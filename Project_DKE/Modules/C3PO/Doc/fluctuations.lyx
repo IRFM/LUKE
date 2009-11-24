@@ -1,4 +1,4 @@
-#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.4 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -1778,37 +1778,12 @@ Appendix B
 \end_layout
 
 \begin_layout Standard
-According to the ray-tracing calculation, the group velocity is 
-\begin_inset Formula \[
-\frac{d\mathbf{X}}{dt}=\dot{\mathbf{X}}=\mathbf{v}_{G}\]
-
+For calculating the wave scattering probability, the perpendicular component
+ 
+\begin_inset Formula $v_{G\bot}^{\sigma}$
 \end_inset
 
-where the contravariant components 
-\begin_inset Formula $\left(\dot{\rho},\dot{\theta},\dot{\phi}\right)$
-\end_inset
-
-
-\begin_inset Formula \[
-\dot{\mathbf{X}}=\mathbf{v}_{G}=\dot{\rho}\widehat{\rho}+\dot{\theta}\widehat{\theta}+\dot{\phi}\widehat{\phi}\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Therefore, 
-\begin_inset Formula \begin{equation}
-v_{G\Vert}=\dfrac{1}{B}\mathbf{v}_{G}\cdot\mathbf{B}=\dfrac{1}{B}v_{G}^{i}B_{j}\label{vgpar}\end{equation}
-
-\end_inset
-
-where 
-\begin_inset Formula $B_{j}$
-\end_inset
-
- are the covariant components of the magnetic field 
+ of the group velocity 
 \family roman
 \series medium
 \shape up
@@ -1818,26 +1793,159 @@ where
 \noun off
 \color none
 
-\begin_inset Formula $\mathbf{B}$
+\begin_inset Formula $\mathbf{v}_{G}^{\sigma}$
 \end_inset
 
-.
+ must be evaluated for all the real roots in 
+\begin_inset Formula $k_{\bot}$
+\end_inset
+
+ of the dispersion relation.
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+According to the ray equations 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pey08"
+
+\end_inset
+
+, and remembering the definition of covariant and contravariant derivative
+ of a scalar function, the contravariant components of 
+\begin_inset Formula $\mathbf{v}_{G}=d\mathbf{X}/dt=\dot{\mathbf{X}}$
+\end_inset
+
+ calculated at the position 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+ may be expressed as 
+\begin_inset Formula $v_{G}^{i}=\left(\dot{\rho},\dot{\theta},\dot{\phi}\right)=-\left(\dfrac{\partial\mathcal{D}}{\partial k_{\rho}},\dfrac{\partial\mathcal{D}}{\partial m},\dfrac{\partial\mathcal{D}}{\partial n}\right)/\dfrac{\partial\mathcal{D}}{\partial\omega}$
+\end_inset
+
+ .
+ The covariant form of the metric tensor is given by:
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula \begin{equation}
+g_{ij}=\mathbf{e}_{i}\cdot\mathbf{e}_{j}=\left(\begin{array}{ccc}
+\frac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}\cos^{2}\alpha} & \frac{r\sin\alpha}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos^{2}\alpha} & 0\\
+\frac{r\sin\alpha}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos^{2}\alpha} & \dfrac{r^{2}}{\cos^{2}\alpha}, & 0\\
+0 & 0 & R^{2}\end{array}\right)\label{eq:covariantmetrictensor}\end{equation}
+
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ The covariant basis defined in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pey08"
+
+\end_inset
+
+ is: 
+\begin_inset Formula \begin{equation}
+\mathbf{e}_{i}=\left(\dfrac{\widehat{\mathbf{r}}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha},\dfrac{r\widehat{\mathbf{s}}}{\cos\alpha},R\widehat{\mathbf{\phi}}\right)\label{eq:covariantbasis}\end{equation}
+
+\end_inset
+
+Using the definition 
+\begin_inset Formula $v_{Gi}=g_{ij}v_{G}^{j}$
+\end_inset
+
+, one obtains the covariant components of 
+\begin_inset Formula $\mathbf{v}_{G}$
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
-Since 
 \begin_inset Formula \begin{equation}
-B_{j}=\left(\sigma_{I}\dfrac{\sin\alpha B_{P}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha},\sigma_{I}\dfrac{rB_{P}}{\cos\alpha},\sigma_{B}RB_{T}\right)\end{equation}
+v_{Gi}=-\left[\frac{1}{\parallel\nabla\rho\parallel^{2}\cos^{2}\alpha}\left(\frac{\partial\mathcal{D}}{\partial k_{\rho}}+r\sin\alpha\right),\frac{r}{\cos^{2}\alpha}\left(\frac{\sin\alpha}{\parallel\nabla\rho\Vert}\frac{\partial\mathcal{D}}{\partial k_{\rho}}+r\frac{\partial\mathcal{D}}{\partial m}\right),R^{2}\frac{\partial\mathcal{D}}{\partial n}\right]/\frac{\partial\mathcal{D}}{\partial\omega}\label{eq:vgroupcov}\end{equation}
 
 \end_inset
 
-it turns out that
-\begin_inset Formula \begin{equation}
-v_{G\Vert}=\sigma_{I}P\dfrac{\tan\alpha}{\left\Vert \mathbf{\nabla}\rho\right\Vert }\dot{\rho}+\sigma_{I}P\dfrac{r\dot{\theta}}{\cos\alpha}+\sigma_{B}TR\dot{\phi}\label{eq:Vgpar1}\end{equation}
+ Now we can easily calculate
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+ 
+\begin_inset Formula $\left\Vert \mathbf{v}_{G}^{\sigma}\right\Vert ^{2}=v_{Gi}^{\sigma}v_{G}^{\sigma i}$
+\end_inset
+
+ , for 
+\begin_inset Formula $N_{\perp}=N_{\perp}^{\sigma}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\left\Vert \mathbf{v}_{G}^{\sigma}\right\Vert ^{2} & =\frac{\dot{\rho}_{\sigma}^{2}}{\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}\cos^{2}\alpha}+\frac{2\dot{\rho}_{\sigma}r\dot{\theta}_{\sigma}\sin\alpha}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos^{2}\alpha}+\dfrac{r^{2}\dot{\theta}_{\sigma}^{2}}{\cos^{2}\alpha}+R^{2}\dot{\phi}_{\sigma}^{2}\label{eq:Vgnorm2a}\end{align}
 
 \end_inset
 
-where 
+Where:
+\begin_inset Formula \begin{equation}
+\begin{array}{l}
+\dfrac{d\rho_{\sigma}}{dt}=\dot{\rho}_{\sigma}=-\left.\dfrac{\partial\mathcal{D}}{\partial k_{\rho}}/\dfrac{\partial\mathcal{D}}{\partial\omega}\right|_{N_{\bot}=N_{\bot}^{\sigma}}\\
+\\\dfrac{d\theta_{\sigma}}{dt}=\dot{\theta}_{\sigma}=-\left.\dfrac{\partial\mathcal{D}}{\partial m}/\dfrac{\partial\mathcal{D}}{\partial\omega}\right|_{N_{\bot}=N_{\bot}^{\sigma}}\\
+\\\dfrac{d\phi_{\sigma}}{dt}=\dot{\phi}_{\sigma}=-\left.\dfrac{\partial\mathcal{D}}{\partial n}/\dfrac{\partial\mathcal{D}}{\partial\omega}\right|_{N_{\bot}=N_{\bot}^{\sigma}}\end{array}\label{h1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The parallel component of the group velocity is given by: 
+\begin_inset Formula \begin{equation}
+v_{G\Vert}=\dfrac{\mathbf{v}_{G}\cdot\mathbf{B}}{B}=v_{G}^{i}\dfrac{B_{i}}{B}\label{vgpar}\end{equation}
+
+\end_inset
+
+so we can write:
+\begin_inset Formula \begin{equation}
+v_{G\Vert}=-\left[\dfrac{\partial\mathcal{D}}{\partial\omega}\right]^{-1}\left(\dfrac{\partial\mathcal{D}}{\partial k_{\rho}}\sigma_{I}P\dfrac{\tan\alpha}{\left\Vert \mathbf{\nabla}\rho\right\Vert }+\dfrac{\partial\mathcal{D}}{\partial m}\sigma_{I}P\dfrac{r}{\cos\alpha}+\dfrac{\partial\mathcal{D}}{\partial n}\sigma_{B}RT\right)\label{eq:vgrouppar}\end{equation}
+
+\end_inset
+
+where the covariant coordinates of the normalized magnetic field are:
+\begin_inset Formula \begin{equation}
+\frac{B_{i}}{B}=\left(\sigma_{I}\dfrac{\sin\alpha P}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha},\sigma_{I}\dfrac{rP}{\cos\alpha},\sigma_{B}RT\right)\label{eq:covariantB}\end{equation}
+
+\end_inset
+
+with 
 \begin_inset Formula $P=B_{P}/B$
 \end_inset
 
@@ -1846,17 +1954,58 @@ where
 \end_inset
 
 .
+ 
 \end_layout
 
 \begin_layout Standard
-Using the general relation 
-\begin_inset Formula \[
-\left\Vert v_{G}\right\Vert ^{2}=g_{ij}v_{G}^{i}v_{G}^{j}\]
+Remembering that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial\mathcal{D}}{\partial k_{\rho}} & = & \frac{\partial\mathcal{D}}{\partial k_{\perp}}\frac{\partial k_{\perp}}{\partial k_{\rho}}+\frac{\partial\mathcal{D}}{\partial k_{\parallel}}\frac{\partial k_{\parallel}}{\partial k_{\rho}}\\
+\frac{\partial\mathcal{D}}{\partial m} & = & \frac{\partial\mathcal{D}}{\partial k_{\perp}}\frac{\partial k_{\perp}}{\partial m}+\frac{\partial\mathcal{D}}{\partial k_{\parallel}}\frac{\partial k_{\parallel}}{\partial m}\\
+\frac{\partial\mathcal{D}}{\partial n} & = & \frac{\partial\mathcal{D}}{\partial k_{\perp}}\frac{\partial k_{\perp}}{\partial n}+\frac{\partial\mathcal{D}}{\partial k_{\parallel}}\frac{\partial k_{\parallel}}{\partial n}\end{eqnarray*}
 
 \end_inset
 
-where 
-\begin_inset Formula $g_{ij}=\left(g^{ij}\right)^{-1}$
+
+\end_layout
+
+\begin_layout Standard
+We have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+v_{G\parallel}=-\left[\frac{\partial\mathcal{D}}{\partial\omega}\right]^{-1}\frac{\partial\mathcal{D}}{\partial k_{\parallel}}\left(\frac{\partial k_{\Vert}}{\partial k_{\rho}}\sigma_{I}P\frac{\tan\alpha}{\Vert\nabla\rho\Vert}+\frac{\partial k_{\Vert}}{\partial m}\sigma_{I}P\frac{r}{\cos\alpha}+\frac{\partial k_{\Vert}}{\partial n}\sigma_{B}TR\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-\left[\frac{\partial\mathfrak{\mathcal{D}}}{\partial\omega}\right]^{-1}\frac{\partial\mathcal{D}}{\partial k_{\perp}}\left(\frac{\partial k_{\perp}}{\partial k_{\rho}}\sigma_{I}P\frac{\tan\alpha}{\parallel\nabla\rho\Vert}+\frac{\partial k_{\perp}}{\partial m}\sigma_{I}P\frac{r}{\cos\alpha}+\frac{\partial k_{\perp}}{\partial n}\sigma_{B}TR\right)=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=-\left[\frac{\partial\mathcal{D}}{\partial\omega}\right]^{-1}\frac{\partial\mathcal{D}}{\partial k_{\Vert}}\left(P^{2}+T^{2}\right)=-\left[\frac{\partial\mathcal{D}}{\partial\omega}\right]^{-1}\frac{\partial\mathcal{D}}{\partial k_{\parallel}}\label{eq:vgpar2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since 
+\begin_inset Formula $P^{2}+T^{2}=1$
 \end_inset
 
 , 
@@ -1869,15 +2018,18 @@ where
 \noun off
 \color none
 
-\begin_inset Formula \[
-g^{ij}=\mathbf{e}^{i}\cdot\mathbf{e}^{j}=\left(\begin{array}{ccc}
-\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2} & -\dfrac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r} & 0\\
--\dfrac{\left\Vert \mathbf{\nabla}\rho\right\Vert \sin\alpha}{r} & \dfrac{1}{r^{2}} & 0\\
-0 & 0 & \dfrac{1}{R^{2}}\end{array}\right)\]
-
+\begin_inset Formula $\sigma_{I}^{2}=\sigma_{B}^{2}=1$
 \end_inset
 
-so that 
+, while the derivatives of 
+\begin_inset Formula $k_{\Vert}$
+\end_inset
+
+and 
+\begin_inset Formula $k_{\perp}$
+\end_inset
+
+are
 \family default
 \series default
 \shape default
@@ -1886,12 +2038,46 @@ so that
 \bar default
 \noun default
 \color inherit
-
-\begin_inset Formula \begin{equation}
-\mathbf{e}_{i}=\left(\dfrac{\widehat{\mathbf{r}}}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos\alpha},\dfrac{r\widehat{\mathbf{s}}}{\cos\alpha},R\widehat{\mathbf{\phi}}\right)\end{equation}
+:
+\begin_inset Formula \begin{align*}
+\dfrac{\partial k_{\Vert}}{\partial k_{\rho}} & =0\\
+\dfrac{\partial k_{\Vert}}{\partial m} & =\sigma_{I}P\frac{\cos\alpha}{r}\\
+\dfrac{\partial k_{\Vert}}{\partial n} & =\sigma_{B}T\dfrac{1}{R}\\
+\frac{\partial k_{\perp}}{\partial k_{\rho}} & =\frac{\Vert\nabla\rho\Vert}{k_{\perp}}\left(k_{\rho}\Vert\nabla\rho\Vert-\sin\alpha\frac{m}{r}\right)\\
+\frac{\partial k_{\perp}}{\partial m} & =\frac{1}{k_{\perp}}\left[\frac{\sigma_{B}T}{r}\cos\alpha\left(\sigma_{B}T\cos\alpha\frac{m}{r}-\sigma_{I}P\frac{n}{R}\right)-\frac{\sin\alpha}{r}\left(k_{\rho}\Vert\nabla\rho\Vert-\sin\alpha\frac{m}{r}\right)\right]\\
+\frac{\partial k_{\perp}}{\partial n} & =-\frac{1}{k_{\perp}}\frac{\sigma_{I}P}{R}\left(\sigma_{B}T\cos\alpha\frac{m}{r}-\sigma_{I}P\frac{n}{R}\right)\end{align*}
 
 \end_inset
 
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+This formulation is more convenient for the wave scattering problem, since
+ 
+\begin_inset Formula $v_{G\Vert}^{\sigma}$
+\end_inset
+
+ must be evaluated for the scattered wave, so that: 
+\begin_inset Formula \[
+v_{G\Vert}^{\sigma}=\left.-\dfrac{\partial\mathcal{D}}{\partial k_{\Vert}}/\dfrac{\partial\mathcal{D}}{\partial\omega}\right|_{N_{\bot}=N_{\bot}^{\sigma}}\]
+
+\end_inset
+
+since 
+\begin_inset Formula $N_{\Vert}^{\sigma}\simeq N_{\Vert}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
 
 \family roman
 \series medium
@@ -1901,12 +2087,17 @@ so that
 \bar no
 \noun off
 \color none
+Now we can calculate an explicit expression for 
+\begin_inset Formula $v_{G\perp}^{\sigma2}$
+\end_inset
 
+ using two alternatives approaches: first is based on the difference between
+ the components:
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula \[
-g_{ij}=\mathbf{e}_{i}\cdot\mathbf{e}_{j}=\left(\begin{array}{ccc}
-\frac{1}{\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}\cos^{2}\alpha} & \frac{r\sin\alpha}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos^{2}\alpha} & 0\\
-\frac{r\sin\alpha}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos^{2}\alpha} & \dfrac{r^{2}}{\cos^{2}\alpha}, & 0\\
-0 & 0 & R^{2}\end{array}\right)\]
+v_{G\perp}^{\sigma2}=\Vert\mathbf{v}_{G}^{\sigma}\Vert^{2}-v_{G\parallel}^{\sigma2}=\frac{\dot{\rho}_{\sigma}^{2}}{\Vert\nabla\rho\Vert^{2}\cos^{2}\alpha}\left(1-\sigma_{I}^{2}P^{2}\sin^{2}\alpha\right)+\left(\sigma_{B}T\frac{r\dot{\theta}_{\sigma}}{\cos\alpha}-\right.\]
 
 \end_inset
 
@@ -1914,19 +2105,337 @@ g_{ij}=\mathbf{e}_{i}\cdot\mathbf{e}_{j}=\left(\begin{array}{ccc}
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \begin{align*}
-\left\Vert v_{G}\right\Vert ^{2} & =\frac{\dot{\rho}^{2}}{\left\Vert \mathbf{\nabla}\rho\right\Vert ^{2}\cos^{2}\alpha}+\frac{2\dot{\rho}r\dot{\theta}\sin\alpha}{\left\Vert \mathbf{\nabla}\rho\right\Vert \cos^{2}\alpha}\\
- & +\dfrac{r^{2}\dot{\theta}^{2}}{\cos^{2}\alpha}+R^{2}\dot{\phi}^{2}\end{align*}
-
-\end_inset
-
-and finally
 \begin_inset Formula \begin{equation}
-v_{G\bot}^{2}=\left\Vert v_{G}\right\Vert ^{2}-v_{G\Vert}^{2}\label{eq:vgperp2}\end{equation}
+\left.-\sigma_{I}PR\dot{\phi}_{\sigma}\right)^{2}+2\sigma_{B}^{2}T^{2}\frac{\dot{\rho}_{\sigma}\dot{\theta}_{\sigma}r\sin\alpha}{\Vert\nabla\rho\Vert\cos^{2}\alpha}-2\sigma_{I}P\sigma_{B}T\frac{\dot{\rho}_{\sigma}\dot{\phi}_{\sigma}R\tan\alpha}{\Vert\nabla\rho\Vert}\label{eq:vgperp1}\end{equation}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+The other way to derive the component of the group velocity parallel to
+ the magnetic field is based on the definition of the vectorial product
+ in the covariant and contravariant representation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left(\mathbf{v}_{G}\times\mathbf{b}\right)_{i}=\frac{1}{J}\epsilon_{ijk}v_{G}^{j}b^{k}\label{eq:vecprodcov}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left(\mathbf{v}_{G}\times\mathbf{b}\right)^{i}=J\epsilon^{ijk}v_{Gj}b_{k}\label{eq:vecprodcontr}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $J=\sqrt{\textrm{det }g_{ij}}$
+\end_inset
+
+, so we can write:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+v_{G\perp}^{2}=\Vert\mathbf{v}_{G}\times\mathbf{b}\Vert^{2}=\left(\mathbf{v}_{G}\times\mathbf{b}\right)_{i}\left(\mathbf{v}_{G}\times\mathbf{b}\right)^{i}=\epsilon_{ijk}\epsilon^{ijk}v_{Gj}v_{G}^{j}b_{k}b^{k}\label{eq:vgperp2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have derived explicit expressions for 
+\begin_inset Formula $v_{Gj},v_{G}^{j},b_{k},b^{k},$
+\end_inset
+
+ so we can calculate the components of the vectorial product in the two
+ different representations for the mode 
+\begin_inset Formula $\sigma$
+\end_inset
+
+:
+\begin_inset Formula \begin{eqnarray*}
+\left(\mathbf{v}_{G}^{\sigma}\times\mathbf{b}\right)_{1} & = & \frac{1}{J}\left(\frac{\sigma_{B}T}{R}\dot{\theta}_{\sigma}-\frac{\sigma_{I}P}{r}\dot{\phi}_{\sigma}\cos\alpha\right)\\
+\left(\mathbf{v}_{G}^{\sigma}\times\mathbf{b}\right)_{2} & = & -\frac{1}{J}\frac{\sigma_{B}T}{R}\dot{\rho}_{\sigma}\\
+\left(\mathbf{v}_{G}^{\sigma}\times\mathbf{b}\right)_{3} & = & \frac{1}{J}\frac{\sigma_{I}P}{r}\dot{\rho}_{\sigma}\cos\alpha\\
+\left(\mathbf{v}_{G}^{\sigma}\times\mathbf{b}\right)^{1} & = & J\left[\sigma_{B}TR\left(\frac{r\dot{\rho}_{\sigma}\sin\alpha}{\Vert\nabla\rho\Vert\cos^{2}\alpha}+\frac{r^{2}\dot{\theta}_{\sigma}}{\cos^{2}\alpha}\right)-\sigma_{I}P\frac{rR^{2}\dot{\phi}_{\sigma}}{\cos\alpha}\right]\\
+\left(\mathbf{v}_{G}^{\sigma}\times\mathbf{b}\right)^{2} & = & J\left[\sigma_{I}P\frac{R^{2}\dot{\phi}_{\sigma}}{\Vert\nabla\rho\Vert}\tan\alpha-\sigma_{B}RT\left(\frac{\dot{\rho}_{\sigma}}{\Vert\nabla\rho\Vert^{2}\cos^{2}\alpha}+\frac{r\dot{\theta}_{\sigma}\sin\alpha}{\Vert\nabla\rho\Vert\cos^{2}\alpha}\right)\right]\\
+\left(\mathbf{v}_{G}^{\sigma}\times\mathbf{b}\right)^{3} & = & J\left[\sigma_{I}P\frac{r}{\cos\alpha}\left(\frac{\dot{\rho}_{\sigma}}{\Vert\nabla\rho\Vert^{2}\cos^{2}\alpha}+\frac{r\dot{\theta}_{\sigma}\sin\alpha}{\Vert\nabla\rho\Vert\cos^{2}\alpha}\right)-\sigma_{I}P\frac{\tan\alpha}{\Vert\nabla\rho\Vert}\left(\frac{r\dot{\rho}_{\sigma}\sin\alpha}{\Vert\nabla\rho\Vert\cos^{2}\alpha}+\frac{r^{2}\dot{\theta}_{\sigma}}{\cos^{2}\alpha}\right)\right]\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now, using this components in the general expression for the vectorial product,
+ it is straightforward to check that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+v_{G\perp}^{\sigma2}=\left(\mathbf{v}_{G}^{\sigma}\times\mathbf{b}\right)_{i}\left(\mathbf{v}_{G}^{\sigma}\times\mathbf{b}\right)^{i}=\frac{\dot{\rho}_{\sigma}^{2}}{\Vert\nabla\rho\Vert^{2}\cos^{2}\alpha}\left(1-\sigma_{I}^{2}P^{2}\sin^{2}\alpha\right)+\left(\sigma_{B}T\frac{r\dot{\theta}_{\sigma}}{\cos\alpha}-\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left.-\sigma_{I}PR\dot{\phi}_{\sigma}\right)^{2}+2\sigma_{B}^{2}T^{2}\frac{\dot{\rho}_{\sigma}\dot{\theta}_{\sigma}r\sin\alpha}{\Vert\nabla\rho\Vert\cos^{2}\alpha}-2\sigma_{I}P\sigma_{B}T\frac{\dot{\rho}_{\sigma}\dot{\phi}_{\sigma}R\tan\alpha}{\Vert\nabla\rho\Vert}=\Vert\mathbf{v}_{G}^{\sigma}\Vert^{2}-v_{G\parallel}^{\sigma2}\label{eq:vgperp1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we have obtained the same expression with two alternative procediments.
+ As we have done for 
+\begin_inset Formula $v_{G\parallel}^{\sigma}$
+\end_inset
+
+, we try to formulate 
+\begin_inset Formula $v_{G\perp}^{\sigma2}$
+\end_inset
+
+in terms of derivatives of the dispersion relation respect to 
+\begin_inset Formula $k_{\parallel}$
+\end_inset
+
+and 
+\begin_inset Formula $k_{\perp}$
+\end_inset
+
+, this formulation is more convenient for studying the wave scattering from
+ a numerical point of vieuw, expecially for calculating the mode coupling
+ coefficients.
+ Remembering the ray equations, we can write:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+v_{G\perp}^{2}=\left[\frac{\partial\mathcal{D}}{\partial\omega}\right]^{-2}\left[\frac{\left(1-\sigma_{I}^{2}P^{2}\sin^{2}\alpha\right)}{\Vert\nabla\rho\Vert^{2}\cos^{2}\alpha}\left(\frac{\partial\mathcal{D}}{\partial k_{\rho}}\right)^{2}+\left(\frac{\sigma_{B}Tr}{\cos\alpha}\frac{\partial\mathcal{D}}{\partial m}-\sigma_{I}PR\frac{\partial\mathcal{D}}{\partial n}\right)^{2}+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left.+2\frac{\sigma_{B}^{2}T^{2}r\sin\alpha}{\Vert\nabla\rho\Vert\cos^{2}\alpha}\frac{\partial\mathcal{D}}{\partial k_{\rho}}\frac{\partial\mathcal{D}}{\partial m}-2\frac{\sigma_{I}P\sigma_{B}TR\tan\alpha}{\Vert\nabla\rho\Vert}\frac{\partial\mathcal{D}}{\partial k_{\rho}}\frac{\partial\mathcal{D}}{\partial n}\right]\label{eq:vgperp2A}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Expriming 
+\begin_inset Formula $\partial\mathcal{D}/\partial k_{\rho},\partial\mathcal{D}/\partial m,\partial\mathcal{D}/\partial n$
+\end_inset
+
+ in function of 
+\begin_inset Formula $\partial\mathcal{D}/\partial k_{\parallel}$
+\end_inset
+
+and 
+\begin_inset Formula $\partial\mathcal{D}/\partial k_{\perp}$
+\end_inset
+
+, we obtain an expression of the type:
+\begin_inset Formula \begin{equation}
+v_{G\perp}^{2}=\left[\frac{\partial\mathcal{D}}{\partial\omega}\right]^{-2}\left[A\left(\frac{\partial\mathcal{D}}{\partial k_{\parallel}}\right)^{2}+B\left(\frac{\partial\mathcal{D}}{\partial k_{\perp}}\right)^{2}+C\left(\frac{\partial\mathcal{D}}{\partial k_{\Vert}}\frac{\partial\mathcal{D}}{\partial k_{\perp}}\right)\right]\label{eq:vgperp2B}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now calculate separately the coefficients 
+\begin_inset Formula $A,B,C$
+\end_inset
+
+ using the expressions for the derivatives of 
+\begin_inset Formula $k_{\parallel}$
+\end_inset
+
+and 
+\begin_inset Formula $k_{\perp}$
+\end_inset
+
+respect to 
+\begin_inset Formula $k_{\rho},m,n$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+A=\frac{\left(1-\sigma_{I}^{2}P^{2}\sin^{2}\alpha\right)}{\Vert\nabla\rho\Vert^{2}\cos^{2}\alpha}\left(\frac{\partial k_{\Vert}}{\partial k_{\rho}}\right)^{2}+\frac{\sigma_{B}^{2}T^{2}r^{2}}{\cos^{2}\alpha}\left(\frac{\partial k_{\Vert}}{\partial m}\right)^{2}+\sigma_{I}^{2}P^{2}R^{2}\left(\frac{\partial k_{\parallel}}{\partial n}\right)^{2}+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++2\frac{\sigma_{B}^{2}T^{2}r\sin\alpha}{\Vert\nabla\rho\Vert\cos^{2}\alpha}\left(\frac{\partial k_{\Vert}}{\partial k_{\rho}}\right)\left(\frac{\partial k_{\Vert}}{\partial m}\right)-2\frac{\sigma_{I}P\sigma_{B}TR\tan\alpha}{\Vert\nabla\rho\Vert}\left(\frac{\partial k_{\Vert}}{\partial k_{\rho}}\right)\left(\frac{\partial k_{\Vert}}{\partial n}\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-2\frac{\sigma_{I}P\sigma_{B}TrR}{\cos\alpha}\left(\frac{\partial k_{\Vert}}{\partial m}\right)\left(\frac{\partial k_{\Vert}}{\partial n}\right)=2\sigma_{I}^{2}P^{2}\sigma_{B}^{2}T^{2}-2\sigma_{I}^{2}P^{2}\sigma_{B}^{2}T^{2}=0\label{eq:vgcoeff1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B=\frac{\left(1-\sigma_{I}^{2}P^{2}\sin^{2}\alpha\right)}{\Vert\nabla\rho\Vert^{2}\cos^{2}\alpha}\left(\frac{\partial k_{\perp}}{\partial k_{\rho}}\right)^{2}+\frac{\sigma_{B}^{2}T^{2}r^{2}}{\cos^{2}\alpha}\left(\frac{\partial k_{\perp}}{\partial m}\right)^{2}+\sigma_{I}^{2}P^{2}R^{2}\left(\frac{\partial k_{\perp}}{\partial n}\right)^{2}+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++2\frac{\sigma_{B}^{2}T^{2}r\sin\alpha}{\Vert\nabla\rho\Vert\cos^{2}\alpha}\left(\frac{\partial k_{\perp}}{\partial k_{\rho}}\right)\left(\frac{\partial k_{\perp}}{\partial m}\right)-2\frac{\sigma_{I}P\sigma_{B}TR\tan\alpha}{\Vert\nabla\rho\Vert}\left(\frac{\partial k_{\perp}}{\partial k_{\rho}}\right)\left(\frac{\partial k_{\perp}}{\partial n}\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-2\frac{\sigma_{I}P\sigma_{B}TrR}{\cos\alpha}\left(\frac{\partial k_{\perp}}{\partial m}\right)\left(\frac{\partial k_{\perp}}{\partial n}\right)=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=\frac{1}{k_{\perp}^{2}}\left[\left(k_{\rho}\Vert\nabla\rho\Vert-\sin\alpha\frac{m}{r}\right)^{2}+\left(\sigma_{B}T\cos\alpha\frac{m}{r}-\sigma_{I}P\frac{n}{R}\right)^{2}\right]=\frac{k_{\perp}^{2}}{k_{\perp}^{2}}=1\label{eq:vgcoeff2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+C=2\frac{\left(1-\sigma_{I}^{2}P^{2}\sin^{2}\alpha\right)}{\Vert\nabla\rho\Vert^{2}\cos^{2}\alpha}\left(\frac{\partial k_{\Vert}}{\partial k_{\rho}}\right)\left(\frac{\partial k_{\perp}}{\partial k_{\rho}}\right)+2\frac{\sigma_{B}^{2}T^{2}r^{2}}{\cos^{2}\alpha}\left(\frac{\partial k_{\Vert}}{\partial m}\right)\left(\frac{\partial k_{\perp}}{\partial m}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++2\sigma_{I}^{2}P^{2}R^{2}\left(\frac{\partial k_{\Vert}}{\partial n}\right)\left(\frac{\partial k_{\perp}}{\partial n}\right)+2\frac{\sigma_{B}^{2}T^{2}r\sin\alpha}{\Vert\nabla\rho\Vert\cos^{2}\alpha}\left(\frac{\partial k_{\Vert}}{\partial k_{\rho}}\frac{\partial k_{\perp}}{\partial m}+\frac{\partial k_{\perp}}{\partial k_{\rho}}\frac{\partial k_{\Vert}}{\partial m}\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-2\frac{\sigma_{I}P\sigma_{B}TR\tan\alpha}{\Vert\nabla\rho\Vert}\left(\frac{\partial k_{\Vert}}{\partial k_{\rho}}\frac{\partial k_{\perp}}{\partial n}+\frac{\partial k_{\perp}}{\partial k_{\rho}}\frac{\partial k_{\Vert}}{\partial n}\right)-2\frac{\sigma_{I}P\sigma_{B}TrR}{\cos\alpha}\left(\frac{\partial k_{\Vert}}{\partial m}\frac{\partial k_{\perp}}{\partial n}+\frac{\partial k_{\perp}}{\partial m}\frac{\partial k_{\Vert}}{\partial n}\right)=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=2\frac{\sigma_{I}P\sigma_{B}T}{k_{\perp}}\left[\left(k_{\rho}\Vert\nabla\rho\Vert-\sin\alpha\frac{m}{r}\right)\tan\alpha\left(2\sigma_{B}T-2\sigma_{B}T\right)+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left.+\left(\sigma_{B}T\cos\alpha\frac{m}{r}-\sigma_{I}P\frac{n}{R}\right)\left(\sigma_{B}^{2}T^{2}-\sigma_{I}^{2}P^{2}+\sigma_{I}^{2}P^{2}-\sigma_{B}^{2}T^{2}\right)\right]=0\label{eq:vgcoeff3}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the perpendicular component of the group velocity becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+v_{G\perp}^{2}=\left(\frac{\partial\mathcal{D}}{\partial k_{\perp}}\right)^{2}/\left(\frac{\partial\mathcal{D}}{\partial\omega}\right)^{2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the mode 
+\begin_inset Formula $\sigma$
+\end_inset
+
+we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+v_{G\perp}^{\sigma2}=\left.\left(\frac{\partial\mathcal{D}}{\partial k_{\perp}}\right)^{2}/\left(\frac{\partial\mathcal{D}}{\partial\omega}\right)^{2}\right|_{N_{\perp}=N_{\perp}^{\sigma}}\label{eq:vgperp3}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have derived an alternative expression for both the components of the
+ group velocity, dependent only by the derivatives of the dispersrion relation
+ respect to the parallel and the perpendicular components of the wave vector.
+ This alternative expression, valid in the general case, without making
+ assumption regarding the kind of the dispersion relation we are using (cold,
+ warm or hot plasma), is particularly convenient for calculating numerically
+ the value of 
+\begin_inset Formula $v_{G}^{\sigma}$
+\end_inset
+
+ along the ray trajectory in an arbitrary position without recalling the
+ raytracing routine.
 \end_layout
 
 \begin_layout Section
@@ -2378,7 +2887,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename /Users/Yves/Travail/Projets/LUKE/Project_DKE/Modules/C3PO/Doc/figs/gaussian_gen_efficiency.eps
+	filename C:/Users/Yves/Travail/Projets/LUKE/Project_DKE/Modules/C3PO/Doc/figs/gaussian_gen_efficiency.eps
 	width 3.6in
 	clip
 

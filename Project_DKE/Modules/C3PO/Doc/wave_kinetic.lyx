@@ -1,4 +1,4 @@
-#LyX 1.6.2 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.4 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -1032,20 +1032,31 @@ The kernel of the scattering probability is given by the expression:
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-K\left(k_{\perp},\check{k}_{\perp},\beta\right)=\frac{2\pi\check{k}_{\perp}}{v_{g\perp}}\left|V^{n}\left(\mathbf{k},\check{\mathbf{k}},\beta\right)\right|^{2}\end{equation}
+K\left(k_{\perp}^{\sigma},\check{k}_{\perp}^{\sigma},\beta\right)=\frac{2\pi\check{k}_{\perp}^{\sigma}}{v_{G\perp}^{\sigma}}\left|V^{n}\left(\mathbf{k}^{\sigma},\check{\mathbf{k}}^{\sigma},\beta\right)\right|^{2}\end{equation}
 
 \end_inset
 
+Where the group velocity is evaluated for the scattered wave vector.
+ The group velocity ffor the mode 
+\begin_inset Formula $\sigma$
+\end_inset
 
-\end_layout
-
-\begin_layout Standard
-The group velocity is given by the expression:
+ is given by the expression:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbf{v}_{g}=\frac{\partial\omega}{\partial\mathbf{k}}=-\frac{\partial\mathcal{D}/\partial\mathbf{k}}{\partial\mathcal{D}/\partial\omega}=-\frac{\textrm{c}}{\omega}\frac{\partial\mathcal{D}/\partial\mathbf{N}}{\partial\mathcal{D}/\partial\omega}\end{equation}
+\mathbf{v}_{G}^{\sigma}=\frac{d\mathbf{X}}{dt}=\left.-\frac{\partial\mathcal{D}/\partial\mathbf{k}}{\partial\mathcal{D}/\partial\omega}\right|_{\mathbf{k}=\mathbf{k}^{\sigma}}\end{equation}
+
+\end_inset
+
+ We have demonstrated that the component of the group velocity perpendicular
+ to the magnetic field can be calculated using the expression:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+v_{G\perp}=\left.-\frac{\partial\mathcal{D}/\partial k_{\perp}}{\partial\mathcal{D}/\partial\omega}\right|_{k_{\perp}=k_{\perp}^{\sigma}}\end{equation}
 
 \end_inset
 
@@ -1053,352 +1064,25 @@ The group velocity is given by the expression:
 \end_layout
 
 \begin_layout Standard
-Where 
-\begin_inset Formula $\mathcal{D}$
+Since 
+\begin_inset Formula $k_{\Vert}\simeq k_{\parallel}^{\sigma}$
 \end_inset
 
- is the dispersion relation, so we need an explicit expression for the component
- of the group velocity perpendicular to the magnetic field.
-\end_layout
-
-\begin_layout Section*
-Appendix C
+ .
+ So the kernel of the scattering probability becomes:
 \end_layout
 
 \begin_layout Standard
-We now derive explicit expressions for 
-\begin_inset Formula $v_{g}$
+\begin_inset Formula \begin{equation}
+K\left(k_{\perp}^{\sigma},\check{k}_{\perp}^{\sigma},\beta\right)=-2\pi\check{k}_{\perp}^{\sigma}\left.\frac{\partial\mathcal{D}/\partial\omega}{\partial\mathcal{D}/\partial k_{\perp}}\right|_{k_{\perp}=k_{\perp}^{\sigma}}\cdot\left|V^{n}\left(\mathbf{k}^{\sigma},\check{\mathbf{k}}^{\sigma},\beta\right)\right|\end{equation}
+
 \end_inset
 
-, 
-\begin_inset Formula $v_{g\perp}$
-\end_inset
 
- and 
-\begin_inset Formula $v_{g\parallel}$
-\end_inset
+\end_layout
 
+\begin_layout Standard
 .
- Let us consider the definition of group velocity, and exprime it in function
- of the canonically conjugate coordinates 
-\begin_inset Formula $\left(\rho,\theta,\phi\right)$
-\end_inset
-
-and 
-\begin_inset Formula $\left(k_{\rho},m,n\right)$
-\end_inset
-
-:
-\begin_inset Formula \begin{equation}
-\mathbf{v}_{g}=\frac{d\mathbf{X}}{dt}=-\frac{\textrm{c}}{\omega}\left(\frac{\partial\mathcal{D}}{\partial\mathbf{N}}/\frac{\partial\mathcal{D}}{\partial\omega}\right)=-\frac{\textrm{c}}{\omega}\left(\frac{\partial\mathcal{D}}{\partial\omega}\right)^{-1}\cdot\left(\frac{\partial\mathcal{D}}{\partial k_{\rho}}\widehat{\rho}+\frac{\partial\mathcal{D}}{\partial m}\widehat{\theta}+\frac{\partial\mathcal{D}}{\partial n}\widehat{\phi}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-So remembering the ray equations:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{eqnarray*}
-\dot{\rho} & = & \frac{d\rho}{dt}=-\frac{\partial\mathcal{D}}{\partial k_{\rho}}/\frac{\partial\mathcal{D}}{\partial\omega}\\
-\dot{\theta} & = & \frac{d\theta}{dt}=-\frac{\partial\mathcal{D}}{\partial m}/\frac{\partial\mathcal{D}}{\partial\omega}\\
-\dot{\phi} & = & \frac{d\phi}{dt}=-\frac{\partial\mathcal{D}}{\partial n}/\frac{\partial\mathcal{D}}{\partial\omega}\end{eqnarray*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We obtain the expression:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\mathbf{v}_{g}=\frac{\textrm{c}}{\omega}\left(\dot{\rho}\widehat{\rho}+\dot{\theta}\widehat{\theta}+\dot{\phi}\widehat{\phi}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This expression can be represented also as 
-\begin_inset Formula $\mathbf{v}_{g}=v_{gj}\mathbf{e}^{j}$
-\end_inset
-
-, where 
-\begin_inset Formula $v_{gj}$
-\end_inset
-
- are the covariant coordinates of the group velocity and 
-\begin_inset Formula $\mathbf{e}^{j}$
-\end_inset
-
-is the contravariant basis:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\mathbf{e}^{j}=\left(\Vert\nabla\rho\Vert\widehat{\rho},\frac{\widehat{\theta}}{r},\frac{\widehat{\phi}}{R}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-v_{gj}=\frac{\textrm{c}}{\omega}\left(\frac{\dot{\rho}}{\Vert\nabla\rho\Vert},r\dot{\theta},R\dot{\phi}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In alternative, we can exprime the group velocity in the form 
-\begin_inset Formula $\mathbf{v}_{g}=v_{g}^{j}\mathbf{e}_{j}$
-\end_inset
-
-, where 
-\begin_inset Formula $v_{g}^{j}$
-\end_inset
-
- are the contravariant coordinates and 
-\begin_inset Formula $\mathbf{e}_{j}$
-\end_inset
-
- is the covariant basis:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\mathbf{e}_{j}=\left(\frac{\widehat{\mathbf{r}}}{\Vert\nabla\rho\Vert\cos\alpha},\frac{r\widehat{\mathbf{s}}}{\cos\alpha},R\widehat{\phi}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-v_{g}^{j}=\frac{\textrm{c}}{\omega}\left(\Vert\nabla\rho\Vert\left(\dot{\rho}-\dot{\theta}\sin\alpha\right),\frac{\dot{\theta}-\dot{\rho}\sin\alpha}{r},\frac{\dot{\phi}}{R}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Remembering the relations:
-\begin_inset Formula \begin{eqnarray*}
-\widehat{\rho}\cdot\widehat{\mathbf{r}} & = & \cos\alpha\\
-\widehat{\rho}\cdot\widehat{\theta} & = & -\sin\alpha\\
-\widehat{\mathbf{s}}\cdot\widehat{\mathbf{r}} & = & \sin\alpha\\
-\widehat{\mathbf{s}}\cdot\widehat{\theta} & = & \cos\alpha\end{eqnarray*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-It is straightforward to verify that the two representations are perfectly
- equivalent: 
-\begin_inset Formula $v_{gj}\mathbf{e}^{j}=v_{g}^{j}\mathbf{e}_{j}$
-\end_inset
-
-.
- So using the covariant and contravariant coordinates, we can easily calculate
- 
-\begin_inset Formula $v_{g}^{2}$
-\end_inset
-
- :
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-v_{g}^{2}=v_{gj}v_{g}^{j}=\frac{\textrm{c }^{2}}{\omega^{2}}\left(\dot{\rho}^{2}+\dot{\theta}^{2}-2\dot{\rho}\dot{\theta}\sin\alpha+\dot{\phi}^{2}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We want to derive an expression for 
-\begin_inset Formula $v_{g\parallel}$
-\end_inset
-
-and 
-\begin_inset Formula $v_{g\perp}$
-\end_inset
-
-, with this purpose we exprime also the normalized magnetic field in the
- two covariant and contravariant representations 
-\begin_inset Formula $\mathbf{b}=b_{j}\mathbf{e}^{j}=b^{j}\mathbf{\mathbf{e}}_{j}$
-\end_inset
-
-, the coordinates of 
-\begin_inset Formula $\mathbf{b}$
-\end_inset
-
- respect the two different basis are:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-b_{j}=\left(\sigma_{I}\frac{\sin\alpha P}{\Vert\nabla\rho\Vert\cos\alpha},\sigma_{I}\frac{rP}{\cos\alpha},\sigma_{B}RT\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-b^{j}=\left(0,\frac{\sigma_{I}P}{r}\cos\alpha,\frac{\sigma_{B}T}{R}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-So we can calculate 
-\begin_inset Formula $v_{g\parallel}$
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-v_{g\parallel}=\mathbf{v}_{g}\cdot\mathbf{b}=v_{gj}b^{j}=v_{g}^{j}b_{j}=\frac{\textrm{c}}{\omega}\left(\sigma_{I}P\cos\alpha\dot{\theta}+\sigma_{B}T\dot{\phi}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-And consequentely:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-v_{g\perp}^{2}=v_{g}^{2}-v_{g\parallel}^{2}=\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-=\frac{\textrm{c}^{2}}{\omega^{2}}\left[\dot{\rho}^{2}+\left(1-\sigma_{I}^{2}P^{2}\cos^{2}\alpha\right)\dot{\theta}^{2}+\sigma_{I}^{2}P^{2}\dot{\phi}^{2}-2\dot{\rho}\dot{\theta}\sin\alpha-2\sigma_{I}P\sigma_{B}T\dot{\theta}\dot{\phi}\cos\alpha\right]\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Another way to derive the component of the group velocity parallel to the
- magnetic field is based on the definition of the vectorial product in the
- covariant and contravariant representation:
-\begin_inset Formula \begin{equation}
-\left(\mathbf{v}_{g}\times\mathbf{b}\right)_{j}=\frac{1}{J}\cdot\epsilon_{lij}v_{g}^{i}b^{l}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\left(\mathbf{v}_{g}\times\mathbf{b}\right)^{j}=J\cdot\epsilon^{lij}v_{gi}b_{l}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Where 
-\begin_inset Formula $J=\sqrt{\mathcal{\textrm{det }}g_{ij}}$
-\end_inset
-
-, so we can write:
-\begin_inset Formula \begin{equation}
-v_{g\perp}^{2}=\parallel\mathbf{v}_{g}\times\mathbf{b}\Vert^{2}=\left(\mathbf{v}_{g}\times\mathbf{b}\right)_{j}\left(\mathbf{v}_{g}\times\mathbf{b}\right)^{j}=\epsilon_{lij}\epsilon^{lij}v_{gi}v^{gi}b_{l}b^{l}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Using the components 
-\begin_inset Formula $v_{gi,}v_{g}^{i},b_{l,}b^{l}$
-\end_inset
-
- it is easy to calculate explicitely the expressions that we need:
-\begin_inset Formula \begin{eqnarray}
-\left(\mathbf{v}_{g}\times\mathbf{b}\right)_{1} & = & \frac{1}{J}\cdot\frac{\textrm{c}}{\omega}\left(\sigma_{B}T\frac{\dot{\theta}-\dot{\rho}\sin\alpha}{rR}-\sigma_{I}P\frac{\dot{\phi}}{rR}\cos\alpha\right)\\
-\left(\mathbf{v}_{g}\times\mathbf{b}\right)_{2} & = & \frac{1}{J}\cdot\frac{\textrm{c}}{\omega}\left(-\sigma_{B}T\frac{\Vert\nabla\rho\Vert\left(\dot{\rho}-\dot{\theta}\sin\alpha\right)}{R}\right)\\
-\left(\mathbf{v}_{g}\times\mathbf{b}\right)_{3} & = & \frac{1}{J}\cdot\frac{\textrm{c}}{\omega}\left(\sigma_{I}P\frac{\Vert\nabla\rho\Vert\left(\dot{\rho}-\dot{\theta}\sin\alpha\right)}{r}\cos\alpha\right)\\
-\left(\mathbf{v}_{g}\times\mathbf{b}\right)^{1} & = & J\cdot\frac{\textrm{c}}{\omega}\left(\sigma_{B}TRr\dot{\theta}-\sigma_{I}P\frac{rR\dot{\phi}}{\cos\alpha}\right)\\
-\left(\mathbf{v}_{g}\times\mathbf{b}\right)^{2} & = & J\cdot\frac{\textrm{c}}{\omega}\left(\sigma_{I}P\frac{R\dot{\phi}\sin\alpha}{\Vert\nabla\rho\Vert\cos\alpha}-\sigma_{B}T\frac{R\dot{\rho}}{\Vert\nabla\rho\Vert}\right)\\
-\left(\mathbf{v}_{g}\times\mathbf{b}\right)^{3} & = & J\cdot\frac{\textrm{c}}{\omega}\left(\sigma_{I}P\frac{r\dot{\rho}}{\Vert\nabla\rho\Vert\cos\alpha}-\sigma_{I}P\frac{r\dot{\theta}\sin\alpha}{\Vert\nabla\rho\Vert\cos\alpha}\right)\end{eqnarray}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Using this components in the expression for 
-\begin_inset Formula $v_{g\perp}^{2}$
-\end_inset
-
-, we obtain:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-v_{g\perp}^{2}=\frac{\textrm{c }^{2}}{\omega^{2}}\left[\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)\dot{\rho}^{2}+\left(\sigma_{B}^{2}T^{2}+\sigma_{I}^{2}P^{2}\sin^{2}\alpha\right)\dot{\theta}^{2}+\sigma_{I}^{2}P^{2}\dot{\phi}^{2}-\right.\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-\left.-2\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)\dot{\rho}\dot{\theta}\sin\alpha-\frac{\sigma_{B}T\sigma_{I}P}{\cos\alpha}\left(1+\cos^{2}\alpha-\sin^{2}\alpha\right)\dot{\theta}\dot{\phi}\right]=\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-=\frac{\textrm{c}^{2}}{\omega^{2}}\left[\dot{\rho}^{2}+\left(1-\sigma_{I}^{2}P^{2}\cos^{2}\alpha\right)\dot{\theta}^{2}+\sigma_{I}^{2}P^{2}\dot{\phi}^{2}-2\dot{\rho}\dot{\theta}\sin\alpha-2\sigma_{I}P\sigma_{B}T\dot{\theta}\dot{\phi}\cos\alpha\right]\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-So we have obtained the same expression with two alternative procediments.
 \end_layout
 
 \end_body
