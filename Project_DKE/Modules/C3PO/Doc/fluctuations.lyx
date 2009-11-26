@@ -1933,7 +1933,24 @@ v_{G\Vert}=\dfrac{\mathbf{v}_{G}\cdot\mathbf{B}}{B}=v_{G}^{i}\dfrac{B_{i}}{B}\la
 
 \end_inset
 
-so we can write:
+So for the mode 
+\begin_inset Formula $\sigma:$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+v_{G\Vert}^{\sigma}=\sigma_{I}P\frac{\tan\alpha}{\Vert\nabla\rho\Vert}\dot{\rho}_{\sigma}+\sigma_{I}P\frac{r}{\cos\alpha}\dot{\theta}_{\sigma}+\sigma_{B}TR\dot{\phi}_{\sigma}\label{eq:vgroupparSigma}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can also write:
 \begin_inset Formula \begin{equation}
 v_{G\Vert}=-\left[\dfrac{\partial\mathcal{D}}{\partial\omega}\right]^{-1}\left(\dfrac{\partial\mathcal{D}}{\partial k_{\rho}}\sigma_{I}P\dfrac{\tan\alpha}{\left\Vert \mathbf{\nabla}\rho\right\Vert }+\dfrac{\partial\mathcal{D}}{\partial m}\sigma_{I}P\dfrac{r}{\cos\alpha}+\dfrac{\partial\mathcal{D}}{\partial n}\sigma_{B}RT\right)\label{eq:vgrouppar}\end{equation}
 

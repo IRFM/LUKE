@@ -931,7 +931,7 @@ M_{xz} & = & \frac{\omega}{2}\frac{\partial D_{xz}}{\partial\omega}=\frac{\omega
 M_{yx} & = & \frac{\omega}{2}\frac{\partial D_{yx}}{\partial\omega}=-\frac{\omega}{2}\frac{\partial X_{xy}}{\partial\omega}\\
 M_{yy} & = & \frac{\omega}{2}\frac{\partial D_{yy}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{yy}}{\partial\omega}+N^{2}\\
 M_{yz} & = & \frac{\omega}{2}\frac{\partial D_{yz}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{yz}}{\partial\omega}\\
-M_{zx} & = & \frac{\omega}{2}\frac{\partial D_{zx}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{zx}}{\partial\omega}-N_{\perp}N_{\parallel}\\
+M_{zx} & = & \frac{\omega}{2}\frac{\partial D_{zx}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{xz}}{\partial\omega}-N_{\perp}N_{\parallel}\\
 M_{zy} & = & \frac{\omega}{2}\frac{\partial D_{zy}}{\partial\omega}=-\frac{\omega}{2}\frac{\partial X_{yz}}{\partial\omega}\\
 M_{zz} & = & \frac{\omega}{2}\frac{\partial D_{zz}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{zz}}{\partial\omega}+N_{\perp}^{2}\end{eqnarray*}
 
@@ -973,8 +973,9 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-\frac{\partial X_{xx}}{\partial\omega}=\frac{\partial X_{xx}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xx}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{xx}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{xx}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial X_{xx}}{\partial\omega} & = & \frac{\partial X_{xx}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xx}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{xx}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}}{\partial\omega}+\frac{\partial X_{xx}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
+ & = & -\left(\frac{\partial X_{xx}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{xx}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{xx}}{\partial N_{\Vert}}\frac{N_{\Vert}}{\omega}+\frac{\partial X_{xx}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
 
 \end_inset
 
@@ -982,8 +983,9 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-\frac{\partial X_{xy}}{\partial\omega}=\frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial X_{xy}}{\partial\omega} & = & \frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{xy}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}}{\partial\omega}+\frac{\partial X_{xy}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
+ & = & -\left(\frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}+\frac{\partial X_{xy}}{\partial N_{\Vert}}\frac{N_{\Vert}}{\omega}+\frac{\partial X_{xy}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
 
 \end_inset
 
@@ -991,8 +993,9 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-\frac{\partial X_{xz}}{\partial\omega}=\frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial X_{xz}}{\partial\omega} & = & \frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{xz}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}}{\partial\omega}+\frac{\partial X_{xz}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
+ & = & -\left(\frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}+\frac{\partial X_{xz}}{\partial N_{\Vert}}\frac{N_{\Vert}}{\omega}+\frac{\partial X_{xz}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
 
 \end_inset
 
@@ -1000,8 +1003,9 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-\frac{\partial X_{yy}}{\partial\omega}=\frac{\partial X_{yy}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{yy}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{yy}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{yy}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial X_{yy}}{\partial\omega} & = & \frac{\partial X_{yy}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{yy}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{yy}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}}{\partial\omega}+\frac{\partial X_{yy}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
+ & = & -\left(\frac{\partial X_{yy}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{yy}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}+\frac{\partial X_{yy}}{\partial N_{\Vert}}\frac{N_{\Vert}}{\omega}+\frac{\partial X_{yy}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
 
 \end_inset
 
@@ -1009,8 +1013,9 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-\frac{\partial X_{yz}}{\partial\omega}=\frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial X_{yz}}{\partial\omega} & = & \frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{yz}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}}{\partial\omega}+\frac{\partial X_{yz}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
+ & = & -\left(\frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}+\frac{\partial X_{yz}}{\partial N_{\parallel}}\frac{N_{\parallel}}{\omega}+\frac{\partial X_{yz}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
 
 \end_inset
 
@@ -1018,8 +1023,34 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-\frac{\partial X_{zz}}{\partial\omega}=\frac{\partial X_{zz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{zz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{zz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{zz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial X_{zz}}{\partial\omega} & = & \frac{\partial X_{zz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{zz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{zz}}{\partial N_{\parallel}}\frac{\partial N_{\parallel}}{\partial\omega}+\frac{\partial X_{zz}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
+ & = & -\left(\frac{\partial X_{zz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{zz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}+\frac{\partial X_{zz}}{\partial N_{\Vert}}\frac{N_{\Vert}}{\omega}+\frac{\partial X_{zz}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the elements of the matrix 
+\begin_inset Formula $\mathbb{M}$
+\end_inset
+
+ become:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+M_{xx} & = & -\frac{1}{2}\left(\frac{\partial X_{xx}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{xx}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{xx}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{xx}}{\partial N_{\perp}}N_{\perp}\right)+N_{\parallel}^{2}\\
+M_{xy} & = & -\frac{1}{2}\left(\frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{xy}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{xy}}{\partial N_{\perp}}N_{\perp}\right)\\
+M_{xz} & = & -\frac{1}{2}\left(\frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{xz}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}\right)-N_{\perp}N_{\parallel}\\
+M_{yx} & = & \frac{1}{2}\left(\frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{xy}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{xy}}{\partial N_{\perp}}N_{\perp}\right)\\
+M_{yy} & = & -\frac{1}{2}\left(\frac{\partial X_{yy}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{yy}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{yy}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{yy}}{\partial N_{\perp}}N_{\perp}\right)+N^{2}\\
+M_{yz} & = & -\frac{1}{2}\left(\frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{yz}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{yz}}{\partial N_{\perp}}N_{\perp}\right)\\
+M_{zx} & = & -\frac{1}{2}\left(\frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{xz}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}\right)-N_{\perp}N_{\Vert}\\
+M_{zy} & = & \frac{1}{2}\left(\frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{yz}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{yz}}{\partial N_{\perp}}N_{\perp}\right)\\
+M_{zz} & = & -\frac{1}{2}\left(\frac{\partial X_{zz}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{zz}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{zz}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{zz}}{\partial N_{\perp}}N_{\perp}\right)+N_{\perp}^{2}\end{eqnarray*}
 
 \end_inset
 
@@ -1074,7 +1105,126 @@ Since
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-K\left(k_{\perp}^{\sigma},\check{k}_{\perp}^{\sigma},\beta\right)=-2\pi\check{k}_{\perp}^{\sigma}\left.\frac{\partial\mathcal{D}/\partial\omega}{\partial\mathcal{D}/\partial k_{\perp}}\right|_{k_{\perp}=k_{\perp}^{\sigma}}\cdot\left|V^{n}\left(\mathbf{k}^{\sigma},\check{\mathbf{k}}^{\sigma},\beta\right)\right|\end{equation}
+K\left(k_{\perp}^{\sigma},\check{k}_{\perp}^{\sigma},\beta\right)=-2\pi\check{k}_{\perp}^{\sigma}\left.\frac{\partial\mathcal{D}/\partial\omega}{\partial\mathcal{D}/\partial k_{\perp}}\right|_{k_{\perp}=k_{\perp}^{\sigma}}\cdot\left|V^{n}\left(\mathbf{k}^{\sigma},\check{\mathbf{k}}^{\sigma},\beta\right)\right|^{2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In function of the refactive index:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+K\left(N_{\perp}^{\sigma},\check{N}_{\perp}^{\sigma},\beta\right)=-\frac{2\pi\omega^{2}}{\textrm{c}^{2}}\check{N}_{\perp}^{\sigma}\left.\frac{\partial\mathcal{D}/\partial\omega}{\partial\mathcal{D}/\partial N_{\perp}}\right|_{N_{\perp}=N_{\perp}^{\sigma}}\cdot\left|V^{n}\left(\mathbf{N}^{\sigma},\check{\mathbf{N}}^{\sigma},\beta\right)\right|^{2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Appendix C
+\end_layout
+
+\begin_layout Standard
+In order to calculate the scattering probability kernel using the expression
+ derived in the precedent paragraph, particularly convenient from a numerical
+ point of vieuw, and with the purpose of doing a benchmarking between different
+ expression of the group velocity, we now calculate the derivative of the
+ dispersion relation respect to 
+\begin_inset Formula $N_{\perp}.$
+\end_inset
+
+Starting from the factorised expression of the dispersion relation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathcal{D}=\underset{k=1}{\overset{k=43}{\sum}}\mathcal{D}^{\left(k\right)}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathcal{D}}{\partial N_{\perp}}=\overset{k=43}{\underset{k=1}{\sum}}\frac{\partial\mathcal{D}^{\left(k\right)}}{\partial N_{\perp}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial\mathcal{D}^{\left(1\right)}}{\partial N_{\perp}} & = & 4N_{\perp}^{3}\\
+\frac{\partial\mathcal{D}^{\left(2\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}N_{\perp}^{4}+4N_{\perp}^{3}X_{xx}\\
+\frac{\partial\mathcal{D}^{\left(3\right)}}{\partial N_{\perp}} & = & 2N_{\Vert}\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}^{3}+6N_{\Vert}X_{xz}N_{\perp}^{2}\\
+\frac{\partial\mathcal{D}^{\left(4\right)}}{\partial N_{\perp}} & = & N_{\Vert}^{2}\frac{\partial X_{xx}}{\partial N_{\perp}}N_{\perp}^{2}+2N_{\parallel}^{2}X_{xx}N_{\perp}\\
+\frac{\partial\mathcal{D}^{\left(5\right)}}{\partial N_{\perp}} & = & N_{\Vert}^{2}\frac{\partial X_{zz}}{\partial N_{\perp}}N_{\perp}^{2}+2N_{\Vert}^{2}X_{zz}N_{\perp}\\
+\frac{\partial\mathcal{D}^{\left(6\right)}}{\partial N_{\perp}} & = & 4N_{\Vert}^{2}N_{\perp}\\
+\frac{\partial\mathcal{D}^{\left(7\right)}}{\partial N_{\perp}} & = & -2\frac{\partial X_{xx}}{\partial N_{\perp}}N_{\perp}^{2}-4X_{xx}N_{\perp}\\
+\frac{\partial\mathcal{D}^{\left(8\right)}}{\partial N_{\perp}} & = & -\frac{\partial X_{yy}}{\partial N_{\perp}}N_{\perp}^{2}-2X_{yy}N_{\perp}\\
+\frac{\partial\mathcal{D}^{\left(9\right)}}{\partial N_{\perp}} & = & -\frac{\partial X_{zz}}{\partial N_{\perp}}N_{\perp}^{2}-2X_{zz}N_{\perp}\\
+\frac{\partial\mathcal{D}^{\left(10\right)}}{\partial N_{\perp}} & = & -\frac{\partial X_{xx}}{\partial N_{\perp}}X_{zz}N_{\perp}^{2}-X_{xx}\frac{\partial X_{zz}}{\partial N_{\perp}}N_{\perp}^{2}-2X_{xx}X_{zz}N_{\perp}\\
+\frac{\partial\mathcal{D}^{\left(11\right)}}{\partial N_{\perp}} & = & 2X_{xz}\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}^{2}+2X_{xz}^{2}N_{\perp}\\
+\frac{\partial\mathcal{D}^{\left(12\right)}}{\partial N_{\perp}} & = & -\frac{\partial X_{xx}}{\partial N_{\perp}}X_{yy}N_{\perp}^{2}-X_{xx}\frac{\partial X_{yy}}{\partial N_{\perp}}N_{\perp}^{2}-2X_{xx}X_{yy}N_{\perp}\\
+\frac{\partial\mathcal{D}^{\left(13\right)}}{\partial N_{\perp}} & = & -2X_{xy}\frac{\partial X_{xy}}{\partial N_{\perp}}N_{\perp}^{2}-2X_{xy}^{2}N_{\perp}\\
+\frac{\partial\mathcal{D}^{\left(14\right)}}{\partial N_{\perp}} & = & -4N_{\perp}\\
+\frac{\partial\mathcal{D}^{\left(15\right)}}{\partial N_{\perp}} & = & -2N_{\Vert}\frac{\partial X_{yy}}{\partial N_{\perp}}X_{xz}N_{\perp}-2N_{\Vert}X_{yy}\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}-2N_{\Vert}X_{yy}X_{xz}\\
+\frac{\partial\mathcal{D}^{\left(16\right)}}{\partial N_{\perp}} & = & 2N_{\Vert}\frac{\partial X_{xy}}{\partial N_{\perp}}X_{yz}N_{\perp}+2N_{\Vert}X_{xy}\frac{\partial X_{yz}}{\partial N_{\perp}}N_{\perp}+2N_{\Vert}X_{xy}X_{yz}\\
+\frac{\partial\mathcal{D}^{\left(17\right)}}{\partial N_{\perp}} & = & -2N_{\Vert}\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}-2N_{\Vert}X_{xz}\\
+\frac{\partial\mathcal{D}^{\left(18\right)}}{\partial N_{\perp}} & = & 2N_{\parallel}^{3}\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}+2N_{\Vert}^{3}X_{xz}\\
+\frac{\partial\mathcal{D}^{\left(19\right)}}{\partial N_{\perp}} & = & 0\\
+\frac{\partial\mathcal{D}^{\left(20\right)}}{\partial N_{\perp}} & = & N_{\Vert}^{4}\frac{\partial X_{zz}}{\partial N_{\perp}}\end{eqnarray*}
+
+\end_inset
+
+
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial\mathcal{D}^{\left(21\right)}}{\partial N_{\perp}} & = & 0\\
+\frac{\partial\mathcal{D}^{\left(22\right)}}{\partial N_{\perp}} & = & 2N_{\Vert}^{2}X_{xz}\frac{\partial X_{xz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(23\right)}}{\partial N_{\perp}} & = & -N_{\Vert}^{2}\frac{\partial X_{yy}}{\partial N_{\perp}}X_{zz}-N_{\Vert}^{2}X_{yy}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(24\right)}}{\partial N_{\perp}} & = & -N_{\Vert}^{2}\frac{\partial X_{xx}}{\partial N_{\perp}}X_{zz}-N_{\Vert}^{2}X_{xx}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(25\right)}}{\partial N_{\perp}} & = & -2N_{\Vert}^{2}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(26\right)}}{\partial N_{\perp}} & = & -N_{\Vert}^{2}\frac{\partial X_{yy}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(27\right)}}{\partial N_{\perp}} & = & -2N_{\Vert}^{2}X_{yz}\frac{\partial X_{yz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(28\right)}}{\partial N_{\perp}} & = & -N_{\Vert}^{2}\frac{\partial X_{xx}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(29\right)}}{\partial N_{\perp}} & = & 0\\
+\frac{\partial\mathcal{D}^{\left(30\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{yy}}{\partial N_{\perp}}X_{zz}+X_{yy}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(31\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}X_{zz}+X_{xx}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(32\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}X_{yy}+X_{xx}\frac{\partial X_{yy}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(33\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}X_{yz}^{2}+2X_{xx}X_{yz}\frac{\partial X_{yz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(34\right)}}{\partial N_{\perp}} & = & 2X_{yz}\frac{\partial X_{yz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(35\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(36\right)}}{\partial N_{\perp}} & = & 2X_{xy}\frac{\partial X_{xy}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(37\right)}}{\partial N_{\perp}} & = & 2X_{xy}\frac{\partial X_{xy}}{\partial N_{\perp}}X_{zz}+X_{xy}^{2}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(38\right)}}{\partial N_{\perp}} & = & -2X_{xz}\frac{\partial X_{xz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(39\right)}}{\partial N_{\perp}} & = & -\frac{\partial X_{yy}}{\partial N_{\perp}}X_{xz}^{2}-2X_{yy}X_{xz}\frac{\partial X_{xz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(40\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{yy}}{\partial N_{\perp}}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial\mathcal{D}^{\left(41\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{zz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(42\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}X_{yy}X_{zz}+X_{xx}\frac{\partial X_{yy}}{\partial N_{\perp}}X_{zz}+X_{xx}X_{yy}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
+\frac{\partial\mathcal{D}^{\left(43\right)}}{\partial N_{\perp}} & = & 2\frac{\partial X_{xy}}{\partial N_{\perp}}X_{yz}X_{xz}+2X_{xy}\frac{\partial X_{yz}}{\partial N_{\perp}}X_{xz}+2X_{xy}X_{yz}\frac{\partial X_{xz}}{\partial N_{\perp}}\end{eqnarray*}
 
 \end_inset
 
