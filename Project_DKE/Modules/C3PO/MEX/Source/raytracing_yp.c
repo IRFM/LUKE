@@ -252,6 +252,7 @@ void ImShka();
 void Fdnest();
 void ImFdnest();
 void kperproots();
+double complex matdot();
 double wavescat();
 void fluctuation();
 static double ran2();
@@ -3074,22 +3075,32 @@ double x,d;
 }
 
 
-matdot(epolx_left,epoly_left,epolz_left,X,epolx_right,epoly_right,epolz_right)
-double complex epolx_left,epoly_left,epolz_left,epolx_right,epoly_right,epolz_right;
+double complex matdot(epolx_left,epoly_left,epolz_left,X,epolx_right,epoly_right,epolz_right)
+double complex epolx_left,epoly_left,epolz_left;
 susceptibilitytensor_format X;
+double complex epolx_right,epoly_right,epolz_right;
+
 {
-   double res=0.0; 
+   double complex res=0.0; 
    
-    res = res + creal(conj(epolx_left)*X.Xxx[0]*epolx_right)
-              + creal(conj(epolx_left)*X.Xxy[0]*epoly_right)
-              + creal(conj(epolx_left)*X.Xxz[0]*epolz_right)
-              - creal(conj(epoly_left)*X.Xxy[0]*epolx_right)
-              + creal(conj(epoly_left)*X.Xyy[0]*epoly_right)
-              + creal(conj(epoly_left)*X.Xyz[0]*epolz_right)
-              + creal(conj(epolz_left)*X.Xxz[0]*epolx_right)
-              - creal(conj(epolz_left)*X.Xyz[0]*epoly_right)
-              + creal(conj(epolz_left)*X.Xzz[0]*epolz_right);
-                
+   
+   
+    res = res + conj(epolx_left)*X.Xxx[0]*epolx_right
+              + conj(epolx_left)*X.Xxy[0]*epoly_right
+              + conj(epolx_left)*X.Xxz[0]*epolz_right
+              - conj(epoly_left)*X.Xxy[0]*epolx_right
+              + conj(epoly_left)*X.Xyy[0]*epoly_right
+              + conj(epoly_left)*X.Xyz[0]*epolz_right
+              + conj(epolz_left)*X.Xxz[0]*epolx_right
+              - conj(epolz_left)*X.Xyz[0]*epoly_right
+              + conj(epolz_left)*X.Xzz[0]*epolz_right;
+    
+   mexPrintf("***YP***/Re(conj(epolx_left))),Im(conj(epolx_left))):%g,%g\n",creal(conj(epolx_left)),cimag(conj(epolx_left)));
+   mexPrintf("***YP***/Re(conj(epoly_right))),Im(conj(epoly_right))),Re(epoly_right)),Im(epoly_right)):%g,%g\n",creal(conj(epoly_right)),cimag(conj(epoly_right)),creal(epoly_right),cimag(epoly_right));
+   mexPrintf("***YP***/Re(X.Xxx[0]),Im(X.Xxx[0]),Re(X.Xxy[0]),Im(X.Xxy[0]),:%g,%g,%g,%g\n",creal(X.Xxx[0]),cimag(X.Xxx[0]),creal(X.Xxy[0]),cimag(X.Xxy[0]));
+   mexPrintf("***YP***/creal(conj(epolx_left)*X.Xxx[0]*epolx_right):%g\n",creal(conj(epolx_left)*X.Xxx[0]*epolx_right));
+   mexPrintf("***YP***/creal(conj(epolx_left)*X.Xxy[0]*epoly_right):%g\n",creal(conj(epolx_left)*X.Xxy[0]*epoly_right));
+   mexPrintf("***YP***/Re(res),Im(res):%g,%g\n",creal(res),cimag(res));
    return(res);
 }
 
@@ -3124,8 +3135,10 @@ double flag;
     double complex N2,dN2dY[MC];
     double wcn[equilparam.ns[0]+1],wpn2[equilparam.ns[0]+1],betath[equilparam.ns[0]+1];
     double kpar,kperp,k2,k21,k22,k23,k24;
-    double cnorm,prob,lnorm,Kn,Sn,Sn0,Kb,Sb,Sb0,vgperproot,V,dummy,v1,v2,v3;
+    double cnorm,prob,lnorm,Kn,Sn,Sn0,Kb,Sb,Sb0,vg2,vgpar,vgperproot,dummy;
+    double complex V2,v1,v2,v3;
     double complex epolx,epoly,epolz,epolp,epolm,epolxroot,epolyroot,epolzroot,epolproot,epolmroot;
+    susceptibilitytensor_format M;
     
     cnorm = CLUM/equilparam.ap[0]/Y[6];
     
@@ -3136,6 +3149,9 @@ double flag;
         interpequil_test(raymagnetic,rayprofiles,equilparam,Y,flag);
     }
     
+    /* Refractive index calculation */
+    /*rayindex(&Nperp,dNperpdY,&N2,dN2dY,1,Y,raymagnetic,equilparam,&Npar,dNpardY);*/
+
     
     kpar = Y[4]*raymagnetic.calpha[0]*raymagnetic.Bsn[0]/raymagnetic.rn[0] + Y[5]*raymagnetic.BPHIn[0]/raymagnetic.Rn[0];
     k21 = raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*Y[3]*Y[3];
@@ -3149,19 +3165,51 @@ double flag;
     N2 = cnorm*cnorm*k2;
     Nperp = cnorm*kperp;
     
+    
     polarization(X,Npar,Nperp,&epolx,&epoly,&epolz,&epolp,&epolm);
     mexPrintf("***YP***/Re(epolp),Im(epolp),Re(epolm),Im(epolm):%g,%g,%g,%g\n",creal(epolp),cimag(epolp),creal(epolm),cimag(epolm));
     mexPrintf("***YP***/Re(epolx),Im(epolx),Re(epoly),Im(epoly),Re(epolz),Im(epolz):%g,%g,%g,%g,%g,%g\n",creal(epolx),cimag(epolx),creal(epoly),cimag(epoly),creal(epolz),cimag(epolz));
     polarization(X,Npar,Nperproot,&epolxroot,&epolyroot,&epolzroot,&epolproot,&epolmroot);
+    mexPrintf("***YP***/Re(epolproot),Im(epolproot),Re(epolmroot),Im(epolmroot):%g,%g,%g,%g\n",creal(epolp),cimag(epolp),creal(epolmroot),cimag(epolmroot));
+    mexPrintf("***YP***/Re(epolxroot),Im(epolxroot),Re(epolyroot),Im(epolyroot),Re(epolzroot),Im(epolzroot):%g,%g,%g,%g,%g,%g\n",creal(epolxroot),cimag(epolxroot),creal(epolyroot),cimag(epolyroot),creal(epolzroot),cimag(epolzroot));
+    mexPrintf("***YP***/Npar,Re(Nperp),Re(Nperproot),Im(Nperp),Im(Nperproot):%g,%g,%g,%g,%g\n",Npar,creal(Nperp),creal(Nperproot),cimag(Nperp),cimag(Nperproot));
+    /* Calculation of the M tensor */
+
+    M.Xxx = mxCalloc(1,sizeof(double complex));
+    M.Xxy = mxCalloc(1,sizeof(double complex));
+    M.Xxz = mxCalloc(1,sizeof(double complex));
+    M.Xyy = mxCalloc(1,sizeof(double complex));
+    M.Xyz = mxCalloc(1,sizeof(double complex));
+    M.Xzz = mxCalloc(1,sizeof(double complex));
     
+    M.Xxx[0] = X.dXxxdY[MC-1]/2.0 + Npar*Npar;
+    M.Xxy[0] = X.dXxydY[MC-1]/2.0;
+    M.Xxz[0] = X.dXxzdY[MC-1]/2.0 - Npar*Nperp;
+    M.Xyy[0] = X.dXyydY[MC-1]/2.0 + N2;
+    M.Xyz[0] = X.dXyzdY[MC-1]/2.0;
+    M.Xzz[0] = X.dXzzdY[MC-1]/2.0 + Nperp*Nperp;
 
     v1 = matdot(epolx,epoly,epolz,X,epolxroot,epolyroot,epolzroot);
-    v2 = 1.0;/*matdot(epolx,epoly,epolz,M,epolx,epoly,epolz);*/
-    v3 = 1.0;/*matdot(epolxroot,epolyroot,epolzroot,M,epolxroot,epolyroot,epolzroot);*/
+    v2 = matdot(epolx,epoly,epolz,M,epolx,epoly,epolz);
+    v3 = matdot(epolxroot,epolyroot,epolzroot,M,epolxroot,epolyroot,epolzroot);
+    V2 = v1*v1/v2*v3;
+    mexPrintf("***YP***/Re(v1),Im(v1):%g,%g\n",creal(v1),cimag(v1));
+    mexPrintf("***YP***/Re(v2),Im(v2):%g,%g\n",creal(v2),cimag(v2));
+    mexPrintf("***YP***/Re(v3),Im(v3):%g,%g\n",creal(v3),cimag(v3));
+    mexPrintf("***YP***/Re(V2),Im(V2):%g,%g\n",creal(V2),cimag(V2));
     
-    vgperproot = 
+    vg2 = Ydot[0]*Ydot[0]/raymagnetic.calpha[0]/raymagnetic.calpha[0]/raymagnetic.gradrhon[0]/raymagnetic.gradrhon[0]
+        + 2.0*Ydot[0]*Ydot[1]*raymagnetic.rn[0]*raymagnetic.salpha[0]/raymagnetic.calpha[0]/raymagnetic.calpha[0]/raymagnetic.gradrhon[0]
+        + raymagnetic.rn[0]*raymagnetic.rn[0]*Ydot[1]*Ydot[1]/raymagnetic.calpha[0]/raymagnetic.calpha[0]
+        + Ydot[2]*Ydot[2]*raymagnetic.Rn[0]*raymagnetic.Rn[0];
     
-    V = -v1/sqrt(v2*v3);
+    vgpar = Ydot[0]*raymagnetic.Bsn[0]*raymagnetic.salpha[0]/raymagnetic.calpha[0]/raymagnetic.gradrhon[0]
+          + Ydot[1]*raymagnetic.Bsn[0]*raymagnetic.rn[0]/raymagnetic.calpha[0]
+          + Ydot[2]*raymagnetic.BPHIn[0]*raymagnetic.Rn[0];
+
+    
+    vgperproot = sqrt(vg2 - vgpar*vgpar); 
+    mexPrintf("***YP***/vgperproot:%g\n",vgperproot);
     
     lnorm = sqrt(Nperp*Nperp + Nperproot*Nperproot - 2*Nperp*Nperproot*cos(beta));/*perp wave vector of the fluctuation (multiplied by c/omega) */
     
@@ -3176,11 +3224,21 @@ double flag;
         Sb = Sb0*exp(-lnorm*lnorm/fluctspectrum.mffcl[0]/fluctspectrum.mffcl[0]/cnorm/cnorm)/PI/fluctspectrum.mffcl[0]/fluctspectrum.mffcl[0]/cnorm/cnorm;
     }
     
-    Kn = 2*PI*Nperproot*V*V/vgperproot;
+    Kn = 2*PI*Nperproot*V2/vgperproot;
    
     prob = Kn*Sn + 0.0*Kb*Sb;
+    
+    mexPrintf("***YP***/prob:%g\n",prob);
 
-    return(prob=1/2/PI);
+    
+    mxFree(M.Xxx);
+    mxFree(M.Xxy);
+    mxFree(M.Xxz);
+    mxFree(M.Xyy);
+    mxFree(M.Xyz);
+    mxFree(M.Xzz);
+
+    return(prob);
 }
 
 
