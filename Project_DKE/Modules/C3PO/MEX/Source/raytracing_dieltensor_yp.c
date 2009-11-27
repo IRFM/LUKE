@@ -106,7 +106,6 @@ susceptibilitytensor_format X;
     }
 } 
 
-
 void coldtensor(X,Nperp,dNperpdY,ns,ncyclharm,raymagnetic,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY)
 susceptibilitytensor_format X;
 double complex Nperp,dNperpdY[];
@@ -181,6 +180,8 @@ double Npar,dNpardY[];
      
     buildXstruc(X,dNperpdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,ns,dNpardY,dwcndY,dwpn2dY,dbetathdY);
 } 
+
+
 
 void calcY1(Nperp,dNperpdY,ns,ncyclharm,Npar,dNpardY,wcn,dwcndY,wpn2,dwpn2dY,betath,dbetathdY)
 double complex Nperp,dNperpdY[MC];
