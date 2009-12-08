@@ -339,6 +339,8 @@ else
     bD0_rf = 4*pi^2.*bFhat.*bFtilde./(me*lnc_e_ref*wpe_ref^2.*bomega_rf.*bphinorm_rf*2*pi.*brb_rf);
 end
 %
+bD0_rf = bD0_rf./(1 + bxb_rf/Rp);
+%
 % Determination of (np*nmhu*nb*nr*n_rf)-space points to be accounted for
 %
 %
