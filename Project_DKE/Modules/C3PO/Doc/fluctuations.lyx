@@ -1,4 +1,4 @@
-#LyX 1.6.4 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -69,8 +69,8 @@ Low frequency fluctuations of the electron density or the magnetic field
  wave by solving a wave kinetic equation in the weak turbulence approximation
  
 \begin_inset CommandInset citation
-LatexCommand citep
-key "bon82,vah92"
+LatexCommand cite
+key "ott78,bon82,vah92"
 
 \end_inset
 
@@ -82,15 +82,29 @@ key "bon82,vah92"
 
  can be modified both in amplitude and direction with the constraint to
  remain solution of the local dispersion relation.
+ This physical mechanism is a good candidate for explaining a possible strong
+ upshift of the power spectrum as the LH wave propagates in the plasma,
+ even if the toroidal mode coupling for bridging the spectral gap is very
+ weak.
  
 \end_layout
 
 \begin_layout Standard
-This physical mechanism is a good candidate for explaining a possible strong
- upshift of the power spectrum as the LH wave propagates in the plasma,
- even if the toroidal mode coupling for bridging the spectral gap is very
- weak.
- Though primarily dedicated to the LH wave, the concept of wave scattering
+More recently, the possibility that edge density fluctuations could also
+ modify significantly the localization of the current driven by the Electron
+ Cyclotron (EC) wave has been investigated, an issue of great importance
+ to the ITER design for the control of neoclassical tearing modes 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "tsi09"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Though primarily dedicated to the LH wave, the concept of wave scattering
  by low frequency density or magnetic field fluctuations can be easily extended
  to other types of rf waves provided 
 \begin_inset Formula $\widetilde{k}_{\Vert}\ll k_{\Vert}$
@@ -263,9 +277,9 @@ key "pey08"
  The wave kinetic equation corresponding to the wave-wave interaction is
  then derived from first principles in the second section for any kind of
  rf waves and plasma model.
- Finally, in the third section, the wave kinetic equation is solved using
- a Monte-Carlo method and the procedure for the numerical implementation
- in the code is explicited.
+ Finally, in the third section, the wave kinetic equation is solved by a
+ Monte-Carlo method and the procedure for the numerical implementation in
+ the code is explicited.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1493,50 +1507,14 @@ Conservation of
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-\check{k}_{\parallel}=\sigma_{I}P\frac{\check{m}}{r}\cos\alpha+\sigma_{B}T\frac{\check{n}}{R}=\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-=\sigma_{I}P\cos\alpha\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]+\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-+\sigma_{B}T\left[\sigma_{B}Tk_{\parallel}+\chi\sin\beta\sigma_{I}P\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\chi\cos\beta\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]=\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-=k_{\Vert}\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)+\sigma_{I}P\sigma_{B}T\chi\sin\beta\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert+k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
--\chi\cos\beta\left[k_{\parallel}\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)-\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma_{B}T\frac{n}{R}\right)\right]=\]
-
-\end_inset
-
-
-\begin_inset Formula \[
-=k_{\parallel}-\chi\cos\beta\left(k_{\parallel}-k_{\parallel}\right)=k_{\parallel}\]
+\begin_inset Formula \begin{align*}
+\check{k}_{\parallel} & =\sigma_{I}P\frac{\check{m}}{r}\cos\alpha+\sigma_{B}T\frac{\check{n}}{R}\\
+ & =\sigma_{I}P\cos\alpha\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]\\
+ & +\sigma_{B}T\left[\sigma_{B}Tk_{\parallel}+\chi\sin\beta\sigma_{I}P\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\chi\cos\beta\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]\\
+ & =k_{\Vert}\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)+\sigma_{I}P\sigma_{B}T\chi\sin\beta\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert+k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)\\
+ & -\chi\cos\beta\left[k_{\parallel}\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)-\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma_{B}T\frac{n}{R}\right)\right]\\
+ & =k_{\parallel}-\chi\cos\beta\left(k_{\parallel}-k_{\parallel}\right)\\
+ & =k_{\parallel}\end{align*}
 
 \end_inset
 
@@ -1552,92 +1530,19 @@ Direction of
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-\mathbf{k}_{\perp}\cdot\check{\mathbf{k}}_{\perp}=k_{\rho}\check{k}_{\rho}\Vert\nabla\rho\Vert^{2}+\frac{m\check{m}}{r^{2}}+\frac{n\check{n}}{R^{2}}-\frac{\Vert\nabla\rho\Vert\sin\alpha}{r}\left(m\check{k}_{\rho}+\check{m}k_{\rho}\right)-k_{\parallel}^{2}=\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-=k_{\rho}\Vert\nabla\rho\Vert\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]\right\} -\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
--k_{\rho}\Vert\nabla\rho\Vert\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)+\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-+\frac{m}{r}\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]+\]
-
-\end_inset
-
-
-\begin_inset Formula \[
-+\frac{n}{R}\left[\sigma_{B}Tk_{\parallel}+\chi\sin\beta\sigma_{I}P\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\chi\cos\beta\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
--\frac{m}{r}\sin\alpha\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]\right\} +\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-+\frac{m}{r}\sin\alpha\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
--k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]-k_{\parallel}^{2}=\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-=\left[\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma_{B}T\frac{n}{R}\right)k_{\parallel}-k_{\parallel}^{2}\right]+\chi\cos\beta\left[k_{\rho}^{2}\Vert\nabla\rho\Vert^{2}+\frac{m^{2}}{r^{2}}+\frac{n^{2}}{R^{2}}-2k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right]-\]
-
-\end_inset
-
-
-\begin_inset Formula \[
--\chi\cos\beta k_{\parallel}\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma T\frac{n}{R}\right)=\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-=\left(k_{\parallel}^{2}-k_{\parallel}^{2}\right)+\chi\cos\beta\left(k^{2}-k_{\parallel}^{2}\right)=k_{\perp}^{2}\chi\cos\beta\]
+\begin_inset Formula \begin{align*}
+\mathbf{k}_{\perp}\cdot\check{\mathbf{k}}_{\perp} & =k_{\rho}\check{k}_{\rho}\Vert\nabla\rho\Vert^{2}+\frac{m\check{m}}{r^{2}}+\frac{n\check{n}}{R^{2}}-\frac{\Vert\nabla\rho\Vert\sin\alpha}{r}\left(m\check{k}_{\rho}+\check{m}k_{\rho}\right)-k_{\parallel}^{2}\\
+ & =k_{\rho}\Vert\nabla\rho\Vert\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]\right\} \\
+ & -k_{\rho}\Vert\nabla\rho\Vert\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)\\
+ & +\frac{m}{r}\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]\\
+ & +\frac{n}{R}\left[\sigma_{B}Tk_{\parallel}+\chi\sin\beta\sigma_{I}P\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\chi\cos\beta\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]\\
+ & -\frac{m}{r}\sin\alpha\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]\right\} \\
+ & +\frac{m}{r}\sin\alpha\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)\\
+ & -k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]-k_{\parallel}^{2}\\
+ & =\left[\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma_{B}T\frac{n}{R}\right)k_{\parallel}-k_{\parallel}^{2}\right]+\chi\cos\beta\left[k_{\rho}^{2}\Vert\nabla\rho\Vert^{2}+\frac{m^{2}}{r^{2}}+\frac{n^{2}}{R^{2}}-2k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right]\\
+ & -\chi\cos\beta k_{\parallel}\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma T\frac{n}{R}\right)\\
+ & =\left(k_{\parallel}^{2}-k_{\parallel}^{2}\right)+\chi\cos\beta\left(k^{2}-k_{\parallel}^{2}\right)\\
+ & =k_{\perp}^{2}\chi\cos\beta\end{align*}
 
 \end_inset
 
@@ -1649,107 +1554,22 @@ Solution of the dispersion relation
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-\check{k}_{\perp}^{2}=\check{k}_{\rho}^{2}\Vert\nabla\rho\Vert^{2}-2\check{k}_{\rho}\Vert\nabla\rho\Vert\frac{\check{m}\sin\alpha}{r}+\frac{\check{m}^{2}}{r^{2}}+\frac{\check{n}^{2}}{R^{2}}-k_{\parallel}^{2}=\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-=\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]-\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)\right\} ^{2}-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
--2\sin\alpha\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{B}T}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]\cdot\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-\cdot\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]-\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)\right\} +\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-+\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}-\frac{m}{r}\right)\right]^{2}+\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-+\left[\sigma_{B}Tk_{\parallel}+\chi\sin\beta\sigma_{I}P\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\chi\cos\beta\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]^{2}-k_{\parallel}^{2}=\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-=\left[\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)k_{\parallel}^{2}-k_{\parallel}^{2}\right]+2\chi\sin\beta\sigma_{I}P\sigma_{B}Tk_{\parallel}\left(k_{\rho}\Vert\nabla\rho\Vert+\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\]
-
-\end_inset
-
-
-\begin_inset Formula \[
--2\chi\cos\beta\left[\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)k_{\parallel}^{2}-\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma_{B}T\frac{n}{R}\right)k_{\parallel}\right]-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
--2\chi^{2}\sin\beta\cos\beta\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)+\sigma_{I}P\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]+\]
-
-\end_inset
-
- 
-\begin_inset Formula \[
-+2\chi^{2}\sin\beta\cos\beta\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)+\sigma_{I}P\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]+\]
-
-\end_inset
-
-
-\begin_inset Formula \[
-+\chi^{2}\sin^{2}\beta\left[\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)^{2}+\left(\sigma_{B}T\frac{n}{R}\cos\alpha-\sigma_{I}P\frac{n}{R}\right)^{2}\right]+\]
-
-\end_inset
-
-
-\begin_inset Formula \[
-+\chi^{2}\cos^{2}\beta\left(k_{\rho}^{2}\Vert\nabla\rho\Vert^{2}-2\frac{m}{r}k_{\rho}\Vert\nabla\rho\Vert\sin\alpha+\frac{m^{2}}{r^{2}}+\frac{n^{2}}{R^{2}}-k_{\parallel}^{2}\right)=\]
-
-\end_inset
-
-
-\begin_inset Formula \[
-=\left(k_{\parallel}^{2}-k_{\parallel}^{2}\right)-2\chi\cos\beta\left(k_{\parallel}^{2}-k_{\parallel}^{2}\right)+\chi^{2}k_{\perp}^{2}\sin^{2}\beta+\chi^{2}\cos^{2}\beta\left(k^{2}-k_{\parallel}^{2}\right)=\]
-
-\end_inset
-
- 
-\begin_inset Formula \[
-=\chi^{2}k_{\perp}^{2}\left(\sin^{2}\beta+\cos^{2}\beta\right)=\chi^{2}k_{\perp}^{2}\]
+\begin_inset Formula \begin{align*}
+\check{k}_{\perp}^{2} & =\check{k}_{\rho}^{2}\Vert\nabla\rho\Vert^{2}-2\check{k}_{\rho}\Vert\nabla\rho\Vert\frac{\check{m}\sin\alpha}{r}+\frac{\check{m}^{2}}{r^{2}}+\frac{\check{n}^{2}}{R^{2}}-k_{\parallel}^{2}\\
+ & =\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]-\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)\right\} ^{2}\\
+ & -2\sin\alpha\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{B}T}{\cos\alpha}k_{\parallel}-\frac{m}{r}\right)\right]\\
+ & \cdot\left\{ \sigma_{I}P\tan\alpha k_{\parallel}+\chi\sin\beta\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)-\sigma_{I}P\frac{n}{R}\right]-\chi\cos\beta\left(\sigma_{I}P\tan\alpha k_{\parallel}-k_{\rho}\Vert\nabla\rho\Vert\right)\right\} \\
+ & +\left[\frac{\sigma_{I}P}{\cos\alpha}k_{\parallel}+\chi\sin\beta\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)-\chi\cos\beta\left(\frac{\sigma_{I}P}{\cos\alpha}-\frac{m}{r}\right)\right]^{2}\\
+ & +\left[\sigma_{B}Tk_{\parallel}+\chi\sin\beta\sigma_{I}P\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)-\chi\cos\beta\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]^{2}-k_{\parallel}^{2}\\
+ & =\left[\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)k_{\parallel}^{2}-k_{\parallel}^{2}\right]+2\chi\sin\beta\sigma_{I}P\sigma_{B}Tk_{\parallel}\left(k_{\rho}\Vert\nabla\rho\Vert+\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)\\
+ & -2\chi\cos\beta\left[\left(\sigma_{I}^{2}P^{2}+\sigma_{B}^{2}T^{2}\right)k_{\parallel}^{2}-\left(\sigma_{I}P\frac{m}{r}\cos\alpha+\sigma_{B}T\frac{n}{R}\right)k_{\parallel}\right]\\
+ & -2\chi^{2}\sin\beta\cos\beta\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)+\sigma_{I}P\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]\\
+ & +2\chi^{2}\sin\beta\cos\beta\left(\frac{m}{r}\sin\alpha-k_{\rho}\Vert\nabla\rho\Vert\right)\left[\frac{\sigma_{B}T}{\cos\alpha}\left(\frac{m}{r}-k_{\rho}\Vert\nabla\rho\Vert\sin\alpha\right)+\sigma_{I}P\left(\sigma_{B}Tk_{\parallel}-\frac{n}{R}\right)\right]\\
+ & +\chi^{2}\sin^{2}\beta\left[\left(k_{\rho}\Vert\nabla\rho\Vert-\frac{m}{r}\sin\alpha\right)^{2}+\left(\sigma_{B}T\frac{n}{R}\cos\alpha-\sigma_{I}P\frac{n}{R}\right)^{2}\right]\\
+ & +\chi^{2}\cos^{2}\beta\left(k_{\rho}^{2}\Vert\nabla\rho\Vert^{2}-2\frac{m}{r}k_{\rho}\Vert\nabla\rho\Vert\sin\alpha+\frac{m^{2}}{r^{2}}+\frac{n^{2}}{R^{2}}-k_{\parallel}^{2}\right)\\
+ & =\left(k_{\parallel}^{2}-k_{\parallel}^{2}\right)-2\chi\cos\beta\left(k_{\parallel}^{2}-k_{\parallel}^{2}\right)+\chi^{2}k_{\perp}^{2}\sin^{2}\beta+\chi^{2}\cos^{2}\beta\left(k^{2}-k_{\parallel}^{2}\right)\\
+ & =\chi^{2}k_{\perp}^{2}\left(\sin^{2}\beta+\cos^{2}\beta\right)\\
+ & =\chi^{2}k_{\perp}^{2}\end{align*}
 
 \end_inset
 
@@ -2460,10 +2280,7 @@ Appendix C
 \end_layout
 
 \begin_layout Standard
-Depending upon the plasma regime and the spatial localization, magnetic
- or density fluctuation spectra may be well approximated by Gaussian or
- Cauchy-Lorentz distributions.
- For this purpose, appropriate random numbers must be generated with the
+For this purpose, appropriate random numbers must be generated with the
  corresponding probability distribution function (pdf).
  Let denotes the uniform pdf for a variable 
 \begin_inset Formula $x$
@@ -2575,405 +2392,6 @@ is itself feasible to compute either analytically or numerically.
 
 .
  
-\end_layout
-
-\begin_layout Subsection
-Cauchy-Lorentz distribution
-\end_layout
-
-\begin_layout Standard
-For the Cauchy-Lorentz distribution centered around 
-\begin_inset Formula $y=0$
-\end_inset
-
-, the cdf takes the simple form 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "pre92"
-
-\end_inset
-
- 
-\begin_inset Formula \begin{equation}
-F\left(y\right)=\frac{1}{2}+\frac{1}{\pi}\tan^{-1}\left(\frac{2y}{\Delta}\right)\label{eq:cumcauchylorentzdist}\end{equation}
-
-\end_inset
-
-where 
-\begin_inset Formula $\Delta$
-\end_inset
-
- is the full width at half maximum (FWHM).
- It's inverse value is then
-\begin_inset Formula \begin{equation}
-F^{-1}\left(x\right)=\frac{\Delta}{2}\tan\left(\pi\left(x-\frac{1}{2}\right)\right)\label{eq:invcumcauchylorentzdist}\end{equation}
-
-\end_inset
-
-and the calculation of random numbers with a Cauchy-Lorentz pdf from a uniform
- random generator is straightforward.
- 
-\end_layout
-
-\begin_layout Standard
-The resulting distribution is 
-\begin_inset Formula \begin{equation}
-p\left(y\right)=\frac{1}{\pi}\frac{\Delta/2}{y^{2}+\left(\Delta/2\right)^{2}}\label{eq:cauchylorentzdist}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Gaussian distribution
-\end_layout
-
-\begin_layout Standard
-For a one dimensional Gaussian or normal distribution, 
-\begin_inset Formula \begin{equation}
-p\left(y\right)=\frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{y^{2}}{2\sigma^{2}}\right)\label{eq:gaussiandist}\end{equation}
-
-\end_inset
-
-with 
-\begin_inset Formula $y\in\left]-\infty,+\infty\right[$
-\end_inset
-
-, the approach is more complex, since 
-\begin_inset Formula $F^{-1}$
-\end_inset
-
- does not exist analytically.
- In (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:gaussiandist"
-
-\end_inset
-
-), the variance 
-\begin_inset Formula $\sigma$
-\end_inset
-
- is related to the full width at half maximum by the usual relation 
-\begin_inset Formula $\Delta=2\sqrt{2\ln2}\sigma$
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Standard
-Instead of considering the usual Box-Muller method for a two dimensional
- problem 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "pre92"
-
-\end_inset
-
-, an efficient standard rejection technique is applied in a first step to
- the normalized Gaussian distribution 
-\begin_inset Formula $p^{+}\left(y\right)$
-\end_inset
-
- on the restricted domain 
-\begin_inset Formula $y\in\left[0,+\infty\right[$
-\end_inset
-
-
-\begin_inset Formula \begin{equation}
-p^{+}\left(y\right)=\frac{1}{\sigma}\sqrt{\frac{2}{\pi}}\exp\left(-\frac{y^{2}}{2\sigma^{2}}\right)\label{eq:halfgaussiandist}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Since the pdf (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:halfgaussiandist"
-
-\end_inset
-
-) may be expressed in the form
-\begin_inset Formula \begin{align}
-p^{+}\left(y\right) & =\frac{1}{\sigma}\sqrt{\frac{2}{\pi}}\exp\left(\frac{1}{2\sigma^{2}}\right)\exp\left(-\frac{y}{\sigma^{2}}\right)\exp\left(-\frac{\left(y-1\right)^{2}}{2\sigma^{2}}\right)\label{eq:haldgaussianpdfbis}\end{align}
-
-\end_inset
-
-it is possible to apply the rejection technique but for random numbers which
- are non uniformly distributed 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "kah54"
-
-\end_inset
-
-.
- Indeed, the pdf (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:haldgaussianpdfbis"
-
-\end_inset
-
-) may be interpreted as a two dimensional probability distribution
-\begin_inset Formula \begin{equation}
-\widetilde{p}^{+}\left(y,z\right)\equiv\exp\left(-\frac{y}{\sigma^{2}}\right)\exp\left(-\frac{z}{\sigma^{2}}\right)\label{eq:2dgaussiandist}\end{equation}
-
-\end_inset
-
-with the usual constraint of acceptance for the coordinates 
-\begin_inset Formula $\left(y,z\right)$
-\end_inset
-
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "pre92"
-
-\end_inset
-
-, 
-\begin_inset Formula \begin{equation}
--\frac{z}{\sigma^{2}}<-\frac{\left(y-1\right)^{2}}{2\sigma^{2}}\label{eq:gaussianacceptance}\end{equation}
-
-\end_inset
-
-or
-\begin_inset Formula \begin{equation}
-\frac{\left(y-1\right)^{2}}{2}<z\label{eq:gaussianacceptancebis}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-It is important to note that the normalisation factors in front of (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:haldgaussianpdfbis"
-
-\end_inset
-
-) do not play a role in the shape of the distribution.
- So they do not contribute to the generation of random numbers 
-\begin_inset Formula $y$
-\end_inset
-
- with a Gaussian distribution.
- 
-\end_layout
-
-\begin_layout Standard
-The rejection procedure starts with the generation of two random numbers
- 
-\begin_inset Formula $y\left[z\right]$
-\end_inset
-
- whose pdf has the same form 
-\begin_inset Formula $\exp\left(-y\left[z\right]/\sigma^{2}\right)$
-\end_inset
-
-in the interval 
-\begin_inset Formula $\left[y\left[z\right],y\left[z\right]+dy\left[dz\right]\right]$
-\end_inset
-
-, according to (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:2dgaussiandist"
-
-\end_inset
-
-).
- This is achieved by the relation
-\begin_inset Formula \begin{equation}
-y\left[z\right]=-\sigma^{2}\ln\left(x_{y}\left[x_{z}\right]\right)\label{eq:expgenerator}\end{equation}
-
-\end_inset
-
-where 
-\begin_inset Formula $x_{y}\left[x_{z}\right]\in\left]0,1\right[$
-\end_inset
-
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "pre92"
-
-\end_inset
-
-.
- Once 
-\begin_inset Formula $y\left[z\right]$
-\end_inset
-
- have been obtained, the value 
-\begin_inset Formula $y$
-\end_inset
-
- is accepted if the condition (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:gaussianacceptancebis"
-
-\end_inset
-
-) is fullfiled.
- Otherwise the whole procedure is repeated until the value 
-\begin_inset Formula $y$
-\end_inset
-
- is accepted.
-\end_layout
-
-\begin_layout Standard
-The probability of obtaining a satisfactory random number 
-\begin_inset Formula $y$
-\end_inset
-
- on the first trial, which called the efficiency 
-\begin_inset Formula $\mathcal{E}$
-\end_inset
-
- of the random generator, is the sum of the probabilities of selecting a
- value 
-\begin_inset Formula $y$
-\end_inset
-
- in any one of the separate interval 
-\begin_inset Formula $dy$
-\end_inset
-
-,
-\begin_inset Formula \begin{align}
-\mathcal{E} & =\intop_{0}^{+\infty}\exp\left(-\frac{y}{\sigma^{2}}\right)\exp\left(-\frac{\left(y-1\right)^{2}}{2\sigma^{2}}\right)dy\nonumber \\
- & =\sigma\sqrt{\frac{\pi}{2}}\exp\left(-\frac{1}{2\sigma^{2}}\right)\label{eq:efficiency}\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-For 
-\begin_inset Formula $\sigma=1,$
-\end_inset
-
- 
-\begin_inset Formula $\mathcal{E}\simeq0.76$
-\end_inset
-
-, which is a high number for a rejection method.
- However, as shown in Fig.
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "FigGaussianGenEfficiency"
-
-\end_inset
-
-, the performances of the Gaussian random generator degradate rapidly when
- the variance 
-\begin_inset Formula $\sigma$
-\end_inset
-
- is less than unity, otherwise, 
-\begin_inset Formula $\mathcal{E}$
-\end_inset
-
- scales almost linearly with 
-\begin_inset Formula $\sigma$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement htb
-wide false
-sideways false
-status collapsed
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename C:/Users/Yves/Travail/Projets/LUKE/Project_DKE/Modules/C3PO/Doc/figs/gaussian_gen_efficiency.eps
-	width 3.6in
-	clip
-
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-Efficiency of the Gaussian random number generator as a function of the
- variance
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "FigGaussianGenEfficiency"
-
-\end_inset
-
- 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Finally, in order to get 
-\begin_inset Formula $p\left(y\right)$
-\end_inset
-
- in the interval 
-\begin_inset Formula $y\in\left]-\infty,+\infty\right[$
-\end_inset
-
-, the solution 
-\begin_inset Formula $y$
-\end_inset
-
- obtained with (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:expgenerator"
-
-\end_inset
-
-) must be multiplied by the random number 
-\begin_inset Formula $s=sign(2x_{s}-1)$
-\end_inset
-
-, where 
-\begin_inset Formula $x_{s}$
-\end_inset
-
- is another uniform random number itself in the interval 
-\begin_inset Formula $x_{s}\in\left]0,1\right[$
-\end_inset
-
-.
 \end_layout
 
 \end_body
