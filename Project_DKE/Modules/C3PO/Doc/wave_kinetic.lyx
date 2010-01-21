@@ -1,4 +1,4 @@
-#LyX 1.6.4 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -53,17 +53,2389 @@ Yves Peysson, Lorenzo Morini and Joan Decker
 \begin_layout Standard
 We now derive the kinetic equation for the wave in presence of scattering
  by density and magnetic field fluctuations.
- The incident wave is treated as a monochromatic wave, satisfying the homogeneou
-s wave equation.
- If we have fluctuations of density and magnetic field, 
-\begin_inset Formula $\delta n\left(\widetilde{\mathbf{k}},\widetilde{\omega}\right)$
+ From simple considerations about the incident wave and the fluctuations
+ ordering we propose an appropriate parameter for the perturbative expansion
+ of the Maxwell-Vlasov system of equations and we show that at the first
+ and second order we obtain the Maxwell equations for the first and second
+ order fields in closed form.
+ By means of this perturbative analysis, we show the bilinear coupling between
+ the incident field and the fluctuations field, that are treated as two
+ independent linear waves, and we demonstrate that scattering in first Born
+ approximation is a second order process due to this bilinear interaction.
+ In the low temperature limit, the wave-wave interaction can be studied
+ with an alternative fluid approach, based on the perturbative analysis
+ of the MHD equations, that can be derived by a moments analysis of the
+ Vlasov equations.
+ We initially study the effects of the fluctuations on LH waves in the cold
+ plasma limit, where all the temperature effects are neglected, so the fluid
+ approach represents a good approximation.
+ Also from the analysis of the MHD equations for a cold plasma it is easy
+ to show that scattering is a second order effect.
+ We derive an explicit expression for the second order current due to interactio
+n between incident field and fluctuations in the cold plasma limit, starting
+ from second order fluid equations.
+ This expression is then inserted in the second order non homogeneous Maxwell
+ equations, and the mode coupling equation that describes the coupling between
+ the incident field and the fluctuations is derived in details.
+ From this equation we can then derive the wave kinetic equation applying
+ the random phase approximation, the wave kinetic equation describes the
+ evolution of the wave energy density due to the scattering events in the
+ plasma and its solution give us the evaluation of the scattering probability
+ along the geometrical optics ray .
+\end_layout
+
+\begin_layout Section
+Fluctuations ordering
+\end_layout
+
+\begin_layout Standard
+The frequency 
+\begin_inset Formula $f=\omega/2\pi$
+\end_inset
+
+ of the lower hybrid incident wave is of the order of 
+\begin_inset Formula $1GHz=10^{9}Hz$
+\end_inset
+
+, the fluctuation frequency 
+\begin_inset Formula $\widetilde{f}=\widetilde{\omega}/2\pi$
+\end_inset
+
+ is 
+\begin_inset Formula $\widetilde{f}\approx100KHz=10^{5}Hz,$
+\end_inset
+
+ so 
+\begin_inset Formula $\widetilde{\omega}\ll\omega$
+\end_inset
+
+ and the fluctuation time-scale is slower than incident wave time-scale,
+ for the time-scales we have the small ordering parameter:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\delta^{2}=\frac{\widetilde{\omega}}{\omega}\approx\frac{10^{5}}{10^{9}}=10^{-4}\label{eq:timeordering}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And we can separate the temporal dynamics of the incident wave from the
+ temporal dynamics of the fluctuations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial}{\partial t}=\frac{\partial}{\partial t_{\omega}}+\delta^{2}\frac{\partial}{\partial t_{\widetilde{\omega}}}\label{eq:timeop}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The modulus of the fluctuations wave vector, 
+\begin_inset Formula $\widetilde{k}$
+\end_inset
+
+, has been measured experimentally with several diagnostic techniques;
+\begin_inset Formula $\widetilde{k}$
+\end_inset
+
+ varies from values of the order of 
+\begin_inset Formula $\widetilde{k}\approx0.005cm^{-1}=0.5m^{-1}$
+\end_inset
+
+, to values of the order of 
+\begin_inset Formula $\widetilde{k}\approx10cm^{-1}=10^{3}m^{-1}$
+\end_inset
+
+, that is of the same order of the incident lower hybrid wave vector, 
+\begin_inset Formula $k=2\pi fN/c\approx10cm^{-1}=10^{3}m^{-1}$
+\end_inset
+
+.
+ For small values of 
+\begin_inset Formula $\widetilde{k}$
+\end_inset
+
+, the scattered wave vector becomes 
+\begin_inset Formula $\check{k}=k+\widetilde{k}\approx k$
+\end_inset
+
+ and we have the like-mode scattering, for values of 
+\begin_inset Formula $\widetilde{k}$
+\end_inset
+
+ of the same order of 
+\begin_inset Formula $k$
+\end_inset
+
+, 
+\begin_inset Formula $\check{k}\neq k$
+\end_inset
+
+ and we have unlike-mode scattering.
+ From experimental studies it has been observed that in all the case in
+ verified: 
+\begin_inset Formula $\widetilde{k}_{\Vert}\ll\widetilde{k}_{\bot}$
+\end_inset
+
+ and so 
+\begin_inset Formula $\widetilde{\lambda}_{\Vert}\gg\widetilde{\lambda}_{\perp}$
+\end_inset
+
+, in particular it has been shown that 
+\begin_inset Formula $\widetilde{\lambda}_{\Vert}\simeq(0.1-0.3)qR\approx1m,$
+\end_inset
+
+ so the parallel space-scale of the fluctuations is slower than the space-scale
+ of the incident wave: 
+\begin_inset Formula $\lambda_{\Vert}=c/fN_{\Vert}\approx1cm=10^{-2}m.$
+\end_inset
+
+ As a consequence, for space-scale, we have the ordering parameter:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\lambda_{\parallel}}{\widetilde{\lambda}_{\parallel}}=\frac{\widetilde{k}_{\parallel}}{k_{\Vert}}\approx10^{-2}=\left(\frac{\widetilde{\omega}}{\omega}\right)^{\frac{1}{2}}=\delta\label{eq:spaceordering}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We note that the space-scale ordering parameters is bigger than the time-scale
+ ordering parameter, this is because the parallel space-scale of the fluctuation
+s is slower than the space-scale of the incident wave but not so slower
+ as in the case of the time-scales.
+ However, we can separate the spatial dynamics of the wave from the parallel
+ spatial dynamics of the fluctuations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla=\nabla_{\lambda}+\delta\nabla_{\parallel\widetilde{\lambda}_{\parallel}}\label{eq:spaceop}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The symbol 
+\begin_inset Formula $\nabla_{\parallel}$
+\end_inset
+
+means that the first order terms of the gradient operator, due to the fluctuatio
+ns, is only regarding the dynamics parallel to the magnetic field.
+\end_layout
+
+\begin_layout Standard
+If we neglect the ion dynamics, 
+\begin_inset Formula $\left(m_{i}\gg m_{e},\mathbf{p}_{i}\ll\mathbf{p}_{e}\right)$
+\end_inset
+
+, the electron distribution function, 
+\begin_inset Formula $f_{e}\left(\mathbf{r},\mathbf{p},t\right)$
+\end_inset
+
+ in a collisionless plasma is solution of the Vlasov kinetic equation: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial f_{e}}{\partial t}+\mathbf{v}\cdot\frac{\partial f_{e}}{\partial\mathbf{r}}+q_{e}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}=0\label{eq:vlasov}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where the macroscopic fields 
+\begin_inset Formula $\mathbf{E}\left(\mathbf{r},t\right)$
 \end_inset
 
  and 
-\begin_inset Formula $\delta\mathbf{B}\left(\widetilde{\mathbf{k}},\widetilde{\omega}\right),$
+\begin_inset Formula $\mathbf{B}\left(\mathbf{r},t\right)$
 \end_inset
 
- from the conservation of momentum and energy, the wave vector and the frequency
+ are solutions of the Maxwell equations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\nabla\times\mathbf{E} & = & -\frac{\partial\mathbf{B}}{\partial t}\label{eq:Maxwell1}\\
+\nabla\times\mathbf{B} & = & \mu_{0}\varepsilon_{0}\frac{\partial\mathbf{E}}{\partial t}+\mu_{0}\mathbf{J}\label{eq:Maxwell2}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And the current is given by:
+\begin_inset Formula \begin{equation}
+\mathbf{J}=q_{e}\int\mathbf{v}f_{e}\textrm{d }\mathbf{p}\label{eq:current}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This system of equation has a set of equilibrium solutions, 
+\begin_inset Formula $f_{e}^{\left(0\right)},\mathbf{E}^{\left(0\right)},\mathbf{J}^{\left(0\right)}$
+\end_inset
+
+and 
+\begin_inset Formula $\mathbf{B}^{\left(0\right)},$
+\end_inset
+
+ we assume 
+\begin_inset Formula $\mathbf{E}^{\left(0\right)}=0$
+\end_inset
+
+ at the equilibrium, and we consider other sets of solutions of the Maxwell-Vlas
+ov system, due to several physical phenomena, as small perturbations to
+ the equilibrium solutions, using the ordering parameter (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:spaceordering"
+
+\end_inset
+
+) for the expansion:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+f_{e}\left(\mathbf{r},\mathbf{p},t\right) & = & f_{e}^{\left(0\right)}+\delta f_{e}^{\left(1\right)}+\delta^{2}f_{e}^{\left(2\right)}+\ldots\\
+\mathbf{E}\left(\mathbf{r},t\right) & = & \qquad\,\,\,\delta\mathbf{E}^{\left(1\right)}+\delta^{2}\mathbf{E}^{\left(2\right)}+\ldots\\
+\mathbf{B}\left(\mathbf{r},t\right) & = & \mathbf{B}^{\left(0\right)}+\delta\mathbf{B}^{\left(1\right)}+\delta^{2}\mathbf{B}^{\left(2\right)}+\ldots\\
+\mathbf{J}\left(\mathbf{r},t\right) & = & \mathbf{J}^{\left(0\right)}+\delta\mathbf{J}^{\left(1\right)}+\delta^{2}\mathbf{J}^{\left(2\right)}+\ldots\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At the order-0, the Vlasov equation is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial f_{e}^{\left(0\right)}}{\partial t_{\omega}}+\mathbf{v}\cdot\nabla_{\lambda}f_{e}^{\left(0\right)}+q_{e}\left(\mathbf{v}\times\mathbf{B}^{\left(0\right)}\right)\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}=0\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The equilibrium distribution function does not vary on temporal and spatial
+ length scale of the incident wave, so we can neglect the first two terms
+ and the 0-order Vlasov equations becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+q_{e}\left(\mathbf{v}\times\mathbf{B}^{\left(0\right)}\right)\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}=0\label{eq:0orderVlasov}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This relation gives us the equilibrium distribution function.
+ The 0-order Maxwell equations are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\frac{\partial\mathbf{B}^{\left(0\right)}}{\partial t_{\omega}} & = & 0\label{eq:0orderMaxwell1}\\
+\nabla_{\lambda}\times\mathbf{B}^{\left(0\right)} & = & \mu_{0}\mathbf{J}^{\left(0\right)}\label{eq:0orderMaxwell2}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2orderMaxwell1"
+
+\end_inset
+
+) gives the independence of the equilibrium magnetic field by the incident
+ wave time-scale, this field is in general assumed to be costant in time,
+ independent by all the time-scales.
+ 
+\begin_inset Formula $\mathbf{B}^{\left(0\right)}$
+\end_inset
+
+does not depend by the space-scale of the wave, so the left term of the
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2orderMaxwell2"
+
+\end_inset
+
+) is assume to be zero and in this case we have 
+\begin_inset Formula $\mathbf{J}^{\left(0\right)}=0$
+\end_inset
+
+; this is not a general assumption, but this derive from the fact that we
+ are working with the wave ordering, not with the tokamak ordering, infact
+ the equilibrium magnetic field is independent by the wave space-scale but
+ not by the space in general and the equilibrium current is of course not
+ due to the incident wave, using the tokamak ordering we obtain the equation
+ for 
+\begin_inset Formula $\mathbf{B}^{\left(0\right)}$
+\end_inset
+
+ with the spatial derivatives referred to the space-scale of the gyroradius.
+\end_layout
+
+\begin_layout Standard
+At the order-1, the Vlasov equation is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial f_{e}^{\left(1\right)}}{\partial t_{\omega}}+\mathbf{v}\cdot\nabla_{\lambda}f_{e}^{\left(1\right)}+q_{e}\left(\mathbf{v}\times\mathbf{B}^{\left(0\right)}\right)\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}=-q_{e}\left(\mathbf{E}^{\left(1\right)}+\mathbf{v}\times\mathbf{B}^{\left(1\right)}\right)\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\mathbf{v}\cdot\nabla_{\Vert\widetilde{\lambda}_{\Vert}}f_{e}^{\left(0\right)}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Remembering that the equilibrium distribution function does not depend by
+ the fluctuation space-scale, we can neglect the second left term, and we
+ obtain the linearized Vlasov equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial f_{e}^{\left(1\right)}}{\partial t_{\omega}}+\mathbf{v}\cdot\nabla_{\lambda}f_{e}^{\left(1\right)}+q_{e}\left(\mathbf{v}\times\mathbf{B}^{\left(0\right)}\right)\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}=-q_{e}\left(\mathbf{E}^{\left(1\right)}+\mathbf{v}\times\mathbf{B}^{\left(1\right)}\right)\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}\label{eq:1orderVlasov}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The order-1 Maxwell equations are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla_{\lambda}\times\mathbf{E}^{\left(1\right)}=-\frac{\partial\mathbf{B}^{\left(1\right)}}{\partial t_{\omega}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla_{\lambda}\times\mathbf{B}^{\left(1\right)}+\nabla_{\Vert\widetilde{\lambda}_{\Vert}}\times\mathbf{B}^{\left(0\right)}=\varepsilon_{0}\mu_{0}\frac{\partial\mathbf{E}^{\left(1\right)}}{\partial t_{\omega}}+\mu_{0}\mathbf{J}^{\left(1\right)}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The equilibrium magnetic field is independent by the fluctuations parallel
+ space-scale, so at the order-1 we have the Maxwell equation in closed form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\nabla_{\lambda}\times\mathbf{E}^{\left(1\right)} & = & -\frac{\partial\mathbf{B}^{\left(1\right)}}{\partial t_{\omega}}\label{eq:1orderMaxwell1}\\
+\nabla_{\lambda}\times\mathbf{B}^{\left(1\right)} & = & \mu_{0}\varepsilon_{0}\frac{\partial\mathbf{E}^{\left(1\right)}}{\partial t_{\omega}}+\mu_{0}\mathbf{J}^{\left(1\right)}\label{eq:1orderMaxwell2}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And the 1-order current is given by:
+\begin_inset Formula \begin{equation}
+\mathbf{J}^{\left(1\right)}=q_{e}\int\mathbf{v}f_{e}^{\left(1\right)}\textrm{d }\mathbf{p}\label{eq:1ordercurrent}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $f_{e}^{\left(1\right)}$
+\end_inset
+
+ is solution of the linearized Vlasov equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:1orderVlasov"
+
+\end_inset
+
+).
+ At the second order the Vlasov equation becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\partial f_{e}^{\left(2\right)}}{\partial t_{\omega}}+\frac{\partial f_{e}^{\left(0\right)}}{\partial t_{\widetilde{\omega}}}+\mathbf{v}\cdot\nabla_{\lambda}f_{e}^{\left(2\right)}+\mathbf{v}\cdot\nabla_{\parallel\widetilde{\lambda}_{\Vert}}f_{e}^{\left(1\right)}+q_{e}\left(\mathbf{v}\times\mathbf{B}^{\left(0\right)}\right)\cdot\frac{\partial f_{e}^{\left(2\right)}}{\partial\mathbf{p}}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=-q_{e}\left(\mathbf{E}^{\left(2\right)}+\mathbf{v}\times\mathbf{B}^{\left(2\right)}\right)\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-q_{e}\left(\mathbf{E}^{\left(1\right)}+\mathbf{v}\times\mathbf{B}^{\left(1\right)}\right)\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The equilibrium and the first order distribution function do not vary with
+ the time-scale and the space-scale of the fluctuations, tha are very slow
+ respect the incident waves scales, so at order-2 the Vlasov equation is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\partial f_{e}^{\left(2\right)}}{\partial t_{\omega}}+\mathbf{v}\cdot\nabla_{\lambda}f_{e}^{\left(2\right)}+q_{e}\left(\mathbf{v}\times\mathbf{B}^{\left(0\right)}\right)\cdot\frac{\partial f_{e}^{\left(2\right)}}{\partial\mathbf{p}}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=-q_{e}\left(\mathbf{E}^{\left(2\right)}+\mathbf{v}\times\mathbf{B}^{\left(2\right)}\right)\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-q_{e}\left(\mathbf{E}^{\left(1\right)}+\mathbf{v}\times\mathbf{B}^{\left(1\right)}\right)\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:2orderVlasov}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At the order-2 of the Maxwell equations we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla_{\lambda}\times\mathbf{E}^{\left(2\right)}+\nabla_{\Vert\widetilde{\lambda}_{\Vert}}\times\mathbf{E}^{\left(1\right)}=-\frac{\partial\mathbf{B}^{\left(0\right)}}{\partial t_{\widetilde{\omega}}}-\frac{\partial\mathbf{B}^{\left(1\right)}}{\partial t_{\omega}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla_{\lambda}\times\mathbf{B}^{\left(2\right)}+\nabla_{\Vert\widetilde{\lambda}_{\Vert}}\times\mathbf{B}^{\left(1\right)}=\varepsilon_{0}\mu_{0}\frac{\partial\mathbf{E}^{\left(2\right)}}{\partial t_{\omega}}+\mu_{0}\mathbf{J}^{\left(2\right)}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathbf{B}^{\left(0\right)}$
+\end_inset
+
+ is assumed to be stationary, the first order fields, 
+\begin_inset Formula $\mathbf{E}^{\left(1\right)}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{B}^{\left(1\right)}$
+\end_inset
+
+, due to the wave fields, vary with the space-scale of the wave, that is
+ faster than the parallel space-scale of the fluctuations, so we can neglect
+ the second left terms of the equations, and we obtain the second order
+ Maxwell equations in closed form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\nabla_{\lambda}\times\mathbf{E}^{\left(2\right)} & = & -\frac{\partial\mathbf{B}^{\left(2\right)}}{\partial t_{\omega}}\label{eq:2orderMaxwell1}\\
+\nabla_{\lambda}\times\mathbf{B}^{\left(2\right)} & = & \mu_{0}\varepsilon_{0}\frac{\partial\mathbf{E}^{\left(2\right)}}{\partial t_{\omega}}+\mu_{0}\mathbf{J}^{\left(2\right)}\label{eq:2orderMaxwell2}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And the 1-order current is given by:
+\begin_inset Formula \begin{equation}
+\mathbf{J}^{\left(2\right)}=q_{e}\int\mathbf{v}f_{e}^{\left(2\right)}\textrm{d }\mathbf{p}\label{eq:2ordercurrent}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $f_{e}^{\left(2\right)}$
+\end_inset
+
+ is solution of the second order Vlasov equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2orderVlasov"
+
+\end_inset
+
+).
+ So using this kind of expansion, we have obtained at orders 1 and 2 the
+ Maxwell-Vlasov system in closed form (sets of equations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:1orderVlasov"
+
+\end_inset
+
+),(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Maxwell2A"
+
+\end_inset
+
+),(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Maxwell2B"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2orderVlasov"
+
+\end_inset
+
+),(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2orderMaxwell1"
+
+\end_inset
+
+),(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2orderMaxwell2"
+
+\end_inset
+
+)).
+ This two sets of equations are the starting point for the study of the
+ interaction between the incident wave and the fluctuations, that are treated
+ as two indipendent linear waves, solutions of the first order Maxwell-Vlasov
+ equations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:1orderVlasov"
+
+\end_inset
+
+),(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Maxwell2A"
+
+\end_inset
+
+),(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Maxwell2B"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Section
+Three waves mixing
+\end_layout
+
+\begin_layout Standard
+The incident wave and the fluctuations are considered two indipendent linear
+ waves, solution of the first-order Maxwell-Vlasov system.
+ To semplify the notation, we now obmit the pedix notation of the temporal
+ and spatial operators in the first and second order equations, and we imply
+ that the derivatives are referred to the incident wave space and time-scale,
+ 
+\begin_inset Formula $\lambda$
+\end_inset
+
+and 
+\begin_inset Formula $\omega$
+\end_inset
+
+.
+ We introduce also the Vlasov linear operator, 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathcal{L}f_{e}=\frac{\partial f_{e}}{\partial t}+\mathbf{v}\cdot\nabla f_{e}+q_{e}\left(\mathbf{v}\times\mathbf{B}^{\left(0\right)}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}\label{eq:linearvlasovop}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And the force 
+\begin_inset Formula $\mathbf{F}^{\left(n\right)}$
+\end_inset
+
+that the field 
+\begin_inset Formula $\mathbf{E}^{\left(n\right)}\left(\mathbf{r},t\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{B}^{\left(n\right)}\left(\mathbf{r},t\right),$
+\end_inset
+
+ of order 
+\begin_inset Formula $\left(n\right)$
+\end_inset
+
+ , exert on an electron of velocity 
+\begin_inset Formula $\mathbf{v}$
+\end_inset
+
+: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{F}^{\left(n\right)}=q_{e}\left(\mathbf{E}^{\left(n\right)}+\mathbf{v}\times\mathbf{B}^{\left(n\right)}\right)\label{eq:force}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using this compact notation, the first order equation (linearized Vlasov
+ equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:1orderVlasov"
+
+\end_inset
+
+)), which describes the linear wave propagation, becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathcal{L}f_{e}^{\left(1\right)}=-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}\label{eq:vlasov1}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The incident wave 
+\begin_inset Formula $\left[f_{e}^{\left(1\right)},\mathbf{E}^{\left(1\right)},\mathbf{B}^{\left(1\right)}\right]$
+\end_inset
+
+and the fluctuations 
+\begin_inset Formula $\left[\widetilde{f}_{e}^{\left(1\right)},\widetilde{\mathbf{E}}^{\left(1\right)},\mathbf{\widetilde{B}}^{\left(1\right)}\right]$
+\end_inset
+
+ are two independent solutions of this linearized Vlasov equation and of
+ the first order Maxwell equations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\nabla\times\mathbf{E}^{\left(1\right)} & = & -\frac{\partial\mathbf{B}^{\left(1\right)}}{\partial t}\label{eq:Maxwell1A}\\
+\nabla\times\mathbf{B}^{\left(1\right)} & = & \mu_{0}\varepsilon_{0}\frac{\partial\mathbf{E}^{\left(1\right)}}{\partial t}+\mu_{0}\mathbf{J}^{\left(1\right)}\label{eq:Maxwell1B}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The system of equations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vlasov1"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Maxwell2A"
+
+\end_inset
+
+),(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Maxwell2B"
+
+\end_inset
+
+) is linear, so the sum of the incident wave and the fluctuation wave is
+ also a solution of this system.
+ At the first order, as we can observe in the equations, there is no coupling
+ between the two waves, that are independent solutions and coexist in the
+ plasma.
+ Using the compact notation, the second order Vlasov equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2orderVlasov"
+
+\end_inset
+
+) becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathcal{L}f_{e}^{\left(2\right)}=-\mathbf{F}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:vlasov2}\end{equation}
+
+\end_inset
+
+ This equation is linear in second order quantities, so we can construct
+ a second order solution a sum of three elements 
+\begin_inset Formula $\left[f_{e}^{\left(2\right)},\mathbf{E}^{\left(2\right)},\mathbf{B}^{\left(2\right)}\right]$
+\end_inset
+
+, 
+\begin_inset Formula $\left[\widetilde{f}_{e}^{\left(2\right)},\widetilde{\mathbf{E}}^{\left(2\right)},\mathbf{\widetilde{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\left[\check{f}_{e}^{\left(2\right)},\check{\mathbf{E}}^{\left(2\right)},\mathbf{\check{B}}^{\left(2\right)}\right]$
+\end_inset
+
+, each one of those is solution of second order Maxwell equations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\nabla\times\mathbf{E}^{\left(2\right)} & = & -\frac{\partial\mathbf{B}^{\left(2\right)}}{\partial t}\label{eq:Maxwell2A}\\
+\nabla\times\mathbf{B}^{\left(2\right)} & = & \mu_{0}\varepsilon_{0}\frac{\partial\mathbf{E}^{\left(2\right)}}{\partial t}+\mu_{0}\mathbf{J}^{\left(2\right)}\label{eq:Maxwell2B}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+With the associated second order current given by the expression:
+\begin_inset Formula \begin{equation}
+\mathbf{J}^{\left(2\right)}=q_{e}\int\mathbf{v}f_{e}^{\left(2\right)}\textrm{d }\mathbf{p}\label{eq:current2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Elements 
+\begin_inset Formula $\left[f_{e}^{\left(2\right)},\mathbf{E}^{\left(2\right)},\mathbf{B}^{\left(2\right)}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\left[\widetilde{f}_{e}^{\left(2\right)},\widetilde{\mathbf{E}}^{\left(2\right)},\mathbf{\widetilde{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ satisfies the second order Vlasov equation without cross terms in the linear
+ wave quantities (first order quantities):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\mathcal{L}f_{e}^{\left(2\right)} & = & -\mathbf{F}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:vlasov2A}\\
+\mathcal{L}\widetilde{f}_{e}^{\left(2\right)} & = & -\widetilde{\mathbf{F}}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\widetilde{\mathbf{F}}^{\left(1\right)}\cdot\frac{\partial\widetilde{f}_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:vlasov2B}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+While it is easy to verify that the second order Vlasov equation for element
+ 
+\begin_inset Formula $\left[\check{f}_{e}^{\left(2\right)},\check{\mathbf{E}}^{\left(2\right)},\mathbf{\check{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ includes the cross terms in the linear wave quantities:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathcal{L}\check{f}_{e}^{\left(2\right)}=-\check{\mathbf{F}}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial\widetilde{f}_{e}^{\left(1\right)}}{\partial\mathbf{p}}-\widetilde{\mathbf{F}}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:vlasov2C}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Elements 
+\begin_inset Formula $\left[f_{e}^{\left(2\right)},\mathbf{E}^{\left(2\right)},\mathbf{B}^{\left(2\right)}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\left[\widetilde{f}_{e}^{\left(2\right)},\widetilde{\mathbf{E}}^{\left(2\right)},\mathbf{\widetilde{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ are second order corrections to the linear waves 
+\begin_inset Formula $\left[f_{e}^{\left(1\right)},\mathbf{E}^{\left(1\right)},\mathbf{B}^{\left(1\right)}\right]$
+\end_inset
+
+and 
+\begin_inset Formula $\left[\widetilde{f}_{e}^{\left(1\right)},\widetilde{\mathbf{E}}^{\left(1\right)},\mathbf{\widetilde{B}}^{\left(1\right)}\right]$
+\end_inset
+
+ , while 
+\begin_inset Formula $\left[\check{f}_{e}^{\left(2\right)},\check{\mathbf{E}}^{\left(2\right)},\mathbf{\check{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ is a new wave resulting from the bilinear interaction between the linear
+ waves, remembering that the two original linear waves are respectively
+ incident wave and fluctuations, this new wave is the scattered wave.
+ So it has been clearly shown that scattering by fluctuations is a second
+ order process due to the bilinear interaction between two linear waves:
+ the incident wave and the fluctuations wave.
+ Observing equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vlasov2C"
+
+\end_inset
+
+), we note that the left -hand side term and the first right-hand side term,
+ involving the quantities due to the scattered wave, are identical to the
+ linearized Vlasov equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vlasov1"
+
+\end_inset
+
+), so these two terms describe the linear propagation of the scattered wave,
+ the second and the third right-hand terms of the equation describe the
+ bilinear interactions between the incident wave and the fluctuations.
+ The electromagnetic field of the scattered wave is then solution of the
+ second-order wave equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla\times\nabla\times\check{\mathbf{E}}^{\left(2\right)}+\varepsilon_{0}\mu_{0}\frac{\partial^{2}\check{\mathbf{E}}^{\left(2\right)}}{\partial\textrm{t}^{2}}=-\mu_{0}\frac{\partial}{\partial\textrm{t}}\left(\check{\mathbf{J}}_{lin}^{\left(2\right)}+\mathbf{\check{J}}_{int}^{\left(2\right)}\right)\label{eq:wavequation}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\check{\mathbf{J}}_{lin}^{\left(2\right)}$
+\end_inset
+
+ is the second order current due to the linear response of the plasma to
+ the field of the scattered wave, and 
+\begin_inset Formula $\mathbf{J}_{int}^{\left(2\right)}$
+\end_inset
+
+ is the current due to the interaction of the incident wave with the fluctuation
+s, and is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{\check{J}}_{int}^{\left(2\right)}=q_{e}\int\mathbf{v}\check{f}_{int}^{\left(2\right)}\textrm{d }\mathbf{p}\label{eq:currentint}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where the function 
+\begin_inset Formula $\check{f}_{int}^{\left(2\right)}$
+\end_inset
+
+satisfies the bilinear part of the second order Vlasov equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathcal{L}\check{f}_{int}^{\left(2\right)}=-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial\widetilde{f}_{e}^{\left(1\right)}}{\partial\mathbf{p}}-\widetilde{\mathbf{F}}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:vlasovint}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Applying the Fourier analysis to the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wavequation"
+
+\end_inset
+
+), we obtain the non homogeneous second order wave equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}^{\left(2\right)}\left(\check{\mathbf{k}},\check{\omega}\right)=-\frac{i}{\varepsilon_{0}\check{\omega}}\mathbf{\check{J}}_{int}^{\left(2\right)}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)\label{eq:nonhomogeneouswave}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\mathbb{D}$
+\end_inset
+
+ is the dispersion tensor, that can be expressed in function of the dielectric
+ tensor, 
+\begin_inset Formula $\mathbb{K}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{D}\left(\mathbf{k},\omega\right)=\frac{c^{2}}{\omega^{2}}\left(\mathbf{k}\mathbf{k}-k^{2}\right)+\mathbb{K}\left(\mathbf{k},\omega\right)\label{eq:disptensor}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An explicit expression for the current 
+\begin_inset Formula $\mathbf{\check{J}}_{int}^{\left(2\right)}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)$
+\end_inset
+
+ , for fluctuations of density, magnetic field, and particle velocitity
+ is obtained by solving equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vlasovint"
+
+\end_inset
+
+) in the Fourier space and using the result in expression (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:currentint"
+
+\end_inset
+
+) .
+ We have used a kinetic approach for studying the wave-wave interaction,
+ this kinetic approach, based on the perturbative analysis of the Vlasov
+ equation, takes in account the effects of the temperature and is the most
+ general approach that can be used for studying this kind of problems, until
+ this point we have not make assumptions regarding the characteristics of
+ the plasma.
+\end_layout
+
+\begin_layout Section
+Fluid approach in cold plasma limit
+\end_layout
+
+\begin_layout Standard
+We now study the interaction between the incident wave and the fluctuations
+ in a cold plasma.
+ In the cold plasma limit, the thermal motions of the particle and in general
+ all the temperature effects are neglected, for this reason we can use a
+ fluid approach alternative to the general kinetic approach illustrated
+ in the precedent paragraph.
+ This fluid approach is based on the perturbative analysis of the MHD equations,
+ that can be derived by the moments anaysis of the Vlasov equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vlasov"
+
+\end_inset
+
+).
+ The MHD tractation is the low temperature limit of the kinetic tractation,
+ then making this low temperature limit we derive the general form of the
+ MHD equations, and we specialize this set of equations for the cold plasma
+ case.
+ By means of the perturbative expansion and of the Fourier analysis of the
+ cold-fluid equation we obtain an explicit expression for the interaction
+ current 
+\begin_inset Formula $\mathbf{\check{J}}_{int}^{\left(2\right)}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)$
+\end_inset
+
+ , valid in the cold plasma limit.
+\end_layout
+
+\begin_layout Standard
+The zero order and the first order moments of the distribution function
+ are respectively the electron density and the electron flux:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+n_{e} & = & \int f_{e}\mathit{\textrm{d}}\mathbf{p}\label{eq:density}\\
+\bar{\mathbf{v}} & = & \int\mathbf{v}f_{e}\textrm{d}\mathbf{p}\label{eq:flux}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The electron velocity has two components, the fluid velocity 
+\begin_inset Formula $\mathbf{u}$
+\end_inset
+
+ and the thermal velocity 
+\begin_inset Formula $\mathbf{w}$
+\end_inset
+
+, due to the temperaure kinetic effects:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{v}=\mathbf{u}+\mathbf{w}\label{eq:velocity}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The average of the thermal velocity is zero, the fluid velocity is connected
+ to the electron flux by the relation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{u}=<\mathbf{v}>=\frac{1}{n_{e}}\int\mathbf{v}f_{e}\textrm{d}\mathbf{p}\label{eq:fluidvelocity}\end{equation}
+
+\end_inset
+
+ If we calculate the zero, the first and the second order moments of VlasovSo
+ we have 
+\begin_inset Formula $\overline{\mathbf{v}}=n_{e}\mathbf{u}$
+\end_inset
+
+.So we have 
+\begin_inset Formula $\overline{\mathbf{v}}=n_{e}\mathbf{u}$
+\end_inset
+
+.
+ equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vlasov"
+
+\end_inset
+
+), we obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}}{\partial t}+\nabla\cdot\overline{\mathbf{v}}=0\label{eq:continuity}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\overline{\mathbf{v}}}{\partial t}+\nabla\cdot\overline{\mathbf{vv}}-\frac{q_{e}}{m_{e}}\left(n_{e}\mathbf{E}+\overline{\mathbf{v}}\times\mathbf{B}\right)=0\label{eq:motion}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\overline{\mathbf{vv}}}{\partial t}+\nabla\cdot\overline{\mathbf{vvv}}-\frac{q_{e}}{m_{e}}\left[\overline{\mathbf{v}}\mathbf{E}+\mathbf{E}\overline{\mathbf{v}}+\left(\overline{\mathbf{vv}}\times\mathbf{B}\right)-\left(\mathbf{B}\times\overline{\mathbf{vv}}\right)\right]=0\label{eq:energy}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where the diad 
+\begin_inset Formula $\overline{\mathbf{vv}}$
+\end_inset
+
+ and the triad 
+\begin_inset Formula $\overline{\mathbf{vvv}}$
+\end_inset
+
+ are respectively the second and the third order moment of 
+\begin_inset Formula $f_{e}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\overline{\mathbf{vv}} & = & \int\mathbf{vv}f_{e}\textrm{d}\mathbf{p}\\
+\overline{\mathbf{vvv}} & = & \int\mathbf{vvv}f_{e}\textrm{d}\mathbf{p}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:continuity"
+
+\end_inset
+
+) is the continuity equation, the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:motion"
+
+\end_inset
+
+) is the equation of motion, and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:energy"
+
+\end_inset
+
+) is the energy conservation equation, so with the moments analysis of Vlasov
+ equation we have easily derived the MHD equations in a general form.
+ In the limit of low temperature, we can study the wave-fluctuation interaction
+ starting from the perturbative expansion of the set of equations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:continuity"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:motion"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:energy"
+
+\end_inset
+
+), coupled with the Maxwell equations.
+ We can use this approach in the generic low temperature limit, that is
+ not exactly equivalent to the cold plasma limit.
+ Infact the diad 
+\begin_inset Formula $\overline{\mathbf{vv}}$
+\end_inset
+
+ imply the stress tensor 
+\begin_inset Formula $\mathbb{P}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\overline{\mathbf{vv}} & = & \int\mathbf{vv}f_{e}\textrm{d}\mathbf{p}=n_{e}\mathbf{uu}+\frac{\mathbb{P}}{m_{e}}\label{eq:stressterm}\\
+\mathbb{P} & =m_{e} & \int\mathbf{ww}f_{e}\textrm{d}\mathbf{p}=m_{e}\overline{\mathbf{ww}}=m_{e}n_{e}<\mathbf{ww}>\label{eq:stresstensor}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the low temperature limit, this tensor is in general not negligible,
+ in this limit is taken in account of the second order thermal correction
+ due to the term 
+\begin_inset Formula $<\mathbf{ww}>$
+\end_inset
+
+, this is the reason because we generally need to include the energy conservatio
+n equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:energy"
+
+\end_inset
+
+) to have a closed set of equations at the orders 0, 1 , and 2.
+ Remembering that 
+\begin_inset Formula $\overline{\mathbf{v}}=n_{e}\mathbf{u}$
+\end_inset
+
+ and using the expression (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:stressterm"
+
+\end_inset
+
+), the continuity (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:continuity"
+
+\end_inset
+
+) and the motion equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:motion"
+
+\end_inset
+
+) become:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}}{\partial t}+\nabla\cdot\left(n_{e}\mathbf{u}\right)=0\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+m_{e}\frac{\partial}{\partial t}\left(n_{e}\mathbf{u}\right)+m_{e}\nabla\cdot\left(n_{e}\mathbf{uu}\right)=q_{e}n_{e}\left(\mathbf{E}+\mathbf{u}\times\mathbf{B}\right)-\nabla\cdot\mathbb{P}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If we use the relations:
+\begin_inset Formula \begin{eqnarray}
+\frac{\partial}{\partial t}\left(n_{e}\mathbf{u}\right) & = & \frac{\partial n_{e}}{\partial t}\mathbf{u}+n_{e}\frac{\partial\mathbf{u}}{\partial t}\\
+\nabla\cdot\left(n_{e}\mathbf{uu}\right) & = & \mathbf{u}\nabla\cdot\left(n_{e}\mathbf{u}\right)+n_{e}\left(\mathbf{u}\cdot\nabla\right)\mathbf{u}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And the contituity equation, the equation for motion finally becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+m_{e}n_{e}\left[\frac{\partial\mathbf{u}}{\partial t}+\left(\mathbf{u}\cdot\nabla\right)\mathbf{u}\right]=en_{e}\left(\mathbf{E}+\mathbf{u}\times\mathbf{B}\right)-\nabla\cdot\mathbb{P}\label{eq:motion2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we can see from this explicit form of the equation that if the stress
+ tensor is not negligible, we need to derive an equation for the evolution
+ of this tensor starting by the implicit conservation energy equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:energy"
+
+\end_inset
+
+).
+ In the cold plasma limit, all the thermal effects, also the second order
+ corrections due to 
+\begin_inset Formula $<\mathbf{ww}>$
+\end_inset
+
+are neglected, so we can neglect 
+\begin_inset Formula $\mathbb{P}$
+\end_inset
+
+ and the continuity and motion equations are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}}{\partial t}+\nabla\cdot\left(n_{e}\mathbf{u}\right)=0\label{eq:continuityCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+m_{e}n_{e}\left[\frac{\partial\mathbf{u}}{\partial t}+\left(\mathbf{u}\cdot\nabla\right)\mathbf{u}\right]=en_{e}\left(\mathbf{E}+\mathbf{u}\times\mathbf{B}\right)\label{eq:motionCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As we can observe, these two equations, coupled with the Maxwell equations,
+ form a closed system of equations, so for studying the interaction between
+ the incident wave and the fluctuations in the cold plasma limit we can
+ start by this system of equations and we don't need to insert the energy
+ conservation equation.
+ Also in the cold approximation, we separe the dynamics of the incident
+ wave from the dynamics of the fluctuations as we have done in the general
+ kinetic approach:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla=\nabla_{\lambda}+\delta\nabla_{\parallel\widetilde{\lambda}_{\parallel}}\label{eq:spaceop}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial}{\partial t}=\frac{\partial}{\partial t_{\omega}}+\delta^{2}\frac{\partial}{\partial t_{\widetilde{\omega}}}\label{eq:timeop}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is the same ordering (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:spaceordering"
+
+\end_inset
+
+) parameter used for the kinetic tractation.
+ Using this parameter, we expand the physical quantities, assuming 
+\begin_inset Formula $\mathbf{u}^{\left(0\right)}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{E}^{\left(0\right)}=0$
+\end_inset
+
+ (at the equilibrium the electric field and the electron fluid velocity,
+ that is the average velocity of the electrons, are zero):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+n_{e}\left(\mathbf{r},t\right) & = & n_{e}^{\left(0\right)}+\delta n_{e}^{\left(1\right)}+\delta^{2}n_{e}^{\left(2\right)}+\ldots\\
+\mathbf{u}\left(\mathbf{r},t\right) & = & \qquad\,\,\,\delta\mathbf{u}^{\left(1\right)}+\delta^{2}\mathbf{u}^{\left(2\right)}+\ldots\\
+\mathbf{E}\left(\mathbf{r},t\right) & = & \qquad\,\,\,\delta\mathbf{E}^{\left(1\right)}+\delta^{2}\mathbf{E}^{\left(2\right)}+\ldots\\
+\mathbf{B}\left(\mathbf{r},t\right) & = & \mathbf{B}^{\left(0\right)}+\delta\mathbf{B}^{\left(2\right)}+\delta^{2}\mathbf{B}^{\left(2\right)}+\ldots\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The zero, the first and the second order of the continuity equation are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}^{\left(0\right)}}{\partial t_{\omega}}=0\label{eq:0ordercontinuity}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}^{\left(1\right)}}{\partial t_{\omega}}+\nabla_{\lambda}\cdot\left(n_{e}^{\left(0\right)}\mathbf{u}^{\left(1\right)}\right)=0\label{eq:1ordercontinuity}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}^{\left(2\right)}}{\partial t_{\omega}}+\frac{\partial n_{e}^{\left(0\right)}}{\partial t_{\widetilde{\omega}}}+\nabla_{\lambda}\cdot\left(n_{e}^{\left(0\right)}\mathbf{u}^{\left(2\right)}+n_{e}^{\left(1\right)}\mathbf{u}^{\left(1\right)}\right)+\nabla_{\Vert\widetilde{\lambda}_{\Vert}}\cdot\left(n_{e}^{\left(0\right)}\mathbf{u}^{\left(1\right)}\right)=0\label{eq:2ordercontinuity}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:0ordercontinuity"
+
+\end_inset
+
+) we can say that the equilibrium density is indepndent by the incident
+ wave time-scale, 
+\begin_inset Formula $n_{e}^{\left(0\right)}$
+\end_inset
+
+ is in general assumed to be costant in time, independent by all the time-scales.
+ The zero order equilibrium quantities, and the first order quantities due
+ to the wave fields, do not vary with the parallel space-scale of the fluctuatio
+ns, that is too slow, so we can neglect the last right term of the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2ordercontinuitySCATT"
+
+\end_inset
+
+), so the first and the second order contituity equation become:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}^{\left(1\right)}}{\partial t_{\omega}}+\nabla_{\lambda}\cdot\left(n_{e}^{\left(0\right)}\mathbf{u}^{\left(1\right)}\right)=0\label{eq:1ordercontinuityCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}^{\left(2\right)}}{\partial t_{\omega}}+\nabla_{\lambda}\cdot\left(n_{e}^{\left(0\right)}\mathbf{u}^{\left(2\right)}+n_{e}^{\left(1\right)}\mathbf{u}^{\left(1\right)}\right)=0\label{eq:2ordercontinuityCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At the first and second order the equation of motion is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+m_{e}n_{e}^{\left(0\right)}\frac{\partial\mathbf{u}^{\left(1\right)}}{\partial t_{\omega}}=q_{e}n_{e}^{\left(0\right)}\left(\mathbf{E}^{\left(1\right)}+\mathbf{u}^{\left(1\right)}\times\mathbf{B}^{\left(0\right)}\right)\label{eq:1ordermotion}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+m_{e}n_{e}\frac{\partial\mathbf{u}^{\left(2\right)}}{\partial t_{\omega}}+m_{e}n_{e}^{\left(1\right)}\frac{\partial\mathbf{u}^{\left(1\right)}}{\partial t_{\omega}}+\left(\mathbf{u}^{\left(1\right)}\cdot\nabla_{\lambda}\right)\mathbf{u}^{\left(1\right)}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=en_{e}^{\left(1\right)}\left(\mathbf{E}^{\left(1\right)}+\mathbf{u}^{\left(1\right)}\times\mathbf{B}^{\left(0\right)}\right)+en_{e}^{\left(0\right)}\left(\mathbf{E}^{\left(2\right)}+\mathbf{u}^{\left(1\right)}\times\mathbf{B}^{\left(1\right)}+\mathbf{u}^{\left(2\right)}\times\mathbf{B}^{\left(0\right)}\right)\label{eq:2ordermotion}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dividing these equations by 
+\begin_inset Formula $n_{e}m_{e}$
+\end_inset
+
+ and recovering the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:1ordermotionCOLD"
+
+\end_inset
+
+) in the second left and in the first right term of the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2ordermotionSCATT"
+
+\end_inset
+
+), we obtain: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{u}^{\left(1\right)}}{\partial t_{\omega}}=\frac{q_{e}}{m_{e}}\left(\mathbf{E}^{\left(1\right)}+\mathbf{u}^{\left(1\right)}\times\mathbf{B}^{\left(0\right)}\right)\label{eq:1ordermotionCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{u}^{\left(2\right)}}{\partial t_{\omega}}+\left(\mathbf{u}^{\left(1\right)}\cdot\nabla_{\lambda}\right)\mathbf{u}^{\left(1\right)}=\frac{q_{e}}{m_{e}}\left(\mathbf{E}^{\left(2\right)}+\mathbf{u}^{\left(2\right)}\times\mathbf{B}^{\left(0\right)}\right)+\frac{q_{e}}{m_{e}}\left(\mathbf{u}^{\left(1\right)}\times\mathbf{B}^{\left(1\right)}\right)\label{eq:2ordermotionCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:1ordermotionCOLD"
+
+\end_inset
+
+) is the linearized equation of motion.
+ We now obmit the pedix notation of the temporal and spatial operators and
+ we imply that the derivatives are referred to the incident wave space and
+ time-scale, 
+\begin_inset Formula $\lambda$
+\end_inset
+
+and 
+\begin_inset Formula $\omega$
+\end_inset
+
+.
+ The first order equations are then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}^{\left(1\right)}}{\partial t}+\nabla\cdot\left(n_{e}^{\left(0\right)}\mathbf{u}^{\left(1\right)}\right)=0\label{eq:1ordercontinuityCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{u}^{\left(1\right)}}{\partial t}=\frac{q_{e}}{m_{e}}\left(\mathbf{E}^{\left(1\right)}+\mathbf{u}^{\left(1\right)}\times\mathbf{B}^{\left(0\right)}\right)\label{eq:1ordermotionCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This equation are coupled with the first order Maxwell equations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\nabla\times\mathbf{E}^{\left(1\right)} & = & -\frac{\partial\mathbf{B}^{\left(1\right)}}{\partial t}\label{eq:Maxwell1A}\\
+\nabla\times\mathbf{B}^{\left(1\right)} & = & \mu_{0}\varepsilon_{0}\frac{\partial\mathbf{E}^{\left(1\right)}}{\partial t}+\mu_{0}\mathbf{J}^{\left(1\right)}\label{eq:Maxwell1B}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where the first order current is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{J}^{\left(1\right)}=q_{e}n_{e}^{\left(0\right)}\mathbf{u}^{\left(1\right)}\label{eq:1ordercurrentCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As in the kinetic tractation, at the first order we have obtained a system
+ of linear equation in closed form, the incident wave 
+\begin_inset Formula $\left[n_{e}^{\left(1\right)},\mathbf{u}^{\left(1\right)},\mathbf{E}^{\left(1\right)},\mathbf{B}^{\left(1\right)}\right]$
+\end_inset
+
+and the fluctuations 
+\begin_inset Formula $\left[\widetilde{n}_{e}^{\left(1\right)},\widetilde{\mathbf{u}}^{\left(1\right)},\widetilde{\mathbf{E}}^{\left(1\right)},\mathbf{\widetilde{B}}^{\left(1\right)}\right]$
+\end_inset
+
+ are two independent solutions of this linear set of equation, and also
+ the sum of the two waves is a solution.
+ The analogy with the general kinetic approach is total, and also in this
+ cold fluid approximation we can observe that at the first order there is
+ no coupling between the incident wave and thec fluctuation, that are independen
+t modes and coexist in the plasma.
+ The second order cold-fluid equations are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}^{\left(2\right)}}{\partial t}+\nabla\cdot\left(n_{e}^{\left(0\right)}\mathbf{u}^{\left(2\right)}+n_{e}^{\left(1\right)}\mathbf{u}^{\left(1\right)}\right)=0\label{eq:2ordercontinuityCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{u}^{\left(2\right)}}{\partial t}+\left(\mathbf{u}^{\left(1\right)}\cdot\nabla\right)\mathbf{u}^{\left(1\right)}=\frac{q_{e}}{m_{e}}\left(\mathbf{E}^{\left(2\right)}+\mathbf{u}^{\left(2\right)}\times\mathbf{B}^{\left(0\right)}\right)+\frac{q_{e}}{m_{e}}\left(\mathbf{u}^{\left(1\right)}\times\mathbf{B}^{\left(1\right)}\right)\label{eq:2ordermotionCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This equations are linear in second order quantities, so also in this cold-fluid
+ approach we can construct a second order solution a sum of three elements
+ 
+\begin_inset Formula $\left[n_{e}^{\left(2\right)},\mathbf{u}^{\left(2\right)},\mathbf{E}^{\left(2\right)},\mathbf{B}^{\left(2\right)}\right]$
+\end_inset
+
+, 
+\begin_inset Formula $\left[\widetilde{n}_{e}^{\left(2\right)},\mathbf{\widetilde{u}}^{\left(2\right)},\widetilde{\mathbf{E}}^{\left(2\right)},\mathbf{\widetilde{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\left[\check{n}_{e}^{\left(2\right)},\check{\mathbf{u}}^{\left(2\right)}\check{\mathbf{E}}^{\left(2\right)},\mathbf{\check{B}}^{\left(2\right)}\right]$
+\end_inset
+
+, with the second order electric and magnetic fields solutions of second
+ order Maxwell equations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\nabla\times\mathbf{E}^{\left(2\right)} & = & -\frac{\partial\mathbf{B}^{\left(2\right)}}{\partial t}\label{eq:Maxwell2A}\\
+\nabla\times\mathbf{B}^{\left(2\right)} & = & \mu_{0}\varepsilon_{0}\frac{\partial\mathbf{E}^{\left(2\right)}}{\partial t}+\mu_{0}\mathbf{J}^{\left(2\right)}\label{eq:Maxwell2B}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And the second order current given by the expression:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{J}^{\left(2\right)}=q_{e}n_{e}^{\left(0\right)}\mathbf{u}^{\left(2\right)}+q_{e}n_{e}^{\left(1\right)}\mathbf{u}^{\left(1\right)}\label{eq:2ordercurrentCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The second order quantities due to the incident wave and to the fluctuations
+ satisfies the second order fluid equations without cross term in first
+ order quantities:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}^{\left(2\right)}}{\partial t}+\nabla\cdot\left(n_{e}^{\left(0\right)}\mathbf{u}^{\left(2\right)}+n_{e}^{\left(1\right)}\mathbf{u}^{\left(1\right)}\right)=0\label{eq:2ordercontinuityLH}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{u}^{\left(2\right)}}{\partial t}+\left(\mathbf{u}^{\left(1\right)}\cdot\nabla\right)\mathbf{u}^{\left(1\right)}=\frac{q_{e}}{m_{e}}\left(\mathbf{E}^{\left(2\right)}+\mathbf{u}^{\left(2\right)}\times\mathbf{B}^{\left(0\right)}\right)+\frac{q_{e}}{m_{e}}\left(\mathbf{u}^{\left(1\right)}\times\mathbf{B}^{\left(1\right)}\right)\label{eq:2ordermotionLH}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\widetilde{n}_{e}^{\left(2\right)}}{\partial t}+\nabla\cdot\left(n_{e}^{\left(0\right)}\mathbf{u}^{\left(2\right)}+\widetilde{n}_{e}^{\left(1\right)}\widetilde{\mathbf{u}}^{\left(1\right)}\right)=0\label{eq:2ordercontinuityFLUTT}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\widetilde{\mathbf{u}}^{\left(2\right)}}{\partial t}+\left(\mathbf{\widetilde{u}}^{\left(1\right)}\cdot\nabla\right)\mathbf{\widetilde{u}}^{\left(1\right)}=\frac{q_{e}}{m_{e}}\left(\mathbf{\widetilde{E}}^{\left(2\right)}+\mathbf{\widetilde{u}}^{\left(2\right)}\times\mathbf{\widetilde{B}}^{\left(0\right)}\right)+\frac{q_{e}}{m_{e}}\left(\mathbf{\widetilde{u}}^{\left(1\right)}\times\mathbf{\widetilde{B}}^{\left(1\right)}\right)\label{eq:2ordermotionFLUTT}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+While for the second order field 
+\begin_inset Formula $\left[\check{n}_{e}^{\left(2\right)},\check{\mathbf{u}}^{\left(2\right)}\check{\mathbf{E}}^{\left(2\right)},\mathbf{\check{B}}^{\left(2\right)}\right]$
+\end_inset
+
+, the equations become:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\check{n}_{e}^{\left(2\right)}}{\partial t}+\nabla\cdot\left(n_{e}^{\left(0\right)}\mathbf{\check{u}}^{\left(2\right)}+\widetilde{n}_{e}^{\left(1\right)}\mathbf{u}^{\left(1\right)}+n_{e}^{\left(1\right)}\widetilde{\mathbf{u}}^{\left(1\right)}\right)=0\label{eq:2ordercontinuitySCATT}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\partial\check{\mathbf{u}}}{\partial t}+\left(\widetilde{\mathbf{u}}^{\left(1\right)}\cdot\nabla\right)\mathbf{u}^{\left(1\right)}+\left(\mathbf{u}^{\left(1\right)}\cdot\nabla\right)\mathbf{\widetilde{u}}^{\left(1\right)}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=\frac{q_{e}}{m_{e}}\left(\check{\mathbf{E}}^{\left(2\right)}+\check{\mathbf{u}}^{\left(2\right)}\times\mathbf{\check{\mathbf{B}}}^{\left(0\right)}\right)+\frac{q_{e}}{m_{e}}\left(\mathbf{\widetilde{u}}^{\left(1\right)}\times\mathbf{B}^{\left(1\right)}+\mathbf{u}^{\left(1\right)}\times\mathbf{\widetilde{B}}^{\left(1\right)}\right)\label{eq:2ordermotionSCATT}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the equations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2ordercontinuitySCATT"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2ordermotionSCATT"
+
+\end_inset
+
+) we can deduce that the wave 
+\begin_inset Formula $\left[\check{n}_{e}^{\left(2\right)},\check{\mathbf{u}}^{\left(2\right)}\check{\mathbf{E}}^{\left(2\right)},\mathbf{\check{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ is generated by the interaction between the first order linear fields due
+ the incident wave and the first order field due to the fluctuations, so
+ 
+\begin_inset Formula $\left[\check{n}_{e}^{\left(2\right)},\check{\mathbf{u}}^{\left(2\right)}\check{\mathbf{E}}^{\left(2\right)},\mathbf{\check{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ is the scattered wave and also in the cold fluid approximation scattering
+ by fluctuations is a second order process, we have then shown the total
+ analogy between the general kinetic tractation and the cold-fluid approximation.
+ Then also in the cold plasma limit the electromagnetic field is solution
+ of the second-order wave equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla\times\nabla\times\check{\mathbf{E}}^{\left(2\right)}+\varepsilon_{0}\mu_{0}\frac{\partial^{2}\check{\mathbf{E}}^{\left(2\right)}}{\partial\textrm{t}^{2}}=-\mu_{0}\frac{\partial}{\partial\textrm{t}}\left(\check{\mathbf{J}}_{lin}^{\left(2\right)}+\mathbf{\check{J}}_{int}^{\left(2\right)}\right)\label{eq:wavequation}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\check{\mathbf{J}}_{lin}^{\left(2\right)}$
+\end_inset
+
+ is the second order current due to the linear response of the plasma to
+ the field of the scattered wave, and 
+\begin_inset Formula $\mathbf{J}_{int}^{\left(2\right)}$
+\end_inset
+
+ is the current due to the interaction of the incident wave with the fluctuation
+s, in the Fourier space the equation becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}^{\left(2\right)}\left(\check{\mathbf{k}},\check{\omega}\right)=-\frac{i}{\varepsilon_{0}\check{\omega}}\mathbf{\check{J}}_{int}^{\left(2\right)}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)\label{eq:nonhomogeneouswave}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The total second order current for the scattered wave is given by the expression
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{\check{J}}^{\left(2\right)}=\mathbf{\check{J}}_{lin}^{\left(2\right)}+\check{\mathbf{J}}_{int}^{\left(2\right)}=q_{e}n_{e}^{\left(0\right)}\check{\mathbf{u}}^{\left(2\right)}+q_{e}\widetilde{n}_{e}^{\left(1\right)}\mathbf{u}^{\left(1\right)}+q_{e}n_{e}^{\left(1\right)}\mathbf{\widetilde{u}}^{\left(1\right)}\label{eq:2ordercurrentSCATT}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So to derive an explicit expression for 
+\begin_inset Formula $\mathbf{\check{J}}^{\left(2\right)}$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{\check{J}}_{lin}^{\left(2\right)}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{\check{J}}_{int}^{\left(2\right)}$
+\end_inset
+
+ we need to obtain 
+\begin_inset Formula $\check{\mathbf{u}}^{\left(2\right)}$
+\end_inset
+
+ solving the equation for motion (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2ordermotionSCATT"
+
+\end_inset
+
+).
+ This equation in the Fourier space becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-i\check{\omega}\check{\mathbf{u}}^{\left(2\right)}-\frac{q_{e}B^{\left(0\right)}}{m_{e}}\left(\check{\mathbf{u}}^{\left(2\right)}\times\frac{\mathbf{B}^{\left(0\right)}}{B^{\left(0\right)}}\right)=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=\frac{q_{e}}{m_{e}}\left(\check{\mathbf{E}}_{\check{\mathbf{k}}}^{\left(2\right)}+\mathbf{u}^{\left(1\right)}\times\mathbf{\widetilde{B}}_{\widetilde{\mathbf{k}}}^{\left(1\right)}+\widetilde{\mathbf{u}}^{\left(1\right)}\times\mathbf{B}_{\mathbf{k}}^{\left(1\right)}\right)-i\left[\left(\mathbf{u}\cdot\widetilde{\mathbf{k}}\right)\mathbf{\widetilde{u}}+\left(\mathbf{\widetilde{u}}\cdot\mathbf{k}\right)\mathbf{u}\right]\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we can write:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{M}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{u}}^{\left(2\right)}=\frac{q_{e}}{m_{e}}\left(\check{\mathbf{E}}_{\check{\mathbf{k}}}^{\left(2\right)}+\mathbf{u}^{\left(1\right)}\times\mathbf{\widetilde{B}_{\widetilde{\mathbf{k}}}}^{\left(1\right)}+\widetilde{\mathbf{u}}^{\left(1\right)}\times\mathbf{B}_{\mathbf{k}}^{\left(1\right)}\right)-i\left[\left(\mathbf{u}\cdot\widetilde{\mathbf{k}}\right)\mathbf{\widetilde{u}}+\left(\mathbf{\widetilde{u}}\cdot\mathbf{k}\right)\mathbf{u}\right]\label{eq:2ordermotionSCATTfourier}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\mathbb{M}\left(\check{\mathbf{k}},\check{\omega}\right)$
+\end_inset
+
+ is the tensor:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{M}\left(\check{\mathbf{k}},\check{\omega}\right)=-i\check{\omega}\mathbb{I}-\omega_{ce}\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\mathbf{b}^{\left(0\right)}\right)\label{eq:veltensor}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is easy to demonstrate that this tensor is related to the susceptibility
+ tensor 
+\begin_inset Formula $\mathbb{X}$
+\end_inset
+
+ by the relation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{M}^{-1}\left(\check{\mathbf{k}},\check{\omega}\right)=-i\frac{\check{\omega}}{\omega_{pe}^{2}}\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using this expression in the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2ordermotionSCATTfourier"
+
+\end_inset
+
+) we obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\widetilde{\mathbf{u}}^{\left(2\right)}=-i\frac{e\check{\omega}}{m_{e}\omega_{pe}^{2}}\left[\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\mathbf{\check{E}}_{\check{\mathbf{k}}}^{\left(2\right)}+\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\left(\mathbf{u}^{\left(1\right)}\times\mathbf{\widetilde{B}}_{\widetilde{\mathbf{k}}}^{\left(1\right)}+\widetilde{\mathbf{u}}^{\left(1\right)}\times\mathbf{B}_{\mathbf{k}}^{\left(1\right)}\right)\right]-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\frac{\check{\omega}}{\omega_{pe}^{2}}\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\left[\left(\mathbf{u}^{\left(1\right)}\cdot\widetilde{\mathbf{k}}\right)\mathbf{\widetilde{u}}^{\left(1\right)}+\left(\widetilde{\mathbf{u}}^{\left(1\right)}\cdot\mathbf{k}\right)\mathbf{u}^{\left(1\right)}\right]\label{eq:velocitySCATT}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have obtained an explicit expression for 
+\begin_inset Formula $\check{\mathbf{u}}^{\left(2\right)}$
+\end_inset
+
+ , if we insert this expression into the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2ordercurrentSCATT"
+
+\end_inset
+
+), remembering that 
+\begin_inset Formula $\omega_{pe}^{2}=n_{e}^{\left(0\right)}q_{e}^{2}/\varepsilon_{0}m_{e},$
+\end_inset
+
+ the second order current becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\check{\mathbf{J}}^{\left(2\right)}=-i\varepsilon_{0}\check{\omega}\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}^{\left(2\right)}-i\varepsilon_{0}\check{\omega}\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\left(\mathbf{u}^{\left(1\right)}\times\mathbf{\widetilde{B}}_{\widetilde{\mathbf{k}}}^{\left(1\right)}+\widetilde{\mathbf{u}}\times\mathbf{B}_{\mathbf{k}}^{\left(1\right)}\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\frac{\varepsilon_{0}m_{e}\check{\omega}}{q_{e}}\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\left[\left(\mathbf{u}^{\left(1\right)}\cdot\widetilde{\mathbf{k}}\right)\widetilde{\mathbf{u}}^{\left(1\right)}+\left(\widetilde{\mathbf{u}}^{\left(1\right)}\cdot\mathbf{k}\right)\mathbf{u}^{\left(1\right)}\right]+q_{e}n_{e}^{\left(1\right)}\widetilde{\mathbf{u}}^{\left(1\right)}+q_{e}\widetilde{n}_{e}^{\left(1\right)}\mathbf{u}^{\left(1\right)}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first term is the component due to the linear response of the plasma
+ to the field of the scattered wave:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\check{\mathbf{J}}_{lin}^{\left(2\right)}\left(\check{\mathbf{k}},\check{\omega}\right)=-i\varepsilon_{0}\check{\omega}\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\mathbf{\check{E}}_{\check{\mathbf{k}}}^{\left(2\right)}\left(\check{\mathbf{k}},\omega\right)=\mathbb{S}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}^{\left(2\right)}\left(\check{\mathbf{k}},\check{\omega}\right)\label{eq:2ordercurrentLIN}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the current due to the interaction between the incident wave and the
+ fluctiations, in the cold plasma limit is given by the expression:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\check{\mathbf{J}}_{int}^{\left(2\right)}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)=-i\varepsilon_{0}\check{\omega}\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\left(\mathbf{u}^{\left(1\right)}\times\mathbf{\widetilde{B}}_{\widetilde{\mathbf{k}}}^{\left(1\right)}+\widetilde{\mathbf{u}}\times\mathbf{B}_{\mathbf{k}}^{\left(1\right)}\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\frac{\varepsilon_{0}m_{e}\check{\omega}}{q_{e}}\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\left[\left(\mathbf{u}^{\left(1\right)}\cdot\widetilde{\mathbf{k}}\right)\widetilde{\mathbf{u}}^{\left(1\right)}+\left(\widetilde{\mathbf{u}}^{\left(1\right)}\cdot\mathbf{k}\right)\mathbf{u}^{\left(1\right)}\right]+q_{e}n_{e}^{\left(1\right)}\widetilde{\mathbf{u}}^{\left(1\right)}+q_{e}\widetilde{n}_{e}^{\left(1\right)}\mathbf{u}^{\left(1\right)}\label{eq:2ordercurrentINT}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now exprime the quantities 
+\begin_inset Formula $n_{e}^{\left(1\right)}$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{u}^{\left(1\right)}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{B}_{\mathbf{k}}^{\left(1\right)}$
+\end_inset
+
+ , relatives to the incident wave, in function of the electric field 
+\begin_inset Formula $\mathbf{E}_{\mathbf{k}}^{\left(1\right)}.$
+\end_inset
+
+ The first order motion(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2ordermotionLH"
+
+\end_inset
+
+) and continuity (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2ordercontinuityLH"
+
+\end_inset
+
+) equations for the incident wave in the Fourier space are given by the
+ expressions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{M}\left(\mathbf{k},\omega\right)\cdot\mathbf{u}^{\left(1\right)}=\frac{q_{e}}{m_{e}}\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\omega n_{e}^{\left(1\right)}-n_{e}^{\left(0\right)}\left(\mathbf{k}\cdot\mathbf{u}^{\left(1\right)}\right)=0\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\mathbb{M}\left(\mathbf{k},\omega\right)$
+\end_inset
+
+ is given by the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:veltensor"
+
+\end_inset
+
+), so it is easy to derive:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\mathbf{u}^{\left(1\right)} & =-i & \frac{\omega\varepsilon_{0}}{n_{e}^{\left(0\right)}q_{e}}\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\label{eq:1ordervelINC}\\
+n_{e}^{\left(1\right)} & = & -i\frac{\varepsilon_{0}}{q_{e}}\left(\mathbf{k}\cdot\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\right)\label{eq:1orderdensINC}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Maxwell1A"
+
+\end_inset
+
+) in the Fourier space we derive 
+\begin_inset Formula $\mathbf{B}_{\mathbf{k}}^{\left(1\right)}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{B}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)=\frac{1}{\omega}\left(\mathbf{k}\times\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So using the vectorial identities we obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\widetilde{\mathbf{u}}^{\left(1\right)}\times\mathbf{B}_{\mathbf{k}}^{\left(1\right)}=\frac{1}{\omega}\left[\left(\widetilde{\mathbf{u}}^{\left(1\right)}\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right)\mathbf{k}-\left(\widetilde{\mathbf{u}}^{\left(1\right)}\cdot\mathbf{k}\right)\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right]\label{eq:1orderBfieldINC}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If we insert the expressions (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:1ordervelINC"
+
+\end_inset
+
+), (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:1orderdensINC"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:1orderBfieldINC"
+
+\end_inset
+
+) into the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:2ordercurrentINT2"
+
+\end_inset
+
+) , remembering that 
+\begin_inset Formula $\omega_{ce}=q_{e}B^{\left(0\right)}/m_{e}$
+\end_inset
+
+, we finally obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\check{\mathbf{J}}_{int}^{\left(2\right)}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)=-i\varepsilon_{0}\omega\left\{ \frac{\widetilde{n}_{e}^{\left(1\right)}}{n_{e}^{\left(0\right)}}\left(\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right)-i\frac{\omega_{ce}\check{\omega}}{\omega_{pe}^{2}}\mathbb{X}\left(\mathbf{\check{k}},\check{\omega}\right)\cdot\left[\left(\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right)\times\frac{\widetilde{\mathbf{B}}_{\widetilde{\mathbf{k}}}^{\left(1\right)}}{B^{\left(0\right)}}\right]\right\} \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-i\varepsilon_{0}\left\{ \frac{\check{\omega}}{\omega}\mathbb{X}\left(\mathbf{\check{k}},\check{\omega}\right)\cdot\left[\left(\widetilde{\mathbf{u}}^{\left(1\right)}\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right)\mathbf{k}-\left(\widetilde{\mathbf{u}}^{\left(1\right)}\cdot\mathbf{k}\right)\mathbf{E}_{\mathbf{k}}^{\left(1\right)}-\frac{\omega^{2}}{\omega_{pe}^{2}}\left(\left(\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right)\cdot\widetilde{\mathbf{k}}\right)\widetilde{\mathbf{u}}^{\left(1\right)}-\right.\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left.-\frac{\omega^{2}}{\omega_{pe}^{2}}\left(\widetilde{\mathbf{u}}^{\left(1\right)}\cdot\mathbf{k}\right)\left(\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right)\right]\left.+\left(\mathbf{k}\cdot\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right)\widetilde{\mathbf{u}}^{\left(1\right)}\right\} \label{eq:2ordercurrentINT2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we have derived an explicit expression for the current due to the interaction
+ between the incident wave and the fluctuations in the cold plasma limit,
+ so we can insert this expression in the right side of the second-order
+ non-homogeneous wave equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:nonhomogeneouswave"
+
+\end_inset
+
+) for studying the effects of the fluctuations on the wave propagation and
+ absorption in the cold plasma approximation.
+ We want to study the effects of the density and magnetic field fluctuations,
+ not of the velocity fluctuations, so in the expression for 
+\begin_inset Formula $\check{\mathbf{J}}_{int}^{\left(2\right)}$
+\end_inset
+
+ we obmit the terms due to 
+\begin_inset Formula $\widetilde{\mathbf{u}}^{\left(1\right)}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\check{\mathbf{J}}_{int}^{\left(2\right)}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)=-i\varepsilon_{0}\omega\left\{ \frac{\widetilde{n}_{e}^{\left(1\right)}}{n_{e}^{\left(0\right)}}\left(\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right)-i\frac{\omega_{ce}\check{\omega}}{\omega_{pe}^{2}}\mathbb{X}\left(\mathbf{\check{k}},\check{\omega}\right)\cdot\left[\left(\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right)\times\frac{\widetilde{\mathbf{B}}_{\widetilde{\mathbf{k}}}^{\left(1\right)}}{B^{\left(0\right)}}\right]\right\} \end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Remembering that 
+\begin_inset Formula $\mathbb{X}=\mathbb{K}-\mathbb{I}$
+\end_inset
+
+ and that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left(\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right)\times\frac{\widetilde{\mathbf{B}}_{\widetilde{\mathbf{k}}}^{\left(1\right)}}{B^{\left(0\right)}}=\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\mathbf{B}_{\mathbf{k}}^{\left(1\right)}}{B^{\left(0\right)}}\right)\cdot\left(\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We obtain the interaction current in function of the dielectric tensor and
+ of the incident electric field:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\check{\mathbf{J}}_{int}^{\left(2\right)}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)=i\varepsilon_{0}\omega\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\frac{\widetilde{n}_{e}^{\left(1\right)}}{n_{e}^{\left(0\right)}}+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\left.i\frac{\omega_{ce}\check{\omega}}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\mathbf{B}_{\mathbf{k}}^{\left(1\right)}}{B^{\left(0\right)}}\right)\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\label{eq:currentINT}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Mode coupling equation
+\end_layout
+
+\begin_layout Standard
+We now insert the expression (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:currentINT"
+
+\end_inset
+
+) in the non-homogeneous wave equation, from this moment we work only with
+ the second order equation, so we obmit the explicit notation, because we
+ imply it:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=-\frac{i}{\varepsilon_{0}\check{\omega}}\mathbf{\check{J}}_{int}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)\label{eq:wavequationSOTT}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the fluctuations we introduce the notation: 
+\begin_inset Formula $\delta n_{e}\left(\widetilde{\mathbf{k}},\widetilde{\omega}\right)=\widetilde{n}_{e}^{\left(1\right)}$
+\end_inset
+
+ and 
+\begin_inset Formula $\delta\mathbf{B}\left(\widetilde{\mathbf{k}},\widetilde{\omega}\right)=\widetilde{\mathbf{B}}_{\widetilde{\mathbf{k}}}^{\left(1\right)}$
+\end_inset
+
+ .From the conservation of momentum and energy, the wave vector and the frequency
  of the scattered wave are given by the expressions:
 \end_layout
 
@@ -77,16 +2449,12 @@ s wave equation.
 \end_layout
 
 \begin_layout Standard
-The field of the scattered wave, 
-\begin_inset Formula $\check{\mathbf{E}}\left(\check{\mathbf{k}},\check{\omega}\right)$
-\end_inset
-
-, satisfies the equation:
+So we have:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\nabla\times\nabla\times\check{\mathbf{E}}+\varepsilon_{0}\mu_{0}\frac{\partial^{2}\check{\mathbf{E}}}{\partial\textrm{t}^{2}}=-\mu_{0}\frac{\partial}{\partial\textrm{t}}\left(\check{\mathbf{J}}+\widetilde{\mathbf{J}}\right)\end{equation}
+\widetilde{\mathbf{k}}=\mathbf{\check{k}}-\mathbf{k},\quad\widetilde{\omega}=\check{\omega}-\omega\end{equation}
 
 \end_inset
 
@@ -94,83 +2462,7 @@ The field of the scattered wave,
 \end_layout
 
 \begin_layout Standard
-Where 
-\begin_inset Formula $\check{\mathbf{J}}$
-\end_inset
-
- is the current due to the linear response of the plasma to the field of
- the scattered wave, and 
-\begin_inset Formula $\widetilde{\mathbf{J}}$
-\end_inset
-
- is the current due to the interaction of the incident wave with the fluctuation
-s.
- In the Fourier space we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\check{\mathbf{k}}\times\check{\mathbf{k}}\times\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)+\varepsilon_{0}\mu_{0}\check{\omega}^{2}\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=-i\mu_{0}\check{\omega}\left(\check{\mathbf{J}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)+\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k}.\check{\mathbf{k}},\omega,\check{\omega}\right)\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-So, 
-\begin_inset Formula $\check{\mathbf{J}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)$
-\end_inset
-
- is given by:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\check{\mathbf{J}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=\mathbb{S}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Inserting this expression in the wave equation and introducing the dielectric
- tensor, we obtain the non homogeneous equation:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\check{\mathbf{k}}\times\check{\mathbf{k}}\times\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)+\frac{\check{\omega}^{2}}{\textrm{c }^{2}}\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=-i\mu_{0}\check{\omega}\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Using the dispersion tensor the equation becomes:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=-\frac{i}{\varepsilon_{0}\check{\omega}}\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-An explicit expression for the current 
-\begin_inset Formula $\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)$
-\end_inset
-
- is obtained applying the Fourier trasform to the MHD equations, the derivation
- of this expression using the linear theory in the cold plasma approximation
- is discussed in details in appendix.
- In the cold plasma limit, considering only the component of the current
- due to the electrons, and several incident modes with wave vector 
+Considering several incident modes with wave vector 
 \begin_inset Formula $\mathbf{k}$
 \end_inset
 
@@ -178,12 +2470,19 @@ An explicit expression for the current
 \begin_inset Formula $\omega$
 \end_inset
 
-, we have:
+, the expression (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:currentINT"
+
+\end_inset
+
+) becomes:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \[
-\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)=i\varepsilon_{0}\underset{\mathbf{k},\omega}{\sum}\omega\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{n}+\right.\]
+\check{\mathbf{J}}_{int}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)=i\varepsilon_{0}\underset{\mathbf{k},\omega}{\sum}\omega\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\frac{\delta n_{e}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{n_{e}^{\left(0\right)}}+\right.\]
 
 \end_inset
 
@@ -192,7 +2491,7 @@ An explicit expression for the current
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\check{\omega}}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{B_{\mathbf{k}}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+\left.+i\frac{\omega_{ce}\check{\omega}}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{B^{\left(0\right)}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
 
 \end_inset
 
@@ -201,6 +2500,10 @@ An explicit expression for the current
 
 \begin_layout Standard
 Where 
+\begin_inset Formula $\mathbf{E_{k}}=\mathbf{E}_{\mathbf{k}}^{\left(1\right)}$
+\end_inset
+
+ , 
 \begin_inset Formula $\mathbb{E}^{LC}$
 \end_inset
 
@@ -215,7 +2518,7 @@ Where
 
 \begin_layout Standard
 \begin_inset Formula \[
-\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}}\check{\omega}\right)=\underset{\mathbf{k},\omega}{\sum}\left[\frac{\omega}{\check{\omega}}\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{n}+\right.\]
+\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}}\check{\omega}\right)=\underset{\mathbf{k},\omega}{\sum}\left[\frac{\omega}{\check{\omega}}\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\frac{\delta n_{e}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{n_{e}^{\left(0\right)}}+\right.\]
 
 \end_inset
 
@@ -224,7 +2527,7 @@ Where
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{B_{\mathbf{k}}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{B^{\left(0\right)}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
 
 \end_inset
 
@@ -245,7 +2548,7 @@ Fluctuations are assumed to be slow, so we have
 
 \begin_layout Standard
 \begin_inset Formula \[
-\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=\underset{\mathbf{k},\omega}{\sum}\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}+\right.\]
+\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{E}}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}},\check{\omega}\right)=\underset{\mathbf{k},\omega}{\sum}\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\frac{\delta n_{e}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n_{e}}+\right.\]
 
 \end_inset
 
@@ -254,7 +2557,7 @@ Fluctuations are assumed to be slow, so we have
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B_{\mathbf{k}}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
 
 \end_inset
 
@@ -315,7 +2618,7 @@ Where
 
 \begin_layout Standard
 \begin_inset Formula \[
-\left[\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)+i\frac{\partial\mathbb{D}}{\partial\check{\omega}}\frac{\partial}{\partial\textrm{t }}\right]\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\check{E}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}}\right)=\underset{\mathbf{k}}{\sum}\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}+\right.\]
+\left[\mathbb{D}\left(\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)+i\frac{\partial\mathbb{D}}{\partial\check{\omega}}\frac{\partial}{\partial\textrm{t }}\right]\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\check{E}_{\check{\mathbf{k}}}\left(\check{\mathbf{k}}\right)=\underset{\mathbf{k}}{\sum}\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\frac{\delta n_{e}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n_{e}^{\left(0\right)}}+\right.\]
 
 \end_inset
 
@@ -324,7 +2627,7 @@ Where
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B_{\mathbf{k}}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\right]\cdot\mathbf{e}\left(\mathbf{k}\right)E_{\mathbf{k}}\left(\mathbf{k}\right)\end{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\right]\cdot\mathbf{e}\left(\mathbf{k}\right)E_{\mathbf{k}}\left(\mathbf{k}\right)\end{equation}
 
 \end_inset
 
@@ -350,7 +2653,7 @@ In this equation all the quantities are considered for
 
 \begin_layout Standard
 \begin_inset Formula \[
-i\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\frac{\partial\mathbb{D}}{\partial\check{\omega}}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\frac{\partial\check{E}_{\check{\mathbf{k}}}\left(\mathbf{\check{k}}\right)}{\partial\textrm{t }}=\underset{\mathbf{k}}{\sum}\check{\mathbf{e}}^{\star}\left(\mathbf{\check{\mathbf{k}}}\right)\cdot\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}+\right.\]
+i\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\frac{\partial\mathbb{D}}{\partial\check{\omega}}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\frac{\partial\check{E}_{\check{\mathbf{k}}}\left(\mathbf{\check{k}}\right)}{\partial\textrm{t }}=\underset{\mathbf{k}}{\sum}\check{\mathbf{e}}^{\star}\left(\mathbf{\check{\mathbf{k}}}\right)\cdot\left[\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\frac{\delta n_{e}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n_{e}}+\right.\]
 
 \end_inset
 
@@ -359,7 +2662,7 @@ i\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\frac{\partial\ma
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B_{\mathbf{k}}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\right]\cdot\mathbf{e}\left(\mathbf{k}\right)E_{\mathbf{k}}\left(\mathbf{k}\right)\end{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\right]\cdot\mathbf{e}\left(\mathbf{k}\right)E_{\mathbf{k}}\left(\mathbf{k}\right)\end{equation}
 
 \end_inset
 
@@ -402,7 +2705,7 @@ So we exprime the electric field in function of the wave amplitude, and
 
 \begin_layout Standard
 \begin_inset Formula \[
-i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset{\mathbf{k}}{\sum}\frac{\check{\omega}_{\check{k}}}{2}\left[\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}+\right.\]
+i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset{\mathbf{k}}{\sum}\frac{\check{\omega}_{\check{k}}}{2}\left[\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\frac{\delta n_{e}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n_{e}}+\right.\]
 
 \end_inset
 
@@ -411,7 +2714,7 @@ i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\check{\omega}_{\check{k}}}{\omega_{pe}^{2}}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B_{\mathbf{k}}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\right]C\left(\mathbf{k}\right)\end{equation}
+\left.+i\frac{\omega_{ce}\check{\omega}_{\check{k}}}{\omega_{pe}^{2}}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\right]C\left(\mathbf{k}\right)\end{equation}
 
 \end_inset
 
@@ -421,7 +2724,7 @@ i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset
 \begin_layout Standard
 This equation can be written in the form:
 \begin_inset Formula \begin{equation}
-i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset{\mathbf{k}}{\sum}\left[V^{n}\left(\mathbf{k},\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}+\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B_{\mathbf{k}}}\right]C\left(\mathbf{k}\right)\end{equation}
+i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset{\mathbf{k}}{\sum}\left[V^{n}\left(\mathbf{k},\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)\frac{\delta n_{e}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n_{e}}+\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}\left(\mathbf{k}\right)}\right]C\left(\mathbf{k}\right)\end{equation}
 
 \end_inset
 
@@ -475,261 +2778,7 @@ V_{m}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)=\frac{i\
 \end_layout
 
 \begin_layout Section*
-\start_of_appendix
 Appendix A
-\end_layout
-
-\begin_layout Standard
-We now derive the explicit expression for the current 
-\begin_inset Formula $\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)$
-\end_inset
-
- due to interaction between the field of the incident wave and the fluctuation
- of the density and of the magnetic field, in the cold plasma approximation.
- 
-\end_layout
-
-\begin_layout Standard
-We firstly assume to have only fluctuations of the density, with 
-\begin_inset Formula $\widetilde{\omega}\ll\omega$
-\end_inset
-
-, so 
-\begin_inset Formula $\check{\omega}=\omega$
-\end_inset
-
-.
- In the cold plasma model, the effects of the thermal motion of the particles
- and of the collisions are neglected, each species of particle is treated
- as an indipendent fluid, so for studying wave propagation we need to solve
- the Maxwell equations coupled with the equation of the motion for the various
- species of particles:
-\begin_inset Formula \begin{equation}
-\nabla\times\mathbf{E}=-\frac{\partial\mathbf{B}}{\partial\textrm{t}}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\nabla\times\mathbf{B}=\varepsilon_{0}\mu_{0}\frac{\partial\mathbf{E}}{\partial\textrm{t}}+\mu_{0}\mathbf{J}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\textrm{m}_{s}\left(\frac{\partial\mathbf{v}_{s}}{\partial\textrm{t}}+\left(\mathbf{v}_{s}\nabla\right)\mathbf{v}_{s}\right)=\textrm{q}_{s}\left(\mathbf{E}+\frac{\mathbf{\mathbf{v}}_{s}}{\textrm{c}}\times\mathbf{B}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Where the current 
-\begin_inset Formula $\mathbf{J}$
-\end_inset
-
- is given by the expression:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\mathbf{J}=\underset{s}{\sum}\textrm{q}_{s}n_{s}\mathbf{v}_{s}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Since the difference between electron and ion masses is very large, and
- 
-\begin_inset Formula $\mathbf{v}_{i}\ll\mathbf{v}_{e}$
-\end_inset
-
-, we consider only the component of the current due to the electrons, assuming
- 
-\begin_inset Formula $n_{e}=n$
-\end_inset
-
- and introducing the density fluctuations, we have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\mathbf{J}=-e\left(n+\delta n\right)\mathbf{v}_{e}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Neglecting the convective term, the linearized equation of motion, in absence
- of magnetic field and velocity fluctuation, is:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\textrm{m}_{e}\frac{\partial\mathbf{v}_{e}}{\partial\textrm{t }}=-e\left(\mathbf{E}+\frac{\mathbf{v}_{e}}{\textrm{c }}\times\mathbf{B}\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In the Fourier space we have:
-\begin_inset Formula \begin{equation}
-i\textrm{m}_{e}\omega\left[\mathbf{v}_{e\mathbf{k}}\left(\mathbf{k},\omega\right)+i\frac{\omega_{ce}}{\omega}\mathbf{v}_{e\mathbf{k}}\left(\mathbf{k},\omega\right)\times\mathbf{b}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\right]=e\mathbf{E}\left(\mathbf{k},\omega\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Using the tensorial notation:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-i\textrm{m}_{e}\omega\left(\mathbb{I}+i\frac{\omega_{ce}}{\omega}\mathbb{E}^{LC}\cdot\mathbf{b}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\right)\cdot\mathbf{v}_{e\mathbf{k}}\left(\mathbf{k},\omega\right)=e\mathbf{E}\left(\mathbf{k},\omega\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-So the electron velocity is given by the expression:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\mathbf{v}_{e\mathbf{k}}\left(\mathbf{k},\omega\right)=-\frac{ie}{\textrm{m}_{e}\omega}\mathbb{T}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Where the tensor 
-\begin_inset Formula $\mathbb{T}$
-\end_inset
-
- is:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-\mathbb{T}\left(\mathbf{k},\omega\right)=\frac{1}{\omega^{2}-\omega_{ce}^{2}}\left(\omega^{2}\mathbb{I}-\omega_{ce}^{2}\mathbf{b}_{\mathbf{k}}\mathbf{b}_{\mathbf{k}}-i\omega\omega_{ce}\mathbb{E}^{LC}\cdot\mathbf{b}_{\mathbf{k}}\right)\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Using (30) in (25), the current becomes:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\mathbf{J}_{\mathbf{k}}=\frac{ie^{2}n}{\textrm{m}_{e}\omega}\left(1+\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}\right)\mathbf{\mathbb{T}}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=\frac{i\omega_{pe}^{2}\varepsilon_{0}}{\omega}\left(1+\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}\right)\mathbb{T}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-So the component due to the interaction between the field of the incident
- wave and the fluctuations is:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)=\frac{i\omega_{pe}^{2}\varepsilon_{0}}{\omega}\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}\mathbb{T}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In absence of fluctuations, we have:
-\begin_inset Formula \begin{equation}
-\mathbf{J}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=\mathbb{S}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=i\omega\varepsilon_{0}\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)=\frac{i\omega_{pe}^{2}\varepsilon_{0}}{\omega}\mathbb{T}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Where 
-\begin_inset Formula $\mathbb{S}$
-\end_inset
-
- and 
-\begin_inset Formula $\mathbb{K}$
-\end_inset
-
- are respectively the conductivity and the permittivity tensor of a cold
- plasma.
- From last equation we can deduce an expression of 
-\begin_inset Formula $\mathbb{T}$
-\end_inset
-
- in function of the cold plasma permittivity tensor:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \[
-\mathbb{T}\left(\mathbf{k},\omega\right)=\frac{\omega^{2}}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-So the current due to the fluctuation of the density can be finally expressed
- in the form:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\widetilde{\mathbf{J}}_{\mathbf{k},\check{\mathbf{k}}}\left(\mathbf{k},\check{\mathbf{k}},\omega,\check{\omega}\right)=i\omega\varepsilon_{0}\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In components:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\widetilde{J}_{\mathbf{k},\check{\mathbf{k}},i}=i\omega\varepsilon_{0}\left(\delta_{ij}-K_{ij}\left(\mathbf{k},\omega\right)\right)\frac{\delta n\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n}E_{\mathbf{k},j}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section*
-Appendix B
 \end_layout
 
 \begin_layout Standard
@@ -931,7 +2980,7 @@ M_{xz} & = & \frac{\omega}{2}\frac{\partial D_{xz}}{\partial\omega}=\frac{\omega
 M_{yx} & = & \frac{\omega}{2}\frac{\partial D_{yx}}{\partial\omega}=-\frac{\omega}{2}\frac{\partial X_{xy}}{\partial\omega}\\
 M_{yy} & = & \frac{\omega}{2}\frac{\partial D_{yy}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{yy}}{\partial\omega}+N^{2}\\
 M_{yz} & = & \frac{\omega}{2}\frac{\partial D_{yz}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{yz}}{\partial\omega}\\
-M_{zx} & = & \frac{\omega}{2}\frac{\partial D_{zx}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{xz}}{\partial\omega}-N_{\perp}N_{\parallel}\\
+M_{zx} & = & \frac{\omega}{2}\frac{\partial D_{zx}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{zx}}{\partial\omega}-N_{\perp}N_{\parallel}\\
 M_{zy} & = & \frac{\omega}{2}\frac{\partial D_{zy}}{\partial\omega}=-\frac{\omega}{2}\frac{\partial X_{yz}}{\partial\omega}\\
 M_{zz} & = & \frac{\omega}{2}\frac{\partial D_{zz}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{zz}}{\partial\omega}+N_{\perp}^{2}\end{eqnarray*}
 
@@ -973,9 +3022,8 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \begin{eqnarray*}
-\frac{\partial X_{xx}}{\partial\omega} & = & \frac{\partial X_{xx}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xx}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{xx}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}}{\partial\omega}+\frac{\partial X_{xx}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
- & = & -\left(\frac{\partial X_{xx}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{xx}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{xx}}{\partial N_{\Vert}}\frac{N_{\Vert}}{\omega}+\frac{\partial X_{xx}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
+\begin_inset Formula \[
+\frac{\partial X_{xx}}{\partial\omega}=\frac{\partial X_{xx}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xx}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{xx}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{xx}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
 
 \end_inset
 
@@ -983,9 +3031,8 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \begin{eqnarray*}
-\frac{\partial X_{xy}}{\partial\omega} & = & \frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{xy}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}}{\partial\omega}+\frac{\partial X_{xy}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
- & = & -\left(\frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}+\frac{\partial X_{xy}}{\partial N_{\Vert}}\frac{N_{\Vert}}{\omega}+\frac{\partial X_{xy}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
+\begin_inset Formula \[
+\frac{\partial X_{xy}}{\partial\omega}=\frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
 
 \end_inset
 
@@ -993,9 +3040,8 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \begin{eqnarray*}
-\frac{\partial X_{xz}}{\partial\omega} & = & \frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{xz}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}}{\partial\omega}+\frac{\partial X_{xz}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
- & = & -\left(\frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}+\frac{\partial X_{xz}}{\partial N_{\Vert}}\frac{N_{\Vert}}{\omega}+\frac{\partial X_{xz}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
+\begin_inset Formula \[
+\frac{\partial X_{xz}}{\partial\omega}=\frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
 
 \end_inset
 
@@ -1003,9 +3049,8 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \begin{eqnarray*}
-\frac{\partial X_{yy}}{\partial\omega} & = & \frac{\partial X_{yy}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{yy}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{yy}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}}{\partial\omega}+\frac{\partial X_{yy}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
- & = & -\left(\frac{\partial X_{yy}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{yy}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}+\frac{\partial X_{yy}}{\partial N_{\Vert}}\frac{N_{\Vert}}{\omega}+\frac{\partial X_{yy}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
+\begin_inset Formula \[
+\frac{\partial X_{yy}}{\partial\omega}=\frac{\partial X_{yy}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{yy}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{yy}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{yy}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
 
 \end_inset
 
@@ -1013,9 +3058,8 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \begin{eqnarray*}
-\frac{\partial X_{yz}}{\partial\omega} & = & \frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{yz}}{\partial N_{\Vert}}\frac{\partial N_{\Vert}}{\partial\omega}+\frac{\partial X_{yz}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
- & = & -\left(\frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}+\frac{\partial X_{yz}}{\partial N_{\parallel}}\frac{N_{\parallel}}{\omega}+\frac{\partial X_{yz}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
+\begin_inset Formula \[
+\frac{\partial X_{yz}}{\partial\omega}=\frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
 
 \end_inset
 
@@ -1023,34 +3067,8 @@ The derivatives of the elements of the susceptibility tensor
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \begin{eqnarray*}
-\frac{\partial X_{zz}}{\partial\omega} & = & \frac{\partial X_{zz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{zz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}+\frac{\partial X_{zz}}{\partial N_{\parallel}}\frac{\partial N_{\parallel}}{\partial\omega}+\frac{\partial X_{zz}}{\partial N_{\perp}}\frac{\partial N_{\perp}}{\partial\omega}=\\
- & = & -\left(\frac{\partial X_{zz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}+\frac{\partial X_{zz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}+\frac{\partial X_{zz}}{\partial N_{\Vert}}\frac{N_{\Vert}}{\omega}+\frac{\partial X_{zz}}{\partial N_{\perp}}\frac{N_{\perp}}{\omega}\right)\end{eqnarray*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-So the elements of the matrix 
-\begin_inset Formula $\mathbb{M}$
-\end_inset
-
- become:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{eqnarray*}
-M_{xx} & = & -\frac{1}{2}\left(\frac{\partial X_{xx}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{xx}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{xx}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{xx}}{\partial N_{\perp}}N_{\perp}\right)+N_{\parallel}^{2}\\
-M_{xy} & = & -\frac{1}{2}\left(\frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{xy}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{xy}}{\partial N_{\perp}}N_{\perp}\right)\\
-M_{xz} & = & -\frac{1}{2}\left(\frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{xz}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}\right)-N_{\perp}N_{\parallel}\\
-M_{yx} & = & \frac{1}{2}\left(\frac{\partial X_{xy}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{xy}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{xy}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{xy}}{\partial N_{\perp}}N_{\perp}\right)\\
-M_{yy} & = & -\frac{1}{2}\left(\frac{\partial X_{yy}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{yy}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{yy}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{yy}}{\partial N_{\perp}}N_{\perp}\right)+N^{2}\\
-M_{yz} & = & -\frac{1}{2}\left(\frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{yz}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{yz}}{\partial N_{\perp}}N_{\perp}\right)\\
-M_{zx} & = & -\frac{1}{2}\left(\frac{\partial X_{xz}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{xz}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{xz}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}\right)-N_{\perp}N_{\Vert}\\
-M_{zy} & = & \frac{1}{2}\left(\frac{\partial X_{yz}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{yz}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{yz}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{yz}}{\partial N_{\perp}}N_{\perp}\right)\\
-M_{zz} & = & -\frac{1}{2}\left(\frac{\partial X_{zz}}{\partial\overline{\omega}_{ps}}\overline{\omega}_{ps}+\frac{\partial X_{zz}}{\partial\overline{\omega}_{cs}}\overline{\omega}_{cs}+\frac{\partial X_{zz}}{\partial N_{\Vert}}N_{\Vert}+\frac{\partial X_{zz}}{\partial N_{\perp}}N_{\perp}\right)+N_{\perp}^{2}\end{eqnarray*}
+\begin_inset Formula \[
+\frac{\partial X_{zz}}{\partial\omega}=\frac{\partial X_{zz}}{\partial\overline{\omega}_{ps}}\frac{\partial\overline{\omega}_{ps}}{\partial\omega}+\frac{\partial X_{zz}}{\partial\overline{\omega}_{cs}}\frac{\partial\overline{\omega}_{cs}}{\partial\omega}=-\frac{\partial X_{zz}}{\partial\overline{\omega}_{ps}}\frac{\overline{\omega}_{ps}}{\omega}-\frac{\partial X_{zz}}{\partial\overline{\omega}_{cs}}\frac{\overline{\omega}_{cs}}{\omega}\]
 
 \end_inset
 
@@ -1068,7 +3086,7 @@ K\left(k_{\perp}^{\sigma},\check{k}_{\perp}^{\sigma},\beta\right)=\frac{2\pi\che
 \end_inset
 
 Where the group velocity is evaluated for the scattered wave vector.
- The group velocity ffor the mode 
+ The group velocity for the mode 
 \begin_inset Formula $\sigma$
 \end_inset
 
@@ -1105,134 +3123,11 @@ Since
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-K\left(k_{\perp}^{\sigma},\check{k}_{\perp}^{\sigma},\beta\right)=-2\pi\check{k}_{\perp}^{\sigma}\left.\frac{\partial\mathcal{D}/\partial\omega}{\partial\mathcal{D}/\partial k_{\perp}}\right|_{k_{\perp}=k_{\perp}^{\sigma}}\cdot\left|V^{n}\left(\mathbf{k}^{\sigma},\check{\mathbf{k}}^{\sigma},\beta\right)\right|^{2}\end{equation}
+K\left(k_{\perp}^{\sigma},\check{k}_{\perp}^{\sigma},\beta\right)=-2\pi\check{k}_{\perp}^{\sigma}\left.\frac{\partial\mathcal{D}/\partial\omega}{\partial\mathcal{D}/\partial k_{\perp}}\right|_{k_{\perp}=k_{\perp}^{\sigma}}\cdot\left|V^{n}\left(\mathbf{k}^{\sigma},\check{\mathbf{k}}^{\sigma},\beta\right)\right|\end{equation}
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-In function of the refactive index:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-K\left(N_{\perp}^{\sigma},\check{N}_{\perp}^{\sigma},\beta\right)=-\frac{2\pi\omega^{2}}{\textrm{c}^{2}}\check{N}_{\perp}^{\sigma}\left.\frac{\partial\mathcal{D}/\partial\omega}{\partial\mathcal{D}/\partial N_{\perp}}\right|_{N_{\perp}=N_{\perp}^{\sigma}}\cdot\left|V^{n}\left(\mathbf{N}^{\sigma},\check{\mathbf{N}}^{\sigma},\beta\right)\right|^{2}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section*
-Appendix C
-\end_layout
-
-\begin_layout Standard
-In order to calculate the scattering probability kernel using the expression
- derived in the precedent paragraph, particularly convenient from a numerical
- point of vieuw, and with the purpose of doing a benchmarking between different
- expression of the group velocity, we now calculate the derivative of the
- dispersion relation respect to 
-\begin_inset Formula $N_{\perp}.$
-\end_inset
-
-Starting from the factorised expression of the dispersion relation:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\mathcal{D}=\underset{k=1}{\overset{k=43}{\sum}}\mathcal{D}^{\left(k\right)}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We have:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{equation}
-\frac{\partial\mathcal{D}}{\partial N_{\perp}}=\overset{k=43}{\underset{k=1}{\sum}}\frac{\partial\mathcal{D}^{\left(k\right)}}{\partial N_{\perp}}\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Where:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{eqnarray*}
-\frac{\partial\mathcal{D}^{\left(1\right)}}{\partial N_{\perp}} & = & 4N_{\perp}^{3}\\
-\frac{\partial\mathcal{D}^{\left(2\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}N_{\perp}^{4}+4N_{\perp}^{3}X_{xx}\\
-\frac{\partial\mathcal{D}^{\left(3\right)}}{\partial N_{\perp}} & = & 2N_{\Vert}\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}^{3}+6N_{\Vert}X_{xz}N_{\perp}^{2}\\
-\frac{\partial\mathcal{D}^{\left(4\right)}}{\partial N_{\perp}} & = & N_{\Vert}^{2}\frac{\partial X_{xx}}{\partial N_{\perp}}N_{\perp}^{2}+2N_{\parallel}^{2}X_{xx}N_{\perp}\\
-\frac{\partial\mathcal{D}^{\left(5\right)}}{\partial N_{\perp}} & = & N_{\Vert}^{2}\frac{\partial X_{zz}}{\partial N_{\perp}}N_{\perp}^{2}+2N_{\Vert}^{2}X_{zz}N_{\perp}\\
-\frac{\partial\mathcal{D}^{\left(6\right)}}{\partial N_{\perp}} & = & 4N_{\Vert}^{2}N_{\perp}\\
-\frac{\partial\mathcal{D}^{\left(7\right)}}{\partial N_{\perp}} & = & -2\frac{\partial X_{xx}}{\partial N_{\perp}}N_{\perp}^{2}-4X_{xx}N_{\perp}\\
-\frac{\partial\mathcal{D}^{\left(8\right)}}{\partial N_{\perp}} & = & -\frac{\partial X_{yy}}{\partial N_{\perp}}N_{\perp}^{2}-2X_{yy}N_{\perp}\\
-\frac{\partial\mathcal{D}^{\left(9\right)}}{\partial N_{\perp}} & = & -\frac{\partial X_{zz}}{\partial N_{\perp}}N_{\perp}^{2}-2X_{zz}N_{\perp}\\
-\frac{\partial\mathcal{D}^{\left(10\right)}}{\partial N_{\perp}} & = & -\frac{\partial X_{xx}}{\partial N_{\perp}}X_{zz}N_{\perp}^{2}-X_{xx}\frac{\partial X_{zz}}{\partial N_{\perp}}N_{\perp}^{2}-2X_{xx}X_{zz}N_{\perp}\\
-\frac{\partial\mathcal{D}^{\left(11\right)}}{\partial N_{\perp}} & = & 2X_{xz}\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}^{2}+2X_{xz}^{2}N_{\perp}\\
-\frac{\partial\mathcal{D}^{\left(12\right)}}{\partial N_{\perp}} & = & -\frac{\partial X_{xx}}{\partial N_{\perp}}X_{yy}N_{\perp}^{2}-X_{xx}\frac{\partial X_{yy}}{\partial N_{\perp}}N_{\perp}^{2}-2X_{xx}X_{yy}N_{\perp}\\
-\frac{\partial\mathcal{D}^{\left(13\right)}}{\partial N_{\perp}} & = & -2X_{xy}\frac{\partial X_{xy}}{\partial N_{\perp}}N_{\perp}^{2}-2X_{xy}^{2}N_{\perp}\\
-\frac{\partial\mathcal{D}^{\left(14\right)}}{\partial N_{\perp}} & = & -4N_{\perp}\\
-\frac{\partial\mathcal{D}^{\left(15\right)}}{\partial N_{\perp}} & = & -2N_{\Vert}\frac{\partial X_{yy}}{\partial N_{\perp}}X_{xz}N_{\perp}-2N_{\Vert}X_{yy}\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}-2N_{\Vert}X_{yy}X_{xz}\\
-\frac{\partial\mathcal{D}^{\left(16\right)}}{\partial N_{\perp}} & = & 2N_{\Vert}\frac{\partial X_{xy}}{\partial N_{\perp}}X_{yz}N_{\perp}+2N_{\Vert}X_{xy}\frac{\partial X_{yz}}{\partial N_{\perp}}N_{\perp}+2N_{\Vert}X_{xy}X_{yz}\\
-\frac{\partial\mathcal{D}^{\left(17\right)}}{\partial N_{\perp}} & = & -2N_{\Vert}\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}-2N_{\Vert}X_{xz}\\
-\frac{\partial\mathcal{D}^{\left(18\right)}}{\partial N_{\perp}} & = & 2N_{\parallel}^{3}\frac{\partial X_{xz}}{\partial N_{\perp}}N_{\perp}+2N_{\Vert}^{3}X_{xz}\\
-\frac{\partial\mathcal{D}^{\left(19\right)}}{\partial N_{\perp}} & = & 0\\
-\frac{\partial\mathcal{D}^{\left(20\right)}}{\partial N_{\perp}} & = & N_{\Vert}^{4}\frac{\partial X_{zz}}{\partial N_{\perp}}\end{eqnarray*}
-
-\end_inset
-
-
-\begin_inset Formula \begin{eqnarray*}
-\frac{\partial\mathcal{D}^{\left(21\right)}}{\partial N_{\perp}} & = & 0\\
-\frac{\partial\mathcal{D}^{\left(22\right)}}{\partial N_{\perp}} & = & 2N_{\Vert}^{2}X_{xz}\frac{\partial X_{xz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(23\right)}}{\partial N_{\perp}} & = & -N_{\Vert}^{2}\frac{\partial X_{yy}}{\partial N_{\perp}}X_{zz}-N_{\Vert}^{2}X_{yy}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(24\right)}}{\partial N_{\perp}} & = & -N_{\Vert}^{2}\frac{\partial X_{xx}}{\partial N_{\perp}}X_{zz}-N_{\Vert}^{2}X_{xx}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(25\right)}}{\partial N_{\perp}} & = & -2N_{\Vert}^{2}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(26\right)}}{\partial N_{\perp}} & = & -N_{\Vert}^{2}\frac{\partial X_{yy}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(27\right)}}{\partial N_{\perp}} & = & -2N_{\Vert}^{2}X_{yz}\frac{\partial X_{yz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(28\right)}}{\partial N_{\perp}} & = & -N_{\Vert}^{2}\frac{\partial X_{xx}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(29\right)}}{\partial N_{\perp}} & = & 0\\
-\frac{\partial\mathcal{D}^{\left(30\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{yy}}{\partial N_{\perp}}X_{zz}+X_{yy}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(31\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}X_{zz}+X_{xx}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(32\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}X_{yy}+X_{xx}\frac{\partial X_{yy}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(33\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}X_{yz}^{2}+2X_{xx}X_{yz}\frac{\partial X_{yz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(34\right)}}{\partial N_{\perp}} & = & 2X_{yz}\frac{\partial X_{yz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(35\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(36\right)}}{\partial N_{\perp}} & = & 2X_{xy}\frac{\partial X_{xy}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(37\right)}}{\partial N_{\perp}} & = & 2X_{xy}\frac{\partial X_{xy}}{\partial N_{\perp}}X_{zz}+X_{xy}^{2}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(38\right)}}{\partial N_{\perp}} & = & -2X_{xz}\frac{\partial X_{xz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(39\right)}}{\partial N_{\perp}} & = & -\frac{\partial X_{yy}}{\partial N_{\perp}}X_{xz}^{2}-2X_{yy}X_{xz}\frac{\partial X_{xz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(40\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{yy}}{\partial N_{\perp}}\end{eqnarray*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{eqnarray*}
-\frac{\partial\mathcal{D}^{\left(41\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{zz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(42\right)}}{\partial N_{\perp}} & = & \frac{\partial X_{xx}}{\partial N_{\perp}}X_{yy}X_{zz}+X_{xx}\frac{\partial X_{yy}}{\partial N_{\perp}}X_{zz}+X_{xx}X_{yy}\frac{\partial X_{zz}}{\partial N_{\perp}}\\
-\frac{\partial\mathcal{D}^{\left(43\right)}}{\partial N_{\perp}} & = & 2\frac{\partial X_{xy}}{\partial N_{\perp}}X_{yz}X_{xz}+2X_{xy}\frac{\partial X_{yz}}{\partial N_{\perp}}X_{xz}+2X_{xy}X_{yz}\frac{\partial X_{xz}}{\partial N_{\perp}}\end{eqnarray*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-.
 \end_layout
 
 \end_body
