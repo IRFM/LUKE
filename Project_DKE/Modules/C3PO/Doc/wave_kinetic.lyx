@@ -89,15 +89,628 @@ Fluctuations ordering
 \end_layout
 
 \begin_layout Standard
-The frequency 
+We now analyze the temporal and spatial scaling of the fluctuations comparing
+ the fluctuations frequency 
+\begin_inset Formula $\widetilde{\omega}$
+\end_inset
+
+ and the fluctuations wave vector 
+\begin_inset Formula $\widetilde{k}$
+\end_inset
+
+ with the frequency 
+\begin_inset Formula $\omega$
+\end_inset
+
+and the wave vector 
+\begin_inset Formula $k$
+\end_inset
+
+ of the incident lower hybrid wave calculated using the parameters of several
+ tokamak devices actually having an LH current drive system and also the
+ ITER parameters.
+ The parameters of the tokamaks considered in the analysis are reported
+ in the table:
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="6">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+JET
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+TORE SUPRA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALCATOR 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+FTU
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ITER
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ 
+\begin_inset Formula $a$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.96m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.46m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.67m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.935m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $6.2m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ 
+\begin_inset Formula $R_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.24m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.68m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.21m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.31m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $B^{\left(0\right)}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.45T$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4T$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $9T$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $8T$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5,3T$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ 
+\begin_inset Formula $n_{e}(0)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3\cdot10^{19}m^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.6\cdot10^{19}m^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.5\cdot10^{20}m^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10^{20}m^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $10^{20}m^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ 
+\begin_inset Formula $q(a)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $7$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $7$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $7$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 \begin_inset Formula $f=\omega/2\pi$
 \end_inset
 
- of the lower hybrid incident wave is of the order of 
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.7GHz$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.7GHz$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.6GHz$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $8GHz$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5GHz$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $R_{0}$
+\end_inset
+
+ are respectively the minor and the major radius of the tokamaks, 
+\begin_inset Formula $B^{\left(0\right)}$
+\end_inset
+
+is the toroidal on axis magnetic field, 
+\begin_inset Formula $n_{e}(0)$
+\end_inset
+
+ is the central electron density, 
+\begin_inset Formula $q(a)$
+\end_inset
+
+ is the safety factor at the border of the plasma, and 
+\begin_inset Formula $f$
+\end_inset
+
+ is the lower hybrid wave frequency.
+ 
+\end_layout
+
+\begin_layout Subsection
+Time ordering
+\end_layout
+
+\begin_layout Standard
+As we can observe from the values reported in the table, the frequency 
+\begin_inset Formula $f=\omega/2\pi$
+\end_inset
+
+ of the lower hybrid incident wave in tokamaks JET, TORE SUPRA and ALCATOR
+ C-MODE is of the order of 
 \begin_inset Formula $1GHz=10^{9}Hz$
 \end_inset
 
-, the fluctuation frequency 
+, the LH system projected for ITER will works with 
+\begin_inset Formula $f=5GHz$
+\end_inset
+
+, so of the order of 
+\begin_inset Formula $10GHz=10^{10}Hz$
+\end_inset
+
+, a system that use this range of frequencies is just in operation on the
+ FTU tokamak, in order to simulate the conditions of an LHCD discharge on
+ ITER.
+ In order to study the fluctuations effects in actual tokamaks scenarios,
+ we assume 
+\begin_inset Formula $f$
+\end_inset
+
+ of the order of 
+\begin_inset Formula $10^{9}Hz.$
+\end_inset
+
+ The fluctuations frequency 
 \begin_inset Formula $\widetilde{f}=\widetilde{\omega}/2\pi$
 \end_inset
 
@@ -105,11 +718,25 @@ The frequency
 \begin_inset Formula $\widetilde{f}\approx100KHz=10^{5}Hz,$
 \end_inset
 
- so 
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "VahBon"
+
+\end_inset
+
+,
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zou"
+
+\end_inset
+
+, so 
 \begin_inset Formula $\widetilde{\omega}\ll\omega$
 \end_inset
 
- and the fluctuation time-scale is slower than incident wave time-scale,
+ and the fluctuations time-scale is slower than incident wave time-scale,
  for the time-scales we have the small ordering parameter:
 \end_layout
 
@@ -123,8 +750,15 @@ The frequency
 \end_layout
 
 \begin_layout Standard
-And we can separate the temporal dynamics of the incident wave from the
- temporal dynamics of the fluctuations:
+It is important to remember that this ordering parameter is obtained considering
+ the characteristics of actual tokamaks scenarios, if we consider the parameters
+ of an ITER-like scenario we obtain 
+\begin_inset Formula $\delta^{2}=\widetilde{\omega}/\omega\approx10^{-5}.$
+\end_inset
+
+ We can then separate the temporal dynamics of the incident wave from the
+ temporal dynamics of the fluctuations, the time derivative operator becomes
+ (see appendix A):
 \end_layout
 
 \begin_layout Standard
@@ -136,12 +770,386 @@ And we can separate the temporal dynamics of the incident wave from the
 
 \end_layout
 
+\begin_layout Subsection
+Space ordering
+\end_layout
+
+\begin_layout Standard
+The perpendicular refractive index of the LH incident wave in the cold-electrost
+atic approximation is given by the dispersion relation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+N_{\bot}^{2}=-\frac{K_{\Vert}^{C}}{K_{\bot}^{C}}N_{\Vert}^{2}\label{eq:NperpES}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where for a two species plasma the elements 
+\begin_inset Formula $K_{\perp}^{C}$
+\end_inset
+
+ and 
+\begin_inset Formula $K_{\Vert}^{C}$
+\end_inset
+
+ of the cold plasma permittivity tensor, remembering that 
+\begin_inset Formula $\omega_{ci}^{2}\ll\omega^{2}\ll\omega_{ce}^{2}$
+\end_inset
+
+ are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+K_{\perp}^{C} & \simeq & 1+\frac{\omega_{pe}^{2}}{\omega_{ce}^{2}}-\frac{\omega_{pi}^{2}}{\omega^{2}}\\
+K_{\Vert}^{C} & \simeq & 1-\frac{\omega_{pe}^{2}}{\omega^{2}}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In our considerations, we assume the costant value 
+\begin_inset Formula $N_{\parallel}=2$
+\end_inset
+
+ that is the tipical initial value of the LH waves used in actual LHCD experimen
+ts (
+\begin_inset Formula $N_{\Vert}$
+\end_inset
+
+ in general remains of order 1 into the plasma).
+ The values of 
+\begin_inset Formula $N_{\perp}$
+\end_inset
+
+ and of the perpendicular component of the wave vector 
+\begin_inset Formula $k_{\perp}=\omega N_{\perp}/c$
+\end_inset
+
+ , in function of the normalized radial coordinate, calculated with the
+ expression (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:NperpES"
+
+\end_inset
+
+) for the tokamak parameters reported in the table, are illustrated in the
+ following figures:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Nperp.eps
+	scale 55
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Kperp2.eps
+	scale 55
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have assumed electron density at the border 
+\begin_inset Formula $n_{e}(a)=0$
+\end_inset
+
+, 
+\begin_inset Formula $B=cost=B^{\left(0\right)}$
+\end_inset
+
+ and 
+\begin_inset Formula $q=cost=q(a)$
+\end_inset
+
+.
+ From these plots we can observe that except for the case of ALCATOR C-MODE,
+ that presents very high density and toroidal magnetic field, in tokamaks
+ actually in operation as TORE SUPRA and JET and also in ITER-like scenarios,
+ the perpendicular component of the LH wave vector is of the order of 
+\begin_inset Formula $k_{\perp}\approx10^{3}m^{-1}$
+\end_inset
+
+.
+ The values of 
+\begin_inset Formula $k_{\parallel}=\omega N_{\Vert}/c$
+\end_inset
+
+ and of 
+\begin_inset Formula $\lambda_{\Vert}=2\pi/k_{\Vert}$
+\end_inset
+
+ calculated for 
+\begin_inset Formula $N_{\Vert}=2$
+\end_inset
+
+ using the tokamak parameters reported in the table, are the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="6">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+JET
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+TORE SUPRA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALCATOR
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+FTU
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ITER
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $k_{\Vert}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $155m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $155m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $193m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $335m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $209m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lambda_{\Vert}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.1\cdot10^{-2}m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.1\cdot10^{-2}m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.2\cdot10^{-2}m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.9\cdot10^{-2}m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3\cdot10^{-2}m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 The modulus of the fluctuations wave vector, 
 \begin_inset Formula $\widetilde{k}$
 \end_inset
 
-, has been measured experimentally with several diagnostic techniques;
+, has been measured experimentally with several diagnostic techniques
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zou,Ger,Ritz"
+
+\end_inset
+
+; 
 \begin_inset Formula $\widetilde{k}$
 \end_inset
 
@@ -150,28 +1158,49 @@ The modulus of the fluctuations wave vector,
 \end_inset
 
 , to values of the order of 
-\begin_inset Formula $\widetilde{k}\approx10cm^{-1}=10^{3}m^{-1}$
+\begin_inset Formula $\widetilde{k}\approx10^{3}m^{-1}$
 \end_inset
 
-, that is of the same order of the incident lower hybrid wave vector, 
-\begin_inset Formula $k=2\pi fN/c\approx10cm^{-1}=10^{3}m^{-1}$
+, that is of the same order of the perpendicular incident lower hybrid wave
+ vector, 
+\begin_inset Formula $k_{\perp}\approx10^{3}m^{-1}$
 \end_inset
 
 .
- For small values of 
-\begin_inset Formula $\widetilde{k}$
+ From these experimental studies it has been observed that 
+\begin_inset Formula $\widetilde{k}_{\Vert}\ll\widetilde{k}_{\bot}$
 \end_inset
 
-, the scattered wave vector becomes 
-\begin_inset Formula $\check{k}=k+\widetilde{k}\approx k$
+ and 
+\begin_inset Formula $\widetilde{\lambda}_{\Vert}\gg\widetilde{\lambda}_{\perp}$
 \end_inset
 
- and we have the like-mode scattering, for values of 
-\begin_inset Formula $\widetilde{k}$
+, so we can approximate 
+\begin_inset Formula $\widetilde{k}\simeq\widetilde{k}_{\perp}$
+\end_inset
+
+ and the component of the scattered wave vector becomes 
+\begin_inset Formula $\check{k}_{\parallel}=k_{\parallel}$
+\end_inset
+
+ and 
+\begin_inset Formula $\check{k}_{\perp}=k_{\perp}+\widetilde{k}_{\perp}$
+\end_inset
+
+ ; for small values of 
+\begin_inset Formula $\widetilde{k}_{\perp}$
+\end_inset
+
+, 
+\begin_inset Formula $\check{k}=k$
+\end_inset
+
+ and we have like-mode scattering, for values of 
+\begin_inset Formula $\widetilde{k}_{\perp}$
 \end_inset
 
  of the same order of 
-\begin_inset Formula $k$
+\begin_inset Formula $k_{\perp}$
 \end_inset
 
 , 
@@ -179,30 +1208,707 @@ The modulus of the fluctuations wave vector,
 \end_inset
 
  and we have unlike-mode scattering.
- From experimental studies it has been observed that in all the case in
- verified: 
-\begin_inset Formula $\widetilde{k}_{\Vert}\ll\widetilde{k}_{\bot}$
+ From the experiments it has been demonstrated the relation 
+\begin_inset Formula $\widetilde{\lambda}_{\Vert}\simeq(0.1-0.3)qR_{0},$
 \end_inset
 
- and so 
-\begin_inset Formula $\widetilde{\lambda}_{\Vert}\gg\widetilde{\lambda}_{\perp}$
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Truc,Zweb"
+
 \end_inset
 
-, in particular it has been shown that 
-\begin_inset Formula $\widetilde{\lambda}_{\Vert}\simeq(0.1-0.3)qR\approx1m,$
+, and as a consequence 
+\begin_inset Formula $\widetilde{k}_{\Vert}\simeq2\pi/(0.1-0.3)qR_{0},$
 \end_inset
 
- so the parallel space-scale of the fluctuations is slower than the space-scale
- of the incident wave: 
-\begin_inset Formula $\lambda_{\Vert}=c/fN_{\Vert}\approx1cm=10^{-2}m.$
+ in the following table are reported the minimum and the maximum values
+ of 
+\begin_inset Formula $\widetilde{k}_{\Vert}$
 \end_inset
 
- As a consequence, for space-scale, we have the ordering parameter:
+and 
+\begin_inset Formula $\widetilde{\lambda}_{\Vert}$
+\end_inset
+
+ calculated with these relations using the tokamak parameter of the first
+ table:
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="6">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+JET
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+TORE SUPRA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALCATOR
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+FTU
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ITER
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\widetilde{k}_{\Vert min}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.8m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.7m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.5m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.2m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.48m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\widetilde{k}_{\Vert max}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.3m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.1m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $11.4m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $9.6m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.44m^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\widetilde{\lambda}_{\Vert min}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.2m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.2m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.47m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.65m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.3m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\widetilde{\lambda}_{\Vert max}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.6m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.7m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.4m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.0m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $13m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From these values we can see that we have 
+\begin_inset Formula $\widetilde{k}_{\Vert}\ll k_{\Vert}$
+\end_inset
+
+ and 
+\begin_inset Formula $\widetilde{\lambda}_{\Vert}\gg\lambda_{\Vert}$
+\end_inset
+
+ for all set of tokamak parameters, as a consequence, we can define the
+ small parameter
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\widetilde{k}_{\Vert}/k_{\Vert}=\lambda_{\Vert}/\widetilde{\lambda}_{\Vert}$
+\end_inset
+
+ and we can calculate the range of values of this parameter for all the
+ tokamaks considered:
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="6">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+JET
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+TORE SUPRA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALCATOR
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+FTU
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ITER
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\widetilde{k}_{\Vert min}/k_{\Vert}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.1\cdot10^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.1\cdot10^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.3\cdot10^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.9\cdot10^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.3\cdot10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\widetilde{k}_{\Vert max}/k_{\Vert}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.4\cdot10^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.3\cdot10^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $6\cdot10^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.9\cdot10^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $6.8\cdot10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For parameters of tokamaks JET, TORE SUPRA and FTU, the range of possible
+ values of 
+\begin_inset Formula $\widetilde{k}_{\Vert}/k_{\Vert}$
+\end_inset
+
+ is of the order of 
+\begin_inset Formula $10^{-2}$
+\end_inset
+
+, for ALCATOR C-MODE parameters it is between 
+\begin_inset Formula $10^{-2}$
+\end_inset
+
+and 
+\begin_inset Formula $10^{-1}$
+\end_inset
+
+ and for ITER parameters it varies from 
+\begin_inset Formula $10^{-3}$
+\end_inset
+
+to 
+\begin_inset Formula $10^{-2}$
+\end_inset
+
+.
+ So for studying the fluctuations effects in tokamaks like JET or TORE SUPRA
+ and also in several ITER-like scenarios we can choose the ordering parameter:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\frac{\lambda_{\parallel}}{\widetilde{\lambda}_{\parallel}}=\frac{\widetilde{k}_{\parallel}}{k_{\Vert}}\approx10^{-2}=\left(\frac{\widetilde{\omega}}{\omega}\right)^{\frac{1}{2}}=\delta\label{eq:spaceordering}\end{equation}
+\frac{\widetilde{k}_{\parallel}}{k_{\parallel}}=\frac{\lambda_{\parallel}}{\widetilde{\lambda}_{\Vert}}\approx10^{-2}=\left(\frac{\widetilde{\omega}}{\omega}\right)^{\frac{1}{2}}=\delta\label{eq:spaceordering}\end{equation}
 
 \end_inset
 
@@ -210,12 +1916,32 @@ The modulus of the fluctuations wave vector,
 \end_layout
 
 \begin_layout Standard
-We note that the space-scale ordering parameters is bigger than the time-scale
- ordering parameter, this is because the parallel space-scale of the fluctuation
-s is slower than the space-scale of the incident wave but not so slower
- as in the case of the time-scales.
- However, we can separate the spatial dynamics of the wave from the parallel
- spatial dynamics of the fluctuations:
+From this discussion it is important to remember that in tokamaks with small
+ radius 
+\begin_inset Formula $R_{0}$
+\end_inset
+
+ and high magnetic field 
+\begin_inset Formula $B^{\left(0\right)}$
+\end_inset
+
+, this space-ordering parameter can reach values of the order of 
+\begin_inset Formula $10^{-1}$
+\end_inset
+
+ and that in tokamaks with very big radius (ITER, DEMO) it can be of the
+ order of 
+\begin_inset Formula $10^{-3}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Now, using this ordering parameter, we can separate the spatial dynamics
+ of the wave from the parallel spatial dynamics of the fluctuations, the
+ gradient operator then becomes (see appendix B):
 \end_layout
 
 \begin_layout Standard
@@ -236,6 +1962,10 @@ means that the first order terms of the gradient operator, due to the fluctuatio
 ns, is only regarding the dynamics parallel to the magnetic field.
 \end_layout
 
+\begin_layout Subsection
+Perturbative analysis of the equations
+\end_layout
+
 \begin_layout Standard
 If we neglect the ion dynamics, 
 \begin_inset Formula $\left(m_{i}\gg m_{e},\mathbf{p}_{i}\ll\mathbf{p}_{e}\right)$
@@ -250,7 +1980,7 @@ If we neglect the ion dynamics,
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\frac{\partial f_{e}}{\partial t}+\mathbf{v}\cdot\frac{\partial f_{e}}{\partial\mathbf{r}}+q_{e}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}=0\label{eq:vlasov}\end{equation}
+\frac{\partial f_{e}}{\partial t}+\mathbf{v}\cdot\nabla f_{e}+q_{e}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}=0\label{eq:vlasov}\end{equation}
 
 \end_inset
 
@@ -282,7 +2012,7 @@ Where the macroscopic fields
 \begin_layout Standard
 And the current is given by:
 \begin_inset Formula \begin{equation}
-\mathbf{J}=q_{e}\int\mathbf{v}f_{e}\textrm{d }\mathbf{p}\label{eq:current}\end{equation}
+\mathbf{J}=q_{e}\int\mathbf{v}f_{e}\textrm{d}\mathbf{p}\label{eq:current}\end{equation}
 
 \end_inset
 
@@ -392,7 +2122,7 @@ reference "eq:2orderMaxwell2"
 
 \end_inset
 
-) is assume to be zero and in this case we have 
+) is assumed to be zero and in this case we have 
 \begin_inset Formula $\mathbf{J}^{\left(0\right)}=0$
 \end_inset
 
@@ -476,7 +2206,7 @@ The equilibrium magnetic field is independent by the fluctuations parallel
 \begin_layout Standard
 And the 1-order current is given by:
 \begin_inset Formula \begin{equation}
-\mathbf{J}^{\left(1\right)}=q_{e}\int\mathbf{v}f_{e}^{\left(1\right)}\textrm{d }\mathbf{p}\label{eq:1ordercurrent}\end{equation}
+\mathbf{J}^{\left(1\right)}=q_{e}\int\mathbf{v}f_{e}^{\left(1\right)}\textrm{d}\mathbf{p}\label{eq:1ordercurrent}\end{equation}
 
 \end_inset
 
@@ -594,7 +2324,7 @@ At the order-2 of the Maxwell equations we have:
 \begin_layout Standard
 And the 1-order current is given by:
 \begin_inset Formula \begin{equation}
-\mathbf{J}^{\left(2\right)}=q_{e}\int\mathbf{v}f_{e}^{\left(2\right)}\textrm{d }\mathbf{p}\label{eq:2ordercurrent}\end{equation}
+\mathbf{J}^{\left(2\right)}=q_{e}\int\mathbf{v}f_{e}^{\left(2\right)}\textrm{d}\mathbf{p}\label{eq:2ordercurrent}\end{equation}
 
 \end_inset
 
@@ -900,12 +2630,11 @@ Elements
 \end_layout
 
 \begin_layout Standard
-While it is easy to verify that the second order Vlasov equation for element
- 
+While the second order Vlasov equation for element 
 \begin_inset Formula $\left[\check{f}_{e}^{\left(2\right)},\check{\mathbf{E}}^{\left(2\right)},\mathbf{\check{B}}^{\left(2\right)}\right]$
 \end_inset
 
- includes the cross terms in the linear wave quantities:
+ includes the cross terms in the linear wave quantities (see appendix C):
 \end_layout
 
 \begin_layout Standard
@@ -939,15 +2668,22 @@ and
 \end_inset
 
  is a new wave resulting from the bilinear interaction between the linear
- waves, remembering that the two original linear waves are respectively
- incident wave and fluctuations, this new wave is the scattered wave.
+ waves
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bind"
+
+\end_inset
+
+, remembering that the two original linear waves are respectively incident
+ wave and fluctuations, this new wave is the scattered wave.
  So it has been clearly shown that scattering by fluctuations is a second
  order process due to the bilinear interaction between two linear waves:
  the incident wave and the fluctuations wave.
  Observing equation (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:vlasov2C"
+reference "eq:vlasov2Capp2"
 
 \end_inset
 
@@ -964,7 +2700,7 @@ reference "eq:vlasov1"
  the second and the third right-hand terms of the equation describe the
  bilinear interactions between the incident wave and the fluctuations.
  The electromagnetic field of the scattered wave is then solution of the
- second-order wave equation:
+ second-order wave equation (see appendix C):
 \end_layout
 
 \begin_layout Standard
@@ -992,7 +2728,7 @@ s, and is given by:
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbf{\check{J}}_{int}^{\left(2\right)}=q_{e}\int\mathbf{v}\check{f}_{int}^{\left(2\right)}\textrm{d }\mathbf{p}\label{eq:currentint}\end{equation}
+\mathbf{\check{J}}_{int}^{\left(2\right)}=q_{e}\int\mathbf{v}\check{f}_{int}^{\left(2\right)}\textrm{d}\mathbf{p}\label{eq:currentint}\end{equation}
 
 \end_inset
 
@@ -1004,7 +2740,8 @@ Where the function
 \begin_inset Formula $\check{f}_{int}^{\left(2\right)}$
 \end_inset
 
-satisfies the bilinear part of the second order Vlasov equation:
+satisfies the bilinear part of the second order Vlasov equation (see appendix
+ B):
 \end_layout
 
 \begin_layout Standard
@@ -1020,11 +2757,18 @@ satisfies the bilinear part of the second order Vlasov equation:
 Applying the Fourier analysis to the (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:wavequation"
+reference "eq:wavequationapp"
 
 \end_inset
 
-), we obtain the non homogeneous second order wave equation:
+), we obtain the non homogeneous second order wave equation
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bind"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -1067,24 +2811,31 @@ An explicit expression for the current
  is obtained by solving equation (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:vlasovint"
+reference "eq:vlasoc2Cappbilinear"
 
 \end_inset
 
 ) in the Fourier space and using the result in expression (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:currentint"
+reference "eq:current2app"
 
 \end_inset
 
-) .
+)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bind"
+
+\end_inset
+
+ .
  We have used a kinetic approach for studying the wave-wave interaction,
  this kinetic approach, based on the perturbative analysis of the Vlasov
- equation, takes in account the effects of the temperature and is the most
- general approach that can be used for studying this kind of problems, until
- this point we have not make assumptions regarding the characteristics of
- the plasma.
+ equation, takes in account the effects of the temperature and it is the
+ most general approach that can be used for studying this kind of problems,
+ until this point we have not make assumptions regarding the characteristics
+ of the plasma.
 \end_layout
 
 \begin_layout Section
@@ -1093,7 +2844,14 @@ Fluid approach in cold plasma limit
 
 \begin_layout Standard
 We now study the interaction between the incident wave and the fluctuations
- in a cold plasma.
+ in a cold plasma
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Sit2,Sit"
+
+\end_inset
+
+.
  In the cold plasma limit, the thermal motions of the particle and in general
  all the temperature effects are neglected, for this reason we can use a
  fluid approach alternative to the general kinetic approach illustrated
@@ -1102,11 +2860,18 @@ We now study the interaction between the incident wave and the fluctuations
  that can be derived by the moments anaysis of the Vlasov equation (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:vlasov"
+reference "eq:2ordervlasov"
 
 \end_inset
 
-).
+)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bind,Sit2"
+
+\end_inset
+
+.
  The MHD tractation is the low temperature limit of the kinetic tractation,
  then making this low temperature limit we derive the general form of the
  MHD equations, and we specialize this set of equations for the cold plasma
@@ -1128,7 +2893,7 @@ The zero order and the first order moments of the distribution function
 \begin_layout Standard
 \begin_inset Formula \begin{eqnarray}
 n_{e} & = & \int f_{e}\mathit{\textrm{d}}\mathbf{p}\label{eq:density}\\
-\bar{\mathbf{v}} & = & \int\mathbf{v}f_{e}\textrm{d}\mathbf{p}\label{eq:flux}\end{eqnarray}
+\overline{\mathbf{v}} & = & \int\mathbf{v}f_{e}\textrm{d}\mathbf{p}\label{eq:flux}\end{eqnarray}
 
 \end_inset
 
@@ -1167,24 +2932,27 @@ The average of the thermal velocity is zero, the fluid velocity is connected
 
 \end_inset
 
- If we calculate the zero, the first and the second order moments of VlasovSo
- we have 
-\begin_inset Formula $\overline{\mathbf{v}}=n_{e}\mathbf{u}$
-\end_inset
-
-.So we have 
+ So we have 
 \begin_inset Formula $\overline{\mathbf{v}}=n_{e}\mathbf{u}$
 \end_inset
 
 .
+ If we calculate the zero, the first and the second order moments of Vlasov
  equation (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:vlasov"
+reference "eq:2ordervlasov"
 
 \end_inset
 
-), we obtain:
+), we obtain
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bind,Bitt"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -1297,12 +3065,19 @@ reference "eq:energy"
 \begin_inset Formula $\mathbb{P}$
 \end_inset
 
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bitt"
+
+\end_inset
+
 :
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \begin{eqnarray}
-\overline{\mathbf{vv}} & = & \int\mathbf{vv}f_{e}\textrm{d}\mathbf{p}=n_{e}\mathbf{uu}+\frac{\mathbb{P}}{m_{e}}\label{eq:stressterm}\\
+\overline{\mathbf{vv}} & = & \int\mathbf{vv}f_{e}\textrm{d}\mathbf{p}=n_{e}\mathbf{uu}+2\mathbf{u}\overline{\mathbf{w}}+\overline{\mathbf{ww}}=n_{e}\mathbf{uu}+\frac{\mathbb{P}}{m_{e}}\label{eq:stressterm}\\
 \mathbb{P} & =m_{e} & \int\mathbf{ww}f_{e}\textrm{d}\mathbf{p}=m_{e}\overline{\mathbf{ww}}=m_{e}n_{e}<\mathbf{ww}>\label{eq:stresstensor}\end{eqnarray}
 
 \end_inset
@@ -1406,7 +3181,14 @@ reference "eq:energy"
 
 \end_inset
 
-).
+)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bitt"
+
+\end_inset
+
+.
  In the cold plasma limit, all the thermal effects, also the second order
  corrections due to 
 \begin_inset Formula $<\mathbf{ww}>$
@@ -1939,6 +3721,12 @@ s, in the Fourier space the equation becomes:
 
 \begin_layout Standard
 The total second order current for the scattered wave is given by the expression
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Sit2"
+
+\end_inset
+
 :
 \end_layout
 
@@ -2003,7 +3791,7 @@ So we can write:
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbb{M}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{u}}^{\left(2\right)}=\frac{q_{e}}{m_{e}}\left(\check{\mathbf{E}}_{\check{\mathbf{k}}}^{\left(2\right)}+\mathbf{u}^{\left(1\right)}\times\mathbf{\widetilde{B}_{\widetilde{\mathbf{k}}}}^{\left(1\right)}+\widetilde{\mathbf{u}}^{\left(1\right)}\times\mathbf{B}_{\mathbf{k}}^{\left(1\right)}\right)-i\left[\left(\mathbf{u}\cdot\widetilde{\mathbf{k}}\right)\mathbf{\widetilde{u}}+\left(\mathbf{\widetilde{u}}\cdot\mathbf{k}\right)\mathbf{u}\right]\label{eq:2ordermotionSCATTfourier}\end{equation}
+\mathbb{T}\left(\check{\mathbf{k}},\check{\omega}\right)\cdot\check{\mathbf{u}}^{\left(2\right)}=\frac{q_{e}}{m_{e}}\left(\check{\mathbf{E}}_{\check{\mathbf{k}}}^{\left(2\right)}+\mathbf{u}^{\left(1\right)}\times\mathbf{\widetilde{B}_{\widetilde{\mathbf{k}}}}^{\left(1\right)}+\widetilde{\mathbf{u}}^{\left(1\right)}\times\mathbf{B}_{\mathbf{k}}^{\left(1\right)}\right)-i\left[\left(\mathbf{u}\cdot\widetilde{\mathbf{k}}\right)\mathbf{\widetilde{u}}+\left(\mathbf{\widetilde{u}}\cdot\mathbf{k}\right)\mathbf{u}\right]\label{eq:2ordermotionSCATTfourier}\end{equation}
 
 \end_inset
 
@@ -2012,7 +3800,7 @@ So we can write:
 
 \begin_layout Standard
 Where 
-\begin_inset Formula $\mathbb{M}\left(\check{\mathbf{k}},\check{\omega}\right)$
+\begin_inset Formula $\mathbb{T}\left(\check{\mathbf{k}},\check{\omega}\right)$
 \end_inset
 
  is the tensor:
@@ -2020,7 +3808,7 @@ Where
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbb{M}\left(\check{\mathbf{k}},\check{\omega}\right)=-i\check{\omega}\mathbb{I}-\omega_{ce}\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\mathbf{b}^{\left(0\right)}\right)\label{eq:veltensor}\end{equation}
+\mathbb{T}\left(\check{\mathbf{k}},\check{\omega}\right)=-i\check{\omega}\mathbb{I}-\omega_{ce}\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\mathbf{b}^{\left(0\right)}\right)\label{eq:veltensor}\end{equation}
 
 \end_inset
 
@@ -2028,17 +3816,23 @@ Where
 \end_layout
 
 \begin_layout Standard
-It is easy to demonstrate that this tensor is related to the susceptibility
- tensor 
+This tensor is related to the susceptibility tensor 
 \begin_inset Formula $\mathbb{X}$
 \end_inset
 
- by the relation:
+ by the relation
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bind"
+
+\end_inset
+
+(see appendix E):
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbb{M}^{-1}\left(\check{\mathbf{k}},\check{\omega}\right)=-i\frac{\check{\omega}}{\omega_{pe}^{2}}\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\end{equation}
+\mathbb{T}^{-1}\left(\check{\mathbf{k}},\check{\omega}\right)=-i\frac{\check{\omega}}{\omega_{pe}^{2}}\mathbb{X}\left(\check{\mathbf{k}},\check{\omega}\right)\label{eq:veltensor2}\end{equation}
 
 \end_inset
 
@@ -2180,12 +3974,12 @@ reference "eq:2ordercontinuityLH"
 \end_inset
 
 ) equations for the incident wave in the Fourier space are given by the
- expressions:
+ expressions (see appendix E):
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbb{M}\left(\mathbf{k},\omega\right)\cdot\mathbf{u}^{\left(1\right)}=\frac{q_{e}}{m_{e}}\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\end{equation}
+\mathbb{T}\left(\mathbf{k},\omega\right)\cdot\mathbf{u}^{\left(1\right)}=\frac{q_{e}}{m_{e}}\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\end{equation}
 
 \end_inset
 
@@ -2203,7 +3997,7 @@ reference "eq:2ordercontinuityLH"
 
 \begin_layout Standard
 Where 
-\begin_inset Formula $\mathbb{M}\left(\mathbf{k},\omega\right)$
+\begin_inset Formula $\mathbb{T}\left(\mathbf{k},\omega\right)$
 \end_inset
 
  is given by the (
@@ -2213,7 +4007,7 @@ reference "eq:veltensor"
 
 \end_inset
 
-), so it is easy to derive:
+), so we derive (see appendix E):
 \end_layout
 
 \begin_layout Standard
@@ -2296,7 +4090,14 @@ reference "eq:2ordercurrentINT2"
 \begin_inset Formula $\omega_{ce}=q_{e}B^{\left(0\right)}/m_{e}$
 \end_inset
 
-, we finally obtain:
+, we finally obtain
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bind,Sit"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -2379,7 +4180,14 @@ Remembering that
 
 \begin_layout Standard
 We obtain the interaction current in function of the dielectric tensor and
- of the incident electric field:
+ of the incident electric field 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "VahBon"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -2393,7 +4201,7 @@ We obtain the interaction current in function of the dielectric tensor and
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.i\frac{\omega_{ce}\check{\omega}}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\mathbf{B}_{\mathbf{k}}^{\left(1\right)}}{B^{\left(0\right)}}\right)\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\label{eq:currentINT}\end{equation}
+\left.i\frac{\omega_{ce}\check{\omega}}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\mathbf{B}_{\mathbf{k}}^{\left(1\right)}}{B^{\left(0\right)}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\label{eq:currentINT}\end{equation}
 
 \end_inset
 
@@ -2436,7 +4244,14 @@ For the fluctuations we introduce the notation:
 \end_inset
 
  .From the conservation of momentum and energy, the wave vector and the frequency
- of the scattered wave are given by the expressions:
+ of the scattered wave are given by the expressions 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "VahBon"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -2491,7 +4306,7 @@ reference "eq:currentINT"
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\check{\omega}}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{B^{\left(0\right)}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+\left.+i\frac{\omega_{ce}\check{\omega}}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{B^{\left(0\right)}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
 
 \end_inset
 
@@ -2504,7 +4319,7 @@ Where
 \end_inset
 
  , 
-\begin_inset Formula $\mathbb{E}^{LC}$
+\begin_inset Formula $\mathbb{\underline{\underline{\underline{\varepsilon}}}}^{LC}$
 \end_inset
 
  is the Levi-Civita tensor of order 3, and 
@@ -2527,7 +4342,7 @@ Where
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{B^{\left(0\right)}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k},\check{\omega}-\omega\right)}{B^{\left(0\right)}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
 
 \end_inset
 
@@ -2557,7 +4372,7 @@ Fluctuations are assumed to be slow, so we have
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}\left(\mathbf{k},\omega\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}},\check{\omega}\right)\right)\cdot\left(\mathbb{\underline{\underline{\underline{\varepsilon}}}}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k},\omega\right)\right)\right]\cdot\mathbf{E}_{\mathbf{k}}\left(\mathbf{k},\omega\right)\end{equation}
 
 \end_inset
 
@@ -2571,7 +4386,14 @@ Now, we assume that fluctuations of the density and of the magnetic field
  from the normal mode propagation that we can easily study by solving the
  homogeneous wave equation.
  In the weak damping approximation, the frequency of the scattered wave
- is given by the expression:
+ is given by the expression 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "BonOtt,VahBon"
+
+\end_inset
+
+:
 \begin_inset Formula \begin{equation}
 \check{\omega}=\check{\omega}_{\check{k}}+i\frac{\partial}{\partial\textrm{t }}\qquad\textrm{with }\left|\frac{\partial}{\partial\textrm{t }}\right|\ll\check{\omega}_{\check{k}}\end{equation}
 
@@ -2627,7 +4449,7 @@ Where
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\right]\cdot\mathbf{e}\left(\mathbf{k}\right)E_{\mathbf{k}}\left(\mathbf{k}\right)\end{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{\underline{\underline{\underline{\varepsilon}}}}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\right]\cdot\mathbf{e}\left(\mathbf{k}\right)E_{\mathbf{k}}\left(\mathbf{k}\right)\end{equation}
 
 \end_inset
 
@@ -2662,7 +4484,7 @@ i\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\frac{\partial\ma
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\right]\cdot\mathbf{e}\left(\mathbf{k}\right)E_{\mathbf{k}}\left(\mathbf{k}\right)\end{equation}
+\left.+i\frac{\omega_{ce}\omega}{\omega_{pe}^{2}}\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{\underline{\underline{\underline{\varepsilon}}}}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\right]\cdot\mathbf{e}\left(\mathbf{k}\right)E_{\mathbf{k}}\left(\mathbf{k}\right)\end{equation}
 
 \end_inset
 
@@ -2714,7 +4536,7 @@ i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\left.+i\frac{\omega_{ce}\check{\omega}_{\check{k}}}{\omega_{pe}^{2}}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\mathbb{E}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}\left(\mathbf{k}\right)}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\right]C\left(\mathbf{k}\right)\end{equation}
+\left.+i\frac{\omega_{ce}\check{\omega}_{\check{k}}}{\omega_{pe}^{2}}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\right]C\left(\mathbf{k}\right)\end{equation}
 
 \end_inset
 
@@ -2724,7 +4546,7 @@ i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset
 \begin_layout Standard
 This equation can be written in the form:
 \begin_inset Formula \begin{equation}
-i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset{\mathbf{k}}{\sum}\left[V^{n}\left(\mathbf{k},\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)\frac{\delta n_{e}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n_{e}}+\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}\left(\mathbf{k}\right)}\right]C\left(\mathbf{k}\right)\end{equation}
+i\frac{\partial C\left(\check{\mathbf{k}}\right)}{\partial\textrm{t }}=\underset{\mathbf{k}}{\sum}\left[V^{n}\left(\mathbf{k},\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)\frac{\delta n_{e}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{n_{e}}+\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\check{\omega}_{\check{k}}\right)\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}}\right]C\left(\mathbf{k}\right)\end{equation}
 
 \end_inset
 
@@ -2751,7 +4573,7 @@ V^{n}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)=\frac{\check{\omega}_
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)=\frac{i\omega_{ce}\check{\omega}_{\check{k}}^{2}}{2\omega_{pe}^{2}}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\mathbb{E}^{LC}\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbb{\mathbf{k}}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\end{equation}
+\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)=\frac{i\omega_{ce}\check{\omega}_{\check{k}}^{2}}{2\omega_{pe}^{2}}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\mathbb{\underline{\underline{\underline{\varepsilon}}}}^{LC}\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbb{\mathbf{k}}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\end{equation}
 
 \end_inset
 
@@ -2778,13 +4600,615 @@ V_{m}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)=\frac{i\
 \end_layout
 
 \begin_layout Section*
+\start_of_appendix
 Appendix A
 \end_layout
 
+\begin_layout Section*
+Appendix B
+\end_layout
+
+\begin_layout Section*
+Appendix C
+\end_layout
+
 \begin_layout Standard
-We now calculate explicitely the mode coupling coefficient for the density
- fluctuations 
-\begin_inset Formula $V^{n}\left(\mathbf{\mathbf{k}},\check{\mathbf{k}},\omega\right)$
+We now derive the second order Vlasov equation for the wave 
+\begin_inset Formula $\left[\check{f}_{e}^{\left(2\right)},\check{\mathbf{E}}^{\left(2\right)},\mathbf{\check{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ , starting from the second order Vlasov equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathcal{L}f_{e}^{\left(2\right)}=-\mathbf{F}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:Vlasov2app}\end{equation}
+
+\end_inset
+
+ This equation is linear in second order quantities, so we can construct
+ a second order solution a sum of three elements 
+\begin_inset Formula $\left[f_{e}^{\left(2\right)},\mathbf{E}^{\left(2\right)},\mathbf{B}^{\left(2\right)}\right]$
+\end_inset
+
+, 
+\begin_inset Formula $\left[\widetilde{f}_{e}^{\left(2\right)},\widetilde{\mathbf{E}}^{\left(2\right)},\mathbf{\widetilde{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\left[\check{f}_{e}^{\left(2\right)},\check{\mathbf{E}}^{\left(2\right)},\mathbf{\check{B}}^{\left(2\right)}\right]$
+\end_inset
+
+, where 
+\begin_inset Formula $\left[\check{f}_{e}^{\left(2\right)},\check{\mathbf{E}}^{\left(2\right)},\mathbf{\check{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ is a purely second order process:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathcal{L}\left(\check{f}_{e}^{\left(2\right)}+f_{e}^{\left(2\right)}+\widetilde{f}_{e}^{\left(2\right)}\right)=-\left(\mathbf{\check{F}}^{\left(2\right)}+\mathbf{F}^{\left(2\right)}+\mathbf{\widetilde{F}}^{\left(2\right)}\right)\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\left(\mathbf{F}^{\left(1\right)}+\mathbf{\widetilde{F}}^{\left(1\right)}\right)\cdot\frac{\partial}{\partial\mathbf{p}}\left(f_{e}^{\left(1\right)}+\widetilde{f}_{e}^{\left(1\right)}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So using the linear propriety it becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathcal{L}\check{f}_{e}^{\left(2\right)}+\mathcal{L}f_{e}^{\left(2\right)}+\mathcal{L}\widetilde{f}_{e}^{\left(2\right)}=-\mathbf{\check{F}}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\mathbf{F}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\mathbf{\widetilde{F}}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}-\mathrm{\mathbf{F}}^{\left(1\right)}\cdot\frac{\partial\widetilde{f}_{e}^{\left(1\right)}}{\partial\mathbf{p}}-\mathbf{\widetilde{F}}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}-\mathbf{\widetilde{F}}^{\left(1\right)}\cdot\frac{\partial\widetilde{f}_{e}^{\left(1\right)}}{\partial\mathbf{p}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathcal{L}\check{f}_{e}^{\left(2\right)}+\mathcal{L}f_{e}^{\left(2\right)}+\mathcal{L}\widetilde{f}_{e}^{\left(2\right)}=-\mathbf{\check{F}}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial\widetilde{f}_{e}^{\left(1\right)}}{\partial\mathbf{p}}-\mathbf{\mathbf{\widetilde{F}}}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\left(\mathbf{F}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}+\mathrm{\mathbf{F}}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\right)-\left(\mathbf{\widetilde{F}}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}+\mathbf{\widetilde{F}}^{\left(1\right)}\cdot\frac{\partial\widetilde{f}_{e}^{\left(1\right)}}{\partial\mathbf{p}}\right)\label{eq:Vlasovsum}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Elements 
+\begin_inset Formula $\left[f_{e}^{\left(2\right)},\mathbf{E}^{\left(2\right)},\mathbf{B}^{\left(2\right)}\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\left[\widetilde{f}_{e}^{\left(2\right)},\widetilde{\mathbf{E}}^{\left(2\right)},\mathbf{\widetilde{B}}^{\left(2\right)}\right]$
+\end_inset
+
+ are singularly solution the second order Vlasov equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\mathcal{L}f_{e}^{\left(2\right)} & = & -\mathbf{F}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:vlasov2Aapp}\\
+\mathcal{L}\widetilde{f}_{e}^{\left(2\right)} & = & -\widetilde{\mathbf{F}}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\widetilde{\mathbf{F}}^{\left(1\right)}\cdot\frac{\partial\widetilde{f}_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:vlasov2Bapp}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So using the equations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vlasov2Aapp"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vlasov2Bapp"
+
+\end_inset
+
+) for simplifying the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Vlasovsum"
+
+\end_inset
+
+) we obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathcal{L}\check{f}_{e}^{\left(2\right)}=-\check{\mathbf{F}}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial\widetilde{f}_{e}^{\left(1\right)}}{\partial\mathbf{p}}-\widetilde{\mathbf{F}}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:vlasov2Capp}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+that is the equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vlasov2C"
+
+\end_inset
+
+).
+ We can represent 
+\begin_inset Formula $\check{f}_{e}^{\left(2\right)}$
+\end_inset
+
+ as 
+\begin_inset Formula $\check{f_{e}}^{\left(2\right)}=\check{f}_{lin}^{\left(2\right)}+\check{f}_{int}^{\left(2\right)}$
+\end_inset
+
+, remenbering the linearity of 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+we have 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathcal{L}\check{f}_{e}^{\left(2\right)}=\mathcal{L}\left(\check{f}_{lin}^{\left(2\right)}+\check{f}_{int}^{\left(2\right)}\right)=\mathcal{L}\check{f}_{lin}^{\left(2\right)}+\mathcal{L}\check{f}_{int}^{\left(2\right)}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=-\check{\mathbf{F}}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial\widetilde{f}_{e}^{\left(1\right)}}{\partial\mathbf{p}}-\widetilde{\mathbf{F}}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:vlasov2Capp2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\check{f}_{lin}^{\left(2\right)}$
+\end_inset
+
+ satisfies the part of the equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:vlasov2Capplinear"
+
+\end_inset
+
+) linear in second order quantities:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathcal{L}\check{f}_{lin}^{\left(2\right)}=-\check{\mathbf{F}}^{\left(2\right)}\cdot\frac{\partial f_{e}^{\left(0\right)}}{\partial\mathbf{p}}\label{eq:vlasov2Capplinear}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+While 
+\begin_inset Formula $\check{f}_{int}^{\left(2\right)}$
+\end_inset
+
+satisfies the bilinear part:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathcal{L}\check{f}_{int}^{\left(2\right)}=-\mathbf{F}^{\left(1\right)}\cdot\frac{\partial\widetilde{f}_{e}^{\left(1\right)}}{\partial\mathbf{p}}-\widetilde{\mathbf{F}}^{\left(1\right)}\cdot\frac{\partial f_{e}^{\left(1\right)}}{\partial\mathbf{p}}\label{eq:vlasoc2Cappbilinear}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we have two currents:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{\check{J}}_{lin}^{\left(1\right)}=q_{e}\int\mathbf{v}\check{f}_{lin}^{\left(2\right)}\textrm{d}\mathbf{p}\qquad\mathbf{\check{J}}_{int}^{\left(2\right)}=q_{e}\int\mathbf{v}\check{f}_{int}^{\left(2\right)}\textrm{d}\mathbf{p}\label{eq:current2app}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So 
+\begin_inset Formula $\check{\mathbf{J}}_{lin}^{\left(2\right)}$
+\end_inset
+
+ is the second order current due to the linear response of the plasma to
+ the field of the scattered wave, and 
+\begin_inset Formula $\mathbf{J}_{int}^{\left(2\right)}$
+\end_inset
+
+ is the current due to the interaction of the incident wave with the fluctuation
+s.
+ The electromagnetic field of the scattered wave is then solution of the
+ second-order wave equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:wavequation"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla\times\nabla\times\check{\mathbf{E}}^{\left(2\right)}+\varepsilon_{0}\mu_{0}\frac{\partial^{2}\check{\mathbf{E}}^{\left(2\right)}}{\partial\textrm{t}^{2}}=-\mu_{0}\frac{\partial}{\partial\textrm{t}}\left(\check{\mathbf{J}}_{lin}^{\left(2\right)}+\mathbf{\check{J}}_{int}^{\left(2\right)}\right)\label{eq:wavequationapp}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Appendix D
+\end_layout
+
+\begin_layout Standard
+We now derive in details the generalized fluid equations (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:continuity"
+
+\end_inset
+
+),(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:motion"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:energy"
+
+\end_inset
+
+) by the moments analysis of the Vlasov equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial f_{e}}{\partial t}+\mathbf{v}\cdot\frac{\partial f_{e}}{\partial\mathbf{r}}+q_{e}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}=0\label{eq:vlasov}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The moment zero of the Vlasov equation is then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\int\frac{\partial f_{e}}{\partial t}\textrm{d}\mathbf{p}+\mathbf{\int v}\cdot\nabla f_{e}\textrm{d}\mathbf{p}+q_{e}\int\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}\textrm{d}\mathbf{p}=0\label{eq:0ordervlasov}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now analyze term by term this equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\int\frac{\partial f_{e}}{\partial t}\textrm{d}\mathbf{p}=\frac{\partial}{\partial t}\int f_{e}\textrm{d}\mathbf{p}=\frac{\partial n_{e}}{\partial t}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\int\mathbf{v}\cdot\nabla f_{e}\textrm{d}\mathbf{p}=\nabla\cdot\int\mathbf{v}f_{e}\textrm{d}\mathbf{p}=\nabla\cdot\overline{\mathbf{v}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\int\mathbf{E}\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}\textrm{d}\mathbf{p}=\int\frac{\partial}{\partial\mathbf{p}}\cdot\left(\mathbf{E}f_{e}\right)\textrm{d}\mathbf{p}=\underset{S_{\infty}}{\int}\mathbf{E}f_{e}\textrm{d}\mathbf{S}=0\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\int\left(\mathbf{v}\times\mathbf{B}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}\textrm{d}\mathbf{p}=\int\frac{\partial}{\partial\mathbf{p}}\left(f_{e}\mathbf{v}\times\mathbf{B}\right)\textrm{d}\mathbf{p}-\int f_{e}\frac{\partial}{\partial\mathbf{p}}\left(\mathbf{v}\times\mathbf{B}\right)\textrm{d}\mathbf{p}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=\underset{S_{\infty}}{\int}\left(f_{e}\mathbf{v}\times\mathbf{B}\right)\textrm{d}\mathbf{S}=0\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the two surfaces integrals we have assumed the surface 
+\begin_inset Formula $S_{\infty}$
+\end_inset
+
+ to the infinity, the surface area increases as 
+\begin_inset Formula $v^{2}$
+\end_inset
+
+, but a real distribution 
+\begin_inset Formula $f_{e}$
+\end_inset
+
+ vanishes much faster for 
+\begin_inset Formula $v\rightarrow\infty$
+\end_inset
+
+ so the intergal on the infinity surfaces also vanishes.
+ The second integral of the last term is zero because 
+\begin_inset Formula $\partial/\partial\mathbf{p}$
+\end_inset
+
+ is perpendicular to 
+\begin_inset Formula $\mathbf{v}\times\mathbf{B}$
+\end_inset
+
+.
+ So the moment zero (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:0ordervlasov"
+
+\end_inset
+
+) is the continuity equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial n_{e}}{\partial t}+\nabla\cdot\overline{\mathbf{v}}=0\label{eq:continuityapp}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The moment one of the Vlasov equation is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\int\mathbf{v}\frac{\partial f_{e}}{\partial t}\textrm{d}\mathbf{p}+\mathbf{\int}\mathbf{v}\left(\mathbf{v}\cdot\nabla f_{e}\right)\textrm{d}\mathbf{p}+q_{e}\int\mathbf{v}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}\textrm{d}\mathbf{p}=0\label{eq:1ordervlasov}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Term by term:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\int\mathbf{v}\frac{\partial f_{e}}{\partial t}\textrm{d}\mathbf{p}=\frac{\partial}{\partial t}\int\mathbf{v}f_{e}\textrm{d}\mathbf{p}=\frac{\partial\overline{\mathbf{v}}}{\partial t}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\int\mathbf{v}\left(\mathbf{v}\cdot\nabla f_{e}\right)\textrm{d}\mathbf{p}=\nabla\cdot\int\mathbf{v}\mathbf{v}f_{e}\textrm{d}\mathbf{p}=\nabla\cdot\overline{\mathbf{vv}}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \[
+\int\mathbf{v}\left(\mathbf{E}\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}\right)\textrm{d}\mathbf{p}=\int\frac{\partial}{\partial\mathbf{p}}\cdot\left(f_{e}\mathbf{v}\mathbf{E}\right)\textrm{d}\mathbf{p}-\frac{1}{m_{e}}\int f_{e}\mathbf{E}\textrm{d}\mathbf{p}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=\underset{S_{\infty}}{\int}\left(f_{e}\mathbf{p}\mathbf{E}\right)\textrm{d}\mathbf{S}-\frac{\mathbf{E}}{m_{e}}\int f_{e}\textrm{d}\mathbf{p}=-\frac{n_{e}\mathbf{E}}{m_{e}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\int\mathbf{v}\left(\mathbf{v}\times\mathbf{B}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}\textrm{d}\mathbf{p}=\int\frac{\partial}{\partial\mathbf{p}}\left[f_{e}\mathbf{v}\left(\mathbf{v}\times\mathbf{B}\right)\right]\textrm{d}\mathbf{p}-\frac{1}{m_{e}}\int f_{e}\left(\mathbf{v}\times\mathbf{B}\right)\textrm{d}\mathbf{p}-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\int f_{e}\mathbf{v}\frac{\partial}{\partial\mathbf{p}}\cdot\left(\mathbf{v}\times\mathbf{B}\right)\textrm{d}\mathbf{p}=\underset{S_{\infty}}{\int}\left[f_{e}\mathbf{v}\left(\mathbf{v}\times\mathbf{B}\right)\right]\textrm{d}\mathbf{S}-\frac{1}{m_{e}}\int\mathbf{v}f_{e}\textrm{d}\mathbf{p}\times\mathbf{B}=-\frac{1}{m_{e}}\left(\overline{\mathbf{v}}\times\mathbf{B}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the moment one of the Vlasov equation is the equation for motion:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\overline{\mathbf{v}}}{\partial t}+\nabla\cdot\overline{\mathbf{vv}}-\frac{q_{e}}{m_{e}}\left(n_{e}\mathbf{E}+\mathbf{\overline{v}}\times\mathbf{B}\right)=0\label{eq:motionapp}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The second moment is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\int\mathbf{v}\mathbf{v}\frac{\partial f_{e}}{\partial t}\textrm{d}\mathbf{p}+\mathbf{\int\mathbf{v}}\mathbf{v}\left(\mathbf{v}\cdot\nabla f_{e}\right)\textrm{d}\mathbf{p}+q_{e}\int\mathbf{v}\mathbf{v}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}\textrm{d}\mathbf{p}=0\label{eq:2ordervlasov}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Term by term:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\int\mathbf{vv}\frac{\partial f_{e}}{\partial t}\textrm{d}\mathbf{p}=\frac{\partial}{\partial t}\int\mathbf{vv}f_{e}\textrm{d}\mathbf{p}=\frac{\partial\overline{\mathbf{vv}}}{\partial t}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\int\mathbf{vv}\left(\mathbf{v}\cdot\nabla f_{e}\right)\textrm{d}\mathbf{p}=\nabla\cdot\int\mathbf{vv}\mathbf{v}f_{e}\textrm{d}\mathbf{p}=\nabla\cdot\overline{\mathbf{vvv}}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \[
+\int\mathbf{vv}\left(\mathbf{E}\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}\right)\textrm{d}\mathbf{p}=\int\frac{\partial}{\partial\mathbf{p}}\cdot\left(f_{e}\mathbf{vv}\mathbf{E}\right)\textrm{d}\mathbf{p}-\frac{1}{m_{e}}\int f_{e}\mathbf{vE}\textrm{d}\mathbf{p}-\frac{1}{m_{e}}\int f_{e}\mathbf{E}\mathbf{v}\textrm{d}\mathbf{p=}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=\underset{S_{\infty}}{\int}\left(f_{e}\mathbf{vv}\mathbf{E}\right)\textrm{d}\mathbf{S}-\int\mathbf{v}f_{e}\textrm{d}\mathbf{p}\frac{\mathbf{E}}{m_{e}}-\frac{\mathrm{\mathbf{E}}}{m_{e}}\int\mathbf{v}f_{e}\textrm{d}\mathbf{p}=-\frac{1}{m_{e}}\left(\overline{\mathbf{v}}\mathbf{E}+\mathbf{E}\overline{\mathbf{v}}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\int\mathbf{vv}\left(\mathbf{v}\times\mathbf{B}\right)\cdot\frac{\partial f_{e}}{\partial\mathbf{p}}\textrm{d}\mathbf{p}=\int\frac{\partial}{\partial\mathbf{p}}\left[f_{e}\mathbf{vv}\left(\mathbf{v}\times\mathbf{B}\right)\right]\textrm{d}\mathbf{p}-\frac{1}{m_{e}}\int f_{e}\mathbf{v}\left(\mathbf{v}\times\mathbf{B}\right)\textrm{d}\mathbf{p}-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-\frac{1}{m_{e}}\int f_{e}\left(\mathbf{v}\times\mathbf{B}\right)\mathbf{v}\textrm{d}\mathbf{p}-\int f_{e}\mathbf{vv}\frac{\partial}{\partial\mathbf{p}}\cdot\left(\mathbf{v}\times\mathbf{B}\right)=\underset{S_{\infty}}{\int}\left[f_{e}\mathbf{vv}\left(\mathbf{v}\times\mathbf{B}\right)\right]\textrm{d}\mathbf{S}-\frac{1}{m_{e}}\int\mathbf{vv}f_{e}\textrm{d}\mathbf{p}\times\mathbf{B}+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
++\frac{1}{m_{e}}\mathbf{B}\times\int\mathbf{vv}f_{e}\textrm{d}\mathbf{p}=-\frac{1}{m_{e}}\left(\overline{\mathbf{vv}}\times\mathbf{B}-\mathbf{B}\times\overline{\mathbf{vv}}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the second moment of the Vlasov equation is the generalized energy transport
+ equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{\overline{vv}}}{\partial t}+\nabla\cdot\mathbf{\overline{vvv}}-\frac{q_{e}}{m_{e}}\left[\mathbf{\overline{v}E}+\mathbf{E\overline{v}}+\left(\mathbf{\overline{vv}}\times\mathbf{B}\right)-\left(\mathbf{B}\times\mathbf{\overline{vv}}\right)\right]=0\label{eq:energyapp}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is interesting to note that starting from this general equation it is
+ possible to derive an explicit equation for the energy transport, infact
+ the kinetic energy density 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+is determined by the sum of the diagonal terms of the diad 
+\begin_inset Formula $\mathbf{\overline{vv}}$
 \end_inset
 
 :
@@ -2792,7 +5216,270 @@ We now calculate explicitely the mode coupling coefficient for the density
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-V^{n}\left(\mathbf{k},\check{\mathbf{k}},\omega\right)=\frac{\omega}{2}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\cdot\left(\mathbf{e^{\star}}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\end{equation}
+\varepsilon=\frac{m_{e}}{2}\int v^{2}f_{e}\textrm{d}\mathbf{p}=\frac{m_{e}}{2}\int\left(v_{1}^{2}+v_{2}^{2}+v_{3}^{2}\right)f_{e}\textrm{d}\mathbf{p}\label{eq:energydensity}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The detailed derivation of the transport equation for 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ starting by the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:energyapp"
+
+\end_inset
+
+) is described in reference 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bitt"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section*
+Appendix E
+\end_layout
+
+\begin_layout Standard
+In this appendix we derive in details the relation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:veltensor2"
+
+\end_inset
+
+) between the tensor 
+\begin_inset Formula $\mathbb{T}$
+\end_inset
+
+ and the susceptibility tensor 
+\begin_inset Formula $\mathbb{X}$
+\end_inset
+
+.
+ 
+\begin_inset Formula $\mathbb{T}$
+\end_inset
+
+ is the tensor that exprimes the linearized equation for motion in the Fourier
+ space with the matricial representetion.
+ As we have shown in our model, the linearized equation for motion is the
+ first order equation for motion and the first order quantities are due
+ to the linear waves and to the linear response of the plasma to these linear
+ sollecitations.
+ So we rewrite the linearized equation for motion and the first order current:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{u}^{\left(1\right)}}{\partial t}=\frac{q_{e}}{m_{e}}\left(\mathbf{E}^{\left(1\right)}+\mathbf{u}^{\left(1\right)}\times\mathbf{B}^{\left(0\right)}\right)\label{eq:1ordermotionCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{J}^{\left(1\right)}=q_{e}n_{e}^{\left(0\right)}\mathbf{u}^{\left(1\right)}\label{eq:1ordercurrentCOLD}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the Fourier the equation for motion becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+-i\omega\mathbf{u}^{\left(1\right)}-\frac{q_{e}B^{\left(0\right)}}{m_{e}}\left(\mathbf{u}^{\left(1\right)}\times\frac{\mathbf{B}^{\left(0\right)}}{B^{\left(0\right)}}\right)=\frac{q_{e}}{m_{e}}\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{T}\left(\mathbf{k},\omega\right)\cdot\mathbf{u}^{\left(1\right)}=\frac{q_{e}}{m_{e}}\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\label{eq:fluidvelapp}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\mathbb{T}\left(\mathbf{k},\omega\right)$
+\end_inset
+
+ is the tensor:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{T}\left(\mathbf{k},\omega\right)=-i\omega\mathbb{I}-\omega_{ce}\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\mathbf{B}^{\left(0\right)}}{B^{\left(0\right)}}\right)\label{eq:veltensor}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\omega_{pe}=q_{e}B^{\left(0\right)}/m_{e}$
+\end_inset
+
+ .The fluid velocity in the Fourier space is the given by the expression:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{u}^{\left(1\right)}=\frac{q_{e}}{m_{e}}\mathbb{T}^{-1}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and the current becomes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{J}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)=\frac{q_{e}^{2}n_{e}^{\left(0\right)}}{m_{e}}\mathbb{T}^{-1}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\label{eq:currentappA}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Remembering that 
+\begin_inset Formula $\mathbf{J}_{\mathbf{k}}^{\left(1\right)}$
+\end_inset
+
+is the current due to the linear propagatin of the wave in the medium, from
+ the linear response theory we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{J}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)=\mathbb{S}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)=-i\varepsilon_{0}\omega\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\label{eq:currentappB}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Equaling the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:currentappA"
+
+\end_inset
+
+) and the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:currentappB"
+
+\end_inset
+
+) we obtain:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{T}^{-1}\left(\mathbf{k},\omega\right)=-i\frac{\varepsilon_{0}m_{e}\omega}{q_{e}^{2}n_{e}^{\left(0\right)}}\mathbb{X}\left(\mathbf{k,}\omega\right)=-i\frac{\omega}{\omega_{pe}^{2}}\mathbb{X}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using this results in the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:fluidvelapp"
+
+\end_inset
+
+) we can exprime the first order fluid velocity in function of the susceptibilit
+y tensor:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{u}^{\left(1\right)}=-i\frac{\omega\varepsilon_{0}}{n_{e}^{\left(0\right)}q_{e}}\mathbb{X}\left(\mathbf{k},\omega\right)\cdot\mathbf{E}_{\mathbf{k}}^{\left(1\right)}\left(\mathbf{k},\omega\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we have also demonstrated the relation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:1ordervelINC"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Section*
+Appendix F 
+\end_layout
+
+\begin_layout Standard
+We now calculate explicitely the mode coupling coefficient for the density
+ fluctuations 
+\begin_inset Formula $V^{n}\left(\mathbf{\mathbf{k}},\check{\mathbf{k}},\omega_{k}\right)$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+V^{n}\left(\mathbf{k},\check{\mathbf{k}},\omega_{k}\right)=\frac{\omega_{k}}{2}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\cdot\left(\mathbf{e^{\star}}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Remembering that 
+\begin_inset Formula $\mathbb{K}=\mathbb{I}+\mathbb{X},$
+\end_inset
+
+ we can exprime this coefficint in function of the susceptibility tensor:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+V^{n}\left(\mathbf{k},\check{\mathbf{k}},\omega\right)=-\frac{\omega_{k}}{2}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{X}\left(\mathbf{k}\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\cdot\left(\mathbf{e^{\star}}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}\end{equation}
 
 \end_inset
 
@@ -2805,7 +5492,7 @@ The numerator of the fraction is given by the product:
 
 \begin_layout Standard
 \begin_inset Formula \[
-\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)=\]
+\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{X}\left(\mathbf{k}\right)\cdot\mathbf{e}\left(\mathbf{k}\right)=\]
 
 \end_inset
 
@@ -2814,7 +5501,7 @@ The numerator of the fraction is given by the product:
 
 \begin_layout Standard
 \begin_inset Formula \[
-=\check{e}_{x}^{\star}e_{x}\left(1-K_{xx}\right)+\check{e}_{y}^{\star}e_{x}K_{yx}+\check{e}_{z}^{\star}e_{x}K_{zx}+\check{e}_{x}^{\star}e_{y}K_{xy}+\check{e}_{y}^{\star}e_{y}\left(1-K_{yy}\right)+\check{e}_{z}^{\star}e_{y}K_{zy}+\]
+=\check{e}_{x}^{\star}e_{x}X_{xx}+\check{e}_{y}^{\star}e_{x}X_{yx}+\check{e}_{z}^{\star}e_{x}X_{zx}+\check{e}_{x}^{\star}e_{y}X_{xy}+\check{e}_{y}^{\star}e_{y}X_{yy}+\check{e}_{z}^{\star}e_{y}X_{zy}+\]
 
 \end_inset
 
@@ -2823,7 +5510,7 @@ The numerator of the fraction is given by the product:
 
 \begin_layout Standard
 \begin_inset Formula \[
-+\check{e}_{x}^{\star}e_{z}K_{xz}+\check{e}_{y}^{\star}e_{z}K_{yz}+\check{e}_{z}^{\star}e_{z}\left(1-K_{zz}\right)=\]
++\check{e}_{x}^{\star}e_{z}X_{xz}+\check{e}_{y}^{\star}e_{z}X_{yz}+\check{e}_{z}^{\star}e_{z}X_{zz}=\]
 
 \end_inset
 
@@ -2832,7 +5519,7 @@ The numerator of the fraction is given by the product:
 
 \begin_layout Standard
 \begin_inset Formula \[
-=\check{e}_{x}^{\star}\left[e_{x}\left(1-K_{xx}\right)+e_{y}K_{xy}+e_{z}K_{xz}\right]+\check{e}_{y}^{\star}\left[e_{x}K_{yx}+e_{y}\left(1-K_{yy}\right)+e_{z}K_{yz}\right]+\]
+=\check{e}_{x}^{\star}\left[e_{x}X_{xx}+e_{y}X_{xy}+e_{z}X_{xz}\right]+\check{e}_{y}^{\star}\left[e_{x}X_{yx}+e_{y}X_{yy}+e_{z}X_{yz}\right]+\]
 
 \end_inset
 
@@ -2841,7 +5528,7 @@ The numerator of the fraction is given by the product:
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-+\check{e}_{z}^{\star}\left[e_{x}K_{zx}+e_{y}K_{zy}+e_{z}\left(1-K_{zz}\right)\right]\end{equation}
++\check{e}_{z}^{\star}\left[e_{x}X_{zx}+e_{y}X_{zy}+e_{z}X_{zz}\right]\end{equation}
 
 \end_inset
 
@@ -2974,15 +5661,15 @@ And that
 
 \begin_layout Standard
 \begin_inset Formula \begin{eqnarray*}
-M_{xx} & = & \frac{\omega}{2}\frac{\partial D_{xx}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{xx}}{\partial\omega}+N_{\parallel}^{2}\\
-M_{xy} & = & \frac{\omega}{2}\frac{\partial D_{xy}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{xy}}{\partial\omega}\\
-M_{xz} & = & \frac{\omega}{2}\frac{\partial D_{xz}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{xz}}{\partial\omega}-N_{\perp}N_{\parallel}\\
-M_{yx} & = & \frac{\omega}{2}\frac{\partial D_{yx}}{\partial\omega}=-\frac{\omega}{2}\frac{\partial X_{xy}}{\partial\omega}\\
-M_{yy} & = & \frac{\omega}{2}\frac{\partial D_{yy}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{yy}}{\partial\omega}+N^{2}\\
-M_{yz} & = & \frac{\omega}{2}\frac{\partial D_{yz}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{yz}}{\partial\omega}\\
-M_{zx} & = & \frac{\omega}{2}\frac{\partial D_{zx}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{zx}}{\partial\omega}-N_{\perp}N_{\parallel}\\
-M_{zy} & = & \frac{\omega}{2}\frac{\partial D_{zy}}{\partial\omega}=-\frac{\omega}{2}\frac{\partial X_{yz}}{\partial\omega}\\
-M_{zz} & = & \frac{\omega}{2}\frac{\partial D_{zz}}{\partial\omega}=\frac{\omega}{2}\frac{\partial X_{zz}}{\partial\omega}+N_{\perp}^{2}\end{eqnarray*}
+M_{xx} & = & \frac{\omega_{k}}{2}\frac{\partial D_{xx}}{\partial\omega}=\frac{\omega_{k}}{2}\frac{\partial X_{xx}}{\partial\omega}+N_{\parallel}^{2}\\
+M_{xy} & = & \frac{\omega_{k}}{2}\frac{\partial D_{xy}}{\partial\omega}=\frac{\omega_{k}}{2}\frac{\partial X_{xy}}{\partial\omega}\\
+M_{xz} & = & \frac{\omega_{k}}{2}\frac{\partial D_{xz}}{\partial\omega}=\frac{\omega_{k}}{2}\frac{\partial X_{xz}}{\partial\omega}-N_{\perp}N_{\parallel}\\
+M_{yx} & = & \frac{\omega_{k}}{2}\frac{\partial D_{yx}}{\partial\omega}=-\frac{\omega_{k}}{2}\frac{\partial X_{xy}}{\partial\omega}\\
+M_{yy} & = & \frac{\omega_{k}}{2}\frac{\partial D_{yy}}{\partial\omega}=\frac{\omega_{k}}{2}\frac{\partial X_{yy}}{\partial\omega}+N^{2}\\
+M_{yz} & = & \frac{\omega_{k}}{2}\frac{\partial D_{yz}}{\partial\omega}=\frac{\omega_{k}}{2}\frac{\partial X_{yz}}{\partial\omega}\\
+M_{zx} & = & \frac{\omega_{k}}{2}\frac{\partial D_{zx}}{\partial\omega}=\frac{\omega_{k}}{2}\frac{\partial X_{zx}}{\partial\omega}-N_{\perp}N_{\parallel}\\
+M_{zy} & = & \frac{\omega_{k}}{2}\frac{\partial D_{zy}}{\partial\omega}=-\frac{\omega_{k}}{2}\frac{\partial X_{yz}}{\partial\omega}\\
+M_{zz} & = & \frac{\omega_{k}}{2}\frac{\partial D_{zz}}{\partial\omega}=\frac{\omega_{k}}{2}\frac{\partial X_{zz}}{\partial\omega}+N_{\perp}^{2}\end{eqnarray*}
 
 \end_inset
 
@@ -2999,10 +5686,10 @@ So the tensor
 
 \begin_layout Standard
 \begin_inset Formula \begin{equation}
-\mathbb{M}=\frac{\omega}{2}\frac{\partial\mathbb{D}}{\partial\omega}=\left(\begin{array}{ccc}
-\frac{\omega}{2}\frac{\partial X_{xx}}{\partial\omega}+N_{\parallel}^{2} & \frac{\omega}{2}\frac{\partial X_{xy}}{\partial\omega} & \frac{\omega}{2}\frac{\partial X_{xz}}{\partial\omega}-N_{\perp}N_{\parallel}\\
--\frac{\omega}{2}\frac{\partial X_{xy}}{\partial\omega} & \frac{\omega}{2}\frac{\partial X_{yy}}{\partial\omega}+N^{2} & \frac{\omega}{2}\frac{\partial X_{yz}}{\partial\omega}\\
-\frac{\omega}{2}\frac{\partial X_{xz}}{\partial\omega}-N_{\perp}N_{\parallel} & -\frac{\omega}{2}\frac{\partial X_{yz}}{\partial\omega} & \frac{\omega}{2}\frac{\partial X_{zz}}{\partial\omega}+N_{\perp}^{2}\end{array}\right)\end{equation}
+\mathbb{M}=\frac{\omega_{k}}{2}\frac{\partial\mathbb{D}}{\partial\omega}=\left(\begin{array}{ccc}
+\frac{\omega_{k}}{2}\frac{\partial X_{xx}}{\partial\omega}+N_{\parallel}^{2} & \frac{\omega_{k}}{2}\frac{\partial X_{xy}}{\partial\omega} & \frac{\omega_{k}}{2}\frac{\partial X_{xz}}{\partial\omega}-N_{\perp}N_{\parallel}\\
+-\frac{\omega_{k}}{2}\frac{\partial X_{xy}}{\partial\omega} & \frac{\omega_{k}}{2}\frac{\partial X_{yy}}{\partial\omega}+N^{2} & \frac{\omega_{k}}{2}\frac{\partial X_{yz}}{\partial\omega}\\
+\frac{\omega_{k}}{2}\frac{\partial X_{xz}}{\partial\omega}-N_{\perp}N_{\parallel} & -\frac{\omega_{k}}{2}\frac{\partial X_{yz}}{\partial\omega} & \frac{\omega_{k}}{2}\frac{\partial X_{zz}}{\partial\omega}+N_{\perp}^{2}\end{array}\right)\end{equation}
 
 \end_inset
 
@@ -3128,6 +5815,897 @@ K\left(k_{\perp}^{\sigma},\check{k}_{\perp}^{\sigma},\beta\right)=-2\pi\check{k}
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section*
+Appendix G
+\end_layout
+
+\begin_layout Standard
+We now calculate explicitely the mode coupling coefficient for the density
+ fluctuations 
+\begin_inset Formula $\mathbf{V}^{\mathbf{B}}\left(\mathbf{\mathbf{k}},\check{\mathbf{k}},\omega\right)$
+\end_inset
+
+, it is important to note that while for density fluctuation the coupling
+ coefficient is a scalar, for magnetic field's fluctuations it is a vector.
+ We start from the expression, that is the term of the mode coupling equation
+ due to the fluctuations of the magnetic field:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+i\frac{\omega_{ce}\check{\omega}_{\check{k}}^{2}}{2\omega_{pe}^{2}}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\check{\mathbf{k}}\right)\right)\cdot\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}}\right)\cdot\left(\mathbb{I}-\mathbb{K}\left(\mathbf{k}\right)\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}=\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega\right)\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\mathbf{\check{k}}-\mathbf{k}\right)}{B^{\left(0\right)}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Remembering that 
+\begin_inset Formula $\mathbb{K}=\mathbb{I}+\mathbb{X},$
+\end_inset
+
+ we can write:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+i\frac{\omega_{ce}\check{\omega}_{\check{k}}^{2}}{2\omega_{pe}^{2}}\frac{\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{X}\left(\check{\mathbf{k}}\right)\cdot\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}}\right)\cdot\mathbb{X}\left(\mathbf{k}\right)\cdot\mathbf{e}\left(\mathbf{k}\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}=\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega\right)\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\mathbf{\check{k}}-\mathbf{k}\right)}{B^{\left(0\right)}}\label{eq:modecouplingB}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The denominator of the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:modecouplingB2"
+
+\end_inset
+
+) is a scalar and it has been calculated in the precedent appendix, so it
+ is useful to write this equation in the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+i\frac{\omega_{ce}\check{\omega}_{\check{k}}^{2}}{2\omega_{pe}^{2}}\frac{\mathbf{w}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega\right)\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\check{\mathbf{k}}-\mathbf{k}\right)}{B^{\left(0\right)}}}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}=\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega\right)\cdot\frac{\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\mathbf{\check{k}}-\mathbf{k}\right)}{B^{\left(0\right)}}\label{eq:modecouplingB2}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the mode coupling coefficient is given by the expression:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+i\frac{\omega_{ce}\check{\omega}_{\check{k}}^{2}}{2\omega_{pe}^{2}}\frac{\mathbf{w}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega\right)}{\left(\check{\mathbf{e}}^{\star}\left(\check{\mathbf{k}}\right)\cdot\mathbb{M}\cdot\check{\mathbf{e}}\left(\check{\mathbf{k}}\right)\right)^{\frac{1}{2}}\left(\mathbf{e}^{\star}\left(\mathbf{k}\right)\cdot\mathbb{M}\cdot\mathbf{e}\left(\mathbf{k}\right)\right)^{\frac{1}{2}}}=\mathbf{V}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega\right)\label{eq:modecouplingcoeffB}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have just calculated the denominator, so we need an explicit expression
+ for 
+\begin_inset Formula $\mathbf{W}^{\mathbf{B}}\left(\mathbf{k},\check{\mathbf{k}},\omega\right)$
+\end_inset
+
+.
+ From this point we use the compact notation 
+\begin_inset Formula $\mathbb{X}\left(\mathbf{\mathbf{k}}\right)=\mathbb{X},\mathbb{X}\left(\check{\mathbf{k}}\right)=\check{\mathbb{X}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\delta\mathbf{B}_{\check{\mathbf{k}}-\mathbf{k}}\left(\mathbf{\check{k}}-\mathbf{k}\right)/B^{\left(0\right)}=\delta\mathbf{B}/B^{\left(0\right)}$
+\end_inset
+
+.
+ The vector 
+\begin_inset Formula $\mathbf{W}^{\mathbf{B}}$
+\end_inset
+
+can be derived from the relation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{\mathbf{\check{e}}}^{\star}\cdot\left[\mathbb{\check{X}}\cdot\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\delta\mathbf{B}}{B^{\left(0\right)}}\right)\cdot\mathbb{X}\right]\cdot\mathbf{e}=\mathbf{w}^{\mathbf{B}}\cdot\frac{\delta\mathbf{B}}{B^{\left(0\right)}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now calculate explicitely this quantity and after we derive the components
+ of the vector 
+\begin_inset Formula $\mathbf{w}^{\mathbf{B}}.$
+\end_inset
+
+ 
+\begin_inset Formula $\underline{\underline{\underline{\varepsilon}}}^{LC}$
+\end_inset
+
+ is the Levi-Civita tensor of order 3, the scalar product of this tensor
+ with the vector 
+\begin_inset Formula $\delta\mathbf{B}/B^{\left(0\right)}$
+\end_inset
+
+gives a tensor of order 2:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+\mathbb{U} & = & \underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\delta\mathbf{B}}{B^{\left(0\right)}}\\
+U_{ij} & = & \varepsilon_{ijk}\frac{\delta B_{k}}{B^{\left(0\right)}}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the elements of 
+\begin_inset Formula $\mathbb{U}$
+\end_inset
+
+ are:
+\begin_inset Formula \begin{eqnarray*}
+U_{xx} & = & \varepsilon_{xxx}\frac{\delta B_{x}}{B^{\left(0\right)}}+\varepsilon_{xxy}\frac{\delta B_{y}}{B^{\left(0\right)}}+\varepsilon_{xxz}\frac{\delta B_{z}}{B^{\left(0\right)}}=0\\
+U_{xy} & = & \varepsilon_{xyx}\frac{\delta B_{x}}{B^{\left(0\right)}}+\varepsilon_{xyy}\frac{\delta B_{y}}{B^{\left(0\right)}}+\varepsilon_{xyz}\frac{\delta B_{z}}{B^{\left(0\right)}}=\frac{\delta B_{z}}{B^{\left(0\right)}}\\
+U_{xz} & = & \varepsilon_{xzx}\frac{\delta B_{x}}{B^{\left(0\right)}}+\varepsilon_{xzy}\frac{\delta B_{y}}{B^{\left(0\right)}}+\varepsilon_{xzz}\frac{\delta B_{z}}{B^{\left(0\right)}}=-\frac{\delta B_{y}}{B^{\left(0\right)}}\\
+U_{yx} & = & \varepsilon_{yxx}\frac{\delta B_{x}}{B^{\left(0\right)}}+\varepsilon_{yxy}\frac{\delta B_{y}}{B^{\left(0\right)}}+\varepsilon_{yxz}\frac{\delta B_{z}}{B^{\left(0\right)}}=-\frac{\delta B_{z}}{B^{\left(0\right)}}\\
+U_{yy} & = & \varepsilon_{yyx}\frac{\delta B_{x}}{B^{\left(0\right)}}+\varepsilon_{yyy}\frac{\delta B_{y}}{B^{\left(0\right)}}+\varepsilon_{yyz}\frac{\delta B_{z}}{B^{\left(0\right)}}=0\\
+U_{yz} & = & \varepsilon_{yzx}\frac{\delta B_{x}}{B^{\left(0\right)}}+\varepsilon_{yzy}\frac{\delta B_{y}}{B^{\left(0\right)}}+\varepsilon_{yzz}\frac{\delta B_{z}}{B^{\left(0\right)}}=\frac{\delta B_{x}}{B^{\left(0\right)}}\\
+U_{zx} & = & \varepsilon_{zxx}\frac{\delta B_{x}}{B^{\left(0\right)}}+\varepsilon_{zxy}\frac{\delta B_{y}}{B^{\left(0\right)}}+\varepsilon_{zxz}\frac{\delta B_{z}}{B^{\left(0\right)}}=\frac{\delta B_{z}}{B^{\left(0\right)}}\\
+U_{zy} & = & \varepsilon_{zyx}\frac{\delta B_{x}}{B^{\left(0\right)}}+\varepsilon_{zyy}\frac{\delta B_{y}}{B^{\left(0\right)}}+\varepsilon_{zyz}\frac{\delta B_{z}}{B^{\left(0\right)}}=-\frac{\delta B_{x}}{B^{\left(0\right)}}\\
+U_{zz} & = & \varepsilon_{zzx}\frac{\delta B_{x}}{B^{\left(0\right)}}+\varepsilon_{zzy}\frac{\delta B_{y}}{B^{\left(0\right)}}+\varepsilon_{zzz}\frac{\delta B_{z}}{B^{\left(0\right)}}=0\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the tensor 
+\begin_inset Formula $\mathbb{U}$
+\end_inset
+
+ is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbb{U}=\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\delta\mathbf{B}}{B^{\left(0\right)}}\right)=\left(\begin{array}{ccc}
+0 & \frac{\delta B_{z}}{B^{\left(0\right)}} & -\frac{\delta B_{y}}{B^{\left(0\right)}}\\
+-\frac{\delta B_{z}}{B^{\left(0\right)}} & 0 & \frac{\delta B_{x}}{B^{\left(0\right)}}\\
+\frac{\delta B_{y}}{B^{\left(0\right)}} & -\frac{\delta B_{x}}{B^{\left(0\right)}} & 0\end{array}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now have to calculate the tensor 
+\begin_inset Formula $\mathbb{W}$
+\end_inset
+
+, given by the expression:
+\begin_inset Formula \begin{equation}
+\mathbb{W}=\check{\mathbb{X}}\cdot\mathbb{U}\cdot\mathbb{X}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The elements of 
+\begin_inset Formula $\mathbb{W}$
+\end_inset
+
+ are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+W_{xx} & = & \left(-\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{xy}+\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{xz}\right)X_{xx}+\left(\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{xx}-\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{xz}\right)X_{yx}+\left(-\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{xx}+\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{xy}\right)X_{zx}\\
+W_{xy} & = & \left(-\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{xy}+\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{xz}\right)X_{xy}+\left(\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{xx}-\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{xz}\right)X_{yy}+\left(-\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{xx}+\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{xy}\right)X_{zy}\\
+W_{xz} & = & \left(-\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{xy}+\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{xz}\right)X_{xz}+\left(\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{xx}-\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{xz}\right)X_{yz}+\left(-\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{xx}+\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{xy}\right)X_{zz}\\
+W_{yx} & = & \left(-\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{yy}+\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{yz}\right)X_{xx}+\left(\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{yx}-\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{yz}\right)X_{yx}+\left(-\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{yx}+\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{yy}\right)X_{zx}\\
+W_{yy} & = & \left(-\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{yy}+\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{yz}\right)X_{xy}+\left(\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{yx}-\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{yz}\right)X_{yz}+\left(-\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{yx}+\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{yy}\right)X_{zy}\\
+W_{yz} & = & \left(-\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{yy}+\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{yz}\right)X_{xz}+\left(\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{yx}-\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{yz}\right)X_{yz}+\left(-\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{yx}+\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{yy}\right)X_{zz}\\
+W_{zx} & = & \left(-\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{zy}+\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{zz}\right)X_{xx}+\left(\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{zx}-\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{zz}\right)X_{yx}+\left(-\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{zx}+\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{zy}\right)X_{zx}\\
+W_{zy} & = & \left(-\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{zy}+\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{zz}\right)X_{xy}+\left(\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{zx}-\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{zz}\right)X_{yy}+\left(-\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{zx}+\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{zy}\right)X_{zy}\\
+W_{zz} & = & \left(-\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{zy}+\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{zz}\right)X_{xz}+\left(\frac{\delta B_{z}}{B^{\left(0\right)}}\check{X}_{zx}-\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{zz}\right)X_{yz}+\left(-\frac{\delta B_{y}}{B^{\left(0\right)}}\check{X}_{zx}+\frac{\delta B_{x}}{B^{\left(0\right)}}\check{X}_{zy}\right)X_{zz}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is useful to write the elements of 
+\begin_inset Formula $\mathbb{W}$
+\end_inset
+
+ in the form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+W_{xx} & = & \frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{xy}X_{zx}-\check{X}_{xz}X_{yx}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{xz}X_{xx}-\check{X}_{xx}X_{zx}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{xx}X_{yx}-\check{X}_{xy}X_{xx}\right)\\
+W_{xy} & = & \frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{xy}X_{zy}-\check{X}_{xz}X_{yy}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{xz}X_{xy}-\check{X}_{xx}X_{zy}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{xx}X_{yy}-\check{X}_{xy}X_{xy}\right)\\
+W_{xz} & = & \frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{xy}X_{zz}-\check{X}_{xz}X_{yz}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{xz}X_{xz}-\check{X}_{xx}X_{zz}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{xx}X_{yz}-\check{X}_{xy}X_{xz}\right)\\
+W_{yx} & = & \frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{yy}X_{zx}-\check{X}_{yz}X_{yx}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{yz}X_{xx}-\check{X}_{yx}X_{zx}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{yx}X_{yx}-\check{X}_{yy}X_{xx}\right)\\
+W_{yy} & = & \frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{yy}X_{zy}-\check{X}_{yz}X_{yy}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{yz}X_{xy}-\check{X}_{yx}X_{zy}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{yx}X_{yy}-\check{X}_{yy}X_{xy}\right)\\
+W_{yz} & = & \frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{yy}X_{zz}-\check{X}_{yz}X_{yz}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{yz}X_{xz}-\check{X}_{yx}X_{zz}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{yx}X_{yz}-\check{X}_{yy}X_{xz}\right)\\
+W_{zx} & = & \frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{zy}X_{zx}-\check{X}_{zz}X_{yx}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{zz}X_{xx}-\check{X}_{zx}X_{zx}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{zx}X_{yx}-\check{X}_{zy}X_{xx}\right)\\
+W_{zy} & = & \frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{zy}X_{zy}-\check{X}_{zz}X_{yy}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{zz}X_{xy}-\check{X}_{zx}X_{zy}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{zx}X_{yy}-\check{X}_{zy}X_{xy}\right)\\
+W_{zz} & = & \frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{zy}X_{zz}-\check{X}_{zz}X_{yz}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{zz}X_{xz}-\check{X}_{zx}X_{zz}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{zx}X_{yz}-\check{X}_{zy}X_{xz}\right)\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using these components of 
+\begin_inset Formula $\mathbb{W}$
+\end_inset
+
+ we now calculate:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{w}^{\mathbf{B}}\cdot\frac{\delta\mathbf{B}}{B^{\left(0\right)}}=\check{\mathbf{e}}^{\star}\cdot\left[\check{\mathbb{X}}\cdot\left(\underline{\underline{\underline{\varepsilon}}}^{LC}\cdot\frac{\delta\mathbf{B}}{B^{\left(0\right)}}\right)\cdot\mathbb{X}\right]\cdot\mathbf{e}=\check{\mathbf{e}}^{\star}\cdot\mathbb{W}\cdot\mathbf{e}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=\check{e}_{x}^{\star}e_{x}W_{xx}+\check{e}_{y}^{\star}e_{x}W_{yx}+\check{e}_{z}^{\star}e_{x}W_{zx}+\check{e}_{x}^{\star}e_{y}W_{xy}+\check{e}_{y}^{\star}e_{y}W_{yy}+\check{e}_{z}^{\star}e_{y}W_{zy}+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\check{e}_{x}^{\star}e_{z}W_{xz}+\check{e}_{y}^{\star}e_{z}W_{yz}+\check{e}_{z}^{\star}e_{z}W_{zz}=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+= & \check{e}_{x}^{\star}\left[\frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{xy}X_{zx}-\check{X}_{xz}X_{yx}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{xz}X_{xx}-\check{X}_{xx}X_{zx}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{xx}X_{yx}-\check{X}_{xy}X_{xx}\right)\right]e_{x} & +\\
++ & \check{e}_{y}^{\star}\left[\frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{yy}X_{zx}-\check{X}_{yz}X_{yx}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{yz}X_{xx}-\check{X}_{yx}X_{zx}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{yx}X_{yx}-\check{X}_{yy}X_{xx}\right)\right]e_{x} & +\\
++ & \check{e}_{z}^{\star}\left[\frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{zy}X_{zx}-\check{X}_{zz}X_{yx}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{zz}X_{xx}-\check{X}_{zx}X_{zx}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{zx}X_{yy}-\check{X}_{zy}X_{xx}\right)\right]e_{x} & +\\
++ & \check{e}_{x}^{\star}\left[\frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{xy}X_{zy}-\check{X}_{xz}X_{yy}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{xz}X_{xy}-\check{X}_{xx}X_{zy}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{xx}X_{yy}-\check{X}_{xy}X_{xy}\right)\right]e_{y} & +\\
++ & \check{e}_{y}^{\star}\left[\frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{yy}X_{zy}-\check{X}_{yz}X_{yy}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{yz}X_{xy}-\check{X}_{yx}X_{zy}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{yx}X_{yy}-\check{X}_{yy}X_{xy}\right)\right]e_{y} & +\\
++ & \check{e}_{z}^{\star}\left[\frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{zy}X_{zy}-\check{X}_{zz}X_{yy}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{zz}X_{xy}-\check{X}_{zx}X_{zy}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{zx}X_{yy}-\check{X}_{zy}X_{xy}\right)\right]e_{y} & +\\
++ & \check{e}_{x}^{\star}\left[\frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{xy}X_{zz}-\check{X}_{xz}X_{yz}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{xz}X_{xz}-\check{X}_{xx}X_{zz}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{xx}X_{yz}-\check{X}_{xy}X_{xz}\right)\right]e_{z} & +\\
++ & \check{e}_{y}^{\star}\left[\frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{yy}X_{zz}-\check{X}_{yz}X_{yz}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{yz}X_{xz}-\check{X}_{yx}X_{zz}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{yx}X_{yz}-\check{X}_{yy}X_{xz}\right)\right]e_{z} & +\\
++ & \check{e}_{z}^{\star}\left[\frac{\delta B_{x}}{B^{\left(0\right)}}\left(\check{X}_{zy}X_{zz}-\check{X}_{zz}X_{yz}\right)+\frac{\delta B_{y}}{B^{\left(0\right)}}\left(\check{X}_{zz}X_{xz}-\check{X}_{zx}X_{zz}\right)+\frac{\delta B_{z}}{B^{\left(0\right)}}\left(\check{X}_{zx}X_{yz}-\check{X}_{zy}X_{xz}\right)\right]e_{z} & =\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=\frac{\delta B_{x}}{B^{\left(0\right)}}\left[\check{e}_{x}^{\star}e_{x}\left(\check{X}_{xy}X_{zx}-\check{X}_{xz}X_{yx}\right)+\check{e}_{y}^{\star}e_{x}\left(\check{X}_{yy}X_{zx}-\check{X}_{yz}X_{yx}\right)+\check{e}_{z}^{\star}e_{x}\left(\check{X}_{zy}X_{zx}-\check{X}_{zz}X_{yx}\right)+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\check{e}_{x}^{\star}e_{y}\left(\check{X}_{xy}X_{zy}-\check{X}_{xz}X_{yy}\right)+\check{e}_{y}^{\star}e_{y}\left(\check{X}_{yy}X_{zy}-\check{X}_{yz}X_{yy}\right)+\check{e}_{z}^{\star}e_{y}\left(\check{X}_{zy}X_{zy}-\check{X}_{zz}X_{yy}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left.+\check{e}_{x}^{\star}e_{z}\left(\check{X}_{xy}X_{zz}-\check{X}_{xz}X_{yz}\right)+\check{e}_{y}^{\star}e_{z}\left(\check{X}_{yy}X_{zz}-\check{X}_{yz}X_{yz}\right)+\check{e}_{z}^{\star}e_{z}\left(\check{X}_{xy}X_{zz}-\check{X}_{zz}X_{yz}\right)\right]+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\frac{\delta B_{y}}{B^{\left(0\right)}}\left[\check{e}_{x}^{\star}e_{x}\left(\check{X}_{xz}X_{xx}-\check{X}_{xx}X_{zx}\right)+\check{e}_{y}^{\star}e_{x}\left(\check{X}_{yz}X_{xx}-\check{X}_{yx}X_{zx}\right)+\check{e}_{z}^{\star}e_{x}\left(\check{X}_{zz}X_{xx}-\check{X}_{zx}X_{zx}\right)+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\check{e}_{x}^{\star}e_{y}\left(\check{X}_{xz}X_{xy}-\check{X}_{xx}X_{zy}\right)+\check{e}_{y}^{\star}e_{y}\left(\check{X}_{yz}X_{xx}+-\check{X}_{yx}X_{zy}\right)+\check{e}_{z}^{\star}e_{y}\left(\check{X}_{zz}X_{xy}-\check{X}_{zx}X_{zy}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left.+\check{e}_{x}^{\star}e_{z}\left(\check{X}_{xz}X_{xz}-\check{X}_{xx}X_{zz}\right)+\check{e}_{y}^{\star}e_{z}\left(\check{X}_{yz}X_{xz}-\check{X}_{yx}X_{zz}\right)+\check{e}_{z}^{\star}e_{z}\left(\check{X}_{zz}X_{xz}-\check{X}_{zx}X_{zz}\right)\right]+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\frac{\delta B_{z}}{B^{\left(0\right)}}\left[\check{e}_{x}^{\star}e_{x}\left(\check{X}_{xx}X_{yx}-\check{X}_{xy}X_{xx}\right)+\check{e}_{y}^{\star}e_{x}\left(\check{X}_{yx}X_{yx}-\check{X}_{yy}X_{xx}\right)+\check{e}_{z}^{\star}e_{x}\left(\check{X}_{zx}X_{yx}-\check{X}_{zy}X_{xx}\right)+\right.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\check{e}_{x}^{\star}e_{y}\left(\check{X}_{xx}X_{yy}-\check{X}_{xy}X_{xy}\right)+\check{e}_{y}^{\star}e_{y}\left(\check{X}_{yx}X_{yy}-\check{X}_{yy}X_{xy}\right)+\check{e}_{z}^{\star}e_{y}\left(\check{X}_{zx}X_{yy}-\check{X}_{zy}X_{xy}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left.+\check{e}_{x}^{\star}e_{z}\left(\check{X}_{xx}X_{yz}-\check{X}_{xy}X_{xz}\right)+\check{e}_{y}^{\star}e_{z}\left(\check{X}_{yx}X_{yz}-\check{X}_{yy}X_{xz}\right)+\check{e}_{z}^{\star}e_{z}\left(\check{X}_{zx}X_{yz}-\check{X}_{zy}X_{yxz}\right)\right]=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+=\frac{\delta B_{x}}{B^{\left(0\right)}}w_{x}^{\mathbf{B}}+\frac{\delta B_{y}}{B^{\left(0\right)}}w_{y}^{\mathbf{B}}+\frac{\delta B_{z}}{B^{\left(0\right)}}w_{z}^{\mathbf{B}}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So we now have the components of the vector 
+\begin_inset Formula $\mathbf{w^{B}}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+w_{x}^{\mathbf{B}}=\check{e}_{x}^{\star}e_{x}\left(\check{X}_{xy}X_{zx}-\check{X}_{xz}X_{yx}\right)+\check{e}_{y}^{\star}e_{x}\left(\check{X}_{yy}X_{zx}-\check{X}_{yz}X_{yx}\right)+\check{e}_{z}^{\star}e_{x}\left(\check{X}_{zy}X_{zx}-\check{X}_{zz}X_{yx}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\check{e}_{x}^{\star}e_{y}\left(\check{X}_{xy}X_{zy}-\check{X}_{xz}X_{yy}\right)+\check{e}_{y}^{\star}e_{y}\left(\check{X}_{yy}X_{zy}-\check{X}_{yz}X_{yy}\right)+\check{e}_{z}^{\star}e_{y}\left(\check{X}_{zy}X_{zy}-\check{X}_{zz}X_{yy}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\check{e}_{x}^{\star}e_{z}\left(\check{X}_{xy}X_{zz}-\check{X}_{xz}X_{yz}\right)+\check{e}_{y}^{\star}e_{z}\left(\check{X}_{yy}X_{zz}-\check{X}_{yz}X_{yz}\right)+\check{e}_{z}^{\star}e_{z}\left(\check{X}_{xy}X_{zz}-\check{X}_{zz}X_{yz}\right)=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=e_{x}X_{zx}\left(\check{e}_{x}^{\star}\check{X}_{xy}+\check{e}_{y}^{\star}\check{X}_{yy}+\check{e}_{z}^{\star}\check{X}_{zy}\right)-e_{x}X_{yx}\left(\check{e}_{x}^{\star}\check{X}_{xz}+\check{e}_{y}^{\star}\check{X}_{yz}+\check{e}_{z}^{\star}\check{X}_{zz}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++e_{y}X_{zy}\left(\check{e}_{x}^{\star}\check{X}_{xy}+\check{e}_{y}^{\star}\check{X}_{yy}+\check{e}_{z}^{\star}\check{X}_{zy}\right)-e_{y}X_{yy}\left(\check{e}_{x}^{\star}\check{X}_{xz}+\check{e}_{y}^{\star}\check{X}_{yz}+\check{e}_{z}^{\star}\check{X}_{zz}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++e_{z}X_{zz}\left(\check{e}_{x}^{\star}\check{X}_{xy}+\check{e}_{y}^{\star}\check{X}_{yy}+\check{e}_{z}^{\star}X_{zy}\right)-e_{y}X_{yz}\left(\check{e}_{x}^{\star}\check{X}_{xz}+\check{e}_{y}^{\star}\check{X}_{yz}+\check{e}_{z}^{\star}\check{X}_{zz}\right)=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=\left(e_{x}X_{zx}+e_{y}X_{zy}+e_{z}X_{zz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xy}+\check{e}_{y}\check{X}_{yy}+\check{e}_{z}^{\star}\check{X}_{zy}\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\left(e_{x}X_{yx}+e_{y}X_{yy}+e_{z}X_{yz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xz}+\check{e}_{y}^{\star}\check{X}_{yz}+\check{e}_{z}^{\star}\check{X}_{zz}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+w_{y}^{\mathbf{B}}=\check{e}_{x}^{\star}e_{x}\left(\check{X}_{xz}X_{xx}-\check{X}_{xx}X_{zx}\right)+\check{e}_{y}^{\star}e_{x}\left(\check{X}_{yz}X_{xx}-\check{X}_{yx}X_{zx}\right)+\check{e}_{z}^{\star}e_{x}\left(\check{X}_{zz}X_{xx}-\check{X}_{zx}X_{zx}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\check{e}_{x}^{\star}e_{y}\left(\check{X}_{xz}X_{xy}-\check{X}_{xx}X_{zy}\right)+\check{e}_{y}^{\star}e_{y}\left(\check{X}_{yz}X_{xx}-\check{X}_{yx}X_{zy}\right)+\check{e}_{z}^{\star}e_{y}\left(\check{X}_{zz}X_{xy}-\check{X}_{zx}X_{zy}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\check{e}_{x}^{\star}e_{z}\left(\check{X}_{xz}X_{xz}-\check{X}_{xx}X_{zz}\right)+\check{e}_{y}^{\star}e_{z}\left(\check{X}_{yz}X_{xz}-\check{X}_{yx}X_{zz}\right)+\check{e}_{z}^{\star}e_{z}\left(\check{X}_{zz}X_{xz}-\check{X}_{zx}X_{zz}\right)=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=e_{x}X_{xx}\left(\check{e}_{x}^{\star}\check{X}_{xz}+\check{e}_{y}^{\star}\check{X}_{yz}+\check{e}_{z}^{\star}\check{X}_{zz}\right)-e_{x}X_{zx}\left(\check{e}_{x}^{\star}\check{X}_{xx}+\check{e}_{y}^{\star}\check{X}_{yx}+\check{e}_{z}^{\star}\check{X}_{zx}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++e_{y}X_{xy}\left(\check{e}_{x}^{\star}\check{X}_{xz}+\check{e}_{y}^{\star}\check{X}_{yz}+\check{e}_{z}^{\star}\check{X}_{zz}\right)-e_{y}X_{zy}\left(\check{e}_{x}^{\star}\check{X}_{xx}+\check{e}_{y}^{\star}\check{X}_{yx}+\check{e}_{z}^{\star}\check{X}_{zx}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++e_{z}X_{xz}\left(\check{e}_{x}^{\star}\check{X}_{xz}+\check{e}_{y}^{\star}\check{X}_{yz}+\check{e}_{z}^{\star}X_{zz}\right)-e_{y}X_{zz}\left(\check{e}_{x}^{\star}\check{X}_{xx}+\check{e}_{y}^{\star}\check{X}_{yx}+\check{e}_{z}^{\star}\check{X}_{zx}\right)=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=\left(e_{x}X_{xx}+e_{y}X_{xy}+e_{z}X_{xz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xz}+\check{e}_{y}\check{X}_{yz}+\check{e}_{z}^{\star}\check{X}_{zz}\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\left(e_{x}X_{zx}+e_{y}X_{zy}+e_{z}X_{zz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xx}+\check{e}_{y}^{\star}\check{X}_{yx}+\check{e}_{z}^{\star}\check{X}_{zx}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+w_{z}^{\mathbf{B}}=\check{e}_{x}^{\star}e_{x}\left(\check{X}_{xx}X_{yx}-\check{X}_{xy}X_{xx}\right)+\check{e}_{y}^{\star}e_{x}\left(\check{X}_{yx}X_{yx}-\check{X}_{yy}X_{xx}\right)+\check{e}_{z}^{\star}e_{x}\left(\check{X}_{zx}X_{yx}-\check{X}_{zy}X_{xx}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\check{e}_{x}^{\star}e_{y}\left(\check{X}_{xx}X_{yy}-\check{X}_{xy}X_{xy}\right)+\check{e}_{y}^{\star}e_{y}\left(\check{X}_{yx}X_{yy}-\check{X}_{yy}X_{xy}\right)+\check{e}_{z}^{\star}e_{y}\left(\check{X}_{zx}X_{yy}-\check{X}_{zy}X_{xy}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++\check{e}_{x}^{\star}e_{z}\left(\check{X}_{xx}X_{yz}-\check{X}_{xy}X_{xz}\right)+\check{e}_{y}^{\star}e_{z}\left(\check{X}_{yx}X_{yz}-\check{X}_{yy}X_{xz}\right)+\check{e}_{z}^{\star}e_{z}\left(\check{X}_{zx}X_{yz}-\check{X}_{zy}X_{yxz}\right)=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=e_{x}X_{yx}\left(\check{e}_{x}^{\star}\check{X}_{xx}+\check{e}_{y}^{\star}\check{X}_{yx}+\check{e}_{z}^{\star}\check{X}_{zx}\right)-e_{x}X_{xx}\left(\check{e}_{x}^{\star}\check{X}_{xy}+\check{e}_{y}^{\star}\check{X}_{yy}+\check{e}_{z}^{\star}\check{X}_{zy}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++e_{y}X_{yy}\left(\check{e}_{x}^{\star}\check{X}_{xx}+\check{e}_{y}^{\star}\check{X}_{yx}+\check{e}_{z}^{\star}\check{X}_{zx}\right)-e_{y}X_{xy}\left(\check{e}_{x}^{\star}\check{X}_{xy}+\check{e}_{y}^{\star}\check{X}_{yy}+\check{e}_{z}^{\star}\check{X}_{zy}\right)+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
++e_{z}X_{yz}\left(\check{e}_{x}^{\star}\check{X}_{xx}+\check{e}_{y}^{\star}\check{X}_{yx}+\check{e}_{z}^{\star}X_{zx}\right)-e_{z}X_{xz}\left(\check{e}_{x}^{\star}\check{X}_{xy}+\check{e}_{y}^{\star}\check{X}_{yy}+\check{e}_{z}^{\star}\check{X}_{zy}\right)=\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=\left(e_{x}X_{yx}+e_{y}X_{yy}+e_{z}X_{yz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xx}+\check{e}_{y}\check{X}_{yx}+\check{e}_{z}^{\star}\check{X}_{zx}\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\left(e_{x}X_{xx}+e_{y}X_{xy}+e_{z}X_{xz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xy}+\check{e}_{y}^{\star}\check{X}_{yy}+\check{e}_{z}^{\star}\check{X}_{zy}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We have finally obtained:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+w_{x}^{\mathbf{B}}=\left(e_{x}X_{zx}+e_{y}X_{zy}+e_{z}X_{zz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xy}+\check{e}_{y}\check{X}_{yy}+\check{e}_{z}^{\star}\check{X}_{zy}\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\left(e_{x}X_{yx}+e_{y}X_{yy}+e_{z}X_{yz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xz}+\check{e}_{y}^{\star}\check{X}_{yz}+\check{e}_{z}^{\star}\check{X}_{zz}\right)\label{eq:w_x}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+w_{y}^{\mathbf{B}}=\left(e_{x}X_{xx}+e_{y}X_{xy}+e_{z}X_{xz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xz}+\check{e}_{y}\check{X}_{yz}+\check{e}_{z}^{\star}\check{X}_{zz}\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\left(e_{x}X_{zx}+e_{y}X_{zy}+e_{z}X_{zz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xx}+\check{e}_{y}^{\star}\check{X}_{yx}+\check{e}_{z}^{\star}\check{X}_{zx}\right)\label{eq:w_y}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+w_{z}^{\mathbf{B}}=\left(e_{x}X_{yx}+e_{y}X_{yy}+e_{z}X_{yz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xx}+\check{e}_{y}\check{X}_{yx}+\check{e}_{z}^{\star}\check{X}_{zx}\right)-\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+-\left(e_{x}X_{xx}+e_{y}X_{xy}+e_{z}X_{xz}\right)\left(\check{e}_{x}^{\star}\check{X}_{xy}+\check{e}_{y}^{\star}\check{X}_{yy}+\check{e}_{z}^{\star}\check{X}_{zy}\right)\label{eq:w_z}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So using these expression in the (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:modecouplingcoeffB"
+
+\end_inset
+
+) we can calculate the mode coupling coefficient for magnetic field fluctuations
+ solely in function of the polarization vector and of the susceptibility
+ tensor.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "1"
+key "BonOtt"
+
+\end_inset
+
+P.T.
+ Bonoli and E.Ott 
+\emph on
+.Fluids, 
+\emph default
+25, p.359 (1982).
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "2"
+key "VahBon"
+
+\end_inset
+
+G.Vahala, L.Vahala and P.T.Bonoli 
+\emph on
+Phys.Fluids B, 
+\emph default
+4, p.4033, (1992).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "3"
+key "Ott"
+
+\end_inset
+
+E.Ott 
+\emph on
+Phys.Fluids, 
+\emph default
+22, p.1732, (1979).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "4"
+key "Zou"
+
+\end_inset
+
+X.L.Zou, L.Colas, M.Paume, J.M.Chareau, L.Laurent, P.Devynck and D.Gresillon, 
+\emph on
+Phys.
+ Rev.
+ Lett., 
+\emph default
+75, p.1090, (1995).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "5"
+key "Ger"
+
+\end_inset
+
+T.Gerbaud, F.Clairet, R.Sabot, A.Sirinelli, S.Heuraux, G.Leclert, and L.Vermare,
+ 
+\emph on
+Rev.
+ Sci.
+ Instrum., 
+\emph default
+77, 10E928, (2006).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "6"
+key "Truc"
+
+\end_inset
+
+A.Truc, A.Quemeneur, P.Hennequin, D.Gresillon, F.Gervais, C.Laviron, J.Olivain,
+ S.K.Saha and P.Devynck, 
+\emph on
+Rev.
+ Sci.
+ Instrum., 
+\emph default
+63, p.3716, (1992).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "7"
+key "Ritz"
+
+\end_inset
+
+C.P.Ritz, E.J.Powers, T.L.Rhodes, R.D.Bengtson, K.W.Gentle, H.Lin, P.E.Phillips, A.J.Wootton,
+ D.L.Brower, N.C.Luhman, W.A.Peebles, P.M.Schoch and R.L.Hickok, 
+\emph on
+Rev.
+ Sci.
+ Instrum., 
+\emph default
+59, p.1789, (1988).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "8"
+key "Zweb"
+
+\end_inset
+
+S.J.Zweben and S.S.Medley, 
+\emph on
+Phys.Fluids B 
+\emph default
+1, p.2058, (1989).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "9"
+key "Bind"
+
+\end_inset
+
+H.Bindslev 
+\emph on
+Plasma Phys.
+ Controlled.
+ Fusion, 
+\emph default
+35, p.1615, (1993).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "10"
+key "Sit2"
+
+\end_inset
+
+A.G.Sitenko, 
+\emph on
+Plasma Phys.
+ Controlled Fusion, 
+\emph default
+37, p.163, (1995).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "11"
+key "Bind2"
+
+\end_inset
+
+H.Bindslev, 
+\emph on
+Plasma Phys.
+ Controlled Fusion, 
+\emph default
+37, p.169, (1995).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "12"
+key "Sit"
+
+\end_inset
+
+A.G.Sitenko, 
+\emph on
+Electromagnetic Fluctuations in Plasma, 
+\emph default
+Academic, New York, (1967).
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "13"
+key "Bitt"
+
+\end_inset
+
+J.A.Bittencourt 
+\emph on
+Fundamentals of Plasma Physics, 3rd edition, 
+\emph default
+Springer-Verlag, New York, (2004).
 \end_layout
 
 \end_body
