@@ -1,0 +1,1034 @@
+#LyX 1.6.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\ov}[1]{\overline{#1}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\un}[1]{\underline{#1}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\wt}[1]{\widetilde{#1}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\wh}[1]{\widehat{#1}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\vb}[1]{\boldsymbol{#1}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\fd}[2]{\frac{\delta#1}{\delta#2}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\bnabla}{\boldsymbol{\nabla}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\btimes}{\boldsymbol{\times}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bdot}{\boldsymbol{\cdot}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\bcolon}{\boldsymbol{\colon}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bhat}{\widehat{\mathsf{b}}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\exd}{\mathsf{d}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\cont}[1]{\iota_{#1}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\brhoeps}{\boldsymbol{\rho}_{\epsilon}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\brhozero}{\boldsymbol{\rho}_{0}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\brhoone}{\boldsymbol{\rho}_{1}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Guiding-center collision FP coefficients in an isotropic non-uniform field-parti
+cle distribution
+\end_layout
+
+\begin_layout Author
+François-Xavier DUTHOIT
+\end_layout
+
+\begin_layout Section
+First-order corrections and gyroaveraging of the particle kinetic momentum
+\end_layout
+
+\begin_layout Standard
+From Brizard
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Brizard_2004"
+
+\end_inset
+
+ we have the following first-order expression for the particle gyroradius,
+ calculated using the Lie-transform generating vectors,
+\begin_inset Formula \begin{equation}
+\brhoeps=\brhozero+\epsilon\brhoone=\brhozero-\alpha\pd{\brhozero}{\varphi}-\beta\brhozero-\gamma\bhat\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\brhozero\equiv\bhat\btimes\mathbf{p}/m\Omega$
+\end_inset
+
+ and
+\begin_inset Formula \begin{equation}
+\alpha=\frac{v_{\|}}{\Omega}\mathbb{A}_{2}\bcolon\bnabla\bhat+\pd{\brhozero}{\varphi}\bdot\left(\bnabla\ln B+\frac{mv_{\|}^{2}}{2\mu B}\bhat\bdot\bnabla\bhat\right)\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\beta=\brhozero\bdot\left(\frac{1}{2}\bnabla\ln B+\frac{mv_{\|}^{2}}{2\mu B}\bhat\bdot\bnabla\bhat\right)+\frac{v_{\|}}{2\Omega}\left(\bhat\bdot\bnabla\btimes\bhat-\mathbb{A}_{1}\bcolon\bnabla\bhat\right)\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\gamma=2\pd{\brhozero}{\varphi}\bdot\left(\frac{v_{\|}}{\Omega}\bhat\bdot\bnabla\bhat\right)-\frac{\mu B}{m\Omega^{2}}\left(\frac{1}{2}\bhat\bdot\bnabla\ln B+\mathbb{A}_{2}\bcolon\bnabla\bhat\right)\end{equation}
+
+\end_inset
+
+The tensors 
+\begin_inset Formula $\mathbb{A}_{1}\equiv\frac{1}{2}\left(\wh{\rho}\wh{\perp}+\wh{\perp}\wh{\rho}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{A}_{2}$
+\end_inset
+
+ are related by 
+\begin_inset Formula $\mathbb{A}_{1}=\partial\mathbb{A}_{2}/\partial\varphi$
+\end_inset
+
+.
+ We then use the following expressions,
+\begin_inset Formula \begin{equation}
+\mathbf{p}_{\epsilon}\equiv m\frac{d_{\epsilon}\mathbf{X}_{\epsilon}}{dt}=m\left[\mathbf{v}_{gc}+\left(\Omega\pd{}{\varphi}+\mathbf{v}_{gc}\bdot\bnabla^{*}\right)\brhoeps\right]\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathbf{v}_{gc}=v_{\|}\bhat+\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\left(\mu\bnabla B+mv_{\|}^{2}\bhat\bdot\bnabla\bhat\right)\equiv v_{\|}\bhat+\epsilon\mathbf{v}_{B}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\bnabla^{*}\equiv\bnabla+\left(\mathbf{R}+\frac{1}{2}\left(\bhat\bdot\bnabla\btimes\bhat\right)\bhat\right)\pd{}{\varphi}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\bnabla\brhozero=-\frac{1}{2}\bnabla\ln B\;\brhozero-\left(\bnabla\bhat\bdot\brhozero\right)\;\bhat-\mathbf{R}\;\pd{\brhozero}{\varphi}\label{eq:nablarho0}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathbf{p}=v_{\|}\bhat+m\Omega\pd{\brhozero}{\varphi}\end{equation}
+
+\end_inset
+
+in order to get the first-order particle momentum:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\mathbf{p}_{\epsilon}\equiv\mathbf{p}+\epsilon\mathbf{p}_{1}+\mathcal{O}\left(\epsilon^{2}\right)= & m\left[\mathbf{v}_{gc}+\Omega\pd{\brhoeps}{\varphi}+\mathbf{v}_{gc}\bdot\bnabla\brhozero+\mathbf{v}_{gc}\bdot\left(\mathbf{R}+\frac{1}{2}\left(\bhat\bdot\bnabla\btimes\bhat\right)\bhat\right)\pd{\brhozero}{\varphi}\right]\nonumber \\
+= & \mathbf{p}+\epsilon\left[\frac{\bhat}{\Omega}\btimes\left(\mu\bnabla B+mv_{\|}^{2}\bhat\bdot\bnabla\bhat\right)\right.\nonumber \\
+ & -m\Omega\left(\pd{\alpha}{\varphi}+\beta\right)\pd{\brhozero}{\varphi}-m\Omega\left(\alpha-\pd{\beta}{\varphi}\right)\brhozero-m\Omega\pd{\gamma}{\varphi}\bhat\nonumber \\
+ & +mv_{\|}\bhat\bdot\left(-\frac{1}{2}\bnabla\ln B\;\brhozero-\left(\bnabla\bhat\bdot\brhozero\right)\;\bhat-\mathbf{R}\;\pd{\brhozero}{\varphi}\right)\nonumber \\
+ & \left.+mv_{\|}\bhat\bdot\left(\mathbf{R}+\frac{1}{2}\left(\bhat\bdot\bnabla\btimes\bhat\right)\bhat\right)\;\pd{\brhozero}{\varphi}\right]+\mathcal{O}\left(\epsilon^{2}\right)\nonumber \\
+= & \mathbf{p}+\epsilon\left[\frac{\bhat}{\Omega}\btimes\left(\mu\bnabla B+mv_{\|}^{2}\bhat\bdot\bnabla\bhat\right)\right.\nonumber \\
+ & -m\Omega\left(\pd{\gamma}{\varphi}+\frac{v_{\|}}{\Omega}\left(\bhat\bdot\bnabla\bhat\bdot\brhozero\right)\right)\bhat\nonumber \\
+ & -m\Omega\left(\beta+\pd{\alpha}{\varphi}-\frac{v_{\|}}{2\Omega}\left(\bhat\bdot\bnabla\btimes\bhat\right)\right)\pd{\brhozero}{\varphi}\nonumber \\
+ & \left.+m\Omega\left(\alpha-\pd{\beta}{\varphi}-\frac{v_{\|}}{2\Omega}\left(\bhat\bdot\bnabla\ln B\right)\right)\brhozero\right]+\mathcal{O}\left(\epsilon^{2}\right)\label{eq:peps}\end{align}
+
+\end_inset
+
+We can readily see that
+\begin_inset Formula \begin{align*}
+\left|\mathbf{p}_{\epsilon}\right|^{2}=\left|\mathbf{p}\right|^{2}+2\epsilon\mathbf{p}\bdot\mathbf{p}_{1}= & \left|\mathbf{p}\right|^{2}+2\epsilon\left[\frac{1}{\Omega}\left(\mu\bnabla B+mv_{\|}^{2}\bhat\bdot\bnabla\bhat\right)\bdot\left(\mathbf{p}\btimes\bhat\right)\right.\\
+ & -mv_{\|}\Omega\left(\pd{\gamma}{\varphi}+\frac{v_{\|}}{\Omega}\left(\bhat\bdot\bnabla\bhat\bdot\brhozero\right)\right)\\
+ & \left.-m^{2}\Omega^{2}\left(\beta+\pd{\alpha}{\varphi}-\frac{v_{\|}}{2\Omega}\left(\bhat\bdot\bnabla\btimes\bhat\right)\right)\left|\pd{\brhozero}{\varphi}\right|^{2}\right]+\mathcal{O}\left(\epsilon^{2}\right)\end{align*}
+
+\end_inset
+
+Using 
+\begin_inset Formula $\left|\pd{\brhozero}{\varphi}\right|^{2}=\left|\brhozero\right|^{2}=2\mu B/m\Omega^{2}$
+\end_inset
+
+ and inserting the expressions for 
+\begin_inset Formula $\alpha$
+\end_inset
+
+,
+\begin_inset Formula $\beta$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ leads to
+\begin_inset Formula \begin{equation}
+\left|\mathbf{p}_{\epsilon}\right|^{2}=\left|\mathbf{p}\right|^{2}+\mathcal{O}\left(\epsilon^{2}\right)=2m\mathcal{E}+\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
+
+\end_inset
+
+Gyro-averaging of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:peps"
+
+\end_inset
+
+ gives
+\begin_inset Formula \begin{align*}
+\left\langle \mathbf{p}_{\epsilon}\right\rangle = & m\mathbf{v}_{gc}-m\Omega\left(\left\langle \pd{\gamma}{\varphi}\right\rangle +\frac{v_{\|}}{\Omega}\left(\bhat\bdot\bnabla\bhat\bdot\left\langle \brhozero\right\rangle \right)\right)\bhat\\
+ & -m\Omega\left\langle \left(\beta+\pd{\alpha}{\varphi}\right)\pd{\brhozero}{\varphi}\right\rangle -\frac{mv_{\|}}{2}\left(\bhat\bdot\bnabla\btimes\bhat\right)\left\langle \pd{\brhozero}{\varphi}\right\rangle \\
+ & +m\Omega\left\langle \left(\alpha-\pd{\beta}{\varphi}\right)\brhozero\right\rangle -\frac{mv_{\|}}{2}\left(\bhat\bdot\bnabla\ln B\right)\left\langle \brhozero\right\rangle +\mathcal{O}\left(\epsilon^{2}\right)\end{align*}
+
+\end_inset
+
+Gyro-averages of 
+\begin_inset Formula $\varphi$
+\end_inset
+
+-derivatives are obviously zero.
+ Using 
+\begin_inset Formula $\left\langle \brhozero\right\rangle =0$
+\end_inset
+
+, and performing an integration by parts gives:
+\begin_inset Formula \begin{align*}
+\left\langle \mathbf{p}_{\epsilon}\right\rangle = & m\mathbf{v}_{gc}+m\Omega\left\langle \left(\alpha+\pd{^{2}\alpha}{\varphi^{2}}\right)\brhozero\right\rangle +\mathcal{O}\left(\epsilon^{2}\right)\\
+= & m\mathbf{v}_{gc}+mv_{\|}\left\langle \left(\mathbb{A}_{2}\bcolon\bnabla\bhat+\pd{\mathbb{A}_{1}}{\varphi}\bcolon\bnabla\bhat\right)\brhozero\right\rangle +\mathcal{O}\left(\epsilon^{2}\right)\end{align*}
+
+\end_inset
+
+Since 
+\begin_inset Formula $\left\langle \left(\partial\mathbb{A}_{1}/\partial\varphi\bcolon\bnabla\bhat\right)\brhozero\right\rangle =-\left\langle \left(\mathbb{A}_{1}\bcolon\bnabla\bhat\right)\partial\brhozero/\partial\varphi\right\rangle =-\left\langle \left(\mathbb{A}_{2}\bcolon\bnabla\bhat\right)\brhozero\right\rangle $
+\end_inset
+
+ when integrating by parts (due to the fact that 
+\begin_inset Formula $\partial^{2}\brhozero/\partial\varphi^{2}=-\brhozero$
+\end_inset
+
+), we readily have
+\begin_inset Formula \begin{equation}
+\left\langle \mathbf{p}_{\epsilon}\right\rangle =m\mathbf{v}_{gc}+\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Calculation of guiding-center coefficients
+\end_layout
+
+\begin_layout Standard
+The drag vector and diffusion tensor have the following expression in an
+ isotropic field-particle distribution:
+\begin_inset Formula \[
+\mathbf{K}=-\nu\left(\mathbf{x},p\right)\mathbf{p}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathbb{D}=D_{l}\left(\mathbf{x},p\right)\mathbf{pp}/p^{2}+D_{t}\left(\mathbf{x},p\right)\left(\mathbb{I}-\mathbf{pp}/p^{2}\right)\]
+
+\end_inset
+
+Note that in practice the coefficients' spatial dependance will essentially
+ be in 
+\begin_inset Formula $\psi$
+\end_inset
+
+.
+ The guiding-center transformation yields the following expressions
+\begin_inset Formula \[
+\mathbf{K}_{\epsilon}\equiv\mathsf{T}_{\epsilon}^{-1}\mathbf{K}=\nu_{\epsilon}\left(\mathbf{X},p\right)\mathbf{p}_{\epsilon}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\mathbb{D}_{\epsilon}\equiv\mathsf{T}_{\epsilon}^{-1}\mathbb{D}=D_{l\epsilon}\left(\mathbf{X},p\right)\mathbf{p}_{\epsilon}\mathbf{p}_{\epsilon}/p^{2}+D_{t\epsilon}\left(\mathbf{X},p\right)\left(\mathbb{I}-\mathbf{p}_{\epsilon}\mathbf{p}_{\epsilon}/p^{2}\right)\]
+
+\end_inset
+
+where the coefficients 
+\begin_inset Formula $\nu_{\epsilon}$
+\end_inset
+
+, 
+\begin_inset Formula $D_{l\epsilon}$
+\end_inset
+
+ and 
+\begin_inset Formula $D_{t\epsilon}$
+\end_inset
+
+are determined at first-order in the density-temperature nonuniformity 
+\begin_inset Formula $\epsilon_{n,T}$
+\end_inset
+
+ which we will assume is equivalent to the magnetic uniformity (i.e., 
+\begin_inset Formula $\epsilon_{n,T}\sim\epsilon_{B}\sim\epsilon$
+\end_inset
+
+)
+\begin_inset Formula \begin{align}
+\nu_{\epsilon}= & \nu-\epsilon\brhozero\bdot\bnabla\nu+\mathcal{O}\left(\epsilon^{2}\right)\\
+D_{l\epsilon}= & D_{l}-\epsilon\brhozero\bdot\bnabla D_{l}+\mathcal{O}\left(\epsilon^{2}\right)\\
+D_{t\epsilon}= & D_{t}-\epsilon\brhozero\bdot\bnabla D_{t}+\mathcal{O}\left(\epsilon^{2}\right)\end{align}
+
+\end_inset
+
+The FP guiding-center coefficients are deduced by the following gyro-averages,
+\begin_inset Formula \begin{equation}
+K_{gc}^{\alpha}=\left\langle \mathbf{K}_{\epsilon}\bdot\boldsymbol{\Delta}_{gc}^{\alpha}\right\rangle \end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+D_{gc}^{\alpha\beta}=\left\langle \boldsymbol{\Delta}_{gc}^{\alpha}\bdot\mathbb{D}_{\epsilon}\bdot\boldsymbol{\Delta}_{gc}^{\beta}\right\rangle \end{equation}
+
+\end_inset
+
+where the projection vectors 
+\begin_inset Formula $\boldsymbol{\Delta}_{gc}^{\alpha}$
+\end_inset
+
+ read
+\begin_inset Formula \begin{align}
+\boldsymbol{\Delta}_{gc}^{\mathbf{X}}= & -\left[\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\bnabla^{*}\mathbf{X}_{\epsilon}\right]^{T}-\pd{\brhoeps}{\mathcal{E}}\;\mathbf{v}_{gc}\label{eq:deltai}\\
+\boldsymbol{\Delta}_{gc}^{\mathcal{E}}= & \frac{\mathbf{p}_{\epsilon}}{m}\label{eq:deltaE}\\
+\boldsymbol{\Delta}_{gc}^{\mu}= & \frac{\Omega}{B}\pd{\brhoeps}{\varphi}\label{eq:deltamu}\end{align}
+
+\end_inset
+
+where for given vector and tensor 
+\begin_inset Formula $\mathbf{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{B}$
+\end_inset
+
+, 
+\begin_inset Formula $(\mathbf{a}\btimes\mathbb{B})_{\, l}^{i}=\epsilon^{ijk}a_{j}B_{kl}=-(\mathbb{B}\btimes\mathbf{a})_{\, l}^{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Momentum-space guiding-center coefficients
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $K_{gc}^{\mathcal{E}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the expressions above and the properties of 
+\begin_inset Formula $\mathbf{p}_{\epsilon}$
+\end_inset
+
+, we immediately have:
+\begin_inset Formula \begin{equation}
+K_{gc}^{\mathcal{E}}\equiv\frac{1}{m}\left\langle \mathbf{K}_{\epsilon}\bdot\mathbf{p}_{\epsilon}\right\rangle =-2\mathcal{E}\left\langle \nu_{\epsilon}\right\rangle =-2\nu\mathcal{E}+\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $K_{gc}^{\mu}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $K_{gc}^{\mu}$
+\end_inset
+
+ reads
+\begin_inset Formula \begin{align*}
+K_{gc}^{\mu}\equiv & \frac{\Omega}{B}\left\langle \mathbf{K}_{\epsilon}\bdot\pd{\brhoeps}{\varphi}\right\rangle \\
+= & -\frac{\Omega}{B}\left\langle \nu_{\epsilon}\mathbf{p}_{\epsilon}\bdot\pd{\brhoeps}{\varphi}\right\rangle \\
+= & -\frac{\Omega}{B}\left[\nu\left\langle \mathbf{p}\bdot\pd{\brhozero}{\varphi}\right\rangle +\nu\left\langle \mathbf{p}\bdot\pd{\brhoone}{\varphi}\right\rangle +\nu\left\langle \mathbf{p}_{1}\bdot\pd{\brhozero}{\varphi}\right\rangle -\left\langle \mathbf{p}\bdot\pd{\brhozero}{\varphi}\;\brhozero\right\rangle \bdot\bnabla\nu\right]+\mathcal{O}\left(\epsilon^{2}\right)\\
+= & -2\mu\nu+\nu\frac{\Omega}{B}\left[m\Omega\left\langle \left(\alpha-\pd{\beta}{\varphi}\right)\brhozero\bdot\pd{\brhozero}{\varphi}\right\rangle +\frac{2\mu B}{\Omega}\left\langle \pd{\alpha}{\varphi}+\beta\right\rangle +mv_{\|}\left\langle \pd{\gamma}{\varphi}\right\rangle \right]\\
+ & -\mu\nu\bhat\btimes\left(\bnabla\ln B+\frac{mv_{\|}^{2}}{\mu B}\bhat\bdot\bnabla\bhat\right)\bdot\left\langle \pd{\brhozero}{\varphi}\right\rangle +2\mu\nu\left[\left\langle \beta+\pd{\alpha}{\varphi}\right\rangle -\frac{v_{\|}}{2\Omega}\bhat\bdot\bnabla\btimes\bhat\right]\\
+ & -2\mu\left\langle \brhozero\right\rangle \bdot\bnabla\nu+\mathcal{O}\left(\epsilon^{2}\right)\\
+= & -2\mu\nu\left[1-2\left\langle \beta\right\rangle +\frac{v_{\|}}{2\Omega}\bhat\bdot\bnabla\btimes\bhat\right]+\mathcal{O}\left(\epsilon^{2}\right)\end{align*}
+
+\end_inset
+
+where we used 
+\begin_inset Formula $\brhozero\bdot\partial\brhozero/\partial\varphi=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\left|\partial\brhozero/\partial\varphi\right|^{2}=2\mu B/m\Omega^{2}$
+\end_inset
+
+.
+ Inserting the expressions for 
+\begin_inset Formula $\beta$
+\end_inset
+
+ gives
+\begin_inset Formula \begin{equation}
+K_{gc}^{\mu}=-\mu\nu\left(2-\frac{v_{\|}}{\Omega}\bhat\bdot\bnabla\btimes\bhat\right)+\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{K}_{gc}^{\mathbf{X}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{K}_{gc}^{\mathbf{X}}$
+\end_inset
+
+ reads
+\begin_inset Formula \begin{align*}
+\mathbf{K}_{gc}^{\mathbf{X}}\equiv & \left\langle \boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbf{K}_{\epsilon}\right\rangle \\
+= & -\left\langle \nu_{\epsilon}\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbf{p}_{\epsilon}\right\rangle \\
+= & \nu\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\left[\left\langle \mathbf{p}_{\epsilon}\right\rangle -\epsilon mv_{\|}\left(\bnabla\bhat\bdot\left\langle \brhozero\right\rangle \right)\right]-2\nu\left(\frac{\mu B}{m\Omega^{2}}\left\langle \mathbb{A}_{2}\right\rangle \bcolon\bnabla\bhat+2\frac{v_{\|}}{\Omega}\bhat\bdot\bnabla\bhat\bdot\left\langle \pd{\brhozero}{\varphi}\right\rangle \right)\bhat\\
+ & +\bnabla\nu\bdot\left\langle \brhozero\;\frac{\bhat}{m\Omega}\btimes\mathbf{p}\right\rangle \\
+= & \nu\frac{\bhat}{m\Omega}\btimes\mathbf{v}_{B}+\frac{\mu B}{m\Omega^{2}}\bnabla\nu\bdot\left(\mathbb{I}-\bhat\bhat\right)\\
+= & -\epsilon^{2}\frac{\mu B}{m\Omega^{2}}\left[\nu\left(\bnabla\ln B+\frac{v_{\|}^{2}}{\Omega^{2}}\bhat\bdot\bnabla\bhat\right)-\bnabla\nu\right]\bdot\left(\mathbb{I}-\bhat\bhat\right)+\mathcal{O}\left(\epsilon^{3}\right)\end{align*}
+
+\end_inset
+
+where we used 
+\begin_inset Formula $\brhozero\equiv\bhat\btimes\mathbf{p}/m\Omega$
+\end_inset
+
+ and 
+\begin_inset Formula $\left\langle \brhozero\;\brhozero\right\rangle =\left(\mu B/m\Omega^{2}\right)\left(\mathbb{I}-\bhat\bhat\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $D_{gc}^{\mathcal{EE}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similarly to 
+\begin_inset Formula $K_{gc}^{\mathcal{E}}$
+\end_inset
+
+, we have
+\begin_inset Formula \begin{equation}
+D_{gc}^{\mathcal{EE}}\equiv\frac{1}{m^{2}}\left\langle \mathbf{p}_{\epsilon}\bdot\mathbb{D}_{\epsilon}\bdot\mathbf{p}_{\epsilon}\right\rangle =\frac{2\mathcal{E}}{m}\left\langle D_{l\epsilon}\right\rangle =2\mathcal{E}\frac{D_{l}}{m}+\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $D_{gc}^{\mathcal{E}\mu}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $D_{gc}^{\mathcal{E}\mu}$
+\end_inset
+
+ reads
+\begin_inset Formula \begin{align*}
+D_{gc}^{\mathcal{E}\mu}\equiv & \frac{\Omega}{mB}\left\langle \mathbf{p}_{\epsilon}\bdot\mathbb{D}_{\epsilon}\bdot\pd{\brhoeps}{\varphi}\right\rangle \\
+= & \frac{\Omega}{mB}\left\langle D_{l\epsilon}\pd{\brhoeps}{\varphi}\bdot\mathbf{p}_{\epsilon}\right\rangle \end{align*}
+
+\end_inset
+
+Similarly to the 
+\begin_inset Formula $K_{gc}^{\mu}$
+\end_inset
+
+ calculation, we obtain
+\begin_inset Formula \begin{equation}
+D_{gc}^{\mathcal{E}\mu}=\mu\frac{D_{l}}{m}\left(2-\frac{v_{\|}}{\Omega}\bhat\bdot\bnabla\btimes\bhat\right)+\mathcal{O}\left(\epsilon^{2}\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbb{D}_{gc}^{\mathbf{XX}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbb{D}_{gc}^{\mathbf{XX}}$
+\end_inset
+
+ reads
+\begin_inset Formula \begin{align*}
+\mathbb{D}_{gc}^{\mathbf{XX}}\equiv & \left\langle \boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbb{D}_{\epsilon}\bdot\boldsymbol{\Delta}_{gc}^{\mathbf{X}}\right\rangle \\
+= & \frac{1}{p^{2}}\left(D_{l}-D_{t}\right)\frac{\bhat}{m\Omega}\btimes\left\langle \mathbf{p}\;\mathbf{p}\right\rangle \btimes\frac{\bhat}{m\Omega}+\frac{1}{m^{2}\Omega^{2}}D_{t\epsilon}\left(\mathbb{I}-\bhat\bhat\right)\\
+= & \epsilon^{2}\frac{B}{m\Omega^{2}}\left(D_{gc}^{\mu}+\frac{D_{t}}{mB}\right)\left(\mathbb{I}-\bhat\bhat\right)+\mathcal{O}\left(\epsilon^{3}\right)\end{align*}
+
+\end_inset
+
+where we used 
+\begin_inset Formula $\left\langle \mathbf{p}\;\mathbf{p}\right\rangle =m^{2}v_{\|}^{2}\bhat\bhat+m\mu B\left(\mathbb{I}-\bhat\bhat\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $D_{gc}^{\mu}\equiv\mu\left(D_{l}-D_{t}\right)/p^{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{X}\mathcal{E}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{X}\mathcal{E}}$
+\end_inset
+
+ reads
+\begin_inset Formula \begin{align*}
+\mathbf{D}_{gc}^{\mathbf{X}\mathcal{E}}\equiv & \left\langle \boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbb{D}_{\epsilon}\bdot\boldsymbol{\Delta}_{gc}^{\mathcal{E}}\right\rangle \\
+= & \frac{1}{m}\left\langle D_{l\epsilon}\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbf{p}_{\epsilon}\right\rangle \end{align*}
+
+\end_inset
+
+Similarly to 
+\begin_inset Formula $\mathbf{K}_{gc}^{\mathbf{X}}$
+\end_inset
+
+, we therefore obtain:
+\begin_inset Formula \begin{align*}
+\mathbf{D}_{gc}^{\mathbf{X}\mathcal{E}}= & -D_{l}\frac{\bhat}{m\Omega}\btimes\mathbf{v}_{B}-\frac{\mu B}{m\Omega^{2}}\bnabla D_{l}\bdot\left(\mathbb{I}-\bhat\bhat\right)+\mathcal{O}\left(\epsilon^{3}\right)\\
+= & \epsilon^{2}\frac{\mu B}{m\Omega^{2}}\left[\nu\left(\bnabla\ln B+\frac{mv_{\|}^{2}}{\mu B}\bhat\bdot\bnabla\bhat\right)-\bnabla\nu\right]\bdot\left(\mathbb{I}-\bhat\bhat\right)+\mathcal{O}\left(\epsilon^{3}\right)\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula $D_{gc}^{\mathcal{E}}\equiv D_{l}/m$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Calculation of 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{X}\mu}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression for 
+\begin_inset Formula $\mathbf{D}_{gc}^{\mathbf{X}\mu}$
+\end_inset
+
+ reads
+\begin_inset Formula \begin{align*}
+\mathbf{D}_{gc}^{\mathbf{X}\mu}\equiv & \left\langle \boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbb{D}_{\epsilon}\bdot\boldsymbol{\Delta}_{gc}^{\mu}\right\rangle \\
+= & \frac{1}{p^{2}}\left\langle \left(D_{l\epsilon}-D_{t\epsilon}\right)\left(\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbf{p}_{\epsilon}\right)\left(\boldsymbol{\Delta}_{gc}^{\mu}\bdot\mathbf{p}_{\epsilon}\right)\right\rangle +\left\langle D_{t\epsilon}\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\boldsymbol{\Delta}_{gc}^{\mu}\right\rangle \\
+= & \frac{1}{\mu}D_{gc}^{\mu}\left\langle \left(\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbf{p}_{\epsilon}\right)\left(\boldsymbol{\Delta}_{gc}^{\mu}\bdot\mathbf{p}_{\epsilon}\right)\right\rangle +D_{t}\left\langle \boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\boldsymbol{\Delta}_{gc}^{\mu}\right\rangle -2\bnabla D_{gc}^{\mu}\bdot\left\langle \brhozero\;\brhozero\right\rangle -\frac{1}{mB}\bnabla D_{t}\bdot\left\langle \brhozero\;\brhozero\right\rangle \\
+= & -\frac{\mu B}{m\Omega^{2}}\left[D_{gc}^{\mu}\bhat\btimes\mathbf{v}_{B}+\bnabla\left(2D^{\mu}+\frac{D_{t}}{mB}\right)\right]\bdot\left(\mathbb{I}-\bhat\bhat\right)\\
+= & \epsilon^{2}\frac{\mu B}{m\Omega^{2}}\left[D_{gc}^{\mu}\left(\bnabla\ln B+\frac{mv_{\|}^{2}}{\mu B}\bhat\bdot\bnabla\bhat\right)-\bnabla\left(2D^{\mu}+\frac{D_{t}}{mB}\right)\right]\bdot\left(\mathbb{I}-\bhat\bhat\right)+\mathcal{O}\left(\epsilon^{3}\right)\end{align*}
+
+\end_inset
+
+where we used the expressions found at 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:deltaxtdotpeps"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:deltamudotpeps"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:deltaxtdotdeltamu"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:meandeltaxtdotpepsdeltamudotpeps"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:meandeltaxtdotdeltaxmu"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+Calculation of spatial projections
+\end_layout
+
+\begin_layout Subsection
+Preliminary calculations
+\end_layout
+
+\begin_layout Standard
+Using 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:deltai"
+
+\end_inset
+
+, we have for a given vector or tensor 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+:
+\begin_inset Formula \begin{align*}
+\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbf{A}= & -\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\bnabla^{*}\mathbf{X}_{\epsilon}\bdot\mathbf{A}-\mathbf{v}_{gc}\;\left(\pd{\brhoeps}{\mathcal{E}}\bdot\mathbf{A}\right)\\
+= & -\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\left(\mathbb{I}+\bnabla\brhoeps+\left[\mathbf{R}+\frac{1}{2}\left(\bhat\bdot\bnabla\btimes\bhat\right)\bhat\right]\;\pd{\brhoeps}{\varphi}\right)\bdot\mathbf{A}-\mathbf{v}_{gc}\;\left(\pd{\brhoeps}{\mathcal{E}}\bdot\mathbf{A}\right)\end{align*}
+
+\end_inset
+
+Using 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:nablarho0"
+
+\end_inset
+
+, we get at first order in 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+:
+\begin_inset Formula \begin{align}
+\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbf{A}= & -\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\left(\mathbb{I}-\frac{1}{2}\bnabla\ln B\;\brhozero-\left(\bnabla\bhat\bdot\brhozero\right)\;\bhat\right)\bdot\mathbf{A}\nonumber \\
+ & -\mathbf{v}_{gc}\;\left(\pd{\brhozero}{\mathcal{E}}\bdot\mathbf{A}\right)-v_{\|}\bhat\;\left(\pd{\brhoone}{\mathcal{E}}\bdot\mathbf{A}\right)\nonumber \\
+= & -\epsilon\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\left[\mathbf{A}-\epsilon\frac{1}{2}\bnabla\ln B\;\left(\brhozero\bdot\mathbf{A}\right)-\epsilon\left(\bnabla\bhat\bdot\brhozero\right)\;\left(\bhat\bdot\mathbf{A}\right)\right]\nonumber \\
+ & -\epsilon^{2}v_{\|}\bhat\;\left(\pd{\brhoone}{\mathcal{E}}\bdot\mathbf{A}\right)+\mathcal{O}\left(\epsilon^{3}\right)\label{eq:ax}\end{align}
+
+\end_inset
+
+where we used 
+\begin_inset Formula $\partial\brhozero/\partial\mathcal{E}=0$
+\end_inset
+
+.
+ We can therefore deduce for a given symmetric tensor 
+\begin_inset Formula $\mathbb{A}$
+\end_inset
+
+, at first order in 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+:
+\begin_inset Formula \begin{equation}
+\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbb{A}\bdot\boldsymbol{\Delta}_{gc}^{\mathbf{X}}=\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\left(\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbb{A}\right)^{T}=\epsilon^{2}\frac{\bhat}{m\Omega}\btimes\mathbb{A}\btimes\frac{\bhat}{m\Omega}+\mathcal{O}\left(\epsilon^{3}\right)\label{eq:axx}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbb{I}\bdot\boldsymbol{\Delta}_{gc}^{\mathbf{X}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:axx"
+
+\end_inset
+
+, we obtain at first order in 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbb{I}\bdot\boldsymbol{\Delta}_{gc}^{\mathbf{X}}= & \frac{\bhat}{m\Omega}\btimes\mathbb{I}\btimes\frac{\bhat}{m\Omega}\nonumber \\
+= & \epsilon^{2}\frac{1}{m^{2}\Omega^{2}}\left(\mathbb{I}-\bhat\bhat\right)+\mathcal{O}\left(\epsilon^{3}\right)\label{eq:ixx}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbf{p}_{\epsilon}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ax"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:peps"
+
+\end_inset
+
+, we obtain at first order in 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+:
+\begin_inset Formula \begin{align}
+\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbf{p}_{\epsilon}= & -\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\left[\mathbf{p}_{\epsilon}-\frac{1}{2}\left(\brhozero\bdot\mathbf{p}\right)\bnabla\ln B-\left(\bhat\bdot\mathbf{p}\right)\left(\bnabla\bhat\bdot\brhozero\right)\right]-v_{\|}\left(\pd{\brhoone}{\mathcal{E}}\bdot\mathbf{p}\right)\bhat\nonumber \\
+= & -\epsilon\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\left[\mathbf{p}_{\epsilon}-\epsilon mv_{\|}\left(\bnabla\bhat\bdot\brhozero\right)\right]+\epsilon^{2}v_{\|}\left(\frac{2\mu B}{\Omega}\pd{\alpha}{\mathcal{E}}+mv_{\|}\pd{\gamma}{\mathcal{E}}\right)\bhat+\mathcal{O}\left(\epsilon^{3}\right)\nonumber \\
+= & -\epsilon\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\left[\mathbf{p}_{\epsilon}-\epsilon mv_{\|}\left(\bnabla\bhat\bdot\brhozero\right)\right]+2\epsilon^{2}\left(\frac{\mu B}{m\Omega^{2}}\mathbb{A}_{2}\bcolon\bnabla\bhat+2\frac{v_{\|}}{\Omega}\bhat\bdot\bnabla\bhat\bdot\pd{\brhozero}{\varphi}\right)\bhat+\mathcal{O}\left(\epsilon^{3}\right)\label{eq:deltaxtdotpeps}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\boldsymbol{\Delta}_{gc}^{\mu}\bdot\mathbf{p}_{\epsilon}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression reads, using 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:peps"
+
+\end_inset
+
+:
+\begin_inset Formula \begin{align}
+\boldsymbol{\Delta}_{gc}^{\mu}\bdot\mathbf{p}_{\epsilon}= & \frac{\Omega}{B}\pd{\brhozero}{\varphi}\bdot\mathbf{p}+\frac{\Omega}{B}\pd{\brhoone}{\varphi}\bdot\mathbf{p}+\frac{\Omega}{B}\pd{\brhozero}{\varphi}\bdot\mathbf{p}_{1}\nonumber \\
+= & 2\mu-\frac{\Omega}{B}\left[\frac{\mu B}{\Omega}\left(\beta+\pd{\alpha}{\varphi}\right)+mv_{\|}\pd{\gamma}{\varphi}\right]+\frac{\Omega}{B}\mathbf{v}_{B}\bdot\pd{\brhozero}{\varphi}-\mu\left(\beta+\pd{\alpha}{\varphi}-\frac{v_{\|}}{2\Omega}\bhat\bdot\bnabla\btimes\bhat\right)\nonumber \\
+= & 2\mu+\epsilon\frac{mv_{\|}^{2}}{B}\bhat\bdot\bnabla\bhat\bdot\brhozero+\epsilon\mu\brhozero\bdot\bnabla\ln B-\epsilon\frac{\mu v_{\|}}{2\Omega}\bhat\bdot\bnabla\btimes\bhat+\epsilon\frac{\Omega}{B}\mathbf{v}_{B}\bdot\pd{\brhozero}{\varphi}+\mathcal{O}\left(\epsilon^{2}\right)\label{eq:deltamudotpeps}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\boldsymbol{\Delta}_{gc}^{\mu}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression reads, using 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:ax"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:deltamu"
+
+\end_inset
+
+:
+\begin_inset Formula \begin{align}
+\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\boldsymbol{\Delta}_{gc}^{\mu}= & -\frac{\Omega}{B}\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\pd{\brhoeps}{\varphi}-\frac{\Omega v_{\|}}{B}\left(\pd{\brhoone}{\mathcal{E}}\bdot\pd{\brhozero}{\varphi}\right)\bhat\nonumber \\
+= & \frac{1}{mB}\left(1-\frac{v_{\|}}{\Omega}\bhat\bdot\bnabla\btimes\bhat\right)\left[\left(\pd{\alpha}{\varphi}+\beta-1\right)\brhozero-\left(\pd{\beta}{\varphi}-\alpha\right)\pd{\brhozero}{\varphi}\right]+2\frac{\mu v_{\|}}{\Omega}\pd{\alpha}{\mathcal{E}}\bhat\nonumber \\
+= & \epsilon\frac{1}{mB}\brhozero+\epsilon^{2}\frac{1}{mB}\left[\frac{v_{\|}}{2\Omega}\mathbb{A}_{1}\bcolon\bnabla\bhat-\frac{1}{2}\brhozero\bdot\bnabla\ln B-\frac{v_{\|}}{2\Omega}\bhat\bdot\bnabla\btimes\bhat\right]\brhozero\nonumber \\
+ & +\epsilon^{2}\frac{1}{mB}\left[\frac{v_{\|}}{\Omega}\pd{\mathbb{A}_{1}}{\varphi}\bcolon\bnabla\bhat-+\frac{1}{2}\pd{\brhozero}{\varphi}\bdot\bnabla\ln B+\frac{v_{\|}}{\Omega}\mathbb{A}_{1}\bcolon\bnabla\bhat+\frac{v_{\|}}{\Omega}\bhat\bdot\bnabla\btimes\bhat\right]\pd{\brhozero}{\varphi}\nonumber \\
+ & +2\epsilon^{2}\left[\frac{\mu}{m\Omega^{2}}\mathbb{A}_{2}\bcolon\bnabla\bhat+\frac{v_{\|}}{B\Omega^{2}}\bhat\bdot\bnabla\bhat\bdot\pd{\brhozero}{\varphi}\right]\bhat+\mathcal{O}\left(\epsilon^{3}\right)\label{eq:deltaxtdotdeltamu}\end{align}
+
+\end_inset
+
+where we used 
+\begin_inset Formula $\Omega_{\|}^{*}=\Omega\left(1+\epsilon\frac{v_{\|}}{\Omega}\bhat\bdot\bnabla\btimes\bhat\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\left\langle \left(\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbf{p}_{\epsilon}\right)\left(\boldsymbol{\Delta}_{gc}^{\mu}\bdot\mathbf{p}_{\epsilon}\right)\right\rangle $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:deltaxtdotpeps"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:deltamudotpeps"
+
+\end_inset
+
+, we have:
+\begin_inset Formula \begin{align}
+\left\langle \left(\boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\mathbf{p}_{\epsilon}\right)\left(\boldsymbol{\Delta}_{gc}^{\mu}\bdot\mathbf{p}_{\epsilon}\right)\right\rangle = & -2\mu\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\left[\left\langle \mathbf{p}_{\epsilon}\right\rangle -\epsilon mv_{\|}\left(\bnabla\bhat\bdot\left\langle \brhozero\right\rangle \right)\right]+4\mu\left(\frac{\mu B}{m\Omega^{2}}\left\langle \mathbb{A}_{2}\right\rangle \bcolon\bnabla\bhat+2\frac{v_{\|}}{\Omega}\bhat\bdot\bnabla\bhat\bdot\left\langle \pd{\brhozero}{\varphi}\right\rangle \right)\bhat\nonumber \\
+ & -\frac{mv_{\|}^{2}}{B}\bhat\bdot\bnabla\bhat\bdot\left\langle \brhozero\;\brhozero\right\rangle -\mu\left\langle \brhozero\;\brhozero\right\rangle \bdot\bnabla\ln B+\left\langle \brhozero\right\rangle \frac{\mu v_{\|}}{2\Omega}\bhat\bdot\bnabla\btimes\bhat-\frac{\Omega}{B}\mathbf{v}_{B}\bdot\left\langle \pd{\brhozero}{\varphi}\;\brhozero\right\rangle \nonumber \\
+= & -2\mu\frac{\bhat}{\Omega}\btimes\mathbf{v}_{B}-\mu\frac{v_{\|}^{2}}{\Omega^{2}}\bhat\bdot\bnabla\bhat\bdot\left(\mathbb{I}-\bhat\bhat\right)-\mu\frac{\mu B}{m\Omega^{2}}\bnabla\ln B\bdot\left(\mathbb{I}-\bhat\bhat\right)\nonumber \\
+= & \epsilon^{2}\frac{\mu^{2}B}{m\Omega^{2}}\left[\bnabla\ln B+\frac{mv_{\|}^{2}}{\mu B}\bhat\bdot\bnabla\bhat\right]\bdot\left(\mathbb{I}-\bhat\bhat\right)+\mathcal{O}\left(\epsilon^{3}\right)\label{eq:meandeltaxtdotpepsdeltamudotpeps}\end{align}
+
+\end_inset
+
+since 
+\begin_inset Formula $\left\langle \brhozero\right\rangle =\left\langle \brhozero\;\pd{\brhozero}{\varphi}\right\rangle =\left\langle \pd{\brhozero}{\varphi}\right\rangle =\left\langle \mathbb{A}_{2}\right\rangle =0$
+\end_inset
+
+ and 
+\begin_inset Formula $\left\langle \brhozero\;\brhozero\right\rangle =\left(\mu B/m\Omega^{2}\right)\left(\mathbb{I}-\bhat\bhat\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\left\langle \boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\boldsymbol{\Delta}_{gc}^{\mu}\right\rangle $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:deltaxtdotdeltamu"
+
+\end_inset
+
+, the expression reads:
+\begin_inset Formula \begin{align}
+\left\langle \boldsymbol{\Delta}_{gc}^{\mathbf{X}T}\bdot\boldsymbol{\Delta}_{gc}^{\mu}\right\rangle = & \frac{1}{mB}\left[\left\langle \brhozero\right\rangle +\frac{v_{\|}}{2\Omega}\left\langle \brhozero\;\mathbb{A}_{1}\right\rangle \bcolon\bnabla\bhat-\frac{1}{2}\left\langle \brhozero\;\brhozero\right\rangle \bdot\bnabla\ln B-\frac{v_{\|}}{2\Omega}\bhat\bdot\bnabla\btimes\bhat\left\langle \brhozero\right\rangle \right.\nonumber \\
+ & +\frac{v_{\|}}{\Omega}\left\langle \pd{\brhozero}{\varphi}\;\pd{\mathbb{A}_{1}}{\varphi}\right\rangle \bcolon\bnabla\bhat+\frac{1}{2}\left\langle \pd{\brhozero}{\varphi}\;\mbox{\pd{\brhozero}{\varphi}}\right\rangle \bdot\bnabla\ln B\nonumber \\
+ & \left.+\frac{v_{\|}}{\Omega}\left\langle \pd{\brhozero}{\varphi}\;\mathbb{A}_{1}\right\rangle \bcolon\bnabla\bhat+\left\langle \pd{\brhozero}{\varphi}\right\rangle \frac{v_{\|}}{\Omega}\bhat\bdot\bnabla\btimes\bhat\right]\nonumber \\
+ & +2\left[\frac{\mu}{m\Omega^{2}}\left\langle \mathbb{A}_{2}\right\rangle \bcolon\bnabla\bhat+\frac{v_{\|}}{B\Omega^{2}}\bhat\bdot\bnabla\bhat\bdot\left\langle \pd{\brhozero}{\varphi}\right\rangle \right]\bhat\nonumber \\
+= & \mathcal{O}\left(\epsilon^{3}\right)\label{eq:meandeltaxtdotdeltaxmu}\end{align}
+
+\end_inset
+
+since 
+\begin_inset Formula $\left\langle \brhozero\right\rangle =\left\langle \brhozero\;\mathbb{A}_{1}\right\rangle =\left\langle \pd{\brhozero}{\varphi}\;\pd{\mathbb{A}_{1}}{\varphi}\right\rangle =\left\langle \pd{\brhozero}{\varphi}\;\mathbb{A}_{1}\right\rangle =\left\langle \pd{\brhozero}{\varphi}\right\rangle =\left\langle \mathbb{A}_{2}\right\rangle =0$
+\end_inset
+
+ and 
+\begin_inset Formula $\left\langle \brhozero\;\brhozero\right\rangle =\left\langle \pd{\brhozero}{\varphi}\;\mbox{\pd{\brhozero}{\varphi}}\right\rangle =\left(\mu B/m\Omega^{2}\right)\left(\mathbb{I}-\bhat\bhat\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "1"
+key "Brizard_2004"
+
+\end_inset
+
+A.
+ J.
+ Brizard, A guiding-center Fokker-Planck collision operator for nonuniform
+ magnetic fields, 
+\shape italic
+Phys.
+ Plasmas
+\shape default
+, 
+\series bold
+11
+\series default
+(9):4429–4438, 2004.
+\end_layout
+
+\end_body
+\end_document
