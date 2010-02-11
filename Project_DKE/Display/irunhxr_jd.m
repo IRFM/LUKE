@@ -1,4 +1,4 @@
-function irunhxr_jd(workdir,basestr,filename,id_simul,equil,dkeparam,dkedisplay,output)
+function irunhxr_jd(opt_gui,workdir,basestr,filename,id_simul,equil,dkeparam,dkedisplay,output)
 %
 % This function calculates the hard X-ray emisssion from LUKE results
 %
@@ -42,7 +42,7 @@ end
 % load HXR camera spec
 %
 hxr_file = which(['HXR_',basestr,'.mat']);
-[hxr_file,hxr_path] = uigetfile('HXR_*.mat','Please select the HXR camera spec file',hxr_file);
+[hxr_file,hxr_path] = igetfile_jd(opt_gui,'HXR_*.mat','Please select the HXR camera spec file',hxr_file);
 if hxr_file == 0,
     disp('-----> No HXR camera spec file specified.')
     disp(quitmsg)
@@ -115,7 +115,7 @@ if strcmp(basestr,'TCV'),% TCV launching data
     %
     if n_opt == 1,% hxr experimental data from file
         %
-        [data_file,data_path] = uigetfile('*.*',['Please select the hxr experimental data file :']);
+        [data_file,data_path] = igetfile_jd(opt_gui,'*.*','Please select the hxr experimental data file :');
         %
         if data_file == 0,
             disp(quitmsg)
@@ -176,14 +176,14 @@ if strcmp(basestr,'TCV'),% TCV launching data
     if n_opt > 0,
         t1 = input_dke_yp('Initial time for TCV HXR data averaging',t1,[0;Inf],'',[1,1]);
         t2 = input_dke_yp('Final time for TCV HXR data averaging',t2,[0;Inf],'',[1,1]);
+	    %
+	    it1 = find(t > t1,1,'first');
+	    it2 = find(t < t2,1,'last');
+	    hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
+	    hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
+	    dt = t(it2) - t(it1);
+	    hxrexp = hxrexp/dt;%taux de comptage
     end
-    %
-    it1 = find(t > t1,1,'first');
-    it2 = find(t < t2,1,'last');
-    hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
-    hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
-    dt = t(it2) - t(it1);
-    hxrexp = hxrexp/dt;%taux de comptage
     %
     if isnan(energy),
         energy = hxrspec.kphot;
