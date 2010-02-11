@@ -36,7 +36,7 @@ for iw = 1:nw,
 	if length(launchs) < iw,
 		launchs{iw} = '';
 	end
-	if ~isempty(launchs{iw}) && length(launchs{iw}.yR_L) < length(waves{iw}.rays),
+	if ~isempty(launchs{iw}) && (~strcmp(launchs{iw}.type,'EC') || length(launchs{iw}.yR_L) < length(waves{iw}.rays)),
 		launchs{iw} = '';
 	end
 end
