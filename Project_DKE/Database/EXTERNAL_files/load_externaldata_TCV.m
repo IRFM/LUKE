@@ -54,7 +54,7 @@ if m_opt == 0,
     data_path = [workdir,'/'];
     data_file = [data_str,launstr,'.mat'];
     %
-    collect_parameters_for_luke(str2num(shotnum),t1,t2,laun,[data_path,data_file],f_opt);%load dhot parameters
+    collect_parameters_for_luke(str2num(shotnum),t1,t2,laun,[data_path,data_file],f_opt);%load shot parameters
     %
 else
     %
