@@ -21,6 +21,7 @@ end
 %
 if ny == 1,
     launch.w0 = input_dke_yp('Beam width (m)',[],[0;Inf],'',[1,1]);
+    launch.z0 = input_dke_yp('Distance to focal point (m)',0,[-Inf;Inf],'',[1,1]);
 end
 %
 launch.id = input_dke_yp('Provide an id for this launching structure','');
