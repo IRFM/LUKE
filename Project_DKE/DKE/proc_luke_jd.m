@@ -15,6 +15,7 @@ if nargin < 7,
     opt.wave = '';
     opt.peakmode = 0;
     opt.rho = '';
+    opt.spec = 1;
 end
 if nargin < 6,
     subtitle = '';
@@ -40,6 +41,9 @@ if ~isfield(opt,'rho') || isempty(opt.rho),
     opt.rho = input_dke_yp('Option for rho definition : ''g'' (geometric), ''p'' (poloidal flux), ''t'' (toroidal flux), ''v'' (volumic rho)','g',{'g','p','t','v'},'',[1,1]);
 end
 %
+if ~isfield(opt,'spec') || isempty(opt.spec)
+    opt.spec = 1;
+end
 Znorm = data.Znorm;
 Zcurr = data.Zcurr;
 ZP0 = data.ZP0;
@@ -494,15 +498,17 @@ if nr > 1,
     else
         peaks = '';
     end
-    %
+    % SCALAR
     data_proc.scalar.p_tot_2piRp = p_tot_2piRp;
     data_proc.scalar.p0_rf_2piRp = p0_rf_2piRp;
     data_proc.scalar.p_rf_2piRp = p_rf_2piRp;
+    data_proc.scalar.np_rf_2piRp = np_rf_2piRp;
+    data_proc.scalar.n_rf_list = n_rf_list;
     data_proc.scalar.p_rf_2piRp_lin = p_rf_2piRp_lin;
     data_proc.scalar.p_e_2piRp = p_e_2piRp;
     data_proc.scalar.I_tot = I_tot;
     data_proc.scalar.EtaRp = EtaRp;
-    %
+    % RADIAL QUASI-LINEAR
     data_proc.radial.xrho = xrho;
     data_proc.radial.J_tot = J_tot;
     data_proc.radial.P_tot = P_tot;
@@ -511,11 +517,28 @@ if nr > 1,
     data_proc.radial.P_e = P_e;
     data_proc.radial.xp_rf_2piRp = xp_rf_2piRp;
     data_proc.radial.xdPdrho_rf_2piRp = xdPdrho_rf_2piRp;
-    %
+    % RADIAL LINEAR
     data_proc.radial.xrho_lin = rho_dep;
     data_proc.radial.xp_rf_2piRp_lin = xp_rf_2piRp_lin;
     data_proc.radial.xdPdrho_rf_2piRp_lin = xdPdrho_rf_2piRp_lin;
-    %
+    % WAVE QUASI-LINEAR
+    data_proc.wave.wxrho = xrho;
+    data_proc.wave.wp0_rf_2piRp = wp0_rf_2piRp;
+    data_proc.wave.wp_rf_2piRp = wp_rf_2piRp;
+    data_proc.wave.wnp_rf_2piRp = wnp_rf_2piRp;
+    data_proc.wave.wn_rf_list = n_rf_list;
+    data_proc.wave.wxp_rf_2piRp = wxp_rf_2piRp;
+    data_proc.wave.wxdPdrho_rf_2piRp = wxdPdrho_rf_2piRp;
+    data_proc.wave.wrhoG = wrhoG;
+    data_proc.wave.wrhoP = wrhoP;
+    data_proc.wave.wrhoT = wrhoT;
+    data_proc.wave.wrhoV = wrhoV;
+    data_proc.wave.wTe = wTe;
+    data_proc.wave.wne = wne;
+    data_proc.wave.wNpar = wNpar;
+    data_proc.wave.wtheta = wtheta;
+    % WAVE LINEAR
+    data_proc.wave.wxrho_lin = rho_dep;
     data_proc.wave.wp_rf_2piRp_lin = wp_rf_2piRp_lin;
     data_proc.wave.wxp_rf_2piRp_lin = wxp_rf_2piRp_lin;
     data_proc.wave.wxdPdrho_rf_2piRp_lin = wxdPdrho_rf_2piRp_lin;
@@ -525,24 +548,9 @@ if nr > 1,
     data_proc.wave.wrhoV_lin = wrhoV_lin;
     data_proc.wave.wTe_lin = wTe_lin;
     data_proc.wave.wne_lin = wne_lin;
-    %
-    data_proc.wave.wp0_rf_2piRp = wp0_rf_2piRp;
-    data_proc.wave.wp_rf_2piRp = wp_rf_2piRp;
-    data_proc.wave.wxp_rf_2piRp = wxp_rf_2piRp;
-    data_proc.wave.wxdPdrho_rf_2piRp = wxdPdrho_rf_2piRp;
-    data_proc.wave.rho_dep = rho_dep;
-    data_proc.wave.wrhoG = wrhoG;
-    data_proc.wave.wrhoP = wrhoP;
-    data_proc.wave.wrhoT = wrhoT;
-    data_proc.wave.wrhoV = wrhoV;
-    data_proc.wave.wTe = wTe;
-    data_proc.wave.wne = wne;
-    %
-    data_proc.wave.wNpar = wNpar;
-    data_proc.wave.wtheta = wtheta;
-    %
+    % PEAKS
     data_proc.peaks = peaks;
-    %
+    % OPTIONS
     data_proc.opt = opt;
     %
     if ir_display >= 0,
@@ -693,7 +701,7 @@ if nr > 1,
         %
         set(gca,'xtick',xtick);
         %
-        print_jd(p_opt,[simul_id,'_Prf_profile'],'.');
+        print_jd(p_opt,[simul_id,'_Prf_profile'],'figures_LUKE');
         %
         figure(2),clf,set(2,'Name',['Ohmic power density profile - ',dke_out.simul.id])
         %
@@ -708,7 +716,7 @@ if nr > 1,
         graph1D_jd(xrho,P_e,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
         set(gca,'xtick',xtick);
         %
-        print_jd(p_opt,[simul_id,'_Pe_profile'],'.');
+        print_jd(p_opt,[simul_id,'_Pe_profile'],'figures_LUKE');
         %
         figure(3),clf,set(3,'Name',['Total power density profile - ',dke_out.simul.id])
         %
@@ -723,7 +731,7 @@ if nr > 1,
         graph1D_jd(xrho,P_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
         set(gca,'xtick',xtick);
         %
-        print_jd(p_opt,[simul_id,'_Ptot_profile'],'.');
+        print_jd(p_opt,[simul_id,'_Ptot_profile'],'figures_LUKE');
         %
         % current profile
         %
@@ -737,7 +745,7 @@ if nr > 1,
         set(gca,'xtick',xtick);
         %set(gca,'ylim',[0,max(get(gca,'ylim'))])
         %
-        print_jd(p_opt,[simul_id,'_J_profile'],'.');
+        print_jd(p_opt,[simul_id,'_J_profile'],'figures_LUKE');
         %
         % efficiency profile
         %
@@ -750,7 +758,7 @@ if nr > 1,
         graph1D_jd(xrho,eta,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
         set(gca,'xtick',xtick);
         %
-        print_jd(p_opt,[simul_id,'_eta_profile'],'.');
+        print_jd(p_opt,[simul_id,'_eta_profile'],'figures_LUKE');
         %
         figure(6),clf,set(6,'Name',['Current and RF power density profiles - ',dke_out.simul.id])
         %    
@@ -763,7 +771,7 @@ if nr > 1,
         graph1D2jd(xrho,J_tot,xrho,P_rf,xlab,ylab1,ylab2,tit,xlim,ylim1,ylim2,...
         style,marker1,color2,width2,style,marker1,color3,width2,siz,red,lspace2,bspace2);
         %
-        print_jd(p_opt,[simul_id,'_J_Prf_profile'],'.');
+        print_jd(p_opt,[simul_id,'_J_Prf_profile'],'figures_LUKE');
         %
         if exist('Zmripple'),
             if ~isempty(Zmripple) & sum(sum(Zmripple.Xnhuloss)) ~= 0,
@@ -771,13 +779,13 @@ if nr > 1,
                 [ax] = graph1D_jd(xrho,dke_out.xMRR_flux,0,0,'\rho','Ripple losses (m-3.s-1)',subtitle,NaN,[0,1],[0,max(max([dke_out.xMRR_flux(:),dke_out.xMRR_tau(:)]))],style,marker1,color2,width2,siz,gca,red,lspace,bspace);hold on
                 [ax] = graph1D_jd(xrho,dke_out.xMRR_tau,0,0,'\rho','Ripple losses (m-3.s-1)',subtitle,NaN,[0,1],[0,max(max([dke_out.xMRR_flux(:),dke_out.xMRR_tau(:)]))],style,marker1,color3,width2,siz,gca,red,lspace,bspace);hold on
                 legend('Boundary losses','Volumic losses');
-                print_jd(p_opt,[simul_id,'_RippleLosses_profile'],'.');
+                print_jd(p_opt,[simul_id,'_RippleLosses_profile'],'figures_LUKE');
                 %
                 figure(8),clf,set(8,'Name',['Cones angles - ',dke_out.simul.id])
                 [ax] = graph1D_jd(xrho,Zmripple.xthetabanana,0,0,'\rho','Angle (Deg.)',subtitle,NaN,[0,1],[0,60],style,marker1,color2,width2,siz,gca,red,lspace,bspace);hold on
                 [ax] = graph1D_jd(xrho,Zmripple.xthetaloss,0,0,'\rho','Angle (Deg.)',subtitle,NaN,[0,1],[0,60],style,marker1,color3,width2,siz,gca,red,lspace,bspace);hold on
                 legend('Banana cone angle','Loss cone angle');
-                print_jd(p_opt,[simul_id,'_RippleConeAngles_profile'],'.');
+                print_jd(p_opt,[simul_id,'_RippleConeAngles_profile'],'figures_LUKE');
                 %
                 ylab1 = 'p/p_{Te}';
                 ylab2 = 'p/p_{Te(loc.)}';
@@ -790,63 +798,66 @@ if nr > 1,
                 [ax] = graph1D2jd(xrho,Zmripple.xpnth,xrho,Zmripple.xpndetrap./Zmripple.xpnth,xlab,ylab1,ylab2,tit,xlim,ylim1,ylim2,style,marker1,color3,width2,style,marker1,color4,width2,siz,red,lspace2,bspace);
                 set(gca,'ytick',ytick);
                 legend('p_{c}/p_{Te}','p_{Te(loc.)}/p_{Te}','p_{c}/p_{Te(loc.)}');
-                print_jd(p_opt,[simul_id,'_RippleDetrapping_profile'],'.');
+                print_jd(p_opt,[simul_id,'_RippleDetrapping_profile'],'figures_LUKE');
             end  
         end
         %
-        disp('******** power absorption along specific rays ********');
-        %
-        iw = NaN;
-        ibb = NaN;
-        ib = 0;
-        iwdef = 1;
-        %
-        while iw ~= 0 && ibb ~= 0
+        if opt.spec == 1
+            disp('******** power absorption along specific rays ********');
             %
-            ib = ib + 1;
+            iw = NaN;
+            ibb = NaN;
+            ib = 0;
+            iwdef = 1;
             %
-            iw = input_dke_yp('wave index (0 to return)',iwdef,0:nw,'',[1,1]);
-            %
-            if iw == 0,
-                continue
+            while iw ~= 0 && ibb ~= 0
+                %
+                ib = ib + 1;
+                %
+                iw = input_dke_yp('wave index (0 to return)',iwdef,0:nw,'',[1,1]);
+                %
+                if iw == 0,
+                    continue
+                end
+                %
+                ibb = input_dke_yp('ray index (0 to return)',1,0:nb(iw),'',[1,1]);
+                %
+                if ibb == 0,
+                    continue
+                end
+                %
+                iwdef = 0;
+                %
+                iy = sum(nb(1:iw - 1)) + ibb;
+                %
+                ray = waves{iw}.rays{ibb};
+                %
+                sS_c3po = ray.ss;
+                sP_c3po = ray.sP_2piRp*2*pi*equilDKE.Rp;
+                %
+                sS_luke = zS{iy};
+                sP_luke = zP_0_2piRp_mod{iy}*2*pi*equilDKE.Rp;
+                %
+                leg = {'Ray-Tracing','Fokker-Planck'};
+                %    
+                % power deposition
+                %
+                figlab = ['wave #',num2str(iw),'; ray #',num2str(ibb)];
+                %
+                figure(14+iy),clf;set(gcf,'name',figlab);
+                %
+                xlim = [0,max([sS_c3po,sS_luke])];
+                ylim = [0,1.2*max([sP_c3po,sP_luke])/1e3];
+                xlab = 's (m)';
+                ylab = 'P (kW)';
+                %
+                graph1D_jd(sS_c3po,sP_c3po/1e3,0,0,xlab,ylab,figlab,NaN,xlim,ylim,style2,marker,color3,width2,siz,gca,red,lspace,bspace2);
+                graph1D_jd(sS_luke,sP_luke/1e3,0,0,'','','',leg,xlim,ylim,style,marker2,color2,width2,siz);
+                %
             end
-            %
-            ibb = input_dke_yp('ray index (0 to return)',1,0:nb(iw),'',[1,1]);
-            %
-            if ibb == 0,
-                continue
-            end
-            %
-            iwdef = 0;
-            %
-            iy = sum(nb(1:iw - 1)) + ibb;
-            %
-            ray = waves{iw}.rays{ibb};
-            %
-            sS_c3po = ray.ss;
-            sP_c3po = ray.sP_2piRp*2*pi*equilDKE.Rp;
-            %
-            sS_luke = zS{iy};
-            sP_luke = zP_0_2piRp_mod{iy}*2*pi*equilDKE.Rp;
-            %
-            leg = {'Ray-Tracing','Fokker-Planck'};
-            %    
-            % power deposition
-            %
-            figlab = ['wave #',num2str(iw),'; ray #',num2str(ibb)];
-            %
-            figure(14+iy),clf;set(gcf,'name',figlab);
-            %
-            xlim = [0,max([sS_c3po,sS_luke])];
-            ylim = [0,1.2*max([sP_c3po,sP_luke])/1e3];
-            xlab = 's (m)';
-            ylab = 'P (kW)';
-            %
-            graph1D_jd(sS_c3po,sP_c3po/1e3,0,0,xlab,ylab,figlab,NaN,xlim,ylim,style2,marker,color3,width2,siz,gca,red,lspace,bspace2);
-            graph1D_jd(sS_luke,sP_luke/1e3,0,0,'','','',leg,xlim,ylim,style,marker2,color2,width2,siz);
-            %
+        %
         end
-        %
+    %
     end
     %
 else
@@ -934,7 +945,7 @@ if ir_display > 0 && ir_display <= nr,
     %
     graph1D_jd(pn,pdj0dp,0,0,xlab,ylab,[radialloc,' ; dj/dp positive for co-current'],NaN,xlim,ylim,style,marker,color2,width2,siz,gca,red,lspace,bspace2);
     %
-    print_jd(p_opt,[simul_id,'_djdp_',tir_display],'.');
+    print_jd(p_opt,[simul_id,'_djdp_',tir_display],'figures_LUKE');
     %
     % ---------- 2D distribution function -----------
     %
@@ -982,7 +993,7 @@ if ir_display > 0 && ir_display <= nr,
         bounce_ripple_jd(1,pnmax,gridDKE.xmhubounce2,ir_display,Zmripple);
     end
     %
-    print_jd(p_opt,[simul_id,'_f_2D',tir_display],'.');
+    print_jd(p_opt,[simul_id,'_f_2D',tir_display],'figures_LUKE');
     %
     if max(max(abs(y3))) > 0,
         %
@@ -999,7 +1010,7 @@ if ir_display > 0 && ir_display <= nr,
         end
         colorbar
         %
-        print_jd(p_opt,[simul_id,'_DQL',tir_display],'.');
+        print_jd(p_opt,[simul_id,'_DQL',tir_display],'figures_LUKE');
         %
     end
     %
@@ -1013,7 +1024,7 @@ if ir_display > 0 && ir_display <= nr,
     %
     graph1D_jd(x1,y1,0,0,xlab1,ylab,radialloc,NaN,xlim1,ylim,style,marker,color2,width2,siz,gca,red,lspace,bspace2);
     %
-    print_jd(p_opt,[simul_id,'_F0mFM_1D',tir_display],'.');
+    print_jd(p_opt,[simul_id,'_F0mFM_1D',tir_display],'figures_LUKE');
     %
     % ---------- parallel distribution -----------
     %
@@ -1028,7 +1039,7 @@ if ir_display > 0 && ir_display <= nr,
     graph1D_jd(x1,y2,0,1,xlab1,ylab,radialloc,leg,xlim1,ylim,style,marker,color2,width2,siz);
     legend(leg);
     %
-    print_jd(p_opt,[simul_id,'_F0pFM_1D_',tir_display],'.');
+    print_jd(p_opt,[simul_id,'_F0pFM_1D_',tir_display],'figures_LUKE');
 end
 %
 
