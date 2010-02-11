@@ -1,6 +1,6 @@
 function wave = imake_wave_AMR_jd(basestr,equil,launch,workdir,opt_gui)
 %
-% This function makes the WAVE file from ART ray-tracing output
+% This function makes the WAVE file from AMR ray-tracing output
 % 
 % by J. Decker (CEA-DRFC) <joan.decker@cea.fr>
 %
@@ -19,6 +19,7 @@ shotime = num2str(str2num(equil.info.shotime),'%1.3f');
 %
 if isempty(launch),	% Read the existing data file
     %
+    launch.type = 'EC';
     if isfield(equil.info,'datapath')
 		%
 		AMR_output_path = equil.info.datapath;
@@ -30,16 +31,20 @@ if isempty(launch),	% Read the existing data file
 		AMR_output_path = [AMR_simul_path,'output/luke/'];
 		%
     end
-	%
+    %
 else	% Run AMR
     %
-    AMR_script_path = getenv('AMR');
+    %AMR_script_path = getenv('AMR');
+    AMR_script_path = '/home/jurban/AMR/';
     if isempty(AMR_script_path),
         AMR_script_path = workdir;
     end
 	%
 	AMR_script_path = igetdir_jd(opt_gui,'Please select the AMR code folder',AMR_script_path);
 	AMR_simul_path = igetdir_jd(opt_gui,'Please select the AMR simulation folder',workdir);
+    %
+    launch.AMR_script_path = AMR_script_path;
+    launch.AMR_simul_path = AMR_simul_path;
     %
     nprz = 101;
     extfacR = 0.1;
@@ -55,7 +60,7 @@ else	% Run AMR
 	%
 	equil_id = [num2str(shotnum),'_',shotime];
 	%
-	make_equil_RZ_AMR_jd(equil_id,equil,[AMR_simul_path,'input/'],nprz,extfacR,extfacZ);
+    make_equil_RZ_AMR_jd(equil_id,equil,AMR_input_path,nprz,extfacR,extfacZ);
     [AMRcfg_file,launch] = make_input_AMR(basestr,equil,launch,AMR_script_path,AMR_simul_path,opt_gui);
     %
     sd = pwd;
@@ -65,6 +70,15 @@ else	% Run AMR
     %
 	AMR_output_path = [AMR_simul_path,'output/luke/'];
 	%
+end
+%
+scan_plot_opt = input_dke_yp('Do you want to plot the conversion efficiency scan [y/n]','y',{'y','n'},'',[1,1]);
+if scan_plot_opt == 'y'
+    if exist([AMR_simul_path,'ebe_run/output/conv_eff_0000.dat'],'file');
+    	read_AMR_outputs(AMR_simul_path,1,2);
+    else
+    	disp(['No conv_eff_0000.dat file in ' AMR_simul_path 'ebe_run/output/ .']);
+    end
 end
 %
 filename_wavedata = ['luke_rays_*_',shotnum,'_',shotime,'.dat'];
