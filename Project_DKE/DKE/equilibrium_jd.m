@@ -419,6 +419,10 @@ if display_mode >=1,
 	disp(['- Plasma major radius on axis (m) Rp = ',num2str(Rp)]);
 	disp(['- Plasma elevation on axis (m) Zp = ',num2str(Zp)]);
 	disp(['- Edge normalized cylindrical poloidal flux (Wb) = ',num2str(psia_apRp)]);
+	if isfield(equil,'signs')
+	disp(['- Sign of the plasma current (LUKE convention) = ',num2str(equil.signs.Ip)]);
+	disp(['- Sign of the toroidal magnetic field (LUKE convention) = ',num2str(equil.signs.Bt)]);
+	end
 	disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
