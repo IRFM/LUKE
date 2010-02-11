@@ -36,7 +36,11 @@ for iw = 1:nw,
 	if length(launchs) < iw,
 		launchs{iw} = '';
 	end
-	if ~isempty(launchs{iw}) && (~strcmp(launchs{iw}.type,'EC') || length(launchs{iw}.yR_L) < length(waves{iw}.rays)),
+	if ~isempty(launchs{iw}) && isfield(launchs{iw},'yR_L'),
+		if length(launchs{iw}.yR_L) < length(waves{iw}.rays),
+			launchs{iw} = '';
+		end
+	else
 		launchs{iw} = '';
 	end
 end
@@ -139,8 +143,8 @@ for iw = 1:nw,
         rays{iy} = waves{iw}.rays{ib};
 		%
         rays{iy}.omega_rf = waves{iw}.omega_rf;
-        rays{iy}.color = colors{iw};
-        rays{iy}.style = styles{iw};
+        rays{iy}.color = colors{mod(iw-1,length(colors))+1};
+        rays{iy}.style = styles{mod(iw-1,length(styles))+1};
         rays{iy}.sX = (Rp + rays{iy}.sx).*cos(-rays{iy}.sphi);
         rays{iy}.sY = (Rp + rays{iy}.sx).*sin(-rays{iy}.sphi);
 		%
@@ -515,6 +519,12 @@ end
 axis('equal');
 axis([xlim,ylim]);
 %
+figname = [waves{1}.equil_id,'-'];
+for ii = 1:length(waves)
+	figname = [figname,waves{ii}.id,'-'];
+end
+print_jd(opt.print,[figname,'Pol_traj'],'figures_WAVE');
+%
 %
 figure(2),clf,set(2,'name','Toroidal trajectories')
 %
@@ -543,6 +553,8 @@ end
 axis('equal');
 axis([xlim,ylim]);
 %
+print_jd(opt.print,[figname,'Tor_traj'],'figures_WAVE');
+%
 smax = 0;
 Nmax = 0;
 Spmax = 0;
@@ -561,6 +573,8 @@ tit = '';
 %
 graph1D_jd(1:ny,yrho_abs,0,0,xlab,ylab,tit,NaN,xlim,ylim,style2,marker1,color2,width1,siz,gca,red,lspace,bspace);
 %
+print_jd(opt.print,[figname,'Rad_dep_peak'],'figures_WAVE');
+%
 figure(4),clf,set(4,'name','N// of deposition peak')
 xlim = [0,ny+1];
 ylim = [0,Nmax];
@@ -570,6 +584,8 @@ tit = '';
 %
 graph1D_jd(1:ny,abs(yNpar_abs),0,0,xlab,ylab,tit,NaN,xlim,ylim,style2,marker1,color2,width1,siz,gca,red,lspace,bspace);
 %
+print_jd(opt.print,[figname,'Npar_dep_peak'],'figures_WAVE');
+%
 figure(5),clf,set(5,'name','Total deposition profile')
 xlim = [0,1];
 ylim = NaN;
@@ -578,6 +594,8 @@ ylab = 'dPd\rho (MW)';
 tit = '';
 %
 graph1D_jd(rho_dep,dPdrho/1e6,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width1,siz,gca,red,lspace,bspace);
+%
+print_jd(opt.print,[figname,'Tot_dep_prof'],'figures_WAVE');
 %
 % Ray specific figures
 %
@@ -722,6 +740,10 @@ while iw ~= 0 && ibb ~= 0
     %
     graph1D_jd(rho_dep,ray.dPnormdrho.*drhog_dep./drho_dep,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color2,width1,siz);
     %
+    if ~f_opt
+    	print_jd(opt.print,[figname,'Wave_',num2str(iw),'_Ray_',num2str(ibb)],'figures_WAVE');
+	
+    end
 end
 %
 return
