@@ -41,8 +41,6 @@ kphot = Zbremplasma.kphot;
 %
 XXfinit = dke_out.XXfinit(:,:,r_dke);
 XXf0 = dke_out.XXf0(:,:,r_dke);
-XXf0_tp = dke_out.XXf0_tp(:,:,r_dke);
-XXf0_g = dke_out.XXf0_g(:,:,r_dke);
 %
 Rp = equilDKE.Rp;
 Zp = equilDKE.Zp;
@@ -132,7 +130,7 @@ print_jd(p_opt,[filename,'_DistributionFunction']);
 % Contour plot of the electron distribution function
 %
 [logXfinit_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(XXfinit(:,:,i_test)),pn,mhu,dp_cyl);
-[logXf0_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(XXf0(:,:,i_test) + XXf0_tp(:,:,i_test) + XXf0_g(:,:,i_test)),pn,mhu,dp_cyl);
+[logXf0_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(XXf0(:,:,i_test)),pn,mhu,dp_cyl);
 [logXf_hxr_cyl,ppar_cyl,dppar_cyl,pperp_cyl,dpperp_cyl] = s2c_dke_yp(log(Zbremplasma.ZXf0_hxr{i_test,j_test}),pn,Zbremplasma.mhu_hxr{i_test,j_test},dp_cyl);
 %
 Xppar_cyl = ones(length(pperp_cyl),1)*ppar_cyl(:)';

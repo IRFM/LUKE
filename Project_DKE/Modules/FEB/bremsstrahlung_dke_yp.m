@@ -90,8 +90,6 @@ xrho = xrho(r_dke);
 %
 XXfinit = dke_out.XXfinit(:,:,r_dke);
 XXf0 = dke_out.XXf0(:,:,r_dke);
-XXf0_tp = dke_out.XXf0_tp(:,:,r_dke);
-XXf0_g = dke_out.XXf0_g(:,:,r_dke);
 %
 pn2 = pn.*pn;
 gamma = sqrt(1 + pn2*betath_ref^2);
@@ -178,20 +176,12 @@ for i = 1:size(psin_hxr,1),%radial position
 			mhu_hxr = mhu_hxr(1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0);
             Zbremplasma.mhu_hxr{i,j} = mhu_hxr;
 			Xf0_hxr = XXf0(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);%Non-thermal distribution function at poloidal location
-			Xf0_tp_hxr = XXf0_tp(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
-			Xf0_g_hxr = XXf0_g(:,1-PSI_hxr(i,j)*(1 - mhu(:).^2) > 0,i);
 %
 			Xf0_i = interp1(mhu_hxr(:),Xf0_hxr',x_leg(:),method)';%Interpolation of the distribution function on the Legendre polynomial pitch-angle grid
-			Xf0_tp_i = interp1(mhu_hxr(:),Xf0_tp_hxr',x_leg(:),method)';
-			Xf0_g_i = interp1(mhu_hxr(:),Xf0_g_hxr',x_leg(:),method)';
 %
 			Xf0_c = (Xf0_i.*(w_leg*ones(1,size(Xf0_i,1)))')*Pm';%Calculation of the Legendre coefficients for local values of the distribution function
-		    Xf0_tp_c = (Xf0_tp_i.*(w_leg*ones(1,size(Xf0_tp_i,1)))')*Pm';
-		    Xf0_g_c = (Xf0_g_i.*(w_leg*ones(1,size(Xf0_g_i,1)))')*Pm';
 %
 			Xf0_c1 = permute(repmat(reshape(Xf0_c',n_gauleg+1,size(XXf0,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);%Same as Xf0_c but expanded for all photon energies 
-			Xf0_tp_c1 = permute(repmat(reshape(Xf0_tp_c',n_gauleg+1,size(XXf0_tp,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
-			Xf0_g_c1 = permute(repmat(reshape(Xf0_g_c',n_gauleg+1,size(XXf0_g,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);
 %
 			dIB_c1 = pn_c1.*pn_c1.*pn_c1.*BREM_c1(:,:,:,i).*(Xf0_c1 + Xf0_tp_c1 + Xf0_g_c1)./gamma_c1;
 			IB_c1 = 2*pi*integral_dke_jd(dpn,dIB_c1,2);%Momentum integration 
