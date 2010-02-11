@@ -138,8 +138,8 @@ if isfield(ZP0,'n_rf_list'),
 elseif isfield(data,'dkeparam'),
     n_rf_list = data.dkeparam.n_rf_list;
 else
-    n_rf_list = 1:nn_rf;
-    disp(['WARNING : n_rf_list = ',num2str(n_rf_list),' enforced.'])
+    n_rf_list = NaN(1,nn_rf);
+    disp(['WARNING : n_rf_list not determined.'])
 end
 %
 I_tot = sum(J_tot.*equilDKE.xdA_dke);
