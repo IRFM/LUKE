@@ -175,6 +175,7 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
     wave.fitparam = fitparam;
     wave.rayparam = rayparam;
     wave.C3POparam = C3POparam;
+    wave.display = C3POdisplay;
     %
 end
 
