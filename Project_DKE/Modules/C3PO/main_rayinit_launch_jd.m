@@ -196,8 +196,12 @@ elseif launch.type == 'LH',
     %
     % Ray initial characteristics
     %
-    if ~isfield(launch,'i_ref'),
-        launch.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+    if ~isfield(launch,'i_ref') || isempty(launch.i_ref),
+        launch.i_ref = -1;%Initial radial position index, relative to LCFS [1,1]
+    end
+    %
+    if launch.i_ref < 0,
+        launch.i_ref = length(equil.psi_apRp) + launch.i_ref;%Initial radial position index [1,1]
     end
     %
     tmask = diff(equil.pty(launch.i_ref,:))*launch.LFS > 0;
