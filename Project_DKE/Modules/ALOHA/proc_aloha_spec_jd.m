@@ -190,13 +190,13 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,display
 	    %
 		figure('Name','Gaussian fit calculation'),
 		leg = {'Gaussian','Fit'};
-		graph1D_jd(xy(:),xyf(:)/1e6,0,0,'n_z','dP/dn_z (MW)','Gaussian fit of the LH power spectrum',NaN,'','','-','none','b',2);hold on
-		graph1D_jd(x,xf/1e6,0,0,'n_z','dP/dn_z (MW)','Gaussian fit of the LH power spectrum',leg,'','','--','none','r',2);
+		graph1D_jd(xy(:),xyf(:)/1e6,0,0,'n_z','dP/dn_z (MW)','',NaN,'','','-','none','b',2,20,gca,0.9,0.7,0.7);
+		graph1D_jd(x,xf/1e6,0,0,'','','',leg,'','','--','none','r',2);
 	    %
 	    figure('Name','Gaussian fit vs. ALOHA'),
 	    leg = {'ALOHA','Gaussian fit'};
-		graph1D_jd(zN,zdP/1e6,0,0,'n_z','dP/dn_z (MW)','Gaussian fit vs. ALOHA for the LH power spectrum',NaN,'','','-','none','b',2);hold on
-		graph1D_jd(x,xf/1e6,0,0,'n_z','dP/dn_z (MW)','Gaussian fit vs. ALOHA for the LH power spectrum',leg,'','','--','none','r',2);
+		graph1D_jd(zN,zdP/1e6,0,0,'n_z','dP/dn_z (MW)','',NaN,'','','-','none','b',2,20,gca,0.9,0.7,0.7);
+		graph1D_jd(x,xf/1e6,0,0,'','','',leg,'','','--','none','r',2);
 	    %    
 	end
 end       
