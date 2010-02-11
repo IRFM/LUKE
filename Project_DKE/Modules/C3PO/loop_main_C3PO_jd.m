@@ -11,7 +11,7 @@ function [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit
     %
     if C3POdisplay.ray,info_dke_yp(2,['Initial conditions of ray #',int2str(iray),' are calculated']);end
     %
-    if isreal(y0(4)),
+    if isreal(y0(4)) && abs(y0(4)) > 0,
         %
         [tout, yout, yproc] = raytracing_yp(rayparam,equil_fit,y0,fluct_fit,flag);
         %
