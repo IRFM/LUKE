@@ -349,9 +349,16 @@ if type == 1 && n_opt <= 1,
     %
     % sign management as most equilibrium codes do not account for these.
     %
-    if ~isstruct(signs) && exist('btsign','var') && exist('ipsign','var'),% note that TCV conventions are opposite to LUKE conventions
-        signs.Bt = - btsign;
-        signs.Ip = - ipsign;
+    if ~isstruct(signs) 
+		if exist('btsign','var') && exist('ipsign','var'),% note that TCV conventions are opposite to LUKE conventions
+        	signs.Bt = - btsign;
+        	signs.Ip = - ipsign;
+		end
+		%
+		if isfield(equil_prof_data,'btsign') && isfield(equil_prof_data,'ipsign'),% note that TCV conventions are opposite to LUKE conventions
+        	signs.Bt = - equil_prof_data.btsign;
+        	signs.Ip = - equil_prof_data.ipsign;
+		end		
     end
     %
     save(profname,'prho','pne','pTe','pTi','Zeff','-mat');
