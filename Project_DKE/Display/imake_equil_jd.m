@@ -341,6 +341,13 @@ if type == 1 && n_opt <= 1,
         %
         Zeff = input_dke_yp('No measure of Zeff is available. Please provide an estimated value for Zeff',3,[1;6],'',[1,1]);
         %
+    else
+        Zeff_new = input(['Confirm Zeff value? [',num2str(Zeff),']: ']);
+    	%
+    	if Zeff_new ~= Zeff,
+        	disp(['-----> WARNING: Zeff value has been changed from ',num2str(Zeff),' to ',num2str(Zeff_new)]);
+        	Zeff = Zeff_new;
+    	end
     end
     %
     Zaxis = equil_prof_data.zaxis(ishot);
@@ -493,6 +500,7 @@ end
 %
 equil = conc_struct_jd(equil_magnetic,equil_prof);
 %
+equil.signs = signs;
 equil.id = id_equil;
 equil.info.gen = 'Built with imake_equil_jd';
 equil.info.shotnum = shotnum;
