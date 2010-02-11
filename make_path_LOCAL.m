@@ -29,23 +29,17 @@ dkepath.default = default;
 dkepath.hostname.saturne = 'saturne';
 %
 saturne.luke_root = [pwd,'/'];
-saturne.local_root = '/home/sccp/gsem/decker/';
+saturne.local_root = '/home/JD211098/';
 saturne.computer = 'GLNXA64';%machine type and supported OS
 saturne.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 saturne.maxcompthreads = 'automatic';%For MatLab multithreading
 %
 saturne.mex75 = [saturne.luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
 saturne.compiler_opt.copts = '';
-saturne.compiler_opt.fopts.mex75 = ['FC=''',saturne.local_root,'bin/saturne/g95'' FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132'''];
-saturne.compiler_opt.helmex.mex75 = ['-L',saturne.local_root,'lib/saturne/g95 -lf95 -lgcc -L',saturne.local_root,'Packages/saturne/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95'];% Optional argument for helmex compilation
+saturne.compiler_opt.fopts.mex75 = [' -largeArrayDims'];
+saturne.compiler_opt.helmex.mex75 = [' -L',saturne.local_root,'lib -lf95 -lgcc -llapack -lblas'];% -ltmglib Optional argument for helmex compilation
 %
-saturne.MUMPS.mex75 = [saturne.local_root,'Packages/saturne/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
-saturne.MUMPS.par = ['/home/sccp/gsem/peysson/Packages/Bin/MUMPS/MUMPS_4.7.2_P_mpichpgf/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
-saturne.MUMPS.seq = ['/home/sccp/gsem/peysson/Packages/Bin/MUMPS/MUMPS_4.6.4_S_g95/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-saturne.MUMPS.mpipath = ['/usr/local/pgi/linux86-64/6.0/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-saturne.PETSc.par = ['/home/sccp/gsem/peysson/Packages/Bin/PETSC/petsc-2.3.2-p8_P_mpichpgf/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
-saturne.PETSc.mpipath = ['/usr/local/pgi/linux86-64/6.0/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-saturne.SUPERLU.mex = ['/home/sccp/gsem/peysson/Packages/Bin/SUPERLU/SuperLU_3.0-pgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+saturne.MUMPS.mex75 = [saturne.local_root,'src/MUMPS_4.7.3/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.saturne = saturne;
 %
