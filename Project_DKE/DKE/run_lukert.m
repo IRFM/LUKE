@@ -96,7 +96,7 @@ else
     w_mask = dkeparam.w_mask;%list of waves to account for in the radial grid determination
 end
 %
-rho_S = optgrid_dke_jd(waves,rho_S,w_mask,dkedisplay.display_mode);
+[rho_S,dkeparam.pnmax_S] = optgrid_dke_jd(waves,rho_S,dkeparam.pnmax_S,equil,w_mask,dkedisplay.display_mode);
 %
 % 3-D relativistic bounce averaged quasilinear kinetic calculations (LUKE)
 %

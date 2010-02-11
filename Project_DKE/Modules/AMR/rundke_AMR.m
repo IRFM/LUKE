@@ -63,7 +63,7 @@ dp_cyl = 0.1;% precision of plots in cyclindrical momentum geometry
 id_dkepath = 'LOCAL';%For all paths used by DKE solver
 path_dkepath = '/home/luke/LUKE/Project_DKE/Database/PATH_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_dkeparam = 'EC_RT';%For DKE code parameters
+id_dkeparam = 'EBW_RT_PNNEG';%For DKE code parameters
 path_dkeparam = '/home/luke/LUKE/Project_DKE/Database/DKEPARAM_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkedisplay = 'NO_DISPLAY';%For output code display

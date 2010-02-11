@@ -34,3 +34,7 @@ end
 if ~isfield(dkeparam,'mfactor'),
     dkeparam.mfactor = 10;
 end
+% 
+if dkeparam.pnmax_S < 0,
+	dkeparam.pnmax_S = -dkeparam.pnmax_S;
+end

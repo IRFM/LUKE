@@ -1,4 +1,4 @@
-function rho_S = optgrid_dke_jd(waves,rho_S,w_mask,display_mode)
+function [rho_S,pnmax_S] = optgrid_dke_jd(waves,rho_S,pnmax_S,equil,w_mask,display_mode)
 %
 % This function generates a non-uniform radial grid of nr points based on
 % the linear damping of waves such that there are more points in regions of
@@ -6,11 +6,11 @@ function rho_S = optgrid_dke_jd(waves,rho_S,w_mask,display_mode)
 %
 % by J. Decker (joan.decker@cea.fr) (CEA/DSM/IRFM) and Y. Peysson (yves.peysson@cea.fr) (CEA/DSM/IRFM) 
 %
-if nargin < 4,
+if nargin < 6,
     display_mode = 0;
 end
 %
-if nargin < 3 || any(isnan(w_mask)),
+if nargin < 5 || any(isnan(w_mask)),
     w_mask = 1:length(waves);
 end
 %
@@ -48,6 +48,24 @@ Ptot = sum(dP);
 if Ptot == 0,
     dP0 = 1;
 else
+	%
+	if pnmax_S < 0,
+		%
+		pnmax_S = -pnmax_S;
+		%
+		rho_dep = (rho_dep_S(1:end-1) + rho_dep_S(2:end))/2;
+		irmax = find(dP == max(dP));
+		rhoabs = rho_dep(irmax(1));
+		%
+		prho = equil.ptx(:,1)/equil.ptx(end,1);
+		pTe = equil.pTe;
+		%
+		te0 = max(pTe);
+		teabs = interp1(prho,pTe,rhoabs);
+		%
+		pnmax_S = max([pnmax_S*sqrt(teabs/te0),5]);% 5 is minimum to avoid losses in maxwellian
+	end
+	%
     dP0 = Ptot/finefac/nr_dep;
 end
 %
