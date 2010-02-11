@@ -43,6 +43,7 @@ beta_inv = asin(sin(theta)*cos(phi));
 ybeta_L = pi/2 + beta_inv;
 %
 launch.id = id;
+launch.type = 'EC';
 launch.yR_L = yR_L;
 launch.yZ_L = yZ_L;
 launch.yphi_L = yphi_L;
