@@ -59,6 +59,7 @@ if i_opt == 0,% use data from external database
         end
         %
         launch = imake_launch_angles_TCV_jd(angles);
+		launch.type = type;
         %
     elseif strcmp(basestr,'TS'),
         %
@@ -125,8 +126,8 @@ elseif i_opt == 1,% use data from an existing file
     %
     w_opt = input_dke_yp('Code used to generate data : 1 (TORAY), 2 (ART), 3 (AMR)',1,1:3,'',[1,1]);
     %
-	launch = [];
-	%
+    launch = [];
+    %
 elseif i_opt == 2,% build the wave data locally
     %
     d_opt = input_dke_yp(['Initial conditions :',...
@@ -169,14 +170,22 @@ elseif i_opt == 2,% build the wave data locally
             % 
             if strcmp(basestr,'TCV'),% TCV launching data
                 %
-                angles = imake_angles_TCV_jd;
-                %
-                if isempty(angles),
-                    disp('-----> launching data not determined');
-                    return
-                end
-                %
-                launch = imake_launch_angles_TCV_jd(angles);
+				a_opt = input_dke_yp('Do you want to specify : launcher angles (0) or initial ray parameters (1)',0,0:1,'',[1,1]);
+				%
+				if a_opt == 0,
+					angles = imake_angles_TCV_jd;
+					%
+					if isempty(angles),
+						disp('-----> launching data not determined');
+						return
+					end
+					%
+					launch = imake_launch_angles_TCV_jd(angles);
+					launch.type = type;
+					%
+				else
+					launch = imake_launch_EC_jd;
+				end
                 %
             elseif strcmp(basestr,'TS')
                 %
@@ -426,6 +435,8 @@ if w_opt == 0; % C3PO Calculation
     wave.info.type = 'RT';
     wave.info.RT = 'C3PO';
     wave.info.ftype = ftype;
+    %
+    wave.display = wavedisplay;
     %
     s_opt = input_dke_yp('Do you want to generate an equivalent make_wave script? [y/n]','n',{'y','n'},'',[1,1]);
     %
