@@ -59,6 +59,10 @@ if nargin == 0
     error('no argument')
 end
 %
+if imag(siz) == 0,
+	siz = siz+i*siz;
+end
+%
 hold on
 if logx == 1 & logy ~= 1
     set(ax,'xscale','log');
@@ -110,26 +114,26 @@ end
 %
 if ~isempty(xlab),
     xl = xlabel(xlab);
-    set(xl,'fontsize',siz);
+    set(xl,'fontsize',real(siz));
     set(xl,'fontname','times new roman');
 end
 if ~isempty(ylab),
     yl = ylabel(ylab);
-    set(yl,'fontsize',siz);
+    set(yl,'fontsize',real(siz));
     set(yl,'fontname','times new roman');
 end
 if ~isempty(tit),
     tl = title(tit);
-    set(tl,'fontsize',siz);
+    set(tl,'fontsize',real(siz));
     set(tl,'fontname','times new roman');
 end
 if iscell(leg) | ~isnan(leg)
     lg = legend(leg);
-    set(lg,'fontsize',siz);
+    set(lg,'fontsize',imag(siz));
     set(lg,'fontname','times new roman');
 end
 %
-set(gca,'fontsize',siz);
+set(gca,'fontsize',real(siz));
 set(gca,'fontname','times new roman');
 %
 ax = gca;
