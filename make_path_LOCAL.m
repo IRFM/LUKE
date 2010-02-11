@@ -302,7 +302,7 @@ dkepath.pleione = pleione;
 %
 % paths for runs on IRFM merope machine
 %
-dkepath.hostname.pleione = 'merope';
+dkepath.hostname.merope = 'merope';
 %
 merope.luke_root = [pwd,'/'];
 merope.local_root = '/home/sccp/gsem/decker/pleione/';
