@@ -839,6 +839,12 @@ while isel >= 0,
             [equil,paths.equil,fileids.equil,newstruct] = ...
                 imake_struct_jd(equil,'equil',paths.equil,fileids.equil,signs,basestr,smakecmd,external,status.equil,'EQUIL',workdir,'',opt_gui,0,0,1,0);
             %
+	    if isempty(equil)
+	    	signs = [];
+        elseif isfield(equil,'signs'),
+	    	signs = equil.signs;
+	    end
+	    %
             % structure interdependences
             %
             if newstruct == 1,
@@ -1101,7 +1107,7 @@ while isel >= 0,
                 continue
             end
             %
-            irunhxr_jd(workdir,basestr,'',id_simul,equil,dkeparam,dkedisplay,output);
+            irunhxr_jd(opt_gui,workdir,basestr,'',id_simul,equil,dkeparam,dkedisplay,output);
             %
         elseif isel == 16,
             %
