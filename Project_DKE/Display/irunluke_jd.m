@@ -406,12 +406,24 @@ while isel >= 0,
                         paths.dkeparam = '';
                     end
 					%
+                    if ~isfield(data,'path_equil'),
+                        data.path_equil = '';
+                    end
+                    %
                     if isfield(data,'id_equil') && ~isempty(data.id_equil) && exist([data.path_equil,'EQUIL_',data.id_equil,'.mat'],'file'),
                         fileids.equil = data.id_equil;
                         paths.equil = data.path_equil;
                     else
                         fileids.equil = '';
                         paths.equil = '';
+                    end
+                    %
+                    if ~isfield(data,'waves'),
+                        if isfield(data.dke_out,'waves'),
+                            data.waves = data.dke_out.waves;
+                        else
+                            data.waves = '';
+                        end
                     end
                     %
                     for iw = 1:length(data.waves),
@@ -423,13 +435,21 @@ while isel >= 0,
                             paths.waves{iw} = '';
                         end
                     end
-					%
+                    %
+                    if ~isfield(data,'ohm'),
+                        data.ohm = '';
+                    end
+                    %
                     if isfield(data,'id_ohm') && ~isempty(data.id_ohm) && exist([data.path_ohm,'OHM_',data.id_ohm,'.mat'],'file'),
                         fileids.ohm = data.id_ohm;
                         paths.ohm = data.path_ohm;
                     else
                         fileids.ohm = '';
                         paths.ohm = '';
+                    end
+                    %
+                    if ~isfield(data,'transpfaste'),
+                        data.transpfaste = '';
                     end
 					%
                     if isfield(data,'id_transpfaste') && ~isempty(data.id_transpfaste) && exist([data.path_transpfaste,'TRANSP_',data.id_transpfaste,'.mat'],'file'),
@@ -438,6 +458,10 @@ while isel >= 0,
                     else
                         fileids.transpfaste = '';
                         paths.transpfaste = '';
+                    end
+                    %
+                    if ~isfield(data,'ripple'),
+                        data.ripple = '';
                     end
 					%
                     if isfield(data,'id_ripple') && ~isempty(data.id_ripple) && exist([data.path_ripple,'RIPPLE_',data.id_ripple,'.mat'],'file'),
