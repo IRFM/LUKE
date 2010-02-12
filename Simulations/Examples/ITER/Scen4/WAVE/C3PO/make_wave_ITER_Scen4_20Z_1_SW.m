@@ -1,11 +1,10 @@
-% script make_wave_ITER_Scen4
+function make_wave_ITER_Scen4
 %
 % runs C3PO based on formatted ray launching parameters and builds the WAVE structure
 %
 % by 	J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 % and   Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
 %
-clear all
 close all
 clc
 %

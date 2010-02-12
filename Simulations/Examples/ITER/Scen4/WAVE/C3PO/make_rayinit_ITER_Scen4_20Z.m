@@ -1,4 +1,4 @@
-% script make_rayinit_ITER_Scen4
+function make_rayinit_ITER_Scen4
 %
 % Creates rayinit structure 
 %
@@ -17,7 +17,6 @@
 % to the toroidal magnetic field must be specified, as well as if the RF
 % wave is driving co or counter current.
 %
-clear all
 close all
 clc
 %
