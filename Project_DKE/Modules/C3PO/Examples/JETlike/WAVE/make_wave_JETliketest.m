@@ -23,13 +23,6 @@ id_equil = 'JETliketest';%For plasma equilibrium
 path_equil = '../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
 %
-% Density and magnetic field fluctuation
-%
-id_fluct = 'dn0p3';%For density and magnetic field fluctuation
-path_fluct = '../FLUCT/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-id_fluct = '';%For density and magnetic field fluctuation
-path_fluct = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
 % initial ray conditions
 %
 omega_rf = [3.7]*2*pi*1e9;
@@ -72,9 +65,9 @@ waveparam.opt_rf = NaN;
 %
 waveparam.dsmin = NaN;%minimum size for ray fragments
 %
-% -----------------------------------------------------------------------------------------------
+% -------------------------------------------------------------------------
 %
-% Global parameters for the vectorial magnetic equilibrium and the plasma fluctuations (if calculated)
+% Global parameters for the vectorial magnetic equilibrium
 %
 fitparam.method = 'pchip';%nearest,spline,pchip,cubic
 fitparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
@@ -84,26 +77,25 @@ fitparam.opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or ove
 % Global parameters for the ray-tracing
 %
 rayparam.testmode = 0;
-rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
+rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 2000;
+rayparam.tfinal = 10000;
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 2000;
+rayparam.kmax = 60000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
 rayparam.nperp = 1000;%number of points in pperp integration for damping calculations
 rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
-rayparam.kextra = 10;%number of calculations performed beyond the full linear absorption (for quasilinear calculations which may require more points)
 %
 % -------------------------------------------------------------------------
 %
 % Load structures
 %
-[equil,dkepath,fluct] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath,'fluct',id_fluct,path_fluct);
+[equil,dkepath] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath);
 %
 % =========================================================================
 %
@@ -161,12 +153,11 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % -------------------------------------------------------------------------
 %
-wave_numeric = main_C3PO_jd([id_wave,'_numeric'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,fluct,0);clear mex;clear functions
-return
+wave_numeric = main_C3PO_jd([id_wave,'_numeric'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
-wave_analytic = main_C3PO_jd([id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,fluct,flag_analytic);
+wave_analytic = main_C3PO_jd([id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,flag_analytic);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
