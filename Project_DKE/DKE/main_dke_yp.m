@@ -78,7 +78,9 @@ if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf),%initialization 
     nit_rf = dkeparam_out.nit_rf;
     if nit_rf > 1 & display.display_mode >= 1,
         Fig_QLIter = figure('Name','Quasilinear iteration');
-        Fig_Pray = figure('Name','Power absorption along rays');
+        if display.display_mode >= 2,
+            Fig_Pray = figure('Name','Power absorption along rays');
+        end
     end
 else
     nit_rf = 1;
@@ -154,14 +156,16 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
                 grid  on
                 drawnow;                
 %             
-                for iray = 1:length(zS),
-                    figure(Fig_Pray + iray - 1);clf
-                    [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod_old{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','--','none','r',2);
-                    [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','-','none','r',2);
-                    legend(['Iteration #',int2str(it_rf-1)],['Iteration #',int2str(it_rf)])
-                    title(['Ray #',num2str(iray),', residue: ',num2str(max([yresidue_rf_mod(iray,it_rf);yresidue_rf_out(iray,it_rf)]))])
-                    grid on
-                    drawnow;
+                if display.display_mode >= 2,
+                    for iray = 1:length(zS),
+                        figure(Fig_Pray + iray - 1);clf
+                        [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod_old{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','--','none','r',2);
+                        [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','-','none','r',2);
+                        legend(['Iteration #',int2str(it_rf-1)],['Iteration #',int2str(it_rf)])
+                        title(['Ray #',num2str(iray),', residue: ',num2str(max([yresidue_rf_mod(iray,it_rf);yresidue_rf_out(iray,it_rf)]))])
+                        grid on
+                        drawnow;
+                    end
                 end
             end
 %
