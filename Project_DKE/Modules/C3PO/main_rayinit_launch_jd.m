@@ -48,6 +48,15 @@ end
 if isfield(launch,'n0') == 0,
     launch.n0 = NaN;
 end
+if isfield(launch,'dNpar0') == 0,
+    launch.dNpar0 = NaN;
+end
+if isfield(launch,'ns') == 0,
+    launch.ns = 1000;
+end
+if isfield(launch,'method') == 0,
+    launch.method = 'cubic';
+end
 %
 if launch.type == 'EC',
     %
