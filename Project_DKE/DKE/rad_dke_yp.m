@@ -1,5 +1,4 @@
 function [ZXXD_a,ZXXF_a] = rad_dke_yp(dkeparam,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste)
-%LUKE - Calculation of the anomalous radial fast electron transport matrix coefficients for arbitrary magnetic plasma equilibrium
 %
 % Calculation of the anomalous radial fast electron transport matrix coefficients for arbitrary magnetic plasma equilibrium 
 %
@@ -44,7 +43,8 @@ ZXXD_a.rm_lp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
 ZXXF_a.r_lm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%radial dynamics only
 ZXXF_a.r_lp = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);%radial dynamics only
 %
-% Terms used by the old scheme only for momentum cross-derivatives (M. Shoucri and I. Shkarofsky,Comp. Phys. Comm., 82 (1994) 287)
+% Terms used by the old scheme only for momentum cross-derivatives (M.
+% Shoucri and I. Shkarofsky,Comp. Phys. Comm., 82 (1994) 287)
 %
 ZXXD_a.pp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
 ZXXD_a.pm_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
