@@ -148,8 +148,6 @@ radialDKE.xrho_S_dke = psi2rho_jd(equil,xpsin_S_dke);
 radialDKE.xpsin_f = xpsin_f;
 radialDKE.xpsin_f_dke = xpsin_f_dke;
 radialDKE.xdpsin_f_dke = xdpsin_f_dke;
-radialDKE.xdpsinmm_f_dke = [0,xdpsin_f_dke(1:nr_f-1)];
-radialDKE.xdpsinpp_f_dke = [xdpsin_f_dke(2:nr_f),0];
 radialDKE.xpsinm_S_dke = xpsinm_S_dke;
 radialDKE.xdpsinm_S_dke = xdpsinm_S_dke;
 radialDKE.xpsinp_S_dke = xpsinp_S_dke;
@@ -157,4 +155,7 @@ radialDKE.xdpsinp_S_dke = xdpsinp_S_dke;
 radialDKE.xpsin_S_dke = xpsin_S_dke;
 radialDKE.r_dke = r_dke;
 radialDKE.ir_display_out = ir_display_out;
-%
+
+
+
+
