@@ -5,7 +5,7 @@ close all
 si = 1;
 opt_rho = 1;
 %
-ids_equil = {'ITER_Scen4_IAEA06_mod'};% if same for all runs, just give one 
+ids_equil = {'ITER_Scen4_IAEA06'};% if same for all runs, just give one 
 %
 select = [1,2,3];
 %ids_wave = {'19Z','20Z','21Z'};
