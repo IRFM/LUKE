@@ -1,4 +1,4 @@
-function [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay,fluct_fit)
+function [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay)
 %C3PO - Set ray initial characteristics and launches the C3PO ray-tracing code (loop function for distributed computing environment)
 %
 %This function calculates the ray initial characteristics and launches the C3PO ray-tracing code
@@ -11,9 +11,9 @@ function [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit
     %
     if C3POdisplay.ray,info_dke_yp(2,['Initial conditions of ray #',int2str(iray),' are calculated']);end
     %
-    if isreal(y0(4)) && abs(y0(4)) > 0,
+    if isreal(y0(4)),
         %
-        [tout, yout, yproc] = raytracing_yp(rayparam,equil_fit,y0,fluct_fit,flag);
+        [tout, yout, yproc] = raytracing_yp(rayparam,equil_fit,y0,flag);
         %
         if C3POdisplay.ray,info_dke_yp(2,['Trajectory of ray #',int2str(iray),' is calculated']);end
         %
