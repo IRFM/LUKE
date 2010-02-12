@@ -75,6 +75,13 @@ if length(varargin) == 0
        natrac = evalin('caller','racine');
      catch
      end  
+     if isempty(natfunc)
+       try
+         natfunc = evalin('caller','param.fonction');
+         natrac = evalin('caller','racine');
+       catch
+       end 
+     end
     end
   
     if isempty(natfunc)
@@ -255,7 +262,7 @@ if nargin == 14,% LH case
       	nofce = 1;
         plh = abs(cons.lh_cons);
         nlh = angle(cons.lh_cons);
-      	if sum(plh(nlh>1)) < 2e5,% test sur la puissance. Calcul si P > 200 kW seulement
+      	if sum(plh(nlh>1)) < 1e5,% test sur la puissance. Calcul si P > 200 kW seulement
         	disp('no LH')
 			nolh = 0;
         elseif any(nlh(plh>2e5) < 1)
@@ -319,8 +326,8 @@ else
   machine = varargin{1}.conf;
 end
 shot    = 0;
-sortie = proto;
 sortie.err = 0;
+sortie = proto;
 % on definit le flag d'erreur a 0 par defaut (pas d'erreur)
 %
 %--------------------------- LIEN AVEC C3PO + LUKE ------------------
@@ -406,13 +413,23 @@ if ~isempty(strfind(par.conf,' (TS)'))
     par.conf = par.conf(1:(strfind(par.conf,' (TS)')-1));
     
 end
+if isfield(par,'aloha_mode')
+  aloha.mode    = par.aloha_mode;
+  aloha.param   = par.aloha_param;
+  aloha.file    = par.aloha_file;
+  aloha.scen    = par.aloha_scen;
+  [chemin,void] = fileparts(gene.file);
+  aloha.path    = chemin;
+else
+  aloha.mode = zeros(size(nlh));;
+end
 switch par.luke_mode
   %    
   case 'mixte'
     %
     % Mixed LH and EC waves case
     %
-    [launchs_lh] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons.lh_cons,cons_spec,lob,freqlh);%for the LH waves
+    [launchs_lh] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons.lh_cons,cons_spec,lob,freqlh,aloha);%for the LH waves
     [launchs_ec] = make_wavelaunchs_cronos_ec(equil,par.ecrh_param,cons.ecrh_cons);%for the EC waves
     %    
     launchs = [launchs_lh,launchs_ec];
@@ -432,9 +449,9 @@ switch par.luke_mode
     end
     %
     if strcmp(par.conf,'Ohmic')
-      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,'MIXTE',cons,cons_spec,lob,freqlh);%for the LH waves
+      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,'MIXTE',cons,cons_spec,lob,freqlh,aloha);%for the LH waves
     else
-      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons,cons_spec,lob,freqlh);%for the LH waves
+      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons,cons_spec,lob,freqlh,aloha);%for the LH waves
     end
     par.launchtype = 'LH';
     %    
@@ -469,6 +486,12 @@ launchs = launchs(mask);
 % --------- Load first all parameters that are in files ------------
 %
 dkeparam         = make_dkeparam_cronos(par.launchtype);
+if ~isfield(par,'Dql')
+
+  disp('old simulation : par.Dql is missing. It is put to 10')
+  par.Dql = 10;
+
+end
 dkeparam.Dparparmax = par.Dql;
 %
 if strcmp(par.eco,'Yes')
@@ -761,7 +784,7 @@ if par.depip == 0
     normip = equi.ip / (I_LH_c*1e6+iboot);
   
   end
-  normip = min(0.9,normip);
+  normip = min(0.95,normip);
   disp(['case TS, normip=',num2str(normip,3)])
   
 end

@@ -1,4 +1,4 @@
-function [launchs] = make_wavelaunchs_cronos_lh(equil,signe,config,cons,cons_spec,lob,freqlh)
+function [launchs] = make_wavelaunchs_cronos_lh(equil,signe,config,cons,cons_spec,lob,freqlh,aloha)
 %
 if nargin < 7,
     freqlh = NaN;
@@ -226,7 +226,7 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
     % 
     launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
     launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+    launchs{1}.i_ref = length(equil.psi_apRp) - 2;%Initial radial position index [1,1]
     launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
     launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
     %
@@ -250,7 +250,7 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
         % 
         launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
         launchs{2}.phi0 = [0];%toroidal angle position [1,1]
-        launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+        launchs{2}.i_ref = length(equil.psi_apRp) - 2;%Initial radial position index [1,1]
         launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
         launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
     end
@@ -503,7 +503,7 @@ elseif strcmp(config,'EAST');%For the Lower Hybrid wave simulations
    launchs{1}.bdNpar0 = [0.5]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
    launchs{1}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS and FTU and EAST
 %
-   launchs{1}.rZ0 = [0];%[-0.35,0,0.35];%vertical launching positions (m) [1,m_pol]
+   launchs{1}.rZ0 = [-0.05 0 0.05];%[-0.35,0,0.35];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
@@ -514,9 +514,37 @@ else
    error('The launch configuration name does not exists')  	
 end
 
-
-
-
+if any(aloha.mode==1) & (strcmp(config,'CIEL')|strcmp(config,'TS')|strcmp(config,'ITER'))
+    disp('use ALOHA file for the power spectrum, TS case')
+    nblh   = length(aloha.mode);
+    %
+    for i=1:nblh
+      if aloha.mode(i) == 1
+        filename = deblank(char(aloha.file(i)));
+        filename(isspace(filename)) = [];
+        load(fullfile(aloha.path,filename));
+        scheme  = scenario(aloha.scen);
+        results = scheme(i).results;
+        redfac = abs(cons(i))/(sum(results.dP_nz)*results.dnz);
+        [bNpar0,bdNpar0,bPlhtot] = proc_aloha_spec_jd(results.nz,NaN,results.dP_nz,redfac,aloha.param(i));
+        %
+        if strcmp(lob,'No');
+            mask = bNpar0 > 0;
+            bNpar0 = bNpar0(mask);
+            bdNpar0 = bdNpar0(mask);
+            bPlhtot = bPlhtot(mask);
+        end
+        %
+        bNpar0 = -signe.ip*signe.b0*bNpar0;%sign in aloha is positive
+        %
+        launchs{i}.bdNpar0    = bdNpar0;
+        launchs{i}.bNpar0     = bNpar0;
+        launchs{i}.bPlhtot    = bPlhtot;
+        launchs{i}.aloha  = aloha;
+        launchs{i}.aloha.file = fullfile(aloha.path,char(aloha.file(i)));
+      end
+    end
+end
 
 
 

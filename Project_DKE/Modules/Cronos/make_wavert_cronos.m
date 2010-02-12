@@ -38,7 +38,7 @@ if strcmp(config,'LH');%For the Lower Hybrid wave simulations
     rayparam.nperp = 1000;%number of points in pperp integration for damping calculations
     rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
     rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
-    rayparam.kextra = 1000;%number of extra points after linear absorption
+    rayparam.kextra = 10000;%number of extra points after linear absorption
     rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
     rayparam.kmax = 100000;
     rayparam.ncyclharm = 50;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
