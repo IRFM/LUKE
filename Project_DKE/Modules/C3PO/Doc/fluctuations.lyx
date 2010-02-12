@@ -1,4 +1,4 @@
-#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -1258,15 +1258,19 @@ reference "ws3"
 The wave kinetic equation
 \end_layout
 
+\begin_layout Subsection
+Maxwell equation
+\end_layout
+
 \begin_layout Standard
 The description of the rf wave scattering by fluctuations starts from the
- Maxwell equations
+ Maxwell equations in the plasma
 \begin_inset Formula \begin{equation}
 \begin{array}{l}
-\mathbf{\nabla}\cdot\mathbf{E}=\dfrac{\rho}{\varepsilon_{0}}\\
+\mathbf{\nabla}\cdot\mathbf{D}=\rho\\
 \mathbf{\nabla}\cdot\mathbf{B}=0\\
 \mathbf{\nabla}\times\mathbf{E}=-\dfrac{\partial\mathbf{B}}{\partial t}\\
-\mathbf{\nabla}\times\mathbf{B}=\mu_{0}\mathbf{J}+\varepsilon_{0}\mu_{0}\dfrac{\partial\mathbf{E}}{\partial t}\end{array}\label{maxwell}\end{equation}
+\mathbf{\nabla}\times\mathbf{H}=\mathbf{J}+\dfrac{\partial\mathbf{D}}{\partial t}\end{array}\label{maxwell}\end{equation}
 
 \end_inset
 
@@ -1276,60 +1280,239 @@ together with the continuity equation
 
 \end_inset
 
-From (),
-\begin_inset Formula \[
-\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}=-\mu_{0}\frac{\partial\mathbf{J}}{\partial t}-\varepsilon_{0}\mu_{0}\dfrac{\partial^{2}\mathbf{E}}{\partial t^{2}}\]
+where the magnetizing field 
+\begin_inset Formula $\mathbf{B}$
+\end_inset
+
+ is related to the magnetizing field 
+\begin_inset Formula $\mathbf{H}$
+\end_inset
+
+ by the relation 
+\begin_inset Formula \begin{equation}
+\mathbf{B}=\overline{\overline{\mu}}*\mathbf{H}=\mu_{0}\mathbf{H}+\mathbf{M}\mathbf{\left(H\right)}=\mu_{0}\iiint\left[\mathbb{I}+\mathbb{X}_{m}\left(\mathbf{x},t,\mathbf{x}',t',\mathbf{H}\right)\right]d^{3}\mathbf{x}'dt'\mathbf{H}\label{eq:H}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\overline{\overline{\mu}}$
+\end_inset
+
+ is the permeability tensor and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\mathbb{X}_{m}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ is the magnetic susceptibility.
+ The magnetization vector 
+\begin_inset Formula $\mathbf{M}\left(\mathbf{H}\right)$
+\end_inset
+
+ defiend as 
+\begin_inset Formula \begin{equation}
+\mathbf{M}\mathbf{\left(H\right)}\equiv\frac{\mathbf{B}}{\mu_{0}}-\mathbf{H}=\mu_{0}\iiint\left[\mathbb{X}_{m}\left(\mathbf{x},t,\mathbf{x}',t',\mathbf{H}\right)\right]d^{3}\mathbf{x}'dt'\mathbf{H}\equiv\mu_{0}\mathbb{X}_{m}*\mathbf{H}\label{eq:M}\end{equation}
+
+\end_inset
+
+is almost negligible for hot and weakly dense plasmas since
+\begin_inset Formula $\mathbb{X}_{m}\simeq0,$
+\end_inset
+
+ and consequently 
+\begin_inset Formula $\overline{\overline{\mu}}\simeq\mu_{0}\mathbb{I}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+In (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "maxwell"
+
+\end_inset
+
+), the electrical displacement vector 
+\begin_inset Formula $\mathbf{D}$
+\end_inset
+
+ is defined in a similar way,
+\begin_inset Formula \begin{equation}
+\mathbf{D}=\mathbb{K}\left(\mathbf{E}\right)*\mathbf{E}=\varepsilon_{0}\iiint\left[\mathbb{I}+\mathbb{X}\left(\mathbf{x},t,\mathbf{x}',t',\mathbf{E}\right)\right]d^{3}\mathbf{x}'dt'\mathbf{E}\label{eq:D}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathbb{K}\left(\mathbf{E}\right)$
+\end_inset
+
+ is the electrical permittivity tensor and 
+\begin_inset Formula $\mathbb{X}$
+\end_inset
+
+ the plasma electrical susceptibility tensor.
+ The polarization vector 
+\begin_inset Formula $\mathbf{P}$
+\end_inset
+
+ may be defined as
+\begin_inset Formula \begin{equation}
+\mathbf{P}\left(\mathbf{E}\right)\equiv\mathbf{D}-\varepsilon_{0}\mathbf{E}\label{eq:P}\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula \begin{align}
+\mathbf{P}\left(\mathbf{E}\right) & =\varepsilon_{0}\iiint\mathbb{X}\left(\mathbf{x},t,\mathbf{x}',t',\mathbf{E}\right)d^{3}\mathbf{x}'dt'\mathbf{E}\nonumber \\
+ & \equiv\mathbb{X}*\mathbf{E}\label{eq:Pol}\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In stationnary and homogeneous plasmas, the polarization becomes invariant
+ by translation in space and time, and 
+\begin_inset Formula $\mathbb{X}$
+\end_inset
+
+ is only a function of the relative distance in space and time, such that
+ the polarization may be simplified
+\begin_inset Formula \begin{align}
+\mathbf{P}\left(\mathbf{E}\right) & =\varepsilon_{0}\iiint\mathbb{X}\left(\mathbf{x}'-\mathbf{x},t'-t,\mathbf{E}\right)d^{3}\mathbf{x}'dt'\mathbf{E}\label{eq:Polhomogeneousstationnary}\end{align}
+
+\end_inset
+
+and in the linear limit 
+\begin_inset Formula $\mathbb{X}$
+\end_inset
+
+ may be considered as independent of 
+\begin_inset Formula $\mathbf{E}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+In (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "maxwell"
+
+\end_inset
+
+), 
+\begin_inset Formula $\mathbf{J}$
+\end_inset
+
+ refers to currents which are not attributable to the linear response of
+ the medium to 
+\begin_inset Formula $\mathbf{E}$
+\end_inset
+
+.
+ It is an external source of current, which could for instance be the result
+ of the fluctuations in the medium.
+ The displacement current 
+\begin_inset Formula \begin{equation}
+\frac{\partial\mathbf{D}}{\partial t}=\varepsilon_{0}\frac{\partial\mathbf{E}}{\partial t}+\frac{\partial\mathbf{P}}{\partial t}\label{eq:displacementJ}\end{equation}
+
+\end_inset
+
+is the sum of two terms, the first one arising from the vacuum contribution
+ and the other from the response of the medium.
+ Therefore, 
+\begin_inset Formula \begin{align}
+\mathbf{J}_{r} & \equiv\frac{\partial\mathbf{P}}{\partial t}\nonumber \\
+ & =\varepsilon_{0}\iiint\frac{\partial\mathbb{X}}{\partial t}\left(\mathbf{x},t,\mathbf{x}',t',\mathbf{E}\right)d^{3}\mathbf{x}'dt'\mathbf{E}\nonumber \\
+ & =\iiint\mathbb{S}\left(\mathbf{x},t,\mathbf{x}',t',\mathbf{E}\right)d^{3}\mathbf{x}'dt'\mathbf{E}\nonumber \\
+ & =\mathbb{S}\left(\mathbf{E}\right)*\mathbf{E}\label{eq:Jlin}\end{align}
+
+\end_inset
+
+where the non-local and non-linear plasma electrical conductivity tensor
+ 
+\begin_inset Formula \begin{equation}
+\mathbb{S}\equiv\varepsilon_{0}\frac{\partial\mathbb{X}}{\partial t}\label{eq:conductivity}\end{equation}
+
+\end_inset
+
+ has been introduced.
+ 
+\end_layout
+
+\begin_layout Standard
+By 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+eliminating the magnetic field 
+\begin_inset Formula $\mathbf{B}$
+\end_inset
+
+ between Maxwell-Faraday and Maxwell-Ampère equations, 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Formula \begin{align}
+\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E} & =-\mu_{0}\frac{\partial\mathbf{J}}{\partial t}-\varepsilon_{0}\mu_{0}\dfrac{\partial^{2}\mathbf{E}}{\partial t^{2}}-\mu_{0}\dfrac{\partial^{2}\mathbf{P}}{\partial t^{2}}\label{eq:maxwellE}\end{align}
+
+\end_inset
+
+or
+\begin_inset Formula \begin{align}
+\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E} & +\frac{1}{c^{2}}\dfrac{\partial^{2}}{\partial t^{2}}\left[\left(\mathbb{I}+\mathbb{X}\right)*\mathbf{E}\right]=-\mu_{0}\frac{\partial\mathbf{J}}{\partial t}\label{eq:MaxwellE1}\end{align}
+
+\end_inset
+
+or
+\begin_inset Formula \begin{align}
+\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E} & +\frac{1}{c^{2}}\dfrac{\partial^{2}}{\partial t^{2}}\left[\mathbb{K}\left(\mathbf{E}\right)*\mathbf{E}\right]=-\mu_{0}\frac{\partial\mathbf{J}}{\partial t}\label{eq:MaxwellE2}\end{align}
 
 \end_inset
 
 and using 
-\begin_inset Formula $\mathbf{J}=\sigma\cdot\mathbf{E}$
+\begin_inset Formula $\varepsilon_{0}\mu_{0}c^{2}=1$
 \end_inset
 
-, 
-\begin_inset Formula \[
-\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}=-\mu_{0}\sigma\frac{\partial\mathbf{E}}{\partial t}-\varepsilon_{0}\mu_{0}\dfrac{\partial^{2}\mathbf{E}}{\partial t^{2}}\]
-
-\end_inset
-
-
+.
+ 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}=-\mu_{0}\sigma\frac{\partial\mathbf{E}}{\partial t}-\varepsilon_{0}\mu_{0}\dfrac{\partial^{2}\mathbf{E}}{\partial t^{2}}\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $\partial/\partial t\rightarrow-i\omega$
-\end_inset
-
- and 
-\begin_inset Formula $\partial^{2}/\partial t^{2}\rightarrow-\omega^{2}$
-\end_inset
-
-, 
-\begin_inset Formula \[
-\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}=i\omega\mu_{0}\sigma\mathbf{E}+\frac{\omega^{2}}{c^{2}}\mathbf{E}\]
-
-\end_inset
-
-
-\begin_inset Formula \[
-\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}-\frac{\omega^{2}}{c^{2}}\mathbf{E}=\frac{\omega^{2}}{c^{2}}i\frac{\sigma}{\varepsilon_{0}\omega}\mathbf{E}\]
-
-\end_inset
-
-
-\begin_inset Formula \[
-\mathbf{\nabla}\times\mathbf{\nabla}\times\mathbf{E}-\frac{\omega^{2}}{c^{2}}\mathbf{E}=\frac{\omega^{2}}{c^{2}}\left(1-\kappa\right)i\frac{\sigma}{\varepsilon_{0}\omega}\mathbf{E}\]
-
-\end_inset
-
 
 \end_layout
 
