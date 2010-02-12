@@ -90,6 +90,7 @@ end
 %
 residue_rf = [];
 conv = 0;
+XXfin = XXfinit;
 %
 for it_rf=1:nit_rf, % convergence in the ray-tracing mode
     if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf),%in the case of RF waves only
@@ -115,7 +116,7 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
     %
     [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd(dkeparam_out,ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod/redfac,gridindex_rf);
     [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_a,ZXXF_a);%Build the 3D DKE matrix
-    [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0,curr0,residu_f] = solver_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit);% Solve the DKE equation
+    [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0,curr0,residu_f] = solver_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfin);% Solve the DKE equation
     %
     xyP0_2piRp_mod_old = xyP0_2piRp_mod;
     %
@@ -141,6 +142,14 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
             zP_0_2piRp_mod_old = raypath_jd(xyP0_2piRp_mod_old,xyprop_dke,yb,radialDKE.r_dke);
             zP_0_2piRp_mod = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
             zP_0_2piRp_out = raypath_jd(xyP0_2piRp_out,xyprop_dke,yb,radialDKE.r_dke);
+            %
+            P_0_2piRp_in = sum(yP0_2piRp);
+            P_0_2piRp_out = 0;
+            for iray = 1:length(yb),
+                 P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp_mod_old{iray}(end);
+            end
+            %
+            abs_frac = (P_0_2piRp_in - P_0_2piRp_out)/P_0_2piRp_in;
             %
             for iray = 1:length(yb),
                 yresidue_rf_mod(iray,it_rf) = max(abs(zP_0_2piRp_mod{iray} - zP_0_2piRp_mod_old{iray})./zP_0_2piRp_mod{iray}(1));
@@ -176,13 +185,6 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
             end
 %  
             if (residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1 & conv == 1) | it_rf == nit_rf,
-                P_0_2piRp_in = sum(yP0_2piRp);
-                P_0_2piRp_out = 0;
-                for iray = 1:length(yb),
-                     P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp_mod_old{iray}(end);
-                end
-                %
-                abs_frac = (P_0_2piRp_in - P_0_2piRp_out)/P_0_2piRp_in;
                 %
                 dke_warnings = '';               
                 if isfield(dkeparam_out,'abs_lim') 
@@ -206,7 +208,11 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
             end
 			if (residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1 & conv == 0),
 				conv = 1;
-			end				
+            end		
+            if isfield(dkeparam_out,'finsert') && dkeparam_out.finsert == 1,
+                XXfin = XXf0;
+                abs_frac_rf(it_rf) = abs_frac;
+            end
         end     
     end
 end
@@ -329,6 +335,10 @@ dke_out.xRR_fsav = xRR_fsav;
 dke_out.Zmripple = Zmripple;
 %
 dke_out.simul = simul;
+%
+if exist('abs_frac_rf','var'),
+    dke_out.abs_frac_rf = abs_frac_rf;
+end
 %
 if dkeparam_out.syn_mode == 1,
     dke_out.XXf0_bc = XXf0_bc;
