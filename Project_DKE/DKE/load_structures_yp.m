@@ -133,7 +133,7 @@ if exist('flag_path','var'),%Paths
         end
     end
     %
-    if isfield(dkepath,'hostname'),
+    if isfield(dkepath,'hostname') && isstruct(dkepath.hostname),
         %
         hostnames = fieldnames(dkepath.hostname);
         nhosts = length(hostnames);
