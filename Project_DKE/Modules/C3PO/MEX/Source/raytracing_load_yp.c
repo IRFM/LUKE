@@ -67,6 +67,9 @@ struct polynomial_piecewise_2D {
     mxChar  *orient_dbndrho;
 };
 
+
+
+
 struct rayprofiles {
     double *Te;
     double *ne;
@@ -107,57 +110,17 @@ struct equilparam {
     double *psia;
 };
 
-struct fluctparam {
-    double *ns0;
-    double *xreset0;
-    double *nkperproots;
-    double *betagridsize;
-    double *dtfac;
-};
 
-struct fluctspectrum {
-    double *dfcl;
-    double *fnkperpspec;
-    double *mffcl;
-    double *fbkperpspec;
-};
 
 typedef struct polynomial_piecewise_1D pp_1D_format;
 typedef struct polynomial_piecewise_2D pp_2D_format;
 typedef struct rayparam rayparam_format;
-typedef struct fluctparam fluctparam_format;
-typedef struct fluctspectrum fluctspectrum_format;
 typedef struct equilparam equilparam_format;
 typedef struct rayprofiles rayprofiles_format;
 
 
-fluctparam_format load_fluct_param(structure_name)
-mxArray *structure_name;
-{
-    fluctparam_format data;
-       
-    data.ns0 = mxGetData(mxGetField(structure_name, 0, "ns0"));
-    data.xreset0 = mxGetData(mxGetField(structure_name, 0, "xreset0"));
-    data.nkperproots = mxGetData(mxGetField(structure_name, 0, "nkperproots"));
-    data.betagridsize = mxGetData(mxGetField(structure_name, 0, "betagridsize"));
-    data.dtfac = mxGetData(mxGetField(structure_name, 0, "dtfac"));
-    
-    return(data);
-}
 
 
-fluctspectrum_format load_fluct_spectrum(structure_name)
-mxArray *structure_name;
-{
-    fluctspectrum_format data;
-   
-    data.dfcl = mxGetData(mxGetField(structure_name, 0, "dfcl"));
-    data.fnkperpspec = mxGetData(mxGetField(structure_name, 0, "fnkperpspec"));
-    data.mffcl = mxGetData(mxGetField(structure_name, 0, "mffcl"));
-    data.fbkperpspec = mxGetData(mxGetField(structure_name, 0, "fbkperpspec"));
-    
-    return(data);
-} 
 
 rayparam_format load_ray_param(structure_name)
 mxArray *structure_name;
@@ -178,7 +141,7 @@ mxArray *structure_name;
     data.nperp = mxGetData(mxGetField(structure_name, 0, "nperp")); 
     data.pperpmax = mxGetData(mxGetField(structure_name, 0, "pperpmax")); 
     data.tau_lim = mxGetData(mxGetField(structure_name, 0, "tau_lim")); 
-    data.kextra = mxGetData(mxGetField(structure_name, 0, "kextra"));
+    data.kextra = mxGetData(mxGetField(structure_name, 0, "kextra")); 
     
     return(data);
 }
@@ -200,7 +163,7 @@ mxArray *structure_name;
     return(data);
 } 
 
-pp_1D_format load_profile_1D(structure_name,field_name)
+pp_1D_format load_equil_1D(structure_name,field_name)
 mxArray *structure_name;
 char *field_name;
 {
@@ -233,7 +196,7 @@ char *field_name;
     return(fit);  
 }
 
-pp_2D_format load_grid_2D(structure_name,field_name)
+pp_2D_format load_equil_2D(structure_name,field_name)
 mxArray *structure_name;
 char *field_name;
 {
