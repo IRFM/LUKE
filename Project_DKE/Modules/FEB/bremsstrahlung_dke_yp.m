@@ -183,7 +183,7 @@ for i = 1:size(psin_hxr,1),%radial position
 %
 			Xf0_c1 = permute(repmat(reshape(Xf0_c',n_gauleg+1,size(XXf0,1),1),[1,1,1,length(kphot)]),[1,2,4,3]);%Same as Xf0_c but expanded for all photon energies 
 %
-			dIB_c1 = pn_c1.*pn_c1.*pn_c1.*BREM_c1(:,:,:,i).*(Xf0_c1 + Xf0_tp_c1 + Xf0_g_c1)./gamma_c1;
+			dIB_c1 = pn_c1.*pn_c1.*pn_c1.*BREM_c1(:,:,:,i).*Xf0_c1./gamma_c1;
 			IB_c1 = 2*pi*integral_dke_jd(dpn,dIB_c1,2);%Momentum integration 
 			ZZIB(i,j,:,:) = reshape(IB_c1,n_gauleg+1,size(IB_c1,2)*size(IB_c1,3))*ne_ref^2*betath_ref*clum/mc2;%MKSA units(s-1*m-3*kev-1*str-1)
 %
