@@ -29,9 +29,9 @@ status.waves = 0;
 status.ohm = 0;
 status.transpfaste = 0;
 status.ripple = 0;
+status.external = 0;
 %
 status.output = 0;
-status.external = 0;
 %
 fileids.data = '';
 fileids.dkepath = '';
@@ -41,6 +41,7 @@ fileids.waves = '';
 fileids.ohm = '';
 fileids.transpfaste = '';
 fileids.ripple = '';
+fileids.external = '';
 %
 paths.data = '';
 paths.dkepath = '';
@@ -50,6 +51,7 @@ paths.waves = '';
 paths.ohm = '';
 paths.transpfaste = '';
 paths.ripple = '';
+paths.external = '';
 %
 dkepath = '';
 dkeparam = '';
@@ -58,9 +60,9 @@ waves = '';
 ohm = '';
 transpfaste = '';
 ripple = '';
+external = '';
 %
 output = '';
-external = '';
 %
 workdir = [pwd,'/'];
 %
@@ -182,6 +184,19 @@ while isel >= 0,
         statstr.ripple = ['<',ostr,' The ''ripple'' structure is optional >'];
     end
     %
+    if status.external == 1,
+        statstr.external = external.id;
+    else 
+        if ~isempty(external),
+            disp('The structure ''external'' is outdated and cleared.')
+            external = '';
+            ostr = ' outdated.';
+        else
+            ostr = '';
+        end   
+        statstr.external = ['<',ostr,' No data from external database in memory. >'];
+    end
+    %
     if status.output == 1,
         statstr.output = id_simul;
     else 
@@ -202,19 +217,6 @@ while isel >= 0,
             statstr.output = ['<',ostr,' First build required structures. >'];
             %
         end
-    end
-    %
-    if status.external == 1,
-        statstr.external = external.id;
-    else 
-        if ~isempty(external),
-            disp('The structure ''external'' is outdated and cleared.')
-            external = '';
-            ostr = ' outdated.';
-        else
-            ostr = '';
-        end   
-        statstr.external = ['<',ostr,' No data from external database in memory. >'];
     end
     %
     if ~isempty(equil),
@@ -313,9 +315,9 @@ while isel >= 0,
                 disp('-----> No LUKE data file specified.');
             else
                 %
+                clear fileids paths
+                %
 				if strfind(data_file,'LUKE_DATA_'),
-                    %
-                    clear fileids paths
                     %
 					load([data_path,data_file],'basestr','signs','status','fileids','paths','id_simul',...
                         'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple','output','external');
@@ -369,6 +371,11 @@ while isel >= 0,
                     %
                     if ~isfield(status,'ripple'),
                         status.ripple = 0;
+                    end
+                    %
+                    if ~isfield(fileids,'external') || (~isempty(fileids.external) && ~exist([paths.external,'EXTERNAL_',fileids.external,'.mat'],'file')),
+                        fileids.external = '';
+                        paths.external = '';
                     end
                     %
                     if ~isfield(status,'external'),
@@ -472,6 +479,9 @@ while isel >= 0,
                         paths.ripple = '';
                     end
                     %
+                    fileids.external = '';
+                    paths.external = '';
+                    %
                     dkepath = data.dkepath;
 					dkeparam = data.dkeparam;
 					dkedisplay = data.dkedisplay;
@@ -536,8 +546,6 @@ while isel >= 0,
 					%
 				elseif strfind(data_file,'last_luke@'),
                     %
-                    clear fileids paths
-                    %
 					data = load([data_path,data_file],'par','dkepath','dkeparam','dkedisplay','equil','ohm','transpfaste','ripple',...
 						'Znorm_RF','Zcurr_RF','ZP0_RF','dke_out_RF','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
                     %
@@ -585,6 +593,7 @@ while isel >= 0,
                     fileids.ohm = '';
                     fileids.transpfaste = '';
                     fileids.ripple = '';
+                    fileids.external = '';
                     %
                     paths.dkepath = '';
                     paths.dkeparam = '';
@@ -592,6 +601,7 @@ while isel >= 0,
                     paths.ohm = '';
                     paths.transpfaste = '';
                     paths.ripple = '';
+                    paths.external = '';
                     %
                     for iw = 1:length(waves),
                         fileids.waves{iw} = '';
@@ -719,33 +729,34 @@ while isel >= 0,
             %
             % LOAD DATA FROM EXTERNAL DATABASE
             %
-            if ~isempty(external),
-                %
-                c_opt = input('There is external data in memory. Do you want to clear existing data (y/n)? [n] : ','s');
-                %
-                if strcmp(c_opt,'y'),
-                    external = '';
-                    disp(['-----> The external data has been cleared from memory.']);
-                    %
-                    l_opt = input('Do you want to load external data (y/n)? [n] : ','s');
-                    %
+            disp(' ');
+            disp('************** EXTERNAL DATA **************')
+            disp(' ');
+            %
+            % treatment of the external structure
+            %
+            smakecmd = 'iload_externaldata_jd';
+            %
+            [external,paths.external,fileids.external,newstruct] = ...
+                imake_struct_jd(external,'external',paths.external,fileids.external,'',basestr,smakecmd,NaN,status.external,'EXTERNAL',workdir,'',opt_gui,0,0,1,0);
+            %
+            % structure interdependences
+            %
+            if newstruct == 1,
+                if ~isempty(external),
+                    status.external = 1;
+                else
+                    status.external = 0;
                 end
-                %
-            else
-                %
-                l_opt = 'y';
-                %
+                status.equil = 0;
+                status.waves = 0;
+                status.ohm = 0;
+                status.transpfaste = 0;
+                status.output = 0;
+                status.data = 2;
             end
             %
-            if strcmp(l_opt,'y'),
-                external = iload_externaldata_jd(basestr,workdir,opt_gui);
-            end
-            %
-            if isempty(external),
-                status.external = 0;
-            else
-                status.external = 1;
-            end
+            clear newstruct smakecmd
             %
         elseif isel == 5, 
             %
@@ -839,12 +850,12 @@ while isel >= 0,
             [equil,paths.equil,fileids.equil,newstruct] = ...
                 imake_struct_jd(equil,'equil',paths.equil,fileids.equil,signs,basestr,smakecmd,external,status.equil,'EQUIL',workdir,'',opt_gui,0,0,1,0);
             %
-	    if isempty(equil)
-	    	signs = [];
-        elseif isfield(equil,'signs'),
-	    	signs = equil.signs;
-	    end
-	    %
+            if isempty(equil)
+                signs = [];
+            elseif isfield(equil,'signs'),
+                signs = equil.signs;
+            end
+            %
             % structure interdependences
             %
             if newstruct == 1,
@@ -1107,7 +1118,7 @@ while isel >= 0,
                 continue
             end
             %
-            irunhxr_jd(opt_gui,workdir,basestr,'',id_simul,equil,dkeparam,dkedisplay,output);
+            irunhxr_jd(opt_gui,workdir,basestr,output,external,id_simul,equil,dkeparam,dkedisplay);
             %
         elseif isel == 16,
             %
