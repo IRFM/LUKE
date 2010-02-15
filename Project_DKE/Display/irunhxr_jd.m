@@ -1,25 +1,17 @@
-function irunhxr_jd(opt_gui,workdir,basestr,filename,id_simul,equil,dkeparam,dkedisplay,output)
+function irunhxr_jd(opt_gui,workdir,basestr,output,external,id_simul,equil,dkeparam,dkedisplay)
 %
 % This function calculates the hard X-ray emisssion from LUKE results
-%
-if nargin < 1,
-    workdir = '.';
-end
-if nargin < 2,
-    basestr = '';
-end
-if nargin < 3,
-    filename = workdir;
-end
 %
 quitmsg = '-----> HXR calculation aborted';
 warning off
 %
 % load LUKE results if needed
 %
-if nargin < 8,
+if nargin < 9,
     %
-    [luke_file,luke_path] = uigetfile('LUKE_RESULTS_*.mat','Please select the LUKE RESULTS file',filename);
+    % data from LUKE_RESULTS_*.mat file
+    %
+    [luke_file,luke_path] = uigetfile('LUKE_RESULTS_*.mat','Please select the LUKE RESULTS file',output);
     %
     if luke_file == 0,
         disp('-----> No LUKE RESULTS file specified.')
@@ -29,6 +21,8 @@ if nargin < 8,
     load([luke_path,luke_file],'id_simul','equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa');
     %
 else
+    %
+    % data from output structure
     %
     Zcurr = output.Zcurr;
     dke_out = output.dke_out;
@@ -48,17 +42,19 @@ if hxr_file == 0,
     disp(quitmsg)
     return
 end
+%
 load([hxr_path,hxr_file],'hxr','hxrparam');
+%
 hxrspec = hxr;
-clear hxr%to avoid name conflict
+clear hxr %to avoid name conflict
 %
-p_opt = input('Option for output figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
-if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
-    p_opt = -1;
-end
+nc = length(hxrspec.beta_hxr);% number of chords
 %
-d_opt = input('Do you want to plot the chords? [y/n] : ','s');
-nc = length(hxrspec.beta_hxr);
+% display options
+%
+p_opt = input_dke_yp('Option for output figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
+%
+d_opt = input_dke_yp('Do you want to plot the chords? [y/n]','n',{'y','n'},'',[1,1]);
 %
 if strcmp(d_opt,'y'),
     %
@@ -81,27 +77,27 @@ if strcmp(d_opt,'y'),
     print_jd(p_opt,[basestr,'_HXR'],1)
 end 
 %
-% load HXR results
+% load and treat HXR experimental results
 %
 if strcmp(basestr,'TCV'),% TCV launching data
-%     if isfield(equil.info,'shotime');
-%         shotime = equil.info.shotime;
-%     else
-%         disp('-----> Shot time information missing');
-%         return
-%     end
-%     %
-    n_opt = input('Option for hxr experimental data? 0 (no exp. data), 1 (data file), 2 (TCV database) [0] : ');
-    if isempty(n_opt),
-        n_opt = 0;
-    end
-    if ~isnumeric(n_opt) | ~any(n_opt == [0,1,2]),
-        disp('-----> Invalid hxr experimental data option');
-        disp(quitmsg)
-        return
+    %
+    % load HXR experimental results
+    %
+    if isfield(external,'hxr'),
+        n_opt = input_dke_yp('Option for hxr experimental data? 0 (structure external), 1 (data file), 2 (TCV database) -1 (no exp. data)',0,-1:2,'',[1,1]);
+    else
+        n_opt = input_dke_yp('Option for hxr experimental data? 1 (data file), 2 (TCV database) -1 (no exp. data)',-1,[-1,1,2],'',[1,1]);
     end
     %
-    if n_opt > 0,
+    if n_opt == 0,% structure external
+        %
+        t = external.hxr.t;
+        energy = external.hxr.energy;
+        hxr = external.hxr.counts;
+        filter_thickness = external.hxr.filter_thickness;
+        filter_material = external.hxr.filter_material;
+        %
+    elseif n_opt > 0,
         if isfield(equil,'info') && isfield(equil.info,'shotnum'),
             shotnum = equil.info.shotnum;
         elseif isfield(equil,'id'),
@@ -111,87 +107,97 @@ if strcmp(basestr,'TCV'),% TCV launching data
             disp('-----> Shot number information missing');
             return
         end
-    end
-    %
-    if n_opt == 1,% hxr experimental data from file
         %
-        [data_file,data_path] = igetfile_jd(opt_gui,'*.*','Please select the hxr experimental data file :');
-        %
-        if data_file == 0,
-            disp(quitmsg)
-           return
+        if n_opt == 1,% hxr experimental data from file
+            %
+            [data_file,data_path] = igetfile_jd(opt_gui,'*.*','Please select the hxr experimental data file :');
+            %
+            if data_file == 0,
+                disp(quitmsg)
+               return
+            end
+            %
+            load([data_path,data_file],'shot','energy','hxr','t','filter_thickness','filter_material');
+            %
+            ishot = find(shot == str2num(shotnum));
+            %
+            if isempty(ishot) | ~exist('hxr','var'),
+                disp(['-----> hxr data not found for shot :',shotnum]);
+                disp(quitmsg)
+                return
+            end
+            %
+            if length(ishot) > 1,
+                disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
+                ishot = ishot(1);
+            end
+            %
+            clear data_path data_file
+            %
+        elseif n_opt == 2,% hxr experimental data from TCV database
+            %
+            shot = str2num(shotnum);
+            collect_hxr;
+            ishot = 1;
+            %
+            clear shot
+            %
         end
         %
-        load([data_path,data_file],'shot','energy','hxr','t','filter_thickness','filter_material');
+        t = t{ishot};
+        energy = energy{ishot};
+        hxr = hxr{ishot};
+        filter_thickness = filter_thickness{ishot};
+        filter_material = filter_material{ishot};
         %
-        ishot = find(shot == str2num(shotnum));
-        %
-        if isempty(ishot) | ~exist('hxr','var'),
-            disp(['-----> hxr data not found for shot :',shotnum]);
-            disp(quitmsg)
-            return
-        end
-        %
-        if length(ishot) > 1,
-            disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
-            ishot = ishot(1);
-        end
-        %
-    elseif n_opt == 2,% hxr experimental data from TCV database
-        %
-        shot = str2num(shotnum);
-        collect_hxr;
-        ishot = 1;
-        %
+        clear ishot shotnum
+        %        
     else
-        t = {NaN};
-        energy = {NaN};
-        hxr = {NaN};
-        filter_thickness = {NaN};
-        filter_material = {NaN};
-        ishot = 1;
+        energy = NaN;
     end
     %
-    t = t{ishot};
-    energy = energy{ishot};
-    hxr = hxr{ishot};
-    filter_thickness = filter_thickness{ishot};
-    filter_material = filter_material{ishot};
-    %
-    %it = min(find(t > str2num(shotime)));
-    %
-    %TCV_19269_0.9000_0.79_1.01_L_1_3'
-    if isfield(equil,'info') && isfield(equil.info,'t1') && isfield(equil.info,'t2'),
-        t1 = equil.info.t1;
-        t2 = equil.info.t2;
-    elseif isfield(equil,'external'),
-        idsep = find(equil.external.id == '_');
-        t1 = str2num(equil.external.id(idsep(3)+1:idsep(4)-1));
-        t2 = str2num(equil.external.id(idsep(4)+1:idsep(5)-1));
-    else
-        t1 = NaN;
-        t2 = NaN;
-    end
-    %
-    if n_opt > 0,
-        t1 = input_dke_yp('Initial time for TCV HXR data averaging',t1,[0;Inf],'',[1,1]);
-        t2 = input_dke_yp('Final time for TCV HXR data averaging',t2,[0;Inf],'',[1,1]);
-	    %
-	    it1 = find(t > t1,1,'first');
-	    it2 = find(t < t2,1,'last');
-	    hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
-	    hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
-	    dt = t(it2) - t(it1);
-	    hxrexp = hxrexp/dt;%taux de comptage
-    end
-    %
-    if isnan(energy),
+    if any(isnan(energy)),% no or useless exp. data
+        %
+        filter_thickness = NaN;
+        filter_material = NaN;
+        %
         energy = hxrspec.kphot;
         hxrexp = NaN*ones(length(energy),nc);
         dt = 1;
     else
         energy = energy.';
-    end
+        %
+        % time sample of experimental data
+        %
+        if isfield(equil,'info') && isfield(equil.info,'t1') && isfield(equil.info,'t2'),
+            t1 = equil.info.t1;
+            t2 = equil.info.t2;
+        elseif isfield(external,'id'),
+            idsep = find(external.id == '_');
+            t1 = str2num(external.id(idsep(3)+1:idsep(4)-1));
+            t2 = str2num(external.id(idsep(4)+1:idsep(5)-1));
+        else
+            t1 = NaN;
+            t2 = NaN;
+        end
+        %
+        t1 = input_dke_yp('Initial time for TCV HXR data averaging',t1,[0;Inf],'',[1,1]);
+        t2 = input_dke_yp('Final time for TCV HXR data averaging',t2,[0;Inf],'',[1,1]);
+        %
+        it1 = find(t >= t1,1,'first');
+        it2 = find(t <= t2,1,'last');
+        %
+        % time averaging
+        %
+        hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
+        dt = t(it2) - t(it1);
+        hxrexp = hxrexp/dt;%taux de comptage
+        %
+        % incremental contribution of energy canal
+        %
+        hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
+        %
+     end        
     %
     hxrspec.kphot = sort([energy,(energy(1:end-1) + energy(2:end))/2]);
     hxrspec.kdiag_hxr = [energy(1:end-1),(energy(1)+energy(2))/2;energy(2:end),(energy(end)+energy(end-1))/2];
