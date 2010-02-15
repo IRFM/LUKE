@@ -1882,3 +1882,89 @@
 % U cleantempdir_yp.m (clean scratch)
 % U input_dke_yp.m (message management)
 %
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.8
+% 
+% Main changes include:
+% 
+% - correction on DQL calculation for proper linear benchmark in toroidal plasmas
+% - AMR/LUKE coupling on TCV
+% 
+% ====> LUKE
+%
+% U make_path_LUKE.m (laptop yves)
+% U make_path_LOCAL.m (laptop yves et joan, merope et pleione, saturne en zone partenaires, crpp)
+% 
+% ====> LUKE/Project_DKE/Database
+%
+% U EQUIL_files/make_equil_EARTH.m (less theta points)
+% U EXTERNAL_files/load_externaldata_TCV.m (small corrections)
+%
+% ====> LUKE/Project_DKE/Display
+%
+% U imake_angles_TCV_jd.m (P0 can be modified, change in distance to waist)
+% U imake_launch_angles_TCV_jd.m (P0 now in angles, angles structure saved)
+% U imake_wave_AMR_jd.m (launch parameters passed on, path management, small corrections)
+% U imake_wave_jd.m (reordering based on ray tracing choice, launch or angles specified for TCV)
+% U irunluke_jd.m (database load in case fields are missing, hxr, signs)
+% U imake_equil_jd.m (signs management, Zeff reset)
+% U imake_launch_EC_jd.m (small corrections) 
+% U Project_DKE/Display/irunhxr_jd.m (opt_gui)
+%
+% ====> LUKE/Project_DKE/DKE
+%
+% U rfdiff_dke_jd.m (correction on diffusion coefficient calculation - now linear benchmark is OK in toroidal plasmas as well)
+% U setpath_luke_jd.m (RT -> C3PO)
+% U load_structures_yp.m (fluctuations structure added, simple dkepath structures)
+% U proc_luke_jd.m (n_rf_list and launched power specified, linear wave data stored)
+% U equilibrium_jd.m (signs displayed)
+% U optgrid_dke_jd.m (pnmax can be fixed by location of absorption)
+% U run_lukert.m (")
+% U paramconsistency_dke_yp.m (")
+% U LUKEversion_jd.m (LUKE 1.8 and matlab version test)
+% U main_dke_yp.m (display convergence along rays only if display > 1, f back in RF loop)
+%
+% ====> LUKE/Project_DKE/Modules/ALOHA
+%
+% U proc_aloha_spec_jd.m (display corrections)
+%
+% ====> LUKE/Project_DKE/Modules/AMR
+%
+% U make_input_AMR.m (launch parameters passed on, TCV eternal data to AMR)
+% U make_equil_RZ_AMR_jd.m (id managed externally, psi/theta equil can be loaded)
+%
+% ====> LUKE/Project_DKE/Modules/FEB
+%
+% U bremlocaldisplay_dke_yp.m (g, tp calc removed)
+% U bremsstrahlung_dke_yp.m (")
+%
+% ====> LUKE/Project_DKE/Modules/C3PO
+%
+% U MEX/Source/raytracing_dieltensor_yp.c (useless fonctions removed)
+% U main_rayinit_launch_jd.m (iref with relative negative index, default missing entries)
+% U loop_main_C3PO_jd.m (condition on y0)
+% U main_C3PO_jd.m (save display parameters)
+%
+% ====> LUKE/Project_DKE/Modules/Cronos
+%
+% U make_dkeparam_cronos.m (base mhu grid parameters changed)
+% U make_wavelaunchs_cronos_lh.m (aloha in LUKE/CRONOS)
+% U make_wavert_cronos.m (")
+% U luke_parameters.m (")
+% U zstarwars.m (")
+%
+% ====> LUKE/Project_DKE/Modules/ITM/
+%
+% U testmatlab.xml (small corrections)
+%
+% ====> LUKE/Project_DKE/Packages
+%
+% U README.txt (mise à jour)
+%
+% ====> LUKE/Tools
+%
+% U comp_struct_jd.m (imaginary display mode for substructure comparison)
+% U graph_wave_jd.m (launch for EC only)
+% U graph1D_jd.m (separate legend size)
+%
