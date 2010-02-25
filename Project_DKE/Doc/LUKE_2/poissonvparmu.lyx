@@ -1,0 +1,850 @@
+#LyX 1.6.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+\numberwithin{equation}{section}
+\end_preamble
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\extd}{\mathsf{d}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\bdot}{\boldsymbol{\cdot}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\bnabla}{\boldsymbol{\nabla}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\bhat}{\widehat{\mathsf{b}}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\btimes}{\boldsymbol{\times}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Calculation of the guiding-center Poisson bracket in 
+\begin_inset Formula $\left(\mathbf{X},v_{\|},\mu,\varphi\right)$
+\end_inset
+
+ coordinates
+\end_layout
+
+\begin_layout Section
+Guiding-center Lagrangian matrix in 
+\begin_inset Formula $\left(\mathbf{X},v_{\|},\mu,\varphi\right)$
+\end_inset
+
+ coordinates
+\end_layout
+
+\begin_layout Standard
+The guiding-center Lagrangian reads
+\begin_inset Formula \begin{equation}
+\Gamma=\left(\frac{e}{c}\mathbf{A}+mv_{\|}\bhat\right)\bdot\extd\mathbf{X}+\frac{\mu B}{\Omega}\left(\extd\varphi-\mathbf{R}^{*}\bdot\extd\mathbf{X}\right)-\left(\frac{1}{2}mv_{\|}^{2}+\mu B\right)\extd t\equiv\Gamma_{\alpha}\extd z^{\alpha}-H\extd t\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $z^{\alpha}\equiv\left(\mathbf{X},\mu,v_{\|},\mu\right)$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ is the magnetic vector potential, 
+\begin_inset Formula $\mathbf{R}^{*}=\mathbf{R}+\frac{1}{2}\left(\bhat\bdot\bnabla\btimes\bhat\right)\bhat$
+\end_inset
+
+ the modified gyro-gauge vector and 
+\begin_inset Formula $\Omega\equiv eB/mc$
+\end_inset
+
+ is the particle gyro-frequency.
+ We immediately deduce the expressions for the symplectic part of the guiding-ce
+nter Lagrangian 
+\begin_inset Formula $\left(\Gamma_{\alpha}\right)$
+\end_inset
+
+:
+\begin_inset Formula \begin{align}
+\boldsymbol{\Gamma}_{\mathbf{X}}= & \frac{e}{c}\mathbf{A}+mv_{\|}\bhat-\frac{\mu B}{\Omega}\mathbf{R}^{*}\\
+\Gamma_{v_{\|}}= & 0\\
+\Gamma_{\mu}= & 0\\
+\Gamma_{\varphi}= & \frac{\mu B}{\Omega}\end{align}
+
+\end_inset
+
+We then perform the exterior derivative of 
+\begin_inset Formula $\left(\Gamma_{\alpha}\right)$
+\end_inset
+
+ in order to obtain the following guiding-center 2-form:
+\begin_inset Formula \begin{equation}
+W\equiv\extd\Gamma\equiv\frac{1}{2}W_{\alpha\beta}\extd z^{\alpha}\wedge\extd z^{\beta}\equiv\pd{\Gamma_{\beta}}{z^{\alpha}}\extd z^{\alpha}\wedge\extd z^{\beta}\equiv\frac{1}{2}\left(\pd{\Gamma_{\beta}}{z^{\alpha}}-\pd{\Gamma_{\alpha}}{z^{\beta}}\right)\extd z^{\alpha}\wedge\extd z^{\beta}\end{equation}
+
+\end_inset
+
+We note here that the coefficients 
+\begin_inset Formula $W_{\alpha\beta}$
+\end_inset
+
+ are antisymmetric, i.e.
+ 
+\begin_inset Formula $W_{\alpha\beta}=-W_{\beta\alpha}$
+\end_inset
+
+.
+ These read
+\begin_inset Formula \begin{align}
+\mathbb{W}_{\mathbf{XX}}= & -\left(\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right)\btimes\mathbb{I}\\
+\mathbf{W}_{\mathbf{X}v_{\|}}= & -m\bhat\\
+\mathbf{W}_{\mathbf{X}\mu}= & \frac{B}{\Omega}\mathbf{R}^{*}\\
+\mathbf{W}_{\mathbf{X}\varphi}= & 0\\
+W_{v_{\|}\mu}= & 0\\
+W_{v_{\|}\varphi}= & 0\\
+W_{\mu\varphi}= & \frac{B}{\Omega}\end{align}
+
+\end_inset
+
+with 
+\begin_inset Formula $W_{v_{\|}v_{\|}}=W_{\mu\mu}=W_{\varphi\varphi}=0$
+\end_inset
+
+, and defining 
+\begin_inset Formula $\mathbf{B}^{*}\equiv\bnabla\btimes\left[\mathbf{A}+\left(v_{\|}/\Omega\right)\mathbf{B}\right]\equiv\mathbf{B}+B\left(v_{\|}/\Omega\right)\bnabla\btimes\bhat$
+\end_inset
+
+.
+ The calculation for 
+\begin_inset Formula $\mathbb{W}_{\mathbf{XX}}$
+\end_inset
+
+ is detailled in appendix 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:WXX"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Calculation of the Poisson matrix
+\end_layout
+
+\begin_layout Standard
+The Poisson matrix is the inverse of the Lagrangian matrix.
+ According to Littlejohn
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Little81"
+
+\end_inset
+
+, if a 
+\begin_inset Formula $\left(2N\times2N\right)$
+\end_inset
+
+ antisymmetric matrix has the following expression
+\begin_inset Formula \begin{equation}
+\mathbb{W}\equiv\left(\begin{array}{ccc}
+\mathbb{X} & \mathbf{Y} & 0\\
+-\mathbf{Y}^{T} & 0 & z\\
+0 & -z & 0\end{array}\right)\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathbb{X}$
+\end_inset
+
+ is a 
+\begin_inset Formula $\left(2N-2\right)\times\left(2N-2\right)$
+\end_inset
+
+ antisymmetric matrix, 
+\begin_inset Formula $\mathbf{Y}$
+\end_inset
+
+ is a 
+\begin_inset Formula $\left(2N-2\right)$
+\end_inset
+
+ column vector and 
+\begin_inset Formula $z$
+\end_inset
+
+ a scalar will have the following inverse expression
+\begin_inset Formula \begin{equation}
+\mathbb{W}^{-1}=\left(\begin{array}{ccc}
+\mathbb{X}^{-1} & 0 & \frac{1}{z}\left(\mathbb{X}^{-1}\bdot\mathbf{Y}\right)\\
+0 & 0 & -\frac{1}{z}\\
+-\frac{1}{z}\left(\mathbb{X}^{-1}\bdot\mathbf{Y}\right)^{T} & \frac{1}{z} & 0\end{array}\right)\end{equation}
+
+\end_inset
+
+we can verify that the product of these two matrices gives identity.
+ In the case of the Lagrangian matrix, we have
+\begin_inset Formula \begin{equation}
+\mathbb{X}=\left(\begin{array}{cc}
+\mathbb{W}_{\mathbf{XX}} & -m\bhat\\
+m\bhat^{T} & 0\end{array}\right)\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\mathbf{Y}=\left(\begin{array}{c}
+\frac{B}{\Omega}\mathbf{R}^{*}\\
+0\end{array}\right)\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+z=\frac{B}{\Omega}\end{equation}
+
+\end_inset
+
+In order to calculate the Poisson matrix, we therefore need to calculate
+ 
+\begin_inset Formula $\mathbb{X}^{-1}$
+\end_inset
+
+.
+ Using the expression found in appendix 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Inverse44"
+
+\end_inset
+
+, we can calculate the inverse matrix denominator 
+\begin_inset Formula $D$
+\end_inset
+
+
+\begin_inset Formula \begin{align}
+D= & -mb_{3}W_{12}+mb_{2}W_{13}-mb_{1}W_{23}\nonumber \\
+= & -m\bhat\bdot\left(\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right)\nonumber \\
+= & -\frac{m^{2}\Omega}{B}B_{\|}^{*}+\frac{m\mu B}{\Omega}\bhat\bdot\bnabla\btimes\mathbf{R}^{*}\nonumber \\
+= & -m^{2}\Omega_{\|}^{*}+\frac{m\mu B}{\Omega}\bhat\bdot\bnabla\btimes\mathbf{R}^{*}\end{align}
+
+\end_inset
+
+the inverse matrix 
+\begin_inset Formula $\mathbb{X}^{-1}$
+\end_inset
+
+ will therefore read
+\begin_inset Formula \begin{align}
+\mathbb{X}^{-1}= & \frac{1}{D}\left(\begin{array}{cccc}
+0 & mb_{1} & -mb_{2} & -W_{23}\\
+-mb_{1} & 0 & mb_{3} & W_{13}\\
+mb_{2} & -mb_{3} & 0 & -W_{12}\\
+W_{23} & -W_{13} & W_{12} & 0\end{array}\right)\nonumber \\
+= & \frac{1}{D}\left(\begin{array}{cc}
+-m\bhat\btimes\mathbb{I} & -\left(\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right)\\
+\left(\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right)^{T} & 0\end{array}\right)\end{align}
+
+\end_inset
+
+we can therefore calculate
+\begin_inset Formula \begin{align}
+\mathbb{X}^{-1}\bdot\mathbf{Y}= & \frac{1}{D}\left(\begin{array}{c}
+-\frac{mB}{\Omega}\bhat\btimes\mathbf{R}^{*}\\
+m\mathbf{B}^{*}\bdot\mathbf{R}^{*}-\frac{\mu B^{2}}{\Omega^{2}}\mathbf{R}^{*}\bdot\bnabla\btimes\mathbf{R}^{*}\end{array}\right)\end{align}
+
+\end_inset
+
+The Poisson matrix reads
+\begin_inset Formula \begin{align}
+\mathbb{J}= & \mathbb{W}^{-1}\nonumber \\
+= & \left(\begin{array}{cccc}
+-\frac{m}{D}\bhat\btimes\mathbb{I} & -\frac{1}{D}\left(\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right) & 0 & -\frac{m}{D}\bhat\btimes\mathbf{R}^{*}\\
+\frac{1}{D}\left(\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right)^{T} & 0 & 0 & \frac{m\Omega}{BD}\mathbf{B}^{*}\bdot\mathbf{R}^{*}-\frac{\mu B}{\Omega D}\mathbf{R}^{*}\bdot\bnabla\btimes\mathbf{R}^{*}\\
+0 & 0 & 0 & -\frac{\Omega}{B}\\
+-\frac{m}{D}\left(\bhat\btimes\mathbf{R}^{*}\right)^{T} & -\left(\frac{m\Omega}{BD}\mathbf{B}^{*}\bdot\mathbf{R}^{*}-\frac{\mu B}{\Omega D}\mathbf{R}^{*}\bdot\bnabla\btimes\mathbf{R}^{*}\right) & \frac{\Omega}{B} & 0\end{array}\right)\end{align}
+
+\end_inset
+
+Since terms containing 
+\begin_inset Formula $\bnabla\btimes\mathbf{R}^{*}$
+\end_inset
+
+ are of second order in 
+\begin_inset Formula $\epsilon_{B}$
+\end_inset
+
+, they can be neglected and therefore
+\begin_inset Formula \begin{equation}
+\mathbb{J}=\left(\begin{array}{cccc}
+\frac{1}{m\Omega_{\|}^{*}}\bhat\btimes\mathbb{I} & \frac{1}{mB_{\|}^{*}}\mathbf{B}^{*} & 0 & -\frac{1}{m\Omega_{\|}^{*}}\bhat\btimes\mathbf{R}^{*}\\
+-\frac{1}{mB_{\|}^{*}}\left(\mathbf{B}^{*}\right)^{T} & 0 & 0 & -\frac{1}{mB_{\|}^{*}}\mathbf{B}^{*}\bdot\mathbf{R}^{*}\\
+0 & 0 & 0 & -\frac{\Omega}{B}\\
+\frac{1}{m\Omega_{\|}^{*}}\left(\bhat\btimes\mathbf{R}^{*}\right)^{T} & \frac{1}{mB_{\|}^{*}}\mathbf{B}^{*}\bdot\mathbf{R}^{*} & \frac{\Omega}{B} & 0\end{array}\right)\end{equation}
+
+\end_inset
+
+The Poisson bracket therefore reads
+\begin_inset Formula \begin{align}
+\left\{ F,G\right\} _{gc}\equiv & \pd F{z^{\alpha}}J_{\alpha\beta}\pd G{z^{\beta}}\nonumber \\
+= & \bnabla F\bdot\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\bnabla G+\frac{\mathbf{B}^{*}}{mB_{\|}^{*}}\bdot\left(\bnabla F\pd G{v_{\|}}-\pd F{v_{\|}}\bnabla G\right)\nonumber \\
+ & -\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\mathbf{R}^{*}\bdot\left(\bnabla F\pd G{\varphi}-\pd F{\varphi}\bnabla G\right)-\frac{\mathbf{B}^{*}}{mB_{\|}^{*}}\bdot\mathbf{R}^{*}\left(\pd F{v_{\|}}\pd G{\varphi}-\pd F{\varphi}\pd G{v_{\|}}\right)\nonumber \\
+ & -\frac{\Omega}{B}\left(\pd F{\mu}\pd G{\varphi}-\pd F{\varphi}\pd G{\mu}\right)\nonumber \\
+= & \left(\bnabla F+\mathbf{R}^{*}\pd F{\varphi}\right)\bdot\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\left(\bnabla G+\mathbf{R}^{*}\pd G{\varphi}\right)\nonumber \\
+ & +\frac{\mathbf{B}^{*}}{mB_{\|}^{*}}\bdot\left[\left(\bnabla F+\mathbf{R}^{*}\pd F{\varphi}\right)\pd G{v_{\|}}-\pd F{v_{\|}}\left(\bnabla G+\mathbf{R}^{*}\pd G{\varphi}\right)\right]\nonumber \\
+ & +\frac{\Omega}{B}\left(\pd F{\varphi}\pd G{\mu}-\pd F{\mu}\pd G{\varphi}\right)\nonumber \\
+= & \frac{\Omega}{B}\left(\pd F{\varphi}\pd G{\mu}-\pd F{\mu}\pd G{\varphi}\right)+\frac{\mathbf{B}^{*}}{mB_{\|}^{*}}\bdot\left(\bnabla^{*}F\pd G{v_{\|}}-\pd F{v_{\|}}\bnabla^{*}G\right)-\frac{\bhat}{m\Omega_{\|}^{*}}\bdot\bnabla^{*}F\btimes\bnabla^{*}G\end{align}
+
+\end_inset
+
+where we defined 
+\begin_inset Formula $\bnabla^{*}\equiv\bnabla+\mathbf{R}^{*}\partial/\partial\varphi$
+\end_inset
+
+ and 
+\begin_inset Formula $\bnabla^{*}F\bdot\bhat\btimes\bnabla^{*}G=\epsilon^{ijk}\left(\partial_{i}^{*}F\right)b_{j}\left(\partial_{k}^{*}G\right)=-\bhat\bdot\bnabla^{*}F\btimes\bnabla^{*}G$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Poisson bracket in 
+\begin_inset Formula $\left(\mathbf{X},\mathcal{E},\mu,\varphi\right)$
+\end_inset
+
+ coordinates
+\end_layout
+
+\begin_layout Standard
+The particle energy 
+\begin_inset Formula $\mathcal{E}$
+\end_inset
+
+ reads
+\begin_inset Formula \begin{equation}
+\mathcal{E}\equiv\frac{1}{2}mv_{\|}^{2}+\mu B\end{equation}
+
+\end_inset
+
+We therefore have
+\begin_inset Formula \begin{equation}
+\extd\mathcal{E}=\mu\bnabla B\bdot\extd\mathbf{X}+mv_{\|}\extd v_{\|}+B\extd\mu\end{equation}
+
+\end_inset
+
+We readily deduce the following poisson brackets, using 
+\begin_inset Formula $\left\{ z^{\alpha},z^{\beta}\right\} \equiv J_{\alpha\beta}$
+\end_inset
+
+
+\begin_inset Formula \begin{align}
+\left\{ \mathbf{X},\mathcal{E}\right\} _{gc}= & \left\{ \mathbf{X},\mathbf{X}\right\} _{gc}\bdot\mu\bnabla B+mv_{\|}\left\{ \mathbf{X},v_{\|}\right\} _{gc}+B\left\{ \mathbf{X},\mu\right\} _{gc}\nonumber \\
+= & \frac{\bhat}{m\Omega_{\|}^{*}}\btimes\mu\bnabla B+\frac{v_{\|}}{B_{\|}^{*}}\mathbf{B}^{*}\label{eq:poissonXE}\end{align}
+
+\end_inset
+
+
+\begin_inset Formula \begin{align}
+\left\{ v_{\|},\mathcal{E}\right\} _{gc}= & \left\{ v_{\|},\mathbf{X}\right\} _{gc}\bdot\mu\bnabla B+B\left\{ v_{\|},\mu\right\} _{gc}\nonumber \\
+= & \frac{\bhat}{m\Omega_{\|}^{*}}\btimes\mu\bnabla B+\frac{v_{\|}}{B_{\|}^{*}}\mathbf{B}^{*}\label{eq:poissonvparE}\end{align}
+
+\end_inset
+
+
+\begin_inset Formula \begin{align}
+\left\{ \mu,\mathcal{E}\right\} _{gc}= & \left\{ \mu,\mathbf{X}\right\} _{gc}\bdot\mu\bnabla B+mv_{\|}\left\{ \mu,v_{\|}\right\} _{gc}\nonumber \\
+= & 0\label{eq:poissonmuE}\end{align}
+
+\end_inset
+
+
+\begin_inset Formula \begin{align}
+\left\{ \varphi,\mathcal{E}\right\} _{gc}= & \left\{ \varphi,\mathbf{X}\right\} _{gc}\bdot\mu\bnabla B+mv_{\|}\left\{ \varphi,v_{\|}\right\} _{gc}+B\left\{ \varphi,\mu\right\} _{gc}\nonumber \\
+= & \Omega+\left(\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\mu\bnabla B+\frac{v_{\|}}{B_{\|}^{*}}\mathbf{B}^{*}\right)\bdot\mathbf{R}^{*}\label{eq:poissonvarphiE}\end{align}
+
+\end_inset
+
+The remaining coordinate Poisson brackets remain unchanged, i.e.
+\begin_inset Formula \begin{align}
+\left\{ \mathbf{X},\mathbf{X}\right\} _{gc}= & \frac{\bhat}{m\Omega_{\|}^{*}}\btimes\mathbb{I}\\
+\left\{ \mathbf{X},\mu\right\} _{gc}= & 0\\
+\left\{ \mathbf{X},\varphi\right\} _{gc}= & -\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\mathbf{R}^{*}\\
+\left\{ \mu,\varphi\right\} _{gc}= & -\frac{\Omega}{B}\end{align}
+
+\end_inset
+
+Since 
+\begin_inset Formula $\bnabla\btimes\bhat=\left(\bhat\bdot\bnabla\btimes\bhat\right)\bhat+\bhat\btimes\left(\bhat\bdot\bnabla\bhat\right)$
+\end_inset
+
+, we can rewrite 
+\begin_inset Formula $\mathbf{B}^{*}$
+\end_inset
+
+ as
+\begin_inset Formula \begin{equation}
+\mathbf{B}^{*}=B_{\|}^{*}\bhat+\frac{v_{\|}}{\Omega}\bhat\btimes\left(\bhat\bdot\bnabla\bhat\right)\end{equation}
+
+\end_inset
+
+We thus define 
+\begin_inset Formula $\mathbf{v}_{gc}$
+\end_inset
+
+ as
+\begin_inset Formula \begin{equation}
+\mathbf{v}_{gc}\equiv\frac{v_{\|}}{B_{\|}^{*}}\mathbf{B}^{*}+\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\mu\bnabla B=v_{\|}\bhat+\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\left(\mu\bnabla B+mv_{\|}^{2}\bhat\bdot\bnabla\bhat\right)\end{equation}
+
+\end_inset
+
+The new guiding-center Poisson bracket therefore reads
+\begin_inset Formula \begin{align}
+\left\{ F,G\right\} _{gc}= & \bnabla F\bdot\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\bnabla G+\mathbf{v}_{gc}\bdot\left(\bnabla F\pd G{\mathcal{E}}-\pd F{\mathcal{E}}\bnabla G\right)\nonumber \\
+ & -\frac{\bhat}{m\Omega_{\|}^{*}}\btimes\mathbf{R}^{*}\bdot\left(\bnabla F\pd G{\varphi}-\pd F{\varphi}\bnabla G\right)-\mathbf{v}_{gc}\bdot\mathbf{R}^{*}\left(\pd F{\mathcal{E}}\pd G{\varphi}-\pd F{\varphi}\pd G{\mathcal{E}}\right)\nonumber \\
+ & -\frac{\Omega}{B}\left(\pd F{\mu}\pd G{\varphi}-\pd F{\varphi}\pd G{\mu}\right)-\Omega\left(\pd F{\mathcal{E}}\pd G{\varphi}-\pd F{\varphi}\pd G{\mathcal{E}}\right)\nonumber \\
+= & \frac{\Omega}{B}\left[\pd F{\varphi}\left(\pd G{\mu}+B\pd G{\mathcal{E}}\right)-\left(\pd F{\mu}+B\pd F{\mathcal{E}}\right)\pd G{\varphi}\right]\nonumber \\
+ & +\mathbf{v}_{gc}\bdot\left(\bnabla^{*}F\pd G{\mathcal{E}}-\pd F{\mathcal{E}}\bnabla^{*}G\right)\nonumber \\
+ & -\frac{\bhat}{m\Omega_{\|}^{*}}\bdot\bnabla^{*}F\btimes\bnabla^{*}G\label{eq:poissonE}\end{align}
+
+\end_inset
+
+We therefore obtain the expression found in Brizard
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bri04"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "1"
+key "Little81"
+
+\end_inset
+
+R.
+ Littlejohn, 
+\shape italic
+Phys.
+ Fluids
+\shape default
+, 
+\series bold
+24
+\series default
+(9), 1981
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "2"
+key "Bri04"
+
+\end_inset
+
+A.
+ J.
+ Brizard, Phys.
+ Plasmas, 
+\series bold
+11
+\series default
+(9), 2004 
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+Calculation of 
+\begin_inset Formula $\mathbb{W}_{\mathbf{XX}}$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:WXX"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the expression for 
+\begin_inset Formula $W$
+\end_inset
+
+,denoting 
+\begin_inset Formula $x^{i}\equiv\left(\mathbf{X}\right)$
+\end_inset
+
+ the spatial coordinates and shortening the spatial coefficients 
+\begin_inset Formula $W_{x^{i}}$
+\end_inset
+
+ as 
+\begin_inset Formula $W_{i}$
+\end_inset
+
+, the spatial gradient reads 
+\begin_inset Formula $\bnabla\equiv\bnabla x^{i}\left(\partial/\partial x^{i}\right)$
+\end_inset
+
+ and we have
+\begin_inset Formula \begin{align}
+W_{12}= & \pd{}{x^{1}}\left(\frac{e}{c}A_{2}+mv_{\|}b_{2}-\frac{\mu B}{\Omega}R_{2}^{*}\right)-\pd{}{x^{2}}\left(\frac{e}{c}A_{1}+mv_{\|}b_{1}-\frac{\mu B}{\Omega}R_{1}^{*}\right)\nonumber \\
+= & \left[\bnabla\btimes\left(\frac{e}{c}\mathbf{A}+mv_{\|}\bhat-\frac{\mu B}{\Omega}\mathbf{R}^{*}\right)\right]_{3}\nonumber \\
+= & \left[\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right]_{3}\\
+W_{13}= & \pd{}{x^{1}}\left(\frac{e}{c}A_{3}+mv_{\|}b_{3}-\frac{\mu B}{\Omega}R_{3}^{*}\right)-\pd{}{x^{3}}\left(\frac{e}{c}A_{1}+mv_{\|}b_{1}-\frac{\mu B}{\Omega}R_{1}^{*}\right)\nonumber \\
+= & -\left[\bnabla\btimes\left(\frac{e}{c}\mathbf{A}+mv_{\|}\bhat-\frac{\mu B}{\Omega}\mathbf{R}^{*}\right)\right]_{2}\nonumber \\
+= & -\left[\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right]_{2}\\
+W_{23}= & \pd{}{x^{2}}\left(\frac{e}{c}A_{3}+mv_{\|}b_{3}-\frac{\mu B}{\Omega}R_{3}^{*}\right)-\pd{}{x^{3}}\left(\frac{e}{c}A_{2}+mv_{\|}b_{2}-\frac{\mu B}{\Omega}R_{2}^{*}\right)\nonumber \\
+= & \left[\bnabla\btimes\left(\frac{e}{c}\mathbf{A}+mv_{\|}\bhat-\frac{\mu B}{\Omega}\mathbf{R}^{*}\right)\right]_{1}\nonumber \\
+= & \left[\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right]_{1}\end{align}
+
+\end_inset
+
+with 
+\begin_inset Formula $W_{11}=W_{22}=W_{33}=0$
+\end_inset
+
+ and defining 
+\begin_inset Formula $\mathbf{B}^{*}\equiv\bnabla\btimes\left[\mathbf{A}+\left(v_{\|}/\Omega\right)\mathbf{B}\right]\equiv\mathbf{B}+B\left(v_{\|}/\Omega\right)\bnabla\btimes\bhat$
+\end_inset
+
+.
+ We can therefore deduce
+\begin_inset Formula \begin{align}
+W_{ij}= & \epsilon^{ijk}\left[\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right]_{k}\nonumber \\
+= & -\epsilon^{ikl}\left[\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right]_{k}\delta_{lj}\nonumber \\
+= & \left(-\left[\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right]\btimes\mathbb{I}\right)_{ij}\end{align}
+
+\end_inset
+
+Using 
+\begin_inset Formula $\mathbf{B}^{*}\equiv\bnabla\btimes\left[\mathbf{A}+\left(v_{\|}/\Omega\right)\mathbf{B}\right]$
+\end_inset
+
+, we finally have the expression
+\begin_inset Formula \begin{equation}
+\mathbb{W}_{\mathbf{XX}}=-\left(\frac{m\Omega}{B}\mathbf{B}^{*}-\frac{\mu B}{\Omega}\bnabla\btimes\mathbf{R}^{*}\right)\btimes\mathbb{I}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Inverse of a 4 by 4 antisymmetric matrix
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Inverse44"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let us consider the following antisymmetric matrix
+\begin_inset Formula \begin{equation}
+\mathbb{A}=\left(\begin{array}{cccc}
+0 & a & b & c\\
+-a & 0 & d & e\\
+-b & -d & 0 & f\\
+-c & -e & -f & 0\end{array}\right)\end{equation}
+
+\end_inset
+
+The cofactors of 
+\begin_inset Formula $\mathbb{A}$
+\end_inset
+
+ read
+\begin_inset Formula \begin{equation}
+C_{ij}=\left(-1\right)^{i+j}\det\mathbb{M}_{ij}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathbb{M}_{ij}$
+\end_inset
+
+ is the submatrix of 
+\begin_inset Formula $\mathbb{A}$
+\end_inset
+
+ where the row 
+\begin_inset Formula $i$
+\end_inset
+
+ and column 
+\begin_inset Formula $j$
+\end_inset
+
+ have been omitted.
+ The determinant of an odd-order antisymmetric matrix is always zero, therefore
+\begin_inset Formula \begin{equation}
+C_{ii}=0\end{equation}
+
+\end_inset
+
+Due to antisymmetry, we also have
+\begin_inset Formula \begin{equation}
+C_{ji}=-C_{ij}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $C_{12}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+C_{12}=-\left|\begin{array}{ccc}
+-a & d & e\\
+-b & 0 & f\\
+-c & -f & 0\end{array}\right|=-bef+cdf+af^{2}=f\left(af-be+cd\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $C_{13}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+C_{13}=\left|\begin{array}{ccc}
+-a & 0 & e\\
+-b & -d & f\\
+-c & -e & 0\end{array}\right|=be^{2}-cde-aef=-e\left(af-be+cd\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $C_{14}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+C_{14}=-\left|\begin{array}{ccc}
+-a & 0 & d\\
+-b & -d & 0\\
+-c & -e & -f\end{array}\right|=adf-bde+cd^{2}=d\left(af-be+cd\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $C_{23}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+C_{23}=-\left|\begin{array}{ccc}
+0 & a & c\\
+-b & -d & f\\
+-c & -e & 0\end{array}\right|=acf-bce+c^{2}d=c\left(af-be+cd\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $C_{24}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+C_{24}=\left|\begin{array}{ccc}
+0 & a & b\\
+-b & -d & 0\\
+-c & -e & -f\end{array}\right|=b^{2}e-bcd-abf=-b\left(af-be+cd\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $C_{34}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+C_{34}=-\left|\begin{array}{ccc}
+0 & a & b\\
+-a & 0 & d\\
+-c & -e & -f\end{array}\right|=acd-abe+a^{2}f=a\left(af-be+cd\right)\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calculation of 
+\begin_inset Formula $\det\mathbb{A}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Developing the first row of the determinant gives
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\det\mathbb{A}=aC_{12}+bC_{13}+cC_{14}=\left(af-be+cd\right)^{2}\end{equation}
+
+\end_inset
+
+the determinant is nonnegative, which is consistent with properties of antisymme
+tric matrices.
+\end_layout
+
+\begin_layout Subsection
+Expression for 
+\begin_inset Formula $\mathbb{A}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The inverse matrix is proportional to the transpose cofactor matrix, i.e.
+\begin_inset Formula \begin{equation}
+\left(\mathbb{A}^{-1}\right)_{ij}=\frac{1}{\det\mathbb{A}}C_{ji}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula $\mathbb{A}^{-1}$
+\end_inset
+
+ therefore reads
+\begin_inset Formula \begin{equation}
+\mathbb{A}^{-1}=\frac{1}{af-be+cd}\left(\begin{array}{cccc}
+0 & -f & e & -d\\
+f & 0 & -c & b\\
+-e & c & 0 & -a\\
+d & -b & a & 0\end{array}\right)\end{equation}
+
+\end_inset
+
+the term 
+\begin_inset Formula $af-be+cd$
+\end_inset
+
+ will be called the inverse matrix denominator in this document.
+\end_layout
+
+\end_body
+\end_document
