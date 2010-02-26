@@ -124,6 +124,24 @@ spparms('default');%Set parameters for sparse matrix ordering algorithms and dir
 spparms('supernd',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
 spparms('rreduce',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions onlyXXdpsin
 %
+% Case where radial transport is set to be proportional to RF diffusion coefficient
+%
+XXD_rf_norm = ZXXD_rf.ij./max(ZXXD_rf.ij(:));
+%
+if imag(transpfaste.Dr_model) == 1,
+    fnames = fieldnames(ZXXD_a);
+    for ifield = 1:length(fnames),
+        ZXXD_a.(fnames{ifield}) = ZXXD_a.(fnames{ifield}).*XXD_rf_norm;
+    end
+end
+%
+if imag(transpfaste.Vr_model) == 1,
+    fnames = fieldnames(ZXXF_a);
+    for ifield = 1:length(fnames),
+        ZXXF_a.(fnames{ifield}) = ZXXF_a.(fnames{ifield}).*XXD_rf_norm;
+    end
+end   
+%
 %TODO: remove transpfaste dependence when collisional transport is set
 %
 if ~isempty(transpfaste),%boundary conditions

@@ -121,17 +121,17 @@ if ~isempty(transpfaste),
         %
         xEc_r_threshold(ir) = mc2*(sqrt(1+pn(ivpar_r_threshold).*pn(ivpar_r_threshold)*betath_ref^2) - 1);%in keV
         %
-        if transpfaste.Dr_model==0,%No vpar dependence
+        if real(transpfaste.Dr_model)==0,%No vpar dependence
             XDpsiv = xDr(ir)*ones(size(npn,nmhu)).*(abs(Xvpar) >= xvparmin_r(ir))/(ap*ap*nhu_ref);%Normalized to the central collision frequency
-        elseif transpfaste.Dr_model==1,%Magnetic turbulence model: Dr(r)*vpar_ref/vth_ref
+        elseif real(transpfaste.Dr_model)==1,%Magnetic turbulence model: Dr(r)*vpar_ref/vth_ref
             XDpsiv = xDr(ir)*(abs(Xvpar) - xvparmin_r(ir)).*(abs(Xvpar) >= xvparmin_r(ir))/xvparmin_r(ir)/(ap*ap*nhu_ref);%Normalized to the central collision frequency
         end
         XXDpsi(:,:,ir) = XDpsiv;%3-D radial diffusion matrix (radial profile dependence) (psi coordinate)
         xmaxDpsi(ir) = max(max(XXDpsi(:,:,ir)));%Maximum value of the radial diffusion coefficient (psi coordinate)
         %
-        if transpfaste.Vr_model==0,%No vpar dependence
+        if real(transpfaste.Vr_model)==0,%No vpar dependence
             XVpsiv = xVr(ir)*ones(size(npn,nmhu)).*(abs(Xvpar) >= xvparmin_r(ir))/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
-        elseif transpfaste.Vr_model==1,%Magnetic turbulence model: Vr(r) = Vr0(r)*vpar_ref/vth_ref
+        elseif real(transpfaste.Vr_model)==1,%Magnetic turbulence model: Vr(r) = Vr0(r)*vpar_ref/vth_ref
             XVpsiv = xVr(ir)*(abs(Xvpar) - xvparmin_r(ir)).*(abs(Xvpar) >= xvparmin_r(ir))/xvparmin_r(ir)/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
         end
         XXVpsi(:,:,ir) = XVpsiv;%3-D radial pinch matrix (radial profile dependence) (psi coordinate)

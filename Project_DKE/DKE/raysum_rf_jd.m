@@ -37,6 +37,7 @@ ZXYD_rf.pm_ij = ZXYD_rf.pm_ij.*XYP0_2piRp;
 ZXYD_rf.mp_ij = ZXYD_rf.mp_ij.*XYP0_2piRp;
 %
 ZXYD_rf.parpar_ij = ZXYD_rf.parpar_ij.*XYP0_2piRp;
+ZXYD_rf.ij = ZXYD_rf.ij.*XYP0_2piRp;
 %
 iXX = double(((gridindex_rf.mask_r - 1)*nmhu + (gridindex_rf.mask_m - 1))*npn + gridindex_rf.mask_p);
 iyn = double((gridindex_rf.mask_n - 1)*ny + gridindex_rf.mask_y);
@@ -76,6 +77,7 @@ ZXXD_rf.mp_ij =     reshape(full(sum(sparse(iyn,iXX,double(ZXYD_rf.mp_ij    ),ny
 ZXXF_rf.p_ij =      zeros(npn,nmhu,nr);    
 %
 ZXXD_rf.parpar_ij = reshape(full(sum(sparse(iyn,iXX,double(ZXYD_rf.parpar_ij),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
+ZXXD_rf.ij = reshape(full(sum(sparse(iyn,iXX,double(ZXYD_rf.ij),ny*nn_rf,npn*nmhu*nr),1)),[npn,nmhu,nr]);
 %
 clear ZXYD_rf XYP0_2piRp
 %
@@ -103,6 +105,7 @@ ZXXD_rf.pm_ij = ZXXD_rf.pm_ij./XXredfac;
 ZXXD_rf.mp_ij = ZXXD_rf.mp_ij./XXredfac;
 %
 ZXXD_rf.parpar_ij = ZXXD_rf.parpar_ij./XXredfac;
+ZXXD_rf.ij = ZXXD_rf.ij./XXredfac;
 %
 if dkeparam.dke_mode == 1,
     %

@@ -954,6 +954,7 @@ ZXYD_rf.pm_ij = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn0./XYgamma).*XYDrf.ij./XYmhu;
 ZXYD_rf.mp_ij = - sqrt(XY1mmhu2).*(XY1mmhu2 - XYyn0./XYgamma).*XYDrf.ij./XYmhu;
 %
 ZXYD_rf.parpar_ij = XY1mmhu2.*(1 - XYyn0./XYgamma).^2.*XYDrf.ij./XYmhu./XYmhu; 
+ZXYD_rf.ij = XYDrf.ij; 
 %
 clear XYDrf 
 %
