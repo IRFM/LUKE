@@ -65,7 +65,11 @@ for i =1:length(xpi),
 %	goodness-of-fit of the data to the model (Q > 0.1 for the fit to be believable)
 %
     chi2(i) = sum(((yi(:,i) - X(1) - X(2)*Ei(:,i))./pi(:,i)).^2);
-	Q(i) = gammainc((sEi(1)-2)/2,chi2(i)/2);
+    if chi2(i) >= 0,
+        Q(i) = gammainc((sEi(1)-2)/2,chi2(i)/2);
+    else
+        Q(i) = NaN;
+    end
 %
 	clear X Y S
 end
