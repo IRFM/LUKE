@@ -377,6 +377,8 @@ if w_opt == 0; % C3PO Calculation
     %
     n_rf_list = input_dke_yp('List of cyclotron harmonics to consider in power deposition',n_rf_list,0:10,'');
     %
+    ns = input_dke_yp('Ray smoothing parameter',1,1:100,'',[1,1]);
+    %
     d_opt = input_dke_yp('Do you want to display the rays [y/n]','n',{'y','n'},'',[1,1]);
     if strcmp(d_opt,'y'),
         wavedisplay.ray = 2;
@@ -392,6 +394,7 @@ if w_opt == 0; % C3PO Calculation
     waveparam.dsmin = dsmin;
     waveparam.nd = nd;
     waveparam.nchi = nchi;
+    waveparam.ns = ns;    
     %waveparam.a_sdNpar = a_sdNpar;
     %
     wavedisplay.equilibrium = 0;
