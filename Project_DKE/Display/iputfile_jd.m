@@ -101,9 +101,10 @@ else
                     %
                     sel = 1;
                     %
-                    for istr = length(spec{iispec}):-1:1,
-                        istar = length(files(ifile).name) + 1;
-                        istar = strfind(files(ifile).name(1:istar-1),spec{iispec}{istr});
+                    istar = length(files(ifile).name) + 1;
+                    %
+                    for istr = length(spec{ispec}):-1:1,
+                        istar = strfind(files(ifile).name(1:istar-1),spec{ispec}{istr});
                         if isempty(istar),
                             sel = 0;
                             break
