@@ -525,6 +525,9 @@ for ii = 1:length(waves)
 end
 print_jd(opt.print,[figname,'Pol_traj'],'figures_WAVE');
 %
+if isfield(opt,'pol') && opt.pol == 1,
+    return
+end
 %
 figure(2),clf,set(2,'name','Toroidal trajectories')
 %
