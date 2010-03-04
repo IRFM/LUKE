@@ -1,13 +1,13 @@
 function [ax] = graph1D2jd(x1,y1,x2,y2,xlab,ylab1,ylab2,tit,xlim,ylim1,ylim2,...
     style1,marker1,color1,width1,style2,marker2,color2,width2,siz,red,lspace,bspace);
 
-if nargin < 22
+if nargin < 23
     bspace = NaN;
 end
-if nargin < 21
+if nargin < 22
     lspace = NaN;
 end
-if nargin < 20
+if nargin < 21
     red = 1;
 end
 

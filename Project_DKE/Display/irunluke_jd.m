@@ -390,7 +390,7 @@ while isel >= 0,
                         'id_equil','path_equil','ids_wave','paths_wave','id_ohm','path_ohm','id_transpfaste','path_transpfaste','id_ripple','path_ripple',...
                         'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
 						'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
-					disp(['-----> The data file ',fileids.data,' is loaded.']);
+					disp(['-----> The data file ',[data_path,data_file],' is loaded.']);
                     %
                     fileids.data = data_file;
                     paths.data = data_path;
