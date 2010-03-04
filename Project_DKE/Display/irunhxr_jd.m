@@ -97,6 +97,12 @@ if strcmp(basestr,'TCV'),% TCV launching data
         filter_thickness = external.hxr.filter_thickness;
         filter_material = external.hxr.filter_material;
         %
+        if isfield(external,'beta')
+            beta = external.beta;
+        else
+            beta = NaN(1,size(hxr,3));
+        end
+        %
     elseif n_opt > 0,
         if isfield(equil,'info') && isfield(equil.info,'shotnum'),
             shotnum = equil.info.shotnum;
@@ -117,7 +123,7 @@ if strcmp(basestr,'TCV'),% TCV launching data
                return
             end
             %
-            load([data_path,data_file],'shot','energy','hxr','t','filter_thickness','filter_material');
+            load([data_path,data_file],'shot','energy','hxr','t','beta','filter_thickness','filter_material');
             %
             ishot = find(shot == str2num(shotnum));
             %
@@ -150,6 +156,10 @@ if strcmp(basestr,'TCV'),% TCV launching data
         filter_thickness = filter_thickness{ishot};
         filter_material = filter_material{ishot};
         %
+        if ~exist('beta','var'),
+            beta = NaN(1,size(hxr,3));
+        end
+        %
         clear ishot shotnum
         %        
     else
@@ -165,6 +175,18 @@ if strcmp(basestr,'TCV'),% TCV launching data
         hxrexp = NaN*ones(length(energy),nc);
         dt = 1;
     else
+        %
+        % test angles
+        %
+        beta(beta > pi) = 2*pi - beta(beta > pi);% correct beta definition        
+        %
+        if length(beta) ~= nc,
+            error('number of chords mismatch')
+        end
+        if ~all(isnan(beta)) && any(abs(beta - hxrspec.beta_hxr) > 1e-15),
+            error('angle of chords mismatch')
+        end
+        %
         energy = energy.';
         %
         % time sample of experimental data
