@@ -130,11 +130,11 @@ beta_hxr = ones(ns,1)*hxr.beta_hxr;
 R_hxr = ones(ns,1)*hxr.R_hxr;
 Z_hxr = ones(ns,1)*hxr.Z_hxr;
 %
-if alpha_hxr <= -pi | alpha_hxr > pi
+if any(alpha_hxr(:) <= -pi | alpha_hxr(:) > pi)
 	 error('need -pi < alpha_hxr <= pi')
 end
 %
-if beta_hxr < 0 | beta_hxr > pi
+if any(beta_hxr(:) < 0 | beta_hxr(:) > pi),
     error('need 0 <= beta_hxr <= pi')
 end    
 %
@@ -146,7 +146,11 @@ sR = sR + eps*(sR == Rp);%to avoid singularities
 sZ = Z_hxr + sZ;
 %
 sZ = sZ + eps*(sZ == Zp);%to avoid singularities
-sphi = rem(2*pi - acos((sR.^2 + R_hxr.^2 - sh.^2)./(2*sR.*R_hxr)).*sign(alpha_hxr),2*pi);%Toroidal angle
+scosphi = (sR.^2 + R_hxr.^2 - sh.^2)./(2*sR.*R_hxr);
+scosphi(scosphi < -1) = -1;
+scosphi(scosphi > 1) = 1;
+%sphi = rem(2*pi - acos(scosphi).*sign(alpha_hxr),2*pi);%Toroidal angle
+sphi = -acos(scosphi).*sign(alpha_hxr);%Toroidal angle
 spsi = griddata(ptR,ptZ,ppsin(:)*ones(1,length(theta)),sR,sZ);%Flux surface value
 %
 gX_hxr = sin(beta_hxr).*cos(alpha_hxr);%Chord vector
