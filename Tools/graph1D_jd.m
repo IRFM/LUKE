@@ -1,5 +1,19 @@
-function [ax] = graph1D_jd(x,y,logx,logy,xlab,ylab,tit,leg,xlim,ylim,style,marker,color,width,siz,ax,red,lspace,bspace,eym,eyp);
+function [ax] = graph1D_jd(x,y,logx,logy,xlab,ylab,tit,leg,xlim,ylim,style,marker,color,width,siz,ax,red,lspace,bspace,eym,eyp,exm,exp);
 
+if nargin < 22
+    exm = NaN;
+    exp = NaN;
+end
+if nargin < 23
+   exp = exm;
+end
+if nargin < 20
+    eym = NaN;
+    eyp = NaN;
+end
+if nargin < 21
+    eyp = eym;
+end
 if nargin < 19
     bspace = NaN;
 end
@@ -75,12 +89,17 @@ elseif logx == 1 & logy == 1
     set(ax,'yscale','log');
     gcl = loglog(x,y,'parent',ax);
 else
-    if nargin == 21,
+    if ~all(isnan(eym(:))) || ~all(isnan(eyp(:)))
         gcl = errorbar(x,y,eym,eyp,'parent',ax);
-    elseif nargin == 20,
-        gcl = errorbar(x,y,eym,eym,'parent',ax);
-    elseif nargin < 20,        
+    else        
         gcl = plot(x,y,'parent',ax);
+    end
+    %
+    if ~all(isnan(exm)) || ~all(isnan(exp))
+        gcxp = plot([x(:).';x(:).' + exp(:).'],[y(:).';y(:).'],'parent',ax);
+        gcxm = plot([x(:).';x(:).' - exm(:).'],[y(:).';y(:).'],'parent',ax);
+        set(gcxp,'marker','+','color',color);
+        set(gcxm,'marker','+','color',color);
     end
 end
 hold off
@@ -128,7 +147,7 @@ if ~isempty(tit),
     set(tl,'fontname','times new roman');
 end
 if iscell(leg) | ~isnan(leg)
-    lg = legend(leg);
+    lg = legend(leg,'location','best');
     set(lg,'fontsize',imag(siz));
     set(lg,'fontname','times new roman');
 end
