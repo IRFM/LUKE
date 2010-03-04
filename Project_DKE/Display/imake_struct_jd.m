@@ -188,7 +188,7 @@ elseif m_opt == 2,
         disp('No make command is available for this structure');
         s_new = '';
     else
-        if ~isstruct(external) && isnan(external),
+        if ~isstruct(external) && any(isnan(external)),
             s_new = feval(smakecmd,basestr,workdir,opt_gui);
         elseif isfield(external,sname),
             s_new = feval(smakecmd,basestr,equil,external.(sname),workdir,opt_gui);
