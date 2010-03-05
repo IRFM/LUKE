@@ -296,8 +296,8 @@ pleione.maxcompthreads = 'automatic';%For MatLab multithreading
 %
 pleione.mex77 = [pleione.luke_root,'Project_DKE/MEX/Bin/pleione/MATLAB77/'];
 pleione.compiler_opt.copts = '';
-pleione.compiler_opt.fopts.mex77 = ['FC=''',pleione.local_root,'bin/g95'' -largeArrayDims '];% FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''
-pleione.compiler_opt.helmex.mex77 = ['-L',pleione.local_root,'lib -lf95 -lgcc -llapack -lblas'];%  -ltmglib Optional argument for helmex compilation
+pleione.compiler_opt.fopts.mex77 = ['FC=''',pleione.local_root,'bin/g95'' '];% FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''
+pleione.compiler_opt.helmex.mex77 = ['-largeArrayDims -L',pleione.local_root,'lib -lf95 -lgcc -llapack -lblas'];%  -ltmglib Optional argument for helmex compilation
 %
 pleione.MUMPS.mex77 = [pleione.local_root,'src/MUMPS_4.7.3/MATLAB_7.7'];%Where MUMPS matrix solver is stored (MEX function)
 %
@@ -316,8 +316,8 @@ merope.maxcompthreads = 'automatic';%For MatLab multithreading
 %
 merope.mex77 = [merope.luke_root,'Project_DKE/MEX/Bin/pleione/MATLAB77/'];
 merope.compiler_opt.copts = '';
-merope.compiler_opt.fopts.mex77 = ['FC=''',merope.local_root,'bin/g95'' -largeArrayDims '];% FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''
-merope.compiler_opt.helmex.mex77 = ['-L',merope.local_root,'lib -lf95 -lgcc -llapack -lblas'];%  -ltmglib Optional argument for helmex compilation
+merope.compiler_opt.fopts.mex77 = ['FC=''',merope.local_root,'bin/g95'' '];% FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''
+merope.compiler_opt.helmex.mex77 = ['-largeArrayDims -L',merope.local_root,'lib -lf95 -lgcc -llapack -lblas'];%  -ltmglib Optional argument for helmex compilation
 %
 merope.MUMPS.mex77 = [merope.local_root,'src/MUMPS_4.7.3/MATLAB_7.7'];%Where MUMPS matrix solver is stored (MEX function)
 %
