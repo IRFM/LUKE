@@ -526,7 +526,15 @@ if any(aloha.mode==1) & (strcmp(config,'CIEL')|strcmp(config,'TS')|strcmp(config
         scheme  = scenario(aloha.scen);
         results = scheme(i).results;
         redfac = abs(cons(i))/(sum(results.dP_nz)*results.dnz);
-        [bNpar0,bdNpar0,bPlhtot] = proc_aloha_spec_jd(results.nz,NaN,results.dP_nz,redfac,aloha.param(i));
+        param = aloha.param(i);
+        if imag(param) == 0,% imag(param) is the number of peaks left intact
+            if param > 1,% case where we specify the number of lobes
+                param = param - 2 + 2i;
+            else% case where we specify the minimum fraction of power
+                param = param + 2i;
+            end
+        end
+        [bNpar0,bdNpar0,bPlhtot] = proc_aloha_spec_jd(results.nz,NaN,results.dP_nz,redfac,param);
         %
         if strcmp(lob,'No');
             mask = bNpar0 > 0;
