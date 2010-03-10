@@ -61,9 +61,9 @@ dZdtheta = dZdtheta./(ones(length(dprho),1)*dtheta);
 dZdrho = dZdrho./(dprho(:)*ones(1,length(dtheta)));
 %
 salpha = ((R - Rp).*dRdtheta + (Z - Zp).*dZdtheta)./r./sqrt(dRdtheta.^2 + dZdtheta.^2 + eps);
+salpha(:,1) = salpha(:,2);
+salpha(:,end) = salpha(:,end-1);
 calpha = sqrt(1.0 - salpha.^2);
-salpha(1,:) = salpha(2,:);
-calpha(1,:) = calpha(2,:);
 %
 [dcalphadtheta,dcalphadrho] = gradient(calpha);%
 dcalphadtheta = dcalphadtheta./(ones(length(dprho),1)*dtheta);
