@@ -236,7 +236,7 @@ if t > 1,
     else
         disp(['Secondary extrema removal suceeded after cutting ',num2str(t - 1),'/',num2str(nc - 1),' harmonics.'])
     end
-        disp(['  -> variations on B : ',num2str(var),'/',num2str(tol),'.'])
+    disp(['  -> variations on B : ',num2str(var),'/',num2str(tol),'.'])
 end
 %
 if var > tol || ~all(nextr <= 2),
@@ -270,15 +270,15 @@ if var > tol || ~all(nextr <= 2),
         tpBy = tpBy3(ntheta:2*(ntheta-1),:);
         %
     end
-end
-%
-if t > 1,
-    if var > tol || ~all(nextr <= 2),
-        disp(['Secondary extrema removal using Gaussian smoothing failed at width ',num2str(dtheta*(t - 1)),'/pi.'])
-    else
-        disp(['Secondary extrema removal suceeded at width ',num2str(dtheta*(t - 1)),'/pi.'])
-    end
+    %
+    if t > 1,
+        if var > tol || ~all(nextr <= 2),
+            error(['Secondary extrema removal using Gaussian smoothing failed at width ',num2str(dtheta*(t - 1)),'/pi.'])
+        else
+            disp(['Secondary extrema removal suceeded at width ',num2str(dtheta*(t - 1)),'/pi.'])
+        end
         disp(['  -> variations on B : ',num2str(var),'/',num2str(tol),'.'])
+    end
 end
 %
 for m = mfactor:-1:1,
