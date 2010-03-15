@@ -182,73 +182,144 @@ end
 %
 % FFT interpolation on R,Z, BR, BZ, BPHI as a function of theta (very precise, works for uniform theta grids only)
 %
-if mfactor > 1,
+tpx = equil.ptx(:,1:(ntheta-1)).';
+tpy = equil.pty(:,1:(ntheta-1)).';
+tpBx = equil.ptBx(:,1:(ntheta-1)).';
+tpBy = equil.ptBy(:,1:(ntheta-1)).';
+tpBPHI = equil.ptBPHI(:,1:(ntheta-1)).';
+%
+% Try cutting off high theta harmonics if there are secondary extrema
+%
+nc = (ntheta-1)/2 + 1;%central fft point
+%
+tol = 0.01;% tolerance on magnetic field variations
+%
+tpB0 = sqrt(tpBx.^2 + tpBy.^2 + tpBPHI.^2);% total magnetic field
+%
+for t = 1:nc,
     %
-    mtheta = 0:2*pi/((ntheta-1)*mfactor):2*pi*((ntheta-1)*mfactor-1)/((ntheta-1)*mfactor); %super theta grid
+    tpB = sqrt(tpBx.^2 + tpBy.^2 + tpBPHI.^2);% total magnetic field
     %
-    mx = interpft(equil.ptx(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-    my = interpft(equil.pty(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-    mBx = interpft(equil.ptBx(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-    mBy = interpft(equil.ptBy(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
-    mBPHI = interpft(equil.ptBPHI(:,1:(ntheta-1))',(ntheta-1)*mfactor)'; %FFT interpolation
+    var = max(max(abs(tpB - tpB0)./tpB0));
     %
-else
+    nextr = sum(diff(sign(diff(tpB))) ~= 0);
     %
-    mtheta = equil.theta(1:end-1); %super theta grid
+    if t == nc || var > tol || all(nextr <= 2),
+        break
+    end
     %
-    mx = equil.ptx(:,1:end-1); %FFT interpolation
-    my = equil.pty(:,1:end-1); %FFT interpolation
-    mBx = equil.ptBx(:,1:end-1); %FFT interpolation
-    mBy = equil.ptBy(:,1:end-1); %FFT interpolation
-    mBPHI = equil.ptBPHI(:,1:end-1); %FFT interpolation
+    ftpx = fft(tpx);
+    ftpy = fft(tpy);
+    ftpBx = fft(tpBx);
+    ftpBy = fft(tpBy);
+    ftpBPHI = fft(tpBPHI);
+    %
+    mask = (nc - t + 1):(nc + t - 1);
+    %
+    ftpx(mask,:) = 0;
+    ftpy(mask,:) = 0;
+    ftpBx(mask,:) = 0;
+    ftpBy(mask,:) = 0;
+    ftpBPHI(mask,:) = 0;
+    %
+    tpx = ifft(ftpx);
+    tpy = ifft(ftpy);
+    tpBx = ifft(ftpBx);
+    tpBy = ifft(ftpBy);
+    tpBPHI = ifft(ftpBPHI);
     %
 end
 %
-% Remove Fourier components if secondary exprema exist
+if t > 1,
+    if var > tol || ~all(nextr <= 2),
+        disp(['Secondary extrema removal using Fourier filtering failed at  ',num2str(t - 1),'/',num2str(nc - 1),' harmonics.'])
+    else
+        disp(['Secondary extrema removal suceeded after cutting ',num2str(t - 1),'/',num2str(nc - 1),' harmonics.'])
+    end
+        disp(['  -> variations on B : ',num2str(var),'/',num2str(tol),'.'])
+end
 %
-nc = (ntheta-1)*mfactor/2 + 1;%central fft point
-t = 1;
+if var > tol || ~all(nextr <= 2),
+    %
+    % Try smoothing the poloidal field components to remove secondary extrema
+    %
+    tpx = equil.ptx(:,1:(ntheta-1)).';
+    tpy = equil.pty(:,1:(ntheta-1)).';
+    tpBx = equil.ptBx(:,1:(ntheta-1)).';
+    tpBy = equil.ptBy(:,1:(ntheta-1)).';
+    tpBPHI = equil.ptBPHI(:,1:(ntheta-1)).';
+    %
+    thetah = equil.theta(1:ntheta-1);
+    dtheta = 2*pi/(ntheta-1);
+    %
+    for t = 1:nc,
+        %
+        tpB = sqrt(tpBx.^2 + tpBy.^2 + tpBPHI.^2);% total magnetic field
+        %
+        var = max(max(abs(tpB - tpB0)./tpB0));
+        %
+        nextr = sum(diff(sign(diff(tpB))) ~= 0);
+        %
+        if t == nc || var > tol || all(nextr <= 2),
+            break
+        end
+        %
+        tpBx3 = smooth_jd([thetah-2*pi,thetah,thetah+2*pi],[tpBx;tpBx;tpBx],dtheta*t);
+        tpBy3 = smooth_jd([thetah-2*pi,thetah,thetah+2*pi],[tpBy;tpBy;tpBy],dtheta*t);
+        tpBx = tpBx3(ntheta:2*(ntheta-1),:);
+        tpBy = tpBy3(ntheta:2*(ntheta-1),:);
+        %
+    end
+end
 %
-while Rp < Inf && t <= (ntheta-1)/2 && Bax ~= 0,
+if t > 1,
+    if var > tol || ~all(nextr <= 2),
+        disp(['Secondary extrema removal using Gaussian smoothing failed at width ',num2str(dtheta*(t - 1)),'/pi.'])
+    else
+        disp(['Secondary extrema removal suceeded at width ',num2str(dtheta*(t - 1)),'/pi.'])
+    end
+        disp(['  -> variations on B : ',num2str(var),'/',num2str(tol),'.'])
+end
+%
+for m = mfactor:-1:1,
     %
-    mB = sqrt(mBx.^2 + mBy.^2 + mBPHI.^2);% total magnetic field
+    mx = interpft(tpx,(ntheta-1)*mfactor).'; %FFT interpolation
+    my = interpft(tpy,(ntheta-1)*mfactor).'; %FFT interpolation
+    mBx = interpft(tpBx,(ntheta-1)*mfactor).'; %FFT interpolation
+    mBy = interpft(tpBy,(ntheta-1)*mfactor).'; %FFT interpolation
+    mBPHI = interpft(tpBPHI,(ntheta-1)*mfactor).'; %FFT interpolation
     %
-    nextr = sum(diff(sign(diff(mB.'))) ~= 0);
+    mB = sqrt(mBx.^2 + mBy.^2 + mBPHI.^2);
+    %
+    nextr = sum(diff(sign(diff(tpB))) ~= 0);
     %
     if all(nextr <= 2),
         break
     end
     %
-    fmx = fft(mx.');
-    fmy = fft(my.');
-    fmBx = fft(mBx.');
-    fmBy = fft(mBy.');
-    fmBPHI = fft(mBPHI.');
-    %
-    mask = (nc - (mfactor-1)*(ntheta-1)/2 - t + 1):(nc + (mfactor-1)*(ntheta-1)/2 + t - 1);
-    %
-    fmx(mask,:) = 0;
-    fmy(mask,:) = 0;
-    fmBx(mask,:) = 0;
-    fmBy(mask,:) = 0;
-    fmBPHI(mask,:) = 0;
-    %
-    mx = ifft(fmx).';
-    my = ifft(fmy).';
-    mBx = ifft(fmBx).';
-    mBy = ifft(fmBy).';
-    mBPHI = ifft(fmBPHI).';
-    %
-    t = t + 1;
-    %
 end
 %
-mtheta = [mtheta,2*pi]; %2*pi point retrieved (for future interpolation)
 mx = [mx,mx(:,1)]; %2*pi point retrieved
 my = [my,my(:,1)]; %2*pi point retrieved
 mBx = [mBx,mBx(:,1)]; %2*pi point retrieved
 mBy = [mBy,mBy(:,1)]; %2*pi point retrieved
 mBPHI = [mBPHI,mBPHI(:,1)]; %2*pi point retrieved
+%
+mtheta = 0:2*pi/((ntheta-1)*mfactor):2*pi; %super theta grid
+%
+if m < mfactor,
+    %
+    disp(['FT interpolation successful up to m = ',num2str(m),'/',num2str(mfactor)])
+    %
+    mmtheta = 0:2*pi/((ntheta-1)*m):2*pi; %super theta grid
+    %
+    mx = interp1(mmtheta,mx,mtheta);
+    my = interp1(mmtheta,my,mtheta);
+    mBx = interp1(mmtheta,mBx,mtheta);
+    mBy = interp1(mmtheta,mBy,mtheta);
+    mBPHI = interp1(mmtheta,mBPHI,mtheta);
+    %
+end 
 %
 ap =  mx(npsi,1);%Plasma minor radius on the LFS midplane 
 %
