@@ -12,6 +12,10 @@ end
 %
 if nargin < 5 || any(isnan(w_mask)),
     w_mask = 1:length(waves);
+elseif max(w_mask) > length(waves)
+    info_dke_yp(2,'Warning : max(w_mask) > length(waves), dismissed.');
+    iw = w_mask > length(waves);
+    w_mask(iw) = [];
 end
 %
 if length(rho_S) ~= 1 || rho_S <= 1,
