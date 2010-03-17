@@ -1,0 +1,81 @@
+function output = getluke_remote_jd(timeid,jobid,remote)
+%
+output = '';
+%
+remotehost = remote.host;
+remoteset_jobid = remote.set_jobid;
+%
+[res,logname] = unix('whoami');
+%
+if res ~= 0,
+    error('Local login name could not be obtained')
+end
+%
+logname(double(logname) == 10) = [];
+%
+if isfield(remote,logname),
+    remotelogname = remote.(logname);
+else
+    remotelogname = logname;
+end
+%
+load_id = ['LUKE_OUT_',remotelogname,'_',timeid,'.mat'];
+%
+[res,txt] = unix(['ssh ',remotelogname,'@',remotehost,' ''qstat ',remoteset_jobid{1},jobid,remoteset_jobid{2},'''']);
+%
+txt(double(txt) == 10) = [];
+%
+if res == 0,% job still running
+    %
+    return
+    %
+elseif isempty(strfind(txt,remoteset_jobid{3})),
+    %
+    error(['Remote run check failed : ',text])
+    %
+else
+    %
+    % disp(['    --> Run is completed, waiting 30 seconds to ensure output file is completely saved ...'])  
+    %
+    % pause(30)% to make sure the file is completely saved by LUKE
+    %
+    disp(['    --> Copying output file from remote host ',remotehost,' as user ',remotelogname,' ...'])  
+    [res,err] = unix(['scp ',remotelogname,'@',remotehost,':',load_id,' ./']);
+    %
+    if res ~= 0,
+        error(['File transfer failed : ',err])
+    end
+    disp(' ... done');
+    %
+    disp(['    --> Removing output file from remote host ',remotehost,' as user ',remotelogname,' ...'])
+    [res,err] = unix(['ssh ',remotelogname,'@',remotehost,' ''rm -f ',load_id,'''']);
+    %
+    if res ~= 0,
+        disp(['Warning, remote file delete failed : ',err])
+    else
+        disp(' ... done');          
+    end
+    %
+    disp(['    --> Removing batch output files from remote host ',remotehost,' as user ',remotelogname,' ...'])
+    [res,err] = unix(['ssh ',remotelogname,'@',remotehost,' ''rm -f mrunluke_batch.e',jobid,' mrunluke_batch.o',jobid,'''']);
+    %
+    if res ~= 0,
+        disp(['Warning, remote file delete failed : ',err])
+    else
+        disp(' ... done');          
+    end
+    %
+    disp(['    --> Loading results from local file ',load_id,' ...'])
+    output = load(load_id);	
+    disp(' ... done'); 
+    %
+    disp(['    --> Deleting local file ',load_id,' ...'])
+    delete(load_id);   
+    disp(' ... done'); 
+    %
+    if isfield(output,'err'),
+        error(['Remote LUKE run failed : ',output.err])
+    end
+    %
+end   
+

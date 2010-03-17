@@ -150,6 +150,20 @@ laptopjoan.MUMPS.mex75 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_
 laptopjoan.MUMPS.mex77 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB77'];%Where MUMPS matrix solver is stored (MEX function)
 laptopjoan.MUMPS.mex78 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB78'];%Where MUMPS matrix solver is stored (MEX function)
 %
+laptopjoan.remote(1).host = 'cephee15.intra.cea.fr';
+laptopjoan.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
+laptopjoan.remote(1).cmd = 'qsub';% -l walltime=1:59:00 -l nodes=1:ppn=1
+laptopjoan.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
+laptopjoan.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+laptopjoan.remote(1).jd211098 = 'JD211098';
+%
+laptopjoan.remote(2).host = 'saturne1.partenaires.cea.fr';
+laptopjoan.remote(2).luke_root = '/home/JD211098/LUKE/';
+laptopjoan.remote(2).cmd = 'qsub';% -l walltime=1:59:00 -l nodes=1:ppn=1
+laptopjoan.remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
+laptopjoan.remote(2).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+laptopjoan.remote(2).jd211098 = 'JD211098';
+%
 dkepath.laptopjoan = laptopjoan;
 %
 % paths for runs on Pramod Sharma's laptop
