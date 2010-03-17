@@ -74,6 +74,7 @@ color3 = 'b';
 color4 = 'g';
 color5 = 'm';
 color6 = 'c';
+colors = {color2,color3,color4,color5,color6};
 %
 width = 0.5;
 width2 = 2;
@@ -689,15 +690,37 @@ if nr > 1,
         xtick = 0:0.2:1;
         ylim = NaN;
         %
-        graph1D_jd(xrho,xdPdrho_rf_2piRp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
-        %
-        if ~isnan(p_rf_2piRp_lin),
+        if opt_wave == 'y',
             %
-            leg = {'LUKE','linear'};
+            leg = {};
             %
-            graph1D_jd(rho_dep,xdPdrho_rf_2piRp_lin,0,0,'','','',leg,xlim,ylim,style,marker,color3,width,siz);
+            for iw = 1:nw,
+                leg = [leg,['LUKE ',waves{iw}.rayinit.launch.id]];
+                %
+                graph1D_jd(xrho,wxdPdrho_rf_2piRp(iw,:),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,colors{iw},width2,siz,gca,red,lspace,bspace);
+            end
             %
-        end
+            if ~isnan(p_rf_2piRp_lin),
+                %
+                for iw = 1:nw,
+                    leg = [leg,['Linear ',waves{iw}.rayinit.launch.id]];
+                    %
+                    graph1D_jd(rho_dep,wxdPdrho_rf_2piRp_lin(iw,:),0,0,'','','',leg,xlim,ylim,style2,marker,colors{iw},width,siz);
+                end
+                %
+            end
+        else
+            %
+            graph1D_jd(xrho,xdPdrho_rf_2piRp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+            %
+            if ~isnan(p_rf_2piRp_lin),
+                %
+                leg = {'LUKE','linear'};
+                %
+                graph1D_jd(rho_dep,xdPdrho_rf_2piRp_lin,0,0,'','','',leg,xlim,ylim,style,marker,color3,width,siz);
+                %
+            end
+        end            
         %
         set(gca,'xtick',xtick);
         %
