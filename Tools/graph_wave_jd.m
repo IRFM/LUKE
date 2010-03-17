@@ -611,6 +611,10 @@ ibb = NaN;
 ib = 0;
 iwdef = 1;
 %
+if isfield(opt,'nospec') && opt.nospec == 1,
+    iw = 0;% no specific ray display
+end
+%
 while iw ~= 0 && ibb ~= 0
     %
     ib = ib + 1;
