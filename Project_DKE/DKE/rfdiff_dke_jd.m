@@ -160,6 +160,7 @@ if nb == 0,
     gridindex_rf.mask_dke = zeros(0,0,'uint32');%mask of indices in the DKE grid list
     %
     ZXYD_rf.parpar_ij = [];
+	ZXYD_rf.ij = []; 
 %
     % Terms from Sp at l+1/2 (Notations: _imj -> (i,j+1+2);_ipj -> (i+1,j+1/2)
     %
