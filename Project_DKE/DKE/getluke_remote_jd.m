@@ -21,7 +21,15 @@ end
 %
 load_id = ['LUKE_OUT_',remotelogname,'_',timeid,'.mat'];
 %
-[res,txt] = unix(['ssh ',remotelogname,'@',remotehost,' ''qstat ',remoteset_jobid{1},jobid,remoteset_jobid{2},'''']);
+if ~isempty(remotehost),
+    %
+    [res,txt] = unix(['ssh ',remotelogname,'@',remotehost,' ''qstat ',remoteset_jobid{1},jobid,remoteset_jobid{2},'''']);
+    %
+else
+    %
+    [res,txt] = unix(['qstat ',remoteset_jobid{1},jobid,remoteset_jobid{2}]);
+    %
+end
 %
 txt(double(txt) == 10) = [];
 %
@@ -39,30 +47,45 @@ else
     %
     % pause(30)% to make sure the file is completely saved by LUKE
     %
-    disp(['    --> Copying output file from remote host ',remotehost,' as user ',remotelogname,' ...'])  
-    [res,err] = unix(['scp ',remotelogname,'@',remotehost,':',load_id,' ./']);
-    %
-    if res ~= 0,
-        error(['File transfer failed : ',err])
-    end
-    disp(' ... done');
-    %
-    disp(['    --> Removing output file from remote host ',remotehost,' as user ',remotelogname,' ...'])
-    [res,err] = unix(['ssh ',remotelogname,'@',remotehost,' ''rm -f ',load_id,'''']);
-    %
-    if res ~= 0,
-        disp(['Warning, remote file delete failed : ',err])
+    if ~isempty(remotehost),
+        %
+        disp(['    --> Copying output file from remote host ',remotehost,' as user ',remotelogname,' ...'])  
+        [res,err] = unix(['scp ',remotelogname,'@',remotehost,':',load_id,' ./']);
+        %
+        if res ~= 0,
+            error(['File transfer failed : ',err])
+        end
+        disp(' ... done');
+        %
+        disp(['    --> Removing output file from remote host ',remotehost,' as user ',remotelogname,' ...'])
+        [res,err] = unix(['ssh ',remotelogname,'@',remotehost,' ''rm -f ',load_id,'''']);
+        %
+        if res ~= 0,
+            disp(['Warning, remote file delete failed : ',err])
+        else
+            disp(' ... done');          
+        end
+        %
+        disp(['    --> Removing batch output files from remote host ',remotehost,' as user ',remotelogname,' ...'])
+        [res,err] = unix(['ssh ',remotelogname,'@',remotehost,' ''rm -f mrunluke_batch.e',jobid,' mrunluke_batch.o',jobid,'''']);
+        %
+        if res ~= 0,
+            disp(['Warning, remote file delete failed : ',err])
+        else
+            disp(' ... done');          
+        end
+        %
     else
-        disp(' ... done');          
-    end
-    %
-    disp(['    --> Removing batch output files from remote host ',remotehost,' as user ',remotelogname,' ...'])
-    [res,err] = unix(['ssh ',remotelogname,'@',remotehost,' ''rm -f mrunluke_batch.e',jobid,' mrunluke_batch.o',jobid,'''']);
-    %
-    if res ~= 0,
-        disp(['Warning, remote file delete failed : ',err])
-    else
-        disp(' ... done');          
+        %
+        disp('    --> Removing batch output files ...')
+        [res,err] = unix(['rm -f ~/mrunluke_batch.e',jobid,' ~/mrunluke_batch.o',jobid]);
+        %
+        if res ~= 0,
+            disp(['Warning, remote file delete failed : ',err])
+        else
+            disp(' ... done');          
+        end
+        %
     end
     %
     disp(['    --> Loading results from local file ',load_id,' ...'])

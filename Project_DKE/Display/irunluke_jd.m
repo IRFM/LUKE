@@ -1330,9 +1330,9 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 if isfield(dkepath,'remote') && ~isempty(dkepath.remote),
                     nrem = length(dkepath.remote);
-                    remstr = 'Option for running LUKE :\n0 : on local computer\n';
+                    remstr = 'Option for running LUKE :\n0 : local session \n';
                     for irem = 1:nrem,
-                        remstr = [remstr,num2str(irem),' : on ',dkepath.remote(irem).host,':',dkepath.remote(irem).luke_root,'\n'];
+                        remstr = [remstr,num2str(irem),' : batch run on ',dkepath.remote(irem).host,':',dkepath.remote(irem).luke_root,'\n'];
                     end
                     %
                     c_opt = input_dke_yp(remstr,0,0:nrem);

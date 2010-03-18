@@ -41,7 +41,7 @@ saturne.compiler_opt.helmex.mex75 = [' -L',saturne.local_root,'lib -lf95 -lgcc -
 %
 saturne.MUMPS.mex75 = [saturne.local_root,'src/MUMPS_4.7.3/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
 %
-saturne.remote(1).host = 'saturne1.partenaires.cea.fr';
+saturne.remote(1).host = '';% empty for local host
 saturne.remote(1).luke_root = '/home/JD211098/LUKE/';
 saturne.remote(1).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
 saturne.remote(1).get_jobid = {'Your job ',' '};%str_before,str_after
@@ -68,7 +68,7 @@ cephee.compiler_opt.helmex.mex75 = ['-L',cephee.local_root,'lib/cephee/g95 -lf95
 %
 cephee.MUMPS.mex75 = [cephee.local_root,'Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
 %
-cephee.remote(1).host = 'cephee15.intra.cea.fr';
+cephee.remote(1).host = '';% empty for local host
 cephee.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
 cephee.remote(1).cmd = 'qsub';% -l walltime=1:59:00 -l nodes=1:ppn=1
 cephee.remote(1).get_jobid = {'','.cephee'};%str_before,str_after

@@ -33,20 +33,32 @@ end
 save_id = ['LUKE_RUN_',remotelogname,'_',timeid,'.mat'];
 save(save_id,'id_simul','waves','dkeparam','equil','dkedisplay','ohm','transpfaste','ripple');
 %
-disp(['    --> Copying run file to remote host ',remotehost,' as user ',remotelogname,' ...'])  
-[res,err] = unix(['scp ',save_id,' ',remotelogname,'@',remotehost,':']);
-%
-delete(save_id);
-%
-if res ~= 0,
-    error(['File transfer failed : ',err])
+if ~isempty(remotehost),
+    %
+    disp(['    --> Copying run file to remote host ',remotehost,' as user ',remotelogname,' ...'])  
+    [res,err] = unix(['scp ',save_id,' ',remotelogname,'@',remotehost,':']);
+    %
+    delete(save_id);
+    %
+    if res ~= 0,
+        error(['File transfer failed : ',err])
+    end
+    disp(' ... done');
+    %
 end
-disp(' ... done');
 %
 disp(['    --> Starting run with command ',remotecmd,' ...']) 
 %
-[res,txt] = unix(['ssh ',remotelogname,'@',remotehost,...
-    ' ''',remotecmd,' -v timeid=',timeid,',LUKE=',remoteluke_root,' ',remoteluke_root,'mrunluke_batch''']);
+if ~isempty(remotehost),
+    %
+    [res,txt] = unix(['ssh ',remotelogname,'@',remotehost,...
+        ' ''',remotecmd,' -v timeid=',timeid,',LUKE=',remoteluke_root,' ',remoteluke_root,'mrunluke_batch''']);
+    %
+else
+    %
+    [res,txt] = unix([remotecmd,' -v timeid=',timeid,',LUKE=',remoteluke_root,',datapath=',pwd,'/ ',remoteluke_root,'mrunluke_batch']);
+    %
+end
 %
 if res ~= 0,
     error(['Remote run start failed : ',err])

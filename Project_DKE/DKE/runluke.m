@@ -3,6 +3,7 @@ function runluke(timeid)
 try
     %
     timeid = getenv('timeid');
+    datapath = getenv('datapath');
     %
     [res,logname] = unix('whoami');
     %
@@ -12,8 +13,8 @@ try
     %
     logname(double(logname) == 10) = [];
     %
-    filein = ['LUKE_RUN_',logname,'_',timeid,'.mat'];
-    fileout = ['LUKE_OUT_',logname,'_',timeid,'.mat'];
+    filein = [datapath,'LUKE_RUN_',logname,'_',timeid,'.mat'];
+    fileout = [datapath,'LUKE_OUT_',logname,'_',timeid,'.mat'];
     %
     load(filein,'id_simul','waves','dkeparam','equil','dkedisplay','ohm','transpfaste','ripple')
     %
