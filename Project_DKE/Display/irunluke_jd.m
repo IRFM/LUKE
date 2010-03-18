@@ -310,7 +310,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 disp('************** LOAD DATA FILE **************')
                 disp('');
                 %
-                [data_file,data_path] = igetfile_jd(opt_gui,{'LUKE_DATA_*.mat';'LUKE_RESULTS_*.mat';'last_luke@'},'Please select a LUKE data file');
+                [data_file,data_path] = igetfile_jd(opt_gui,{'LUKE_DATA_*.mat';'LUKE_RESULTS_*.mat';'last_luke@*';'before_luke@*'},'Please select a LUKE data file');
                 %
                 if data_file == 0,
                     disp('-----> No LUKE data file specified.');
@@ -320,7 +320,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     if strfind(data_file,'LUKE_DATA_'),
                         %
-                        load([data_path,data_file],'basestr','signs','status','fileids','paths','id_simul',...
+                        load([data_path,data_file],'basestr','signs','status','fileids','paths','id_simul','timeid','jobid','remote',...
                             'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple','output','external');
                         disp(['-----> The data file ',[data_path,data_file],' is loaded.']);
                         %
@@ -387,7 +387,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                     elseif strfind(data_file,'LUKE_RESULTS_'),
                         %
-                        data = load([data_path,data_file],'id_simul','rho_S','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
+                        data = load([data_path,data_file],'basestr','id_simul','rho_S','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
                             'id_equil','path_equil','ids_wave','paths_wave','id_ohm','path_ohm','id_transpfaste','path_transpfaste','id_ripple','path_ripple',...
                             'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
                             'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
@@ -540,6 +540,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                             end
                         end                    
                         %
+                        timeid = '';
+                        %
                         status.external = 0;
                         status.data = 2;
                         %
@@ -547,8 +549,12 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                     elseif strfind(data_file,'last_luke@'),
                         %
-                        data = load([data_path,data_file],'par','dkepath','dkeparam','dkedisplay','equil','ohm','transpfaste','ripple',...
+                        data = load([data_path,data_file],'par','tokamak','dkepath','dkeparam','dkedisplay','equil','ohm','transpfaste','ripple',...
                             'Znorm_RF','Zcurr_RF','ZP0_RF','dke_out_RF','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
+                        %
+                        if isfield(data,'tokamak'),
+                            basestr = data.tokamak;
+                        end
                         %
                         fileids.data = data_file;
                         paths.data = data_path;
@@ -636,8 +642,91 @@ function irunluke_jd(basestr,signs,opt_gui)
                             end
                         end                    
                         %
+                        timeid = '';
+                        %
                         status.external = 0;
                         status.data = 2;
+                        %
+                        clear data
+                        %
+                    elseif strfind(data_file,'before_luke@'),
+                        %
+                        data = load([data_path,data_file],'par','dkepath','dkeparam','dkedisplay','equil','ohm','transpfaste','ripple','wavestructs');
+                        %
+                        fileids.data = data_file;
+                        paths.data = data_path;
+                        %
+                        disp(['-----> The data file ',fileids.data,' is loaded.']);
+                        %
+                        output = '';
+                        %
+                        status.dkeparam = 1;
+                        status.dkepath = 1;
+                        status.equil = 1;
+                        status.output = 0;
+                        %
+                        dkepath = data.dkepath;
+                        dkeparam = data.dkeparam;
+                        dkedisplay = data.dkedisplay;
+                        equil = data.equil;
+                        ohm = data.ohm;
+                        transpfaste = data.transpfaste;
+                        ripple = data.ripple;
+                        %
+                        waves = '';
+                        %
+                        if ~isfield(dkeparam,'rho_S') && isfield(data.par,'rho_S'),
+                            dkeparam.rho_S = data.par.rho_S;
+                        end
+                        %
+                        fileids.dkepath = '';
+                        fileids.dkeparam = '';
+                        fileids.equil = '';
+                        fileids.ohm = '';
+                        fileids.waves = '';
+                        fileids.transpfaste = '';
+                        fileids.ripple = '';
+                        fileids.external = '';
+                        %
+                        paths.dkepath = '';
+                        paths.dkeparam = '';
+                        paths.equil = '';
+                        paths.ohm = '';
+                        paths.waves = '';                       
+                        paths.transpfaste = '';
+                        paths.ripple = '';
+                        paths.external = '';
+                        %
+                        status.waves = 0;
+                        %
+                        if ~isempty(ohm),
+                            status.ohm = 1;
+                            if ~isfield(ohm,'id'),
+                                ohm.id = 'OHM';
+                            end
+                        end                    
+                        %
+                        if ~isempty(transpfaste),
+                            status.transpfaste = 1;
+                            if ~isfield(transpfaste,'id'),
+                                transpfaste.id = 'TRANSP';
+                            end
+                        end                    
+                        %
+                        if ~isempty(ripple),
+                            status.ripple = 1;
+                            if ~isfield(ripple,'id'),
+                                ripple.id = 'RIPPLE';
+                            end
+                        end                    
+                        %
+                        external.id = ['wavestructs : ',num2str(length(data.wavestructs)),' waves'];
+                        external.wave.wavestructs = data.wavestructs;
+                        %
+                        status.external = 1;
+                        status.data = 2;
+                        %
+                        timeid = '';
                         %
                         clear data
                         %
