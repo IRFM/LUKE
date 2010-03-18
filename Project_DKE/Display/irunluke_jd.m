@@ -209,7 +209,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                 ostr = '';
             end   
             %
-            if ~isempty(dkepath) & ~isempty(dkeparam) & ~isempty(equil),
+            if ~isempty(timeid),
+                %
+                statstr.output = ['< LUKE is currently running under job id ',jobid,' >'];
+                %                
+            elseif ~isempty(dkepath) && ~isempty(dkeparam) && ~isempty(equil),
                 %
                 statstr.output = ['<',ostr,' You can start LUKE now. >'];
                 %
@@ -1232,7 +1236,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 % CHECK IF THERE IS A BATCH RUN OF LUKE
                 %
                 if ~isempty(timeid) && input_dke_yp(['-----> There is a pending remote LUKE batch run.\n',...
-                        'Do you want to check the run'],1,[0,1]),
+                        'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
                     %
                     output = getluke_remote_jd(timeid,jobid,remote);
                     %
