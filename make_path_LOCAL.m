@@ -159,10 +159,17 @@ laptopjoan.remote(1).jd211098 = 'JD211098';
 %
 laptopjoan.remote(2).host = 'saturne1.partenaires.cea.fr';
 laptopjoan.remote(2).luke_root = '/home/JD211098/LUKE/';
-laptopjoan.remote(2).cmd = 'qsub';% -l walltime=1:59:00 -l nodes=1:ppn=1
+laptopjoan.remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
 laptopjoan.remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
 laptopjoan.remote(2).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
 laptopjoan.remote(2).jd211098 = 'JD211098';
+%
+laptopjoan.remote(3).host = 'pleiades2.epfl.ch';
+laptopjoan.remote(3).luke_root = '/home/jdecker/LUKE/';
+laptopjoan.remote(3).cmd = 'qsub -l walltime=1:59:00 -l nodes=1:ppn=1';
+laptopjoan.remote(3).get_jobid = {'',''};%str_before,str_after
+laptopjoan.remote(3).set_jobid = {'','',''};%str_before,str_after,str_check
+laptopjoan.remote(3).jd211098 = 'jdecker';
 %
 dkepath.laptopjoan = laptopjoan;
 %
@@ -315,6 +322,20 @@ pleione.compiler_opt.helmex.mex77 = ['-largeArrayDims -L',pleione.local_root,'li
 %
 pleione.MUMPS.mex77 = [pleione.local_root,'src/MUMPS_4.7.3/MATLAB_7.7'];%Where MUMPS matrix solver is stored (MEX function)
 %
+pleione.remote(1).host = 'cephee15.intra.cea.fr';
+pleione.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
+pleione.remote(1).cmd = 'qsub';% -l walltime=1:59:00 -l nodes=1:ppn=1
+pleione.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
+pleione.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+pleione.remote(1).JD211098 = 'JD211098';
+%
+pleione.remote(2).host = 'saturne1.partenaires.cea.fr';
+pleione.remote(2).luke_root = '/home/JD211098/LUKE/';
+pleione.remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+pleione.remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
+pleione.remote(2).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+pleione.remote(2).JD211098 = 'JD211098';
+%
 dkepath.pleione = pleione;
 %
 %
@@ -322,20 +343,7 @@ dkepath.pleione = pleione;
 %
 dkepath.hostname.merope = 'merope';
 %
-merope.luke_root = [pwd,'/'];
-merope.local_root = '/home/sccp/gsem/decker/pleione/';
-merope.computer = 'GLNXA64';%machine type and supported OS
-merope.temppathroot = '/home/sccp/gsem/decker/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-merope.maxcompthreads = 'automatic';%For MatLab multithreading
-%
-merope.mex77 = [merope.luke_root,'Project_DKE/MEX/Bin/pleione/MATLAB77/'];
-merope.compiler_opt.copts = '';
-merope.compiler_opt.fopts.mex77 = ['FC=''',merope.local_root,'bin/g95'' '];% FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''
-merope.compiler_opt.helmex.mex77 = ['-largeArrayDims -L',merope.local_root,'lib -lf95 -lgcc -llapack -lblas'];%  -ltmglib Optional argument for helmex compilation
-%
-merope.MUMPS.mex77 = [merope.local_root,'src/MUMPS_4.7.3/MATLAB_7.7'];%Where MUMPS matrix solver is stored (MEX function)
-%
-dkepath.merope = merope;
+dkepath.merope = pleione;% identical machine
 %
 %***************************************************************************************************
 %
