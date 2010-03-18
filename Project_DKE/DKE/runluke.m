@@ -31,7 +31,13 @@ try
     %
 catch
     %
-    err = lasterr;
+    lsterr = lasterror;
+    %
+    err = {'The action was cancelled due to the following error:','',lsterr.message};
+    for il = 1:length(lsterr.stack),
+        err = [err,['In ',lsterr.stack(il).file,' at line ',num2str(lsterr.stack(il).line)]];
+    end
+    %
     save(fileout,'err')
     %
 end
