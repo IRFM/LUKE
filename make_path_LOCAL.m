@@ -167,8 +167,8 @@ laptopjoan.remote(2).jd211098 = 'JD211098';
 laptopjoan.remote(3).host = 'pleiades2.epfl.ch';
 laptopjoan.remote(3).luke_root = '/home/jdecker/LUKE/';
 laptopjoan.remote(3).cmd = 'qsub -l walltime=1:59:00 -l nodes=1:ppn=1';
-laptopjoan.remote(3).get_jobid = {'',''};%str_before,str_after
-laptopjoan.remote(3).set_jobid = {'','',''};%str_before,str_after,str_check
+laptopjoan.remote(3).get_jobid = {'','.pleiades2.epfl.ch'};%str_before,str_after
+laptopjoan.remote(3).set_jobid = {'','','Unknown Job Id'};%str_before,str_after,str_check
 laptopjoan.remote(3).jd211098 = 'jdecker';
 %
 dkepath.laptopjoan = laptopjoan;
@@ -285,6 +285,13 @@ crpppc70.compiler_opt.fopts = 'FFLAGS=''-fexceptions -fPIC -fno-omit-frame-point
 crpppc70.MUMPS.mex76 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
 %crpppc70.MUMPS.mex78 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.8'];%Where MUMPS matrix solver is stored (MEX function)
 crpppc70.MUMPS.mex79 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.9'];%Where MUMPS matrix solver is stored (MEX function)
+%
+crpppc70.remote(1).host = 'pleiades2.epfl.ch';
+crpppc70.remote(1).luke_root = '/home/jdecker/LUKE/';
+crpppc70.remote(1).cmd = 'qsub -l walltime=1:59:00 -l nodes=1:ppn=1';
+crpppc70.remote(1).get_jobid = {'','.pleiades2.epfl.ch'};%str_before,str_after
+crpppc70.remote(1).set_jobid = {'','','Unknown Job Id'};%str_before,str_after,str_check
+crpppc70.remote(1).decker = 'jdecker';
 %
 dkepath.crpppc70 = crpppc70;
 %
