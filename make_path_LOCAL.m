@@ -41,6 +41,13 @@ saturne.compiler_opt.helmex.mex75 = [' -L',saturne.local_root,'lib -lf95 -lgcc -
 %
 saturne.MUMPS.mex75 = [saturne.local_root,'src/MUMPS_4.7.3/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
 %
+saturne.remote(1).host = 'saturne1.partenaires.cea.fr';
+saturne.remote(1).luke_root = '/home/JD211098/LUKE/';
+saturne.remote(1).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+saturne.remote(1).get_jobid = {'Your job ',' '};%str_before,str_after
+saturne.remote(1).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+saturne.remote(1).JD211098 = 'JD211098';
+%
 dkepath.saturne = saturne;
 %
 % paths for runs on IRFM cephee cluster
@@ -60,6 +67,20 @@ cephee.compiler_opt.fopts.mex75 = ['-f /home/sccp/gsem/decker/Packages/cephee/MU
 cephee.compiler_opt.helmex.mex75 = ['-L',cephee.local_root,'lib/cephee/g95 -lf95 -lgcc -L',cephee.local_root,'Packages/cephee/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95'];% Optional argument for helmex compilation
 %
 cephee.MUMPS.mex75 = [cephee.local_root,'Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
+%
+cephee.remote(1).host = 'cephee15.intra.cea.fr';
+cephee.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
+cephee.remote(1).cmd = 'qsub';% -l walltime=1:59:00 -l nodes=1:ppn=1
+cephee.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
+cephee.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+cephee.remote(1).JD211098 = 'JD211098';
+%
+cephee.remote(2).host = 'saturne1.partenaires.cea.fr';
+cephee.remote(2).luke_root = '/home/JD211098/LUKE/';
+cephee.remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+cephee.remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
+cephee.remote(2).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+cephee.remote(2).JD211098 = 'JD211098';
 %
 dkepath.cephee = cephee;
 %
@@ -292,6 +313,7 @@ crpppc70.remote(1).cmd = 'qsub -l walltime=1:59:00 -l nodes=1:ppn=1';
 crpppc70.remote(1).get_jobid = {'','.pleiades2.epfl.ch'};%str_before,str_after
 crpppc70.remote(1).set_jobid = {'','','Unknown Job Id'};%str_before,str_after,str_check
 crpppc70.remote(1).decker = 'jdecker';
+crpppc70.remote(1).curchod = 'lcurchod';
 %
 dkepath.crpppc70 = crpppc70;
 %
