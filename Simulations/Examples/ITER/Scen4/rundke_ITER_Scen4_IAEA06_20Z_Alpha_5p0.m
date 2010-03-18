@@ -1,7 +1,7 @@
 %Script for running the DKE solver (can be modified by the user for specific simulations)
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
-clear all
+%clear all
 clear mex
 clear functions
 close all
