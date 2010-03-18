@@ -78,12 +78,24 @@ else
     else
         %
         disp('    --> Removing batch output files ...')
-        [res,err] = unix(['rm -f ~/mrunluke_batch.e',jobid,' ~/mrunluke_batch.o',jobid]);
         %
-        if res ~= 0,
-            disp(['Warning, remote file delete failed : ',err])
-        else
+        efile = ['mrunluke_batch.e',jobid];
+        ofile = ['mrunluke_batch.o',jobid];
+        %
+        if exist(efile,'file'),
+            %
+            delete(efile),
+            delete(ofile),
             disp(' ... done');          
+            %
+        elseif exist([getenv('HOME'),'/',efile],'file'),
+            %
+            delete([getenv('HOME'),'/',efile]),
+            delete([getenv('HOME'),'/',ofile]),
+            disp(' ... done');          
+            %
+        else
+            disp('Warning, remote file delete failed : batch output files not found')
         end
         %
     end
