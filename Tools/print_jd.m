@@ -21,7 +21,7 @@ if nargin < 1
 end
 %
 if isnan(savedir),
-    savedir = 'figures';
+    savedir = './figures';
 end
 if ~isnan(fignum),
     figure(fignum)
