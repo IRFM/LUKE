@@ -10,7 +10,7 @@ if nargin < 2,
 end
 %
 Sx = size(x);
-if length(Sx) ~= 2 | min(Sx) ~= 1 |max(Sx) == 1,
+if length(Sx) ~= 2 || min(Sx) ~= 1 || max(Sx) == 1,
     error('x must be a vector')
 else
     x = x(:);
@@ -45,7 +45,7 @@ Xx0 = repmat(x.',[nx,1,Sff]);
 Xdx0 = repmat(dx.',[nx,1,Sff]);
 Xf0 = repmat(reshape(xf,[1,Sf]),[nx,ones(length(Sff))]);
 %
-xfs = sum(Xf0.*Xdx0.*exp(-(Xx - Xx0).^2/dxs.^2)/sqrt(pi)/dxs,2);
+xfs = reshape(sum(Xf0.*Xdx0.*exp(-(Xx - Xx0).^2/dxs.^2)/sqrt(pi)/dxs,2),Sf);
 %
 
 
