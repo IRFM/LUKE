@@ -15,15 +15,24 @@ if nargin < 3,
 end
 %
 wave = '';
+wavestruct = '';
 type = '';
 %
-if ~isempty(external),% magnetic equilibrium from external database?
+if ~isempty(external) && ~isfield(external,'wavestructs'),% wave data from external database
     %
     i_opt = input_dke_yp(['Do you want to :\n',...
         '(0) use data loaded from the external database \n',...
         '(1) use data from an existing file \n',...
         '(2) build the wave data locally \n'],...
         0,{0,1,2},'Invalid selection');
+    %
+elseif ~isempty(external) && isfield(external,'wavestructs'),% wave data from wavestructs
+    %
+    i_opt = input_dke_yp(['Do you want to :\n',...
+        '(1) use data from an existing file \n',...
+        '(2) build the wave data locally \n',...
+        '(3) use data from wavestructs \n'],...
+        1,{1,2,3},'Invalid selection');
     %
 else
     %
@@ -103,22 +112,6 @@ if i_opt == 0,% use data from external database
         %
         disp(['-----> wave data not yet implemented for :',basestr]);
         return      
-        %
-    end
-    %
-    % Select the ray tracing code to be launched from LUKE
-    %
-    w_opt = input_dke_yp('Which ray-tracing code do you want to run ? 0 (C3PO), 1 (TORAY), 2 (ART), 3 (AMR), ',0,0:3,'',[1,1]);
-    %
-	if w_opt == 1,% Run TORAY from LUKE interface
-        %
-        disp('-----> TORAY run from LUKE not implemented yet');
-        return
-        %
-    elseif w_opt == 2,% Run ART from LUKE interface
-        %
-        disp('-----> ART run from LUKE not implemented yet');
-        return
         %
     end
     %
@@ -226,11 +219,34 @@ elseif i_opt == 2,% build the wave data locally
         %
     end
     %
-    % Select the ray tracing code to be launched from LUKE
+elseif i_opt == 3,% use data from wavestructs
+    %
+    d_opt = 0;% rayinit built from launching conditions
+    %
+    wavestructs = external.wavestructs;
+    %
+    if length(wavestructs) > 1,
+        t_opt = input_dke_yp(['Select the wave number (1:',num2str(length(wavestructs)),')'],1,1:length(wavestructs),'',[1,1]);
+    else
+        t_opt = 1;
+    end
+    %
+    wavestruct = wavestructs{t_opt};
+    %
+    % WAVE TYPE
+    %
+    launch = wavestruct.launch;
+    type = launch.type;
+    %
+end
+%
+% Select the ray tracing code to be launched from LUKE
+%
+if any(i_opt == [0,2,3]),
     %
     w_opt = input_dke_yp('Which ray-tracing code do you want to run ? 0 (C3PO), 1 (TORAY), 2 (ART), 3 (AMR), ',0,0:3,'',[1,1]);
     %
-	if w_opt == 1,% Run TORAY from LUKE interface
+    if w_opt == 1,% Run TORAY from LUKE interface
         %
         disp('-----> TORAY run from LUKE not implemented yet');
         return
@@ -241,7 +257,6 @@ elseif i_opt == 2,% build the wave data locally
         return
         %
     end
-    %
 end
 %
 % C3PO CALCULATIONS
@@ -267,9 +282,35 @@ if w_opt == 0; % C3PO Calculation
     %
     [qe,me] = pc_dke_yp;
     %
-    if strcmp(ftype,'LF'), 
+    if isfield(wavestruct,'waveparam'),
+        %
+        mmode = wavestruct.waveparam.mmode;
+        kmode = wavestruct.waveparam.kmode;
+        opt_rf = wavestruct.waveparam.opt_rf;
+        dsmin = wavestruct.waveparam.dsmin;
+        %
+        nd = 1;
+        nchi = 1;
+        %
+        if strcmp(ftype,'LF'),
+            %
+            reflection = 1;
+            n_rf_list = 0;
+            method = 'pchip';
+            %
+        else
+            %
+            reflection = 0;
+            n_rf_list = max([1,floor(omega_rf/(qe*max(abs(equil.ptBPHI(end,:)))/me))]):...
+                ceil(omega_rf/(qe*min(abs(equil.ptBPHI(end,:)))/me));
+            method = 'spline';
+            %
+        end
+        %
+    elseif strcmp(ftype,'LF'), 
         %
         mmode = -1;
+        kmode = 0;
         opt_rf = 1;
         dsmin = 0.01;
         nd = 1;
@@ -291,8 +332,8 @@ if w_opt == 0; % C3PO Calculation
             return       
         end
         %
-        %
         mmode = 1;
+        kmode = 0;
         opt_rf = 0;
         dsmin = 0.001;
         nd = 3;
@@ -363,7 +404,7 @@ if w_opt == 0; % C3PO Calculation
     mmode = input_dke_yp('Polarization : (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1)',mmode,{-1,1},'',[1,1]);
     %
     %kmode = input_dke_yp('Plasma model for wave propagation : (0:cold, 1:warm, 2:kinetic non rel., 3:weakly rel., 4:fully rel.)',0,0:4,'',[1,1]);
-    kmode = input_dke_yp('Plasma model for wave propagation : (0:cold, 1:kinetic)',0,0:1,'',[1,1])*2;
+    kmode = input_dke_yp('Plasma model for wave propagation : (0:cold, 1:kinetic)',kmode,0:1,'',[1,1])*2;
     %
     opt_rf = input_dke_yp('FLR effects : (0:all, 1:small)',opt_rf,0:1,'',[1,1]);
     %
@@ -394,7 +435,9 @@ if w_opt == 0; % C3PO Calculation
     waveparam.dsmin = dsmin;
     waveparam.nd = nd;
     waveparam.nchi = nchi;
+    waveparam.n_rf_list = n_rf_list;
     waveparam.ns = ns;    
+    %
     %waveparam.a_sdNpar = a_sdNpar;
     %
     wavedisplay.equilibrium = 0;
@@ -406,12 +449,18 @@ if w_opt == 0; % C3PO Calculation
     %
     % RAY, WAVE, AND DISPLAY PARAMETERS
     %
-    c3poparam_file = which('C3POPARAM.mat');
-    [c3poparam_file,c3poparam_path] = igetfile_jd(opt_gui,'*.*','Please select the C3PO default parameters file',c3poparam_file);
-    if c3poparam_file == 0,
-        return
+    if isfield(wavestruct,'fitequilparam') && isfield(wavestruct,'rayparam') && isfield(wavestruct,'C3POparam'),
+        fitparam = wavestruct.fitequilparam;
+        rayparam = wavestruct.rayparam;
+        C3POparam = wavestruct.C3POparam;
+    else    
+        c3poparam_file = which('C3POPARAM.mat');
+        [c3poparam_file,c3poparam_path] = igetfile_jd(opt_gui,'*.*','Please select the C3PO default parameters file',c3poparam_file);
+        if c3poparam_file == 0,
+            return
+        end
+        load([c3poparam_path,c3poparam_file],'fitparam','rayparam','C3POparam');
     end
-    load([c3poparam_path,c3poparam_file],'fitparam','rayparam','C3POparam');
     %
     rayparam.tensortype = kmode;
     rayparam.reflection = reflection;
@@ -427,8 +476,6 @@ if w_opt == 0; % C3PO Calculation
     end
     %
     % C3PO ray tracing
-    %
-    waveparam.n_rf_list = n_rf_list;
     %
     sd = pwd;
     cd(workdir);
