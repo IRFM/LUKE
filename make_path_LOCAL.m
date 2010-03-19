@@ -70,7 +70,7 @@ cephee.MUMPS.mex75 = [cephee.local_root,'Packages/cephee/MUMPS_4.7.3_S_g95/MATLA
 %
 cephee.remote(1).host = '';% empty for local host
 cephee.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
-cephee.remote(1).cmd = 'qsub';% -l walltime=1:59:00 -l nodes=1:ppn=1
+cephee.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
 cephee.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
 cephee.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 cephee.remote(1).JD211098 = 'JD211098';
@@ -173,7 +173,7 @@ laptopjoan.MUMPS.mex78 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_
 %
 laptopjoan.remote(1).host = 'cephee15.intra.cea.fr';
 laptopjoan.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
-laptopjoan.remote(1).cmd = 'qsub';% -l walltime=1:59:00 -l nodes=1:ppn=1
+laptopjoan.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
 laptopjoan.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
 laptopjoan.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 laptopjoan.remote(1).jd211098 = 'JD211098';
@@ -353,7 +353,7 @@ pleione.MUMPS.mex77 = [pleione.local_root,'src/MUMPS_4.7.3/MATLAB_7.7'];%Where M
 %
 pleione.remote(1).host = 'cephee15.intra.cea.fr';
 pleione.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
-pleione.remote(1).cmd = 'qsub';% -l walltime=1:59:00 -l nodes=1:ppn=1
+pleione.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
 pleione.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
 pleione.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 pleione.remote(1).JD211098 = 'JD211098';
