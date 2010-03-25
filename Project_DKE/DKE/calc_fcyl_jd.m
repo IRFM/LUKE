@@ -65,7 +65,7 @@ xXFpar_cyl = 2*pi*integral_dke_jd(dpperp_cyl,XXpperph_cyl.*XXfh_cyl,1);
 %
 if isempty(iir_display), 
     inter = 1;
-    iir_display = input_dke_yp(['Select radial location index (1:',num2str(nr),'). Enter 0 to exit. '],1,1:nr);
+    iir_display = input_dke_yp(['Select radial location index (1:',num2str(nr),'). Enter 0 to exit. '],1,0:nr);
 else
     inter = 0;
 end
@@ -76,12 +76,14 @@ while iir_display > 0,
     Fpar_cyl = xXFpar_cyl(:,iir_display);
     %
     if isempty(pnmax_disp),
-        pnmax_disp = pmax;
+        pnmax = pmax;
     elseif isnan(pnmax_disp),
-        pnmax_disp = min([pmax,min(min(Xp_cyl(Xf_cyl == 0)))]);
+        pnmax = min([pmax,min(min(Xp_cyl(Xf_cyl == 0)))]);
+    else
+        pnmax = pnmax_disp;
     end
     %
-    Xf_cyl(Xp_cyl > pnmax_disp) = 0;
+    Xf_cyl(Xp_cyl > pnmax) = 0;
     %
     % ---------- 2D distribution function -----------
     %
@@ -89,17 +91,17 @@ while iir_display > 0,
     %
     x1 = ppar_cyl;
     xlab1 = 'p_{||}/p_{Te}';
-    xlim1 = [-pnmax_disp,pnmax_disp];
+    xlim1 = [-pnmax,pnmax];
     %
     x2 = pperp_cyl;
     xlab2 = 'p_{\perp}/p_{Te}';
-    xlim2 = [0,pnmax_disp];
+    xlim2 = [0,pnmax];
     %
     y1 = Xf_cyl;
     %
-    y2 = sqrt(pnmax_disp^2 - ppar_cyl.^2);
+    y2 = sqrt(pnmax^2 - ppar_cyl.^2);
     %
-    graph2D_jd(x1,x2,y1.','','','',xlim1,xlim2,0,betath_ref,0:0.5:pnmax,0,'-','r',2,20,1,max(max(y1)));
+    graph2D_jd(x1,x2,y1.','','','',xlim1,xlim2,0,betath_ref,0:0.5:40,0,'-','r',2,20,1,max(max(y1)));
     %
     graph1D_jd(x1,y2,0,0,xlab1,xlab2,'',NaN,xlim1,xlim2,'--','none','k',2,20,gca,0.9,0.7,0.7);
     %
@@ -109,16 +111,16 @@ while iir_display > 0,
     %
     figure(2),clf,set(1,'Name',['1-D contour of f, iir = ',num2str(iir_display)])
     %
-    y = Xf_cyl;
+    y = Fpar_cyl;
     ylab = 'F_{||}';
     ylim = [eps,1];
     %
     graph1D_jd(x1,y,0,1,xlab1,ylab,'',NaN,xlim1,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
     %
-    axis('equal');axis([xlim1,xlim2]);
+    set(gca,'ytick',10.^(-16:2:0))
     %
     if inter == 1,
-        iir_display = input_dke_yp(['Select radial location index (1:',num2str(nr),'). Enter 0 to exit. '],1,1:nr);
+        iir_display = input_dke_yp(['Select radial location index (1:',num2str(nr),'). Enter 0 to exit. '],0,0:nr);
     end
     %
 end
