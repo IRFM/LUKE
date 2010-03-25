@@ -35,7 +35,7 @@ if ndx == 1
     %SX = squeeze(X);
     SX = squeeze(X*dx);
     if size(SX,1) == 1
-        SX = SX';
+        SX = SX.';
     end
     return;
 end
@@ -60,6 +60,6 @@ if nd > 2
 %   SX = shiftdim(SXs,nd-d);
     SX = shiftdim(shiftdim(SXs,1),nd-d);
 else
-    SX = SXs';
+    SX = SXs.';
 end
 
