@@ -188,69 +188,15 @@ tpBx = equil.ptBx(:,1:(ntheta-1)).';
 tpBy = equil.ptBy(:,1:(ntheta-1)).';
 tpBPHI = equil.ptBPHI(:,1:(ntheta-1)).';
 %
-% Try cutting off high theta harmonics if there are secondary extrema
-%
-nc = (ntheta-1)/2 + 1;%central fft point
-%
-tol = 0.01;% tolerance on magnetic field variations
-%
-tpB0 = sqrt(tpBx.^2 + tpBy.^2 + tpBPHI.^2);% total magnetic field
-%
-for t = 1:nc,
+if Rp < Inf,
     %
-    tpB = sqrt(tpBx.^2 + tpBy.^2 + tpBPHI.^2);% total magnetic field
+    % Try cutting off high theta harmonics if there are secondary extrema
     %
-    var = max(max(abs(tpB - tpB0)./tpB0));
+    nc = (ntheta-1)/2 + 1;%central fft point
     %
-    nextr = sum(diff(sign(diff(tpB))) ~= 0);
+    tol = 0.01;% tolerance on magnetic field variations
     %
-    if t == nc || var > tol || all(nextr <= 2),
-        break
-    end
-    %
-    ftpx = fft(tpx);
-    ftpy = fft(tpy);
-    ftpBx = fft(tpBx);
-    ftpBy = fft(tpBy);
-    ftpBPHI = fft(tpBPHI);
-    %
-    mask = (nc - t + 1):(nc + t - 1);
-    %
-    ftpx(mask,:) = 0;
-    ftpy(mask,:) = 0;
-    ftpBx(mask,:) = 0;
-    ftpBy(mask,:) = 0;
-    ftpBPHI(mask,:) = 0;
-    %
-    tpx = ifft(ftpx);
-    tpy = ifft(ftpy);
-    tpBx = ifft(ftpBx);
-    tpBy = ifft(ftpBy);
-    tpBPHI = ifft(ftpBPHI);
-    %
-end
-%
-if t > 1,
-    if var > tol || ~all(nextr <= 2),
-        disp(['Secondary extrema removal using Fourier filtering failed at  ',num2str(t - 1),'/',num2str(nc - 1),' harmonics.'])
-    else
-        disp(['Secondary extrema removal suceeded after cutting ',num2str(t - 1),'/',num2str(nc - 1),' harmonics.'])
-    end
-    disp(['  -> variations on B : ',num2str(var),'/',num2str(tol),'.'])
-end
-%
-if var > tol || ~all(nextr <= 2),
-    %
-    % Try smoothing the poloidal field components to remove secondary extrema
-    %
-    tpx = equil.ptx(:,1:(ntheta-1)).';
-    tpy = equil.pty(:,1:(ntheta-1)).';
-    tpBx = equil.ptBx(:,1:(ntheta-1)).';
-    tpBy = equil.ptBy(:,1:(ntheta-1)).';
-    tpBPHI = equil.ptBPHI(:,1:(ntheta-1)).';
-    %
-    thetah = equil.theta(1:ntheta-1);
-    dtheta = 2*pi/(ntheta-1);
+    tpB0 = sqrt(tpBx.^2 + tpBy.^2 + tpBPHI.^2);% total magnetic field
     %
     for t = 1:nc,
         %
@@ -264,39 +210,101 @@ if var > tol || ~all(nextr <= 2),
             break
         end
         %
-        tpBx3 = smooth_jd([thetah-2*pi,thetah,thetah+2*pi],[tpBx;tpBx;tpBx],dtheta*t);
-        tpBy3 = smooth_jd([thetah-2*pi,thetah,thetah+2*pi],[tpBy;tpBy;tpBy],dtheta*t);
-        tpBx = tpBx3(ntheta:2*(ntheta-1),:);
-        tpBy = tpBy3(ntheta:2*(ntheta-1),:);
+        ftpx = fft(tpx);
+        ftpy = fft(tpy);
+        ftpBx = fft(tpBx);
+        ftpBy = fft(tpBy);
+        ftpBPHI = fft(tpBPHI);
+        %
+        mask = (nc - t + 1):(nc + t - 1);
+        %
+        ftpx(mask,:) = 0;
+        ftpy(mask,:) = 0;
+        ftpBx(mask,:) = 0;
+        ftpBy(mask,:) = 0;
+        ftpBPHI(mask,:) = 0;
+        %
+        tpx = ifft(ftpx);
+        tpy = ifft(ftpy);
+        tpBx = ifft(ftpBx);
+        tpBy = ifft(ftpBy);
+        tpBPHI = ifft(ftpBPHI);
         %
     end
     %
     if t > 1,
         if var > tol || ~all(nextr <= 2),
-            error(['Secondary extrema removal using Gaussian smoothing failed at width ',num2str(dtheta*(t - 1)),'/pi.'])
+            disp(['Secondary extrema removal using Fourier filtering failed at  ',num2str(t - 1),'/',num2str(nc - 1),' harmonics.'])
         else
-            disp(['Secondary extrema removal suceeded at width ',num2str(dtheta*(t - 1)),'/pi.'])
+            disp(['Secondary extrema removal suceeded after cutting ',num2str(t - 1),'/',num2str(nc - 1),' harmonics.'])
         end
         disp(['  -> variations on B : ',num2str(var),'/',num2str(tol),'.'])
+    end
+    %
+    if var > tol || ~all(nextr <= 2),
+        %
+        % Try smoothing the poloidal field components to remove secondary extrema
+        %
+        tpx = equil.ptx(:,1:(ntheta-1)).';
+        tpy = equil.pty(:,1:(ntheta-1)).';
+        tpBx = equil.ptBx(:,1:(ntheta-1)).';
+        tpBy = equil.ptBy(:,1:(ntheta-1)).';
+        tpBPHI = equil.ptBPHI(:,1:(ntheta-1)).';
+        %
+        thetah = equil.theta(1:ntheta-1);
+        dtheta = 2*pi/(ntheta-1);
+        %
+        for t = 1:nc,
+            %
+            tpB = sqrt(tpBx.^2 + tpBy.^2 + tpBPHI.^2);% total magnetic field
+            %
+            var = max(max(abs(tpB - tpB0)./tpB0));
+            %
+            nextr = sum(diff(sign(diff(tpB))) ~= 0);
+            %
+            if t == nc || var > tol || all(nextr <= 2),
+                break
+            end
+            %
+            tpBx3 = smooth_jd([thetah-2*pi,thetah,thetah+2*pi],[tpBx;tpBx;tpBx],dtheta*t);
+            tpBy3 = smooth_jd([thetah-2*pi,thetah,thetah+2*pi],[tpBy;tpBy;tpBy],dtheta*t);
+            tpBx = tpBx3(ntheta:2*(ntheta-1),:);
+            tpBy = tpBy3(ntheta:2*(ntheta-1),:);
+            %
+        end
+        %
+        if t > 1,
+            if var > tol || ~all(nextr <= 2),
+                error(['Secondary extrema removal using Gaussian smoothing failed at width ',num2str(dtheta*(t - 1)),'/pi.'])
+            else
+                disp(['Secondary extrema removal suceeded at width ',num2str(dtheta*(t - 1)),'/pi.'])
+            end
+            disp(['  -> variations on B : ',num2str(var),'/',num2str(tol),'.'])
+        end
     end
 end
 %
 for m = mfactor:-1:1,
     %
-    mx = interpft(tpx,(ntheta-1)*mfactor).'; %FFT interpolation
-    my = interpft(tpy,(ntheta-1)*mfactor).'; %FFT interpolation
-    mBx = interpft(tpBx,(ntheta-1)*mfactor).'; %FFT interpolation
-    mBy = interpft(tpBy,(ntheta-1)*mfactor).'; %FFT interpolation
-    mBPHI = interpft(tpBPHI,(ntheta-1)*mfactor).'; %FFT interpolation
+    mx = interpft(tpx,(ntheta-1)*m).'; %FFT interpolation
+    my = interpft(tpy,(ntheta-1)*m).'; %FFT interpolation
+    mBx = interpft(tpBx,(ntheta-1)*m).'; %FFT interpolation
+    mBy = interpft(tpBy,(ntheta-1)*m).'; %FFT interpolation
+    mBPHI = interpft(tpBPHI,(ntheta-1)*m).'; %FFT interpolation
     %
-    mB = sqrt(mBx.^2 + mBy.^2 + mBPHI.^2);
-    %
-    nextr = sum(diff(sign(diff(tpB))) ~= 0);
-    %
-    if all(nextr <= 2),
+    if Rp < Inf
+        %
+        mB = sqrt(mBx.^2 + mBy.^2 + mBPHI.^2);
+        %
+        nextr = sum(diff(sign(diff(tpB))) ~= 0);
+        %
+        if all(nextr <= 2),
+            break
+        end
+        %
+    else
         break
     end
-    %
 end
 %
 mx = [mx,mx(:,1)]; %2*pi point retrieved
