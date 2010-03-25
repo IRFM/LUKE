@@ -1968,3 +1968,83 @@
 % U graph_wave_jd.m (launch for EC only)
 % U graph1D_jd.m (separate legend size)
 %
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.8.1
+% 
+% - BATCH remote LUKE run
+% - CRONOS output file coupling
+% - equilibrium extrema removal
+% - TCV HXR corrections and comparison
+% - ALOHA coupling
+% - transport proportional to DQL
+% 
+% ====> LUKE
+%
+% A mrunluke_batch (batch LUKE run)
+% U make_path_LOCAL.m (")
+% 
+% ====> LUKE/Project_DKEDatabase
+%
+% U DKEPARAM_files/make_dkeparam_EC_RT.m (stability)
+% U HXR_files/make_hxr_TCV.m (beta angles corrected)
+%
+% ====> LUKE/Project_DKE/Display
+%
+% U irunluke_jd.m (remote batch LUKE run and cronos coupling)
+% U irunhxr_jd.m (experimental data from external, and angle test)
+% U igetfile_jd.m (filters correction)
+% U iputfile_jd.m (")
+% U imake_struct_jd.m (possibility to load external structure)
+% U imake_wave_jd.m (build from CRONOS wavestructs)
+%
+% ====> LUKE/Project_DKE/DKE
+%
+% U optgrid_dke_jd.m (avoid some errors)
+% U equilibrium_jd.m (secondary extrema removal improved)
+% A runluke.m (batch LUKE run)
+% A runluke_remote_jd.m (")
+% A getluke_remote_jd.m (")
+% U raysum_rf_jd.m (possibility to make transport proportional to DQL)
+% U rad_dke_yp.m (")
+% U matrixcalc_dke_yp.m (")
+% U rfdiff_dke_jd.m (")
+% U proc_luke_jd.m (multiple waves deposition display)
+% A calc_fcyl_jd.m (cylindrical distribution calculation and plot)
+% U s2c_dke_yp.m (to ensure symmetry)
+% U LUKEversion_jd.m (LUKE 1.8.1)
+%
+% ====> LUKE/Project_DKE/Modules/ALOHA
+%
+% U proc_aloha_spec_jd.m (some peaks left intact)
+%
+% ====> LUKE/Project_DKE/Modules/C3PO
+%
+% U testfitequil_yp.m (small correction)
+%
+% ====> LUKE/Project_DKE/Modules/Cronos
+%
+% U make_wavelaunchs_cronos_lh.m (some peaks left intact)
+% U luke_parameters.m (opt_save = 2 before run)
+% U zstarwars.m (id, save and path)
+% U make_equil_cronos.m (equil.id)
+%
+% ====> LUKE/Project_DKE/Modules/FEB
+%
+% U bremsstrahlung_dke_yp.m (small correction)
+% A collect_hxr_forLUKE_jd.m (collect HXR exp data for LUKE)
+% A comp_hxr_jd.m (compare exp and calc for each energy channel)
+% A fproc_hxr.m (general function for HXR comparison)
+% A runhxr_jd.m (automatic version of irun_hxr)
+% U Pile-up/tphfit_dke_yp.m (use NaN for inconsistent data)
+% U bremchord_dke_yp.m (beta angles corrected)
+%
+% ====> LUKE/Tools
+%
+% A smooth_jd.m (gaussian smoothing)
+% U print_jd.m (small correction)
+% U graph1D_jd.m (error bars in x axis)
+% U graph1D2jd.m (nargin corrections)
+% U graph_wave_jd.m (display option)
+% U integral_dke_jd.m (small correction)
+%
