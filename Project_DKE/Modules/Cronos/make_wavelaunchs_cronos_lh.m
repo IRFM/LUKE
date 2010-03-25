@@ -517,12 +517,12 @@ else
    error('The launch configuration name does not exists')  	
 end
 
-if any(aloha.mode==1) & (strcmp(config,'CIEL')|strcmp(config,'TS')|strcmp(config,'ITER'))
-    disp('use ALOHA file for the power spectrum, TS case')
+if any(aloha.mode==1) & (strcmp(config,'CIEL')|strcmp(config,'TS')|strcmp(config,'ITER')|strcmp(config,'JET'))
+    disp('use ALOHA file for the power spectrum, TS/JET case')
     nblh   = length(aloha.mode);
     %
     for i=1:nblh
-      if aloha.mode(i) == 1
+      if aloha.mode(i) == 1 & abs(cons(i)) > 0
         filename = deblank(char(aloha.file(i)));
         filename(isspace(filename)) = [];
         load(fullfile(aloha.path,filename));
@@ -537,7 +537,8 @@ if any(aloha.mode==1) & (strcmp(config,'CIEL')|strcmp(config,'TS')|strcmp(config
                 param = param + 2i;
             end
         end
-        [bNpar0,bdNpar0,bPlhtot] = proc_aloha_spec_jd(results.nz,NaN,results.dP_nz,redfac,param);
+        opt_optim = 0 %(if 1 use  toolbox optimisation)
+        [bNpar0,bdNpar0,bPlhtot] = proc_aloha_spec_jd(results.nz,NaN,results.dP_nz,redfac,param,opt_optim);
         %
         if strcmp(lob,'No');
             mask = bNpar0 > 0;
