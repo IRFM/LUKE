@@ -319,13 +319,13 @@ end
 %
 % info machine
 %
-%from = evalin('base','param.from');
-if isfield(varargin{1},'machine_nom')
-  machine = varargin{1}.machine_nom;
-else
-  machine = varargin{1}.conf;
-end
-shot    = 0;
+workdir = par.workdir;
+tokamak = par.tokamak;
+shotnum = num2str(par.shotnum);
+shotime = num2str(par.temps,'%6.4f');
+%
+equil_id = [tokamak,'_',shotnum,'_',shotime];
+%
 sortie.err = 0;
 sortie = proto;
 % on definit le flag d'erreur a 0 par defaut (pas d'erreur)
@@ -373,7 +373,7 @@ if ~isempty(ind)
 end
 equi.psi = equi.psi(1) - cumtrapz(gene.x,absdpsidx);
 
-equil = make_equil_cronos(shot,equi,gene,prof,compo,impur);
+equil = make_equil_cronos(equil_id,equi,gene,prof,compo,impur);
 if sum(equil.ptBy(:,end)-equil.ptBy(:,1)) ~= 0
     disp('equilibrium warning, By(:,theta=0) ~= By(:,theta=pi)')
     equil.ptBy(:,end) = equil.ptBy(:,1);
@@ -693,14 +693,28 @@ else
   acces_lh
 end
 %
+if par.save == 2,%save before LUKE
+   %
+   save([workdir,'/before_luke@',equil_id,'.mat']);
+   %
+   error('Exiting after saving LUKE parameters')
+end
+
+%
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
 ik = 1;
 warning off
 
 %
+%
 %while 1,
-   [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,waves,[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
+wd = pwd;
+cd(workdir);
+%
+[Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,waves,[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
+%
+cd(wd);
 %   if isempty(dke_warnings),
 %      break;
 %   else
@@ -882,11 +896,8 @@ memoire.data.edistribution.p = momentumDKE.pn*mksa.betath_ref;
 memoire.data.edistribution.mhu0 = momentumDKE.mhu;
 memoire.data.edistribution.psin = equilDKE.xpsin;
 
-if par.save,
-   [chemin,void] = fileparts(gene.rapsauve);
-   save(fullfile(chemin,sprintf('last_luke@%s',int2str(fix(gene.t*1000)))));
-%   shot=evalin('base','param.from.shot.num')
-%   save(fullfile(chemin,'last_luke'));
+if par.save == 1,
+   save([workdir,'/last_luke@',equil_id,'.mat']);
 end
 %
 
