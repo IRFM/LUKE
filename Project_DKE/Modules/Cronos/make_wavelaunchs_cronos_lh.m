@@ -1,5 +1,8 @@
 function [launchs] = make_wavelaunchs_cronos_lh(equil,signe,config,cons,cons_spec,lob,freqlh,aloha)
 %
+if nargin < 8,
+    aloha.mode = 0;
+end
 if nargin < 7,
     freqlh = NaN;
 end
