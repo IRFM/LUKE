@@ -1,11 +1,11 @@
-function equil = make_equil_cronos(shot,equi,gene,prof,compo,impur);
+function equil = make_equil_cronos(equil_id,equi,gene,prof,compo,impur);
 %
 % This function creates the equil structure used by LUKE from various
 % cronos structures.
 %
 % by Joan Decker (joan.decker@cea.fr) and Yves Peysson (yves.peysson@cea.fr)
 %
-equil.id = ['CRONOS_',int2str(shot),'_k',int2str(gene.k)];%gene.k is the time slice
+equil.id = equil_id;%gene.k is the time slice
 equil.Rp = double(equi.R(1,1,1));
 equil.Zp = double(equi.Z(1,1,1));
 equil.ptx = squeeze(double(equi.R)) - equil.Rp;
