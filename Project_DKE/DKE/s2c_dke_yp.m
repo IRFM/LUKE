@@ -39,8 +39,12 @@ pperp00 = [-pperp0(:,nextra:-1:1),pperp0,-pperp0(:,sf0:-1:sf0-nextra+1)];
 f00 = [f0(:,nextra:-1:1),f0,f0(:,sf0:-1:sf0-nextra+1)];
 %
 pmax = max(p) + max(diff(p));
-ppar = [-pmax:dp:pmax];
-pperp = [0:dp:pmax];
+% to ensure 0 is a ppar grid point
+np = ceil(pmax/dp);
+ppar = linspace(-pmax,pmax,2*np + 1);
+pperp = linspace(0,pmax,np + 1);
+dp = pperp(2) - pperp(1);
+%
 [ppar1,pperp1] = meshgrid(ppar,pperp);
 f1 = griddata(ppar00,pperp00,f00,ppar1,pperp1,'cubic');
 %
