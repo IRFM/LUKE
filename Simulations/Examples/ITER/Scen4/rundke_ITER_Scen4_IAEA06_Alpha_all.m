@@ -6,6 +6,8 @@ clear all
 close all
 warning off
 %
+dkepath = load_structures_yp('dkepath','','');%to set path to DCLUKE functions
+%
 mdce_mode = 2;
 %
 script_list = {...
