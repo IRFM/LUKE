@@ -20,11 +20,9 @@ script_list = {...
 %
 nruns = length(script_list);
 %
-dkecluster = clustermode_luke(mdce_mode,'',0);
+dkecluster = clustermode_luke(mdce_mode,'',0,dkepath.remote);
 dkecluster.size = nruns;
 %
 flag = mdce_luke(@feval,{''},1,script_list,dkecluster);
-%
-rmdir(dkecluster.temppath,'s');
 %
 disp('******** Simulation completed **********')
