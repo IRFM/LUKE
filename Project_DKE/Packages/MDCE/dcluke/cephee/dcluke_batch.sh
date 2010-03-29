@@ -20,6 +20,6 @@ echo '#$ -l inter=false,ncpus=2,mem=4gb'    >> "$6"
 echo  $4  $5            >> "$6"
 
 chmod u+x $6 
-qsub $6
-
+#qsub $6
+qsub -l inter=false,ncpus=2 $6
 # Pour CEPHEE qsub -N $3 -j oe -m abe -M $4 -r n -V -l inter=false,ncpus=2,mem=4gb $5
