@@ -109,16 +109,3 @@ if nargin == 2,
     end
 end
 %
-% Path distributed computing
-%
-if nargin == 2, 
-	clusterscriptsdir = [dkepath.luke_root,'Project_DKE/Packages/MDCE/dcluke/',dkepath.hostname];
-	if exist(clusterscriptsdir,'dir'),
-		if exist([clusterscriptsdir,'/dcluke_batch.sh']) & exist([clusterscriptsdir,'/dcluke_etat.sh']) & exist([clusterscriptsdir,'/dcluke_kill.sh']) & exist([clusterscriptsdir,'/dcluke_kill.sh']) & exist([clusterscriptsdir,'/dcluke.exe']),
-			addpath(clusterscriptsdir);
-		else
-			error('Scripts for LUKE distributed computing not found')
-		end
-	end
-end
-%
