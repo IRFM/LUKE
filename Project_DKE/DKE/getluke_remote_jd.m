@@ -39,7 +39,7 @@ if res == 0,% job still running
     %
 elseif isempty(strfind(txt,remoteset_jobid{3})),
     %
-    error(['Remote run check failed : ',text])
+    error(['Remote run check failed : ',txt])
     %
 else
     %
