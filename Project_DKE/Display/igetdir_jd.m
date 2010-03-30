@@ -70,6 +70,8 @@ else
         disp(' ');
         disp('[-1] Cancel');
         disp(' ');
+        disp('[-2] Current directory');
+        disp(' ');
         %
         isel_new = input(['? [',num2str(isel_loc),'] : ']);
         %
@@ -77,7 +79,11 @@ else
             isel_new = isel_loc;
         end
         %
-        if isel_new == -1,%cancel operation
+        if isel_new == -2,%current directory
+            %
+            selectpath = [pwd,'/'];
+            %
+        elseif isel_new == -1,%cancel operation
             %
             selectpath = 0;
             %
