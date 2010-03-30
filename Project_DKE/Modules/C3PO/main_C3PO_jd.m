@@ -1,16 +1,16 @@
-function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,flag)
+function wave = main_C3PO_jd(dkepath,id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,flag)
 %C3PO - Set ray initial characteristics and launches the C3PO ray-tracing code
 %
 % This function calculates the ray initial characteristics and launches the C3PO ray-tracing code
 %
 % by J. Decker (CEA-IRFM) <joan.decker@cea.fr> and   Y. Peysson (CEA-IRFM) <yves.peysson@cea.fr>
 %
-    if nargin < 8,
+    if nargin < 9,
     	C3POparam = [];
         flag = 0;%numerical equilibrium used by default
     end
 	%
-    if nargin < 9,
+    if nargin < 10,
         flag = 0;%numerical equilibrium used by default
     end
     %
@@ -108,9 +108,8 @@ function wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C
         for iray = 1:Nrays,
             arg_range{iray} = iray;
         end
-        [dkecluster] = clustermode_luke(C3POparam.clustermode,'main_C3PO_jd',C3POdisplay);
+        [dkecluster] = clustermode_luke(C3POparam.clustermode,'main_C3PO_jd',C3POdisplay,dkepath.remote);
         [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,dkecluster);
-		rmdir(dkecluster.temppath,'s');
 		%
 		iray_wave = 1;
 		for iray = 1:Nrays,

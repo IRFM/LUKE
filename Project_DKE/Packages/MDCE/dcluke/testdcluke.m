@@ -6,14 +6,15 @@
 clear all
 %
 dkepath = load_structures_yp('dkepath','','');
-[dkecluster] = clustermode_luke(2,'',1);%Cluster parameters, paths and warnings. Must be called once before distributed computing
+[dkecluster] = clustermode_luke(2,'',1,dkepath.remote);%Cluster parameters, paths and warnings. Must be called once before distributed computing
 %
 if dkecluster.mode == 2,
+    mkdir(dkecluster.temppath);
 	dcluke(dkecluster,0,'RESET');
     id = dcluke(dkecluster,'fundcluke',pi/3); 
     dcluke(dkecluster);
     tic,[e1_d,e2_d,e3_d] = dcluke(dkecluster,id);toc
-    rmdir(dkecluster.temppath,'s');%Must always be done after distributed computing call
+    rmdir(dkecluster.temppath,'s');
     disp('Calculations in the distributed computing mode done.');
 else
 	disp(dkecluster.info);

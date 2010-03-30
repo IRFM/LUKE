@@ -162,7 +162,7 @@ for n=1:N,
     %   
 	C3POparam.clustermode.main_C3PO_jd.mode = 0;
 	C3POparam.clustermode.main_C3PO_jd.size = nprocmax1;
-    tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_seq(n) = toc;
+    tic;wave = main_C3PO_jd(dkepath,'test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_seq(n) = toc;
     figure;
     for j = 1:n,
         graph1D_jd(wave.rays{j}.ss,wave.rays{j}.srho,0,0,'Ray length','\rho',['Sequential computing - ',int2str(n),' cycles, dt = ',num2str(time_seq(n)),' (s)'],'',[0,max(wave.rays{1}.ss)],NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
@@ -176,7 +176,7 @@ for n=1:N,
 %	C3POparam.clustermode.main_C3PO_jd.mode = 1;
 %	C3POparam.clustermode.main_C3PO_jd.size = nprocmax1;
 %    if C3POparam.clustermode.main_C3PO_jd.mode == 1,%(MDCE only with 1 processor called)
-%    	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce1(n) = toc;
+%    	tic;wave = main_C3PO_jd(dkepath,'test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce1(n) = toc;
 %		flag_mode1 = 1;
 %    end
 %	 figure;
@@ -188,7 +188,7 @@ for n=1:N,
     C3POparam.clustermode.main_C3PO_jd.mode = 2;
 	C3POparam.clustermode.main_C3PO_jd.size = n;
     if C3POparam.clustermode.main_C3PO_jd.mode == 2,
-    	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_ldce(n) = toc;
+    	tic;wave = main_C3PO_jd(dkepath,'test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_ldce(n) = toc;
         flag_mode2 = 1;
     end
     figure;
@@ -213,7 +213,7 @@ for n=1:N,
 %	C3POparam.clustermode.main_C3PO_jd.mode = 1;
 %	C3POparam.clustermode.main_C3PO_jd.size = nprocmax4;
 %    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
-%    	tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce4(n) = toc;
+%    	tic;wave = main_C3PO_jd(dkepath,'test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce4(n) = toc;
 %    end
 %    %
 %    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
@@ -227,7 +227,7 @@ for n=1:N,
 %	C3POparam.clustermode.main_C3PO_jd.mode = 1;
 %	C3POparam.clustermode.main_C3PO_jd.size = nprocmax8;
 %    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
-%        tic;wave = main_C3PO_jd('test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce8(n) = toc;
+%        tic;wave = main_C3PO_jd(dkepath,'test',equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);clear mex;clear functions;time_mdce8(n) = toc;
 %    end
     %
 %    if C3POparam.clustermode.main_C3PO_jd.mode == 1,
