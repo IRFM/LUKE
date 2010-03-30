@@ -157,6 +157,11 @@ if exist('flag_path','var'),%Paths
         %
         dkepath.hostname = hostname;
         dkepath.id = path_id;
+        %
+        if ~isfield(dkepath,'remote'),
+            dkepath.remote = '';
+        end
+        %
     end
     %
     if ~strcmp(dkepath.computer,computer),
