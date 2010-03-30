@@ -752,6 +752,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                         [dkepath,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepath,paths,fileids,status,opt_gui);
                         %
                     end
+                    %
+                    if ~strcmp(workdir,[pwd,'/']) && input_dke_yp('Do you want to move to the source directory (y/n)','y',{'y','n'}) == 'y',
+                        cd(workdir);
+                    end
+                    %
                 end
                 %
             elseif isel == 2,
@@ -819,6 +824,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                 end
                 %
+                if ~strcmp(workdir,[pwd,'/']) && input_dke_yp('Do you want to move to the working directory (y/n)','y',{'y','n'}) == 'y',
+                    cd(workdir);
+                end
+                %
             elseif isel == 4,
                 %
                 % LOAD DATA FROM EXTERNAL DATABASE
@@ -832,7 +841,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 smakecmd = 'iload_externaldata_jd';
                 %
                 [external,paths.external,fileids.external,newstruct] = ...
-                    imake_struct_jd(external,'external',paths.external,fileids.external,'',basestr,smakecmd,NaN,status.external,'EXTERNAL',workdir,'',opt_gui,0,0,1,0);
+                    imake_struct_jd(dkepath,external,'external',paths.external,fileids.external,'',basestr,smakecmd,NaN,status.external,'EXTERNAL',workdir,'',opt_gui,0,0,1,0);
                 %
                 % structure interdependences
                 %
@@ -909,7 +918,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 smakecmd = '';
                 %
                 [dkeparam,paths.dkeparam,fileids.dkeparam,newstruct] = ...
-                    imake_struct_jd(dkeparam,'dkeparam',paths.dkeparam,fileids.dkeparam,equil,basestr,smakecmd,'',status.dkeparam,'DKEPARAM',workdir,dkeparam_default,opt_gui,0,1,1,0);
+                    imake_struct_jd(dkepath,dkeparam,'dkeparam',paths.dkeparam,fileids.dkeparam,equil,basestr,smakecmd,'',status.dkeparam,'DKEPARAM',workdir,dkeparam_default,opt_gui,0,1,1,0);
                 %
                 if ~isempty(dkeparam) && ~isfield(dkeparam,'rho_S'),
                     dkeparam.rho_S = 20;
@@ -942,7 +951,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 smakecmd = 'imake_equil_jd';
                 %
                 [equil,paths.equil,fileids.equil,newstruct] = ...
-                    imake_struct_jd(equil,'equil',paths.equil,fileids.equil,signs,basestr,smakecmd,external,status.equil,'EQUIL',workdir,'',opt_gui,0,0,1,0);
+                    imake_struct_jd(dkepath,equil,'equil',paths.equil,fileids.equil,signs,basestr,smakecmd,external,status.equil,'EQUIL',workdir,'',opt_gui,0,0,1,0);
                 %
                 if isempty(equil)
                     signs = [];
@@ -980,7 +989,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 smakecmd = 'imake_wave_jd';
                 %
                 [waves,paths.waves,fileids.waves,newstruct] = ...
-                    imake_struct_jd(waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,external,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
+                    imake_struct_jd(dkepath,waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,external,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
                 %
                 % structure interdependences
                 %
@@ -1009,7 +1018,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 smakecmd = 'imake_ohm_jd';
                 %
                 [ohm,paths.ohm,fileids.ohm,newstruct] = ...
-                    imake_struct_jd(ohm,'ohm',paths.ohm,fileids.ohm,equil,basestr,smakecmd,external,status.ohm,'OHM',workdir,'',opt_gui,0,1,1);
+                    imake_struct_jd(dkepath,ohm,'ohm',paths.ohm,fileids.ohm,equil,basestr,smakecmd,external,status.ohm,'OHM',workdir,'',opt_gui,0,1,1);
                 %
                 % structure interdependences
                 %
@@ -1038,7 +1047,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 smakecmd = 'imake_transp_jd';
                 %
                 [transpfaste,paths.transpfaste,fileids.transpfaste,newstruct] = ...
-                    imake_struct_jd(transpfaste,'transpfaste',paths.transpfaste,fileids.transpfaste,equil,basestr,smakecmd,external,status.transpfaste,'TRANSP',workdir,'',opt_gui,0,1,1);
+                    imake_struct_jd(dkepath,transpfaste,'transpfaste',paths.transpfaste,fileids.transpfaste,equil,basestr,smakecmd,external,status.transpfaste,'TRANSP',workdir,'',opt_gui,0,1,1);
                 %
                 % structure interdependences
                 %
@@ -1072,7 +1081,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 smakecmd = 'imake_ripple_yp';
                 %
                 [ripple,paths.ripple,fileids.ripple,newstruct] = ...
-                    imake_struct_jd(ripple,'ripple',paths.ripple,fileids.ripple,equil,basestr,smakecmd,external,status.ripple,'RIPPLE',workdir,'',opt_gui,0,1,1);
+                    imake_struct_jd(dkepath,ripple,'ripple',paths.ripple,fileids.ripple,equil,basestr,smakecmd,external,status.ripple,'RIPPLE',workdir,'',opt_gui,0,1,1);
                 %
                 % structure interdependences
                 %
@@ -1238,7 +1247,12 @@ function irunluke_jd(basestr,signs,opt_gui)
                 if ~isempty(timeid) && input_dke_yp(['-----> There is a pending remote LUKE batch run.\n',...
                         'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
                     %
+                    sd  = pwd;
+                    cd(workdir);
+                    %
                     output = getluke_remote_jd(timeid,jobid,remote);
+                    %
+                    cd(sd);
                     %
                     if isempty(output),
                         disp(['Remote LUKE still running under job id ',jobid,' ...'])
@@ -1448,7 +1462,7 @@ function [dkepath,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepa
 	smakecmd = '';
 	%
 	[dkepath,paths.dkepath,fileids.dkepath,newstruct] = ...
-		imake_struct_jd(dkepath,'dkepath',paths.dkepath,fileids.dkepath,'',basestr,smakecmd,'',status.dkepath,'PATH',workdir,dkepath_default,opt_gui,0,0,1,0);
+		imake_struct_jd(dkepath,dkepath,'dkepath',paths.dkepath,fileids.dkepath,'',basestr,smakecmd,'',status.dkepath,'PATH',workdir,dkepath_default,opt_gui,0,0,1,0);
 	%
 	% structure interdependences
 	%

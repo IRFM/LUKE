@@ -1,4 +1,4 @@
-function external = iload_externaldata_jd(basestr,workdir,opt_gui)
+function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui)
 %
 % This function loads data from external database
 %

@@ -1,4 +1,4 @@
-function transpfaste = imake_transp_jd(basestr,equil,external,workdir,opt_gui)
+function transpfaste = imake_transp_jd(dkepath,basestr,equil,external,workdir,opt_gui)
 %
 % This function interactively builds the ohm structure
 %

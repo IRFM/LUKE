@@ -1,20 +1,20 @@
-function equil = imake_equil_jd(basestr,signs,external,workdir,opt_gui)
+function equil = imake_equil_jd(dkepath,basestr,signs,external,workdir,opt_gui)
 %
 % This function interactively builds the equilibrium structure
 %
-if nargin < 5,
+if nargin < 6,
 	opt_gui = 1;
 end
 %
-if nargin < 4,
+if nargin < 5,
 	workdir = pwd;
 end
 %
-if nargin < 3,
+if nargin < 4,
 	external = '';
 end
 %
-if nargin < 2,
+if nargin < 3,
 	signs = '';
 end
 %

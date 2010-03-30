@@ -119,7 +119,7 @@ s = [s,{'% ---------------------------------------------------------------------
 s = [s,{'%'}];
 s = [s,{'% C3P0 ray tracing'}];
 s = [s,{'%'}];
-s = [s,{'wave = main_C3PO_jd(id_wave,equil,rayinits{1},waveparam,fitparam,rayparam,C3POdisplay,C3POparam);'}];
+s = [s,{'wave = main_C3PO_jd(dkepath,id_wave,equil,rayinits{1},waveparam,fitparam,rayparam,C3POdisplay,C3POparam);'}];
 s = [s,{'%'}];
 s = [s,{'% Wave processing and relativistic linear damping'}];
 s = [s,{'%'}];

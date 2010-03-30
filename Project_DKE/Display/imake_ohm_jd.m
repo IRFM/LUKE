@@ -1,16 +1,16 @@
-function ohm = imake_ohm_jd(basestr,equil,external,workdir,opt_gui)
+function ohm = imake_ohm_jd(dkepath,basestr,equil,external,workdir,opt_gui)
 %
 % This function interactively builds the ohm structure
 %
-if nargin < 5,
+if nargin < 6,
 	opt_gui = 1;
 end
 %
-if nargin < 4,
+if nargin < 5,
 	workdir = pwd;
 end
 %
-if nargin < 3,
+if nargin < 4,
 	external = '';
 end
 %

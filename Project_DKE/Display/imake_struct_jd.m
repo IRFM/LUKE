@@ -1,42 +1,42 @@
-function [s,spath,sfileid,newstruct] = imake_struct_jd(s,sname,spath,sfileid,equil,basestr,smakecmd,external,status,sbase,workdir,sdefault,opt_gui,opt_multi,opt_id,d_opt,e_opt)
+function [s,spath,sfileid,newstruct] = imake_struct_jd(dkepath,s,sname,spath,sfileid,equil,basestr,smakecmd,external,status,sbase,workdir,sdefault,opt_gui,opt_multi,opt_id,d_opt,e_opt)
 %
 % This function is the general interactive function for the structure s.
 %
 %
-if nargin < 17,
+if nargin < 18,
     e_opt = 1;
 end
-if nargin < 16,
+if nargin < 17,
     d_opt = 1;
 end
-if nargin < 15,
+if nargin < 16,
     opt_id = 1;
 end
-if nargin < 14,
+if nargin < 15,
     opt_multi = 0;
 end
-if nargin < 13,
+if nargin < 14,
     opt_gui = 1;
 end
-if nargin < 12,
+if nargin < 13,
     sdefault = '';
 end
-if nargin < 11,
+if nargin < 12,
     workdir = pwd;
 end
-if nargin < 10,
+if nargin < 11,
     sbase = '';
 end
-if nargin < 9,
+if nargin < 10,
     status = 0;
 end
-if nargin < 8,
+if nargin < 9,
     external = '';
 end
-if nargin < 7,
+if nargin < 8,
     smakecmd = '';
 end
-if nargin < 6,
+if nargin < 7,
     error('Not enough arguments.');
 end
 %
@@ -189,11 +189,11 @@ elseif m_opt == 2,
         s_new = '';
     else
         if ~isstruct(external) && any(isnan(external)),
-            s_new = feval(smakecmd,basestr,workdir,opt_gui);
+            s_new = feval(smakecmd,dkepath,basestr,workdir,opt_gui);
         elseif isfield(external,sname),
-            s_new = feval(smakecmd,basestr,equil,external.(sname),workdir,opt_gui);
+            s_new = feval(smakecmd,dkepath,basestr,equil,external.(sname),workdir,opt_gui);
         else
-            s_new = feval(smakecmd,basestr,equil,'',workdir,opt_gui);
+            s_new = feval(smakecmd,dkepath,basestr,equil,'',workdir,opt_gui);
         end
     end
     %
