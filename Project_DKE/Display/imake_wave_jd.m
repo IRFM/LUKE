@@ -1,16 +1,16 @@
-function wave = imake_wave_jd(basestr,equil,external,workdir,opt_gui)
+function wave = imake_wave_jd(dkepath,basestr,equil,external,workdir,opt_gui)
 %
 % This function interactively builds the wave structure
 %
-if nargin < 5,
+if nargin < 6,
 	opt_gui = 1;
 end
 %
-if nargin < 4,
+if nargin < 5,
 	workdir = pwd;
 end
 %
-if nargin < 3,
+if nargin < 4,
 	external = '';
 end
 %
@@ -479,7 +479,7 @@ if w_opt == 0; % C3PO Calculation
     %
     sd = pwd;
     cd(workdir);
-    wave = main_C3PO_jd(rayinit.id,equil,rayinit,waveparam,fitparam,rayparam,wavedisplay,C3POparam);
+    wave = main_C3PO_jd(dkepath,rayinit.id,equil,rayinit,waveparam,fitparam,rayparam,wavedisplay,C3POparam);
     cd(sd);
     %
     wave.info.type = 'RT';

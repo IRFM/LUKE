@@ -105,7 +105,7 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 %
 rayinit.yP0_2piRp = yP0/(2*pi*equil.Rp);
 %
-wave = main_C3PO_jd(id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam);
+wave = main_C3PO_jd(dkepath,id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam);
 %
 % Wave processing and relativistic linear damping
 %

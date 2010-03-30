@@ -83,7 +83,7 @@ rayparam.reflection = 1;%1:Enforce wave reflection at plasma boundary, 0: the co
 %
 % C3P0 ray tracing
 %
-wave = main_C3PO_jd(id_wave,equil,rayinits{1},waveparam,fitparam,rayparam,C3POdisplay,C3POparam);
+wave = main_C3PO_jd(dkepath,id_wave,equil,rayinits{1},waveparam,fitparam,rayparam,C3POdisplay,C3POparam);
 %
 % Wave processing and relativistic linear damping
 %
