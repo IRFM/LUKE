@@ -7,7 +7,7 @@ function [varargout] = run_lukert(id_simul,wavestructs,waves,psin_S,rho_S,dkepat
 %Ray-tracing calculations
 %
 if nargin < 15,
-   opt_save = 0;%rays are calculated by C3PO and not reload
+   opt_save = 0;%rays are calculated by C3PO and not reloaded
 end 
 %
 path_simul = '';
@@ -34,10 +34,14 @@ for iw = (nw0 + 1):(nw0 + length(wavestructs)),
     %
     if strcmp(wavestruct.wavesolver,'C3PO'),% C3P0 ray tracing
 	    rayinit = main_rayinit_launch_jd(equil,wavestruct.launch);
-	    if ~isfield(wavestruct,'C3POparam'),wavestruct.C3POparam = [];end
+        %
+	    if ~isfield(wavestruct,'C3POparam'),
+            wavestruct.C3POparam = [];
+        end
+        %
 	    wave = main_C3PO_jd(dkepath,wavestruct.id,equil,rayinit,wavestruct.waveparam,wavestruct.fitequilparam,wavestruct.rayparam,wavestruct.raydisplay,wavestruct.C3POparam);%Ray calculations
         %
-        wave = wave_process_jd(equil,wave,dkeparam.n_rf_list);%Wave processing and relativistic linear damping
+        wave = wave_process_jd(equil,wave,wavestruct.waveparam.n_rf_list);%Wave processing and relativistic linear damping
         %
         if isfield(wavestruct.launch,'b_sdNpar') == 1,
             wave.b_sdNpar = wavestruct.launch.b_sdNpar;
@@ -96,6 +100,14 @@ else
     w_mask = dkeparam.w_mask;%list of waves to account for in the radial grid determination
 end
 %
+if isfield(dkeparam,'rho0'),
+    rho_S = rho_S + i*rho0;
+end
+%
+if ~isfield(dkeparam,'nk_abs'),
+    nk_abs = 1;
+end
+%
 [rho_S,dkeparam.pnmax_S] = optgrid_dke_jd(waves,rho_S,dkeparam.pnmax_S,equil,w_mask,dkedisplay.display_mode);
 %
 % 3-D relativistic bounce averaged quasilinear kinetic calculations (LUKE)
@@ -138,23 +150,70 @@ elseif dkeparam.rt_mode == 2,
 %
 % *************************************************************************
 %
-% Case with sdNpar proportional to ss (in waves structure)
+% Case with sdNpar eventually proportional to ss (in waves structure)
 %
 elseif dkeparam.rt_mode == 4,
     %
+    iw_list = [];%list of LH waves
+    a_sdNpar = zeros(1,nw);
+    %
     for iw = 1:nw,
-        if ~isfield(waves{iw},'a_sdNpar') == 1,
-            disp(['a_sdNpar not specified is set to zero for wave ',int2str(iw)])
-            waves{iw}.a_sdNpar = 0;
-        end
-%
-        for ib = 1:nb(iw),
-            waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sdNpar(1) + waves{iw}.a_sdNpar*waves{iw}.rays{ib}.ss;
+        if strcmp(waves{iw}.rayinit.launch.type,'LH'),
+            iw_list = [iw_list, iw];
+            %
+            if ~isfield(waves{iw},'a_sdNpar'),
+                disp(['a_sdNpar not specified is set to zero for wave ',int2str(iw)])
+                a_sdNpar(iw) = 0;% used only in abslim loop
+            else
+                a_sdNpar(iw) = waves{iw}.a_sdNpar;
+            end
         end
     end
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
-%
+    for ik = 1:nk_abs,
+        %
+        for iw = iw_list;            
+            for ib = 1:nb(iw),
+                waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sdNpar(1) +ik*a_sdNpar(iw)*waves{iw}.rays{ib}.ss;
+            end
+        end
+        %
+        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+        %
+        yp_rf_2piRp = sum(ZP0.xy_rf_fsav.'*mksa.P_ref.*repmat(equilDKE.xdV_2piRp_dke,[ny,1]),1);
+        %
+        P0 = 0;
+        Pabs = 0;
+        %
+        for iw = iw_list,
+            %
+            nb(iw) = length(waves{iw}.rays);
+            %
+            ibmin = sum(nb(1:iw-1)) + 1;
+            ibmax = sum(nb(1:iw)) + 1;
+            %
+            if iw < nw
+                ymask = yb(ibmin):(yb(ibmax) - 1);
+            else
+                ymask = yb(ibmin):ny;
+            end            
+            %
+            Pabs = Pabs + yp_rf_2piRp(ymask);
+            P0 = P0 + sum(waves{iw}.rayinit.launch.bPlhtot);
+        end
+        %
+        if P0 > 0 && isfield(dkeparam,'abs_lim') && Pabs/P0 < dkeparam.abs_lim,
+            %
+            if a_sdNpar(iw) == 0,
+                %
+                a_sdNpar(iw) = 0.01;
+                %
+            end
+            %
+        else
+            break
+        end
+    end
 % *************************************************************************
 %
 % Case with sdNpar increasing at each caustic point

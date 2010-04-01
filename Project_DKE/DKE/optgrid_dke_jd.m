@@ -18,10 +18,11 @@ elseif max(w_mask) > length(waves)
     w_mask(iw) = [];
 end
 %
-if length(rho_S) ~= 1 || rho_S <= 1,
+if length(rho_S) ~= 1 || real(rho_S) <= 1,
     return
 else
-    nr = rho_S;
+    nr = real(rho_S);
+    rho0 = imag(rho_S);
     clear rho_S
     info_dke_yp(2,'Radial grid automaticaly generated for optimizing the RF absorption.');
 end
@@ -78,6 +79,10 @@ rP = [0,cumsum(dP)];
 P = rP(end);
 %
 rho_S = interp1(rP,rho_dep_S,P*linspace(0,1,nr+1));
+%
+if rho0 > 0 && rho_S(2) > rho0,
+    rho_S = [0,rho0,rho_S(2:end)];
+end
 %
 
 
