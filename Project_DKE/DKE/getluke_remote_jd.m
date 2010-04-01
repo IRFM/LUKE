@@ -111,8 +111,7 @@ else
     if isfield(output,'err'),
     	for istr = 1:length(output.err),
     		disp(output.err{istr});
-    	end
-        error('Remote LUKE run failed, aborted.')
+        end
     end
     %
 end   
