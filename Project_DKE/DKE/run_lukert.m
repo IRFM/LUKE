@@ -110,10 +110,12 @@ else
 end
 %
 if isfield(dkeparam,'rho0'),
-    rho_S = rho_S + i*rho0;
+    rho_S = rho_S + i*dkeparam.rho0;
 end
 %
-if ~isfield(dkeparam,'nk_abs'),
+if isfield(dkeparam,'nk_abs'),
+    nk_abs = dkeparam.nk_abs;
+else
     nk_abs = 1;
 end
 %

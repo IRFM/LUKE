@@ -310,7 +310,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 % LOAD DATA FILE
                 %
-                if status.data == 2 && input_dke_yp('previous data is not saved. Are you sure you want to quit LUKE (y/n)','n',{'y','n'}) == 'n',
+                if status.data == 2 && input_dke_yp('--> Previous data is not saved. Are you sure you want to load new file (y/n)','n',{'y','n'}) == 'n',
                     continue;
                 end
                 %
@@ -1263,7 +1263,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                     elseif isfield(output,'err'),
                         disp('Remote LUKE run failed, aborted.')
                         timeid = '';
-                        clear output
+                        output = '';
+                        status.data = 2;
                     else
                         timeid = '';
                         %
@@ -1405,7 +1406,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     elseif isfield(output,'err'),
                         disp('Remote LUKE run failed, aborted.')
                         timeid = '';
-                        clear output
+                        output = '';
                     else
                         timeid = '';
                         %
@@ -1438,7 +1439,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 end
                 %
             elseif isel < 0 && status.data == 2,
-                if input_dke_yp('Data is not saved. Are you sure you want to quit LUKE (y/n)','n',{'y','n'}) == 'n',
+                if input_dke_yp('--> Data is not saved. Are you sure you want to quit LUKE (y/n)','n',{'y','n'}) == 'n',
                     isel = 1;
                 end
             end
