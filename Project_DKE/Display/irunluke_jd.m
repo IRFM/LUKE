@@ -310,6 +310,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 % LOAD DATA FILE
                 %
+                if status.data == 2 && input_dke_yp('previous data is not saved. Are you sure you want to quit LUKE (y/n)','n',{'y','n'}) == 'n',
+                    continue;
+                end
+                %
                 disp('');
                 disp('************** LOAD DATA FILE **************')
                 disp('');
@@ -1256,6 +1260,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     if isempty(output),
                         disp(['Remote LUKE still running under job id ',jobid,' ...'])
+                    elseif isfield(output,'err'),
+                        disp('Remote LUKE run failed, aborted.')
+                        timeid = '';
+                        clear output
                     else
                         timeid = '';
                         %
@@ -1269,7 +1277,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 % RUN LUKE
                 %    
-                if isempty(dkepath) | isempty(dkeparam) | isempty(equil),
+                if isempty(dkepath) || isempty(dkeparam) || isempty(equil),
                     disp('-----> the structures dkepath, dkeparam and equil must exist to run LUKE.');
                     continue
                 end       
@@ -1394,6 +1402,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     if isempty(output),
                         disp(['Stop waiting , elapsed time (minutes) ',num2str(round(toc/60)),'/',num2str(w_opt)])
+                    elseif isfield(output,'err'),
+                        disp('Remote LUKE run failed, aborted.')
+                        timeid = '';
+                        clear output
                     else
                         timeid = '';
                         %
@@ -1425,6 +1437,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                 end
                 %
+            elseif isel < 0 && status.data == 2,
+                if input_dke_yp('Data is not saved. Are you sure you want to quit LUKE (y/n)','n',{'y','n'}) == 'n',
+                    isel = 1;
+                end
             end
             %
         catch
