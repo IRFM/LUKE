@@ -140,6 +140,8 @@ nn_rf = size(ynP_rf,3);
 %
 if isfield(ZP0,'n_rf_list'),
     n_rf_list = ZP0.n_rf_list;
+elseif isfield(dke_out,'waveparam'),
+    n_rf_list = dke_out.waveparam.n_rf_list;
 elseif isfield(data,'dkeparam'),
     n_rf_list = data.dkeparam.n_rf_list;
 else

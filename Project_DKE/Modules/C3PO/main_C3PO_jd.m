@@ -17,18 +17,20 @@ function wave = main_C3PO_jd(dkepath,id_wave,equil,rayinit,waveparam,fitparam,ra
     % Build or load vectorized magnetic equilibrium structure
     %
     if fitparam.opt_load && exist(['EQUILV_',equil.id,'.mat'],'file'),
-       load(['EQUILV_',equil.id,'.mat'],'equil_fit');
-       if C3POdisplay.equilibrium,info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is reloaded.']);end
+        load(['EQUILV_',equil.id,'.mat'],'equil_fit');
+        if C3POdisplay.equilibrium,info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is reloaded.']);end
     else
-       if C3POdisplay.equilibrium,info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is being calculated.']);end   
-       [equil_fit] = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);
-    %   
-       if ~isfield(equil,'opt_save'),equil.opt_save = 1;end
-    %   
-       if equil.opt_save > 0,
+        if C3POdisplay.equilibrium,info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is being calculated.']);end   
+        [equil_fit] = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);
+        %   
+        if ~isfield(equil,'opt_save'),
+            equil.opt_save = 0;
+        end
+        %   
+        if equil.opt_save > 0,
             save(['EQUILV_',equil_fit.id,'.mat'],'equil_fit');
             if C3POdisplay.equilibrium,info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil_fit.id,' is saved.']);end
-       end
+        end
     end
     %
     if C3POdisplay.equilibrium,
@@ -45,6 +47,7 @@ function wave = main_C3PO_jd(dkepath,id_wave,equil,rayinit,waveparam,fitparam,ra
     wave.equil_id = equil.id;
     wave.omega_rf = omega_rf;
     wave.opt_rf = waveparam.opt_rf;
+    wave.n_rf_list = waveparam.n_rf_list;
     wave.opt_disp = 0;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp) 
     %
     wave.dsmin = waveparam.dsmin;

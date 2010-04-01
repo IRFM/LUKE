@@ -13,7 +13,6 @@ function [waveparam,xyprop_dke_rf,xyP0_2piRp_in_rf,yb_rf,yP0_2piRp,xys_rf] = rfw
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;
 %
 %dke_mode = dkeparam.dke_mode;
-n_rf_list = dkeparam.n_rf_list;
 %
 if isfield(dkeparam,'npresmin'),
     npresmin = dkeparam.npresmin;% minimum number of resonant points for numerical stability.
@@ -84,6 +83,8 @@ ibw = 0;
 rays = {};
 % vsrays = {};
 %
+n0_rf_list = [];
+%
 for iw = 1:length(waves),% 
     %
     % ======================================================================
@@ -107,6 +108,17 @@ for iw = 1:length(waves),%
     end        
     %
     omega_rf = wave.omega_rf;% The wave frequency (in rad/s) [1,1]
+    %
+    if isfield(wave,'n_rf_list'),
+        n_rf_list = wave.n_rf_list;
+    elseif isfield(dkeparam,'n_rf_list'),
+        n_rf_list = dkeparam.n_rf_list;
+    elseif isfield(wave,'waveparam') && isfield(wave.waveparam,'n_rf_list'),
+        n_rf_list = wave.waveparam.n_rf_list;
+    else
+        disp('Warning : no n_rf_list data found, enforced to 0:3')
+        n_rf_list = 0:3;
+    end
 	%
 	if isfield(wave,'dsmin'),
     	dsmin = wave.dsmin;%minimum interval for ray fragments
@@ -251,6 +263,9 @@ for iw = 1:length(waves),%
         %
         rays{ibw} = ray;% minimum number of resonant points for numerical stability.
     end
+    %
+    n0_rf_list = min([n0_rf_list,n_rf_list]):max([n0_rf_list,n_rf_list]);
+    %
 end
 %
 % ======================================================================
@@ -259,6 +274,8 @@ end
 %
 [waveparam,xyprop_dke_rf,xys_rf,xyP0_2piRp_in_rf,yb,yP0_2piRp] = propagation_jd(rays,xpsin_S_dke,xpsin_dke,method,display_mode);
 %disp('-------------------------------------------------------------------------------------------------------------------');
+%
+waveparam.n_rf_list = n0_rf_list;
 %
 nb_rf = size(yb,2);%number of actual rays
 %nbb_rf = size(xyprop_dke_rf,2);%number of ray subdivisions
@@ -275,8 +292,6 @@ if nb_rf == 0%no rays
 end
 %
 yb_rf = yb(1,:);%position of ray starts
-%
-
 % for ibb = 1:nbb_rf
 %     ib_rf(ibb) = max(find(yb_rf <= ibb));%new ray number
 % end

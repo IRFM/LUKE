@@ -32,6 +32,15 @@ for iw = (nw0 + 1):(nw0 + length(wavestructs)),
     %
     wavestruct = wavestructs{iw};
     %
+    if isfield(wavestruct.waveparam,'n_rf_list'),
+        n_rf_list = wavestruct.waveparam.n_rf_list;
+    elseif isfield(dkeparam,'n_rf_list'),
+        n_rf_list = dkeparam.n_rf_list;
+    else
+        disp('Warning : no n_rf_list data found, enforced to 0:3')
+        n_rf_list = 0:3;
+    end
+    %
     if strcmp(wavestruct.wavesolver,'C3PO'),% C3P0 ray tracing
 	    rayinit = main_rayinit_launch_jd(equil,wavestruct.launch);
         %
@@ -41,7 +50,7 @@ for iw = (nw0 + 1):(nw0 + length(wavestructs)),
         %
 	    wave = main_C3PO_jd(dkepath,wavestruct.id,equil,rayinit,wavestruct.waveparam,wavestruct.fitequilparam,wavestruct.rayparam,wavestruct.raydisplay,wavestruct.C3POparam);%Ray calculations
         %
-        wave = wave_process_jd(equil,wave,wavestruct.waveparam.n_rf_list);%Wave processing and relativistic linear damping
+        wave = wave_process_jd(equil,wave,n_rf_list);%Wave processing and relativistic linear damping
         %
         if isfield(wavestruct.launch,'b_sdNpar') == 1,
             wave.b_sdNpar = wavestruct.launch.b_sdNpar;
@@ -65,7 +74,7 @@ for iw = (nw0 + 1):(nw0 + length(wavestructs)),
         %
 	    wave = make_wave_AMR_jd(wavestruct,equil);%Ray calculations
         %
-        wave = wave_process_jd(equil,wave,dkeparam.n_rf_list);%Wave processing and relativistic linear damping
+        wave = wave_process_jd(equil,wave,n_rf_list);%Wave processing and relativistic linear damping
         %
         if opt_save == 1,
             mkdir('WAVE')

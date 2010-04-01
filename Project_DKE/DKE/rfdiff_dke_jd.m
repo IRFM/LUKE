@@ -54,7 +54,7 @@ time0 = clock;
 %
 rf_tol = eps('single');% threshold for calculation mask on deltares
 %
-n_rf_list = single(dkeparam.n_rf_list);
+n_rf_list = single(waveparam.n_rf_list);
 bounce_mode = dkeparam.bounce_mode;
 dke_mode = dkeparam.dke_mode;
 %
