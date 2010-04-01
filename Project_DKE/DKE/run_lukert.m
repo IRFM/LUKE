@@ -191,14 +191,13 @@ elseif dkeparam.rt_mode == 4,
         %
         [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
         %
-        yp_rf_2piRp = sum(ZP0.xy_rf_fsav.'*mksa.P_ref.*repmat(equilDKE.xdV_2piRp_dke,[ny,1]),1);
+        yp_rf = 2*pi*equil.Rp*sum(ZP0.xy_rf_fsav*mksa.P_ref.*repmat(equilDKE.xdV_2piRp_dke.',[1,size(ZP0.xy_rf_fsav,2)]),1);
         %
         P0 = 0;
         Pabs = 0;
+        yb = dke_out.yb;
         %
         for iw = iw_list,
-            %
-            nb(iw) = length(waves{iw}.rays);
             %
             ibmin = sum(nb(1:iw-1)) + 1;
             ibmax = sum(nb(1:iw)) + 1;
@@ -209,7 +208,7 @@ elseif dkeparam.rt_mode == 4,
                 ymask = yb(ibmin):ny;
             end            
             %
-            Pabs = Pabs + yp_rf_2piRp(ymask);
+            Pabs = Pabs + 1e6*sum(yp_rf(ymask));
             P0 = P0 + sum(waves{iw}.rayinit.launch.bPlhtot);
         end
         %
