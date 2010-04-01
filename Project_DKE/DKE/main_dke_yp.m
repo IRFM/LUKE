@@ -187,14 +187,8 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
             if (residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1 & conv == 1) | it_rf == nit_rf,
                 %
                 dke_warnings = '';               
-                if isfield(dkeparam_out,'abs_lim') 
-                    if abs_frac < dkeparam_out.abs_lim,
-                       dke_warnings = warning('The RF power is not fully absorbed. To bypass this error set dkeparam.abs_lim between 0 and 1')
-                    end
-                else 
-                    if abs_frac < 0.95,%95% of the RF power must be absorbed for an acceptable quasilinear solution
-                       error('The RF power is not fully absorbed. To bypass this error set dkeparam.abs_lim between 0 and 1')
-                    end
+                if isfield(dkeparam_out,'abs_lim') && abs_frac < dkeparam_out.abs_lim,
+                    dke_warnings = warning('The RF power is not fully absorbed. To bypass this error set dkeparam.abs_lim between 0 and 1')
                 end
                 %
                 if residue_rf(it_rf) <= dkeparam_out.prec_rf & redfac == 1 & it_rf > 1 & conv == 1,
