@@ -1,4 +1,4 @@
-function [varargout] = run_lukert(id_simul,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in,opt_save)
+function [varargout] = run_lukert(id_simul,wavestructs,waves,psin_S,rho_S_init,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in,opt_save)
 %
 % Ray-tracing + quasilinear kinetic calculations using LUKE. Tool for implementation in other calculation packages.
 %
@@ -110,7 +110,7 @@ else
 end
 %
 if isfield(dkeparam,'rho0') && length(rho_S) == 1,
-    rho_S = rho_S + i*dkeparam.rho0;
+    rho_S_init = rho_S_init + i*dkeparam.rho0;
 end
 %
 if isfield(dkeparam,'nk_abs'),
@@ -119,7 +119,7 @@ else
     nk_abs = 1;
 end
 %
-[rho_S,dkeparam.pnmax_S] = optgrid_dke_jd(waves,rho_S,dkeparam.pnmax_S,equil,w_mask,dkedisplay.display_mode);
+[rho_S,dkeparam.pnmax_S] = optgrid_dke_jd(waves,rho_S_init,dkeparam.pnmax_S,equil,w_mask,dkedisplay.display_mode);
 %
 % 3-D relativistic bounce averaged quasilinear kinetic calculations (LUKE)
 %
@@ -184,10 +184,35 @@ elseif dkeparam.rt_mode == 4,
     for ik = 1:nk_abs,
         %
         for iw = iw_list;            
+            %
             for ib = 1:nb(iw),
                 waves{iw}.rays{ib}.sdNpar = waves{iw}.rays{ib}.sdNpar(1) +ik*a_sdNpar(iw)*waves{iw}.rays{ib}.ss;
             end
+            %
+            if ik > 1,
+                if isfield(waves{iw},'waveparam') && isfield(waves{iw}.waveparam,'n_rf_list'),
+                    n_rf_list = waves{iw}.waveparam.n_rf_list;
+                elseif isfield(dkeparam,'n_rf_list'),
+                    n_rf_list = dkeparam.n_rf_list;
+                else
+                    disp('Warning : no n_rf_list data found, enforced to 0:3')
+                    n_rf_list = 0:3;
+                end
+                %
+                % the wave linear deposition is recalculated accounting for a_sdNpar effect
+                %
+                waves{iw}.a_sdNpar = ik*a_sdNpar(iw);
+                %
+                waves{iw} = wave_process_jd(equil,waves{iw},n_rf_list);%Wave processing and relativistic linear damping
+            end
         end
+        %
+        if ik > 1,
+            %
+            % the radial grid is recalculated accounting for a_sdNpar effect
+            %
+            [rho_S,dkeparam.pnmax_S] = optgrid_dke_jd(waves,rho_S_init,dkeparam.pnmax_S,equil,w_mask,dkedisplay.display_mode);
+        end            
         %
         [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
         %
