@@ -109,7 +109,7 @@ else
     w_mask = dkeparam.w_mask;%list of waves to account for in the radial grid determination
 end
 %
-if isfield(dkeparam,'rho0'),
+if isfield(dkeparam,'rho0') && length(rho_S) == 1,
     rho_S = rho_S + i*dkeparam.rho0;
 end
 %

@@ -37,10 +37,7 @@
 % fonction ecrite par Y. Peyssson, J. Decker et V. Basiuk, poste 6290 ou
 % 6126
 %
-function [sortie,memoire] = zstarwars(varargin);
-% 
-%
-%
+function [sortie,memoire] = zstarwars(varargin)
 %
 mode = [];
 natfunc = [];
@@ -143,8 +140,6 @@ if length(varargin) <= 1
   else
       nbfce = varargin{1};
   end
-  langue = getappdata(0,'langue_cronos');
-  tokamak = evalin('base','param.from.machine');
 %
 % merge ECRH if zstarwars in ECRH mode
 %
@@ -188,6 +183,7 @@ if length(varargin) <= 1
   else 
          nblh  = evalin('base','param.gene.nbhyb');
   end
+  tokamak = evalin('base','param.from.machine');
   luke_parameters;
 %	     
 % CRONOS PARAMETERS
@@ -212,93 +208,7 @@ end
 %
 % --------------------------- RUN STARWARS ------------------------
 %
-app = dbstack;
-if  length(app) > 1 & strcmp(app(2).name,'zineb1test') 
-     nathyb  = app(1).file;
-	 try
-       nblh = evalin('caller','param.gene.nbhyb');
-     catch     
-	   nblh = 2;
-	 end
-	 
-else
-     try 
-       nblh  = evalin('base','param.gene.nbhyb');
-     catch
-       if isfield(varargin{1},'freqlh')
-	     nblh = length(varargin{1}.freqlh);
-       else
-         nblh = 1;  
-       end
-	 end
-end
-
-if nargin == 14,% LH case
-    par = varargin{1};
-    %
-    % cas zinebupdatetest
-    %
-    if ~isfield(par,'rt_mode') & strcmp(app(2).name,'zineb1test') 
-        tokamak = evalin('caller','param.from.machine');
-        luke_parameters;
-        par = valeur;
-    end
-    proto = varargin{2};
-    cons = varargin{3};
-    cons_spec = varargin{4};
-    geo = varargin{5};
-    equi = varargin{6};
-    injection = varargin{7};
-    prof = varargin{8};
-    neo = varargin{9};
-    impur = varargin{10};
-    phy = varargin{11};
-    compo = varargin{12};
-    gene = varargin{13};
-    memoire = varargin{14};
-    %
-    if isstruct(cons)
-      	nolh  = 1;
-      	nofce = 1;
-        plh = abs(cons.lh_cons);
-        nlh = angle(cons.lh_cons);
-      	if sum(plh(nlh>1)) < 1e5,% test sur la puissance. Calcul si P > 200 kW seulement
-        	disp('no LH')
-			nolh = 0;
-        elseif any(nlh(plh>2e5) < 1)
-            disp(['LH problem, parallel index < 1'])
-            return
-        end
-        pec = abs(cons.ecrh_cons);
-      	if  sum(pec) < 2e5,% test sur la puissance. Calcul si P > 200 kW seulement
-        	disp('no ECRH')
-			nofce = 0;
-        end
-        if nofce == 0 & nolh == 1 & ~strcmp(par.luke_mode,'lh')
-            disp('mode LH alone is imposed, no ECRH')
-            par.luke_mode='lh';
-        end
-      	if nolh+nofce == 0
-			disp('no LH')
-        	sortie = proto;
-			if ~strcmp(par.conf,'Ohmic')
-				return
-			end
-			disp('zstarwars in ohmic mode')		
-      	end
-    else
-        plh = abs(cons);
-        nlh = angle(cons);
-      	if sum(plh(nlh>1))< 2e5 ,% test sur la puissance. Calcul si P > 200 kW seulement
-			sortie = proto;
-			disp('no LH injected power')
-			if ~strcmp(par.conf,'Ohmic')
-				return
-			end
-			disp('zstarwars in ohmic mode')		
-       	end
-    end
-elseif nargin == 13,% FCE case
+if nargin == 13,% LH case
     par = varargin{1};
     proto = varargin{2};
     cons = varargin{3};
@@ -312,226 +222,76 @@ elseif nargin == 13,% FCE case
     compo = varargin{11};
     gene = varargin{12};
     memoire = varargin{13};
+    %
+    % cas zinebupdatetest
+    %
+    if ~isfield(par,'rt_mode') & strcmp(app(2).name,'zineb1test') 
+        tokamak = evalin('caller','param.from.machine');
+        luke_parameters;
+        par = valeur;
+    end  
+    if ~isfield(par,'zinterpolation')
+        par.zinterpolation = [];
+    end
+    %
+    if ~isfield(par,'luke_mode')
+        par.luke_mode='lh';
+    end
+    %
+    if ~isstruct(cons)% LH only (a verifier)
+        if strcmp(par.luke_mode,'lh'),
+            cons.lh_cons = cons;
+        elseif strcmp(par.luke_mode,'ecrh'),
+            cons.ecrh_cons = cons;
+        else
+            error('LUKE mode not determined')
+        end
+    end
 else
     error('Wrong number of inputs in zstarwars')
 end
 %
-%
 % info machine
 %
-workdir = par.workdir;
-tokamak = par.tokamak;
-shotnum = num2str(par.shotnum);
-shotime = num2str(par.temps,'%6.4f');
+workdir = fileparts(evalin('base','param.gene.file'));
+tokamak = evalin('base','param.from.machine');
+shotnum = num2str(round(evalin('base','param.from.shot.num')));
+if isfield(par,'temps'),
+    gene.t = par.temps;
+end    
+shotime = num2str(gene.t,'%6.4f');
 %
 equil_id = [tokamak,'_',shotnum,'_',shotime];
 %
 sortie.err = 0;
 sortie = proto;
+%
 % on definit le flag d'erreur a 0 par defaut (pas d'erreur)
 %
 %--------------------------- LIEN AVEC C3PO + LUKE ------------------
 %
-% PARAMETRES EQUILIBRE
-%
-if ~isfield(par,'eco')
-  par.eco='No';
-end
-if strcmp(par.eco,'Yes')
-  disp('memory economic mode on, nrho = 15')
-  par.rho_S = '15';
-end
-if ~isfield(par,'rho_S')
-   par.rho_S = '20';   
-end
-if ischar(par.rho_S)
-  if strcmp(par.lob,'No')
-      eval(['par.rho_S = ',par.rho_S,';']);
-  else
-      eval(['par.rho_S = ',par.rho_S,';']); 
-      par.rho_S=min(30,par.rho_S+5);
-      disp(['increases the number of radial point due to the LH negatif lob : ',int2str(par.rho_S)])
-  end
-end
-%
-% protetcion pour des flux non monotones
-%
-absdpsidx  = abs(pdederive(gene.x,double(equi.psiRZ),0,2,2,1));
-ind        = find(absdpsidx == 0);
-if ~isempty(ind)
-   mindpsidx      = min(absdpsidx(absdpsidx > 0));
-   absdpsidx(ind) = mindpsidx;
-   disp('equi.psiRZ is not  monotonic, -> correction') 
-end
-equi.psiRZ = equi.psiRZ(1) - cumtrapz(gene.x,absdpsidx);
-absdpsidx  = abs(pdederive(gene.x,double(equi.psi),0,2,2,1));
-ind        = find(absdpsidx == 0);
-if ~isempty(ind)
-   mindpsidx      = min(absdpsidx(absdpsidx > 0));
-   absdpsidx(ind) = mindpsidx;
-   disp('equi.psi is not  monotonic -> correction') 
-end
-equi.psi = equi.psi(1) - cumtrapz(gene.x,absdpsidx);
-
-equil = make_equil_cronos(equil_id,equi,gene,prof,compo,impur);
-if sum(equil.ptBy(:,end)-equil.ptBy(:,1)) ~= 0
-    disp('equilibrium warning, By(:,theta=0) ~= By(:,theta=pi)')
-    equil.ptBy(:,end) = equil.ptBy(:,1);
-end
-if sum(equil.ptBx(:,end)-equil.ptBx(:,1)) ~= 0
-    disp('equilibrium warning, Bx(:,theta=0) ~= Bx(:,theta=pi)')
-    equil.ptBx(:,end) = equil.ptBx(:,1);
-end
-if sum(equil.ptBPHI(:,end)-equil.ptBPHI(:,1)) ~= 0
-    disp('equilibrium warning, Bphi(:,theta=0) ~= Bphi(:,theta=pi)')
-    equil.ptBPHI(:,end) = equil.ptBPHI(:,1);
-end
-%
-% Determines run type
-%
-if isfield(par,'lob')
-  lob = par.lob;
-else
-  lob = 'No';
-end
-if isfield(par,'freqlh')
-  freqlh = par.freqlh;
-else
-  freqlh = 3.7;
-end
-if ~isfield(par,'conf')
- par.conf = machine;
-end 
-if strcmp(par.conf,'AUG')
-   par.conf = 'ASDEX';
- end
-if ~isfield(par,'luke_mode')
-  par.luke_mode='lh';
-end
-if ~isempty(strfind(par.conf,' (TS)'))
-   
-    par.conf = par.conf(1:(strfind(par.conf,' (TS)')-1));
-    
-end
-if isfield(par,'aloha_mode')
-  aloha.mode    = par.aloha_mode;
-  aloha.param   = par.aloha_param;
-  aloha.file    = par.aloha_file;
-  aloha.scen    = par.aloha_scen;
-  [chemin,void] = fileparts(gene.file);
-  aloha.path    = chemin;
-else
-  aloha.mode = zeros(size(nlh));;
-end
-switch par.luke_mode
-  %    
-  case 'mixte'
-    %
-    % Mixed LH and EC waves case
-    %
-    [launchs_lh] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons.lh_cons,cons_spec,lob,freqlh,aloha);%for the LH waves
-    [launchs_ec] = make_wavelaunchs_cronos_ec(equil,par.ecrh_param,cons.ecrh_cons);%for the EC waves
-    %    
-    launchs = [launchs_lh,launchs_ec];
-    par.launchtype = 'LH';
-    %
-  case 'lh'
-    %
-    % LH waves only
-    %
-    nolh         = 1;
-    nofce        = 0;
-    if isstruct(cons)
-
-      disp('mode lh alone forced')
-      cons = cons.lh_cons;
-
-    end
-    %
-    if strcmp(par.conf,'Ohmic')
-      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,'MIXTE',cons,cons_spec,lob,freqlh,aloha);%for the LH waves
-    else
-      [launchs] = make_wavelaunchs_cronos_lh(equil,gene.signe,par.conf,cons,cons_spec,lob,freqlh,aloha);%for the LH waves
-    end
-    par.launchtype = 'LH';
-    %    
-  case 'ecrh'
-    %
-    % EC waves only
-    %
-    nofce = 1;
-    nolh  = 0;
-    if isstruct(cons)
-      cons = cons.ecrh_cons;
-    end
-    [launchs] = make_wavelaunchs_cronos_ec(equil,par,cons);%for the EC waves    
-    par.launchtype = 'EC';
-    %
-  otherwise
-    %
-    error('luke mode could not be determined')
-    %      
-end
-%
-mask = [];
-for iw = 1:length(launchs),
-    if strcmp(launchs{iw}.type,'LH') & sum(launchs{iw}.bPlhtot) > 1,
-        mask = [mask,iw];
-    elseif strcmp(launchs{iw}.type,'EC') & launchs{iw}.yP_L > 1,
-        mask = [mask,iw];
-    end
-end
-launchs = launchs(mask);        
-%
-% --------- Load first all parameters that are in files ------------
-%
-dkeparam         = make_dkeparam_cronos(par.launchtype);
-if ~isfield(par,'Dql')
-
-  disp('old simulation : par.Dql is missing. It is put to 10')
-  par.Dql = 10;
-
-end
-dkeparam.Dparparmax = par.Dql;
-%
-if strcmp(par.eco,'Yes')
-  disp('memory economic mode on')
-  dkeparam.nmhu_S  = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
-  dkeparam.np_S    = 121;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
-  dkeparam.pnmax_S = 20;%Maximum value of the flux momentum grid (pth_ref)
-end
-%
-if ~isfield(par,'make_display');
-    par.make_display='NO_DISPLAY';
-end
-dkedisplay       = make_display_cronos(par.make_display);
-dkepath          = getappdata(0,'DKEPATH');
-dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
-%
-% --------- Override parameters that are in files ------------
-%
 % PARAMETRES LUKE
 %
-dkeparam.rt_mode = par.rt_mode;%RT-DKE power consistency
-dkeparam.abs_lim = par.abs_lim;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
-dkeparam.nit_rf = par.nit_rf;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
-dkeparam.dke_mode = par.dke_mode;%Fokker-Planck equation (0), Drift Kinetic equation (1)
-dkeparam.dtn = par.dtn;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
-dkeparam.invproc = par.invproc;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
-dkeparam.n_rf_list = [0:par.n_ec_max];
+dkeparam = make_dkeparam_cronos(par);
+%
+% TMP PATH LUKE
+%
+dkepath = getappdata(0,'DKEPATH');
+dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
 %
 % PARAMETRES DISPLAY
 %
+dkedisplay = make_display_cronos;
 dkedisplay.rho_display  = par.rho_display;%Approximate radial position at which results are displayed if display.display_mode >= 1 [1,1]. Not used if NaN
 dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial, (2): full
 %
+% PARAMETRES EQUILIBRE
+%
+equil = make_equil_cronos(equil_id,equi,gene,prof,compo,impur);
+%
 % PARAMETRES OHMIC, transformation en flux poloidal puis en coordonnees radials de LUKE
 %
-if isfield(varargin{13},'signe')
-  signe = varargin{13}.signe;%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
-else
-  signe = varargin{12}.signe;  
-end
+signe = varargin{12}.signe;%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
 %
 % psipncronos    : coordonnee radiale normalisee de CRONOS en flux poloidal
 % psipncronoshel : coordonnee radiale normalisee en flux poloidal associee a HELENA pour BR BZ et BPHI
@@ -548,10 +308,12 @@ psipn_ohm       = rho2psi_jd(equil,ohm.rho);
 % passage de prof.epar de la grille en x sur la grille HELENA
 % puis passage sur la grille LUKE en faisant correspondre rhohel et psihel
 % puis multiplication par le facteur geometrique (pour s'assurer que l'integrale redonne le courant)
-% ohm.epsi : V/m
-% Here Efield sign is always co-current by definition, in order to retrieve both amplitude and sign of Ip without any RF wave
+%
+% prof.epar (V/m): signe par rapport à IP
+% ohm.epsi (V/m): signe par rapport à BT
+% - signe is electron charge
 %----------------------------------------------------------
-ohm.epsi     = -sign(signe.ip)*sign(signe.b0)*abs(interp1(gene.x,prof.epar,psitncronoshel));
+ohm.epsi     = -sign(signe.ip)*sign(signe.b0)*interp1(gene.x,prof.epar,psitncronoshel);
 ohm.epsi     = complex(interp1(psipncronoshel,ohm.epsi,psipn_ohm));%Imaginary for considering the definition of the flux surface averaging of CRONOS in LUKE
 %
 % PARAMETRES RIPPLE 
@@ -560,138 +322,77 @@ ripple.mode = par.ripple;
 %
 % PARAMETRES FAST ELECTRON TRANSPORT 
 %
-transpfaste.vparmin  = par.vparmin_r;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
-transpfaste.norm_ref = par.norm_ref;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
-if par.Dr_model == 2
-    transpfaste.Dr0 = 0;
+if par.Dr0 == 0 && par.Vr0 == 0
+    %
+    % cas sans transport, structure vide
+    %
+    transpfaste = '';
 else
+    transpfaste.vparmin  = par.vparmin_r;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
+    transpfaste.norm_ref = par.norm_ref;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
     transpfaste.Dr0      = par.Dr0;%Core radial diffusion coefficient (m^2/s)
+    transpfaste.pDr      = par.pDr;%Coefficient for the Dr radial profile
+    transpfaste.Vr0      = par.Vr0;%Core radial pinch coefficient (m/s)
+    transpfaste.pVr      = par.pVr;%Coefficient for the Vr radial profile
+    transpfaste.Dr_model = par.Dr_model;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
+    transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
 end
-transpfaste.pDr      = par.pDr;%Coefficient for the Dr radial profile
-transpfaste.Vr0      = par.Vr0;%Core radial pinch coefficient (m/s)
-transpfaste.pVr      = par.pVr;%Coefficient for the Vr radial profile
-if par.Dr_model == 2
-    transpfaste.Dr_model = 0;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
-else
-	transpfaste.Dr_model = par.Dr_model;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
-end
-transpfaste.Vr_model = par.Vr_model;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth),
-%
-% cas sans transport, strucutre vide
-%
-if transpfaste.Dr0 == 0 & transpfaste.Vr0 == 0
-
-  transpfaste = [];
-
-end
-dkeparam.w_mask = [];
 %
 % PARAMETRES WAVE LH + EC (C3PO) 
 %
-isdnpar = 0;
+if ~isfield(par,'conf')
+ par.conf = tokamak;
+end 
+%
+[launchs_lh] = make_wavelaunchs_cronos_lh(equil,gene,par,cons.lh_cons);%for the LH waves
+[launchs_ec] = make_wavelaunchs_cronos_ec(equil,par,cons.ecrh_cons);%for the EC waves
+%    
+launchs = [launchs_lh,launchs_ec];
+%
+mask = [];
+prf = 0;
 for iw = 1:length(launchs),
-    [waveparam,fitequilparam,rayparam,raydisplay,C3POparam] = make_wavert_cronos(launchs{iw}.type);%parameter for ray-tracing are adapted to the selected wave
-    %   	
-    wavestructs{iw}.id = [par.conf,'_',launchs{iw}.id];
+    %
+    if strcmp(launchs{iw}.type,'LH')
+        wprf = sum(launchs{iw}.bPlhtot);
+    elseif strcmp(launchs{iw}.type,'EC')
+        wprf = sum(launchs{iw}.yP_L);
+    end
+    %
+    if ~isfield(par,'prfmin') || wprf > par.prfmin,
+        mask = [mask,iw];
+        prf = prf + wprf;
+    end
+end
+launchs = launchs(mask);  
+nw = length(launchs);
+%
+wavestructs = cell(1,length(launchs));
+%
+dkeparam.w_mask = [];% waves to be accounted for in radial grid optimization: EC only or LH if no EC present
+%
+for iw = 1:nw,
+    wavestructs{iw} = make_wavert_cronos(launchs{iw},par);%parameter for ray-tracing are adapted to the selected wave
+    %
     wavestructs{iw}.equil_id = equil.id;
-    wavestructs{iw}.launch = launchs{iw};
-    if ~isfield(launchs{iw},'w0')
-      wavestructs{iw}.launch.w0 = NaN;
-    end
-    if ~isfield(launchs{iw},'z_L')
-      wavestructs{iw}.launch.z_L = NaN;
-    end
-    wavestructs{iw}.waveparam = waveparam;
-    wavestructs{iw}.fitequilparam = fitequilparam;
-    wavestructs{iw}.rayparam = rayparam;
-    wavestructs{iw}.raydisplay = raydisplay;
-    if isfield(par,'raydisplay')
-        wavestructs{iw}.raydisplay.ray = par.raydisplay.ray;
-    end
-    wavestructs{iw}.C3POparam = C3POparam;
     %
-    wavestructs{iw}.wavesolver = 'C3PO';
-    wavestructs{iw}.waveparam.mmode = launchs{iw}.mmode;% cold mode (+1 for m; -1 for p)
-    wavestructs{iw}.waveparam.kmode = par.kmode;%Dielectric tensor (0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
-    %
-    if isfield(wavestructs{iw}.launch,'a_sdNpar'),
-        if ~isfield(par,'a_sdNpar')
-          par.a_sdNpar = 0;
-        end
-        wavestructs{iw}.waveparam.a_sdNpar = par.a_sdNpar;
-        wavestructs{iw}.launch = rmfield(wavestructs{iw}.launch,'a_sdNpar');
-        if wavestructs{iw}.waveparam.a_sdNpar > 0
-           
-            disp(['artificial upshift, a_sdNpar =',num2str(wavestructs{iw}.waveparam.a_sdNpar)])
-            disp('version of LUKE with rt_mode forced to 4');
-            dkeparam.rt_mode = 4;
-            isdnpar = 1;
-        end
-    end
-    %
-    % augmentation de Npar initial si Te0 faible pour TS
-    %
-    %if prof.te(1)/1e3 < 2 &  abs(launchs{iw}.bNpar0(1)) < 2
-        
-    %   disp('artificial correction to insure a good absorption of this ray')
-    %   wavestructs{iw}.launch.bNpar0(1)= wavestructs{iw}.launch.bNpar0(1)+0.4*sign(wavestructs{iw}.launch.bNpar0(1));
-        
-    %end
-    %
-    wavestructs{iw}.rayparam.tensortype = wavestructs{iw}.waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
-    wavestructs{iw}.rayparam.tfinal = par.ray_tfinal;
-    %
-    if strcmp(par.oneray,'Yes') & strcmp(wavestructs{iw}.launch.type,'LH'),
-    	wavestructs{iw}.launch.rZ0 = mean(wavestructs{iw}.launch.rZ0);
-    end
-
     if strcmp(launchs{iw}.type,'EC')
-
-      dkeparam.w_mask = [dkeparam.w_mask iw];
-
+        %
+        dkeparam.w_mask = [dkeparam.w_mask,iw];
+        disp(['wave :',int2str(iw),' type :',launchs{iw}.type])
+        %
+    else
+        disp(['wave :',int2str(iw),' type :',launchs{iw}.type,' n// = ',num2str(wavestructs{iw}.launch.bNpar0,4)])
     end
     %
 end
 if isempty(dkeparam.w_mask)
     dkeparam.w_mask = 1:length(launchs);
 end
-if isdnpar == 0 & par.rt_mode ~= 1
- 
-  disp('forced to rt_mode = 1');
-  dkeparam.rt_mode = 1;
-
-end
-
-%
-if isfield(par,'save')
-  opt_save = par.save;%For debugging or scan only.
-else
-  opt_save = 0;
-end
-%
-% Reload waves if the script has been used at least once
-%
-waves   = [];
-iww     = 0;
-iw_list = [];
-%
-if opt_save == 1,
-    for iw = 1:length(wavestructs),
-        wavestr = ['WAVE/C3PO/WAVE_',equil.id,'_',wavestructs{iw}.id,'.mat'];
-        if exist(wavestr),
-            load(wavestr);
-            iww = iww+1;
-            waves{iww} = wave;
-            iw_list = [iw_list,iw];
-        end
-    end	
-    wavestructs(iw_list) = [];
-else
 %
 % accessibility test
 %
-  acces_lh
-end
+acces_lh
 %
 if par.save == 2,%save before LUKE
    %
@@ -699,203 +400,150 @@ if par.save == 2,%save before LUKE
    %
    error('Exiting after saving LUKE parameters')
 end
-
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
 %
 ik = 1;
 warning off
-
+disp(['LUKE is running ....'])
 %
-%
-%while 1,
-wd = pwd;
-cd(workdir);
-%
-[Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,waves,[],par.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
-%
-cd(wd);
-%   if isempty(dke_warnings),
-%      break;
-%   else
-%      info_dke_yp(2,'The RF power is not absorbed at an acceptable level for the quasilinear solution. The ray-tracing is relaunched with extended ray lengths');
-%
-%      for iw = 1:length(launchs),
-%         wavestructs{iw}.rayparam.tfinal = wavestructs{iw}.rayparam.tfinal*1.5^ik;
-%         wavestructs{iw}.rayparam.kmax = wavestructs{iw}.rayparam.kmax*1.5^ik;
-%         ik = ik + 1;
-%         if ik > 10;
-%            error('The RF power cannot absorbed at an acceptable level for the quasilinear solution even is ray lengths have been extended. Something is going wrong !!!');
-%         end
-%      end
-%   end
-%end
+[Znorm_RF,Zcurr_RF,ZP0_RF,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,[],[],dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
 %
 clear raytracing_yp alphaphimex_jd trapz_dke_yp dmumpsmex
-%
-if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
-   [Znorm,Zcurr,ZP0,dke_out] = run_lukert('cronos',[],[],[],radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
-end
-%
-warning on
 %
 signe_out = -signe.ip;
 %
 j_TOT_c = signe_out*Zcurr_RF.x_0_vcfsav*mksa.j_ref;
-if sum(abs(ohm.epsi)) ~= 0
-  j_OHM_c = signe_out*Zcurr.x_0_vcfsav*mksa.j_ref;
-else
-  j_OHM_c = 0*j_TOT_c;
-end
-j_LH_c = j_TOT_c - j_OHM_c;
-%
 I_TOT_c = sum(signe_out*Zcurr_RF.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
-if sum(abs(ohm.epsi)) ~= 0
+p_TOT_c = (ZP0_RF.x_rf_fsav.' + ZP0_RF.x_e_fsav)*mksa.P_ref;
+p_RF_c = ZP0_RF.x_rf_fsav.'*mksa.P_ref;
+P_TOT_c = sum(p_RF_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
+P_RF_c = sum(p_RF_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
+%
+if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
+    %
+    [Znorm,Zcurr,ZP0] = run_lukert('cronos',[],[],[],radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
+    %
+    j_OHM_c = signe_out*Zcurr.x_0_vcfsav*mksa.j_ref;
     I_OHM_c = sum(signe_out*Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
+    p_OHM_c = ZP0.x_e_fsav*mksa.P_ref;
+    P_OHM_c = sum(p_OHM_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
 else
-    I_OHM_c = 0*I_TOT_c;   
+    j_OHM_c = 0;
+    I_OHM_c = 0;
+    p_OHM_c = 0;  
+    P_OHM_c = 0;
 end
-I_LH_c = I_TOT_c - I_OHM_c;
-
 %
-p_TOT_c = (ZP0_RF.x_rf_fsav' + ZP0_RF.x_e_fsav)*mksa.P_ref;
-p_LH_c = ZP0_RF.x_rf_fsav'*mksa.P_ref;
-if sum(abs(ohm.epsi)) ~= 0
-  p_OHM_c = ZP0.x_e_fsav*mksa.P_ref;
-else
-  p_OHM_c = 0*p_TOT_c;  
+warning on
+%
+j_RF_c = j_TOT_c - j_OHM_c;
+I_RF_c = I_TOT_c - I_OHM_c;
+p_OHMsyn_c = p_TOT_c - p_OHM_c - p_RF_c;% synergistic power spent on electric field, already accounted for in cronos E.J
+P_OHMsyn_c = P_TOT_c - P_OHM_c - P_RF_c;% synergistic power spent on electric field, already accounted for in cronos E.J
+%
+if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') || strcmp(dkedisplay.display_mode,'VISUAL'),
+    %
+    visu_luke
+    %
 end
-p_OHMsyn_c = p_TOT_c - p_OHM_c - p_LH_c;% synergistic power spent on electric field, already accounted for in cronos E.J
 %
-P_TOT_c = sum((ZP0_RF.x_rf_fsav' + ZP0_RF.x_e_fsav).*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
-P_LH_c = sum(ZP0_RF.x_rf_fsav'.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
-if sum(abs(ohm.epsi)) ~= 0
-  P_OHM_c = sum(ZP0.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
-else
-  P_OHM_c = 0*P_TOT_c;
-end
-P_OHMsyn_c = P_TOT_c - P_OHM_c - P_LH_c;% synergistic power spent on electric field, already accounted for in cronos E.J
-
-%
-if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') | strcmp(dkedisplay.display_mode,'VISUAL'),
- %
- visu_luke
- %
+if isfield(par,'ipfrac'),
+    %
+    I_boot = equi.rhomax*trapz(gene.x,neo.jboot.*equi.spr,2);
+    %
+    if (I_RF_c*1e6+I_boot)/equi.ip > par.ipfrac,
+        %
+        normip = par.ipfrac*equi.ip/(I_RF_c*1e6+I_boot);
+        disp(['----> to avoid I_L_H + I_b_o_o_t > Ip'])
+        disp(['normalisation =',num2str(normip,3)])
+        %
+    else
+        %
+        normip = 1;
+        %
+    end
 end
 %
 %--------------------------- REMPLISSAGE DE LA STRUCTURE DE SORTIE POUR CRONOS --------------------------- 
 %
-% calcul du flux toroidal normalise associé a la grille de LUKE 
-%
-if ~isfield(par,'depip')
-  par.depip = 1;
-end
-normip = 1;
-if par.depip == 0
-  iboot = equi.rhomax * trapz(gene.x,neo.jboot.*equi.spr,2);
-  if I_LH_c*1e6 > equi.ip
-
-    normip = equi.ip / (I_LH_c*1e6+iboot);
-  
-  end
-  normip = min(0.95,normip);
-  disp(['case TS, normip=',num2str(normip,3)])
-  
-end
-
-%equilDKE.xcron = interp1(sqrt(psipncronos),gene.x,equilDKE.xpsin);
-
-equilDKE.xcron = interp1(psipncronos,gene.x,equilDKE.xpsin);
-
 %
 % preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
 % et avec les bonnes unites
 %
-if strcmp(par.lob,'Yes')
-    method = 'linear';
-else
-    method = 'pchip';
-end
-sortie.j  = interp1(equilDKE.xrhoT,j_LH_c,gene.x,method,0) * 1e6 * normip;
-sortie.el = interp1(equilDKE.xrhoT,p_LH_c,gene.x,method,0) * 1e6;
-    
-Pverif    = trapz(gene.x,sortie.el.*equi.vpr)*equi.rhomax;
-if Pverif > 1.1*P_LH_c * 1e6;
-    disp(['Plh inside Cronos greater than Plh inside LUKE : ',num2str(Pverif/(P_TOT_c * 1e6),3)])
-    if strcmp(par.lob,'Yes')
-         intpl = cumsum(ZP0_RF.x_rf_fsav'.*equilDKE.xdV_2piRp_dke*mksa.P_ref*2*pi*equilDKE.Rp);
-         intpc = interp1(equilDKE.xrhoT,intpl,gene.x,'pchip','extrap');
-         xrhoTluke = equilDKE.xrhoT;
-         xrhoTluke(end+1)=1;
-         intpl(end+1)=intpl(end);
-         elc = gradient(intpc)./gradient(gene.x)./equi.vpr / equi.rhomax;
-         elc(isnan(elc)) = 0;
-         elc(elc<0)      = 0;
-         sortie.el       = elc * 1e6;
-    end
-end
-if ~isfield(par,'smooth')
-  par.smooth = 'No';
-end
-if strcmp(par.smooth,'Yes')
-    newj  = smooth_dke_yp(sortie.j',par.width_smooth,par.method_smooth)';  % diffusion phenomenologique du courant
+method = 'linear';
+%
+xrhoT = [0,equilDKE.xrhoT,1];
+j_RF_c = [j_RF_c(1),j_RF_c,0];
+p_RF_c = [p_RF_c(1),p_RF_c,0];
+%
+sortie.j  = interp1(xrhoT,j_RF_c,gene.x,method)*1e6*normip;% (A/m2)
+sortie.el = interp1(xrhoT,p_RF_c,gene.x,method)*1e6;% (W/m3)
+%
+% SMOOTHING
+%
+if isfield(par,'smooth') && strcmp(par.smooth,'Yes')
+    newj  = smooth_dke_yp(sortie.j.',par.width_smooth,par.method_smooth).';  % diffusion phenomenologique du courant
     norm1 = trapz(gene.x,sortie.j.*equi.spr);
     norm2 = trapz(gene.x,newj.*equi.spr);
-    sortie.j = newj / norm2 * norm1;
-    newel  = smooth_dke_yp(sortie.el',par.width_smooth,par.method_smooth)';  % diffusion phenomenologique du courant
+    sortie.j = newj/norm2*norm1;
+    newel  = smooth_dke_yp(sortie.el.',par.width_smooth,par.method_smooth).';  % diffusion phenomenologique du courant
     norm1 = trapz(gene.x,sortie.el.*equi.vpr);
     norm2 = trapz(gene.x,newel.*equi.vpr);
-    sortie.el = newel / norm2 * norm1;
+    sortie.el = newel/norm2*norm1;
 end
-
 %
-% pour les valeurs en dehors de la grille LUKE (centre du plasma uniquement), nous
-% reportons la derniere valeur connue
-%
-indj = find(gene.x<equilDKE.xrhoT(1));
-if ~isempty(indj)
-
-  sortie.j(indj)=sortie.j(indj(end)+1);
-  sortie.el(indj)=sortie.el(indj(end)+1);
- 
-end
 sortie.err = normip;
 %
-% blindage : 0 au bord, au centre on recopie la premiere valeur non nulle
+if any(p_RF_c < 0),
+    %
+    sortie.err = sortie.err + 1i;
+    %
+    disp('Problem in LUKE, negative absorbed power, use the last value if possible')
+    %
+    if isfield(memoire.data,'output')
+        %
+        sortie.j   = memoire.data.output.j*prf/memoire.data.output.prf*memoire.data.output.ne/prof.ne;
+        sortie.el  = memoire.data.output.el*prf/memoire.data.output.prf;
+        %
+    end
+end    
 %
-%  indnan = find(isnan(sortie.j));
-%  indmax = max(indnan(gene.x(indnan) < 0.5))+1;
-%  sortie.j(indnan(gene.x(indnan) > 0.5))=0;
-%  sortie.j(indnan(gene.x(indnan) < 0.5))=sortie.j(indmax);
-
+irf = zintsurf(sortie.j,gene.x,equi.spr,equi.rhomax);
+paddrf = zintvol(sortie.el,gene.x,equi.vpr,equi.rhomax);
 %
-%  sortie.el(indnan(gene.x(indnan) > 0.5))=0;
-%  sortie.el(indnan(gene.x(indnan) < 0.5))=sortie.el(indmax);
-%  sortie.el(sortie.el<0)=0;
+disp(['I_L_H = ',num2str(irf/1e3,3),' kA / I_p =',num2str(equi.ip/1e3,4),' kA'])
+disp(['P_L_H = ',num2str(paddrf/1e3,3),' kW / P_r_e_f = ',num2str(prf/1e3,3),' kW'])
 %
-% renormalisation du courant (VB, 4 février 2008, pour avoir la meme intégrale dans CRONOS et LUKE)
+memoire.data.output.j     = sortie.j;
+memoire.data.output.el    = sortie.el;
+memoire.data.output.paddrf  = paddrf;
+memoire.data.output.prf  = prf;
+memoire.data.output.ne    = prof.ne;
+memoire.data.output.irf  = irf;
+if length(memoire.t) == 1
+    memoire.t = gene.t;
+else
+    memoire.t = [memoire.t gene.t];
+end
 %
-%  x       = gene.x;
-%  spr     = equi.spr;
-%  rhomax  = equi.rhomax;
-%  Icrotot = trapz(x,sortie.j.*spr)*rhomax;
-%  rap     = Icrotot ./ I_LH_c / 1e6
-%  sortie.j = sortie.j / rap;
+na = length(memoire.t);
 %
-% renormalisation de la puissance
+for iw = 1:nw,
+    if isfield(wavestructs{iw}.launch,'aloha'), 
+        memoire.data.output.npar{iw}(na,:) = wavestructs{iw}.launch.bNpar0;
+        memoire.data.output.pow{iw}(na,:)  = wavestructs{iw}.launch.bPlhtot;
+        memoire.data.output.fr{iw}(na,:)   = wavestructs{iw}.launch.bPlhtot/sum(wavestructs{iw}.launch.bPlhtot)*100;
+    end
+end
 %
-%  vpr     = equi.vpr;
-%  Pcrotot = trapz(x,sortie.el.*vpr)*rhomax;
-%  rap     = Pcrotot ./ P_LH_c
-%  sortie.el = sortie.el / rap * 1e6;
-%
-% distribution function for use in CRONOS
-%
-memoire.data.edistribution.f0 = dke_out_RF.XXf0;
-memoire.data.edistribution.p = momentumDKE.pn*mksa.betath_ref;
-memoire.data.edistribution.mhu0 = momentumDKE.mhu;
+memoire.data.edistribution.f0 = dke_out.XXf0;
+memoire.data.edistribution.pn = momentumDKE.pn;
+memoire.data.edistribution.mhu = momentumDKE.mhu;
 memoire.data.edistribution.psin = equilDKE.xpsin;
-
+memoire.data.edistribution.betath_ref = mksa.betath_ref;
+memoire.data.edistribution.ne_ref = mksa.ne_ref;
+%
 if par.save == 1,
    save([workdir,'/last_luke@',equil_id,'.mat']);
 end

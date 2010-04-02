@@ -1,4 +1,4 @@
-function [launchs] = make_wavelaunchs_cronos_lh(equil,signe,config,cons,cons_spec,lob,freqlh,aloha)
+function [launchs] = make_wavelaunchs_cronos_lh(equil,gene,par,cons,signe,config,lob,freqlh,aloha)
 %
 if nargin < 8,
     aloha.mode = 0;
@@ -7,15 +7,53 @@ if nargin < 7,
     freqlh = NaN;
 end
 %
+if isempty(cons),
+    launchs = cell(0,1);
+    return
+else
+    nlh = length(cons);
+end
+%
+if isfield(par,'lob')
+    lob = par.lob;
+else
+    lob = 'No';
+end
+%
+if isfield(par,'freqlh')
+    freqlh = par.freqlh;
+else
+    freqlh = NaN;
+end
+%
+if ~isempty(strfind(par.conf,' (TS)'))
+    par.conf = par.conf(1:(strfind(par.conf,' (TS)')-1));    
+end
+%
+if isfield(par,'aloha_mode')
+    for ilh = 1:nlh,
+        aloha(ilh).mode    = par.aloha_mode(ilh);
+        aloha(ilh).param   = par.aloha_param(ilh) + i*par.aloha_param0(ilh);
+        aloha(ilh).file    = fullfile(fileparts(gene.file),strtrim(par.aloha_file{ilh}));
+        aloha(ilh).scen    = par.aloha_scen(ilh);
+    end
+else
+    aloha.mode = zeros(1,nlh);
+end
+%
 % Create the structure launch for CRONOS
 %
 %by Y.Peysson <yves.peysson@cea.fr> (CEA-DRFC) and J. Decker <joan.decker@cea.fr> (CEA-DRFC)
 %
 % -------------------------------- Tore Supra --------------------------------
 %
-if strcmp(config,'TS');%For the Lower Hybrid wave simulations
+if strcmp(par.conf,'TS');%For the Lower Hybrid wave simulations
     %
     % ------- LH antenna #1 (C1) -------
+    %
+    if nlh ~= 2,
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
     % 
     if isnan(freqlh),
         freqlh = [4.6,4.6];
@@ -27,12 +65,11 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
     %
     directivity = [0.7];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-    launchs{1}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{1}.rZ0 = [-0.155,-0.075,0.075,0.155];%vertical launching positions (m) [1,m_pol]
     % 
@@ -50,12 +87,11 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
     %
     directivity = [0.7];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{2}.bdNpar0  = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-    launchs{2}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{2}.rZ0 = [-0.244,-0.162,-0.080,0.080,0.162,0.244];%vertical launching positions (m) [1,m_pol]
     %
@@ -67,9 +103,13 @@ if strcmp(config,'TS');%For the Lower Hybrid wave simulations
 %
 % -------------------------------- Tore Supra Mixte --------------------------------
 %
-elseif strcmp(config,'MIXTE') || strcmp(config,'MIXTE (TS)') ;%For the Lower Hybrid wave simulations
+elseif strcmp(par.conf,'MIXTE') || strcmp(par.conf,'MIXTE (TS)') ;%For the Lower Hybrid wave simulations
     %
     % ------- LH antenna #1 (C2) -------
+    %
+    if nlh ~= 2,
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
     % 
     if isnan(freqlh),
         freqlh = [4.6,4.6];
@@ -81,12 +121,11 @@ elseif strcmp(config,'MIXTE') || strcmp(config,'MIXTE (TS)') ;%For the Lower Hyb
     %
     directivity = [0.7];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-    launchs{1}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{1}.rZ0 = [-0.155,-0.075,0.075,0.155];%vertical launching positions (m) [1,m_pol]
     % 
@@ -104,12 +143,11 @@ elseif strcmp(config,'MIXTE') || strcmp(config,'MIXTE (TS)') ;%For the Lower Hyb
     %
     directivity = [0.6];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{2}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
-    launchs{2}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{2}.rZ0 = [-0.244,-0.162,-0.080,0.080,0.162,0.244];%vertical launching positions (m) [1,m_pol]
     % 
@@ -121,9 +159,13 @@ elseif strcmp(config,'MIXTE') || strcmp(config,'MIXTE (TS)') ;%For the Lower Hyb
 %
 % -------------------------------- Tore Supra CIEL --------------------------------
 %
-elseif strcmp(config,'CIEL') | strcmp(config,'CIEL (TS)') ;%For the Lower Hybrid wave simulations
+elseif strcmp(par.conf,'CIEL') | strcmp(par.conf,'CIEL (TS)') ;%For the Lower Hybrid wave simulations
     %
     % ------- LH antenna #1 (C2) -------
+    %
+    if nlh ~= 2,
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
     % 
     if isnan(freqlh),
         freqlh = [4.6,4.6];
@@ -135,12 +177,11 @@ elseif strcmp(config,'CIEL') | strcmp(config,'CIEL (TS)') ;%For the Lower Hybrid
     %
     directivity = [0.6];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-    launchs{1}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{1}.rZ0 = [-0.155,-0.075,0.075,0.155];%vertical launching positions (m) [1,m_pol]
     % 
@@ -158,12 +199,11 @@ elseif strcmp(config,'CIEL') | strcmp(config,'CIEL (TS)') ;%For the Lower Hybrid
     %
     directivity = [0.6];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{2}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
-    launchs{2}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS
     %
     launchs{2}.rZ0 = [-0.244,-0.162,-0.080,0.080,0.162,0.244];%vertical launching positions (m) [1,m_pol]
     % 
@@ -172,12 +212,16 @@ elseif strcmp(config,'CIEL') | strcmp(config,'CIEL (TS)') ;%For the Lower Hybrid
     launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
     launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
     launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
-%
-% -------------------------------- C-MOD --------------------------------
-%
-elseif strcmp(config,'CMOD');%For the Lower Hybrid wave simulations 
-%
-% ------- LH antenna #1 -------
+    %
+    % -------------------------------- C-MOD --------------------------------
+    %
+elseif strcmp(par.conf,'CMOD');%For the Lower Hybrid wave simulations 
+    %
+    % ------- LH antenna #1 -------
+    %
+    if nlh ~= 1,
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
 % 
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
@@ -185,12 +229,11 @@ elseif strcmp(config,'CMOD');%For the Lower Hybrid wave simulations
 %
    directivity = [1.0];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons,lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{1}.rZ0 = [0,0,0,0];%vertical launching positions (m) [1,m_pol]
 % 
@@ -202,9 +245,11 @@ elseif strcmp(config,'CMOD');%For the Lower Hybrid wave simulations
 %
 % -------------------------------- JET --------------------------------
 %
-elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
+elseif strcmp(par.conf,'JET');%For the Lower Hybrid wave simulations
     %
-    numa = length(cons);
+    if ~any(nlh == [1,2]),
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
     %
     % ------- LH antenna #1 -------
     % 
@@ -218,12 +263,11 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
     %
     directivity = [0.7];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
     launchs{1}.bdNpar0 = 0.2*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-    launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
     %
     launchs{1}.rZ0 = [0.370 0.222 0.074 -0.074 -0.222 -0.370];%vertical launching positions (m) [1,m_pol]
     % 
@@ -235,19 +279,18 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
     %
     % ------- LH antenna #2 -------
     % 
-    if numa > 1 & cons(numa) > 0
+    if nlh > 1,
         launchs{2}.id = 'Antenna_2';
         launchs{2}.type = 'LH';
         launchs{2}.omega_rf = freqlh(2)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
         %
         directivity = [0.7];%Antenna directivity [1,1]
         %
-        [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+        [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
         launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
         launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
         %
         launchs{2}.bdNpar0 = 0.2*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
-        launchs{2}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe] 
         %
         launchs{2}.rZ0 = [0.370 0.222 0.074 -0.074 -0.222 -0.370];%vertical launching positions (m) [1,m_pol]
         % 
@@ -261,22 +304,25 @@ elseif strcmp(config,'JET');%For the Lower Hybrid wave simulations
 %
 % -------------------------------- ITER@3.7GHz --------------------------------
 %
-elseif strcmp(config,'ITER');%For the Lower Hybrid wave simulations
+elseif strcmp(par.conf,'ITER');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 -------
 % 
+    if nlh ~= 1,
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
+    %
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
- %
+%
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{1}.rZ0 = [0.15,1.15];%vertical launching positions (m) [1,m_pol]
 % 
@@ -294,12 +340,11 @@ elseif strcmp(config,'ITER');%For the Lower Hybrid wave simulations
 %
 %   directivity = [0.7];%Antenna directivity [1,1]
 %
-%   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,cons_spec);%Power and parallel refractive index [1,n_lobe]
+%   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons);%Power and parallel refractive index [1,n_lobe]
 %   launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
 %   launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
 %
 %   launchs{2}.bdNpar0 = [0.2,1.8];%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
-%   launchs{2}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
 %   launchs{2}.rZ0 = [0.15,1.15];%vertical launching positions (m) [1,m_pol]
 % 
@@ -313,22 +358,25 @@ elseif strcmp(config,'ITER');%For the Lower Hybrid wave simulations
 %
 % -------------------------------- FT-U --------------------------------
 %
-elseif strcmp(config,'FTU')
+elseif strcmp(par.conf,'FTU')
 %
 % ------- LH antenna #1 -------
 % 
+    if nlh ~= 1,
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
+    %
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.85];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS and FTU
 %
    launchs{1}.rZ0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
@@ -340,22 +388,25 @@ elseif strcmp(config,'FTU')
 %
 % -------------------------------- SST-1 --------------------------------
 %
-elseif strcmp(config,'SST1')
+elseif strcmp(par.conf,'SST1')
 %
 % ------- LH antenna #1 -------
 % 
+    if nlh ~= 1,
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
+    %
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.75];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{1}.rZ0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
@@ -367,22 +418,25 @@ elseif strcmp(config,'SST1')
 %
 % -------------------------------- DEMO --------------------------------
 %
-elseif strcmp(config,'DEMO')
+elseif strcmp(par.conf,'DEMO')
 %
 % ------- LH antenna #1 -------
 % 
+    if nlh ~= 2,
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
+    %
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
- %
+%
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{1}.rZ0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
@@ -400,12 +454,11 @@ elseif strcmp(config,'DEMO')
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
- %
+%
    launchs{2}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations (main lobe) [1,n_lobe]
-   launchs{2}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{2}.rZ0 = [0];%vertical launching positions (m) [1,m_pol]
 % 
@@ -417,22 +470,25 @@ elseif strcmp(config,'DEMO')
 %
 % -------------------------------- COMPASS --------------------------------
 %
-elseif strcmp(config,'COMPASS');%For the Lower Hybrid wave simulations
+elseif strcmp(par.conf,'COMPASS');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 -------
 % 
+    if nlh ~= 1,
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
+    %
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
- %
+%
    launchs{1}.bdNpar0 = [0.2]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.00;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{1}.rZ0 = [-0.0535;0.0001;0.0535];%vertical launching positions (m) [1,m_pol]
 % 
@@ -442,22 +498,25 @@ elseif strcmp(config,'COMPASS');%For the Lower Hybrid wave simulations
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
    
-elseif strcmp(config,'ASDEX');%For the Lower Hybrid wave simulations 
+elseif strcmp(par.conf,'AUG') || strcmp(par.conf,'ASDEX');%For the Lower Hybrid wave simulations 
 %
 % ------- LH antenna #1 -------
 % 
+    if nlh ~= 2,
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
+    %
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
- %
+%
    launchs{1}.bdNpar0 = [0.5]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{1}.rZ0 = [linspace(-0.35,-0.05,6) linspace(0.05,0.35,6)];%[-0.35,0,0.35];%vertical launching positions (m) [1,m_pol]
 % 
@@ -475,12 +534,11 @@ elseif strcmp(config,'ASDEX');%For the Lower Hybrid wave simulations
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
- %
+%
    launchs{2}.bdNpar0 = [0.5]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{2}.a_sdNpar = 0.0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
 %
    launchs{2}.rZ0 = [linspace(-0.35,-0.05,6) linspace(0.05,0.35,6)];%vertical launching positions (m) [1,m_pol]
 % 
@@ -489,23 +547,25 @@ elseif strcmp(config,'ASDEX');%For the Lower Hybrid wave simulations
    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
    launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
-elseif strcmp(config,'EAST');%For the Lower Hybrid wave simulations 
+elseif strcmp(par.conf,'EAST');%For the Lower Hybrid wave simulations 
 %
 % ------- LH antenna #1 -------
 % 
+    if nlh ~= 1,
+        error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
+    end
+    %
    launchs{1}.id = 'Antenna_1';
    launchs{1}.type = 'LH';
    launchs{1}.omega_rf = freqlh(1)*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),cons_spec,lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
    launchs{1}.bdNpar0 = [0.5]*ones(size(Npar0));%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-   launchs{1}.a_sdNpar = 0.0;%artificial upshift, 0.05 for TS and FTU and EAST
-%
    launchs{1}.rZ0 = [-0.05 0 0.05];%[-0.35,0,0.35];%vertical launching positions (m) [1,m_pol]
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
@@ -516,28 +576,20 @@ elseif strcmp(config,'EAST');%For the Lower Hybrid wave simulations
 else
    error('The launch configuration name does not exists')  	
 end
-
-if any(aloha.mode==1) & (strcmp(config,'CIEL')|strcmp(config,'TS')|strcmp(config,'ITER')|strcmp(config,'JET'))
-    disp('use ALOHA file for the power spectrum, TS/JET case')
-    nblh   = length(aloha.mode);
-    %
-    for i=1:nblh
-      if aloha.mode(i) == 1 & abs(cons(i)) > 0
-        filename = deblank(char(aloha.file(i)));
-        filename(isspace(filename)) = [];
-        load(fullfile(aloha.path,filename));
-        scheme  = scenario(aloha.scen);
-        results = scheme(i).results;
-        redfac = abs(cons(i))/(sum(results.dP_nz)*results.dnz);
-        param = aloha.param(i);
-        if imag(param) == 0,% imag(param) is the number of peaks left intact
-            if param > 1,% case where we specify the number of lobes
-                param = param - 2 + 2i;
-            else% case where we specify the minimum fraction of power
-                param = param + 2i;
-            end
-        end
-        opt_optim = 0 %(if 1 use  toolbox optimisation)
+%
+% ============================= ALOHA =====================================
+%
+for ilh=1:nlh,
+    if aloha(ilh).mode == 1 && abs(cons(ilh)) > 0,
+        %
+        disp(['use ALOHA file for the power spectrum of LH wave # ',num2str(ilh)])
+        %
+        load(aloha(ilh).file);
+        scheme  = scenario(aloha(ilh).scen);
+        results = scheme(ilh).results;
+        redfac = abs(cons(ilh))/(sum(results.dP_nz)*results.dnz);
+        param = aloha(ilh).param;%number of fitted peaks + number of peaks left intact
+        opt_optim = 0; %(if 1 use  toolbox optimisation)
         [bNpar0,bdNpar0,bPlhtot] = proc_aloha_spec_jd(results.nz,NaN,results.dP_nz,redfac,param,opt_optim);
         %
         if strcmp(lob,'No');
@@ -547,16 +599,44 @@ if any(aloha.mode==1) & (strcmp(config,'CIEL')|strcmp(config,'TS')|strcmp(config
             bPlhtot = bPlhtot(mask);
         end
         %
-        bNpar0 = -signe.ip*signe.b0*bNpar0;%sign in aloha is positive
+        bNpar0 = -gene.signe.ip*gene.signe.b0*bNpar0;%sign in aloha is positive
         %
-        launchs{i}.bdNpar0    = bdNpar0;
-        launchs{i}.bNpar0     = bNpar0;
-        launchs{i}.bPlhtot    = bPlhtot;
-        launchs{i}.aloha  = aloha;
-        launchs{i}.aloha.file = fullfile(aloha.path,char(aloha.file(i)));
-      end
+        launchs{ilh}.bdNpar0    = bdNpar0;
+        launchs{ilh}.bNpar0     = bNpar0;
+        launchs{ilh}.bPlhtot    = bPlhtot;
+        launchs{ilh}.aloha  = aloha(ilh);
     end
 end
+%
+% ====================== OTHER PARAMETERS ==========================
+%
+%
+for ilh=1:nlh,
+    %
+    launch = launchs{ilh};
+    %
+    if isfield(par,'nparp') && par.nparp(ilh) ~= 0,
+        for ib = 1:length(launch.bNpar0),
+            disp(['artificial upshift for LH wave ',num2str(ilh),...
+                ' Npar0: ',num2str(launch.bNpar0(ib)),' ==> ',num2str(launch.bNpar0(ib) + sign(launch.bNpar0(ib)).*par.nparp(ilh))])
+            launch.bNpar0(ib) = launch.bNpar0(ib) + sign(launch.bNpar0(ib)).*par.nparp(ilh);
+        end
+    else
+        launch.nparp = 0;
+    end
+    %
+    if isfield(par,'a_sdNpar') && par.a_sdNpar(ilh) ~= 0,
+        launch.a_sdNpar = par.a_sdNpar(ilh);
+        disp(['artificial upshift for LH wave ',num2str(ilh),...
+            ': a_sdNpar = ',num2str(par.a_sdNpar(ilh))])
+    else
+        launch.a_sdNpar = 0;
+    end
+    %
+    launchs{ilh} = launch;
+    %
+end
+%
 
 
 

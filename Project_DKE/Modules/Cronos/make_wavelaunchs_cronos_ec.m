@@ -4,9 +4,14 @@ function [launchs] = make_wavelaunchs_cronos_ec(equil,par,cons)
 %
 % by J. Decker <joan.decker@cea.fr> (CEA-DRFC) and Y.Peysson <yves.peysson@cea.fr> (CEA-DRFC)
 %
+if isempty(cons),
+    launchs = cell(0,1);
+    return
+end
+%
 si = sign(equil.psi_apRp(end));%sign of Iphi
 %
-nw = length(par.freq_ghz);%number of EC beams
+nw = length(par.ecrh_param.freq_ghz);%number of EC beams
 %
 % parameters for free space ray propagation towards first closed FS
 %
@@ -21,16 +26,16 @@ for iw = 1:nw,
     %
     launch.id = num2str(iw);
     launch.type = 'EC';
-    launch.omega_rf = par.freq_ghz(iw)*2*pi*1e9;
+    launch.omega_rf = par.ecrh_param.freq_ghz(iw)*2*pi*1e9;
     launch.ns = ns;
     launch.method = method;
     %
     launch.yP_L = abs(cons(iw));
-    launch.yR_L = par.rant(iw);
-    launch.yZ_L = par.zant(iw);
+    launch.yR_L = par.ecrh_param.rant(iw);
+    launch.yZ_L = par.ecrh_param.zant(iw);
     launch.yphi_L = 0;
     %
-    if par.angle_var(iw) == 1,
+    if par.ecrh_param.angle_var(iw) == 1,
         %
         angle_mul  = angle(cons(iw));
         angle_tor = fix(abs(angle_mul) .* 1e7) .* 1e-4 - 360;
@@ -38,8 +43,8 @@ for iw = 1:nw,
         %        
     else
         %
-        angle_pol = par.angle_pol(iw);
-        angle_tor = par.angle_tor(iw);
+        angle_pol = par.ecrh_param.angle_pol(iw);
+        angle_tor = par.ecrh_param.angle_tor(iw);
         %
     end
     %
@@ -53,7 +58,7 @@ for iw = 1:nw,
     %
     launch.ybeta_L = pi/2 - angle_pol_t*pi/180;
     %
-    launch.mmode = -1^(par.modpolar(iw) == 2);%(1) for X mode
+    launch.mmode = -1^(par.ecrh_param.modpolar(iw) == 2);%(1) for X mode
     launch.dNpar0 = dNpar0;
     launch.a_sdNpar = 0.0;%NO Spectral broadening for EC WAVES
     %
