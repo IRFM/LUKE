@@ -100,13 +100,17 @@ else
         %
     end
     %
-    disp(['    --> Loading results from local file ',load_id,' ...'])
-    output = load(load_id);	
-    disp(' ... done'); 
-    %
-    disp(['    --> Deleting local file ',load_id,' ...'])
-    delete(load_id);   
-    disp(' ... done'); 
+    if ~exist(load_id,'file'),
+        output.err = {['Could not find output file ',load_id,'. Aborted']};
+    else
+        disp(['    --> Loading results from local file ',load_id,' ...'])
+        output = load(load_id);	
+        disp(' ... done'); 
+        %
+        disp(['    --> Deleting local file ',load_id,' ...'])
+        delete(load_id);   
+        disp(' ... done'); 
+    end
     %
     if isfield(output,'err'),
     	for istr = 1:length(output.err),
