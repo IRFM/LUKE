@@ -146,7 +146,11 @@ for id = 1:nd,
     end
 end
 %
-wave.opt_disp = wave.opt_disp + i;
+if isfield(wave,'rayparam') && wave.rayparam.rel_opt == 0,
+    wave.opt_disp = real(wave.opt_disp) - i;
+else
+    wave.opt_disp = real(wave.opt_disp) + i;
+end    
 %
 
 

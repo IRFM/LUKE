@@ -16,8 +16,12 @@ end
 %
 % Absorption calculation including dnpar effects
 %
-if isfield(wave,'a_sdNpar') & wave.a_sdNpar > 0,
-    wave.opt_disp = real(wave.opt_disp) + (1 + wave.a_sdNpar)*i;
+if isfield(wave,'a_sdNpar') && wave.a_sdNpar > 0,
+    if isfield(wave,'rayparam') && wave.rayparam.rel_opt == 0,
+        wave.opt_disp = real(wave.opt_disp) - (1 + wave.a_sdNpar)*i;
+    else
+        wave.opt_disp = real(wave.opt_disp) + (1 + wave.a_sdNpar)*i;
+    end
 end
 %
 % Ray processing
@@ -34,7 +38,7 @@ for ib = 1:length(wave.rays),
         salpha_lin = salphaphi_lin./sphi_norm;
         salpha_lin(isnan(salpha_lin)) = 0;
         %
-        if ~isfield(ray,'stau') | all(isnan(ray.stau)) | imag(wave.opt_disp) > 1,
+        if ~isfield(ray,'stau') || all(isnan(ray.stau)) || abs(imag(wave.opt_disp)) > 1,
             %
             salpha_lin_h = (salpha_lin(1:end-1) + salpha_lin(2:end))/2;
             sds = diff(ray.ss);

@@ -487,18 +487,18 @@ else
         error('model not yet implemented');
     elseif real(opt_disp) == 5, % electrostatic approximation for EBW calculations
         %
-        [sNperp,sepol_pmz,sphi_xyz]...%,salphaphi_lin_nr,salphaphi_lin_wr,salphaphi_lin_fr
+        [sNperp,sepol_pmz,sphi_xyz,salphaphi_lin_nr,salphaphi_lin_wr,salphaphi_lin_fr]...
         = ES_ebw_disp_jd(real(sNpar),omega_rf,sTe,sne,sB,sNperp);%,0,imag(opt_disp)
         %
-        %salphaphi_lin = real(salphaphi_lin_fr)*omega_rf/clum;
-        %opt_disp = real(opt_disp);
+        salphaphi_lin = real(salphaphi_lin_fr)*omega_rf/clum;
+        opt_disp = real(opt_disp);
         %
         smask = ~isnan(sNperp);
         ns = sum(smask);
         %
         sNperp = sNperp(smask);
         sepol_pmz = sepol_pmz(:,smask);
-        %salphaphi_lin = salphaphi_lin(smask);
+        salphaphi_lin = salphaphi_lin(smask);
         sphi_xyz = sphi_xyz(:,smask);
         %
         ss = ss(smask);
@@ -561,19 +561,19 @@ if isempty(sdNpar) || any(isnan(sdNpar)),
     end
 end
 %
-if imag(opt_disp) >= 1,%calculation of the absorption coefficient
+if abs(imag(opt_disp)) >= 1,%calculation of the absorption coefficient
     %
-    rel_opt = (imag(opt_disp) == 1);
+    rel_opt = imag(opt_disp) > 0;
     %
     sa = sne*qe^2/e0/me/omega_rf^2;
     sb = sB*qe/me/omega_rf;
 	sbeta = sqrt(sTe/mc2);
     salphaphi_lin = zeros(1,ns);
     for n = n_rf_list,
-        if imag(opt_disp) == 1,
+        if abs(imag(opt_disp)) == 1,
             salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,real(sNpar),real(sNperp),sepol_pmz,n,rel_opt);
         else
-            salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,real(sNpar) + sign(real(sNpar)).*(sdNpar + (imag(opt_disp) - 1)*ss)/2,real(sNperp),sepol_pmz,n,rel_opt);
+            salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,real(sNpar) + sign(real(sNpar)).*ss*abs(imag(opt_disp) - 1)/2,real(sNperp),sepol_pmz,n,rel_opt);
         end
     end
 end
