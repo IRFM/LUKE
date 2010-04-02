@@ -5,7 +5,7 @@ function [lukeversion,matlabversion] = LUKEversion_jd;
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
-lukeversion = 'LUKE 1.8.1';
+lukeversion = 'LUKE 1.8.2';
 ver = version;
 matlabversion = ver([1,3]);
 if str2num(ver(1:3)) < 7.5;error('Version of MatLab prior to R2007B (7.5) are not supported');end

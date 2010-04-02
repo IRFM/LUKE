@@ -1984,7 +1984,7 @@
 % A mrunluke_batch (batch LUKE run)
 % U make_path_LOCAL.m (")
 % 
-% ====> LUKE/Project_DKEDatabase
+% ====> LUKE/Project_DKE/Database
 %
 % U DKEPARAM_files/make_dkeparam_EC_RT.m (stability)
 % U HXR_files/make_hxr_TCV.m (beta angles corrected)
@@ -2048,3 +2048,110 @@
 % U graph_wave_jd.m (display option)
 % U integral_dke_jd.m (small correction)
 %
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.8.2
+% 
+% - DCLUKE uses dkepath
+% - CRONOS coupling completely revisited. 3 main errors corrected:
+%		- T, n profiles now on correct grid
+%		- ohm.epsi can now have varying signs
+%		- EQUILV no longer reloaded
+% - use of a_sdNpar
+% 
+% ====> LUKE
+% 
+%
+%
+% ====> LUKE/Project_DKE/Display
+%
+% U igetdir_jd.m (current directory)
+% U iload_externaldata_jd.m (dkepath for dcluke)
+% U imake_equil_jd.m (")
+% U imake_makewave_jd.m (")
+% U imake_ohm_jd.m (")
+% U imake_ripple_yp.m (")
+% U imake_struct_jd.m (")
+% U imake_transp_jd.m (")
+% U imake_wave_jd.m (")
+% U irunluke_jd.m (dkepath for dcluke, exit protection, failed luke case)
+%
+% ====> LUKE/Project_DKE/DKE
+% 
+% U coll_dke_jd.m (dkepath for dcluke)
+% U eecoll_dke_yp.m (")
+% U loop_coll_dke_jd1.m (")
+% U load_structures_yp.m (")
+% U setpath_luke_jd.m (")
+% U fmoments_dke_yp.m (n_rf_list)
+% U rfdiff_dke_jd.m (")
+% U rfwave_dke_jd.m (")
+% U proc_luke_jd.m (")
+% U run_lukert.m (rho0, rtmode = 4, n_rf_list)
+% U optgrid_dke_jd.m (rho0)
+% U getluke_remote_jd.m (small corrections)
+% U main_dke_yp.m (")
+% U rayprocess_jd.m (a_sdNpar case)
+% U wave_process_jd.m (")
+%
+% ====> LUKE/Project_DKE/Modules/C3PO
+%
+% U make_beam_wave_jd.m (")
+% U main_C3PO_jd.m (dkepath for dcluke)
+% U Examples/JETlike/WAVE/make_wave_JETliketest.m (")
+% U Examples/JETlike/WAVE/make_wave_JETliketest_bis.m (")
+% U Examples/PLT/WAVE/make_wave_PLTtest.m (")
+% U Examples/RFP/WAVE/make_wave_RFP.m (")
+% U Examples/RTtest/WAVE/make_wave_RTtest.m (")
+% U Examples/RTtest/WAVE/make_wave_RTtest_straight.m (")
+% U Examples/VERSATOR2/WAVE/make_wave_VERSATOR2test.m (")
+%
+% ====> LUKE/Project_DKE/Modules/Cronos
+%
+% U lhspectrum_cronos.m (no cons_spec)
+% U luke_parameters.m (revisited)
+% U make_display_cronos.m (small modifications)
+% U make_dkeparam_cronos.m (parameters modified in function)
+% U make_equil_cronos.m (treatment in function, psi grid, t and n profiles)
+% U make_wavelaunchs_cronos_ec.m (parameters modified in function)
+% U make_wavelaunchs_cronos_lh.m (parameters modified in function, aloha)
+% U make_wavert_cronos.m (parameters modified in function, no equil reload)
+% U zstarwars.m (revisited, ohm.epsi can change sign)
+%
+% ====> Project_DKE/Packages/MDCE
+%
+% U run_mdce.m  (dkepath for dcluke)
+% U run_mdce_rt.m  (")
+% U dcluke/dcluke.exe (")
+% U dcluke/dcluke.m (")
+% U dcluke/dcluke_batch.sh (")
+% U dcluke/testdcluke.m (")
+% A dcluke/cephee/dcluke.exe is no longer in the repository
+% A dcluke/cephee/dcluke_batch.sh is no longer in the repository
+% A dcluke/cephee/dcluke_etat.sh is no longer in the repository
+% A dcluke/cephee/dcluke_kill.sh is no longer in the repository
+% A dcluke/efda-itm/dcluke.exe is no longer in the repository
+% A dcluke/efda-itm/dcluke_batch.sh is no longer in the repository
+% A dcluke/efda-itm/dcluke_etat.sh is no longer in the repository
+% A dcluke/efda-itm/dcluke_kill.sh is no longer in the repository
+% A dcluke/saturne/dcluke.exe is no longer in the repository
+% A dcluke/saturne/dcluke_batch.sh is no longer in the repository
+% A dcluke/saturne/dcluke_etat.sh is no longer in the repository
+% A dcluke/saturne/dcluke_kill.sh is no longer in the repository
+%
+% ====> LUKE/Tools
+%
+% U clustermode_luke.m (dkepath for dcluke)
+% U mdce_luke.m (")
+% U comp_struct_jd.m (small corrections)
+%
+
+
+
+
+
+
+
+
+
+
