@@ -401,6 +401,13 @@ function irunluke_jd(basestr,signs,opt_gui)
                             'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
                         disp(['-----> The data file ',[data_path,data_file],' is loaded.']);
                         %
+                        if isfield(data,'basestr'),
+                            basestr = data.basestr;
+                        else
+                            basestr = data_file(14:12 + find(data_file(14:end) == '_',1,'first'));
+                            basestr = input_dke_yp('Please enter the tokamak name',basestr);
+                        end
+                        %
                         fileids.data = data_file;
                         paths.data = data_path;
                         %

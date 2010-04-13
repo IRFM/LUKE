@@ -1,4 +1,4 @@
-function userid = userid_jd;
+function userid = userid_jd
 %
 % This function determines and returns the user id
 %
@@ -20,3 +20,6 @@ elseif strcmp(computer,'MAC'),%MAC system
     ismin = max([1,is_blanck + 1]);
     userid = str(ismin:end);
 end
+%
+userid(userid == 10) = '';
+%
