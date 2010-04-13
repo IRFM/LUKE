@@ -6,6 +6,7 @@ load(filename,'output');
 %
 [qe,me] = pc_dke_yp;
 %
+mhd.luke_simul = output.dke_out.simul;
 mhd.XF0 = output.dke_out.XXf0;
 mhd.XFM = output.dke_out.XXfinit;
 %
@@ -31,7 +32,13 @@ mhd.equil.xq = output.Zbouncecoef.xq*output.equilDKE.ap/output.equilDKE.Rp;
 mhd.equil.E_ref = output.mksa.Te_ref*1e3*qe/me;
 mhd.equil.n_ref = output.mksa.ne_ref;
 %
-mhdstr = ['MHD_DATA_',filestr,'.mat'];
+locstr = input('Enter an optional string to add to the MHD filename (or leave empty) : ','s');
+%
+if ~isempty(locstr),
+    locstr = ['_',locstr];
+end
+%
+mhdstr = ['MHD_DATA_',filestr,locstr,'.mat'];
 %
 save(mhdstr,'mhd')
 
