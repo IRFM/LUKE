@@ -265,6 +265,8 @@ if w_opt == 0; % C3PO Calculation
     %
     % WAVE TYPE
     %
+    n_rf_list = NaN;
+    %
     if strcmp(type,'LH') || strcmp(type,'IC') || strcmp(type,'FW'),
         %
         ftype = 'LF';
@@ -295,14 +297,11 @@ if w_opt == 0; % C3PO Calculation
         if strcmp(ftype,'LF'),
             %
             reflection = 1;
-            n_rf_list = 0;
             method = 'pchip';
             %
         else
             %
             reflection = 0;
-            n_rf_list = max([1,floor(omega_rf/(qe*max(abs(equil.ptBPHI(end,:)))/me))]):...
-                ceil(omega_rf/(qe*min(abs(equil.ptBPHI(end,:)))/me));
             method = 'spline';
             %
         end
@@ -315,7 +314,6 @@ if w_opt == 0; % C3PO Calculation
         dsmin = 0.01;
         nd = 1;
         nchi = 1;
-        n_rf_list = 0;
         %
         reflection = 1;
         %
@@ -338,8 +336,6 @@ if w_opt == 0; % C3PO Calculation
         dsmin = 0.001;
         nd = 3;
         nchi = 4;
-        n_rf_list = max([1,floor(omega_rf/(qe*max(abs(equil.ptBPHI(end,:)))/me))]):...
-            ceil(omega_rf/(qe*min(abs(equil.ptBPHI(end,:)))/me));
         %
         reflection = 0;
         %
@@ -416,7 +412,7 @@ if w_opt == 0; % C3PO Calculation
     %
     %a_sdNpar = input_dke_yp('Spectral width parameter a_sdNpar (m^-1)',0,[0;Inf],'',[1,1]);
     %
-    n_rf_list = input_dke_yp('List of cyclotron harmonics to consider in power deposition',n_rf_list,0:10,'');
+    n_rf_list = input_dke_yp('List of cyclotron harmonics to consider in wave power deposition :\n (enter NaN if list determined by C3PO)',n_rf_list,[NaN,0:10],'');
     %
     ns = input_dke_yp('Ray smoothing parameter',1,1:100,'',[1,1]);
     %

@@ -275,7 +275,13 @@ end
 [waveparam,xyprop_dke_rf,xys_rf,xyP0_2piRp_in_rf,yb,yP0_2piRp] = propagation_jd(rays,xpsin_S_dke,xpsin_dke,method,display_mode);
 %disp('-------------------------------------------------------------------------------------------------------------------');
 %
-waveparam.n_rf_list = n0_rf_list;
+if isfield(dkeparam,'n_rf_list'),% in this case the LUKE n_rf_list is imposed by dkeparam
+    disp(['List of cyclotron harmonics in LUKE imposed by dkeparam : ',num2str(dkeparam.n_rf_list)])
+    waveparam.n_rf_list = dkeparam.n_rf_list;
+else
+    disp(['List of cyclotron harmonics in LUKE compiled from all waves : ',num2str(n0_rf_list)])
+    waveparam.n_rf_list = n0_rf_list;
+end
 %
 nb_rf = size(yb,2);%number of actual rays
 %nbb_rf = size(xyprop_dke_rf,2);%number of ray subdivisions
