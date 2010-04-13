@@ -33,20 +33,55 @@ else
     %
 end
 %
-% load HXR camera spec
-%
-hxr_file = which(['HXR_',basestr,'.mat']);
-[hxr_file,hxr_path] = igetfile_jd(opt_gui,'HXR_*.mat','Please select the HXR camera spec file',hxr_file);
-if hxr_file == 0,
-    disp('-----> No HXR camera spec file specified.')
-    disp(quitmsg)
-    return
+if isfield(equil,'info') && isfield(equil.info,'shotnum'),
+    shotnum = equil.info.shotnum;
+elseif isfield(equil,'id'),
+    idsep = find(equil.id == '_');
+    shotnum = equil.id(idsep(1)+1:idsep(2)-1); 
+else
+    shotnum = '';
 end
 %
-load([hxr_path,hxr_file],'hxr','hxrparam');
+% load HXR camera spec
 %
-hxrspec = hxr;
-clear hxr %to avoid name conflict
+if strcmp(basestr,'TS') && ~isempty(shotnum) && exist('tsdate','file') && input_dke_yp('Do you want to load the HXR camera spec automatically (y/n)','y',{'y','n'}) == 'y',
+    shotdate = tsdate(str2num(shotnum));
+    %
+    hxrspec = bremTSconvert_dke_yp(str2num(shotdate(1:2)),str2num(shotdate(4:5)),str2num(shotdate(7:10)));
+    %
+    % according to the correct definitions of alpha (-pi -> pi) and beta (0 -> pi)
+    %
+    hxrspec.alpha_hxr(hxrspec.beta_hxr > pi) = hxrspec.alpha_hxr(hxrspec.beta_hxr > pi) + pi;
+    hxrspec.beta_hxr(hxrspec.beta_hxr > pi) = 2*pi - hxrspec.beta_hxr(hxrspec.beta_hxr > pi);
+    %
+    hxrspec.alpha_hxr(hxrspec.beta_hxr < 0) = hxrspec.alpha_hxr(hxrspec.beta_hxr < 0) + pi;
+    hxrspec.beta_hxr(hxrspec.beta_hxr < 0) = - hxrspec.beta_hxr(hxrspec.beta_hxr < 0);
+    %
+    hxrspec.alpha_hxr(hxrspec.alpha_hxr < 0) = hxrspec.alpha_hxr(hxrspec.alpha_hxr < 0) + 2*pi;
+    hxrspec.alpha_hxr(hxrspec.alpha_hxr > 2*pi) = hxrspec.alpha_hxr(hxrspec.alpha_hxr > 2*pi) - 2*pi;
+    %
+    hxrparam.mfactor = 1;%For the magnetic equilibrium
+    hxrparam.method = 'spline';%For the magnetic equilibrium in the HXR calculations
+    hxrparam.ns = 3000;%for chord integration
+    hxrparam.n_gauleg = 35;%Number of Legendre polynomials for projections of cross-section and electron velocity distribution
+    hxrparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
+    %
+else
+    %
+    hxr_file = which(['HXR_',basestr,'.mat']);
+    [hxr_file,hxr_path] = igetfile_jd(opt_gui,'HXR_*.mat','Please select the HXR camera spec file',hxr_file);
+    if hxr_file == 0,
+        disp('-----> No HXR camera spec file specified.')
+        disp(quitmsg)
+        return
+    end
+    %
+    load([hxr_path,hxr_file],'hxr','hxrparam');
+    %
+    hxrspec = hxr;
+    clear hxr %to avoid name conflict
+    %
+end
 %
 nc = length(hxrspec.beta_hxr);% number of chords
 %
@@ -66,8 +101,8 @@ if strcmp(d_opt,'y'),
     R = zeros(nc,length(L));
     Z = zeros(nc,length(L));
     for chord = 1:nc,
-           R(chord,:) = hxrspec.R_hxr(chord) + L*cos(hxrspec.beta_hxr(chord) - pi/2);
-           Z(chord,:) = hxrspec.Z_hxr(chord) + L*sin(hxrspec.beta_hxr(chord) - pi/2);
+           R(chord,:) = hxrspec.R_hxr(chord) + L*sin(hxrspec.beta_hxr(chord))*cos(hxrspec.alpha_hxr(chord));
+           Z(chord,:) = hxrspec.Z_hxr(chord) + L*cos(hxrspec.beta_hxr(chord));
     end
     plot(R',Z'),
     plot(R(1),Z(1),'*')
@@ -79,51 +114,44 @@ end
 %
 % load and treat HXR experimental results
 %
-if strcmp(basestr,'TCV'),% TCV launching data
+if isfield(external,'hxr'),
+    n_opt = input_dke_yp(['Option for hxr experimental data? 0 (structure external), 1 (data file), 2 (',basestr,' database) -1 (no exp. data)'],0,-1:2,'',[1,1]);
+else
+    n_opt = input_dke_yp(['Option for hxr experimental data? 1 (data file), 2 (',basestr,' database) -1 (no exp. data)'],-1,[-1,1,2],'',[1,1]);
+end
+%
+if n_opt == 0,% structure external
     %
-    % load HXR experimental results
+    t = external.hxr.t;
+    energy = external.hxr.energy;
+    hxr = external.hxr.counts;
+    %filter_thickness = external.hxr.filter_thickness;
+    %filter_material = external.hxr.filter_material;
     %
-    if isfield(external,'hxr'),
-        n_opt = input_dke_yp('Option for hxr experimental data? 0 (structure external), 1 (data file), 2 (TCV database) -1 (no exp. data)',0,-1:2,'',[1,1]);
+    if isfield(external,'beta')
+        beta = external.beta;
     else
-        n_opt = input_dke_yp('Option for hxr experimental data? 1 (data file), 2 (TCV database) -1 (no exp. data)',-1,[-1,1,2],'',[1,1]);
+        beta = NaN(1,size(hxr,3));
     end
     %
-    if n_opt == 0,% structure external
+elseif n_opt > 0,
+    if isempty(shotnum)
+        disp('-----> Shot number information missing');
+        return
+    end
+    %
+    if n_opt == 1,% hxr experimental data from file
         %
-        t = external.hxr.t;
-        energy = external.hxr.energy;
-        hxr = external.hxr.counts;
-        filter_thickness = external.hxr.filter_thickness;
-        filter_material = external.hxr.filter_material;
+        [data_file,data_path] = igetfile_jd(opt_gui,'*.*','Please select the hxr experimental data file :');
         %
-        if isfield(external,'beta')
-            beta = external.beta;
-        else
-            beta = NaN(1,size(hxr,3));
+        if data_file == 0,
+            disp(quitmsg)
+           return
         end
         %
-    elseif n_opt > 0,
-        if isfield(equil,'info') && isfield(equil.info,'shotnum'),
-            shotnum = equil.info.shotnum;
-        elseif isfield(equil,'id'),
-            idsep = find(equil.id == '_');
-            shotnum = equil.id(idsep(1)+1:idsep(2)-1); 
-        else
-            disp('-----> Shot number information missing');
-            return
-        end
-        %
-        if n_opt == 1,% hxr experimental data from file
+        if strcmp(basestr,'TCV'),
             %
-            [data_file,data_path] = igetfile_jd(opt_gui,'*.*','Please select the hxr experimental data file :');
-            %
-            if data_file == 0,
-                disp(quitmsg)
-               return
-            end
-            %
-            load([data_path,data_file],'shot','energy','hxr','t','beta','filter_thickness','filter_material');
+            load([data_path,data_file],'shot','energy','hxr','t','beta');%,'filter_thickness','filter_material'
             %
             ishot = find(shot == str2num(shotnum));
             %
@@ -140,97 +168,161 @@ if strcmp(basestr,'TCV'),% TCV launching data
             %
             clear data_path data_file
             %
-        elseif n_opt == 2,% hxr experimental data from TCV database
+            t = t{ishot};
+            energy = energy{ishot};
+            hxr = hxr{ishot};
+            %filter_thickness = filter_thickness{ishot};
+            %filter_material = filter_material{ishot};
             %
-            shot = str2num(shotnum);
+            clear ishot
+            %
+        else
+            disp(['-----> option not yet implemented for ',basestr,'.']);
+            disp(quitmsg)
+            return            
+        end
+        %
+    elseif n_opt == 2,% hxr experimental data from TCV database
+        %
+        shot = str2num(shotnum);
+        %
+        if strcmp(basestr,'TCV'),
             collect_hxr;
-            ishot = 1;
             %
-            clear shot
+            t = t{1};
+            energy = energy{1};
+            hxr = hxr{1};
+            %filter_thickness = filter_thickness{1};
+            %filter_material = filter_material{1};
             %
+        elseif strcmp(basestr,'TS') && exist('tsbase','file'),
+            %
+            %[hxr01,t] = tsbase(shot,'GVRX01');
+            [hxr01,t] = tsbase(shot,'GVX01');
+            %
+            if isempty(hxr01),
+                disp(['-----> hxr data not found for shot :',shotnum]);
+                disp(quitmsg)
+                return            
+            end                
+            %
+            [nt,nk] = size(t);
+            %
+%             if size(hxrspec.kdiag_hxr,2) ~= nk+1,
+%                 disp(['-----> photon energy chanel mismatch.']);
+%                 disp(quitmsg)
+%                 return            
+%             end                
+            %
+            t = t(:,1);
+            %
+            hxr = NaN(nt,nk,nc);            
+            %
+            for ic = 1:min([nc,9]),
+                %[hxrloc,tloc] = tsbase(shot,['GVRX0',num2str(ic)]);
+                [hxrloc,tloc] = tsbase(shot,['GVX0',num2str(ic)]);
+                if any(size(tloc) ~= [nt,nk]) || any(any(tloc ~= repmat(t,[1,nk]))),
+                    for ik = 1:nk,
+                        hxr(:,ik,ic) = interp1(tloc(:,ik),hxrloc(:,ik),t);
+                    end
+                else
+                    hxr(:,:,ic) = hxrloc;
+                end                     
+            end    
+            %
+            for ic = 10:nc,
+                %[hxrloc,tloc] = tsbase(shot,['GVRX',num2str(ic)]);
+                [hxrloc,tloc] = tsbase(shot,['GVX',num2str(ic)]);
+                if any(size(tloc) ~= [nt,nk]) || any(any(tloc ~= repmat(t,[1,nk]))),
+                    for ik = 1:nk,
+                        hxr(:,ik,ic) = interp1(tloc(:,ik),hxrloc(:,ik),t);
+                    end
+                else
+                    hxr(:,:,ic) = hxrloc;
+                end                     
+            end      
+            %
+            hxr = flipdim(cumsum(flipdim(hxr,2),2),2);%TS data is per channel (it is not monotonically decreasing)
+            %
+            energy = [hxrspec.kdiag_hxr(1,1:end-1),hxrspec.kdiag_hxr(2,end-1)].';
+            %
+        else
+            disp(['-----> no access to the ',basestr,' database found.']);
+            disp(quitmsg)
+            return            
         end
         %
-        t = t{ishot};
-        energy = energy{ishot};
-        hxr = hxr{ishot};
-        filter_thickness = filter_thickness{ishot};
-        filter_material = filter_material{ishot};
+        clear shot
         %
-        if ~exist('beta','var'),
-            beta = NaN(1,size(hxr,3));
-        end
-        %
-        clear ishot shotnum
-        %        
-    else
-        energy = NaN;
     end
     %
-    if any(isnan(energy)),% no or useless exp. data
-        %
-        filter_thickness = NaN;
-        filter_material = NaN;
-        %
-        energy = hxrspec.kphot;
-        hxrexp = NaN*ones(length(energy),nc);
-        dt = 1;
-    else
-        %
-        % test angles
-        %
-        beta(beta > pi) = 2*pi - beta(beta > pi);% correct beta definition        
-        %
-        if length(beta) ~= nc,
-            error('number of chords mismatch')
-        end
-        if ~all(isnan(beta)) && any(abs(beta - hxrspec.beta_hxr) > 1e-15),
-            error('angle of chords mismatch')
-        end
-        %
-        energy = energy.';
-        %
-        % time sample of experimental data
-        %
-        if isfield(equil,'info') && isfield(equil.info,'t1') && isfield(equil.info,'t2'),
-            t1 = equil.info.t1;
-            t2 = equil.info.t2;
-        elseif isfield(external,'id'),
-            idsep = find(external.id == '_');
-            t1 = str2num(external.id(idsep(3)+1:idsep(4)-1));
-            t2 = str2num(external.id(idsep(4)+1:idsep(5)-1));
-        else
-            t1 = NaN;
-            t2 = NaN;
-        end
-        %
-        t1 = input_dke_yp('Initial time for TCV HXR data averaging',t1,[0;Inf],'',[1,1]);
-        t2 = input_dke_yp('Final time for TCV HXR data averaging',t2,[0;Inf],'',[1,1]);
-        %
-        it1 = find(t >= t1,1,'first');
-        it2 = find(t <= t2,1,'last');
-        %
-        % time averaging
-        %
-        hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
-        dt = t(it2) - t(it1);
-        hxrexp = hxrexp/dt;%taux de comptage
-        %
-        % incremental contribution of energy canal
-        %
-        hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
-        %
-     end        
+    if ~exist('beta','var'),
+        beta = NaN(1,size(hxr,3));
+    end
+    %        
+else
+    energy = NaN;
+end
+%
+if any(isnan(energy)),% no or useless exp. data
     %
-    hxrspec.kphot = sort([energy,(energy(1:end-1) + energy(2:end))/2]);
-    hxrspec.kdiag_hxr = [energy(1:end-1),(energy(1)+energy(2))/2;energy(2:end),(energy(end)+energy(end-1))/2];
+    filter_thickness = NaN;
+    filter_material = NaN;
     %
+    energy = hxrspec.kphot;
+    hxrexp = NaN*ones(length(energy),nc);
+    dt = 1;
 else
     %
-    disp(['-----> hxr experimental data not implemented yet for :',basestr]);
-    disp(quitmsg)
-    return    
+    % test angles
     %
-end
+    beta(beta > pi) = 2*pi - beta(beta > pi);% correct beta definition        
+    %
+    if length(beta) ~= nc,
+        error('number of chords mismatch')
+    end
+    if ~all(isnan(beta)) && any(abs(beta - hxrspec.beta_hxr) > 1e-15),
+        error('angle of chords mismatch')
+    end
+    %
+    energy = energy.';
+    %
+    % time sample of experimental data
+    %
+    if isfield(equil,'info') && isfield(equil.info,'t1') && isfield(equil.info,'t2'),
+        t1 = equil.info.t1;
+        t2 = equil.info.t2;
+    elseif isfield(external,'id'),
+        idsep = find(external.id == '_');
+        t1 = str2num(external.id(idsep(3)+1:idsep(4)-1));
+        t2 = str2num(external.id(idsep(4)+1:idsep(5)-1));
+    else
+        t1 = NaN;
+        t2 = NaN;
+    end
+    %
+    t1 = input_dke_yp('Initial time for TCV HXR data averaging',t1,[0;Inf],'',[1,1]);
+    t2 = input_dke_yp('Final time for TCV HXR data averaging',t2,[0;Inf],'',[1,1]);
+    %
+    it1 = find(t >= t1,1,'first');
+    it2 = find(t <= t2,1,'last');
+    %
+    % time averaging
+    %
+    hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
+    dt = t(it2) - t(it1);
+    hxrexp = hxrexp/dt;%taux de comptage
+    %
+    % incremental contribution of energy canal
+    %
+    hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
+    %
+ end        
+%
+hxrspec.kphot = sort([energy,(energy(1:end-1) + energy(2:end))/2]);
+hxrspec.kdiag_hxr = [energy(1:end-1),(energy(1)+energy(2))/2;energy(2:end),(energy(end)+energy(end-1))/2];
+%
+% HXR emission calculations
 %
 [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,dkedisplay,equil,radialDKE,Zcurr,hxrspec,hxrparam);
 %
