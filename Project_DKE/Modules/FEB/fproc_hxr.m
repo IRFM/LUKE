@@ -55,7 +55,7 @@ if exist([hxr_path,proc_hxr_datafile],'file'),
     %
     load([hxr_path,proc_hxr_datafile],'hxr');
     %
-    if ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
+    if ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
         disp(['Warning : input dt = ',num2str(dt),' discarded, HXR file dt = ',num2str(hxr.dt),' enforced.'])
     end
     %
@@ -73,7 +73,7 @@ if hxrdata == 0 && exist([hxr_path,hxr_datafile],'file'),
     hxr.dt = Zbremdiag.dt;
     hxr.hxrexp = hxrexp.';
     %
-    if ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
+    if ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
         disp(['Warning : input dt = ',num2str(dt),' discarded, HXR file dt = ',num2str(hxr.dt),' enforced.'])
     end
     %
@@ -98,7 +98,7 @@ if hxrdata == 0 && exist([hxr_path,proc_datafile1],'file'),
     end
     %
     if isstruct(hxr), 
-        if~isfield(hxr,'dt')
+        if ~isfield(hxr,'dt')
             if isnan(dt),
                 error('No value found for dt as input or from PROC_RESULT file')
             else
@@ -108,7 +108,7 @@ if hxrdata == 0 && exist([hxr_path,proc_datafile1],'file'),
                     opt.save = 1;
                 end
             end
-        elseif ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
+        elseif ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
             disp(['Warning : input dt = ',num2str(dt),' discarded, PROC_RESULT file dt = ',num2str(hxr.dt),' enforced.'])
         end
     end
@@ -140,7 +140,7 @@ if hxrdata == 0 && exist([hxr_path,proc_datafile2],'file'),
                     opt.save = 1;
                 end
             end
-        elseif ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
+        elseif ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
             disp(['Warning : input dt = ',num2str(dt),' discarded, PROC_DATA file dt = ',num2str(hxr.dt),' enforced.'])
         end
     end
@@ -171,7 +171,7 @@ if hxrdata == 0 && exist([hxr_path,datafile1],'file'),
     hxr.dt = hxrdata.Zbremdiag.dt;
     hxr.hxrexp = hxrdata.hxrexp.';
     %
-    if ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
+    if ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
         disp(['Warning : input dt = ',num2str(dt),' discarded, PROC_RESULTS file dt = ',num2str(hxr.dt),' enforced.'])
     end
     %
@@ -205,7 +205,7 @@ if hxrdata == 0 && exist([hxr_path,datafile2],'file'),
     hxr.dt = hxrdata.Zbremdiag.dt;
     hxr.hxrexp = hxrdata.hxrexp.';
     %
-    if ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
+    if ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
         disp(['Warning : input dt = ',num2str(dt),' discarded, PROC_DATA file dt = ',num2str(hxr.dt),' enforced.'])
     end
     %
