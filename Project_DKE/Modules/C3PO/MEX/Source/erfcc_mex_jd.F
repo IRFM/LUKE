@@ -20,7 +20,7 @@ C
 C
 C-----------------------------------------------------------------------
 C
-      integer NLHS, NRHS
+      mwSize NLHS, NRHS
 C
 C-----------------------------------------------------------------------
 C     (pointer) Replace integer by integer*8 on the DEC Alpha
@@ -41,7 +41,7 @@ C-----------------------------------------------------------------------
 C     (pointer) Replace integer by integer*8 on the DEC Alpha
 C     64-bit platform
 C
-      integer i,nx,nin
+      mwSize i,nx,nin
       mwPointer xrp,xip,zrp,zip,ninp 
       mwSize matone
       parameter (matone=1)
