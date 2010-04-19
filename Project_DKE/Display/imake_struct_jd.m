@@ -212,7 +212,7 @@ elseif m_opt == 2,
         end
         %
         newstruct = 1;
-        m_opt = i;
+        m_opt = 1i;
         %
     end
     %
@@ -222,7 +222,7 @@ if real(m_opt) == 0,
     %
     if opt_multi == 0,
         %
-        [s,mod] = imod_struct_jd(s,sname,d_opt);
+        [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui);
         %
         if mod == 1,
             %
@@ -261,7 +261,7 @@ if real(m_opt) == 0,
             is = ns + 1;
         end
         %
-        [s{is},mod] = imod_struct_jd(s{is},sname,d_opt);
+        [s{is},mod] = imod_struct_jd(s{is},sname,d_opt,opt_gui);
         %
         if mod == 1,
             %

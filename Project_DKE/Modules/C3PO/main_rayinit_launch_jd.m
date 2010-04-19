@@ -42,23 +42,23 @@ end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
-if isfield(launch,'m0') == 0,
+if ~isfield(launch,'m0'),
     launch.m0 = NaN;
 end
-if isfield(launch,'n0') == 0,
+if ~isfield(launch,'n0'),
     launch.n0 = NaN;
 end
-if isfield(launch,'dNpar0') == 0,
+if strcmp(launch.type,'EC') && ~isfield(launch,'dNpar0'),
     launch.dNpar0 = NaN;
 end
-if isfield(launch,'ns') == 0,
+if ~isfield(launch,'ns'),
     launch.ns = 1000;
 end
-if isfield(launch,'method') == 0,
+if ~isfield(launch,'method'),
     launch.method = 'cubic';
 end
 %
-if launch.type == 'EC',
+if strcmp(launch.type,'EC'),
     %
     dNpar0 = launch.dNpar0;
     ns = launch.ns;
@@ -195,13 +195,13 @@ if launch.type == 'EC',
         %
     end
     %
-elseif launch.type == 'LH',
+elseif strcmp(launch.type,'LH'),
     %
     bP0 = launch.bPlhtot;%initial power in the ray (W) [1,n_lobe]
     bNpar0 = launch.bNpar0;%Initial Npar value [1,n_lobe]
     bdNpar0 = launch.bdNpar0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
     ry0 = launch.rZ0 - equil.Zp;
-    rby0 = [ry0(:)*ones(1,length(bP0))];%[m_pol,n_lobe]
+    rby0 = ry0(:)*ones(1,length(bP0));%[m_pol,n_lobe]
     %
     % Ray initial characteristics
     %
@@ -245,6 +245,8 @@ elseif launch.type == 'LH',
             %
         end
     end
+else
+    error('launch type not recognised')
 end
 %
 rayinit.launch = launch;

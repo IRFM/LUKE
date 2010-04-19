@@ -1,7 +1,10 @@
-function launch = imake_launch_LH_jd(basestr,equil,external)
+function launch = imake_launch_LH_jd(basestr,equil,external,opt_gui)
 %
 % This function builts the launch structure for LH waves from external and/or user-specified data
 %
+if nargin < 4,
+    opt_gui = 0;
+end
 if nargin < 3,
     external = '';
 end
@@ -84,7 +87,7 @@ if strcmp(basestr,'TS') || strcmp(basestr,'JET'),% default values from make_wave
     %
 else % default values
     %
-    launch.omega_rf = 4.6;
+    launch.omega_rf = 2*pi*1e9*4.6;
     launch.LFS = 1;    
     launch.m0 = 0;
     %
@@ -109,41 +112,15 @@ if ~isempty(external),
     %
 end
 %
-launch.omega_rf = 2*pi*1e9*input_dke_yp('Wave frequency (GHz)',launch.omega_rf/(2*pi*1e9),[0;Inf],'',[1,1]);
+launch.frequency_GHz = launch.omega_rf/(2*pi*1e9);
+launch.phi0_deg = launch.phi0*180/pi;
+launch.bPlhtot_MW = launch.bPlhtot/1e6;
+launch = rmfield(launch,{'omega_rf','phi0','bPlhtot'});
 %
-launch.LFS = input_dke_yp('Launching side : (-1) high field side, (1) low field side',launch.LFS,[-1,1],'',[1,1]);    
+launch = imod_struct_jd(launch,'launch',1,opt_gui);
 %
-launch.m0 = input_dke_yp('Initial poloidal mode number (enter ''NaN'' to specify toroidal mode number)',launch.m0,[],'',[1,1]);
-%
-if isnan(launch.m0),
-    launch.n0 = input_dke_yp('Initial toroidal mode number',0,[],'',[1,1]);
-else
-    launch.n0 = NaN;
-end
-%
-launch.phi0 = pi/180*input_dke_yp('Initial toroidal angle (in deg.)',launch.phi0*180/pi,[],'',[1,1]);
-%
-n_lobe = input_dke_yp('Number of spectral lobes',length(launch.bPlhtot),1:10,'',[1,1]);  
-%
-if length(launch.bPlhtot) >= n_lobe,
-    launch.bPlhtot = launch.bPlhtot(1:n_lobe);
-    launch.bNpar0 = launch.bNpar0(1:n_lobe);
-    launch.bdNpar0 = launch.bdNpar0(1:n_lobe);
-else
-    launch.bPlhtot = [];
-    launch.bNpar0 = [];
-    launch.bdNpar0 = [];
-end
-%
-launch.bPlhtot = 1e6*input_dke_yp('Initial power in each lobe (MW)',launch.bPlhtot/1e6,[0;Inf],'',[1,n_lobe]);  
-launch.bNpar0 = input_dke_yp('Initial Npar in each lobe',launch.bNpar0 ,[],'',[1,n_lobe]);  
-launch.bdNpar0 = input_dke_yp(['Spectral width in each lobe :',...
-            '\n specify fixed value, or ',...
-            '\n type ''0'' if minimum width within numerical constraints'],launch.bdNpar0,[0;Inf],'',[1,n_lobe]);
-%
-m_pol = input_dke_yp('Number of vertical launching positions',length(launch.rZ0),1:10,'',[1,1]);  
-%
-launch.rZ0 = input_dke_yp('Vertical launching positions (m)',launch.rZ0,[],'',[1,m_pol]).';  
-%
-launch.id = input_dke_yp('Provide an id for this launching structure',launch.id);
+launch.omega_rf = launch.frequency_GHz*(2*pi*1e9);
+launch.phi0 = launch.phi0_deg*pi/180;
+launch.bPlhtot = launch.bPlhtot_MW*1e6;
+launch = rmfield(launch,{'frequency_GHz','phi0_deg','bPlhtot_MW'});
 %

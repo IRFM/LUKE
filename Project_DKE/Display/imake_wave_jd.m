@@ -157,7 +157,7 @@ elseif i_opt == 2,% build the wave data locally
         %
         if strcmp(type,'LH'),
             %
-            launch = imake_launch_LH_jd(basestr,equil);
+            launch = imake_launch_LH_jd(basestr,equil,'',opt_gui);
             %
         elseif strcmp(type,'EC'),
             % 
@@ -265,8 +265,6 @@ if w_opt == 0; % C3PO Calculation
     %
     % WAVE TYPE
     %
-    n_rf_list = NaN;
-    %
     if strcmp(type,'LH') || strcmp(type,'IC') || strcmp(type,'FW'),
         %
         ftype = 'LF';
@@ -286,13 +284,14 @@ if w_opt == 0; % C3PO Calculation
     %
     if isfield(wavestruct,'waveparam'),
         %
-        mmode = wavestruct.waveparam.mmode;
-        kmode = wavestruct.waveparam.kmode;
-        opt_rf = wavestruct.waveparam.opt_rf;
-        dsmin = wavestruct.waveparam.dsmin;
+        waveparam = wavestruct.waveparam;
+        %mmode = wavestruct.waveparam.mmode;
+        %kmode = wavestruct.waveparam.kmode;
+        %opt_rf = wavestruct.waveparam.opt_rf;
+        %dsmin = wavestruct.waveparam.dsmin;
         %
-        nd = 1;
-        nchi = 1;
+        waveparam.nd = 1;
+        waveparam.nchi = 1;
         %
         if strcmp(ftype,'LF'),
             %
@@ -308,37 +307,35 @@ if w_opt == 0; % C3PO Calculation
         %
     elseif strcmp(ftype,'LF'), 
         %
-        mmode = -1;
-        kmode = 0;
-        opt_rf = 1;
-        dsmin = 0.01;
-        nd = 1;
-        nchi = 1;
+        waveparam.mmode = -1;
+        waveparam.kmode = 0;
+        waveparam.opt_rf = 1;
+        waveparam.dsmin = 0.01;
+        waveparam.nd = 1;
+        waveparam.nchi = 1;
         %
         reflection = 1;
-        %
 		method = 'pchip';
 		%
     else
         %        
-        if exist('launch','var') && isfield(launch,'omega_rf'),
-            omega_rf = launch.omega_rf;
-        elseif exist('rayinit','var') && isfield(rayinit,'omega_rf'),
-            omega_rf = rayinit.omega_rf;
-        else
-            disp('-----> wave frequency not specified');
-            return       
-        end
+        %if exist('launch','var') && isfield(launch,'omega_rf'),
+        %    omega_rf = launch.omega_rf;
+        %elseif exist('rayinit','var') && isfield(rayinit,'omega_rf'),
+        %    omega_rf = rayinit.omega_rf;
+        %else
+        %    disp('-----> wave frequency not specified');
+        %    return       
+        %end
         %
-        mmode = 1;
-        kmode = 0;
-        opt_rf = 0;
-        dsmin = 0.001;
-        nd = 3;
-        nchi = 4;
+        waveparam.mmode = 1;
+        waveparam.kmode = 0;
+        waveparam.opt_rf = 0;
+        waveparam.dsmin = 0.001;
+        waveparam.nd = 3;
+        waveparam.nchi = 4;
         %
         reflection = 0;
-        %
 		method = 'spline';
         %
     end
@@ -397,24 +394,10 @@ if w_opt == 0; % C3PO Calculation
         %
     end
     %
-    mmode = input_dke_yp('Polarization : (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1)',mmode,{-1,1},'',[1,1]);
+    waveparam.n_rf_list = NaN;%List of cyclotron harmonics to consider in wave power deposition
+    waveparam.ns = 1;%Ray smoothing parameter
     %
-    %kmode = input_dke_yp('Plasma model for wave propagation : (0:cold, 1:warm, 2:kinetic non rel., 3:weakly rel., 4:fully rel.)',0,0:4,'',[1,1]);
-    kmode = input_dke_yp('Plasma model for wave propagation : (0:cold, 1:kinetic)',kmode,0:1,'',[1,1])*2;
-    %
-    opt_rf = input_dke_yp('FLR effects : (0:all, 1:small)',opt_rf,0:1,'',[1,1]);
-    %
-    dsmin = input_dke_yp('Minimum length of ray fragments: [0] :',dsmin,[0;Inf],'',[1,1]);
-    %
-    nd = input_dke_yp('Number of transverse distance positions for beamlets',nd,1:10,'',[1,1]);
-    %
-    nchi = input_dke_yp('Number of angular positions for beamlets',nchi,1:12,'',[1,1]);
-    %
-    %a_sdNpar = input_dke_yp('Spectral width parameter a_sdNpar (m^-1)',0,[0;Inf],'',[1,1]);
-    %
-    n_rf_list = input_dke_yp('List of cyclotron harmonics to consider in wave power deposition :\n (enter NaN if list determined by C3PO)',n_rf_list,[NaN,0:10],'');
-    %
-    ns = input_dke_yp('Ray smoothing parameter',1,1:100,'',[1,1]);
+    waveparam = imod_struct_jd(waveparam,'waveparam',1,opt_gui);
     %
     d_opt = input_dke_yp('Do you want to display the rays [y/n]','n',{'y','n'},'',[1,1]);
     if strcmp(d_opt,'y'),
@@ -424,15 +407,6 @@ if w_opt == 0; % C3PO Calculation
     end
     %
     p_opt = input_dke_yp('Option for equilibrium figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
-    %
-    waveparam.mmode = mmode;
-    waveparam.kmode = kmode;
-    waveparam.opt_rf = opt_rf;
-    waveparam.dsmin = dsmin;
-    waveparam.nd = nd;
-    waveparam.nchi = nchi;
-    waveparam.n_rf_list = n_rf_list;
-    waveparam.ns = ns;    
     %
     %waveparam.a_sdNpar = a_sdNpar;
     %
@@ -458,16 +432,16 @@ if w_opt == 0; % C3PO Calculation
         load([c3poparam_path,c3poparam_file],'fitparam','rayparam','C3POparam');
     end
     %
-    rayparam.tensortype = kmode;
+    rayparam.tensortype = waveparam.kmode;
     rayparam.reflection = reflection;
 	fitparam.method = method;
     %
     c_opt = input_dke_yp('Do you want to see/modify the C3PO parameters [y/n]','n',{'y','n'},'',[1,1]);
     if strcmp(c_opt,'y'),
         %
-        fitparam = imod_struct_jd(fitparam,'fitparam',1);
-        rayparam = imod_struct_jd(rayparam,'rayparam',1);
-		C3POparam = imod_struct_jd(C3POparam,'C3POparam',1);
+        fitparam = imod_struct_jd(fitparam,'fitparam',1,opt_gui);
+        rayparam = imod_struct_jd(rayparam,'rayparam',1,opt_gui);
+		C3POparam.clustermode.main_C3PO_jd = imod_struct_jd(C3POparam.clustermode.main_C3PO_jd,'clustermode',1,opt_gui);
         %
     end
     %
@@ -491,6 +465,8 @@ if w_opt == 0; % C3PO Calculation
         imake_makewave_jd(workdir,wave,opt_gui);
         %
     end
+    %
+    n_rf_list = waveparam.n_rf_list;
     %
 elseif w_opt == 1,% TORAY calculations
     %
