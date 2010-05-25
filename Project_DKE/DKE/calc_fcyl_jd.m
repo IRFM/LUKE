@@ -1,4 +1,4 @@
-function [XXf_cyl,xXFpar_cyl,ppar_cyl,pperp_cyl] = calc_fcyl_jd(XXf,betath_ref,pn,mhu,dp_cyl,ir_list,iir_display,pnmax_disp)
+function [XXf_cyl,xXFpar_cyl,ppar_cyl,xXFperp_cyl,pperp_cyl] = calc_fcyl_jd(XXf,betath_ref,pn,mhu,dp_cyl,ir_list,iir_display,pnmax_disp)
 %
 % this function transforms the distribution into cylindrical momentum space
 % and calculates the parallel distribution function
@@ -36,6 +36,8 @@ pperp_cyl = linspace(0,pmax,np_cyl + 1);
 %
 XXf_cyl = NaN(np_cyl + 1,2*np_cyl + 1,nr);
 %
+XXf(XXf <= eps) = 0;
+%
 for iir = 1:nr, 
     %
     % spherical to cylindrical transformation
@@ -47,7 +49,7 @@ for iir = 1:nr,
     Xpperp_cyl = repmat(pperp_cyl.',[1,2*np_cyl + 1]);
     Xp_cyl = sqrt(Xppar_cyl.*Xppar_cyl + Xpperp_cyl.*Xpperp_cyl);
     %
-    Xf_cyl(Xf_cyl < eps) = 0;%Remove negative values and values less than computer accuracy
+    Xf_cyl(Xf_cyl <= eps) = 0;%Remove negative values and values less than computer accuracy
     Xf_cyl(Xp_cyl > pmax) = 0;%Remove values above max(ppar)
     Xf_cyl(isnan(Xf_cyl)) = 0;%Remove NaN values
     %
@@ -57,11 +59,14 @@ end
 %
 % parallel distribution
 %
-XXfh_cyl = (XXf_cyl(1:np_cyl,:,:) + XXf_cyl(2:np_cyl + 1,:,:))/2;
+XXfh_perp_cyl = (XXf_cyl(1:np_cyl,:,:) + XXf_cyl(2:np_cyl + 1,:,:))/2;
+XXfh_par_cyl = (XXf_cyl(:,1:2*np_cyl,:) + XXf_cyl(:,2:2*np_cyl + 1,:))/2;
 XXpperph_cyl = repmat((pperp_cyl(1:np_cyl) + pperp_cyl(2:np_cyl + 1)).'/2,[1,2*np_cyl + 1,nr]);
 dpperp_cyl = diff(pperp_cyl);
+dppar_cyl = diff(ppar_cyl);
 %
-xXFpar_cyl = 2*pi*integral_dke_jd(dpperp_cyl,XXpperph_cyl.*XXfh_cyl,1);
+xXFpar_cyl = 2*pi*integral_dke_jd(dpperp_cyl,XXpperph_cyl.*XXfh_perp_cyl,1);
+xXFperp_cyl = 2*pi*integral_dke_jd(dppar_cyl,XXfh_par_cyl,2);
 %
 if isempty(iir_display), 
     inter = 1;
@@ -74,6 +79,7 @@ while iir_display > 0,
     %
     Xf_cyl = XXf_cyl(:,:,iir_display);
     Fpar_cyl = xXFpar_cyl(:,iir_display);
+    Fperp_cyl = xXFperp_cyl(:,iir_display);
     %
     if isempty(pnmax_disp),
         pnmax = pmax;
@@ -107,15 +113,28 @@ while iir_display > 0,
     %
     axis('equal');axis([xlim1,xlim2]);
     %
-    % ---------- 1D distribution function -----------
+    % ---------- 1D par distribution function -----------
     %
-    figure(2),clf,set(1,'Name',['1-D contour of f, iir = ',num2str(iir_display)])
+    figure(2),clf,set(2,'Name',['F//, iir = ',num2str(iir_display)])
     %
     y = Fpar_cyl;
     ylab = 'F_{||}';
     ylim = [eps,1];
     %
     graph1D_jd(x1,y,0,1,xlab1,ylab,'',NaN,xlim1,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+    %
+    set(gca,'ytick',10.^(-16:2:0))
+    %
+    %
+    % ---------- 1D perp distribution function -----------
+    %
+    figure(3),clf,set(3,'Name',['Fperp, iir = ',num2str(iir_display)])
+    %
+    y = Fperp_cyl;
+    ylab = 'F_{\perp}';
+    ylim = [eps,1];
+    %
+    graph1D_jd(x2,y,0,1,xlab2,ylab,'',NaN,xlim2,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
     %
     set(gca,'ytick',10.^(-16:2:0))
     %
