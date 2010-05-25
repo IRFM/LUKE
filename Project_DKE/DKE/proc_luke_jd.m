@@ -118,6 +118,12 @@ gamma = Zmomcoef.gamma;
 %
 nr = length(xrhoG);
 %
+if isfield(dke_out,'waveparam')
+    nfrags = length(dke_out.waveparam.biy_rf);
+else
+    nfrags = NaN;
+end
+%
 scocurr = sign(equilDKE.psia_apRp)*sign(equilDKE.XBphi(1,1));
 %
 J_tot = Zcurr.x_0_fsav*mksa.j_ref*scocurr;
@@ -511,6 +517,7 @@ if nr > 1,
     data_proc.scalar.p_e_2piRp = p_e_2piRp;
     data_proc.scalar.I_tot = I_tot;
     data_proc.scalar.EtaRp = EtaRp;
+    data_proc.scalar.nfrags = nfrags;
     % RADIAL QUASI-LINEAR
     data_proc.radial.xrho = xrho;
     data_proc.radial.J_tot = J_tot;
@@ -1065,6 +1072,22 @@ if ir_display > 0 && ir_display <= nr,
     legend(leg);
     %
     print_jd(p_opt,[simul_id,'_F0pFM_1D_',tir_display],'figures_LUKE');
+    %
+    % ---------- parallel diffusion coefficient  -----------
+    %
+    if strcmp(y3lab,'D||'),
+        %
+        figure(15),clf,set(14,'Name',['D|| - ',dke_out.simul.id])
+        %
+        y1 = XDparpar_cyl_ref(1,:);
+        ylab = 'D_{||} (p_{\perp}=0)';
+        ylim = NaN;
+        %
+        graph1D_jd(x1,y1,0,0,xlab1,ylab,radialloc,NaN,xlim1,ylim,style,marker,color2,width2,siz,gca,red,lspace,bspace2);
+        %
+        print_jd(p_opt,[simul_id,'_DQL_1D_',tir_display],'figures_LUKE');
+        %
+    end
 end
 %
 
