@@ -254,21 +254,29 @@ if exist('flag_wave','var'),
     ii = 0;
     waves = '';%List of structures for multiple RF waves
     %
-    if ~iscell(ids_wave),ids_wave={ids_wave};end
-    if ~iscell(paths_wave),paths_wave={paths_wave};end
+    if ~iscell(ids_wave),
+        ids_wave={ids_wave};
+    end
+    if ~iscell(paths_wave),
+        paths_wave=repmat({paths_wave},[1,length(ids_wave)]);
+    end
     %
     if isempty(ids_wave{1}),
         info_dke_yp(2,['Simulations are performed without RF Waves']);
     else
         for iw = 1:length(ids_wave),
-            filename = [paths_wave{iw},'WAVE_',id_equil,'_',ids_wave{iw},'.mat'];
-            if exist(filename) == 0,
-                info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+            filename = ['WAVE_',id_equil,'_',ids_wave{iw},'.mat'];
+            filenames = getlist_jd(paths_wave{iw},filename);
+            if isempty(filenames),
+                info_dke_yp(2,['Warning : Structure ',filename,' could not be found in directory',paths_wave{iw},'.']);
             else
-                load(filename);
-                info_dke_yp(2,['Structure ''wave'': ',filename,' successfully loaded']);
-                ii = ii + 1;
-                waves{ii} = wave;
+                for ifile = 1:length(filenames),
+                    filename = [paths_wave{iw},filenames{ifile}];
+                    load(filename);
+                    info_dke_yp(2,['Structure ''wave'': ',filename,' successfully loaded']);
+                    ii = ii + 1;
+                    waves{ii} = wave;
+                end
             end
         end
     end
@@ -404,5 +412,16 @@ if exist('flag_external','var'),%DKE external parameters
     end
     varargout{flag_external} = external;
 end
+%
+        
+
+    
+    
+    
+    
+    
+    
+    
+    
 
 
