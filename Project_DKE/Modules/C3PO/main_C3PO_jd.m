@@ -47,7 +47,9 @@ function wave = main_C3PO_jd(dkepath,id_wave,equil,rayinit,waveparam,fitparam,ra
     wave.equil_id = equil.id;
     wave.omega_rf = omega_rf;
     wave.opt_rf = waveparam.opt_rf;
-    wave.n_rf_list = waveparam.n_rf_list;
+    if isfield(waveparam,'n_rf_list'),
+        wave.n_rf_list = waveparam.n_rf_list;
+    end
     wave.opt_disp = 0;  % option for solving the wave equation, which gives (ray.sepol_pmz, ray.sphi, ray.sNperp) 
     %
     wave.dsmin = waveparam.dsmin;
