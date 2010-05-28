@@ -136,13 +136,13 @@ wavestruct.fitequilparam = fitparam;
 wavestruct.raydisplay = C3POdisplay;
 wavestruct.C3POparam = C3POparam;
 %
+id_simul = [id_equil,'_',wavestruct.id];
+%
 %************************************************************************************************************************************
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,{wavestruct},[],psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);
 %
 %************************************************************************************************************************************
-%
-id_simul = [id_equil,'_',wavestruct.id];
 filename = [path_simul,'LUKE_RESULTS_',id_simul,'.mat'];
 save(filename);
 info_dke_yp(2,['LUKE Results saved in ',filename]);
