@@ -6,6 +6,11 @@
 clear all
 close all
 %
+% ITER signs (clockwise from top)
+%
+signs.Ip = 1;
+signs.Bt = 1;
+%
 % path
 %
 id_dkepath = '';%For all paths used by DKE solver
@@ -15,13 +20,43 @@ path_dkepath = '';%if nothing is specified, the working directory is first used 
 %
 % file name
 %
-filename = 'Scen4';
-pathname = 'Source_files/';
-type = 4;
-display_mode = 2;
-p_opt = 2;
+id_equil = 'Scen4';
+source_path = 'Source_files/';
+%
+eqdsk_file = [id_equil,'.efit'];
+eqdsk_path = source_path;
+%
+profname = [eqdsk_path,id_equil,'.prof'];
+type = 0.2;
+Zeff = NaN;
+%
+display_mode = 0;
+p_opt = -1;
 dispname = 'ITER Scenario 4';
 savename = 'ITER_Scen4';
-Zeff = 2.23;
-
-equil_EFIT_jd([pathname,filename],type,display_mode,p_opt,dispname,savename,Zeff)
+%
+% --------------------------------------------------------------
+%
+[equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd([eqdsk_path,eqdsk_file],display_mode,p_opt,dispname,savename);
+equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
+%
+% signs
+%
+if signs.Ip*equil_magnetic.psi_apRp(end) < 0,
+    equil_magnetic.psi_apRp = -equil_magnetic.psi_apRp;
+    equil_magnetic.ptBx = -equil_magnetic.ptBx;
+    equil_magnetic.ptBy = -equil_magnetic.ptBy;
+end
+%
+if signs.Bt*equil_magnetic.ptBPHI(1,1) < 0,
+    equil_magnetic.ptBPHI = -equil_magnetic.ptBPHI;
+end
+%
+equil = conc_struct_jd(equil_magnetic,equil_prof);
+%
+equil.signs = signs;
+equil.id = id_equil;
+%
+savestr = ['EQUIL_',id_equil];
+save(savestr,'equil');
+disp(['equilibrium saved in file ',savestr,'.'])
