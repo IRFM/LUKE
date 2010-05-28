@@ -8,6 +8,8 @@ close all
 %
 % ITER signs (clockwise from top)
 %
+basestr ='ITER';
+%
 signs.Ip = 1;
 signs.Bt = 1;
 %
@@ -55,8 +57,8 @@ end
 equil = conc_struct_jd(equil_magnetic,equil_prof);
 %
 equil.signs = signs;
-equil.id = id_equil;
+equil.id = [basestr,'_',id_equil];
 %
-savestr = ['EQUIL_',id_equil];
+savestr = ['EQUIL_',equil.id];
 save(savestr,'equil');
 disp(['equilibrium saved in file ',savestr,'.'])
