@@ -20,36 +20,32 @@ function [equil_magnetic,equil_prof,equil_RZ] = make_equil_AMR_jd(equil_path,sho
 %     Ns = 101;
 % end
 %
-if nargin < 11,
+if nargin < 10,
     method = 'spline';
 end
 %
-if nargin < 10,
+if nargin < 9,
     nt = 65;
 end
 %
-if nargin < 9,
+if nargin < 8,
     np = 101;
 end
 %
-if nargin < 8,
+if nargin < 7,
     savename = [shotnum,'_',shotime];
 end
 %
-if nargin < 7,
+if nargin < 6,
     dispname = savename;
 end
 %
-if nargin < 6,
+if nargin < 5,
     p_opt = -1;
 end
 %
-if nargin < 5,
-    display_mode = 0;
-end
-%
 if nargin < 4,
-    Zeff = 1;
+    display_mode = 0;
 end
 %
 % Ion data
@@ -242,48 +238,6 @@ if ~eq_psi_theta
     %
     prho = ptx(:,1).'/ap;
     %
-    if display_mode == 2, 
-    %
-        rx = [-fliplr(prho(2:np)),prho];
-        rBx = [fliplr(ptBx(2:np,(nt+1)/2)'),ptBx(:,1)'];
-        rBy = [fliplr(ptBy(2:np,(nt+1)/2)'),ptBy(:,1)'];
-        rBPHI = [fliplr(ptBPHI(2:np,(nt+1)/2)'),ptBPHI(:,1)'];
-        rBP = sqrt(rBx.^2 + rBy.^2);
-        rB = sqrt(rBP.^2 + rBPHI.^2);
-    %
-        style = '-';
-        marker = 'none';
-        color1 = 'r';
-        color2 = 'b';
-        color3 = 'k';
-        width = 2;
-        siz = 20;
-        red = 0.9;
-        lspace = 0.7;
-        bspace = 0.6;
-        tit = dispname;
-        %
-        figure(12),clf
-        %
-        xlab = 'r/a';
-        ylab = 'B(T)';
-        xlim = [-1,1];
-        ylim = NaN;
-        leg = ['B_T';'B_P';'B  '];
-    %
-        graph1D_jd(rx,abs(rBPHI),0,0,'','','',NaN,xlim,ylim,style,marker,color1,width,siz,gca,red,lspace,bspace);
-        graph1D_jd(rx,rBP,0,0,'','','',NaN,xlim,ylim,style,marker,color2,width);
-        graph1D_jd(rx,rB,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color3,width);
-        print_jd(p_opt,[savename,'_Bfield']);
-    %
-        figure(13),clf
-        graph1D_jd(theta,ptB(2,:),0,0,'','','',NaN,'','',style,marker,'b',width);hold on
-        plot(theta,ptB(2:end,:))
-        legend(['r/a = ',num2str(prho(2))])
-        axis([0,2*pi,0,ceil(max(max(ptB(2:end,:)))*10)/10])
-        xlabel('\theta (rd)'),ylabel('B(T)'),title(dispname)
-    end
-    %
     ptx(:,nt) = ptx(:,1);
     pty(:,nt) = pty(:,1);
     ptBx(:,nt) = ptBx(:,1);
@@ -310,7 +264,21 @@ if ~eq_psi_theta
 else
     % psi-theta equilibrium import
     ptx = x.'; %already x,y-matrices
+    if (max(abs(ptx(1,:)))>0),
+        disp(['Forced ptx(1,:0)=0, error: ',num2str(max(abs(ptx(1,:))))]);
+        ptx(1,:)=0;
+    end
     pty = y.';
+    if (max(abs(pty(1,:)))>0),
+        disp(['Forced pty(1,:)=0, error: ',num2str(max(abs(pty(1,:))))]);
+        pty(1,:)=0;
+    end
+    if (max(abs(pty(:,1)))>0),
+        disp(['Forced pty(:,1)=0, error: ',num2str(max(abs(pty(:,1))))]);
+        pty(:,1)=0;
+    end
+    ptx(:,end)=ptx(:,1); % Force first and last points on each flux surface exacly identical
+    pty(:,end)=pty(:,1);
     theta = theta_in; % theta vector
     ptBx = BR;
     ptBy = BZ;
@@ -337,10 +305,52 @@ else
     pzTi = ones(nz,1)*pTi;
     psin = xypsi/psia;
     ap = ptx(np,1); %Plasma minor radius on the LFS midplane
-    psi_apRp = psin*psia*ap/Rp; %The poloidal flux coordinate is normalized by the aspect ratio 
-    %ptBP = sqrt(ptBx.^2 +ptBy.^2);
-    %ptB = sqrt(ptBP.^2 + ptBPHI.^2);
-    %prho = ptx(:,1).'/ap;
+    psi_apRp = xypsi*ap/Rp; %The poloidal flux coordinate is normalized by the aspect ratio 
+    ptBP = sqrt(ptBx.^2 +ptBy.^2);
+    ptB = sqrt(ptBP.^2 + ptBPHI.^2);
+    prho = ptx(:,1).'/ap;
+end
+%
+if display_mode == 2, 
+%
+    rx = [-fliplr(prho(2:np)),prho];
+    rBx = [fliplr(ptBx(2:np,(nt+1)/2)'),ptBx(:,1)'];
+    rBy = [fliplr(ptBy(2:np,(nt+1)/2)'),ptBy(:,1)'];
+    rBPHI = [fliplr(ptBPHI(2:np,(nt+1)/2)'),ptBPHI(:,1)'];
+    rBP = sqrt(rBx.^2 + rBy.^2);
+    rB = sqrt(rBP.^2 + rBPHI.^2);
+%
+    style = '-';
+    marker = 'none';
+    color1 = 'r';
+    color2 = 'b';
+    color3 = 'k';
+    width = 2;
+    siz = 20;
+    red = 0.9;
+    lspace = 0.7;
+    bspace = 0.6;
+    tit = dispname;
+    %
+    figure(12),clf
+    %
+    xlab = 'r/a';
+    ylab = 'B(T)';
+    xlim = [-1,1];
+    ylim = NaN;
+    leg = ['B_T';'B_P';'B  '];
+%
+    graph1D_jd(rx,abs(rBPHI),0,0,'','','',NaN,xlim,ylim,style,marker,color1,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(rx,rBP,0,0,'','','',NaN,xlim,ylim,style,marker,color2,width);
+    graph1D_jd(rx,rB,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color3,width);
+    print_jd(p_opt,[savename,'_Bfield']);
+%
+    figure(13),clf
+    graph1D_jd(theta,ptB(2,:),0,0,'','','',NaN,'','',style,marker,'b',width);hold on
+    plot(theta,ptB(2:end,:))
+    legend(['r/a = ',num2str(prho(2))])
+    axis([0,2*pi,0,ceil(max(max(ptB(2:end,:)))*10)/10])
+    xlabel('\theta (rd)'),ylabel('B(T)'),title(dispname)
 end
 %
 equil_magnetic.psi_apRp = psi_apRp;

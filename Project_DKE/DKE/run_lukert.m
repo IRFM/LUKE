@@ -32,7 +32,7 @@ for iw = (nw0 + 1):(nw0 + length(wavestructs)),
     %
     wavestruct = wavestructs{iw};
     %
-    if isfield(wavestruct.waveparam,'n_rf_list'),
+    if isfield(wavestruct,'waveparam') && isfield(wavestruct.waveparam,'n_rf_list'),
         n_rf_list = wavestruct.waveparam.n_rf_list;
     elseif isfield(dkeparam,'n_rf_list'),
         n_rf_list = dkeparam.n_rf_list;

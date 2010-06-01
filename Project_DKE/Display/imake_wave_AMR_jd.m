@@ -34,8 +34,7 @@ if isempty(launch),	% Read the existing data file
     %
 else	% Run AMR
     %
-    %AMR_script_path = getenv('AMR');
-    AMR_script_path = '/home/jurban/AMR/';
+    AMR_script_path = getenv('AMR');
     if isempty(AMR_script_path),
         AMR_script_path = workdir;
     end
