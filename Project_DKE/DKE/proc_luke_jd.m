@@ -704,7 +704,11 @@ if nr > 1,
             leg = {};
             %
             for iw = 1:nw,
-                leg = [leg,['LUKE ',waves{iw}.rayinit.launch.id]];
+                if isfield(waves{iw},'rayinit') && isfield(waves{iw}.rayinit,'launch'),
+                    leg = [leg,['LUKE ',waves{iw}.rayinit.launch.id]];
+                else
+                    leg = [leg,['LUKE ',waves{iw}.id]];
+                end
                 %
                 graph1D_jd(xrho,wxdPdrho_rf_2piRp(iw,:),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,colors{iw},width2,siz,gca,red,lspace,bspace);
             end
@@ -712,7 +716,11 @@ if nr > 1,
             if ~isnan(p_rf_2piRp_lin),
                 %
                 for iw = 1:nw,
-                    leg = [leg,['Linear ',waves{iw}.rayinit.launch.id]];
+                    if isfield(waves{iw},'rayinit') && isfield(waves{iw}.rayinit,'launch'),
+                        leg = [leg,['C3PO ',waves{iw}.rayinit.launch.id]];
+                    else
+                        leg = [leg,['Linear ',waves{iw}.id]];
+                    end
                     %
                     graph1D_jd(rho_dep,wxdPdrho_rf_2piRp_lin(iw,:),0,0,'','','',leg,xlim,ylim,style2,marker,colors{iw},width,siz);
                 end
