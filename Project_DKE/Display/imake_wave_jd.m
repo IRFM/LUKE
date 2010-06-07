@@ -293,10 +293,6 @@ if w_opt == 0; % C3PO Calculation
     if isfield(wavestruct,'waveparam'),
         %
         waveparam = wavestruct.waveparam;
-        %mmode = wavestruct.waveparam.mmode;
-        %kmode = wavestruct.waveparam.kmode;
-        %opt_rf = wavestruct.waveparam.opt_rf;
-        %dsmin = wavestruct.waveparam.dsmin;
         %
         waveparam.nd = 1;
         waveparam.nchi = 1;
@@ -328,15 +324,6 @@ if w_opt == 0; % C3PO Calculation
 		%
     else
         %        
-        %if exist('launch','var') && isfield(launch,'omega_rf'),
-        %    omega_rf = launch.omega_rf;
-        %elseif exist('rayinit','var') && isfield(rayinit,'omega_rf'),
-        %    omega_rf = rayinit.omega_rf;
-        %else
-        %    disp('-----> wave frequency not specified');
-        %    return       
-        %end
-        %
         waveparam.mmode = 1;
         waveparam.kmode = 0;
         waveparam.opt_rf = 0;
