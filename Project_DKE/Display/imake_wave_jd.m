@@ -47,9 +47,10 @@ if i_opt == 0,% use data from external database
     %
     d_opt = 0;% rayinit built from launching conditions
     %
-    if isfield(equil.info,'shotnum');
-        shotnum = equil.info.shotnum;
-    else
+    istru = find(equil.id == '_');
+    if length(istru) >= 2 && strcmp(equil.id(1:istru(1)-1),basestr),
+        shotnum = equil.id(istru(1)+1:istru(2)-1);
+    else           
         disp('-----> Shot number information missing');
         return
     end
@@ -313,6 +314,7 @@ if w_opt == 0; % C3PO Calculation
         waveparam.dsmin = 0.01;
         waveparam.nd = 1;
         waveparam.nchi = 1;
+        waveparam.n_rf_list = 0;%List of cyclotron harmonics to consider in wave power deposition
         %
         reflection = 1;
 		method = 'pchip';
@@ -334,6 +336,7 @@ if w_opt == 0; % C3PO Calculation
         waveparam.dsmin = 0.001;
         waveparam.nd = 3;
         waveparam.nchi = 4;
+        waveparam.n_rf_list = 1:3;%List of cyclotron harmonics to consider in wave power deposition
         %
         reflection = 0;
 		method = 'spline';
@@ -394,7 +397,6 @@ if w_opt == 0; % C3PO Calculation
         %
     end
     %
-    waveparam.n_rf_list = NaN;%List of cyclotron harmonics to consider in wave power deposition
     waveparam.ns = 1;%Ray smoothing parameter
     %
     waveparam = imod_struct_jd(waveparam,'waveparam',1,opt_gui);
