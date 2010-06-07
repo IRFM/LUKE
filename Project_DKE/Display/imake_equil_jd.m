@@ -484,16 +484,26 @@ end
 %
 % sign management as most equilibrium codes do not account for these.
 %
-if isstruct(signs),
-	if signs.Ip*equil_magnetic.psi_apRp(end) < 0,
-		equil_magnetic.psi_apRp = -equil_magnetic.psi_apRp;
-		equil_magnetic.ptBx = -equil_magnetic.ptBx;
-		equil_magnetic.ptBy = -equil_magnetic.ptBy;
-	end
-	%
-	if signs.Bt*equil_magnetic.ptBPHI(1,1) < 0,
-		equil_magnetic.ptBPHI = -equil_magnetic.ptBPHI;
-	end
+if ~isstruct(signs),
+    s_opt = input_dke_yp('Do you want to impose the signs of Bt and Ip [y/n]','n',{'y','n'});
+    %
+    if strcmp(s_opt,'y'),
+        signs.Bt = input_dke_yp('Signs of Bt (positive if clockwise from top)',sign(equil_magnetic.ptBPHI(1,1)),{-1,1});
+        signs.Ip = input_dke_yp('Signs of Ip (positive if clockwise from top)',sign(equil_magnetic.psi_apRp(end)),{-1,1});
+    else
+        signs.Ip = sign(equil_magnetic.psi_apRp(end));
+        signs.Bt = sign(equil_magnetic.ptBPHI(1,1));
+    end
+    %
+end
+if signs.Ip*equil_magnetic.psi_apRp(end) < 0,
+    equil_magnetic.psi_apRp = -equil_magnetic.psi_apRp;
+    equil_magnetic.ptBx = -equil_magnetic.ptBx;
+    equil_magnetic.ptBy = -equil_magnetic.ptBy;
+end
+%
+if signs.Bt*equil_magnetic.ptBPHI(1,1) < 0,
+    equil_magnetic.ptBPHI = -equil_magnetic.ptBPHI;
 end
 %
 % EQUIL structure
