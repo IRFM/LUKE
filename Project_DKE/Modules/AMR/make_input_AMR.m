@@ -93,8 +93,8 @@ if strcmp(m_ant_opt,'y')% overwrite antenna parameters with shot parameters
     end
 end        
 %
-[AMRcfg] = imod_struct_jd(AMRcfg,'AMRcfg');
-[antennacfg] = imod_struct_jd(antennacfg,'antennacfg');
+[AMRcfg] = imod_struct_jd(AMRcfg,'AMRcfg',1,opt_gui);
+[antennacfg] = imod_struct_jd(antennacfg,'antennacfg',1,opt_gui);
 %
 AMRcfg = rminfo(AMRcfg);
 antennacfg = rminfo(antennacfg);
