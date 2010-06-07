@@ -62,6 +62,10 @@ if i_opt == 0,% data loaded from external database
     end
     %
     vloop = external.vloop(ishot);
+	%
+    if strcmp(basestr,'TCV'),
+		vloop = - vloop;%sign convention in TCV
+	end
     %
     o_opt = 0;
     %
@@ -132,7 +136,7 @@ end
 %
 if o_opt == 0,% ohm from constant VLOOP
     %
-    sigma = - sign(equil.ptBPHI(1,1)*equil.psi_apRp(end));
+    sigma = - sign(equil.ptBPHI(1,1));%epsi is defined versus B, electron charge included
     %
     id_ohm = input('Please specify a name for the ohm structure : [VLOOP]','s');
     if isempty(id_ohm),
