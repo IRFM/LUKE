@@ -241,8 +241,10 @@ if nargin == 13,% LH case
     if ~isstruct(cons)% LH only (a verifier)
         if strcmp(par.luke_mode,'lh'),
             cons.lh_cons = cons;
+            cons.ecrh_cons = '';
         elseif strcmp(par.luke_mode,'ecrh'),
             cons.ecrh_cons = cons;
+            cons.lh_cons = '';
         else
             error('LUKE mode not determined')
         end
@@ -253,7 +255,6 @@ end
 %
 % info machine
 %
-workdir = fileparts(evalin('base','param.gene.file'));
 tokamak = evalin('base','param.from.machine');
 shotnum = num2str(round(evalin('base','param.from.shot.num')));
 if isfield(par,'temps'),
@@ -396,6 +397,7 @@ acces_lh
 %
 if par.save == 2,%save before LUKE
    %
+   workdir = fileparts(evalin('base','param.gene.file'));
    save([workdir,'/before_luke@',equil_id,'.mat']);
    %
    error('Exiting after saving LUKE parameters')
@@ -545,6 +547,7 @@ memoire.data.edistribution.betath_ref = mksa.betath_ref;
 memoire.data.edistribution.ne_ref = mksa.ne_ref;
 %
 if par.save == 1,
+   workdir = fileparts(evalin('base','param.gene.file'));
    save([workdir,'/last_luke@',equil_id,'.mat']);
 end
 %
