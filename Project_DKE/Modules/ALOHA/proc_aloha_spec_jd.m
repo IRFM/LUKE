@@ -16,9 +16,9 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
         opt_optim = 0;
     end
 	%
-	zdP = zdP(:)'*zredfac;
-	zdN = zdN(:)';
-	zN = zN(:)';
+	zdP = zdP(:).'*zredfac;
+	zdN = zdN(:).';
+	zN = zN(:).';
 	%
 	if min(zdP) < 0,
 	    disp('warning: min(zdP) < 0, correcting')
@@ -50,7 +50,7 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	zvar = diff(zptrend);
 	%
 	ilim = [1,find(zvar == 2),nz]; 
-%ipeak = find(zvar == -2);
+%
 %
 % 
 % ilim = 1;
@@ -87,6 +87,37 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 %
 	ny = length(ilim) - 1;
 	%
+	if real(param) == 0,% Peak position and height are maintained, dNpar is adjusted
+        if imag(param) < 1,
+            Pfacmin = imag(param);
+            nlobesmax = ny;
+        else
+            Pfacmin = 0;
+            nlobesmax = imag(param);
+        end        
+        %
+        nlobespro = 0;
+        opt_peak = 0;
+        %
+    else % Peak position and height are varied for non-protected peaks
+        if real(param) < 1,
+            Pfacmin = real(param);
+            nlobesmax = ny;
+        else
+            Pfacmin = 0;
+            nlobesmax = real(param);
+        end
+        %
+        % a number of (main) peaks can be protected (they keep the original N, P and dN)
+        %
+        % they are not accounted for in nlobesmax (nlobes = nlobesmax + nlobespro). 
+        % if Pfacmin is used, the fraction is calculated on the remaining power
+        %
+        nlobespro = fix(imag(param));
+        opt_peak = 1;
+        %
+    end
+	%
 	zydP = repmat(zdP.',[1,ny]);
 	zydN = repmat(zdN.',[1,ny]);
 	zyN = repmat(zN.',[1,ny]);
@@ -101,34 +132,30 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	zyfac(zyind == 1 | zyind == nz) = 2*zyfac(zyind == 1 | zyind == nz);%full power belongs to lobe at end points
 	%
 	yP = sum(zydP.*zydN.*zyfac);
-	yN = sum(zydP.*zydN.*zyfac.*zyN)./yP;
-	ydN = sqrt(2*sum(zydP.*zydN.*zyfac.*(zyN - repmat(yN,[nz,1])).^2)./yP);
-    if opt_optim,
-        for iy = 1:ny,
-            zx = zN - yN(iy);
-            zf = zdP.*zyfac(:,iy).'/yP(iy);
-            ydN(iy) = lsqnonlin(@gauss_squares_jd,ydN(iy));
+    %
+    if opt_peak == 1,
+        %
+        yN = sum(zydP.*zydN.*zyfac.*zyN)./yP;
+        ydN = sqrt(2*sum(zydP.*zydN.*zyfac.*(zyN - repmat(yN,[nz,1])).^2)./yP);
+        if opt_optim,
+            for iy = 1:ny,
+                zx = zN - yN(iy);
+                zf = zdP.*zyfac(:,iy).'/yP(iy);
+                ydN(iy) = lsqnonlin(@gauss_squares_jd,ydN(iy));
+            end
         end
+        %
+    else
+        %
+        ipeak = find(zvar == -2);
+        yN = zN(ipeak);
+        ydN = yP/sqrt(pi)./zdP(ipeak);        
+        %
     end
 	%
 	if abs(sum(yP) - Ptot)/Ptot > eps('double')*nz,
 	    error('Power was not conserved')
 	end
-	%
-	if real(param) < 1,
-	    Pfacmin = real(param);
-	    nlobesmax = ny;
-	else
-	    Pfacmin = 0;
-	    nlobesmax = real(param);
-    end
-    %
-    % a number of (main) peaks can be protected (they keep the original N, P and dN)
-    %
-    % they are not accounted for in nlobesmax (nlobes = nlobesmax + nlobespro). 
-    % if Pfacmin is used, the fraction is calculated on the remaining power
-    %
-    nlobespro = fix(imag(param));
     %
     if nlobespro > 0 && ny > nlobespro,
 	    %
@@ -159,6 +186,8 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
         %
     end
 	%
+    yP0 = yP;
+    %
 	while ny > nlobesmax || min(yP)/Ptot < Pfacmin,
         %
         iy = find(yP == min(yP),1,'first');
@@ -167,26 +196,32 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	        %
 	        iyp = 2;
 	        zyfac(:,iyp) = zyfac(:,iyp) + zyfac(:,iy);
-	        yP(iyp) = sum(zdP.*zdN.*zyfac(:,iyp).');
-	        yN(iyp) = sum(zdP.*zdN.*zyfac(:,iyp).'.*zN)./yP(iyp);
-	        ydN(iyp) = sqrt(2*sum(zdP.*zdN.*zyfac(:,iyp).'.*(zN - yN(iyp)).^2)/yP(iyp));
-            if opt_optim,
-                zx = zN - yN(iyp);
-                zf = zdP.*zyfac(:,iyp).'/yP(iyp);
-                ydN(iyp) = lsqnonlin(@gauss_squares_jd,ydN(iyp));
+            yP(iyp) = sum(zdP.*zdN.*zyfac(:,iyp).');
+            %
+            if opt_peak == 1,
+                yN(iyp) = sum(zdP.*zdN.*zyfac(:,iyp).'.*zN)./yP(iyp);
+                ydN(iyp) = sqrt(2*sum(zdP.*zdN.*zyfac(:,iyp).'.*(zN - yN(iyp)).^2)/yP(iyp));
+                if opt_optim,
+                    zx = zN - yN(iyp);
+                    zf = zdP.*zyfac(:,iyp).'/yP(iyp);
+                    ydN(iyp) = lsqnonlin(@gauss_squares_jd,ydN(iyp));
+                end
             end
 	        %
 	    elseif iy == ny,
 	        %
 	        iym = ny - 1;
 	        zyfac(:,iym) = zyfac(:,iym) + zyfac(:,iy);
-	        yP(iym) = sum(zdP.*zdN.*zyfac(:,iym).');
-	        yN(iym) = sum(zdP.*zdN.*zyfac(:,iym).'.*zN)./yP(iym);
-	        ydN(iym) = sqrt(2*sum(zdP.*zdN.*zyfac(:,iym).'.*(zN - yN(iym)).^2)/yP(iym));
-            if opt_optim,
-                zx = zN - yN(iym);
-                zf = zdP.*zyfac(:,iym).'/yP(iym);
-                ydN(iym) = lsqnonlin(@gauss_squares_jd,ydN(iym));
+            yP(iym) = sum(zdP.*zdN.*zyfac(:,iym).');
+            %
+            if opt_peak == 1,
+                yN(iym) = sum(zdP.*zdN.*zyfac(:,iym).'.*zN)./yP(iym);
+                ydN(iym) = sqrt(2*sum(zdP.*zdN.*zyfac(:,iym).'.*(zN - yN(iym)).^2)/yP(iym));
+                if opt_optim,
+                    zx = zN - yN(iym);
+                    zf = zdP.*zyfac(:,iym).'/yP(iym);
+                    ydN(iym) = lsqnonlin(@gauss_squares_jd,ydN(iym));
+                end
             end
 	        %
 	    else
@@ -203,34 +238,44 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	        zyfac(izlimm,iym) = zyfac(izlimm,iym) + zyfac(izlimm,iy)*(Nlim - zN_S(izlimm))/zdN(izlimm);
 	        zyfac(izlimm,iyp) = zyfac(izlimm,iyp) + zyfac(izlimm,iy)*(zN_S(izlimm + 1) - Nlim)/zdN(izlimm);
 	        %
-	        yP(iym) = sum(zdP.*zdN.*zyfac(:,iym).');
-	        yN(iym) = sum(zdP.*zdN.*zyfac(:,iym).'.*zN)./yP(iym);
-	        ydN(iym) = sqrt(2*sum(zdP.*zdN.*zyfac(:,iym).'.*(zN - yN(iym)).^2)/yP(iym));
-            if opt_optim,
-                zx = zN - yN(iym);
-                zf = zdP.*zyfac(:,iym).'/yP(iym);
-                ydN(iym) = lsqnonlin(@gauss_squares_jd,ydN(iym));
-            end
-	        %
-	        yP(iyp) = sum(zdP.*zdN.*zyfac(:,iyp).');
-	        yN(iyp) = sum(zdP.*zdN.*zyfac(:,iyp).'.*zN)./yP(iyp);
-	        ydN(iyp) = sqrt(2*sum(zdP.*zdN.*zyfac(:,iyp).'.*(zN - yN(iyp)).^2)/yP(iyp));
-            if opt_optim,
-                zx = zN - yN(iyp);
-                zf = zdP.*zyfac(:,iyp).'/yP(iyp);
-                ydN(iyp) = lsqnonlin(@gauss_squares_jd,ydN(iyp));
+            yP(iym) = sum(zdP.*zdN.*zyfac(:,iym).');
+            yP(iyp) = sum(zdP.*zdN.*zyfac(:,iyp).');
+            %
+            if opt_peak == 1,
+                yN(iym) = sum(zdP.*zdN.*zyfac(:,iym).'.*zN)./yP(iym);
+                ydN(iym) = sqrt(2*sum(zdP.*zdN.*zyfac(:,iym).'.*(zN - yN(iym)).^2)/yP(iym));
+                if opt_optim,
+                    zx = zN - yN(iym);
+                    zf = zdP.*zyfac(:,iym).'/yP(iym);
+                    ydN(iym) = lsqnonlin(@gauss_squares_jd,ydN(iym));
+                end
+                %
+                yN(iyp) = sum(zdP.*zdN.*zyfac(:,iyp).'.*zN)./yP(iyp);
+                ydN(iyp) = sqrt(2*sum(zdP.*zdN.*zyfac(:,iyp).'.*(zN - yN(iyp)).^2)/yP(iyp));
+                if opt_optim,
+                    zx = zN - yN(iyp);
+                    zf = zdP.*zyfac(:,iyp).'/yP(iyp);
+                    ydN(iyp) = lsqnonlin(@gauss_squares_jd,ydN(iyp));
+                end
             end
 	        %
 	    end
 	    %
-	    yP(iy) = [];
+	    yP0(iy) = [];
+        yP(iy) = [];
 	    yN(iy) = [];
 	    ydN(iy) = [];
 	    zyfac(:,iy) = [];
 	    %
 	    ny = ny - 1;    
 	    %
-	end
+    end
+    %
+    if opt_peak == 0,
+        %
+        ydN = ydN.*yP./yP0;
+        %
+    end
     %
     yN = [yNpro,yN];
     ydN = [ydNpro,ydN];
@@ -247,7 +292,7 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	if display_mode >= 2,
 	    %
 	    dx = min(ydN)/10;
-	    x = (min(yN) - max(ydN)):dx:(max(yN) + max(ydN));
+	    x = (min(yN) - 4*max(ydN)):dx:(max(yN) + 4*max(ydN));
 	    nx = length(x);
 	    %
 	    xyN = repmat(yN,[nx,1]);
