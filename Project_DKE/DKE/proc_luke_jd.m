@@ -185,7 +185,7 @@ if ir_display >= 0,
         diaryname = ['res_',simul_id,'_irho_',tir_display,'.log'];
     end
     %
-    if exist(diaryname,'file'),
+    if exist(diaryname,'file') && gettime_jd(diaryname) > datenum(timeid_jd(dke_out.simul.timeid),'dd/mm/yyyy HH:MM:SS'),
         diaryname = '';
     end
     %
