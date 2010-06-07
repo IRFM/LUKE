@@ -45,7 +45,7 @@ natrac  = [];
 natpar = [];
 natder  = 0;
 natfce = [];
-
+%disp(['zstarwars is running ......: length(varargin)=',int2str(length(varargin))])
 if length(varargin) == 0
   app     = dbstack;
   if length(app) > 1
@@ -100,6 +100,7 @@ else
    if length(app) > 1 & strcmp(app(2).name,'zineb1test')
       natrac = evalin('caller','module'); 
       natfunc = evalin('caller',['param.fonction.',natrac]);
+      nblh = evalin('caller','param.gene.nbhyb');
    end
    if length(app) > 1 & strcmp(app(2).name,'zmajmodext')
       natfunc = evalin('caller','module'); 
@@ -176,14 +177,14 @@ if length(varargin) <= 1
 %
 %--------------------------- EQUATION DE DERIVE CINETIQUE ------------------
 %
-  app = dbstack;      
+  app = dbstack;     
   if length(app) > 1 & strcmp(app(2).name,'zineb1test') 
          nathyb  = app(1).file;
          nblh = evalin('caller','param.gene.nbhyb');
   else 
-         nblh  = evalin('base','param.gene.nbhyb');
+         disp('nblh')
+         nblh  = evalin('base','param.gene.nbhyb')
   end
-  tokamak = evalin('base','param.from.machine');
   luke_parameters;
 %	     
 % CRONOS PARAMETERS
@@ -208,7 +209,38 @@ end
 %
 % --------------------------- RUN STARWARS ------------------------
 %
-if nargin == 13,% LH case
+if nargin == 14,% LH case
+    par = varargin{1};
+    proto = varargin{2};
+    cons = varargin{3};
+    cons_spec = varargin{4};
+    geo = varargin{5};
+    equi = varargin{6};
+    injection = varargin{7};
+    prof = varargin{8};
+    neo = varargin{9};
+    impur = varargin{10};
+    phy = varargin{11};
+    compo = varargin{12};
+    gene = varargin{13};
+    memoire = varargin{14};
+    signe = varargin{13}.signe;%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
+    %
+    % cas zinebupdatetest
+    %
+    if ~isfield(par,'rt_mode') & strcmp(app(2).name,'zineb1test') 
+        tokamak = evalin('caller','param.from.machine');
+        luke_parameters;
+        par = valeur;
+    end  
+    if ~isfield(par,'zinterpolation')
+        par.zinterpolation = [];
+    end
+    %
+    if ~isfield(par,'luke_mode')
+        par.luke_mode='lh';
+    end
+elseif nargin == 13
     par = varargin{1};
     proto = varargin{2};
     cons = varargin{3};
@@ -222,6 +254,7 @@ if nargin == 13,% LH case
     compo = varargin{11};
     gene = varargin{12};
     memoire = varargin{13};
+    signe = varargin{12}.signe;%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
     %
     % cas zinebupdatetest
     %
@@ -238,32 +271,44 @@ if nargin == 13,% LH case
         par.luke_mode='lh';
     end
     %
-    if ~isstruct(cons)% LH only (a verifier)
-        if strcmp(par.luke_mode,'lh'),
-            cons.lh_cons = cons;
-            cons.ecrh_cons = '';
-        elseif strcmp(par.luke_mode,'ecrh'),
-            cons.ecrh_cons = cons;
-            cons.lh_cons = '';
-        else
-            error('LUKE mode not determined')
-        end
-    end
 else
     error('Wrong number of inputs in zstarwars')
 end
 %
-% info machine
+if ~isstruct(cons)
+    constr = cons;
+    clear cons
+    if strcmp(par.luke_mode,'lh'),
+        cons.lh_cons = constr;
+		cons.ecrh_cons = '';
+    elseif strcmp(par.luke_mode,'ecrh'),
+        cons.ecrh_cons = constr;
+		cons.lh_cons = '';
+    else
+        error('LUKE mode not determined')
+    end
+end
 %
-tokamak = evalin('base','param.from.machine');
-shotnum = num2str(round(evalin('base','param.from.shot.num')));
-if isfield(par,'temps'),
-    gene.t = par.temps;
-end    
-shotime = num2str(gene.t,'%6.4f');
+if isfield(par,'temps')
+  shotime = num2str(par.temps,'%6.4f');
+elseif isfield(par,'taanalyse')
+  shotime = num2str(par.temps,'%6.4f');    
+else
+  shotime = num2str(gene.t,'%6.4f');        
+end
+if ~isfield(par,'tok')
+
+  par.tok = 'unknown';
+
+end
+if ~isfield(par,'shot')
+
+  par.shot = 1;
+
+end
 %
-equil_id = [tokamak,'_',shotnum,'_',shotime];
-%
+equil_id = [par.tok,'_',num2str(par.shot),'_',shotime];
+
 sortie.err = 0;
 sortie = proto;
 %
@@ -291,8 +336,6 @@ dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial,
 equil = make_equil_cronos(equil_id,equi,gene,prof,compo,impur);
 %
 % PARAMETRES OHMIC, transformation en flux poloidal puis en coordonnees radials de LUKE
-%
-signe = varargin{12}.signe;%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
 %
 % psipncronos    : coordonnee radiale normalisee de CRONOS en flux poloidal
 % psipncronoshel : coordonnee radiale normalisee en flux poloidal associee a HELENA pour BR BZ et BPHI
@@ -384,6 +427,7 @@ for iw = 1:nw,
         %
     else
         disp(['wave :',int2str(iw),' type :',launchs{iw}.type,' n// = ',num2str(wavestructs{iw}.launch.bNpar0,4)])
+        disp(['wave :',int2str(iw),' type :',launchs{iw}.type,' Plh = ',num2str(wavestructs{iw}.launch.bPlhtot,4)])
     end
     %
 end
@@ -393,14 +437,24 @@ end
 %
 % accessibility test
 %
-acces_lh
+if nw > 0
+  acces_lh
+end
 %
 if par.save == 2,%save before LUKE
-   %
-   workdir = fileparts(evalin('base','param.gene.file'));
-   save([workdir,'/before_luke@',equil_id,'.mat']);
-   %
-   error('Exiting after saving LUKE parameters')
+   %  
+  try
+    workdir = fileparts(evalin('base','param.gene.file'));
+  catch 
+    workdir = [];
+  end
+  if isempty(workdir)
+    disp('you can not save the luke file in batch mode')
+  else
+    save([workdir,'/before_luke@',equil_id,'.mat']);
+    error('Exiting after saving LUKE parameters')
+  end
+
 end
 %
 %--------------------------- Execution du trace de rayon C3PO et du code cinetique LUKE --------------------------- 
@@ -482,6 +536,20 @@ p_RF_c = [p_RF_c(1),p_RF_c,0];
 sortie.j  = interp1(xrhoT,j_RF_c,gene.x,method)*1e6*normip;% (A/m2)
 sortie.el = interp1(xrhoT,p_RF_c,gene.x,method)*1e6;% (W/m3)
 %
+% remise de la puissance et du courant de LUKE
+%
+irfnew = zintsurf(sortie.j,gene.x,equi.spr,equi.rhomax);
+paddrfnew = zintvol(sortie.el,gene.x,equi.vpr,equi.rhomax);
+%
+if abs(paddrfnew - P_RF_c)./abs(P_RF_c) > 0.01,
+	disp(['WARNING : volume integral on LUKE and CRONOS grids give different results. RF power renormalized by ',num2str(P_RF_c / paddrfnew * 1e6)])
+end
+if abs(irfnew - I_RF_c./abs(I_RF_c) > 0.01,
+	disp(['WARNING : surface integral on LUKE and CRONOS grids give different results. RF current renormalized by ',num2str(I_RF_c / irfnew * 1e6)])
+end
+sortie.el = sortie.el * P_RF_c / paddrfnew * 1e6;
+sortie.j  = sortie.j  * I_RF_c / irfnew * 1e6;
+%
 % SMOOTHING
 %
 if isfield(par,'smooth') && strcmp(par.smooth,'Yes')
@@ -529,7 +597,7 @@ else
     memoire.t = [memoire.t gene.t];
 end
 %
-na = length(memoire.t);
+na = length(memoire.t)+1;
 %
 for iw = 1:nw,
     if isfield(wavestructs{iw}.launch,'aloha'), 
@@ -547,8 +615,16 @@ memoire.data.edistribution.betath_ref = mksa.betath_ref;
 memoire.data.edistribution.ne_ref = mksa.ne_ref;
 %
 if par.save == 1,
-   workdir = fileparts(evalin('base','param.gene.file'));
-   save([workdir,'/last_luke@',equil_id,'.mat']);
+  try
+    workdir = fileparts(evalin('base','param.gene.file'));
+  catch 
+    workdir = [];
+  end
+  if isempty(workdir)
+    disp('you can not save the luke file in batch mode')
+  else
+    save([workdir,'/last_luke@',equil_id,'.mat']);
+  end
 end
 %
 
