@@ -62,6 +62,8 @@ if exist([hxr_path,proc_hxr_datafile],'file'),
     hxrdata = 1;
     opt.save = 0;
     %
+    disp(['HXR data loaded from file ',hxr_path,proc_hxr_datafile])
+    %
 end
 %
 if hxrdata == 0 && exist([hxr_path,hxr_datafile],'file'),
@@ -82,6 +84,8 @@ if hxrdata == 0 && exist([hxr_path,hxr_datafile],'file'),
     hxrdata = 1;
     datafile = hxr_datafile;
     %
+    disp(['HXR data loaded from file ',hxr_path,hxr_datafile])
+    %
 end
 %
 if hxrdata == 0 && exist([hxr_path,proc_datafile1],'file'),
@@ -90,11 +94,16 @@ if hxrdata == 0 && exist([hxr_path,proc_datafile1],'file'),
     %
     procdata = 1;
     %
+    disp(['LUKE data loaded from file ',hxr_path,proc_datafile1])
+    %
     if isfield(data_proc,'hxr'),
         hxr = data_proc.hxr;
         opt.save = 0;
         %
         hxrdata = 1;
+        %
+        disp(['HXR data loaded from file ',hxr_path,proc_datafile1])
+        %
     end
     %
     if isstruct(hxr), 
@@ -122,11 +131,16 @@ if hxrdata == 0 && exist([hxr_path,proc_datafile2],'file'),
     %
     procdata = 1;
     %
+    disp(['LUKE data loaded from file ',hxr_path,proc_datafile2])
+    %
     if isfield(data_proc,'hxr'),
         hxr = data_proc.hxr;
         opt.save = 0;
         %
         hxrdata = 1;
+        %
+        disp(['HXR data loaded from file ',hxr_path,proc_datafile2])
+        %
     end
     %
     if isstruct(hxr),
@@ -151,6 +165,8 @@ end
 if hxrdata == 0 && exist([hxr_path,datafile1],'file'),
     %
     data = load([hxr_path,datafile1]);
+    %
+    disp(['LUKE data loaded from file ',hxr_path,datafile1])
     %
     if procdata == 0,
         %
@@ -185,6 +201,8 @@ end
 if hxrdata == 0 && exist([hxr_path,datafile2],'file'),
     %
     data = load([hxr_path,datafile2]);
+    %
+    disp(['LUKE data loaded from file ',hxr_path,datafile2])
     %
     if procdata == 0,
         %
