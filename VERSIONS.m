@@ -2059,10 +2059,6 @@
 %		- EQUILV no longer reloaded
 % - use of a_sdNpar
 % 
-% ====> LUKE
-% 
-%
-%
 % ====> LUKE/Project_DKE/Display
 %
 % U igetdir_jd.m (current directory)
@@ -2145,8 +2141,86 @@
 % U mdce_luke.m (")
 % U comp_struct_jd.m (small corrections)
 %
-
-
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.8.3
+% 
+% - use of GUI in structure modifications
+% - TS HXR comparison added
+% - new equilibrium extrema removal technique
+% - new example cases, more realistic
+% - ALOHA : new technique with peak value and Npar conserved
+% 
+% ====> LUKE
+%
+% U make_path_LOCAL.m (small corrections)
+% 
+% ====> LUKE/Project_DKE/Display
+%
+% U structinfo_yp.m (use of GUI in structure modification)
+% U putinfo_yp.m (")
+% U imake_struct_jd.m (")
+% U imake_launch_LH_jd.m (")
+% U imod_struct_jd.m (")
+% U imake_wave_jd.m (" + launch structure loaded + n_rf_list)
+% U irunluke_jd.m (small corrections)
+% U imake_ohm_jd.m (")
+% U imake_equil_jd.m (")
+% U imake_wave_AMR_jd.m (")
+% U irunhxr_jd.m (TS case added)
+% 
+% ====> LUKE/Project_DKE/DKE
+%
+% U equilibrium_jd.m (new technique with point removal)
+% U proc_luke_jd.m (nfrags, diary, etc)
+% U run_lukert.m (small correction)
+% U calc_fcyl_jd.m (Fperp)
+% U load_structures_yp.m (path as string)
+% U rfwave_dke_jd.m (n_rf_list)
+% U wave_process_jd.m (")
+%
+% ====> LUKE/Project_DKE/Modules/ALOHA
+%
+% U proc_aloha_spec_jd.m (new technique with peak value and Npar conserved)
+%
+% ====> LUKE/Project_DKE/Modules/AMR
+% 
+% U make_input_AMR.m (externalization of TCV case)
+% U make_equil_AMR_jd.m (small correction)
+% U rundke_AMR.m (negative pnmax case)
+%
+% ====> LUKE/Project_DKE/Modules/C3PO
+%
+% U main_rayinit_launch_jd.m (use of GUI in structure modification)
+% U main_C3PO_jd.m (n_rf_list)
+% U MEX/Source/erfcc_mex_jd.F (use of mwsize...)
+%
+% ====> LUKE/Project_DKE/Modules/Cronos
+%
+% U luke_parameters.m (aloha and shot parameters)
+% U zstarwars.m (small corrections)
+%
+% ====> LUKE/Project_DKE/Modules/FEB
+%
+% U runhxr_jd.m (structure external)
+% U fproc_hxr.m (disp)
+% U collect_hxr_forLUKE_jd.m (path)
+%
+% ====> LUKE/Project_DKE/Modules/MHDK
+%
+% U proc_LUKE_forMHD.m (simul id)
+%
+% ====> LUKE/Tools
+%
+% U input_dke_yp.m (case of NaN)
+% U userid_jd.m (small correction)
+% U graph_wave_jd.m (absorption normalization)	
+% U getlist_jd.m (get list of files with given format)
+%
+% ====> LUKE/Simulations/Examples
+%
+% New equilibrium and run cases for ITER (LH study) and TS (new cronos run with correct profiles)
+%
 
 
 
