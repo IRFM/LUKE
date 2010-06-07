@@ -3,6 +3,14 @@ function filetime = gettime_jd(filename,filepath,test)
 % This function returns a comparison-ready modification time for the input
 % file in the input directory
 %
+if nargin < 3,
+    test = false;
+end
+%
+if nargin < 2,
+    filepath = './';
+end
+%
 files = dir(filepath);
 filetime = 0;
 %
