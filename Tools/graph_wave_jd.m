@@ -216,7 +216,7 @@ for iy = 1:ny,
     %
     if isfield(rays{iy},'sP_2piRp'),
         sP_2piRp_norm = rays{iy}.sP_2piRp/rays{iy}.sP_2piRp(1);
-        sdP_2piRp_ds_norm = rays{iy}.sdP_2piRp_ds/max(rays{iy}.sdP_2piRp_ds+eps);
+        sdP_2piRp_ds_norm = rays{iy}.sdP_2piRp_ds/max(rays{iy}.sdP_2piRp_ds+eps).*(1 - sP_2piRp_norm(end)/sP_2piRp_norm(1));
         if ~iscell(yabs),
             rays{iy}.mask_abs = find(sdP_2piRp_ds_norm > 0.01);
         end
