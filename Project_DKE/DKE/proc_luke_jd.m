@@ -74,7 +74,8 @@ color3 = 'b';
 color4 = 'g';
 color5 = 'm';
 color6 = 'c';
-colors = {color2,color3,color4,color5,color6};
+color7 = 'y';
+colors = {color2,color3,color4,color5,color6,color7};
 %
 width = 0.5;
 width2 = 2;
@@ -184,8 +185,16 @@ if ir_display >= 0,
         diaryname = ['res_',simul_id,'_irho_',tir_display,'.log'];
     end
     %
-    delete(diaryname)
-    diary(diaryname)
+    if exist(diaryname,'file'),
+        diaryname = '';
+    end
+    %
+    diaryname = input_dke_yp('Provide a name for the log file? (return empty string if no log file)',diaryname);
+    %
+    if ~isempty(diaryname),
+        delete(diaryname)
+        diary(diaryname)
+    end
     %
     disp(['Simulation id: ',dke_out.simul.id]);
     disp(['Simulation date: ',timeid_jd(dke_out.simul.timeid)]);
