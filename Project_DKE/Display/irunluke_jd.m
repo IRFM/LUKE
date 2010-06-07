@@ -1130,13 +1130,16 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                         if isfield(waves{iw},'rayinit'),
                             rayinits{iw} = waves{iw}.rayinit;
+                            %
+                            if isfield (waves{iw}.rayinit,'launch'),
+                                launchs{iw} = waves{iw}.rayinit.launch;
+                            elseif isfield(waves{iw},'launch'),
+                                launchs{iw} = waves{iw}.launch;
+                            else
+                                launchs{iw} = '';
+                            end
                         else
                             rayinits{iw} = '';
-                        end
-                        %
-                        if isfield(waves{iw},'launch'),
-                            launchs{iw} = waves{iw}.launch;
-                        else
                             launchs{iw} = '';
                         end
                         %
