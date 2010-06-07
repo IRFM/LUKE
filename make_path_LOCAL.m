@@ -155,7 +155,7 @@ dkepath.efdaitm = efdaitm;
 %
 dkepath.hostname.laptopjoan = 'PC-DECKER-J';%WARNING: for laptop, may change with connection status.
 %
-laptopjoan.luke_root = [pwd,'/'];
+laptopjoan.luke_root = '/home/jd211098/Work/LUKE/';
 laptopjoan.local_root = '/home/jd211098/Work/LUKE/';
 laptopjoan.computer = 'GLNX86';%machine type and supported OS
 laptopjoan.temppathroot = '/home/jd211098/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -309,13 +309,19 @@ crpppc70.MUMPS.mex79 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g9
 %
 crpppc70.remote(1).host = 'pleiades2.epfl.ch';
 crpppc70.remote(1).luke_root = '/home/jdecker/LUKE/';
-crpppc70.remote(1).cmd = 'qsub -l walltime=1:59:00 -l nodes=1:ppn=1';
+crpppc70.remote(1).cmd = 'qsub -l walltime=3:59:00 -l nodes=1:ppn=1';
 crpppc70.remote(1).get_jobid = {'','.pleiades2.epfl.ch'};%str_before,str_after
 crpppc70.remote(1).set_jobid = {'','','Unknown Job Id'};%str_before,str_after,str_check
 crpppc70.remote(1).decker = 'jdecker';
 crpppc70.remote(1).curchod = 'lcurchod';
 %
 dkepath.crpppc70 = crpppc70;
+%
+% paths for runs on CRPP PC lac4
+%
+dkepath.hostname.lac4 = 'lac4';
+%
+dkepath.lac4 = crpppc70;
 %
 % paths for runs on CRPP PC 51
 %

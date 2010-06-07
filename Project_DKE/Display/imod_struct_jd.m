@@ -292,6 +292,7 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui)
             fname = fnames{isel};
             fval = s.(fname);
             values = s.values.(fname);
+            locmod = 0;
             %
             if stype(isel) <= 2,
                 %
