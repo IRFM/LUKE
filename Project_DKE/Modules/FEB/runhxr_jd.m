@@ -28,6 +28,7 @@ if isstruct(data),
         radialDKE = data.output.radialDKE;
         momentumDKE = data.output.momentumDKE;
         mksa = data.output.mksa;
+        external = data.external;
     else % case of LUKE_RESULTS file
         Zcurr = data.Zcurr;
         dke_out = data.dke_out;
@@ -35,13 +36,16 @@ if isstruct(data),
         radialDKE = data.radialDKE;
         momentumDKE = data.momentumDKE;
         mksa = data.mksa;
+        external = '';
     end        
     %
 else
     %
     % data from file
     %
-    load(data,'id_simul','equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa');
+    external = '';
+    %
+    load(data,'id_simul','equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa','external');
     %
 end    
 %
@@ -58,58 +62,76 @@ nc = length(hxrspec.beta_hxr);% number of chords
 %
 % load and treat HXR experimental results
 %
-if ~isnan(exp_file),
+if all(ischar(exp_file)),
     %
     if strcmp(basestr,'TCV'),% TCV launching data
         %
-        % load HXR experimental results
-        %
-        if isfield(equil,'info') && isfield(equil.info,'shotnum'),
-            shotnum = equil.info.shotnum;
-        elseif isfield(equil,'id'),
-            idsep = find(equil.id == '_');
-            shotnum = equil.id(idsep(1)+1:idsep(2)-1); 
+        if isfield(external,'hxr'),
+            %
+            t = external.hxr.t;
+            energy = external.hxr.energy;
+            hxr = external.hxr.counts;
+            filter_thickness = external.hxr.filter_thickness;
+            filter_material = external.hxr.filter_material;
+            %
+            if isfield(external,'beta')
+                beta = external.beta;
+            else
+                beta = NaN(1,size(hxr,3));
+            end
+            %
         else
-            disp('-----> Shot number information missing');
-            return
-        end
-        %
-        if ~isempty(exp_file),% hxr experimental data from file
             %
-            load(exp_file,'shot','energy','hxr','t','beta','filter_thickness','filter_material');
+            % load HXR experimental results
             %
-            ishot = find(shot == str2num(shotnum));
-            %
-            if isempty(ishot) | ~exist('hxr','var'),
-                disp(['-----> hxr data not found for shot :',shotnum]);
-                disp(quitmsg)
+            if isfield(equil,'info') && isfield(equil.info,'shotnum'),
+                shotnum = equil.info.shotnum;
+            elseif isfield(equil,'id'),
+                idsep = find(equil.id == '_');
+                shotnum = equil.id(idsep(1)+1:idsep(2)-1); 
+            else
+                disp('-----> Shot number information missing');
                 return
             end
             %
-            if length(ishot) > 1,
-                disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
-                ishot = ishot(1);
+            if ~isempty(exp_file),% hxr experimental data from file
+                %
+                load(exp_file,'shot','energy','hxr','t','beta','filter_thickness','filter_material');
+                %
+                ishot = find(shot == str2num(shotnum));
+                %
+                if isempty(ishot) | ~exist('hxr','var'),
+                    disp(['-----> hxr data not found for shot :',shotnum]);
+                    disp(quitmsg)
+                    return
+                end
+                %
+                if length(ishot) > 1,
+                    disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
+                    ishot = ishot(1);
+                end
+            else % hxr experimental data from TCV database
+                %
+                shot = str2num(shotnum);
+                collect_hxr;
+                ishot = 1;
+                %
+                clear shot
+                %
             end
-        else % hxr experimental data from TCV database
             %
-            shot = str2num(shotnum);
-            collect_hxr;
-            ishot = 1;
+            t = t{ishot};
+            energy = energy{ishot};
+            hxr = hxr{ishot};
+            filter_thickness = filter_thickness{ishot};
+            filter_material = filter_material{ishot};
             %
-            clear shot
+            clear ishot shotnum
             %
-        end
-        %
-        t = t{ishot};
-        energy = energy{ishot};
-        hxr = hxr{ishot};
-        filter_thickness = filter_thickness{ishot};
-        filter_material = filter_material{ishot};
-        %
-        clear ishot shotnum
-        %
-        if ~exist('beta','var'),
-            beta = NaN(1,size(hxr,3));
+            if ~exist('beta','var'),
+                beta = NaN(1,size(hxr,3));
+            end
+            %
         end
         %
         % test angles
