@@ -1061,6 +1061,19 @@ if ir_display > 0 && ir_display <= nr,
         %
         print_jd(p_opt,[simul_id,'_DQL',tir_display],'figures_LUKE');
         %
+        if strcmp(y3lab,'D||'),
+            %
+            figure(121),clf,set(121,'Name',['1-D plot of ',y3lab,' - ',dke_out.simul.id])
+            %
+            y1 = y3(1,:);
+            ylab = 'D_{||} (p_\perp = 0)';
+            ylim = NaN;
+            %
+            graph1D_jd(x1,y1,0,0,xlab1,ylab,radialloc,NaN,xlim1,ylim,style,marker,color2,width2,siz,gca,red,lspace,bspace2);
+            %
+            print_jd(p_opt,[simul_id,'_DQL_1D',tir_display],'figures_LUKE');
+            %
+        end
     end
     %
     % ---------- parallel distribution difference-----------

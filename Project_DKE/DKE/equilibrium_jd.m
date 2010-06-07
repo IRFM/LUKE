@@ -572,6 +572,12 @@ if display_mode >= 2,
     [ax] = graph1D_jd(sx',sy',0,0,'','','',NaN,[xmin,xmax],[ymin,ymax],'-','none','r',2);drawnow
     [ax] = graph1D_jd(stx,sty,0,0,'x(m)','y(m)','Flux-surfaces labeled by \rho=0,0.05,0.1...1',NaN,[xmin,xmax],[ymin,ymax],'-','none','b',0.5,20,gca,0.9,0.7,0.5);
     axis('equal');drawnow  
+    %
+    figure('Name','Electron Temperature and Density Profiles'),clf
+%    
+    [ax] = graph1D2jd(prho,xTe,prho,xne/1e19,'\rho','T_e (keV)','n_e (10^{19} m^{-3})','',...
+        [0,1],NaN,NaN,'-','none','r',2,'--','none','b',2,20,0.9,0.5,0.7);
+    set(ax(1),'xtick',[0:0.2:1]);set(ax(2),'xtick',[0:0.2:1])
 end
 %
 zZi = equil.zZi;
