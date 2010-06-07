@@ -35,9 +35,10 @@ end
 %
 if i_opt == 0,% data loaded from external database
     %
-    if isfield(equil.info,'shotnum');
-        shotnum = equil.info.shotnum;
-    else
+    istru = find(equil.id == '_');
+    if length(istru) >= 2 && strcmp(equil.id(1:istru(1)-1),basestr),
+        shotnum = equil.id(istru(1)+1:istru(2)-1);
+    else           
         disp('-----> Shot number information missing');
         return
     end
