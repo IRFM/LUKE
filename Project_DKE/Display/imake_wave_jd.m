@@ -126,10 +126,11 @@ elseif i_opt == 2,% build the wave data locally
     %
     d_opt = input_dke_yp(['Initial conditions :',...
         '\n0 (user-specified conditions)',...
-        '\n1 (from an existing RAYINIT file)',...
-        '\n2 (from TORAY data)',...
-        '\n3 (from ART data)',...
-        '\n4 (from AMR data)'],0,0:4,'',[1,1]);
+        '\n1 (from an existing LAUNCH file)',...
+        '\n2 (from an existing RAYINIT file)',...
+        '\n3 (from TORAY data)',...
+        '\n4 (from ART data)',...
+        '\n5 (from AMR data)'],0,0:4,'',[1,1]);
     %
     %
     if d_opt == 0,% user-specified initial conditions 
@@ -197,23 +198,29 @@ elseif i_opt == 2,% build the wave data locally
             %
         end
         %
-    elseif d_opt == 1,%initial conditions from an existing RAYINIT file 
+    elseif d_opt == 1,%initial conditions from an existing LAUNCH file 
+        %
+        launch = iload_struct_jd('launch','LAUNCH',workdir,opt_gui);
+        %
+        type = launch.type;
+        %
+    elseif d_opt == 2,%initial conditions from an existing RAYINIT file 
         %
         rayinit = iload_struct_jd('rayinit','RAYINIT',workdir,opt_gui);
         %
         type = rayinit.type;
         %
-    elseif d_opt == 2,%initial conditions from TORAY 
+    elseif d_opt == 3,%initial conditions from TORAY 
         %
         disp('-----> initial conditions from TORAY not implemented yet');
         return
         %
-    elseif d_opt == 3,% wave from ART calculations
+    elseif d_opt == 4,% wave from ART calculations
         %
         disp('-----> initial conditions from ART not implemented yet');
         return
         %
-    elseif d_opt == 4,% wave from AMR calculations
+    elseif d_opt == 5,% wave from AMR calculations
         %
         disp('-----> initial conditions from AMR not implemented yet');
         return
@@ -345,7 +352,7 @@ if w_opt == 0; % C3PO Calculation
     %
     % BUILDING RAYINIT
     %
-    if d_opt == 0,% rayinit built from launching conditions
+    if d_opt <= 1,% rayinit built from launching conditions
         %
         if strcmp(ftype,'HF'), 
             %
