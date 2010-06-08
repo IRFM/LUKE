@@ -4,7 +4,17 @@ function wave = make_wave_AMR_jd(wavestruct,equil)
 %
 AMR_output_path = wavestruct.AMR_output_path;
 %
-shotime = equil.info.shotime;
+if length(istru) >= 2 && strcmp(equil.id(1:istru(1)-1),basestr),
+	shotnum = equil.id(istru(1)+1:istru(2)-1);
+	if length(istru) >= 3,
+		shotime = equil.id(istru(2)+1:istru(3)-1);
+	else
+		shotime = equil.id(istru(2)+1:end);
+	end
+else           
+	disp('-----> Shot number information missing');
+	return
+end
 %
 wavedatafile = [AMR_output_path,'luke_rays_',wavestruct.filestr,'.dat'];
 %

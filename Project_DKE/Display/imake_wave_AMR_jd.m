@@ -16,7 +16,7 @@ if length(istru) >= 2 && strcmp(equil.id(1:istru(1)-1),basestr),
 	if length(istru) >= 3,
 		shotime = equil.id(istru(2)+1:istru(3)-1);
 	else
-		shotime = equil.id(istru(2)+1:strfind(equil.id,'.mat')-1);
+		shotime = equil.id(istru(2)+1:end);
 	end
 else           
 	disp('-----> Shot number information missing');
@@ -31,19 +31,12 @@ shotime = num2str(str2num(shotime),'%1.3f');
 if isempty(launch),	% Read the existing data file
     %
     launch.type = 'EC';
-    if isfield(equil.info,'datapath')
-		%
-		AMR_output_path = equil.info.datapath;
-		%
-    else
-    	%
-		AMR_simul_path = igetdir_jd(opt_gui,'Please select the AMR simulation folder',workdir);
-		%
-		AMR_output_path = [AMR_simul_path,'output/luke/'];
-		%
-    end
-    %
-else	% Run AMR
+	%
+	AMR_simul_path = igetdir_jd(opt_gui,'Please select the AMR simulation folder',workdir);
+	%
+	AMR_output_path = [AMR_simul_path,'output/luke/'];
+	%
+ else	% Run AMR
     %
     AMR_script_path = getenv('AMR');
     if isempty(AMR_script_path),
