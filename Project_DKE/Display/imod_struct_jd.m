@@ -360,7 +360,7 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui)
     end
     %
     mod = any(mod);
-    s = rmfield(s,fexcept);
+    s = rminfo(s,fexcept);
     %
     function pushbutton_cbf(hObject,eventdata)
         %
@@ -452,6 +452,16 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui)
         %
     end
     %
+end
+%
+function s = rminfo(s,fexcept)
+    s = rmfield(s,fexcept);
+    fnames = fieldnames(s);
+    for iname = 1:length(fnames);
+        if isstruct(s.(fnames{iname})),
+            s.(fnames{iname}) = rminfo(s.(fnames{iname}),fexcept);
+        end
+    end
 end
 
     

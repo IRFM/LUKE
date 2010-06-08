@@ -96,9 +96,6 @@ end
 [AMRcfg] = imod_struct_jd(AMRcfg,'AMRcfg',1,opt_gui);
 [antennacfg] = imod_struct_jd(antennacfg,'antennacfg',1,opt_gui);
 %
-AMRcfg = rminfo(AMRcfg);
-antennacfg = rminfo(antennacfg);
-%
 antenna_ids = fieldnames(rmfield(antennacfg,'general'));
 %
 AMRcfg.antenna = rmfield(AMRcfg.antenna,'ids');
@@ -162,15 +159,4 @@ function fprintf_key(fid,key,val)
         keystr = [keystr,'\n'];
     end
     fprintf(fid,keystr);
-end
-
-function s = rminfo(s)
-    fnames = fieldnames(s);
-    for iname = 1:length(fnames);
-        if strcmp(fnames{iname},'info') || strcmp(fnames{iname},'expert'),
-            s = rmfield(s,fnames{iname});
-        elseif isstruct(s.(fnames{iname})),
-            s.(fnames{iname}) = rminfo(s.(fnames{iname}));
-        end
-    end
 end
