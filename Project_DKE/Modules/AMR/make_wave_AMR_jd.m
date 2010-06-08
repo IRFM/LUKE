@@ -5,7 +5,7 @@ function wave = make_wave_AMR_jd(wavestruct,equil)
 AMR_output_path = wavestruct.AMR_output_path;
 %
 istru = find(equil.id == '_');
-if length(istru) >= 2 && strcmp(equil.id(1:istru(1)-1),basestr),
+if length(istru) >= 2,
 	shotnum = equil.id(istru(1)+1:istru(2)-1);
 	if length(istru) >= 3,
 		shotime = equil.id(istru(2)+1:istru(3)-1);
