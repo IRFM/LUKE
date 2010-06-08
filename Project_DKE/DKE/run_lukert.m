@@ -236,7 +236,9 @@ elseif dkeparam.rt_mode == 4,
             end            
             %
             Pabs = Pabs + 1e6*sum(yp_rf(ymask));
-            P0 = P0 + sum(waves{iw}.rayinit.launch.bPlhtot);
+            for ib = 1:nb(iw),
+                P0 = P0 + waves{iw}.rays{ib}.P0_2piRp*2*pi*equil.Rp;
+            end
         end
         %
         if P0 > 0 && isfield(dkeparam,'abs_lim') && Pabs/P0 < dkeparam.abs_lim,
