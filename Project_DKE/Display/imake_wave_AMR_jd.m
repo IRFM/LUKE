@@ -10,12 +10,23 @@ wave = '';
 %
 % 6-digit shot number SSSSSS with leading zeros
 %
-shotnum = equil.info.shotnum;
+istru = find(equil.id == '_');
+if length(istru) >= 2 && strcmp(equil.id(1:istru(1)-1),basestr),
+	shotnum = equil.id(istru(1)+1:istru(2)-1);
+	if length(istru) >= 3,
+		shotime = equil.id(istru(2)+1:istru(3)-1);
+	else
+		shotime = equil.id(istru(2)+1:strfind(equil.id,'.mat')-1);
+	end
+else           
+	disp('-----> Shot number information missing');
+	return
+end
 shotnum = [repmat('0',[1,6-length(shotnum)]),shotnum];
 %
 % Time in fixed format T.TTT
 %
-shotime = num2str(str2num(equil.info.shotime),'%1.3f');
+shotime = num2str(str2num(shotime),'%1.3f');
 %
 if isempty(launch),	% Read the existing data file
     %
