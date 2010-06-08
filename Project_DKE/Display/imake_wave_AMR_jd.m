@@ -105,13 +105,12 @@ antconf = ['0'*ones(1,4-length(antconfbase)),antconfbase];
 %
 waveparam.filestr = [antnum,'_',antconf,'_',shotnum,'_',shotime];
 %
-shotime = wavedata(1,1);
-ny = size(wavedata,1);
-%
-if str2double(equil.info.shotime) ~= shotime,
+if str2double(shotime) ~= wavedata(1,1),
     disp('-----> The shot time is not compatible with equilibrium')
     return
 end
+%
+ny = size(wavedata,1);
 %
 dNpar = input('Spectral width (NaN if calculated from beam size) [NaN]:');
 if isempty(dNpar),
