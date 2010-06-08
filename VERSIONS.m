@@ -2164,7 +2164,7 @@
 % U imod_struct_jd.m (")
 % U imake_wave_jd.m (" + launch structure loaded + n_rf_list)
 % U irunluke_jd.m (small corrections)
-% U imake_ohm_jd.m (")
+% U imake_ohm_jd.m (" + signs management)
 % U imake_equil_jd.m (")
 % U imake_wave_AMR_jd.m (")
 % U irunhxr_jd.m (TS case added)
@@ -2188,6 +2188,9 @@
 % U make_input_AMR.m (externalization of TCV case)
 % U make_equil_AMR_jd.m (small correction)
 % U rundke_AMR.m (negative pnmax case)
+% U make_AMR_antenna_TCV.m (TCV specific antenna for AMR)
+% U ebe6_TCV.cfg (config file for TCV in AMR)
+% U make_wave_AMR_jd.m (small correction)
 %
 % ====> LUKE/Project_DKE/Modules/C3PO
 %
@@ -2216,16 +2219,9 @@
 % U userid_jd.m (small correction)
 % U graph_wave_jd.m (absorption normalization)	
 % U getlist_jd.m (get list of files with given format)
+% U gettime_jd.m (nargins)
 %
 % ====> LUKE/Simulations/Examples
 %
 % New equilibrium and run cases for ITER (LH study) and TS (new cronos run with correct profiles)
 %
-
-
-
-
-
-
-
-
