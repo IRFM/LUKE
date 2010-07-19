@@ -63,7 +63,7 @@ syZ = syZ_L + sysZ;
 syphi = syphi_L + acos((syR.^2 + syR_L.^2 - sysh.^2)./(2*syR.*syR_L)).*sign(syalpha_L);
 syphi = real(syphi);
 %
-syalpha = syalpha_L - syphi;
+syalpha = syalpha_L - syphi + syphi_L;
 %
 sygR = sin(sybeta).*cos(syalpha);
 sygZ = cos(sybeta);
