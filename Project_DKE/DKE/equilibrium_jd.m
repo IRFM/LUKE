@@ -194,7 +194,7 @@ if Rp < Inf,
     %
     nc = (ntheta-1)/2 + 1;%central fft point
     %
-    tol = 0.01;% tolerance on magnetic field variations
+    tol = 0.1;% tolerance on magnetic field variations
     %
     tpB0 = sqrt(tpBx.^2 + tpBy.^2 + tpBPHI.^2);% total magnetic field
     %
@@ -318,7 +318,9 @@ if Rp < Inf,
         %
         thetah = equil.theta(1:ntheta-1);
         %
-        for t = 1:nc,
+        nt = 10*nc;
+        %
+        for t = 1:nt,
             %
             tpB = sqrt(tpBx.^2 + tpBy.^2 + tpBPHI.^2);% total magnetic field
             %
@@ -327,7 +329,10 @@ if Rp < Inf,
             extr_ind = diff(sign(diff([tpB(end,:);tpB;tpB(1,:)]))) ~= 0;%local extrema indices
             nextr = sum(extr_ind);
             %
-            if t == nc || var > tol || all(nextr <= 2),
+            disp(['Iteration : ',num2str(t),'; FS with extr. : ',num2str(sum(nextr > 2)),'/',...
+                num2str(npsi),'; B var. : ',num2str(var),'/',num2str(tol),'.'])
+            %
+            if t == nt || var > tol || all(nextr <= 2),
                 break
             end
             %
@@ -337,6 +342,10 @@ if Rp < Inf,
                 %
                 mask(tpB(:,ir) == max(tpB0(:,ir))) = false;%take global extrema indices away
                 mask(tpB(:,ir) == min(tpB0(:,ir))) = false;%take global extrema indices away
+                %
+                if ~any(mask),
+                    continue
+                end
                 %
                 tB = interp1([thetah(end) - 2*pi,thetah(~mask),2*pi],[tpB(end,ir);tpB(~mask,ir);tpB(1,ir)],thetah,'linear').';
                 if any(tB.^2 < tpBPHI(:,ir).^2),
