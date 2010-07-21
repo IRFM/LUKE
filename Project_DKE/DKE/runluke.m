@@ -2,8 +2,8 @@ function runluke(timeid)
 %
 try
     %
-    timeid = getenv('timeid');
-    datapath = getenv('datapath');
+    timeid = getenv('LUKE_timeid');
+    datapath = getenv('LUKE_datapath');
     %
     [res,logname] = unix('whoami');
     %
@@ -16,7 +16,7 @@ try
     filein = [datapath,'LUKE_RUN_',logname,'_',timeid,'.mat'];
     fileout = [datapath,'LUKE_OUT_',logname,'_',timeid,'.mat'];
     %
-    load(filein,'id_simul','waves','dkeparam','equil','dkedisplay','ohm','transpfaste','ripple')
+    load(filein,'id_simul','wavestructs','waves','dkeparam','equil','dkedisplay','ohm','transpfaste','ripple')
     %
     delete(filein);
     %
@@ -25,7 +25,7 @@ try
     warning off
     %
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = ...
-        run_lukert(id_simul,[],waves,dkeparam.psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);
+        run_lukert(id_simul,wavestructs,waves,dkeparam.psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);
     %
     save(fileout,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource')
     %

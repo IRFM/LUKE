@@ -4,6 +4,7 @@ id_simul = luke_input.id_simul;
 dkeparam = luke_input.dkeparam;
 dkedisplay = luke_input.dkedisplay;
 equil = luke_input.equil;
+wavestructs = luke_input.wavestructs;
 waves = luke_input.waves;
 ohm = luke_input.ohm;
 transpfaste = luke_input.transpfaste;
@@ -31,7 +32,7 @@ else
 end
 %
 save_id = ['LUKE_RUN_',remotelogname,'_',timeid,'.mat'];
-save(save_id,'id_simul','waves','dkeparam','equil','dkedisplay','ohm','transpfaste','ripple');
+save(save_id,'id_simul','wavestructs','waves','dkeparam','equil','dkedisplay','ohm','transpfaste','ripple');
 %
 if ~isempty(remotehost),
     %
@@ -52,11 +53,11 @@ disp(['    --> Starting run with command ',remotecmd,' ...'])
 if ~isempty(remotehost),
     %
     [res,txt] = unix(['ssh ',remotelogname,'@',remotehost,...
-        ' ''',remotecmd,' -v timeid=',timeid,',LUKE=',remoteluke_root,' ',remoteluke_root,'mrunluke_batch''']);
+        ' ''',remotecmd,' -v LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,' ',remoteluke_root,'mrunluke_batch''']);
     %
 else
     %
-    [res,txt] = unix([remotecmd,' -v timeid=',timeid,',LUKE=',remoteluke_root,',datapath=',pwd,'/ ',remoteluke_root,'mrunluke_batch']);
+    [res,txt] = unix([remotecmd,' -v LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,',LUKE_datapath=',pwd,'/ ',remoteluke_root,'mrunluke_batch']);
     %
 end
 %
