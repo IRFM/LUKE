@@ -491,6 +491,8 @@ XYDrf.ijm = spalloc(nr*ny,npn*nmhu*nn_rf,0);
 % XBDrf.ijp = zeros(SXB,'single');
 % XBDrf.ijm = zeros(SXB,'single');
 %
+disp(['Number of DQL elements : ',num2str(nXB)])
+%
 for ibloc = 1:ceil(nXB/Nmax),
     %
     bloc_mask = (ibloc - 1)*Nmax + 1:min([ibloc*Nmax,nXB]);
