@@ -441,7 +441,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                             paths.equil = '';
                         end
                         %
-                        if ~isfield(data,'waves'),
+                        if ~isfield(data,'waves') || isempty(data.waves),
                             if isfield(data.dke_out,'waves'),
                                 data.waves = data.dke_out.waves;
                             else
@@ -450,7 +450,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                         end
                         %
                         for iw = 1:length(data.waves),
-                            if isfield(data,'ids_wave') && ~isempty(data.ids_wave{iw}) && exist([data.paths_wave{iw},'WAVE_',data.ids_wave{iw},'.mat'],'file'),
+                            if isfield(data,'ids_wave') && length(data.ids_wave) >= iw && ~isempty(data.ids_wave{iw}) && ...
+                                    ((iscell(data.paths_wave) && exist([data.paths_wave{iw},'WAVE_',data.ids_wave{iw},'.mat'],'file')) || exist([data.paths_wave,'WAVE_',data.ids_wave{iw},'.mat'],'file')),
                                 fileids.waves{iw} = data.ids_wave{iw};
                                 paths.waves{iw} = data.paths_wave{iw};
                             else
