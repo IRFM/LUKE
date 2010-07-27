@@ -64,18 +64,23 @@ end
 %
 wave = rmfield(wave,'rays');
 %
-sx = smooth(ss,ray.sx,nsm).';
-sy = smooth(ss,ray.sy,nsm).';
-sphi = smooth(ss,ray.sphi,nsm).';
-%
+sx = ray.sx;
+sy = ray.sy;
+sphi = ray.sphi;
 sNpar = ray.sNpar; 
 sNperp = ray.sNperp;
 %
-if length(sNpar) == ns,
-	sNpar = smooth(ss,sNpar,nsm).';
-end
-if length(sNperp) == ns,
-	sNperp = smooth(ss,sNperp,nsm).';
+if nsm > 1,
+    sx = smooth(ss,sx,nsm).';
+    sy = smooth(ss,sy,nsm).';
+    sphi = smooth(ss,sphi,nsm).';
+    %
+    if length(sNpar) == ns,
+        sNpar = smooth(ss,sNpar,nsm).';
+    end
+    if length(sNperp) == ns,
+        sNperp = smooth(ss,sNperp,nsm).';
+    end
 end
 %
 sR = sx + equil.Rp;
