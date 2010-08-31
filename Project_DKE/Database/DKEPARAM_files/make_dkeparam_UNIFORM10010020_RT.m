@@ -106,4 +106,8 @@ dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculatio
 dkeparam.opt_load = 0;%Load intermediate calculations
 dkeparam.opt_save = 0;%Save intermediate calculations
 %
+dkeparam.method = 'spline';%For the pitch-angle interpolation in the prjectioon of the electron velocity distribution on the Legendre polynomial basis
+dkeparam.n_gauleg = 35;%Number of Legendre polynomials for projections of the electron velocity distribution
+dkeparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
+%
 eval(['save DKEPARAM_',dkeparam_id,'.mat dkeparam']);

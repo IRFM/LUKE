@@ -1,4 +1,4 @@
-function [ZP0,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
+function [XXf0_leg,ZP0,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
     fmoments_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
                     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
                     ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp,gridindex_rf,...
@@ -899,6 +899,18 @@ end
 %Integral of the source term
 %
 xne_norm_out = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXsinksource(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
+%
+% Projection of the distribution function on the Legendre polynomial basis
+%
+n_pol = dkeparam.n_gauleg;%Necessary for accurate reconstruction at ksi = -1
+[x_leg,w_leg] = gauleg_dke_yp(dkeparam.n_gauleg,dkeparam.epsi_gauleg);%Gauss-Legendre abscissa and weigth calculations between -1 and + 1
+[Pm,cL] = leg_dke_yp(x_leg(:)',n_pol);%Legendre polynomial calculation
+%
+XXf0_leg = zeros(size(XXf0,1),length(cL),size(XXf0,3));
+%
+for ir = 1:size(XXf0,3),%radial position
+    XXf0_leg(:,:,ir) = (interp1(gridDKE.Xmhu(1,:)',XXf0(:,:,ir)',x_leg(:),dkeparam.method)'.*(w_leg*ones(1,size(XXf0,1)))')*Pm';%Calculation of the Legendre coefficients for local values of the distribution function
+end
 %
 if display_mode >= 1,info_dke_yp(2,['Moments of the distribution function calculated in ',num2str(etime(clock,time0)),' (s)']);end
 %
