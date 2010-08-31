@@ -11,7 +11,7 @@ function [Pn,cL] = leg_dke_yp(x,m)
 %	Output:
 %
 %		- Pn: Legendre polynomials up to degree m [m+1,n]
-%     - cL: Legendre coefficient up to degree m [m+1] 
+%       - cL: Legendre coefficient up to degree m [m+1] 
 %
 %	Warning: Pn(k+1,:) is corresponding to the Legendre polynomial of	degree k.
 %
