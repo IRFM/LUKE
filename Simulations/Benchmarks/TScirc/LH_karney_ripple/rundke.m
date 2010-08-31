@@ -95,9 +95,14 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 [Znorm_0,Zcurr_0,ZP0_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,[],[],[]);
 %
-% case withripple
+% case with ripple
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+%
+% Interpolation of f0 with Legendre polynomials on a new (pn,mhu) grid
+%
+mhu_i = linspace(-1,1,1001);
+[XXf0_i,x_0_i] = interpleg_yp(dke_out.XXf0_leg,mhu_i,momentumDKE);
 %
 MRRs = dke_out.xMRR_flux;
 MRRt = dke_out.xMRR_tau;
