@@ -91,9 +91,13 @@ for ir = 1:nr,
         normf0 = 2*pi*integral_dke_jd(dpn(:),pn2(:).*integral_dke_jd(dmhu,Xf0,2),1);
 		Xf0 = xne_norm(ir)*Xf0/normf0;
 		title_initguess = 'V. Fuchs et al., Phys. Fluids, 28 (1985) 3619';
-	else
-		Xf0 = XXf0_in(:,:,ir);
-		title_initguess = 'Initial distribution from input arguments';
+    else
+        if size(XXf0_in,2) == nmhu,
+            Xf0 = XXf0_in(:,:,ir);
+            title_initguess = 'Initial distribution from input arguments';
+        else
+            Xf0 = interpleg_yp(XXf0_in(:,:,ir),mhu);%interpolate using Legendre polynomials 
+        end
 	end
 	XXfinit(:,:,ir) = Xf0;
 end
