@@ -393,8 +393,6 @@ elseif dkeparam.rt_mode == 3,%
     % diary off
 end
 %
-dke_out.waves = waves;
-%
 if dkeparam.rt_mode >= 1,%Variable number of outputs (only if LUKE is running otherwise no output)
 	if nargout >= 1,varargout{1} = Znorm;end
 	if nargout >= 2,varargout{2} = Zcurr;end
