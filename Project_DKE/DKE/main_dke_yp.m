@@ -211,7 +211,9 @@ for it_rf=1:nit_rf, % convergence in the ray-tracing mode
     end
 end
 %
-[ZP0,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
+% Calculations of the moments iof the distribution function
+%
+[XXf0_leg,ZP0,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
     fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
     ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
@@ -287,10 +289,12 @@ end
 %
 dke_out.XXfinit = XXfinit;
 dke_out.XXf0 = XXf0;
+dke_out.XXf0_leg = XXf0_leg;
 dke_out.XXf0_g = XXf0_g;
 dke_out.normf0 = normf0;
 dke_out.curr0 = curr0;
 dke_out.residu_f = residu_f;
+dke_out.waves = waves;
 dke_out.ZXXS = ZXXS;
 dke_out.ZXXD_c = ZXXD_c;
 dke_out.ZXXF_c = ZXXF_c;
