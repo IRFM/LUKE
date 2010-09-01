@@ -5,7 +5,15 @@ function [lukeversion,matlabversion] = LUKEversion_jd;
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
-lukeversion = 'LUKE 1.8.3';
+lukeversion = 'LUKE 1.8.4';
 ver = version;
-matlabversion = ver([1,3]);
-if str2num(ver(1:3)) < 7.5;error('Version of MatLab prior to R2007B (7.5) are not supported');end
+[iver] = strfind(ver,'.');
+if iver(2)-iver(1) == 2,
+	ver = [ver(1:iver(1)-1),'0',ver(iver(1)+1:iver(2)-1)];
+else
+	ver = [ver(1:iver(1)-1),ver(iver(1)+1:iver(2)-1)];
+end
+matlabversion = ver;
+if str2num(ver) < 705;
+	error('Version of MatLab prior to R2007B (7.5) are no longer supported');
+end
