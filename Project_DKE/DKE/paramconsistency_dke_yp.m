@@ -38,3 +38,9 @@ end
 if dkeparam.pnmax_S < 0,
 	dkeparam.pnmax_S = -dkeparam.pnmax_S;
 end
+%
+if ~isfield(dkeparam,'method'),
+    dkeparam.method = 'spline';%For the pitch-angle interpolation in the prjectioon of the electron velocity distribution on the Legendre polynomial basis
+    dkeparam.n_gauleg = 35;%Number of Legendre polynomials for projections of the electron velocity distribution
+    dkeparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
+end
