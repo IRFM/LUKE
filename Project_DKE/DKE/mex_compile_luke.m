@@ -8,8 +8,7 @@ if nargin < 2,
     compiler_opt = '';%no options
 end
 %
-matver = version;
-matver = matver([1,3]);
+[lukeversion,matver] = LUKEversion_jd;
 %
 if ~exist(mexpath,'dir'),
     %
@@ -99,18 +98,18 @@ initdir = pwd;
 %
 cd(mexpath);
 %
-if force_compile || any(filetime.trapz_dke_yp.source > filetime.trapz_dke_yp.mex),
+if ~any(isnan(copts)) && (force_compile || any(filetime.trapz_dke_yp.source > filetime.trapz_dke_yp.mex)),
     eval(['mex ',copts,' ',sourcepath.DKE,'trapz_dke_yp.c']);
     disp(['The trapz_dke_yp.',mexext,' mexfile has been compiled.'])
 end
 %
-if force_compile || any(filetime.alphaphimex_jd.source > filetime.alphaphimex_jd.mex),
+if ~any(isnan(copts)) && (force_compile || any(filetime.alphaphimex_jd.source > filetime.alphaphimex_jd.mex)),
     eval(['mex -c ',copts,' -I',sourcepath.DKE,' ',sourcepath.DKE,'alphaphi_jd.c']);
     eval(['mex ',copts,' ',sourcepath.DKE,'alphaphimex_jd.c alphaphi_jd.',objext]);
     disp(['The alphaphimex_jd.',mexext,' mexfile has been compiled.'])
 end
 %
-if force_compile || any(filetime.raytracing_yp.source > filetime.raytracing_yp.mex),
+if ~any(isnan(copts)) && (force_compile || any(filetime.raytracing_yp.source > filetime.raytracing_yp.mex)),
     eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_interp_yp.c']);
     eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_dieltensor_yp.c']);
     eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_load_yp.c']);
@@ -119,18 +118,18 @@ if force_compile || any(filetime.raytracing_yp.source > filetime.raytracing_yp.m
     disp(['The raytracing_yp.',mexext,' mexfile has been compiled.'])
 end
 %
-if force_compile || any(filetime.erfcc.source > filetime.erfcc.mex),
+if ~any(isnan(fopts)) && (force_compile || any(filetime.erfcc.source > filetime.erfcc.mex)),
     eval(['mex -c ',fopts,' ',sourcepath.C3PO,'erfcc.f']);
     eval(['mex ',fopts,' ',sourcepath.C3PO,'erfcc_mex_jd.F erfcc.',objext]);
     disp(['The erfcc_mex_jd.',mexext,' mexfile has been compiled.'])
 end
 %
-if ~any(isnan(helmex)) && (force_compile || any(filetime.separatrice.source > filetime.separatrice.mex)),
+if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.separatrice.source > filetime.separatrice.mex)),
     eval(['mex ',fopts,' ',sourcepath.helmex,'separatrice.F ',helmex]);
     disp(['The separatrice.',mexext,' mexfile has been compiled.'])
 end
 %
-if ~any(isnan(helmex)) && (force_compile || any(filetime.helmex77.source > filetime.helmex77.mex)),
+if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.helmex77.source > filetime.helmex77.mex)),
     eval(['mex ',fopts,' ',sourcepath.helmex,'helmex77.F ',helmex]);
     disp(['The helmex77.',mexext,' mexfile has been compiled.'])
 end

@@ -9,12 +9,28 @@ waves = luke_input.waves;
 ohm = luke_input.ohm;
 transpfaste = luke_input.transpfaste;
 ripple = luke_input.ripple;
+XXf0_in = luke_input.XXf0_in;
+%
+if isfield(luke_input,'dkepath'),
+    dkepath = luke_input.dkepath;
+else
+    dkepath  ='';
+end
 %
 timeid = timeid_jd(clock);
 %
 remotehost = remote.host;
 remoteluke_root = remote.luke_root;
 remotecmd = remote.cmd;
+if isfield(remote,'mem'),% memory allocation if applicable
+    if isempty(transpfaste),% no transport
+        remotemem = [remote.mem{1},remote.mem{3},remote.mem{2}];
+    else% with transport
+        remotemem = [remote.mem{1},remote.mem{4},remote.mem{2}];
+    end
+else
+    remotemem = '';
+end
 remoteget_jobid = remote.get_jobid;
 %
 [res,logname] = unix('whoami');
@@ -32,7 +48,7 @@ else
 end
 %
 save_id = ['LUKE_RUN_',remotelogname,'_',timeid,'.mat'];
-save(save_id,'id_simul','wavestructs','waves','dkeparam','equil','dkedisplay','ohm','transpfaste','ripple');
+save(save_id,'id_simul','wavestructs','waves','dkeparam','dkepath','equil','dkedisplay','ohm','transpfaste','ripple','XXf0_in');
 %
 if ~isempty(remotehost),
     %
@@ -53,11 +69,11 @@ disp(['    --> Starting run with command ',remotecmd,' ...'])
 if ~isempty(remotehost),
     %
     [res,txt] = unix(['ssh ',remotelogname,'@',remotehost,...
-        ' ''',remotecmd,' -v LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,' ',remoteluke_root,'mrunluke_batch''']);
+        ' ''',remotecmd,remotemem,' -v LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,' ',remoteluke_root,'mrunluke_batch''']);
     %
 else
     %
-    [res,txt] = unix([remotecmd,' -v LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,',LUKE_datapath=',pwd,'/ ',remoteluke_root,'mrunluke_batch']);
+    [res,txt] = unix([remotecmd,remotemem,' -v LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,',LUKE_datapath=',pwd,'/ ',remoteluke_root,'mrunluke_batch']);
     %
 end
 %

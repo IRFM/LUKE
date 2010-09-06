@@ -333,6 +333,14 @@ dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial,
 %
 % PARAMETRES EQUILIBRE
 %
+if equi.psiRZ(1) == equi.psiRZ(2)
+   disp('non monotonic psiRZ');
+   psiRZ = interp1(gene.x*equi.rhomax,equi.psi,double(equi.rhoRZ),'pchip','extrap');
+   equi.psiRZ = double(psiRZ);
+else
+   psiRZ = double(equi.psiRZ); 
+end
+
 equil = make_equil_cronos(equil_id,equi,gene,prof,compo,impur);
 %
 % PARAMETRES OHMIC, transformation en flux poloidal puis en coordonnees radials de LUKE
@@ -344,7 +352,7 @@ equil = make_equil_cronos(equil_id,equi,gene,prof,compo,impur);
 %
 ohm.rho        = linspace(0,1,101);
 psipncronos    = abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1)));
-psipncronoshel = abs(equi.psiRZ-equi.psiRZ(1))/max(abs(equi.psiRZ-equi.psiRZ(1)));
+psipncronoshel = abs(psiRZ-psiRZ(1))/max(abs(psiRZ-psiRZ(1)));
 psitncronoshel = equi.rhoRZ/equi.rhomax;
 psipn_ohm       = rho2psi_jd(equil,ohm.rho);
 %---------------------------------------------------------
@@ -411,6 +419,22 @@ end
 launchs = launchs(mask);  
 nw = length(launchs);
 %
+if nw == 0
+   sortie.j  = zeros(size(gene.x));
+   sortie.el = zeros(size(gene.x));
+   memoire.data.output.j     = sortie.j;
+   memoire.data.output.el    = sortie.el;
+   memoire.data.output.paddrf  = 0;
+   memoire.data.output.prf  = 0;
+   memoire.data.output.ne    = prof.ne;
+   memoire.data.output.irf  = 0;
+   if length(memoire.t) == 1
+     memoire.t = gene.t;
+   else
+     memoire.t = [memoire.t gene.t];
+   end
+   return 
+end
 wavestructs = cell(1,length(launchs));
 %
 dkeparam.w_mask = [];% waves to be accounted for in radial grid optimization: EC only or LH if no EC present
@@ -462,9 +486,81 @@ end
 ik = 1;
 warning off
 disp(['LUKE is running ....'])
+distrib = [];
+if ~isempty(memoire)
+  if isfield(memoire,'data')
+    if isfield(memoire.data,'edistribution')  
+      if isfield(memoire.data.edistribution,'f0')
+        disp(['-------------using the last distribution function------------'])
+        distrib        = memoire.data.edistribution.f0;
+        dkeparam.rho_S = memoire.data.edistribution.r;
+      end
+    end
+  end
+end
 %
-[Znorm_RF,Zcurr_RF,ZP0_RF,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,[],[],dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
-%
+if strcmp(par.batch,'Yes') && isfield(dkepath,'remote') && ~isempty(dkepath.remote),% batch calculation of run_lukert
+    %
+    remote = dkepath.remote(1);
+    dkeparam.psin_S = [];
+    %
+    luke_input.id_simul = 'cronos';
+    luke_input.dkeparam = dkeparam;
+    luke_input.dkepath = dkepath;
+    luke_input.dkedisplay = dkedisplay;
+    luke_input.equil = equil;
+    luke_input.waves = [];
+    luke_input.wavestructs = wavestructs;
+    luke_input.ohm = ohm;
+    luke_input.transpfaste = transpfaste;
+    luke_input.ripple = ripple;
+    luke_input.XXf0_in = distrib;
+    %
+    [timeid,jobid] = runluke_remote_jd(luke_input,remote);
+    %
+    %w_opt = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes)',60,0:7*24*60);
+    w_opt = 240;disp('LUKE time out : 4 hours')
+    %
+    tic
+    %
+    output = '';
+    %
+    while isempty(output) && toc/60 < w_opt,
+        %
+        pause(60);
+        %
+        disp(['LUKE Still running , elapsed time (minutes) ',num2str(round(toc/60)),'/',num2str(w_opt)])
+        %
+        output = getluke_remote_jd(timeid,jobid,remote);
+        %
+    end
+    %
+    if isempty(output),
+        error(['Stop waiting , elapsed time (minutes) ',num2str(round(toc/60)),'/',num2str(w_opt)])
+    elseif isfield(output,'err'),
+        error('Remote LUKE run failed, aborted.')
+    else
+        %
+        Znorm_RF = output.Znorm;
+        Zcurr_RF = output.Zcurr;
+        ZP0_RF = output.ZP0;
+        dke_out = output.dke_out;
+        radialDKE = output.radialDKE;
+        equilDKE = output.equilDKE;
+        momentumDKE = output.momentumDKE;
+        gridDKE = output.gridDKE;
+        Zmomcoef = output.Zmomcoef;
+        Zbouncecoef = output.Zbouncecoef;
+        Zmripple = output.Zmripple;
+        mksa = output.mksa;
+        %
+    end
+    %
+else
+    %
+    [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,[],[],dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib,[]);
+    %
+end
 clear raytracing_yp alphaphimex_jd trapz_dke_yp dmumpsmex
 %
 signe_out = -signe.ip;
@@ -541,10 +637,10 @@ sortie.el = interp1(xrhoT,p_RF_c,gene.x,method)*1e6;% (W/m3)
 irfnew = zintsurf(sortie.j,gene.x,equi.spr,equi.rhomax);
 paddrfnew = zintvol(sortie.el,gene.x,equi.vpr,equi.rhomax);
 %
-if abs(paddrfnew - P_RF_c)./abs(P_RF_c) > 0.01,
+if abs(paddrfnew - P_RF_c)/abs(P_RF_c) > 0.01,
 	disp(['WARNING : volume integral on LUKE and CRONOS grids give different results. RF power renormalized by ',num2str(P_RF_c / paddrfnew * 1e6)])
 end
-if abs(irfnew - I_RF_c./abs(I_RF_c) > 0.01,
+if abs(irfnew - I_RF_c)/abs(I_RF_c) > 0.01,
 	disp(['WARNING : surface integral on LUKE and CRONOS grids give different results. RF current renormalized by ',num2str(I_RF_c / irfnew * 1e6)])
 end
 sortie.el = sortie.el * P_RF_c / paddrfnew * 1e6;
@@ -573,7 +669,7 @@ if any(p_RF_c < 0),
     %
     if isfield(memoire.data,'output')
         %
-        sortie.j   = memoire.data.output.j*prf/memoire.data.output.prf*memoire.data.output.ne/prof.ne;
+        sortie.j   = memoire.data.output.j*prf/memoire.data.output.prf.*memoire.data.output.ne./prof.ne;
         sortie.el  = memoire.data.output.el*prf/memoire.data.output.prf;
         %
     end
@@ -608,6 +704,7 @@ for iw = 1:nw,
 end
 %
 memoire.data.edistribution.f0 = dke_out.XXf0;
+memoire.data.edistribution.r  = radialDKE.xrho_S_dke;
 memoire.data.edistribution.pn = momentumDKE.pn;
 memoire.data.edistribution.mhu = momentumDKE.mhu;
 memoire.data.edistribution.psin = equilDKE.xpsin;
