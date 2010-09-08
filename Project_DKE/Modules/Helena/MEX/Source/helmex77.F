@@ -109,6 +109,9 @@ C--------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
       IMPLICIT integer (I-N)
 
+      integer   m,n,sizeIN,sizeOUT,mxGetM,mxGetN,mRext,nRext
+      integer   sizeR,NBFR,MBMAX,N_GEM,KKLDA,MAXNODE,NRMMAX,NPMMAX
+
 C-----------------------------------------------------------
 C Taille des tableaux de sortie. Cette liste de parametres
 C est presente dans de nombreuses subroutines, et doit etre
@@ -138,7 +141,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NPMAP,NITER 
-      mwSize  NP,NRMAP      
+      integer  NP,NRMAP      
 C-----------------------------------------------------------------------
       COMMON /COMMAP/CS,QS,DQS,CURJ,CHI,   
      >     GEM11,GEM12,GEM33,  
@@ -152,7 +155,7 @@ C-----------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE
-      INTEGER JS0,NCHI,NPSI
+      integer JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON /COMSPOT/RSPOT,ZSPOT,BRSPOT,BZSPOT
@@ -207,9 +210,7 @@ c pointeurs et tailles
       mwPointer GEM11_pr, GEM12_pr, GEM33_pr      
       mwPointer RSPOT_pr, ZSPOT_pr, BRSPOT_pr, BZSPOT_pr
 C
-      mwSize   m,n,sizeIN,sizeOUT,mxGetM,mxGetN,mRext,nRext
-      mwSize   sizeR,NBFR,MBMAX,N_GEM,KKLDA,MAXNODE,NRMMAX,NPMMAX
-      mwSize mat1,mat2,mat3,mat4,mat101
+      integer mat1,mat2,mat3,mat4,mat101
       parameter (mat1=1)
       parameter (mat2=2)
       parameter (mat3=3)
@@ -681,7 +682,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer NRMAP,NPMAP
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
@@ -723,7 +724,7 @@ C-----------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE
-      INTEGER JS0,NCHI,NPSI
+      integer JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON /COMSPOT/RSPOT,ZSPOT,BRSPOT,BZSPOT
@@ -735,7 +736,7 @@ C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
       common / COMPQ / CP0, CP1, CP2, CQ0, CQ1, NCPQ
       REAL*8    CP0(NPNC),CP1(NPNC),CP2(NPNC),CQ0(NPNC),CQ1(NPNC)
-      INTEGER NCPQ
+      integer NCPQ
 C-----------------------------------------------------------------------
       common / COMNAM / QAXIS,TBB,TBF
       REAL*8     QAXIS,TBB,TBF
@@ -758,7 +759,7 @@ C-----------------------------------------------------------------------
      I         NRDONE
       REAL*8   XR1DONE,SIG1DONE
       REAL*8   SG(NRMMAX),DSG(NRMMAX),DDSG(NRMMAX)
-      INTEGER  NRDONE
+      integer  NRDONE
 
       real*8 XX(4,MAXMNODE),YY(4,MAXMNODE),FR(2*MBMAX+2)
       real*8 QQ(4*MAXNODE),DIAG(4*MAXNODE)                                
@@ -1463,7 +1464,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER 
-      mwSize  NRMAP,NPMAP      
+      integer  NRMAP,NPMAP      
 C-----------------------------------------------------------------------
       COMMON /COMMAP/CS,QS,DQS,CURJ,CHI,   
      >     GEM11,GEM12,GEM33,  
@@ -1477,7 +1478,7 @@ C-----------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      INTEGER JS0,NCHI,NPSI
+      integer JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON/TOLERA/PSITOL,THTTOL,TOL                                   
@@ -1766,7 +1767,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer NRMAP,NPMAP
 C-----------------------------------------------------------------------
       COMMON / COMPIE/ PI                                               
       real*8 PI                                                           
@@ -2042,7 +2043,7 @@ C-----------------------------------------------------------------------
      I         NRDONE
       REAL*8   XR1DONE,SIG1DONE
       REAL*8   SG(NRMMAX),DSG(NRMMAX),DDSG(NRMMAX)
-      INTEGER  NRDONE
+      integer  NRDONE
                               
 C      write(*,*) ' INIGRID : ',NR,NP,XR1,SIG1
                                            
@@ -2390,7 +2391,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer NRMAP,NPMAP
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
@@ -2450,7 +2451,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP     
+      integer NRMAP,NPMAP     
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
@@ -2495,7 +2496,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer NRMAP,NPMAP
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
@@ -2552,7 +2553,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer NRMAP,NPMAP
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
@@ -2596,7 +2597,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer NRMAP,NPMAP
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
@@ -3317,7 +3318,7 @@ C-----------------------------------------------------------------------
      I         NRDONE
       REAL*8   XR1DONE,SIG1DONE
       REAL*8   SG(NRMMAX),DSG(NRMMAX),DDSG(NRMMAX)
-      INTEGER  NRDONE
+      integer  NRDONE
                                                                         
       PI = 2.D0 * DASIN(1.D0)                                                
       TOLTHT = 1.D-6                                                    
@@ -4090,7 +4091,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer NRMAP,NPMAP
 C-----------------------------------------------------------------------
       COMMON /NODES/ PSIKN,THTKN,RADPSI,DPSIKN,DDPSIKN                                   
       REAL*8    PSIKN(NRMMAX),THTKN(NPMMAX),RADPSI(NRMMAX) 
@@ -4149,7 +4150,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer NRMAP,NPMAP
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
@@ -4198,7 +4199,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer NRMAP,NPMAP
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
@@ -5500,8 +5501,16 @@ C
       IMPLICIT REAL*8 (A-H,O-Z)
       IMPLICIT integer (I-N)
       REAL*8 DATAR(*), DATAI(*)                                      
-      KTRAN=ISIGN(-1,INC)                                               
-      KS=IABS(INC)                                                      
+C      KTRAN=ISIGN(-1,INC)   
+C      KS=IABS(INC)   
+
+      IF (INC.LT.0) KTRAN=-1
+      IF (INC.GE.0) KTRAN=1
+
+      IF (INC.LT.0) KS=-INC 
+      IF (INC.GE.0) KS=INC
+
+                                                   
       IP0=KS                                                            
       IP3=IP0*N                                                         
       IREV=1                                                            
@@ -6183,7 +6192,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer NRMAP,NPMAP
 c------------------------------------------------------------------
       COMMON /COMMAP/CS,QS,DQS,CURJ,CHI,   
      >     GEM11,GEM12,GEM33,  
@@ -6197,7 +6206,7 @@ c------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      INTEGER JS0,NCHI,NPSI
+      integer JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON / COMSPL /                                                 
@@ -6214,7 +6223,7 @@ C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
       common / COMPQ / CP0, CP1, CP2, CQ0, CQ1, NCPQ
       REAL*8    CP0(NPNC),CP1(NPNC),CP2(NPNC),CQ0(NPNC),CQ1(NPNC)
-      INTEGER NCPQ
+      integer NCPQ
 C-----------------------------------------------------------------------
       common / COMNAM / QAXIS,TBB,TBF
       REAL*8     QAXIS,TBB,TBF
@@ -6377,7 +6386,7 @@ c------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      INTEGER JS0,NCHI,NPSI
+      integer JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON / COMSPL /                                                 
@@ -6394,7 +6403,7 @@ C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
       common / COMPQ / CP0, CP1, CP2, CQ0, CQ1, NCPQ
       REAL*8    CP0(NPNC),CP1(NPNC),CP2(NPNC),CQ0(NPNC),CQ1(NPNC)
-      INTEGER NCPQ
+      integer NCPQ
 C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
       common / COMNAM / QAXIS,TBB,TBF
@@ -6489,7 +6498,7 @@ c------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      INTEGER JS0,NCHI,NPSI
+      integer JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON / COMSPL /                                                 
@@ -6564,7 +6573,7 @@ c------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      INTEGER JS0,NCHI,NPSI
+      integer JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON / COMSPL /                                                 
@@ -6678,7 +6687,7 @@ c parametres MISHKA
 c-----------------------------------------------------------------------
       common / COMPQ / CP0, CP1, CP2, CQ0, CQ1, NCPQ
       REAL*8    CP0(NPNC),CP1(NPNC),CP2(NPNC),CQ0(NPNC),CQ1(NPNC)
-      INTEGER NCPQ
+      integer NCPQ
 C-----------------------------------------------------------------------
 
 
@@ -6767,7 +6776,7 @@ c parametres MISHKA
       PARAMETER (NPSIMAX=NRMMAX)                             
       PARAMETER (NPNC=NPSIMAX*NCHIMAX, NP4=4*NPSIMAX)                   
       REAL*8       ARRIN(*),DARR(*),FF(2*NCHIMAX+2),DF(2*NCHIMAX+2)
-      INTEGER    INDEX(2*NCHIMAX)
+      integer    INDEX(2*NCHIMAX)
 
       PI = 2.* ASIN(1.)
 
@@ -6840,7 +6849,7 @@ C-----------------------------------------------------------------------
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer NRMAP,NPMAP
 C-----------------------------------------------------------------------
       COMMON /GAUSINT/ XGAUSS,WGAUSS,H,HR,HS,HRS                        
       real*8 XGAUSS(4),WGAUSS(4)                                          
@@ -6851,10 +6860,10 @@ C-----------------------------------------------------------------------
       REAL*8    DPSIKN(NRMMAX),DDPSIKN(NRMMAX)
 C-----------------------------------------------------------------------
       COMMON /COMPRI/ NPR1,NPR2,NROUT,NDIAG
-      INTEGER NPR1,NPR2,NROUT,NDIAG
+      integer NPR1,NPR2,NROUT,NDIAG
 C-----------------------------------------------------------------------
       COMMON /COMPLO/ NPL1,TXTOUT
-      INTEGER       NPL1
+      integer       NPL1
       CHARACTER*100 TXTOUT(40)
 C-----------------------------------------------------------------------
       COMMON /COMMAP/ CS,QS,DQS,CURJ,CHI,   
@@ -6869,7 +6878,7 @@ C-----------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      INTEGER JS0,NCHI,NPSI
+      integer JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON /COMSPOT/RSPOT,ZSPOT,BRSPOT,BZSPOT
@@ -6897,7 +6906,7 @@ C-----------------------------------------------------------------------
      I         NRDONE
       REAL*8   XR1DONE,SIG1DONE
       REAL*8   SG(NRMMAX),DSG(NRMMAX),DDSG(NRMMAX)
-      INTEGER  NRDONE
+      integer  NRDONE
 C-----------------------------------------------------------------------
       COMMON/COMLOCAL/CCHI,SCHI,XCHI,YCHI,XOUT,YOUT,IJCHI
 
@@ -6905,7 +6914,7 @@ C-----------------------------------------------------------------------
       REAL*8 CCHI(4,2*MAXMNODE),SCHI(2*MAXMNODE)
       REAL*8 XCHI(2*MAXMNODE),YCHI(2*MAXMNODE)
       REAL*8 XOUT(2*MAXMNODE),YOUT(2*MAXMNODE)
-      INTEGER IJCHI(2*MAXMNODE)
+      integer IJCHI(2*MAXMNODE)
       LOGICAL CHIN
       REAL*8 XPLOT(2*NRMMAX),PPLOT(2*NRMMAX),PSIPLOT(2*NRMMAX)
       REAL*8 QPLOT(2*NRMMAX),CUPLOT(2*NRMMAX),DQPLOT(2*NRMMAX)
