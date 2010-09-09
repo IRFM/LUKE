@@ -16,7 +16,7 @@ c pointeurs mex
 
       mwPointer mxGetPr, mxCreateDoubleMatrix
 
-      mwSize mxgetN, mxgetM
+      integer mxgetN, mxgetM
 c 
 c Extrait du main de helios.f concernant le trace de la derniere surface
 c magnetique (il s'agit d'une implementation triviale des formules fournies)
@@ -27,7 +27,7 @@ c pointeurs et tailles
       integer ifail
       real*8 mode,geom(8),x(125*4),y(125*4)
 
-      mwSize mat1,mat8,mat500
+      integer mat1,mat8,mat500
       parameter (mat1=1)
       parameter (mat8=8)
       parameter (mat500=125*4)
@@ -43,9 +43,7 @@ C GESTION DES ENTREES
 C entree
       write(*,*) 'debut separatrice'
       geom_pr = mxGetPr(prhs(1))
-      call mxCopyPtrtoReal8(geom_pr,geom,mat8)
-
-
+      call mxCopyPtrToReal8(geom_pr,geom,mat8)
 
       rkappax1  = geom(1)
       ptdeltax1 = geom(2)
@@ -57,7 +55,7 @@ C entree
       psim2dg   = geom(8)
 C mode de calcul
       mode_pr = mxGetPr(prhs(2))
-      call mxCopyPtrtoReal8(mode_pr,mode,mat1)
+      call mxCopyPtrToReal8(mode_pr,mode,mat1)
 
 
 c Initializing geometrical parameters
@@ -427,7 +425,7 @@ C
       
       
             DOUBLE PRECISION FUNCTION D1MACH(I)
-      INTEGER I
+      integer I
 C
 C  DOUBLE-PRECISION MACHINE CONSTANTS
 C  D1MACH( 1) = B**(EMIN-1), THE SMALLEST POSITIVE MAGNITUDE.
@@ -436,12 +434,12 @@ C  D1MACH( 3) = B**(-T), THE SMALLEST RELATIVE SPACING.
 C  D1MACH( 4) = B**(1-T), THE LARGEST RELATIVE SPACING.
 C  D1MACH( 5) = LOG10(B)
 C
-      INTEGER SMALL(2)
-      INTEGER LARGE(2)
-      INTEGER RIGHT(2)
-      INTEGER DIVER(2)
-      INTEGER LOG10(2)
-      INTEGER SC, CRAY1(38), J
+      integer SMALL(2)
+      integer LARGE(2)
+      integer RIGHT(2)
+      integer DIVER(2)
+      integer LOG10(2)
+      integer SC, CRAY1(38), J
       COMMON /D9MACH/ CRAY1
       SAVE SMALL, LARGE, RIGHT, DIVER, LOG10, SC
       DOUBLE PRECISION DMACH(5)
@@ -631,7 +629,7 @@ C     ON FIRST CALL, IF NO DATA UNCOMMENTED, TEST MACHINE TYPES.
       END
       SUBROUTINE I1MCRY(A, A1, B, C, D)
 **** SPECIAL COMPUTATION FOR OLD CRAY MACHINES ****
-      INTEGER A, A1, B, C, D
+      integer A, A1, B, C, D
       A1 = 16777216*B + C
       A = 16777216*A1 + D
       END
