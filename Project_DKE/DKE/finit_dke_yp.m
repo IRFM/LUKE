@@ -92,11 +92,12 @@ for ir = 1:nr,
 		Xf0 = xne_norm(ir)*Xf0/normf0;
 		title_initguess = 'V. Fuchs et al., Phys. Fluids, 28 (1985) 3619';
     else
-        if size(XXf0_in,2) == nmhu,
+        if ~isstruct(XXf0_in),
             Xf0 = XXf0_in(:,:,ir);
             title_initguess = 'Initial distribution from input arguments';
         else
-            Xf0 = interpleg_yp(XXf0_in(:,:,ir),mhu);%interpolate using Legendre polynomials 
+            Xf0 = interpleg_yp(XXf0_in.XXf0_leg(:,:,ir),mhu);%interpolate mhu grid using Legendre polynomials
+            title_initguess = 'Initial distribution interpolated from input arguments';
         end
 	end
 	XXfinit(:,:,ir) = Xf0;
