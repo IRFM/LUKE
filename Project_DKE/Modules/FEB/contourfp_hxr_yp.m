@@ -31,7 +31,7 @@ mask_hxr = Zbremchord.mask_hxr;
 %
 ne_ref = mksa.ne_ref;
 betath_ref = mksa.betath_ref;
-Ec = mksa.Ec_ref;
+Ec = pn2Ec_yp(mksa,momentumDKE);%Calculation of kinetic energy of the fast electrons (in keV);
 %
 dmhu = momentumDKE.dmhu;
 mhu = momentumDKE.mhu;
