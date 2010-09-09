@@ -41,9 +41,15 @@ if dkeparam_in.opt_load*exist(['temp',filesep,'DKE_TEMP_',id_simul,'.mat']),
 else
    [radialDKE] = radialgrid_dke_jd(equil,dkeparam_out,display,psin_S,rho_S);%Radial grid for DKE
    [equilDKE] = equilibrium_jd(equil,radialDKE,display,'spline',dkeparam_out.mfactor);%Magnetic equilibrium for DKE
+   %
+   if isstruct(XXf0_in),
+       mksa = XXf0_in.mksa;%when plasma temperature evolves from one iteration to another, the normalization is kept constant such that normalized quantities may be compared
+   else
+       mksa = mksacoefbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE);%Main MKSA quantities     
+   end
+   %
    [momentumDKE] = momentumgrid_dke_jd(dkeparam_out,equilDKE,radialDKE);%Momentum space 2D grid for DKE
    [gridDKE] = matrix3Dgridbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE);%General grid structure for the DKE solver
-   [mksa] = mksacoefbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE,gridDKE);%MKSA quantities calculations
    [Zmomcoef] = momentumcoefbuilder_dke_yp(gridDKE,mksa);%Momentum space coefficients for FP calculations
    [Zbouncecoef] = bouncecoefbuilder_dke_yp(dkeparam_out,display,equilDKE,gridDKE);%bounce averaging coefficients
    [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
@@ -213,7 +219,7 @@ end
 %
 % Calculations of the moments iof the distribution function
 %
-[ZP0,XXf0_leg,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
+[ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
     fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
     ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
@@ -289,7 +295,7 @@ end
 %
 dke_out.XXfinit = XXfinit;
 dke_out.XXf0 = XXf0;
-dke_out.XXf0_leg = XXf0_leg;
+dke_out.Zf0_interp = Zf0_interp;
 dke_out.XXf0_g = XXf0_g;
 dke_out.normf0 = normf0;
 dke_out.curr0 = curr0;
