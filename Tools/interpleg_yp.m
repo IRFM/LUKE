@@ -18,7 +18,7 @@ function [XXf0,x_0] = interpleg_yp(XXf0_leg,mhu,momentumDKE)
 %
 if nargin < 2,error('Wrong number of input arguments in interpleg_yp.m.');end
 %
-if (mhu(1) ~= -1) | (mhu(end) ~= 1) | (abs(mhu) > 1),error('Inconsistent input in interpleg_yp.m: pitch-angle values must lie between -1 and 1.');end
+if abs(mhu) > 1,error('Inconsistent input in interpleg_yp.m: pitch-angle values must lie between -1 and 1.');end
 %
 if ~exist('momentumDKE'),x_0 = [];end
 %
