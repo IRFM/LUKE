@@ -9,7 +9,7 @@ waves = luke_input.waves;
 ohm = luke_input.ohm;
 transpfaste = luke_input.transpfaste;
 ripple = luke_input.ripple;
-XXf0_in = luke_input.XXf0_in;
+Zf0_interp = luke_input.Zf0_interp;
 %
 if isfield(luke_input,'dkepath'),
     dkepath = luke_input.dkepath;
@@ -48,7 +48,7 @@ else
 end
 %
 save_id = ['LUKE_RUN_',remotelogname,'_',timeid,'.mat'];
-save(save_id,'id_simul','wavestructs','waves','dkeparam','dkepath','equil','dkedisplay','ohm','transpfaste','ripple','XXf0_in');
+save(save_id,'id_simul','wavestructs','waves','dkeparam','dkepath','equil','dkedisplay','ohm','transpfaste','ripple','Zf0_interp');
 %
 if ~isempty(remotehost),
     %
