@@ -45,7 +45,7 @@ Ipdir_mfl_lcs = Zbremchord.Ipdir_mfl_lcs;
 %
 ne_ref = mksa.ne_ref;
 betath_ref = mksa.betath_ref;
-Ec = pn2Ec_yp(mksa,momentumDKE);%Calculation of kinetic energy of the fast electrons (in keV);
+Ec = momentumDKE.Ec_ref;
 %
 dmhu = momentumDKE.dmhu;
 mhu = momentumDKE.mhu;
