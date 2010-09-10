@@ -4,6 +4,8 @@ function [Zmomcoef] = momentumcoefbuilder_dke_yp(gridDKE,mksa)
 %
 %   by Y. Peysson (CEA-DRFC) (yves.peysson@cea.fr) and J. Decker (CEA-DRFC) (joan.decker@cea.fr)
 %
+[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Universal physics constants
+%
 z = mksa.betath_ref*gridDKE.pn;
 z2 = z.*z;
 z3 = z2.*z;
@@ -121,4 +123,6 @@ Zmomcoef.xv2 = xv2;
 Zmomcoef.Xpnpar = gridDKE.Xpn.*gridDKE.Xmhu;
 Zmomcoef.Xpnperp2 = gridDKE.Xpn2 - Zmomcoef.Xpnpar.*Zmomcoef.Xpnpar;
 Zmomcoef.Xvpar = (v'*ones(1,gridDKE.nmhu)).*(ones(length(v),1)*gridDKE.mhu);
+%
+Zmomcoef.Ec_ref = mc2*(sqrt(1 + momentumDKE.pn.*momentumDKE.pn*mksa.betath_ref^2) - 1);%Fast electron kinetic energy in keV
 
