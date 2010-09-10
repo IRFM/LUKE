@@ -285,8 +285,6 @@ end
 Eta_fe = equilDKE.xne(1)*Itot_fe./Ptot_2piRp_fe/(2*pi)/1e19;
 Eta_ve = equilDKE.xne(1)*Itot_ve./Ptot_2piRp_fe/(2*pi)/1e19;
 %
-
-%
 strcolor = ['b','g','r','c','m','y','k'];
 figure(1000),
 for it = 1:ntime_step,
