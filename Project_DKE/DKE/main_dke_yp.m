@@ -395,7 +395,7 @@ end
 savefields_radialDKE = {'xrho_S_dke','xpsin_f','xpsin_f_dke','xdpsin_f_dke','xpsin_S_dke','r_dke'};
 savefields_momentumDKE = {'pn','pnp','pn_S','dpn','mhu','mhu_S','dmhu'};
 savefields_gridDKE = {'X1mmhu2','xmhubounce2'};
-savefields_Zmomcoef = {'gamma','v'};
+savefields_Zmomcoef = {'gamma','v','Ec_ref'};
 savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda'};
 savefields_Zmripple = {'XXlossripple','xdeltaripple','xNq','Xnhuloss','xthetabanana','xthetaloss','xpndetrap','xpnth','xEseuil'};
 %
