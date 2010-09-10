@@ -50,14 +50,14 @@ else
 end
 %
 for ir = 1:nr,	
-	if dkeparam.initguess_f == 0 & isempty(XXf0_in) == 1,
+	if dkeparam.initguess_f == 0 && isempty(XXf0_in),
 		fM = exp(-pn.*pn./(1 + gamma)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));%Maxwellian distribution normalized to normalized density ne_norm (1st order gamma corrections)
 		XfM = fM'*ones(1,nmhu);
 		normfM = 2*pi*integral_dke_jd(dpn(:),pn(:).*pn(:).*integral_dke_jd(dmhu,XfM,2),1);
 		XfM = xne_norm(ir)*XfM/normfM;
 		Xf0 = XfM;
 		title_initguess = 'Relativistic Maxwellian';        
-	elseif dkeparam.initguess_f == 1 & isempty(XXf0_in) == 1,
+	elseif dkeparam.initguess_f == 1 && isempty(XXf0_in),
 %
 %   Initial guess for the distribution function from ref. V.Fuchs et al.,Phys. Fluids 28 (1985) 3619. 
 %   (Only for the old method for calculating the quasilinear diffusion coefficient of the LH operator)
@@ -92,14 +92,15 @@ for ir = 1:nr,
 		Xf0 = xne_norm(ir)*Xf0/normf0;
 		title_initguess = 'V. Fuchs et al., Phys. Fluids, 28 (1985) 3619';
     else
-        if ~isstruct(XXf0_in),
+        if size(XXf0_in,2) == nmhu,
             Xf0 = XXf0_in(:,:,ir);
             title_initguess = 'Initial distribution from input arguments';
         else
-            Xf0 = interpleg_yp(XXf0_in.XXf0_leg(:,:,ir),mhu);%interpolate mhu grid using Legendre polynomials
+            Xf0 = interpleg_yp(XXf0_in(:,:,ir),mhu);%interpolate using Legendre polynomials
             title_initguess = 'Initial distribution interpolated from input arguments';
-        end
-	end
+        end        
+    end
+    %
 	XXfinit(:,:,ir) = Xf0;
 end
 %

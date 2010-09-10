@@ -1,4 +1,4 @@
-function [varargout] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam_in,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+function [varargout] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam_in,display,ohm,waves,transpfaste,ripple,Zf0_interp,XXsinksource_in);
 %
 %  Main function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the RF wave absorption problem in presence of an Ohmic electric field (electron bootstrap current consistent with non-Maxwellian distribution)
@@ -42,10 +42,16 @@ else
    [radialDKE] = radialgrid_dke_jd(equil,dkeparam_out,display,psin_S,rho_S);%Radial grid for DKE
    [equilDKE] = equilibrium_jd(equil,radialDKE,display,'spline',dkeparam_out.mfactor);%Magnetic equilibrium for DKE
    %
-   if isstruct(XXf0_in),
-       mksa = XXf0_in.mksa;%when plasma temperature evolves from one iteration to another, the normalization is kept constant such that normalized quantities may be compared
+   if isstruct(Zf0_interp),
+       mksa = Zf0_interp.mksa;%when plasma temperature evolves from one iteration to another, the normalization is kept constant such that normalized quantities may be compared
+       XXf0_in = Zf0_interp.XXf0_leg;
    else
-       mksa = mksacoefbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE);%Main MKSA quantities     
+       mksa = mksacoefbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE);%Main MKSA quantities
+       if ~isempty(Zf0_interp), 
+           XXf0_in = Zf0_interp;
+       else
+           XXf0_in = [];
+       end
    end
    %
    [momentumDKE] = momentumgrid_dke_jd(dkeparam_out,equilDKE,radialDKE);%Momentum space 2D grid for DKE
