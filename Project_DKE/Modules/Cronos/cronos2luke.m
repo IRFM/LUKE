@@ -514,7 +514,7 @@ if strcmp(par.batch,'Yes') && isfield(dkepath,'remote') && ~isempty(dkepath.remo
     luke_input.ohm = ohm;
     luke_input.transpfaste = transpfaste;
     luke_input.ripple = ripple;
-    luke_input.XXf0_in = distrib;
+    luke_input.Zf0_interp = distrib;
     %
     [timeid,jobid] = runluke_remote_jd(luke_input,remote);
     %
@@ -574,7 +574,10 @@ P_RF_c = sum(p_RF_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
 %
 if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
     %
-    [Znorm,Zcurr,ZP0] = run_lukert('cronos',[],[],[],radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
+    distrib_ohm.XXf0_leg = [];
+    distrib_ohm.mksa = distrib.mksa;
+    %
+    [Znorm,Zcurr,ZP0] = run_lukert('cronos',[],[],[],radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib_ohm,[]);
     %
     j_OHM_c = signe_out*Zcurr.x_0_vcfsav*mksa.j_ref;
     I_OHM_c = sum(signe_out*Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
@@ -703,13 +706,20 @@ for iw = 1:nw,
     end
 end
 %
-memoire.data.edistribution.f0 = dke_out.XXf0;
-memoire.data.edistribution.r  = radialDKE.xrho_S_dke;
-memoire.data.edistribution.pn = momentumDKE.pn;
-memoire.data.edistribution.mhu = momentumDKE.mhu;
-memoire.data.edistribution.psin = equilDKE.xpsin;
-memoire.data.edistribution.betath_ref = mksa.betath_ref;
-memoire.data.edistribution.ne_ref = mksa.ne_ref;
+memoire.data.edistribution.f0 = dke_out.Zf0_interp;%For time evolution
+%
+% For diagnostic post-processing (HXR,...)
+%
+%memoire.data.edistribution.dkeparam  = dkeparam;%For HXR calculations
+%memoire.data.edistribution.dkedisplay = momentumDKE.dkedisplay;%For HXR calculations
+%memoire.data.edistribution.equil = equil;%For HXR calculations
+%memoire.data.edistribution.radialDKE = radialDKE;%For HXR calculations
+%memoire.data.edistribution.Zcurr = Zcurr;%For HXR calculations
+%memoire.data.edistribution.hxr = hxr;%For HXR calculations
+%memoire.data.edistribution.hxrparam = hxrparam;%For HXR calculations
+%memoire.data.edistribution.mksa = mksa;%For HXR calculations
+%memoire.data.edistribution.momentumDKE = momentumDKE;%For HXR calculations
+%memoire.data.edistribution.dke_out = dke_out;%For HXR calculations
 %
 if par.save == 1,
   try
