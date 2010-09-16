@@ -55,22 +55,29 @@ dkepath.saturne = saturne;
 dkepath.hostname.cephee = 'cephee';
 %
 cephee.luke_root = [pwd,'/'];
-cephee.local_root = '/home/sccp/gsem/decker/';
+cephee.local_root = '/home/sccp/gsem/decker/Packages/cephee/';
 cephee.computer = 'GLNXA64';%machine type and supported OS
 cephee.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 cephee.maxcompthreads = 2;%For MatLab multithreading
 %
 cephee.mex75 = [cephee.luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB75/'];
-%cephee.compiler_opt.copts = 'CC=''gcc'' CLIBS=''-Wl,-rpath-link,/applications/matlab_2007b/bin/glnxa64 -L/applications/matlab_2007b/bin/glnxa64 -lmx -lmex -lmat -lm''';
-cephee.compiler_opt.copts = '-f /home/sccp/gsem/decker/Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh';
+cephee.mex710 = [cephee.luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB710/'];
+%
+cephee.compiler_opt.copts.mex75 = '-f /home/sccp/gsem/decker/Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh';
 cephee.compiler_opt.fopts.mex75 = ['-f /home/sccp/gsem/decker/Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh FC=''',cephee.local_root,'bin/cephee/g95'' FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132'''];
 cephee.compiler_opt.helmex.mex75 = ['-L',cephee.local_root,'lib/cephee/g95 -lf95 -lgcc -L',cephee.local_root,'Packages/cephee/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95'];% Optional argument for helmex compilation
 %
-cephee.MUMPS.mex75 = [cephee.local_root,'Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
+cephee.compiler_opt.copts.mex710 = '';
+cephee.compiler_opt.fopts.mex710 = 'FC=''ifort''';
+cephee.compiler_opt.helmex.mex710 = ['-L',cephee.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+%
+cephee.MUMPS.mex75 = [cephee.local_root,'old/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
+cephee.MUMPS.mex710 = [cephee.local_root,'MUMPS_4.9.2/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 %
 cephee.remote(1).host = '';% empty for local host
 cephee.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
 cephee.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
+cephee.remote(1).mem = {',mem=','mb','6000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
 cephee.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
 cephee.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 cephee.remote(1).JD211098 = 'JD211098';
@@ -174,6 +181,7 @@ laptopjoan.MUMPS.mex78 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_
 laptopjoan.remote(1).host = 'cephee15.intra.cea.fr';
 laptopjoan.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
 laptopjoan.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
+laptopjoan.remote(1).mem = {',mem=','mb','6000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
 laptopjoan.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
 laptopjoan.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 laptopjoan.remote(1).jd211098 = 'JD211098';
@@ -360,6 +368,7 @@ pleione.MUMPS.mex77 = [pleione.local_root,'src/MUMPS_4.7.3/MATLAB_7.7'];%Where M
 pleione.remote(1).host = 'cephee15.intra.cea.fr';
 pleione.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
 pleione.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
+pleione.remote(1).mem = {',mem=','mb','6000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
 pleione.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
 pleione.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 pleione.remote(1).JD211098 = 'JD211098';
