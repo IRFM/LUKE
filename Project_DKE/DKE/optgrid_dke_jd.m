@@ -37,15 +37,18 @@ drho_dep = 1/nr_dep;
 %
 for iw = w_mask;
     %
-    for iray = 1:length(waves{iw}.rays),
-        %
-        ray = radialdampingprofile_jd(waves{iw}.rays{iray},nr_dep,display_mode);
-        %
-        if isfield(ray,'sP_2piRp')  && isfield(ray,'srho'),
-            dP = dP + ray.dPnormdrho*ray.sP_2piRp(1)*drho_dep;
+    if isfield(waves{iw},'rays'),
+        for iray = 1:length(waves{iw}.rays),
+            %
+            ray = radialdampingprofile_jd(waves{iw}.rays{iray},nr_dep,display_mode);
+            %
+            if isfield(ray,'sP_2piRp')  && isfield(ray,'srho'),
+                dP = dP + ray.dPnormdrho*ray.sP_2piRp(1)*drho_dep;
+            end
+            %
         end
-        %
     end
+    %
 end
 %
 Ptot = sum(dP);

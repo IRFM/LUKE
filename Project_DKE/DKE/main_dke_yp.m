@@ -67,7 +67,7 @@ else
 %
    if strcmp(waveparam.model,'RT'),% ray tracing simulation
       [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_jd(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waveparam);%RF waves flux coefficients
-   elseif strcmp(waveparam.model,'FW_BIL')%full wave model by R. Bilato
+   elseif strcmp(waveparam.model,'FW')%full wave model by R. Bilato
       [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_fw_jd(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waves);%RF waves flux coefficients
    else
       error('Wave model not implemented')

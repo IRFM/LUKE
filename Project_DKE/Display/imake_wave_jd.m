@@ -118,7 +118,7 @@ if i_opt == 0,% use data from external database
     %
 elseif i_opt == 1,% use data from an existing file
     %
-    w_opt = input_dke_yp('Code used to generate data : 1 (TORAY), 2 (ART), 3 (AMR)',1,1:3,'',[1,1]);
+    w_opt = input_dke_yp('Code used to generate data : 1 (TORAY), 2 (ART), 3 (AMR), 4 (EVE)',1,1:4,'',[1,1]);
     %
     launch = [];
     %
@@ -481,6 +481,12 @@ elseif w_opt == 3, % AMR calculations
     wave = imake_wave_AMR_jd(basestr,equil,launch,workdir,opt_gui);
     %
     n_rf_list = 1:3;
+    %
+elseif w_opt == 4, % EVE calculations
+    %
+    wave = imake_wave_EVE_jd(basestr,equil,workdir,opt_gui);
+    %
+    n_rf_list = 0;
     %
 end
 %

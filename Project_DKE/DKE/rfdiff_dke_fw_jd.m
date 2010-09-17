@@ -2,7 +2,17 @@ function [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_fw_jd
 %
 % full wave diffusion tensor calculation
 %
-method = 'linear';
+method = 'spline';
+%
+xrho = equilDKE.xrho;
+xrho_S = radialDKE.xrho_S_dke;
+%
+% grids for interpolation
+%
+xrho_I = [0,xrho,1];
+xrhoP_I = [0,equilDKE.xrhoP,1];
+xrhoT_I = [0,equilDKE.xrhoT,1];
+xrhoV_I = [0,equilDKE.xrhoV,1];
 %
 XXmhup = gridDKE.XXmhup;
 XXmhu = gridDKE.XXmhu;
@@ -36,6 +46,9 @@ XXvpar.imj = XXmhu.*gridDKE.XXpnm./XXgammam;
 XXvpar.ijp = XXmhup.*gridDKE.XXpn./XXgamma;
 XXvpar.ijm = XXmhum.*gridDKE.XXpn./XXgamma;
 %
+Xvpar = XXvpar.ij(:,:,1);
+dvpar = mean([mean(diff(Xvpar)),mean(diff(Xvpar.'))]);
+%
 SXX = size(XXmhu);
 %
 npn = SXX(1);
@@ -66,64 +79,105 @@ XXDtt.ijm = zeros(SXX);
 % each contribution on the wave.Xvpar grid is accounted for.
 %
 for iw = 1:length(waves);
+    %
     wave = waves{iw};
     %
-    [nv,nr_fw] = size(wave.Xvpar);
+    % normalization 
     %
-    for ir = 1:nr_fw,
+    % The parallel quasilinear coefficient D// is considered here, with
+    % D// = D_LD + vperp^2 D_MX +  vperp^4 D_TT.
+    %
+    % We assume the following normalization. 
+    %
+    % - xvpar and vperp are normalized to c
+    % - xDql_LD, xDql_MX and xDql_TT are  normalized to (mc)^2
+    %
+    Xvpar = wave.Xvpar;
+    %Xvpar_S = wave.Xvpar_S;
+    XDql_LD = wave.XDql_LD;
+    XDql_MX = wave.XDql_MX;
+    XDql_TT = wave.XDql_TT;
+    %rho = wave.rho;
+    rho_S = wave.rho_S;
+    rhotype = wave.rhotype;
+    %
+    [nv,nr_fw] = size(Xvpar);
+    %
+    % In LUKE, the velocities are normalized to vT = betath_ref*c
+    % and the diffusion coefficients to (nhu_ref pT^2)
+    %
+    Xvpar = Xvpar/mksa.betath_ref;
+    XDql_LD = XDql_LD/(mksa.nhu_ref*mksa.betath_ref^2);
+    XDql_MX = XDql_MX/(mksa.nhu_ref*mksa.betath_ref^2)*mksa.betath_ref^2;
+    XDql_TT = XDql_TT/(mksa.nhu_ref*mksa.betath_ref^2)*mksa.betath_ref^4;
+    %
+%     Xdvpar = [Xvpar(2,:) - Xvpar(1,:);...
+%               (Xvpar(3:end,:) - Xvpar(1:end-2,:))/2;...
+%               Xvpar(end,:) - Xvpar(end-1,:)];
+    %
+    if rhotype == 'g',
+        %wrho = rho;
+        wrho_S = rho_S;
+    elseif rhotype == 'p',
+        %wrho = interp1(xrhoP_I,xrho_I,rho,method);
+        wrho_S = interp1(xrhoP_I,xrho_I,rho_S,method);
+    elseif rhotype == 't',
+        %wrho = interp1(xrhoT_I,xrho_I,rho,method);
+        wrho_S = interp1(xrhoT_I,xrho_I,rho_S,method);
+    elseif rhotype == 'v',
+        %wrho = interp1(xrhoV_I,xrho_I,rho,method);
+        wrho_S = interp1(xrhoV_I,xrho_I,rho_S,method);
+    else
+        error('rho type not recognized')
+    end
+    %
+    wdrho = diff(wrho_S);
+    %
+    % There are several possible methods : 
+    % - smooth XDql (in both (or either) v// and (or) rho)
+    % - take every contribution from XDql and map it on (rho,p,mhu) space
+    % - a combination of the two (smooth in v// for each rho contribution...)
+    %
+    for ir_fw = 1:nr_fw,
+        % 
+        disp(['Contruction of DQL from FW data : ir_rw = ',num2str(ir_fw),'/',num2str(nr_fw)]);
         %
-        xvpar = wave.Xvpar(:,ir);
-        xDql_LD = wave.XDql_LD(:,ir);
-        xDql_MX = wave.XDql_MX(:,ir);
-        xDql_TT = wave.XDql_TT(:,ir);
+        xmask = max([zeros(1,nr);(min([repmat(wrho_S(ir_fw + 1),[1,nr]);xrho_S(2:end)]) - max([repmat(wrho_S(ir_fw),[1,nr]);xrho_S(1:end-1)]))])/wdrho(ir_fw);
+        XXmask = repmat(reshape(xmask,[1,1,nr]),[npn,nmhu,1]);
         %
-        % normalization
+        yvpar = Xvpar(:,ir_fw);
+        yDql_LD = smooth_jd(yvpar,XDql_LD(:,ir_fw),dvpar);
+        yDql_MX = smooth_jd(yvpar,XDql_MX(:,ir_fw),dvpar);
+        yDql_TT = smooth_jd(yvpar,XDql_TT(:,ir_fw),dvpar);
         %
-        xvpar = xvpar/mksa.betath_ref;
-        xDql_LD = xDql_LD/mksa.nhu_ref;
-        xDql_MX = xDql_MX/mksa.nhu_ref*mksa.betath_ref^2;
-        xDql_TT = xDql_TT/mksa.nhu_ref*mksa.betath_ref^4;
+        XXDld.ipj = XXDld.ipj + XXmask.*interp1(yvpar,yDql_LD,XXvpar.ipj,'linear',0);
+        XXDld.ij = XXDld.ipj + XXmask.*interp1(yvpar,yDql_LD,XXvpar.ij,'linear',0);
+        XXDld.imj = XXDld.ipj + XXmask.*interp1(yvpar,yDql_LD,XXvpar.imj,'linear',0);
+        XXDld.ijp = XXDld.ipj + XXmask.*interp1(yvpar,yDql_LD,XXvpar.ijp,'linear',0);
+        XXDld.ijm = XXDld.ipj + XXmask.*interp1(yvpar,yDql_LD,XXvpar.ijm,'linear',0);
         %
-        % smoothing of the diffusion coefficient
-        % based on the vpar grid for mhu = 1
+        XXDmx.ipj = XXDld.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ipj,'linear',0);
+        XXDmx.ij = XXDld.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ij,'linear',0);
+        XXDmx.imj = XXDld.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.imj,'linear',0);
+        XXDmx.ijp = XXDld.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ijp,'linear',0);
+        XXDmx.ijm = XXDld.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ijm,'linear',0);
         %
-        % smoothing scale: average DKE vpar grid step
+        XXDtt.ipj = XXDld.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ipj,'linear',0);
+        XXDtt.ij = XXDld.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ij,'linear',0);
+        XXDtt.imj = XXDld.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.imj,'linear',0);
+        XXDtt.ijp = XXDld.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ijp,'linear',0);
+        XXDtt.ijm = XXDld.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ijm,'linear',0);
         %
-        dvpar = mean(diff(XXvpar.ij(:,nmhu,ir)));
-        %
-        xDql_LD_s = smooth_jd(xvpar,xDql_LD,dvpar);
-        xDql_MX_s = smooth_jd(xvpar,xDql_MX,dvpar);
-        xDql_TT_s = smooth_jd(xvpar,xDql_TT,dvpar);
-        %
-        % interpolation
-        %
-        XXDld.ipj(:,:,ir) = XXDld.ipj(:,:,ir) + interp1(xvpar,xDql_LD_s,XXvpar.ipj(:,:,ir),method,0);
-        XXDmx.ipj(:,:,ir) = XXDmx.ipj(:,:,ir) + interp1(xvpar,xDql_MX_s,XXvpar.ipj(:,:,ir),method,0);
-        XXDtt.ipj(:,:,ir) = XXDtt.ipj(:,:,ir) + interp1(xvpar,xDql_TT_s,XXvpar.ipj(:,:,ir),method,0);
-        %
-        XXDld.ij(:,:,ir) = XXDld.ij(:,:,ir) + interp1(xvpar,xDql_LD_s,XXvpar.ij(:,:,ir),method,0);
-        XXDmx.ij(:,:,ir) = XXDmx.ij(:,:,ir) + interp1(xvpar,xDql_MX_s,XXvpar.ij(:,:,ir),method,0);
-        XXDtt.ij(:,:,ir) = XXDtt.ij(:,:,ir) + interp1(xvpar,xDql_TT_s,XXvpar.ij(:,:,ir),method,0);
-        %
-        XXDld.imj(:,:,ir) = XXDld.imj(:,:,ir) + interp1(xvpar,xDql_LD_s,XXvpar.imj(:,:,ir),method,0);
-        XXDmx.imj(:,:,ir) = XXDmx.imj(:,:,ir) + interp1(xvpar,xDql_MX_s,XXvpar.imj(:,:,ir),method,0);
-        XXDtt.imj(:,:,ir) = XXDtt.imj(:,:,ir) + interp1(xvpar,xDql_TT_s,XXvpar.imj(:,:,ir),method,0);
-        %
-        XXDld.ijp(:,:,ir) = XXDld.ijp(:,:,ir) + interp1(xvpar,xDql_LD_s,XXvpar.ijp(:,:,ir),method,0);
-        XXDmx.ijp(:,:,ir) = XXDmx.ijp(:,:,ir) + interp1(xvpar,xDql_MX_s,XXvpar.ijp(:,:,ir),method,0);
-        XXDtt.ijp(:,:,ir) = XXDtt.ijp(:,:,ir) + interp1(xvpar,xDql_TT_s,XXvpar.ijp(:,:,ir),method,0);
-        %
-        XXDld.ijm(:,:,ir) = XXDld.ijm(:,:,ir) + interp1(xvpar,xDql_LD_s,XXvpar.ijm(:,:,ir),method,0);
-        XXDmx.ijm(:,:,ir) = XXDmx.ijm(:,:,ir) + interp1(xvpar,xDql_MX_s,XXvpar.ijm(:,:,ir),method,0);
-        XXDtt.ijm(:,:,ir) = XXDtt.ijm(:,:,ir) + interp1(xvpar,xDql_TT_s,XXvpar.ijm(:,:,ir),method,0);
     end
 end
 %
-XXDrf.ipj = XXmhu.*XXmhu.*(XXDld.ipj + XXv2p.*XX1mmhu2.*XXDmx.ipj/2 + XXv2p.*XXv2p.*XX1mmhu2.*XX1mmhu2.*XXDtt.ipj/4)./XX1mmhu2;
-XXDrf.ij = XXmhu.*XXmhu.*(XXDld.ij + XXv2.*XX1mmhu2.*XXDmx.ij/2 + XXv2.*XXv2.*XX1mmhu2.*XX1mmhu2.*XXDtt.ij/4)./XX1mmhu2;
-XXDrf.imj = XXmhu.*XXmhu.*(XXDld.imj + XXv2m.*XX1mmhu2.*XXDmx.imj/2 + XXv2m.*XXv2m.*XX1mmhu2.*XX1mmhu2.*XXDtt.imj/4)./XX1mmhu2;
-XXDrf.ijp = XXmhup.*XXmhup.*(XXDld.ijp + XXv2.*XX1mmhu2p.*XXDmx.ijp/2 + XXv2.*XXv2.*XX1mmhu2p.*XX1mmhu2p.*XXDtt.ijp/4)./XX1mmhu2p;
-XXDrf.ijm = XXmhum.*XXmhum.*(XXDld.ijm + XXv2.*XX1mmhu2m.*XXDmx.ijm/2 + XXv2.*XXv2.*XX1mmhu2m.*XX1mmhu2m.*XXDtt.ijm/4)./XX1mmhu2m;
+keyboard
+%
+XXDrf.ipj = XXmhu.*XXmhu.*(XXDld.ipj + XXv2p.*XX1mmhu2.*XXDmx.ipj + XXv2p.*XXv2p.*XX1mmhu2.*XX1mmhu2.*XXDtt.ipj)./XX1mmhu2;
+XXDrf.ij = XXmhu.*XXmhu.*(XXDld.ij + XXv2.*XX1mmhu2.*XXDmx.ij + XXv2.*XXv2.*XX1mmhu2.*XX1mmhu2.*XXDtt.ij)./XX1mmhu2;
+XXDrf.imj = XXmhu.*XXmhu.*(XXDld.imj + XXv2m.*XX1mmhu2.*XXDmx.imj + XXv2m.*XXv2m.*XX1mmhu2.*XX1mmhu2.*XXDtt.imj)./XX1mmhu2;
+XXDrf.ijp = XXmhup.*XXmhup.*(XXDld.ijp + XXv2.*XX1mmhu2p.*XXDmx.ijp + XXv2.*XXv2.*XX1mmhu2p.*XX1mmhu2p.*XXDtt.ijp)./XX1mmhu2p;
+XXDrf.ijm = XXmhum.*XXmhum.*(XXDld.ijm + XXv2.*XX1mmhu2m.*XXDmx.ijm + XXv2.*XXv2.*XX1mmhu2m.*XX1mmhu2m.*XXDtt.ijm)./XX1mmhu2m;
 %
 XXDrf_mhuflip.ipj = flipdim(XXDrf.ipj,2);
 XXDrf_mhuflip.ij = flipdim(XXDrf.ij,2);

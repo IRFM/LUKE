@@ -97,13 +97,14 @@ for iw = 1:length(waves),%
         error('DKE and WAVE equilibria are different')
     end
     %
-    if isfield(wave,'model') & wave.model(1:2) == 'FW',%full wave simulation
+    if isfield(wave,'model') && strcmp(wave.model,'FW'),%full wave simulation
         waveparam = wave;
         xyprop_dke_rf = zeros(nr,0);
         xyP0_2piRp_in_rf = zeros(nr,0);
         xys_rf = zeros(nr,0);
         yb_rf = zeros(1,0);
-        %    
+        yP0_2piRp = zeros(1,0);
+        %
         return
     end        
     %

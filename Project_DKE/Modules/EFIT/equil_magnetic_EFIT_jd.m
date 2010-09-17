@@ -123,4 +123,5 @@ equil_magnetic.ptBy = ptBy;
 equil_magnetic.ptBPHI = ptBPHI;
 equil_magnetic.Rp = Rp;
 equil_magnetic.Zp = Zp;
+equil_magnetic.equi_src = filename;
 %

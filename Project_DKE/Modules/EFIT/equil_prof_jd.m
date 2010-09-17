@@ -64,4 +64,5 @@ equil_prof.pTe = pTe;
 equil_prof.pne = pne;
 equil_prof.pzTi = pzTi;
 equil_prof.pzni = pzni;
+equil_prof.prof_src = filename;
 %

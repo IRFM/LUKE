@@ -98,7 +98,11 @@ clear wavestruct rayinit wave
 nw = length(waves);
 nb = zeros(1,nw);
 for iw = 1:nw,
-    nb(iw) = length(waves{iw}.rays);
+    if isfield(waves{iw},'rays'),
+        nb(iw) = length(waves{iw}.rays);
+    else
+        nb(iw) = NaN;
+    end
 end
 %
 % Determination of the radial grid optmized according to linear damping

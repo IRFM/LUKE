@@ -224,8 +224,9 @@ if e_opt ~= -2,
         n_opt = input_dke_yp(['Option for equilibrium profiles file : \n',...
             '0 (existing data file)\n',...
             '1 (ART profiles)\n',...
-            '2 (TORAY profiles)\n'],...
-            0,{0,1,2},'Invalid selection');
+            '2 (TORAY profiles)\n',...
+            '3 (EVE profiles)\n'],...
+            0,{0,1,2,3},'Invalid selection');
         %
         [data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
         %
@@ -275,6 +276,15 @@ if e_opt ~= -2,
             equil_prof_data.zaxis = NaN;
             %
             equil_prof_data.shot = str2num(data_file(4:8));
+            %
+        elseif n_opt == 2,% profiles from TORAY output
+            %
+            disp('-----> profiles data files not treated yet for TORAY output');
+            return             
+            %
+        elseif n_opt == 3,% EVE profiles
+            %
+            type = 1.3;
             %
         end
         %

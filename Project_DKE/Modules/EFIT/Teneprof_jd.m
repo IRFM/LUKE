@@ -30,6 +30,18 @@ elseif type == 1 | type == 1.1 ,%.mat
     eval(['load -mat ',filename,' prho pTe pne pTi Zeff']);
 elseif type == 1.2 ,%.mat
     eval(['load -mat ',filename,' pspsin pTe pne pTi Zeff']);    
+elseif type == 1.3 ,%.mat, EVE profiles
+    %
+    load(filename,'eve','-mat');
+    %
+    pspsinT = eve.sg.';
+    pTe = eve.Ts(:,1).';
+    pne = eve.ns(:,1).';
+    pzTi = eve.Ts(:,2:end).';
+    pzni = eve.ns(:,2:end).';
+    zZi = eve.Zs(2:end).';
+    zmi = eve.As(2:end).';
+    %
 elseif type == 2,%ascii - 203040
     [prho,pTi,pTe,pni,pne] = textread(filename,'%n%n%n%n%n');
 elseif type == 3,%ascii formatted (CMOD)
@@ -189,7 +201,7 @@ elseif type == 6,%ascii formatted (FTU)
     pTi = pTe/2.0;%As done in RANT3D/AORSA  
 end
 %
-if type < 4 & type >= 0,
+if type < 4 && type >= 0 && type ~= 1.3,
     %
     zZi = [1,1,1,6];
     zmi = [1,2,3,12];
@@ -199,7 +211,7 @@ end
 %
 nz = length(zZi);
 %
-if type == 0 | type == 2,
+if type == 0 || type == 2,
     %
     pTe = pTe/1e3;
     pTi = pTi/1e3;
@@ -279,7 +291,7 @@ if type == 1 || type == 1.1 || type == 1.2 || type>= 3 && type ~=5 && type ~=6,
     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
     pzni = [fi.'*pnH;pnZ];
     pzTi = ones(nz,1)*pTi;
-elseif type == 0 | type == 2,
+elseif type == 0 || type == 2,
     pnH = pne;
     pzni = [fi.'*pnH];
     pzTi = ones(nz,1)*pTi;
