@@ -38,7 +38,7 @@ dke_mode = dkeparam.dke_mode;
 %
 XXfinit = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid)
 %
-if exist('waveparam'),
+if dkeparam.initguess_f == 1 && exist('waveparam'),
     if isreal(waveparam.bdNpar_rf),%General RF power spectrum
          dkeparam.initguess_f = 0;
     else,%dNpar is made imaginary to identify square power spectrum type (for the Lower Hybrid wave comparison with theoretical models only)
