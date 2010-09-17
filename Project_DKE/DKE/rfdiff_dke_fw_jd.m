@@ -46,8 +46,7 @@ XXvpar.imj = XXmhu.*gridDKE.XXpnm./XXgammam;
 XXvpar.ijp = XXmhup.*gridDKE.XXpn./XXgamma;
 XXvpar.ijm = XXmhum.*gridDKE.XXpn./XXgamma;
 %
-Xvpar = XXvpar.ij(:,:,1);
-dvpar = mean([mean(diff(Xvpar)),mean(diff(Xvpar.'))]);
+dvpar = mean([mean(diff(XXvpar.ij(:,:,1))),mean(diff(XXvpar.ij(:,:,1).'))]);
 %
 SXX = size(XXmhu);
 %
@@ -156,22 +155,20 @@ for iw = 1:length(waves);
         XXDld.ijp = XXDld.ipj + XXmask.*interp1(yvpar,yDql_LD,XXvpar.ijp,'linear',0);
         XXDld.ijm = XXDld.ipj + XXmask.*interp1(yvpar,yDql_LD,XXvpar.ijm,'linear',0);
         %
-        XXDmx.ipj = XXDld.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ipj,'linear',0);
-        XXDmx.ij = XXDld.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ij,'linear',0);
-        XXDmx.imj = XXDld.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.imj,'linear',0);
-        XXDmx.ijp = XXDld.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ijp,'linear',0);
-        XXDmx.ijm = XXDld.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ijm,'linear',0);
+        XXDmx.ipj = XXDmx.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ipj,'linear',0);
+        XXDmx.ij = XXDmx.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ij,'linear',0);
+        XXDmx.imj = XXDmx.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.imj,'linear',0);
+        XXDmx.ijp = XXDmx.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ijp,'linear',0);
+        XXDmx.ijm = XXDmx.ipj + XXmask.*interp1(yvpar,yDql_MX,XXvpar.ijm,'linear',0);
         %
-        XXDtt.ipj = XXDld.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ipj,'linear',0);
-        XXDtt.ij = XXDld.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ij,'linear',0);
-        XXDtt.imj = XXDld.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.imj,'linear',0);
-        XXDtt.ijp = XXDld.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ijp,'linear',0);
-        XXDtt.ijm = XXDld.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ijm,'linear',0);
+        XXDtt.ipj = XXDtt.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ipj,'linear',0);
+        XXDtt.ij = XXDtt.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ij,'linear',0);
+        XXDtt.imj = XXDtt.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.imj,'linear',0);
+        XXDtt.ijp = XXDtt.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ijp,'linear',0);
+        XXDtt.ijm = XXDtt.ipj + XXmask.*interp1(yvpar,yDql_TT,XXvpar.ijm,'linear',0);
         %
     end
 end
-%
-keyboard
 %
 XXDrf.ipj = XXmhu.*XXmhu.*(XXDld.ipj + XXv2p.*XX1mmhu2.*XXDmx.ipj + XXv2p.*XXv2p.*XX1mmhu2.*XX1mmhu2.*XXDtt.ipj)./XX1mmhu2;
 XXDrf.ij = XXmhu.*XXmhu.*(XXDld.ij + XXv2.*XX1mmhu2.*XXDmx.ij + XXv2.*XXv2.*XX1mmhu2.*XX1mmhu2.*XXDtt.ij)./XX1mmhu2;
