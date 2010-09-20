@@ -92,6 +92,13 @@ xrhoP = equilDKE.xrhoP;
 xrhoT = equilDKE.xrhoT; 
 xrhoV = equilDKE.xrhoV; 
 %
+% grids for interpolation
+%
+xrhoG_I = [0,xrhoG,1];
+xrhoP_I = [0,xrhoP,1];
+xrhoT_I = [0,xrhoT,1];
+xrhoV_I = [0,xrhoV,1];
+%
 xrhoG_S = radialDKE.xrho_S_dke;
 %
 if opt.rho == 'g',
@@ -119,7 +126,7 @@ gamma = Zmomcoef.gamma;
 %
 nr = length(xrhoG);
 %
-if isfield(dke_out,'waveparam')
+if isfield(dke_out,'waveparam') && strcmp(dke_out.waveparam.model,'RT'),
     nfrags = length(dke_out.waveparam.biy_rf);
 else
     nfrags = NaN;
@@ -252,11 +259,22 @@ if nr > 1,
     wp0_rf_2piRp = zeros(1,nw);
     %
     for iw = 1:nw,
-        nb(iw) = length(waves{iw}.rays);
-        for iray = 1:nb(iw),
-            %
-            wp0_rf_2piRp(iw) = wp0_rf_2piRp(iw) + waves{iw}.rays{iray}.P0_2piRp*1e-6;
-            %
+        if strcmp(waves{iw}.model,'RT'),
+            nb(iw) = length(waves{iw}.rays);
+            for iray = 1:nb(iw),
+                %
+                wp0_rf_2piRp(iw) = wp0_rf_2piRp(iw) + waves{iw}.rays{iray}.P0_2piRp*1e-6;
+                %
+            end
+        elseif strcmp(waves{iw}.model,'FW'),
+            nb(iw) = 0;
+            if isfield(waves{iw},'P0_2piRp'),
+                wp0_rf_2piRp(iw) = waves{iw}.P0_2piRp*1e-6;
+            else
+                wp0_rf_2piRp(iw) = NaN;
+            end
+        else
+            error('Wave type not recognized.')
         end
     end
     %
@@ -279,30 +297,72 @@ if nr > 1,
             %
         end
         %
+        nr_dep_S = length(rhoG_dep_S);
+        %
         drho_dep = diff(rho_dep_S);
         drhoG_dep = diff(rhoG_dep_S);
         rho_dep = (rho_dep_S(1:end-1) + rho_dep_S(2:end))/2;
         rhoG_dep = (rhoG_dep_S(1:end-1) + rhoG_dep_S(2:end))/2;
         %
-        wxdPdrho_rf_2piRp_lin = zeros(nw,length(rho_dep_S)-1);
-        wxdPdrhoG_rf_2piRp_lin = zeros(nw,length(rho_dep_S)-1);
+        wxdPdrho_rf_2piRp_lin = zeros(nw,nr_dep_S-1);
+        wxdPdrhoG_rf_2piRp_lin = zeros(nw,nr_dep_S-1);
         %
-        wxp_rf_2piRp_lin = zeros(nw,length(rho_dep_S)-1);
+        wxp_rf_2piRp_lin = zeros(nw,nr_dep_S-1);
         %
         wi_peak_lin = zeros(1,nw);
         %
         for iw = 1:nw;
-            %
-            for iray = 1:nb(iw),
+            if strcmp(waves{iw}.model,'RT'),
                 %
-                ray = radialdampingprofile_jd(waves{iw}.rays{iray},rhoG_dep_S,0);
-                %
-                if isfield(ray,'sP_2piRp')  && isfield(ray,'srho'),
-                    wxdPdrhoG_rf_2piRp_lin(iw,:) = wxdPdrhoG_rf_2piRp_lin(iw,:) + ray.dPnormdrho*ray.sP_2piRp(1)*1e-6;
-                else
-                    wxdPdrhoG_rf_2piRp_lin(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
+                for iray = 1:nb(iw),
+                    %
+                    ray = radialdampingprofile_jd(waves{iw}.rays{iray},rhoG_dep_S,0);
+                    %
+                    if isfield(ray,'sP_2piRp')  && isfield(ray,'srho'),
+                        wxdPdrhoG_rf_2piRp_lin(iw,:) = wxdPdrhoG_rf_2piRp_lin(iw,:) + ray.dPnormdrho*ray.sP_2piRp(1)*1e-6;
+                    else
+                        wxdPdrhoG_rf_2piRp_lin(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
+                    end
+                    %
                 end
                 %
+            elseif strcmp(waves{iw}.model,'FW'),
+                %
+                if waves{iw}.rhotype == 'g',
+                    wrho_S = waves{iw}.rho_S;
+                elseif waves{iw}.rhotype == 'p',
+                    wrho_S = interp1(xrhoP_I,xrhoG_I,waves{iw}.rho_S,'spline');
+                elseif waves{iw}.rhotype == 't',
+                    wrho_S = interp1(xrhoT_I,xrhoG_I,waves{iw}.rho_S,'spline');
+                elseif waves{iw}.rhotype == 'v',
+                    wrho_S = interp1(xrhoV_I,xrhoG_I,waves{iw}.rho_S,'spline');
+                else
+                    error('rho type not recognized')
+                end
+                %
+                nr_fw = length(waves{iw}.rho);
+                xwmask = zeros(nr_dep_S - 1,nr_fw);%matrix of individual contributions from each EVE FS
+                %
+                for ir_fw = 1:nr_fw,
+                    xwmask(:,ir_fw) = max([zeros(1,nr);(min([repmat(wrho_S(ir_fw + 1),[1,nr]);rhoG_dep_S(2:end)]) - max([repmat(wrho_S(ir_fw),[1,nr]);rhoG_dep_S(1:end-1)]))]).'./drhoG_dep.';
+                end
+                %
+                wpe_eve = 1e-6*(waves{iw}.pe_eve(1:end - 1) + waves{iw}.pe_eve(2:end))/2;% EVE linear power density (in MW/m3?)
+                %
+                if nr_dep >= 1,
+                    %
+                    equilDKE_dep = equilibrium_jd(dke_out.equil,struct('xpsin_S_dke',rho2psi_jd(dke_out.equil,rhoG_dep_S),'xpsin_f',rho2psi_jd(dke_out.equil,rhoG_dep)));
+                    %
+                else
+                    %
+                    equilDKE_dep = equilDKE;
+                    %
+                end
+                %
+                wxdPdrhoG_rf_2piRp_lin(iw,:) = (xwmask*wpe_eve).'.*equilDKE_dep.xdV_2piRp_dke./drhoG_dep;
+                %
+            else
+                error('Wave type not recognized.')
             end
             %
             wxdPdrho_rf_2piRp_lin(iw,:) = wxdPdrhoG_rf_2piRp_lin(iw,:).*drhoG_dep./drho_dep;
@@ -417,25 +477,32 @@ if nr > 1,
             Npar_peak = NaN(1,nb(iw));
             theta_peak = NaN(1,nb(iw));
             %
-            for iray = 1:nb(iw),
+            if strcmp(waves{iw}.model,'RT'),
                 %
-                ibb = iray + sum(nb(1:iw-1));
-                ray = waves{iw}.rays{iray};
+                for iray = 1:nb(iw),
+                    %
+                    ibb = iray + sum(nb(1:iw-1));
+                    ray = waves{iw}.rays{iray};
+                    %
+                    vS = zS{ibb};
+                    vP_0_2piRp_mod = zP_0_2piRp_mod{ibb};
+                    %
+                    [dPds_peak,iv_peak] = max(-diff(vP_0_2piRp_mod)./diff(vS));
+                    s_peak = vS(iv_peak);
+                    %
+                    Npar_peak(iray) = interp1(ray.ss,ray.sNpar,s_peak);
+                    theta_peak(iray) = interp1(ray.ss,ray.stheta,s_peak);
+                    %
+                end
                 %
-                vS = zS{ibb};
-                vP_0_2piRp_mod = zP_0_2piRp_mod{ibb};
+                wNpar(iw) = mean(Npar_peak);
+                wtheta(iw) = mean(theta_peak);
                 %
-                [dPds_peak,iv_peak] = max(-diff(vP_0_2piRp_mod)./diff(vS));
-                s_peak = vS(iv_peak);
+            elseif strcmp(waves{iw}.model,'FW'),
                 %
-                Npar_peak(iray) = interp1(ray.ss,ray.sNpar,s_peak);
-                theta_peak(iray) = interp1(ray.ss,ray.stheta,s_peak);
-                %
+            else
+                error('Wave type not recognized.')
             end
-            %
-            wNpar(iw) = mean(Npar_peak);
-            wtheta(iw) = mean(theta_peak);
-            %
         end
         %
         wp_rf_2piRp = sum(wxp_rf_2piRp,2);
