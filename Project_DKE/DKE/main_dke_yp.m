@@ -97,7 +97,7 @@ if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf),%initialization 
 else
     nit_rf = 1;
     redfac = 1;
-    xyP0_2piRp_mod = '';
+    xyP0_2piRp_mod = ones(gridindex_rf.nr,gridindex_rf.ny);
 end  
 %
 residue_rf = [];
@@ -306,6 +306,7 @@ dke_out.XXf0_g = XXf0_g;
 dke_out.normf0 = normf0;
 dke_out.curr0 = curr0;
 dke_out.residu_f = residu_f;
+dke_out.equil = equil;
 dke_out.waves = waves;
 dke_out.ZXXS = ZXXS;
 dke_out.ZXXD_c = ZXXD_c;
