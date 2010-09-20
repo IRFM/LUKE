@@ -6,6 +6,7 @@ method = 'spline';
 %
 xrho = equilDKE.xrho;
 xrho_S = radialDKE.xrho_S_dke;
+xdrho = diff(radialDKE.xrho_S_dke);
 %
 % grids for interpolation
 %
@@ -130,8 +131,6 @@ for iw = 1:length(waves);
         error('rho type not recognized')
     end
     %
-    wdrho = diff(wrho_S);
-    %
     % There are several possible methods : 
     % - smooth XDql (in both (or either) v// and (or) rho)
     % - take every contribution from XDql and map it on (rho,p,mhu) space
@@ -141,7 +140,7 @@ for iw = 1:length(waves);
         % 
         disp(['Contruction of DQL from FW data : ir_rw = ',num2str(ir_fw),'/',num2str(nr_fw)]);
         %
-        xmask = max([zeros(1,nr);(min([repmat(wrho_S(ir_fw + 1),[1,nr]);xrho_S(2:end)]) - max([repmat(wrho_S(ir_fw),[1,nr]);xrho_S(1:end-1)]))])/wdrho(ir_fw);
+        xmask = max([zeros(1,nr);(min([repmat(wrho_S(ir_fw + 1),[1,nr]);xrho_S(2:end)]) - max([repmat(wrho_S(ir_fw),[1,nr]);xrho_S(1:end-1)]))])./xdrho;
         XXmask = repmat(reshape(xmask,[1,1,nr]),[npn,nmhu,1]);
         %
         yvpar = Xvpar(:,ir_fw);
@@ -222,11 +221,14 @@ ZXXD_rf.pm_ij = - sqrt(XX1mmhu2).*(XX1mmhu2 - XXyn).*XXDrf.ij./XXmhu;
 ZXXD_rf.mp_ij = - sqrt(XX1mmhu2).*(XX1mmhu2 - XXyn).*XXDrf.ij./XXmhu;
 %
 ZXXD_rf.parpar_ij = XX1mmhu2.*(1 - XXyn).^2.*XXDrf.ij./XXmhu./XXmhu; 
+ZXXD_rf.ij = XXDrf.ij; 
 %
 ZXYD_rf.pp_ipj = ZXXD_rf.pp_ipj(:);
 ZXYD_rf.pp_imj = ZXXD_rf.pp_imj(:);
 ZXYD_rf.pm_ipj = ZXXD_rf.pm_ipj(:);
 ZXYD_rf.pm_imj = ZXXD_rf.pm_imj(:);
+ZXYD_rf.pr_ipj = ZXXD_rf.pr_ipj(:);
+ZXYD_rf.pr_imj = ZXXD_rf.pr_imj(:);
 ZXYF_rf.p_ipj = ZXXF_rf.p_ipj(:);
 ZXYF_rf.p_imj = ZXXF_rf.p_imj(:);
 %
@@ -234,6 +236,8 @@ ZXYD_rf.mm_ijp = ZXXD_rf.mm_ijp(:);
 ZXYD_rf.mm_ijm = ZXXD_rf.mm_ijm(:);
 ZXYD_rf.mp_ijp = ZXXD_rf.mp_ijp(:);
 ZXYD_rf.mp_ijm = ZXXD_rf.mp_ijm(:);
+ZXYD_rf.mr_ijp = ZXXD_rf.mr_ijp(:);
+ZXYD_rf.mr_ijm = ZXXD_rf.mr_ijm(:);
 ZXYF_rf.m_ijp = ZXXF_rf.m_ijp(:);
 ZXYF_rf.m_ijm = ZXXF_rf.m_ijm(:);
 %
@@ -252,6 +256,7 @@ ZXYD_rf.pm_ij = ZXXD_rf.pm_ij(:);
 ZXYD_rf.mp_ij = ZXXD_rf.mp_ij(:);
 %
 ZXYD_rf.parpar_ij = ZXXD_rf.parpar_ij(:);
+ZXYD_rf.ij = ZXXD_rf.ij(:);
 %
 ZXYD_rf_tp = NaN;
 ZXYF_rf_tp = NaN;
@@ -268,7 +273,7 @@ gridindex_rf.npn = npn;
 gridindex_rf.nmhu = nmhu;
 gridindex_rf.nr = nr;
 gridindex_rf.nr_dke = nr;
-gridindex_rf.nb = 1;
+gridindex_rf.ny = 1;
 gridindex_rf.nn_rf = 1;
 
 
