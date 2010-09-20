@@ -97,19 +97,6 @@ for iw = 1:length(waves),%
         error('DKE and WAVE equilibria are different')
     end
     %
-    if isfield(wave,'model') && strcmp(wave.model,'FW'),%full wave simulation
-        waveparam = wave;
-        xyprop_dke_rf = zeros(nr,0);
-        xyP0_2piRp_in_rf = zeros(nr,0);
-        xys_rf = zeros(nr,0);
-        yb_rf = zeros(1,0);
-        yP0_2piRp = zeros(1,0);
-        %
-        return
-    end        
-    %
-    omega_rf = wave.omega_rf;% The wave frequency (in rad/s) [1,1]
-    %
     if isfield(wave,'n_rf_list'),
         n_rf_list = wave.n_rf_list;
     elseif isfield(dkeparam,'n_rf_list'),
@@ -120,6 +107,20 @@ for iw = 1:length(waves),%
         disp('Warning : no n_rf_list data found, enforced to 0:3')
         n_rf_list = 0:3;
     end
+    %
+    if isfield(wave,'model') && strcmp(wave.model,'FW'),%full wave simulation
+        waveparam = wave;
+        waveparam.n_rf_list = n_rf_list;
+        xyprop_dke_rf = zeros(nr,0);
+        xyP0_2piRp_in_rf = zeros(nr,0);
+        xys_rf = zeros(nr,0);
+        yb_rf = zeros(1,0);
+        yP0_2piRp = zeros(1,0);
+        %
+        return
+    end        
+    %
+    omega_rf = wave.omega_rf;% The wave frequency (in rad/s) [1,1]
 	%
 	if isfield(wave,'dsmin'),
     	dsmin = wave.dsmin;%minimum interval for ray fragments
