@@ -60,18 +60,18 @@ cephee.computer = 'GLNXA64';%machine type and supported OS
 cephee.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 cephee.maxcompthreads = 2;%For MatLab multithreading
 %
-cephee.mex75 = [cephee.luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB75/'];
+cephee.mex705 = [cephee.luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB75/'];
 cephee.mex710 = [cephee.luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB710/'];
 %
-cephee.compiler_opt.copts.mex75 = '-f /home/sccp/gsem/decker/Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh';
-cephee.compiler_opt.fopts.mex75 = ['-f /home/sccp/gsem/decker/Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh FC=''',cephee.local_root,'bin/cephee/g95'' FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132'''];
-cephee.compiler_opt.helmex.mex75 = ['-L',cephee.local_root,'lib/cephee/g95 -lf95 -lgcc -L',cephee.local_root,'Packages/cephee/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95'];% Optional argument for helmex compilation
+cephee.compiler_opt.copts.mex705 = '-f /home/sccp/gsem/decker/Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh';
+cephee.compiler_opt.fopts.mex705 = ['-f /home/sccp/gsem/decker/Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh FC=''',cephee.local_root,'bin/cephee/g95'' FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132'''];
+cephee.compiler_opt.helmex.mex705 = ['-L',cephee.local_root,'lib/cephee/g95 -lf95 -lgcc -L',cephee.local_root,'Packages/cephee/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95'];% Optional argument for helmex compilation
 %
 cephee.compiler_opt.copts.mex710 = '';
 cephee.compiler_opt.fopts.mex710 = 'FC=''ifort''';
 cephee.compiler_opt.helmex.mex710 = ['-L',cephee.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
-cephee.MUMPS.mex75 = [cephee.local_root,'old/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
+cephee.MUMPS.mex705 = [cephee.local_root,'old/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
 cephee.MUMPS.mex710 = [cephee.local_root,'MUMPS_4.9.2/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 %
 cephee.remote(1).host = '';% empty for local host
@@ -358,12 +358,12 @@ pleione.computer = 'GLNXA64';%machine type and supported OS
 pleione.temppathroot = '/home/sccp/gsem/decker/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 pleione.maxcompthreads = 'automatic';%For MatLab multithreading
 %
-pleione.mex77 = [pleione.luke_root,'Project_DKE/MEX/Bin/pleione/MATLAB77/'];
+pleione.mex707 = [pleione.luke_root,'Project_DKE/MEX/Bin/pleione/MATLAB77/'];
 pleione.compiler_opt.copts = '';
-pleione.compiler_opt.fopts.mex77 = ['FC=''',pleione.local_root,'bin/g95'' '];% FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''
-pleione.compiler_opt.helmex.mex77 = ['-largeArrayDims -L',pleione.local_root,'lib -lf95 -lgcc -llapack -lblas'];%  -ltmglib Optional argument for helmex compilation
+pleione.compiler_opt.fopts.mex707 = ['FC=''',pleione.local_root,'bin/g95'' '];% FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''
+pleione.compiler_opt.helmex.mex707 = ['-largeArrayDims -L',pleione.local_root,'lib -lf95 -lgcc -llapack -lblas'];%  -ltmglib Optional argument for helmex compilation
 %
-pleione.MUMPS.mex77 = [pleione.local_root,'src/MUMPS_4.7.3/MATLAB_7.7'];%Where MUMPS matrix solver is stored (MEX function)
+pleione.MUMPS.mex707 = [pleione.local_root,'src/MUMPS_4.7.3/MATLAB_7.7'];%Where MUMPS matrix solver is stored (MEX function)
 %
 pleione.remote(1).host = 'cephee15.intra.cea.fr';
 pleione.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
