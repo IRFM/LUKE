@@ -24,7 +24,7 @@ if nargin < 4,
     nd = 1;
 end
 %
-if length(wave.rays) > 1,
+if length(wave.rays) ~= 1,
     if C3POdisplay.ray,disp('WARNING : This function only applies to the single ray representation.');end
     return
 end
