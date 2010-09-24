@@ -522,9 +522,8 @@ equil = conc_struct_jd(equil_magnetic,equil_prof);
 %
 equil.signs = signs;
 equil.id = id_equil;
-equil.info.gen = 'Built with imake_equil_jd';
-equil.info.shotnum = shotnum;
-equil.info.shotime = shotime;
+equil.shotnum = shotnum;
+equil.shotime = shotime;
 %
 if e_opt == -1,
     equil.info.eqdsk = [eqdsk_path,eqdsk_file];

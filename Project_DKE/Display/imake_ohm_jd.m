@@ -33,15 +33,15 @@ else
     %
 end
 %
+if any(~isfield(equil,{'shotnum','shotime'})),
+    disp('WARNING : Equilibrium is obsolete, using fix_equil_jd to fix shotnum and shotime.')
+    equil = fix_equil_jd(equil,1);
+end
+%
+shotnum = equil.shotnum;
+shotime = equil.shotime;
+%
 if i_opt == 0,% data loaded from external database
-    %
-    istru = find(equil.id == '_');
-    if length(istru) >= 2 && strcmp(equil.id(1:istru(1)-1),basestr),
-        shotnum = equil.id(istru(1)+1:istru(2)-1);
-    else           
-        disp('-----> Shot number information missing');
-        return
-    end
     %
     if isfield(external,'shot'),
         %
@@ -72,14 +72,6 @@ if i_opt == 0,% data loaded from external database
 elseif i_opt == 1,
     %
     if strcmp(basestr,'ITER'),
-        %
-        if isfield(equil.info,'shotnum') && isfield(equil.info,'shotime');
-            shotnum = equil.info.shotnum;
-            shotime = equil.info.shotime;
-        else
-            disp('-----> Shot information missing');
-            return
-        end
         %
         [data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],workdir);
         %
