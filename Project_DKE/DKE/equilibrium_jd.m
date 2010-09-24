@@ -348,13 +348,10 @@ if Rp < Inf,
                 end
                 %
                 tB = interp1([thetah(end) - 2*pi,thetah(~mask),2*pi],[tpB(end,ir);tpB(~mask,ir);tpB(1,ir)],thetah,'linear').';
-                if any(tB.^2 < tpBPHI(:,ir).^2),
-                    error('Extrema removal failed in linearization process');
-                end
                 %
-                tBP = sqrt(tpBx(:,ir).^2 + tpBy(:,ir).^2);
-                tpBx(:,ir) = tpBx(:,ir).*sqrt(tB.^2 - tpBPHI(:,ir).^2)./tBP;
-                tpBy(:,ir) = tpBy(:,ir).*sqrt(tB.^2 - tpBPHI(:,ir).^2)./tBP;
+                tpBx(:,ir) = tpBx(:,ir).*tB./tpB(:,ir);
+                tpBy(:,ir) = tpBy(:,ir).*tB./tpB(:,ir);
+                tpBPHI(:,ir) = tpBPHI(:,ir).*tB./tpB(:,ir);
             end
             %
         end

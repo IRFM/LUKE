@@ -38,6 +38,8 @@ if np == 1
     psin = linspace(0,1,np);
 end
 %
+psin_lcfs = 0.999;%0.998;%
+%
 nx=  length(x);
 ny = length(y);
 %
@@ -119,7 +121,7 @@ sxytheta = atan(sxyy./sxyx) + pi*(sxyx < 0) + 2*pi*(sxyx > 0 & sxyy < 0);
 %
 % last closed flux-surface
 %
-[xc,yc] = contlimit_jd(sx,sy,sxypsin',[-1,0.999]);
+[xc,yc] = contlimit_jd(sx,sy,sxypsin',[-1,psin_lcfs]);
 %
 % selects the plasma among various closed systems   
 %
