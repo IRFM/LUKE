@@ -29,8 +29,11 @@ global nfig;
 %
 % set temp path
 %
-dkepath.temppath = fullfile(dkepath.temppathroot,timeid_jd(clock));
-mkdir(dkepath.temppath);%Create calculation directory
+mkdirmessage = 'Directory already exists.';
+while strcmp(mkdirmessage,'Directory already exists.'),
+    dkepath.temppath = fullfile(dkepath.temppathroot,timeid_jd(clock));
+    [res,mkdirmessage] = mkdir(dkepath.temppath);%Create calculation directory
+end
 %
 [dkeparam_out] = paramconsistency_dke_yp(dkeparam_in,equil,psin_S,rho_S);%Check consistency between input parameters 
 multithreading_luke(dkepath);
