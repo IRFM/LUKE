@@ -454,8 +454,13 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui)
     %
 end
 %
-function s = rminfo(s,fexcept)
-    s = rmfield(s,fexcept);
+function s = rminfo(s,fexcept)   
+    for ifield = 1:length(fexcept),
+        if isfield(s,fexcept{ifield}),
+            s = rmfield(s,fexcept{ifield});
+        end
+    end    
+    %s = rmfield(s,fexcept);
     fnames = fieldnames(s);
     for iname = 1:length(fnames);
         if isstruct(s.(fnames{iname})),
@@ -463,10 +468,3 @@ function s = rminfo(s,fexcept)
         end
     end
 end
-
-    
-    
-
-
-
-
