@@ -99,6 +99,11 @@ function varargout = dcluke(dkecluster,entree1,varargin)
     % cmd.kill  = which('dcluke_kill.sh');
     %
     cmd = dkecluster.cmd;
+    if isfield(dkecluster,'mem') && ~isempty(dkecluster.mem),% memory allocation if applicable
+        remotemem = [dkecluster.mem{1},dkecluster.mem{3},dkecluster.mem{2}];
+    else
+        remotemem = '';
+    end
     remoteget_jobid = dkecluster.get_jobid;
     remoteset_jobid = dkecluster.set_jobid;
     %
@@ -178,7 +183,7 @@ function varargout = dcluke(dkecluster,entree1,varargin)
         save(ba(current).inputdata,'data');
         % lancement du job
         script = which('dcluke.exe');
-        txt =   sprintf('%s %s "%s" %s %s %s',run,workdir,cmd,script,ba(current).inputdata,ba(current).batchfile);
+        txt =   sprintf('%s %s "%s%s" %s %s %s',run,workdir,cmd,remotemem,script,ba(current).inputdata,ba(current).batchfile);
         [s,t] = unix(txt);
         if s~= 0
                 error(sprintf('dcluke : error launching job %d in batch :\n %s',entree1,t));				
