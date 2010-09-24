@@ -5,7 +5,7 @@ function [lukeversion,matlabversion] = LUKEversion_jd;
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
-lukeversion = 'LUKE 1.8.4';
+lukeversion = 'LUKE 1.8.5';
 ver = version;
 [iver] = strfind(ver,'.');
 if iver(2)-iver(1) == 2,
