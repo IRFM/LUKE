@@ -106,7 +106,7 @@ switch struct
             case 'tol',expert = 1;values = [0;Inf];info = 'tolerance on dispersion relation';
             case 'kmax',expert = 1;values = [0;Inf];info = 'maximum number of recorded steps';
             case 'ncyclharm',expert = 1;values = 0:50;info = 'number of cyclotron harmonics in kinetic dielectric tensor (only for tensortype > 1)';
-            case 'reflection',expert = 0;values = {true,false};info = '(1) reflection enforced on LCFS';
+            case 'reflection',expert = 0;values = -10:1;info = 'negative n: n reflections enforced on vessel; (1) reflection enforced on LCFS';
             case 'rel_opt',expert = 0;values = {true,false};info = '(0) non relativistic, or (1) relativistic absorption calculation';
             case 'nperp',expert = 1;values = 00:100:5000;info = 'number of pperp points in absorption calculation';
             case 'pperpmax',expert = 1;values = 1:20;info = 'maximum value of pperp in absorption calculation';

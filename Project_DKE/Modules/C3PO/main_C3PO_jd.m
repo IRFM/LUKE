@@ -107,6 +107,7 @@ function wave = main_C3PO_jd(dkepath,id_wave,equil,rayinit,waveparam,fitparam,ra
     %
     wave.cut_fac = waveparam.cut_fac;
     wave.kextra = rayparam.kextra;
+    wave.rays = cell(1,0);
     %
     if ~isempty(C3POparam) && C3POparam.clustermode.main_C3PO_jd.mode,
         arg_range = cell(1,Nrays);
@@ -114,33 +115,30 @@ function wave = main_C3PO_jd(dkepath,id_wave,equil,rayinit,waveparam,fitparam,ra
             arg_range{iray} = iray;
         end
         [dkecluster] = clustermode_luke(C3POparam.clustermode,'main_C3PO_jd',C3POdisplay,dkepath.remote);
-        [flag,rays] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,dkecluster);
+        [flag,rayss] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay},1,arg_range,dkecluster);
 		%
-		iray_wave = 1;
-		for iray = 1:Nrays,
-			if isempty(rays{iray}),
-                disp(['kpsin has a non nul imaginary part for ray # ',int2str(iray),' !']);  
-                info_dke_yp(2,['WARNING: Ray #',int2str(iray),' is not put in the wave structure.']);
-            else
-                wave.rays{iray_wave} = rays{iray};
-                iray_wave = iray_wave + 1;
-                info_dke_yp(2,['Ray #',int2str(iray),' is processed']);	
-            end
-		end
     else
-    	iray_wave = 1;
+    	rayss = cell(1,Nrays);
         for iray = 1:Nrays,    
-            [ray] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay);
-            if isempty(ray),
-                disp(['kpsin has a non nul imaginary part for ray # ',int2str(iray),' !']);
-                info_dke_yp(2,['WARNING: Ray #',int2str(iray),' is not put in the wave structure.']);
-            else
-                wave.rays{iray_wave} = ray;
-                iray_wave = iray_wave + 1;
-                info_dke_yp(2,['Ray #',int2str(iray),' is processed']);
-            end
+            [rayss{iray}] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay);
         end
     end
+    %
+    iray_wave = 1;
+    for iray = 1:Nrays,
+        %
+        rays = rayss{iray};
+        Niray = length(rays);%ray can be duplicated if multiple reflections
+        %
+        if Niray == 1 && isempty(rays{1}.ss),
+            disp(['kpsin has a non nul imaginary part for ray # ',int2str(iray),' !']);  
+            info_dke_yp(2,['WARNING: Ray #',int2str(iray),' is not put in the wave structure.']);
+        else
+            wave.rays(iray_wave:iray_wave + Niray - 1) = rays;
+            iray_wave = iray_wave + Niray;
+            info_dke_yp(2,['Ray #',int2str(iray),' is processed']);	
+        end
+    end    
     %
     wave = make_beam_wave_jd(wave,equil,C3POdisplay,waveparam.nd,waveparam.nchi,rayinit.w0,rayinit.z0,waveparam.ns);
     %

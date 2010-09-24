@@ -54,6 +54,12 @@ function [Nperpp,Nperpm,Kxyz,...
 % 
 [qe,me,mp,mn,e0] = pc_dke_yp;
 %
+if isnan(ne),%vacuum limit
+    %
+    ne = 1e-5*me*e0*omega_rf^2/qe^2;%so that the polarizations are separated
+    %
+end
+%
 ns = [ne;zni(:)];
 qs = qe*[-1;zZi(:)];    
 if zZi(1) == 0,

@@ -148,7 +148,7 @@ if strcmp(launch.type,'EC'),
             x0 = interp1(ty(mask),tx(mask),y0,method,NaN);
             %
             if isnan(y0),
-                error('The vertical launching position in beyonf the LCFS');
+                error('The vertical launching position in beyond the LCFS');
             end
             %
             r0 = sqrt(x0.^2 + y0.^2);
@@ -161,38 +161,77 @@ if strcmp(launch.type,'EC'),
             %
         end
         %
-        Bx0 = interp2(psin,equil.theta,equil.ptBx.',psin0,theta0,method);
-        By0 = interp2(psin,equil.theta,equil.ptBy.',psin0,theta0,method);
-        BPHI0 = interp2(psin,equil.theta,equil.ptBPHI.',psin0,theta0,method);    
-        %
-        Npar0 = (Nx0*Bx0 + Ny0*By0 + Nphi0*BPHI0)/sqrt(Bx0.^2 + By0.^2 + BPHI0.^2);
-        %
-        Bp0 = sqrt(Bx0.^2 + By0.^2);
-        cosalpha0 = (By0*x0 - Bx0*y0)/r0/Bp0;
-        Ns0 = (Nx0*Bx0 + Ny0*By0)/Bp0;
-        m0 = r0*Ns0*rayinit.omega_rf/clum/cosalpha0;
-        %
-        rayinit.yrho0(iy) = rho0;%Initial radial position at launch
-        rayinit.ytheta0(iy) = theta0;%Initial poloidal position at launch
-        rayinit.yphi0(iy) = phi0;%Initial toroidal position at launch
-        rayinit.ym0(iy) = m0;%Initial poloidal mode number
-        rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
-        rayinit.yNpar0(iy) = Npar0;%Initial index of refraction
-        rayinit.ydNpar0(iy) = dNpar0;%initial Ray spectral width
-        rayinit.yP0_2piRp(iy) = yP0_2piRp(iy);%Lineic initial power density initial power in the ray (W/m)
-        %
-        if ny == 1 && isfield(launch,'w0'),%beam waist  
-            rayinit.w0 = launch.w0;
-            if isfield(launch,'z_L'),%for divergence calculation
-                rayinit.z0 = launch.z_L - s0;%distance from LCFS to waist
-            else
-                rayinit.z0 = 0;
+        if ~isempty(psin0),
+            %
+            Bx0 = interp2(psin,equil.theta,equil.ptBx.',psin0,theta0,method);
+            By0 = interp2(psin,equil.theta,equil.ptBy.',psin0,theta0,method);
+            BPHI0 = interp2(psin,equil.theta,equil.ptBPHI.',psin0,theta0,method);    
+            %
+            B0 = sqrt(Bx0.^2 + By0.^2 + BPHI0.^2);
+            Npar0 = (Nx0*Bx0 + Ny0*By0 + Nphi0*BPHI0)/B0;
+            %
+            Bp0 = sqrt(Bx0.^2 + By0.^2);
+            cosalpha0 = (By0*x0 - Bx0*y0)/r0/Bp0;
+            Ns0 = (Nx0*Bx0 + Ny0*By0)/Bp0;
+            m0 = r0*Ns0*rayinit.omega_rf/clum/cosalpha0;
+            %
+            rayinit.yrho0(iy) = rho0;%Initial radial position at launch
+            rayinit.ytheta0(iy) = theta0;%Initial poloidal position at launch
+            rayinit.yphi0(iy) = phi0;%Initial toroidal position at launch
+            rayinit.ym0(iy) = m0;%Initial poloidal mode number
+            rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
+            rayinit.yNpar0(iy) = Npar0;%Initial index of refraction
+            rayinit.ydNpar0(iy) = dNpar0;%initial Ray spectral width
+            rayinit.yP0_2piRp(iy) = yP0_2piRp(iy);%Lineic initial power density initial power in the ray (W/m)
+            %
+            if ny == 1 && isfield(launch,'w0'),%beam waist  
+                rayinit.w0 = launch.w0;
+                if isfield(launch,'z_L'),%for divergence calculation
+                    rayinit.z0 = launch.z_L - s0;%distance from LCFS to waist
+                else
+                    rayinit.z0 = 0;
+                end
+            else% the Gaussian beam representation is compatible with the one ray description only
+                rayinit.w0 = NaN;
+                rayinit.z0 = NaN;
             end
-        else% the Gaussian beam representation is compatible with the one ray description only
+            %
+            if isfield(launch,'epol_XYZ') && isfield(launch,'N_XYZ');
+                %
+                [Nperpp,Nperpm,Kxyz,ep_xyz,em_xyz] = colddisp_dke_jd(Npar0,launch.omega_rf,NaN,0,1,1,B0);
+                %
+                BX0 = Bx0*cos(phi0) - BPHI0*sin(phi0);
+                BY0 = -Bx0*sin(phi0) - BPHI0*cos(phi0);
+                BZ0 = By0;
+                %
+                B0_XYZ = [BX0;BY0;BZ0];
+                %
+                z_XYZ = B0_XYZ/B0;
+                y_XYZ = cross(B0_XYZ,launch.N_XYZ)/norm(cross(B0_XYZ,launch.N_XYZ));
+                x_XYZ = cross(y_XYZ,z_XYZ);
+                %
+                M_xyzXYZ = [x_XYZ,y_XYZ,z_XYZ];
+                ep_XYZ = M_xyzXYZ*ep_xyz;
+                em_XYZ = M_xyzXYZ*em_xyz;
+                %
+                rayinit.ap2 = abs(launch.epol_XYZ'*ep_XYZ).^2;
+                rayinit.am2 = abs(launch.epol_XYZ'*em_XYZ).^2;
+            end
+            %
+        else
+            rayinit.yrho0(iy) = NaN;%Initial radial position at launch
+            rayinit.ytheta0(iy) = NaN;%Initial poloidal position at launch
+            rayinit.yphi0(iy) = NaN;%Initial toroidal position at launch
+            rayinit.ym0(iy) = NaN;%Initial poloidal mode number
+            rayinit.yn0(iy) = NaN;%Initial toroidal mode number
+            rayinit.yNpar0(iy) = NaN;%Initial index of refraction
+            rayinit.ydNpar0(iy) = NaN;%initial Ray spectral width
+            rayinit.yP0_2piRp(iy) = NaN;%Lineic initial power density initial power in the ray (W/m)
             rayinit.w0 = NaN;
             rayinit.z0 = NaN;
+            rayinit.ap2 = NaN;
+            rayinit.am2 = NaN;
         end
-        %
     end
     %
 elseif strcmp(launch.type,'LH'),
