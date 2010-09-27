@@ -5,13 +5,7 @@ output = '';
 remotehost = remote.host;
 remoteset_jobid = remote.set_jobid;
 %
-[res,logname] = unix('whoami');
-%
-if res ~= 0,
-    error('Local login name could not be obtained')
-end
-%
-logname(double(logname) == 10) = [];
+logname = getenv('USER');
 %
 if isfield(remote,logname),
     remotelogname = remote.(logname);

@@ -7,18 +7,12 @@ try
     end        
     datapath = getenv('LUKE_datapath');
     %
-    [res,logname] = unix('whoami');
-    %
-    if res ~= 0,
-        error('Local login name could not be obtained')
-    end
-    %
-    logname(double(logname) == 10) = [];
+    logname = getenv('USER');
     %
     filein = [datapath,'LUKE_RUN_',logname,'_',timeid,'.mat'];
     fileout = [datapath,'LUKE_OUT_',logname,'_',timeid,'.mat'];
     %
-    load(filein,'id_simul','wavestructs','waves','dkeparam','dkepath','equil','dkedisplay','ohm','transpfaste','ripple','XXf0_in')
+    load(filein,'id_simul','wavestructs','waves','dkeparam','dkepath','equil','dkedisplay','ohm','transpfaste','ripple','Zf0_interp')
     %
     delete(filein);
     %
@@ -31,7 +25,7 @@ try
     warning off
     %
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = ...
-        run_lukert(id_simul,wavestructs,waves,dkeparam.psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0_in,[],0);
+        run_lukert(id_simul,wavestructs,waves,dkeparam.psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,Zf0_interp,[],0);
     %
     save(fileout,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource')
     %
