@@ -575,7 +575,7 @@ P_RF_c = sum(p_RF_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
 if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
     %
     distrib_ohm.XXf0_leg = [];
-    distrib_ohm.mksa = distrib.mksa;
+    distrib_ohm.mksa = mksa;
     %
     [Znorm,Zcurr,ZP0] = run_lukert('cronos',[],[],[],radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib_ohm,[]);
     %
@@ -707,6 +707,7 @@ for iw = 1:nw,
 end
 %
 memoire.data.edistribution.f0 = dke_out.Zf0_interp;%For time evolution
+memoire.data.edistribution.r  = radialDKE.xrho_S_dke;
 %
 % For diagnostic post-processing (HXR,...)
 %

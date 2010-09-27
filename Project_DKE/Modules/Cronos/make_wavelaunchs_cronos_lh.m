@@ -586,7 +586,7 @@ for ilh=1:nlh,
         %
         load(aloha(ilh).file);
         scheme  = scenario(aloha(ilh).scen);
-        results = scheme(ilh).results;
+        results = scheme.results;
         redfac = abs(cons(ilh))/(sum(results.dP_nz)*results.dnz);
         param = aloha(ilh).param;%number of fitted peaks + number of peaks left intact
         opt_optim = 0; %(if 1 use  toolbox optimisation)
