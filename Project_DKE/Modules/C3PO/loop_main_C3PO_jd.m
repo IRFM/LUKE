@@ -5,12 +5,23 @@ function [rays] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayini
 %
 %by Yves Peysson (CEA-IRFM,yves.peysson@cea.fr) and Joan Decker (CEA-IRFM,joan.decker@cea.fr) and 
 %
+% this function is called for a single ray
+%
+rayinit.yrho0 = rayinit.yrho0(iray);
+rayinit.ytheta0 = rayinit.ytheta0(iray);
+rayinit.yphi0 = rayinit.yphi0(iray);
+rayinit.ym0 = rayinit.ym0(iray);
+rayinit.yn0 = rayinit.yn0 (iray);
+rayinit.yNpar0 = rayinit.yNpar0(iray);
+rayinit.ydNpar0 = rayinit.ydNpar0(iray);
+rayinit.yP0_2piRp = rayinit.yP0_2piRp(iray);
+%
 tau_lim_init = rayparam.tau_lim;%Initial optical depth limit
 kmode = waveparam.kmode;
-ydNpar0 = rayinit.ydNpar0(iray);
+ydNpar0 = rayinit.ydNpar0;
 launch0 = rayinit.launch;
 %
-rays{1}.P0_2piRp = rayinit.yP0_2piRp(iray);%Initial lineic power density in the ray (W/m) [1,1]
+rays{1}.P0_2piRp = rayinit.yP0_2piRp;%Initial lineic power density in the ray (W/m) [1,1]
 %
 rays{1}.sx = [];% Ray location (major radius) along the propagation [1,ns]
 rays{1}.sphi = [];% Ray location (toroidal angle) along the propagation [1,ns]
