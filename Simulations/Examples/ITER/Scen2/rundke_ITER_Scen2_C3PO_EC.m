@@ -54,7 +54,7 @@ mmode = -1;% cold plasma mode (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode:
 %
 R_L = 6.4848;
 Z_L = 4.110;
-P_L = 1e-6;% [MW] 
+P_L = 1e-3;% [MW] 
 %
 cone_div = 1.08;% equivalent exp(-2) power cone divergence
 cone_ori = -0.5;% equivalent cone origin
