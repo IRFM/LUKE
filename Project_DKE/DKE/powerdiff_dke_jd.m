@@ -40,7 +40,6 @@ if deltax < max(xramp + dx2/yn(nrdxramp + 1))
         solution = 1;
     end
     if solution == 0,
-        warning('empty output from powerdiff');
         x = [];
         return
     end
