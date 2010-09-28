@@ -1,11 +1,11 @@
 Simulation id: ITER_Scen4_C3PO_f5_N2_dN0.2
-Simulation date: 09/28/2010  11:20:36
+Simulation date: 09/28/2010  13:37:06
 User id: JD211098
 LUKE Version: LUKE 1.8.5
-MATLAB Version: 705
+MATLAB Version: 710
 MACHINE: cephee
  
-Total current (I): 0.66341 MA (positive for co-current)
+Total current (I): 0.6634 MA (positive for co-current)
 Launched RF power (P): 20 MW
 RF power (P): 20.0166 MW ---> 100.0831 %.
 RF power on harm. 0 (P): 20.0166 MW ---> 100.0831 %.
