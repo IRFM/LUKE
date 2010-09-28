@@ -44,6 +44,7 @@ function wave = main_C3PO_jd(dkepath,id_wave,equil,rayinit,waveparam,fitparam,ra
     omega_rf = rayinit.omega_rf;
     %
     wave.id = id_wave;
+    wave.model = 'RT';
     wave.equil_id = equil.id;
     wave.omega_rf = omega_rf;
     wave.opt_rf = waveparam.opt_rf;
