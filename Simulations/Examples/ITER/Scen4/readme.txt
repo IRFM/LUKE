@@ -18,8 +18,7 @@ Simulations ITER Scen 4
 
 - Results can be compared to identical run with irunluke_jd : 
 
-- Build launch with parameters from run script or use Launch file under CVS control :
-		- LAUNCH/LAUNCH_f5_N2_dN0.2.mat -> /luke/Simulations/Joan/Local/ITER/Scen4/LAUNCH_f5_N2_dN0.2.mat
+- Build launch with parameters from run script
 
 	When building wave structure use default options except :
 		- dsmin = 0;
@@ -27,4 +26,6 @@ Simulations ITER Scen 4
 		- rayparam.tau_lim = 20;
 
 - Comparison successful for LUKE 1.8.2 on 05/28/2010.
+- Comparison successful for LUKE 1.8.5 on 09/28/2010.
+    (7.5 then 7.10, script then irunluke then batch)
 
