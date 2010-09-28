@@ -329,12 +329,12 @@ if Rp < Inf,
             extr_ind = diff(sign(diff([tpB(end,:);tpB;tpB(1,:)]))) ~= 0;%local extrema indices
             nextr = sum(extr_ind);
             %
-            disp(['Iteration : ',num2str(t),'; FS with extr. : ',num2str(sum(nextr > 2)),'/',...
-                num2str(npsi),'; B var. : ',num2str(var),'/',num2str(tol),'.'])
-            %
             if t == nt || var > tol || all(nextr <= 2),
                 break
             end
+            %
+            disp(['Iteration : ',num2str(t),'; FS with extr. : ',num2str(sum(nextr > 2)),'/',...
+                num2str(npsi),'; B var. : ',num2str(var),'/',num2str(tol),'.'])
             %
             for ir = 1:npsi,
                 %
