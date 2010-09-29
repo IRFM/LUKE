@@ -372,21 +372,24 @@ for in = 1:nn_rf,
     byn_rf = n_rf*bomegaratio;
     %
     bmask_n1 = (bnpar_rf == 1);
-    bmask_yn = (abs(bnpar_rf) > 1 | byn_rf > sqrt(1 - bnpar_rf.^2));
+    bmask_yn = (byn_rf >= sqrt(1 - min([bnpar_rf.^2;ones(1,nb)])));
     bpn_res = abs((abs(bnpar_rf).*byn_rf - sqrt(byn_rf.^2 + bnpar_rf.^2 - 1))./(1 - bnpar_rf.^2))/betath_ref;
-    bpn_res_n1 = abs(1 - byn_rf.^2)./(2*byn_rf*betath_ref);
+    bpn_res_n1 = NaN(1,nb);
+    bpn_res_n1(byn_rf ~= 0) = abs(1 - byn_rf(byn_rf ~= 0).^2)./(2*byn_rf(byn_rf ~= 0)*betath_ref);
     bpn_res(bmask_n1) = bpn_res_n1(bmask_n1);
     %
     bmask_n1_min = (bnparmin_rf == 1);
-    bmask_yn_min = (abs(bnparmin_rf) > 1 | byn_rf > sqrt(1 - bnparmin_rf.^2));
+    bmask_yn_min = (byn_rf >= sqrt(1 - min([bnparmin_rf.^2;ones(1,nb)])));
     bpn_res_min = abs((abs(bnparmin_rf).*byn_rf - sqrt(byn_rf.^2 + bnparmin_rf.^2 - 1))./(1 - bnparmin_rf.^2))/betath_ref;
-    bpn_res_n1_min = abs(1 - byn_rf.^2)./(2*byn_rf*betath_ref);
+    bpn_res_n1_min = NaN(1,nb);
+    bpn_res_n1_min(byn_rf ~= 0) = abs(1 - byn_rf(byn_rf ~= 0).^2)./(2*byn_rf(byn_rf ~= 0)*betath_ref);
     bpn_res_min(bmask_n1_min) = bpn_res_n1_min(bmask_n1_min);
     %
     bmask_n1_max = (bnparmax_rf == 1);
-    bmask_yn_max = (abs(bnparmax_rf) > 1 | byn_rf > sqrt(1 - bnparmax_rf.^2));
+    bmask_yn_max = (byn_rf >= sqrt(1 - min([bnparmax_rf.^2;ones(1,nb)])));
     bpn_res_max = abs((abs(bnparmax_rf).*byn_rf - sqrt(byn_rf.^2 + bnparmax_rf.^2 - 1))./(1 - bnparmax_rf.^2))/betath_ref;
-    bpn_res_n1_max = abs(1 - byn_rf.^2)./(2*byn_rf*betath_ref);
+    bpn_res_n1_max = NaN(1,nb);
+    bpn_res_n1_max(byn_rf ~= 0) = abs(1 - byn_rf(byn_rf ~= 0).^2)./(2*byn_rf(byn_rf ~= 0)*betath_ref);
     bpn_res_max(bmask_n1_max) = bpn_res_n1_max(bmask_n1_max);
     %
     bmask = find((bmask_yn & bpn_res < pnmax) | (bmask_yn_min & bpn_res_min < pnmax) | (bmask_yn_max & bpn_res_max < pnmax));

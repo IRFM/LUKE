@@ -231,7 +231,8 @@ for iw = 1:length(waves),%
 		syn = snres.*sy;
 		%
         spparmin = abs((abs(sNpar).*syn - sqrt(syn.^2 + sNpar.^2 - 1))./(1 - sNpar.^2))./sbetath;
-        spparmin1 = abs(1 - syn.^2)./(2*sbetath.*syn);
+        spparmin1 = NaN(1,length(sy));
+        spparmin1(syn ~= 0) = abs(1 - syn(syn ~= 0).^2)./(2*sbetath(syn ~= 0).*syn(syn ~= 0));
         spparmin(sNpar == 1) = spparmin1(sNpar == 1);
         %
         spparmax = (abs(sNpar).*syn + sqrt(syn.^2 + sNpar.^2 - 1))./(1 - sNpar.^2)./sbetath;
