@@ -1387,9 +1387,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                     luke_input.dkedisplay = dkedisplay;
                     luke_input.equil = equil;
                     luke_input.waves = waves;
+                    luke_input.wavestructs = '';
                     luke_input.ohm = ohm;
                     luke_input.transpfaste = transpfaste;
                     luke_input.ripple = ripple;
+                    luke_input.Zf0_interp = '';
                     %
                     [timeid,jobid] = runluke_remote_jd(luke_input,remote);
                     %

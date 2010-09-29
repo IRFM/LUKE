@@ -12,7 +12,8 @@ function [varargout] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam_
 simul.id = id_simul;
 simul.timeid = timeid_jd(clock);
 simul.userid = userid_jd;
-simul.LUKEversion = LUKEversion_jd;
+[simul.LUKEversion,simul.matver] = LUKEversion_jd;
+simul.hostname = dkepath.hostname;
 %
 dke_warnings = '';
 %

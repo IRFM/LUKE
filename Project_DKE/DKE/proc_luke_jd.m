@@ -199,7 +199,9 @@ if ir_display >= 0,
     diaryname = input_dke_yp('Provide a name for the log file? (return empty string if no log file)',diaryname);
     %
     if ~isempty(diaryname),
-        delete(diaryname)
+        if exist(diaryname,'file'),
+            delete(diaryname)
+        end
         diary(diaryname)
     end
     %
@@ -207,6 +209,10 @@ if ir_display >= 0,
     disp(['Simulation date: ',timeid_jd(dke_out.simul.timeid)]);
     disp(['User id: ',dke_out.simul.userid]);
     disp(['LUKE Version: ',dke_out.simul.LUKEversion]);
+    if all(isfield(dke_out.simul,{'matver','hostname'})),
+        disp(['MATLAB Version: ',dke_out.simul.matver]);
+        disp(['MACHINE: ',dke_out.simul.hostname]);
+    end
     disp(' ');
     %
 end
@@ -231,7 +237,8 @@ EtaRp = I_tot/(p_tot_2piRp*2*pi);
 xdPdrho_rf_2piRp = xp_rf_2piRp./xdrho;
 yxdPdrho_rf_2piRp = yxp_rf_2piRp./repmat(xdrho,[ny,1]);
 %
-eta = J_tot./P_tot;
+eta = NaN(1,nr);
+eta(P_tot ~= 0) = J_tot(P_tot ~= 0)./P_tot(P_tot ~= 0);
 i_peak = find(P_rf == max(P_rf));
 eta_peak = eta(i_peak);
 %
@@ -259,7 +266,7 @@ if nr > 1,
     wp0_rf_2piRp = zeros(1,nw);
     %
     for iw = 1:nw,
-        if strcmp(waves{iw}.model,'RT'),
+        if ~isfield(waves{iw},'model') || strcmp(waves{iw}.model,'RT'),
             nb(iw) = length(waves{iw}.rays);
             for iray = 1:nb(iw),
                 %
@@ -312,7 +319,7 @@ if nr > 1,
         wi_peak_lin = zeros(1,nw);
         %
         for iw = 1:nw;
-            if strcmp(waves{iw}.model,'RT'),
+            if ~isfield(waves{iw},'model') || strcmp(waves{iw}.model,'RT'),
                 %
                 for iray = 1:nb(iw),
                     %
