@@ -183,7 +183,7 @@ function varargout = dcluke(dkecluster,entree1,varargin)
         save(ba(current).inputdata,'data');
         % lancement du job
         script = which('dcluke.exe');
-        txt =   sprintf('%s %s "%s%s" %s %s %s',run,workdir,cmd,remotemem,script,ba(current).inputdata,ba(current).batchfile);
+        txt =   sprintf('%s %s "%s%s" %s %s %s %s',run,workdir,cmd,remotemem,script,matlabroot,ba(current).inputdata,ba(current).batchfile);
         [s,t] = unix(txt);
         if s~= 0
                 error(sprintf('dcluke : error launching job %d in batch :\n %s',entree1,t));				

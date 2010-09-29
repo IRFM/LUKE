@@ -3,11 +3,11 @@ unsetenv DISPLAY
 pwd
 #/usr/local/R2007B/bin/matlab  -nosplash -nodesktop <<@@ > /dev/null 
 #matlab -nodesktop <<@@
-matlab  -nosplash -nodesktop <<@@ > /dev/null 
+$1/bin/matlab  -nosplash -nodesktop <<@@ > /dev/null 
 dbstop if all error
 % chargement des donnees
 warning off
-load $1
+load $2
 % restauration du path
 path(data.path)
 warning on
