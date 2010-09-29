@@ -2225,3 +2225,159 @@
 %
 % New equilibrium and run cases for ITER (LH study) and TS (new cronos run with correct profiles)
 %
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.8.4
+% 
+% - important correction in the raypath_prop_jd function which affects ECCD in TCV
+% - Legendre projection of f calculated and used in CRONOS
+% - batch run of LUKE in interactive CRONOS
+% 
+% ====> LUKE
+%
+% U mrunluke_batch (LUKE path, to run in cronos)
+% 
+% ====> LUKE/Project_DKE/Database
+%
+% U DKEPARAM_files/make_dkeparam_EC_RT.m (parameters for Legendre polynomials projection of f)
+% U DKEPARAM_files/make_dkeparam_LH_RT.m (")
+% U DKEPARAM_files/make_dkeparam_NONUNIFORM10010020.m (")
+% U DKEPARAM_files/make_dkeparam_UNIFORM10010020.m (")
+% 
+% ====> LUKE/Project_DKE/Display
+%
+% U irunluke_jd.m (wave path)
+% 
+% ====> LUKE/Project_DKE/DKE
+%
+% U finit_dke_yp.m (Legendre projection of f)
+% U fmoments_dke_yp.m (")
+% U main_dke_yp.m (")
+% U paramconsistency_dke_yp.m (")
+% U mksacoefbuilder_dke_yp.m
+% U momentumcoefbuilder_dke_yp.m (")
+% U proc_luke_jd.m (radial grids)
+% U rfdiff_dke_jd.m (number of elements)
+% U run_lukert.m (wave passed into dke_out in main)
+% U runluke.m (wavestructs passed, LUKE path, cronos batch mode)
+% U runluke_remote_jd.m (")
+% U equilibrium_jd.m (repair parameters)
+% U LUKEversion_jd.m (1.8.4 and treatment of matlab > ?.9)
+% U mex_compile_luke.m (compile options and LUKE path & version)
+%
+% ====> LUKE/Project_DKE/Modules/C3PO
+%
+% U make_beam_wave_jd.m (test for smooth.m existence)
+% U raypath_prop_jd.m (important correction for ECCD in TCV)
+% A MEX/Source/test_plasmadisp_jd.m (test plasma dispersion functions)
+%
+% ====> LUKE/Project_DKE/Modules/Cronos
+%
+% U luke_parameters.m (batch mode)
+% U zstarwars.m (batch mode and Legendre projection of f)
+%
+% ====> LUKE/Project_DKE/Modules/FEB
+%
+% U leg_dke_yp.m (small correction and Legendre projection of f)
+% U bremlocaldisplay_dke_yp.m (energy from momentumDKE)
+% U contourfp_hxr_yp.m (")
+% U bremsstrahlung_dke_yp.m (")
+%
+% ====> LUKE/Tools
+%
+% A interpleg_yp.m (reconstruct the distribution on a mhu grid from Legendre polynomials)
+% U comp_struct_jd.m (display improved)
+% M Tools/gauleg_dke_yp.m (moved from LUKE/Project_DKE/Modules/FEB)
+% M Tools/leg_dke_yp.m (")
+%
+% ====> LUKE/Simulations
+%
+% Examples/ITER/Scen2 (examples for ECCD in ITER)
+% Benchmarks/TScirc/LH_karney_ripple/rundke.m (test for Legendre polynomials reconstruction)
+%
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.8.5
+% 
+% - coupling between LUKE and EVE
+% - improve distributed computing
+% - compatibility Matlab 7.10 and 7.11
+% - EC reflection on wall
+% 
+% ====> LUKE
+%
+% U make_path_LOCAL.m (Matlab 7.10 and 7.11 update)
+% U mrunluke_batch (matlab version)
+% 
+% ====> LUKE/Project_DKE/Display
+%
+% U imake_equil_jd.m (equil shotnum and shotime info)
+% U imake_ohm_jd.m (")
+% U imake_wave_jd.m (EVE-LUKE coupling)
+% U imake_wave_EVE_jd.m (")
+% U imod_struct_jd.m (rm fields)
+% U structinfo_yp.m (EC reflections on wall)
+% U irunluke_jd.m (small correction)
+%
+% ====> LUKE/Project_DKE/DKE
+%
+% U main_dke_yp.m (EVE-LUKE coupling)
+% U optgrid_dke_jd.m (")
+% U proc_luke_jd.m (")
+% U rfdiff_dke_fw_jd.m (")
+% U rfwave_dke_jd.m (")
+% U wave_process_jd.m (")
+% U run_lukert.m (")
+% U equilibrium_jd.m (small corrections)
+% U finit_dke_yp.m (")
+% U fix_equil_jd.m (")
+% U getluke_remote_jd.m (logname and matlab version)
+% U runluke.m (")
+% U powerdiff_dke_jd.m (warning off)
+%
+% ====> LUKE/Project_DKE/Modules/C3PO/
+%
+% U make_beam_wave_jd.m (EVE-LUKE coupling)
+% U loop_main_C3PO_jd.m (EC reflections on wall)
+% U main_C3PO_jd.m (")
+% U main_rayinit_launch_jd.m (")
+%
+% ====> LUKE/Project_DKE/Modules/Cronos/
+%
+% U luke_parameters.m (small correction)
+% U make_wavelaunchs_cronos_lh.m (")
+% U zstarwars.m (")
+%
+% ====> LUKE/Project_DKE/Modules/EFIT/
+%
+% U equil_magnetic_EFIT_jd.m (EVE-LUKE coupling)
+% U equil_prof_jd.m (")
+% U Teneprof_jd.m (")
+% U rz2pt_jd.m (small correction)
+%
+% ====> LUKE/Project_DKE/Packages/MDCE/dcluke
+%
+% U dcluke.m (memory management and matlab version)
+% U dcluke.exe (matlab version)
+% U dcluke_batch.sh (")
+%
+% ====> LUKE/Tools
+%
+% U clustermode_luke.m (memory management)
+% U mdce_luke.m (")
+% U fproc_data.m (simulation script)
+% U proc_a_sdNpar_scan.m (")
+% U proc_Dr0_scan.m (")
+% U proc_TS.m (")
+% U colddisp_dke_jd (vacuum limit)
+% U userid_jd.m (use of USER)
+%
+% ====> LUKE/Simulations/Examples
+%
+% U ITER/Scen2/res_ITER_Scen2_200103121816_430_129_C3PO_NTM_32.log (matlab 7.10)
+% U ITER/Scen2/rundke_ITER_Scen4_C3PO_EC.m (")
+% U ITER/Scen4/readme.txt (")
+% U ITER/Scen4/res_ITER_Scen4_C3PO_f5_N2_dN0.2.log (")
+% U TS/32299/res_alpha_0_Dr0_0.log (")
+
+
