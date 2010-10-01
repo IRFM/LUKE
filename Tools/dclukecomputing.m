@@ -1,74 +1,66 @@
-function [flag,results] = dclukecomputing(fun,args_in,arg_index,arg_range,nargout_in,dkecluster)
-%LUKE - LUKE distributed computing environment
+function [flag,varargout] = dclukecomputing(fun_handle,args_in,arg_index,arg_range,dkecluster)
+% LUKE - LUKE distributed computing environment
 %
 %   Distributed computing using the LUKE distributed computing environment
 %
 %   INPUT:
 %
-%       - fun: function handle
-%       - args_in: input arguments list of the function
-%       - arg_index: index in the argument list args_in which must be changed
-%       - arg_range: list of values to be calculated for the input argument arg_index, length(arg_range) = number of times a calculation must be performed
-%       - nargout_in: number of output arguments in the parent function
+%       - fun_handle: function handle
+%       - args_in: input arguments list of the function {1,nargin}
+%       - arg_index: index in the argument list args_in which must be changed [1,1]
+%       - arg_range: list of values for the input argument arg_index [1,nrange]
+%           => nrange = length(arg_range) = number of jobs 
 %
 %   OUTPUT:
 %
-%		- flag: status of the computing (OK = 0, ERROR = 1)
-%       - results: output arguments list of the function
+%       - flag: status of the computation : 2 (OK) or -2 (failed) [1,nrange]
+%       - varargout: output arguments list of the function {1,nargout-1}.
+%           => Each element is a list of size {nrange,1}
 %
 %   by Y. Peysson (CEA/DSM/IRFM) (yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM) (joan.decker@cea.fr)
 %
-results = cell(1,nargout_in);
-narg_range = length(arg_range);
+nrange = length(arg_range);
+varargout_array = cell(nrange,nargout-1);
+flag = 2*ones(1,nrange);
+%
+id = NaN(1,nrange);
 %
 try
     %
-    dcluke(dkecluster,0,'RESET');
+    dcluke(dkecluster,0,'RESET');%initialisation
     %
-    id = NaN(1,narg_range);
-    arg_out = cell(nargout_in,narg_range);
-    %
-    for j_range = 1:narg_range,
+    for j_range = 1:nrange,
         args_in{arg_index} = arg_range{j_range};
-        id(j_range) = dcluke(dkecluster,func2str(fun),args_in{:});      
+        id(j_range) = dcluke(dkecluster,func2str(fun_handle),args_in{:});%submit jobs      
     end
     %
-    dcluke(dkecluster);
+    dcluke(dkecluster);%wait for job completion
     %
-    for j_range = 1:narg_range,
+    for j_range = 1:nrange,
         %
-        outcmd = '';
-        %
-        for j_nargout = 1:nargout_in,
-            %
-            if j_nargout == 1,
-                outcmd = '[';
-            end
-            %
-            outcmd = [outcmd,'arg_out{',int2str(j_nargout),',',int2str(j_range),'}'];
-            %
-            if j_nargout == nargout_in,
-                outcmd = [outcmd,'] = '];
-            else
-                outcmd = [outcmd,','];
-            end
+        try
+            [varargout_array{j_range,:}] = dcluke(dkecluster,id(j_range));
+        catch me_load
+            disp(['Error loading the results for run ',int2str(j_range),'/',int2str(nrange),' : flagged for sequential run']);
+            disp(['===> Error : ',getReport(me_load)]);
+            flag(j_range) = -2;
         end
         %
-        cmd = [outcmd,'dcluke(dkecluster,',int2str(id(j_range)),');'];      
-        %
-        eval(cmd);
-        %
     end
     %
-    for j_nargout = 1:nargout_in,
-        results{j_nargout} = reshape(arg_out(j_nargout,:),narg_range,1);
-    end
+catch me_dcluke
+    disp('Error running dclukecomputing : flagged for sequential run');
+    disp(['===> Error : ',getReport(me_dcluke)]);
+    flag = -2*ones(1,nrange);
+end
+%
+varargout = cell(1,nargout-1);
+%
+%[varargout{:}] = deal(cell(N_range,1)); keep this line as an example of use of the function deal
+%
+for j_argout = 1:nargout-1,
     %
-    flag = 2;
-catch
-    for j_nargout = 1:nargout_in,
-        results{j_nargout} = '';
-    end
-    flag = -2;
+    varargout{j_argout} = varargout_array(:,j_argout);
+    %
 end
 %
