@@ -484,7 +484,7 @@ if nr > 1,
             Npar_peak = NaN(1,nb(iw));
             theta_peak = NaN(1,nb(iw));
             %
-            if strcmp(waves{iw}.model,'RT'),
+            if ~isfield(waves{iw},'model') || strcmp(waves{iw}.model,'RT'),
                 %
                 for iray = 1:nb(iw),
                     %
