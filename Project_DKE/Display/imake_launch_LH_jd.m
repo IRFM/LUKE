@@ -112,6 +112,8 @@ if ~isempty(external),
     %
 end
 %
+launch.i_ref = -1;%index of the flux surface where the rays are launched
+%
 launch.frequency_GHz = launch.omega_rf/(2*pi*1e9);
 launch.phi0_deg = launch.phi0*180/pi;
 launch.bPlhtot_MW = launch.bPlhtot/1e6;

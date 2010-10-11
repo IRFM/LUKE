@@ -165,6 +165,7 @@ switch struct
             case 'bNpar0',expert = 0;values = [-Inf;Inf];info = 'Initial Npar in each lobe';
             case 'bdNpar0',expert = 0;values = [0;Inf];info = 'Spectral width in each lobe : specify fixed value, or type ''0'' if minimum width within numerical constraints';
             case 'rZ0',expert = 0;values = [-Inf;Inf];info = 'Vertical launching positions (m)';
+	    case 'i_ref',expert = 1;values = -1:-1:-10;info = 'Retrait du point de départ depuis la dernière surface de flux (increase to pass cutoff if edge density is low)';
             otherwise,
         end
 		%
