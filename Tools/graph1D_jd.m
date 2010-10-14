@@ -77,6 +77,8 @@ if imag(siz) == 0,
 	siz = siz+i*siz;
 end
 %
+fontname = 'Times';%'Courier';
+%
 hold on
 if logx == 1 & logy ~= 1
     set(ax,'xscale','log');
@@ -133,27 +135,27 @@ end
 %
 if ~isempty(xlab),
     xl = xlabel(xlab);
-    set(xl,'fontsize',real(siz));
-    set(xl,'fontname','times new roman');
+    set(xl,'fontsize',real(siz),'fontname',fontname);
 end
 if ~isempty(ylab),
     yl = ylabel(ylab);
-    set(yl,'fontsize',real(siz));
-    set(yl,'fontname','times new roman');
+    set(yl,'fontsize',real(siz),'fontname',fontname);
 end
 if ~isempty(tit),
     tl = title(tit);
-    set(tl,'fontsize',real(siz));
-    set(tl,'fontname','times new roman');
+    set(tl,'fontsize',real(siz),'fontname',fontname);
 end
-if iscell(leg) | ~isnan(leg)
-    lg = legend(leg,'location','best');
-    set(lg,'fontsize',imag(siz));
-    set(lg,'fontname','times new roman');
+if iscell(leg) || ~any(isnan(leg)),
+    Nleg = length(leg);
+    if iscell(leg) && Nleg > 2 && strcmp(leg(Nleg - 1),'Location'),
+        lg = legend(leg(1:Nleg - 2),'location',leg{Nleg});
+    else
+        lg = legend(leg,'location','best');
+    end
+    set(lg,'fontsize',imag(siz),'fontname',fontname);
 end
 %
-set(gca,'fontsize',real(siz));
-set(gca,'fontname','times new roman');
+set(gca,'fontsize',real(siz),'fontname',fontname);
 %
 ax = gca;
 %
