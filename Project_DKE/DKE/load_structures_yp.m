@@ -138,8 +138,8 @@ if exist('flag_path','var'),%Paths
         hostnames = fieldnames(dkepath.hostname);
         nhosts = length(hostnames);
         hostname = '';
-        for ihost = 1:nhosts,
-            [s,lhostname] = unix('hostname');
+        [s,lhostname] = unix('hostname');
+        for ihost = 1:nhosts, 
             if strfind(lhostname,dkepath.hostname.(hostnames{ihost})),
                 hostname = hostnames{ihost};
             end
