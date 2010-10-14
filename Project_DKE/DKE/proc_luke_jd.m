@@ -141,6 +141,12 @@ ynP_rf = ZP0.xyn_rf_fsav*mksa.P_ref;
 P_e = ZP0.x_e_fsav*mksa.P_ref;
 P_tot = P_rf + P_e;
 %
+if isfield(dke_out,'residue_rf'),
+    residue_rf = dke_out.residue_rf(end);
+else
+    residue_rf = NaN;
+end
+%
 if isfield(dke_out,'zS'),
     zS = dke_out.zS;
     zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod;
@@ -213,6 +219,7 @@ if ir_display >= 0,
         disp(['MATLAB Version: ',dke_out.simul.matver]);
         disp(['MACHINE: ',dke_out.simul.hostname]);
     end
+    disp(['Final RF convergence parameter: ',num2str(residue_rf)]);
     disp(' ');
     %
 end
@@ -386,9 +393,9 @@ if nr > 1,
         p_rf_2piRp_lin = sum(wp_rf_2piRp_lin);
         %
         wrhoG_lin = rhoG_dep(wi_peak_lin);
-        wrhoP_lin = interp1(xrhoG,xrhoP,wrhoG_lin);
-        wrhoT_lin = interp1(xrhoG,xrhoT,wrhoG_lin);
-        wrhoV_lin = interp1(xrhoG,xrhoV,wrhoG_lin);
+        wrhoP_lin = interp1(xrhoG_I,xrhoP_I,wrhoG_lin);
+        wrhoT_lin = interp1(xrhoG_I,xrhoT_I,wrhoG_lin);
+        wrhoV_lin = interp1(xrhoG_I,xrhoV_I,wrhoG_lin);
         wTe_lin = interp1(xrhoG,xTe,wrhoG_lin);
         wne_lin = interp1(xrhoG,xne,wrhoG_lin);
         %
@@ -474,9 +481,9 @@ if nr > 1,
                 wne(iw) = xne(wi_peak);
             else
                 wrhoG(iw) = sum(wxp_rf_2piRp(iw,:).*xrhoG)/sum(wxp_rf_2piRp(iw,:));
-                wrhoP(iw) = interp1(xrhoG,xrhoP,wrhoG(iw));
-                wrhoT(iw) = interp1(xrhoG,xrhoT,wrhoG(iw));
-                wrhoV(iw) = interp1(xrhoG,xrhoV,wrhoG(iw));
+                wrhoP(iw) = interp1(xrhoG_I,xrhoP_I,wrhoG(iw));
+                wrhoT(iw) = interp1(xrhoG_I,xrhoT_I,wrhoG(iw));
+                wrhoV(iw) = interp1(xrhoG_I,xrhoV_I,wrhoG(iw));
                 wTe(iw) = interp1(xrhoG,xTe,wrhoG(iw));
                 wne(iw) = interp1(xrhoG,xne,wrhoG(iw));
             end
@@ -590,6 +597,9 @@ if nr > 1,
     else
         peaks = '';
     end
+    % SIMUL
+    data_proc.simul = dke_out.simul;
+    data_proc.simul.residue_rf = residue_rf;
     % SCALAR
     data_proc.scalar.p_tot_2piRp = p_tot_2piRp;
     data_proc.scalar.p0_rf_2piRp = p0_rf_2piRp;
