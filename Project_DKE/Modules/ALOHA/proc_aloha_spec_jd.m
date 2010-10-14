@@ -311,7 +311,7 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 		graph1D_jd(x,xf/1e6,0,1,'','','',leg,'',ylim/1e6,'--','none','r',2);
 	    %
 	    figure('Name','Gaussian fit vs. ALOHA'),
-	    leg = {'ALOHA','Gaussian fit'};
+	    leg = {'ALOHA','Gaussian fit','Location','NorthWest'};
 		graph1D_jd(zN,zdP/1e6,0,1,'n_z','dP/dn_z (MW)','',NaN,'',ylim/1e6,'-','none','b',2,20,gca,0.9,0.7,0.7);
 		graph1D_jd(x,xf/1e6,0,1,'','','',leg,'',ylim/1e6,'--','none','r',2);
 	    %    
