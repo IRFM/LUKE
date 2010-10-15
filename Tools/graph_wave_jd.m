@@ -706,10 +706,13 @@ while iw ~= 0 && ibb ~= 0
     ylab = 'N_{||}';
     tit = '';
     %
-    graph1D_jd(ray.ss,abs(real(ray.sNpar)),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
+    graph1D_jd(ray.ss,abs(real(ray.sNpar)),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);
     if waves{iw}.opt_TeNpar == 1,
-        graph1D_jd(ray.ss,6.5./sqrt(ray.sTe),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
-        leg = {'N_{||}','6.5/Te^{1/2}','N_{||acc}'};
+        %
+        NparsTe = input_dke_yp('Value for N//*sqrt(Te)',6.5);
+        %
+        graph1D_jd(ray.ss,NparsTe./sqrt(ray.sTe),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
+        leg = {'N_{||}',[num2str(NparsTe),'/Te^{1/2}'],'N_{||acc}'};
     else
         leg = {'N_{||}','N_{||acc}'};
     end
