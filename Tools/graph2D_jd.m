@@ -1,4 +1,4 @@
-function [ax] = graph2D_jd(x,y,Z,xlab,ylab,tit,xlim,ylim,fill,max,cont,lab,style,color,width,siz,red,Z_0)
+function [ax] = graph2D_jd(x,y,Z,xlab,ylab,tit,xlim,ylim,fill,maxw,cont,lab,style,color,width,siz,red,Z_0)
 
 if nargin < 18
     Z_0 = NaN;
@@ -25,7 +25,7 @@ if nargin < 11
     cont = NaN;
 end
 if nargin < 10
-    max = NaN;
+    maxw = NaN;
 end
 if nargin < 9
     fill = 0;
@@ -61,13 +61,13 @@ end
 %x = x(:);
 %y = y(:);
 %
-if ~isnan(max)
+if ~isnan(maxw)
     if isnan(Z_0)
         Z_0 = Z((length(x)+1)/2,1);
     end
     Z = Z + eps*(Z==0);
     lnZ = log(Z/Z_0);
-    Z = sqrt(max^2*lnZ.^2 - 2*lnZ);
+    Z = sqrt(maxw^2*lnZ.^2 - 2*lnZ);
 end
 %
 %hold on
@@ -100,6 +100,10 @@ else
         end 
     end
 end    
+%
+if any(isnan(color)) && ~any(isnan(cont)) && length(cont) > 1,
+    caxis([min(cont),max(cont)]);
+end
 %hold off
 %
 set(H,'linewidth',width);
