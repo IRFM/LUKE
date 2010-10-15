@@ -16,6 +16,7 @@ if nargin < 7,
     opt.peakmode = 0;
     opt.rho = '';
     opt.spec = 1;
+    opt.blist = '';
 end
 if nargin < 6,
     subtitle = '';
@@ -125,6 +126,9 @@ dmhu = momentumDKE.dmhu;
 gamma = Zmomcoef.gamma;
 %
 nr = length(xrhoG);
+nw = length(waves);
+%
+yb = dke_out.yb;
 %
 if isfield(dke_out,'waveparam') && strcmp(dke_out.waveparam.model,'RT'),
     nfrags = length(dke_out.waveparam.biy_rf);
@@ -189,6 +193,17 @@ else
     opt_wave = opt.wave;
 end
 %
+if nw == 1 && (~isfield(waves{1},'model') || strcmp(waves{1}.model,'RT')),
+    if ~isfield(opt,'blist') || isempty(opt.blist)
+        nb = length(waves{1}.rays);
+        opt_blist = input(['You can group the ',num2str(nb),' rays by vectors in cell (leave empty otherwise) :']);
+    else
+        opt_blist = opt.blist;
+    end
+else
+    opt_blist = [];
+end
+%
 if ir_display >= 0,
     %
     if ir_display == 0,
@@ -249,52 +264,93 @@ eta(P_tot ~= 0) = J_tot(P_tot ~= 0)./P_tot(P_tot ~= 0);
 i_peak = find(P_rf == max(P_rf));
 eta_peak = eta(i_peak);
 %
-if isfield(opt,'blist') && length(waves) == 1,%separate rays by list in the case of one wave
+if iscell(opt_blist),%separate rays by list in the case of one wave
+    %
+    nw = length(opt_blist);
+    %
+    nb = NaN(1,nw);
+    ymask = cell(1,nw);
+    wp0_rf_2piRp = zeros(1,nw);
     %
     wave = waves{1};
+    nbw = length(wave.rays);
     %
-    for i_blist = 1:length(opt.blist),
+    for iw = 1:nw,
         %
-        waves{i_blist} = wave;
-        waves{i_blist}.rays = waves{i_blist}.rays(opt.blist{i_blist});
+        waves{iw} = wave;
+        waves{iw}.rays = wave.rays(opt_blist{iw});
+        %
+        nb(iw) = length(opt_blist{iw});
+        ymask{iw} = [];
+        %
+        for iiray = 1:nb(iw),
+            %
+            iray = opt_blist{iw}(iiray);
+            %
+            wp0_rf_2piRp(iw) = wp0_rf_2piRp(iw) + waves{iw}.rays{iiray}.P0_2piRp*1e-6;
+            %
+            if iray < nbw
+                ymaskloc = yb(iray):(yb(iray+1) - 1);
+            else
+                ymaskloc = yb(iray):ny;
+            end          
+            %
+            ymask{iw} = sort([ymask{iw},ymaskloc]);
+            %
+        end
         %
     end
     %
     clear wave
     %
-end
-%
-if nr > 1,
-    %
-    nw = length(waves);
+else
     %
     nb = NaN(1,nw);
-    %
+    ymask = cell(1,nw);
     wp0_rf_2piRp = zeros(1,nw);
     %
     for iw = 1:nw,
+        %
         if ~isfield(waves{iw},'model') || strcmp(waves{iw}.model,'RT'),
+            %
             nb(iw) = length(waves{iw}.rays);
             for iray = 1:nb(iw),
                 %
                 wp0_rf_2piRp(iw) = wp0_rf_2piRp(iw) + waves{iw}.rays{iray}.P0_2piRp*1e-6;
                 %
             end
+            %
         elseif strcmp(waves{iw}.model,'FW'),
+            %
             nb(iw) = 0;
             if isfield(waves{iw},'P0_2piRp'),
                 wp0_rf_2piRp(iw) = waves{iw}.P0_2piRp*1e-6;
             else
                 wp0_rf_2piRp(iw) = NaN;
             end
+            %
         else
             error('Wave type not recognized.')
         end
+        %
+        ibmin = sum(nb(1:iw-1)) + 1;
+        ibmax = sum(nb(1:iw)) + 1;
+        %
+        if iw < nw
+            ymask{iw} = yb(ibmin):(yb(ibmax) - 1);
+        else
+            ymask{iw} = yb(ibmin):ny;
+        end          
+        %
     end
-    %
-    nbtot = sum(nb);
-    %
-    p0_rf_2piRp = sum(wp0_rf_2piRp);
+end
+%
+%nbtot = sum(nb);
+%
+p0_rf_2piRp = sum(wp0_rf_2piRp);
+%
+%
+if nr > 1,
     %
     if nr_dep >= 0,
         %
@@ -420,8 +476,6 @@ if nr > 1,
     %
     if nw > 0 && opt_wave == 'y',
         %
-        yb = dke_out.yb;
-        %
         wxp_rf_2piRp = zeros(nw,nr);
         wnp_rf_2piRp = zeros(nw,nn_rf);
         wxdPdrho_rf_2piRp = zeros(nw,nr);
@@ -457,18 +511,9 @@ if nr > 1,
             %     %
             % end
             %
-            ibmin = sum(nb(1:iw-1)) + 1;
-            ibmax = sum(nb(1:iw)) + 1;
-            %
-            if iw < nw
-                ymask = yb(ibmin):(yb(ibmax) - 1);
-            else
-                ymask = yb(ibmin):ny;
-            end            
-            %
-            wxp_rf_2piRp(iw,:) = sum(yxp_rf_2piRp(ymask,:),1);
-            wnp_rf_2piRp(iw,:) = reshape(sum(sum(yxnp_rf_2piRp(:,ymask,:),2),1),[1,nn_rf]);
-            wxdPdrho_rf_2piRp(iw,:) = sum(yxdPdrho_rf_2piRp(ymask,:),1);
+            wxp_rf_2piRp(iw,:) = sum(yxp_rf_2piRp(ymask{iw},:),1);
+            wnp_rf_2piRp(iw,:) = reshape(sum(sum(yxnp_rf_2piRp(:,ymask{iw},:),2),1),[1,nn_rf]);
+            wxdPdrho_rf_2piRp(iw,:) = sum(yxdPdrho_rf_2piRp(ymask{iw},:),1);
             %    
             wi_peak = find(wxdPdrho_rf_2piRp(iw,:) == max(wxdPdrho_rf_2piRp(iw,:)));
             %
@@ -800,8 +845,10 @@ if nr > 1,
             leg = {};
             %
             for iw = 1:nw,
-                if isfield(waves{iw},'rayinit') && isfield(waves{iw}.rayinit,'launch'),
+                if isfield(waves{iw},'rayinit') && isfield(waves{iw}.rayinit,'launch') && isfield(waves{iw}.rayinit.launch,'id'),
                     leg = [leg,['LUKE ',waves{iw}.rayinit.launch.id]];
+                elseif isfield(waves{iw},'rayinit') && isfield(waves{iw}.rayinit,'id'),
+                    leg = [leg,['LUKE ',waves{iw}.rayinit.id]];
                 else
                     leg = [leg,['LUKE ',waves{iw}.id]];
                 end
@@ -812,8 +859,10 @@ if nr > 1,
             if ~isnan(p_rf_2piRp_lin),
                 %
                 for iw = 1:nw,
-                    if isfield(waves{iw},'rayinit') && isfield(waves{iw}.rayinit,'launch'),
+                    if isfield(waves{iw},'rayinit') && isfield(waves{iw}.rayinit,'launch') && isfield(waves{iw}.rayinit.launch,'id'),
                         leg = [leg,['C3PO ',waves{iw}.rayinit.launch.id]];
+                    elseif isfield(waves{iw},'rayinit') && isfield(waves{iw}.rayinit,'id'),
+                        leg = [leg,[waves{iw}.rayinit.id]];
                     else
                         leg = [leg,['Linear ',waves{iw}.id]];
                     end
@@ -1064,7 +1113,12 @@ if ir_display > 0 && ir_display <= nr,
     XDpp_cyl_ref(Xmask) = 0;
     %
     Fpar0_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref,Xpperp_cyl_ref.*Xf0_cyl_ref,1);
-    Fparinit_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref,Xpperp_cyl_ref.*Xfinit_cyl_ref,1);		
+    Fparinit_cyl_ref = 2*pi*integral_dke_jd(dpperp_cyl_ref,Xpperp_cyl_ref.*Xfinit_cyl_ref,1);	
+    %
+    data_proc.cyl.ppar_ref = ppar_cyl_ref;
+    data_proc.cyl.Fpar0_ref = Fpar0_cyl_ref;
+    data_proc.cyl.Fparinit_ref = Fparinit_cyl_ref;
+    data_proc.cyl.Dparpar_ref = XDparpar_cyl_ref(1,:);
     %
     % Figures
     %
@@ -1135,7 +1189,7 @@ if ir_display > 0 && ir_display <= nr,
         %
         figure(12),clf,set(12,'Name',['2-D contour of ',y3lab,' - ',dke_out.simul.id])
         %
-        cont = 10;
+        cont = input_dke_yp('contours for DQL',10);
         %
         graph2D_jd(x1,x2,y3','','',radialloc,xlim1,xlim2,1,NaN,cont,0,style,NaN,width,siz,1);
         graph1D_jd(x1,y9,0,0,xlab1,xlab2,radialloc,NaN,xlim1,xlim2,style,marker,color1,width2,siz,gca,red,lspace,bspace2);
@@ -1190,21 +1244,6 @@ if ir_display > 0 && ir_display <= nr,
     %
     print_jd(p_opt,[simul_id,'_F0pFM_1D_',tir_display],'figures_LUKE');
     %
-    % ---------- parallel diffusion coefficient  -----------
-    %
-    if strcmp(y3lab,'D||'),
-        %
-        figure(15),clf,set(14,'Name',['D|| - ',dke_out.simul.id])
-        %
-        y1 = XDparpar_cyl_ref(1,:);
-        ylab = 'D_{||} (p_{\perp}=0)';
-        ylim = NaN;
-        %
-        graph1D_jd(x1,y1,0,0,xlab1,ylab,radialloc,NaN,xlim1,ylim,style,marker,color2,width2,siz,gca,red,lspace,bspace2);
-        %
-        print_jd(p_opt,[simul_id,'_DQL_1D_',tir_display],'figures_LUKE');
-        %
-    end
 end
 %
 
