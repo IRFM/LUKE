@@ -102,10 +102,10 @@ if xvar == 'g',%rho defined as r/a on LFS midplane
     plab = 'r/a';
 elseif xvar == 'p',%rho defined as square root of poloidal flux
     prho = sqrt(psin);
-    plab = '\psi_n^{1/2}';
+    plab = '\rho_{\psi_P}';
 elseif xvar == 't',%rho defined as square root of toroidal flux
     prho = equilDKE.xrhoT;
-    plab = '\psi_t^{1/2}';
+    plab = '\rho_{\psi_T}';
 elseif xvar == 'v',%rho defined as square root of toroidal flux
     prho = equilDKE.xrhoV;
     plab = '\rho_V';
@@ -484,7 +484,7 @@ color4 = 'g';
 color5 = 'k';
 width1 = 2;
 width2 = 0.5;
-siz = 20;
+siz = 20+14i;
 red = 0.9;
 lspace = 0.7;
 bspace = 0.7;
@@ -641,6 +641,12 @@ while iw ~= 0 && ibb ~= 0
     %
     figlab = ['wave #',num2str(iw),'; ray #',num2str(ibb)];
     %
+    if waves{iw}.opt_TeNpar == 1,
+        %
+        NparsTe = input_dke_yp('Value for N//*sqrt(Te)',6.5);
+        %
+    end
+    %
     % poloidal ray trajectory
     %
     setfig(f_opt,ib,1,figlab)
@@ -701,16 +707,13 @@ while iw ~= 0 && ibb ~= 0
     setfig(f_opt,ib,3,figlab)
     %
     xlim = [0,max(ray.ss)];
-    ylim = NaN;
+    ylim = [0,ceil(1.5*max(abs(real(ray.sNpar))))];
     xlab = 's (m)';
     ylab = 'N_{||}';
     tit = '';
     %
-    graph1D_jd(ray.ss,abs(real(ray.sNpar)),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz,gca,red,lspace,bspace);
+    graph1D_jd(ray.ss,abs(real(ray.sNpar)),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
     if waves{iw}.opt_TeNpar == 1,
-        %
-        NparsTe = input_dke_yp('Value for N//*sqrt(Te)',6.5);
-        %
         graph1D_jd(ray.ss,NparsTe./sqrt(ray.sTe),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
         leg = {'N_{||}',[num2str(NparsTe),'/Te^{1/2}'],'N_{||acc}'};
     else
@@ -724,6 +727,7 @@ while iw ~= 0 && ibb ~= 0
     setfig(f_opt,ib,4,figlab)
     %
     ylab = 'N_{\perp}';
+    ylim = NaN;
     %
     graph1D_jd(ray.ss,real(ray.sNperp),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width1,siz);
     graph1D_jd(ray.ss(mask_abs),real(ray.sNperp(mask_abs)),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
@@ -750,9 +754,21 @@ while iw ~= 0 && ibb ~= 0
     %
     graph1D_jd(rho_dep,ray.dPnormdrho.*drhog_dep./drho_dep,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color2,width1,siz);
     %
-    if ~f_opt
-    	print_jd(opt.print,[figname,'Wave_',num2str(iw),'_Ray_',num2str(ibb)],'figures_WAVE');
-	
+    if ~f_opt && opt.print >= 0,
+        %
+        figure(2000 + ib - 1);
+        cpaxlist = copyobj(get(1000 + ib - 1,'children'),2000 + ib - 1);
+        %
+        set(2000 + ib - 1,'position',[0,0,600,900]),
+        set(cpaxlist(1),'units','normalized','position',[0.65,0.1,0.3,0.2])
+        set(cpaxlist(2),'units','normalized','position',[0.15,0.1,0.3,0.2])
+        set(cpaxlist(3),'units','normalized','position',[0.65,0.4,0.3,0.2])
+        set(cpaxlist(4),'units','normalized','position',[0.35,0.525,0.1,0.1])
+        set(cpaxlist(5),'units','normalized','position',[0.15,0.4,0.3,0.2])
+        set(cpaxlist(6),'units','normalized','position',[0.65,0.7,0.3,0.2])
+        set(cpaxlist(7),'units','normalized','position',[0.15,0.7,0.3,0.2])    
+        %
+    	print_jd(opt.print,[figname,'Wave_',num2str(iw),'_Ray_',num2str(ibb)],'figures_WAVE');	
     end
 end
 %
@@ -773,6 +789,7 @@ else
         clf,
         set(gcf,'resize','on'),
         set(gcf,'units','normalized'),
+        %
         set(gcf,'position',[0,0,1,1]),
         set(fignum,'name',figlab)
     end    
