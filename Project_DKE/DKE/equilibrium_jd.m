@@ -528,62 +528,85 @@ end
 % Display of equilibrium properties
 %
 if display_mode >= 2,
-%    
+    %
+    p_opt = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
+    %    
     prho = mx(:,1)'/ap;
-%
-% displays the equilibrium profiles
-%
-    if flag_id, 
-       figure('Name','Magnetic equilibrium profile parameters'),clf
-       set(gcf,'units','inches','position',[0.5,1,10,6]);
-       set(gca,'position',[0,0,1,1]);
-%
-       subplot('position',[1/12,0.5+1/16,5/24,5/16])
-          [ax] = graph1D_jd(prho,psin,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xpsin,0,0,'\rho','\psi_n','',NaN,[0,1],[-eps,1],'none','+','r',2);
-       subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
-          [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],[-eps,max(equil.pTe)],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xTe,0,0,'\rho','T_e (keV)',equil.id,NaN,[0,1],[-eps,max(equil.pTe)],'none','+','r',2);
-       subplot('position',[2/3+1/12,0.5+1/16,5/24,5/16])
-          [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'','','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xne/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'none','+','r',2);
-       subplot('position',[1/12,1/8,5/24,5/16])
-          [ax] = graph1D_jd(prho,equil.pzTi,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xzTi,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'none','+','r',2);
-       subplot('position',[1/3+1/12,1/8,5/24,5/16])
-          [ax] = graph1D_jd(prho,equil.pzni/1e19,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xzni/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'none','+','r',2);
-       subplot('position',[2/3+1/12,1/8,5/24,5/16])
-          [ax] = graph1D_jd(prho,pZeff,0,0,'','','',NaN,[0,1],[-eps,max(pZeff)],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[-eps,max(pZeff)],'none','+','r',2);
-    end
-%       
-% displays the magnetic flux-surfaces geometry
-%       
+    %       
+    % displays the magnetic flux-surfaces geometry
+    %       
     srho = linspace(0,1,21);
     stheta = linspace(0,2*pi,31);
     sx = interp1(prho,mx,srho,method);  
     sy = interp1(prho,my,srho,method); 
     stx = interp1(mtheta,mx',stheta,method)';  
     sty = interp1(mtheta,my',stheta,method)';    
-%
+    %
     xmin = min(min(equil.ptx));
     xmax = max(max(equil.ptx));
     ymin = min(min(equil.pty));
     ymax = max(max(equil.pty));
-   
     %
     figure('Name','Magnetic equilibrium flux surface contour'),clf
-%    
+    %    
     [ax] = graph1D_jd(sx',sy',0,0,'','','',NaN,[xmin,xmax],[ymin,ymax],'-','none','r',2);drawnow
     [ax] = graph1D_jd(stx,sty,0,0,'x(m)','y(m)','Flux-surfaces labeled by \rho=0,0.05,0.1...1',NaN,[xmin,xmax],[ymin,ymax],'-','none','b',0.5,20,gca,0.9,0.7,0.5);
     axis('equal');drawnow  
+    print_jd(p_opt,['Fig_EQUIL_',equil.id,'_mag'])
     %
     figure('Name','Electron Temperature and Density Profiles'),clf
-%    
+    %    
     [ax] = graph1D2jd(prho,xTe,prho,xne/1e19,'\rho','T_e (keV)','n_e (10^{19} m^{-3})','',...
         [0,1],NaN,NaN,'-','none','r',2,'--','none','b',2,20,0.9,0.5,0.7);
     set(ax(1),'xtick',[0:0.2:1]);set(ax(2),'xtick',[0:0.2:1])
+    print_jd(p_opt,['Fig_EQUIL_',equil.id,'_tene'])
+    %
+    % displays the equilibrium profiles
+    %
+%    if flag_id, 
+    figure('Name','Equilibrium profile parameters'),clf
+    set(gcf,'units','inches','position',[0.5,1,10,6]);
+    set(gca,'position',[0,0,1,1]);
+    %
+    subplot('position',[1/12,0.5+1/16,5/24,5/16])
+      [ax] = graph1D_jd(prho,psin,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',0.5);
+      [ax] = graph1D_jd(xrho,xpsin,0,0,'\rho','\psi_n','',NaN,[0,1],[-eps,1],'none','+','r',2);
+    subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
+      [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],[-eps,max(equil.pTe)],'-','none','b',0.5);
+      [ax] = graph1D_jd(xrho,xTe,0,0,'\rho','T_e (keV)',equil.id,NaN,[0,1],[-eps,max(equil.pTe)],'none','+','r',2);
+    subplot('position',[2/3+1/12,0.5+1/16,5/24,5/16])
+      [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'','','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'-','none','b',0.5);
+      [ax] = graph1D_jd(xrho,xne/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'none','+','r',2);
+    subplot('position',[1/12,1/8,5/24,5/16])
+      [ax] = graph1D_jd(prho,equil.pzTi,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'-','none','b',0.5);
+      [ax] = graph1D_jd(xrho,xzTi,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'none','+','r',2);
+    subplot('position',[1/3+1/12,1/8,5/24,5/16])
+      [ax] = graph1D_jd(prho,equil.pzni/1e19,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'-','none','b',0.5);
+      [ax] = graph1D_jd(xrho,xzni/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'none','+','r',2);
+    subplot('position',[2/3+1/12,1/8,5/24,5/16])
+      [ax] = graph1D_jd(prho,pZeff,0,0,'','','',NaN,[0,1],[-eps,max(pZeff)],'-','none','b',0.5);
+      [ax] = graph1D_jd(xrho,xZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[-eps,max(pZeff)],'none','+','r',2);
+%    end
+    %
+    if p_opt >= 0,
+        %
+        axlist = get(gcf,'children');
+        figure('Name','Equilibrium profile > print'),clf
+        cpaxlist = copyobj(axlist,gcf);
+        %
+        set(gcf,'position',[0,0,600,900]),
+        set(cpaxlist(1),'units','normalized','position',[0.65,0.1,0.3,0.2])
+        set(cpaxlist(2),'units','normalized','position',[0.65,0.4,0.3,0.2])
+        set(cpaxlist(3),'units','normalized','position',[0.15,0.4,0.3,0.2])
+        set(cpaxlist(4),'units','normalized','position',[0.65,0.7,0.3,0.2])
+        set(cpaxlist(5),'units','normalized','position',[0.15,0.7,0.3,0.2])
+        set(cpaxlist(6),'units','normalized','position',[0.15,0.1,0.3,0.2])    
+        %
+        set(get(cpaxlist(5),'title'),'string','')
+        %
+        print_jd(p_opt,['Fig_EQUIL_',equil.id,'_prof']);	
+        %
+    end
 end
 %
 zZi = equil.zZi;
