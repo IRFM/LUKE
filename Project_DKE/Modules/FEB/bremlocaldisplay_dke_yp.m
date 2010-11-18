@@ -1,16 +1,16 @@
-function [] = bremlocaldisplay_dke_yp(dkeparam,display,equilDKE,momentumDKE,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_display,t_display,k_display,p_opt,filename);
+function [] = bremlocaldisplay_dke_yp(dkeparam,display,equilDKE,momentumDKE,Zmomcoef,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_display,t_display,k_display,p_opt,filename);
 %R5-X2 - Draws local properties of the plasma bremsstrahlung
 %
 % This function draws local properties of the plasma bremsstrahlung
 %
 % by J. Decker (CEA/IRFM, joan.decker@cea.fr) and Y. Peysson (CEA/IRFM, yves.peysson@cea.fr)
 %
-if nargin < 12, error('Not enough input argument in bremlocaldisplay_dke_yp');end
-if nargin == 12, 
+if nargin < 13, error('Not enough input argument in bremlocaldisplay_dke_yp');end
+if nargin == 13, 
     p_opt = 2;
     filename = '';
 end
-if nargin == 13, 
+if nargin == 14, 
     filename = '';
 end
 %
@@ -25,7 +25,7 @@ mask_hxr = Zbremchord.mask_hxr;
 %
 ne_ref = mksa.ne_ref;
 betath_ref = mksa.betath_ref;
-Ec = momentumDKE.Ec_ref;
+Ec = Zmomcoef.Ec_ref;
 %
 dmhu = momentumDKE.dmhu;
 mhu = momentumDKE.mhu;

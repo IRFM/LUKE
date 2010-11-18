@@ -1,11 +1,11 @@
-function [ppar_cyl,pperp_cyl,p_hxr,Xf_hxr_cyl,mc2,betath_ref] = contourfp_hxr_yp(dkeparam,display,equilDKE,momentumDKE,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,Zbremdiag,i_kphot,i_test,j_test,display_mode)
+function [ppar_cyl,pperp_cyl,p_hxr,Xf_hxr_cyl,mc2,betath_ref] = contourfp_hxr_yp(dkeparam,display,equilDKE,momentumDKE,Zmomcoef,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,Zbremdiag,i_kphot,i_test,j_test,display_mode)
 %
 %Draw countour plot of the electron distribution function with the region that is concerned by fast electron bremsstrahlung above a given photon energy
 %(see its use in postprocessingTS_hxr.m and postprocessingMST_hxr.m in Simulations directory)
 %
 %by Y. PEYSSON (CEA/DRFC, yves.peysson@cea.fr) and J. DECKER (CEA/DRFC, joan.decker@cea.fr)
 %
-if nargin < 14,
+if nargin < 15,
     error('Not enough input arguments in contourfp_hxr_yp');
 end
 %
@@ -31,7 +31,7 @@ mask_hxr = Zbremchord.mask_hxr;
 %
 ne_ref = mksa.ne_ref;
 betath_ref = mksa.betath_ref;
-Ec = momentumDKE.Ec_ref;
+Ec = Zmomcoef.Ec_ref;
 %
 dmhu = momentumDKE.dmhu;
 mhu = momentumDKE.mhu;

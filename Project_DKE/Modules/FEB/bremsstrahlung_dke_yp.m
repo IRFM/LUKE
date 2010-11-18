@@ -1,4 +1,4 @@
-function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam,fieldside,mode)
+function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,Zmomcoef,dke_out,Zbremchord,hxr,hxrparam,fieldside,mode)
 %R5-X2 - Calculation of  the plasma bremsstrahlung emission
 %
 % Calculates the plasma bremsstrahlung emission. Call first the function bremchord_dke_yp.m
@@ -25,14 +25,14 @@ function  [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,rad
 %
 % by Joan Decker (CEA/IRFM,joan.decker@cea.fr) and Yves Peysson(CEA/IRFM,yves.peysson@cea.fr)
 %
-if nargin < 10,
+if nargin < 11,
    error('Not enough input arguments in bremshtrahlung_dke_yp')
 end
-if nargin == 10,
+if nargin == 11,
     fieldside = NaN;
     mode = NaN;
 end
-if nargin == 11,
+if nargin == 12,
     mode = NaN;
 end
 %	
@@ -45,7 +45,7 @@ Ipdir_mfl_lcs = Zbremchord.Ipdir_mfl_lcs;
 %
 ne_ref = mksa.ne_ref;
 betath_ref = mksa.betath_ref;
-Ec = momentumDKE.Ec_ref;
+Ec = Zmomcoef.Ec_ref;
 %
 dmhu = momentumDKE.dmhu;
 mhu = momentumDKE.mhu;

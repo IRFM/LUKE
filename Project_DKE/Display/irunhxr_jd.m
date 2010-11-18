@@ -18,7 +18,7 @@ if nargin < 9,
         disp(quitmsg)
         return
     end  
-    load([luke_path,luke_file],'id_simul','equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa');
+    load([luke_path,luke_file],'id_simul','equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa','Zmomcoef');
     %
 else
     %
@@ -30,8 +30,17 @@ else
     radialDKE = output.radialDKE;
     momentumDKE = output.momentumDKE;
     mksa = output.mksa;
+    Zmomcoef = output.Zmomcoef;
     %
 end
+%
+if ~isfield(Zmomcoef,'Ec_ref'),
+    if isfield(mksa,'Ec_ref'),
+        Zmomcoef.Ec_ref = mksa.Ec_ref;
+    else
+        error('Kinetic energy data missing. Please correct manually.')
+    end
+end    
 %
 if isfield(equil,'info') && isfield(equil.info,'shotnum'),
     shotnum = equil.info.shotnum;
@@ -328,7 +337,7 @@ hxrspec.kdiag_hxr = [energy(1:end-1),(energy(1)+energy(2))/2;energy(2:end),(ener
 %
 Zbremchord.mask_hxr(:) = 1;%so that the bremmstrahlung is calculated at all positions, for display purposes
 %
-[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxrspec,hxrparam);
+[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,Zmomcoef,dke_out,Zbremchord,hxrspec,hxrparam);
 %
 [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxrspec,hxrparam,dt);
 %
@@ -382,7 +391,7 @@ if strcmp(d_opt,'y'),
     bremchorddisplay_dke_yp(equilHXR,Zbremchord,c_opt,p_opt,equil.id);
     %
     if ~isempty(r_opt) & ~isempty(t_opt) & ~isempty(k_opt)
-        bremlocaldisplay_dke_yp(dkeparam,dkedisplay,equilDKE,momentumDKE,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_opt,t_opt,k_opt,p_opt,equil.id)
+        bremlocaldisplay_dke_yp(dkeparam,dkedisplay,equilDKE,momentumDKE,Zmomcoef,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_opt,t_opt,k_opt,p_opt,equil.id)
     end
     %
     bremdiagdisplay_dke_yp(hxrspec,Zbremchord,Zbremplasma,Zbremdiag,c_opt,k_opt,p_opt,equil.id,hxrexp(ik,1:nc))
