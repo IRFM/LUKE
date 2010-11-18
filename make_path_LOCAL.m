@@ -320,18 +320,21 @@ crpppc70.local_root = '/home/decker/NoTivoli/';
 crpppc70.computer = 'GLNXA64';%machine type and supported OS
 crpppc70.temppathroot = '/home/decker/NoTivoli/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-crpppc70.mex76 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB76'];
-crpppc70.mex78 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB78'];
-crpppc70.mex79 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB79'];
+crpppc70.mex706 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB76'];
+crpppc70.mex708 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB78'];
+crpppc70.mex709 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB79'];
+crpppc70.mex710 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB710'];
 crpppc70.compiler_opt.helmex.mex76 = 'FLIBS=''-Wl,-rpath-link,/usr/local/matlab76/bin/glnxa64 -L/usr/local/matlab76/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
 %crpppc70.compiler_opt.helmex.mex78 = 'FLIBS=''-Wl,-rpath-link,/usr/local/matlab78/bin/glnxa64 -L/usr/local/matlab78/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
 crpppc70.compiler_opt.helmex.mex78 = NaN;
 crpppc70.compiler_opt.helmex.mex79 = 'FLIBS=''-Wl,-rpath-link,/usr/local/matlab79/bin/glnxa64 -L/usr/local/matlab79/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
+crpppc70.compiler_opt.helmex.mex710 = crpppc70.compiler_opt.helmex.mex79;
 crpppc70.compiler_opt.fopts = 'FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''';
 %
-crpppc70.MUMPS.mex76 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
+crpppc70.MUMPS.mex706 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
 %crpppc70.MUMPS.mex78 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.8'];%Where MUMPS matrix solver is stored (MEX function)
-crpppc70.MUMPS.mex79 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.9'];%Where MUMPS matrix solver is stored (MEX function)
+crpppc70.MUMPS.mex709 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.9'];%Where MUMPS matrix solver is stored (MEX function)
+crpppc70.MUMPS.mex710 = [crpppc70.local_root,'Packages/MUMPS_4.9.2/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 %
 crpppc70.remote(1).host = 'pleiades2.epfl.ch';
 crpppc70.remote(1).luke_root = '/home/jdecker/LUKE/';
