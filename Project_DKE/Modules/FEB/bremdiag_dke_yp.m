@@ -40,17 +40,17 @@ method = 'cubic';
 kphot = Zbremplasma.kphot;
 brem_bd_in = Zbremplasma.brem_bd_out;
 %
-kphotmin = hxr.kdiag_hxr(1,1);
-kphotmax = hxr.kdiag_hxr(2,end-1);
+kphotmin = min(kphot);%hxr.kdiag_hxr(1,1);
+kphotmax = max(kphot);%hxr.kdiag_hxr(2,end-1);
 %
 kfit = (hxr.kdiag_hxr(1,1:end-1) + hxr.kdiag_hxr(2,1:end-1))/2;%Measured photon energy spectrum (keV) [1,k]
-ikfitmin = find(kfit == hxr.kdiag_hxr(1,end));
-ikfitmax = find(kfit == hxr.kdiag_hxr(2,end));
-kfitmin = kfit(ikfitmin);
-kfitmax = kfit(ikfitmax);
+ikfitmin = find(kfit >= hxr.kdiag_hxr(1,end),1,'first');
+ikfitmax = find(kfit <= hxr.kdiag_hxr(2,end),1,'last');
+%kfitmin = kfit(ikfitmin);
+%kfitmax = kfit(ikfitmax);
 dkfit = hxr.kdiag_hxr(2,1:end-1) - hxr.kdiag_hxr(1,1:end-1);%Channel width of the measured photon energy spectrum (keV) [1,k]
 %
-kinterp = linspace(kphotmin,kphotmax,1000);%Uniform grid only 
+kinterp = linspace(kphotmin,kphotmax,1001);%Uniform grid only 
 dkinterp = kinterp(2) - kinterp(1);
 brem_bd_interp = interp1(kphot,brem_bd_in',kinterp,method)';
 %
@@ -101,7 +101,7 @@ for ic = 1:size(brem_bd_interp,1),
 	if ic == 1,
 		gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);		
 		normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
-		gkEinterp = (gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
+		gkEinterp = gkEinterp1;%(gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
 %		plot(kinterp,trapz(kinterp,gkEinterp1') + gkEinterp1(:,1)'*kinterp(1));%test of the norm
 %       plot(kinterp,trapz(kinterp,gkEinterp'));%test of the norm
 %
@@ -122,7 +122,7 @@ for ic = 1:size(brem_bd_interp,1),
 %
 	gkEinterp_out{ic} = gkEinterp;%For display of the response function
 %
-	brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp)*dkinterp*(brem_bd_interp(ic,:))'))'; 
+	brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))'; 
 %	brem_bd_diag_interp(ic,:) = (fix(((eye(size(gkEinterp')).*Tabsxinterp)*(brem_bd_interp(ic,:))')))';%detector response neglected
 %	
 	for ik = 1:size(hxr.kdiag_hxr,2)-1,

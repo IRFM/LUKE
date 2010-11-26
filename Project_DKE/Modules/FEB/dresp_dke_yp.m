@@ -48,7 +48,7 @@ for i=1:nk,
         if dEk(i)~=0,
                 gkEph = Rk(i)*2*sqrt(log(2)/pi)*exp(-4*log(2)*(E - k(i)).^2/dEk(i)^2)/dEk(i);
                 if ic==0,
-                        gkE(i,:) = gkEph/Rk(i);
+                        gkE(i,:) = gkEph;%/Rk(i);
                 else
                         E1 = E(1:ic);
                         E2 = E(ic+1:nk);
@@ -61,7 +61,7 @@ for i=1:nk,
                 gkEph0 = speye(i,nk);
                 gkEph = Rk(i)*gkEph0/deltak;
                 if ic==0,
-                        gkE(i,:) = gkEph/Rk(i);
+                        gkE(i,:) = gkEph;%/Rk(i);
                 else
                         E1 = E(1:ic);
                         E2 = E(ic+1:nk);                    
