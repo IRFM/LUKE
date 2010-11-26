@@ -1127,23 +1127,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     nw = length(waves);
                     %
-                    for iw = 1:nw
-                        %
-                        if isfield(waves{iw},'rayinit'),
-                            rayinits{iw} = waves{iw}.rayinit;
-                            %
-                            if isfield (waves{iw}.rayinit,'launch'),
-                                launchs{iw} = waves{iw}.rayinit.launch;
-                            elseif isfield(waves{iw},'launch'),
-                                launchs{iw} = waves{iw}.launch;
-                            else
-                                launchs{iw} = '';
-                            end
-                        else
-                            rayinits{iw} = '';
-                            launchs{iw} = '';
-                        end
-                        %
+                    if basestr == 'TCV'
+                        g_opt.vessel_opt = input_dke_yp('Do you want to display TCV vessel and tiles','y',{'y','n'});
+                    else
+                        g_opt.vessel_opt = 'n';
                     end
                     %
                     w_list = input_dke_yp('List of waves to display',1:nw,[1;nw],'');
@@ -1160,7 +1147,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     rho_disp = 0:0.1:1;
                     ymask = NaN;
                     %
-                    graph_wave_jd(equil,waves(w_list),rayinits(w_list),launchs(w_list),nr_dep,g_opt,rho_disp,ymask,xvar);
+                    graph_wave_jd(equil,waves(w_list),nr_dep,g_opt,rho_disp,ymask,xvar);
                     %
                     clear rayinits nw
                     %
