@@ -69,11 +69,11 @@ disp(['    --> Starting run with command ',remotecmd,' ...'])
 if ~isempty(remotehost),
     %
     [res,txt] = unix(['ssh ',remotelogname,'@',remotehost,...
-        ' ''',remotecmd,remotemem,' -v LUKE_matlabroot=',matlabroot,'/bin/,LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,' ',remoteluke_root,'mrunluke_batch''']);
+        ' ''',remotecmd,remotemem,' -v LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,' ',remoteluke_root,'mrunluke_batch''']);
     %
 else
     %
-    [res,txt] = unix([remotecmd,remotemem,' -v LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,',LUKE_datapath=',pwd,'/ ',remoteluke_root,'mrunluke_batch']);
+    [res,txt] = unix([remotecmd,remotemem,' -v LUKE_matlabroot=',matlabroot,'/bin/,LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,',LUKE_datapath=',pwd,'/ ',remoteluke_root,'mrunluke_batch']);
     %
 end
 %
