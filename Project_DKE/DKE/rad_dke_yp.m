@@ -70,6 +70,7 @@ if ~isempty(transpfaste),
     mhu = gridDKE.mhu;
     %
     gamma = Zmomcoef.gamma;
+    Xv = Zmomcoef.Xv;
     Xvpar = Zmomcoef.Xvpar;
     %
     ns_f = Zbouncecoef.ns_f;
@@ -102,10 +103,14 @@ if ~isempty(transpfaste),
     XXVpsi = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid) (psi coordinate)
     %
     if transpfaste.norm_ref == 1,
-        xvparmin_r = transpfaste.vparmin*ones(size(xrho));%Normalized to vth_ref
+        xvparmin_c = transpfaste.vparmin*ones(size(xrho));%Normalized to vth_ref
     elseif transpfaste.norm_ref == 0,
-        xvparmin_r = transpfaste.vparmin*ones(size(xrho)).*xbetath/betath_ref;%Normalized to vth (local)
+        xvparmin_c = transpfaste.vparmin*ones(size(xrho)).*xbetath/betath_ref;%Normalized to vth (local)
     end
+    %
+    xvparmin_r = real(xvparmin_c);
+    xvparmin_i = imag(xvparmin_c);
+    %
     xDr = transpfaste.Dr0*(1 + transpfaste.pDr*xrho.^2);
     xVr = transpfaste.Vr0*(1 + transpfaste.pVr*xrho.^2);
     %
@@ -122,17 +127,29 @@ if ~isempty(transpfaste),
         xEc_r_threshold(ir) = mc2*(sqrt(1+pn(ivpar_r_threshold).*pn(ivpar_r_threshold)*betath_ref^2) - 1);%in keV
         %
         if real(transpfaste.Dr_model)==0,%No vpar dependence
-            XDpsiv = xDr(ir)*ones(size(npn,nmhu)).*(abs(Xvpar) >= xvparmin_r(ir))/(ap*ap*nhu_ref);%Normalized to the central collision frequency
+            XDpsiv = xDr(ir)*(abs(Xvpar) >= xvparmin_r(ir))/(ap*ap*nhu_ref);%Normalized to the central collision frequency
         elseif real(transpfaste.Dr_model)==1,%Magnetic turbulence model: Dr(r)*vpar_ref/vth_ref
             XDpsiv = xDr(ir)*(abs(Xvpar) - xvparmin_r(ir)).*(abs(Xvpar) >= xvparmin_r(ir))/xvparmin_r(ir)/(ap*ap*nhu_ref);%Normalized to the central collision frequency
+        elseif real(transpfaste.Dr_model)==2,
+            if imag(transpfaste.vparmin) == 0,%No energy dependence
+                XDpsiv = xDr(ir)*(Xv >= xvparmin_r(ir))/(ap*ap*nhu_ref);%Normalized to the central collision frequency
+            else
+                XDpsiv = xDr(ir)*(Xv >= (xvparmin_r(ir) - 2*xvparmin_i(ir))).*(Xv <= (xvparmin_r(ir) + 2*xvparmin_i(ir))).*exp(-(Xv - xvparmin_r(ir)).^2/xvparmin_i(ir).^2)/(ap*ap*nhu_ref);
+            end
         end
         XXDpsi(:,:,ir) = XDpsiv;%3-D radial diffusion matrix (radial profile dependence) (psi coordinate)
         xmaxDpsi(ir) = max(max(XXDpsi(:,:,ir)));%Maximum value of the radial diffusion coefficient (psi coordinate)
         %
         if real(transpfaste.Vr_model)==0,%No vpar dependence
-            XVpsiv = xVr(ir)*ones(size(npn,nmhu)).*(abs(Xvpar) >= xvparmin_r(ir))/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
+            XVpsiv = xVr(ir)*(abs(Xvpar) >= xvparmin_r(ir))/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
         elseif real(transpfaste.Vr_model)==1,%Magnetic turbulence model: Vr(r) = Vr0(r)*vpar_ref/vth_ref
             XVpsiv = xVr(ir)*(abs(Xvpar) - xvparmin_r(ir)).*(abs(Xvpar) >= xvparmin_r(ir))/xvparmin_r(ir)/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
+        elseif real(transpfaste.Vr_model)==2,
+            if imag(transpfaste.vparmin) == 0,%No energy dependence
+                XVpsiv = xVr(ir)*(Xv >= xvparmin_r(ir))/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
+            else
+                XVpsiv = xVr(ir)*exp(-(Xv - xvparmin_r(ir)).^2/xvparmin_i(ir).^2)/(ap*nhu_ref);
+            end
         end
         XXVpsi(:,:,ir) = XVpsiv;%3-D radial pinch matrix (radial profile dependence) (psi coordinate)
         xmaxVpsi(ir) = max(max(XXVpsi(:,:,ir)));%Maximum value of the radial convection coefficient (psi coordinate)
