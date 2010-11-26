@@ -61,6 +61,7 @@ vp = gridDKE.pnp./gammap;
 v2p = vp.*vp;
 xv = v'*ones(1,length(v));
 xv2 = xv.*xv;
+Xv = v'*ones(1,gridDKE.nmhu);
 %
 % Fill structure gridDKE for output
 %
@@ -119,6 +120,7 @@ Zmomcoef.vp = vp;
 Zmomcoef.v2p = v2p;
 Zmomcoef.xv = xv;
 Zmomcoef.xv2 = xv2;
+Zmomcoef.Xv = Xv;
 %
 Zmomcoef.Xpnpar = gridDKE.Xpn.*gridDKE.Xmhu;
 Zmomcoef.Xpnperp2 = gridDKE.Xpn2 - Zmomcoef.Xpnpar.*Zmomcoef.Xpnpar;
