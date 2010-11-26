@@ -278,7 +278,7 @@ if any(isnan(energy)),% no or useless exp. data
     filter_thickness = NaN;
     filter_material = NaN;
     %
-    energy = hxrspec.kphot;
+    %energy = [hxrspec.kdiag_hxr(1,1:end-1),hxrspec.kdiag_hxr(2,end-1)];
     hxrexp = NaN*ones(length(energy),nc);
     dt = 1;
 else
@@ -328,8 +328,7 @@ else
     %
  end        
 %
-hxrspec.kphot = sort([energy,(energy(1:end-1) + energy(2:end))/2]);
-hxrspec.kdiag_hxr = [energy(1:end-1),(energy(1)+energy(2))/2;energy(2:end),(energy(end)+energy(end-1))/2];
+hxrspec.kdiag_hxr = [energy(1:end-1),hxrspec.kdiag_hxr(1,end);energy(2:end),hxrspec.kdiag_hxr(2,end)];%redefine kdiag according to measurements
 %
 % HXR emission calculations
 %

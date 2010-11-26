@@ -28,6 +28,7 @@ if isstruct(data),
         radialDKE = data.output.radialDKE;
         momentumDKE = data.output.momentumDKE;
         mksa = data.output.mksa;
+        Zmomcoef = data.output.Zmomcoef;
         external = data.external;
     else % case of LUKE_RESULTS file
         Zcurr = data.Zcurr;
@@ -36,6 +37,7 @@ if isstruct(data),
         radialDKE = data.radialDKE;
         momentumDKE = data.momentumDKE;
         mksa = data.mksa;
+        Zmomcoef = data.Zmomcoef;
         external = '';
     end        
     %
@@ -45,11 +47,19 @@ else
     %
     external = '';
     %
-    load(data,'id_simul','equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa','external');
+    load(data,'id_simul','equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa','Zmomcoef','external');
     %
 end    
 %
 clear data
+%
+if ~isfield(Zmomcoef,'Ec_ref'),
+    if isfield(mksa,'Ec_ref'),
+        Zmomcoef.Ec_ref = mksa.Ec_ref;
+    else
+        error('Kinetic energy data missing. Please correct manually.')
+    end
+end    
 %
 % load HXR camera spec
 %
@@ -180,8 +190,7 @@ if all(ischar(exp_file)),
         %
         hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
         %
-        hxrspec.kphot = sort([energy,(energy(1:end-1) + energy(2:end))/2]);
-        hxrspec.kdiag_hxr = [energy(1:end-1),(energy(1)+energy(2))/2;energy(2:end),(energy(end)+energy(end-1))/2];
+        hxrspec.kdiag_hxr = [energy(1:end-1),hxrspec.kdiag_hxr(1,end);energy(2:end),hxrspec.kdiag_hxr(2,end)];%redefine kdiag according to measurements
         %
     else
         %
@@ -195,7 +204,7 @@ else
     filter_thickness = NaN;
     filter_material = NaN;
     %
-    energy = hxrspec.kphot;
+    energy = [hxrspec.kdiag_hxr(1,1:end-1),hxrspec.kdiag_hxr(2,end-1)];
     hxrexp = NaN*ones(length(energy),nc);
     dt = 1;
     %
@@ -205,7 +214,7 @@ end
 %
 Zbremchord.mask_hxr(:) = 1;%so that the bremmstrahlung is calculated at all positions, for display purposes
 %
-[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxrspec,hxrparam);
+[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,Zmomcoef,dke_out,Zbremchord,hxrspec,hxrparam);
 %
 [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxrspec,hxrparam,dt);
 %
