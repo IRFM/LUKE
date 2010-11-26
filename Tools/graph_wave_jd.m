@@ -1,49 +1,29 @@
-function graph_wave_jd(equil,waves,rayinits,launchs,nr_dep,opt,rho_disp,ymask,xvar,yabs,colors,styles)
+function graph_wave_jd(equil,waves,nr_dep,opt,rho_disp,ymask,xvar,yabs,colors,styles)
 %
 % This function plots the characteristics of wave data
 %
 % by J. Decker 02/04/03
 %
-if nargin < 12
+if nargin < 10
     styles = {'-','-','-','-','-','-'};
 end
-if nargin < 11
+if nargin < 9
     colors = {'b','r',[0,0.5,0],'m','c','y'};
 end
-if nargin < 10
+if nargin < 8
     yabs = NaN;
 end
-if nargin < 9
+if nargin < 7
     xvar = 's';
 end
-if nargin < 8
+if nargin < 6
     ymask = NaN;
 end
-if nargin < 7
+if nargin < 5
     rho_disp = 0:0.1:1;
 end
 %
 nw = length(waves);
-%
-for iw = 1:nw,
-	if length(rayinits) < iw,
-		rayinits{iw} = '';
-	end
-	if ~isempty(rayinits{iw}) && length(rayinits{iw}.yrho0) < length(waves{iw}.rays),
-		rayinits{iw} = '';
-	end
-	%
-	if length(launchs) < iw,
-		launchs{iw} = '';
-	end
-	if ~isempty(launchs{iw}) && isfield(launchs{iw},'yR_L'),
-		if length(launchs{iw}.yR_L) < length(waves{iw}.rays),
-			launchs{iw} = '';
-		end
-	else
-		launchs{iw} = '';
-	end
-end
 %
 if ~iscell(ymask),
     ymask = '';
@@ -144,6 +124,7 @@ for iw = 1:nw,
 		%
         rays{iy}.omega_rf = waves{iw}.omega_rf;
         rays{iy}.color = colors{mod(iw-1,length(colors))+1};
+        %rays{iy}.color = colors{mod(iy-1,length(colors))+1};
         rays{iy}.style = styles{mod(iw-1,length(styles))+1};
         rays{iy}.sX = (Rp + rays{iy}.sx).*cos(-rays{iy}.sphi);
         rays{iy}.sY = (Rp + rays{iy}.sx).*sin(-rays{iy}.sphi);
@@ -153,51 +134,69 @@ for iw = 1:nw,
 		else
 			rays{iy}.mask_abs = [];
         end
-        if isempty(rayinits{iw}),
-            rays{iy}.init = '';
+        if ~isfield(rays{iy},'rayinits'),
+            rays{iy}.refs = '';
         else
-            rays{iy}.init.rho0 = rayinits{iw}.yrho0(ib);
-            rays{iy}.init.theta0 = rayinits{iw}.ytheta0(ib);
-            rays{iy}.init.phi0 = rayinits{iw}.yphi0(ib);
-            rays{iy}.init.m0 = rayinits{iw}.ym0(ib);
-            rays{iy}.init.Npar0 = rayinits{iw}.yNpar0(ib);
-            rays{iy}.init.dNpar0 = rayinits{iw}.ydNpar0(ib);
-            rays{iy}.init.P0_2piRp = rayinits{iw}.yP0_2piRp(ib);
-			%
-			rays{iy}.init.psin0 = rho2psi_jd(equil,rays{iy}.init.rho0);
-			rays{iy}.init.x0 = interp2(psin,theta,ptx.',rays{iy}.init.psin0,rays{iy}.init.theta0,method);
-			rays{iy}.init.y0 = interp2(psin,theta,pty.',rays{iy}.init.psin0,rays{iy}.init.theta0,method);
-			rays{iy}.init.R0 = rays{iy}.init.x0 + Rp;
-			rays{iy}.init.Z0 = rays{iy}.init.y0 + Zp;
-			rays{iy}.init.X0 = rays{iy}.init.R0*cos(-rays{iy}.init.phi0);
-			rays{iy}.init.Y0 = rays{iy}.init.R0*sin(-rays{iy}.init.phi0);
+            for iref = 1:length(rays{iy}.rayinits),% for each reflection
+                %
+                rayinit = rays{iy}.rayinits{iref};
+                %
+                launch = rayinit.launch;
+                %
+                rays{iy}.refs{iref}.x = launch.yR_L - Rp;
+                rays{iy}.refs{iref}.y = launch.yZ_L - Zp;
+                rays{iy}.refs{iref}.phi = launch.yphi_L;
+                %
+                while isfield(launch,'launch_back') && ~isempty(launch.launch_back),
+                    %
+                    launch = launch.launch_back;
+                    %
+                    rays{iy}.refs{iref}.x = [launch.yR_L - Rp,rays{iy}.refs{iref}.x];
+                    rays{iy}.refs{iref}.y = [launch.yZ_L - Zp,rays{iy}.refs{iref}.y];
+                    rays{iy}.refs{iref}.phi = [launch.yphi_L,rays{iy}.refs{iref}.phi];
+                    %
+                end
+                %
+                is = find(rays{iy}.ss == rayinit.ss0);
+                %
+                if is > 1 && is < length(rays{iy}.ss),
+                    %
+                    rays{iy}.refs{iref}.x = [rays{iy}.sx(is),rays{iy}.refs{iref}.x,rays{iy}.sx(is+1)];
+                    rays{iy}.refs{iref}.y = [rays{iy}.sy(is),rays{iy}.refs{iref}.y,rays{iy}.sy(is+1)];
+                    rays{iy}.refs{iref}.phi = [rays{iy}.sphi(is),rays{iy}.refs{iref}.phi,rays{iy}.sphi(is+1)];
+                    %
+                elseif is ==1,
+                    %
+                    rays{iy}.refs{iref}.x = [rays{iy}.refs{iref}.x,rays{iy}.sx(is)];
+                    rays{iy}.refs{iref}.y = [rays{iy}.refs{iref}.y,rays{iy}.sy(is)];
+                    rays{iy}.refs{iref}.phi = [rays{iy}.refs{iref}.phi,rays{iy}.sphi(is)];
+                    %
+                else
+                    %
+                    rays{iy}.refs{iref}.x = [rays{iy}.sx(is),rays{iy}.refs{iref}.x];
+                    rays{iy}.refs{iref}.y = [rays{iy}.sy(is),rays{iy}.refs{iref}.y];
+                    rays{iy}.refs{iref}.phi = [rays{iy}.sphi(is),rays{iy}.refs{iref}.phi];
+                    %
+                end
+                %
+                rays{iy}.refs{iref}.R = rays{iy}.refs{iref}.x + Rp;
+                rays{iy}.refs{iref}.Z = rays{iy}.refs{iref}.y + Zp;
+                rays{iy}.refs{iref}.X = rays{iy}.refs{iref}.R.*cos(-rays{iy}.refs{iref}.phi);
+                rays{iy}.refs{iref}.Y = rays{iy}.refs{iref}.R.*sin(-rays{iy}.refs{iref}.phi);
+                %
+                xmin = min([xmin,rays{iy}.refs{iref}.x]);	
+                xmax = max([xmax,rays{iy}.refs{iref}.x]);	
+                ymin = min([ymin,rays{iy}.refs{iref}.y]);	
+                ymax = max([ymax,rays{iy}.refs{iref}.y]);	
+                %
+                Xmin = min([Xmin,rays{iy}.refs{iref}.X]);	
+                Xmax = max([Xmax,rays{iy}.refs{iref}.X]);	
+                Ymin = min([Ymin,rays{iy}.refs{iref}.Y]);	
+                Ymax = max([Ymax,rays{iy}.refs{iref}.Y]);	
+                %
+            end
+            %     
         end
-        %    
-        if isempty(launchs{iw}) | ~strcmp(launchs{iw}.type,'EC'),
-            rays{iy}.launch = '';
-        else
-            rays{iy}.launch.R_L = launchs{iw}.yR_L(ib);
-            rays{iy}.launch.Z_L = launchs{iw}.yZ_L(ib);
-            rays{iy}.launch.phi_L = launchs{iw}.yphi_L(ib);
-            rays{iy}.launch.alpha_L = launchs{iw}.yalpha_L(ib);
-            rays{iy}.launch.beta_L = launchs{iw}.ybeta_L(ib);
-            rays{iy}.launch.P_L = launchs{iw}.yP_L(ib);
-			%
-            rays{iy}.launch.x_L = rays{iy}.launch.R_L - Rp;
-            rays{iy}.launch.y_L = rays{iy}.launch.Z_L - Zp;			
-            rays{iy}.launch.X_L = rays{iy}.launch.R_L*cos(-rays{iy}.launch.phi_L);
-            rays{iy}.launch.Y_L = rays{iy}.launch.R_L*sin(-rays{iy}.launch.phi_L);		
-			%
-			xmin = min([xmin,rays{iy}.launch.x_L]);	
-			xmax = max([xmax,rays{iy}.launch.x_L]);	
-			ymin = min([ymin,rays{iy}.launch.y_L]);	
-			ymax = max([ymax,rays{iy}.launch.y_L]);	
-			%
-			Xmin = min([Xmin,rays{iy}.launch.X_L]);	
-			Xmax = max([Xmax,rays{iy}.launch.X_L]);	
-			Ymin = min([Ymin,rays{iy}.launch.Y_L]);	
-			Ymax = max([Ymax,rays{iy}.launch.Y_L]);	
-         end
         %    
     end
 end
@@ -490,34 +489,46 @@ lspace = 0.7;
 bspace = 0.7;
 %
 figure(1),clf,set(1,'name','Poloidal trajectories')
+% Add vessel and tiles if TCV
+if strfind(equil.id,'TCV') & strcmp(opt.vessel_opt,'y')
+    tcvview('avt'); % Plot axes, vessel and tiles
+    tcvview('color','t',[0.75 0.75 0.75]); % Tiles in light gray
+    title(''); % Remove title
+    hold on;
+    Rpdisp = Rp; % Centering of flux surfaces and rays on the magnetic axis
+    Zpdisp = Zp;
+else
+    Rpdisp = 0;
+    Zpdisp = 0;
+end
 %
-xlim = [xmin,xmax];
-ylim = [ymin,ymax];
+xlim = [xmin + Rpdisp,xmax + Rpdisp];
+ylim = [ymin + Zpdisp,ymax + Zpdisp];
 xlab = 'x (m)';
 ylab = 'y (m)';
 tit = '';
 %
-[ax] = graph1D_jd(ptx_disp',pty_disp',0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz,gca,red,lspace,bspace);
+[ax] = graph1D_jd(ptx_disp'+Rpdisp,pty_disp'+Zpdisp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz,gca,red,lspace,bspace);
 for iy = 1:ny,
     mask_max = 1:rays{iy}.is_abs_max;
-    graph1D_jd(rays{iy}.sx(mask_max),rays{iy}.sy(mask_max),0,0,'','','',NaN,xlim,ylim,rays{iy}.style,marker,rays{iy}.color,width1,siz);
+    graph1D_jd(rays{iy}.sx(mask_max) + Rpdisp,rays{iy}.sy(mask_max) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style2,marker2,rays{iy}.color,width2,siz);
 	mask_abs = rays{iy}.mask_abs;
-    graph1D_jd(rays{iy}.sx(mask_abs),rays{iy}.sy(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
-    if ~isempty(rays{iy}.init),
-        graph1D_jd(rays{iy}.init.x0,rays{iy}.init.y0,0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
+    graph1D_jd(rays{iy}.sx(mask_abs) + Rpdisp,rays{iy}.sy(mask_abs) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
+    if ~isempty(rays{iy}.refs),
+        for iref = 1:length(rays{iy}.refs),
+            graph1D_jd(rays{iy}.refs{iref}.x + Rpdisp,rays{iy}.refs{iref}.y + Zpdisp,0,0,'','','',NaN,xlim,ylim,style,marker3,rays{iy}.color,width2,siz);
+        end
     end 
-	if ~isempty(rays{iy}.launch),
-    	graph1D_jd(rays{iy}.launch.x_L,rays{iy}.launch.y_L,0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
-	end
-	if ~isempty(rays{iy}.init) & ~isempty(rays{iy}.launch),
-    	graph1D_jd([rays{iy}.launch.x_L,rays{iy}.init.x0],[rays{iy}.launch.y_L,rays{iy}.init.y0],0,0,'','','',NaN,xlim,ylim,style3,marker,rays{iy}.color,width2,siz);
-	end
 end
 if 0,%opt.res >= 1,
-    [ax] = graph2D_jd(R,Z,yres','','','',xlim,ylim,0,NaN,[1:10],0,style,color5,width1,siz);
+    [ax] = graph2D_jd(R + Rpdisp,Z + Zpdisp,yres','','','',xlim,ylim,0,NaN,[1:10],0,style,color5,width1,siz);
 end
 axis('equal');
 axis([xlim,ylim]);
+if strfind(equil.id,'TCV') & strcmp(opt.vessel_opt,'y')
+   axis auto;
+   set(gca,'XTick',[0:0.2:1.4],'YTick',[-0.8:0.2:0.8]);
+end
 %
 figname = [waves{1}.equil_id,'-'];
 for ii = 1:length(waves)
@@ -540,18 +551,14 @@ tit = '';
 [ax] = graph1D_jd(X_disp',Y_disp',0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz,gca,red,lspace,bspace);
 for iy = 1:ny,
     mask_max = 1:rays{iy}.is_abs_max;
-    graph1D_jd(rays{iy}.sX(mask_max),rays{iy}.sY(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,siz);
+    graph1D_jd(rays{iy}.sX(mask_max),rays{iy}.sY(mask_max),0,0,'','','',NaN,xlim,ylim,style2,marker2,rays{iy}.color,width2,siz);
 	mask_abs = rays{iy}.mask_abs;
     graph1D_jd(rays{iy}.sX(mask_abs),rays{iy}.sY(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
-    if ~isempty(rays{iy}.init),
-        graph1D_jd(rays{iy}.init.X0,rays{iy}.init.Y0,0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
-    end        
-	if ~isempty(rays{iy}.launch),
-    	graph1D_jd(rays{iy}.launch.X_L,rays{iy}.launch.Y_L,0,0,'','','',NaN,xlim,ylim,style2,marker3,rays{iy}.color,width2,siz);
-	end
-	if ~isempty(rays{iy}.init) & ~isempty(rays{iy}.launch),
-    	graph1D_jd([rays{iy}.launch.X_L,rays{iy}.init.X0],[rays{iy}.launch.Y_L,rays{iy}.init.Y0],0,0,'','','',NaN,xlim,ylim,style3,marker,rays{iy}.color,width2,siz);
-	end
+    if ~isempty(rays{iy}.refs),
+        for iref = 1:length(rays{iy}.refs),
+            graph1D_jd(rays{iy}.refs{iref}.X,rays{iy}.refs{iref}.Y,0,0,'','','',NaN,xlim,ylim,style,marker3,rays{iy}.color,width2,siz);
+        end
+    end 
 end
 axis('equal');
 axis([xlim,ylim]);
@@ -663,15 +670,11 @@ while iw ~= 0 && ibb ~= 0
     graph1D_jd(ptx_disp',pty_disp',0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz);
     graph1D_jd(ray.sx(mask_max),ray.sy(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
     graph1D_jd(ray.sx(mask_abs),ray.sy(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
-    if ~isempty(ray.init),
-        graph1D_jd(ray.init.x0,ray.init.y0,0,0,'','','',NaN,xlim,ylim,style2,marker3,ray.color,width2,siz);
+    if ~isempty(ray.refs),
+        for iref = 1:length(ray.refs),
+            graph1D_jd(ray.refs{iref}.x,ray.refs{iref}.y,0,0,'','','',NaN,xlim,ylim,style,marker3,color5,width2,siz);
+        end
     end 
-    if ~isempty(ray.launch),
-        graph1D_jd(ray.launch.x_L,ray.launch.y_L,0,0,'','','',NaN,xlim,ylim,style2,marker3,ray.color,width2,siz);
-    end
-    if ~isempty(ray.init) && ~isempty(ray.launch),
-        graph1D_jd([ray.launch.x_L,ray.init.x0],[ray.launch.y_L,ray.init.y0],0,0,'','','',NaN,xlim,ylim,style3,marker,ray.color,width2,siz);
-    end
     %
     axis('equal');
     axis([xlim,ylim]);
@@ -689,15 +692,11 @@ while iw ~= 0 && ibb ~= 0
     graph1D_jd(X_disp',Y_disp',0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color5,width2,siz);
     graph1D_jd(ray.sX(mask_max),ray.sY(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
     graph1D_jd(ray.sX(mask_abs),ray.sY(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
-    if ~isempty(ray.init),
-        graph1D_jd(ray.init.X0,ray.init.Y0,0,0,'','','',NaN,xlim,ylim,style2,marker3,ray.color,width2,siz);
-    end        
-    if ~isempty(ray.launch),
-        graph1D_jd(ray.launch.X_L,ray.launch.Y_L,0,0,'','','',NaN,xlim,ylim,style2,marker3,ray.color,width2,siz);
-    end
-    if ~isempty(ray.init) && ~isempty(ray.launch),
-        graph1D_jd([ray.launch.X_L,ray.init.X0],[ray.launch.Y_L,ray.init.Y0],0,0,'','','',NaN,xlim,ylim,style3,marker,ray.color,width2,siz);
-    end
+    if ~isempty(rays{iy}.refs),
+        for iref = 1:length(ray.refs),
+            graph1D_jd(ray.refs{iref}.X,ray.refs{iref}.Y,0,0,'','','',NaN,xlim,ylim,style,marker3,color5,width2,siz);
+        end
+    end 
     %
     axis('equal');
     axis([xlim,ylim]);
