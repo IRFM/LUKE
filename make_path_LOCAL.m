@@ -70,9 +70,10 @@ cephee.compiler_opt.helmex.mex705 = ['-L',cephee.local_root,'lib/cephee/g95 -lf9
 cephee.compiler_opt.copts.mex710 = '';
 cephee.compiler_opt.fopts.mex710 = 'FC=''ifort''';
 cephee.compiler_opt.helmex.mex710 = ['-L',cephee.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-%
-cephee.MUMPS.mex705 = [cephee.local_root,'old/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
-cephee.MUMPS.mex710 = [cephee.local_root,'MUMPS_4.9.2/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+%Where MUMPS matrix solver is stored (MEX function)
+cephee.MUMPS.mex705 = [cephee.local_root,'MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
+cephee.MUMPS.mex710 = [cephee.local_root,'MUMPS_4.9.2_S_ifort/MATLAB710'];%MUMPS_4.9.2 not compatible with matlab 7.5
+%cephee.MUMPS.mex710 = [cephee.local_root,'MUMPS_4.9.2_S_g95/MATLAB710'];%alternative option
 %
 cephee.remote(1).host = '';% empty for local host
 cephee.remote(1).luke_root = cephee.luke_root;
