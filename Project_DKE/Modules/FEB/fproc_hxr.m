@@ -267,6 +267,8 @@ ik = ikfitmin:ikfitmax;
 nk = length(ik);
 %
 hxr_proc.k = hxr.kfit;
+hxr_proc.ik = ik;
+hxr_proc.ic = ic;
 hxr_proc.dNdtplasma = hxr.brem_bd_plasma.';
 hxr_proc.dNdtdiag = hxr.brem_bd_diag.';
 hxr_proc.dNdtexp = hxr.hxrexp.';
