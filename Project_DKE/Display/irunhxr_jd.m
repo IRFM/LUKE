@@ -54,26 +54,8 @@ end
 % load HXR camera spec
 %
 if strcmp(basestr,'TS') && ~isempty(shotnum) && exist('tsdate','file') && input_dke_yp('Do you want to load the HXR camera spec automatically (y/n)','y',{'y','n'}) == 'y',
-    shotdate = tsdate(str2num(shotnum));
     %
-    hxrspec = bremTSconvert_dke_yp(str2num(shotdate(1:2)),str2num(shotdate(4:5)),str2num(shotdate(7:10)));
-    %
-    % according to the correct definitions of alpha (-pi -> pi) and beta (0 -> pi)
-    %
-    hxrspec.alpha_hxr(hxrspec.beta_hxr > pi) = hxrspec.alpha_hxr(hxrspec.beta_hxr > pi) + pi;
-    hxrspec.beta_hxr(hxrspec.beta_hxr > pi) = 2*pi - hxrspec.beta_hxr(hxrspec.beta_hxr > pi);
-    %
-    hxrspec.alpha_hxr(hxrspec.beta_hxr < 0) = hxrspec.alpha_hxr(hxrspec.beta_hxr < 0) + pi;
-    hxrspec.beta_hxr(hxrspec.beta_hxr < 0) = - hxrspec.beta_hxr(hxrspec.beta_hxr < 0);
-    %
-    hxrspec.alpha_hxr(hxrspec.alpha_hxr < 0) = hxrspec.alpha_hxr(hxrspec.alpha_hxr < 0) + 2*pi;
-    hxrspec.alpha_hxr(hxrspec.alpha_hxr > 2*pi) = hxrspec.alpha_hxr(hxrspec.alpha_hxr > 2*pi) - 2*pi;
-    %
-    hxrparam.mfactor = 1;%For the magnetic equilibrium
-    hxrparam.method = 'spline';%For the magnetic equilibrium in the HXR calculations
-    hxrparam.ns = 3000;%for chord integration
-    hxrparam.n_gauleg = 35;%Number of Legendre polynomials for projections of cross-section and electron velocity distribution
-    hxrparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
+    [hxrspec,hxrparam] = get_hxrspec_forLUKE_jd('TS',str2num(shotnum));
     %
 else
     %
@@ -143,6 +125,14 @@ if n_opt == 0,% structure external
         beta = NaN(1,size(hxr,3));
     end
     %
+    if iscell(t),%old TCV data file
+        t = t{ishot};
+        energy = energy{ishot};
+        hxr = hxr{ishot};
+        %filter_thickness = filter_thickness{ishot};
+        %filter_material = filter_material{ishot};
+    end
+    %
 elseif n_opt > 0,
     if isempty(shotnum)
         disp('-----> Shot number information missing');
@@ -158,114 +148,40 @@ elseif n_opt > 0,
            return
         end
         %
-        if strcmp(basestr,'TCV'),
-            %
-            load([data_path,data_file],'shot','energy','hxr','t','beta');%,'filter_thickness','filter_material'
-            %
-            ishot = find(shot == str2num(shotnum));
-            %
-            if isempty(ishot) | ~exist('hxr','var'),
-                disp(['-----> hxr data not found for shot :',shotnum]);
-                disp(quitmsg)
-                return
-            end
-            %
-            if length(ishot) > 1,
-                disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
-                ishot = ishot(1);
-            end
-            %
-            clear data_path data_file
-            %
+        load([data_path,data_file],'shot','energy','hxr','t','beta');%,'filter_thickness','filter_material'
+        %
+        ishot = find(shot == str2num(shotnum));
+        %
+        if isempty(ishot) || ~exist('hxr','var'),
+            disp(['-----> hxr data not found for shot :',shotnum]);
+            disp(quitmsg)
+            return
+        end
+        %
+        if length(ishot) > 1,
+            disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
+            ishot = ishot(1);
+        end
+        %
+        clear data_path data_file
+        %
+        if iscell(t),%old TCV data file
             t = t{ishot};
             energy = energy{ishot};
             hxr = hxr{ishot};
             %filter_thickness = filter_thickness{ishot};
             %filter_material = filter_material{ishot};
-            %
-            clear ishot
-            %
-        else
-            disp(['-----> option not yet implemented for ',basestr,'.']);
-            disp(quitmsg)
-            return            
         end
+        %
+        clear ishot
         %
     elseif n_opt == 2,% hxr experimental data from TCV database
         %
-        shot = str2num(shotnum);
-        %
-        if strcmp(basestr,'TCV'),
-            collect_hxr;
-            %
-            t = t{1};
-            energy = energy{1};
-            hxr = hxr{1};
-            %filter_thickness = filter_thickness{1};
-            %filter_material = filter_material{1};
-            %
-        elseif strcmp(basestr,'TS') && exist('tsbase','file'),
-            %
-            %[hxr01,t] = tsbase(shot,'GVRX01');
-            [hxr01,t] = tsbase(shot,'GVX01');
-            %
-            if isempty(hxr01),
-                disp(['-----> hxr data not found for shot :',shotnum]);
-                disp(quitmsg)
-                return            
-            end                
-            %
-            [nt,nk] = size(t);
-            %
-%             if size(hxrspec.kdiag_hxr,2) ~= nk+1,
-%                 disp(['-----> photon energy chanel mismatch.']);
-%                 disp(quitmsg)
-%                 return            
-%             end                
-            %
-            t = t(:,1);
-            %
-            hxr = NaN(nt,nk,nc);            
-            %
-            for ic = 1:min([nc,9]),
-                %[hxrloc,tloc] = tsbase(shot,['GVRX0',num2str(ic)]);
-                [hxrloc,tloc] = tsbase(shot,['GVX0',num2str(ic)]);
-                if any(size(tloc) ~= [nt,nk]) || any(any(tloc ~= repmat(t,[1,nk]))),
-                    for ik = 1:nk,
-                        hxr(:,ik,ic) = interp1(tloc(:,ik),hxrloc(:,ik),t);
-                    end
-                else
-                    hxr(:,:,ic) = hxrloc;
-                end                     
-            end    
-            %
-            for ic = 10:nc,
-                %[hxrloc,tloc] = tsbase(shot,['GVRX',num2str(ic)]);
-                [hxrloc,tloc] = tsbase(shot,['GVX',num2str(ic)]);
-                if any(size(tloc) ~= [nt,nk]) || any(any(tloc ~= repmat(t,[1,nk]))),
-                    for ik = 1:nk,
-                        hxr(:,ik,ic) = interp1(tloc(:,ik),hxrloc(:,ik),t);
-                    end
-                else
-                    hxr(:,:,ic) = hxrloc;
-                end                     
-            end      
-            %
-            hxr = flipdim(cumsum(flipdim(hxr,2),2),2);%TS data is per channel (it is not monotonically decreasing)
-            %
-            energy = [hxrspec.kdiag_hxr(1,1:end-1),hxrspec.kdiag_hxr(2,end-1)].';
-            %
-        else
-            disp(['-----> no access to the ',basestr,' database found.']);
-            disp(quitmsg)
-            return            
-        end
-        %
-        clear shot
+        [energy,hxr,t,beta] = collect_hxr_forLUKE_jd(basestr,str2num(shotnum),opt,data_path);%,'filter_thickness','filter_material'
         %
     end
     %
-    if ~exist('beta','var'),
+    if ~exist('beta','var') || (isscalar(beta) && isnan(beta)),
         beta = NaN(1,size(hxr,3));
     end
     %        
@@ -301,7 +217,7 @@ else
     if isfield(equil,'info') && isfield(equil.info,'t1') && isfield(equil.info,'t2'),
         t1 = equil.info.t1;
         t2 = equil.info.t2;
-    elseif isfield(external,'id'),
+    elseif isfield(external,'id') && length(find(external.id == '_')) >= 5,
         idsep = find(external.id == '_');
         t1 = str2num(external.id(idsep(3)+1:idsep(4)-1));
         t2 = str2num(external.id(idsep(4)+1:idsep(5)-1));
