@@ -259,7 +259,9 @@ if opt.save,
 end
 %
 nc = length(ic);
-dt = hxr.dt;
+%
+%dt = hxr.dt;
+dt = 0.016;%hxr.dt;%sampling time
 %
 ikfitmin = find(hxr.kfit >= krange(1),1,'first');
 ikfitmax = find(hxr.kfit <= krange(2),1,'last');
@@ -327,11 +329,9 @@ if display_mode > 0,
     dNdtdiag = hxr_proc.dNdtdiag(ik,ic);
     dNdtexp = hxr_proc.dNdtexp(ik,ic);
     %
-    dt = hxr.dt;
-    %
     xlab = 'Chord #';
     xlim = [min(ic)-1,max(ic)+1];
-    xtick = ic;
+    xtick = 0:5:60;
     %
     xlab2 = 'Photon Energy (keV)';
     xlim2 = [0,2*k(end) - k(end-1)];
@@ -390,17 +390,18 @@ if display_mode > 0,
     figure(3),clf,set(3,'Name','Count rate')
     %
     kmin = min(k);
+    kmax= max(k);
     %
-    ylab = ['Count rate (k > ',num2str(kmin),' keV)'];
+    ylab = ['Count rate (s^{-1}) [',num2str(kmin),' - ',num2str(kmax),' keV]'];
     tit = '';
     %
-    Nplasma = dt*sum(dNdtplasma,1);%number of counts
-    Ndiag = dt*sum(dNdtdiag,1);%number of counts
-    Nexp = dt*sum(dNdtexp,1);%number of counts
+    %Nplasma = sum(dNdtplasma,1);%Count rate
+    Ndiag = sum(dNdtdiag,1);%Count rate
+    Nexp = sum(dNdtexp,1);%Count rate
     %
-    %graph1D_jd(ic,Nplasma,0,0,'','','',NaN,xlim,ylim,style,marker,color1,width2,siz,gca,1,lspace,bspace,sqrt(Nplasma));
-    graph1D_jd(ic,Ndiag,0,0,'','','',NaN,xlim,ylim,style,marker,color2,width2,siz,gca,1,lspace,bspace,sqrt(Ndiag));
-    graph1D_jd(ic,Nexp,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color3,width2,siz,gca,red,lspace,bspace,sqrt(Nexp));
+    %graph1D_jd(ic,Nplasma,0,0,'','','',NaN,xlim,ylim,style,marker,color1,width2,siz,gca,1,lspace,bspace,sqrt(Nplasma/dt));
+    graph1D_jd(ic,Ndiag,0,0,'','','',NaN,xlim,ylim,style,marker,color2,width2,siz,gca,1,lspace,bspace,sqrt(Ndiag/dt));
+    graph1D_jd(ic,Nexp,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color3,width2,siz,gca,red,lspace,bspace,sqrt(Nexp/dt));
     % 
     set(gca,'xtick',xtick);
     %set(gca,'ytick',ytick);
@@ -408,13 +409,34 @@ if display_mode > 0,
     print_jd(p_opt,['Fig_hxrcomp_tot_',load_id],[hxr_path,'figures'],3);
     %
     %
-    figure(4),clf,set(4,'Name','Exp prof')
+    figure(4),clf,set(4,'Name','Normalized count rate')
     %
+    ylab = 'Normalized count rate';
     ylim = [0,1.2];
     ytick = 0:0.2:1.2;
     %
-    Nnorm = dt*dNdtexp.'./repmat(dt*max(dNdtexp.'),[nc,1]);
-    eNnorm = sqrt(dt*dNdtexp.')./repmat(dt*max(dNdtexp.'),[nc,1]);
+    %nNplasma = Nplasma/Nplasma(ic == opt.icc);%Count rate
+    nNdiag = Ndiag/Ndiag(ic == opt.icc);%Count rate
+    nNexp = Nexp/Nexp(ic == opt.icc);%Count rate
+    %
+    %enNplasma = sqrt(Nplasma/dt)/Nplasma(ic == opt.icc);%Count rate
+    enNdiag = sqrt(Ndiag/dt)/Ndiag(ic == opt.icc);%Count rate
+    enNexp = sqrt(Nexp/dt)/Nexp(ic == opt.icc);%Count rate
+    %
+    %graph1D_jd(ic,nNplasma,0,0,'','','',NaN,xlim,ylim,style,marker,color1,width2,siz,gca,1,lspace,bspace,enNplasma);
+    graph1D_jd(ic,nNdiag,0,0,'','','',NaN,xlim,ylim,style,marker,color2,width2,siz,gca,1,lspace,bspace,enNdiag);
+    graph1D_jd(ic,nNexp,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color3,width2,siz,gca,red,lspace,bspace,enNexp);
+    % 
+    set(gca,'xtick',xtick);
+    %set(gca,'ytick',ytick);
+    %
+    print_jd(p_opt,['Fig_hxrcomp_norm_',load_id],[hxr_path,'figures'],4);
+    %
+    %
+    figure(5),clf,set(5,'Name','Normalized exp emission')
+    %
+    Nnorm = dNdtexp.'./repmat(max(dNdtexp.'),[nc,1]);
+    eNnorm = sqrt(dNdtexp.'/dt)./repmat(max(dNdtexp.'),[nc,1]);
     %
     for iik = 1:nk,
         leg2{iik} = ['k = ',num2str(k(iik)),' keV'];
@@ -426,14 +448,14 @@ if display_mode > 0,
     set(gca,'xtick',xtick);
     set(gca,'ytick',ytick);
     %
-    print_jd(p_opt,['Fig_countrate_exp_',load_id],[hxr_path,'figures'],4);
+    print_jd(p_opt,['Fig_countrate_exp_',load_id],[hxr_path,'figures'],5);
     %
     %
-    maskplasma = 1 - hxr_proc.Qplasma < 1e-4;
-    maskdiag = 1 - hxr_proc.Qdiag < 1e-4;
-    maskexp = 1 - hxr_proc.Qexp < 1e-4;
+    maskplasma = 1 - hxr_proc.Qplasma < 1e-2;%1e-4;
+    maskdiag = 1 - hxr_proc.Qdiag < 1e-2;%1e-4;
+    maskexp = 1 - hxr_proc.Qexp < 1e-2;%1e-4;
     %
-    figure(5),clf,set(5,'Name','Photon Temperature')
+    figure(6),clf,set(6,'Name','Photon Temperature')
     %
     ylim = [0,max([hxr_proc.Tphplasma(maskplasma),hxr_proc.Tphdiag(maskdiag),hxr_proc.Tphexp(maskexp)])]*1.2;
     %ytick = 0:2:16;
@@ -448,10 +470,10 @@ if display_mode > 0,
     set(gca,'xtick',xtick);
     %set(gca,'ytick',ytick);
     %
-    print_jd(p_opt,['Fig_tph_',load_id],[hxr_path,'figures'],5);
+    print_jd(p_opt,['Fig_tph_',load_id],[hxr_path,'figures'],6);
     %
     %
-    figure(6),clf,set(6,'Name','Photon Amplitude')
+    figure(7),clf,set(7,'Name','Photon Amplitude')
     %
     ylim = [0,max([hxr_proc.Aplasma(maskplasma),hxr_proc.Adiag(maskdiag),hxr_proc.Aexp(maskexp)])]*1.2;
     ylab = ['Emission Amplitude'];
@@ -465,6 +487,33 @@ if display_mode > 0,
     set(gca,'xtick',xtick);
     %set(gca,'ytick',ytick);
     %
-    print_jd(p_opt,['Fig_A_',load_id],[hxr_path,'figures'],6);
+    print_jd(p_opt,['Fig_A_',load_id],[hxr_path,'figures'],7);
+    %
+    %
+    figure(8),clf,set(8,'name','spectrum for central chord')
+    %
+    ylab = 'dN/dt [s^{-1}]';
+    %ymin = floor(min(log10([dNdtplasma(:,ic == opt.icc);dNdtdiag(:,ic == opt.icc);dNdtexp(:,ic == opt.icc)])));
+    %ymax =  ceil(max(log10([dNdtplasma(:,ic == opt.icc);dNdtdiag(:,ic == opt.icc);dNdtexp(:,ic == opt.icc)])));
+    %
+    ylim = NaN;%[ymin,ymax];
+%     ytick = ymin:ymax;
+%     yticklabel = cell(1,length(ytick));
+%     for iy = 1:length(ytick),
+%         yticklabel{iy} = ['10^{',num2str(ytick(iy)),'}'];
+%     end
+    %
+    tit = ['Pulse count rate, chord # ',num2str(opt.icc)];
+    %
+    %graph1D_jd(k,dNdtplasma(:,ic == opt.icc),0,1,'','','',NaN,xlim2,ylim,style,marker,color1,width2,siz,gca,1,lspace,bspace,sqrt(dNdtplasma(:,ic == opt.icc)/dt));
+    graph1D_jd(k,dNdtdiag(:,ic == opt.icc),0,0,'','','',NaN,xlim2,ylim,style,marker,color2,width2,siz,gca,1,lspace,bspace,sqrt(dNdtdiag(:,ic == opt.icc)/dt));
+    graph1D_jd(k,dNdtexp(:,ic == opt.icc),0,0,xlab2,ylab,tit,leg,xlim2,ylim,style2,marker,color3,width2,siz,gca,red,lspace,bspace,sqrt(dNdtexp(:,ic == opt.icc)/dt));
+    %
+    set(gca,'xtick',xtick2);
+    %set(gca,'ytick',ytick);
+    %set(gca,'yticklabel',yticklabel)
+    %
+    print_jd(p_opt,['Fig_hxrcomp_central_',load_id],[hxr_path,'figures'],8);
+    %  
     %
 end
