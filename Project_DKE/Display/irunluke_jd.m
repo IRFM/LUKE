@@ -1127,7 +1127,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     nw = length(waves);
                     %
-                    if basestr == 'TCV'
+                    if strcmp(basestr,'TCV')
                         g_opt.vessel_opt = input_dke_yp('Do you want to display TCV vessel and tiles','y',{'y','n'});
                     else
                         g_opt.vessel_opt = 'n';
