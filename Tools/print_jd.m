@@ -44,6 +44,9 @@ if opt >= 0 & opt <= 1,
 end
 %
 if opt >= 1,
+    if opt == 3,
+        keyboard
+    end
     if exist(savedir,'dir') ~= 7
         mkdir(savedir)
     end
