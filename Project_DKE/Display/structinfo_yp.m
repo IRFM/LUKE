@@ -295,6 +295,106 @@ switch struct
             case 'frequencies',expert = 0;info = 'array of frequencies';
             otherwise,
         end
+    %
+    %%%% MIKE fields %%%%
+    %
+    case 'simul',
+        switch field
+            case 'mhd', expert = 0; info = 'Structure for MHD_DATA source file';
+            case 'opt', expert = 0; info = 'Options for the MIKE simulation';
+            case 'param', expert = 0; info = 'Parameters for the MIKE simulation';
+            case 'davies', expert = 1; info = 'Parameters for the Davies root finding method';
+        end
+    case 'mhd',
+        switch field
+            case 'path',expert = 0; values = ''; info = 'path to MHD_DATA file';
+            case 'filename',expert = 0; values = ''; info = 'name of MHD_DATA file';
+            case 'machine',expert = 1; values = ''; info = 'name of the tokamak for the simulation';
+            case 'shot',expert = 1; values = [0;Inf]; info = 'shot number for the simulation';
+            case 'time',expert = 1; values = [0;Inf]; info = 'time of the simulation';
+            case 'defname',expert = 1; values = ''; info = 'default prefix for the MIKE simulation filename';
+            case 'luke_simul',expert = 1; info = 'luke_simul struct of the associated LUKE simulation';
+        end
+    case 'opt',
+        switch field
+            case 'phmode',expert = 1; values = ''; info = 'Method for dWk calculation (kinetic & fluid, fast & thermal)';
+            case 'intE',expert = 1; values = 1:2; info = 'Energy integral method (main distribution) \n(1) Zfunction \n(2) Logarithm';
+            case 'pnmax',expert = 1;values = [0;Inf]; info = 'Maximum value for the momentum grid (NaN for value of LUKE simulation)';
+            case 'T',expert = 1; values = {true,false}; info = 'Trapped particles only';
+            case 'bounce',expert = 1; values = 0:1; info = 'Expression for bounce period \n(0) Zonca \n(1) White';
+            case 'drift',expert = 1; values = 0:1; info = 'Expression for drift frequency \n(0) Zonca \n(1) White';
+            case 'beta',expert = 1; values = 0:1; info = 'Expression for poloidal beta \n(0) White \n(1) Zonca';
+            case 'inertia',expert = 1; values = 0:1; info = 'Convention for the inertia term \n(0) Chen \n(1) Zonca';
+            case 'dWcInp',expert = 0; values = {true,false}; info = 'Enforced dWc';
+            case 'resistive',expert = 1; values = 0:1; info = 'Inertia term \n(0) Ideal \n(1) Resistive';
+            case 'mdce',expert = 1; values = 1:3; info = 'Distributed comuting mode \n(1) Sequential computing \n(2) Matlab routine \n(3) LUKE routine';
+            case 'test',expert = 1; values = {true,false}; info = 'Test/Ideal case';
+            case 'F',expert = 1; values = 1:6; info = 'Type of analytical distribution (test) \n(1) slowing down \n(2) Maxwellian distribution \n(3) bi-Maxwellian \n(4) BiMaxwellian + slowing-down \n(5) BiMaxwellian + maxwellian';
+            case 'E',expert = 1; values = {true,false}; info = 'Analytical energy integration (test)';
+            case 'mhu',expert = 1; values = {true,false}; info = 'Analytical pitch-angle integration (test)';
+            case 'rho',expert = 1; values = {true,false}; info = 'Analytical radial integration (test)';
+            case 'k',expert = 1; values = 1:3; info = '(1) constant lambda, (2) constant kappa, (3) constant mhu distribution';
+            case 'C',expert = 1; values = {true,false}; info = 'Locally normalized distribution';
+            case 'a',expert = 1; values = {true,false}; info = 'Approximate radial dependences';
+            case 'b',expert = 1; values = {true,false}; info = 'Neglect the energy derivative term';
+        end
+    case 'phmode',
+        switch field
+            case 'dist',expert = 1; values = [-1;3]; info = 'Distribution chosen for calculation \n(1) fast -1->0, 0->myFEHM, 1->XFEH, 2->myFEHP, 3->XFM-XF0 \n(2) th e- -1->0, 0->myFE, 1->XFE, 2->XFM, \n(3) th ions -1->0, 0->myFI, 1->XFI';
+            case 'dWk',expert = 1; values = [0;1]; info = 'Components for dWk\n (1) fast (2) th e- (3) th ions';
+            case 'dWgp',expert = 1; values = [0;1]; info = 'Components for dWgp\n (1) fast (2) th e- (3) th ions';
+        end
+    case 'param',
+        switch field
+            case 'action',expert = 0; values = 1:8; info = 'Action for MIKE simulation \n(1) Calculation for given frequency \n(2) Frequency scan \n(3) Growth rate scan \n(4) 2D Scan \n(5) Root search \n(6) Parameter Scan \n(7) Hybrid Scan (frequency) \n(8) Hybrid Scan (growth rate)';
+            case 'nTor',expert = 1; values = [0;Inf]; info = 'Toroidal mode number';
+            case 'nh',expert = 1; values = [-Inf;Inf]; info = 'Fast particle fraction';
+            case 'S',expert = 1; values = [0;Inf]; info = 'Conductivity factor (Inf) for ideal';
+            case 'dWc',expert = 0; values = [-Inf;Inf]; info = 'Value of dWc when it is enforced';
+            case 'nz',expert = 1; values = [0;Inf]; info = 'Number of points for energy calc-grid (NaN for no interpolation)';
+            case 'nm',expert = 1; values = [0;Inf]; info = 'Number of points for pitch-angle calc-grid (NaN for no interpolation)';
+            case 'ny',expert = 1; values = [0;Inf]; info = 'Number of points for radial calc-grid (NaN for no interpolation)';
+            case 'q',expert = 0; values = 0:3; info = 'Shape of the q-profile \n(0) CRONOS profile \n(1) Parabolic \n(2) Inverted \n(3) Flat then parabolic';
+            case 'qpar',expert = 0; values = [-Inf;Inf]; info = 'q-profile parameters \n qfac, qtrs, qmin, qmax, rhos, rhos1, rhos2';
+            case 'romega',expert = 0; values = [-Inf;Inf]; info = 'Frequency values (kHz) \n(start,end,numpts)';
+            case 'iomega',expert = 0; values = [-Inf;Inf]; info = 'Growth rate values (kHz) \n(start,end,numpts)';
+            case 'ScanPar',expert = 0; values = {'dWc','nh','S','qfac','qtrs','qmin','qmax','rhos','rhos1','rhos2'}; info = 'Scan parameter';
+            case 'parVal',expert = 0; values = [-Inf;Inf]; info = 'Scan parameter values \n(start,end,numpts)';
+            case 'omega0',expert = 0; values = [-Inf;Inf]; info = 'Starting frequency for root search method (kHz)';
+            case 'domega',expert = 0; values = [0;Inf]; info = 'Starting radius for root search method (kHz)';
+            case 'np',expert = 1; values = [0;Inf]; info = 'Number of points for energy original-grid (test)';
+            case 'nmhu',expert = 1; values = [0;Inf]; info = 'Number of points for pitch-angle original-grid (test)';
+            case 'nrho',expert = 1; values = [0;Inf]; info = 'Number of points for radial original-grid (test)';
+            case 'Rp',expert = 1; values = [0;Inf]; info = 'Major radius in meters (test)';
+            case 'ap',expert = 1; values = [0;Inf]; info = 'Minor radius in meters (test)';
+            case 'Bt',expert = 1; values = [0;Inf]; info = 'Toroidal magnetic field in teslas (test)';
+            case 'qpar_t',expert = 1; values = [-Inf;Inf]; info = 'q-profile parameters (test) \n qfac, qtrs, qmin, qmax, rhos, rhos1, rhos2';
+            case 'Emin',expert = 1; values = [0;Inf]; info = 'SD distribution : lower frequency (test)';
+            case 'Emax',expert = 1; values = [0;Inf]; info = 'SD distribution : upper frequency (test)';
+            case 'T',expert = 1; values = [0;Inf]; info = 'Maxwellian distribution : temperature in keV (test)';
+            case 'Eref',expert = 1; values = [0;Inf]; info = 'Reference energy (test)';
+            case 'nref',expert = 1; values = [0;Inf]; info = 'Reference density (test)';
+            case 'mhu0s',expert = 1; values = [-1;1]; info = 'Pitch-angle (mhu), NaN for isotropic (test)';
+            case 'dmhu',expert = 1; values = [0;Inf]; info = 'Width of pitch-angle distribution (test)';
+        end
+    case 'davies',
+        switch field,
+            case 'immin',expert = 1; values = [2;Inf]; info = 'minimun number of points (log2) for function evaluation';
+            case 'immax',expert = 1; values = [3;Inf]; info = 'maximum number of points (log2) for function evaluation';
+            case 'rapmax',expert = 1; values = [0;Inf]; info = 'tolerance for change in module between neighboring points';
+            case 'phimax',expert = 1; values = [0;Inf]; info = 'tolerance for change in argument between neighboring points';
+            case 'convlim',expert = 1; values = [0;Inf]; info = 'precision for root evaluation';
+            case 'nconv',expert = 1; values = [0;Inf]; info = 'maximum number of iterations';
+            case 'display_mode',expert = 1; values = [0:2]; info = 'display mode \n(0) only final result \n(1) each iteration results \n(2) all output';
+        end
+    case 'luke_simul',
+        switch field,
+            % TODO : imod_struct_jd always looks at info, expert, values in substructures
+            case 'id', expert = 1; info = '';
+            case 'timeid', expert = 1; info = '';
+            case 'userid', expert = 1; values = ''; info = '';
+            case 'LUKEversion', expert = 1; values = ''; info = '';
+        end
    otherwise,
 end
 %
