@@ -79,7 +79,7 @@ end
 %
 fontname = 'Times';%'Courier';
 %
-hold on
+hold(ax,'on');
 if logx == 1 & logy ~= 1
     set(ax,'xscale','log');
     gcl = semilogx(x,y,'parent',ax);
@@ -104,7 +104,7 @@ else
         set(gcxm,'marker','+','color',color);
     end
 end
-hold off
+hold(ax,'off');
 %
 set(gcl,'linestyle',style);
 set(gcl,'marker',marker);
@@ -118,18 +118,18 @@ if ~isnan(color)
 end
 %
 if ~isnan(xlim)
-    set(gca,'xlim',xlim);
+    set(ax,'xlim',xlim);
 end
 if ~isnan(ylim)
     if length(ylim) == 1
-        ylim_old = get(gca,'ylim');
+        ylim_old = get(ax,'ylim');
         if ylim_old(2) > ylim
-            set(gca,'ylim',[ylim,ylim_old(2)]);
+            set(ax,'ylim',[ylim,ylim_old(2)]);
         else
-            set(gca,'ylim',[ylim_old(1),ylim]);
+            set(ax,'ylim',[ylim_old(1),ylim]);
         end            
     else
-        set(gca,'ylim',ylim);
+        set(ax,'ylim',ylim);
     end
 end
 %
@@ -155,21 +155,19 @@ if iscell(leg) || ~any(isnan(leg)),
     set(lg,'fontsize',imag(siz),'fontname',fontname);
 end
 %
-set(gca,'fontsize',real(siz),'fontname',fontname);
-%
-ax = gca;
+set(ax,'fontsize',real(siz),'fontname',fontname);
 %
 set(gcf,'PaperPositionMode','auto');
 %
-[lspace_out,bspace_out,apos_new] = resizejd(gca,red);
+[lspace_out,bspace_out,apos_new] = resizejd(ax,red);
 if isnan(lspace)
     lspace = lspace_out;
 end
 if isnan(bspace)
     bspace = bspace_out;
 end
-
-[lspace_out,bspace_out,apos_new] = resizejd(gca,1,lspace,bspace);
-
-box on
-grid on
+%
+[lspace_out,bspace_out,apos_new] = resizejd(ax,1,lspace,bspace);
+%
+box(ax,'on');
+grid(ax,'on');
