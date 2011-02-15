@@ -5,7 +5,15 @@ function userid = userid_jd
 userid = '';
 %
 if strcmp(computer,'GLNXA64'),%unix system
-    userid = getenv('USER');
+    [flag,str] = unix('echo $user');
+    is_blanck = find(double(str(1:end-1)) == 10);
+    ismin = max([1,is_blanck + 1]);
+    userid = str(ismin:end);
+elseif strcmp(computer,'GLNX86'),%unix system
+    [flag,str] = unix('id -un');
+    is_blanck = find(double(str(1:end-1)) == 10);
+    ismin = max([1,is_blanck + 1]);
+    userid = str(ismin:end);
 elseif strcmp(computer,'PCWIN'),%windows system
     [flag,str] = dos('hostname');
     is_blanck = find(double(str(1:end-1)) == 10);
