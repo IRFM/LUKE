@@ -177,7 +177,7 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui)
                 cposition = [lref + cwidth/2  - 0.5*margin,bref,cwidth/2  - 2.5*margin,2*ftsize];
                 rposition = [lref + cwidth - 2*margin,bref,margin,2*ftsize];
                 %
-                cguis(iname) = uicontrol(cgui,'style','text','string',fname,'position',sposition,'tooltipstring',s.info.(fname));
+                cguis(iname) = uicontrol(cgui,'style','text','string',fname,'position',sposition,'tooltipstring',sprintf(s.info.(fname)));
                 %
                 if stype(iname) == 0,%logical
                     cguic(iname) = uicontrol(cgui,'style','checkbox','string','','value',fval,'position',cposition,'callback',@field_cbf);
@@ -417,7 +417,7 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui)
             elseif size(values,1) == 1,
                 s.(fname) = values(get(hObject,'value'));
             else
-                eval(['s.(fname) = ',get(hObject,'string'),';']);
+                s.(fname) = str2num(get(hObject,'string'));
             end
             %
             if rev(iname) == 1,
