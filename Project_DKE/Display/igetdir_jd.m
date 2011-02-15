@@ -11,6 +11,9 @@ else
         %
         if exist(presel,'dir'),
             pathname = presel;
+            if pathname(end) ~= filesep,
+                pathname = [pathname,filesep];
+            end
         else
             %
             disp(['WARNING : the directory ''',pathname,''' does not exist.'])

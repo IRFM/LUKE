@@ -37,6 +37,9 @@ else
         %
         if exist(presel,'dir'),
             pathname = presel;
+            if pathname(end) ~= filesep,
+                pathname = [pathname,filesep];
+            end
             filename = '';
         else
             %
