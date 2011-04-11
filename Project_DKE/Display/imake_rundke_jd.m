@@ -1,9 +1,9 @@
-function imake_rundke_jd(paths,fileids,status,rho_S,workdir,id_simul_o,opt_gui)
+function imake_rundke_jd(paths,fileids,status,workdir,id_simul_o,opt_gui)
 %
-if nargin < 7,
+if nargin < 6,
 	opt_gui = 1;
 end
-if nargin < 6,
+if nargin < 5,
 	id_simul_o = '';
 end
 %
@@ -12,7 +12,7 @@ end
 if ~isfield(fileids,'dkepath') || ~isfield(fileids,'dkeparam') || ~isfield(fileids,'equil'),
     disp('-----> the structures dkepath, dkeparam and equil must exist in a fileids to run LUKE.');
     return
-end     
+end  
 %
 id_simul = input(['Please provide an id for the run [',id_simul_o,'] : '],'s');
 if isempty(id_simul),
@@ -43,19 +43,20 @@ s = [s,{'clear all'}];
 s = [s,{'clear mex'}];
 s = [s,{'clear functions'}];
 s = [s,{'close all'}];
-s = [s,{'warning off'}];
-s = [s,{'global nfig'}];
+s = [s,{'warning(''off'',''all'')'}];
 s = [s,{'pause(1)'}];
 s = [s,{'%'}];
-s = [s,{'p_opt = 2;'}];
+s = [s,{'p_opt = -1;% printing option (-1): none, (0): printer, (1) printer and files, (2) files'}];
+s = [s,{'c_opt = 0;% batch run index in dkepath.remote; (0) for local run.'}];
+s = [s,{'w_opt = 60;% waiting time in batch run'}];
 s = [s,{'%'}];
 s = [s,{'% *********************** Specify LUKE structures *****************************'}];
 s = [s,{'%'}];
 s = [s,{['id_simul = ''',id_simul,''';%Simulation ID']}];
 s = [s,{['path_simul = '''';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path']}];
-s = [s,{'%'}];
-s = [s,{'psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)'}];
-s = [s,{['rho_S = [',num2str(rho_S),'];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)']}];
+%s = [s,{'%'}];
+%s = [s,{'psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)'}];
+%s = [s,{['rho_S = [',num2str(rho_S),'];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)']}];
 s = [s,{'%'}];
 s = [s,{['id_dkepath = ''',fileids.dkepath,''';%For all paths used by DKE solver']}];
 s = [s,{['path_dkepath = ''',paths.dkepath,''';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path']}];
@@ -150,7 +151,62 @@ s = [s,{'[dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple] = load
 s = [s,{'%'}];
 s = [s,{'%************************************************************************************************************************************'}];
 s = [s,{'%'}];
-s = [s,{'[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,[],waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);'}];
+s = [s,{'if c_opt == 0,'}];
+s = [s,{'    %'}];
+s = [s,{'   [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,[],waves,dkeparam.psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);'}];
+s = [s,{'    %'}];
+s = [s,{'else'}];
+s = [s,{'    %'}];
+s = [s,{'    remote = dkepath.remote(c_opt);'}];
+s = [s,{'    %'}];
+s = [s,{'    luke_input.id_simul = id_simul;'}];
+s = [s,{'    luke_input.dkeparam = dkeparam;'}];
+s = [s,{'    luke_input.dkedisplay = dkedisplay;'}];
+s = [s,{'    luke_input.equil = equil;'}];
+s = [s,{'    luke_input.waves = waves;'}];
+s = [s,{'    luke_input.wavestructs = '''';'}];
+s = [s,{'    luke_input.ohm = ohm;'}];
+s = [s,{'    luke_input.transpfaste = transpfaste;'}];
+s = [s,{'    luke_input.ripple = ripple;'}];
+s = [s,{'    luke_input.Zf0_interp = '''';'}];
+s = [s,{'    %'}];
+s = [s,{'    [timeid,jobid] = runluke_remote_jd(luke_input,remote);'}];
+s = [s,{'    %'}];
+s = [s,{'    tic'}];
+s = [s,{'    %'}];
+s = [s,{'    output = '''';'}];
+s = [s,{'    %'}];
+s = [s,{'    while isempty(output) && toc/60 < w_opt,'}];
+s = [s,{'        %'}];
+s = [s,{'        pause(60);'}];
+s = [s,{'        %'}];
+s = [s,{'        disp([''Still running , elapsed time (minutes) '',num2str(round(toc/60)),''/'',num2str(w_opt)])'}];
+s = [s,{'        %'}];
+s = [s,{'        output = getluke_remote_jd(timeid,jobid,remote);'}];
+s = [s,{'        %'}];
+s = [s,{'    end'}];
+s = [s,{'    %'}];
+s = [s,{'    if isempty(output)'}];
+s = [s,{'        error([''Stop waiting , elapsed time (minutes) '',num2str(round(toc/60)),''/'',num2str(w_opt)])'}];
+s = [s,{'    elseif isfield(output,''err''),'}];
+s = [s,{'        error(''Remote LUKE run failed, aborted.'')'}];
+s = [s,{'    end'}];
+s = [s,{'    %'}];
+s = [s,{'    Znorm = output.Znorm;'}];
+s = [s,{'    Zcurr = output.Zcurr;'}];
+s = [s,{'    ZP0 = output.ZP0;'}];
+s = [s,{'    dke_out = output.dke_out;'}];
+s = [s,{'    radialDKE = output.radialDKE;'}];
+s = [s,{'    equilDKE = output.equilDKE;'}];
+s = [s,{'    momentumDKE = output.momentumDKE;'}];
+s = [s,{'    gridDKE = output.gridDKE;'}];
+s = [s,{'    Zmomcoef = output.Zmomcoef;'}];
+s = [s,{'    Zbouncecoef = output.Zbouncecoef;'}];
+s = [s,{'    Zmripple = output.Zmripple;'}];
+s = [s,{'    mksa = output.mksa;'}];
+s = [s,{'    XXsinksource = output.XXsinksource;'}];
+s = [s,{'    %'}];
+s = [s,{'end'}];
 s = [s,{'%'}];	    
 s = [s,{'%************************************************************************************************************************************'}];
 s = [s,{'I_tot = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);'}];
