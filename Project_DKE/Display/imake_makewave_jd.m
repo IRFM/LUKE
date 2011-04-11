@@ -45,8 +45,15 @@ s = [s,{'path_equil = '''';%if nothing is specified, the working directory is fi
 s = [s,{'%'}];
 s = [s,{'% initial ray conditions'}];
 s = [s,{'%'}];
-s = [s,{['ids_rayinit = {''',wave.rayinit.id,'''};']}];
-s = [s,{'paths_rayinit = {''''};'}];
+%
+if isfield(wave.rayinit,'launch'),
+    s = [s,{['ids_launch = {''',wave.rayinit.launch.id,'''};']}];
+    s = [s,{'paths_launch = {''''};'}];
+else    
+    s = [s,{['ids_rayinit = {''',wave.rayinit.id,'''};']}];
+    s = [s,{'paths_rayinit = {''''};'}];
+end
+%
 s = [s,{'%'}];
 s = [s,{'% C3PO computing parameters'}];
 s = [s,{'%'}];
@@ -77,7 +84,7 @@ s = [s,{'%'}];
 s = [s,{['waveparam.nd = ',num2str(wave.waveparam.nd),';%Number of transverse distance positions for beamlets']}];
 s = [s,{['waveparam.nchi = ',num2str(wave.waveparam.nchi),';%Number of angular positions for beamlets']}];
 s = [s,{'%'}];
-s = [s,{['n_rf_list = [',num2str(wave.waveparam.n_rf_list),'];']}];
+s = [s,{['waveparam.n_rf_list = [',num2str(wave.waveparam.n_rf_list),'];']}];
 s = [s,{'%'}];
 s = [s,{'% -------------------------------------------------------------------------'}];
 s = [s,{'%'}];
@@ -113,26 +120,28 @@ s = [s,{'% ---------------------------------------------------------------------
 s = [s,{'%'}];
 s = [s,{'% Load structures'}];
 s = [s,{'%'}];
-s = [s,{'[equil,rayinits,dkepath] = load_structures_yp(''equil'',id_equil,path_equil,''rayinits'',ids_rayinit,paths_rayinit,''dkepath'',id_dkepath,path_dkepath);'}];
+%
+if isfield(wave.rayinit,'launch'),
+    s = [s,{'[equil,launchs,dkepath] = load_structures_yp(''equil'',id_equil,path_equil,''launchs'',ids_launch,paths_launch,''dkepath'',id_dkepath,path_dkepath);'}];
+    s = [s,{'launch = launchs{1};'}];
+    s = [s,{'%'}];
+    s = [s,{'rayinit = main_rayinit_launch_jd(equil,launch);'}];
+    s = [s,{'rayinit.id = [''C3PO_'',launch.id];'}];
+    s = [s,{'rayinit.type = launch.type;'}];
+else
+    s = [s,{'[equil,rayinits,dkepath] = load_structures_yp(''equil'',id_equil,path_equil,''rayinits'',ids_rayinit,paths_rayinit,''dkepath'',id_dkepath,path_dkepath);'}];
+    s = [s,{'rayinit = rayinits{1};'}];
+end
 s = [s,{'%'}];
 s = [s,{'% -------------------------------------------------------------------------'}];
 s = [s,{'%'}];
 s = [s,{'% C3P0 ray tracing'}];
 s = [s,{'%'}];
-s = [s,{'wave = main_C3PO_jd(dkepath,id_wave,equil,rayinits{1},waveparam,fitparam,rayparam,C3POdisplay,C3POparam);'}];
+s = [s,{'wave = main_C3PO_jd(dkepath,id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam);'}];
 s = [s,{'%'}];
 s = [s,{'% Wave processing and relativistic linear damping'}];
 s = [s,{'%'}];
-s = [s,{'wave = wave_process_jd(equil,wave,n_rf_list);'}];
-s = [s,{'%'}];
-s = [s,{'wave.rayinit = rayinits{1};'}];
-s = [s,{'wave.fitparam = fitparam;'}];
-s = [s,{'wave.rayparam = rayparam;'}];
-s = [s,{'wave.display = C3POdisplay;'}];
-s = [s,{'wave.C3POparam = C3POparam;'}];
-s = [s,{'%'}];
-s = [s,{'waveparam.n_rf_list = n_rf_list;'}];
-s = [s,{'wave.waveparam = waveparam;'}];
+s = [s,{'wave = wave_process_jd(equil,wave,waveparam.n_rf_list);'}];
 s = [s,{'%'}];
 s = [s,{'save_str = [''WAVE_'',id_equil,''_'',id_wave,''.mat''];'}];
 s = [s,{'eval([''save '',save_str,'' wave'']);'}];
