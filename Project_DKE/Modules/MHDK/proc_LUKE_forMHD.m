@@ -2,7 +2,12 @@ function proc_LUKE_forMHD(filestr)
 %
 filename = ['LUKE_DATA_',filestr,'.mat'];
 %
-load(filename,'output');
+if exist(filename,'file'),
+    load(filename,'output');
+else
+    filename = ['LUKE_RESULTS_',filestr,'.mat'];
+    output = load(filename,'dke_out','equilDKE','momentumDKE','Zbouncecoef','mksa');
+end
 %
 [qe,me] = pc_dke_yp;
 %
