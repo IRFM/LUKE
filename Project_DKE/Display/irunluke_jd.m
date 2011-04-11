@@ -589,7 +589,14 @@ function irunluke_jd(basestr,signs,opt_gui)
                         output.Zbouncecoef = data.Zbouncecoef;
                         output.Zmripple = data.Zmripple;
                         output.mksa = data.mksa;
-                        output.XXsinksource = data.XXsinksource;  
+                        %
+                        % TODO: to correct in zstarwars, then remove here
+                        %
+                        if isfield(data,'XXsinksource'),    
+                            output.XXsinksource = data.XXsinksource;
+                        else
+                            output.XXsinksource = '';
+                        end
                         %
                         status.dkeparam = 1;
                         status.dkepath = 1;
@@ -789,8 +796,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                 else
                     newdatafile = [data_path,data_file];
                     if ~isempty(fileids.data) & ~strcmp([paths.data,fileids.data],newdatafile),
-                        c_opt = input('The data file name has changed. Do you want to keep old data file (y/n)? [n] : ','s');
-                        if ~strcmp(c_opt,'y'),
+                        c_opt = input('The data file name has changed. Do you want to keep old data file (y/n)? [y] : ','s');
+                        if strcmp(c_opt,'n'),
                             delete([paths.data,fileids.data])
                             disp(['-----> The file ',[paths.data,fileids.data],' has been deleted']);
                         end
@@ -1138,6 +1145,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     p_opt = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
                     g_opt.abs_max = input_dke_yp('Option for ray trajectories : 0 (full trajectory), 1 (cut when damped)',0,0:1,'',[1,1]);
                     %
+                    g_opt.mode = input_dke_yp('Option for showing ray polarization (n/y)','n',{'n','y'});
                     %xvaropt = input_dke_yp('Option for rho definition : 0 (geometric), 1 (poloidal flux), 2 (toroidal flux)',0,0:2,'',[1,1]);
                     xvar = input_dke_yp('Option for rho definition : ''g'' (geometric), ''p'' (poloidal flux), ''t'' (toroidal flux), ''v'' (volumic rho)','g',{'g','p','t','v'},'',[1,1]);
                     %
@@ -1229,7 +1237,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 % GENERATE LUKE RUN SCRIPT
                 %
-                imake_rundke_jd(paths,fileids,status,dkeparam.rho_S,workdir,id_simul_o,opt_gui);
+                imake_rundke_jd(paths,fileids,status,workdir,id_simul_o,opt_gui);
                 %
             elseif isel == 17,
                 %

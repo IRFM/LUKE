@@ -553,6 +553,7 @@ if strcmp(par.batch,'Yes') && isfield(dkepath,'remote') && ~isempty(dkepath.remo
         Zbouncecoef = output.Zbouncecoef;
         Zmripple = output.Zmripple;
         mksa = output.mksa;
+        XXsinksource = output.XXsinksource;
         %
     end
     %
