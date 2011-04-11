@@ -109,9 +109,13 @@ hold(ax,'off');
 set(gcl,'linestyle',style);
 set(gcl,'marker',marker);
 %if ~strcmp(style,'none'),
-    set(gcl,'linewidth',width);
+    set(gcl,'linewidth',real(width));
 %else
+if imag(width) == 0,
     set(gcl,'markersize',8);
+else
+    set(gcl,'markersize',imag(width));
+end
 %end
 if ~isnan(color)
     set(gcl,'color',color);
