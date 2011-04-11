@@ -128,9 +128,10 @@ elseif i_opt == 2,% build the wave data locally
         '\n0 (user-specified conditions)',...
         '\n1 (from an existing LAUNCH file)',...
         '\n2 (from an existing RAYINIT file)',...
-        '\n3 (from TORAY data)',...
-        '\n4 (from ART data)',...
-        '\n5 (from AMR data)'],0,0:4,'',[1,1]);
+        '\n3 (from an existing ALOHA file)',...
+        '\n4 (from TORAY data)',...
+        '\n5 (from ART data)',...
+        '\n6 (from AMR data)'],0,0:4,'',[1,1]);
     %
     %
     if d_opt == 0,% user-specified initial conditions 
@@ -209,18 +210,33 @@ elseif i_opt == 2,% build the wave data locally
         rayinit = iload_struct_jd('rayinit','RAYINIT',workdir,opt_gui);
         %
         type = rayinit.type;
+    elseif d_opt == 3,%initial conditions from an existing ALOHA file 
         %
-    elseif d_opt == 3,%initial conditions from TORAY 
+        [alohafile,alohapath] = igetfile_jd(opt_gui,'*.*','Please select the ALOHA output file',workdir,0);
+        %
+        if ischar(alohafile),
+            %
+            aloha = load([alohapath,alohafile]);
+            launch = make_launch_aloha_jd(aloha);
+            %
+        else
+            disp('No file selected, aborted.')
+            return
+        end
+        %
+        type = launch.type;
+        %
+    elseif d_opt == 4,%initial conditions from TORAY 
         %
         disp('-----> initial conditions from TORAY not implemented yet');
         return
         %
-    elseif d_opt == 4,% wave from ART calculations
+    elseif d_opt == 5,% wave from ART calculations
         %
         disp('-----> initial conditions from ART not implemented yet');
         return
         %
-    elseif d_opt == 5,% wave from AMR calculations
+    elseif d_opt == 6,% wave from AMR calculations
         %
         disp('-----> initial conditions from AMR not implemented yet');
         return
@@ -451,8 +467,6 @@ if w_opt == 0; % C3PO Calculation
     wave.info.type = 'RT';
     wave.info.RT = 'C3PO';
     wave.info.ftype = ftype;
-    %
-    wave.display = wavedisplay;
     %
     s_opt = input_dke_yp('Do you want to generate an equivalent make_wave script? [y/n]','n',{'y','n'},'',[1,1]);
     %
