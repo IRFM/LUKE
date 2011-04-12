@@ -146,7 +146,7 @@ if all(ischar(exp_file)),
             %
         else % hxr experimental data fromdatabase
             %
-            [energy,hxr,t,beta] = collect_hxr_forLUKE_jd(basestr,str2num(shotnum),opt,data_path);%,'filter_thickness','filter_material'
+            [energy,hxr,t,beta] = collect_hxr_forLUKE_jd(basestr,str2num(shotnum));%,opt,data_path,'filter_thickness','filter_material'
             %
         end
         %

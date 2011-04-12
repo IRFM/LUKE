@@ -175,9 +175,11 @@ elseif n_opt > 0,
         %
         clear ishot
         %
-    elseif n_opt == 2,% hxr experimental data from TCV database
+    elseif n_opt == 2,% hxr experimental data fro database
         %
-        [energy,hxr,t,beta] = collect_hxr_forLUKE_jd(basestr,str2num(shotnum),opt,data_path);%,'filter_thickness','filter_material'
+        opt = input_dke_yp('Pile-up rejection (TS only)? (0) no, (1) yes)',1,[0,1],'',[1,1]);
+        %
+        [energy,hxr,t,beta] = collect_hxr_forLUKE_jd(basestr,str2num(shotnum),opt);%,'data_path','filter_thickness','filter_material'
         %
     end
     %
