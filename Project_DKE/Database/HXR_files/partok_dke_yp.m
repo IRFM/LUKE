@@ -90,7 +90,8 @@ if strcmp(tokname,'TS')==1,
 %		if mode == 'N',
 %			infoyp(2,['Default values for ',tokname,' / last update: 01/05/98']);
 %		end
-%%	elseif strcmp(tokname,'TS')==1,
+%
+%	elseif strcmp(tokname,'TS')==1,
 %		if mode == 'N',
 %			infoyp(2,['Default values for ',tokname,' / last update: 18/11/1993']);
 %		end
@@ -639,7 +640,7 @@ if strcmp(tokname,'TS')==1,
 		lc = 1*ones(1,59);
 		lf = 1000*ones(1,59);
 		lfp = 1000*ones(1,59);
-		kdiag = [20,40,60,80,100,120,140,160,30;40,60,80,100,120,140,160,180,170];
+		kdiag = [20,40,60,80,100,120,140,160,50;40,60,80,100,120,140,160,180,110];
 		ef = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 		ef = [ef,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 		tf = ['Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al';'Al'];
