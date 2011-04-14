@@ -396,7 +396,7 @@ if ~isfield(par,'conf')
  par.conf = tokamak;
 end 
 %
-[launchs_lh] = make_wavelaunchs_cronos_lh(equil,gene,par,cons.lh_cons);%for the LH waves
+[launchs_lh] = make_wavelaunchs_cronos_lh(gene,par,cons.lh_cons);%for the LH waves
 [launchs_ec] = make_wavelaunchs_cronos_ec(equil,par,cons.ecrh_cons);%for the EC waves
 %    
 launchs = [launchs_lh,launchs_ec];
@@ -570,7 +570,7 @@ j_TOT_c = signe_out*Zcurr_RF.x_0_vcfsav*mksa.j_ref;
 I_TOT_c = sum(signe_out*Zcurr_RF.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
 p_TOT_c = (ZP0_RF.x_rf_fsav.' + ZP0_RF.x_e_fsav)*mksa.P_ref;
 p_RF_c = ZP0_RF.x_rf_fsav.'*mksa.P_ref;
-P_TOT_c = sum(p_RF_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
+P_TOT_c = sum(p_TOT_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
 P_RF_c = sum(p_RF_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
 %
 if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current

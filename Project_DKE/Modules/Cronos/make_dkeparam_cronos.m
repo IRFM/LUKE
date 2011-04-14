@@ -122,7 +122,7 @@ if strcmp(par.luke_mode,'lh') || strcmp(par.luke_mode,'mixte');%For the Lower Hy
     dkeparam.opt_load = 0;%Load intermediate calculations
     dkeparam.opt_save = 0;%Save intermediate calculations
     %
-elseif strcmp(par.luke_mode,'ec'),%For the Electron Cyclotron wave simulations
+elseif strcmp(par.luke_mode,'ecrh'),%For the Electron Cyclotron wave simulations
     %
     %Mesh size calculation
     %
