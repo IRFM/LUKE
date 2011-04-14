@@ -133,7 +133,7 @@ for iw = 1:nw,
 		else
 			rays{iy}.mask_abs = [];
         end
-        if ~isfield(rays{iy},'rayinits') || ~strcmp(rays{iy}.rayinits{1}.type,'EC'),
+        if ~isfield(rays{iy},'rayinits') || ~isfield(rays{iy}.rayinits{1},'type') || ~strcmp(rays{iy}.rayinits{1}.type,'EC'),
             rays{iy}.refs = '';
         else
             for iref = 1:length(rays{iy}.rayinits),% for each reflection
