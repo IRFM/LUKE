@@ -58,17 +58,17 @@ fi =  [0,1,0];%  Hydrogen isotopic fraction (H/D/T) [1,3] (WARNING: only used wh
 %
 Te0 = 5;%  Core electron temperature (keV)
 Tea = 0.5;%  Edge electron temperature (keV)
-eTe1 = 2;%  Exponent #1 for Te profile 
+eTe1 = 4;%  Exponent #1 for Te profile 
 eTe2 = 2;%  Exponent #2 for Te profile 
 %
 ne0 = 2.0e19;%  Core electron density (m-3)
 nea = 2.0e17;%  Edge electron density (m-3)
-ene1 = 2;%  Exponent #1 for ne profile 
+ene1 = 4;%  Exponent #1 for ne profile 
 ene2 = 0.5;%  Exponent #2 for ne profile
 %
 Ti0 = 2;%  Core ion temperature (keV)
 Tia = 0.2;%  Edge ion temperature (keV)
-eTi1 = 2;%  Exponent #1 for Ti profile
+eTi1 = 4;%  Exponent #1 for Ti profile
 eTi2 = 2;%  Exponent #2 for Ti profile
 %
 Zeff0 = 1.5;%  Core effective charge (a.u.)
