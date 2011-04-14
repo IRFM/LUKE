@@ -19,10 +19,15 @@ dpsi_RZ(dpsi_RZ > 0) = dpsi_RZ_min;
 psiRZ = cumsum([0,dpsi_RZ]);
 %
 equil.id = equil_id;%gene.k is the time slice
-equil.Rp = double(equi.R(1,1,1));
-equil.Zp = double(equi.Z(1,1,1));
-equil.ptx = squeeze(double(equi.R)) - equil.Rp;
-equil.pty = squeeze(double(equi.Z)) - equil.Zp;
+%
+if any(imag(equi.R(:)) ~= 0) || any(imag(equi.Z(:)) ~= 0),
+	disp('WARNING : imaginary data from Helena equilibrium, discarded in LUKE');
+end
+%
+equil.Rp = double(real(equi.R(1,1,1)));
+equil.Zp = double(real(equi.Z(1,1,1)));
+equil.ptx = squeeze(double(real(equi.R))) - equil.Rp;
+equil.pty = squeeze(double(real(equi.Z))) - equil.Zp;
 equil.ap = equil.ptx(end,1);
 equil.psi_apRp = -psiRZ*equil.ap/equil.Rp;%Match already the defintion of ppsi in DKE (psi(helena)/2/pi))
 equil.theta = linspace(0,2*pi,size(equi.R,3));
