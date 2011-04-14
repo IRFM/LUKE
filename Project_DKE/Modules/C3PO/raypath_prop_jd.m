@@ -32,22 +32,28 @@ end
 if min(yR_L) < 0
     error('R_L must be positive')
 end
-if min(yphi_L) <= -pi | max(yphi_L) > pi
+if min(yphi_L) <= -pi || max(yphi_L) > pi
     error('need -pi < phi_L <= pi')
 end
-if min(yalpha_L) <= -pi | max(yalpha_L) > pi
+if min(yalpha_L) <= -pi || max(yalpha_L) > pi
     error('need -pi < alpha_L <= pi')
 end
-if min(ybeta_L) < 0 | max(ybeta_L) > pi
+if min(ybeta_L) < 0 || max(ybeta_L) > pi
     error('need 0 <= beta_L <= pi')
 end    
 %
 ns = length(s);
-nb = length(yR_L);
+nb = max([length(yR_L),length(yZ_L),length(yphi_L),length(yalpha_L),length(ybeta_L)]);
 %
-if length(yZ_L) ~= nb | length(yphi_L) ~= nb | length(yalpha_L) ~= nb | length(ybeta_L) ~= nb
+if ~any(length(yR_L) == [1,nb]) || ~any(length(yZ_L) == [1,nb]) || ~any(length(yphi_L) == [1,nb]) || ~any(length(yalpha_L) == [1,nb]) || ~any(length(ybeta_L) == [1,nb])
     error('Launching inputs must have the same dimension')
 end
+%
+yR_L = repmat(yR_L,[1,nb/length(yR_L)]);
+yZ_L = repmat(yZ_L,[1,nb/length(yZ_L)]);
+yphi_L = repmat(yphi_L,[1,nb/length(yphi_L)]);
+yalpha_L = repmat(yalpha_L,[1,nb/length(yalpha_L)]);
+ybeta_L = repmat(ybeta_L,[1,nb/length(ybeta_L)]);
 %
 sysZ = s'*cos(ybeta_L);
 sysh = s'*sin(ybeta_L);
