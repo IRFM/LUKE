@@ -91,15 +91,22 @@ elseif ~isstruct(display)
 else
     display_mode = display.display_mode;
 end
-if nargin < 2 || ~isstruct(radialDKE),
-    xpsin_S_dke = NaN;%no incremental volume or surface calculations
-    xpsin = NaN;%the radial grid is the equilibrium grid
-else
-    xpsin_S_dke = radialDKE.xpsin_S_dke;
-    xpsin = radialDKE.xpsin_f;
+if nargin < 2,
+    radialDKE = NaN;
 end
 if nargin < 1,
     error('Not enough input arguments in equilibrium_jd.m');
+end
+%
+if isstruct(radialDKE),
+    xpsin_S_dke = radialDKE.xpsin_S_dke;
+    xpsin = radialDKE.xpsin_f;
+elseif length(radialDKE) > 1,
+    xpsin_S_dke = radialDKE;
+    xpsin = (xpsin_S_dke(1:end-1) + xpsin_S_dke(2:end))/2;
+else
+    xpsin_S_dke = NaN;%no incremental volume or surface calculations
+    xpsin = NaN;%the radial grid is the equilibrium grid
 end
 %
 % CASE OF LOCAL CALCULATION INDEPENDENT OF ANY ACTUAL TOKAMAK GENOMETRY
@@ -340,8 +347,11 @@ if Rp < Inf,
                 %
                 mask = extr_ind(:,ir);%extrema positions
                 %
-                mask(tpB(:,ir) == max(tpB0(:,ir))) = false;%take global extrema indices away
-                mask(tpB(:,ir) == min(tpB0(:,ir))) = false;%take global extrema indices away
+                itmax = find(tpB(:,ir) == max(tpB0(:,ir)),1,'first');
+                itmin = find(tpB(:,ir) == min(tpB0(:,ir)),1,'first');
+                %
+                mask(itmax) = false;%take global extrema indices away
+                mask(itmin) = false;%take global extrema indices away
                 %
                 if ~any(mask),
                     continue
