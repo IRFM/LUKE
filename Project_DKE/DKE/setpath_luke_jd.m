@@ -41,6 +41,7 @@ addpath([luke_root,'Project_DKE/Modules/C3PO']);
 addpath([luke_root,'Project_DKE/Modules/Ripple/TS']);
 addpath([luke_root,'Project_DKE/Modules/Cronos']);
 addpath([luke_root,'Project_DKE/Modules/ITM']);
+addpath([luke_root,'Project_DKE/Modules/METIS']);
 addpath([luke_root,'Project_DKE/Display']);
 addpath([luke_root,'Project_DKE/Packages']);
 addpath([luke_root,'Project_DKE/Packages/MUMPS']);
