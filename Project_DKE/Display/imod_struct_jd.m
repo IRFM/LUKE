@@ -182,12 +182,22 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui)
                 if stype(iname) == 0,%logical
                     cguic(iname) = uicontrol(cgui,'style','checkbox','string','','value',fval,'position',cposition,'callback',@field_cbf);
                 elseif stype(iname) == 1,%string
-                    cguic(iname) = uicontrol(cgui,'style','edit','string',sval,'position',cposition,'callback',@field_cbf);
+                    if iscell(values),
+                        for ielem = 1:length(values),
+                            if strcmp(fval,values{ielem}),
+                                break
+                            end
+                        end
+                        % 
+                        cguic(iname) = uicontrol(cgui,'style','popupmenu','string',values,'value',ielem,'position',cposition,'callback',@field_cbf);
+                    else
+                        cguic(iname) = uicontrol(cgui,'style','edit','string',sval,'position',cposition,'callback',@field_cbf);
+                    end                
                 elseif stype(iname) == 2,%scalar or small vector    
                     if iscell(values) || size(values,1) == 1,
                         if iscell(values),
                             for ielem = 1:length(values),
-                                if fval == values(ielem),
+                                if fval == values{ielem},
                                     break
                                 end
                             end
@@ -405,7 +415,11 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui)
                 mod(imod) = 1;
             end
         elseif stype(iname) == 1,%string
-            s.(fname) = get(hObject,'string');
+            if iscell(values),
+                s.(fname) = values{get(hObject,'value')};
+            else
+                s.(fname) = get(hObject,'string');
+            end
             %
             if ~strcmp(s.(fname),sinit.(fname)),
                 mod(imod) = 1;
