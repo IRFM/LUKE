@@ -163,7 +163,7 @@ dkepath.efdaitm = efdaitm;
 %
 dkepath.hostname.laptopjoan = 'CADTS-0096';%WARNING: for laptop, may change with connection status.
 %
-laptopjoan.luke_root = '/home/joan/Work/LUKE/';
+laptopjoan.luke_root = [pwd,'/'];
 laptopjoan.local_root = '/opt/';
 laptopjoan.computer = 'GLNXA64';%machine type and supported OS
 laptopjoan.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -187,7 +187,7 @@ laptopjoan.mex711 = [laptopjoan.luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB
 % no option (32 bits)
 %
 %FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer''  
-laptopjoan.compiler_opt.helmex = '-v -L/home/joan/lib -llapack_g95_32 -lblas_g95_32';%'-v -largeArrayDims -llapack -lblas -lgfortran FC=''gfortran'' FFLAGS=''-fexceptions -fPIC -fbackslash''';%  
+laptopjoan.compiler_opt.helmex = '-v -largeArrayDims -L/home/joan/lib -llapack_g95_32 -lblas_g95_32';%'-v -largeArrayDims -llapack -lblas -lgfortran FC=''gfortran'' FFLAGS=''-fexceptions -fPIC -fbackslash''';%  
 laptopjoan.compiler_opt.fopts = '';%'-v FC="gfortran"';%'FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';
 laptopjoan.compiler_opt.copts = '';
 %
