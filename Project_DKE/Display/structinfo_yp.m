@@ -130,7 +130,7 @@ switch struct
         %
         switch field 
             case 'mode',expert = 0;values = 0:2;info = 'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)';
-            case 'timeout',expert = 1;values = [50:50:500];info = 'MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor';
+            case 'timeout',expert = 1;values = 50:50:500;info = 'MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor';
             case 'size',expert = 0;values = [0;Inf];info = '%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations';
             otherwise,
         end
@@ -165,7 +165,21 @@ switch struct
             case 'bNpar0',expert = 0;values = [-Inf;Inf];info = 'Initial Npar in each lobe';
             case 'bdNpar0',expert = 0;values = [0;Inf];info = 'Spectral width in each lobe : specify fixed value, or type ''0'' if minimum width within numerical constraints';
             case 'rZ0',expert = 0;values = [-Inf;Inf];info = 'Vertical launching positions (m)';
-	    case 'i_ref',expert = 1;values = -1:-1:-10;info = 'Retrait du point de départ depuis la dernière surface de flux (increase to pass cutoff if edge density is low)';
+            otherwise,
+        end
+        %
+    case 'transpfaste',
+        %
+        switch field 
+            case 'id',expert = 0;values = '';info = 'Provide an id for this transpfaste structure';
+            case 'Dr0',expert = 0;values = [0;Inf];info = 'Core radial diffusion coefficient (m^2/s)';
+            case 'Dr_model',expert = 0;values = 0:2;info = 'Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth)';
+            case 'pDr',expert = 0;values = [-Inf;Inf];info = 'Coefficient for the Dr radial profile';
+            case 'Vr0',expert = 0;values = [-Inf;Inf];info = 'Core radial pinch coefficient (m/s)';
+            case 'Vr_model',expert = 0;values = 0:2;info = 'Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth)';
+            case 'pVr',expert = 0;values = [-Inf;Inf];info = 'Coefficient for the Vr radial profile';
+            case 'vparmin',expert = 0;values = [0;Inf];info = 'Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)';
+            case 'norm_ref',expert = 0;values = [0,1];info = 'Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref';
             otherwise,
         end
 		%
@@ -293,6 +307,71 @@ switch struct
             case 'angles_E_equatorial',expert = 0;info = 'array of polarization angles (single value for no angle scan)';
             case 'popolarizationwer',expert = 0;info = 'select polarization(s) (linear | linear_complementary | circular)';
             case 'frequencies',expert = 0;info = 'array of frequencies';
+            otherwise,
+        end
+		%
+        % -------------------------- METIS coupling structures -----------------------
+        %
+    case 'lukeparam',
+        %
+        switch field 
+            case 'luke_mode',expert = 0;values = 0:2;info = '(0) run LUKE, (1) run LUKE then save output (2) save input then exit';
+            case 'batch_mode',expert = 0;values = 0:1;info = 'run LUKE in (0) interactive mode, (1) batch mode';                
+            case 'display_mode',expert = 0;values = 0:2;info = '(0) none, (1) limited (2) full display';
+            case 'rho_display',expert = 1;values = [0;1];info = 'radial position for display [0;1]';
+            case 'dkeparam',expert = 1;info = 'LUKE run parameters';
+            case 'equilparam',expert = 1;info = 'equilibrium parameters';
+            case 'lhparam',expert = 0;info = 'LH parameters';
+            case 'ecparam',expert = 0;info = 'EC parameters';
+            case 'transpfaste',expert = 0;info = 'radial transport parameters';
+            otherwise,
+        end
+    case 'equilparam',
+        %
+        switch field 
+            case 'nbpx',expert = 0;values = [0,11:10:201];info = 'number of points in interpolated radial grid (enter 0 if no interpolation required)';
+            case 'mode',expert = 0;values = {'standard','sqrt(psi)','psi'};info = 'interpolation mode : linear in "standard" (xli), "sqrt(psi)", or "psi"';                
+            case 'expo',expert = 0;values = [-Inf;Inf];info = 'morphing function exponent';
+            case 'comp',expert = 0;values = {true,false};info = 'control of equilibrium moments reconstructed from LUKE';
+            otherwise,
+        end
+    case 'lhparam',
+        %
+        switch field 
+            case 'freqlh',expert = 0;values = [0;Inf];info = 'Wave frequency (GHz)';
+            case 'plh',expert = 0;values = [0;Inf];info = 'Wave initial power (W)';
+            case 'npar0',expert = 0;values = [-Inf;Inf];info = 'Wave initial index of refraction';
+            case 'mode',expert = 0;values = 0:2;info = 'LUKE LH mode : (0) simple v1, v2, D model, (1) C3PO with ideal antenna, (2) C3PO with prescribed antenna';
+            case 'plhmin',expert = 1;values = [0;Inf];info = 'Minimum power level to use wave in LUKE (W)';
+            case 'directivity',expert = 0;values = [0;1];info = 'Spectrum directivity';
+            case 'lob',expert = 0;values = {true,false};info = 'Include opposite lobe';
+            case 'dnpar0',expert = 1;values = [0;Inf];info = 'Wave initial spectral width';
+            case 'z0',expert = 0;values = [-Inf;Inf];info = 'Vertical launching positions (m)';
+            case 'm0',expert = 1;values = [-Inf;Inf];info = 'Initial poloidal mode number';
+            case 'phi0',expert = 1;values = [-pi;pi];info = 'Initial toroidal angle (rad)';
+            case 'i_ref',expert = 1;values = -10:0;info = 'Initial radial position index (relative from edge)';
+            case 'LFS',expert = 1;values = [-1,1];info = 'Launching side : (-1) high field side, (1) low field side';
+            case 'mmode',expert = 0;values = [-1,1];info = 'Polarization : (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1)';
+            case 'a_sdNpar',expert = 1;values = [0;Inf];info = 'Spectral broadening factor (m^-1)';
+            case 'nparp',expert = 1;values = [-Inf;Inf];info = 'Initial additional upshift';
+            otherwise,
+        end
+    case 'ecparam',
+        %
+        switch field 
+            case 'freqec',expert = 0;values = [-Inf;Inf];info = 'Wave frequency (GHz); if negative integer = harmonic number, determined from alpha, xec and polec';
+            case 'pec',expert = 0;values = [0;Inf];info = 'Wave initial power (W)';
+            case 'alpha_L',expert = 0;values = [-pi;pi];info = 'Toroidal launching angle (degrees); if NaN, determined from freqec, xec and polec, or from option.sens if freqec=NaN';
+            case 'mode',expert = 0;values = 0:2;info = 'LUKE LH mode : (0) simple v1, v2, D model, (1) C3PO with ideal antenna, (2) C3PO with prescribed antenna';
+            case 'pecmin',expert = 1;values = [0;Inf];info = 'Minimum power level to use wave in LUKE (W)';
+            case 'xec',expert = 0;values = [0;Inf];info = 'Radial location of ECRH deposition (normalized METIS grid)';
+            case 'polec',expert = 0;values = [0;1];info = 'Poloidal location of ECRH deposition, (degrees); if NaN, determined from freqec, xec and alpha_L';
+            case 'pabs',expert = 1;values = [0;Inf];info = 'momentum at absorption (for Doppler shift)';
+            case 'dnpar0',expert = 1;values = [0;Inf];info = 'Wave initial spectral width';
+            case 'phi0',expert = 1;values = [-pi;pi];info = 'Initial toroidal angle (rad)';
+            case 'mmode',expert = 0;values = [-1,1];info = 'Polarization : (1) m (-1) p, (O/X mode: -1/+1)';
+            case 'ns',expert = 1;values = 200:200:5000;info = 'Number of points for stright line calculations';
+            case 'method',expert = 1;values = {'linear','nearest','spline','pchip','cubic'};info = 'Interpolation method';
             otherwise,
         end
     %
