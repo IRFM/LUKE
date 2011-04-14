@@ -82,7 +82,7 @@ hxr.td_hxr = td;%type of material for the detector (BGO,CsI,NaI,Ge or CdTe) [1,m
 %
 hxr.kdiag_hxr = kdiag;%Measured photon energy spectrum (keV) [1,k]
 %
-hxr.kphot = [20:10:180];%Photon energy in keV
+hxr.kphot = [20:10:240];%Photon energy in keV
 
 
 
