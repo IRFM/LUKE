@@ -10,6 +10,10 @@ global nfig
 %
 opt_proc = 0;%test for numerical performance test with number of processors 
 %
+mdce_mode = 2;
+mdce_enforce = 1;%enforce sequential run if distributed computing failed
+mdce_memory = 7500;%memory allocated to batch runs, in MB
+%
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -104,30 +108,38 @@ Dr0_list = [0,0.001,0.01,0.1,0.3,1,3,10,30,100];
 Dr0_mask = [1,4,6,8];
 iDr0_save = 8;
 %
-for iDr0 = 1:length(Dr0_list),
+nDr0 = length(Dr0_list);
+nr = length(rho_S) - 1;
+%
+dkecluster = clustermode_luke(mdce_mode,'',0,dkepath.remote,mdce_memory);
+dkecluster.size = nDr0;
+dkecluster.enforce = mdce_enforce;%enforce sequential run if distributed computing failed
+%
+[flag,cZcurr,cZP0,cdke_out,cequilDKE,cmksa] = mdce_luke(@loop_rundke,...
+    {'',Dr0_list,iDr0_save,id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple},...
+    1,1:nDr0,dkecluster);
+%
+j = NaN(nr,nDr0);
+P = NaN(nr,nDr0);
+tCPU_Dr0 = NaN(1,nDr0);
+Itot = NaN(1,nDr0);
+Ptot_2piRp = NaN(1,nDr0);
+%
+for iDr0 = 1:nDr0,
     %
-    transpfaste.Dr0 = Dr0_list(iDr0);
+    j(:,iDr0) = cZcurr{iDr0}.x_0;
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    P(:,iDr0) = cZP0{iDr0}.x_rf_fsav;
     %
-    if iDr0 == iDr0_save,
-        eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'_Dr0_',num2str(Dr0_list(iDr0)),'.mat']);
-        info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'_Dr0_',num2str(Dr0_list(iDr0)),'.mat']);
-    end
+    tCPU_Dr0(iDr0) = cdke_out{iDr0}.time_out;
     %
-    j(:,iDr0) = Zcurr.x_0;
-    %
-    P(:,iDr0) = ZP0.x_rf_fsav;
-    %
-    tCPU_Dr0(iDr0) = dke_out.time_out;
-    %
-    Itot(iDr0) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
-    Ptot_2piRp(iDr0) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
+    Itot(iDr0) = sum(cZcurr{iDr0}.x_0.*cequilDKE{iDr0}.xdA_dke*cmksa{iDr0}.j_ref);
+    Ptot_2piRp(iDr0) = sum(cZP0{iDr0}.x_rf_fsav.'.*cequilDKE{iDr0}.xdV_2piRp_dke*cmksa{iDr0}.P_ref);
     %
 end
 %
 eta = j./P;
-Eta = equilDKE.xne(1)*Itot./Ptot_2piRp/(2*pi)/1e19;
+Eta = cequilDKE{1}.xne(1)*Itot./Ptot_2piRp/(2*pi)/1e19;
 %
 % Nprocessor scan for Dpsipsi = 10 m2/s (1-> 10) (on the cluster only)
 %
@@ -162,12 +174,13 @@ ylim = [0,0.0015];
 xlab = 'r/a_p';
 ylab = 'j';
 tit = '';
+siz = 20+14i;
 %
 %for iDr0 = 1:length(Dr0_list) - 1, 
-%    graph1D_jd(equilDKE.xrho,j(:,iDr0),i,0,0,'','','',NaN,xlim,ylim,'-','none',NaN,2,20,gca);
+%    graph1D_jd(cequilDKE{1}.xrho,j(:,iDr0),i,0,0,'','','',NaN,xlim,ylim,'-','none',NaN,2,20,gca);
 %end
-graph1D_jd(equilDKE.xrho,j(:,Dr0_mask),0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none',NaN,2,20,gca,0.9,0.7,0.7);
-%graph1D_jd(equilDKE.xrho,besselj(0,2.4*equilDKE.xrho)*j(1,Dr0_mask(end)),0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20);
+graph1D_jd(cequilDKE{1}.xrho,j(:,Dr0_mask),0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none',NaN,2,siz,gca,0.9,0.7,0.7);
+%graph1D_jd(cquilDKE{1}.xrho,besselj(0,2.4*equilDKE.xrho)*j(1,Dr0_mask(end)),0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20);
 %
 set(gca,'ytick',[0:1/3:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
@@ -180,7 +193,7 @@ xlab = 'D_{\psi\psi} (m^{2}/s)';
 ylab = 'CPU time (s)';
 tit = '';
 %
-graph1D_jd(Dr0_list(2:end),tCPU_Dr0(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),tCPU_Dr0(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 %
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0.01,0.1,1,10,100])
@@ -195,7 +208,7 @@ xlab = 'D_{\psi\psi} (m^{2}/s)';
 ylab = 'I (MA)';
 tit = '';
 %
-graph1D_jd(Dr0_list(2:end),-Itot(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),-Itot(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 %
 set(gca,'ytick',[0:0.25:1]*ylim(2))
 set(gca,'xtick',[0.01,0.1,1,10,100])
@@ -210,7 +223,7 @@ xlab = 'D_{\psi\psi} (m^{2}/s)';
 ylab = 'P/(2\piR_p) (MW/m)';
 tit = '';
 %
-graph1D_jd(Dr0_list(2:end),Ptot_2piRp(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),Ptot_2piRp(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 %
 set(gca,'ytick',[0:0.25:1]*ylim(2))
 set(gca,'xtick',[0.01,0.1,1,10,100])
@@ -225,7 +238,7 @@ xlab = 'D_{\psi\psi} (m^{2}/s)';
 ylab = 'n_{19}IR_p/P';
 tit = '';
 %
-graph1D_jd(Dr0_list(2:end),-Eta(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),-Eta(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 %
 set(gca,'ytick',[0:0.25:1]*ylim(2))
 set(gca,'xtick',[0.01,0.1,1,10,100])
@@ -248,7 +261,7 @@ if opt_proc > 0 & strcmp(computer,'GLNXA64'),
     ylab = 'Number of processors';
     tit = '';
     %
-    graph1D_jd(nproc_list,tCPU_nproc,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+    graph1D_jd(nproc_list,tCPU_nproc,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
     %
     set(gca,'ytick',[0:0.2:1]*ylim(2))
     set(gca,'xtick',[0:0.2:1]*xlim(2))
