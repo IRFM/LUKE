@@ -2360,11 +2360,15 @@
 % U dcluke.m (memory management and matlab version)
 % U dcluke.exe (matlab version)
 % U dcluke_batch.sh (")
+% A ftest_mdce.m (test function for distributed computing)
+% A test_mdce.m (")
 %
 % ====> LUKE/Tools
 %
 % U clustermode_luke.m (memory management)
-% U mdce_luke.m (")
+% U mdce_luke.m (memory and error management, simplifications)
+% U dclukecomputing.m (error management, simplifications)
+% U seqcomputing.m (")
 % U fproc_data.m (simulation script)
 % U proc_a_sdNpar_scan.m (")
 % U proc_Dr0_scan.m (")
@@ -2379,5 +2383,6 @@
 % U ITER/Scen4/readme.txt (")
 % U ITER/Scen4/res_ITER_Scen4_C3PO_f5_N2_dN0.2.log (")
 % U TS/32299/res_alpha_0_Dr0_0.log (")
+%
 
 
