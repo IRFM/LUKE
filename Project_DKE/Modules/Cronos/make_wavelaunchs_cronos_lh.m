@@ -1,10 +1,23 @@
-function [launchs] = make_wavelaunchs_cronos_lh(equil,gene,par,cons,signe,config,lob,freqlh,aloha)
+function [launchs] = make_wavelaunchs_cronos_lh(gene,par,cons,signe,conf,lob,freqlh,aloha_mode)
 %
-if nargin < 8,
-    aloha.mode = 0;
+if nargin >= 8,
+    par.aloha_mode = aloha_mode;
 end
-if nargin < 7,
-    freqlh = NaN;
+%
+if nargin >= 7,
+    par.freqlh = freqlh;
+end
+%
+if nargin >= 6,
+    par.lob = lob;
+end
+%
+if nargin >= 5,
+    par.conf = conf;
+end
+%
+if nargin >= 4,
+    gene.signe = signe;
 end
 %
 if isempty(cons),
@@ -26,19 +39,25 @@ else
     freqlh = NaN;
 end
 %
-if ~isempty(strfind(par.conf,' (TS)'))
-    par.conf = par.conf(1:(strfind(par.conf,' (TS)')-1));    
+conf = par.conf;
+%
+signe = gene.signe;
+%
+if ~isempty(strfind(conf,' (TS)'))
+    conf = conf(1:(strfind(conf,' (TS)')-1));    
 end
 %
 if isfield(par,'aloha_mode')
     for ilh = 1:nlh,
         aloha(ilh).mode    = par.aloha_mode(ilh);
-        aloha(ilh).param   = par.aloha_param(ilh) + i*par.aloha_param0(ilh);
+        aloha(ilh).param   = par.aloha_param(ilh) + 1i*par.aloha_param0(ilh);
         aloha(ilh).file    = fullfile(fileparts(gene.file),strtrim(par.aloha_file{ilh}));
         aloha(ilh).scen    = par.aloha_scen(ilh);
     end
 else
-    aloha.mode = zeros(1,nlh);
+   for ilh = 1:nlh,
+     aloha(ilh).mode = zeros(1,nlh);
+   end
 end
 %
 % Create the structure launch for CRONOS
@@ -47,7 +66,7 @@ end
 %
 % -------------------------------- Tore Supra --------------------------------
 %
-if strcmp(par.conf,'TS');%For the Lower Hybrid wave simulations
+if strcmp(conf,'TS');%For the Lower Hybrid wave simulations
     %
     % ------- LH antenna #1 (C1) -------
     %
@@ -65,7 +84,7 @@ if strcmp(par.conf,'TS');%For the Lower Hybrid wave simulations
     %
     directivity = [0.7];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
@@ -75,7 +94,7 @@ if strcmp(par.conf,'TS');%For the Lower Hybrid wave simulations
     % 
     launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
     launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+    launchs{1}.i_ref = -1;%Initial radial position index [1,1]
     launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
     launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
     %
@@ -87,7 +106,7 @@ if strcmp(par.conf,'TS');%For the Lower Hybrid wave simulations
     %
     directivity = [0.7];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
@@ -97,13 +116,13 @@ if strcmp(par.conf,'TS');%For the Lower Hybrid wave simulations
     %
     launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
     launchs{2}.phi0 = [0];%toroidal angle position [1,1]
-    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+    launchs{2}.i_ref = -1;%Initial radial position index [1,1]
     launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
     launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- Tore Supra Mixte --------------------------------
 %
-elseif strcmp(par.conf,'MIXTE') || strcmp(par.conf,'MIXTE (TS)') ;%For the Lower Hybrid wave simulations
+elseif strcmp(conf,'MIXTE') || strcmp(conf,'MIXTE (TS)') ;%For the Lower Hybrid wave simulations
     %
     % ------- LH antenna #1 (C2) -------
     %
@@ -121,7 +140,7 @@ elseif strcmp(par.conf,'MIXTE') || strcmp(par.conf,'MIXTE (TS)') ;%For the Lower
     %
     directivity = [0.7];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
@@ -131,7 +150,7 @@ elseif strcmp(par.conf,'MIXTE') || strcmp(par.conf,'MIXTE (TS)') ;%For the Lower
     % 
     launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
     launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+    launchs{1}.i_ref = -1;%Initial radial position index [1,1]
     launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
     launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
     %
@@ -143,7 +162,7 @@ elseif strcmp(par.conf,'MIXTE') || strcmp(par.conf,'MIXTE (TS)') ;%For the Lower
     %
     directivity = [0.6];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
@@ -153,13 +172,13 @@ elseif strcmp(par.conf,'MIXTE') || strcmp(par.conf,'MIXTE (TS)') ;%For the Lower
     % 
     launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
     launchs{2}.phi0 = [0];%toroidal angle position [1,1]
-    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+    launchs{2}.i_ref = -1;%Initial radial position index [1,1]
     launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
     launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- Tore Supra CIEL --------------------------------
 %
-elseif strcmp(par.conf,'CIEL') | strcmp(par.conf,'CIEL (TS)') ;%For the Lower Hybrid wave simulations
+elseif strcmp(conf,'CIEL') | strcmp(conf,'CIEL (TS)') ;%For the Lower Hybrid wave simulations
     %
     % ------- LH antenna #1 (C2) -------
     %
@@ -177,7 +196,7 @@ elseif strcmp(par.conf,'CIEL') | strcmp(par.conf,'CIEL (TS)') ;%For the Lower Hy
     %
     directivity = [0.6];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
@@ -187,7 +206,7 @@ elseif strcmp(par.conf,'CIEL') | strcmp(par.conf,'CIEL (TS)') ;%For the Lower Hy
     % 
     launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
     launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-    launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+    launchs{1}.i_ref = -1;%Initial radial position index [1,1]
     launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
     launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
     %
@@ -199,7 +218,7 @@ elseif strcmp(par.conf,'CIEL') | strcmp(par.conf,'CIEL (TS)') ;%For the Lower Hy
     %
     directivity = [0.6];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
@@ -209,13 +228,13 @@ elseif strcmp(par.conf,'CIEL') | strcmp(par.conf,'CIEL (TS)') ;%For the Lower Hy
     % 
     launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
     launchs{2}.phi0 = [0];%toroidal angle position [1,1]
-    launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+    launchs{2}.i_ref = -1;%Initial radial position index [1,1]
     launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
     launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
     %
     % -------------------------------- C-MOD --------------------------------
     %
-elseif strcmp(par.conf,'CMOD');%For the Lower Hybrid wave simulations 
+elseif strcmp(conf,'CMOD');%For the Lower Hybrid wave simulations 
     %
     % ------- LH antenna #1 -------
     %
@@ -229,7 +248,7 @@ elseif strcmp(par.conf,'CMOD');%For the Lower Hybrid wave simulations
 %
    directivity = [1.0];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons,lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons,lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -239,13 +258,13 @@ elseif strcmp(par.conf,'CMOD');%For the Lower Hybrid wave simulations
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-   launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{1}.i_ref = -1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- JET --------------------------------
 %
-elseif strcmp(par.conf,'JET');%For the Lower Hybrid wave simulations
+elseif strcmp(conf,'JET');%For the Lower Hybrid wave simulations
     %
     if ~any(nlh == [1,2]),
         error('Mismatch in antenna number between LH cons and make_wavelaunchs_cronos_lh')
@@ -263,7 +282,7 @@ elseif strcmp(par.conf,'JET');%For the Lower Hybrid wave simulations
     %
     directivity = [0.7];%Antenna directivity [1,1]
     %
-    [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
+    [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
     launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
     launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
     %
@@ -273,7 +292,7 @@ elseif strcmp(par.conf,'JET');%For the Lower Hybrid wave simulations
     % 
     launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
     launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-    launchs{1}.i_ref = length(equil.psi_apRp) - 2;%Initial radial position index [1,1]
+    launchs{1}.i_ref = -2;%Initial radial position index [1,1]
     launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
     launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
     %
@@ -286,7 +305,7 @@ elseif strcmp(par.conf,'JET');%For the Lower Hybrid wave simulations
         %
         directivity = [0.7];%Antenna directivity [1,1]
         %
-        [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
+        [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
         launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
         launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
         %
@@ -296,7 +315,7 @@ elseif strcmp(par.conf,'JET');%For the Lower Hybrid wave simulations
         % 
         launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
         launchs{2}.phi0 = [0];%toroidal angle position [1,1]
-        launchs{2}.i_ref = length(equil.psi_apRp) - 2;%Initial radial position index [1,1]
+        launchs{2}.i_ref = -2;%Initial radial position index [1,1]
         launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
         launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
     end
@@ -304,7 +323,7 @@ elseif strcmp(par.conf,'JET');%For the Lower Hybrid wave simulations
 %
 % -------------------------------- ITER@3.7GHz --------------------------------
 %
-elseif strcmp(par.conf,'ITER');%For the Lower Hybrid wave simulations
+elseif strcmp(conf,'ITER');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 -------
 % 
@@ -318,7 +337,7 @@ elseif strcmp(par.conf,'ITER');%For the Lower Hybrid wave simulations
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
 %
@@ -328,7 +347,7 @@ elseif strcmp(par.conf,'ITER');%For the Lower Hybrid wave simulations
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-   launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{1}.i_ref = -1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
@@ -340,7 +359,7 @@ elseif strcmp(par.conf,'ITER');%For the Lower Hybrid wave simulations
 %
 %   directivity = [0.7];%Antenna directivity [1,1]
 %
-%   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons);%Power and parallel refractive index [1,n_lobe]
+%   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons);%Power and parallel refractive index [1,n_lobe]
 %   launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
 %   launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
 %
@@ -350,7 +369,7 @@ elseif strcmp(par.conf,'ITER');%For the Lower Hybrid wave simulations
 % 
 %   launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
 %   launchs{2}.phi0 = [0];%toroidal angle position [1,1]
-%   launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+%   launchs{2}.i_ref = -1;%Initial radial position index [1,1]
 %   launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
 %   launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 
@@ -358,7 +377,7 @@ elseif strcmp(par.conf,'ITER');%For the Lower Hybrid wave simulations
 %
 % -------------------------------- FT-U --------------------------------
 %
-elseif strcmp(par.conf,'FTU')
+elseif strcmp(conf,'FTU')
 %
 % ------- LH antenna #1 -------
 % 
@@ -372,7 +391,7 @@ elseif strcmp(par.conf,'FTU')
 %
    directivity = [0.85];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -382,13 +401,13 @@ elseif strcmp(par.conf,'FTU')
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-   launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{1}.i_ref = -1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- SST-1 --------------------------------
 %
-elseif strcmp(par.conf,'SST1')
+elseif strcmp(conf,'SST1')
 %
 % ------- LH antenna #1 -------
 % 
@@ -402,7 +421,7 @@ elseif strcmp(par.conf,'SST1')
 %
    directivity = [0.75];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -412,13 +431,13 @@ elseif strcmp(par.conf,'SST1')
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-   launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{1}.i_ref = -1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- DEMO --------------------------------
 %
-elseif strcmp(par.conf,'DEMO')
+elseif strcmp(conf,'DEMO')
 %
 % ------- LH antenna #1 -------
 % 
@@ -432,7 +451,7 @@ elseif strcmp(par.conf,'DEMO')
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
 %
@@ -442,7 +461,7 @@ elseif strcmp(par.conf,'DEMO')
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-   launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{1}.i_ref = -1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
@@ -454,7 +473,7 @@ elseif strcmp(par.conf,'DEMO')
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
 %
@@ -464,13 +483,13 @@ elseif strcmp(par.conf,'DEMO')
 % 
    launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
-   launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{2}.i_ref = -1;%Initial radial position index [1,1]
    launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]  
    launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % -------------------------------- COMPASS --------------------------------
 %
-elseif strcmp(par.conf,'COMPASS');%For the Lower Hybrid wave simulations
+elseif strcmp(conf,'COMPASS');%For the Lower Hybrid wave simulations
 %
 % ------- LH antenna #1 -------
 % 
@@ -484,7 +503,7 @@ elseif strcmp(par.conf,'COMPASS');%For the Lower Hybrid wave simulations
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
 %
@@ -494,11 +513,11 @@ elseif strcmp(par.conf,'COMPASS');%For the Lower Hybrid wave simulations
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-   launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{1}.i_ref = -1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
    
-elseif strcmp(par.conf,'AUG') || strcmp(par.conf,'ASDEX');%For the Lower Hybrid wave simulations 
+elseif strcmp(conf,'AUG') || strcmp(conf,'ASDEX');%For the Lower Hybrid wave simulations 
 %
 % ------- LH antenna #1 -------
 % 
@@ -512,7 +531,7 @@ elseif strcmp(par.conf,'AUG') || strcmp(par.conf,'ASDEX');%For the Lower Hybrid 
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
 %
@@ -522,7 +541,7 @@ elseif strcmp(par.conf,'AUG') || strcmp(par.conf,'ASDEX');%For the Lower Hybrid 
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-   launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{1}.i_ref = -1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
@@ -534,7 +553,7 @@ elseif strcmp(par.conf,'AUG') || strcmp(par.conf,'ASDEX');%For the Lower Hybrid 
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(2),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{2}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{2}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
 %
@@ -544,10 +563,10 @@ elseif strcmp(par.conf,'AUG') || strcmp(par.conf,'ASDEX');%For the Lower Hybrid 
 % 
    launchs{2}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{2}.phi0 = [0];%toroidal angle position [1,1]
-   launchs{2}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{2}.i_ref = -1;%Initial radial position index [1,1]
    launchs{2}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{2}.mmode = -1;% (-1) for slow wave, (1) for fast wave
-elseif strcmp(par.conf,'EAST');%For the Lower Hybrid wave simulations 
+elseif strcmp(conf,'EAST');%For the Lower Hybrid wave simulations 
 %
 % ------- LH antenna #1 -------
 % 
@@ -561,7 +580,7 @@ elseif strcmp(par.conf,'EAST');%For the Lower Hybrid wave simulations
 %
    directivity = [0.7];%Antenna directivity [1,1]
 %
-   [Plhtot,Npar0] = lhspectrum_cronos(directivity,gene.signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
+   [Plhtot,Npar0] = lhspectrum_cronos(directivity,signe,cons(1),lob);%Power and parallel refractive index [1,n_lobe]
    launchs{1}.bPlhtot = Plhtot;%initial power in the ray (W) [1,n_lobe]
    launchs{1}.bNpar0 = Npar0;%Initial Npar value [1,n_lobe]
  %
@@ -570,7 +589,7 @@ elseif strcmp(par.conf,'EAST');%For the Lower Hybrid wave simulations
 % 
    launchs{1}.m0 = [0];%initial poloidal mode number [1,1]
    launchs{1}.phi0 = [0];%toroidal angle position [1,1]
-   launchs{1}.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
+   launchs{1}.i_ref = -1;%Initial radial position index [1,1]
    launchs{1}.LFS = [1];% (-1) high field side launching, (1) low field side launching [1,1]
    launchs{1}.mmode = -1;% (-1) for slow wave, (1) for fast wave
 else
@@ -599,13 +618,14 @@ for ilh=1:nlh,
             bPlhtot = bPlhtot(mask);
         end
         %
-        bNpar0 = -gene.signe.ip*gene.signe.b0*bNpar0;%sign in aloha is positive
+        bNpar0 = -signe.ip*signe.b0*bNpar0;%sign in aloha is positive
         %
         launchs{ilh}.bdNpar0    = bdNpar0;
         launchs{ilh}.bNpar0     = bNpar0;
         launchs{ilh}.bPlhtot    = bPlhtot;
-        launchs{ilh}.aloha  = aloha(ilh);
     end
+    %
+    launchs{ilh}.aloha  = aloha(ilh);
 end
 %
 % ====================== OTHER PARAMETERS ==========================
