@@ -416,7 +416,10 @@ Zmomcoef = selectfields_jd(Zmomcoef,savefields_Zmomcoef);
 Zbouncecoef = selectfields_jd(Zbouncecoef,savefields_Zbouncecoef);
 Zmripple = selectfields_jd(Zmripple,savefields_Zmripple);
 %
-rmdir(dkepath.temppath);%Remove calculation directory
+if exist(dkepath.temppath,'dir')
+    disp(['remove the directory :',dkepath.temppath]),
+    rmdir(dkepath.temppath);%Remove calculation directory
+end
 %
 if nargout >= 1,varargout{1} = Znorm;end
 if nargout >= 2,varargout{2} = Zcurr;end
