@@ -13,7 +13,7 @@ function [YTdt,YTmask,YTF,YTPSIB,YTmhu0,YTmhu,YTx,xymaskT,nt2] = banana_dke_jd(y
 %   
 %       - YTdt: dtheta
 %       - YTmask: Mask on the integration over B
-%       - YTF: B*[(R-Rp)^2+(Z-Zp)^2]/|BR*(Z-Zp)-BZ*(R-Rp)|/Rp, integrant that appears in the numerical bounce integrals (see notice)
+%       - YTF: B*mhu0*[(R-Rp)^2+(Z-Zp)^2]/|BR*(Z-Zp)-BZ*(R-Rp)|/mhu/ap, integrant that appears in the numerical bounce integrals (see notice)
 %       - YTPSIB: Ratio of B-field to its minimum on flux surface, B/Bmin
 %       - YTmhu0: Pitch-angle at Bmin
 %       - YTmhu: Pitch-angle cosine of (psi,theta,mhu) at B

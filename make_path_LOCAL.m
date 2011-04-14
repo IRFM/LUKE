@@ -187,8 +187,11 @@ laptopjoan.mex711 = [laptopjoan.luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB
 % no option (32 bits)
 %
 %FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer''  
-laptopjoan.compiler_opt.helmex = '-v -largeArrayDims -L/home/joan/lib -llapack_g95_32 -lblas_g95_32';%'-v -largeArrayDims -llapack -lblas -lgfortran FC=''gfortran'' FFLAGS=''-fexceptions -fPIC -fbackslash''';%  
-laptopjoan.compiler_opt.fopts = '';%'-v FC="gfortran"';%'FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';
+%
+% in fedora, g95 installed but helmex did not work... try again with kubuntu?
+%
+laptopjoan.compiler_opt.helmex = NaN;%'-v -L/home/joan/lib -llapack_g95_32 -lblas_g95_32';%'-v -largeArrayDims -llapack -lblas -lgfortran FC=''gfortran'' FFLAGS=''-fexceptions -fPIC -fbackslash''';%  
+laptopjoan.compiler_opt.fopts = '-v FC="gfortran"';%'';%'FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';
 laptopjoan.compiler_opt.copts = '';
 %
 % laptopjoan.MUMPS.mex75 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
