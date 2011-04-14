@@ -613,7 +613,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                         waves = output.dke_out.waves;
                         %
-                        if ~isfield(dkeparam,'rho_S') && isfield(data.par,'rho_S'),
+                        if ~isfield(dkeparam,'rho_S') && isfield(data,'par') && isfield(data.par,'rho_S'),
                             dkeparam.rho_S = data.par.rho_S;
                         end
                         %
@@ -698,7 +698,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                         waves = '';
                         %
-                        if ~isfield(dkeparam,'rho_S') && isfield(data.par,'rho_S'),
+                        if ~isfield(dkeparam,'rho_S') && isfield(data,'par') && isfield(data.par,'rho_S'),
                             dkeparam.rho_S = data.par.rho_S;
                         end
                         %
