@@ -261,7 +261,13 @@ end
 nc = length(ic);
 %
 %dt = hxr.dt;
-dt = 0.016;%hxr.dt;%sampling time
+if strcmp(basestr,'TS'),
+    dt = 0.016;%hxr.dt;%sampling time
+elseif strcmp(basestr,'TCV'),
+    dt = 0.0025;
+else
+    error('this machine is not implemented yet')
+end
 %
 ikfitmin = find(hxr.kfit >= krange(1),1,'first');
 ikfitmax = find(hxr.kfit <= krange(2),1,'last');
@@ -451,9 +457,9 @@ if display_mode > 0,
     print_jd(p_opt,['Fig_countrate_exp_',load_id],[hxr_path,'figures'],5);
     %
     %
-    maskplasma = 1 - hxr_proc.Qplasma < 1e-2;%1e-4;
-    maskdiag = 1 - hxr_proc.Qdiag < 1e-2;%1e-4;
-    maskexp = 1 - hxr_proc.Qexp < 1e-2;%1e-4;
+    maskplasma = 1 - hxr_proc.Qplasma < 1e-1;%1e-2;%1e-4;
+    maskdiag = 1 - hxr_proc.Qdiag < 1e-1;%1e-2;%1e-4;
+    maskexp = 1 - hxr_proc.Qexp < 1e-1;%1e-2;%1e-4;
     %
     figure(6),clf,set(6,'Name','Photon Temperature')
     %
