@@ -2313,6 +2313,7 @@
 %
 % U imake_equil_jd.m (equil shotnum and shotime info)
 % U imake_ohm_jd.m (")
+% U imake_launch_LH_jd.m (iref as option)
 % U imake_wave_jd.m (EVE-LUKE coupling)
 % U imake_wave_EVE_jd.m (")
 % U imod_struct_jd.m (rm fields)
@@ -2375,6 +2376,7 @@
 % U proc_TS.m (")
 % U colddisp_dke_jd (vacuum limit)
 % U userid_jd.m (use of USER)
+% U graph_wave_jd.m (landau damping parameter, portrait subplot printing)
 %
 % ====> LUKE/Simulations/Examples
 %
