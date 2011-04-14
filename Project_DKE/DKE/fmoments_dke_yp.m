@@ -770,7 +770,7 @@ end
 %
 Zcurr.x_0_fsav = (xq(rdke)./xqbar(rdke)).*Zcurr.x_0;
 Zcurr.x_0_vfsav = (xqtilde(rdke)./xqhat(rdke)).*Zcurr.x_0;
-Zcurr.x_0_vcfsav = (xB0(rdke).*xqcronos(rdke)./xqhat(rdke)./Bax).*Zcurr.x_0;
+Zcurr.x_0_vcfsav = (xB0(rdke).*xqcronos(rdke)./xqhat(rdke)./abs(Bax)).*Zcurr.x_0;
 %
 Zcurr.x_tp_fsav = 2*pi*(xqtilde(rdke)./xqbar(rdke))./(1 + xx0(rdke)/Rp).*(xBT0(rdke)./xB0(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_tp(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke).*XXlambda_p2m2p2(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
 %************* to be updated YP 14/06/07 *************
