@@ -4,57 +4,55 @@
 %
 % by Yves Peysson (CEA/DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
-% ---------------------- ITER -----------------------
+% ---------------------- ITER Scen 4 LHCD ------------------
 %
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['ITER',filesep,'Scen4',filesep,'EQUIL']);
-w = what;
-if size(w.mat,1) ~= 2 | forcerun,
-   make_equil_ITER;
-   make_equil_ITER_IAEA06;
+if exist('EQUIL_ITER_Scen4.mat','file') == 0 || forcerun,
+    make_equil_ITER_Scen4
 else
-   info_dke_yp(2,['Magnetic equilibrium calculations for ITER/Scen4 skipped because already done !'])      
+    info_dke_yp(2,'Magnetic equilibrium calculations for ITER/Scen4 skipped because already done !')      
 end
 cd ../../..
 %
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['ITER',filesep,'Scen4',filesep,'WAVE',filesep,'C3PO']);
-w = what;
-if size(w.mat,1) ~= 28 | forcerun,
-   make_rayinit_ITER_Scen4_all;
-   make_rayinit_ITER_Scen4_Alpha_all;
-   %
-   make_wave_ITER_Scen4_all;
-   make_wave_ITER_Scen4_Alpha_all;
-else
-   info_dke_yp(2,['C3PO calculations for ITER/Scen4 skipped because already done !'])      
-end
-cd ../../../..
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['ITER',filesep,'Scen4']);
-w = what;
-if size(w.mat,1) ~= 9 | forcerun,
-   rundke_ITER_Scen4_IAEA06_all;
-   rundke_ITER_Scen4_IAEA06_Alpha_all;
-   proc_ITER
+if exist('LUKE_RESULTS_ITER_Scen4_C3PO_f5_N2_dN0.2.mat','file') == 0 || forcerun,
+    rundke_ITER_Scen4_C3PO_f5_N2_dN0p2
 else
-   info_dke_yp(2,['LUKE calculations for ITER/Scen4 skipped because already done !'])      
+    info_dke_yp(2,'LUKE calculations for ITER/Scen4 skipped because already done !')      
 end
 cd ../..
 %
-% ---------------------- TS -----------------------
+% ---------------------- ITER Scen 2 ECCD ------------------
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['ITER',filesep,'Scen2']);
+if exist('LUKE_RESULTS_ITER_Scen2_200103121816_430_129_C3PO_NTM_32.mat','file') == 0 || forcerun,
+    rundke_ITER_Scen4_C3PO_EC
+else
+    info_dke_yp(2,'LUKE calculations for ITER/Scen2 skipped because already done !')      
+end
+cd ../..
+%
+% ---------------------- TS 32299 -----------------------
 %
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['TS',filesep,'32299']);
-w = what;
-if size(w.mat,1) ~= 29 | forcerun,
-   run_cronos_C3PO;
-   run_cronos_starwars;
-   run_cronos_starwars_Alpha_scan;
-   run_cronos_starwars_Dr0_scan;
+if exist('WAVE/C3PO/WAVE_TS_32299_100.0117_TS_Coupleur_C1.mat','file') == 0 ||...
+        exist('WAVE/C3PO/WAVE_TS_32299_100.0117_TS_Coupleur_C2.mat','file') == 0 || forcerun,
+    run_cronos_C3PO;
 else
-   info_dke_yp(2,['C3PO/LUKE calculations for TS/32299 skipped because already done !'])      
+    info_dke_yp(2,'C3PO calculations for TS/32299 skipped because already done !')      
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TS',filesep,'32299']);
+if exist('DKE_RESULTS_TS_32299_100.0117_alpha_0_Dr0_0.mat','file') == 0 || forcerun,
+	run_cronos_starwars;
+else
+    info_dke_yp(2,'LUKE calculations for TS/32299 skipped because already done !')      
 end
 cd ../..
 %
