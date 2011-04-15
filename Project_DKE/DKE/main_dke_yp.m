@@ -32,7 +32,7 @@ global nfig;
 %
 mkdirmessage = 'Directory already exists.';
 while strcmp(mkdirmessage,'Directory already exists.'),
-    dkepath.temppath = fullfile(dkepath.temppathroot,timeid_jd(clock));
+    dkepath.temppath = fullfile(dkepath.temppathroot,timeid_jd(clock,3));
     [res,mkdirmessage] = mkdir(dkepath.temppath);%Create calculation directory
 end
 %
