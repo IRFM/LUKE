@@ -24,8 +24,16 @@ Simulations ITER Scen 4
 		- dsmin = 0;
 		- fitparam.method = 'spline';
 		- rayparam.tau_lim = 20;
+		- C3POparam.clustermode.main_C3PO_jd.mode = 2 (if MDCE applicable)
 
 - Comparison successful for LUKE 1.8.2 on 05/28/2010.
 - Comparison successful for LUKE 1.8.5 on 09/28/2010.
     (7.5 then 7.10, script then irunluke then batch)
+- Comparison successful for LUKE 1.8.6 on 04/15/2011.
+	(7.10, script and irunluke in batch mode)
+	Note : ray length vary slightly, reason unknown.
+		- First ray points coincide.
+		- same compiled mex files.
+		- seems to depend upon cephee processor.
+	
 
