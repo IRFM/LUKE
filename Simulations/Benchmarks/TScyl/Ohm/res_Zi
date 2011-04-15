@@ -1,0 +1,21 @@
+Comparison LUKE/Karney/Spitzer - NR calculations (betath = 0.01)
+----------------------
+--> Zi = 1
+Linearized operator : sigma = 7.4196/7.429
+Maxwellian operator : sigma = 3.7535/3.773
+High-Velocity operator : sigma = 2.9924/2.837
+----------------------
+--> Zi = 2
+Linearized operator : sigma = 4.3632/4.377
+Maxwellian operator : sigma = 2.8088/2.824
+High-Velocity operator : sigma = 2.3999/2.31
+----------------------
+--> Zi = 5
+Linearized operator : sigma = 2.0639/2.078
+Maxwellian operator : sigma = 1.6496/1.66
+High-Velocity operator : sigma = 1.5168/1.489
+----------------------
+--> Zi = 10
+Linearized operator : sigma = 1.1235/1.133
+Maxwellian operator : sigma = 0.99116/0.998
+High-Velocity operator : sigma = 0.94506/0.938
