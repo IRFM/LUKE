@@ -437,7 +437,11 @@ if nr > 1,
             %
             wxdPdrho_rf_2piRp_lin(iw,:) = wxdPdrhoG_rf_2piRp_lin(iw,:).*drhoG_dep./drho_dep;
             %    
-            wi_peak_lin(iw) = find(wxdPdrho_rf_2piRp_lin(iw,:) == max(wxdPdrho_rf_2piRp_lin(iw,:)));
+            if ~all(isnan(wxdPdrho_rf_2piRp_lin(iw,:))),
+                wi_peak_lin(iw) = find(wxdPdrho_rf_2piRp_lin(iw,:) == max(wxdPdrho_rf_2piRp_lin(iw,:)));
+            else
+                wi_peak_lin(iw) = NaN;
+            end
             %
             wxp_rf_2piRp_lin(iw,:) = wxdPdrho_rf_2piRp_lin(iw,:).*drho_dep;
             %
@@ -448,12 +452,21 @@ if nr > 1,
         xdPdrho_rf_2piRp_lin = sum(wxdPdrho_rf_2piRp_lin,1);
         p_rf_2piRp_lin = sum(wp_rf_2piRp_lin);
         %
-        wrhoG_lin = rhoG_dep(wi_peak_lin);
-        wrhoP_lin = interp1(xrhoG_I,xrhoP_I,wrhoG_lin);
-        wrhoT_lin = interp1(xrhoG_I,xrhoT_I,wrhoG_lin);
-        wrhoV_lin = interp1(xrhoG_I,xrhoV_I,wrhoG_lin);
-        wTe_lin = interp1(xrhoG,xTe,wrhoG_lin);
-        wne_lin = interp1(xrhoG,xne,wrhoG_lin);
+        if ~isnan(wi_peak_lin),
+            wrhoG_lin = rhoG_dep(wi_peak_lin);
+            wrhoP_lin = interp1(xrhoG_I,xrhoP_I,wrhoG_lin);
+            wrhoT_lin = interp1(xrhoG_I,xrhoT_I,wrhoG_lin);
+            wrhoV_lin = interp1(xrhoG_I,xrhoV_I,wrhoG_lin);
+            wTe_lin = interp1(xrhoG,xTe,wrhoG_lin);
+            wne_lin = interp1(xrhoG,xne,wrhoG_lin);
+        else
+            wrhoG_lin = NaN;
+            wrhoP_lin = NaN;
+            wrhoT_lin = NaN;
+            wrhoV_lin = NaN;
+            wTe_lin = NaN;
+            wne_lin = NaN;
+        end           
         %
     else
         %

@@ -42,7 +42,7 @@ launch.omega_rf = [0.8]*2*pi*1e9;%wave angular frequency (rad/s) [1,1] (same fre
 launch.bPlhtot = [1]*1e6;%initial power in the ray (W) (main lobe) [1,n_lobe]
 launch.bNpar0 = [10];%Initial Npar value (main lobe) [1,n_lobe]
 launch.bdNpar0 = [3];%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-launch.ry0 = [-0.36];%vertical launching positions [1,m_pol]
+launch.rZ0 = [-0.36];%vertical launching positions [1,m_pol]
 %
 launch.n0 = 0;%initial toroidal mode number [1,1]
 launch.phi0 = 0;%toroidal angle position [1,1]
@@ -59,7 +59,7 @@ launch.i_ref = length(equil.psi_apRp) - 1;%Initial radial position index [1,1]
 %
 % Ray initial characteristics
 %
-rayinit = main_rayinit_launch_jd(equil,launch)
+rayinit = main_rayinit_launch_jd(equil,launch);
 %
 save_str = ['RAYINIT_',id_equil,'_',id_rayinit,'.mat'];
 eval(['save ',save_str,' rayinit']);

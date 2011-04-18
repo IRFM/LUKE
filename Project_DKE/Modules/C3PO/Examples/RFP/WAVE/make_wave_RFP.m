@@ -11,6 +11,11 @@ clc
 %
 id_wave = 'RFP_LH';
 %
+% Path parameters
+%
+id_dkepath = '';%For all paths used by DKE solver
+path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 % Equilibrium parameters
 %
 id_equil = 'RFP';%For plasma equilibrium
@@ -79,7 +84,7 @@ rayparam.reflection = 1;%1:Enforce wave reflection at plasma boundary, 0: the co
 %
 % Load structures
 %
-[equil,rayinits] = load_structures_yp('equil',id_equil,path_equil,'rayinits',ids_rayinit,paths_rayinit);
+[dkepath,equil,rayinits] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'rayinits',ids_rayinit,paths_rayinit);
 %
 % C3P0 ray tracing
 %
