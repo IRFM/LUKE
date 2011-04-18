@@ -221,7 +221,7 @@ cd ../..
 %
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['TScyl',filesep,'LH_karney_3D_splitting']);
-if exist('DKE_RESULTS_TScyl_LH_karney_3D_splitting.mat','file') == 0 || forcerun,
+if exist('DKE_RESULTS_TScyl_LH_karney_3D_splitting_1.mat','file') == 0 || forcerun,
    rundke
 else
    info_dke_yp(2,['Simulation TScyl',filesep,'LH_karney_3D_splitting skipped because already done !']) 
