@@ -11,6 +11,7 @@ clc
 %
 id_wave = 'PLTtest';
 flag_analytic = 4;
+p_opt = -1;
 %
 % Path parameters
 %
@@ -125,30 +126,5 @@ eval(['save ',save_str,' wave_numeric wave_analytic']);
 %
 info_dke_yp(2,'Wave parameters saved');
 %
-graph_comp_RT_jd(wave_numeric,wave_analytic);
+graph_comp_RT_jd(wave_numeric,wave_analytic,['Fig_',id_equil,'_',id_wave],p_opt);
 %
-figure('Name','Normalized radial position comparison')
-graph1D_jd(abs(yout(:,3)/2/pi),yout(:,1),0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(yout_a(:,3)/2/pi),yout_a(:,1),0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-print_jd(p_opt,[filename,'_RhoComp']);
-figure('Name','Normalized poloidal position comparison')
-graph1D_jd(abs(yout(:,3)/2/pi),yout(:,2)/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(yout_a(:,3)/2/pi),yout_a(:,2)/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-print_jd(p_opt,[filename,'_ThetaComp']);
-figure('Name','Poloidal mode number comparison')
-graph1D_jd(abs(yout(:,3)/2/pi),yout(:,5),0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(yout_a(:,3)/2/pi),yout_a(:,5),0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-print_jd(p_opt,[filename,'_PoloidalModeComp']);
-figure('Name','Parallel wave refractive index comparison')
-graph1D_jd(abs(yout(:,3)/2/pi),sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(yout_a(:,3)/2/pi),sNpar_a,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-print_jd(p_opt,[filename,'_NparComp']);
-figure('Name','Perpendicular wave refractive index comparison')
-graph1D_jd(abs(yout(:,3)/2/pi),sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(yout_a(:,3)/2/pi),sNperp_a,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-print_jd(p_opt,[filename,'_NperpComp']);
