@@ -2386,5 +2386,153 @@
 % U ITER/Scen4/res_ITER_Scen4_C3PO_f5_N2_dN0.2.log (")
 % U TS/32299/res_alpha_0_Dr0_0.log (")
 %
-
-
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.8.6
+% 
+% - HXR calculation corrected and updated for TS
+% - METIS - LUKE coupling
+% - new fast electron transport threshold and models
+% - multiray description of fluctuation effects on LH spectrum
+% 
+% ====> LUKE
+%
+% U make_path_LOCAL.m updates for cephee, lac2 and laptopjoan
+% U install_LUKE.m (mdce testing and startup.m file)
+% U LUKE_startup_jd.m (setup for LUKE in startup.m file)
+% U alltests_LUKE.m (updated and tested)
+% 
+% ====> LUKE/Project_DKE/Database
+%
+% U DKEPARAM_files/make_dkeparam_LH_RT.m (small correction)
+% U EQUIL_files/make_equil_JETh77.m (new exponents for new equilibrium - see benchmarks)
+% A EXTERNAL_files/collect_hxr.m (Stefano's function for TCV data - hard link)
+% A EXTERNAL_files/collect_parameters_for_luke.m (")
+% A EXTERNAL_files/reflect_tcv.m (function for ray reflection on vessel)
+% U HXR_files/make_hxr_TCV.m (kphot - kdiag corrections)
+% U HXR_files/bremTSconvert_dke_yp.m (")
+% U HXR_files/partok_dke_yp.m (new version from displaytt)
+% A WAVE_files/get_launchs_TS.m (parameters for TS LHCD antenna)
+% A WAVE_files/make_wave_C3POparam_LH.m (C3PO parameters for LH wave)
+% 
+% ====> LUKE/Project_DKE/Display
+%
+% U igetdir_jd.m (filesep added if necessary)
+% U igetfile_jd.m (")
+% U imake_makewave_jd.m (launch file input added)
+% U imake_rundke_jd.m (includes batch mode)
+% U imod_struct_jd.m (cell of strings management)
+% U irunhxr_jd.m (TS update and kphot - kdiag corrections)
+% U irunluke_jd.m (ray reflection on vessel included)
+% U structinfo_yp.m (MIKE, METIS and transpfaste parameters)
+% A imake_launch_aloha_jd.m (make launch from aloha output)
+% U imake_wave_jd.m (")
+% 
+% ====> LUKE/Project_DKE/DKE
+%
+% U LUKEversion_jd.m (LUKE 1.8.6)
+% U equilibrium_jd.m (input grid and extremum management)
+% U fmoments_dke_yp.m (sign error in current for cronos)
+% U proc_luke_jd.m (residue info, blist management, and harmonic separation)
+% U run_lukert.m (correction in a_sdNpar run)
+% U setpath_luke_jd.m (coupling to METIS included)
+% U banana_dke_jd.m (small corrections)
+% U main_dke_yp.m (")
+% U momentumcoefbuilder_dke_yp.m (Xv added)
+% U rad_dke_yp.m (case with energy threshold and/or gaussian energy dep.)
+% U runluke_remote_jd.m (matlab root for local runs)
+% U load_structures_yp.m (correction to reduce execution time)
+% 
+% ====> LUKE/Project_DKE/Modules/ALOHA
+%
+% U proc_aloha_spec_jd.m (correction on legend location)
+% 
+% ====> LUKE/Project_DKE/Modules/C3PO
+%
+% U raypath_prop_jd.m (input can be scalars)
+% A test_spectrum_jd.m (test function for varspectrum_jd.m)
+% A varspectrum_jd.m (account for fluctuation-generated N//0 Gaussian diffusion in ray distribution)
+% A graph_comp_RT_jd.m (compares C3PO results - old function reinstated)
+% U loop_main_C3PO_jd.m (small correction when no launch present)
+% A reflection_jd.m (ray reflection on vessel)
+% U Examples/run_all.m (modified similarly to run_all_benchmarks - fully tested)
+% U Examples/PLT/WAVE/make_wave_PLTtest.m (small correction)
+% U Examples/RFP/WAVE/make_rayinit_RFP.m (")
+% U Examples/RFP/WAVE/make_wave_RFP.m (")
+% 
+% ====> LUKE/Project_DKE/Modules/Cronos
+%
+% U luke_parameters.m (small corrections)
+% U make_dkeparam_cronos.m (")
+% U zstarwars.m (")
+% U make_wavert_cronos.m (" + parameters with aloha)
+% U make_equil_cronos.m (complex values from helena removed)
+% U make_wavelaunchs_cronos_ec.m (data structure corrected)
+% U make_wavelaunchs_cronos_lh.m (simplifications)
+% 
+% ====> LUKE/Project_DKE/Modules/FEB
+%
+% U runhxr_jd.m (TS update and kphot - kdiag corrections)
+% A get_hxrspec_forLUKE_jd.m (TS update)
+% U fproc_hxr.m (various corrections, including sampling time)
+% U collect_hxr_forLUKE_jd.m (update for TS)
+% U bremdiag_dke_yp.m (corrections on detector response function)
+% U dresp_dke_yp.m (")
+% U bremlocaldisplay_dke_yp.m (small corrections)
+% U bremsstrahlung_dke_yp.m (")
+% U contourfp_hxr_yp.m (")
+% A plotchords_jd.m (plots HXR chords)
+% 
+% ====> LUKE/Project_DKE/Modules/Helena
+%
+% U equil_magnetic_helmex77_yp.m (correction on call to helena)
+% U MEX/Source/separatrice.F (version corrigée par Yves)
+% U MEX/Source/helmex77.F (")
+% 
+% ====> LUKE/Project_DKE/Modules/METIS
+%
+% A metis2luke.m (couplage LUKE-METIS)
+% A make_equil_metis2luke.m (equil metis -> luke)
+% A make_lukeparam_metis2luke.m (LUKE parameters in metis)
+% A make_wavelaunchs_metis2luke_ec.m (EC parameters)
+% A make_wavelaunchs_metis2luke_lh.m (LH parameters)
+% 
+% ====> LUKE/Project_DKE/Modules/MHDK
+%
+% U proc_LUKE_forMHD.m (LUKE_RESULTS as input possible)
+% 
+% ====> LUKE/Project_DKE/Packages
+%
+% U test_packages_dke_yp.m (updated and tested)
+% U MDCE/test_mdce.m (made into a function for install_LUKE)
+% U MDCE/run_mdce.m (small corrections) 
+% 
+% ====> LUKE/Tools
+%
+% U graph1D_jd.m (font name, legend location, marker size)
+% U graph_wave_jd.m (reflections on vessel, polarization)
+% U mdce_luke.m (error corrected in the case of several parallel bunches)
+% U timeid_jd.m (1/1000 second to avoid conflicts)
+% U clustermode_luke.m (")
+% U userid_jd.m
+% A equilvol_mc_jd.m (volume of FS by monte-carlo code)
+% A equilmoments_jd.m (moments of LUKE equilibrium)
+% A structindex.m (fields evaluated at given index)
+% U print_jd.m (opt = 3 for keyboard)
+% U colddisp_dke_jd.m (access condition returned)
+% U graph2D_jd.m (colormap scale)
+% U execute_jd.m (small correction)
+% U input_dke_yp.m (")
+%
+% ====> LUKE/Simulations/Benchmarks
+%
+% U run_all_benchmarks.m (small corrections - fully tested)
+% U TScirc_e1/Ohm_bounce/rundke.m (pour réutilisation dans irunluke)
+% U JETh77/LH_karney_transp_bounce/rundke.m
+% U JETh77/LH_karney_transp_bounce/loop_rundke.m (distributed calculation)
+% U JETh77/LH_karney_transp_bounce/readme.txt (new equilibrium and validation)
+%
+% ====> LUKE/Simulations/Examples
+%
+% U run_all_examples.m (ITER Scen2 ECCD added, and some corrections)
+%
