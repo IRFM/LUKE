@@ -20,9 +20,9 @@ cd('../..')
 %
 % ---------------------- C3PO -----------------------
 %
-cd(['Project_DKE',filesep,'Modules',filesep,'RT',filesep,'Examples']);
+cd(['Project_DKE',filesep,'Modules',filesep,'C3PO',filesep,'Examples']);
 run_all;
-cd('../../..')
+cd('../../../..')
 %
 % ---------------------- Packages -----------------------
 %
