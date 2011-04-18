@@ -19,7 +19,11 @@ rayinit.yP0_2piRp = rayinit.yP0_2piRp(iray);
 tau_lim_init = rayparam.tau_lim;%Initial optical depth limit
 kmode = waveparam.kmode;
 ydNpar0 = rayinit.ydNpar0;
-launch0 = rayinit.launch;
+if isfield(rayinit,'launch'),
+    launch0 = rayinit.launch;
+else
+    launch0 = '';
+end
 %
 rays{1}.P0_2piRp = rayinit.yP0_2piRp;%Initial lineic power density in the ray (W/m) [1,1]
 %
