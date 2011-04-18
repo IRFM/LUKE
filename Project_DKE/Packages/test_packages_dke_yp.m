@@ -2,7 +2,7 @@ clc
 clear all
 close all
 %
-dkepath = path_LUKE_LOCAL;
+[dkepath,dkeparam] = load_structures_yp('dkepath','','','dkeparam','UNIFORM10010020','');
 dirinit = pwd;%initial directory
 cd([dkepath.luke_root,'Project_DKE/Packages']);
 %
@@ -11,14 +11,25 @@ disp('---------------------------------------------------------------')
 mode = input_dke_yp('2-D (0) or 3-D (1) input matrix',0);
 npass = input_dke_yp('Number of passes',10);disp(' ');
 if mode ==0,
-   load testLU2D.mat;if exist('testmatinv-2D.txt'),delete testmatinv-2D.txt;end;diary testmatinv-2D.txt;disp(['2-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
+   load('testLU2D.mat','MMXPC_f_t','MMXL_f_t','MMXU_f_t','MMXR_t');%,'dkeparam'
+   if exist('testmatinv-2D.txt','file'),
+       delete testmatinv-2D.txt;
+   end;
+   diary testmatinv-2D.txt;
+   disp(['2-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
 elseif mode == 1
-   load testLU3D.mat;if exist('testmatinv-3D.txt'),delete testmatinv-3D.txt;end;diary testmatinv-3D.txt;disp(['3-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
+   load('testLU3D.mat','MMXPC_f_t','MMXL_f_t','MMXU_f_t','MMXR_t');%,'dkeparam'
+   if exist('testmatinv-3D.txt','file'),
+       delete testmatinv-3D.txt;
+   end;
+   diary testmatinv-3D.txt;
+   disp(['3-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
 end
 %
-dkepath = path_LUKE_LOCAL;
 dkepath.temppath = [dkepath.temppathroot,filesep,timeid_jd(clock)];
 local_root = dkepath.local_root;
+%
+[lukeversion,matver] = LUKEversion_jd;
 %
 % Tests
 %
@@ -48,19 +59,28 @@ while ipass < npass,
 %
 % MUMPS packages (MEX application)
 %
-    if exist([local_root,'Packages/Bin/MUMPS']),
-        list_of_packages = dir([local_root,'Packages/Bin/MUMPS']);
+    MUMPSDIRS = {[local_root,'Packages/Bin/MUMPS/'],local_root};
+    MUMPSDIR = '';
+    for idir = 1:length(MUMPSDIRS),
+        if exist(MUMPSDIRS{idir},'dir'),
+            MUMPSDIR = MUMPSDIRS{idir};
+            break
+        end
+    end
+    %
+    if ~isempty(MUMPSDIR),
+        list_of_packages = dir(MUMPSDIR);
         for ifile = 1:length(list_of_packages),
-            if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'MUMPS' & ~isempty(strfind(list_of_packages(ifile).name,'_S_')),
-                dkepath.MUMPS.mex = [local_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/MATLAB'];
-                if exist([dkepath.MUMPS.mex,filesep,'dmumpsmex.',mexext]),
-                    addpath(dkepath.MUMPS.mex)
+            if length(list_of_packages(ifile).name) >= 5 && strcmp(list_of_packages(ifile).name(1:5),'MUMPS') && ~isempty(strfind(list_of_packages(ifile).name,'_S_')),
+                MUMPSMATLAB =[MUMPSDIR,list_of_packages(ifile).name,filesep,'MATLAB',matver,filesep];
+                if exist(MUMPSMATLAB,'dir') && exist([MUMPSMATLAB,'dmumpsmex.',mexext],'file'),
+                    addpath(MUMPSMATLAB)
                     isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-ILU (MEX)']),tic,job_MUMPSMEX = 1;MUMPSMEX_dke_yp;job_MUMPSMEX = 2;MUMPSMEX_dke_yp;t(isim) = toc;
                     Zname{isim} = ['MEX_',list_of_packages(ifile).name,'_LU_FACTORISATION'];
                     isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-SOLVE (MEX)']),tic,job_MUMPSMEX = 3;MUMPSMEX_dke_yp;t(isim) = toc;MMXS_t_MUMPS = id_MUMPSMEX.SOL;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds.']);job_MUMPSMEX = -2;MUMPSMEX_dke_yp;
                     ZMMXS_t{isim} = MMXS_t_MUMPS;
                     Zname{isim} = ['MEX_',list_of_packages(ifile).name];
-                    rmpath(dkepath.MUMPS.mex)  
+                    rmpath(MUMPSMATLAB)  
                 end    
             end
         end
