@@ -251,12 +251,14 @@ yxnp_rf_2piRp = ynP_rf.*repmat(equilDKE.xdV_2piRp_dke.',[1,ny,nn_rf]);
 %
 p_rf_2piRp = sum(xp_rf_2piRp);
 np_rf_2piRp = sum(reshape(sum(yxnp_rf_2piRp,2),[nr,nn_rf]),1);
+xnp_rf_2piRp = reshape(sum(yxnp_rf_2piRp,2),[nr,nn_rf]);
 %
 p_e_2piRp = sum(P_e.*equilDKE.xdV_2piRp_dke);
 p_tot_2piRp = sum(P_tot.*equilDKE.xdV_2piRp_dke);
 EtaRp = I_tot/(p_tot_2piRp*2*pi);    
 %
 xdPdrho_rf_2piRp = xp_rf_2piRp./xdrho;
+xndPdrho_rf_2piRp = xnp_rf_2piRp./repmat(xdrho.',[1,nn_rf]);
 yxdPdrho_rf_2piRp = yxp_rf_2piRp./repmat(xdrho,[ny,1]);
 %
 eta = NaN(1,nr);
@@ -680,7 +682,9 @@ if nr > 1,
     data_proc.radial.P_rf = P_rf;
     data_proc.radial.P_e = P_e;
     data_proc.radial.xp_rf_2piRp = xp_rf_2piRp;
+    data_proc.radial.xnp_rf_2piRp = xnp_rf_2piRp;
     data_proc.radial.xdPdrho_rf_2piRp = xdPdrho_rf_2piRp;
+    data_proc.radial.xndPdrho_rf_2piRp = xndPdrho_rf_2piRp;
     % RADIAL LINEAR
     data_proc.radial.xrho_lin = rho_dep;
     data_proc.radial.xp_rf_2piRp_lin = xp_rf_2piRp_lin;
@@ -900,6 +904,45 @@ if nr > 1,
         set(gca,'xtick',xtick);
         %
         print_jd(p_opt,[simul_id,'_Prf_profile'],'figures_LUKE');
+        %
+        % power profiles - by harmonic number
+        %
+        if nn_rf > 1,
+            %
+            figure(101),clf,set(1,'Name',['RF power deposition profile per harmonic # - ',dke_out.simul.id])
+            %
+            if 0,%~isnan(xndPdrho_rf_2piRp_lin),
+                %
+                leg = cell(1,2*nn_rf);
+                %
+                for in_rf = 1:nn_rf,
+                    %
+                    leg{in_rf} = ['linear, n = ',num2str(n_rf_list(in_rf))];
+                    %
+                end
+                %
+                graph1D_jd(rho_dep,xndPdrho_rf_2piRp_lin,0,0,'','','',NaN,xlim,ylim,style,marker,NaN,width,siz);
+                %
+            else
+                %
+                in_rf = 0;
+                leg = cell(1,nn_rf);
+                %
+            end   
+            %
+            iin_rf = in_rf;
+            %
+            for in_rf = 1:nn_rf,
+                leg{iin_rf + in_rf} = ['LUKE, n = ',num2str(n_rf_list(in_rf))];
+            end
+            %
+            graph1D_jd(xrho,xndPdrho_rf_2piRp,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker1,NaN,width2,siz,gca,red,lspace,bspace);
+            %
+            set(gca,'xtick',xtick);
+            %
+            print_jd(p_opt,[simul_id,'_Prf_nrf_profile'],'figures_LUKE');
+            %
+        end
         %
         figure(2),clf,set(2,'Name',['Ohmic power density profile - ',dke_out.simul.id])
         %
