@@ -2514,7 +2514,7 @@
 % U mdce_luke.m (error corrected in the case of several parallel bunches)
 % U timeid_jd.m (1/1000 second to avoid conflicts)
 % U clustermode_luke.m (")
-% U userid_jd.m
+% U userid_jd.m (simplified)
 % A equilvol_mc_jd.m (volume of FS by monte-carlo code)
 % A equilmoments_jd.m (moments of LUKE equilibrium)
 % A structindex.m (fields evaluated at given index)
