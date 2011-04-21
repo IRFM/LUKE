@@ -26,7 +26,9 @@ elseif type == 0.1,
     pTi = pTe;
 elseif type == 0.2,
     [pspsinT,pTe,pTi,pne,pnH,pnalpha,pnimp,pZeff,dummy] = textread(filename,'%n%n%n%n%n%n%n%n%n');    
-elseif type == 1 | type == 1.1 ,%.mat
+elseif type == 1,%.mat
+    eval(['load -mat ',filename,' prho pTe pne pTi pZeff']);
+elseif type == 1.1 ,%.mat
     eval(['load -mat ',filename,' prho pTe pne pTi Zeff']);
 elseif type == 1.2 ,%.mat
     eval(['load -mat ',filename,' pspsin pTe pne pTi Zeff']);    
@@ -273,7 +275,7 @@ elseif type == 0.2,% note pnH, pnalpha and pnimp not accounted for because impur
     pzni = [fi.'*pnH;pnZ];
     pzTi = ones(nz,1)*pTi;
     %
-elseif type == 1,
+elseif type == 1,%TCV
     %
     pTe = pTe/1e3;
     pTi = pTi/1e3;
@@ -284,8 +286,12 @@ elseif type == 1,
     pspsin = prho;
     prho = [];
     %
+    pnH = pne.*(zZi(4) - pZeff)/(zZi(4) - 1);
+    pnZ = pne.*(pZeff - 1)/zZi(4)/(zZi(4) - 1);
+    pzni = [fi.'*pnH;pnZ];
+    pzTi = ones(nz,1)*pTi;
 end
-if type == 1 || type == 1.1 || type == 1.2 || type>= 3 && type ~=5 && type ~=6,
+if type == 1.1 || type == 1.2 || type>= 3 && type ~=5 && type ~=6,
     %
     pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
