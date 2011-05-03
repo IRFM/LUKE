@@ -345,7 +345,7 @@ if type == 1 && n_opt <= 1,
         pTi = equil_prof_data.ti(ishot,:);
     end
     %
-    pZeff = equil_prof_data.zeff(ishot);
+    pZeff = equil_prof_data.zeff(ishot,:);
     %
     if isscalar(pZeff),%uniform profile
         %

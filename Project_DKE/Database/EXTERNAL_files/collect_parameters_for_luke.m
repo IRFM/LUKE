@@ -1,7 +1,7 @@
-function dummy = collect_parameters_for_luke (shot,t1,t2,laun,filename,teflag)
+function dummy = collect_parameters_for_luke (shot,t1,t2,laun,filename,teflag,zeff)
 
 %
-%	function dummy = collect_parameters_for_luke (shot,t1,t2,laun,filename,teflag)
+%	function dummy = collect_parameters_for_luke (shot,t1,t2,laun,filename,teflag,zeff)
 %
 %	collect all TCV data needed for Luke run (with the exception of the
 %	  equilibrium, which must be supplied separately in EQDSK format:
@@ -15,12 +15,20 @@ function dummy = collect_parameters_for_luke (shot,t1,t2,laun,filename,teflag)
 %		teflag = flag, if 0 (default) Thomson data are used for Te,
 %			 if nonzero Thomson data are renormalized to Te(0)
 %			 supplied by XTe
+%		zeff = structure array (length = shot):
+%		   zeff(i).data = zeff profile (dimensions = rho x time)
+%		   zeff(i).rho = rho_psi grid
+%		   zeff(i).time = time vector
+%		     where i is the shot number
+%			 the output will be remapped on the Thomson grid
+%			 if this variable is empty or undefined, zeff will be 
+%			   read from data but will then be scalar
 %	rho coordinate is rho_psi
 
-
 %	S. Coda, 30/04/07
-%		 12/03/09
+%		 26/04/11
 
+if nargin<7|isempty(zeff),zeff.data=NaN;end
 if nargin<6|isempty(teflag),teflag=0;end
 if nargin<5|isempty(filename),filename='luke_input_parameters.mat';end
 
@@ -159,11 +167,17 @@ for i=1:length(shot),
     ang.id=int2str(shot(i));
     eval(['angles_',int2str(j),'(1,i)=ang;']);
   end
-  z=mdsdata('\results::zx[[$1]:[$2]:0.05]',t1(i),t2(i));
-  if ~isempty(z)&~iscell(z)&~ischar(z),
-    zeff(i)=mean(z(:,1));
+  if isnan(zeff(1).data),
+   z=mdsdata('\results::zx[[$1]:[$2]:0.05]',t1(i),t2(i));
+   if ~isempty(z)&~iscell(z)&~ischar(z),
+    zefff(i)=mean(z(:,1));
+   else
+    zefff(i)=NaN;
+   end
   else
-    zeff(i)=NaN;
+   [dummy,jt1]=min(abs(zeff(i).time-t1(i)));
+   [dummy,jt2]=min(abs(zeff(i).time-t1(i)));
+   zefff(:,i)=mean(interp1(zeff(i).rho(:),zeff(i).data(:,jt1:jt2),rho(:,i)),2);
   end
   zaxis(:,i)=mean(mdsdata('\results::z_axis[[$1]:[$2]:0.05]',t1(i),t2(i)));
   ip0=mdsdata('\ipol[[0.0,0.01],"OH_001"]');
@@ -184,7 +198,9 @@ ne=ne';
 dne=dne';
 rho=rho';
 ti=ti';
-zeff=zeff';
+clear zeff;
+zeff=zefff';
+clear zefff
 zaxis=zaxis';
 ipsign=ipsign';
 btsign=btsign';
