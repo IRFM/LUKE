@@ -2536,3 +2536,14 @@
 %
 % U run_all_examples.m (ITER Scen2 ECCD added, and some corrections)
 %
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.9.0
+% 
+% - correction for correct time evolution is solver_dke_yp.m
+% 
+% ====> LUKE/Project_DKE/DKE
+%
+% U LUKEversion_jd.m (LUKE 1.9.0)
+% U solver_dke_yp.m (correction to decouple Legendre convergence from time evolution)
+%
