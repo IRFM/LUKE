@@ -56,8 +56,6 @@ function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU
 %       - invparam: structure for parameters of the matrix inversion
 %       - display: display mode parameter (full: 2, partial: 1, no: = 0) index of the radial position where results are displayed
 %           (default = [0,1])
-%       - store_mode: Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1)
-%           (default = 0)
 %       - XXfinit: initial guess for the 2D electron momentum distribution function [np,nmhu,nr]
 %           (default = Maxwellian)
 %
@@ -112,7 +110,6 @@ boundary_mode_f = dkeparam.boundary_mode_f;
 boundary_mode_g = dkeparam.boundary_mode_g;
 dke_mode = dkeparam.dke_mode;
 bounce_mode = dkeparam.bounce_mode;
-store_mode = dkeparam.store_mode;
 dtn = dkeparam.dtn;
 temppath = dkepath.temppath;
 prec0_f = dkeparam.prec0_f;
@@ -224,9 +221,6 @@ if display_mode >=1,
     disp('-------------------------------------------------------------------------------------------------------------------');
     disp('-------------------------------------------------------------------------------------------------------------------');
     disp('Kinetic calculation parameters: ');
-%Numerical transient operation
-    if (store_mode == 0), disp('   - Matrices storage in RAM (fast mode)');
-    else                  disp('   - Matrices storage in disk file (slow mode)');end
 %Matrix facorization technique
     if (dkeparam.invproc > 0),        disp('   - MatLab incomplete LU matrix factorization');
     elseif (dkeparam.invproc ==- 2),  disp('   - MUMPSMEX incomplete LU matrix factorization');        
@@ -456,17 +450,22 @@ end
 time0 = clock;
 XXf0 = XXfinit;%Initial guess (normalized to xne_norm)
 %
+MMXfinit_t = [];
+for ir = 1:nr,
+    MMXfinit_t = [MMXfinit_t;reshape(XXfinit(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
+end
+%
 if dkeparam.PETScparam.cloop & dkeparam.invproc == -4,
     %
-	writeCloopinput_dke_ft(nit_f,boundary_mode_f,bounce_mode,dkeparam.coll_mode,dkeparam.norm_mode_f,prec0_f,display_mode,betath_ref,xTe_norm,xne_norm,dtn,mhu,nmhu,npn,ns_f,nr,sm_f,...
-        masku,maskl,dpn,dmhu,xpn,xpn2,xpn3,xsigma,xgamma,xz,xz2,pn,pn2,pn3,...
-        sigma,gamma,z,z2,xJ1,xJ2,xJ3,xJ4,J1,J2,J3,J4,...
-        Xmhu,XXsinksource,Xmask_r_edge,XXfM,XXfinit,XXRlambda_b_p1p1,rdke,Xpn2,Zpn2_t,...
-        Zmask_f0_t,...
-        MMXT_f_t,MMXR_f_t,MMXP_f_t,MMXPC_f_t,MMXPDI_f_t,...
-        XXI,XXf0,time_scheme,dkepath);
+%	writeCloopinput_dke_ft(nit_f,boundary_mode_f,bounce_mode,dkeparam.coll_mode,dkeparam.norm_mode_f,prec0_f,display_mode,betath_ref,xTe_norm,xne_norm,dtn,mhu,nmhu,npn,ns_f,nr,sm_f,...
+     %   masku,maskl,dpn,dmhu,xpn,xpn2,xpn3,xsigma,xgamma,xz,xz2,pn,pn2,pn3,...
+     %   sigma,gamma,z,z2,xJ1,xJ2,xJ3,xJ4,J1,J2,J3,J4,...
+    %    Xmhu,XXsinksource,Xmask_r_edge,XXfM,XXfinit,XXRlambda_b_p1p1,rdke,Xpn2,Zpn2_t,...
+    %    Zmask_f0_t,...
+    %    MMXT_f_t,MMXR_f_t,MMXP_f_t,MMXPC_f_t,MMXPDI_f_t,...
+    %    XXI,XXf0,time_scheme,dkepath);
     % 
-	[XXf0] = PETSc_Cloop_dke_ft(dkeparam.PETScparam,display_mode,dkepath);
+%	[XXf0] = PETSc_Cloop_dke_ft(dkeparam.PETScparam,display_mode,dkepath);
 else
     %
     for ir = 1:nr,
@@ -501,10 +500,6 @@ else
         MMXIpn2_t = [];
         MMXsource_t = [];
         %
-        if store_mode == 1,
-            load([fullfile(temppath,'MXP_'),save_id,'.mat'],'Zmask_f0_t');
-        end 
-        %
         for ir = 1:nr,
             XI_t = XXI(:,Zmask_f0_t{ir},ir);
             %
@@ -524,7 +519,7 @@ else
         end 
 		%	
         if dkeparam.opsplit == 0,
-            MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
+            MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - (time_scheme - 1)*(MMXP_f_t + MMXR_f_t)/time_scheme)*MMXfinit_t;%Right handside term of the Fokker-Planck equation          
             MMXR_t = sparse(MMXPDI_f_t*MMXq_t - MMXPC_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
             %
             %          save testLU3D.mat MMXPC_f_t MMXR_t dkeparam  MMXL_f_t MMXU_f_t dkepath display_mode    
@@ -549,7 +544,7 @@ else
                 [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),display_mode,dkepath);
             end
         elseif dkeparam.opsplit == 1,        
-            MMXq_t = MMXsource_t + MMXIpn2_t + (2*MMXT_f_t - MMXR_f_t/time_scheme - (time_scheme - 1)*MMXP_f_t/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
+            MMXq_t = MMXsource_t + MMXIpn2_t + (2*MMXT_f_t - MMXR_f_t/time_scheme - (time_scheme - 1)*MMXP_f_t/time_scheme)*MMXfinit_t;%Right handside term of the Fokker-Planck equation          
             MMXR_t = sparse(MMXPDI_P_f_t*MMXq_t - MMXPC_P_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
             %
             if dkeparam.invproc == 0,%Matlab direct inversion
@@ -574,7 +569,7 @@ else
             %
             MMXf0_t = MMXf0_t + MMXS_t;
 			%
-            MMXq_t = MMXsource_t + MMXIpn2_t + (2*MMXT_f_t - MMXP_f_t/time_scheme - (time_scheme - 1)*MMXR_f_t/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
+            MMXq_t = MMXsource_t + MMXIpn2_t + (2*MMXT_f_t - MMXP_f_t/time_scheme - (time_scheme - 1)*MMXR_f_t/time_scheme)*MMXfinit_t;%Right handside term of the Fokker-Planck equation          
             MMXR_t = sparse(MMXPDI_R_f_t*MMXq_t - MMXPC_R_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
             %
             if dkeparam.invproc == 0,%Matlab direct inversion
@@ -597,7 +592,7 @@ else
                 [MMXS_t,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_R_f_t,full(MMXR_t),display_mode,dkepath);
             end   
         elseif dkeparam.opsplit == 2, 
-            MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - MMXR_f_t/time_scheme - (time_scheme - 1)*MMXP_f_t/time_scheme)*MMXf0_t;%Right handside term of the Fokker-Planck equation          
+            MMXq_t = MMXsource_t + MMXIpn2_t + (MMXT_f_t - MMXR_f_t/time_scheme - (time_scheme - 1)*MMXP_f_t/time_scheme)*MMXfinit_t;%Right handside term of the Fokker-Planck equation          
             MMXR_t = sparse(MMXPDI_P_f_t*MMXq_t - MMXPC_P_f_t*MMXf0_t);%Residu calculation for matrix inversion, force sparse type for the RHS, optimized for Matlab 
             %
             if dkeparam.invproc == 0,%Matlab direct inversion
@@ -800,10 +795,6 @@ if dke_mode == 1,
         XfMm = XXfM(:,:,jr1);%Lower radial value for gradient calculation
         XfM = XXfM(:,:,jr2);%Central radial value for gradient calculation (where ftp and g are calculated)
         XfMp = XXfM(:,:,jr3);%Upper radial value for gradient calculation
-%
-        if store_mode == 1,
-            load([fullfile(temppath,'MXP_'),save_id,'.mat'],'Zmask_g');
-        end
 %                   
         dpsim = (xpsin(jr1) - xpsin(jr2));%Radial step for parabolic gradient calculations (dke)
         dpsi = (xpsin(jr3) - xpsin(jr1));%Radial step for parabolic gradient calculations (dke)
