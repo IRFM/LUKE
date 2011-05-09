@@ -62,7 +62,7 @@ if exist(startupfile,'file'),%startup.m file already exist
                 %
                 % test for LUKE path at the present location, ignore others
                 %
-                if any(strfind(cfile(sf1(isf):sf2(isf)),pwd)),
+                if any(strfind(cfile(sf1(isf):sf2(isf)),[pwd,'/'])),
                     tabl = find(sfile(sf1(isf) + 54:sf2(isf)) ~= 32,1,'first') - 1;% length of tabulation
                     mask = [mask,[sf1(isf);sf2(isf)+53;tabl]];% indices to be replaced
                 end
