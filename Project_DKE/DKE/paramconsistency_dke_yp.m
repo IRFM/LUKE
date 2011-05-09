@@ -44,3 +44,27 @@ if ~isfield(dkeparam,'method'),
     dkeparam.n_gauleg = 35;%Number of Legendre polynomials for projections of the electron velocity distribution
     dkeparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
 end
+%
+if ~isfield(dkeparam,'finitabs'),
+    dkeparam.finitabs = 0;%The initial distribution is used to first estimate the ray absorption
+end
+%
+if ~isfield(dkeparam,'finsert'),
+    dkeparam.finsert = 0;%The initial distribution is used to first estimate the ray absorption
+end
+%
+if ~isfield(dkeparam,'tn'),
+    dkeparam.tn = dkeparam.dtn;
+end
+if dkeparam.dtn > dkeparam.tn,
+    dkeparam.dtn = dkeparam.tn;
+end
+%
+if ~isfield(dkeparam,'timevol'),
+    dkeparam.timevol = 0;
+end
+%
+if ~isfield(dkeparam,'redfac'),
+    dkeparam.redfac = 0;
+end
+%
