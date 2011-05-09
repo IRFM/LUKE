@@ -173,6 +173,7 @@ xz = Zmomcoef.xz;
 xz2 = Zmomcoef.xz2;
 gamma = Zmomcoef.gamma;
 xgamma = Zmomcoef.xgamma;
+Xgamma = Zmomcoef.Xgamma;
 sigma = Zmomcoef.sigma;
 xsigma = Zmomcoef.xsigma;
 J1 = Zmomcoef.J1;
@@ -268,13 +269,13 @@ if display_mode >=1,
     disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
-normf0 = zeros(nr,nit_f);
+%normf0 = zeros(nr,nit_f);
 normf1 = zeros(nr,nit_f);
-curr0 = zeros(nr,nit_f);
+%curr0 = zeros(nr,nit_f);
 curr1 = zeros(nr,nit_f);
 prec_curr = zeros(nr,nit_f);
 prec_normf = zeros(nr,nit_f);
-residu_f = NaN*ones(nr,nit_f);
+%residu_f = NaN*ones(nr,nit_f);
 prec_residu_f = NaN*ones(nr,nit_f);
 residu_g = NaN*ones(nr_dke,nit_g);
 prec_residu_g = NaN*ones(nr_dke,nit_g);
@@ -469,8 +470,14 @@ if dkeparam.PETScparam.cloop & dkeparam.invproc == -4,
 else
     %
     for ir = 1:nr,
-        normf0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXf0(:,:,ir),2),1);
-        curr0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXf0(:,:,ir),2),1);
+        %normf0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXf0(:,:,ir),2),1);
+        %curr0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXf0(:,:,ir),2),1);
+        % 
+        % for compatibility with fmoments
+        % 
+        normf0(ir,1) = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,ir).*Xpn2,1),1);
+        curr0(ir,1) = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,ir).*Xpn2.*Xpn.*Xmhu./Xgamma,1),1);
+        %
     end
     %
     if display_mode == 2,
@@ -638,22 +645,28 @@ else
                 Xf0(:,nmhu/2 + 1 - ns_f(ir):nmhu/2) = fliplr(Xf0_t(:,nmhu/2 + 1 - ns_f(ir):nmhu/2));
             end
             %
-            normf0(ir,it_f+1) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf0,2),1);
-            curr0(ir,it_f+1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*Xf0,2),1);
+            %normf0(ir,it_f+1) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf0,2),1);
+            %curr0(ir,it_f+1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*Xf0,2),1);
+            % 
+            % for compatibility with fmoments
+            % 
+            normf0(ir,it_f+1) = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,Xf0.*Xpn2,1),1);
+            curr0(ir,it_f+1) = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,Xf0.*Xpn2.*Xpn.*Xmhu./Xgamma,1),1);
+            %
             prec_curr(ir,it_f) = (curr0(ir,it_f+1) - curr0(ir,it_f))/curr0(ir,it_f);
             prec_normf0(ir,it_f) = (normf0(ir,it_f+1) - normf0(ir,1))/normf0(ir,1);
             prec_normf(ir,it_f) = (normf0(ir,it_f+1) - normf0(ir,it_f))/normf0(ir,it_f);
             %
             if dkeparam.norm_mode_f == 1,
                 if isfield(dkeparam,'convtest'),%Absolute residu calculation for convergence tests
-                    residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf0*xne_norm(ir)/normf0(ir,it_f+1) - XXf0_ref(:,:,ir)).^2.*XXf0_ref(:,:,ir),2),1)/normf0(ir,it_f+1)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
+                    residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf0*xne_norm(ir)/normf0(ir,it_f+1) - XXf0_ref(:,:,ir)).^2.*XXf0_ref(:,:,ir),2),1)/normf0(ir,it_f+1));%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
                     XXf0(:,:,ir) = Xf0*xne_norm(ir)/normf0(ir,it_f+1);%Normalization to the local density
                 else
-                    residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf0*xne_norm(ir)/normf0(ir,it_f+1) - XXf0(:,:,ir)).^2.*XXf0(:,:,ir),2),1)/normf0(ir,it_f+1)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
+                    residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf0*xne_norm(ir)/normf0(ir,it_f+1) - XXf0(:,:,ir)).^2.*XXf0(:,:,ir),2),1)/normf0(ir,it_f+1));%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
                     XXf0(:,:,ir) = Xf0*xne_norm(ir)/normf0(ir,it_f+1);%Normalization to the local density
                 end
             else
-                residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf0-XXf0(:,:,ir)).^2.*XXf0(:,:,ir),2),1)/normf0(ir,it_f+1)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
+                residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf0-XXf0(:,:,ir)).^2.*XXf0(:,:,ir),2),1)/normf0(ir,it_f+1));%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
                 XXf0(:,:,ir) = Xf0;%The default value in principle. If OK, tells that the numerical conservative scheme is correct
             end
             %           
