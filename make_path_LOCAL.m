@@ -173,6 +173,7 @@ laptopjoan.temppathroot = '/tmp/';%Absolute root directory path adress where tem
 % laptopjoan.mex78 = [laptopjoan.luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB78'];
 laptopjoan.mex710 = [laptopjoan.luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB710']; 
 laptopjoan.mex711 = [laptopjoan.luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB711']; 
+laptopjoan.mex712 = [laptopjoan.luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB712']; 
 %
 % this version compiles but helmex still seems to use libc.so.6 instead of
 % libgcc... to continue
@@ -199,6 +200,7 @@ laptopjoan.compiler_opt.copts = '';
 % laptopjoan.MUMPS.mex78 = [laptopjoan.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB78'];%Where MUMPS matrix solver is stored (MEX function)
 laptopjoan.MUMPS.mex710 = [laptopjoan.local_root,'MUMPS_4.9.2/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 laptopjoan.MUMPS.mex711 = [laptopjoan.local_root,'MUMPS_4.9.2/MATLAB711'];%Where MUMPS matrix solver is stored (MEX function)
+laptopjoan.MUMPS.mex712 = [laptopjoan.local_root,'MUMPS_4.9.2/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
 %
 laptopjoan.remote(1).host = 'cephee15.intra.cea.fr';
 laptopjoan.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
