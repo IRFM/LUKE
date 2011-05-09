@@ -13,7 +13,7 @@ if dkeparam.rt_mode == 0,dkeparam.nit_rf = 1;end
 %
 if (dkeparam.invproc == -1), dkeparam.luproc = -1;end,%MUMPS performs direct inversion only
 %
-if isempty(psin_S) == 1 & isempty(rho_S) == 1,%No iteration if one radial point
+if isempty(psin_S) == 1 && isempty(rho_S) == 1,%No iteration if one radial point
     error('No input radial flux grid is specified !');
 end
 if length(rho_S) + length(psin_S) == 1,%No iteration if one radial point
@@ -53,6 +53,12 @@ if ~isfield(dkeparam,'finsert'),
     dkeparam.finsert = 0;%The initial distribution is used to first estimate the ray absorption
 end
 %
+if isnan(dkeparam.dtn),% value adjusted for realistic time evolution
+    if ~isfield(dkeparam,'tn') || isnan(dkeparam.tn),
+        dkeparam.tn = 100000;%asymptotic calculation
+    end
+    dkeparam.dtn = dkeparam.tn./min([100,max([1,ceil(60./dkeparam.tn.^(3/8))])]);% fitted result from TS/32299 analysis
+end
 if ~isfield(dkeparam,'tn'),
     dkeparam.tn = dkeparam.dtn;
 end
