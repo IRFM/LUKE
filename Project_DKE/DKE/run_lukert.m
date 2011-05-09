@@ -216,9 +216,9 @@ elseif dkeparam.rt_mode == 4,
         %
         [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
         %
-        ny = size(ZP0.xy_rf_fsav,2);
+        ny = size(ZP0(end).xy_rf_fsav,2);
         %
-        yp_rf = 2*pi*equil.Rp*sum(ZP0.xy_rf_fsav*mksa.P_ref.*repmat(equilDKE.xdV_2piRp_dke.',[1,ny]),1);
+        yp_rf = 2*pi*equil.Rp*sum(ZP0(end).xy_rf_fsav*mksa.P_ref.*repmat(equilDKE.xdV_2piRp_dke.',[1,ny]),1);
         %
         P0 = 0;
         Pabs = 0;

@@ -45,6 +45,7 @@ end
 if ~isfield(opt,'spec') || isempty(opt.spec)
     opt.spec = 1;
 end
+%
 Znorm = data.Znorm;
 Zcurr = data.Zcurr;
 ZP0 = data.ZP0;
@@ -136,17 +137,27 @@ else
     nfrags = NaN;
 end
 %
+if isfield(data.dkeparam,'timevol') && data.dkeparam.timevol == 1,
+    timevol = 1;
+else
+    timevol = 0;
+end
+%
 scocurr = sign(equilDKE.psia_apRp)*sign(equilDKE.XBphi(1,1));
 %
-J_tot = Zcurr.x_0_fsav*mksa.j_ref*scocurr;
-P_rf = ZP0.x_rf_fsav.'*mksa.P_ref;
-yP_rf = ZP0.xy_rf_fsav.'*mksa.P_ref;
-ynP_rf = ZP0.xyn_rf_fsav*mksa.P_ref;
-P_e = ZP0.x_e_fsav*mksa.P_ref;
+J_tot = Zcurr(end).x_0_fsav*mksa.j_ref*scocurr;
+P_rf = ZP0(end).x_rf_fsav.'*mksa.P_ref;
+yP_rf = ZP0(end).xy_rf_fsav.'*mksa.P_ref;
+ynP_rf = ZP0(end).xyn_rf_fsav*mksa.P_ref;
+P_e = ZP0(end).x_e_fsav*mksa.P_ref;
 P_tot = P_rf + P_e;
 %
 if isfield(dke_out,'residue_rf'),
-    residue_rf = dke_out.residue_rf(end);
+    if timevol == 1,
+        residue_rf = dke_out.residue_rf{end}(end);
+    else
+        residue_rf = dke_out.residue_rf(end);
+    end
 else
     residue_rf = NaN;
 end
@@ -162,8 +173,8 @@ end
 ny = size(yP_rf,1);
 nn_rf = size(ynP_rf,3);
 %
-if isfield(ZP0,'n_rf_list'),
-    n_rf_list = ZP0.n_rf_list;
+if isfield(ZP0(end),'n_rf_list'),
+    n_rf_list = ZP0(end).n_rf_list;
 elseif isfield(dke_out,'waveparam'),
     n_rf_list = dke_out.waveparam.n_rf_list;
 elseif isfield(data,'dkeparam'),
@@ -265,6 +276,26 @@ eta = NaN(1,nr);
 eta(P_tot ~= 0) = J_tot(P_tot ~= 0)./P_tot(P_tot ~= 0);
 i_peak = find(P_rf == max(P_rf));
 eta_peak = eta(i_peak);
+%
+if timevol == 1,
+    %
+    FPtime = dke_out.FPtime;
+    %
+    nit = length(FPtime);
+    %
+    tJ_tot = reshape([Zcurr.x_0_fsav],[nr,nit])*mksa.j_ref*scocurr;
+    tP_rf = [ZP0.x_rf_fsav]*mksa.P_ref;
+    tP_e = reshape([ZP0.x_e_fsav],[nr,nit])*mksa.P_ref;
+    tP_tot = tP_rf + tP_e;
+    tI_tot = sum(tJ_tot.*repmat(equilDKE.xdA_dke.',[1,nit]));
+    %
+    xtdV_2piRp_dke = repmat(equilDKE.xdV_2piRp_dke.',[1,nit]);
+    %
+    tp_rf_2piRp = sum(tP_rf.*xtdV_2piRp_dke);
+    tp_e_2piRp = sum(tP_e.*xtdV_2piRp_dke);
+    tp_tot_2piRp = sum(tP_tot.*xtdV_2piRp_dke);
+    %
+end
 %
 if iscell(opt_blist),%separate rays by list in the case of one wave
     %
@@ -689,6 +720,18 @@ if nr > 1,
     data_proc.radial.xrho_lin = rho_dep;
     data_proc.radial.xp_rf_2piRp_lin = xp_rf_2piRp_lin;
     data_proc.radial.xdPdrho_rf_2piRp_lin = xdPdrho_rf_2piRp_lin;
+    % TIME EVOLUTION
+    if timevol == 1,
+        data_proc.timevol.FPtime = FPtime;
+        data_proc.timevol.tJ_tot = tJ_tot;
+        data_proc.timevol.tP_rf = tP_rf;
+        data_proc.timevol.tP_e = tP_e;
+        data_proc.timevol.tP_tot = tP_tot;
+        data_proc.timevol.tI_tot = tI_tot;
+        data_proc.timevol.tp_rf_2piRp = tp_rf_2piRp;
+        data_proc.timevol.tp_e_2piRp = tp_e_2piRp;
+        data_proc.timevol.tp_tot_2piRp = tp_tot_2piRp;
+    end
     % WAVE QUASI-LINEAR
     data_proc.wave.wxrho = xrho;
     data_proc.wave.wp0_rf_2piRp = wp0_rf_2piRp;
@@ -1105,11 +1148,11 @@ else
     %
     if ir_display >= 0,
         %
-        disp(['normalized current: ',num2str(Zcurr.x_0_fsav)])
-        disp(['normalized RF power: ',num2str(ZP0.x_rf_fsav)])
-        disp(['normalized Ohmic power: ',num2str(ZP0.x_e_fsav)])
-        disp(['normalized Total power: ',num2str(ZP0.x_e_fsav+ZP0.x_rf_fsav)])
-        disp(['normalized CD efficiency: ',num2str(Zcurr.x_0_fsav./(ZP0.x_e_fsav+ZP0.x_rf_fsav))])
+        disp(['normalized current: ',num2str(Zcurr(end).x_0_fsav)])
+        disp(['normalized RF power: ',num2str(ZP0(end).x_rf_fsav)])
+        disp(['normalized Ohmic power: ',num2str(ZP0(end).x_e_fsav)])
+        disp(['normalized Total power: ',num2str(ZP0(end).x_e_fsav+ZP0(end).x_rf_fsav)])
+        disp(['normalized CD efficiency: ',num2str(Zcurr(end).x_0_fsav./(ZP0(end).x_e_fsav+ZP0(end).x_rf_fsav))])
         %
         diary off
         %
