@@ -24,7 +24,7 @@ function [xNperp,xepol_pmz,xphi_xyz,xalphaphi_lin_nr,...
 %       - xne: electron density (m-3) [1,nx]
 %       - xB: magnetic field amplitude [1,nx]
 %       - xNperp_in: perpendicular index of refraction (initial guess) [1,nx]
-%       - opt_calc: option for dispersion calculation (default : 0)
+%       - opt_calc: option for dispersion calculation (default : 1)
 %       - opt_disp: option for dispersion model (default : 2)
 %       - nmax: maximum harmonic number (default:50) 
 %
@@ -47,7 +47,7 @@ if nargin < 8
     opt_disp = 0;
 end
 if nargin < 7
-    opt_calc = 0;
+    opt_calc = 1;
 end
 if nargin < 6
     error('An initial guess must be provided')
