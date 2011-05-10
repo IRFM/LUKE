@@ -125,6 +125,7 @@ end
 %
 C3POparam.clustermode.main_C3PO_jd.timeout = 300;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
 C3POparam.clustermode.main_C3PO_jd.size = 12;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+C3POparam.clustermode.main_C3PO_jd.mem = 500;% memory allocated to batch jobs (in MB)
 %
 if isfield(par,'conf'),
     wavestruct.id = [par.conf,'_',launch.id];
