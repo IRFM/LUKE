@@ -36,8 +36,11 @@ rays{1}.spsin = [];% Ray location (normalized magnetic flux) along the propagati
 rays{1}.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
 %
 rays{1}.skx = [];% Ray wave vector (major radius) along the propagation [1,ns]
-rays{1}.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]
 rays{1}.sky = [];% Ray wave vector (vertical) along the propagation [1,ns]
+%
+rays{1}.skrho = [];% Ray wave number (radial) along the propagation [1,ns]
+rays{1}.sm = [];% Ray wave number (poloidal) along the propagation [1,ns]
+rays{1}.sn = [];% Ray wave number (toroidal) along the propagation [1,ns]
 %
 rays{1}.sNpar = [];% Ray parallel wave number [1,ns]
 rays{1}.sNperp = [];% Ray perpendicular wave number [1,ns]
@@ -117,7 +120,7 @@ for iref = 1:nref + 1,
 			end
 			%
 			filename_in = [id_wave,'_ray_',int2str(iray)];
-			[iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz,spmode,sD,ss,salphaphi_lin,sB,sBP,sBPHI,sTe,sne,szTi,szni,sr,salpha,sgradrhon,stau] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,C3POdisplay.text,C3POdisplay.ray,C3POdisplay.p_opt,filename_in);
+			[iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz,spmode,sD,ss,salphaphi_lin,sB,sBP,sBPHI,sTe,sne,szTi,szni,sr,salpha,sgradrhon,stau,skrho,sm,sn] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,C3POdisplay.text,C3POdisplay.ray,C3POdisplay.p_opt,filename_in);
 			%
 			if C3POdisplay.ray == 1,
 				pause(5)
@@ -131,6 +134,10 @@ for iref = 1:nref + 1,
 			%
 			rays{irayref}.ss = [rays{irayref}.ss,rayinit.ss0 + ss.'];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
 			rays{irayref}.stheta = [rays{irayref}.stheta,stheta.'];% Ray location (poloidal angle) along the propagation [1,ns]
+			%
+			rays{irayref}.skrho = [rays{irayref}.skrho,skrho.'];% Ray radial wave number [1,ns]
+			rays{irayref}.sm = [rays{irayref}.sm,sm.'];% Ray poloidal wave number [1,ns]
+			rays{irayref}.sn = [rays{irayref}.sn,sn.'];% Ray toroidal wave number [1,ns]
 			%
 			rays{irayref}.sNpar = [rays{irayref}.sNpar,sNpar.'];% Ray parallel wave number [1,ns]
 			rays{irayref}.sNperp = [rays{irayref}.sNperp,sNperp.'];% Ray perpendicular wave number [1,ns]

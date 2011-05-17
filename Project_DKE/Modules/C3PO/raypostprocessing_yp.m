@@ -1,4 +1,4 @@
-function [iabs_out,rho_ray,theta_ray,phi_ray,R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,pmode_ray,D_ray,s_ray,alphaphi_ray,B_ray,BP_ray,BPHI_ray,Te_ray,ne_ray,zTi_ray,zni_ray,r_ray,salpha_ray,gradrhon_ray,tau_ray] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,display_text,display_mode,p_opt,filename,subtitle)
+function [iabs_out,rho_ray,theta_ray,phi_ray,R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,pmode_ray,D_ray,s_ray,alphaphi_ray,B_ray,BP_ray,BPHI_ray,Te_ray,ne_ray,zTi_ray,zni_ray,r_ray,salpha_ray,gradrhon_ray,tau_ray,krho_ray,m_ray,n_ray] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,display_text,display_mode,p_opt,filename,subtitle)
 %C3PO - Post processing of the ray calculation
 %
 % Post processing of the ray calculation

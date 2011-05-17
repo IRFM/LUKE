@@ -64,6 +64,15 @@ stheta = ray.stheta;% Ray location (poloidal angle) along the propagation [1,ns]
 skx = ray.skx;% Ray wave vector (major radius) along the propagation [1,ns]
 sky = ray.sky;% Ray wave vector (vertical) along the propagation [1,ns]
 %
+if isfield(ray,'skrho') && isfield(ray,'sm')
+    skrho = ray.skrho;% Ray wave vector (radial) along the propagation [1,ns]
+    sm = ray.sm;% Ray wave number (poloidal) along the propagation [1,ns]
+else
+    skrho = [];
+    sm = [];
+end
+%
+%
 sNpar = ray.sNpar;% Ray parallel wave number [1,ns]
 sNperp = ray.sNperp;% Ray perpendicular wave number [1,ns]
 sdNpar = ray.sdNpar;% Ray spectral width in Npar [1,ns] 
@@ -228,6 +237,10 @@ end
 % if ~isempty(skx) & ~isempty(skZ)
 %     skx = skx(mask);
 %     sky = sky(mask);
+% end
+% if ~isempty(skrho) & ~isempty(sm)
+%     skrho = skrho(mask);
+%     sm = sm(mask);
 % end
 % if ~isempty(sNpar)
 %     sNpar = sNpar(mask);
@@ -403,9 +416,14 @@ else
         sNpar = sNpar(smask);
         sdNpar = sdNpar(smask);
         %
-        if ~isempty(skx) & ~isempty(sky)
+        if ~isempty(skx) && ~isempty(sky)
             skx = skx(smask);
             sky = sky(smask);
+        end        
+        %
+        if ~isempty(skrho) && ~isempty(sm)
+            skrho = skrho(smask);
+            sm = sm(smask);
         end        
         %
         if ~isempty(swidth)
@@ -461,9 +479,14 @@ else
         sNpar = sNpar(smask_ht);
         sdNpar = sdNpar(smask_ht);
         %
-        if ~isempty(skx) & ~isempty(sky)
+        if ~isempty(skx) && ~isempty(sky)
             skx = skx(smask_ht);
             sky = sky(smask_ht);
+        end        
+        %
+        if ~isempty(skrho) && ~isempty(sm)
+            skrho = skrho(smask_ht);
+            sm = sm(smask_ht);
         end        
         %
         if ~isempty(swidth)
@@ -524,9 +547,14 @@ else
         sNpar = sNpar(smask);
         sdNpar = sdNpar(smask);
         %
-        if ~isempty(skx) & ~isempty(sky)
+        if ~isempty(skx) && ~isempty(sky)
             skx = skx(smask);
             sky = sky(smask);
+        end        
+        %
+        if ~isempty(skrho) && ~isempty(sm)
+            skrho = skrho(smask);
+            sm = sm(smask);
         end        
         %
         if ~isempty(swidth)
@@ -598,6 +626,9 @@ end
 %
 ray.skx = skx;% Ray wave vector (major radius) along the propagation [1,ns]
 ray.sky = sky;% Ray wave vector (vertical) along the propagation [1,ns]
+%
+ray.skrho = skrho;% Ray wave vector (radial) along the propagation [1,ns]
+ray.sm = sm;% Ray wave number (poloidal) along the propagation [1,ns]
 %
 ray.sNpar = sNpar;% Ray parallel wave number [1,ns]
 ray.sNperp = real(sNperp);% Ray perpendicular wave number [1,ns]
