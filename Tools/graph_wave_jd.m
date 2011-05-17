@@ -48,7 +48,7 @@ for iw = 1:nw,
     end        
 end
 %
-%[qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;
+[qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
 method = 'cubic';
 %format
@@ -731,15 +731,17 @@ while iw ~= 0 && ibb ~= 0
     %
     mask_max = 1:ray.is_abs_max;
     mask_abs = ray.mask_abs;
+    mask_p = ray.mask_p;
+    mask_m = ray.mask_m;
     %
     if isfield(opt,'mode') && opt.mode == 'y',
-        graph1D_jd(ray.sx(ray.mask_p{1}),ray.sy(ray.mask_p{1}),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
-        graph1D_jd(ray.sx(ray.mask_m{1}),ray.sy(ray.mask_m{1}),0,0,'','','',legpol,xlim,ylim,style3,marker,ray.color,width1,siz);
-        for ip = 2:length(ray.mask_p),
-            graph1D_jd(ray.sx(ray.mask_p{ip}),ray.sy(ray.mask_p{ip}),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
+        graph1D_jd(ray.sx(mask_p{1}),ray.sy(mask_p{1}),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
+        graph1D_jd(ray.sx(mask_m{1}),ray.sy(mask_m{1}),0,0,'','','',legpol,xlim,ylim,style3,marker,ray.color,width1,siz);
+        for ip = 2:length(mask_p),
+            graph1D_jd(ray.sx(mask_p{ip}),ray.sy(mask_p{ip}),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
         end
-        for im = 2:length(ray.mask_m),
-            graph1D_jd(ray.sx(ray.mask_m{im}),ray.sy(ray.mask_m{im}),0,0,'','','',NaN,xlim,ylim,style3,marker,ray.color,width1,siz);
+        for im = 2:length(mask_m),
+            graph1D_jd(ray.sx(mask_m{im}),ray.sy(mask_m{im}),0,0,'','','',NaN,xlim,ylim,style3,marker,ray.color,width1,siz);
         end
     else
         graph1D_jd(ray.sx(mask_max),ray.sy(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
@@ -769,13 +771,13 @@ while iw ~= 0 && ibb ~= 0
     tit = 'toroidal ray trajectory';
     %
     if isfield(opt,'mode') && opt.mode == 'y',
-        graph1D_jd(ray.sX(ray.mask_p{1}),ray.sY(ray.mask_p{1}),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
-        graph1D_jd(ray.sX(ray.mask_m{1}),ray.sY(ray.mask_m{1}),0,0,'','','',legpol,xlim,ylim,style3,marker,ray.color,width1,siz);
-        for ip = 2:length(ray.mask_p),
-            graph1D_jd(ray.sX(ray.mask_p{ip}),ray.sY(ray.mask_p{ip}),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
+        graph1D_jd(ray.sX(mask_p{1}),ray.sY(mask_p{1}),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
+        graph1D_jd(ray.sX(mask_m{1}),ray.sY(mask_m{1}),0,0,'','','',legpol,xlim,ylim,style3,marker,ray.color,width1,siz);
+        for ip = 2:length(mask_p),
+            graph1D_jd(ray.sX(mask_p{ip}),ray.sY(mask_p{ip}),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
         end
-        for im = 2:length(ray.mask_m),
-            graph1D_jd(ray.sX(ray.mask_m{im}),ray.sY(ray.mask_m{im}),0,0,'','','',NaN,xlim,ylim,style3,marker,ray.color,width1,siz);
+        for im = 2:length(mask_m),
+            graph1D_jd(ray.sX(mask_m{im}),ray.sY(mask_m{im}),0,0,'','','',NaN,xlim,ylim,style3,marker,ray.color,width1,siz);
         end
     else
         graph1D_jd(ray.sX(mask_max),ray.sY(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,ray.color,width1,siz);
@@ -806,8 +808,8 @@ while iw ~= 0 && ibb ~= 0
     %
     if isfield(opt,'mode') && opt.mode == 'y',
         leg = {'|n_{||}| (SW)','|n_{||}| (FW)'};
-        graph1D_jd(ray.ss(ray.mask_p{1}),abs(real(ray.sNpar(ray.mask_p{1}))),0,0,'','','',NaN,xlim,ylim,style,marker,color2,width1,siz);
-        graph1D_jd(ray.ss(ray.mask_m{1}),abs(real(ray.sNpar(ray.mask_m{1}))),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
+        graph1D_jd(ray.ss(mask_p{1}),abs(real(ray.sNpar(mask_p{1}))),0,0,'','','',NaN,xlim,ylim,style,marker,color2,width1,siz);
+        graph1D_jd(ray.ss(mask_m{1}),abs(real(ray.sNpar(mask_m{1}))),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
     else
         leg = {'|n_{||}|'};
         graph1D_jd(ray.ss(mask_max),abs(real(ray.sNpar(mask_max))),0,0,'','','',NaN,xlim,ylim,style,marker,color2,width1,siz);
@@ -827,11 +829,11 @@ while iw ~= 0 && ibb ~= 0
     end        
     %
     if isfield(opt,'mode') && opt.mode == 'y',
-        for ip = 2:length(ray.mask_p),
-            graph1D_jd(ray.ss(ray.mask_p{ip}),abs(real(ray.sNpar(ray.mask_p{ip}))),0,0,'','','',NaN,xlim,ylim,style,marker,color2,width1,siz);
+        for ip = 2:length(mask_p),
+            graph1D_jd(ray.ss(mask_p{ip}),abs(real(ray.sNpar(mask_p{ip}))),0,0,'','','',NaN,xlim,ylim,style,marker,color2,width1,siz);
         end
-        for im = 2:length(ray.mask_m),
-            graph1D_jd(ray.ss(ray.mask_m{im}),abs(real(ray.sNpar(ray.mask_m{im}))),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
+        for im = 2:length(mask_m),
+            graph1D_jd(ray.ss(mask_m{im}),abs(real(ray.sNpar(mask_m{im}))),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
         end
     end
     %
@@ -868,6 +870,43 @@ while iw ~= 0 && ibb ~= 0
     ylab = 'dP/d\rho/P_0';
     %
     graph1D_jd(rho_dep,ray.dPnormdrho.*drhog_dep./drho_dep,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color2,width1,siz);
+    %    
+    % radial location and reflection
+    %
+    if f_opt && ~isempty(ray.skrho),
+        %
+        setfig(f_opt,ib,7,figlab)
+        %
+        xlim = [0,max(ray.ss(mask_max))];
+        ylim = [-40,40];
+        xlab = 's (m)';
+        ylab = '';
+        tit = '';
+        leg = {'n_{\rho}','d\rho/ds (\times 1000)'};
+        %
+        snrho = ray.skrho*clum/ray.omega_rf;
+        sdrhods = 1000*gradient_jd(ray.ss,ray.srho);
+        %
+        if isfield(opt,'mode') && opt.mode == 'y',
+            graph1D_jd(ray.ss(mask_p{1}),snrho(mask_p{1}),0,0,'','','',NaN,xlim,ylim,style,marker,color1,width2,siz);
+            graph1D_jd(ray.ss(mask_p{1}),sdrhods(mask_p{1}),0,0,'','','',leg,xlim,ylim,style,marker,color2,width1,siz);
+            for ip = 2:length(mask_p),
+                graph1D_jd(ray.ss(mask_p{ip}),snrho(mask_p{ip}),0,0,'','','',NaN,xlim,ylim,style,marker,color1,width2,siz);
+                graph1D_jd(ray.ss(mask_p{ip}),sdrhods(mask_p{ip}),0,0,'','','',leg,xlim,ylim,style,marker,color2,width1,siz);
+            end
+            for im = 1:length(mask_m),
+                graph1D_jd(ray.ss(mask_m{im}),snrho(mask_m{im}),0,0,'','','',NaN,xlim,ylim,style3,marker,color1,width2,siz);
+                graph1D_jd(ray.ss(mask_m{im}),sdrhods(mask_m{im}),0,0,'','','',NaN,xlim,ylim,style3,marker,color2,width1,siz);
+            end
+        else
+            graph1D_jd(ray.ss,snrho,0,0,'','','',NaN,xlim,ylim,style,marker,color1,width2,siz);
+            graph1D_jd(ray.ss,sdrhods,0,0,'','','',leg,xlim,ylim,style,marker,color2,width1,siz);
+        end
+        %
+        graph1D_jd(ray.ss(mask_abs),snrho(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
+        graph1D_jd(ray.ss(mask_abs),sdrhods(mask_abs),0,0,xlab,ylab,tit,NaN,xlim,ylim,style2,marker2,color5,width2,siz,gca,red,lspace,bspace);
+        %
+    end
     %
     if ~f_opt && opt.print >= 0,
         %
@@ -887,7 +926,7 @@ while iw ~= 0 && ibb ~= 0
     end
 end
 %
-return
+end
 %
 function setfig(f_opt,ib,ifig,figlab)
 %
@@ -913,10 +952,20 @@ else
     %
 end
 %
-return
-
-
-
+end
+%
+function dydx = gradient_jd(x,y)
+    %
+    dydx = zeros(size(y));
+    %
+    dydx(2:end-1) = ...
+        (1./(x(3:end) - x(2:end-1)) - 1./(x(3:end) - x(1:end-2))).*y(3:end) + ...
+        (1./(x(2:end-1) - x(1:end-2)) - 1./(x(3:end) - x(2:end-1))).*y(2:end-1) + ...
+        (1./(x(3:end) - x(1:end-2)) - 1./(x(2:end-1) - x(1:end-2))).*y(1:end-2);
+    %
+    dydx(1) = (y(2) - y(1))/(x(2) - x(1));
+    dydx(end) = (y(end) - y(end-1))/(x(end) - x(end-1));
+end
 
 
 
