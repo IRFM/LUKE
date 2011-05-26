@@ -24,11 +24,6 @@ if nargin < 5,
     texp = NaN;
 end
 %
-opt.nr_dep = 0;
-opt.peak = 'n';
-opt.wave = 'y';
-opt.rho = 'p';
-%
 opt_save_0 = opt.save;
 %
 dt = diff(texp);
@@ -40,8 +35,10 @@ basestr = load_id(1:find(load_id == '_',1,'first') - 1);
 %
 datafile1 = ['LUKE_RESULTS_',load_id,'.mat'];
 datafile2 = ['LUKE_DATA_',load_id,'.mat'];
+datafile3 = ['LUKE_BACKUP_',load_id,'.mat'];
 proc_datafile1 = ['PROC_',datafile1];
 proc_datafile2 = ['PROC_',datafile2];
+proc_datafile3 = ['PROC_',datafile3];
 hxr_datafile = ['HXR_RESULTS_',load_id,'.mat'];
 proc_hxr_datafile = ['PROC_HXR_RESULTS_',load_id,'.mat'];
 %
@@ -164,6 +161,43 @@ if hxrdata == 0 && exist([hxr_path,proc_datafile2],'file'),
     %
 end
 %
+if hxrdata == 0 && exist([hxr_path,proc_datafile3],'file'),
+    %
+    load([hxr_path,proc_datafile3],'data_proc');
+    %
+    procdata = 1;
+    %
+    disp(['LUKE data loaded from file ',hxr_path,proc_datafile3])
+    %
+    if isfield(data_proc,'hxr'),
+        hxr = data_proc.hxr;
+        opt.save = 0;
+        %
+        hxrdata = 1;
+        %
+        disp(['HXR data loaded from file ',hxr_path,proc_datafile3])
+        %
+    end
+    %
+    if isstruct(hxr),
+        if ~isfield(hxr,'dt')
+            if isnan(dt),
+                error('No value found for dt as input or from PROC_DATA file')
+            else
+                hxr.dt = dt;
+                disp(['Warning : input dt = ',num2str(dt),' enforced, No value found for dt in PROC_DATA file'])
+                if opt_save_0 == 1,
+                    opt.save = 1;
+                end
+            end
+        elseif ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
+            disp(['Warning : input dt = ',num2str(dt),' discarded, PROC_DATA file dt = ',num2str(hxr.dt),' enforced.'])
+        end
+    end
+    datafile = datafile3;
+    %
+end
+%
 if hxrdata == 0 && exist([hxr_path,datafile1],'file'),
     %
     data = load([hxr_path,datafile1]);
@@ -235,6 +269,45 @@ if hxrdata == 0 && exist([hxr_path,datafile2],'file'),
     %
     hxrdata = 1;
     datafile = datafile2;
+    %
+end
+%
+if hxrdata == 0 && exist([hxr_path,datafile3],'file'),
+    %
+    data = load([hxr_path,datafile3]);
+    %
+    disp(['LUKE data loaded from file ',hxr_path,datafile3])
+    %
+    data = proc_backup_jd(data,opt);
+    %
+    if procdata == 0,
+        %
+        data_proc = proc_luke_jd(data,-1,-1,0.1,NaN,'',opt);
+        %
+        procdata = 1;
+        %
+    end
+    %
+    if isempty(hxr_file),
+        error('No HXR spec file specified')
+    end
+    %
+    hxrdata = runhxr_jd(data,basestr,hxr_file,exp_file,hxr_path,texp);
+    %
+    hxr.kfit = hxrdata.Zbremdiag.kfit;
+    hxr.brem_bd_plasma = hxrdata.Zbremdiag.brem_bd_plasma;
+    hxr.brem_bd_diag = hxrdata.Zbremdiag.brem_bd_diag;
+    hxr.dt = hxrdata.Zbremdiag.dt;
+    hxr.hxrexp = hxrdata.hxrexp.';
+    %
+    if ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
+        disp(['Warning : input dt = ',num2str(dt),' discarded, PROC_RESULTS file dt = ',num2str(hxr.dt),' enforced.'])
+    end
+    %
+    clear data hxrdata 
+    %
+    hxrdata = 1;
+    datafile = datafile1;
     %
 end
 %
