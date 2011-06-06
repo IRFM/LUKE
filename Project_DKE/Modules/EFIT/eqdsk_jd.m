@@ -263,8 +263,8 @@ if display_mode >= 2,
     rho_list = [0:0.05:0.999];
     iy0 = find(abs(y) == min(abs(y)));
     ix0 = min(find(x >= 0));
-    ap = interp1(xypsin(ix0:nnx,iy0),x(ix0:nnx),1,'spline');
-    rpsi = interp1(x(ix0:nnx)/ap,xypsin(ix0:nnx,iy0),rho_list,'spline');
+    ap = interp1(xypsin(ix0:nnx,iy0(1)),x(ix0:nnx),1,'spline');
+    rpsi = interp1(x(ix0:nnx)/ap,xypsin(ix0:nnx,iy0(1)),rho_list,'spline');
     %
     xlab = 'x (m)';
     ylab = 'y (m)';
