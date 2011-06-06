@@ -15,6 +15,7 @@ dkeparam.nmhu_S = 91;%Number of angular values for the flux grid (WARNING: odd n
 dkeparam.np_S = 101;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
 dkeparam.pnmax_S = 15;%Maximum value of the flux momentum grid (pth_ref)
 dkeparam.rho_S = 20;% number of points for radial grid calculation
+dkeparam.psin_S = [];% number of points for radial grid calculation
 %
 %Pitch-angle grid
 %
@@ -74,7 +75,8 @@ dkeparam.boundary_mode_g = 0;%Number of points where the first distribution func
 dkeparam.prec0_g = 1e-11;%Convergence level of the residu (if NaN, iterations stop with nit_g)
 dkeparam.nit_g = 100;%Maximum number of iterations for g
 %
-dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
+dkeparam.tn = 100000;%LUKE time step (1/nhuth_ref)
+dkeparam.dtn = NaN;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 dkeparam.opsplit = 0;%Operator splitting between momentum and radial dynamics (for tests only) (opsplit = 0: no operator splitting , opsplit = 1: operator splitting). If this field does not exist, it is equivalent to dkeparam.opsplit = 0.
 %
 dkeparam.invproc = -2;%Iterative matrix inversion methods
