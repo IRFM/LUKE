@@ -264,24 +264,32 @@ elseif strcmp(launch.type,'LH'),
     %
     nb = size(rby0,2);% number of beams
     nr = size(rby0,1);% number of poloidal locations
+    nm = length(launch.m0);% number of poloidal numbers
     %
     bP0_2piRp = bP0/(2*pi*equil.Rp);
+    %
+    if all(imag(launch.m0) == 0),
+        launch.m0 = launch.m0 + 1i/nm;%uniform power distribution
+    end
     %
     iy = 0;
     %
     for ib = 1:nb,
         for ir = 1:nr,
-            iy = iy + 1;
-            %
-            rayinit.yrho0(iy) = rho0;%Initial radial position at launch
-            rayinit.ytheta0(iy) = rbtheta0(ir,ib);%Initial poloidal position at launch
-            rayinit.yphi0(iy) = launch.phi0;%Initial toroidal position at launch
-            rayinit.ym0(iy) = launch.m0;%Initial poloidal mode number
-            rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
-            rayinit.yNpar0(iy) = bNpar0(ib);%Initial index of refraction
-            rayinit.ydNpar0(iy) = bdNpar0(ib);%initial Ray spectral width
-            rayinit.yP0_2piRp(iy) = bP0_2piRp(ib)/nr;%Lineic initial power density initial power in the ray (W/m)
-            %
+            for im = 1:nm,
+                %
+                iy = iy + 1;
+                %
+                rayinit.yrho0(iy) = rho0;%Initial radial position at launch
+                rayinit.ytheta0(iy) = rbtheta0(ir,ib);%Initial poloidal position at launch
+                rayinit.yphi0(iy) = launch.phi0;%Initial toroidal position at launch
+                rayinit.ym0(iy) = real(launch.m0(im));%Initial poloidal mode number
+                rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
+                rayinit.yNpar0(iy) = bNpar0(ib);%Initial index of refraction
+                rayinit.ydNpar0(iy) = bdNpar0(ib);%initial Ray spectral width
+                rayinit.yP0_2piRp(iy) = bP0_2piRp(ib)*imag(launch.m0(im))/nr;%Lineic initial power density initial power in the ray (W/m)
+                %
+            end
         end
     end
 else
