@@ -177,7 +177,8 @@ elseif n_opt > 0,
         %
     elseif n_opt == 2,% hxr experimental data fro database
         %
-        opt = input_dke_yp('Pile-up rejection (TS only)? (0) no, (1) yes)',1,[0,1],'',[1,1]);
+        opt.R = input_dke_yp('Pile-up rejection (TS only)? (0) no, (1) yes)',1,[0,1],'',[1,1]);
+        opt.V = input_dke_yp('Real time diagnostic (TS only)? (0) no, (1) yes)',1,[0,1],'',[1,1]);
         %
         [energy,hxr,t,beta] = collect_hxr_forLUKE_jd(basestr,str2num(shotnum),opt);%,'data_path','filter_thickness','filter_material'
         %
