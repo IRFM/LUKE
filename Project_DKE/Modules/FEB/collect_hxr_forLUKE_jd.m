@@ -7,7 +7,8 @@ if nargin < 2,
 end
 %
 if nargin < 3,
-    opt = 1;
+    opt.R = 1;
+    opt.V = 1;
 end
 %
 t = NaN;
@@ -33,13 +34,19 @@ elseif strcmp(basestr,'TS') && exist('tsbase','file'),
     energy = (20:20:160).';%energy channels in TS
     nc = 59;%numver of chords in TS
     %
-    if opt == 1,
+    if opt.R == 1,
         pilerej = 'R';
     else
         pilerej = '';
     end
     %
-    [hxr01,t] = tsbase(shot,['GV',pilerej,'X01']);
+    if opt.V == 1,
+        treel = 'V';
+    else
+        treel = '';
+    end
+    %
+    [hxr01,t] = tsbase(shot,['G',treel,pilerej,'X01']);
     %
     if isempty(hxr01),
         disp(['-----> hxr data not found for shot :',num2str(shot)]);
@@ -62,7 +69,7 @@ elseif strcmp(basestr,'TS') && exist('tsbase','file'),
     %
     for ic = 1:nc,
         try 
-            [hxrloc,tloc] = tsbase(shot,['GV',pilerej,'X',icstr{ic}]);
+            [hxrloc,tloc] = tsbase(shot,['G',treel,pilerej,'X',icstr{ic}]);
             %
             nkloc = size(tloc,2);
             %
