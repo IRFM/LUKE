@@ -49,44 +49,6 @@ hxr = '';
 data_proc = '';
 hxr_proc = '';
 %
-if exist([hxr_path,proc_hxr_datafile],'file'),
-    %
-    load([hxr_path,proc_hxr_datafile],'hxr');
-    %
-    if ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
-        disp(['Warning : input dt = ',num2str(dt),' discarded, HXR file dt = ',num2str(hxr.dt),' enforced.'])
-    end
-    %
-    hxrdata = 1;
-    opt.save = 0;
-    %
-    disp(['HXR data loaded from file ',hxr_path,proc_hxr_datafile])
-    %
-end
-%
-if hxrdata == 0 && exist([hxr_path,hxr_datafile],'file'),
-    %
-    load([hxr_path,hxr_datafile],'Zbremdiag','hxrexp');
-    %
-    hxr.kfit = Zbremdiag.kfit;
-    hxr.brem_bd_plasma = Zbremdiag.brem_bd_plasma;
-    hxr.brem_bd_diag = Zbremdiag.brem_bd_diag;
-    hxr.dt = Zbremdiag.dt;
-    hxr.hxrexp = hxrexp.';
-    %
-    if ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
-        disp(['Warning : input dt = ',num2str(dt),' discarded, HXR file dt = ',num2str(hxr.dt),' enforced.'])
-    end
-    %
-    clear Zbremdiag hxrexp dt
-    %
-    hxrdata = 1;
-    datafile = hxr_datafile;
-    %
-    disp(['HXR data loaded from file ',hxr_path,hxr_datafile])
-    %
-end
-%
 if hxrdata == 0 && exist([hxr_path,proc_datafile1],'file'),
     %
     load([hxr_path,proc_datafile1],'data_proc');
@@ -195,6 +157,44 @@ if hxrdata == 0 && exist([hxr_path,proc_datafile3],'file'),
         end
     end
     datafile = datafile3;
+    %
+end
+%
+if exist([hxr_path,proc_hxr_datafile],'file'),
+    %
+    load([hxr_path,proc_hxr_datafile],'hxr');
+    %
+    if ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
+        disp(['Warning : input dt = ',num2str(dt),' discarded, HXR file dt = ',num2str(hxr.dt),' enforced.'])
+    end
+    %
+    hxrdata = 1;
+    opt.save = 0;
+    %
+    disp(['HXR data loaded from file ',hxr_path,proc_hxr_datafile])
+    %
+end
+%
+if hxrdata == 0 && exist([hxr_path,hxr_datafile],'file'),
+    %
+    load([hxr_path,hxr_datafile],'Zbremdiag','hxrexp');
+    %
+    hxr.kfit = Zbremdiag.kfit;
+    hxr.brem_bd_plasma = Zbremdiag.brem_bd_plasma;
+    hxr.brem_bd_diag = Zbremdiag.brem_bd_diag;
+    hxr.dt = Zbremdiag.dt;
+    hxr.hxrexp = hxrexp.';
+    %
+    if ~isempty(dt) && ~isnan(dt) && abs(dt - hxr.dt)/dt > 1e-2,
+        disp(['Warning : input dt = ',num2str(dt),' discarded, HXR file dt = ',num2str(hxr.dt),' enforced.'])
+    end
+    %
+    clear Zbremdiag hxrexp dt
+    %
+    hxrdata = 1;
+    datafile = hxr_datafile;
+    %
+    disp(['HXR data loaded from file ',hxr_path,hxr_datafile])
     %
 end
 %
