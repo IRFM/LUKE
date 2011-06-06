@@ -32,14 +32,14 @@ id_ohm = '';
 path_ohm = '';
 ids_wave = '';
 paths_wave = '';
+ids_wavestruct = '';
+paths_wavestruct = '';
 ids_rayinit = '';
 paths_rayinit = '';
 ids_launch = '';
 paths_launch = '';
 ids_angles = '';
 paths_angles = '';
-id_transpfaste = '';
-path_transpfaste = '';
 id_transpfaste = '';
 path_transpfaste = '';
 id_ripple = '';
@@ -77,6 +77,10 @@ for i=1:3:length(varargin),
        ids_wave = varargin{i+1};
        paths_wave = varargin{i+2};
        flag_wave = j;
+    elseif strcmp(varargin{i},'wavestructs'),
+       ids_wavestruct = varargin{i+1};
+       paths_wavestruct = varargin{i+2};
+       flag_wavestruct = j;
     elseif strcmp(varargin{i},'rayinits'),
        ids_rayinit = varargin{i+1};
        paths_rayinit = varargin{i+2};
@@ -281,6 +285,39 @@ if exist('flag_wave','var'),
         end
     end
     varargout{flag_wave} = waves;
+end
+%
+if exist('flag_wavestruct','var'),
+    ii = 0;
+    wavestructs = '';%List of structures for multiple RF waves
+    %
+    if ~iscell(ids_wavestruct),
+        ids_wavestruct={ids_wavestruct};
+    end
+    if ~iscell(paths_wavestruct),
+        paths_wavestruct=repmat({paths_wavestruct},[1,length(ids_wavestruct)]);
+    end
+    %
+    if isempty(ids_wavestruct{1}),
+        info_dke_yp(2,['Simulations are performed without RF Wavestructs']);
+    else
+        for iw = 1:length(ids_wavestruct),
+            filename = ['WAVESTRUCT_',id_equil,'_',ids_wavestruct{iw},'.mat'];
+            filenames = getlist_jd(paths_wavestruct{iw},filename);
+            if isempty(filenames),
+                info_dke_yp(2,['Warning : Structure ',filename,' could not be found in directory',paths_wavestruct{iw},'.']);
+            else
+                for ifile = 1:length(filenames),
+                    filename = [paths_wavestruct{iw},filenames{ifile}];
+                    load(filename);
+                    info_dke_yp(2,['Structure ''wavestruct'': ',filename,' successfully loaded']);
+                    ii = ii + 1;
+                    wavestructs{ii} = wavestruct;
+                end
+            end
+        end
+    end
+    varargout{flag_wavestruct} = wavestructs;
 end
 %
 if exist('flag_rayinit','var'),
