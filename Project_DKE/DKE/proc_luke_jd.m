@@ -137,7 +137,7 @@ else
     nfrags = NaN;
 end
 %
-if isfield(data.dkeparam,'timevol') && data.dkeparam.timevol == 1,
+if isfield(data,'dkeparam') && isfield(data.dkeparam,'timevol') && data.dkeparam.timevol == 1,
     timevol = 1;
 else
     timevol = 0;
@@ -164,7 +164,7 @@ end
 %
 if isfield(dke_out,'zS'),
     zS = dke_out.zS;
-    zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod;
+    zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod{end};
 else
     zS = '';
     zP_0_2piRp_mod = '';
