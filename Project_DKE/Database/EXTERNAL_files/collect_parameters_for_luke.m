@@ -26,7 +26,7 @@ function dummy = collect_parameters_for_luke (shot,t1,t2,laun,filename,teflag,ze
 %	rho coordinate is rho_psi
 
 %	S. Coda, 30/04/07
-%		 26/04/11
+%		 21/06/11
 
 if nargin<7|isempty(zeff),zeff.data=NaN;end
 if nargin<6|isempty(teflag),teflag=0;end
@@ -80,6 +80,9 @@ for i=1:length(shot),
   tiraw=mdsdata('\results::cxrs:ti');
   if ~isempty(tiraw),
    rhotiraw=mdsdata('\results::cxrs:rho');
+   if isempty(rhotiraw),
+     rhotiraw=mdsdata('dim_of(\results::cxrs:ti,0)');
+   end
    ttiraw=mdsdata('dim_of(\results::cxrs:ti,1)');
    tiind1=min(find(ttiraw>=t1(i)&ttiraw<=t2(i)));
    tiind2=max(find(ttiraw>=t1(i)&ttiraw<=t2(i)));
