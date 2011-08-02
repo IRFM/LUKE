@@ -307,7 +307,7 @@ for itn = itn0:nit,
     %
     if dkeparam_out.timevol == 1,
         [ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...(itn)
-            XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xRR_fsav{itn},...
+            XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRR_fsav{itn},...
             xne_norm_out{itn},xTe_norm_out{itn},xft_fsav{itn},xfteff_fsav{itn}] = ...
             fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
             XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
@@ -339,7 +339,7 @@ if dkeparam_out.timevol == 0,
     residue_rf = residue_rf{nit};
     %
     [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
-        XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,...
+        XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
         xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
         fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
         XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
@@ -397,7 +397,7 @@ if dkeparam_out.syn_mode == 1,
     [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(dkeparam_out,display,waveparam_bc,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa);% RF wave flux coefficients
     [MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp);%Build the 3D DKE matrix
     [XXf0_bc,XXf0_bc_tp,XXf0_bc_g,XXf0_bc_L_tp,XXf0_bc_L_g,memoryLU_bc_f,memoryLU_bc_g] = solver_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource,XXfinit);% Solve the DKE equation
-    [ZP0_bc,Zcurr_bc,Znor_bcm,ZXXS_bc,ZYXXD_bc_rf,XxRR_bc_fsav,xMRR_bc_flux,xMRR_bc_tau,xRR_bc_fsav,xne_norm_bc_out_bc,xTe_norm_bc_out,xft_bc_fsav,xfteff_bc_fsav] = fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,[],radial_mode,Zdelta,XXf0{nit},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,ZXXD_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp);%Calculate moments of the distribution function
+    [ZP0_bc,Zcurr_bc,Znor_bcm,ZXXS_bc,ZYXXD_bc_rf,XxRR_bc_fsav,xMRR_bc_flux,xMRR_bc_tau,xMRR_bc_flux,xMRR_bc_tau,xRR_bc_fsav,xne_norm_bc_out_bc,xTe_norm_bc_out,xft_bc_fsav,xfteff_bc_fsav] = fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,[],radial_mode,Zdelta,XXf0{nit},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,ZXXD_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp);%Calculate moments of the distribution function
 %
     time_bc_out = etime(clock,time0_bc);
     memoryLU_bc_f_out = memoryLU_bc_f;
@@ -439,6 +439,8 @@ dke_out.gridindex_rf = gridindex_rf;
 dke_out.XxRR_fsav = XxRR_fsav;
 dke_out.xMRR_flux = xMRR_flux;
 dke_out.xMRR_tau = xMRR_tau;
+dke_out.xMRR_power_flux = xMRR_power_flux;
+dke_out.xMRR_power_tau = xMRR_power_tau;
 dke_out.xTe_norm_out = xTe_norm_out;
 dke_out.xne_norm_out = xne_norm_out;
 dke_out.xft_fsav = xft_fsav;
@@ -483,6 +485,8 @@ if dkeparam_out.syn_mode == 1,
     dke_out.XxRR_bc_fsav = XxRR_bc_fsav;
     dke_out.xMRR_flux_bc = xMRR_flux_bc;
     dke_out.xMRR_tau_bc = xMRR_tau_bc;
+    dke_out.xMRR_power_flux_bc = xMRR_power_flux_bc;
+    dke_out.xMRR_power_tau_bc = xMRR_power_tau_bc;
     dke_out.xne_norm_bc_out = xne_norm_bc_out;
     dke_out.xTe_norm_bc_out = xTe_norm_bc_out;
     dke_out.xft_bc_fsav = xft_bc_fsav;
@@ -505,6 +509,8 @@ else
     dke_out.XxRR_bc_fsav = [];
     dke_out.xMRR_flux_bc = [];
     dke_out.xMRR_tau_bc = [];
+    dke_out.xMRR_power_flux_bc = [];
+    dke_out.xMRR_power_tau_bc = [];    
     dke_out.xne_norm_bc_out = [];
     dke_out.xTe_norm_bc_out = [];
     dke_out.xft_bc_fsav = [];

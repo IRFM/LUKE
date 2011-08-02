@@ -1,5 +1,5 @@
 function [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
-    XxRR_fsav,xMRR_flux,xMRR_tau,xRR_fsav,...
+    XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
     xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
     fmoments_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
                     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
@@ -882,8 +882,13 @@ end
 %   is added (XXlossripple = XXsource). Otherwise, only the surface loss must be considered
 %
 if sum(sum(sum(XXlossripple))) ~= 0 & isempty(findstr(equilDKE.tokname,'TS')) == 0,
+    %
+    XXEc = sqrt(XXpn2*mksa.betath_ref^2 + 1) - 1;
+    XXEcm = sqrt(XXpn2m*mksa.betath_ref^2 + 1) - 1;
+    %
     xMRR_tau = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlossripple(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
-%
+    xMRR_power_tau = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlossripple(:,:,rdke).*XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXEc(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
+    %
     XXmaskMRR_im = [zeros(1,nmhu,nr);abs(diff(XXlossripple~=0))];%Mask in p (only nhuloss ~=0 is considered)
     XXmaskMRR_jm = [zeros(npn,1,nr),abs(permute(diff(permute(XXlossripple~=0,[2,1,3])),[2,1,3]))];%Mask in mhu (mhu < 0 only because of symmetry) (only nhuloss ~=0 is considered)
     XXmaskMRR_jm(:,mhu>0,:)=0;%mhu < 0 only because of symmetry)
@@ -893,6 +898,13 @@ if sum(sum(sum(XXlossripple))) ~= 0 & isempty(findstr(equilDKE.tokname,'TS')) ==
     xMRR_flux_mhu = XxMRR_flux_mhu(XxMRR_flux_mhu~=0)';
     xMRR_flux = xMRR_flux_p - xMRR_flux_mhu;%Reduce number of points since only nhuloss ~=0 is considered
     xMRR_flux =[xMRR_tau(find(xMRR_tau==0)),xMRR_flux];%Restore the points for nhuloss =0   
+
+    XxMRR_power_flux_p = 2*pi*integral_dke_jd(dmhum,XXmaskMRR_im(:,:,rdke).*XXSp0_imj.*XXpn2m(:,:,rdke).*XXEcm(:,:,rdke).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),2);
+    XxMRR_power_flux_mhu = 2*2*pi*integral_dke_jd(dpnm,XXmaskMRR_jm(:,:,rdke).*XXSm0_ijm.*XXpnm(:,:,rdke).*XXEcm(:,:,rdke).*sqrt(XX1mmhu2m(:,:,rdke)).*XXlambda(:,:,rdke).*XXRlambda_m(:,:,rdke),1);
+    xMRR_power_flux_p = XxMRR_power_flux_p(XxMRR_power_flux_p~=0)';
+    xMRR_power_flux_mhu = XxMRR_power_flux_mhu(XxMRR_power_flux_mhu~=0)';
+    xMRR_power_flux = xMRR_power_flux_p - xMRR_power_flux_mhu;%Reduce number of points since only nhuloss ~=0 is considered
+    xMRR_power_flux =[xMRR_power_tau(find(xMRR_power_tau==0)),xMRR_power_flux];%Restore the points for nhuloss =0   
 else
     xMRR_tau = NaN*ones(1,nr_dke);
     xMRR_flux = NaN*ones(1,nr_dke);
