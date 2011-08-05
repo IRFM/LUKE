@@ -908,6 +908,8 @@ if sum(sum(sum(XXlossripple))) ~= 0 & isempty(findstr(equilDKE.tokname,'TS')) ==
 else
     xMRR_tau = NaN*ones(1,nr_dke);
     xMRR_flux = NaN*ones(1,nr_dke);
+    xMRR_power_flux = NaN*ones(1,nr_dke);
+    xMRR_power_tau = NaN*ones(1,nr_dke);
 end
 %
 %Integral of the source term
