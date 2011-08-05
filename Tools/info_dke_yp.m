@@ -48,4 +48,13 @@ elseif mode == 4,
 	sa = size(a);
 	disp([' - ',a]);
 	disp(ttt);
+elseif mode == 5,
+	ttt = [];
+	sa = size(a);
+	for i = 1:sa(2)+10,
+		ttt= [ttt,'-'];
+    end
+    disp(ttt);
+    disp(a);
+    disp(ttt);
 end
