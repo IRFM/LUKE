@@ -8,9 +8,21 @@
 % warning : matlab versions before 7.5 are no longer supported
 %
 clear all
+%
+CVSbranch = '';
+%
 dkepath.id = 'LOCAL';%Set here the name path parameters (user specific)
 [lukeversion,matver] = LUKEversion_jd;
-disp(['--------- The version ',lukeversion,' is installed ---------'])
+%
+% For simplifying CVS branch (multiple projects on the same computer)
+%
+if ~exist('CVSbranch'),
+    CVSbranch = '';
+else
+    if ~isempty(CVSbranch),
+        CVSbranch = ['_',CVSbranch];
+    end
+end
 %
 % default paths for unrecognized profiles
 %
@@ -29,24 +41,25 @@ dkepath.default = default;
 dkepath.hostname.saturne = 'saturne';
 %
 saturne.luke_root = [pwd,'/'];
-saturne.local_root = '/home/JD211098/';
+saturne.local_root = '/home/YP105119/';
 saturne.computer = 'GLNXA64';%machine type and supported OS
 saturne.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 saturne.maxcompthreads = 'automatic';%For MatLab multithreading
 %
-saturne.mex705 = [saturne.luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
+saturne.mex75 = [saturne.luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
 saturne.compiler_opt.copts = '';
 saturne.compiler_opt.fopts.mex75 = [' -largeArrayDims'];
 saturne.compiler_opt.helmex.mex75 = [' -L',saturne.local_root,'lib -lf95 -lgcc -llapack -lblas'];% -ltmglib Optional argument for helmex compilation
 %
-saturne.MUMPS.mex705 = [saturne.local_root,'src/MUMPS_4.7.3/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
+saturne.MUMPS.mex75 = ['/home/JD211098/src/MUMPS_4.7.3/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
 %
 saturne.remote(1).host = '';% empty for local host
-saturne.remote(1).luke_root = '/home/JD211098/LUKE/';
+saturne.remote(1).nproc = 12;
+saturne.remote(1).luke_root = ['/home/YP105119/LUKE',CVSbranch,'/'];
 saturne.remote(1).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
 saturne.remote(1).get_jobid = {'Your job ',' '};%str_before,str_after
-saturne.remote(1).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
-saturne.remote(1).JD211098 = 'JD211098';
+saturne.remote(1).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+saturne.remote(1).YP105119 = 'YP105119';
 %
 dkepath.saturne = saturne;
 %
@@ -75,20 +88,38 @@ cephee.MUMPS.mex705 = [cephee.local_root,'MUMPS_4.7.3_S_g95/MATLAB75'];%Where MU
 cephee.MUMPS.mex710 = [cephee.local_root,'MUMPS_4.9.2_S_ifort/MATLAB710'];%MUMPS_4.9.2 not compatible with matlab 7.5
 %cephee.MUMPS.mex710 = [cephee.local_root,'MUMPS_4.9.2_S_g95/MATLAB710'];%alternative option
 %
-cephee.remote(1).host = '';% empty for local host
-cephee.remote(1).luke_root = cephee.luke_root;
+cephee.remote(1).host = 'cephee15.intra.cea.fr';
+cephee.remote(1).nproc = 28;
+cephee.remote(1).luke_root = ['/home/sccp/gsem/peysson/LUKE',CVSbranch,'/'];
+cephee.remote(1).matlabroot = '';
 cephee.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
-cephee.remote(1).mem = {',mem=','mb','6000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
+cephee.remote(1).mem = {',mem=','mb','10000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
 cephee.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
 cephee.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
-cephee.remote(1).JD211098 = 'JD211098';
+cephee.remote(1).sshfs = {''};
+cephee.remote(1).YP105119 = 'YP105119';
 %
-cephee.remote(2).host = 'saturne1.partenaires.cea.fr';
-cephee.remote(2).luke_root = '/home/JD211098/LUKE/';
-cephee.remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-cephee.remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
-cephee.remote(2).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
-cephee.remote(2).JD211098 = 'JD211098';
+cephee.remote(2).host = 'cephee15.intra.cea.fr';
+cephee.remote(2).nproc = 28;
+cephee.remote(2).luke_root = ['/home/sccp/gsem/peysson/LUKE',CVSbranch,'/'];
+cephee.remote(2).matlabroot = '';
+cephee.remote(2).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
+cephee.remote(2).mem = {',mem=','mb','10000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
+cephee.remote(2).get_jobid = {'','.cephee'};%str_before,str_after
+cephee.remote(2).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+cephee.remote(2).sshfs = {''};
+cephee.remote(2).YP105119 = 'YP105119';
+%
+%
+cephee.remote(3).host = 'saturne1.partenaires.cea.fr';
+cephee.remote(3).nproc = 12;
+cephee.remote(3).luke_root = ['/home/YP105119/LUKE',CVSbranch,'/'];
+cephee.remote(3).matlabroot = '';
+cephee.remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+cephee.remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
+cephee.remote(3).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+cephee.remote(3).sshfs = {''};
+cephee.remote(3).YP105119 = 'YP105119';
 %
 dkepath.cephee = cephee;
 %
@@ -108,29 +139,205 @@ pcluke.MUMPS.mex72 = [pcluke.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MA
 %
 dkepath.pcluke = pcluke;
 %
-% paths for runs on Yves Peysson's laptop
+% paths for runs on Yves Peysson's powerbook (PPC G4 Motorola)
 %
-dkepath.hostname.laptopyves = 'peysson';%WARNING: for laptop, may change with connection status.
+dkepath.hostname.powerbookyves = 'powerbookyves';%WARNING: for laptop, may change with connection status.
 %
-laptopyves.luke_root = [getenv('HOME'),'/Travail/Projets/LUKE/'];
-laptopyves.local_root = [getenv('HOME'),'/Travail/Projets/'];
-laptopyves.computer = 'MAC';%machine type and supported OS
-laptopyves.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+powerbookyves.luke_root = [getenv('HOME'),'/Travail/Projets/LUKE',CVSbranch,'/'];
+powerbookyves.local_root = [getenv('HOME'),'/Travail/Projets/'];
+powerbookyves.computer = 'MAC';%machine type and supported OS
+powerbookyves.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-laptopyves.mex75 = [laptopyves.luke_root,'Project_DKE/MEX/Bin/laptopyves/MATLAB75/'];
-laptopyves.compiler_opt.helmex = 'FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';% Optional argument for helmex compilation 
-laptopyves.compiler_opt.fopts = 'FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';
+powerbookyves.mex75 = [powerbookyves.luke_root,'Project_DKE/MEX/Bin/powerbookyves/MATLAB75/'];
+powerbookyves.compiler_opt.helmex = 'FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';% Optional argument for helmex compilation 
+powerbookyves.compiler_opt.fopts = 'FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';
 %
-laptopyves.MUMPS.par = [laptopyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
-laptopyves.MUMPS.seq = [laptopyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_S_GotoBlasg95/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-laptopyves.MUMPS.mex75 = [laptopyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.8.1_S_GotoBlasg95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
-laptopyves.MUMPS.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-laptopyves.PETSc.par = [laptopyves.local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
-laptopyves.PETSc.seq = [laptopyves.local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_S_g95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
-laptopyves.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-laptopyves.SUPERLU.mex = [laptopyves.local_root,'Packages/Bin/SUPERLU/SuperLU_3.0-GotoBlasgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+powerbookyves.MUMPS.par = [powerbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+powerbookyves.MUMPS.seq = [powerbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_S_GotoBlasg95/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+powerbookyves.MUMPS.mex75 = [powerbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.8.1_S_GotoBlasg95/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
+powerbookyves.MUMPS.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+powerbookyves.PETSc.par = [powerbookyves.local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
+powerbookyves.PETSc.seq = [powerbookyves.local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_S_g95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
+powerbookyves.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+powerbookyves.SUPERLU.mex = [powerbookyves.local_root,'Packages/Bin/SUPERLU/SuperLU_3.0-GotoBlasgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
 %
-dkepath.laptopyves = laptopyves;
+dkepath.powerbookyves = powerbookyves;
+%
+% paths for runs on Yves Peysson's macbook pro 2010 (Core i7 Intel)
+%
+dkepath.hostname.macbookyves = 'macbookyves';%
+%
+macbookyves.luke_root = [getenv('HOME'),'/Travail/Projets/LUKE',CVSbranch,'/'];
+macbookyves.local_root = [getenv('HOME'),'/Travail/Projets/'];
+macbookyves.computer = 'MACI64';%machine type and supported OS
+macbookyves.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+macbookyves.mex711 = [macbookyves.luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB711/'];
+macbookyves.mex712 = [macbookyves.luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB712/'];
+macbookyves.compiler_opt.helmex = '-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+macbookyves.compiler_opt.fopts = ' ';%
+%
+%macbookyves.MUMPS.par = [macbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+%macbookyves.MUMPS.seq = [macbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+macbookyves.MUMPS.seq = [macbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+%macbookyves.MUMPS.mex712 = [macbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+macbookyves.MUMPS.mex712 = [macbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+%macbookyves.MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+%macbookyves.PETSc.par = [macbookyves.local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
+macbookyves.PETSc.seq = [macbookyves.local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S_gfortran/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
+%macbookyves.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+%macbookyves.SUPERLU.mex =
+%[macbookyves.local_root,'Packages/Bin/SUPERLU/SuperLU_3.0-GotoBlasgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+%
+% WARNING about Xgrid scheduler for mac OSX (> 10.5.x)
+% Xgrid runs tasks using the "sandbox" facility. Tasks running as 'nobody' ie, 
+% any task where either the submitting client or the receiving agent 
+% are NOT using Kerberos authentication) have very restricted access to the
+% filesystem. To by-pass this strong protection (no password) on a local
+% cluster or a multi-core multi-processor machine, go to
+% /usr/share/sandbox/xgridagentd_task_nobody.sb file (root rights needed)
+% then, comment the following line (with a ';' at the beginning of the line):
+% (allow process* sysctl* mach* network* system-socket)
+% and replace it by
+% (allow process* sysctl* mach* file-read* file-write* network* system-socket)
+% omment the following lines (with a ';' at the beginning of the line):
+% (allow file-read* (regex "^/(bin|dev|(private/)?(etc|tmp|var)|usr|System|Library)(/|$)"))
+% (allow file-read* file-write* (regex "^/(private/)?(tmp|var)(/|$)"))
+% and replace it by
+% (allow file-read* file-write* (regex "^/all(/|$)"))
+%
+% NOTE that it should be done each time the system is updated.
+% furthermore, all *.m and *.mex* files must be read by anybody.
+% This lack of protection make the cluster more vulnerable to an external
+% attack, but on a personal computer, this risk is limited.
+%
+macbookyves.remote(1).host = {'macbookyves','macbookyves'};% or empty for local host
+macbookyves.remote(1).nproc = 4;
+macbookyves.remote(1).luke_root = ['/Users/yves/Travail/Projets/LUKE',CVSbranch,'/'];
+macbookyves.remote(1).matlabroot = ['/Applications/MATLAB_R2011a.app/bin/'];
+macbookyves.remote(1).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
+macbookyves.remote(1).mem = [];
+macbookyves.remote(1).get_jobid = {'jobIdentifier = ',';'};%
+macbookyves.remote(1).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+macbookyves.remote(1).sshfs = {''};
+macbookyves.remote(1).yves = 'yves';% Faire getenv('USER') pour savoir qui je suis !!!!
+%
+macbookyves.remote(2).host = 'cephee15.intra.cea.fr';
+macbookyves.remote(2).nproc = 28;
+macbookyves.remote(2).luke_root = ['/home/sccp/gsem/peysson/LUKE',CVSbranch,'/'];
+macbookyves.remote(2).matlabroot = '';
+macbookyves.remote(2).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
+macbookyves.remote(2).mem = {',mem=','mb','10000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
+macbookyves.remote(2).get_jobid = {'','.cephee'};%str_before,str_after
+macbookyves.remote(2).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+macbookyves.remote(2).sshfs = {''};
+macbookyves.remote(2).yves = 'YP105119';
+%
+macbookyves.remote(3).host = 'saturne1.partenaires.cea.fr';
+macbookyves.remote(3).nproc = 12;
+macbookyves.remote(3).luke_root = ['/home/YP105119/LUKE',CVSbranch,'/'];
+macbookyves.remote(3).matlabroot = '';
+macbookyves.remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+macbookyves.remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
+macbookyves.remote(3).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+macbookyves.remote(3).sshfs = {''};
+macbookyves.remote(3).yves = 'YP105119';
+%
+macbookyves.remote(4).host = {'macproyves','82.227.179.204'};% or empty for local host
+macbookyves.remote(4).nproc = 12;
+macbookyves.remote(4).luke_root = ['/Users/yvespeysson/Travail/Projets/LUKE',CVSbranch,'/'];
+macbookyves.remote(4).matlabroot = ['/Applications/MATLAB_R2011a.app/bin/'];
+macbookyves.remote(4).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
+macbookyves.remote(4).mem = [];
+macbookyves.remote(4).get_jobid = {'jobIdentifier = ',';'};%
+macbookyves.remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+macbookyves.remote(4).sshfs = {''};%{'/Applications/sshfs.app/Contents/Resources/sshfs-static','-oauto_cache,reconnect,volname='};
+macbookyves.remote(4).yves = 'yvespeysson';% Faire getenv('USER') pour savoir qui je suis !!!!
+%
+dkepath.macbookyves = macbookyves;
+%
+% paths for runs on Yves Peysson's mac pro 2011 (Core i7 Intel)
+%
+dkepath.hostname.macproyves = 'macproyves';%WARNING: for laptop, may change with connection status.
+%
+macproyves.luke_root = [getenv('HOME'),'/Travail/Projets/LUKE',CVSbranch,'/'];
+macproyves.local_root = [getenv('HOME'),'/Shared/'];
+macproyves.computer = 'MACI64';%machine type and supported OS
+macproyves.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+macproyves.mex712 = [macproyves.luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB712/'];
+macproyves.compiler_opt.helmex = '-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+macproyves.compiler_opt.fopts = ' ';%
+%
+%macproyves.MUMPS.par = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+%macproyves.MUMPS.seq = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+macproyves.MUMPS.seq = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+%macproyves.MUMPS.mex712 = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+%macproyves.MUMPS.mex712 = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+macproyves.MUMPS.mex712 = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+
+%macproyves.MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+%macproyves.PETSc.par = [macproyves.local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
+macproyves.PETSc.seq = [macproyves.local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S_gfortran/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
+%macproyves.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+%macproyves.SUPERLU.mex =
+%[macproyves.local_root,'Packages/Bin/SUPERLU/SuperLU_3.0-GotoBlasgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+%
+% WARNING about Xgrid scheduler for mac OSX (> 10.5.x)
+% Xgrid runs tasks using the "sandbox" facility. Tasks running as 'nobody' ie, 
+% any task where either the submitting client or the receiving agent 
+% are NOT using Kerberos authentication) have very restricted access to the
+% filesystem. To by-pass this strong protection (no password) on a local
+% cluster or a multi-core multi-processor machine, go to
+% /usr/share/sandbox/xgridagentd_task_nobody.sb file (root rights needed)
+% then, comment the following line (with a ';' at the beginning of the line):
+% (allow process* sysctl* mach* network* system-socket)
+% and replace it by
+% (allow process* sysctl* mach* file-read* file-write* network* system-socket)
+% omment the following lines (with a ';' at the beginning of the line):
+% (allow file-read* (regex "^/(bin|dev|(private/)?(etc|tmp|var)|usr|System|Library)(/|$)"))
+% (allow file-read* file-write* (regex "^/(private/)?(tmp|var)(/|$)"))
+% and replace it by
+% (allow file-read* file-write* (regex "^/all(/|$)"))
+%
+% NOTE that it should be done each time the system is updated.
+% furthermore, all *.m and *.mex* files must be read by anybody.
+% This lack of protection make the cluster more vulnerable to an external
+% attack, but on a personal computer, this risk is limited.
+%
+macproyves.remote(1).host = {'macproyves','macproyves'};% or empty for local host
+macproyves.remote(1).nproc = 12;
+macproyves.remote(1).luke_root = ['/Users/yvespeysson/Travail/Projets/LUKE',CVSbranch,'/'];
+macproyves.remote(1).matlabroot = ['/Applications/MATLAB_R2011a.app/bin/'];
+macproyves.remote(1).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
+macproyves.remote(1).mem = [];
+macproyves.remote(1).get_jobid = {'jobIdentifier = ',';'};%
+macproyves.remote(1).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+macproyves.remote(1).sshfs = {''};
+macproyves.remote(1).yves = 'yvespeysson';% Faire getenv('USER') pour savoir qui je suis !!!!
+%
+macproyves.remote(2).host = 'cephee15.intra.cea.fr';
+macproyves.remote(2).nproc = 28;
+macproyves.remote(2).luke_root = ['/home/sccp/gsem/peysson/LUKE',CVSbranch,'/'];
+macproyves.remote(2).matlabroot = '';
+macproyves.remote(2).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
+macproyves.remote(2).mem = {',mem=','mb','10000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
+macproyves.remote(2).get_jobid = {'','.cephee'};%str_before,str_after
+macproyves.remote(2).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+macproyves.remote(2).sshfs = {''};
+macproyves.remote(2).yves = 'YP105119';
+%
+macproyves.remote(3).host = 'saturne1.partenaires.cea.fr';
+macproyves.remote(3).nproc = 12;
+macproyves.remote(3).luke_root = ['/home/YP105119/LUKE',CVSbranch,'/'];
+macproyves.remote(3).matlabroot = '';
+macproyves.remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+macproyves.remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
+macproyves.remote(3).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+macproyves.remote(3).sshfs = {''};
+macproyves.remote(3).yves = 'YP105119';
+%
+dkepath.macproyves = macproyves;
 %
 % paths for runs on ITM gateway
 %
@@ -203,26 +410,45 @@ laptopjoan.MUMPS.mex711 = [laptopjoan.local_root,'MUMPS_4.9.2/MATLAB711'];%Where
 laptopjoan.MUMPS.mex712 = [laptopjoan.local_root,'MUMPS_4.9.2/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
 %
 laptopjoan.remote(1).host = 'cephee15.intra.cea.fr';
+laptopjoan.remote(1).nproc = 28;
+laptopjoan.remote(1).matlabroot = '';
 laptopjoan.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
 laptopjoan.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
 laptopjoan.remote(1).mem = {',mem=','mb','6000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
 laptopjoan.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
 laptopjoan.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
-laptopjoan.remote(1).jd211098 = 'JD211098';
+laptopjoan.remote(1).sshfs = {''};
+laptopjoan.remote(1).joan = 'JD211098';
 %
 laptopjoan.remote(2).host = 'saturne1.partenaires.cea.fr';
+laptopjoan.remote(2).nproc = 12;
+laptopjoan.remote(2).matlabroot = '';
 laptopjoan.remote(2).luke_root = '/home/JD211098/LUKE/';
 laptopjoan.remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
 laptopjoan.remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
 laptopjoan.remote(2).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
-laptopjoan.remote(2).jd211098 = 'JD211098';
+laptopjoan.remote(2).sshfs = {''};
+laptopjoan.remote(2).joan = 'JD211098';
 %
 laptopjoan.remote(3).host = 'pleiades2.epfl.ch';
+laptopjoan.remote(3).nproc = 48;
+laptopjoan.remote(3).matlabroot = '';
 laptopjoan.remote(3).luke_root = '/home/jdecker/LUKE/';
 laptopjoan.remote(3).cmd = 'qsub -l walltime=1:59:00 -l nodes=1:ppn=1';
 laptopjoan.remote(3).get_jobid = {'','.pleiades2.epfl.ch'};%str_before,str_after
 laptopjoan.remote(3).set_jobid = {'','','Unknown Job Id'};%str_before,str_after,str_check
-laptopjoan.remote(3).jd211098 = 'jdecker';
+laptopjoan.remote(3).sshfs = {''};
+laptopjoan.remote(3).joan = 'jdecker';
+%
+laptopjoan.remote(4).host = {'macproyves','82.227.179.204'};% or empty for local host
+laptopjoan.remote(4).matlabroot = '/Applications/MATLAB_R2011a.app/bin/';
+laptopjoan.remote(4).luke_root = ['/Users/yvespeysson/Travail/Projets/LUKE',CVSbranch,'/'];
+laptopjoan.remote(4).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
+laptopjoan.remote(4).mem = [];
+laptopjoan.remote(4).get_jobid = {'jobIdentifier = ',';'};%
+laptopjoan.remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+laptopjoan.remote(4).sshfs = {''};%{'/Applications/sshfs.app/Contents/Resources/sshfs-static','-oauto_cache,reconnect,volname='};
+laptopjoan.remote(4).joan = 'joandecker';% Faire getenv('USER') pour savoir qui je suis !!!!
 %
 dkepath.laptopjoan = laptopjoan;
 %
@@ -326,37 +552,29 @@ crpppc70.local_root = '/home/decker/NoTivoli/';
 crpppc70.computer = 'GLNXA64';%machine type and supported OS
 crpppc70.temppathroot = '/home/decker/NoTivoli/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-crpppc70.mex706 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB76'];
-crpppc70.mex708 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB78'];
-crpppc70.mex709 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB79'];
-crpppc70.mex710 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB710'];
-crpppc70.compiler_opt.helmex.mex706 = 'FLIBS=''-Wl,-rpath-link,/usr/local/matlab76/bin/glnxa64 -L/usr/local/matlab76/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
-%crpppc70.compiler_opt.helmex.mex708 = 'FLIBS=''-Wl,-rpath-link,/usr/local/matlab78/bin/glnxa64 -L/usr/local/matlab78/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
-crpppc70.compiler_opt.helmex.mex708 = NaN;
-crpppc70.compiler_opt.helmex.mex709 = 'FLIBS=''-Wl,-rpath-link,/usr/local/matlab79/bin/glnxa64 -L/usr/local/matlab79/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
-crpppc70.compiler_opt.helmex.mex710 = crpppc70.compiler_opt.helmex.mex709;
+crpppc70.mex76 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB76'];
+crpppc70.mex78 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB78'];
+crpppc70.mex79 = [crpppc70.luke_root,'Project_DKE/MEX/Bin/crpppc70/MATLAB79'];
+crpppc70.compiler_opt.helmex.mex76 = 'FLIBS=''-Wl,-rpath-link,/usr/local/matlab76/bin/glnxa64 -L/usr/local/matlab76/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
+%crpppc70.compiler_opt.helmex.mex78 = 'FLIBS=''-Wl,-rpath-link,/usr/local/matlab78/bin/glnxa64 -L/usr/local/matlab78/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
+crpppc70.compiler_opt.helmex.mex78 = NaN;
+crpppc70.compiler_opt.helmex.mex79 = 'FLIBS=''-Wl,-rpath-link,/usr/local/matlab79/bin/glnxa64 -L/usr/local/matlab79/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
 crpppc70.compiler_opt.fopts = 'FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''';
 %
-crpppc70.MUMPS.mex706 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
+crpppc70.MUMPS.mex76 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
 %crpppc70.MUMPS.mex78 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.8'];%Where MUMPS matrix solver is stored (MEX function)
-crpppc70.MUMPS.mex709 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.9'];%Where MUMPS matrix solver is stored (MEX function)
-crpppc70.MUMPS.mex710 = [crpppc70.local_root,'Packages/MUMPS_4.9.2/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+crpppc70.MUMPS.mex79 = [crpppc70.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.9'];%Where MUMPS matrix solver is stored (MEX function)
 %
 crpppc70.remote(1).host = 'pleiades2.epfl.ch';
+crpppc70.remote(1).nproc = 48;
 crpppc70.remote(1).luke_root = '/home/jdecker/LUKE/';
-crpppc70.remote(1).cmd = 'qsub -l walltime=3:59:00 -l nodes=1:ppn=1';
+crpppc70.remote(1).cmd = 'qsub -l walltime=1:59:00 -l nodes=1:ppn=1';
 crpppc70.remote(1).get_jobid = {'','.pleiades2.epfl.ch'};%str_before,str_after
-crpppc70.remote(1).set_jobid = {'','','Unknown Job Id'};%str_before,str_after,str_check
+crpppc70.remote(1).set_jobid = {'qstat','','Unknown Job Id'};%str_before,str_after,str_check
 crpppc70.remote(1).decker = 'jdecker';
 crpppc70.remote(1).curchod = 'lcurchod';
 %
 dkepath.crpppc70 = crpppc70;
-%
-% paths for runs on CRPP PC lac4
-%
-dkepath.hostname.lac4 = 'lac4';
-%
-dkepath.lac4 = crpppc70;
 %
 % paths for runs on CRPP PC 51
 %
@@ -380,36 +598,33 @@ dkepath.crpppc51 = crpppc51;
 dkepath.hostname.pleione = 'pleione';
 %
 pleione.luke_root = [pwd,'/'];
-pleione.local_root = '/home/sccp/gsem/decker/Packages/pleione/';
+pleione.local_root = '/home/sccp/gsem/decker/pleione/';
 pleione.computer = 'GLNXA64';%machine type and supported OS
 pleione.temppathroot = '/home/sccp/gsem/decker/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 pleione.maxcompthreads = 'automatic';%For MatLab multithreading
 %
-pleione.mex707 = [pleione.luke_root,'Project_DKE/MEX/Bin/pleione/MATLAB77/'];
-pleione.mex710 = [pleione.luke_root,'Project_DKE/MEX/Bin/pleione/MATLAB710/'];
+pleione.mex77 = [pleione.luke_root,'Project_DKE/MEX/Bin/pleione/MATLAB77/'];
 pleione.compiler_opt.copts = '';
-pleione.compiler_opt.fopts.mex707 = ['FC=''/home/sccp/gsem/decker/pleione/bin/g95'' '];% FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''
-pleione.compiler_opt.helmex.mex707 = ['-largeArrayDims -L/home/sccp/gsem/decker/pleione/lib -lf95 -lgcc -llapack -lblas'];%  -ltmglib Optional argument for helmex compilation
-pleione.compiler_opt.fopts.mex710 = ['FC=''/home/sccp/gsem/decker/pleione/bin/g95'' '];% FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''
-pleione.compiler_opt.helmex.mex710 = ['-largeArrayDims -L/home/sccp/gsem/decker/pleione/lib -lf95 -lgcc -llapack -lblas'];%  -ltmglib Optional argument for helmex compilation
+pleione.compiler_opt.fopts.mex77 = ['FC=''',pleione.local_root,'bin/g95'' '];% FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''
+pleione.compiler_opt.helmex.mex77 = ['-largeArrayDims -L',pleione.local_root,'lib -lf95 -lgcc -llapack -lblas'];%  -ltmglib Optional argument for helmex compilation
 %
-pleione.MUMPS.mex707 = ['/home/sccp/gsem/decker/pleione/src/MUMPS_4.7.3/MATLAB_7.7'];%Where MUMPS matrix solver is stored (MEX function)
-pleione.MUMPS.mex710 = [pleione.local_root,'MUMPS_4.9.2/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+pleione.MUMPS.mex77 = ['/home/sccp/gsem/decker/pleione/src/MUMPS_4.7.3/MATLAB_7.7'];%Where MUMPS matrix solver is stored (MEX function)
 %
 pleione.remote(1).host = 'cephee15.intra.cea.fr';
-pleione.remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_8/';
+pleione.remote(1).nproc = 28;
+pleione.remote(1).luke_root = ['/home/sccp/gsem/peysson/LUKE',CVSbranch,'/'];
 pleione.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
-pleione.remote(1).mem = {',mem=','mb','6000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
 pleione.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
-pleione.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
-pleione.remote(1).JD211098 = 'JD211098';
+pleione.remote(1).set_jobid = {'qstat','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+pleione.remote(1).YP105119 = 'YP105119';
 %
 pleione.remote(2).host = 'saturne1.partenaires.cea.fr';
-pleione.remote(2).luke_root = '/home/JD211098/LUKE/';
+pleione.remote(2).nproc = 12;
+pleione.remote(2).luke_root = ['/home/YP105119/LUKE',CVSbranch,'/'];
 pleione.remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
 pleione.remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
-pleione.remote(2).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
-pleione.remote(2).JD211098 = 'JD211098';
+pleione.remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+pleione.remote(2).YP105119 = 'YP105119';
 %
 dkepath.pleione = pleione;
 %
@@ -423,4 +638,5 @@ dkepath.merope = pleione;% identical machine
 %***************************************************************************************************
 %
 save([pwd,'/Project_DKE/Database/PATH_files/PATH_',dkepath.id,'.mat'],'dkepath');
+disp(['>> The dkepath structure for LUKE',CVSbranch,' is saved in ',pwd,'/Project_DKE/Database/PATH_files/PATH_',dkepath.id,'.mat']);
 %
