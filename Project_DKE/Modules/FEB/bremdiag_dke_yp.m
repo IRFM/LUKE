@@ -84,7 +84,7 @@ end
 kd = hxr.kd_hxr;%reference energies for the photofraction [m,p]
 phf = hxr.phf_hxr;%photofraction determined using the "MCDET.f" Monte-carlo hard x-ray absorption code at energies kd [m,p]
 res = hxr.res_hxr;%fit parameters of the energy resolution of the detectors [m,2]
-ef = hxr.res_hxr;%thickness of the vacuum window (mm) [1,m]
+ef = hxr.ef_hxr;%thickness of the vacuum window (mm) [1,m]
 tf = hxr.tf_hxr;%type of material for the vacuum window (Al ou Be) [1,m]
 ea = hxr.ea_hxr;%thickness of the absorber (mm) [1,m]
 ta = hxr.ta_hxr;%type of material for the absorber (Al,Fe,Ge,Be ou Pb) [1,m]
