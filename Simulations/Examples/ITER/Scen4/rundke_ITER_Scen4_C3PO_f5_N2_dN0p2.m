@@ -15,8 +15,8 @@ p_opt = -1;
 % Use these parameters to compare with LUKE 1.8 only
 % In that case, use the old version of the function solver_dke_yp
 %
-tn = 10000;
-dtn = 10000;
+% tn = 10000;
+% dtn = 10000;
 %
 % *********************** Specify LUKE structures *****************************
 %

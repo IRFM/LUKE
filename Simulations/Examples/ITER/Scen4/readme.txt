@@ -35,5 +35,10 @@ Simulations ITER Scen 4
 		- First ray points coincide.
 		- same compiled mex files.
 		- seems to depend upon cephee processor.
+		
+- Passage à LUKE 1.9 : first calculation (LUKE 1.9.0) wrong because dtn and tn not adjusted in dkeparam
+- Comparison successful for LUKE 1.9.1 with dtn=tn=10000, old version of solver_dke_yp from 1.8.6
+- Results validated for LUKE 1.9.1 with tn=100000, new version of solver_dke_yp
+
 	
 
