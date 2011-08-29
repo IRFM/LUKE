@@ -37,280 +37,15 @@
 % fonction ecrite par Y. Peyssson, J. Decker et V. Basiuk, poste 6290 ou
 % 6126
 %
-function [sortie,memoire] = zstarwars(varargin)
+function [sortie,memoire] = zstarwars(par,equi,neo,gene,prof,compo,impur,geo,proto,memoire)
 %
-mode = [];
-natfunc = [];
-natrac  = [];
-natpar = [];
-natder  = 0;
-natfce = [];
-%disp(['zstarwars is running ......: length(varargin)=',int2str(length(varargin))])
-if length(varargin) == 0
-  app     = dbstack;
-  if length(app) > 1
-    %
-    % recherche du mode d'appel de zstarwars (module fce ou lh)
-    %
-    if strcmp(app(2).name,'zuidownloadform')
-        infname = 'var';      
-        natpar  = evalin('caller',infname);
-        if ~isempty(strfind(natpar,'hyb'))
-          natfunc = 'hyb';
-        else
-          natfunc = 'fce'; 
-        end
-    end
-     if strcmp(app(2).name,'zuidata')
-        infname = 'string';      
-        natfunc  = evalin('caller',infname);
-    end
-   
-    if isempty(natfunc)
-     try
-       natfunc = evalin('caller','fonction');
-       natrac = evalin('caller','racine');
-     catch
-     end  
-     if isempty(natfunc)
-       try
-         natfunc = evalin('caller','param.fonction');
-         natrac = evalin('caller','racine');
-       catch
-       end 
-     end
-    end
-  
-    if isempty(natfunc)
-      try
-        natfunc = evalin('caller','module');
-        natder  = 1;
-      catch
-      end  
-    end
-  else
-    % appel direct 
-     %  natfunc = evalin('base','param.fonction.hyb')
-       natfunc = 'zstarwars';
-       natrac  = 'hyb';
-       natfce  = 'zecrhinlh';
-  end
-else
-   app     = dbstack;
-   if length(app) > 1 & strcmp(app(2).name,'zineb1test')
-      natrac = evalin('caller','module'); 
-      natfunc = evalin('caller',['param.fonction.',natrac]);
-      nblh = evalin('caller','param.gene.nbhyb');
-   end
-   if length(app) > 1 & strcmp(app(2).name,'zmajmodext')
-      natfunc = evalin('caller','module'); 
-      natrac  = evalin('caller','fonction');
-   end
-   if length(app) > 1 & strcmp(app(2).name,'zmergeparam')
-      natrac = evalin('caller','module'); 
-      natfunc  = evalin('caller','nomf');
-   end
-   if length(app) > 1 & strcmp(app(2).name,'zuicreefunform')
-      natrac = evalin('caller','racine');      
-      if ~isempty(strfind(natrac,'hyb'))
-          natrac = 'hyb';
-      else
-          natrac = 'fce';
-      end
-      natfunc  = evalin('caller','fonction');
-   end
-end
-if length(varargin) <= 1   
-  if isempty(natfce)   
-      app     = dbstack;
-      if length(app) > 1 & strcmp(app(2).name,'zineb1test') 
-         natfce = evalin('caller','param.fonction.fce');
-      else
-         natfce = evalin('base','param.fonction.fce');          
-      end
-  end
-  if strcmp(natfce,'zecrhinlh') & strcmp(natfunc ,'zstarwars')
-	   disp(['zstarwars in LH+ECRH mode'])
-  elseif strcmp(natfunc,'zstarwars') & strcmp(natrac,'fce')
-	   disp(['zstarwars in ECRH mode'])    
-  elseif strcmp(natfunc,'zstarwars') & strcmp(natrac,'hyb')
-	   disp(['zstarwars in LH mode'])    
-  end
-  if length(varargin) == 0
-        nbfce = 1;
-  else
-      nbfce = varargin{1};
-  end
 %
-% merge ECRH if zstarwars in ECRH mode
+shotime = par.shotime;
 %
-  if ~isempty(natrac) | ~isempty(strfind(natpar,'fce'))
-    if ~isempty(strfind(natrac,'fce')) | ~isempty(strfind(natpar,'fce'))
-      val    = zecrhinlh(nbfce);  
-      valeur = val.valeur;
-      type   = val.type;
-      borne  = val.borne;
-      defaut = val.valeur;
-      info   = val.info;
-      valeur = rmfield(valeur,'nbcouronne');
-      valeur = rmfield(valeur,'nbray');
-      valeur = rmfield(valeur,'equi');
-      type   = rmfield(type,'nbcouronne');
-      type   = rmfield(type,'nbray');
-      type   = rmfield(type,'equi');
-      borne  = rmfield(borne,'nbcouronne');
-      borne  = rmfield(borne,'nbray');
-      borne  = rmfield(borne,'equi');
-      defaut = rmfield(defaut,'nbcouronne');
-      defaut = rmfield(defaut,'nbray');
-      defaut = rmfield(defaut,'equi');
-      info   = rmfield(info,'nbcouronne');
-      info   = rmfield(info,'nbray');
-      info   = rmfield(info,'equi');
-     
-    else
-      if strcmp(natfce,'zecrhinlh')
-        disp(['ECRH parameters should be read in the module zecrhinlh'])
-      end
-    end
-  end
-%
-%--------------------------- EQUATION DE DERIVE CINETIQUE ------------------
-%
-  app = dbstack;     
-  if length(app) > 1 & strcmp(app(2).name,'zineb1test') 
-         nathyb  = app(1).file;
-         nblh = evalin('caller','param.gene.nbhyb');
-  else 
-         disp('nblh')
-         nblh  = evalin('base','param.gene.nbhyb')
-  end
-  luke_parameters;
-%	     
-% CRONOS PARAMETERS
-%
-   interface.ts = '';                    % nom de la fonction d'interfacage avec les donnees TS
-   interface.jet = '';                   % nom de la fonction d'interfacage avec les donnees Jet 
-%
-   sortie.valeur = valeur;
-   sortie.type = type;
-   sortie.borne = borne;
-   sortie.defaut = defaut;
-   sortie.info = info;
-   sortie.mode = mode;
-   sortie.interface = interface;
-   sortie.description = 'LH power deposition computation with/wo ECRH using LUKE';   % description (une ligne) de la fonction
-   sortie.help = '';                            % nom du fichier d'aide s'il existe, sinon aide de la fonction
-   sortie.gui  ='';                             % nom de l'interface graphique specifique si elle existe
-   sortie.controle = '';                        % nom de la fonction de controle des valeurs si elle existe
-%
-   return
-end
-%
-% --------------------------- RUN STARWARS ------------------------
-%
-if nargin == 14,% LH case
-    par = varargin{1};
-    proto = varargin{2};
-    cons = varargin{3};
-    cons_spec = varargin{4};
-    geo = varargin{5};
-    equi = varargin{6};
-    injection = varargin{7};
-    prof = varargin{8};
-    neo = varargin{9};
-    impur = varargin{10};
-    phy = varargin{11};
-    compo = varargin{12};
-    gene = varargin{13};
-    memoire = varargin{14};
-    signe = varargin{13}.signe;%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
-    %
-    % cas zinebupdatetest
-    %
-    if ~isfield(par,'rt_mode') & strcmp(app(2).name,'zineb1test') 
-        tokamak = evalin('caller','param.from.machine');
-        luke_parameters;
-        par = valeur;
-    end  
-    if ~isfield(par,'zinterpolation')
-        par.zinterpolation = [];
-    end
-    %
-    if ~isfield(par,'luke_mode')
-        par.luke_mode='lh';
-    end
-elseif nargin == 13
-    par = varargin{1};
-    proto = varargin{2};
-    cons = varargin{3};
-    geo = varargin{4};
-    equi = varargin{5};
-    injection = varargin{6};
-    prof = varargin{7};
-    neo = varargin{8};
-    impur = varargin{9};
-    phy = varargin{10};
-    compo = varargin{11};
-    gene = varargin{12};
-    memoire = varargin{13};
-    signe = varargin{12}.signe;%Toroidal Bfield and plasma current sign (CRONOS convention: > 0 when counter-clockwise from top view)
-    %
-    % cas zinebupdatetest
-    %
-    if ~isfield(par,'rt_mode') & strcmp(app(2).name,'zineb1test') 
-        tokamak = evalin('caller','param.from.machine');
-        luke_parameters;
-        par = valeur;
-    end  
-    if ~isfield(par,'zinterpolation')
-        par.zinterpolation = [];
-    end
-    %
-    if ~isfield(par,'luke_mode')
-        par.luke_mode='lh';
-    end
-    %
-else
-    error('Wrong number of inputs in zstarwars')
-end
-%
-if ~isstruct(cons)
-    constr = cons;
-    clear cons
-    if strcmp(par.luke_mode,'lh'),
-        cons.lh_cons = constr;
-		cons.ecrh_cons = '';
-    elseif strcmp(par.luke_mode,'ecrh'),
-        cons.ecrh_cons = constr;
-		cons.lh_cons = '';
-    else
-        error('LUKE mode not determined')
-    end
-end
-%
-if isfield(par,'temps')
-  shotime = num2str(par.temps,'%6.4f');
-elseif isfield(par,'taanalyse')
-  shotime = num2str(par.temps,'%6.4f');    
-else
-  shotime = num2str(gene.t,'%6.4f');        
-end
-if ~isfield(par,'tok')
-
-  par.tok = 'unknown';
-
-end
-if ~isfield(par,'shot')
-
-  par.shot = 1;
-
-end
-%
-equil_id = [par.tok,'_',num2str(par.shot),'_',shotime];
+equil_id = [par.tok,'_',num2str(par.shot),'_',num2str(shotime,'%6.4f')];
 
 sortie.err = 0;
-sortie = proto;
+sortie     = proto;
 %
 % on definit le flag d'erreur a 0 par defaut (pas d'erreur)
 %
@@ -365,7 +100,7 @@ psipn_ohm       = rho2psi_jd(equil,ohm.rho);
 % ohm.epsi (V/m): signe par rapport à BT
 % - signe is electron charge
 %----------------------------------------------------------
-ohm.epsi     = -sign(signe.ip)*sign(signe.b0)*interp1(gene.x,prof.epar,psitncronoshel);
+ohm.epsi     = -sign(par.signe.ip)*sign(par.signe.b0)*interp1(gene.x,prof.epar,psitncronoshel);
 ohm.epsi     = complex(interp1(psipncronoshel,ohm.epsi,psipn_ohm));%Imaginary for considering the definition of the flux surface averaging of CRONOS in LUKE
 %
 % PARAMETRES RIPPLE 
@@ -396,8 +131,19 @@ if ~isfield(par,'conf')
  par.conf = tokamak;
 end 
 %
-[launchs_lh] = make_wavelaunchs_cronos_lh(gene,par,cons.lh_cons);%for the LH waves
-[launchs_ec] = make_wavelaunchs_cronos_ec(equil,par,cons.ecrh_cons);%for the EC waves
+cons=par.cons;
+if strcmp(par.luke_mode,'lh')
+  [launchs_lh] = make_wavelaunchs_cronos_lh(gene,par,cons.lh_cons);%for the LH waves
+  launchs_ec   = [];
+end
+if strcmp(par.luke_mode,'ec')
+  [launchs_ec] = make_wavelaunchs_cronos_ec(equil,par,cons.ecrh_cons);%for the EC waves
+  launchs_lh   = [];
+end
+if strcmp(par.luke_mode,'mixte')
+  [launchs_lh] = make_wavelaunchs_cronos_lh(gene,par,cons.lh_cons);%for the LH waves
+  [launchs_ec] = make_wavelaunchs_cronos_ec(equil,par,cons.ecrh_cons);%for the EC waves
+end
 %    
 launchs = [launchs_lh,launchs_ec];
 %
@@ -420,19 +166,14 @@ launchs = launchs(mask);
 nw = length(launchs);
 %
 if nw == 0
-   sortie.j  = zeros(size(gene.x));
-   sortie.el = zeros(size(gene.x));
-   memoire.data.output.j     = sortie.j;
-   memoire.data.output.el    = sortie.el;
+   sortie.j                    = zeros(size(gene.x));
+   sortie.el                   = zeros(size(gene.x));
+   memoire.data.output.j       = sortie.j;
+   memoire.data.output.el      = sortie.el;
    memoire.data.output.paddrf  = 0;
-   memoire.data.output.prf  = 0;
-   memoire.data.output.ne    = prof.ne;
-   memoire.data.output.irf  = 0;
-   if length(memoire.t) == 1
-     memoire.t = gene.t;
-   else
-     memoire.t = [memoire.t gene.t];
-   end
+   memoire.data.output.prf     = 0;
+   memoire.data.output.ne      = prof.ne;
+   memoire.data.output.irf     = 0;
    return 
 end
 wavestructs = cell(1,length(launchs));
@@ -465,6 +206,27 @@ if nw > 0
   acces_lh
 end
 %
+distrib     = [];
+distrib_ohm = [];
+if ~isempty(memoire)
+  if isfield(memoire,'data')
+    if isfield(memoire.data,'edistribution')  
+        disp(['-------------using the last distribution function------------'])
+        tm = memoire.data.edistribution(end).shotime;
+        if tm == shotime,% remove last distribution info if time has not advanced
+            memoire.data.edistribution = memoire.data.edistribution(1:end-1);
+        end
+        %
+        if length(memoire.data.edistribution) >= 1,% the time here is necessarily anterior
+            distrib        = memoire.data.edistribution(end).f0;
+            distrib_ohm    = memoire.data.edistribution(end).f0_ohm;
+            dkeparam.rho_S = memoire.data.edistribution(end).rho_S;
+            dkeparam.tn    = (shotime - memoire.data.edistribution(end).shotime)*distrib.mksa.nhu_ref;% LUKE time step
+        end
+    end
+  end
+end
+%
 if par.save == 2,%save before LUKE
    %  
   try
@@ -486,18 +248,6 @@ end
 ik = 1;
 warning off
 disp(['LUKE is running ....'])
-distrib = [];
-if ~isempty(memoire)
-  if isfield(memoire,'data')
-    if isfield(memoire.data,'edistribution')  
-      if isfield(memoire.data.edistribution,'f0')
-        disp(['-------------using the last distribution function------------'])
-        distrib        = memoire.data.edistribution.f0;
-        dkeparam.rho_S = memoire.data.edistribution.r;
-      end
-    end
-  end
-end
 %
 if strcmp(par.batch,'Yes') && isfield(dkepath,'remote') && ~isempty(dkepath.remote),% batch calculation of run_lukert
     %
@@ -544,7 +294,7 @@ if strcmp(par.batch,'Yes') && isfield(dkepath,'remote') && ~isempty(dkepath.remo
         Znorm_RF = output.Znorm;
         Zcurr_RF = output.Zcurr;
         ZP0_RF = output.ZP0;
-        dke_out = output.dke_out;
+        dke_out_RF = output.dke_out;
         radialDKE = output.radialDKE;
         equilDKE = output.equilDKE;
         momentumDKE = output.momentumDKE;
@@ -559,12 +309,12 @@ if strcmp(par.batch,'Yes') && isfield(dkepath,'remote') && ~isempty(dkepath.remo
     %
 else
     %
-    [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,[],[],dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib,[]);
+    [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,[],[],dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib,[]);
     %
 end
 clear raytracing_yp alphaphimex_jd trapz_dke_yp dmumpsmex
 %
-signe_out = -signe.ip;
+signe_out = -par.signe.ip;
 %
 j_TOT_c = signe_out*Zcurr_RF.x_0_vcfsav*mksa.j_ref;
 I_TOT_c = sum(signe_out*Zcurr_RF.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
@@ -575,14 +325,11 @@ P_RF_c = sum(p_RF_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
 %
 if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
     %
-    distrib_ohm.XXf0_leg = [];
-    distrib_ohm.mksa = mksa;
+    [Znorm_ohm,Zcurr_ohm,ZP0_ohm,dke_out_ohm] = run_lukert('cronos',[],[],[],radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib_ohm,[]);
     %
-    [Znorm,Zcurr,ZP0] = run_lukert('cronos',[],[],[],radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib_ohm,[]);
-    %
-    j_OHM_c = signe_out*Zcurr.x_0_vcfsav*mksa.j_ref;
-    I_OHM_c = sum(signe_out*Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
-    p_OHM_c = ZP0.x_e_fsav*mksa.P_ref;
+    j_OHM_c = signe_out*Zcurr_ohm.x_0_vcfsav*mksa.j_ref;
+    I_OHM_c = sum(signe_out*Zcurr_ohm.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
+    p_OHM_c = ZP0_ohm.x_e_fsav*mksa.P_ref;
     P_OHM_c = sum(p_OHM_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
 else
     j_OHM_c = 0;
@@ -685,30 +432,38 @@ paddrf = zintvol(sortie.el,gene.x,equi.vpr,equi.rhomax);
 disp(['I_L_H = ',num2str(irf/1e3,3),' kA / I_p =',num2str(equi.ip/1e3,4),' kA'])
 disp(['P_L_H = ',num2str(paddrf/1e3,3),' kW / P_r_e_f = ',num2str(prf/1e3,3),' kW'])
 %
-memoire.data.output.j     = sortie.j;
-memoire.data.output.el    = sortie.el;
-memoire.data.output.paddrf  = paddrf;
-memoire.data.output.prf  = prf;
-memoire.data.output.ne    = prof.ne;
-memoire.data.output.irf  = irf;
-if length(memoire.t) == 1
-    memoire.t = gene.t;
-else
-    memoire.t = [memoire.t gene.t];
-end
-%
-na = length(memoire.t)+1;
+memoire.data.output.j         = sortie.j;
+memoire.data.output.el        = sortie.el;
+memoire.data.output.paddrf    = paddrf;
+memoire.data.output.prf       = prf;
+memoire.data.output.ne        = prof.ne;
+memoire.data.output.irf       = irf;
 %
 for iw = 1:nw,
-    if isfield(wavestructs{iw}.launch,'aloha'), 
-        memoire.data.output.npar{iw}(na,:) = wavestructs{iw}.launch.bNpar0;
-        memoire.data.output.pow{iw}(na,:)  = wavestructs{iw}.launch.bPlhtot;
-        memoire.data.output.fr{iw}(na,:)   = wavestructs{iw}.launch.bPlhtot/sum(wavestructs{iw}.launch.bPlhtot)*100;
+    if isfield(wavestructs{iw}.launch,'aloha') & wavestructs{iw}.launch.aloha.mode ~= 0
+       if isfield(memoire.data.output,'npar')        
+           memoire.data.output.npar{iw} = [memoire.data.output.npar{iw};wavestructs{iw}.launch.bNpar0];
+           memoire.data.output.pow{iw} = [memoire.data.output.pow{iw};wavestructs{iw}.launch.bPlhtot];
+           memoire.data.output.fr{iw} = [memoire.data.output.fr{iw};wavestructs{iw}.launch.bPlhtot/sum(wavestructs{iw}.launch.bPlhtot)*100];
+       else
+           memoire.data.output.npar{iw} = wavestructs{iw}.launch.bNpar0;
+           memoire.data.output.pow{iw} = wavestructs{iw}.launch.bPlhtot;
+           memoire.data.output.fr{iw} = wavestructs{iw}.launch.bPlhtot/sum(wavestructs{iw}.launch.bPlhtot)*100;   
+       end
     end
 end
 %
-memoire.data.edistribution.f0 = dke_out.Zf0_interp;%For time evolution
-memoire.data.edistribution.r  = radialDKE.xrho_S_dke;
+if isfield(memoire.data,'edistribution')
+  memoire.data.edistribution(end + 1).shotime = shotime;%For time evolution
+  memoire.data.edistribution(end).f0      = dke_out_RF.Zf0_interp;%For time evolution
+  memoire.data.edistribution(end).f0_ohm  = dke_out_ohm.Zf0_interp;%For time evolution
+  memoire.data.edistribution(end).rho_S   = radialDKE.xrho_S_dke;
+else
+  memoire.data.edistribution(1).shotime = shotime;%For time evolution
+  memoire.data.edistribution(1).f0      = dke_out_RF.Zf0_interp;%For time evolution
+  memoire.data.edistribution(1).f0_ohm  = dke_out_ohm.Zf0_interp;%For time evolution
+  memoire.data.edistribution(1).rho_S   = radialDKE.xrho_S_dke;
+end
 %
 % For diagnostic post-processing (HXR,...)
 %
@@ -721,7 +476,7 @@ memoire.data.edistribution.r  = radialDKE.xrho_S_dke;
 %memoire.data.edistribution.hxrparam = hxrparam;%For HXR calculations
 %memoire.data.edistribution.mksa = mksa;%For HXR calculations
 %memoire.data.edistribution.momentumDKE = momentumDKE;%For HXR calculations
-%memoire.data.edistribution.dke_out = dke_out;%For HXR calculations
+%memoire.data.edistribution.dke_out = dke_out_RF;%For HXR calculations
 %
 if par.save == 1,
   try
