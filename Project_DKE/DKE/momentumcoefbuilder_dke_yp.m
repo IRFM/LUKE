@@ -127,4 +127,7 @@ Zmomcoef.Xpnperp2 = gridDKE.Xpn2 - Zmomcoef.Xpnpar.*Zmomcoef.Xpnpar;
 Zmomcoef.Xvpar = (v'*ones(1,gridDKE.nmhu)).*(ones(length(v),1)*gridDKE.mhu);
 %
 Zmomcoef.Ec_ref = mc2*(sqrt(1 + gridDKE.pn.*gridDKE.pn*mksa.betath_ref^2) - 1);%Fast electron kinetic energy in keV
+Ec_ref_S = mc2*(sqrt(1 + gridDKE.pn_S.*gridDKE.pn_S*mksa.betath_ref^2) - 1);%Fast electron kinetic energy in keV
+Zmomcoef.dEc_ref = diff(Ec_ref_S);%Fast electron kinetic energy in keV
+
 
