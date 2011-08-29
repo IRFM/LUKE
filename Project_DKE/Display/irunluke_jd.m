@@ -566,7 +566,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     elseif strfind(data_file,'last_luke@'),
                         %
                         data = load([data_path,data_file],'par','tokamak','dkepath','dkeparam','dkedisplay','equil','ohm','transpfaste','ripple',...
-                            'Znorm_RF','Zcurr_RF','ZP0_RF','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
+                            'Znorm_RF','Zcurr_RF','ZP0_RF','dke_out_RF','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
                         %
                         if isfield(data,'tokamak'),
                             basestr = data.tokamak;
@@ -580,7 +580,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         output.Znorm = data.Znorm_RF;
                         output.Zcurr = data.Zcurr_RF;
                         output.ZP0 = data.ZP0_RF;
-                        output.dke_out = data.dke_out;
+                        output.dke_out = data.dke_out_RF;
                         output.radialDKE = data.radialDKE;
                         output.equilDKE = data.equilDKE;
                         output.momentumDKE = data.momentumDKE;

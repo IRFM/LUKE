@@ -13,7 +13,7 @@ function [equil_magnetic,prho,pspsin,pspsinT,pp] = equil_magnetic_EFIT_jd(filena
 % by J. Decker (joan.decker@cea.fr) 11/01/04
 %
 if nargin < 5,
-    dispname = filename;
+    savename = filename;
 end
 %
 if nargin < 4,

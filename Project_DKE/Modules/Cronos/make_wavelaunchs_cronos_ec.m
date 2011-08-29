@@ -8,10 +8,18 @@ if isempty(cons),
     launchs = cell(0,1);
     return
 end
+if sum(cons) == 0
+    launchs = cell(0,1);
+    return
+end
 %
 si = sign(equil.psi_apRp(end));%sign of Iphi
 %
-nw = length(par.freq_ghz);%number of EC beams
+if isfield(par,'freq_ghz')
+  nw = length(par.freq_ghz);%number of EC beams
+else
+  nw = [];
+end
 %
 % parameters for free space ray propagation towards first closed FS
 %
