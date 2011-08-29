@@ -11,13 +11,6 @@ if nargin < 3,
     opt.V = 1;
 end
 %
-t = NaN;
-energy = NaN;
-hxr = NaN;
-filter_thickness = NaN;
-filter_material = NaN;
-beta = NaN;
-%
 if strcmp(basestr,'TCV'),
     %
     collect_hxr;
@@ -93,7 +86,18 @@ elseif strcmp(basestr,'TS') && exist('tsbase','file'),
     %
     hxr = flipdim(cumsum(flipdim(hxr,2),2),2);%TS data is per channel (it is not monotonically decreasing)
     %
+    filter_thickness = NaN;
+    filter_material = NaN;
+    beta = NaN;
+    %
 else
+    %
+    t = NaN;
+    energy = NaN;
+    hxr = NaN;
+    filter_thickness = NaN;
+    filter_material = NaN;
+    beta = NaN;
     %
     disp(['-----> no access to the ',basestr,' database found.']);
     %

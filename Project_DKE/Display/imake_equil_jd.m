@@ -59,6 +59,10 @@ if i_opt == 0, % use data from from external database
         eqdsk_path = external.magnetic.eqdsk_path;
         eqdsk_file = external.magnetic.eqdsk_file;
         %
+        if ~exist([eqdsk_path,eqdsk_file],'file'),
+            error(['The file ',eqdsk_path,eqdsk_file,' does not exist. Aborted.'])
+        end
+        %
         e_opt = -1;% eqdsk equilibrium
         %
     elseif strcmp(basestr,'TS'),
@@ -336,9 +340,10 @@ if type == 1 && n_opt <= 1,
     pne = equil_prof_data.ne(ishot,:);
     pTe = equil_prof_data.te(ishot,:);
     %
-    if length(equil_prof_data.ti(ishot,:)) == 1,
+    if length(equil_prof_data.ti(ishot,:)) == 1 || ...
+      input_dke_yp('Do you want to specify Ti manually','n',{'y','n'},'',[1,1]) == 'y';
         %
-        TeTi = input_dke_yp('No data on Ti was found. Please provide an estimated value for Te/Ti',6,'','',[1,1]);
+        TeTi = input_dke_yp('Please provide an estimated value for Te/Ti',6,'','',[1,1]);
         %
         pTi = pTe/TeTi;
     else
