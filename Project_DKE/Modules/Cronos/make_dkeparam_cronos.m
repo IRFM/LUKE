@@ -87,7 +87,7 @@ if strcmp(par.luke_mode,'lh') || strcmp(par.luke_mode,'mixte');%For the Lower Hy
     dkeparam.prec0_g = 1e-10;%Convergence level of the residu (if NaN, iterations stop with nit_g)
     dkeparam.nit_g = 100;%Maximum number of iterations for g
     %
-    dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
+    dkeparam.dtn = NaN;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
     dkeparam.opsplit = 0;%Operator splitting between momentum and radial dynamics (for tests only) (opsplit = 0: no operator splitting , opsplit = 1: operator splitting). If this field does not exist, it is equivalent to dkeparam.opsplit = 0.
     %
     % (3) Matlab built-in qmr iterative method (MatLab built-in partial LU factorization used)
@@ -195,7 +195,7 @@ elseif strcmp(par.luke_mode,'ecrh'),%For the Electron Cyclotron wave simulations
     dkeparam.prec0_g = 1e-11;%Convergence level of the residu (if NaN, iterations stop with nit_g)
     dkeparam.nit_g = 100;%Maximum number of iterations for g
     %
-    dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
+    dkeparam.dtn = NaN;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
     %
     dkeparam.invproc = -1;%Iterative matrix inversion methods
     % (3) Matlab built-in qmr iterative method (MatLab built-in partial LU factorization used)
@@ -239,7 +239,11 @@ dkeparam.rt_mode = par.rt_mode;%RT-DKE power consistency
 dkeparam.abs_lim = par.abs_lim;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
 dkeparam.nit_rf = par.nit_rf;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
 %dkeparam.dke_mode = par.dke_mode;%Fokker-Planck equation (0), Drift Kinetic equation (1)
-dkeparam.dtn = par.dtn;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
+if isfield(par,'tn')
+  dkeparam.tn = par.tn;% LUKE output time
+else
+  dkeparam.tn = 100000;  
+end
 dkeparam.invproc = par.invproc;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
 %
 if ~isfield(par,'nk_abs'),
