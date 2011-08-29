@@ -12,6 +12,12 @@ pause(1)
 %
 p_opt = -1;
 %
+% Use these parameters to compare with LUKE 1.8 only
+% In that case, use the old version of the function solver_dke_yp
+%
+tn = 10000;
+dtn = 10000;
+%
 % *********************** Specify LUKE structures *****************************
 %
 id_simul = '';%Simulation ID
@@ -124,6 +130,11 @@ rayparam.kextra = 1000;
 %************************************************************************************************************************************
 %
 [dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_dkedisplay,path_dkedisplay,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
+%
+if exist('tn','var') && exist('dtn','var'),
+    dkeparam.tn = tn;
+    dkeparam.dtn = dtn;
+end    
 %
 % wavestruct
 %
