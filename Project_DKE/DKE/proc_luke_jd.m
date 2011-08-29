@@ -122,9 +122,17 @@ xTe = equilDKE.xTe;
 xne = equilDKE.xne;
 %
 pn = momentumDKE.pn;
+dpn = momentumDKE.dpn;
 mhu = momentumDKE.mhu;
 dmhu = momentumDKE.dmhu;
 gamma = Zmomcoef.gamma;
+Ec_ref = Zmomcoef.Ec_ref;%Fast electron kinetic energy in keV
+if isfield(Zmomcoef,'dEc_ref'),
+    dEc_ref = Zmomcoef.dEc_ref;
+else
+    [dummy,dummy,dummy,dummy,dummy,dummy,dummy,mc2] = pc_dke_yp;
+    dEc_ref = diff(mc2*(sqrt(1 + momentumDKE.pn_S.*momentumDKE.pn_S*mksa.betath_ref^2) - 1));
+end
 %
 nr = length(xrhoG);
 nw = length(waves);
@@ -1165,17 +1173,28 @@ if ir_display > 0 && ir_display <= nr,
     disp(['normalized radius for distribution plots: ',num2str(xrho(ir_display))])
     %
     Xf0 = dke_out.XXf0(:,:,ir_display);
+    Xfinit = dke_out.XXfinit(:,:,ir_display);
     Xmhu = repmat(mhu,[length(pn),1]);
+    %
+    Xlambda = repmat(Zbouncecoef.Xxlambda(:,ir_display).',[length(pn),1]);
+    qtilde = Zbouncecoef.xqtilde(ir_display);
+    qhat =  Zbouncecoef.xqhat(ir_display);
     %
     % energy-space density of current deposition
     %
     pdj0dp = scocurr*mksa.j_ref*2*pi*pn.*pn.*pn.*integral_dke_jd(dmhu,Xf0.*Xmhu,2).'./gamma;
+    %
+    % energy distribution function
+    %
+    pdN0_dEc_ref = 2*pi.*(qtilde./qhat).*integral_dke_jd(dmhu,Xlambda.*Xf0,2).'.*pn.*pn.*dpn./dEc_ref;
+    pdNinit_dEc_ref = 2*pi.*(qtilde./qhat).*integral_dke_jd(dmhu,Xlambda.*Xfinit,2).'.*pn.*pn.*dpn./dEc_ref;
+    %
     % spherical to cylindrical transformation
     %
     [logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(Xf0),pn,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
     Xf0_cyl_ref = exp(logXf0_cyl_ref);%For accurate representation in figures 
     %
-    logXfinit_cyl_ref = s2c_dke_yp(log(dke_out.XXfinit(:,:,ir_display)),pn,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
+    logXfinit_cyl_ref = s2c_dke_yp(log(Xfinit),pn,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
     Xfinit_cyl_ref = exp(logXfinit_cyl_ref);%For accurate representation in figures 
     %
     XDparpar_cyl_ref = s2c_dke_yp(dke_out.ZXXD_rf.parpar_ij(:,:,ir_display),pn,mhu,dp_cyl);%Spherical to cylindrical coordinate transformation
@@ -1342,6 +1361,24 @@ if ir_display > 0 && ir_display <= nr,
     legend(leg);
     %
     print_jd(p_opt,[simul_id,'_F0pFM_1D_',tir_display],'figures_LUKE');
+    %
+    % ---------- energy distribution -----------
+    %
+    figure(15),clf,set(14,'Name',['dNdEc - ',dke_out.simul.id])
+    %
+    x1 = Ec_ref;
+    xlab1 = 'E_c (keV)';
+    xlim1 = [0,max(x1)];
+    y1 = pdNinit_dEc_ref;
+    y2 = pdN0_dEc_ref;
+    ylab = 'dn_e/dE_c/n_0 (keV^{-1})';
+    ylim = NaN;
+    %
+    graph1D_jd(x1,y1,0,1,'','',radialloc,NaN,xlim1,ylim,style2,marker,color3,width2,siz,gca,red,lspace,bspace2);
+    graph1D_jd(x1,y2,0,1,xlab1,ylab,radialloc,leg,xlim1,ylim,style,marker,color2,width2,siz);
+    legend(leg);
+    %
+    print_jd(p_opt,[simul_id,'_dNdEc_',tir_display],'figures_LUKE');
     %
 end
 %
