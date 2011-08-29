@@ -139,6 +139,11 @@ rayparam.kextra = 50;
 %
 [dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_dkedisplay,path_dkedisplay,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
 %
+if exist('tn','var') && exist('dtn','var'),
+    dkeparam.tn = tn;
+    dkeparam.dtn = dtn;
+end    
+%
 % launch structure
 %
 launch.id = id;
