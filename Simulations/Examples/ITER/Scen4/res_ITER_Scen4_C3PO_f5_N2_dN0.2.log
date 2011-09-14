@@ -1,10 +1,10 @@
 Simulation id: ITER_Scen4_C3PO_f5_N2_dN0.2
-Simulation date: 08/29/2011  13:47:32
+Simulation date: 09/14/2011  10:54:48
 User id: JD211098
 LUKE Version: LUKE 1.9.1
 MATLAB Version: 710
 MACHINE: cephee
-Final RF convergence parameter: 0.00065644
+Final RF convergence parameter: 0.00065653
  
 Total current (I): 0.66209 MA (positive for co-current)
 Launched RF power (P): 20 MW
