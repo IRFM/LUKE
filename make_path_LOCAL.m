@@ -48,8 +48,8 @@ saturne.maxcompthreads = 'automatic';%For MatLab multithreading
 %
 saturne.mex705 = [saturne.luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
 saturne.compiler_opt.copts = '';
-saturne.compiler_opt.fopts.mex75 = [' -largeArrayDims'];
-saturne.compiler_opt.helmex.mex75 = [' -L',saturne.local_root,'lib -lf95 -lgcc -llapack -lblas'];% -ltmglib Optional argument for helmex compilation
+saturne.compiler_opt.fopts.mex705 = [' -largeArrayDims'];
+saturne.compiler_opt.helmex.mex705 = [' -L',saturne.local_root,'lib -lf95 -lgcc -llapack -lblas'];% -ltmglib Optional argument for helmex compilation
 %
 saturne.MUMPS.mex705 = [saturne.local_root,'src/MUMPS_4.7.3/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
 %
