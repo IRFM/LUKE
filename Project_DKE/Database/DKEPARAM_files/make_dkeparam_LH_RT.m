@@ -110,6 +110,7 @@ dkeparam.clustermode.eecoll_dke_yp.size = 4;%MatLab distributed computing enviro
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 dkeparam.opt_load = 0;%Load intermediate calculations
 dkeparam.opt_save = 0;%Save intermediate calculations
+dkeparam.timevol = 0;% save results at intermediate times
 %
 dkeparam.method = 'spline';%For the pitch-angle interpolation in the prjectioon of the electron velocity distribution on the Legendre polynomial basis
 dkeparam.n_gauleg = 35;%Number of Legendre polynomials for projections of the electron velocity distribution
