@@ -55,6 +55,7 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
 iar_list = [0.1,0.2,0.3,0.5,0.8];
 %
@@ -74,30 +75,40 @@ equil_cyl.pzTi = betath^2*mc2*ones(size(equil_cyl.pzTi));
 ohm_cyl = ohm_flat(equil_cyl,epsi);
 ohm = ohm_flat(equil,epsi);
 %
-dkeparam.bounce_mode = 0;
-rho_S = 0.5;
-%
-[Znorm_cyl,Zcurr_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
-%
-dkeparam.bounce_mode = 1;
-%dkeparam.nmhu_S = 98;
-%
 ap = equil.ptx(end,1);
 rho_list = iar_list*equil.Rp/ap;
 %
-for irho = 1:length(rho_list),
+nrho = length(rho_list);
+j_0 = NaN(1,nrho);
+j = NaN(1,nrho);
+%
+for irho = 1:nrho,
     %
+    dkeparam.bounce_mode = 1;
+    dkeparam.mhu_S = [];
     rho_S = rho_list(irho);
     %
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    JRF(irho) = Zcurr.x_tot_vfsav;
+    if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
+        j(irho) = Zcurr.x_tot_vfsav;
+    end  
+    %
+    dkeparam.bounce_mode = 0;
+    dkeparam.mhu_S = momentumDKE.mhu_S;
+    rho_S = 0.5;
+    %
+    [Znorm_cyl,Zcurr_cyl,ZP0_cyl,dke_out_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
+    %
+    if dke_out_cyl.residu_f{end}(end) <= dkeparam.prec0_f,
+        j_0(irho) = Zcurr_cyl.x_0;
+    end  
     %
 end
 %	    
 %************************************************************************************************************************************
 %
-sigman_luke = JRF./Zcurr_cyl.x_0;
+sigman_luke = j./j_0;
 %
 [iar,sigman_sc] = conductivity_model_yp(equil,1,rho_list);%Sigmar-Coppi model (low inverse aspect ratio limit)
 [iar,sigman_cghk] = conductivity_model_yp(equil,2,rho_list);%Connor et al. model (arbitrary inverse aspect ratio)

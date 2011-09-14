@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -49,7 +50,7 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-if exist('dmumpsmex');dkeparam.invproc = -2;end
+if exist('dmumpsmex','file');dkeparam.invproc = -2;end
 %
 betath = 0.001;%validated for NR limit
 %
@@ -59,10 +60,6 @@ equil.pTe = betath^2*mc2*ones(size(equil.pTe));
 equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-dkeparam.boundary_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
-dkeparam.prec0_f = -1;
-%
-dtn_list = logspace(-8,8,33);
 %
 epsi = 0.04;%corresponds to pc/pT = 5
 %
@@ -70,32 +67,51 @@ ohm = ohm_flat(equil,epsi);
 %
 RR_kulsrud = 1.914*1e-6;%Kulsrud (PRL, 31,11, (1972) 690)
 %
-% Building the distribution function to a quasi steady-state
+% Building the distribution function to a quasi steady-state for the
+% runaway problem : tn = 10000
 %
-dtn = 100;
-dkeparam.dtn = dtn;
-dkeparam.nit_f = 50;
+tnmax = 10000;
+nit_list = round(logspace(0,2,11));
+dtn_list = tnmax./nit_list;
 %
-[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-%
-RRv_end = (dke_out.normf0(end-1) - dke_out.normf0(end))/dtn;
-RRs_end = dke_out.XxRR_fsav(end,:);
-%
-XXf0 = dke_out.XXf0;
+dkeparam.tn = NaN;%specified by dtn
 %
 % Testing different dtn
 %
-dkeparam.nit_f = 1;%Enforcing a single iteration
+ndtn = length(dtn_list);
+xRRv_0 = NaN(1,ndtn);
+xRRs_0 = NaN(1,ndtn);
+xRRv_1 = NaN(1,ndtn);
+xRRs_1 = NaN(1,ndtn);
+xRRv_2 = NaN(1,ndtn);
+xRRs_2 = NaN(1,ndtn);
 %
-for idtn = 1:length(dtn_list),
+for idtn = 1:ndtn,
     %
-    dtn = dtn_list(idtn);
-    dkeparam.dtn = dtn;     
+    dtn = dtn_list(idtn); 
+    dkeparam.dtn = repmat(dtn,[1,nit_list(idtn)]);
     %
-	[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0,[]);
+    dkeparam.boundary_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
+    dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+	[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    xRRv(idtn) = (dke_out.normf0(1) - dke_out.normf0(2))/dtn;
-    xRRs(idtn) = dke_out.XxRR_fsav(end,:);
+    xRRv_0(idtn) = (dke_out.normf0{end}(1) - dke_out.normf0{end}(end))/dtn;
+    xRRs_0(idtn) = dke_out.XxRR_fsav(end,:);
+    %
+    %
+    dkeparam.boundary_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
+    dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+	[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    xRRv_1(idtn) = (dke_out.normf0{end}(1) - dke_out.normf0{end}(end))/dtn;
+    xRRs_1(idtn) = dke_out.XxRR_fsav(end,:);
+    %
+    dkeparam.boundary_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
+    dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+	[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    xRRv_2(idtn) = (dke_out.normf0{end}(1) - dke_out.normf0{end}(end))/dtn;
+    xRRs_2(idtn) = dke_out.XxRR_fsav(end,:);
     %
 end
 %
@@ -104,24 +120,38 @@ end
 figure(1),clf
 %
 leg = {'Volumic losses','Boundary losses','Runaway losses'};
-xlim = 10.^[-8,8];
-ylim = 10.^[-10,-5];
+xlim = 10.^[2,4];
+ylim = [1.5,2]*1e-6;
 xlab = '\Deltat';
 ylab = '\Gamma_R';
 tit = '';
-graph1D_jd(dtn_list,xRRv,1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(dtn_list,xRRs,1,1,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
-graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],1,1,'','','',leg,xlim,ylim,'--','none','k',2,20,gca);
-%graph1D_jd(xlim,[RRv_end,RRv_end],1,1,'','','',NaN,xlim,ylim,'--','none','r',0.5,20,gca);
-%graph1D_jd(xlim,[RRs_end,RRs_end],1,1,'','','',NaN,xlim,ylim,'--','none','b',0.5,20,gca);
-set(gca,'ytick',[1e-010 1e-09 1e-08 1e-07 1e-06 1e-05])
-set(gca,'xtick',[1e-08 1e-06 1e-04 1e-02 1 1e2 1e4 1e6 1e8])
-set(gca,'XMinorGrid','off')
-set(gca,'XMinorTick','on')
-set(gca,'YMinorGrid','off')
-set(gca,'YMinorTick','on')
+siz = 20+14i;
 %
-print_jd(2,'fig_runaway_dtn','.',1)
+graph1D_jd(dtn_list,xRRv_0,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(dtn_list,xRRs_0,1,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
+graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],1,0,'','','',leg,xlim,ylim,'--','none','k',2,siz,gca);
+%
+set(gca,'ytick',[1.5:0.1:2]*1e-6)
+%
+figure(2),clf
+%
+graph1D_jd(dtn_list,xRRv_1,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(dtn_list,xRRs_1,1,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
+graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],1,0,'','','',leg,xlim,ylim,'--','none','k',2,siz,gca);
+%
+set(gca,'ytick',[1.5:0.1:2]*1e-6)
+%
+figure(3),clf
+%
+graph1D_jd(dtn_list,xRRv_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(dtn_list,xRRs_2,1,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
+graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],1,0,'','','',leg,xlim,ylim,'--','none','k',2,siz,gca);
+%
+set(gca,'ytick',[1.5:0.1:2]*1e-6)
+%
+print_jd(p_opt,'fig_runaway_dtn_0','.',1)
+print_jd(p_opt,'fig_runaway_dtn_1','.',2)
+print_jd(p_opt,'fig_runaway_dtn_2','.',3)
 %
 %************************************************************************************************************************************
 %

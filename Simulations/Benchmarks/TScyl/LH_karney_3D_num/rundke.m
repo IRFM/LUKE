@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -82,8 +83,11 @@ wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.coll_mode = 0;% Relativistic Maxwellian background
 %
-dkeparam.ludroptol = 1e-4;%droptolerance
+dkeparam.ludroptol = 1e-6;%Drop tolerance for the built-in MatLab partial LU decomposition (recipes: droptol = max(1/dtn/nr,param_inv(1)))
+dkeparam.mlmaxitinv = 20;%Maximum number of iterations for iterative built-in MatLab matrix inversion method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
+dkeparam.mlprecinv = 1e-6;%Accuracy for the MatLab build-in matrix inversion.
 %
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
@@ -97,7 +101,11 @@ Dr0_list = [0,0.001,0.01,0.1,0.3,1,3,10,30,100];
 dkeparam.invproc  = 1;%Numerical method (CGS, BICG, QMR)
 transpfaste.Dr0 = 0;
 %
-for inp = 1:length(np_list);
+nnp = length(np_list);
+memory_LUi_np = NaN(1,nnp);
+time_LUi_np = NaN(1,nnp);
+%
+for inp = 1:nnp,
     %
     dkeparam.np_S = np_list(inp) + 1;
     %
@@ -110,7 +118,11 @@ end
 %
 dkeparam.np_S = 101;
 %
-for inmhu = 1:length(nmhu_list);
+nnmhu = length(nmhu_list);
+memory_LUi_nmhu = NaN(1,nnmhu);
+time_LUi_nmhu = NaN(1,nnmhu);
+%
+for inmhu = 1:nnmhu,
     %
     dkeparam.nmhu_S = nmhu_list(inmhu) + 1;
     %
@@ -123,7 +135,11 @@ end
 %
 dkeparam.nmhu_S = 101;
 %
-for inr = 1:length(nr_list);
+nnr = length(nr_list);
+memory_LUi_nr = NaN(1,nnr);
+time_LUi_nr = NaN(1,nnr);
+%
+for inr = 1:nnr,
     %
     rho_S = linspace(0,1,nr_list(inr)+1);
     %
@@ -136,7 +152,11 @@ end
 %
 rho_S = 0:0.05:1;
 %
-for iDr0 = 1:length(Dr0_list),
+nDr0 = length(Dr0_list);
+memory_LUi_Dr0 = NaN(1,nDr0);
+time_LUi_Dr0 = NaN(1,nDr0);
+%
+for iDr0 = 1:nDr0,
     %
     transpfaste.Dr0 = Dr0_list(iDr0);
     %
@@ -156,7 +176,11 @@ disp('Incomplete LU calculation done')
 if exist('dmumpsmex'),
     dkeparam.invproc = -2;
     %
-    for inp = 1:length(np_list);
+    nnp = length(np_list);
+    memory_MX_np = NaN(1,nnp);
+    time_MX_np = NaN(1,nnp);
+    %
+    for inp = 1:nnp,
         %
         dkeparam.np_S = np_list(inp) + 1;
         %
@@ -169,7 +193,11 @@ if exist('dmumpsmex'),
     %
     dkeparam.np_S = 101;
     %
-    for inmhu = 1:length(nmhu_list);
+    nnmhu = length(nmhu_list);
+    memory_MX_nmhu = NaN(1,nnmhu);
+    time_MX_nmhu = NaN(1,nnmhu);
+    %
+    for inmhu = 1:nnmhu,
         %
         dkeparam.nmhu_S = nmhu_list(inmhu) + 1;
         %
@@ -182,7 +210,11 @@ if exist('dmumpsmex'),
     %
     dkeparam.nmhu_S = 101;
     %
-    for inr = 1:length(nr_list);
+    nnr = length(nr_list);
+    memory_MX_nr = NaN(1,nnr);
+    time_MX_nr = NaN(1,nnr);
+    %
+    for inr = 1:nnr,
         %
         rho_S = linspace(0,1,nr_list(inr)+1);
         %
@@ -195,7 +227,11 @@ if exist('dmumpsmex'),
     %
     rho_S = 0:0.05:1;
     %
-    for iDr0 = 1:length(Dr0_list),
+    nDr0 = length(Dr0_list);
+    memory_MX_Dr0 = NaN(1,nDr0);
+    time_MX_Dr0 = NaN(1,nDr0);
+    %
+    for iDr0 = 1:nDr0,
         %
         transpfaste.Dr0 = Dr0_list(iDr0);
         %
@@ -226,13 +262,15 @@ figure(1),clf
 %
 leg = {'MATLAB LUi','MUMPSMEX'};
 xlim = [0,300];
-ylim = [0,250];
+ylim = [0,50];
 xlab = 'n_p';
 ylab = 'FPE calculation time (s)';
 tit = '';
+siz = 20+14i;
 %
-graph1D_jd(np_list,time_LUi_np,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,time_MX_np,0,0,'','','',leg,xlim,ylim,'-','+','b',2,20,gca);
+graph1D_jd(np_list,time_LUi_np,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,time_MX_np,0,0,'','','',leg,xlim,ylim,'-','+','b',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 %set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
 set(gca,'xtick',[0:0.2:1]*xlim(2))
@@ -242,15 +280,12 @@ set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(2),clf
 %
-leg = {'MATLAB LUi','MUMPSMEX'};
 xlim = [0,300];
-ylim = [0,250];
+ylim = [0,200];
 xlab = 'n_{\xi}';
-ylab = 'FPE calculation time (s)';
-tit = '';
 %
-graph1D_jd(nmhu_list,time_LUi_nmhu,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(nmhu_list,time_MX_nmhu,0,0,'','','',leg,xlim,ylim,'-','+','b',2,20,gca);
+graph1D_jd(nmhu_list,time_LUi_nmhu,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(nmhu_list,time_MX_nmhu,0,0,'','','',leg,xlim,ylim,'-','+','b',2,siz,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 %set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
 set(gca,'xtick',[0:0.2:1]*xlim(2))
@@ -260,15 +295,12 @@ set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(3),clf
 %
-leg = {'MATLAB LUi','MUMPSMEX'};
 xlim = [0,30];
-ylim = [0,250];
+ylim = [0,50];
 xlab = 'n_r';
-ylab = 'FPE calculation time (s)';
-tit = '';
 %
-graph1D_jd(nr_list,time_LUi_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(nr_list,time_MX_nr,0,0,'','','',leg,xlim,ylim,'-','+','b',2,20,gca);
+graph1D_jd(nr_list,time_LUi_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(nr_list,time_MX_nr,0,0,'','','',leg,xlim,ylim,'-','+','b',2,siz,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 %set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
 set(gca,'xtick',[0:0.2:1]*xlim(2))
@@ -278,18 +310,15 @@ set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(4),clf
 %
-leg = {'MATLAB LUi','MUMPSMEX'};
 xlim = [0.001,100];
-ylim = [0,1500];
+ylim = 10.^[0,4];%[0,5000];%
 xlab = 'D_{\psi\psi} (m^{2}/s)';
-ylab = 'FPE calculation time (s)';
-tit = '';
 %
-graph1D_jd(Dr0_list(2:end),time_LUi_Dr0(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(Dr0_list(2:end),time_MX_Dr0(2:end),1,0,'','','',leg,xlim,ylim,'-','+','b',2,20,gca);
-graph1D_jd(xlim,[time_LUi_Dr0(1),time_LUi_Dr0(1)],1,0,'','','',leg,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(xlim,[time_MX_Dr0(1),time_MX_Dr0(1)],1,0,'','','',leg,xlim,ylim,'--','none','b',2,20,gca);
-set(gca,'ytick',[0:0.2:1]*ylim(2))
+graph1D_jd(Dr0_list(2:end),time_LUi_Dr0(2:end),1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),time_MX_Dr0(2:end),1,1,'','','',leg,xlim,ylim,'-','+','b',2,siz,gca);
+graph1D_jd(xlim,[time_LUi_Dr0(1),time_LUi_Dr0(1)],1,1,'','','',leg,xlim,ylim,'--','none','r',2,siz,gca);
+graph1D_jd(xlim,[time_MX_Dr0(1),time_MX_Dr0(1)],1,1,'','','',leg,xlim,ylim,'--','none','b',2,siz,gca);
+set(gca,'ytick',10.^[0:4]);%set(gca,'ytick',[0:0.2:1]*ylim(2))%
 set(gca,'xtick',[0.001,0.01,0.1,1,10,100])
 %set(gca,'xtick',[0:0.2:1]*xlim(2))
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -299,15 +328,13 @@ set(gca,'XMinorTick','on')
 %
 figure(5),clf
 %
-leg = {'MATLAB LUi','MUMPSMEX'};
 xlim = [0,300];
-ylim = [0,500];
+ylim = [0,1000];
 xlab = 'n_p';
 ylab = 'LU matrix size (MBytes)';
-tit = '';
 %
-graph1D_jd(np_list,memory_LUi_np,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,memory_MX_np,0,0,'','','',leg,xlim,ylim,'-','+','b',2,20,gca);
+graph1D_jd(np_list,memory_LUi_np,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,memory_MX_np,0,0,'','','',leg,xlim,ylim,'-','+','b',2,siz,gca);
 %set(gca,'ytick',[0:0.2:1]*ylim(2))
 %set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
 set(gca,'xtick',[0:0.2:1]*xlim(2))
@@ -317,15 +344,11 @@ set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(6),clf
 %
-leg = {'MATLAB LUi','MUMPSMEX'};
 xlim = [0,300];
-ylim = [0,500];
 xlab = 'n_{\xi}';
-ylab = 'LU matrix size (MBytes)';
-tit = '';
 %
-graph1D_jd(nmhu_list,memory_LUi_nmhu,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(nmhu_list,memory_MX_nmhu,0,0,'','','',leg,xlim,ylim,'-','+','b',2,20,gca);
+graph1D_jd(nmhu_list,memory_LUi_nmhu,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(nmhu_list,memory_MX_nmhu,0,0,'','','',leg,xlim,ylim,'-','+','b',2,siz,gca);
 %set(gca,'ytick',[0:0.2:1]*ylim(2))
 %set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
 set(gca,'xtick',[0:0.2:1]*xlim(2))
@@ -335,15 +358,11 @@ set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(7),clf
 %
-leg = {'MATLAB LUi','MUMPSMEX'};
 xlim = [0,30];
-ylim = [0,500];
 xlab = 'n_r';
-ylab = 'LU matrix size (MBytes)';
-tit = '';
 %
-graph1D_jd(nr_list,memory_LUi_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(nr_list,memory_MX_nr,0,0,'','','',leg,xlim,ylim,'-','+','b',2,20,gca);
+graph1D_jd(nr_list,memory_LUi_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(nr_list,memory_MX_nr,0,0,'','','',leg,xlim,ylim,'-','+','b',2,siz,gca);
 %set(gca,'ytick',[0:0.2:1]*ylim(2))
 %set(gca,'xtick',[1e-7,1e-6,1e-5,1e-4,1e-3,1e-2,1e-1])
 set(gca,'xtick',[0:0.2:1]*xlim(2))
@@ -353,18 +372,15 @@ set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(8),clf
 %
-leg = {'MATLAB LUi','MUMPSMEX'};
 xlim = [0.001,100];
-ylim = [0,1000];
+ylim = 10.^[0,5];%[0,1000];%
 xlab = 'D_{\psi\psi} (m^{2}/s)';
-ylab = 'LU matrix size (MBytes)';
-tit = '';
 %
-graph1D_jd(Dr0_list(2:end),memory_LUi_Dr0(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(Dr0_list(2:end),memory_MX_Dr0(2:end),1,0,'','','',leg,xlim,ylim,'-','+','b',2,20,gca);
-graph1D_jd(xlim,[memory_LUi_Dr0(1),memory_LUi_Dr0(1)],1,0,'','','',leg,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(xlim,[memory_MX_Dr0(1),memory_MX_Dr0(1)],1,0,'','','',leg,xlim,ylim,'--','none','b',2,20,gca);
-set(gca,'ytick',[0:0.2:1]*ylim(2))
+graph1D_jd(Dr0_list(2:end),memory_LUi_Dr0(2:end),1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),memory_MX_Dr0(2:end),1,1,'','','',leg,xlim,ylim,'-','+','b',2,siz,gca);
+graph1D_jd(xlim,[memory_LUi_Dr0(1),memory_LUi_Dr0(1)],1,1,'','','',leg,xlim,ylim,'--','none','r',2,siz,gca);
+graph1D_jd(xlim,[memory_MX_Dr0(1),memory_MX_Dr0(1)],1,1,'','','',leg,xlim,ylim,'--','none','b',2,siz,gca);
+set(gca,'ytick',10.^[0:5]);%set(gca,'ytick',[0:0.2:1]*ylim(2));%
 set(gca,'xtick',[0.001,0.01,0.1,1,10,100])
 %set(gca,'xtick',[0:0.2:1]*xlim(2))
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -373,24 +389,22 @@ set(gca,'XMinorTick','on')
 %
 figure(9),clf
 %
-leg = {'MATLAB LUi','MUMPSMEX'};
-xlim = [0.1,2000];
-ylim = [0.05,5];
+xlim = 10.^[-2,4];%[0.1,2000];%
+ylim = 10.^[-2,1];%[0.05,5];%
 xlab = 'FPE time (s)';
 ylab = 'FPE time/LU size  (s/MBytes)';
-tit = '';
 %
-graph1D_jd(time_LUi_np,ratio_LUi_np,1,1,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(time_MX_np,ratio_MX_np,1,1,'','','',leg,xlim,ylim,'none','o','r',2,20,gca);
-graph1D_jd(time_LUi_nmhu,ratio_LUi_nmhu,1,1,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
-graph1D_jd(time_LUi_nr,ratio_LUi_nr,1,1,'','','',NaN,xlim,ylim,'none','+','g',2,20,gca);
-graph1D_jd(time_LUi_Dr0,ratio_LUi_Dr0,1,1,'','','',NaN,xlim,ylim,'none','+','m',2,20,gca);
-graph1D_jd(time_MX_nmhu,ratio_MX_nmhu,1,1,'','','',NaN,xlim,ylim,'none','o','b',2,20,gca);
-graph1D_jd(time_MX_nr,ratio_MX_nr,1,1,'','','',NaN,xlim,ylim,'none','o','g',2,20,gca);
-graph1D_jd(time_MX_Dr0,ratio_MX_Dr0,1,1,'','','',NaN,xlim,ylim,'none','o','m',2,20,gca);
+graph1D_jd(time_LUi_np,ratio_LUi_np,1,1,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(time_MX_np,ratio_MX_np,1,1,'','','',leg,xlim,ylim,'none','o','r',2,siz,gca);
+graph1D_jd(time_LUi_nmhu,ratio_LUi_nmhu,1,1,'','','',NaN,xlim,ylim,'none','+','b',2,siz,gca);
+graph1D_jd(time_LUi_nr,ratio_LUi_nr,1,1,'','','',NaN,xlim,ylim,'none','+','g',2,siz,gca);
+graph1D_jd(time_LUi_Dr0,ratio_LUi_Dr0,1,1,'','','',NaN,xlim,ylim,'none','+','m',2,siz,gca);
+graph1D_jd(time_MX_nmhu,ratio_MX_nmhu,1,1,'','','',NaN,xlim,ylim,'none','o','b',2,siz,gca);
+graph1D_jd(time_MX_nr,ratio_MX_nr,1,1,'','','',NaN,xlim,ylim,'none','o','g',2,siz,gca);
+graph1D_jd(time_MX_Dr0,ratio_MX_Dr0,1,1,'','','',NaN,xlim,ylim,'none','o','m',2,siz,gca);
 %set(gca,'ytick',[0:0.2:1]*ylim(2))
-set(gca,'ytick',[1e-1,1])
-set(gca,'xtick',[1e-1,1,10,100,1000])
+set(gca,'ytick',10.^[-2:1]);%set(gca,'ytick',[1e-1,1]);%
+set(gca,'xtick',10.^[-2:4]);%set(gca,'xtick',[1e-1,1,10,100,1000]);%
 %set(gca,'xtick',[0:0.2:1]*xlim(2))
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
 set(gca,'XMinorGrid','off')

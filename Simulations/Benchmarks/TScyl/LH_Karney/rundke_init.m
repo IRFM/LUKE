@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -94,7 +95,17 @@ betath_list = [logspace(-3,-2,7),logspace(-1.85,-0.35,11)];betath_list = betath_
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
-for ibetath = 1:length(betath_list),
+nbetath = length(betath_list);
+%
+j0_0 = NaN(1,nbetath);
+jend_0 = NaN(1,nbetath);
+nit_0 = NaN(1,nbetath);
+%
+j0_1 = NaN(1,nbetath);
+jend_1 = NaN(1,nbetath);
+nit_1 = NaN(1,nbetath);
+%
+for ibetath = 1:nbetath,
     %
     betath = betath_list(ibetath);
     %
@@ -103,123 +114,44 @@ for ibetath = 1:length(betath_list),
     %
     waves{1} = make_idealLHwave_jd(equil,wavestruct);
     %
-    dkeparam.coll_mode = 0;% Relativistic Maxwellian background
     dkeparam.initguess_f =  0;
-    [Znorm,Zcurr_M0,ZP0_M0,dke_out_M0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    dkeparam.initguess_f =  1; 
-    [Znorm,Zcurr_NM0,ZP0_NM0,dke_out_NM0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    dkeparam.coll_mode = 1;% High-velocity limit
-    dkeparam.initguess_f =  0;
-    [Znorm,Zcurr_M1,ZP0_M1,dke_out_M1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    dkeparam.initguess_f =  1;
-    [Znorm,Zcurr_NM1,ZP0_NM1,dke_out_NM1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    j0_0(ibetath) = dke_out.curr0{end}(1);
+    jend_0(ibetath) = dke_out.curr0{end}(end);
+    nit_0(ibetath) = length(dke_out.curr0{end}) - 1;
     %
-    dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
-    dkeparam.initguess_f =  0;
-    [Znorm,Zcurr_M2,ZP0_M2,dke_out_M2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     dkeparam.initguess_f =  1;
     if ibetath == 14,
         dkedisplay.display_init = 1;%Display the initial distribution function only
     end
-    [Znorm,Zcurr_NM2,ZP0_NM2,dke_out_NM2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     dkedisplay.display_init = 0;
     %
-    j_M0(ibetath) = Zcurr_M0.x_0;
-    j_M1(ibetath) = Zcurr_M1.x_0;
-    j_M2(ibetath) = Zcurr_M2.x_0;
+    j0_1(ibetath) = dke_out.curr0{end}(1);
+    jend_1(ibetath) = dke_out.curr0{end}(end);
+    nit_1(ibetath) = length(dke_out.curr0{end}) - 1;
     %
-    P_M0(ibetath) = ZP0_M0.x_rf_fsav;
-    P_M1(ibetath) = ZP0_M1.x_rf_fsav;
-    P_M2(ibetath) = ZP0_M2.x_rf_fsav;
-    %
-    cur_M0(ibetath,1) = dke_out_M0.curr0(1);
-    cur_M0(ibetath,2) = dke_out_M0.curr0(find(dke_out_M0.curr0~=0,1,'last'));    
-    cur_M0(ibetath,3) = find(dke_out_M0.curr0~=0,1,'last');    
-    %
-    cur_M1(ibetath,1) = dke_out_M1.curr0(1);
-    cur_M1(ibetath,2) = dke_out_M1.curr0(find(dke_out_M1.curr0~=0,1,'last'));    
-    cur_M1(ibetath,3) = find(dke_out_M1.curr0~=0,1,'last');    
-    %
-    cur_M2(ibetath,1) = dke_out_M2.curr0(1);
-    cur_M2(ibetath,2) = dke_out_M2.curr0(find(dke_out_M2.curr0~=0,1,'last'));    
-    cur_M2(ibetath,3) = find(dke_out_M2.curr0~=0,1,'last');    
-%
-    j_NM0(ibetath) = Zcurr_NM0.x_0;
-    j_NM1(ibetath) = Zcurr_NM1.x_0;
-    j_NM2(ibetath) = Zcurr_NM2.x_0;
-    %
-    P_NM0(ibetath) = ZP0_NM0.x_rf_fsav;
-    P_NM1(ibetath) = ZP0_NM1.x_rf_fsav;
-    P_NM2(ibetath) = ZP0_NM2.x_rf_fsav;
-    %
-    cur_NM0(ibetath,1) = dke_out_NM0.curr0(1);
-    cur_NM0(ibetath,2) = dke_out_NM0.curr0(find(dke_out_NM0.curr0~=0,1,'last'));    
-    cur_NM0(ibetath,3) = find(dke_out_NM0.curr0~=0,1,'last');    
-    %
-    cur_NM1(ibetath,1) = dke_out_NM1.curr0(1);
-    cur_NM1(ibetath,2) = dke_out_NM1.curr0(find(dke_out_NM1.curr0~=0,1,'last'));    
-    cur_NM1(ibetath,3) = find(dke_out_NM1.curr0~=0,1,'last');    
-    %
-    cur_NM2(ibetath,1) = dke_out_NM2.curr0(1);
-    cur_NM2(ibetath,2) = dke_out_NM2.curr0(find(dke_out_NM2.curr0~=0,1,'last'));    
-    cur_NM2(ibetath,3) = find(dke_out_NM2.curr0~=0,1,'last');   
 end
 %
-eta_M0 = j_M0./P_M0;
-eta_M1 = j_M1./P_M1;
-eta_M2 = j_M2./P_M2;
-%
-eta_NM0 = j_NM0./P_NM0;
-eta_NM1 = j_NM1./P_NM1;
-eta_NM2 = j_NM2./P_NM2;
-%
-j_0_nr_Karney = 0.05759;
-P_0_nr_Karney = 0.004012;
-eta_0_nr_Karney = 14.35;
-%
 j_2_nr_Karney = 0.07092;
-P_2_nr_Karney = 0.004294;
-eta_2_nr_Karney = 16.52;
 %
 %************************************************************************************************************************************
 %
-leg0 = {'Linearized (f_{M0})','High v limit (f_{M0})','Maxwellian (f_{M0})','Linearized (f_{NM0})','High v limit (f_{NM0})','Maxwellian (f_{NM0})'};
-leg1 = {'Linearized (f_{NM}(end))','High v limit (f_{NM}(end))','Maxwellian (f_{NM}(end))','LH model (f_{NM}(1))'};
+leg = {'No guess (initial)','No guess (final)','LH guess (initial)','LH guess (final)'};
 xlim = 10.^[-3,0];
 ylim = [0,0.1];
 xlab = '\beta_T';
 ylab = 'j';
-ylab1 = 'Number of iterations';
 tit = '';
+siz = 20+14i;
 %
-figure('Name','Final LH current solutions');clf
+figure('Name','LH current');clf
 %
-graph1D_jd(betath_list,j_M2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(betath_list,j_M1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(betath_list,j_M0,1,0,'','','',NaN,xlim,ylim,'-','none','g',2,20,gca);
-%
-graph1D_jd(betath_list,j_NM2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','*','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(betath_list,j_NM1,1,0,'','','',NaN,xlim,ylim,'none','*','b',2,20,gca);
-graph1D_jd(betath_list,j_NM0,1,0,'','','',leg0,xlim,ylim,'none','*','g',2,20,gca);
-%
-graph1D_jd(xlim,[j_2_nr_Karney,j_2_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(xlim,[j_0_nr_Karney,j_0_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
-set(gca,'ytick',[0:0.2:1]*ylim(2))
-set(gca,'xtick',[1e-05 0.0001 0.001 0.01 0.1 1])
-set(gca,'XMinorGrid','off')
-set(gca,'XMinorTick','on')
-%
-figure('Name','Initial & final LH current solutions');clf
-%
-graph1D_jd(betath_list,cur_NM2(:,2),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(betath_list,cur_NM1(:,2),1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(betath_list,cur_NM0(:,2),1,0,'','','',NaN,xlim,ylim,'-','none','g',2,20,gca);
-%
-graph1D_jd(betath_list,cur_NM0(:,1),1,0,'','','',leg1,xlim,ylim,'none','*','r',2,20,gca);
-%
-graph1D_jd(xlim,[j_2_nr_Karney,j_2_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(xlim,[j_0_nr_Karney,j_0_nr_Karney],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,20,gca);
+graph1D_jd(betath_list,j0_0,1,0,xlab,ylab,tit,NaN,xlim,ylim,'--','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(betath_list,jend_0,1,0,'','','',NaN,xlim,ylim,'-','none','r',2,siz,gca);
+graph1D_jd(betath_list,j0_1,1,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
+graph1D_jd(betath_list,jend_1,1,0,'','','',leg,xlim,ylim,'-','none','b',2,siz,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[1e-05 0.0001 0.001 0.01 0.1 1])
 set(gca,'XMinorGrid','off')
@@ -227,16 +159,21 @@ set(gca,'XMinorTick','on')
 %
 figure('Name','Convergence rate');clf
 %
-graph1D_jd(betath_list,cur_M2(:,3),1,0,xlab,ylab1,tit,NaN,xlim,[0,20],'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(betath_list,cur_M1(:,3),1,0,'','','',NaN,xlim,[0,20],'-','none','b',2,20,gca);
-graph1D_jd(betath_list,cur_M0(:,3),1,0,'','','',NaN,xlim,[0,20],'-','none','g',2,20,gca);
+leg = {'No guess','LH guess'};
+ylab = 'Number of iterations';
+ylim = [0,50];
 %
-graph1D_jd(betath_list,cur_NM2(:,3),1,0,xlab,ylab1,tit,NaN,xlim,[0,20],'none','*','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(betath_list,cur_NM1(:,3),1,0,'','','',NaN,xlim,[0,20],'none','*','b',2,20,gca);
-graph1D_jd(betath_list,cur_NM0(:,3),1,0,'','','',leg1,xlim,[0,20],'none','*','g',2,20,gca);
+graph1D_jd(betath_list,nit_0,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(betath_list,nit_1,1,0,'','','',leg,xlim,ylim,'-','+','b',2,20,gca);
 %
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
+%
+print_jd(p_opt,'fig_f2D_init','.',1)
+print_jd(p_opt,'fig_f1D_init','.',2)
+print_jd(p_opt,'fig_vp_init','.',3)
+print_jd(p_opt,'fig_j_init','.',4)
+print_jd(p_opt,'fig_nit_init','.',5)
 %
 %************************************************************************************************************************************
 %

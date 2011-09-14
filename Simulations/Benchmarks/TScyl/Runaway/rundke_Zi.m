@@ -8,14 +8,15 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
 id_simul = 'Runaway_Zi_nobounce';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.5];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -54,6 +55,8 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = 10000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.dtn = 1000;%10 time steps required for accurate runaway solution - see rundke_dtn
 %
 dkeparam.coll_mode = 0;%For comparison with theoretical results
 betath = 0.001;%validated for NR limit
@@ -137,14 +140,17 @@ ylim = 10.^[-8,-2];
 xlab = 'Z_i';
 ylab = '\Gamma_R';
 tit = '';
-graph1D_jd(Zi_list,RR,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(Zi_kulsrud,RR_kulsrud,0,1,'','','',leg,xlim,ylim,'none','+','',2,20,gca);
+siz = 20+14i;
+%
+graph1D_jd(Zi_list,RR,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(Zi_kulsrud,RR_kulsrud,0,1,'','','',leg,xlim,ylim,'none','+','',2,siz,gca);
+%
 set(gca,'ytick',[1e-8 1e-7 1e-6 1e-5 1e-4 1e-3 1e-2])
 set(gca,'xtick',[0:2:20])
 set(gca,'YMinorGrid','off')
 set(gca,'YMinorTick','on')
 %
-print_jd(2,'fig_runaway_Zi','.',1)
+print_jd(p_opt,'fig_runaway_Zi','.',1)
 %
 %************************************************************************************************************************************
 %

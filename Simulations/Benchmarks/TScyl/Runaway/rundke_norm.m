@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -59,12 +60,11 @@ equil.pTe = betath^2*mc2*ones(size(equil.pTe));
 equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-dkeparam.nit_f = 1;%Enforcing a single iteration
+dkeparam.timevol = 1;%to calculate moments at all internal times
 %
-dtn = 1000;
-tn_max = 200000;
-%
-nit_f = round(tn_max/dtn);
+dtn = 100;% time step
+nit = 100;% number of iterations
+tn_max = dtn*nit;% total time
 %
 epsi = 0.04;%corresponds to pc/pT = 5
 %
@@ -74,41 +74,43 @@ RR_kulsrud = 1.914*1e-6;%Kulsrud (PRL, 31,11, (1972) 690)
 %
 % Different conservation schemes
 %
-XXf0_0 = [];
-XXf0_1 = [];
-XXf0_2 = [];
-%
 dkeparam.dtn = dtn; 
+dkeparam.tn = tn_max; 
 %
-for it = 1:nit_f,
-    %
-    dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
-    dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
-    %
-	[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_0,[]);
-    %
-    xRRv_0(it) = (dke_out.normf0(1) - dke_out.normf0(2))/dtn;
-    xRRs_0(it) = dke_out.XxRR_fsav(end,:);
-    XXf0_0 = dke_out.XXf0;
-    %
-    dkeparam.boundary_mode_f = 1;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
-    dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
-    %
-	[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_1,[]);
-    %
-    xRRv_1(it) = (dke_out.normf0(1) - dke_out.normf0(2))/dtn;
-    xRRs_1(it) = dke_out.XxRR_fsav(end,:);
-    XXf0_1 = dke_out.XXf0;
-    %
-    dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
-    dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
-    %
-	[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_2,[]);
-    %
-    xRRv_2(it) = (dke_out.normf0(1) - dke_out.normf0(2))/dtn;
-    xRRs_2(it) = dke_out.XxRR_fsav(end,:);
-    XXf0_2 = dke_out.XXf0;
-    %
+dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
+dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
+[dummy,dummy,dummy,dke_out_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+%
+xRRv_0 = NaN(1,nit);
+xRRs_0 = NaN(1,nit);
+for it=1:nit,
+    xRRv_0(it) = (dke_out_0.normf0{it}(1) - dke_out_0.normf0{it}(end))/dtn;
+    xRRs_0(it) = dke_out_0.XxRR_fsav{it}(end,:);
+end
+%
+dkeparam.boundary_mode_f = 1;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
+dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
+[dummy,dummy,dummy,dke_out_1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+%
+xRRv_1 = NaN(1,nit);
+xRRs_1 = NaN(1,nit);
+for it=1:nit,
+    xRRv_1(it) = (dke_out_1.normf0{it}(1) - dke_out_1.normf0{it}(end))/dtn;
+    xRRs_1(it) = dke_out_1.XxRR_fsav{it}(end,:);
+end
+%
+dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
+dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
+[dummy,dummy,dummy,dke_out_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+%
+xRRv_2 = NaN(1,nit);
+xRRs_2 = NaN(1,nit);
+for it=1:nit,
+    xRRv_2(it) = (dke_out_2.normf0{it}(1) - dke_out_2.normf0{it}(end))/dtn;
+    xRRs_2(it) = dke_out_2.XxRR_fsav{it}(end,:);
 end
 %
 %************************************************************************************************************************************
@@ -116,26 +118,22 @@ end
 figure(1),clf
 %
 leg = {'Volumic losses','Boundary losses','Runaway losses'};
-xlim = [dtn,tn_max];
-ylim = 10.^[-7,-5];
-xlab = '\Deltat';
+xlim = [0,tn_max];
+ylim = [1.5e-6,2e-6];
+xlab = 't/\tau_c';
 ylab = '\Gamma_R';
 tit = '';
-graph1D_jd(dtn:dtn:tn_max,xRRv_0,1,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(dtn:dtn:tn_max,xRRs_0,1,1,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],1,1,'','','',leg,xlim,ylim,'--','none','k',2,20,gca);
-graph1D_jd(dtn:dtn:tn_max,xRRv_1,1,1,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(dtn:dtn:tn_max,xRRs_1,1,1,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
-graph1D_jd(dtn:dtn:tn_max,xRRv_2,1,1,'','','',NaN,xlim,ylim,'-','none','g',2,20,gca);
-graph1D_jd(dtn:dtn:tn_max,xRRs_2,1,1,'','','',NaN,xlim,ylim,'--','none','g',2,20,gca);
-set(gca,'ytick',[1e-07 1e-06 1e-05])
-%set(gca,'xtick',[1e-08 1e-06 1e-04 1e-02 1 1e2 1e4 1e6 1e8])
-set(gca,'XMinorGrid','off')
-set(gca,'XMinorTick','on')
-set(gca,'YMinorGrid','off')
-set(gca,'YMinorTick','on')
+siz = 20+14i;
 %
-print_jd(2,'fig_runaway_norm','.',1)
+graph1D_jd(dtn:dtn:tn_max,xRRv_0,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(dtn:dtn:tn_max,xRRs_0,0,0,'','','',NaN,xlim,ylim,'--','none','r',2,siz,gca);
+graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],0,0,'','','',leg,xlim,ylim,'--','none','k',2,siz,gca);
+graph1D_jd(dtn:dtn:tn_max,xRRv_1,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
+graph1D_jd(dtn:dtn:tn_max,xRRs_1,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
+graph1D_jd(dtn:dtn:tn_max,xRRv_2,0,0,'','','',NaN,xlim,ylim,'-','none','g',2,siz,gca);
+graph1D_jd(dtn:dtn:tn_max,xRRs_2,0,0,'','','',NaN,xlim,ylim,'--','none','g',2,siz,gca);
+%
+print_jd(p_opt,'fig_runaway_norm','.',1)
 %
 %************************************************************************************************************************************
 %

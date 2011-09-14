@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files in $HOME/Database directory if necessary *****************************
 %
@@ -46,18 +47,19 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-if exist('dmumpsmex'),
-	invproc = -2;
+if exist('dmumpsmex','file'),
+	invproc = -2;% MUMPSMEX
 else
 	invproc = 1;
 end
 %
 boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
-prec0_f = -1;
 %
-tnmax = 100000;%number of iterations
-dtn_list = [500,5000,50000];
+tnmax = 100000;%asymptotic time
+dtn_list = [500,5000,50000];%time steps
+%
+pzTi = equil.pzTi;
 %
 % Case Ti=Te, uniform grid
 %
@@ -68,36 +70,51 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 %
 dkeparam.boundary_mode_f = boundary_mode_f;
 dkeparam.coll_mode = coll_mode;
-dkeparam.prec0_f = prec0_f;
 dkeparam.invproc = invproc;
 %
-for idtn = 1:length(dtn_list);
+dkeparam.prec0_f = 0;%to reach end of Legendre iterations
+dkeparam.tn = tnmax;
+%
+ndtn = length(dtn_list);
+%
+normf0_u_1 = cell(1,ndtn);
+normf0_u_2 = cell(1,ndtn);
+normf0_nu_1 = cell(1,ndtn);
+normf0_nu_2 = cell(1,ndtn);
+%
+residue_u_1 = cell(1,ndtn);
+residue_u_2 = cell(1,ndtn);
+residue_nu_1 = cell(1,ndtn);
+residue_nu_2 = cell(1,ndtn);
+%
+for idtn = 1:ndtn,
+    %
     dtn = dtn_list(idtn);
-    nit_f = round(tnmax/dtn);
-    %
     dkeparam.dtn = dtn;
-    dkeparam.nit_f = nit_f;
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    normf0_u_1{idtn} = dke_out.normf0;
-    residue_final_u_1(idtn) = dke_out.residu_f(end);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    for itn = 1:length(dke_out.residu_f),
+        normf0_u_1{idtn}(itn) = dke_out.normf0{itn}(end);
+        residue_u_1{idtn}(itn) = dke_out.residu_f{itn}(end);
+    end
 end
 %
 % Case Ti=Te/2, uniform grid
 %
-pzTi = equil.pzTi;
 equil.pzTi = pzTi/2;
 %
-for idtn = 1:length(dtn_list);
+for idtn = 1:ndtn;
+    %
     dtn = dtn_list(idtn);
-    nit_f = round(tnmax/dtn);
-    %
     dkeparam.dtn = dtn;
-    dkeparam.nit_f = nit_f;
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    normf0_u_2{idtn} = dke_out.normf0;
-    residue_final_u_2(idtn) = dke_out.residu_f(end);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    for itn = 1:length(dke_out.residu_f),
+        normf0_u_2{idtn}(itn) = dke_out.normf0{itn}(end);
+        residue_u_2{idtn}(itn) = dke_out.residu_f{itn}(end);
+    end
 end
 %
 % Case Ti=Te, non-uniform grid
@@ -109,98 +126,155 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 %
 dkeparam.boundary_mode_f = boundary_mode_f;
 dkeparam.coll_mode = coll_mode;
-dkeparam.prec0_f = prec0_f;
 dkeparam.invproc = invproc;
+%
+dkeparam.prec0_f = 0;%to reach end of Legendre iterations
+dkeparam.tn = tnmax;
 %
 equil.pzTi = pzTi;
 %
-for idtn = 1:length(dtn_list);
+for idtn = 1:ndtn;
+    %
     dtn = dtn_list(idtn);
-    nit_f = round(tnmax/dtn);
-    %
     dkeparam.dtn = dtn;
-    dkeparam.nit_f = nit_f;
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    normf0_nu_1{idtn} = dke_out.normf0;
-    residue_final_nu_1(idtn) = dke_out.residu_f(end);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    for itn = 1:length(dke_out.residu_f),
+        normf0_nu_1{idtn}(itn) = dke_out.normf0{itn}(end);
+        residue_nu_1{idtn}(itn) = dke_out.residu_f{itn}(end);
+    end
 end
 %
-% Case Ti=Te/2, uniform grid
+% Case Ti=Te/2, non-uniform grid
 %
 equil.pzTi = pzTi/2;
 %
-for idtn = 1:length(dtn_list);
+for idtn = 1:ndtn;
+    %
     dtn = dtn_list(idtn);
-    nit_f = round(tnmax/dtn);
-    %
     dkeparam.dtn = dtn;
-    dkeparam.nit_f = nit_f;
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    normf0_nu_2{idtn} = dke_out.normf0;
-    residue_final_nu_2(idtn) = dke_out.residu_f(end);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    for itn = 1:length(dke_out.residu_f),
+        normf0_nu_2{idtn}(itn) = dke_out.normf0{itn}(end);
+        residue_nu_2{idtn}(itn) = dke_out.residu_f{itn}(end);
+    end
 end
+%
+% density conservation
 %
 figure(1),clf
 %
-leg = {'\Deltat/\tau_c = 500','\Deltat/\tau_c = 5000','\Deltat/\tau_c = 50000'};
+leg = {'\Deltat/\tau_c = 500','\Deltat/\tau_c = 5000','\Deltat/\tau_c = 50000','Location','SouthWest'};
 xlim = [0,tnmax];
 ylim = [-4,4]*1e-8;
 xlab = 't/\tau_c';
 ylab = '\Deltan/n_0';
 tit = '';
-colors = {'r','b','g','m'};
-graph1D_jd(0:dtn_list(1):tnmax,normf0_u_1{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
-for idtn = 2:length(dtn_list);
-    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_u_1{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,20,gca);
+colors = {'r','b','g'};
+siz = 20+14i;
+%
+for idtn = 1:ndtn-1;
+    graph1D_jd(0:dtn_list(idtn):tnmax,[0,normf0_u_1{idtn}-1],0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,siz,gca);
 end
-legend(leg)
+graph1D_jd(0:dtn_list(end):tnmax,[0,normf0_u_1{end}-1],0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none',colors{end},2,siz,gca,0.9,0.7,0.7);
+%
 set(gca,'xtick',[0:0.2:1]*tnmax)
 set(gca,'ytick',[-4:2:4]*1e-8)
 %
 figure(2),clf
 %
 ylim = [-4,4]*1e-3;
-graph1D_jd(0:dtn_list(1):tnmax,normf0_u_2{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
-for idtn = 2:length(dtn_list);
-    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_u_2{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,20,gca);
+%
+for idtn = 1:ndtn-1;
+    graph1D_jd(0:dtn_list(idtn):tnmax,[0,normf0_u_2{idtn}-1],0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,siz,gca);
 end
-legend(leg)
+graph1D_jd(0:dtn_list(end):tnmax,[0,normf0_u_2{end}-1],0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none',colors{end},2,siz,gca,0.9,0.7,0.7);
+%
 set(gca,'xtick',[0:0.2:1]*tnmax)
 set(gca,'ytick',[-4:2:4]*1e-3)
 %
 figure(3),clf
 %
-ylim = [-5,5]*1e-8;
-graph1D_jd(0:dtn_list(1):tnmax,normf0_nu_1{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
-for idtn = 2:length(dtn_list);
-    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_nu_1{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,20,gca);
+ylim = [-4,4]*1e-8;
+%
+for idtn = 1:ndtn-1;
+    graph1D_jd(0:dtn_list(idtn):tnmax,[0,normf0_nu_1{idtn}-1],0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,siz,gca);
 end
-legend(leg)
+graph1D_jd(0:dtn_list(end):tnmax,[0,normf0_nu_1{end}-1],0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none',colors{end},2,siz,gca,0.9,0.7,0.7);
+%
 set(gca,'xtick',[0:0.2:1]*tnmax)
 set(gca,'ytick',[-4:2:4]*1e-8)
 %
 figure(4),clf
 %
 ylim = [-4,4]*1e-3;
-graph1D_jd(0:dtn_list(1):tnmax,normf0_nu_2{1}-1,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none',colors{1},2,20,gca,0.9,0.7,0.7);
-for idtn = 2:length(dtn_list);
-    graph1D_jd(0:dtn_list(idtn):tnmax,normf0_nu_2{idtn}-1,0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,20,gca);
+%
+for idtn = 1:ndtn-1;
+    graph1D_jd(0:dtn_list(idtn):tnmax,[0,normf0_nu_2{idtn}-1],0,0,'','','',NaN,xlim,ylim,'-','none',colors{idtn},2,siz,gca);
 end
-legend(leg)
+graph1D_jd(0:dtn_list(end):tnmax,[0,normf0_nu_2{end}-1],0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none',colors{end},2,siz,gca,0.9,0.7,0.7);
+%
 set(gca,'xtick',[0:0.2:1]*tnmax)
 set(gca,'ytick',[-4:2:4]*1e-3)
 %
-residue_final_u_1
-residue_final_u_2
-residue_final_nu_1
-residue_final_nu_2
+% residue
 %
-print_jd(2,'fig_thermal_dtn_TiTe_u','.',1)
-print_jd(2,'fig_thermal_dtn_TiTe2_u','.',2)
-print_jd(2,'fig_thermal_dtn_TiTe_nu','.',3)
-print_jd(2,'fig_thermal_dtn_TiTe2_nu','.',4)
+figure(5),clf
+%
+ylim = [1e-24,2e-21];
+ytick = 10.^[-24:-21];
+ylab = 'Legendre convergence parameter';
+%
+for idtn = 1:ndtn-1;
+    graph1D_jd(dtn_list(idtn):dtn_list(idtn):tnmax,residue_u_1{idtn},0,1,'','','',NaN,xlim,ylim,'-','+',colors{idtn},2,siz,gca);
+end
+graph1D_jd(dtn_list(end):dtn_list(end):tnmax,residue_u_1{end},0,1,xlab,ylab,tit,leg,xlim,ylim,'-','+',colors{end},2,siz,gca,0.9,0.7,0.7);
+%
+set(gca,'xtick',[0:0.2:1]*tnmax)
+set(gca,'ytick',ytick)
+%
+figure(6),clf
+%
+for idtn = 1:ndtn-1;
+    graph1D_jd(dtn_list(idtn):dtn_list(idtn):tnmax,residue_u_2{idtn},0,1,'','','',NaN,xlim,ylim,'-','+',colors{idtn},2,siz,gca);
+end
+graph1D_jd(dtn_list(end):dtn_list(end):tnmax,residue_u_2{end},0,1,xlab,ylab,tit,leg,xlim,ylim,'-','+',colors{end},2,siz,gca,0.9,0.7,0.7);
+%
+set(gca,'xtick',[0:0.2:1]*tnmax)
+set(gca,'ytick',ytick)
+%
+figure(7),clf
+%
+for idtn = 1:ndtn-1;
+    graph1D_jd(dtn_list(idtn):dtn_list(idtn):tnmax,residue_nu_1{idtn},0,1,'','','',NaN,xlim,ylim,'-','+',colors{idtn},2,siz,gca);
+end
+graph1D_jd(dtn_list(end):dtn_list(end):tnmax,residue_nu_1{end},0,1,xlab,ylab,tit,leg,xlim,ylim,'-','+',colors{end},2,siz,gca,0.9,0.7,0.7);
+%
+set(gca,'xtick',[0:0.2:1]*tnmax)
+set(gca,'ytick',ytick)
+%
+figure(8),clf
+%
+for idtn = 1:ndtn-1;
+    graph1D_jd(dtn_list(idtn):dtn_list(idtn):tnmax,residue_nu_2{idtn},0,1,'','','',NaN,xlim,ylim,'-','+',colors{idtn},2,siz,gca);
+end
+graph1D_jd(dtn_list(end):dtn_list(end):tnmax,residue_nu_2{end},0,1,xlab,ylab,tit,leg,xlim,ylim,'-','+',colors{end},2,siz,gca,0.9,0.7,0.7);
+%
+set(gca,'xtick',[0:0.2:1]*tnmax)
+set(gca,'ytick',ytick)
+%
+print_jd(p_opt,'fig_thermal_dtn_TiTe_u','.',1)
+print_jd(p_opt,'fig_thermal_dtn_TiTe2_u','.',2)
+print_jd(p_opt,'fig_thermal_dtn_TiTe_nu','.',3)
+print_jd(p_opt,'fig_thermal_dtn_TiTe2_nu','.',4)
+%
+print_jd(p_opt,'fig_thermal_dtn_TiTe_u_res','.',5)
+print_jd(p_opt,'fig_thermal_dtn_TiTe2_u_res','.',6)
+print_jd(p_opt,'fig_thermal_dtn_TiTe_nu_res','.',7)
+print_jd(p_opt,'fig_thermal_dtn_TiTe2_nu_res','.',8)
 %	    
 %************************************************************************************************************************************
 %

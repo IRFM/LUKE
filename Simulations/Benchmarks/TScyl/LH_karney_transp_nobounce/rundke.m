@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 opt_proc = 0;%test for numerical performance test with number of processors 
 %
 % 
@@ -87,6 +88,7 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
 %betath = 0.001;
 %
@@ -103,22 +105,36 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 Dr0_list = [0,0.001,0.01,0.1,0.3,1,3,10,30,100];
 Dr0_mask = [1,4,6,8];
 %
-for iDr0 = 1:length(Dr0_list),
+nr = length(rho_S)-1;
+nDr0 = length(Dr0_list);
+%
+j = NaN(nr,nDr0);
+P = NaN(nr,nDr0);
+%
+tCPU = NaN(1,nDr0);
+memory = NaN(1,nDr0);
+tDKE = NaN(1,nDr0);
+%
+Itot = NaN(1,nDr0);
+Ptot_2piRp = NaN(1,nDr0);
+%
+for iDr0 = 1:nDr0,
     %
     transpfaste.Dr0 = Dr0_list(iDr0);
     %
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    j(:,iDr0) = Zcurr.x_0;
-    %
-    P(:,iDr0) = ZP0.x_rf_fsav;
-    %
-    tCPU(iDr0) = dke_out.time_out;
-    memory(iDr0) = dke_out.memoryLU_f_out;
-    tDKE(iDr0) = dke_out.time_DKE;
-    %
-    Itot(iDr0) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
-    Ptot_2piRp(iDr0) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
+    if max(dke_out.residu_f{end}(:,end)) <= dkeparam.prec0_f,
+        j(:,iDr0) = Zcurr.x_0;
+        P(:,iDr0) = ZP0.x_rf_fsav;
+        %
+        tCPU(iDr0) = dke_out.time_out;
+        memory(iDr0) = dke_out.memoryLU_f_out;
+        tDKE(iDr0) = dke_out.time_DKE;
+        %
+        Itot(iDr0) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
+        Ptot_2piRp(iDr0) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
+    end
     %
 end
 %
@@ -127,7 +143,7 @@ Eta = equilDKE.xne(1)*Itot./Ptot_2piRp/(2*pi)/1e19;
 %
 % Nprocessor scan for Dpsipsi = 10 m2/s (1-> 10) (on the cluster only)
 %
-if opt_proc > 0 & strcmp(computer,'GLNXA64'),
+if opt_proc > 0 && strcmp(computer,'GLNXA64'),
     %
     transpfaste.Dr0 = 10;
     dkeparam.invproc = -1;
@@ -158,12 +174,13 @@ ylim = [0,0.004];
 xlab = 'r/a_p';
 ylab = 'j';
 tit = '';
+siz = 20+14i;
 %
 %for iDr0 = 1:length(Dr0_list) - 1, 
-%    graph1D_jd(equilDKE.xrho,j(:,iDr0),i,0,0,'','','',NaN,xlim,ylim,'-','none',NaN,2,20,gca);
+%    graph1D_jd(equilDKE.xrho,j(:,iDr0),i,0,0,'','','',NaN,xlim,ylim,'-','none',NaN,2,siz,gca);
 %end
-graph1D_jd(equilDKE.xrho,j(:,Dr0_mask),0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none',NaN,2,20,gca,0.9,0.7,0.7);
-graph1D_jd(equilDKE.xrho,besselj(0,2.4*equilDKE.xrho)*j(1,Dr0_mask(end)),0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20);
+graph1D_jd(equilDKE.xrho,j(:,Dr0_mask),0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none',NaN,2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(equilDKE.xrho,besselj(0,2.4*equilDKE.xrho)*j(1,Dr0_mask(end)),0,0,'','','',NaN,xlim,ylim,'--','none','k',2,siz);
 %
 set(gca,'ytick',[0:0.25:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
@@ -174,9 +191,8 @@ xlim = [0.01,100];
 ylim = [0,200];
 xlab = 'D_{\psi\psi} (m^{2}/s)';
 ylab = 'CPU time (s)';
-tit = '';
 %
-graph1D_jd(Dr0_list(2:end),tCPU(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),tCPU(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 %
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0.01,0.1,1,10,100])
@@ -185,13 +201,11 @@ set(gca,'XMinorTick','on')
 %
 figure(3),clf
 %
-xlim = [0.01,100];
 ylim = [0,200];
-xlab = 'D_{\psi\psi} (m^{2}/s)';
 ylab = 'FPE calculation time (s)';
 tit = '';
 %
-graph1D_jd(Dr0_list(2:end),tDKE(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),tDKE(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 %
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0.01,0.1,1,10,100])
@@ -200,13 +214,10 @@ set(gca,'XMinorTick','on')
 %
 figure(4),clf
 %
-xlim = [0.01,100];
 ylim = NaN;%[0,200];
-xlab = 'D_{\psi\psi} (m^{2}/s)';
 ylab = 'LU matrix size (MBytes)';
-tit = '';
 %
-graph1D_jd(Dr0_list(2:end),memory(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),memory(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 %
 %set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0.01,0.1,1,10,100])
@@ -215,13 +226,10 @@ set(gca,'XMinorTick','on')
 %
 figure(5),clf
 %
-xlim = [0.01,100];
 ylim = [0,0.06];
-xlab = 'D_{\psi\psi} (m^{2}/s)';
 ylab = 'I (MA)';
-tit = '';
 %
-graph1D_jd(Dr0_list(2:end),-Itot(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),-Itot(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 %
 set(gca,'ytick',[0:0.25:1]*ylim(2))
 set(gca,'xtick',[0.01,0.1,1,10,100])
@@ -230,13 +238,10 @@ set(gca,'XMinorTick','on')
 %
 figure(6),clf
 %
-xlim = [0.01,100];
 ylim = [0,0.004];
-xlab = 'D_{\psi\psi} (m^{2}/s)';
 ylab = 'P/(2\piR_p) (MW/m)';
-tit = '';
 %
-graph1D_jd(Dr0_list(2:end),Ptot_2piRp(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),Ptot_2piRp(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 %
 set(gca,'ytick',[0:0.25:1]*ylim(2))
 set(gca,'xtick',[0.01,0.1,1,10,100])
@@ -245,43 +250,38 @@ set(gca,'XMinorTick','on')
 %
 figure(7),clf
 %
-xlim = [0.01,100];
 ylim = [0,6];
-xlab = 'D_{\psi\psi} (m^{2}/s)';
 ylab = 'n_{19}IR_p/P';
-tit = '';
 %
-graph1D_jd(Dr0_list(2:end),-Eta(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+graph1D_jd(Dr0_list(2:end),-Eta(2:end),1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 %
 set(gca,'ytick',[0:0.25:1]*ylim(2))
 set(gca,'xtick',[0.01,0.1,1,10,100])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(2,'fig_transp_nobounce_j','.',1)
-print_jd(2,'fig_transp_nobounce_cpu','.',2)
-print_jd(2,'fig_transp_nobounce_fpe','.',3)
-print_jd(2,'fig_transp_nobounce_memory','.',4)
-print_jd(2,'fig_transp_nobounce_I','.',5)
-print_jd(2,'fig_transp_nobounce_P','.',6)
-print_jd(2,'fig_transp_nobounce_Eta','.',7)
+print_jd(p_opt,'fig_transp_nobounce_j','.',1)
+print_jd(p_opt,'fig_transp_nobounce_cpu','.',2)
+print_jd(p_opt,'fig_transp_nobounce_fpe','.',3)
+print_jd(p_opt,'fig_transp_nobounce_memory','.',4)
+print_jd(p_opt,'fig_transp_nobounce_I','.',5)
+print_jd(p_opt,'fig_transp_nobounce_P','.',6)
+print_jd(p_opt,'fig_transp_nobounce_Eta','.',7)
 %
-if opt_proc > 0 & strcmp(computer,'GLNXA64'), 
+if opt_proc > 0 && strcmp(computer,'GLNXA64'), 
     %
     figure(8),clf
     %
     xlim = [0:10];
     ylim = NaN;%[0,0.1];
-    xlab = 'D_{\psi\psi} (m^{2}/s)';
     ylab = 'Number of processors';
-    tit = '';
     %
-    graph1D_jd(nproc_list,tCPU_nproc,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+    graph1D_jd(nproc_list,tCPU_nproc,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
     %
     set(gca,'ytick',[0:0.2:1]*ylim(2))
     set(gca,'xtick',[0:0.2:1]*xlim(2))
     %
-    print_jd(2,'fig_transp_nobounce_cpu_proc','.',8)
+    print_jd(p_opt,'fig_transp_nobounce_cpu_proc','.',8)
     %
 end
 %

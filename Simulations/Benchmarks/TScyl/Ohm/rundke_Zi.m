@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -52,7 +53,8 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
-dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
 epsi = 0.001;
 betath = 0.01;%validated for NR limit
@@ -74,24 +76,16 @@ for iZi = 1:length(Zi_list),
     equil.pzni = [0;0;0;1/Zi]*equil.pne;
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if min(dke_out.residu_f) < dkeparam.prec0_f,
-        sigma_0(iZi) = Zcurr.x_0/epsi;
-    else
-        sigma_0(iZi) = NaN;
-    end        
+    [dummy,Zcurr] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    sigma_0(iZi) = Zcurr.x_0/epsi;
     %
     dkeparam.coll_mode = 1;% High-velocity limit
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if min(dke_out.residu_f) < dkeparam.prec0_f,
-        sigma_1(iZi) = Zcurr.x_0/epsi;
-    else
-        sigma_1(iZi) = NaN;
-    end        
+    [dummy,Zcurr] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    sigma_1(iZi) = Zcurr.x_0/epsi;
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
     [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if min(dke_out.residu_f) < dkeparam.prec0_f,
+    if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         sigma_2(iZi) = Zcurr.x_0/epsi;
     else
         sigma_2(iZi) = NaN;
@@ -148,14 +142,17 @@ ylim = [0,8];
 xlab = 'Z_i';
 ylab = '\sigma';
 tit = '';
-graph1D_jd(Zi_list,sigma_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(Zi_list,sigma_1,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(Zi_list,sigma_0,0,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
-graph1D_jd(Zi_Karney,sigma_Karney_2,0,0,'','','',NaN,xlim,ylim,'none','+','r',2,20,gca);
-graph1D_jd(Zi_Karney,sigma_Karney_1,0,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
-graph1D_jd(Zi_Karney,sigma_Karney_0,0,0,'','','',NaN,xlim,ylim,'none','+','g',2,20,gca);
-graph1D_jd(Zi_list,sigma_Lor,0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
-graph1D_jd(1,sigma_Z1s,0,0,'','','',NaN,xlim,ylim,'none','x','k',2,20,gca);
+siz = 20+14i;
+%
+graph1D_jd(Zi_list,sigma_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(Zi_list,sigma_1,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
+graph1D_jd(Zi_list,sigma_0,0,0,'','','',leg,xlim,ylim,'-','none','g',2,siz,gca);
+graph1D_jd(Zi_Karney,sigma_Karney_2,0,0,'','','',NaN,xlim,ylim,'none','+','r',2,siz,gca);
+graph1D_jd(Zi_Karney,sigma_Karney_1,0,0,'','','',NaN,xlim,ylim,'none','+','b',2,siz,gca);
+graph1D_jd(Zi_Karney,sigma_Karney_0,0,0,'','','',NaN,xlim,ylim,'none','+','g',2,siz,gca);
+graph1D_jd(Zi_list,sigma_Lor,0,0,'','','',NaN,xlim,ylim,'--','none','k',2,siz,gca);
+graph1D_jd(1,sigma_Z1s,0,0,'','','',NaN,xlim,ylim,'none','x','k',2,siz,gca);
+%
 set(gca,'ytick',[0:2:10])
 set(gca,'xtick',[0:5:max(Zi_list)])
 %

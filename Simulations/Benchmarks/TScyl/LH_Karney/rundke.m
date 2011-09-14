@@ -81,6 +81,11 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
+%
+%dkeparam.prec0_f = 1e-11;%to retrieve early LUKE 1.9.0 results
+%dkeparam.tn = 10000;%to retrieve early LUKE 1.9.0 results
+%dkeparam.dtn = 10000;%to retrieve early LUKE 1.9.0 results
 %
 % RELATIVISTIC CASE
 %

@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -81,12 +82,29 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
 np_list = round(logspace(1,3,41));
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
-for inp = 1:length(np_list),
+nnp = length(np_list);
+%
+j_rel_50 = NaN(1,nnp);
+j_rel_100 = NaN(1,nnp);
+j_rel_200 = NaN(1,nnp);
+p_rel_50 = NaN(1,nnp);
+p_rel_100 = NaN(1,nnp);
+p_rel_200 = NaN(1,nnp);
+%
+j_nr_50 = NaN(1,nnp);
+j_nr_100 = NaN(1,nnp);
+j_nr_200 = NaN(1,nnp);
+p_nr_50 = NaN(1,nnp);
+p_nr_100 = NaN(1,nnp);
+p_nr_200 = NaN(1,nnp);
+%
+for inp = 1:nnp,
     %
     dkeparam.np_S = np_list(inp) + 1;
     %
@@ -105,24 +123,30 @@ for inp = 1:length(np_list),
     %
     dkeparam.nmhu_S = 51;
     %
-    [Znorm,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    j_rel_50(inp) = Zcurr.x_0;
-    p_rel_50(inp) = ZP0.x_rf_fsav;
+    if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
+        j_rel_50(inp) = Zcurr.x_0;
+        p_rel_50(inp) = ZP0.x_rf_fsav;
+    end
     %
     dkeparam.nmhu_S = 101;
     %
-    [Znorm,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    j_rel_100(inp) = Zcurr.x_0;
-    p_rel_100(inp) = ZP0.x_rf_fsav;
+    if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
+        j_rel_100(inp) = Zcurr.x_0;
+        p_rel_100(inp) = ZP0.x_rf_fsav;
+    end
     %
     dkeparam.nmhu_S = 201;
     %
-    [Znorm,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    j_rel_200(inp) = Zcurr.x_0;
-    p_rel_200(inp) = ZP0.x_rf_fsav;
+    if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
+        j_rel_200(inp) = Zcurr.x_0;
+        p_rel_200(inp) = ZP0.x_rf_fsav;
+    end
     %
     % NON-RELATIVISTIC CASE
     %
@@ -139,24 +163,30 @@ for inp = 1:length(np_list),
     %
     dkeparam.nmhu_S = 51;
     %
-    [Znorm,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    j_nr_50(inp) = Zcurr.x_0;
-    p_nr_50(inp) = ZP0.x_rf_fsav;
+    if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
+        j_nr_50(inp) = Zcurr.x_0;
+        p_nr_50(inp) = ZP0.x_rf_fsav;
+    end
     %
     dkeparam.nmhu_S = 101;
     %
-    [Znorm,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    j_nr_100(inp) = Zcurr.x_0;
-    p_nr_100(inp) = ZP0.x_rf_fsav;
+    if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
+        j_nr_100(inp) = Zcurr.x_0;
+        p_nr_100(inp) = ZP0.x_rf_fsav;
+    end
     %
     dkeparam.nmhu_S = 201;
     %
-    [Znorm,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    j_nr_200(inp) = Zcurr.x_0;
-    p_nr_200(inp) = ZP0.x_rf_fsav;
+    if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
+        j_nr_200(inp) = Zcurr.x_0;
+        p_nr_200(inp) = ZP0.x_rf_fsav;
+    end
     %
 end
 %
@@ -185,11 +215,13 @@ ylim = [0,0.01];
 xlab = 'n_p';
 ylab = 'j';
 tit = '';
+siz = 20+14i;
 %
-graph1D_jd(np_list,j_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,j_rel_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
-graph1D_jd(np_list,j_rel_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
-graph1D_jd(xlim,[j_rel_k,j_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
+graph1D_jd(np_list,j_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,j_rel_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,siz,gca);
+graph1D_jd(np_list,j_rel_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,siz,gca);
+graph1D_jd(xlim,[j_rel_k,j_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -201,10 +233,11 @@ figure(2),clf
 ylim = [0,0.0005];
 ylab = 'P';
 %
-graph1D_jd(np_list,p_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,p_rel_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
-graph1D_jd(np_list,p_rel_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
-graph1D_jd(xlim,[p_rel_k,p_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
+graph1D_jd(np_list,p_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,p_rel_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,siz,gca);
+graph1D_jd(np_list,p_rel_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,siz,gca);
+graph1D_jd(xlim,[p_rel_k,p_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -217,10 +250,11 @@ ylim = [0,50];
 ylab = 'j/P';
 tit = '';
 %
-graph1D_jd(np_list,eta_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,eta_rel_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
-graph1D_jd(np_list,eta_rel_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
-graph1D_jd(xlim,[eta_rel_k,eta_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
+graph1D_jd(np_list,eta_rel_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,eta_rel_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,siz,gca);
+graph1D_jd(np_list,eta_rel_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,siz,gca);
+graph1D_jd(xlim,[eta_rel_k,eta_rel_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -233,10 +267,11 @@ ylim = [0,0.1];
 ylab = 'j';
 tit = '';
 %
-graph1D_jd(np_list,j_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,j_nr_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
-graph1D_jd(np_list,j_nr_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
-graph1D_jd(xlim,[j_nr_k,j_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
+graph1D_jd(np_list,j_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,j_nr_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,siz,gca);
+graph1D_jd(np_list,j_nr_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,siz,gca);
+graph1D_jd(xlim,[j_nr_k,j_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -248,10 +283,11 @@ figure(5),clf
 ylim = [0,0.01];
 ylab = 'P';
 %
-graph1D_jd(np_list,p_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,p_nr_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
-graph1D_jd(np_list,p_nr_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
-graph1D_jd(xlim,[p_nr_k,p_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
+graph1D_jd(np_list,p_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,p_nr_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,siz,gca);
+graph1D_jd(np_list,p_nr_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,siz,gca);
+graph1D_jd(xlim,[p_nr_k,p_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
@@ -264,22 +300,23 @@ ylim = [0,30];
 ylab = 'j/P';
 tit = '';
 %
-graph1D_jd(np_list,eta_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(np_list,eta_nr_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,20,gca);
-graph1D_jd(np_list,eta_nr_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,20,gca);
-graph1D_jd(xlim,[eta_nr_k,eta_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
+graph1D_jd(np_list,eta_nr_50,1,0,xlab,ylab,tit,NaN,xlim,ylim,'none','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(np_list,eta_nr_100,1,0,'','','',NaN,xlim,ylim,'none','+','b',2,siz,gca);
+graph1D_jd(np_list,eta_nr_200,1,0,'','','',leg,xlim,ylim,'none','+','g',2,siz,gca);
+graph1D_jd(xlim,[eta_nr_k,eta_nr_k],0,0,'','','',NaN,xlim,ylim,'--','none','k',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[10,100,1000])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(2,'fig_j_rel_grid','.',1)
-print_jd(2,'fig_P_rel_grid','.',2)
-print_jd(2,'fig_eta_rel_grid','.',3)
-print_jd(2,'fig_j_nr_grid','.',4)
-print_jd(2,'fig_P_nr_grid','.',5)
-print_jd(2,'fig_eta_nr_grid','.',6)
+print_jd(p_opt,'fig_j_rel_grid','.',1)
+print_jd(p_opt,'fig_P_rel_grid','.',2)
+print_jd(p_opt,'fig_eta_rel_grid','.',3)
+print_jd(p_opt,'fig_j_nr_grid','.',4)
+print_jd(p_opt,'fig_P_nr_grid','.',5)
+print_jd(p_opt,'fig_eta_nr_grid','.',6)
 %
 %************************************************************************************************************************************
 %

@@ -17,6 +17,15 @@ cd ../..
 %
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['TScyl',filesep,'Thermal']);
+if exist('DKE_RESULTS_TScyl_Thermal_res.mat','file') == 0 || forcerun,
+   rundke_res
+else
+   info_dke_yp(2,['Simulation TScyl',filesep,'Thermal_res skipped because already done !'])      
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScyl',filesep,'Thermal']);
 if exist('DKE_RESULTS_TScyl_Thermal_norm.mat','file') == 0 || forcerun,
    rundke_norm
 else
@@ -34,6 +43,33 @@ end
 cd ../..
 %
 % ---------------------- TScyl Ohm -----------------------
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScyl',filesep,'Ohm']);
+if exist('DKE_RESULTS_TScyl_Ohm_dtn.mat','file') == 0 || forcerun,
+   rundke_dtn
+else
+   info_dke_yp(2,['Simulation TScyl',filesep,'Ohm_dtn skipped because already done !'])     
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScyl',filesep,'Ohm']);
+if exist('DKE_RESULTS_TScyl_Ohm_time.mat','file') == 0 || forcerun,
+   rundke_time
+else
+   info_dke_yp(2,['Simulation TScyl',filesep,'Ohm_time skipped because already done !'])     
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScyl',filesep,'Ohm']);
+if exist('DKE_RESULTS_TScyl_Ohm_conv.mat','file') == 0 || forcerun,
+   rundke_conv
+else
+   info_dke_yp(2,['Simulation TScyl',filesep,'Ohm_conv skipped because already done !'])     
+end
+cd ../..
 %
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['TScyl',filesep,'Ohm']);
@@ -79,6 +115,15 @@ if exist('DKE_RESULTS_TScyl_Runaway_dtn.mat','file') == 0 || forcerun,
    rundke_dtn
 else
    info_dke_yp(2,['Simulation TScyl',filesep,'Runaway_dtn skipped because already done !']) 
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScyl',filesep,'Runaway']);
+if exist('DKE_RESULTS_TScyl_Runaway_conv.mat','file') == 0 || forcerun,
+   rundke_conv
+else
+   info_dke_yp(2,['Simulation TScyl',filesep,'Runaway_conv skipped because already done !']) 
 end
 cd ../..
 %
@@ -153,6 +198,24 @@ if exist('DKE_RESULTS_TScyl_LH_karney_conv.mat','file') == 0 || forcerun,
    rundke_conv
 else
    info_dke_yp(2,['Simulation TScyl',filesep,'LH_karney_conv skipped because already done !']) 
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScyl',filesep,'LH_Karney']);
+if exist('DKE_RESULTS_TScyl_LH_karney_time.mat','file') == 0 || forcerun,
+   rundke_time
+else
+   info_dke_yp(2,['Simulation TScyl',filesep,'LH_karney_time skipped because already done !']) 
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScyl',filesep,'LH_Karney']);
+if exist('DKE_RESULTS_TScyl_LH_karney_dtn.mat','file') == 0 || forcerun,
+   rundke_dtn
+else
+   info_dke_yp(2,['Simulation TScyl',filesep,'LH_karney_dtn skipped because already done !']) 
 end
 cd ../..
 %
@@ -240,11 +303,47 @@ end
 cd ../..
 %
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScirc_e1',filesep,'Ohm_bounce']);
+if exist('DKE_RESULTS_TScirc_e1_Ohm_bounce_val.mat','file') == 0 || forcerun,
+   rundke
+else
+   info_dke_yp(2,['Simulation TScirc_e1',filesep,'Ohm_bounce_val skipped because already done !']) 
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['TScirc_e1',filesep,'Runaway_bounce']);
 if exist('DKE_RESULTS_TScirc_e1_Runaway_bounce.mat','file') == 0 || forcerun,
    rundke
 else
    info_dke_yp(2,['Simulation TScirc_e1',filesep,'Runaway_bounce skipped because already done !']) 
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScirc_e1',filesep,'Runaway_bounce']);
+if exist('DKE_RESULTS_TScirc_e1_Runaway_bounce_val.mat','file') == 0 || forcerun,
+   rundke
+else
+   info_dke_yp(2,['Simulation TScirc_e1',filesep,'Runaway_bounce_val skipped because already done !']) 
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScirc_e1',filesep,'LH_Karney_bounce']);
+if exist('DKE_RESULTS_TScirc_e1_LH_bounce.mat','file') == 0 || forcerun,
+   rundke
+else
+   info_dke_yp(2,['Simulation TScirc_e1',filesep,'LH_bounce skipped because already done !']) 
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['TScirc_e1',filesep,'LH_Karney_bounce']);
+if exist('DKE_RESULTS_TScirc_e1_LH_bounce_val.mat','file') == 0 || forcerun,
+   rundke
+else
+   info_dke_yp(2,['Simulation TScirc_e1',filesep,'LH_bounce_val skipped because already done !']) 
 end
 cd ../..
 %

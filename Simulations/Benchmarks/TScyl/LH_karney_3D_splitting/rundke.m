@@ -11,6 +11,7 @@ global nfig
 opt_proc = 0;%test for numerical performance test with number of processors 
 Dr0 = 1;
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -18,7 +19,6 @@ id_simul = ['LH_karney_3D_splitting_',num2str(Dr0)];%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-%rho_S = [0,0.05:0.02:0.2,0.22:0.03:0.6,0.62:0.05:0.95,1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0:0.025:0.65,0.7:0.1:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
@@ -88,6 +88,7 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.timevol = 1;%to calculate moments at all internal times
 %
 %betath = 0.001;
 %
@@ -99,28 +100,22 @@ dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, t
 %
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
-dkeparam.prec0_f = -1;
-dkedisplay.display_mode = 0;%If -1, only the radius at which the residu is the largest is displayed
+%dkedisplay.display_mode = 0;%If -1, only the radius at which the residu is the largest is displayed
 %
-tfinal = 5000;
+tfinal = 2000;
+%
 dtn_list = [1,10,100,1000];
-nit_f = tfinal./dtn_list;
-coll_mode_list = 0;%[0,2];
+coll_mode_list = [0,2];
 optsplit_list = [0,1];
 %
 ncoll = length(coll_mode_list);
 nopt = length(optsplit_list);
 ndtn = length(dtn_list);
-nit_max = max(nit_f);
-nr = length(rho_S) - 1;
 %
-normf0_0 = NaN(nr,nit_max + 1,ndtn,nopt,ncoll);
-curr0_0 = NaN(nr,nit_max + 1,ndtn,nopt,ncoll);
-residu_0 = NaN(nr,nit_max,ndtn,nopt,ncoll);
+dkeparam.tn = tfinal;
+transpfaste.Dr0 = Dr0;
 %
-normf0_Dr0 = NaN(nr,nit_max + 1,ndtn,nopt,ncoll);
-curr0_Dr0 = NaN(nr,nit_max + 1,ndtn,nopt,ncoll);
-residu_Dr0 = NaN(nr,nit_max,ndtn,nopt,ncoll);
+I = cell(ndtn,nopt,ncoll);
 %
 for icoll = 1:ncoll,
 	for iopt = 1:nopt,
@@ -128,22 +123,18 @@ for icoll = 1:ncoll,
     		%
     		dkeparam.coll_mode = coll_mode_list(icoll);
         	dkeparam.opsplit = optsplit_list(iopt);
-        	dkeparam.nit_f = nit_f(idtn);
         	dkeparam.dtn = dtn_list(idtn);
         	%
-        	%transpfaste.Dr0 = 0;
-        	%[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        	[dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         	%
-        	%normf0_0(:,1:nit_f(idtn) + 1,idtn,iopt,icoll) = dke_out.normf0;
-        	%curr0_0(:,1:nit_f(idtn) + 1,idtn,iopt,icoll) = dke_out.curr0;
-        	%residu_0(:,1:nit_f(idtn),idtn,iopt,icoll) = dke_out.residu_f;
-        	%
-        	transpfaste.Dr0 = Dr0;
-        	[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-        	%
-        	normf0_Dr0(:,1:nit_f(idtn) + 1,idtn,iopt,icoll) = dke_out.normf0;
-        	curr0_Dr0(:,1:nit_f(idtn) + 1,idtn,iopt,icoll) = dke_out.curr0;
-        	residu_Dr0(:,1:nit_f(idtn),idtn,iopt,icoll) = dke_out.residu_f;
+            nit = tfinal/dkeparam.dtn;
+            I{idtn,iopt,icoll} = NaN(1,nit);
+            %
+            for it = 1:nit,
+                if dkeparam.coll_mode ~= 2 || dke_out.residu_f{it}(end) <= dkeparam.prec0_f,
+                    I{idtn,iopt,icoll}(it) = Zcurr(it).I_tot;
+                end
+            end
       		%
         	disp(['- collmode: ',int2str(dkeparam.coll_mode),',- opsplit: ',int2str(dkeparam.opsplit),',dtn: ',int2str(dtn_list(idtn)),' done.'])
     	end

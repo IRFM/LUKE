@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -60,8 +61,11 @@ equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 dkeparam.coll_mode = 0;% Relativistic Maxwellian background
 %
-dtn_list = logspace(1,4,17);
-tn_max = 100000;
+tnmax = 100000;
+nit_list = round(logspace(0,2,11));
+dtn_list = tnmax./nit_list;
+%
+dkeparam.tn = NaN;%specified by dtn
 %
 epsi = 0.04;%corresponds to pc/pT = 5
 %
@@ -69,36 +73,35 @@ ohm = ohm_flat(equil,epsi);
 %
 RR_kulsrud = 1.914*1e-6;%Kulsrud (PRL, 31,11, (1972) 690)
 %
+% Testing different dtn
+%
+ndtn = length(dtn_list);
+xRRv_1 = NaN(1,ndtn);
+xRRs_1 = NaN(1,ndtn);
+xRRv_2 = NaN(1,ndtn);
+xRRs_2 = NaN(1,ndtn);
+%
 % Different conservation schemes
 %
-for idtn = 1:length(dtn_list),
+for idtn = 1:ndtn,
     %
     dtn = dtn_list(idtn);
-    dkeparam.dtn = dtn;  
-    dkeparam.nit_f = round(tn_max/dtn);
-    %
-%     dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
-%     dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
-%     %
-% 	  [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-%     %
-%     xRRv_0(idtn) = (dke_out.normf0(end-1) - dke_out.normf0(end))/dtn;
-%     xRRs_0(idtn) = dke_out.XxRR_fsav(end,:);
+    dkeparam.dtn = repmat(dtn,[1,nit_list(idtn)]);
     %
     dkeparam.boundary_mode_f = 1;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
     dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
     %
-	[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+	[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    xRRv_1(idtn) = (dke_out.normf0(end-1) - dke_out.normf0(end))/dtn;
+    xRRv_1(idtn) = (dke_out.normf0{end}(1) - dke_out.normf0{end}(end))/dtn;
     xRRs_1(idtn) = dke_out.XxRR_fsav(end,:);
     %
     dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
     dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
     %
-	[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+	[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    xRRv_2(idtn) = (dke_out.normf0(end-1) - dke_out.normf0(end))/dtn;
+    xRRv_2(idtn) = (dke_out.normf0{end}(1) - dke_out.normf0{end}(end))/dtn;
     xRRs_2(idtn) = dke_out.XxRR_fsav(end,:);
     %
 end
@@ -107,28 +110,26 @@ end
 %
 figure(1),clf
 %
-% leg = {'Volumic losses','Boundary losses','Runaway losses'};
 leg = {'Fixed point','Normalization','Kulsrud'};
-xlim = 10.^[1,4];
+xlim = 10.^[3,5];
 ylim = NaN;%10.^[-6,-5];
 xlab = '\Deltat';
 ylab = '\Gamma_R';
 tit = '';
-% graph1D_jd(dtn_list,xRRv_0,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-% graph1D_jd(dtn_list,xRRs_0,1,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-% graph1D_jd(dtn_list,xRRv_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca,0.9,0.7,0.7);
+siz = 20+14i;
+%
 graph1D_jd(dtn_list,xRRs_1,1,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
-% graph1D_jd(dtn_list,xRRv_2,1,0,'','','',NaN,xlim,ylim,'-','none','g',2,20,gca);
 graph1D_jd(dtn_list,xRRs_2,1,0,'','','',NaN,xlim,ylim,'--','none','g',2,20,gca);
 graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],1,0,'','','',leg,xlim,ylim,'--','none','k',2,20,gca);
+%
 %set(gca,'ytick',[1e-07 1e-06 1e-05])
-%set(gca,'xtick',[1e-08 1e-06 1e-04 1e-02 1 1e2 1e4 1e6 1e8])
+set(gca,'xtick',10.^[3:5])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %set(gca,'YMinorGrid','off')
 %set(gca,'YMinorTick','on')
 %
-print_jd(2,'fig_runaway_norm_ss','.',1)
+print_jd(p_opt,'fig_runaway_norm_ss','.',1)
 %
 %************************************************************************************************************************************
 %

@@ -83,7 +83,7 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
-dkeparam.prec0_f = 1e-15;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
 iar_list = [0.1,0.2,0.3,0.5,0.8];
 %
@@ -91,6 +91,7 @@ iar_list = [0.1,0.2,0.3,0.5,0.8];
 %
 dkeparam.pnmax_S = 30;
 dkeparam.np_S = 201;
+dkeparam.nmhu_S = 201;
 %
 wavestruct.yvparmin_lh = [4];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
 wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
@@ -98,26 +99,38 @@ wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the pl
 waves_cyl{1} = make_idealLHwave_jd(equil_cyl,wavestruct);
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
-dkeparam.bounce_mode = 0;
-dkeparam.nmhu_S = 201;
-rho_S = 0.5;
-%
-[Znorm_rel_cyl,Zcurr_rel_cyl,ZP0_rel_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm,waves_cyl,transpfaste,ripple,[],[]);
-%
-dkeparam.bounce_mode = 1;
-dkeparam.nmhu_S = 199;
-%
 ap = equil.ptx(end,1);
 rho_list = iar_list*equil.Rp/ap;
 %
-for irho = 1:length(rho_list),
+nrho = length(rho_list);
+j_rel = NaN(1,nrho);
+p_rel = NaN(1,nrho);
+j_rel_cyl = NaN(1,nrho);
+p_rel_cyl = NaN(1,nrho);
+%
+for irho = 1:nrho,
     %
+    dkeparam.bounce_mode = 1;
+    dkeparam.mhu_S = [];
     rho_S = rho_list(irho);
     %
-    [Znorm_rel,Zcurr_rel,ZP0_rel] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_rel,Zcurr_rel,ZP0_rel,dke_out_rel,radialDKE_rel,equilDKE_rel,momentumDKE_rel] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    j_rel(irho) = Zcurr_rel.x_0_vfsav;
-    p_rel(irho) = ZP0_rel.x_rf_fsav.';
+    if dke_out_rel.residu_f{end}(end) <= dkeparam.prec0_f,
+        j_rel(irho) = Zcurr_rel.x_0_vfsav;
+        p_rel(irho) = ZP0_rel.x_rf_fsav.';
+    end  
+    %
+    dkeparam.bounce_mode = 0;
+    dkeparam.mhu_S = momentumDKE_rel.mhu_S;
+    rho_S = 0.5;
+    %
+    [Znorm_rel_cyl,Zcurr_rel_cyl,ZP0_rel_cyl,dke_out_rel_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm,waves_cyl,transpfaste,ripple,[],[]);
+    %
+    if dke_out_rel_cyl.residu_f{end}(end) <= dkeparam.prec0_f,
+        j_rel_cyl(irho) = Zcurr_rel_cyl.x_0;
+        p_rel_cyl(irho) = ZP0_rel_cyl.x_rf_fsav.';
+    end  
     %
 end
 %
@@ -142,49 +155,42 @@ waves_cyl{1} = make_idealLHwave_jd(equil_cyl,wavestruct);
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 dkeparam.pnmax_S = 10;
-dkeparam.nmhu_S = 201;
-rho_S = 0.5;
 %
-dkeparam.bounce_mode = 0;
+j_nr = NaN(1,nrho);
+p_nr = NaN(1,nrho);
+j_nr_cyl = NaN(1,nrho);
+p_nr_cyl = NaN(1,nrho);
 %
-[Znorm_nr_cyl,Zcurr_nr_cyl,ZP0_nr_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm,waves_cyl,transpfaste,ripple,[],[]);
-%
-dkeparam.bounce_mode = 1;
-dkeparam.nmhu_S = 199;
-%
-for irho = 1:length(rho_list),
+for irho = 1:nrho,
     %
+    dkeparam.bounce_mode = 1;
+    dkeparam.mhu_S = [];
     rho_S = rho_list(irho);
     %
-    [Znorm_nr,Zcurr_nr,ZP0_nr] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_nr,Zcurr_nr,ZP0_nr,dke_out_nr,radialDKE_nr,equilDKE_nr,momentumDKE_nr] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
-    j_nr(irho) = Zcurr_nr.x_0_vfsav;
-    p_nr(irho) = ZP0_nr.x_rf_fsav.';
+    if dke_out_nr.residu_f{end}(end) <= dkeparam.prec0_f,
+        j_nr(irho) = Zcurr_nr.x_0_vfsav;
+        p_nr(irho) = ZP0_nr.x_rf_fsav.';
+    end  
+    %
+    dkeparam.bounce_mode = 0;
+    dkeparam.mhu_S = momentumDKE_nr.mhu_S;
+    rho_S = 0.5;
+    %
+    [Znorm_nr_cyl,Zcurr_nr_cyl,ZP0_nr_cyl,dke_out_nr_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm,waves_cyl,transpfaste,ripple,[],[]);
+    %
+    if dke_out_nr_cyl.residu_f{end}(end) <= dkeparam.prec0_f,
+        j_nr_cyl(irho) = Zcurr_nr_cyl.x_0;
+        p_nr_cyl(irho) = ZP0_nr_cyl.x_rf_fsav.';
+    end  
     %
 end
 %
-% j_r_k = '0.003732';
-% p_r_k = '0.0001256';
-% eta_r_k = '29.72';
-% %
-% j_nr_k = '0.07092';
-% p_nr_k = '0.004294';
-% eta_nr_k = '16.52';
-%	    
-j_rel_cyl = Zcurr_rel_cyl.x_0;
-p_rel_cyl = ZP0_rel_cyl.x_rf_fsav.';
 eta_rel_cyl = j_rel_cyl./p_rel_cyl;
-%
-% j_rel = Zcurr_rel.x_0_vfsav;
-% p_rel = ZP0_rel.x_rf_fsav.';
 eta_rel = j_rel./p_rel;
 %
-j_nr_cyl = Zcurr_nr_cyl.x_0;
-p_nr_cyl = ZP0_nr_cyl.x_rf_fsav.';
 eta_nr_cyl = j_nr_cyl./p_nr_cyl;
-%
-% j_nr = Zcurr_nr.x_0_vfsav;
-% p_nr = ZP0_nr.x_rf_fsav.';
 eta_nr = j_nr./p_nr;
 %
 %************************************************************************************************************************************

@@ -11,7 +11,7 @@ global nfig
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-id_simul = 'LH_karney_test';%Simulation ID
+id_simul = 'LH_karney_cluster';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
@@ -84,6 +84,7 @@ dkeparam.clustermode.eecoll_dke_jd.mode = 2;
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
 % RELATIVISTIC CASE
 %
@@ -147,9 +148,9 @@ eta_nr_2_20_k = '16.52';
 %
 format
 %
-delete res_karney
+delete res_karney_cluster
 %
-diary res_karney
+diary res_karney_cluster
 %
 disp(['Comparison LUKE/Karney'])
 disp(['----------------------'])

@@ -7,7 +7,6 @@ clear functions
 close all
 warning off
 global nfig
-%
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -84,6 +83,7 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 1;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
 dkeparam.np_S = 201;
 dkeparam.nmhu_S = 201;
@@ -93,14 +93,30 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 % case with no ripple
 %
-[Znorm_0,Zcurr_0,ZP0_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,[],[],[]);
+[Znorm_0,Zcurr_0,ZP0_0,dke_out_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,[],[],[]);
+if dke_out_0.residu_f{end}(end) <= dkeparam.prec0_f,
+    j_0 = Zcurr_0.x_0;
+    P_0 = ZP0_0.x_rf_fsav;
+else
+    j_0 = NaN;
+    P_0 = NaN;
+end
 %
 % case with ripple
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
+    j = Zcurr.x_0;
+    P = ZP0.x_rf_fsav;
+    MRRs = dke_out.xMRR_flux;
+    MRRt = dke_out.xMRR_tau;
+else
+    j = NaN;
+    P = NaN;
+    MRRs = NaN;
+    MRRt = NaN;
+end
 %
-MRRs = dke_out.xMRR_flux;
-MRRt = dke_out.xMRR_tau;
 %
 %************************************************************************************************************************************
 %
@@ -116,8 +132,8 @@ disp(['----------------------'])
 disp(['Boundary losses : Gamma*tau_c = ',num2str(MRRs)]) 
 disp(['Volumic losses : Gamma*tau_c = ',num2str(MRRt)]) 
 %
-disp(['Case with ripple : j = ',num2str(Zcurr.x_0),' ; P = ',num2str(ZP0.x_rf_fsav),' ; j/P = ',num2str(Zcurr.x_0./ZP0.x_rf_fsav)]) 
-disp(['Case with no ripple : j = ',num2str(Zcurr_0.x_0),' ; P = ',num2str(ZP0_0.x_rf_fsav),' ; j/P = ',num2str(Zcurr_0.x_0./ZP0_0.x_rf_fsav)]) 
+disp(['Case with ripple : j = ',num2str(j),' ; P = ',num2str(P),' ; j/P = ',num2str(j/P)]) 
+disp(['Case with no ripple : j = ',num2str(j_0),' ; P = ',num2str(P_0),' ; j/P = ',num2str(j_0/P_0)]) 
 %
 diary off
 %

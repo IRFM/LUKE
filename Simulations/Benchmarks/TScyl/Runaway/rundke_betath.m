@@ -8,14 +8,15 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
 id_simul = 'Runaway_betath';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-psin_S = [0.001];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.5];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -53,14 +54,10 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = 10000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.dtn = 1000;%10 time steps required for accurate runaway solution - see rundke_dtn
 %
 epsi = 0.04;
-%
-%dkeparam.pnmax_S = 15;
-%dkeparam.np_S = 166;
-%dkeparam.nmhu_S = 221;
-%dkeparam.grid_uniformity = 0;
-%dkeparam.spfac = 20;
 %
 equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
@@ -68,7 +65,14 @@ betath_list = [logspace(-5,-2,7),logspace(-1.85,-0.35,11)];
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
-for ibetath = 1:length(betath_list),
+nbetath = length(betath_list);
+%
+RR_0 = NaN(1,nbetath);
+RR_1 = NaN(1,nbetath);
+RR_2 = NaN(1,nbetath);
+%RR_4 = NaN(1,nbetath);
+%
+for ibetath = 1:nbetath,
     %
     betath = betath_list(ibetath);
     %
@@ -78,21 +82,25 @@ for ibetath = 1:length(betath_list),
     ohm = ohm_flat(equil,epsi);
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-    [Znorm,Zcurr,ZP0,dke_out_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     dkeparam.coll_mode = 1;% High-velocity limit
-    [Znorm,Zcurr,ZP0,dke_out_1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out_1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
-    [Znorm,Zcurr,ZP0,dke_out_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     %dkeparam.coll_mode = 4;% Maxwellian Background
-    %[Znorm,Zcurr,ZP0,dke_out_4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %[dummy,dummy,dummy,dke_out_4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     RR_0(ibetath) = dke_out_0.XxRR_fsav(end,:);
     RR_1(ibetath) = dke_out_1.XxRR_fsav(end,:);
-    RR_2(ibetath) = dke_out_2.XxRR_fsav(end,:);
-    %RR_4(ibetath) = dke_out_4.XxRR_fsav(end,:);
+    %
+    if dke_out_2.residu_f{end}(end) <= dkeparam.prec0_f,
+        RR_2(ibetath) = dke_out_2.XxRR_fsav(end,:);
+    end
+    %
+%    RR_4(ibetath) = dke_out_4.XxRR_fsav(end,:);
     %
 end
 %
@@ -109,18 +117,21 @@ ylim = [0,5e-6];
 xlab = '\beta_T';
 ylab = '\Gamma_R';
 tit = '';
-graph1D_jd(betath_list,RR_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(betath_list,RR_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,20,gca);
-graph1D_jd(betath_list,RR_0,1,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
-%graph1D_jd(betath_list,RR_4,1,0,'','','',leg,xlim,ylim,'-','none','m',2,20,gca);
-graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],1,0,'','','',NaN,xlim,ylim,'--','none','k',2,20,gca);
+siz = 20+14i;
+%
+graph1D_jd(betath_list,RR_2,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(betath_list,RR_1,1,0,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
+graph1D_jd(betath_list,RR_0,1,0,'','','',leg,xlim,ylim,'-','none','g',2,siz,gca);
+%graph1D_jd(betath_list,RR_4,1,0,'','','',leg,xlim,ylim,'-','none','m',2,siz,gca);
+%
+graph1D_jd(xlim,[RR_kulsrud,RR_kulsrud],1,0,'','','',NaN,xlim,ylim,'--','none','k',2,siz,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[1e-05 0.0001 0.001 0.01 0.1 1])
 %set(gca,'XTickLabel',{'10^{-5}','10^{-4}','10^{-3}','10^{-2}','10^{-1}','1'})
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(2,'fig_runaway_betath','.',1)
+print_jd(p_opt,'fig_runaway_betath','.',1)
 %
 %************************************************************************************************************************************
 %

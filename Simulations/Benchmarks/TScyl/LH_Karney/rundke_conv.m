@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -81,14 +82,18 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
-dkeparam.prec0_f = -1;
+dkeparam.prec0_f = -1;%to reach end of Legendre iterations
+dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
 %
 dkeparam.nmhu_S = 201;
 dkeparam.np_S = 201;
 dkeparam.pnmax_S = 20;
 %
-tnmax = 500000;%5000;
-dtn = 10000;%100;
+nit_f = 50;
+%
+dkeparam.nit_f = nit_f;
+dkeparam.tn = 100000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.dtn = NaN;%single time step for Legendre convergence studies
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
@@ -101,71 +106,50 @@ wavestruct.yvparmax_lh = [5];%LH wave square N// Spectrum: Upper limit of the pl
 %
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
-dkeparam.dtn = dtn;
-dkeparam.nit_f = round(tnmax/dtn);
+[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
-dkeparam.coll_mode = 0;
+j_k = 0.07092;
 %
-[Znorm,Zcurr,ZP0,dke_out_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-%
-dkeparam.coll_mode = 2;
-%
-[Znorm,Zcurr,ZP0,dke_out_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-%
-j_k_0 = 0.05759;
-j_k_2 = 0.07092;
-%
-dcurr_0 = abs(dke_out_0.curr0 - dke_out_0.curr0(end))/dke_out_0.curr0(end);
-dcurr_2 = abs(dke_out_2.curr0 - dke_out_2.curr0(end))/dke_out_2.curr0(end);
-%
-dnorm_0 = abs(dke_out_0.normf0 - dke_out_0.normf0(end))/dke_out_0.normf0(end);
-dnorm_2 = abs(dke_out_2.normf0 - dke_out_2.normf0(end))/dke_out_2.normf0(end);
+dcurr = abs(dke_out.curr0{end} - dke_out.curr0{end}(end))/dke_out.curr0{end}(end);
+dnorm = abs(dke_out.normf0{end} - dke_out.normf0{end}(end))/dke_out.normf0{end}(end);
 %
 %************************************************************************************************************************************
 %
 figure(1),clf
 %
-leg = {'Linearized','Maxwellian'};
-xlim = [0,tnmax];
+leg = {'LUKE','Karney'};
+xlim = [0,nit_f];
 ylim = [0,0.1];
-xlab = 't/\tau_c';
+xlab = '# iterations';
 ylab = 'j';
 tit = '';
+siz = 20+14i;
 %
-graph1D_jd(0:dtn:tnmax,dke_out_2.curr0,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(0:dtn:tnmax,dke_out_0.curr0,0,0,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
-graph1D_jd(xlim,[j_k_2,j_k_2],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,20,gca);
-graph1D_jd(xlim,[j_k_0,j_k_0],0,0,'','','',NaN,xlim,ylim,'--','none','g',2,20,gca);
+graph1D_jd(0:nit_f,dke_out.curr0{end},0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(xlim,[j_k,j_k],0,0,'','','',leg,xlim,ylim,'--','none','b',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(2),clf
 %
-leg = {'Linearized','Maxwellian'};
-xlim = [0,tnmax];
-ylim = 10.^[-20,0];
-xlab = 't/\tau_c';
+ylim = 10.^[-24,-8];
 ylab = 'R_f';
-tit = '';
 %
-graph1D_jd(dtn:dtn:tnmax,dke_out_2.residu_f,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(dtn:dtn:tnmax,dke_out_0.residu_f,0,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(1:nit_f,dke_out.residu_f{end},0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+%
 set(gca,'xtick',[0:0.2:1]*xlim(2))
-set(gca,'ytick',[1e-20 1e-15 1e-10 1e-5 1])
+set(gca,'ytick',[1e-24 1e-20 1e-16 1e-12 1e-8])
 set(gca,'YMinorGrid','off')
 set(gca,'YMinorTick','on')
 %
 figure(3),clf
 %
-leg = {'Linearized','Maxwellian'};
-xlim = [0,tnmax];
 ylim = 10.^[-20,0];
-xlab = 't/\tau_c';
 ylab = '(j-j_f)/j_f';
-tit = '';
 %
-graph1D_jd(0:dtn:tnmax,dcurr_2,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(0:dtn:tnmax,dcurr_0,0,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(0:nit_f,dcurr,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+%
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 set(gca,'ytick',[1e-20 1e-15 1e-10 1e-5 1])
 set(gca,'YMinorGrid','off')
@@ -173,29 +157,25 @@ set(gca,'YMinorTick','on')
 %
 figure(4),clf
 %
-leg = {'Linearized','Maxwellian'};
-xlim = [0,tnmax];
 ylim = 10.^[-20,0];
-xlab = 't/\tau_c';
 ylab = '(n-n_f)/n_f';
-tit = '';
 %
-graph1D_jd(0:dtn:tnmax,dnorm_2,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(0:dtn:tnmax,dnorm_0,0,1,'','','',leg,xlim,ylim,'-','none','g',2,20,gca);
+graph1D_jd(0:nit_f,dnorm,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+%
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 set(gca,'ytick',[1e-20 1e-15 1e-10 1e-5 1])
 set(gca,'YMinorGrid','off')
 set(gca,'YMinorTick','on')
 %
-% print_jd(2,'fig_j_conv','.',1)
-% print_jd(2,'fig_Rf_conv','.',2)
-% print_jd(2,'fig_jn_conv','.',3)
-% print_jd(2,'fig_nn_conv','.',4)
+% print_jd(p_opt,'fig_j_conv','.',1)
+% print_jd(p_opt,'fig_Rf_conv','.',2)
+% print_jd(p_opt,'fig_jn_conv','.',3)
+% print_jd(p_opt,'fig_nn_conv','.',4)
 %
-print_jd(2,'fig_j_conv_ss','.',1)
-print_jd(2,'fig_Rf_conv_ss','.',2)
-print_jd(2,'fig_jn_conv_ss','.',3)
-print_jd(2,'fig_nn_conv_ss','.',4)
+print_jd(p_opt,'fig_j_conv_ss','.',1)
+print_jd(p_opt,'fig_Rf_conv_ss','.',2)
+print_jd(p_opt,'fig_jn_conv_ss','.',3)
+print_jd(p_opt,'fig_nn_conv_ss','.',4)
 %
 %************************************************************************************************************************************
 %

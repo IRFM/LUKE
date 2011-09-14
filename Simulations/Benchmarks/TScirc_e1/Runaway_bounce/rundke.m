@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -55,6 +56,8 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = 10000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.dtn = 1000;%10 time steps required for accurate runaway solution - see rundke_dtn
 %
 epsi = 0.04;
 betath = 0.001;%validated for NR limit
@@ -72,20 +75,30 @@ equil_cyl.pzTi = betath^2*mc2*ones(size(equil_cyl.pzTi));
 ohm_cyl = ohm_flat(equil_cyl,epsi);
 ohm = ohm_flat(equil,epsi);
 %
-dkeparam.bounce_mode = 0;
 dkeparam.np_S = 201;
 dkeparam.nmhu_S = 201;
-%
-[Znorm,Zcurr,ZP0,dke_out_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
-%
 dkeparam.bounce_mode = 1;
-dkeparam.nmhu_S = 174;
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+%
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
+    RR = dke_out.XxRR_fsav(end,:);
+else
+    RR = NaN;
+end  
+%
+dkeparam.bounce_mode = 0;
+dkeparam.mhu_S = momentumDKE.mhu_S;
+[Znorm_cyl,Zcurr_cyl,ZP0_cyl,dke_out_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
+if dke_out_cyl.residu_f{end}(end) <= dkeparam.prec0_f,
+    RR_0 = dke_out_cyl.XxRR_fsav(end,:);
+else
+    RR_0 = NaN;
+end        
 %	    
 %************************************************************************************************************************************
 %
 iar = equilDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
-RRn = dke_out.XxRR_fsav(end,:)./dke_out_cyl.XxRR_fsav(end,:);
+RRn = RR./RR_0;
 %
 %************************************************************************************************************************************
 %
@@ -97,13 +110,16 @@ ylim = 10.^[-4,0];
 xlab = 'r/R_p';
 ylab = '\Gamma_R/\Gamma_R^{cyl}';
 tit = '';
-graph1D_jd(iar,RRn,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
+siz = 20+14i;
+%
+graph1D_jd(iar,RRn,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+%
 set(gca,'xtick',[0:0.2:1])
 set(gca,'ytick',[1e-5 1e-4 1e-3 1e-2 1e-1 1])
 set(gca,'YMinorGrid','off')
 set(gca,'YMinorTick','on')
 %
-print_jd(2,'fig_runaway_bounce','.',1)
+print_jd(p_opt,'fig_runaway_bounce','.',1)
 %
 %************************************************************************************************************************************
 %

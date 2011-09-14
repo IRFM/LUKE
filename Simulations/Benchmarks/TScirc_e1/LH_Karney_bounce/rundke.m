@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -83,12 +84,13 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
-dkeparam.prec0_f = 1e-15;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
 % RELATIVISTIC CASE
 %
 dkeparam.pnmax_S = 30;
 dkeparam.np_S = 201;
+dkeparam.nmhu_S = 201;
 %
 wavestruct.yvparmin_lh = [4];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
 wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
@@ -96,15 +98,34 @@ wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the pl
 waves_cyl{1} = make_idealLHwave_jd(equil_cyl,wavestruct);
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
-dkeparam.bounce_mode = 0;
-dkeparam.nmhu_S = 201;
-%
-[Znorm_rel_cyl,Zcurr_rel_cyl,ZP0_rel_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm,waves_cyl,transpfaste,ripple,[],[]);
-%
 dkeparam.bounce_mode = 1;
-dkeparam.nmhu_S = 174;
+dkeparam.mhu_S = [];
 %
-[Znorm_rel,Zcurr_rel,ZP0_rel] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_rel,Zcurr_rel,ZP0_rel,dke_out_rel,radialDKE_rel,equilDKE_rel,momentumDKE_rel] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+if dke_out_rel.residu_f{end}(end) <= dkeparam.prec0_f,
+    j_rel = Zcurr_rel.x_0_vfsav;
+    p_rel = ZP0_rel.x_rf_fsav.';
+    eta_rel = j_rel./p_rel;
+else
+    j_rel = NaN;
+    p_rel = NaN;
+    eta_rel = NaN;
+end  
+%
+%
+dkeparam.bounce_mode = 0;
+dkeparam.mhu_S = momentumDKE_rel.mhu_S;
+%
+[Znorm_rel_cyl,Zcurr_rel_cyl,ZP0_rel_cyl,dke_out_rel_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm,waves_cyl,transpfaste,ripple,[],[]);
+if dke_out_rel_cyl.residu_f{end}(end) <= dkeparam.prec0_f,
+    j_rel_cyl = Zcurr_rel_cyl.x_0;
+    p_rel_cyl = ZP0_rel_cyl.x_rf_fsav.';
+    eta_rel_cyl = j_rel_cyl./p_rel_cyl;
+else
+    j_rel_cyl = NaN;
+    p_rel_cyl = NaN;
+    eta_rel_cyl = NaN;
+end        
 %
 % NON-RELATIVISTIC CASE
 %
@@ -127,42 +148,37 @@ waves_cyl{1} = make_idealLHwave_jd(equil_cyl,wavestruct);
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 dkeparam.pnmax_S = 10;
-dkeparam.nmhu_S = 201;
-%
-dkeparam.bounce_mode = 0;
-%
-[Znorm_nr_cyl,Zcurr_nr_cyl,ZP0_nr_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm,waves_cyl,transpfaste,ripple,[],[]);
 %
 dkeparam.bounce_mode = 1;
-dkeparam.nmhu_S = 174;
+dkeparam.mhu_S = [];
 %
-[Znorm_nr,Zcurr_nr,ZP0_nr,dke_out,radialDKE,equilDKE] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_nr,Zcurr_nr,ZP0_nr,dke_out_nr,radialDKE_nr,equilDKE_nr,momentumDKE_nr] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+if dke_out_nr.residu_f{end}(end) <= dkeparam.prec0_f,
+    j_nr = Zcurr_nr.x_0_vfsav;
+    p_nr = ZP0_nr.x_rf_fsav.';
+    eta_nr = j_nr./p_nr;
+else
+    j_nr = NaN;
+    p_nr = NaN;
+    eta_nr = NaN;
+end  
 %
-% j_r_k = '0.003732';
-% p_r_k = '0.0001256';
-% eta_r_k = '29.72';
-% %
-% j_nr_k = '0.07092';
-% p_nr_k = '0.004294';
-% eta_nr_k = '16.52';
-%	    
-iar = equilDKE.xrho*equilDKE.ap/equilDKE.Rp;%Circular inverse aspect ratio
 %
-j_rel_cyl = Zcurr_rel_cyl.x_0;
-p_rel_cyl = ZP0_rel_cyl.x_rf_fsav.';
-eta_rel_cyl = j_rel_cyl./p_rel_cyl;
+dkeparam.bounce_mode = 0;
+dkeparam.mhu_S = momentumDKE_nr.mhu_S;
 %
-j_rel = Zcurr_rel.x_0_vfsav;
-p_rel = ZP0_rel.x_rf_fsav.';
-eta_rel = j_rel./p_rel;
+[Znorm_nr_cyl,Zcurr_nr_cyl,ZP0_nr_cyl,dke_out_nr_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm,waves_cyl,transpfaste,ripple,[],[]);
+if dke_out_nr_cyl.residu_f{end}(end) <= dkeparam.prec0_f,
+    j_nr_cyl = Zcurr_nr_cyl.x_0;
+    p_nr_cyl = ZP0_nr_cyl.x_rf_fsav.';
+    eta_nr_cyl = j_nr_cyl./p_nr_cyl;
+else
+    j_nr_cyl = NaN;
+    p_nr_cyl = NaN;
+    eta_nr_cyl = NaN;
+end        
 %
-j_nr_cyl = Zcurr_nr_cyl.x_0;
-p_nr_cyl = ZP0_nr_cyl.x_rf_fsav.';
-eta_nr_cyl = j_nr_cyl./p_nr_cyl;
-%
-j_nr = Zcurr_nr.x_0_vfsav;
-p_nr = ZP0_nr.x_rf_fsav.';
-eta_nr = j_nr./p_nr;
+iar = equilDKE_nr.xrho*equilDKE_nr.ap/equilDKE_nr.Rp;%Circular inverse aspect ratio
 %
 %************************************************************************************************************************************
 %
@@ -173,86 +189,77 @@ ylim = [0,0.005];
 xlab = 'r/R_p';
 ylab = 'j';
 tit = '';
+siz = 20+14i;
 %
-graph1D_jd(iar,j_rel,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(iar,j_rel_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(iar,j_rel,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(iar,j_rel_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(2),clf
 %
-xlim = [0,1];
 ylim = [0,0.0005];
-xlab = 'r/R_p';
 ylab = 'P';
-tit = '';
 %
-graph1D_jd(iar,p_rel,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(iar,p_rel_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(iar,p_rel,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(iar,p_rel_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(3),clf
 %
-xlim = [0,1];
 ylim = [0,50];
-xlab = 'r/R_p';
 ylab = 'j/P';
-tit = '';
 %
-graph1D_jd(iar,eta_rel,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(iar,eta_rel_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(iar,eta_rel,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(iar,eta_rel_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(4),clf
 %
-xlim = [0,1];
 ylim = [0,0.1];
-xlab = 'r/R_p';
 ylab = 'j';
-tit = '';
 %
-graph1D_jd(iar,j_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(iar,j_nr_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(iar,j_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(iar,j_nr_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(5),clf
 %
-xlim = [0,1];
 ylim = [0,0.01];
-xlab = 'r/R_p';
 ylab = 'P';
-tit = '';
 %
-graph1D_jd(iar,p_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(iar,p_nr_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(iar,p_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(iar,p_nr_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
 figure(6),clf
 %
-xlim = [0,1];
 ylim = [0,20];
-xlab = 'r/R_p';
 ylab = 'j/P';
-tit = '';
 %
-graph1D_jd(iar,eta_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20,gca,0.9,0.7,0.7);
-graph1D_jd(iar,eta_nr_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20,gca);
+graph1D_jd(iar,eta_nr,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(iar,eta_nr_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
+%
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
-print_jd(2,'fig_LH_bounce_rel_j','.',1)
-print_jd(2,'fig_LH_bounce_rel_P','.',2)
-print_jd(2,'fig_LH_bounce_rel_eta','.',3)
-print_jd(2,'fig_LH_bounce_nr_j','.',4)
-print_jd(2,'fig_LH_bounce_nr_P','.',5)
-print_jd(2,'fig_LH_bounce_nr_eta','.',6)
+print_jd(p_opt,'fig_LH_bounce_rel_j','.',1)
+print_jd(p_opt,'fig_LH_bounce_rel_P','.',2)
+print_jd(p_opt,'fig_LH_bounce_rel_eta','.',3)
+print_jd(p_opt,'fig_LH_bounce_nr_j','.',4)
+print_jd(p_opt,'fig_LH_bounce_nr_P','.',5)
+print_jd(p_opt,'fig_LH_bounce_nr_eta','.',6)
 %
 %************************************************************************************************************************************
-%
 %
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
 info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
