@@ -2540,11 +2540,10 @@
 % 
 % LUKE Release 1.9.0
 % 
-% - correction for correct time evolution is solver_dke_yp.m
+% - correction for correct time evolution in solver_dke_yp.m
 % 
 % ====> LUKE/Project_DKE/DKE
 %
-% U LUKEversion_jd.m (LUKE 1.9.0)
 % U LUKE_startup_jd.m (small corrections)
 % U make_path_LOCAL.m (crpp and mat 7.12)
 %
@@ -2560,6 +2559,7 @@
 % U proc_luke_jd.m (outputs with dtn different from tn)
 % U run_lukert.m (")
 % U solver_dke_yp.m (correction to decouple Legendre convergence from time evolution, moments calculation coherent with fmoments)
+% U LUKEversion_jd.m (LUKE 1.9.0)
 %
 % ====> LUKE/Project_DKE/Display
 %
@@ -2572,4 +2572,96 @@
 % ====> LUKE/Tools
 %
 % U clustermode_luke.m (function-specific memory management)
+%
+% ----------------------------------------------------------------------------------------------------
+% 
+% LUKE Release 1.9.1
+% 
+% - delta f correction - no iterations needed with coll_mode ~= 2
+% - decomposition in poloidal mode number
+% - ripple power losses
+% - time management and function calls in CRONOS
+% - various updates before merging with LUKE_fluct
+% 
+% ====> LUKE
+%
+% U make_path_LOCAL.m (merge with Yves)
+% U make_path_LUKE.m (small corrections)
+%
+% ====> LUKE/Project_DKE/Database
+%
+% U DKEPARAM_files/make_dkeparam_UNIFORM10010020.m (tn, dtn, prec_0 and timevol)
+% U DKEPARAM_files/make_dkeparam_NONUNIFORM10010020.m (")
+% U DKEPARAM_files/make_dkeparam_EC_RT.m (tn added)
+% U DKEPARAM_files/make_dkeparam_LH_RT.m (")
+% U EXTERNAL_files/collect_parameters_for_luke.m (small correction)
+%
+% ====> LUKE/Project_DKE/DKE
+%
+% U LUKEversion_jd.m (LUKE 1.9.1)
+% U load_structures_yp.m (wavestruct added)
+% U momentumcoefbuilder_dke_yp.m (differential kinetic energy)
+% U proc_luke_jd.m (small corrections & energy distribution function)
+% U rayprocess_jd.m (processing of m and krho)
+% U main_dke_yp.m (ripple power losses, non-uniform time grid)
+% U fmoments_dke_yp.m (")
+% U solver_dke_yp.m (deltaf calculation corrected - no iterations required with coll_mode ~= 2)
+% U momentumgrid_dke_jd.m (externally specified mhu and pn grids possible)
+% U paramconsistency_dke_yp.m (non-uniform time grid, externally specified mhu and pn grids possible)
+%
+% ====> LUKE/Project_DKE/Display
+%
+% U imake_equil_jd.m (small corrections)
+% U irunluke_jd.m (")
+% U irunhxr_jd.m (management of old diagnostic)
+% U structinfo_yp.m (pnmax can be negative)
+% 
+% ====> LUKE/Project_DKE/Modules/Cronos
+%
+% U luke_parameters.m (tn instead of dtn)
+% U make_dkeparam_cronos.m (")
+% U make_wavelaunchs_cronos_ec.m (small corrections)
+% U zstarwars.m (time management corrected and simplified. input now in cronos wrapping functions)
+% 
+% ====> LUKE/Project_DKE/Modules/C3PO
+%
+% U main_rayinit_launch_jd.m (decomposition in m0)
+% U loop_main_C3PO_jd.m (processing of m and krho)
+% U raypostprocessing_yp.m (")
+% 
+% ====> LUKE/Project_DKE/Modules/EFIT
+%
+% U eqdsk_jd.m (small correction)
+% U equil_magnetic_EFIT_jd.m (")
+%
+% ====> LUKE/Project_DKE/Modules/FEB
+%
+% U bremdiag_dke_yp.m (small correction)
+% U fproc_hxr.m (read BACKUP_* files)
+% U collect_hxr_forLUKE_jd.m (management of old diagnostic)
+%
+% ====> LUKE/Project_DKE/Packages
+%
+% U nproc_dke_yp.m (new computers)
+%
+% ====> LUKE/Tools
+%
+% U graph_wave_jd.m (ray polarization and radial reflection)
+% U info_dke_yp.m (new mode)
+% U timeid_jd.m (default number of digits)
+% U userid_jd.m (new computer types)
+%
+% ====> LUKE/Simulations/Examples
+%
+% U ITER/Scen2/res_ITER_Scen2_200103121816_430_129_C3PO_NTM_32.log (LUKE 1.9 asymptotic solution tn=100 000, nit = 1)
+% U ITER/Scen4/res_ITER_Scen4_C3PO_f5_N2_dN0.2.log (")
+% U TS/32299/res_alpha_0_Dr0_0.log (")
+% U TS/32299/run_cronos_starwars.m (")
+% A TS/32299/ALOHA/TS32299_C3_ne03e17.mat (aloha spectrum file)
+% A TS/32299/ALOHA/TS32299_C3_ne05e17.mat (")
+% A TS/32299/ALOHA/TS32299_C3_ne07e17.mat (")
+%
+% ====> LUKE/Simulations/Benchmarks
+%
+% U all files modified and tested for compatibility with LUKE 1.9.1
 %
