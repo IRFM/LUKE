@@ -62,6 +62,8 @@ else
        end
     end
     %
+    clear Zf0_interp
+    %
     [momentumDKE] = momentumgrid_dke_jd(dkeparam_out,equilDKE,radialDKE);%Momentum space 2D grid for DKE
     [gridDKE] = matrix3Dgridbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE);%General grid structure for the DKE solver
     [Zmomcoef] = momentumcoefbuilder_dke_yp(gridDKE,mksa);%Momentum space coefficients for FP calculations
@@ -103,13 +105,10 @@ else
         xyP0_2piRp_mod = ones(gridindex_rf.nr,gridindex_rf.ny);
     end 
     %
-    if ~isinf(dkeparam_out.dtn),
-        nit = ceil(dkeparam_out.tn/dkeparam_out.dtn);
-    else
-        nit = 1;
-    end
+    FPtime = dkeparam_out.tn;
+    nit = length(FPtime);
+    dtn_list = diff([0,FPtime]);
     %
-    FPtime = unique([dkeparam_out.dtn:dkeparam_out.dtn:dkeparam_out.tn,dkeparam_out.tn]);
     if nit > 1 && display.display_mode >= 1,
         Fig_TimeIter = figure('Name','Time evolution');        
     end
@@ -149,9 +148,7 @@ end
 %
 for itn = itn0:nit,
     %
-    if itn == nit && ~isinf(dkeparam_out.dtn),
-        dkeparam_out.dtn = dkeparam_out.tn - (nit - 1)*dkeparam_out.dtn;% to adjust total computation time to tn
-    end
+    dkeparam_out.dtn = dtn_list(itn);
     %
     if itn == 1,
         XXfin = XXfinit;
@@ -319,8 +316,10 @@ for itn = itn0:nit,
         figure(Fig_TimeIter),
         if length(rho_S) == 1,
             graph1D_jd(FPtime(itn),curr0{itn}(end),0,0,'FP time (\tau_c)','J (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
-        else
+        elseif dkeparam_out.timevol == 1,
             graph1D_jd(FPtime(itn),Zcurr(itn).I_tot,0,0,'FP time (\tau_c)','I (MA)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
+        else
+            graph1D_jd(FPtime(itn),curr0{itn}(1,end),0,0,'FP time (\tau_c)','J_0 (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
         end
         grid on
         drawnow;                
@@ -329,6 +328,10 @@ for itn = itn0:nit,
     if dkeparam_in.opt_save,
         save(tmpfile);
     end
+end
+%
+if nit > 1 && display.display_mode >= 1,
+    close(Fig_TimeIter)
 end
 %
 % Moments of the distribution function

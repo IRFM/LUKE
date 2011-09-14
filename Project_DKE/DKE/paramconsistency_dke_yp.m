@@ -53,17 +53,55 @@ if ~isfield(dkeparam,'finsert'),
     dkeparam.finsert = 0;%The initial distribution is used to first estimate the ray absorption
 end
 %
-if isnan(dkeparam.dtn),% value adjusted for realistic time evolution
-    if ~isfield(dkeparam,'tn') || isnan(dkeparam.tn),
-        dkeparam.tn = 100000;%asymptotic calculation
-    end
-    dkeparam.dtn = dkeparam.tn./min([100,max([1,ceil(60./dkeparam.tn.^(3/8))])]);% fitted result from TS/32299 analysis
-end
+% FP time management
+%
 if ~isfield(dkeparam,'tn'),
-    dkeparam.tn = dkeparam.dtn;
+    dkeparam.tn = NaN;
 end
-if dkeparam.dtn > dkeparam.tn,
-    dkeparam.dtn = dkeparam.tn;
+if ~isfield(dkeparam,'dtn'),
+    dkeparam.dtn = NaN;
+end
+%
+if isscalar(dkeparam.tn),
+    if isnan(dkeparam.tn),
+        if isscalar(dkeparam.dtn) && isnan(dkeparam.dtn),
+            dkeparam.tn = 100000;%asymptotic calculation - quasi steady-state
+        else
+            dkeparam.tn = cumsum(dkeparam.dtn);%tn fixed by scalar or vector dtn
+        end
+    else
+        if isscalar(dkeparam.dtn),
+            if isnan(dkeparam.dtn),
+                dkeparam.dtn = dkeparam.tn./min([100,max([1,ceil(60./dkeparam.tn.^(3/8))])]);% fitted result from TS/32299 analysis
+            else% time step determined by dtn
+                if dkeparam.dtn > dkeparam.tn,
+                    info_dke_yp(2,['Warning : the prescribed time step (',num2str(dkeparam.dtn),...
+                    ') is reduced to tn = ',num2str(dkeparam.tn)]);
+                end
+                dkeparam.tn = unique([dkeparam.dtn:dkeparam.dtn:dkeparam.tn,dkeparam.tn]);
+                if length(dkeparam.tn) > 1 && dkeparam.tn(end) - dkeparam.tn(end-1) < dkeparam.dtn,
+                    info_dke_yp(2,['Warning : the last time step (',num2str(dkeparam.tn(end) - dkeparam.tn(end-1)),...
+                    ') is shorter than dtn = ',num2str(dkeparam.dtn)]);
+                end
+            end
+        else
+            info_dke_yp(2,'Warning : dkeparam.dtn prescription overridden by dkeparam.tn');
+        end
+    end
+else%time steps determined by tn vector
+    if ~isscalar(dkeparam.dtn) || ~isnan(dkeparam.dtn),
+        info_dke_yp(2,['Warning : dkeparam.dtn prescription overridden by dkeparam.tn']);
+    end
+end
+%
+dkeparam = rmfield(dkeparam,'dtn');%dtn determined from tn in main_dke_yp
+%
+if dkeparam.coll_mode ~= 2,
+    dkeparam.nit_f = 1;%no Legendre iterations without RHS
+end
+%
+if dkeparam.nit_f == 1,
+    dkeparam.prec0_f = -1;%no residue comparison with only one iteration
 end
 %
 if ~isfield(dkeparam,'timevol'),
@@ -74,3 +112,10 @@ if ~isfield(dkeparam,'redfac'),
     dkeparam.redfac = 0;
 end
 %
+if dkeparam.bounce_mode == 1 && isfield(dkeparam,'mhu_S') && ~isempty(dkeparam.mhu_S),
+     info_dke_yp(2,['Warning : the pitch angle grid cannot be externally enforced with bounce_mode = 1.']);
+     dkeparam = rmfield(dkeparam,'mhu_S');
+end
+    
+    
+    
