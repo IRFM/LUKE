@@ -69,179 +69,186 @@ end
 %
 %Pitch-angle grid
 %
-if grid_power == 0,
-    nmhumin = nmhu_S_in;
-    dmhu = 2/nmhumin; % grid step for uniform grid
-%
-    sdmhu0 = dmhu/sfac0; % fine grid step near mhu = 0
-    sdmhu1 = dmhu/sfac1; % fine grid step near mhu = 1
-    sdmhut = dmhu/sfact; % fine grid step near mhu = mhut
-%
-% ---------- fine grid near mhu = 0 and  mhu = 1 ----------------
-%
-    xmhut = sqrt(xmhu0T2);
-    xmhut = xmhut(xmhut > 0 & xmhut < 1);
-    mhutmin = min([xmhut,1]);
-    mhutmax = max([0,xmhut]);
-%    
-% ------ ensures that there are always enough points near mhu = 0 and  mhu = 1 --------
-%    
-    if ((1/4 + snmhu0)*sdmhu0) > mhutmin 
-	    sdmhu0 = mhutmin/(1/4 + snmhu0);
-    else
-	    sdmhu0 = sdmhu0;
-    end
-%
-    if ((3/4 + snmhu1)*sdmhu1) > (1 - mhutmax)
-	    sdmhu1 = (1 - mhutmax)/(3/4 + snmhu1);
-    else
-	    sdmhu1 = sdmhu1;
-    end
-%
-    smhu0min = 0;
-    smhu0max = snmhu0*sdmhu0;
-    smhu0 = [smhu0min:sdmhu0:smhu0max]; % fine grid at the mhu=0 vicinity
-%
-    smhu1min = 1 - snmhu1*sdmhu1;
-    smhu1max = 1;
-    smhu1 = [smhu1min:sdmhu1:smhu1max]; % fine grid at the mhu=1 vicinity
-%
-% --------------- generates half mhu grid ---------------------------
-%
-    if xrho_f == 0
-    	lmhu = trapeze_dke_jd(smhu0max,smhu1min,sdmhut,sfact);
-    	mhu = [smhu0,lmhu,smhu1];
-    else
-    	mhu = smhu0;
-    	if dke_mode == 0
-    		sdmhut = min([sdmhut,diff(xmhut)/3]);
-    	else
-    		sdmhut = min([sdmhut,diff(xmhut)/6]);
-    	end        
-    	N = length(xmhut);
-    	i = 1;
-    	while ~isempty(xmhut(i:N))
-    		if smhu0max > (xmhut(i) - (1/4 + snmhut)*sdmhut)
-    			sdmhuti = sdmhu0;
-    		elseif smhu1min < (xmhut(i) + (3/4 + snmhut)*sdmhut)
-    			sdmhuti = sdmhu1;
-    		else
-    			sdmhuti = sdmhut;
-    		end
-%
-    		rmhumin = xmhut(i) - (1/4 + snmhut)*sdmhuti;
-    		rmhumax =  xmhut(i) + (3/4 + snmhut)*sdmhuti;
-%
-    		if i > 1 & max(mhu) > rmhumin % when two consecutive fine radial grid overlap
-    			d = max(mhu) - rmhumin;
-    			while d > 0
-    				mhu = mhu(1:length(mhu)-1);
-    				rmhumin = rmhumin + sdmhuti;
-    				d = max(mhu) - rmhumin;
-    			end
-    			if (-d) > sdmhuti
-    				lmhu = max(mhu) + (-d)/2;
-    			else
-    				lmhu = [];
-    			end
-    		else
-    			mhu = mhu(mhu <= rmhumin);
-            lmhumin = max(mhu);
-            lmhumax = rmhumin;       
-            lmhu = trapeze_dke_jd(lmhumin,lmhumax,sdmhuti,dmhu);	
-         end 
-         rmhu = [rmhumin:sdmhuti:rmhumax];
-         mhu = [mhu,lmhu,rmhu];
-         i = i+1;
-      end
-%
-% fine grid near mhu = 1
-%
-      smhu1 = smhu1(smhu1 >= max(mhu));
-      lmhumin = max(mhu);
-      lmhumax = min(smhu1);  
-      lmhu = trapeze_dke_jd(lmhumin,lmhumax,sdmhuti/2,dmhu);   
-      mhu = [mhu,lmhu,smhu1];
-   end
-%
-   mhum = mhu(2:length(mhu));
-   mhu = [mhu(1),mhum(diff(mhu) > eps)];
-   mhu_S = [-fliplr(mhu(2:length(mhu))),mhu];
-%
-%   Case of an uniform mhu grid
-%   
-   if uniform == 1,
-   	mhu_S = [-1:2/(nmhumin+1):1];
-   end
-%
-% calculates the radial positions for dke solutions
-%
-   if sum(xrho_f == 0) > 0
-   	dke_mode = 0
-   end
-   if dke_mode == 1
-   	i_dke = [];
-   	i_rho = [];
-   	r_dke =[];
-   	for i = 1:length(xrho_f),
-   		i_mhu = max(find(mhu < xmhut(i)));
-   		i_dke = [i_dke, i_mhu];
-   		if i > 1 & i_mhu == max(i_rho)
-   			r_dke = [r_dke, length(i_rho)];
-            i_rho = [i_rho, i_mhu + 1];
-         elseif  i > 1 & i_mhu == max(i_rho) + 1
-            r_dke = [r_dke, length(i_rho) + 1];
-            i_rho = [i_rho, i_mhu, i_mhu + 1];
-         else
-            r_dke = [r_dke, length(i_rho) + 2];
-            i_rho = [i_rho, i_mhu - 1, i_mhu, i_mhu + 1];
-         end            
-      end
-      xrho_dke = 1./(2./(3/4*mhu(i_rho)+1/4*mhu(i_rho+1)).^2 - 1)*Rp_norm;
-      xrho_S = NaN*xrho_S;
-   else 
-   	r_dke = [1:1:length(xrho_f)];
-   	xrho_dke = xrho_f;
-   end
-%
-   xrho_f = xrho_dke;%Final grid with extra points for solving the drift kinetic equation
-%
-   if nr_S > 1,
-   	ir_display_out = find(min(abs(xrho_f(r_dke) - rho_display_in)) == abs(xrho_f(r_dke) - rho_display_in));
-   	if length(ir_display_out) == 2, ir_display_out = min(ir_display_out); end
-   else
-   	ir_display_out = 1;
-   end
-else
-%
-%New optimized method for reducing the number of pitch-angle points.
-%
-    nmhumin = nmhu_S_in;
-    dmhu = 2/(nmhumin-1); % grid step for uniform grid
-%
-    sdmhu0 = dmhu/sfac0; % fine grid step near mhu = 0
-    sdmhu1 = dmhu/sfac1; % fine grid step near mhu = 1
-    sdmhut = dmhu/sfact; % fine grid step near mhut
-%
-    xmhut = sqrt(xmhu0T2);
-    N = length(xmhut);
-%
-    if bounce_mode > 0,
-        mhu = makegrid_dke_jd(0,snmhu0,sdmhu0,xmhut(1),snmhut,sdmhut,snmhu0,dmhu,grid_power);
-        for ix=1:N-1,
-            %sdmhutmin = diff(mhu(length(mhu) - 1:length(mhu)));
-            %snmhut_new = max([snmhut - fix(log(sdmhut/sdmhutmin)/log(grid_power)),1]);
-            mhu = [mhu,makegrid_dke_jd(xmhut(ix),snmhut,sdmhut,xmhut(ix+1),snmhut,sdmhut,1,dmhu,grid_power)];
+if ~isfield(dkeparam,'mhu_S') || isempty(dkeparam.mhu_S),
+    if grid_power == 0,
+        nmhumin = nmhu_S_in;
+        dmhu = 2/nmhumin; % grid step for uniform grid
+    %
+        sdmhu0 = dmhu/sfac0; % fine grid step near mhu = 0
+        sdmhu1 = dmhu/sfac1; % fine grid step near mhu = 1
+        sdmhut = dmhu/sfact; % fine grid step near mhu = mhut
+    %
+    % ---------- fine grid near mhu = 0 and  mhu = 1 ----------------
+    %
+        xmhut = sqrt(xmhu0T2);
+        xmhut = xmhut(xmhut > 0 & xmhut < 1);
+        mhutmin = min([xmhut,1]);
+        mhutmax = max([0,xmhut]);
+    %    
+    % ------ ensures that there are always enough points near mhu = 0 and  mhu = 1 --------
+    %    
+        if ((1/4 + snmhu0)*sdmhu0) > mhutmin 
+            sdmhu0 = mhutmin/(1/4 + snmhu0);
+        else
+            sdmhu0 = sdmhu0;
         end
-        %sdmhutmin = diff(mhu(length(mhu) - 1:length(mhu)));
-        mhu = [mhu,makegrid_dke_jd(xmhut(N),snmhut,sdmhut,1,snmhu1,sdmhu1,snmhu1,dmhu,grid_power)];
+    %
+        if ((3/4 + snmhu1)*sdmhu1) > (1 - mhutmax)
+            sdmhu1 = (1 - mhutmax)/(3/4 + snmhu1);
+        else
+            sdmhu1 = sdmhu1;
+        end
+    %
+        smhu0min = 0;
+        smhu0max = snmhu0*sdmhu0;
+        smhu0 = [smhu0min:sdmhu0:smhu0max]; % fine grid at the mhu=0 vicinity
+    %
+        smhu1min = 1 - snmhu1*sdmhu1;
+        smhu1max = 1;
+        smhu1 = [smhu1min:sdmhu1:smhu1max]; % fine grid at the mhu=1 vicinity
+    %
+    % --------------- generates half mhu grid ---------------------------
+    %
+        if xrho_f == 0
+            lmhu = trapeze_dke_jd(smhu0max,smhu1min,sdmhut,sfact);
+            mhu = [smhu0,lmhu,smhu1];
+        else
+            mhu = smhu0;
+            if dke_mode == 0
+                sdmhut = min([sdmhut,diff(xmhut)/3]);
+            else
+                sdmhut = min([sdmhut,diff(xmhut)/6]);
+            end        
+            N = length(xmhut);
+            i = 1;
+            while ~isempty(xmhut(i:N))
+                if smhu0max > (xmhut(i) - (1/4 + snmhut)*sdmhut)
+                    sdmhuti = sdmhu0;
+                elseif smhu1min < (xmhut(i) + (3/4 + snmhut)*sdmhut)
+                    sdmhuti = sdmhu1;
+                else
+                    sdmhuti = sdmhut;
+                end
+    %
+                rmhumin = xmhut(i) - (1/4 + snmhut)*sdmhuti;
+                rmhumax =  xmhut(i) + (3/4 + snmhut)*sdmhuti;
+    %
+                if i > 1 & max(mhu) > rmhumin % when two consecutive fine radial grid overlap
+                    d = max(mhu) - rmhumin;
+                    while d > 0
+                        mhu = mhu(1:length(mhu)-1);
+                        rmhumin = rmhumin + sdmhuti;
+                        d = max(mhu) - rmhumin;
+                    end
+                    if (-d) > sdmhuti
+                        lmhu = max(mhu) + (-d)/2;
+                    else
+                        lmhu = [];
+                    end
+                else
+                    mhu = mhu(mhu <= rmhumin);
+                lmhumin = max(mhu);
+                lmhumax = rmhumin;       
+                lmhu = trapeze_dke_jd(lmhumin,lmhumax,sdmhuti,dmhu);	
+             end 
+             rmhu = [rmhumin:sdmhuti:rmhumax];
+             mhu = [mhu,lmhu,rmhu];
+             i = i+1;
+          end
+    %
+    % fine grid near mhu = 1
+    %
+          smhu1 = smhu1(smhu1 >= max(mhu));
+          lmhumin = max(mhu);
+          lmhumax = min(smhu1);  
+          lmhu = trapeze_dke_jd(lmhumin,lmhumax,sdmhuti/2,dmhu);   
+          mhu = [mhu,lmhu,smhu1];
+       end
+    %
+       mhum = mhu(2:length(mhu));
+       mhu = [mhu(1),mhum(diff(mhu) > eps)];
+       mhu_S = [-fliplr(mhu(2:length(mhu))),mhu];
+    %
+    %   Case of an uniform mhu grid
+    %   
+       if uniform == 1,
+        mhu_S = [-1:2/(nmhumin+1):1];
+       end
+    %
+    % calculates the radial positions for dke solutions
+    %
+       if sum(xrho_f == 0) > 0
+        dke_mode = 0
+       end
+       if dke_mode == 1
+        i_dke = [];
+        i_rho = [];
+        r_dke =[];
+        for i = 1:length(xrho_f),
+            i_mhu = max(find(mhu < xmhut(i)));
+            i_dke = [i_dke, i_mhu];
+            if i > 1 & i_mhu == max(i_rho)
+                r_dke = [r_dke, length(i_rho)];
+                i_rho = [i_rho, i_mhu + 1];
+             elseif  i > 1 & i_mhu == max(i_rho) + 1
+                r_dke = [r_dke, length(i_rho) + 1];
+                i_rho = [i_rho, i_mhu, i_mhu + 1];
+             else
+                r_dke = [r_dke, length(i_rho) + 2];
+                i_rho = [i_rho, i_mhu - 1, i_mhu, i_mhu + 1];
+             end            
+          end
+          xrho_dke = 1./(2./(3/4*mhu(i_rho)+1/4*mhu(i_rho+1)).^2 - 1)*Rp_norm;
+          xrho_S = NaN*xrho_S;
+       else 
+        r_dke = [1:1:length(xrho_f)];
+        xrho_dke = xrho_f;
+       end
+    %
+       xrho_f = xrho_dke;%Final grid with extra points for solving the drift kinetic equation
+    %
+       if nr_S > 1,
+        ir_display_out = find(min(abs(xrho_f(r_dke) - rho_display_in)) == abs(xrho_f(r_dke) - rho_display_in));
+        if length(ir_display_out) == 2, ir_display_out = min(ir_display_out); end
+       else
+        ir_display_out = 1;
+       end
     else
-        mhu = makegrid_dke_jd(0,snmhu0,sdmhu0,1,snmhu1,sdmhu1,snmhu0+snmhu1,dmhu,grid_power);
+    %
+    %New optimized method for reducing the number of pitch-angle points.
+    %
+        nmhumin = nmhu_S_in;
+        dmhu = 2/(nmhumin-1); % grid step for uniform grid
+    %
+        sdmhu0 = dmhu/sfac0; % fine grid step near mhu = 0
+        sdmhu1 = dmhu/sfac1; % fine grid step near mhu = 1
+        sdmhut = dmhu/sfact; % fine grid step near mhut
+    %
+        xmhut = sqrt(xmhu0T2);
+        N = length(xmhut);
+    %
+        if bounce_mode > 0,
+            mhu = makegrid_dke_jd(0,snmhu0,sdmhu0,xmhut(1),snmhut,sdmhut,snmhu0,dmhu,grid_power);
+            for ix=1:N-1,
+                %sdmhutmin = diff(mhu(length(mhu) - 1:length(mhu)));
+                %snmhut_new = max([snmhut - fix(log(sdmhut/sdmhutmin)/log(grid_power)),1]);
+                mhu = [mhu,makegrid_dke_jd(xmhut(ix),snmhut,sdmhut,xmhut(ix+1),snmhut,sdmhut,1,dmhu,grid_power)];
+            end
+            %sdmhutmin = diff(mhu(length(mhu) - 1:length(mhu)));
+            mhu = [mhu,makegrid_dke_jd(xmhut(N),snmhut,sdmhut,1,snmhu1,sdmhu1,snmhu1,dmhu,grid_power)];
+        else
+            mhu = makegrid_dke_jd(0,snmhu0,sdmhu0,1,snmhu1,sdmhu1,snmhu0+snmhu1,dmhu,grid_power);
+        end
+    %
+        mhu = sort(mhu(find(diff([-1,mhu]) > 10*eps)));%Sorting for RFP since the trapped domain is not monotonic with the minor radius
+        mhu_S = [-fliplr(mhu(2:length(mhu))),mhu];
+    %
     end
-%
-    mhu = sort(mhu(find(diff([-1,mhu]) > 10*eps)));%Sorting for RFP since the trapped domain is not monotonic with the minor radius
-    mhu_S = [-fliplr(mhu(2:length(mhu))),mhu];
-%
+    %
+else% pitch angle grid specified in dkeparam
+    %
+    mhu_S = dkeparam.mhu_S;
+    %
 end
 %
 nmhu_S = length(mhu_S);
@@ -268,31 +275,40 @@ dmhup_S(dmhup_S == 0) = eps;%Avoid singularities (NaN)
 %
 %Momentum grid
 %
-if uniform == 1,
-	pgridfactor = 1;%Uniform grid: pgridfactor = 1
-	np_S_ref = 20;
-else
-	pgridfactor = snp;%Non-uniform grid pgridfactor > 1
-end
-%
-%if np_S_in < nmhu_S, 
-%    np_S = nmhu_S;
-%else
-    np_S = np_S_in;
-%end
-%
-pn_S(1) = 0;
-dpn_S_ref = pnmax_S/(np_S - 1);
-dpn_S_0 = dpn_S_ref/pgridfactor;%Momentum step close to p = 0
 dpn_threshold = 0.1;
-ip = 1;
-while pn_S(ip) <= pnmax_S + dpn_S_ref*1e-3,%Small steps close to p = 0
-%   dpn_S(ip) = (dpn_S_ref-dpn_S_0)*tanh((np_S - ip - np_S_ref)/25)/2 + (dpn_S_ref+dpn_S_0)/2;
-   dpn_S(ip) = (dpn_S_ref-dpn_S_0)*tanh((ip-np_S_ref))/2 + (dpn_S_ref+dpn_S_0)/2;
-	pn_S(ip+1) = pn_S(ip) + dpn_S(ip);
-	ip = ip+1;
+%
+if ~isfield(dkeparam,'pn_S') || isempty(dkeparam.pn_S),
+    if uniform == 1,
+        pgridfactor = 1;%Uniform grid: pgridfactor = 1
+        np_S_ref = 20;
+    else
+        pgridfactor = snp;%Non-uniform grid pgridfactor > 1
+    end
+    %
+    %if np_S_in < nmhu_S, 
+    %    np_S = nmhu_S;
+    %else
+        np_S = np_S_in;
+    %end
+    %
+    pn_S(1) = 0;
+    dpn_S_ref = pnmax_S/(np_S - 1);
+    dpn_S_0 = dpn_S_ref/pgridfactor;%Momentum step close to p = 0
+    ip = 1;
+    while pn_S(ip) <= pnmax_S + dpn_S_ref*1e-3,%Small steps close to p = 0
+    %   dpn_S(ip) = (dpn_S_ref-dpn_S_0)*tanh((np_S - ip - np_S_ref)/25)/2 + (dpn_S_ref+dpn_S_0)/2;
+       dpn_S(ip) = (dpn_S_ref-dpn_S_0)*tanh((ip-np_S_ref))/2 + (dpn_S_ref+dpn_S_0)/2;
+        pn_S(ip+1) = pn_S(ip) + dpn_S(ip);
+        ip = ip+1;
+    end
+    pn_S = pn_S(1:length(pn_S) - 1);
+    %
+else% momentum grid specified in dkeparam
+    %
+    pn_S = dkeparam.pn_S;
+    %
 end
-pn_S = pn_S(1:length(pn_S) - 1);
+%
 npn_S = length(pn_S);
 %
 npn_f = npn_S - 1;
