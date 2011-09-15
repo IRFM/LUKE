@@ -38,6 +38,7 @@ addpath([luke_root,'Project_DKE/Modules/R2D2']);
 addpath([luke_root,'Project_DKE/Modules/R2D2/MEX/Bin']);
 addpath([luke_root,'Project_DKE/Modules/EFIT']);
 addpath([luke_root,'Project_DKE/Modules/C3PO']);
+addpath([luke_root,'Project_DKE/Modules/Ripple']);
 addpath([luke_root,'Project_DKE/Modules/Ripple/TS']);
 addpath([luke_root,'Project_DKE/Modules/Cronos']);
 addpath([luke_root,'Project_DKE/Modules/ITM']);
@@ -45,6 +46,7 @@ addpath([luke_root,'Project_DKE/Modules/METIS']);
 addpath([luke_root,'Project_DKE/Display']);
 addpath([luke_root,'Project_DKE/Packages']);
 addpath([luke_root,'Project_DKE/Packages/MUMPS']);
+addpath([luke_root,'Project_DKE/Packages/PARDISO']);
 addpath([luke_root,'Project_DKE/Packages/PETSc']);
 addpath([luke_root,'Project_DKE/Packages/MDCE']);
 addpath([luke_root,'Project_DKE/Packages/MDCE/dcluke']);
@@ -74,7 +76,7 @@ end
 %
 % Path for MEX files
 %
-[lukeversion,matver] = LUKEversion_jd;
+[dummy,matver] = LUKEversion_jd;
 %
 sourcepath.DKE = [luke_root,'Project_DKE/MEX/Source/'];
 sourcepath.C3PO = [luke_root,'Project_DKE/Modules/C3PO/MEX/Source/'];
@@ -89,7 +91,7 @@ if nargin == 2,
         mexpath = [luke_root,'Project_DKE/MEX/Bin'];
         force_compile = 1;
     end
-    mex_compile_luke(sourcepath,mexpath,dkepath.compiler_opt,force_compile)
+    mex_compile_luke(sourcepath,mexpath,dkepath.compiler_opt,force_compile);
     %
     addpath(mexpath);
     %
@@ -105,8 +107,18 @@ if nargin == 2,
 			addpath(dkepath.MUMPS.mex);
 		end
     end
+    %
     if isfield(dkepath,'SUPERLU') & isfield(dkepath.SUPERLU,'mex'),
         addpath(dkepath.SUPERLU.mex);
     end
+    %
+    if isfield(dkepath,'PARDISO') 
+		if isfield(dkepath.PARDISO,['mex',matver]),
+			addpath(dkepath.PARDISO.(['mex',matver]));
+        elseif isfield(dkepath.PARDISO,'mex'),
+			addpath(dkepath.PARDISO.mex);
+		end
+    end
+
 end
 %
