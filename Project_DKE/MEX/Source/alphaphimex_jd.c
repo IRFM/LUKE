@@ -38,6 +38,7 @@ by Joan Decker (CEA-DRFC) <joan.decker@cea.fr> and Yves Peysson (CEA-DRFC)  <yve
 /*#include <math.h>*/
 #include "mex.h"
 #include <complex.h>
+#include <math.h>
 
 /* subroutines list */
 
@@ -60,6 +61,10 @@ double alphaphi_jd();
 #define REL_OPT_IN      prhs[12]
 #define NS_IN           prhs[13]
 #define PPERPMAX_IN     prhs[14]
+#define PN_IN           prhs[15]
+#define MHU_IN          prhs[16]
+#define F0_IN           prhs[17]
+#define PSI_IN          prhs[18]
 
 /* Output Arguments */
 
@@ -78,7 +83,12 @@ void mexFunction( int nlhs, mxArray *plhs[],
     
     double complex xepolp,xepolm,xepolz;
     
+    int flag_f0 =  1;
+    
     int nx,m;
+    
+    double *pn,*mhu,*Xf0,*PSI;
+    int npn,nmhu;
     
     /* Check out the arguments */
 
@@ -90,27 +100,34 @@ void mexFunction( int nlhs, mxArray *plhs[],
         mexErrMsgTxt("Not enough input arguments calling alphaphi_fr_jd");
     }
  
-    if (nrhs > 15) {
+    if (nrhs > 19)  {
         mexErrMsgTxt("Too many input arguments calling alphaphi_fr_jd");
+    }
+    
+    if ((nrhs > 15) && (nrhs != 19))  {
+        mexErrMsgTxt("Wrong number of input arguments calling alphaphi_fr_jd");
     }
       
     if (nrhs < 13) {
-        rel_opt = 0;} 
-    else {
+        rel_opt = 0;
+    } else {
         rel_opt = *mxGetPr(REL_OPT_IN);
     }    
     
     if (nrhs < 14) {
-        ns = 1000;} 
-    else {
+        ns = 1000; 
+    } else {
         ns = *mxGetPr(NS_IN);
     }    
     
     if (nrhs < 15) {
-        pperpmax = 10;} 
-    else {
+        pperpmax = 10;
+    } else {
         pperpmax = *mxGetPr(PPERPMAX_IN);
-    }    
+    }
+    
+    if (nrhs != 19) flag_f0 = 0;/* No wave damping on a non-maxwellian distribution */
+
     
     /* Get Input Arguments */
 
@@ -133,6 +150,28 @@ void mexFunction( int nlhs, mxArray *plhs[],
     nx = mxGetN(XA_IN);
     XALPHAPHI_OUT = mxCreateDoubleMatrix(1,nx,mxREAL);
     xalphaphi = mxGetPr(XALPHAPHI_OUT);  
+    
+    if (flag_f0 == 1) {/* non-Maxwellian electron distribution */
+
+        pn = mxGetPr(PN_IN);
+        mhu = mxGetPr(MHU_IN);
+        Xf0 = mxGetPr(F0_IN);
+        PSI = mxGetPr(PSI_IN);
+        
+        npn = fmax(mxGetM(PN_IN),mxGetN(PN_IN));
+        nmhu = fmax(mxGetM(MHU_IN),mxGetN(MHU_IN));
+        
+    } else {/* Maxwellian electron distribution */
+          
+        Xf0 = mxCalloc(1,sizeof(double));          
+        PSI = mxCalloc(1,sizeof(double));
+        
+        pn = mxCalloc(1,sizeof(double));
+        npn = 1;
+        
+        mhu = mxCalloc(1,sizeof(double));
+        nmhu = 1;  
+    }
     
     /* Local test 
     
@@ -157,8 +196,18 @@ void mexFunction( int nlhs, mxArray *plhs[],
         mexPrintf("xepolm : %g + I*%g\n",creal(xepolm),cimag(xepolm));
         mexPrintf("xepolz : %g + I*%g\n",creal(xepolz),cimag(xepolz));*/
     
-        xalphaphi[m] = alphaphi_jd(xepolp,xepolm,xepolz,xa[m],xb[m],xbeta[m],xnpar[m],xnperp[m],n,rel_opt,ns,pperpmax);
+        xalphaphi[m] = alphaphi_jd(xepolp,xepolm,xepolz,xa[m],xb[m],xbeta[m],xnpar[m],xnperp[m],n,rel_opt,ns,pperpmax,npn,pn,nmhu,mhu,Xf0,PSI);
     }
-     
+    
+    
+    if (flag_f0 == 0) {/* Maxwellian electron distribution */
+          
+        mxFree(Xf0);
+        mxFree(PSI);
+        mxFree(pn);
+        mxFree(mhu); 
+    }  
 }
+
+
 
