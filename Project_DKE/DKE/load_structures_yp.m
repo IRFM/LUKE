@@ -142,7 +142,10 @@ if exist('flag_path','var'),%Paths
         hostnames = fieldnames(dkepath.hostname);
         nhosts = length(hostnames);
         hostname = '';
-        [s,lhostname] = unix('hostname');
+        [s,lhostname] = system('hostname');
+        if s ~= 0,
+            lhostname = getenv('LUKE_hostname');%For remote computing (xgrid)
+        end
         for ihost = 1:nhosts, 
             if strfind(lhostname,dkepath.hostname.(hostnames{ihost})),
                 hostname = hostnames{ihost};
@@ -151,6 +154,7 @@ if exist('flag_path','var'),%Paths
         if isempty(hostname),
             if isfield(dkepath,'default'),
                 hostname = 'default';
+                warning('The computer is not listed in dkepath: default hostname.')
             else
                 error('The computer is not listed in dkepath')
             end
