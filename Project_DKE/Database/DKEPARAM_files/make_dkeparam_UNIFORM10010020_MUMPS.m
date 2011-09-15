@@ -52,6 +52,14 @@ dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if 
 dkeparam.prec_rf = 1e-4;%relative precision in RT-DKE iterations
 dkeparam.n_rf_list = 0;%List of harmonics in the Dql calculations
 dkeparam.delta_rt = 0;%smoothering parameter of quasilinear iterations
+dkeparam.nk_abs = 1;%maximum number of iterations on a_sdNpar for full absorption (%%%%%%TODO%%%%%%% for what ?)
+%dkeparam.w_mask = ;%%%%%%TODO%%%%%%%
+%dkeparam.rho0 = ;%%%%%%TODO%%%%%%%
+%dkeparam.seekparam.submode = ;%%%%%%TODO%%%%%%%
+%dkeparam.seekparam.f_sdNpar_in = ;%%%%%%TODO%%%%%%%
+%dkeparam.seekparam.f_step = ;%%%%%%TODO%%%%%%%
+%dkeparam.seekparam.a_sdNpar_in = ;%%%%%%TODO%%%%%%%
+%dkeparam.seekparam.a_step = ;%%%%%%TODO%%%%%%%
 %
 % Run mode
 %
@@ -71,7 +79,8 @@ dkeparam.boundary_mode_g = 0;%Number of points where the first distribution func
 dkeparam.prec0_g = 1e-11;%Convergence level of the residu (if NaN, iterations stop with nit_g)
 dkeparam.nit_g = 50;%Maximum number of iterations for g
 %
-dkeparam.dtn = 10000;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
+dkeparam.tn = 100000;%LUKE time step (1/nhuth_ref)
+dkeparam.dtn = NaN;%Integration time step (1/nhuth_ref) (dtn > 0: fully implicit time differencing scheme , dtn < 0: Crank-Nicholson time differencing scheme) (WARNING: dtn less than 1 when fast electron radial transport is considered)
 dkeparam.opsplit = 0;%Operator splitting between momentum and radial dynamics (for tests only) (opsplit = 0: no operator splitting , opsplit = 1: operator splitting). If this field does not exist, it is equivalent to dkeparam.opsplit = 0.
 %
 dkeparam.invproc = -1;%Iterative matrix inversion methods
@@ -95,16 +104,23 @@ dkeparam.PETScparam.kspmethod = ' ';%KSP method used by PETSc. '-ksp_type preonl
 dkeparam.PETScparam.pcmethod = ' ';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation
 dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
 %
-dkeparam.clustermode.coll_dke_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
-dkeparam.clustermode.coll_dke_jd.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-dkeparam.clustermode.coll_dke_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
-dkeparam.clustermode.eecoll_dke_yp.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
-dkeparam.clustermode.eecoll_dke_yp.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-dkeparam.clustermode.eecoll_dke_yp.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+dkeparam.clustermode.coll_dke_jd.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+dkeparam.clustermode.coll_dke_jd.scheduler.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
+dkeparam.clustermode.coll_dke_jd.scheduler.size = 2;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+dkeparam.clustermode.eecoll_dke_yp.scheduler.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
+dkeparam.clustermode.eecoll_dke_yp.scheduler.size = 2;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+dkeparam.clustermode.wave_solver_yp.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+dkeparam.clustermode.wave_solver_yp.scheduler.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
+dkeparam.clustermode.wave_solver_yp.scheduler.size = 2;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+dkeparam.clustermode.wave_random_yp.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+dkeparam.clustermode.wave_random_yp.scheduler.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
+dkeparam.clustermode.wave_random_yp.scheduler.size = 2;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
 %
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 dkeparam.opt_save = 0;%Save intermediate calculations
 dkeparam.opt_load = 0;%Load intermediate calculations
+dkeparam.timevol = 0;% save results at intermediate times
 %
 dkeparam.method = 'spline';%For the pitch-angle interpolation in the prjectioon of the electron velocity distribution on the Legendre polynomial basis
 dkeparam.n_gauleg = 35;%Number of Legendre polynomials for projections of the electron velocity distribution
