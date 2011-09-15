@@ -1,0 +1,7 @@
+Comparison LUKE/Coppi/Connor - NR calculations (betath = 0.01)
+----------------------
+--> eps = 0.1 : sigma/sigma_cyl = 0.44968/0.47836/0.46236
+--> eps = 0.2 : sigma/sigma_cyl = 0.30094/0.31793/0.30727
+--> eps = 0.3 : sigma/sigma_cyl = 0.21367/0.21694/0.21228
+--> eps = 0.5 : sigma/sigma_cyl = 0.10869/0.096142/0.099567
+--> eps = 0.8 : sigma/sigma_cyl = 0.025236/0.015867/0.019417

@@ -1,13 +1,13 @@
 Comparison LUKE/Karney/Spitzer - NR calculations (betath = 0.01)
 ----------------------
-Linearized operator : sigma = 7.4176/7.429/7.432
+Linearized operator : sigma = 7.4269/7.429/7.432
 Maxwellian operator : sigma = 3.753/3.773
 High-Velocity operator : sigma = 2.9921/2.837
  
 Comparison LUKE/Karney - FR calculations
 ----------------------
-betath^2 = 0.01 : sigma = 7.2617/7.291
-betath^2 = 0.02 : sigma = 7.114/7.16
-betath^2 = 0.05 : sigma = 6.7205/6.807
-betath^2 = 0.10 : sigma = 6.1885/6.317
-betath^2 = 0.20 : sigma = 5.4133/5.575
+betath^2 = 0.01 : sigma = 7.2708/7.291
+betath^2 = 0.02 : sigma = 7.1229/7.16
+betath^2 = 0.05 : sigma = 6.729/6.807
+betath^2 = 0.10 : sigma = 6.1967/6.317
+betath^2 = 0.20 : sigma = 5.422/5.575

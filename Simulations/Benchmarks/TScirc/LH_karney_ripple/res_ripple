@@ -1,0 +1,6 @@
+Ripple losses
+----------------------
+Boundary losses : Gamma*tau_c = 8.155e-07
+Volumic losses : Gamma*tau_c = 8.2387e-07
+Case with ripple : j = 0.0024598 ; P = 0.00010231 ; j/P = 24.043
+Case with no ripple : j = 0.0026097 ; P = 0.0001072 ; j/P = 24.3445

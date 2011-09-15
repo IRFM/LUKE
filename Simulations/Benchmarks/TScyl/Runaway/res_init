@@ -1,0 +1,14 @@
+Test for internal and external loop consistency
+----------------------
+--> Maximum difference between internal and external density calculations : 
+coll_mode = 0 : max(abs(snormf0_0 - xnormf0_0)) = 0
+coll_mode = 2 : max(abs(snormf0_2 - xnormf0_2)) = 0
+ 
+--> Maximum difference between internal and external volume runaway calculations : 
+coll_mode = 0 : max(abs(sRRv_0 - xRRv_0)) = 0
+coll_mode = 2 : max(abs(sRRv_2 - xRRv_2)) = 0
+ 
+--> Maximum difference between internal and external surface runaway calculations : 
+coll_mode = 0 : max(abs(sRRs_0 - xRRs_0)) = 0
+coll_mode = 2 : max(abs(sRRs_2 - xRRs_2)) = 0
+----------------------

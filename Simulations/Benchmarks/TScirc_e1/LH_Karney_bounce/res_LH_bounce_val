@@ -1,0 +1,17 @@
+Case 1 (NR)
+----------------------
+--> eps = 0.0 : eta/eta_cyl = 16.4314      16.4303      16.4494      16.4497      16.4411
+--> eps = 0.1 : eta/eta_cyl = 12.9988
+--> eps = 0.2 : eta/eta_cyl = 11.0486
+--> eps = 0.3 : eta/eta_cyl = 9.2327
+--> eps = 0.5 : eta/eta_cyl = 5.3284
+--> eps = 0.8 : eta/eta_cyl = 0.91215
+ 
+Case 2 (FR)
+----------------------
+--> eps = 0.0 : eta/eta_cyl = 29.7628      29.7742      29.7675      29.7874      29.8095
+--> eps = 0.1 : eta/eta_cyl = 25.0959
+--> eps = 0.2 : eta/eta_cyl = 21.4471
+--> eps = 0.3 : eta/eta_cyl = 18.5343
+--> eps = 0.5 : eta/eta_cyl = 12.3246
+--> eps = 0.8 : eta/eta_cyl = 2.8514

@@ -1,0 +1,7 @@
+Comparison LUKE/Coppi/Connor - NR calculations (betath = 0.001)
+----------------------
+--> eps = 0.1 : RR/RR_cyl = 0.33982
+--> eps = 0.2 : RR/RR_cyl = 0.17015
+--> eps = 0.3 : RR/RR_cyl = 0.090208
+--> eps = 0.5 : RR/RR_cyl = 0.025252
+--> eps = 0.8 : RR/RR_cyl = 0.001708
