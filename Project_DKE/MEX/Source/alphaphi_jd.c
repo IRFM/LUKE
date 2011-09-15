@@ -1,15 +1,22 @@
-#include <math.h>
+#include "mex.h"
 #include <complex.h>
+#include <math.h>
+
 #include <bessel_IJK_jd.h>
-/*#include "mex.h"*/
-#define PI 3.141592653589793
+
+/* Format definition */
+
 
 double integral_fr_jd();
 
-double alphaphi_jd(epolp,epolm,epolz,a,b,beta,npar,nperp,n,rel_opt,ns,pperpmax)
+#define PI 3.141592653589793
+
+double alphaphi_jd(epolp,epolm,epolz,a,b,beta,npar,nperp,n,rel_opt,ns,pperpmax,npn,pn,nmhu,mhu,Xf0,PSI)
 double complex epolp,epolm,epolz;
 double a,b,beta,npar,nperp,pperpmax;
 int n,rel_opt,ns;
+int npn,nmhu;
+double *pn,*mhu,*Xf0,*PSI;
 {   /* Local test */
      
     /*mexPrintf("a : %g\n",a);
@@ -41,6 +48,18 @@ int n,rel_opt,ns;
     
     if (ntest < 50) {
         mexPrintf("WARNING : Some positions have as little as %g integration steps per Bessel period\n",floor(ntest));
+    }
+    
+    /* Non-Maxwellian parameter */
+    
+    if ((npn > 1) && (nmhu > 1)) {/*Wave aborption is calculated with a non-Maxwellian distribution function */
+        
+       /* mexPrintf("----------------------------------------\n");
+        mexPrintf("Wave aborption may be calculated with a non-Maxwellian distribution function.\n"); 
+        mexPrintf("npn, pn(1),pn(end) : %d,%g,%g\n",npn,pn[0],pn[npn-1]);
+        mexPrintf("nmhu, mhu(1),mhu(end) : %d,%g,%g\n",nmhu,mhu[0],mhu[nmhu-1]);
+        */
+  
     }
       
     /* Resonance curve type */
