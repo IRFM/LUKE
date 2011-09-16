@@ -134,7 +134,7 @@ function varargout = dcluke(dkecluster,entree1,varargin)
             end
         end
     %
-    %TODO: Probleme li� au montage NFS tres lent de CEPHEE. A enlever plus tard...
+    %TODO: Probleme lie au montage NFS tres lent de CEPHEE. A enlever plus tard...
     %
         if strfind(hostname,'cephee'),
             pause(1);
@@ -183,7 +183,18 @@ function varargout = dcluke(dkecluster,entree1,varargin)
         save(ba(current).inputdata,'data');
         % lancement du job
         script = which('dcluke.exe');
-        txt =   sprintf('%s %s "%s%s" %s %s %s %s',run,workdir,cmd,remotemem,script,matlabroot,ba(current).inputdata,ba(current).batchfile);
+        if ischar(cmd),
+        	txt =   sprintf('%s %s "%s%s" %s %s %s %s',run,workdir,cmd,remotemem,script,matlabroot,ba(current).inputdata,ba(current).batchfile);
+        elseif iscell(cmd),
+            txt =   sprintf('%s %s "%s" %s %s',run,workdir,cmd{1},script,ba(current).inputdata);
+            for ic = 2:length(cmd)        
+                txt = [txt,sprintf(' "%s"',cmd{ic})];
+            end
+            txt = [txt,sprintf(' %s',ba(current).batchfile)];
+        else
+        	error('cmd must be char array or cell array')    
+        end
+        %
         [s,t] = unix(txt);
         if s~= 0
                 error(sprintf('dcluke : error launching job %d in batch :\n %s',entree1,t));				
@@ -365,18 +376,31 @@ end
 %
 function etat = etat_maj(jobid,remoteset_jobid)
     %
-    [s,t] = unix(['qstat ',remoteset_jobid{1},jobid,remoteset_jobid{2}]);
+    [s,t] = unix([remoteset_jobid{1},jobid,remoteset_jobid{2}]);
     t(double(t) == 10) = [];
-    if s ~= 0
-        if isempty(strfind(t,remoteset_jobid{3})),
-            %
-            error(['Remote run check failed : ',t])
-            %
+    %
+    if s ~= 0 && isempty(strfind(t,remoteset_jobid{3})),
+        error(['Remote run check failed : ',t])
+    end
+    %
+    if s ~= 0 && ~isempty(strfind(t,remoteset_jobid{3})),
+        etat ='done';	
+    end
+    %
+    if s == 0 && ~isempty(strfind(t,remoteset_jobid{3})),
+        error(['Remote run check failed : ',t])
+    end
+    %
+    if s == 0 && isempty(strfind(t,remoteset_jobid{3})),
+        if length(remoteset_jobid) > 3
+            if ~isempty(strfind(t,remoteset_jobid{4})),
+                etat ='done';    
+            else
+                etat ='running'; 
+            end
         else
-            etat ='done';	
+            etat ='running';
         end
-    else
-        etat ='running';	
     end
 end
 
