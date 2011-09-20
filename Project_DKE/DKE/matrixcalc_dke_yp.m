@@ -14,7 +14,6 @@ etime_fp = 0;
 boundary_mode_f = dkeparam.boundary_mode_f;
 dke_mode = dkeparam.dke_mode;
 bounce_mode = dkeparam.bounce_mode;
-store_mode = dkeparam.store_mode;
 dtn = dkeparam.dtn;
 %
 display_mode = display.display_mode;
@@ -1092,10 +1091,6 @@ if dke_mode == 1,
 %    MMH_tp = MMH_tp + sparse([1:nMMH_tp-(nmhu+1)*npn],[1+(nmhu+1)*npn:nMMH_tp],MMH_tp_pp(1:nMMH_tp-npn*(nmhu+1)),nMMH_tp,nMMH_tp);
 %
 %    if display_mode >= 1,info_dke_yp(2,['Second order radial gradient correction for ftp matrix calculations done in ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
-end
-%
-if store_mode == 1,
-%    save([fullfile(temppath,'MXP_mat'],'Zmask_f0_t','Zmask_g','-append');
 end
 %
 

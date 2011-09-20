@@ -1,7 +1,6 @@
 function [mksa] = mksacoefbuilder_dke_yp(dkeparam,display,equilDKE,radialDKE)
-%LUKE - Calculation of all mksa coefficients for the 3D electron relativistic drift kinetic solver
 %
-%   Calculate mksa coefficients for the 3D electron relativistic drift kinetic solver.
+% LUKE - Calculation of mksa coefficients for the 3D electron relativistic drift kinetic solver
 %
 %   by Y. Peysson (CEA/DSM/IRFM) (yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM) (joan.decker@cea.fr)
 %
@@ -46,3 +45,5 @@ mksa.Edreicer_ref = me*clum*mksa.betath_ref*mksa.nhu_ref/qe;%MKSA Dreicer field 
 mksa.wpe_ref = sqrt(ne_ref*qe^2/me/e0);%MKSA plasma frequency (s-1)
 mksa.wmabs2 = me*mksa.lnc_e_ref*mksa.wpe_ref^2/(4*pi^2);%coefficient relating the squared electric field amplitude to the diffusion coefficient
 %
+mksa.vde_ref = mksa.betath_ref*mksa.betath_ref*me*clum*clum/2/pi/abs(qe)/equilDKE.xB0(1,1)/equilDKE.Rp;%Electron drift velocity (m.s-1)
+mksa.taude_ref = equilDKE.ap/mksa.vde_ref;%Electron drift time scale (s)

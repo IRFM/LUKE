@@ -1,4 +1,5 @@
-function [varargout] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam_in,display,ohm,waves,transpfaste,ripple,Zf0_interp,XXsinksource_in)
+function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = ...
+    main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam_in,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct)
 %
 %  Main function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the RF wave absorption problem in presence of an Ohmic electric field (electron bootstrap current consistent with non-Maxwellian distribution)
@@ -17,8 +18,10 @@ simul.hostname = dkepath.hostname;
 %
 dke_warnings = '';
 %
-if nargin ~= 13,
-    error('Wrong number of input arguments in main_dke_yp')
+if nargin < 13,
+    error('Wrong number of input arguments in main_dke_yp');
+elseif nargin == 13,
+    loadstruct = [];
 end
 %
 if dkeparam_in.opt_save && ~ exist('tmp','dir'),
@@ -32,10 +35,8 @@ format long e;
 mkdirmessage = 'Directory already exists.';
 while strcmp(mkdirmessage,'Directory already exists.'),
     dkepath.temppath = fullfile(dkepath.temppathroot,timeid_jd(clock,3));
-    [res,mkdirmessage] = mkdir(dkepath.temppath);%Create calculation directory
+    [dummy,mkdirmessage] = mkdir(dkepath.temppath);%Create calculation directory
 end
-%
-[dkeparam_out] = paramconsistency_dke_yp(dkeparam_in,equil,psin_S,rho_S);%Check consistency between input parameters 
 %
 tmpfile = ['tmp',filesep,'LUKE_RESULTS_',id_simul,'_TMP.mat'];
 %
@@ -47,43 +48,17 @@ if dkeparam_in.opt_load && exist(tmpfile,'file'),
     itn0 = itn;
     %
 else
-    [radialDKE] = radialgrid_dke_jd(equil,dkeparam_out,display,psin_S,rho_S);%Radial grid for DKE
-    [equilDKE] = equilibrium_jd(equil,radialDKE,display,'spline',dkeparam_out.mfactor);%Magnetic equilibrium for DKE
     %
-    if isstruct(Zf0_interp),
-       mksa = Zf0_interp.mksa;%when plasma temperature evolves from one iteration to another, the normalization is kept constant such that normalized quantities may be compared
-       XXf0_in = Zf0_interp.XXf0_leg;
-    else
-       mksa = mksacoefbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE);%Main MKSA quantities
-       if ~isempty(Zf0_interp), 
-           XXf0_in = Zf0_interp;
-       else
-           XXf0_in = [];
-       end
-    end
+    % Load data if existing in 'loadstruct' structure or recalculate them otherwise
     %
-    clear Zf0_interp
-    %
-    [momentumDKE] = momentumgrid_dke_jd(dkeparam_out,equilDKE,radialDKE);%Momentum space 2D grid for DKE
-    [gridDKE] = matrix3Dgridbuilder_dke_yp(dkeparam_out,display,equilDKE,radialDKE,momentumDKE);%General grid structure for the DKE solver
-    [Zmomcoef] = momentumcoefbuilder_dke_yp(gridDKE,mksa);%Momentum space coefficients for FP calculations
-    [Zbouncecoef] = bouncecoefbuilder_dke_yp(dkeparam_out,display,equilDKE,gridDKE);%bounce averaging coefficients
-    [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys] = rfwave_dke_jd(dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
-    [XXsinksource] = sinksourcecoeffbuilder_dke_yp(dkeparam_out,display,gridDKE,mksa,Zbouncecoef,XXsinksource_in);%External sink and source contributions (for right-hand side part of the FP equation)
-    [Zmripple] = mripplecoefbuilder_dke_yp(dkeparam_out,display,equil,equilDKE,gridDKE,mksa,ripple);%Magnetic ripple matrix coefficients
-    [ZXXD_a,ZXXF_a] = rad_dke_yp(dkeparam_out,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste);%Anomalous radial transport super matrix
-    [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);%Collisions flux coefficients 
-    [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = efield_dke_jd(dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c);%Electric field flux coefficients
-    %
-    if strcmp(waveparam.model,'RT'),% ray tracing simulation
-        [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_jd(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waveparam);%RF waves flux coefficients
-    elseif strcmp(waveparam.model,'FW')%full wave model by R. Bilato
-        [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = rfdiff_dke_fw_jd(dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waves);%RF waves flux coefficients
-    else
-        error('Wave model not implemented')
-    end
-    %
-    [XXfinit] = finit_dke_yp(dkeparam_out,display,equilDKE,gridDKE,mksa,Zmomcoef,waveparam,XXf0_in);%Initial distribution function
+    [dkeparam_out,radialDKE,equilDKE,momentumDKE,gridDKE,mksa,Zmomcoef,Zbouncecoef,XXsinksource,Zmripple,...
+        ZXXD_a,ZXXF_a,...
+        ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor,...
+        ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity,...
+        waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys,...
+        ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf,...
+        XXfinit]...
+         = buildlukestruct_yp(loadstruct,psin_S,rho_S,equil,dkeparam_in,display,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
     %
     time0 = clock;
     %
@@ -94,9 +69,9 @@ else
         zS = raypath_jd(xys,xyprop_dke,yb,radialDKE.r_dke);
         nit_rf = dkeparam_out.nit_rf;
         if nit_rf > 1 && display.display_mode >= 1,
-            Fig_QLIter = figure('Name','Quasilinear iteration');
+            Fig_QLIter = figbyname_yp('Quasilinear iteration');
             if display.display_mode >= 2,
-                Fig_Pray = figure('Name','Power absorption along rays');
+                Fig_Pray = figbyname_yp('Power absorption along rays');
             end
         end
     else
@@ -144,7 +119,7 @@ end
 % The evolution of the distribution function is calculated from time 0 to
 % time dkeparam.tn, by time steps dkeparam.dtn. For each time step,
 % nested convergence on the wave absorption and explicit collision
-% intergral term must be obtained.
+% integral term must be obtained.
 %
 for itn = itn0:nit,
     %
@@ -352,7 +327,7 @@ if dkeparam_out.timevol == 0,
 end
 %   RF wave quasilinear diffusion
 %
-if ~isstruct(waveparam) & ~isempty(waveparam.bomega_rf),%In the case of RF waves and quasilinear iteration
+if ~isstruct(waveparam) && ~isempty(waveparam.bomega_rf),%In the case of RF waves and quasilinear iteration
     [qe,me] = pc_dke_yp;%Universal physics constants
     blist_lh = find(round(waveparam(1,:,1)./(qe*min(equilDKE.xB0)/me)) == 0);
     nb_lh = length(blist_lh);
@@ -456,7 +431,7 @@ dke_out.waveparam = waveparam;
 dke_out.xyprop_dke = xyprop_dke;
 dke_out.xyP0_2piRp_mod = xyP0_2piRp_mod_old;
 dke_out.xys = xys;
-if strcmp(waveparam.model,'RT') & ~isempty(waveparam.bomega_rf) & nit_rf > 1,
+if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf) && nit_rf > 1,
     dke_out.yresidue_rf_mod = yresidue_rf_mod;
     dke_out.yresidue_rf_out = yresidue_rf_out;
     dke_out.residue_rf = residue_rf;
@@ -526,36 +501,25 @@ end
 %
 % Flexible output
 %
-savefields_radialDKE = {'xrho_S_dke','xpsin_f','xpsin_f_dke','xdpsin_f_dke','xpsin_S_dke','r_dke'};
-savefields_momentumDKE = {'pn','pnp','pn_S','dpn','mhu','mhu_S','dmhu'};
-savefields_gridDKE = {'X1mmhu2','xmhubounce2'};
-savefields_Zmomcoef = {'gamma','v','Ec_ref','dEc_ref'};
-savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda'};
-savefields_Zmripple = {'XXlossripple','xdeltaripple','xNq','Xnhuloss','xthetabanana','xthetaloss','xpndetrap','xpnth','xEseuil'};
-%
-radialDKE = selectfields_jd(radialDKE,savefields_radialDKE);
-momentumDKE = selectfields_jd(momentumDKE,savefields_momentumDKE);
-gridDKE = selectfields_jd(gridDKE,savefields_gridDKE);
-Zmomcoef = selectfields_jd(Zmomcoef,savefields_Zmomcoef);
-Zbouncecoef = selectfields_jd(Zbouncecoef,savefields_Zbouncecoef);
-Zmripple = selectfields_jd(Zmripple,savefields_Zmripple);
+if dkeparam_out.opt_struct == 0,
+    savefields_radialDKE = {'xrho_S_dke','xpsin_f','xpsin_f_dke','xdpsin_f_dke','xpsin_S_dke','r_dke'};
+    savefields_momentumDKE = {'pn','pnp','pn_S','dpn','mhu','mhu_S','dmhu'};
+    savefields_gridDKE = {'X1mmhu2','xmhubounce2'};
+    savefields_Zmomcoef = {'gamma','v','Ec_ref','dEc_ref'};
+    savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda'};
+    savefields_Zmripple = {'XXlossripple','xdeltaripple','xNq','Xnhuloss','xthetabanana','xthetaloss','xpndetrap','xpnth','xEseuil'};
+    %
+    radialDKE = selectfields_jd(radialDKE,savefields_radialDKE);
+    momentumDKE = selectfields_jd(momentumDKE,savefields_momentumDKE);
+    gridDKE = selectfields_jd(gridDKE,savefields_gridDKE);
+    Zmomcoef = selectfields_jd(Zmomcoef,savefields_Zmomcoef);
+    Zbouncecoef = selectfields_jd(Zbouncecoef,savefields_Zbouncecoef);
+    Zmripple = selectfields_jd(Zmripple,savefields_Zmripple);
+end
 %
 if exist(dkepath.temppath,'dir')
     disp(['remove the directory :',dkepath.temppath]),
     rmdir(dkepath.temppath);%Remove calculation directory
 end
 %
-if nargout >= 1,varargout{1} = Znorm;end
-if nargout >= 2,varargout{2} = Zcurr;end
-if nargout >= 3,varargout{3} = ZP0;end
-if nargout >= 4,varargout{4} = dke_out;end
-if nargout >= 5,varargout{5} = radialDKE;end
-if nargout >= 6,varargout{6} = equilDKE;end
-if nargout >= 7,varargout{7} = momentumDKE;end
-if nargout >= 8,varargout{8} = gridDKE;end
-if nargout >= 9,varargout{9} = Zmomcoef;end
-if nargout >= 10,varargout{10} = Zbouncecoef;end
-if nargout >= 11,varargout{11} = Zmripple;end
-if nargout >= 12,varargout{12} = mksa;end
-if nargout >= 13,varargout{13} = XXsinksource;end
-if nargout >= 14,varargout{14} = dke_warnings;end   
+

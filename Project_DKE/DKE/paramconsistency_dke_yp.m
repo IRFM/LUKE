@@ -90,7 +90,7 @@ if isscalar(dkeparam.tn),
     end
 else%time steps determined by tn vector
     if ~isscalar(dkeparam.dtn) || ~isnan(dkeparam.dtn),
-        info_dke_yp(2,['Warning : dkeparam.dtn prescription overridden by dkeparam.tn']);
+        info_dke_yp(2,'Warning : dkeparam.dtn prescription overridden by dkeparam.tn');
     end
 end
 %
@@ -113,9 +113,15 @@ if ~isfield(dkeparam,'redfac'),
 end
 %
 if dkeparam.bounce_mode == 1 && isfield(dkeparam,'mhu_S') && ~isempty(dkeparam.mhu_S),
-     info_dke_yp(2,['Warning : the pitch angle grid cannot be externally enforced with bounce_mode = 1.']);
+     info_dke_yp(2,'Warning : the pitch angle grid cannot be externally enforced with bounce_mode = 1.');
      dkeparam = rmfield(dkeparam,'mhu_S');
 end
-    
-    
-    
+%
+if ~isfield(dkeparam,'opt_load'),
+    dkeparam.opt_load = 0;
+end
+%
+if ~isfield(dkeparam,'opt_struct'),
+    dkeparam.opt_struct = 0;
+end
+% 

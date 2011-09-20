@@ -8,7 +8,7 @@ if nargin < 2,
     compiler_opt = '';%no options
 end
 %
-[lukeversion,matver] = LUKEversion_jd;
+[dummy,matver] = LUKEversion_jd;
 %
 if ~exist(mexpath,'dir'),
     %
@@ -21,6 +21,9 @@ if force_compile == 0,
     %
     filetime.trapz_dke_yp.mex = gettime_jd(['trapz_dke_yp.',mexext],mexpath,0); 
     filetime.trapz_dke_yp.source = gettime_jd('trapz_dke_yp.c',sourcepath.DKE,1);     
+    %
+    filetime.twister.mex = gettime_jd(['twister.',mexext],mexpath,0); 
+    filetime.twister.source = gettime_jd('twister.cpp',sourcepath.DKE,1);
     %
     filetime.alphaphimex_jd.mex = gettime_jd(['alphaphimex_jd.',mexext],mexpath,0); 
     filetime.alphaphimex_jd.source(1) = gettime_jd('alphaphimex_jd.c',sourcepath.DKE,1); 
@@ -101,6 +104,11 @@ cd(mexpath);
 if ~any(isnan(copts)) && (force_compile || any(filetime.trapz_dke_yp.source > filetime.trapz_dke_yp.mex)),
     eval(['mex ',copts,' ',sourcepath.DKE,'trapz_dke_yp.c']);
     disp(['The trapz_dke_yp.',mexext,' mexfile has been compiled.'])
+end
+%
+if ~any(isnan(copts)) && (force_compile || any(filetime.twister.source > filetime.twister.mex)),
+    eval(['mex ',copts,' ',sourcepath.DKE,'twister.cpp']);
+    disp(['The twister.',mexext,' mexfile has been compiled.'])
 end
 %
 if ~any(isnan(copts)) && (force_compile || any(filetime.alphaphimex_jd.source > filetime.alphaphimex_jd.mex)),
