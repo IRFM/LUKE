@@ -537,15 +537,19 @@ end
 %
 % Display of equilibrium properties
 %
-if display_mode >= 2,
+if abs(display_mode) >= 2,
     %
     p_opt = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
     %    
     prho = mx(:,1)'/ap;
     %       
     % displays the magnetic flux-surfaces geometry
-    %       
-    srho = linspace(0,1,21);
+    %    
+    if imag(display_mode) == 0,
+        srho = linspace(0,1,21);
+    else
+        srho = linspace(0,1,11);
+    end
     stheta = linspace(0,2*pi,31);
     sx = interp1(prho,mx,srho,method);  
     sy = interp1(prho,my,srho,method); 
@@ -559,8 +563,10 @@ if display_mode >= 2,
     %
     figure('Name','Magnetic equilibrium flux surface contour'),clf
     %    
-    [ax] = graph1D_jd(sx',sy',0,0,'','','',NaN,[xmin,xmax],[ymin,ymax],'-','none','r',2);drawnow
-    [ax] = graph1D_jd(stx,sty,0,0,'x(m)','y(m)','Flux-surfaces labeled by \rho=0,0.05,0.1...1',NaN,[xmin,xmax],[ymin,ymax],'-','none','b',0.5,20,gca,0.9,0.7,0.5);
+    [ax] = graph1D_jd(sx',sy',0,0,'x(m)','y(m)','',NaN,[xmin,xmax],[ymin,ymax],'-','none','r',2,20,gca,0.9,0.7,0.5);drawnow
+    if imag(display_mode) == 0,
+        [ax] = graph1D_jd(stx,sty,0,0,'','','Flux-surfaces labeled by \rho=0,0.05,0.1...1',NaN,[xmin,xmax],[ymin,ymax],'-','none','b',0.5);
+    end
     axis('equal');drawnow  
     print_jd(p_opt,['Fig_EQUIL_',equil.id,'_mag'])
     %
@@ -622,7 +628,7 @@ end
 zZi = equil.zZi;
 zmi = equil.zmi;
 %
-if display_mode >=1,
+if abs(display_mode) >=1,
     disp('-------------------------------------------------------------------------------------------------------------------');
     disp(['- Scenario name = ',equil.id]);
     disp('-------------------------------------------------------------------------------------------------------------------');
