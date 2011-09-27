@@ -149,7 +149,7 @@ if ~isempty(tit),
     tl = title(tit);
     set(tl,'fontsize',real(siz),'fontname',fontname);
 end
-if iscell(leg) || ~any(isnan(leg)),
+if iscell(leg) | ~any(isnan(leg)),
     Nleg = length(leg);
     if iscell(leg) && Nleg > 2 && strcmp(leg(Nleg - 1),'Location'),
         lg = legend(leg(1:Nleg - 2),'location',leg{Nleg});

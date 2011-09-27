@@ -26,7 +26,6 @@ if strcmp(equil.id,'LOCAL'),
     return
 end
 npsi = length(equil.psi_apRp);
-nr = length(rho);
 %
 ap =  equil.ptx(npsi,1);%plasma radius on the LFS midplane 
 prho = equil.ptx(:,1)/ap;

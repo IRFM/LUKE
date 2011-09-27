@@ -266,11 +266,13 @@ disp(['---> Injected rf power @ itn = ',int2str(itn),' : ',num2str(Ptot_inj_old/
 disp(['---> Injected rf power @ itn = ',int2str(itn+1),' : ',num2str(Ptot_inj_new/1e6),' (MW)']);
 disp(['---> Power ratio = ',num2str(Ptot_inj_new/Ptot_inj_old)]);
 %
-if isfield(dkeparam,'clustermode'),
-    if isfield(dkeparam.clustermode,'wave_random_yp'),dkecluster = dkeparam.clustermode.wave_random_yp;end
+if isfield(dkeparam,'clustermode') && isfield(dkeparam.clustermode,'wave_solver_yp'),
+    dkecluster = dkeparam.clustermode.wave_solver_yp;
+else
+    dkecluster = [];
 end
 %
-[dummy,waves] = mdce_luke(@wave_random_yp,{dkepath,dkeparam,wavestructs,f0struct},3,wavestructs_fluct_out,dkecluster);
+[dummy,waves] = mdce_luke(@wave_solver_yp,{dkepath,'',f0struct},2,wavestructs,dkecluster);
 %
 % to keep memory of the initial Npar0 from ray tracing (edge fluctuations for the LH wave only) for the next time step, depending upon dtn_fluct
 %

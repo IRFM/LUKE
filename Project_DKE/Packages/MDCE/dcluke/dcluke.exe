@@ -1,6 +1,16 @@
 #!/bin/csh 
 unsetenv DISPLAY
-pwd
+#pwd
+if ($#argv == 3) then 
+    eval $3 
+endif
+if ($#argv == 4) then 
+    eval $4 
+endif
+if ($#argv == 5) then 
+    eval $5 
+endif
+#env
 #/usr/local/R2007B/bin/matlab  -nosplash -nodesktop <<@@ > /dev/null 
 #matlab -nodesktop <<@@
 $1/bin/matlab  -nosplash -nodesktop <<@@ > /dev/null 
