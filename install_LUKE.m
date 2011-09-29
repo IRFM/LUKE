@@ -64,7 +64,7 @@ opt = input_dke_yp('Do you want to test MDCE capabilities','n',{'y','n'});
 if opt == 'y',
     if isfield(dkepath,'remote'),
         cd([luke_root,'Project_DKE/Packages/MDCE']);
-        test_mdce(dkepath.remote);
+        test_mdce(2,dkepath);
         cd(dkepath.luke_root); 
     else
         disp('No cluster information found.')
