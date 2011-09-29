@@ -9,7 +9,7 @@ filepaths = which(filename,'-all');
 nn = length(filepaths);
 %
 kk = [];
-if strcmp(computer,'MAC') | strcmp(computer,'MACI') | strcmp(computer,'PCWIN') | strcmp(computer,'PCWIN64'),%Systems which are usually not case sensitive
+if strcmp(computer,'MAC') | strcmp(computer,'MACI') |  strcmp(computer,'MACI64') | strcmp(computer,'PCWIN') | strcmp(computer,'PCWIN64'),%Systems which are usually not case sensitive
     for ii = 1:nn-1,
         for jj = ii+1:nn
             if strcmpi(filepaths{ii},filepaths{jj}),%identify identical strings (not case sensitive)
