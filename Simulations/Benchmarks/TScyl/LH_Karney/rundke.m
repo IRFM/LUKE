@@ -153,7 +153,7 @@ delete res_karney
 %
 diary res_karney
 %
-disp(['Comparison LUKE/Karney'])
+disp(['Comparison LUKE/Karney with tn = ',int2str(dkeparam.tn),', dtn = ',int2str(dkeparam.dtn),' and nit_f = ',int2str(dkeparam.nit_f)])
 disp(['----------------------'])
 %
 disp(['Relativistic case (4,7,1) : j = ',num2str(Zcurr_rel.x_0),'/',j_r_k,' ; P = ',num2str(ZP0_rel.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr_rel.x_0./ZP0_rel.x_rf_fsav),'/',eta_r_k]) 
@@ -165,5 +165,5 @@ diary off
 %
 %************************************************************************************************************************************
 %
-eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
+eval(['save ',path_simul,'LUKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
 info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
