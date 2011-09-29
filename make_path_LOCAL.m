@@ -9,7 +9,7 @@
 %
 clear all
 %
-CVSbranch = '';
+CVSbranch = 'FLUCT';
 %
 dkepath.id = 'LOCAL';%Set here the name path parameters (user specific)
 [lukeversion,matver] = LUKEversion_jd;
@@ -59,7 +59,7 @@ saturne.remote(1).luke_root = saturne.luke_root;
 saturne.remote(1).matlabroot = '';
 saturne.remote(1).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
 saturne.remote(1).get_jobid = {'Your job ',' '};%str_before,str_after
-saturne.remote(1).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+saturne.remote(1).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
 %
 dkepath.saturne = saturne;
 %
@@ -70,7 +70,7 @@ dkepath.hostname.cephee = 'cephee';
 cephee.luke_root = [pwd,'/'];
 cephee.local_root = '/home/sccp/gsem/decker/Packages/cephee/';
 cephee.computer = 'GLNXA64';%machine type and supported OS
-cephee.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+cephee.temppathroot = '/local/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 cephee.maxcompthreads = 2;%For MatLab multithreading
 %
 cephee.mex705 = [cephee.luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB75/'];
@@ -95,7 +95,7 @@ cephee.remote(1).matlabroot = '';
 cephee.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
 cephee.remote(1).mem = {',mem=','mb','7000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
 cephee.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
-cephee.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+cephee.remote(1).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 %
 cephee.remote(2).host = 'saturne1.partenaires.cea.fr';
 cephee.remote(2).nproc = 12;
@@ -103,7 +103,7 @@ cephee.remote(2).luke_root = ['/home/JD211098/LUKE',CVSbranch,'/'];%official sat
 cephee.remote(2).matlabroot = '';
 cephee.remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
 cephee.remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
-cephee.remote(2).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+cephee.remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
 cephee.remote(2).JD211098 = 'JD211098';
 cephee.remote(2).YP105119 = 'YP105119';
 %
@@ -160,6 +160,7 @@ macbookyves.temppathroot = '/tmp/';%Absolute root directory path adress where te
 %
 macbookyves.mex711 = [macbookyves.luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB711/'];
 macbookyves.mex712 = [macbookyves.luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB712/'];
+macbookyves.mex713 = [macbookyves.luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB713/'];
 macbookyves.compiler_opt.helmex = '-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 macbookyves.compiler_opt.fopts = ' ';%
 %
@@ -167,7 +168,9 @@ macbookyves.compiler_opt.fopts = ' ';%
 %macbookyves.MUMPS.seq = [macbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 macbookyves.MUMPS.seq = [macbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 %macbookyves.MUMPS.mex712 = [macbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+%macbookyves.MUMPS.mex713 = [macbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB713'];%Where MUMPS matrix solver is stored (MEX function)
 macbookyves.MUMPS.mex712 = [macbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+macbookyves.MUMPS.mex713 = [macbookyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB713'];%Where MUMPS matrix solver is stored (MEX function)
 %macbookyves.MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 %macbookyves.PETSc.par = [macbookyves.local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
 macbookyves.PETSc.seq = [macbookyves.local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S_gfortran/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
@@ -200,7 +203,8 @@ macbookyves.PETSc.seq = [macbookyves.local_root,'Packages/Bin/PETSC/petsc-3.1-p4
 macbookyves.remote(1).host = {'macbookyves','macbookyves'};% or empty for local host
 macbookyves.remote(1).nproc = 4;
 macbookyves.remote(1).luke_root = macbookyves.luke_root;
-macbookyves.remote(1).matlabroot = ['/Applications/MATLAB_R2011a.app/bin/'];
+macbookyves.remote(1).matlabroot = ['/Applications/MATLAB_R2011b.app/bin/'];
+macbookyves.remote(1).prefdir = ['/Users/yves/.matlab/R2011b'];
 macbookyves.remote(1).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
 macbookyves.remote(1).mem = [];
 macbookyves.remote(1).get_jobid = {'jobIdentifier = ',';'};%
@@ -213,7 +217,7 @@ macbookyves.remote(2).matlabroot = '';
 macbookyves.remote(2).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
 macbookyves.remote(2).mem = {',mem=','mb','7000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
 macbookyves.remote(2).get_jobid = {'','.cephee'};%str_before,str_after
-macbookyves.remote(2).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+macbookyves.remote(2).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 macbookyves.remote(2).yves = 'YP105119';
 %
 macbookyves.remote(3).host = 'saturne1.partenaires.cea.fr';
@@ -222,13 +226,14 @@ macbookyves.remote(3).luke_root = ['/home/YP105119/LUKE',CVSbranch,'/'];
 macbookyves.remote(3).matlabroot = '';
 macbookyves.remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
 macbookyves.remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
-macbookyves.remote(3).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+macbookyves.remote(3).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
 macbookyves.remote(3).yves = 'YP105119';
 %
 macbookyves.remote(4).host = {'macproyves','82.227.179.204'};% or empty for local host
 macbookyves.remote(4).nproc = 12;
 macbookyves.remote(4).luke_root = ['/Users/yvespeysson/Travail/Projets/LUKE',CVSbranch,'/'];
-macbookyves.remote(4).matlabroot = ['/Applications/MATLAB_R2011a.app/bin/'];
+macbookyves.remote(4).matlabroot = ['/Applications/MATLAB_R2011b.app/bin/'];
+macbookyves.remote(4).prefdir = ['/Users/yvespeysson/.matlab/R2011b'];
 macbookyves.remote(4).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
 macbookyves.remote(4).mem = [];
 macbookyves.remote(4).get_jobid = {'jobIdentifier = ',';'};%
@@ -247,6 +252,7 @@ macproyves.computer = 'MACI64';%machine type and supported OS
 macproyves.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 macproyves.mex712 = [macproyves.luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB712/'];
+macproyves.mex713 = [macproyves.luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB713/'];
 macproyves.compiler_opt.helmex = '-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 macproyves.compiler_opt.fopts = ' ';%
 %
@@ -254,15 +260,18 @@ macproyves.compiler_opt.fopts = ' ';%
 %macproyves.MUMPS.seq = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 macproyves.MUMPS.seq = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 %macproyves.MUMPS.mex712 = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
-%macproyves.MUMPS.mex712 = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+%macproyves.MUMPS.mex713 = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB713'];%Where MUMPS matrix solver is stored (MEX function)
 macproyves.MUMPS.mex712 = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
-
+macproyves.MUMPS.mex713 = [macproyves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB713'];%Where MUMPS matrix solver is stored (MEX function)
+%
 %macproyves.MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 %macproyves.PETSc.par = [macproyves.local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
 macproyves.PETSc.seq = [macproyves.local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S_gfortran/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
 %macproyves.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 %macproyves.SUPERLU.mex =
 %[macproyves.local_root,'Packages/Bin/SUPERLU/SuperLU_3.0-GotoBlasgcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+macproyves.PARDISO.mex712 = [macproyves.local_root,'Packages/Bin/PARDISO/PARDISO/MATLAB712'];%Where PARDISO matrix solver is stored (MEX function)
+macproyves.PARDISO.mex713 = [macproyves.local_root,'Packages/Bin/PARDISO/PARDISO/MATLAB713'];%Where PARDISO matrix solver is stored (MEX function)
 %
 % WARNING about Xgrid scheduler for mac OSX (> 10.5.x)
 % Xgrid runs tasks using the "sandbox" facility. Tasks running as 'nobody' ie, 
@@ -289,11 +298,13 @@ macproyves.PETSc.seq = [macproyves.local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S
 macproyves.remote(1).host = {'macproyves','macproyves'};% or empty for local host
 macproyves.remote(1).nproc = 12;
 macproyves.remote(1).luke_root = macproyves.luke_root;
-macproyves.remote(1).matlabroot = ['/Applications/MATLAB_R2011a.app/bin/'];
+macproyves.remote(1).matlabroot = ['/Applications/MATLAB_R2011b.app/bin/'];
+macproyves.remote(1).prefdir = ['/Users/yvespeysson/.matlab/R2011b'];
 macproyves.remote(1).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
 macproyves.remote(1).mem = [];
 macproyves.remote(1).get_jobid = {'jobIdentifier = ',';'};%
 macproyves.remote(1).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+macproyves.remote(1).yves = 'yvespeysson';% Faire getenv('USER') pour savoir qui je suis !!!!
 %
 dkepath.macproyves = macproyves;
 %
@@ -374,7 +385,7 @@ laptopjoan.remote(1).matlabroot = '';
 laptopjoan.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
 laptopjoan.remote(1).mem = {',mem=','mb','7000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
 laptopjoan.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
-laptopjoan.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+laptopjoan.remote(1).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 laptopjoan.remote(1).joan = 'JD211098';
 %
 laptopjoan.remote(2).host = 'saturne1.partenaires.cea.fr';
@@ -383,7 +394,7 @@ laptopjoan.remote(2).luke_root = ['/home/JD211098/LUKE',CVSbranch,'/'];
 laptopjoan.remote(2).matlabroot = '';
 laptopjoan.remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
 laptopjoan.remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
-laptopjoan.remote(2).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+laptopjoan.remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
 laptopjoan.remote(2).joan = 'JD211098';
 %
 laptopjoan.remote(3).host = 'pleiades2.epfl.ch';
@@ -392,7 +403,7 @@ laptopjoan.remote(3).luke_root = ['/home/jdecker/LUKE',CVSbranch,'/'];
 laptopjoan.remote(3).matlabroot = '';
 laptopjoan.remote(3).cmd = 'qsub -l walltime=1:59:00 -l nodes=1:ppn=1';
 laptopjoan.remote(3).get_jobid = {'','.pleiades2.epfl.ch'};%str_before,str_after
-laptopjoan.remote(3).set_jobid = {'','','Unknown Job Id'};%str_before,str_after,str_check
+laptopjoan.remote(3).set_jobid = {'qstat ','','Unknown Job Id'};%str_before,str_after,str_check
 laptopjoan.remote(3).joan = 'jdecker';
 %
 laptopjoan.remote(4).host = {'macproyves','82.227.179.204'};% or empty for local host
@@ -529,7 +540,7 @@ crpppc70.remote(1).luke_root = ['/home/jdecker/LUKE',CVSbranch,'/'];
 crpppc70.remote(1).matlabroot = '';
 crpppc70.remote(1).cmd = 'qsub -l walltime=3:59:00 -l nodes=1:ppn=1';
 crpppc70.remote(1).get_jobid = {'','.pleiades2.epfl.ch'};%str_before,str_after
-crpppc70.remote(1).set_jobid = {'','','Unknown Job Id'};%str_before,str_after,str_check
+crpppc70.remote(1).set_jobid = {'qstat ','','Unknown Job Id'};%str_before,str_after,str_check
 crpppc70.remote(1).decker = 'jdecker';
 crpppc70.remote(1).curchod = 'lcurchod';
 %
@@ -586,7 +597,7 @@ pleione.remote(1).matlabroot = '';
 pleione.remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
 pleione.remote(1).mem = {',mem=','mb','7000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
 pleione.remote(1).get_jobid = {'','.cephee'};%str_before,str_after
-pleione.remote(1).set_jobid = {'','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+pleione.remote(1).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 pleione.remote(1).JD211098 = 'JD211098';
 pleione.remote(1).YP105119 = 'YP105119';
 %
@@ -596,7 +607,7 @@ pleione.remote(2).luke_root = ['/home/JD211098/LUKE',CVSbranch,'/'];
 pleione.remote(1).matlabroot = '';
 pleione.remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
 pleione.remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
-pleione.remote(2).set_jobid = {'-j ','','Following jobs do not exist'};%str_before,str_after,str_check
+pleione.remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
 pleione.remote(2).JD211098 = 'JD211098';
 pleione.remote(2).YP105119 = 'YP105119';
 %
