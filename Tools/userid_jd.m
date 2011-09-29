@@ -4,13 +4,9 @@ function userid = userid_jd
 %
 str = '';
 %
-if strcmp(computer,'GLNXA64') || strcmp(computer,'GLNX86'),%unix system
-    [flag,str] = unix('echo $USER');
-elseif strcmp(computer,'PCWIN') || strcmp(computer,'PCWIN64'),%windows system
+if strcmp(computer,'PCWIN') || strcmp(computer,'PCWIN64'), % Windows systems
     [flag,str] = dos('hostname');
-elseif strcmp(computer,'MAC') || strcmp(computer,'MACI') || strcmp(computer,'MACI64'),%MAC system
-    [flag,str] = dos('hostname');
+	userid = strtrim(str);
+else % UNIX based systems
+    userid = getenv('USER');
 end
-%
-userid = strtrim(str);
-%
