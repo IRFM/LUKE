@@ -176,7 +176,7 @@ for itn = itnmin:itnmax,%time evolution
     % RF wave propagation solver
     %
     if ~isempty(wavestructs), 
-        [waves,wavestructs,wavestructs_fluct,Nfluct] = wave_distribution_yp(dkepath,dkeparam,wavestructs,wavestructs_fluct,f0struct,buildlukestruct_yp(psin_S,rho_S,equil,dkeparam,dkedisplay,'mksa'),itn,Pnonabs_ray);%ray propagation in fluctuating plasma. The fluctuation phase in wavestructs is output to be later re-used by the same function taling into account of the phase evolution
+        [waves,wavestructs,wavestructs_fluct,Nfluct] = wave_distribution_yp(dkepath,dkeparam,wavestructs,wavestructs_fluct,f0struct,buildlukestruct_yp('mksa',psin_S,rho_S,equil,dkeparam,dkedisplay),itn,Pnonabs_ray);%ray propagation in fluctuating plasma. The fluctuation phase in wavestructs is output to be later re-used by the same function taling into account of the phase evolution
     end
     %
     % RF wave absorption solver (drift kinetic calculations)
@@ -221,8 +221,8 @@ for itn = itnmin:itnmax,%time evolution
     end
     %
     if isfield(dke_out,'zP_0_2piRp_mod');
-        for iout = 1:length(dke_out.zP_0_2piRp_mod),
-            Pnonabs_ray(iout) = dke_out.zP_0_2piRp_mod{iout}(end);%Linear power density not absorbed P/(2*pi*Rp)
+        for iout = 1:length(dke_out.zP_0_2piRp_mod{end}),
+            Pnonabs_ray(iout) = dke_out.zP_0_2piRp_mod{end}{iout}(end);%Linear power density not absorbed P/(2*pi*Rp)
         end
     end
     %
