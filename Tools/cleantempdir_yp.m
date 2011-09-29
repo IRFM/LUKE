@@ -32,12 +32,12 @@ dkepath = load_structures_yp('dkepath','','');
 flag = 0;
 %
 dirini = pwd;
-if isempty(dkepath.temppathroot) | strcmp(dkepath.temppathroot,pwd),
+if isempty(dkepath.temppathroot) || strcmp(dkepath.temppathroot,pwd),
 	disp('WARNING: you cannot delete automatically working directories if the parent directory is your local directory !');
 	return;
 end
 %
-if isempty(strfind(dkepath.temppathroot,'scratch')) & isempty(strfind(dkepath.temppathroot,'tmp')),
+if isempty(strfind(dkepath.temppathroot,'scratch')) && isempty(strfind(dkepath.temppathroot,'tmp')),
 	disp('WARNING: you cannot delete automatically working directories if the parent directory is not named ''scratch'' or ''tmp'' !');
 	return;
 end
