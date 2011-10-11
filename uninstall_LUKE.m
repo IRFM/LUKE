@@ -12,7 +12,7 @@ if nargin == 0,
 	if isempty(pathforstartup),
 		fid = -2;
 	else
-		fid = fopen(pathforstartup,'w');  
+		fid = fopen(pathforstartup,'r');  
 	end
 	%	
 	if fid <= -1,
