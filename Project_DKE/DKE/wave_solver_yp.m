@@ -21,9 +21,9 @@ if strcmp(wavestruct.wavesolver,'C3PO'),% C3P0 ray tracing
     end
     %
     if ~isfield(wavestruct.equil_fit,'fluct_fit'),
-        wave = main_C3PO_jd(dkepath,wavestruct.id,wavestruct.equil_fit,rayinit,wavestruct.waveparam,[],wavestruct.rayparam,wavestruct.raydisplay,wavestruct.C3POparam);%Ray calculations
+        wave = main_C3PO_jd(dkepath,wavestruct.id,wavestruct.equil,wavestruct.equil_fit,rayinit,wavestruct.waveparam,[],wavestruct.rayparam,wavestruct.raydisplay,wavestruct.C3POparam);%Ray calculations
     else
-        wave = main_C3PO_jd(dkepath,wavestruct.id,wavestruct.equil_fit,rayinit,wavestruct.waveparam,[],wavestruct.rayparam,wavestruct.raydisplay,wavestruct.C3POparam,f0struct,wavestruct.equil_fit.fluct_fit);%Ray calculations
+        wave = main_C3PO_jd(dkepath,wavestruct.id,wavestruct.equil,wavestruct.equil_fit,rayinit,wavestruct.waveparam,[],wavestruct.rayparam,wavestruct.raydisplay,wavestruct.C3POparam,f0struct,wavestruct.equil_fit.fluct_fit);%Ray calculations
     end
     %
     wave = wave_process_jd(wavestruct.equil,wave,n_rf_list);%Wave processing and relativistic linear damping
