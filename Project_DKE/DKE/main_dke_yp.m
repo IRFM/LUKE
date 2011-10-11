@@ -1,5 +1,5 @@
 function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = ...
-    main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam_in,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct)
+    main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam_in,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct)
 %
 %  Main function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the RF wave absorption problem in presence of an Ohmic electric field (electron bootstrap current consistent with non-Maxwellian distribution)
@@ -10,7 +10,6 @@ function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoe
 %
 %by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (CEA-DRFC) <joan.decker@cea.fr>
 %
-simul.id = id_simul;
 simul.timeid = timeid_jd(clock);
 simul.userid = userid_jd;
 [simul.LUKEversion,simul.matver] = LUKEversion_jd;
@@ -38,7 +37,7 @@ while strcmp(mkdirmessage,'Directory already exists.'),
     [dummy,mkdirmessage] = mkdir(dkepath.temppath);%Create calculation directory
 end
 %
-tmpfile = ['tmp',filesep,'LUKE_RESULTS_',id_simul,'_TMP.mat'];
+tmpfile = [simul.path,'LUKE_RESULTS_',simul.id,'_TMP.mat'];
 %
 if dkeparam_in.opt_load && exist(tmpfile,'file'),
     %

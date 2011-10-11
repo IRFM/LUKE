@@ -1,4 +1,4 @@
-function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = loop_run_lukert(id_simul,waves,psin_S,rho_S_init,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct)
+function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = loop_run_lukert(simul,waves,psin_S,rho_S_init,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct)
 %
 % Ray-tracing + quasilinear kinetic calculations using LUKE. Tool for implementation in other calculation packages.
 %
@@ -42,7 +42,7 @@ if dkeparam.rt_mode == 1,
 %
 % Case with sdNpar given by the waves structure (usualy constant along ray propagation)
 %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
 %
 % Case with sdNpar proportional to sNpar (in waves structure)
 %
@@ -72,7 +72,7 @@ elseif dkeparam.rt_mode == 2,
         end
     end
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
 %
 % *************************************************************************
 %
@@ -125,7 +125,7 @@ elseif dkeparam.rt_mode == 4,
         %
         [rho_S,dkeparam.pnmax_S] = optgrid_dke_jd(waves,rho_S_init,dkeparam.pnmax_S,equil,w_mask,dkedisplay.display_mode);
         %
-        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
         %
         ny = size(ZP0(end).xy_rf_fsav,2);
         %
@@ -179,7 +179,7 @@ elseif dkeparam.rt_mode == 5,
         end
     end
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
 %
 % *************************************************************************
 %
@@ -235,9 +235,9 @@ elseif dkeparam.rt_mode == 3,%
         %
         for is=1:length(dNstr),if dNstr(is) == '.',dNstr(is) = 'p';end,end
         %
-        % eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',id_simul,'_',dNstr,'.txt']);
+        % eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',simul.id,'_',dNstr,'.txt']);
         %
-        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
         %
         % CD efficiency (A/W)
         %
@@ -245,7 +245,7 @@ elseif dkeparam.rt_mode == 3,%
         Itot = sum(Zcurr.x_tot_fsav(:).*equilDKE.xdA_dke(:)*mksa.j_ref);
         eta = abs(Itot/Prf);
         %
-        eval(['save ',path_simul,'DKE_RESULTS_',equil.id,'_',id_simul,'_',dNstr,'.mat']);
+        eval(['save ',path_simul,'DKE_RESULTS_',equil.id,'_',simul.id,'_',dNstr,'.mat']);
         %
         disp(['--> Step ',dNstr,' calculated. eta = ',num2str(eta),' A/W'])
         %
@@ -287,7 +287,7 @@ elseif dkeparam.rt_mode == 3,%
         end
     end
     %
-    % eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',id_simul,'.txt']);
+    % eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',simul.id,'.txt']);
     %
     for iw = 1:nw,
         for ib = 1:nb(iw),
@@ -299,7 +299,7 @@ elseif dkeparam.rt_mode == 3,%
         end
     end
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
     %
     % diary off
 else

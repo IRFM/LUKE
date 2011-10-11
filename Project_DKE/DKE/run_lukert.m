@@ -1,4 +1,4 @@
-function [varargout] = run_lukert(id_simul,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam_in,dkedisplay_in,ohm,transpfaste,ripple,XXf0,XXsinksource_in,opt_save_in)
+function [varargout] = run_lukert(simul,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam_in,dkedisplay_in,ohm,transpfaste,ripple,XXf0,XXsinksource_in,opt_save_in)
 %
 % Wave and kinetic solver. Self-consistent calculations with or without plasma fluctuations
 %
@@ -10,20 +10,22 @@ if nargin < 15,
    opt_save_in = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
 end
 %
-if isfield(dkeparam_in,'path_simul'),
-    path_simul = dkeparam_in.path_simul;
-    if exist(path_simul) ~= 7, mkdir(path_simul);end
-    if exist([path_simul,'wave_results']) ~= 7, mkdir([path_simul,'wave_results']);end
-else
-    path_simul = '';%local save
-    if exist('wave_results') ~= 7, mkdir('wave_results');end
+if ~isstruct(simul),
+    simul.id = simul;
+    simul.path = './';
+end
+if ~exist(simul.path,'dir'), 
+    mkdir(simul.path);
+end
+if ~exist([simul.path,'wave_results'],'dir'), 
+    mkdir([simul.path,'wave_results']);
 end
 %
-if opt_save_in <0 && ~exist([path_simul,'backup_',id_simul,'.mat']),
+if opt_save_in <0 && ~exist([simul.path,'backup_',simul.id,'.mat'],'file'),
     opt_save_in = 1;
 end
 %
-disp(id_simul);
+disp(simul.id);
 %
 dkecluster = [];
 itnmin = 1;
@@ -103,13 +105,11 @@ else
     %
     disp('------------------ RE-LOAD MODE ------------------');
     %
-    load([path_simul,'backup_',id_simul,'.mat']);
-    %
-    dkeparam.path_simul = path_simul;%transfert the new path (root directory may be interchanged)
+    load([simul.path,'backup_',simul.id,'.mat']);
     %
     if opt_save_in == -1,%interactive update
         %
-        overwrite_dkeparam_field = input_dke_yp('If you want to overwrite one field of the reloaded ''dkeparam'' structure, give its name (not ''path_simul'' field) ?',overwrite_dkeparam_field);
+        overwrite_dkeparam_field = input_dke_yp('If you want to overwrite one field of the reloaded ''dkeparam'' structure, give its name ?',overwrite_dkeparam_field);
         overwrite_dkedisplay_field = input_dke_yp('If you want to overwrite one field of the reloaded ''dkedisplay'' structure, give its name ?',overwrite_dkeparam_field);
         %
         if ~isempty(overwrite_dkeparam_field),
@@ -196,9 +196,9 @@ for itn = itnmin:itnmax,%time evolution
     %
     for imultiray = 1:Nmultiray,
         if isempty(loadstructs),
-            [Znorm,Zcurr,ZP0,dke_out,loadstructs.radialDKE,loadstructs.equilDKE,loadstructs.momentumDKE,loadstructs.gridDKE,loadstructs.Zmomcoef,loadstructs.Zbouncecoef,loadstructs.Zmripple,loadstructs.mksa,loadstructs.XXsinksource,loadstructs.loopDKE] = loop_run_lukert(id_simul,waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);
+            [Znorm,Zcurr,ZP0,dke_out,loadstructs.radialDKE,loadstructs.equilDKE,loadstructs.momentumDKE,loadstructs.gridDKE,loadstructs.Zmomcoef,loadstructs.Zbouncecoef,loadstructs.Zmripple,loadstructs.mksa,loadstructs.XXsinksource,loadstructs.loopDKE] = loop_run_lukert(simul,waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);
         else
-            [Znorm,Zcurr,ZP0,dke_out] = loop_run_lukert(id_simul,waves,psin_S,loadstructs.radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);   
+            [Znorm,Zcurr,ZP0,dke_out] = loop_run_lukert(simul,waves,psin_S,loadstructs.radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);   
         end
         %
         XXf0 = dke_out.XXf0;
@@ -246,7 +246,7 @@ for itn = itnmin:itnmax,%time evolution
         %
         if dkedisplay.display_time_mode >= 1,
             %
-            figure(figbyname_yp(['Jrf(r,t) / ',id_simul])),
+            figure(figbyname_yp(['Jrf(r,t) / ',simul.id])),
             %
             if itn > 2,
                 graph1D_jd(xrho,xJ([1:end-2],:),0,0,'\rho','J_{tot} (MA/m^2)',['Iteration = ',int2str(itn),'/',int2str(itnmax),', I_{tot} = ',num2str(Itot(itn)),' (MA)'],NaN,'','','-','none','g',1);
@@ -258,7 +258,7 @@ for itn = itnmin:itnmax,%time evolution
             %
             graph1D_jd(xrho,xJ(end,:),0,0,'\rho','J_{tot} (MA/m^2)',['I_{tot} = ',num2str(Itot(itn)),' (MA)'],NaN,'','','-','none','r',2);
             %
-            figure(figbyname_yp(['Prf(r,t) / ',id_simul])),
+            figure(figbyname_yp(['Prf(r,t) / ',simul.id])),
             %
             if itn > 2,
                 graph1D_jd(xrho,xP([1:end-2],:),0,0,'\rho','P_{abs} (MW/m^3)',['Iteration = ',int2str(itn),'/',int2str(itnmax),', P_{abs} = ',num2str(Ptot(itn)),' (MW)'],NaN,'','','-','none','g',1);
@@ -270,12 +270,12 @@ for itn = itnmin:itnmax,%time evolution
             %
             graph1D_jd(xrho,xP(end,:),0,0,'\rho','P_{abs} (MW/m^3)',['P_{abs} = ',num2str(Ptot(itn)),' (MW)'],NaN,'','','-','none','r',2);
             %
-            figure(figbyname_yp(['Irf(t) / ',id_simul])),
+            figure(figbyname_yp(['Irf(t) / ',simul.id])),
             %
             graph1D_jd([1:itn]*dkeparam.dtn,Itot,0,0,'t*\nu','I_{tot} (MA)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'','','none','.','c',2);  
             graph1D_jd([1:itn]*dkeparam.dtn,Itot,0,0,'t*\nu','I_{tot} (MA)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'','','-','none','c',2);  
             %
-            figure(figbyname_yp(['Prf(t) / ',id_simul])),
+            figure(figbyname_yp(['Prf(t) / ',simul.id])),
             %
             graph1D_jd([1:itn]*dkeparam.dtn,Ptot,0,0,'t*\nu','P_{tot} (MW)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'',[0,Ptot_inj*2],'none','.','k',2);drawnow
             graph1D_jd([1:itn]*dkeparam.dtn,Ptot,0,0,'t*\nu','P_{tot} (MW)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'',[0,Ptot_inj*2],'-','none','k',2);drawnow
@@ -283,7 +283,7 @@ for itn = itnmin:itnmax,%time evolution
         else
             disp(' ');
             disp('------------------------------------------------------------------------------------');
-            disp(['Simulation ',id_simul]);
+            disp(['Simulation ',simul.id]);
             disp(['Iteration #',int2str(itn),': Pref = ',num2str(Ptot_inj),' (MW) - Ptot = ',num2str(Ptot(itn)),' (MW) - Itot = ',num2str(Itot(itn)),' (MA)']);
             disp('------------------------------------------------------------------------------------');
             disp(' ');
@@ -322,20 +322,20 @@ for itn = itnmin:itnmax,%time evolution
             end
         end
         %
-        eval(['save ',path_simul,'wave_results/waves_',id_simul,'_',int2str(itn),'.mat wavetype waves wavestructs rho_S itn']);
+        eval(['save ',simul.path,'wave_results/waves_',simul.id,'_',int2str(itn),'.mat wavetype waves wavestructs rho_S itn']);
         %
         wavetype = 0;
         %
         %Emergency backup of each iteration
         %
-        save_str = [path_simul,'backup_',id_simul,'.mat'];
+        save_str = [simul.path,'backup_',simul.id,'.mat'];
         if isfield(dke_out,'waves'),
             waves = dke_out.waves;
         else
             waves = '';
         end
         %
-        eval(['save ',save_str,' itn itnmax xrho xJ xP Itot Ptot Pnonabs_ray wavestructs wavestructs_fluct waves f0struct XXf0_t loadstructs id_simul psin_S dkepath equil dkeparam dkedisplay ohm transpfaste ripple XXsinksource_in opt_save Znorm Zcurr ZP0']);
+        eval(['save ',save_str,' itn itnmax xrho xJ xP Itot Ptot Pnonabs_ray wavestructs wavestructs_fluct waves f0struct XXf0_t loadstructs simul psin_S dkepath equil dkeparam dkedisplay ohm transpfaste ripple XXsinksource_in opt_save Znorm Zcurr ZP0']);
         disp('--------------------------------------------------------------------------------------------------');
         info_dke_yp(2,['Backup of iteration ',int2str(itn),'/',int2str(itnmax),' done in file ''',save_str,'''.']);
         disp('--------------------------------------------------------------------------------------------------');
