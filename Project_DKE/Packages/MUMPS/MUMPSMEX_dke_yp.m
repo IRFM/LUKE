@@ -17,6 +17,7 @@
 %
 %By Joan Decker (CEA-DRFC, joan.decker@cea.fr) and Yves Peysson (CEA-DRFC, yves.peysson@cea.fr)
 %
+if ~isfield(dkeparam,'opsplit'),dkeparam.opsplit = 0;end
 %
 if dkeparam.opsplit == 0,
     A_MUMPSMEX = MMXPC_f_t;
