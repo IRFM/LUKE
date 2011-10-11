@@ -21,7 +21,7 @@ for i = 1:length(x),
         if x(i)>=pp.breaks(j) & x(i)<=pp.breaks(j+1),
             for k = 1:pp.dim,
                 if pp.order == 2,
-                    y(i,k) = pp.coefs(k+(j-1)*pp.dim,1)*(x(i) - pp.breaks(j)) + pp.coefs(j+(k-1)*pp.dim,2);
+                    y(i,k) = pp.coefs(k+(j-1)*pp.dim,1)*(x(i) - pp.breaks(j))^1 + pp.coefs(k+(j-1)*pp.dim,2);
                 elseif pp.order == 3,
                     y(i,k) = pp.coefs(k+(j-1)*pp.dim,1)*(x(i) - pp.breaks(j))^2 + pp.coefs(k+(j-1)*pp.dim,2)*(x(i) - pp.breaks(j)) + pp.coefs(k+(j-1)*pp.dim,3);
                 elseif pp.order == 4,

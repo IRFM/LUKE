@@ -34,7 +34,7 @@ function rayinit = main_rayinit_launch_jd(equil,launch)
 %       - ns : (1000)
 %       - method: ('cubic')
 %
-% by J. Decker (CEA-DRFC) <joan.decker@cea.fr> and Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
+% by J. Decker (CEA-IRFM) <joan.decker@cea.fr> and Y. Peysson (IRFM/DSM/CEA) <yves.peysson@cea.fr>
 %
 if nargin < 2,
     error('Not enough input arguments in main_rayinit_launch_jd');
@@ -285,7 +285,30 @@ elseif strcmp(launch.type,'LH'),
                 rayinit.yphi0(iy) = launch.phi0;%Initial toroidal position at launch
                 rayinit.ym0(iy) = real(launch.m0(im));%Initial poloidal mode number
                 rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
-                rayinit.yNpar0(iy) = bNpar0(ib);%Initial index of refraction
+                %
+                rayinit.yNpar0(iy) = bNpar0(ib);%Initial index of refraction (default values, no fluctuations)
+                %
+                % Statistical initial condition (edge fluctuation)
+                %
+                if isfield(equil,'fluct'),
+                    if isfield(equil.fluct,'edge'),
+                        if isfield(equil.fluct.edge,'hwhm_npar') && isfield(equil.fluct.edge,'dtn'),
+                            if ~isempty(equil.fluct.edge.hwhm_npar) && ~isinf(equil.fluct.edge.dtn),
+                                if isfield(equil.fluct.edge,'flag'),
+                                    if equil.fluct.edge.flag,%random npar0 with Gaussian distribution for each lobe
+                                        rayinit.yNpar0(iy) = randg_yp(1,bNpar0(ib),equil.fluct.edge.hwhm_npar);%New random Npar0
+                                    else
+                                        rayinit.yNpar0(iy) = equil.fluct.edge.Npar0(iy);%reload previous Npar0
+                                    end
+                                    %
+                                    disp(['Reference npar0: ',num2str(bNpar0(ib)),', new npar0: ',num2str(rayinit.yNpar0(iy)),' with Gaussian distribtion HWHM=',num2str(equil.fluct.edge.hwhm_npar)]);
+                                    %
+                                end
+                            end
+                        end
+                    end
+                end
+                %
                 rayinit.ydNpar0(iy) = bdNpar0(ib);%initial Ray spectral width
                 rayinit.yP0_2piRp(iy) = bP0_2piRp(ib)*imag(launch.m0(im))/nr;%Lineic initial power density initial power in the ray (W/m)
                 %
