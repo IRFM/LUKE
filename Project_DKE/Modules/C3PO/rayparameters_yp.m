@@ -1,4 +1,4 @@
-function [R,Z,Npar,Nperp,epol_pmz,phi_xyz,D,Te,ne,zTi,zni,BP,BPHI,B,r,salpha,gradrho,pmode] = rayparameters_yp(rayparam,equil_fit,omega,rho,theta,phi,krho,m,n)
+function [R,Z,Npar,Nperp,epol_pmz,phi_xyz,D,Te,ne,zTi,zni,BRHO,BP,BPHI,B,r,salpha,gradrho,pmode] = rayparameters_yp(rayparam,equil_fit,fluct_fit,omega,rho,theta,phi,krho,m,n)
 %
 % Calculates ray position, Npar and Nperp 
 %
@@ -57,15 +57,41 @@ for ii = 1:length(rho),
 end
 %
 sigmaIp =  sign(-BR(1)*sin(theta(1)) + BZ(1)*cos(theta(1)));%Sign of the plasma current
-BP = sqrt(BR.^2 + BZ.^2);
+BP = sigmaIp.*sqrt(BR.^2 + BZ.^2);
 B = sqrt(BR.^2 + BZ.^2 + BPHI.^2);
+BRHO = zeros(size(BP));
 r = sqrt((R - Rp).^2 + (Z - Zp).^2);
 salpha = ((R - Rp).*dRdtheta + (Z - Zp).*dZdtheta)./r./sqrt(dRdtheta.^2 + dZdtheta.^2);
 calpha = sqrt(1.0 - salpha.^2);
 gradrho = R.*BP.*dRstardpsin_ray(:)/abs(equil_fit.psia);
 %
+if exist('fluct_fit'),
+    if isstruct(fluct_fit),
+        for ii = 1:length(rho),
+            [fluctval] = fluctval_yp(equil_fit,fluct_fit,rho(ii),theta(ii),phi(ii)); 
+            %
+            ne(ii) = ne(ii) + ne(ii)*fluctval.ner;
+            Te(ii) = Te(ii) + Te(ii)*fluctval.Ter;
+            zni(ii,:) = zni(ii,:) + zni(ii,:).*fluctval.znir;
+            zTi(ii,:) = zTi(ii,:) + zTi(ii,:).*fluctval.zTir;
+            %
+            cta = cos(theta(ii)).*calpha(ii) + sin(theta(ii)).*salpha(ii);
+            sta = -cos(theta(ii)).*salpha(ii) + sin(theta(ii)).*calpha(ii);
+            %
+            BRHO(ii) = BRHO(ii) + B(ii)*(cta*fluctval.Bxr + sta*fluctval.Byr);%normalized to unperturbed magnetic equilibrium
+            BP(ii) = BP(ii) + B(ii)*(cta*fluctval.Byr - sta*fluctval.Bxr);%normalized to unperturbed magnetic equilibrium
+            BPHI(ii) = BPHI(ii) + B(ii)*fluctval.Bzr;%normalized to unperturbed magnetic equilibrium
+            %
+            B(ii) = sqrt(BRHO(ii).^2 + BP(ii).^2 + BPHI(ii).^2);%perturbed magnetic field
+            %
+        end
+       %
+    end
+end
+%
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
-Npar = clum*(sigmaIp*m.*calpha.*BP./r./B + n.*BPHI./R./B)./omega;
+%
+Npar = clum*(krho.*krho.*gradrho.*gradrho.*BRHO./B./equil_fit.ap^2 + m.*(calpha.*BP./B - salpha.*BRHO./B)./r + n.*BPHI./R./B)./omega;
 Nperp = sqrt(clum*clum*(krho.*krho.*gradrho.*gradrho/equil_fit.ap^2 - 2*krho.*m.*gradrho.*salpha./r/equil_fit.ap + (m./r).^2 + (n./R).^2)./omega./omega - Npar.^2);
 %
 D = zeros(length(rho),1);

@@ -1,4 +1,4 @@
-function [R,Z] = testfitequil_yp(equil_in,equil_fit,rho,theta)
+function [R,Z] = testfitequil_yp(equil_in,equil_fit,rho,theta,ns)
 %
 % Test the interpolated magnetic equilibrium
 %
@@ -9,14 +9,26 @@ function [R,Z] = testfitequil_yp(equil_in,equil_fit,rho,theta)
 %      (default = 0.25)
 %    - theta: poloidal angle (rad) [1,1]
 %      (default = 0.2)
+%    - ns: number of species [1,1]
+%      (default = 2)
 %
-% OUTPUT: none
+% OUTPUT: (size(rho)=size(theta)=(1,1) only)
+%    - R: Major axis position [1,1]
+%    - Z: Vertical axis position [1,1]
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
-if nargin <3,% Output for comparison with C raytracing_yp.c
+if nargin < 3,% Output for comparison with C raytracing_yp.c
    rho = 0.25;
    theta = 0.2;
+   ns = 2;
+end
+if nargin < 4,% Output for comparison with C raytracing_yp.c
+   theta = 0.2;
+   ns = 2;
+end
+if nargin < 5,
+   ns = 2;
 end
 %
 R = [];
@@ -27,6 +39,7 @@ prec = 1e-3;
 psin = equil_in.psi_apRp/equil_in.psi_apRp(end);
 [prho] = psi2rho_jd(equil_in,psin,'spline');
 dpsin = gradient(psin(:));
+d2psin = gradient(dpsin(:));
 dprho = gradient(prho(:));
 dtheta = gradient(equil_in.theta);
 %
@@ -86,12 +99,31 @@ dBdtheta = dBdtheta./(ones(length(dprho),1)*dtheta);
 dBdrho = dBdrho./(dprho(:)*ones(1,length(dtheta)));
 %
 dpsindrho = dpsin./dprho;
-if ~isempty(pTe),dTedrho = gradient(pTe)./dprho(:);end
-if ~isempty(pne),dnedrho = gradient(pne)./dprho(:);end
+d2psindrho2 = d2psin./dprho./dprho;
+if ~isempty(pTe),
+    pdTe = gradient(pTe);
+    pd2Te = gradient(pdTe);
+    dTedrho = pdTe./dprho(:);
+    d2Tedrho2 = pd2Te./dprho(:)./dprho(:);
+end
+if ~isempty(pne),
+    pdne = gradient(pne);
+    pd2ne = gradient(pdne);
+    dnedrho = pdne./dprho(:);
+    d2nedrho2 = pd2ne./dprho(:)./dprho(:);
+end
 if ~isempty(equil_in.zZi),
    for i = 1:length(equil_in.zZi)
-      zdTidrho(:,i) = gradient(pzTi(:,i))./dprho(:);
-      zdnidrho(:,i) = gradient(pzni(:,i))./dprho(:);
+      pdzTi = gradient(pzTi(:,i));
+      pd2zTi = gradient(pdzTi);       
+      pdzni = gradient(pzni(:,i));
+      pd2zni = gradient(pdzni);       
+      %
+      zdTidrho(:,i) = pdzTi./dprho(:);
+      zdnidrho(:,i) = pdzni./dprho(:);
+      %
+      zd2Tidrho2(:,i) = pd2zTi./dprho(:)./dprho(:);
+      zd2nidrho2(:,i) = pd2zni./dprho(:)./dprho(:);
    end
 end
 %
@@ -115,12 +147,16 @@ if nargin < 3,
    psin_fit1 = ppval_yp(equil_fit.psin_fit.pp_f,rho_fit);psin_fit1 = psin_fit1(:);
    dpsindrho_fit = ppval(equil_fit.psin_fit.pp_dfdrho,rho_fit);
    dpsindrho_fit1 = ppval_yp(equil_fit.psin_fit.pp_dfdrho,rho_fit);
+   d2psindrho2_fit = ppval(equil_fit.psin_fit.pp_d2fdrho2,rho_fit);
+   d2psindrho2_fit1 = ppval_yp(equil_fit.psin_fit.pp_d2fdrho2,rho_fit);
 %
    if isfield(equil_fit,'Te_fit'),
       Te_fit = ppval(equil_fit.Te_fit.pp_f,rho_fit);Te_fit = Te_fit(:);
       Te_fit1 = ppval_yp(equil_fit.Te_fit.pp_f,rho_fit);Te_fit1 = Te_fit1(:);
       dTedrho_fit = ppval(equil_fit.Te_fit.pp_dfdrho,rho_fit);
       dTedrho_fit1 = ppval_yp(equil_fit.Te_fit.pp_dfdrho,rho_fit);
+      d2Tedrho2_fit = ppval(equil_fit.Te_fit.pp_d2fdrho2,rho_fit);
+      d2Tedrho2_fit1 = ppval_yp(equil_fit.Te_fit.pp_d2fdrho2,rho_fit);
    end
 %
    if isfield(equil_fit,'ne_fit'),
@@ -128,6 +164,8 @@ if nargin < 3,
       ne_fit1 = ppval_yp(equil_fit.ne_fit.pp_f,rho_fit);ne_fit1 = ne_fit1(:);
       dnedrho_fit = ppval(equil_fit.ne_fit.pp_dfdrho,rho_fit);
       dnedrho_fit1 = ppval_yp(equil_fit.ne_fit.pp_dfdrho,rho_fit);
+      d2nedrho2_fit = ppval(equil_fit.ne_fit.pp_d2fdrho2,rho_fit);
+      d2nedrho2_fit1 = ppval_yp(equil_fit.ne_fit.pp_d2fdrho2,rho_fit);
    end
 %
    if isfield(equil_fit,'zTi_fit'),
@@ -135,6 +173,8 @@ if nargin < 3,
       zTi_fit1 = ppval_yp(equil_fit.zTi_fit.pp_f,rho_fit);
       zdTidrho_fit = ppval(equil_fit.zTi_fit.pp_dfdrho,rho_fit);
       zdTidrho_fit1 = ppval_yp(equil_fit.zTi_fit.pp_dfdrho,rho_fit);
+      zd2Tidrho2_fit = ppval(equil_fit.zTi_fit.pp_d2fdrho2,rho_fit);
+      zd2Tidrho2_fit1 = ppval_yp(equil_fit.zTi_fit.pp_d2fdrho2,rho_fit);
    end
 %
    if isfield(equil_fit,'zni_fit'),
@@ -142,6 +182,8 @@ if nargin < 3,
       zni_fit1 = ppval_yp(equil_fit.zni_fit.pp_f,rho_fit);
       zdnidrho_fit = ppval(equil_fit.zni_fit.pp_dfdrho,rho_fit);
       zdnidrho_fit1 = ppval_yp(equil_fit.zni_fit.pp_dfdrho,rho_fit);
+      zd2nidrho2_fit = ppval(equil_fit.zni_fit.pp_d2fdrho2,rho_fit);
+      zd2nidrho2_fit1 = ppval_yp(equil_fit.zni_fit.pp_d2fdrho2,rho_fit);
    end
 %
 % Calculation of the coordinates and magnetic equilibrium quantity
@@ -352,39 +394,72 @@ if nargin < 3,
       subplot('position',[2/3+1/12,1/8,5/24,5/16])
    end
 %
-   figure('Name','Derivatives of magnetic equilibrium profile parameters'),clf
+   figure('Name','1st order derivatives of the magnetic equilibrium profile parameters'),clf
    set(gcf,'units','inches','position',[0.5,1,10,6]);
    set(gca,'position',[0,0,1,1]);
 %
    subplot('position',[1/12,0.5+1/16,5/24,5/16])
-   [ax] = graph1D_jd(rho_fit,dpsindrho_fit,0,0,'\rho','d\psi_nd/\rho','',NaN,[0,1],[-eps,1],'-','none','b',2);
-   [ax] = graph1D_jd(rho_fit,dpsindrho_fit1,0,0,'\rho','d\psi_nd/\rho','',NaN,[0,1],[-eps,1],'-','none','c',1);
-   [ax] = graph1D_jd(prho(1:10:end),dpsindrho(1:10:end),0,0,'\rho','d\psi_nd/\rho','',NaN,[0,1],[-eps,1],'--','non','r',1);
+   [ax] = graph1D_jd(rho_fit,dpsindrho_fit,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',2);
+   [ax] = graph1D_jd(rho_fit,dpsindrho_fit1,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','c',1);
+   [ax] = graph1D_jd(prho(1:10:end),dpsindrho(1:10:end),0,0,'\rho','d\psi_nd/\rho','',NaN,[0,1],[min(dpsindrho_fit1),max(dpsindrho_fit1)],'--','non','r',1);
    if isfield(equil_fit,'Te_fit'),
       subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
-      [ax] = graph1D_jd(rho_fit,dTedrho_fit,0,0,'\rho','T_e (keV)',equil_in.id,NaN,NaN,NaN,'-','none','b',2);
-      [ax] = graph1D_jd(rho_fit,dTedrho_fit1,0,0,'\rho','T_e (keV)',equil_in.id,NaN,NaN,NaN,'-','none','c',1);
+      [ax] = graph1D_jd(rho_fit,dTedrho_fit,0,0,'','',equil_in.id,NaN,NaN,NaN,'-','none','b',2);
+      [ax] = graph1D_jd(rho_fit,dTedrho_fit1,0,0,'','',equil_in.id,NaN,NaN,NaN,'-','none','c',1);
       [ax] = graph1D_jd(prho(1:10:end),dTedrho(1:10:end),0,0,'\rho','dT_ed/\rho (keV)',equil_in.id,NaN,NaN,NaN,'--','non','r',1);
    end
    if isfield(equil_fit,'ne_fit'),
       subplot('position',[2/3+1/12,0.5+1/16,5/24,5/16])
-      [ax] = graph1D_jd(rho_fit,dnedrho_fit/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,NaN,NaN,'-','none','b',2);
-      [ax] = graph1D_jd(rho_fit,dnedrho_fit1/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,NaN,NaN,'-','none','c',1);
+      [ax] = graph1D_jd(rho_fit,dnedrho_fit/1e19,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
+      [ax] = graph1D_jd(rho_fit,dnedrho_fit1/1e19,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
       [ax] = graph1D_jd(prho(1:10:end),dnedrho(1:10:end)/1e19,0,0,'\rho','dn_e/d\rho (10^{19} m^{-3})','',NaN,NaN,NaN,'--','non','r',1);
    end
    if isfield(equil_fit,'zTi_fit'),
       subplot('position',[1/12,1/8,5/24,5/16])
-      [ax] = graph1D_jd(rho_fit,zdTidrho_fit,0,0,'\rho','','',NaN,NaN,NaN,'-','none','b',2);
-      [ax] = graph1D_jd(rho_fit,zdTidrho_fit1,0,0,'\rho','','',NaN,NaN,NaN,'-','none','c',1);
+      [ax] = graph1D_jd(rho_fit,zdTidrho_fit,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
+      [ax] = graph1D_jd(rho_fit,zdTidrho_fit1,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
       [ax] = graph1D_jd(prho(1:10:end),zdTidrho(1:10:end,:),0,0,'\rho','dT_i/d\rho (keV)','',NaN,NaN,NaN,'--','non','r',1);
    end
    if isfield(equil_fit,'zni_fit'),
       subplot('position',[1/3+1/12,1/8,5/24,5/16])
-      [ax] = graph1D_jd(rho_fit,zdnidrho_fit/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,NaN,NaN,'-','none','b',2);
-      [ax] = graph1D_jd(rho_fit,zdnidrho_fit1/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,NaN,NaN,'-','none','c',1);
+      [ax] = graph1D_jd(rho_fit,zdnidrho_fit/1e19,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
+      [ax] = graph1D_jd(rho_fit,zdnidrho_fit1/1e19,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
       [ax] = graph1D_jd(prho(1:10:end),zdnidrho(1:10:end,:)/1e19,0,0,'\rho','dn_i/d\rho (10^{19} m^{-3})','',NaN,NaN,NaN,'--','non','r',1);
       subplot('position',[2/3+1/12,1/8,5/24,5/16])
-      [ax] = graph1D_jd(rho_fit,zdnidrho_fit/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,NaN,NaN,'-','none','b',2); 
+   end
+%
+   figure('Name','2nd order derivatives of the magnetic equilibrium profile parameters'),clf
+   set(gcf,'units','inches','position',[0.5,1,10,6]);
+   set(gca,'position',[0,0,1,1]);
+%
+   subplot('position',[1/12,0.5+1/16,5/24,5/16])
+   [ax] = graph1D_jd(rho_fit,d2psindrho2_fit,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',2);
+   [ax] = graph1D_jd(rho_fit,d2psindrho2_fit1,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','c',1);
+   [ax] = graph1D_jd(prho(1:10:end),d2psindrho2(1:10:end),0,0,'\rho','d2\psi_nd/\rho2','',NaN,[0,1],[min(d2psindrho2_fit1),max(d2psindrho2_fit1)],'--','non','r',1);
+   if isfield(equil_fit,'Te_fit'),
+      subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
+      [ax] = graph1D_jd(rho_fit,d2Tedrho2_fit,0,0,'','',equil_in.id,NaN,NaN,NaN,'-','none','b',2);
+      [ax] = graph1D_jd(rho_fit,d2Tedrho2_fit1,0,0,'','',equil_in.id,NaN,NaN,NaN,'-','none','c',1);
+      [ax] = graph1D_jd(prho(1:10:end),d2Tedrho2(1:10:end),0,0,'\rho','d2T_ed/\rho2 (keV)',equil_in.id,NaN,NaN,NaN,'--','non','r',1);
+   end
+   if isfield(equil_fit,'ne_fit'),
+      subplot('position',[2/3+1/12,0.5+1/16,5/24,5/16])
+      [ax] = graph1D_jd(rho_fit,d2nedrho2_fit/1e19,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
+      [ax] = graph1D_jd(rho_fit,d2nedrho2_fit1/1e19,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
+      [ax] = graph1D_jd(prho(1:10:end),d2nedrho2(1:10:end)/1e19,0,0,'\rho','d2n_e/d\rho2 (10^{19} m^{-3})','',NaN,NaN,NaN,'--','non','r',1);
+   end
+   if isfield(equil_fit,'zTi_fit'),
+      subplot('position',[1/12,1/8,5/24,5/16])
+      [ax] = graph1D_jd(rho_fit,zd2Tidrho2_fit,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
+      [ax] = graph1D_jd(rho_fit,zd2Tidrho2_fit1,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
+      [ax] = graph1D_jd(prho(1:10:end),zd2Tidrho2(1:10:end,:),0,0,'\rho','d2T_i/d\rho2 (keV)','',NaN,NaN,NaN,'--','non','r',1);
+   end
+   if isfield(equil_fit,'zni_fit'),
+      subplot('position',[1/3+1/12,1/8,5/24,5/16])
+      [ax] = graph1D_jd(rho_fit,zd2nidrho2_fit/1e19,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
+      [ax] = graph1D_jd(rho_fit,zd2nidrho2_fit1/1e19,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
+      [ax] = graph1D_jd(prho(1:10:end),zd2nidrho2(1:10:end,:)/1e19,0,0,'','d2n_i/d\rho2 (10^{19} m^{-3})','',NaN,NaN,NaN,'--','non','r',1);
+      subplot('position',[2/3+1/12,1/8,5/24,5/16])
    end
 %
 % Magnetic equilibrium coordinates
@@ -549,126 +624,38 @@ if nargin < 3,
    [ax] = graph1D_jd(R_fit1(:,:)',Z_fit1(:,:)',0,0,'R(m)','Z(m)','Flux-surfaces labeled by \rho=0,0.1,0.2...1',NaN,[Rmin,Rmax],[Zmin,Zmax],'--','none','c',1);
    axis('equal');drawnow  
 %
-end
-%
-if nargin == 4,
-   psin = ppval(equil_fit.psin_fit.pp_f,rho);
-   dpsindrho = ppval(equil_fit.psin_fit.pp_dfdrho,rho);
-   dRstardpsin = ppval(equil_fit.dxstardpsin_fit.pp_f,rho);
-   ddRstardpsindrho = ppval(equil_fit.dxstardpsin_fit.pp_dfdrho,rho);
-   if isfield(equil_fit,'Te_fit'),
-      Te = ppval(equil_fit.Te_fit.pp_f,rho);
-      dTedrho = ppval_yp(equil_fit.Te_fit.pp_dfdrho,rho);
-   end
-   if isfield(equil_fit,'ne_fit'),
-      ne = ppval(equil_fit.ne_fit.pp_f,rho);
-      dnedrho = ppval_yp(equil_fit.ne_fit.pp_dfdrho,rho);
-   end
-   if isfield(equil_fit,'zTi_fit'),
-      zTi = ppval(equil_fit.zTi_fit.pp_f,rho);
-      dzTidrho = ppval_yp(equil_fit.zTi_fit.pp_dfdrho,rho);
-   end
-   if isfield(equil_fit,'zni_fit'),
-      zni = ppval(equil_fit.zni_fit.pp_f,rho);
-      dznidrho = ppval_yp(equil_fit.zni_fit.pp_dfdrho,rho);
-   end
-%
-   x_a0 = ppval(equil_fit.x_fit.pp_a0,rho);
-   x_an = ppval(equil_fit.x_fit.pp_an,rho);
-   x_bn = ppval(equil_fit.x_fit.pp_bn,rho);
-   x_da0drho = ppval(equil_fit.x_fit.pp_da0drho,rho);
-   x_dandrho = ppval(equil_fit.x_fit.pp_dandrho,rho);
-   x_dbndrho = ppval(equil_fit.x_fit.pp_dbndrho,rho); 
-   [R,dRdtheta,d2Rdtheta2,dRdrho,d2Rdthetadrho] = calcval_yp(equil_fit,theta,x_a0,x_an,x_bn,x_da0drho,x_dandrho,x_dbndrho);
-   R = R + Rp;
-%
-   y_a0 = ppval(equil_fit.y_fit.pp_a0,rho);
-   y_an = ppval(equil_fit.y_fit.pp_an,rho);
-   y_bn = ppval(equil_fit.y_fit.pp_bn,rho);
-   y_da0drho = ppval(equil_fit.y_fit.pp_da0drho,rho);
-   y_dandrho = ppval(equil_fit.y_fit.pp_dandrho,rho);
-   y_dbndrho = ppval(equil_fit.y_fit.pp_dbndrho,rho);
-   [Z,dZdtheta,d2Zdtheta2,dZdrho,d2Zdthetadrho] = calcval_yp(equil_fit,theta,y_a0,y_an,y_bn,y_da0drho,y_dandrho,y_dbndrho);
-   Z = Z + Zp;
-%
-   r = sqrt((R - Rp).^2 + (Z - Zp).^2);
-   drdtheta = (dRdtheta.*(R - Rp) + dZdtheta.*(Z - Zp))./r;
-   drdrho = (dRdrho.*(R - Rp) + dZdrho.*(Z - Zp))./r;
-%
-   salpha = ((R - Rp).*dRdtheta + (Z - Zp).*dZdtheta)./r./sqrt(dRdtheta.^2 + dZdtheta.^2);
-   dsalphadtheta = ...
-      sqrt(dRdtheta.^2 + dZdtheta.^2)./r ...
-      + ((R - Rp).*d2Rdtheta2 + (Z - Zp).*d2Zdtheta2)./r./sqrt(dRdtheta.^2 + dZdtheta.^2) ...
-      -drdtheta.*((R - Rp).*dRdtheta + (Z - Zp).*dZdtheta)./r.^2./sqrt(dRdtheta.^2 + dZdtheta.^2) ...
-      -(dRdtheta.*d2Rdtheta2 + dZdtheta.*d2Zdtheta2).*((R - Rp).*dRdtheta + (Z - Zp).*dZdtheta)./r./sqrt(dRdtheta.^2 + dZdtheta.^2)./(dRdtheta.^2 + dZdtheta.^2);
-   dsalphadrho = ...
-      (dRdtheta.*dRdrho + dZdtheta.*dZdrho)./r./sqrt(dRdtheta.^2 + dZdtheta.^2)...
-      + ((R - Rp).*d2Rdthetadrho + (Z - Zp).*d2Zdthetadrho)./r./sqrt(dRdtheta.^2 + dZdtheta.^2) ...
-      -drdrho.*((R - Rp).*dRdtheta + (Z - Zp).*dZdtheta)./r.^2./sqrt(dRdtheta.^2 + dZdtheta.^2) ...
-      -(dRdtheta.*d2Rdthetadrho + dZdtheta.*d2Zdthetadrho).*((R - Rp).*dRdtheta + (Z - Zp).*dZdtheta)./r./sqrt(dRdtheta.^2 + dZdtheta.^2)./(dRdtheta.^2 + dZdtheta.^2);
-%
-   calpha = sqrt(1.0 - salpha.^2);
-   dcalphadtheta = -salpha.*dsalphadtheta./calpha;
-   dcalphadrho = -salpha.*dsalphadrho./calpha;
-%
-   Bx_a0 = ppval(equil_fit.Bx_fit.pp_a0,rho);
-   Bx_an = ppval(equil_fit.Bx_fit.pp_an,rho);
-   Bx_bn = ppval(equil_fit.Bx_fit.pp_bn,rho);
-   Bx_da0drho = ppval(equil_fit.Bx_fit.pp_da0drho,rho);
-   Bx_dandrho = ppval(equil_fit.Bx_fit.pp_dandrho,rho);
-   Bx_dbndrho = ppval(equil_fit.Bx_fit.pp_dbndrho,rho);
-   Bx_dbndrho = ppval(equil_fit.Bx_fit.pp_dbndrho,rho);
-   [BR,dBRdtheta,d2BRdtheta2,dBRdrho,d2BRdthetadrho] = calcval_yp(equil_fit,theta,Bx_a0,Bx_an,Bx_bn,Bx_da0drho,Bx_dandrho,Bx_dbndrho);
-%
-   By_a0 = ppval(equil_fit.By_fit.pp_a0,rho);
-   By_an = ppval(equil_fit.By_fit.pp_an,rho);
-   By_bn = ppval(equil_fit.By_fit.pp_bn,rho);
-   By_da0drho = ppval(equil_fit.By_fit.pp_da0drho,rho);
-   By_dandrho = ppval(equil_fit.By_fit.pp_dandrho,rho);
-   By_dbndrho = ppval(equil_fit.By_fit.pp_dbndrho,rho);
-   [BZ,dBZdtheta,d2BZdtheta2,dBZdrho,d2BZdthetadrho] = calcval_yp(equil_fit,theta,By_a0,By_an,By_bn,By_da0drho,By_dandrho,By_dbndrho);
-%
-   BPHI_a0 = ppval(equil_fit.BPHI_fit.pp_a0,rho);
-   BPHI_an = ppval(equil_fit.BPHI_fit.pp_an,rho);
-   BPHI_bn = ppval(equil_fit.BPHI_fit.pp_bn,rho);
-   BPHI_da0drho = ppval(equil_fit.BPHI_fit.pp_da0drho,rho);
-   BPHI_dandrho = ppval(equil_fit.BPHI_fit.pp_dandrho,rho);
-   BPHI_dbndrho = ppval(equil_fit.BPHI_fit.pp_dbndrho,rho);
-   [BPHI,dBPHIdtheta,d2BPHIdtheta2,dBPHIdrho,d2BPHIdthetadrho] = calcval_yp(equil_fit,theta,BPHI_a0,BPHI_an,BPHI_bn,BPHI_da0drho,BPHI_dandrho,BPHI_dbndrho);
-%
-   BP = sqrt(BR^2 + BZ^2);
-   dBPdtheta = (BR*dBRdtheta + BZ*dBZdtheta)/BP;
-   dBPdrho = (BR*dBRdrho + BZ*dBZdrho)/BP;
-%
-   B = sqrt(BR^2 + BZ^2 + BPHI^2);
-   dBdtheta = (BR*dBRdtheta + BZ*dBZdtheta + BPHI*dBPHIdtheta)/B;
-   dBdrho = (BR*dBRdrho + BZ*dBZdrho + BPHI*dBPHIdrho)/B;
-%
-   gradrho = R.*BP.*dRstardpsin/equil_fit.ap/equil_fit.psia;
-   dgradrhodrho = dRdrho.*BP.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*dBPdrho.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*BP.*ddRstardpsindrho/equil_fit.psia/equil_fit.ap;
-   dgradrhodtheta = dRdtheta.*BP.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*dBPdtheta.*dRstardpsin/equil_fit.psia/equil_fit.ap;
+else
+   [Te,dTedrho,d2Tedrho2,ne,dnedrho,d2nedrho2,zTi,dzTidrho,d2zTidrho2,zni,dznidrho,d2znidrho2,...
+        R,dRdtheta,d2Rdtheta2,dRdrho,d2Rdthetadrho,Z,dZdtheta,d2Zdtheta2,dZdrho,d2Zdthetadrho,...
+        r,drdtheta,drdrho,salpha,dsalphadtheta,dsalphadrho,calpha,dcalphadtheta,dcalphadrho,...
+        BR,dBRdtheta,d2BRdtheta2,dBRdrho,d2BRdthetadrho,...
+        BZ,dBZdtheta,d2BZdtheta2,dBZdrho,d2BZdthetadrho,...
+        BPHI,dBPHIdtheta,d2BPHIdtheta2,dBPHIdrho,d2BPHIdthetadrho,...
+        BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho,...
+        gradrho,dgradrhodtheta,dgradrhodrho] = equilval_yp(equil_fit,rho,theta,1);
 %
    if nargout ~= 2,
       disp('--------------');
       if isfield(equil_fit,'Te_fit'),
          disp(['equil_fit.Te_fit.pp_f.coefs(1) = ',num2str(equil_fit.Te_fit.pp_f.coefs(1))]);
          disp(['equil_fit.Te_fit.pp_dfdrho.coefs(1) = ',num2str(equil_fit.Te_fit.pp_dfdrho.coefs(1))]);
+         disp(['equil_fit.Te_fit.pp_d2fdrho2.coefs(1) = ',num2str(equil_fit.Te_fit.pp_d2fdrho2.coefs(1))]);
       end
-      disp(['equil_fit.BPHI_fit.n = ',num2str(equil_fit.BPHI_fit.n(1))]);
+      disp(['equil_fit.BPHI_fit.n = ',num2str(equil_fit.BPHI_fit.n(end))]);
       disp(['equil_fit.BPHI_fit.bn_f.coefs(1) = ',num2str(equil_fit.BPHI_fit.pp_bn.coefs(1))]);
       disp(['equil_fit.BPHI_fit.bn_f.coefs(1) = ',num2str(equil_fit.BPHI_fit.pp_dbndrho.coefs(1))]);
       disp('--------------');
       if isfield(equil_fit,'Te_fit'),
-         disp(['Te(',num2str(rho),'),dTedrho(',num2str(rho),') (keV) = ',num2str(Te),',',num2str(dTedrho)]);
+         disp(['Te(',num2str(rho),'),dTedrho(',num2str(rho),'),d2Tedrho2(',num2str(rho),') (keV) = ',num2str(Te),',',num2str(dTedrho),',',num2str(d2Tedrho2)]);
       end
       if isfield(equil_fit,'ne_fit'),
-         disp(['ne(',num2str(rho),'),dnedrho(',num2str(rho),') (10+19 m-3) = ',num2str(ne/1e19),',',num2str(dnedrho/1e19)]);
+         disp(['ne(',num2str(rho),'),dnedrho(',num2str(rho),'),d2nedrho2(',num2str(rho),') (10+19 m-3) = ',num2str(ne/1e19),',',num2str(dnedrho/1e19),',',num2str(d2nedrho2/1e19)]);
       end
       if isfield(equil_fit,'zTi_fit'),
-         disp(['zTi(2,',num2str(rho),'),dzTidrho(2,',num2str(rho),') (keV) = ',num2str(zTi(2)),',',num2str(dzTidrho(2))]);
+         disp(['zTi(',int2str(ns),',',num2str(rho),'),dzTidrho(',int2str(ns),',',num2str(rho),'),d2zTidrho2(',int2str(ns),' ,',num2str(rho),') (keV) = ',num2str(zTi(ns)),',',num2str(dzTidrho(ns)),',',num2str(d2zTidrho2(ns))]);
       end
       if isfield(equil_fit,'zni_fit'),
-         disp(['zni(2,',num2str(rho),'),dznidrho(2,',num2str(rho),') (10+19 m-3) = ',num2str(zni(2)/1e19),',',num2str(dznidrho(2)/1e19)]);
+         disp(['zni(',int2str(ns),',',num2str(rho),'),dznidrho(',int2str(ns),',',num2str(rho),'),d2znidrho2(',int2str(ns),' ,',num2str(rho),') (10+19 m-3) = ',num2str(zni(ns)/1e19),',',num2str(dznidrho(ns)/1e19),',',num2str(d2znidrho2(ns)/1e19)]);
       end
 %
       disp(['R(',num2str(rho),',',num2str(theta),'),dRdrho(',num2str(rho),',',num2str(theta),'),dRdtheta(',num2str(rho),',',num2str(theta),'),d2Rdtheta2(',num2str(rho),',',num2str(theta),'),d2Rdthetadrho(',num2str(rho),',',num2str(theta),') (m) = ',num2str(R),',',num2str(dRdrho),',',num2str(dRdtheta),',',num2str(d2Rdtheta2),',',num2str(d2Rdthetadrho)]);
