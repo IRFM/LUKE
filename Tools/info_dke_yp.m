@@ -1,4 +1,4 @@
-function [] = info_dke_yp(mode,a)
+function [] = info_dke_yp(mode,a,display_mode)
 %
 %	Customized message display
 %
@@ -6,17 +6,18 @@ function [] = info_dke_yp(mode,a)
 %
 %		- mode: type of message [1,1]
 %		- a: the message (string) [1,m]
+%		- display_mode: if display_mode == 0, no display
 %
 %	Output: none
 %
+% By Yves Peysson (CEA-IRFM, yves.peysson@cea.fr) and Joan Decker (CEA-IRFM, joan.decker@cea.fr)
 %
-%by Y.PEYSSON CEA-DRFC 24/10/1991 <yves.peysson@cea.fr>
-%revised for MatLab 5.2 (15/04/2000)
-%
-%
+if nargin == 3 && display_mode == 0,
+    return
+end
 if nargin < 2,
 	info_dke_yp(2,'Wrong number of input arguments for info_dke_yp');
-	return;
+	return
 end
 %
 if mode == 1,
