@@ -88,6 +88,9 @@ cephee.MUMPS.mex705 = [cephee.local_root,'MUMPS_4.7.3_S_g95/MATLAB75'];%Where MU
 cephee.MUMPS.mex710 = [cephee.local_root,'MUMPS_4.9.2_S_ifort/MATLAB710'];%MUMPS_4.9.2 not compatible with matlab 7.5
 %cephee.MUMPS.mex710 = [cephee.local_root,'MUMPS_4.9.2_S_g95/MATLAB710'];%alternative option
 %
+cephee.scheduler.local = '/local/mdce/configurations/localconfig.mat';
+cephee.scheduler.pbspro = '/local/mdce/configurations/pbsproconfig.mat';
+%
 cephee.remote(1).host = '';% empty for local host
 cephee.remote(1).nproc = 28;
 cephee.remote(1).luke_root = cephee.luke_root;

@@ -1,4 +1,4 @@
-function [flag,varargout] = dclukecomputing(fun_handle,args_in,arg_index,arg_range,dkecluster)
+function [flag,varargout] = dclukecomputing(fun_handle,args_in,arg_index,arg_range,scheduler)
 % LUKE - LUKE distributed computing environment
 %
 %   Distributed computing using the LUKE distributed computing environment
@@ -10,10 +10,11 @@ function [flag,varargout] = dclukecomputing(fun_handle,args_in,arg_index,arg_ran
 %       - arg_index: index in the argument list args_in which must be changed [1,1]
 %       - arg_range: list of values for the input argument arg_index [1,nrange]
 %           => nrange = length(arg_range) = number of jobs 
+%       - scheduler: scheduler information
 %
 %   OUTPUT:
 %
-%       - flag: status of the computation : 2 (OK) or -2 (failed) [1,nrange]
+%       - flag: status of the computation : scheduler.mode (OK with dclukecomputing) or -2 (failed) [1,nrange]
 %       - varargout: output arguments list of the function {1,nargout-1}.
 %           => Each element is a list of size {nrange,1}
 %
@@ -21,25 +22,25 @@ function [flag,varargout] = dclukecomputing(fun_handle,args_in,arg_index,arg_ran
 %
 nrange = length(arg_range);
 varargout_array = cell(nrange,nargout-1);
-flag = 2*ones(1,nrange);
+flag = scheduler.mode*ones(1,nrange);
 %
 id = NaN(1,nrange);
 %
 try
     %
-    dcluke(dkecluster,0,'RESET');%initialisation
+    dcluke(scheduler,0,'RESET');%initialisation
     %
     for j_range = 1:nrange,
         args_in{arg_index} = arg_range{j_range};
-        id(j_range) = dcluke(dkecluster,func2str(fun_handle),args_in{:});%submit jobs      
+        id(j_range) = dcluke(scheduler,func2str(fun_handle),args_in{:});%submit jobs      
     end
     %
-    dcluke(dkecluster);%wait for job completion
+    dcluke(scheduler);%wait for job completion
     %
     for j_range = 1:nrange,
         %
         try
-            [varargout_array{j_range,:}] = dcluke(dkecluster,id(j_range));
+            [varargout_array{j_range,:}] = dcluke(scheduler,id(j_range));
         catch me_load
             disp(['Error loading the results for run ',int2str(j_range),'/',int2str(nrange),' : flagged for sequential run']);
             disp(['===> Error : ',getReport(me_load)]);
