@@ -13,25 +13,21 @@ load('initdata.mat','dkeparam_out','display','equilDKE','gridDKE');%Load data fo
 %
 display.display_mode = 0;%no display
 %
-[vmatlab,testtoolbox] = matlabstatus_yp('Parallel Computing Toolbox');
+% [vmatlab,testtoolbox] = matlabstatus_yp('Parallel Computing Toolbox');
 %
-Nmax = 4;
-Configname = 'local';%'PBSPro';%
+Nmax = 2;
+schedulertype = 'pbspro';%'local';%
 %
-if vmatlab >= 77 && testtoolbox,
-    set(findResource('scheduler','type',Configname),'ClusterSize',Nmax);%maximum local workers (max : number of physical cores recommanded) 
-end
-%
-MDCE = 0;%Set to 1 if matlab MDCE is tested
-LUKEDC = 0;%Set to 1 if batch DCLUKE is tested
+MDCE = 1;%Set to 1 if matlab MDCE is tested
+LUKEDC = 1;%Set to 1 if batch DCLUKE is tested
 PARLOOP = 1;%Set to 1 if parfor is tested
 %
 N = 2*Nmax;%number of jobs
 %
-time_seq = NaN*ones(1,N);flag_seq = cell(1,N);
-time_par = NaN*ones(1,N);flag_par = cell(1,N);
-time_mdce = NaN*ones(1,N);flag_mdce = cell(1,N);
-time_ldce = NaN*ones(1,N);flag_ldce = cell(1,N);
+time_seq = NaN*ones(1,N);test_seq = ones(1,N);flag_seq = cell(1,N);
+time_par = NaN*ones(1,N);test_par = NaN*ones(1,N);flag_par = cell(1,N);
+time_mdce = NaN*ones(1,N);test_mdce = NaN*ones(1,N);flag_mdce = cell(1,N);
+time_ldce = NaN*ones(1,N);test_ldce = NaN*ones(1,N);flag_ldce = cell(1,N);
 %
 Rp = equilDKE.Rp;
 %
@@ -45,7 +41,7 @@ for n=1:N,
     %
     % Sequential job (for loop)
     %
-    [dkecluster] = clustermode_luke(0,'',dkepath,Configname);%All cluster paramters and paths
+    [dkecluster] = clustermode_luke(0,'',dkepath,schedulertype);%All cluster paramters and paths
     %
     tic;[flag_seq{n},Zbouncecoef_seq] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_seq(n) = toc;
     %
@@ -55,13 +51,16 @@ for n=1:N,
     % Matlab Distributed Computing Environment (MDCE)
     %
     if MDCE == 1,
-        [dkecluster] = clustermode_luke(1,'',dkepath,Configname);%All cluster parameters and paths
-        dkecluster.scheduler.size = min(n,dkecluster.scheduler.size);
+        [dkecluster] = clustermode_luke(1,'',dkepath,schedulertype);%All cluster parameters and paths
+        dkecluster.scheduler.clustersize = min(n,Nmax);
+        dkecluster.scheduler.enforce = 0;
+        dkecluster.scheduler.display = 1;
         %
         tic;[flag_mdce{n},Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_mdce(n) = toc;
         test_mdce(n) = comp_struct_jd(Zbouncecoef_seq,Zbouncecoef_mdce,0);
+        clear Zbouncecoef_mdce
         %
-        disp(['   --> time for n = ',int2str(n),' MDCE calculations on (',int2str(dkecluster.scheduler.size),' proc.) : ',num2str(time_mdce(n)),' s'])
+        disp(['   --> time for n = ',int2str(n),' MDCE calculations on (',int2str(dkecluster.scheduler.clustersize),' proc.) : ',num2str(time_mdce(n)),' s'])
         if test_mdce(n) == 1,
             disp('   --> sequential and MDCE calculations give same outputs');
         else
@@ -73,14 +72,16 @@ for n=1:N,
     % LUKE Distributed Computing Environment (LDCE)
     %
     if LUKEDC == 1,%All matlab may be used with this technique based on an external batch-queuing
-        [dkecluster] = clustermode_luke(2,'',dkepath,Configname);%All cluster parameters and paths
-        dkecluster.scheduler.size = min(n,dkecluster.scheduler.size);
+        [dkecluster] = clustermode_luke(2,'',dkepath,schedulertype);%All cluster parameters and paths
+        dkecluster.scheduler.clustersize = min(n,Nmax);
         dkecluster.scheduler.enforce = 0;
+        dkecluster.scheduler.display = 1;
         %
     	tic;[flag_ldce{n},Zbouncecoef_ldce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_ldce(n) = toc;
         test_ldce(n) = comp_struct_jd(Zbouncecoef_seq,Zbouncecoef_ldce,0);
+        clear Zbouncecoef_ldce
         %
-        disp(['   --> time for n = ',int2str(n),' LDCE calculations on (',int2str(dkecluster.scheduler.size),' proc.) : ',num2str(time_ldce(n)),' s'])
+        disp(['   --> time for n = ',int2str(n),' LDCE calculations on (',int2str(dkecluster.scheduler.clustersize),' proc.) : ',num2str(time_ldce(n)),' s'])
         if test_ldce(n) == 1,
             disp('   --> sequential and LDCE calculations give same outputs');
         else
@@ -92,14 +93,17 @@ for n=1:N,
     % Parallel job (parfor loop)
     %
     if PARLOOP == 1,
-        [dkecluster] = clustermode_luke(3,'',dkepath,Configname);%All cluster paramters and paths
-        dkecluster.scheduler.size = min(n,dkecluster.scheduler.size);
+        [dkecluster] = clustermode_luke(3,'',dkepath,schedulertype);%All cluster paramters and paths
+        dkecluster.scheduler.clustersize = min(n,Nmax);
+        dkecluster.scheduler.enforce = 0;
+        dkecluster.scheduler.display = 1;
         %
         tic;[flag_par{n},Zbouncecoef_par] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_par(n) = toc;
         matlabpool close force
         test_par(n) = comp_struct_jd(Zbouncecoef_seq,Zbouncecoef_par,0);
+        clear Zbouncecoef_par
         %    
-        disp(['   --> time for n = ',int2str(n),' parallel (parfor loop) calculations on (',int2str(dkecluster.scheduler.size),' proc.) : ',num2str(time_par(n)),' s'])
+        disp(['   --> time for n = ',int2str(n),' parallel (parfor loop) calculations on (',int2str(dkecluster.scheduler.clustersize),' proc.) : ',num2str(time_par(n)),' s'])
         if test_par(n) == 1,
             disp('   --> sequential and parallel (parfor loop) calculations give same outputs');
         else
@@ -109,23 +113,28 @@ for n=1:N,
     end
 end
 %
-leg = 'Serial                                    ';
-graph1D_jd(1:N,time_seq,0,0,'','','',leg,[0,N+1],NaN,'none','o','b',2,20,gca,0.9,0.7,0.7);
+mask_par = find(test_par);
+mask_mdce = find(test_mdce);
+mask_ldce = find(test_ldce);
+%
+leg = {};
 %
 if PARLOOP == 1,
-    leg = [leg;'Parallel                                  '];
-    graph1D_jd(1:N,time_par,0,0,'','','',leg,[0,N+1],NaN,'none','x','r',2,20,gca,0.9,0.7,0.7);
+    leg = [leg,'Parallel'];
+    graph1D_jd(mask_par,time_par(mask_par),0,0,'','','',NaN,[0,N+1],NaN,'none','x','r',2,20,gca);
 end
 %
 if MDCE == 1,
-    leg = [leg;'MDCE                                      '];
-    graph1D_jd(1:N,time_mdce',0,0,'N processors','time (s)','',leg,[0,N],NaN,'none','s','g',2,20,gca,0.9,0.7,0.7);
+    leg = [leg;'MDCE'];
+    graph1D_jd(mask_mdce,time_mdce(mask_mdce),0,0,'','','',NaN,[0,N],NaN,'none','s','g',2,20,gca);
 end
 %
 if LUKEDC == 1,
-    leg = [leg;'LDCE                                      '];
-    graph1D_jd(1:N,time_ldce',0,0,'N processors','time (s)','',leg,[0,N],NaN,'none','d','g',2,20,gca,0.9,0.7,0.7);
+    leg = [leg;'LDCE'];
+    graph1D_jd(mask_ldce,time_ldce(mask_ldce),0,0,'','','',NaN,[0,N],NaN,'none','d','g',2,20,gca);
 end
 %
-
+leg = ['Serial'];
+graph1D_jd(1:N,time_seq,0,0,'N processors','time (s)','',leg,[0,N+1],NaN,'none','o','b',2,20,gca,0.9,0.7,0.7);
+%
 	
