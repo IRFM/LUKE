@@ -1,4 +1,4 @@
-Comparison LUKE/Karney
+Comparison LUKE/Karney with tn = 50000  100000, dtn = NaN and nit_f = 50
 ----------------------
 Relativistic case (4,7,1) : j = 0.0038208/0.003732 ; P = 0.00012759/0.0001256 ; j/P = 29.9452/29.72
 Non Relativistic case (3,5,1) pmax = 10, coll_mode = 0 : j = 0.057336/0.05754 ; P = 0.004011/0.004011 ; j/P = 14.2947/14.34
