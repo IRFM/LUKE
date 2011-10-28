@@ -41,6 +41,9 @@ path_dkedisplay = '';%if nothing is specified, the working directory is first us
 id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
+%ids_wave = {'C3PO_NTM_32'};%For RF waves contribution (put all the type of waves needed)
+%paths_wave = {'LUKE_1_9/'};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
 paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
@@ -72,12 +75,6 @@ beta_prater = 22;% angle between N and poloidal plane
 %
 ns = 1000;
 method = 'cubic';
-%
-% C3PO computing parameters
-%
-C3POparam.clustermode.main_C3PO_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
-C3POparam.clustermode.main_C3PO_jd.timeout = 300;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-C3POparam.clustermode.main_C3PO_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
 %
 % Display parameters
 %
@@ -144,6 +141,20 @@ if exist('tn','var') && exist('dtn','var'),
     dkeparam.dtn = dtn;
 end    
 %
+% C3PO parallel computing parameters
+%
+% C3POparam.clustermode.main_C3PO_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
+% C3POparam.clustermode.main_C3PO_jd.timeout = 300;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
+% C3POparam.clustermode.main_C3PO_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+%
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
+C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
+%
+% LUKE parallel computing parameters
+%
+dkeparam.clustermode.wave_solver_yp = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
+dkeparam.clustermode.wave_solver_yp.scheduler.display = 1;
+%
 % launch structure
 %
 launch.id = id;
@@ -178,7 +189,9 @@ id_simul = [id_equil,'_',wavestruct.id];
 %
 %************************************************************************************************************************************
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,{wavestruct},[],psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);
+%wavestructs = [];
+wavestructs = {wavestruct};
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);
 %
 %************************************************************************************************************************************
 filename = [path_simul,'LUKE_RESULTS_',id_simul,'.mat'];
