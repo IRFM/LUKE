@@ -72,7 +72,8 @@ if isscalar(dkeparam.tn),
     else
         if isscalar(dkeparam.dtn),
             if isnan(dkeparam.dtn),
-                dkeparam.dtn = dkeparam.tn./min([100,max([1,ceil(60./dkeparam.tn.^(3/8))])]);% fitted result from TS/32299 analysis
+                nit = min([100,max([1,ceil(60./dkeparam.tn.^(3/8))])]);%number of internal iterations, fitted result from TS/32299 analysis
+                dkeparam.tn = dkeparam.tn.*(1:nit)/nit;% 
             else% time step determined by dtn
                 if dkeparam.dtn > dkeparam.tn,
                     info_dke_yp(2,['Warning : the prescribed time step (',num2str(dkeparam.dtn),...

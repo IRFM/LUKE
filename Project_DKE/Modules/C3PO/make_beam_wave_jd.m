@@ -143,7 +143,6 @@ for id = 1:nd,
         wave.rays{ir}.sky = ray.sky;
         wave.rays{ir}.sm = ray.sm;
         wave.rays{ir}.sn = ray.sn;
-        wave.rays{ir}.srho = ray.srho;
         wave.rays{ir}.sNpar = sNpar;
         wave.rays{ir}.sNperp= sNperp;
         wave.rays{ir}.sdNpar = ray.sdNpar;
