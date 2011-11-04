@@ -31,6 +31,7 @@ path_dkepath = '';%if nothing is specified, the working directory is first used 
 %
 id_equil = 'ITER_Scen4';%For plasma equilibrium
 path_equil = 'EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%path_equil = '/luke/LUKE_Simulations_1_9/Examples/ITER/Scen4/EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'LH_RT';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -64,12 +65,6 @@ launch.rZ0 = [0.15,1.15];
 launch.m0 = 0;
 launch.phi0 = 0;
 launch.LFS = 1;
-%
-% C3PO computing parameters
-%
-C3POparam.clustermode.main_C3PO_jd.mode = 2;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
-C3POparam.clustermode.main_C3PO_jd.timeout = 300;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-C3POparam.clustermode.main_C3PO_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
 %
 % Display parameters
 %
@@ -135,6 +130,14 @@ if exist('tn','var') && exist('dtn','var'),
     dkeparam.tn = tn;
     dkeparam.dtn = dtn;
 end    
+%
+% Parallel computing parameters
+%
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
+C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
+%
+dkeparam.clustermode.wave_solver_yp = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
+dkeparam.clustermode.wave_solver_yp.scheduler.display = 1;
 %
 % wavestruct
 %
