@@ -8,7 +8,11 @@ close all
 %
 [lukeversion,matver] = LUKEversion_jd;
 %
-GPUstatus = gpuDevice;%data from the GPU device
+try
+    GPUstatus = gpuDevice;%data from the GPU device
+catch
+    GPUstatus.DeviceSupported = false;
+end    
 %
 if GPUstatus.DeviceSupported,
     reset(parallel.gpu.GPUDevice.current());%reset memory on GPU device (should be done to have the largest memory available)
@@ -41,21 +45,21 @@ disp(' ');
 disp('---------------------------------------------------------------')
 %
 if mode ==0,
-   load('testLU2D.mat','MMXPC_f_t','MMXL_f_t','MMXU_f_t','MMXR_t');%,'dkeparam'
+   load('testLU2D.mat','MMXPC_f_t','MMXR_t');%,'dkeparam'
    if exist('testmatinv-2D.txt','file'),
        delete testmatinv-2D.txt;
    end;
    diary testmatinv-2D.txt;
    disp(['2-D LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
 elseif mode == 1
-   load('testLU2D_GPU.mat','MMXPC_f_t','MMXL_f_t','MMXU_f_t','MMXR_t');%,'dkeparam'
+   load('testLU2D_GPU.mat','MMXPC_f_t','MMXR_t');%,'dkeparam'
    if exist('testmatinv-2D_GPU.txt','file'),
        delete testmatinv-2D_GPU.txt;
    end;
    diary testmatinv-2D_GPU.txt;
    disp(['2-D (GPU) LUKE matrix inversion performances on ',computer]);disp('----------------------------------------------')
 elseif mode == 2
-   load('testLU3D.mat','MMXPC_f_t','MMXL_f_t','MMXU_f_t','MMXR_t');%,'dkeparam'
+   load('testLU3D.mat','MMXPC_f_t','MMXR_t');%,'dkeparam'
    if exist('testmatinv-3D.txt','file'),
        delete testmatinv-3D.txt;
    end;
