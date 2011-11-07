@@ -14,11 +14,11 @@ function [nproc] = nproc_powerbook_YVES(display_mode,param,dkepath)
 %
 %By Joan Decker (CEA-DRFC, joan.decker@cea.fr) and Yves Peysson (CEA-DRFC, yves.peysson@cea.fr)
 %
-if param.nproc > 4, 
-	nproc = 4;
-	info_dke_yp(2,'The number of processors has been enforced to 4 !');
+if param.nproc > 1, 
+	nproc = 1;
+	info_dke_yp(2,'The number of processors has been enforced to 1 !');
 else
-	nproc = max(4,param.nproc);%4 processors enforced on powerbook G4
+	nproc = param.nproc;
 end   
 %
 fid = fopen('.machines','w');
