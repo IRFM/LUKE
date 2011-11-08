@@ -29,7 +29,7 @@ paths_rayinit = {''};
 %
 % Display parameters
 %
-C3POdisplay.ray = 0;
+C3POdisplay.ray = 1;
 C3POdisplay.equilibrium = 0;
 C3POdisplay.p_opt = 2;%Printing or saving option of the figures
 %
@@ -92,12 +92,12 @@ if C3POdisplay.equilibrium,testfitequil_yp(equil,equil_fit);end
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster parameters and paths
 %
 % C3P0 ray tracing
 %
 tstart = tic;
-wave = main_C3PO_jd(dkepath,id_wave,equil_fit,rayinits{1},waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);
+wave = main_C3PO_jd(dkepath,id_wave,equil,equil_fit,rayinits{1},waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);
 telapsed_ray = toc(tstart);
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
@@ -108,7 +108,8 @@ info_dke_yp(2,'Wave parameters saved');
 % For poloidal ray trajectory comparison
 %
 ntheta_fit= 65;
-rho_fit = linspace(0,1,15);
+nrho_fit = 15;
+rho_fit = linspace(0,1,nrho_fit);
 theta_fit = linspace(0,2*pi,ntheta_fit);
 phi_fit = linspace(0,2*pi,ntheta_fit);
 x_a0_fit = ppval(equil_fit.x_fit.pp_a0,rho_fit);
@@ -117,6 +118,9 @@ x_bn_fit = ppval(equil_fit.x_fit.pp_bn,rho_fit);
 y_a0_fit = ppval(equil_fit.y_fit.pp_a0,rho_fit);
 y_an_fit = ppval(equil_fit.y_fit.pp_an,rho_fit);
 y_bn_fit = ppval(equil_fit.y_fit.pp_bn,rho_fit);
+%
+R_fit = NaN(nrho_fit,ntheta_fit);
+Z_fit = NaN(nrho_fit,ntheta_fit);
 %
 for ii = 1:ntheta_fit,
    R_fit(:,ii) = equil_fit.Rp + x_a0_fit.' + x_an_fit*cos(equil_fit.x_fit.n*theta_fit(ii)) + x_bn_fit*sin(equil_fit.x_fit.n*theta_fit(ii));
@@ -128,24 +132,16 @@ Rmax = max(max(R_fit));
 Zmin = min(min(Z_fit));
 Zmax = max(max(Z_fit));
 %
-figure('Name','Poloidal ray trajectory comparison')
-graph1D_jd(wave.rays{1}.sx + equil_fit.Rp,wave.rays{1}.sy + equil_fit.Zp,0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);drawnow;hold on
-graph1D_jd(R_fit,Z_fit,0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);drawnow
-graph1D_jd(R_fit',Z_fit',0,0,'R(m)','Z(m)',['Poloidal Ray trajectory'],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);hold on
+figname = ['Fig_',id_wave];
+%
+graph_comp_RT_jd(wave.rays{1},'',figname,C3POdisplay.p_opt)
+%
+figure('Name','Poloidal ray trajectory')
 axis('equal');
-print_jd(C3POdisplay.p_opt,[id_wave,'_poloidal_trajectory']);
-%
-figure('Name','Normalized radial position comparison')
-graph1D_jd(abs(wave.rays{1}.sphi/2/pi),wave.rays{1}.srho,0,0,'abs(\phi)/2\pi','\rho',['Normalized radial position'],NaN,'','','-','none','r',2);drawnow;hold on
-print_jd(C3POdisplay.p_opt,[id_wave,'_comparison_rho']);
-%
-figure('Name','Parallel wave refractive index comparison')
-graph1D_jd(abs(wave.rays{1}.sphi/2/pi),wave.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-print_jd(C3POdisplay.p_opt,[id_wave,'_comparison_Npar']);
-%
-figure('Name','Dispersion relation comparison')
-graph1D_jd(abs(wave.rays{1}.sphi/2/pi),wave.rays{1}.sD,0,1,'abs(\phi)/2\pi','det(D)',['Dispersion relation'],NaN,'','','-','none','r',2);drawnow;hold on
-print_jd(C3POdisplay.p_opt,[id_wave,'_comparison_Disp']);
+graph1D_jd(wave.rays{1}.sx + equil_fit.Rp,wave.rays{1}.sy + equil_fit.Zp,0,0,'R(m)','Z(m)','Poloidal ray trajectory',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);
+graph1D_jd(R_fit,Z_fit,0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);
+graph1D_jd(R_fit',Z_fit',0,0,'R(m)','Z(m)','Poloidal Ray trajectory',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);
+print_jd(C3POdisplay.p_opt,[figname,'_poloidal_trajectory']);
 %
 disp(['Elapsed time (s):',num2str(telapsed_ray),' for ray calculations (PCHIP interp. technique)']);
 %
