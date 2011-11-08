@@ -14,7 +14,7 @@ flag_analytic = 2;
 %
 % Path parameters
 %
-id_dkepath = 'LOCAL';%For all paths used by DKE solver
+id_dkepath = '';%For all paths used by DKE solver
 path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % Equilibrium parameters
@@ -45,9 +45,15 @@ P0_2piRp = NaN;
 %
 % Display parameters
 %
-C3POdisplay.ray = 0;
-C3POdisplay.equilibrium = 0;
-C3POdisplay.p_opt = 2;%Printing or saving option of the figures
+C3POdisplay_pchip.ray = 1;
+C3POdisplay_pchip.equilibrium = 0;
+C3POdisplay_pchip.p_opt = 2;%Printing or saving option of the figures
+C3POdisplay_pchip.mdce = 1;%for distributed computing
+%
+C3POdisplay_spline.ray = 0;
+C3POdisplay_spline.equilibrium = 0;
+C3POdisplay_spline.p_opt = 0;%Printing or saving option of the figures
+C3POdisplay_spline.mdce = 0;%for distributed computing
 %
 % Wave parameters
 %
@@ -98,7 +104,7 @@ equil_fit_pchip = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam
 telapsed_equil_pchip = toc(tstart);
 %
 info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is calculated with pchip method.']);
-if C3POdisplay.equilibrium,testfitequil_yp(equil,equil_fit_pchip);end
+if C3POdisplay_pchip.equilibrium,testfitequil_yp(equil,equil_fit_pchip);end
 %
 fitparam.method = 'spline';%nearest,spline,pchip,cubic
 tstart = tic;
@@ -106,7 +112,7 @@ equil_fit_spline = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitpara
 telapsed_equil_spline = toc(tstart);
 %
 info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is calculated with spline method.']);
-if C3POdisplay.equilibrium,testfitequil_yp(equil,equil_fit_spline);end
+if C3POdisplay_spline.equilibrium,testfitequil_yp(equil,equil_fit_spline);end
 %
 % Calculation of Npar0 using Nphi0
 %
@@ -151,12 +157,12 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster parameters and paths
 %
 % ray-tracing calculations
 %
 tstart = tic;
-wave_numeric_pchip = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
+wave_numeric_pchip = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip,C3POparam,[],[],0);clear mex;clear functions
 telapsed_ray_numeric_pchip = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with pchip method)');
@@ -202,18 +208,18 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster parameters and paths
 %
 % ray-tracing calculations
 %
 tstart = tic;
-wave_numeric_spline = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil_fit_spline,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
+wave_numeric_spline = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit_spline,rayinit,waveparam,[],rayparam,C3POdisplay_spline,C3POparam,[],[],0);clear mex;clear functions
 telapsed_ray_numeric_spline = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with spline method)');
 %
 tstart = tic;
-wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],flag_analytic);
+wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip,C3POparam,[],[],flag_analytic);
 telapsed_ray_analytic = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
@@ -264,8 +270,8 @@ Zmin_spline = min(min(Z_fit_spline));
 Zmax_spline = max(max(Z_fit_spline));
 %
 figure('Name','Poloidal ray trajectory')
-pmode_ray_pchip = wave_numeric_pchip.rays{1}.spmode;
-pmode_ray_spline = wave_numeric_spline.rays{1}.spmode;
+pmode_ray_pchip = wave_numeric_pchip.rays{1}.spmode == 1;
+pmode_ray_spline = wave_numeric_spline.rays{1}.spmode == 1;
 %
 graph1D_jd(wave_numeric_pchip.rays{1}.sx(pmode_ray_pchip) + equil_fit_pchip.Rp,wave_numeric_pchip.rays{1}.sy(pmode_ray_pchip) + equil_fit_pchip.Zp,0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin_pchip,Rmax_pchip],[Zmin_pchip,Zmax_pchip],'none','.','r',2);drawnow;hold on
 graph1D_jd(wave_numeric_pchip.rays{1}.sx(~pmode_ray_pchip) + equil_fit_pchip.Rp,wave_numeric_pchip.rays{1}.sy(~pmode_ray_pchip) + equil_fit_pchip.Zp,0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin_pchip,Rmax_pchip],[Zmin_pchip,Zmax_pchip],'none','.','b',2);drawnow;hold on
@@ -275,26 +281,26 @@ graph1D_jd(wave_numeric_pchip.rays{1}.sx(~pmode_ray_pchip) + equil_fit_pchip.Rp,
 graph1D_jd(R_fit_pchip,Z_fit_pchip,0,0,'','','',NaN,[Rmin_pchip,Rmax_pchip],[Zmin_pchip,Zmax_pchip],'-','none','b',1);drawnow
 graph1D_jd(R_fit_pchip',Z_fit_pchip',0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin_pchip,Rmax_pchip],[Zmin_pchip,Zmax_pchip],'-','none','b',1);hold on
 axis('equal');
-print_jd(C3POdisplay.p_opt,[id_wave,'_poloidal_trajectory']);
+print_jd(C3POdisplay_pchip.p_opt,[id_wave,'_poloidal_trajectory']);
 %
 figure('Name','Normalized radial position comparison')
 graph1D_jd(abs(wave_numeric_pchip.rays{1}.sphi/2/pi),wave_numeric_pchip.rays{1}.srho,0,0,'abs(\phi)/2\pi','\rho',['Normalized radial position'],NaN,'','','--','none','r',2);drawnow;hold on
 graph1D_jd(abs(wave_numeric_spline.rays{1}.sphi/2/pi),wave_numeric_spline.rays{1}.srho,0,0,'abs(\phi)/2\pi','\rho',['Normalized radial position'],NaN,'','',':','none','b',2);drawnow;hold on
 graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.srho,0,0,'abs(\phi)/2\pi','\rho',['Normalized radial position'],NaN,'','','-','none','k',2);drawnow;hold on
-print_jd(C3POdisplay.p_opt,[id_wave,'_comparison_rho']);
+print_jd(C3POdisplay_pchip.p_opt,[id_wave,'_comparison_rho']);
 %
 figure('Name','Parallel wave refractive index comparison')
 graph1D_jd(abs(wave_numeric_pchip.rays{1}.sphi/2/pi),wave_numeric_pchip.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','--','none','r',2);drawnow;hold on
 graph1D_jd(abs(wave_numeric_spline.rays{1}.sphi/2/pi),wave_numeric_spline.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','',':','none','b',2);drawnow;hold on
 graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','k',2);drawnow;hold on
-print_jd(C3POdisplay.p_opt,[id_wave,'_comparison_Npar']);
+print_jd(C3POdisplay_pchip.p_opt,[id_wave,'_comparison_Npar']);
 %
 figure('Name','Dispersion relation comparison')
 graph1D_jd(abs(wave_numeric_pchip.rays{1}.sphi/2/pi),wave_numeric_pchip.rays{1}.sD,0,1,'abs(\phi)/2\pi','det(D)',['Dispersion relation'],NaN,'','','--','none','r',2);drawnow;hold on
 graph1D_jd(abs(wave_numeric_spline.rays{1}.sphi/2/pi),wave_numeric_spline.rays{1}.sD,0,1,'abs(\phi)/2\pi','det(D)',['Dispersion relation'],NaN,'','',':','none','b',2);drawnow;hold on
 graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.sD,0,1,'abs(\phi)/2\pi','det(D)',['Dispersion relation'],NaN,'','','-','none','k',2);drawnow;hold on
 legend('PCHIP','SPLINE','Analytic','Location','SouthEast')
-print_jd(C3POdisplay.p_opt,[id_wave,'_comparison_Disp']);
+print_jd(C3POdisplay_pchip.p_opt,[id_wave,'_comparison_Disp']);
 %
 figure('Name','Normalized poloidal position comparison')
 graph1D_jd(abs(wave_numeric_pchip.rays{1}.sphi/2/pi),wave_numeric_pchip.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','--','none','r',2);drawnow;hold on
