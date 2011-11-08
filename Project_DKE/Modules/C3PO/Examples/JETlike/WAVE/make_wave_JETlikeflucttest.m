@@ -24,7 +24,7 @@ path_equil = '../EQUIL/';%if nothing is specified, the working directory is firs
 %
 % Density and magnetic field fluctuation
 %
-id_fluct = 'test';%For density and magnetic field fluctuation
+id_fluct = 'ne_Bperp_k_ripple';%For density and magnetic field fluctuation
 path_fluct = '../FLUCT/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % Load structures
@@ -164,16 +164,19 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster parameters and paths
 %
 % ray-tracing calculations
 %
-wave_nofluct = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
+wave_nofluct = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with no plasma fluctuations)');
 %
-fluct = fluctphase_yp(fluct);%Set the phase (fixed for magnetic ripple, random for fluctuations)
-[wave_fluct] = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],fluct_fit,0);
+if ~isempty(fluct),
+    [wave_fluct] = main_C3PO_jd(dkepath,[id_wave,'_fluct'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],fluct_fit,0);
+else
+    wave_fluct = wave_nofluct;
+end
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with plasma fluctuations)');
 %

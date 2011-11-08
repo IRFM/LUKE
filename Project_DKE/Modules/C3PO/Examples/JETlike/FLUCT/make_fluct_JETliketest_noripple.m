@@ -76,10 +76,10 @@ eval(['save ',save_str,' fluct']);
 %
 info_dke_yp(2,'Plasma fluctuations saved');
 %
-load('../EQUIL/EQUILV_JETliketest.mat');
+% load('../EQUIL/EQUILV_JETliketest.mat');
 %
-[fluct] = fluctphase_yp(fluct,0);%Mersenne-Twitter pseudorandom generator -> 0, Matlab rand (reset by clock) -> 1
-[fluct_fit] = fitfluct_yp(fluct);
-%testfitfluct_yp(equil_fit,fluct,fluct_fit,0.8);
+% [fluct] = fluctphase_yp(fluct,0);%Mersenne-Twitter pseudorandom generator -> 0, Matlab rand (reset by clock) -> 1
+% [fluct_fit] = fitfluct_yp(fluct);
+% testfitfluct_yp(equil_fit,fluct,fluct_fit,0.8);
 
 

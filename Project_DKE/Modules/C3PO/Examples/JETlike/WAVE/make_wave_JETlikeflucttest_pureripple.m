@@ -164,19 +164,19 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster parameters and paths
 %
 % ray-tracing calculations
 %
 tstart = tic;
-wave_nofluct = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
+wave_nofluct = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
 telapsed_ray_nofluct = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with no plasma fluctuations)');
 %
 fluct = fluctphase_yp(fluct);%Set the phase (fixed for magnetic ripple, random for fluctuations)
 tstart = tic;
-[wave_fluct] = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],fluct_fit,0);
+[wave_fluct] = main_C3PO_jd(dkepath,[id_wave,'_fluct'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],fluct_fit,0);
 telapsed_ray_fluct = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with plasma fluctuations)');
