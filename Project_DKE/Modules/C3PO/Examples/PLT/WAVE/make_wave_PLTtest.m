@@ -22,7 +22,12 @@ path_dkepath = '';%if nothing is specified, the working directory is first used 
 %
 id_equil = 'PLTtest';%For plasma equilibrium
 path_equil = '../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
+%
+% -------------------------------------------------------------------------
+%
+% Load structures
+%
+[equil,dkepath] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath);
 %
 % initial ray conditions
 %
@@ -38,12 +43,6 @@ Npar0 = 1.33;%initial index of refraction
 %
 dNpar0 = NaN;
 P0_2piRp = NaN;
-%
-% C3PO computing parameters
-%
-C3POparam.clustermode.main_C3PO_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
-C3POparam.clustermode.main_C3PO_jd.timeout = 300;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-C3POparam.clustermode.main_C3PO_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
 %
 % Display parameters
 %
@@ -69,10 +68,10 @@ waveparam.dsmin = NaN;%minimum size for ray fragments
 %
 % Global parameters for the vectorial magnetic equilibrium
 %
+fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
 fitparam.method = 'pchip';%nearest,spline,pchip,cubic
 fitparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
 fitparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
-fitparam.opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or overwrite it (0).
 %
 % Global parameters for the ray-tracing
 %
@@ -85,17 +84,11 @@ rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
 rayparam.kmax = 60000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
-rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
+rayparam.reflection = 1;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
 rayparam.nperp = 1000;%number of points in pperp integration for damping calculations
 rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
-%
-% -------------------------------------------------------------------------
-%
-% Load structures
-%
-[equil,dkepath] = load_structures_yp('equil',id_equil,path_equil,'dkepath',id_dkepath,path_dkepath);
 %
 % =========================================================================
 %
@@ -113,11 +106,17 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % -------------------------------------------------------------------------
 %
-wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);
+% C3PO computing parameters
+%
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster parameters and paths
+%
+% ray-tracing calculations
+%
+wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],0);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
-wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,flag_analytic);
+wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],flag_analytic);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
