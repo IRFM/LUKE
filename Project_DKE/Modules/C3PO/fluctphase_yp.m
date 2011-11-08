@@ -40,9 +40,9 @@ for i = 1:length(field_name),
                 %
                 if fluct.(char(field_name(i)))(ifield).model == 1 || fluct.(char(field_name(i)))(ifield).model == 2,
                 	phase = 2*pi*rand(1,dl*dm*dn) - pi;%
-                elseif fluct.(char(field_name(i)))(ifield).model == 3 | fluct.(char(field_name(i)))(ifield).model == 6,
+                elseif fluct.(char(field_name(i)))(ifield).model == 3 || fluct.(char(field_name(i)))(ifield).model == 6,
                 	phase = 2*pi*rand(1,dl*dm) - pi;% 
-               	elseif fluct.(char(field_name(i)))(ifield).model == 4 | fluct.(char(field_name(i)))(ifield).model == 5,
+               	elseif fluct.(char(field_name(i)))(ifield).model == 4 || fluct.(char(field_name(i)))(ifield).model == 5,
                     phase = 2*pi*rand(1,dm) - pi;%
                 else
                     error('Error in fluctuation phase calculation, model unrecongized !');
@@ -118,7 +118,7 @@ end
 %    if isstruct(fluct.(char(field_name(i)))) && isempty(strfind(char(field_name(i)),'cn')) && isempty(strfind(char(field_name(i)),'cm')) && isempty(strfind(char(field_name(i)),'cn_fit'))  && isempty(strfind(char(field_name(i)),'cm_fit')) && isempty(strfind(char(field_name(i)),'fitparam')),
 %        for ifield = 1:length(fluct.(char(field_name(i)))),
 %            %
-%%            nkperp = length(fluct.(char(field_name(i)))(ifield).kp);
+%            nkperp = length(fluct.(char(field_name(i)))(ifield).kp);
 %            kpmin = min(fluct.(char(field_name(i)))(ifield).kp);
 %            kpmax = max(fluct.(char(field_name(i)))(ifield).kp);
 %            if fluct.(char(field_name(i)))(ifield).model == 1,%Gaussian kperp-spectrum (random phase) + electron drift wave

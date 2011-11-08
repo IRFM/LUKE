@@ -11,9 +11,6 @@ clc
 %
 id_wave = 'VERSATOR2test';% scenario identification (see paper IEEE transaction on plasma science, vol. PS-12, N�2, 1984 - P.Bonoli et al.)
 %
-p_opt = 2;%Printing or saving option of the figures
-%
-%
 % Path parameters
 %
 id_dkepath = 'LOCAL';%For all paths used by DKE solver
@@ -113,11 +110,11 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster parameters and paths
 %
 % ray-tracing calculations
 %
-wave = main_C3PO_jd(dkepath,id_wave,equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam);
+wave = main_C3PO_jd(dkepath,id_wave,equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
@@ -126,3 +123,6 @@ eval(['save ',save_str,' wave']);
 %
 info_dke_yp(2,'Wave parameters saved');
 %
+figname = ['Fig_',id_wave];
+%
+graph_comp_RT_jd(wave.rays{1},'',figname,C3POdisplay.p_opt)

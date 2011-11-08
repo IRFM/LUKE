@@ -107,15 +107,15 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster parameters and paths
 %
 % Ray-tracing calculations
 %
-wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],0);
+wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],0);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
-wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],flag_analytic);
+wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],flag_analytic);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
