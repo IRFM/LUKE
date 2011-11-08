@@ -42,7 +42,7 @@ launch.omega_rf = [0.8]*2*pi*1e9;%wave angular frequency (rad/s) [1,1] (same fre
 launch.bPlhtot = [1]*1e6;%initial power in the ray (W) (main lobe) [1,n_lobe]
 launch.bNpar0 = [10];%Initial Npar value (main lobe) [1,n_lobe]
 launch.bdNpar0 = [3];%ray spectral width for Fokker-Planck calculations [1,n_lobe]
-launch.rZ0 = [-0.36];%vertical launching positions [1,m_pol]
+launch.rZ0 = [0];%vertical launching positions [1,m_pol]
 %
 launch.n0 = 0;%initial toroidal mode number [1,1]
 launch.phi0 = 0;%toroidal angle position [1,1]
