@@ -21,7 +21,6 @@ path_dkepath = '';%if nothing is specified, the working directory is first used 
 %
 id_equil = 'RTtest';%For plasma equilibrium
 path_equil = '../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
 %
 % initial ray conditions
 %
@@ -37,12 +36,6 @@ Npar0 = 2.0;%initial index of refraction
 %
 dNpar0 = NaN;
 P0_2piRp = NaN;
-%
-% C3PO computing parameters
-%
-C3POparam.clustermode.main_C3PO_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
-C3POparam.clustermode.main_C3PO_jd.timeout = 300;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-C3POparam.clustermode.main_C3PO_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
 %
 % Display parameters
 %
@@ -68,10 +61,10 @@ waveparam.dsmin = NaN;%minimum size for ray fragments
 %
 % Global parameters for the vectorial magnetic equilibrium
 %
+fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
 fitparam.method = 'pchip';%nearest,spline,pchip,cubic
 fitparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
 fitparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
-fitparam.opt_load = 1;%Reload existing vectorial magnetic equilibrium (1) or overwrite it (0).
 %
 % Global parameters for the ray-tracing
 %
@@ -112,11 +105,17 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % -------------------------------------------------------------------------
 %
-wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,0);
+% C3PO computing parameters
+%
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%All cluster parameters and paths
+%
+% Ray-tracing calculations
+%
+wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],0);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
-wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,flag_analytic);
+wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],flag_analytic);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
@@ -125,5 +124,23 @@ eval(['save ',save_str,' wave_numeric wave_analytic']);
 %
 info_dke_yp(2,'Wave parameters saved');
 %
-graph_comp_RT_jd(wave_numeric,wave_analytic,save_str);
-%
+figure('Name','Comparison: Normalized radial position')
+graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.srho,0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.srho,0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','b',2);drawnow;hold on
+legend('Numeric','Analytic')
+figure('Name','Comparison: Normalized poloidal position')
+graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','b',2);drawnow;hold on
+legend('Numeric','Analytic')
+figure('Name','Comparison: Poloidal mode number')
+graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','b',2);drawnow;hold on
+legend('Numeric','Analytic')
+figure('Name','Comparison: Parallel wave refractive index')
+graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
+legend('Numeric','Analytic')
+figure('Name','Comparison: Perpendicular wave refractive index')
+graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
+graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
+legend('Numeric','Analytic')
