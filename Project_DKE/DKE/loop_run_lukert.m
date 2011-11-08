@@ -302,6 +302,27 @@ elseif dkeparam.rt_mode == 3,%
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
     %
     % diary off
+elseif dkeparam.rt_mode == -1,
+    %
+    % No FP calculations, return equil and waves
+    %
+    Znorm = [];
+    Zcurr.x_0_fsav = [];
+    ZP0.x_rf_fsav = [];
+    dke_out.equil = equil;
+    dke_out.waves = waves;
+    dke_out.XXf0 = [];
+    radialDKE = [];
+    equilDKE = [];
+    momentumDKE = [];
+    gridDKE = [];
+    Zmomcoef = [];
+    Zbouncecoef = [];
+    Zmripple = [];
+    mksa = [];
+    XXsinksource = [];  
+    dke_warnings = [];
+    %
 else
     Znorm = [];
     Zcurr = [];
