@@ -120,27 +120,22 @@ wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,'',rayinit,wave
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-eval(['save ',save_str,' wave_numeric wave_analytic']);
+save(save_str,'id_wave','wave_numeric','wave_analytic');
 %
 info_dke_yp(2,'Wave parameters saved');
 %
-figure('Name','Comparison: Normalized radial position')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.srho,0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.srho,0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-figure('Name','Comparison: Normalized poloidal position')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-figure('Name','Comparison: Poloidal mode number')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-figure('Name','Comparison: Parallel wave refractive index')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-figure('Name','Comparison: Perpendicular wave refractive index')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
+% --- display results ---
+%
+rays = {wave_numeric.rays{1},wave_analytic.rays{1}};
+%
+legs = {'Numeric','Analytic'};
+%
+filename = ['Fig_',id_wave];
+%
+opt.p_opt = C3POdisplay.p_opt;
+opt.ntheta_fit = 65;
+opt.nrho_fit = 15;
+opt.propvar = 1;   
+%
+graph_comp_RT_jd(rays,legs,'',filename,opt)
+%

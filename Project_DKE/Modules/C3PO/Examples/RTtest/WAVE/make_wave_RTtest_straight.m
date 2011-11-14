@@ -126,76 +126,22 @@ wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit,rayin
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-eval(['save ',save_str,' wave_numeric wave_analytic']);
+save(save_str,'id_wave','wave_numeric','wave_analytic');
 %
 info_dke_yp(2,'Wave parameters saved');
 %
-% For poloidal ray trajectory comparison
+% --- display results ---
 %
-ntheta_fit= 65;
-rho_fit = linspace(0,1,15);
-theta_fit = linspace(0,2*pi,ntheta_fit);
-phi_fit = linspace(0,2*pi,ntheta_fit);
-x_a0_fit = ppval(equil_fit.x_fit.pp_a0,rho_fit);
-x_an_fit = ppval(equil_fit.x_fit.pp_an,rho_fit);
-x_bn_fit = ppval(equil_fit.x_fit.pp_bn,rho_fit);
-y_a0_fit = ppval(equil_fit.y_fit.pp_a0,rho_fit);
-y_an_fit = ppval(equil_fit.y_fit.pp_an,rho_fit);
-y_bn_fit = ppval(equil_fit.y_fit.pp_bn,rho_fit);
+rays = {wave_numeric.rays{1},wave_analytic.rays{1}};
 %
-for ii = 1:ntheta_fit,
-   R_fit(:,ii) = equil_fit.Rp + x_a0_fit.' + x_an_fit*cos(equil_fit.x_fit.n*theta_fit(ii)) + x_bn_fit*sin(equil_fit.x_fit.n*theta_fit(ii));
-   Z_fit(:,ii) = equil_fit.Zp + y_a0_fit.' + y_an_fit*cos(equil_fit.y_fit.n*theta_fit(ii)) + y_bn_fit*sin(equil_fit.y_fit.n*theta_fit(ii));
-end
+legs = {'Numeric','Analytic'};
 %
-Rmin = min(min(R_fit));
-Rmax = max(max(R_fit));
-Zmin = min(min(Z_fit));
-Zmax = max(max(Z_fit));
+filename = ['Fig_',id_wave];
 %
-% For toroidal display
+opt.p_opt = C3POdisplay.p_opt;
+opt.ntheta_fit = 65;
+opt.nrho_fit = 15;
+opt.propvar = 1;   
 %
-Xmin_fit = Rmin*cos(phi_fit);   
-Ymin_fit = Rmin*sin(phi_fit); 
-Xmax_fit = Rmax*cos(phi_fit);   
-Ymax_fit = Rmax*sin(phi_fit); 
-Xp_fit = equil_fit.Rp*cos(phi_fit);   
-Yp_fit = equil_fit.Rp*sin(phi_fit);
+graph_comp_RT_jd(rays,legs,'',filename,opt)
 %
-figure('Name','Poloidal ray trajectory comparison')
-graph1D_jd(wave_numeric.rays{1}.sx + equil_fit.Rp,wave_numeric.rays{1}.sy + equil_fit.Zp,0,0,'R(m)','Z(m)',['Poloidal Ray trajectory'],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);drawnow;hold on
-graph1D_jd(wave_analytic.rays{1}.sx(1:10:end) + equil_fit.Rp,wave_analytic.rays{1}.sy(1:10:end) + equil_fit.Zp,0,0,'R(m)','Z(m)',['Poloidal Ray trajectory'],NaN,[Rmin,Rmax],[Zmin,Zmax],'none','.','b',2);drawnow;hold on
-graph1D_jd(R_fit,Z_fit,0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);drawnow
-graph1D_jd(R_fit',Z_fit',0,0,'R(m)','Z(m)',['Poloidal Ray trajectory'],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);hold on
-axis('equal');
-print_jd(C3POdisplay.p_opt,[id_wave,'_comparison_poloidal']);
-%
-figure('Name','Toroidal ray trajectory comparison')
-graph1D_jd((wave_numeric.rays{1}.sx + equil_fit.Rp).*cos(wave_numeric.rays{1}.sphi),-(wave_numeric.rays{1}.sx + equil_fit.Rp).*sin(wave_numeric.rays{1}.sphi),0,0,'X(m)','Y(m)',['Toroidal ray trajectory'],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','r',2);hold on
-graph1D_jd((wave_analytic.rays{1}.sx(1:30:end) + equil_fit.Rp).*cos(wave_analytic.rays{1}.sphi(1:30:end)),-(wave_analytic.rays{1}.sx(1:30:end) + equil_fit.Rp).*sin(wave_analytic.rays{1}.sphi(1:30:end)),0,0,'X(m)','Y(m)',['Toroidal ray trajectory'],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'none','.','b',2);hold on
-graph1D_jd(Xmin_fit,Ymin_fit,0,0,'','','',NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','b',1);drawnow
-graph1D_jd(Xmax_fit,Ymax_fit,0,0,'X(m)','Y(m)','',NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','b',1);hold on
-graph1D_jd(Xp_fit,Yp_fit,0,0,'X(m)','Y(m)',['Toroidal ray trajectory'],NaN,[-Rmax,Rmax],[-Rmax,Rmax],'--','none','b',1);hold on
-axis('equal');
-print_jd(C3POdisplay.p_opt,[id_wave,'_comparison_toroidal']);
-%
-figure('Name','Comparison: Normalized radial position')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.srho,0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.srho,0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-figure('Name','Comparison: Normalized poloidal position')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-figure('Name','Comparison: Poloidal mode number')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-figure('Name','Comparison: Parallel wave refractive index')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')
-figure('Name','Comparison: Perpendicular wave refractive index')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Numeric','Analytic')

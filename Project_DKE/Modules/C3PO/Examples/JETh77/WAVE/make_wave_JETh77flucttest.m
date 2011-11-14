@@ -149,29 +149,23 @@ wave_fluct = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit,rayinit,
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with plasma fluctuations)');
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-eval(['save ',save_str,' wave_fluct wave_nofluct fluct']);
+save(save_str,'id_wave','wave_fluct','wave_nofluct','equil_fit','fluct');
 %
 info_dke_yp(2,'Wave parameters saved');
 %
+% --- display results ---
 %
-figure('Name','Normalized radial position comparison')
-graph1D_jd(abs(wave_nofluct.rays{1}.sphi/2/pi),wave_nofluct.rays{1}.srho,0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_fluct.rays{1}.sphi/2/pi),wave_fluct.rays{1}.srho,0,0,'abs(\phi)/2\pi','rho',['Normalized radial position'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Without fluctuations','With fluctuations')
-figure('Name','Normalized poloidal position comparison')
-graph1D_jd(abs(wave_nofluct.rays{1}.sphi/2/pi),wave_nofluct.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_fluct.rays{1}.sphi/2/pi),wave_fluct.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Without fluctuations','With fluctuations')
-figure('Name','Poloidal mode number comparison')
-graph1D_jd(abs(wave_nofluct.rays{1}.sphi/2/pi),wave_nofluct.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_fluct.rays{1}.sphi/2/pi),wave_fluct.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Without fluctuations','With fluctuations')
-figure('Name','Parallel wave refractive index comparison')
-graph1D_jd(abs(wave_nofluct.rays{1}.sphi/2/pi),wave_nofluct.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_fluct.rays{1}.sphi/2/pi),wave_fluct.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Without fluctuations','With fluctuations')
-figure('Name','Perpendicular wave refractive index comparison')
-graph1D_jd(abs(wave_nofluct.rays{1}.sphi/2/pi),wave_nofluct.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_fluct.rays{1}.sphi/2/pi),wave_fluct.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('Without fluctuations','With fluctuations')
-
+rays = {wave_nofluct.rays{1},wave_fluct.rays{1}};
+%
+legs = {'No fluct.','With fluct.';...
+       'nofluct','fluct'};
+%
+filename = ['Fig_',id_wave];
+%
+opt.p_opt = C3POdisplay.p_opt;
+opt.ntheta_fit = 65;
+opt.nrho_fit = 15;
+opt.propvar = 1;   
+%
+graph_comp_RT_jd(rays,legs,equil_fit,filename,opt)
+%

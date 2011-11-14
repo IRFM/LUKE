@@ -121,9 +121,22 @@ wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,'',rayinit,wave
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-eval(['save ',save_str,' wave_numeric wave_analytic']);
+save(save_str,'id_wave','wave_numeric','wave_analytic');
 %
 info_dke_yp(2,'Wave parameters saved');
 %
-graph_comp_RT_jd(wave_numeric,wave_analytic,['Fig_',id_equil,'_',id_wave],p_opt);
+% --- display results ---
+%
+rays = {wave_numeric.rays{1},wave_analytic.rays{1}};
+%
+legs = {'Numeric','Analytic'};
+%
+filename = ['Fig_',id_wave];
+%
+opt.p_opt = C3POdisplay.p_opt;
+opt.ntheta_fit = 65;
+opt.nrho_fit = 15;
+opt.propvar = 1;   
+%
+graph_comp_RT_jd(rays,legs,'',filename,opt)
 %

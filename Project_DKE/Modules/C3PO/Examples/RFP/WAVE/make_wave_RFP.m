@@ -101,47 +101,24 @@ wave = main_C3PO_jd(dkepath,id_wave,equil,equil_fit,rayinits{1},waveparam,[],ray
 telapsed_ray = toc(tstart);
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-eval(['save ',save_str,' wave']);
+save(save_str,'id_wave','wave');
 %
 info_dke_yp(2,'Wave parameters saved');
 %
-% For poloidal ray trajectory comparison
-%
-ntheta_fit= 65;
-nrho_fit = 15;
-rho_fit = linspace(0,1,nrho_fit);
-theta_fit = linspace(0,2*pi,ntheta_fit);
-phi_fit = linspace(0,2*pi,ntheta_fit);
-x_a0_fit = ppval(equil_fit.x_fit.pp_a0,rho_fit);
-x_an_fit = ppval(equil_fit.x_fit.pp_an,rho_fit);
-x_bn_fit = ppval(equil_fit.x_fit.pp_bn,rho_fit);
-y_a0_fit = ppval(equil_fit.y_fit.pp_a0,rho_fit);
-y_an_fit = ppval(equil_fit.y_fit.pp_an,rho_fit);
-y_bn_fit = ppval(equil_fit.y_fit.pp_bn,rho_fit);
-%
-R_fit = NaN(nrho_fit,ntheta_fit);
-Z_fit = NaN(nrho_fit,ntheta_fit);
-%
-for ii = 1:ntheta_fit,
-   R_fit(:,ii) = equil_fit.Rp + x_a0_fit.' + x_an_fit*cos(equil_fit.x_fit.n*theta_fit(ii)) + x_bn_fit*sin(equil_fit.x_fit.n*theta_fit(ii));
-   Z_fit(:,ii) = equil_fit.Zp + y_a0_fit.' + y_an_fit*cos(equil_fit.y_fit.n*theta_fit(ii)) + y_bn_fit*sin(equil_fit.y_fit.n*theta_fit(ii));
-end
-%
-Rmin = min(min(R_fit));
-Rmax = max(max(R_fit));
-Zmin = min(min(Z_fit));
-Zmax = max(max(Z_fit));
-%
-figname = ['Fig_',id_wave];
-%
-graph_comp_RT_jd(wave.rays{1},'',figname,C3POdisplay.p_opt)
-%
-figure('Name','Poloidal ray trajectory')
-axis('equal');
-graph1D_jd(wave.rays{1}.sx + equil_fit.Rp,wave.rays{1}.sy + equil_fit.Zp,0,0,'R(m)','Z(m)','Poloidal ray trajectory',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);
-graph1D_jd(R_fit,Z_fit,0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);
-graph1D_jd(R_fit',Z_fit',0,0,'R(m)','Z(m)','Poloidal Ray trajectory',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);
-print_jd(C3POdisplay.p_opt,[figname,'_poloidal_trajectory']);
-%
 disp(['Elapsed time (s):',num2str(telapsed_ray),' for ray calculations (PCHIP interp. technique)']);
+%
+% --- display results ---
+%
+rays = {wave.rays{1}};
+%
+legs = {'Numeric'};
+%
+filename = ['Fig_',id_wave];
+%
+opt.p_opt = C3POdisplay.p_opt;
+opt.ntheta_fit = 65;
+opt.nrho_fit = 15;
+opt.propvar = 1;   
+%
+graph_comp_RT_jd(rays,legs,'',filename,opt)
 %
