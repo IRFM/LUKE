@@ -49,8 +49,10 @@ phi_ray = yout(:,3);
 krho_ray = yout(:,4); 
 m_ray = yout(:,5); 
 n_ray = yout(:,6);
-omega = yout(1,7);
+omega_ray = yout(:,7);
 s_ray = yout(:,8)*equil_fit.ap;
+%
+omega = yout(1,7);
 %
 if ~isempty(yproc) & size(yproc,2) >= 25,
     D_ray = yproc(:,1);
@@ -98,9 +100,7 @@ if ~isempty(yproc) & size(yproc,2) >= 25,
     %
 else
     %
-    omega_ray = yout(:,7);
-    %
-    [R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,D_ray,Te_ray,ne_ray,zTi_ray,zni_ray,BRHO_ray,BP_ray,BPHI_ray,B_ray,r_ray,salpha_ray,gradrho_ray,pmode_ray] = rayparameters_yp(rayparam,equil_fit,fluct_fit,omega_ray,rho_ray,theta_ray,phi_ray,krho_ray,m_ray,n_ray);
+    [R_ray,Z_ray,Npar_ray,Nperp_ray,epol_pmz_ray,phi_xyz_ray,D_ray,Te_ray,ne_ray,zTi_ray,zni_ray,BRHO_ray,BP_ray,BPHI_ray,B_ray,r_ray,salpha_ray,gradrho_ray,pmode_ray,wpe2,wce2] = rayparameters_yp(rayparam,equil_fit,fluct_fit,omega_ray,rho_ray,theta_ray,phi_ray,krho_ray,m_ray,n_ray);
     %
     s_ray = [];
     alphaphi_ray = [];
