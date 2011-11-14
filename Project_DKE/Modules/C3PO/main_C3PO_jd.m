@@ -175,7 +175,7 @@ for iray = 1:Nrays,
     rays = rayss{iray};
     Niray = length(rays);%ray can be duplicated if multiple reflections
     %
-    if Niray == 1 && isempty(rays{1}.ss),
+    if Niray == 1 && isempty(rays{1}.srho),
         disp(['kpsin has a non nul imaginary part for ray # ',int2str(iray),' !']);  
         info_dke_yp(2,['WARNING: Ray #',int2str(iray),' is not put in the wave structure.']);
     else
