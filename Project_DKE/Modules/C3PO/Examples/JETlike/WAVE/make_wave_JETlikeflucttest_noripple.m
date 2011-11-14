@@ -187,59 +187,29 @@ telapsed_ray_fluct = toc(tstart);
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with plasma fluctuations)');
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-eval(['save ',save_str,' wave_fluct wave_nofluct fluct']);
+save(save_str,'id_wave','wave_fluct','wave_nofluct','equil_fit','fluct');
 %
 info_dke_yp(2,'Wave parameters saved');
-%
-ntheta_fit= 65;
-rho_fit = linspace(0,1,15);
-theta_fit = linspace(0,2*pi,ntheta_fit);
-phi_fit = linspace(0,2*pi,ntheta_fit);
-x_a0_fit = ppval(equil_fit.x_fit.pp_a0,rho_fit);
-x_an_fit = ppval(equil_fit.x_fit.pp_an,rho_fit);
-x_bn_fit = ppval(equil_fit.x_fit.pp_bn,rho_fit);
-y_a0_fit = ppval(equil_fit.y_fit.pp_a0,rho_fit);
-y_an_fit = ppval(equil_fit.y_fit.pp_an,rho_fit);
-y_bn_fit = ppval(equil_fit.y_fit.pp_bn,rho_fit);
-%
-for ii = 1:ntheta_fit,
-   R_fit(:,ii) = equil_fit.Rp + x_a0_fit.' + x_an_fit*cos(equil_fit.x_fit.n*theta_fit(ii)) + x_bn_fit*sin(equil_fit.x_fit.n*theta_fit(ii));
-   Z_fit(:,ii) = equil_fit.Zp + y_a0_fit.' + y_an_fit*cos(equil_fit.y_fit.n*theta_fit(ii)) + y_bn_fit*sin(equil_fit.y_fit.n*theta_fit(ii));
-end
-%
-Rmin = min(min(R_fit));
-Rmax = max(max(R_fit));
-Zmin = min(min(Z_fit));
-Zmax = max(max(Z_fit));
-%
-figure('Name','Poloidal ray trajectory comparison')
-graph1D_jd(wave_nofluct.rays{1}.sx + equil_fit.Rp,wave_nofluct.rays{1}.sy + equil_fit.Zp,0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','r',2);drawnow;hold on
-graph1D_jd(wave_fluct.rays{1}.sx + equil_fit.Rp,wave_fluct.rays{1}.sy + equil_fit.Zp,0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',2);drawnow;hold on
-graph1D_jd(R_fit,Z_fit,0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);drawnow
-graph1D_jd(R_fit',Z_fit',0,0,'R(m)','Z(m)',['Poloidal Ray trajectory'],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);hold on
-axis('equal');
-print_jd(C3POdisplay.p_opt,[id_wave,'_poloidal_trajectory']);
-%
-figure('Name','Normalized radial position comparison')
-graph1D_jd(abs(wave_nofluct.rays{1}.sphi/2/pi),wave_nofluct.rays{1}.srho,0,0,'abs(\phi)/2\pi','\rho',['Normalized radial position'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_fluct.rays{1}.sphi/2/pi),wave_fluct.rays{1}.srho,0,0,'abs(\phi)/2\pi','\rho',['Normalized radial position'],NaN,'','','-','none','b',2);drawnow;hold on
-print_jd(C3POdisplay.p_opt,[id_wave,'_comparison_rho']);
-%
-figure('Name','Parallel wave refractive index comparison')
-graph1D_jd(abs(wave_nofluct.rays{1}.sphi/2/pi),real(wave_nofluct.rays{1}.sNpar),0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_fluct.rays{1}.sphi/2/pi),real(wave_fluct.rays{1}.sNpar),0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','b',2);drawnow;hold on
-print_jd(C3POdisplay.p_opt,[id_wave,'_comparison_Npar']);
-%
-figure('Name','Dispersion relation comparison')
-graph1D_jd(abs(wave_nofluct.rays{1}.sphi/2/pi),wave_nofluct.rays{1}.sD,0,1,'abs(\phi)/2\pi','det(D)',['Dispersion relation'],NaN,'','','-','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_fluct.rays{1}.sphi/2/pi),wave_fluct.rays{1}.sD,0,1,'abs(\phi)/2\pi','det(D)',['Dispersion relation'],NaN,'','','-','none','b',2);drawnow;hold on
-legend('No n_e fluctuations','With n_e fluctuations','Location','SouthEast')
-print_jd(C3POdisplay.p_opt,[id_wave,'_comparison_Disp']);
 %
 disp(['Elapsed time (s):',num2str(telapsed_ray_nofluct),' for ray calculations without density fluctuations (PCHIP interp. technique)']);
 disp(['Elapsed time (s):',num2str(telapsed_ray_fluct),' for ray calculations with density fluctuations (PCHIP interp. technique)']);
 %
-
+% --- display results ---
+%
+rays = {wave_nofluct.rays{1},wave_fluct.rays{1}};
+%
+legs = {'No fluct.','With fluct.';...
+       'nofluct','fluct'};
+%
+filename = ['Fig_',id_wave];
+%
+opt.p_opt = C3POdisplay.p_opt;
+opt.ntheta_fit = 65;
+opt.nrho_fit = 15;
+opt.propvar = 1;   
+%
+graph_comp_RT_jd(rays,legs,equil_fit,filename,opt)
+%
 
 
 

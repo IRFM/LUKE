@@ -225,98 +225,9 @@ telapsed_ray_analytic = toc(tstart);
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-eval(['save ',save_str,' wave_numeric_pchip wave_numeric_spline wave_analytic']);
+save(save_str,'id_wave','wave_numeric_pchip','wave_numeric_spline','wave_analytic','equil_fit_pchip','equil_fit_spline');
 %
 info_dke_yp(2,'Wave parameters saved');
-%
-% For poloidal ray trajectory comparison
-%
-ntheta_fit= 65;
-rho_fit = linspace(0,1,15);
-theta_fit = linspace(0,2*pi,ntheta_fit);
-phi_fit = linspace(0,2*pi,ntheta_fit);
-x_a0_fit = ppval(equil_fit_pchip.x_fit.pp_a0,rho_fit);
-x_an_fit = ppval(equil_fit_pchip.x_fit.pp_an,rho_fit);
-x_bn_fit = ppval(equil_fit_pchip.x_fit.pp_bn,rho_fit);
-y_a0_fit = ppval(equil_fit_pchip.y_fit.pp_a0,rho_fit);
-y_an_fit = ppval(equil_fit_pchip.y_fit.pp_an,rho_fit);
-y_bn_fit = ppval(equil_fit_pchip.y_fit.pp_bn,rho_fit);
-%
-for ii = 1:ntheta_fit,
-   R_fit_pchip(:,ii) = equil_fit_pchip.Rp + x_a0_fit.' + x_an_fit*cos(equil_fit_pchip.x_fit.n*theta_fit(ii)) + x_bn_fit*sin(equil_fit_pchip.x_fit.n*theta_fit(ii));
-   Z_fit_pchip(:,ii) = equil_fit_pchip.Zp + y_a0_fit.' + y_an_fit*cos(equil_fit_pchip.y_fit.n*theta_fit(ii)) + y_bn_fit*sin(equil_fit_pchip.y_fit.n*theta_fit(ii));
-end
-%
-Rmin_pchip = min(min(R_fit_pchip));
-Rmax_pchip = max(max(R_fit_pchip));
-Zmin_pchip = min(min(Z_fit_pchip));
-Zmax_pchip = max(max(Z_fit_pchip));
-%
-x_a0_fit = ppval(equil_fit_spline.x_fit.pp_a0,rho_fit);
-x_an_fit = ppval(equil_fit_spline.x_fit.pp_an,rho_fit);
-x_bn_fit = ppval(equil_fit_spline.x_fit.pp_bn,rho_fit);
-y_a0_fit = ppval(equil_fit_spline.y_fit.pp_a0,rho_fit);
-y_an_fit = ppval(equil_fit_spline.y_fit.pp_an,rho_fit);
-y_bn_fit = ppval(equil_fit_spline.y_fit.pp_bn,rho_fit);
-%
-for ii = 1:ntheta_fit,
-   R_fit_spline(:,ii) = equil_fit_spline.Rp + x_a0_fit.' + x_an_fit*cos(equil_fit_spline.x_fit.n*theta_fit(ii)) + x_bn_fit*sin(equil_fit_spline.x_fit.n*theta_fit(ii));
-   Z_fit_spline(:,ii) = equil_fit_spline.Zp + y_a0_fit.' + y_an_fit*cos(equil_fit_spline.y_fit.n*theta_fit(ii)) + y_bn_fit*sin(equil_fit_spline.y_fit.n*theta_fit(ii));
-end
-%
-Rmin_spline = min(min(R_fit_spline));
-Rmax_spline = max(max(R_fit_spline));
-Zmin_spline = min(min(Z_fit_spline));
-Zmax_spline = max(max(Z_fit_spline));
-%
-figure('Name','Poloidal ray trajectory')
-pmode_ray_pchip = wave_numeric_pchip.rays{1}.spmode == 1;
-pmode_ray_spline = wave_numeric_spline.rays{1}.spmode == 1;
-%
-graph1D_jd(wave_numeric_pchip.rays{1}.sx(pmode_ray_pchip) + equil_fit_pchip.Rp,wave_numeric_pchip.rays{1}.sy(pmode_ray_pchip) + equil_fit_pchip.Zp,0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin_pchip,Rmax_pchip],[Zmin_pchip,Zmax_pchip],'none','.','r',2);drawnow;hold on
-graph1D_jd(wave_numeric_pchip.rays{1}.sx(~pmode_ray_pchip) + equil_fit_pchip.Rp,wave_numeric_pchip.rays{1}.sy(~pmode_ray_pchip) + equil_fit_pchip.Zp,0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin_pchip,Rmax_pchip],[Zmin_pchip,Zmax_pchip],'none','.','b',2);drawnow;hold on
-%graph1D_jd(wave_numeric_spline.rays{1}.sx(pmode_ray_spline) + equil_fit_spline.Rp,wave_numeric_spline.rays{1}.sy(pmode_ray_spline) + equil_fit_spline.Zp,0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin_spline,Rmax_spline],[Zmin_spline,Zmax_spline],'none','.','r',2);drawnow;hold on
-%graph1D_jd(wave_numeric_spline.rays{1}.sx(~pmode_ray_spline) + equil_fit_spline.Rp,wave_numeric_spline.rays{1}.sy(~pmode_ray_spline) + equil_fit_spline.Zp,0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin_spline,Rmax_spline],[Zmin_spline,Zmax_spline],'none','.','b',2);drawnow;hold on
-%
-graph1D_jd(R_fit_pchip,Z_fit_pchip,0,0,'','','',NaN,[Rmin_pchip,Rmax_pchip],[Zmin_pchip,Zmax_pchip],'-','none','b',1);drawnow
-graph1D_jd(R_fit_pchip',Z_fit_pchip',0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin_pchip,Rmax_pchip],[Zmin_pchip,Zmax_pchip],'-','none','b',1);hold on
-axis('equal');
-print_jd(C3POdisplay_pchip.p_opt,[id_wave,'_poloidal_trajectory']);
-%
-figure('Name','Normalized radial position comparison')
-graph1D_jd(abs(wave_numeric_pchip.rays{1}.sphi/2/pi),wave_numeric_pchip.rays{1}.srho,0,0,'abs(\phi)/2\pi','\rho',['Normalized radial position'],NaN,'','','--','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_numeric_spline.rays{1}.sphi/2/pi),wave_numeric_spline.rays{1}.srho,0,0,'abs(\phi)/2\pi','\rho',['Normalized radial position'],NaN,'','',':','none','b',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.srho,0,0,'abs(\phi)/2\pi','\rho',['Normalized radial position'],NaN,'','','-','none','k',2);drawnow;hold on
-print_jd(C3POdisplay_pchip.p_opt,[id_wave,'_comparison_rho']);
-%
-figure('Name','Parallel wave refractive index comparison')
-graph1D_jd(abs(wave_numeric_pchip.rays{1}.sphi/2/pi),wave_numeric_pchip.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','--','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_numeric_spline.rays{1}.sphi/2/pi),wave_numeric_spline.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','',':','none','b',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','-','none','k',2);drawnow;hold on
-print_jd(C3POdisplay_pchip.p_opt,[id_wave,'_comparison_Npar']);
-%
-figure('Name','Dispersion relation comparison')
-graph1D_jd(abs(wave_numeric_pchip.rays{1}.sphi/2/pi),wave_numeric_pchip.rays{1}.sD,0,1,'abs(\phi)/2\pi','det(D)',['Dispersion relation'],NaN,'','','--','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_numeric_spline.rays{1}.sphi/2/pi),wave_numeric_spline.rays{1}.sD,0,1,'abs(\phi)/2\pi','det(D)',['Dispersion relation'],NaN,'','',':','none','b',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.sD,0,1,'abs(\phi)/2\pi','det(D)',['Dispersion relation'],NaN,'','','-','none','k',2);drawnow;hold on
-legend('PCHIP','SPLINE','Analytic','Location','SouthEast')
-print_jd(C3POdisplay_pchip.p_opt,[id_wave,'_comparison_Disp']);
-%
-figure('Name','Normalized poloidal position comparison')
-graph1D_jd(abs(wave_numeric_pchip.rays{1}.sphi/2/pi),wave_numeric_pchip.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','--','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_numeric_spline.rays{1}.sphi/2/pi),wave_numeric_spline.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','',':','none','b',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','-','none','k',2);drawnow;hold on
-legend('Numeric (pchip)','Numeric (spline)','Analytic')
-figure('Name','Poloidal mode number comparison')
-graph1D_jd(abs(wave_numeric_pchip.rays{1}.sphi/2/pi),wave_numeric_pchip.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','--','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_numeric_spline.rays{1}.sphi/2/pi),wave_numeric_spline.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','',':','none','b',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','-','none','k',2);drawnow;hold on
-legend('Numeric (pchip)','Numeric (spline)','Analytic')
-figure('Name','Perpendicular wave refractive index comparison')
-graph1D_jd(abs(wave_numeric_pchip.rays{1}.sphi/2/pi),wave_numeric_pchip.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','--','none','r',2);drawnow;hold on
-graph1D_jd(abs(wave_numeric_spline.rays{1}.sphi/2/pi),wave_numeric_spline.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','',':','none','b',2);drawnow;hold on
-graph1D_jd(abs(wave_analytic.rays{1}.sphi/2/pi),wave_analytic.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','-','none','k',2);drawnow;hold on
-legend('Numeric (pchip)','Numeric (spline)','Analytic')
 %
 disp(['Elapsed time (s):',num2str(telapsed_equil_pchip),' for interpolating MHD equilibrium (PCHIP interp. technique)']);
 disp(['Elapsed time (s):',num2str(telapsed_equil_spline),' for interpolating MHD equilibrium (SPLINE interp. technique)']);
@@ -324,3 +235,22 @@ disp(['Elapsed time (s):',num2str(telapsed_equil_spline),' for interpolating MHD
 disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_pchip),' for ray calculations with numerical MHD equilibrium (PCHIP interp. technique)']);
 disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_spline),' for ray calculations with numerical MHD equilibrium (SPLINE interp. technique)']);
 disp(['Elapsed time (s):',num2str(telapsed_ray_analytic),' for ray calculations with analytical MHD equilibrium']);
+%
+% --- display results ---
+%
+rays = {wave_numeric_pchip.rays{1},wave_numeric_spline.rays{1},wave_analytic.rays{1}};
+%
+legs = {'Numeric - pchip','Numeric - spline','Analytic';...
+       'Numeric_pchip','Numeric_spline','Analytic'};
+%
+equil_fit = [equil_fit_pchip,equil_fit_spline,equil_fit_pchip];
+%
+filename = ['Fig_',id_wave];
+%
+opt.p_opt = C3POdisplay_pchip.p_opt;
+opt.ntheta_fit = 65;
+opt.nrho_fit = 15;
+opt.propvar = 1;   
+%
+graph_comp_RT_jd(rays,legs,equil_fit,filename,opt)
+%
