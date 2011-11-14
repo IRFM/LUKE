@@ -1,4 +1,4 @@
-function [R,Z,Npar,Nperp,epol_pmz,phi_xyz,D,Te,ne,zTi,zni,BRHO,BP,BPHI,B,r,salpha,gradrho,pmode] = rayparameters_yp(rayparam,equil_fit,fluct_fit,omega,rho,theta,phi,krho,m,n)
+function [R,Z,Npar,Nperp,epol_pmz,phi_xyz,D,Te,ne,zTi,zni,BRHO,BP,BPHI,B,r,salpha,gradrho,pmode,wpe2,wce2] = rayparameters_yp(rayparam,equil_fit,fluct_fit,omega,rho,theta,phi,krho,m,n)
 %
 % Calculates ray position, Npar and Nperp 
 %
@@ -98,10 +98,12 @@ D = zeros(length(rho),1);
 pmode = zeros(length(rho),1);
 epol_pmz = zeros(length(rho),3);
 phi_xyz = zeros(length(rho),3);
+wpe2 = zeros(length(rho),1);
+wce2 = zeros(length(rho),1);
 %
 for ii = 1:length(rho),
     if rayparam.tensortype == 0,
-        [dummy,dummy,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk]...
+        [dummy,dummy,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,sigmap,sigmam,Dp,Dm,ps,ys]...
             = colddisp_dke_jd(Npar(ii),omega(ii),ne(ii),zni(ii,:)',equil_fit.zZi,equil_fit.zmi,B(ii),Nperp(ii));
 %
         [Nperpp,Nperpm] = colddisp_dke_jd(Npar(ii),omega(ii),ne(ii),zni(ii,:)',equil_fit.zZi,equil_fit.zmi,B(ii));
@@ -118,4 +120,7 @@ for ii = 1:length(rho),
 %    
     epol_pmz(ii,:) = ep_pmz.';
     phi_xyz(ii,:) = phip_xyz.';
+    %
+    wpe2(ii) = ps(1)^2;
+    wce2(ii) = ys(1)^2;
 end
