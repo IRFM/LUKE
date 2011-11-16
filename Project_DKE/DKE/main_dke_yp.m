@@ -10,6 +10,12 @@ function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoe
 %
 %by Y.Peysson (CEA-DRFC) <yves.peysson@cea.fr> and J. Decker (CEA-DRFC) <joan.decker@cea.fr>
 %
+%
+if ~isstruct(simul),
+    simul.id = simul;
+    simul.path = './';
+end
+%
 simul.timeid = timeid_jd(clock);
 simul.userid = userid_jd;
 [simul.LUKEversion,simul.matver] = LUKEversion_jd;
