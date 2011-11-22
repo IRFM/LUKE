@@ -51,13 +51,13 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 % LAUNCH parameters
 %
-id = 'NTM_32_fluctn';
+id = 'NTM_32_20MW_1ray';
 freq_GHz = 170;
 mmode = -1;% cold plasma mode (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1) :1
 %
 R_L = 6.4848;
 Z_L = 4.110;
-P_L = 1e-6;% [MW] 
+P_L = 20;% [MW] 
 %
 cone_div = 1.08;% equivalent exp(-2) power cone divergence
 cone_ori = -0.5;% equivalent cone origin
@@ -96,8 +96,8 @@ waveparam.opt_rf = 1;
 %
 waveparam.dsmin = 0;%minimum size for ray fragments
 %
-waveparam.nd = 2;%Number of transverse distance positions for beamlets
-waveparam.nchi = 2;%Number of angular positions for beamlets
+waveparam.nd = 1;%Number of transverse distance positions for beamlets
+waveparam.nchi = 1;%Number of angular positions for beamlets
 %
 waveparam.n_rf_list = 1:2;
 waveparam.ns = 1;%ray smoothing parameter
@@ -177,7 +177,7 @@ wavestruct.fitequilparam = fitparam;
 wavestruct.raydisplay = C3POdisplay;
 wavestruct.C3POparam = C3POparam;
 %
-id_simul = [id_equil,'_',wavestruct.id];
+id_simul = [id_equil,'_',wavestruct.id,'_',id_fluct];
 %
 fluct_fitparam.method = 'pchip';%nearest,spline,pchip,cubic
 fluct_fitparam.nharm = 32;%Number of harmonics in the plasma fluctuations interpolation (less than ntheta_equil/2)
@@ -186,11 +186,12 @@ fluct_fitparam.ngridresample = 201;%Number of grid points for resampling the rad
 %************************************************************************************************************************************
 %
 dkeparam.rt_mode = 1;
-dkeparam.dtn = 10;
-dkeparam.tn = 2*dkeparam.dtn;
-dkeparam.invproc = -1;
+dkeparam.dtn = 1i;% as an imaginary number, dkeparam.dtn prescribes the number of internal time steps
+dkeparam.tn = 5i;% as an imaginary number, dkeparam.tn prescribes the number of fluctuation iterations
+dkeparam.Nfluct = 1.024024138104782;% to retrieve previous results before merge
 %
 dkedisplay.display_mode = 1;
+dkedisplay.display_time_mode = 1;
 %
 opt_save = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
 %
@@ -215,7 +216,7 @@ info_dke_yp(2,['LUKE Results saved in ',filename]);
 %
 p_opt = 2;
 path_simul = pwd;
-[tn,fluctres] = fluctanalysis_yp(equilDKE,ZP0,Zcurr,dkeparam,mksa,0);
+[tn,tn_all,fluctres] = fluctanalysis_yp(equilDKE,ZP0,Zcurr,dkeparam,mksa,0);
 %
 info_dke_yp(2,['Total co-current     : ',num2str(fluctres.I.Itotm*fluctres.I.scocurr),' +/- ',num2str(abs(fluctres.I.Itots)*fluctres.I.scocurr),' MA, relative unbiased accuracy: ',num2str(abs(fluctres.I.Itotr))]);
 info_dke_yp(2,['Total RF power    : ',num2str(fluctres.P.Ptotm),' +/- ',num2str(abs(fluctres.P.Ptots)),' MW, relative unbiased accuracy: ',num2str(abs(fluctres.P.Ptotr))]);
@@ -247,11 +248,23 @@ end
 %
 figure('Name','Mean co-current profile (fluctuation)')
 %
+index = find(fluctres.I.xJm*fluctres.I.scocurr > 1e-5*max(fluctres.I.xJm*fluctres.I.scocurr))
+[curve, goodness] = fit(equilDKE.xrho(index)',log(abs(fluctres.I.xJm(index)*fluctres.I.scocurr))','poly2');
+fitmax = max(exp(curve.p1*equilDKE.xrho(index).^2 + curve.p2*equilDKE.xrho(index) + curve.p3));
+xJmmax = max(fluctres.I.xJm*fluctres.I.scocurr);
+rhomax = equilDKE.xrho(fluctres.I.xJm*fluctres.I.scocurr == xJmmax);
+delta_Jm = 2*sqrt(-log(2)/curve.p1);
+%
 if isscalar(fluctres.I.xJs), 
     graph1D_jd(equilDKE.xrho,fluctres.I.xJm*fluctres.I.scocurr,0,0,'\rho','J_{lh} co-current (MA/m^2)',['I_{lh} (co-current) = ',num2str(fluctres.I.Itotm*fluctres.I.scocurr),'\pm',num2str(abs(fluctres.I.Itots)*fluctres.I.scocurr),' (MA)'],NaN,'','','-','none','r',2,20,gca,1,NaN);
 else
-    graph1D_jd(equilDKE.xrho,fluctres.I.xJm*fluctres.I.scocurr,0,0,'\rho','J_{lh} co-current (MA/m^2)',['I_{lh} (co-current) = ',num2str(fluctres.I.Itotm*fluctres.I.scocurr),'\pm',num2str(abs(fluctres.I.Itots)*fluctres.I.scocurr),' (MA)'],NaN,'','','-','none','r',2,20,gca,1,NaN,NaN,fluctres.I.xJs*fluctres.I.scocurr,fluctres.I.xJs*fluctres.I.scocurr);
+    graph1D_jd(equilDKE.xrho,fluctres.I.xJm*fluctres.I.scocurr,0,0,'\rho','J_{lh} co-current (MA/m^2)',['I_{lh} (co-current) = ',num2str(fluctres.I.Itotm*fluctres.I.scocurr),'\pm',num2str(abs(fluctres.I.Itots)*fluctres.I.scocurr),' (MA)'],NaN,'','','-','none','r',1,20,gca,1,NaN,NaN,fluctres.I.xJs*fluctres.I.scocurr,fluctres.I.xJs*fluctres.I.scocurr);
+    graph1D_jd(equilDKE.xrho,fluctres.I.xJm*fluctres.I.scocurr,0,0,'\rho','J_{lh} co-current (MA/m^2)',['I_{lh} (co-current) = ',num2str(fluctres.I.Itotm*fluctres.I.scocurr),'\pm',num2str(abs(fluctres.I.Itots)*fluctres.I.scocurr),' (MA)'],NaN,'','','-','none','r',2,20,gca,1,NaN);
+    graph1D_jd(equilDKE.xrho(index),xJmmax*exp(curve.p1*equilDKE.xrho(index).^2 + curve.p2*equilDKE.xrho(index) + curve.p3)/fitmax,0,0,'\rho','J_{lh} co-current (MA/m^2)',['I_{lh} (co-current) = ',num2str(fluctres.I.Itotm*fluctres.I.scocurr),'\pm',num2str(abs(fluctres.I.Itots)*fluctres.I.scocurr),' (MA)'],NaN,'','','--','none','k',1,20,gca,1,NaN);
 end
+%
+disp(['FWHM of the current density profile = ',num2str(delta_Jm)]);
+disp(['Position of the current density profile = ',num2str(rhomax)]);
 %
 print_jd(p_opt,[id_simul,'_jcocurr_EC_profile'],path_simul);
 %
@@ -260,7 +273,8 @@ figure('Name','Mean EC power absorption profile (fluctuation)')
 if isscalar(fluctres.P.xPs),
     graph1D_jd(equilDKE.xrho,fluctres.P.xPm,0,0,'\rho','P_{tot} (MW/m^3)',['P_{tot} = ',num2str(fluctres.P.Ptotm),'\pm',num2str(fluctres.P.Ptots),' (MW)'],NaN,'','','-','none','b',2,20,gca,1,NaN);
 else
-    graph1D_jd(equilDKE.xrho,fluctres.P.xPm,0,0,'\rho','P_{tot} (MW/m^3)',['P_{tot} = ',num2str(fluctres.P.Ptotm),'\pm',num2str(fluctres.P.Ptots),' (MW)'],NaN,'','','-','none','b',2,20,gca,1,NaN,NaN,fluctres.P.xPs,fluctres.P.xPs);
+    graph1D_jd(equilDKE.xrho,fluctres.P.xPm,0,0,'\rho','P_{tot} (MW/m^3)',['P_{tot} = ',num2str(fluctres.P.Ptotm),'\pm',num2str(fluctres.P.Ptots),' (MW)'],NaN,'','','-','none','b',1,20,gca,1,NaN,NaN,fluctres.P.xPs,fluctres.P.xPs);
+    graph1D_jd(equilDKE.xrho,fluctres.P.xPm,0,0,'\rho','P_{tot} (MW/m^3)',['P_{tot} = ',num2str(fluctres.P.Ptotm),'\pm',num2str(fluctres.P.Ptots),' (MW)'],NaN,'','','-','none','b',2,20,gca,1,NaN);
 end
 print_jd(p_opt,[id_simul,'_p_EC_profile'],path_simul);
 %
