@@ -18,7 +18,6 @@ id_simul = '';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = 20;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0:0.1:0.6,0.61:0.01:0.79,0.80:0.05:1];
 %
 id_dkepath = '';%For all paths used by DKE solver
@@ -145,9 +144,6 @@ C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
 dkeparam.clustermode.wave_solver_yp = clustermode_luke(0,'',0,dkepath);%MatLab distributed computing environment
 dkeparam.clustermode.wave_solver_yp.scheduler.display = 1;
 %
-dkeparam.clustermode.wave_random_yp = clustermode_luke(0,'',0,dkepath);%MatLab distributed computing environment
-dkeparam.clustermode.wave_random_yp.scheduler.display = 1;
-
 % launch structure
 %
 launch.id = id;
@@ -187,9 +183,9 @@ fluct_fitparam.ngridresample = 201;%Number of grid points for resampling the rad
 %************************************************************************************************************************************
 %
 dkeparam.rt_mode = 1;
-dkeparam.dtn = 1;
-dkeparam.tn = 20*dkeparam.dtn;
-dkeparam.invproc = -1;
+dkeparam.dtn = 1i;% as an imaginary number, dkeparam.dtn prescribes the number of internal time steps
+dkeparam.tn = 20i;% as an imaginary number, dkeparam.tn prescribes the number of fluctuation iterations
+dkeparam.Nfluct = 1.052872583699049;% to retrieve previous results before merge
 %
 dkedisplay.display_mode = 1;
 dkedisplay.display_time_mode = 1;
