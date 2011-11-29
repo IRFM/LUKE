@@ -15,13 +15,14 @@ load ('before_luke@TS_32299_100.0117.mat','equil');%data file from cronos
 %
 opt_dist = 0;% batch run index in dkepath.remote; (0) for local run, (1) local multicore, (2) remote cephee, (3) remote saturne
 opt_save = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
-tn_max = 20;%Maximum normalized integration time
+tn = 10i;%Total normalized integration time. As an imaginary number, dkeparam.tn prescribes the number of fluctuation iterations
 display_mode = [1,1,1];%option for display [C3PO, LUKE, time evolution]
 p_opt = 2;%option for printing
 %
 %%%%%%%%%%% WARNING: Nothing below must be modified in case of reload %%%%%%%%%%% %%%%%%%%%%%%%%%
 %
-dtn = [2];%normalized integration time step (note that the effective collision time step is dtn/nit_f)
+Nfluct = [0.381141619674545];%ratio of LUKE internal evolution time to fluctuation time !! set to retrieve old dtn = 2
+dtn = 1i;% LUKE internal time step. As an imaginary number, dkeparam.dtn prescribes the number of internal time steps
 %
 sigmar_max_in = 0.5;%Core plasma fluctuations
 epsi_rho_in = [0.01];%Core plasma fluctuations
@@ -48,16 +49,14 @@ if exist(path_simul) ~= 7, mkdir(path_simul);end
 for sigmar_max = sigmar_max_in,
     for epsi_rho = epsi_rho_in,
         %
-        ntn = tn_max/dtn;%number of time steps
-        %
         epsi_theta = epsi_rho;%Core plasma fluctuations
         %
         fluct_ref =  ['sigmar_max',num2str(sigmar_max),'_epsi_rho',num2str(epsi_rho)];
         %        
         if isempty(Npar_p),
-            shot_ref = ['dtn',num2str(dtn),'_',fluct_ref];
+            shot_ref = ['Nfluct',num2str(Nfluct),'_',fluct_ref];
         else
-            shot_ref = ['Npar_p',num2str(abs(Npar_p)),'_dtn',num2str(dtn),'_',fluct_ref];
+            shot_ref = ['Npar_p',num2str(abs(Npar_p)),'_Nfluct',num2str(Nfluct),'_',fluct_ref];
         end
         %
         id_simul = [scenario,'_',shot_ref];
@@ -92,7 +91,7 @@ for sigmar_max = sigmar_max_in,
         %
         if opt_dist == 0,%local calculations
             %
-            [timeid,jobid,dkeparam,dkepath,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_cronos_C3PO_yp(opt_dist,opt_save,id_simul,root_dir,scenario,dtn,ntn,naequilp,display_mode,Npar_p,Npar_m);
+            [timeid,jobid,dkeparam,dkepath,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_cronos_C3PO_yp(opt_dist,opt_save,id_simul,root_dir,scenario,Nfluct,tn,dtn,naequilp,display_mode,Npar_p,Npar_m);
             %
             % ---------------------------------------------- Save results ----------------------------------------------
             %
@@ -105,7 +104,7 @@ for sigmar_max = sigmar_max_in,
             display_cronos_C3PO(id_simul,equilDKE,ZP0,Zcurr,dkeparam,mksa,racc,p_opt,root_dir)
             %
         else
-            [timeid,jobid,dkeparam,dkepath] = loop_cronos_C3PO_yp(opt_dist,opt_save,id_simul,root_dir,scenario,dtn,ntn,naequilp,display_mode,Npar_p,Npar_m);
+            [timeid,jobid,dkeparam,dkepath] = loop_cronos_C3PO_yp(opt_dist,opt_save,id_simul,root_dir,scenario,Nfluct,tn,dtn,naequilp,display_mode,Npar_p,Npar_m);
             %
             job.id_simul{ijob} = id_simul;
             job.id(ijob) = str2num(jobid);
