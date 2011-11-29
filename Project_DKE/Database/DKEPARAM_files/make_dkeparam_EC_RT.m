@@ -57,6 +57,9 @@ dkeparam.delta_rt = 0.25;%smoothering parameter of quasilinear iterations
 dkeparam.Dparparmax = Inf;%Upper limit of the quasilinear diffusion coefficient. Important for low temperature plasmas et high power level for stability of the code
 dkeparam.npresmin = 1;% minimum number of resonant points for each ray and position
 dkeparam.nk_abs = 1;%maximum number of iterations on a_sdNpar for full absorption (%%%%%%TODO%%%%%%% for what ?)
+%
+dkeparam.Nfluct = 1;%-log(sqrt(0.01));%ratio of LUKE to FLUCT time to reset phases (-log(sqrt(tol)) where tol is the tolerance on decorrelation)
+%
 %dkeparam.w_mask = ;%%%%%%TODO%%%%%%%
 %dkeparam.rho0 = ;%%%%%%TODO%%%%%%%
 %dkeparam.seekparam.submode = ;%%%%%%TODO%%%%%%%
