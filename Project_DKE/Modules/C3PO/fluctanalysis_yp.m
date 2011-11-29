@@ -41,8 +41,8 @@ xdA = equilDKE.xdA_dke;
 ZP0_t_x_rf_fsav = ZP0.t_x_rf_fsav(itnmin:end,:);
 if isvector(ZP0.t_x_rf_fsav),ZP0_t_x_rf_fsav = ZP0_t_x_rf_fsav(:)';end
 %
-tn = ([1:size(ZP0_t_x_rf_fsav,1)] + itnmin - 1)*dkeparam.dtn;
-tn_all = [1:size(ZP0.t_x_rf_fsav,1)]*dkeparam.dtn;
+tn = Zcurr.xtn(itnmin:end);
+tn_all = Zcurr.xtn;
 %
 fluctres.P.tP_all = ZP0.t_x_rf_fsav*mksa.P_ref*xdV(:);
 fluctres.P.tnP_all = tn_all;
