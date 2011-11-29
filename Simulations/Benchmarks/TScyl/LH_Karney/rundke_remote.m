@@ -8,11 +8,11 @@ close all
 warning off
 global nfig
 %
-opt_dist = 4;%0 -> local, 1 -> local distributed, 2 -> CEPHEE, 3 -> SATURNE, 4 -> macproyves distributed (see make_path_LOCAL.m)
+opt_dist = 1;%0 -> local, 1 -> local distributed, 2 -> CEPHEE, 3 -> SATURNE, 4 -> macproyves distributed (see make_path_LOCAL.m)
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-id_simul = 'LH_karney_test';%Simulation ID
+id_simul = 'LH_karney_remote';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
@@ -82,11 +82,12 @@ wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [
 %
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-dkeparam.clustermode.coll_dke_jd.mode = 2;
-dkeparam.clustermode.eecoll_dke_jd.mode = 2;
-%
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
+%
+dkeparam.clustermode.coll_dke_jd.mode = 2;
+dkeparam.clustermode.eecoll_dke_jd.mode = 2;
 %
 if opt_dist == 0,%local non distributed calculations
     %
@@ -100,8 +101,10 @@ if opt_dist == 0,%local non distributed calculations
     waves{1} = make_idealLHwave_jd(equil,wavestruct);
     %
     tic
-    [nondist(1).Znorm,nondist(1).Zcurr,nondist(1).ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    %[nondist(1).Znorm,nondist(1).Zcurr,nondist(1).ZP0] = run_lukert(id_simul,'',waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
+    %[nondist(1).Znorm,nondist(1).Zcurr,nondist(1).ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    dkeparam.rt_mode = 1;
+    [nondist(1).Znorm,nondist(1).Zcurr,nondist(1).ZP0] = run_lukert(id_simul,'',waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
     time_without_dist = toc;
     %
     % NON-RELATIVISTIC CASE
@@ -144,6 +147,7 @@ if opt_dist == 0,%local non distributed calculations
 else,%remote distributed calculations
     luke_input = [];
     %
+    dkeparam.rt_mode = 1;
     dkeparam.psin_S = psin_S;
     dkeparam.rho_S = rho_S;
     %
@@ -274,11 +278,11 @@ eta_nr_2_20_k = '16.52';
 %
 format
 %
-delete res_karney
+delete res_karney_remote
 %
-diary res_karney
+diary res_karney_remote
 %
-disp(['Comparison LUKE/Karney with dtn = ',int2str(dkeparam.dtn),' and nit_f = ',int2str(dkeparam.nit_f)])
+disp(['Comparison LUKE/Karney with tn = ',int2str(dkeparam.tn),', dtn = ',int2str(dkeparam.dtn),' and nit_f = ',int2str(dkeparam.nit_f)])
 disp(['----------------------'])
 %
 if opt_dist == 0,
