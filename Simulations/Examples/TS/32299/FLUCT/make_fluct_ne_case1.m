@@ -16,7 +16,7 @@ path_dkepath = '';%if nothing is specified, the working directory is first used 
 %
 % Equilibrium parameters
 %
-id_equil = 'CRONOS_32299_k100';%For plasma equilibrium
+id_equil = 'TS_32299_100.0117';%For plasma equilibrium
 path_equil = '../EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % Core density fluctuations
