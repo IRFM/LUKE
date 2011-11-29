@@ -86,8 +86,8 @@ function pdfhtlatex_yp(root_path,filelist)
     %
     for i = 1:length(filelist),
         try
-    %        keyboard
-            [pathstr, name, ext, versn] = fileparts(filelist{i});
+            %keyboard
+            [pathstr, name, ext] = fileparts(filelist{i});
             if ~strcmp(pathstr(end),filesep),
                 pathstr = [pathstr,filesep];%root_path must be ended by a filesep
             end
