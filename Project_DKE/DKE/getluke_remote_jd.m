@@ -29,7 +29,7 @@ end
 %
 logname = getenv('USER');
 %
-if isfield(remote,logname),
+if isfield(remote,logname) && ~isempty(remote.(logname)),
     remotelogname = remote.(logname);
 else
     remotelogname = logname;
@@ -48,7 +48,7 @@ if ~isempty(remotehost),
     %
 else
     %
-    [res,txt] = unix(['qstat ',remoteset_jobid{1},jobid,remoteset_jobid{2}]);
+    [res,txt] = unix([remoteset_jobid{1},jobid,remoteset_jobid{2}]);
     %
 end
 %

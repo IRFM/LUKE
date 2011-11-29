@@ -65,7 +65,7 @@ end
 %
 logname(double(logname) == 10) = [];
 %
-if isfield(remote,logname),
+if isfield(remote,logname) && ~isempty(remote.(logname)),
     remotelogname = remote.(logname);
 else
     remotelogname = logname;
