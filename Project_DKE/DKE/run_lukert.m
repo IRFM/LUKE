@@ -183,7 +183,7 @@ else
             disp(['- Old tn = ',int2str(tn)]);
             disp(['- New tn = ',int2str(tn_in)]);
             tn = tn_in;
-            itnmax = max(1,ceil(tn/dtn_phase));
+            itnmax = max([1,ceil(tn/dtn_phase)]);
         end
         %
     end
@@ -209,9 +209,11 @@ end
 for itn = itnmin:itnmax,%time evolution
     %
     if itn < itnmax,
-        dkeparam.tn = dtn_phase;
-    else% includes case without fluctuations, tn as vector, etc.
+        dkeparam.tn = dtn_phase;% fluctuations, one step
+    elseif isscalar(tn) && ~isinf(dtn_phase),%fluctuations, last time step
         dkeparam.tn = tn - dtn_phase*(itnmax - 1);
+    else% no fluctutions
+        dkeparam.tn = tn;
     end
     %
     %
