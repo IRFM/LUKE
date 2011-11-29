@@ -66,27 +66,33 @@ if isscalar(dkeparam.tn),
     if isnan(dkeparam.tn),
         if isscalar(dkeparam.dtn) && isnan(dkeparam.dtn),
             dkeparam.tn = 100000;%asymptotic calculation - quasi steady-state
+        elseif isscalar(dkeparam.dtn) && imag(dkeparam.dtn) > 0,%number of ierations fixed by imag(dtn)
+            nit = imag(dkeparam.dtn);
+            dkeparam.tn = 100000.*(1:nit)/nit;% 
         else
             dkeparam.tn = cumsum(dkeparam.dtn);%tn fixed by scalar or vector dtn
         end
     else
-        if isscalar(dkeparam.dtn),
-            if isnan(dkeparam.dtn),
-                nit = min([100,max([1,ceil(60./dkeparam.tn.^(3/8))])]);%number of internal iterations, fitted result from TS/32299 analysis
-                dkeparam.tn = dkeparam.tn.*(1:nit)/nit;% 
-            else% time step determined by dtn
-                if dkeparam.dtn > dkeparam.tn,
-                    info_dke_yp(2,['Warning : the prescribed time step (',num2str(dkeparam.dtn),...
-                    ') is reduced to tn = ',num2str(dkeparam.tn)]);
-                end
-                dkeparam.tn = unique([dkeparam.dtn:dkeparam.dtn:dkeparam.tn,dkeparam.tn]);
-                if length(dkeparam.tn) > 1 && dkeparam.tn(end) - dkeparam.tn(end-1) < dkeparam.dtn,
-                    info_dke_yp(2,['Warning : the last time step (',num2str(dkeparam.tn(end) - dkeparam.tn(end-1)),...
-                    ') is shorter than dtn = ',num2str(dkeparam.dtn)]);
-                end
-            end
-        else
+        if ~isscalar(dkeparam.dtn),
             info_dke_yp(2,'Warning : dkeparam.dtn prescription overridden by dkeparam.tn');
+            dkeparam.dtn = NaN;
+        end
+        if isnan(dkeparam.dtn),% automatic time step
+            nit = min([100,max([1,ceil(60./dkeparam.tn.^(3/8))])]);%number of internal iterations, fitted result from TS/32299 analysis
+            dkeparam.tn = dkeparam.tn.*(1:nit)/nit;% 
+        elseif imag(dkeparam.dtn) > 0,%number of ierations fixed by imag(dtn)
+            nit = imag(dkeparam.dtn);
+            dkeparam.tn = 100000.*(1:nit)/nit;% 
+        else% time step determined by dtn
+            if dkeparam.dtn > dkeparam.tn,
+                info_dke_yp(2,['Warning : the prescribed time step (',num2str(dkeparam.dtn),...
+                ') is reduced to tn = ',num2str(dkeparam.tn)]);
+            end
+            dkeparam.tn = unique([dkeparam.dtn:dkeparam.dtn:dkeparam.tn,dkeparam.tn]);
+            if length(dkeparam.tn) > 1 && dkeparam.tn(end) - dkeparam.tn(end-1) < dkeparam.dtn,
+                info_dke_yp(2,['Warning : the last time step (',num2str(dkeparam.tn(end) - dkeparam.tn(end-1)),...
+                ') is shorter than dtn = ',num2str(dkeparam.dtn)]);
+            end
         end
     end
 else%time steps determined by tn vector
