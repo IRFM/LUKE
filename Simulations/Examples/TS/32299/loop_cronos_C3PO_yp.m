@@ -1,10 +1,9 @@
-function [timeid,jobid,dkeparam,dkepath,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_cronos_C3PO_yp(opt_dist,opt_save,id_simul,root_dir,scenario,dtn,ntn,naequilp,display_mode,Npar_p,Npar_m,multiray_mode,XXfinit)
+function [timeid,jobid,dkeparam,dkepath,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_cronos_C3PO_yp(opt_dist,opt_save,id_simul,root_dir,scenario,Nfluct,tn,dtn,naequilp,display_mode,Npar_p,Npar_m,XXfinit)
 %
 timeid = [];
 jobid = [];
 %
-id_dkepath = 'LOCAL';%For all paths used by DKE solver
-path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+load ('before_luke@TS_32299_100.0117.mat','dkeparam','dkedisplay','transpfaste','ohm','ripple','wavestructs','equil');%data file from cronos
 %
 if strfind(id_simul,'ALOHA'),
     aloha_file = 'TS32299_C3_ne03e17.mat';
@@ -15,8 +14,6 @@ if strfind(id_simul,'ALOHA'),
     id_launch = [aloha_file(1:strfind(aloha_file,'.')-1),'_param_',num2str(param),'_nlobes_',num2str(nlobes)];
     load_str = ['LAUNCH_',id_launch,'.mat'];
     load([aloha_path,load_str],'launch');
-    %
-    load ('before_luke@TS_32299_100.0117.mat','dkeparam','dkedisplay','transpfaste','ohm','ripple','wavestructs','equil');%data file from cronos
     %
     wavestructs = {wavestructs{1}};
     wavestructs{1}.launch = launch;
@@ -78,34 +75,18 @@ end
 %
 dkeparam = rmfield(dkeparam,'clustermode');%remove old structure for backward compatibility
 %
-dkeparam.clustermode.coll_dke_jd.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
-dkeparam.clustermode.coll_dke_jd.scheduler.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-dkeparam.clustermode.coll_dke_jd.scheduler.size = 2;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
-dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
-dkeparam.clustermode.eecoll_dke_yp.scheduler.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-dkeparam.clustermode.eecoll_dke_yp.scheduler.size = 2;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
-dkeparam.clustermode.wave_solver_yp.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
-dkeparam.clustermode.wave_solver_yp.scheduler.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-dkeparam.clustermode.wave_solver_yp.scheduler.size = 2;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
-dkeparam.clustermode.wave_random_yp.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
-dkeparam.clustermode.wave_random_yp.scheduler.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-dkeparam.clustermode.wave_random_yp.scheduler.size = 2;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
-%
 if strfind(id_simul,'ALOHA'),
-    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%MatLab distributed computing environment
+    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
     wavestructs{1}.C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
 else
-    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%MatLab distributed computing environment
+    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
     wavestructs{1}.C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
-    wavestructs{2}.C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%MatLab distributed computing environment
+    wavestructs{2}.C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
     wavestructs{2}.C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
 end
 %
-dkeparam.clustermode.wave_solver_yp = clustermode_luke(0,'',0,dkepath);%MatLab distributed computing environment (3)
+dkeparam.clustermode.wave_solver_yp = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment (3)
 dkeparam.clustermode.wave_solver_yp.scheduler.display = 0;
-%
-dkeparam.clustermode.wave_random_yp = clustermode_luke(0,'',0,dkepath);%MatLab distributed computing environment (3)
-dkeparam.clustermode.wave_random_yp.scheduler.display = 0;
 %
 dkeparam.psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 dkeparam.rho_S = 25;%dkeparam.rho_S;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
@@ -170,10 +151,10 @@ else
     dkedisplay.display_time_mode = 0;    
 end
 %
-dkeparam.dtn = dtn;
-dkeparam.tn = ntn*dtn;%total integration duration
+dkeparam.Nfluct = Nfluct;
+dkeparam.tn = tn;%LUKE internal evolution time
+dkeparam.dtn = dtn;%LUKE internal time step
 dkeparam.finitabs = 0;%the initial distribution is used to first estimate the ray absorption (1) otherwise (0)
-if exist('multiray_mode'), dkeparam.multiray_mode = multiray_mode;end%multiray mode
 %
 if opt_dist == 0,%local calculations
     %
