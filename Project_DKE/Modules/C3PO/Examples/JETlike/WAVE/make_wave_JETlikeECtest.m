@@ -135,70 +135,35 @@ rayinit = main_rayinit_launch_jd(equil,launch);
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster parameters and paths
 %
 % ray-tracing calculations
 %
 tstart = tic;
-wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
+wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
 telapsed_ray_numeric = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-eval(['save ',save_str,' wave_numeric']);
+save(save_str,'id_wave','wave_numeric');
 %
 info_dke_yp(2,'Wave parameters saved');
 %
-% For poloidal ray trajectory comparison
+disp(['Elapsed time (s):',num2str(telapsed_ray_numeric),' for ray calculations (PCHIP interp. technique)']);
 %
-ntheta_fit= 65;
-rho_fit = linspace(0,1,15);
-theta_fit = linspace(0,2*pi,ntheta_fit);
-phi_fit = linspace(0,2*pi,ntheta_fit);
-x_a0_fit = ppval(equil_fit.x_fit.pp_a0,rho_fit);
-x_an_fit = ppval(equil_fit.x_fit.pp_an,rho_fit);
-x_bn_fit = ppval(equil_fit.x_fit.pp_bn,rho_fit);
-y_a0_fit = ppval(equil_fit.y_fit.pp_a0,rho_fit);
-y_an_fit = ppval(equil_fit.y_fit.pp_an,rho_fit);
-y_bn_fit = ppval(equil_fit.y_fit.pp_bn,rho_fit);
+% --- display results ---
 %
-for ii = 1:ntheta_fit,
-   R_fit(:,ii) = equil_fit.Rp + x_a0_fit.' + x_an_fit*cos(equil_fit.x_fit.n*theta_fit(ii)) + x_bn_fit*sin(equil_fit.x_fit.n*theta_fit(ii));
-   Z_fit(:,ii) = equil_fit.Zp + y_a0_fit.' + y_an_fit*cos(equil_fit.y_fit.n*theta_fit(ii)) + y_bn_fit*sin(equil_fit.y_fit.n*theta_fit(ii));
-end
+rays = {wave_numeric.rays{1}};
 %
-Rmin = min(min(R_fit));
-Rmax = max(max(R_fit));
-Zmin = min(min(Z_fit));
-Zmax = max(max(Z_fit));
+legs = {'Numeric'};
 %
-figure('Name','Poloidal ray trajectory')
-pmode_ray = wave_numeric.rays{1}.spmode;
+filename = ['Fig_',id_wave];
 %
-graph1D_jd(wave_numeric.rays{1}.sx(pmode_ray) + equil_fit.Rp,wave_numeric.rays{1}.sy(pmode_ray) + equil_fit.Zp,0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin,Rmax],[Zmin,Zmax],'none','.','r',2);drawnow;hold on
-graph1D_jd(wave_numeric.rays{1}.sx(~pmode_ray) + equil_fit.Rp,wave_numeric.rays{1}.sy(~pmode_ray) + equil_fit.Zp,0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin,Rmax],[Zmin,Zmax],'none','.','b',2);drawnow;hold on
+opt.p_opt = C3POdisplay.p_opt;
+opt.ntheta_fit = 65;
+opt.nrho_fit = 15;
+opt.propvar = 1;   
 %
-graph1D_jd(R_fit,Z_fit,0,0,'','','',NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);drawnow
-graph1D_jd(R_fit',Z_fit',0,0,'R(m)','Z(m)',['Poloidal ray trajectory'],NaN,[Rmin,Rmax],[Zmin,Zmax],'-','none','b',1);hold on
-axis('equal');
-print_jd(C3POdisplay.p_opt,[id_wave,'_poloidal_trajectory']);
+graph_comp_RT_jd(rays,legs,'',filename,opt)
 %
-figure('Name','Normalized radial position')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.srho,0,0,'abs(\phi)/2\pi','\rho',['Normalized radial position'],NaN,'','','--','none','r',2);drawnow;hold on
-print_jd(C3POdisplay.p_opt,[id_wave,'_rho']);
-%
-figure('Name','Parallel wave refractive index')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.sNpar,0,0,'abs(\phi)/2\pi','N_{||}',['Parallel wave refractive index'],NaN,'','','--','none','r',2);drawnow;hold on
-print_jd(C3POdisplay.p_opt,[id_wave,'_Npar']);
-%
-figure('Name','Dispersion relation')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.sD,0,1,'abs(\phi)/2\pi','det(D)',['Dispersion relation'],NaN,'','','--','none','r',2);drawnow;hold on
-print_jd(C3POdisplay.p_opt,[id_wave,'_Disp']);
-%
-figure('Name','Normalized poloidal position')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.stheta/2/pi,0,0,'abs(\phi)/2\pi','\theta/2\pi',['Poloidal angle'],NaN,'','','--','none','r',2);drawnow;hold on
-figure('Name','Poloidal mode number')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.spmode,0,0,'abs(\phi)/2\pi','m',['Poloidal mode number'],NaN,'','','--','none','r',2);drawnow;hold on
-figure('Name','Perpendicular wave refractive index')
-graph1D_jd(abs(wave_numeric.rays{1}.sphi/2/pi),wave_numeric.rays{1}.sNperp,0,0,'abs(\phi)/2\pi','N_{perp}',['Perpendicular wave refractive index'],NaN,'','','--','none','r',2);drawnow;hold on
