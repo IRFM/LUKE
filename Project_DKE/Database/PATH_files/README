@@ -1,1 +1,7 @@
-This folder contains the LUKE paths .mat files.
+This folder contains the LUKE path scripts of the generic form path_xxx*.m, and the corresponding structure 
+is stored in file PATH_LOCAL.mat. 
+
+Note that the script load_dkepath_yp.m do the job, which recognizes automatically the hostname, the matlab version
+and the username.
+
+
