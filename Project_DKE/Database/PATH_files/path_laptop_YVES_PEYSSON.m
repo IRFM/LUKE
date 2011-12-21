@@ -24,37 +24,37 @@ if nargin == 0, luke_ref = 'LUKE';end
 macbookyves.hostname = 'macbookyves';
 macbookyves.machine = 'macbookyves';
 %
-% Profile usage (to be consistent with the profiles listed below)
+% Selected user profile (structure hostname.usernames(pathref).xxx)
 %
-macbookyves.user = 'yves';
+macbookyves.pathref = 1;
 %
-%------------------------------------ Profile Yves Peysson ------------------------------------
+%------------------------------------ Profile 1 (yves: Yves Peysson) ------------------------------------
 %
-macbookyves.yves.computer = computer;%machine type and supported OS
+macbookyves.yves(1).computer = computer;%machine type and supported OS
 %
-macbookyves.yves.luke_root = [getenv('HOME'),'/Travail/Projets/',luke_ref,'/'];
-macbookyves.yves.local_root = [getenv('HOME'),'/Travail/Projets/'];
-macbookyves.yves.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+macbookyves.yves(1).luke_root = [getenv('HOME'),'/Travail/Projets/',luke_ref,'/'];
+macbookyves.yves(1).local_root = [getenv('HOME'),'/Travail/Projets/'];
+macbookyves.yves(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-macbookyves.yves.(['mex',matlabversion]) = [macbookyves.yves.luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB',matlabversion,'/'];
-macbookyves.yves.compiler_opt.copts = '';
-macbookyves.yves.compiler_opt.helmex = '-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-macbookyves.yves.compiler_opt.fopts = ' ';
+macbookyves.yves(1).(['mex',matlabversion]) = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB',matlabversion,'/'];
+macbookyves.yves(1).compiler_opt.copts = '';
+macbookyves.yves(1).compiler_opt.helmex = '-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+macbookyves.yves(1).compiler_opt.fopts = ' ';
 %
 % MUMPS matrix solver (parallel, sequential, mex)
 %
-%macbookyves.yves.MUMPS.par = [macbookyves.yves.local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
-%macbookyves.yves.MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-macbookyves.yves.MUMPS.seq = [macbookyves.yves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-macbookyves.yves.MUMPS.seq = [macbookyves.yves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-macbookyves.yves.MUMPS.(['mex',matlabversion]) = [macbookyves.yves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB',matlabversion];%Where MUMPS matrix solver is stored (MEX function)
-macbookyves.yves.MUMPS.(['mex',matlabversion]) = [macbookyves.yves.local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB',matlabversion];%Where MUMPS matrix solver is stored (MEX function)
+%macbookyves.yves(1).MUMPS.par = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+%macbookyves.yves(1).MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+macbookyves.yves(1).MUMPS.seq = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+macbookyves.yves(1).MUMPS.seq = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+macbookyves.yves(1).MUMPS.(['mex',matlabversion]) = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB',matlabversion];%Where MUMPS matrix solver is stored (MEX function)
+macbookyves.yves(1).MUMPS.(['mex',matlabversion]) = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB',matlabversion];%Where MUMPS matrix solver is stored (MEX function)
 %
 % PETSc matrix solver (parallel, sequential)
 %
-%macbookyves.yves.PETSc.par = [macbookyves.yves.local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
-%macbookyves.yves.PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-macbookyves.yves.PETSc.seq = [macbookyves.yves.local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S_gfortran/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
+%macbookyves.yves(1).PETSc.par = [macbookyves.yves(1).local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
+%macbookyves.yves(1).PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+macbookyves.yves(1).PETSc.seq = [macbookyves.yves(1).local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S_gfortran/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
 %
 %--------------------------- Remote computing -----------------------------
 %
@@ -74,16 +74,16 @@ macbookyves.yves.PETSc.seq = [macbookyves.yves.local_root,'Packages/Bin/PETSC/pe
 %
 % MACBOOK PRO Yves (local)
 %
-macbookyves.yves.remote(1).host = {macbookyves.hostname,macbookyves.hostname};%may be empty for local host
+macbookyves.yves(1).remote(1).host = {macbookyves.hostname,macbookyves.hostname};%may be empty for local host
 [~,nproc] = unix('sysctl -n hw.ncpu');nproc = nproc(1:end-1);
-macbookyves.yves.remote(1).nproc = nproc;%number of cpu
-macbookyves.yves.remote(1).matlabroot = ['/Applications/MATLAB_',matlabrelease,'.app/bin/'];%matlab application
-macbookyves.yves.remote(1).luke_root = macbookyves.yves.luke_root;%local host LUKE root
-macbookyves.yves.remote(1).prefdir = [getenv('MATLAB_PATH'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir
-macbookyves.yves.remote(1).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
-macbookyves.yves.remote(1).mem = [];
-macbookyves.yves.remote(1).get_jobid = {'jobIdentifier = ',';'};%
-macbookyves.yves.remote(1).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+macbookyves.yves(1).remote(1).nproc = nproc;%number of cpu
+macbookyves.yves(1).remote(1).matlabroot = ['/Applications/MATLAB_',matlabrelease,'.app/bin/'];%matlab application
+macbookyves.yves(1).remote(1).luke_root = macbookyves.yves(1).luke_root;%local host LUKE root
+macbookyves.yves(1).remote(1).prefdir = [getenv('MATLAB_PATH'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir
+macbookyves.yves(1).remote(1).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
+macbookyves.yves(1).remote(1).mem = [];
+macbookyves.yves(1).remote(1).get_jobid = {'jobIdentifier = ',';'};%
+macbookyves.yves(1).remote(1).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
 %
 % CEPHEE CEA cluster
 %
@@ -92,26 +92,15 @@ HOST = 'cephee15.intra.cea.fr';
 HOME = '/home/sccp/gsem/peysson';
 NPROC = 28;
 %
-display(['Check if remote access to ',USER,'@',HOST,' is working.'])
-display('(If the process is blocked, type CTRL-C to escape)');
-[remote_access,~] = unix(['ssh ',USER,'@',HOST,' ''ls''']);
-if ~remote_access,%test is the remote machine is working with ssh
-    [~,HOME] = unix(['ssh ',USER,'@',HOST,' pwd']);
-    HOME = HOME(1:end-1);%remove extra term    
-    disp(['--> The remote configuation ',USER,'@',HOST,' is available.']);
-else
-    disp(['WARNING: The remote configuation ',USER,'@',HOST,' is not available.']);
-end
-%
-macbookyves.yves.remote(2).host = HOST;
-macbookyves.yves.remote(2).nproc = NPROC;
-macbookyves.yves.remote(2).luke_root = [HOME,'/',luke_ref,'/'];
-macbookyves.yves.remote(2).matlabroot = '';
-macbookyves.yves.remote(2).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
-macbookyves.yves.remote(2).mem = {',mem=','mb','7000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
-macbookyves.yves.remote(2).get_jobid = {'','.cephee'};%str_before,str_after
-macbookyves.yves.remote(2).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
-macbookyves.yves.remote(2).(getenv('USER')) = USER;
+macbookyves.yves(1).remote(2).host = HOST;
+macbookyves.yves(1).remote(2).nproc = NPROC;
+macbookyves.yves(1).remote(2).luke_root = [HOME,'/',luke_ref,'/'];
+macbookyves.yves(1).remote(2).matlabroot = '';
+macbookyves.yves(1).remote(2).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
+macbookyves.yves(1).remote(2).mem = {',mem=','mb','7000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
+macbookyves.yves(1).remote(2).get_jobid = {'','.cephee'};%str_before,str_after
+macbookyves.yves(1).remote(2).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+macbookyves.yves(1).remote(2).(getenv('USER')) = USER;
 %
 % SATURNE CEA cluster
 %
@@ -120,26 +109,14 @@ HOST = 'saturne2.partenaires.cea.fr';
 HOME = '/home/YP105119';
 NPROC = 12;
 %
-display(['Check if remote access to ',USER,'@',HOST,' is working.']);
-display('(If the process is blocked, type CTRL-C to escape)');
-[remote_access,~] = unix(['ssh ',USER,'@',HOST,' ''ls''']);
-if ~remote_access,,%test is the remote machine is working
-    [~,HOME] = unix(['ssh ',USER,'@',HOST,' pwd']);
-    HOME = HOME(1:end-1);%remove extra term
-    %
-    disp(['--> The remote configuation ',USER,'@',HOST,' is available.']);
-else
-    disp(['WARNING: The remote configuation ',USER,'@',HOST,' is not available.']);
-end
-%
-macbookyves.yves.remote(3).host = HOST;
-macbookyves.yves.remote(3).nproc = NPROC;
-macbookyves.yves.remote(3).luke_root = [HOME,'/',luke_ref,'/'];
-macbookyves.yves.remote(3).matlabroot = '';
-macbookyves.yves.remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-macbookyves.yves.remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
-macbookyves.yves.remote(3).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
-macbookyves.yves.remote(3).(getenv('USER')) = USER;
+macbookyves.yves(1).remote(3).host = HOST;
+macbookyves.yves(1).remote(3).nproc = NPROC;
+macbookyves.yves(1).remote(3).luke_root = [HOME,'/',luke_ref,'/'];
+macbookyves.yves(1).remote(3).matlabroot = '';
+macbookyves.yves(1).remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+macbookyves.yves(1).remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
+macbookyves.yves(1).remote(3).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+macbookyves.yves(1).remote(3).(getenv('USER')) = USER;
 %
 % MACPRO yves
 %
@@ -171,27 +148,14 @@ HOME = '/Users/yvespeysson';
 APPLICATIONS = 'MATLAB_R2011b';
 NPROC = 12;
 %
-display(['Check if remote access to ',USER,'@',HOST,' is working.']);
-display('(If the process is blocked, type CTRL-C to escape)');
-[remote_access,~] = unix(['ssh ',USER,'@',HOST,' ''ls''']);
-if ~remote_access,,%test is the remote machine is working
-    [~,HOME] = unix(['ssh ',USER,'@',HOST,' pwd']);
-    HOME = HOME(1:end-1);%remove extra term
-    [~,APPLICATIONS] = unix(['ssh ',USER,'@',HOST,' ls /Applications']);
-    [~,NPROC] = unix(['ssh ',USER,'@',HOST,' sysctl -n hw.ncpu']);NPROC = NPROC(1:end-1);%number of cpu
-    %
-    disp(['--> The remote configuation ',USER,'@',HOST,' is available.']);
-else
-    disp(['WARNING: The remote configuation ',USER,'@',HOST,' is not available.']);
-end
+macbookyves.yves(1).remote(4).host = {HOST,HOST};
+macbookyves.yves(1).remote(4).nproc = NPROC;
+macbookyves.yves(1).remote(4).luke_root = [HOME,'/Travail/Projets/',luke_ref,'/'];
+macbookyves.yves(1).remote(4).matlabroot = ['/Applications/MATLAB_',APPLICATIONS(strfind(APPLICATIONS,'MATLAB')+7:strfind(APPLICATIONS,'MATLAB')+12),'.app/bin/'];
+macbookyves.yves(1).remote(4).prefdir = [HOME,'/.matlab/',APPLICATIONS(strfind(APPLICATIONS,'MATLAB')+7:strfind(APPLICATIONS,'MATLAB')+12)];
+macbookyves.yves(1).remote(4).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
+macbookyves.yves(1).remote(4).mem = [];
+macbookyves.yves(1).remote(4).get_jobid = {'jobIdentifier = ',';'};%
+macbookyves.yves(1).remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+macbookyves.yves(1).remote(4).(getenv('USER')) = USER;
 %
-macbookyves.yves.remote(4).host = {HOST,HOST};
-macbookyves.yves.remote(4).nproc = NPROC;
-macbookyves.yves.remote(4).luke_root = [HOME,'/Travail/Projets/',luke_ref,'/'];
-macbookyves.yves.remote(4).matlabroot = ['/Applications/MATLAB_',APPLICATIONS(strfind(APPLICATIONS,'MATLAB')+7:strfind(APPLICATIONS,'MATLAB')+12),'.app/bin/'];
-macbookyves.yves.remote(4).prefdir = [HOME,'/.matlab/',APPLICATIONS(strfind(APPLICATIONS,'MATLAB')+7:strfind(APPLICATIONS,'MATLAB')+12)];
-macbookyves.yves.remote(4).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
-macbookyves.yves.remote(4).mem = [];
-macbookyves.yves.remote(4).get_jobid = {'jobIdentifier = ',';'};%
-macbookyves.yves.remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
-macbookyves.yves.remote(4).(getenv('USER')) = USER;
