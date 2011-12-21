@@ -22,12 +22,13 @@ flagconfig = 0;
 [~,hostname] = unix('hostname');hostname = hostname(1:end-1);%remove extra term
 %
 for ipath = 1:length(list_path),
-    eval(['dkepath_temp = ',list_path(ipath).name(1:end-2),'(''',luke_ref,''')']);
+    eval(['dkepath_temp = ',list_path(ipath).name(1:end-2),'(''',luke_ref,''');']);
     if strcmp(dkepath_temp.hostname,hostname) && strcmp(getenv('USER'),dkepath_temp.user),
         dkepath.hostname.(dkepath_temp.machine) = dkepath_temp.hostname;
         dkepath.(dkepath_temp.machine) = dkepath_temp.(dkepath_temp.user);
         dkepath = rmfield(dkepath,'default');%useless since a specific one is found.
         flagconfig = 1;
+        break
     end
 end
 %
