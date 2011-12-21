@@ -39,6 +39,9 @@ if nargin < 4,
     if isempty(display_mode),display_mode = 1;end
 end
 %
+[lukeversion,matver] = LUKEversion_jd;
+if (matver < 713),color_mode = '';end
+%
 if mode == 1,
 	a1 = [];
 	sa = size(a);
