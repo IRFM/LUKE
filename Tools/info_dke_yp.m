@@ -40,7 +40,7 @@ if nargin < 4,
 end
 %
 [lukeversion,matver] = LUKEversion_jd;
-if (matver < 713),color_mode = '';end
+if str2num(matver) < 713,color_mode = '';end
 %
 if mode == 1,
 	a1 = [];
