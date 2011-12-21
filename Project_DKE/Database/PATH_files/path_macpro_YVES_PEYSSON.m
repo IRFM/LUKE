@@ -101,7 +101,7 @@ macproyves.yvespeysson(1).PARDISO.(['mex',matlabversion]) = [macproyves.yvespeys
 % attack, but on a personal computer, this risk is limited.
 %
 macproyves.yvespeysson(1).remote(1).host = {macproyves.hostname,macproyves.hostname};%may be empty for local host
-[~,nproc] = unix('sysctl -n hw.ncpu');nproc = nproc(1:end-1);
+[dummy,nproc] = unix('sysctl -n hw.ncpu');nproc = nproc(1:end-1);
 macproyves.yvespeysson(1).remote(1).nproc = nproc;%number of cpu
 macproyves.yvespeysson(1).remote(1).matlabroot = ['/Applications/MATLAB_',matlabrelease,'.app/bin/'];%matlab application
 macproyves.yvespeysson(1).remote(1).luke_root = macproyves.yvespeysson(1).luke_root;%local host LUKE root

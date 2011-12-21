@@ -72,7 +72,7 @@ macbookyves.yves(1).PETSc.seq = [macbookyves.yves(1).local_root,'Packages/Bin/PE
 % MACBOOK PRO Yves (local)
 %
 macbookyves.yves(1).remote(1).host = {macbookyves.hostname,macbookyves.hostname};%may be empty for local host
-[~,nproc] = unix('sysctl -n hw.ncpu');nproc = nproc(1:end-1);
+[dummy,nproc] = unix('sysctl -n hw.ncpu');nproc = nproc(1:end-1);
 macbookyves.yves(1).remote(1).nproc = nproc;%number of cpu
 macbookyves.yves(1).remote(1).matlabroot = ['/Applications/MATLAB_',matlabrelease,'.app/bin/'];%matlab application
 macbookyves.yves(1).remote(1).luke_root = macbookyves.yves(1).luke_root;%local host LUKE root
