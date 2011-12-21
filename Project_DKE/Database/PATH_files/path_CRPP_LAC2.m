@@ -17,7 +17,7 @@ function [crpppc70] = path_CRPP_PC70(luke_ref)
 %
 if nargin == 0, luke_ref = 'LUKE';end
 %
-[~,matlabversion,matlabrelease] = LUKEversion_jd;
+[dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
 crpppc70.hostname = 'lac2';
 crpppc70.machine = 'crpppc70';

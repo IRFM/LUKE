@@ -17,9 +17,7 @@ function [sunipp] = path_IPP_SUN(luke_ref)
 %
 if nargin == 0, luke_ref = 'LUKE';end
 %
-[~,matlabversion,matlabrelease] = LUKEversion_jd;
-%
-[~,hostname] = unix('hostname');hostname = hostname(1:end-1);%remove extra term
+[dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
 sunipp.hostname = 'Sun1.ipp.cas.cz';
 sunipp.machine = 'sunipp';

@@ -19,7 +19,7 @@ function [dkepath] = load_dkepath_yp(dkepath,luke_ref)
 list_path = dir('Project_DKE/Database/PATH_files/path_*.m');
 flagconfig = 0;
 %
-[~,hostname] = unix('hostname');hostname = hostname(1:end-1);%remove extra term
+[dummy,hostname] = unix('hostname');hostname = hostname(1:end-1);%remove extra term
 %
 for ipath = 1:length(list_path),
     eval(['dkepath_temp = ',list_path(ipath).name(1:end-2),'(''',luke_ref,''');']);

@@ -17,7 +17,7 @@ function [ipr] = path_IPR(luke_ref)
 %
 if nargin == 0, luke_ref = 'LUKE';end
 %
-[~,matlabversion,matlabrelease] = LUKEversion_jd;
+[dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
 ipr.hostname = 'matlab2';
 ipr.machine = 'matlab2';

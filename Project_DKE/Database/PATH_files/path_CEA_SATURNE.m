@@ -17,9 +17,7 @@ function [saturne] = path_SATURNE(luke_ref)
 %
 if nargin == 0, luke_ref = 'LUKE';end
 %
-[~,matlabversion,matlabrelease] = LUKEversion_jd;
-%
-[~,hostname] = unix('hostname');hostname = hostname(1:end-1);%remove extra term
+[dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
 saturne.hostname = 'saturne';
 saturne.machine = 'saturne';

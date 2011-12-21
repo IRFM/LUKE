@@ -17,7 +17,7 @@ function [efdaitm] = path_EFDA_ITM(luke_ref)
 %
 if nargin == 0, luke_ref = 'LUKE';end
 %
-[~,matlabversion,matlabrelease] = LUKEversion_jd;
+[dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
 efdaitm.hostname = 'enea144.efda-itm.eu';
 efdaitm.machine = 'efdaitm';

@@ -17,7 +17,7 @@ function [laptopjoan] = path_laptop_JOAN_DECKER(luke_ref)
 %
 if nargin == 0, luke_ref = 'LUKE';end
 %
-[~,matlabversion,matlabrelease] = LUKEversion_jd;
+[dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
 laptopjoan.hostname = 'CADTS-0096';%WARNING: for laptop, may change with connection status.
 laptopjoan.machine = 'laptopjoan';
