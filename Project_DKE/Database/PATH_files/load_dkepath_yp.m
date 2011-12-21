@@ -23,19 +23,27 @@ flagconfig = 0;
 %
 for ipath = 1:length(list_path),
     eval(['dkepath_temp = ',list_path(ipath).name(1:end-2),'(''',luke_ref,''');']);
-    if strcmp(dkepath_temp.hostname,hostname) && strcmp(getenv('USER'),dkepath_temp.user),
-        dkepath.hostname.(dkepath_temp.machine) = dkepath_temp.hostname;
-        dkepath.(dkepath_temp.machine) = dkepath_temp.(dkepath_temp.user);
-        dkepath = rmfield(dkepath,'default');%useless since a specific one is found.
-        flagconfig = 1;
-        break
+    fnames = fieldnames(dkepath_temp);
+    for ifnames = 1:length(fnames),
+        if strcmp(dkepath_temp.hostname,hostname) && strcmp(getenv('USER'),fnames(ifnames)) && ~flagconfig,
+            dkepath.hostname.(dkepath_temp.machine) = dkepath_temp.hostname;
+            if length(dkepath_temp.([fnames{ifnames}])) > 1,%if several path for the same user
+                dkepath.(dkepath_temp.machine) = dkepath_temp.([fnames{ifnames}])(dkepath_temp.pathref);
+            else
+                dkepath.(dkepath_temp.machine) = dkepath_temp.([fnames{ifnames}]);
+            end
+            dkepath = rmfield(dkepath,'default');%useless since a specific one is found.
+            flagconfig = 1;
+        end
     end
 end
 %
 if flagconfig == 0,
-    disp(['WARNING: no specific configuration found for user ''',dkepath_temp.user,''' on machine ''',dkepath_temp.machine,'''']);
+    disp('------------------------------------------------------');
+    info_dke_yp(1,['WARNING: no specific configuration found for user ''',getenv('USER'),''' on host ''',hostname,''''],'','Green');
 else
-    disp(['Configuration for user ''',dkepath_temp.user,''' on machine ''',dkepath_temp.machine,''' well loaded.']);
+    disp('------------------------------------------------------');
+    info_dke_yp(1,['Configuration for user ''',getenv('USER'),''' on host ''',hostname,''' well loaded.'],'','Red');
 end
 %
 
