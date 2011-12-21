@@ -1,5 +1,9 @@
 This folder contains the LUKE path scripts of the generic form path_xxx*.m, and the corresponding structure 
-is stored in file PATH_LOCAL.mat. Here, 'xxx' is the name of the script, with no operand of Matlab (don't use +,-,etc)
+is stored in file PATH_LOCAL.mat. Here, 'xxx' is the name of the script, with no operand of Matlab 
+(don't use +,-,etc)
+
+The name 'xxx' may be freely chosen, but for sake of clarity, it is recommanded to use the follwing rule
+xxx = INSTITUTIONNAME_MACHINENAME
 
 Note that the script load_dkepath_yp.m do the job, which recognizes automatically the hostname, the matlab version
 and the username. The structure is defined as follows:
