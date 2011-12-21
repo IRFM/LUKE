@@ -25,7 +25,7 @@ for ipath = 1:length(list_path),
     eval(['dkepath_temp = ',list_path(ipath).name(1:end-2),'(''',luke_ref,''');']);
     fnames = fieldnames(dkepath_temp);
     for ifnames = 1:length(fnames),
-        if strfind(dkepath_temp.hostname,hostname) & strcmp(getenv('USER'),fnames(ifnames)) & ~flagconfig,
+        if strfind(hostname,dkepath_temp.hostname) & strcmp(getenv('USER'),fnames(ifnames)) & ~flagconfig,
             dkepath.hostname.(dkepath_temp.machine) = dkepath_temp.hostname;
             if length(dkepath_temp.([fnames{ifnames}])) > 1,%if several path for the same user
                 dkepath.(dkepath_temp.machine) = dkepath_temp.([fnames{ifnames}])(dkepath_temp.path_profile);
