@@ -23,14 +23,13 @@ if nargin == 0, luke_ref = 'LUKE';end
 %
 macproyves.hostname = 'macproyves';
 macproyves.machine = 'macproyves';
+macproyves.computer = computer;%machine type and supported OS
 %
-% Selected user profile (structure hostname.usernames(pathref).xxx)
+% Selected user profile (structure hostname.usernames(path_profile).xxx)
 %
-macproyves.pathref = 1;
+macproyves.path_profile = 1;
 %
-%------------------------------------ Profile Yves Peysson ------------------------------------
-%
-macproyves.yvespeysson(1).computer = computer;%machine type and supported OS
+%------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %
 macproyves.yvespeysson(1).luke_root = [getenv('HOME'),'/Travail/Projets/',luke_ref,'/'];
 macproyves.yvespeysson(1).local_root = [getenv('HOME'),'/Shared/'];

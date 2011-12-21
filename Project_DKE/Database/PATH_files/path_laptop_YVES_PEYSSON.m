@@ -13,7 +13,7 @@ function [macbookyves] = path_laptop_YVES_PEYSSON(luke_ref)
 %
 %   Warning: none
 %
-% by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
+% By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
 if nargin == 0, luke_ref = 'LUKE';end
 %
@@ -23,14 +23,13 @@ if nargin == 0, luke_ref = 'LUKE';end
 %
 macbookyves.hostname = 'macbookyves';
 macbookyves.machine = 'macbookyves';
+macbookyves.computer = computer;%machine type and supported OS
 %
-% Selected user profile (structure hostname.usernames(pathref).xxx)
+% Selected user profile (structure hostname.usernames(path_profile).xxx)
 %
-macbookyves.pathref = 1;
+macbookyves.path_profile = 1;
 %
-%------------------------------------ Profile 1 (yves: Yves Peysson) ------------------------------------
-%
-macbookyves.yves(1).computer = computer;%machine type and supported OS
+%------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %
 macbookyves.yves(1).luke_root = [getenv('HOME'),'/Travail/Projets/',luke_ref,'/'];
 macbookyves.yves(1).local_root = [getenv('HOME'),'/Travail/Projets/'];
