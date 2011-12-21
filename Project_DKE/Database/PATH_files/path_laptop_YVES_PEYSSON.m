@@ -36,28 +36,24 @@ macbookyves.(getenv('USER'))(1).luke_root = [getenv('HOME'),'/Travail/Projets/',
 macbookyves.(getenv('USER'))(1).local_root = [getenv('HOME'),'/Travail/Projets/'];
 macbookyves.(getenv('USER'))(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-macbookyves.(getenv('USER'))(1).mex713 = [macbookyves.(getenv('USER'))(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB',matlabversion,'/'];
+macbookyves.(getenv('USER'))(1).(['mex',matlabversion]) = [macbookyves.(getenv('USER'))(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB',matlabversion,'/'];
 macbookyves.(getenv('USER'))(1).compiler_opt.copts = '';
 macbookyves.(getenv('USER'))(1).compiler_opt.helmex = '-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 macbookyves.(getenv('USER'))(1).compiler_opt.fopts = ' ';
 %
 % MUMPS matrix solver (parallel, sequential, mex)
 %
-%macbookyves.yves(1).MUMPS.par = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
-%
+%macbookyves.(getenv('USER'))(1).MUMPS.par = [macbookyves.(getenv('USER'))(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+%macbookyves.(getenv('USER'))(1).MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 macbookyves.(getenv('USER'))(1).MUMPS.seq = [macbookyves.(getenv('USER'))(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 macbookyves.(getenv('USER'))(1).MUMPS.seq = [macbookyves.(getenv('USER'))(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-%
 macbookyves.(getenv('USER'))(1).MUMPS.(['mex',matlabversion]) = [macbookyves.(getenv('USER'))(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB',matlabversion];%Where MUMPS matrix solver is stored (MEX function)
 macbookyves.(getenv('USER'))(1).MUMPS.(['mex',matlabversion]) = [macbookyves.(getenv('USER'))(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB',matlabversion];%Where MUMPS matrix solver is stored (MEX function)
 %
-%macbookyves.yves(1).MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-%
 % PETSc matrix solver (parallel, sequential)
 %
-%macbookyves.yves(1).PETSc.par = [macbookyves.yves(1).local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
-%macbookyves.yves(1).PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-%
+%macbookyves.(getenv('USER'))(1).PETSc.par = [macbookyves.(getenv('USER'))(1).local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
+%macbookyves.(getenv('USER'))(1).PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 macbookyves.(getenv('USER'))(1).PETSc.seq = [macbookyves.(getenv('USER'))(1).local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S_gfortran/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
 %
 %--------------------------- Remote computing -----------------------------
