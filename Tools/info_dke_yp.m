@@ -1,23 +1,42 @@
-function [] = info_dke_yp(mode,a,display_mode)
+function [] = info_dke_yp(mode,a,display_mode,color_mode)
 %
-%	Customized message display
+%	Customized message display (may be colorized, with cprintf.m)
 %
 %	Input:
 %
 %		- mode: type of message [1,1]
-%		- a: the message (string) [1,m]
-%		- display_mode: if display_mode == 0, no display
+%          (1): --------------------------- Essai de texte ---------------------------
+%          (2): -------> message
+%          (3): message...
+%               -----------------
+%          (4):  - message
+%          (5): -----------------
+%               message
+%               -----------------
+%          (6): WARNING: message
+%		- a: the text (string) [1,m]
+%		- display_mode: yes -> 1, no -> 0 [1,1]
+%         (default: 0)
+%       - color_mode: 'Black','Cyan','Magenta','Blue','Green','Red','Yellow','White' (string) [1,m]
+%         (default: 'Black' if empty)
 %
 %	Output: none
 %
-% By Yves Peysson (CEA-IRFM, yves.peysson@cea.fr) and Joan Decker (CEA-IRFM, joan.decker@cea.fr)
+%   Warning: none
 %
-if nargin == 3 && display_mode == 0,
-    return
-end
+% By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
+%
 if nargin < 2,
 	info_dke_yp(2,'Wrong number of input arguments for info_dke_yp');
 	return
+end
+if nargin < 3,
+    display_mode = 1;
+    color_mode = '';
+end
+if nargin < 4,
+    color_mode = '';
+    if isempty(display_mode),display_mode = 1;end
 end
 %
 if mode == 1,
@@ -32,30 +51,65 @@ if mode == 1,
  		a2 = a1;
 	else
  		a2 = [a1,'-'];
-	end
-	disp([a1,' ',a,' ',a2]);
+    end
+    %
+    if isempty(color_mode)
+        disp([a1,' ',a,' ',a2]);
+    else
+        cprintf(color_mode,[a1,' ',a,' ',a2,'\n']);
+    end
 elseif mode == 2,
-	disp(['-----> ',a]);
+    if isempty(color_mode)
+        disp(['-------> ',a]);
+    else
+        cprintf(color_mode,['-------> ',a,'\n']);
+    end
 elseif mode == 3,
 	ttt = [];
 	sa = size(a);
-	disp([a,'...']);
+    if isempty(color_mode)
+        disp([a,'...']);
+    else
+        cprintf(color_mode,[a,'...','\n']);
+    end
 	for i = 1:sa(2)+10,
 		ttt= [ttt,'-'];
-	end
-	disp(ttt);
+    end
+    %
+    disp(ttt);
 elseif mode == 4,
 	ttt = [];
 	sa = size(a);
-	disp([' - ',a]);
-	disp(ttt);
+    if isempty(color_mode)
+        disp([' - ',a]);
+    else
+        cprintf(color_mode,[' - ',a,'\n']);
+    end
+    if isempty(color_mode)
+        disp(ttt);
+    else
+        cprintf(color_mode,[ttt,'\n']);
+    end
 elseif mode == 5,
 	ttt = [];
 	sa = size(a);
 	for i = 1:sa(2)+10,
 		ttt= [ttt,'-'];
     end
+    %
     disp(ttt);
-    disp(a);
+    %
+    if isempty(color_mode)
+        disp(a);
+    else
+        cprintf(color_mode,[a,'\n']);
+    end
+    %
     disp(ttt);
+elseif mode == 6,
+    if isempty(color_mode)
+        disp(['WARNING: ',a]);
+    else
+        cprintf(color_mode,['WARNING: ',a,'\n']);
+    end
 end
