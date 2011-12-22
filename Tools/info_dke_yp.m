@@ -5,6 +5,7 @@ function [] = info_dke_yp(mode,a,display_mode,color_mode)
 %	Input:
 %
 %		- mode: type of message [1,1]
+%          (0): message
 %          (1): --------------------------- Essai de texte ---------------------------
 %          (2): -------> message
 %          (3): message...
@@ -14,6 +15,7 @@ function [] = info_dke_yp(mode,a,display_mode,color_mode)
 %               message
 %               -----------------
 %          (6): WARNING: message
+%          (7): ERROR: message
 %		- a: the text (string) [1,m]
 %		- display_mode: yes -> 1, no -> 0 [1,1]
 %         (default: 0)
@@ -42,7 +44,13 @@ end
 [lukeversion,matver] = LUKEversion_jd;
 if str2num(matver) < 713,color_mode = '';end
 %
-if mode == 1,
+if mode == 0,
+    if isempty(color_mode)
+        disp(a);
+    else
+        cprintf(color_mode,[a,'\n']);
+    end 
+elseif mode == 1,
 	a1 = [];
 	sa = size(a);
 	nmax = 68; 
@@ -114,5 +122,11 @@ elseif mode == 6,
         disp(['WARNING: ',a]);
     else
         cprintf(color_mode,['WARNING: ',a,'\n']);
+    end
+elseif mode == 7,
+    if isempty(color_mode)
+        disp(['ERROR: ',a]);
+    else
+        cprintf(color_mode,['ERROR: ',a,'\n']);
     end
 end
