@@ -101,15 +101,30 @@ macproyves.yvespeysson(1).PARDISO.(['mex',matlabversion]) = [macproyves.yvespeys
 macproyves.yvespeysson(1).remote(1).host = {macproyves.hostname,macproyves.hostname};%may be empty for local host
 [dummy,nproc] = unix('sysctl -n hw.ncpu');nproc = nproc(1:end-1);
 macproyves.yvespeysson(1).remote(1).nproc = nproc;%number of cpu
-macproyves.yvespeysson(1).remote(1).matlabroot = ['/Applications/MATLAB_',matlabrelease,'.app/bin/'];%matlab application
+macproyves.yvespeysson(1).remote(1).matlabroot = [getenv('MATLAB_PATH'),'/bin/'];%matlab application
 macproyves.yvespeysson(1).remote(1).luke_root = macproyves.yvespeysson(1).luke_root;%local host LUKE root
-macproyves.yvespeysson(1).remote(1).prefdir = [getenv('MATLAB_PATH'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir
-macproyves.yvespeysson(1).remote(1).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
+macproyves.yvespeysson(1).remote(1).prefdir = [getenv('HOME'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir
+macproyves.yvespeysson(1).remote(1).cmd = {'xgrid -h ',' -p ',' -job batch ','xgrid_batch_matlab_'};%
 macproyves.yvespeysson(1).remote(1).mem = [];
 macproyves.yvespeysson(1).remote(1).get_jobid = {'jobIdentifier = ',';'};%
 macproyves.yvespeysson(1).remote(1).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
-
-
-
-
+macproyves.yvespeysson(1).remote(1).password = {'ghm93'};
+macproyves.yvespeysson(1).remote(1).(getenv('USER')) = (getenv('USER'));
+%
+% SATURNE CEA cluster
+%
+USER = 'YP105119';
+HOST = 'saturne1.partenaires.cea.fr';
+HOME = '/home/YP105119';
+NPROC = 12;
+%
+macbookyves.yves(1).remote(2).host = {HOST};
+macbookyves.yves(1).remote(2).nproc = NPROC;
+macbookyves.yves(1).remote(2).luke_root = [HOME,'/',luke_ref,'/'];
+macbookyves.yves(1).remote(2).matlabroot = '';
+macbookyves.yves(1).remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+macbookyves.yves(1).remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
+macbookyves.yves(1).remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+macbookyves.yves(1).remote(2).password = {''};
+macbookyves.yves(1).remote(2).(getenv('USER')) = USER;
 

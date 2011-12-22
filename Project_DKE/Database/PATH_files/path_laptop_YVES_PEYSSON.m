@@ -74,13 +74,15 @@ macbookyves.yves(1).PETSc.seq = [macbookyves.yves(1).local_root,'Packages/Bin/PE
 macbookyves.yves(1).remote(1).host = {macbookyves.hostname,macbookyves.hostname};%may be empty for local host
 [dummy,nproc] = unix('sysctl -n hw.ncpu');nproc = nproc(1:end-1);
 macbookyves.yves(1).remote(1).nproc = nproc;%number of cpu
-macbookyves.yves(1).remote(1).matlabroot = ['/Applications/MATLAB_',matlabrelease,'.app/bin/'];%matlab application
+macbookyves.yves(1).remote(1).matlabroot = [getenv('MATLAB_PATH'),'/bin/'];%matlab application
 macbookyves.yves(1).remote(1).luke_root = macbookyves.yves(1).luke_root;%local host LUKE root
-macbookyves.yves(1).remote(1).prefdir = [getenv('MATLAB_PATH'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir
-macbookyves.yves(1).remote(1).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
+macbookyves.yves(1).remote(1).prefdir = [getenv('HOME'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir
+macbookyves.yves(1).remote(1).cmd = {'xgrid -h ',' -p ',' -job batch ','xgrid_batch_matlab_'};%
 macbookyves.yves(1).remote(1).mem = [];
 macbookyves.yves(1).remote(1).get_jobid = {'jobIdentifier = ',';'};%
 macbookyves.yves(1).remote(1).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+macbookyves.yves(1).remote(1).password = {'ghm93'};
+macbookyves.yves(1).remote(1).(getenv('USER')) = (getenv('USER'));
 %
 % CEPHEE CEA cluster
 %
@@ -89,7 +91,7 @@ HOST = 'cephee15.intra.cea.fr';
 HOME = '/home/sccp/gsem/peysson';
 NPROC = 28;
 %
-macbookyves.yves(1).remote(2).host = HOST;
+macbookyves.yves(1).remote(2).host = {HOST};
 macbookyves.yves(1).remote(2).nproc = NPROC;
 macbookyves.yves(1).remote(2).luke_root = [HOME,'/',luke_ref,'/'];
 macbookyves.yves(1).remote(2).matlabroot = '';
@@ -97,22 +99,24 @@ macbookyves.yves(1).remote(2).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=
 macbookyves.yves(1).remote(2).mem = {',mem=','mb','7000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
 macbookyves.yves(1).remote(2).get_jobid = {'','.cephee'};%str_before,str_after
 macbookyves.yves(1).remote(2).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
+macbookyves.yves(1).remote(2).password = {''};
 macbookyves.yves(1).remote(2).(getenv('USER')) = USER;
 %
 % SATURNE CEA cluster
 %
 USER = 'YP105119';
-HOST = 'saturne2.partenaires.cea.fr';
+HOST = 'saturne1.partenaires.cea.fr';
 HOME = '/home/YP105119';
 NPROC = 12;
 %
-macbookyves.yves(1).remote(3).host = HOST;
+macbookyves.yves(1).remote(3).host = {HOST};
 macbookyves.yves(1).remote(3).nproc = NPROC;
 macbookyves.yves(1).remote(3).luke_root = [HOME,'/',luke_ref,'/'];
 macbookyves.yves(1).remote(3).matlabroot = '';
 macbookyves.yves(1).remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
 macbookyves.yves(1).remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
 macbookyves.yves(1).remote(3).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+macbookyves.yves(1).remote(3).password = {''};
 macbookyves.yves(1).remote(3).(getenv('USER')) = USER;
 %
 % MACPRO yves
@@ -148,11 +152,12 @@ NPROC = 12;
 macbookyves.yves(1).remote(4).host = {HOST,HOST};
 macbookyves.yves(1).remote(4).nproc = NPROC;
 macbookyves.yves(1).remote(4).luke_root = [HOME,'/Travail/Projets/',luke_ref,'/'];
-macbookyves.yves(1).remote(4).matlabroot = ['/Applications/MATLAB_',APPLICATIONS(strfind(APPLICATIONS,'MATLAB')+7:strfind(APPLICATIONS,'MATLAB')+12),'.app/bin/'];
+macbookyves.yves(1).remote(4).matlabroot = ['/Applications/',APPLICATIONS,'.app/bin/'];
 macbookyves.yves(1).remote(4).prefdir = [HOME,'/.matlab/',APPLICATIONS(strfind(APPLICATIONS,'MATLAB')+7:strfind(APPLICATIONS,'MATLAB')+12)];
-macbookyves.yves(1).remote(4).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
+macbookyves.yves(1).remote(4).cmd = {'xgrid -h ',' -p ',' -job batch ','xgrid_batch_matlab_'};%
 macbookyves.yves(1).remote(4).mem = [];
 macbookyves.yves(1).remote(4).get_jobid = {'jobIdentifier = ',';'};%
 macbookyves.yves(1).remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+macbookyves.yves(1).remote(4).password = 'ghm93';
 macbookyves.yves(1).remote(4).(getenv('USER')) = USER;
 %
