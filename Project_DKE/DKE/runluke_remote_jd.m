@@ -41,19 +41,21 @@ xgridsearch = strfind(remotecmd,'xgrid');
 remotehost = remote.host;
 remoteluke_root = remote.luke_root;
 remotefields = fieldnames(remote);
+remotepassword = remote.password;
 %
 if ~isempty(xgridsearch),
     user_root = ['/Users/',remote.(remotefields{end}),'/'];
 end
 %
-if isfield(remote,'mem') && ~isempty(remote.mem),% memory allocation if applicable
-    if isempty(transpfaste),% no transport
-        remotemem = [remote.mem{1},remote.mem{3},remote.mem{2}];
-    else% with transport
-        remotemem = [remote.mem{1},remote.mem{4},remote.mem{2}];
+remotemem = '';
+if isfield(remote,'mem'),% memory allocation if applicable
+    if ~isempty(remote.mem)
+        if isempty(transpfaste),% no transport
+            remotemem = [remote.mem{1},remote.mem{3},remote.mem{2}];
+        else% with transport
+            remotemem = [remote.mem{1},remote.mem{4},remote.mem{2}];
+        end
     end
-else
-    remotemem = '';
 end
 remoteget_jobid = remote.get_jobid;
 %
@@ -65,7 +67,7 @@ end
 %
 logname(double(logname) == 10) = [];
 %
-if isfield(remote,logname) && ~isempty(remote.(logname)),
+if isfield(remote,logname),
     remotelogname = remote.(logname);
 else
     remotelogname = logname;
@@ -81,9 +83,9 @@ if ~isempty(remotehost),
         %
         [res,err] = unix(['scp ',save_id,' ',remotelogname,'@',remotehost{2},':']);
     else
-        disp(['    --> Copying run file to remote host ',remotehost,' as user ',remotelogname,' ...'])
+        disp(['    --> Copying run file to remote host ',remotehost{1},' as user ',remotelogname,' ...'])
     %
-    [res,err] = unix(['scp ',save_id,' ',remotelogname,'@',remotehost,':']);
+    [res,err] = unix(['scp ',save_id,' ',remotelogname,'@',remotehost{1},':']);
     end
     %
     delete(save_id);
@@ -109,7 +111,7 @@ if ~isempty(remotehost),
 end
 %
 if ~isempty(xgridsearch),
-    disp(['    --> Starting run with command ',remotecmd{1},remotehost{1},remotecmd{2},user_root,remotecmd{3},' ...'])
+    disp(['    --> Starting run with command ',remotecmd{1},remotehost{1},remotecmd{2},'******',remotecmd{3},user_root,remotecmd{4},' ...'])
 else
     disp(['    --> Starting run with command ',remotecmd,' ...'])
 end
@@ -117,13 +119,13 @@ end
 if ~isempty(remotehost),
     %
     if ~isempty(xgridsearch),
-        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{2},' ''',remotecmd{1},remotehost{1},remotecmd{2},user_root,remotecmd{3},timeid,'.plist''']);
+        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{2},' ''',remotecmd{1},remotehost{1},remotecmd{2},remotepassword{1},remotecmd{3},user_root,remotecmd{4},timeid,'.plist''']);
         %
-        [res_clean_batch,err_clean_batch] = unix(['ssh ',remotelogname,'@',remotehost{2},' ''rm ',user_root,remotecmd{3},timeid,'.plist''']);        
+        [res_clean_batch,err_clean_batch] = unix(['ssh ',remotelogname,'@',remotehost{2},' ''rm ',user_root,remotecmd{4},timeid,'.plist''']);             
         %
         if res_clean_batch,disp(err_clean_batch);end
     else
-        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost,...
+        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{1},...
         ' ''',remotecmd,remotemem,' -v LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,' ',remoteluke_root,'mrunluke_batch''']);
     end
     %
