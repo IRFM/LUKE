@@ -1,14 +1,15 @@
 %Script for running the DKE solver (can be modified by the user for specific simulations)
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
+clc
+close all
 clear all
 clear mex
 clear functions
-close all
 warning off
 global nfig
 %
-opt_dist = 1;%0 -> local, 1 -> local distributed, 2 -> CEPHEE, 3 -> SATURNE, 4 -> macproyves distributed (see make_path_LOCAL.m)
+opt_remote = 'cephee';%'','local','cephee','saturne','macproyves','macbookyves',... (see make_path_LOCAL.m)
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -89,7 +90,7 @@ dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic sol
 dkeparam.clustermode.coll_dke_jd.mode = 2;
 dkeparam.clustermode.eecoll_dke_jd.mode = 2;
 %
-if opt_dist == 0,%local non distributed calculations
+if isempty(opt_remote),%local non distributed calculations
     %
     % RELATIVISTIC CASE
     %
@@ -145,6 +146,9 @@ if opt_dist == 0,%local non distributed calculations
     time_without_dist = time_without_dist + toc;
     %
 else,%remote distributed calculations
+    [flag] = check_remote_yp(dkepath,opt_remote);
+    if ~flag,return;,end
+    %
     luke_input = [];
     %
     dkeparam.rt_mode = 1;
@@ -198,6 +202,19 @@ else,%remote distributed calculations
     dkeparam_nonrel_2_20.nmhu_S = 201;
     dkeparam_nonrel_2_20.np_S = 201;
     dkeparam_nonrel_2_20.pnmax_S = 20;
+    %
+    for ir = 1:length(dkepath.remote),
+        if strcmp(opt_remote,'local'),
+            opt_dist = 1;
+            break
+        else
+            a = dkepath.remote(ir).host{1};
+            if ~isempty(strfind(a,opt_remote)),
+                opt_dist = ir;
+                break
+            end
+        end      
+    end
     %
     remote = dkepath.remote(opt_dist);
     %
@@ -282,25 +299,24 @@ delete res_karney_remote
 %
 diary res_karney_remote
 %
+disp(['----------------------'])
 disp(['Comparison LUKE/Karney with tn = ',int2str(dkeparam.tn),', dtn = ',int2str(dkeparam.dtn),' and nit_f = ',int2str(dkeparam.nit_f)])
 disp(['----------------------'])
 %
-if opt_dist == 0,
-    disp(['Calculations time without distributed computing']);
+if isempty(opt_remote),
+    info_dke_yp(2,['Calculations time without distributed computing, elapsed time: ',num2str(time_without_dist),' s'],'','Green');
     disp(['----------------------'])
     disp(['Relativistic case (4,7,1) : j = ',num2str(nondist(1).Zcurr.x_0),'/',j_r_k,' ; P = ',num2str(nondist(1).ZP0.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(nondist(1).Zcurr.x_0./nondist(1).ZP0.x_rf_fsav),'/',eta_r_k]) 
     disp(['Non Relativistic case (3,5,1) pmax = 10, coll_mode = 0 : j = ',num2str(nondist(2).Zcurr.x_0),'/',j_nr_0_10_k,' ; P = ',num2str(nondist(2).ZP0.x_rf_fsav),'/',p_nr_0_10_k,' ; j/P = ',num2str(nondist(2).Zcurr.x_0./nondist(2).ZP0.x_rf_fsav),'/',eta_nr_0_10_k]) 
     disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 0 : j = ',num2str(nondist(3).Zcurr.x_0),'/',j_nr_0_20_k,' ; P = ',num2str(nondist(3).ZP0.x_rf_fsav),'/',p_nr_0_20_k,' ; j/P = ',num2str(nondist(3).Zcurr.x_0./nondist(3).ZP0.x_rf_fsav),'/',eta_nr_0_20_k]) 
     disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 2 : j = ',num2str(nondist(4).Zcurr.x_0),'/',j_nr_2_20_k,' ; P = ',num2str(nondist(4).ZP0.x_rf_fsav),'/',p_nr_2_20_k,' ; j/P = ',num2str(nondist(4).Zcurr.x_0./nondist(4).ZP0.x_rf_fsav),'/',eta_nr_2_20_k]) 
-    disp(['Elapsed time: ',num2str(time_without_dist),' s']);
 else
-    disp(['Calculations time with distributed computing']);
+    info_dke_yp(2,['Calculations time with distributed computing, elapsed time: ',num2str(time_with_dist),' s'],'','Green');
     disp(['----------------------'])
     disp(['Relativistic case (4,7,1) : j = ',num2str(withdist(1).Zcurr.x_0),'/',j_r_k,' ; P = ',num2str(withdist(1).ZP0.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(withdist(1).Zcurr.x_0./withdist(1).ZP0.x_rf_fsav),'/',eta_r_k]) 
     disp(['Non Relativistic case (3,5,1) pmax = 10, coll_mode = 0 : j = ',num2str(withdist(2).Zcurr.x_0),'/',j_nr_0_10_k,' ; P = ',num2str(withdist(2).ZP0.x_rf_fsav),'/',p_nr_0_10_k,' ; j/P = ',num2str(withdist(2).Zcurr.x_0./withdist(2).ZP0.x_rf_fsav),'/',eta_nr_0_10_k]) 
     disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 0 : j = ',num2str(withdist(3).Zcurr.x_0),'/',j_nr_0_20_k,' ; P = ',num2str(withdist(3).ZP0.x_rf_fsav),'/',p_nr_0_20_k,' ; j/P = ',num2str(withdist(3).Zcurr.x_0./withdist(3).ZP0.x_rf_fsav),'/',eta_nr_0_20_k]) 
     disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 2 : j = ',num2str(withdist(4).Zcurr.x_0),'/',j_nr_2_20_k,' ; P = ',num2str(withdist(4).ZP0.x_rf_fsav),'/',p_nr_2_20_k,' ; j/P = ',num2str(withdist(4).Zcurr.x_0./withdist(4).ZP0.x_rf_fsav),'/',eta_nr_2_20_k]) 
-    disp(['Elapsed time: ',num2str(time_with_dist),' s']);
     disp(['----------------------'])
 end
 %
