@@ -1,9 +1,10 @@
+----------------------
 Comparison LUKE/Karney with tn = 50000  100000, dtn = NaN and nit_f = 50
 ----------------------
-Calculations time without distributed computing
+-------> Calculations time with distributed computing, elapsed time: 20.8998 s
 ----------------------
 Relativistic case (4,7,1) : j = 0.0038208/0.003732 ; P = 0.00012759/0.0001256 ; j/P = 29.9452/29.72
 Non Relativistic case (3,5,1) pmax = 10, coll_mode = 0 : j = 0.057336/0.05754 ; P = 0.004011/0.004011 ; j/P = 14.2947/14.34
 Non Relativistic case (3,5,1) pmax = 20, coll_mode = 0 : j = 0.057483/0.05759 ; P = 0.0040004/0.004012 ; j/P = 14.3692/14.35
 Non Relativistic case (3,5,1) pmax = 20, coll_mode = 2 : j = 0.07073/0.07092 ; P = 0.0042806/0.004294 ; j/P = 16.5232/16.52
-Elapsed time: 13.2579 s
+----------------------
