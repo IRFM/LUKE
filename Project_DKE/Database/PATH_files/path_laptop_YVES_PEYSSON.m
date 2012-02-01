@@ -188,12 +188,12 @@ macbookyves.yves(1).remote(3).(getenv('USER')) = USER;
 %
 %
 USER = 'yvespeysson';
-HOST = '82.227.179.204';
+HOST = 'macproyves';
 HOME = '/Users/yvespeysson';
 APPLICATIONS = 'MATLAB_R2011b';
 NPROC = 12;
 %
-macbookyves.yves(1).remote(4).host = {HOST,HOST};
+macbookyves.yves(1).remote(4).host = {HOST,macbookyves.hostname};
 macbookyves.yves(1).remote(4).nproc = NPROC;
 macbookyves.yves(1).remote(4).luke_root = [HOME,'/Travail/Projets/',luke_ref,'/'];
 macbookyves.yves(1).remote(4).matlabroot = ['/Applications/',APPLICATIONS,'.app/bin/'];
@@ -202,6 +202,7 @@ macbookyves.yves(1).remote(4).cmd = {'xgrid -h ',' -p ',' -job batch ','xgrid_ba
 macbookyves.yves(1).remote(4).mem = [];
 macbookyves.yves(1).remote(4).get_jobid = {'jobIdentifier = ',';'};%
 macbookyves.yves(1).remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
-macbookyves.yves(1).remote(4).password = 'ghm93';
+macbookyves.yves(1).remote(4).password = {'ghm93'};
 macbookyves.yves(1).remote(4).(getenv('USER')) = USER;
 %
+

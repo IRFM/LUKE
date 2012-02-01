@@ -95,12 +95,22 @@ laptopjoan.joan(1).remote(3).get_jobid = {'','.pleiades2.epfl.ch'};%str_before,s
 laptopjoan.joan(1).remote(3).set_jobid = {'qstat ','','Unknown Job Id'};%str_before,str_after,str_check
 laptopjoan.joan(1).remote(3).joan = 'jdecker';
 %
-laptopjoan.joan(1).remote(4).host = {'macproyves','82.227.179.204'};% or empty for local host
-laptopjoan.joan(1).remote(4).nproc = 12;
-laptopjoan.joan(1).remote(4).luke_root = ['/Users/joandecker/Travail/Projets/LUKE/'];
-laptopjoan.joan(1).remote(4).matlabroot = '/Applications/MATLAB_R2011a.app/bin/';
-laptopjoan.joan(1).remote(4).cmd = {'xgrid -h ',' -job batch ','xgrid_batch_matlab_'};%
+% macproyves (Xgrid)
+%
+USER = 'joandecker';
+HOST = 'macproyves';
+HOME = '/Users/joandecker';
+APPLICATIONS = 'MATLAB_R2011b';
+NPROC = 12;
+%
+laptopjoan.joan(1).remote(4).host = {HOST,laptopjoan.hostname};
+laptopjoan.joan(1).remote(4).nproc = NPROC;
+laptopjoan.joan(1).remote(4).luke_root = [HOME,'/Travail/Projets/',luke_ref,'/'];
+laptopjoan.joan(1).remote(4).matlabroot = ['/Applications/',APPLICATIONS,'.app/bin/'];
+laptopjoan.joan(1).remote(4).prefdir = [HOME,'/.matlab/',APPLICATIONS(strfind(APPLICATIONS,'MATLAB')+7:strfind(APPLICATIONS,'MATLAB')+12)];
+laptopjoan.joan(1).remote(4).cmd = {'xgrid -h ',' -p ',' -job batch ','xgrid_batch_matlab_'};%
 laptopjoan.joan(1).remote(4).mem = [];
 laptopjoan.joan(1).remote(4).get_jobid = {'jobIdentifier = ',';'};%
 laptopjoan.joan(1).remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
-laptopjoan.joan(1).remote(4).joan = 'joandecker';% Faire getenv('USER') pour savoir qui je suis !!!!
+laptopjoan.joan(1).remote(4).password = {'chatel00'};
+laptopjoan.joan(1).remote(4).(getenv('USER')) = USER;
