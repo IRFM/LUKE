@@ -11,7 +11,12 @@ try
     logname = getenv('USER');
     %
     filein = [datapath,'LUKE_RUN_',logname,'_',timeid,'.mat'];
-    fileout = [datapath,'LUKE_OUT_',logname,'_',timeid,'.mat'];
+    %
+    if xgridmode,
+        fileout = ['LUKE_OUT_',logname,'_',timeid,'.mat'];
+    else
+        fileout = [datapath,'LUKE_OUT_',logname,'_',timeid,'.mat'];
+    end
     %
     load(filein,'id_simul','wavestructs','waves','dkeparam','dkepath','equil','dkedisplay','ohm','transpfaste','ripple','Zf0_interp','XXsinksource','opt_save');
     %
@@ -29,7 +34,6 @@ try
         run_lukert(id_simul,wavestructs,waves,dkeparam.psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,Zf0_interp,XXsinksource,opt_save);    
     %
     save(fileout,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource')
-    %
     %
 catch
     %
