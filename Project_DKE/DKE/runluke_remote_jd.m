@@ -44,7 +44,7 @@ remotefields = fieldnames(remote);
 remotepassword = remote.password;
 %
 if ~isempty(xgridsearch),
-    user_root = ['/Users/',remote.(remotefields{end}),'/'];
+    user_root = ['/Users/',remote.(remotefields{end}),'/xgrid/'];
 end
 %
 remotemem = '';
@@ -81,7 +81,7 @@ if ~isempty(remotehost),
     if ~isempty(xgridsearch),
         disp(['    --> Copying run and batch files to remote host ',remotehost{2},' as user ',remotelogname,' ...'])
         %
-        [res,err] = unix(['scp ',save_id,' ',remotelogname,'@',remotehost{2},':']);
+        [res,err] = unix(['scp ',save_id,' ',remotelogname,'@',remotehost{2},':xgrid']);
     else
         disp(['    --> Copying run file to remote host ',remotehost{1},' as user ',remotelogname,' ...'])
     %
@@ -97,7 +97,7 @@ if ~isempty(remotehost),
     if ~isempty(xgridsearch),
         batch_id = xgrid_batch2xml_yp(timeid,remote.luke_root,id_simul,remote.(remotefields{end}),remote.matlabroot,remote.prefdir,remote.luke_root,user_root,remotehost{1});
         %
-        [res_batch,err_batch] = unix(['scp ',batch_id,' ',remotelogname,'@',remotehost{2},':']);
+        [res_batch,err_batch] = unix(['scp ',batch_id,' ',remotelogname,'@',remotehost{2},':xgrid']);
         %
         delete(batch_id);
         %
@@ -119,9 +119,9 @@ end
 if ~isempty(remotehost),
     %
     if ~isempty(xgridsearch),
-        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{2},' ''',remotecmd{1},remotehost{1},remotecmd{2},remotepassword{1},remotecmd{3},user_root,remotecmd{4},timeid,'.plist''']);
+        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{2},' ''',remotecmd{1},remotehost{1},remotecmd{2},remotepassword{1},remotecmd{3},user_root,remotecmd{4},timeid,'.plist''']);%execute xgrid job
         %
-        [res_clean_batch,err_clean_batch] = unix(['ssh ',remotelogname,'@',remotehost{2},' ''rm ',user_root,remotecmd{4},timeid,'.plist''']);             
+        [res_clean_batch,err_clean_batch] = unix(['ssh ',remotelogname,'@',remotehost{2},' ''rm ',user_root,remotecmd{4},timeid,'.plist''']);%remove plist file             
         %
         if res_clean_batch,disp(err_clean_batch);end
     else
