@@ -79,7 +79,9 @@ for iremote = iremote_min:iremote_max,
     disp('------------------------------------------------------');
     display(['Check if remote computer is accessible at to ',USER,'@',HOST,'.'])
     info_dke_yp(0,'(If the process is blocked (waiting more than 10s approx.), type CTRL-C to escape)','','Blue');
+    %
     [remote_access,~] = unix(['ssh ',USER,'@',HOST,' ''ls''']);
+    %
     if ~remote_access,%test is the remote machine is working with ssh
         [~,HOME] = unix(['ssh ',USER,'@',HOST,' pwd']);
         HOME = HOME(1:end-1);%remove extra term    
@@ -87,5 +89,7 @@ for iremote = iremote_min:iremote_max,
         flag(iremote) = 1;
     else
         info_dke_yp(6,['The remote computer ',USER,'@',HOST,' is NOT available.'],'','Red');
+        info_dke_yp(2,['Check that SSH login without password is well configured with the remote computer ''',HOST,'''.'],'','Red');
+        info_dke_yp(2,['Type manually the following command in a Matlab command window for investigating the problem : !ssh ',USER,'@',HOST,' ''ls'''],'','Red');
     end    
 end
