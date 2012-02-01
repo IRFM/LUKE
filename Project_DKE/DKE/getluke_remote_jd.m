@@ -18,8 +18,8 @@ remotefields = fieldnames(remote);
 remotepassword = remote.password{1};
 %
 if ~isempty(xgridsearch),
-    user_root = ['/Users/',remote.(remotefields{end}),'/'];
-    local_user_root = getenv('HOME');
+    user_root = ['/Users/',remote.(remotefields{end}),'/xgrid/'];
+    local_user_root = [getenv('HOME'),'/xgrid'];
     %
     if exist([local_user_root,'/Volume_',remotehost{1}]);%the remote disk must be unmounted first
         unix(['umount ',local_user_root,'/Volume_',remotehost{1}]);
@@ -41,6 +41,13 @@ load_id = ['LUKE_OUT_',remotelogname,'_',timeid,'.mat'];
 if ~isempty(remotehost),
     %
     if ~isempty(xgridsearch),
+        if debugmode,%debug mode in case of problem
+            [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{2},' '' mkdir ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'''']);
+            [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{2},' '' ',remoteset_jobid{1},remotehost{1},remotecmd{2},remotepassword,remoteset_jobid{6},jobid,' -se ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'/','error_file',' -so ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'/','output_file -out''']);
+            %
+            info_dke_yp(6,['The debug files are placed in the directory ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'.'],'','Red');
+        end
+        %
         [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{2},' '' ',remoteset_jobid{1},remotehost{1},remotecmd{2},remotepassword,remoteset_jobid{2},jobid,'''']);
     else
         [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},jobid,remoteset_jobid{2},'''']);
@@ -91,13 +98,8 @@ if ~isempty(remotehost),
         [res_mkdir,err_mkdir] = unix(['ssh ',remotelogname,'@',remotehost{2},' '' mkdir ',user_root,'xgrid_job_',jobid,'''']);
         pause(0.1)
         if ~res_mkdir,
-            if debugmode
-                [res_local,err_local] = unix(['ssh ',remotelogname,'@',remotehost{2},' '' ',remoteset_jobid{1},remotehost{1},remoteset_jobid{6},jobid,remoteset_jobid{7},user_root,'xgrid_job_',jobid,'/error_file_',timeid,'.txt',remoteset_jobid{8},user_root,'xgrid_job_',jobid,'/output_file_',timeid,'.txt',remoteset_jobid{9},user_root,'xgrid_job_',jobid,'''']);
-                pause(0.1)
-            else
-                [res_local,err_local] = unix(['ssh ',remotelogname,'@',remotehost{2},' '' ',remoteset_jobid{1},remotehost{1},remoteset_jobid{6},jobid,remoteset_jobid{9},user_root,'xgrid_job_',jobid,'''']);
-                pause(0.1)
-            end
+            [res_local,err_local] = unix(['ssh ',remotelogname,'@',remotehost{2},' '' ',remoteset_jobid{1},remotehost{1},remotecmd{2},remotepassword,remoteset_jobid{6},jobid,remoteset_jobid{9},user_root,'xgrid_job_',jobid,'''']);
+            pause(0.1)
             %
             if ~res_local,
                 disp([' ... done in ',user_root,'xgrid_job_',jobid]);
@@ -215,7 +217,7 @@ else
         %
         disp(['    --> Deleting xgrid job id #',jobid,' ...']);
         %
-        [res_clean_job,err_clean_job] = unix(['ssh ',remotelogname,'@',remotehost{2},' '' ',remoteset_jobid{1},remotehost{1},remoteset_jobid{10},jobid,'''']);        
+        [res_clean_job,err_clean_job] = unix(['ssh ',remotelogname,'@',remotehost{2},' '' ',remoteset_jobid{1},remotehost{1},remotecmd{2},remotepassword,remoteset_jobid{10},jobid,'''']);        
         %
         if res_clean_job,
             disp(err_clean_job);
