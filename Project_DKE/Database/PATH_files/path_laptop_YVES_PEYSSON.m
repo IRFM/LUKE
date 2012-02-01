@@ -71,6 +71,39 @@ macbookyves.yves(1).PETSc.seq = [macbookyves.yves(1).local_root,'Packages/Bin/PE
 %
 % MACBOOK PRO Yves (local)
 %
+%
+% WARNING about Xgrid scheduler for mac OSX (> 10.5.x)
+% Xgrid runs tasks using the "sandbox" facility. Tasks running as 'nobody' ie, 
+% any task where either the submitting client or the receiving agent 
+% are NOT using Kerberos authentication) have very restricted access to the
+% filesystem. To by-pass this strong protection (no password) on a local
+% cluster or a multi-core multi-processor machine, go to
+% /usr/share/sandbox/xgridagentd_task_nobody.sb file (root rights needed)
+% then, comment the following line (with a ';' at the beginning of the line):
+% (allow process* sysctl* mach* network* system-socket)
+% and replace it by
+% (allow process* sysctl* mach* file-read* file-write* network* system-socket)
+% omment the following lines (with a ';' at the beginning of the line):
+% (allow file-read* (regex "^/(bin|dev|(private/)?(etc|tmp|var)|usr|System|Library)(/|$)"))
+% (allow file-read* file-write* (regex "^/(private/)?(tmp|var)(/|$)"))
+% and replace it by
+% (allow file-read* file-write* (regex "^/all(/|$)"))
+%
+% NOTE that it should be done each time the system is updated.
+% furthermore, all *.m and *.mex* files must be read by anybody.
+% This lack of protection make the cluster more vulnerable to an external
+% attack, but on a personal computer, this risk is limited.
+%
+% Furthermore, on the remote session, before any calculation, it is
+% necessary to create a folder named 'xgrid' (~/xgrid)
+% that will contain all the files for the remote calculations. The owner is the
+% USER , and the group is 'nobody(-2)'. The rights are 777. It is also
+% necessary to done it the same for the Matlab_R20xx_y application (all the
+% package and inside) in such a way Matlab can write in the ~/xgrid folder.
+%
+% WARNING: most of the problems come from the SSH without login
+% authentication, rights of the target directory and Matlab !
+%
 macbookyves.yves(1).remote(1).host = {macbookyves.hostname,macbookyves.hostname};%may be empty for local host
 [dummy,nproc] = unix('sysctl -n hw.ncpu');nproc = nproc(1:end-1);
 macbookyves.yves(1).remote(1).nproc = nproc;%number of cpu
@@ -142,6 +175,17 @@ macbookyves.yves(1).remote(3).(getenv('USER')) = USER;
 % furthermore, all *.m and *.mex* files must be read by anybody.
 % This lack of protection make the cluster more vulnerable to an external
 % attack, but on a personal computer, this risk is limited.
+%
+% Furthermore, on the remote session, before any calculation, it is
+% necessary to create a folder named 'xgrid' (~/xgrid)
+% that will contain all the files for the remote calculations. The owner is the
+% USER , and the group is 'nobody(-2)'. The rights are 777. It is also
+% necessary to done it the same for the Matlab_R20xx_y application (all the
+% package and inside) in such a way Matlab can write in the ~/xgrid folder.
+%
+% WARNING: most of the problems come from the SSH without login
+% authentication, rights of the target directory and Matlab !
+%
 %
 USER = 'yvespeysson';
 HOST = '82.227.179.204';
