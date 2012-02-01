@@ -9,7 +9,7 @@ clear functions
 warning off
 global nfig
 %
-opt_remote = 'cephee';%'','local','cephee','saturne','macproyves','macbookyves',... (see make_path_LOCAL.m)
+opt_remote = 'macbookyves';%empty: no remote calculations,local: local remote calculations cluster (multicore),cephee: remote calculations on cephee cluster,saturne: remote calculations on saturne cluster,macproyves: remote calculations on macproyves,macbookyves: remote calculations on macbookpro,... (see make_path_LOCAL.m)
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -256,11 +256,13 @@ else,%remote distributed calculations
     i_simul = 1;
     flag = ones(4,1);
     %
-    disp('Wait until each job is done...');
+    disp('Wait until each job is done (set ''debugmode'' variable to 1 for investing the logfiles in case of problems)...');
+    %
+    debugmode = 0;%set to 1 in case of problem
     %
     while 1,
         if flag(i_simul)
-            output = getluke_remote_jd(timeid{i_simul},jobid{i_simul},remote);
+            output = getluke_remote_jd(timeid{i_simul},jobid{i_simul},remote,debugmode);
             if ~isempty(output)
                 withdist(i_simul) = output;
                 flag(i_simul) = 0;
