@@ -172,10 +172,10 @@ set(gca,'YMinorTick','on')
 % print_jd(p_opt,'fig_jn_conv','.',3)
 % print_jd(p_opt,'fig_nn_conv','.',4)
 %
-print_jd(p_opt,'fig_j_conv_ss','.',1)
-print_jd(p_opt,'fig_Rf_conv_ss','.',2)
-print_jd(p_opt,'fig_jn_conv_ss','.',3)
-print_jd(p_opt,'fig_nn_conv_ss','.',4)
+print_jd(p_opt,'fig_j_conv_ss','./figures',1)
+print_jd(p_opt,'fig_Rf_conv_ss','./figures',2)
+print_jd(p_opt,'fig_jn_conv_ss','./figures',3)
+print_jd(p_opt,'fig_nn_conv_ss','./figures',4)
 %
 %************************************************************************************************************************************
 %

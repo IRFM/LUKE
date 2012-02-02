@@ -161,7 +161,7 @@ set(gca,'xtick',10.^[3:5]);%10.^[2:4];%
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(p_opt,'fig_eta_coll_dtn','.',1)
+print_jd(p_opt,'fig_eta_coll_dtn','./figures',1)
 %
 %************************************************************************************************************************************
 %

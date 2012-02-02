@@ -214,9 +214,9 @@ set(gca,'xtick',[1e-05 0.0001 0.001 0.01 0.1 1])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(p_opt,'fig_j_betath','.',1)
-print_jd(p_opt,'fig_P_betath','.',2)
-print_jd(p_opt,'fig_eta_betath','.',3)
+print_jd(p_opt,'fig_j_betath','./figures',1)
+print_jd(p_opt,'fig_P_betath','./figures',2)
+print_jd(p_opt,'fig_eta_betath','./figures',3)
 %
 %************************************************************************************************************************************
 %
