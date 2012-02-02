@@ -84,6 +84,26 @@ if ~isempty(clustername),
         if ~flag_remote,%error on the name of the remote computer
             info_dke_yp(7,['The remote computer ''',clustername,''' is NOT is the list (see the path script called by make_path_LOCAL.m).'],'','Red');
             remote = [];
+            %
+            disp('------------------------------------------------------');
+            disp('Available remote computers: ');
+            %
+            for iremote = 1:length(dkepath.remote),
+                if isfield(dkepath.remote(iremote),'cluster')
+                    if iremote == 1,
+                        info_dke_yp(2,[dkepath.remote(iremote).cluster,' or local'],0,'Blue');
+                    else
+                        info_dke_yp(2,dkepath.remote(iremote).cluster,0,'Blue');
+                    end
+                else
+                    if iremote == 1,
+                        info_dke_yp(2,[dkepath.remote(iremote).host{1},' or local'],0,'Blue');
+                    else
+                        info_dke_yp(2,dkepath.remote(iremote).host{1},0,'Blue');
+                    end
+                end
+            end
+            %
             return;
         end
     end
