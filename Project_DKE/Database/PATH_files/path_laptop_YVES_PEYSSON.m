@@ -101,6 +101,8 @@ macbookyves.yves(1).PETSc.seq = [macbookyves.yves(1).local_root,'Packages/Bin/PE
 % necessary to done it the same for the Matlab_R20xx_y application (all the
 % package and inside) in such a way Matlab can write in the ~/xgrid folder.
 %
+% The IP address of the hostname must be given in the file /etc/hosts
+%
 % WARNING: most of the problems come from the SSH without login
 % authentication, rights of the target directory and Matlab !
 %
@@ -183,12 +185,14 @@ macbookyves.yves(1).remote(3).(getenv('USER')) = USER;
 % necessary to done it the same for the Matlab_R20xx_y application (all the
 % package and inside) in such a way Matlab can write in the ~/xgrid folder.
 %
+% The IP address of the hostname must be given in the file /etc/hosts
+%
 % WARNING: most of the problems come from the SSH without login
 % authentication, rights of the target directory and Matlab !
 %
 %
 USER = 'yvespeysson';
-HOST = 'macproyves';
+HOST = 'macproyves';%
 HOME = '/Users/yvespeysson';
 APPLICATIONS = 'MATLAB_R2011b';
 NPROC = 12;
