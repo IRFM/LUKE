@@ -1,63 +1,89 @@
-function [flag] = check_remote_yp(dkepath,remote)
+function [flag,remote] = check_remote_yp(dkepath,clustername)
 %
-%	Check if remote links are available
+%	Check if remote links are available and if yes, extract the structure of the active
+%	cluster for remote calculations. If zero or one input arguments, scan the
+%	available clusters (or computers) for remote calculations from the
+%	dkepath structure.
 %
 %	Input:
 %
 %       - dkepath: path structure
 %         (default: if no input structure or empty, dkepath is automatically loaded from PATH_LOCAL.mat)
-%       - remote: remote computer name [1,p]
+%       - clustername: remote cluster (or computer) name [1,p]
 %        
 %
 %	Output:
 %
 %       - flag: 1 -> remote link available, 0 -> remote link not available [1,nlinks]
+%       - remote: structure of the active cluster for remote calculations
 %
 %   Warning: If the process is blocked (no automatic ssh login for example or remote computer behind a firewall or 
-%   remote computer not running, type CTRL-C to escape.
+%   remote cluster (or computer) not running, type CTRL-C to escape.
 %
-% By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
+%by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
+%
+%remote = dkepath.remote(clusternum);
 %
 if nargin == 0,
     dkepath = load_structures_yp('dkepath','','');
-    remote = '';
-    flag = zeros(length(dkepath.remote));
-end
-if nargin == 1,
-    remote = '';
-    flag = zeros(length(dkepath.remote));
-end
-if nargin == 2,
-    flag = 0;
 end
 %
 if nargin < 2,
     disp('------------------------------------------------------');
     disp(['Number of remote computers: ',int2str(length(dkepath.remote))]);
+    clustername = '';
 end
 %
+flag = 0;
 flag_remote = 0;
 %
 iremote_min = 1;
 iremote_max = length(dkepath.remote);
 %
-if ~isempty(remote),
-    if strcmp(remote,'local'),
+if ~isempty(clustername),
+    if strcmp(clustername,'local'),
         iremote_min = 1;
         iremote_max = 1;
+        remote = dkepath.remote(1);%first substructure is always correpsonding to the local cluster (or computer)
     else
-        for iremote = 1:length(dkepath.remote),
-            a = dkepath.remote(iremote).host{1};
-            if ~isempty(strfind(a,remote)),
-                iremote_min = iremote;
-                iremote_max = iremote;
-                flag_remote = 1;
-                break
+        if isfield(dkepath.remote,'cluster'), 
+            for iremote = 1:length(dkepath.remote),
+                clustername0 = dkepath.remote(iremote).cluster;
+                if ~isempty(clustername0)
+                    if ~isempty(strfind(clustername0,clustername)),
+                        iremote_min = iremote;
+                        iremote_max = iremote;
+                        flag_remote = 1;
+                        remote = dkepath.remote(iremote);
+                        break
+                    end
+                else
+                    clustername0 = dkepath.remote(iremote).host{1};%look if the cluster name is in the hostname
+                    if ~isempty(strfind(clustername0,clustername)),
+                        iremote_min = iremote;
+                        iremote_max = iremote;
+                        flag_remote = 1;
+                        remote = dkepath.remote(iremote);
+                        break
+                    end                     
+                end
+            end
+        else
+            for iremote = 1:length(dkepath.remote),
+                clustername0 = dkepath.remote(iremote).host{1};%look if the cluster name is in the hostname
+                if ~isempty(strfind(clustername0,clustername)),
+                    iremote_min = iremote;
+                    iremote_max = iremote;
+                    flag_remote = 1;
+                    remote = dkepath.remote(iremote);
+                    break
+                end
             end
         end
         %
         if ~flag_remote,%error on the name of the remote computer
-            info_dke_yp(7,['The remote computer ''',remote,''' is NOT is the list (see the path script called by make_path_LOCAL.m).'],'','Red');
+            info_dke_yp(7,['The remote computer ''',clustername,''' is NOT is the list (see the path script called by make_path_LOCAL.m).'],'','Red');
+            remote = [];
             return;
         end
     end
