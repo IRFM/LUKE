@@ -73,6 +73,9 @@ else
     remotelogname = logname;
 end
 %
+[err,remote_localhost] = unix(['ssh ',remotelogname,'@',remotehost{1},' ''hostname''']);
+remote_localhost = remote_localhost(1:end-1);
+%
 save_id = ['LUKE_RUN_',remotelogname,'_',timeid,'.mat'];
 save(save_id,'id_simul','wavestructs','waves','dkeparam','dkepath','equil','dkedisplay','ohm','transpfaste','ripple','Zf0_interp','XXsinksource','opt_save');
 %
@@ -95,7 +98,7 @@ if ~isempty(remotehost),
     end
     %
     if ~isempty(xgridsearch),
-        batch_id = xgrid_batch2xml_yp(timeid,remote.luke_root,id_simul,remote.(remotefields{end}),remote.matlabroot,remote.prefdir,remote.luke_root,user_root,remotehost{1});
+        batch_id = xgrid_batch2xml_yp(timeid,remote.luke_root,id_simul,remote.(remotefields{end}),remote.matlabroot,remote.prefdir,remote.luke_root,user_root,remote_localhost);
         %
         [res_batch,err_batch] = unix(['scp ',batch_id,' ',remotelogname,'@',remotehost{1},':xgrid']);
         %
@@ -111,7 +114,7 @@ if ~isempty(remotehost),
 end
 %
 if ~isempty(xgridsearch),
-    disp(['    --> Starting run with command ',remotecmd{1},remotehost{1},remotecmd{2},'******',remotecmd{3},user_root,remotecmd{4},' ...'])
+    disp(['    --> Starting run with command ',remotecmd{1},remote_localhost,remotecmd{2},'******',remotecmd{3},user_root,remotecmd{4},' ...'])
 else
     disp(['    --> Starting run with command ',remotecmd,' ...'])
 end
@@ -119,7 +122,7 @@ end
 if ~isempty(remotehost),
     %
     if ~isempty(xgridsearch),
-        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{1},' ''',remotecmd{1},remotehost{1},remotecmd{2},remotepassword{1},remotecmd{3},user_root,remotecmd{4},timeid,'.plist''']);%execute xgrid job
+        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{1},' ''',remotecmd{1},remote_localhost,remotecmd{2},remotepassword{1},remotecmd{3},user_root,remotecmd{4},timeid,'.plist''']);%execute xgrid job
         %
         [res_clean_batch,err_clean_batch] = unix(['ssh ',remotelogname,'@',remotehost{1},' ''rm ',user_root,remotecmd{4},timeid,'.plist''']);%remove plist file             
         %
