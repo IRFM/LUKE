@@ -132,14 +132,14 @@ HOST = 'saturne1.partenaires.cea.fr';
 HOME = '/home/YP105119';
 NPROC = 12;
 %
-macbookyves.yves(1).remote(2).host = {HOST};
-macbookyves.yves(1).remote(2).cluster = CLUSTER;
-macbookyves.yves(1).remote(2).nproc = NPROC;
-macbookyves.yves(1).remote(2).luke_root = [HOME,'/',luke_ref,'/'];
-macbookyves.yves(1).remote(2).matlabroot = '';
-macbookyves.yves(1).remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-macbookyves.yves(1).remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
-macbookyves.yves(1).remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
-macbookyves.yves(1).remote(2).password = {''};
-macbookyves.yves(1).remote(2).(getenv('USER')) = USER;
+macproyves.yvespeysson(1).remote(2).host = {HOST};
+macproyves.yvespeysson(1).remote(2).cluster = CLUSTER;
+macproyves.yvespeysson(1).remote(2).nproc = NPROC;
+macproyves.yvespeysson(1).remote(2).luke_root = [HOME,'/',luke_ref,'/'];
+macproyves.yvespeysson(1).remote(2).matlabroot = '';
+macproyves.yvespeysson(1).remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+macproyves.yvespeysson(1).remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
+macproyves.yvespeysson(1).remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+macproyves.yvespeysson(1).remote(2).password = {''};
+macproyves.yvespeysson(1).remote(2).(getenv('USER')) = USER;
 
