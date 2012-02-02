@@ -101,12 +101,13 @@ macbookyves.yves(1).PETSc.seq = [macbookyves.yves(1).local_root,'Packages/Bin/PE
 % necessary to done it the same for the Matlab_R20xx_y application (all the
 % package and inside) in such a way Matlab can write in the ~/xgrid folder.
 %
-% The IP address of the hostname must be given in the file /etc/hosts
+% The IP address of the hostname can be given in the file /etc/hosts 
 %
 % WARNING: most of the problems come from the SSH without login
 % authentication, rights of the target directory and Matlab !
 %
 macbookyves.yves(1).remote(1).host = {macbookyves.hostname,macbookyves.hostname};%may be empty for local host
+macbookyves.yves(1).remote(1).cluster = macbookyves.hostname;
 [dummy,nproc] = unix('sysctl -n hw.ncpu');nproc = nproc(1:end-1);
 macbookyves.yves(1).remote(1).nproc = nproc;%number of cpu
 macbookyves.yves(1).remote(1).matlabroot = [getenv('MATLAB_PATH'),'/bin/'];%matlab application
@@ -122,11 +123,13 @@ macbookyves.yves(1).remote(1).(getenv('USER')) = (getenv('USER'));
 % CEPHEE CEA cluster
 %
 USER = 'YP105119';
+CLUSTER = 'cephee';
 HOST = 'cephee15.intra.cea.fr';
 HOME = '/home/sccp/gsem/peysson';
 NPROC = 28;
 %
 macbookyves.yves(1).remote(2).host = {HOST};
+macbookyves.yves(1).remote(2).cluster = CLUSTER;
 macbookyves.yves(1).remote(2).nproc = NPROC;
 macbookyves.yves(1).remote(2).luke_root = [HOME,'/',luke_ref,'/'];
 macbookyves.yves(1).remote(2).matlabroot = '';
@@ -140,11 +143,13 @@ macbookyves.yves(1).remote(2).(getenv('USER')) = USER;
 % SATURNE CEA cluster
 %
 USER = 'YP105119';
+CLUSTER = 'saturne';
 HOST = 'saturne1.partenaires.cea.fr';
 HOME = '/home/YP105119';
 NPROC = 12;
 %
 macbookyves.yves(1).remote(3).host = {HOST};
+macbookyves.yves(1).remote(3).cluster = CLUSTER;
 macbookyves.yves(1).remote(3).nproc = NPROC;
 macbookyves.yves(1).remote(3).luke_root = [HOME,'/',luke_ref,'/'];
 macbookyves.yves(1).remote(3).matlabroot = '';
@@ -192,12 +197,14 @@ macbookyves.yves(1).remote(3).(getenv('USER')) = USER;
 %
 %
 USER = 'yvespeysson';
-HOST = 'macproyves';%
+CLUSTER = 'macproyves';
+HOST = 'tolbachik.hd.free.fr';%
 HOME = '/Users/yvespeysson';
 APPLICATIONS = 'MATLAB_R2011b';
 NPROC = 12;
 %
 macbookyves.yves(1).remote(4).host = {HOST,macbookyves.hostname};
+macbookyves.yves(1).remote(4).cluster = CLUSTER;
 macbookyves.yves(1).remote(4).nproc = NPROC;
 macbookyves.yves(1).remote(4).luke_root = [HOME,'/Travail/Projets/',luke_ref,'/'];
 macbookyves.yves(1).remote(4).matlabroot = ['/Applications/',APPLICATIONS,'.app/bin/'];
