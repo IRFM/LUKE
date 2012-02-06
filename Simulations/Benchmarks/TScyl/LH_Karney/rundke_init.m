@@ -169,11 +169,11 @@ graph1D_jd(betath_list,nit_1,1,0,'','','',leg,xlim,ylim,'-','+','b',2,20,gca);
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(p_opt,'fig_f2D_init','.',1)
-print_jd(p_opt,'fig_f1D_init','.',2)
-print_jd(p_opt,'fig_vp_init','.',3)
-print_jd(p_opt,'fig_j_init','.',4)
-print_jd(p_opt,'fig_nit_init','.',5)
+print_jd(p_opt,'fig_f2D_init','./figures',1)
+print_jd(p_opt,'fig_f1D_init','./figures',2)
+print_jd(p_opt,'fig_vp_init','./figures',3)
+print_jd(p_opt,'fig_j_init','./figures',4)
+print_jd(p_opt,'fig_nit_init','./figures',5)
 %
 %************************************************************************************************************************************
 %

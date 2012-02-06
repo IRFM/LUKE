@@ -213,9 +213,9 @@ graph1D_jd(Zi_list,eta_2_nr_Karney,0,0,'','','',NaN,xlim,ylim,'--','none','k',0.
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
-print_jd(p_opt,'fig_j_Zi','.',1)
-print_jd(p_opt,'fig_P_Zi','.',2)
-print_jd(p_opt,'fig_eta_Zi','.',3)
+print_jd(p_opt,'fig_j_Zi','./figures',1)
+print_jd(p_opt,'fig_P_Zi','./figures',2)
+print_jd(p_opt,'fig_eta_Zi','./figures',3)
 %
 %************************************************************************************************************************************
 %
