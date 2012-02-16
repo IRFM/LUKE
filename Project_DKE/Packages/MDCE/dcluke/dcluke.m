@@ -81,6 +81,8 @@ function varargout = dcluke(dkecluster,entree1,varargin)
     dcluke_display = dkecluster.display;
     workdir  = dkecluster.temppath;
     %
+    xgridsearch = strfind(dkecluster.cmd{1},'xgrid');%find if the xgrid task scheduler is used
+    %
     % donnees
     %
     if isappdata(0,'BATCH_DISTRIBUE_LUKE')
@@ -98,14 +100,13 @@ function varargout = dcluke(dkecluster,entree1,varargin)
     % cmd.state = which('dcluke_etat.sh');
     % cmd.kill  = which('dcluke_kill.sh');
     %
-    cmd = dkecluster.cmd;
+    dkecluster.cmd = dkecluster.cmd;
+    %
     if isfield(dkecluster,'mem') && ~isempty(dkecluster.mem),% memory allocation if applicable
         remotemem = [dkecluster.mem{1},dkecluster.mem{3},dkecluster.mem{2}];
     else
         remotemem = '';
     end
-    remoteget_jobid = dkecluster.get_jobid;
-    remoteset_jobid = dkecluster.set_jobid;
     %
     % pas de sortie par defaut
     varargout = {};
@@ -123,7 +124,7 @@ function varargout = dcluke(dkecluster,entree1,varargin)
             for k = 1:length(ba)
                 switch ba(k).etat 
                 case 'running'
-                    ba(k).etat = etat_maj(ba(k).jobid,remoteset_jobid);
+                    ba(k).etat = etat_maj(ba(k).jobid,dkecluster);
                     if strcmp(ba(k).etat,'done') && dcluke_display,	
                                 fprintf('dcluke: job %d terminated (%s)\n',k,ba(k).jobid);
                     else
@@ -182,29 +183,39 @@ function varargout = dcluke(dkecluster,entree1,varargin)
         data.resultat           = {};
         save(ba(current).inputdata,'data');
         % lancement du job
-        script = which('dcluke.exe');
-        if ischar(cmd),
-        	txt =   sprintf('%s %s "%s%s" %s %s %s %s',run,workdir,cmd,remotemem,script,matlabroot,ba(current).inputdata,ba(current).batchfile);
-        elseif iscell(cmd),
-            txt =   sprintf('%s %s "%s" %s %s',run,workdir,cmd{1},script,ba(current).inputdata);
-            for ic = 2:length(cmd)        
-                txt = [txt,sprintf(' "%s"',cmd{ic})];
-            end
-            txt = [txt,sprintf(' %s',ba(current).batchfile)];
+        if ~isempty(xgridsearch),
+            batch_id = xgrid_batch2xml_yp(int2str(current),dkecluster.luke_root,int2str(current),dkecluster.logname,dkecluster.matlabroot,dkecluster.prefdir,dkecluster.luke_root,'Project_DKE/Packages/MDCE/dcluke/dcluke_xgrid.exe',workdir,hostname(1:end-1));
+            [s,t] = unix(['scp ',batch_id,' ',workdir,batch_id]);
+            delete(batch_id);            
+            %
+            [s,t] = unix([dkecluster.cmd{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.cmd{3},workdir,dkecluster.cmd{4},int2str(current),'.plist']);%execute xgrid job  
+            %
         else
-        	error('cmd must be char array or cell array')    
+            script = which('dcluke.exe');
+            if ischar(dkecluster.cmd),
+                txt =   sprintf('%s %s "%s%s" %s %s %s %s',run,workdir,dkecluster.cmd,remotemem,script,matlabroot,ba(current).inputdata,ba(current).batchfile);
+            elseif iscell(dkecluster.cmd),
+                txt =   sprintf('%s %s "%s" %s %s',run,workdir,dkecluster.cmd{1},script,ba(current).inputdata);
+                for ic = 2:length(dkecluster.cmd)        
+                    txt = [txt,sprintf(' "%s"',dkecluster.cmd{ic})];
+                end
+                txt = [txt,sprintf(' %s',ba(current).batchfile)];
+            else
+                error('cmd must be char array or cell array')    
+            end
+            %
+            [s,t] = unix(txt);
         end
         %
-        [s,t] = unix(txt);
         if s~= 0
-                error(sprintf('dcluke : error launching job %d in batch :\n %s',entree1,t));				
+            error(sprintf('dcluke : error launching job %d in batch :\n %s',entree1,t));				
         else
             %
             t(double(t) == 10) = [];
             %
-            if ~isempty(remoteget_jobid{1}),
-                strl1 = length(remoteget_jobid{1});
-                istr0 = strl1 + min(strfind(t,remoteget_jobid{1}));
+            if ~isempty(dkecluster.get_jobid{1}),
+                strl1 = length(dkecluster.get_jobid{1});
+                istr0 = strl1 + min(strfind(t,dkecluster.get_jobid{1}));
                 if isempty(istr0),
                     error('Job ID could not be retrieved')
                 end
@@ -212,8 +223,8 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                 istr0 = 1;
             end
             %
-            if ~isempty(remoteget_jobid{2}),
-                istr1 = min(strfind(t(istr0:end),remoteget_jobid{2})) + istr0 - 2;
+            if ~isempty(dkecluster.get_jobid{2}),
+                istr1 = min(strfind(t(istr0:end),dkecluster.get_jobid{2})) + istr0 - 2;
                 if isempty(istr1),
                     error('Job ID could not be retrieved')
                 end
@@ -230,7 +241,7 @@ function varargout = dcluke(dkecluster,entree1,varargin)
         if length(ba) >= entree1
             switch ba(entree1).etat 
             case 'running'
-                ba(entree1).etat = etat_maj(ba(entree1).jobid,remoteset_jobid);
+                ba(entree1).etat = etat_maj(ba(entree1).jobid,dkecluster);
             end
             % test de fin
             switch ba(entree1).etat 
@@ -261,6 +272,11 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                 delete(ba(entree1).batchout);
                 warning on
                 ba(entree1).etat = 'delete';
+                %
+                if ~isempty(xgridsearch), 
+                    [s,t] = unix([dkecluster.set_jobid{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.set_jobid{10},ba(entree1).jobid]);        
+                    if dcluke_display && ~s,disp(['    --> xgrid job id #',ba(entree1).jobid,' is deleted.']);end
+                end
             case 'delete'
                 warning('dcluke : job %d results had already been read',entree1);
                 [varargout{1:nargout}] = deal([]);
@@ -279,14 +295,14 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                 for k = 1:length(ba)
                     switch ba(k).etat 
                     case 'running'
-                        ba(k).etat = etat_maj(ba(k).jobid,remoteset_jobid);
+                        ba(k).etat = etat_maj(ba(k).jobid,dkecluster);
                     end
                 end
             end
         else
             switch ba(entree1).etat 
             case 'running'
-                ba(entree1).etat = etat_maj(ba(entree1).jobid,remoteset_jobid);
+                ba(entree1).etat = etat_maj(ba(entree1).jobid,dkecluster);
             end
         end
 
@@ -296,7 +312,11 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                 for k = 1:length(ba)
                     switch ba(k).etat 
                     case 'running';
-                        [s,t] = unix(['qdel ',remoteset_jobid{1},ba(k).jobid,remoteset_jobid{2}]);
+                        if ~isempty(xgridsearch), 
+                            [s,t] = unix([dkecluster.set_jobid{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.set_jobid{10},ba(k).jobid]);        
+                        else
+                            [s,t] = unix(['qdel ',dkecluster.set_jobid{1},ba(k).jobid,dkecluster.set_jobid{2}]);
+                        end
                         % destruction du resultat
                         warning off
                         delete(ba(k).diaryfile);
@@ -325,7 +345,11 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                 % fin du job					
                 switch ba(entree1).etat 
                 case 'running'
-                    [s,t] = unix(['qdel ',remoteset_jobid{1},ba(entree1).jobid,remoteset_jobid{2}]);
+                    if ~isempty(xgridsearch),
+                        [s,t] = unix([dkecluster.set_jobid{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.set_jobid{10},ba(k).jobid]);        
+                    else
+                        [s,t] = unix(['qdel ',dkecluster.set_jobid{1},ba(entree1).jobid,dkecluster.set_jobid{2}]);
+                    end
                     if s == 0
                         ba(entree1).jobid = NaN;
                         % destruction des fichiers 
@@ -374,32 +398,49 @@ function varargout = dcluke(dkecluster,entree1,varargin)
     %
 end
 %
-function etat = etat_maj(jobid,remoteset_jobid)
+function etat = etat_maj(jobid,dkecluster)
+    [s,hostname] = unix('hostname');
     %
-    [s,t] = unix([remoteset_jobid{1},jobid,remoteset_jobid{2}]);
-    t(double(t) == 10) = [];
+    xgridsearch = strfind(dkecluster.set_jobid{1},'xgrid');%find if the xgrid task scheduler is used
     %
-    if s ~= 0 && isempty(strfind(t,remoteset_jobid{3})),
-        error(['Remote run check failed : ',t])
-    end
-    %
-    if s ~= 0 && ~isempty(strfind(t,remoteset_jobid{3})),
-        etat ='done';	
-    end
-    %
-    if s == 0 && ~isempty(strfind(t,remoteset_jobid{3})),
-        error(['Remote run check failed : ',t])
-    end
-    %
-    if s == 0 && isempty(strfind(t,remoteset_jobid{3})),
-        if length(remoteset_jobid) > 3
-            if ~isempty(strfind(t,remoteset_jobid{4})),
-                etat ='done';    
-            else
-                etat ='running'; 
-            end
+    if ~isempty(xgridsearch),
+        [s,t] = unix([dkecluster.set_jobid{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.set_jobid{2},jobid]);
+        %
+        t(double(t) == 10) = [];
+        %
+        if ~isempty(strfind(t,dkecluster.set_jobid{3})), % job still running
+             etat ='running';
+        elseif ~isempty(strfind(t,dkecluster.set_jobid{4})), % job pending
+            etat ='pending';
         else
-            etat ='running';
+            etat ='done';
+        end              
+    else
+        [s,t] = unix([dkecluster.set_jobid{1},jobid,dkecluster.set_jobid{2}]);
+        t(double(t) == 10) = [];
+        %
+        if s ~= 0 && isempty(strfind(t,dkecluster.set_jobid{3})),
+            error(['Remote run check failed : ',t])
+        end
+        %
+        if s ~= 0 && ~isempty(strfind(t,dkecluster.set_jobid{3})),
+            etat ='done';	
+        end
+        %
+        if s == 0 && ~isempty(strfind(t,dkecluster.set_jobid{3})),
+            error(['Remote run check failed : ',t])
+        end
+        %
+        if s == 0 && isempty(strfind(t,dkecluster.set_jobid{3})),
+            if length(dkecluster.set_jobid) > 3
+                if ~isempty(strfind(t,dkecluster.set_jobid{4})),
+                    etat ='done';    
+                else
+                    etat ='running'; 
+                end
+            else
+                etat ='running';
+            end
         end
     end
 end
