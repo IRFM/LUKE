@@ -98,7 +98,7 @@ if ~isempty(remotehost),
     end
     %
     if ~isempty(xgridsearch),
-        batch_id = xgrid_batch2xml_yp(timeid,remote.luke_root,id_simul,remote.(remotefields{end}),remote.matlabroot,remote.prefdir,remote.luke_root,user_root,remote_localhost);
+        batch_id = xgrid_batch2xml_yp(timeid,remote.luke_root,id_simul,remote.(remotefields{end}),remote.matlabroot,remote.prefdir,remote.luke_root,'mrunluke_batch_xgrid.sh',user_root,remote_localhost);
         %
         [res_batch,err_batch] = unix(['scp ',batch_id,' ',remotelogname,'@',remotehost{1},':xgrid']);
         %
