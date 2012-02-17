@@ -80,8 +80,12 @@ function varargout = dcluke(dkecluster,entree1,varargin)
     %
     dcluke_display = dkecluster.display;
     workdir  = dkecluster.temppath;
-    %
-    xgridsearch = strfind(dkecluster.cmd{1},'xgrid');%find if the xgrid task scheduler is used
+    %    
+    if iscell(dkecluster.cmd),
+        xgridsearch = strfind(dkecluster.cmd{1},'xgrid');%find if the xgrid task scheduler is used (mac,...)
+    else
+        xgridsearch = '';
+    end
     %
     % donnees
     %
@@ -401,7 +405,11 @@ end
 function etat = etat_maj(jobid,dkecluster)
     [s,hostname] = unix('hostname');
     %
-    xgridsearch = strfind(dkecluster.set_jobid{1},'xgrid');%find if the xgrid task scheduler is used
+    if iscell(dkecluster.cmd),
+        xgridsearch = strfind(dkecluster.set_jobid{1},'xgrid');%find if the xgrid task scheduler is used (mac,...)
+    else
+        xgridsearch = '';
+    end
     %
     if ~isempty(xgridsearch),
         [s,t] = unix([dkecluster.set_jobid{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.set_jobid{2},jobid]);
