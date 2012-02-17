@@ -60,7 +60,7 @@ cephee.YP105119(1).remote(1).mem = {',mem=','mb','7000','14000'};% -l select=1:i
 cephee.YP105119(1).remote(1).get_jobid = {'','.cephee'};%str_before,str_after
 cephee.YP105119(1).remote(1).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 %
-cephee.YP105119(1).remote(2).host = 'saturne1.partenaires.cea.fr';
+cephee.YP105119(1).remote(2).host = {'saturne1.partenaires.cea.fr'};
 cephee.YP105119(1).remote(2).nproc = 12;
 cephee.YP105119(1).remote(2).luke_root = ['/home/JD211098/LUKE/'];%official saturne package repository for collaborators
 cephee.YP105119(1).remote(2).matlabroot = '';
