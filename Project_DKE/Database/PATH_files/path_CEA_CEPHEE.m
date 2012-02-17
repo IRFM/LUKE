@@ -110,9 +110,6 @@ cephee.JD211098(1).MUMPS.mex710 = [cephee.JD211098(1).local_root,'MUMPS_4.9.2_S_
 %cephee.JD211098(1).MUMPS.mex710 = [cephee.JD211098(1).local_root,'MUMPS_4.9.2_S_g95/MATLAB710'];%alternative option
 cephee.JD211098(1).MUMPS.mex712 = [cephee.JD211098(1).local_root,'MUMPS_4.9.2_S_ifort/MATLAB712'];%MUMPS_4.9.2 not compatible with matlab 7.5
 %
-cephee.JD211098(1).scheduler.local = '/local/mdce/configurations/localconfig.mat';
-cephee.JD211098(1).scheduler.pbspro = '/local/mdce/configurations/pbsproconfig.mat';
-%
 cephee.JD211098(1).scheduler.local.configfile = '/local/mdce/configurations/localconfig.mat';
 cephee.JD211098(1).scheduler.local.mode = 3;%No parallel computing
 cephee.JD211098(1).scheduler.local.timeout = 20;%100 s time out for job submission
