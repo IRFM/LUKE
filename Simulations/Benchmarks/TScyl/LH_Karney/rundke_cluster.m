@@ -81,8 +81,10 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 % Choice of the distributed computing method
 %
-dkeparam.clustermode.coll_dke_jd.scheduler.mode = 0;%0: sequential, 1: MDCE, 2: LDCE, 3: PARFOR, 4: GPU
-dkeparam.clustermode.eecoll_dke_jd.scheduler.mode = 0;%0: sequential, 1: MDCE, 2: LDCE, 3: PARFOR, 4: GPU
+dkeparam.clustermode.coll_dke_jd.scheduler = dkepath.scheduler.pbspro;
+dkeparam.clustermode.coll_dke_jd.scheduler.mode = 2;
+dkeparam.clustermode.eecoll_dke_yp.scheduler = dkepath.scheduler.pbspro;
+dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = 2;
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
