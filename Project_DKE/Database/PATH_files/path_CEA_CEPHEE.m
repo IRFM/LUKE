@@ -48,6 +48,8 @@ cephee.YP105119(1).MUMPS.mex705 = [cephee.YP105119(1).local_root,'MUMPS_4.7.3_S_
 cephee.YP105119(1).MUMPS.mex710 = [cephee.YP105119(1).local_root,'MUMPS_4.9.2_S_ifort/MATLAB710'];%MUMPS_4.9.2 not compatible with matlab 7.5
 %cephee.YP105119(1).MUMPS.mex710 = [cephee.YP105119(1).local_root,'MUMPS_4.9.2_S_g95/MATLAB710'];%alternative option
 %
+%--------------------------- Distributed computing -----------------------------
+%
 cephee.YP105119(1).scheduler.local.configfile = '/local/mdce/configurations/localconfig.mat';
 cephee.YP105119(1).scheduler.local.mode = 3;%No parallel computing
 cephee.YP105119(1).scheduler.local.timeout = 20;%100 s time out for job submission
@@ -63,6 +65,8 @@ cephee.YP105119(1).scheduler.pbspro.clustersize = 8*14;%One core or processor
 cephee.YP105119(1).scheduler.pbspro.memory = 1600;%no memory requirements
 cephee.YP105119(1).scheduler.pbspro.temppath = '/local/';
 cephee.YP105119(1).scheduler.pbspro.display = 0;
+%
+%--------------------------- Remote computing -----------------------------
 %
 cephee.YP105119(1).remote(1).host = '';% empty for local host
 cephee.YP105119(1).remote(1).nproc = 28;
@@ -110,6 +114,8 @@ cephee.JD211098(1).MUMPS.mex710 = [cephee.JD211098(1).local_root,'MUMPS_4.9.2_S_
 %cephee.JD211098(1).MUMPS.mex710 = [cephee.JD211098(1).local_root,'MUMPS_4.9.2_S_g95/MATLAB710'];%alternative option
 cephee.JD211098(1).MUMPS.mex712 = [cephee.JD211098(1).local_root,'MUMPS_4.9.2_S_ifort/MATLAB712'];%MUMPS_4.9.2 not compatible with matlab 7.5
 %
+%--------------------------- Distributed computing -----------------------------
+%
 cephee.JD211098(1).scheduler.local.configfile = '/local/mdce/configurations/localconfig.mat';
 cephee.JD211098(1).scheduler.local.mode = 3;%No parallel computing
 cephee.JD211098(1).scheduler.local.timeout = 20;%100 s time out for job submission
@@ -125,6 +131,8 @@ cephee.JD211098(1).scheduler.pbspro.clustersize = 8*14;%One core or processor
 cephee.JD211098(1).scheduler.pbspro.memory = 1600;%no memory requirements
 cephee.JD211098(1).scheduler.pbspro.temppath = '/local/';
 cephee.JD211098(1).scheduler.pbspro.display = 0;
+%
+%--------------------------- Remote computing -----------------------------
 %
 cephee.JD211098(1).remote(1).host = '';% empty for local host
 cephee.JD211098(1).remote(1).nproc = 28;
