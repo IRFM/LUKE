@@ -13,14 +13,16 @@ load('initdata.mat','dkeparam_out','display','equilDKE','gridDKE');%Load data fo
 %
 display.display_mode = 0;%no display
 %
-% [vmatlab,testtoolbox] = matlabstatus_yp('Parallel Computing Toolbox');
+N = 4;%number of jobs
+%
+[vmatlab,testtoolbox] = matlabstatus_yp('Parallel Computing Toolbox');
 %
 Nmax = 2;
-schedulertype = 'pbspro';%'local';%
+schedulertype = 'local';%'' or 'local','pbspro','xgrid',...
 %
-MDCE = 1;%Set to 1 if matlab MDCE is tested
+MDCE = 0;%Set to 1 if matlab MDCE is tested
 LUKEDC = 1;%Set to 1 if batch DCLUKE is tested
-PARLOOP = 1;%Set to 1 if parfor is tested
+PARLOOP = 0;%Set to 1 if parfor is tested
 %
 N = 2*Nmax;%number of jobs
 %
@@ -50,7 +52,7 @@ for n=1:N,
     %
     % Matlab Distributed Computing Environment (MDCE)
     %
-    if MDCE == 1,
+    if MDCE == 1 && testtoolbox,
         [dkecluster] = clustermode_luke(1,'',dkepath,schedulertype);%All cluster parameters and paths
         dkecluster.scheduler.clustersize = min(n,Nmax);
         dkecluster.scheduler.enforce = 0;
@@ -73,7 +75,7 @@ for n=1:N,
     %
     if LUKEDC == 1,%All matlab may be used with this technique based on an external batch-queuing
         [dkecluster] = clustermode_luke(2,'',dkepath,schedulertype);%All cluster parameters and paths
-        dkecluster.scheduler.clustersize = min(n,Nmax);
+        dkecluster.scheduler.clustersize = n;%min(n,Nmax);
         dkecluster.scheduler.enforce = 0;
         dkecluster.scheduler.display = 1;
         %
@@ -92,7 +94,7 @@ for n=1:N,
     %
     % Parallel job (parfor loop)
     %
-    if PARLOOP == 1,
+    if PARLOOP == 1 && testtoolbox,
         [dkecluster] = clustermode_luke(3,'',dkepath,schedulertype);%All cluster paramters and paths
         dkecluster.scheduler.clustersize = min(n,Nmax);
         dkecluster.scheduler.enforce = 0;
@@ -117,24 +119,48 @@ mask_par = find(test_par);
 mask_mdce = find(test_mdce);
 mask_ldce = find(test_ldce);
 %
-leg = {};
+figure('Name','Calculation time (s)')
+%
+leg = 'Serial  ';
+graph1D_jd(1:N,time_seq,0,0,'N processors','time (s)','',leg,[0,N+1],NaN,'none','o','b',2,20,gca,0.9,0.7,0.7);
 %
 if PARLOOP == 1,
-    leg = [leg,'Parallel'];
-    graph1D_jd(mask_par,time_par(mask_par),0,0,'','','',NaN,[0,N+1],NaN,'none','x','r',2,20,gca);
+    leg = [leg;'PARFOR  '];
+    graph1D_jd(mask_par,time_par(mask_par),0,0,'N processors','time (s)','Distributed computing calculations',leg,[0,N+1],NaN,'none','x','r',2,20,gca);
 end
 %
 if MDCE == 1,
-    leg = [leg;'MDCE'];
-    graph1D_jd(mask_mdce,time_mdce(mask_mdce),0,0,'','','',NaN,[0,N],NaN,'none','s','g',2,20,gca);
+    leg = [leg;'MDCE    '];
+    graph1D_jd(mask_mdce,time_mdce(mask_mdce),0,0,'N processors','time (s)','Distributed computing calculations',leg,[0,N+1],NaN,'none','s','g',2,20,gca);
 end
 %
 if LUKEDC == 1,
-    leg = [leg;'LDCE'];
-    graph1D_jd(mask_ldce,time_ldce(mask_ldce),0,0,'','','',NaN,[0,N],NaN,'none','d','g',2,20,gca);
+    leg = [leg;'LDCE    '];
+    graph1D_jd(mask_ldce,time_ldce(mask_ldce),0,0,'N processors','time (s)','Distributed computing calculations',leg,[0,N+1],NaN,'none','d','g',2,20,gca);
 end
 %
-leg = ['Serial'];
+legend('Location','NorthWest')
+%
+figure('Name','Calculation time normalized per processor (s)')
+%
+leg = 'Serial  ';
 graph1D_jd(1:N,time_seq,0,0,'N processors','time (s)','',leg,[0,N+1],NaN,'none','o','b',2,20,gca,0.9,0.7,0.7);
 %
+if PARLOOP == 1,
+    leg = [leg;'PARFOR  '];
+    graph1D_jd(mask_par,time_par(mask_par)./mask_par,0,0,'N processors','time (s)','Distributed computing calculations',leg,[0,N+1],NaN,'none','x','r',2,20,gca);
+end
+%
+if MDCE == 1,
+    leg = [leg;'MDCE    '];
+    graph1D_jd(mask_mdce,time_mdce(mask_mdce)./mask_mdce,0,0,'N processors','time (s)','Distributed computing calculations',leg,[0,N+1],NaN,'none','s','g',2,20,gca);
+end
+%
+if LUKEDC == 1,
+    leg = [leg;'LDCE    '];
+    graph1D_jd(mask_ldce,time_ldce(mask_ldce)./mask_ldce,0,0,'N processors','time (s)','Distributed computing calculations',leg,[0,N+1],NaN,'none','d','g',2,20,gca);
+end
+%
+legend('Location','NorthWest')
+
 	
