@@ -6,6 +6,8 @@
 clear all
 if isappdata(0,'BATCH_DISTRIBUE_LUKE'),rmappdata(0,'BATCH_DISTRIBUE_LUKE');end
 %
+nrun = 7;%number of jobs
+%
 dkepath = load_structures_yp('dkepath','','');
 [dkecluster] = clustermode_luke(2,'',dkepath);%Cluster parameters, paths and warnings. Must be called once before distributed computing
 %
@@ -14,7 +16,7 @@ if dkecluster.scheduler.mode == 2,
     fileattrib(dkecluster.scheduler.temppath,'+w');
     %
 	dcluke(dkecluster.scheduler,0,'RESET');
-    nrun = 5;
+    %
     for irun = 1:nrun,
         id(irun) = dcluke(dkecluster.scheduler,'fundcluke',pi/3);
     end
