@@ -135,7 +135,15 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                         attente = 1;
                         pause(0.1);
                     end
-                end
+                case 'pending',%for xgrid when the number of jobs exceeds the number of processors
+                    ba(k).etat = etat_maj(ba(k).jobid,dkecluster);
+                    if strcmp(ba(k).etat,'done') && dcluke_display,	
+                                fprintf('dcluke: job %d terminated (%s)\n',k,ba(k).jobid);
+                    else
+                        attente = 1;
+                        pause(0.1);
+                    end
+                end                
             end
         end
     %
