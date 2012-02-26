@@ -122,6 +122,7 @@ function varargout = dcluke(dkecluster,entree1,varargin)
     if nargin == 1,
         % test des etats et attente
         attente = 1;
+        tstart = tic;
         while	(attente == 1)
             attente = 0;
             % mise a jour des etat
@@ -130,21 +131,38 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                 case 'running'
                     ba(k).etat = etat_maj(ba(k).jobid,dkecluster);
                     if strcmp(ba(k).etat,'done') && dcluke_display,	
-                                fprintf('dcluke: job %d terminated (%s)\n',k,ba(k).jobid);
+                        fprintf('dcluke: job %d terminated (%s)\n',k,ba(k).jobid);
                     else
                         attente = 1;
+                        pause(0.1);
+                    end
+                    %
+                    telapsed = toc(tstart);
+                    if telapsed > dkecluster.timeout,
+                        ba(k).etat = 'timeout';
+                        fprintf('dcluke: timeout reached \n');
+                        attente = 0;
                         pause(0.1);
                     end
                 case 'pending',%for xgrid when the number of jobs exceeds the number of processors
                     ba(k).etat = etat_maj(ba(k).jobid,dkecluster);
                     if strcmp(ba(k).etat,'done') && dcluke_display,	
-                                fprintf('dcluke: job %d terminated (%s)\n',k,ba(k).jobid);
+                        fprintf('dcluke: job %d terminated (%s)\n',k,ba(k).jobid);
                     else
                         attente = 1;
                         pause(0.1);
                     end
-                end                
+                    %
+                    telapsed = toc(tstart);
+                    if telapsed > dkecluster.timeout,
+                        ba(k).etat = 'timeout';
+                        fprintf('dcluke: timeout reached \n');
+                        attente = 0;
+                        pause(0.1);
+                    end
+                end                            
             end
+            %
         end
     %
     %TODO: Probleme lie au montage NFS tres lent de CEPHEE. A enlever plus tard...
@@ -250,8 +268,8 @@ function varargout = dcluke(dkecluster,entree1,varargin)
         varargout{1} = current;
     elseif nargin == 2,
         % lecture du resultat pour la reference donnees
-        if length(ba) >= entree1
-            switch ba(entree1).etat 
+        if length(ba) >= entree1 
+            switch ba(entree1).etat   
             case 'running'
                 ba(entree1).etat = etat_maj(ba(entree1).jobid,dkecluster);
             end
@@ -265,7 +283,7 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                     if exist(ba(entree1).diaryfile,'file')
                         type(ba(entree1).diaryfile)
                     end
-                    error(sprintf('dcluke : error loading result job %d',entree1));			
+                    error(sprintf('dcluke : error loading result job %d',entree1));	
                 end
                 % lecture du texte
                 %ba(entree1).resultat = data.resultat;
@@ -291,6 +309,9 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                 end
             case 'delete'
                 warning('dcluke : job %d results had already been read',entree1);
+                [varargout{1:nargout}] = deal([]);
+            case 'timeout'
+                error('dcluke : job %d has timed out',entree1);
                 [varargout{1:nargout}] = deal([]);
             otherwise
                 warning('dcluke : job %d is not finish',entree1);
@@ -425,7 +446,7 @@ function etat = etat_maj(jobid,dkecluster)
         t(double(t) == 10) = [];
         %
         if ~isempty(strfind(t,dkecluster.set_jobid{3})), % job still running
-             etat ='running';
+            etat ='running';
         elseif ~isempty(strfind(t,dkecluster.set_jobid{4})), % job pending
             etat ='pending';
         else
