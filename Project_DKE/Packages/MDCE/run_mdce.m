@@ -136,8 +136,9 @@ if LUKEDC == 1,
     graph1D_jd(mask_ldce,time_ldce(mask_ldce),0,0,'','','',NaN,[0,N],NaN,'none','d','g',2,20,gca);
 end
 %
-leg = ['Serial','Location','NorthWest'];
+leg = [leg;'Serial'];
 graph1D_jd(1:N,time_seq,0,0,'N processors','time (s)','Distributed computing calculations',leg,[0,N+1],NaN,'none','o','b',2,20,gca,0.9,0.7,0.7);
+legend('Location','NorthWest');
 %
 figure('Name','Calculation time normalized per processor (s)')
 %
@@ -154,6 +155,7 @@ if LUKEDC == 1,
 end
 %
 graph1D_jd(1:N,time_seq,0,0,'N processors','time/cpu (s)','Distributed computing calculations',leg,[0,N+1],NaN,'none','o','b',2,20,gca,0.9,0.7,0.7);
+legend('Location','NorthWest');
 %
 
 	
