@@ -14,13 +14,23 @@ if nargin < 8
     yabs = NaN;
 end
 if nargin < 7
-    xvar = 's';
+    xvar = input_dke_yp('Option for rho definition : ''g'' (geometric), ''p'' (poloidal flux), ''t'' (toroidal flux), ''v'' (volumic rho)','g',{'g','p','t','v'},'',[1,1]);
 end
 if nargin < 6
     ymask = NaN;
 end
 if nargin < 5
     rho_disp = 0:0.1:1;
+end
+if nargin < 4,
+    opt.vessel_opt = 'n';
+    opt.abs_max = input_dke_yp('Option for ray trajectories : 0 (full trajectory), 1 (cut when damped)',0,0:1,'',[1,1]);
+    opt.mode = input_dke_yp('Option for showing ray polarization (n/y)','n',{'n','y'});
+    opt.print = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
+    opt.TeNpar = 1;
+end
+if nargin < 3,
+    nr_dep = 40;
 end
 %
 nw = length(waves);
