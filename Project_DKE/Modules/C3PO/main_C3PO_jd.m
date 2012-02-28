@@ -165,7 +165,7 @@ for iray = 1:Nrays,
     arg_range{iray} = iray;
 end
 %
-dkecluster = clustermode_luke(C3POparam,'main_C3PO_jd',dkepath);%MatLab distributed computing environment
+dkecluster = clustermode_luke(C3POparam.clustermode,'main_C3PO_jd',dkepath);%MatLab distributed computing environment
 %
 [dummy,rayss] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay,f0struct,fluct_fit},1,arg_range,dkecluster);
 %
