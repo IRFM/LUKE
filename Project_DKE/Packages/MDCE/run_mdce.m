@@ -1,161 +1,161 @@
-%LUKE - Script for testing the distributed calculations within MatLab (using the distributed MatLab toolbox)
+function [flag,tmdce,texe,test] = run_mdce(scheduler,modes,tpause,nX,datamode,Nmax,N,display_mode)
 %
-%Script for testing the distributed calculations within MatLab (using the distributed MatLab toolbox)
+% Script for testing the distributed calculations within MatLab (using the distributed MatLab toolbox)
 %
-%by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
+% INPUTS : 
+%       - scheduler : override scheduler properties (type,enforce,display,...) [struct]
+%       - modes : list of mdce modes to test (0) : sequential, (1) mdce jobs, (2) dcluke, (3) mdce parfor [1,nmodes] 
+%       - tpause : pause time in function (s) [1,1]
+%       - mode : data transert mode : 0 (back and forth); (1) forth; (-1) back [1,1]
+%       - nX : size of transfer matrix (related memory = 8*nX^2 Bytes) [1,1]
+%       - datamode = 0 : data transert mode : 0 (back and forth); (1) forth; (-1) back [1,1]
+%       - Nmax : maximum cluster size [1,1]
+%       - N : number of iterations [1,1]
+%       - display_mode : (0) no figure display, (1) figure display [1,1]
 %
-clear all
-close all
+% OUTPUTS : 
+%       - flag : list of output flags {nmodes,N}[1,n]
+%       - tmdce : total MDCE calculation time [nmodes,N]
+%       - texe : Internatal execution calculation time {nmodes,N}[1,n]
+%       - test : test for correct outputs [nmodes,N]
+%
+% by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
+%
+if nargin < 1,
+    scheduler.type = 'local';%'local','pbspro','xgrid',...
+    scheduler.enforce = 0;% 1 to enforce sequential calculation if mdce problem
+    scheduler.display = 1;
+end   
+if nargin < 2,
+    modes = 0:3; 
+end   
+if nargin < 3,
+    tpause = 10;
+end   
+if nargin < 4,
+    nX = 100;
+end   
+if nargin < 5,
+    datamode = 0;
+end   
+if nargin < 6,
+    Nmax = 8;
+end
+if nargin < 7,
+    N = 12;
+end   
+if nargin < 8,
+    display_mode = 1;% (0) no figure display, (1) figure display
+end   
 %
 dkepath = load_structures_yp('dkepath','','');
 %
-load('initdata.mat','dkeparam_out','display','equilDKE','gridDKE');%Load data for the MDCE example
+modestrs = {'SEQUENTIAL','MDCE JOBS','DCLUKE','MDCE PARFOR'};
+colors = {'k','b','r','g'};
+markers = {'o','+','s','d'};
 %
-display.display_mode = 0;%no display
+nmodes = length(modes);
 %
-%[vmatlab,testtoolbox] = matlabstatus_yp('Parallel Computing Toolbox');
+tmdce = NaN*ones(nmodes,N);
+test = NaN*ones(nmodes,N);
+flag = cell(nmodes,N);
+texe = cell(nmodes,N);
 %
-schedulertype = 'local';%'' or 'local','pbspro','xgrid',...
+X_in = cell(1,N);
+for j = 1:N,
+    if datamode >= 0,%data transfered forth
+        X_in{j} = rand(nX);
+    else
+        X_in{j} = nX;
+    end
+end
 %
-MDCE = 1;%Set to 1 if matlab MDCE is tested
-LUKEDC = 1;%Set to 1 if batch DCLUKE is tested
-PARLOOP = 1;%Set to 1 if parfor is tested
-%
-Nmax = 12;%number of jobs
-N = Nmax;%2*Nmax;%number of allocated ressources
-%
-time_seq = NaN*ones(1,N);test_seq = ones(1,N);flag_seq = cell(1,N);
-time_par = NaN*ones(1,N);test_par = NaN*ones(1,N);flag_par = cell(1,N);
-time_mdce = NaN*ones(1,N);test_mdce = NaN*ones(1,N);flag_mdce = cell(1,N);
-time_ldce = NaN*ones(1,N);test_ldce = NaN*ones(1,N);flag_ldce = cell(1,N);
-%
-Rp = equilDKE.Rp;
-%
-for n=1:N,
+for n=[1,1:N],% case 1 calculated twice to avoid preallocation time delays
     %
-    arg_range = '';%Set the number of input data
-    for j = 1:n,
-        equilDKE.Rp = Rp*(1 + 0.1*rand(1));%For changing the equilibrium
-        arg_range{j} = equilDKE;
+    for imode = 1:nmodes,
+        %
+        mode = modes(imode);
+        modeindex = mode+1;
+        modestr = modestrs{modeindex};
+        %
+        scheduler.mode = mode;
+        scheduler.clustersize = min(n,Nmax);
+        %
+        [flag{imode,n},tmdce(imode,n),texe{imode,n},test(imode,n)] = nloop_mdce(modestr,dkepath,scheduler,X_in(1:n),tpause,datamode);
+        %
+    end
+end
+%
+if display_mode > 0,
+    %
+    figure(1),clf,set(1,'Name','Calculation time (s)')
+    %
+    % display total mdce time
+    %
+    leg = cell(1,nmodes);
+    %
+    for imode = 1:nmodes,
+        %
+        mode = modes(imode);
+        modeindex = mode+1;
+        mask = find(test(imode,:));
+        leg{imode} = modestrs{modeindex};
+        %
+        if imode < nmodes,
+            graph1D_jd(mask,tmdce(imode,mask),0,0,'','','',NaN,[0,N+1],NaN,'-',markers{modeindex},colors{modeindex},2,20+14i,gca);
+        else
+            leg = [leg,'Location','NorthWest'];
+            graph1D_jd(mask,tmdce(imode,mask),0,0,'N processors','time (s)','Distributed computing calculations',leg,[0,N+1],NaN,'-',markers{modeindex},colors{modeindex},2,20+14i,gca,0.9,0.7,0.5);
+        end
+        %
     end
     %
-    % Sequential job (for loop)
+    % display execution time
     %
-    [dkecluster] = clustermode_luke(0,'',dkepath,schedulertype);%All cluster paramters and paths
+    for imode = 1:nmodes,
+        %
+        mode = modes(imode);
+        modeindex = mode+1;
+        mask = find(test(imode,:));
+        %
+        texemax = NaN(1,N);
+        for n=mask,
+            texemax(n) = max(texe{imode,n});
+        end
+        %
+        graph1D_jd(mask,texemax(mask),0,0,'','','',NaN,[0,N+1],NaN,'--','none',colors{modeindex},0.5,20+14i,gca);
+        %
+    end
+end
+end
+%
+function [flag,tmdce,texe,test] = nloop_mdce(modestr,dkepath,scheduler,X_in,tpause,datamode)
     %
-    tic;[flag_seq{n},Zbouncecoef_seq] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_seq(n) = toc;
+    [dkecluster] = clustermode_luke(scheduler,'',dkepath,scheduler.type);%All cluster parameters and paths
     %
-    disp(['   --> time for n = ',int2str(n),' serial (for loop) calculations on (',int2str(1),' proc.) : ',num2str(time_seq(n)),' s'])
+    tinit = tic;
+    [flag,X_out,texe] = mdce_luke(@frun_mdce,{tpause,datamode,''},3,X_in,dkecluster);
+    tmdce = toc(tinit);
+    texe = cell2mat(texe.');
+    %
+    if ~all(flag == scheduler.mode),
+        disp('   --> WARNING: Distributed calculation problem occured.');
+        disp(['   --> flag : ',num2str(flag)]);
+    end        
+    %
+    if datamode == 0,% back and forth, test result
+        test = comp_struct_jd(X_in,X_out.',0);
+        if test == 1,
+            disp('   --> Outputs and Inputs are identical');
+        else
+            disp('   --> WARNING: Outputs are different from inputs. Verify workflow.');
+        end
+    else
+        test = 1;
+    end
+    %
+    disp(['   --> time for n = ',int2str(length(X_in)),' ',modestr,' calculations on ',int2str(dkecluster.scheduler.clustersize),' proc. : ',num2str(tmdce),' s'])
+    disp(['   --> Execution time for frun_mdce : min ',num2str(min(texe)),'; max ',num2str(max(texe)),'; mean ',num2str(mean(texe)),' s'])
     disp('-------------------------------------------------------------------------')
-    %
-    % Matlab Distributed Computing Environment (MDCE)
-    %
-    if MDCE == 1,% && testtoolbox,
-        [dkecluster] = clustermode_luke(1,'',dkepath,schedulertype);%All cluster parameters and paths
-        dkecluster.scheduler.clustersize = min(n,Nmax);
-        dkecluster.scheduler.enforce = 0;
-        dkecluster.scheduler.display = 1;
-        %
-        tic;[flag_mdce{n},Zbouncecoef_mdce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_mdce(n) = toc;
-        test_mdce(n) = comp_struct_jd(Zbouncecoef_seq,Zbouncecoef_mdce,0);
-        clear Zbouncecoef_mdce
-        %
-        disp(['   --> time for n = ',int2str(n),' MDCE calculations on (',int2str(dkecluster.scheduler.clustersize),' proc.) : ',num2str(time_mdce(n)),' s'])
-        if test_mdce(n) == 1,
-            disp('   --> sequential and MDCE calculations give same outputs');
-        else
-            disp('   --> WARNING: sequential and MDCE calculations give different outputs');
-        end
-        disp('-------------------------------------------------------------------------')
-    end
-    %
-    % LUKE Distributed Computing Environment (LDCE)
-    %
-    if LUKEDC == 1,%All matlab may be used with this technique based on an external batch-queuing
-        [dkecluster] = clustermode_luke(2,'',dkepath,schedulertype);%All cluster parameters and paths
-        dkecluster.scheduler.clustersize = min(n,Nmax);
-        dkecluster.scheduler.enforce = 0;
-        dkecluster.scheduler.display = 1;
-        %
-    	tic;[flag_ldce{n},Zbouncecoef_ldce] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_ldce(n) = toc;
-        test_ldce(n) = comp_struct_jd(Zbouncecoef_seq,Zbouncecoef_ldce,0);
-        clear Zbouncecoef_ldce
-        %
-        disp(['   --> time for n = ',int2str(n),' LDCE calculations on (',int2str(dkecluster.scheduler.clustersize),' proc.) : ',num2str(time_ldce(n)),' s'])
-        if test_ldce(n) == 1,
-            disp('   --> sequential and LDCE calculations give same outputs');
-        else
-            disp('   --> WARNING: sequential and LDCE calculations give different outputs');
-        end
-        disp('-------------------------------------------------------------------------')
-    end
-    %
-    % Parallel job (parfor loop)
-    %
-    if PARLOOP == 1,% && testtoolbox,
-        [dkecluster] = clustermode_luke(3,'',dkepath,schedulertype);%All cluster paramters and paths
-        dkecluster.scheduler.clustersize = min(n,Nmax);
-        dkecluster.scheduler.enforce = 0;
-        dkecluster.scheduler.display = 1;
-        %
-        tic;[flag_par{n},Zbouncecoef_par] = mdce_luke(@bouncecoefbuilder_dke_yp,{dkeparam_out,display,equilDKE,gridDKE},3,arg_range,dkecluster);time_par(n) = toc;
-        matlabpool close force
-        test_par(n) = comp_struct_jd(Zbouncecoef_seq,Zbouncecoef_par,0);
-        clear Zbouncecoef_par
-        %    
-        disp(['   --> time for n = ',int2str(n),' parallel (parfor loop) calculations on (',int2str(dkecluster.scheduler.clustersize),' proc.) : ',num2str(time_par(n)),' s'])
-        if test_par(n) == 1,
-            disp('   --> sequential and parallel (parfor loop) calculations give same outputs');
-        else
-            disp('   --> WARNING: sequential and parallel (parfor loop) calculations give different outputs');
-        end
-        disp('-------------------------------------------------------------------------')
-    end
+	%
 end
-%
-mask_par = find(test_par);
-mask_mdce = find(test_mdce);
-mask_ldce = find(test_ldce);
-%
-figure('Name','Calculation time (s)')
-%
-leg = {};
-%
-if PARLOOP == 1,
-    leg = [leg,'Parallel'];
-    graph1D_jd(mask_par,time_par(mask_par),0,0,'','','',NaN,[0,N+1],NaN,'none','x','r',2,20,gca);
-end
-%
-if MDCE == 1,
-    leg = [leg;'MDCE'];
-    graph1D_jd(mask_mdce,time_mdce(mask_mdce),0,0,'','','',NaN,[0,N],NaN,'none','s','g',2,20,gca);
-end
-%
-if LUKEDC == 1,
-    leg = [leg;'LDCE'];
-    graph1D_jd(mask_ldce,time_ldce(mask_ldce),0,0,'','','',NaN,[0,N],NaN,'none','d','g',2,20,gca);
-end
-%
-leg = [leg;'Serial'];
-graph1D_jd(1:N,time_seq,0,0,'N processors','time (s)','Distributed computing calculations',leg,[0,N+1],NaN,'none','o','b',2,20,gca,0.9,0.7,0.7);
-legend('Location','NorthWest');
-%
-figure('Name','Calculation time normalized per processor (s)')
-%
-if PARLOOP == 1,
-    graph1D_jd(mask_par,time_par(mask_par)./mask_par,0,0,'','','',NaN,[0,N+1],NaN,'none','x','r',2,20,gca);
-end
-%
-if MDCE == 1,
-    graph1D_jd(mask_mdce,time_mdce(mask_mdce)./mask_mdce,0,0,'','','',NaN,[0,N],NaN,'none','s','g',2,20,gca);
-end
-%
-if LUKEDC == 1,
-    graph1D_jd(mask_ldce,time_ldce(mask_ldce)./mask_ldce,0,0,'','','',NaN,[0,N],NaN,'none','d','g',2,20,gca);
-end
-%
-graph1D_jd(1:N,time_seq,0,0,'N processors','time/cpu (s)','Distributed computing calculations',leg,[0,N+1],NaN,'none','o','b',2,20,gca,0.9,0.7,0.7);
-legend('Location','NorthWest');
-%
-
-	
