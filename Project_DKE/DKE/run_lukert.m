@@ -72,7 +72,9 @@ if flag_LH == 0 && isfield(equil.fluct,'edge'),
     equil.fluct = rmfield(equil.fluct,'edge');
 end
 %
-equil.fluct.dtn_fluct = calc_dtn_fluct_jd(equil.fluct,buildlukestruct_yp('mksa',psin_S,rho_S,equil,dkeparam_in,dkedisplay_in));% maximum fluctuation time
+mksa = buildlukestruct_yp('mksa',psin_S,rho_S,equil,dkeparam_in,dkedisplay_in);
+%
+equil.fluct.dtn_fluct = calc_dtn_fluct_jd(equil.fluct,mksa);% maximum fluctuation time
 %
 dtn_phase = dkeparam_in.Nfluct*equil.fluct.dtn_fluct;%time for phase renewal
 %
@@ -206,6 +208,8 @@ if ~exist('wavestructs_fluct','var'),
     wavestructs_fluct = [];
 end
 %
+byPnonabs = NaN;% leftover power in each wave
+%
 for itn = itnmin:itnmax,%time evolution
     %
     if itn < itnmax,
@@ -220,7 +224,7 @@ for itn = itnmin:itnmax,%time evolution
     % RF wave propagation solver
     %
     if ~isempty(wavestructs), 
-        [waves,wavestructs,wavestructs_fluct] = wave_distribution_yp(dkepath,dkeparam,wavestructs,wavestructs_fluct,f0struct,buildlukestruct_yp('mksa',psin_S,rho_S,equil,dkeparam,dkedisplay),itn,Pnonabs_ray);%ray propagation in fluctuating plasma. The fluctuation phase in wavestructs is output to be later re-used by the same function taling into account of the phase evolution
+        [waves,wavestructs,byisel] = wave_distribution_yp(dkepath,dkeparam,wavestructs,f0struct,equil.fluct.dtn_fluct/mksa.nhu_ref,byPnonabs);%ray propagation in fluctuating plasma. The fluctuation phase in wavestructs is output to be later re-used by the same function taling into account of the phase evolution
     end
     %
     % RF wave absorption solver (drift kinetic calculations)
@@ -235,19 +239,37 @@ for itn = itnmin:itnmax,%time evolution
         [Znorm,Zcurr,ZP0,dke_out] = loop_run_lukert(simul,waves,psin_S,loadstructs.radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);   
     end
     %
-    Ptot_inj = 0;
+    Ptot_0 = 0;%injected power at t=0
+    Ptot_inj = 0;%injected power at t=itn
+    Pnonabs = 0;%quasilinear power not absorbed at t=itn
     %    
-    for iw = 1:length(wavestructs),
-        if isfield(wavestructs{iw}.launch,'bPlhtot'),
-            Ptot_inj = Ptot_inj + sum(wavestructs{iw}.launch.bPlhtot)/1e6;%LH power injected (MW)
-        elseif isfield(wavestructs{iw}.launch,'yP_L'),
-            Ptot_inj = Ptot_inj + sum(wavestructs{iw}.launch.yP_L)/1e6;%EC power injected (MW)
-        end
-    end
+    byPnonabs = cell(size(wavestructs));
     %
-    if isfield(dke_out,'zP_0_2piRp_mod');
-        for iout = 1:length(dke_out.zP_0_2piRp_mod{end}),
-            Pnonabs_ray(iout) = dke_out.zP_0_2piRp_mod{end}{iout}(end);%Linear power density not absorbed P/(2*pi*Rp)
+    for ifluct = 1:size(wavestructs,1),
+        for iw = 1:size(wavestructs,2),
+            %
+            % calculate power injected at t=0 et t=tin
+            %
+            if isfield(wavestructs{ifluct,iw}.launch,'bPlhtot'),
+                Ptot_0 = Ptot_0 + sum(wavestructs{ifluct,iw}.launch.bPlhtot_in)/1e6;%LH injected power at t=0
+                Ptot_inj = Ptot_inj + sum(wavestructs{ifluct,iw}.launch.bPlhtot)/1e6;%LH injected power at t=itn
+                ny = length(wavestructs{ifluct,iw}.launch.bPlhtot);
+            elseif isfield(wavestructs{ifluct,iw}.launch,'yP_L'),
+                Ptot_0 = Ptot_0 + sum(wavestructs{ifluct,iw}.launch.yP_L)/1e6;%EC injected power at t=0
+                Ptot_inj = Ptot_inj + sum(wavestructs{ifluct,iw}.launch.yP_L)/1e6;%EC injected power at t=itn
+                ny = length(wavestructs{ifluct,iw}.launch.yP_L);
+            end
+            %
+            % calculate ql power not absorbed at t=tn
+            %
+            byPnonabs{ifluct,iw} = zeros(1,ny);
+            for iy = 1:ny,
+                for iray = 1:length(byisel{ifluct,iw}{iy}),
+                    Pnonabs_loc = 2*pi*equil.Rp*dke_out.zP_0_2piRp_mod{end}{byisel{ifluct,iw}{iy}(iray)}(end);
+                    byPnonabs{ifluct,iw} = byPnonabs{ifluct,iw} + Pnonabs_loc;
+                    Pnonabs = Pnonabs + Pnonabs_loc;
+                end
+            end
         end
     end
     %
