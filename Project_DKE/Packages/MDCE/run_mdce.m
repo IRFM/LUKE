@@ -39,10 +39,10 @@ if nargin < 5,
     datamode = 0;
 end   
 if nargin < 6,
-    Nmax = 8;
+    Nmax = Inf;
 end
 if nargin < 7,
-    N = 12;
+    N = 14;
 end   
 if nargin < 8,
     display_mode = 1;% (0) no figure display, (1) figure display
