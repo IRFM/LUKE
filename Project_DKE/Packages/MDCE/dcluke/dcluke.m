@@ -122,7 +122,6 @@ function varargout = dcluke(dkecluster,entree1,varargin)
     if nargin == 1,
         % test des etats et attente
         attente = 1;
-        tstart = tic;
         while	(attente == 1)
             attente = 0;
             % mise a jour des etat
@@ -136,28 +135,12 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                         attente = 1;
                         pause(0.1);
                     end
-                    %
-                    telapsed = toc(tstart);
-                    if telapsed > dkecluster.timeout,
-                        ba(k).etat = 'timeout';
-                        fprintf('dcluke: timeout reached \n');
-                        attente = 0;
-                        pause(0.1);
-                    end
                 case 'pending',%for xgrid when the number of jobs exceeds the number of processors
                     ba(k).etat = etat_maj(ba(k).jobid,dkecluster);
                     if strcmp(ba(k).etat,'done') && dcluke_display,	
                         fprintf('dcluke: job %d terminated (%s)\n',k,ba(k).jobid);
                     else
                         attente = 1;
-                        pause(0.1);
-                    end
-                    %
-                    telapsed = toc(tstart);
-                    if telapsed > dkecluster.timeout,
-                        ba(k).etat = 'timeout';
-                        fprintf('dcluke: timeout reached \n');
-                        attente = 0;
                         pause(0.1);
                     end
                 end                            
@@ -289,6 +272,12 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                 %ba(entree1).resultat = data.resultat;
                 ba(entree1).etat_sortie = data.etat_sortie;
                 ba(entree1).error = data.etat_error;
+                %
+                if ~isempty(xgridsearch), 
+                    [s,t] = unix([dkecluster.set_jobid{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.set_jobid{10},ba(entree1).jobid]);        
+                    if dcluke_display && ~s,disp(['    --> xgrid job id #',ba(entree1).jobid,' is deleted.']);end
+                end
+                %
                 if ba(entree1).etat_sortie == 1
                     error(sprintf('dcluke : error in "%s" :\n %s',ba(entree1).commande,ba(entree1).error));
                 end
@@ -302,16 +291,8 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                 delete(ba(entree1).batchout);
                 warning on
                 ba(entree1).etat = 'delete';
-                %
-                if ~isempty(xgridsearch), 
-                    [s,t] = unix([dkecluster.set_jobid{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.set_jobid{10},ba(entree1).jobid]);        
-                    if dcluke_display && ~s,disp(['    --> xgrid job id #',ba(entree1).jobid,' is deleted.']);end
-                end
             case 'delete'
                 warning('dcluke : job %d results had already been read',entree1);
-                [varargout{1:nargout}] = deal([]);
-            case 'timeout'
-                error('dcluke : job %d has timed out',entree1);
                 [varargout{1:nargout}] = deal([]);
             otherwise
                 warning('dcluke : job %d is not finish',entree1);
