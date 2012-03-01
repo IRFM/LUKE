@@ -114,8 +114,7 @@ macproyves.yvespeysson(1).PARDISO.(['mex',matlabversion]) = [macproyves.yvespeys
 %
 macproyves.yvespeysson(1).remote(1).host = {macproyves.hostname,macproyves.hostname};%may be empty for local host
 macproyves.yvespeysson(1).remote(1).cluster = macproyves.hostname;
-[dummy,nproc] = unix('sysctl -n hw.ncpu');nproc = nproc(1:end-1);
-macproyves.yvespeysson(1).remote(1).nproc = nproc;%number of cpu
+macproyves.yvespeysson(1).remote(1).nproc = feature('numCores');%number of cpu
 macproyves.yvespeysson(1).remote(1).matlabroot = [getenv('MATLAB_PATH'),'/bin/'];%matlab application
 macproyves.yvespeysson(1).remote(1).luke_root = macproyves.yvespeysson(1).luke_root;%local host LUKE root
 macproyves.yvespeysson(1).remote(1).prefdir = [getenv('HOME'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir

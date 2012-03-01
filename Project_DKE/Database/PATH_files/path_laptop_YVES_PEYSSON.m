@@ -119,8 +119,7 @@ macbookyves.yves(1).scheduler.xgrid.display = 0;
 %
 macbookyves.yves(1).remote(1).host = {macbookyves.hostname,macbookyves.hostname};%may be empty for local host
 macbookyves.yves(1).remote(1).cluster = macbookyves.hostname;
-[dummy,nproc] = unix('sysctl -n hw.ncpu');nproc = nproc(1:end-1);
-macbookyves.yves(1).remote(1).nproc = nproc;%number of cpu
+macbookyves.yves(1).remote(1).nproc = feature('numCores');%number of cpu
 macbookyves.yves(1).remote(1).matlabroot = [getenv('MATLAB_PATH'),'/bin/'];%matlab application
 macbookyves.yves(1).remote(1).luke_root = macbookyves.yves(1).luke_root;%local host LUKE root
 macbookyves.yves(1).remote(1).prefdir = [getenv('HOME'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir
