@@ -55,14 +55,6 @@ macbookyves.yves(1).PETSc.seq = [macbookyves.yves(1).local_root,'Packages/Bin/PE
 %
 %--------------------------- Distributed computing -----------------------------
 %
-macbookyves.yves(1).scheduler.xgrid.configfile = '';
-macbookyves.yves(1).scheduler.xgrid.mode = 2;%Parfor parallel computing
-macbookyves.yves(1).scheduler.xgrid.timeout = 20;%100 s time out for job submission
-[dummy,nproc] = unix('sysctl -n hw.ncpu');
-macbookyves.yves(1).scheduler.xgrid.clustersize = str2num(nproc(1:end-1));%One core or processor
-macbookyves.yves(1).scheduler.xgrid.memory = NaN;%no memory requirements
-macbookyves.yves(1).scheduler.xgrid.temppath = '/tmp/';
-macbookyves.yves(1).scheduler.xgrid.display = 0;
 %
 %--------------------------- Remote computing -----------------------------
 %
