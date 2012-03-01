@@ -42,11 +42,11 @@ if nargin < 6,
     Nmax = Inf;
 end
 if nargin < 7,
-    N = 14;
+    N = 16;
 end   
 if nargin < 8,
-    display_mode = 1;% (0) no figure display, (1) figure display
-end   
+    display_mode = 2;% (0) no figure display, (1) figure display
+end 
 %
 dkepath = load_structures_yp('dkepath','','');
 %
@@ -125,6 +125,7 @@ if display_mode > 0,
         %
         graph1D_jd(mask,texemax(mask),0,0,'','','',NaN,[0,N+1],NaN,'--','none',colors{modeindex},0.5,20+14i,gca);
         %
+        print_jd(display_mode,'mdce_evaluation','./figures',1)
     end
 end
 end
