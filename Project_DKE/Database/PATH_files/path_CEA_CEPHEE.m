@@ -50,21 +50,8 @@ cephee.YP105119(1).MUMPS.mex710 = [cephee.YP105119(1).local_root,'MUMPS_4.9.2_S_
 %
 %--------------------------- Distributed computing -----------------------------
 %
-cephee.YP105119(1).scheduler.local.configfile = '';%'/local/mdce/configurations/localconfig.mat';
-cephee.YP105119(1).scheduler.local.mode = 3;%No parallel computing
-cephee.YP105119(1).scheduler.local.timeout = 20;%100 s time out for job submission
-cephee.YP105119(1).scheduler.local.clustersize = 8;%One core or processor
-cephee.YP105119(1).scheduler.local.memory = 1600;%no memory requirements
-cephee.YP105119(1).scheduler.local.temppathroot = cephee.YP105119(1).temppathroot;
-cephee.YP105119(1).scheduler.local.display = 0;
-%
-cephee.YP105119(1).scheduler.pbsproconfig.configfile = '/local/mdce/configurations/pbsproconfig.mat';
-cephee.YP105119(1).scheduler.pbsproconfig.mode = 3;%No parallel computing
-cephee.YP105119(1).scheduler.pbsproconfig.timeout = 20;%100 s time out for job submission
-cephee.YP105119(1).scheduler.pbsproconfig.clustersize = 8*14;%One core or processor
-cephee.YP105119(1).scheduler.pbsproconfig.memory = 1600;%no memory requirements
-cephee.YP105119(1).scheduler.pbsproconfig.temppathroot = cephee.YP105119(1).temppathroot;
-cephee.YP105119(1).scheduler.pbsproconfig.display = 0;
+cephee.YP105119(1).configurations.localconfig = '/local/mdce/configurations/localconfig.mat';
+cephee.YP105119(1).configurations.pbsproconfig = '/local/mdce/configurations/pbsproconfig.mat';
 %
 %--------------------------- Remote computing -----------------------------
 %
@@ -116,21 +103,8 @@ cephee.JD211098(1).MUMPS.mex712 = [cephee.JD211098(1).local_root,'MUMPS_4.9.2_S_
 %
 %--------------------------- Distributed computing -----------------------------
 %
-cephee.JD211098(1).scheduler.local.configfile = '';%'/local/mdce/configurations/localconfig.mat';
-cephee.JD211098(1).scheduler.local.mode = 3;%No parallel computing
-cephee.JD211098(1).scheduler.local.timeout = 20;%100 s time out for job submission
-cephee.JD211098(1).scheduler.local.clustersize = 8;%One core or processor
-cephee.JD211098(1).scheduler.local.memory = 1600;%no memory requirements
-cephee.JD211098(1).scheduler.local.temppathroot = cephee.JD211098(1).temppathroot;
-cephee.JD211098(1).scheduler.local.display = 0;
-%
-cephee.JD211098(1).scheduler.pbsproconfig.configfile = '';%'/local/mdce/configurations/pbsproconfig.mat';
-cephee.JD211098(1).scheduler.pbsproconfig.mode = 3;%No parallel computing
-cephee.JD211098(1).scheduler.pbsproconfig.timeout = 20;%100 s time out for job submission
-cephee.JD211098(1).scheduler.pbsproconfig.clustersize = 8*14;%One core or processor
-cephee.JD211098(1).scheduler.pbsproconfig.memory = 1600;%no memory requirements
-cephee.JD211098(1).scheduler.pbsproconfig.temppathroot = cephee.JD211098(1).temppathroot;
-cephee.JD211098(1).scheduler.pbsproconfig.display = 0;
+cephee.JD211098(1).configurations.localconfig = '/local/mdce/configurations/localconfig.mat';
+cephee.JD211098(1).configurations.pbsproconfig = '/local/mdce/configurations/pbsproconfig.mat';
 %
 %--------------------------- Remote computing -----------------------------
 %
