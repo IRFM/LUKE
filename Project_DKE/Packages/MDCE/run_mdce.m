@@ -48,6 +48,10 @@ if nargin < 8,
     display_mode = 2;% (0) no figure display, (1) figure display
 end 
 %
+if ~isfield(scheduler,'memory'),
+    scheduler.memory = 500 + round(8*nX^2/1e6);
+end
+%
 dkepath = load_structures_yp('dkepath','','');
 %
 modestrs = {'SEQUENTIAL','MDCE JOBS','DCLUKE','MDCE PARFOR'};
