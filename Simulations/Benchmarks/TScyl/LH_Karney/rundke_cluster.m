@@ -106,7 +106,7 @@ p_nr_2_20_k = '0.004294';
 eta_nr_2_20_k = '16.52';
 %
 iclustermode_min = 1;%1: sequential, 2: MDCE, 3: LDCE, 4: PARFOR, 5: GPU
-iclustermode_max = 1;%1: sequential, 2: MDCE, 3: LDCE, 4: PARFOR, 5: GPU
+iclustermode_max = 2;%1: sequential, 2: MDCE, 3: LDCE, 4: PARFOR, 5: GPU
 %
 for iclustermode = iclustermode_min:iclustermode_max,
     %
