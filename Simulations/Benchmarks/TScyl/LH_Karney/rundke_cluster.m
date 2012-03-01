@@ -26,7 +26,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -79,58 +79,15 @@ wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [
 %
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-% Choice of the distributed computing method
+% Distributed computing parameters (scheduler choice)
 %
-dkeparam.clustermode.coll_dke_jd.scheduler = dkepath.scheduler.pbspro;
-dkeparam.clustermode.coll_dke_jd.scheduler.mode = 2;
-dkeparam.clustermode.eecoll_dke_yp.scheduler = dkepath.scheduler.pbspro;
-dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = 2;
+dkeparam.clustermode.coll_dke_jd.scheduler = 'local';%'' or 'local', 'pbspro'  otherwise
+%
+dkeparam.clustermode.eecoll_dke_yp.scheduler = 'local';%'' or 'local' otherwise
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
-%
-% RELATIVISTIC CASE
-%
-dkeparam.pnmax_S = 30;
-%
-wavestruct.yvparmin_lh = [4];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
-wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
-%
-waves{1} = make_idealLHwave_jd(equil,wavestruct);
-%
-[Znorm_rel,Zcurr_rel,ZP0_rel] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-%
-% NON-RELATIVISTIC CASE
-%
-[qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
-%
-betath = 0.001;%validated for NR limit
-equil.pTe = betath^2*mc2*ones(size(equil.pTe));
-equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
-%
-wavestruct.yvparmin_lh = [3];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
-wavestruct.yvparmax_lh = [5];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
-%
-waves{1} = make_idealLHwave_jd(equil,wavestruct);
-%
-dkeparam.coll_mode = 0;%For comparison with theoretical results
-%
-dkeparam.nmhu_S = 101;
-dkeparam.np_S = 101;
-dkeparam.pnmax_S = 10;
-%
-[Znorm_nr_0_10,Zcurr_0_10,ZP0_0_10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-%
-dkeparam.nmhu_S = 201;
-dkeparam.np_S = 201;
-dkeparam.pnmax_S = 20;
-%
-[Znorm_nr_0_20,Zcurr_0_20,ZP0_0_20] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-%
-dkeparam.coll_mode = 2;%For comparison with theoretical results
-%
-[Znorm_nr_2_20,Zcurr_2_20,ZP0_2_20] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 j_r_k = '0.003732';
 p_r_k = '0.0001256';
@@ -148,7 +105,61 @@ j_nr_2_20_k = '0.07092';
 p_nr_2_20_k = '0.004294';
 eta_nr_2_20_k = '16.52';
 %
-%************************************************************************************************************************************
+iclustermode_min = 1;%1: sequential, 2: MDCE, 3: LDCE, 4: PARFOR, 5: GPU
+iclustermode_max = 1;%1: sequential, 2: MDCE, 3: LDCE, 4: PARFOR, 5: GPU
+%
+for iclustermode = iclustermode_min:iclustermode_max,
+    %
+    dkeparam.clustermode.coll_dke_jd.scheduler.mode = iclustermode-1;%0: sequential, 1: MDCE, 2: LDCE, 3: PARFOR, 4: GPU
+    dkeparam.clustermode.coll_dke_jd.scheduler.memory = 500;%memory allocated to batch runs, in MB
+    %
+    dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = iclustermode-1;%0: sequential, 1: MDCE, 2: LDCE, 3: PARFOR, 4: GPU
+    dkeparam.clustermode.eecoll_dke_yp.scheduler.memory = 500;%memory allocated to batch runs, in MB 
+    %
+    % RELATIVISTIC CASE
+    %
+    dkeparam.pnmax_S = 30;
+    %
+    wavestruct.yvparmin_lh = [4];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+    wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+    %
+    waves{1} = make_idealLHwave_jd(equil,wavestruct);
+    %
+    [Znorm_rel{iclustermode},Zcurr_rel{iclustermode},ZP0_rel{iclustermode}] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    % NON-RELATIVISTIC CASE
+    %
+    [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
+    %
+    betath = 0.001;%validated for NR limit
+    equil.pTe = betath^2*mc2*ones(size(equil.pTe));
+    equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
+    %
+    wavestruct.yvparmin_lh = [3];%LH wave square N// Spectrum: Lower limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+    wavestruct.yvparmax_lh = [5];%LH wave square N// Spectrum: Upper limit of the plateau (vth_ref or vth) [1,n_scenario_lh]
+    %
+    waves{1} = make_idealLHwave_jd(equil,wavestruct);
+    %
+    dkeparam.coll_mode = 0;%For comparison with theoretical results
+    %
+    dkeparam.nmhu_S = 101;
+    dkeparam.np_S = 101;
+    dkeparam.pnmax_S = 10;
+    %
+    [Znorm_nr_0_10{iclustermode},Zcurr_0_10{iclustermode},ZP0_0_10{iclustermode}] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    dkeparam.nmhu_S = 201;
+    dkeparam.np_S = 201;
+    dkeparam.pnmax_S = 20;
+    %
+    [Znorm_nr_0_20{iclustermode},Zcurr_0_20{iclustermode},ZP0_0_20{iclustermode}] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %
+    dkeparam.coll_mode = 2;%For comparison with theoretical results
+    %
+    [Znorm_nr_2_20{iclustermode},Zcurr_2_20{iclustermode},ZP0_2_20{iclustermode}] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+end
+%
+disp(['--------------------------------------------------------------------------------------------'])
 %
 format
 %
@@ -156,17 +167,32 @@ delete res_karney_cluster
 %
 diary res_karney_cluster
 %
-disp(['Comparison LUKE/Karney'])
-disp(['----------------------'])
-%
-disp(['Relativistic case (4,7,1) : j = ',num2str(Zcurr_rel.x_0),'/',j_r_k,' ; P = ',num2str(ZP0_rel.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr_rel.x_0./ZP0_rel.x_rf_fsav),'/',eta_r_k]) 
-disp(['Non Relativistic case (3,5,1) pmax = 10, coll_mode = 0 : j = ',num2str(Zcurr_0_10.x_0),'/',j_nr_0_10_k,' ; P = ',num2str(ZP0_0_10.x_rf_fsav),'/',p_nr_0_10_k,' ; j/P = ',num2str(Zcurr_0_10.x_0./ZP0_0_10.x_rf_fsav),'/',eta_nr_0_10_k]) 
-disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 0 : j = ',num2str(Zcurr_0_20.x_0),'/',j_nr_0_20_k,' ; P = ',num2str(ZP0_0_20.x_rf_fsav),'/',p_nr_0_20_k,' ; j/P = ',num2str(Zcurr_0_20.x_0./ZP0_0_20.x_rf_fsav),'/',eta_nr_0_20_k]) 
-disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 2 : j = ',num2str(Zcurr_2_20.x_0),'/',j_nr_2_20_k,' ; P = ',num2str(ZP0_2_20.x_rf_fsav),'/',p_nr_2_20_k,' ; j/P = ',num2str(Zcurr_2_20.x_0./ZP0_2_20.x_rf_fsav),'/',eta_nr_2_20_k]) 
+for iclustermode = iclustermode_min:iclustermode_max,    
+    if iclustermode == 1,
+        disp(['Comparison LUKE/Karney, sequential calculations'])
+    elseif iclustermode == 2,
+        disp(['Comparison LUKE/Karney, Matlab Distributed Computing Toolbox calculations (MDCE)'])
+    elseif iclustermode == 3,
+        disp(['Comparison LUKE/Karney, LUKE Distributed Computing Toolbox calculations (LDCE)'])
+    elseif iclustermode == 4,
+        disp(['Comparison LUKE/Karney, with PARFOR loop calculations'])
+    elseif iclustermode == 5,
+        disp(['Comparison LUKE/Karney, with GPU calculations'])
+    end
+    %
+    disp(' ')
+    disp(['----------------------------------------------'])
+    %
+    disp(['Relativistic case (4,7,1) : j = ',num2str(Zcurr_rel{iclustermode}.x_0),'/',j_r_k,' ; P = ',num2str(ZP0_rel{iclustermode}.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr_rel{iclustermode}.x_0./ZP0_rel{iclustermode}.x_rf_fsav),'/',eta_r_k]) 
+    disp(['Non Relativistic case (3,5,1) pmax = 10, coll_mode = 0 : j = ',num2str(Zcurr_0_10{iclustermode}.x_0),'/',j_nr_0_10_k,' ; P = ',num2str(ZP0_0_10{iclustermode}.x_rf_fsav),'/',p_nr_0_10_k,' ; j/P = ',num2str(Zcurr_0_10{iclustermode}.x_0./ZP0_0_10{iclustermode}.x_rf_fsav),'/',eta_nr_0_10_k]) 
+    disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 0 : j = ',num2str(Zcurr_0_20{iclustermode}.x_0),'/',j_nr_0_20_k,' ; P = ',num2str(ZP0_0_20{iclustermode}.x_rf_fsav),'/',p_nr_0_20_k,' ; j/P = ',num2str(Zcurr_0_20{iclustermode}.x_0./ZP0_0_20{iclustermode}.x_rf_fsav),'/',eta_nr_0_20_k]) 
+    disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 2 : j = ',num2str(Zcurr_2_20{iclustermode}.x_0),'/',j_nr_2_20_k,' ; P = ',num2str(ZP0_2_20{iclustermode}.x_rf_fsav),'/',p_nr_2_20_k,' ; j/P = ',num2str(Zcurr_2_20{iclustermode}.x_0./ZP0_2_20{iclustermode}.x_rf_fsav),'/',eta_nr_2_20_k]) 
+end
 %
 diary off
 %
 %************************************************************************************************************************************
 %
+disp(' ')
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
 info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
