@@ -106,7 +106,7 @@ p_nr_2_20_k = '0.004294';
 eta_nr_2_20_k = '16.52';
 %
 iclustermode_min = 1;%1: sequential, 2: MDCE, 3: LDCE, 4: PARFOR, 5: GPU
-iclustermode_max = 2;%1: sequential, 2: MDCE, 3: LDCE, 4: PARFOR, 5: GPU
+iclustermode_max = 4;%1: sequential, 2: MDCE, 3: LDCE, 4: PARFOR, 5: GPU
 %
 for iclustermode = iclustermode_min:iclustermode_max,
     %
@@ -159,6 +159,8 @@ for iclustermode = iclustermode_min:iclustermode_max,
     [Znorm_nr_2_20{iclustermode},Zcurr_2_20{iclustermode},ZP0_2_20{iclustermode}] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 end
 %
+clc
+%
 disp(['--------------------------------------------------------------------------------------------'])
 %
 format
@@ -167,7 +169,8 @@ delete res_karney_cluster
 %
 diary res_karney_cluster
 %
-for iclustermode = iclustermode_min:iclustermode_max,    
+for iclustermode = iclustermode_min:iclustermode_max,  
+    disp(' ')
     if iclustermode == 1,
         disp(['Comparison LUKE/Karney, sequential calculations'])
     elseif iclustermode == 2,
@@ -180,7 +183,6 @@ for iclustermode = iclustermode_min:iclustermode_max,
         disp(['Comparison LUKE/Karney, with GPU calculations'])
     end
     %
-    disp(' ')
     disp(['----------------------------------------------'])
     %
     disp(['Relativistic case (4,7,1) : j = ',num2str(Zcurr_rel{iclustermode}.x_0),'/',j_r_k,' ; P = ',num2str(ZP0_rel{iclustermode}.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr_rel{iclustermode}.x_0./ZP0_rel{iclustermode}.x_rf_fsav),'/',eta_r_k]) 
