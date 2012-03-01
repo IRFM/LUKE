@@ -109,7 +109,7 @@ xlim = [0,1];
 ylim = 10.^[-4,0];
 xlab = 'r/R_p';
 ylab = '\Gamma_R/\Gamma_R^{cyl}';
-tit = '';
+tit = 'Electron bounce averaged runaway rate';
 siz = 20+14i;
 %
 graph1D_jd(iar,RRn,0,1,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
@@ -119,7 +119,7 @@ set(gca,'ytick',[1e-5 1e-4 1e-3 1e-2 1e-1 1])
 set(gca,'YMinorGrid','off')
 set(gca,'YMinorTick','on')
 %
-print_jd(p_opt,'fig_runaway_bounce','.',1)
+print_jd(p_opt,'fig_runaway_bounce','./figures',1)
 %
 %************************************************************************************************************************************
 %
