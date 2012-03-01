@@ -185,7 +185,7 @@ fluct_fitparam.ngridresample = 201;%Number of grid points for resampling the rad
 dkeparam.rt_mode = 1;
 dkeparam.dtn = 1i;% as an imaginary number, dkeparam.dtn prescribes the number of internal time steps
 dkeparam.tn = 5i;% as an imaginary number, dkeparam.tn prescribes the number of fluctuation iterations
-dkeparam.Nfluct = 1.052872583699049;% to retrieve previous results before merge
+dkeparam.Nfluct = 2*1.052872583699049;% to retrieve previous results before merge
 %
 dkedisplay.display_mode = 1;
 dkedisplay.display_time_mode = 1;

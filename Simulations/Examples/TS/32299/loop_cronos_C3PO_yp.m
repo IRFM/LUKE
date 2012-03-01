@@ -76,17 +76,17 @@ end
 dkeparam = rmfield(dkeparam,'clustermode');%remove old structure for backward compatibility
 %
 if strfind(id_simul,'ALOHA'),
-    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
-    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
+    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = 0;
+    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd.scheduler.memory = 500;
 else
-    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
-    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
-    wavestructs{2}.C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
-    wavestructs{2}.C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
+    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = 0;
+    wavestructs{1}.C3POparam.clustermode.main_C3PO_jd.scheduler.memory = 500;
+    wavestructs{2}.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = 0;
+    wavestructs{2}.C3POparam.clustermode.main_C3PO_jd.scheduler.memory = 500;
 end
 %
-dkeparam.clustermode.wave_solver_yp = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment (3)
-dkeparam.clustermode.wave_solver_yp.scheduler.display = 0;
+dkeparam.clustermode.wave_solver_yp.scheduler.mode = 2;%MatLab distributed computing environment (3)
+dkeparam.clustermode.wave_solver_yp.scheduler.memory = 500;
 %
 dkeparam.psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 dkeparam.rho_S = 25;%dkeparam.rho_S;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)

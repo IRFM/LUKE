@@ -16,7 +16,7 @@ load ('before_luke@TS_32299_100.0117.mat','equil');%data file from cronos
 opt_dist = 0;% batch run index in dkepath.remote; (0) for local run, (1) local multicore, (2) remote cephee, (3) remote saturne
 opt_save = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
 tn = 10i;%Total normalized integration time. As an imaginary number, dkeparam.tn prescribes the number of fluctuation iterations
-display_mode = [1,1,1];%option for display [C3PO, LUKE, time evolution]
+display_mode = [0,1,1];%option for display [C3PO, LUKE, time evolution]
 p_opt = 2;%option for printing
 %
 %%%%%%%%%%% WARNING: Nothing below must be modified in case of reload %%%%%%%%%%% %%%%%%%%%%%%%%%

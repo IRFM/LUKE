@@ -29,7 +29,6 @@ disp(simul.id);
 %
 itnmin = 1;
 wavetype = 0;
-Pnonabs_ray = [];
 %
 for iw = 1:length(waves),
     if strcmp(waves{iw}.equil_id,equil.id) == 0,
@@ -204,10 +203,6 @@ else
     end
 end
 %
-if ~exist('wavestructs_fluct','var'),
-    wavestructs_fluct = [];
-end
-%
 byPnonabs = NaN;% leftover power in each wave
 %
 for itn = itnmin:itnmax,%time evolution
@@ -245,32 +240,39 @@ for itn = itnmin:itnmax,%time evolution
     %    
     byPnonabs = cell(size(wavestructs));
     %
-    for ifluct = 1:size(wavestructs,1),
-        for iw = 1:size(wavestructs,2),
-            %
-            % calculate power injected at t=0 et t=tin
-            %
-            if isfield(wavestructs{ifluct,iw}.launch,'bPlhtot'),
-                Ptot_0 = Ptot_0 + sum(wavestructs{ifluct,iw}.launch.bPlhtot_in)/1e6;%LH injected power at t=0
-                Ptot_inj = Ptot_inj + sum(wavestructs{ifluct,iw}.launch.bPlhtot)/1e6;%LH injected power at t=itn
-                ny = length(wavestructs{ifluct,iw}.launch.bPlhtot);
-            elseif isfield(wavestructs{ifluct,iw}.launch,'yP_L'),
-                Ptot_0 = Ptot_0 + sum(wavestructs{ifluct,iw}.launch.yP_L)/1e6;%EC injected power at t=0
-                Ptot_inj = Ptot_inj + sum(wavestructs{ifluct,iw}.launch.yP_L)/1e6;%EC injected power at t=itn
-                ny = length(wavestructs{ifluct,iw}.launch.yP_L);
-            end
-            %
-            % calculate ql power not absorbed at t=tn
-            %
-            byPnonabs{ifluct,iw} = zeros(1,ny);
-            for iy = 1:ny,
-                for iray = 1:length(byisel{ifluct,iw}{iy}),
-                    Pnonabs_loc = 2*pi*equil.Rp*dke_out.zP_0_2piRp_mod{end}{byisel{ifluct,iw}{iy}(iray)}(end);
-                    byPnonabs{ifluct,iw} = byPnonabs{ifluct,iw} + Pnonabs_loc;
-                    Pnonabs = Pnonabs + Pnonabs_loc;
+    if ~isinf(dtn_phase),
+        %
+        for ifluct = 1:size(wavestructs,1),
+            for iw = 1:size(wavestructs,2),
+                %
+                % calculate power injected at t=0 et t=tin
+                %
+                if isfield(wavestructs{ifluct,iw}.launch,'bPlhtot'),
+                    Ptot_0 = Ptot_0 + sum(wavestructs{ifluct,iw}.launch.bPlhtot_in)/1e6;%LH injected power at t=0
+                    Ptot_inj = Ptot_inj + sum(wavestructs{ifluct,iw}.launch.bPlhtot)/1e6;%LH injected power at t=itn
+                    ny = length(wavestructs{ifluct,iw}.launch.bPlhtot);
+                elseif isfield(wavestructs{ifluct,iw}.launch,'yP_L'),
+                    Ptot_0 = Ptot_0 + sum(wavestructs{ifluct,iw}.launch.yP_L)/1e6;%EC injected power at t=0
+                    Ptot_inj = Ptot_inj + sum(wavestructs{ifluct,iw}.launch.yP_L)/1e6;%EC injected power at t=itn
+                    ny = length(wavestructs{ifluct,iw}.launch.yP_L);
+                end
+                %
+                % calculate ql power not absorbed at t=tn
+                %
+                byPnonabs{ifluct,iw} = zeros(1,ny);
+                for iy = 1:ny,
+                    for iray = 1:length(byisel{ifluct,iw}{iy}),
+                        Pnonabs_loc = 2*pi*equil.Rp*dke_out.zP_0_2piRp_mod{end}{byisel{ifluct,iw}{iy}(iray)}(end);
+                        byPnonabs{ifluct,iw} = byPnonabs{ifluct,iw} + Pnonabs_loc;
+                        Pnonabs = Pnonabs + Pnonabs_loc/1e6;
+                    end
                 end
             end
         end
+        %
+        disp(['---> Injected rf power @ itn = 1 : ',num2str(Ptot_0),' (MW)']);
+        disp(['---> Injected rf power @ itn = ',int2str(itn),' : ',num2str(Ptot_inj),' (MW)']);
+        disp(['---> Power not absorbed @ itn = ',int2str(itn),' : ',num2str(Pnonabs),' (MW)']);
     end
     %
     if itnmax > 1,
@@ -386,7 +388,7 @@ for itn = itnmin:itnmax,%time evolution
             waves = '';
         end
         %
-        eval(['save ',save_str,' tn itn itnmax xrho xJ xP Itot Ptot Pnonabs_ray wavestructs wavestructs_fluct waves f0struct XXf0_t loadstructs simul psin_S dkepath equil dkeparam dkedisplay ohm transpfaste ripple XXsinksource_in opt_save Znorm Zcurr ZP0']);
+        eval(['save ',save_str,' tn itn itnmax xrho xJ xP Itot Ptot byPnonabs wavestructs waves f0struct XXf0_t loadstructs simul psin_S dkepath equil dkeparam dkedisplay ohm transpfaste ripple XXsinksource_in opt_save Znorm Zcurr ZP0']);
         disp('--------------------------------------------------------------------------------------------------');
         info_dke_yp(2,['Backup of iteration ',int2str(itn),'/',int2str(itnmax),' done in file ''',save_str,'''.']);
         disp('--------------------------------------------------------------------------------------------------');

@@ -25,6 +25,8 @@ if nargin < 6,
 end
 %
 Nfluct = max([1,round(dkeparam.Nfluct)]);
+%
+nw = size(wavestructs,2);
 %        
 if ~iscell(byPnonabs) && isfield(wavestructs{1}.equil_fit,'fluct_fit'),% first time step, with fluctuations
     %
@@ -32,7 +34,6 @@ if ~iscell(byPnonabs) && isfield(wavestructs{1}.equil_fit,'fluct_fit'),% first t
         error('byPnonabs must be provided if wavestruct structure already duplicated.')
     end
     %
-    nw = length(wavestructs);
     wavestructs = repmat(wavestructs,[Nfluct,1]);% copy wavestructs in Nfluct structures
     byPnonabs = cell(Nfluct,nw);
     %
@@ -70,8 +71,6 @@ if iscell(byPnonabs),%calculate fluctuation phases and adjust initial power in e
         error('wavestruct structure must be already duplicated if byPnonabs is provided.')
     end
     %
-    nw = size(wavestructs,2);
-    %
     for ifluct = 1:Nfluct,
         %
         fluct_fit = fluctphase_yp(wavestructs{ifluct,1}.equil_fit.fluct_fit);%Calculations with new random phase for each structure (core fluctuations). Edge fluctuations are done in main_rayinit_launch_jd.m
@@ -93,17 +92,7 @@ if iscell(byPnonabs),%calculate fluctuation phases and adjust initial power in e
     end          
 end    
 %
-%
-%disp(['---> Injected rf power : ',num2str(Ptot_inj_th),' (MW)']);
-%disp(['---> Injected rf power @ itn = ',int2str(itn),' : ',num2str(Ptot_inj_old/1e6),' (MW)']);
-%disp(['---> Injected rf power @ itn = ',int2str(itn+1),' : ',num2str(Ptot_inj_new/1e6),' (MW)']);
-%disp(['---> Power ratio = ',num2str(Ptot_inj_new/Ptot_inj_old)]);
-%
-if isfield(dkeparam,'clustermode') && isfield(dkeparam.clustermode,'wave_solver_yp'),
-    dkecluster = dkeparam.clustermode.wave_solver_yp;
-else
-    dkecluster = [];
-end
+dkecluster = clustermode_luke(dkeparam.clustermode,'wave_solver_yp',dkepath);%MatLab distributed computing environment
 %
 [flag,waves] = mdce_luke(@wave_solver_yp,{dkepath,'',f0struct},2,wavestructs(:),dkecluster);
 %
