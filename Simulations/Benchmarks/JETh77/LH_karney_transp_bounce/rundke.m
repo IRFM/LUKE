@@ -8,9 +8,11 @@ close all
 warning off
 global nfig
 %
-opt_proc = 0;%test for numerical performance test with number of processors 
+opt_proc = 1;%test of numerical performances with number of processors at fixed Dpsipsi = 10 m2/s.
+nproc_max = 10;%max number of processors
 %
-mdce_mode = 2;
+scheduler = 'local';%'' or 'local', 'pbspro', 'xgrid' or otherwise
+mdce_mode = 2;%distributed computing environment state: (0) disabled, (1) enabled with the dedicated Matlab toolbox which must be installed, (2) enabled with a private method (LDCE), (3) parfor parallel computing [1,1]
 mdce_enforce = 1;%enforce sequential run if distributed computing failed
 mdce_memory = 7500;%memory allocated to batch runs, in MB
 %
@@ -33,7 +35,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'NONUNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -112,8 +114,8 @@ iDr0_save = 8;
 nDr0 = length(Dr0_list);
 nr = length(rho_S) - 1;
 %
-dkecluster = clustermode_luke(mdce_mode,'',0,dkepath.remote,mdce_memory);
-dkecluster.size = nDr0;
+dkecluster = clustermode_luke(mdce_mode,'',dkepath,scheduler);
+dkecluster.clustersize = nDr0;
 dkecluster.enforce = mdce_enforce;%enforce sequential run if distributed computing failed
 %
 [flag,cZcurr,cZP0,cdke_out,cequilDKE,cmksa] = mdce_luke(@loop_rundke,...
@@ -144,18 +146,15 @@ end
 eta = j./P;
 Eta = cequilDKE{1}.xne(1)*Itot./Ptot_2piRp/(2*pi)/1e19;
 %
-% Nprocessor scan for Dpsipsi = 10 m2/s (1-> 10) (on the cluster only)
+% N processors scan for Dpsipsi = 10 m2/s (1-> nproc_max)
 %
-if opt_proc > 0 && strcmp(computer,'GLNXA64'),
+if opt_proc > 0,
     %
     transpfaste.Dr0 = 10;
-    dkeparam.invproc = -1;
     %    
-    nproc_list = [1:10];
+    nproc_list = [1:nproc_max];
     %
     for inproc = 1:length(nproc_list),
-        %
-        dkeparam.MUMPSparam.nproc = nproc_list(inproc);
         %
         [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         %
@@ -238,26 +237,25 @@ set(gca,'xtick',[0.01,0.1,1,10,100])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(p_opt,'fig_JET_transp_nobounce_j','.',1)
-print_jd(p_opt,'fig_JET_transp_nobounce_cpu','.',2)
-print_jd(p_opt,'fig_JET_transp_nobounce_I','.',3)
-print_jd(p_opt,'fig_JET_transp_nobounce_P','.',4)
-print_jd(p_opt,'fig_JET_transp_nobounce_Eta','.',5)
+print_jd(p_opt,'fig_JET_transp_nobounce_j','./figures',1)
+print_jd(p_opt,'fig_JET_transp_nobounce_cpu','./figures',2)
+print_jd(p_opt,'fig_JET_transp_nobounce_I','./figures',3)
+print_jd(p_opt,'fig_JET_transp_nobounce_P','./figures',4)
+print_jd(p_opt,'fig_JET_transp_nobounce_Eta','./figures',5)
 %
-if opt_proc > 0 && strcmp(computer,'GLNXA64'), 
+if opt_proc > 0, 
     %
     figure(6),clf
     %
-    xlim = [0:10];
-    ylim = NaN;%[0,0.1];
-    ylab = 'Number of processors';
+    xlim = [0,length(nproc_list)+1];
+    ylim = [0,round(max(tCPU_nproc)*2)];
+    xlab = 'Number of processors';
+    ylab = 'CPU time (s)';
+    tit = 'D_{\psi\psi} = 10 (m^{2}/s)';
     %
-    graph1D_jd(nproc_list,tCPU_nproc,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+    graph1D_jd(nproc_list,tCPU_nproc,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
     %
-    set(gca,'ytick',[0:0.2:1]*ylim(2))
-    set(gca,'xtick',[0:0.2:1]*xlim(2))
-    %
-    print_jd(p_opt,'fig_transp_nobounce_cpu_proc','.',6)
+    print_jd(p_opt,'fig_transp_nobounce_cpu_proc','./figures',6)
     %
 end
 %
