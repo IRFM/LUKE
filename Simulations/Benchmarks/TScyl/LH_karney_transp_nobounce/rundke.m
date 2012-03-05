@@ -9,8 +9,9 @@ warning off
 global nfig
 %
 p_opt = 2;
-opt_proc = 0;%test for numerical performance test with number of processors 
 %
+opt_proc = 1;%test of numerical performances with number of processors at fixed Dpsipsi = 10 m2/s.
+nproc_max = 10;%max number of processors
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -18,7 +19,6 @@ id_simul = 'LH_karney_transp_nobounce';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-%rho_S = [0,0.05:0.02:0.2,0.22:0.03:0.6,0.62:0.05:0.95,1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0:0.025:0.65,0.7:0.1:1];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
@@ -141,18 +141,16 @@ end
 eta = j./P;
 Eta = equilDKE.xne(1)*Itot./Ptot_2piRp/(2*pi)/1e19;
 %
-% Nprocessor scan for Dpsipsi = 10 m2/s (1-> 10) (on the cluster only)
+% Nprocessor scan for Dpsipsi = 10 m2/s (1-> 10)
 %
-if opt_proc > 0 && strcmp(computer,'GLNXA64'),
+if opt_proc > 0,
     %
     transpfaste.Dr0 = 10;
-    dkeparam.invproc = -1;
+    dkeparam.invproc = -2;
     %    
-    nproc_list = [1:10];
+    nproc_list = [1:nproc_max];
     %
     for inproc = 1:length(nproc_list),
-        %
-        dkeparam.MUMPSparam.nproc = nproc_list(inproc);
         %
         [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         %
@@ -260,28 +258,27 @@ set(gca,'xtick',[0.01,0.1,1,10,100])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(p_opt,'fig_transp_nobounce_j','.',1)
-print_jd(p_opt,'fig_transp_nobounce_cpu','.',2)
-print_jd(p_opt,'fig_transp_nobounce_fpe','.',3)
-print_jd(p_opt,'fig_transp_nobounce_memory','.',4)
-print_jd(p_opt,'fig_transp_nobounce_I','.',5)
-print_jd(p_opt,'fig_transp_nobounce_P','.',6)
-print_jd(p_opt,'fig_transp_nobounce_Eta','.',7)
+print_jd(p_opt,'fig_transp_nobounce_j','./figures',1)
+print_jd(p_opt,'fig_transp_nobounce_cpu','./figures',2)
+print_jd(p_opt,'fig_transp_nobounce_fpe','./figures',3)
+print_jd(p_opt,'fig_transp_nobounce_memory','./figures',4)
+print_jd(p_opt,'fig_transp_nobounce_I','./figures',5)
+print_jd(p_opt,'fig_transp_nobounce_P','./figures',6)
+print_jd(p_opt,'fig_transp_nobounce_Eta','./figures',7)
 %
-if opt_proc > 0 && strcmp(computer,'GLNXA64'), 
+if opt_proc > 0, 
     %
     figure(8),clf
     %
-    xlim = [0:10];
-    ylim = NaN;%[0,0.1];
-    ylab = 'Number of processors';
+    xlim = [0,length(nproc_list)+1];
+    ylim = [0,round(max(tCPU_nproc)*2)];
+    xlab = 'Number of processors';
+    ylab = 'CPU time (s)';
+    tit = 'D_{\psi\psi} = 10 (m^{2}/s)';
     %
-    graph1D_jd(nproc_list,tCPU_nproc,1,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+    graph1D_jd(nproc_list,tCPU_nproc,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
     %
-    set(gca,'ytick',[0:0.2:1]*ylim(2))
-    set(gca,'xtick',[0:0.2:1]*xlim(2))
-    %
-    print_jd(p_opt,'fig_transp_nobounce_cpu_proc','.',8)
+    print_jd(p_opt,'fig_transp_nobounce_cpu_proc','./figures',8)
     %
 end
 %
