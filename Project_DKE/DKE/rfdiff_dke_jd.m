@@ -494,7 +494,9 @@ XYDrf.ijm = spalloc(nr*ny,npn*nmhu*nn_rf,0);
 % XBDrf.ijp = zeros(SXB,'single');
 % XBDrf.ijm = zeros(SXB,'single');
 %
-disp(['Number of DQL elements : ',num2str(nXB)])
+if display_mode > 0,
+	disp(['Number of DQL elements : ',num2str(nXB)])
+end
 %
 for ibloc = 1:ceil(nXB/Nmax),
     %

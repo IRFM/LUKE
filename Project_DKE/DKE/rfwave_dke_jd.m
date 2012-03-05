@@ -279,10 +279,14 @@ end
 %disp('-------------------------------------------------------------------------------------------------------------------');
 %
 if isfield(dkeparam,'n_rf_list'),% in this case the LUKE n_rf_list is imposed by dkeparam
-    disp(['List of cyclotron harmonics in LUKE imposed by dkeparam : ',num2str(dkeparam.n_rf_list)])
+    if display.display_mode > 0,
+        disp(['List of cyclotron harmonics in LUKE imposed by dkeparam : ',num2str(dkeparam.n_rf_list)])
+    end
     waveparam.n_rf_list = dkeparam.n_rf_list;
 else
-    disp(['List of cyclotron harmonics in LUKE compiled from all waves : ',num2str(n0_rf_list)])
+    if display.display_mode > 0,
+        disp(['List of cyclotron harmonics in LUKE compiled from all waves : ',num2str(n0_rf_list)])
+    end
     waveparam.n_rf_list = n0_rf_list;
 end
 %
