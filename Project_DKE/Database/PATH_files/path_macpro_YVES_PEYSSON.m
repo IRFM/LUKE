@@ -47,6 +47,10 @@ macproyves.yvespeysson(1).MUMPS.seq = [macproyves.yvespeysson(1).local_root,'Pac
 macproyves.yvespeysson(1).MUMPS.(['mex',matlabversion]) = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB',matlabversion];%Where MUMPS matrix solver is stored (MEX function)
 macproyves.yvespeysson(1).MUMPS.(['mex',matlabversion]) = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB',matlabversion];%Where MUMPS matrix solver is stored (MEX function)
 %
+% SUPERLU matrix solver (parallel, sequential)
+%
+macproyves.yvespeysson(1).SUPERLU.mex = [macproyves.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+%
 % PETSc matrix solver (parallel, sequential)
 %
 %macproyves.yvespeysson(1).PETSc.par = [macproyves.yvespeysson(1).local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
@@ -55,7 +59,7 @@ macproyves.yvespeysson(1).MUMPS.(['mex',matlabversion]) = [macproyves.yvespeysso
 %
 % PARDISO matrix solver (mex)
 %
-macproyves.yvespeysson(1).PARDISO.(['mex',matlabversion]) = [macproyves.yvespeysson(1).local_root,'Packages/Bin/PARDISO/PARDISO/MATLAB',matlabversion];%Where PARDISO matrix solver is stored (MEX function)
+%macproyves.yvespeysson(1).PARDISO.(['mex',matlabversion]) = [macproyves.yvespeysson(1).local_root,'Packages/Bin/PARDISO/PARDISO/MATLAB',matlabversion];%Where PARDISO matrix solver is stored (MEX function)
 %
 %--------------------------- Distributed computing -----------------------------
 %
