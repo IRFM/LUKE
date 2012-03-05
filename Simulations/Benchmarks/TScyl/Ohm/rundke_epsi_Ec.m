@@ -26,7 +26,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -72,7 +72,7 @@ for iepsi = 1:length(epsi_list),
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f(max([1,find(~isnan(dke_out.residu_f))])) < dkeparam.prec0_f,
+    if dke_out.residu_f{1}(max([1,find(~isnan(dke_out.residu_f{1}))])) < dkeparam.prec0_f,
         sigma_0(iepsi) = Zcurr.x_0/epsi;
         sigma_0_noconv(iepsi) = NaN;
     else
@@ -92,7 +92,7 @@ for iepsi = 1:length(epsi_list),
     %
     dkeparam.coll_mode = 1;% High-velocity limit
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f(max([1,find(~isnan(dke_out.residu_f))])) < dkeparam.prec0_f,
+    if dke_out.residu_f{1}(max([1,find(~isnan(dke_out.residu_f{1}))])) < dkeparam.prec0_f,
         sigma_1(iepsi) = Zcurr.x_0/epsi;
         sigma_1_noconv(iepsi) = NaN;
     else
@@ -112,7 +112,7 @@ for iepsi = 1:length(epsi_list),
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f(max([1,find(~isnan(dke_out.residu_f))])) < dkeparam.prec0_f,
+    if dke_out.residu_f{1}(max([1,find(~isnan(dke_out.residu_f{1}))])) < dkeparam.prec0_f,
         sigma_2(iepsi) = Zcurr.x_0/epsi;
         sigma_2_noconv(iepsi) = NaN;
     else
@@ -173,7 +173,7 @@ set(gca,'xtick',[1e-06 1e-5 0.0001 0.001 0.01 0.1 1])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(2,'fig_sigma_epsi','.',1)
+print_jd(2,'fig_sigma_epsi','./figures',1)
 %
 figure(2),clf
 %
@@ -191,7 +191,7 @@ set(gca,'XTickLabel',['0.01',cell(1,8),'0.1'])%set(gca,'XTickLabel',{'10^{-5}','
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(2,'fig_Ecmax_epsi','.',2)
+print_jd(2,'fig_Ecmax_epsi','./figures',2)
 %
 %************************************************************************************************************************************
 %
