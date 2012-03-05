@@ -28,7 +28,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'NONUNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -123,7 +123,7 @@ set(gca,'ytick',[1 10 100 1000 10000])
 set(gca,'YMinorGrid','off')
 set(gca,'YMinorTick','on')
 %
-print_jd(p_opt,'fig_sigma_bounce','.',1)
+print_jd(p_opt,'fig_sigma_bounce','./figurss',1)
 %
 %************************************************************************************************************************************
 %

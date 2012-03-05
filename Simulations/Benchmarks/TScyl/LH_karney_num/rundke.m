@@ -27,7 +27,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -305,8 +305,9 @@ end
 if isfield(dkepath,'PETSc'),
     dkeparam.invproc = -30;
     dkeparam.PETScparam.nproc = 1;%number of processor used by PETSc (depends of the computer framework). Default is 1
-%
+    %
     [flag,message] = unix('uname -n');
+    %
     if strfind(message,'saturne'),%this option runs only on the SATURNE CEA-DRFC cluster
         dkeparam.PETScparam.matrixtype = '-matload_type superlu_dist';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
         dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
@@ -644,23 +645,23 @@ set(gca,'xtick',10.^[-9:-1])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(p_opt,'fig_num_lutol_time','.',1)
-%print_jd(p_opt,'fig_num_lutol_n','.',2)
-print_jd(p_opt,'fig_num_lutol_j','.',3)
-print_jd(p_opt,'fig_num_lutol_P','.',4)
-print_jd(p_opt,'fig_num_lutol_eta','.',5)
-print_jd(p_opt,'fig_num_lutol_etarel','.',6)
-%print_jd(p_opt,'fig_num_lutol_nit','.',7)
-print_jd(p_opt,'fig_num_lutol_memory','.',8)
+print_jd(p_opt,'fig_num_lutol_time','./figures',1)
+%print_jd(p_opt,'fig_num_lutol_n','./figures',2)
+print_jd(p_opt,'fig_num_lutol_j','./figures',3)
+print_jd(p_opt,'fig_num_lutol_P','./figures',4)
+print_jd(p_opt,'fig_num_lutol_eta','./figures',5)
+print_jd(p_opt,'fig_num_lutol_etarel','./figures',6)
+%print_jd(p_opt,'fig_num_lutol_nit','./figures',7)
+print_jd(p_opt,'fig_num_lutol_memory','./figures',8)
 %
-print_jd(p_opt,'fig_num_ittol_time','.',9)
-%print_jd(p_opt,'fig_num_ittol_n','.',10)
-print_jd(p_opt,'fig_num_ittol_j','.',11)
-print_jd(p_opt,'fig_num_ittol_P','.',12)
-print_jd(p_opt,'fig_num_ittol_eta','.',13)
-print_jd(p_opt,'fig_num_ittol_etarel','.',14)
-%print_jd(p_opt,'fig_num_ittol_nit','.',15)
-print_jd(p_opt,'fig_num_ittol_memory','.',16)
+print_jd(p_opt,'fig_num_ittol_time','./figures',9)
+%print_jd(p_opt,'fig_num_ittol_n','./figures',10)
+print_jd(p_opt,'fig_num_ittol_j','./figures',11)
+print_jd(p_opt,'fig_num_ittol_P','./figures',12)
+print_jd(p_opt,'fig_num_ittol_eta','./figures',13)
+print_jd(p_opt,'fig_num_ittol_etarel','./figures',14)
+%print_jd(p_opt,'fig_num_ittol_nit','./figures',15)
+print_jd(p_opt,'fig_num_ittol_memory','./figures',16)
 %
 delete testmatinv.txt
 %

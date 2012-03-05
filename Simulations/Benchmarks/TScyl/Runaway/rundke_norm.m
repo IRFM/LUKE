@@ -27,7 +27,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -133,7 +133,7 @@ graph1D_jd(dtn:dtn:tn_max,xRRs_1,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,si
 graph1D_jd(dtn:dtn:tn_max,xRRv_2,0,0,'','','',NaN,xlim,ylim,'-','none','g',2,siz,gca);
 graph1D_jd(dtn:dtn:tn_max,xRRs_2,0,0,'','','',NaN,xlim,ylim,'--','none','g',2,siz,gca);
 %
-print_jd(p_opt,'fig_runaway_norm','.',1)
+print_jd(p_opt,'fig_runaway_norm','./figures',1)
 %
 %************************************************************************************************************************************
 %

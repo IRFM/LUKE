@@ -28,7 +28,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'NONUNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -252,12 +252,12 @@ graph1D_jd(iar,eta_nr_cyl,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,siz,gca);
 set(gca,'ytick',[0:0.2:1]*ylim(2))
 set(gca,'xtick',[0:0.2:1]*xlim(2))
 %
-print_jd(p_opt,'fig_LH_bounce_rel_j','.',1)
-print_jd(p_opt,'fig_LH_bounce_rel_P','.',2)
-print_jd(p_opt,'fig_LH_bounce_rel_eta','.',3)
-print_jd(p_opt,'fig_LH_bounce_nr_j','.',4)
-print_jd(p_opt,'fig_LH_bounce_nr_P','.',5)
-print_jd(p_opt,'fig_LH_bounce_nr_eta','.',6)
+print_jd(p_opt,'fig_LH_bounce_rel_j','./figures',1)
+print_jd(p_opt,'fig_LH_bounce_rel_P','./figures',2)
+print_jd(p_opt,'fig_LH_bounce_rel_eta','./figures',3)
+print_jd(p_opt,'fig_LH_bounce_nr_j','./figures',4)
+print_jd(p_opt,'fig_LH_bounce_nr_P','./figures',5)
+print_jd(p_opt,'fig_LH_bounce_nr_eta','./figures',6)
 %
 %************************************************************************************************************************************
 %

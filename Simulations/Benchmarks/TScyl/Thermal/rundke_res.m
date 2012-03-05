@@ -24,7 +24,7 @@ path_path = '';%if nothing is specified, the working directory is first used and
 id_equil = 'TScyl';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -258,15 +258,15 @@ graph1D_jd(1:length(residue_nu_2{end}),residue_nu_2{end},0,1,xlab,ylab,tit,leg,x
 set(gca,'xtick',[0:0.2:1]*tnmax)
 set(gca,'ytick',ytick)
 %
-print_jd(p_opt,'fig_thermal_res_TiTe_u','.',1)
-print_jd(p_opt,'fig_thermal_res_TiTe2_u','.',2)
-print_jd(p_opt,'fig_thermal_res_TiTe_nu','.',3)
-print_jd(p_opt,'fig_thermal_res_TiTe2_nu','.',4)
+print_jd(p_opt,'fig_thermal_res_TiTe_u','./figures',1)
+print_jd(p_opt,'fig_thermal_res_TiTe2_u','./figures',2)
+print_jd(p_opt,'fig_thermal_res_TiTe_nu','./figures',3)
+print_jd(p_opt,'fig_thermal_res_TiTe2_nu','./figures',4)
 %
-print_jd(p_opt,'fig_thermal_res_TiTe_u_res','.',5)
-print_jd(p_opt,'fig_thermal_res_TiTe2_u_res','.',6)
-print_jd(p_opt,'fig_thermal_res_TiTe_nu_res','.',7)
-print_jd(p_opt,'fig_thermal_res_TiTe2_nu_res','.',8)
+print_jd(p_opt,'fig_thermal_res_TiTe_u_res','./figures',5)
+print_jd(p_opt,'fig_thermal_res_TiTe2_u_res','./figures',6)
+print_jd(p_opt,'fig_thermal_res_TiTe_nu_res','./figures',7)
+print_jd(p_opt,'fig_thermal_res_TiTe2_nu_res','./figures',8)
 %	    
 %************************************************************************************************************************************
 %

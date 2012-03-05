@@ -26,7 +26,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -130,8 +130,8 @@ set(gca,'ytick',10.^[-23:21])
 set(gca,'YMinorGrid','off')
 set(gca,'YMinorTick','off')
 %
-print_jd(2,'fig_thermal_Ti_deltan','.',1)
-print_jd(2,'fig_thermal_Ti_residue','.',2)
+print_jd(2,'fig_thermal_Ti_deltan','./figures',1)
+print_jd(2,'fig_thermal_Ti_residue','./figures',2)
 %	    
 %************************************************************************************************************************************
 %

@@ -27,7 +27,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -413,15 +413,15 @@ set(gca,'YMinorGrid','off')
 set(gca,'YMinorTick','on')
 %
 %
-print_jd(2,'fig_num_3D_np_time','.',1)
-print_jd(2,'fig_num_3D_nmhu_time','.',2)
-print_jd(2,'fig_num_3D_nr_time','.',3)
-print_jd(2,'fig_num_3D_Dr0_time','.',4)
-print_jd(2,'fig_num_3D_np_memory','.',5)
-print_jd(2,'fig_num_3D_nmhu_memory','.',6)
-print_jd(2,'fig_num_3D_nr_memory','.',7)
-print_jd(2,'fig_num_3D_Dr0_memory','.',8)
-print_jd(2,'fig_num_3D_ratio','.',9)
+print_jd(2,'fig_num_3D_np_time','./figures',1)
+print_jd(2,'fig_num_3D_nmhu_time','./figures',2)
+print_jd(2,'fig_num_3D_nr_time','./figures',3)
+print_jd(2,'fig_num_3D_Dr0_time','./figures',4)
+print_jd(2,'fig_num_3D_np_memory','./figures',5)
+print_jd(2,'fig_num_3D_nmhu_memory','./figures',6)
+print_jd(2,'fig_num_3D_nr_memory','./figures',7)
+print_jd(2,'fig_num_3D_Dr0_memory','./figures',8)
+print_jd(2,'fig_num_3D_ratio','./figures',9)
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);

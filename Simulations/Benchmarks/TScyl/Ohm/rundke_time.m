@@ -27,7 +27,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -169,8 +169,8 @@ set(gca,'xtick',10.^[-2:5])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(p_opt,'fig_sigma_time','.',1)
-print_jd(p_opt,'fig_sigma_norm','.',2)
+print_jd(p_opt,'fig_sigma_time','./figures',1)
+print_jd(p_opt,'fig_sigma_norm','./figures',2)
 %
 %************************************************************************************************************************************
 %
