@@ -6,6 +6,15 @@ clc
 clear all
 close all
 %
+% Flags of the tested methods (0: not testes, 1: tested). WARNING: it tests
+% all compiled version of a matrix inversion method. Check before the
+% compatibility with the working release of Matlab.
+%
+MUMPS = 1;
+PETSC = 0;
+SUPERLU = 1;
+PARDISO = 0;
+%
 [lukeversion,matver] = LUKEversion_jd;
 %
 try
@@ -162,7 +171,7 @@ while ipass < npass,
         end
     end
     %
-    if ~isempty(MUMPSDIR),
+    if ~isempty(MUMPSDIR) & MUMPS,
         list_of_packages = dir(MUMPSDIR);
         for ifile = 1:length(list_of_packages),
             if length(list_of_packages(ifile).name) >= 5 && strcmp(list_of_packages(ifile).name(1:5),'MUMPS') && ~isempty(strfind(list_of_packages(ifile).name,'_S_')),
@@ -184,7 +193,7 @@ while ipass < npass,
 %
 % MUMPS packages (stand-alone application)
 %
-    if exist([local_root,'Packages/Bin/MUMPS']),
+    if exist([local_root,'Packages/Bin/MUMPS']) & MUMPS,
         list_of_packages = dir([local_root,'Packages/Bin/MUMPS']);
         for ifile = 1:length(list_of_packages),
             if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'MUMPS',
@@ -225,7 +234,7 @@ while ipass < npass,
 %
 % PETSc packages (stand-alone application)
 %
-    if exist([local_root,'Packages/Bin/PETSC']),
+    if exist([local_root,'Packages/Bin/PETSC']) & PETSC,
         list_of_packages = dir([local_root,'Packages/Bin/PETSC']);
         for ifile = 1:length(list_of_packages),   
             if length(list_of_packages(ifile).name) >= 5 & list_of_packages(ifile).name(1:5) == 'petsc',
@@ -301,7 +310,7 @@ while ipass < npass,
 %
 % SUPERLU packages (MEX application)
 %
-    if exist([local_root,'Packages/Bin/SUPERLU']),
+    if exist([local_root,'Packages/Bin/SUPERLU']) & SUPERLU,
         list_of_packages = dir([local_root,'Packages/Bin/SUPERLU']);
         list_of_packages = dir([local_root,'Packages/Bin/SUPERLU']);
         for ifile = 1:length(list_of_packages),   
@@ -324,7 +333,7 @@ while ipass < npass,
 %
 % PARDISO packages (MEX application)
 %
-    if exist([local_root,'Packages/Bin/PARDISO']),
+    if exist([local_root,'Packages/Bin/PARDISO']) & PARDISO,
         list_of_packages = dir([local_root,'Packages/Bin/PARDISO']);
         for ifile = 1:length(list_of_packages),
             if strfind(list_of_packages(ifile).name,'PARDISO'),
@@ -372,4 +381,3 @@ diary off
 %
 cd(dirinit);%back to the initial directory
 %
-
