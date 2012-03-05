@@ -525,8 +525,11 @@ if dkeparam_out.opt_struct == 0,
 end
 %
 if exist(dkepath.temppath,'dir')
-    disp(['remove the directory :',dkepath.temppath]),
-    rmdir(dkepath.temppath);%Remove calculation directory
+    try
+        rmdir(dkepath.temppath);%Remove calculation directory
+    catch
+        disp(['WARNING: The calculation directory:',dkepath.temppath,' has NOT been removed.']),
+    end
 end
 %
 
