@@ -9,8 +9,6 @@ clear functions
 warning off
 global nfig
 %
-clustername = 'local';%'','local','cephee','saturne','macproyves',... (see make_path_LOCAL.m)
-% 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
 id_simul = 'LH_karney_remote';%Simulation ID
@@ -28,7 +26,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'NO_DISPLAY';%For output code display
+id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -87,10 +85,18 @@ dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
-dkeparam.clustermode.coll_dke_jd.mode = 2;
-dkeparam.clustermode.eecoll_dke_jd.mode = 2;
+% Distributed compting options on the remote computer (or cluster)
 %
-if isempty(clustername),%local non distributed calculations
+remotename = 'local';%'','local','cephee','saturne','macproyves',... (see make_path_LOCAL.m)
+%
+dkeparam.clustermode.coll_dke_jd.scheduler = 'local';
+dkeparam.clustermode.eecoll_dke_yp.scheduler = 'local';
+dkeparam.clustermode.coll_dke_jd.scheduler.mode = 2;
+dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = 2;
+%Ò
+debugmode = 1;%set to 1 in case of problem
+%
+if isempty(remotename),%local non distributed calculations
     %
     % RELATIVISTIC CASE
     %
@@ -145,8 +151,8 @@ if isempty(clustername),%local non distributed calculations
     [nondist(4).Znorm,nondist(4).Zcurr,nondist(4).ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     time_without_dist = time_without_dist + toc;
     %
-else,%remote distributed calculations
-    [flag,remote] = check_remote_yp(dkepath,clustername);
+else,%remote distributed calculations (may be distributed on the remote machine or cluster)
+    [flag,remote] = check_remote_yp(dkepath,remotename);
     if ~flag,return,end,%no remote connection
     %
     luke_input = [];
@@ -233,7 +239,7 @@ else,%remote distributed calculations
     %
     tic
     for i_simul = 1:4,
-        [tid,jid] = runluke_remote_jd(luke_input(i_simul),remote);%Job submission
+        [tid,jid] = runluke_remote_jd(luke_input(i_simul),remote,debugmode);%Job submission
          timeid(i_simul) = {tid};
          jobid(i_simul) = {jid};
     end
@@ -242,8 +248,6 @@ else,%remote distributed calculations
     flag = ones(4,1);
     %
     disp('Wait until each job is done (set ''debugmode'' variable to 1 for investing the logfiles in case of problems)...');
-    %
-    debugmode = 0;%set to 1 in case of problem
     %
     while 1,
         if flag(i_simul)
@@ -290,7 +294,7 @@ disp(['----------------------'])
 disp(['Comparison LUKE/Karney with tn = ',int2str(dkeparam.tn),', dtn = ',int2str(dkeparam.dtn),' and nit_f = ',int2str(dkeparam.nit_f)])
 disp(['----------------------'])
 %
-if isempty(clustername),
+if isempty(remotename),
     info_dke_yp(2,['Calculations time without distributed computing, elapsed time: ',num2str(time_without_dist),' s'],'','Green');
     disp(['----------------------'])
     disp(['Relativistic case (4,7,1) : j = ',num2str(nondist(1).Zcurr.x_0),'/',j_r_k,' ; P = ',num2str(nondist(1).ZP0.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(nondist(1).Zcurr.x_0./nondist(1).ZP0.x_rf_fsav),'/',eta_r_k]) 
