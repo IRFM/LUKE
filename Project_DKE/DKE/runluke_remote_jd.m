@@ -1,4 +1,8 @@
-function [timeid,jobid] = runluke_remote_jd(luke_input,remote)
+function [timeid,jobid] = runluke_remote_jd(luke_input,remote,debugmode)
+%
+if nargin < 3
+    debugmode = 0;
+end
 %
 id_simul = luke_input.id_simul;
 dkeparam = luke_input.dkeparam;
@@ -91,7 +95,11 @@ if ~isempty(remotehost),
     [res,err] = unix(['scp ',save_id,' ',remotelogname,'@',remotehost{1},':']);
     end
     %
-    delete(save_id);
+    if ~debugmode,
+        delete(save_id);
+    else
+        info_dke_yp(6,['The files ',save_id,' is not deleted.'],'','Red');
+    end
     %
     if res ~= 0,
         error(['File transfer failed : ',err])
@@ -102,7 +110,11 @@ if ~isempty(remotehost),
         %
         [res_batch,err_batch] = unix(['scp ',batch_id,' ',remotelogname,'@',remotehost{1},':xgrid']);
         %
-        delete(batch_id);
+        if ~debugmode,
+            delete(batch_id);
+        else
+            info_dke_yp(6,['The files ',batch_id,' is not deleted.'],'','Red');
+        end
         %
         if res_batch ~= 0,
             error(['Batch file transfer failed : ',err_batch])
