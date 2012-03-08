@@ -146,7 +146,7 @@ if exist('flag_path','var'),%Paths
         try
             [s,lhostname] = system('hostname');
             if s ~= 0,
-                lhostname = getenv('LUKE_hostname'),%For remote computing (xgrid)
+                lhostname = getenv('LUKE_hostname');%For remote computing (xgrid)
             end
         catch
             lhostname = getenv('LUKE_hostname'),%For remote computing (xgrid)
