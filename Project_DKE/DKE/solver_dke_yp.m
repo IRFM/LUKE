@@ -304,7 +304,7 @@ if dkeparam.opsplit == 0,
         MMXPC_f_t = MMXPDI_f_t*(MMXP_f_t/time_scheme + MMXR_f_t/time_scheme + MMXT_f_t);%Main diagonal matrix preconditionning
 %
         if dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
-            [MMXL_f_t,MMXU_f_t] = luinc(MMXPC_f_t,dkeparam.ludroptol);
+            [MMXL_f_t,MMXU_f_t] = ilu(MMXPC_f_t,struct('type','crout','milu','row','droptol',dkeparam.ludroptol));
         elseif dkeparam.invproc == -2,%MUMPSMEX case only (single processor). See MUMPS documentation
             job_MUMPSMEX = 1;MUMPSMEX_dke_yp;
             job_MUMPSMEX = 2;MUMPSMEX_dke_yp;
@@ -326,7 +326,7 @@ if dkeparam.opsplit == 0,
         MMXPC_g_t = MMXPDI_g_t*MMXP_g_t;%Main diagonal matrix preconditionning
     %
         if dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
-           [MMXL_g_t,MMXU_g_t] = luinc(MMXPC_g_t,dkeparam.ludroptol); 
+           [MMXL_g_t,MMXU_g_t] = ilu(MMXPC_g_t,struct('type','crout','milu','row','droptol',dkeparam.ludroptol)); 
         end
     %
         time_g = etime(clock,time0);
@@ -369,8 +369,8 @@ elseif dkeparam.opsplit == 1,
         MMXPC_R_f_t = MMXPDI_R_f_t*(MMXR_f_t/time_scheme + 2*MMXT_f_t);%Main diagonal matrix preconditionning
 %
         if dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
-            [MMXL_P_f_t,MMXU_P_f_t] = luinc(MMXPC_P_f_t,dkeparam.ludroptol);
-            [MMXL_R_f_t,MMXU_R_f_t] = luinc(MMXPC_R_f_t,dkeparam.ludroptol);
+            [MMXL_P_f_t,MMXU_P_f_t] = ilu(MMXPC_P_f_t,struct('type','crout','milu','row','droptol',dkeparam.ludroptol));
+            [MMXL_R_f_t,MMXU_R_f_t] = ilu(MMXPC_R_f_t,struct('type','crout','milu','row','droptol',dkeparam.ludroptol));
         elseif dkeparam.invproc == -2,%MUMPSMEX case only (single processor). See MUMPS documentation
             job_MUMPSMEX = 1;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;%P matrix
             job_MUMPSMEX = 2;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;%P matrix
@@ -404,7 +404,7 @@ elseif dkeparam.opsplit == 2,
         MMXPC_P_f_t = MMXPDI_P_f_t*(MMXP_f_t/time_scheme + MMXT_f_t);%Main diagonal matrix preconditionning
 %
         if dkeparam.invproc >=1,%MatLab build-in matrix incomplete factorization only
-            [MMXL_P_f_t,MMXU_P_f_t] = luinc(MMXPC_P_f_t,dkeparam.ludroptol);
+            [MMXL_P_f_t,MMXU_P_f_t] = ilu(MMXPC_P_f_t,struct('type','crout','milu','row','droptol',dkeparam.ludroptol));
         elseif dkeparam.invproc == -2,%MUMPSMEX case only (single processor). See MUMPS documentation            
             job_MUMPSMEX = 1;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;%P matrix
             job_MUMPSMEX = 2;mode_MUMPSMEX=1;MUMPSMEX_dke_yp;%P matrix
