@@ -89,12 +89,12 @@ dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic sol
 %
 remotename = 'local';%'','local','cephee','saturne','macproyves',... (see make_path_LOCAL.m)
 %
-dkeparam.clustermode.coll_dke_jd.scheduler = 'local';
-dkeparam.clustermode.eecoll_dke_yp.scheduler = 'local';
+dkeparam.clustermode.coll_dke_jd.scheduler.type = 'local';
+dkeparam.clustermode.eecoll_dke_yp.scheduler.type = 'local';
 dkeparam.clustermode.coll_dke_jd.scheduler.mode = 2;
 dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = 2;
-%Ò
-debugmode = 1;%set to 1 in case of problem
+%
+debugmode = 0;%set to 1 in case of problem
 %
 if isempty(remotename),%local non distributed calculations
     %
