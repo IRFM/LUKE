@@ -46,8 +46,10 @@ end
 %
 npass = input_dke_yp('Number of passes',1);
 %
-if GPUstatus.DeviceSupported,
+if GPUstatus.DeviceSupported && mode==1,
     gpu_mode = input_dke_yp('Calculation with GPU',1);disp(' ');
+elseif GPUstatus.DeviceSupported && mode~=1,
+    gpu_mode = input_dke_yp('Calculation with GPU',0);disp(' ');    
 end
 %
 disp(' ');
@@ -95,8 +97,8 @@ disp(' ');disp(['Matrix size: (',int2str(length(MMXR_t)),'x',int2str(length(MMXR
 %
 ipass = 0;
 %
-ilu_param.type = 'crout';
-ilu_param.droptol = 1e-4;
+ilu_param.type = 'crout';%equivalent to old matlab function luinc
+ilu_param.droptol = 1e-6;
 ilu_param.milu = 'row';
 %
 if mode < 2,%not too large matrices for GPU tests and direct matrix inversions
@@ -145,7 +147,7 @@ while ipass < npass,
     %
     % Iterative methods
     %
-    isim = isim + 1;disp('- MATLAB-ILU by CPU with sparse matrix (drop_tol = 1e-4)'),tic,[MMXL_f_t,MMXU_f_t] = ilu(MMXPC_f_t,ilu_param);t(isim) = toc;
+    isim = isim + 1;disp('- MATLAB-ILU by CPU with sparse matrix (drop_tol = 1e-6)'),tic,[MMXL_f_t,MMXU_f_t] = ilu(MMXPC_f_t,ilu_param);t(isim) = toc;
     Zname{isim} = ['MATLAB_LU_FACTORISATION'];
     isim = isim + 1;disp('- MATLAB-CGS by CPU with sparse matrix'),tic,[MMXS_t_cgs,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds.']);
     ZMMXS_t{isim} = MMXS_t_cgs;
