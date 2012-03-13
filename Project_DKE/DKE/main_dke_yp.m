@@ -1,5 +1,5 @@
 function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = ...
-    main_dke_yp(simul_in,psin_S,rho_S,dkepath,equil,dkeparam_in,display,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct)
+    main_dke_yp(simul_in,psin_S,rho_S,dkepath,equil,dkeparam_in,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct)
 %
 %  Main function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the RF wave absorption problem in presence of an Ohmic electric field (electron bootstrap current consistent with non-Maxwellian distribution)
@@ -65,7 +65,7 @@ else
         waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys,...
         ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf,...
         XXfinit]...
-         = buildlukestruct_yp(loadstruct,psin_S,rho_S,equil,dkeparam_in,display,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+         = buildlukestruct_yp(loadstruct,psin_S,rho_S,equil,dkeparam_in,dkedisplay,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
     %
     time0 = clock;
     %
@@ -75,9 +75,9 @@ else
         %
         zS = raypath_jd(xys,xyprop_dke,yb,radialDKE.r_dke);
         nit_rf = dkeparam_out.nit_rf;
-        if nit_rf > 1 && display.display_mode >= 1,
+        if nit_rf > 1 && dkedisplay.display_mode >= 1,
             Fig_QLIter = figbyname_yp('Quasilinear iteration');
-            if display.display_mode >= 2,
+            if dkedisplay.display_mode >= 2,
                 Fig_Pray = figbyname_yp('Power absorption along rays');
             end
         end
@@ -91,7 +91,7 @@ else
     nit = length(FPtime);
     dtn_list = diff([0,FPtime]);
     %
-    if nit > 1 && display.display_mode >= 1,
+    if nit > 1 && dkedisplay.display_mode >= 1,
         Fig_TimeIter = figure('Name','Time evolution');        
     end
     %
@@ -169,10 +169,10 @@ for itn = itn0:nit,
         end
         %
         [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd(dkeparam_out,ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod/redfac,gridindex_rf);
-        [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_a,ZXXF_a);%Build the 3D DKE matrix
+        [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,dkedisplay,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_a,ZXXF_a);%Build the 3D DKE matrix
         %
         if conv >= 0,
-            [XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0{itn},curr0{itn},residu_f{itn}] = solver_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfin);% Solve the DKE equation
+            [XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0{itn},curr0{itn},residu_f{itn}] = solver_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfin);% Solve the DKE equation
         else% case where the initial distribution is used to first estimate the ray absorption
             XXf0{itn} = XXfin;
             XXf0_tp = zeros(size(XXf0{itn}));
@@ -189,7 +189,7 @@ for itn = itn0:nit,
                 %
                 % Calculation of the density of power absorbed for all rays
                 %
-                [ZP0_rf] = fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
+                [ZP0_rf] = fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
                     XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
                     ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod,gridindex_rf);%Calculate RF absorbed power of the distribution function
                 if dkeparam_out.dke_mode >= 1,
@@ -223,13 +223,13 @@ for itn = itn0:nit,
                 %residue_rf{itn}(it_rf) = max([yresidue_rf_mod(:,it_rf);yresidue_rf_out(:,it_rf)]);
                 residue_rf{itn}(it_rf) = max(yresidue_rf_mod(:,it_rf));
                 %
-                if display.display_mode >= 1,
+                if dkedisplay.display_mode >= 1,
                     figure(Fig_QLIter),
                     [ax] = graph1D_jd(1:it_rf,residue_rf{itn},0,1,'Iteration number','\DeltaP/P','Quasilinear convergence',NaN,[0,nit_rf],[dkeparam_out.prec_rf,1],'none','+','r',2);
                     grid  on
                     drawnow;                
     %             
-                    if display.display_mode >= 2,
+                    if dkedisplay.display_mode >= 2,
                         for iray = 1:length(zS),
                             figure(Fig_Pray + iray - 1);clf
                             [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod_old{itn}{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','--','none','r',2);
@@ -242,7 +242,7 @@ for itn = itn0:nit,
                     end
                 end
     %
-                if display.display_mode >=1,
+                if dkedisplay.display_mode >=1,
                     info_dke_yp(2,'---------------------------------------------------------');
                     info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf{itn}(it_rf)),', delta_rt = ',num2str(delta_rt)]);
                     info_dke_yp(2,'---------------------------------------------------------');
@@ -256,13 +256,13 @@ for itn = itn0:nit,
                     end
                     %
                     if residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == 1,
-                        if display.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);end
+                        if dkedisplay.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);end
                         break
                     else
                         info_dke_yp(2,['WARNING: convergence for ray-tracing coupling was not achieved after ',int2str(it_rf),' iterations !']);                  
                     end
                 else   	
-                    if display.display_mode >=1,info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf{itn}(it_rf))]);end       
+                    if dkedisplay.display_mode >=1,info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf{itn}(it_rf))]);end       
                 end
                 %
                 if (residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == 0),
@@ -270,7 +270,7 @@ for itn = itn0:nit,
                 end		
                 %
                 if (residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == -1),
-                    if display.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling on initial distribution after ',int2str(it_rf),' iterations !']);end
+                    if dkedisplay.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling on initial distribution after ',int2str(it_rf),' iterations !']);end
                     conv = 0;
                 end	
                 %
@@ -288,13 +288,13 @@ for itn = itn0:nit,
         [ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...(itn)
             XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRR_fsav{itn},...
             xne_norm_out{itn},xTe_norm_out{itn},xft_fsav{itn},xfteff_fsav{itn}] = ...
-            fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
+            fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
             XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
             ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
             ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor);%Calculate moments of the distribution function
     end
     %
-    if nit > 1 && display.display_mode >= 1,
+    if nit > 1 && dkedisplay.display_mode >= 1,
         figure(Fig_TimeIter),
         if length(rho_S) == 1,
             graph1D_jd(FPtime(itn),curr0{itn}(end),0,0,'FP time (\tau_c)','J (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
@@ -312,7 +312,7 @@ for itn = itn0:nit,
     end
 end
 %
-if nit > 1 && display.display_mode >= 1,
+if nit > 1 && dkedisplay.display_mode >= 1,
     close(Fig_TimeIter)
 end
 %
@@ -326,7 +326,7 @@ if dkeparam_out.timevol == 0,
     [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
         XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
         xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
-        fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
+        fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
         XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
         ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
         ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor);%Calculate moments of the distribution function
@@ -362,7 +362,7 @@ time_out = etime(clock,time0);
 memoryLU_f_out = memoryLU_f;
 memoryLU_g_out = memoryLU_g;
 %
-if display.display_mode >= 1,
+if dkedisplay.display_mode >= 1,
     if dkeparam_out.dke_mode == 0,
         info_dke_yp(2,['Full elapsed time for solving the electron Fokker-Planck equation: ',num2str(time_out),' (s)']) 
     else
@@ -377,18 +377,18 @@ if dkeparam_out.syn_mode == 1,
     time0_bc = clock;
     %
     waveparam_bc = [];
-    [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = efield_dke_jd(dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,'',ZXXF_c);%No Ohmic electric field
+    [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = efield_dke_jd(dkepath,dkeparam_out,dkedisplay,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,'',ZXXF_c);%No Ohmic electric field
     %
-    [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(dkeparam_out,display,waveparam_bc,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa);% RF wave flux coefficients
-    [MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp);%Build the 3D DKE matrix
-    [XXf0_bc,XXf0_bc_tp,XXf0_bc_g,XXf0_bc_L_tp,XXf0_bc_L_g,memoryLU_bc_f,memoryLU_bc_g] = solver_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource,XXfinit);% Solve the DKE equation
-    [ZP0_bc,Zcurr_bc,Znorm_bc,ZXXS_bc,ZYXXD_bc_rf,XxRR_bc_fsav,xMRR_flux_bc,xMRR_tau_bc,xMRR_power_flux_bc,xMRR_power_tau_bc,xRR_bc_fsav,xne_norm_bc_out_bc,xTe_norm_bc_out,xft_bc_fsav,xfteff_bc_fsav] = fmoments_dke_yp(dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,[],radial_mode,Zdelta,XXf0{nit},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,ZXXD_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp);%Calculate moments of the distribution function
+    [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(dkeparam_out,dkedisplay,waveparam_bc,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa);% RF wave flux coefficients
+    [MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,dkedisplay,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp);%Build the 3D DKE matrix
+    [XXf0_bc,XXf0_bc_tp,XXf0_bc_g,XXf0_bc_L_tp,XXf0_bc_L_g,memoryLU_bc_f,memoryLU_bc_g] = solver_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource,XXfinit);% Solve the DKE equation
+    [ZP0_bc,Zcurr_bc,Znorm_bc,ZXXS_bc,ZYXXD_bc_rf,XxRR_bc_fsav,xMRR_flux_bc,xMRR_tau_bc,xMRR_power_flux_bc,xMRR_power_tau_bc,xRR_bc_fsav,xne_norm_bc_out_bc,xTe_norm_bc_out,xft_bc_fsav,xfteff_bc_fsav] = fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,[],radial_mode,Zdelta,XXf0{nit},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,ZXXD_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp);%Calculate moments of the distribution function
 %
     time_bc_out = etime(clock,time0_bc);
     memoryLU_bc_f_out = memoryLU_bc_f;
     memoryLU_bc_g_out = memoryLU_bc_g;
 %
-    if display.display_mode >= 1,
+    if dkedisplay.display_mode >= 1,
         if dke_mode == 0,
             info_dke_yp(2,['Full elapsed time for solving the electron Fokker-Planck equation (Bootstrap Calc. Only): ',num2str(time_bc_out),' (s)']) 
         else
@@ -526,9 +526,9 @@ end
 %
 if exist(dkepath.temppath,'dir')
     try
-        rmdir(dkepath.temppath);%Remove calculation directory
+       rmdir(dkepath.temppath);%Remove calculation directory
     catch
-        disp(['WARNING: The calculation directory:',dkepath.temppath,' has NOT been removed.']),
+       disp(['WARNING: The calculation directory:',dkepath.temppath,' has NOT been removed.']),
     end
 end
 %
