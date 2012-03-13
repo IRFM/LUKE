@@ -80,7 +80,7 @@ macproyves.yvespeysson(1).SUPERLU.mex = [macproyves.yvespeysson(1).local_root,'P
 % WARNING: the setup of the scheduler may be complicated and is usually
 % machine dependent. 
 %
-% MACPRO Yves (local)
+% Xgrid and Matlab set-up
 %
 % WARNING about Xgrid scheduler for mac OSX (> 10.5.x)
 % Xgrid runs tasks using the "sandbox" facility. Tasks running as 'nobody' ie, 
@@ -109,16 +109,18 @@ macproyves.yvespeysson(1).SUPERLU.mex = [macproyves.yvespeysson(1).local_root,'P
 % that will contain all the files for the remote calculations. The owner is the
 % USER , and the group is 'nobody(-2)'. The rights are 777. It is also
 % necessary to done it the same for the Matlab_R20xx_y application (all the
-% package and inside) in such a way Matlab can write in the ~/xgrid folder.
+% package and inside) in such a way Matlab can write in the ~/xgrid folder,
+% and all the files in the directory 'Packages' which contain external tools (mexfiles,...)
 %
 % The IP address of the hostname can be given in the file /etc/hosts 
 %
 % WARNING: most of the problems come from the SSH without login
-% authentication, rights of the target directory and Matlab !
+% authentication, rights of the target directory, Matlab and Packages ! Use
+% the debug mode for identifying the problem.
 %
 macproyves.yvespeysson(1).remote(1).host = {macproyves.hostname,macproyves.hostname};%may be empty for local host
 macproyves.yvespeysson(1).remote(1).cluster = macproyves.hostname;
-macproyves.yvespeysson(1).remote(1).nproc = feature('numCores');%number of cpu
+macproyves.yvespeysson(1).remote(1).nproc = 2*feature('numCores');%number of cpu
 macproyves.yvespeysson(1).remote(1).matlabroot = [getenv('MATLAB_PATH'),'/bin/'];%matlab application
 macproyves.yvespeysson(1).remote(1).luke_root = macproyves.yvespeysson(1).luke_root;%local host LUKE root
 macproyves.yvespeysson(1).remote(1).prefdir = [getenv('HOME'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir
