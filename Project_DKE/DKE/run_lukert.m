@@ -1,4 +1,4 @@
-function [varargout] = run_lukert(simul,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam_in,dkedisplay_in,ohm,transpfaste,ripple,XXf0,XXsinksource_in,opt_save_in)
+function [varargout] = run_lukert(simul_in,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam_in,dkedisplay_in,ohm,transpfaste,ripple,XXf0,XXsinksource_in,opt_save_in)
 %
 % Wave and kinetic solver. Self-consistent calculations with or without plasma fluctuations
 %
@@ -10,10 +10,13 @@ if nargin < 15,
    opt_save_in = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
 end
 %
-if ~isstruct(simul),
-    simul.id = simul;
+if ~isstruct(simul_in),
+    simul.id = simul_in;
     simul.path = './';
+else
+    simul = simul_in;
 end
+%
 if ~exist(simul.path,'dir'), 
     mkdir(simul.path);
 end
