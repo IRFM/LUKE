@@ -51,6 +51,21 @@ cd([luke_root,'Project_DKE/Database']);
 make_all;
 cd(luke_root);
 %
+% Warning for the external mexfiles
+%
+dkepathfields1 = fieldnames(dkepath);
+%
+for ifields1 = 1:length(dkepathfields1)
+    if isstruct(dkepath.(dkepathfields1{ifields1})),
+        dkepathfields2 = fieldnames(dkepath.(dkepathfields1{ifields1}));
+        for ifields2 = 1:length(dkepathfields2)
+            if ~isempty(strfind(dkepathfields2{ifields2},'mex')) && ~strcmp(dkepathfields2{ifields2},'helmex'),
+                info_dke_yp(6,['Check that all external MEXfiles in ''',dkepath.(dkepathfields1{ifields1}).(dkepathfields2{ifields2}),''' folder have been been well compiled.'],0,'blue');
+            end
+        end
+    end
+end
+%
 disp(['WARNING: automatic generation of the documentation can be a rather long process !']);
 %
 opt = input_dke_yp('Do you want to automatically generate the documentation','n',{'y','n'});
