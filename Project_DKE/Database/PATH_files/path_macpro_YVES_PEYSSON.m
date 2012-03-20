@@ -61,6 +61,12 @@ macproyves.yvespeysson(1).SUPERLU.mex = [macproyves.yvespeysson(1).local_root,'P
 %
 %macproyves.yvespeysson(1).PARDISO.(['mex',matlabversion]) = [macproyves.yvespeysson(1).local_root,'Packages/Bin/PARDISO/PARDISO/MATLAB',matlabversion];%Where PARDISO matrix solver is stored (MEX function)
 %
+%--------------------------- Access to the experimental databases -----------------------------
+%
+% Tore Supra (TSBase)
+%
+macproyves.yvespeysson(1).TSBASE.mex = [macproyves.yvespeysson(1).luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase'];%Where tsbase, tsmat and tsdernier_choc functions are stored (MEX function)
+%
 %--------------------------- Distributed computing -----------------------------
 %
 %

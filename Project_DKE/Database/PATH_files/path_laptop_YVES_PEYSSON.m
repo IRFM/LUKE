@@ -57,6 +57,12 @@ macbookyves.yves(1).SUPERLU.mex = [macbookyves.yves(1).local_root,'Packages/Bin/
 %macbookyves.yves(1).PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 %macbookyves.yves(1).PETSc.seq = [macbookyves.yves(1).local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S_gfortran/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
 %
+%--------------------------- Access to the experimental databases -----------------------------
+%
+% Tore Supra (TSBase)
+%
+macbookyves.yves(1).TSBASE.mex = [macbookyves.yves(1).luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase'];%Where tsbase, tsmat and tsdernier_choc functions are stored (MEX function)
+%
 %--------------------------- Distributed computing -----------------------------
 %
 %
