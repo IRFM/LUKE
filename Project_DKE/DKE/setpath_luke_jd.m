@@ -59,6 +59,7 @@ addpath([luke_root,'Project_DKE/Database/OHM_files']);
 addpath([luke_root,'Project_DKE/Database/TRANSP_files']);
 addpath([luke_root,'Project_DKE/Database/RIPPLE_files']);
 addpath([luke_root,'Project_DKE/Database/EXTERNAL_files']);
+addpath([luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase']);
 addpath([luke_root,'Project_DKE/Database/PATH_files']);
 addpath([luke_root,'Project_DKE/DKE']);
 addpath([luke_root,'Tools']);
