@@ -15,7 +15,7 @@
  *****************************************************************************/
 
 #if (client==MAC)                             /* definition du type Double */
-  typedef double Double;
+  typedef short double Double;
 #elif (client == INTEL)
 #define Double double
 #else

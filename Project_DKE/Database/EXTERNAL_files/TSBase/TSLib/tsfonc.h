@@ -29,3 +29,5 @@
 #define fonc_tssigdeclenche	1013
 #define fonc_tsxtrdeclenche	1014
 #define fonc_tsgrpdeclenche	1015      
+#define fonc_tsinitocctrait	1016    /* JS - 10.2004 - Initialisation des occurrences traitements (debut du traitement) */
+#define fonc_tsupdateocctrait	1017    /* JS - 10.2004 - maj des occurrences traitements en fin du traitement */

@@ -13,6 +13,7 @@
 #define STRAT_PILOTE    15
 #define SERNAM		18
 #define CADRAN		19
+#define T_DECODE        24
 #define CHRONO       	28
 #define T_DECLENC       29
 #define L_DIAG       	30

@@ -28,7 +28,7 @@
 #include "tsdef.h"                      /* liste des constantes utilisees    */
 #include "tsconf.h"                     /* configuration du client           */
 #if (client == MAC)
-
+#include <Connections.h>           /* interface C - gestionnaire de connexion */
 #endif
 #include "tsfonc.h"                     /* liste des fonctions appelees   */
 #include "tsmes.h"                      /* liste des erreurs              */
@@ -86,7 +86,11 @@ char      *tab_val;
   Longint  code_param;
   int i;
 
+#if (client == MAC)
+  ConnHandle NumSocket; /* descripteur de la socket de communication */
+#else
   int       NumSocket;  /* descripteur de la socket de communication */
+#endif
   short int CodeFonc;   /* code de la fonction TSLib appelee         */
   Longint   Resultat;   /* compte-rendu d'execution du client        */ 
 

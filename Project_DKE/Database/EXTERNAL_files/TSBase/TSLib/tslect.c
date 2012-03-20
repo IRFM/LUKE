@@ -94,7 +94,11 @@ TSRSigRg (	char *NomDon,
   Longint code_param;
   Longint numchoc;
 
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
   int NumSocket;		/* descripteur de la socket de communication */
+#endif
   short int CodeFonc;		/* code de la fonction TSLib appelee         */
   Longint Resultat;		/* compte-rendu d'execution du client        */
 
@@ -310,7 +314,11 @@ TSRSigX (    char *NomDon,
   Longint code_param;
   Longint numchoc;
 
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
   int NumSocket;		/* descripteur de la socket de communication */
+#endif
   short int CodeFonc;		/* code de la fonction TSLib appelee         */
   Longint Resultat;		/* compte-rendu d'execution du client        */
 
@@ -534,7 +542,11 @@ TSXtrRg (    char *NomDon,
   Longint code_param;
   Longint numchoc;
 
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
   int NumSocket;		/* descripteur de la socket de communication */
+#endif
   short int CodeFonc;		/* code de la fonction TSLib appelee         */
   Longint Resultat;		/* compte-rendu d'execution du client        */
 
@@ -786,7 +798,11 @@ TSXtrX (     char *NomDon,
   Longint code_param;
   Longint numchoc;
 
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
   int NumSocket;		/* descripteur de la socket de communication */
+#endif
   short int CodeFonc;		/* code de la fonction TSLib appelee         */
   Longint Resultat;		/* compte-rendu d'execution du client        */
 
@@ -1033,7 +1049,11 @@ TSGrpRg (	char *NomDon,
   Longint code_param;
   Longint numchoc;
 
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
   int NumSocket;		/* descripteur de la socket de communication */
+#endif
   short int CodeFonc;		/* code de la fonction TSLib appelee         */
   Longint Resultat;		/* compte-rendu d'execution du client        */
 
@@ -1279,7 +1299,11 @@ TSGrpX ( 	char *NomDon,
   Longint code_param;
   Longint numchoc;
 
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
   int NumSocket;		/* descripteur de la socket de communication */
+#endif
   short int CodeFonc;		/* code de la fonction TSLib appelee         */
   Longint Resultat;		/* compte-rendu d'execution du client        */
 

@@ -11,7 +11,9 @@
 
    Date de Creation :   29/09/92
    Modifications    :
-
+    01.10.04 (JaS)
+    	TSInitOccTrait	:  nouvelle fonction
+	TSUpdateOccTrait : nouvelle fonction
  *****************************************************************************/
 
 /*****************************************************************************
@@ -20,6 +22,8 @@
 
         TSWrite
         TSWcertif
+	TSInitOccTrait
+	TSUpdateOccTrait
 
  *****************************************************************************/
 
@@ -74,7 +78,11 @@ TSWrite (	char *NomTrait,
   Longint code_param;
   Longint numchoc;
 
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
   int NumSocket;		/* descripteur de la socket de communication */
+#endif
   short int CodeFonc;		/* code de la fonction TSLib appelee         */
   Longint Resultat;		/* compte-rendu d'execution du client        */
 
@@ -108,13 +116,16 @@ TSWrite (	char *NomTrait,
 
   /* YB YB YB for CTD !!!!  YB YB YB */
      if (!gethostname(host, len_host)) {
-       if (!strncmp(host,"hercule",7)) {
+       /*
+       if ( (!strncmp(host,"hercule",7)) || (!strncmp(host,"nunki",5)) ||
+                     (!strncmp(host,"asterope",8)) ) {
+       */
           var_env = getenv("TOUR");
           if(var_env) {
             if( !strcmp(var_env,"BABEL") )
               rejeu_ok = 1;
           } 
-        }
+        /* } */
      }
   /* Fin YB YB YB for CTD !!!!  YB YB YB */
 
@@ -226,7 +237,11 @@ TSWcertif (	char *NomDon,
   Longint CR;
   Longint code_param;
 
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
   int NumSocket;		/* descripteur de la socket de communication */
+#endif
   short int CodeFonc;		/* code de la fonction TSLib appelee         */
   Longint Resultat;		/* compte-rendu d'execution du client        */
 
@@ -298,4 +313,204 @@ TSWcertif (	char *NomDon,
 
   return CR;
 
+}
+
+/*----------------------------------------------------------------------------
+
+                        TSInitOccTrait
+
+But : 	fonction envoyant au serveur les paramètres écrire 
+	dans la base de données au début de l'éxécution du traitement
+Arguments :
+	NomTrait  : nom du traitement
+	Entrees   : liste des entrees du traitement
+Retour : compte-rendu d'execution
+
+------------------------------------------------------------------------------*/
+Longint FAR_PASCAL
+TSInitOccTrait (char *NomTrait, pS_Entree Entrees)
+
+{
+  Longint CR;
+  Longint code_param;
+  Longint numchoc;
+
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
+  int NumSocket;		/* descripteur de la socket de communication */
+#endif
+short int CodeFonc;		/* code de la fonction TSLib appelee         */
+Longint Resultat;		/* compte-rendu d'execution du client        */
+
+char host[64], *var_env;
+int rejeu_ok = 0, len_host = 63 ;
+
+    numchoc = Entrees->union_var.lval;
+
+    /* modif du 05/08/96 pour devtrait */
+    if (!strcmp(getenv("USER"),"devtrait"))
+      {
+       printf("Developpement traitement : Ecriture Choc # %d sous # 77 \n",numchoc);
+       Entrees->union_var.lval=77;
+      }
+
+    /* test des parametres de type pointeur */
+
+    code_param = ok;
+    
+    if (NomTrait == NULL)
+	code_param = p_nomtrait;
+    if (code_param != ok)
+	return (Gestion_Erreur (erreur_chaine_vide, code_param));
+
+    /* Verification si on est en rejeu */
+    if (!gethostname(host, len_host)) {
+	/*if (!strncmp(host,"hercule",7)) {*/
+	  var_env = getenv("TOUR");
+          if(var_env) {
+            if( !strcmp(var_env,"BABEL") )
+              rejeu_ok = 1;
+          } 
+       /* }*/
+    }
+    
+    /* debut de communication */
+    if ((Resultat = Debut_Communication (&NumSocket, 1)) != ok)
+    	return Resultat;
+
+    /* emission du code de la fonction */
+    if(compress_on)
+    	CodeFonc = fonc_tsinitocctrait;
+    else
+	CodeFonc = -(fonc_tsinitocctrait - MAX_FUNCT_NUMBER);
+    if ((Resultat = Emission (NumSocket, (char *) &CodeFonc, taille_short, p_codefonc))
+	    != ok)
+	return Resultat;
+
+    /* emission des parametres */
+    if ((Resultat = Emission (NumSocket, (char *) &rejeu_ok, taille_long, p_longnb))
+	    != ok)
+    	return Resultat;
+
+    if ((Resultat = Emission (NumSocket, NomTrait, TAILLE_NOM_TRAITEMENT, p_nomtrait))
+	    != ok)
+	return Resultat;
+
+    if ((Resultat = Emission_Entrees (NumSocket, Entrees, p_entrees))
+	    != ok)
+	return Resultat;
+
+    /* fin d'emission */
+#if ((client!=PC) && (client !=MAC))
+    if ((Resultat = Fin_Emission (NumSocket)) == erreur_fin_emission)
+	return Resultat;
+#endif
+
+    /* reception d'un parametre */
+    if ((Resultat = Reception (NumSocket, (char *) &CR, taille_long, p_cr))
+	    != ok)
+	return Resultat;
+
+    /* fin de communication */
+    Fin_Communication (NumSocket);
+    return CR;
+}
+
+/*----------------------------------------------------------------------------
+
+                        TSUpdateOccTrait
+
+But : 	fonction envoyant au serveur les paramètres écrire 
+	dans la base de données a la fin de l'éxécution du traitement
+Arguments :
+	NomTrait  : nom du traitement
+	Entrees   : liste des entrees du traitement
+	Status    : status de l'execution du traitement
+	Dureems   : duree de l'execution du traitement en millisecondes
+Retour : compte-rendu d'execution
+
+------------------------------------------------------------------------------*/
+Longint FAR_PASCAL
+TSUpdateOccTrait (char *NomTrait, pS_Entree Entrees, Longint Status, 
+		  Longint Dureems)
+{
+Longint CR;
+Longint code_param;
+Longint numchoc;
+
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
+  int NumSocket;		/* descripteur de la socket de communication */
+#endif
+short int CodeFonc;		/* code de la fonction TSLib appelee         */
+Longint Resultat;		/* compte-rendu d'execution du client        */
+
+    numchoc = Entrees->union_var.lval;
+
+    /* modif du 05/08/96 pour devtrait */
+    if (!strcmp(getenv("USER"),"devtrait"))
+      {
+       printf("Developpement traitement : Ecriture Choc # %d sous # 77 \n",numchoc);
+       Entrees->union_var.lval=77;
+      }
+
+    /* test des parametres de type pointeur */
+
+    code_param = ok;
+
+    if (NomTrait == NULL)
+	code_param = p_nomtrait;
+    if (code_param != ok)
+	return (Gestion_Erreur (erreur_chaine_vide, code_param));
+    if (Status == 0)
+    	code_param = p_status;
+    if (code_param != ok)
+    	return (Gestion_Erreur (erreur_tableau_vide, code_param));
+
+    /* debut de communication */
+    if ((Resultat = Debut_Communication (&NumSocket, 1)) != ok)
+	return Resultat;
+
+    /* emission du code de la fonction */
+    if(compress_on)
+      CodeFonc = fonc_tsupdateocctrait;
+    else
+      CodeFonc = -(fonc_tsupdateocctrait - MAX_FUNCT_NUMBER);
+    if ((Resultat = Emission (NumSocket, (char *) &CodeFonc, taille_short, p_codefonc))
+    	!= ok)
+      return Resultat;
+
+    /* emission des parametres */
+    if ((Resultat = Emission (NumSocket, NomTrait, TAILLE_NOM_TRAITEMENT, p_nomtrait))
+	    != ok)
+	return Resultat;
+
+    if ((Resultat = Emission_Entrees (NumSocket, Entrees, p_entrees))
+	    != ok)
+	return Resultat;
+
+    if ((Resultat = Emission (NumSocket, (char *) &Status, taille_long, p_status))
+	    != ok)
+	return Resultat;
+
+    if ((Resultat = Emission (NumSocket, (char *) &Dureems, taille_long, p_duree))
+	    != ok)
+	return Resultat;
+
+    /* fin d'emission */
+#if ((client!=PC) && (client !=MAC))
+    if ((Resultat = Fin_Emission (NumSocket)) == erreur_fin_emission)
+	return Resultat;
+#endif
+
+    /* reception d'un parametre */
+    if ((Resultat = Reception (NumSocket, (char *) &CR, taille_long, p_cr))
+	    != ok)
+	return Resultat;
+
+    /* fin de communication */
+    Fin_Communication (NumSocket);
+    return CR;
 }

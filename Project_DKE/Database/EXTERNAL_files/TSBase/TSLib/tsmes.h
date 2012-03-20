@@ -78,5 +78,5 @@
 #define p_cr                     (Longint)34
 #define p_codeclient             (Longint)35
 #define p_codefonc               (Longint)36
-
-
+#define p_status		 (Longint)37	/* JS - 10.2004 */
+#define p_duree			 (Longint)38	/* JS - 10.2004 */

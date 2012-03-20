@@ -18,6 +18,8 @@
 /*   26/09/97 : rajoute format CADRAN         (version 2.23)    */
 /*   26/09/97 : rajoute format SERNAM         (version 2.23)    */
 /*   26/09/97 : rajoute format CHRONO         (version 2.23)    */
+/*								*/
+/*   29/02/08 : rajoute format T_DECODE       (version 2.25c)   */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,7 +37,7 @@
 #include "newarg.h"
 
 static char     rcsid[] = "$Id$";
-static char     banner[] = "tsmat V2.25b";
+static char     banner[] = "tsmat V2.25c";
 
 #if (client != PC)
 char        tslib_reel = 'd';
@@ -283,7 +285,7 @@ MATformat(Longint mrows, Longint ncols, Longint format, dataUnion tabl)
         for (i = 0; i < mrows; i++)
             {
              j = 0;
-             while( (j < ncols) && (tabl.Char[j + i * ncols] != NULL)) {
+             while( (j < ncols) && (tabl.Char[j + i * ncols] != '\0' /*NULL*/)) {
                  chaine[i + j * mrows] = tabl.Char[j + i * ncols]; 
                  j++;
              }
@@ -444,18 +446,18 @@ absolute, Longint rangs[], Double xab[])   /** +++  **/
           mexPrintf ("Extraction demandee\n");
 #endif
           pts++;
-          if(*pts != NULL){
+          if(*pts != '\0' /*NULL*/){
             ptd = ss;
             while (*pts != ' ' && *pts != '\0' && *pts != SEPAR_EXTR)
                 *ptd++ = *pts++;
             *ptd='\0';
             extract = atoi(ss);
          }
-          if(*pts != NULL)
+          if(*pts != '\0' /*NULL*/)
                 if (*pts  == SEPAR_EXTR)
                         pts++;
 
-          if(*pts != NULL){
+          if(*pts != '\0' /*NULL*/){
               ptd = ss;
               while (*pts != ' ' && *pts != '\0')
                 *ptd++ = *pts++;
@@ -503,7 +505,7 @@ extr (char ss[], char **pts, char *type, Longint numchoc,
       ptss++;                   /* Rang demande */
 
       ptd = rang_f;             /* Rang fin */
-      while (*ptss != NULL)
+      while (*ptss != '\0' /*NULL*/)
         *ptd++ = *ptss++;
       *ptd = '\0';
 
@@ -571,7 +573,7 @@ extr (char ss[], char **pts, char *type, Longint numchoc,
       ptss++;                   /* Nombre demande  */
 
       ptd = rang_f;             /* Nombre fin */
-      while (*ptss != NULL)
+      while (*ptss != '\0' /*NULL*/)
         *ptd++ = *ptss++;
       *ptd = '\0';
 
@@ -722,7 +724,7 @@ charMat(Longint mlig, Longint ncol, char *chartab)
     mxArray         *psort;
     char           *chaine;
 
-    chaine = (char *) mxCalloc(mlig * ncol + 1, sizeof(char));
+    chaine = (char *) mxCalloc(mlig * ncol + mlig, sizeof(char));
     for (i = 0; i < mlig; i++)
         {
         for (j = 0; j < ncol; j++)
@@ -980,7 +982,6 @@ mexFunction(int nout, mxArray * pout[], int nin,const mxArray * pin[])
                 tot += 1;
                 }
             }
-
         pout[num] = charMat(tot, TAILLE_NOM_DONNEE, charcom);
         num += 1;
         /* FreeMemM((void *) charcom);  ******/
@@ -1479,7 +1480,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
            (fparm != STRAT_PILOTE) && (fparm != CADRAN)  && (fparm != SERNAM) &&
            (fparm != CHRONO) && (fparm != FLOAT4_CHAR64)
         && (fparm != INT2_CHAR64) && (fparm != L_DIAG) && 
-           (fparm != VOIE_GAIN) /*8avril*/  )
+           (fparm != VOIE_GAIN) /* 29 fevrier*/ && (fparm != T_DECODE)  )
         {
         cr = decodeParam(buffer, nb_rep, fparm, &dataout);
         if (cr != 0)
@@ -1585,7 +1586,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
           for (i = 0; i < nlig; i++)
            {
              j = 0;
-             while( (j < ncol) && (pts[i * (ncol) + j] != NULL)) {
+             while( (j < ncol) && (pts[i * (ncol) + j] != '\0' /*NULL*/)) {
                  Nom_diag[i + j * nlig] = pts[i * (ncol) + j];
                  j++;
              }
@@ -1594,7 +1595,8 @@ mexPrintf ("val = %d \n",*(int *)buffer);
                    Nom_diag[i + j * nlig] = ' ';
                    j++;
              }
-             j = 0;
+      /* Thanks to PH Moreau the 1st user of this ceartainly not tested case */
+      /*     j = 0;
              while( (j < ncol) && (pts[i * (ncol) + ncol+ j] != NULL)) {
                    Nom_diag[(nlig*lf) +i + j * nlig] =
                                 pts[i * (ncol) +ncol + j];
@@ -1606,7 +1608,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
                    Nom_diag[(nlig*lf) + i + j * nlig] = ' ';
                    j++;
                  }
-
+        */
              }
               pout[num] = mxCreateString (Nom_diag);
               mxSetM (pout[num], nlig);
@@ -1634,7 +1636,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
           for (i = 0; i < nlig; i++)
            {
              j = 0;
-             while( (j < ncol) && (pts[i * (ncol + ncol) + j] != NULL)) {
+             while( (j < ncol) && (pts[i * (ncol + ncol) + j] != '\0' /*NULL*/)) {
                  Nom_decl[i + j * nlig] = pts[i * (ncol + ncol) + j]; 
                  j++;
              }
@@ -1644,7 +1646,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
                    j++;
              }
              j = 0;
-             while( (j < ncol) && (pts[i * (ncol + ncol) + ncol+ j] != NULL)) {
+             while( (j < ncol) && (pts[i * (ncol + ncol) + ncol+ j] != '\0' /*NULL*/)) {
                    Nom_decl[(nlig*lf) +i + j * nlig] =
                                 pts[i * (ncol + ncol) +ncol + j];
                     j++;
@@ -1714,7 +1716,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < ncol; j++) {
-                   if( (pts[i * (ncol + 4) + j] == NULL) || sZterm ) {
+                   if( (pts[i * (ncol + 4) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[i * (ncol + sizeof(float)) + j] = ' ';
                           sZterm = 1;
                    }
@@ -1752,7 +1754,208 @@ mexPrintf ("val = %d \n",*(int *)buffer);
              }
              break; /* end T_DECLENC */
 
+          case T_DECODE: {
+             char  *Type, *decl1, *decl2, *Comm, *pts ;
+             short *numero, *polar;
+             Longint *duree;
+             int i, j ,sZterm, *pt_i;
+             int ofs = 2 + 2*L_NOM_DECLENCHE+2*sizeof(short)+sizeof(Longint)+L_COMMENTAIRE;
+             Double   *pr;
 
+             nlig = nb_rep ;
+
+             if ((Type = (char *) mxCalloc (nb_rep, 3)) == NULL)
+                             meser ("AllocTDecode1 - ", " ", 1001, FATAL);
+             if ((decl1=(char *) mxCalloc(nb_rep, L_NOM_DECLENCHE+1))==NULL)
+                             meser ("AllocTDecode2 - ", " ", 1001, FATAL);
+             if ((decl2=(char *) mxCalloc (nb_rep, L_NOM_DECLENCHE+1))==NULL)
+                             meser ("AllocTDecode3 - ", " ", 1001, FATAL);
+             if ((Comm = (char *) mxCalloc (nb_rep, L_COMMENTAIRE +1)) == NULL)
+                             meser ("AllocTDecode4 - ", " ", 1001, FATAL);
+
+             if( (numchoc < NUM_CHOC_BASE) && (numchoc > NUM_CHOC_TEST))
+              { /* Old shots */
+                /*  TODO  */
+                meser ("T_DECODE old shot not yet implemented - ", " ", 1001, FATAL);
+              }
+              else {
+              if ((numero = (short *) mxCalloc (nb_rep, sizeof (short)))==NULL)
+                             meser ("AllocTDecode5 - ", " ", 1001, FATAL);
+              if ((polar = (short *) mxCalloc (nb_rep, sizeof (short)))==NULL)
+                             meser ("AllocTDecode6 - ", " ", 1001, FATAL);
+              if ((duree = (Longint *) mxCalloc (nb_rep, sizeof (Longint)))=='\0')
+                             meser ("AllocTDecode7 - ", " ", 1001, FATAL);
+
+              /* numero */
+              pts = buffer + 2 ;
+              for (i = 0; i < nb_rep; i++) {
+                  memcpy(&numero[i], pts, sizeof(short));
+                  pts += ofs;
+              }
+
+              /* polar */
+              pts = buffer + 4 ;
+              for (i = 0; i < nb_rep; i++) {
+                  memcpy(&polar[i], pts, sizeof(short));
+                  pts += ofs;
+                }
+
+              /* duree */
+              pts = buffer + 2 + 2 * sizeof(short) + 2 * L_NOM_DECLENCHE ;
+              for (i = 0; i < nb_rep; i++) {
+                  memcpy(&duree[i], pts, sizeof(Longint));
+                  pts += ofs;
+                }
+             }
+
+             if( (numchoc < NUM_CHOC_BASE) && (numchoc > NUM_CHOC_TEST))
+               ncol = 8;    /* THE_OLD_SIZE */
+              else
+               ncol = THE_SIZE;    /* THE_SIZE */
+
+              /*  Type  */
+              pts = buffer;
+              for (i = 0; i < nlig; i++)
+              {
+                sZterm = 0;
+                for (j = 0; j < 2; j++) {
+                   if( (pts[(i * ofs) + j] == '\0') || sZterm ) {
+                          pts[(i * ofs) + j] = ' ';
+                          sZterm = 1;
+                   }
+                   Type[i + j * nlig] = pts[(i * ofs) + j];
+                }
+              }
+              Type[nlig * 2] = '\0';
+
+              pout[num] = mxCreateString (Type);
+              mxSetM (pout[num], nlig);
+              mxSetN (pout[num], 2);
+              mxFree (Type);
+              num += 1;
+
+              /* numero */
+              pout[num] = mxCreateDoubleMatrix( nlig, 1, mxREAL);
+              pr = mxGetPr(pout[num]);
+              if( (numchoc < NUM_CHOC_BASE) && (numchoc > NUM_CHOC_TEST))
+               {
+                 /* TODO */
+                 meser ("T_DECODE : numero for old shot not implemented - ", " "
+, 1001, FATAL);
+               } else {
+                  for (j = 0; j < 1; j++)
+                    {
+                      for (i = 0; i < nlig; i++)
+                         pr[i + j * nlig] = (Double) numero[i + j];
+                    }
+                  mxFree(numero);
+                  num += 1;
+              }
+
+              /* polar */
+              pout[num] = mxCreateDoubleMatrix( nlig, 1, mxREAL);
+              pr = mxGetPr(pout[num]);
+              if( (numchoc < NUM_CHOC_BASE) && (numchoc > NUM_CHOC_TEST))
+               {
+                 /* TODO */
+                 meser ("T_DECODE : polar for old shot not implemented - ", " ",
+ 1001, FATAL);
+               } else {
+                  for (j = 0; j < 1; j++)
+                    {
+                      for (i = 0; i < nlig; i++)
+                         pr[i + j * nlig] = (Double) polar[i + j] ;
+                    }
+                  mxFree(polar);
+                  num += 1;
+               }
+
+              /* declenche1 */
+              pts = buffer + 2 + 2 * sizeof(short);
+
+              for (i = 0; i < nlig; i++)
+              {
+                sZterm = 0;
+                for (j = 0; j < L_NOM_DECLENCHE; j++) {
+                   if( (pts[(i * ofs) + j] == '\0') || sZterm ) {
+                          pts[(i * ofs) + j] = ' ';
+                          sZterm = 1;
+                   }
+                   decl1[i + j * nlig] = pts[(i * ofs) + j];
+                }
+              }
+              decl1[nlig * L_NOM_DECLENCHE] = '\0';
+
+              pout[num] = mxCreateString (decl1);
+              mxSetM (pout[num], nlig);
+              mxSetN (pout[num], L_NOM_DECLENCHE);
+              num += 1;
+              mxFree (decl1);
+
+             /* declenche2 */
+              pts = buffer + 2 + 2 * sizeof(short) + L_NOM_DECLENCHE;
+
+              for (i = 0; i < nlig; i++)
+              {
+                sZterm = 0;
+                for (j = 0; j < L_NOM_DECLENCHE; j++) {
+                   if( (pts[(i * ofs) + j] == '\0') || sZterm ) {
+                          pts[(i * ofs) + j] = ' ';
+                          sZterm = 1;
+                   }
+                   decl2[i + j * nlig] = pts[(i * ofs) + j];
+                }
+              }
+              decl2[nlig * L_NOM_DECLENCHE] = '\0';
+
+              pout[num] = mxCreateString (decl2);
+              mxSetM (pout[num], nlig);
+              mxSetN (pout[num], L_NOM_DECLENCHE);
+              mxFree (decl2);
+              num += 1;
+
+              /* Duree */
+              pout[num] = mxCreateDoubleMatrix( nlig, 1, mxREAL);
+              pr = mxGetPr(pout[num]);
+              if( (numchoc < NUM_CHOC_BASE) && (numchoc > NUM_CHOC_TEST))
+               {
+                 /* TODO */
+                 meser ("T_DECODE : duree for old shot not implemented - ", " ",
+ 1001, FATAL);
+               } else {
+               for (j = 0; j < 1; j++)
+                {
+                  for (i = 0; i < nlig; i++)
+                    pr[i + j * nlig] = (Double) duree[i + j];
+                }
+                mxFree(duree);
+                num += 1;
+               }
+
+
+              /*  Commentaire  */
+              pts = buffer+2+2*sizeof(short)+2*L_NOM_DECLENCHE+sizeof(Longint);
+
+              for (i = 0; i < nlig; i++)
+              {
+                sZterm = 0;
+                for (j = 0; j < L_COMMENTAIRE; j++) {
+                   if( (pts[(i * ofs) + j] == '\0') || sZterm ) {
+                          pts[(i * ofs) + j] = ' ';
+                          sZterm = 1;
+                   }
+                   Comm[i + j * nlig] = pts[(i * ofs) + j];
+                }
+              }
+              Comm[nlig * L_COMMENTAIRE] = '\0';
+
+              pout[num] = mxCreateString (Comm);
+              mxSetM (pout[num], nlig);
+              mxSetN (pout[num], L_COMMENTAIRE);
+              num += 1;
+              mxFree (Comm);
+
+          } break;
 
           case CHRONO : {
              char  *Nom_decl, *Valid, *Typ, *Repere, *Ref, *Comm, *pts ;
@@ -1810,7 +2013,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < 2; j++) {
-                   if( (pts[(i * ofs) + j] == NULL) || sZterm ) {
+                   if( (pts[(i * ofs) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[(i * ofs) + j] = ' ';
                           sZterm = 1;
                    }
@@ -1832,7 +2035,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < 2; j++) {
-                   if( (pts[(i * ofs) + j] == NULL) || sZterm ) {
+                   if( (pts[(i * ofs) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[(i * ofs) + j] = ' ';
                           sZterm = 1;
                    }
@@ -1854,7 +2057,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < L_NOM_REPERE; j++) {
-                   if( (pts[(i * ofs) + j] == NULL) || sZterm ) {
+                   if( (pts[(i * ofs) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[(i * ofs) + j] = ' ';
                           sZterm = 1;
                    }
@@ -1876,7 +2079,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < L_NOM_DECLENCHE; j++) {
-                   if( (pts[(i * ofs) + j] == NULL) || sZterm ) {
+                   if( (pts[(i * ofs) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[(i * ofs) + j] = ' ';
                           sZterm = 1;
                    }
@@ -1914,7 +2117,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < 9; j++) {
-                   if( (pts[(i * ofs) + j] == NULL) || sZterm ) {
+                   if( (pts[(i * ofs) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[(i * ofs) + j] = ' ';
                           sZterm = 1;
                    }
@@ -1952,7 +2155,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < L_COMMENTAIRE; j++) {
-                   if( (pts[(i * ofs) + j] == NULL) || sZterm ) {
+                   if( (pts[(i * ofs) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[(i * ofs) + j] = ' ';
                           sZterm = 1;
                    }
@@ -2016,7 +2219,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < ncol; j++) {
-                   if( (pts[i * (sizeof(short) + ncol +  2 + L_NOM_STRATEGIE + L_COMMENTAIRE) + j] == NULL) || sZterm ) {
+                   if( (pts[i * (sizeof(short) + ncol +  2 + L_NOM_STRATEGIE + L_COMMENTAIRE) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[i * (sizeof(short) + ncol + 2 +  L_NOM_STRATEGIE + L_COMMENTAIRE) + j] = ' ';
                           sZterm = 1;
                    }
@@ -2038,7 +2241,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < 2; j++) {
-                   if( (pts[i * ( 2 + L_NOM_STRATEGIE + L_COMMENTAIRE + sizeof(short) + L_NOM_DECLENCHE) + j] == NULL) || sZterm ) {
+                   if( (pts[i * ( 2 + L_NOM_STRATEGIE + L_COMMENTAIRE + sizeof(short) + L_NOM_DECLENCHE) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[i * (2 + L_NOM_STRATEGIE + L_COMMENTAIRE + sizeof(short) + L_NOM_DECLENCHE) + j] = ' ';
                           sZterm = 1;
                    }
@@ -2060,7 +2263,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < ncol; j++) {
-                   if( (pts[i * (L_NOM_STRATEGIE + L_COMMENTAIRE + sizeof(short) + L_NOM_DECLENCHE + 2) + j] == NULL) || sZterm ) {
+                   if( (pts[i * (L_NOM_STRATEGIE + L_COMMENTAIRE + sizeof(short) + L_NOM_DECLENCHE + 2) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[i * (L_NOM_STRATEGIE + L_COMMENTAIRE + sizeof(short) + L_NOM_DECLENCHE + 2 ) + j] = ' ';
                           sZterm = 1;
                    }
@@ -2082,7 +2285,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < L_COMMENTAIRE; j++) {
-                   if( (pts[i * (L_COMMENTAIRE + sizeof(short) + L_NOM_DECLENCHE + 2 + L_NOM_STRATEGIE) + j] == NULL) || sZterm ) {
+                   if( (pts[i * (L_COMMENTAIRE + sizeof(short) + L_NOM_DECLENCHE + 2 + L_NOM_STRATEGIE) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[i * (L_COMMENTAIRE + sizeof(short) + L_NOM_DECLENCHE + 2 + L_NOM_STRATEGIE) + j] = ' ';
                           sZterm = 1;
                    }
@@ -2160,7 +2363,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < ncol; j++) {
-                   if( (pts[i * (2 + ncol +  2 + L_COMMENTAIRE) + j] == NULL) || sZterm ) {
+                   if( (pts[i * (2 + ncol +  2 + L_COMMENTAIRE) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[i * (2 + ncol + 2 + L_COMMENTAIRE) + j] = ' ';
                           sZterm = 1;
                    }
@@ -2182,7 +2385,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < 2; j++) {
-                   if( (pts[i * (2 +  sizeof(short) + L_COMMENTAIRE + ncol ) + j] == NULL) || sZterm ) {
+                   if( (pts[i * (2 +  sizeof(short) + L_COMMENTAIRE + ncol ) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[i * (2 + 2 + L_COMMENTAIRE + ncol) + j] = ' ';
                           sZterm = 1;
                    }
@@ -2204,7 +2407,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < L_COMMENTAIRE; j++) {
-                   if( (pts[i * (L_COMMENTAIRE + sizeof(short) + 2 + L_NOM_DECLENCHE) + j] == NULL) || sZterm ) {
+                   if( (pts[i * (L_COMMENTAIRE + sizeof(short) + 2 + L_NOM_DECLENCHE) + j] =='\0' /* NULL*/) || sZterm ) {
                           pts[i * (L_COMMENTAIRE + sizeof(short) + 2 + L_NOM_DECLENCHE) + j] = ' ';
                           sZterm = 1;
                    }
@@ -2273,7 +2476,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < ncol; j++) {
-                   if( (pts[i * (ncol + 4) + j] == NULL) || sZterm ) {
+                   if( (pts[i * (ncol + 4) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[i * (ncol + sizeof(float) ) + j] = ' ';
                           sZterm = 1;
                    }
@@ -2340,7 +2543,7 @@ mexPrintf ("val = %d \n",*(int *)buffer);
               {
                 sZterm = 0;
                 for (j = 0; j < ncol; j++) {
-                   if( (pts[i * (ncol + sizeof(short)) + j] == NULL) || sZterm ) {
+                   if( (pts[i * (ncol + sizeof(short)) + j] == '\0' /*NULL*/) || sZterm ) {
                           pts[i * (ncol + sizeof(short) ) + j] = ' ';
                           sZterm = 1;
                    }
@@ -2377,9 +2580,10 @@ mexPrintf ("val = %d \n",*(int *)buffer);
            }  /* end switch */
         }
 
-    if((fparm != T_DECLENC) && (fparm != STRAT_PILOTE)  && (fparm != SERNAM)  && 
-       (fparm != CADRAN) && (fparm != CHRONO)  && (fparm != FLOAT4_CHAR64)
-       && (fparm != INT2_CHAR64) && (fparm != L_DIAG)  && (fparm != VOIE_GAIN) ) {
+    if((fparm != T_DECLENC) && (fparm != STRAT_PILOTE)  && (fparm != SERNAM) 
+       && (fparm != CADRAN) && (fparm != CHRONO)  && (fparm != FLOAT4_CHAR64)
+       && (fparm != INT2_CHAR64) && (fparm != L_DIAG)  && (fparm != VOIE_GAIN)
+       && (fparm != T_DECODE) ) {
        pout[num] = MATformat(nlig, ncol, fparm, dataout);
        if (!pout[num])
          {
@@ -2588,7 +2792,7 @@ char *trim (char *str)
                   while (*ibuf && (!isspace (*ibuf)))
                         *(obuf++) = *(ibuf++);
             }
-            *obuf = NULL;
+            *obuf = '\0' /*NULL*/;
       }
       return (str);
 }

@@ -15,17 +15,13 @@
  *****************************************************************************/
 
 #if (client==MAC)                             /* definition du type Double */
-  typedef double Double;
-#elif (client == INTEL)
-#define Double double
+  typedef short double Double;
 #else
   typedef double Double;
 #endif
 
 #ifdef __alpha
   typedef int Longint;
-#elif (client == INTEL)
-#define Longint int
 #else
   typedef long Longint;
 #endif
@@ -135,4 +131,3 @@ typedef struct S_LisCoord
         struct S_LisCoord	*ps_suivant;
 }
         *pS_LisCoord; 
-

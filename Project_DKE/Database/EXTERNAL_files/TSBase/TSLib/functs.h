@@ -202,7 +202,17 @@ TSWcertif (char *NomDon,
 	   Longint *Certif,
 	   Longint CertifNb);
 
+/* JS - 10.2004 */
+extern Longint FAR_PASCAL
+TSInitOccTrait (char *NomTrait,
+	pS_Entree Entrees);
 
+extern Longint FAR_PASCAL
+TSUpdateOccTrait (char *NomTrait,
+	pS_Entree Entrees,
+	Longint Status,
+	Longint Dureems);
+/*** Fin JS ***/
 
 /* --- module TSLect.c --- */
 
@@ -376,9 +386,12 @@ TSGrpDeclenche (char *NomDon,
 
 extern Longint FAR_PASCAL
 Emission (
-
+#if (client == MAC)
+	  ConnHandle nsock,
+#else
 	  int nsock,
-          	  char *parametre,
+#endif
+	  char *parametre,
 	  Longint longbuffer,
 	  Longint code_param);
 
@@ -386,14 +399,21 @@ extern Longint FAR_PASCAL Fin_Emission (int nsock);
 
 Longint FAR_PASCAL
 Emission_DescDon (
-
-                int nsock,
+#if (client == MAC)
+   			ConnHandle nsock,
+#else
+    			int nsock,
+#endif
      		short int code_fonc,
 		char *nom_don);
 
 extern Longint FAR_PASCAL
 Reception (
+#if (client == MAC)
+	   ConnHandle nsock,
+#else
 	   int nsock,
+#endif
 	   char * parametre,
 	   Longint longbuffer,
 	   Longint code_param);
@@ -407,19 +427,34 @@ ReceptionHuge (
 	   Longint code_param);
 /************************************/
 
+#if (client != MAC)
 extern Longint FAR_PASCAL
                 Debut_Communication (int *NumSocket, int ind_base);
 
+#else				/* version Macintosh */
+extern Longint
+                Debut_Communication (ConnHandle * NumSocket, int ind_base);
+#endif
+
+
 extern void 
 Fin_Communication (
+#if (client == MAC)
+		   ConnHandle nsock
+#else
 		   int nsock
+#endif
 );
 
 /* --- module TSutil.c --- */
 
 extern Longint FAR_PASCAL
 Emission_Entrees (
+#if (client == MAC)
+		  ConnHandle nsock,
+#else
 		  int nsock,
+#endif
 		  pS_Entree ptent,
 		  Longint code_param);
 
@@ -427,27 +462,43 @@ Emission_Entrees (
 
 extern Longint FAR_PASCAL
 Reception_Donnee (
+#if (client == MAC)
+		  ConnHandle nsock,
+#else
 		  int nsock,
+#endif
 		  pS_Donnee * ptdon,
 		  Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_DescEntree (
+#if (client == MAC)
+	      ConnHandle nsock,
+#else
 	      int nsock,
+#endif
 	      pS_DescEntree * ptent,
 	      Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_DescCoord (
+#if (client == MAC)
+	     ConnHandle nsock,
+#else
 	     int nsock,
+#endif
 	     pS_DescCoord * ptcoord,
 	     Longint code_param);
 
 extern Longint FAR_PASCAL
 Reception_Chaine (
+#if (client == MAC)
+	  ConnHandle nsock,
+#else
 	  int nsock,
+#endif
 	  char **chaine,
 	  Longint code_param);
 
@@ -455,35 +506,55 @@ Reception_Chaine (
 
 extern Longint FAR_PASCAL
 Reception_DescTrait (
+#if (client == MAC)
+	     ConnHandle nsock,
+#else
 	     int nsock,
+#endif
 	     pS_DescTrait * pttrait,
 	     Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_DescDiag (
+#if (client == MAC)
+	    ConnHandle nsock,
+#else
 	    int nsock,
+#endif
 	    pS_DescDiag * ptdiag,
 	    Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_DescDon (
+#if (client == MAC)
+	   ConnHandle nsock,
+#else
 	   int nsock,
+#endif
 	   pS_DescDon * ptdon,
 	   Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_Unite (
+#if (client == MAC)
+	 ConnHandle nsock,
+#else
 	 int nsock,
+#endif
 	 pS_Unite * ptunite,
 	 Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_Tableau (
+#if (client == MAC)
+	   ConnHandle nsock,
+#else
 	   int nsock,
+#endif
 	   char HUGE * Tab,
 	   Longint Tablg,
 	   char *Tabtyp,
@@ -492,7 +563,11 @@ Reception_Tableau (
 
 extern Longint FAR_PASCAL
 Reception_Tab_Coord (
+#if (client == MAC)
+	     ConnHandle nsock,
+#else
 	     int nsock,
+#endif
 	     char *Tab,
 	     Longint *Tablg,
 	     char *Tabtyp,

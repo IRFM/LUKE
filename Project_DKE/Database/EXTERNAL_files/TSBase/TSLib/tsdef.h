@@ -13,6 +13,9 @@
    Modifications    :
 
  *****************************************************************************/
+#ifndef __alpha
+  #define __alpha
+#endif
 
 #define	TAILLE_NOM_DONNEE	(Longint)17	/* taille maxi avec '\0' */
 #define	TAILLE_NOM_COORDONNEE	(Longint)17

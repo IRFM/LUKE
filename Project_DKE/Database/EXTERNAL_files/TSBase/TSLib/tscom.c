@@ -34,6 +34,7 @@
 
 #include <stdio.h>		/* bibliotheques standards           */
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include <sys/time.h>
 
@@ -54,6 +55,12 @@
 #include <sock_err.h>
 #include <windows.h>
 #include <toolhelp.h>
+
+#elif (client==MAC)
+#include <CTBUtilities.h>	/* utilitaires de la communication toolbox */
+#include <CommResources.h>	/* */
+#include <Connections.h>	/* */
+#include <unix.h>
 
 #elif (client == INTEL)
 #include <rmx_c.h>
@@ -115,13 +122,35 @@ int Socket_save;
 
 Longint FAR_PASCAL
 Emission (
+#if (client == MAC)
+	   ConnHandle nsock,
+#else
 	   int nsock,
+#endif
 	   char *parametre,
 	   Longint longbuffer,
 	   Longint code_param)
 
 {
-#if (client==PC)
+#if (client ==MAC)
+  Longint longenvoye, i;
+  OSErr anErr;
+
+  i = 0;
+  while (i < longbuffer)
+    {
+      longenvoye = longbuffer - i;
+
+      (void) CMIdle (nsock);
+      if ((anErr = CMWrite (nsock, parametre + i, &longenvoye, cmData, 0, NULL, 1, 0))
+	  != noErr)
+	{
+	  Fin_Communication (nsock);
+	  return (Gestion_Erreur (erreur_emission, code_param));
+	}
+      i = i + longenvoye;
+    }
+#elif (client==PC)
 
   short int longbuff;
   Longint i;
@@ -292,12 +321,61 @@ ReceptionHuge (
 
 Longint FAR_PASCAL
 Reception (
+#if (client == MAC)
+	    ConnHandle nsock,
+#else
 	    int nsock,
+#endif
 	    char *parametre,
 	    Longint longbuffer,
 	    Longint code_param)
 {
-#if (client == PC)
+#if (client ==MAC)
+  Longint longenvoye;
+  Longint i;
+  CMFlags cmflags;
+  OSErr anErr;
+  CMBufferSizes datasizes;
+  CMStatFlags statflags;
+  unsigned Longint startticks;
+
+  if (longbuffer > 0)
+    {
+      i = 0;
+      while (i < longbuffer)
+	{
+	  longenvoye = longbuffer - i;
+
+	  startticks = TickCount ();
+	  do
+	    {
+	      (void) CMIdle (nsock);
+	      anErr = CMStatus (nsock, datasizes, &statflags);
+	    }
+	  while ((anErr == noErr) && (datasizes[cmDataIn] == 0) &&
+		 (((unsigned Longint) TickCount () - startticks) < delai));
+
+	  cmflags = 0;
+	  if ((anErr == noErr) && (datasizes[cmDataIn] != 0))
+	    {
+	      anErr = CMRead (nsock, parametre + i, &longenvoye, cmData, 0, NULL, 1, &cmflags);
+	      if (anErr != noErr)
+		{
+		  Fin_Communication (nsock);
+		  return (Gestion_Erreur (erreur_reception, code_param));
+		}
+	      else
+		i = i + longenvoye;
+	    }
+	  else
+	    {
+	      Fin_Communication (nsock);
+	      return (Gestion_Erreur (erreur_reception, code_param));
+	    }
+	}
+    }
+
+#elif (client == PC)
   Longint i;
   int j;
   short longbuff;
@@ -397,6 +475,7 @@ Reception (
   Retour           : compte-rendu d'execution
 
  ----------------------------------------------------------------------------*/
+#if (client != MAC)
 
 Longint FAR_PASCAL
 Debut_Communication (int *NumSocket, int ind_serv)
@@ -428,7 +507,7 @@ Debut_Communication (int *NumSocket, int ind_serv)
       if (host)
 	{
 	  sscanf (host, "%[^:]:%s", hostpart, portpart);
-	  if (strlen (portpart) == 0)
+	  if (strlen (portpart) ==  0)
 	    strcpy (portpart, "5880");
 	  /*  printf(" Warning !! Connecting to %s : %s \n",
                                               hostpart,portpart); */
@@ -531,7 +610,73 @@ if (getsockname (*NumSocket, (struct sockaddr *) &AdrSockLocale,
   return Resultat;
 }
 
+#else /* version macintosh */
+Longint
+Debut_Communication (ConnHandle * NumSocket, int ind_base)
+{
 
+  ConnHandle sock;
+  OSErr anErr;
+  short int procID;
+  Longint refcon;
+  unsigned Longint startticks;
+  CMRecFlags recflags;
+  CMBufferSizes desiredsizes, datasizes;
+  CMStatFlags statflags;
+  CMStatFlags prevstatflags = -1;
+  CMFlags cmflags;
+  Str255 toolname;
+  Longint Resultat;
+  char CodeClient;		/* code du client */
+
+  Resultat = ok;
+
+  desiredsizes[cmDataIn] = 0;
+  desiredsizes[cmCntlIn] = 0;
+  desiredsizes[cmAttnIn] = 0;
+  desiredsizes[cmRsrvIn] = 0;
+  desiredsizes[cmDataOut] = 0;
+  desiredsizes[cmCntlOut] = 0;
+  desiredsizes[cmAttnOut] = 0;
+  desiredsizes[cmRsrvOut] = 0;
+
+  recflags = 0;
+  refcon = 0;
+
+  (void) InitCRM ();
+  (void) InitCTBUtilities ();
+  (void) InitCM ();
+
+  Strcpy (toolname, glob_toolname);
+  procID = CMGetProcID (toolname);
+  if (procID != -1)
+    {
+      sock = NULL;
+      if ((sock = CMNew (procID, recflags, desiredsizes, refcon, (Longint) NULL))
+	  == NULL)
+	return erreur_cree_enr_conn;
+      *NumSocket = sock;
+    }
+  else
+    return erreur_outil_connexion;
+
+  if ((anErr = CMSetConfig (*NumSocket, glob_config)) != noErr)
+    return erreur_config_conn;
+
+  if ((anErr = CMOpen (*NumSocket, 0, NULL, 1)) != noErr)
+    return erreur_connexion;
+
+  /* emission du code client */
+
+  CodeClient = client;
+  if ((Resultat = Emission (*NumSocket, &CodeClient, taille_char, p_codeclient))
+      != ok)
+    return (Resultat);
+
+  return Resultat;
+}
+
+#endif
 
 /*----------------------------------------------------------------------------
 
@@ -547,11 +692,17 @@ if (getsockname (*NumSocket, (struct sockaddr *) &AdrSockLocale,
 
 void 
 Fin_Communication (
+#if (client == MAC)
+		    ConnHandle nsock
+#else
 		    int nsock
+#endif
 )
 {
 #if (client==PC)
   close_socket (nsock);
+#elif (client==MAC)
+  CMDispose (nsock);
 #elif (client == INTEL)
   shutdown (nsock, 2);
 #else

@@ -35,6 +35,6 @@
 #define fonc_tsrdc	        1079    /* Lecture donnees continues   */
 #define fonc_tsexist_gen	1080    /* Tsexist donnees generiques  */
 #define fonc_tsltr	        1082    /* Lecture donnees temps reel  */
-#define fonc_tschangeoccur	1083    /* Change occurence  */
+#define fonc_tschangeoccur	1083	/* Changemnt des occurrences */
 
 

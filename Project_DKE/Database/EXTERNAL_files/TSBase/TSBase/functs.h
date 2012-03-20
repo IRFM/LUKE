@@ -2,20 +2,24 @@
 functs.h:
 	prototype des fonctions TSlib ( Norme ANSI ) (toutes ?)
 ----------------------------------------------------*/
-#if(client == PC)
+#ifdef HUGE
+#undef HUGE
+#endif
+
+#ifdef DLLMEX
 #include <windows.h>
 
 #define MAXDATAPC	100000L
 #define FAR_PASCAL   PASCAL
-#define HUGE	     huge       
+#define HUGE huge
 #define Register
 #define Strcpy	     lstrcpy
 #define Strcat	     lstrcat
 #define Strlen	     lstrlen
 #define Memcpy	     _fmemcpy
 #else
-#define FAR_PASCAL  
-#define HUGE	     
+#define FAR_PASCAL
+#define HUGE
 #define Register     register
 #define Strcpy	     strcpy
 #define Strlen	     strlen
@@ -42,7 +46,7 @@ TSRqparm (Longint numchoc,
 	  char *nomdiag,
 	  char *nomobj,
 	  char *nomparam,
-	  Longint nbval,
+	  int nbval,
 	  char *buff,
 	  Longint *nrep,
 	  Longint *fparm);
@@ -86,71 +90,6 @@ TSRqt (	char * Requete,
 	char ** ShotList,
      	Longint * LShotList );
 
-extern Longint FAR_PASCAL
-TSLgDiag (      Longint numchoc,
-                char *nomdiag,
-                Longint *nbmes   );
-
-extern Longint FAR_PASCAL
-TSwriteParam (  Longint numchoc,
-                char *nomdiag,
-                char *nomobj,
-                char *nomparam,
-                Longint n,
-                Longint nbval[],
-                Longint lgval[],
-                char *buff);
-
-extern Longint FAR_PASCAL
-TSlistObjet ( );
-                           
-extern Longint FAR_PASCAL
-TSrqParm (      Longint numchoc,
-                char *nomdiag,
-                char *nomobj,
-                char *typobj,
-                char *nomparam,
-                char **buff,
-                Longint *nrep,
-                Longint *fmt);
-
-extern Longint FAR_PASCAL
-TSdescObjet (   Longint numchoc,
-                char *nomdiag,
-                char *nomobj,
-               /* char *typobj,*/
-                char **buff,
-                char **cmt);
-
-extern Longint FAR_PASCAL
-TStele ( char *NomDiag,
-         Longint al,
-         Longint val,
-         char **pt_val,
-         Longint *lg_data  );
-
-extern Longint FAR_PASCAL
-TSChargerObjet (Longint numchoc,
-                char *ensCible,
-                char *ensSource,
-                char *prodCible,
-                char *prodSource,
-                char *objSource,
-                char *objCible,
-                Longint remp,
-                Longint dom);
-
-
-extern Longint FAR_PASCAL
-TSPrepareTele ( char *NomDiag);
-
-extern Longint FAR_PASCAL
-TSArchive (char *NomDiag);
-
-extern Longint FAR_PASCAL
-TSEnregistrable (char *NomDiag, 
-                 int val);
-
 /* --- module TSDesc.c --- */
 
 extern Longint FAR_PASCAL 
@@ -166,14 +105,6 @@ TSDescDiag (char *NomDiag,
 extern Longint FAR_PASCAL 
 TSDescDon (char *NomDon,
 	   pS_DescDon * DescDon);
-
-/* He les loulous faudrait voir de tout mettre
-   pour que ca gaze !!!!   YB 12/6/96 14h */
-/*extern Longint FAR_PASCAL 
-TSDescDon_choc (char *NomDon,
-         Longint num_choc,
-         ts_donnee **pt_val );
-*/
 
 extern Longint FAR_PASCAL 
 TSExist (char *NomDon,
@@ -376,24 +307,24 @@ TSGrpDeclenche (char *NomDon,
 
 extern Longint FAR_PASCAL
 Emission (
-
+#if (client == MAC)
+	  ConnHandle nsock,
+#else
 	  int nsock,
-          	  char *parametre,
+#endif
+	  char *parametre,
 	  Longint longbuffer,
 	  Longint code_param);
 
 extern Longint FAR_PASCAL Fin_Emission (int nsock);
 
-Longint FAR_PASCAL
-Emission_DescDon (
-
-                int nsock,
-     		short int code_fonc,
-		char *nom_don);
-
 extern Longint FAR_PASCAL
 Reception (
+#if (client == MAC)
+	   ConnHandle nsock,
+#else
 	   int nsock,
+#endif
 	   char * parametre,
 	   Longint longbuffer,
 	   Longint code_param);
@@ -407,19 +338,34 @@ ReceptionHuge (
 	   Longint code_param);
 /************************************/
 
+#if (client != MAC)
 extern Longint FAR_PASCAL
-                Debut_Communication (int *NumSocket, int ind_base);
+                Debut_Communication (int *NumSocket);
+
+#else				/* version Macintosh */
+extern Longint
+                Debut_Communication (ConnHandle * NumSocket);
+#endif
+
 
 extern void 
 Fin_Communication (
+#if (client == MAC)
+		   ConnHandle nsock
+#else
 		   int nsock
+#endif
 );
 
 /* --- module TSutil.c --- */
 
 extern Longint FAR_PASCAL
 Emission_Entrees (
+#if (client == MAC)
+		  ConnHandle nsock,
+#else
 		  int nsock,
+#endif
 		  pS_Entree ptent,
 		  Longint code_param);
 
@@ -427,27 +373,43 @@ Emission_Entrees (
 
 extern Longint FAR_PASCAL
 Reception_Donnee (
+#if (client == MAC)
+		  ConnHandle nsock,
+#else
 		  int nsock,
+#endif
 		  pS_Donnee * ptdon,
 		  Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_DescEntree (
+#if (client == MAC)
+	      ConnHandle nsock,
+#else
 	      int nsock,
+#endif
 	      pS_DescEntree * ptent,
 	      Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_DescCoord (
+#if (client == MAC)
+	     ConnHandle nsock,
+#else
 	     int nsock,
+#endif
 	     pS_DescCoord * ptcoord,
 	     Longint code_param);
 
 extern Longint FAR_PASCAL
 Reception_Chaine (
+#if (client == MAC)
+	  ConnHandle nsock,
+#else
 	  int nsock,
+#endif
 	  char **chaine,
 	  Longint code_param);
 
@@ -455,35 +417,55 @@ Reception_Chaine (
 
 extern Longint FAR_PASCAL
 Reception_DescTrait (
+#if (client == MAC)
+	     ConnHandle nsock,
+#else
 	     int nsock,
+#endif
 	     pS_DescTrait * pttrait,
 	     Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_DescDiag (
+#if (client == MAC)
+	    ConnHandle nsock,
+#else
 	    int nsock,
+#endif
 	    pS_DescDiag * ptdiag,
 	    Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_DescDon (
+#if (client == MAC)
+	   ConnHandle nsock,
+#else
 	   int nsock,
+#endif
 	   pS_DescDon * ptdon,
 	   Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_Unite (
+#if (client == MAC)
+	 ConnHandle nsock,
+#else
 	 int nsock,
+#endif
 	 pS_Unite * ptunite,
 	 Longint code_param);
 
 
 extern Longint FAR_PASCAL
 Reception_Tableau (
+#if (client == MAC)
+	   ConnHandle nsock,
+#else
 	   int nsock,
+#endif
 	   char HUGE * Tab,
 	   Longint Tablg,
 	   char *Tabtyp,
@@ -492,7 +474,11 @@ Reception_Tableau (
 
 extern Longint FAR_PASCAL
 Reception_Tab_Coord (
+#if (client == MAC)
+	     ConnHandle nsock,
+#else
 	     int nsock,
+#endif
 	     char *Tab,
 	     Longint *Tablg,
 	     char *Tabtyp,

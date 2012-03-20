@@ -84,7 +84,11 @@ void lzrw1_decompress();
 
 Longint FAR_PASCAL
 Emission_Entrees (
+#if (client == MAC)
+     				ConnHandle nsock,
+#else
      				int nsock,
+#endif
      			pS_Entree ptent,
      			Longint code_param     )
 {
@@ -143,7 +147,11 @@ Emission_Entrees (
 
 Longint FAR_PASCAL
 Reception_Donnee (
+#if (client == MAC)
+     				ConnHandle nsock,
+#else
      				int nsock,
+#endif
      			pS_Donnee *ptdon,
      			Longint code_param   )
 {
@@ -207,7 +215,11 @@ if(pcdon != NULL)
 
 Longint FAR_PASCAL
 Reception_DescEntree (
+#if (client == MAC)
+				ConnHandle nsock,
+#else
     				int nsock,
+#endif
      			pS_DescEntree *ptent,
      			Longint code_param  )
 {
@@ -278,7 +290,11 @@ Reception_DescEntree (
 
 Longint FAR_PASCAL
 Reception_DescCoord (
+#if (client == MAC)
+     				ConnHandle nsock,
+#else
      				int nsock,
+#endif
      			pS_DescCoord *ptcoord,
      			Longint code_param      )
 {
@@ -371,7 +387,11 @@ Reception_DescCoord (
 ------------------------------------------------------------------------------*/
 Longint FAR_PASCAL
 Reception_Chaine (
+#if (client == MAC)
+     				ConnHandle nsock,
+#else
      				int nsock,
+#endif
      			char **chaine,
 			Longint code_param     )
 {
@@ -426,7 +446,11 @@ Reception_Chaine (
 
 Longint FAR_PASCAL
 Reception_DescTrait (
+#if (client == MAC)
+     				ConnHandle nsock,
+#else
      				int nsock,
+#endif
      				pS_DescTrait *pttrait,
 				Longint code_param    )
 {
@@ -524,7 +548,11 @@ Reception_DescTrait (
 
 Longint FAR_PASCAL
 Reception_DescDiag (
+#if (client == MAC)
+			ConnHandle nsock,
+#else
      			int nsock,
+#endif
      			pS_DescDiag *ptdiag,
      			Longint code_param       )
 {
@@ -608,7 +636,11 @@ Reception_DescDiag (
 
 Longint FAR_PASCAL
 Reception_DescDon (
+#if (client == MAC)
+			ConnHandle nsock,
+#else
     			int nsock,
+#endif
      			pS_DescDon *ptdon,
      			Longint code_param    )
 {
@@ -703,7 +735,11 @@ Reception_DescDon (
 
 Longint FAR_PASCAL
 Reception_Unite ( 
+#if (client == MAC)
+ 			ConnHandle nsock,
+#else
      			int nsock,
+#endif
      			pS_Unite *ptunite,
      			Longint code_param    )
 {
@@ -776,7 +812,11 @@ Reception_Unite (
 ------------------------------------------------------------------------------*/
 Longint FAR_PASCAL
 Reception_Tableau (
+#if (client == MAC)
+			ConnHandle nsock,
+#else
      			int nsock,
+#endif
      			char HUGE *Tab,
      			Longint Tablg,
      			char *Tabtyp,
@@ -1061,7 +1101,11 @@ Reception_Tableau (
 ------------------------------------------------------------------------------*/
 Longint FAR_PASCAL
 Reception_Tab_Coord (
+#if (client == MAC)
+     			ConnHandle nsock,
+#else
 			int nsock,
+#endif
 			char  *Tab,
      			Longint *Tablg,
     			char *Tabtyp,

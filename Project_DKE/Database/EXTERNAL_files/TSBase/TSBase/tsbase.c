@@ -23,9 +23,9 @@
 #include "tsdef.h"
 #include "tsconf.h"
 #include "tstype.h"
-//#if (client != MAC)
+#if (client != MAC)
 #include "tserreur.h"
-//#endif
+#endif
 #include "functs.h"		/* prototype des fonctions de TSLib */
 #include "tsbamat.h"
 #include "newarg.h"
@@ -66,7 +66,7 @@ toupper (c)
 
   return (adel);
 }
-*/
+ */
 
 int l_rang ;	  /* lecture rang par defaut */         /** +++  **/
 int nb_extr2; /* nbre mesures quand extract = 2 */  /** +++  **/
@@ -116,15 +116,13 @@ typedef struct zs_donnee_ {
 
 
 #if (client == MAC )
-//extern char *err_tslib[100];
-//extern char *err_tsmat[20];
-//extern char *err_rqlib[10];
-/*
+extern char *err_tslib[100];
+extern char *err_tsmat[20];
+extern char *err_rqlib[10];
 extern void Init_err_tslib(void);
 extern void Init_err_tsmat(void);
 extern void Init_err_rqlib(void);
 #define ERR_MAX 1014L
-*/
 #endif
 
 mxArray *
@@ -142,7 +140,7 @@ charMat (Longint m, Longint n, char *liste)
   int i, j, gN;
   mxArray *mat;
   char *chaine;
-  chaine = (char *) mxCalloc (m * n + 1 , sizeof (char));
+  chaine = (char *) mxCalloc (m * (n + 1) , sizeof (char));
   for (i = 0; i < m; i++)
     {
       for (j = 0; j < n; j++) 
@@ -583,9 +581,9 @@ mexFunction (int nout, mxArray * pout[], int nin,const mxArray * pin[])
   nintemp = nin;
 
 #if (client == MAC )
-  //  Init_err_tslib();
-  //  Init_err_tsmat();
-  //  Init_err_rqlib();
+    Init_err_tslib();
+    Init_err_tsmat();
+    Init_err_rqlib();
 #endif
 
 /* For CTRL C problems */
@@ -1251,7 +1249,6 @@ lit_traite (char *nomsigp, Longint numchoc, Longint occ, mxArray * pout[],
     {				/* non fonction du temps */
       if (ptDescDon->nb_coordonnees == 1)
 	rscalaire = 1;
-
       else if (ptDescDon->nb_coordonnees > 1)
 	rscalaire = 2;
 
@@ -1613,7 +1610,6 @@ mexPrintf ("avant TSRSigX xab %g %g nbmax %ld\n", xab[0], xab[1], nbmax);
 		{
 		  if (rscalaire == 0)
 		    {
-
 		        for (i = 0; i < lind[0]; i++)
                            pr[i + j * lind[0]] = X[i * lind[1] + j] / CTPS;
 		    }

@@ -12,4 +12,5 @@ ceat.h:
 #define nom_donnee_invalide  	227
 #define nom_fichier_invalide  	228
 #define erreur_ouverture_fic  	229
+#define nom_trait_invalide	230	/* JS - 11.2003 */
 

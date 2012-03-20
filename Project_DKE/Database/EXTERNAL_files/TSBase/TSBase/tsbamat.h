@@ -22,7 +22,7 @@
 #define MAX_SIG  	128	/* Nbre max de signaux d'un groupe     */
 #define MAX_DIAG	50	/* Nbre max de diagnostics	       */
 #define MAX_TRAIT 	80	/* Nbre max de traitements decrits     */
-#define MAX_PARAM       1024	/* Nbre max de parametres demandes     */
+#define MAX_PARAM       16384	/* Nbre max de parametres demandes     */
 #define TAILLE_COMMENT	80	/* Taille des commentaires rendus      */
 #define TAILLE_MISC	256	/* Taille des certifs,date,heure ..    */
 #define LONG_UNITE	8

@@ -64,7 +64,11 @@ TSDescTrait (char *NomTrait,
   Longint CR;
   Longint code_param;
 
+#if (client == MAC)
+  ConnHandle NumSocket;         /* descripteur de la socket de communication */
+#else
   int NumSocket;                /* descripteur de la socket de communication */
+#endif
   short int CodeFonc;           /* code de la fonction TSLib appelee */
   Longint Resultat;            /* compte-rendu d'execution du client */
 
@@ -156,7 +160,11 @@ TSDescDiag ( char *NomDiag,
   Longint CR;
   Longint code_param;
 
+#if (client == MAC)
+  ConnHandle NumSocket;         /* descripteur de la socket de communication */
+#else
   int NumSocket;                /* descripteur de la socket de communication */
+#endif
   short int CodeFonc;           /* code de la fonction TSLib appelee */
   Longint Resultat;            /* compte-rendu d'execution du client */
 
@@ -246,7 +254,11 @@ TSDescDon (char *NomDon,
 {
   Longint CR;
   Longint code_param;
+#if (client == MAC)
+  ConnHandle NumSocket;         /* descripteur de la socket de communication */
+#else
   int NumSocket;                /* descripteur de la socket de communication */
+#endif
   short int CodeFonc;           /* code de la fonction TSLib appelee         */
   Longint Resultat;            /* compte-rendu d'execution du client        */
   char buffer[TAILLE_NOM_DONNEE+taille_short];
@@ -346,7 +358,11 @@ TSExist (char *NomDon,
   Longint code_param;
   char buffer[TAILLE_NOM_DONNEE+taille_long+taille_short];
 
+#if (client == MAC)
+  ConnHandle NumSocket;         /* descripteur de la socket de communication */
+#else
   int NumSocket;                /* descripteur de la socket de communication */
+#endif
   short int CodeFonc;           /* code de la fonction TSLib appelee   */
   Longint Resultat;            /* compte-rendu d'execution du client  */
 

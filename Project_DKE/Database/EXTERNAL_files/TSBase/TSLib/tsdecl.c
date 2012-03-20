@@ -87,7 +87,11 @@ TSSigDeclenche (	char *NomDon,
   char YType[2];		/* type des elements du tableau Y  */
   Longint code_param;
 
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
   int NumSocket;		/* descripteur de la socket de communication */
+#endif
   short int CodeFonc;		/* code de la fonction TSLib appelee         */
   Longint Resultat;		/* compte-rendu d'execution du client        */
 
@@ -286,7 +290,11 @@ TSXtrDeclenche (	char *NomDon,
   char YType[2];		/* type des elements du tableau Y */
   Longint code_param;
 
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
   int NumSocket;		/* descripteur de la socket de communication */
+#endif
   short int CodeFonc;		/* code de la fonction TSLib appelee         */
   Longint Resultat;		/* compte-rendu d'execution du client        */
 
@@ -490,7 +498,11 @@ TSGrpDeclenche (	char *NomDon,
   char YType[2];		/* type des elements du tableau Y */
   Longint code_param;
 
+#if (client == MAC)
+  ConnHandle NumSocket;		/* descripteur de la socket de communication */
+#else
   int NumSocket;		/* descripteur de la socket de communication */
+#endif
   short int CodeFonc;		/* code de la fonction TSLib appelee         */
   Longint Resultat;		/* compte-rendu d'execution du client        */
 

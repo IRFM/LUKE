@@ -447,10 +447,15 @@ typedef struct zs_cwm_valeur_ {
 /* Description of table occurence_traitement from database basetop */
  typedef struct zs_occurence_traitement_ {
 	Longint	num_choc;
+	Longint entree2;
 	Longint	id_traitement;
 	Longint	date;
 	Longint	heure;
 	char	repertoire[L_REPERTOIRE];
+	short   etat;
+        float   duree;
+        char    localisation[60];
+        short   nbexec;
 	Longint	id_occurence;
   } ts_occurence_traitement;
 

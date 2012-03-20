@@ -15,7 +15,10 @@
  *****************************************************************************/
 
 
-#define client                  MAC             /* nom de la machine cliente */
+#define client                  DEC            /* nom de la machine cliente */
+#ifndef __alpha
+  #define __alpha
+#endif
 
 #if (client == MAC)
 #define delai                   30*60 

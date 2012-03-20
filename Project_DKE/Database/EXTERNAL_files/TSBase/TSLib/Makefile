@@ -1,13 +1,14 @@
 #*****************************************************************************
 #   NOM  DU FICHIER 	 :  Makefile
-#   DESCRIPTION DU FICHIER : Makefile du client Unix/OSF TSLib 
+#   DESCRIPTION DU FICHIER : Makefile du client Linux TSLib 
 #   Modifications    :
 # *****************************************************************************
 
- CC = gcc #insure
- FF = f77 
+ CC = gcc 
+ FF = g77 
 
- CFLAGS = -g
+# CFLAGS =  -g -m32
+ CFLAGS =  -g -fPIC -m64
  COMP = 
  FFLAGS = -c 
 
@@ -46,7 +47,7 @@ SRCF =  tslib_fcf.c  tslib_fcd.c
 OBJFF = tslib_fcf.o
 OBJFD = tslib_fcd.o
 
-all : libTS.a 
+all : libTS.a libTSFf.a libTSFd.a
 
 .f.o:
 	$(FF) $(FFLAGS) $<
@@ -55,7 +56,7 @@ all : libTS.a
 
 
 libTS.a: $(OBJ)
-	ar ru $@ $(OBJ)
+	ar ru $@ $(OBJ) 
 	ranlib $@
 
 TSLib.a : $(INC_COMMUN) $(INC_COM) $(INC_CLIENT) $(INC_CL_UTIL)
@@ -68,61 +69,11 @@ libTSFd.a: $(OBJFD)
 	ar ru $@ $(OBJFD)
 	ranlib $@
 
-rqtest: rqtest.o
-	cc -g -o rqtest rqtest.o libTS.a -lm
-rqtest: libTS.a
-
-TestWP: TestWP.o 
-	cc -g -o $@ TestWP.o libTS.a -lm
-
-Tetat: Tetat.o 
-	$(CC) -g -o $@ Tetat.o libTS.a -lm
-
-TestTSLib: TestTSLib.o 
-	$(CC) -g -o $@ TestTSLib.o libTS.a -lm
-
-new_recette: new_recette.o t2.o
-	$(CC) -g -o $@ new_recette.o t2.o libTS.a -lm
-recette: recette.o 
-	cc -g -o $@ recette.o libTS.a -lm
-recette: libTS.a
-new_recette: libTS.a
-TestWP: libTS.a
-
-tele.o :
-	cc -c  -g -migrate -assume noaligned_objects tele.c
-tele: tele.o
-	cc -g -migrate -assume noaligned_objects  -o $@ tele.o \
-	libTS.a /usr/drfc/devarc/tele/dev/New/libdisp.a 
-tele: libTS.a /usr/drfc/devarc/tele/dev/New/libdisp.a
-
-bob: bob.o t2.o 
-	cc -g -o $@ bob.o t2.o libTS.a -lm
-bob: libTS.a
-
-t_charger: t_charger.o 
-	cc -g -o $@ t_charger.o libTS.a 
-t_charger: libTS.a
-
-int: int.o
-	f77 -g -o int int.o libTSFf.a TSLib.a 
-int : TSLib.a libTSFf.a
-
-tfort: tfort.o
-	f77 -g -o tfort tfort.o libTSFf.a TSLib.a 
-tfort : TSLib.a libTSFf.a
 
 tscom.o : tshote.h tsconf.h
 tscom_random.o : tshote.h tsconf.h
 ceat.o: tsdef.h ceaf.h
 $(OBJ): tsarcad.h
 
-dist :
-	(make clean; make "CFLAGS=-std 0 -non_shared"; echo 'Copying files in distribution'; \
-         d=`date`;mkdir distrib/"$$d"; mkdir distrib/"$$d"/src; mkdir distrib/"$$d"/lib; \
-         cp *.a distrib/"$$d"/lib/.; cp $(SRC) distrib/"$$d"/src/.; cp $(SRCF) distrib/"$$d"/src/. ; \
-         cp $(SRCH) distrib/"$$d"/src/.; \
-         cp Makefile distrib/"$$d"/src/.;  make clean; make)
-
 clean :
-	rm -f *.o core *.BAK *.old *JNL *~
+	rm -f *.o core *.BAK *.old *JNL *~ libTS.a libTSFf.a libTSFd.a
