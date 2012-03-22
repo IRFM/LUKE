@@ -318,7 +318,7 @@ while ipass < npass,
         for ifile = 1:length(list_of_packages),   
             if length(list_of_packages(ifile).name) >= 7 
                 if list_of_packages(ifile).name(1:7) == 'SuperLU',
-                    dkepath.SUPERLU.mex = [local_root,'Packages/Bin/SUPERLU/',list_of_packages(ifile).name,'/MATLAB'];
+                    dkepath.SUPERLU.mex = [local_root,'Packages/Bin/SUPERLU/',list_of_packages(ifile).name,'/MATLAB',matver];
                     if exist(dkepath.SUPERLU.mex),
                         addpath(dkepath.SUPERLU.mex)
                         if exist('mexlusolve');isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-SOLVE (MEX)']),tic,[MMXS_t_SUPERLU] = lusolve(MMXPC_f_t,MMXR_t);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);end
