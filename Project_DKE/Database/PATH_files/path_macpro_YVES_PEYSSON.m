@@ -44,12 +44,13 @@ macproyves.yvespeysson(1).compiler_opt.fopts = ' ';
 %macproyves.yvespeysson(1).MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 macproyves.yvespeysson(1).MUMPS.seq = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 macproyves.yvespeysson(1).MUMPS.seq = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-macproyves.yvespeysson(1).MUMPS.(['mex',matlabversion]) = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB',matlabversion];%Where MUMPS matrix solver is stored (MEX function)
-macproyves.yvespeysson(1).MUMPS.(['mex',matlabversion]) = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB',matlabversion];%Where MUMPS matrix solver is stored (MEX function)
+macproyves.yvespeysson(1).MUMPS.mex713 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_gfortran/MATLAB713'];%Where MUMPS matrix solver is stored (MEX function)
+macproyves.yvespeysson(1).MUMPS.mex713 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.9.2_S_ifort/MATLAB713'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % SUPERLU matrix solver (parallel, sequential)
 %
-macproyves.yvespeysson(1).SUPERLU.mex = [macproyves.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB'];%Where SUPERLU matrix solver is stored (MEX function)
+macproyves.yvespeysson(1).SUPERLU.mex713 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB713'];%Where SUPERLU matrix solver is stored (MEX function)
+macproyves.yvespeysson(1).SUPERLU.mex714 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB714'];%Where SUPERLU matrix solver is stored (MEX function)
 %
 % PETSc matrix solver (parallel, sequential)
 %

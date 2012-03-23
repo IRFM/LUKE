@@ -35,7 +35,7 @@ macbookyves.yves(1).temppathroot = '/tmp/';%Absolute root directory path adress 
 %
 macbookyves.yves(1).(['mex',matlabversion]) = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB',matlabversion,'/'];
 macbookyves.yves(1).compiler_opt.copts = '';
-macbookyves.yves(1).compiler_opt.helmex = ' -compatibleArrayDims -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+macbookyves.yves(1).compiler_opt.helmex = ' -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 macbookyves.yves(1).compiler_opt.fopts = ' ';
 %
 % MUMPS matrix solver (parallel, sequential, mex)
@@ -43,11 +43,13 @@ macbookyves.yves(1).compiler_opt.fopts = ' ';
 %macbookyves.yves(1).MUMPS.par = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
 %macbookyves.yves(1).MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 macbookyves.yves(1).MUMPS.seq = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-macbookyves.yves(1).MUMPS.(['mex',matlabversion]) = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB',matlabversion];%Where MUMPS matrix solver is stored (MEX function)
+macbookyves.yves(1).MUMPS.mex713 = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB713'];%Where MUMPS matrix solver is stored (MEX function)
+macbookyves.yves(1).MUMPS.mex714 = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB714'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % SUPERLU matrix solver (parallel, sequential)
 %
-macbookyves.yves(1).SUPERLU.mex = [macbookyves.yves(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB',matlabversion];%Where SUPERLU matrix solver is stored (MEX function)
+macbookyves.yves(1).SUPERLU.mex713 = [macbookyves.yves(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB713'];%Where SUPERLU matrix solver is stored (MEX function)
+macbookyves.yves(1).SUPERLU.mex714 = [macbookyves.yves(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB714'];%Where SUPERLU matrix solver is stored (MEX function)
 %
 % PETSc matrix solver (parallel, sequential)
 %
