@@ -133,7 +133,7 @@ if ~any(isnan(fopts)) && (force_compile || any(filetime.erfcc.source > filetime.
 end
 %
 if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.separatrice.source > filetime.separatrice.mex)),
-    eval(['mex ',fopts,' ',sourcepath.helmex,'separatrice.F ',helmex]);
+    eval(['mex ',fopts,' ',sourcepath.helmex,'separatrice.F ']);
     disp(['The separatrice.',mexext,' mexfile has been compiled.'])
 end
 %
