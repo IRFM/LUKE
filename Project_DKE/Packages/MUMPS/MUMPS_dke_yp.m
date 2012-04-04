@@ -70,7 +70,7 @@ elseif nproc == 1,%Sequential processing is invoked
         if display_mode >= 1,info_dke_yp(2,'Matrix inversion by MUMPS solver - parallel processing enforced, no sequential processing package on this machine !  -');end
         [flag,text] = unix([dkepath.MUMPS.mpipath,'mpirun -np ',int2str(nproc),' -machinefile .machines ',dkepath.MUMPS.par,'/mumpsdke']);
     else
-        error('MUMPS package not correctly named for LUKE: <pakage name+version>_P_<compiler name> or  <pakage name+version>_S_<compiler name>');
+        info_dke_yp(7,'MUMPS package not correctly named for LUKE: <pakage name+version>_P_<compiler name> or  <pakage name+version>_S_<compiler name>',1,'red');error('');
     end
 end
 %
@@ -80,7 +80,7 @@ if flag == 0,
    fid=fopen('MUMPS_X_out.bin','rb');X=fread(fid,N,'double');fclose(fid);%solution of the system of equation
    X = X(:);
 else
-   error(['Error in MUMPS calculation. Flag =',int2str(flag),', Log = ',text]);
+   info_dke_yp(7,['Error in MUMPS calculation. Flag =',int2str(flag),', Log = ',text],1,'red');error('');
 end
 %
 delete('*.bin');%delete all bin files
