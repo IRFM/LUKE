@@ -31,7 +31,7 @@ function [equilDKE] = equilibrium_jd(equil,radialDKE,display,method,mfactor,fig_
 %           (NAN: ppsi grid)
 %       - xpsin_S_dke: radial flux grid used for the calculation of FS volume and poloidal surface 
 %       - display_mode: (0-1) text only (2) graphics
-%       - method: interpolation method (linear,cubic,spline,...) 
+%       - method: interpolation method (linear,pchip,spline,...) 
 %           (default: linear)
 %       - mfactor: factor for super theta grid (default: 50)
 %       - fig_id: figure ID of figure for the magnetic equilibrium (default = 51)

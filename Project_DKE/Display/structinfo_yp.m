@@ -371,7 +371,7 @@ switch struct
             case 'phi0',expert = 1;values = [-pi;pi];info = 'Initial toroidal angle (rad)';
             case 'mmode',expert = 0;values = [-1,1];info = 'Polarization : (1) m (-1) p, (O/X mode: -1/+1)';
             case 'ns',expert = 1;values = 200:200:5000;info = 'Number of points for stright line calculations';
-            case 'method',expert = 1;values = {'linear','nearest','spline','pchip','cubic'};info = 'Interpolation method';
+            case 'method',expert = 1;values = {'linear','nearest','spline','pchip'};info = 'Interpolation method';
             otherwise,
         end
     %
