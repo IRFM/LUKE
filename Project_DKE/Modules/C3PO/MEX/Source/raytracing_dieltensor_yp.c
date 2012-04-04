@@ -68,7 +68,7 @@ typedef struct susceptibilitytensor susceptibilitytensor_format;
 #define MAXCYCLHARM 101
 #define PI 3.14159265358979
 
-
+void buildXstruc();
 void vacuumtensor();
 void coldtensor();
 void calcY();
@@ -86,6 +86,7 @@ void Shka();
 void ImShka();
 void Fdnest();
 void ImFdnest();
+int sgn();
 
 
 void vacuumtensor(X)
@@ -1724,10 +1725,10 @@ double *RF5,*RF7,*RF9,*dRF5dz,*dRF7dz,*dRF9dz,*dRF3da,*dRF5da,*dRF7da,*dRF9da,*d
             phi = sqrt(phi2);
             /* Z is real, contains no imaginary part */
             
-/*          Z1 = -2.0*dawson(psi-phi);
-/*          Z2 = -2.0*dawson(-psi-phi); 
-/*                        S0 = -0.5*(Z1+Z2)/phi; /* F1_2 */
-/*          S1 = 0.5*(Z2-Z1)/psi; /* F3_2 */
+/*          Z1 = -2.0*dawson(psi-phi);*/
+/*          Z2 = -2.0*dawson(-psi-phi); */
+/*                        S0 = -0.5*(Z1+Z2)/phi;*/ /* F1_2 */
+/*          S1 = 0.5*(Z2-Z1)/psi;*/ /* F3_2 */
             dawson(psi-phi,&daw);
             rZ1 = -2.0*daw;
             dawson(-psi-phi,&daw);
@@ -1741,11 +1742,11 @@ double *RF5,*RF7,*RF9,*dRF5dz,*dRF7dz,*dRF9dz,*dRF3da,*dRF5da,*dRF7da,*dRF9da,*d
                         S1 = 2.0*daw/psi;
         } else { /* (phi2<0.0) */
             phi = -sqrt(-phi2);
-/*          Zfried (psi,-phi,&rZ1,&iZ1);
-            Zfried (-psi,-phi,&rZ2,&iZ2); */
-            /* only the real part is retained */
-/*          S0 = -0.5*(iZ1+iZ2)/phi; /* F1_2 */
-/*          S1 = 0.5*(rZ2-rZ1)/psi; /* F3_2 */
+/*          Zfried (psi,-phi,&rZ1,&iZ1);*/
+/*          Zfried (-psi,-phi,&rZ2,&iZ2); */
+/*          only the real part is retained */
+/*          S0 = -0.5*(iZ1+iZ2)/phi;*/ /* F1_2 */
+/*          S1 = 0.5*(rZ2-rZ1)/psi;*/ /* F3_2 */
             ZFriedConte(psi-I*phi,&Z1);
             ZFriedConte(-psi-I*phi,&Z2);
             S0 = -0.5*(cimag(Z1)+cimag(Z2))/phi; /* F1_2 */

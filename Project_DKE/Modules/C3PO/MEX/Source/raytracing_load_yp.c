@@ -175,6 +175,7 @@ typedef struct fluctparam fluctparam_format;
 typedef struct rayprofiles rayprofiles_format;
 typedef struct distriparam distriparam_format;
 
+int strcmp();
 
 distriparam_format load_distri_param(structure_name)
 mxArray *structure_name;
