@@ -205,10 +205,15 @@ while ipass < npass,
                 if ~isempty(strfind(list_of_packages(ifile).name,'_S_'))
                     dkepath.MUMPS.seq = [local_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/dke'];
                     if isfield(dkepath.MUMPS,'par'),rmfield(dkepath.MUMPS,'par');end
-                    if exist(dkepath.MUMPS.seq),                    
-                        isim = isim + 1;disp(['- ',list_of_packages(ifile).name,' by CPU with sparse matrix (sequential processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);
+                    if exist(dkepath.MUMPS.seq),  
+                        try
+                            isim = isim + 1;disp(['- ',list_of_packages(ifile).name,' by CPU with sparse matrix (sequential processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);  
+                        catch
+                            MMXS_t_MUMPS = [];
+                        end
                         ZMMXS_t{isim} = MMXS_t_MUMPS;
                         Zname{isim} = list_of_packages(ifile).name;
+                        clear MMXS_t_MUMPS
                     end
                 end
 %
