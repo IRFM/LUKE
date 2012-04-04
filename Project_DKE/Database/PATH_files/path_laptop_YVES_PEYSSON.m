@@ -33,10 +33,12 @@ macbookyves.yves(1).luke_root = [getenv('HOME'),'/Travail/Projets/',luke_ref,'/'
 macbookyves.yves(1).local_root = [getenv('HOME'),'/Travail/Projets/'];
 macbookyves.yves(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-macbookyves.yves(1).(['mex',matlabversion]) = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB',matlabversion,'/'];
+macbookyves.yves(1).mex713 = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB713','/'];
+macbookyves.yves(1).mex714 = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB714','/'];
+%
 macbookyves.yves(1).compiler_opt.copts = '';
-macbookyves.yves(1).compiler_opt.helmex = ' -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-macbookyves.yves(1).compiler_opt.fopts = ' ';
+macbookyves.yves(1).compiler_opt.helmex = '  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+macbookyves.yves(1).compiler_opt.fopts = ' -largeArrayDims';
 %
 % MUMPS matrix solver (parallel, sequential, mex)
 %
