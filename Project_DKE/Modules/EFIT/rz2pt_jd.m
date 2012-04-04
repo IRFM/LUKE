@@ -4,25 +4,25 @@ function [ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,the
 %
 % by J. Decker (jodecker@alum.mit.edu) 11/02/04
 %
-if nargin < 12
+if nargin < 10
     sfac = 10;
 end
-if nargin < 11
+if nargin < 9
     filename = 'tokamak';
 end
-if nargin < 10
+if nargin < 8
     p_opt = -1;
 end
-if nargin < 9
+if nargin < 7
     display_mode = 0;
 end
-if nargin < 8
+if nargin < 6
     method = 'linear';
 end
-if nargin < 7
+if nargin < 5
     theta = 65;
 end
-if nargin < 6
+if nargin < 4
     psin = 101;
 end
 %
