@@ -4,7 +4,7 @@ function [varargout] = run_lukert(simul_in,wavestructs,waves,psin_S,rho_S,dkepat
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 %
-RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
+RandStream.setGlobalStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
 %
 if nargin < 15,
    opt_save_in = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
