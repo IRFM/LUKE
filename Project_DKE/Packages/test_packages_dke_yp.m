@@ -224,7 +224,11 @@ while ipass < npass,
                     if isfield(dkepath.MUMPS,'seq'),rmfield(dkepath.MUMPS,'seq');end
                     if exist(dkepath.MUMPS.par),                                   
                         dkeparam.MUMPSparam.nproc = 4;%case with 4 processors
-                        isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 4 (parallel processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);
+                        try
+                            isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 4 (parallel processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);
+                        catch 
+                            MMXS_t_MUMPS = [];
+                        end
                         ZMMXS_t{isim} = MMXS_t_MUMPS;
                         Zname{isim} = [list_of_packages(ifile).name,'_np_4'];
                     %
