@@ -278,6 +278,7 @@ typedef struct raydistri raydistri_format;
 
 /* subroutines list */
 
+void ppvald_0D();
 void ppvald_1D();
 void ppvald_2D();
 void ppvali_2D();
@@ -792,10 +793,12 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
        
        if (acc != 0) mexPrintf("The dispersion relation is first solved internally to remove numerical errors from initial conditions.\n");
        
-       if (fabs((krho1_dsolve - krho1)/krho1) > 1e-3) mexPrintf("WARNING: The relative difference between initial krho and krho after dsolve exceeds 1e-3.\n");
-       
-       krho1 = krho1_dsolve;
-       /* mexPrintf("krho1:%g\n",krho1); */         
+       if (fabs((krho1_dsolve - krho1)/krho1) > 1e-3) {
+            mexPrintf("WARNING: The relative difference between initial krho and krho after dsolve exceeds 1e-3.\n");
+            mexPrintf("krho1,krho1_dsolve:%g,%g\n",krho1,krho1_dsolve);
+            krho1 = krho1_dsolve;
+       }
+             
     }
     
          
@@ -1683,7 +1686,7 @@ int flag_fluct;
         
         /********** WARNING: alphaphi_jd MUST be modified before using these quantities YP **************/
         
-        /*wpn2[0] = qe*qe*distriparam.ne_ref[0]/epsi0/me/Y[6]/Y[6];/*electrons */
+        /*wpn2[0] = qe*qe*distriparam.ne_ref[0]/epsi0/me/Y[6]/Y[6];*/ /*electrons */
         /*betath[0] = distriparam.betath_ref[0];*/
         
         /************************************************************************************************/
@@ -2014,7 +2017,7 @@ int flag_fluct;
         }    
 
 
-        /* krho[0] = -Y[3]; /* old method not accurate */ 
+        /* krho[0] = -Y[3];*/ /* old method not accurate */ 
     } else {
         krho[0] = Y[3];
     }
@@ -4029,7 +4032,7 @@ double flag;
  /*      mexPrintf("qmax,BPa,equilparam.psia[0] = %g,%g,%g\n",qmax,BPa,equilparam.psia[0]);*/
         
     } else if(abs(flag) == 2) {/*JETlike */
-  /*  BP = BPa*(1 - pow(1 - rho*rho,2))*Rp/R/rho;/* Poloidal magnetic field, cylindrical limit */
+  /*  BP = BPa*(1 - pow(1 - rho*rho,2))*Rp/R/rho;*/ /* Poloidal magnetic field, cylindrical limit */
   /*  dBPdrho = BPa*(4*(1 - rho*rho) - (1 - pow(1 - rho*rho,2))/rho/rho)*Rp/R - BP*dRdrho/R; */
        
        if (Y[0] == 0.0) {
