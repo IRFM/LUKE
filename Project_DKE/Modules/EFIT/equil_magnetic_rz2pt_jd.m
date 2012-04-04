@@ -20,11 +20,11 @@ if nargin < 6,
 end
 %
 if nargin < 5,
-    dispname = filename;
+    savename = '';
 end
 %
 if nargin < 4,
-    dispname = filename;
+    dispname = '';
 end
 %
 if nargin < 3,
