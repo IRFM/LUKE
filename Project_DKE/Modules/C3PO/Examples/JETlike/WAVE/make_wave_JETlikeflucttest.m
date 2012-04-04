@@ -74,13 +74,13 @@ waveparam.dsmin = NaN;%minimum size for ray fragments
 %
 % Global parameters for the vectorial magnetic equilibrium and the plasma fluctuations (if calculated)
 %
-fitparam.equil.method = 'pchip';%nearest,spline,pchip,cubic
+fitparam.equil.method = 'pchip';%nearest,spline,pchip
 fitparam.equil.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
 fitparam.equil.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
 fitparam.equil.mode_equil = 1;%(rho,theta) -> 0, (x,y) -> 1
 %
 fitparam.fluct.mode_equil = fitparam.equil.mode_equil;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
-fitparam.fluct.method = 'pchip';%nearest,spline,pchip,cubic
+fitparam.fluct.method = 'pchip';%nearest,spline,pchip
 fitparam.fluct.nharm = 32;%Number of harmonics in the plasma fluctuations interpolation (less than ntheta_equil/2)
 fitparam.fluct.ngridresample = 201;%Number of grid points for resampling the radial profile of plasma fluctuations parameters (very slow if too big !!)
 %

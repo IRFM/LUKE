@@ -21,7 +21,7 @@ if nargin < 2,
 	savepath = [pwd,'/',];
 end
 %
-method = 'cubic';
+method = 'pchip';
 %
 equil_RZ = pt2rz_jd(equil,extfacR,extfacZ,nprz,method);
 %

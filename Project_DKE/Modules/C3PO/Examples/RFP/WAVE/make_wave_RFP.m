@@ -57,7 +57,7 @@ n_rf_list = 0;
 % Equilibrium parameters for the ray-tracing
 %
 fitparam.equil.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
-fitparam.equil.method = 'pchip';%nearest,spline,pchip,cubic
+fitparam.equil.method = 'pchip';%nearest,spline,pchip
 fitparam.equil.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
 fitparam.equil.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
 %

@@ -93,7 +93,7 @@ s = [s,{'%'}];
 s = [s,{'% Equilibrium parameters for the ray-tracing'}];
 s = [s,{'%'}];
 s = [s,{['fitparam.mode_equil = ',num2str(wave.fitparam.mode_equil),';%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)']}];
-s = [s,{['fitparam.method = ''',wave.fitparam.method,''';%nearest,spline,pchip,cubic']}];
+s = [s,{['fitparam.method = ''',wave.fitparam.method,''';%nearest,spline,pchip']}];
 s = [s,{['fitparam.nharm = ',num2str(wave.fitparam.nharm),';%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)']}];
 s = [s,{['fitparam.ngridresample = ',num2str(wave.fitparam.ngridresample),';%Number of grid points for resampling the radial profile of magnetic equilibrium parameters']}];
 s = [s,{['fitparam.opt_load = ',num2str(wave.fitparam.opt_load),';%Reload existing vectorial magnetic equilibrium (1) or overwrite it (0).']}];

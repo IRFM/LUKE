@@ -98,7 +98,7 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 %
 % C3P0 ray tracing
 %
-fitparam.method = 'pchip';%nearest,spline,pchip,cubic
+fitparam.method = 'pchip';%nearest,spline,pchip
 tstart = tic;
 equil_fit_pchip = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
 telapsed_equil_pchip = toc(tstart);
@@ -106,7 +106,7 @@ telapsed_equil_pchip = toc(tstart);
 info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is calculated with pchip method.']);
 if C3POdisplay_pchip.equilibrium,testfitequil_yp(equil,equil_fit_pchip);end
 %
-fitparam.method = 'spline';%nearest,spline,pchip,cubic
+fitparam.method = 'spline';%nearest,spline,pchip
 tstart = tic;
 equil_fit_spline = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
 telapsed_equil_spline = toc(tstart);

@@ -4,14 +4,14 @@ function [equil_out] = fitequil_yp(equil_in,mode,method,ngrid,nharm)
 % Two operating modes :
 % 1) Spline-Fourier description for (psi,theta) magnetic equilibrium (HELENA for example)
 %
-%    1-D: use interp1.m MatLab built-in function (Hermite polynomials (pchip), spline, bi-cubic, linear,  nearest,...)
+%    1-D: use interp1.m MatLab built-in function (Hermite polynomials (pchip), spline, linear,  nearest,...)
 %    2-D: use Fourier series expansion for the poloidal dependence and the
-%    interp1.m for the Fourier series coefficients (Hermite polynomials (pchip), spline, bi-cubic, linear,
+%    interp1.m for the Fourier series coefficients (Hermite polynomials (pchip), spline, linear,
 %    nearest,...)
 %
 % 2) Spline-Spline description for (x,y) magnetic equilibrium (EFIT for example)
 %
-%    1-D: use interp1.m MatLab built-in function (Hermite polynomials (pchip), spline, bi-cubic, linear, nearest,...)
+%    1-D: use interp1.m MatLab built-in function (Hermite polynomials (pchip), spline, linear, nearest,...)
 %    2-D: use interp1.m for the x-direction and the interp1.m again for the coefficients of the 
 %    previous spline (Hermite polynomials (pchip), spline, bi-cubic, linear, nearest,...)
 %

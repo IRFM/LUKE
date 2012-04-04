@@ -46,7 +46,7 @@ pperp = linspace(0,pmax,np + 1);
 dp = pperp(2) - pperp(1);
 %
 [ppar1,pperp1] = meshgrid(ppar,pperp);
-f1 = griddata(ppar00,pperp00,f00,ppar1,pperp1,'cubic');
+f1 = griddata(ppar00,pperp00,f00,ppar1,pperp1,'pchip');
 %
 dppar = dp*ones(size(ppar));
 dpperp = dp*ones(size(pperp));

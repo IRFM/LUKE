@@ -381,7 +381,7 @@ if w_opt == 0; % C3PO Calculation
         launch.type = type;
         %
         launch.ns = 1000;
-        launch.method = 'cubic';
+        launch.method = 'pchip';
         %
         % BUILDING RAYINIT
         %
