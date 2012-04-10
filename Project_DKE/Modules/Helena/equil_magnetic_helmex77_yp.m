@@ -144,7 +144,13 @@ if exist(['helmex77.',mexext]) == 3,
     pp = pout;%pressure given by HELENA
 %
 else
-	error(['The mexfile helmex77.',mexext,' does not exists ! Compile it for the computer you are using...']);
+	warning(['The mexfile helmex77.',mexext,' does not exists ! Compile it for the computer you are using...']);
+	%
+	equil_magnetic = '';
+	prho = '';
+	pspsin = '';
+	pspsinT = '';
+	pp  = '';
 end
 
 
