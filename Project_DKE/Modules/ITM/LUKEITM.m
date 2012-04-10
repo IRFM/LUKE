@@ -14,12 +14,12 @@ if strcmp(name,'equil'),
 	equil_name{4} = 'TScirc_e1';path_equil{4} = '';
 	equil_name{5} = 'TScyl_lowTene';path_equil{5} = '';
 	equil_name{6} = 'JETh77';path_equil{6} = '';
-	equil_name{7} = 'JETliketest';path_equil{7} = [dkepath.luke_root,'Project_DKE/Modules/RT/Examples/JETlike/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/RT/Examples/***/EQUIL/
-	equil_name{8} = 'PLTtest';path_equil{8} = [dkepath.luke_root,'Project_DKE/Modules/RT/Examples/PLT/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/RT/Examples/***/EQUIL/
-	equil_name{9} = 'VERSATOR2test';path_equil{9} = [dkepath.luke_root,'Project_DKE/Modules/RT/Examples/VERSATOR2/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/RT/Examples/***/EQUIL/
-	equil_name{10} = 'RTtest';path_equil{10} = [dkepath.luke_root,'Project_DKE/Modules/RT/Examples/RTtest/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/RT/Examples/***/EQUIL/
-	equil_name{11} = 'RTtest_vacuum';path_equil{11} = [dkepath.luke_root,'Project_DKE/Modules/RT/Examples/RTtest/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/RT/Examples/***/EQUIL/
-	equil_name{12} = 'RFP';path_equil{12} = [dkepath.luke_root,'Project_DKE/Modules/RT/Examples/RFP/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/RT/Examples/***/EQUIL/
+	equil_name{7} = 'JETliketest';path_equil{7} = [dkepath.luke_root,'Project_DKE/Modules/C3PO/Examples/JETlike/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/C3PO/Examples/***/EQUIL/
+	equil_name{8} = 'PLTtest';path_equil{8} = [dkepath.luke_root,'Project_DKE/Modules/C3PO/Examples/PLT/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/C3PO/Examples/***/EQUIL/
+	equil_name{9} = 'VERSATOR2test';path_equil{9} = [dkepath.luke_root,'Project_DKE/Modules/C3PO/Examples/VERSATOR2/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/C3PO/Examples/***/EQUIL/
+	equil_name{10} = 'RTtest';path_equil{10} = [dkepath.luke_root,'Project_DKE/Modules/C3PO/Examples/RTtest/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/C3PO/Examples/***/EQUIL/
+	equil_name{11} = 'RTtest_vacuum';path_equil{11} = [dkepath.luke_root,'Project_DKE/Modules/C3PO/Examples/RTtest/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/C3PO/Examples/***/EQUIL/
+	equil_name{12} = 'RFP';path_equil{12} = [dkepath.luke_root,'Project_DKE/Modules/C3PO/Examples/RFP/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Project_DKE/Modules/C3PO/Examples/***/EQUIL/
 	equil_name{13} = 'ITER_Scen4_IAEA06';path_equil{13} = [dkepath.luke_root,'Simulations/Examples/ITER/Scen4/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Simulations/
 	equil_name{14} = 'CRONOS_32299_k100';path_equil{14} = [dkepath.luke_root,'Simulations/Examples/TS/32299/EQUIL/'];% Magnetic equilibrium from ~/LUKE/Simulations/
 	%
