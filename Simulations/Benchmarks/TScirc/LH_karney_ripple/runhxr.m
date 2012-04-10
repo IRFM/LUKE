@@ -2,10 +2,10 @@ id_simul = 'LH_karney_ripple';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_equil = 'TScirc';%For plasma equilibrium
-path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_equil = [dkepath.luke_root,'Project_DKE/Database/EQUIL_files/'];%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_hxr = 'TS99';%For HXR diagnostic configuration
-path_hxr = '../../../Database/HXR_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_hxr = [dkepath.luke_root,'Project_DKE/Database/HXR_files/'];%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 %************************************************************************************************************************************
 %************************************************************************************************************************************
@@ -27,7 +27,7 @@ else
 	info_dke_yp(2,['DKE data results in file ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat successfully loaded']);
 end
 %
-[Zbremchord,equilHXR] = bremchord_dke_yp(display,equil,radialDKE,Zcurr,hxr,hxrparam);
+[Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,dkedisplay,equil,radialDKE,Zcurr,hxr,hxrparam);                        
 [Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,display,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam);
 [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam);
 %

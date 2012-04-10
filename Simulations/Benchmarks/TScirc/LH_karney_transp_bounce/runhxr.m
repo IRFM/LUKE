@@ -1,11 +1,11 @@
-id_simul = 'LH_karney_transp_bounce';%Simulation ID
-path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%id_simul = 'LH_karney_transp_bounce';%Simulation ID
+%path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScirc';%For plasma equilibrium
-path_equil = '../../../Database/EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%id_equil = 'TScirc';%For plasma equilibrium
+%path_equil = 'EQUIL_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_hxr = 'TS99';%For HXR diagnostic configuration
-path_hxr = '../../../Database/HXR_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+path_hxr = 'HXR_files/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 %************************************************************************************************************************************
 %************************************************************************************************************************************
@@ -19,16 +19,16 @@ else
 	info_dke_yp(2,'Structures ''hxr and hxrparam'' successfully loaded');
 end
 %
-if exist([path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']) == 0,%DKE results
-	info_dke_yp(2,[path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat does not exist']);
-	break
-else
-	eval(['load ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
-	info_dke_yp(2,['DKE data results in file ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat successfully loaded']);
-end
+%if exist([path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']) == 0,%DKE results
+%	info_dke_yp(2,[path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat does not exist']);
+%	break
+%else
+%	eval(['load ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
+%	info_dke_yp(2,['DKE data results in file ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat successfully loaded']);
+%end
 %
-[Zbremchord,equilHXR] = bremchord_dke_yp(display,equil,radialDKE,Zcurr,hxr,hxrparam);
-[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,display,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam);
+[Zbremchord,equilHXR] = bremchord_dke_yp(dkedisplay,equil,radialDKE,Zcurr,hxr,hxrparam);
+[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,dke_out,Zbremchord,hxr,hxrparam);
 [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam);
 %
 %For display HXR

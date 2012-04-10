@@ -1,22 +1,19 @@
-C
-C
-C
-#include "fintrf.h"
-C
 
-       subroutine mexFunction(nlhs,plhs,nrhs,prhs)
+#include "fintrf.h"
+
+
+      
+      subroutine mexFunction(nlhs,plhs,nrhs,prhs)
 C--------------------------------------------------------------
 C Interface mex-file (matlab 5) pour le code HELENA
 C F. Imbeaux - Aout 2000
-C mise à jour pour plateforme quelconque 32 ou 64 bits Y. Peysson 08/04/2009
 C
 C Appel depuis Matlab :
 C [C2,C3,rho2m,R,Z,rho,Vp,drhoor,qpsi,psipout,ftra,Fdia,psiT,B2,invB2,Sp, ...
 C    rav,oor,drhoav,xshift,xrad,xell,xtriapos,xtrianeg,jout,iout,pout, ...
-C    r2,oor2,r2tau2,drho2ob2,r3otau3,r3otau,BPR,BPZ,b,df2,dpr,kkbig,li, ...
-C    dimerc,drmerc,balcrit,fr,ifail,nchi,cpsurf,radius,gem11,gem12,gem33,rspot,zspot,brspot,bzspot]= ...
-C    helmex77(psipin,ptot,jin,R0,B0,Ip,lsc,a,elong,triangh,triangb, ...
-C             Rext,Zext,init,b,df2,kkbig,ecrit,xrsig,dpr,fr);
+C    r2,oor2,r2tau2,drho2ob2,r3otau3,r3otau,BPR,BPZ,b,df2,kkbig,li, ...
+C    dimerc,drmerc,balcrit,ifail]= ...
+C    helmex77(psipin,ptot,jin,R0,B0,Ip,lsc,a,elong,triangh,triangb,Rext,Zext,init,b,df2,kkbig,ecrit);
 C 
 C Inputs :
 C psipin : flux poloidal (V*s, doit etre nul au centre) [Xpts,1]
@@ -26,9 +23,9 @@ C R0 : grand rayon (m) [1,1]
 C B0 : champ magnetique (T) [1,1]
 C Ip : courant plasma (A) [1,1], Ip < 0 -> utilisation de psip pour le calcul du courant
 C lsc : type d'input pour la derniere surface magnetique fermee [1,1]
-C        0 = plasma sym         
-C        1 = plasma asymetrique, donnee de a, elong, triangh, triangb
-C        2 = plasma asymetrique, donnee de la LSC en (R,Z)
+C        0 = plasma symetrique, donnee de a, elong, triang
+C        1 = plasma asymï¿½trique, donnee de a, elong, triangh, triangb
+C        2 = plasma asymï¿½trique, donnee de la LSC en (R,Z)
 C a  : petit rayon (m) [1,1]
 C elong : ellipticite de la derniere surface magnetique fermee (1 pour TS) (-) [1,1]
 C triangh : triangularite haute de la derniere surface magnetique fermee (0 pour TS) (-) [1,1]
@@ -41,14 +38,9 @@ C kkbig : matrice kkbig deja calculee (-) [KKLDA,4*MAXNODE]
 C ecrit : matrice kkbig deja calculee (-) [KKLDA,4*MAXNODE]
 C Rext  : grand rayon de la derniere surface de flux [250,1]
 C Zext  : altitude de la derniere surface de flux [250,1]
-C xrsig = [XR1,SIG1] -> defini la position et la largeur de la gaussienne pour 
-C          un maillage plus fin autour de XR1
-C dpr : vecteur dpr de l'equilibre initial (-) [101,1] (P')
-c FR     : Fourrier coefficient of LCMS transform
-C
 C
 C Outputs :
-C <> designe la moyenne de la variable sur une surface de flux poloidal
+C <> designe la moyenne de la variable sur une surface de flux poloidal 
 C C2     : Vp*<gradient(rho)^2/R^2 > [NRMAP,1]
 C C3     : Vp*< 1/R^2 > [NRMAP,1]
 C rho2m  : <|gradient(rho)|^2> [NRMAP,1]
@@ -58,7 +50,7 @@ C Vp     : V' (dV/drho a rho(i)-m**2) [NRMAP,1]
 C drhoor : <|grad(rho)|/R> [NRMAP,1]
 C qpsi   : facteur de securite [NRMAP,1]
 C psip   : flux poloidal (V*s) [NRMAP,1]
-C ftra   : fraction de piegees [NRMAP,1]
+C ftra   : fraction de piegees [NRMAP,1] 
 C Fdia   : fonction diamagnetique [NRMAP,1]
 C psiT   : flux toroidal (V*s) [NRMAP,1]
 C B2     : <B^2> (T^2) [NRMAP,1]
@@ -84,93 +76,55 @@ C r3otau : <R^3/tau> (m) [NRMAP,1]
 C BPR     : Coordonnee R du champ magnetique sur un maillage (R,Z) (T) [NRMAP,NPMAP]
 C BPZ     : Coordonnee Z du champ magnetique sur un maillage (R,Z) (T) [NRMAP,NPMAP]
 C b : parametre b de l'equilibre final (-) [1,1]
-C df2 : vecteur df2 de l'equilibre initial (-) [101,1] (FF')
-C dpr : vecteur dpr de l'equilibre initial (-) [101,1] (P')
+C df2 : vecteur df2 de l'equilibre initial (-) [101,1]
 C kkbig : matrice kkbig deja calculee (-) [KKLDA,4*MAXNODE]
 c DIMERC : Ideal Mercier criterion
 c DRMERC : resistive Mercier criterion
-c BALCRIT : ballooning stability criterion (stable if >1, marginally stable if =1, unstable if <1, except if s<0 : balcrit=0 (always stable with negative magnetic shear))
-c FR     : Fourrier coefficient of LCMS transform
+c BALCRIT : ballooning stability criterion (stable if >1, marginally stable if =1, unstable if <1, except if s<0 : balcrit=0 (always stable with negative magnetic shear)) 
 c ifail  : code d'erreur (0 si pas d'erreur) [1,1]
-C nchi   : number of poloidal points (straight field line coordinates)
-C cpsurf : normalised total poloidal flux
-c radius : normalised minor radius (R_mag=1)
-c gem11  : grad(psi)**2 (normalised)
-c gem12  : grad(psi).grad(theta)
-c gem33  : R**2 on (psi,theta) grid
-C RSPOT  : R on (psi,theta) grid
-C ZSPOT  : Z on (psi,theta) grid
-C BRSPOT : BR on (psi,theta) grid
-C BZSPOT : BZ on (psi,theta) grid
 C
-C Compilation : mex helmex77.f -lcxml
+C Compilation : fmex helmex77.f -ldxml
 C--------------------------------------------------------------
 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-
-      mwSize   m,n,sizeIN,sizeOUT,mRext,nRext
-      mwSize   sizeR,NBFR,MBMAX,N_GEM,KKLDA,MAXNODE,NRMMAX,NPMMAX
+      IMPLICIT integer (I-N)
 
 C-----------------------------------------------------------
 C Taille des tableaux de sortie. Cette liste de parametres
 C est presente dans de nombreuses subroutines, et doit etre
 C mise a jour partout en cas de modification
-
-C-----------------------------------------------------------------------
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
-      PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
+      PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
-      COMMON / COMDAT/
-     >        ELLIP,TRIAH,TRIAB,QUAD,PAR1,PAR2,PAR3,PAR4,
-     >        AGA,BGA,CGA,DGA,EGA,FGA,GGA,HGA,
-     >        API,BPI,CPI,DPI,EPI,FPI,GPI,HPI,
-     >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,
-     >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,
-     >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1,
-     >        IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
+      COMMON / COMDAT/                                                  
+     >        ELLIP,TRIAH,TRIAB,QUAD,PAR1,PAR2,PAR3,PAR4,                      
+     >        AGA,BGA,CGA,DGA,EGA,FGA,GGA,HGA,                          
+     >        API,BPI,CPI,DPI,EPI,FPI,GPI,HPI,                          
+     >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
+     >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
+     >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1,          
+     >        IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
-      real*8    ELLIP,TRIAH,TRIAB,QUAD,PAR1,PAR2,PAR3,PAR4,
-     >        AGA,BGA,CGA,DGA,EGA,FGA,GGA,HGA,
-     >        API,BPI,CPI,DPI,EPI,FPI,GPI,HPI,
-     >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,
-     >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,
-     >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NPMAP,NITER 
-      mwSize  NP,NRMAP      
-C-----------------------------------------------------------------------
-      COMMON /COMMAP/CS,QS,DQS,CURJ,CHI,   
-     >     GEM11,GEM12,GEM33,  
-     >     CHIKN,P0,RBPHI,
-     >     DP,DRBPHI,
-     >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE,
-     >     JS0,NCHI,NPSI,NLTORE
-
-      REAL*8 CS(NRMMAX),QS(NRMMAX),DQS(NRMMAX),CURJ(NRMMAX),CHI(NPMMAX),   
-     >     GEM11(MAXMNODE),GEM12(MAXMNODE),GEM33(MAXMNODE),  
-     >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
-     >     DP(NRMMAX),DRBPHI(NRMMAX),
-     >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE
-      mwSize JS0,NCHI,NPSI
-      LOGICAL NLTORE  
-C-----------------------------------------------------------------------
-      COMMON /COMSPOT/RSPOT,ZSPOT,BRSPOT,BZSPOT
-      REAL*8 RSPOT(MAXMNODE),ZSPOT(MAXMNODE)
-      REAL*8 BRSPOT(MAXMNODE),BZSPOT(MAXMNODE)
-
+      real*8    ELLIP,TRIAH,TRIAB,QUAD,PAR1,PAR2,PAR3,PAR4,                      
+     >        AGA,BGA,CGA,DGA,EGA,FGA,GGA,HGA,                          
+     >        API,BPI,CPI,DPI,EPI,FPI,GPI,HPI,                          
+     >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
+     >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
+     >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
       COMMON/TOLERA/PSITOL,THTTOL,TOL                                   
       real*8    PSITOL,THTTOL,TOL                                         
@@ -180,45 +134,18 @@ C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
       COMMON/FAXIS/PSI,NAXIS                                            
       real*8    PSI(4*MAXMNODE)                                           
-      mwSize NAXIS                                                     
+      integer NAXIS                                                     
 C-----------------------------------------------------------------------
-      COMMON/COMSOLV/KKBIG
-      real*8 KKBIG(KKLDA,4*MAXNODE)
-c      real*8, ALLOCATABLE :: KKBIG(:,:)
-c      mwSize KKLDA                                                    
+      COMMON/COMSOLV/KKBIG                                              
+      real*8 KKBIG(KKLDA,4*MAXNODE)                                       
+c      real*8, ALLOCATABLE :: KKBIG(:,:)                                  
+c      integer KKLDA                                                    
 C-----------------------------------------------------------------------                               
 C DECLARATION DES VARIABLES
 c pointeurs mex   
-      mwPointer plhs(*), prhs(*)
-      integer*4  nlhs, nrhs
-
-      mwPointer mxGetPr, mxCreateDoubleMatrix
-      mwPointer mxGetM, mxGetN
-c pointeurs et tailles      
-      mwPointer VP_pr,C2_pr,C3_pr,R2M_pr,RHO_pr
-      mwPointer FTRA_pr,FDIA_pr,INVB2_pr
-      mwPointer DRHOOR_pr,QPSI_pr,B2_pr
-      mwPointer SP_pr,Jout_pr,PSIPOUT_pr,PSIT_pr,Pout_pr
-      mwPointer RR_pr,ZZ_pr,Rext_pr,Zext_pr,init_pr
-      mwPointer PSIPIN_pr,PTOT_pr,Jin_pr,B0_pr, Ip_pr
-      mwPointer R0_pr, amin_pr, ELLIP_pr, TRIAH_pr, TRIAB_pr
-      mwPointer RAV_pr,OOR_pr,DRHOAV_pr,XRAD_pr,XIAB_pr
-      mwPointer XSHIFT_pr,XELL_pr,XTRIAPOS_pr,XTRIANEG_pr,IFAIL_pr
-      mwPointer ECRIT_pr,DIMERC_pr,DRMERC_pr,BALCRIT_pr,XRSIG_pr
-      mwPointer R2_pr,OOR2_pr,R2TAU2_pr,DRHO2OB2_pr
-      mwPointer R3OTAU3_pr,R3OTAU_pr,FR_pr
-      mwPointer LSC_pr,BPR_pr,BPZ_pr,b_pr,df2_pr,dpr_pr,kkbig_pr,XLI_pr
-      mwPointer NCHI_pr, CPSURF_pr, RADIUS_pr
-      mwPointer GEM11_pr, GEM12_pr, GEM33_pr      
-      mwPointer RSPOT_pr, ZSPOT_pr, BRSPOT_pr, BZSPOT_pr
-C
-      mwSize mat1,mat2,mat3,mat4,mat101
-      parameter (mat1=1)
-      parameter (mat2=2)
-      parameter (mat3=3)
-      parameter (mat4=4)
-      parameter (mat101=101)
-c variables de sortie
+      INTEGER*8 plhs(*), prhs(*) 
+      integer nlhs, nrhs
+c variables de sortie      
       real*8 VP(NRMMAX),C2(NRMMAX),C3(NRMMAX),R2M(NRMMAX),RHO(NRMMAX)
       real*8 FTRA(NRMMAX),FDIA(NRMMAX),INVB2(NRMMAX)
       real*8 DRHOOR(NRMMAX),QPSI(NRMMAX),B2(NRMMAX)
@@ -231,17 +158,31 @@ c variables de sortie
       real*8 R3OTAU(NRMMAX)
       real*8 BPR(NRMMAX,NPMMAX),BPZ(NRMMAX,NPMMAX)
       real*8 DIMERC(NRMMAX),DRMERC(NRMMAX),BALCRIT(NRMMAX)
-      real*8 FR(2*MBMAX+2)
       real*8 LSC
-      mwSize IFAIL
-c taille des tableaux d'entree fixee a 101 elements
+      integer IFAIL
+c taille des tableaux d'entree fixee a 101 elements      
       real*8 PSIPIN(101),PTOT(101),Jin(101),Rext(250),Zext(250)
-      real*8 R0, amin, B0, Ip, ecrit,xrsig(2)
-c taille d'autres tableaux
-      real*8 TINIT(3)
+      real*8 R0, amin, B0, Ip, ecrit
+c pointeurs et tailles      
+      INTEGER*8 VP_pr,C2_pr,C3_pr,R2M_pr,RHO_pr
+      INTEGER*8 FTRA_pr,FDIA_pr,INVB2_pr
+      INTEGER*8 DRHOOR_pr,QPSI_pr,B2_pr
+      INTEGER*8 SP_pr,Jout_pr,PSIPOUT_pr,PSIT_pr,Pout_pr
+      INTEGER*8 RR_pr,ZZ_pr,Rext_pr,Zext_pr,init_pr
+      INTEGER*8 PSIPIN_pr,PTOT_pr,Jin_pr,B0_pr, Ip_pr
+      INTEGER*8 R0_pr, amin_pr, ELLIP_pr, TRIAH_pr, TRIAB_pr      
+      INTEGER*8 RAV_pr,OOR_pr,DRHOAV_pr,XRAD_pr,XIAB_pr
+      INTEGER*8 XSHIFT_pr,XELL_pr,XTRIAPOS_pr,XTRIANEG_pr,IFAIL_pr
+      INTEGER*8 ECRIT_pr,DIMERC_pr,DRMERC_pr,BALCRIT_pr
+      INTEGER*8 R2_pr,OOR2_pr,R2TAU2_pr,DRHO2OB2_pr,R3OTAU3_pr,R3OTAU_pr
+      INTEGER*8 LSC_pr,BPR_pr,BPZ_pr,b_pr,df2_pr,kkbig_pr,XLI_pr      
+      integer   m, n, sizeIN, sizeOUT, mxGetM, mxGetN, mRext, nRext
+      integer   sizeR
+      INTEGER*8 mxCreateFull, mxGetPr
+
 C---------------------------------------------------------------------
 C GESTION DES ENTREES     
-C taille des tableaux (nb de points radiaux)
+C taille des tableaux (nb de points radiaux)     
       m = mxGetM(prhs(1))
       n = mxGetN(prhs(1))
       sizeIN = m*n
@@ -257,52 +198,52 @@ C         call mexErrMsgTxt('Erreur de dimension : trop de points radiaux')
 C      endif   
 C flux poloidal (0 au centre du plasma)     
       PSIPIN_pr = mxGetPr(prhs(1))
-      call mxCopyPtrToReal8(PSIPIN_pr,PSIPIN,sizeIN)
+      call mxCopyReal8ToPtr(PSIPIN_pr,PSIPIN,sizeIN)
 C pression totale (keV * m-3)
       PTOT_pr = mxGetPr(prhs(2))
-      call mxCopyPtrToReal8(PTOT_pr,PTOT,sizeIN)
+      call mxCopyReal8ToPtr(PTOT_pr,PTOT,sizeIN)
 C densite de courant (A/m2)
       Jin_pr = mxGetPr(prhs(3))
-      call mxCopyPtrToReal8(Jin_pr,Jin,sizeIN)
+      call mxCopyReal8ToPtr(Jin_pr,Jin,sizeIN)
 C grand rayon (m)
       R0_pr = mxGetPr(prhs(4))
-      call mxCopyPtrToReal8(R0_pr,R0,mat1)
+      call mxCopyReal8ToPtr(R0_pr,R0,1)
 C champ magnetique (T)
       B0_pr = mxGetPr(prhs(5))
-      call mxCopyPtrToReal8(B0_pr,B0,mat1)
+      call mxCopyReal8ToPtr(B0_pr,B0,1)
 C courant total (A)
       Ip_pr = mxGetPr(prhs(6))
-      call mxCopyPtrToReal8(Ip_pr,Ip,mat1)
+      call mxCopyReal8ToPtr(Ip_pr,Ip,1)
 C type d'input pour la derniere surface fermee
       LSC_pr = mxGetPr(prhs(7))
-      call mxCopyPtrToReal8(LSC_pr,LSC,mat1)
+      call mxCopyReal8ToPtr(LSC_pr,LSC,1)
       IF (INT(LSC).EQ.0) THEN
          IAS = 0      
 C        petit rayon (m)
          amin_pr = mxGetPr(prhs(8))
-         call mxCopyPtrToReal8(amin_pr,amin,mat1)      
+         call mxCopyReal8ToPtr(amin_pr,amin,1)      
 C        ellipticite
          ELLIP_pr = mxGetPr(prhs(9))
-         call mxCopyPtrToReal8(ELLIP_pr,ELLIP,mat1)
+         call mxCopyReal8ToPtr(ELLIP_pr,ELLIP,1)
 C        triangularite
          TRIAH_pr = mxGetPr(prhs(10))
-         call mxCopyPtrToReal8(TRIAH_pr,TRIAH,mat1)
+         call mxCopyReal8ToPtr(TRIAH_pr,TRIAH,1)
          TRIAB = TRIAH
 			NBext = -1
       ELSEIF (INT(LSC).EQ.1) THEN
          IAS = 1      
 C        petit rayon (m)
          amin_pr = mxGetPr(prhs(8))
-         call mxCopyPtrToReal8(amin_pr,amin,mat1)      
+         call mxCopyReal8ToPtr(amin_pr,amin,1)      
 C        ellipticite
          ELLIP_pr = mxGetPr(prhs(9))
-         call mxCopyPtrToReal8(ELLIP_pr,ELLIP,mat1)
+         call mxCopyReal8ToPtr(ELLIP_pr,ELLIP,1)
 C        triangularite haute
          TRIAH_pr = mxGetPr(prhs(10))
-         call mxCopyPtrToReal8(TRIAH_pr,TRIAH,mat1)
+         call mxCopyReal8ToPtr(TRIAH_pr,TRIAH,1)
 C        triangularite basse
          TRIAB_pr = mxGetPr(prhs(11))
-         call mxCopyPtrToReal8(TRIAB_pr,TRIAB,mat1)
+         call mxCopyReal8ToPtr(TRIAB_pr,TRIAB,1)
          NBext = -1
       ELSE
          IAS = 1
@@ -311,368 +252,223 @@ c     position de la derniere surface de flux
 c
 C        petit rayon (m)
         amin_pr = mxGetPr(prhs(8))
-        call mxCopyPtrToReal8(amin_pr,amin,mat1)
+        call mxCopyReal8ToPtr(amin_pr,amin,1)
         Rext_pr = mxGetPr(prhs(12))
-        call mxCopyPtrToReal8(Rext_pr,Rext,sizeR) 
+        call mxCopyReal8ToPtr(Rext_pr,Rext,sizeR) 
         Zext_pr = mxGetPr(prhs(13))
-        call mxCopyPtrToReal8(Zext_pr,Zext,sizeR)
-        NBext = sizeR
+        call mxCopyReal8ToPtr(Zext_pr,Zext,sizeR) 
+        NBext = sizeR        
       ENDIF
       
 C init (pour partir d'un equilibre deja specifie)
       init_pr = mxGetPr(prhs(14))
-      call mxCopyPtrToReal8(init_pr,TINIT,mat3)
-      ERRCUR = TINIT(2)
-      ERRIT  = TINIT(3)
-      IF (INT(TINIT(1)).EQ.1) THEN
+      call mxCopyReal8ToPtr(init_pr,TINIT,1)
+      IF (INT(TINIT).EQ.1) THEN
          INI=1
 C        B
          b_pr = mxGetPr(prhs(15))
-         call mxCopyPtrToReal8(b_pr,B,mat1)
+         call mxCopyReal8ToPtr(b_pr,B,1)
 C        DF2
          df2_pr = mxGetPr(prhs(16))
-         call mxCopyPtrToReal8(df2_pr,DF2,mat101)
+         call mxCopyReal8ToPtr(df2_pr,DF2,101)
 C        KKBIG
          kkbig_pr = mxGetPr(prhs(17))
-         call mxCopyPtrToReal8(kkbig_pr,KKBIG,KKLDA*mat4*MAXNODE)
+         call mxCopyReal8ToPtr(kkbig_pr,KKBIG,KKLDA*4*MAXNODE)
       ELSE
          INI=0
-      ENDIF
-
-
+      ENDIF  
       IF (nrhs.GE.18) THEN
           ECRIT_pr = mxGetPr(prhs(18))
-          call mxCopyPtrToReal8(ECRIT_pr,ecrit,mat1)
+          call mxCopyReal8ToPtr(ECRIT_pr,ecrit,1)
       ELSE
           ecrit =0.0
-      ENDIF   
-
-
-      IF (nrhs.GE.19) THEN
-          XRSIG_pr = mxGetPr(prhs(19))
-          call mxCopyPtrToReal8(XRSIG_pr,xrsig,mat2)
-      ELSE
-          xrsig(1) = 99.0
-          xrsig(2) = 99.0
-      ENDIF  
-
-
-C entree pour recacul exact de helena
-      IEXACT = 1
-      IF (nrhs.GE.21) THEN
-          DPR_pr = mxGetPr(prhs(20))
-          call mxCopyPtrToReal8(DPR_pr,DPR,mat101)
-          FR_pr = mxGetPr(prhs(21))
-          DO I = 1,2*MBMAX+2
-            FR(I) = 0.D0
-          ENDDO
-          NBFRM = mxGetM(prhs(21))
-          NBFRN = mxGetN(prhs(21))
-          NBFR = NBFRN * NBFRM
-          call mxCopyPtrToReal8(FR_pr,FR,NBFR)
-C ajouter pour cette option
-C         B
-          b_pr = mxGetPr(prhs(15))
-          call mxCopyPtrToReal8(b_pr,B,mat1)
-C         DF2
-          df2_pr = mxGetPr(prhs(16))
-          call mxCopyPtrToReal8(df2_pr,DF2,mat101)
-      ELSE
-         IEXACT = 0
-      ENDIF   
-
-c      write(*,*) 'Avant Helena',IEXACT
-    
+      ENDIF      
       CALL HELENA(PSIPIN,PTOT,Jin,sizeIN,INI,amin,R0,B0,Ip,
      >            C2,C3,R2M,RR,ZZ,RHO,VP,DRHOOR,QPSI,PSIPOUT,FTRA,FDIA,
      >            PSIT,B2,INVB2,SP,Jout,RAV,OOR,DRHOAV,XRAD,XSHIFT,
      >            XELL,XTRIAPOS,XTRIANEG,Pout,
      >            R2,OOR2,R2TAU2,DRHO2OB2,R3OTAU3,R3OTAU,
      >            BPR,BPZ,Rext,Zext,NBext,XLI,DIMERC,DRMERC,
-     >            BALCRIT,IFAIL,ecrit,xrsig,FR,IEXACT)
-     
-c      write(*,*) 'apres Helena'
+     >            BALCRIT,IFAIL,ecrit)
 
 C---------------------------------------------------------------------
 C GESTION DES SORTIES
 C Recuperation du nombre de valeurs du flux poloidal et de l'angle poloidal
 C de la grille de sortie
       sizeOUT = NRMAP * NPMAP
-
-c      LSC = real(sizeOUT)
-
-c      plhs(1) = mxCreateDoubleMatrix(mat1,mat1,0)
-c      LSC_pr = mxGetPr(plhs(1))
-c      call mxCopyReal8ToPtr(LSC,LSC_pr,mat1)
-
-            
-
 C C2 : Vp <gradient(rho)^2/R^2 >
-      plhs(1) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(1) = mxCreateFull(NRMAP,1,0)
       C2_pr = mxGetPr(plhs(1))
       call mxCopyReal8ToPtr(C2,C2_pr,NRMAP)
 C C3 : Vp < 1/R^2 >
-      plhs(2) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(2) = mxCreateFull(NRMAP,1,0)
       C3_pr = mxGetPr(plhs(2))
       call mxCopyReal8ToPtr(C3,C3_pr,NRMAP)
-
 C R2M : (rho2m) < | gradient(rho)^2 | >
-      plhs(3) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(3) = mxCreateFull(NRMAP,1,0)
       R2M_pr = mxGetPr(plhs(3))
       call mxCopyReal8ToPtr(R2M,R2M_pr,NRMAP)
-
 C R et Z des surfaces de flux     
-      plhs(4) = mxCreateDoubleMatrix(NRMAP,NPMAP,0)
+      plhs(4) = mxCreateFull(NRMAP,NPMAP,0)
       RR_pr = mxGetPr(plhs(4))
       call mxCopyReal8ToPtr(RR,RR_pr,sizeOUT)
-
-      plhs(5) = mxCreateDoubleMatrix(NRMAP,NPMAP,0)
+      plhs(5) = mxCreateFull(NRMAP,NPMAP,0)
       ZZ_pr = mxGetPr(plhs(5))
       call mxCopyReal8ToPtr(ZZ,ZZ_pr,sizeOUT)
-
 C RHO racine du flux toroidal (m)
-      plhs(6) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(6) = mxCreateFull(NRMAP,1,0)
       RHO_pr = mxGetPr(plhs(6))
       call mxCopyReal8ToPtr(RHO,RHO_pr,NRMAP)
-
 C Vp : V' (dV/drho a rho(i)-m**2)
-      plhs(7) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(7) = mxCreateFull(NRMAP,1,0)
       VP_pr = mxGetPr(plhs(7))
       call mxCopyReal8ToPtr(VP,VP_pr,NRMAP)
-
 C drhoor : <abs(grad(rho))/R>
-      plhs(8) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(8) = mxCreateFull(NRMAP,1,0)
       DRHOOR_pr = mxGetPr(plhs(8))
       call mxCopyReal8ToPtr(DRHOOR,DRHOOR_pr,NRMAP)
-
 C qpsi : facteur de securite
-      plhs(9) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(9) = mxCreateFull(NRMAP,1,0)
       QPSI_pr = mxGetPr(plhs(9))
       call mxCopyReal8ToPtr(QPSI,QPSI_pr,NRMAP)
-
 C Flux poloidal (le meme qu'en entree)
-      plhs(10) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(10) = mxCreateFull(NRMAP,1,0)
       PSIPOUT_pr = mxGetPr(plhs(10))
       call mxCopyReal8ToPtr(PSIPOUT,PSIPOUT_pr,NRMAP)
-
-C ftra : fraction de piegees
-      plhs(11) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+C ftra : fraction de piegees            
+      plhs(11) = mxCreateFull(NRMAP,1,0)
       FTRA_pr = mxGetPr(plhs(11))
       call mxCopyReal8ToPtr(FTRA,FTRA_pr,NRMAP)
-
 C Fdia : fonction diamagnetique
-      plhs(12) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(12) = mxCreateFull(NRMAP,1,0)
       FDIA_pr = mxGetPr(plhs(12))
       call mxCopyReal8ToPtr(FDIA,FDIA_pr,NRMAP)
-
 C Flux toroidal
-      plhs(13) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(13) = mxCreateFull(NRMAP,1,0)
       PSIT_pr = mxGetPr(plhs(13))
       call mxCopyReal8ToPtr(PSIT,PSIT_pr,NRMAP)
-
 C B2 : moyenne de B^2 sur une surface de flux
-      plhs(14) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(14) = mxCreateFull(NRMAP,1,0)
       B2_pr = mxGetPr(plhs(14))
       call mxCopyReal8ToPtr(B2,B2_pr,NRMAP)
-
 C invB2 : moyenne de l'inverse de B^2 sur une surface de flux
-      plhs(15) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(15) = mxCreateFull(NRMAP,1,0)
       INVB2_pr = mxGetPr(plhs(15))
       call mxCopyReal8ToPtr(INVB2,INVB2_pr,NRMAP)
-
 C Sp : element de surface
-      plhs(16) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(16) = mxCreateFull(NRMAP,1,0)
       SP_pr = mxGetPr(plhs(16))
       call mxCopyReal8ToPtr(SP,SP_pr,NRMAP)
-
 C RAV : <R>
-      plhs(17) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(17) = mxCreateFull(NRMAP,1,0)
       RAV_pr = mxGetPr(plhs(17))
       call mxCopyReal8ToPtr(RAV,RAV_pr,NRMAP)
-
 C OOR / <1/R>
-      plhs(18) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(18) = mxCreateFull(NRMAP,1,0)
       OOR_pr = mxGetPr(plhs(18))
       call mxCopyReal8ToPtr(OOR,OOR_pr,NRMAP)
-
 C DRHOAV : <abs(grad(rho))>
-      plhs(19) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(19) = mxCreateFull(NRMAP,1,0)
       DRHOAV_pr = mxGetPr(plhs(19))
       call mxCopyReal8ToPtr(DRHOAV,DRHOAV_pr,NRMAP)
-
 C XSHIFT : element d'ordre 0 de la serie de Fourier R(theta)
-      plhs(20) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(20) = mxCreateFull(NRMAP,1,0)
       XSHIFT_pr = mxGetPr(plhs(20))
       call mxCopyReal8ToPtr(XSHIFT,XSHIFT_pr,NRMAP)
-
 C XRAD : petit rayon geometrique
-      plhs(21) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(21) = mxCreateFull(NRMAP,1,0)
       XRAD_pr = mxGetPr(plhs(21))
       call mxCopyReal8ToPtr(XRAD,XRAD_pr,NRMAP)
-
 C XELL : ellipticite
-      plhs(22) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(22) = mxCreateFull(NRMAP,1,0)
       XELL_pr = mxGetPr(plhs(22))
-      call mxCopyReal8ToPtr(XELL,XELL_pr,NRMAP)  
-    
+      call mxCopyReal8ToPtr(XELL,XELL_pr,NRMAP)      
 C XTRIAPOS : triangularite partie superieure (Z>0)
-      plhs(23) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(23) = mxCreateFull(NRMAP,1,0)
       XTRIAPOS_pr = mxGetPr(plhs(23))
       call mxCopyReal8ToPtr(XTRIAPOS,XTRIAPOS_pr,NRMAP)
-
 C XTRIANEG : triangularite partie inferieure (Z<0)
-      plhs(24) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(24) = mxCreateFull(NRMAP,1,0)
       XTRIANEG_pr = mxGetPr(plhs(24))
       call mxCopyReal8ToPtr(XTRIANEG,XTRIANEG_pr,NRMAP)
-
 C Jout : densite de courant recalculee d'apres l'equilibre trouve
-      plhs(25) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(25) = mxCreateFull(NRMAP,1,0)
       Jout_pr = mxGetPr(plhs(25))
       call mxCopyReal8ToPtr(Jout,Jout_pr,NRMAP)
-
-      goto 2222
-
 C Iout : courant total
-      plhs(26) = mxCreateDoubleMatrix(1,mat1,0)
+      plhs(26) = mxCreateFull(1,1,0)
       XIAB_pr = mxGetPr(plhs(26))
       call mxCopyReal8ToPtr(XIAB,XIAB_pr,1)
-
 C Pout : pression recalculee d'apres l'equilibre trouve
-      plhs(27) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(27) = mxCreateFull(NRMAP,1,0)
       Pout_pr = mxGetPr(plhs(27))
       call mxCopyReal8ToPtr(Pout,Pout_pr,NRMAP)
-
 C R2 : <R^2>
-      plhs(28) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(28) = mxCreateFull(NRMAP,1,0)
       R2_pr = mxGetPr(plhs(28))
       call mxCopyReal8ToPtr(R2,R2_pr,NRMAP)
 C OOR2 : <1/R2>
-      plhs(29) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(29) = mxCreateFull(NRMAP,1,0)
       OOR2_pr = mxGetPr(plhs(29))
       call mxCopyReal8ToPtr(OOR2,OOR2_pr,NRMAP)
 C R2TAU2 : <R^2/tau^2>
-      plhs(30) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(30) = mxCreateFull(NRMAP,1,0)
       R2TAU2_pr = mxGetPr(plhs(30))
       call mxCopyReal8ToPtr(R2TAU2,R2TAU2_pr,NRMAP)
 C DRHO2OB2 : < |gradient(rho)|^2/B^2 >
-      plhs(31) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(31) = mxCreateFull(NRMAP,1,0)
       DRHO2OB2_pr = mxGetPr(plhs(31))
       call mxCopyReal8ToPtr(DRHO2OB2,DRHO2OB2_pr,NRMAP)
 C R3OTAU3 : <R^3/tau^3>
-      plhs(32) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(32) = mxCreateFull(NRMAP,1,0)
       R3OTAU3_pr = mxGetPr(plhs(32))
       call mxCopyReal8ToPtr(R3OTAU3,R3OTAU3_pr,NRMAP)
 C R3OTAU : <R^3/tau>
-      plhs(33) = mxCreateDoubleMatrix(NRMAP,mat1,0)
+      plhs(33) = mxCreateFull(NRMAP,1,0)
       R3OTAU_pr = mxGetPr(plhs(33))
       call mxCopyReal8ToPtr(R3OTAU,R3OTAU_pr,NRMAP)
 C BPR : Champ magnetique
-      plhs(34) = mxCreateDoubleMatrix(NRMAP,NPMAP,0)
+      plhs(34) = mxCreateFull(NRMAP,NPMAP,0)
       BPR_pr    = mxGetPr(plhs(34))
       call mxCopyReal8ToPtr(BPR,BPR_pr,sizeOUT) 
 C BPZ : Champ magnetique
-      plhs(35) = mxCreateDoubleMatrix(NRMAP,NPMAP,0)
+      plhs(35) = mxCreateFull(NRMAP,NPMAP,0)
       BPZ_pr    = mxGetPr(plhs(35))
       call mxCopyReal8ToPtr(BPZ,BPZ_pr,sizeout)
 C b : parametre de calcul de l'equilibre final
-      plhs(36) = mxCreateDoubleMatrix(mat1,mat1,0)
+      plhs(36) = mxCreateFull(1,1,0)
       b_pr    = mxGetPr(plhs(36))
       call mxCopyReal8ToPtr(B,b_pr,1)
-C df2 : parametre de calcul de l'equilibre final (FF')
-      plhs(37) = mxCreateDoubleMatrix(mat101,mat1,0)
+C df2 : parametre de calcul de l'equilibre final
+      plhs(37) = mxCreateFull(101,1,0)
       df2_pr    = mxGetPr(plhs(37))
       call mxCopyReal8ToPtr(DF2,df2_pr,101)
-C dpr : parametre de calcul de l'equilibre final (P')
-      plhs(38) = mxCreateDoubleMatrix(mat101,mat1,0)
-      dpr_pr    = mxGetPr(plhs(38))
-      call mxCopyReal8ToPtr(DPR,dpr_pr,101)
 C kkbig : matrice des elements finis
-      plhs(39) = mxCreateDoubleMatrix(KKLDA,mat4*MAXNODE,0)
-      kkbig_pr    = mxGetPr(plhs(39))
-      call mxCopyReal8ToPtr(KKBIG,kkbig_pr,KKLDA*mat4*MAXNODE)             
+      plhs(38) = mxCreateFull(KKLDA,4*MAXNODE,0)
+      kkbig_pr    = mxGetPr(plhs(38))
+      call mxCopyReal8ToPtr(KKBIG,kkbig_pr,KKLDA*4*MAXNODE)             
 C XLI : self
-      plhs(40) = mxCreateDoubleMatrix(mat1,mat1,0)
-      XLI_pr = mxGetPr(plhs(40))
-      call mxCopyReal8ToPtr(XLI,XLI_pr,mat1)
+      plhs(39) = mxCreateFull(1,1,0)
+      XLI_pr = mxGetPr(plhs(39))
+      call mxCopyReal8ToPtr(XLI,XLI_pr,1)
 C DIMERC : ideal Mercier criterion
-      plhs(41) = mxCreateDoubleMatrix(NRMAP,mat1,0)
-      DIMERC_pr = mxGetPr(plhs(41))
+      plhs(40) = mxCreateFull(NRMAP,1,0)
+      DIMERC_pr = mxGetPr(plhs(40))
       call mxCopyReal8ToPtr(DIMERC,DIMERC_pr,NRMAP)
 C DIMERC : resistive Mercier criterion
-      plhs(42) = mxCreateDoubleMatrix(NRMAP,mat1,0)
-      DRMERC_pr = mxGetPr(plhs(42))
+      plhs(41) = mxCreateFull(NRMAP,1,0)
+      DRMERC_pr = mxGetPr(plhs(41))
       call mxCopyReal8ToPtr(DRMERC,DRMERC_pr,NRMAP)
 C BALCRIT : Ballooning stability criterion
-      plhs(43) = mxCreateDoubleMatrix(NRMAP,mat1,0)
-      BALCRIT_pr = mxGetPr(plhs(43))
+      plhs(42) = mxCreateFull(NRMAP,1,0)
+      BALCRIT_pr = mxGetPr(plhs(42))
       call mxCopyReal8ToPtr(BALCRIT,BALCRIT_pr,NRMAP)
-C coefficient de la transformee de Fourrier de lq DSMF
-      plhs(44) = mxCreateDoubleMatrix(mat2*MBMAX+mat2,mat1,0)
-      FR_pr    = mxGetPr(plhs(44))
-      call mxCopyReal8ToPtr(FR,FR_pr,mat2*MBMAX+mat2)
 C IFAIL : code d'erreur
-      plhs(45) = mxCreateDoubleMatrix(mat1,mat1,0)
-      IFAIL_pr = mxGetPr(plhs(45))
+      plhs(43) = mxCreateFull(1,1,0)
+      IFAIL_pr = mxGetPr(plhs(43))
       RIFAIL=REAL(IFAIL)
       call mxCopyReal8ToPtr(RIFAIL,IFAIL_pr,1)
-C nchi   : number of poloidal points (straight field line coordinates)
-      plhs(46) = mxCreateDoubleMatrix(mat1,mat1,0)
-      NCHI_pr = mxGetPr(plhs(46))
-      RNCHI=REAL(NCHI)
-      call mxCopyReal8ToPtr(RNCHI,NCHI_pr,mat1)
-C cpsurf : normalised total poloidal flux
-      plhs(47) = mxCreateDoubleMatrix(mat1,mat1,0)
-      CPSURF_pr = mxGetPr(plhs(47))
-      call mxCopyReal8ToPtr(CPSURF,CPSURF_pr,mat1)
-c radius : normalised minor radius (R_mag=1)
-      plhs(48) = mxCreateDoubleMatrix(mat1,mat1,0)
-      RADIUS_pr = mxGetPr(plhs(48))
-      call mxCopyReal8ToPtr(RADIUS,RADIUS_pr,mat1)
-c gem11  : grad(psi)**2 (normalised)
-C taille de la matrice
-c      write(*,*) 'taille'
-      N_GEM = NPSI*NCHI
-c      write(*,*) 'NPSI = ',NPSI
-c      write(*,*) 'NCHI = ',NCHI
-c      write(*,*) 'N_GEM = ',N_GEM
-
-      plhs(49) = mxCreateDoubleMatrix(N_GEM,mat1,0)
-      GEM11_pr = mxGetPr(plhs(49))
-      call mxCopyReal8ToPtr(GEM11,GEM11_pr,N_GEM)
-c gem12  : grad(psi).grad(theta)
-c      write(*,*) '50'
-      plhs(50) = mxCreateDoubleMatrix(N_GEM,mat1,0)
-      GEM12_pr = mxGetPr(plhs(50))
-      call mxCopyReal8ToPtr(GEM12,GEM12_pr,N_GEM)
-c gem33  : R**2
-c      write(*,*) '51'
-      plhs(51) = mxCreateDoubleMatrix(N_GEM,mat1,0)
-      GEM33_pr = mxGetPr(plhs(51))
-      call mxCopyReal8ToPtr(GEM33,GEM33_pr,N_GEM)
-c RSPOT  : R
-c      write(*,*) '52'
-      plhs(52) = mxCreateDoubleMatrix(N_GEM,mat1,0)
-      RSPOT_pr = mxGetPr(plhs(52))
-      call mxCopyReal8ToPtr(RSPOT,RSPOT_pr,N_GEM)
-c ZSPOT  : Z
-c      write(*,*) '53'
-      plhs(53) = mxCreateDoubleMatrix(N_GEM,mat1,0)
-      ZSPOT_pr = mxGetPr(plhs(53))
-      call mxCopyReal8ToPtr(ZSPOT,ZSPOT_pr,N_GEM)
-c BRSPOT  : BR
-c      write(*,*) '54'
-      plhs(54) = mxCreateDoubleMatrix(N_GEM,mat1,0)
-      BRSPOT_pr = mxGetPr(plhs(54))
-      call mxCopyReal8ToPtr(BRSPOT,BRSPOT_pr,N_GEM)
-c BZSPOT  : BZ
-c      write(*,*) '55'
-      plhs(55) = mxCreateDoubleMatrix(N_GEM,mat1,0)
-      BZSPOT_pr = mxGetPr(plhs(55))
-      call mxCopyReal8ToPtr(BZSPOT,BZSPOT_pr,N_GEM)
-
-c      write(*,*) 'end'
- 2222  continue
-
+     
       return
       END
                                                                    
@@ -683,64 +479,59 @@ c      write(*,*) 'end'
      >                  XRAD,XSHIFT,XELL,XTRIAPOS,XTRIANEG,ZP0,
      >                  R2,OOR2,R2OTAU2,DRHO2OB2,R3OTAU3,R3OTAU,
      >                  BPR,BPZ,Rext,Zext,NBext,XLI,DIMERC,DRMERC,
-     >                  BALCRIT,IFAIL,ecrit,xrsig,FR,IEXACT)
+     >                  BALCRIT,IFAIL,ecrit)        
 C-----------------------------------------------------------------------
 C                                                                       
 C MAIN PROGRAM HELENA :        (VERSION 12small  DATE 25-01-2000)       
 C ---------------------                                                 
-C      - SOLVES THE 2D GRAD-SHAFRANOV EQUATION FOR  ARBITRARY UP/DOWN
+C      - SOLVES THE 2D GRAD-SHAFRANOV EQUATION FOR  ARBITRARY UP/DOWN   
 C        SYMMETRIC CONTINUOUS PLASMA BOUNDARIES AND EQUILIBRIUM PRESSURE
 C        AND GAMMA PROFILES.                                            
 C      - 2D CUBIC ISOPARAMETRIC FINITE ELEMENTS ARE USED FOR AN ACCURATE
 C        REPRESENTATION OF THE SOLUTION.                                
-C      - THE FINAL SOLUTION IS OBTAINED AN A FLUXSURFACE GRID.
+C      - THE FINAL SOLUTION IS OBTAINED AN A FLUXSURFACE GRID.          
 C                                                                       
 C                                                                       
 C AUTHOR : G. HUYSMANS                                                  
 C                                                                       
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
-      PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026, KKLDA=4*NPMAX+9)
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
+      PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026, KKLDA=4*NPMAX+9)        
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)
       PARAMETER (NPSIMAX=NRMMAX, NCHIMAX=1026)                             
       PARAMETER (NPNC=NPSIMAX*NCHIMAX, NP4=4*NPSIMAX)                   
                                          
 C-----------------------------------------------------------------------
-      COMMON / COMDAT/
-     >        ELLIP,TRIAH,TRIAB,QUAD,PAR1,PAR2,PAR3,PAR4,
-     >        AGA,BGA,CGA,DGA,EGA,FGA,GGA,HGA,
-     >        API,BPI,CPI,DPI,EPI,FPI,GPI,HPI,
-     >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,
-     >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,
-     >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1,
-     >        IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
+      COMMON / COMDAT/                                                  
+     >        ELLIP,TRIAH,TRIAB,QUAD,PAR1,PAR2,PAR3,PAR4,                      
+     >        AGA,BGA,CGA,DGA,EGA,FGA,GGA,HGA,                          
+     >        API,BPI,CPI,DPI,EPI,FPI,GPI,HPI,                          
+     >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
+     >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
+     >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1,          
+     >        IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
      >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
-      real*8    ELLIP,TRIAH,TRIAB,QUAD,PAR1,PAR2,PAR3,PAR4,
-     >        AGA,BGA,CGA,DGA,EGA,FGA,GGA,HGA,
-     >        API,BPI,CPI,DPI,EPI,FPI,GPI,HPI,
-     >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,
-     >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,
-     >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      real*8    ELLIP,TRIAH,TRIAB,QUAD,PAR1,PAR2,PAR3,PAR4,                      
+     >        AGA,BGA,CGA,DGA,EGA,FGA,GGA,HGA,                          
+     >        API,BPI,CPI,DPI,EPI,FPI,GPI,HPI,                          
+     >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
+     >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
+     >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
-C-----------------------------------------------------------------------
-      COMMON /NODES/ PSIKN,THTKN,RADPSI,DPSIKN,DDPSIKN                                   
-      REAL*8    PSIKN(NRMMAX),THTKN(NPMMAX),RADPSI(NRMMAX) 
-      REAL*8    DPSIKN(NRMMAX),DDPSIKN(NRMMAX)
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
       COMMON/TOLERA/PSITOL,THTTOL,TOL                                   
       real*8    PSITOL,THTTOL,TOL                                         
@@ -750,12 +541,12 @@ C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
       COMMON/FAXIS/PSI,NAXIS                                            
       real*8    PSI(4*MAXMNODE)                                           
-      mwSize NAXIS                                                     
+      integer NAXIS                                                     
 C-----------------------------------------------------------------------
-      COMMON/COMSOLV/KKBIG
-      real*8 KKBIG(KKLDA,4*MAXNODE)
-c      real*8, ALLOCATABLE :: KKBIG(:,:)
-c      mwSize KKLDA                                                    
+      COMMON/COMSOLV/KKBIG                                              
+      real*8 KKBIG(KKLDA,4*MAXNODE)                                       
+c      real*8, ALLOCATABLE :: KKBIG(:,:)                                  
+c      integer KKLDA                                                    
 C-----------------------------------------------------------------------
       COMMON /COMMAP/CS,QS,DQS,CURJ,CHI,   
      >     GEM11,GEM12,GEM33,  
@@ -768,20 +559,16 @@ C-----------------------------------------------------------------------
      >     GEM11(MAXMNODE),GEM12(MAXMNODE),GEM33(MAXMNODE),  
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
-     >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE
-      mwSize JS0,NCHI,NPSI
+     >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
+      INTEGER JS0,NCHI,NPSI
       LOGICAL NLTORE  
-C-----------------------------------------------------------------------
-      COMMON /COMSPOT/RSPOT,ZSPOT,BRSPOT,BZSPOT
-      REAL*8 RSPOT(MAXMNODE),ZSPOT(MAXMNODE)
-      REAL*8 BRSPOT(MAXMNODE),BZSPOT(MAXMNODE)
 C-----------------------------------------------------------------------
       common / COMB02 / B02,DTB02 , DSB02
       REAL*8    B02(NPNC), DTB02(NPNC), DSB02(NPNC)
 C-----------------------------------------------------------------------
       common / COMPQ / CP0, CP1, CP2, CQ0, CQ1, NCPQ
       REAL*8    CP0(NPNC),CP1(NPNC),CP2(NPNC),CQ0(NPNC),CQ1(NPNC)
-      mwSize NCPQ
+      INTEGER NCPQ
 C-----------------------------------------------------------------------
       common / COMNAM / QAXIS,TBB,TBF
       REAL*8     QAXIS,TBB,TBF
@@ -789,28 +576,21 @@ C-----------------------------------------------------------------------
       COMMON / COMPIE/ PI                                               
       real*8 PI                                                           
 C-----------------------------------------------------------------------
-      COMMON / COMSPL /
+      COMMON / COMSPL /                                                 
      R         Q1(NPSIMAX), Q2(NPSIMAX), Q3(NPSIMAX), Q4(NPSIMAX),      
      R         P1(NPSIMAX), P2(NPSIMAX), P3(NPSIMAX), P4(NPSIMAX),      
-     R         RBP1(NPSIMAX), RBP2(NPSIMAX), RBP3(NPSIMAX),
-     R         RBP4(NPSIMAX)
+     R         RBP1(NPSIMAX), RBP2(NPSIMAX), RBP3(NPSIMAX),             
+     R         RBP4(NPSIMAX)                                            
                                                                        
       REAL*8     Q1, Q2, Q3, Q4,                          
-     >         P1, P2, P3, P4, RBP1, RBP2, RBP3, RBP4
+     >         P1, P2, P3, P4, RBP1, RBP2, RBP3, RBP4                  
 C-----------------------------------------------------------------------
-      COMMON / MESHAC /
-     R         XR1DONE,SIG1DONE,
-     R         SG,DSG,DDSG,
-     I         NRDONE
-      REAL*8   XR1DONE,SIG1DONE
-      REAL*8   SG(NRMMAX),DSG(NRMMAX),DDSG(NRMMAX)
-      mwSize  NRDONE,ISPLINE,IIFBND,IIFBND1,IFORMKQ,ISOLVE2
 
-      real*8 XX(4,MAXMNODE),YY(4,MAXMNODE),FR(2*MBMAX+2)
+      real*8 XX(4,MAXMNODE),YY(4,MAXMNODE),FR(2*MBMAX+2)                  
       real*8 QQ(4*MAXNODE),DIAG(4*MAXNODE)                                
       real*8 PSPLOT(101),DPPLOT(101),DGPLOT(101),ZJPLOT(101),QPLOT(101)   
-      real*8 DF2OLD(NPTSMAX),FM(MBMAX)
-      real*8 FCIRC(NRMMAX),B0MAX(NRMMAX),RAV(NRMMAX)
+      real*8 DF2OLD(NPTSMAX),FM(MBMAX)                                    
+      real*8 FCIRC(NRMMAX),B0MAX(NRMMAX),RAV(NRMMAX)                      
       real*8 DRMERC(NRMMAX),DIMERC(NRMMAX),HH(NRMMAX),QPROF(NRMMAX)       
       real*8 DQPROF(NRMMAX),GEONC(NRMMAX),ZJPAR(NRMMAX)                   
       real*8 DUMMY1(NRMMAX),DUMMY2(NRMMAX)                                
@@ -818,34 +598,31 @@ C-----------------------------------------------------------------------
       real*8 ZJJ5(NRMMAX),ZJJ6(NRMMAX),ZJJ7(NRMMAX),ZJJ12(NRMMAX)                       
       real*8 ZJJ8(NRMMAX),ZJJ9(NRMMAX),ZJJ10(NRMMAX),ZJJ11(NRMMAX)
       real*8 ZJJ13(NRMMAX),ZJJ14(NRMMAX),ZJJ15(NRMMAX)
-      real*8 ZJJ16(NRMMAX),ZJJ17(NRMMAX),BALCRIT(NRMMAX)
+      real*8 ZJJ16(NRMMAX),ZJJ17(NRMMAX),BALCRIT(NRMMAX)                                                   
       real*8 ZQ(NRMMAX),ZAREA(NRMMAX),ZVOL(NRMMAX),OOR(NRMMAX)
       real*8 DRHOAV(NRMMAX),AVC(NRMMAX),DRHOOR(NRMMAX)
       real*8 ZCUR(NRMMAX),ZP0(NRMMAX),ZFF(NRMMAX),TMP(NRMMAX)             
-      real*8 VP(*),C2(*),C3(*),R2M(*),RHO(*),FTRA(*),FDIA(*),INVB2(*)
-      real*8 TAU(NRMMAX),QPSI(*),SP(*),PSIP(*),PSIT(*),B2(*)
-      real*8 PSIN(*),PIN(*),ZJIN(*),ABLTG(3),Rext(*),Zext(*)
+      real*8 VP(*),C2(*),C3(*),R2M(*),RHO(*),FTRA(*),FDIA(*),INVB2(*)     
+      real*8 TAU(NRMMAX),QPSI(*),SP(*),PSIP(*),PSIT(*),B2(*)         
+      real*8 PSIN(*),PIN(*),ZJIN(*),ABLTG(3),Rext(*),Zext(*)                 
       real*8 XSHIFT(*),XRAD(*),XTRIAPOS(*),XTRIANEG(*),XELL(*)
       real*8 R2(*),OOR2(*),R2OTAU2(*),DRHO2OB2(*),R3OTAU3(*),R3OTAU(*)
       real*8 RR(NRMMAX,NPMMAX),ZZ(NRMMAX,NPMMAX),BPR(NRMMAX,NPMMAX)
-      real*8 BPZ(NRMMAX,NPMMAX)
+      real*8 BPZ(NRMMAX,NPMMAX)                                     
       real*8 S1(101),S2(101),S3(101),S4(101)
-      real*8 ecrit, xrsig(2)
+      real*8 ecrit
                                                                                          
-      CALL INIVAL
-      IF ((INI.EQ.0) .AND. (IEXACT.EQ. 0)) THEN
-         B = 0.002D0
+      CALL INIVAL                                                
+      IF (INI.EQ.0) THEN
+         B = 0.002D0                                                          
       ENDIF
       
       IFAIL = 999
       IWRT = INT(ecrit)
-      XR1  = xrsig(1)
-      SIG1 = xrsig(2)
-      if (IWRT.GT.1)  then
+      if (IWRT.GE.1)  then
       	IWRT = 1
 	AMIX = 0.9
 	NITER = 1000
-c        write(*,*) 'XR1 = ',XR1,' ;SIG1 = ',SIG1
       endif
             
       PSI0 = PSIN(1)
@@ -854,94 +631,64 @@ c        write(*,*) 'XR1 = ',XR1,' ;SIG1 = ',SIG1
       ENDDO
 
 c      NBEXT = 33
-      MF    = 2*MHARM
-c      IF (IWRT.NE.0) WRITE(*,*) ' Point wise boundary : ',NBEXT
+      MF    = 128
+      IF (IWRT.NE.0) WRITE(*,*) ' Point wise boundary : ',NBEXT
       IF (IWRT.NE.0) then
-c        DO I=1,NPRFL
-c          WRITE(*,*) 'I= ',I,' PSI =',PSIN(I)
-c	ENDDO
+        DO I=1,NPRFL
+          WRITE(*,*) 'I= ',I,' PSI =',PSIN(I)
+	ENDDO
       ENDIF
-
-c       write(*,*) 'Iexact dans helena =',IEXACT
-C le mode FR = 0 est pour le couplage avec DINA
-      IF ((IEXACT .EQ. 0) .OR. (FR(1) .EQ. 0.0D0)) THEN
-
-        DO I=1,2*MBMAX+2
-           FR(I)  = 0.0
-        ENDDO
-
-        IF (NBext.GT.0) THEN
-          IIFBND = 1
-          IIFBND1 = NBext-1
-          CALL FBND(Rext,Zext,IIFBND1,FR,MF,AMIN,R0,IIFBND)
-        ENDIF
-      ELSE
-        IF (NBext.GT.0) THEN
-            IIFBND = 0
-            IIFBND1 = NBext-1
-            CALL FBND(Rext,Zext,IIFBND1,FR,MF,AMIN,R0,IIFBND)
-        ENDIF
-      ENDIF    
-                    
+      IF (NBext.GT.0) THEN
+        CALL FBND(Rext,Zext,NBext-1,FR,MF,AMIN,R0)
+      ENDIF
+                        
       EPS = AMIN/R0                                                                                                            
-      BETAP = PIN(1) * 1.6022D-16 * 12.56637D-7 / B0**2.0
-      XIAB = 12.56637D-7 * XI / (AMIN * B0)
-      ALFA =  2.*PI* AMIN**2.0 * B0 / DABS(PSIN(NPRFL))
+      BETAP = PIN(1) * 1.6022D-16 * 12.56637D-7 / B0**2                 
+      XIAB = 12.56637D-7 * XI / (AMIN * B0)                             
+      ALFA =  2.*PI* AMIN**2 * B0 / DABS(PSIN(NPRFL))
       
       IF (IWRT.NE.0) THEN
-c         WRITE(*,*) ' IAS   : ',IAS
-c         WRITE(*,*) ' AMIN  : ',AMIN
-c	 WRITE(*,*) ' B0    : ',B0
-c	 WRITE(*,*) ' XI    : ',XI
-c	 WRITE(*,*) ' PSI(1): ',PSIN(NPRFL)
-c	 WRITE(*,*) ' XTRIA(TOP) : ',TRIAH
-c	 WRITE(*,*) ' XTRIA(BOT) : ',TRIAB
-c	 WRITE(*,*) ' ALFA  : ',ALFA
+         WRITE(*,*) ' IAS   : ',IAS
+         WRITE(*,*) ' AMIN  : ',AMIN
+	 WRITE(*,*) ' B0    : ',B0
+	 WRITE(*,*) ' XI    : ',XI
+	 WRITE(*,*) ' PSI(1): ',PSIN(NPRFL)
+	 WRITE(*,*) ' XTRIA(TOP) : ',TRIAH
+	 WRITE(*,*) ' XTRIA(BOT) : ',TRIAB
+	 WRITE(*,*) ' ALFA  : ',ALFA
       ENDIF
-c      IF (INI.EQ.1) WRITE(*,*) ' B(prev) : ',B
-c      IF (IEXACT.EQ.1) WRITE(*,*) ' B(prev) : ',B
+      IF (INI.EQ.1) WRITE(*,*) ' B(prev) : ',B
 
-
-      IF (IEXACT .EQ. 0) THEN
 c------------------------ quadratic extraolation to axis
-        dp3 = (pin(4)-pin(3))/(psin(4)-psin(3))
-        pin(1)=pin(3)+(psin(1)-psin(3))*dp3
-        pin(2)=pin(3)+(psin(2)-psin(3))*dp3
-c        write(*,*) 'avant spline PIN'
-        ISPLINE = 2
-        CALL SPLINE(NPRFL,PSIN,PIN,0.D0,0.D0,ISPLINE,S1,S2,S3,S4)
-c        write(*,*) 'apres spline'
-
-	NPTS=101
-        PSIB = DABS(PSIN(NPRFL))                                           
-        DO I=1,NPTS   
-          SS =  dble(I-1)/dble(NPTS-1)                                                   
-          FI = PSIB * SS*SS                        
-          TMP1 = SPWERT(NPRFL,FI,S1,S2,S3,S4,PSIN,ABLTG)                   
-          DPR(I) = ABLTG(1)
-        ENDDO                                                             
-c        write(*,*) 'avant spline ZJIN'
-        ISPLINE = 2
-        CALL SPLINE(NPRFL,PSIN,ZJIN,0.D0,0.D0,ISPLINE,S1,S2,S3,S4)
-        NPTS=101                                                          
-        DO I=1,NPTS                                                       
-          SS =  dble(I-1)/dble(NPTS-1)                                                   
-          FI = PSIB * SS*SS                
-          ZJZ(I) = SPWERT(NPRFL,FI,S1,S2,S3,S4,PSIN,ABLTG)
-          IF (INI.EQ.0) THEN               
-             DF2(I) = 1. - FI/PSIB                                           
-c             DF2(I) = DPR(I)                                           
-          ENDIF        
-        ENDDO       
-
-      ELSE
-         ICUR = 0
-         NMESH = 1
-      ENDIF
+      dp3 = (pin(4)-pin(3))/(psin(4)-psin(3))
+      pin(1)=pin(3)+(psin(1)-psin(3))*dp3
+      pin(2)=pin(3)+(psin(2)-psin(3))*dp3
+      
+      CALL SPLINE(NPRFL,PSIN,PIN,0.D0,0.D0,2,S1,S2,S3,S4)                   
+      NPTS=101                                                          
+      PSIB = DABS(PSIN(NPRFL))                                           
+      DO I=1,NPTS   
+        SS =  dble(I-1)/dble(NPTS-1)                                                   
+        FI = PSIB * SS*SS                        
+        TMP1 = SPWERT(NPRFL,FI,S1,S2,S3,S4,PSIN,ABLTG)                   
+        DPR(I) = ABLTG(1)
+      ENDDO                                                             
                                                                         
+      CALL SPLINE(NPRFL,PSIN,ZJIN,0.D0,0.D0,2,S1,S2,S3,S4)                  
+      NPTS=101                                                          
+      DO I=1,NPTS                                                       
+        SS =  dble(I-1)/dble(NPTS-1)                                                   
+        FI = PSIB * SS*SS                
+        ZJZ(I) = SPWERT(NPRFL,FI,S1,S2,S3,S4,PSIN,ABLTG)
+        IF (INI.EQ.0) THEN               
+           DF2(I) = 1. - FI/PSIB                                           
+c           DF2(I) = DPR(I)                                           
+        ENDIF        
+      ENDDO       
+                                                                              
 C------------------------------------------ALLOCATE LARGE MATRIX        
       IF ((NR.GT.NRMAX).OR.(NP.GT.NPMAX)) THEN                          
-c        WRITE(*,*) ' NR or NP too large, NRMAX =',NRMAX,' NPMAX=',NPMAX
+        WRITE(*,*) ' NR or NP too large, NRMAX =',NRMAX,' NPMAX=',NPMAX 
         CALL mexErrMsgTxt(' NR or NP too large')                                                            
       ENDIF                                                             
 c-90      KKLDA = 4*NP+9                                                
@@ -949,8 +696,7 @@ c-90      KKLDA = 4*NP+9
 c-90      ALLOCATE(KKBIG(KKLDA,4*(NR+2)*NP))                            
                                                                         
 C-------------------------------- INITIALIZE INTERPOLATING FUNCTIONS ---
-c      write(*,*) 'avant gauss'
-      CALL GAUSS
+      CALL GAUSS                                            
 C------------------------------------ PLASMA BOUNDARY IN FOURIER SERIES 
       IF (NBEXT.LE.0) CALL FSHAPE(FR,MHARM)
 C------------------------------------ NORMALIZE PROFILES ---------------
@@ -969,13 +715,13 @@ C------------------------------------ NORMALIZE PROFILES ---------------
 	ENDIF
       ENDDO
    
-      IF ((INI.EQ.0) .AND. (IEXACT .EQ. 0)) THEN
+      IF (INI.EQ.0) THEN
         IF (ZMAXDPR.GT.100.0) THEN
            B = .2/ZMAXDPR    
 	ENDIF                                                     
       ENDIF
                                    
-      IF ((INI.EQ.0) .AND. (IEXACT .EQ. 0)) THEN
+      IF (INI.EQ.0) THEN
         B = - B * PSCALE/DABS(PSCALE)
       ENDIF
 C-------------------------------- INITIAL GUESS FOR A ------------------
@@ -984,44 +730,41 @@ C--------------------------------- INITIALIZE PRES AND GAM PROFILES ----
       CALL INIPRES                                                      
       CALL INIGAM                                                       
       IF (IWRT.NE.0) THEN
-c      WRITE(*,*) '***********************************************'
-c      WRITE(*,*) '*        INPUT PROFILES :                     *'
-c      WRITE(*,*) '***********************************************'
-c      WRITE(*,*) '*  S,         dP/dPSI,     Gamma,       J_phi *'
-c      WRITE(*,*) '***********************************************'
-      DO I=1,101
-          SS = dble(I-1)*0.01D0
-          PS = SS*SS                                            
+      WRITE(*,*) '***********************************************'     
+      WRITE(*,*) '*        INPUT PROFILES :                     *'     
+      WRITE(*,*) '***********************************************'     
+      WRITE(*,*) '*  PSI,       dP/dPSI,     Gamma,       J_phi *'     
+      WRITE(*,*) '***********************************************'     
+      DO I=1,101                                                         
+          PS = dble(I-1)*0.01D0                                               
           PSPLOT(I) = PS                                                
           DPPLOT(I) = DPDPSI(PS)                                        
           DGPLOT(I) = DGDPSI(PS)                                        
           ZJPLOT(I) = CURPHI(PS)                                        
-c          WRITE(*,622) SS,DPPLOT(I),DGPLOT(I),ZJPLOT(I)             
+          WRITE(*,622) PS,DPPLOT(I),DGPLOT(I),ZJPLOT(I)             
       ENDDO
       ENDIF
                                                                         
-c  622 FORMAT(4E12.4)                                                    
+  622 FORMAT(4E12.4)                                                    
 C------------------------------------ DEFINE NUMBERING OF ELEMENTS ---- 
       CALL ELMNO(NR,NP,NODENO)                                          
                                                                         
 C------------------------------------ DEFINE INITIAL GRID X,Y --------- 
-C      write(*,*) MHARM
-C      write(*,*) (FR(m),m=1,MHARM)
       CALL INIGRID(XX,YY,PSI,NR,NP,FR,MHARM,INIMESH,IAS,IARC,XR1,SIG1)  
 C----------------------------------- START OF LOOP OVER CURRENT/BETA--- 
       DO 888 NMG = 1,NMESH  
         IF (IWRT.NE.0) THEN                                            
-c        WRITE(*,*) '***************************************'
-c        WRITE(*,21) NMG                                                
-c        WRITE(*,*) '***************************************'
+        WRITE(*,*) '***************************************'           
+        WRITE(*,21) NMG                                                
+        WRITE(*,*) '***************************************'   
 	ENDIF        
-c   21   FORMAT(' * ITERATION CURRENT PROFILE,  NMG=',I3,'  *')          
+   21   FORMAT(' * ITERATION CURRENT PROFILE,  NMG=',I3,'  *')          
                                                                         
         NIT=NITER                                                       
 C------------------------------------ LOOP OVER GS EQUATION ------------
         DO 10 NI = 1, NIT  
           DO J=1,4*NR*NP                                                
-            QQ(J) = 0.D0
+            QQ(J) = 0.D0                                                  
           ENDDO                                                         
 C------------------------------------ INITIALIZE KK AND QQ TO ZERO -----
           DO I=1,4*NR*NP                                                
@@ -1030,25 +773,21 @@ C------------------------------------ INITIALIZE KK AND QQ TO ZERO -----
 
           IF (INI.EQ.0) THEN
 C------------------------------------ FORM MATRIX, NO CONDITIONS -------
-c          write(*,*) 'avant formkq'
-	  CALL FORMKQ(XX,YY,PSI,NR,NP,QQ,A,B,C,EPS,IGAM,ISOL,NI*NMG,IAS)
-c          write(*,*) 'apres formkq'
+          CALL FORMKQ(XX,YY,PSI,NR,NP,QQ,A,B,C,EPS,IGAM,ISOL,NI*NMG,IAS)
 C------------------------------------ SOLVE SET OF EQUATIONS -----------
           CALL SOLVE2(QQ,NR,NP,PSI,NI*NMG,IAS)
           ELSE
-          IFORMKQ = 0
-         CALL FORMKQ(XX,YY,PSI,NR,NP,QQ,A,B,C,EPS,IGAM,ISOL,IFORMKQ,IAS)
-          ISOLVE2 = 0
-          CALL SOLVE2(QQ,NR,NP,PSI,ISOLVE2,IAS)
+          CALL FORMKQ(XX,YY,PSI,NR,NP,QQ,A,B,C,EPS,IGAM,ISOL,0,IAS)
+          CALL SOLVE2(QQ,NR,NP,PSI,0,IAS)
           ENDIF
 C------------------------------------ FIND MAGN. AXIS AND PSI AT AXIS --
           CALL FINDAXIS(XX,YY,NR,NP,PSAXIS,XAXIS,YAXIS,
-     >                  NAX,RAX,SAX,IAS,IFAIL)
+     >                  NAX,RAX,SAX,IAS,IFAIL) 
 c          IF (IWRT.NE.0) WRITE(*,*) 'MAGN. AXIS : ',XAXIS,YAXIS
            A = A / (1.-PSAXIS)   
 C------------------------------------ NORMALIZE FLUX TO ZERO ON AXIS ---
 	  IF (IFAIL.NE.0) THEN
-c	    WRITE(*,*) ' AXIS NOT FOUND'
+	    WRITE(*,*) ' AXIS NOT FOUND'
 	    RETURN
 	  ENDIF
 	  CALL NORMAL(PSI,NR,NP,PSAXIS) 
@@ -1059,149 +798,129 @@ c	    WRITE(*,*) ' AXIS NOT FOUND'
            CALL FINDAXIS(XX,YY,NR,NP,PSAXIS,XAXIS,YAXIS,
      >                   NAX,RAX,SAX,IAS,IFAIL)
 	    IF (IFAIL.NE.0) THEN
-c	      WRITE(*,*) ' AXIS NOT FOUND'
+	      WRITE(*,*) ' AXIS NOT FOUND'
 	      RETURN
 	    ENDIF
             AOLD = A
             A = A / (1.-PSAXIS)
-           CALL NORMAL(PSI,NR,NP,PSAXIS)
+            CALL NORMAL(PSI,NR,NP,PSAXIS)
           ENDIF  
 
-          ERR1 = 0.
+          ERR1 = 0.                                                     
           DO I=1,NR*NP                                                  
             NBASE = 4*(I-1)+1                                           
             ERR1 = ERR1 + DABS(PSI(NBASE)  - PSIOLD(NBASE))              
           ENDDO                                                         
           ERR1 = ERR1 / dble(NR*NP)                                    
           IF (ERR1.LT.ERRIT) GOTO 777                                   
-   10   CONTINUE
+   10   CONTINUE                                                        
 c-----------------------------------------------------------------------
-  777   CONTINUE
-c        IF (IWRT.NE.0)         WRITE(*,*) ERR1,NI
+  777   CONTINUE                                                        
+        IF (IWRT.NE.0)         WRITE(*,*) ERR1,NI                                            
 c        AMIX = 0.
         IF (ERR1.GT.ERRIT) AMIX = 0.6
-
-        IF ((IEXACT . EQ. 1) .AND. (ERR1 . GT. ERRIT)) THEN
-           IFAIL = 1
-           RETURN
-        ENDIF
-
-        IF (NMG.EQ.NMESH) GOTO 999
-
-C------------------------------------- CALC. NEW FF' PROFILE
-c        write(*,*) 'avant remesh'
-	CALL REMESH(XX,YY,PSI,A,B,C,EPS,NR,NP,NR,NP,MESHNO,
-     >              CX,CY,XAXIS,YAXIS,NAX,RAX,SAX,IGAM,IAS,
-     >              XR1,SIG1,IFAIL)
-c        write(*,*) 'apres remesh'
-
-	IF (IFAIL.NE.0) RETURN
-        DO I = 1, NPTS
-          DF2OLD(I) = DF2(I)
-        ENDDO
-C-------------------------------- update FF' based on current profile
-        CALL FLXINT(XAXIS,XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IGAM,ISOL,IAS)
+        IF (NMG.EQ.NMESH) GOTO 999                                      
+                                                                        
+C------------------------------------- CALC. NEW FF' PROFILE            
+        CALL REMESH(XX,YY,PSI,A,B,C,EPS,NR,NP,NR,NP,MESHNO,             
+     >              CX,CY,XAXIS,YAXIS,NAX,RAX,SAX,IGAM,IAS,IFAIL)
+        IF (IFAIL.NE.0) RETURN
+        DO I = 1, NPTS                                                  
+          DF2OLD(I) = DF2(I)                                            
+        ENDDO        
+C-------------------------------- update FF' based on current profile   
+        CALL FLXINT(XAXIS,XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IGAM,ISOL,IAS) 
 
 C-------------------------------- use current only when positive
         IF (XIAB.GT.0.) THEN
           CALL CURRENT(XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IGAM,ISOL,CUR,IAS)
-	  ALFA = ALFA * CUR / XIAB
-c          IF (IWRT.NE.0) WRITE(*,*) ' ALFA = ',ALFA
+	  ALFA = ALFA * CUR / XIAB                                        
+          IF (IWRT.NE.0) WRITE(*,*) ' ALFA = ',ALFA
         ENDIF
-
-
-        CALL PROFILES(ZP0,ZFF,DUMMY1,DUMMY2,A)
-        PAXIS=ZP0(1) * EPS / ALFA**2.0
-        IF ((BETAP.GE.0).AND.(DABS(PAXIS-BETAP).GT.0.001*PAXIS)) THEN
-          IF (NMG.EQ.NBB) THEN
-            B1 = B
-            BP1 = PAXIS
-            IF (B.LT.0.) THEN
-              IF (PAXIS .GT. BETAP) THEN
-                B = 1.02*B1
-              ELSE
-                B = 0.98*B1
-              ENDIF
-ccc             B =  PAXIS /(BBB * BETAP) * B1
-            ELSE
-              B =   B1 / PAXIS * BETAP
-            ENDIF
-	    IF (IWRT.NE.0) THEN
-c              WRITE(*,'(A18,2f10.5,A4,f10.5)') 'first change of B ',
-c     >                               B1,PAXIS,' >> ',B
-            ENDIF
-          ELSE
-
-            IF (MOD(NMG,NBB).EQ.0) THEN
-              BOLD = B
-              DELTAB = (B1-BOLD)/(BP1-PAXIS) * (BETAP-PAXIS)
-              IF (DABS(DELTAB/BOLD) .gt. AMPL) THEN
-                B = BOLD + BBB*DELTAB/DABS(DELTAB)*ABS(BOLD)
-              ELSE
-                B = BOLD + ABB*(B1-BOLD)/(BP1-PAXIS) * (BETAP-PAXIS)
-              ENDIF
-              IF (IWRT.NE.0) THEN
-c              WRITE(*,'(A17,4f10.5,A4,f10.5)') 'next change of B ',
-c     >                                BOLD,PAXIS,B1,BP1,' >> ',B
-              ENDIF
-              B1 = BOLD
-              BP1 = PAXIS
-            ENDIF
-          ENDIF
-        ENDIF
-
-        DIFDF2 = 0.
-        DO I = 1, NPTS
-          DIFDF2 = DIFDF2 + DABS(DF2(I) - DF2OLD(I))
-        ENDDO
-c        IF (IWRT.NE.0) WRITE(*,711) NMG,DIFDF2,B,PAXIS
-c 711    FORMAT(' ITERATION : ',I3,' DIFF : ',1PE10.2,0P2f10.5,1PE10.2)
-
-        DO I = 1, NR*NP
-          DO K = 1, 4
-             XX(K,I) = XXOLD(K,I)
-             YY(K,I) = YYOLD(K,I)
-             PSI(4*(I-1)+K) = PSIOLD(4*(I-1)+K)
-          ENDDO
-        ENDDO
-	if (NMG .ge. (NMESH-1)) then
-c	  write(*,*) 'convergence problem, NMG=',NMG
-	endif
-
-        IF (((DIFDF2.LT.ERRCUR).AND.(DABS(PAXIS-BETAP).LT.0.001*PAXIS))
+	
+	                                                                
+        CALL PROFILES(ZP0,ZFF,DUMMY1,DUMMY2,A)                          
+        PAXIS=ZP0(1) * EPS / ALFA**2                                    
+        IF ((BETAP.GE.0).AND.(DABS(PAXIS-BETAP).GT.0.001*PAXIS)) THEN   
+          IF (NMG.EQ.NBB) THEN                                          
+            B1 = B                                                      
+            BP1 = PAXIS                                                 
+            IF (B.LT.0.) THEN                                           
+              IF (PAXIS .GT. BETAP) THEN                                
+                B = 1.02*B1                                             
+              ELSE                                                      
+                B = 0.98*B1                                             
+              ENDIF                                                     
+ccc             B =  PAXIS /(BBB * BETAP) * B1                          
+            ELSE                                                        
+              B =   B1 / PAXIS * BETAP                                  
+            ENDIF      
+	    IF (IWRT.NE.0) THEN                                                                                             
+              WRITE(*,'(A18,2f10.5,A4,f10.5)') 'first change of B ',    
+     >                               B1,PAXIS,' >> ',B   
+            ENDIF               
+          ELSE                                                          
+                                                                        
+            IF (MOD(NMG,NBB).EQ.0) THEN                                 
+              BOLD = B                                                  
+              DELTAB = (B1-BOLD)/(BP1-PAXIS) * (BETAP-PAXIS)            
+              IF (DABS(DELTAB/BOLD) .gt. AMPL) THEN                       
+                B = BOLD + BBB*DELTAB/DABS(DELTAB)*ABS(BOLD)             
+              ELSE                                                      
+                B = BOLD + ABB*(B1-BOLD)/(BP1-PAXIS) * (BETAP-PAXIS)    
+              ENDIF                                                     
+              IF (IWRT.NE.0) THEN                                                                                             
+              WRITE(*,'(A17,4f10.5,A4,f10.5)') 'next change of B ',     
+     >                                BOLD,PAXIS,B1,BP1,' >> ',B   
+              ENDIF     
+              B1 = BOLD                                                 
+              BP1 = PAXIS                                               
+            ENDIF                                                       
+          ENDIF                                                         
+        ENDIF                                                           
+                                                                        
+        DIFDF2 = 0.                                                     
+        DO I = 1, NPTS                              
+          DIFDF2 = DIFDF2 + DABS(DF2(I) - DF2OLD(I))                     
+        ENDDO                                                           
+        IF (IWRT.NE.0) WRITE(*,711) NMG,DIFDF2,B,PAXIS                                 
+ 711    FORMAT(' ITERATION : ',I3,' DIFF : ',1PE10.2,0P2f10.5,1PE10.2)  
+                                                                        
+        DO I = 1, NR*NP                                                 
+          DO K = 1, 4                                                   
+             XX(K,I) = XXOLD(K,I)                                       
+             YY(K,I) = YYOLD(K,I)                                       
+             PSI(4*(I-1)+K) = PSIOLD(4*(I-1)+K)                         
+          ENDDO                                                         
+        ENDDO                                                           
+                                                                        
+        IF (((DIFDF2.LT.ERRCUR).AND.(DABS(PAXIS-BETAP).LT.0.001*PAXIS))  
      >          .OR.(NMG.EQ.NMESH-1)) THEN
            IFAIL = 0
-	   if (NMG .ge. (NMESH-1)) then
-	     IFAIL = 9
-	   endif
-	   
-	   GOTO 999
+	   GOTO 999 
 	ENDIF
-
-        CALL INIGAM
-
- 888  CONTINUE
- 999  CONTINUE
-c-90      DEALLOCATE(KKBIG)
-c      write(*,*) 'avant current, apres 999'
+                                                                        
+        CALL INIGAM                                                     
+                                                                        
+ 888  CONTINUE                                                          
+ 999  CONTINUE                                                          
+c-90      DEALLOCATE(KKBIG)                                             
+              
       CALL CURRENT(XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IGAM,ISOL,XIAB,IAS)
-c      IF (IWRT.NE.0) WRITE(*,*) ' TOTAL CURRENT : ',XIAB,ALFA
-
-      CALL REMESH(XX,YY,PSI,A,B,C,EPS,NR,NP,NRMAP,NPMAP,MESHNO,
-     >              CX,CY,XAXIS,YAXIS,NAX,RAX,SAX,IGAM,IAS,
-     >              XR1,SIG1,IFAIL)
-c      write(*,*) 'apres remesh'
-
+      IF (IWRT.NE.0) WRITE(*,*) ' TOTAL CURRENT : ',XIAB,ALFA
+	                                                                
+      CALL REMESH(XX,YY,PSI,A,B,C,EPS,NR,NP,NRMAP,NPMAP,MESHNO,         
+     >              CX,CY,XAXIS,YAXIS,NAX,RAX,SAX,IGAM,IAS,IFAIL)             
       IF (IFAIL.NE.0) RETURN
-
-      CALL DIAGNO(XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IAS,IGAM,XAXIS,
-     >            ZJJ1,ZJJ2,ZJJ3,ZJJ4,ZJJ5,ZJJ6,ZJJ7,ZJJ8,ZJJ9,ZJJ10,
+                                                                              
+      CALL DIAGNO(XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IAS,IGAM,XAXIS,        
+     >            ZJJ1,ZJJ2,ZJJ3,ZJJ4,ZJJ5,ZJJ6,ZJJ7,ZJJ8,ZJJ9,ZJJ10,   
      >            ZJJ11,ZJJ12,ZJJ13,ZJJ14,ZJJ15,ZJJ16,ZJJ17,
      >            PSIT,B2,INVB2,QPSI,ZAREA,ZVOL,ZCUR,ZP0,ZFF,AVC,XLI,
-     >            DIMERC,DRMERC)
-
-      CALL CIRCUL(XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IGAM,IAS,
-     >            FCIRC,TMP,B0MAX,RAV)
+     >            DIMERC,DRMERC)          
+                                                                        
+      CALL CIRCUL(XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IGAM,IAS,              
+     >            FCIRC,TMP,B0MAX,RAV)                                  
 
       CALL TRIANG(XX,YY,XAXIS,NR,NP,XSHIFT,XRAD,XELL,XTRIAPOS,XTRIANEG
      >            ,IAS)
@@ -1210,10 +929,9 @@ c      write(*,*) 'apres remesh'
 C Added 17/09/03 for calculation of Ballooning and Mercier criteria
 C-------------------------------------- MAPPING OF FLUX COORDINATES ----
 C
-C      write (*,*) 'Start Mapping'
-       CALL MAPPING(XX,YY,PSI,CX,CY,XAXIS,A,IWRT)
-c       write(*,*) 'RADIUS apres mapping=', RADIUS
-C      write (*,*) 'End of Mapping'
+c      write (*,*) 'Start Mapping'
+      CALL MAPPING(XX,YY,PSI,CX,CY,XAXIS,A)
+c      write (*,*) 'End of Mapping'
 C
 C--------------------------------------- CALC. BALLOONING STABILITY -----
 C
@@ -1221,112 +939,107 @@ c     En fait, le critere de Mercier est calcule au dessus, dans DIAGNO
 c      CALL MERCIER(XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IGAM,IAS,
 c     >             DIMERC,DRMERC,HH,QPROF,DQPROF,GEONC,ZJPAR)
 
-C      write (*,*) 'Start HELBAL'
+c      write (*,*) 'Start HELBAL'
       CALL HELBAL(ZVOL,ZJJ5,XAXIS,BALCRIT)
-C      write (*,*) 'End of HELBAL'
+c      write (*,*) 'End of HELBAL'
 
 c-------------------------------------- undo normalisation -------------
-      PI = 2.D0*DASIN(1.D0)
-      ZMU0 = 4D-7*PI
-      ZE   = 1.6022D-19
-      PSCALE  = B0**2.0 / ZMU0
-      RBSCALE = B0 * R0
-      RADIUS  = EPS * R0
-c      write(*,*) 'RADIUS =', RADIUS
-      CPSURF  = DABS(RADIUS**2.0 * B0 / ALFA)
-      CTSURF  = PSIT(NR) * R0*R0*B0
+      PI = 2.D0*DASIN(1.D0)                                                  
+      ZMU0 = 4D-7*PI                                                    
+      ZE   = 1.6022D-19                                                 
+      PSCALE  = B0**2 / ZMU0                                            
+      RBSCALE = B0 * R0                                                 
+      RADIUS  = EPS * R0                                                
+      CPSURF  = DABS(RADIUS**2 * B0 / ALFA)                                   
+      CTSURF  = PSIT(NR) * R0*R0*B0                                     
 
-
-      DO I = 1,NRMAP
-
+                           
+      DO I = 1,NRMAP     
+        
         XSHIFT(I) = XSHIFT(I) * RADIUS
         XRAD(I) = XRAD(I) * RADIUS
-
-        PS = PSI(4*(NRMAP-I)*NPMAP + 1)
-        PSIP(I) = 2. * PI * PS * CPSURF
-
-        SPS2 = 2.*CPSURF*DSQRT(DABS(PS))
-c        ancienne normalisation de RHO
-c        RHO(I) = DSQRT(DABS(PSIT(I)/PSIT(NR))) * RADIUS
-
-        ZP0(I) = ZP0(I) * PSCALE / 1.6D-16
-        FDIA(I) = ZFF(I) * RBSCALE
+                                                        
+        PS = PSI(4*(NRMAP-I)*NPMAP + 1)                                       
+        PSIP(I) = 2. * PI * PS * CPSURF                                 
+                                                                        
+        SPS2 = 2.*CPSURF*DSQRT(DABS(PS))                                       
+c        ancienne normalisation de RHO                                                                        
+c        RHO(I) = DSQRT(DABS(PSIT(I)/PSIT(NR))) * RADIUS                        
+                                                                       
+        ZP0(I) = ZP0(I) * PSCALE / 1.6D-16                                       
+        FDIA(I) = ZFF(I) * RBSCALE                                      
         PSIT(I) = PSIT(I) * R0*R0*B0
-        RHO(I) = DSQRT(DABS(PSIT(I))/PI/B0)
-        ZVOL(I) = ZVOL(I)  * R0**3.0
-        ZAREA(I)= ZAREA(I) * R0**2.0
-        ZCUR(I) = ZCUR(I)  * B0 * R0 / ZMU0
-
-        B2(I) = B2(I) * B0*B0
-        INVB2(I) = INVB2(I) / (B0*B0)
-
-c       pour l'ancienne normalisation de RHO
-c        DPSIDRHO = 2.* RHO(I) * CTSURF / (QPSI(I) * RADIUS**2.0)
-        DPSIDRHO = 2.D0 * RHO(I) * PI * B0 / QPSI(I)
-
-        VP(I)   = ZJJ5(I) * DPSIDRHO * R0/B0   *  2.D0*PI
-        SP(I)   = ZJJ8(I) * DPSIDRHO / B0
-        C2(I)   = ZJJ6(I) / DPSIDRHO * (R0*B0) * (2.D0*PI)**3.0
-        C3(I)   = ZJJ4(I) * DPSIDRHO / (R0*B0) *  2.D0*PI
-        R2M(I)  = ZJJ7(I) / (ZJJ5(I) * DPSIDRHO**2.0) * 
-     +(2.D0*PI*R0*B0)**2.0
+        RHO(I) = DSQRT(DABS(PSIT(I))/PI/B0)                                   
+        ZVOL(I) = ZVOL(I)  * R0**3                                      
+        ZAREA(I)= ZAREA(I) * R0**2                                      
+        ZCUR(I) = ZCUR(I)  * B0 * R0 / ZMU0                    
+                                                                        
+        B2(I) = B2(I) * B0*B0                                           
+        INVB2(I) = INVB2(I) / (B0*B0)       
+                                    
+c       pour l'ancienne normalisation de RHO                                                                        
+c        DPSIDRHO = 2.* RHO(I) * CTSURF / (QPSI(I) * RADIUS**2)          
+        DPSIDRHO = 2.D0 * RHO(I) * PI * B0 / QPSI(I)          
+                                                                       
+        VP(I)   = ZJJ5(I) * DPSIDRHO * R0/B0   *  2.D0*PI                 
+        SP(I)   = ZJJ8(I) * DPSIDRHO / B0                               
+        C2(I)   = ZJJ6(I) / DPSIDRHO * (R0*B0) * (2.D0*PI)**3             
+        C3(I)   = ZJJ4(I) * DPSIDRHO / (R0*B0) *  2.D0*PI                 
+        R2M(I)  = ZJJ7(I) / (ZJJ5(I) * DPSIDRHO**2) * (2.D0*PI*R0*B0)**2  
         OOR(I)  = ZJJ8(I)    / ZJJ5(I) / R0
-        OOR2(I) = ZJJ4(I) / ZJJ5(I) / R0**2.0
-	    RAV(I)  = ZJJ10(I)   / ZJJ5(I) * R0
-	    DRHOAV(I) = ZJJ9(I)  / ZJJ5(I) / DPSIDRHO * (2.D0*PI*R0*B0)
-	    DRHOOR(I) = ZJJ12(I) / ZJJ5(I) / DPSIDRHO * (2.D0*PI*B0)
-        R2(I) = ZJJ13(I) / ZJJ5(I) * R0**2.0
-        DRHO2OB2(I) = ZJJ15(I) / ZJJ5(I) / DPSIDRHO**2.0 
-     +*(2.D0*PI*R0)**2.0
+        OOR2(I) = ZJJ4(I) / ZJJ5(I) / R0**2
+	RAV(I)  = ZJJ10(I)   / ZJJ5(I) * R0
+	DRHOAV(I) = ZJJ9(I)  / ZJJ5(I) / DPSIDRHO * (2.D0*PI*R0*B0)
+	DRHOOR(I) = ZJJ12(I) / ZJJ5(I) / DPSIDRHO * (2.D0*PI*B0)
+        R2(I) = ZJJ13(I) / ZJJ5(I) * R0**2
+        DRHO2OB2(I) = ZJJ15(I) / ZJJ5(I) / DPSIDRHO**2 *(2.D0*PI*R0)**2
 
-c        R2TAU2(I)   = ZJJ14(I) / ZJJ5(I) / (DPSIDRHO / B0)**2.0 / R0**2.0
-c        R3OTAU3(I)  = -ZJJ16(I) / ZJJ5(I) / (DPSIDRHO / B0)**3.0 / R0**3.0
+c        R2TAU2(I)   = ZJJ14(I) / ZJJ5(I) / (DPSIDRHO / B0)**2 / R0**2
+c        R3OTAU3(I)  = -ZJJ16(I) / ZJJ5(I) / (DPSIDRHO / B0)**3 / R0**3
 c        R3OTAU(I)   = -ZJJ17(I) / ZJJ5(I) / (DPSIDRHO / B0) * R0
 
 
-        R2OTAU2(I)=  ZJJ14(I)/ZJJ5(I)/(DPSIDRHO / (2.*PI*B0))**2.0 
-     +*R0**2.0
-        R3OTAU3(I)= -ZJJ16(I)/ZJJ5(I)/(DPSIDRHO /(2.*PI*B0))**3.0 
-     +* R0**3.0
-        R3OTAU(I)= -ZJJ17(I)/ZJJ5(I)/(DPSIDRHO / (2.*PI*B0)) * R0**3.0
+        R2OTAU2(I)=  ZJJ14(I)/ZJJ5(I)/(DPSIDRHO / (2.*PI*B0))**2 *R0**2
+        R3OTAU3(I)= -ZJJ16(I)/ZJJ5(I)/(DPSIDRHO /(2.*PI*B0))**3 * R0**3
+        R3OTAU(I)= -ZJJ17(I)/ZJJ5(I)/(DPSIDRHO / (2.*PI*B0)) * R0**3
+        
 
-
-	FTRA(I) = 1. - FCIRC(I)
+	FTRA(I) = 1. - FCIRC(I)                                         
 
         AVC(I)    = AVC(I) * B0 / (ZMU0 * R0)
         TAU(I)    = - ZJJ11(I) / ZJJ5(I) * DPSIDRHO/(2.*PI) / (B0)
-
-      ENDDO
-
-      PSIP(1) = 0.
-      PSIT(1) = 0.
-      C2(1) = 0.
-      C3(1) = 0.
+		                                                                        
+      ENDDO                                 
+                                                                        
+      PSIP(1) = 0.                                                      
+      PSIT(1) = 0.                                                      
+      C2(1) = 0.                                                        
+      C3(1) = 0.                                                        
       QPSI(1) = FDIA(1)/(R0*B0)* ALFA/(2.D0*DSQRT(DABS(CX*CY))*
-     >          (1.D0+EPS*XAXIS))
-      B2(1) = (FDIA(1)/(R0*(1.D0+EPS*XAXIS)))**2.0
-      INVB2(1) = 1./B2(1)
-      FTRA(1) = 0.
-      R2M(1) = QPSI(1)*PSIP(NR)/PSIT(NR) * (CX + CY)/2.
-      VP(1) = 0.
-      SP(1) = 0.
-      TAU(1) = 0.
-
-      DO I=1,NRMAP
-        DO J=1,NPMAP
-          NODE = (NRMAP-I)*NPMAP + J
-          RR(I,J) = RADIUS * XX(1,NODE) + R0
+     >          (1.D0+EPS*XAXIS))   
+      B2(1) = (FDIA(1)/(R0*(1.D0+EPS*XAXIS)))**2                          
+      INVB2(1) = 1./B2(1)                                               
+      FTRA(1) = 0.                                                      
+      R2M(1) = QPSI(1)*PSIP(NR)/PSIT(NR) * (CX + CY)/2.                 
+      VP(1) = 0.                                                        
+      SP(1) = 0.                                 
+      TAU(1) = 0.                                  
+                                                                         
+      DO I=1,NRMAP                                                        
+        DO J=1,NPMAP                                                       
+          NODE = (NRMAP-I)*NPMAP + J                                          
+          RR(I,J) = RADIUS * XX(1,NODE) + R0                            
           ZZ(I,J) = RADIUS * YY(1,NODE)
           IF (IAS.EQ.0) THEN
              JSYM = NPMAP * 2 - J
              RR(I,JSYM) = RR(I,J)
              ZZ(I,JSYM) = - ZZ(I,J)
           ENDIF
-        ENDDO
-      ENDDO
-      DO I=2,NRMAP
-        DO J=1,NPMAP
-          NODE = (NRMAP-I)*NPMAP + J
+        ENDDO  
+      ENDDO                            
+      DO I=2,NRMAP                                                        
+        DO J=1,NPMAP                                                       
+          NODE = (NRMAP-I)*NPMAP + J                                          
  	  XR    = XX(2,NODE)
 	  YR    = YY(2,NODE)
 	  XS    = XX(3,NODE)
@@ -1350,49 +1063,20 @@ c        R3OTAU(I)   = -ZJJ17(I) / ZJJ5(I) / (DPSIDRHO / B0) * R0
         BPR(1,J) = 0.
         BPZ(1,J) = 0.
       ENDDO
-
-c (de)normalisation de spot, normalisation with (RM,BM) !!!
-      RM = R0*(1.D0 + EPS * XAXIS)
-      BM = RBPHI(1) / RM
-
-      DO I=1,NPSI*NCHI
-         RSPOT(I)  = RSPOT(I)  * R0
-         ZSPOT(I)  = ZSPOT(I)  * R0 * EPS
-         BRSPOT(I) = BRSPOT(I) * BM
-         BZSPOT(I) = BZSPOT(I) * BM
-      ENDDO
-      DO I=1,NCHI
-         RSPOT(I)  = RM
-         ZSPOT(I)  = R0 * YAXIS * EPS
-         BRSPOT(I) = 0.0D0
-         BZSPOT(I) = 0.0D0
-      ENDDO
 c pour que matlab ait la bonne dimension en theta :
       IF (IAS.EQ.0) NPMAP = NPMAP * 2 - 1
-c      WRITE(*,*) ' HELENA ENDS OK',TAU(NR)                                                                                         
+      WRITE(*,*) ' HELENA ENDS OK',TAU(NR)                                                                                         
       RETURN                                                            
-      END
-
-
-
+      END                                                               
 
 *********************************************************************** 
-      SUBROUTINE FBND(r,z,NTHT,FR,MF,AMIN,R0,IFR)
+      SUBROUTINE FBND(r,z,NTHT,FR,MF,AMIN,R0)
       IMPLICIT REAL*8 (A-H,O-Z)
-      mwSize NRMAX,NPMAX,MAXNODE,KKLDA,NRMMAX,NPMMAX,NPTSMAX,NTHT3
-      mwSize ispline,NP,ntht,IIIRFT2,MF,IFR
- 
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
-      PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
-      PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
-      PARAMETER (NPTSMAX = 201)                                         
-
       COMMON / COMPIE/ PI                                               
       REAL*8 PI                                                           
       REAL*8 r(*),z(*),FR(*)
-      REAL*8 theta(3*MBMAX),radius(3*MBMAX)
-      REAL*8 ar(3*MBMAX),br(3*MBMAX),cr(3*MBMAX),dr(3*MBMAX),dummy(3)
+      REAL*8 theta(770),radius(770)
+      REAL*8 ar(770),br(770),cr(770),dr(770),dummy(3)
       
       rmax = -1.D10
       rmin = -rmax
@@ -1408,37 +1092,20 @@ c      WRITE(*,*) ' HELENA ENDS OK',TAU(NR)
         endif
       enddo
       r0 = (rmin+rmax)/2.D0
-c      do i=1,ntht
-c        theta(i) = atan2(z(i)-z0,r(i)-r0)
-c        if (theta(i).lt.0.D0) then
-c          theta(i) = theta(i)+2.*pi
-c	endif
-c
-c       protection en fin de contour, theta pouvant etre nul
-c       V. Basiuk, 30 octobre 2001
-c	
-c        if (i .eq. ntht .and. theta(i).eq.0.D0) then
-c          theta(i) = theta(i)+2.*pi
-c	     endif
-c      enddo
       do i=1,ntht
         theta(i) = atan2(z(i)-z0,r(i)-r0)
         if (theta(i).lt.0.D0) then
           theta(i) = theta(i)+2.*pi
-	endif	
-      enddo
+	endif
 c
 c       protection en fin de contour, theta pouvant etre nul
 c       V. Basiuk, 30 octobre 2001
 c	
-
-      do i=2,ntht
-        if (theta(i+1) .lt. theta(i) ) theta(i+1) = theta(i+1) + 2.*PI
+        if (i .eq. ntht .and. theta(i).eq.0.D0) then
+          theta(i) = theta(i)+2.*pi
+	     endif
       enddo
-      
-C      write(*,*) 'avant spline r'
-      ispline = 2
-      call spline(ntht,theta,r,0.D0,0.D0,ispline,ar,br,cr,dr)
+      call spline(ntht,theta,r,0.D0,0.D0,2,ar,br,cr,dr)
       rmin = spwert(ntht,PI,ar,br,cr,dr,theta,dummy)
       r0 = (rmin+rmax)/2.D0
       amin = (rmax-rmin)/2.D0
@@ -1446,14 +1113,12 @@ C      write(*,*) 'avant spline r'
       do i=1,ntht
         theta(i) = atan2(z(i)-z0,r(i)-r0)
         if (theta(i).lt.0.D0) then
-          theta(i) = theta(i)+ 2.* pi
+          theta(i) = theta(i)+2.*pi
 	endif
-        radius(i) = sqrt((r(i)-r0)**2.0 + (z(i)-z0)**2.0) / amin
+        radius(i) = sqrt((r(i)-r0)**2 + (z(i)-z0)**2) / amin
       enddo
       do i=1,ntht-1
          if (theta(i).gt.theta(i+1)) theta(i+1)=theta(i+1)+2.*pi
-         if (theta(i).eq.theta(i+1)) theta(i+1)=theta(i+1)+1.d-6
-C         write(*,*) 'theta(',i,':',i+1,')=',theta(i),theta(i+1)  
       enddo
       do i=1,ntht
         theta(i+ntht) = theta(i) + 2.*pi
@@ -1463,57 +1128,41 @@ C         write(*,*) 'theta(',i,':',i+1,')=',theta(i),theta(i+1)
         theta(i+2*ntht)  = theta(i) + 4.*pi
 	radius(i+2*ntht) = radius(i)
       enddo
-C      write(*,*) 'avant spline radius'
-      NTHT3 = 3*NTHT
-      ispline = 2
-      call spline(ntht3,theta,radius,0.D0,0.D0,ispline,ar,br,cr,dr)
+      call spline(3*ntht,theta,radius,0.D0,0.D0,2,ar,br,cr,dr)
 
       NP=MF
+      NTHT3 = 3*NTHT
       DO i=1,NP
-        angle = 2.D0 * DBLE(i-1)/DBLE(NP) * PI + 2.D0*PI 
-c        angle = 2.D0 * DBLE(i-1)/DBLE(NP) * PI + 2.D0*PI + theta(1)
+        angle = 2.D0 * DBLE(i-1)/DBLE(NP) * PI + 2.D0*PI + theta(1)
         radius(i) = spwert(NTHT3,angle,ar,br,cr,dr,theta,dummy)
       ENDDO
-      IIIRFT2 = 1
-      call RFT2(RADIUS,NP,IIIRFT2)
-
-      IF (IFR .EQ. 1) THEN
-
-        DO M=1,NP
-          FR(m) = 2.D0 * RADIUS(m)/DBLE(np)
-        ENDDO
-        DO M=2,NP,2
-          FR(M) = - FR(M)
-        ENDDO
-
-      ENDIF
-
+      call RFT2(RADIUS,NP,1)
+      DO M=1,NP
+        FR(m) = 2.D0 * RADIUS(m)/DBLE(np)
+      ENDDO
+      DO M=2,NP,2
+        FR(M) = - FR(M)
+      ENDDO
       RETURN
       END
 
-
-
-
-
-
-
-                                                                   
+                                                                        
 *********************************************************************** 
       SUBROUTINE INIVAL                                                 
 C-----------------------------------------------------------------------
 C SUBROUTINE TO INITIALIZE THE NAMELIST INPUT VARIABLES                 
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON /GAUSINT/ XGAUSS,WGAUSS,H,HR,HS,HRS                        
       real*8 XGAUSS(4),WGAUSS(4)                                          
@@ -1534,24 +1183,8 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER 
-      mwSize  NRMAP,NPMAP      
-C-----------------------------------------------------------------------
-      COMMON /COMMAP/CS,QS,DQS,CURJ,CHI,   
-     >     GEM11,GEM12,GEM33,  
-     >     CHIKN,P0,RBPHI,
-     >     DP,DRBPHI,
-     >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE,
-     >     JS0,NCHI,NPSI,NLTORE
-
-      REAL*8 CS(NRMMAX),QS(NRMMAX),DQS(NRMMAX),CURJ(NRMMAX),CHI(NPMMAX),   
-     >     GEM11(MAXMNODE),GEM12(MAXMNODE),GEM33(MAXMNODE),  
-     >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
-     >     DP(NRMMAX),DRBPHI(NRMMAX),
-     >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      mwSize JS0,NCHI,NPSI
-      LOGICAL NLTORE  
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON/TOLERA/PSITOL,THTTOL,TOL                                   
       real*8    PSITOL,THTTOL,TOL                                         
@@ -1599,7 +1232,7 @@ c
 c pour plasma iter (avant iarc = 0)
 c 17 mars 2004, V. Basiuk 
 c
-      IARC = 2                                                          
+      IARC = 1                                                          
       XR1 = 99.D0                                                         
       SIG1 = 99.D0                                                        
       AGA = -1.D0                                                         
@@ -1627,30 +1260,26 @@ c taille de la grille (R,Z) sur laquelle le calcul est effectue
       NP=16*(IAS+1)+1                                              
 c taille de la grille (R,Z) des variables de sortie                     
       NRMAP=101
-      NPSI = NRMAP
 c nb de point en theta depend de la condition de symetrie IAS
       IF (IAS.EQ.0) THEN                                                         
          NPMAP=33
-         NCHI =33
       ELSE
          NPMAP=65
-         NCHI =64
-      ENDIF   
+c         NPMAP=129
+      ENDIF                
 c                                                  
       NITER = 100                                                        
-      NMESH = 200                                                        
+      NMESH = 100                                                        
       NPTS = 21                                                         
       INIMESH=1                                                         
-      NBB = 8                                                           
+      NBB = 6                                                           
       ABB = 1.D0                                                          
-      ABB = 0.5D0                                                          
       BBB = 0.2D0                                                          
       AMPL = 2.D0                                                         
-c      ERRCUR = 1.D-4 
+c     ERRCUR = 1.D-4 
 c modifier le 12/04/2001 par J-F Artaud :                                                   
-c      ERRCUR = 1.D-3
-c    ERRIT  = 1.D-5                                                
-c      ERRIT  = 1.D-6                                                    
+      ERRCUR = 1.D-3                                                    
+      ERRIT  = 1.D-5                                                    
       PSITOL = 1.D-6                                                    
       THTTOL = 1.D-6                                                    
       TOL    = 1.D-6                                                    
@@ -1661,26 +1290,24 @@ c      ERRIT  = 1.D-6
       RPE  = 0.5D0                                                        
                                                                                                                                                
       RETURN                                                            
-      END    
-
-
-
-***********************************************************************
+      END                                                               
+                                                                        
+************************************************************************
       SUBROUTINE GAUSS                                                  
 C-----------------------------------------------------------------------
 C CALCULATE THE SIXTHEEN FUNCTIONS AT THE SIXTEEN GAUSSIAN POINTS       
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON /GAUSINT/ XGAUSS,WGAUSS,H,HR,HS,HRS                        
       real*8 XGAUSS(4),WGAUSS(4)                                          
@@ -1708,11 +1335,8 @@ C-----------------------------------------------------------------------
    10 CONTINUE    
                                                          
       RETURN                                                            
-      END   
-
-
-
-
+      END                                                               
+                                                                        
 ************************************************************************
       SUBROUTINE CUBICH(I,J,R0,S0,R,S,H,HR,HS,HRS,HRR,HSS)              
                                                                         
@@ -1721,26 +1345,26 @@ C SUBROUTINE TO CALCULATE THE VALUE OF THE CUBIC POLYNOMIALS AND
 C THE DERIVATIVES OF THE CORNER MARKED BY R0,S0 AT THE POSITION R,S     
 C------------------------------------------------------------------     
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       real*8 H,HR,HS,HRS,HI,HRI,HJ,HSJ,HRR,HSS,HRRI,HSSJ                  
                                                                        
       IF (I.EQ.0) THEN                                                  
-        HI = - (R+R0)**2.0 * (R*R0-2.D0) / 4.D0                               
-        HRI = - (R+R0)*(R*R0-2.D0)/2.D0 - R0*(R+R0)**2.0 / 4.D0                 
+        HI = - (R+R0)**2 * (R*R0-2.D0) / 4.D0                               
+        HRI = - (R+R0)*(R*R0-2.D0)/2.D0 - R0*(R+R0)**2 / 4.D0                 
         HRRI = - 1.5D0 * R * R0                                           
       ELSE                                                              
-        HI = + R0 * (R+R0)**2.0 * (R*R0 - 1.D0) / 4.D0                        
-        HRI = + R0*(R+R0)*(R*R0-1.D0)/2.D0 + (R+R0)**2.0 /4.D0                  
+        HI = + R0 * (R+R0)**2 * (R*R0 - 1.D0) / 4.D0                        
+        HRI = + R0*(R+R0)*(R*R0-1.D0)/2.D0 + (R+R0)**2 /4.D0                  
         HRRI = 1.5D0*R + .5D0*R0                                            
       ENDIF  
                                                                        
       IF (J.EQ.0) THEN                                                  
-        HJ = - (S+S0)**2.0 * (S*S0-2.D0) / 4.D0                               
-        HSJ = - (S+S0)*(S*S0-2.D0)/2.D0 - S0*(S+S0)**2.0 / 4.D0                 
+        HJ = - (S+S0)**2 * (S*S0-2.D0) / 4.D0                               
+        HSJ = - (S+S0)*(S*S0-2.D0)/2.D0 - S0*(S+S0)**2 / 4.D0                 
         HSSJ = - 1.5D0 * S * S0                                           
       ELSE                                                              
-        HJ = + S0 * (S+S0)**2.0 * (S*S0 - 1.D0) / 4.D0                        
-        HSJ = + S0*(S+S0)*(S*S0-1.D0)/2.D0 + (S+S0)**2.0 / 4.D0                 
+        HJ = + S0 * (S+S0)**2 * (S*S0 - 1.D0) / 4.D0                        
+        HSJ = + S0*(S+S0)*(S*S0-1.D0)/2.D0 + (S+S0)**2 / 4.D0                 
         HSSJ = 1.5D0*S + .5D0*S0                                            
       ENDIF        
       
@@ -1752,13 +1376,8 @@ C------------------------------------------------------------------
       HRR = HRRI * HJ                                                   
       HSS = HI   * HSSJ
       RETURN                                                            
-      END      
-
-
-
-
-
-
+      END                                                               
+                                                                        
 ************************************************************************
       SUBROUTINE CUBICH1(I,J,R0,S0,R,S,H)                               
 C------------------------------------------------------------------     
@@ -1766,18 +1385,18 @@ C SUBROUTINE TO CALCULATE THE VALUE OF THE CUBIC POLYNOMIALS AND
 C THE DERIVATIVES OF THE CORNER MARKED BY R0,S0 AT THE POSITION R,S     
 C------------------------------------------------------------------     
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       real*8 H,HI,HJ                                                      
                                                                          
       IF (I.EQ.0) THEN                                                  
-        HI = - (R+R0)**2.0 * (R*R0-2.D0) / 4.D0                               
+        HI = - (R+R0)**2 * (R*R0-2.D0) / 4.D0                               
       ELSE                                                              
-        HI = + R0 * (R+R0)**2.0 * (R*R0 - 1.D0) / 4.D0                        
+        HI = + R0 * (R+R0)**2 * (R*R0 - 1.D0) / 4.D0                        
       ENDIF                                                             
       IF (J.EQ.0) THEN                                                  
-        HJ = - (S+S0)**2.0 * (S*S0-2.D0) / 4.D0                               
+        HJ = - (S+S0)**2 * (S*S0-2.D0) / 4.D0                               
       ELSE                                                              
-        HJ = + S0 * (S+S0)**2.0 * (S*S0 - 1.D0) / 4.D0                        
+        HJ = + S0 * (S+S0)**2 * (S*S0 - 1.D0) / 4.D0                        
       ENDIF                                                             
       H = HI * HJ                                                       
       RETURN                                                            
@@ -1790,34 +1409,29 @@ C SUBROUTINE TO CALCULATE THE VALUE OF THE CUBIC POLYNOMIALS AND
 C THE DERIVATIVES OF THE CORNER MARKED BY R0,S0 AT THE POSITION R,S     
 C------------------------------------------------------------------     
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       real*8 H,HR,HS,HI,HRI,HJ,HSJ                                        
                                                                          
-      IF (I.EQ.0) THEN
-        HI = - (R+R0)**2.0 * (R*R0-2.D0) / 4.D0                               
-        HRI = - (R+R0)*(R*R0-2.D0)/2.D0 - R0*(R+R0)**2.0 / 4.D0                 
+      IF (I.EQ.0) THEN                                                  
+        HI = - (R+R0)**2 * (R*R0-2.D0) / 4.D0                               
+        HRI = - (R+R0)*(R*R0-2.D0)/2.D0 - R0*(R+R0)**2 / 4.D0                 
       ELSE                                                              
-        HI = + R0 * (R+R0)**2.0 * (R*R0 - 1.D0) / 4.D0                        
-        HRI = + R0*(R+R0)*(R*R0-1.D0)/2.D0 + (R+R0)**2.0 /4.D0                  
+        HI = + R0 * (R+R0)**2 * (R*R0 - 1.D0) / 4.D0                        
+        HRI = + R0*(R+R0)*(R*R0-1.D0)/2.D0 + (R+R0)**2 /4.D0                  
       ENDIF                                                             
       IF (J.EQ.0) THEN                                                  
-        HJ = - (S+S0)**2.0 * (S*S0-2.D0) / 4.D0                               
-        HSJ = - (S+S0)*(S*S0-2.D0)/2.D0 - S0*(S+S0)**2.0 / 4.D0                 
+        HJ = - (S+S0)**2 * (S*S0-2.D0) / 4.D0                               
+        HSJ = - (S+S0)*(S*S0-2.D0)/2.D0 - S0*(S+S0)**2 / 4.D0                 
       ELSE                                                              
-        HJ = + S0 * (S+S0)**2.0 * (S*S0 - 1.D0) / 4.D0                        
-        HSJ = + S0*(S+S0)*(S*S0-1.D0)/2.D0 + (S+S0)**2.0 / 4.D0                 
+        HJ = + S0 * (S+S0)**2 * (S*S0 - 1.D0) / 4.D0                        
+        HSJ = + S0*(S+S0)*(S*S0-1.D0)/2.D0 + (S+S0)**2 / 4.D0                 
       ENDIF                                                             
       H = HI * HJ                                                       
       HR = HRI * HJ                                                     
       HS = HI * HSJ                                                     
       RETURN                                                            
-      END    
-
-
-
-
-
-
+      END                                                               
+                                                                        
 ************************************************************************
       SUBROUTINE FSHAPE(FR,MF)                                          
 C-----------------------------------------------------------------------
@@ -1830,10 +1444,10 @@ C  WHERE THETA IS FOUND FROM GAMMA BY INVERSION.
 C  THE FOURIER COEFFICIENTS FRFNUL,FRF(M) OF FR(J) ARE ALSO CALCULATED. 
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
@@ -1852,9 +1466,8 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON / COMPIE/ PI                                               
       real*8 PI                                                           
@@ -1876,9 +1489,8 @@ C------------------------------------------ THETA(GAMMA(J)) ------------
         THETA(J) = DATAN2(YJ,XJ)  
    10 CONTINUE   
    11 format(i3,3f12.4)                                                       
-C-------------- INVERSION OF THETA(GAMMA(J)) TO GAMMA(THETA(J)) ------ 
-      IGRID2NV = 0
-      CALL GRID2NV(THETA,GAMMA,MF,1.D-6,IGRINV,IGRID2NV)                       
+C-------------- INVERSION OF THETA(GAMMA(J)) TO GAMMA(THETA(J)) ------  
+      CALL GRID2NV(THETA,GAMMA,MF,1.D-6,IGRINV,0)                       
       DO 30 J=1,MF                                                      
         GAMM=GAMMA(J)
         IF (GAMM.LE.PI) THEN                                                   
@@ -1897,35 +1509,31 @@ C-------------- INVERSION OF THETA(GAMMA(J)) TO GAMMA(THETA(J)) ------
       DO 35 J=1,MF                                                      
         XN = (XV(J) - X0) / XL                                          
         YN =  YV(J) / XL                                                
-        FR(J) = DSQRT(XN**2.0 + YN**2.0)                                     
+        FR(J) = DSQRT(XN**2 + YN**2)                                     
    35 CONTINUE                          
-C------------------- FOURIER COEFFICIENTS FRFNUL AND FRF(M) OF FR(J). 
-      IIRFT2 = 1
-      CALL RFT2(FR,MF,IIRFT2)     
+C------------------- FOURIER COEFFICIENTS FRFNUL AND FRF(M) OF FR(J).   
+      CALL RFT2(FR,MF,1)     
       DO 50 M=1,MF                                                      
         FR(M) = 2.D0 * FR(M) / dble(MF)                                    
    50 CONTINUE                                                          
 ccc      CALL PRARR1('FR : ',FR,MF,203)                                 
       RETURN                                                            
-      END    
-
-
-      
-
+      END                                                               
+                                                                        
 ************************************************************************
       SUBROUTINE ELMNO(NR,NP,NODENO)                                    
 C-------------------------------------------------------------------    
 C SUBROUTINE TO CALCULATE THE FOUR NODENUMBERS OF EVERY ELEMENT         
 C-------------------------------------------------------------------    
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
-      mwSize NODENO(MAXMNODE,4)                                        
+      integer NODENO(MAXMNODE,4)                                        
 
       NO = 0                                                            
       DO 10 N=1,NR-1                                                    
@@ -1940,26 +1548,17 @@ C-----------------------------------------------------------------------
       RETURN                                                            
       END                                                               
 ************************************************************************
-
-
-
-
-
-
-
-************************************************************************
       SUBROUTINE MESHAC2(NR,SG,DSG,DDSG,XR1,SIG1)                        
 C-----------------------------------------------------------------------
 C subroutine to construct non-equidistant radial mesh in Helena         
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       PARAMETER (NMAX=1001)                                             
       real*8 SG(*),DSG(*),DDSG(*)                                         
       real*8 S1(NMAX),F1(NMAX),F2(NMAX),F3(NMAX),F4(NMAX),FSUM(NMAX)      
-      real*8 ABLTG(3)
-      mwSize TYP
-                                                    
+      real*8 ABLTG(3)                                                     
+                                                                         
 C--------------------------------------- set parameters of gaussians    
       BGF  = 0.3D0                                                        
       XR2  = 9999.D0                                                      
@@ -1969,8 +1568,7 @@ C--------------------------------------- integrate gaussian
       DSI = 1.D0 / dble(NMAX-1)                                          
       S1(1) = 0.D0                                                        
       FSUM(1)  = 0.D0                                                     
-      FINT2 = FGAUS(S1(1),BGF,XR1,XR2,SIG1,SIG2,FACT,DFG)  
-      SUM = 0.D0             
+      FINT2 = FGAUS(S1(1),BGF,XR1,XR2,SIG1,SIG2,FACT,DFG)               
       DO I=2,NMAX                                                       
         S1(I) = dble(I-1) * DSI                                        
         FINT1 = FINT2                                                   
@@ -1980,14 +1578,13 @@ C--------------------------------------- integrate gaussian
       ENDDO                                                             
                                                                         
       DO I=1,NMAX-1                                                     
-        FSUM(I) = FSUM(I)/FSUM(NMAX)  
-c        write(*,*) ' fsum :',i,fsum(i)                                  
+        FSUM(I) = FSUM(I)/FSUM(NMAX)                                    
       ENDDO                                                             
       FSUM(NMAX) = 1.D0                                                   
       ALFA = 0.D0                                                         
       BETA = 0.D0                                                         
       TYP = 2                                                           
-      CALL SPLINE(NMAX,FSUM,S1,ALFA,BETA,TYP,F1,F2,F3,F4)
+      CALL SPLINE(NMAX,FSUM,S1,ALFA,BETA,TYP,F1,F2,F3,F4)               
                                                                         
       SG(1)   = 0.D0                                                      
       DSG(1)  = F2(1)                                                   
@@ -1996,21 +1593,14 @@ c        write(*,*) ' fsum :',i,fsum(i)
         FI = dble(I-1)/dble(NR-1)                                     
         SG(I)   = SPWERT(NMAX,FI,F1,F2,F3,F4,FSUM,ABLTG)                
         DSG(I)  = ABLTG(1)                                              
-        DDSG(I) = ABLTG(2)
-c        write(*,*) ' meshac ',I,SG(i),FI                                              
+        DDSG(I) = ABLTG(2)                                              
       ENDDO                                                             
       SG(NR)   = 1.D0                                                     
       DSG(NR)  = F2(NMAX)                                               
       DDSG(NR) = F3(NMAX)                                               
       RETURN                                                            
       END                                                               
-  
-
-
-
-
-
-
+                                                                        
 ************************************************************************
       REAL*8 FUNCTION FGAUS(ZS,BGF,XR1,XR2,SIG1,SIG2,FACT,DFGAUSS)             
       IMPLICIT REAL*8 (A-H,O-Z)
@@ -2020,10 +1610,10 @@ C-----------------------------------------------------------------------
 C                                                                       
       ZNORM1 = 0.39894D0 / SIG1                                           
       ZNORM2 = 0.39894D0 / SIG2                                           
-      ZEX1   = -0.5D0 * (ZS - XR1)**2.0 / SIG1**2.0                           
-      ZEX2   = -0.5D0 * (ZS - XR2)**2.0 / SIG2**2.0                           
-      DEX1   = -(ZS-XR1)/SIG1**2.0                                       
-      DEX2   = -(ZS-XR2)/SIG2**2.0                                        
+      ZEX1   = -0.5D0 * (ZS - XR1)**2 / SIG1**2                           
+      ZEX2   = -0.5D0 * (ZS - XR2)**2 / SIG2**2                           
+      DEX1   = -(ZS-XR1)/SIG1**2                                        
+      DEX2   = -(ZS-XR2)/SIG2**2                                        
                                                                         
       F1     = ZNORM1 * EXP(ZEX1)                                       
       F2     = ZNORM2 * EXP(ZEX2)                                       
@@ -2035,13 +1625,7 @@ C
 C                                                                       
       RETURN                                                            
       END                                                               
-            
-
-
-
-
-
-
+                                                                        
 ************************************************************************
       SUBROUTINE ARCLENGTH(FR,MF,THETA,DTC,NP,IAS,WR,WS)                
 C-----------------------------------------------------------------------
@@ -2056,10 +1640,10 @@ C                NP    : NUMBER OF POINTS IN THETA,DTC
 C                IAS   : CONTROLS SYM/ASYM (INPUT)                      
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       PARAMETER (NPTS=512)                                              
       real*8 FR(*),THETA(*),DTC(*),WR(4),WS(4),XL(NPTS),DXL(NPTS)         
-      mwSize NF,NP,IAS                                                 
+      integer NF,NP,IAS                                                 
                                                                         
       PI = 2.D0*DASIN(1.D0)                                                  
       XL(1) = 0.D0                                                        
@@ -2124,13 +1708,7 @@ c--------------------------- interval located, use linear interpolation
         DTC(J) =  1.D0/ DCT                                               
       ENDDO                                                             
       RETURN                                                            
-      END 
-
-
-
-
-      
-
+      END                                                               
 ************************************************************************
       SUBROUTINE INIGRID(XX,YY,PSI,NR,NP,FR,MHARM,INIMESH,IAS,          
      >                   IARC,XR1,SIG1)                                 
@@ -2141,10 +1719,10 @@ C XX(1,NODE) = X, XX(2,NODE) = XR, XX(3,NODE) = XS, XX(4,NODE) = XRS
 C THE SHAPE OF THE BOUNDARY IS GIVEN BY FR(M)                           
 C--------------------------------------------------------------------   
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
@@ -2153,18 +1731,8 @@ C-----------------------------------------------------------------------
       real*8 H(4,4,4,4),HR(4,4,4,4),HS(4,4,4,4),HRS(4,4,4,4)              
 C-----------------------------------------------------------------------
       real*8 XX(4,*),YY(4,*),FR(*),PSI(*),THETA(NPMMAX),DTC(NPMMAX)       
-c      real*8 SS(NRMAX),DS(NRMAX),DDS(NRMAX)                               
-C-----------------------------------------------------------------------
-      COMMON / MESHAC /
-     R         XR1DONE,SIG1DONE,
-     R         SG,DSG,DDSG,
-     I         NRDONE
-      REAL*8   XR1DONE,SIG1DONE
-      REAL*8   SG(NRMMAX),DSG(NRMMAX),DDSG(NRMMAX)
-      mwSize  NRDONE
-                              
-C      write(*,*) ' INIGRID : ',NR,NP,XR1,SIG1
-                                           
+      real*8 SS(NRMAX),DS(NRMAX),DDS(NRMAX)                               
+                                                                         
       PI = 2.*DASIN(1.D0)                                                  
       DT = (1.+dble(IAS))*PI/dble(NP-1)                                
       DR = 1./dble(NR-1)                                                
@@ -2181,15 +1749,12 @@ C--------------------------- change theta grid to constant arclenght
       ENDIF                                                             
                                                                         
       IF ((XR1.LE.1.D0).AND.(SIG1.LT.1.D0)) THEN                            
-        CALL MESHAC2(NR,SG,DSG,DDSG,XR1,SIG1)   
-        NRDONE = NR
-        XR1DONE = XR1
-	SIG1DONE = SIG1                           
+        CALL MESHAC2(NR,SS,DS,DDS,XR1,SIG1)                              
       ELSE                                                              
         DO I=1,NR                                                       
-          SG(I)  = dble(I-1)/dble(NR-1)                               
-          DSG(I)  = 1.D0                                                   
-          DDSG(I) = 0.D0                                                   
+          SS(I)  = dble(I-1)/dble(NR-1)                               
+          DS(I)  = 1.D0                                                   
+          DDS(I) = 0.D0                                                   
         ENDDO                                                           
       ENDIF                                                             
                                                                         
@@ -2197,7 +1762,7 @@ C--------------------------- change theta grid to constant arclenght
         DO 20 J=1,NP                                                    
           NODE = NP*(I-1) + J                                           
           THTJ = THETA(J)                                               
-          RADIUS = SG(NR-I+1)                                           
+          RADIUS = SS(NR-I+1)                                           
           XX(1,NODE) = RADIUS * FR(1) * DCOS(THTJ) / 2.D0                  
           XX(2,NODE) = FR(1) * DCOS(THTJ)          / 2.D0                  
           XX(3,NODE) = - RADIUS * FR(1) * DSIN(THTJ) / 2.D0                
@@ -2236,25 +1801,23 @@ C---------------------------- KEEP ELLIPTICITY ON AXIS -----------
             XX(4,NODE) = XX(4,NODE) - DRM * DSIN(THTJ)+DRMTR*DCOS(THTJ) 
             YY(4,NODE) = YY(4,NODE) + DRM * DCOS(THTJ)+DRMTR*DSIN(THTJ) 
    30     CONTINUE                                                      
-          XX(2,NODE) = - XX(2,NODE) * DR/2.D0 * DSG(NR-I+1)                
+          XX(2,NODE) = - XX(2,NODE) * DR/2.D0 * DS(NR-I+1)                
           XX(3,NODE) =   XX(3,NODE) * DT/2.D0 * DTC(J)                    
-          XX(4,NODE) = - XX(4,NODE)*DR/2.D0*DT/2.D0*DTC(J)*DSG(NR-I+1) 
-          YY(2,NODE) = - YY(2,NODE) * DR/2.D0 * DSG(NR-I+1)                
+          XX(4,NODE) = - XX(4,NODE)*DR/2.D0*DT/2.D0*DTC(J)*DS(NR-I+1) 
+          YY(2,NODE) = - YY(2,NODE) * DR/2.D0 * DS(NR-I+1)                
           YY(3,NODE) =   YY(3,NODE) * DT/2.D0 * DTC(J)                    
-          YY(4,NODE) = - YY(4,NODE)*DR/2.D0*DT/2.D0*DTC(J)*DSG(NR-I+1) 
-          PSI(4*(NODE-1)+1) = RADIUS **2.0                                
-          PSI(4*(NODE-1)+2) = - 2.D0* RADIUS * DR / 2.D0 * DSG(NR-I+1)       
+          YY(4,NODE) = - YY(4,NODE)*DR/2.D0*DT/2.D0*DTC(J)*DS(NR-I+1) 
+          PSI(4*(NODE-1)+1) = RADIUS **2                                
+          PSI(4*(NODE-1)+2) = - 2.D0* RADIUS * DR / 2.D0 * DS(NR-I+1)       
           PSI(4*(NODE-1)+3) = 0.D0                                        
           PSI(4*(NODE-1)+4) = 0.D0                                        
    20   CONTINUE                                                        
    10 CONTINUE                                                          
       RETURN                                                            
       END                                                               
-  
-
-
-
-
+                                                                        
+                                                                        
+                                                                        
                                                                         
 ************************************************************************
       SUBROUTINE CUB1D(X1,X1S,X2,X2S,S,X,XS)                            
@@ -2262,29 +1825,23 @@ C-----------------------------------------------------------------------
 C CUBIC HERMITE INTERPOLATION IN ONE DIMENSION                          
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       real*8 H0M,H0P,H1M,H1P,H0MS,H0PS,H1MS,H1PS                          
                                                                          
-      H0M  =  (S-1.D0)**2.0 *(S+2.D0) * 0.25D0                                  
-      H0MS =  (S-1.D0)*(S+2.D0)/2.D0 + (S-1.D0)**2.0 * 0.25D0                       
-      H0P  = -(S+1.D0)**2.0 *(S-2.D0) * 0.25D0                                  
-      H0PS = -(S+1.D0)*(S-2.D0)/2.D0 - (S+1.D0)**2.0 * 0.25D0                       
-      H1M  =  (S-1.D0)**2.0 *(S+1.D0) * 0.25D0                                  
-      H1MS =  (S-1.D0)*(S+1.D0)/2.D0 + (S-1.D0)**2.0 * 0.25D0                       
-      H1P  =  (S+1.D0)**2.0 *(S-1.D0) * 0.25D0                                  
-      H1PS =  (S+1.D0)*(S-1.D0)/2.D0 + (S+1.D0)**2.0 * 0.25D0                       
+      H0M  =  (S-1.D0)**2 *(S+2.D0) * 0.25D0                                  
+      H0MS =  (S-1.D0)*(S+2.D0)/2.D0 + (S-1.D0)**2 * 0.25D0                       
+      H0P  = -(S+1.D0)**2 *(S-2.D0) * 0.25D0                                  
+      H0PS = -(S+1.D0)*(S-2.D0)/2.D0 - (S+1.D0)**2 * 0.25D0                       
+      H1M  =  (S-1.D0)**2 *(S+1.D0) * 0.25D0                                  
+      H1MS =  (S-1.D0)*(S+1.D0)/2.D0 + (S-1.D0)**2 * 0.25D0                       
+      H1P  =  (S+1.D0)**2 *(S-1.D0) * 0.25D0                                  
+      H1PS =  (S+1.D0)*(S-1.D0)/2.D0 + (S+1.D0)**2 * 0.25D0                       
                                                                         
       X  = X1*H0M  + X1S*H1M +  X2*H0P  + X2S*H1P                       
       XS = X1*H0MS + X1S*H1MS + X2*H0PS + X2S*H1PS                      
       RETURN                                                            
-      END  
-
-
-
-
-
-      
-
+      END                                                               
+                                                                        
                                                                         
 ************************************************************************
       SUBROUTINE FORMKQ(XX,YY,PSI,NR,NP,QQ,A,B,C,EPS,IGAM,ISOL,ITER,IAS)
@@ -2300,16 +1857,16 @@ C EPS : THE INVERS ASPECT RATIO
 C IGAM=1-4 : HBT GAMMA PROFILE INPUT, 5- : FF' AS INPUT PROFILE.        
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON /GAUSINT/ XGAUSS,WGAUSS,H,HR,HS,HRS                        
       real*8 XGAUSS(4),WGAUSS(4)                                          
@@ -2318,12 +1875,12 @@ C-----------------------------------------------------------------------
       COMMON/COMSOLV/KKBIG                                              
       real*8 KKBIG(KKLDA,4*MAXNODE)                                       
 c      real*8, ALLOCATABLE :: KKBIG(:,:)                                  
-c      mwSize KKLDA                                                    
+c      integer KKLDA                                                    
 C-----------------------------------------------------------------------
       real*8 QQ(*)                                                        
       real*8 XX(4,*),YY(4,*),PSI(*)                                       
       real*8 GPX(4,4,MAXNODE),GPJAC(4,4,MAXNODE)                          
-      mwSize INDEX(MAXNODE)                                            
+      integer INDEX(MAXNODE)                                            
                                                                          
                                                                         
       SAVE GPX,GPJAC,INDEX                                              
@@ -2401,7 +1958,7 @@ C----------------------------------------- CALCULATE RIGHT HAND SIDE ---
             IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                       
               ARHS = C*DGDPSI(PS) + B*X*(1.D0+EPS*X/2.D0)*DPDPSI(PS)          
             ELSE                                                        
-              ARHS = C*DGDPSI(PS) + B*(1.D0+EPS*X)**2.0 * DPDPSI(PS)        
+              ARHS = C*DGDPSI(PS) + B*(1.D0+EPS*X)**2 * DPDPSI(PS)        
             ENDIF                                                       
             ARHS = A * ARHS / (1.D0+EPS*X)                                
 C---------------------------------------------- SOLOVIEV RHS ---------- 
@@ -2466,7 +2023,7 @@ C----------------------------------------- CALCULATE RIGHT HAND SIDE ---
             IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                       
               ARHS = C*DGDPSI(PS) + B*X*(1.D0+EPS*X/2.D0)*DPDPSI(PS)          
             ELSE                                                        
-              ARHS = C*DGDPSI(PS) + B*(1.D0+EPS*X)**2.0 * DPDPSI(PS)        
+              ARHS = C*DGDPSI(PS) + B*(1.D0+EPS*X)**2 * DPDPSI(PS)        
             ENDIF                                                       
             ARHS = A * ARHS / (1.+EPS*X)                                
 C---------------------------------------------- SOLOVIEV RHS ---------- 
@@ -2486,22 +2043,17 @@ C------------------------------------- 4 FUNCTIONS V PER NODE ---------
       ENDIF                                                             
       RETURN                                                            
       END                                                               
-        
-
-
-
-        
-
+                                                                        
 ************************************************************************
       SUBROUTINE INIPRES                                                
 C------------------------------------------------------------------     
 C INITIALIZING THE ARRAY DPRES(1001) USED BY FUNCTION DPDPSI            
 C------------------------------------------------------------------     
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
@@ -2520,14 +2072,13 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
                                                                          
       NPT=1001                                                          
@@ -2550,11 +2101,7 @@ C-----------------------------------------------------------------------
       RETURN                                                            
       END                                                               
                                                  
-         
-
-
-
-                                                               
+                                                                        
                                                                         
 ************************************************************************
       REAL*8 FUNCTION DPDPSI(PSI)                                              
@@ -2563,9 +2110,9 @@ C THE NORMALIZED PROFILE OF THE PRESSURE GRADIENT VERSUS FLUX
 C THIS ROUTINE MUST BE INITIALIZED BY A CALL TO INIPRES                 
 C------------------------------------------------------------------     
       IMPLICIT REAL*8 (A-H,O-Z)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
@@ -2584,14 +2131,13 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP     
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
       NPT = 1001                                                        
       DPS = 1.D0 /dble(NPT-1)
@@ -2600,25 +2146,17 @@ C-----------------------------------------------------------------------
       DPDPSI = DPRES(NINT) + (PSI-DPS*dble(NINT-1))/DPS *                 
      >                         (DPRES(NINT+1)-DPRES(NINT))              
       RETURN                                                            
-      END           
-
-                                                             
-
-
-
-
-                                                             
-
+      END                                                               
 ************************************************************************
       SUBROUTINE INIGAM                                                 
 C---------------------------------------------------------------------  
 C SUBROUTINE TO INITIALIZE THE ARRAY DGAM USED IN THE FUNCTION DGDPSI   
 C------------------------------------------------------------------     
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
@@ -2637,14 +2175,13 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
                                                                          
       NPT=1001                                                          
@@ -2666,22 +2203,16 @@ C-----------------------------------------------------------------------
       ENDDO                                                             
                                                                         
       RETURN                                                            
-      END     
-
-
-
-
-
-
+      END                                                               
 ************************************************************************
       REAL*8 FUNCTION DGDPSI(PSI)                                              
 C------------------------------------------------------------------     
 C THE NORMALIZED PROFILE OF GRADIENT OF GAMMA VERSUS FLUX               
 C------------------------------------------------------------------     
       IMPLICIT REAL*8 (A-H,O-Z)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
@@ -2700,14 +2231,13 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
       NPT=1001                                                          
       DPS = 1.D0/dble(NPT-1)                                              
@@ -2723,9 +2253,9 @@ C------------------------------------------------------------------
 C THE NORMALIZED PROFILE OF THE CURRENT DENSITY VERSUS FLUX             
 C------------------------------------------------------------------     
       IMPLICIT REAL*8 (A-H,O-Z)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
@@ -2744,14 +2274,13 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
                                                                         
       DPS = 1./dble(NPTS-1)                                             
@@ -2761,13 +2290,7 @@ C-----------------------------------------------------------------------
      >                         (ZJZ(NINT+1)-ZJZ(NINT))                  
       RETURN                                                            
       END                                                               
-
-
-
-
-
-
-
+                                                                        
                                                                         
 ************************************************************************
       SUBROUTINE INTERP(XN1,XN2,XN3,XN4,R,S,X,XR,XS,XRS,XRR,XSS)        
@@ -2776,45 +2299,45 @@ C SUBROUTINE CALCULATES THE INTERPOLATED VALUE OF THE FUNCTION X GIVEN
 C BY XI(1..4) AT THE FOUR NODES USING BI-CUBIC HERMITE ELEMENTS         
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       real*8 XN1(4),XN2(4),XN3(4),XN4(4)                                  
                                                                         
-      HI0M   = - (R-1.)**2.0 * (-R-2.) * 0.25                             
-      HRI0M  = - (R-1.)*(-R-2.)*0.5 +(R-1.)**2.0 * 0.25                   
+      HI0M   = - (R-1.)**2 * (-R-2.) * 0.25                             
+      HRI0M  = - (R-1.)*(-R-2.)*0.5 +(R-1.)**2 * 0.25                   
       HRRI0M = + 1.5 * R                                                
-      HI1M   = - (R-1.)**2.0 * (-R-1.) * 0.25                             
-      HRI1M  = - (R-1.)*(-R-1.)*0.5 + (R-1.)**2.0 *0.25                   
+      HI1M   = - (R-1.)**2 * (-R-1.) * 0.25                             
+      HRI1M  = - (R-1.)*(-R-1.)*0.5 + (R-1.)**2 *0.25                   
       HRRI1M = + 1.5 * R - .5                                           
                                                                         
-      HJ0M   = - (S-1.)**2.0 * (-S-2.) * 0.25                             
-      HSJ0M  = - (S-1.)*(-S-2.)*0.5 +(S-1.)**2.0 * 0.25                   
+      HJ0M   = - (S-1.)**2 * (-S-2.) * 0.25                             
+      HSJ0M  = - (S-1.)*(-S-2.)*0.5 +(S-1.)**2 * 0.25                   
       HSSJ0M = + 1.5 * S                                                
-      HJ1M   = - (S-1.)**2.0 * (-S-1.) * 0.25                             
-      HSJ1M  = - (S-1.)*(-S-1.)*0.5 + (S-1.)**2.0 * 0.25                  
+      HJ1M   = - (S-1.)**2 * (-S-1.) * 0.25                             
+      HSJ1M  = - (S-1.)*(-S-1.)*0.5 + (S-1.)**2 * 0.25                  
       HSSJ1M = + 1.5 * S - .5                                           
                                                                         
-      HI0P   = - (R+1.)**2.0 * (R-2.) * 0.25                              
-      HRI0P  = - (R+1.)*(R-2.)*0.5 - (R+1.)**2.0 * 0.25                   
+      HI0P   = - (R+1.)**2 * (R-2.) * 0.25                              
+      HRI0P  = - (R+1.)*(R-2.)*0.5 - (R+1.)**2 * 0.25                   
       HRRI0P = - 1.5 * R                                                
-      HI1P   = + (R+1.)**2.0 * (R-1.) * 0.25                              
-      HRI1P  = + (R+1.)*(R-1.)*0.5 + (R+1.)**2.0 * 0.25                   
+      HI1P   = + (R+1.)**2 * (R-1.) * 0.25                              
+      HRI1P  = + (R+1.)*(R-1.)*0.5 + (R+1.)**2 * 0.25                   
       HRRI1P = + 1.5 * R + .5                                           
                                                                         
-      HJ0P  = - (S+1.)**2.0 * (S-2.) * 0.25                               
-      HSJ0P = - (S+1.)*(S-2.)*0.5 - (S+1.)**2.0 * 0.25                    
+      HJ0P  = - (S+1.)**2 * (S-2.) * 0.25                               
+      HSJ0P = - (S+1.)*(S-2.)*0.5 - (S+1.)**2 * 0.25                    
       HSSJ0P = - 1.5 * S                                                
-      HJ1P  = + (S+1.)**2.0 * (S-1.) * 0.25                               
-      HSJ1P = + (S+1.)*(S-1.)*0.5 + (S+1.)**2.0 * 0.25                    
+      HJ1P  = + (S+1.)**2 * (S-1.) * 0.25                               
+      HSJ1P = + (S+1.)*(S-1.)*0.5 + (S+1.)**2 * 0.25                    
       HSSJ1P = + 1.5 * S + .5                                           
                                                                         
       X = HI0M*HJ0M * XN1(1) + HI1M*HJ0M * XN1(2)                       
@@ -2873,13 +2396,8 @@ C-----------------------------------------------------------------------
                                                                         
       RETURN                                                            
       END                                                               
-             
-
-
-
- 
-
-                                                                      
+                                                                        
+                                                                        
 ************************************************************************
       SUBROUTINE INTERP1(XN1,XN2,XN3,XN4,R,S,X)                         
 C---------------------------------------------------------------------- 
@@ -2887,30 +2405,30 @@ C SUBROUTINE CALCULATES THE INTERPOLATED VALUE OF THE FUNCTION X GIVEN
 C BY XI(1..4) AT THE FOUR NODES USING BI-CUBIC HERMITE ELEMENTS         
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       real*8 XN1(4),XN2(4),XN3(4),XN4(4)                                  
                                                                          
-      HI0M  = - (R-1.D0)**2.0 * (-R-2.D0) * 0.25D0                              
-      HI1M  = - (R-1.D0)**2.0 * (-R-1.D0) * 0.25D0                              
+      HI0M  = - (R-1.D0)**2 * (-R-2.D0) * 0.25D0                              
+      HI1M  = - (R-1.D0)**2 * (-R-1.D0) * 0.25D0                              
                                                                         
-      HJ0M  = - (S-1.D0)**2.0 * (-S-2.D0) * 0.25D0                              
-      HJ1M  = - (S-1.D0)**2.0 * (-S-1.D0) * 0.25D0                              
+      HJ0M  = - (S-1.D0)**2 * (-S-2.D0) * 0.25D0                              
+      HJ1M  = - (S-1.D0)**2 * (-S-1.D0) * 0.25D0                              
                                                                         
-      HI0P  = - (R+1.D0)**2.0 * (R-2.D0)  * 0.25D0                              
-      HI1P  = + (R+1.D0)**2.0 * (R-1.D0)  * 0.25D0                              
+      HI0P  = - (R+1.D0)**2 * (R-2.D0)  * 0.25D0                              
+      HI1P  = + (R+1.D0)**2 * (R-1.D0)  * 0.25D0                              
                                                                         
-      HJ0P  = - (S+1.D0)**2.0 * (S-2.D0)  * 0.25D0                              
-      HJ1P  = + (S+1.D0)**2.0 * (S-1.D0)  * 0.25D0                              
+      HJ0P  = - (S+1.D0)**2 * (S-2.D0)  * 0.25D0                              
+      HJ1P  = + (S+1.D0)**2 * (S-1.D0)  * 0.25D0                              
                                                                         
       X = HI0M*HJ0M * XN1(1) + HI1M*HJ0M * XN1(2)                       
      >  + HI0M*HJ1M * XN1(3) + HI1M*HJ1M * XN1(4)                       
@@ -2922,16 +2440,7 @@ C-----------------------------------------------------------------------
      >  + HI0P*HJ1P * XN3(3) + HI1P*HJ1P * XN3(4)                       
                                                                         
       RETURN                                                            
-      END     
-
-
-
-
-
-
-
-
-                                                          
+      END                                                               
                                                                         
 ************************************************************************
       SUBROUTINE INTERP2(XN1,XN2,XN3,XN4,R,S,X,XR,XS)                   
@@ -2940,37 +2449,37 @@ C SUBROUTINE CALCULATES THE INTERPOLATED VALUE OF THE FUNCTION X GIVEN
 C BY XI(1..4) AT THE FOUR NODES USING BI-CUBIC HERMITE ELEMENTS         
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       real*8 XN1(4),XN2(4),XN3(4),XN4(4)                                  
                                                                          
-      HI0M  = - (R-1.D0)**2.0 * (-R-2.D0) * 0.25D0                              
-      HRI0M = - (R-1.D0)*(-R-2.D0)*0.5D0 +(R-1.D0)**2.0 * 0.25D0                    
-      HI1M  = - (R-1.D0)**2.0 * (-R-1.D0) * 0.25D0                              
-      HRI1M = - (R-1.D0)*(-R-1.D0)*0.5D0 + (R-1.D0)**2.0 * 0.25D0                   
-      HJ0M  = - (S-1.D0)**2.0 * (-S-2.D0) * 0.25D0                              
-      HSJ0M = - (S-1.D0)*(-S-2.D0)*0.5D0 +(S-1.D0)**2.0  * 0.25D0                   
-      HJ1M  = - (S-1.D0)**2.0 * (-S-1.D0) * 0.25D0                              
-      HSJ1M = - (S-1.D0)*(-S-1.D0)*0.5D0 + (S-1.D0)**2.0 * 0.25D0                   
+      HI0M  = - (R-1.D0)**2 * (-R-2.D0) * 0.25D0                              
+      HRI0M = - (R-1.D0)*(-R-2.D0)*0.5D0 +(R-1.D0)**2 * 0.25D0                    
+      HI1M  = - (R-1.D0)**2 * (-R-1.D0) * 0.25D0                              
+      HRI1M = - (R-1.D0)*(-R-1.D0)*0.5D0 + (R-1.D0)**2 * 0.25D0                   
+      HJ0M  = - (S-1.D0)**2 * (-S-2.D0) * 0.25D0                              
+      HSJ0M = - (S-1.D0)*(-S-2.D0)*0.5D0 +(S-1.D0)**2  * 0.25D0                   
+      HJ1M  = - (S-1.D0)**2 * (-S-1.D0) * 0.25D0                              
+      HSJ1M = - (S-1.D0)*(-S-1.D0)*0.5D0 + (S-1.D0)**2 * 0.25D0                   
                                                                         
-      HI0P  = - (R+1.D0)**2.0 * (R-2.D0) * 0.25D0                               
-      HRI0P = - (R+1.D0)*(R-2.D0)*0.5D0 - (R+1.D0)**2.0 * 0.25D0                    
-      HI1P  = + (R+1.D0)**2.0 * (R-1.D0) * 0.25D0                               
-      HRI1P = + (R+1.D0)*(R-1.D0)*0.5D0 + (R+1.D0)**2.0 * 0.25D0                    
+      HI0P  = - (R+1.D0)**2 * (R-2.D0) * 0.25D0                               
+      HRI0P = - (R+1.D0)*(R-2.D0)*0.5D0 - (R+1.D0)**2 * 0.25D0                    
+      HI1P  = + (R+1.D0)**2 * (R-1.D0) * 0.25D0                               
+      HRI1P = + (R+1.D0)*(R-1.D0)*0.5D0 + (R+1.D0)**2 * 0.25D0                    
                                                                         
-      HJ0P  = - (S+1.D0)**2.0 * (S-2.D0) * 0.25D0                               
-      HSJ0P = - (S+1.D0)*(S-2.D0)*0.5D0 - (S+1.D0)**2.0 * 0.25D0                    
-      HJ1P  = + (S+1.D0)**2.0 * (S-1.D0) * 0.25D0                               
-      HSJ1P = + (S+1.D0)*(S-1.D0)*0.5D0 + (S+1.D0)**2.0 * 0.25D0                    
+      HJ0P  = - (S+1.D0)**2 * (S-2.D0) * 0.25D0                               
+      HSJ0P = - (S+1.D0)*(S-2.D0)*0.5D0 - (S+1.D0)**2 * 0.25D0                    
+      HJ1P  = + (S+1.D0)**2 * (S-1.D0) * 0.25D0                               
+      HSJ1P = + (S+1.D0)*(S-1.D0)*0.5D0 + (S+1.D0)**2 * 0.25D0                    
                                                                         
       X = HI0M*HJ0M * XN1(1) + HI1M*HJ0M * XN1(2)                       
      >  + HI0M*HJ1M * XN1(3) + HI1M*HJ1M * XN1(4)                       
@@ -3000,15 +2509,7 @@ C-----------------------------------------------------------------------
      >   + HI0P*HSJ1P * XN3(3) + HI1P*HSJ1P * XN3(4)                    
                                                                         
       RETURN                                                            
-      END    
-
-
-
-
-
-
-
-                                                           
+      END                                                               
                                                                         
       SUBROUTINE INTERP3(XN1,XN2,XN3,XN4,                               
      >                   YN1,YN2,YN3,YN4,                               
@@ -3019,29 +2520,29 @@ C SUBROUTINE CALCULATES THE INTERPOLATED VALUE OF THE FUNCTION X GIVEN
 C BY XI(1..4) AT THE FOUR NODES USING BI-CUBIC HERMITE ELEMENTS         
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       real*8 XN1(4),XN2(4),XN3(4),XN4(4)                                  
       real*8 YN1(4),YN2(4),YN3(4),YN4(4)                                  
       real*8 PN1(4),PN2(4),PN3(4),PN4(4)                                  
                                                                         
-      HI0M  = - (R-1.D0)**2.0 * (-R-2.D0) * 0.25D0                              
-      HRI0M = - (R-1.D0)*(-R-2.D0)*0.5D0 +(R-1.D0)**2.0 * 0.25D0                    
-      HI1M  = - (R-1.D0)**2.0 * (-R-1.D0) * 0.25D0                              
-      HRI1M = - (R-1.D0)*(-R-1.D0)*0.5D0 + (R-1.D0)**2.0 * 0.25D0                  
-      HJ0M  = - (S-1.D0)**2.0 * (-S-2.D0) * 0.25D0                              
-      HSJ0M = - (S-1.D0)*(-S-2.D0)*0.5D0 +(S-1.D0)**2.0  * 0.25D0                   
-      HJ1M  = - (S-1.D0)**2.0 * (-S-1.D0) * 0.25D0                              
-      HSJ1M = - (S-1.D0)*(-S-1.D0)*0.5D0 + (S-1.D0)**2.0 * 0.25D0                   
+      HI0M  = - (R-1.D0)**2 * (-R-2.D0) * 0.25D0                              
+      HRI0M = - (R-1.D0)*(-R-2.D0)*0.5D0 +(R-1.D0)**2 * 0.25D0                    
+      HI1M  = - (R-1.D0)**2 * (-R-1.D0) * 0.25D0                              
+      HRI1M = - (R-1.D0)*(-R-1.D0)*0.5D0 + (R-1.D0)**2 * 0.25D0                  
+      HJ0M  = - (S-1.D0)**2 * (-S-2.D0) * 0.25D0                              
+      HSJ0M = - (S-1.D0)*(-S-2.D0)*0.5D0 +(S-1.D0)**2  * 0.25D0                   
+      HJ1M  = - (S-1.D0)**2 * (-S-1.D0) * 0.25D0                              
+      HSJ1M = - (S-1.D0)*(-S-1.D0)*0.5D0 + (S-1.D0)**2 * 0.25D0                   
                                                                         
-      HI0P  = - (R+1.D0)**2.0 * (R-2.D0) * 0.25D0                               
-      HRI0P = - (R+1.D0)*(R-2.D0)*0.5D0 - (R+1.D0)**2.0 * 0.25D0                    
-      HI1P  = + (R+1.D0)**2.0 * (R-1.D0) * 0.25D0                               
-      HRI1P = + (R+1.D0)*(R-1.D0)*0.5D0 + (R+1.D0)**2.0 * 0.25D0                    
+      HI0P  = - (R+1.D0)**2 * (R-2.D0) * 0.25D0                               
+      HRI0P = - (R+1.D0)*(R-2.D0)*0.5D0 - (R+1.D0)**2 * 0.25D0                    
+      HI1P  = + (R+1.D0)**2 * (R-1.D0) * 0.25D0                               
+      HRI1P = + (R+1.D0)*(R-1.D0)*0.5D0 + (R+1.D0)**2 * 0.25D0                    
                                                                         
-      HJ0P  = - (S+1.D0)**2.0 * (S-2.D0) * 0.25D0                               
-      HSJ0P = - (S+1.D0)*(S-2.D0)*0.5D0 - (S+1.D0)**2.0 * 0.25D0                    
-      HJ1P  = + (S+1.D0)**2.0 * (S-1.D0) * 0.25                               
-      HSJ1P = + (S+1.D0)*(S-1.D0)*0.5D0 + (S+1.D0)**2.0 * 0.25D0                    
+      HJ0P  = - (S+1.D0)**2 * (S-2.D0) * 0.25D0                               
+      HSJ0P = - (S+1.D0)*(S-2.D0)*0.5D0 - (S+1.D0)**2 * 0.25D0                    
+      HJ1P  = + (S+1.D0)**2 * (S-1.D0) * 0.25                               
+      HSJ1P = + (S+1.D0)*(S-1.D0)*0.5D0 + (S+1.D0)**2 * 0.25D0                    
                                                                         
       X = HI0M*HJ0M * XN1(1) + HI1M*HJ0M * XN1(2)                       
      >  + HI0M*HJ1M * XN1(3) + HI1M*HJ1M * XN1(4)                       
@@ -3098,11 +2599,8 @@ C----------------------------------------------------------------------
      >   + HI0P*HSJ1P * YN3(3) + HI1P*HSJ1P * YN3(4)                    
                                                                         
       RETURN                                                            
-      END                                 
-
-
-
-      
+      END                                                               
+                                                                        
                                                                         
 ************************************************************************
       SUBROUTINE SOLVE2(QQ,NR,NP,PSI,ITER,IAS)                          
@@ -3110,20 +2608,20 @@ C-----------------------------------------------------------------------
 C SUBROUTINE TO SOLVE THE SYSTEM OF EQUATIONS USING GAUSSIAN ELIMINATION
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON/COMSOLV/KKBIG                                              
       real*8 KKBIG(KKLDA,4*MAXNODE)                                       
 c      real*8, ALLOCATABLE :: KKBIG(:,:)                                  
-c      mwSize KKLDA                                                    
+c      integer KKLDA                                                    
 C-----------------------------------------------------------------------
       real*8    QQ(*),PSI(*)                                              
-      mwSize INDEX(MAXNODE)                                            
+      integer INDEX(MAXNODE)                                            
                                                                          
       SAVE INDEX                                                        
                                                                         
@@ -3215,12 +2713,8 @@ CCC      CALL PRARR1('PSI : ',PSI,4*NR*NP,203)
                                                                         
       RETURN                                                            
       END                                                               
-          
-
-
-
-
-
+                                                                        
+                                                                        
 ************************************************************************
       SUBROUTINE FINDAXIS(XX,YY,NR,NP,PSAXIS,XAXIS,YAXIS,               
      >                    NAX,RAX,SAX,IAS,IFAIL)                              
@@ -3229,20 +2723,20 @@ C SUBROUTINE TO LOCALIZE THE POSITION OF THE MAGNETIC AXIS ; THE MINIMUM
 C OF PSI OF ALL ELEMENTS                                                
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON/FAXIS/PSI,NAXIS                                            
       real*8    PSI(4*MAXMNODE)                                           
-      mwSize NAXIS                                                     
+      integer NAXIS                                                     
 C-----------------------------------------------------------------------
       real*8 XX(4,*),YY(4,*)                                              
       REAL*8 X(2),FVEC(2),FJAC(2,2)                                  
@@ -3376,13 +2870,7 @@ c             WRITE(*,*) 'LOCAL MINIMUM AT XAXIS = ',XAXIS
       IFAIL  = 0                                                     
       ENDIF                                                             
       RETURN                                                            
-      END   
-
-
-
-
-
-
+      END                                                               
                                                                         
 *********************************************************************** 
       SUBROUTINE FZERO2(N,X,FVEC,FJAC,LDFJAC,IFLAG)                     
@@ -3390,20 +2878,20 @@ C----------------------------------------------------------------------
 C SOLUTION DETERMINES THE MINIMUM OF THE FLUX IN ONE ELEMENT            
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON/FAXIS/PSI,NAXIS                                            
       real*8    PSI(4*MAXMNODE)                                           
-      mwSize NAXIS                                                     
+      integer NAXIS                                                     
 C-----------------------------------------------------------------------
       real*8 X(N),FVEC(N),FJAC(LDFJAC,N)                                  
                                                                         
@@ -3428,14 +2916,8 @@ C-----------------------------------------------------------------------
       ENDIF                                                             
       RETURN                                                            
       END                                                               
-  
-
-   
-
-
-
-
-c************************************************************************
+                                                                        
+************************************************************************
       REAL*8 FUNCTION ROOT(A,B,C,D,SGN)                                        
 C---------------------------------------------------------------------  
 C THIS FUNCTION GIVES BETTER ROOTS OF QUADRATICS BY AVOIDING            
@@ -3449,20 +2931,13 @@ C---------------------------------------------------------------------
       ENDIF                                                             
       RETURN                                                            
       END                                                               
-
-
-
-      
-
-
-
 ************************************************************************
       SUBROUTINE NORMAL(PSI,NR,NP,PSAXIS)                               
 C-----------------------------------------------------------------------
 C SUBROUTINE TO NORMALIZE PSI TO ONE ON THE BOUNDARY AND ZERO ON AXIS   
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       real*8 PSI(*)                                                       
                                                                         
       DO 60 I=1,NR*NP                                                   
@@ -3472,18 +2947,12 @@ C-----------------------------------------------------------------------
    70   CONTINUE                                                        
    60 CONTINUE                                                          
       RETURN                                                            
-      END  
-
-                              
-
-
-
-
+      END                                                               
+                                                                        
                                                                         
 ************************************************************************
        SUBROUTINE REMESH(XX,YY,PSI,A,B,C,EPS,NR,NP,NRNEW,NPNEW,MESHNO,  
-     >                    CX,CY,XAXIS,YAXIS,NAX,RAX,SAX,IGAM,IAS,
-     >                    XR1,SIG1,IFAIL)         
+     >                  CX,CY,XAXIS,YAXIS,NAX,RAX,SAX,IGAM,IAS,IFAIL)         
 C---------------------------------------------------------------------  
 C FORM THE SYSTEM OF NEW FINITE ELEMENTS AS FLUX COORDINATES USING      
 C THE EXACT INTERPOLATION                                               
@@ -3495,16 +2964,16 @@ C   NAX1,NAX2 : NODENUMBERS OF ELEMENT WITH MAGNETIC AXIS
 C   RAX : R VALUE OF MAGNETIC AXIS                                      
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON/MESH2/XXOLD,YYOLD,PSIOLD                                   
       real*8    XXOLD(4,MAXNODE),YYOLD(4,MAXNODE),PSIOLD(4*MAXNODE)       
@@ -3517,17 +2986,8 @@ C-----------------------------------------------------------------------
       real*8    PSITOL,THTTOL,TOL                                         
 C-----------------------------------------------------------------------
       real*8 XX(4,*), YY(4,*), PSI(*)                                     
-      mwSize NSYM(2*NR-2),SSYM(2*NR-2),ISEARCH(2*NRMAX)                                 
+      integer NSYM(2*NR-2),SSYM(2*NR-2),ISEARCH(2*NRMAX)                                 
       LOGICAL FOUND,NOBRACK,CHAGR(MAXMNODE)                             
-C-----------------------------------------------------------------------
-      COMMON / MESHAC /
-     R         XR1DONE,SIG1DONE,
-     R         SG,DSG,DDSG,
-     I         NRDONE
-      REAL*8   XR1DONE,SIG1DONE
-      REAL*8   SG(NRMMAX),DSG(NRMMAX),DDSG(NRMMAX)
-      mwSize  NRDONE
-
                                                                         
       PI = 2.D0 * DASIN(1.D0)                                                
       TOLTHT = 1.D-6                                                    
@@ -3541,55 +3001,21 @@ C-----------------------------------------------------------------------
         SSYM(I) = -1.D0                                                   
         NSYM(NR-1+I) = (NR-1)*(NP-1) - (I-1)*(NP-1)                     
         SSYM(NR-1+I) = +1.D0                                              
-      ENDDO
-           
-C modification du 26/11/04
-C      write(*,*) '(1) xr1=',xr1,sig1,nrnew
-C      write(*,*) ' NRDONE,NRNEW : ',NRDONE,NRNEW
-C      write(*,*) ' XR1DONE,XR1 : ',XR1DONE,XR1
-C      write(*,*) ' SIG1DONE,SIG1 : ',SIG1DONE,SIG1
-                                                        
-      IF ((XR1.LE.1.D0).AND.(SIG1.LT.1.D0))THEN
-          IF ((NRDONE.NE.NRNEW).OR.(XR1DONE.NE.XR1)
-     >                        .OR.(SIG1DONE.NE.SIG1)) THEN
-            CALL MESHAC2(NRNEW,SG,DSG,DDSG,XR1,SIG1)
-            NRDONE = NRNEW
-	    XR1DONE = XR1
-	    SIG1DONE = SIG1
-C             write(*,*) ' (2) xr1=',xr1,sig1,nrnew
-	  ENDIF
-          DO I=1,NRNEW
-            PSIKN(NRNEW-I+1)   = SG(I)**2.0
-C            write(*,*) 'i=',i,'SG(I)**2.0=',PSIKN(NRNEW-I+1)
-            DPSIKN(NRNEW-I+1)  = 2.D0*SG(I) * DSG(I)
-            DDPSIKN(NRNEW-I+1) = 2.D0*SG(I) * DDSG(I) + 2.D0*DSG(I)**2.0
-            RADPSI(NRNEW-I+1)  =  REAL(I-1)/REAL(NRNEW-1)
-	  ENDDO
-      ELSE 
-        DO  I=1,NRNEW
-          RPSI =  dble(I-1)/dble(NRNEW-1)                                 
-          PSID = RPSI**2.0                                                  
-          PSIKN(NRNEW-I+1)   = PSID 
-          DPSIKN(NRNEW-I+1)  = 2.D0*RPSI 
-          DDPSIKN(NRNEW-I+1) = 2.D0                              
-          RADPSI(NRNEW-I+1)  = RPSI   
-	ENDDO
-      ENDIF
+      ENDDO                                                             
                                                                         
-C      DO 5 I=1,NRNEW                                                    
-C        RPSI =  dble(I-1)/dble(NRNEW-1)                                 
-C        PSID = RPSI**2.0                                                  
-C        PSIKN(NRNEW-I+1) = PSID                                         
-C        RADPSI(NRNEW-I+1) = RPSI                                        
-C   5  CONTINUE                                                          
+      DO 5 I=1,NRNEW                                                    
+        RPSI =  dble(I-1)/dble(NRNEW-1)                                 
+        PSID = RPSI**2                                                  
+        PSIKN(NRNEW-I+1) = PSID                                         
+        RADPSI(NRNEW-I+1) = RPSI                                        
+   5  CONTINUE                                                          
       RADPSI(NRNEW) = 0.D0                                                
       PSIKN(NRNEW) = 0.D0                                                 
 C      CALL PRARR1('PSI VALUES : ',PSIKN,NRNEW,203)                     
       DO 6 J=1,NPNEW                                                    
         THTKN(J) = (1.D0+dble(IAS)) * PI * dble(J-1)/dble(NPNEW-1)       
     6 CONTINUE                                                          
-      MESHNO = MESHNO + 1       
-                                              
+      MESHNO = MESHNO + 1                                               
 C------------------------- UPDATE OLD MESH FOR THE FIRST ITERATION ---- 
       DO 8 I= 1,NRNEW*NPNEW                                             
         CHAGR(I) = .FALSE.                                              
@@ -3622,8 +3048,7 @@ C------------------------- UPDATE OLD MESH FOR THE FIRST ITERATION ----
 	  ENDIF
         ENDDO
       ENDIF  
-      NSEARCH = IS    
-                                                                         
+      NSEARCH = IS                                                                            
 C--------------------------- LOOP OVER ALL FLUXSURFACES -----------     
       DO 30 I=1,NRNEW-1                                                 
         PSIVAL=PSIKN(I)      
@@ -3664,8 +3089,7 @@ C------------------------------------- QUAD. EQ FOR R VALUE AT MINIMUM -
      >                 R,SAX,PS,DPSIR,DPSIS)                            
             PSIMIN=MIN(MIN(PSIM,PS),PSIP)                               
             PSIMAX=MAX(MAX(PSIM,PS),PSIP)                               
-          ENDIF
-                                                         
+          ENDIF                                                         
           IF ((PSIVAL.GE.PSIMIN-PSITOL).AND.                            
      >        (PSIVAL.LE.PSIMAX+PSITOL))THEN                            
             A3 = (PSIM+PSIMR-PSIP+PSIPR)/4.D0                             
@@ -3690,8 +3114,7 @@ c              WRITE(*,*) ' NODE ON WRONG SIDE : ',ZX,XAXIS,R2
      >                     XXOLD(1,N3),XXOLD(1,N4),                     
      >                     RR,SAX,ZX,DXR,DXS)                           
             ENDIF   
-c            write(*,*) 'RR=',RR,ZX,XAXIS,PS 
-                                                  
+c            write(*,*) 'RR=',RR,ZX,XAXIS,PS                                                    
             IF ((DABS(RR).LE.1.D0+1.D-5).AND.(ZX.GE.XAXIS)) GOTO 45        
 c------------------ special case psi=1.                 
             IF ((I.EQ.1).AND.(DABS(PS-PSIVAL).LT.1.D-5)) THEN  
@@ -3728,7 +3151,7 @@ C----------------------------- trace fluxsurface to find theta values
 	  ENDIF                                                                
           THTVAL = THTKN(JINDEX)                                        
           FOUND = .FALSE.                                               
-                                                                       
+                                                                        
 c---------------------------------- treat theta=pi as special point     
           IF ((J.EQ.NPNEW).AND.(IAS.EQ.0)) THEN                         
             DO 140 NS=1, 2*NR-2                                         
@@ -3777,10 +3200,9 @@ C                WRITE(*,*) ' NODE ON WRONG SIDE : ',ZX,XAXIS
   140       CONTINUE                                                    
           ENDIF                                                         
   145     CONTINUE                                                      
-                       
-                                                                                                      
-      	  DO ITN=1,ITMAX    
-                                            
+                                                                        
+                                                                        
+      	  DO ITN=1,ITMAX                                                 
             N1 = NODENO(NN,1)                                           
             N2 = NODENO(NN,2)                                           
             N3 = NODENO(NN,3)                                           
@@ -3801,7 +3223,6 @@ C                WRITE(*,*) ' NODE ON WRONG SIDE : ',ZX,XAXIS
 	    ELSEIF (FOUND) THEN                                                
 	      THT1 = THT                                                       
             ENDIF  
-
             IF (((DABS(THTVAL-THT).LT.TOLTHT) .OR.                       
      >           (DABS(THTVAL-THT+2.D0*PI) .LT. TOLTHT) .OR.                
      >           (DABS(THTVAL-THT-2.D0*PI) .LT. TOLTHT)) .AND.              
@@ -3811,7 +3232,7 @@ c----------------------------- node located ---------------------
               FOUND = .TRUE.                                            
               IF ((DABS(RR).GT.1.D0+TOLPSI).OR.                            
      >            (DABS(SS).GT.1.D0+TOLTHT)) THEN                          
-c                WRITE(*,*) ' WARNING : ',RR,SS                          
+                WRITE(*,*) ' WARNING : ',RR,SS                          
               ENDIF                                                     
               NODE = (I-1)*NPNEW + JINDEX                               
               N1 = NODENO(NN,1)                                         
@@ -3826,12 +3247,12 @@ c                WRITE(*,*) ' WARNING : ',RR,SS
      >                    PSIOLD(4*(N3-1)+1),PSIOLD(4*(N4-1)+1),        
      >               RR,SS,ZPSI,ZPSIR,ZPSIS,ZPSIRS,ZPSIRR,ZPSISS)       
 c-------------------------------------------------------------------    
-              RAD = (X-XAXIS)**2.0 + (Y-YAXIS)**2.0                         
+              RAD = (X-XAXIS)**2 + (Y-YAXIS)**2                         
               THY = (X-XAXIS) / RAD                                     
               THX = -(Y-YAXIS) / RAD                                    
-              THXX = 2.D0*(Y-YAXIS)*(X-XAXIS) / RAD**2.0                     
+              THXX = 2.D0*(Y-YAXIS)*(X-XAXIS) / RAD**2                     
               THYY = - THXX                                             
-              THXY = ( (Y-YAXIS)**2.0 - (X-XAXIS)**2.0 ) / RAD**2.0           
+              THXY = ( (Y-YAXIS)**2 - (X-XAXIS)**2 ) / RAD**2           
               THS = THX * XS + THY * YS                                 
               THR = THX * XR + THY * YR                                 
               THRR = THXX*XR*XR + 2*THXY*XR*YR + THX*XRR                
@@ -3845,18 +3266,18 @@ c-------------------------------------------------------------------
               ST =   ZPSIR / PTJAC                                      
               PTJR = ZPSIRR*THS+ZPSIR*THRS-ZPSIRS*THR-ZPSIS*THRR        
               PTJS = ZPSIRS*THS+ZPSIR*THSS-ZPSISS*THR-ZPSIS*THRS        
-              RPT = (-PTJR*THS/PTJAC**2.0 + THRS/PTJAC) * RT              
-     >            + (-PTJS*THS/PTJAC**2.0 + THSS/PTJAC) * ST              
-              SPT = ( PTJR*THR/PTJAC**2.0 - THRR/PTJAC) * RT              
-     >            + ( PTJS*THR/PTJAC**2.0 - THRS/PTJAC) * ST              
-              XPT = - XRR * THS*ZPSIS/PTJAC**2.0                         
-     >              + XRS * (THS*ZPSIR + THR*ZPSIS)/PTJAC**2.0            
+              RPT = (-PTJR*THS/PTJAC**2 + THRS/PTJAC) * RT              
+     >            + (-PTJS*THS/PTJAC**2 + THSS/PTJAC) * ST              
+              SPT = ( PTJR*THR/PTJAC**2 - THRR/PTJAC) * RT              
+     >            + ( PTJS*THR/PTJAC**2 - THRS/PTJAC) * ST              
+              XPT = - XRR * THS*ZPSIS/PTJAC**2                          
+     >              + XRS * (THS*ZPSIR + THR*ZPSIS)/PTJAC**2            
      >              + XR  * RPT        + XS * SPT                       
-     >              - XSS * THR*ZPSIR/PTJAC**2.0                          
-              YPT = - YRR * THS*ZPSIS/PTJAC**2.0                          
-     >              + YRS * (THS*ZPSIR + THR*ZPSIS)/PTJAC**2.0            
+     >              - XSS * THR*ZPSIR/PTJAC**2                          
+              YPT = - YRR * THS*ZPSIS/PTJAC**2                          
+     >              + YRS * (THS*ZPSIR + THR*ZPSIS)/PTJAC**2            
      >              + YR  * RPT        + YS * SPT                       
-     >              - YSS * THR*ZPSIR/PTJAC**2.0                          
+     >              - YSS * THR*ZPSIR/PTJAC**2                          
               XYJAC = XR*YS - XS*YR                                     
               PSIX = ( YS*ZPSIR - YR*ZPSIS) / XYJAC                     
               PSIY = (-XS*ZPSIR + XR*ZPSIS) / XYJAC                     
@@ -3874,13 +3295,11 @@ C-------------------------------- WATCH MINUS DSIGN FROM R ORIENTATION --
      >  *dble(NPNEW-1)/PI)
        YY(4,NODE) =-(YPT/ETAP)/(2.D0*FACTAS*dble(NRNEW-1)
      >  *dble(NPNEW-1)/PI)
- 
               PSI(4*(NODE-1)+1) = ZPSI                                  
               PSI(4*(NODE-1)+2) = - 2.D0*RADPSI(I)/(2.D0*dble(NRNEW-1))      
               PSI(4*(NODE-1)+3) = 0.D0                                    
               PSI(4*(NODE-1)+4) = 0.D0                                    
-              CHAGR(NODE) = .TRUE.   
-                                  
+              CHAGR(NODE) = .TRUE.                                      
               IF (ITN.GT.ITTEST) ITTEST = ITN                           
               GOTO 50                                                   
             ELSEIF ( ((THT1.LE.THTVAL+1.D-5).AND.                       
@@ -3893,12 +3312,11 @@ C-------------------------------- WATCH MINUS DSIGN FROM R ORIENTATION --
      >         ((IAS.EQ.1).AND.(THT1.GT.THT2+1.57)                           
      >                    .AND.(THT1-2.D0*PI.LE.THTVAL+1.D-5)              
      >                    .AND.(THT2.GE.THTVAL-1.D-5)) )  THEN          
-                                                     
+                                                                   
    47         FORMAT(' THETA BRACK : ',3E14.6)	                         
 c                                                                       
 c----------------------------- theta value bracketed ------------       
-c              
-                                                           
+c                                                                       
               FVEC1 = -(ZY - YAXIS) + (ZX - XAXIS) * TAN(THTVAL)        
               FVEC2 = -PS + PSIVAL                                      
               FJAC11 = ZYR - ZXR*TAN(THTVAL)                            
@@ -3911,8 +3329,7 @@ c
               DR = DSIGN(MIN(DABS(DR),0.05D0),DR)                           
               DS = DSIGN(MIN(DABS(DS),0.05D0),DS)                           
               RR = RR + DR                                              
-              SS = SS + DS   
-                                           
+              SS = SS + DS                                              
 
    46         FORMAT(' 2D NEWTON- : ',1P5E12.4)                          
    56         FORMAT(' No brack : ',1P5E12.4)  
@@ -3921,10 +3338,9 @@ c
             ELSE                                                        
 c                                                                       
 c------------------------ theta not found yet, track flux surface       
-c                                                                      
+c                                                                       
               NOBRACK = .TRUE.                                          
-              DS = - DD * DPSIR/DABS(DPSIR) 
-                             
+              DS = - DD * DPSIR/DABS(DPSIR)                              
               IF (DABS((PSIVAL-PS)/PSIVAL).GT.0.01D0) THEN                 
                 DS=0.D0                                                   
                 DR = (PSIVAL-PS) / DPSIR                                
@@ -3938,14 +3354,9 @@ c
                 SS = SS + DS                                            
               ENDIF                                                     
             ENDIF          
-   58       Format('tracking:',6e16.8)  
-                                                  
-            IN = (NN-1)/(NP-1)+1 
-                       
-            JN = MOD(NN-1,NP-1)+1  
-            
-cccccccccccccccyp        
-c            goto 1112                             
+   58       Format('tracking:',6e16.8)                                       
+            IN = (NN-1)/(NP-1)+1                                        
+            JN = MOD(NN-1,NP-1)+1                                       
             IF (SS.LT.-1.D0) THEN                                         
               IF (JPREV.EQ.-1) THEN                                     
                 NN = NN - 1                                             
@@ -3959,16 +3370,14 @@ c            goto 1112
             ELSEIF (SS.GT.1.D0) THEN                                       
               IF (JPREV.EQ.1) THEN                                      
                 NN = NN + 1                                             
-ccccbug64       IF (JN.EQ.NP-1) NN = NN - (NP-1)                        
-                SS = SS - 2.D0                                           
+                IF (JN.EQ.NP-1) NN = NN - (NP-1)                        
+                SS = SS - 2.D0                                            
                 JPREV = 0                                               
               ELSE                                                      
                 SS = 1.D0                                                 
                 JPREV = 1                                               
               ENDIF                                                     
-            ENDIF  
-cccccccccccccccyp
- 1112       continue                                           
+            ENDIF                                                       
             IF (RR.LT.-1.D0) THEN                                          
               IF ((IN.GT.1).AND.(IPREV.EQ.-1))THEN                      
                 NN = NN - NP + 1                                        
@@ -3987,19 +3396,18 @@ cccccccccccccccyp
                 RR = 1.D0                                                 
                 IPREV = 1                                               
               ENDIF                                                     
-            ENDIF                                      
-          ENDDO   
-                                                  
-c          WRITE(*,43) I,J,PSIVAL,THTVAL 
+            ENDIF                                                       
+          ENDDO                                                         
+          WRITE(*,43) I,J,PSIVAL,THTVAL 
 	  IFAIL = 1
-c	  WRITE(*,*) ' RETURN FROM REMESH IFAIL : ',IFAIL
+	  WRITE(*,*) ' RETURN FROM REMESH IFAIL : ',IFAIL
 	  RETURN     
    50   CONTINUE                                                        
 C        WRITE(*,*) ' MAX NUMBER ITERATIONS : ',ITTEST,DD               
    30 CONTINUE                                                          
    41 FORMAT(i3,2e12.4,4e14.6)                                          
    42 FORMAT(i3,6e12.4)                                                 
-c   43 FORMAT(' FATAL NODE NOT FOUND : ',2i3,2f12.6)                                                                    
+   43 FORMAT(' FATAL NODE NOT FOUND : ',2i3,2f12.6)                                                                    
       IF (IAS.EQ.1) THEN                                                
 C------------------------------------ copy tht=0 to tht=2PI             
       DO I=1,NRNEW-1                                                    
@@ -4046,7 +3454,7 @@ C------------------------------------ copy tht=0 to tht=2PI
       IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                             
         PSIYY0 = A * ( C + B*X*(1+EPS*X/2.D0) ) - PSIXX                  
       ELSE                                                              
-        PSIYY0 = A * ( C + B*(1.D0+EPS*X)**2.0   ) - PSIXX                  
+        PSIYY0 = A * ( C + B*(1.D0+EPS*X)**2   ) - PSIXX                  
       ENDIF                                                             
       CX = PSIXX/2.D0                                                     
       CY = PSIYY0/2.D0                                                    
@@ -4056,7 +3464,7 @@ ccc      WRITE(*,3) CX,CY
         XX(1,NODE) = XAXIS                                              
         YY(1,NODE) = YAXIS                                              
         TN = TAN(THTKN(J))                                              
-        TN2 = TN**2.0                                                    
+        TN2 = TN**2                                                     
         CN = DCOS(THTKN(J))                                              
         IF (THTKN(J).EQ.(PI/2.D0)) THEN                                   
           XX(2,NODE) = 0.D0                                               
@@ -4075,7 +3483,7 @@ ccc      WRITE(*,3) CX,CY
      >  *dble(NRNEW-1))  
         YY(2,NODE)=-DABS(TN)/(DSQRT(DABS(CX+CY*TN2))*2.D0*dble(NRNEW-1))     
         XX(4,NODE) = + (CX+CY*TN2)**(-1.5D0) * CY * DABS(TN)              
-     >    / (CN**2.0 * 2.D0*FACTAS*dble(NRNEW-1)*dble(NPNEW-1)/PI)        
+     >    / (CN**2 * 2.D0*FACTAS*dble(NRNEW-1)*dble(NPNEW-1)/PI)        
          YY(4,NODE) = - CX * (CX + CY*TN2)**(-1.5D0) / (CN*DABS(CN)       
      >              * 2.D0*FACTAS*dble(NRNEW-1)*dble(NPNEW-1)/PI)                 
         ENDIF                                                           
@@ -4093,7 +3501,7 @@ ccc      WRITE(*,3) CX,CY
    60 CONTINUE                                                          
       DO 80 I=1,NRNEW*NPNEW                                             
         IF (.NOT. CHAGR(I)) THEN
-c	   WRITE(*,*) 'NODE MISSED AT I = ',I         
+	   WRITE(*,*) 'NODE MISSED AT I = ',I         
 	   IFAIL = I
 	ENDIF
    80 CONTINUE                                                          
@@ -4106,16 +3514,7 @@ c      CALL PRARR1('X : ',XX,4*NRNEW*NPNEW,203)
 c      CALL PRARR1('Y : ',YY,4*NRNEW*NPNEW,203)                         
 c      CALL PRARR1('PSI : ',PSI,4*NRNEW*NPNEW,203)                                                                                        
       RETURN                                                            
-      END                                                                
-
-
-
-
-
-
-
-
-
+      END                                                               
                                                                         
 ************************************************************************
       SUBROUTINE PSIMIMA(N,PSI,PSIMIN,PSIMAX)                           
@@ -4127,16 +3526,16 @@ C   PSI : VECTOR WITH PSI VALUES
 C   PSIMIN,PSIMAX : THE RESULTING MINIMUM AND MAXIMUM VALUES OF PSI     
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       real*8 PSI(*)                                                       
                                                                         
@@ -4162,7 +3561,7 @@ C-----------------------------------------------------------------------
         AA =  3.D0 * (PSIM + PSIMR - PSIP + PSIPR ) / 4.D0                  
         BB =  ( - PSIMR + PSIPR ) / 2.D0                                  
         CC =  ( - 3.D0*PSIM - PSIMR + 3.D0*PSIP - PSIPR) / 4.D0                 
-        DET = BB**2.0 - 4.D0*AA*CC                                           
+        DET = BB**2 - 4.D0*AA*CC                                           
         IF (DET.GT.0.D0) THEN                                             
            R = (-BB + DSQRT(DET) ) / (2.D0*AA)                    
            IF (DABS(R).GT.1.D0) THEN                                       
@@ -4182,27 +3581,21 @@ C-----------------------------------------------------------------------
    10 CONTINUE                                                          
       RETURN                                                            
       END                                                               
- 
-
-
-
-
-
-                                                                         
+                                                                        
 ************************************************************************
       SUBROUTINE THTMIMA(N,NP,XX,YY,XAXIS,YAXIS,THTMIN,THTMAX)          
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
        real*8 XX(4,*), YY(4,*)                                             
                                                                         
@@ -4229,14 +3622,7 @@ C-----------------------------------------------------------------------
       ENDIF                                                             
       RETURN                                                            
       END                                                               
-
-
-
-
-
-
-      
-
+                                                                        
 ************************************************************************
 *DECK SOLVP3
       SUBROUTINE SOLVP3(C0,C1,C2,C3,X1,X2,X3,IFAIL)
@@ -4245,7 +3631,7 @@ C SOLVES A CUBIC EQUATION WITH A SOLUTION WITH -1.< X < 1
 C CN : THE COEFFICIENT OF X**N, X : THE REAL SOLUTION WITH -1.< X < 1.
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       REAL*8 C0,C1,C2,C3,X1,X2,X3
 
       X1 = 99.D0
@@ -4258,7 +3644,7 @@ c------------------------------------- 2nd order poly for small c3
         AA = C2
         BB = C1
         CC = C0
-        DET = BB**2.0 - 4*AA*CC
+        DET = BB**2 - 4*AA*CC
         IF (DET.GT.0.D0) THEN
           X1 = ROOT(AA,BB,CC,DET,1.D0)
           IF (ABS(X1).GT.1.+TOL) THEN
@@ -4274,9 +3660,9 @@ c------------------------------------- 3rd order poly solution
       A0 = C0 / C3                                                      
       A1 = C1 / C3                                                      
       A2 = C2 / C3                                                      
-      P = - (A2**2.0)/3.D0 + A1                                             
-      Q = 2.D0/27.D0*(A2**3.0) - A2 * A1/3.D0 + A0                              
-      DET = (P/3.D0)**3.0 + (Q/2.D0)**2.0                                       
+      P = - (A2**2)/3.D0 + A1                                             
+      Q = 2.D0/27.D0*(A2**3) - A2 * A1/3.D0 + A0                              
+      DET = (P/3.D0)**3 + (Q/2.D0)**2                                       
       IF (DET.GE.0.D0) THEN                                                
         U  = DSIGN(1.D0,-Q/2.D0+SQRT(DET))
      >   *ABS(-Q/2.D0 + SQRT(DET))**(1.D0/3.D0)   
@@ -4286,7 +3672,7 @@ c------------------------------------- 3rd order poly solution
         IF (ABS(X1).GE.(1.D0+TOL)) IFAIL = 1                               
       ELSE                                                              
         P = -P                                                          
-        ANGLE = DSIGN(1.D0,P)*ACOS((Q/2.D0)/SQRT(DABS(P)/3.D0)**3.0)              
+        ANGLE = DSIGN(1.D0,P)*ACOS((Q/2.D0)/SQRT(DABS(P)/3.D0)**3)              
         X1 = -2.D0*SQRT(DABS(P)/3.D0)*COS(ANGLE/3.D0) - A2/3.D0                   
         X2 = -2.D0*SQRT(DABS(P)/3.D0)*COS(2*PI/3.D0-ANGLE/3.D0)-A2/3.D0        
         X3 = -2.D0*SQRT(DABS(P)/3.D0)*COS(2*PI/3.D0+ANGLE/3.D0)-A2/3.D0        
@@ -4310,13 +3696,7 @@ c------------------------------------- 3rd order poly solution
       IF (ABS(X1).GT.(1.D0+TOL)) IFAIL=1                                  
       RETURN                                                            
       END        
-               
-
-
-
-
-
-                               
+                                              
                                                                         
 ************************************************************************
       SUBROUTINE PROFILES(P0,RBPHI,DP,DRBPHI,A)                         
@@ -4324,10 +3704,10 @@ C-----------------------------------------------------------------------
 C SUBROUTINE TO INTEGRATE THE EQUILIBRIUM PROFILES                      
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
@@ -4346,9 +3726,8 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON /NODES/ PSIKN,THTKN,RADPSI,DPSIKN,DDPSIKN                                   
       REAL*8    PSIKN(NRMMAX),THTKN(NPMMAX),RADPSI(NRMMAX) 
@@ -4372,16 +3751,11 @@ C---------------------------- DERIVATIVES TO R = SQRT(PSI) !!!! --------
           RBPHI(J) = - EPS * A * C * XGAMMA(FLUX)                       
           DRBPHI(J) = EPS * 2.D0*A*C * DGDPSI(FLUX) * DSQRT(DABS(FLUX))          
         ENDIF                                                           
-        RBPHI(J) = DSQRT(DABS(1.D0 - 2.D0*EPS*RBPHI(J) /ALFA**2.0))                 
-        DRBPHI(J) = - 1.D0/(2.D0*RBPHI(J)) * 2.D0*EPS*DRBPHI(J)/ALFA**2.0       
+        RBPHI(J) = DSQRT(DABS(1.D0 - 2.D0*EPS*RBPHI(J) /ALFA**2))                 
+        DRBPHI(J) = - 1.D0/(2.D0*RBPHI(J)) * 2.D0*EPS*DRBPHI(J)/ALFA**2       
    10 CONTINUE                                                          
       RETURN                                                            
       END                                                               
- 
-
-
-
-
                                                                         
 *********************************************************************** 
       REAL*8 FUNCTION PRES(FLUX)                                               
@@ -4389,9 +3763,9 @@ C-----------------------------------------------------------------------
 C PRESSURE PROFILE AS A FUNCTION OF PSI                                 
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
@@ -4410,14 +3784,13 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
       NPT=1001                                                          
       NINT = INT((NPT-1)*FLUX)+1                                        
@@ -4430,27 +3803,17 @@ C-----------------------------------------------------------------------
       SUM  = SUM + DPSI * (DPRI + DPRES(NINT+1))/2.                     
       PRES = SUM                                                        
       RETURN                                                            
-      END   
-
-
-
-
-
-
-
-
-
-
-      
+      END                                                               
+                                                                        
 ************************************************************************
       REAL*8 FUNCTION XGAMMA(FLUX)                                             
 C-----------------------------------------------------------------------
 C SECOND PROFILE AS A FUNCTION OF PSI                                   
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
@@ -4469,14 +3832,13 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
       NPT=1001                                                          
       NINT = INT((NPT-1)*FLUX)+1                                        
@@ -4491,14 +3853,7 @@ C-----------------------------------------------------------------------
       RETURN                                                            
       END                                                               
                                                                         
-   
-
-
-
-
-
-
-
+                                                                        
                                                                         
 ************************************************************************
       SUBROUTINE DIAGNO(XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IAS,IGAM,XAXIS,  
@@ -4510,16 +3865,16 @@ C----------------------------------------------------------------------
 C SUBROUTINE TO EVALUATE OUTPUT QUANTITIES                              
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON /GAUSINT/ XGAUSS,WGAUSS,H,HR,HS,HRS                        
       real*8 XGAUSS(4),WGAUSS(4)                                          
@@ -4547,11 +3902,11 @@ C-----------------------------------------------------------------------
       R0 = 1.D0                                                           
       B0 = 1.D0                                                           
       RADIUS = EPS * R0                                                 
-      CPSURF = RADIUS**2.0 * B0 / ALFA                                    
+      CPSURF = RADIUS**2 * B0 / ALFA                                    
                                                                         
       CALL PROFILES(P0,FF,DP,DF,A)                                      
                                                                         
-      PSCALE = B0**2.0 * EPS / ALFA**2.0                                    
+      PSCALE = B0**2 * EPS / ALFA**2                                    
       RBSCALE = B0 * R0                                                 
       DO 90 I = 1,NR                                                    
         P0(I) = P0(I) * PSCALE                                          
@@ -4590,25 +3945,25 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
             CALL INTERP(PSI(4*(N1-1)+1),PSI(4*(N2-1)+1),                
      >                PSI(4*(N3-1)+1),PSI(4*(N4-1)+1),                  
      >                R,S,PS,PSR,PSS,PSRS,PSRR,PSSS)                    
-            XJAC =  (XR*YS - XS*YR) * RADIUS**2.0                         
+            XJAC =  (XR*YS - XS*YR) * RADIUS**2                         
             AREA = AREA + WR * WS * XJAC                                
             VOLUME = VOLUME + (1.D0+EPS*X) * WR * WS * XJAC               
-            GRPS2  = PSR**2.0 * RADIUS**2.0 * (XS**2.0 + YS**2.0) / XJAC**2.0     
-            BP2    = GRPS2 / (1.D0+EPS*X)**2.0                           
+            GRPS2  = PSR**2 * RADIUS**2 * (XS**2 + YS**2) / XJAC**2     
+            BP2    = GRPS2 / (1.D0+EPS*X)**2                              
             BP2VOL = BP2VOL + (1.D0+EPS*X) * BP2 *WR*WS*XJAC              
             PRESS  = PRES(PS)                                           
             PAREA  = PAREA + WR * WS * XJAC * PRESS                     
-            PAR2   = PAR2  + WR * WS * XJAC * PRESS**2.0                  
+            PAR2   = PAR2  + WR * WS * XJAC * PRESS**2                  
             IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                       
               ARHS = DGDPSI(PS) + B*X*(1.+EPS*X/2.D0)*DPDPSI(PS)          
               P0J =  .5D0 * A * B * PRES(PS)                              
               GAM = A * C * XGAMMA(PS)                                      
               RBPHIJ = P0J - EPS * GAM                                  
             ELSE                                                        
-              ARHS = C*DGDPSI(PS) + B*(1.+EPS*X)**2.0 * DPDPSI(PS)        
+              ARHS = C*DGDPSI(PS) + B*(1.+EPS*X)**2 * DPDPSI(PS)        
               RBPHIJ = - EPS * A * C * XGAMMA(PS)                       
             ENDIF                                                       
-            RBPHIJ = DSQRT(DABS( 1.D0 - 2.D0*EPS*RBPHIJ /ALFA**2.0) )                
+            RBPHIJ = DSQRT(DABS( 1.D0 - 2.D0*EPS*RBPHIJ /ALFA**2) )                
             ARHS =  ARHS / (1.D0+EPS*X)                                   
             CAREA = CAREA + WR * WS * XJAC * ARHS                       
             PTAR  = PTAR  + WR * WS * XJAC * RBPHIJ / (1.+EPS*X)        
@@ -4633,21 +3988,21 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
       RAV = VOLUME / AREA                                               
       IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                             
         PAREA = FACTAS * 0.5D0 * A * B * PAREA                            
-        PAR2  = FACTAS * (0.5D0*A*B)**2.0 * PAR2                            
+        PAR2  = FACTAS * (0.5D0*A*B)**2 * PAR2                            
         CAREA = FACTAS * A * CAREA                                      
       ELSE                                                              
         PAREA =  FACTAS * EPS * A * B * PAREA                           
-        PAR2  =  FACTAS * (EPS * A * B)**2.0 * PAR2                       
+        PAR2  =  FACTAS * (EPS * A * B)**2 * PAR2                       
         CAREA =  FACTAS * A * CAREA                                     
       ENDIF                                                             
       VOLUME = 2.D0 * PI * VOLUME                                          
-      XLI = DABS(4.D0*FACTAS*PI * EPS**4 * BP2VOL / (RAV * CAREA**2.0))
+      XLI = DABS(4.D0*FACTAS*PI * EPS**4 * BP2VOL / (RAV * CAREA**2))
 c      write(6,*) 'Volume',VOLUME,' aire',AREA,' EPS',EPS
 c      write(6,*) ' FACTAS',FACTAS
 c      write(6,*) 'BP2VOL',BP2VOL,' <R>',RAV,' CAREA',CAREA       
-      BETA   = 2.D0* (EPS/ALFA**2.0) * DABS(PAREA) / AREA                     
-      BETASTAR = 2.D0 * (EPS/ALFA**2.0) * DSQRT(DABS(PAR2)/AREA)               
-      BETAPL = (8.D0*PI*EPS)    * DABS(PAREA) / CAREA**2.0                    
+      BETA   = 2.D0* (EPS/ALFA**2) * DABS(PAREA) / AREA                     
+      BETASTAR = 2.D0 * (EPS/ALFA**2) * DSQRT(DABS(PAR2)/AREA)               
+      BETAPL = (8.D0*PI*EPS)    * DABS(PAREA) / CAREA**2                    
       CURRENT  = DABS(CAREA) / (EPS*ALFA)                                
                                                                         
 c      WRITE(*,*)                                                       
@@ -4728,67 +4083,67 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
           XJAC =  XR*YS - XS*YR                                         
           XJACR = XRR*YS + XR*YRS - XRS*YR - XS*YRR                     
                                                                         
-          DL = DSQRT(XS**2.0+YS**2.0)                                        
+          DL = DSQRT(XS**2+YS**2)                                        
           BIGR = (1.D0 + EPS * X)                                         
-	  GRADPS2 = PSR**2.0 * (XS**2.0 + YS**2.0) / XJAC**2.0                         
+	  GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
           DSSDR = DABS(PSR) / (2.D0*DSQRT(DABS(PS)))                              
 c------------------------------------------------ normalisations	       
-	  GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2.0                              
-	  XJAC    = XJAC * RADIUS**2.0                                           
+	  GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2                               
+	  XJAC    = XJAC * RADIUS**2                                           
 	  BIGR    = BIGR                                                       
 	  DL      = RADIUS * DL                                                
 	  PSR     = CPSURF * PSR                                               
           PSRR    = CPSURF * PSRR                                       
-	  XJACR   = XJACR  * RADIUS**2.0                                         
+	  XJACR   = XJACR  * RADIUS**2                                         
 c---------------------------------------------------------------        
                                                                         
 	  ZJDCHI = BIGR * XJAC / DABS(PSR)                                      
 	                                                                       
-	  SUMJ1 = SUMJ1 - WS * ZJDCHI / (GRADPS2 * BIGR**2.0)                    
+	  SUMJ1 = SUMJ1 - WS * ZJDCHI / (GRADPS2 * BIGR**2)                    
 	  SUMJ2 = SUMJ2 - WS * ZJDCHI / (GRADPS2)                              
-	  SUMJ3 = SUMJ3 - WS * ZJDCHI * (BIGR**2.0 / GRADPS2)                    
-	  SUMJ4 = SUMJ4 - WS * ZJDCHI / BIGR**2.0                                
+	  SUMJ3 = SUMJ3 - WS * ZJDCHI * (BIGR**2 / GRADPS2)                    
+	  SUMJ4 = SUMJ4 - WS * ZJDCHI / BIGR**2                                
 	  SUMJ5 = SUMJ5 - WS * ZJDCHI                                          
-	  SUMJ6 = SUMJ6 - WS * ZJDCHI * GRADPS2 / BIGR**2.0                      
+	  SUMJ6 = SUMJ6 - WS * ZJDCHI * GRADPS2 / BIGR**2                      
           SUMJ7 = SUMJ7 - WS * ZJDCHI * GRADPS2                         
           SUMJ8 = SUMJ8 - WS * ZJDCHI / BIGR                            
           SUMJ9 = SUMJ9 - WS * ZJDCHI * SQRT(GRADPS2)
 	  SUMJ10 = SUMJ10 - WS * ZJDCHI * BIGR
 	  SUMJ11 = SUMJ11 - WS * ZJDCHI * XJAC / (DABS(PSR)*DTDS)
           SUMJ12 = SUMJ12 - WS * ZJDCHI * SQRT(GRADPS2)/BIGR
-          SUMJ13 = SUMJ13 - WS * ZJDCHI * BIGR**2.0
-          SUMJ14 = SUMJ14 - WS * ZJDCHI * BIGR**2.0 / 
-     >                      (XJAC / (DABS(PSR)*DTDS))**2.0
-          SUMJ16 = SUMJ16 - WS * ZJDCHI * BIGR**3.0 /
-     >                      (XJAC / (DABS(PSR)*DTDS))**3.0
-          SUMJ17 = SUMJ17 - WS * ZJDCHI * BIGR**3.0 /
+          SUMJ13 = SUMJ13 - WS * ZJDCHI * BIGR**2
+          SUMJ14 = SUMJ14 - WS * ZJDCHI * BIGR**2 / 
+     >                      (XJAC / (DABS(PSR)*DTDS))**2
+          SUMJ16 = SUMJ16 - WS * ZJDCHI * BIGR**3 /
+     >                      (XJAC / (DABS(PSR)*DTDS))**3
+          SUMJ17 = SUMJ17 - WS * ZJDCHI * BIGR**3 /
      >                      (XJAC / (DABS(PSR)*DTDS))
 
 	  SUMQ  = SUMQ  - WS * XJAC / ( BIGR * DABS(PSR))                
                                                                         
-          SUMQR = SUMQR + PSRR * XJAC / ((PSR**2.0)*BIGR) * WS            
+          SUMQR = SUMQR + PSRR * XJAC / ((PSR**2)*BIGR) * WS            
           SUMQR = SUMQR - XJACR / (BIGR*PSR)            * WS            
-          SUMQR = SUMQR + XJAC*EPS*XR/((BIGR**2.0)*PSR)   * WS            
+          SUMQR = SUMQR + XJAC*EPS*XR/((BIGR**2)*PSR)   * WS            
 	                                                                       
-	  SUMJ5R = SUMJ5R + XJAC  * BIGR * PSRR / (PSR**2.0) * WS                
+	  SUMJ5R = SUMJ5R + XJAC  * BIGR * PSRR / (PSR**2) * WS                
 	  SUMJ5R = SUMJ5R - XJACR * BIGR / PSR             * WS                
 	  SUMJ5R = SUMJ5R - XJAC  * EPS *XR / PSR          * WS                
 	                                                                       
 c-----------------------------------------------------------------      
                                                                         
-          B02 = (FF(NR-I+1)/BIGR)**2.0 + GRADPS2/BIGR**2.0                  
+          B02 = (FF(NR-I+1)/BIGR)**2 + GRADPS2/BIGR**2                  
                                                                         
           SUMJ15 = SUMJ15 - WS * ZJDCHI * GRADPS2 / B02
           SUMB0  = SUMB0  - WS * ZJDCHI * B02                           
           SUMBOP = SUMBOP - WS * ZJDCHI * B02 / GRADPS2                 
-	  SUMOR2 = SUMOR2 - WS * ZJDCHI / BIGR**2.0                              
+	  SUMOR2 = SUMOR2 - WS * ZJDCHI / BIGR**2                              
           SUMOB  = SUMOB  - WS * ZJDCHI / B02                           
                                                                         
-          XLENGTH = XLENGTH + RADIUS**2.0 * DSQRT(XS**2.0 + YS**2.0)*WS      
+          XLENGTH = XLENGTH + RADIUS**2 * DSQRT(XS**2 + YS**2)*WS      
           IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                         
             ARHS = C*DGDPSI(PS) + B*X*(1.D0+EPS*X/2.D0)*DPDPSI(PS)            
           ELSE                                                          
-            ARHS = C*DGDPSI(PS) + B*(1.D0+EPS*X)**2.0 * DPDPSI(PS)          
+            ARHS = C*DGDPSI(PS) + B*(1.D0+EPS*X)**2 * DPDPSI(PS)          
           ENDIF                                                         
           ARHS =  ARHS / (1.D0+EPS*X)                                     
           AVCUR = AVCUR + WS * ARHS * ZJDCHI/(1.D0+EPS*X)   
@@ -4838,15 +4193,15 @@ c-----------------------------------------------------------------
                                                                         
         BIGG(NI) = FACTAS * SUMBOP / (2.D0*PI)                            
 	                                                                       
-	DIMERC(NI) = (DP(NI)*FF(NI)*ZJJ2(NI)/DQ(NI)-0.5D0)**2.0                  
-     >     +  DP(NI)/DQ(NI)**2.0 * (DJJ5(NI) - DP(NI)*ZJJ3(NI))           
-     >     * (FF(NI)**2.0 * ZJJ1(NI) + ZJJ4(NI) )                         
+	DIMERC(NI) = (DP(NI)*FF(NI)*ZJJ2(NI)/DQ(NI)-0.5D0)**2                  
+     >     +  DP(NI)/DQ(NI)**2 * (DJJ5(NI) - DP(NI)*ZJJ3(NI))           
+     >     * (FF(NI)**2 * ZJJ1(NI) + ZJJ4(NI) )                         
 	                                                                       
 	HH(NI) = FF(NI) * DP(NI)/DQ(NI) * (ZJJ2(NI)                            
-     >    - ZJJ5(NI)*(ZJJ4(NI)+FF(NI)**2.0 * ZJJ1(NI))                    
-     >    / (ZJJ6(NI) + FF(NI)**2.0 * ZJJ4(NI) ) )                        
+     >    - ZJJ5(NI)*(ZJJ4(NI)+FF(NI)**2 * ZJJ1(NI))                    
+     >    / (ZJJ6(NI) + FF(NI)**2 * ZJJ4(NI) ) )                        
                                                                         
-        DRMERC(NI) = DIMERC(NI) - (HH(NI) - 0.5D0)**2.0                     
+        DRMERC(NI) = DIMERC(NI) - (HH(NI) - 0.5D0)**2                     
                                                                         
         SHEAR = DSQRT(DABS(PS)) * DQ(NI) / ZQ(NI)                              
                                                                         
@@ -4856,7 +4211,7 @@ c      AVC(1) = AVC(2) - (AVC(3)-AVC(2))/(ZPS(3)-ZPS(2))*ZPS(2)
       IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                             
          CUR0 = (C+B*XAXIS*(1.D0+EPS*XAXIS/2.D0))/(1.D0+EPS*XAXIS)           
       ELSE                                                              
-         CUR0 = (C+B*(1.D0+EPS*XAXIS)**2.0)/(1.D0+EPS*XAXIS)                 
+         CUR0 = (C+B*(1.D0+EPS*XAXIS)**2)/(1.D0+EPS*XAXIS)                 
       ENDIF                                                             
       AVC(1) = A * CUR0 / ALFA   
 
@@ -4887,18 +4242,13 @@ c          ERR = AVC(I)/AVC(1) - CURPHI(ZPS(I))
 c          WRITE(*,72) I,ZPS(I),SQRT(ZPS(I)),AVC(I)/AVC(1),             
 c     >               ERR,XL(I),ZQ(I),P0(I)                              
 c      ENDDO                                                             
-c      WRITE(*,*) '***********************************************'
+c      WRITE(*,*) '***********************************************'     
 c     >             //'******************'                               
-c      WRITE(*,*)
+c      WRITE(*,*)                                                       
 c                                                                        
    72 FORMAT(I3,3F8.4,1PE10.2,0P,5F8.4)                                 
       RETURN                                                            
       END                                                               
-
-
-
-
-
 
 ************************************************************************
 *DECK TRIANG
@@ -4910,16 +4260,16 @@ C OF THE MINOR RADIUS (GEOMETRICAL DEFINITION)
 C----------------------------------------------------------------------
 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON /GAUSINT/ XGAUSS,WGAUSS,H,HR,HS,HRS                        
       real*8 XGAUSS(4),WGAUSS(4)                                          
@@ -5043,7 +4393,7 @@ C     valeur sur l'axe magnetique
 c      WITH FOURIER DECOMPOSITION :
 C
 c      WRITE(*,*) '**************************************************'
-c      WRITE(*,*) '*  ELLIPTICITY AND TRIANGULARITY   (FOURIER CO.) *'
+c      WRITE(*,*) '*  ELLIPTICITY AND TRIANGULARITY   (FOURIER CO.) *' 
 c      WRITE(*,*) '**************************************************'
 c      WRITE(*,*) '* INDEX,  S,    RADIUS,   SHIFT,   ELLIP,   TRIA *'
 c      WRITE(*,*) '**************************************************'
@@ -5111,16 +4461,9 @@ c   11 FORMAT(I3,5E16.8)
       RETURN
       END
                                                                       
-      
 
-
-
-
-
-
-
-
-
+                                                                      
+                                                                        
 ************************************************************************
       SUBROUTINE FLXINT(XAXIS,XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,           
      >                  IGAM,ISOL,IAS)                                  
@@ -5128,16 +4471,16 @@ C----------------------------------------------------------------------
 C SUBROUTINE TO EVALUATE NEW DF2 PROFILE                                
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON /GAUSINT/ XGAUSS,WGAUSS,H,HR,HS,HRS                        
       real*8 XGAUSS(4),WGAUSS(4)                                          
@@ -5148,7 +4491,7 @@ C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
       real*8 XX(4,MAXMNODE),YY(4,MAXMNODE),PSI(4*MAXMNODE)                
       real*8 AVC(NRMMAX),XL(NRMMAX),ZPS(NRMMAX)                           
@@ -5163,7 +4506,7 @@ C-----------------------------------------------------------------------
       IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                             
          CUR0 = (C+B*XAXIS*(1.D0+EPS*XAXIS/2.D0))/(1.D0+EPS*XAXIS)           
       ELSE                                                              
-         CUR0 = (C+B*(1.D0+EPS*XAXIS)**2.0)/(1.D0+EPS*XAXIS)                 
+         CUR0 = (C+B*(1.D0+EPS*XAXIS)**2)/(1.D0+EPS*XAXIS)                 
       ENDIF                                                             
       DF2TMP(1) = 1.D0                                                    
 C------------------------------------- NELM ELEMENTS ------------------ 
@@ -5191,14 +4534,14 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
      >                PSI(4*(N4-1)+1),                                  
      >                R,S,PS,PSR,PSS,PSRS,PSRR,PSSS)                    
           XJAC =  XR*YS - XS*YR                                         
-          DL = DSQRT(XS**2.0+YS**2.0)            
+          DL = DSQRT(XS**2+YS**2)            
           BIGR = (1.D0 + EPS * X)                                         
 	  ZJDCHI = BIGR * XJAC / DABS(PSR)  
           XLENGTH = XLENGTH + DL * WS                                   
-          SUMC1 = SUMC1 + 1.D0/(1.D0+EPS*X)**2.0 * ZJDCHI * WS
+          SUMC1 = SUMC1 + 1.D0/(1.D0+EPS*X)**2 * ZJDCHI * WS
 	  SUMC3 = SUMC3 + 1.D0/(1.D0+EPS*X) * ZJDCHI * WS 
           IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                         
-             SUMC2 = SUMC2 + X*(1.D0+EPS*X/2.)/(1.D0+EPS*X)**2.0
+             SUMC2 = SUMC2 + X*(1.D0+EPS*X/2.)/(1.D0+EPS*X)**2
      >                     * ZJDCHI * WS       
           ELSE                                                          
              SUMC2 = SUMC2 + ZJDCHI * WS                    
@@ -5214,9 +4557,8 @@ c     >       / (C*SUMC1)
    40 CONTINUE                                                          
 c------------------------------------- calc equidistant gamma profile   
       DF2TMP(1) = 1.D0                                                    
-      ZPS(1) = 0.D0     
-      ISPLINE = 2                                                  
-      CALL SPLINE(NR,ZPS,DF2TMP,0.D0,0.D0,ISPLINE,DD1,DD2,DD3,DD4)                
+      ZPS(1) = 0.D0                                                       
+      CALL SPLINE(NR,ZPS,DF2TMP,0.D0,0.D0,2,DD1,DD2,DD3,DD4)                
       DO 70 I=2,NPTS                                                    
         IF ((IGAM.EQ.2).OR.(IGAM.EQ.11)) THEN                           
           SS = dble(I-1)/dble(NPTS-1)                                   
@@ -5228,13 +4570,7 @@ c------------------------------------- calc equidistant gamma profile
    70 CONTINUE                                                          
        DF2(1) = 1.D0            
       RETURN                                                            
-      END 
-
-
-
-
-
-                                                            
+      END                                                               
 ************************************************************************
       SUBROUTINE FLXINT2(XAXIS,XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,           
      >                  IGAM,ISOL,IAS)                                  
@@ -5242,16 +4578,16 @@ C----------------------------------------------------------------------
 C SUBROUTINE TO EVALUATE NEW DF2 PROFILE                                
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON /GAUSINT/ XGAUSS,WGAUSS,H,HR,HS,HRS                        
       real*8 XGAUSS(4),WGAUSS(4)                                          
@@ -5262,7 +4598,7 @@ C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
       real*8 XX(4,MAXMNODE),YY(4,MAXMNODE),PSI(4*MAXMNODE)                
       real*8 AVC(NRMMAX),XL(NRMMAX),ZPS(NRMMAX)                           
@@ -5277,7 +4613,7 @@ C-----------------------------------------------------------------------
       IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                             
          CUR0 = (C+B*XAXIS*(1.D0+EPS*XAXIS/2.D0))/(1.D0+EPS*XAXIS)           
       ELSE                                                              
-         CUR0 = (C+B*(1.D0+EPS*XAXIS)**2.0)/(1.D0+EPS*XAXIS)                 
+         CUR0 = (C+B*(1.D0+EPS*XAXIS)**2)/(1.D0+EPS*XAXIS)                 
       ENDIF                                                             
       DF2TMP(1) = 1.D0                                                    
 C------------------------------------- NELM ELEMENTS ------------------ 
@@ -5304,7 +4640,7 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
      >                PSI(4*(N4-1)+1),                                  
      >                R,S,PS,PSR,PSS,PSRS,PSRR,PSSS)                    
           XJAC =  XR*YS - XS*YR                                         
-          DL = DSQRT(XS**2.0+YS**2.0)                                        
+          DL = DSQRT(XS**2+YS**2)                                        
           XLENGTH = XLENGTH + DL * WS                                   
           SUMC1 = SUMC1 + 1.D0/(1.D0+EPS*X) * DL * WS                       
           IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN                         
@@ -5333,24 +4669,7 @@ c------------------------------------- calc equidistant gamma profile
    70 CONTINUE                                                          
        DF2(1) = 1.D0                                                      
       RETURN                                                            
-      END   
-
-
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      END                                                                                                             
 ************************************************************************
       SUBROUTINE CURRENT(XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,                
      >                   IGAM,ISOL,CUR,IAS)                             
@@ -5358,16 +4677,16 @@ C----------------------------------------------------------------------
 C SUBROUTINE TO EVALUATE NEW DF2 PROFILE                                
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON /GAUSINT/ XGAUSS,WGAUSS,H,HR,HS,HRS                        
       real*8 XGAUSS(4),WGAUSS(4)                                          
@@ -5378,7 +4697,7 @@ C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
       real*8 XX(4,MAXMNODE),YY(4,MAXMNODE),PSI(4*MAXMNODE)                
                                                                         
@@ -5406,28 +4725,18 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
      >                PSI(4*(N4-1)+1),                                  
      >                R,S,PS,PSR,PSS,PSRS,PSRR,PSSS)                    
           XJAC =  XR*YS - XS*YR                                         
-          DL = DSQRT(XS**2.0+YS**2.0)                                        
+          DL = DSQRT(XS**2+YS**2)                                        
           XLENGTH = XLENGTH + DL * WS                                   
-	  GRADPS2 = PSR**2.0 * (XS**2.0 + YS**2.0) / XJAC**2.0                         
+	  GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
           SUMC1 = SUMC1 + DSQRT(GRADPS2)/(1.D0+EPS*X) * DL * WS            
    60     CONTINUE                                                      
    50   CONTINUE                                                        
         CUR = FACTAS * SUMC1 * EPS / ALFA                               
       RETURN                                                            
       END                                                               
-                                                                                                                                     
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                        
+                                                                        
+************************************************************************
                                                                         
 ************************************************************************
       SUBROUTINE CIRCUL(XX,YY,PSI,NR,NP,A,B,C,EPS,ALFA,IGAM,IAS,        
@@ -5436,16 +4745,16 @@ C----------------------------------------------------------------------
 C SUBROUTINE FOR THE FRACTION OF CIRCULATING PARTICLES                  
 C---------------------------------------------------------------------- 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON /GAUSINT/ XGAUSS,WGAUSS,H,HR,HS,HRS                        
       real*8 XGAUSS(4),WGAUSS(4)                                          
@@ -5456,7 +4765,7 @@ C-----------------------------------------------------------------------
       COMMON/COMPROF/DPR,DF2,ZJZ,QIN,DPRES,DGAM,PINT,GINT,NPTS          
       real*8    DPR(NPTSMAX),DF2(NPTSMAX),ZJZ(NPTSMAX),QIN(NPTSMAX),      
      >        DPRES(1001),DGAM(1001),PINT(1001),GINT(1001)              
-      mwSize NPTS                                                      
+      integer NPTS                                                      
 C-----------------------------------------------------------------------
       COMMON / COMPIE/ PI                                               
       real*8 PI                                                           
@@ -5472,7 +4781,7 @@ C
       R0 = 1.D0                                                           
       B0 = 1.D0                                                           
       RADIUS = EPS * R0                                                 
-      CPSURF = RADIUS**2.0 * B0 / ALFA                                    
+      CPSURF = RADIUS**2 * B0 / ALFA                                    
                                                                         
       CALL PROFILES(P0TMP,FTMP,DPTMP,DFTMP,A)                           
                                                                         
@@ -5507,15 +4816,15 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
                                                                         
           XJAC =  XR*YS - XS*YR                                         
           BIGR = (1.D0 + EPS * X)                                         
-	  GRADPS2 = PSR**2.0 * (XS**2.0 + YS**2.0) / XJAC**2.0                         
+	  GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
 c------------------------------------------------ normalisations	       
-	  GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2.0                               
-	  XJAC    = XJAC * RADIUS**2.0                                           
+	  GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2                               
+	  XJAC    = XJAC * RADIUS**2                                           
 	  BIGR    = BIGR                                                       
 	  PSR     = CPSURF * PSR                                               
 c---------------------------------------------------------------        
 	  ZJDCHI = BIGR * XJAC / DABS(PSR)                                      
-          B02 = (FTMP(NR-I+1)/BIGR)**2.0 + GRADPS2/BIGR**2                
+          B02 = (FTMP(NR-I+1)/BIGR)**2 + GRADPS2/BIGR**2                
 	  SUM1  = SUM1 - WS * ZJDCHI                                           
           SUM2  = SUM2 - WS * ZJDCHI * B02                              
           SUMR  = SUMR - WS * ZJDCHI * BIGR                             
@@ -5562,13 +4871,13 @@ C------------------------------------- 4 POINT GAUSSIAN INT. IN S -----
           BIGR = (1.D0 + EPS * X)                                         
 	  GRADPS2 = PSR**2 * (XS**2 + YS**2) / XJAC**2                         
 c------------------------------------------------ normalisations	       
-	  GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2.0                               
+	  GRADPS2 = GRADPS2 * (CPSURF/RADIUS)**2                               
 	  XJAC    = XJAC * RADIUS**2                                           
 	  BIGR    = BIGR                                                       
 	  PSR     = CPSURF * PSR                                               
 c---------------------------------------------------------------        
 	  ZJDCHI = BIGR * XJAC / DABS(PSR)                                      
-          B02 = (FTMP(NR-I+1)/BIGR)**2.0 + GRADPS2/BIGR**2                
+          B02 = (FTMP(NR-I+1)/BIGR)**2 + GRADPS2/BIGR**2                
 	  B0 = DSQRT(DABS(B02))                                                       
 	  BM = B0MAX(NR-I+1)                                                   
 	  DO K = 1, NK                                                         
@@ -5590,7 +4899,7 @@ c------------------------------------------ integrate over lambda
 	  SUM = SUM + ZLAM * SUM1 / SUMK(K)                                    
 	ENDDO                                                                  
 	FCIRC(NI) = (SUM + 0.5D0 * SUM1/SUMK(NK)) / dble(NK-1)                  
-	FCIRC(NI) = 0.75D0 * FCIRC(NI)  * B02AV(NI) / B0MAX(NI)**2.0               
+	FCIRC(NI) = 0.75D0 * FCIRC(NI)  * B02AV(NI) / B0MAX(NI)**2               
 ccc        WRITE(*,41) I,SQRT(PS),B02AV(NI),B0MAX(NI),FCIRC(NI)        
   140 CONTINUE                                                          
                                                                         
@@ -5598,8 +4907,9 @@ ccc        WRITE(*,41) I,SQRT(PS),B02AV(NI),B0MAX(NI),FCIRC(NI)
       END                                                               
                                                                         
                                                                         
-     
-
+                                                                        
+                                                                        
+                                                                        
 ************************************************************************
 C***********************************************************************
 C***********************************************************************
@@ -5614,13 +4924,7 @@ C**                     - PRARR2                                      **
 C**                                                                   **
 C***********************************************************************
 C***********************************************************************
-
-
-
-
-
-
-
+                                                                        
 ************************************************************************
       SUBROUTINE ZERO(X1,Y1,X2,Y2,FUNC,ERR,X,Y,IZERO,LL)                
 C                                                                       
@@ -5637,7 +4941,7 @@ C     * MODIFIED BY JAN REM TO IMPROVE CONVERGENCE 25/08/84.           *
 C     ******************************************************************
 C                                                                       
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       EXTERNAL FUNC                                                     
 C                                                                       
       IOUT=LL/10                                                        
@@ -5745,14 +5049,8 @@ C     * FORMATS.
      B       3X,'YN=',1PE12.4)                                          
    13 FORMAT(/1X,'***SUBROUTINE ZERO: NO CONVERGENCE FOR X IN ',I3,     
      A       ' STEPS')                                                  
-      END
-
-
-
-
-
-
-
+      END                                                               
+C                                                                       
 ************************************************************************
       SUBROUTINE RFT2(DATA,NR,KR)                                       
 C                                                                       
@@ -5771,25 +5069,13 @@ C     * LASL ROUTINE MAY 75, CALLING FFT2 AND RTRAN2.                  *
 C     ******************************************************************
 C                                                                       
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       REAL*8 DATA(*)                                                 
-      CALL FFT2(DATA(1),DATA(KR+1),NR/2,-(KR+KR))  
-
-
-      IRTRAN2 = 1       
-      CALL RTRAN2(DATA,NR,KR,IRTRAN2)                                         
+      CALL FFT2(DATA(1),DATA(KR+1),NR/2,-(KR+KR))                       
+      CALL RTRAN2(DATA,NR,KR,1)                                         
       RETURN                                                            
       END                                                               
-C  
-
-
-
-
-
-
-
- 
-                                                                     
+C                                                                       
 C                                                                       
 ************************************************************************
       SUBROUTINE RTRAN2(DATA,NR,KR,KTRAN)                               
@@ -5802,14 +5088,14 @@ C     * LASL ROUTINE MAY 75, CALLED FROM RFT2 AND RFI2.                *
 C     ******************************************************************
 C                                                                       
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       REAL*8 DATA(*)                                                 
       KS=2*KR                                                           
       N=NR/2                                                            
       NMAX=N*KS+2                                                       
       KMAX=NMAX/2                                                       
       THETA=1.5707963267949D0/N                                           
-      DC=2.D0*DSIN(THETA)**2.0                                               
+      DC=2.D0*DSIN(THETA)**2                                               
       DS=DSIN(2.D0*THETA)                                                  
       WS=0.D0                                                             
       IF(KTRAN.LE.0) THEN                                               
@@ -5837,17 +5123,8 @@ C
          WC=WCA                                                         
    10 CONTINUE                                                          
       RETURN                                                            
-      END  
-
-
-
-
-
-
-
-      
-
-
+      END                                                               
+C                                                                       
 ************************************************************************
       SUBROUTINE FFT2 (DATAR,DATAI,N,INC)                               
 C                                                                       
@@ -5856,18 +5133,10 @@ C     * FFT2 FORTRAN VERSION CLAIR NIELSON MAY 75.                     *
 C     ******************************************************************
 C                                                                       
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       REAL*8 DATAR(*), DATAI(*)                                      
-C      KTRAN=ISIGN(-1,INC)   
-C      KS=IABS(INC)   
-
-      IF (INC.LT.0) KTRAN=-1
-      IF (INC.GE.0) KTRAN=1
-
-      IF (INC.LT.0) KS=-INC 
-      IF (INC.GE.0) KS=INC
-
-                                                   
+      KTRAN=ISIGN(-1,INC)                                               
+      KS=IABS(INC)                                                      
       IP0=KS                                                            
       IP3=IP0*N                                                         
       IREV=1                                                            
@@ -5913,14 +5182,8 @@ C      KS=IABS(INC)
       THETA=.5D0*THETA                                                    
       GOTO 30                                                           
    60 RETURN                                                            
-      END   
-
-
-
-
-
- 
-
+      END                                                               
+                                                                        
 ************************************************************************
       SUBROUTINE GRID2NV(TIN,TOUT,JPTS,ACC,IGRD,LL)                     
 C-----------------------------------------------------------------------
@@ -5935,7 +5198,7 @@ C  OUTPUT UNIT IOUT=LL/10 AND THE PRINT SWITCH L=LL-IOUT*10.
 C  IOUT=0 (L=LL): FILE IS "OUTPUT".                                     
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       PARAMETER (JMAX=1024,NINV=100)                                    
       REAL*8 TIN(*),TOUT(*),T(JMAX+1),G(JMAX+1),GFCOS(JMAX/2-1),     
      A          GFSIN(JMAX/2-1)                                         
@@ -5960,8 +5223,8 @@ C
       IF(L.NE.0) THEN                                                   
 c         CALL PRARR1('TIN(J) : ',TIN,JPTS,IOUT*10+L)                   
 c         CALL PRARR1('G(I):',T,JPTS,IOUT*10+L)                         
-c         IF(IOUT.EQ.0) WRITE(*,56) GFNUL                               
-c         IF(IOUT.NE.0) WRITE(IOUT,56) GFNUL                             
+         IF(IOUT.EQ.0) WRITE(*,56) GFNUL                               
+         IF(IOUT.NE.0) WRITE(IOUT,56) GFNUL                             
 c         CALL PRARR1('GFCOS(M):',GFCOS,MHARM,IOUT*10+L)                
 c         CALL PRARR1('GFSIN(M):',GFSIN,MHARM,IOUT*10+L)                
       ENDIF                                                             
@@ -6033,23 +5296,15 @@ C     * FORMATS.
    55 FORMAT(1X,'I=',I3,5X,'N=',I3)                                     
    56 FORMAT(/1X,'GFNUL = ',1PE12.4)                                    
    70 FORMAT(/1X,'***SUBROUTINE GRIDINV: NO ZERO FOUND ')               
-      END  
-
-
-
-
-
-
-
-      
-
+      END                                                               
+                                                                        
 ************************************************************************
       SUBROUTINE FSUM2(F,T,FFNUL,FFCOS,FFSIN,MHARM)                     
 C-----------------------------------------------------------------------
 C FOURIER SYNTHESIS OF GENERAL  FUNCTION F(T) AT SINGLE POINT T.        
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       REAL*8 FFCOS(*),FFSIN(*)                                       
       CO=DCOS(T)                                                         
       SI=DSIN(T)                                                         
@@ -6065,13 +5320,6 @@ C-----------------------------------------------------------------------
       F=SUM                                                             
       RETURN                                                            
       END                                                               
-
-
-
-
-
-
-      
                                                                         
 ************************************************************************
       SUBROUTINE RFT(F,FFNUL,FFCOS,FFSIN,JPTS,MHARM)                    
@@ -6081,17 +5329,16 @@ C  FFSIN OF THE ARRAY FF CORRESPONDING TO THE  FUNCTION
 C  F(T)=.5*FFNUL+SUM(FFCOS(M)*COS(M*T)+FFSIN(M)*SIN(M*T))               
 C  WHERE MHARM.LE.JPTS/2-1, FFNUL=FF(0) AND T=2*PI*(J-1)/JPTS.          
 C  THE INPUT ARRAY F(J) IS NOT DESTROYED BY CALLING RFTCOS.             
-C  TYPICAL USE IS FOR MHARM MUCH SMALLER THAN JPTS/2-1, SO THAT
+C  TYPICAL USE IS FOR MHARM MUCH SMALLER THAN JPTS/2-1, SO THAT         
 C  RFT2 CANNOT BE USED DIRECTLY.                                        
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       PARAMETER (JMAX=1024)                                             
       REAL*8 F(*),FFCOS(*),FFSIN(*),FSTORE(JMAX+2)                   
       DO 10 J=1,JPTS                                                    
-   10 FSTORE(J)=F(J)
-      IRFT2 = 1                                                    
-      CALL RFT2(FSTORE,JPTS,IRFT2)                                          
+   10 FSTORE(J)=F(J)                                                    
+      CALL RFT2(FSTORE,JPTS,1)                                          
       FAC=2.D0/DBLE(JPTS)                                                       
       FFNUL=FSTORE(1)*FAC                                               
       DO 20 M=1,MHARM                                                   
@@ -6100,15 +5347,7 @@ C-----------------------------------------------------------------------
    20 CONTINUE                                                          
       RETURN                                                            
       END                                                               
-           
-
-
-
-
-
-      
- 
-                                                             
+                                                                        
 ************************************************************************
       SUBROUTINE RFI2(DATA,NR,KR)                                       
 C-----------------------------------------------------------------------
@@ -6122,56 +5361,45 @@ C  LASL ROUTINE MAY 75, CALLING RTRAN2 AND FFT2.
 C ----------------------------------------------------------------------
 C                                                                       
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      REAL*8 DATA(*) 
-      IRTRAN2 = -1                                                
-      CALL RTRAN2(DATA,NR,KR,IRTRAN2)                                        
+      IMPLICIT integer (I-N)
+      REAL*8 DATA(*)                                                 
+      CALL RTRAN2(DATA,NR,KR,-1)                                        
       MR=NR*KR                                                          
       FNI=2.D0/DBLE(NR)                                                         
       DO 10 I=1,MR,KR                                                   
    10 DATA(I)=FNI*DATA(I)                                               
       CALL FFT2(DATA(1),DATA(KR+1),NR/2,(KR+KR))                        
       RETURN                                                            
-      END                  
-
-
-
-
-
-
-
-
-
-
-
+      END                                                               
+                                                                        
 ************************************************************************
-      SUBROUTINE mnewtax(ntrial,x,n,tolx,tolf,errx,errf,ifail)
+      SUBROUTINE mnewtax(ntrial,x,n,tolx,tolf,errx,errf,ifail)                
 C-----------------------------------------------------------------------
 C ROUTINE TO SOLVE TWO NONLINEAR EQUATIONS USING NEWTONS METHOD FROM    
 C NUMERICAL RECIPES.                                                    
 C LU DECOMPOSITION REPLACED BY EXPLICIT SOLUTION OF 2X2 MATRIX.         
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 C-----------------------------------------------------------------------
       COMMON /CORNERS/ RS, IJ, NODENO                                   
       real*8    RS(4,2)                                                   
-      mwSize IJ(4,2), NODENO(MAXMNODE,4)                               
+      integer IJ(4,2), NODENO(MAXMNODE,4)                               
 C-----------------------------------------------------------------------
       COMMON/FAXIS/PSI,NAXIS                                            
       real*8    PSI(4*MAXMNODE)                                           
-      mwSize NAXIS                                                     
+      integer NAXIS                                                     
 C-----------------------------------------------------------------------
       PARAMETER (NEQ=2)                                                 
       real*8 X(NEQ),FVEC(NEQ),FJAC(NEQ,NEQ)                               
-      mwSize n,ntrial                                                  
+      integer n,ntrial                                                  
       real*8 tolf,tolx                                                    
-      mwSize i,k,indx(NEQ)                                             
+      integer i,k,indx(NEQ)                                             
       real*8 d,errf,errx,p(NEQ)                                           
                                                                         
       ifail=0
@@ -6208,16 +5436,14 @@ c-----------------------------------------------------------------------
 	x(2) = X(2) + p(2)                                                                                       
         if(errx.le.tolx)return                                          
       enddo   
-      ifail=1
+      ifail=1                                                 
       return                                                            
       END                                                               
 C  (C) Copr. 1986-92 Numerical Recipes Software *N*1V45_Lt+V'.          
-
-
-
-      
+                                                                        
+                                                                        
 ************************************************************************
-      SUBROUTINE SPLINE(N,X,Y,ALFA,BETA,TYP,A,B,C,D)
+      SUBROUTINE SPLINE(N,X,Y,ALFA,BETA,TYP,A,B,C,D)                    
 C-----------------------------------------------------------------------
 C     INPUT:                                                            
 C                                                                       
@@ -6226,39 +5452,39 @@ C     X     ARRAY DER X-WERTE
 C     Y     ARRAY DER Y-WERTE                                           
 C     ALFA  RANDBEDINGUNG IN X(1)                                       
 C     BETA        "       IN X(N)                                       
-C     TYP   =  0  NOT-A-KNOT SPLINE
+C     TYP   =  0  NOT-A-KNOT SPLINE                                     
 C              1  ALFA, BETA 1. ABLEITUNGEN VORGEGEBEN                  
 C              2    "    "   2.     "           "                       
 C              3    "    "   3.     "           "                       
 C                                                                       
-C     BEMERKUNG: MIT TYP = 2 UND ALFA = BETA = 0 ERHAELT MAN
+C     BEMERKUNG: MIT TYP = 2 UND ALFA = BETA = 0 ERHAELT MAN            
 C           EINEN NATUERLICHEN SPLINE                                   
 C                                                                       
 C     OUTPUT:                                                           
 C                                                                       
 C     A, B, C, D     ARRAYS DER SPLINEKOEFFIZIENTEN                     
-C       S = A(I) + B(I)*(X-X(I)) + C(I)*(X-X(I))**2.0+ D(I)*(X-X(I))**3.0   
+C       S = A(I) + B(I)*(X-X(I)) + C(I)*(X-X(I))**2+ D(I)*(X-X(I))**3   
 C                                                                       
 C     BEI ANWENDUNGSFEHLERN WIRD DAS PROGRAMM MIT ENTSPRECHENDER        
 C     FEHLERMELDUNG ABGEBROCHEN                                         
 C-----------------------------------------------------------------------
 C                                                                       
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      mwSize  N, TYP
+      IMPLICIT integer (I-N)
+      integer  N, TYP                                                   
       real*8     X(N), Y(N), ALFA, BETA, A(N), B(N), C(N), D(N)           
-      mwSize  I, IERR                                                  
+      integer  I, IERR                                                  
       real*8     H(1001)                                                  
                                                                               
 C                                                                       
       NMAX = 1001                                                       
-      IF((TYP.LT.0).OR.(TYP.GT.3)) THEN
-c         WRITE(*,*) 'FEHLER IN ROUTINE SPLINE: FALSCHER TYP'
-         CALL mexErrMsgTxt('FEHLER IN ROUTINE SPLINE: FALSCHER TYP')
+      IF((TYP.LT.0).OR.(TYP.GT.3)) THEN                                 
+         WRITE(*,*) 'FEHLER IN ROUTINE SPLINE: FALSCHER TYP'            
+         CALL mexErrMsgTxt('FEHLER IN ROUTINE SPLINE: FALSCHER TYP')                                                           
       ENDIF                                                             
 C                                                                       
       IF((N.LT.3).OR.(N.GT.NMAX)) THEN                                  
-c         WRITE(*,*) 'FEHLER IN ROUTINE  SPLINE: N < 3 ODER N > NMAX'    
+         WRITE(*,*) 'FEHLER IN ROUTINE  SPLINE: N < 3 ODER N > NMAX'    
          CALL mexErrMsgTxt('FEHLER IN ROUTINE  SPLINE')                                                            
       ENDIF                                                             
 C                                                                       
@@ -6269,7 +5495,7 @@ C
       DO 10 I = 1, N-1                                                  
          H(I) = X(I+1)- X(I)
          IF(H(I).LE.0.0D0) THEN                                           
-c           WRITE(*,*) 'MONOTONIEFEHLER IN SPLINE: X(I-1) >= X(I)'
+            WRITE(*,*) 'MONOTONIEFEHLER IN SPLINE: X(I-1) >= X(I)'      
             CALL mexErrMsgTxt('FEHLER IN ROUTINE')                                                       
          ENDIF                                                          
    10 CONTINUE                                                          
@@ -6287,7 +5513,7 @@ C     BERUECKSICHTIGEN DER RANDBEDINGUNGEN
 C                                                                       
 C     NOT-A-KNOT                                                        
 C                
-      IF(TYP.EQ.0) THEN
+      IF(TYP.EQ.0) THEN                                                 
          A(1)   = A(1) * H(2) / (H(1) + H(2))                           
          A(N-2) = A(N-2) * H(N-2) / (H(N-1) + H(N-2))                   
          D(1)   = D(1) - H(1)                                           
@@ -6298,7 +5524,7 @@ C
 C                                                                       
 C     1. ABLEITUNG VORGEGEBEN                                           
 C                                                                       
-      IF(TYP.EQ.1) THEN
+      IF(TYP.EQ.1) THEN                                                 
          A(1)   = A(1) - 1.5D0 * ((Y(2)-Y(1)) / H(1) - ALFA)              
          A(N-2) = A(N-2) - 1.5D0 * (BETA - (Y(N)-Y(N-1)) / H(N-1))        
          D(1)   = D(1) - 0.5D0 * H(1)                                     
@@ -6307,14 +5533,14 @@ C
 C                                                                       
 C     2. ABLEITUNG VORGEGEBEN                                           
 C                                                                                                                             
-      IF(TYP.EQ.2) THEN
+      IF(TYP.EQ.2) THEN                                                 
          A(1)   = A(1) - 0.5D0 * ALFA * H(1)                              
          A(N-2) = A(N-2) - 0.5D0 * BETA * H(N-1)                          
       ENDIF  
 C                                                                       
 C     3. ABLEITUNG VORGEGEBEN                                           
 C                                                                       
-      IF(TYP.EQ.3 ) THEN
+      IF(TYP.EQ.3 ) THEN                                                
          A(1)   = A(1) + 0.5D0 * ALFA * H(1) * H(1)                       
          A(N-2) = A(N-2) - 0.5D0 * BETA * H(N-1)* H(N-1)                  
          D(1)   = D(1) + H(1)                                           
@@ -6325,7 +5551,7 @@ C     BERECHNUNG DER KOEFFIZIENTEN
 C            
       CALL SGTSL(N-2,B,D,C,A,IERR)                                      
       IF(IERR.NE.0) THEN                                                
-c         WRITE(*,21)                                                    
+         WRITE(*,21)                                                    
          CALL mexErrMsgTxt('ERROR IN SGTSL: MATRIX SINGULAR')                                                           
       ENDIF                                                             
 C                                                                       
@@ -6336,12 +5562,12 @@ C
 C     IN ABHAENGIGKEIT VON DEN RANDBEDINGUNGEN WIRD DER 1. UND          
 C     DER LETZTE WERT VON C KORRIGIERT                                  
 C                                                                       
-      IF(TYP.EQ.0) THEN
+      IF(TYP.EQ.0) THEN                                                 
          C(1) = C(2) + H(1) * (C(2)-C(3)) / H(2)                        
          C(N) = C(N-1) + H(N-1) * (C(N-1)-C(N-2)) / H(N-2)              
       ENDIF                                                             
 C                                                                       
-      IF(TYP.EQ.1) THEN
+      IF(TYP.EQ.1) THEN                                                 
       C(1) = 1.5D0*((Y(2)-Y(1)) / H(1) - ALFA) / H(1) - 0.5D0 * C(2)     
       C(N) = -1.5D0*((Y(N)-Y(N-1)) / H(N-1)-BETA) / H(N-1)-0.5D0*C(N-1)  
       ENDIF                                                             
@@ -6369,17 +5595,8 @@ C
       RETURN                                                            
 C                                                                       
    21 FORMAT(1X,'ERROR IN SGTSL: MATRIX SINGULAR')                      
-      END  
-
-
-
-
-
-
-
-
- 
-
+      END                                                               
+                                                                        
 ************************************************************************
       real*8 FUNCTION SPWERT(N,XWERT,A,B,C,D,X,ABLTG)                     
 C-----------------------------------------------------------------------
@@ -6397,9 +5614,9 @@ C     ABLTG(I) WERT DER I-TEN ABLEITUNG BEI XWERT
 C-----------------------------------------------------------------------
 C     
       IMPLICIT REAL*8 (A-H,O-Z)
-      mwSize  N                                                        
+      integer  N                                                        
       real*8     XWERT, A(N), B(N), C(N), D(N), X(N), ABLTG(3)            
-      mwSize  I, K, M                                                  
+      integer  I, K, M                                                  
 C                                                                       
 C     SUCHE PASSENDES INTERVALL (BINAERE SUCHE)                         
 C                                                                       
@@ -6426,18 +5643,15 @@ C
       SPWERT = ((D(I)*XX + C(I))*XX + B(I))*XX + A(I)                   
 C                                                                       
       RETURN                                                            
-      END 
-
-
-
-     
+      END                                                               
+                                                                        
 ************************************************************************
 *** FROM NETLIB, TUE AUG 28 08:28:34 EDT 1990 ***                       
 C                                                                       
       SUBROUTINE SGTSL(N,C,D,E,B,INFO)                                  
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      mwSize N,INFO                                                    
+      IMPLICIT integer (I-N)
+      integer N,INFO                                                    
       real*8 C(1),D(1),E(1),B(1)                                          
 C                                                                       
 C     SGTSL GIVEN A GENERAL TRIDIAGONAL MATRIX AND A RIGHT HAND         
@@ -6445,7 +5659,7 @@ C     SIDE WILL FIND THE SOLUTION.
 C                                                                       
 C     ON ENTRY                                                          
 C                                                                       
-C        N       mwSize                                                
+C        N       integer                                                
 C                IS THE ORDER OF THE TRIDIAGONAL MATRIX.                
 C                                                                       
 C        C       dble(N)                                                
@@ -6469,7 +5683,7 @@ C     ON RETURN
 C                                                                       
 C        B       IS THE SOLUTION VECTOR.                                
 C                                                                       
-C        INFO    mwSize                                                
+C        INFO    integer                                                
 C                = 0 NORMAL VALUE.                                      
 C                = K IF THE K-TH ELEMENT OF THE DIAGONAL BECOMES        
 C                    EXACTLY ZERO.  THE SUBROUTINE RETURNS WHEN         
@@ -6483,7 +5697,7 @@ C     FORTRAN ABS
 C                                                                       
 C     INTERNAL VARIABLES                                                
 C                                                                       
-      mwSize K,KB,KP1,NM1,NM2                                          
+      integer K,KB,KP1,NM1,NM2                                          
       real*8 T                                                            
 C     BEGIN BLOCK PERMITTING ...EXITS TO 100                            
 C                                                                       
@@ -6555,20 +5769,14 @@ C
 C                                                                       
       RETURN                                                            
       END      
-  
-
-
-
-
-
-
-
+      
+                              
 ************************************************************************
 *DECK HELBAL
       SUBROUTINE HELBAL(ZVOL,ZVOLP,XAXIS,BALCRIT)
 
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
 C-----------------------------------------------------------------------
 C PROGRAM TO DETERMINE THE BALLOONING STABILITY OF HELENA EQUILIBRIA
 C         - READS THE MAPPING FILE AS USED BY CASTOR
@@ -6577,23 +5785,23 @@ C         - FOR SYMMETRIC AND ASYMMETRIC PLASMA BOUNDARY SHAPES
 C
 C         VERSION : 1                 DATE : 28-09-95
 C-----------------------------------------------------------------------
-C STATUS :
+C STATUS : 
 C
 C 28/9/95   - tested for symmetric soloviev equilibrium with E=1.41
 C             eps=0.382, compares well with Turnbull results.
 C           - also tested for sym. soloviev asymmetric helena
 C
 C-----------------------------------------------------------------------
-      PARAMETER (NRMAX = 51,  NPMAX = 33)
-      PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)
-      PARAMETER (MAXMNODE = NRMMAX*NPMMAX)
-      PARAMETER (NPTSMAX = 201)
-      PARAMETER (NPSIMAX=NRMMAX, NCHIMAX=1026)
-      PARAMETER (NPNC=NPSIMAX*NCHIMAX, NP4=4*NPSIMAX)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
+      PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
+      PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
+      PARAMETER (NPTSMAX = 201)                                         
+      PARAMETER (NPSIMAX=NRMMAX, NCHIMAX=1026)                             
+      PARAMETER (NPNC=NPSIMAX*NCHIMAX, NP4=4*NPSIMAX)                   
 c      USE COMPIO ?
 C-----------------------------------------------------------------------
-      COMMON / COMDAT/
+      COMMON / COMDAT/                                                  
      >        ELLIP,TRIAH,TRIAB,QUAD,PAR1,PAR2,PAR3,PAR4,                      
      >        AGA,BGA,CGA,DGA,EGA,FGA,GGA,HGA,                          
      >        API,BPI,CPI,DPI,EPI,FPI,GPI,HPI,                          
@@ -6608,9 +5816,8 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 c------------------------------------------------------------------
       COMMON /COMMAP/CS,QS,DQS,CURJ,CHI,   
      >     GEM11,GEM12,GEM33,  
@@ -6624,7 +5831,7 @@ c------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      mwSize JS0,NCHI,NPSI
+      INTEGER JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON / COMSPL /                                                 
@@ -6641,28 +5848,26 @@ C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
       common / COMPQ / CP0, CP1, CP2, CQ0, CQ1, NCPQ
       REAL*8    CP0(NPNC),CP1(NPNC),CP2(NPNC),CQ0(NPNC),CQ1(NPNC)
-      mwSize NCPQ
+      INTEGER NCPQ
 C-----------------------------------------------------------------------
       common / COMNAM / QAXIS,TBB,TBF
       REAL*8     QAXIS,TBB,TBF
 C-----------------------------------------------------------------------
 
+
+
+
       REAL*8 ZVOL(*),ZVOLP(*),XAXIS,BALCRIT(*)
       CHARACTER*25 BAL,INIBAL
-c      write(*,*) 'dans helbal'
 
       PI = 2.*ASIN(1.)
       CALL INIT(IAS)
 C---------------------- READ HELENA MAPPING FILE -----------------------      
-c      write(*,*) 'avant iodsk'
-
       CALL IODSK
 C---------------------- CALCULATE B-FIELD ON GRID POINTS ---------------     
-c      write(*,*) 'avant bfield'
       CALL BFIELD(IAS)
 C---------------------- CALCULATE P AND Q COEFF. ON ALL GRIDPOINTS -----      
-c        write(*,*) 'avant pq'
-        CALL PQ(IAS)
+      CALL PQ(IAS)
 C---------------------- CALCULATE STABILITY INDEX ----------------------     
 c      WRITE(20,*)
 c      WRITE(20,*) '****************************************************'
@@ -6672,18 +5877,18 @@ c     >              '  ALPHA1,  FMARG,  BALLOONING *'
 c      WRITE(20,*) '****************************************************'
 c     >            //'***************************'
       DO 10 IPSI=2,NPSI
-         FACT = 1.D0
-         CALL SUYDAM(IPSI,0.D0,TBB,TBF,NCPQ,1.D0,BAL)
+         FACT = 1.
+         CALL SUYDAM(IPSI,0.,TBB,TBF,NCPQ,1.,BAL)
 C---------------------- FIND DISTANCE FROM STABILITY BOUNDARY ----------         
          INIBAL = BAL
          IF (BAL.EQ.' STABLE') THEN
-            DELF = 2.D0
+            DELF = 2.
          ELSE
-            DELF = 0.5D0
+            DELF = 0.5
          ENDIF      
          FACT = DELF * FACT
          DO 20 NIT=1,10
-           CALL SUYDAM(IPSI,0.D0,TBB,TBF,NCPQ,FACT,BAL)
+           CALL SUYDAM(IPSI,0.,TBB,TBF,NCPQ,FACT,BAL)
            IF (BAL.EQ.INIBAL) THEN
               FACT = DELF * FACT
            ELSE
@@ -6694,15 +5899,15 @@ C--------------------- UPPER AND LOWER LIMII ESTABLISHED --------------
    30   CONTINUE
         IF (INIBAL.EQ.' STABLE') THEN
           FUNST = FACT
-          FSTAB = FACT / 2.D0
+          FSTAB = FACT / 2.
         ELSE
           FSTAB = FACT
-          FUNST = FACT * 2.D0
+          FUNST = FACT * 2.
         ENDIF   
 c------------------------------------- BISECTION TO FIND FACTOR
         DO 40 NIT = 1, 10 
-           FACT = (FUNST + FSTAB)/2.D0
-           CALL SUYDAM(IPSI,0.D0,TBB,TBF,NCPQ,FACT,BAL)
+           FACT = (FUNST + FSTAB)/2.
+           CALL SUYDAM(IPSI,0.,TBB,TBF,NCPQ,FACT,BAL)
            IF (BAL.EQ.' STABLE') THEN
              FSTAB = FACT
            ELSE
@@ -6710,13 +5915,13 @@ c------------------------------------- BISECTION TO FIND FACTOR
            ENDIF               
    40   CONTINUE      
         SHEAR = CS(IPSI)/QS(IPSI) * DQS(IPSI) 
-        ALPHA = - 2.D0*QS(IPSI)**2.0 * P2(IPSI)/EPS
+        ALPHA = - 2.*QS(IPSI)**2 * P2(IPSI)/EPS
 
-	SHEAR1 = 2.D0*ZVOL(IPSI)/QS(IPSI) * DQS(IPSI)
-     >         / (2.D0*CS(IPSI)*ZVOLP(IPSI))
+	SHEAR1 = 2.*ZVOL(IPSI)/QS(IPSI) * DQS(IPSI)
+     >         / (2.*CS(IPSI)*ZVOLP(IPSI))
 c-------------------------------------------- Lao's definition
-c        ALPHA1 = -P2(IPSI)/(2.*CS(IPSI)) * ZVOLP(IPSI) / CPSURF**2.0
-c     >         * SQRT(ZVOL(IPSI)/(4.*PI*(1.+EPS*XAXIS))) * EPS**3.0
+c        ALPHA1 = -P2(IPSI)/(2.*CS(IPSI)) * ZVOLP(IPSI) / CPSURF**2
+c     >         * SQRT(ZVOL(IPSI)/(4.*PI*(1.+EPS*XAXIS))) * EPS**3
 c
 c--------------------------------------------- use rho as radius
         RHO = SQRT(ZVOL(IPSI)/ZVOL(NR))
@@ -6724,35 +5929,26 @@ c--------------------------------------------- use rho as radius
 	ALPHA2 = ALPHA / DRHODS
 
 c----------------------------------------- Lao corrected? Needs check
-c        ALPHA11 = -P2(IPSI)/(2.*CS(IPSI)) * ZVOLP(IPSI) / CPSURF**2.0
+c        ALPHA11 = -P2(IPSI)/(2.*CS(IPSI)) * ZVOLP(IPSI) / CPSURF**2
 c     >          / (PI*PI*EPS) * RHO * ZVOL(NR) *EPS**4
 c----------------------------------------------------------------------
 	
-	FMARG = (FSTAB+FUNST)/2.D0
+	FMARG = (FSTAB+FUNST)/2.
 C----------------------------------- temporary fix for negative shear and IAS=1
-        IF ((SHEAR.LE.0.D0).AND.(IAS.EQ.1)) THEN   
-	  FMARG = 0.D0
+        IF ((SHEAR.LE.0.).AND.(IAS.EQ.1)) THEN   
+	  FMARG = 0.
 	  INIBAL =  ' STABLE'
         ENDIF
         BALCRIT(IPSI) = FMARG
-c        WRITE(20,11) IPSI,CS(IPSI)**2.0,RHO,QS(IPSI),SHEAR,SHEAR1,
+c        WRITE(20,11) IPSI,CS(IPSI)**2,RHO,QS(IPSI),SHEAR,SHEAR1,
 c     >               ALPHA,ALPHA2,FMARG, INIBAL
    10 CONTINUE
-c      write(*,*) 'fin boucle 10'
 c      WRITE(20,*) '****************************************************'
 c     >            //'*****************'
 c   11 FORMAT(' ',I3,' ',F6.3,' ',F6.3,' ',F6.3,' ',F7.4,' ',F7.4,' ',
 c     >       F7.4,' ',F7.4,' ',F8.3,'  ',A25)
 
       END
-
-
-
- 
-
-
-
-
 
 ************************************************************************
 *DECK INIT
@@ -6763,25 +5959,16 @@ C OF THE OUTPUT FILE
 C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       common / COMNAM / QAXIS,TBB,TBF
       REAL*8     QAXIS,TBB,TBF
 C-----------------------------------------------------------------------
 
-      TBB = -100.D0
-      IF (IAS.EQ.0) TBB = 0.D0
-      TBF =  100.D0
+      TBB = -100.
+      IF (IAS.EQ.0) TBB = 0.
+      TBF =  100.
       RETURN
-      END  
-
-
-
-
-
-
-
-
-    
+      END      
 ************************************************************************
 *DECK PQ
       SUBROUTINE PQ(IAS)
@@ -6798,10 +5985,10 @@ C NUMBER OF POINTS IN POLOIDAL DIRECTION IS NCHI+1 FOR IAS=1 AND
 C 2*NCHI-1 FOR IAS=0.
 C-----------------------------------------------------------------------      
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
       PARAMETER (NPSIMAX=NRMMAX, NCHIMAX=1026)                             
@@ -6821,7 +6008,7 @@ c------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      mwSize JS0,NCHI,NPSI
+      INTEGER JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON / COMSPL /                                                 
@@ -6838,7 +6025,7 @@ C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
       common / COMPQ / CP0, CP1, CP2, CQ0, CQ1, NCPQ
       REAL*8    CP0(NPNC),CP1(NPNC),CP2(NPNC),CQ0(NPNC),CQ1(NPNC)
-      mwSize NCPQ
+      INTEGER NCPQ
 C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
       common / COMNAM / QAXIS,TBB,TBF
@@ -6862,23 +6049,23 @@ C-----------------------------------------------------------------------
           ENDIF  
 C----------------------------------- LOWER INDEX GEOMETRIC COEFF. -------     
 c          G33 = GEM33(IJ)
-c          G11 = SPS2**2.0 *(1. + ZQ**2.0/ZT**2.0 
-c     >                       * GEM33(IJ) * GEM12(IJ)**2.0 ) / GEM11(IJ)  
-c          G12 = - SPS2 * ZQ**2.0 / ZT**2.0 * GEM12(IJ) * GEM33(IJ)
-c          G22 = ZQ**2.0 / ZT**2.0 * GEM11(IJ) * GEM33(IJ)
+c          G11 = SPS2**2 *(1. + ZQ**2/ZT**2 
+c     >                       * GEM33(IJ) * GEM12(IJ)**2 ) / GEM11(IJ)  
+c          G12 = - SPS2 * ZQ**2 / ZT**2 * GEM12(IJ) * GEM33(IJ)
+c          G22 = ZQ**2 / ZT**2 * GEM11(IJ) * GEM33(IJ)
 c          ZJ  = SPS2 * ZQ * GEM33(IJ) / ZT
 C----------------------------------------------------------------------- 
           BETA =  - GEM12(IJ)/GEM11(IJ) 
-          CP0(IJ1) = 1.D0 / (GEM33(IJ)*GEM11(IJ))
-     >             + ZQ**2.0 * GEM11(IJ) *BETA**2.0 /(GEM33(IJ)*B02(IJ))
-          CP1(IJ1) = 2.D0*BETA * GEM11(IJ) * (ZDQ*ZQ)
+          CP0(IJ1) = 1. / (GEM33(IJ)*GEM11(IJ))
+     >             + ZQ**2 * GEM11(IJ) *BETA**2 /(GEM33(IJ)*B02(IJ))
+          CP1(IJ1) = 2.*BETA * GEM11(IJ) * (ZDQ*ZQ)
      >                               /(SPS2*GEM33(IJ)*B02(IJ))
-          CP2(IJ1) = GEM11(IJ) * ZDQ**2.0
-     >                               /(SPS2**2.0 *GEM33(IJ)*B02(IJ))
-          CQ0(IJ1) = -ZDP* ZQ**2.0 * GEM33(IJ) / (SPS2*ZT*B02(IJ))**2.0
-     >             *( (2.D0*ZDP+DSB02(IJ))*B02(IJ) + 
+          CP2(IJ1) = GEM11(IJ) * ZDQ**2
+     >                               /(SPS2**2 *GEM33(IJ)*B02(IJ))
+          CQ0(IJ1) = -ZDP* ZQ**2 * GEM33(IJ) / (SPS2*ZT*B02(IJ))**2
+     >             *( (2.*ZDP+DSB02(IJ))*B02(IJ) + 
      >                SPS2*BETA*GEM11(IJ)/GEM33(IJ) * DTB02(IJ))     
-          CQ1(IJ1) = ZDP*ZDQ*ZQ /(SPS2 * B02(IJ))**2.0 * DTB02(IJ)   
+          CQ1(IJ1) = ZDP*ZDQ*ZQ /(SPS2 * B02(IJ))**2 * DTB02(IJ)   
 C----------------------------------------------------------------------- 
           IF (IAS.EQ.0) THEN
              IJ2 = I*(2*NCHI-1) - J + 1 
@@ -6900,14 +6087,6 @@ C-----------------------------------------------------------------------
       RETURN
       END
 
-
-
-
-
-
-
-
-
 ************************************************************************
 *DECK BFIELD      
       SUBROUTINE BFIELD(IAS)
@@ -6918,10 +6097,10 @@ C      - THE RADIAL AND POLOIDAL DERIVATIVE OF THE TOTAL FIELD SQUARED
 C    ON THE GRID POINTS OF THE STRAIGHT FIELD LINE COORDINATE SYSTEM. 
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
       PARAMETER (NPSIMAX=NRMMAX, NCHIMAX=1026)                             
@@ -6941,7 +6120,7 @@ c------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      mwSize JS0,NCHI,NPSI
+      INTEGER JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON / COMSPL /                                                 
@@ -6951,8 +6130,7 @@ C-----------------------------------------------------------------------
      R         RBP4(NPSIMAX)                                            
 C                                                                       
       REAL*8     Q1, Q2, Q3, Q4,                          
-     >         P1, P2, P3, P4, RBP1, RBP2, RBP3, RBP4     
-      mwSize ISPLINE              
+     >         P1, P2, P3, P4, RBP1, RBP2, RBP3, RBP4                   
 C-----------------------------------------------------------------------
       common / COMB02 / B02,DTB02 , DSB02
       REAL*8    B02(NPNC), DTB02(NPNC), DSB02(NPNC)
@@ -6965,7 +6143,7 @@ C---------------------------------------- B0 ON GRID POINTS -----------
       DO 10 I=1,NPSI
         DO 20 J=1,NCHI
            IJ = (I-1)*NCHI + J
-           B02(IJ) = (GEM11(IJ) + RBPHI(I)**2.0)/GEM33(IJ)
+           B02(IJ) = (GEM11(IJ) + RBPHI(I)**2)/GEM33(IJ)
    20   CONTINUE
    10 CONTINUE
 C---------------------------------------- D(B02)/D(THETA) -------------
@@ -6979,30 +6157,14 @@ C---------------------------------------- D(B02)/DS --------------------
           IJ = (I-1)*NCHI + J
           SP(I) = B02(IJ)
    50   CONTINUE
-        ISPLINE = 2
-        CALL SPLINE(NPSI,CS,SP,0.D0,0.D0,ISPLINE,S1,S2,S3,S4)
+        CALL SPLINE(NPSI,CS,SP,0.0,0.0,2,S1,S2,S3,S4)
         DO 60 I=1,NPSI
           IJ = (I-1)*NCHI + J
           DSB02(IJ) = S2(I)
    60   CONTINUE 
    40 CONTINUE
       RETURN
-      END  
-
-
-
-
-
-      
-
-
-
-
-
-
-
-
-     
+      END       
 ************************************************************************
 *DECK IODSK
       SUBROUTINE IODSK
@@ -7011,10 +6173,10 @@ C    - READS HELENA MAPPING FILE
 C    - SCALES QUANTITIES WITH Q ON AXIS
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
       PARAMETER (NPSIMAX=NRMMAX, NCHIMAX=1026)                             
@@ -7033,7 +6195,7 @@ c------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      mwSize JS0,NCHI,NPSI
+      INTEGER JS0,NCHI,NPSI
       LOGICAL NLTORE  
 C-----------------------------------------------------------------------
       COMMON / COMSPL /                                                 
@@ -7043,80 +6205,68 @@ C-----------------------------------------------------------------------
      R         RBP4(NPSIMAX)                                            
 C                                                                       
       REAL*8     Q1, Q2, Q3, Q4,                          
-     >         P1, P2, P3, P4, RBP1, RBP2, RBP3, RBP4
+     >         P1, P2, P3, P4, RBP1, RBP2, RBP3, RBP4                   
 C-----------------------------------------------------------------------
       common / COMNAM / QAXIS,TBB,TBF
       REAL*8     QAXIS,TBB,TBF
 C-----------------------------------------------------------------------
-      REAL*8 C1(NPSIMAX),dummy(3)
-      mwSize ISPLINE
-
-c      write(*,*) ' STARTING IODSK',NPSI,NCHI
+      REAL*8 dummy(3)
 
       NPSI = JS0 + 1
       NG = NPSI*NCHI
-c      write(*,*) ' STARTING IODSK',NPSI,NCHI
+
       DO 30 JC=1,NCHI
         GEM11(JC) = 0.
-        GEM33(JC) = RAXIS**2.0
+        GEM33(JC) = RAXIS**2
    30 CONTINUE
 C
       DO 40 JC=1,NCHI
-c         write(*,*) 'jc=',jc
          CALL DCOPY(NPSI-1,GEM12(NCHI+JC),NCHI,C1,1)
-c         write(*,*) 'apres dcopy',nchi
-         ISPLINE = 2
-         CALL SPLINE(NPSI-1,CS(2),C1,0.D0,0.D0,ISPLINE,Q1,Q2,Q3,Q4)
-         GEM12(JC) = SPWERT(NPSI-1,0.D0,Q1,Q2,Q3,Q4,CS(2),DUMMY)
+         CALL SPLINE(NPSI-1,CS(2),C1,0.0,0.0,2,Q1,Q2,Q3,Q4)
+         GEM12(JC) = SPWERT(NPSI-1,0.0,Q1,Q2,Q3,Q4,CS(2),DUMMY)
    40 CONTINUE
-c      return
+
 C------------------------------------------------------------------
 C     SCALE QUANTITIES WITH VALUE OF Q ON AXIS (TOTAL CURRENT)
 C------------------------------------------------------------------
       SCALEQ = QS(1)/QAXIS
 C
       CPSURF = CPSURF*SCALEQ
-c      write(*,*) 'dans iodsk, avant dscal'
-      CALL DSCAL(NPSI,SCALEQ**2.0,P0,1)
+      CALL DSCAL(NPSI,SCALEQ**2,P0,1)
       CALL DSCAL(NPSI*NCHI,-SCALEQ,GEM12,1)
-      CALL DSCAL(NPSI*NCHI,SCALEQ**2.0,GEM11,1)
+      CALL DSCAL(NPSI*NCHI,SCALEQ**2,GEM11,1)
 C
-      RBPHI02 = RBPHI(1)**2.0
+      RBPHI02 = RBPHI(1)**2
 C
-      DP0     = DP0*SCALEQ**2.0
-      DPE     = DPE*SCALEQ**2.0
-      DRBPHI0 = DRBPHI0*SCALEQ**2.0
-      DRBPHIE = DRBPHIE*SCALEQ/SQRT(1.D0+RBPHI02/RBPHI(NPSI)**2.0*
-     >          (1.D0/SCALEQ**2.0-1.D0))
+      DP0     = DP0*SCALEQ**2
+      DPE     = DPE*SCALEQ**2
+      DRBPHI0 = DRBPHI0*SCALEQ**2
+      DRBPHIE = DRBPHIE*SCALEQ/SQRT(1.+RBPHI02/RBPHI(NPSI)**2*
+     >          (1./SCALEQ**2-1.))
 C
       DO 50 J=1,NPSI
-         WURZEL   = SQRT(1.D0+RBPHI02/RBPHI(J)**2.0
-     +*(1./SCALEQ**2.0-1.D0))
+         WURZEL   = SQRT(1.+RBPHI02/RBPHI(J)**2*(1./SCALEQ**2-1.))
          QS(J)    = WURZEL * QS(J)
          RBPHI(J) = WURZEL * SCALEQ * RBPHI(J)
    50 CONTINUE
 C
-c      WRITE(*,*)  NPSI,NCHI
-c      WRITE(20,51) SCALEQ
-c      WRITE(20,52) CPSURF
-c      WRITE(20,53) (QS(JJ),JJ=1,JS0+1)
-c      WRITE(20,54) (P0(JJ),JJ=1,NPSI)
-c      WRITE(20,55) (RBPHI(JJ),JJ=1,NPSI)
+      WRITE(20,*)  NPSI,NCHI
+      WRITE(20,51) SCALEQ
+      WRITE(20,52) CPSURF
+      WRITE(20,53) (QS(JJ),JJ=1,JS0+1)
+      WRITE(20,54) (P0(JJ),JJ=1,NPSI)
+      WRITE(20,55) (RBPHI(JJ),JJ=1,NPSI)
 C
 C     SPLINES
 C
       DQ1 = (QS(NPSI)-QS(NPSI-1))/(CS(NPSI)-CS(NPSI-1))
       DQ0 = (QS(2)-QS(1))/(CS(2)-CS(1))
       
-      ISPLINE = 1
-      CALL SPLINE(NPSI,CS,QS,DQ0,DQ1,ISPLINE,Q1,Q2,Q3,Q4)
-      CALL SPLINE(NPSI,CS,P0,DP0,DPE,ISPLINE,P1,P2,P3,P4)
-      CALL SPLINE(NPSI,CS,RBPHI,DRBPHI0,DRBPHIE,ISPLINE,RBP1,RBP2,
-     +RBP3,RBP4)
+      CALL SPLINE(NPSI,CS,QS,DQ0,DQ1,1,Q1,Q2,Q3,Q4)
+      CALL SPLINE(NPSI,CS,P0,DP0,DPE,1,P1,P2,P3,P4)
+      CALL SPLINE(NPSI,CS,RBPHI,DRBPHI0,DRBPHIE,1,RBP1,RBP2,RBP3,RBP4)
 C
-c      write(*,*) 'avant dcopy',DQS
       CALL DCOPY(NPSI,Q2,1,DQS,1)
-c      write(*,*) 'apres dcopy'
       RETURN
 C
    51 FORMAT(/' AFTER SCALE: SCALEQ=',1P,E12.4,0P)
@@ -7125,16 +6275,6 @@ C
    54 FORMAT(/' P0'/(1X,1P,5E16.8,0P))
    55 FORMAT(/' RBPHI'/(1X,1P,5E16.8,0P))
       END
-
-
-
-            
-
-
-
-
-
-
 
 ************************************************************************
 *DECK KGS
@@ -7147,10 +6287,10 @@ C REQUESTED. NO INTERPOLATION IS DONE!
 C-----------------------------------------------------------------------      
 c      USE COMMAX ?
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 c parametres MISHKA		              
@@ -7161,11 +6301,11 @@ c parametres MISHKA
 c-----------------------------------------------------------------------
       common / COMPQ / CP0, CP1, CP2, CQ0, CQ1, NCPQ
       REAL*8    CP0(NPNC),CP1(NPNC),CP2(NPNC),CQ0(NPNC),CQ1(NPNC)
-      mwSize NCPQ
+      INTEGER NCPQ
 C-----------------------------------------------------------------------
 
 
-      TWOPI = 4.D0*ASIN(1.)
+      TWOPI = 4.*ASIN(1.)
       DT = TWOPI/REAL(NCPQ-1)
       TM = MOD(MOD(T,TWOPI)+TWOPI, TWOPI)
 C-------------------------- NCPQ=2*NCHI-1 (IAS=0) OR NCPQ=NCHI+1 (IAS=1)      
@@ -7177,17 +6317,10 @@ C-------------------------- NCPQ=2*NCHI-1 (IAS=0) OR NCPQ=NCHI+1 (IAS=1)
       CP2D = CP2(IJM) + (CP2(IJM+1)-CP2(IJM))*FRAC
       CQ0D = CQ0(IJM) + (CQ0(IJM+1)-CQ0(IJM))*FRAC 
       CQ1D = CQ1(IJM) + (CQ1(IJM+1)-CQ1(IJM))*FRAC           
-      CP = CP0D + CP1D*(T-T0) + CP2D*(T-T0)**2.0 
+      CP = CP0D + CP1D*(T-T0) + CP2D*(T-T0)**2 
       CQ = CQ0D + CQ1D*(T-T0)
       RETURN
       END
-
-
-
-
-
-
-      
 
 ************************************************************************
 *DECK SUYDAM
@@ -7197,20 +6330,20 @@ C  SUBROUTINE TO VERIFY THE SIGN OF THE BALLOONING ENERGY
 C  FUNCTIONAL ACCORDING TO THE SUYDAM FINITE DIFFERENCE SCHEME.  
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
+      IMPLICIT integer (I-N)
       REAL*8 KP1,KP2
       CHARACTER*25 BAL
       
-      PI  = 2.D0*ASIN(1.)
+      PI  = 2*ASIN(1.)
       BAL = ' STABLE'
-      DBT = 4.D0*ASIN(1.)/REAL(NCPQ-1)
+      DBT = 4.*ASIN(1.)/REAL(NCPQ-1)
 
       N  = INT((TBF - TBB) / DBT)
-      ALP= 1.D0
+      ALP= 1.
       T2 = TBB - DBT/2.
 
-      KP2 = 0.D0
-      GP2 = 0.D0
+      KP2 = 0.
+      GP2 = 0.
 C
       DO 10 I=1,N
         T1  = T2
@@ -7219,12 +6352,12 @@ C
         T2  = T1+DBT
         CALL KGS(T2,T0,KP2,GP2TEMP,IPSI)
         GP2 = GP2TEMP * FACT
-        A11=(KP2+KP1)/DBT+0.25D0*(GP1+GP2)*DBT       
-        A01=-KP1/DBT+0.25D0*GP1*DBT
-        IF (I.EQ.1) A01 = 0.D0
+        A11=(KP2+KP1)/DBT+0.25*(GP1+GP2)*DBT       
+        A01=-KP1/DBT+0.25*GP1*DBT
+        IF (I.EQ.1) A01 = 0.
         ALP=A11-(A01*A01)/ALP
-        IF(ALP.LE.0.D0) THEN
-          TS = (T1+T2)/2.D0
+        IF(ALP.LE.0.) THEN
+          TS = (T1+T2)/2.
           WRITE(BAL,11) TS
           RETURN
         ENDIF
@@ -7232,13 +6365,6 @@ C
    11 FORMAT(' UNSTABLE AT T = ',F8.3)
    20 RETURN
       END
-
-
-
-
-
-
-
 
 **********************************************************************
 *DECK DERIV
@@ -7252,10 +6378,10 @@ C IAS   : 0 FOR UP/DOWN SYMMETRIC EQUILIBRIA, 1 FOR ASYMMETRIC EQUIL.
 C---------------------------------------------------------------------
 c      USE COMMAX ?
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026 ,KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)                                         
 c parametres MISHKA		              
@@ -7264,7 +6390,7 @@ c parametres MISHKA
       PARAMETER (NPSIMAX=NRMMAX)                             
       PARAMETER (NPNC=NPSIMAX*NCHIMAX, NP4=4*NPSIMAX)                   
       REAL*8       ARRIN(*),DARR(*),FF(2*NCHIMAX+2),DF(2*NCHIMAX+2)
-      mwSize    INDEX(2*NCHIMAX), IRFI2,IRFT2
+      INTEGER    INDEX(2*NCHIMAX)
 
       PI = 2.* ASIN(1.)
 
@@ -7286,39 +6412,34 @@ c parametres MISHKA
       DO 40 J=1,N       
         FF(J) = ARRIN(INDEX(J))
    40 CONTINUE 
-      
-      IRFT2 = 1                  
-      CALL RFT2(FF,N,IRFT2)
+                        
+      CALL RFT2(FF,N,1)
       
       DO 50 J = 1,N/2
         DF(2*J-1) = - real(J-1) * FF(2*J)   
         DF(2*J)   =   real(J-1) * FF(2*J-1) 
    50 CONTINUE
    
-      DF(2) = 0.D0
-      DF(N+2) = 0.D0
+      DF(2) = 0.
+      DF(N+2) = 0.
 
-      IRFI2 = 1
-      CALL RFI2(DF,N,IRFI2)
+      CALL RFI2(DF,N,1)
 
       DO 60 J=1,NCHI
         DARR(J) = DF(J)
    60 CONTINUE
       END
-
-
-
 ************************************************************************
 *DECK MAPPING
-      SUBROUTINE MAPPING(XX,YY,PSI,CX,CY,XAXIS,A,IWRT)
+      SUBROUTINE MAPPING(XX,YY,PSI,CX,CY,XAXIS,A)
 C-----------------------------------------------------------------------
 C SUBROUTINE TO CALCULATE THE METRIC COEFFICIENTS NEEDED FOR CASTOR
 C-----------------------------------------------------------------------
       IMPLICIT REAL*8 (A-H,O-Z)
-      IMPLICIT mwSize (I-N)
-      PARAMETER (NRMAX = 51,  NPMAX = 33)                              
+      IMPLICIT integer (I-N)
+      PARAMETER (NRMAX = 51,  NPMAX = 129)                              
       PARAMETER (MAXNODE=NRMAX*NPMAX, MBMAX=1026, KKLDA=4*NPMAX+9)        
-      PARAMETER (NRMMAX = 101, NPMMAX = 65)                             
+      PARAMETER (NRMMAX = 201, NPMMAX = 129)                             
       PARAMETER (MAXMNODE = NRMMAX*NPMMAX)                              
       PARAMETER (NPTSMAX = 201)
       PARAMETER (NPSIMAX=NRMMAX, NCHIMAX=1026)                             
@@ -7340,9 +6461,8 @@ C-----------------------------------------------------------------------
      >        ACUR,BCUR,CCUR,DCUR,ECUR,FCUR,GCUR,HCUR,                  
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,       
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1           
-      mwSize IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER       
-      mwSize NRMAP,NPMAP
+      integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,          
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NRMAP,NPMAP,NITER       
 C-----------------------------------------------------------------------
       COMMON /GAUSINT/ XGAUSS,WGAUSS,H,HR,HS,HRS                        
       real*8 XGAUSS(4),WGAUSS(4)                                          
@@ -7353,10 +6473,10 @@ C-----------------------------------------------------------------------
       REAL*8    DPSIKN(NRMMAX),DDPSIKN(NRMMAX)
 C-----------------------------------------------------------------------
       COMMON /COMPRI/ NPR1,NPR2,NROUT,NDIAG
-      mwSize NPR1,NPR2,NROUT,NDIAG
+      INTEGER NPR1,NPR2,NROUT,NDIAG
 C-----------------------------------------------------------------------
       COMMON /COMPLO/ NPL1,TXTOUT
-      mwSize       NPL1
+      INTEGER       NPL1
       CHARACTER*100 TXTOUT(40)
 C-----------------------------------------------------------------------
       COMMON /COMMAP/ CS,QS,DQS,CURJ,CHI,   
@@ -7371,12 +6491,8 @@ C-----------------------------------------------------------------------
      >     CHIKN(NPMMAX),P0(NRMMAX),RBPHI(NRMMAX),
      >     DP(NRMMAX),DRBPHI(NRMMAX),
      >     DQEC,DJ0,DJE,CPSURF,RADIUS,RAXIS,DP0,DPE,DRBPHI0,DRBPHIE   
-      mwSize JS0,NCHI,NPSI
+      INTEGER JS0,NCHI,NPSI
       LOGICAL NLTORE  
-C-----------------------------------------------------------------------
-      COMMON /COMSPOT/RSPOT,ZSPOT,BRSPOT,BZSPOT
-      REAL*8 RSPOT(MAXMNODE),ZSPOT(MAXMNODE)
-      REAL*8 BRSPOT(MAXMNODE),BZSPOT(MAXMNODE)
 C-----------------------------------------------------------------------
       common / COMNAM / QAXIS,TBB,TBF
       REAL*8     QAXIS,TBB,TBF
@@ -7393,13 +6509,12 @@ C-----------------------------------------------------------------------
       REAL*8     Q1, Q2, Q3, Q4,                          
      >         P1, P2, P3, P4, RBP1, RBP2, RBP3, RBP4                   
 C-----------------------------------------------------------------------
-      COMMON / MESHAC /
-     R         XR1DONE,SIG1DONE,
-     R         SG,DSG,DDSG,
-     I         NRDONE
-      REAL*8   XR1DONE,SIG1DONE
-      REAL*8   SG(NRMMAX),DSG(NRMMAX),DDSG(NRMMAX)
-      mwSize  NRDONE
+      COMMON /MESHAC/ AMESH,BMESH,CMESH,XR1DONE,SIG1DONE,
+     > SG,DSG,DDSG,IMESH,NRDONE 
+      REAL*8    AMESH,BMESH,CMESH
+      REAL*8    XR1DONE,SIG1DONE
+      REAL*8    SG(NRMMAX),DSG(NRMMAX),DDSG(NRMMAX)
+      INTEGER IMESH,NRDONE
 C-----------------------------------------------------------------------
       COMMON/COMLOCAL/CCHI,SCHI,XCHI,YCHI,XOUT,YOUT,IJCHI
 
@@ -7407,14 +6522,13 @@ C-----------------------------------------------------------------------
       REAL*8 CCHI(4,2*MAXMNODE),SCHI(2*MAXMNODE)
       REAL*8 XCHI(2*MAXMNODE),YCHI(2*MAXMNODE)
       REAL*8 XOUT(2*MAXMNODE),YOUT(2*MAXMNODE)
-      mwSize IJCHI(2*MAXMNODE)
+      INTEGER IJCHI(2*MAXMNODE)
       LOGICAL CHIN
       REAL*8 XPLOT(2*NRMMAX),PPLOT(2*NRMMAX),PSIPLOT(2*NRMMAX)
       REAL*8 QPLOT(2*NRMMAX),CUPLOT(2*NRMMAX),DQPLOT(2*NRMMAX)
 C--------------------------------------------- VARIABLES FOR VACUUM --
       REAL*8 VX(2*NPMMAX-1),VY(2*NPMMAX-1)
 C---------------------------------------------------------------------
-
       PI = 2.*ASIN(1.D0)
       MAXERR = -1.D20
       FACTAS = 2.D0
@@ -7429,7 +6543,7 @@ c        WRITE(20,*)
 c        WRITE(20,*) '*************************************'
 c        WRITE(20,*) '* PRESSURE PROFILE BEFORE NORM.  :  *'
 c        WRITE(20,*) '*************************************'
-c        WRITE(20,91) (P0(I)*EPS/ALFA**2.0,I=1,NR)
+c        WRITE(20,91) (P0(I)*EPS/ALFA**2,I=1,NR)
 c        WRITE(20,*) '*************************************'
 c	WRITE(20,*)
 c      ENDIF
@@ -7441,7 +6555,7 @@ c   91 FORMAT(4E16.8)
       B0 = 1./ BM
       R0 = 1./ RAXIS
       RADIUS = EPS * R0
-      PSCALE = B0**2.0 * EPS / ALFA**2.0
+      PSCALE = B0**2 * EPS / ALFA**2
       RBSCALE = B0 * R0
       DO 90 I = 1,NR
         P0(I) = P0(I) * PSCALE
@@ -7449,7 +6563,7 @@ c   91 FORMAT(4E16.8)
         RBPHI(I) = RBPHI(I) * RBSCALE
         DRBPHI(I) = DRBPHI(I) * RBSCALE
    90 CONTINUE
-      CPSURF = RADIUS**2.0 * B0 / ALFA
+      CPSURF = RADIUS**2 * B0 / ALFA
       RAXIS = 1.
       PAXIS = P0(1)
 c      WRITE(20,2) RADIUS
@@ -7474,10 +6588,10 @@ C                                           - CHI VALUES AT THETA NODES
         SUMQR = 0.
         ZPSI = PSIKN(I)
 c        CALL RADMESH(RADPSI(I),ZPSI,DZPSI,DDZPSI)
-        PSIR  = - DPSIKN(I)  /(2.D0*REAL(NR-1))
-        PSIRR =   DDPSIKN(I) /(2.D0*REAL(NR-1))**2.0
+        PSIR  = - DPSIKN(I)  /(2.*REAL(NR-1))
+        PSIRR =   DDPSIKN(I) /(2.*REAL(NR-1))**2
         CS(NR-I+1) = SQRT(ZPSI)
-c        write(*,*) 'Ligne 6559',ZPSI,PSIR,PSIRR
+c        write(*,*) 'Ligne 6559'
         DO 20 J = 1, NP-1
           N1 = (I-1)*NP + J
           N2 = N1 + 1
@@ -7493,9 +6607,9 @@ c        write(*,*) 'Ligne 6559',ZPSI,PSIR,PSIRR
             ER = XRR*YS + XR*YRS - XRS*YR - XS*YRR
             BIGR  = (1. + EPS * X)
             SUMQ  = SUMQ - WGAUSS(K) * EJAC / ( BIGR * ABS(PSIR))
-            SUMQR = SUMQR + PSIRR * EJAC / ((PSIR**2.0)*BIGR)* WGAUSS(K)
+            SUMQR = SUMQR + PSIRR * EJAC / ((PSIR**2)*BIGR)* WGAUSS(K)
             SUMQR = SUMQR - ER / (BIGR*PSIR)               * WGAUSS(K)
-            SUMQR = SUMQR + EJAC*EPS*XR/((BIGR**2.0)*PSIR)  * WGAUSS(K)
+            SUMQR = SUMQR + EJAC*EPS*XR/((BIGR**2)*PSIR)  * WGAUSS(K)
    30     CONTINUE
           CCHI(1,(I-1)*NP+J+1) = SUMQ
           CCHI(2,(I-1)*NP+J+1) = SUMQR
@@ -7507,14 +6621,14 @@ c        write(*,*) 'Ligne 6559',ZPSI,PSIR,PSIRR
           ER = XRR*YS + XR*YRS - XRS*YR - XS*YRR
           BIGR = (1. + EPS * X )
           ZSUMQ  = - EJAC / ( BIGR * ABS(PSIR))
-          ZSUMQR = + PSIRR * EJAC / (PSIR**2.0 *BIGR)
+          ZSUMQR = + PSIRR * EJAC / (PSIR**2 *BIGR)
           ZSUMQR =  ZSUMQR - ER / (BIGR*PSIR)
-          ZSUMQR =  ZSUMQR + EJAC*EPS*XR/((BIGR**2.0) * PSIR)
+          ZSUMQR =  ZSUMQR + EJAC*EPS*XR/((BIGR**2) * PSIR)
           CCHI(3,(I-1)*NP+J+1) = ZSUMQ
           CCHI(4,(I-1)*NP+J+1) = ZSUMQR
    20   CONTINUE
-        CCHI(1,(I-1)*NP+1) = 0.D0
-        CCHI(2,(I-1)*NP+1) = 0.D0
+        CCHI(1,(I-1)*NP+1) = 0.
+        CCHI(2,(I-1)*NP+1) = 0.
         N1 = (I-1)*NP + 1
         N2 = N1 + 1
         N3 = N2 + NP
@@ -7525,27 +6639,25 @@ c        write(*,*) 'Ligne 6559',ZPSI,PSIR,PSIRR
      >              Y,YR,YS,YRS,YRR,YSS)
         EJAC = XR*YS - XS*YR
         ER = XRR*YS + XR*YRS - XRS*YR - XS*YRR
-        BIGR = (1.D0 + EPS * X )
+        BIGR = (1. + EPS * X )
         ZSUMQ = - EJAC / (BIGR * ABS(PSIR))
-        ZSUMQR =  + PSIRR * EJAC / (PSIR**2.0 *BIGR)
+        ZSUMQR =  + PSIRR * EJAC / (PSIR**2 *BIGR)
         ZSUMQR = ZSUMQR - ER / (BIGR*PSIR)
-        ZSUMQR = ZSUMQR + EJAC*EPS*XR/((BIGR**2.0) * PSIR)
+        ZSUMQR = ZSUMQR + EJAC*EPS*XR/((BIGR**2) * PSIR)
         CCHI(3,(I-1)*NP+1) =  ZSUMQ
         CCHI(4,(I-1)*NP+1) =  ZSUMQR
         QS(NR-I+1) =  0.5D0*FACTAS * SUMQ * RBPHI(NR-I+1) / RBSCALE
-        DQS(NR-I+1)=SUMQR*RBPHI(NR-I+1)+SUMQ*DRBPHI(NR-I+1) 
-     &           /(2.D0*(NR-1))
+        DQS(NR-I+1)=SUMQR*RBPHI(NR-I+1)+SUMQ*DRBPHI(NR-I+1)/(2.*(NR-1))
         DQS(NR-I+1)=  0.5D0*FACTAS * DQS(NR-I+1) / RBSCALE
-
    10 CONTINUE
-      IF ((EPS.LE.0.01D0).AND.(P0(1).LE.0.D0)) THEN
+      IF ((EPS.LE.0.01).AND.(P0(1).LE.0.)) THEN
         S2 = SQRT(PSIKN(NR-1))
         S3 = SQRT(PSIKN(NR-2))
         QS(1) = QS(2) - (QS(3)-QS(2))/(S3-S2) * S2
       ELSE
         QS(1) = RBPHI(1)* PI/(2.*SQRT(CX*CY)*(1.+EPS*XAXIS)*RBSCALE)
       ENDIF
-      DQS(1) = 0.D0
+      DQS(1) = 0.
       DO 40 I = 1, NR-1
         DO 50 J = 1, NP
           DUM = CCHI(1,I*NP)
@@ -7559,7 +6671,7 @@ C------------------------------ FINAL VALUES OF CHI --------------------
           QQ  = QS(NR-I+1)
           DQQ = DQS(NR-I+1)
           RB  = RBPHI(NR-I+1)
-          DRB = DRBPHI(NR-I+1)  /  REAL(2*(NR-1))
+          DRB = DRBPHI(NR-I+1)  /  (2*(NR-1))
           CCHI(2,NO)= +(DQQ/QQ - DRB/RB) * CCHI(1,NO) - CCHI(2,NO)
           CCHI(4,NO)= +(DQQ/QQ - DRB/RB) * CCHI(3,NO) - CCHI(4,NO)
    50   CONTINUE
@@ -7577,9 +6689,9 @@ c      write(*,*) 'Profil de q'
    45 CONTINUE
       QS0 = QS(1)
       QAXIS = QS(1)
-c       WRITE(*,*)
-c       WRITE(*,31) QS(1)
-c       WRITE(*,32) QS(NR)
+c      WRITE(20,*)
+c      WRITE(20,31) QS(1)
+c      WRITE(20,32) QS(NR)
 c   31 FORMAT('  Q ON AXIS = ',f7.4)
 c   32 FORMAT('  Q AT BOUNDARY = ',f7.4)
 
@@ -7598,8 +6710,8 @@ c   54 FORMAT('NUMBER OF CHI VALUES : ',I3)
    55   CONTINUE
       ELSE
         DO 56 J=1,NCHI
-          CHIKN(J) = 2.D0 * PI * REAL(J-1)/REAL(NCHI)
-          CHI(J)   = 2.D0 * PI * REAL(J-1)/REAL(NCHI)
+          CHIKN(J) = 2. * PI * REAL(J-1)/REAL(NCHI)
+          CHI(J)   = 2. * PI * REAL(J-1)/REAL(NCHI)
    56   CONTINUE
       ENDIF
 C      CALL PRARR1(' CHI : ',CHI,NCHI,201)
@@ -7609,10 +6721,10 @@ C      CALL PRARR2(' YY : ',' ',YY,4,NR*NP,4,203)
       DO 60 I=1,NR-1
         ZPSI = PSIKN(I)
 c        CALL RADMESH(RADPSI(I),ZPSI,DZPSI,DDZPSI)
-        PSIR  = - DPSIKN(I)  /(2.D0*REAL(NR-1))
-        PSIRR =   DDPSIKN(I) /(2.D0*REAL(NR-1))**2.0
+        PSIR  = - DPSIKN(I)  /(2.*REAL(NR-1))
+        PSIRR =   DDPSIKN(I) /(2.*REAL(NR-1))**2
 C-------------------------- FIRST POINT IS KNOWN -----------------------
-c      write(*,*)  'Ligne 6691',PSIR,PSIRR
+c      write(*,*)  'Ligne 6691'
         NO = (I-1)*NCHI + 1
         K = 1
         S = -1.D0
@@ -7635,7 +6747,7 @@ C--------------------------------------------- VACUUM DATA ---------
         ENDIF
 C-----------------------------------------------------------------------
         EJAC  = (XR*YS-XS*YR)
-        EJAC2 = EJAC**2.0
+        EJAC2 = EJAC**2
 C----------------------------- DATA FOR VECTOR PLOT TO FILE 21 -----
         PSIX = PSIR * YS / EJAC
         PSIY = - PSIR * XS / EJAC
@@ -7644,25 +6756,20 @@ C----------------------------- DATA FOR VECTOR PLOT TO FILE 21 -----
 c        WRITE(21,61) SQRT(ZPSI),DCHI,XCHI(NO),YCHI(NO),
 c     >              PSIX,PSIY,CHIX,CHIY
 C----------------------------------------------------------------------
-        GRPS2 = PSIR**2.0 * (XS**2.0 + YS**2.0) / EJAC2
+        GRPS2 = PSIR**2 * (XS**2 + YS**2) / EJAC2
         NOG = (NR-1)*NCHI - I*NCHI + 1
-        GEM11(NCHI+NOG) = GRPS2 * (CPSURF/RADIUS)**2.0
-        GRPGRC = ( CHIR * PSIR * (XS**2.0 + YS**2.0) -
+        GEM11(NCHI+NOG) = GRPS2 * (CPSURF/RADIUS)**2
+        GRPGRC = ( CHIR * PSIR * (XS**2 + YS**2) -
      >             CHIS * PSIR * (XR*XS + YR*YS) ) / EJAC2
-        GEM12(NCHI+NOG) = GRPGRC * CPSURF / (RADIUS**2.0)
-        GEM33(NCHI+NOG) =((1.+EPS*XCHI(NO))/(1.+EPS*XAXIS))**2.0
+        GEM12(NCHI+NOG) = GRPGRC * CPSURF / (RADIUS**2)
+        GEM33(NCHI+NOG) =((1.+EPS*XCHI(NO))/(1.+EPS*XAXIS))**2
         XOUT(NCHI+NOG) = XCHI(NO)
         YOUT(NCHI+NOG) = YCHI(NO)
-        RSPOT(NCHI+NOG) = (1. + EPS * XCHI(NO))
-        ZSPOT(NCHI+NOG) = YCHI(NO)
-        BRSPOT(NCHI+NOG) = - PSIY / (1. + EPS*XCHI(NO))*(CPSURF/RADIUS)
-        BZSPOT(NCHI+NOG) = + PSIX / (1. + EPS*XCHI(NO))*(CPSURF/RADIUS)
-C
 C------------------------------------ CHECK JACOBIAN -----------------        
-                GRCHI2 = CHIX**2.0 + CHIY**2.0                                    
-                DUM1 = RBPHI(NR-I+1)**2.0 /                                     
-     >             (QS(NR-I+1)**2.0 * GEM33(NCHI+NOG))                          
-                DUM2 = GEM11(NCHI+NOG) * GRCHI2 / (RADIUS**2.0)                 
+                GRCHI2 = CHIX**2 + CHIY**2                                    
+                DUM1 = RBPHI(NR-I+1)**2 /                                     
+     >             (QS(NR-I+1)**2 * GEM33(NCHI+NOG))                          
+                DUM2 = GEM11(NCHI+NOG) * GRCHI2 / (RADIUS**2)                 
                 DUM3 = GEM12(NCHI+NOG)                                        
                 DUM4 = DUM2 - DUM3*DUM3
 		ERRJ = ABS(DUM4-DUM1)
@@ -7673,7 +6780,7 @@ C------------------------------------ CHECK JACOBIAN -----------------
                   SERR = SQRT(ZPSI)
                   CERR = DCHI
                 ENDIF
-c                WRITE(*,*) I,DUM1,DUM4,(dum1-dum4)/dum1
+CCC                WRITE(20,*) DUM1,DUM4,(dum1-dum4)/dum1
 c      write(*,*) 'Ligne 6747'
 C---------------------------------------------------------------------
         JBASE = 2
@@ -7688,17 +6795,14 @@ C---------------------------------------------------------------------
               CHIN = .TRUE.
               NOM = (I-1)*NP + K
               NOP = NOM + 1
-              A3 = (CCHI(1,NOM)+CCHI(3,NOM)-CCHI(1,NOP)
-     >            +CCHI(3,NOP))/4.D0
-              A2 = (- CCHI(3,NOM) + CCHI(3,NOP))/4.D0
-              A1 = (-3.D0*CCHI(1,NOM)-CCHI(3,NOM)+3*CCHI(1,NOP)
-     >            -CCHI(3,NOP))/4.D0
-              A0 = ( 2.D0*CCHI(1,NOM)+CCHI(3,NOM)+2*CCHI(1,NOP)
-     >            -CCHI(3,NOP))/4.D0
+              A3 = (CCHI(1,NOM)+CCHI(3,NOM)-CCHI(1,NOP)+CCHI(3,NOP))/4.
+              A2 = (- CCHI(3,NOM) + CCHI(3,NOP))/4.
+           A1=(-3*CCHI(1,NOM)-CCHI(3,NOM)+3*CCHI(1,NOP)-CCHI(3,NOP))/4.
+           A0=( 2*CCHI(1,NOM)+CCHI(3,NOM)+2*CCHI(1,NOP)-CCHI(3,NOP))/4.
      >       - ZCHI
               CALL SOLVP3(A0,A1,A2,A3,S,S2,S3,IFAIL)
 	      IF ((IAS.EQ.0).AND.(J.EQ.NCHI)) THEN
-	        S = 1.D0
+	        S = 1.0
 		IFAIL=0
 	      ENDIF	
               IF (IFAIL.EQ.0) THEN
@@ -7709,11 +6813,11 @@ C---------------------------------------------------------------------
                 N3 = N2 + NP
                 N4 = N1 + NP
                 CALL INTERP(XX(1,N1),XX(1,N2),XX(1,N3),XX(1,N4),
-     >                      -1.D0,S,XCHI(NO),XR,XS,XRS,XRR,XSS)
+     >                      -1.,S,XCHI(NO),XR,XS,XRS,XRR,XSS)
                 CALL INTERP(YY(1,N1),YY(1,N2),YY(1,N3),YY(1,N4),
-     >                      -1.D0,S,YCHI(NO),YR,YS,YRS,YRR,YSS)
+     >                      -1.,S,YCHI(NO),YR,YS,YRS,YRR,YSS)
                 CALL INTERP(CCHI(1,N1),CCHI(1,N2),CCHI(1,N3),CCHI(1,N4),
-     >                      -1.D0,S,DCHI,CHIR,CHIS,CHIRS,CHIRR,CHISS)
+     >                      -1.,S,DCHI,CHIR,CHIS,CHIRS,CHIRR,CHISS)
 C--------------------------------------------- VACUUM DATA ---------
                 IF (I.EQ.1) THEN
                   VX(J) = XCHI(NO)
@@ -7721,7 +6825,7 @@ C--------------------------------------------- VACUUM DATA ---------
                 ENDIF
 C-----------------------------------------------------------------------
                 EJAC  = (XR*YS-XS*YR)
-                EJAC2 = EJAC**2.0
+                EJAC2 = EJAC**2
 C-------------------------------- DATA FOR VECTOR PLOT TO FILE 21 -----
                 PSIX = PSIR * YS / EJAC
                 PSIY = - PSIR * XS / EJAC
@@ -7730,28 +6834,20 @@ C-------------------------------- DATA FOR VECTOR PLOT TO FILE 21 -----
 c                WRITE(21,61) SQRT(ZPSI),DCHI,XCHI(NO),YCHI(NO),
 c     >                        PSIX,PSIY,CHIX,CHIY
 C----------------------------------------------------------------------
-                GRPS2 = PSIR**2.0 * (XS**2.0 + YS**2.0) / EJAC2
+                GRPS2 = PSIR**2 * (XS**2 + YS**2) / EJAC2
                 NOG = (NR-1)*NCHI - I*NCHI + J
-                GEM11(NCHI+NOG) = GRPS2 * (CPSURF/RADIUS)**2.0
-                GRPGRC = ( CHIR * PSIR * (XS**2.0 + YS**2.0) -
+                GEM11(NCHI+NOG) = GRPS2 * (CPSURF/RADIUS)**2
+                GRPGRC = ( CHIR * PSIR * (XS**2 + YS**2) -
      >                     CHIS * PSIR * (XR*XS + YR*YS) ) / EJAC2
-                GEM12(NCHI+NOG) = GRPGRC * CPSURF / (RADIUS**2.0)
-                GEM33(NCHI+NOG) =((1.+EPS*XCHI(NO))/(1.+EPS*XAXIS))**2.0
-                
+                GEM12(NCHI+NOG) = GRPGRC * CPSURF / (RADIUS**2)
+                GEM33(NCHI+NOG) =((1.+EPS*XCHI(NO))/(1.+EPS*XAXIS))**2
                 XOUT(NCHI+NOG) = XCHI(NO)
                 YOUT(NCHI+NOG) = YCHI(NO)
-                RSPOT(NCHI+NOG) = (1. + EPS * XCHI(NO))
-                ZSPOT(NCHI+NOG) = YCHI(NO)
-                BRSPOT(NCHI+NOG) = - PSIY / (1. + EPS*XCHI(NO)) 
-     &                               * (CPSURF/RADIUS)
-                BZSPOT(NCHI+NOG) = + PSIX / (1. + EPS*XCHI(NO)) 
-     &                               * (CPSURF/RADIUS)
-
 C------------------------------------ CHECK JACOBIAN -----------------        
-                GRCHI2 = CHIX**2.0 + CHIY**2.0                                    
-                DUM1 = RBPHI(NR-I+1)**2.0 /                                     
-     >             (QS(NR-I+1)**2.0 * GEM33(NCHI+NOG))                          
-                DUM2 = GEM11(NCHI+NOG) * GRCHI2 / (RADIUS**2.0)                 
+                GRCHI2 = CHIX**2 + CHIY**2                                    
+                DUM1 = RBPHI(NR-I+1)**2 /                                     
+     >             (QS(NR-I+1)**2 * GEM33(NCHI+NOG))                          
+                DUM2 = GEM11(NCHI+NOG) * GRCHI2 / (RADIUS**2)                 
                 DUM3 = GEM12(NCHI+NOG)                                        
                 DUM4 = DUM2 - DUM3*DUM3
 		ERRJ = ABS(DUM4-DUM1)
@@ -7765,9 +6861,9 @@ C------------------------------------ CHECK JACOBIAN -----------------
 CCC                WRITE(20,*) DUM1,DUM4,dum1-dum4
 C---------------------------------------------------------------------
               ELSE
-c                WRITE(*,*) 'ERROR IN SOLVP3 I,J,K : ',I,J,K,S,s2,s3
-c                WRITE(*,*) A0,A1,A2,A3,ZCHI
-c                WRITE(*,*) CCHI(1,(I-1)*NP+K),CCHI(1,(I-1)*NP+K+1)
+                WRITE(*,*) 'ERROR IN SOLVP3 I,J,K : ',I,J,K,S,s2,s3
+                WRITE(*,*) A0,A1,A2,A3,ZCHI
+                WRITE(*,*) CCHI(1,(I-1)*NP+K),CCHI(1,(I-1)*NP+K+1)
               ENDIF
             ELSEIF (CHIN) THEN
               JBASE = J
@@ -7780,12 +6876,11 @@ c                WRITE(*,*) CCHI(1,(I-1)*NP+K),CCHI(1,(I-1)*NP+K+1)
 
    62 FORMAT(' MAX. ERROR IN JACOBIAN AFTER MAPPING : ',
      >       1PE10.3,0P2F10.6,2I4)
-       IF (IWRT.NE.0) THEN
-c        WRITE(*,*)
-c        WRITE(*,*) '***************************************************'
-c        WRITE(*,62) MAXERR,SERR,CERR,IERR,JERR
-c        WRITE(*,*) '***************************************************'
-       ENDIF
+c      WRITE(20,*)
+c      WRITE(20,*) '***************************************************'
+c      WRITE(20,62) MAXERR,SERR,CERR,IERR,JERR
+c      WRITE(20,*) '***************************************************'
+
 
 C-------------------- WRITE GEOMETRIC QUANTITIES TO TAPE12 -----------
 c      NMAP = 12
@@ -7843,8 +6938,8 @@ c        IF ((IGAM.GE.1).AND.(IGAM.LE.4)) THEN
 c          CUPLOT(I) = DGDPSI(ZPSI) + B*XL*(1.+EPS*XL/2.)*DPDPSI(ZPSI)
 c          CUPLOT(2*NR-I)= DGDPSI(ZPSI)+B*XR*(1.+EPS*XR/2.)*DPDPSI(ZPSI)
 c        ELSE
-c          CUPLOT(I) = C*DGDPSI(ZPSI) + B*(1.+EPS*XL)**2.0 * DPDPSI(ZPSI)
-c          CUPLOT(2*NR-I)=C*DGDPSI(ZPSI)+B*(1.+EPS*XR)**2.0 *DPDPSI(ZPSI)
+c          CUPLOT(I) = C*DGDPSI(ZPSI) + B*(1.+EPS*XL)**2 * DPDPSI(ZPSI)
+c          CUPLOT(2*NR-I)=C*DGDPSI(ZPSI)+B*(1.+EPS*XR)**2 *DPDPSI(ZPSI)
 c        ENDIF
 c        CUPLOT(I) = A * CUPLOT(I) / (1.+EPS*XL)
 c        IF (I.NE.NR) THEN

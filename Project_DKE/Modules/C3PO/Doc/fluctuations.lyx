@@ -42,20 +42,11 @@
 \begin_body
 
 \begin_layout Title
-Effect of density and magnetic field fluctuations on rf waves propagation
+Plasma fluctuations and rf current drive
 \end_layout
 
 \begin_layout Author
-Yves Peysson, Lorenzo Morini and Joan Decker 
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset toc
-LatexCommand tableofcontents
-
-\end_inset
-
-
+Yves Peysson, Lorenzo Morini and Joan Decker
 \end_layout
 
 \begin_layout Section
@@ -63,8 +54,8 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-Low frequency fluctuations of the electron density or the magnetic field
- can strongly affect the propagation of rf waves in a magnetized plasma.
+Low frequency plasma fluctuations can strongly affect the propagation of
+ rf waves in a magnetized plasma.
  This effect has been extensively investigated for the Lower Hybrid (LH)
  wave by solving a wave kinetic equation in the weak turbulence approximation
  
@@ -75,7 +66,16 @@ key "ott78,bon82,vah92"
 \end_inset
 
 .
- In this approach, the flow of rf energy is described by a usual ray-tracing
+ More recently, it has been addressed for the Electron Cyclotron wave in
+ relation with the ability to focalize the rf beam on 
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+In this approach, the flow of rf energy is described by a usual ray-tracing
  between random scattering events where the initial wave vector 
 \begin_inset Formula $\mathbf{k}$
 \end_inset
