@@ -45,7 +45,11 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
-[dkepath,dkeparam,equil,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'dkeparam',id_dkeparam,path_dkeparam,'equil',id_equil,path_equil,'dkedisplay',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
+try, %in case of impossible access to the ITM database
+	[dkepath,dkeparam,equil,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'dkeparam',id_dkeparam,path_dkeparam,'equil',id_equil,path_equil,'dkedisplay',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
+catch
+	return
+end
 %
 %************************************************************************************************************************************
 %
