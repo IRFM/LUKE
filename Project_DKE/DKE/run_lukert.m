@@ -4,6 +4,11 @@ function [varargout] = run_lukert(simul_in,wavestructs,waves,psin_S,rho_S,dkepat
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 %
+[dummy,matlabversion,matlabrelease] = LUKEversion_jd;
+%
+if matlabversion > 711,
+	RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
+end
 RandStream.setGlobalStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
 %
 if nargin < 15,
