@@ -48,7 +48,11 @@ if mode == 0,
     if isempty(color_mode)
         disp(a);
     else
-        cprintf(color_mode,[a,'\n']);
+    	try
+        	cprintf(color_mode,[a,'\n']);
+        catch
+        	disp(a);
+        end
     end 
 elseif mode == 1,
 	a1 = [];
@@ -67,13 +71,21 @@ elseif mode == 1,
     if isempty(color_mode)
         disp([a1,' ',a,' ',a2]);
     else
-        cprintf(color_mode,[a1,' ',a,' ',a2,'\n']);
+    	try
+        	cprintf(color_mode,[a1,' ',a,' ',a2,'\n']);
+        catch
+        	disp([a1,' ',a,' ',a2]);
+        end
     end
 elseif mode == 2,
     if isempty(color_mode)
         disp(['-------> ',a]);
     else
-        cprintf(color_mode,['-------> ',a,'\n']);
+    	try
+        	cprintf(color_mode,['-------> ',a,'\n']);
+        catch
+        	disp(['-------> ',a]);
+        end
     end
 elseif mode == 3,
 	ttt = [];
@@ -81,7 +93,11 @@ elseif mode == 3,
     if isempty(color_mode)
         disp([a,'...']);
     else
-        cprintf(color_mode,[a,'...','\n']);
+        try
+        	cprintf(color_mode,[a,'...','\n']);
+        catch
+        	disp([a,'...']);
+        end
     end
 	for i = 1:sa(2)+10,
 		ttt= [ttt,'-'];
@@ -94,12 +110,20 @@ elseif mode == 4,
     if isempty(color_mode)
         disp([' - ',a]);
     else
-        cprintf(color_mode,[' - ',a,'\n']);
+        try
+        	cprintf(color_mode,[' - ',a,'\n']);
+     	catch
+     		disp([' - ',a]);
+     	end
     end
     if isempty(color_mode)
         disp(ttt);
     else
-        cprintf(color_mode,[ttt,'\n']);
+        try
+        	cprintf(color_mode,[ttt,'\n']);
+        catch
+        	disp(ttt);
+        end
     end
 elseif mode == 5,
 	ttt = [];
@@ -113,7 +137,11 @@ elseif mode == 5,
     if isempty(color_mode)
         disp(a);
     else
-        cprintf(color_mode,[a,'\n']);
+        try
+        	cprintf(color_mode,[a,'\n']);
+        catch
+        	disp(a);
+        end
     end
     %
     disp(ttt);
@@ -121,7 +149,11 @@ elseif mode == 6,
     if isempty(color_mode)
         disp(['WARNING: ',a]);
     else
-        cprintf(color_mode,['WARNING: ',a,'\n']);
+        try
+        	cprintf(color_mode,['WARNING: ',a,'\n']);
+        catch
+            disp(['WARNING: ',a]);
+        end
     end
 elseif mode == 7,
     if isempty(color_mode)
