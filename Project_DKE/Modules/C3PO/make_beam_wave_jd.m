@@ -150,6 +150,9 @@ for id = 1:nd,
         wave.rays{ir}.sphi_xyz = ray.sphi_xyz;
         %
         wave.rays{ir}.swidth = swidth;
+        %
+        wave.rays{ir}.rayinits = ray.rayinits;
+        %
     end
 end
 %
