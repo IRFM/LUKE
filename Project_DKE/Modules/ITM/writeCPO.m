@@ -5,7 +5,7 @@ function [flag] = writeCPO(varargin)
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
-if length(varargin) < 4,error('Not enough input arguments in loadCPO.m');end
+if length(varargin) < 4,error('Not enough input arguments in writeCPO.m');end
 %
 if ischar(varargin{4}),%Simulation is identified by the shot and run numbers
 	expIdx = varargin{1};
