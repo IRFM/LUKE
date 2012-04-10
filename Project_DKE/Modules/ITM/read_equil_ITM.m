@@ -1,4 +1,4 @@
-function [equil_LUKE,status,result] = read_equil_ITM(numshot,numrun,time,method)
+function [equil] = read_equil_ITM(numshot,numrun,time,time_interp)
 %LUKE - Function that build a LUKE compliant magnetic equilibrium structure from ITM MDS+ database
 %
 %Function that build a LUKE compliant magnetic equilibrium structure from ITM MDS+ database
@@ -8,37 +8,39 @@ function [equil_LUKE,status,result] = read_equil_ITM(numshot,numrun,time,method)
 if nargin < 2,error('Not enough input arguments in read_equil_ITM.m');end
 %
 if nargin == 2,
-	time = 1;%First time only
-	method == 1;Time interpolation (1:linear,2:******,3:nearest neighbor)
+	time = 0;%Time is zero when the variable is not transfered
+	time_interp = 1;%Time interpolation (1:linear,2:******,3:nearest neighbor)
 end
 %
 if nargin == 3,
-	method == 1;Time interpolation (1:linear,2:******,3:nearest neighbor)
+	time_interp = 1;%Time interpolation (1:linear,2:******,3:nearest neighbor)
 end
 %
 status = 0;
-result = '';
-equil_LUKE = '';
+equil = [];
 %
 try
-	import ualmemory.javainterface.*;
-	expIdx = openBD('euitm',numshot,numrun);%Open the database
+	expIdx = euitm_open('euitm',numshot,numrun);%Open the ITM MDS+ database
 	%
-	if isnan(time),%All data are get
-		equil = CPO_get(expIdx,'equilibrium');%Read magnetic equilibrium
-		coreprof = CPO_get(expIdx,'coreprof');%Read data profile
+	equil_euitm = euitm_get_slice(expIdx,'equilibrium',time,time_interp);%Read 'equilibrium' CPO
+	coreprof_euitm = euitm_get_slice(expIdx,'coreprof',time,time_interp);%Read 'coreprof' CPO
+	%
+	info_dke_yp(4,'EQUILIBRIUM and COREPROF data structures successfully loaded from the ITM-MDS+ database.');
+	%
+	euitm_close(expIdx,'euitm',numshot,numrun);%Close the currently open database
+	%
+	if isempty(equil_euitm.datainfo.whatref.machine),
+		id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun),'_time_',int2str(time),'_timeinterp_',int2str(time_interp)];
+		equil_euitm.datainfo.whatref.machine = id;
+		info_dke_yp(6,['The field equil_euitm.datainfo.whatref.machine is empty -> the reference id is enforced to ',id]);
 	else
-		equil = CPO_get(expIdx,'equilibrium',time,method);%Read magnetic equilibrium
-		coreprof = CPO_get(expIdx,'coreprof',time,method);%Read data profile
+		id = equil_euitm.datainfo.whatref.machine;
 	end
-	%
-	closeBD(expIdx,'euitm',numshot,numrun);%Close the currently open database
-	%
-	magnetic_LUKE = CPO2LUKEstruct_yp('equilibrium',equil);% Data conversion between ITM CPO's and C3PO/LUKE format
-	coreprof_LUKE = CPO2LUKEstruct_yp('coreprof',coreprof);% Data conversion between ITM CPO's and C3PO/LUKE format
-	equil_LUKE = conc_struct_jd(magnetic_LUKE,coreprof_LUKE);
 catch
 	status = -1;
-	result = 'Error while reading the ITM-MDS+ database. Data may not exist !';
+	info_dke_yp(7,'Problem while reading the ITM-MDS+ database. Data may not exist.')
 end
-
+%
+if ~status & nargout == 1, 
+    equil = process_euitm_dataequil(equil_euitm,coreprof_euitm);
+end

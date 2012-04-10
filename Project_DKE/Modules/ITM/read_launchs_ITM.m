@@ -1,40 +1,43 @@
-function [launchs_LUKE,status,result] = read_launchs_ITM(numshot,numrun,time,method)
-%LUKE - Function that build a LUKE compliant launch structure from ITM MDS+ database
+function [launchs] = read_launchs_ITM(numshot,numrun,time,time_interp)
+%LUKE - Function that build a LUKE compliant launchs (multiple antennas) structure from ITM MDS+ database
 %
-%Function that build a LUKE compliant launch structure from ITM MDS+ database
+%Function that build a LUKE compliant launchs (multiple antennas) structure from ITM MDS+ database 
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
-if nargin < 2,error('Not enough input arguments in read_equil_ITM.m');end
+if nargin < 2,error('Not enough input arguments in read_launchs_ITM.m');end
 %
 if nargin == 2,
-	time = 1;%First time only
-	method == 1;Time interpolation (1:linear,2:******,3:nearest neighbor)
+	time = 0;%Time is zero when the variable is not transfered
+	time_interp = 1;%Time interpolation (1:linear,2:******,3:nearest neighbor)
 end
 %
 if nargin == 3,
-	method == 1;Time interpolation (1:linear,2:******,3:nearest neighbor)
+	time_interp = 1;%Time interpolation (1:linear,2:******,3:nearest neighbor)
 end
 %
 status = 0;
-result = '';
-launchs_LUKE = '';
+launchs = [];
 %
 try
-	import ualmemory.javainterface.*;
-	expIdx = openBD('euitm',numshot,numrun);%Open the database
+	expIdx = euitm_open('euitm',numshot,numrun);%Open the ITM MDS+ database
 	%
-	if isnan(time),%All data are get
-		launchs = CPO_get(expIdx,'launchs');%Read launchs CPO
-	else
-		launchs = CPO_get(expIdx,'launchs',time,method);%Read launchs CPO
+	antennas_euitm = euitm_get_slice(expIdx,'antennas',time,time_interp);%Read antennas data 
+	%
+	info_dke_yp(4,'The ANTENNAS data structure successfully loaded from the ITM-MDS+ database.');
+	%
+	euitm_close(expIdx,'euitm',numshot,numrun);%Close the currently open database
+	%
+	if isempty(antennas_euitm.datainfo.whatref.machine),
+		id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun),'_time_',int2str(time),'_timeinterp_',int2str(time_interp)];
+		antennas_euitm.datainfo.whatref.machine = id;
+		info_dke_yp(6,['The field antennas_euitm.datainfo.whatref.machine is empty -> the reference id is enforced to ',id]);
 	end
-	%
-	closeBD(expIdx,'euitm',numshot,numrun);%Close the currently open database
-	%
-	launchs_LUKE = CPO2LUKEstruct_yp('launchs',launchs);% Data conversion between ITM CPO's and C3PO/LUKE format
 catch
 	status = -1;
-	result = 'Error while reading the ITM-MDS+ database. Data may not exist !';
+	info_dke_yp(7,'Problem while reading the ITM-MDS+ database. Data may not exist.')
 end
-
+%
+if ~status & nargout == 1, 
+	launchs = CPO2LUKEstruct_yp('antennas',antennas_euitm);% Data conversion between ITM CPO's and C3PO/LUKE format
+end

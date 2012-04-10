@@ -3,6 +3,18 @@ function [status,result] = write_equil_ITM(equil,numshot,numrun,time)
 %
 %Function that writes a LUKE magnetic equilibrium structure into ITM MDS+ database using the CPO format
 %
+%WARNING: steps for writing into a ITM database
+%
+%   - check that in the.cshrc file the following command is written: source /afs/efda-itm.eu/project/switm/scripts/ITMv1 kepler luke 4.09a >/dev/null ('luke' is the fake tokamak name, and 4.09a is the UAL version)
+%   - type 'env' to given the environment variables of the user. A list of directories with the base name MDSPLUS_TREE_BASE_0=/afs/efda-itm.eu/user/p/peysson/public/itmdb/itm_trees/luke/4.09a/mdsplus/1
+%   - type ls MDSPLUS_TREE_BASE_0=/afs/efda-itm.eu/user/p/peysson/public/itmdb/itm_trees/luke/4.09a/mdsplus/1. If it is empty the tree of the database must be first created
+%   - type which ITMv1 (the same ITM version setup in the .cshrc), and in the example the answer is: /opt/switm/scripts.bin/ITMv1
+%   - type ls /opt/switm/scripts.bin/ITMv1 to see the list of functions
+%   - type create_user_itm_dir to get the usage -> Usage: create_user_itm_dir <tokamak name> <Data Structure version>. Here <tokamak name> = luke and <Data Structure version> = 4.09a
+%   - type create_user_itm_dir luke 4.09a for creating the database for luke.
+%
+%Once the previous steps have been done, this routine may be operational. To have details on the ITM matlab functions (euitm_create,...), type ls /afs/efda-itm.eu/project/switm/ual/4.09a/matlabinterface/ in matlab
+%
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
 if nargin < 3,error('Not enough input arguments in write_equil_ITM.m');end
@@ -17,8 +29,8 @@ import ualmemory.javainterface.*;
 %
 ntime = length(time);
 %
-try,
-	expIdx = UALAccess.create('euitm',numshot,numrun,numshot,0);
+try,	
+	expIdx = euitm_create('euitm',numshot,numrun,numshot,0);%type help euitm_create to get the infos on this function.
 	equilCPO = CPO_create('equilibrium',ntime);
 	coreprofCPO = CPO_create('coreprof',ntime);
 	%
@@ -370,10 +382,10 @@ try,
 	%
 	CPO_put(expIdx,equilCPO);
 	CPO_put(expIdx,coreprofCPO);
-	closeBD(expIdx,'euitm',numshot,numrun);
+	euitm_close(expIdx,'euitm',numshot,numrun);
 catch
 	status = -1;
-	result = 'WARNING: LUKE magnetic equilibrium unsuccessfully writen in the ITM-MDS+ database.';
+	result = 'WARNING: unsuccessful  attempt to write a LUKE magnetic equilibrium in the ITM-MDS+ database.';
 end
 %
 
