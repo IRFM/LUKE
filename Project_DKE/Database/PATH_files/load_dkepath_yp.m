@@ -4,52 +4,42 @@ function [dkepath] = load_dkepath_yp(dkepath,luke_ref)
 %
 %	Input:
 %
-%       - dkepath: path structure
-%       - luke_ref: for CVS tagged LUKE version [1,m]
+%       - dkepath: initial path structure
+%       - luke_ref: for CVS tagged LUKE version [1,1]
 %         (default: 'LUKE')
 %
 %	Output:
 %
-%       - dkepath: path structure
+%       - dkepath: final path structure
 %
 %   Warning: none
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-list_path = dir('Project_DKE/Database/PATH_files/path_*.m');
-flagconfig = 0;
-%
-[dummy,hostname] = unix('hostname');hostname = hostname(1:end-1);%remove extra term
+list_path = dir('Project_DKE/Database/PATH_files/path_*.m');% list of path configurations
 %
 for ipath = 1:length(list_path),
-    eval(['dkepath_temp = ',list_path(ipath).name(1:end-2),'(''',luke_ref,''');']);
-    fnames = fieldnames(dkepath_temp);
-    for ifnames = 1:length(fnames),
-        if strfind(hostname,dkepath_temp.hostname) & strcmp(getenv('USER'),fnames(ifnames)) & ~flagconfig,
-            dkepath.hostname.(dkepath_temp.machine) = dkepath_temp.hostname;
-            if length(dkepath_temp.([fnames{ifnames}])) > 1,%if several path for the same user
-                dkepath.(dkepath_temp.machine) = dkepath_temp.([fnames{ifnames}])(dkepath_temp.path_profile);
-            else
-                dkepath.(dkepath_temp.machine) = dkepath_temp.([fnames{ifnames}]);
-            end
-            dkepath.(dkepath_temp.machine).computer = dkepath_temp.computer;
-            %
-            dkepath = rmfield(dkepath,'default');%useless since a specific one is found.
-            %
-            flagconfig = 1;
-        end
+    %
+    funcname = list_path(ipath).name(1:end-2);
+    pathfunc = str2func(funcname);
+    %
+    try
+        dkepath_new = dkepath;
+        dkepath_temp = pathfunc(luke_ref);% try loading specific path profile for 
+        %
+        dkepath_new.hostname.(dkepath_temp.machine) = dkepath_temp.hostname;
+        dkepath_new.(dkepath_temp.machine) = dkepath_temp;
+        %
+        disp(['Path from profile ',funcname,'.m successfully loaded'])
+        %
+        dkepath = dkepath_new;
+        %
+    catch err
+        disp(['Warning : path from profile ',funcname,'.m could not be loaded because of the following error :',err.message]);
     end
+    %
 end
 %
-if flagconfig == 0,
-    disp('------------------------------------------------------');
-    info_dke_yp(1,['WARNING: no specific path configuration found for user ''',getenv('USER'),''' on host ''',hostname,''''],'','Red');
-else
-    disp('------------------------------------------------------');
-    info_dke_yp(2,['Path configuration for user ''',getenv('USER'),''' on host ''',hostname,''' well loaded.'],'','Green');
-end
-%
-
 
 
 

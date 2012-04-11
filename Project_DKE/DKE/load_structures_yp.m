@@ -121,6 +121,13 @@ end
 %
 if exist('flag_path','var'),%Paths
     %
+    if isnumeric(id_path),% path profile number selected
+        profnum = id_path;
+        id_path = '';
+    else
+        profnum = NaN;% default profile number
+    end
+    %
     if isempty(id_path),%path is taken relative to local directory
         dkepath = path_LUKE_LOCAL;
         info_dke_yp(2,['Local LUKE path selected']);
@@ -167,10 +174,42 @@ if exist('flag_path','var'),%Paths
         end
         %
         path_id = dkepath.id;
-        dkepath = dkepath.(hostname);
         %
-        dkepath.hostname = hostname;
-        dkepath.id = path_id;
+        username = getenv('USER');
+        %
+        if ~isfield(dkepath.(hostname),username),%user not listed in machine profiles
+            if isfield(dkepath.(hostname),'default'),
+                disp(['Warning : user ',username,' not found on machine ',hostname,'; selecting profile from default user ',dkepath.(hostname).default])
+                username = dkepath.(hostname).default;
+            else
+                error(['Warning : user ',username,' not found on machine ',hostname,'; no default profile found.'])
+            end
+        end
+        %
+        dkepath_local = dkepath.(hostname).(username);
+        %
+        if profnum > length(dkepath_local),
+            disp(['Warning : profile index exceeds number of profiles for user ',username,' on machine ',hostname,'; selecting default profile.'])
+            profnum = NaN;
+        end
+        %
+        if isnan(profnum),
+            if isfield(dkepath.(hostname),'path_profile') && isfield(dkepath.(hostname).path_profile,username),
+                profnum = dkepath.(hostname).path_profile.(username);
+            else
+                profnum = 1;
+            end
+        end
+        %
+        dkepath_local = dkepath_local(profnum);
+        %
+        disp(['Path profile number ',num2str(profnum),' for user ',username,' on machine ',hostname,' selected'])
+        %
+        dkepath_local.hostname = hostname;
+        dkepath_local.computer = dkepath.(hostname).computer;
+        dkepath_local.id = path_id;
+        %
+        dkepath = dkepath_local;
         %
         if ~isfield(dkepath,'remote'),
             dkepath.remote = '';
