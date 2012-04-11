@@ -82,7 +82,7 @@ if isscalar(dkeparam.tn),
             dkeparam.tn = dkeparam.tn.*(1:nit)/nit;% 
         elseif imag(dkeparam.dtn) > 0,%number of ierations fixed by imag(dtn)
             nit = imag(dkeparam.dtn);
-            dkeparam.tn = 100000.*(1:nit)/nit;% 
+            dkeparam.tn = dkeparam.tn.*(1:nit)/nit;% 
         else% time step determined by dtn
             if dkeparam.dtn > dkeparam.tn,
                 info_dke_yp(2,['Warning : the prescribed time step (',num2str(dkeparam.dtn),...
