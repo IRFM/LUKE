@@ -135,7 +135,7 @@ if any(alpha_hxr(:) <= -pi | alpha_hxr(:) > pi)
 end
 %
 if any(beta_hxr(:) < 0 | beta_hxr(:) > pi),
-   % error('need 0 <= beta_hxr <= pi')
+    error('need 0 <= beta_hxr <= pi')
 end    
 %
 sZ = s.*cos(beta_hxr);
