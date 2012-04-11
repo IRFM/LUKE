@@ -198,7 +198,6 @@ equil.fluct.fitparam = fluct_fitparam;
 if exist('dmumpsmex','file');
     dkeparam.invproc = -2;%MUMPSMEX
 end
-dkeparam.invproc = 1;
 %
 %************************************************************************************************************************************
 %
