@@ -214,7 +214,7 @@ USER = 'yvespeysson';
 CLUSTER = 'macproyves';
 HOST = 'tolbachik.hd.free.fr';%
 HOME = '/Users/yvespeysson';
-APPLICATIONS = 'MATLAB_R2011b';
+APPLICATIONS = 'MATLAB_R2012a';
 NPROC = 6;
 %
 macbookyves.yves(1).remote(4).host = {HOST,macbookyves.hostname};
