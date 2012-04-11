@@ -203,7 +203,7 @@ if exist('flag_path','var'),%Paths
         %
         dkepath_local = dkepath_local(profnum);
         %
-        disp(['Path profile number ',num2str(profnum),' for user ',username,' on machine ',hostname,' selected'])
+        info_dke_yp(2,['Path profile number ',num2str(profnum),' for user ',username,' on machine ',hostname,' selected'],'','Green');
         %
         dkepath_local.hostname = hostname;
         dkepath_local.computer = dkepath.(hostname).computer;
