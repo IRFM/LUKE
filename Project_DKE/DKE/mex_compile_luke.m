@@ -131,39 +131,52 @@ end
 % Compilation of FORTRAN programs
 %
 if ~any(isnan(fopts)) && (force_compile || any(filetime.erfcc.source > filetime.erfcc.mex)) && isfield(compiler_opt,'fopts'),
-    lfield = fieldnames(compiler_opt.fopts);
-    for ifield = 1:length(lfield),
-		if strcmp(lfield(ifield),['mex',matver]),
-    		eval(['mex -c ',fopts,' ',sourcepath.C3PO,'erfcc.f']);
-    		eval(['mex ',fopts,' ',sourcepath.C3PO,'erfcc_mex_jd.F erfcc.',objext]);
-    		disp(['The erfcc_mex_jd.',mexext,' mexfile has been compiled.'])
-    	end
+    if isstruct(compiler_opt.fopts),
+        lfield = fieldnames(compiler_opt.fopts);
+        for ifield = 1:length(lfield),
+            if strcmp(lfield(ifield),['mex',matver]),
+                fopts = compiler_opt.fopts.lfield(ifield);%fopts for the used matlab version
+            end
+        end
+    else
+        fopts = compiler_opt.fopts;
     end
+    %
+    eval(['mex -c ',fopts,' ',sourcepath.C3PO,'erfcc.f']);
+    eval(['mex ',fopts,' ',sourcepath.C3PO,'erfcc_mex_jd.F erfcc.',objext]);
+    disp(['The erfcc_mex_jd.',mexext,' mexfile has been compiled.'])    
 end
 %
 if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.separatrice.source > filetime.separatrice.mex)) && isfield(compiler_opt,'helmex'),
-    lfield = fieldnames(compiler_opt.helmex);
-    for ifield = 1:length(lfield),
-		if strcmp(lfield(ifield),['mex',matver]),
-    		eval(['mex ',fopts,' ',sourcepath.helmex,'separatrice.F ']);
-    		disp(['The separatrice.',mexext,' mexfile has been compiled.'])
+    if isstruct(compiler_opt.fopts),
+        lfield = fieldnames(compiler_opt.helmex);
+        for ifield = 1:length(lfield),
+            if strcmp(lfield(ifield),['mex',matver]),
+                fopts = compiler_opt.fopts.lfield(ifield);%fopts for the used matlab version
+            end
         end
-	end
-end
-%
-if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.separatrice.source > filetime.separatrice.mex)),
+    else
+        fopts = compiler_opt.fopts;
+    end
+    %
     eval(['mex ',fopts,' ',sourcepath.helmex,'separatrice.F ']);
-    disp(['The separatrice.',mexext,' mexfile has been compiled.'])
+    disp(['The separatrice.',mexext,' mexfile has been compiled.']);
 end
 %
 if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.helmex77.source > filetime.helmex77.mex)) && isfield(compiler_opt,'helmex'),
-    lfield = fieldnames(compiler_opt.helmex);
-    for ifield = 1:length(lfield),
-		if strcmp(lfield(ifield),['mex',matver]),
-    		eval(['mex ',fopts,' ',sourcepath.helmex,'helmex77.F ',helmex]);
-    		disp(['The helmex77.',mexext,' mexfile has been compiled.'])
-    	end
+    if isstruct(compiler_opt.helmex),
+        lfield = fieldnames(compiler_opt.helmex);
+        for ifield = 1:length(lfield),
+            if strcmp(lfield(ifield),['mex',matver]),
+                helmex = compiler_opt.helmex.lfield(ifield);%fopts for the used matlab version
+            end        
+        end
+    else
+        helmex = compiler_opt.helmex;
     end
+    %
+	eval(['mex ',fopts,' ',sourcepath.helmex,'helmex77.F ',helmex]);
+	disp(['The helmex77.',mexext,' mexfile has been compiled.'])
 end
 %
 cd(initdir);
