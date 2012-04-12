@@ -5,7 +5,7 @@ if nargin < 3,
 end
 %
 if nargin < 2,
-    compiler_opt = '';%no compilation (options copts, fopts and helmex must be setup in the path_XXX_YYY.m. They may be empty but defined)
+    compiler_opt = '';%no compilation options (options copts, fopts and helmex must be setup in the path_XXX_YYY.m. They may be empty but defined)
 end
 %
 [dummy,matver] = LUKEversion_jd;
@@ -103,23 +103,23 @@ cd(mexpath);
 %
 % Compilation of C programs
 %
-if ~any(isnan(copts)) && (force_compile || any(filetime.trapz_dke_yp.source > filetime.trapz_dke_yp.mex)) && isfield(compiler_opt,'copts'),
+if ~any(isnan(copts)) && (force_compile || any(filetime.trapz_dke_yp.source > filetime.trapz_dke_yp.mex)),
     eval(['mex ',copts,' ',sourcepath.DKE,'trapz_dke_yp.c']);
     disp(['The trapz_dke_yp.',mexext,' mexfile has been compiled.'])
 end
 %
-if ~any(isnan(copts)) && (force_compile || any(filetime.twister.source > filetime.twister.mex)) && isfield(compiler_opt,'copts')
+if ~any(isnan(copts)) && (force_compile || any(filetime.twister.source > filetime.twister.mex)),
     eval(['mex ',copts,' ',sourcepath.DKE,'twister.cpp']);
     disp(['The twister.',mexext,' mexfile has been compiled.'])
 end
 %
-if ~any(isnan(copts)) && (force_compile || any(filetime.alphaphimex_jd.source > filetime.alphaphimex_jd.mex)) && isfield(compiler_opt,'copts'),
+if ~any(isnan(copts)) && (force_compile || any(filetime.alphaphimex_jd.source > filetime.alphaphimex_jd.mex)),
     eval(['mex -c ',copts,' -I',sourcepath.DKE,' ',sourcepath.DKE,'alphaphi_jd.c']);
     eval(['mex ',copts,' ',sourcepath.DKE,'alphaphimex_jd.c alphaphi_jd.',objext]);
     disp(['The alphaphimex_jd.',mexext,' mexfile has been compiled.'])
 end
 %
-if ~any(isnan(copts)) && (force_compile || any(filetime.raytracing_yp.source > filetime.raytracing_yp.mex)) && isfield(compiler_opt,'copts'),
+if ~any(isnan(copts)) && (force_compile || any(filetime.raytracing_yp.source > filetime.raytracing_yp.mex)),
     eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_interp_yp.c']);
     eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_dieltensor_yp.c']);
     eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_load_yp.c']);
@@ -130,53 +130,20 @@ end
 %
 % Compilation of FORTRAN programs
 %
-if ~any(isnan(fopts)) && (force_compile || any(filetime.erfcc.source > filetime.erfcc.mex)) && isfield(compiler_opt,'fopts'),
-    if isstruct(compiler_opt.fopts),
-        lfield = fieldnames(compiler_opt.fopts);
-        for ifield = 1:length(lfield),
-            if strcmp(lfield(ifield),['mex',matver]),
-                fopts = compiler_opt.fopts.lfield(ifield);%fopts for the used matlab version
-            end
-        end
-    else
-        fopts = compiler_opt.fopts;
-    end
-    %
+if ~any(isnan(fopts)) && (force_compile || any(filetime.erfcc.source > filetime.erfcc.mex)),
     eval(['mex -c ',fopts,' ',sourcepath.C3PO,'erfcc.f']);
     eval(['mex ',fopts,' ',sourcepath.C3PO,'erfcc_mex_jd.F erfcc.',objext]);
-    disp(['The erfcc_mex_jd.',mexext,' mexfile has been compiled.'])    
+    disp(['The erfcc_mex_jd.',mexext,' mexfile has been compiled.'])
 end
 %
-if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.separatrice.source > filetime.separatrice.mex)) && isfield(compiler_opt,'helmex'),
-    if isstruct(compiler_opt.fopts),
-        lfield = fieldnames(compiler_opt.helmex);
-        for ifield = 1:length(lfield),
-            if strcmp(lfield(ifield),['mex',matver]),
-                fopts = compiler_opt.fopts.lfield(ifield);%fopts for the used matlab version
-            end
-        end
-    else
-        fopts = compiler_opt.fopts;
-    end
-    %
+if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.separatrice.source > filetime.separatrice.mex)),
     eval(['mex ',fopts,' ',sourcepath.helmex,'separatrice.F ']);
-    disp(['The separatrice.',mexext,' mexfile has been compiled.']);
+    disp(['The separatrice.',mexext,' mexfile has been compiled.'])
 end
 %
-if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.helmex77.source > filetime.helmex77.mex)) && isfield(compiler_opt,'helmex'),
-    if isstruct(compiler_opt.helmex),
-        lfield = fieldnames(compiler_opt.helmex);
-        for ifield = 1:length(lfield),
-            if strcmp(lfield(ifield),['mex',matver]),
-                helmex = compiler_opt.helmex.lfield(ifield);%fopts for the used matlab version
-            end        
-        end
-    else
-        helmex = compiler_opt.helmex;
-    end
-    %
-	eval(['mex ',fopts,' ',sourcepath.helmex,'helmex77.F ',helmex]);
-	disp(['The helmex77.',mexext,' mexfile has been compiled.'])
+if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.helmex77.source > filetime.helmex77.mex)),
+    eval(['mex ',fopts,' ',sourcepath.helmex,'helmex77.F ',helmex]);
+    disp(['The helmex77.',mexext,' mexfile has been compiled.'])
 end
 %
 cd(initdir);
