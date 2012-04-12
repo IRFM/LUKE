@@ -105,6 +105,8 @@ if opt_save_in >= 0;
     opt_save = opt_save_in;
     tn = tn_in;
     %
+    calctime = struct;
+    %
     if ~isinf(equil.fluct.dtn_fluct),
         xJ = [];
         xP = [];
@@ -223,12 +225,16 @@ for itn = itnmin:itnmax,%time evolution
         dkeparam.tn = tn;
     end
     %
-    %
     % RF wave propagation solver
+    %
+    time_waves = tic;
     %
     if ~isempty(wavestructs), 
         [waves,wavestructs,byisel] = wave_distribution_yp(dkepath,dkeparam,wavestructs,f0struct,equil.fluct.dtn_fluct/mksa.nhu_ref,byPnonabs);%ray propagation in fluctuating plasma. The fluctuation phase in wavestructs is output to be later re-used by the same function taling into account of the phase evolution
     end
+    %
+    calctime(itn).waves = toc(time_waves);
+    %
     %
     % RF wave absorption solver (drift kinetic calculations)
     %
@@ -236,11 +242,15 @@ for itn = itnmin:itnmax,%time evolution
         XXf0 = XXf0_t{itn-1};%internal time evolution. The previous time is the input for the next one
     end
     %
+    time_luke = tic;
+    %
     if isempty(loadstructs),
         [Znorm,Zcurr,ZP0,dke_out,loadstructs.radialDKE,loadstructs.equilDKE,loadstructs.momentumDKE,loadstructs.gridDKE,loadstructs.Zmomcoef,loadstructs.Zbouncecoef,loadstructs.Zmripple,loadstructs.mksa,loadstructs.XXsinksource,loadstructs.loopDKE] = loop_run_lukert(simul,waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);
     else
         [Znorm,Zcurr,ZP0,dke_out] = loop_run_lukert(simul,waves,psin_S,loadstructs.radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);   
     end
+    %
+    calctime(itn).luke = toc(time_luke);
     %
     Ptot_0 = 0;%injected power at t=0
     Ptot_inj = 0;%injected power at t=itn
@@ -396,7 +406,7 @@ for itn = itnmin:itnmax,%time evolution
             waves = '';
         end
         %
-        eval(['save ',save_str,' tn itn itnmax xrho xJ xP Itot Ptot byPnonabs wavestructs waves f0struct XXf0_t loadstructs simul psin_S dkepath equil dkeparam dkedisplay ohm transpfaste ripple XXsinksource_in opt_save Znorm Zcurr ZP0']);
+        eval(['save ',save_str,' tn itn itnmax calctime xrho xtn xJ xP Itot Ptot byPnonabs wavestructs waves f0struct XXf0_t loadstructs simul psin_S dkepath equil dkeparam dkedisplay ohm transpfaste ripple XXsinksource_in opt_save Znorm Zcurr ZP0']);
         disp('--------------------------------------------------------------------------------------------------');
         info_dke_yp(2,['Backup of iteration ',int2str(itn),'/',int2str(itnmax),' done in file ''',save_str,'''.']);
         disp('--------------------------------------------------------------------------------------------------');
@@ -405,6 +415,7 @@ for itn = itnmin:itnmax,%time evolution
 end
 %
 dke_out.dkeparam = dkeparam;%for data transfer only
+dke_out.calctime = calctime;
 %
 if ~isempty(loadstructs),
     if nargout >= 1,varargout{1} = Znorm;end
