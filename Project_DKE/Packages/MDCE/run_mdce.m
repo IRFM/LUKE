@@ -48,6 +48,14 @@ if nargin < 8,
     display_mode = 2;% (0) no figure display, (1) figure display
 end 
 %
+if ~isstruct(scheduler),
+    %
+    scheduler.type = scheduler;
+    scheduler.enforce = 0;% 1 to enforce sequential calculation if mdce problem
+    scheduler.display = 1;
+    %
+end
+%
 if ~isfield(scheduler,'memory'),
     scheduler.memory = 500 + round(8*nX^2/1e6);
 end
