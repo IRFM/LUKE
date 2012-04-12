@@ -397,7 +397,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                         data = load([data_path,data_file],'basestr','id_simul','rho_S','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
                             'id_equil','path_equil','ids_wave','paths_wave','id_ohm','path_ohm','id_transpfaste','path_transpfaste','id_ripple','path_ripple',...
-                            'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
+                            'luke_input','dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
                             'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
                         disp(['-----> The data file ',[data_path,data_file],' is loaded.']);
                         %
@@ -499,14 +499,29 @@ function irunluke_jd(basestr,signs,opt_gui)
                         fileids.external = '';
                         paths.external = '';
                         %
-                        dkepath = data.dkepath;
-                        dkeparam = data.dkeparam;
-                        dkedisplay = data.dkedisplay;
-                        equil = data.equil;
-                        waves = data.waves;
-                        ohm = data.ohm;
-                        transpfaste = data.transpfaste;
-                        ripple = data.ripple;
+                        if isfield(data,'dkepath'),
+                            dkepath = data.dkepath;
+                        else
+                            dkepath = '';
+                        end
+                        %
+                        if isfield(data,'luke_input'),
+                            dkeparam = data.luke_input.dkeparam;
+                            dkedisplay = data.luke_input.dkedisplay;
+                            equil = data.luke_input.equil;
+                            waves = data.dke_out.waves;
+                            ohm = data.luke_input.ohm;
+                            transpfaste = data.luke_input.transpfaste;
+                            ripple = data.luke_input.ripple;
+                        else
+                            dkeparam = data.dkeparam;
+                            dkedisplay = data.dkedisplay;
+                            equil = data.equil;
+                            waves = data.waves;
+                            ohm = data.ohm;
+                            transpfaste = data.transpfaste;
+                            ripple = data.ripple;
+                        end
                         %
                         output.Znorm = data.Znorm;
                         output.Zcurr = data.Zcurr;
@@ -1151,6 +1166,32 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     g_opt.print = p_opt;
                     g_opt.TeNpar = 1;
+                    %
+                    if status.output == 1,
+                        g_opt.luke = input_dke_yp('Do you want to show waves using LUKE absorption (n/y)','y',{'n','y'}) == 'y';
+                        %
+                        if g_opt.luke,
+                            for iw = w_list,
+                                if ~isfield(waves{iw},'simul') || ~comp_struct_jd(waves{iw}.simul,output.dke_out.simul,0),
+                                    if isfield(waves{iw},'simul'),
+                                        disp(['WARNING : LUKE data in wave # ',num2str(iw),' outdated, recalculating...'])
+                                    else
+                                        disp(['WARNING : LUKE data in wave # ',num2str(iw),' missing, calculating now...'])
+                                    end
+                                    %
+                                    waves(iw) = proc_wave_alphaphi_luke_jd(output,waves(iw),1);%tmp version to deal with old waves
+                                    %waves(iw) = alphaphi_luke_jd(waves(iw),output.dke_out,output.ZP0,output.equilDKE,output.mksa);
+                                    %
+                                end
+                            end
+                        end
+                        %
+                    else
+                        g_opt.luke = false;
+                    end          
+                    %
+                    waves(w_list) = proc_wave_alphaphi_luke_jd('',waves(w_list),0);%tmp command to correct old waves
+                    %
                     nr_dep = 40;
                     rho_disp = 0:0.1:1;
                     ymask = NaN;
@@ -1361,7 +1402,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                     nrem = length(dkepath.remote);
                     remstr = 'Option for running LUKE :\n0 : local session \n';
                     for irem = 1:nrem,
-                        remstr = [remstr,num2str(irem),' : batch run on ',dkepath.remote(irem).host,':',dkepath.remote(irem).luke_root,'\n'];
+                        if ~iscell(dkepath.remote(irem).host),
+                            remstr = [remstr,num2str(irem),' : batch run on ',dkepath.remote(irem).host,':',dkepath.remote(irem).luke_root,'\n'];
+                        else
+                            remstr = [remstr,num2str(irem),' : batch run on ',dkepath.remote(irem).host{1},':',dkepath.remote(irem).luke_root,'\n'];
+                        end                            
                     end
                     %
                     c_opt = input_dke_yp(remstr,0,0:nrem);
@@ -1444,6 +1489,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                     status.output = 1;
                     status.data = 2;
                     %
+                end
+                %
+                if input_dke_yp('--> Do you want to update the waves structures with LUKE absorption (y/n)','y',{'y','n'}) == 'y',
+                    waves = output.dke_out.waves;
                 end
                 %
             elseif isel < 0 && status.data == 2,
