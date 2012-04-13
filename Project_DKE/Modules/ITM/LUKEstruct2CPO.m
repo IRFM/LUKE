@@ -14,6 +14,8 @@ if strcmp('waves',struct_name),
 	%
 	ix = findstr(rawdata.dkepath.luke_root,'/');
 	%
+	CPO_struct(timeslice).time = timeslice;
+	%
 	CPO_struct(timeslice).datainfo.dataprovider = rawdata.dkepath.luke_root(ix(5)+1:ix(6)-1);
 	CPO_struct(timeslice).datainfo.putdate = date;
 	CPO_struct(timeslice).datainfo.whatref.machine = which_MDSdatabase;
