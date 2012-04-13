@@ -19,10 +19,12 @@ clc
 % ITM simulation references (EC17 benchmark)
 %
 numshot = 2;
-numrun = 11;
-timeslice = 0;
+numrun_in = 551;
+numrun_out = 502;%single ray: 502, beam: 503
+%
+timeslice = [0];
+%
 time_interp = 1;%nearest point
-angle_simul = {'20','40','20+40'};
 %
 %Printing options
 %
@@ -51,7 +53,19 @@ par.nk_abs = 1;%maximum number of iterations on a_sdNpar for full absorption
 par.Dql = Inf;%Upper limit of the quasilinear diffusion coefficient. Important for low temperature plasmas et high power level for stability of the code
 par.rho_S = 20;%number of points for radial grid calculation
 %
-ray_display = 1;%for display ray propagation
+dkeparam = make_dkeparam_cronos(par);
+%
+ray_display = 0;%for display ray propagation
+%
+if numrun_out == 503,
+	beam_mode = 1;
+	nd = 3;%Number of transverse distance positions for beamlets
+	nchi= 4;%Number of angular positions for beamlets
+elseif numrun_out == 502,
+	beam_mode = 0;
+	nd = 1;%Number of transverse distance positions for beamlets
+	nchi= 1;%Number of angular positions for beamlets
+end
 %
 [dkepath,dkedisplay] = load_structures_yp('dkepath','','','dkedisplay','PARTIAL_VISUAL','');
 %
@@ -60,50 +74,52 @@ info_dke_yp(1,'Benchmark using the ITM framework for the EC17 conference')
 [machine,user,ver] = which_MDSdatabase;%test the database is correct
 info_dke_yp(4,['machine: ',machine,', user: ',user,', datastructure version: ',ver])
 %
-[equil] = read_equil_ITM(numshot,numrun,timeslice,time_interp);%Create magnetic equilibrium structure
-%
-[launchs] = read_launchs_ITM(numshot,numrun,timeslice,time_interp);%Create rf waves launchs structure
-%
-dkeparam = make_dkeparam_cronos(par);
-%
-wavestructs = cell(1,length(launchs));
-%
-for iw = 1:length(launchs),
- 	wavestructs{iw} = make_wavert_cronos(launchs{iw},0);%parameter for ray-tracing are adapted to the selected wave
-	%
- 	wavestructs{iw}.equil_id = equil.id;
- 	wavestructs{iw}.raydisplay.ray = ray_display;%for display ray propagation
- 	%
- 	if strcmp(launchs{iw}.type,'EC')
-     	%
-     	info_dke_yp(4,['wave :',int2str(iw),' type :',launchs{iw}.type])
-     	%
- 	else
-     	info_dke_yp(4,['wave :',int2str(iw),' type :',launchs{iw}.type,' n// = ',num2str(wavestructs{iw}.launch.bNpar0,4)])
-     	info_dke_yp(4,['wave :',int2str(iw),' type :',launchs{iw}.type,' Plh = ',num2str(wavestructs{iw}.launch.bPlhtot,4)])
- 	end
- 	%
-end
-%
-% Perform all simulations case. 
+[equil] = read_equil_ITM(numshot,numrun_in,timeslice(1),time_interp);%Create magnetic equilibrium structure
 %
 CPO_waves = [];
 %
-for i_simul = 1:length(angle_simul),
-	id_simul = ['launch_angle_',angle_simul{i_simul}];
+for it = 1:length(timeslice),
 	%
-	if i_simul == 1, 
-		wavestructs_simul = {wavestructs{1}};%angle 20 deg. only
-		timeslice = 1;
-	elseif i_simul == 2, 
-		wavestructs_simul = {wavestructs{2}};%angle 40 deg. only
-		timeslice = 2;
-	else 
-		wavestructs_simul = wavestructs;%both angles: 20 deg. + 40 deg.
-		timeslice = 3;
+	[launchs] = read_launchs_ITM(numshot,numrun_in,timeslice,time_interp);%Create rf waves launchs structure
+	%
+	wavestructs = cell(1,length(launchs));
+	%
+	for iw = 1:length(launchs),
+ 		wavestructs{iw} = make_wavert_cronos(launchs{iw},0);%parameter for ray-tracing are adapted to the selected wave
+		%
+ 		wavestructs{iw}.equil_id = equil.id;
+ 		wavestructs{iw}.raydisplay.ray = ray_display;%for display ray propagation
+		%
+      	wavestructs{iw}.waveparam.nd = nd;%Number of transverse distance positions for beamlets
+		wavestructs{iw}.waveparam.nchi = nchi;%Number of angular positions for beamlets
+		%
+		if ~beam_mode,
+			wavestructs{iw}.launch.w0 = NaN;
+         	wavestructs{iw}.launch.z_L = NaN;
+		end
+ 		%
+ 		if strcmp(launchs{iw}.type,'EC')
+     		%
+     		info_dke_yp(4,['wave :',int2str(iw),' type :',launchs{iw}.type])
+     		%
+ 		else
+     		info_dke_yp(4,['wave :',int2str(iw),' type :',launchs{iw}.type,' n// = ',num2str(wavestructs{iw}.launch.bNpar0,4)])
+     		info_dke_yp(4,['wave :',int2str(iw),' type :',launchs{iw}.type,' Plh = ',num2str(wavestructs{iw}.launch.bPlhtot,4)])
+ 		end
+ 		%
+ 		
+ 		
+ 		
+ 		%
 	end
 	%
-	[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('ITM',wavestructs_simul,[],[],dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,[],[],[],[],[]);
+    wavestructs = {wavestructs{1}};
+	%
+	% Perform simulation
+	%
+	id_simul = ['timeslice_',int2str(timeslice(it))];
+	%
+	[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('ITM',wavestructs,[],[],dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,[],[],[],[],[]);
 	%
 	filename = ['EC17_benchmark_',id_simul,'.mat'];
 	save(filename);
@@ -112,12 +128,13 @@ for i_simul = 1:length(angle_simul),
 	rawdata = load(filename);
 	procdata = proc_luke_jd(rawdata,0,p_opt,0.1,NaN,'',opt);
 	%
-	[CPO_waves] = LUKEstruct2CPO(numshot,numrun,timeslice,'waves',rawdata,procdata,CPO_waves);
+	[CPO_waves] = LUKEstruct2CPO(numshot,numrun_out,timeslice,'waves',rawdata,procdata,CPO_waves);
 	%
 end
-save toto.mat
 %
 %write results in CPO 'waves'
 %
-write_waves_ITM(numshot,numrun,CPO_waves);%build the structure to be transfered in the ITM MDS+ database
+save toto.mat
+return
+write_waves_ITM(numshot,numrun_out,CPO_waves);%build the structure to be transfered in the ITM MDS+ database
 %
