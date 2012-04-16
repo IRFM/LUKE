@@ -121,11 +121,11 @@ for it = 1:length(timeslice),
     luke_in(it).ohm = '';
     luke_in(it).transpfaste = '';
     luke_in(it).ripple = '';    
-    %
-	filename = ['EC17_benchmark_',id_simul,'_input.mat'];
-	save(filename,'luke_in');
-	info_dke_yp(2,['LUKE input data saved in ',filename]);
 end
+%
+filename = ['EC17_benchmark_',equil.id,'_input.mat'];
+save(filename,'luke_in');
+info_dke_yp(2,['LUKE input data saved in ',filename]);
 %
 if isempty(remotename),
 	for it = 1:length(timeslice),%local calculations
@@ -164,7 +164,7 @@ else
     end
 end
 %
-filename = ['EC17_benchmark_',id_simul,'_output.mat'];
+filename = ['EC17_benchmark_',equil.id,'_output.mat'];
 save(filename,'luke_out');
 info_dke_yp(2,['LUKE input data saved in ',filename]);
 %
@@ -189,7 +189,7 @@ for it = 1:length(timeslice),%local calculations
 	mksa = luke_out(it).mksa;
 	XXsinksource = luke_out(it).XXsinksource;
 	%
-	filename = ['EC17_benchmark_',id_simul,'.mat'];
+	filename = ['EC17_benchmark_',equil.id,'_',id_simul,'.mat'];
 	save(filename);
 	%
 	rawdata = load(filename);
