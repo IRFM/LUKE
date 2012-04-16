@@ -21,8 +21,7 @@ clc
 numshot = 2;
 numrun_in = 551;
 numrun_out = 502;%single ray: 502, beam: 503
-%
-timeslice = [0];
+timeslice = [0,1,2,3];
 %
 time_interp = 1;%nearest point
 %
@@ -78,7 +77,7 @@ info_dke_yp(4,['machine: ',machine,', user: ',user,', datastructure version: ',v
 %
 for it = 1:length(timeslice),
 	%
-	[launchs] = read_launchs_ITM(numshot,numrun_in,timeslice,time_interp);%Create rf waves launchs structure
+	[launchs] = read_launchs_ITM(numshot,numrun_in,timeslice(it),time_interp);%Create rf waves launchs structure
 	%
 	wavestructs = cell(1,length(launchs));
 	%
@@ -95,6 +94,10 @@ for it = 1:length(timeslice),
 			wavestructs{iw}.launch.w0 = NaN;
          	wavestructs{iw}.launch.z_L = NaN;
 		end
+		%
+		if wavestructs{iw}.launch.yP_L == 0, 
+			wavestructs{iw}.launch.yP_L = eps;%to avoid interpolation problems
+		end
  		%
  		if strcmp(launchs{iw}.type,'EC')
      		%
@@ -108,12 +111,12 @@ for it = 1:length(timeslice),
 	%
 	id_simul = ['timeslice_',int2str(timeslice(it))];
 	%
-	luke_in.id_simul = id_simul;
+	luke_in(it).id_simul = id_simul;
 	luke_in(it).dkeparam = dkeparam;
     luke_in(it).equil = equil;
     luke_in(it).dkedisplay = dkedisplay;
-   % ***********************
-    luke_in(it).wavestructs = {wavestructs{1}};
+    luke_in(it).wavestructs = {wavestructs{1},wavestructs{2}};
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%luke_in(it).wavestructs = wavestructs;
     luke_in(1).waves = '';
     luke_in(it).ohm = '';
     luke_in(it).transpfaste = '';
