@@ -122,11 +122,10 @@ for it = 1:length(timeslice),
     luke_in(it).transpfaste = '';
     luke_in(it).ripple = '';    
     %
+	filename = ['EC17_benchmark_',id_simul,'_input.mat'];
+	save(filename,'luke_in');
+	info_dke_yp(2,['LUKE input data saved in ',filename]);
 end
-%
-filename = ['EC17_benchmark_',id_simul,'_input.mat'];
-save(filename,'luke_in');
-info_dke_yp(2,['LUKE input data saved in ',filename]);
 %
 if isempty(remotename),
 	for it = 1:length(timeslice),%local calculations
