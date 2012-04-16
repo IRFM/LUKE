@@ -188,7 +188,7 @@ elseif strcmp('antennas',struct_name),
 		if ~isempty(CPO_struct.antenna_unit(ia).antenna_ec.name),
 			LUKE_struct{ia}.id = CPO_struct.antenna_unit(ia).antenna_ec.name;
 			LUKE_struct{ia}.type = 'EC';
-			LUKE_struct{ia}.omega_rf = [CPO_struct.antenna_unit(ia).antenna_ec.frequency]*2*pi;%wave angular frequency (rad/s)
+			LUKE_struct{ia}.omega_rf = CPO_struct.antenna_unit(ia).antenna_ec.frequency*2*pi;%wave angular frequency (rad/s)
 			%
 			LUKE_struct{ia}.yR_L = CPO_struct.antenna_unit(ia).antenna_ec.position.r;
 			LUKE_struct{ia}.yZ_L = CPO_struct.antenna_unit(ia).antenna_ec.position.z;
@@ -203,8 +203,12 @@ elseif strcmp('antennas',struct_name),
 			LUKE_struct{ia}.ns = 1000;
 			LUKE_struct{ia}.method = 'cubic';
 			%
-			LUKE_struct{ia}.w0 = NaN;
-			LUKE_struct{ia}.z_L = NaN;
+			clum = 299792458;%Speed of light (m/s)
+			alpha = CPO_struct.antenna_unit(ia).antenna_ec.frequency*pi/clum;%for the Rayleigh length
+			yw = alpha^2*CPO_struct.antenna_unit(ia).antenna_ec.beam.spot.waist(1)^4*CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad(1);%WARNING: circular shape only
+			%
+			LUKE_struct{ia}.w0 = CPO_struct.antenna_unit(ia).antenna_ec.beam.spot.waist(1)/sqrt(1 + yw*CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad(1));
+			LUKE_struct{ia}.z_L = yw/sqrt(1 + yw*CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad(1));
 			%
 			LUKE_struct{ia}.mmode = -CPO_struct.antenna_unit(ia).antenna_ec.mode;%LUKE definitions -> O/X mode: -1/+1. ITM ones are opposite
 		end
