@@ -58,7 +58,9 @@ else
 end
 %
 if nd == 1 || nchi == 1,
-    wave.rays{1}.swidth = swidth;
+    if ~isnan(swidth),
+        wave.rays{1}.swidth = swidth;
+    end
     return
 end
 %
@@ -149,7 +151,9 @@ for id = 1:nd,
         wave.rays{ir}.sepol_pmz = ray.sepol_pmz;
         wave.rays{ir}.sphi_xyz = ray.sphi_xyz;
         %
-        wave.rays{ir}.swidth = swidth;
+        if ~isnan(swidth),
+            wave.rays{ir}.swidth = swidth;
+        end
         %
         wave.rays{ir}.rayinits = ray.rayinits;
         %
