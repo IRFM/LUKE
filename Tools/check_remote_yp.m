@@ -126,10 +126,10 @@ for iremote = iremote_min:iremote_max,
     display(['Check if remote computer is accessible at to ',USER,'@',HOST,'.'])
     info_dke_yp(0,'(If the process is blocked (waiting more than 10s approx.), type CTRL-C to escape)','','Blue');
     %
-    [remote_access,~] = unix(['ssh ',USER,'@',HOST,' ''ls''']);
+    [remote_access,dummy] = unix(['ssh ',USER,'@',HOST,' ''ls''']);
     %
     if ~remote_access,%test is the remote machine is working with ssh
-        [~,HOME] = unix(['ssh ',USER,'@',HOST,' pwd']);
+        [dummy,HOME] = unix(['ssh ',USER,'@',HOST,' pwd']);
         HOME = HOME(1:end-1);%remove extra term    
         info_dke_yp(2,['The remote computer ',USER,'@',HOST,' is available.'],'','Green');
         flag(iremote) = 1;
