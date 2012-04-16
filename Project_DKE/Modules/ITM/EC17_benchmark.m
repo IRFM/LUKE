@@ -30,6 +30,11 @@ time_interp = 1;%nearest point
 %
 p_opt = -1;
 %
+%remote computing options
+%
+remotename = 'macproyves';%'','macproyves'
+debugmode = 1;%set to 1 in case of problem
+%
 %LUKE post-processing options
 opt.rho = 'g';
 opt.nr_dep = 0;
@@ -42,32 +47,27 @@ opt.spec = 0;
 %
 % User specific C3PO/LUKEparameters
 %
-par.luke_mode = 'ecrh';%'mixte','ecrh','lh'
-par.rt_mode = 1;%RT-DKE power consistency
-par.abs_lim = 0.95;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
-par.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
-par.dke_mode = 0;%Fokker-Planck equation (0), Drift Kinetic equation (1)
-par.tn = 100000;%LUKE time step (1/nhuth_ref)
-par.invproc = 1;%Iterative matrix inversion method: (1) cgs iterative method, (2) bicg iterative method, (3) qmr iterative method
-par.nk_abs = 1;%maximum number of iterations on a_sdNpar for full absorption
-par.Dql = Inf;%Upper limit of the quasilinear diffusion coefficient. Important for low temperature plasmas et high power level for stability of the code
-par.rho_S = 20;%number of points for radial grid calculation
-%
-dkeparam = make_dkeparam_cronos(par);
-%
 ray_display = 0;%for display ray propagation
 %
 if numrun_out == 503,
 	beam_mode = 1;
-	nd = 3;%Number of transverse distance positions for beamlets
-	nchi= 4;%Number of angular positions for beamlets
+	nd = 4;%Number of transverse distance positions for beamlets
+	nchi= 6;%Number of angular positions for beamlets
+	%
+	idx  = euitm_create('euitm',numshot,numrun_out);%create database for this run if not exists
+	euitm_close(idx,'euitm',numshot,numrun_out);
+	%
 elseif numrun_out == 502,
 	beam_mode = 0;
 	nd = 1;%Number of transverse distance positions for beamlets
 	nchi= 1;%Number of angular positions for beamlets
+	%
+    idx  = euitm_create('euitm',numshot,numrun_out);%create database for this run if not exists
+	euitm_close(idx,'euitm',numshot,numrun_out);
+	%
 end
 %
-[dkepath,dkedisplay] = load_structures_yp('dkepath','','','dkedisplay','PARTIAL_VISUAL','');
+[dkeparam,dkepath,dkedisplay] = load_structures_yp('dkeparam','EC_RT','','dkepath','','','dkedisplay','PARTIAL_VISUAL','');
 %
 info_dke_yp(1,'Benchmark using the ITM framework for the EC17 conference')
 %
@@ -75,8 +75,6 @@ info_dke_yp(1,'Benchmark using the ITM framework for the EC17 conference')
 info_dke_yp(4,['machine: ',machine,', user: ',user,', datastructure version: ',ver])
 %
 [equil] = read_equil_ITM(numshot,numrun_in,timeslice(1),time_interp);%Create magnetic equilibrium structure
-%
-CPO_waves = [];
 %
 for it = 1:length(timeslice),
 	%
@@ -106,35 +104,99 @@ for it = 1:length(timeslice),
      		info_dke_yp(4,['wave :',int2str(iw),' type :',launchs{iw}.type,' n// = ',num2str(wavestructs{iw}.launch.bNpar0,4)])
      		info_dke_yp(4,['wave :',int2str(iw),' type :',launchs{iw}.type,' Plh = ',num2str(wavestructs{iw}.launch.bPlhtot,4)])
  		end
- 		%
- 		
- 		
- 		
- 		%
 	end
-	%
-    wavestructs = {wavestructs{1}};
-	%
-	% Perform simulation
 	%
 	id_simul = ['timeslice_',int2str(timeslice(it))];
 	%
-	[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert('ITM',wavestructs,[],[],dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,[],[],[],[],[]);
+	luke_in.id_simul = id_simul;
+	luke_in(it).dkeparam = dkeparam;
+    luke_in(it).equil = equil;
+    luke_in(it).dkedisplay = dkedisplay;
+   % ***********************
+    luke_in(it).wavestructs = {wavestructs{1}};
+    luke_in(1).waves = '';
+    luke_in(it).ohm = '';
+    luke_in(it).transpfaste = '';
+    luke_in(it).ripple = '';    
+    %
+end
+%
+filename = ['EC17_benchmark_',id_simul,'_input.mat'];
+save(filename,'luke_in');
+info_dke_yp(2,['LUKE input data saved in ',filename]);
+%
+if isempty(remotename),
+	for it = 1:length(timeslice),%local calculations
+		[luke_out(it).Znorm,luke_out(it).Zcurr,luke_out(it).ZP0,luke_out(it).dke_out,luke_out(it).radialDKE,luke_out(it).equilDKE,luke_out(it).momentumDKE,luke_out(it).gridDKE,luke_out(it).Zmomcoef,luke_out(it).Zbouncecoef,luke_out(it).Zmripple,luke_out(it).mksa,luke_out(it).XXsinksource] = run_lukert(luke_in(it).id_simul,luke_in(it).wavestructs,luke_in(it).waves,[],luke_in(it).dkeparam.rho_S,dkepath,luke_in(it).equil,luke_in(it).dkeparam,luke_in(it).dkedisplay,luke_in(it).ohm,luke_in(it).transpfaste,luke_in(it).ripple,[],[]);
+	end
+else
+    [flag,remote] = check_remote_yp(dkepath,remotename);
+	%
+	if ~flag,%local calculations
+		[luke_out(it).Znorm,luke_out(it).Zcurr,luke_out(it).ZP0,luke_out(it).dke_out,luke_out(it).radialDKE,luke_out(it).equilDKE,luke_out(it).momentumDKE,luke_out(it).gridDKE,luke_out(it).Zmomcoef,luke_out(it).Zbouncecoef,luke_out(it).Zmripple,luke_out(it).mksa,luke_out(it).XXsinksource] = run_lukert(luke_in(it).id_simul,luke_in(it).wavestructs,luke_in(it).waves,[],luke_in(it).dkeparam.rho_S,dkepath,luke_in(it).equil,luke_in(it).dkeparam,luke_in(it).dkedisplay,luke_in(it).ohm,luke_in(it).transpfaste,luke_in(it).ripple,[],[]);
+	else
+		for it = 1:length(timeslice),%local calculations
+			[tid,jid] = runluke_remote_jd(luke_in(it),remote,debugmode);%Job submission
+			timeid(it) = {tid};
+			jobid(it) = {jid};
+		end
+		
+		%
+   	 	i_simul = 1;
+    	flag = ones(length(timeslice),1);
+    	%
+    	while 1,
+        	if flag(i_simul)
+            	output = getluke_remote_jd(timeid{i_simul},jobid{i_simul},remote,debugmode);
+            	if ~isempty(output)
+                	luke_out(i_simul) = output;
+                	flag(i_simul) = 0;
+            	end
+        	end
+        	%
+        	i_simul = i_simul + 1;
+        	if i_simul > length(timeslice), i_simul = 1;end
+        	%
+        	if sum(flag) == 0;break;end
+    	end
+    end
+end
+%
+filename = ['EC17_benchmark_',id_simul,'_output.mat'];
+save(filename,'luke_out');
+info_dke_yp(2,['LUKE input data saved in ',filename]);
+%
+% Build structure for CPO 'waves'
+%
+CPO_waves = [];
+%
+for it = 1:length(timeslice),%local calculations
+	id_simul = ['timeslice_',int2str(timeslice(it))];
+	%
+	Znorm = luke_out(it).Znorm;
+	Zcurr = luke_out(it).Zcurr;
+	ZP0 = luke_out(it).ZP0;
+	dke_out = luke_out(it).dke_out;
+	radialDKE = luke_out(it).radialDKE;
+	equilDKE = luke_out(it).equilDKE;
+	momentumDKE = luke_out(it).momentumDKE;
+	gridDKE = luke_out(it).gridDKE;
+	Zmomcoef = luke_out(it).Zmomcoef;
+	Zbouncecoef = luke_out(it).Zbouncecoef;
+	Zmripple = luke_out(it).Zmripple;
+	mksa = luke_out(it).mksa;
+	XXsinksource = luke_out(it).XXsinksource;
 	%
 	filename = ['EC17_benchmark_',id_simul,'.mat'];
 	save(filename);
-	info_dke_yp(2,['LUKE Results saved in ',filename]);
 	%
 	rawdata = load(filename);
 	procdata = proc_luke_jd(rawdata,0,p_opt,0.1,NaN,'',opt);
 	%
 	[CPO_waves] = LUKEstruct2CPO(numshot,numrun_out,timeslice,'waves',rawdata,procdata,CPO_waves);
-	%
 end
 %
-%write results in CPO 'waves'
+% Write results in CPO 'waves'
 %
-save toto.mat
-return
 write_waves_ITM(numshot,numrun_out,CPO_waves);%build the structure to be transfered in the ITM MDS+ database
 %
