@@ -15,8 +15,6 @@ if strcmp('waves',struct_name),
 	%
 	it = length(CPO_struct) + 1;
 	%
-	CPO_struct(it).time = timeslice;
-	%
 	CPO_struct(it).datainfo.dataprovider = rawdata.dkepath.luke_root(ix(5)+1:ix(6)-1);
 	CPO_struct(it).datainfo.putdate = date;
 	CPO_struct(it).datainfo.whatref.machine = which_MDSdatabase;
@@ -80,6 +78,8 @@ if strcmp('waves',struct_name),
 	%
 	CPO_struct(it).codeparam.codename = LUKEversion_jd;
 	CPO_struct(it).codeparam.codeversion = LUKEversion_jd;
+	%
+	CPO_struct(it).time = timeslice;
 else
 	error(['There is no CPO with the name ',struct_name,' in the ITM MDS+ database']);
 end
