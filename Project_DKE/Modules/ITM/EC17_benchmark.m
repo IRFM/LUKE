@@ -74,8 +74,8 @@ end
 if numrun_out == 503,%beam tracing
 	beam_mode = 1;
 	%
-	nd = 4;%Number of transverse distance positions for beamlets
-	nchi= 6;%Number of angular positions for beamlets
+	nd = 2;%Number of transverse distance positions for beamlets
+	nchi= 3;%Number of angular positions for beamlets
 	%
 	if itm_connect,
 		idx  = euitm_create('euitm',numshot,numrun_out);%create database for this run if not exists
@@ -95,7 +95,8 @@ elseif numrun_out == 502,%ray tracing
 	%
 end
 %
-[dkeparam,dkepath,dkedisplay] = load_structures_yp('dkeparam','EC_RT','','dkepath','','','dkedisplay','PARTIAL_VISUAL','');
+[dkeparam,dkepath,dkedisplay] = load_structures_yp('dkeparam','EC_RT','','dkepath','','','dkedisplay','NO_DISPLAY','');
+dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.4,0.41:0.1:1];
 %
 id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice(1)),'_timeinterp_',int2str(time_interp)];
 %
@@ -135,6 +136,7 @@ for it = 1:length(timeslice),
  		wavestructs{iw}.equil_id = equil.id;
  		wavestructs{iw}.raydisplay.ray = ray_display;%for display ray propagation
 		%
+        wavestructs{iw}.waveparam.dsmin = 0;
       	wavestructs{iw}.waveparam.nd = nd;%Number of transverse distance positions for beamlets
 		wavestructs{iw}.waveparam.nchi = nchi;%Number of angular positions for beamlets
 		%
