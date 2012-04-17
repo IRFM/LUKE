@@ -1,4 +1,4 @@
-function [launchs] = read_launchs_ITM(numshot,numrun,time,time_interp)
+function [launchs] = read_launchs_ITM(numshot,numrun,time,time_interp,save_mode)
 %LUKE - Function that build a LUKE compliant launchs (multiple antennas) structure from ITM MDS+ database
 %
 %Function that build a LUKE compliant launchs (multiple antennas) structure from ITM MDS+ database 
@@ -10,10 +10,16 @@ if nargin < 2,error('Not enough input arguments in read_launchs_ITM.m');end
 if nargin == 2,
 	time = 0;%Time is zero when the variable is not transfered
 	time_interp = 1;%Time interpolation (1:linear,2:******,3:nearest neighbor)
+	save_mode = 0;%save euitm datastructure in a mat-file
 end
 %
 if nargin == 3,
 	time_interp = 1;%Time interpolation (1:linear,2:******,3:nearest neighbor)
+	save_mode = 0;%save euitm datastructure in a mat-file
+end
+%
+if nargin == 4,
+	save_mode = 0;%save euitm datastructure in a mat-file
 end
 %
 status = 0;
@@ -38,6 +44,10 @@ catch
 	info_dke_yp(7,'Problem while reading the ITM-MDS+ database. Data may not exist.')
 end
 %
-if ~status & nargout == 1, 
+if ~status & nargout == 1,
+	if save_mode,
+		save(['antennas_',id],'antennas_euitm')
+	end
+	%
 	launchs = CPO2LUKEstruct_yp('antennas',antennas_euitm);% Data conversion between ITM CPO's and C3PO/LUKE format
 end
