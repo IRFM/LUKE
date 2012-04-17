@@ -36,7 +36,7 @@ debug_mode = 0;%set to 1 in case of problem
 %
 % Save euitm structures in mat-files
 %
-save_mode = 1;% 0 -> no save, > 0 -> save
+save_mode = 0;% 0 -> no save, > 0 -> save
 %
 % LUKE post-processing options
 %
