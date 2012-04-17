@@ -7,6 +7,7 @@ function [machine,user,ver] = which_MDSdatabase(dkepath,mute)
 %
 if nargin == 0
 	dkepath = load_structures_yp('dkepath','','');
+    mute = 0;
 end
 %
 if nargin == 1,
@@ -25,7 +26,9 @@ else
 	mdstreebase = getenv('MDSPLUS_TREE_BASE_0');
 	%
 	if isempty(hdf5base) | isempty(mdstreebase),
-		if ~mute,warning('Environment variables for ITM MDS+/HDF5 database are not set-up.');end
+		if ~mute,
+            warning('Environment variables for ITM MDS+/HDF5 database are not set-up.');
+        end
 		machine = '';
 		user = '';
 		ver = '';
