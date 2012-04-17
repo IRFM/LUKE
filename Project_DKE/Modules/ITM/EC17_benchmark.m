@@ -25,16 +25,21 @@ timeslice = [0,1,2,3];
 %
 time_interp = 1;%nearest point
 %
-%Printing options
+% Printing options
 %
 p_opt = -1;
 %
-%remote computing options
+% Remote computing options
 %
 remotename = 'macproyves';%'','macproyves'
-debugmode = 1;%set to 1 in case of problem
+debug_mode = 0;%set to 1 in case of problem
 %
-%LUKE post-processing options
+% Save euitm structures in mat-files
+%
+save_mode = 1;% 0 -> no save, > 0 -> save
+%
+% LUKE post-processing options
+%
 opt.rho = 'g';
 opt.nr_dep = 0;
 opt.peakmode = 0;
@@ -48,36 +53,79 @@ opt.spec = 0;
 %
 ray_display = 0;%for display ray propagation
 %
-if numrun_out == 503,
+info_dke_yp(1,'--------------------------------------------------------------------')
+info_dke_yp(1,'Benchmarking EC codes using the EFDA-ITM framework')
+info_dke_yp(1,'EC17 conference, Deurne, The Netherlands (2012)')
+info_dke_yp(1,'--------------------------------------------------------------------')
+%
+% Test if a connection to the ITM MDS+ database may be established
+%
+[machine,user,ver] = which_MDSdatabase;%test the database is correct
+%
+if  ~isempty(machine) && ~isempty(user) && ~isempty(ver)
+	info_dke_yp(4,['ITM database well connected -> machine: ',machine,', user: ',user,', datastructure version: ',ver]);
+	itm_connect = 1;
+else
+	itm_connect = 0;	
+end
+%
+% run number of the output 
+%
+if numrun_out == 503,%beam tracing
 	beam_mode = 1;
+	%
 	nd = 4;%Number of transverse distance positions for beamlets
 	nchi= 6;%Number of angular positions for beamlets
 	%
-	idx  = euitm_create('euitm',numshot,numrun_out);%create database for this run if not exists
-	euitm_close(idx,'euitm',numshot,numrun_out);
+	if itm_connect,
+		idx  = euitm_create('euitm',numshot,numrun_out);%create database for this run if not exists
+		euitm_close(idx,'euitm',numshot,numrun_out);
+	end
 	%
-elseif numrun_out == 502,
+elseif numrun_out == 502,%ray tracing
 	beam_mode = 0;
+	%
 	nd = 1;%Number of transverse distance positions for beamlets
 	nchi= 1;%Number of angular positions for beamlets
 	%
-    idx  = euitm_create('euitm',numshot,numrun_out);%create database for this run if not exists
-	euitm_close(idx,'euitm',numshot,numrun_out);
+	if itm_connect,
+    	idx  = euitm_create('euitm',numshot,numrun_out);%create database for this run if not exists
+		euitm_close(idx,'euitm',numshot,numrun_out);
+	end
 	%
 end
 %
 [dkeparam,dkepath,dkedisplay] = load_structures_yp('dkeparam','EC_RT','','dkepath','','','dkedisplay','PARTIAL_VISUAL','');
 %
-info_dke_yp(1,'Benchmark using the ITM framework for the EC17 conference')
+id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice(1)),'_timeinterp_',int2str(time_interp)];
 %
-[machine,user,ver] = which_MDSdatabase;%test the database is correct
-info_dke_yp(4,['machine: ',machine,', user: ',user,', datastructure version: ',ver])
-%
-[equil] = read_equil_ITM(numshot,numrun_in,timeslice(1),time_interp);%Create magnetic equilibrium structure
+if itm_connect,
+	equil = read_equil_ITM(numshot,numrun_in,timeslice(1),time_interp,save_mode);%Create magnetic equilibrium structure
+else
+	id_equil = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice(1)),'_timeinterp_',int2str(time_interp)];
+	%
+	if exist(['equil_',id,'.mat']) == 2,
+		load(['equil_',id,'.mat']);
+		equil = process_euitm_dataequil(equil_euitm,coreprof_euitm);
+	else
+		error(['Unable to find the euitm equil file: equil_',id_equil,'.mat.']);
+	end
+end
 %
 for it = 1:length(timeslice),
 	%
-	[launchs] = read_launchs_ITM(numshot,numrun_in,timeslice(it),time_interp);%Create rf waves launchs structure
+	if itm_connect,
+		launchs = read_launchs_ITM(numshot,numrun_in,timeslice(it),time_interp,save_mode);%Create rf waves launchs structure
+	else
+		id_launchs = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice(it)),'_timeinterp_',int2str(time_interp)];
+		%
+		if exist(['antennas_',id,'.mat']) == 2,
+			load(['antennas_',id,'.mat']);
+			launchs = CPO2LUKEstruct_yp('antennas',antennas_euitm);% Data conversion between ITM CPO's and C3PO/LUKE format
+		else
+			error(['Unable to find the euitm antennas file: antennas_',id_launchs,'.mat.']);
+		end
+	end
 	%
 	wavestructs = cell(1,length(launchs));
 	%
@@ -123,9 +171,11 @@ for it = 1:length(timeslice),
     luke_in(it).ripple = '';    
 end
 %
-filename = ['EC17_benchmark_',equil.id,'_input.mat'];
-save(filename,'luke_in');
-info_dke_yp(2,['LUKE input data saved in ',filename]);
+if debug_mode,
+	filename = ['EC17_benchmark_',equil.id,'_input.mat'];
+	save(filename,'luke_in');
+	info_dke_yp(2,['Debug mode: LUKE input data saved in ',filename]);
+end
 %
 if isempty(remotename),
 	for it = 1:length(timeslice),%local calculations
@@ -138,7 +188,7 @@ else
 		[luke_out(it).Znorm,luke_out(it).Zcurr,luke_out(it).ZP0,luke_out(it).dke_out,luke_out(it).radialDKE,luke_out(it).equilDKE,luke_out(it).momentumDKE,luke_out(it).gridDKE,luke_out(it).Zmomcoef,luke_out(it).Zbouncecoef,luke_out(it).Zmripple,luke_out(it).mksa,luke_out(it).XXsinksource] = run_lukert(luke_in(it).id_simul,luke_in(it).wavestructs,luke_in(it).waves,[],luke_in(it).dkeparam.rho_S,dkepath,luke_in(it).equil,luke_in(it).dkeparam,luke_in(it).dkedisplay,luke_in(it).ohm,luke_in(it).transpfaste,luke_in(it).ripple,[],[]);
 	else
 		for it = 1:length(timeslice),%local calculations
-			[tid,jid] = runluke_remote_jd(luke_in(it),remote,debugmode);%Job submission
+			[tid,jid] = runluke_remote_jd(luke_in(it),remote,debug_mode);%Job submission
 			timeid(it) = {tid};
 			jobid(it) = {jid};
 		end
@@ -149,7 +199,7 @@ else
     	%
     	while 1,
         	if flag(i_simul)
-            	output = getluke_remote_jd(timeid{i_simul},jobid{i_simul},remote,debugmode);
+            	output = getluke_remote_jd(timeid{i_simul},jobid{i_simul},remote,debug_mode);
             	if ~isempty(output)
                 	luke_out(i_simul) = output;
                 	flag(i_simul) = 0;
@@ -164,15 +214,18 @@ else
     end
 end
 %
-filename = ['EC17_benchmark_',equil.id,'_output.mat'];
-save(filename,'luke_out');
-info_dke_yp(2,['LUKE input data saved in ',filename]);
+if debug_mode | ~itm_connect,
+	filename = ['EC17_benchmark_',equil.id,'_output.mat'];
+	save(filename,'luke_out');
+	info_dke_yp(2,['Debug mode or no connection to the ITM database: LUKE output data saved in ',filename]);
+end
 %
 % Build structure for CPO 'waves'
 %
 CPO_waves = [];
 %
 for it = 1:length(timeslice),%local calculations
+	%
 	id_simul = ['timeslice_',int2str(timeslice(it))];
 	%
 	Znorm = luke_out(it).Znorm;
@@ -196,9 +249,13 @@ for it = 1:length(timeslice),%local calculations
 	procdata = proc_luke_jd(rawdata,0,p_opt,0.1,NaN,'',opt);
 	%
 	[CPO_waves] = LUKEstruct2CPO(numshot,numrun_out,timeslice,'waves',rawdata,procdata,CPO_waves);
+	%
+	delete(filename);
 end
 %
 % Write results in CPO 'waves'
 %
-write_waves_ITM(numshot,numrun_out,CPO_waves);%build the structure to be transfered in the ITM MDS+ database
+if itm_connect,
+	write_waves_ITM(numshot,numrun_out,CPO_waves);%build the structure to be transfered in the ITM MDS+ database
+end
 %
