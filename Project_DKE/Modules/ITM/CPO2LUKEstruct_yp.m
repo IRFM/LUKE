@@ -17,6 +17,12 @@ function [LUKE_struct] = CPO2LUKE_struct_yp(struct_name,CPO_struct,display_mode)
 %
 if nargin < 2,error('Not enough input arguments in CPO2LUKE_struct_yp.m');end
 %
+if nargin == 2,
+    display_mode = 0;%display option
+end
+%
+p_opt = -1;%printing option
+%
 if strcmp('equilibrium',struct_name),
 	%
 	if round(str2double(CPO_struct.profiles_2d.grid_type(1))) == 1,%rectangular grid
@@ -56,9 +62,6 @@ if strcmp('equilibrium',struct_name),
 		%
 		% (R,Z) to (psi,theta) grid conversion (two methods)
 		%
-         display_mode = 2;%display option (0: no display)
-         p_opt = -1;%printing option
-         %
         if isempty(xyBR) || isempty(xyBZ),%calculations of the poloidal B field from the poloidal magnetic flux
             %
             equil_magnetic_data.x = x;
@@ -67,9 +70,9 @@ if strcmp('equilibrium',struct_name),
             equil_magnetic_data.Zp = Zp;
             equil_magnetic_data.xypsin = xypsin;
             equil_magnetic_data.psia = psia;
-            equil_magnetic_data.xBt = sign(Btor0)*xyBPHI(:,1);
+            equil_magnetic_data.xBt = -xyBPHI(:,1);%sign change -> ITM: BPHI > 0 if direction counter clockwise, LUKE: BPHI > 0 direction is clockwise (both view from the top)
             equil_magnetic_data.psin = psin;
-            equil_magnetic_data.pq = qspi*sign(Ip);
+            equil_magnetic_data.pq = -qspi;%sign change -> ITM: Ip > 0 if direction counter clockwise, LUKE: Ip > 0 direction is clockwise (both view from the top)
             %
             [LUKE_struct,prho,pspsin,pspsinT] = equil_magnetic_rz2pt_jd(equil_magnetic_data,display_mode,p_opt,'','',npsin);
             %
@@ -79,7 +82,7 @@ if strcmp('equilibrium',struct_name),
             %
             [ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,ntheta,interp_method,display_mode);
             %
-            ptBPHI = sign(Btor0)*griddata(x,y,xyBPHI',ptx,pty);
+            ptBPHI = -griddata(x,y,xyBPHI',ptx,pty);%sign change -> ITM: BPHI > 0 if direction counter clockwise, LUKE: BPHI > 0 direction is clockwise (both view from the top)
             %
             ap = ptx(npsin,1);%Plasma minor radius on the LFS midplane
             psi_apRp = psin*psia*ap/Rp;%The poloidal flux coordinate is normalized by the aspect ratio 
@@ -87,8 +90,8 @@ if strcmp('equilibrium',struct_name),
             %
             % Note that in LUKE we have B = F.gradphi + gradphi x gradpsi.
             %
-            ptBx = -sign(Ip)*griddata(x,y,xyBR',ptx,pty);
-            ptBy = -sign(Ip)*griddata(x,y,xyBZ',ptx,pty);
+            ptBx = griddata(x,y,xyBR',ptx,pty);
+            ptBy = griddata(x,y,xyBZ',ptx,pty);
             %
             ptBP = sqrt(ptBx.^2 +ptBy.^2);
             ptB = sqrt(ptBP.^2 + ptBPHI.^2);
@@ -150,6 +153,13 @@ if strcmp('equilibrium',struct_name),
             LUKE_struct.Rp = Rp;
             LUKE_struct.Zp = Zp;
         end
+        %
+        % For writing results in CPO in a consistent manner with ITM definitions
+        %
+        LUKE_struct.ITM.psi0 = psi0;
+        LUKE_struct.ITM.psia = psia;
+        LUKE_struct.ITM.sign_BHI = sign(Btor0);
+        LUKE_struct.ITM.sign_Ip = sign(Ip);
 	else
 		error('This grid is not yet recognized in CPO2LUKE_struct_yp.m.')
     end
