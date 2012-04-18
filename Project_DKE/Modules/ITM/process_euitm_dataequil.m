@@ -1,4 +1,4 @@
-function [equil] = process_euitm_dataequil(magnetic_euitm,coreprof_euitm)
+function [equil] = process_euitm_dataequil(magnetic_euitm,coreprof_euitm,display_mode)
 %LUKE - Function that process the ITM data to generate a LUKE compliant magnetic equilibrium structure from ITM MDS+ database
 %
 %Function that build a LUKE compliant magnetic equilibrium structure from ITM MDS+ database
@@ -7,8 +7,12 @@ function [equil] = process_euitm_dataequil(magnetic_euitm,coreprof_euitm)
 %
 if nargin < 2,error('Not enough input arguments in process_euitm_dataequil.m');end
 %
-magnetic = CPO2LUKEstruct_yp('equilibrium',magnetic_euitm);% Data conversion between ITM CPO's and C3PO/LUKE format
-coreprof = CPO2LUKEstruct_yp('coreprof',coreprof_euitm);% Data conversion between ITM CPO's and C3PO/LUKE format
+if nargin == 2,
+    display_mode = 0;%display option
+end
+%
+magnetic = CPO2LUKEstruct_yp('equilibrium',magnetic_euitm,display_mode);% Data conversion between ITM CPO's and C3PO/LUKE format
+coreprof = CPO2LUKEstruct_yp('coreprof',coreprof_euitm,display_mode);% Data conversion between ITM CPO's and C3PO/LUKE format
 %
 % Profiles interpolation of the temperatures and densities on the 1-D psin grid defined in magnetic_LUKE
 %
