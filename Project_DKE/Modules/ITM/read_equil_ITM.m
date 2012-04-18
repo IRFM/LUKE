@@ -1,4 +1,4 @@
-function [equil] = read_equil_ITM(numshot,numrun,time,time_interp,save_mode)
+function [equil] = read_equil_ITM(numshot,numrun,time,time_interp,display_mode,save_mode)
 %LUKE - Function that build a LUKE compliant magnetic equilibrium structure from ITM MDS+ database
 %
 %Function that build a LUKE compliant magnetic equilibrium structure from ITM MDS+ database
@@ -10,15 +10,22 @@ if nargin < 2,error('Not enough input arguments in read_equil_ITM.m');end
 if nargin == 2,
 	time = 0;%Time is zero when the variable is not transfered
 	time_interp = 1;%Time interpolation (1:linear,2:******,3:nearest neighbor)
-	save_mode = 0;%save euitm datastructure in a mat-file
+	display_mode = 0;%display option
+    save_mode = 0;%save euitm datastructure in a mat-file
 end
 %
 if nargin == 3,
 	time_interp = 1;%Time interpolation (1:linear,2:******,3:nearest neighbor)
+	display_mode = 0;%display option
 	save_mode = 0;%save euitm datastructure in a mat-file
 end
 %
 if nargin == 4,
+	display_mode = 0;%display option
+	save_mode = 0;%save euitm datastructure in a mat-file
+end
+%
+if nargin == 5,
 	save_mode = 0;%save euitm datastructure in a mat-file
 end
 %
@@ -52,5 +59,5 @@ if ~status & nargout == 1,
 		save(['equil_',id],'equil_euitm','coreprof_euitm')
 	end
 	%
-    equil = process_euitm_dataequil(equil_euitm,coreprof_euitm);
+    equil = process_euitm_dataequil(equil_euitm,coreprof_euitm,display_mode);
 end
