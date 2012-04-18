@@ -33,18 +33,18 @@ if strcmp('waves',struct_name),
 		CPO_struct(it).coherentwave(iwaves).global_param.f_assumption = 1;
 		CPO_struct(it).coherentwave(iwaves).global_param.power_tot = procdata.scalar.p_rf_2piRp*2*pi*rawdata.equilDKE.Rp*1e6;
 		CPO_struct(it).coherentwave(iwaves).global_param.power_e = procdata.scalar.p_rf_2piRp*2*pi*rawdata.equilDKE.Rp*1e6;
-		CPO_struct(it).coherentwave(iwaves).global_param.cur_tor = procdata.scalar.I_tot*1e6;%positive co-current
+		CPO_struct(it).coherentwave(iwaves).global_param.cur_tor = procdata.scalar.I_tot*rawdata.equil.ITM.sign_Ip*1e6;%co-current: I_tot >0
 		CPO_struct(it).coherentwave(iwaves).global_param.code_type = 1;
 		%
-		CPO_struct(it).coherentwave(iwaves).grid_1d.psi = rawdata.equilDKE.xpsin(:)*rawdata.equilDKE.psia_apRp/rawdata.equilDKE.ap*rawdata.equilDKE.Rp*2*pi;
+		CPO_struct(it).coherentwave(iwaves).grid_1d.psi = rawdata.equilDKE.xpsin(:)*rawdata.equilDKE.psia_apRp/rawdata.equilDKE.ap*rawdata.equilDKE.Rp*2*pi + rawdata.equil.ITM.psi0*2*pi;
 		%
-		CPO_struct(it).coherentwave(iwaves).profiles_1d.powd_tot = procdata.radial.P_rf(:);
-		CPO_struct(it).coherentwave(iwaves).profiles_1d.powd_e = procdata.radial.P_rf(:);
-		CPO_struct(it).coherentwave(iwaves).profiles_1d.curd_tor = procdata.radial.J_tot(:);
-		CPO_struct(it).coherentwave(iwaves).profiles_1d.pow_tot = procdata.radial.xp_rf_2piRp*rawdata.equilDKE.Rp*2*pi;
-		CPO_struct(it).coherentwave(iwaves).profiles_1d.pow_e = procdata.radial.xp_rf_2piRp*rawdata.equilDKE.Rp*2*pi;
+		CPO_struct(it).coherentwave(iwaves).profiles_1d.powd_tot = procdata.radial.P_rf(:)*1e6;
+		CPO_struct(it).coherentwave(iwaves).profiles_1d.powd_e = procdata.radial.P_rf(:)*1e6;
+		CPO_struct(it).coherentwave(iwaves).profiles_1d.curd_tor = procdata.radial.J_tot(:)*rawdata.equil.ITM.sign_Ip*1e6;%co-current: J_tot >0
+		CPO_struct(it).coherentwave(iwaves).profiles_1d.pow_tot = procdata.radial.xp_rf_2piRp*rawdata.equilDKE.Rp*2*pi*1e6;
+		CPO_struct(it).coherentwave(iwaves).profiles_1d.pow_e = procdata.radial.xp_rf_2piRp*rawdata.equilDKE.Rp*2*pi*1e6;
 		CPO_struct(it).coherentwave(iwaves).profiles_1d.curd_par = '';
-		CPO_struct(it).coherentwave(iwaves).profiles_1d.cur_tor = '';
+		CPO_struct(it).coherentwave(iwaves).profiles_1d.cur_tor = procdata.radial.J_tot(:).*rawdata.equilDKE.xdA_dke(:)*rawdata.equil.ITM.sign_Ip*1e6;
 		%	
 		for irays = 1:length(rawdata.dke_out.waves{iwaves}.rays)
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).npoints = length(rawdata.dke_out.waves{iwaves}.rays{irays}.sx);
@@ -53,13 +53,13 @@ if strcmp('waves',struct_name),
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).length = rawdata.dke_out.waves{iwaves}.rays{irays}.ss(:);
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).position.r = rawdata.dke_out.waves{iwaves}.rays{irays}.sx(:) + rawdata.equilDKE.Rp;
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).position.z = rawdata.dke_out.waves{iwaves}.rays{irays}.sy(:) + rawdata.equilDKE.Zp;
-			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).position.phi = rawdata.dke_out.waves{iwaves}.rays{irays}.sphi(:);
-			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).position.psi = rawdata.dke_out.waves{iwaves}.rays{irays}.spsin(:)*rawdata.equilDKE.psia_apRp/rawdata.equilDKE.ap*rawdata.equilDKE.Rp*2*pi;
+			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).position.phi = -rawdata.dke_out.waves{iwaves}.rays{irays}.sphi(:);%sign change -> ITM: PHI > 0 if direction counter clockwise, LUKE: PHI > 0 direction is clockwise (both view from the top)
+			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).position.psi = rawdata.dke_out.waves{iwaves}.rays{irays}.spsin(:)*rawdata.equilDKE.psia_apRp/rawdata.equilDKE.ap*rawdata.equilDKE.Rp*2*pi + rawdata.equil.ITM.psi0*2*pi;
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).position.theta = rawdata.dke_out.waves{iwaves}.rays{irays}.stheta(:);
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).wavevector.kr = '';
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).wavevector.kz = '';
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).wavevector.kphi = '';
-			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).wavevector.npar = rawdata.dke_out.waves{iwaves}.rays{irays}.sNpar(:);
+			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).wavevector.npar = -rawdata.dke_out.waves{iwaves}.rays{irays}.sNpar(:);%sign change -> ITM: BPHI > 0 if direction counter clockwise, LUKE: BPHI > 0 direction is clockwise (both view from the top)
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).wavevector.ntor = rawdata.dke_out.waves{iwaves}.rays{irays}.sn(:);
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).wavevector.var_ntor = 0;
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).polarization.epol_p_re = '';
@@ -70,7 +70,7 @@ if strcmp('waves',struct_name),
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).polarization.epol_par_im = '';
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).powerflow.phi_perp = '';
 			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).powerflow.phi_par = '';
-			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).powerflow.power_e = '';
+			CPO_struct(it).coherentwave(iwaves).beamtracing(ibeam).powerflow.power_e = rawdata.dke_out.waves{iwaves}.rays{irays}.P0_2piRp*2*pi*rawdata.equilDKE.Rp;;
 			%
 			ibeam = ibeam + 1;
 		end
