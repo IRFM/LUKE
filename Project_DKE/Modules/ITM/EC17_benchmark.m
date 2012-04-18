@@ -25,13 +25,9 @@ timeslice = [0,1,2,3];
 %
 time_interp = 1;%nearest point
 %
-% Printing options
-%
-p_opt = -1;
-%
 % Remote computing options
 %
-remotename = 'macproyves';%'','macproyves'
+remotename = '';%'','macproyves'
 debug_mode = 0;%set to 1 in case of problem
 %
 % Save euitm structures in mat-files
@@ -49,9 +45,13 @@ opt.blist = '';
 opt.diaryname = '';
 opt.spec = 0;
 %
+p_opt = -1;%Printing options
+%
 % User specific C3PO/LUKEparameters
 %
 ray_display = 0;%for display ray propagation
+display_mode = 0;%display results 'equilibrium, Fokker-Planck)
+%
 %
 info_dke_yp(1,'--------------------------------------------------------------------')
 info_dke_yp(1,'Benchmarking EC codes using the EFDA-ITM framework')
@@ -101,13 +101,13 @@ dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.4,0.41:0.1:1];
 id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice(1)),'_timeinterp_',int2str(time_interp)];
 %
 if itm_connect,
-	equil = read_equil_ITM(numshot,numrun_in,timeslice(1),time_interp,save_mode);%Create magnetic equilibrium structure
+	equil = read_equil_ITM(numshot,numrun_in,timeslice(1),time_interp,display_mode,save_mode);%Create magnetic equilibrium structure
 else
 	id_equil = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice(1)),'_timeinterp_',int2str(time_interp)];
 	%
 	if exist(['equil_',id,'.mat']) == 2,
 		load(['equil_',id,'.mat']);
-		equil = process_euitm_dataequil(equil_euitm,coreprof_euitm);
+		equil = process_euitm_dataequil(equil_euitm,coreprof_euitm,display_mode);
 	else
 		error(['Unable to find the euitm equil file: equil_',id_equil,'.mat.']);
 	end
@@ -165,7 +165,8 @@ for it = 1:length(timeslice),
 	luke_in(it).dkeparam = dkeparam;
     luke_in(it).equil = equil;
     luke_in(it).dkedisplay = dkedisplay;
-    luke_in(it).wavestructs = {wavestructs{1},wavestructs{2}};
+    %luke_in(it).wavestructs = {wavestructs{1},wavestructs{2}};
+    luke_in(it).wavestructs = {wavestructs{1}};
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%luke_in(it).wavestructs = wavestructs;
     luke_in(1).waves = '';
     luke_in(it).ohm = '';
