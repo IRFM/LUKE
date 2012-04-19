@@ -20,14 +20,14 @@ clc
 %
 numshot = 2;
 numrun_in = 551;
-numrun_out = 503;%single ray: 502, beam: 503
+numrun_out = 502;%single ray: 502, beam: 503
 timeslice = [0,1,2,3];
 %
 time_interp = 1;%nearest point
 %
 % Remote computing options
 %
-remotename = '';%'','macproyves'
+remotename = 'macproyves';%'','macproyves'
 debug_mode = 0;%set to 1 in case of problem
 %
 % Save euitm structures in mat-files
@@ -49,8 +49,9 @@ p_opt = -1;%Printing options
 %
 % User specific C3PO/LUKEparameters
 %
-ray_display = 0;%for display ray propagation
-display_mode = 0;%display results 'equilibrium, Fokker-Planck)
+ray_display = 0;%for display ray propagation (0,1,2)
+display_mode = 0;%display results 'equilibrium, Fokker-Planck (0,1,2)
+ir_display = -1;%proc_luke_jd display option (-1,0,1,2)
 %
 %
 info_dke_yp(1,'--------------------------------------------------------------------')
@@ -248,9 +249,9 @@ for it = 1:length(timeslice),%local calculations
 	save(filename);
 	%
 	rawdata = load(filename);
-	procdata = proc_luke_jd(rawdata,0,p_opt,0.1,NaN,'',opt);
+	procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
 	%
-	[CPO_waves] = LUKEstruct2CPO(numshot,numrun_out,timeslice,'waves',rawdata,procdata,CPO_waves);
+	[CPO_waves] = LUKEstruct2CPO(numshot,numrun_out,timeslice(it),'waves',rawdata,procdata,CPO_waves);
 	%
 	delete(filename);
 end
