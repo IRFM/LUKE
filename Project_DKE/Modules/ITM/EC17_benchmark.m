@@ -98,15 +98,13 @@ end
 [dkeparam,dkepath,dkedisplay] = load_structures_yp('dkeparam','EC_RT','','dkepath','','','dkedisplay','NO_DISPLAY','');
 dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.4,0.41:0.1:1];
 %
-id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice(1)),'_timeinterp_',int2str(time_interp)];
-%
 if itm_connect,
 	equil = read_equil_ITM(numshot,numrun_in,timeslice(1),time_interp,display_mode,save_mode);%Create magnetic equilibrium structure
 else
 	id_equil = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice(1)),'_timeinterp_',int2str(time_interp)];
 	%
-	if exist(['equil_',id,'.mat']) == 2,
-		load(['equil_',id,'.mat']);
+	if exist(['equil_',id_equil,'.mat']) == 2,
+		load(['equil_',id_equil,'.mat']);
 		equil = process_euitm_dataequil(equil_euitm,coreprof_euitm,display_mode);
 	else
 		error(['Unable to find the euitm equil file: equil_',id_equil,'.mat.']);
@@ -120,10 +118,10 @@ for it = 1:length(timeslice),
 	else
 		id_launchs = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice(it)),'_timeinterp_',int2str(time_interp)];
 		%
-		if exist(['antennas_',id,'.mat']) == 2,
-			load(['antennas_',id,'.mat']);
+		if exist(['antennas_',id_launchs,'.mat']) == 2,
+			load(['antennas_',id_launchs,'.mat']);
 			launchs = CPO2LUKEstruct_yp('antennas',antennas_euitm);% Data conversion between ITM CPO's and C3PO/LUKE format
-		else
+        else
 			error(['Unable to find the euitm antennas file: antennas_',id_launchs,'.mat.']);
 		end
 	end
@@ -165,13 +163,12 @@ for it = 1:length(timeslice),
 	luke_in(it).dkeparam = dkeparam;
     luke_in(it).equil = equil;
     luke_in(it).dkedisplay = dkedisplay;
-    %luke_in(it).wavestructs = {wavestructs{1},wavestructs{2}};
-    luke_in(it).wavestructs = {wavestructs{1}};
+    luke_in(it).wavestructs = {wavestructs{1},wavestructs{2}};
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%luke_in(it).wavestructs = wavestructs;
-    luke_in(1).waves = '';
+    luke_in(it).waves = '';
     luke_in(it).ohm = '';
     luke_in(it).transpfaste = '';
-    luke_in(it).ripple = '';    
+    luke_in(it).ripple = '';
 end
 %
 if debug_mode,
@@ -262,3 +259,5 @@ if itm_connect,
 	write_waves_ITM(numshot,numrun_out,CPO_waves);%build the structure to be transfered in the ITM MDS+ database
 end
 %
+filename = ['EC17_benchmark_',equil.id,'.mat'];
+save(filename,'numshot','numrun_out','CPO_waves');
