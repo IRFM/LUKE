@@ -16,11 +16,12 @@ clear functions
 close all
 clc
 %
+[dkeparam,dkepath,dkedisplay] = load_structures_yp('dkeparam','EC_RT','','dkepath','','','dkedisplay','NO_DISPLAY','');
 % ITM simulation references (EC17 benchmark)
 %
 numshot = 2;
 numrun_in = 551;
-numrun_out = 502;%single ray: 502, beam: 503
+numrun_out = 503;%single ray: 502, beam: 503
 timeslice = [0,1,2,3];
 %
 time_interp = 1;%nearest point
@@ -96,8 +97,13 @@ elseif numrun_out == 502,%ray tracing
 	%
 end
 %
-[dkeparam,dkepath,dkedisplay] = load_structures_yp('dkeparam','EC_RT','','dkepath','','','dkedisplay','NO_DISPLAY','');
 dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:1];
+%
+if isempty(remotename),
+	dkeparam.invproc = 1;%MUMPS is not working on the ITM gateway
+	info_dke_yp(6,['The use of dmumpsmex is temporarily disabled on the ITM gateway.'])
+end
+
 %
 run_id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_CPO_',int2str(numrun_out)];
 %
