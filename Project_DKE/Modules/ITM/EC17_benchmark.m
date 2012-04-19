@@ -20,7 +20,7 @@ clc
 %
 numshot = 2;
 numrun_in = 551;
-numrun_out = 502;%single ray: 502, beam: 503
+numrun_out = 503;%single ray: 502, beam: 503
 timeslice = [0,1,2,3];
 %
 time_interp = 1;%nearest point
@@ -96,7 +96,9 @@ elseif numrun_out == 502,%ray tracing
 end
 %
 [dkeparam,dkepath,dkedisplay] = load_structures_yp('dkeparam','EC_RT','','dkepath','','','dkedisplay','NO_DISPLAY','');
-dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.4,0.41:0.1:1];
+dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:1];
+%
+run_id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_CPO_',int2str(numrun_out)];
 %
 if itm_connect,
 	equil = read_equil_ITM(numshot,numrun_in,timeslice(1),time_interp,display_mode,save_mode);%Create magnetic equilibrium structure
@@ -172,7 +174,7 @@ for it = 1:length(timeslice),
 end
 %
 if debug_mode,
-	filename = ['EC17_benchmark_',equil.id,'_input.mat'];
+	filename = ['EC17_benchmark_',run_id,'_input.mat'];
 	save(filename,'luke_in');
 	info_dke_yp(2,['Debug mode: LUKE input data saved in ',filename]);
 end
@@ -215,7 +217,7 @@ else
 end
 %
 if debug_mode | ~itm_connect,
-	filename = ['EC17_benchmark_',equil.id,'_output.mat'];
+	filename = ['EC17_benchmark_',run_id,'_output.mat'];
 	save(filename,'luke_out');
 	info_dke_yp(2,['Debug mode or no connection to the ITM database: LUKE output data saved in ',filename]);
 end
@@ -259,5 +261,5 @@ if itm_connect,
 	write_waves_ITM(numshot,numrun_out,CPO_waves);%build the structure to be transfered in the ITM MDS+ database
 end
 %
-filename = ['EC17_benchmark_',equil.id,'.mat'];
+filename = ['EC17_benchmark_',run_id,'.mat'];
 save(filename,'numshot','numrun_out','CPO_waves');
