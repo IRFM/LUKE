@@ -209,7 +209,7 @@ elseif strcmp('antennas',struct_name),
 			% Launch angles definitions for ITM are identical to those for Prater benchmark (see ITER simulation example in LUKE)
 			%
 			LUKE_struct{ia}.yalpha_L = sign(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.beta)*pi - atan(tan(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.beta)/cos(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.alpha));
-			LUKE_struct{ia}.ybeta_L = acos(cosd(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.beta)*sin(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.alpha));
+			LUKE_struct{ia}.ybeta_L = pi - acos(cosd(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.beta)*sin(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.alpha));
             %
             LUKE_struct{ia}.yP_L = CPO_struct.antenna_unit(ia).antenna_ec.power.value;
 			LUKE_struct{ia}.dNpar0 = NaN;
