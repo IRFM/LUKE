@@ -270,7 +270,7 @@ if display_mode >= 2,
     ymin = min(min(pty));
     ymax = max(max(pty));
     %
-    figure_yp('','Toroidal MHD equilibrium','clf');
+    figure_yp('','Poloidal view - MHD equilibrium','clf');
     %    
     [ax] = graph1D_jd(sx',sy',0,0,'','','',NaN,[xmin,xmax],[ymin,ymax],style,marker,color1,width1,siz,gca,red);pause(0.5)
     [ax] = graph1D_jd(stx,sty,0,0,'x','y','',NaN,[xmin,xmax],[ymin,ymax],style,marker,color2,width2);pause(0.5)
@@ -278,7 +278,7 @@ if display_mode >= 2,
     axis([xmin,xmax,ymin,ymax]);
     print_jd(p_opt,[filename,'_rhotheta']);
     %
-    figure_yp('','Toroidal MHD equilibrium','clf');
+    figure_yp('','Poloidal view - MHD equilibrium','clf');
     %    
     sspsin = linspace(0,1,21);
     sx = interp1(sqrt(psin),ptx,sspsin,method);  
@@ -288,4 +288,13 @@ if display_mode >= 2,
     axis('equal');  
     axis([xmin,xmax,ymin,ymax]);
     print_jd(p_opt,[filename,'_spsin']);
+    %
+    %figure_yp('','Toroidal view - MHD equilibrium','clf');
+    %
+    
+    
+    
+    
+    
+    
 end
