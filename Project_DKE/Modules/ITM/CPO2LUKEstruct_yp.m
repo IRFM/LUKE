@@ -124,11 +124,13 @@ if strcmp('equilibrium',struct_name),
                 ylim = NaN;
                 leg = ['B_T';'B_P';'B  '];
                 %
-                figure(100),graph1D_jd(rx,abs(rBPHI),0,0,'','','',NaN,xlim,ylim,style,marker,color1,width,siz,gca,red,lspace,bspace);
+                figure_yp('','B field radial profiles','clf');
+                graph1D_jd(rx,abs(rBPHI),0,0,'','','',NaN,xlim,ylim,style,marker,color1,width,siz,gca,red,lspace,bspace);
                 graph1D_jd(rx,rBP,0,0,'','','',NaN,xlim,ylim,style,marker,color2,width);
                 graph1D_jd(rx,rB,0,0,xlab,ylab,'',leg,xlim,ylim,style,marker,color3,width);
                 %
-                figure(101),graph1D_jd(theta,ptB(2,:),0,0,'','','',NaN,'','',style,marker,'b',width);hold on
+                figure_yp('','B field poloidal dependence','clf');
+                graph1D_jd(theta,ptB(2,:),0,0,'','','',NaN,'','',style,marker,'b',width);hold on
                 plot(theta,ptB([2:end],:))
                 legend(['r/a = ',num2str(prho(2))])
                 axis([0,2*pi,0,ceil(max(max(ptB([2:end],:)))*10)/10])
@@ -208,7 +210,8 @@ elseif strcmp('antennas',struct_name),
 			%
 			LUKE_struct{ia}.yalpha_L = sign(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.beta)*pi - atan(tan(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.beta)/cos(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.alpha));
 			LUKE_struct{ia}.ybeta_L = acos(cosd(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.beta)*sin(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.alpha));
-			LUKE_struct{ia}.yP_L = CPO_struct.antenna_unit(ia).antenna_ec.power.value;
+            %
+            LUKE_struct{ia}.yP_L = CPO_struct.antenna_unit(ia).antenna_ec.power.value;
 			LUKE_struct{ia}.dNpar0 = NaN;
 			LUKE_struct{ia}.ns = 1000;
 			LUKE_struct{ia}.method = 'cubic';
