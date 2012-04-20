@@ -539,7 +539,13 @@ end
 %
 if abs(display_mode) >= 2,
     %
-    p_opt = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
+    if abs(display_mode) == 2,
+        p_opt = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
+        flag_id = 1;
+    else
+        p_opt = -1;
+        flag_id = 0;
+    end
     %    
     prho = mx(:,1)'/ap;
     %       
@@ -570,39 +576,41 @@ if abs(display_mode) >= 2,
     axis('equal');drawnow  
     print_jd(p_opt,['Fig_EQUIL_',equil.id,'_mag'])
     %
-    figure('Name','Electron Temperature and Density Profiles'),clf
-    %    
-    [ax] = graph1D2jd(prho,xTe,prho,xne/1e19,'\rho','T_e (keV)','n_e (10^{19} m^{-3})','',...
-        [0,1],NaN,NaN,'-','none','r',2,'--','none','b',2,20,0.9,0.5,0.7);
-    set(ax(1),'xtick',[0:0.2:1]);set(ax(2),'xtick',[0:0.2:1])
-    print_jd(p_opt,['Fig_EQUIL_',equil.id,'_tene'])
+    if flag_id,
+        figure('Name','Electron Temperature and Density Profiles'),clf
+        %    
+        [ax] = graph1D2jd(prho,xTe,prho,xne/1e19,'\rho','T_e (keV)','n_e (10^{19} m^{-3})','',...
+            [0,1],NaN,NaN,'-','none','r',2,'--','none','b',2,20,0.9,0.5,0.7);
+        set(ax(1),'xtick',[0:0.2:1]);set(ax(2),'xtick',[0:0.2:1])
+        print_jd(p_opt,['Fig_EQUIL_',equil.id,'_tene'])
+    end
     %
     % displays the equilibrium profiles
     %
-%    if flag_id, 
-    figure('Name','Equilibrium profile parameters'),clf
-    set(gcf,'units','inches','position',[0.5,1,10,6]);
-    set(gca,'position',[0,0,1,1]);
-    %
-    subplot('position',[1/12,0.5+1/16,5/24,5/16])
-      [ax] = graph1D_jd(prho,psin,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',0.5);
-      [ax] = graph1D_jd(xrho,xpsin,0,0,'\rho','\psi_n','',NaN,[0,1],[-eps,1],'none','+','r',2);
-    subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
-      [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],[-eps,max(equil.pTe)],'-','none','b',0.5);
-      [ax] = graph1D_jd(xrho,xTe,0,0,'\rho','T_e (keV)',equil.id,NaN,[0,1],[-eps,max(equil.pTe)],'none','+','r',2);
-    subplot('position',[2/3+1/12,0.5+1/16,5/24,5/16])
-      [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'','','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'-','none','b',0.5);
-      [ax] = graph1D_jd(xrho,xne/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'none','+','r',2);
-    subplot('position',[1/12,1/8,5/24,5/16])
-      [ax] = graph1D_jd(prho,equil.pzTi,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'-','none','b',0.5);
-      [ax] = graph1D_jd(xrho,xzTi,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'none','+','r',2);
-    subplot('position',[1/3+1/12,1/8,5/24,5/16])
-      [ax] = graph1D_jd(prho,equil.pzni/1e19,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'-','none','b',0.5);
-      [ax] = graph1D_jd(xrho,xzni/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'none','+','r',2);
-    subplot('position',[2/3+1/12,1/8,5/24,5/16])
-      [ax] = graph1D_jd(prho,pZeff,0,0,'','','',NaN,[0,1],[-eps,max(pZeff)],'-','none','b',0.5);
-      [ax] = graph1D_jd(xrho,xZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[-eps,max(pZeff)],'none','+','r',2);
-%    end
+    if flag_id, 
+        figure('Name','Equilibrium profile parameters'),clf
+        set(gcf,'units','inches','position',[0.5,1,10,6]);
+        set(gca,'position',[0,0,1,1]);
+        %
+        subplot('position',[1/12,0.5+1/16,5/24,5/16])
+          [ax] = graph1D_jd(prho,psin,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xpsin,0,0,'\rho','\psi_n','',NaN,[0,1],[-eps,1],'none','+','r',2);
+        subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
+          [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],[-eps,max(equil.pTe)],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xTe,0,0,'\rho','T_e (keV)',equil.id,NaN,[0,1],[-eps,max(equil.pTe)],'none','+','r',2);
+        subplot('position',[2/3+1/12,0.5+1/16,5/24,5/16])
+          [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'','','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xne/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'none','+','r',2);
+        subplot('position',[1/12,1/8,5/24,5/16])
+          [ax] = graph1D_jd(prho,equil.pzTi,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xzTi,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'none','+','r',2);
+        subplot('position',[1/3+1/12,1/8,5/24,5/16])
+          [ax] = graph1D_jd(prho,equil.pzni/1e19,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xzni/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'none','+','r',2);
+        subplot('position',[2/3+1/12,1/8,5/24,5/16])
+          [ax] = graph1D_jd(prho,pZeff,0,0,'','','',NaN,[0,1],[-eps,max(pZeff)],'-','none','b',0.5);
+          [ax] = graph1D_jd(xrho,xZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[-eps,max(pZeff)],'none','+','r',2);
+        end
     %
     if p_opt >= 0,
         %
