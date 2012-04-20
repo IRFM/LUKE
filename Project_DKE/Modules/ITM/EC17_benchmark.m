@@ -21,14 +21,14 @@ clc
 %
 numshot = 2;
 numrun_in = 551;
-numrun_out = 503;%single ray: 502, beam: 503
+numrun_out = 502;%single ray: 502, beam: 503
 timeslice = [0,1,2,3];
 %
 time_interp = 1;%nearest point
 %
 % Remote computing options
 %
-remotename = 'macproyves';%'','macproyves'
+remotename = '';%'','macproyves'
 debug_mode = 0;%set to 1 in case of problem
 %
 % Save euitm structures in mat-files
@@ -50,8 +50,8 @@ p_opt = -1;%Printing options
 %
 % User specific C3PO/LUKEparameters
 %
-ray_display = 0;%for display ray propagation (0,1,2)
-display_mode = 0;%display results 'equilibrium, Fokker-Planck (0,1,2)
+ray_display = 1;%for display ray propagation (0,1,2)
+display_mode = 2;%display results 'equilibrium, Fokker-Planck (0,1,2)
 ir_display = -1;%proc_luke_jd display option (-1,0,1,2)
 %
 %
@@ -133,11 +133,19 @@ for it = 1:length(timeslice),
         else
 			error(['Unable to find the euitm antennas file: antennas_',id_launchs,'.mat.']);
 		end
-	end
+    end    
 	%
 	wavestructs = cell(1,length(launchs));
 	%
+
 	for iw = 1:length(launchs),
+        %
+        [sysh,sysZ,syR,syZ,syphi,syalpha,sybeta,sygR,sygZ,sygphi] = raypath_prop_jd(launchs{iw}.yR_L,launchs{iw}.yZ_L,launchs{iw}.yphi_L,launchs{iw}.yalpha_L,launchs{iw}.ybeta_L,linspace(0,10,1000));
+        %
+        equilibrium_jd(equil,'',3);
+        hold on
+        graph1D_jd(syR-equil.Rp,syZ-equil.Zp,0,0,'','','',NaN,'','','-','non','k',2);%plot ray trajectory  
+        %
  		wavestructs{iw} = make_wavert_cronos(launchs{iw},0);%parameter for ray-tracing are adapted to the selected wave
 		%
  		wavestructs{iw}.equil_id = equil.id;
@@ -172,8 +180,7 @@ for it = 1:length(timeslice),
 	luke_in(it).dkeparam = dkeparam;
     luke_in(it).equil = equil;
     luke_in(it).dkedisplay = dkedisplay;
-    luke_in(it).wavestructs = {wavestructs{1},wavestructs{2}};
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%luke_in(it).wavestructs = wavestructs;
+    luke_in(it).wavestructs = wavestructs;
     luke_in(it).waves = '';
     luke_in(it).ohm = '';
     luke_in(it).transpfaste = '';
