@@ -50,7 +50,7 @@ p_opt = -1;%Printing options
 %
 % User specific C3PO/LUKEparameters
 %
-ray_display = 1;%for display ray propagation (0,1,2)
+ray_display = 0;%for display ray propagation (0,1,2)
 display_mode = 2;%display results 'equilibrium, Fokker-Planck (0,1,2)
 ir_display = -1;%proc_luke_jd display option (-1,0,1,2)
 %
@@ -97,7 +97,7 @@ elseif numrun_out == 502,%ray tracing
 	%
 end
 %
-dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:1];
+dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.6,0.61:0.01:0.79,0.80:0.05:1];
 %
 if isempty(remotename),
 	dkeparam.invproc = 1;%MUMPS is not working on the ITM gateway
@@ -259,8 +259,8 @@ for it = 1:length(timeslice),%local calculations
 	XXsinksource = luke_out(it).XXsinksource;
 	%
 	filename = ['EC17_benchmark_',equil.id,'_',id_simul,'.mat'];
-	save(filename);
-	%
+	save(filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
+    %
 	rawdata = load(filename);
 	procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
 	%
