@@ -97,7 +97,7 @@ elseif numrun_out == 502,%ray tracing
 	%
 end
 %
-dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.6,0.61:0.01:0.79,0.80:0.05:1];
+dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.6,0.61:0.02:0.79,0.80:0.05:1];
 %
 if isempty(remotename),
 	dkeparam.invproc = 1;%MUMPS is not working on the ITM gateway
