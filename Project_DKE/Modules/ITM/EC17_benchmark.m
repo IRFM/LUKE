@@ -28,7 +28,7 @@ time_interp = 1;%nearest point
 %
 % Remote computing options
 %
-remotename = '';%'','macproyves'
+remotename = 'macproyves';%'','macproyves'
 debug_mode = 0;%set to 1 in case of problem
 %
 % Save euitm structures in mat-files
@@ -67,6 +67,9 @@ info_dke_yp(1,'-----------------------------------------------------------------
 if  ~isempty(machine) && ~isempty(user) && ~isempty(ver)
 	info_dke_yp(4,['ITM database well connected -> machine: ',machine,', user: ',user,', datastructure version: ',ver]);
 	itm_connect = 1;
+	%
+	eval(['javaaddpath /afs/efda-itm.eu/project/switm/ual/',ver,'/javainterface/ualjava.jar']);%add UAL Access to classpath
+	import ualmemory.javainterface.*;%import Java packages	
 else
 	itm_connect = 0;	
 end
@@ -84,6 +87,8 @@ if numrun_out == 503,%beam tracing
 		euitm_close(idx,'euitm',numshot,numrun_out);
 	end
 	%
+	dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.6,0.61:0.02:0.79,0.80:0.05:1];
+	%
 elseif numrun_out == 502,%ray tracing
 	beam_mode = 0;
 	%
@@ -95,15 +100,14 @@ elseif numrun_out == 502,%ray tracing
 		euitm_close(idx,'euitm',numshot,numrun_out);
 	end
 	%
+	dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.6,0.61:0.01:0.79,0.80:0.05:1];
 end
 %
-dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.6,0.61:0.02:0.79,0.80:0.05:1];
 %
 if isempty(remotename),
 	dkeparam.invproc = 1;%MUMPS is not working on the ITM gateway
 	info_dke_yp(6,['The use of dmumpsmex is temporarily disabled on the ITM gateway.'])
 end
-
 %
 run_id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_CPO_',int2str(numrun_out)];
 %
