@@ -166,11 +166,11 @@ for it = 1:length(timeslice),
  		%
  		if strcmp(launchs{iw}.type,'EC')
      		%
-     		info_dke_yp(4,['wave :',int2str(iw),' type :',launchs{iw}.type])
+     		info_dke_yp(4,['wave : ',int2str(iw),' type :',launchs{iw}.type])
      		%
  		else
-     		info_dke_yp(4,['wave :',int2str(iw),' type :',launchs{iw}.type,' n// = ',num2str(wavestructs{iw}.launch.bNpar0,4)])
-     		info_dke_yp(4,['wave :',int2str(iw),' type :',launchs{iw}.type,' Plh = ',num2str(wavestructs{iw}.launch.bPlhtot,4)])
+     		info_dke_yp(4,['wave : ',int2str(iw),' type :',launchs{iw}.type,' n// = ',num2str(wavestructs{iw}.launch.bNpar0,4)])
+     		info_dke_yp(4,['wave : ',int2str(iw),' type :',launchs{iw}.type,' Plh = ',num2str(wavestructs{iw}.launch.bPlhtot,4)])
  		end
 	end
 	%
