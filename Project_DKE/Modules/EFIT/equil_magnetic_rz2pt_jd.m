@@ -70,7 +70,7 @@ ptB = sqrt(ptBP.^2 + ptBPHI.^2);
 %
 prho = ptx(:,1).'/ap;
 %
-pq = interp1(ypsin,yq,psin,'linear','extrap');
+pq = interp1(ypsin,yq,psin,method,'extrap');
 %
 pq_h = (pq(1:end-1) + pq(2:end))/2;
 pdpsin = diff(psin);
