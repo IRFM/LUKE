@@ -58,15 +58,15 @@ sy = linspace(ymin,ymax,sny);
 %
 % even finer grid near the center
 %
-ix = find(abs(sx) == min(abs(sx)));
-iy = find(abs(sy) == min(abs(sy)));
+%ix = find(abs(sx) == min(abs(sx)));
+%iy = find(abs(sy) == min(abs(sy)));
 %
-sx = sort([sx([1:ix-2,ix+2:end]),linspace(sx(ix - 1),sx(ix + 1),2*sfac+1)]);
-sy = sort([sy([1:iy-2,iy+2:end]),linspace(sy(iy - 1),sy(iy + 1),2*sfac+1)]);
+%sx = sort([sx([1:ix-2,ix+2:end]),linspace(sx(ix - 1),sx(ix + 1),2*sfac+1)]);
+%sy = sort([sy([1:iy-2,iy+2:end]),linspace(sy(iy - 1),sy(iy + 1),2*sfac+1)]);
 %
 %
-snx = length(sx);
-sny = length(sy);
+%snx = length(sx)
+%sny = length(sy)
 %
 ix = find(abs(sx) == min(abs(sx)));
 iy = find(abs(sy) == min(abs(sy)));
@@ -292,9 +292,5 @@ if display_mode >= 2,
     %figure_yp('','Toroidal view - MHD equilibrium','clf');
     %
     
-    
-    
-    
-    
-    
+
 end
