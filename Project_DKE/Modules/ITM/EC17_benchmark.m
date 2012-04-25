@@ -159,6 +159,8 @@ for it = 1:length(timeslice),
       	wavestructs{iw}.waveparam.nd = nd;%Number of transverse distance positions for beamlets
 		wavestructs{iw}.waveparam.nchi = nchi;%Number of angular positions for beamlets
 		%
+        wavestructs{iw}.fitequilparam.method = 'spline';
+        %
 		if ~beam_mode,
 			wavestructs{iw}.launch.w0 = NaN;
          	wavestructs{iw}.launch.z_L = NaN;
