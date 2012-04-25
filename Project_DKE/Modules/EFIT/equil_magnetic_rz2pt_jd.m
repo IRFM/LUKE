@@ -1,4 +1,4 @@
-function [equil_magnetic,prho,pspsin,pspsinT] = equil_magnetic_rz2pt_jd(equil_magnetic_data,display_mode,p_opt,dispname,savename,np,nt)
+function [equil_magnetic,prho,pspsin,pspsinT] = equil_magnetic_rz2pt_jd(equil_magnetic_data,display_mode,p_opt,dispname,savename,np,nt,sfac)
 %
 % This function reads and returns the magnetic equilibrium parameters from 
 % magnetic field data on a RZ grid
@@ -51,7 +51,7 @@ psin = linspace(0,1,np);
 %
 % Transforms on a (psi,theta) grid
 %
-[ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,nt,method,display_mode,p_opt,savename);
+[ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,nt,method,display_mode,p_opt,savename,sfac);
 %
 np = length(psin);
 ap = ptx(np,1);%Plasma minor radius on the LFS midplane
