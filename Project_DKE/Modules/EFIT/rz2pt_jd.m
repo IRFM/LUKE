@@ -58,31 +58,31 @@ sy = linspace(ymin,ymax,sny);
 %
 % even finer grid near the center
 %
-%ix = find(abs(sx) == min(abs(sx)));
-%iy = find(abs(sy) == min(abs(sy)));
+ix = find(abs(sx) == min(abs(sx)));
+iy = find(abs(sy) == min(abs(sy)));
 %
-%sx = sort([sx([1:ix-2,ix+2:end]),linspace(sx(ix - 1),sx(ix + 1),2*sfac+1)]);
-%sy = sort([sy([1:iy-2,iy+2:end]),linspace(sy(iy - 1),sy(iy + 1),2*sfac+1)]);
+sx = sort([sx([1:ix-2,ix+2:end]),linspace(sx(ix - 1),sx(ix + 1),2*sfac+1)]);
+sy = sort([sy([1:iy-2,iy+2:end]),linspace(sy(iy - 1),sy(iy + 1),2*sfac+1)]);
 %
 %
 snx = length(sx);
 sny = length(sy);
 %
-%ix = find(abs(sx) == min(abs(sx)));
-%iy = find(abs(sy) == min(abs(sy)));
+ix = find(abs(sx) == min(abs(sx)));
+iy = find(abs(sy) == min(abs(sy)));
 %
-%if abs(sx(ix)) > 10*eps | abs(sy(iy)) > 10*eps,
-%    warning('location of magnetic axis enforced')
-%end
-%sx(ix) = 0;
-%sy(iy) = 0;
+if abs(sx(ix)) > 10*eps | abs(sy(iy)) > 10*eps,
+    warning('location of magnetic axis enforced')
+end
+sx(ix) = 0;
+sy(iy) = 0;
 %
 sxypsin = interp2(x,y,xypsin.',sx.',sy,method).';
 %
-%if abs(sxypsin(ix,iy)) > 10*eps,
-%    warning('value of psi at magnetic axis enforced')
-%end
-%sxypsin(ix,iy) = 0;
+if abs(sxypsin(ix,iy)) > 10*eps,
+    warning('value of psi at magnetic axis enforced')
+end
+sxypsin(ix,iy) = 0;
 %
 % calculation of grad psi
 %
@@ -107,8 +107,8 @@ sxydpsindy(:,1) = (hxypsin_y(:,1) - sxypsin(:,1))/(hy(1) - sy(1));
 sxydpsindx(snx,:) = (sxypsin(snx,:) - hxypsin_x(snx-1,:))/(sx(snx) - hx(snx-1));
 sxydpsindy(:,sny) = (sxypsin(:,sny) - hxypsin_y(:,sny-1))/(sy(sny) - hy(sny-1));
 %
-%sxydpsindx(ix,iy) = 0;
-%sxydpsindy(ix,iy) = 0;
+sxydpsindx(ix,iy) = 0;
+sxydpsindy(ix,iy) = 0;
 %
 % change to (r,theta) grid
 %

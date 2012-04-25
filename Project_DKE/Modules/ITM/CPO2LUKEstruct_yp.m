@@ -61,7 +61,7 @@ if strcmp('equilibrium',struct_name),
         npsin = length(psin);%number of radial points (normalized grid point)
         %
         ntheta = 65;%number of theta points (poloidal angle)
-        sfac = 10;%have to increased when ray goes close to the magnetic axis
+        sfac = 24;%have to increased when ray goes close to the magnetic axis
 		%
 		% (R,Z) to (psi,theta) grid conversion (two methods)
 		%
