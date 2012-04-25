@@ -59,6 +59,9 @@ if strcmp('equilibrium',struct_name),
 		xypsin = xypsi/psia;%normalized poloidal magnetic flux
 		psin = psi(:)'/psia;
         npsin = length(psin);%number of radial points (normalized grid point)
+        %
+        ntheta = 65;%number of theta points (poloidal angle)
+        sfac = 10;%have to increased when ray goes close to the magnetic axis
 		%
 		% (R,Z) to (psi,theta) grid conversion (two methods)
 		%
@@ -74,13 +77,12 @@ if strcmp('equilibrium',struct_name),
             equil_magnetic_data.psin = psin;
             equil_magnetic_data.pq = -qspi;%sign change -> ITM: Ip > 0 if direction counter clockwise, LUKE: Ip > 0 direction is clockwise (both view from the top)
             %
-            [LUKE_struct,prho,pspsin,pspsinT] = equil_magnetic_rz2pt_jd(equil_magnetic_data,display_mode,p_opt,'','',npsin);
+            [LUKE_struct,prho,pspsin,pspsinT] = equil_magnetic_rz2pt_jd(equil_magnetic_data,display_mode,p_opt,'','',npsin,ntheta,sfac);
             %
         else,%direct interpolation of the magnetic field
-			ntheta = 65;%number of theta points (poloidal angle)
             interp_method = 'spline';%interpolation method for grid conversion. 
             %
-            [ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,ntheta,interp_method,display_mode);
+            [ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,ntheta,interp_method,display_mode,p_opt,'',sfac);
             %
             ptBPHI = -griddata(x,y,xyBPHI',ptx,pty);%sign change -> ITM: BPHI > 0 if direction counter clockwise, LUKE: BPHI > 0 direction is clockwise (both view from the top)
             %
