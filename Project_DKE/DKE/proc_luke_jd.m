@@ -61,6 +61,13 @@ mksa = data.mksa;
 %
 simul_id = dke_out.simul.id;
 waves = dke_out.waves;
+if isfield(dke_out,'dkeparam')
+    dkeparam = dke_out.dkeparam;
+elseif isfield(data,'dkeparam')
+    dkeparam = data.dkeparam;
+else
+    dkeparam = struct;
+end
 %
 style0 = 'none';
 style = '-';
@@ -145,7 +152,7 @@ else
     nfrags = NaN;
 end
 %
-if isfield(data,'dkeparam') && isfield(data.dkeparam,'timevol') && data.dkeparam.timevol == 1,
+if isfield(dkeparam,'timevol') && dkeparam.timevol == 1,
     timevol = 1;
 else
     timevol = 0;
@@ -161,7 +168,7 @@ P_e = ZP0(end).x_e_fsav*mksa.P_ref;
 P_tot = P_rf + P_e;
 %
 if isfield(dke_out,'residue_rf'),
-    if timevol == 1,
+    if iscell(dke_out.residue_rf),
         residue_rf = dke_out.residue_rf{end}(end);
     else
         residue_rf = dke_out.residue_rf(end);
@@ -185,8 +192,8 @@ if isfield(ZP0(end),'n_rf_list'),
     n_rf_list = ZP0(end).n_rf_list;
 elseif isfield(dke_out,'waveparam'),
     n_rf_list = dke_out.waveparam.n_rf_list;
-elseif isfield(data,'dkeparam'),
-    n_rf_list = data.dkeparam.n_rf_list;
+elseif isfield(dkeparam,'n_rf_list'),
+    n_rf_list = dkeparam.n_rf_list;
 else
     n_rf_list = NaN(1,nn_rf);
     disp(['WARNING : n_rf_list not determined.'])
@@ -1172,7 +1179,7 @@ if ir_display > 0 && ir_display <= nr,
     %
     disp(['normalized radius for distribution plots: ',num2str(xrho(ir_display))])
     %
-    Xf0 = dke_out.XXf0(:,:,ir_display);
+    Xf0 = dke_out.XXf0{end}(:,:,ir_display);
     Xfinit = dke_out.XXfinit(:,:,ir_display);
     Xmhu = repmat(mhu,[length(pn),1]);
     %
