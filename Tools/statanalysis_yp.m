@@ -1,4 +1,4 @@
-function [iy,y,ym,ys,yr,iyr] = statanalysis_yp(yin,yt)
+function [iy,y,ym,ys,yr,iyr] = statanalysis_yp(yin,yt,display_mode)
 %
 % This function calculates the mean value, the standard deviation, and the
 % relative accuracy of the mean value. The function should exhibit a
@@ -16,52 +16,80 @@ function [iy,y,ym,ys,yr,iyr] = statanalysis_yp(yin,yt)
 %       - ym: mean value [1,1]
 %       - ys: standard deviation [1,1]
 %       - yr: relative accuracy of the mean value [1,1]
-%       - iyr: rejected index [1,p]
+%       - iyr: rejected index [1,m-p]
 %
 % by Y. Peysson DRFC-CEA <yves.peysson@cea.fr> and J. Decker DRFC-CEA <joan.decker@cea.fr> 
 %
-if nargin == 1,
-    yt = 0.01;
+if nargin < 3,
+    display_mode = 0;% default value, no display
 end
 %
-y0 = yin;
+if nargin < 2,
+    yt = NaN;% default value, two times the standard deviation
+end
+%
+nyin = length(yin);
 y = yin;
-yr = Inf;
-iyr = [];
+ny = nyin;
 %
-if yt > 0,
-    while abs(yr) > abs(yt)
-        ym = mean(y);
-        ys = std(y);
-        %
-        yr1 = yr;
-        yr = ys/ym/sqrt(length(y));
-        yr2 = yr;
-        %
-        x = find(abs(y - ym) <= abs(ys));
-        %
-        y = y(x);
-        if yr1 == yr2,break;end
+ymask = true(1,ny);% mask of valid indices
+%
+ym = mean(y);
+ys = std(y);
+yd = ny*ys/ym;
+yr = Inf;
+%
+while ny > 1,%abs(yr) > abs(yt),%
+    %
+    iyc = find(abs(y - ym) == max(abs(y - ym)),1,'first');% find value furthest from average
+    %
+    y(iyc) = [];
+    %
+    ymc = mean(y);
+    ysc = std(y);
+    ydc = ny*ysc/ymc;
+    %
+    yr = abs(yd - ydc);
+    %
+    if isnan(yt),
+        yrmax = 3*ys/ym;
+    else
+        yrmax = yt;
     end
     %
-    for i = 1:length(y),
-        iy(i) = find(y0 == y(i));
+    if yr <= yrmax,
+        break
     end
     %
-    j = 1;
-    for i = 1:length(y0),
-        if isempty(find(iy == i)),
-            iyr(j) = i;
-            j = j + 1;
-        end
-    end
-else
-    y = yin;
-    ym = mean(y);
-    ys = std(y);
-    yr = ys/ym/sqrt(length(y));
-    iy = [1:length(y)];
-    iyr = [];
+    % take away rejected index
+    %
+    yind = find(ymask);
+    ymask(yind(iyc)) = false;
+    ny = ny - 1;
+    %
+    ym = ymc;
+    ys = ysc;
+    yd = ny*ys/ym;
+    %
 end
 %
-
+iy = find(ymask);
+iyr = find(~ymask);
+y = yin(ymask);
+%
+if display_mode >= 2,
+    %
+    figure(1),clf
+    %
+    graph1D_jd(1:nyin,yin/ym,0,0,'n','y/ym','',NaN,[0,nyin+1],NaN,'-','+','r',2,20+14i,gca,0.9,0.7,0.7);
+    graph1D_jd(iy,y/ym,0,0,'','','',NaN,[0,nyin+1],NaN,'none','o','b',2,20+14i);
+    %
+    graph1D_jd([0,nyin+1],[1+yrmax,1+yrmax],0,0,'','','',NaN,[0,nyin+1],NaN,'--','none','k',2,20+14i);
+    graph1D_jd([0,nyin+1],[1-yrmax,1-yrmax],0,0,'','','',NaN,[0,nyin+1],NaN,'--','none','k',2,20+14i);
+    %
+    graph1D_jd([0,nyin+1],[1+ys/ym,1+ys/ym],0,0,'','','',NaN,[0,nyin+1],NaN,'--','none','g',2,20+14i);
+    graph1D_jd([0,nyin+1],[1-ys/ym,1-ys/ym],0,0,'','','',NaN,[0,nyin+1],NaN,'--','none','g',2,20+14i);
+    %
+end
+    
+   
