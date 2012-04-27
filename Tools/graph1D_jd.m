@@ -80,17 +80,17 @@ end
 fontname = 'Times';%'Courier';
 %
 hold(ax,'on');
-if logx == 1 & logy ~= 1
-    set(ax,'xscale','log');
-    gcl = semilogx(x,y,'parent',ax);
-elseif logx ~= 1 & logy == 1
-    set(ax,'yscale','log');
-    gcl = semilogy(x,y,'parent',ax);
-elseif logx == 1 & logy == 1
-    set(ax,'xscale','log');
-    set(ax,'yscale','log');
-    gcl = loglog(x,y,'parent',ax);
-else
+% if logx == 1 & logy ~= 1
+%     set(ax,'xscale','log');
+%     gcl = semilogx(x,y,'parent',ax);
+% elseif logx ~= 1 & logy == 1
+%     set(ax,'yscale','log');
+%     gcl = semilogy(x,y,'parent',ax);
+% elseif logx == 1 & logy == 1
+%     set(ax,'xscale','log');
+%     set(ax,'yscale','log');
+%     gcl = loglog(x,y,'parent',ax);
+% else
     if ~all(isnan(eym(:))) || ~all(isnan(eyp(:)))
         gcl = errorbar(x,y,eym,eyp,'parent',ax);
     else        
@@ -103,8 +103,21 @@ else
         set(gcxp,'marker','+','color',color);
         set(gcxm,'marker','+','color',color);
     end
-end
+% end
+%
 hold(ax,'off');
+%
+if logx == 1,
+    set(ax,'xscale','log');
+else
+    set(ax,'xscale','linear');
+end
+%
+if logy == 1,
+    set(ax,'yscale','log');
+else
+    set(ax,'yscale','linear');
+end
 %
 set(gcl,'linestyle',style);
 set(gcl,'marker',marker);
