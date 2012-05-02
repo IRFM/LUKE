@@ -84,7 +84,9 @@ elseif strcmp(basestr,'TS') && exist('tsbase','file'),
         end
     end
     %
-    hxr = flipdim(cumsum(flipdim(hxr,2),2),2);%TS data is per channel (it is not monotonically decreasing)
+    if opt.V == 1,
+        hxr = flipdim(cumsum(flipdim(hxr,2),2),2);%TS data is per channel (it is not monotonically decreasing)
+    end
     %
     filter_thickness = NaN;
     filter_material = NaN;
