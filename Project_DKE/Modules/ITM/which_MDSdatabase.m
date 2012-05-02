@@ -3,10 +3,23 @@ function [machine,user,ver] = which_MDSdatabase(dkepath,mute)
 %
 %Function that check which ITM MDS+ database is connected
 %
+%	Input:
+%
+%   - dkepath: LUKE path structure
+%       (default: value for the computer in the LUKE/PATH_files database)
+%   - mute: if set to 1, warning are displayed, if set to 0, quiet mode [1,1]
+%       (default = 0)
+%
+%	Output:
+%
+%   - machine: tokamak name in the ITM MDS+ database [1,n]
+%   - user: user of the ITM MDS+ database [1,n]
+%   - ver: version of the data structure (UAL) in ITM MDS+ database [1,n]
+% 
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
 if nargin == 0
-	dkepath = load_structures_yp('dkepath','','');
+	dkepath = '';
     mute = 0;
 end
 %
@@ -14,8 +27,12 @@ if nargin == 1,
 	mute = 0;
 end
 %
+if isempty(dkepath),
+    dkepath = load_structures_yp('dkepath','','');    
+end
+%
 if ~strfind(dkepath.hostname,'efda-itm'),%one of the ITM gateway nodes
-	if ~mute,warning(['Remote access to the ITM MDS+ database from ',dkepath.hostnames,' not yet implemented !']);end
+	if mute,warning(['Remote access to the ITM MDS+ database from ',dkepath.hostnames,' not yet implemented !']);end
 	machine = '';
 	user = '';
 	ver = '';
@@ -26,7 +43,7 @@ else
 	mdstreebase = getenv('MDSPLUS_TREE_BASE_0');
 	%
 	if isempty(hdf5base) | isempty(mdstreebase),
-		if ~mute,
+		if mute,
             warning('Environment variables for ITM MDS+/HDF5 database are not set-up.');
         end
 		machine = '';
