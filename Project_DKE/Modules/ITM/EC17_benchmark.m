@@ -28,7 +28,7 @@ time_interp = 1;%nearest point
 %
 % Remote computing options
 %
-remotename = 'macproyves';%'','macproyves'
+remotename = '';%'','macproyves'
 debug_mode = 0;%set to 1 in case of problem
 %
 % Save euitm structures in mat-files
@@ -74,6 +74,8 @@ else
 	itm_connect = 0;	
 end
 %
+dkeparam.rho_S = [0:0.02:0.24,0.25:0.03:0.76,0.77:0.003:0.81,0.82:0.05:1];
+%
 % run number of the output 
 %
 if numrun_out == 503,%beam tracing
@@ -87,8 +89,6 @@ if numrun_out == 503,%beam tracing
 		euitm_close(idx,'euitm',numshot,numrun_out);
 	end
 	%
-	dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.6,0.61:0.02:0.79,0.80:0.05:1];
-	%
 elseif numrun_out == 502,%ray tracing
 	beam_mode = 0;
 	%
@@ -99,22 +99,28 @@ elseif numrun_out == 502,%ray tracing
     	idx  = euitm_create('euitm',numshot,numrun_out);%create database for this run if not exists
 		euitm_close(idx,'euitm',numshot,numrun_out);
 	end
-	%
-	dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.6,0.61:0.01:0.79,0.80:0.05:1];
 end
 %
 %
-if isempty(remotename),
+if isempty(remotename) & ~strcmp(mexext,'mexmaci64'),
 	dkeparam.invproc = 1;%MUMPS is not working on the ITM gateway
 	info_dke_yp(6,['The use of dmumpsmex is temporarily disabled on the ITM gateway.'])
 end
 %
+dkeparam.npresmin = 0;%for the quasilinear calculations
+%
 run_id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_CPO_',int2str(numrun_out)];
 %
-if itm_connect,
-	equil = read_equil_ITM(numshot,numrun_in,timeslice(1),time_interp,display_mode,save_mode);%Create magnetic equilibrium structure
+if timeslice(1) > 0,
+    timeslice_equil = 0;
 else
-	id_equil = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice(1)),'_timeinterp_',int2str(time_interp)];
+    timeslice_equil = timeslice(1);
+end
+%
+if itm_connect,
+	equil = read_equil_ITM(numshot,numrun_in,timeslice_equil,time_interp,display_mode,save_mode);%Create magnetic equilibrium structure
+else
+	id_equil = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice_equil),'_timeinterp_',int2str(time_interp)];
 	%
 	if exist(['equil_',id_equil,'.mat']) == 2,
 		load(['equil_',id_equil,'.mat']);
@@ -141,7 +147,6 @@ for it = 1:length(timeslice),
 	%
 	wavestructs = cell(1,length(launchs));
 	%
-
 	for iw = 1:length(launchs),
         %
         [sysh,sysZ,syR,syZ,syphi,syalpha,sybeta,sygR,sygZ,sygphi] = raypath_prop_jd(launchs{iw}.yR_L,launchs{iw}.yZ_L,launchs{iw}.yphi_L,launchs{iw}.yalpha_L,launchs{iw}.ybeta_L,linspace(0,10,1000));
@@ -160,12 +165,7 @@ for it = 1:length(timeslice),
 		wavestructs{iw}.waveparam.nchi = nchi;%Number of angular positions for beamlets
 		%
         wavestructs{iw}.fitequilparam.method = 'spline';
-        %
-		if ~beam_mode,
-			wavestructs{iw}.launch.w0 = NaN;
-         	wavestructs{iw}.launch.z_L = NaN;
-		end
-		%
+   		%
 		if wavestructs{iw}.launch.yP_L == 0, 
 			wavestructs{iw}.launch.yP_L = eps;%to avoid interpolation problems
 		end
@@ -254,6 +254,14 @@ for it = 1:length(timeslice),%local calculations
 	Zcurr = luke_out(it).Zcurr;
 	ZP0 = luke_out(it).ZP0;
 	dke_out = luke_out(it).dke_out;
+    %
+    for iray = 1:length(dke_out.waves{1}.rays),
+        if ~isfield(dke_out.waves{1}.rays{iray},'mask_p') | ~isfield(dke_out.waves{1}.rays{iray},'mask_m');
+            dke_out.waves{1}.rays{iray}.mask_p = zeros(size(dke_out.waves{1}.rays{iray}.ss));
+            dke_out.waves{1}.rays{iray}.mask_m = ones(size(dke_out.waves{1}.rays{iray}.ss));
+        end
+    end
+    %
 	radialDKE = luke_out(it).radialDKE;
 	equilDKE = luke_out(it).equilDKE;
 	momentumDKE = luke_out(it).momentumDKE;
@@ -268,7 +276,13 @@ for it = 1:length(timeslice),%local calculations
 	save(filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
     %
 	rawdata = load(filename);
-	procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
+    %
+    if debug_mode,
+        procdata = proc_luke_jd(rawdata,ir_display,p_opt);
+        graph_wave_jd(equil,dke_out.waves);
+    else
+        procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
+    end
 	%
 	[CPO_waves] = LUKEstruct2CPO(numshot,numrun_out,timeslice(it),'waves',rawdata,procdata,CPO_waves);
 	%
@@ -283,3 +297,4 @@ end
 %
 filename = ['EC17_benchmark_',run_id,'.mat'];
 save(filename,'numshot','numrun_out','CPO_waves');
+info_dke_yp(2,['Results saved in ',filename]);
