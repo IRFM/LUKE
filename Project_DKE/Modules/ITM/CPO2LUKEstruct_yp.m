@@ -220,11 +220,11 @@ elseif strcmp('antennas',struct_name),
 			%
 			clum = 299792458;%Speed of light (m/s)
 			alpha = CPO_struct.antenna_unit(ia).antenna_ec.frequency*pi/clum;%for the Rayleigh length
-			yw = alpha^2*CPO_struct.antenna_unit(ia).antenna_ec.beam.spot.waist(1)^4*CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad(1);%WARNING: circular shape only
+			yw = alpha^2*CPO_struct.antenna_unit(ia).antenna_ec.beam.spot.waist(1)^4*CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad(1);%WARNING: circular shape only.
 			%
 			LUKE_struct{ia}.w0 = CPO_struct.antenna_unit(ia).antenna_ec.beam.spot.waist(1)/sqrt(1 + yw*CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad(1));
-			LUKE_struct{ia}.z_L = yw/sqrt(1 + yw*CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad(1));
-			%
+			LUKE_struct{ia}.z_L = -yw/(1 + yw*CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad(1));                        
+            %
 			LUKE_struct{ia}.mmode = -CPO_struct.antenna_unit(ia).antenna_ec.mode;%LUKE definitions -> O/X mode: -1/+1. ITM ones are opposite
 		end
 		%
