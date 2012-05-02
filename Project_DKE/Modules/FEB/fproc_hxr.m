@@ -1,26 +1,26 @@
-function [hxr_proc,hxr,data_proc] = fproc_hxr(hxr_path,load_id,hxr_file,exp_file,texp,ic,krange,opt,display_mode,p_opt)
+function [hxr_proc,hxr,data_proc] = fproc_hxr(basestr,hxr_path,load_id,hxr_file,exp_file,texp,ic,krange,opt,display_mode,p_opt)
 %
-if nargin < 10,
+if nargin < 11,
     p_opt = -1;
 end
 %
-if nargin < 9,
+if nargin < 10,
     display_mode = 0;
 end
 %
-if nargin < 8,
+if nargin < 9,
     opt.save = 0;
 end
 %
-if nargin < 7,
+if nargin < 8,
     krange = NaN;
 end
 %
-if nargin < 6,
+if nargin < 7,
     ic = NaN;
 end
 %
-if nargin < 5,
+if nargin < 6,
     texp = NaN;
 end
 %
@@ -28,7 +28,6 @@ opt_save_0 = opt.save;
 %
 dt = diff(texp);
 %
-basestr = load_id(1:find(load_id == '_',1,'first') - 1);
 %
 % This function processes (and eventually displays) HXR data
 %
@@ -49,9 +48,13 @@ hxr = '';
 data_proc = '';
 hxr_proc = '';
 %
-if hxrdata == 0 && exist([hxr_path,proc_datafile1],'file'),
+if hxrdata == 0 && exist([hxr_path,proc_datafile1],'file') && (gettime_jd(proc_datafile1,hxr_path) > gettime_jd(datafile1,hxr_path)),
     %
     load([hxr_path,proc_datafile1],'data_proc');
+%     data = load([hxr_path,datafile1]);
+%     data_proc_tmp = proc_luke_jd(data,-1,-1,0.1,NaN,'',opt);
+%     data_proc.scalar.I_exp = data_proc_tmp.scalar.I_exp;
+%     save([hxr_path,proc_datafile1],'data_proc');
     %
     procdata = 1;
     %
@@ -86,7 +89,7 @@ if hxrdata == 0 && exist([hxr_path,proc_datafile1],'file'),
     %
 end
 %
-if hxrdata == 0 && exist([hxr_path,proc_datafile2],'file'),
+if hxrdata == 0 && exist([hxr_path,proc_datafile2],'file') && (gettime_jd(proc_datafile2,hxr_path) > gettime_jd(datafile2,hxr_path)),
     %
     load([hxr_path,proc_datafile2],'data_proc');
     %
@@ -123,7 +126,7 @@ if hxrdata == 0 && exist([hxr_path,proc_datafile2],'file'),
     %
 end
 %
-if hxrdata == 0 && exist([hxr_path,proc_datafile3],'file'),
+if hxrdata == 0 && exist([hxr_path,proc_datafile3],'file') && (gettime_jd(proc_datafile3,hxr_path) > gettime_jd(datafile3,hxr_path)),
     %
     load([hxr_path,proc_datafile3],'data_proc');
     %
@@ -160,7 +163,7 @@ if hxrdata == 0 && exist([hxr_path,proc_datafile3],'file'),
     %
 end
 %
-if exist([hxr_path,proc_hxr_datafile],'file'),
+if exist([hxr_path,proc_hxr_datafile],'file') && (gettime_jd(proc_hxr_datafile,hxr_path) > gettime_jd(hxr_datafile,hxr_path)),
     %
     load([hxr_path,proc_hxr_datafile],'hxr');
     %

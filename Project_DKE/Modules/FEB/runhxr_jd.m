@@ -16,10 +16,17 @@ if isstruct(data),
     %
     % data from input structure
     %
-    id_simul = data.id_simul;
-    equil = data.equil;
-    dkeparam = data.dkeparam;
-    dkedisplay = data.dkedisplay;
+    if isfield(data,'luke_input'),
+        id_simul = data.luke_input.id_simul;
+        equil = data.luke_input.equil;
+        dkeparam = data.luke_input.dkeparam;
+        dkedisplay = data.luke_input.dkedisplay;
+    else
+        id_simul = data.id_simul;
+        equil = data.equil;
+        dkeparam = data.dkeparam;
+        dkedisplay = data.dkedisplay;
+    end
     %
     if isfield(data,'output'),% case of LUKE_DATA file
         Zcurr = data.output.Zcurr;
