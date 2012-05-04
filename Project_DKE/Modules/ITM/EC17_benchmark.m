@@ -74,9 +74,9 @@ else
 	itm_connect = 0;	
 end
 %
-dkeparam.rho_S = [0:0.02:0.24,0.25:0.03:0.76,0.77:0.003:0.81,0.82:0.05:1];
-%
 % run number of the output 
+%
+dkeparam.rho_S = [25];
 %
 if numrun_out == 503,%beam tracing
 	beam_mode = 1;
@@ -89,6 +89,8 @@ if numrun_out == 503,%beam tracing
 		euitm_close(idx,'euitm',numshot,numrun_out);
 	end
 	%
+    %dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.6,0.61:0.02:0.79,0.80:0.05:1];
+    %
 elseif numrun_out == 502,%ray tracing
 	beam_mode = 0;
 	%
@@ -98,9 +100,10 @@ elseif numrun_out == 502,%ray tracing
 	if itm_connect,
     	idx  = euitm_create('euitm',numshot,numrun_out);%create database for this run if not exists
 		euitm_close(idx,'euitm',numshot,numrun_out);
-	end
+    end
+    %
+    %dkeparam.rho_S = [0:0.02:0.24,0.25:0.03:0.76,0.77:0.003:0.81,0.82:0.05:1];
 end
-%
 %
 if isempty(remotename) & ~strcmp(mexext,'mexmaci64'),
 	dkeparam.invproc = 1;%MUMPS is not working on the ITM gateway
@@ -155,10 +158,28 @@ for it = 1:length(timeslice),
         hold on
         graph1D_jd(syR-equil.Rp,syZ-equil.Zp,0,0,'','','',NaN,'','','-','non','k',2);%plot ray trajectory  
         %
- 		wavestructs{iw} = make_wavert_cronos(launchs{iw},0);%parameter for ray-tracing are adapted to the selected wave
-		%
- 		wavestructs{iw}.equil_id = equil.id;
+        % Generic parameters for EC wave calculations
+        %
+        data = load([dkepath.luke_root,'Project_DKE/Database/WAVE_files/C3POPARAM_EC.mat']);
+        %
+        if 0,
+        wavestructs{iw}.id = launchs{iw}.id;
+        wavestructs{iw}.launch = launchs{iw};
+        wavestructs{iw}.waveparam = conc_struct_jd(wavestructs{iw},data.waveparam);
+        wavestructs{iw}.fitequilparam = conc_struct_jd(wavestructs{iw},data.fitparam);
+        wavestructs{iw}.rayparam = conc_struct_jd(wavestructs{iw},data.rayparam);
+        wavestructs{iw}.C3POparam = conc_struct_jd(wavestructs{iw},data.C3POparam);
+        wavestructs{iw}.wavesolver = 'C3PO';
+        wavestructs{iw}.equil_id = equil.id;       
+        %
+        % Specific parameters for EC wave calculations
+        %
  		wavestructs{iw}.raydisplay.ray = ray_display;%for display ray propagation
+        wavestructs{iw}.raydisplay.equilibrium = 0;
+        wavestructs{iw}.raydisplay.p_opt = -1;%Printing or saving option of the figures
+        end
+        
+        wavestructs{iw} = make_wavert_cronos(launchs{iw},0);
 		%
         wavestructs{iw}.waveparam.dsmin = 0;
       	wavestructs{iw}.waveparam.nd = nd;%Number of transverse distance positions for beamlets
@@ -170,14 +191,7 @@ for it = 1:length(timeslice),
 			wavestructs{iw}.launch.yP_L = eps;%to avoid interpolation problems
 		end
  		%
- 		if strcmp(launchs{iw}.type,'EC')
-     		%
-     		info_dke_yp(4,['wave : ',int2str(iw),' type :',launchs{iw}.type])
-     		%
- 		else
-     		info_dke_yp(4,['wave : ',int2str(iw),' type :',launchs{iw}.type,' n// = ',num2str(wavestructs{iw}.launch.bNpar0,4)])
-     		info_dke_yp(4,['wave : ',int2str(iw),' type :',launchs{iw}.type,' Plh = ',num2str(wavestructs{iw}.launch.bPlhtot,4)])
- 		end
+        info_dke_yp(4,['wave : ',int2str(iw),' type :',launchs{iw}.type])
 	end
 	%
 	id_simul = ['timeslice_',int2str(timeslice(it))];
@@ -278,7 +292,7 @@ for it = 1:length(timeslice),%local calculations
 	rawdata = load(filename);
     %
     if debug_mode,
-        procdata = proc_luke_jd(rawdata,ir_display,p_opt);
+        procdata = proc_luke_jd(rawdata,0,p_opt);
         graph_wave_jd(equil,dke_out.waves);
     else
         procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
