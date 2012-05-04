@@ -95,7 +95,7 @@ elseif strcmp(launch.type,'EC') || strcmp(launch.type,'EBW'),%For the Electron C
     rayparam.tfinal = 100000;
     rayparam.dt0 = 1.e-5;
     rayparam.dS = 1.e-4;
-    rayparam.tol = 1e-6;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
+    rayparam.tol = 1e-10;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
     rayparam.kmax = 100000;
     rayparam.ncyclharm = 50;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
     rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
@@ -103,7 +103,7 @@ elseif strcmp(launch.type,'EC') || strcmp(launch.type,'EBW'),%For the Electron C
     rayparam.nperp = 1000;%number of points in pperp integration for damping calculations
     rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
     rayparam.tau_lim = Inf;%value of optical depth beyond which the wave is considered absorbed
-    rayparam.kextra = 200;%number of extra points after linear absorption
+    rayparam.kextra = 1000;%number of extra points after linear absorption
 %
 % Ray display mode
 %
