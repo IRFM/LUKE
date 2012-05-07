@@ -88,9 +88,6 @@ if numrun_out == 503,%beam tracing
 		idx  = euitm_create('euitm',numshot,numrun_out);%create database for this run if not exists
 		euitm_close(idx,'euitm',numshot,numrun_out);
 	end
-	%
-    %dkeparam.rho_S = [0:0.019:0.20,0.21:0.03:0.6,0.61:0.02:0.79,0.80:0.05:1];
-    %
 elseif numrun_out == 502,%ray tracing
 	beam_mode = 0;
 	%
@@ -101,8 +98,6 @@ elseif numrun_out == 502,%ray tracing
     	idx  = euitm_create('euitm',numshot,numrun_out);%create database for this run if not exists
 		euitm_close(idx,'euitm',numshot,numrun_out);
     end
-    %
-    %dkeparam.rho_S = [0:0.02:0.24,0.25:0.03:0.76,0.77:0.003:0.81,0.82:0.05:1];
 end
 %
 if isempty(remotename) & ~strcmp(mexext,'mexmaci64'),
