@@ -68,8 +68,6 @@ if  ~isempty(machine) && ~isempty(user) && ~isempty(ver)
 	info_dke_yp(4,['ITM database well connected -> machine: ',machine,', user: ',user,', datastructure version: ',ver]);
 	itm_connect = 1;
 	%
-	eval(['javaaddpath /afs/efda-itm.eu/project/switm/ual/',ver,'/javainterface/ualjava.jar']);%add UAL Access to classpath
-	import ualmemory.javainterface.*;%import Java packages	
 else
 	itm_connect = 0;	
 end
