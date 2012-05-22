@@ -116,6 +116,10 @@ end
 if itm_connect,
 	equil = read_equil_ITM(numshot,numrun_in,timeslice_equil,time_interp,display_mode,save_mode);%Create magnetic equilibrium structure
 else
+    equil = [];
+end
+%
+if isempty(equil),
 	id_equil = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice_equil),'_timeinterp_',int2str(time_interp)];
 	%
 	if exist(['equil_',id_equil,'.mat']) == 2,
@@ -130,7 +134,11 @@ for it = 1:length(timeslice),
 	%
 	if itm_connect,
 		launchs = read_launchs_ITM(numshot,numrun_in,timeslice(it),time_interp,save_mode);%Create rf waves launchs structure
-	else
+    else
+    	launchs = [];
+    end
+    %
+	if isempty(launchs),
 		id_launchs = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice(it)),'_timeinterp_',int2str(time_interp)];
 		%
 		if exist(['antennas_',id_launchs,'.mat']) == 2,
@@ -155,30 +163,36 @@ for it = 1:length(timeslice),
         %
         data = load([dkepath.luke_root,'Project_DKE/Database/WAVE_files/C3POPARAM_EC.mat']);
         %
-        if 0,
-        wavestructs{iw}.id = launchs{iw}.id;
-        wavestructs{iw}.launch = launchs{iw};
-        wavestructs{iw}.waveparam = conc_struct_jd(wavestructs{iw},data.waveparam);
-        wavestructs{iw}.fitequilparam = conc_struct_jd(wavestructs{iw},data.fitparam);
-        wavestructs{iw}.rayparam = conc_struct_jd(wavestructs{iw},data.rayparam);
-        wavestructs{iw}.C3POparam = conc_struct_jd(wavestructs{iw},data.C3POparam);
         wavestructs{iw}.wavesolver = 'C3PO';
-        wavestructs{iw}.equil_id = equil.id;       
+        wavestructs{iw}.id = launchs{iw}.id;      
+        wavestructs{iw}.equil_id = equil.id; 
         %
+        wavestructs{iw}.launch = launchs{iw};
+        %
+        wavestructs{iw}.waveparam = conc_struct_jd(wavestructs{iw},data.waveparam);%******
+        wavestructs{iw}.waveparam.dsmin = 0;
+      	wavestructs{iw}.waveparam.nd = nd;%Number of transverse distance positions for beamlets
+		wavestructs{iw}.waveparam.nchi = nchi;%Number of angular positions for beamlets
+        wavestructs{iw}.waveparam.mmode = -1;%O-mode
+        wavestructs{iw}.waveparam.cut_fac = Inf;
+        wavestructs{iw}.waveparam.a_sdNpar = 0;
+    	%
+        wavestructs{iw}.fitequilparam = conc_struct_jd(wavestructs{iw},data.fitparam);
+        %
+        wavestructs{iw}.rayparam = conc_struct_jd(wavestructs{iw},data.rayparam);
+        wavestructs{iw}.rayparam.tfinal = 100000;
+        wavestructs{iw}.rayparam.dt0 = 1e-5;
+        wavestructs{iw}.rayparam.dS = 1e-4;
+        wavestructs{iw}.rayparam.tol = 1e-10;
+        wavestructs{iw}.rayparam.kmax = 100000;
+        %
+        wavestructs{iw}.C3POparam = conc_struct_jd(wavestructs{iw},data.C3POparam);
+    	%
         % Specific parameters for EC wave calculations
         %
  		wavestructs{iw}.raydisplay.ray = ray_display;%for display ray propagation
         wavestructs{iw}.raydisplay.equilibrium = 0;
         wavestructs{iw}.raydisplay.p_opt = -1;%Printing or saving option of the figures
-        end
-        
-        wavestructs{iw} = make_wavert_cronos(launchs{iw},0);
-		%
-        wavestructs{iw}.waveparam.dsmin = 0;
-      	wavestructs{iw}.waveparam.nd = nd;%Number of transverse distance positions for beamlets
-		wavestructs{iw}.waveparam.nchi = nchi;%Number of angular positions for beamlets
-		%
-        wavestructs{iw}.fitequilparam.method = 'spline';
    		%
 		if wavestructs{iw}.launch.yP_L == 0, 
 			wavestructs{iw}.launch.yP_L = eps;%to avoid interpolation problems
