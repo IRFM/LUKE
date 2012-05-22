@@ -51,7 +51,7 @@ try
 	end
 catch
 	status = -1;
-	info_dke_yp(7,'Problem while reading the ITM-MDS+ database. Data may not exist.')
+	info_dke_yp(7,'Problem while reading the ITM-MDS+ database : ''equilibrium'' and ''coreprof'' data may not exist.')
 end
 %
 if ~status & nargout == 1,
