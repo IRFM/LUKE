@@ -21,7 +21,7 @@ if nargin == 0, luke_ref = 'LUKE';end
 %
 [dummy,hostname] = unix('hostname');hostname = hostname(1:end-1);%remove extra term
 %
-efdaitm.hostname = 'enea143.efda-itm.eu';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
+efdaitm.hostname = 'efda-itm.eu';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
 efdaitm.machine = 'efda';
 efdaitm.computer = computer;%machine type and supported OS
 %
@@ -36,8 +36,6 @@ efdaitm.peysson(1).local_root = ['/afs/efda-itm.eu/project/switm/'];
 efdaitm.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 efdaitm.peysson(1).speclibpath.xml_io_tools = [efdaitm.peysson(1).luke_root,'Project_DKE/Modules/ITM/xml_io_tools/'];%Other machine specific libraries (XML I/O)
-%efdaitm.peysson(1).speclibpath.ual = [efdaitm.peysson(1).local_root,'ual/matlabinterface'];%Other machine specific libraries (UAL)
-%efdaitm.peysson(1).speclibpath.ual = ['/afs/efda-itm.eu/isip/user/buravand/public/matlab/v4.09b'];%Other machine specific libraries (UAL)
 efdaitm.peysson(1).speclibpath.ual = getenv('UAL');%Other machine specific libraries (UAL for ITM: see the .cshrc file on the gateway to have the correct UAL version)
 %
 efdaitm.peysson(1).mex706 = [efdaitm.peysson(1).luke_root,'Project_DKE/MEX/Bin/efda/MATLAB706/'];
