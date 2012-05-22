@@ -36,7 +36,7 @@ else
     remotelogname = logname;
 end
 %
-[err,remote_localhost] = unix(['ssh ',remotelogname,'@',remotehost{1},' ''hostname''']);
+[err,remote_localhost] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''hostname''']);
 remote_localhost = remote_localhost(1:end-1);
 %
 load_id = ['LUKE_OUT_',remotelogname,'_',timeid,'.mat'];
@@ -45,15 +45,15 @@ if ~isempty(remotehost),
     %
     if ~isempty(xgridsearch),
         if debugmode,%debug mode in case of problem
-            [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{1},' '' mkdir ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'''']);
-            [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},remote_localhost,remotecmd{2},remotepassword,remoteset_jobid{6},jobid,' -se ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'/','error_file',' -so ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'/','output_file -out''']);
+            [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' mkdir ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'''']);
+            [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},remote_localhost,remotecmd{2},remotepassword,remoteset_jobid{6},jobid,' -se ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'/','error_file',' -so ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'/','output_file -out''']);
             %
             info_dke_yp(6,['The debug files are placed in the directory ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'.'],'','Red');
         end
         %
-        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},remote_localhost,remotecmd{2},remotepassword,remoteset_jobid{2},jobid,'''']);
+        [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},remote_localhost,remotecmd{2},remotepassword,remoteset_jobid{2},jobid,'''']);
     else
-        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},jobid,remoteset_jobid{2},'''']);
+        [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},jobid,remoteset_jobid{2},'''']);
     end
     pause(0.1)
     %
@@ -98,20 +98,20 @@ if ~isempty(remotehost),
     if ~isempty(xgridsearch),
         %
         disp(['    --> Local transfer of output files from remote host ',remotehost{1},' as user ',remotelogname,' ...'])  
-        [res_mkdir,err_mkdir] = unix(['ssh ',remotelogname,'@',remotehost{1},' '' mkdir ',user_root,'xgrid_job_',jobid,'''']);
+        [res_mkdir,err_mkdir] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' mkdir ',user_root,'xgrid_job_',jobid,'''']);
         pause(0.1)
         if ~res_mkdir,
-            [res_local,err_local] = unix(['ssh ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},remote_localhost,remotecmd{2},remotepassword,remoteset_jobid{6},jobid,remoteset_jobid{9},user_root,'xgrid_job_',jobid,'''']);
+            [res_local,err_local] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},remote_localhost,remotecmd{2},remotepassword,remoteset_jobid{6},jobid,remoteset_jobid{9},user_root,'xgrid_job_',jobid,'''']);
             pause(0.1)
             %
             if ~res_local,
                 disp([' ... done in ',user_root,'xgrid_job_',jobid]);
                 %
                 if strcmp(remotehost{1},remotehost{2}),%local distributed computing
-                    [res_copy,err_copy] = unix(['scp ',getenv('USER'),'@',localhost,':',local_user_root,'/','xgrid_job_',jobid,'/',load_id,' ./']);
+                    [res_copy,err_copy] = unix(['scp -q ',getenv('USER'),'@',localhost,':',local_user_root,'/','xgrid_job_',jobid,'/',load_id,' ./']);
                     pause(0.1)
                 else%transfer via scp
-                    [res_copy,err_copy] = unix(['scp ',remotelogname,'@',remotehost{1},':',user_root,'xgrid_job_',jobid,'/',load_id,' ./']);
+                    [res_copy,err_copy] = unix(['scp -q ',remotelogname,'@',remotehost{1},':',user_root,'xgrid_job_',jobid,'/',load_id,' ./']);
                     pause(0.1)
                 end
                 %
@@ -131,7 +131,7 @@ if ~isempty(remotehost),
     else
         %
         disp(['    --> Copying output file from remote host ',remotehost{1},' as user ',remotelogname,' ...'])  
-        [res,err] = unix(['scp ',remotelogname,'@',remotehost{1},':',load_id,' ./']);
+        [res,err] = unix(['scp -q ',remotelogname,'@',remotehost{1},':',load_id,' ./']);
         %
         if res ~= 0,
             disp(['File transfer failed : ',err]);
@@ -140,7 +140,7 @@ if ~isempty(remotehost),
         disp(' ... done');
         %
         disp(['    --> Removing output file from remote host ',remotehost{1},' as user ',remotelogname,' ...'])
-        [res,err] = unix(['ssh ',remotelogname,'@',remotehost{1},' ''rm -f ',load_id,'''']);
+        [res,err] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''rm -f ',load_id,'''']);
         %
         if res ~= 0,
             disp(['Warning, remote file delete failed : ',err])
@@ -149,7 +149,7 @@ if ~isempty(remotehost),
         end
         %
         disp(['    --> Removing batch output files from remote host ',remotehost{1},' as user ',remotelogname,' ...'])
-        [res,err] = unix(['ssh ',remotelogname,'@',remotehost{1},' ''rm -f mrunluke_batch.e',jobid,' mrunluke_batch.o',jobid,'''']);
+        [res,err] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''rm -f mrunluke_batch.e',jobid,' mrunluke_batch.o',jobid,'''']);
         %
         if res ~= 0,
             disp(['Warning, remote file delete failed : ',err])

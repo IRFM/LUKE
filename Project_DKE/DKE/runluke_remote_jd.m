@@ -77,7 +77,7 @@ else
     remotelogname = logname;
 end
 %
-[err,remote_localhost] = unix(['ssh ',remotelogname,'@',remotehost{1},' ''hostname''']);
+[err,remote_localhost] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''hostname''']);
 remote_localhost = remote_localhost(1:end-1);
 %
 save_id = ['LUKE_RUN_',remotelogname,'_',timeid,'.mat'];
@@ -88,11 +88,11 @@ if ~isempty(remotehost),
     if ~isempty(xgridsearch),
         disp(['    --> Copying run and batch files to remote host ',remotehost{1},' as user ',remotelogname,' ...'])
         %
-        [res,err] = unix(['scp ',save_id,' ',remotelogname,'@',remotehost{1},':xgrid']);
+        [res,err] = unix(['scp -q ',save_id,' ',remotelogname,'@',remotehost{1},':xgrid']);
     else
         disp(['    --> Copying run file to remote host ',remotehost{1},' as user ',remotelogname,' ...'])
     %
-    [res,err] = unix(['scp ',save_id,' ',remotelogname,'@',remotehost{1},':']);
+    [res,err] = unix(['scp -q ',save_id,' ',remotelogname,'@',remotehost{1},':']);
     end
     %
     if ~debugmode,
@@ -108,7 +108,7 @@ if ~isempty(remotehost),
     if ~isempty(xgridsearch),
         batch_id = xgrid_batch2xml_yp(timeid,remote.luke_root,id_simul,remote.(remotefields{end}),remote.matlabroot,remote.prefdir,remote.luke_root,'mrunluke_batch_xgrid.sh',user_root,remote_localhost);
         %
-        [res_batch,err_batch] = unix(['scp ',batch_id,' ',remotelogname,'@',remotehost{1},':xgrid']);
+        [res_batch,err_batch] = unix(['scp -q ',batch_id,' ',remotelogname,'@',remotehost{1},':xgrid']);
         %
         if ~debugmode,
             delete(batch_id);
@@ -134,13 +134,13 @@ end
 if ~isempty(remotehost),
     %
     if ~isempty(xgridsearch),
-        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{1},' ''',remotecmd{1},remote_localhost,remotecmd{2},remotepassword{1},remotecmd{3},user_root,remotecmd{4},timeid,'.plist''']);%execute xgrid job
+        [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''',remotecmd{1},remote_localhost,remotecmd{2},remotepassword{1},remotecmd{3},user_root,remotecmd{4},timeid,'.plist''']);%execute xgrid job
         %
-        [res_clean_batch,err_clean_batch] = unix(['ssh ',remotelogname,'@',remotehost{1},' ''rm ',user_root,remotecmd{4},timeid,'.plist''']);%remove plist file             
+        [res_clean_batch,err_clean_batch] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''rm ',user_root,remotecmd{4},timeid,'.plist''']);%remove plist file             
         %
         if res_clean_batch,disp(err_clean_batch);end
     else
-        [res,txt] = unix(['ssh ',remotelogname,'@',remotehost{1},...
+        [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},...
         ' ''',remotecmd,remotemem,' -v LUKE_timeid=',timeid,',LUKE_path=',remoteluke_root,' ',remoteluke_root,'mrunluke_batch''']);
     end
     %
