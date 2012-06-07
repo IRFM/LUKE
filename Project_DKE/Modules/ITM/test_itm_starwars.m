@@ -5,20 +5,37 @@
 % 
 % by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-shot = 13;
-run= 1;
-time = NaN;
-method = 1;
-mode = [];
+[dkepath] = load_structures_yp('dkepath','','');
 %
-mode = input_dke_yp('Database access by ID (1) or shot and run numbers (2)',1,{1,2},mode);
+shot = 2;
+run= 501;
+run_out= 502;
+timeslice = 0;
+iter = 1;
+occurrence_out = 0;
 %
-dkepath = load_structures_yp('dkepath','','');
+expIdx  = euitm_create('euitm',shot,run_out);%recreate the database otherwise no refreshment when writing 
+euitm_close(expIdx,'euitm',shot,run_out);
 %
-if mode,
-	expIdx = openBD('euitm',shot,run);%Equivalent to UALinit in KEPLER
-	flag = writeCPO(expIdx,NaN,1,itm_starwars(loadCPO(expIdx,NaN,1,'equilibrium','coreprof')));
-	closeBD(expIdx,'euitm',shot,run);
-else
-	flag = writeCPO(shot,run,NaN,1,itm_starwars(loadCPO(shot,run,NaN,1,'equilibrium','coreprof')));
+time_interp = 1;
+%
+CPOs = {'equilibrium','coreprof','antennas'};
+%
+occurrence_eq = 0;%equilibrium CPO occurence
+occurrence_cp = 0;%coreprof CPO occurence
+occurrence_an = 0;%antenna CPO occurence
+%
+CPO_occurrences = [occurrence_eq,occurrence_cp,occurrence_an];
+%
+remotename = 'macproyves';%empty if local calculations on the ITM gateway
+%
+[machine,user,ver] = which_MDSdatabase;%test the database is correct
+%
+if isempty(machine) || isempty(user) || isempty(ver)
+	error(['ITM database not recognized -> machine: ',machine,', user: ',user,', datastructure version: ',ver]);
 end
+%
+waves = itm_starwars(dkepath,shot,run,run_out,timeslice,time_interp,CPOs,CPO_occurrences,remotename,iter,occurrence_out);
+%
+output = 'ok';
+outputdata = waves.coherentwave(1).profiles_1d.powd_tot;
