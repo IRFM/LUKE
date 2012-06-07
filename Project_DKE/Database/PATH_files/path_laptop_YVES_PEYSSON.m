@@ -33,6 +33,10 @@ macbookyves.yves(1).luke_root = [getenv('HOME'),'/Travail/Projets/',luke_ref,'/'
 macbookyves.yves(1).local_root = [getenv('HOME'),'/Travail/Projets/'];
 macbookyves.yves(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
+macbookyves.yves(1).startup{1} = [];
+%
+macbookyves.yves(1).cshrc{1} = [];
+%
 macbookyves.yves(1).mex713 = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB713','/'];
 macbookyves.yves(1).mex714 = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB714','/'];
 %

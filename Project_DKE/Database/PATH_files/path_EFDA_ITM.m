@@ -35,6 +35,18 @@ efdaitm.peysson(1).luke_root = [getenv('HOME'),'/LUKE_ITM/trunk/'];
 efdaitm.peysson(1).local_root = ['/afs/efda-itm.eu/project/switm/'];
 efdaitm.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
+efdaitm.peysson(1).startup{1} = sprintf('%s\n','[lukeversion,matlabversion,matlabrelease] = LUKEversion_jd;');
+efdaitm.peysson(1).startup{2} = sprintf('%s\n','if str2num(matlabversion) >= 713,');
+efdaitm.peysson(1).startup{3} = sprintf('%s\n','	eval([''javaaddpath /afs/efda-itm.eu/project/switm/ual/'',ver,''/javainterface/ualjava.jar'']);');%add UAL Access to classpath';
+efdaitm.peysson(1).startup{4} = sprintf('%s\n','	import ualmemory.javainterface.*;%import Java packages');
+efdaitm.peysson(1).startup{5} = sprintf('%s\n','end');
+%
+efdaitm.peysson(1).cshrc{1} = sprintf('%s\n','#matlab version aliases');
+efdaitm.peysson(1).cshrc{2} = sprintf('%s\n','alias mat706 ''matlab -nodesktop''');
+efdaitm.peysson(1).cshrc{3} = sprintf('%s\n','alias mat713 ''matlab2011b -nodesktop''');
+efdaitm.peysson(1).cshrc{4} = sprintf('%s\n','#sourcing the correct UAL version (4.09a, 4.10a, etc)');
+efdaitm.peysson(1).cshrc{5} = sprintf('%s\n','source /afs/efda-itm.eu/project/switm/scripts/ITMv1 kepler test 4.09a >/dev/null');
+%
 efdaitm.peysson(1).speclibpath.xml_io_tools = [efdaitm.peysson(1).luke_root,'Project_DKE/Modules/ITM/xml_io_tools/'];%Other machine specific libraries (XML I/O)
 efdaitm.peysson(1).speclibpath.ual = getenv('UAL');%Other machine specific libraries (UAL for ITM: see the .cshrc file on the gateway to have the correct UAL version)
 %

@@ -1,8 +1,12 @@
-function flag = LUKE_startup_jd(spath,pathforstartup)
+function flag = LUKE_startup_jd(spath,pathforstartup,mode)
 %
 % This function creates or mofifies a startup file to include LUKE paths
 %
 %By Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
+%
+if nargin < 3,
+    mode = 0;
+end
 %
 flag = 0;%existing startup file
 %
@@ -79,7 +83,12 @@ if exist(startupfile,'file'),%startup.m file already exist
                 %    
             else% found older LUKE path at present location in startup file. Replaced.                    
                 %
-                cfile_new = cfile(1:mask(1,1)-1);
+                if mode == 0
+                    cfile_new = cfile(1:mask(1,1)-1);
+                else
+                    cfile_new = cfile(1:sf2-1);
+                end
+                %
                 for imk = 1:size(mask,2),
                     if imk < size(mask,2),
                         inext = mask(1,imk+1)-1;
@@ -88,9 +97,22 @@ if exist(startupfile,'file'),%startup.m file already exist
                     end
                     %
                     tabstr = repmat(' ',[1,mask(3,imk)]);
-                    cfile_new = [cfile_new,spath{1},tabstr,spath{2},tabstr,spath{3},...
-                        tabstr,spath{4},tabstr,spath{5},cfile(mask(2,imk)+1:inext)];
                     %
+                    if mode == 0
+                        cfilenew1 = '';
+                    else
+                        cfilenew1 = sprintf('%s\n','%');
+                    end
+                    %
+                    for ispath = 1:length(spath)-1
+                        cfilenew1 =[cfilenew1,spath{ispath},tabstr];
+                    end
+                    %
+                    if mode == 0
+                        cfile_new = [cfile_new,cfilenew1,spath{end},cfile(mask(2,imk)+1:inext)];
+                    else
+                        cfile_new = [cfile_new,cfilenew1,spath{end},tabstr,'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%',cfile(mask(2,imk)+1:inext)];                       
+                    end                                       
                 end
                 %
                 fclose(fid);
@@ -118,7 +140,10 @@ end
 %
 if abs(flag) == 1,%path added in new startup file or at end of existing file
     %
-    cfile = [spath{1},spath{2},spath{3},spath{4},spath{5}];
+    cfile = '';
+    for ispath = 1:length(spath),
+        cfile = [cfile,spath{ispath}];
+    end
     %                
     fid = fopen(startupfile,'a+');%Create or open startup.m file and append LUKE path at the end of the existing startup file
     %

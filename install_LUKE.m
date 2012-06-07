@@ -1,7 +1,8 @@
 function install_LUKE(pathforstartup)
 %LUKE - Installation package script
 %
-%Install LUKE path in existing default MatLab startup.m and build all *.mat and *.mex files
+%Install LUKE path in existing default MatLab startup.m, build all *.mat and *.mex files
+%build documentation and launch some tests procedure.
 %
 %By Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
 %
@@ -11,13 +12,26 @@ end
 %
 localpath = [pwd,'/'];
 %
-spath{1} = sprintf('%s\n','%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
-spath{2} = sprintf('%s\n',['luke_root = ''',localpath,''';']);
-spath{3} = sprintf('%s\n','addpath([luke_root,''Project_DKE/DKE'']);');
-spath{4} = sprintf('%s\n','setpath_luke_jd(luke_root);');
-spath{5} = sprintf('%s\n','%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
+startuppath = fileparts(which('startup.m'));
 %
-opt = input('Do you want to setup your startup file automatically (y/n)? ','s');
+if isempty(startuppath),
+    startup;%create a startup.m file as it does not exist
+    startuppath = fileparts(which('startup.m'));
+    disp(['WARNING: an empty ''startup.m'' file has been created in the local directory: ',startuppath])
+end
+%
+spath{1} = sprintf('%s\n','%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
+spath{2} = sprintf('%s\n','if ~isdeployed,');
+spath{3} = sprintf('%s\n',['   luke_root = ''',localpath,''';']);
+spath{4} = sprintf('%s\n','   addpath([luke_root,''Project_DKE/DKE'']);');
+spath{5} = sprintf('%s\n','   setpath_luke_jd(luke_root);');
+spath{6} = sprintf('%s\n','end');
+spath{7} = sprintf('%s\n','%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
+%
+opt = input('Do you want to setup your startup file automatically (y/n) [y] ? ','s');
+if isempty(opt),
+    opt='y';
+end
 %
 if strcmp(opt,'y')
     flag = LUKE_startup_jd(spath,pathforstartup);
@@ -29,7 +43,13 @@ if flag == 2,
     disp('Warning : LUKE paths were not written in a startup file.');
     disp('          Please verify or include manually the following lines in matlab startup :');
     disp(' ');
-    disp([spath{1},spath{2},spath{3},spath{4},spath{5}])
+    %
+    cfile = '';
+    for ispath = 1:length(spath),
+        cfile = [cfile,spath{ispath}];
+    end
+    %
+    disp(cfile)
 end
 %
 % add paths
@@ -42,7 +62,6 @@ disp('The LUKE paths have been installed.');
 % Creates and loads the PATH_LOCAL.mat structure, build *.mex files  
 %
 make_path_LOCAL;
-dkepath = load_structures_yp('dkepath','','');
 luke_root = dkepath.luke_root;
 %
 % Build *.mat files

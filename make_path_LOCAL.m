@@ -39,3 +39,20 @@ save([pwd,'/Project_DKE/Database/PATH_files/PATH_',dkepath.id,'.mat'],'dkepath')
 disp('------------------------------------------------------');
 info_dke_yp(2,['The dkepath structure for ',luke_ref,' is saved in ',pwd,'/Project_DKE/Database/PATH_files/PATH_',dkepath.id,'.mat'],'','Green');
 %
+dkepath = load_structures_yp('dkepath','','');
+%
+%update startup.m file with parameters in dkepath
+%
+if isfield(dkepath,'startup'),
+    if ~isempty(dkepath.startup),
+        flag = LUKE_startup_jd(dkepath.startup,'',1);%update startup.m 
+    end
+end
+%
+%update .cshrc.perso file with parameters in dkepath
+%
+if isfield(dkepath,'cshrc'),
+    if ~isempty(dkepath.cshrc),
+        flag = LUKE_cshrc_yp(dkepath.cshrc);%update .cshrc.perso file if a .cshrc file exists in the session
+    end
+end
