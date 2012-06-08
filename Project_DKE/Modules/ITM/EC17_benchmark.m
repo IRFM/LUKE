@@ -28,7 +28,7 @@ time_interp = 1;%nearest point
 %
 % Remote computing options
 %
-remotename = '';%'','macproyves'
+remotename = 'macproyves';%''
 debug_mode = 0;%set to 1 in case of problem
 %
 % Save euitm structures in mat-files
@@ -114,7 +114,7 @@ else
 end
 %
 if itm_connect,
-	equil = read_equil_ITM(numshot,numrun_in,timeslice_equil,time_interp,display_mode,save_mode);%Create magnetic equilibrium structure
+	equil = read_equil_ITM(numshot,numrun_in,timeslice_equil,time_interp,{'equilibrium','coreprof'},display_mode,save_mode);%Create magnetic equilibrium structure
 else
     equil = [];
 end
@@ -133,7 +133,7 @@ end
 for it = 1:length(timeslice),
 	%
 	if itm_connect,
-		launchs = read_launchs_ITM(numshot,numrun_in,timeslice(it),time_interp,save_mode);%Create rf waves launchs structure
+		launchs = read_launchs_ITM(numshot,numrun_in,timeslice(it),time_interp,{'antennas'},save_mode);%Create rf waves launchs structure
     else
     	launchs = [];
     end
