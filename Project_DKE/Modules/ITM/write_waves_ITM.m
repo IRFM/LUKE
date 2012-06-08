@@ -14,7 +14,7 @@ end
 CPO = 'waves';
 %
 try
-	if nargin < 3
+	if nargin < 4
 		expIdx  = euitm_create('euitm',numshot,numrun);%recreate the database otherwise no refreshment when writing (4.09a problem apparently)
 		euitm_close(expIdx,'euitm',numshot,numrun);
 		%
@@ -54,25 +54,25 @@ try
 	%
 	% check write
 	%
-	if 0
-	expIdx = euitm_open('euitm',numshot,numrun);
-	waves  = euitm_get_slice(expIdx,'waves',0,1)
-	size(waves.coherentwave(1).profiles_1d.powd_tot)
-	figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
-	%
-	waves  = euitm_get_slice(expIdx,'waves',1,1)
-	size(waves.coherentwave(1).profiles_1d.powd_tot)
-	figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
-	%
-	waves  = euitm_get_slice(expIdx,'waves',2,1)
-	size(waves.coherentwave(1).profiles_1d.powd_tot)
-	figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
-	%
-	waves  = euitm_get_slice(expIdx,'waves',3,1) 
-	size(waves.coherentwave(1).profiles_1d.powd_tot)
-	figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
-	%
-	euitm_close(expIdx,'euitm',numshot,numrun)  
+	if 0,
+		expIdx = euitm_open('euitm',numshot,numrun);
+		waves  = euitm_get_slice(expIdx,'waves',0,1);
+		size(waves.coherentwave(1).profiles_1d.powd_tot);
+		figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
+		%
+		waves  = euitm_get_slice(expIdx,'waves',1,1);
+		size(waves.coherentwave(1).profiles_1d.powd_tot);
+		figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
+		%
+		waves  = euitm_get_slice(expIdx,'waves',2,1);
+		size(waves.coherentwave(1).profiles_1d.powd_tot);
+		figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
+		%
+		waves  = euitm_get_slice(expIdx,'waves',3,1);
+		size(waves.coherentwave(1).profiles_1d.powd_tot);
+		figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
+		%
+		euitm_close(expIdx,'euitm',numshot,numrun);
 	end
 	%
 catch
