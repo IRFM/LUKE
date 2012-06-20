@@ -128,10 +128,10 @@ if ~isempty(equil_in.zZi),
 end
 %
 dRstardpsin = gradient(R(:,1))./dpsin(:);
-gradrho = R.*BP.*(dRstardpsin*ones(1,size(R,2)))/equil_fit.ap/equil_fit.psia;
-[dgradrhodtheta,dgradrhodrho] = gradient(gradrho);%rho gradient
-dgradrhodtheta = dgradrhodtheta./(ones(length(dprho),1)*dtheta);
-dgradrhodrho = dgradrhodrho./(dprho(:)*ones(1,length(dtheta)));
+gradrhon = R.*BP.*(dRstardpsin*ones(1,size(R,2)))/equil_fit.psia;
+[dgradrhondtheta,dgradrhondrho] = gradient(gradrhon);%rho gradient
+dgradrhondtheta = dgradrhondtheta./(ones(length(dprho),1)*dtheta);
+dgradrhondrho = dgradrhondrho./(dprho(:)*ones(1,length(dtheta)));
 %
 if nargin < 3, 
    close all;
@@ -308,9 +308,9 @@ if nargin < 3,
       dBdtheta_fit(:,ii) = (BR_fit(:,ii).*dBRdtheta_fit(:,ii) + BZ_fit(:,ii).*dBZdtheta_fit(:,ii) + BPHI_fit(:,ii).*dBPHIdtheta_fit(:,ii))./B_fit(:,ii);
       dBdrho_fit(:,ii) = (BR_fit(:,ii).*dBRdrho_fit(:,ii) + BZ_fit(:,ii).*dBZdrho_fit(:,ii) + BPHI_fit(:,ii).*dBPHIdrho_fit(:,ii))./B_fit(:,ii);
 %      
-      gradrho_fit(:,ii) = R_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.ap/equil_fit.psia;
-      dgradrhodrho_fit(:,ii) = dRdrho_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*dBPdrho_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*BP_fit(:,ii).*ddRstardpsindrho_fit/equil_fit.ap/equil_fit.psia;
-      dgradrhodtheta_fit(:,ii) = dRdtheta_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.ap + R_fit(:,ii).*dBPdtheta_fit(:,ii).*dRstardpsin_fit/equil_fit.ap/equil_fit.psia;     
+      gradrhon_fit(:,ii) = R_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.psia;
+      dgradrhondrho_fit(:,ii) = dRdrho_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.psia + R_fit(:,ii).*dBPdrho_fit(:,ii).*dRstardpsin_fit/equil_fit.ap/equil_fit.psia + R_fit(:,ii).*BP_fit(:,ii).*ddRstardpsindrho_fit/equil_fit.ap/equil_fit.psia;
+      dgradrhondtheta_fit(:,ii) = dRdtheta_fit(:,ii).*BP_fit(:,ii).*dRstardpsin_fit/equil_fit.psia + R_fit(:,ii).*dBPdtheta_fit(:,ii).*dRstardpsin_fit/equil_fit.ap/equil_fit.psia;     
 %
       [R_fit1(:,ii),dRdtheta_fit1(:,ii),d2Rdtheta2_fit1(:,ii),dRdrho_fit1(:,ii),d2Rdthetadrho_fit1(:,ii)] = calcval_yp(equil_fit,theta_fit(ii),x_a0_fit1,x_an_fit1,x_bn_fit,x_da0drho_fit1,x_dandrho_fit1,x_dbndrho_fit1);
       R_fit1(:,ii) = R_fit1(:,ii) + Rp;
@@ -353,9 +353,9 @@ if nargin < 3,
       dBdtheta_fit1(:,ii) = (BR_fit1(:,ii).*dBRdtheta_fit1(:,ii) + BZ_fit1(:,ii).*dBZdtheta_fit1(:,ii) + BPHI_fit1(:,ii).*dBPHIdtheta_fit1(:,ii))./B_fit1(:,ii);
       dBdrho_fit1(:,ii) = (BR_fit1(:,ii).*dBRdrho_fit1(:,ii) + BZ_fit1(:,ii).*dBZdrho_fit1(:,ii) + BPHI_fit1(:,ii).*dBPHIdrho_fit1(:,ii))./B_fit1(:,ii);
 %
-      gradrho_fit1(:,ii) = R_fit1(:,ii).*BP_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap/equil_fit.psia;
-      dgradrhodrho_fit1(:,ii) = dRdrho_fit1(:,ii).*BP_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap + R_fit1(:,ii).*dBPdrho_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap + R_fit1(:,ii).*BP_fit1(:,ii).*ddRstardpsindrho_fit1/equil_fit.ap/equil_fit.psia;
-      dgradrhodtheta_fit1(:,ii) = dRdtheta_fit1(:,ii).*BP_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap + R_fit1(:,ii).*dBPdtheta_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap/equil_fit.psia;
+      gradrhon_fit1(:,ii) = R_fit1(:,ii).*BP_fit1(:,ii).*dRstardpsin_fit1/equil_fit.psia;
+      dgradrhondrho_fit1(:,ii) = dRdrho_fit1(:,ii).*BP_fit1(:,ii).*dRstardpsin_fit1/equil_fit.psia + R_fit1(:,ii).*dBPdrho_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap + R_fit1(:,ii).*BP_fit1(:,ii).*ddRstardpsindrho_fit1/equil_fit.ap/equil_fit.psia;
+      dgradrhondtheta_fit1(:,ii) = dRdtheta_fit1(:,ii).*BP_fit1(:,ii).*dRstardpsin_fit1/equil_fit.psia + R_fit1(:,ii).*dBPdtheta_fit1(:,ii).*dRstardpsin_fit1/equil_fit.ap/equil_fit.psia;
    end
 %
 % Display results
@@ -545,20 +545,20 @@ if nargin < 3,
    [ax] = graph1D_jd(theta_fit,salpha_fit.^2 + calpha_fit.^2,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
    [ax] = graph1D_jd(equil_in.theta(1:2:end),salpha(1:10:end,1:2:end).^2 + calpha(1:10:end,1:2:end).^2,0,0,'\theta (rd)','cos^2(\alpha)+sin^2(\alpha)','Blue: ppval interp., Cyan: ppval_{yp} interp.',NaN,NaN,NaN,'--','non','r',1);
 %
-   figure('Name','gradrho'),
-   [ax] = graph1D_jd(theta_fit,gradrho_fit,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
-   [ax] = graph1D_jd(theta_fit,gradrho_fit1,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
-   [ax] = graph1D_jd(equil_in.theta(1:2:end),gradrho(1:10:end,1:2:end),0,0,'\theta (rd)','grad\rho','Blue: ppval interp., Cyan: ppval_{yp} interp.',NaN,NaN,NaN,'--','non','r',1);
+   figure('Name','gradrhon'),
+   [ax] = graph1D_jd(theta_fit,gradrhon_fit,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
+   [ax] = graph1D_jd(theta_fit,gradrhon_fit1,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
+   [ax] = graph1D_jd(equil_in.theta(1:2:end),gradrhon(1:10:end,1:2:end),0,0,'\theta (rd)','grad\rhon','Blue: ppval interp., Cyan: ppval_{yp} interp.',NaN,NaN,NaN,'--','non','r',1);
 %
-   figure('Name','dgradrho/dtheta'),
-   [ax] = graph1D_jd(theta_fit,dgradrhodtheta_fit,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
-   [ax] = graph1D_jd(theta_fit,dgradrhodtheta_fit1,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
-   [ax] = graph1D_jd(equil_in.theta(1:2:end),dgradrhodtheta(1:10:end,1:2:end),0,0,'\theta (rd)','dgrad\rho/d\theta','Blue: interp., Cyan: ppval_{yp} interp.',NaN,NaN,NaN,'--','non','r',1);
+   figure('Name','dgradrhon/dtheta'),
+   [ax] = graph1D_jd(theta_fit,dgradrhondtheta_fit,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
+   [ax] = graph1D_jd(theta_fit,dgradrhondtheta_fit1,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
+   [ax] = graph1D_jd(equil_in.theta(1:2:end),dgradrhondtheta(1:10:end,1:2:end),0,0,'\theta (rd)','dgrad\rhon/d\theta','Blue: interp., Cyan: ppval_{yp} interp.',NaN,NaN,NaN,'--','non','r',1);
 %
-   figure('Name','dgradrho/drho'),
-   [ax] = graph1D_jd(theta_fit,dgradrhodrho_fit,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
-   [ax] = graph1D_jd(theta_fit,dgradrhodrho_fit1,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
-   [ax] = graph1D_jd(equil_in.theta(1:2:end),dgradrhodrho(1:10:end,1:2:end),0,0,'\rho','dgrad\rho/d\rho','Blue: interp., Cyan: ppval_{yp} interp.',NaN,NaN,NaN,'--','non','r',1);
+   figure('Name','dgradrhon/drho'),
+   [ax] = graph1D_jd(theta_fit,dgradrhondrho_fit,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);
+   [ax] = graph1D_jd(theta_fit,dgradrhondrho_fit1,0,0,'','','',NaN,NaN,NaN,'-','none','c',1);
+   [ax] = graph1D_jd(equil_in.theta(1:2:end),dgradrhondrho(1:10:end,1:2:end),0,0,'\rho','dgrad\rhon/d\rho','Blue: interp., Cyan: ppval_{yp} interp.',NaN,NaN,NaN,'--','non','r',1);
 %
 %Magnetic fields
 %
@@ -632,7 +632,7 @@ else
         BZ,dBZdtheta,d2BZdtheta2,dBZdrho,d2BZdthetadrho,...
         BPHI,dBPHIdtheta,d2BPHIdtheta2,dBPHIdrho,d2BPHIdthetadrho,...
         BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho,...
-        gradrho,dgradrhodtheta,dgradrhodrho] = equilval_yp(equil_fit,rho,theta,1);
+        gradrhon,dgradrhondtheta,dgradrhondrho] = equilval_yp(equil_fit,rho,theta,1);
 %
    if nargout ~= 2,
       disp('--------------');
@@ -668,7 +668,7 @@ else
       disp(['B(',num2str(rho),',',num2str(theta),'),dBdrho(',num2str(rho),',',num2str(theta),'),dBdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(B),',',num2str(dBdrho),',',num2str(dBdtheta)]);
       disp(['calpha(',num2str(rho),',',num2str(theta),'),dcalphadrho(',num2str(rho),',',num2str(theta),'),dcalphadtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(calpha),',',num2str(dcalphadrho),',',num2str(dcalphadtheta)]);
       disp(['salpha(',num2str(rho),',',num2str(theta),'),dsalphadrho(',num2str(rho),',',num2str(theta),'),dsalphadtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(salpha),',',num2str(dsalphadrho),',',num2str(dsalphadtheta)]);
-      disp(['gradrho(',num2str(rho),',',num2str(theta),'),dgradrhodrho(',num2str(rho),',',num2str(theta),'),dgradrhodtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(gradrho),',',num2str(dgradrhodrho),',',num2str(dgradrhodtheta)]);
+      disp(['gradrhon(',num2str(rho),',',num2str(theta),'),dgradrhondrho(',num2str(rho),',',num2str(theta),'),dgradrhondtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(gradrhon),',',num2str(dgradrhondrho),',',num2str(dgradrhondtheta)]);
    end
 end
 

@@ -5,7 +5,7 @@ function [Te,dTedrho,d2Tedrho2,ne,dnedrho,d2nedrho2,zTi,dzTidrho,d2zTidrho2,zni,
     BZ,dBZdtheta,d2BZdtheta2,dBZdrho,d2BZdthetadrho,...
     BPHI,dBPHIdtheta,d2BPHIdtheta2,dBPHIdrho,d2BPHIdthetadrho,...
     BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho,...
-    gradrho,dgradrhodtheta,dgradrhodrho] = equilval_yp(equil_fit,rho,theta,mode)
+    gradrhon,dgradrhondtheta,dgradrhondrho] = equilval_yp(equil_fit,rho,theta,mode)
 %
 % This function calculates all parameters of the axisymmetric magnetic equilibrium at any position in the plasma
 %
@@ -32,7 +32,7 @@ function [Te,dTedrho,d2Tedrho2,ne,dnedrho,d2nedrho2,zTi,dzTidrho,d2zTidrho2,zni,
 %       - BZ,dBZdtheta,d2BZdtheta2,dBZdrho,d2BZdthetadrho: vertical B-field and it's derivatives [1,1]
 %       - BPHI,dBPHIdtheta,d2BPHIdtheta2,dBPHIdrho,d2BPHIdthetadrho: toroidal B-field and it's derivatives (signed value) [1,1]
 %       - BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho: poloidal B-field [1,1]
-%       - gradrho,dgradrhodtheta,dgradrhodrho: gradrho and it'derivatives [1,1]
+%       - gradrhon,dgradrhondtheta,dgradrhondrho: normalized gradient of rho and it'derivatives [1,1]
 %
 % by Y. Peysson DRFC-CEA <yves.peysson@cea.fr> and J. Decker DRFC-CEA <joan.decker@cea.fr> 
 %
@@ -140,6 +140,6 @@ B = sqrt(BR^2 + BZ^2 + BPHI^2);
 dBdtheta = (BR*dBRdtheta + BZ*dBZdtheta + BPHI*dBPHIdtheta)/B;
 dBdrho = (BR*dBRdrho + BZ*dBZdrho + BPHI*dBPHIdrho)/B;
 %
-gradrho = R.*BP.*dRstardpsin/equil_fit.ap/equil_fit.psia;
-dgradrhodrho = dRdrho.*BP.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*dBPdrho.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*BP.*ddRstardpsindrho/equil_fit.psia/equil_fit.ap;
-dgradrhodtheta = dRdtheta.*BP.*dRstardpsin/equil_fit.psia/equil_fit.ap + R.*dBPdtheta.*dRstardpsin/equil_fit.psia/equil_fit.ap;
+gradrhon = R.*BP.*dRstardpsin/equil_fit.psia;
+dgradrhondrho = dRdrho.*BP.*dRstardpsin/equil_fit.psia + R.*dBPdrho.*dRstardpsin/equil_fit.psia + R.*BP.*ddRstardpsindrho/equil_fit.psia;
+dgradrhondtheta = dRdtheta.*BP.*dRstardpsin/equil_fit.psia + R.*dBPdtheta.*dRstardpsin/equil_fit.psia;
