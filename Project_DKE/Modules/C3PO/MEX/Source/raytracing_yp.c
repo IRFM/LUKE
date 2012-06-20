@@ -850,7 +850,11 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
                 if (equilparam.zZi[0] > 0) {/*no absorption in vacuum*/
                     
                     rayprocess(ns,rayproc,rayparam,raymagnetic,rayprofiles,X,equilparam,fluctparam,yinit,y0,rayequil,rayfluctuations,distriparam,raydistri,flag_f0,flag,flag_fluct);
-
+                    /* mexPrintf("y[0],y[1],y[2],y[3],y[4],y[5],y[6]:%g,%g,%g,%g,%g,%g,%g\n",yinit[0],yinit[1],yinit[2],yinit[3],yinit[4],yinit[5],yinit[6]); */
+                    /* return; */
+                    /* Stop here for debug and uncomment the calculation of Dtot which should be very close to zero*/
+                    
+                    
                     for (i=0;i<MPROC+2*ns;i++) {
                         temp_proc[i][k] = rayproc[i];
                     }
