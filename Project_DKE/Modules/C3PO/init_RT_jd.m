@@ -98,6 +98,7 @@ xBt = xBPHI;
 xB = sqrt(xBt.^2 + xBp.^2);
 xBsn = sigmaIp*xBp./xB;
 xBphin = xBt./xB;
+%
 xgradrho = xR.*xBp.*xdxstardpsin/abs(equil_fit.psia)/equil_fit.ap;
 %
 % Plasma fluctuations or modulations
