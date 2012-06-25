@@ -1,0 +1,522 @@
+#LyX 1.6.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options false
+\language english
+\inputencoding latin9
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\headheight 0cm
+\headsep 0cm
+\footskip 0cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle headings
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Conventions and transformations of ray launching angles
+\end_layout
+
+\begin_layout Author
+Joan Decker
+\end_layout
+
+\begin_layout Date
+02.06.2009
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename angles.pdf
+	width 8cm
+	BoundingBox 0.5cm 17cm 18cm 29.5cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "figure"
+
+\end_inset
+
+geometry of poloidal and toroidal angles
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are several definitions for the ray launching angles used in ECCD.
+ The most common definitions are listed here.
+ 
+\end_layout
+
+\begin_layout Itemize
+for the vertical angle :
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\alpha\:\left[-\pi;\pi\right]$
+\end_inset
+
+ : angle between the poloidal projection of the ray and the horizontal plane.
+ Refered to as the poloidal angle in [pra08].
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\tilde{\alpha}\:\left[-\pi/2;\pi/2\right]$
+\end_inset
+
+ : angle between the ray and the horizontal plane.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\theta\:\left[0;\pi\right]$
+\end_inset
+
+ : angle between the ray and the Z axis [LUKE].
+ Refered to as the polar angle in [pra08].
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+for the horizontal angle :
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\beta\:\left[-\pi/2;\pi/2\right]$
+\end_inset
+
+ : angle between the ray and the poloidal plane.
+ Refered to as the toroidal angle in [pra08].
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\tilde{\beta}\:\left[-\pi;\pi\right]$
+\end_inset
+
+ : angle between the horizontal projection of the ray and the poloidal plane.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\phi\:\left[0;2\pi\right]$
+\end_inset
+
+ : angle between the ray and the R axis [LUKE].
+ Refered to as the azimuthal angle in [pra08].
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+These angles are reported on Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "figure"
+
+\end_inset
+
+.
+ Note that these definitions are valid both in the case of low-field side
+ (
+\begin_inset Formula $\left|\alpha\right|<\pi/2$
+\end_inset
+
+, 
+\begin_inset Formula $\left|\tilde{\beta}\right|<\pi/2$
+\end_inset
+
+) and high-field side (
+\begin_inset Formula $\left|\alpha\right|>\pi/2$
+\end_inset
+
+, 
+\begin_inset Formula $\left|\tilde{\beta}\right|>\pi/2$
+\end_inset
+
+) launching.
+ Note that the sign convention is that the angle 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, 
+\begin_inset Formula $\beta$
+\end_inset
+
+, 
+\begin_inset Formula $\tilde{\alpha}$
+\end_inset
+
+ and 
+\begin_inset Formula $\tilde{\beta}$
+\end_inset
+
+ are positive as indicated by arrows on the figure.
+ The convention for 
+\begin_inset Formula $\beta$
+\end_inset
+
+ and 
+\begin_inset Formula $\tilde{\beta}$
+\end_inset
+
+ depends upon the direction of the toroidal angle.
+ The angles 
+\begin_inset Formula $\theta$
+\end_inset
+
+ and 
+\begin_inset Formula $\phi$
+\end_inset
+
+ are defined uniquely with respect to R and Z.
+\end_layout
+
+\begin_layout Standard
+The angles 
+\begin_inset Formula $\theta$
+\end_inset
+
+ and 
+\begin_inset Formula $\phi$
+\end_inset
+
+ are similar to the angles 
+\begin_inset Formula $\tilde{\alpha}$
+\end_inset
+
+ and 
+\begin_inset Formula $\tilde{\beta}$
+\end_inset
+
+.
+ They are simply related through
+\begin_inset Formula \begin{equation}
+\boxed{\begin{aligned}\theta & =\frac{\pi}{2}-\tilde{\alpha}\\
+\phi & =\pi+\tilde{\beta}\end{aligned}
+}\label{tpab}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The relations between 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, 
+\begin_inset Formula $\beta$
+\end_inset
+
+, 
+\begin_inset Formula $\tilde{\alpha}$
+\end_inset
+
+ and 
+\begin_inset Formula $\tilde{\beta}$
+\end_inset
+
+ are expressed by four geometrical relations
+\begin_inset Formula \begin{eqnarray}
+\sin\beta & = & \cos\tilde{\alpha}\sin\tilde{\beta}\label{rel1}\\
+\tan\beta & = & \cos\alpha\tan\tilde{\beta}\label{rel2}\\
+\sin\tilde{\alpha} & = & \cos\beta\sin\alpha\label{rel3}\\
+\tan\tilde{\alpha} & = & \cos\tilde{\beta}\tan\alpha\label{rel4}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The transformation from 
+\begin_inset Formula $(\alpha,\beta)$
+\end_inset
+
+ to 
+\begin_inset Formula $(\tilde{\alpha},\tilde{\beta})$
+\end_inset
+
+ coordinates is derived from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "rel3"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "rel2"
+
+\end_inset
+
+)
+\backslash
+_
+\begin_inset Formula \begin{equation}
+\boxed{\begin{aligned}\tilde{\alpha} & =\arcsin\left(\cos\beta\sin\alpha\right)\\
+\tilde{\beta} & =\arctan\left(\frac{\tan\beta}{\cos\alpha}\right)+\pi\textrm{sign}(\beta)\left[\left|\alpha\right|>\frac{\pi}{2}\right]\end{aligned}
+}\label{abtab}\end{equation}
+
+\end_inset
+
+such that the transformation from 
+\begin_inset Formula $(\alpha,\beta)$
+\end_inset
+
+ to 
+\begin_inset Formula $(\tilde{\alpha},\tilde{\beta})$
+\end_inset
+
+ coordinates is (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tpab"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "abtab"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align}
+\boxed{\theta=\arccos\left(\cos\beta\sin\alpha\right)}\label{thetaab}\\
+\phi=\pi+\arctan\left(\frac{\tan\beta}{\cos\alpha}\right)+\pi\textrm{sign}(\beta)\left[\left|\alpha\right|>\frac{\pi}{2}\right]\label{phiab}\end{align}
+
+\end_inset
+
+Note that instead of (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "v"
+
+\end_inset
+
+) we can use (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "rel1"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tpab"
+
+\end_inset
+
+) 
+\begin_inset Formula \begin{equation}
+\boxed{\phi=\pi+\arcsin\left(\frac{\sin\beta}{\sin\theta}\right)+\pi\textrm{sign}(\beta)\left[\left|\alpha\right|>\frac{\pi}{2}\right]}\label{phitb}\end{equation}
+
+\end_inset
+
+which avoids the numerical errors that ay arise from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "v"
+
+\end_inset
+
+).
+ The expression (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "g"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "phitb"
+
+\end_inset
+
+) were derived in [pra08] for the case of low-field side launching only.
+\end_layout
+
+\begin_layout Standard
+The inverse relation could also be useful.
+ We can transform from 
+\begin_inset Formula $(\tilde{\alpha},\tilde{\beta})$
+\end_inset
+
+ to 
+\begin_inset Formula $(\alpha,\beta)$
+\end_inset
+
+ according to the relations
+\begin_inset Formula \begin{align*}
+\alpha=\arctan\left(\frac{\tan\tilde{\alpha}}{\cos\tilde{\beta}}\right)+\pi\textrm{sign}(\tilde{\alpha})\left[\left|\tilde{\beta}\right|>\frac{\pi}{2}\right]\\
+\boxed{\beta=\arcsin\left(\cos\tilde{\alpha}\sin\tilde{\beta}\right)}\end{align*}
+
+\end_inset
+
+Again, we may use instead
+\begin_inset Formula \begin{equation}
+\boxed{\alpha=\arcsin\left(\frac{\sin\tilde{\alpha}}{\cos\beta}\right)+\pi\textrm{sign}(\tilde{\alpha})\left[\left|\tilde{\beta}\right|>\frac{\pi}{2}\right]}\label{aatb}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In addition, it is possible to derive the following cross-transformations
+ : with prior knowledge of LFS or HFS launching, we obtain 
+\begin_inset Formula $(\tilde{\alpha},\beta)$
+\end_inset
+
+ to 
+\begin_inset Formula $(\alpha,\tilde{\beta})$
+\end_inset
+
+ by using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "aatb"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "rel1"
+
+\end_inset
+
+)
+\begin_inset Formula \begin{align*}
+\alpha & =\arcsin\left(\frac{\sin\tilde{\alpha}}{\cos\beta}\right)+\pi\textrm{sign}(\tilde{\alpha})\left[\textrm{HFS}\right]\\
+\tilde{\beta} & =\arcsin\left(\frac{\sin\beta}{\cos\tilde{\alpha}}\right)+\pi\textrm{sign}(\beta)\left[\textrm{HFS}\right]\end{align*}
+
+\end_inset
+
+We can also derive 
+\begin_inset Formula $(\alpha,\tilde{\beta})$
+\end_inset
+
+ to 
+\begin_inset Formula $(\tilde{\alpha},\beta)$
+\end_inset
+
+ from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "rel4"
+
+\end_inset
+
+) 
+\begin_inset Formula \begin{align*}
+\tilde{\alpha} & =\arctan\left(\cos\tilde{\beta}\tan\alpha\right)\\
+\beta & =\arctan\left(\cos\alpha\tan\tilde{\beta}\right)\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the launching point is in free space the index of refraction 
+\begin_inset Formula $\mathbf{n}$
+\end_inset
+
+ is parallel to the ray direction and 
+\begin_inset Formula $\left\Vert \mathbf{n}\right\Vert =1$
+\end_inset
+
+.
+ The parallel index of refraction is 
+\begin_inset Formula \[
+n_{\Vert}\equiv\mathbf{n}\cdot\hat{\mathbf{b}}=\frac{n_{R}\cdot B_{R}+n_{Z}\cdot B_{Z}+n_{\phi}\cdot B_{\phi}}{\left\Vert \mathbf{B}\right\Vert }\]
+
+\end_inset
+
+where we have the relations
+\begin_inset Formula \[
+\begin{alignedat}{2}n_{R} & =-\cos\alpha\cos\beta & =-\cos\tilde{\beta}\cos\tilde{\alpha} & =\cos\phi\sin\theta\\
+n_{Z} & =\sin\alpha\cos\beta & =\sin\tilde{\alpha} & =\cos\theta\\
+n_{\phi} & =\sin\beta & =\sin\tilde{\beta}\cos & =-\sin\phi\sin\theta\end{alignedat}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
