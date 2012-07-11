@@ -117,7 +117,7 @@ struct equilparam {
     double *Rp;
     double *ap;
     double *Zp;
-    double *psia;
+    double *psia_apRp;
 };
 
 struct fluctparam {
@@ -231,7 +231,7 @@ mxArray *structure_name;
     data.ap = mxGetData(mxGetField(structure_name, 0, "ap"));
     data.Rp = mxGetData(mxGetField(structure_name, 0, "Rp"));
     data.Zp = mxGetData(mxGetField(structure_name, 0, "Zp"));
-    data.psia = mxGetData(mxGetField(structure_name, 0, "psia"));
+    data.psia_apRp = mxGetData(mxGetField(structure_name, 0, "psia_apRp"));
     
     return(data);
 }
