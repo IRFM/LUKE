@@ -9,7 +9,9 @@ clear all
 close all
 clc
 %
-id_wave = 'VERSATOR2test';% scenario identification (see paper IEEE transaction on plasma science, vol. PS-12, N�2, 1984 - P.Bonoli et al.)
+id_wave = 'VERSATOR2test';% scenario identification (see paper IEEE transaction on plasma science, vol. PS-12, N2, 1984 - P.Bonoli et al.)
+flag_analytic = 3;
+p_opt = -1;
 %
 % Path parameters
 %
@@ -114,20 +116,27 @@ C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster
 %
 % ray-tracing calculations
 %
-wave = main_C3PO_jd(dkepath,id_wave,equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam);
+wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],0);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
+rayparam.tfinal = 6000;
+rayparam.kmax = 6000;
+%
+wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],flag_analytic);
+%
+info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
+%
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-save(save_str,'id_wave','wave');
+save(save_str,'id_wave','wave_numeric','wave_analytic');
 %
 info_dke_yp(2,'Wave parameters saved');
 %
 % --- display results ---
 %
-rays = {wave.rays{1}};
+rays = {wave_numeric.rays{1},wave_analytic.rays{1}};
 %
-legs = {'Numeric'};
+legs = {'Numeric','Analytic'};
 %
 filename = ['Fig_',id_wave];
 %
