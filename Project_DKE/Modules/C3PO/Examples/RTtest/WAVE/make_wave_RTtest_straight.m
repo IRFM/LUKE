@@ -10,7 +10,7 @@ close all
 clc
 %
 id_wave = 'RTtest_straight';
-flag_analytic = 1;
+flag_analytic = -1;
 %
 % Path parameters
 %
@@ -121,6 +121,8 @@ wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit,rayinit
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
+rayparam.tfinal = 65000;
+rayparam.kmax = 60000;
 wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],flag_analytic);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
