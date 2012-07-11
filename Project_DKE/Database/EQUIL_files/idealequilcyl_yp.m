@@ -1,8 +1,12 @@
-function [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test,prho,pspsin,pspsinT] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin_Rpap,eq,qopt,npsi,ntheta)
+function [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test,prho,pspsin,pspsinT] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin_Rpap,eq,qopt,npsi,ntheta,lambda)
 %
 % Create ideal cylindrical magnetic equilibrium with circular concentric flux surfaces from parametric description
 %
 % by Y.Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
+%
+if nargin < 11,
+    lambda = NaN;% 65 poloidal grid points by default
+end
 %
 if nargin < 10,
     ntheta = 65;% 65 poloidal grid points by default
@@ -10,6 +14,10 @@ end
 %
 if nargin < 9,
     npsi = 101;% 101 radial profile grid points by default
+end
+%
+if nargin < 8,
+    qopt = 0;% 101 radial profile grid points by default
 end
 %
 [qe,me,mp,mn,e0,mu0] = pc_dke_yp;
@@ -26,15 +34,42 @@ Xtheta = repmat(theta,[npsi,1]);
 x = ap*Xrho.*cos(Xtheta);
 y = ap*Xrho.*sin(Xtheta);
 %
-if qopt == 1,
-	 pq_Rpap = (qmax_Rpap - qmin_Rpap)*prho.^eq + qmin_Rpap;% Current profile defined by qmin and eq
-	 pdq_Rpap = eq*(qmax_Rpap - qmin_Rpap)*prho.^(eq-1);
-else 
-	 pq_Rpap = qmax_Rpap*ones(1,npsi);% Current profile defined with constant q (uniform current density)
-	 pdq_Rpap = zeros(1,npsi);
+if isempty(lambda) || isnan(lambda),
+    if qopt == 2,
+        if eq >= 1,
+            pq_Rpap = qmax_Rpap*prho.^2./(1.0 - (1.0 - prho.^2).^(1.0 + eq));%Safety factor profile deduced from a current profile proportional to (1-rho^2)^eq
+            pq_Rpap(1) = qmax_Rpap/(1.0 + eq);
+            pdq_Rpap = 2*pq_Rpap.*(1.0 - pq_Rpap*(eq + 1.0).*(1.0 - prho.^2)/qmax_Rpap)./prho;
+            pdq_Rpap(1) = 0;
+        else
+            error('Error: eq >= 1.0 for qopt = 2 !');
+        end
+    elseif qopt == 1,
+         pq_Rpap = (qmax_Rpap - qmin_Rpap)*prho.^eq + qmin_Rpap;%Current profile defined by qmin and eq
+         pdq_Rpap = eq*(qmax_Rpap - qmin_Rpap)*prho.^(eq-1);
+    elseif qopt == 0,
+         pq_Rpap = qmax_Rpap*ones(1,npsi);%Current profile defined with constant q (uniform current density)
+         pdq_Rpap = zeros(1,npsi);
+    else
+        error('This safety factor model is not recognized.')
+    end
+    %
+    pBphi = Bt*ones(size(prho));%
+    pBpp = sign(Bpa)*prho*abs(Bt)./pq_Rpap;
+else
+    pq_Rpap = prho.*besselj(0,lambda*prho)./besselj(1,lambda*prho);%Safety factor RFP BFM model
+    pdq_Rpap = besselj(0,lambda*prho)./besselj(1,lambda*prho)...
+                - lambda*prho - besselj(0,lambda*prho)./besselj(1,lambda*prho).^2.*(besselj(0,lambda*prho) - lambda*prho.*besselj(2,lambda*prho));
+    %
+    pBphi = Bt*besselj(0,lambda*prho);%RFP BFM model
+    pBpp = Bt*besselj(1,lambda*prho);%RFP BFM model
+    %
+    ppsi_apRp_theoric = ap*ap*Bt*(1.0 - besselj(0,lambda*prho))/lambda; 
 end
 %
-pBpp = sign(Bpa)*prho*abs(Bt)./pq_Rpap;
+%Note: term of order (ap/Rp)^2 or higher are neglected.
+%
+XBpp = repmat(pBpp',[1,ntheta]);
 %
 spBpp = triu(repmat((pBpp(1:npsi-1) + pBpp(2:npsi))'/2,[1,npsi-1]));
 pdprho = diff(prho);
@@ -47,10 +82,11 @@ ppsiT = pi*Bt*ap^2*prho.^2;%Toroidal magnetic flux
 ppsinT = ppsiT/ppsiT(end);%Normalized toroidal magnetic flux
 pspsinT = sqrt(ppsinT);
 %
-XBpp = repmat(pBpp',[1,ntheta]);
-Bx = -XBpp.*sin(Xtheta)./(1 + x/Rp);
-By = XBpp.*cos(Xtheta)./(1 + x/Rp);
-BPHI = Bt./(1 + x/Rp);
+Upsilon = 1 + x/Rp;%Toroidal factor. Upsilon = 1 for cylindrical magnetic configuration
+%
+Bx = -XBpp.*sin(Xtheta)./Upsilon;
+By = XBpp.*cos(Xtheta)./Upsilon;
+BPHI = repmat(pBphi',[1,ntheta])./Upsilon;
 %
 pj = (Bt/ap/mu0).*(2./pq_Rpap - pdq_Rpap.*prho./pq_Rpap.^2);%Current density profile (A.m-2)
 %
