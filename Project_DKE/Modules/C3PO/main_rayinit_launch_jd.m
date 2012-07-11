@@ -1,7 +1,7 @@
 function rayinit = main_rayinit_launch_jd(equil,launch)
 %
 % This function creates the rayinit structure based on ray launching parameters. Straight ray
-% propagation is assumed up to the last closed flux-surface.
+% propagation is assumed up to the last closed flux-surface for the EC wave
 %
 % INPUTS:
 %   Launch structure fields:
@@ -11,25 +11,25 @@ function rayinit = main_rayinit_launch_jd(equil,launch)
 %
 %   Specific to LH wave
 %
-%       - bPlhtot: initial power in the ray (W) [1,n_lobe]
+%       - bPlhtot_2piRp: initial lineic power density in the ray (W/m) [1,n_lobe]
 %       - bNpar0: Initial Npar value [1,n_lobe]
 %       - bdNpar0: Initial dNpar value [1,n_lobe]
-%       - rZ0: vertical launching positions [m_pol,1]
+%       - ry0: vertical launching positions [m_pol,1]
 %
 %       - m0: initial poloidal mode number
-%       - n0: initial toroidal mode number
-%       - phi0: toroidal angle position
+%       - kz0: initial axial wabe vector
+%       - z0: initial axial position
 %       - i_ref: Initial radial position index
 %       - LFS: (-1) high field side launching, (1) low field side launching
 %
 %   Specific to EC wave
 %
-%       - yR_L : major radius position of launching (m)
-%       - yZ_L : vertical position of launching (m)
-%       - yphi_L : toroidal angle position of launching (rad), (R,Z,phi) right handed
+%       - yx_L : major radius position of launching (m)
+%       - yy_L : vertical position of launching (m)
+%       - yz_L : axial position of launching (m), (R,Z,phi) or (x,y,z) right handed
 %       - yalpha_L : horizontal angle with respect to R (rad)
 %       - ybeta_L : vertical angle with respect to Z (rad) 
-%       - yP_L : power launched in the ray (W)
+%       - yP_L_2piRp : lineic power density launched in the ray (W/m)
 %       - dNpar0 :  initial power spectrum width. May be NaN
 %       - ns : (1000)
 %       - method: ('cubic')
@@ -45,9 +45,11 @@ end
 if ~isfield(launch,'m0'),
     launch.m0 = NaN;
 end
-if ~isfield(launch,'n0'),
-    launch.n0 = NaN;
+%
+if ~isfield(launch,'n0') && ~isfield(launch,'kz0'),
+    launch.kz0 = NaN;
 end
+%
 if strcmp(launch.type,'EC') && ~isfield(launch,'dNpar0'),
     launch.dNpar0 = NaN;
 end
@@ -64,7 +66,15 @@ if strcmp(launch.type,'EC'),
     ns = launch.ns;
     method = launch.method;
     %
-    ny = length(launch.yP_L);
+    if isfield(launch,'yP_L') && ~isinf(equil.Rp),
+        yP0_2piRp = launch.yP_L/(2*pi*equil.Rp);%initial power in the ray (W) [1,n_lobe]
+    elseif isfield(launch,'yP_L_2piRp')
+        yP0_2piRp = launch.yP_L_2piRp;
+    else
+        error('ERROR in main_rayinit_launch_jd.m -> inconsistent launch input: use yP_L if Rp is finite only, or yP_L_2piRp otherwise.');
+    end
+    %
+    ny = length(yP0_2piRp);
     %
     ptr = sqrt(equil.ptx.^2 + equil.pty.^2);
     smax = 2*max(max(ptr));
@@ -72,12 +82,34 @@ if strcmp(launch.type,'EC'),
     %
     % Straight ray propagation to reach first closed flux surface
     %
-    [sysh,sysZ,syR,syZ,syphi,syalpha,sybeta,sygR,sygZ,sygphi] = raypath_prop_jd(launch.yR_L,launch.yZ_L,-launch.yphi_L,launch.yalpha_L,launch.ybeta_L,s);
-    % The definition of phi in raypath_prop_jd is opposite from the definition in DKE
-    syx = syR - equil.Rp;
-    syy = syZ - equil.Zp;
-    syphi = - syphi;
-    sygphi = - sygphi;
+    if isfield(launch,'yR_L') && ~isinf(equil.Rp),
+        yx_L = launch.yR_L - equil.Rp;
+    elseif isfield(launch,'yx_L')
+        yx_L = launch.yx_L;
+    else
+        error('ERROR in main_rayinit_launch_jd.m -> inconsistent launch input: use yR_L if Rp is finite only, or yx_L otherwise.');
+    end
+    %    
+    if isfield(launch,'yZ_L')
+        yy_L = launch.yZ_L - equil.Zp;
+    elseif isfield(launch,'yy_L')
+        yy_L = launch.yy_L;
+    end
+    %    
+    if isfield(launch,'yphi_L') && ~isinf(equil.Rp),
+        yz_L = launch.yphi_L*equil.Rp;
+    elseif isfield(launch,'yz_L')
+        yz_L = launch.yz_L;
+    else
+        error('ERROR in main_rayinit_launch_jd.m -> inconsistent launch input: use yphi_L if Rp is finite only, or yz_L otherwise.');
+    end
+    %
+    [sysh,sysy,syx,syy,syz,syalpha,sybeta,sygx,sygy,sygz] = raypath_prop_jd(equil.Rp,yx_L,yy_L,-yz_L,launch.yalpha_L,launch.ybeta_L,s);    
+    %
+    % The definition of z in raypath_prop_jd is opposite from the definition in DKE
+    %
+    syz = - syz;
+    sygz = - sygz;
     %
     syr = sqrt(syx.^2 + syy.^2);
     syx(syx == 0) = eps;
@@ -85,11 +117,9 @@ if strcmp(launch.type,'EC'),
     %
     % In vacuum N = g; 
     %
-    syNx = sygR;
-    syNy = sygZ;
-    syNphi = sygphi;
-    %
-    yP0_2piRp = launch.yP_L/(2*pi*equil.Rp);
+    syNx = sygx;
+    syNy = sygy;
+    syNz = sygz;
     %
     psi_apRp = equil.psi_apRp;
     psin = psi_apRp/psi_apRp(end);
@@ -98,7 +128,7 @@ if strcmp(launch.type,'EC'),
     %
     for iy = 1:ny,    
         %
-        if ~isnan(launch.yR_L(iy)),
+        if ~isnan(yx_L(iy)),
             %
             %
             % interpolation for r at ray poloidal locations    
@@ -119,16 +149,16 @@ if strcmp(launch.type,'EC'),
             %
             psin0 = spsin(is0);
             %
-            s0 = sqrt(sysh(is0,iy).^2 + sysZ(is0,iy).^2);%distance along the ray from mirror to LCFS   
+            s0 = sqrt(sysh(is0,iy).^2 + sysy(is0,iy).^2);%distance along the ray from mirror to LCFS   
             %
             x0 = syx(is0,iy);
             y0 = syy(is0,iy);
             r0 = syr(is0,iy);
             theta0 = sytheta(is0,iy);
-            phi0 = syphi(is0,iy);
+            z0 = syz(is0,iy);
             Nx0 = syNx(is0,iy);
             Ny0 = syNy(is0,iy);
-            Nphi0 = syNphi(is0,iy);
+            Nz0 = syNz(is0,iy);
             %
             rho0 = psi2rho_jd(equil,psin0);
             %
@@ -144,7 +174,7 @@ if strcmp(launch.type,'EC'),
             %
             mask = [find(ty(1:end - 1) < 0 & diff(ty) > 0),1 + [0,find(ty(1:end - 1) >= 0 & diff(ty) > 0)]]; 
             %
-            y0 = launch.yZ_L(iy) - equil.Zp;
+            y0 = yy_L(iy);
             x0 = interp1(ty(mask),tx(mask),y0,method,NaN);
             %
             if isnan(y0),
@@ -153,11 +183,11 @@ if strcmp(launch.type,'EC'),
             %
             r0 = sqrt(x0.^2 + y0.^2);
             theta0 = atan(y0./x0) + pi*(x0 < 0) + 2*pi*(x0 > 0 & y0 < 0);
-            phi0 = - launch.yphi_L(iy);
+            z0 = - yz_L(iy);
             %
             Nx0 = sin(launch.ybeta_L(iy)).*cos(launch.yalpha_L(iy));
             Ny0 = cos(launch.ybeta_L(iy));
-            Nphi0 = sin(launch.ybeta_L(iy)).*sin(launch.yalpha_L(iy));
+            Nz0 = sin(launch.ybeta_L(iy)).*sin(launch.yalpha_L(iy));
             %
         end
         %
@@ -165,10 +195,10 @@ if strcmp(launch.type,'EC'),
             %
             Bx0 = interp2(psin,equil.theta,equil.ptBx.',psin0,theta0,method);
             By0 = interp2(psin,equil.theta,equil.ptBy.',psin0,theta0,method);
-            BPHI0 = interp2(psin,equil.theta,equil.ptBPHI.',psin0,theta0,method);    
+            Bz0 = interp2(psin,equil.theta,equil.ptBPHI.',psin0,theta0,method);    
             %
-            B0 = sqrt(Bx0.^2 + By0.^2 + BPHI0.^2);
-            Npar0 = (Nx0*Bx0 + Ny0*By0 + Nphi0*BPHI0)/B0;
+            B0 = sqrt(Bx0.^2 + By0.^2 + Bz0.^2);
+            Npar0 = (Nx0*Bx0 + Ny0*By0 + Nz0*Bz0)/B0;
             %
             Bp0 = sqrt(Bx0.^2 + By0.^2);
             cosalpha0 = (By0*x0 - Bx0*y0)/r0/Bp0;
@@ -177,9 +207,9 @@ if strcmp(launch.type,'EC'),
             %
             rayinit.yrho0(iy) = rho0;%Initial radial position at launch
             rayinit.ytheta0(iy) = theta0;%Initial poloidal position at launch
-            rayinit.yphi0(iy) = phi0;%Initial toroidal position at launch
+            rayinit.yz0(iy) = z0;%Initial axial position at launch
             rayinit.ym0(iy) = m0;%Initial poloidal mode number
-            rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
+            rayinit.ykz0(iy) = launch.kz0;%Initial toroidal mode number
             rayinit.yNpar0(iy) = Npar0;%Initial index of refraction
             rayinit.ydNpar0(iy) = dNpar0;%initial Ray spectral width
             rayinit.yP0_2piRp(iy) = yP0_2piRp(iy);%Lineic initial power density initial power in the ray (W/m)
@@ -200,8 +230,13 @@ if strcmp(launch.type,'EC'),
                 %
                 [Nperpp,Nperpm,Kxyz,ep_xyz,em_xyz] = colddisp_dke_jd(Npar0,launch.omega_rf,NaN,0,1,1,B0);
                 %
-                BX0 = Bx0*cos(phi0) - BPHI0*sin(phi0);
-                BY0 = -Bx0*sin(phi0) - BPHI0*cos(phi0);
+                if isinf(equil.Rp),
+                    BX0 = Bx0;
+                    BY0 = -Bz0;
+                else
+                    BX0 = Bx0*cos(z0/equil.Rp) - Bz0*sin(z0/equil.Rp);
+                    BY0 = -Bx0*sin(z0/equil.Rp) - Bz0*cos(z0/equil.Rp);
+                end
                 BZ0 = By0;
                 %
                 B0_XYZ = [BX0;BY0;BZ0];
@@ -221,9 +256,9 @@ if strcmp(launch.type,'EC'),
         else
             rayinit.yrho0(iy) = NaN;%Initial radial position at launch
             rayinit.ytheta0(iy) = NaN;%Initial poloidal position at launch
-            rayinit.yphi0(iy) = NaN;%Initial toroidal position at launch
+            rayinit.yz0(iy) = NaN;%Initial axial position at launch
             rayinit.ym0(iy) = NaN;%Initial poloidal mode number
-            rayinit.yn0(iy) = NaN;%Initial toroidal mode number
+            rayinit.ykz0(iy) = NaN;%Initial toroidal mode number
             rayinit.yNpar0(iy) = NaN;%Initial index of refraction
             rayinit.ydNpar0(iy) = NaN;%initial Ray spectral width
             rayinit.yP0_2piRp(iy) = NaN;%Lineic initial power density initial power in the ray (W/m)
@@ -235,12 +270,18 @@ if strcmp(launch.type,'EC'),
     end
     %
 elseif strcmp(launch.type,'LH'),
+    if isfield(launch,'bPlhtot') && ~isinf(equil.Rp),
+        bP0_2piRp = launch.bPlhtot/(2*pi*equil.Rp);%initial power in the ray (W) [1,n_lobe]
+    elseif isfield(launch,'bPlhtot_2piRp')
+        bP0_2piRp = launch.bPlhtot_2piRp;
+    else
+        error('ERROR in main_rayinit_launch_jd.m -> inconsistent launch input: use bPlhtot if Rp is finite only, or bPlhtot_2piRp otherwise.');
+    end
     %
-    bP0 = launch.bPlhtot;%initial power in the ray (W) [1,n_lobe]
     bNpar0 = launch.bNpar0;%Initial Npar value [1,n_lobe]
     bdNpar0 = launch.bdNpar0;%ray spectral width for Fokker-Planck calculations [1,n_lobe]
     ry0 = launch.rZ0 - equil.Zp;
-    rby0 = ry0(:)*ones(1,length(bP0));%[m_pol,n_lobe]
+    rby0 = ry0(:)*ones(1,length(bP0_2piRp));%[m_pol,n_lobe]
     %
     % Ray initial characteristics
     %
@@ -266,8 +307,6 @@ elseif strcmp(launch.type,'LH'),
     nr = size(rby0,1);% number of poloidal locations
     nm = length(launch.m0);% number of poloidal numbers
     %
-    bP0_2piRp = bP0/(2*pi*equil.Rp);
-    %
     if all(imag(launch.m0) == 0),
         launch.m0 = launch.m0 + 1i/nm;%uniform power distribution
     end
@@ -282,9 +321,26 @@ elseif strcmp(launch.type,'LH'),
                 %
                 rayinit.yrho0(iy) = rho0;%Initial radial position at launch
                 rayinit.ytheta0(iy) = rbtheta0(ir,ib);%Initial poloidal position at launch
-                rayinit.yphi0(iy) = launch.phi0;%Initial toroidal position at launch
+                if isfield(launch,'z0')
+                    rayinit.yz0(iy) = launch.z0;%Initial axial position at launch
+                elseif isfield(launch,'phi0') && ~isinf(equil.Rp),
+                    rayinit.yphi0(iy) = launch.phi0;%Initial toroidal position at launch
+                else
+                    error('ERROR in main_rayinit_launch_jd.m -> inconsistent launch input: use phi0 is Rp if finite only, or z0 otherwise.');
+                end
+                %
+                %rayinit.yphi0(iy) = launch.phi0;
                 rayinit.ym0(iy) = real(launch.m0(im));%Initial poloidal mode number
-                rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
+                %
+                if isfield(launch,'kz0')
+                    rayinit.ykz0(iy) = launch.kz0;%Initial toroidal mode number
+                elseif isfield(launch,'n0') && ~isinf(equil.Rp);
+                    rayinit.yn0(iy) = launch.n0;
+                else
+                    error('ERROR in main_rayinit_launch_jd.m -> inconsistent launch input: use n0 is Rp if finite only, or kz0 otherwise.');
+                end                
+                %
+                %rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
                 %
                 rayinit.yNpar0(iy) = bNpar0(ib);%Initial index of refraction (default values, no fluctuations)
                 %

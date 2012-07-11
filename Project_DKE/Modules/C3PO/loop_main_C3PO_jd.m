@@ -9,16 +9,35 @@ function [rays] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayini
 %
 rayinit.yrho0 = rayinit.yrho0(iray);
 rayinit.ytheta0 = rayinit.ytheta0(iray);
-rayinit.yphi0 = rayinit.yphi0(iray);
+%
+if isfield(rayinit,'yz0')
+    rayinit.yz0 = rayinit.yz0(iray);
+elseif isfield(rayinit,'yphi0') && ~isinf(equil_fit.Rp),
+    rayinit.yz0 = rayinit.yphi0(iray)*equil_fit.Rp;
+else
+    error('ERROR in loop_main_C3PO_jd.m: inconsistent rayinit input: use yphi0 is Rp is finite only, or yz0 elsewhere.');
+end
+%
 rayinit.ym0 = rayinit.ym0(iray);
-rayinit.yn0 = rayinit.yn0 (iray);
+%
+if isfield(rayinit,'ykz0')
+    rayinit.ykz0 = rayinit.ykz0(iray);
+elseif isfield(rayinit,'yn0') && ~isinf(equil_fit.Rp),
+    rayinit.ykz0 = rayinit.yn0(iray)/equil_fit.Rp;
+else
+    error('ERROR in loop_main_C3PO_jd.m: inconsistent rayinit input: use yn0 is Rp is finite only, or ykz0 elsewhere.');
+end
 rayinit.yNpar0 = rayinit.yNpar0(iray);
 rayinit.ydNpar0 = rayinit.ydNpar0(iray);
 rayinit.yP0_2piRp = rayinit.yP0_2piRp(iray);
+
+
+
 %
 tau_lim_init = rayparam.tau_lim;%Initial optical depth limit
 kmode = waveparam.kmode;
 ydNpar0 = rayinit.ydNpar0;
+%
 if isfield(rayinit,'launch'),
     launch0 = rayinit.launch;
 else
@@ -27,16 +46,19 @@ end
 %
 rays{1}.P0_2piRp = rayinit.yP0_2piRp;%Initial lineic power density in the ray (W/m) [1,1]
 %
-rays{1}.sx = [];% Ray location (major radius) along the propagation [1,ns]
-rays{1}.sphi = [];% Ray location (toroidal angle) along the propagation [1,ns]
+rays{1}.sx = [];% Ray location (horizontal) along the propagation [1,ns]
 rays{1}.sy = [];% Ray location (vertical) along the propagation [1,ns]
+rays{1}.sz = [];% Ray location (axial or torodial) along the propagation [1,ns]
 %
 rays{1}.ss = [];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
+%
 rays{1}.spsin = [];% Ray location (normalized magnetic flux) along the propagation [1,ns]
 rays{1}.stheta = [];% Ray location (poloidal angle) along the propagation [1,ns]
+rays{1}.sphi = [];% Ray location (toroidal angle) along the propagation [1,ns]
 %
 rays{1}.skx = [];% Ray wave vector (major radius) along the propagation [1,ns]
 rays{1}.sky = [];% Ray wave vector (vertical) along the propagation [1,ns]
+rays{1}.skz = [];% Ray wave vector (axial or toroidal) along the propagation [1,ns]
 %
 rays{1}.skrho = [];% Ray wave number (radial) along the propagation [1,ns]
 rays{1}.sm = [];% Ray wave number (poloidal) along the propagation [1,ns]
@@ -64,7 +86,7 @@ rays{1}.sD = [];% Dispersion relation [1,ns]
 rays{1}.sB = [];% Total magnetic field along the ray [1,ns] (T)
 rays{1}.sBRHO = [];% Radial magnetic field along the ray [1,ns] (T)
 rays{1}.sBP = [];% Poloidal magnetic field along the ray [1,ns] (T)
-rays{1}.sBPHI = [];% Toroidal magnetic field along the ray [1,ns] (T)
+rays{1}.sBz = [];% Toroidal or axial magnetic field along the ray [1,ns] (T)
 
 rays{1}.sTe = [];% Electron temperature along the ray [1,ns] (keV)
 rays{1}.sne = [];% Electron density along the ray [1,ns] (m-3)
@@ -109,8 +131,8 @@ for iref = 1:nref + 1,% vessel reflection index
         rayinit = rays{irayref}.rayinits{end};
         %
 		y0 = init_RT_jd(equil_fit,...
-            rayinit.yrho0,rayinit.ytheta0,rayinit.yphi0,omega_rf,...
-            rayinit.yNpar0,rayinit.ym0,rayinit.yn0,rayinit.mmode,kmode,fluct_fit).';
+            rayinit.yrho0,rayinit.ytheta0,rayinit.yz0,omega_rf,...
+            rayinit.yNpar0,rayinit.ym0,rayinit.ykz0,rayinit.mmode,kmode,fluct_fit).';
         %
 		if C3POdisplay.ray,
 			info_dke_yp(2,['Initial conditions of ray #',int2str(iray),' are calculated']);
@@ -120,30 +142,39 @@ for iref = 1:nref + 1,% vessel reflection index
             %
             rayparam.tau_lim = tau_lim_init - rayinit.tau0;% the absorption criterion accounts for previous steps
 			%
-			[tout, yout, yproc] = raytracing_yp(rayparam,equil_fit,y0,f0struct,fluct_fit,flag);
+			[tout, yout, yproc] = raytracing_yp(rayparam,equil_fit,y0,f0struct,fluct_fit,flag);            
 			%
 			if C3POdisplay.ray,
 				info_dke_yp(2,['Trajectory of ray #',int2str(iray),' is calculated']);
 			end
 			%
 			filename_in = [id_wave,'_ray_',int2str(iray)];
-			[iabs_out,srho,stheta,sphi,sR,sZ,sNpar,sNperp,sepol_pmz,sphi_xyz,spmode,sD,ss,salphaphi_lin,sB,sBRHO,sBP,sBPHI,sTe,sne,szTi,szni,sr,salpha,sgradrhon,stau,seikval,skrho,sm,sn,swpe2,swce2] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,fluct_fit,C3POdisplay.text,C3POdisplay.ray,C3POdisplay.p_opt,filename_in);
+			[iabs_out,srho,stheta,sx,sy,sz,sNpar,sNperp,sepol_pmz,sphi_xyz,spmode,sD,ss,salphaphi_lin,sB,sBRHO,sBP,sBz,sTe,sne,szTi,szni,sr,salpha,sgradrhon,stau,seikval,skrho,sm,skz,sn,swpe2,swce2] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,fluct_fit,C3POdisplay.text,C3POdisplay.ray,C3POdisplay.p_opt,filename_in);
 			%
 			if C3POdisplay.ray == 1,
 				pause(5)
-			end
+            end
 			%
 			% building ray for FP calculations
 			%
-			rays{irayref}.sx = [rays{irayref}.sx,sR.' - equil_fit.Rp];% Ray location (major radius) along the propagation [1,ns]
-			rays{irayref}.sphi = [rays{irayref}.sphi,sphi.'];% Ray location (toroidal angle) along the propagation [1,ns]
-			rays{irayref}.sy = [rays{irayref}.sy,sZ.' - equil_fit.Zp];% Ray location (vertical) along the propagation [1,ns]
-			%
+			rays{irayref}.sx = [rays{irayref}.sx,sx.'];% Ray location (horizontal) along the propagation [1,ns]
+			rays{irayref}.sy = [rays{irayref}.sy,sy.'];% Ray location (vertical) along the propagation [1,ns]
+			rays{irayref}.sz = [rays{irayref}.sz,sz.'];% Ray location (axial) along the propagation [1,ns]
+            %
 			rays{irayref}.ss = [rays{irayref}.ss,rayinit.ss0 + ss.'];% Ray propagation distance parameter for each ray (put to NaN once the ray is absorbed) [1,ns]
 			rays{irayref}.stheta = [rays{irayref}.stheta,stheta.'];% Ray location (poloidal angle) along the propagation [1,ns]
+            %
+            if ~isinf(equil_fit.Rp),
+                sphi = sz/equil_fit.Rp;
+            else
+                sphi = NaN(size(sz));
+            end
+            %
+            rays{irayref}.sphi = [rays{irayref}.sphi,sphi.'];
 			%
-			rays{irayref}.skrho = [rays{irayref}.skrho,skrho.'];% Ray radial wave number [1,ns]
+			rays{irayref}.skrho = [rays{irayref}.skrho,skrho.'];% Ray radial wave vector [1,ns]
 			rays{irayref}.sm = [rays{irayref}.sm,sm.'];% Ray poloidal wave number [1,ns]
+            rays{irayref}.skz = [rays{irayref}.skz,skz.'];% Ray axial wave vector [1,ns]
 			rays{irayref}.sn = [rays{irayref}.sn,sn.'];% Ray toroidal wave number [1,ns]
 			%
 			rays{irayref}.sNpar = [rays{irayref}.sNpar,sNpar.'];% Ray parallel wave number [1,ns]
@@ -168,7 +199,7 @@ for iref = 1:nref + 1,% vessel reflection index
 			rays{irayref}.sB = [rays{irayref}.sB,sB.'];% Total magnetic field along the ray [1,ns] (T)
 			rays{irayref}.sBRHO = [rays{irayref}.sBRHO,sBRHO.'];% Radial magnetic field along the ray [1,ns] (T)
 			rays{irayref}.sBP = [rays{irayref}.sBP,sBP.'];% Poloidal magnetic field along the ray [1,ns] (T)
-			rays{irayref}.sBPHI = [rays{irayref}.sBPHI,sBPHI.'];% Toroidal magnetic field along the ray [1,ns] (T)
+			rays{irayref}.sBz = [rays{irayref}.sBz,sBz.'];% Toroidal magnetic field along the ray [1,ns] (T)
 			
 			rays{irayref}.sTe = [rays{irayref}.sTe,sTe.'];% Electron temperature along the ray [1,ns] (keV)
 			rays{irayref}.sne = [rays{irayref}.sne,sne.'];% Electron density along the ray [1,ns] (m-3)
