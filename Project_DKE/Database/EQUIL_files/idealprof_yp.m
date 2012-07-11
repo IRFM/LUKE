@@ -19,9 +19,15 @@ zmi = mi;%[1,ni]
 %
 % Plasma parameters
 %
-pTe = (Te0 - Tea)*(1 - prho.^eTe1).^eTe2 + Tea;%Electron temperature (keV)
-pne = (ne0 - nea)*(1 - prho.^ene1).^ene2 + nea;%Electron density (m-3)
-pTi = (Ti0 - Tia)*(1 - prho.^eTi1).^eTi2 + Tia;%Ion temperatures (keV)
+if ~isnan(eTe2) && ~isempty (eTe2)
+    pTe = (Te0 - Tea)*(1 - prho.^eTe1).^eTe2 + Tea;%Electron temperature (keV)
+    pne = (ne0 - nea)*(1 - prho.^ene1).^ene2 + nea;%Electron density (m-3)
+    pTi = (Ti0 - Tia)*(1 - prho.^eTi1).^eTi2 + Tia;%Ion temperatures (keV)    
+else,% Bonoli's paper notation, IEEE Transactions on plasma science Vol. PS-12, No 2, june 1984, p100
+    pTe = (Te0 - Tea)*(exp(-eTe1*prho.^2) - exp(-eTe1))/(1 - exp(-eTe1)) + Tea;% Electron temperature (keV)
+    pne = (ne0 - nea)*(exp(ene1) - exp(ene1*prho.^2))/(exp(ene1) - 1) + nea;% Electron density (m-3)
+    pTi = (Ti0 - Tia)*(exp(-eTi1*prho.^2) - exp(-eTi1))/(1 - exp(-eTi1)) + Tia;% Ion temperatures (keV)
+end
 %
 if isnan(xZeff) || isempty(xZeff),
     pZeff = (Zeff0 - Zeffa)*(1 - prho.^2).^eZeff + Zeffa;% Effective charge (a.u.)
@@ -37,3 +43,5 @@ pzni = species_dke_yp(pne,pZeff,zZi,fi);
 %
 pkin = pTe.*pne + sum(pzni.*pzTi);%Total plasma pressure profile (special units for helmex77 in keV.m-3)
 %
+
+
