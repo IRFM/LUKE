@@ -16,6 +16,8 @@ path_dkepath = '';%if nothing is specified, the working directory is first used 
 %
 %
 id_wave = 'RFP_LH';
+flag_analytic = 6;
+p_opt = -1;
 %
 % Equilibrium parameters
 %
@@ -29,9 +31,13 @@ paths_rayinit = {''};
 %
 % Display parameters
 %
-C3POdisplay.ray = 1;
-C3POdisplay.equilibrium = 0;
-C3POdisplay.p_opt = 2;%Printing or saving option of the figures
+C3POdisplay_numeric.ray = 1;
+C3POdisplay_numeric.equilibrium = 0;
+C3POdisplay_numeric.p_opt = 2;%Printing or saving option of the figures
+%
+C3POdisplay_analytic.ray = 0;
+C3POdisplay_analytic.equilibrium = 0;
+C3POdisplay_analytic.p_opt = 2;%Printing or saving option of the figures
 %
 % Wave parameters
 %
@@ -56,10 +62,10 @@ n_rf_list = 0;
 %
 % Equilibrium parameters for the ray-tracing
 %
-fitparam.equil.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
-fitparam.equil.method = 'pchip';%nearest,spline,pchip
-fitparam.equil.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
-fitparam.equil.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
+fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
+fitparam.method = 'pchip';%nearest,spline,pchip
+fitparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
+fitparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
 %
 % Global parameters for the ray-tracing
 %
@@ -86,9 +92,9 @@ rayparam.kextra = 1000;%number of calculations performed beyond the full linear 
 %
 % Vectorial description of the magnetic equilibrium
 %
-equil_fit = fitequil_yp(equil,fitparam.equil.mode_equil,fitparam.equil.method,fitparam.equil.ngridresample,fitparam.equil.nharm);%Build vectorized magnetic equilibrium structure
+equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
 info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is calculated.']);
-if C3POdisplay.equilibrium,testfitequil_yp(equil,equil_fit);end
+if C3POdisplay_numeric.equilibrium,testfitequil_yp(equil,equil_fit);end
 %
 % C3PO computing parameters
 %
@@ -96,26 +102,29 @@ C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster
 %
 % C3P0 ray tracing
 %
-tstart = tic;
-wave = main_C3PO_jd(dkepath,id_wave,equil,equil_fit,rayinits{1},waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);
-telapsed_ray = toc(tstart);
+wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,'',rayinits{1},waveparam,fitparam,rayparam,C3POdisplay_numeric,C3POparam,[],[],0);
+%
+info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
+%
+rayparam.tfinal = 600;
+wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,'',rayinits{1},waveparam,fitparam,rayparam,C3POdisplay_analytic,C3POparam,[],[],flag_analytic);
+%
+info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
 save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-save(save_str,'id_wave','wave');
+save(save_str,'id_wave','wave_numeric','wave_analytic');
 %
 info_dke_yp(2,'Wave parameters saved');
 %
-disp(['Elapsed time (s):',num2str(telapsed_ray),' for ray calculations (PCHIP interp. technique)']);
-%
 % --- display results ---
 %
-rays = {wave.rays{1}};
+rays = {wave_numeric.rays{1},wave_analytic.rays{1}};
 %
-legs = {'Numeric'};
+legs = {'Numeric','Analytic'};
 %
 filename = ['Fig_',id_wave];
 %
-opt.p_opt = C3POdisplay.p_opt;
+opt.p_opt = C3POdisplay_numeric.p_opt;
 opt.ntheta_fit = 65;
 opt.nrho_fit = 15;
 opt.propvar = 1;   
