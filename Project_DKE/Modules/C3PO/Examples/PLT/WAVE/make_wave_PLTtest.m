@@ -116,6 +116,9 @@ wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,'',rayinit,wavepa
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
+rayparam.tfinal = 6000;
+rayparam.kmax = 6000;
+%
 wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],flag_analytic);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
