@@ -1,4 +1,4 @@
-function xY = init_RT_jd(equil_fit,xrho,xtheta,xphi,xomega,xNpar,xm,xn,mmode,kmode,fluct_fit);
+function xY = init_RT_jd(equil_fit,xrho,xtheta,xz,xomega,xNpar,xm,xkz,mmode,kmode,fluct_fit);
 %
 % This function solves the dispersion relation from initial positions and 
 % wave characteristics to initiate ray-tracing calculations.
@@ -8,11 +8,11 @@ function xY = init_RT_jd(equil_fit,xrho,xtheta,xphi,xomega,xNpar,xm,xn,mmode,kmo
 %       - equil_fit: fitted axisymmetric magnetic equilibrium structure
 %       - xrho: normalized minor radius positions [1,1]
 %       - xtheta: poloidal positions (rad) [1,1]
-%       - xphi: toroidal positions (rad) [1,1]
+%       - xz: axial or toroidal positions [m] [1,1]
 %       - xomega: wave frequencies (rad/s) [1,1]
 %       - xNpar: parallel indices of refraction [1,1]
 %       - xm: poloidal mode numbers [1,1]
-%       - xn: toroidal mode numbers [1,1]
+%       - xkz: axial or toroidal wave vector [1,1]
 %       - xmode: cold plasma mode [1,1] : (-1) m (1) p 
 %           p is the slow mode when kperp > 0 (ex : LH slow wave)
 %       - sigma: direction of the wave propagation (outward, or inward)
@@ -24,10 +24,10 @@ function xY = init_RT_jd(equil_fit,xrho,xtheta,xphi,xomega,xNpar,xm,xn,mmode,kmo
 %       - xY: canonical coordinates vector [8,nx] decomposed into
 %               - xpsin [1,1]
 %               - xtheta (rad) [1,1]
-%               - xphi (rad) [1,1]
+%               - xz (rad) [1,1]
 %               - xkrhon  [1,1]
 %               - xm [1,1]
-%               - xn [1,1]
+%               - xkz [1,1]
 %               - xomega/clum (m^-1) [1,1]
 %
 %   By J. Decker DRFC-CEA <joan.decker@cea.fr> and Y. Peysson DRFC-CEA <yves.peysson@cea.fr>
@@ -46,7 +46,7 @@ end
 %
 %if abs(sigma) ~= 1,error('Parameter ''sigma'' for the wave direction atlaunch must be +1 or +1');end
 %
-if length(xtheta) ~= 1 | length(xphi) ~= 1 | length(xomega) ~= 1 | length(xNpar) ~= 1 | length(xm) ~= 1 | length(xn) ~= 1,,
+if length(xtheta) ~= 1 | length(xz) ~= 1 | length(xomega) ~= 1 | length(xNpar) ~= 1 | length(xm) ~= 1 | length(xkz) ~= 1,,
     error('Input argument dimensions are not compatible');
 end
 %
@@ -75,9 +75,9 @@ By_a0_fit = ppval(equil_fit.By_fit.pp_a0,xrho);
 By_an_fit = ppval(equil_fit.By_fit.pp_an,xrho);
 By_bn_fit = ppval(equil_fit.By_fit.pp_bn,xrho);
 %
-BPHI_a0_fit = ppval(equil_fit.BPHI_fit.pp_a0,xrho);
-BPHI_an_fit = ppval(equil_fit.BPHI_fit.pp_an,xrho);
-BPHI_bn_fit = ppval(equil_fit.BPHI_fit.pp_bn,xrho);
+Bz_a0_fit = ppval(equil_fit.Bz_fit.pp_a0,xrho);
+Bz_an_fit = ppval(equil_fit.Bz_fit.pp_an,xrho);
+Bz_bn_fit = ppval(equil_fit.Bz_fit.pp_bn,xrho);
 %
 % Build interpolated magnetic fields
 %	
@@ -85,28 +85,32 @@ BPHI_bn_fit = ppval(equil_fit.BPHI_fit.pp_bn,xrho);
 [xy,xdydtheta] = calcval_yp(equil_fit,xtheta,y_a0_fit,y_an_fit,y_bn_fit);
 [xBx] = calcval_yp(equil_fit,xtheta,Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
 [xBy] = calcval_yp(equil_fit,xtheta,By_a0_fit,By_an_fit,By_bn_fit);
-[xBPHI] = calcval_yp(equil_fit,xtheta,BPHI_a0_fit,BPHI_an_fit,BPHI_bn_fit);
+[xBz] = calcval_yp(equil_fit,xtheta,Bz_a0_fit,Bz_an_fit,Bz_bn_fit);
 %
-sigmaIp =  sign(equil_fit.psia);%Sign of the plasma current
+sigmaIp =  sign(equil_fit.psia_apRp);%Sign of the plasma current
 %
-xR = xx + equil_fit.Rp;
+if isinf(equil_fit.Rp),
+    Upsilon = 1.0;
+else
+    Upsilon = 1 + xx/equil_fit.Rp;%toroidal factor (1 -> cylindrical limit)
+end
+%
 xr = sqrt(xx.^2 + xy.^2);
 xs = (xx.*xdxdtheta + xy.*xdydtheta)./xr./sqrt(xdxdtheta.^2 + xdydtheta.^2);
 xc = sqrt(1.0 - xs.^2);
 xBp = sqrt(xBx.^2 + xBy.^2); 
-xBt = xBPHI; 
-xB = sqrt(xBt.^2 + xBp.^2);
+xB = sqrt(xBz.^2 + xBp.^2);
 xBsn = sigmaIp*xBp./xB;
-xBphin = xBt./xB;
+xBzn = xBz./xB;
 %
-xgradrho = xR.*xBp.*xdxstardpsin/abs(equil_fit.psia)/equil_fit.ap;
+xgradrho = Upsilon.*xBp.*xdxstardpsin/abs(equil_fit.psia_apRp);
 %
 % Plasma fluctuations or modulations
 %
 xBrhon = 0;
 %
 if isstruct(fluct_fit),
-   [fluctval] = fluctval_yp(equil_fit,fluct_fit,xrho,xtheta,xphi);
+   [fluctval] = fluctval_yp(equil_fit,fluct_fit,xrho,xtheta,xz);
    %
    xne = xne + xne*fluctval.ner;%tanh(x) is for limitating the perturbation between -1 and 1
    xTe = xTe + xTe*fluctval.Ter;
@@ -118,13 +122,13 @@ if isstruct(fluct_fit),
    %
    xBrho = xB*(xcta*fluctval.Bxr + xsta*fluctval.Byr);%normalized to unperturbed magnetic equilibrium
    xBs = xB*(xBsn + xcta*fluctval.Byr - xsta*fluctval.Bxr);%normalized to unperturbed magnetic equilibrium
-   xBphi = xB*(xBphin + fluctval.Bzr);%normalized to unperturbed magnetic equilibrium
+   xBphi = xB*(xBzn + fluctval.Bzr);%normalized to unperturbed magnetic equilibrium
    %
-   xB = sqrt(xBrho.^2 + xBs.^2 + xBphi.^2);%perturbed magnetic field
+   xB = sqrt(xBrho.^2 + xBs.^2 + xBz.^2);%perturbed magnetic field
    %
    xBrhon = xBrho/xB;%normalized to perturbed magnetic equilibrium
    xBsn = xBs/xB;%normalized to perturbed magnetic equilibrium
-   xBphin = xBphi/xB;%normalized to perturbed magnetic equilibrium
+   xBzn = xBz/xB;%normalized to perturbed magnetic equilibrium
    %
 end
 %
@@ -175,37 +179,37 @@ end
 %
 xlambda = xc.*xBsn - xs.*xBrhon;
 %
-if isnan(xn),%xm is specified at the plasma edge (tokamak case)
+if isnan(xkz),%xm is specified at the plasma edge (tokamak case)
     if abs(xBrhon) < 1e-6,
-        xn = xR.*(xNpar.*xomega/clum - xm.*xc.*xBsn./xr)./xBphin;
-        xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xn./xR).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho;
+        xkz = Upsilon.*(xNpar.*xomega/clum - xm.*xc.*xBsn./xr)./xBzn;
+        xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xkz./Upsilon).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho;
     else
         xdelta = xNpar.*xomega./clum - xm.*xlambda./xr;
         a = (1.0 - xBsn.*xBsn)./xBrhon./xBrhon;
-        b = xBphin.*(xNpar.*xomega/clum - xm.*xBsn.*xc./xr)./xBrhon./xBrhon;
+        b = xBzn.*(xNpar.*xomega/clum - xm.*xBsn.*xc./xr)./xBrhon./xBrhon;
         c = (xNpar.*xomega/clum - xm.*xlambda./xr).^2*(1.0 - xBrhon.*xBrhon)./xBrhon./xBrhon + xm.*xm.*(1.0 - xlambda.*xlambda)./xr./xr - 2.0.*xm.*(xNpar.*xomega/clum - xm.*xlambda./xr).*(xs + xBrhon.*xlambda)./xr./xBrhon - (xNperp.*xomega/clum).^2;
-        xnp = xR.*(b + sqrt(b.*b - a*c))/a;
-        xnm = xR.*(b - sqrt(b.*b - a*c))/a;
-        xkrhop = (-xnp.*xBphin./xR + xdelta)./xBrhon./xgradrho;
-        xkrhom = (-xnm.*xBphin./xR + xdelta)./xBrhon./xgradrho;
+        xkzp = Upsilon.*(b + sqrt(b.*b - a*c))/a;
+        xkzm = Upsilon.*(b - sqrt(b.*b - a*c))/a;
+        xkrhop = (-xkzp.*xBzn./Upsilon + xdelta)./xBrhon./xgradrho;
+        xkrhom = (-xkzm.*xBzn./Upsilon + xdelta)./xBrhon./xgradrho;
         %
         if imag(xkrhop) ~= 0 & imag(xkrhom) ~= 0,
             error('The wave cannot propagate in the plasma. Let change the initial conditions.')
         else
             xkrhoroots = [xkrhop,xkrhom];
-            xnroots = [xnp,xnm];
+            xkzroots = [xkzp,xkzm];
             xkrho = xkrhoroots(find(xkrhoroots>0));%choice of the root for inward propagation
-            xn = xnroots(find(xkrhoroots>0));
+            xkz = xkzroots(find(xkrhoroots>0));
         end
         %
     end
-elseif isnan(xm),%xn is specified at the plasma edge (RFP case)
+elseif isnan(xm),%xkz is specified at the plasma edge (RFP case)
     if abs(xBrhon) < eps,
-        xm = xr.*(xNpar.*xomega/clum - xn.*xBphin./xR)./xc./xBsn;
-        xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xn./xR).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho;
+        xm = xr.*(xNpar.*xomega/clum - xkz.*xBzn./Upsilon)./xc./xBsn;
+        xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xkz./Upsilon).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho;
     else
         %TODO: calculation for RFP
-        %xdelta = xNpar.*xomega./clum - xn.*xBphin./xR;
+        %xdelta = xNpar.*xomega./clum - xkz.*xBzn./Uspilon;
         %a = ;
         %b = ;
         %c = ;
@@ -228,20 +232,20 @@ elseif isnan(xm),%xn is specified at the plasma edge (RFP case)
     end
 end
 %
-xY = [xrho;xtheta;xphi;xkrho;xm;xn;xomega];
+xY = [xrho;xtheta;xz;xkrho;xm;xkz;xomega];
 %
 % verification
 %
 if 1,
-    xNpar2 = (xkrho*xgradrho.*xBrhon + xm.*xlambda./xr + xn.*xBphin./xR)*clum./xomega;
+    xNpar2 = (xkrho*xgradrho.*xBrhon + xm.*xlambda./xr + xkz.*xBzn./Upsilon)*clum./xomega;
     %
-    %xNperp2 = sqrt((xkrho*xgradrho - xs.*xm./xr).^2 + (xBphin.*xc.*xm./xr - xBsn.*xn./xR).^2)*clum./xomega;
+    %xNperp2 = sqrt((xkrho*xgradrho - xs.*xm./xr).^2 + (xBzn.*xc.*xm./xr - xBsn.*xkz./Upsilon).^2)*clum./xomega;
     %
-    xNperp2 = sqrt(xkrho.^2*xgradrho.^2.*(1.0 - xBrhon.^2) + xm.^2./xr.^2.*(1.0 - xlambda.^2) + xn.^2./xR.^2.*(1.0 - xBphin.^2) ... 
-            - 2.0*xkrho.*xgradrho.*xn./xR.*xBrhon.*xBphin ...
-            - 2.0*xm./xr.*(xkrho.*xgradrho.*(xs + xBrhon.*xlambda) + xlambda.*xn.*xBphin./xR))*clum./xomega;    
-    %
+    xNperp2 = sqrt(xkrho.^2*xgradrho.^2.*(1.0 - xBrhon.^2) + xm.^2./xr.^2.*(1.0 - xlambda.^2) + xkz.^2./Upsilon.^2.*(1.0 - xBzn.^2) ... 
+            - 2.0*xkrho.*xgradrho.*xkz./Upsilon.*xBrhon.*xBzn ...
+            - 2.0*xm./xr.*(xkrho.*xgradrho.*(xs + xBrhon.*xlambda) + xlambda.*xkz.*xBzn./Upsilon))*clum./xomega;    
+      
     [Nperpp2,Nperpm2,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,sigmap,sigmam,Dp,Dm]...
         = colddisp_dke_jd(xNpar2,xomega,xne,zxni,zZi,zmi,xB,xNperp2);
-    %disp(['xNpar,xNperp,xNpar2,xNperp2,Dp,Dm:',num2str(xNpar),',',num2str(xNperp),',',num2str(xNpar2),',',num2str(xNperp2),',',num2str(Dp),',',num2str(Dm)]);
+    disp(['xNpar,xNperp,xNpar2,xNperp2,Dp,Dm:',num2str(xNpar),',',num2str(xNperp),',',num2str(xNpar2),',',num2str(xNperp2),',',num2str(Dp),',',num2str(Dm)]);
 end
