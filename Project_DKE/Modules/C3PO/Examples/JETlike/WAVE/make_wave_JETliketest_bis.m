@@ -48,12 +48,17 @@ P0_2piRp = NaN;
 C3POdisplay_pchip.ray = 1;
 C3POdisplay_pchip.equilibrium = 0;
 C3POdisplay_pchip.p_opt = 2;%Printing or saving option of the figures
-C3POdisplay_pchip.mdce = 1;%for distributed computing
+C3POdisplay_pchip.mdce = 0;%for distributed computing
 %
 C3POdisplay_spline.ray = 0;
 C3POdisplay_spline.equilibrium = 0;
 C3POdisplay_spline.p_opt = 0;%Printing or saving option of the figures
 C3POdisplay_spline.mdce = 0;%for distributed computing
+%
+C3POdisplay_analytic.ray = 0;
+C3POdisplay_analytic.equilibrium = 0;
+C3POdisplay_analytic.p_opt = 2;%Printing or saving option of the figures
+C3POdisplay_analytic.mdce = 0;%for distributed computing
 %
 % Wave parameters
 %
@@ -126,22 +131,21 @@ By_a0_fit = ppval(equil_fit_pchip.By_fit.pp_a0,rho0);
 By_an_fit = ppval(equil_fit_pchip.By_fit.pp_an,rho0);
 By_bn_fit = ppval(equil_fit_pchip.By_fit.pp_bn,rho0);
 %
-BPHI_a0_fit = ppval(equil_fit_pchip.BPHI_fit.pp_a0,rho0);
-BPHI_an_fit = ppval(equil_fit_pchip.BPHI_fit.pp_an,rho0);
-BPHI_bn_fit = ppval(equil_fit_pchip.BPHI_fit.pp_bn,rho0);
+Bz_a0_fit = ppval(equil_fit_pchip.Bz_fit.pp_a0,rho0);
+Bz_an_fit = ppval(equil_fit_pchip.Bz_fit.pp_an,rho0);
+Bz_bn_fit = ppval(equil_fit_pchip.Bz_fit.pp_bn,rho0);
 %
 % Build interpolated magnetic fields
 %	
 [xBx] = calcval_yp(equil_fit_pchip,theta0,Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
 [xBy] = calcval_yp(equil_fit_pchip,theta0,By_a0_fit,By_an_fit,By_bn_fit);
-[xBPHI] = calcval_yp(equil_fit_pchip,theta0,BPHI_a0_fit,BPHI_an_fit,BPHI_bn_fit);
+[xBz] = calcval_yp(equil_fit_pchip,theta0,Bz_a0_fit,Bz_an_fit,Bz_bn_fit);
 %
-xBp = sqrt(xBx.^2 + xBy.^2); 
-xBt = xBPHI; 
-xB = sqrt(xBt.^2 + xBp.^2);
-xBphin = xBt./xB;
+xBp = sqrt(xBx.^2 + xBy.^2);
+xB = sqrt(xBz.^2 + xBp.^2);
+xBzn = xBz./xB;
 %
-Npar0 = Nphi0.*xBphin;
+Npar0 = Nphi0.*xBzn;
 %
 rayinit.omega_rf = omega_rf;
 rayinit.yrho0 = rho0;%Initial radial position at launch
@@ -179,22 +183,21 @@ By_a0_fit = ppval(equil_fit_spline.By_fit.pp_a0,rho0);
 By_an_fit = ppval(equil_fit_spline.By_fit.pp_an,rho0);
 By_bn_fit = ppval(equil_fit_spline.By_fit.pp_bn,rho0);
 %
-BPHI_a0_fit = ppval(equil_fit_spline.BPHI_fit.pp_a0,rho0);
-BPHI_an_fit = ppval(equil_fit_spline.BPHI_fit.pp_an,rho0);
-BPHI_bn_fit = ppval(equil_fit_spline.BPHI_fit.pp_bn,rho0);
+Bz_a0_fit = ppval(equil_fit_spline.Bz_fit.pp_a0,rho0);
+Bz_an_fit = ppval(equil_fit_spline.Bz_fit.pp_an,rho0);
+Bz_bn_fit = ppval(equil_fit_spline.Bz_fit.pp_bn,rho0);
 %
 % Build interpolated magnetic fields
 %	
 [xBx] = calcval_yp(equil_fit_spline,theta0,Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
 [xBy] = calcval_yp(equil_fit_spline,theta0,By_a0_fit,By_an_fit,By_bn_fit);
-[xBPHI] = calcval_yp(equil_fit_spline,theta0,BPHI_a0_fit,BPHI_an_fit,BPHI_bn_fit);
+[xBz] = calcval_yp(equil_fit_spline,theta0,Bz_a0_fit,Bz_an_fit,Bz_bn_fit);
 %
 xBp = sqrt(xBx.^2 + xBy.^2); 
-xBt = xBPHI; 
-xB = sqrt(xBt.^2 + xBp.^2);
-xBphin = xBt./xB;
+xB = sqrt(xBz.^2 + xBp.^2);
+xBzn = xBz./xB;
 %
-Npar0 = Nphi0.*xBphin;
+Npar0 = Nphi0.*xBzn;
 %
 rayinit.omega_rf = omega_rf;
 rayinit.yrho0 = rho0;%Initial radial position at launch
@@ -219,7 +222,7 @@ telapsed_ray_numeric_spline = toc(tstart);
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with spline method)');
 %
 tstart = tic;
-wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip,C3POparam,[],[],flag_analytic);
+wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_analytic,C3POparam,[],[],flag_analytic);
 telapsed_ray_analytic = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');

@@ -1,4 +1,4 @@
-function [R,Z,Npar,Nperp,epol_pmz,phi_xyz,D,Te,ne,zTi,zni,BRHO,BP,BPHI,B,r,salpha,gradrho,pmode,wpe2,wce2] = rayparameters_yp(rayparam,equil_fit,fluct_fit,omega,rho,theta,phi,krho,m,n)
+function [x,y,Npar,Nperp,epol_pmz,phi_xyz,D,Te,ne,zTi,zni,BRHO,BP,Bz,B,r,salpha,gradrho,Upsilon,pmode,wpe2,wce2] = rayparameters_yp(rayparam,equil_fit,fluct_fit,omega,rho,theta,z,krho,m,kz)
 %
 % Calculates ray position, Npar and Nperp 
 %
@@ -8,7 +8,7 @@ function [R,Z,Npar,Nperp,epol_pmz,phi_xyz,D,Te,ne,zTi,zni,BRHO,BP,BPHI,B,r,salph
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
-dRstardpsin_ray = ppval(equil_fit.dxstardpsin_fit.pp_f,rho);
+dxstardpsin_ray = ppval(equil_fit.dxstardpsin_fit.pp_f,rho);
 %
 if isfield(equil_fit,'Te_fit'),Te = ppval(equil_fit.Te_fit.pp_f,rho);else Te = zeros(size(rho));end
 if isfield(equil_fit,'ne_fit'),ne = ppval(equil_fit.ne_fit.pp_f,rho);else ne = zeros(size(rho));end
@@ -34,36 +34,42 @@ By_a0 = ppval(equil_fit.By_fit.pp_a0,rho);
 By_an = ppval(equil_fit.By_fit.pp_an,rho);
 By_bn = ppval(equil_fit.By_fit.pp_bn,rho);
 %
-BPHI_a0 = ppval(equil_fit.BPHI_fit.pp_a0,rho);
-BPHI_an = ppval(equil_fit.BPHI_fit.pp_an,rho);
-BPHI_bn = ppval(equil_fit.BPHI_fit.pp_bn,rho);
+Bz_a0 = ppval(equil_fit.Bz_fit.pp_a0,rho);
+Bz_an = ppval(equil_fit.Bz_fit.pp_an,rho);
+Bz_bn = ppval(equil_fit.Bz_fit.pp_bn,rho);
 %
-R = zeros(length(rho),1);
-Z = zeros(length(rho),1);
-BR = zeros(length(rho),1);
-BZ = zeros(length(rho),1);
-BPHI = zeros(length(rho),1);
-dRdtheta = zeros(length(rho),1);
-dZdtheta = zeros(length(rho),1);
+x = zeros(length(rho),1);
+y = zeros(length(rho),1);
+Bx = zeros(length(rho),1);
+By = zeros(length(rho),1);
+Bz = zeros(length(rho),1);
+dxdtheta = zeros(length(rho),1);
+dydtheta = zeros(length(rho),1);
 %
 for ii = 1:length(rho),
-   R(ii) = Rp + x_a0(ii) + x_an(ii,:)*cos(equil_fit.x_fit.n*theta(ii)) + x_bn(ii,:)*sin(equil_fit.x_fit.n*theta(ii));
-   Z(ii) = Zp + y_a0(ii) + y_an(ii,:)*cos(equil_fit.y_fit.n*theta(ii)) + y_bn(ii,:)*sin(equil_fit.y_fit.n*theta(ii));
-   dRdtheta(ii) = -x_an(ii,:)*(equil_fit.x_fit.n.*sin(equil_fit.x_fit.n*theta(ii))) + x_bn(ii,:)*(equil_fit.x_fit.n.*cos(equil_fit.x_fit.n*theta(ii)));
-   dZdtheta(ii) = -y_an(ii,:)*(equil_fit.y_fit.n.*sin(equil_fit.y_fit.n*theta(ii))) + y_bn(ii,:)*(equil_fit.y_fit.n.*cos(equil_fit.y_fit.n*theta(ii)));   
-   BR(ii) = Bx_a0(ii) + Bx_an(ii,:)*cos(equil_fit.Bx_fit.n*theta(ii)) + Bx_bn(ii,:)*sin(equil_fit.Bx_fit.n*theta(ii));
-   BZ(ii) = By_a0(ii) + By_an(ii,:)*cos(equil_fit.By_fit.n*theta(ii)) + By_bn(ii,:)*sin(equil_fit.By_fit.n*theta(ii));
-   BPHI(ii) = BPHI_a0(ii) + BPHI_an(ii,:)*cos(equil_fit.BPHI_fit.n*theta(ii)) + BPHI_bn(ii,:)*sin(equil_fit.BPHI_fit.n*theta(ii));
+   x(ii) = x_a0(ii) + x_an(ii,:)*cos(equil_fit.x_fit.n*theta(ii)) + x_bn(ii,:)*sin(equil_fit.x_fit.n*theta(ii));
+   y(ii) = y_a0(ii) + y_an(ii,:)*cos(equil_fit.y_fit.n*theta(ii)) + y_bn(ii,:)*sin(equil_fit.y_fit.n*theta(ii));
+   dxdtheta(ii) = -x_an(ii,:)*(equil_fit.x_fit.n.*sin(equil_fit.x_fit.n*theta(ii))) + x_bn(ii,:)*(equil_fit.x_fit.n.*cos(equil_fit.x_fit.n*theta(ii)));
+   dydtheta(ii) = -y_an(ii,:)*(equil_fit.y_fit.n.*sin(equil_fit.y_fit.n*theta(ii))) + y_bn(ii,:)*(equil_fit.y_fit.n.*cos(equil_fit.y_fit.n*theta(ii)));   
+   Bx(ii) = Bx_a0(ii) + Bx_an(ii,:)*cos(equil_fit.Bx_fit.n*theta(ii)) + Bx_bn(ii,:)*sin(equil_fit.Bx_fit.n*theta(ii));
+   By(ii) = By_a0(ii) + By_an(ii,:)*cos(equil_fit.By_fit.n*theta(ii)) + By_bn(ii,:)*sin(equil_fit.By_fit.n*theta(ii));
+   Bz(ii) = Bz_a0(ii) + Bz_an(ii,:)*cos(equil_fit.Bz_fit.n*theta(ii)) + Bz_bn(ii,:)*sin(equil_fit.Bz_fit.n*theta(ii));
 end
 %
-sigmaIp =  sign(-BR(1)*sin(theta(1)) + BZ(1)*cos(theta(1)));%Sign of the plasma current
-BP = sigmaIp.*sqrt(BR.^2 + BZ.^2);
-B = sqrt(BR.^2 + BZ.^2 + BPHI.^2);
+if isinf(equil_fit.Rp),
+    Upsilon = 1.0;
+else
+    Upsilon = 1 + x/equil_fit.Rp;%toroidal factor (1 -> cylindrical limit)
+end
+%
+sigmaIp =  sign(-Bx(1)*sin(theta(1)) + By(1)*cos(theta(1)));%Sign of the plasma current
+BP = sigmaIp.*sqrt(Bx.^2 + By.^2);
+B = sqrt(Bx.^2 + By.^2 + Bz.^2);
 BRHO = zeros(size(BP));
-r = sqrt((R - Rp).^2 + (Z - Zp).^2);
-salpha = ((R - Rp).*dRdtheta + (Z - Zp).*dZdtheta)./r./sqrt(dRdtheta.^2 + dZdtheta.^2);
+r = sqrt(x.^2 + y.^2);
+salpha = (x.*dxdtheta + y.*dydtheta)./r./sqrt(dxdtheta.^2 + dydtheta.^2);
 calpha = sqrt(1.0 - salpha.^2);
-gradrho = R.*BP.*dRstardpsin_ray(:)/abs(equil_fit.psia);
+gradrho = Upsilon.*BP.*dxstardpsin_ray(:)/abs(equil_fit.psia_apRp);
 %
 if exist('fluct_fit'),
     if isstruct(fluct_fit),
@@ -80,9 +86,9 @@ if exist('fluct_fit'),
             %
             BRHO(ii) = BRHO(ii) + B(ii)*(cta*fluctval.Bxr + sta*fluctval.Byr);%normalized to unperturbed magnetic equilibrium
             BP(ii) = BP(ii) + B(ii)*(cta*fluctval.Byr - sta*fluctval.Bxr);%normalized to unperturbed magnetic equilibrium
-            BPHI(ii) = BPHI(ii) + B(ii)*fluctval.Bzr;%normalized to unperturbed magnetic equilibrium
+            Bz(ii) = Bz(ii) + B(ii)*fluctval.Bzr;%normalized to unperturbed magnetic equilibrium
             %
-            B(ii) = sqrt(BRHO(ii).^2 + BP(ii).^2 + BPHI(ii).^2);%perturbed magnetic field
+            B(ii) = sqrt(BRHO(ii).^2 + BP(ii).^2 + Bz(ii).^2);%perturbed magnetic field
             %
         end
        %
@@ -91,8 +97,8 @@ end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
-Npar = clum*(krho.*krho.*gradrho.*gradrho.*BRHO./B./equil_fit.ap^2 + m.*(calpha.*BP./B - salpha.*BRHO./B)./r + n.*BPHI./R./B)./omega;
-Nperp = sqrt(clum*clum*(krho.*krho.*gradrho.*gradrho/equil_fit.ap^2 - 2*krho.*m.*gradrho.*salpha./r/equil_fit.ap + (m./r).^2 + (n./R).^2)./omega./omega - Npar.^2);
+Npar = clum*(krho.*krho.*gradrho.*gradrho.*BRHO./B + m.*(calpha.*BP./B - salpha.*BRHO./B)./r + kz.*Bz./Upsilon./B)./omega;
+Nperp = sqrt(clum*clum*(krho.*krho.*gradrho.*gradrho - 2*krho.*m.*gradrho.*salpha./r + (m./r).^2 + (kz./Upsilon).^2)./omega./omega - Npar.^2);
 %
 D = zeros(length(rho),1);
 pmode = zeros(length(rho),1);
