@@ -214,7 +214,7 @@ for ib = 1:nb,
     ieq = min([ib,neq]);%equil_fit number
     graph1D_jd(abs(rays{ib}.(propfield))/propfac,rays{ib}.sNperp,0,0,'','','',NaN,xlim,ylim,style,marker,colors{rem(ib,ncol)},width2);
 end
-graph1D_jd(abs(rays{nb}.(propfield))/propfac,rays{nb}.sNperp,0,0,proplab,'N_{||}','Perpendicular wave refractive index',NaN,xlim,ylim,style,marker,colors{rem(nb,ncol)},width2,siz,gca,red,lspace,bspace);
+graph1D_jd(abs(rays{nb}.(propfield))/propfac,rays{nb}.sNperp,0,0,proplab,'N_{\perp}','Perpendicular wave refractive index',NaN,xlim,ylim,style,marker,colors{rem(nb,ncol)},width2,siz,gca,red,lspace,bspace);
 print_jd(p_opt,[filename,'_NperpComp']);
 %
 % --- dispersion relation ---
