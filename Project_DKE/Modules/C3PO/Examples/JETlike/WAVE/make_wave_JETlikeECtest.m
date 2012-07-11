@@ -30,24 +30,26 @@ path_equil = '../EQUIL/';%if nothing is specified, the working directory is firs
 %
 % initial ray conditions
 %
-freq_GHz = 90;
+freq_GHz = 110;
 %
 R_L = 5.0;
 Z_L = 0.1;
+phi_L = 0;
 %
 P_L = 1e-6;% [MW] 
 %
 alpha_L = 165;% With respect to R axis
 beta_L = 90;% With respect to Z axis
+%
 dNpar0 = 0.05;%spectral width
 ns = 1000;%discrtization parameter for free space propagation
 method = 'linear';%interpolation method for ray separatrix crossing
 %
 % Display parameters
 %
-C3POdisplay.ray = 0;
+C3POdisplay.ray = 1;
 C3POdisplay.equilibrium = 0;
-C3POdisplay.p_opt = 2;%Printing or saving option of the figures
+C3POdisplay.p_opt = -1;%Printing or saving option of the figures
 C3POdisplay.mdce = 1;%for distributed computing
 %
 % Wave parameters
@@ -83,14 +85,14 @@ fitparam.equil.ngridresample = 1001;%Number of grid points for resampling the ra
 %
 % Global parameters for the ray-tracing
 %
-rayparam.testmode = 0;
+rayparam.testmode = 1;
 rayparam.tensortype = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 50000;
+rayparam.tfinal = 100000;
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
-rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 50000;
+rayparam.tol = 1e-9;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
+rayparam.kmax = 100000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
@@ -107,11 +109,15 @@ launch.omega_rf = [freq_GHz]*2*pi*1e9;%wave angular frequency (rad/s)
 %
 launch.yR_L = R_L;
 launch.yZ_L = Z_L;
-launch.yphi_L = 0;
+launch.yphi_L = phi_L;
+%
 launch.yalpha_L = alpha_L*pi/180;
 launch.ybeta_L = beta_L*pi/180;
+%
 launch.yP_L = P_L*1e6;
+%
 launch.dNpar0 = dNpar0;
+%
 launch.ns = ns;
 launch.method = method;
 %
@@ -151,19 +157,4 @@ save(save_str,'id_wave','wave_numeric');
 info_dke_yp(2,'Wave parameters saved');
 %
 disp(['Elapsed time (s):',num2str(telapsed_ray_numeric),' for ray calculations (PCHIP interp. technique)']);
-%
-% --- display results ---
-%
-rays = {wave_numeric.rays{1}};
-%
-legs = {'Numeric'};
-%
-filename = ['Fig_',id_wave];
-%
-opt.p_opt = C3POdisplay.p_opt;
-opt.ntheta_fit = 65;
-opt.nrho_fit = 15;
-opt.propvar = 1;   
-%
-graph_comp_RT_jd(rays,legs,'',filename,opt)
 %
