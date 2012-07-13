@@ -30,9 +30,6 @@ end
 rayinit.yNpar0 = rayinit.yNpar0(iray);
 rayinit.ydNpar0 = rayinit.ydNpar0(iray);
 rayinit.yP0_2piRp = rayinit.yP0_2piRp(iray);
-
-
-
 %
 tau_lim_init = rayparam.tau_lim;%Initial optical depth limit
 kmode = waveparam.kmode;
@@ -209,8 +206,11 @@ for iref = 1:nref + 1,% vessel reflection index
             rays{irayref}.swpe2 = [rays{irayref}.swpe2,swpe2];%Normalized electron plasma frequency
             rays{irayref}.swce2 = [rays{irayref}.swce2,swce2];%Normalized electron gyro frequency
             %
-			if iref <= nref && yout(end,1) > 1 - 2*rayparam.dS,% ray reaches edge before full absorption and a reflection is enforced
+			if iref <= nref && yout(end,1) > 1 - 2*rayparam.dS && ~isinf(equil.Rp),% ray reaches edge before full absorption and a reflection is enforced (toroidal case only)
 				%
+                sR = sx + equil.Rp;
+                sZ = sy + equil.Zp;
+                %
 				R_end = sR(end); 
 				phi_end = sphi(end);
 				Z_end = sZ(end);		
