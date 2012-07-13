@@ -28,8 +28,8 @@ time_interp = 1;%nearest point
 %
 % Remote computing options
 %
-remotename = 'macproyves';%''
-debug_mode = 0;%set to 1 in case of problem
+remotename = '';%''
+debug_mode = 1;%set to 1 in case of problem
 %
 % Save euitm structures in mat-files
 %
@@ -153,11 +153,11 @@ for it = 1:length(timeslice),
 	%
 	for iw = 1:length(launchs),
         %
-        [sysh,sysZ,syR,syZ,syphi,syalpha,sybeta,sygR,sygZ,sygphi] = raypath_prop_jd(launchs{iw}.yR_L,launchs{iw}.yZ_L,launchs{iw}.yphi_L,launchs{iw}.yalpha_L,launchs{iw}.ybeta_L,linspace(0,10,1000));
+        %[sysh,sysZ,syR,syZ,syphi,syalpha,sybeta,sygR,sygZ,sygphi] = raypath_prop_jd(launchs{iw}.yR_L,launchs{iw}.yZ_L,launchs{iw}.yphi_L,launchs{iw}.yalpha_L,launchs{iw}.ybeta_L,linspace(0,10,1000));
         %
-        equilibrium_jd(equil,'',3);
-        hold on
-        graph1D_jd(syR-equil.Rp,syZ-equil.Zp,0,0,'','','',NaN,'','','-','non','k',2);%plot ray trajectory  
+        %equilibrium_jd(equil,'',3);
+        %hold on
+        %graph1D_jd(syR-equil.Rp,syZ-equil.Zp,0,0,'','','',NaN,'','','-','non','k',2);%plot ray trajectory  
         %
         % Generic parameters for EC wave calculations
         %
