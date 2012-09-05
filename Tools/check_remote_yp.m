@@ -41,30 +41,57 @@ iremote_min = 1;
 iremote_max = length(dkepath.remote);
 %
 if ~isempty(clustername),
+    %
+    scheduler = clustername([strfind(clustername,':')+1:end]);%for multiple schedulers on the same cluster
+    %
+    if isempty(scheduler),%search default local scheduler (xgrid or condor)
+        if iscell(dkepath.remote(1).cmd)
+            scheduler = dkepath.remote(1).cmd{1};
+        else
+            scheduler = dkepath.remote(1).cmd;
+        end
+        %
+        if strfind(scheduler,'condor'),scheduler='condor';end
+        if strfind(scheduler,'xgrid'),scheduler='xgrid';end
+        if strfind(scheduler,'qsub'),scheduler='pbs';end
+    else
+        clustername = clustername([1:strfind(clustername,':')-1]);
+    end
+    %
     if strcmp(clustername,'local'),
         iremote_min = 1;
         iremote_max = 1;
-        remote = dkepath.remote(1);%first substructure is always correpsonding to the local cluster (or computer)
+        remote = dkepath.remote(1);%first substructure is always corresponding to the local cluster (or computer)
     else
         if isfield(dkepath.remote,'cluster'), 
             for iremote = 1:length(dkepath.remote),
                 clustername0 = dkepath.remote(iremote).cluster;
                 if ~isempty(clustername0)
                     if ~isempty(strfind(clustername0,clustername)),
-                        iremote_min = iremote;
-                        iremote_max = iremote;
-                        flag_remote = 1;
-                        remote = dkepath.remote(iremote);
-                        break
+                        scheduler_flag = strfind(dkepath.remote(iremote).cmd,scheduler);
+                        for isc = 1:length(scheduler_flag),
+                            if ~isempty(scheduler_flag{isc}),                     
+                                iremote_min = iremote;
+                                iremote_max = iremote;
+                                flag_remote = 1;
+                                remote = dkepath.remote(iremote);
+                                break
+                            end
+                        end
                     end
                 else
                     clustername0 = dkepath.remote(iremote).host{1};%look if the cluster name is in the hostname
                     if ~isempty(strfind(clustername0,clustername)),
-                        iremote_min = iremote;
-                        iremote_max = iremote;
-                        flag_remote = 1;
-                        remote = dkepath.remote(iremote);
-                        break
+                        scheduler_flag = strfind(dkepath.remote(iremote).cmd,scheduler);
+                        for isc = 1:length(scheduler_flag),
+                            if ~isempty(scheduler_flag{isc}),  
+                                iremote_min = iremote;
+                                iremote_max = iremote;
+                                flag_remote = 1;
+                                remote = dkepath.remote(iremote);
+                                break
+                            end
+                        end
                     end                     
                 end
             end
@@ -72,17 +99,22 @@ if ~isempty(clustername),
             for iremote = 1:length(dkepath.remote),
                 clustername0 = dkepath.remote(iremote).host{1};%look if the cluster name is in the hostname
                 if ~isempty(strfind(clustername0,clustername)),
-                    iremote_min = iremote;
-                    iremote_max = iremote;
-                    flag_remote = 1;
-                    remote = dkepath.remote(iremote);
-                    break
+                    scheduler_flag = strfind(dkepath.remote(iremote).cmd,scheduler);
+                    for isc = 1:length(scheduler_flag),
+                    	if ~isempty(scheduler_flag{isc}),
+                            iremote_min = iremote;
+                            iremote_max = iremote;
+                            flag_remote = 1;
+                            remote = dkepath.remote(iremote);
+                            break
+                        end
+                    end
                 end
             end
         end
         %
         if ~flag_remote,%error on the name of the remote computer
-            info_dke_yp(7,['The remote computer ''',clustername,''' is NOT is the list (see the path script called by make_path_LOCAL.m).'],'','Red');
+            info_dke_yp(7,['The remote computer ''',clustername,''' with scheduler ''',scheduler,''' is NOT is the list (see the path script for ''',clustername,''' called by make_path_LOCAL.m).'],'','Red');
             remote = [];
             %
             disp('------------------------------------------------------');

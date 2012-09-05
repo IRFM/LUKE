@@ -41,14 +41,19 @@ timeid = timeid_jd(clock);
 %
 remotecmd = remote.cmd;
 xgridsearch = strfind(remotecmd,'xgrid');
+if isempty(xgridsearch), xgridsearch = {'',''};end
+condorsearch = strfind(remotecmd,'condor');
+if isempty(condorsearch), condorsearch = {'',''};end
 %
 remotehost = remote.host;
 remoteluke_root = remote.luke_root;
 remotefields = fieldnames(remote);
 remotepassword = remote.password;
 %
-if ~isempty(xgridsearch),
+if sum(~cellfun('isempty',xgridsearch)),
     user_root = ['/Users/',remote.(remotefields{end}),'/xgrid/'];
+elseif sum(~cellfun('isempty',condorsearch)),
+    user_root = ['/Users/',remote.(remotefields{end}),'/condor/'];
 end
 %
 remotemem = '';
@@ -61,6 +66,11 @@ if isfield(remote,'mem'),% memory allocation if applicable
         end
     end
 end
+%
+if isfield(remote,'path'),% memory allocation if applicable
+	remotepath = remote.path;
+end
+%
 remoteget_jobid = remote.get_jobid;
 %
 [res,logname] = unix('whoami');
@@ -85,14 +95,19 @@ save(save_id,'id_simul','wavestructs','waves','dkeparam','dkepath','equil','dked
 %
 if ~isempty(remotehost),
     %
-    if ~isempty(xgridsearch),
+    if sum(~cellfun('isempty',xgridsearch)),
         disp(['    --> Copying run and batch files to remote host ',remotehost{1},' as user ',remotelogname,' ...'])
         %
         [res,err] = unix(['scp -q ',save_id,' ',remotelogname,'@',remotehost{1},':xgrid']);
+    elseif sum(~cellfun('isempty',condorsearch)),
+        %
+        disp(['    --> Copying run and batch files to remote host ',remotehost{1},' as user ',remotelogname,' ...'])
+        %
+        [res,err] = unix(['scp -q ',save_id,' ',remotelogname,'@',remotehost{1},':condor']);        
     else
         disp(['    --> Copying run file to remote host ',remotehost{1},' as user ',remotelogname,' ...'])
-    %
-    [res,err] = unix(['scp -q ',save_id,' ',remotelogname,'@',remotehost{1},':']);
+        %
+        [res,err] = unix(['scp -q ',save_id,' ',remotelogname,'@',remotehost{1},':']);
     end
     %
     if ~debugmode,
@@ -105,7 +120,7 @@ if ~isempty(remotehost),
         error(['File transfer failed : ',err])
     end
     %
-    if ~isempty(xgridsearch),
+    if sum(~cellfun('isempty',xgridsearch)),
         batch_id = xgrid_batch2xml_yp(timeid,remote.luke_root,id_simul,remote.(remotefields{end}),remote.matlabroot,remote.prefdir,remote.luke_root,'mrunluke_batch_xgrid.sh',user_root,remote_localhost);
         %
         [res_batch,err_batch] = unix(['scp -q ',batch_id,' ',remotelogname,'@',remotehost{1},':xgrid']);
@@ -119,24 +134,46 @@ if ~isempty(remotehost),
         if res_batch ~= 0,
             error(['Batch file transfer failed : ',err_batch])
         end    
+    elseif sum(~cellfun('isempty',condorsearch)),
+        batch_id = condor_batchscript_yp(timeid,remote.home,remote.luke_root,remote.matlabroot,debugmode);
+        %
+        [res_batch,err_batch] = unix(['scp -q ',batch_id,' ',remotelogname,'@',remotehost{1},':condor']);
+        %
+        if ~debugmode,
+            delete(batch_id);
+        else
+            info_dke_yp(6,['The files ',batch_id,' is not deleted.'],'','Red');
+        end
+        %
+        if res_batch ~= 0,
+            error(['Batch file transfer failed : ',err_batch])
+        end        
     end
     %
     disp(' ... done');
     %
 end
 %
-if ~isempty(xgridsearch),
+if sum(~cellfun('isempty',xgridsearch)),
     disp(['    --> Starting run with command ',remotecmd{1},remote_localhost,remotecmd{2},'******',remotecmd{3},user_root,remotecmd{4},' ...'])
+elseif sum(~cellfun('isempty',condorsearch)),
+    disp(['    --> Starting run with command ',remotecmd{1},' ...'])
 else
     disp(['    --> Starting run with command ',remotecmd,' ...'])
 end
 %
 if ~isempty(remotehost),
     %
-    if ~isempty(xgridsearch),
+    if sum(~cellfun('isempty',xgridsearch)),
         [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''',remotecmd{1},remote_localhost,remotecmd{2},remotepassword{1},remotecmd{3},user_root,remotecmd{4},timeid,'.plist''']);%execute xgrid job
         %
         [res_clean_batch,err_clean_batch] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''rm ',user_root,remotecmd{4},timeid,'.plist''']);%remove plist file             
+        %
+        if res_clean_batch,disp(err_clean_batch);end
+    elseif sum(~cellfun('isempty',condorsearch)),
+        [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''export LUKE_matlabroot=',remote.matlabroot,';export LUKE_path=',remote.luke_root,';export ',remotepath{1},'=',remotepath{2},';',remotepath{3},'=',remotepath{4},':${',remotepath{3},'};export ',remotepath{3},';',remotecmd{1},user_root,remotecmd{2},timeid,'.condor -v''']);%execute condor job
+        %
+        [res_clean_batch,err_clean_batch] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''rm ',user_root,remotecmd{2},timeid,'.condor''']);%remove condor batch file             
         %
         if res_clean_batch,disp(err_clean_batch);end
     else

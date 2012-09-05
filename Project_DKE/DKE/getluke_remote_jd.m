@@ -8,7 +8,15 @@ output = '';
 %
 remoteset_jobid = remote.set_jobid;
 remotecmd = remote.cmd;
-xgridsearch = strfind(remotecmd,'xgrid');
+if isfield(remote,'path'),
+    remotepath = remote.path;
+else
+    remotepath = '';
+end
+xgridsearch = strfind(remotecmd,'xgrid');%Xgrid scheduler
+condorsearch = strfind(remotecmd,'condor');%CONDOR scheduler
+if isempty(xgridsearch), xgridsearch = {'',''};end
+if isempty(condorsearch), condorsearch = {'',''};end
 %
 [res,localhost] = unix('hostname');
 localhost = localhost(1:end-1);
@@ -17,7 +25,7 @@ remoteluke_root = remote.luke_root;
 remotefields = fieldnames(remote);
 remotepassword = remote.password{1};
 %
-if ~isempty(xgridsearch),
+if sum(~cellfun('isempty',xgridsearch)),
     user_root = ['/Users/',remote.(remotefields{end}),'/xgrid/'];
     local_user_root = [getenv('HOME'),'/xgrid'];
     %
@@ -26,6 +34,9 @@ if ~isempty(xgridsearch),
         pause(0.1)
     end
     %
+elseif sum(~cellfun('isempty',condorsearch)),
+    user_root = ['/Users/',remote.(remotefields{end}),'/condor/'];
+    local_user_root = [getenv('HOME'),'/condor'];
 end
 %
 logname = getenv('USER');
@@ -43,7 +54,7 @@ load_id = ['LUKE_OUT_',remotelogname,'_',timeid,'.mat'];
 %
 if ~isempty(remotehost),
     %
-    if ~isempty(xgridsearch),
+    if sum(~cellfun('isempty',xgridsearch)),,
         if debugmode,%debug mode in case of problem
             [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' mkdir ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'''']);
             [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},remote_localhost,remotecmd{2},remotepassword,remoteset_jobid{6},jobid,' -se ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'/','error_file',' -so ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'/','output_file -out''']);
@@ -52,6 +63,9 @@ if ~isempty(remotehost),
         end
         %
         [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},remote_localhost,remotecmd{2},remotepassword,remoteset_jobid{2},jobid,'''']);
+    elseif sum(~cellfun('isempty',condorsearch)),   
+        [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''export LUKE_matlabroot=',remote.matlabroot,';export LUKE_path=',remote.luke_root,';export ',remotepath{1},'=',remotepath{2},';',remotepath{3},'=',remotepath{4},':${',remotepath{3},'};export ',remotepath{3},';',remoteset_jobid{1},jobid,'''']); 
+         txt1 = txt;
     else
         [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},jobid,remoteset_jobid{2},'''']);
     end
@@ -65,7 +79,7 @@ end
 %
 txt(double(txt) == 10) = [];
 %
-if ~isempty(xgridsearch),
+if sum(~cellfun('isempty',xgridsearch)),
     if ~isempty(strfind(txt,remoteset_jobid{3})), % job still running
         return
     elseif ~isempty(strfind(txt,remoteset_jobid{4})), % job pending
@@ -76,7 +90,23 @@ if ~isempty(xgridsearch),
             return
         end
     end
-    
+elseif sum(~cellfun('isempty',condorsearch)),
+    i_job = strfind(txt,jobid);
+    i_running = strfind(txt(i_job:end),'R');
+    i_pending = strfind(txt(i_job:end),'I');
+    i_hold = strfind(txt(i_job:end),'H');
+    i_err = strfind(txt(i_job:end),'E');
+    i_unknown = strfind(txt(i_job:end),'U');
+    i_removed = strfind(txt(i_job:end),'X');
+    %
+    if ~isempty(i_job),
+        if ~isempty(i_running),return;end
+        if ~isempty(i_pending),return;end
+        if ~isempty(i_hold) || ~isempty(i_err) || ~isempty(i_unknown) || ~isempty(i_removed),% job has a problem   
+            disp(['Remote run check failed : \n',txt1]);
+            return
+        end
+    end
 else
     if res == 0,% job still running
         %
@@ -95,7 +125,7 @@ end
 % pause(30)% to make sure the file is completely saved by LUKE
 %
 if ~isempty(remotehost),
-    if ~isempty(xgridsearch),
+    if sum(~cellfun('isempty',xgridsearch)),
         %
         disp(['    --> Local transfer of output files from remote host ',remotehost{1},' as user ',remotelogname,' ...'])  
         [res_mkdir,err_mkdir] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' mkdir ',user_root,'xgrid_job_',jobid,'''']);
@@ -127,7 +157,18 @@ if ~isempty(remotehost),
         else
             disp(['Output folder creation failed : ',err_mkdir]);
             return
-        end   
+        end
+    elseif sum(~cellfun('isempty',condorsearch)),
+        %
+        disp(['    --> Local transfer of output files from remote host ',remotehost{1},' as user ',remotelogname,' ...'])  
+        %
+        [res_copy,err_copy] = unix(['scp -q ',remotelogname,'@',remotehost{1},':',user_root,load_id,' ./']);
+        pause(0.1)
+        %
+        if res_copy,
+            disp(['File transfer failed : ',err_copy]);
+            return
+        end                    
     else
         %
         disp(['    --> Copying output file from remote host ',remotehost{1},' as user ',remotelogname,' ...'])  
@@ -194,7 +235,7 @@ else
     delete(load_id);
     disp(' ... done'); 
     %
-    if ~isempty(xgridsearch),
+    if sum(~cellfun('isempty',xgridsearch)),,
         %
         disp(['    --> Deleting remote folder ',user_root,'xgrid_job_',jobid,' ...']);
         %
@@ -216,7 +257,20 @@ else
         else
             disp(' ... done'); 
         end
-        %  
+        % 
+    elseif sum(~cellfun('isempty',condorsearch)),
+        %
+        disp(['    --> Deleting remote file ',user_root,load_id,' ...']);
+        %
+        [res_clean_out,err_clean_out] = unix(['ssh ',remotelogname,'@',remotehost{1},' ''rm ',user_root,load_id,'''']);
+        pause(0.1)
+        %
+        if res_clean_out,
+            disp(err_clean_out);
+        else
+            disp(' ... done'); 
+        end
+        %       
     end
 end
 %
