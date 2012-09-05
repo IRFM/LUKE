@@ -1,14 +1,33 @@
-function runluke(timeid)
+function runluke(timeid,debugmode)
 %
 try
     %
     if nargin == 0,
         timeid = getenv('LUKE_timeid');
-    end  
+    else
+        stimeid = whos('timeid');
+        if ~strcmp(stimeid.class,'char'),
+            timeid = int2str(timeid);
+        end
+    end
+    %
+    if nargin < 2,debugmode = 0;end
     %
     datapath = getenv('LUKE_datapath');
     xgridmode = getenv('LUKE_xgrid');
     logname = getenv('USER');
+    %
+    if debugmode,
+        filediary = ['matlab_diary.',timeid];
+        diary(filediary);
+        %
+        disp('-------- in runluke.m --------');
+        disp(['datapath = ',datapath]);
+        disp(['xgridmode = ',xgridmode]);
+        disp(['logname = ',logname]);
+        disp(['timeid = ',timeid]);
+        disp('------------------------------');
+    end
     %
     filein = [datapath,'LUKE_RUN_',logname,'_',timeid,'.mat'];
     %
