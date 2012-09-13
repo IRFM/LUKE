@@ -80,11 +80,13 @@ function varargout = dcluke(dkecluster,entree1,varargin)
     %
     dcluke_display = dkecluster.display;
     workdir  = dkecluster.temppath;
-    %    
+    %   
     if iscell(dkecluster.cmd),
         xgridsearch = strfind(dkecluster.cmd{1},'xgrid');%find if the xgrid task scheduler is used (mac,...)
+        condorsearch = strfind(dkecluster.cmd{1},'condor');%find if the condor task scheduler is used (mac,...)
     else
         xgridsearch = '';
+        condorsearch = '';
     end
     %
     % donnees
@@ -203,6 +205,12 @@ function varargout = dcluke(dkecluster,entree1,varargin)
             %
             [s,t] = unix([dkecluster.cmd{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.cmd{3},workdir,dkecluster.cmd{4},int2str(current),'.plist']);%execute xgrid job  
             %
+        elseif ~isempty(condorsearch),
+            batch_id = condor_batchscript_yp(int2str(current),workdir,dkecluster.luke_root,dkecluster.matlabroot,1);
+            [s,t] = unix(['scp ',batch_id,' ',workdir,batch_id]);
+            delete(batch_id);
+            %
+            [s,t] = unix(['export LUKE_matlabroot=',dkecluster.matlabroot,';export LUKE_path=',dkecluster.luke_root,';export ',dkecluster.path{1},'=',dkecluster.path{2},';',dkecluster.path{3},'=',dkecluster.path{4},':${',dkecluster.path{3},'};export ',dkecluster.path{3},';',dkecluster.cmd{1},workdir,dkecluster.cmd{2},int2str(current),'.condor -v']);%execute condor job
         else
             script = which('dcluke.exe');
             if ischar(dkecluster.cmd),
@@ -276,6 +284,9 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                 if ~isempty(xgridsearch), 
                     [s,t] = unix([dkecluster.set_jobid{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.set_jobid{10},ba(entree1).jobid]);        
                     if dcluke_display && ~s,disp(['    --> xgrid job id #',ba(entree1).jobid,' is deleted.']);end
+                elseif ~isempty(condorsearch),
+                    [s,t] = unix(['export LUKE_matlabroot=',dkecluster.matlabroot,';export LUKE_path=',dkecluster.luke_root,';export ',dkecluster.path{1},'=',dkecluster.path{2},';',dkecluster.path{3},'=',dkecluster.path{4},':${',dkecluster.path{3},'};export ',dkecluster.path{3},';condor_rm ',ba(entree1).jobid]); 
+                    if dcluke_display && ~s,disp(['    --> condor job id #',ba(entree1).jobid,' is deleted.']);end
                 end
                 %
                 if ba(entree1).etat_sortie == 1
@@ -328,6 +339,8 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                     case 'running';
                         if ~isempty(xgridsearch), 
                             [s,t] = unix([dkecluster.set_jobid{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.set_jobid{10},ba(k).jobid]);        
+                        elseif ~isempty(condorsearch), 
+                            [s,t] = unix(['export LUKE_matlabroot=',dkecluster.matlabroot,';export LUKE_path=',dkecluster.luke_root,';export ',dkecluster.path{1},'=',dkecluster.path{2},';',dkecluster.path{3},'=',dkecluster.path{4},':${',dkecluster.path{3},'};export ',dkecluster.path{3},';condor_rm ',ba(k).jobid]); 
                         else
                             [s,t] = unix(['qdel ',dkecluster.set_jobid{1},ba(k).jobid,dkecluster.set_jobid{2}]);
                         end
@@ -361,7 +374,9 @@ function varargout = dcluke(dkecluster,entree1,varargin)
                 case 'running'
                     if ~isempty(xgridsearch),
                         [s,t] = unix([dkecluster.set_jobid{1},hostname(1:end-1),dkecluster.cmd{2},dkecluster.password{1},dkecluster.set_jobid{10},ba(k).jobid]);        
-                    else
+                    elseif ~isempty(condorsearch),
+                        [s,t] = unix(['export LUKE_matlabroot=',dkecluster.matlabroot,';export LUKE_path=',dkecluster.luke_root,';export ',dkecluster.path{1},'=',dkecluster.path{2},';',dkecluster.path{3},'=',dkecluster.path{4},':${',dkecluster.path{3},'};export ',dkecluster.path{3},';condor_rm ',ba(k).jobid]);  
+                    else 
                         [s,t] = unix(['qdel ',dkecluster.set_jobid{1},ba(entree1).jobid,dkecluster.set_jobid{2}]);
                     end
                     if s == 0
@@ -417,8 +432,10 @@ function etat = etat_maj(jobid,dkecluster)
     %
     if iscell(dkecluster.cmd),
         xgridsearch = strfind(dkecluster.set_jobid{1},'xgrid');%find if the xgrid task scheduler is used (mac,...)
+        condorsearch = strfind(dkecluster.set_jobid{1},'condor');%find if the condor task scheduler is used (mac,...)
     else
         xgridsearch = '';
+        condorsearch = '';
     end
     %
     if ~isempty(xgridsearch),
@@ -432,7 +449,26 @@ function etat = etat_maj(jobid,dkecluster)
             etat ='pending';
         else
             etat ='done';
-        end              
+        end
+    elseif ~isempty(condorsearch),
+        [s,t] = unix(['export LUKE_matlabroot=',dkecluster.matlabroot,';export LUKE_path=',dkecluster.luke_root,';export ',dkecluster.path{1},'=',dkecluster.path{2},';',dkecluster.path{3},'=',dkecluster.path{4},':${',dkecluster.path{3},'};export ',dkecluster.path{3},';',dkecluster.set_jobid{1},jobid]); 
+        %
+        t(double(t) == 10) = [];
+        %
+        i_job = strfind(t,jobid);
+        i_running = strfind(t(i_job:end),'R');
+        i_pending = strfind(t(i_job:end),'I');
+        i_hold = strfind(t(i_job:end),'H');
+        i_err = strfind(t(i_job:end),'E');
+        i_unknown = strfind(t(i_job:end),'U');
+        i_removed = strfind(t(i_job:end),'X');
+        %
+        etat ='done';
+        %
+        if ~isempty(i_job),
+            if ~isempty(i_running),etat ='running';end
+            if ~isempty(i_pending),etat ='pending';end
+        end    
     else
         [s,t] = unix([dkecluster.set_jobid{1},jobid,dkecluster.set_jobid{2}]);
         t(double(t) == 10) = [];
