@@ -51,9 +51,9 @@ remotefields = fieldnames(remote);
 remotepassword = remote.password;
 %
 if sum(~cellfun('isempty',xgridsearch)),
-    user_root = ['/Users/',remote.(remotefields{end}),'/xgrid/'];
+    user_root = remote.home;
 elseif sum(~cellfun('isempty',condorsearch)),
-    user_root = ['/Users/',remote.(remotefields{end}),'/condor/'];
+    user_root = remote.home;
 end
 %
 remotemem = '';
@@ -135,7 +135,7 @@ if ~isempty(remotehost),
             error(['Batch file transfer failed : ',err_batch])
         end    
     elseif sum(~cellfun('isempty',condorsearch)),
-        batch_id = condor_batchscript_yp(timeid,remote.home,remote.luke_root,remote.matlabroot,debugmode);
+        batch_id = condor_batchscript_yp(timeid,user_root,remote.luke_root,remote.matlabroot,'',debugmode);
         %
         [res_batch,err_batch] = unix(['scp -q ',batch_id,' ',remotelogname,'@',remotehost{1},':condor']);
         %
