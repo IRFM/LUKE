@@ -34,24 +34,28 @@ tic,[e1,e2,e3] = fundcluke(pi/3);toc
 disp('Calculations in the sequential computing mode done.');
 %
 disp('---------------------------------');
-disp('Results: (sequential,distributed)');
+disp('Results: (sequential : distributed)');
 disp('---------------------------------');
 %
 e1_out = e1;
 e2_out = e2;
 e3_out = e3;
 %
+e1_out = [num2str(e1_out),' :'];
+e2_out = [num2str(e2_out),' :'];
+e3_out = [num2str(e3_out),' :'];
+%
 for irun = 1:nrun,
     if dkecluster.scheduler.mode == 2,
-        e1_out = [e1_out,e1_d(irun)];
-        e2_out = [e2_out,e2_d(irun)];
-        e3_out = [e3_out,e3_d(irun)];
+        e1_out = [e1_out,' ',num2str(e1_d(irun))];
+        e2_out = [e2_out,' ',num2str(e2_d(irun))];
+        e3_out = [e3_out,' ',num2str(e3_d(irun))];
        
     else
-        e1_out = [e1_out,NaN];
-        e2_out = [e2_out,NaN];
-        e3_out = [e3_out,NaN];
+        e1_out = [e1_out,' NaN'];
+        e2_out = [e2_out,' NaN'];
+        e3_out = [e3_out,' NaN'];
     end
 end
 %
- [e1_out;e2_out;e3_out]
+[e1_out;e2_out;e3_out]
