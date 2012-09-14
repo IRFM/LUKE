@@ -73,7 +73,11 @@ transpfaste.pVr = 0;%Coefficient for the Vr radial profile
 transpfaste.vparmin = 3.5;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
 transpfaste.norm_ref = 1;%Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref
 %
-lukeparam.luke_mode = 0;% (0) run LUKE, (1) run LUKE then save output (2) save input then exit
+if isfield(option,'luke_mode'),
+    lukeparam.luke_mode = option.luke_mode;% (0) run LUKE, (1) run LUKE then save output (2) save input then exit
+else  
+    lukeparam.luke_mode = 0;% (0) run LUKE, (1) run LUKE then save output (2) save input then exit
+end
 lukeparam.batch_mode = 1;% (0) rum LUKE in interactive mode, (1) run LUKE in batch mode
 %
 lukeparam.display_mode = 0;
