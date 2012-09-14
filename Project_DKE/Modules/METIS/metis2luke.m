@@ -69,11 +69,6 @@ else
     geo = structindex(geo,ntcons,itcons);
 end
 %
-% LUKE path structure
-%
-dkepath = getappdata(0,'DKEPATH');
-dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
-%
 % LUKE parameters structure
 %
 lukeparam = make_lukeparam_metis2luke(cons,option,auto_mode);
@@ -166,6 +161,11 @@ if lukeparam.luke_mode == 2,% save input then exit
     return
     %
 end
+%
+% LUKE path structure
+%
+dkepath = getappdata(0,'DKEPATH');
+dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
 %
 % RUN LUKE with RF waves
 %
