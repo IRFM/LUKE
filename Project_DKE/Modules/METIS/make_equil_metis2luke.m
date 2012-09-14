@@ -121,6 +121,14 @@ equil.pzTi = ones(length(equil.zZi),1)*profil0d.tip/1e3;
 %
 [equil.pshift,equil.pelong,equil.ptrian,equil.pli] = equilmoments_jd(equil.theta,equil.ptx,equil.pty);
 %
+equil.ip = zerod.ip;% plasma current in A
+equil.iohm = zerod.iohm;% ohmic current in A
+equil.iboot = zerod.iboot;% bootstrap current in A
+%
+% modify after error correction in METIS
+%
+equil.icd = zerod.ipar - zerod.iohm - equil.iboot;% zerod.icd;% zerod.ini - equil.iboot;
+%
 if equilparam.comp,
     %
     leg = {'METIS - orig.','METIS - interp.','LUKE'};
