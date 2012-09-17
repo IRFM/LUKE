@@ -28,7 +28,8 @@ if exist(['helmex77.',mexext]) == 3,
 	lim_bottom = atan(0.5*xpoint(5)/(1-xpoint(6)))*180/pi;%In order to avoid convergence problem in separatrix MEX file
 	if xpoint(8) > lim_bottom,xpoint(8) = lim_bottom - 0.1;end
 %
-    [x1,y1] = separatrice(xpoint,1);%The LCS is approximated by four ellipses (mode = 1)
+	[x1,y1] = separatrice(xpoint,1);%The LCS is approximated by four ellipses (mode = 1)
+
 	rr = x1*ap;
 	zz = y1*ap;
 	alpha  = unwrap(angle(rr+ i .* zz));%poloidal angle
@@ -66,13 +67,12 @@ if exist(['helmex77.',mexext]) == 3,
 %and the plasma current must be positive for helmex77 so that the current
 %output is correctly normalized
 %
-keyboard
  	[C2,C3,rho2m,R,Zout,rho,Vp,drhoor,qpsi,ppsi,ftra,Fdia,psiT,B2,invB2,Sp, ...
 			rav,oor,drhoav,xshift,xrad,xell,xtriapos,xtrianeg,jout,ipout,pout, ...
 			r2,oor2,r2tau2,drho2ob2,r3otau3,r3otau,BR,BZ,b,df2,dpr,kkbig,li, ...
 			dimerc,drmerc,balcrit,frmode,ifail,nchi,cpsurf,radius,gem11,gem12,gem33,rspot,zspot,brspot,bzspot]= ...
-			helmex77(abs(ppsi_in),ptot_in,pj_in,Rp_in,abs(Bt_in),abs(Ip_in)*1e6,2,ap_in,0,0,0,R_in,Z_in,init,0,0*ppsi_in,0,2);
- %
+			helmex77(abs(ppsi_in),ptot_in,pj_in,Rp_in,abs(Bt_in),abs(Ip_in)*1e6,2,ap_in,0,0,0,R_in,Z_in,init,0,0*ppsi_in,[],2);
+%
 	[qe,me,mp,mn,e0,mu0] = pc_dke_yp;
 	Ip_helmex = ipout.* max(xrad).*abs(Bt_in)/mu0*1e-6*sign(Ip_in);%For test only (MA)
 %	  
@@ -144,13 +144,7 @@ keyboard
     pp = pout;%pressure given by HELENA
 %
 else
-	warning(['The mexfile helmex77.',mexext,' does not exists ! Compile it for the computer you are using...']);
-	%
-	equil_magnetic = '';
-	prho = '';
-	pspsin = '';
-	pspsinT = '';
-	pp  = '';
+	error(['The mexfile helmex77.',mexext,' does not exists ! Compile it for the computer you are using...']);
 end
 
 

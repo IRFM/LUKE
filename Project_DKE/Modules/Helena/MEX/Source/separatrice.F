@@ -25,12 +25,12 @@ c pointeurs et tailles
    
       mwPointer geom_pr,mode_pr,x_pr,y_pr
       integer ifail
-      real*8 mode,geom(8),x(500),y(500)
+      real*8 mode,geom(8),x(125*4),y(125*4)
 
-      mwSize mat1,mat8,mat500
-      parameter (mat1=1) 
+      integer mat1,mat8,mat500
+      parameter (mat1=1)
       parameter (mat8=8)
-      parameter (mat500=500)
+      parameter (mat500=125*4)
 
       data pi/3.141592653589793/
       data two/2./,one/1./,rho/1./ 
@@ -41,10 +41,10 @@ c     & rkappax2/2.001/,ptdeltax2/0.568/,psip2dg/22.46/,psim2dg/67.92/
 C---------------------------------------------------------------------
 C GESTION DES ENTREES     
 C entree
-c      write(*,*) 'debut separatrice'
+      write(*,*) 'debut separatrice'
       geom_pr = mxGetPr(prhs(1))
       call mxCopyPtrToReal8(geom_pr,geom,mat8)
- 
+
       rkappax1  = geom(1)
       ptdeltax1 = geom(2)
       psip1dg   = geom(3)
@@ -57,6 +57,7 @@ C mode de calcul
       mode_pr = mxGetPr(prhs(2))
       call mxCopyPtrToReal8(mode_pr,mode,mat1)
 
+
 c Initializing geometrical parameters
       psimoins1=psim1dg*pi/180.
       psiplus1=psip1dg*pi/180.
@@ -68,11 +69,10 @@ c      write(*,*) 'tmoins1 = ',tmoins1,' tmoins2 =',tmoins2
       tplus1=tan(psiplus1)*(1.+ptdeltax1)/rkappax1
       tplus2=tan(psiplus2)*(1.+ptdeltax2)/rkappax2
 c      write(*,*) 'tplus1 = ',tplus1,' tplus2 =',tplus2
-
 c      
 c Activer manuellement la bonne partie du programme suivant le cas (voir texte
 c fourni) en remplacant if(one.gt.two) par if(two.gt.one)
-c Un algorithme automatique peut aussi 
+c Un algorithme automatique peut aussi �re �rit
 c
 c plot of the plasma last closed magnetic surface
 c
@@ -319,7 +319,7 @@ c internal part
       endif ! true/false
        sizeOUT = 125*4
 C x
-c      write(*,*) 'debut ecriture de x et y'
+      write(*,*) 'debut ecriture de x et y'
       plhs(1) = mxCreateDoubleMatrix(mat500,mat1,0)
       x_pr = mxGetPr(plhs(1))
       call mxCopyReal8ToPtr(x,x_pr,mat500)
@@ -328,9 +328,10 @@ C x
       y_pr = mxGetPr(plhs(2))
       call mxCopyReal8ToPtr(y,y_pr,mat500)
 
-      end
-
-
+       end
+c
+c
+c
 
 *DECK DASINH
       DOUBLE PRECISION FUNCTION DASINH (X)
@@ -421,8 +422,8 @@ C
       RETURN
 C
       END
-
-
+      
+      
             DOUBLE PRECISION FUNCTION D1MACH(I)
       integer I
 C
@@ -679,12 +680,12 @@ C***END PROLOGUE  DCSEVL
 C***FIRST EXECUTABLE STATEMENT  DCSEVL
       IF (FIRST) ONEPL = 1.0D0 + D1MACH(4)
       FIRST = .FALSE.
-c      IF (N .LT. 1) PRINT *,'SLATEC', 'DCSEVL',
-c     +   'NUMBER OF TERMS .LE. 0', 2, 2
-c      IF (N .GT. 1000) PRINT *,'SLATEC', 'DCSEVL',
-c     +   'NUMBER OF TERMS .GT. 1000', 3, 2
-c      IF (ABS(X) .GT. ONEPL) PRINT *,'SLATEC', 'DCSEVL',
-c     +   'X OUTSIDE THE INTERVAL (-1,+1)', 1, 1
+      IF (N .LT. 1) PRINT *,'SLATEC', 'DCSEVL',
+     +   'NUMBER OF TERMS .LE. 0', 2, 2
+      IF (N .GT. 1000) PRINT *,'SLATEC', 'DCSEVL',
+     +   'NUMBER OF TERMS .GT. 1000', 3, 2
+      IF (ABS(X) .GT. ONEPL) PRINT *,'SLATEC', 'DCSEVL',
+     +   'X OUTSIDE THE INTERVAL (-1,+1)', 1, 1
 C
       B1 = 0.0D0
       B0 = 0.0D0
@@ -740,8 +741,8 @@ C   900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
 C***END PROLOGUE  INITDS
       DOUBLE PRECISION OS(*)
 C***FIRST EXECUTABLE STATEMENT  INITDS
-c      IF (NOS .LT. 1) PRINT *,'SLATEC', 'INITDS',
-c     +   'Number of coefficients is less than 1', 2, 1
+      IF (NOS .LT. 1) PRINT *,'SLATEC', 'INITDS',
+     +   'Number of coefficients is less than 1', 2, 1
 C
       ERR = 0.
       DO 10 II = 1,NOS
@@ -750,10 +751,12 @@ C
         IF (ERR.GT.ETA) GO TO 20
    10 CONTINUE
 C
-   20  continue
-c      IF (I .EQ. NOS) PRINT *,'SLATEC', 'INITDS',
-c     +   'Chebyshev series too short for specified accuracy', 1, 1
+   20 IF (I .EQ. NOS) PRINT *,'SLATEC', 'INITDS',
+     +   'Chebyshev series too short for specified accuracy', 1, 1
       INITDS = I
 C
       RETURN
       END
+
+      
+
