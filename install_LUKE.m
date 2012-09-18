@@ -66,9 +66,14 @@ luke_root = dkepath.luke_root;
 %
 % Build *.mat files
 %
-cd([luke_root,'Project_DKE/Database']);
-make_all;
-cd(luke_root);
+%
+opt = input_dke_yp('Do you want to rebuild the database (necessary for new installs and upgrades)','y',{'y','n'});
+%
+if opt == 'y',
+    cd([luke_root,'Project_DKE/Database']);
+    make_all;
+    cd(luke_root);
+end
 %
 % Warning for the external mexfiles
 %
@@ -97,9 +102,7 @@ opt = input_dke_yp('Do you want to test MDCE capabilities','n',{'y','n'});
 %
 if opt == 'y',
     if isfield(dkepath,'remote'),
-        cd([luke_root,'Project_DKE/Packages/MDCE']);
-        test_mdce(2,dkepath);
-        cd(dkepath.luke_root); 
+        test_mdce(2,1,1,'local',8,200,dkepath);
     else
         disp('No cluster information found.')
     end
@@ -120,7 +123,7 @@ end
 opt = input_dke_yp('Do you want to run the test case with distributed calculation of collision integrals','n',{'y','n'});
 %
 if opt == 'y' && isfield(dkepath,'remote'),
-	cd([luke_root,'Simulations/Benchmarks/TScyl/LH_Karney']);
+	cd([dkepath.luke_root,'Simulations/Benchmarks/TScyl/LH_Karney']);
 	disp('---------------------------------------------------------------------------')
 	disp('---------------------------DISTRIBUTED COMPUTING---------------------------')
     disp('---------------------------------------------------------------------------')
