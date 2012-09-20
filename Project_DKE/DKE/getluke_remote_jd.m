@@ -23,9 +23,9 @@ localhost = localhost(1:end-1);
 remotehost = remote.host;
 remoteluke_root = remote.luke_root;
 remotefields = fieldnames(remote);
-remotepassword = remote.password{1};
 %
 if sum(~cellfun('isempty',xgridsearch)),
+    remotepassword = remote.password{1};
     user_root = ['/Users/',remote.(remotefields{end}),'/xgrid/'];
     local_user_root = [getenv('HOME'),'/xgrid'];
     %
@@ -47,14 +47,14 @@ else
     remotelogname = logname;
 end
 %
-[err,remote_localhost] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''hostname''']);
-remote_localhost = remote_localhost(1:end-1);
-%
 load_id = ['LUKE_OUT_',remotelogname,'_',timeid,'.mat'];
 %
 if ~isempty(remotehost),
     %
-    if sum(~cellfun('isempty',xgridsearch)),,
+    if sum(~cellfun('isempty',xgridsearch)),
+        %
+        [err,remote_localhost] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' ''hostname''']);
+        remote_localhost = remote_localhost(1:end-1);
         if debugmode,%debug mode in case of problem
             [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' mkdir ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'''']);
             [res,txt] = unix(['ssh -q ',remotelogname,'@',remotehost{1},' '' ',remoteset_jobid{1},remote_localhost,remotecmd{2},remotepassword,remoteset_jobid{6},jobid,' -se ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'/','error_file',' -so ',user_root,'xgrid_logfiles_jobid_',jobid,'_timeid_',timeid,'/','output_file -out''']);
