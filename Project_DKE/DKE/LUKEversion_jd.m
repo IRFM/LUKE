@@ -16,7 +16,7 @@ function [lukeversion,matlabversion,matlabrelease] = LUKEversion_jd
 %
 %by Y.Peysson CEA/DSM/IRFM <yves.peysson@cea.fr> and Joan Decker CEA/DSM/IRFM (joan.decker@cea.fr)
 %
-lukeversion = 'LUKE 1.9.1';
+lukeversion = 'LUKE 1.10.0';
 %
 ver = version;
 %
