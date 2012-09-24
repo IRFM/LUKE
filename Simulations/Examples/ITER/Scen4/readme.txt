@@ -36,9 +36,11 @@ Simulations ITER Scen 4
 		- same compiled mex files.
 		- seems to depend upon cephee processor.
 		
-- Passage à LUKE 1.9 : first calculation (LUKE 1.9.0) wrong because dtn and tn not adjusted in dkeparam
+- Passage ï¿½ LUKE 1.9 : first calculation (LUKE 1.9.0) wrong because dtn and tn not adjusted in dkeparam
 - Comparison successful for LUKE 1.9.1 with dtn=tn=10000, old version of solver_dke_yp from 1.8.6
 - Results validated for LUKE 1.9.1 with tn=100000, new version of solver_dke_yp
 
+- Comparison sucessful on 09/21/2012 with old EQUIL.
+- Small difference on 09/20/2012 with new EQUIL - tagged LUKE_1_10
 	
 
