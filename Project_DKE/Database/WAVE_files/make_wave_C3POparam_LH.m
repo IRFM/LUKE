@@ -30,9 +30,34 @@ rayparam.kextra = 2000;%extra points if QL absorption is delayed
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd.mode = 2;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
-C3POparam.clustermode.main_C3PO_jd.timeout = 300;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-C3POparam.clustermode.main_C3PO_jd.size = 12;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+C3POparam.clustermode.main_C3PO_jd.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+C3POparam.clustermode.main_C3PO_jd.scheduler.memory = 500;%required memory (in mb)
 %
-save('C3POPARAM_LH.mat','fitparam','rayparam','C3POparam');
+% C3PO Display parameters
+%
+C3POdisplay.ray = 0;
+C3POdisplay.equilibrium = 0;
+C3POdisplay.p_opt = -1;%Printing or saving option of the figures
+%
+% Wave parameters
+%
+waveparam.mmode = -1;%cold plasma mode [1] : (-1) m (1) p, p is the slow mode when kperp > 0 (slow/fast LH wave: -1/+1, O/X mode: -1/+1)
+waveparam.kmode = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+%
+%Option parameter for FLR effects and cross-comparison between old FP code: 
+%	- (0): all FLR effects
+%	- (1): small FLR effects and 1/vpar dependence
+%	- (2): small FLR effects and no 1/vpar dependence and old grid technique for DQL calculations (Karney, Shoucri) (see rfdiff_dke_jd)
+%
+waveparam.opt_rf = 1;
+%
+waveparam.dsmin = 0.01;%minimum size for ray fragments
+%
+waveparam.nd = 1;%Number of transverse distance positions for beamlets
+waveparam.nchi = 1;%Number of angular positions for beamlets
+%
+waveparam.n_rf_list = 0;
+waveparam.ns = 1;%ray smoothing parameter
+%
+save('C3POPARAM_LH.mat','fitparam','rayparam','C3POparam','C3POdisplay','waveparam');
 
