@@ -63,7 +63,7 @@ function irunluke_jd(basestr,signs,opt_gui)
     external = '';
     %
     output = '';
-    timeid = '';
+    luke_job = '';
     %
     workdir = [pwd,'/'];
     %
@@ -209,9 +209,9 @@ function irunluke_jd(basestr,signs,opt_gui)
                 ostr = '';
             end   
             %
-            if ~isempty(timeid),
+            if ~isempty(luke_job),
                 %
-                statstr.output = ['< LUKE is currently running under job id ',jobid,' >'];
+                statstr.output = ['< LUKE is currently running under job id ',luke_job.id,' >'];
                 %                
             elseif ~isempty(dkepath) && ~isempty(dkeparam) && ~isempty(equil),
                 %
@@ -328,7 +328,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     if strfind(data_file,'LUKE_DATA_'),
                         %
-                        load([data_path,data_file],'basestr','signs','status','fileids','paths','id_simul','timeid','jobid','remote',...
+                        load([data_path,data_file],'basestr','signs','status','fileids','paths','id_simul','luke_job','remote',...
                             'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple','output','external');
                         disp(['-----> The data file ',[data_path,data_file],' is loaded.']);
                         %
@@ -571,7 +571,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                             end
                         end                    
                         %
-                        timeid = '';
+                        luke_job = '';
                         %
                         status.external = 0;
                         status.data = 2;
@@ -680,7 +680,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                             end
                         end                    
                         %
-                        timeid = '';
+                        luke_job = '';
                         %
                         status.external = 0;
                         status.data = 2;
@@ -764,7 +764,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         status.external = 1;
                         status.data = 2;
                         %
-                        timeid = '';
+                        luke_job = '';
                         %
                         clear data
                         %
@@ -1295,25 +1295,25 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 % CHECK IF THERE IS A BATCH RUN OF LUKE
                 %
-                if ~isempty(timeid) && input_dke_yp(['-----> There is a pending remote LUKE batch run.\n',...
+                if ~isempty(luke_job) && input_dke_yp(['-----> There is a pending remote LUKE batch run.\n',...
                         'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
                     %
                     sd  = pwd;
                     cd(workdir);
                     %
-                    output = getluke_remote_jd(timeid,jobid,remote);
+                    output = getluke_remote_jd(luke_job,remote);
                     %
                     cd(sd);
                     %
                     if isempty(output),
-                        disp(['Remote LUKE still running under job id ',jobid,' ...'])
+                        disp(['Remote LUKE still running under job id ',luke_job.id,' ...'])
                     elseif isfield(output,'err'),
                         disp('Remote LUKE run failed, aborted.')
-                        timeid = '';
+                        luke_job = '';
                         output = '';
                         status.data = 2;
                     else
-                        timeid = '';
+                        luke_job = '';
                         %
                         status.output = 1;
                         status.data = 2;            
@@ -1422,7 +1422,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     remote = dkepath.remote(c_opt);
                     %
-                    luke_input.id_simul = id_simul;
+                    luke_input.simul_in = id_simul;
                     luke_input.dkeparam = dkeparam;
                     luke_input.dkedisplay = dkedisplay;
                     luke_input.equil = equil;
@@ -1433,7 +1433,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     luke_input.ripple = ripple;
                     luke_input.Zf0_interp = '';
                     %
-                    [timeid,jobid] = runluke_remote_jd(luke_input,remote);
+                    luke_job = runluke_remote_jd(luke_input,remote);
                     %
                     w_opt = input_dke_yp(['Waiting for remote LUKE results... enter time out (minutes)'...
                         '\n(enter 0 to load results later)'],60,[0:7*24*60]);
@@ -1450,7 +1450,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                         disp(['Still running , elapsed time (minutes) ',num2str(round(toc/60)),'/',num2str(w_opt)])
                         %
-                        output = getluke_remote_jd(timeid,jobid,remote);
+                        output = getluke_remote_jd(luke_job,remote);
                         %
                     end
                     %
@@ -1458,10 +1458,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                         disp(['Stop waiting , elapsed time (minutes) ',num2str(round(toc/60)),'/',num2str(w_opt)])
                     elseif isfield(output,'err'),
                         disp('Remote LUKE run failed, aborted.')
-                        timeid = '';
+                        luke_job = '';
                         output = '';
                     else
-                        timeid = '';
+                        luke_job = '';
                         %
                         status.output = 1;
                     end
