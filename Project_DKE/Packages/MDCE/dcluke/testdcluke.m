@@ -24,7 +24,11 @@ if dkecluster.scheduler.mode == 2,
     for irun = 1:nrun,
         tic,[e1_d(irun),e2_d(irun),e3_d(irun)] = dcluke(dkecluster.scheduler,id(irun));toc
     end
-    rmdir(dkecluster.scheduler.temppath,'s');
+    try
+        rmdir(dkecluster.scheduler.temppath,'s');
+    catch
+        disp(['WARNING : tmp directory ',dkecluster.scheduler.temppath,' could not be removed.'])
+    end
     disp('Calculations in the distributed computing mode done.');
 else
 	disp(dkecluster.scheduler.info);
