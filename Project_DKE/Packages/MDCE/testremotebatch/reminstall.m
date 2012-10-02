@@ -1,4 +1,4 @@
-function reminstall(remote)
+function [remotehome] = reminstall(remote)
 %
 % This function transfers and copies functions for testremotebatch
 %
@@ -26,16 +26,35 @@ else
     remotelogname = logname;
 end
 %
+remotecmd = 'echo $HOME';
+%
+if ~isempty(remotehost),%remote calculation 
+    %
+    [res,remotehome] = unix(['ssh ',remotelogname,'@',remotehost,' ''',remotecmd,'''']);
+    %
+else
+    %
+    [res,remotehome] = unix(remotecmd);
+    %
+end
+%
+if res ~= 0,
+    error(['File transfer failed : ',err])
+end
+disp(' ... done');
+remotehome(double(remotehome) == 10) = [];% remove return character
+%
 % check if directories exist - create them if needed
 %
-remotedirtest_jd(remotehost,remotelogname,'~/remotebatchtest/')
-remotedirtest_jd(remotehost,remotelogname,'~/remotebatchtest/bin/')
-remotedirtest_jd(remotehost,remotelogname,'~/remotebatchtest/mat/')
+remotedirtest_jd(remotehost,remotelogname,[remotehome,filesep,'remotebatchtest/'])
+remotedirtest_jd(remotehost,remotelogname,[remotehome,filesep,'remotebatchtest/bin/'])
+remotedirtest_jd(remotehost,remotelogname,[remotehome,filesep,'remotebatchtest/mat/'])
 %
 % copy test files into directory
 %
-remotefilecopy_jd(remotehost,remotelogname,'remotebatch','~/remotebatchtest/bin/')
-remotefilecopy_jd(remotehost,remotelogname,'remotetest.m','~/remotebatchtest/mat/')
+remotefilecopy_jd(remotehost,remotelogname,'remotebatch',[remotehome,filesep,'remotebatchtest/bin/'])
+remotefilecopy_jd(remotehost,remotelogname,'condor_matlab.sh',[remotehome,filesep,'remotebatchtest/bin/'])
+remotefilecopy_jd(remotehost,remotelogname,'remotetest.m',[remotehome,filesep,'remotebatchtest/mat/'])
 %
 disp('-------------------------------------------------------')
 disp('-------------------- setting done ---------------------')
@@ -104,15 +123,19 @@ function remotefilecopy_jd(remotehost,remotelogname,filename,location)
     %
     % copy file into destimation
     %
+    remotecmd = ['chmod a+x ',location,filename];
+    %
     if ~isempty(remotehost),%remote calculation 
         %
         disp(['    --> Copying script file ',filename,' to remote host ',remotehost,':',location,' as user ',remotelogname,' ...'])  
         [res,err] = unix(['scp ',filename,' ',remotelogname,'@',remotehost,':',location]);
+        [res2,txt2] = unix(['ssh ',remotelogname,'@',remotehost,' ''',remotecmd,'''']);
         %
     else
         %
-        disp(['    --> Copying script file ',filename,' to ',location])  
+        disp(['    --> Copying script file ',filename,' to ',location])  ;
         [res,err] = unix(['cp ',filename,' ',location]);
+        [res2,txt2] = unix(remotecmd);
         %
     end
     %
