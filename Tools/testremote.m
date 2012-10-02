@@ -24,7 +24,9 @@ if  opt == 0,
     luke_job.savefcn = 'runlukesave';%'matstandardsave';
     luke_job.loadfcn = 'runlukeload';%'matstandardload';
     luke_job.root = '/home/sccp/gsem/decker/LUKE_merge/';
+    %luke_job.nproc = 2;
     luke_job.memory = 7000;%mb
+    %luke_job.walltime = [];%hours
     luke_job.localdatapath = '~/tmp';
     luke_job.remotedatapath = '/local';
     luke_job.env.LUKE_matlabroot = '';
