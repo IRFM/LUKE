@@ -8,14 +8,14 @@ output = '';
 %
 profil0d = post.profil0d;
 zerod = post.zerod;
-%exp0d = post.z0dinput.exp0d;
+exp0d = post.z0dinput.exp0d;
 cons = post.z0dinput.cons;
 geo = post.z0dinput.geo;
 option = post.z0dinput.option;
 tokamak = post.z0dinput.machine;
 shotnum = num2str(fix(abs(post.z0dinput.shot)));
 %
-clear post
+% clear post
 %
 % test inputs and set calculation time
 %
@@ -53,12 +53,12 @@ else
     zerod = structindex(zerod,length(zerod.temps),itzerod);
 end
 %
-% itexp = find(abs((exp0d.temps - t)/t) < 10*eps,1,'first');
-% if isempty(itexp),
-%     error('profil0d time not found in exp0d time grid.')
-% else
-%     exp0d = structindex(exp0d,length(exp0d.temps),itexp);
-% end
+itexp = find(abs((exp0d.temps - t)/t) < 10*eps,1,'first');
+if isempty(itexp),
+    error('profil0d time not found in exp0d time grid.')
+else
+    exp0d = structindex(exp0d,length(exp0d.temps),itexp);
+end
 %
 itcons = find(abs((cons.temps - t)/t) < 10*eps,1,'first');
 if isempty(itcons),
@@ -84,7 +84,7 @@ dkedisplay.display_mode = lukeparam.display_mode;%Display mode: (0): no, (1): pa
 %
 equil_id = [tokamak,'_',shotnum,'_',shotime];
 %
-[equil,profil0d_out] = make_equil_metis2luke(equil_id,profil0d,zerod,geo,option,lukeparam.equilparam);
+[equil,profil0d_out] = make_equil_metis2luke(equil_id,profil0d,zerod,exp0d,cons,geo,option,lukeparam.equilparam);
 %
 prho = equil.ptx(:,1).'/equil.ptx(end,1);%rho grid in LUKE definition
 %

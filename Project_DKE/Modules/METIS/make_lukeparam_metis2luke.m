@@ -18,6 +18,16 @@ equilparam.nbpx = 101;% number of points in interpolated radial grid (enter 0 if
 equilparam.mode = 'standard';% interpolation mode : linear in "standard" (xli), "sqrt(psi)", or "psi"
 equilparam.expo = option.morphing;% exposant de la fonction de morphing
 equilparam.comp = false;%control of equilibrium moments reconstructed from LUKE
+if isfield(option,'luke_helena'),
+    equilparam.helena = option.luke_helena;
+else
+    equilparam.helena = 0;
+end
+if isfield(option,'bsigne'),
+    equilparam.bsigne = option.bsigne;
+else
+    equilparam.bsigne = 1;
+end
 %
 % LUKE LH parameters
 %
