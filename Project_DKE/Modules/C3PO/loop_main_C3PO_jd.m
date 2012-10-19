@@ -75,7 +75,7 @@ rays{1}.sr = [];% Ray radial position [1,ns] (m)
 rays{1}.srho = [];% Ray normalized radial position [1,ns]
 %
 rays{1}.salphaphi_lin = [];% Ray absorption coefficient [1,ns]
-rays{1}.stau = [];% Ray optical depth [1,ns]
+rays{1}.stau_lin = [];% Ray optical depth [1,ns]
 %
 rays{1}.seikval = [];% Eikonal approximation validity (OK if less than 1) [1,ns]
 rays{1}.sD = [];% Dispersion relation [1,ns]
@@ -94,7 +94,7 @@ rays{1}.swpe2 = [];%Normalized electron plasma frequency
 rays{1}.swce2 = [];%Normalized electron gyro frequency
 %
 rayinit.mmode = waveparam.mmode;%initial polarization
-rayinit.tau0 = 0;%initial optical depth
+rayinit.tau0_lin = 0;%initial optical depth
 rayinit.ss0 = 0;%initial ray length
 %
 rays{1}.rayinits{1} = rayinit;
@@ -137,7 +137,7 @@ for iref = 1:nref + 1,% vessel reflection index
 		%
 		if isreal(y0(4)) && abs(y0(4)) > 0,%ray enters the plasma
             %
-            rayparam.tau_lim = tau_lim_init - rayinit.tau0;% the absorption criterion accounts for previous steps
+            rayparam.tau_lim = tau_lim_init - rayinit.tau0_lin;% the absorption criterion accounts for previous steps
 			%
 			[tout, yout, yproc] = raytracing_yp(rayparam,equil_fit,y0,f0struct,fluct_fit,flag);            
 			%
@@ -146,7 +146,7 @@ for iref = 1:nref + 1,% vessel reflection index
 			end
 			%
 			filename_in = [id_wave,'_ray_',int2str(iray)];
-			[iabs_out,srho,stheta,sx,sy,sz,sNpar,sNperp,sepol_pmz,sphi_xyz,spmode,sD,ss,salphaphi_lin,sB,sBRHO,sBP,sBz,sTe,sne,szTi,szni,sr,salpha,sgradrhon,stau,seikval,skrho,sm,skz,sn,swpe2,swce2] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,fluct_fit,C3POdisplay.text,C3POdisplay.ray,C3POdisplay.p_opt,filename_in);
+			[iabs_out,srho,stheta,sx,sy,sz,sNpar,sNperp,sepol_pmz,sphi_xyz,spmode,sD,ss,salphaphi_lin,sB,sBRHO,sBP,sBz,sTe,sne,szTi,szni,sr,salpha,sgradrhon,staune,szTi,szni,sr,salpha,sgradrhon,stau_lin,seikval,skr,seikval,skrho,sm,skz,sn,swpe2,swce2] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,fluct_fit,C3POdisplay.text,C3POdisplay.ray,C3POdisplay.p_opt,filename_in);
 			%
 			if C3POdisplay.ray == 1,
 				pause(5)
@@ -188,7 +188,7 @@ for iref = 1:nref + 1,% vessel reflection index
 			rays{irayref}.srho = [rays{irayref}.srho,srho.'];% Ray normalized radial position [1,ns]
 			%
 			rays{irayref}.salphaphi_lin = [rays{irayref}.salphaphi_lin,salphaphi_lin.'];% Ray absorption coefficient [1,ns]
-			rays{irayref}.stau = [rays{irayref}.stau,rayinit.tau0 + stau.'];% Ray optical depth [1,ns]
+			rays{irayref}.stau_lin = [rays{irayref}.stau_lin,rayinit.tau0_lin + stau_lin.'];% Ray optical depth [1,ns]
             %
             rays{irayref}.seikval = [rays{irayref}.seikval,seikval.'];% Eikonal approximation validity (OK if less than 1) [1,ns]
             rays{irayref}.sD = [rays{irayref}.sD,sD.'];% Dispersion relation [1,ns]
@@ -322,7 +322,7 @@ for iref = 1:nref + 1,% vessel reflection index
 					%
                     ray = rays{irayref};
                     %
-                    rayinit.tau0 = ray.stau(end);
+                    rayinit.tau0_lin = ray.stau_lin(end);
                     rayinit.ss0 = ray.ss(end);
                     %
                     rayX = ray;
