@@ -68,7 +68,7 @@ if strcmp(basestr,'TS') || strcmp(basestr,'JET'),% default values from make_wave
     %
     cons_spec = NaN;
     %
-    launchs = make_wavelaunchs_cronos_lh(equil,signe,config,cons,cons_spec,lob);
+    launchs = make_wavelaunchs_cronos_lh('','',cons,signe,config,lob);
     %
     a_str = '';
     for iw = 1:length(launchs),
