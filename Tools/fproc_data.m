@@ -19,7 +19,7 @@ procdata = 0;
 %
 data_proc = '';
 %
-if exist([datapath,proc_datafile1],'file'),
+if exist([datapath,proc_datafile1],'file') && (gettime_jd(proc_datafile1,datapath) > gettime_jd(datafile1,datapath)),
     %
     load([datapath,proc_datafile1],'data_proc');
     %
@@ -30,7 +30,7 @@ if exist([datapath,proc_datafile1],'file'),
     %
 end
 %
-if procdata == 0 && exist([datapath,proc_datafile2],'file'),
+if procdata == 0 && exist([datapath,proc_datafile2],'file') && (gettime_jd(proc_datafile2,datapath) > gettime_jd(datafile2,datapath)),
     %
     load([datapath,proc_datafile2],'data_proc');
     %
