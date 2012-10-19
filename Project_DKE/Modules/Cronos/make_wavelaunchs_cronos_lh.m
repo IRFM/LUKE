@@ -56,7 +56,7 @@ if isfield(par,'aloha_mode')
     end
 else
    for ilh = 1:nlh,
-     aloha(ilh).mode = zeros(1,nlh);
+     aloha(ilh).mode = 0;
    end
 end
 %
