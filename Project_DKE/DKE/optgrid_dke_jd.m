@@ -40,10 +40,10 @@ for iw = w_mask;
     if isfield(waves{iw},'rays'),
         for iray = 1:length(waves{iw}.rays),
             %
-            ray = radialdampingprofile_jd(waves{iw}.rays{iray},nr_dep,display_mode);
+            ray = waves{iw}.rays{iray};
             %
-            if isfield(ray,'sP_2piRp')  && isfield(ray,'srho'),
-                dP = dP + ray.dPnormdrho*ray.sP_2piRp(1)*drho_dep;
+            if isfield(ray,'sP_2piRp_lin')  && isfield(ray,'srho'),
+                dP = dP + drho_dep*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin,nr_dep);
             end
             %
         end

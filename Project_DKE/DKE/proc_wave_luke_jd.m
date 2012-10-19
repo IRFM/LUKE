@@ -80,8 +80,7 @@ for iw = 1:length(waves),
         P0tot_2piRp = P0tot_2piRp + ray.P0_2piRp;
         %
         ray.srho = psi2rho_jd(equil,ray.spsin);
-        ray = radialdampingprofile_jd(ray,nr_dep,0);
-        rdPdrho_lin = rdPdrho_lin + ray.dPnormdrho*ray.P0_2piRp*2*pi*equil.Rp;
+        rdPdrho_lin = rdPdrho_lin + 2*pi*equil.Rp*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin,nr_dep);
         %
         ray.zs = zs{ibb};
         ray.zP0_2piRp_mod = zP0_2piRp_mod{ibb};
@@ -105,20 +104,20 @@ for iw = 1:length(waves),
             zP0_2piRp_mod_fit = [zP0_2piRp_mod_fit,ray.zP0_2piRp_mod(end)];
         end
         %
-        ray.sP_2piRp_luke = interp1(zs_fit,zP0_2piRp_mod_fit,ray.ss,'pchip');
+        ray.sP_2piRp = interp1(zs_fit,zP0_2piRp_mod_fit,ray.ss,'pchip');
         %
-        sP_2piRp_luke_norm = ray.sP_2piRp_luke/ray.P0_2piRp;
+        sP_2piRp_norm = ray.sP_2piRp/ray.P0_2piRp;
         delta = (1 - erf(1))/2;
         %
-        ray.isabsmin = max(find(sP_2piRp_luke_norm > (1 - delta)));
-        ray.isabsmax = max(find(sP_2piRp_luke_norm > delta));
-        ray.ismax = max(find(diff(ray.sP_2piRp_luke) == min(diff(ray.sP_2piRp_luke))));
+        ray.isabsmin = max(find(sP_2piRp_norm > (1 - delta)));
+        ray.isabsmax = max(find(sP_2piRp_norm > delta));
+        ray.ismax = max(find(diff(ray.sP_2piRp) == min(diff(ray.sP_2piRp))));
         %
         Pin.dke(iw,ib) = ray.zP0_2piRp_mod(1)*2*pi*equil.Rp;
         Pout.dke(iw,ib) = ray.zP0_2piRp_mod(end)*2*pi*equil.Rp;
         %
-        Pin.alpha(iw,ib) = ray.sP_2piRp(1)*2*pi*equil.Rp;
-        Pout.alpha(iw,ib) = ray.sP_2piRp(end)*2*pi*equil.Rp;
+        Pin.alpha(iw,ib) = ray.sP_2piRp_lin(1)*2*pi*equil.Rp;
+        Pout.alpha(iw,ib) = ray.sP_2piRp_lin(end)*2*pi*equil.Rp;
         %
         ray.absrate_dke = 1 - Pout.dke(iw,ib)/Pin.dke(iw,ib);
         ray.absrate_alpha = 1 - Pout.alpha(iw,ib)/Pin.alpha(iw,ib);
@@ -132,7 +131,8 @@ for iw = 1:length(waves),
     %
 end
 %
-rho_dep = ray.rho_dep;
+rho_dep_S = linspace(0,1,nr_dep+1);
+rho_dep = (rho_dep_S(1:end-1) + rho_dep_S(2:end))/2;
 %
 close all
 %
@@ -216,7 +216,7 @@ for iw = 1:length(waves),
         ray = waves{iw}.rays{ib};
         %
         %graph1D_jd(wbss{iw,ib},wbsP{iw,ib},0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width2,siz,gca,red,lspace,bspace);
-        graph1D_jd(ray.ss,ray.sP_2piRp/ray.P0_2piRp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width2,siz,gca,red,lspace,bspace);
+        graph1D_jd(ray.ss,ray.sP_2piRp_lin/ray.P0_2piRp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color1,width2,siz,gca,red,lspace,bspace);
         graph1D_jd(ray.zs,ray.zP0_2piRp_mod/ray.P0_2piRp,0,0,'','','',leg,xlim,ylim,style,marker2,color2,width2);
         %
         figure(100*iw + 10 + ib)
