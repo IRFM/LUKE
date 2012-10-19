@@ -61,7 +61,7 @@ set(ax(2),'xcolor','k');
 %set(gcf,'PaperPositionMode','auto');
 
 [lspace_out,bspace_out,apos_new] = resizejd(ax(1),red);
-[lspace_out,bspace_out,apos_new] = resizejd(ax(2),red);
+[lspace_out,bspace_out,apos_new] = resizejd(ax(2),1);
 
 if isnan(lspace)
     lspace = lspace_out;

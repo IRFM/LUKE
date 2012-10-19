@@ -8,7 +8,10 @@ function [xyBb_rf,xyBPb_rf,xyrb_rf,xycosb_rf,xyxb_rf,xyyb_rf,xyBxb_rf,xyByb_rf,x
 if nargin < 8
     method = 'linear';
 end
-nr = size(xythetab_rf,1);
+nr = size(Xx,1);
+if size(xythetab_rf,1) == 1,
+    xythetab_rf = repmat(xythetab_rf,[nr,1]);
+end
 for ir = 1:nr
     xyxb_rf(ir,:) = interp1(theta,Xx(ir,:),xythetab_rf(ir,:),method);
     xyyb_rf(ir,:) = interp1(theta,Xy(ir,:),xythetab_rf(ir,:),method);
