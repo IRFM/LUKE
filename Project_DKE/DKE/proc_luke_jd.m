@@ -38,6 +38,10 @@ if ~isfield(opt,'peakmode'),
     opt.peakmode = 0;
 end
 %
+if ~isfield(opt,'jpeak'),
+    opt.jpeak = 0;
+end
+%
 if ~isfield(opt,'rho') || isempty(opt.rho),
     opt.rho = input_dke_yp('Option for rho definition : ''g'' (geometric), ''p'' (poloidal flux), ''t'' (toroidal flux), ''v'' (volumic rho)','g',{'g','p','t','v'},'',[1,1]);
 end
@@ -60,7 +64,7 @@ Zmripple = data.Zmripple;
 mksa = data.mksa;
 %
 simul_id = dke_out.simul.id;
-waves = dke_out.waves;
+waves = proc_wave_alphaphi_luke_jd(data,dke_out.waves,1);
 if isfield(dke_out,'dkeparam')
     dkeparam = dke_out.dkeparam;
 elseif isfield(data,'dkeparam')
@@ -201,6 +205,70 @@ end
 %
 I_tot = sum(J_tot.*equilDKE.xdA_dke);
 %
+if opt.jpeak == 0,%peak defined as dIdrho
+    xI = J_tot.*equilDKE.xdA_dke;
+    xdIdrho = xI./xdrho;
+else% peak defined as J
+    xI = J_tot.*xdrho;
+    xdIdrho = J_tot;
+end    
+dIdrhomax = max(xdIdrho);
+wi_jpeak = find(xdIdrho == dIdrhomax);% co-current peak
+%
+xmaskp = wi_jpeak:nr;
+ixp = find(diff(xdIdrho(xmaskp)) >= 0,1,'first');
+xmaskp = xmaskp(1:min([ixp,length(xmaskp)]));
+%
+xmaskm = 1:wi_jpeak;
+ixm = 1 + find(diff(xdIdrho(xmaskm)) <= 0,1,'last');
+xmaskm = xmaskm(max([1,ixm]):end);
+%
+if opt.peakmode == 0,
+    jrhoG = xrhoG(wi_jpeak);
+    jrhoP = xrhoP(wi_jpeak);
+    jrhoT = xrhoT(wi_jpeak);
+    jrhoV = xrhoV(wi_jpeak);
+    jTe = xTe(wi_jpeak);
+    jne= xne(wi_jpeak);
+    %
+    % FWHM
+    %
+    jdrhoG = interp1(xdIdrho(xmaskp),xrhoG(xmaskp),dIdrhomax/2) - interp1(xdIdrho(xmaskm),xrhoG(xmaskm),dIdrhomax/2);
+    jdrhoP = interp1(xdIdrho(xmaskp),xrhoP(xmaskp),dIdrhomax/2) - interp1(xdIdrho(xmaskm),xrhoP(xmaskm),dIdrhomax/2);
+    jdrhoT = interp1(xdIdrho(xmaskp),xrhoT(xmaskp),dIdrhomax/2) - interp1(xdIdrho(xmaskm),xrhoT(xmaskm),dIdrhomax/2);
+    jdrhoV = interp1(xdIdrho(xmaskp),xrhoV(xmaskp),dIdrhomax/2) - interp1(xdIdrho(xmaskm),xrhoV(xmaskm),dIdrhomax/2);
+else
+    %
+    %xmaskj = unique([xmaskm,xmaskp]);
+    %xmaskj = xmaskj(xI(xmaskj) >= 0);
+    %
+    xmaskp = wi_jpeak:nr;
+    ixp = find(xI(xmaskp) <= 0,1,'first') - 1;
+    xmaskp = xmaskp(1:min([ixp,length(xmaskp)]));
+    %
+    xmaskm = 1:wi_jpeak;
+    ixm = find(xI(xmaskm) <= 0,1,'last') + 1;
+    xmaskm = xmaskm(max([1,ixm]):end);
+    %
+    xmaskj = unique([xmaskm,xmaskp]);
+    %
+    I_totj = sum(xI(xmaskj));
+    %
+    jrhoG = sum(xI(xmaskj).*xrhoG(xmaskj))/I_totj;
+    jrhoP = interp1(xrhoG,xrhoP,jrhoG);
+    jrhoT = interp1(xrhoG,xrhoT,jrhoG);
+    jrhoV = interp1(xrhoG,xrhoV,jrhoG);
+    jTe = interp1(xrhoG,xTe,jrhoG);
+    jne = interp1(xrhoG,xne,jrhoG);
+    %
+    % FWHM
+    %
+    jdrhoG = 2*sqrt(2*log(2))*sqrt(sum(xI(xmaskj).*(xrhoG(xmaskj) - jrhoG).^2)/I_totj);
+    jdrhoP = 2*sqrt(2*log(2))*sqrt(sum(xI(xmaskj).*(xrhoP(xmaskj) - jrhoP).^2)/I_totj);
+    jdrhoT = 2*sqrt(2*log(2))*sqrt(sum(xI(xmaskj).*(xrhoT(xmaskj) - jrhoT).^2)/I_totj);
+    jdrhoV = 2*sqrt(2*log(2))*sqrt(sum(xI(xmaskj).*(xrhoV(xmaskj) - jrhoV).^2)/I_totj);
+end
+%            
 if isempty(opt.nr_dep),
     nr_dep = input_dke_yp('Comparison with linear deposition : (-1) none, (0) on LUKE grid, or indicate the number of fine grid points',0,0:100,'',[1,1]);
 else
@@ -239,7 +307,7 @@ if ir_display >= 0,
         diaryname = ['res_',simul_id,'_irho_',tir_display,'.log'];
     end
     %
-    if exist(diaryname,'file') && gettime_jd(diaryname) > datenum(timeid_jd(dke_out.simul.timeid),'dd/mm/yyyy HH:MM:SS'),
+    if exist(diaryname,'file') && gettime_jd(diaryname) > datenum(timeid_jd(dke_out.simul.timeid),'mm/dd/yyyy HH:MM:SS'),
         diaryname = '';
     end
     %
@@ -281,7 +349,8 @@ xnp_rf_2piRp = reshape(sum(yxnp_rf_2piRp,2),[nr,nn_rf]);
 %
 p_e_2piRp = sum(P_e.*equilDKE.xdV_2piRp_dke);
 p_tot_2piRp = sum(P_tot.*equilDKE.xdV_2piRp_dke);
-EtaRp = I_tot/(p_tot_2piRp*2*pi);    
+EtaRp = I_tot/(p_tot_2piRp*2*pi);
+EtaRFRp = jne*1e-19*I_tot/(p_rf_2piRp*2*pi);
 %
 xdPdrho_rf_2piRp = xp_rf_2piRp./xdrho;
 xndPdrho_rf_2piRp = xnp_rf_2piRp./repmat(xdrho.',[1,nn_rf]);
@@ -291,6 +360,24 @@ eta = NaN(1,nr);
 eta(P_tot ~= 0) = J_tot(P_tot ~= 0)./P_tot(P_tot ~= 0);
 i_peak = find(P_rf == max(P_rf));
 eta_peak = eta(i_peak);
+%
+I_exp = NaN;
+%
+if isfield(dke_out,'equil') && isfield(dke_out.equil,'icd'),% integrated modelling or experimental current drive
+    %
+    if p_e_2piRp == 0, % ohmic heating in LUKE
+        %
+        I_exp = dke_out.equil.icd/1e6;
+        %
+    elseif isfield(dke_out.equil,'iohm')
+        %
+        I_exp = (dke_out.equil.icd + dke_out.equil.iohm)/1e6;
+        %
+    else
+        %
+        disp('Warning : ohmic heating not available, exp. comparison discarded')
+    end
+end
 %
 if timevol == 1,
     %
@@ -434,10 +521,10 @@ if nr > 1,
                 %
                 for iray = 1:nb(iw),
                     %
-                    ray = radialdampingprofile_jd(waves{iw}.rays{iray},rhoG_dep_S,0);
+                    ray = waves{iw}.rays{iray};
                     %
-                    if isfield(ray,'sP_2piRp')  && isfield(ray,'srho'),
-                        wxdPdrhoG_rf_2piRp_lin(iw,:) = wxdPdrhoG_rf_2piRp_lin(iw,:) + ray.dPnormdrho*ray.sP_2piRp(1)*1e-6;
+                    if isfield(ray,'sP_2piRp_lin')  && isfield(ray,'srho'),
+                        wxdPdrhoG_rf_2piRp_lin(iw,:) = wxdPdrhoG_rf_2piRp_lin(iw,:) + 1e-6*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin,rhoG_dep_S);
                     else
                         wxdPdrhoG_rf_2piRp_lin(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
                     end
@@ -594,29 +681,15 @@ if nr > 1,
                 wne(iw) = interp1(xrhoG,xne,wrhoG(iw));
             end
             %
-            Npar_peak = NaN(1,nb(iw));
-            theta_peak = NaN(1,nb(iw));
-            %
             if ~isfield(waves{iw},'model') || strcmp(waves{iw}.model,'RT'),
+                %
+                wrays{iw} = cell(1,nb(iw));
                 %
                 for iray = 1:nb(iw),
                     %
-                    ibb = iray + sum(nb(1:iw-1));
-                    ray = waves{iw}.rays{iray};
-                    %
-                    vS = zS{ibb};
-                    vP_0_2piRp_mod = zP_0_2piRp_mod{ibb};
-                    %
-                    [dPds_peak,iv_peak] = max(-diff(vP_0_2piRp_mod)./diff(vS));
-                    s_peak = vS(iv_peak);
-                    %
-                    Npar_peak(iray) = interp1(ray.ss,ray.sNpar,s_peak);
-                    theta_peak(iray) = interp1(ray.ss,ray.stheta,s_peak);
+                    wrays{iw}{iray} = proc_ray_jd(waves{iw}.rays{iray});
                     %
                 end
-                %
-                wNpar(iw) = mean(Npar_peak);
-                wtheta(iw) = mean(theta_peak);
                 %
             elseif strcmp(waves{iw}.model,'FW'),
                 %
@@ -639,8 +712,7 @@ if nr > 1,
         wrhoV = '';
         wTe = '';        
         wne = '';     
-        wNpar = '';
-        wtheta = '';
+        wrays = '';
         %
     end
     %
@@ -715,8 +787,21 @@ if nr > 1,
     data_proc.scalar.p_rf_2piRp_lin = p_rf_2piRp_lin;
     data_proc.scalar.p_e_2piRp = p_e_2piRp;
     data_proc.scalar.I_tot = I_tot;
+    data_proc.scalar.I_exp = I_exp;
     data_proc.scalar.EtaRp = EtaRp;
+    data_proc.scalar.EtaRFRp = EtaRFRp;
     data_proc.scalar.nfrags = nfrags;
+    data_proc.scalar.Rp = equilDKE.Rp;
+    data_proc.scalar.jrhoG = jrhoG;
+    data_proc.scalar.jrhoP = jrhoP;
+    data_proc.scalar.jrhoT = jrhoT;
+    data_proc.scalar.jrhoV = jrhoV;
+    data_proc.scalar.jdrhoG = jdrhoG;
+    data_proc.scalar.jdrhoP = jdrhoP;
+    data_proc.scalar.jdrhoT = jdrhoT;
+    data_proc.scalar.jdrhoV = jdrhoV;
+    data_proc.scalar.jTe = jTe;
+    data_proc.scalar.jne = jne;
     % RADIAL QUASI-LINEAR
     data_proc.radial.xrhoG = xrhoG;
     data_proc.radial.xrhoP = xrhoP;
@@ -761,8 +846,7 @@ if nr > 1,
     data_proc.wave.wrhoV = wrhoV;
     data_proc.wave.wTe = wTe;
     data_proc.wave.wne = wne;
-    data_proc.wave.wNpar = wNpar;
-    data_proc.wave.wtheta = wtheta;
+    data_proc.wave.wrays = wrays;
     % WAVE LINEAR
     data_proc.wave.wxrho_lin = rho_dep;
     data_proc.wave.wp_rf_2piRp_lin = wp_rf_2piRp_lin;
@@ -782,6 +866,24 @@ if nr > 1,
     if ir_display >= 0,
         %
         disp(['Total current (I): ',num2str(I_tot),' MA (positive for co-current)'])
+        %
+        if opt.rho == 'g',
+            jrho = jrhoG;
+            jdrho = jdrhoG;
+        elseif opt.rho == 'p',
+            jrho = jrhoG;
+            jdrho = jdrhoG;
+        elseif  opt.rho == 't',
+            jrho = jrhoT;
+            jdrho = jdrhoT;
+        elseif  opt.rho == 'v',
+            jrho = jrhoV;
+            jdrho = jdrhoV;
+        end
+        disp(['Location of current peak (rho',opt.rho,'): ',num2str(jrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
+        disp(['Current FWHM (drho',opt.rho,'): ',num2str(jdrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
+        disp(['RF efficiency (n_19*I*Rp/P): ',num2str(EtaRFRp),' 10^19 A/(W.m^2)'])
+        %
         if isinf(equilDKE.Rp),
             disp(['Launched RF power (P/2piRp): ',num2str(p0_rf_2piRp),' MW/m'])
             disp(['RF power (P/2piRp): ',num2str(p_rf_2piRp),' MW/m ---> ',num2str(100*p_rf_2piRp/p0_rf_2piRp),' %.'])
@@ -1132,7 +1234,7 @@ if nr > 1,
                 ray = waves{iw}.rays{ibb};
                 %
                 sS_c3po = ray.ss;
-                sP_c3po = ray.sP_2piRp*2*pi*equilDKE.Rp;
+                sP_c3po = ray.sP_2piRp_lin*2*pi*equilDKE.Rp;
                 %
                 sS_luke = zS{iy};
                 sP_luke = zP_0_2piRp_mod{iy}*2*pi*equilDKE.Rp;
@@ -1245,6 +1347,12 @@ if ir_display > 0 && ir_display <= nr,
     data_proc.cyl.Fparinit_ref = Fparinit_cyl_ref;
     data_proc.cyl.Dparpar_ref = XDparpar_cyl_ref(1,:);
     %
+    nhnorm = mean((Xfinit(1,:) - Xf0(1,:))./Xfinit(1,:));
+    %
+    disp(['Fraction of suprathermal electrons : ',num2str(nhnorm)]);
+    %
+    Xfh_cyl_ref = (Xf0_cyl_ref - (1 - nhnorm)*Xfinit_cyl_ref)/nhnorm;
+    %
     % Figures
     %
     radialloc = ['\rho = ',num2str(xrho(ir_display))];
@@ -1341,6 +1449,51 @@ if ir_display > 0 && ir_display <= nr,
             %
         end
     end
+    %
+    % ---------- 2D suprathermal distribution function -----------
+    %
+    figure(111),clf,set(11,'Name',['2-D contour of fh - ',dke_out.simul.id])
+    %
+    x1 = ppar_cyl_ref;
+    xlab1 = 'p_{||}/p_{Te}';
+    xlim1 = [-pnmax,pnmax];
+    %
+    x2 = pperp_cyl_ref;
+    xlab2 = 'p_{\perp}/p_{Te}';
+    xlim2 = [0,pnmax];
+    %
+    y = Xfh_cyl_ref;
+    %
+    if max(max(XDparpar_cyl_ref)) > max(max(XDpp_cyl_ref)),
+        y3 = XDparpar_cyl_ref;
+        y3lab = 'D||';
+    else
+        y3 = XDpp_cyl_ref;
+        y3lab = 'Dpp';
+    end
+    y3max = max(max(y3));
+    %
+    y9 = sqrt(pnmax^2 - x1.^2);
+    %
+    graph2D_jd(x1,x2,y','','',radialloc,xlim1,xlim2,0,mksa.betath_ref,[0:0.5:pnmax],0,style,color3,width,siz,1,max(max(y1)));
+    hold on
+    %
+    if y3max > 1e-5,
+        graph2D_jd(x1,x2,y3','','',radialloc,xlim1,xlim2,0,NaN,y3max/100,0,style,color4,width2,siz);
+    end
+    hold off
+    %
+    graph1D_jd(x1,y9,0,0,xlab1,xlab2,radialloc,NaN,xlim1,xlim2,style,marker,color1,width2,siz,gca,red,lspace,bspace2);
+    %
+    axis('equal');axis([xlim1,xlim2]);
+    legend(leg);
+    %
+    if equilDKE.Rp ~= Inf,
+        bounce_ripple_jd(1,pnmax,gridDKE.xmhubounce2,ir_display,Zmripple);
+    end
+    %
+    print_jd(p_opt,[simul_id,'_fh_2D',tir_display],'figures_LUKE');
+    %
     %
     % ---------- parallel distribution difference-----------
     %
