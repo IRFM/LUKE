@@ -1,4 +1,4 @@
-function [waveparam,xyprop,xys,xyPinc_2piRp_lin,yb,yP0_2piRp] = propagation_jd(rays,xpsin_S,xpsin,method,display_mode);
+function [waveparam,xyprop,xys,xyPinc_2piRp_lin,yb,yP0_2piRp] = propagation_jd(rays,xpsin_S,xpsin,method,display_mode)
 %
 % This function couples the DKE code with a ray-tracing code.
 % RF rays are distributed onto the DKE flux surfaces.
@@ -293,15 +293,15 @@ for ib = 1:nb
             else
                 xys(ir0,iy) = (ss(is0) + ss(is1))/2;
             end
-            %xyPinc_2piRp_lin(ir0,iy) = ray.sP_2piRp(is0);
+            %xyPinc_2piRp_lin(ir0,iy) = ray.sP_2piRp_lin(is0);
         end
         if isnan(xys(ir1,iy)),
             xys(ir1,iy) = (ssiscross(end) + ss(is1))/2;
-            %xyPinc_2piRp_lin(ir1,iy) = ray.sP_2piRp(is1); 
+            %xyPinc_2piRp_lin(ir1,iy) = ray.sP_2piRp_lin(is1); 
         end
         %
-        if isfield(ray,'sP_2piRp'),
-            xyPinc_2piRp_lin(xmask,iy) = interp1(ss(ismask),ray.sP_2piRp(ismask),xys(xmask,iy),method);
+        if isfield(ray,'sP_2piRp_lin'),
+            xyPinc_2piRp_lin(xmask,iy) = interp1(ss(ismask),ray.sP_2piRp_lin(ismask),xys(xmask,iy),method);
         else
             xyPinc_2piRp_lin(xmask,iy) = ray.P0_2piRp;
         end

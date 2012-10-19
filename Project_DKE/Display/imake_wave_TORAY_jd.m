@@ -204,7 +204,7 @@ for iy = 1:ny,
     ray.sepol_pmz = [];% polarization vector [3,ns] complex
     ray.sphi_xyz = [];% normalized power flow [3,ns]
     %
-    ray.sP_2piRp = ray.P0_2piRp*(1 - syPabs{iy}.');
+    ray.sP_2piRp_lin = ray.P0_2piRp*(1 - syPabs{iy}.');
     %
     rays{iy} = ray;
 end
