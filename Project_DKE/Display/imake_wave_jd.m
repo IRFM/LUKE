@@ -202,14 +202,17 @@ elseif i_opt == 2,% build the wave data locally
     elseif d_opt == 1,%initial conditions from an existing LAUNCH file 
         %
         launch = iload_struct_jd('launch','LAUNCH',workdir,opt_gui);
+        launch = imod_struct_jd(launch,'launch',1,opt_gui);
         %
         type = launch.type;
         %
     elseif d_opt == 2,%initial conditions from an existing RAYINIT file 
         %
         rayinit = iload_struct_jd('rayinit','RAYINIT',workdir,opt_gui);
+        rayinit = imod_struct_jd(rayinit,'rayinit',1,opt_gui);
         %
         type = rayinit.type;
+        %
     elseif d_opt == 3,%initial conditions from an existing ALOHA file 
         %
         [alohafile,alohapath] = igetfile_jd(opt_gui,'*.*','Please select the ALOHA output file',workdir,0);
