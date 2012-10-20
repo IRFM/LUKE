@@ -6,7 +6,11 @@ function [varargout] = run_lukert(simul_in,wavestructs,waves,psin_S,rho_S,dkepat
 %
 % remote luke run if specified in dkepath
 %
-if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && isinteger(dkepath.remnum) && dkepath.remnum >= 1 && dkepath.remnum <= length(dkepath.remote),
+if nargin < 15,
+   opt_save_in = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
+end
+%
+if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && dkepath.remnum == round(dkepath.remnum) && dkepath.remnum >= 1 && dkepath.remnum <= length(dkepath.remote),
     luke_input.simul_in = simul_in;
     luke_input.dkeparam = dkeparam_in;
     luke_input.dkeparam.psin_S = psin_S;
@@ -24,28 +28,32 @@ if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && isinteger(dkepath.re
     %
     luke_job = runluke_remote_jd(luke_input,dkepath.remote(dkepath.remnum),dkedisplay_in.display_mode);
     %
-    if ~isfield(dkepath,'remtimout'),
-        dkepath.remtimout = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes) [60]',60);
-    end
-    %
-    for it = 1:dkepath.remtimout,
-        %
-        pause(60);
-        %
-        output = getluke_remote_jd(luke_job,remote,dkedisplay_in.display_mode);
-        %
-        if ~isempty(output),
-            break
-        elseif dkedisplay_in.display_mode >= 1,
-            disp(['Elapsed time : ',num2str(it),'/',num2str(dkepath.remtimout),' minutes'])
+    if isfield(luke_job,'err'),% an error occured in the remote job start,
+        output.err = luke_job.err;
+    else
+        if ~isfield(dkepath,'remtimout'),
+            dkepath.remtimout = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes) [60]',60);
         end
         %
+        for it = 1:dkepath.remtimout,
+            %
+            pause(60);
+            %
+            output = getluke_remote_jd(luke_job,remote,dkedisplay_in.display_mode);
+            %
+            if ~isempty(output),
+                break
+            elseif dkedisplay_in.display_mode >= 1,
+                disp(['Elapsed time : ',num2str(it),'/',num2str(dkepath.remtimout),' minutes'])
+            end
+            %
+        end
     end
     %
     if isempty(output),
         disp('Timeout reached, calculation started locally')
     elseif isfield(output,'err'),
-        disp('Remote LUKE run failed, calculation started locally')
+        disp('Remote LUKE run failed, calculation started locally if enforced')
     else
     	varargout{1} = output.Znorm;
     	varargout{2} = output.Zcurr;
@@ -69,6 +77,16 @@ if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && isinteger(dkepath.re
         return
         %        
     end
+    %
+    if isfield(dkepath,'remenforce') && dkepath.remenforce == 0,%do not enforce local calculation, exit instead
+        varargout{1} = output;
+        for iarg = 2:13,
+            varargout{iarg} = '';
+        end
+        %
+        return
+    end
+    %
 end   
 %
 [dummy,matlabversion,matlabrelease] = LUKEversion_jd;
@@ -81,10 +99,6 @@ else
 	else
 		RandStream.setGlobalStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
 	end
-end
-%
-if nargin < 15,
-   opt_save_in = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
 end
 %
 if ~isstruct(simul_in),
