@@ -25,11 +25,13 @@ macproyves.computer = computer;%machine type and supported OS
 %
 % Selected user profile (structure hostname.usernames(path_profile).xxx)
 %
-macproyves.path_profile = 1;
+macproyves.default = 'yvespeysson';
+macproyves.path_profile.yvespeysson = 1;
 %
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %
-macproyves.yvespeysson(1).luke_root = [getenv('HOME'),'/Travail/Projets/',luke_ref,'/'];
+%macproyves.yvespeysson(1).luke_root = [getenv('HOME'),'/Travail/Projets/',luke_ref,'/'];
+macproyves.yvespeysson(1).luke_root = [pwd,'/'];
 macproyves.yvespeysson(1).local_root = [getenv('HOME'),'/Shared/'];
 macproyves.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -126,18 +128,32 @@ macproyves.yvespeysson(1).TSBASE.mex = [macproyves.yvespeysson(1).luke_root,'Pro
 % authentication, rights of the target directory, Matlab and Packages ! Use
 % the debug mode for identifying the problem.
 %
-macproyves.yvespeysson(1).remote(1).host = {macproyves.hostname,macproyves.hostname};%may be empty for local host
-macproyves.yvespeysson(1).remote(1).cluster = macproyves.hostname;
-macproyves.yvespeysson(1).remote(1).nproc = 2*feature('numCores');%number of cpu
-macproyves.yvespeysson(1).remote(1).matlabroot = [getenv('MATLAB_PATH'),'/bin/'];%matlab application
-macproyves.yvespeysson(1).remote(1).luke_root = macproyves.yvespeysson(1).luke_root;%local host LUKE root
-macproyves.yvespeysson(1).remote(1).prefdir = [getenv('HOME'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir
-macproyves.yvespeysson(1).remote(1).cmd = {'xgrid -h ',' -p ',' -job batch ','xgrid_batch_matlab_'};%
-macproyves.yvespeysson(1).remote(1).mem = [];
-macproyves.yvespeysson(1).remote(1).get_jobid = {'jobIdentifier = ',';'};%
-macproyves.yvespeysson(1).remote(1).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
-macproyves.yvespeysson(1).remote(1).password = {'ghm93'};
-macproyves.yvespeysson(1).remote(1).(getenv('USER')) = (getenv('USER'));
+% LOCAL # 1 - CONDOR
+%
+macproyves.yvespeysson(1).remote(1).host = '';
+macproyves.yvespeysson(1).remote(1).cmd = 'condor_submit';
+macproyves.yvespeysson(1).remote(1).get_jobid = {'** Proc ',':'};
+macproyves.yvespeysson(1).remote(1).set_jobid = {'condor_q ',''};
+macproyves.yvespeysson(1).remote(1).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
+macproyves.yvespeysson(1).remote(1).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
+macproyves.yvespeysson(1).remote(1).matlabroot.mat712 = '/Applications/MATLAB_R2012a.app/bin/';
+macproyves.yvespeysson(1).remote(1).matlabroot.default = macproyves.yvespeysson(1).remote(1).matlabroot.mat712;
+macproyves.yvespeysson(1).remote(1).luke_root = macproyves.yvespeysson(1).luke_root;
+%
+% LOCAL # 1 - XGRID
+%
+macproyves.yvespeysson(1).remote(2).host = {macproyves.hostname,macproyves.hostname};%may be empty for local host
+macproyves.yvespeysson(1).remote(2).cluster = macproyves.hostname;
+macproyves.yvespeysson(1).remote(2).nproc = 2*feature('numCores');%number of cpu
+macproyves.yvespeysson(1).remote(2).matlabroot = [getenv('MATLAB_PATH'),'/bin/'];%matlab application
+macproyves.yvespeysson(1).remote(2).luke_root = macproyves.yvespeysson(1).luke_root;%local host LUKE root
+macproyves.yvespeysson(1).remote(2).prefdir = [getenv('HOME'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir
+macproyves.yvespeysson(1).remote(2).cmd = {'xgrid -h ',' -p ',' -job batch ','xgrid_batch_matlab_'};%
+macproyves.yvespeysson(1).remote(2).mem = [];
+macproyves.yvespeysson(1).remote(2).get_jobid = {'jobIdentifier = ',';'};%
+macproyves.yvespeysson(1).remote(2).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+macproyves.yvespeysson(1).remote(2).password = {'ghm93'};
+macproyves.yvespeysson(1).remote(2).(getenv('USER')) = (getenv('USER'));
 %
 % SATURNE CEA cluster
 %
@@ -147,14 +163,47 @@ HOST = 'saturne1.partenaires.cea.fr';
 HOME = '/home/YP105119';
 NPROC = 12;
 %
-macproyves.yvespeysson(1).remote(2).host = {HOST};
-macproyves.yvespeysson(1).remote(2).cluster = CLUSTER;
-macproyves.yvespeysson(1).remote(2).nproc = NPROC;
-macproyves.yvespeysson(1).remote(2).luke_root = [HOME,'/',luke_ref,'/'];
-macproyves.yvespeysson(1).remote(2).matlabroot = '';
-macproyves.yvespeysson(1).remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-macproyves.yvespeysson(1).remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
-macproyves.yvespeysson(1).remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
-macproyves.yvespeysson(1).remote(2).password = {''};
-macproyves.yvespeysson(1).remote(2).(getenv('USER')) = USER;
-
+macproyves.yvespeysson(1).remote(3).host = {HOST};
+macproyves.yvespeysson(1).remote(3).cluster = CLUSTER;
+macproyves.yvespeysson(1).remote(3).nproc = NPROC;
+macproyves.yvespeysson(1).remote(3).luke_root = [HOME,'/',luke_ref,'/'];
+macproyves.yvespeysson(1).remote(3).matlabroot = '';
+macproyves.yvespeysson(1).remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+macproyves.yvespeysson(1).remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
+macproyves.yvespeysson(1).remote(3).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+macproyves.yvespeysson(1).remote(3).password = {''};
+macproyves.yvespeysson(1).remote(3).(getenv('USER')) = USER;
+%
+%------------------------------------ Profile number 2, Joan Decker ------------------------------------
+%
+%
+% Warning : use of profile numbers better but requires verifying all calls to load_structures_yp... TODO 
+%
+% macproyves.yvespeysson(2).luke_root = [getenv('HOME'),'/joandecker/Work/',luke_ref,'/'];
+% macproyves.yvespeysson(2).local_root = macproyves.yvespeysson(1).local_root;
+% macproyves.yvespeysson(2).temppathroot = macproyves.yvespeysson(1).temppathroot;
+% %
+% macproyves.yvespeysson(2).mex713 = [macproyves.yvespeysson(2).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB713','/'];
+% macproyves.yvespeysson(2).mex714 = [macproyves.yvespeysson(2).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB714','/'];
+% %
+% macproyves.yvespeysson(2).compiler_opt.copts = macproyves.yvespeysson(1).compiler_opt;
+% macproyves.yvespeysson(2).compiler_opt.helmex = '-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+% macproyves.yvespeysson(2).compiler_opt.fopts = ' ';
+% %
+% macproyves.yvespeysson(2).MUMPS = macproyves.yvespeysson(1).MUMPS;
+% macproyves.yvespeysson(2).SUPERLU = macproyves.yvespeysson(1).SUPERLU;
+% %
+% macproyves.yvespeysson(2).TSBASE.mex = [macproyves.yvespeysson(2).luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase'];%Where tsbase, tsmat and tsdernier_choc functions are stored (MEX function)
+% %
+% % LOCAL # 1 - CONDOR
+% %
+% macproyves.yvespeysson(2).remote(1).host = '';
+% macproyves.yvespeysson(2).remote(1).cmd = 'condor_submit';
+% macproyves.yvespeysson(2).remote(1).get_jobid = {'** Proc ',':'};
+% macproyves.yvespeysson(2).remote(1).set_jobid = {'condor_q ',''};
+% macproyves.yvespeysson(2).remote(1).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
+% macproyves.yvespeysson(2).remote(1).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
+% macproyves.yvespeysson(2).remote(1).matlabroot.mat712 = '/Applications/MATLAB_R2012a.app/bin/';
+% macproyves.yvespeysson(2).remote(1).matlabroot.default = macproyves.yvespeysson(2).remote(1).matlabroot.mat712;
+% macproyves.yvespeysson(2).remote(1).luke_root = macproyves.yvespeysson(2).luke_root;
+%

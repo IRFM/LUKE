@@ -67,23 +67,33 @@ laptopjoan.joan(1).MUMPS.mex710 = [laptopjoan.joan(1).local_root,'MUMPS_4.9.2/MA
 laptopjoan.joan(1).MUMPS.mex711 = [laptopjoan.joan(1).local_root,'MUMPS_4.9.2/MATLAB711'];%Where MUMPS matrix solver is stored (MEX function)
 laptopjoan.joan(1).MUMPS.mex712 = [laptopjoan.joan(1).local_root,'MUMPS_4.9.2/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
 %
-laptopjoan.joan(1).remote(1).host = 'cephee15.intra.cea.fr';
-laptopjoan.joan(1).remote(1).nproc = 28;
-laptopjoan.joan(1).remote(1).luke_root = ['/home/sccp/gsem/decker/LUKE/'];
-laptopjoan.joan(1).remote(1).matlabroot = '';
-laptopjoan.joan(1).remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
-laptopjoan.joan(1).remote(1).mem = {',mem=','mb','7000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
-laptopjoan.joan(1).remote(1).get_jobid = {'','.cephee'};%str_before,str_after
-laptopjoan.joan(1).remote(1).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
-laptopjoan.joan(1).remote(1).joan = 'JD211098';
+% macproyves (condor)
 %
-laptopjoan.joan(1).remote(2).host = 'saturne1.partenaires.cea.fr';
-laptopjoan.joan(1).remote(2).nproc = 12;
-laptopjoan.joan(1).remote(2).luke_root = ['/home/JD211098/LUKE/'];
+laptopjoan.joan(1).remote(1).host = 'tolbachik.hd.free.fr';
+laptopjoan.joan(1).remote(1).cmd = 'condor_submit';
+laptopjoan.joan(1).remote(1).get_jobid = {'** Proc ',':'};
+laptopjoan.joan(1).remote(1).set_jobid = {'condor_q ',''};
+%
+laptopjoan.joan(1).remote(1).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
+laptopjoan.joan(1).remote(1).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
+laptopjoan.joan(1).remote(1).matlabroot.mat712 = '/Applications/MATLAB_R2012a.app/bin/';
+laptopjoan.joan(1).remote(1).matlabroot.default = laptopjoan.joan(1).remote(1).matlabroot.mat712;
+laptopjoan.joan(1).remote(1).luke_root = '/Users/yvespeysson/joandecker/Work/LUKE_1_10/';
+%
+laptopjoan.joan(1).remote(1).yves = 'yvespeysson';
+laptopjoan.joan(1).remote(1).joan = 'yvespeysson';%'joandecker';
+laptopjoan.joan(1).remote(1).JD211098 = 'yvespeysson';%'joandecker';
+%
+return
+%
+laptopjoan.joan(1).remote(2).host = 'cephee15.intra.cea.fr';
+laptopjoan.joan(1).remote(2).nproc = 28;
+laptopjoan.joan(1).remote(2).luke_root = ['/home/sccp/gsem/decker/LUKE/'];
 laptopjoan.joan(1).remote(2).matlabroot = '';
-laptopjoan.joan(1).remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-laptopjoan.joan(1).remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
-laptopjoan.joan(1).remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+laptopjoan.joan(1).remote(2).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
+laptopjoan.joan(1).remote(2).mem = {',mem=','mb','7000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
+laptopjoan.joan(1).remote(2).get_jobid = {'','.cephee'};%str_before,str_after
+laptopjoan.joan(1).remote(2).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 laptopjoan.joan(1).remote(2).joan = 'JD211098';
 %
 laptopjoan.joan(1).remote(3).host = 'pleiades2.epfl.ch';
@@ -114,3 +124,12 @@ laptopjoan.joan(1).remote(4).get_jobid = {'jobIdentifier = ',';'};%
 laptopjoan.joan(1).remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
 laptopjoan.joan(1).remote(4).password = {'chatel00'};
 laptopjoan.joan(1).remote(4).(getenv('USER')) = USER;
+%
+laptopjoan.joan(1).remote(5).host = 'saturne1.partenaires.cea.fr';
+laptopjoan.joan(1).remote(5).nproc = 12;
+laptopjoan.joan(1).remote(5).luke_root = ['/home/JD211098/LUKE/'];
+laptopjoan.joan(1).remote(5).matlabroot = '';
+laptopjoan.joan(1).remote(5).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+laptopjoan.joan(1).remote(5).get_jobid = {'Your job ',' '};%str_before,str_after
+laptopjoan.joan(1).remote(5).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+laptopjoan.joan(1).remote(5).joan = 'JD211098';
