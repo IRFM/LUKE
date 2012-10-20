@@ -52,8 +52,7 @@ remotedirtest_jd(remotehost,remotelogname,[remotehome,filesep,'remotebatchtest/m
 %
 % copy test files into directory
 %
-remotefilecopy_jd(remotehost,remotelogname,'remotebatch',[remotehome,filesep,'remotebatchtest/bin/'])
-remotefilecopy_jd(remotehost,remotelogname,'condor_matlab.sh',[remotehome,filesep,'remotebatchtest/bin/'])
+remotefilecopy_jd(remotehost,remotelogname,which('matlabbatch.sh'),[remotehome,filesep,'remotebatchtest/bin/'])
 remotefilecopy_jd(remotehost,remotelogname,'remotetest.m',[remotehome,filesep,'remotebatchtest/mat/'])
 %
 disp('-------------------------------------------------------')
