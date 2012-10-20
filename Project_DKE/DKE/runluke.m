@@ -2,8 +2,11 @@ function runluke(timeid,debugmode)
 %
 try
     %
-    if nargin == 0,
+    if nargin < 1,
         timeid = getenv('jobtimeid');
+        if isempty(timeid),
+            error('timeid not prescribed')
+        end
     else
         stimeid = whos('timeid');
         if ~strcmp(stimeid.class,'char'),
@@ -12,7 +15,10 @@ try
     end
     %
     if nargin < 2,
-        debugmode = 0;
+        debugmode = str2double(getenv('debugmode'));
+        if isempty(debugmode),
+            debugmode = 0;
+        end
     end
     %
     if debugmode,
@@ -21,16 +27,10 @@ try
     end
     %
     datapath = getenv('remotedatapath');
-    xgridmode = getenv('LUKE_xgrid');
     logname = getenv('USER');
     %
-    filein = [datapath,'LUKE_RUN_',logname,'_',timeid,'.mat'];
-    %
-    if xgridmode,
-        fileout = ['LUKE_OUT_',logname,'_',timeid,'.mat'];
-    else
-        fileout = [datapath,'LUKE_OUT_',logname,'_',timeid,'.mat'];
-    end
+    filein = [datapath,'MAT_RUN_',logname,'_',timeid,'.mat'];
+    fileout = [datapath,'MAT_OUT_',logname,'_',timeid,'.mat'];
     %
     if debugmode,
         disp('-------- in runluke.m --------');
@@ -43,13 +43,9 @@ try
         disp('------------------------------');
     end
     %
-    load(filein,'simul_in','wavestructs','waves','dkeparam','dkepath','equil','dkedisplay','ohm','transpfaste','ripple','Zf0_interp','XXsinksource','opt_save');
+    load(filein,'simul_in','wavestructs','waves','dkeparam','equil','dkedisplay','ohm','transpfaste','ripple','Zf0_interp','XXsinksource','opt_save');
     %
-    if isempty(dkepath),
-        dkepath = load_structures_yp('dkepath','','');
-    else
-        setpath_luke_jd(dkepath.luke_root,dkepath);
-    end
+    dkepath = load_structures_yp('dkepath','','');
     %
     warning off
     %

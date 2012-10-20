@@ -39,7 +39,7 @@ if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && dkepath.remnum == ro
             %
             pause(60);
             %
-            output = getluke_remote_jd(luke_job,remote,dkedisplay_in.display_mode);
+            output = getluke_remote_jd(luke_job,dkepath.remote(dkepath.remnum),dkedisplay_in.display_mode);
             %
             if ~isempty(output),
                 break
