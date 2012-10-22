@@ -1,1 +1,0 @@
-"$remotebatch_matlabroot"matlab -nodesktop -r "remotebatch_path = getenv('remotebatch_path');addpath(remotebatch_path);disp([' Path set to ',remotebatch_path]);remotetest"
