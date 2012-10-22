@@ -72,7 +72,7 @@ for iepsi = 1:length(epsi_list),
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f{1}(max([1,find(~isnan(dke_out.residu_f{1}))])) < dkeparam.prec0_f,
+    if dke_out.residu_f{end}(max([1,find(~isnan(dke_out.residu_f{end}))])) < dkeparam.prec0_f,
         sigma_0(iepsi) = Zcurr.x_0/epsi;
         sigma_0_noconv(iepsi) = NaN;
     else
@@ -92,7 +92,7 @@ for iepsi = 1:length(epsi_list),
     %
     dkeparam.coll_mode = 1;% High-velocity limit
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f{1}(max([1,find(~isnan(dke_out.residu_f{1}))])) < dkeparam.prec0_f,
+    if dke_out.residu_f{end}(max([1,find(~isnan(dke_out.residu_f{end}))])) < dkeparam.prec0_f,
         sigma_1(iepsi) = Zcurr.x_0/epsi;
         sigma_1_noconv(iepsi) = NaN;
     else
@@ -112,7 +112,7 @@ for iepsi = 1:length(epsi_list),
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-    if dke_out.residu_f{1}(max([1,find(~isnan(dke_out.residu_f{1}))])) < dkeparam.prec0_f,
+    if dke_out.residu_f{end}(max([1,find(~isnan(dke_out.residu_f{end}))])) < dkeparam.prec0_f,
         sigma_2(iepsi) = Zcurr.x_0/epsi;
         sigma_2_noconv(iepsi) = NaN;
     else
