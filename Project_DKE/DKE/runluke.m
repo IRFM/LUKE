@@ -1,73 +1,11 @@
-function runluke(timeid,debugmode)
+function luke_output = runluke(luke_input)
 %
-try
-    %
-    if nargin < 1,
-        timeid = getenv('jobtimeid');
-        if isempty(timeid),
-            error('timeid not prescribed')
-        end
-    else
-        stimeid = whos('timeid');
-        if ~strcmp(stimeid.class,'char'),
-            timeid = int2str(timeid);% in case timeid is integer
-        end
-    end
-    %
-    if nargin < 2,
-        debugmode = str2double(getenv('debugmode'));
-        if isempty(debugmode),
-            debugmode = 0;
-        end
-    end
-    %
-    if debugmode,
-        filediary = ['matlab_diary.',timeid];
-        diary(filediary);
-    end
-    %
-    datapath = getenv('remotedatapath');
-    logname = getenv('USER');
-    %
-    filein = [datapath,'MAT_RUN_',logname,'_',timeid,'.mat'];
-    fileout = [datapath,'MAT_OUT_',logname,'_',timeid,'.mat'];
-    %
-    if debugmode,
-        disp('-------- in runluke.m --------');
-        disp(['datapath = ',datapath]);
-        disp(['xgridmode = ',xgridmode]);
-        disp(['logname = ',logname]);
-        disp(['timeid = ',timeid]);
-        disp(['filein = ',filein]);
-        disp(['fileout = ',fileout]);
-        disp('------------------------------');
-    end
-    %
-    load(filein,'simul_in','wavestructs','waves','dkeparam','equil','dkedisplay','ohm','transpfaste','ripple','Zf0_interp','XXsinksource','opt_save');
-    %
-    dkepath = load_structures_yp('dkepath','','');
-    %
-    warning off
-    %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = ...
-        run_lukert(simul_in,wavestructs,waves,dkeparam.psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,Zf0_interp,XXsinksource,opt_save);   
-    %
-    save(fileout,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
-    %
-catch
-    %
-    lsterr = lasterror;
-    %
-    err = {'The action was cancelled due to the following error:','',lsterr.message};
-    for il = 1:length(lsterr.stack),
-        err = [err,['In ',lsterr.stack(il).file,' at line ',num2str(lsterr.stack(il).line)]];
-    end
-    %
-    save(fileout,'err')
-    %
-end
+dkepath = load_structures_yp('dkepath','','');
 %
-if debugmode,
-    diary off
-end
+warning off
+%
+[luke_output.Znorm,luke_output.Zcurr,luke_output.ZP0,luke_output.dke_out,luke_output.radialDKE,...
+        luke_output.equilDKE,luke_output.momentumDKE,luke_output.gridDKE,luke_output.Zmomcoef,luke_output.Zbouncecoef,luke_output.Zmripple,luke_output.mksa,luke_output.XXsinksource] = ...
+    run_lukert(luke_input.simul_in,luke_input.wavestructs,luke_input.waves,luke_input.dkeparam.psin_S,luke_input.dkeparam.rho_S,dkepath,...
+        luke_input.equil,luke_input.dkeparam,luke_input.dkedisplay,luke_input.ohm,luke_input.transpfaste,luke_input.ripple,luke_input.Zf0_interp,luke_input.XXsinksource,luke_input.opt_save);   
 %
