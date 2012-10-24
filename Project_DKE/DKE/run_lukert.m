@@ -11,75 +11,32 @@ if nargin < 15,
 end
 %
 if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && dkepath.remnum == round(dkepath.remnum) && dkepath.remnum >= 1 && dkepath.remnum <= length(dkepath.remote),
-    luke_input.simul_in = simul_in;
-    luke_input.dkeparam = dkeparam_in;
-    luke_input.dkeparam.psin_S = psin_S;
-    luke_input.dkeparam.rho_S = rho_S;
-    luke_input.dkedisplay = dkedisplay_in;
-    luke_input.equil = equil;
-    luke_input.waves = waves;
-    luke_input.wavestructs = wavestructs;
-    luke_input.ohm = ohm;
-    luke_input.transpfaste = transpfaste;
-    luke_input.ripple = ripple;
-    luke_input.Zf0_interp = XXf0;
-    luke_input.XXsinksource = XXsinksource_in;
-    luke_input.opt_save = opt_save_in;
     %
-    luke_job = runluke_remote_jd(luke_input,dkepath.remote(dkepath.remnum),dkedisplay_in.display_mode);
+    varargout = cell(1,nargout);
     %
-    if isfield(luke_job,'err'),% an error occured in the remote job start,
-        output.err = luke_job.err;
+    remote = dkepath.remote(dkepath.remnum);
+    %
+    if isfield(dkepath,'remtimout'),%timeout
+        remote.remtimout = dkepath.remtimout;
     else
-        if ~isfield(dkepath,'remtimout'),
-            dkepath.remtimout = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes) [60]',60);
-        end
-        %
-        for it = 1:dkepath.remtimout,
-            %
-            pause(60);
-            %
-            output = getluke_remote_jd(luke_job,dkepath.remote(dkepath.remnum),dkedisplay_in.display_mode);
-            %
-            if ~isempty(output),
-                break
-            elseif dkedisplay_in.display_mode >= 1,
-                disp(['Elapsed time : ',num2str(it),'/',num2str(dkepath.remtimout),' minutes'])
-            end
-            %
-        end
+        remote.remtimout = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes) [60]',60);
     end
+    remote.rempause = 60;%pause between job checks
     %
-    if isempty(output),
-        disp('Timeout reached, calculation started locally')
-    elseif isfield(output,'err'),
-        disp('Remote LUKE run failed, calculation started locally if enforced')
-    else
-    	varargout{1} = output.Znorm;
-    	varargout{2} = output.Zcurr;
-    	varargout{3} = output.ZP0;
-    	varargout{4} = output.dke_out;
-    	varargout{5} = output.radialDKE;
-        %
+    remote.debugmode = dkedisplay_in.display_mode;
+    %
+    [err,varargout{:}] = matremote_luke_jd('run_lukert',{simul_in,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam_in,dkedisplay_in,ohm,transpfaste,ripple,XXf0,XXsinksource_in,opt_save_in},remote);
+    %
+    if isempty(err)
         if isfield(equil,'fluct'),
-            output.equilDKE.fluct = equil.fluct;%for transfering info about plasma fluctuations
+            varargout{6}.fluct = equil.fluct;%for transfering info about plasma fluctuations
         end
-        varargout{6} = output.equilDKE;
-        %
-        varargout{7} = output.momentumDKE;
-    	varargout{8} = output.gridDKE;
-    	varargout{9} = output.Zmomcoef;
-    	varargout{10} = output.Zbouncecoef;
-    	varargout{11} = output.Zmripple;
-    	varargout{12} = output.mksa;
-    	varargout{13} = output.XXsinksource;
         %
         return
-        %        
     end
     %
     if isfield(dkepath,'remenforce') && dkepath.remenforce == 0,%do not enforce local calculation, exit instead
-        varargout{1} = output;
+        varargout{1} = err;
         for iarg = 2:13,
             varargout{iarg} = '';
         end
