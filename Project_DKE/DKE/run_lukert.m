@@ -21,7 +21,7 @@ if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && dkepath.remnum == ro
     else
         remote.remtimout = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes) [60]',60);
     end
-    remote.rempause = 60;%pause between job checks
+    remote.rempause = 1;%pause between job checks (in minutes)
     %
     remote.debugmode = dkedisplay_in.display_mode;
     %
