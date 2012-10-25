@@ -88,22 +88,14 @@ macbookyves.yves(1).TSBASE.mex = [macbookyves.yves(1).luke_root,'Project_DKE/Dat
 % WARNING: the setup of the scheduler may be complicated and is usually
 % machine dependent. 
 %
-% MACBOOK PRO Yves (local)
+% MACBOOK PRO Yves (local - condor)
 %
-macbookyves.yves(1).remote(1).host = {macbookyves.hostname,macbookyves.hostname};%may be empty for local host
-macbookyves.yves(1).remote(1).cluster = macbookyves.hostname;
+macbookyves.yves(1).remote(1).host = '';
 macbookyves.yves(1).remote(1).nproc = feature('numCores');%number of cpu
-macbookyves.yves(1).remote(1).home = [getenv('HOME'),'/condor/'];
-macbookyves.yves(1).remote(1).matlabroot = [getenv('MATLAB_BASEDIR'),'/bin/'];%matlab application
+macbookyves.yves(1).remote(1).cmd = 'condor_submit';
+macbookyves.yves(1).remote(1).get_jobid = {'** Proc ',':'};
+macbookyves.yves(1).remote(1).set_jobid = {'condor_q ',''};
 macbookyves.yves(1).remote(1).luke_root = macbookyves.yves(1).luke_root;%local host LUKE root
-macbookyves.yves(1).remote(1).prefdir = [getenv('HOME'),'/.matlab/',matlabrelease,'/'];%Matlab preference dir
-macbookyves.yves(1).remote(1).cmd = {'condor_submit ','batch_matlab_'};%
-macbookyves.yves(1).remote(1).path = {'CONDOR_CONFIG','/usr/local/condor/etc/condor_config','PATH','/usr/local/condor/sbin:/usr/local/condor/bin'};%
-macbookyves.yves(1).remote(1).mem = [];
-macbookyves.yves(1).remote(1).get_jobid = {'** Proc ',':'};%
-macbookyves.yves(1).remote(1).set_jobid = {'condor_q '};%
-macbookyves.yves(1).remote(1).password = {'ghm93'};
-macbookyves.yves(1).remote(1).(getenv('USER')) = (getenv('USER'));        
 %
 % CEPHEE CEA cluster
 %
@@ -182,47 +174,34 @@ macbookyves.yves(1).remote(3).(getenv('USER')) = USER;
 % WARNING: most of the problems come from the SSH without login
 % authentication, rights of the target directory and Matlab !
 %
+% macproyves (xgrid)
 %
-USER = 'yvespeysson';
-CLUSTER = 'macproyves';
-HOST = 'tolbachik.hd.free.fr';%
-HOME = '/Users/yvespeysson';
-APPLICATIONS = 'MATLAB_R2012a';
-NPROC = 6;
-%
-macbookyves.yves(1).remote(4).host = {HOST,macbookyves.hostname};
-macbookyves.yves(1).remote(4).cluster = CLUSTER;
-macbookyves.yves(1).remote(4).nproc = NPROC;
-macbookyves.yves(1).remote(4).home = [HOME,'/xgrid/'];
-macbookyves.yves(1).remote(4).luke_root = [HOME,'/Travail/Projets/',luke_ref,'/'];
-macbookyves.yves(1).remote(4).matlabroot = ['/Applications/',APPLICATIONS,'.app/bin/'];
-macbookyves.yves(1).remote(4).prefdir = [HOME,'/.matlab/',APPLICATIONS(strfind(APPLICATIONS,'MATLAB')+7:strfind(APPLICATIONS,'MATLAB')+12)];
-macbookyves.yves(1).remote(4).cmd = {'xgrid -h ',' -p ',' -job batch ','xgrid_batch_matlab_'};%
-macbookyves.yves(1).remote(4).mem = [];
-macbookyves.yves(1).remote(4).get_jobid = {'jobIdentifier = ',';'};%
+macbookyves.yves(1).remote(4).host = 'tolbachik.hd.free.fr';
+macbookyves.yves(1).remote(4).nproc = 6;
+macbookyves.yves(1).remote(4).cmd = {'xgrid -h ',' -p ',' -job batch '};
+macbookyves.yves(1).remote(4).get_jobid = {'jobIdentifier = ',';'};
 macbookyves.yves(1).remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+macbookyves.yves(1).remote(4).remotedatapath = '/Users/yvespeysson/xgrid/';
+macbookyves.yves(1).remote(4).mat714.root = '/Applications/MATLAB_R2012a.app/bin/';
+macbookyves.yves(1).remote(4).mat714.prefdir = '/Users/yvespeysson/.matlab/R2012a';
+macbookyves.yves(1).remote(4).matdef = macbookyves.yves(1).remote(4).mat714;%default matlab on remote machine
+macbookyves.yves(1).remote(4).luke_root = ['/Users/yvespeysson/Travail/Projets/',luke_ref,'/'];
 macbookyves.yves(1).remote(4).password = {'ghm93'};
-macbookyves.yves(1).remote(4).(getenv('USER')) = USER;
+macbookyves.yves(1).remote(4).(getenv('USER')) = 'yvespeysson';
 %
-USER = 'yvespeysson';
-CLUSTER = 'macproyves';
-HOST = 'tolbachik.hd.free.fr';%
-HOME = '/Users/yvespeysson';
-APPLICATIONS = 'MATLAB_R2012a';
-NPROC = 6;
+% macproyves (condor)
 %
-macbookyves.yves(1).remote(5).host = {HOST,macbookyves.hostname};
-macbookyves.yves(1).remote(5).cluster = CLUSTER;
-macbookyves.yves(1).remote(5).nproc = NPROC;
-macbookyves.yves(1).remote(5).home = [HOME,'/condor/'];
-macbookyves.yves(1).remote(5).luke_root = [HOME,'/Travail/Projets/',luke_ref,'/'];
-macbookyves.yves(1).remote(5).matlabroot = ['/Applications/',APPLICATIONS,'.app/bin/'];
-macbookyves.yves(1).remote(5).prefdir = [HOME,'/.matlab/',APPLICATIONS(strfind(APPLICATIONS,'MATLAB')+7:strfind(APPLICATIONS,'MATLAB')+12)];
-macbookyves.yves(1).remote(5).cmd = {'condor_submit ','batch_matlab_'};%
-macbookyves.yves(1).remote(5).path = {'CONDOR_CONFIG','/usr/local/condor/etc/condor_config','PATH','/usr/local/condor/sbin:/usr/local/condor/bin'};%
-macbookyves.yves(1).remote(5).mem = [];
-macbookyves.yves(1).remote(5).get_jobid = {'** Proc ',':'};%
-macbookyves.yves(1).remote(5).set_jobid = {'condor_q '};%
-macbookyves.yves(1).remote(5).password = {'ghm93'};
-macbookyves.yves(1).remote(5).(getenv('USER')) = USER;
+macbookyves.yves(1).remote(5).host = 'tolbachik.hd.free.fr';
+macbookyves.yves(1).remote(5).nproc = 6;
+macbookyves.yves(1).remote(5).cmd = 'condor_submit';
+macbookyves.yves(1).remote(5).get_jobid = {'** Proc ',':'};
+macbookyves.yves(1).remote(5).set_jobid = {'condor_q ',''};
+macbookyves.yves(1).remote(5).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
+macbookyves.yves(1).remote(5).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
+macbookyves.yves(1).remote(5).remotedatapath = '/Users/yvespeysson/condor/';
+macbookyves.yves(1).remote(5).mat714.root = '/Applications/MATLAB_R2012a.app/bin/';
+macbookyves.yves(1).remote(5).mat714.prefdir = '/Users/yvespeysson/.matlab/R2012a';
+macbookyves.yves(1).remote(5).matdef = macbookyves.yves(1).remote(5).mat714;%default matlab on remote machine
+macbookyves.yves(1).remote(5).luke_root = ['/Users/yvespeysson/Travail/Projets/',luke_ref,'/'];
+macbookyves.yves(1).remote(5).(getenv('USER')) = 'yvespeysson';
 
