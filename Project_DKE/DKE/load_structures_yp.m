@@ -150,13 +150,9 @@ if exist('flag_path','var'),%Paths
         nhosts = length(hostnames);
         hostname = '';
         %
-        try
-            [s,lhostname] = system('hostname');
-            if s ~= 0,
-                lhostname = getenv('LUKE_hostname');%For remote computing (xgrid)
-            end
-        catch
-            lhostname = getenv('LUKE_hostname'),%For remote computing (xgrid)
+        [s,lhostname] = system('hostname');
+        if s ~= 0,
+            lhostname = getenv('HOSTNAME');%For remote computing (xgrid)
         end
         %
         for ihost = 1:nhosts, 
