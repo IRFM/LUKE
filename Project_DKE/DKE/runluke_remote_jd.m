@@ -19,7 +19,11 @@ luke_job.args = 'luke_root = getenv(''luke_root'');addpath([luke_root,''Project_
 luke_job.savefcn = 'matstandardsave';%'runlukesave';%
 luke_job.loadfcn = 'matstandardload';%'runlukeload';%
 luke_job.localdatapath = '';
-luke_job.remotedatapath = '/Users/yvespeysson/condor/';
+if isfield(remote,'remotedatapath') && ~isempty(remote.remotedatapath),
+    luke_job.remotedatapath = remote.remotedatapath;
+else
+    luke_job.remotedatapath = '';
+end
 %
 luke_job.wait = 0;% (0) return hand (1) wait for result
 luke_job.nodes = 1;%number of nodes required
