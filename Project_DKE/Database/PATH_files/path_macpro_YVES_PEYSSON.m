@@ -153,20 +153,20 @@ macproyves.yvespeysson(1).remote(2).password = {'ghm93'};
 %
 % SATURNE CEA cluster
 %
-USER = 'YP105119';
-CLUSTER = 'saturne';
-HOST = 'saturne1.partenaires.cea.fr';
-HOME = '/home/YP105119';
-NPROC = 12;
-%
-macproyves.yvespeysson(1).remote(3).host = {HOST};
-macproyves.yvespeysson(1).remote(3).cluster = CLUSTER;
-macproyves.yvespeysson(1).remote(3).nproc = NPROC;
-macproyves.yvespeysson(1).remote(3).luke_root = [HOME,'/',luke_ref,'/'];
-macproyves.yvespeysson(1).remote(3).matlabroot = '';
-macproyves.yvespeysson(1).remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-macproyves.yvespeysson(1).remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
-macproyves.yvespeysson(1).remote(3).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
-macproyves.yvespeysson(1).remote(3).password = {''};
-macproyves.yvespeysson(1).remote(3).(getenv('USER')) = USER;
-%
+% USER = 'YP105119';
+% CLUSTER = 'saturne';
+% HOST = 'saturne1.partenaires.cea.fr';
+% HOME = '/home/YP105119';
+% NPROC = 12;
+% %
+% macproyves.yvespeysson(1).remote(3).host = {HOST};
+% macproyves.yvespeysson(1).remote(3).cluster = CLUSTER;
+% macproyves.yvespeysson(1).remote(3).nproc = NPROC;
+% macproyves.yvespeysson(1).remote(3).luke_root = [HOME,'/',luke_ref,'/'];
+% macproyves.yvespeysson(1).remote(3).matlabroot = '';
+% macproyves.yvespeysson(1).remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+% macproyves.yvespeysson(1).remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
+% macproyves.yvespeysson(1).remote(3).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+% macproyves.yvespeysson(1).remote(3).password = {''};
+% macproyves.yvespeysson(1).remote(3).(getenv('USER')) = USER;
+% %
