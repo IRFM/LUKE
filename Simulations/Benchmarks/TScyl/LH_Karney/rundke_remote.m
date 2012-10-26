@@ -129,16 +129,6 @@ for remnum = 1:nrem,
         Znorm{remnum} = rZnorm;
         Zcurr{remnum} = rZcurr;
         ZP0{remnum} = rZP0;
-%     elseif isfield(rZnorm,'err'),
-%         if ischar(rZnorm.err),
-%             disp('err')
-%         else
-%             for idisp = 1:length(rZnorm.err),
-%                 disp(rZnorm.err{idisp});
-%             end
-%         end
-%     else
-%         disp('Calculation timeout')
     end
 end
 %
@@ -162,7 +152,7 @@ disp(['Local calculation : j = ',num2str(Zcurr_0.x_0),'/',j_r_k,' ; P = ',num2st
 %
 for remnum = 1:nrem,
     if ~isempty(Zcurr{remnum}),
-        disp(['Remote calc.  # ',num2str(remnum),' : j = ',num2str(Zcurr{1}.x_0),'/',j_r_k,' ; P = ',num2str(ZP0{1}.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr{1}.x_0./ZP0{1}.x_rf_fsav),'/',eta_r_k]) 
+        disp(['Remote calc.  # ',num2str(remnum),' : j = ',num2str(Zcurr{remnum}.x_0),'/',j_r_k,' ; P = ',num2str(ZP0{remnum}.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr{remnum}.x_0./ZP0{remnum}.x_rf_fsav),'/',eta_r_k]) 
     end
 end
 %
