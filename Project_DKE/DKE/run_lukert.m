@@ -10,6 +10,10 @@ if nargin < 15,
    opt_save_in = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
 end
 %
+if isempty(dkepath),
+    dkepath = load_structures_yp('dkepath','','');
+end
+%
 if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && dkepath.remnum == round(dkepath.remnum) && dkepath.remnum >= 1 && dkepath.remnum <= length(dkepath.remote),
     %
     varargout = cell(1,nargout);
@@ -25,7 +29,7 @@ if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && dkepath.remnum == ro
     %
     remote.debugmode = dkedisplay_in.display_mode;
     %
-    [err,varargout{:}] = matremote_luke_jd('run_lukert',{simul_in,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam_in,dkedisplay_in,ohm,transpfaste,ripple,XXf0,XXsinksource_in,opt_save_in},remote);
+    [err,varargout{:}] = matremote_luke_jd('run_lukert',{simul_in,wavestructs,waves,psin_S,rho_S,'',equil,dkeparam_in,dkedisplay_in,ohm,transpfaste,ripple,XXf0,XXsinksource_in,opt_save_in},remote);
     %
     if isempty(err)
         if isfield(equil,'fluct'),
