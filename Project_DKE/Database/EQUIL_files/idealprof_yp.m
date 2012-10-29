@@ -1,17 +1,19 @@
-function [prho,pTe,pne,pzTi,pzni,zZi,zmi,fi,pkin] = idealprof_yp(Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,npsi)
+function [prho,pTe,pne,pzTi,pzni,zZi,zmi,fi,pkin] = idealprof_yp(Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,prho)
 %
 % Create profiles from parametric description
 %
 % by Y.Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
 if nargin < 20,
-    npsi = 101;
+    prho = 101;
 end
 if nargin < 19,
     error('Not enough input arguments in idealprof_yp');
 end
 %
-prho = linspace(0,1,npsi);%Uniform rho grid
+if length(prho) == 1,
+    prho = linspace(0,1,prho);%Uniform rho grid
+end
 %
 zZi = Zi;%[1,ni]
 zmi = mi;%[1,ni]
