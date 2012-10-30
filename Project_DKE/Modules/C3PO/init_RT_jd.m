@@ -110,7 +110,7 @@ xgradrho = Upsilon.*xBp.*xdxstardpsin/abs(equil_fit.psia_apRp);
 xBrhon = 0;
 %
 if isstruct(fluct_fit),
-   [fluctval] = fluctval_yp(equil_fit,fluct_fit,xrho,xtheta,xz);
+   [fluctval] = fluctval_yp(equil_fit,fluct_fit,xrho,xtheta,xz/equil_fit.Rp);
    %
    xne = xne + xne*fluctval.ner;%tanh(x) is for limitating the perturbation between -1 and 1
    xTe = xTe + xTe*fluctval.Ter;
@@ -122,7 +122,7 @@ if isstruct(fluct_fit),
    %
    xBrho = xB*(xcta*fluctval.Bxr + xsta*fluctval.Byr);%normalized to unperturbed magnetic equilibrium
    xBs = xB*(xBsn + xcta*fluctval.Byr - xsta*fluctval.Bxr);%normalized to unperturbed magnetic equilibrium
-   xBphi = xB*(xBzn + fluctval.Bzr);%normalized to unperturbed magnetic equilibrium
+   xBz = xB*(xBzn + fluctval.Bzr);%normalized to unperturbed magnetic equilibrium
    %
    xB = sqrt(xBrho.^2 + xBs.^2 + xBz.^2);%perturbed magnetic field
    %
@@ -247,5 +247,5 @@ if 1,
       
     [Nperpp2,Nperpm2,Kxyz,ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,sigmap,sigmam,Dp,Dm]...
         = colddisp_dke_jd(xNpar2,xomega,xne,zxni,zZi,zmi,xB,xNperp2);
-    %disp(['xNpar,xNperp,xNpar2,xNperp2,Dp,Dm:',num2str(xNpar),',',num2str(xNperp),',',num2str(xNpar2),',',num2str(xNperp2),',',num2str(Dp),',',num2str(Dm)]);
+%   disp(['xNpar,xNperp,xNpar2,xNperp2,Dp,Dm:',num2str(xNpar),',',num2str(xNperp),',',num2str(xNpar2),',',num2str(xNperp2),',',num2str(Dp),',',num2str(Dm)]);
 end
