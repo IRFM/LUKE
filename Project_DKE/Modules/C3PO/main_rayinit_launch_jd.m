@@ -46,7 +46,11 @@ if ~isfield(launch,'m0'),
     launch.m0 = NaN;
 end
 %
-if ~isfield(launch,'n0') && ~isfield(launch,'kz0'),
+if ~isfield(launch,'n0'),
+	launch.n0 = NaN;
+end
+%
+if ~isfield(launch,'kz0'),
     launch.kz0 = NaN;
 end
 %
@@ -323,24 +327,15 @@ elseif strcmp(launch.type,'LH'),
                 rayinit.ytheta0(iy) = rbtheta0(ir,ib);%Initial poloidal position at launch
                 if isfield(launch,'z0')
                     rayinit.yz0(iy) = launch.z0;%Initial axial position at launch
+                    rayinit.ykz0(iy) = launch.kz0;%Initial axial wave vector
                 elseif isfield(launch,'phi0') && ~isinf(equil.Rp),
                     rayinit.yphi0(iy) = launch.phi0;%Initial toroidal position at launch
+                    rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
                 else
-                    error('ERROR in main_rayinit_launch_jd.m -> inconsistent launch input: use phi0 is Rp if finite only, or z0 otherwise.');
+                    error('ERROR in main_rayinit_launch_jd.m -> inconsistent launch input: use phi0 if Rp is finite only, or z0 otherwise.');
                 end
                 %
-                %rayinit.yphi0(iy) = launch.phi0;
-                rayinit.ym0(iy) = real(launch.m0(im));%Initial poloidal mode number
-                %
-                if isfield(launch,'kz0')
-                    rayinit.ykz0(iy) = launch.kz0;%Initial toroidal mode number
-                elseif isfield(launch,'n0') && ~isinf(equil.Rp);
-                    rayinit.yn0(iy) = launch.n0;
-                else
-                    error('ERROR in main_rayinit_launch_jd.m -> inconsistent launch input: use n0 is Rp if finite only, or kz0 otherwise.');
-                end                
-                %
-                %rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
+                rayinit.ym0(iy) = real(launch.m0(im));%Initial poloidal mode number              
                 %
                 rayinit.yNpar0(iy) = bNpar0(ib);%Initial index of refraction (default values, no fluctuations)
                 %
