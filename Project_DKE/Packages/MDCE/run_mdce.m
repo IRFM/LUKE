@@ -146,6 +146,8 @@ function [flag,tmdce,texe,test] = nloop_mdce(modestr,dkepath,scheduler,X_in,tpau
     %
     [dkecluster] = clustermode_luke(scheduler,'',dkepath,scheduler.type);%All cluster parameters and paths
     %
+    dkecluster.scheduler.clustersize = length(X_in);
+    %
     tinit = tic;
     [flag,X_out,texe] = mdce_luke(@frun_mdce,{tpause,datamode,''},3,X_in,dkecluster);
     tmdce = toc(tinit);
