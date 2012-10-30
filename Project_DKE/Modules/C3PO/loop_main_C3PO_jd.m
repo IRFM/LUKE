@@ -10,23 +10,26 @@ function [rays] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayini
 rayinit.yrho0 = rayinit.yrho0(iray);
 rayinit.ytheta0 = rayinit.ytheta0(iray);
 %
-if isfield(rayinit,'yz0')
-    rayinit.yz0 = rayinit.yz0(iray);
-elseif isfield(rayinit,'yphi0') && ~isinf(equil_fit.Rp),
-    rayinit.yz0 = rayinit.yphi0(iray)*equil_fit.Rp;
-else
-    error('ERROR in loop_main_C3PO_jd.m: inconsistent rayinit input: use yphi0 is Rp is finite only, or yz0 elsewhere.');
+if isfield(rayinit,'yphi0') && ~isinf(equil_fit.Rp),
+    rayinit.yz0 = rayinit.yphi0*equil_fit.Rp;
+    rayinit = rmfield(rayinit,'yphi0');
+elseif isfield(rayinit,'yphi0') && isinf(equil_fit.Rp),
+    error('ERROR in loop_main_C3PO_jd.m: inconsistent rayinit input: use yphi0 if Rp is finite only, or yz0 elsewhere.');
 end
+%
+rayinit.yz0 = rayinit.yz0(iray);
 %
 rayinit.ym0 = rayinit.ym0(iray);
 %
-if isfield(rayinit,'ykz0')
-    rayinit.ykz0 = rayinit.ykz0(iray);
-elseif isfield(rayinit,'yn0') && ~isinf(equil_fit.Rp),
-    rayinit.ykz0 = rayinit.yn0(iray)/equil_fit.Rp;
-else
-    error('ERROR in loop_main_C3PO_jd.m: inconsistent rayinit input: use yn0 is Rp is finite only, or ykz0 elsewhere.');
+if isfield(rayinit,'yn0') && ~isinf(equil_fit.Rp),
+    rayinit.ykz0 = rayinit.yn0/equil_fit.Rp;%backward compatibility for the toroidal coordinates
+    rayinit = rmfield(rayinit,'yn0');
+elseif isfield(rayinit,'yn0') && isinf(equil_fit.Rp),
+    error('ERROR in loop_main_C3PO_jd.m: inconsistent rayinit input: use yn0 if Rp is finite only, or ykz0 elsewhere.');
 end
+%
+rayinit.ykz0 = rayinit.ykz0(iray);
+%
 rayinit.yNpar0 = rayinit.yNpar0(iray);
 rayinit.ydNpar0 = rayinit.ydNpar0(iray);
 rayinit.yP0_2piRp = rayinit.yP0_2piRp(iray);

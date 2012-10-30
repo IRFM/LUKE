@@ -166,7 +166,7 @@ struct fluctparam {
     double **ne_polmode;      
     double **ne_epsi_rho;      
     double **ne_epsi_theta;       
-    double **ne_epsi_z;       
+    double **ne_epsi_phi;       
     double **ne_lmin;      
     double **ne_mmin;    
     double **ne_nmin;    
@@ -183,7 +183,7 @@ struct fluctparam {
     double **B_polmode;      
     double **B_epsi_rho;      
     double **B_epsi_theta;       
-    double **B_epsi_z;       
+    double **B_epsi_phi;       
     double **B_lmin;      
     double **B_mmin;    
     double **B_nmin;    
@@ -256,7 +256,7 @@ struct raydistri {
 struct rayfluctuations {
     pp_0D_format L_rho;
     pp_1D_format xq_fit,xL_theta_fit,xL_perp_fit;
-    pp_2D_format XL_z_fit;
+    pp_2D_format XL_phi_fit;
     pp_2D_format *B_sfx_fit,*B_sfy_fit,*B_sfz_fit;
     pp_2D_format Xcm_fit,Xcn_fit;
 };
@@ -533,7 +533,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
         	rayfluctuations.xq_fit = load_profile_1D(FLUCT_IN,"xq_fit");
         	rayfluctuations.xL_theta_fit = load_profile_1D(FLUCT_IN,"xL_theta_fit");
         	rayfluctuations.xL_perp_fit = load_profile_1D(FLUCT_IN,"xL_perp_fit");
-        	rayfluctuations.XL_z_fit = load_grid_2D(FLUCT_IN,"XL_z_fit",0);
+        	rayfluctuations.XL_phi_fit = load_grid_2D(FLUCT_IN,"XL_phi_fit",0);
 			rayfluctuations.Xcm_fit = load_grid_2D(FLUCT_IN,"Xcm_fit",0);
         	rayfluctuations.Xcn_fit = load_grid_2D(FLUCT_IN,"Xcn_fit",0);
                 
@@ -790,7 +790,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
     
     alpha_rho = raymagnetic.gradrhon[0]*raymagnetic.drhoripdY[0];
     alpha_theta = raymagnetic.drhoripdY[1]/raymagnetic.rn[0];
-    alpha_z = raymagnetic.drhoripdY[2]/raymagnetic.Upsilonn[0];/*****YP : check here ****/
+    alpha_z = raymagnetic.drhoripdY[2]/raymagnetic.Upsilonn[0];
 
     acc = raymagnetic.Brhon[0]*(alpha_rho - alpha_theta*raymagnetic.salpha[0]) + raymagnetic.Bsn[0]*alpha_theta*raymagnetic.calpha[0] + alpha_z*raymagnetic.Bzn[0];
 
@@ -1828,7 +1828,7 @@ int flag_fluct;
     
     alpha_rho = raymagnetic.gradrhon[0]*raymagnetic.drhoripdY[0];
     alpha_theta = raymagnetic.drhoripdY[1]/raymagnetic.rn[0];
-    alpha_z = raymagnetic.drhoripdY[2]/raymagnetic.Upsilonn[0];/****YP:check values in this section ****/
+    alpha_z = raymagnetic.drhoripdY[2]/raymagnetic.Upsilonn[0];
      
     beta_r = -raymagnetic.salpha[0]*raymagnetic.Bzn[0]*alpha_rho + alpha_theta*raymagnetic.Bzn[0] + alpha_z*(raymagnetic.Brhon[0]*raymagnetic.salpha[0] - raymagnetic.Bsn[0]*raymagnetic.calpha[0]);
     beta_theta = -raymagnetic.calpha[0]*raymagnetic.Bzn[0]*alpha_rho + alpha_z*(raymagnetic.Brhon[0]*raymagnetic.calpha[0] + raymagnetic.Bsn[0]*raymagnetic.salpha[0]);
@@ -1867,7 +1867,7 @@ int flag_fluct;
     mexPrintf("Axisymmetric case -> krho2[0],m2[0],n2[0]:%g,%g,%g\n",krho2[0],m2[0],n2[0]);
     mexPrintf("Initial values -> krho1[0],m1[0],n1[0]:%g,%g,%g\n",Y[3],Y[4],Y[5]);
     
-    mexPrintf("General calculation -> alpha_rho,alpha_theta,alpha_phi:%g,%g,%g\n",alpha_rho,alpha_theta,alpha_phi);
+    mexPrintf("General calculation -> alpha_rho,alpha_theta,alpha_z:%g,%g,%g\n",alpha_rho,alpha_theta,alpha_z);
     mexPrintf("General calculation -> raymagnetic.Brhon[0],raymagnetic.Bsn[0],raymagnetic.Bzn[0]:%g,%g,%g\n",raymagnetic.Brhon[0],raymagnetic.Bsn[0],raymagnetic.Bzn[0]);
     mexPrintf("General calculation -> raymagnetic.calpha[0],raymagnetic.salpha[0],raymagnetic.gradrhon[0]:%g,%g,%g\n",raymagnetic.calpha[0],raymagnetic.salpha[0],raymagnetic.gradrhon[0]);
     */
@@ -2630,89 +2630,91 @@ int flag_fluct;
    
     double icm,idcmdrho,cm,cn0,dcn0drho;
     
-    double phaseB,dphaseBdrho,dphaseBdtheta,dphaseBdz;
-    double phasene,dphasenedrho,dphasenedtheta,dphasenedz;
+    double phaseB,dphaseBdrho,dphaseBdtheta,dphaseBdphi;
+    double phasene,dphasenedrho,dphasenedtheta,dphasenedphi;
         
-    double nefsne,dnefsnedrho,dnefsnedtheta,dnefsnedz;
-    double TefsTe,dTefsTedrho,dTefsTedtheta,dTefsTedz;
-    double znifszni[equilparam.ns[0]],dznifsznidrho[equilparam.ns[0]],dznifsznidtheta[equilparam.ns[0]],dznifsznidz[equilparam.ns[0]];
-    double zTifszTi[equilparam.ns[0]],dzTifszTidrho[equilparam.ns[0]],dzTifszTidtheta[equilparam.ns[0]],dzTifszTidz[equilparam.ns[0]];
+    double nefsne,dnefsnedrho,dnefsnedtheta,dnefsnedphi;
+    double TefsTe,dTefsTedrho,dTefsTedtheta,dTefsTedphi;
+    double znifszni[equilparam.ns[0]],dznifsznidrho[equilparam.ns[0]],dznifsznidtheta[equilparam.ns[0]],dznifsznidphi[equilparam.ns[0]];
+    double zTifszTi[equilparam.ns[0]],dzTifszTidrho[equilparam.ns[0]],dzTifszTidtheta[equilparam.ns[0]],dzTifszTidphi[equilparam.ns[0]];
     
     double sfBx[fluctparam.B_nmodel[0]],dsfBxdrho[fluctparam.B_nmodel[0]],dsfBxdtheta[fluctparam.B_nmodel[0]],d2sfBxdtheta2[fluctparam.B_nmodel[0]],d2sfBxdthetadrho[fluctparam.B_nmodel[0]];
     double sfBy[fluctparam.B_nmodel[0]],dsfBydrho[fluctparam.B_nmodel[0]],dsfBydtheta[fluctparam.B_nmodel[0]],d2sfBydtheta2[fluctparam.B_nmodel[0]],d2sfBydthetadrho[fluctparam.B_nmodel[0]];
     double sfBz[fluctparam.B_nmodel[0]],dsfBzdrho[fluctparam.B_nmodel[0]],dsfBzdtheta[fluctparam.B_nmodel[0]],d2sfBzdtheta2[fluctparam.B_nmodel[0]],d2sfBzdthetadrho[fluctparam.B_nmodel[0]];
-    double BxfsB,dBxfsBdrho,dBxfsBdtheta,dBxfsBdz;
-    double ByfsB,dByfsBdrho,dByfsBdtheta,dByfsBdz;
-    double BzfsB,dBzfsBdrho,dBzfsBdtheta,dBzfsBdz;
-    double BrhofsB,dBrhofsBdrho,dBrhofsBdtheta,dBrhofsBdz;
-    double BsfsB,dBsfsBdrho,dBsfsBdtheta,dBsfsBdz;
+    double BxfsB,dBxfsBdrho,dBxfsBdtheta,dBxfsBdphi;
+    double ByfsB,dByfsBdrho,dByfsBdtheta,dByfsBdphi;
+    double BzfsB,dBzfsBdrho,dBzfsBdtheta,dBzfsBdphi;
+    double BrhofsB,dBrhofsBdrho,dBrhofsBdtheta,dBrhofsBdphi;
+    double BsfsB,dBsfsBdrho,dBsfsBdtheta,dBsfsBdphi;
+    double BphifsB,dBphifsBdrho,dBphifsBdtheta,dBphifsBdphi;    
 
-    double cta,dctadrho,dctadtheta,dctadz;
-    double sta,dstadrho,dstadtheta,dstadz;
+    double cta,dctadrho,dctadtheta,dctadphi;
+    double sta,dstadrho,dstadtheta,dstadphi;
     
-    double Brho,Bs,B;
-    double Brhon,Bsn,Bzn;       
-    double dBrhodrho,dBrhodtheta,dBrhodz;       
-    double dBsdrho,dBsdtheta,dBsdz;         
-    double dBdrho,dBdtheta,dBdz;
+    double Brho,Bs,Bphi,B;
+    double Brhon,Bsn,Bphin;       
+    double dBrhodrho,dBrhodtheta,dBrhodphi;       
+    double dBsdrho,dBsdtheta,dBsdphi;       
+    double dBphidrho,dBphidtheta,dBphidphi;       
+    double dBdrho,dBdtheta,dBdphi;
     
     double Brho0,dBrho0drho,dBrho0dtheta;    
     double lambda,dlambdadrho,dlambdadtheta;
-    double rhorip,drhodrhorip,drhodthetarip,drhodzrip;
+    double rhorip,drhodrhorip,drhodthetarip,drhodphirip;
     
     double val,dvaldrho,d2valdrho2;
     double zval[equilparam.ns[0]],dzvaldrho[equilparam.ns[0]],d2zvaldrho2[equilparam.ns[0]];
     
     double ne_sep,dnedrho_sep;
     double rho_neeq0;
-    double nerip,dnedrhorip,dnedthetarip,dnedzrip;
-    double ne_tilde,dnedrho_tilde,dnedtheta_tilde,dnedz_tilde;
-    double ner_tilde,dnerdrho_tilde,dnerdtheta_tilde,dnerdz_tilde;
+    double nerip,dnedrhorip,dnedthetarip,dnedphirip;
+    double ne_tilde,dnedrho_tilde,dnedtheta_tilde,dnedphi_tilde;
+    double ner_tilde,dnerdrho_tilde,dnerdtheta_tilde,dnerdphi_tilde;
     
     double Te_sep,dTedrho_sep;
     double rho_Teeq0;
-    double Terip,dTedrhorip,dTedthetarip,dTedzrip;
-    double Te_tilde,dTedrho_tilde,dTedtheta_tilde,dTedz_tilde;
-    double Ter_tilde,dTerdrho_tilde,dTerdtheta_tilde,dTerdz_tilde;
+    double Terip,dTedrhorip,dTedthetarip,dTedphirip;
+    double Te_tilde,dTedrho_tilde,dTedtheta_tilde,dTedphi_tilde;
+    double Ter_tilde,dTerdrho_tilde,dTerdtheta_tilde,dTerdphi_tilde;
     
     double zni_sep[equilparam.ns[0]],dznidrho_sep[equilparam.ns[0]];
     double rho_znieq0[equilparam.ns[0]];
-    double znirip[equilparam.ns[0]],dznidrhorip[equilparam.ns[0]],dznidthetarip[equilparam.ns[0]],dznidzrip[equilparam.ns[0]];
-    double zni_tilde[equilparam.ns[0]],dznidrho_tilde[equilparam.ns[0]],dznidtheta_tilde[equilparam.ns[0]],dznidz_tilde[equilparam.ns[0]];
-    double znir_tilde[equilparam.ns[0]],dznirdrho_tilde[equilparam.ns[0]],dznirdtheta_tilde[equilparam.ns[0]],dznirdz_tilde[equilparam.ns[0]];
+    double znirip[equilparam.ns[0]],dznidrhorip[equilparam.ns[0]],dznidthetarip[equilparam.ns[0]],dznidphirip[equilparam.ns[0]];
+    double zni_tilde[equilparam.ns[0]],dznidrho_tilde[equilparam.ns[0]],dznidtheta_tilde[equilparam.ns[0]],dznidphi_tilde[equilparam.ns[0]];
+    double znir_tilde[equilparam.ns[0]],dznirdrho_tilde[equilparam.ns[0]],dznirdtheta_tilde[equilparam.ns[0]],dznirdphi_tilde[equilparam.ns[0]];
     
     double zTi_sep[equilparam.ns[0]],dzTidrho_sep[equilparam.ns[0]];
     double rho_zTieq0[equilparam.ns[0]];
-    double zTirip[equilparam.ns[0]],dzTidrhorip[equilparam.ns[0]],dzTidthetarip[equilparam.ns[0]],dzTidzrip[equilparam.ns[0]];
-    double zTi_tilde[equilparam.ns[0]],dzTidrho_tilde[equilparam.ns[0]],dzTidtheta_tilde[equilparam.ns[0]],dzTidz_tilde[equilparam.ns[0]];
-    double zTir_tilde[equilparam.ns[0]],dzTirdrho_tilde[equilparam.ns[0]],dzTirdtheta_tilde[equilparam.ns[0]],dzTirdz_tilde[equilparam.ns[0]];
+    double zTirip[equilparam.ns[0]],dzTidrhorip[equilparam.ns[0]],dzTidthetarip[equilparam.ns[0]],dzTidphirip[equilparam.ns[0]];
+    double zTi_tilde[equilparam.ns[0]],dzTidrho_tilde[equilparam.ns[0]],dzTidtheta_tilde[equilparam.ns[0]],dzTidphi_tilde[equilparam.ns[0]];
+    double zTir_tilde[equilparam.ns[0]],dzTirdrho_tilde[equilparam.ns[0]],dzTirdtheta_tilde[equilparam.ns[0]],dzTirdphi_tilde[equilparam.ns[0]];
               
     int il,im,in,iphase;
     
     double dl,dm;
-    double phase,dphasedrho,dphasedtheta,dphasedz;
-    double Flambda,dFlambdadrho,dFlambdadtheta,dFlambdadz;
-    double Fdelta,dFdeltadrho,dFdeltadtheta,dFdeltadz;
+    double phase,dphasedrho,dphasedtheta,dphasedphi;
+    double Flambda,dFlambdadrho,dFlambdadtheta,dFlambdadphi;
+    double Fdelta,dFdeltadrho,dFdeltadtheta,dFdeltadphi;
     
-    double L_rho,dL_rhodrho,dL_rhodtheta,dL_rhodz;
-    double xq,dxqdrho,dxqdtheta,dxqdz;
-    double xL_theta,dxL_thetadrho,dxL_thetadtheta,dxL_thetadz;
-    double xL_perp,dxL_perpdrho,dxL_perpdtheta,dxL_perpdz;
-    double XL_z,dXL_zdrho,dXL_zdtheta,dXL_zdz;
+    double L_rho,dL_rhodrho,dL_rhodtheta,dL_rhodphi;
+    double xq,dxqdrho,dxqdtheta,dxqdphi;
+    double xL_theta,dxL_thetadrho,dxL_thetadtheta,dxL_thetadphi;
+    double xL_perp,dxL_perpdrho,dxL_perpdtheta,dxL_perpdphi;
+    double XL_phi,dXL_phidrho,dXL_phidtheta,dXL_phidphi;
    
-    double ac,dacdrho,dacdtheta,dacdz;
-    double u_l,du_ldrho,du_ldtheta,du_ldz,expu_l,dexpu_ldrho,dexpu_ldtheta,dexpu_ldz;
-    double u_m,du_mdrho,du_mdtheta,du_mdz,expu_m,dexpu_mdrho,dexpu_mdtheta,dexpu_mdz;
-    double u_n,du_ndrho,du_ndtheta,du_ndz,expu_n,dexpu_ndrho,dexpu_ndtheta,dexpu_ndz;
-    double almn,dalmndrho,dalmndtheta,dalmndz;
-    double alm,dalmdrho,dalmdtheta,dalmdz;
-    double am,damdrho,damdtheta,damdz;
-    double curtheta,dcurthetadrho,dcurthetadtheta,dcurthetadz;
+    double ac,dacdrho,dacdtheta,dacdphi;
+    double u_l,du_ldrho,du_ldtheta,du_ldphi,expu_l,dexpu_ldrho,dexpu_ldtheta,dexpu_ldphi;
+    double u_m,du_mdrho,du_mdtheta,du_mdphi,expu_m,dexpu_mdrho,dexpu_mdtheta,dexpu_mdphi;
+    double u_n,du_ndrho,du_ndtheta,du_ndphi,expu_n,dexpu_ndrho,dexpu_ndtheta,dexpu_ndphi;
+    double almn,dalmndrho,dalmndtheta,dalmndphi;
+    double alm,dalmdrho,dalmdtheta,dalmdphi;
+    double am,damdrho,damdtheta,damdphi;
+    double curtheta,dcurthetadrho,dcurthetadtheta,dcurthetadphi;
     
-    double kperp,dkperpdrho,dkperpdtheta,dkperpdz;
+    double kperp,dkperpdrho,dkperpdtheta,dkperpdphi;    
     
     double ht=0,dht=0,d2ht=0;
-    double xx=0,dxxdrho=0,dxxdtheta=0,dxxdz=0;
+    double xx=0,dxxdrho=0,dxxdtheta=0,dxxdphi=0;
     
     double dummy,dummy1,dummy2;
     
@@ -2783,80 +2785,77 @@ int flag_fluct;
         
         if (flag_fluct == 1) { /* no fluctuation in vacuum */
             
-            /* mexPrintf("WARNING: the fluctuations part has not been yet updated to work with new coordinates (x,y,z)");
-            return; */
-            
             /*Initialisation of the perturbations */
             
             rhorip = Y[0]; 
             drhodrhorip = 1.0; 
             drhodthetarip = 0.0;
-            drhodzrip = 0.0;
+            drhodphirip = 0.0;
                
 	        BrhofsB = 0.0;
 	        dBrhofsBdrho = 0.0;
 	        dBrhofsBdtheta = 0.0;
-	        dBrhofsBdz = 0.0;
+	        dBrhofsBdphi = 0.0;
                
             BsfsB = 0.0;
 	        dBsfsBdrho = 0.0;
 	        dBsfsBdtheta = 0.0;
-	        dBsfsBdz = 0.0;
+	        dBsfsBdphi = 0.0;
                	           
-            BzfsB = 0.0;
-	        dBzfsBdrho = 0.0;
-	        dBzfsBdtheta = 0.0;
-	        dBzfsBdz = 0.0;
+            BphifsB = 0.0;
+	        dBphifsBdrho = 0.0;
+	        dBphifsBdtheta = 0.0;
+	        dBphifsBdphi = 0.0;
             
             nefsne = 0.0;
 	        dnefsnedrho = 0.0;
 	        dnefsnedtheta = 0.0;
-	        dnefsnedz = 0.0;
+	        dnefsnedphi = 0.0;
             
             TefsTe = 0.0;
 	        dTefsTedrho = 0.0;
 	        dTefsTedtheta = 0.0;
-	        dTefsTedz = 0.0;
+	        dTefsTedphi = 0.0;
             
             for (is=0;is<equilparam.ns[0];is++) {
                 
                 znifszni[is] = 0.0;
                 dznifsznidrho[is] = 0.0;
                 dznifsznidtheta[is] = 0.0;
-                dznifsznidz[is] = 0.0;
+                dznifsznidphi[is] = 0.0;
 
                 zTifszTi[is] = 0.0;
                 dzTifszTidrho[is] = 0.0;
                 dzTifszTidtheta[is] = 0.0;
-                dzTifszTidz[is] = 0.0;
+                dzTifszTidphi[is] = 0.0;
             }
                        
             ppvald_0D(rayfluctuations.L_rho,&L_rho);
             dL_rhodrho = 0.0;
             dL_rhodtheta = 0.0;
-            dL_rhodz = 0.0;
+            dL_rhodphi = 0.0;
             
             ppvald_1D(rayfluctuations.xq_fit,rayparam.dS[0],Y[0],&xq,&dxqdrho,&dummy);
             dxqdtheta = 0.0;
-            dxqdz = 0.0;
+            dxqdphi = 0.0;
             
             ppvald_1D(rayfluctuations.xL_theta_fit,rayparam.dS[0],Y[0],&xL_theta,&dxL_thetadrho,&dummy);
             dxL_thetadtheta = 0.0;
-            dxL_thetadz = 0.0;
+            dxL_thetadphi = 0.0;
             
             ppvald_1D(rayfluctuations.xL_perp_fit,rayparam.dS[0],Y[0],&xL_perp,&dxL_perpdrho,&dummy);
             dxL_perpdtheta = 0.0;
-            dxL_perpdz = 0.0;
+            dxL_perpdphi = 0.0;
             
-            ppvald_2D(rayfluctuations.XL_z_fit,rayparam.dS[0],Y[0],Y[1],&XL_z,&dXL_zdrho,&dXL_zdtheta,&dummy,&dummy);
-            dXL_zdz =0.0;
+            ppvald_2D(rayfluctuations.XL_phi_fit,rayparam.dS[0],Y[0],Y[1],&XL_phi,&dXL_phidrho,&dXL_phidtheta,&dummy,&dummy);
+            dXL_phidphi =0.0;
         
             ppvald_2D(rayfluctuations.Xcn_fit,rayparam.dS[0],Y[0],Y0[1],&cn0,&dcn0drho,&dummy,&dummy,&dummy);/*geometrical factor for fluctuations phase, kpar = 0 drift wave model */
             ppvald_2D(rayfluctuations.Xcm_fit,rayparam.dS[0],Y[0],Y[1],&cm,&dummy,&dummy,&dummy,&dummy);/*geometrical factor for fluctuations phase, kpar = 0 drift wave model */
             ppvali_2D(rayfluctuations.Xcm_fit,rayparam.dS[0],Y[0],Y0[1],Y[1],&icm,&idcmdrho);/*geometrical factor for fluctuations phase, kpar = 0 drift wave model */  
                                
             /*
-            mexPrintf("rho,theta,phi,gphase,dgphasedrho,dgphasedtheta,dgphasedz:%g,%g,%g,%g,%g,%g,%g\n",Y[0],Y[1],Y[2],gphase,dgphasedrho,dgphasedtheta,dgphasedz);
+            mexPrintf("rho,theta,phi,gphase,dgphasedrho,dgphasedtheta,dgphasedphi:%g,%g,%g,%g,%g,%g,%g\n",Y[0],Y[1],Y[2],gphase,dgphasedrho,dgphasedtheta,dgphasedphi);
             mexPrintf("cn0,dcn0drho,icm,idcmdrho,cm:%g,%g,%g,%g,%g\n",cn0,dcn0drho,icm,idcmdrho,cm);
             */
             
@@ -2870,21 +2869,21 @@ int flag_fluct;
                     Flambda = (1.0 + fluctparam.ne_polmode[imodel][0] + (1.0 - fluctparam.ne_polmode[imodel][0])*cos(Y[1]))/2.0;
                     dFlambdadrho = 0.0;
                     dFlambdadtheta = -(1.0 - fluctparam.ne_polmode[imodel][0])*sin(Y[1])/2.0;
-                    dFlambdadz = 0.0;
+                    dFlambdadphi = 0.0;
                     
                     Fdelta = exp(-log(2.0)*pow(Y[0] - fluctparam.ne_sigmar_rho[imodel][0],2.0)/pow(fluctparam.ne_sigmar_hwhm[imodel][0],2));
                     dFdeltadrho = -Fdelta*2.0*log(2.0)*(Y[0] - fluctparam.ne_sigmar_rho[imodel][0])/pow(fluctparam.ne_sigmar_hwhm[imodel][0],2);                   
                     dFdeltadtheta = 0.0;
-                    dFdeltadz = 0.0;
+                    dFdeltadphi = 0.0;
                     
                     xx = 0;
                     dxxdrho = 0;                                                                 
                     dxxdtheta = 0; 
-                    dxxdz = 0; 
+                    dxxdphi = 0; 
                     
                     if (fluctparam.ne_model[imodel][0] == 1) {/* 3-D Gaussian model (rho,theta,phi), relative epsi values (benchmark of C3PO) */ 
 
-                        ac = 4.0*pow(PI,0.75)*fluctparam.ne_sigmar_max[imodel][0]*sqrt(fluctparam.ne_epsi_rho[imodel][0]*fluctparam.ne_epsi_theta[imodel][0]*fluctparam.ne_epsi_z[imodel][0]);
+                        ac = 4.0*pow(PI,0.75)*fluctparam.ne_sigmar_max[imodel][0]*sqrt(fluctparam.ne_epsi_rho[imodel][0]*fluctparam.ne_epsi_theta[imodel][0]*fluctparam.ne_epsi_phi[imodel][0]);
                         
                         for (il = fluctparam.ne_lmin[imodel][0];il <= fluctparam.ne_lmax[imodel][0];il++) {
                             for (im = fluctparam.ne_mmin[imodel][0];im <= fluctparam.ne_mmax[imodel][0];im++) {
@@ -2895,11 +2894,11 @@ int flag_fluct;
                                     phase = 2*PI*il*Y[0] + im*Y[1] + in*Y[2]/equilparam.Rp[0] + fluctparam.ne_phase[imodel][iphase-1];
                                     dphasedrho = 2*PI*il;
                                     dphasedtheta = im;
-                                    dphasedz = in/equilparam.Rp[0];
+                                    dphasedphi = in;
                                     
                                     u_l = PI*fluctparam.ne_epsi_rho[imodel][0]*il;
                                     u_m = PI*fluctparam.ne_epsi_theta[imodel][0]*im;
-                                    u_n = PI*fluctparam.ne_epsi_z[imodel][0]*in;
+                                    u_n = PI*fluctparam.ne_epsi_phi[imodel][0]*in;
                         
                                     expu_l = exp(-u_l*u_l/2);
                                     expu_m = exp(-u_m*u_m/2);
@@ -2910,7 +2909,7 @@ int flag_fluct;
                                     xx += ac*almn*Flambda*Fdelta*sin(phase);
                                     dxxdrho += ac*almn*Flambda*(Fdelta*cos(phase)*dphasedrho + dFdeltadrho*sin(phase));                                                                 
                                     dxxdtheta += ac*almn*Fdelta*(Flambda*cos(phase)*dphasedtheta + dFlambdadtheta*sin(phase));
-                                    dxxdz += ac*almn*Flambda*Fdelta*cos(phase)*dphasedz;
+                                    dxxdphi += ac*almn*Flambda*Fdelta*cos(phase)*dphasedphi;
                                 }
                             }
                         }
@@ -2922,16 +2921,16 @@ int flag_fluct;
                         nefsne += ht;
                         dnefsnedrho += dht*dxxdrho;                                                                 
                         dnefsnedtheta += dht*dxxdtheta;
-                        dnefsnedz += dht*dxxdz;                       
+                        dnefsnedphi += dht*dxxdphi;                       
                         
                      }    
                         
                      if (fluctparam.ne_model[imodel][0] == 2) {/* 3-D Gaussian model (rho,theta,phi), absolute epsi values (benchmark of C3PO) */ 
                        
-                        ac = 4.0*pow(PI,0.75)*fluctparam.ne_sigmar_max[imodel][0]*sqrt(fluctparam.ne_epsi_rho[imodel][0]*fluctparam.ne_epsi_theta[imodel][0]*fluctparam.ne_epsi_z[imodel][0]/L_rho/xL_theta/XL_z);
-                        dacdrho = -0.5*ac*(dL_rhodrho/L_rho + dxL_thetadrho/xL_theta +  dXL_zdrho/XL_z);
-                        dacdtheta = -0.5*ac*(dL_rhodtheta/L_rho + dxL_thetadtheta/xL_theta + dXL_zdtheta/XL_z);
-                        dacdz = -0.5*ac*(dL_rhodz/L_rho + dxL_thetadz/xL_theta + dXL_zdz/XL_z);
+                        ac = 4.0*pow(PI,0.75)*fluctparam.ne_sigmar_max[imodel][0]*sqrt(fluctparam.ne_epsi_rho[imodel][0]*fluctparam.ne_epsi_theta[imodel][0]*fluctparam.ne_epsi_phi[imodel][0]/L_rho/xL_theta/XL_phi);
+                        dacdrho = -0.5*ac*(dL_rhodrho/L_rho + dxL_thetadrho/xL_theta +  dXL_phidrho/XL_phi);
+                        dacdtheta = -0.5*ac*(dL_rhodtheta/L_rho + dxL_thetadtheta/xL_theta + dXL_phidtheta/XL_phi);
+                        dacdphi = -0.5*ac*(dL_rhodphi/L_rho + dxL_thetadphi/xL_theta + dXL_phidphi/XL_phi);
                         
                         for (il = fluctparam.ne_lmin[imodel][0];il <= fluctparam.ne_lmax[imodel][0];il++) {
                             for (im = fluctparam.ne_mmin[imodel][0];im <= fluctparam.ne_mmax[imodel][0];im++) {
@@ -2942,23 +2941,23 @@ int flag_fluct;
                                     phase = 2*PI*il*Y[0] + im*Y[1] + in*Y[2]/equilparam.Rp[0] + fluctparam.ne_phase[imodel][iphase-1];
                                     dphasedrho = 2*PI*il;
                                     dphasedtheta = im;
-                                    dphasedz = in/equilparam.Rp[0];
+                                    dphasedphi = in;
                                     
                                     u_l = PI*fluctparam.ne_epsi_rho[imodel][0]*il/L_rho;
                                     u_m = PI*fluctparam.ne_epsi_theta[imodel][0]*im/xL_theta;
-                                    u_n = PI*fluctparam.ne_epsi_z[imodel][0]*in/XL_z;
+                                    u_n = PI*fluctparam.ne_epsi_phi[imodel][0]*in/XL_phi;
                                     
                                     du_ldrho = -u_l/L_rho*dL_rhodrho;
                                     du_mdrho = -u_m/xL_theta*dxL_thetadrho;
-                                    du_ndrho = -u_n/XL_z*dXL_zdrho;
+                                    du_ndrho = -u_n/XL_phi*dXL_phidrho;
                                     
                                     du_ldtheta = -u_l/L_rho*dL_rhodtheta;
                                     du_mdtheta = -u_m/xL_theta*dxL_thetadtheta;
-                                    du_ndtheta = -u_n/XL_z*dXL_zdtheta;
+                                    du_ndtheta = -u_n/XL_phi*dXL_phidtheta;
                                     
-                                    du_ldz = -u_l/L_rho*dL_rhodz;
-                                    du_mdz = -u_m/xL_theta*dxL_thetadz;
-                                    du_ndz = -u_n/XL_z*dXL_zdz;
+                                    du_ldphi = -u_l/L_rho*dL_rhodphi;
+                                    du_mdphi = -u_m/xL_theta*dxL_thetadphi;
+                                    du_ndphi = -u_n/XL_phi*dXL_phidphi;
                                     
                                     expu_l = exp(-u_l*u_l/2);
                                     expu_m = exp(-u_m*u_m/2);
@@ -2975,15 +2974,15 @@ int flag_fluct;
                                     dexpu_ndtheta = -expu_n*u_n*du_ndtheta; 
                                     dalmndtheta = dexpu_ldtheta*expu_m*expu_n + expu_l*dexpu_mdtheta*expu_n + expu_l*expu_m*dexpu_ndtheta;                        
                                     
-                                    dexpu_ldz = -expu_l*u_l*du_ldz;
-                                    dexpu_mdz = -expu_m*u_m*du_mdz;
-                                    dexpu_ndz = -expu_n*u_n*du_ndz;
-                                    dalmndz = dexpu_ldz*expu_m*expu_n + expu_l*dexpu_mdz*expu_n + expu_l*expu_m*dexpu_ndz;
+                                    dexpu_ldphi = -expu_l*u_l*du_ldphi;
+                                    dexpu_mdphi = -expu_m*u_m*du_mdphi;
+                                    dexpu_ndphi = -expu_n*u_n*du_ndphi;
+                                    dalmndphi = dexpu_ldphi*expu_m*expu_n + expu_l*dexpu_mdphi*expu_n + expu_l*expu_m*dexpu_ndphi;
                                       
                                     xx += ac*Flambda*Fdelta*almn*sin(phase);
                                     dxxdrho += dacdrho*Flambda*Fdelta*almn*sin(phase) + ac*dFlambdadrho*Fdelta*almn*sin(phase) + ac*Flambda*dFdeltadrho*almn*sin(phase) + ac*Flambda*Fdelta*dalmndrho*sin(phase) + ac*Flambda*Fdelta*almn*cos(phase)*dphasedrho;                   
                                     dxxdtheta += dacdtheta*Flambda*Fdelta*almn*sin(phase) + ac*dFlambdadtheta*Fdelta*almn*sin(phase) + ac*Flambda*dFdeltadtheta*almn*sin(phase) + ac*Flambda*Fdelta*dalmndtheta*sin(phase) + ac*Flambda*Fdelta*almn*cos(phase)*dphasedtheta;
-                                    dxxdz += dacdz*Flambda*Fdelta*almn*sin(phase) + ac*dFlambdadz*Fdelta*almn*sin(phase) + ac*Flambda*dFdeltadz*almn*sin(phase) + ac*Flambda*Fdelta*dalmndz*sin(phase) + ac*Flambda*Fdelta*almn*cos(phase)*dphasedz;
+                                    dxxdphi += dacdphi*Flambda*Fdelta*almn*sin(phase) + ac*dFlambdadphi*Fdelta*almn*sin(phase) + ac*Flambda*dFdeltadphi*almn*sin(phase) + ac*Flambda*Fdelta*dalmndphi*sin(phase) + ac*Flambda*Fdelta*almn*cos(phase)*dphasedphi;
                                 }
                             }
                         } 
@@ -2995,7 +2994,7 @@ int flag_fluct;
                         nefsne += ht;
                         dnefsnedrho += dht*dxxdrho;                                                                 
                         dnefsnedtheta += dht*dxxdtheta;
-                        dnefsnedz += dht*dxxdz;   
+                        dnefsnedphi += dht*dxxdphi;   
                      }
 
                      if (fluctparam.ne_model[imodel][0] == 3) {/* 2-D Gaussian model (rho,curtheta), absolute epsi values (drift wave model, global cylindrical phase approx.) */ 
@@ -3005,7 +3004,7 @@ int flag_fluct;
                         ac = 2.0*sqrt(2.0*PI)*fluctparam.ne_sigmar_max[imodel][0]*sqrt(fluctparam.ne_epsi_rho[imodel][0]*fluctparam.ne_epsi_theta[imodel][0]/L_rho/xL_perp);
                         dacdrho = -0.5*ac*(dL_rhodrho/L_rho + dxL_perpdrho/xL_perp);
                         dacdtheta = -0.5*ac*(dL_rhodtheta/L_rho + dxL_perpdtheta/xL_perp);
-                        dacdz = -0.5*ac*(dL_rhodz/L_rho + dxL_perpdz/xL_perp);
+                        dacdphi = -0.5*ac*(dL_rhodphi/L_rho + dxL_perpdphi/xL_perp);
                         
                         for (il = fluctparam.ne_lmin[imodel][0];il <= fluctparam.ne_lmax[imodel][0];il++) {
                             for (im = fluctparam.ne_mmin[imodel][0];im <= fluctparam.ne_mmax[imodel][0];im++) {
@@ -3015,12 +3014,12 @@ int flag_fluct;
                                 curtheta = xq*Y[1] - Y[2]/equilparam.Rp[0];
                                 dcurthetadrho = dxqdrho*Y[1];
                                 dcurthetadtheta = dxqdtheta*Y[1] + xq;
-                                dcurthetadz = dxqdz*Y[1]-1.0/equilparam.Rp[0];
+                                dcurthetadphi = dxqdphi*Y[1]-1.0;
                                 
                                 phase = 2*PI*il*Y[0] + im*curtheta + fluctparam.ne_phase[imodel][iphase-1];
                                 dphasedrho = 2*PI*il + im*dcurthetadrho;
                                 dphasedtheta = im*dcurthetadtheta;
-                                dphasedz = im*dcurthetadz;
+                                dphasedphi = im*dcurthetadphi;
 
                                 u_l = PI*fluctparam.ne_epsi_rho[imodel][0]*il/L_rho;
                                 u_m = PI*fluctparam.ne_epsi_theta[imodel][0]*im/xL_perp;
@@ -3031,8 +3030,8 @@ int flag_fluct;
                                 du_ldtheta = -u_l/L_rho*dL_rhodtheta;
                                 du_mdtheta = -u_m/xL_perp*dxL_perpdtheta;
 
-                                du_ldz = -u_l/L_rho*dL_rhodz;
-                                du_mdz = -u_m/xL_perp*dxL_perpdz;
+                                du_ldphi = -u_l/L_rho*dL_rhodphi;
+                                du_mdphi = -u_m/xL_perp*dxL_perpdphi;
 
                                 expu_l = exp(-u_l*u_l/2);
                                 expu_m = exp(-u_m*u_m/2);
@@ -3046,14 +3045,14 @@ int flag_fluct;
                                 dexpu_mdtheta = -expu_m*u_m*du_mdtheta;
                                 dalmdtheta = dexpu_ldtheta*expu_m + expu_l*dexpu_mdtheta;                        
 
-                                dexpu_ldz = -expu_l*u_l*du_ldz;
-                                dexpu_mdz = -expu_m*u_m*du_mdz;
-                                dalmdz = dexpu_ldz*expu_m + expu_l*dexpu_mdz;
+                                dexpu_ldphi = -expu_l*u_l*du_ldphi;
+                                dexpu_mdphi = -expu_m*u_m*du_mdphi;
+                                dalmdphi = dexpu_ldphi*expu_m + expu_l*dexpu_mdphi;
                                 
                                 xx += ac*Flambda*Fdelta*alm*sin(phase);
                                 dxxdrho += dacdrho*Flambda*Fdelta*alm*sin(phase) + ac*dFlambdadrho*Fdelta*alm*sin(phase) + ac*Flambda*dFdeltadrho*alm*sin(phase) + ac*Flambda*Fdelta*dalmdrho*sin(phase) + ac*Flambda*Fdelta*alm*cos(phase)*dphasedrho;                   
                                 dxxdtheta += dacdtheta*Flambda*Fdelta*alm*sin(phase) + ac*dFlambdadtheta*Fdelta*alm*sin(phase) + ac*Flambda*dFdeltadtheta*alm*sin(phase) + ac*Flambda*Fdelta*dalmdtheta*sin(phase) + ac*Flambda*Fdelta*alm*cos(phase)*dphasedtheta;
-                                dxxdz += dacdz*Flambda*Fdelta*alm*sin(phase) + ac*dFlambdadz*Fdelta*alm*sin(phase) + ac*Flambda*dFdeltadz*alm*sin(phase) + ac*Flambda*Fdelta*dalmdz*sin(phase) + ac*Flambda*Fdelta*alm*cos(phase)*dphasedz;
+                                dxxdphi += dacdphi*Flambda*Fdelta*alm*sin(phase) + ac*dFlambdadphi*Fdelta*alm*sin(phase) + ac*Flambda*dFdeltadphi*alm*sin(phase) + ac*Flambda*Fdelta*dalmdphi*sin(phase) + ac*Flambda*Fdelta*alm*cos(phase)*dphasedphi;
 
                             }
                         }  
@@ -3065,7 +3064,7 @@ int flag_fluct;
                         nefsne += ht;
                         dnefsnedrho += dht*dxxdrho;                                                                 
                         dnefsnedtheta += dht*dxxdtheta;
-                        dnefsnedz += dht*dxxdz;      
+                        dnefsnedphi += dht*dxxdphi;      
                      }
 
                      if (fluctparam.ne_model[imodel][0] == 4) {/* 1-D Gaussian model (rho,curtheta), absolute epsi values (drift wave model, global cylindrical phase approx.) */ 
@@ -3075,21 +3074,21 @@ int flag_fluct;
                         ac = 2.0*sqrt(sqrt(PI))*fluctparam.ne_sigmar_max[imodel][0]*sqrt(fluctparam.ne_epsi_theta[imodel][0]/xL_perp);
                         dacdrho = -0.5*ac*dxL_perpdrho/xL_perp;
                         dacdtheta = -0.5*ac*dxL_perpdtheta/xL_perp;
-                        dacdz = -0.5*ac*dxL_perpdz/xL_perp;
+                        dacdphi = -0.5*ac*dxL_perpdphi/xL_perp;
                         
                         for (im = fluctparam.ne_mmin[imodel][0];im <= fluctparam.ne_mmax[imodel][0];im++) {
                                     
                             iphase = (im-(int)fluctparam.ne_mmin[imodel][0]) + 1;
 
-                            curtheta = xq*(Y[1] - Y0[1]) - (Y[2]/equilparam.Rp[0] - Y0[2]);
+                            curtheta = xq*(Y[1] - Y0[1]) - (Y[2] - Y0[2])/equilparam.Rp[0];
                             dcurthetadrho = dxqdrho*(Y[1] - Y0[1]);
                             dcurthetadtheta = dxqdtheta*Y[1] + xq;
-                            dcurthetadz = dxqdz*Y[1] - 1.0/equilparam.Rp[0];
+                            dcurthetadphi = dxqdphi*Y[1] - 1.0;
 
                             phase = im*curtheta + fluctparam.ne_phase[imodel][iphase-1];
                             dphasedrho = im*dcurthetadrho;
                             dphasedtheta = im*dcurthetadtheta;
-                            dphasedz = im*dcurthetadz;
+                            dphasedphi = im*dcurthetadphi;
                             
                             u_m = PI*fluctparam.ne_epsi_theta[imodel][0]*im/xL_perp;
 
@@ -3097,7 +3096,7 @@ int flag_fluct;
                             
                             du_mdtheta = -u_m/xL_perp*dxL_perpdtheta;
 
-                            du_mdz = -u_m/xL_perp*dxL_perpdz;
+                            du_mdphi = -u_m/xL_perp*dxL_perpdphi;
                             
                             expu_m = exp(-u_m*u_m/2);
                             am = expu_m;
@@ -3106,12 +3105,12 @@ int flag_fluct;
 
                             damdtheta = -expu_m*u_m*du_mdtheta;
 
-                            damdz = -expu_m*u_m*du_mdz;
+                            damdphi = -expu_m*u_m*du_mdphi;
 
                             xx += ac*Flambda*Fdelta*am*sin(phase);
                             dxxdrho += dacdrho*Flambda*Fdelta*am*sin(phase) + ac*dFlambdadrho*Fdelta*am*sin(phase) + ac*Flambda*dFdeltadrho*am*sin(phase) + ac*Flambda*Fdelta*damdrho*sin(phase) + ac*Flambda*Fdelta*am*cos(phase)*dphasedrho;                   
                             dxxdtheta += dacdtheta*Flambda*Fdelta*am*sin(phase) + ac*dFlambdadtheta*Fdelta*am*sin(phase) + ac*Flambda*dFdeltadtheta*am*sin(phase) + ac*Flambda*Fdelta*damdtheta*sin(phase) + ac*Flambda*Fdelta*am*cos(phase)*dphasedtheta;
-                            dxxdz += dacdz*Flambda*Fdelta*am*sin(phase) + ac*dFlambdadz*Fdelta*am*sin(phase) + ac*Flambda*dFdeltadz*am*sin(phase) + ac*Flambda*Fdelta*damdz*sin(phase) + ac*Flambda*Fdelta*am*cos(phase)*dphasedz;
+                            dxxdphi += dacdphi*Flambda*Fdelta*am*sin(phase) + ac*dFlambdadphi*Fdelta*am*sin(phase) + ac*Flambda*dFdeltadphi*am*sin(phase) + ac*Flambda*Fdelta*damdphi*sin(phase) + ac*Flambda*Fdelta*am*cos(phase)*dphasedphi;
                                     
                         } 
                         
@@ -3123,7 +3122,7 @@ int flag_fluct;
                         nefsne += ht;
                         dnefsnedrho += dht*dxxdrho;                                                                 
                         dnefsnedtheta += dht*dxxdtheta;
-                        dnefsnedz += dht*dxxdz;    
+                        dnefsnedphi += dht*dxxdphi;    
                      }
 
                         
@@ -3134,7 +3133,7 @@ int flag_fluct;
                         ac = 2.0*sqrt(sqrt(PI))*fluctparam.ne_sigmar_max[imodel][0]*sqrt(fluctparam.ne_epsi_theta[imodel][0]/xL_perp);
                         dacdrho = -0.5*ac*dxL_perpdrho/xL_perp;
                         dacdtheta = -0.5*ac*dxL_perpdtheta/xL_perp;
-                        dacdz = -0.5*ac*dxL_perpdz/xL_perp;
+                        dacdphi = -0.5*ac*dxL_perpdphi/xL_perp;
                         
                         for (im = fluctparam.ne_mmin[imodel][0];im <= fluctparam.ne_mmax[imodel][0];im++) {
                                     
@@ -3143,13 +3142,12 @@ int flag_fluct;
                             kperp = 2*PI*im/xL_perp;
                             dkperpdrho = -kperp/xL_perp*dxL_perpdrho;;
                             dkperpdtheta = 0.0;
-                            dkperpdz = 0.0;
+                            dkperpdphi = 0.0;
 
-                            phase = (icm + cn0*(Y[2]/equilparam.Rp[0] - Y0[2]))*kperp + fluctparam.ne_phase[imodel][iphase-1];
-                            
-                            dphasedrho = (idcmdrho + dcn0drho*(Y[2]/equilparam.Rp[0] - Y0[2]))*kperp + (icm + cn0*(Y[2]/equilparam.Rp[0] - Y0[2]))*dkperpdrho;
-                            dphasedtheta = cm*kperp + (icm + cn0*(Y[2]/equilparam.Rp[0] - Y0[2]))*dkperpdtheta;
-                            dphasedz = cn0*kperp/equilparam.Rp[0] + (icm + cn0*(Y[2]/equilparam.Rp[0] - Y0[2]))*dkperpdz;
+                            phase = (icm + cn0*(Y[2] - Y0[2])/equilparam.Rp[0])*kperp + fluctparam.ne_phase[imodel][iphase-1];
+                            dphasedrho = (idcmdrho + dcn0drho*(Y[2] - Y0[2])/equilparam.Rp[0])*kperp + (icm + cn0*(Y[2] - Y0[2])/equilparam.Rp[0])*dkperpdrho;
+                            dphasedtheta = cm*kperp + (icm + cn0*(Y[2] - Y0[2])/equilparam.Rp[0])*dkperpdtheta;
+                            dphasedphi = cn0*kperp + (icm + cn0*(Y[2] - Y0[2])/equilparam.Rp[0])*dkperpdphi;
                             
                             u_m = PI*fluctparam.ne_epsi_theta[imodel][0]*im/xL_perp;
 
@@ -3157,7 +3155,7 @@ int flag_fluct;
                             
                             du_mdtheta = -u_m/xL_perp*dxL_perpdtheta;
 
-                            du_mdz = -u_m/xL_perp*dxL_perpdz;
+                            du_mdphi = -u_m/xL_perp*dxL_perpdphi;
                             
                             expu_m = exp(-u_m*u_m/2);
                             am = expu_m;
@@ -3166,12 +3164,12 @@ int flag_fluct;
 
                             damdtheta = -expu_m*u_m*du_mdtheta;
 
-                            damdz = -expu_m*u_m*du_mdz;
+                            damdphi = -expu_m*u_m*du_mdphi;
 
                             xx += ac*Flambda*Fdelta*am*sin(phase);
                             dxxdrho += dacdrho*Flambda*Fdelta*am*sin(phase) + ac*dFlambdadrho*Fdelta*am*sin(phase) + ac*Flambda*dFdeltadrho*am*sin(phase) + ac*Flambda*Fdelta*damdrho*sin(phase) + ac*Flambda*Fdelta*am*cos(phase)*dphasedrho;                   
                             dxxdtheta += dacdtheta*Flambda*Fdelta*am*sin(phase) + ac*dFlambdadtheta*Fdelta*am*sin(phase) + ac*Flambda*dFdeltadtheta*am*sin(phase) + ac*Flambda*Fdelta*damdtheta*sin(phase) + ac*Flambda*Fdelta*am*cos(phase)*dphasedtheta;
-                            dxxdz += dacdz*Flambda*Fdelta*am*sin(phase) + ac*dFlambdadz*Fdelta*am*sin(phase) + ac*Flambda*dFdeltadz*am*sin(phase) + ac*Flambda*Fdelta*damdz*sin(phase) + ac*Flambda*Fdelta*am*cos(phase)*dphasedz;
+                            dxxdphi += dacdphi*Flambda*Fdelta*am*sin(phase) + ac*dFlambdadphi*Fdelta*am*sin(phase) + ac*Flambda*dFdeltadphi*am*sin(phase) + ac*Flambda*Fdelta*damdphi*sin(phase) + ac*Flambda*Fdelta*am*cos(phase)*dphasedphi;
 
                         }
                         
@@ -3182,7 +3180,7 @@ int flag_fluct;
                         nefsne += ht;
                         dnefsnedrho += dht*dxxdrho;                                                                 
                         dnefsnedtheta += dht*dxxdtheta;
-                        dnefsnedz += dht*dxxdz;           
+                        dnefsnedphi += dht*dxxdphi;           
                      }
                     
                      if (fluctparam.ne_model[imodel][0] == 6) {/* 2-D Gaussian model (rho,cm,cn), absolute epsi values (drift wave model, local phase approx. ) */ 
@@ -3192,7 +3190,7 @@ int flag_fluct;
                         ac = 2.0*sqrt(2.0*PI)*fluctparam.ne_sigmar_max[imodel][0]*sqrt(fluctparam.ne_epsi_rho[imodel][0]*fluctparam.ne_epsi_theta[imodel][0]/L_rho/xL_perp);
                         dacdrho = -0.5*ac*(dL_rhodrho/L_rho + dxL_perpdrho/xL_perp);
                         dacdtheta = -0.5*ac*(dL_rhodtheta/L_rho + dxL_perpdtheta/xL_perp);
-                        dacdz = -0.5*ac*(dL_rhodz/L_rho + dxL_perpdz/xL_perp);
+                        dacdphi = -0.5*ac*(dL_rhodphi/L_rho + dxL_perpdphi/xL_perp);
                         
                         for (il = fluctparam.ne_lmin[imodel][0];il <= fluctparam.ne_lmax[imodel][0];il++) {
                             for (im = fluctparam.ne_mmin[imodel][0];im <= fluctparam.ne_mmax[imodel][0];im++) {
@@ -3202,12 +3200,12 @@ int flag_fluct;
                                 kperp = 2*PI*im/xL_perp;
                                 dkperpdrho = -kperp/xL_perp*dxL_perpdrho;;
                                 dkperpdtheta = 0.0;
-                                dkperpdz = 0.0;
+                                dkperpdphi = 0.0;
 
-                                phase = 2*PI*il*Y[0] + (icm + cn0*(Y[2]/equilparam.Rp[0] - Y0[2]))*kperp + fluctparam.ne_phase[imodel][iphase-1];
-                                dphasedrho = 2*PI*il + (idcmdrho + dcn0drho*(Y[2]/equilparam.Rp[0] - Y0[2]))*kperp + (icm + cn0*(Y[2]/equilparam.Rp[0] - Y0[2]))*dkperpdrho;
-                                dphasedtheta = cm*kperp + (icm + cn0*(Y[2]/equilparam.Rp[0] - Y0[2]))*dkperpdtheta;
-                                dphasedz = cn0*kperp/equilparam.Rp[0] + (icm + cn0*(Y[2]/equilparam.Rp[0] - Y0[2]))*dkperpdz;
+                                phase = 2*PI*il*Y[0] + (icm + cn0*(Y[2] - Y0[2])/equilparam.Rp[0])*kperp + fluctparam.ne_phase[imodel][iphase-1];
+                                dphasedrho = 2*PI*il + (idcmdrho + dcn0drho*(Y[2] - Y0[2])/equilparam.Rp[0])*kperp + (icm + cn0*(Y[2] - Y0[2])/equilparam.Rp[0])*dkperpdrho;
+                                dphasedtheta = cm*kperp + (icm + cn0*(Y[2] - Y0[2])/equilparam.Rp[0])*dkperpdtheta;
+                                dphasedphi = cn0*kperp + (icm + cn0*(Y[2] - Y0[2])/equilparam.Rp[0])*dkperpdphi;
 
                                 u_l = PI*fluctparam.ne_epsi_rho[imodel][0]*il/L_rho;
                                 u_m = PI*fluctparam.ne_epsi_theta[imodel][0]*im/xL_perp;
@@ -3218,8 +3216,8 @@ int flag_fluct;
                                 du_ldtheta = -u_l/L_rho*dL_rhodtheta;
                                 du_mdtheta = -u_m/xL_perp*dxL_perpdtheta;
 
-                                du_ldz = -u_l/L_rho*dL_rhodz;
-                                du_mdz = -u_m/xL_perp*dxL_perpdz;
+                                du_ldphi = -u_l/L_rho*dL_rhodphi;
+                                du_mdphi = -u_m/xL_perp*dxL_perpdphi;
 
                                 expu_l = exp(-u_l*u_l/2);
                                 expu_m = exp(-u_m*u_m/2);
@@ -3233,14 +3231,14 @@ int flag_fluct;
                                 dexpu_mdtheta = -expu_m*u_m*du_mdtheta;
                                 dalmdtheta = dexpu_ldtheta*expu_m + expu_l*dexpu_mdtheta;                        
 
-                                dexpu_ldz = -expu_l*u_l*du_ldz;
-                                dexpu_mdz = -expu_m*u_m*du_mdz;
-                                dalmdz = dexpu_ldz*expu_m + expu_l*dexpu_mdz;
+                                dexpu_ldphi = -expu_l*u_l*du_ldphi;
+                                dexpu_mdphi = -expu_m*u_m*du_mdphi;
+                                dalmdphi = dexpu_ldphi*expu_m + expu_l*dexpu_mdphi;
                                 
                                 xx += ac*Flambda*Fdelta*alm*sin(phase);
                                 dxxdrho += dacdrho*Flambda*Fdelta*alm*sin(phase) + ac*dFlambdadrho*Fdelta*alm*sin(phase) + ac*Flambda*dFdeltadrho*alm*sin(phase) + ac*Flambda*Fdelta*dalmdrho*sin(phase) + ac*Flambda*Fdelta*alm*cos(phase)*dphasedrho;                   
                                 dxxdtheta += dacdtheta*Flambda*Fdelta*alm*sin(phase) + ac*dFlambdadtheta*Fdelta*alm*sin(phase) + ac*Flambda*dFdeltadtheta*alm*sin(phase) + ac*Flambda*Fdelta*dalmdtheta*sin(phase) + ac*Flambda*Fdelta*alm*cos(phase)*dphasedtheta;
-                                dxxdz += dacdz*Flambda*Fdelta*alm*sin(phase) + ac*dFlambdadz*Fdelta*alm*sin(phase) + ac*Flambda*dFdeltadz*alm*sin(phase) + ac*Flambda*Fdelta*dalmdz*sin(phase) + ac*Flambda*Fdelta*alm*cos(phase)*dphasedz;
+                                dxxdphi += dacdphi*Flambda*Fdelta*alm*sin(phase) + ac*dFlambdadphi*Fdelta*alm*sin(phase) + ac*Flambda*dFdeltadphi*alm*sin(phase) + ac*Flambda*Fdelta*dalmdphi*sin(phase) + ac*Flambda*Fdelta*alm*cos(phase)*dphasedphi;
 
                             }
                         }  
@@ -3252,7 +3250,7 @@ int flag_fluct;
                         nefsne += ht;
                         dnefsnedrho += dht*dxxdrho;                                                                 
                         dnefsnedtheta += dht*dxxdtheta;
-                        dnefsnedz += dht*dxxdz;      
+                        dnefsnedphi += dht*dxxdphi;      
                      }                    
 	            }
             }
@@ -3264,11 +3262,11 @@ int flag_fluct;
                 
                dctadrho = cos(Y[1])*raymagnetic.dcalphadY[0] + sin(Y[1])*raymagnetic.dsalphadY[0];   
                dctadtheta = cos(Y[1])*raymagnetic.dcalphadY[1] + sin(Y[1])*raymagnetic.dsalphadY[1] - sta;
-               dctadz = cos(Y[1])*raymagnetic.dcalphadY[2] + sin(Y[1])*raymagnetic.dsalphadY[2];
+               dctadphi = cos(Y[1])*raymagnetic.dcalphadY[2]*equilparam.Rp[0] + sin(Y[1])*raymagnetic.dsalphadY[2]*equilparam.Rp[0];
                
                dstadrho = - cos(Y[1])*raymagnetic.dsalphadY[0] + sin(Y[1])*raymagnetic.dcalphadY[0];
                dstadtheta = - cos(Y[1])*raymagnetic.dsalphadY[1] + sin(Y[1])*raymagnetic.dcalphadY[1] + cta;
-               dstadz = - cos(Y[1])*raymagnetic.dsalphadY[2] + sin(Y[1])*raymagnetic.dcalphadY[2];
+               dstadphi = - cos(Y[1])*raymagnetic.dsalphadY[2]*equilparam.Rp[0] + sin(Y[1])*raymagnetic.dcalphadY[2]*equilparam.Rp[0];
                
 	           for (imodel=0; imodel < fluctparam.B_nmodel[0]; imodel++) {
 	               
@@ -3280,7 +3278,7 @@ int flag_fluct;
                            phaseB = gphase*fluctparam.B_kperp[imodel][ikperp] + fluctparam.B_phase[imodel][ikperp];
                            dphaseBdrho = dgphasedrho*fluctparam.B_kperp[imodel][ikperp];
 	                       dphaseBdtheta = dgphasedtheta*fluctparam.B_kperp[imodel][ikperp];                  
-	                       dphaseBdz = dgphasedz*fluctparam.B_kperp[imodel][ikperp];                          
+	                       dphaseBdphi = dgphasedphi*fluctparam.B_kperp[imodel][ikperp];                          
 	                       
 	                       ff0 = sqrt(2*(fluctparam.B_kperp[imodel][1]-fluctparam.B_kperp[imodel][0])/sqrt(2*PI));
 	                       
@@ -3295,22 +3293,22 @@ int flag_fluct;
 	                       BxfsB = ff0*sfBx[imodel]*ff1*ff2*cos(phaseB);
 	                       dBxfsBdrho = ff0*(dsfBxdrho[imodel]*cos(phaseB)*ff1*ff2 - sfBx[imodel]*sin(phaseB)*dphaseBdrho*ff1*ff2 + sfBx[imodel]*cos(phaseB)*dff1drho*ff2 + sfBx[imodel]*cos(phaseB)*ff1*dff2drho);
 	                       dBxfsBdtheta = ff0*(dsfBxdtheta[imodel]*cos(phaseB)*ff1*ff2 - sfBx[imodel]*sin(phaseB)*dphaseBdtheta*ff1*ff2 + sfBx[imodel]*cos(phaseB)*dff1dtheta*ff2 + sfBx[imodel]*cos(phaseB)*ff1*dff2dtheta);
-	                       dBxfsBdz = - ff0*sfBx[imodel]*sin(phaseB)*dphaseBdz*ff1*ff2;
+	                       dBxfsBdphi = - ff0*sfBx[imodel]*sin(phaseB)*dphaseBdphi*ff1*ff2;
                            
                            ByfsB = ff0*sfBy[imodel]*ff1*ff2*cos(phaseB);
 	                       dByfsBdrho = ff0*(dsfBydrho[imodel]*cos(phaseB)*ff1*ff2 - sfBy[imodel]*sin(phaseB)*dphaseBdrho*ff1*ff2 + sfBy[imodel]*cos(phaseB)*dff1drho*ff2 + sfBy[imodel]*cos(phaseB)*ff1*dff2drho);
 	                       dByfsBdtheta = ff0*(dsfBydtheta[imodel]*cos(phaseB)*ff1*ff2 - sfBy[imodel]*sin(phaseB)*dphaseBdtheta*ff1*ff2 + sfBy[imodel]*cos(phaseB)*dff1dtheta*ff2 + sfBy[imodel]*cos(phaseB)*ff1*dff2dtheta);
-	                       dByfsBdz = - ff0*sfBy[imodel]*sin(phaseB)*dphaseBdz*ff1*ff2;
+	                       dByfsBdphi = - ff0*sfBy[imodel]*sin(phaseB)*dphaseBdphi*ff1*ff2;
 
                            BzfsB = ff0*sfBz[imodel]*ff1*ff2*cos(phaseB);
 	                       dBzfsBdrho = ff0*(dsfBzdrho[imodel]*cos(phaseB)*ff1*ff2 - sfBz[imodel]*sin(phaseB)*dphaseBdrho*ff1*ff2 + sfBz[imodel]*cos(phaseB)*dff1drho*ff2 + sfBz[imodel]*cos(phaseB)*ff1*dff2drho);
 	                       dBzfsBdtheta = ff0*(dsfBzdtheta[imodel]*cos(phaseB)*ff1*ff2 - sfBz[imodel]*sin(phaseB)*dphaseBdtheta*ff1*ff2 + sfBz[imodel]*cos(phaseB)*dff1dtheta*ff2 + sfBz[imodel]*cos(phaseB)*ff1*dff2dtheta);
-	                       dBzfsBdz = - ff0*sfBz[imodel]*sin(phaseB)*dphaseBdz*ff1*ff2;
+	                       dBzfsBdphi = - ff0*sfBz[imodel]*sin(phaseB)*dphaseBdphi*ff1*ff2;
                      */
                     
-                           /* mexPrintf("Y[0],Y[1],Y[2],Bfx[0],dBxfdY[0],dBxfdY[1],dBxfdY[2]:%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g\n",Y[0],Y[1],Y[2],Bxf,dBxfdrho,dBxfdtheta,dBxfdz);*/
-                           /* mexPrintf("Y[0],Y[1],Y[2],Bfy[0],dByfdY[0],dByfdY[1],dByfdY[2]:%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g\n",Y[0],Y[1],Y[2],Byf,dByfdrho,dByfdtheta,dByfdz);*/
-                           /* mexPrintf("Y[0],Y[1],Y[2],Bfz[0],dBzfdY[0],dBzfdY[1],dBzfdY[2]:%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g\n",Y[0],Y[1],Y[2],Bzf,dBzfdrho,dBzfdtheta,dBzfdz);
+                           /* mexPrintf("Y[0],Y[1],Y[2],Bfx[0],dBxfdY[0],dBxfdY[1],dBxfdY[2]:%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g\n",Y[0],Y[1],Y[2],Bxf,dBxfdrho,dBxfdtheta,dBxfdphi);*/
+                           /* mexPrintf("Y[0],Y[1],Y[2],Bfy[0],dByfdY[0],dByfdY[1],dByfdY[2]:%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g\n",Y[0],Y[1],Y[2],Byf,dByfdrho,dByfdtheta,dByfdphi);*/
+                           /* mexPrintf("Y[0],Y[1],Y[2],Bfz[0],dBzfdY[0],dBzfdY[1],dBzfdY[2]:%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g\n",Y[0],Y[1],Y[2],Bzf,dBzfdrho,dBzfdtheta,dBzfdphi);
 
 	                   }
 	                   */
@@ -3325,22 +3323,22 @@ int flag_fluct;
                        phaseB = fluctparam.B_nmax[imodel][0]*Y[2]/equilparam.Rp[0];
                        dphaseBdrho = 0.0;
                        dphaseBdtheta = 0.0;
-                       dphaseBdz = fluctparam.B_nmax[imodel][0]/equilparam.Rp[0];
+                       dphaseBdphi = fluctparam.B_nmax[imodel][0];
 
                        BxfsB = sfBx[imodel]*sin(phaseB);
                        dBxfsBdrho = dsfBxdrho[imodel]*sin(phaseB);
                        dBxfsBdtheta = dsfBxdtheta[imodel]*sin(phaseB);
-                       dBxfsBdz = sfBx[imodel]*cos(phaseB)*dphaseBdz;
+                       dBxfsBdphi = sfBx[imodel]*cos(phaseB)*dphaseBdphi;
 
                        ByfsB = sfBy[imodel]*sin(phaseB);
                        dByfsBdrho = dsfBydrho[imodel]*sin(phaseB);
                        dByfsBdtheta = dsfBydtheta[imodel]*sin(phaseB);
-                       dByfsBdz = sfBy[imodel]*cos(phaseB)*dphaseBdz;
+                       dByfsBdphi = sfBy[imodel]*cos(phaseB)*dphaseBdphi;
 
                        BzfsB = sfBz[imodel]*cos(phaseB);
                        dBzfsBdrho = dsfBzdrho[imodel]*cos(phaseB);
                        dBzfsBdtheta = dsfBzdtheta[imodel]*cos(phaseB);
-                       dBzfsBdz = -sfBz[imodel]*sin(phaseB)*dphaseBdz;
+                       dBzfsBdphi = -sfBz[imodel]*sin(phaseB)*dphaseBdphi;
 
                        /* add ripple effect on densities and temperatures (electron and ion) */
 
@@ -3355,7 +3353,7 @@ int flag_fluct;
                        rhorip = Y[0] + lambda*cos(phaseB); 
                        drhodrhorip = 1.0 + dlambdadrho*cos(phaseB); 
                        drhodthetarip = dlambdadtheta*cos(phaseB);
-                       drhodzrip = - dphaseBdz*lambda*sin(phaseB);
+                       drhodphirip = - dphaseBdphi*lambda*sin(phaseB);
 
                        /* Electron density */
 
@@ -3374,40 +3372,40 @@ int flag_fluct;
                            nerip = val;
                            dnedrhorip = dvaldrho*drhodrhorip;
                            dnedthetarip = dvaldrho*drhodthetarip;
-                           dnedzrip = dvaldrho*drhodzrip;
+                           dnedphirip = dvaldrho*drhodphirip;
                        }
 
                        if ((rhorip > 1.0) & (rhorip <= rho_neeq0)) {
                            nerip = ne_sep + dnedrho_sep*(rhorip - 1.0); /* SOL */
                            dnedrhorip = dnedrho_sep*drhodrhorip;
                            dnedthetarip = dnedrho_sep*drhodthetarip;
-                           dnedzrip = dnedrho_sep*drhodzrip;
+                           dnedphirip = dnedrho_sep*drhodphirip;
                        }
 
                        if (rhorip > rho_neeq0) {
                            nerip = 0.0; /*vacuum */
                            dnedrhorip = 0.0;
                            dnedthetarip = 0.0;
-                           dnedzrip = 0.0;
+                           dnedphirip = 0.0;
                        }
 
                        ne_tilde = nerip - rayprofiles.ne[0];
                        dnedrho_tilde = dnedrhorip - rayprofiles.dnedY[0];
                        dnedtheta_tilde = dnedthetarip;
-                       dnedz_tilde = dnedzrip;
+                       dnedphi_tilde = dnedphirip;
 
                        ner_tilde = ne_tilde/rayprofiles.ne[0];
                        dnerdrho_tilde = dnedrho_tilde/rayprofiles.ne[0] - ne_tilde*rayprofiles.dnedY[0]/rayprofiles.ne[0]/rayprofiles.ne[0];
                        dnerdtheta_tilde = dnedtheta_tilde/rayprofiles.ne[0];
-                       dnerdz_tilde = dnedz_tilde/rayprofiles.ne[0];
+                       dnerdphi_tilde = dnedphi_tilde/rayprofiles.ne[0];
 
-                /*     mexPrintf("rho,theta,phi,rhorip,rho_neeq0,ne,dnedrho,nerip,dnedrhorip,dnedthetarip,dnedzrip,ner_tilde,dnerdrho_tilde,dnerdtheta_tilde,dnerdz_tilde:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",Y[0],Y[1],Y[2],rhorip,rho_neeq0,rayprofiles.ne[0],rayprofiles.dnedY[0],nerip,dnedrhorip,dnedthetarip,dnedzrip,ner_tilde,dnerdrho_tilde,dnerdtheta_tilde,dnerdz_tilde);
-                       mexPrintf("Brho0,raymagnetic.gradrhon[0],equilparam.Rp[0],Bz,fluctparam.B_kperp[imodel][ikperp],lambda:%g,%g,%g,%g,%g,%g\n",Brho0,raymagnetic.gradrhon[0],equilparam.Rp[0],Bz,fluctparam.B_kperp[imodel][ikperp],lambda);
+                /*     mexPrintf("rho,theta,phi,rhorip,rho_neeq0,ne,dnedrho,nerip,dnedrhorip,dnedthetarip,dnedphirip,ner_tilde,dnerdrho_tilde,dnerdtheta_tilde,dnerdphi_tilde:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",Y[0],Y[1],Y[2],rhorip,rho_neeq0,rayprofiles.ne[0],rayprofiles.dnedY[0],nerip,dnedrhorip,dnedthetarip,dnedphirip,ner_tilde,dnerdrho_tilde,dnerdtheta_tilde,dnerdphi_tilde);
+                       mexPrintf("Brho0,raymagnetic.gradrhon[0],equilparam.Rp[0],BPHI,fluctparam.B_kperp[imodel][ikperp],lambda:%g,%g,%g,%g,%g,%g\n",Brho0,raymagnetic.gradrhon[0],equilparam.Rp[0],BPHI,fluctparam.B_kperp[imodel][ikperp],lambda);
                 */    
                        nefsne += ner_tilde;/* add the relative contribution of magnetic ripple to the density perturbation */
                        dnefsnedrho += dnerdrho_tilde;
                        dnefsnedtheta += dnerdtheta_tilde;
-                       dnefsnedz += dnerdz_tilde;
+                       dnefsnedphi += dnerdphi_tilde;
 
                        /* Electron temperature */
 
@@ -3426,37 +3424,37 @@ int flag_fluct;
                            Terip = val;
                            dTedrhorip = dvaldrho*drhodrhorip;
                            dTedthetarip = dvaldrho*drhodthetarip;
-                           dTedzrip = dvaldrho*drhodzrip;
+                           dTedphirip = dvaldrho*drhodphirip;
                        }
 
                        if ((rhorip > 1.0) & (rhorip <= rho_Teeq0)) {
                            Terip = Te_sep + dTedrho_sep*(rhorip - 1.0); /* SOL */
                            dTedrhorip = dTedrho_sep*drhodrhorip;
                            dTedthetarip = dTedrho_sep*drhodthetarip;
-                           dTedzrip = dTedrho_sep*drhodzrip;
+                           dTedphirip = dTedrho_sep*drhodphirip;
                        }
 
                        if (rhorip > rho_Teeq0) {
                            Terip = 0.0; /*vacuum */
                            dTedrhorip = 0.0;
                            dTedthetarip = 0.0;
-                           dTedzrip = 0.0;
+                           dTedphirip = 0.0;
                        }
 
                        Te_tilde = Terip - rayprofiles.Te[0];
                        dTedrho_tilde = dTedrhorip - rayprofiles.dTedY[0];
                        dTedtheta_tilde = dTedthetarip;
-                       dTedz_tilde = dTedzrip;
+                       dTedphi_tilde = dTedphirip;
 
                        Ter_tilde = Te_tilde/rayprofiles.Te[0];
                        dTerdrho_tilde = dTedrho_tilde/rayprofiles.Te[0] - Te_tilde*rayprofiles.dTedY[0]/rayprofiles.Te[0]/rayprofiles.Te[0];
                        dTerdtheta_tilde = dTedtheta_tilde/rayprofiles.Te[0];
-                       dTerdz_tilde = dTedz_tilde/rayprofiles.Te[0];
+                       dTerdphi_tilde = dTedphi_tilde/rayprofiles.Te[0];
 
                        TefsTe += Ter_tilde;/* add the relative contribution of magnetic ripple to the electron temperature perturbation */
                        dTefsTedrho += dTerdrho_tilde;
                        dTefsTedtheta += dTerdtheta_tilde;
-                       dTefsTedz += dTerdz_tilde;
+                       dTefsTedphi += dTerdphi_tilde;
 
                        /* ion densities */
 
@@ -3477,27 +3475,27 @@ int flag_fluct;
                                znirip[is] = zval[is];
                                dznidrhorip[is] = dzvaldrho[is]*drhodrhorip;
                                dznidthetarip[is] = dzvaldrho[is]*drhodthetarip;
-                               dznidzrip[is] = dzvaldrho[is]*drhodzrip;
+                               dznidphirip[is] = dzvaldrho[is]*drhodphirip;
                            }
 
                            if ((rhorip > 1.0) & (rhorip <= rho_znieq0[is])) {
                                znirip[is] = zni_sep[is] + dznidrho_sep[is]*(rhorip - 1.0); /* SOL */
                                dznidrhorip[is] = dznidrho_sep[is]*drhodrhorip;
                                dznidthetarip[is] = dznidrho_sep[is]*drhodthetarip;
-                               dznidzrip[is] = dznidrho_sep[is]*drhodzrip;
+                               dznidphirip[is] = dznidrho_sep[is]*drhodphirip;
                            }
 
                            if (rhorip > rho_znieq0[is]) {
                                znirip[is] = 0.0; /*vacuum */
                                dznidrhorip[is] = 0.0;
                                dznidthetarip[is] = 0.0;
-                               dznidzrip[is] = 0.0;
+                               dznidphirip[is] = 0.0;
                            }
 
                            zni_tilde[is] = znirip[is] - rayprofiles.zni[is];
                            dznidrho_tilde[is] = dznidrhorip[is] - rayprofiles.dznidY[is][0];
                            dznidtheta_tilde[is] = dznidthetarip[is];
-                           dznidz_tilde[is] = dznidzrip[is];
+                           dznidphi_tilde[is] = dznidphirip[is];
 
                            /*mexPrintf("is,ns,rayprofiles.zni[is],%d,%d,%g\n",is,equilparam.ns[0],rayprofiles.zni[is]);*/
 
@@ -3508,12 +3506,12 @@ int flag_fluct;
                                znir_tilde[is] = zni_tilde[is]/rayprofiles.zni[is];
                                dznirdrho_tilde[is] = dznidrho_tilde[is]/rayprofiles.zni[is] - zni_tilde[is]*rayprofiles.dznidY[is][0]/rayprofiles.zni[is]/rayprofiles.zni[is];
                                dznirdtheta_tilde[is] = dznidtheta_tilde[is]/rayprofiles.zni[is];
-                               dznirdz_tilde[is] = dznidz_tilde[is]/rayprofiles.zni[is];
+                               dznirdphi_tilde[is] = dznidphi_tilde[is]/rayprofiles.zni[is];
 
                                znifszni[is] += znir_tilde[is];/* add the relative contribution of magnetic ripple to the ion densities perturbations */
                                dznifsznidrho[is] += dznirdrho_tilde[is];
                                dznifsznidtheta[is] += dznirdtheta_tilde[is];
-                               dznifsznidz[is] += dznirdz_tilde[is];
+                               dznifsznidphi[is] += dznirdphi_tilde[is];
                            }
 
                            /* ion temperatures */
@@ -3533,37 +3531,37 @@ int flag_fluct;
                                zTirip[is] = zval[is];
                                dzTidrhorip[is] = dzvaldrho[is]*drhodrhorip;
                                dzTidthetarip[is] = dzvaldrho[is]*drhodthetarip;
-                               dzTidzrip[is] = dzvaldrho[is]*drhodzrip;
+                               dzTidphirip[is] = dzvaldrho[is]*drhodphirip;
                            }
 
                            if ((rhorip > 1.0) & (rhorip <= rho_zTieq0[is])) {
                                zTirip[is] = zTi_sep[is] + dzTidrho_sep[is]*(rhorip - 1.0); /* SOL */
                                dzTidrhorip[is] = dzTidrho_sep[is]*drhodrhorip;
                                dzTidthetarip[is] = dzTidrho_sep[is]*drhodthetarip;
-                               dzTidzrip[is] = dzTidrho_sep[is]*drhodzrip;
+                               dzTidphirip[is] = dzTidrho_sep[is]*drhodphirip;
                            }
 
                            if (rhorip > rho_zTieq0[is]) {
                                zTirip[is] = 0.0; /*vacuum */
                                dzTidrhorip[is] = 0.0;
                                dzTidthetarip[is] = 0.0;
-                               dzTidzrip[is] = 0.0;
+                               dzTidphirip[is] = 0.0;
                            }
 
                            zTi_tilde[is] = zTirip[is] - rayprofiles.zTi[is];
                            dzTidrho_tilde[is] = dzTidrhorip[is] - rayprofiles.dzTidY[is][0];
                            dzTidtheta_tilde[is] = dzTidthetarip[is];
-                           dzTidz_tilde[is] = dzTidzrip[is];
+                           dzTidphi_tilde[is] = dzTidphirip[is];
 
                            zTir_tilde[is] = zTi_tilde[is]/rayprofiles.zTi[is];
                            dzTirdrho_tilde[is] = dzTidrho_tilde[is]/rayprofiles.zTi[is] - zTi_tilde[is]*rayprofiles.dzTidY[is][0]/rayprofiles.zTi[is]/rayprofiles.zTi[is];
                            dzTirdtheta_tilde[is] = dzTidtheta_tilde[is]/rayprofiles.zTi[is];
-                           dzTirdz_tilde[is] = dzTidz_tilde[is]/rayprofiles.zTi[is];
+                           dzTirdphi_tilde[is] = dzTidphi_tilde[is]/rayprofiles.zTi[is];
 
                            zTifszTi[is] += zTir_tilde[is];/* add the relative contribution of magnetic ripple to the ion temperatures perturbations */
                            dzTifszTidrho[is] += dzTirdrho_tilde[is];
                            dzTifszTidtheta[is] += dzTirdtheta_tilde[is];
-                           dzTifszTidz[is] += dzTirdz_tilde[is];
+                           dzTifszTidphi[is] += dzTirdphi_tilde[is];
                        }
 
                    }
@@ -3571,87 +3569,88 @@ int flag_fluct;
                    BrhofsB += cta*BxfsB + sta*ByfsB;
                    dBrhofsBdrho += dctadrho*BxfsB + cta*dBxfsBdrho + dstadrho*ByfsB + sta*dByfsBdrho;
                    dBrhofsBdtheta += dctadtheta*BxfsB + cta*dBxfsBdtheta + dstadtheta*ByfsB + sta*dByfsBdtheta;
-                   dBrhofsBdz += dctadz*BxfsB + cta*dBxfsBdz + dstadz*ByfsB + sta*dByfsBdz;
+                   dBrhofsBdphi += dctadphi*BxfsB + cta*dBxfsBdphi + dstadphi*ByfsB + sta*dByfsBdphi;
 
                    BsfsB += cta*ByfsB - sta*BxfsB;
                    dBsfsBdrho += dctadrho*ByfsB + cta*dByfsBdrho - dstadrho*BxfsB - sta*dBxfsBdrho;
                    dBsfsBdtheta += dctadtheta*ByfsB + cta*dByfsBdtheta - dstadtheta*BxfsB - sta*dBxfsBdtheta;
-                   dBsfsBdz += dctadz*ByfsB + cta*dByfsBdz - dstadz*BxfsB - sta*dBxfsBdz;
+                   dBsfsBdphi += dctadphi*ByfsB + cta*dByfsBdphi - dstadphi*BxfsB - sta*dBxfsBdphi;
 
-                   BzfsB += BzfsB;
-                   dBzfsBdrho += dBzfsBdrho;
-                   dBzfsBdtheta += dBzfsBdtheta;
-                   dBzfsBdz += dBzfsBdz;                       
+                   BphifsB += BzfsB;
+                   dBphifsBdrho += dBzfsBdrho;
+                   dBphifsBdtheta += dBzfsBdtheta;
+                   dBphifsBdphi += dBzfsBdphi;                       
                 
 	            }               
             }
             
             /* Calculation of the perturbed magnetic field and it's derivatives */
-            
+
             Brho = (raymagnetic.Brhon[0] + BrhofsB)*raymagnetic.B[0];
             Bs = (raymagnetic.Bsn[0] + BsfsB)*raymagnetic.B[0];
-            Bz = (raymagnetic.Bzn[0] + BzfsB)*raymagnetic.B[0];
-            B = sqrt(Brho*Brho + Bs*Bs + Bz*Bz);
+            Bphi = (raymagnetic.Bzn[0] + BphifsB)*raymagnetic.B[0];
+            B = sqrt(Brho*Brho + Bs*Bs + Bphi*Bphi);
 
             Brhon = Brho/B;/* Normalization to the new local value of B */
             Bsn = Bs/B;
-            Bzn = Bz/B;
+            Bphin = Bphi/B;
 
             dBrhodrho = (raymagnetic.dBrhondY[0] + dBrhofsBdrho)*raymagnetic.B[0] + (raymagnetic.Brhon[0] + BrhofsB)*raymagnetic.dBdY[0];
             dBrhodtheta = (raymagnetic.dBrhondY[1] + dBrhofsBdtheta)*raymagnetic.B[0] + (raymagnetic.Brhon[0] + BrhofsB)*raymagnetic.dBdY[1];
-            dBrhodz = (raymagnetic.dBrhondY[2] + dBrhofsBdz)*raymagnetic.B[0] + (raymagnetic.Brhon[0] + BrhofsB)*raymagnetic.dBdY[2];
+            dBrhodphi = (raymagnetic.dBrhondY[2]*equilparam.Rp[0] + dBrhofsBdphi)*raymagnetic.B[0] + (raymagnetic.Brhon[0] + BrhofsB)*raymagnetic.dBdY[2]*equilparam.Rp[0];
 
             dBsdrho = (raymagnetic.dBsndY[0] + dBsfsBdrho)*raymagnetic.B[0] + (raymagnetic.Bsn[0] + BsfsB)*raymagnetic.dBdY[0];
             dBsdtheta = (raymagnetic.dBsndY[1] + dBsfsBdtheta)*raymagnetic.B[0] + (raymagnetic.Bsn[0] + BsfsB)*raymagnetic.dBdY[1];
-            dBsdz = (raymagnetic.dBsndY[2] + dBsfsBdz)*raymagnetic.B[0] + (raymagnetic.Bsn[0] + BsfsB)*raymagnetic.dBdY[2];
+            dBsdphi = (raymagnetic.dBsndY[2]*equilparam.Rp[0] + dBsfsBdphi)*raymagnetic.B[0] + (raymagnetic.Bsn[0] + BsfsB)*raymagnetic.dBdY[2]*equilparam.Rp[0];
 
-            dBzdrho = (raymagnetic.dBzndY[0] + dBzfsBdrho)*raymagnetic.B[0] + (raymagnetic.Bzn[0] + BzfsB)*raymagnetic.dBdY[0];
-            dBzdtheta = (raymagnetic.dBzndY[1] + dBzfsBdtheta)*raymagnetic.B[0] + (raymagnetic.Bzn[0] + BzfsB)*raymagnetic.dBdY[1];
-            dBzdz = (raymagnetic.dBzndY[2] + dBzfsBdz)*raymagnetic.B[0] + (raymagnetic.Bzn[0] + BzfsB)*raymagnetic.dBdY[2];
+            dBphidrho = (raymagnetic.dBzndY[0] + dBphifsBdrho)*raymagnetic.B[0] + (raymagnetic.Bzn[0] + BphifsB)*raymagnetic.dBdY[0];
+            dBphidtheta = (raymagnetic.dBzndY[1] + dBphifsBdtheta)*raymagnetic.B[0] + (raymagnetic.Bzn[0] + BphifsB)*raymagnetic.dBdY[1];
+            dBphidphi = (raymagnetic.dBzndY[2]*equilparam.Rp[0] + dBphifsBdphi)*raymagnetic.B[0] + (raymagnetic.Bzn[0] + BphifsB)*raymagnetic.dBdY[2]*equilparam.Rp[0];
 
-            dBdrho = Brhon*dBrhodrho + Bsn*dBsdrho + Bzn*dBzdrho;
-            dBdtheta = Brhon*dBrhodtheta + Bsn*dBsdtheta + Bzn*dBzdtheta;
-            dBdz = Brhon*dBrhodz + Bsn*dBsdz + Bzn*dBzdz;
+            dBdrho = Brhon*dBrhodrho + Bsn*dBsdrho + Bphin*dBphidrho;
+            dBdtheta = Brhon*dBrhodtheta + Bsn*dBsdtheta + Bphin*dBphidtheta;
+            dBdphi = Brhon*dBrhodphi + Bsn*dBsdphi + Bphin*dBphidphi;
+            
 
             raymagnetic.Brhon[0] = Brhon;
             raymagnetic.dBrhondY[0] = (dBrhodrho - Brhon*dBdrho)/B;
             raymagnetic.dBrhondY[1] = (dBrhodtheta - Brhon*dBdtheta)/B;
-            raymagnetic.dBrhondY[2] = (dBrhodz - Brhon*dBdz)/B;         
+            raymagnetic.dBrhondY[2] = (dBrhodphi - Brhon*dBdphi)/B/equilparam.Rp[0];         
 
             raymagnetic.Bsn[0] = Bsn;
-            raymagnetic.dBsndY[0] = (dBsdrho - Bsn*dBdrho)/B;;
+            raymagnetic.dBsndY[0] = (dBsdrho - Bsn*dBdrho)/B;
             raymagnetic.dBsndY[1] = (dBsdtheta - Bsn*dBdtheta)/B;
-            raymagnetic.dBsndY[2] = (dBsdz - Bsn*dBdz)/B;         
+            raymagnetic.dBsndY[2] = (dBsdphi - Bsn*dBdphi)/B/equilparam.Rp[0];         
 
-            raymagnetic.Bzn[0] = Bzn;
-            raymagnetic.dBzndY[0] = (dBzdrho - Bzn*dBdrho)/B;
-            raymagnetic.dBzndY[1] = (dBzdtheta - Bzn*dBdtheta)/B;
-            raymagnetic.dBzndY[2] = (dBzdz - Bzn*dBdz)/B;         
+            raymagnetic.Bzn[0] = Bphin;
+            raymagnetic.dBzndY[0] = (dBphidrho - Bphin*dBdrho)/B;
+            raymagnetic.dBzndY[1] = (dBphidtheta - Bphin*dBdtheta)/B;
+            raymagnetic.dBzndY[2] = (dBphidphi - Bphin*dBdphi)/B/equilparam.Rp[0];         
 
             raymagnetic.B[0] = B;
             raymagnetic.dBdY[0] = dBdrho;
             raymagnetic.dBdY[1] = dBdtheta;
-            raymagnetic.dBdY[2] = dBdz;
+            raymagnetic.dBdY[2] = dBdphi/equilparam.Rp[0];
             
             raymagnetic.rhorip[0] = rhorip; 
             raymagnetic.drhoripdY[0] = drhodrhorip; 
             raymagnetic.drhoripdY[1] = drhodthetarip;
-            raymagnetic.drhoripdY[2] = drhodzrip;
+            raymagnetic.drhoripdY[2] = drhodphirip/equilparam.Rp[0];
                                  
             /* Calculation of the perturbed electron density and it's derivatives */
                 
-            /* mexPrintf("rho,theta,phi,ner[0],dnerdY[0],dnerdY[1],dnerdY[2]:%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g\n",Y[0],Y[1],Y[2],nefsne,dnefsnedrho,dnefsnedtheta,dnefsnedz);*/
+            /* mexPrintf("rho,theta,phi,ner[0],dnerdY[0],dnerdY[1],dnerdY[2]:%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g,%25.15g\n",Y[0],Y[1],Y[2],nefsne,dnefsnedrho,dnefsnedtheta,dnefsnedphi);*/
             
             rayprofiles.dnedY[0] = rayprofiles.dnedY[0]*(1.0 + nefsne) + rayprofiles.ne[0]*dnefsnedrho;
 	        rayprofiles.dnedY[1] = rayprofiles.dnedY[1]*(1.0 + nefsne) + rayprofiles.ne[0]*dnefsnedtheta;
-	        rayprofiles.dnedY[2] = rayprofiles.dnedY[2]*(1.0 + nefsne) + rayprofiles.ne[0]*dnefsnedz;         
+	        rayprofiles.dnedY[2] = rayprofiles.dnedY[2]*(1.0 + nefsne) + rayprofiles.ne[0]*dnefsnedphi/equilparam.Rp[0];         
 	        rayprofiles.ne[0] = rayprofiles.ne[0]*(1.0 + nefsne);
             
             /* Calculation of the perturbed electron temperature and it's derivatives */
            
             rayprofiles.dTedY[0] = rayprofiles.dTedY[0]*(1.0 + TefsTe) + rayprofiles.Te[0]*dTefsTedrho;
 	        rayprofiles.dTedY[1] = rayprofiles.dTedY[1]*(1.0 + TefsTe) + rayprofiles.Te[0]*dTefsTedtheta;
-	        rayprofiles.dTedY[2] = rayprofiles.dTedY[2]*(1.0 + TefsTe) + rayprofiles.Te[0]*dTefsTedz;         
+	        rayprofiles.dTedY[2] = rayprofiles.dTedY[2]*(1.0 + TefsTe) + rayprofiles.Te[0]*dTefsTedphi/equilparam.Rp[0];         
 	        rayprofiles.Te[0] = rayprofiles.Te[0]*(1.0 + TefsTe);
             
             for (is=0;is<equilparam.ns[0];is++) {
@@ -3660,14 +3659,14 @@ int flag_fluct;
 
                 rayprofiles.dznidY[is][0] = rayprofiles.dznidY[is][0]*(1.0 + znifszni[is]) + rayprofiles.zni[is]*dznifsznidrho[is];
                 rayprofiles.dznidY[is][1] = rayprofiles.dznidY[is][1]*(1.0 + znifszni[is]) + rayprofiles.zni[is]*dznifsznidtheta[is];
-                rayprofiles.dznidY[is][2] = rayprofiles.dznidY[is][2]*(1.0 + znifszni[is]) + rayprofiles.zni[is]*dznifsznidz[is];         
+                rayprofiles.dznidY[is][2] = rayprofiles.dznidY[is][2]*(1.0 + znifszni[is]) + rayprofiles.zni[is]*dznifsznidphi[is]/equilparam.Rp[0];         
                 rayprofiles.zni[is] = rayprofiles.zni[is]*(1.0 + znifszni[is]);
 
                 /* Calculation of the perturbed ion temperatures and their derivatives */
 
                 rayprofiles.dzTidY[is][0] = rayprofiles.dzTidY[is][0]*(1.0 + zTifszTi[is]) + rayprofiles.zTi[is]*dzTifszTidrho[is];
                 rayprofiles.dzTidY[is][1] = rayprofiles.dzTidY[is][1]*(1.0 + zTifszTi[is]) + rayprofiles.zTi[is]*dzTifszTidtheta[is];
-                rayprofiles.dzTidY[is][2] = rayprofiles.dzTidY[is][2]*(1.0 + zTifszTi[is]) + rayprofiles.zTi[is]*dzTifszTidz[is];         
+                rayprofiles.dzTidY[is][2] = rayprofiles.dzTidY[is][2]*(1.0 + zTifszTi[is]) + rayprofiles.zTi[is]*dzTifszTidphi[is]/equilparam.Rp[0];         
                 rayprofiles.zTi[is] = rayprofiles.zTi[is]*(1.0 + zTifszTi[is]);
                 
             }
@@ -4433,7 +4432,7 @@ double y0_in[MC];
     double *xq,*dxqdrho;
     double *xL_theta,*dxL_thetadrho;
     double *xL_perp,*dxL_perpdrho;
-    double *XL_z,*dXL_zdrho,*dXL_zdtheta;
+    double *XL_phi,*dXL_phidrho,*dXL_phidtheta;
      
     double *sf,*dsfdrho,*dsfdtheta;
     double *sfx,*dsfxdrho,*dsfxdtheta;
@@ -4628,20 +4627,20 @@ double y0_in[MC];
         	dxL_thetadrho = mxCalloc(1,sizeof(double));
         	xL_perp = mxCalloc(1,sizeof(double));
        	 	dxL_perpdrho = mxCalloc(1,sizeof(double));
-        	XL_z = mxCalloc(1,sizeof(double));
-        	dXL_zdrho = mxCalloc(1,sizeof(double));
-        	dXL_zdtheta = mxCalloc(1,sizeof(double));
+        	XL_phi = mxCalloc(1,sizeof(double));
+        	dXL_phidrho = mxCalloc(1,sizeof(double));
+        	dXL_phidtheta = mxCalloc(1,sizeof(double));
         	ppvald_0D(rayfluctuations.L_rho,L_rho);
         	ppvald_1D(rayfluctuations.xq_fit,rayparam.dS[0],0.25,xq,dxqdrho,&dummy1);
         	ppvald_1D(rayfluctuations.xL_theta_fit,rayparam.dS[0],0.25,xL_theta,dxL_thetadrho,&dummy1);
         	ppvald_1D(rayfluctuations.xL_perp_fit,rayparam.dS[0],0.25,xL_perp,dxL_perpdrho,&dummy1);
-        	ppvald_2D(rayfluctuations.XL_z_fit,rayparam.dS[0],0.25,0.2,XL_z,dXL_zdrho,dXL_zdtheta,&dummy1,&dummy2);
+        	ppvald_2D(rayfluctuations.XL_phi_fit,rayparam.dS[0],0.25,0.2,XL_phi,dXL_phidrho,dXL_phidtheta,&dummy1,&dummy2);
         	mexPrintf("----------------------------------------\n");
         	mexPrintf("Fluctuations -> xq(0.25),dxqdrho(0.25): %g,%g\n",xq[0],dxqdrho[0]);
         	mexPrintf("Fluctuations -> L_rho: %g\n",L_rho[0]);
         	mexPrintf("Fluctuations -> xL_theta(0.25),dxL_thetadrho(0.25): %g,%g\n",xL_theta[0],dxL_thetadrho[0]);
         	mexPrintf("Fluctuations -> xL_perp(0.25),dxL_perpdrho(0.25): %g,%g\n",xL_perp[0],dxL_perpdrho[0]);
-        	mexPrintf("Fluctuations -> XL_z(0.25,0.2),dXL_zdrho(0.25,0.2),dXL_zdtheta(0.25,0.2): %g,%g,%g\n",XL_z[0],dXL_zdrho[0],dXL_zdtheta[0]);
+        	mexPrintf("Fluctuations -> XL_phi(0.25,0.2),dXL_phidrho(0.25,0.2),dXL_phidtheta(0.25,0.2): %g,%g,%g\n",XL_phi[0],dXL_phidrho[0],dXL_phidtheta[0]);
         	mexPrintf("----------------------------------------\n");   
         	mxFree(xq);
         	mxFree(dxqdrho);
@@ -4650,9 +4649,9 @@ double y0_in[MC];
         	mxFree(dxL_thetadrho);
         	mxFree(xL_perp);
         	mxFree(dxL_perpdrho);
-        	mxFree(XL_z);
-        	mxFree(dXL_zdrho); 
-        	mxFree(dXL_zdtheta);
+        	mxFree(XL_phi);
+        	mxFree(dXL_phidrho); 
+        	mxFree(dXL_phidtheta);
 
         	if (fluctparam.ne_nmodel[0]) {
             	mexPrintf("----------------------------------------\n");
@@ -4666,7 +4665,7 @@ double y0_in[MC];
                 	if (fluctparam.ne_polmode[jf] != NULL) mexPrintf("Fluctuations for ne -> ne_polmode(%d): %g\n",0,fluctparam.ne_polmode[jf][0]);
                 	if (fluctparam.ne_epsi_rho[jf] != NULL) mexPrintf("Fluctuations for ne -> ne_epsi_rho(%d): %g\n",0,fluctparam.ne_epsi_rho[jf][0]);
                 	if (fluctparam.ne_epsi_theta[jf] != NULL) mexPrintf("Fluctuations for ne -> ne_epsi_theta(%d): %g\n",0,fluctparam.ne_epsi_theta[jf][0]);
-                	if (fluctparam.ne_epsi_z[jf] != NULL) mexPrintf("Fluctuations for ne -> ne_epsi_z(%d): %g\n",0,fluctparam.ne_epsi_z[jf][0]);
+                	if (fluctparam.ne_epsi_phi[jf] != NULL) mexPrintf("Fluctuations for ne -> ne_epsi_phi(%d): %g\n",0,fluctparam.ne_epsi_phi[jf][0]);
                 	if (fluctparam.ne_lmin[jf] != NULL) mexPrintf("Fluctuations for ne -> ne_lmin(%d): %g\n",0,fluctparam.ne_lmin[jf][0]);
                 	if (fluctparam.ne_mmin[jf] != NULL) mexPrintf("Fluctuations for ne -> ne_mmin(%d): %g\n",0,fluctparam.ne_mmin[jf][0]);
                	 	if (fluctparam.ne_nmin[jf] != NULL) mexPrintf("Fluctuations for ne -> ne_nmin(%d): %g\n",0,fluctparam.ne_nmin[jf][0]);
@@ -4692,7 +4691,7 @@ double y0_in[MC];
                 	if (fluctparam.B_polmode[jf] != NULL) mexPrintf("Fluctuations for B -> B_polmode(%d): %g\n",0,fluctparam.B_polmode[jf][0]);
                 	if (fluctparam.B_epsi_rho[jf] != NULL) mexPrintf("Fluctuations for B -> B_epsi_rho(%d): %g\n",0,fluctparam.B_epsi_rho[jf][0]);
                 	if (fluctparam.B_epsi_theta[jf] != NULL) mexPrintf("Fluctuations for B -> B_epsi_theta(%d): %g\n",0,fluctparam.B_epsi_theta[jf][0]);
-                	if (fluctparam.B_epsi_z[jf] != NULL) mexPrintf("Fluctuations for B -> B_epsi_z(%d): %g\n",0,fluctparam.B_epsi_z[jf][0]);
+                	if (fluctparam.B_epsi_phi[jf] != NULL) mexPrintf("Fluctuations for B -> B_epsi_phi(%d): %g\n",0,fluctparam.B_epsi_phi[jf][0]);
                 	if (fluctparam.B_lmin[jf] != NULL) mexPrintf("Fluctuations for B -> B_lmin(%d): %g\n",0,fluctparam.B_lmin[jf][0]);
                 	if (fluctparam.B_mmin[jf] != NULL) mexPrintf("Fluctuations for B -> B_mmin(%d): %g\n",0,fluctparam.B_mmin[jf][0]);
                 	if (fluctparam.B_nmin[jf] != NULL) mexPrintf("Fluctuations for B -> B_nmin(%d): %g\n",0,fluctparam.B_nmin[jf][0]);
