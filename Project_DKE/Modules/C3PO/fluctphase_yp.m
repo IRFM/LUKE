@@ -35,7 +35,12 @@ for i = 1:length(field_name),
                     dm = fluct.(char(field_name(i)))(ifield).mmax - fluct.(char(field_name(i)))(ifield).mmin + 1;
                     dn = fluct.(char(field_name(i)))(ifield).nmax - fluct.(char(field_name(i)))(ifield).nmin + 1;
                 if mode == 0,
-                    RandStream.setDefaultStream(RandStream('mt19937ar','seed',5489));%reset rand with original Mersenne-Twister pseudo-random number generator
+                    [lukeversion,matlabversion] = LUKEversion_jd;
+                    if str2num(matlabversion) < 713,
+                        RandStream.setDefaultStream(RandStream('mt19937ar','seed',5489));%reset rand with original Mersenne-Twister pseudo-random number generator
+                    else
+                        RandStream.setGlobalStream(RandStream('mt19937ar','seed',5489));%reset rand with original Mersenne-Twister pseudo-random number generator
+                    end
                 end
                 %
                 if fluct.(char(field_name(i)))(ifield).model == 1 || fluct.(char(field_name(i)))(ifield).model == 2,
