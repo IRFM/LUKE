@@ -99,7 +99,7 @@ dkeparam.clustermode.coll_dke_jd.scheduler.type = 'local';
 dkeparam.clustermode.eecoll_dke_yp.scheduler.type = 'local';
 dkeparam.clustermode.coll_dke_jd.scheduler.mode = 2;
 dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = 2;
-=======
+%
 %debugmode = 0;%set to 1 in case of problem
 %
 % RELATIVISTIC CASE
