@@ -5,7 +5,7 @@ function [Te,dTedrho,d2Tedrho2,ne,dnedrho,d2nedrho2,zTi,dzTidrho,d2zTidrho2,zni,
     By,dBydtheta,d2Bydtheta2,dBydrho,d2Bydthetadrho,...
     Bz,dBzdtheta,d2Bzdtheta2,dBzdrho,d2Bzdthetadrho,...
     BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho,...
-    gradrhon,dgradrhondtheta,dgradrhondrho] = equilval_yp(equil_fit,rho,theta,mode)
+    gradrho,dgradrhodtheta,dgradrhodrho] = equilval_yp(equil_fit,rho,theta,mode)
 %
 % This function calculates all parameters of the axisymmetric magnetic equilibrium at any position in the plasma
 %
@@ -32,7 +32,7 @@ function [Te,dTedrho,d2Tedrho2,ne,dnedrho,d2nedrho2,zTi,dzTidrho,d2zTidrho2,zni,
 %       - By,dBydtheta,d2Bydtheta2,dBydrho,d2Bydthetadrho: vertical B-field and it's derivatives [1,1]
 %       - Bz,dBzdtheta,d2Bzdtheta2,dBzdrho,d2Bzdthetadrho: toroidal or axial B-field and it's derivatives (signed value) [1,1]
 %       - BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho: poloidal B-field [1,1]
-%       - gradrhon,dgradrhondtheta,dgradrhondrho: normalized gradient of rho and it'derivatives [1,1]
+%       - gradrho,dgradrhodtheta,dgradrhodrho: normalized gradient of rho and it'derivatives [1,1]
 %
 % by Y. Peysson DRFC-CEA <yves.peysson@cea.fr> and J. Decker DRFC-CEA <joan.decker@cea.fr> 
 %
@@ -156,6 +156,6 @@ else
     dUpsilondtheta = dxdtheta/Rp;
 end
 %
-gradrhon = Upsilon.*BP.*dxstardpsin/equil_fit.psia_apRp*equil_fit.ap;
-dgradrhondrho = (dUpsilondrho.*BP.*dxstardpsin + Upsilon.*dBPdrho.*dxstardpsin + Upsilon.*BP.*ddxstardpsindrho)/equil_fit.psia_apRp*equil_fit.ap;
-dgradrhondtheta = (dUpsilondtheta.*BP.*dxstardpsin + Upsilon.*dBPdtheta.*dxstardpsin)/equil_fit.psia_apRp*equil_fit.ap;
+gradrho = Upsilon.*BP.*dxstardpsin/equil_fit.psia_apRp;
+dgradrhodrho = (dUpsilondrho.*BP.*dxstardpsin + Upsilon.*dBPdrho.*dxstardpsin + Upsilon.*BP.*ddxstardpsindrho)/equil_fit.psia_apRp;
+dgradrhodtheta = (dUpsilondtheta.*BP.*dxstardpsin + Upsilon.*dBPdtheta.*dxstardpsin)/equil_fit.psia_apRp;
