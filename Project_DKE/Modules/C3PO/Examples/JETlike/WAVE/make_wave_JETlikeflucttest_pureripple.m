@@ -198,7 +198,7 @@ legs = {'No ripple.','With ripple.';...
 %
 filename = ['Fig_',id_wave];
 %
-opt.p_opt = C3POdisplay_pchip.p_opt;
+opt.p_opt = C3POdisplay.p_opt;
 opt.ntheta_fit = 65;
 opt.nrho_fit = 15;
 opt.propvar = 1;   
