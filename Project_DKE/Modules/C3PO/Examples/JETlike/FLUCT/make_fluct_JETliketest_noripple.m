@@ -22,7 +22,7 @@ path_equil = '../EQUIL/';%if nothing is specified, the working directory is firs
 % Core plasma fluctuations inside the separatrix
 %
 naequilp.core.fluct.type = {'ne'};%Type of fluctuations or modulations ('ne': electron density, 'B': magnetic field) {1,nfluct_types}
-naequilp.core.fluct.model = [6];%Statistical ne fluctuation model (>= 1) : [1,nfluct_types]
+naequilp.core.fluct.model = [1];%Statistical ne fluctuation model (>= 1) : [1,nfluct_types]
                         %    - (1) -> 3-D Gaussian model (rho,theta,phi), relative epsi values (benchmark of C3PO)
                         %    - (2) -> 3-D Gaussian model (rho,theta,phi), absolute epsi values (m)
                         %    - (3) -> 2-D Gaussian drift-wave like model global (rho,curtheta), absolute epsi values (m)
@@ -43,8 +43,8 @@ naequilp.core.fluct.lmin = [1];%
 naequilp.core.fluct.mmin = [1];%for perp direction for models 3 & 4
 naequilp.core.fluct.nmin = [1];%useless for models 3 & 4
 %
-naequilp.core.fluct.lmax = [200];%
-naequilp.core.fluct.mmax = [200];%for perp direction for models 3 & 4
+naequilp.core.fluct.lmax = [50];%
+naequilp.core.fluct.mmax = [50];%for perp direction for models 3 & 4
 naequilp.core.fluct.nmax = [5];%useless for models 3 & 4%
 %
 % Edge plasma fluctuations outside the separatrix (for LH wave only, run with run_lukert or a specific script)
