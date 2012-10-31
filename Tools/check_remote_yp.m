@@ -24,7 +24,7 @@ function [flag,remote] = check_remote_yp(dkepath,clustername)
 %
 %remote = dkepath.remote(clusternum);
 %
-if nargin == 0,
+if nargin == 0 || isempty(dkepath),
     dkepath = load_structures_yp('dkepath','','');
 end
 %
@@ -70,7 +70,7 @@ if ~isempty(clustername),
                     if ~isempty(strfind(clustername0,clustername)),
                         scheduler_flag = strfind(dkepath.remote(iremote).cmd,scheduler);
                         for isc = 1:length(scheduler_flag),
-                            if ~isempty(scheduler_flag{isc}),                     
+                            if ~isempty(scheduler_flag(isc)),                     
                                 iremote_min = iremote;
                                 iremote_max = iremote;
                                 flag_remote = 1;
@@ -84,7 +84,7 @@ if ~isempty(clustername),
                     if ~isempty(strfind(clustername0,clustername)),
                         scheduler_flag = strfind(dkepath.remote(iremote).cmd,scheduler);
                         for isc = 1:length(scheduler_flag),
-                            if ~isempty(scheduler_flag{isc}),  
+                            if ~isempty(scheduler_flag(isc)),  
                                 iremote_min = iremote;
                                 iremote_max = iremote;
                                 flag_remote = 1;
@@ -97,11 +97,11 @@ if ~isempty(clustername),
             end
         else
             for iremote = 1:length(dkepath.remote),
-                clustername0 = dkepath.remote(iremote).host{1};%look if the cluster name is in the hostname
+                clustername0 = dkepath.remote(iremote).host;%look if the cluster name is in the hostname
                 if ~isempty(strfind(clustername0,clustername)),
                     scheduler_flag = strfind(dkepath.remote(iremote).cmd,scheduler);
                     for isc = 1:length(scheduler_flag),
-                    	if ~isempty(scheduler_flag{isc}),
+                    	if ~isempty(scheduler_flag(isc)),
                             iremote_min = iremote;
                             iremote_max = iremote;
                             flag_remote = 1;
@@ -129,9 +129,9 @@ if ~isempty(clustername),
                     end
                 else
                     if iremote == 1,
-                        info_dke_yp(2,[dkepath.remote(iremote).host{1},' or local'],0,'Blue');
+                        info_dke_yp(2,[dkepath.remote(iremote).host,' or local'],0,'Blue');
                     else
-                        info_dke_yp(2,dkepath.remote(iremote).host{1},0,'Blue');
+                        info_dke_yp(2,dkepath.remote(iremote).host,0,'Blue');
                     end
                 end
             end
@@ -142,11 +142,8 @@ if ~isempty(clustername),
 end
 %  
 for iremote = iremote_min:iremote_max,
-    if iscell(dkepath.remote(iremote).host),
-        HOST = dkepath.remote(iremote).host{1};
-    else
-        HOST = dkepath.remote(iremote).host;
-    end
+    %
+    HOST = dkepath.remote(iremote).host;
     %
     if isempty(dkepath.remote(iremote).(getenv('USER')));
         USER = getenv('USER');
@@ -156,7 +153,7 @@ for iremote = iremote_min:iremote_max,
     %
     disp('------------------------------------------------------');
     display(['Check if remote computer is accessible at to ',USER,'@',HOST,'.'])
-    info_dke_yp(0,'(If the process is blocked (waiting more than 10s approx.), type CTRL-C to escape)','','Blue');
+    info_dke_yp(0,'(If the process is blocked (waiting more than 10s approx.), type CTRL-C to escape)','','blue');
     %
     [remote_access,dummy] = unix(['ssh ',USER,'@',HOST,' ''ls''']);
     %
