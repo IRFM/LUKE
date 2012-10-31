@@ -39,6 +39,7 @@ macbookyves.yves(1).cshrc{1} = [];
 %
 macbookyves.yves(1).mex713 = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB713','/'];
 macbookyves.yves(1).mex714 = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB714','/'];
+macbookyves.yves(1).mex800 = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB800','/'];
 %
 macbookyves.yves(1).compiler_opt.copts = '';
 macbookyves.yves(1).compiler_opt.helmex = '  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
@@ -51,11 +52,13 @@ macbookyves.yves(1).compiler_opt.fopts = ' -largeArrayDims';
 macbookyves.yves(1).MUMPS.seq = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 macbookyves.yves(1).MUMPS.mex713 = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB713'];%Where MUMPS matrix solver is stored (MEX function)
 macbookyves.yves(1).MUMPS.mex714 = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB714'];%Where MUMPS matrix solver is stored (MEX function)
+macbookyves.yves(1).MUMPS.mex800 = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % SUPERLU matrix solver (parallel, sequential)
 %
 macbookyves.yves(1).SUPERLU.mex713 = [macbookyves.yves(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB713'];%Where SUPERLU matrix solver is stored (MEX function)
 macbookyves.yves(1).SUPERLU.mex714 = [macbookyves.yves(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB714'];%Where SUPERLU matrix solver is stored (MEX function)
+macbookyves.yves(1).SUPERLU.mex800 = [macbookyves.yves(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB800'];%Where SUPERLU matrix solver is stored (MEX function)
 %
 % PETSc matrix solver (parallel, sequential)
 %
@@ -96,6 +99,8 @@ macbookyves.yves(1).remote(1).cmd = 'condor_submit';
 macbookyves.yves(1).remote(1).get_jobid = {'** Proc ',':'};
 macbookyves.yves(1).remote(1).set_jobid = {'condor_q ',''};
 macbookyves.yves(1).remote(1).luke_root = macbookyves.yves(1).luke_root;%local host LUKE root
+macbookyves.yves(1).remote(1).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
+macbookyves.yves(1).remote(1).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
 %
 % CEPHEE CEA cluster (pbs)
 %
@@ -146,33 +151,47 @@ macbookyves.yves(1).remote(2).yves = 'YP105119';
 % macproyves (condor)
 %
 macbookyves.yves(1).remote(3).host = 'tolbachik.hd.free.fr';
-macbookyves.yves(1).remote(3).nproc = 6;
 macbookyves.yves(1).remote(3).cmd = 'condor_submit';
 macbookyves.yves(1).remote(3).get_jobid = {'** Proc ',':'};
 macbookyves.yves(1).remote(3).set_jobid = {'condor_q ',''};
+%
 macbookyves.yves(1).remote(3).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
 macbookyves.yves(1).remote(3).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
 macbookyves.yves(1).remote(3).remotedatapath = '/Users/yvespeysson/condor/';
-macbookyves.yves(1).remote(3).mat714.root = '/Applications/MATLAB_R2012a.app/bin/';
-macbookyves.yves(1).remote(3).mat714.prefdir = '/Users/yvespeysson/.matlab/R2012a';
-macbookyves.yves(1).remote(3).matdef = macbookyves.yves(1).remote(3).mat714;%default matlab on remote machine
 macbookyves.yves(1).remote(3).luke_root = ['/Users/yvespeysson/Travail/Projets/',luke_ref,'/'];
-macbookyves.yves(1).remote(3).(getenv('USER')) = 'yvespeysson';
+%
+%macbookyves.yves(1).remote(3).mat714.root = '/Applications/MATLAB_R2012a.app/bin/';
+%macbookyves.yves(1).remote(3).mat714.prefdir = '/Users/yvespeysson/.matlab/R2012a';
+%macbookyves.yves(1).remote(3).matdef = macbookyves.yves(1).remote(3).mat714;%default matlab on remote machine
+%
+macbookyves.yves(1).remote(3).mat800.root = '/Applications/MATLAB_R2012b.app/bin/';
+macbookyves.yves(1).remote(3).mat800.prefdir = '/Users/yvespeysson/.matlab/R2012b';
+macbookyves.yves(1).remote(3).matdef = macbookyves.yves(1).remote(3).mat800;%default matlab on remote machine
+%
+macbookyves.yves(1).remote(3).yves = 'yvespeysson';
+macbookyves.yves(1).remote(3).joan = 'yvespeysson';
+macbookyves.yves(1).remote(3).JD211098 = 'yvespeysson';
 %
 % macproyves (xgrid)
 %
 macbookyves.yves(1).remote(4).host = 'tolbachik.hd.free.fr';
-macbookyves.yves(1).remote(4).nproc = 6;
-macbookyves.yves(1).remote(4).cmd = {'xgrid -h ',' -p ',' -job batch '};
-macbookyves.yves(1).remote(4).get_jobid = {'jobIdentifier = ',';'};
+macbookyves.yves(1).remote(4).cmd = {'xgrid -h ',' -p ',' -job batch '};%
+macbookyves.yves(1).remote(4).get_jobid = {'jobIdentifier = ',';'};%
 macbookyves.yves(1).remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
 macbookyves.yves(1).remote(4).remotedatapath = '/Users/yvespeysson/xgrid/';
-macbookyves.yves(1).remote(4).mat714.root = '/Applications/MATLAB_R2012a.app/bin/';
-macbookyves.yves(1).remote(4).mat714.prefdir = '/Users/yvespeysson/.matlab/R2012a';
-macbookyves.yves(1).remote(4).matdef = macbookyves.yves(1).remote(4).mat714;%default matlab on remote machine
-macbookyves.yves(1).remote(4).luke_root = ['/Users/yvespeysson/Travail/Projets/',luke_ref,'/'];
+macbookyves.yves(1).remote(4).luke_root = ['/Users/yvespeysson/Travail/Projets/LUKE/'];
+%
+%macbookyves.yves(1).remote(4).mat714.root = '/Applications/MATLAB_R2012a.app/bin/';
+%macbookyves.yves(1).remote(4).mat714.prefdir = '/Users/yvespeysson/.matlab/R2012a';
+%macbookyves.yves(1).remote(4).matdef = macbookyves.yves(1).remote(4).mat714;%default matlab on remote machine
+%
+macbookyves.yves(1).remote(3).mat800.root = '/Applications/MATLAB_R2012b.app/bin/';
+macbookyves.yves(1).remote(3).mat800.prefdir = '/Users/yvespeysson/.matlab/R2012b';
+macbookyves.yves(1).remote(3).matdef = macbookyves.yves(1).remote(3).mat800;%default matlab on remote machine
+%
 macbookyves.yves(1).remote(4).password = {'ghm93'};
-macbookyves.yves(1).remote(4).(getenv('USER')) = 'yvespeysson';
+macbookyves.yves(1).remote(4).yves = 'yvespeysson';
+macbookyves.yves(1).remote(4).joan = 'yvespeysson';
 %
 % SATURNE CEA cluster
 %
@@ -193,4 +212,5 @@ macbookyves.yves(1).remote(4).(getenv('USER')) = 'yvespeysson';
 % macbookyves.yves(1).remote(5).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
 % macbookyves.yves(1).remote(5).password = {''};
 % macbookyves.yves(1).remote(5).(getenv('USER')) = USER;
+
 

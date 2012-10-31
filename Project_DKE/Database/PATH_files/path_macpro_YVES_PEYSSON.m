@@ -41,6 +41,7 @@ macproyves.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path a
 %
 macproyves.yvespeysson(1).mex713 = [macproyves.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB713','/'];
 macproyves.yvespeysson(1).mex714 = [macproyves.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB714','/'];
+macproyves.yvespeysson(1).mex800 = [macproyves.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB800','/'];
 %
 macproyves.yvespeysson(1).compiler_opt.copts = '';
 macproyves.yvespeysson(1).compiler_opt.helmex = '-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
@@ -53,11 +54,13 @@ macproyves.yvespeysson(1).compiler_opt.fopts = ' ';
 macproyves.yvespeysson(1).MUMPS.seq = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 macproyves.yvespeysson(1).MUMPS.mex713 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB713'];%Where MUMPS matrix solver is stored (MEX function)
 macproyves.yvespeysson(1).MUMPS.mex714 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB714'];%Where MUMPS matrix solver is stored (MEX function)
+macproyves.yvespeysson(1).MUMPS.mex800 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % SUPERLU matrix solver (parallel, sequential)
 %
 macproyves.yvespeysson(1).SUPERLU.mex713 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB713'];%Where SUPERLU matrix solver is stored (MEX function)
 macproyves.yvespeysson(1).SUPERLU.mex714 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB714'];%Where SUPERLU matrix solver is stored (MEX function)
+macproyves.yvespeysson(1).SUPERLU.mex800 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB800'];%Where SUPERLU matrix solver is stored (MEX function)
 %
 % PETSc matrix solver (parallel, sequential)
 %
@@ -135,38 +138,47 @@ macproyves.yvespeysson(1).TSBASE.mex = [macproyves.yvespeysson(1).luke_root,'Pro
 % LOCAL # 1 - CONDOR
 %
 macproyves.yvespeysson(1).remote(1).host = '';
-macproyves.yvespeysson(1).remote(1).nproc = 2*feature('numCores');%number of cpu
+macproyves.yvespeysson(1).remote(1).nproc = feature('numCores');%number of cpu
 macproyves.yvespeysson(1).remote(1).cmd = 'condor_submit';
 macproyves.yvespeysson(1).remote(1).get_jobid = {'** Proc ',':'};
 macproyves.yvespeysson(1).remote(1).set_jobid = {'condor_q ',''};
-macproyves.yvespeysson(1).remote(1).luke_root = macproyves.yvespeysson(1).luke_root;
+macproyves.yvespeysson(1).remote(1).luke_root = macproyves.yvespeysson(1).luke_root;%local host LUKE root
+macproyves.yvespeysson(1).remote(1).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
+macproyves.yvespeysson(1).remote(1).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
 %
 % LOCAL # 2 - XGRID
 %
-macproyves.yvespeysson(1).remote(2).host = '';
-macproyves.yvespeysson(1).remote(2).nproc = 2*feature('numCores');%number of cpu
+macproyves.yvespeysson(1).remote(2).host = 'tolbachik.hd.free.fr';
+macproyves.yvespeysson(1).remote(2).nproc = 6;
 macproyves.yvespeysson(1).remote(2).cmd = {'xgrid -h ',' -p ',' -job batch '};
 macproyves.yvespeysson(1).remote(2).get_jobid = {'jobIdentifier = ',';'};
 macproyves.yvespeysson(1).remote(2).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
-macproyves.yvespeysson(1).remote(2).luke_root = macproyves.yvespeysson(1).luke_root;
+macproyves.yvespeysson(1).remote(2).remotedatapath = '/Users/yvespeysson/xgrid/';
+macproyves.yvespeysson(1).remote(2).mat800.root = '/Applications/MATLAB_R2012b.app/bin/';
+macproyves.yvespeysson(1).remote(2).mat800.prefdir = '/Users/yvespeysson/.matlab/R2012b';
+macproyves.yvespeysson(1).remote(2).matdef = macproyves.yvespeysson(1).remote(2).mat800;%default matlab on remote machine
+macproyves.yvespeysson(1).remote(2).luke_root = ['/Users/yvespeysson/Travail/Projets/',luke_ref,'/'];
 macproyves.yvespeysson(1).remote(2).password = {'ghm93'};
+macproyves.yvespeysson(1).remote(2).(getenv('USER')) = 'yvespeysson';
 %
 % SATURNE CEA cluster
 %
-% USER = 'YP105119';
-% CLUSTER = 'saturne';
-% HOST = 'saturne1.partenaires.cea.fr';
-% HOME = '/home/YP105119';
-% NPROC = 12;
-% %
-% macproyves.yvespeysson(1).remote(3).host = {HOST};
-% macproyves.yvespeysson(1).remote(3).cluster = CLUSTER;
-% macproyves.yvespeysson(1).remote(3).nproc = NPROC;
-% macproyves.yvespeysson(1).remote(3).luke_root = [HOME,'/',luke_ref,'/'];
-% macproyves.yvespeysson(1).remote(3).matlabroot = '';
-% macproyves.yvespeysson(1).remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-% macproyves.yvespeysson(1).remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
-% macproyves.yvespeysson(1).remote(3).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
-% macproyves.yvespeysson(1).remote(3).password = {''};
-% macproyves.yvespeysson(1).remote(3).(getenv('USER')) = USER;
-% %
+USER = 'YP105119';
+CLUSTER = 'saturne';
+HOST = 'saturne1.partenaires.cea.fr';
+HOME = '/home/YP105119';
+NPROC = 12;
+%
+macproyves.yvespeysson(1).remote(3).host = {HOST};
+macproyves.yvespeysson(1).remote(3).cluster = CLUSTER;
+macproyves.yvespeysson(1).remote(3).nproc = NPROC;
+macproyves.yvespeysson(1).remote(3).home = [HOME,'/'];
+macproyves.yvespeysson(1).remote(3).luke_root = [HOME,'/',luke_ref,'/'];
+macproyves.yvespeysson(1).remote(3).matlabroot = '';
+macproyves.yvespeysson(1).remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+macproyves.yvespeysson(1).remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
+macproyves.yvespeysson(1).remote(3).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+macproyves.yvespeysson(1).remote(3).password = {''};
+macproyves.yvespeysson(1).remote(3).(getenv('USER')) = USER;
+%
+
