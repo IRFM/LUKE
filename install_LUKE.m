@@ -102,7 +102,7 @@ opt = input_dke_yp('Do you want to test MDCE capabilities','n',{'y','n'});
 %
 if opt == 'y',
     if isfield(dkepath,'remote'),
-        test_mdce(2,1,1,'local',8,200,dkepath);
+        test_mdce(3,1,1);
     else
         disp('No cluster information found.')
     end
