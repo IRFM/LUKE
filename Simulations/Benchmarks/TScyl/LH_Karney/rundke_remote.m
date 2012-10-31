@@ -86,21 +86,10 @@ dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, t
 dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 dkeparam.rt_mode = 1;% necessary to use run_lukert
 %
-% Distributed compting options on the remote computer (or cluster)
-% Syntax 'cluster:scheduler' with:
-%   - cluster: 'local','cephee','saturne','macproyves','macbookyves' (see make_path_LOCAL.m)
-%   - scheduler: 'xgrid','condor','pbs' (NOTE: for TORQUE or LFS, use pbs) (see make_path_LOCAL.m)
-% If scheduler is empty, the first remote structure is considered (default or local)
-% If remotename is empty, sequential calculations
-%
-remotename = 'macbookyves:condor';%'macproyves:condor','macproyves:xgrid','local';
-%
 dkeparam.clustermode.coll_dke_jd.scheduler.type = 'local';
 dkeparam.clustermode.eecoll_dke_yp.scheduler.type = 'local';
 dkeparam.clustermode.coll_dke_jd.scheduler.mode = 2;
 dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = 2;
-%
-%debugmode = 0;%set to 1 in case of problem
 %
 % RELATIVISTIC CASE
 %
