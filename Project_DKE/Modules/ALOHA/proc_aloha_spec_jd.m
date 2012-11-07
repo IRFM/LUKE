@@ -1,5 +1,42 @@
-function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_optim,display_mode)
+function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,Pin,param,opt_optim,display_mode)
 	%
+    % function for coupling ALOHA outputs and C3PO inputs
+    %
+    % INPUTS : 
+    %       - zN : initial ntor grid [1,nz]
+    %       - zdN : initial ntor grid steps [1,nz] or [1,1] or NaN 
+    %       - zdP : initial spectrum dP/dntor [1,nz]
+    %       - Pin : corrected initial total power (NaN to calculate from Pin, 1 for normalized output)
+    %       - param : spectrum treatment option, param = x + i*y. (default : 2i)
+    %                 The lobes are selected in the order of decreasing power.
+    %                 
+    %           o case x = 0 : lobes calculated by keeping N and Pmax of
+    %               each initial selected lobe. dN increased to account for
+    %               power of neighboring lobes. 
+    %                   - If y < 1, y is mimimum respective fraction of max power
+    %                   - If y > 1 (integer), y is number of lobes selected
+    %
+    %           o case x > 0 : lobes calculated by varying N, Pmax and dN to account for
+    %               neighboring lobes (weighted averages). 
+    %                   - If x < 1, x is mimimum respective fraction of max power
+    %                   - If x > 1 (integer), x is number of lobes selected
+    %                   - y (integer) is the number of completely protected lobes
+    %
+    %           o case x < 0 : identical to x = 0, but at the end only |x| (integer) 
+    %               lobes are truly returned. 
+    %             WARNING : in this case the total power is less than Pin
+    %                   
+    %       - opt_optim : use of function lsqnonlin for gaussian lobe fit (default : 0)
+    %       - display_mode : display initial and treated spectrum (default : 0)
+    %
+    % OUTPUTS : 
+    %       - yN : values for output lobes
+    %       - ydN : respective gaussian width
+    %       - yP : respective power
+    %       - zyfac : distribution matrix
+    %
+    % by J. Decker and Y. Peysson
+    %
 	if nargin < 7,
     	display_mode = 0;
 	end
@@ -12,11 +49,15 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
     	param = 2+2i;
     end
     %
+	if nargin < 4,
+    	Pin = 1;
+    end
+    %
     if opt_optim == 1 && exist('lsqnonlin') ~= 2,
         opt_optim = 0;
     end
 	%
-	zdP = zdP(:).'*zredfac;
+	zdP = zdP(:).';
 	zdN = zdN(:).';
 	zN = zN(:).';
 	%
@@ -24,21 +65,31 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	    disp('warning: min(zdP) < 0, correcting')
 	    zdP = zdP - min(zdP);
     end
-    %
-    Pmindisp = 10^(floor(mean(log10(zdP(find(zdP > 0))))) - 2); 
-    Pmaxdisp = 10^(ceil(log10(max(zdP))) + 1); 
 	%
 	global zx zf
 	%
+    % calculate grid steps if needed
+    %
 	if length(zdN) == 1 && isnan(zdN),
 	    zN_S = [zN(1) - (zN(2)-zN(1))/2, (zN(1:end-1) + zN(2:end))/2, zN(end) + (zN(end)-zN(end-1))/2];
 	    zdN = diff(zN_S);
 	end
 	%
 	Ptot = sum(zdP.*zdN);
-	%
 	nz = length(zdP);
+    %
+    if ~isnan(Pin),
+        zdP = zdP*Pin/Ptot;%set correct total input power (aloha total power calculation may give erratic results)
+        Ptot = Pin;
+    end
+    %
+    %  display limits
+    %
+    Pmindisp = 10^(floor(mean(log10(zdP(find(zdP > 0))))) - 2); 
+    Pmaxdisp = 10^(ceil(log10(max(zdP))) + 1); 
 	%
+    % identify initial lobes
+    %
 	zppdP = [0,zdP,0];
 	%
 	zptrend = sign(diff(zppdP));
@@ -85,9 +136,16 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 %
 % clear Prefm Prefp iz evol
 %
-	ny = length(ilim) - 1;
+	ny = length(ilim) - 1;% number of initial lobes
 	%
-	if real(param) == 0,% Peak position and height are maintained, dNpar is adjusted
+    if imag(param) <= -2,% keep directivity
+        enforcedir = 1;
+        param = real(param) - 1i*imag(param);
+    else
+        enforcedir = 0;
+    end
+    %
+	if real(param) <= 0,% Peak position and height are maintained, dNpar is adjusted
         if imag(param) < 1,
             Pfacmin = imag(param);
             nlobesmax = ny;
@@ -126,14 +184,16 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	zyilimm = repmat(ilim(1:end-1),[nz,1]);
 	zyilimp = repmat(ilim(2:end),[nz,1]);
 	%
-	zyfac = zeros(nz,ny);
+	zyfac = zeros(nz,ny);% distribution matrix
 	zyfac(zyind > zyilimm & zyind < zyilimp) = 1;
 	zyfac(zyind == zyilimm | zyind == zyilimp) = 1/2;%half power belongs to lobe at separation points
 	zyfac(zyind == 1 | zyind == nz) = 2*zyfac(zyind == 1 | zyind == nz);%full power belongs to lobe at end points
 	%
 	yP = sum(zydP.*zydN.*zyfac);
     %
-    if opt_peak == 1,
+    % initial lobes
+    %
+    if opt_peak == 1,% recalculate N//
         %
         yN = sum(zydP.*zydN.*zyfac.*zyN)./yP;
         ydN = sqrt(2*sum(zydP.*zydN.*zyfac.*(zyN - repmat(yN,[nz,1])).^2)./yP);
@@ -145,7 +205,7 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
             end
         end
         %
-    else
+    else% keep N//, 
         %
         ipeak = find(zvar == -2);
         yN = zN(ipeak);
@@ -157,7 +217,7 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	    error('Power was not conserved')
 	end
     %
-    if nlobespro > 0 && ny > nlobespro,
+    if nlobespro > 0 && ny > nlobespro,% keep a number of protected peaks
 	    %
         [yPsort,iysort] = sort(yP);
         %
@@ -188,6 +248,8 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	%
     yP0 = yP;
     %
+    % loop to agregate the power of minor peaks
+    %
 	while ny > nlobesmax || min(yP)/Ptot < Pfacmin,
         %
         iy = find(yP == min(yP),1,'first');
@@ -195,10 +257,33 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	    if iy == 1,
 	        %
 	        iyp = 2;
+            %
+            if enforcedir == 1 && yN(iyp)*yN(iy) < 0,% forbid changes in directivity
+                %
+                yNpro = [yNpro,yN(iy)];
+                ydNpro = [ydNpro,ydN(iy)];
+                yPpro = [yPpro,yP(iy)];
+                zyfacpro = [zyfacpro,zyfac(:,iy)];
+                %
+                yN(iy) = [];
+                ydN(iy) = [];
+                yP(iy) = [];
+                zyfac(:,iy) = [];
+                %
+                Ptot = Ptot - yP(iy);
+                %
+                ny = ny - 1;
+                %
+                nlobesmax = nlobesmax - 1;
+                %
+                continue
+                %
+            end
+            %
 	        zyfac(:,iyp) = zyfac(:,iyp) + zyfac(:,iy);
             yP(iyp) = sum(zdP.*zdN.*zyfac(:,iyp).');
             %
-            if opt_peak == 1,
+            if opt_peak == 1,% recalculate N//
                 yN(iyp) = sum(zdP.*zdN.*zyfac(:,iyp).'.*zN)./yP(iyp);
                 ydN(iyp) = sqrt(2*sum(zdP.*zdN.*zyfac(:,iyp).'.*(zN - yN(iyp)).^2)/yP(iyp));
                 if opt_optim,
@@ -211,10 +296,33 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	    elseif iy == ny,
 	        %
 	        iym = ny - 1;
+            %
+            if enforcedir == 1 && yN(iym)*yN(iy) < 0,% forbid changes in directivity
+                %
+                yNpro = [yNpro,yN(iy)];
+                ydNpro = [ydNpro,ydN(iy)];
+                yPpro = [yPpro,yP(iy)];
+                zyfacpro = [zyfacpro,zyfac(:,iy)];
+                %
+                yN(iy) = [];
+                ydN(iy) = [];
+                yP(iy) = [];
+                zyfac(:,iy) = [];
+                %
+                Ptot = Ptot - yP(iy);
+                %
+                ny = ny - 1;
+                %
+                nlobesmax = nlobesmax - 1;
+                %
+                continue
+                %
+            end
+            %
 	        zyfac(:,iym) = zyfac(:,iym) + zyfac(:,iy);
             yP(iym) = sum(zdP.*zdN.*zyfac(:,iym).');
             %
-            if opt_peak == 1,
+            if opt_peak == 1,% recalculate N//
                 yN(iym) = sum(zdP.*zdN.*zyfac(:,iym).'.*zN)./yP(iym);
                 ydN(iym) = sqrt(2*sum(zdP.*zdN.*zyfac(:,iym).'.*(zN - yN(iym)).^2)/yP(iym));
                 if opt_optim,
@@ -228,8 +336,17 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	        %
 	        iym = iy - 1;
 	        iyp = iy + 1;
+            %
+            if enforcedir == 1 && yN(iym)*yN(iyp) < 0,% forbid changes in directivity
+                %
+                Nlim = 0;
+                %
+            else
+                %
+                Nlim = (yN(iym) + yN(iyp))/2;
+                %
+            end
 	        %
-	        Nlim = (yN(iym) + yN(iyp))/2;
 	        izlimm = find(zN_S < Nlim,1,'last');
 	        %
 	        zyfac(1:izlimm-1,iym) = zyfac(1:izlimm-1,iym) + zyfac(1:izlimm-1,iy);
@@ -241,7 +358,7 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
             yP(iym) = sum(zdP.*zdN.*zyfac(:,iym).');
             yP(iyp) = sum(zdP.*zdN.*zyfac(:,iyp).');
             %
-            if opt_peak == 1,
+            if opt_peak == 1,% recalculate N//
                 yN(iym) = sum(zdP.*zdN.*zyfac(:,iym).'.*zN)./yP(iym);
                 ydN(iym) = sqrt(2*sum(zdP.*zdN.*zyfac(:,iym).'.*(zN - yN(iym)).^2)/yP(iym));
                 if opt_optim,
@@ -271,23 +388,42 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	    %
     end
     %
-    if opt_peak == 0,
+    if opt_peak == 0,% recalculate dN// to keep Pmax.
         %
         ydN = ydN.*yP./yP0;
         %
     end
+    %
+    % add protected peaks
     %
     yN = [yNpro,yN];
     ydN = [ydNpro,ydN];
     yP = [yPpro,yP];
     zyfac = [zyfacpro,zyfac];
     %
+    ny = ny + nlobespro;
+    %
+    % select number of peaks if real(param) < 0
+    %
+    if real(param) < 0,
+        %
+        ny = min([ny,-real(param)]);
+        %
+        [yP,iy] = sort(yP,2,'descend');
+        yP = yP(1:ny);
+        yN = yN(iy(1:ny));
+        zyfac = zyfac(:,iy(1:ny));
+        %
+    end
+    %
+    % sort output by N//
+    %
     [yN,iy] = sort(yN);
     ydN = ydN(iy);
     yP = yP(iy);
     zyfac = zyfac(:,iy);
     %
-    ny = ny + nlobespro;
+    % display results
     %
 	if display_mode >= 2,
 	    %
@@ -305,15 +441,31 @@ function [yN,ydN,yP,zyfac] = proc_aloha_spec_jd(zN,zdN,zdP,zredfac,param,opt_opt
 	    %
         ylim = [Pmindisp,Pmaxdisp];
         %
+        if Pin == 1,
+            fac = 1;
+            ylab = 'dP/dn_z (norm.)';
+        else
+            fac = 1e6;
+            ylab = 'dP/dn_z (MW)';
+        end            
+        %
 		figure('Name','Gaussian fit calculation'),
 		leg = {'Gaussian','Fit'};
-		graph1D_jd(xy(:),xyf(:)/1e6,0,1,'n_z','dP/dn_z (MW)','',NaN,'',ylim/1e6,'-','none','b',2,20,gca,0.9,0.7,0.7);
-		graph1D_jd(x,xf/1e6,0,1,'','','',leg,'',ylim/1e6,'--','none','r',2);
+		graph1D_jd(xy(:),xyf(:)/fac,0,1,'n_z',ylab,'',NaN,'',ylim/fac,'-','none','b',2,20,gca,0.9,0.7,0.7);
+		graph1D_jd(x,xf/fac,0,1,'','','',leg,'',ylim/fac,'--','none','r',2);
+        %
+		figure('Name','Gaussian fit calculation'),
+		graph1D_jd(xy(:),xyf(:)/fac,0,0,'n_z',ylab,'',NaN,'',NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);
+		graph1D_jd(x,xf/fac,0,0,'','','',leg,'',NaN,'--','none','r',2);
 	    %
 	    figure('Name','Gaussian fit vs. ALOHA'),
 	    leg = {'ALOHA','Gaussian fit','Location','NorthWest'};
-		graph1D_jd(zN,zdP/1e6,0,1,'n_z','dP/dn_z (MW)','',NaN,'',ylim/1e6,'-','none','b',2,20,gca,0.9,0.7,0.7);
-		graph1D_jd(x,xf/1e6,0,1,'','','',leg,'',ylim/1e6,'--','none','r',2);
+		graph1D_jd(zN,zdP/fac,0,1,'n_z',ylab,'',NaN,'',ylim/fac,'-','none','b',2,20,gca,0.9,0.7,0.7);
+		graph1D_jd(x,xf/fac,0,1,'','','',leg,'',ylim/fac,'--','none','r',2);
+	    %
+	    figure('Name','Gaussian fit vs. ALOHA'),
+		graph1D_jd(zN,zdP/fac,0,0,'n_z',ylab,'',NaN,'',NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);
+		graph1D_jd(x,xf/fac,0,0,'','','',leg,'',NaN,'--','none','r',2);
 	    %    
     end
     %
