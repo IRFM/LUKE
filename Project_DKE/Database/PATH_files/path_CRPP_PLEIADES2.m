@@ -31,7 +31,7 @@ pleiades2.path_profile = 1;
 %
 pleiades2.jdecker(1).luke_root = [pwd,'/'];
 pleiades2.jdecker(1).local_root = '/home/jdecker/';
-pleiades2.jdecker(1).temppathroot = '/scratch/jdecker/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+pleiades2.jdecker(1).temppathroot = '/scratch2/jdecker/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 pleiades2.jdecker(1).mex705 = [pleiades2.jdecker(1).luke_root,'Project_DKE/MEX/Bin/pleiades2/MATLAB75'];
 pleiades2.jdecker(1).mex711 = [pleiades2.jdecker(1).luke_root,'Project_DKE/MEX/Bin/pleiades2/MATLAB711'];
@@ -44,6 +44,7 @@ pleiades2.jdecker(1).MUMPS.mex711 = [pleiades2.jdecker(1).local_root,'Packages/B
 %
 pleiades2.jdecker(1).remote(1).host = '';
 pleiades2.jdecker(1).remote(1).nproc = 48;
+pleiades2.jdecker(1).remote(1).ppn = 1;
 pleiades2.jdecker(1).remote(1).cmd = 'qsub';
 pleiades2.jdecker(1).remote(1).get_jobid = {'','.pleiades2.epfl.ch'};%str_before,str_after
 pleiades2.jdecker(1).remote(1).set_jobid = {'qstat ','','Unknown Job Id'};%str_before,str_after,str_check
