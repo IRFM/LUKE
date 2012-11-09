@@ -106,8 +106,7 @@ nshots = length(shotimes);
 %
 % LUKE calculation for selected shotimes
 %
-timeids = cell(1,nshots);
-jobids = cell(1,nshots);
+jobs = cell(1,nshots);
 luke_inputs = cell(1,nshots);
 %
 for ishot = 1:nshots
@@ -178,6 +177,7 @@ for ishot = 1:nshots
     %
     luke_input.waves = '';
     luke_input.Zf0_interp = '';
+    luke_input.XXsinksource = '';
     %
     % Simulation ID
     %
@@ -204,14 +204,15 @@ for ishot = 1:nshots
         id_simul = [id_simul,'_',locid_simul];
     end
     %
-    luke_input.id_simul = id_simul;
+    luke_input.simul_in = id_simul;
+    luke_input.opt_save = 0;
     %
     % Run LUKE
     %
     if c_opt == 0,% sequential mode
         %
         [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] ...
-            = run_lukert(luke_input.id_simul,luke_input.wavestructs,[],luke_input.dkeparam.psin_S,luke_input.dkeparam.rho_S,dkepath,luke_input.equil,luke_input.dkeparam,luke_input.dkedisplay,luke_input.ohm,luke_input.transpfaste,luke_input.ripple,[],[],0);
+            = run_lukert(luke_input.simul_in,luke_input.wavestructs,luke_input.waves,luke_input.dkeparam.psin_S,luke_input.dkeparam.rho_S,dkepath,luke_input.equil,luke_input.dkeparam,luke_input.dkedisplay,luke_input.ohm,luke_input.transpfaste,luke_input.ripple,luke_input.Zf0_interp,luke_input.XXsinksource,luke_input.opt_save);
         %
         filename = [path_simul,filesep,'LUKE_RESULTS_',luke_input.id_simul,'.mat'];
         save(filename,'basestr','id_simul','luke_input','Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
@@ -221,12 +222,7 @@ for ishot = 1:nshots
         %
         remote = dkepath.remote(c_opt);
         %
-        if isfield(remote,'mem') && ~isempty(remote.mem) && isfield(dkeparam,'mem') && ~isempty(dkeparam.mem),
-            remote.mem{3} = dkeparam.mem;
-            remote.mem{4} = dkeparam.mem;
-        end
-        %
-        [timeids{ishot},jobids{ishot}] = runluke_remote_jd(luke_input,remote);
+        jobs{ishot} = runluke_remote_jd(luke_input,remote);
         %
         luke_inputs{ishot} = luke_input;
         %
@@ -247,7 +243,7 @@ elseif s_opt == 1,
         ifilenum = ifilenum + 1;
         filename = [path_simul,filesep,savestr,'_',num2str(ifilenum),'.mat'];
     end        
-    save(filename,'path_simul','basestr','shotimes','luke_inputs','timeids','jobids','remote')
+    save(filename,'path_simul','basestr','shotimes','luke_inputs','jobs','remote')
     disp(['Batch info saved in ',filename])
     return
 end
