@@ -17,12 +17,10 @@ if isstruct(data),
     % data from input structure
     %
     if isfield(data,'luke_input'),
-        id_simul = data.luke_input.id_simul;
         equil = data.luke_input.equil;
         dkeparam = data.luke_input.dkeparam;
         dkedisplay = data.luke_input.dkedisplay;
     else
-        id_simul = data.id_simul;
         equil = data.equil;
         dkeparam = data.dkeparam;
         dkedisplay = data.dkedisplay;
@@ -54,7 +52,7 @@ else
     %
     external = '';
     %
-    load(data,'id_simul','equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa','Zmomcoef','external');
+    load(data,'equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa','Zmomcoef','external');
     %
 end    
 %
@@ -235,6 +233,7 @@ Zbremchord.mask_hxr(:) = 1;%so that the bremmstrahlung is calculated at all posi
 % Save results
 %
 if opt_save,
+    id_simul = dke_out.simul.id;
     filename = [workdir,'HXR_RESULTS_',id_simul,'.mat'];
     save(filename,'Zbremchord','Zbremplasma','Zbremdiag','equilHXR','hxrexp');
     disp(['HXR data saved in file ',filename])
