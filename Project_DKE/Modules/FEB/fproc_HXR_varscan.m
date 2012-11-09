@@ -21,7 +21,7 @@ if iscell(shotime),
     id_simul_o = basestr;
     var.str = shotnum;
     %
-    var.liststr = select_shotimes_jd([equilbase,'_',basestr,'_',shotnum,'_'],[locid_simul,'.mat'],path_simul,shotime);
+    var.liststr = select_shotimes_jd([equilbase,basestr,'_',shotnum,'_'],[locid_simul,'.mat'],path_simul,shotime);
     nvar = length(var.liststr);
     %
     ivar_disp = [];
@@ -46,7 +46,7 @@ if iscell(shotime),
         var.unit = '\times 10^{19} m^{-3}';
     end
 else
-    equilbase = [file_str,basestr,'_',shotnum,'_',shotime];
+    equilbase = [file_str,basestr,'_',shotnum,'_',shotime,'_'];
     nvar = length(var.list);
     ttimes = repmat(str2num(shotime),[1,nvar]);
     ivar_disp = [];
@@ -109,24 +109,27 @@ dvardiag = NaN(1,nvar);
 %
 icpeak = NaN(1,nvar);
 %
-varmask = [];
+varmask = false(1,nvar);
 %
 for ivar = 1:nvar,
     %
     texp = [ttimes(ivar) - dtexp/2,ttimes(ivar) + dtexp/2]; 
     %
-    id_simul = [equilbase,'_',id_simul_o,'_',var.str,'_',var.liststr{ivar},locid_simul];%Simulation ID
+    id_simul = [equilbase,id_simul_o,'_',var.str,'_',var.liststr{ivar},locid_simul];%Simulation ID
     %
     [hxr_proc,hxr,data_proc] = fproc_hxr(basestr,path_simul,id_simul,hxr_file,exp_file,texp,ic,krange,opt);
     %
     if isempty(hxr_proc),
-        varmask = [varmask,ivar];
+        varmask(ivar) = true;
         %
         continue
     end
     %
     dI_tot(ivar) = data_proc.scalar.I_tot;
-    dI_exp(ivar) = data_proc.scalar.I_exp;
+    %
+    if isfield(data_proc.scalar,'I_exp'),
+        dI_exp(ivar) = data_proc.scalar.I_exp;
+    end
     %
     dp0_rf_2piRp(ivar) = data_proc.scalar.p0_rf_2piRp;
     dp_rf_2piRp(ivar) = data_proc.scalar.p_rf_2piRp;
@@ -221,7 +224,7 @@ dNdtexp(:,:,varmask) = NaN;
 %
 dt = 0.016;%%%%%
 %
-if ~all(all(k == repmat(k(:,1),[1,nvar]))),
+if ~all(all(k(:,~varmask) == repmat(k(:,1),[1,sum(~varmask)]))),
     error('verify energy list')
 else
     k = k(:,1);
@@ -320,7 +323,7 @@ kmax = max(k);
 %
 krangestr = ['k = ',num2str(kmin),' - ',num2str(kmax),' keV'];
 %
-savestr = [equilbase,'_',id_simul_o,locid_simul];%Save string
+savestr = [equilbase,id_simul_o,locid_simul];%Save string
 %
 % --------------------- Current -----------------------
 %
