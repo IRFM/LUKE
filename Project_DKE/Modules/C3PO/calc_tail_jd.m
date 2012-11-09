@@ -1,5 +1,9 @@
 function [Npar0_tail,dNpar0_tail,P0_2piRp_tail] = calc_tail_jd(Npar0,dNpar0,P0_2piRp,Nparmax_tail,n_tail,P_tail,opt_tail,display_mode)
 %
+% This function generates the series of rays to represent the spectral tail
+%
+%
+%
 if nargin < 8,
     display_mode = 0;
 end
@@ -17,7 +21,7 @@ else
     Ny = NaN;
 end
 %
-if Npar0 < 0,
+if Npar0 < 0,% working in positive spectrum
     s = -1;
     Npar0 = - Npar0;
 else
@@ -28,17 +32,19 @@ fac = exp(-1);%overlap factor
 %
 facln = sqrt(-log(fac));
 %
-if dNpar0 == 0 || imag(opt_tail) == 1,
-    dNpar0 = abs(Nparmax_tail - Npar0)/(1+2*n_tail)/facln;
+if dNpar0 == 0 || imag(opt_tail) == 1,% uniform dNpar0 in the tail
+    dNpar0_new = abs(Nparmax_tail - Npar0)/(1+2*n_tail)/facln;
+else
+    dNpar0_new = dNpar0;
 end
 %
-N_ini = Npar0 + dNpar0*facln;
+N_ini = Npar0 + dNpar0_new*facln;
 %
-if Nparmax_tail <= N_ini,% no tail
+if Nparmax_tail <= N_ini,% no tail is required as single pass absorption is ensured
     n_tail = 0;
 end
 %
-if n_tail == 0,
+if n_tail == 0,% no tail
     %
     Npar0_tail = s*Npar0;
     dNpar0_tail = dNpar0;
@@ -55,7 +61,7 @@ N_sep = linspace(N_ini,Nparmax_tail,n_tail + 1);
 %
 Npar0_tail = [Npar0,(N_sep(2:end) + N_sep(1:end-1))/2];% lobes positions
 %    
-dNpar0_tail = [dNpar0,diff(N_sep)/(2*facln)];% lobes width
+dNpar0_tail = [dNpar0_new,diff(N_sep)/(2*facln)];% lobes width
 %
 if real(opt_tail) == 1,
     P0_2piRp_tail = P0_2piRp*[(1-P_tail),P_tail*(2*n_tail-1:-2:1)/n_tail^2];% lobes power (linear distribution)
@@ -66,11 +72,11 @@ end
 if display_mode == 2,
     %
     nx = 101;
-    xlim = [Npar0-2*dNpar0,Nparmax_tail+dNpar0];
+    xlim = [Npar0-2*dNpar0_new,Nparmax_tail+dNpar0_new];
     %
     xN = linspace(xlim(1),xlim(2),nx);
     %
-    xdPdN_0 = exp(-(xN - Npar0).^2/dNpar0.^2)/(sqrt(pi)*dNpar0);
+    xdPdN_0 = exp(-(xN - Npar0).^2/dNpar0_new.^2)/(sqrt(pi)*dNpar0_new);
     %
     for in = 1:n_tail + 1,
         xdPdN(in,:) = P0_2piRp_tail(in)/P0_2piRp*exp(-(xN - Npar0_tail(in)).^2/dNpar0_tail(in).^2)/(sqrt(pi)*dNpar0_tail(in));
