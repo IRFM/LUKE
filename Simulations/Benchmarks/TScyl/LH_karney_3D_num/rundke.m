@@ -1,6 +1,7 @@
 %Script for running the DKE solver (can be modified by the user for specific simulations)
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
+clc
 clear all
 clear mex
 clear functions
@@ -87,13 +88,13 @@ dkeparam.coll_mode = 0;% Relativistic Maxwellian background
 %
 dkeparam.ludroptol = 1e-6;%Drop tolerance for the built-in MatLab partial LU decomposition (recipes: droptol = max(1/dtn/nr,param_inv(1)))
 dkeparam.mlmaxitinv = 20;%Maximum number of iterations for iterative built-in MatLab matrix inversion method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
-dkeparam.mlprecinv = 1e-6;%Accuracy for the MatLab build-in matrix inversion.
+dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
 %
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 np_list = 25:25:250;
 nmhu_list = 25:25:250;
-nr_list = [1,5:5:30];
+nr_list = [1,5:5:45];
 Dr0_list = [0,0.001,0.01,0.1,0.3,1,3,10,30,100];
 %
 % Incomplete LU factorization
@@ -160,7 +161,7 @@ for iDr0 = 1:nDr0,
     %
     transpfaste.Dr0 = Dr0_list(iDr0);
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_MATLAB{iDr0},Zcurr_MATLAB{iDr0},ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     % 
     memory_LUi_Dr0(iDr0) = dke_out.memoryLU_f_out;
     time_LUi_Dr0(iDr0) = dke_out.time_DKE;
@@ -182,6 +183,8 @@ if exist('dmumpsmex'),
     %
     for inp = 1:nnp,
         %
+        disp(['inp = ',int2str(inp),'/',int2str(nnp)])
+        %
         dkeparam.np_S = np_list(inp) + 1;
         %
         [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
@@ -198,6 +201,8 @@ if exist('dmumpsmex'),
     time_MX_nmhu = NaN(1,nnmhu);
     %
     for inmhu = 1:nnmhu,
+        %
+        disp(['inmhu = ',int2str(inmhu),'/',int2str(nnmhu)])
         %
         dkeparam.nmhu_S = nmhu_list(inmhu) + 1;
         %
@@ -216,6 +221,8 @@ if exist('dmumpsmex'),
     %
     for inr = 1:nnr,
         %
+        disp(['inr = ',int2str(inr),'/',int2str(nnr)])
+        %
         rho_S = linspace(0,1,nr_list(inr)+1);
         %
         [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
@@ -233,9 +240,11 @@ if exist('dmumpsmex'),
     %
     for iDr0 = 1:nDr0,
         %
+        disp(['iDr0 = ',int2str(iDr0),'/',int2str(nDr0)])
+        %
         transpfaste.Dr0 = Dr0_list(iDr0);
         %
-        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        [Znorm_MUMPS{iDr0},Zcurr_MUMPS{iDr0},ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         % 
         memory_MX_Dr0(iDr0) = dke_out.memoryLU_f_out;
         time_MX_Dr0(iDr0) = dke_out.time_DKE;
