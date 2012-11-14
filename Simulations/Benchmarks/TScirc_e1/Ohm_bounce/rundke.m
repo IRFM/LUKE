@@ -123,7 +123,7 @@ set(gca,'ytick',[1 10 100 1000 10000])
 set(gca,'YMinorGrid','off')
 set(gca,'YMinorTick','on')
 %
-print_jd(p_opt,'fig_sigma_bounce','./figurss',1)
+print_jd(p_opt,'fig_sigma_bounce','./figures',1)
 %
 %************************************************************************************************************************************
 %
