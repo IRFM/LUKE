@@ -97,6 +97,9 @@ Zcurr10_4 = Zcurr10;
 ZP0_10_4 = ZP0_10;
 dke_out10_4 = dke_out10;
 %
+%
+%TODO: dkeparam.MUMPSparam.nproc not in operation 
+%
 dkeparam.MUMPSparam.nproc = 1;%Number of processors
 [Znorm10_1,Zcurr10_1,ZP0_10_1,dke_out10_1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 disp('Nproc = 1 done');
