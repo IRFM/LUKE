@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -53,7 +54,6 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 % 
 % Dpsipsi scan (0 -> 100 m2/s
 %
-%
 transpfaste.Dr0 = 0;
 [Znorm0,Zcurr0,ZP0_0,dke_out0,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 disp('D=0 m2/s done');
@@ -90,42 +90,40 @@ disp('D=20 m2/s done');
 %
 transpfaste.Dr0 = 10;
 %
-if strcmp(computer,'GLNXA64'),
-   dkeparam.invproc = -1;
+dkeparam.invproc = -1;
 %
-   Znorm10_4 = Znorm10;%Calculations already done
-   Zcurr10_4 = Zcurr10;
-   ZP0_10_4 = ZP0_10;
-   dke_out10_4 = dke_out10;
+Znorm10_4 = Znorm10;%Calculations already done
+Zcurr10_4 = Zcurr10;
+ZP0_10_4 = ZP0_10;
+dke_out10_4 = dke_out10;
 %
-   dkeparam.MUMPSparam.nproc = 1;%Number of processors
-   [Znorm10_1,Zcurr10_1,ZP0_10_1,dke_out10_1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-   disp('Nproc = 1 done');
-   dkeparam.MUMPSparam.nproc = 2;%Number of processors
-   [Znorm10_2,Zcurr10_2,ZP0_10_2,dke_out10_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-   disp('Nprocs = 2 done');
-   dkeparam.MUMPSparam.nproc = 3;%Number of processors
-   [Znorm10_3,Zcurr10_3,ZP0_10_3,dke_out10_3] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-   disp('Nprocs = 3 done');
-   dkeparam.MUMPSparam.nproc = 5;%Number of processors
-   [Znorm10_5,Zcurr10_5,ZP0_10_5,dke_out10_5] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-   disp('Nproc = 5 done');
-   dkeparam.MUMPSparam.nproc = 6;%Number of processors
-   [Znorm10_6,Zcurr10_6,ZP0_10_6,dke_out10_6] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-   disp('Nproc = 6 done');
-   dkeparam.MUMPSparam.nproc = 7;%Number of processors
-   [Znorm10_7,Zcurr10_7,ZP0_10_7,dke_out10_7] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-   disp('Nproc = 7 done');
-   dkeparam.MUMPSparam.nproc = 8;%Number of processors
-   [Znorm10_8,Zcurr10_8,ZP0_10_8,dke_out10_8] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-   disp('Nproc = 8 done');
-   dkeparam.MUMPSparam.nproc = 9;%Number of processors
-   [Znorm10_9,Zcurr10_9,ZP0_10_9,dke_out10_9] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-   disp('Nproc = 9 done');
-   dkeparam.MUMPSparam.nproc = 10;%Number of processors
-   [Znorm10_10,Zcurr10_10,ZP0_10_10,dke_out10_10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-   disp('Nproc = 10 done');
-  end  
+dkeparam.MUMPSparam.nproc = 1;%Number of processors
+[Znorm10_1,Zcurr10_1,ZP0_10_1,dke_out10_1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+disp('Nproc = 1 done');
+dkeparam.MUMPSparam.nproc = 2;%Number of processors
+[Znorm10_2,Zcurr10_2,ZP0_10_2,dke_out10_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+disp('Nprocs = 2 done');
+dkeparam.MUMPSparam.nproc = 3;%Number of processors
+[Znorm10_3,Zcurr10_3,ZP0_10_3,dke_out10_3] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+disp('Nprocs = 3 done');
+dkeparam.MUMPSparam.nproc = 5;%Number of processors
+[Znorm10_5,Zcurr10_5,ZP0_10_5,dke_out10_5] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+disp('Nproc = 5 done');
+dkeparam.MUMPSparam.nproc = 6;%Number of processors
+[Znorm10_6,Zcurr10_6,ZP0_10_6,dke_out10_6] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+disp('Nproc = 6 done');
+dkeparam.MUMPSparam.nproc = 7;%Number of processors
+[Znorm10_7,Zcurr10_7,ZP0_10_7,dke_out10_7] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+disp('Nproc = 7 done');
+dkeparam.MUMPSparam.nproc = 8;%Number of processors
+[Znorm10_8,Zcurr10_8,ZP0_10_8,dke_out10_8] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+disp('Nproc = 8 done');
+dkeparam.MUMPSparam.nproc = 9;%Number of processors
+[Znorm10_9,Zcurr10_9,ZP0_10_9,dke_out10_9] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+disp('Nproc = 9 done');
+dkeparam.MUMPSparam.nproc = 10;%Number of processors
+[Znorm10_10,Zcurr10_10,ZP0_10_10,dke_out10_10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+disp('Nproc = 10 done');  
 %  
 Dpsipsi=[0,0.1,1,10];
 tCPU = [dke_out0.time_out,dke_out01.time_out,dke_out1.time_out,dke_out10.time_out];
@@ -136,11 +134,9 @@ vparmax = 1/(waves{1}.rays{1}.sNpar(1)-imag(waves{1}.rays{1}.sdNpar(1))/2)/mksa.
 %
 figure(1),clf,graph1D_jd(Dpsipsi,tCPU,1,0,'D_{\psi\psi} (m^{2}/s)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);
 axis([0.1,10,0,300])
-savefig_dke_yp('tCPU_Dpsipsi')
 %
 figure(2),clf,graph1D_jd([1:10],tCPU1,0,0,'Number of processors)','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2),', D_{\psi\psi}  = 10 (m^{2}/s)'],NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);
 axis([1,10,0,400])
-savefig_dke_yp('tCPUDpsipsi10_Nproc')
 %
 figure(3),clf,graph1D_jd(equilDKE.xrho,Zcurr0.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd(equilDKE.xrho,Zcurr01.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','b',2,20,gca,1,0.6,0.6);hold on
@@ -153,8 +149,10 @@ graph1D_jd(equilDKE.xrho,Zcurr10.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min
 graph1D_jd(equilDKE.xrho,Zcurr20.x_tot_fsav,0,0,'\rho','CPU time (s)',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','-','none','k',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd(equilDKE.xrho,besselj(0,2.4*equilDKE.xrho)*Zcurr20.x_tot_fsav(1),0,0,'\rho','current density',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','none','+','r',2,20,gca,1,0.6,0.6);
 legend('D_{\psi\psi} = 0 (m^{2}/s)','D_{\psi\psi} = 0.1 (m^{2}/s)','D_{\psi\psi} = 1 (m^{2}/s)','D_{\psi\psi} = 10 (m^{2}/s)','D_{\psi\psi} = 20 (m^{2}/s)','J_{0}(2.4*\rho)')
-savefig_dke_yp('Jprof_Dpsipsi')
-
+%
+print_jd(p_opt,'tCPU_Dpsipsi','./figures',1)
+print_jd(p_opt,'tCPUDpsipsi10_Nproc','./figures',2)
+print_jd(p_opt,'Jprof_Dpsipsi','./figures',3)
 %
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
