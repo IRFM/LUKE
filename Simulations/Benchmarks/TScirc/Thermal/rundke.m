@@ -8,6 +8,7 @@ close all
 warning off
 global nfig
 %
+p_opt = 2;
 % 
 % ***********************This part must be specified by the user, run make files in $HOME/Database directory if necessary *****************************
 %
@@ -26,7 +27,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = '';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -54,6 +55,8 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 [dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
 dkeparam.boundary_mode_f = boundary_mode_f;
 dkeparam.coll_mode = coll_mode;
+dkeparam.dtn = dkeparam.tn;
+%
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 [Znorm_u,Zcurr_u,ZP0_u,dke_out_u,radialDKE_u,equilDKE_u,momentumDKE_u,gridDKE_u,Zmomcoef_u,Zbouncecoef_u,Zmripple_u,mksa,XXsinksource_u] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
@@ -68,6 +71,7 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 [dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
 dkeparam.boundary_mode_f = boundary_mode_f;
 dkeparam.coll_mode = coll_mode;
+dkeparam.dtn = dkeparam.tn;
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
@@ -77,7 +81,8 @@ for i = 2:nit,
     ne(i) = Znorm.x_0_fsav;
 end
 %
-figure(1),clf,graph1D_jd([1:nit]*dkeparam.dtn,ne_u*mksa.ne_ref,0,0,'Integration time step (t_{coll})','Electron density (10^{+19} m^{-3)}',['Maxwellian distr., dtn = ',int2str(dkeparam.dtn)],NaN,'','','-','+','r',2,20,gca,1,0.6,0.6);hold on
+figure(1),clf,
+graph1D_jd([1:nit]*dkeparam.dtn,ne_u*mksa.ne_ref,0,0,'Integration time step (t_{coll})','Electron density (10^{+19} m^{-3)}',['Maxwellian distr., dtn = ',int2str(dkeparam.dtn)],NaN,'','','-','+','r',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd([1:nit]*dkeparam.dtn,ne*mksa.ne_ref,0,0,'Integration time step (\tau_{coll})','Electron density (10^{+19} m^{-3)}',['Maxwellian distr., dtn = ',int2str(dkeparam.dtn)],NaN,'','','-','o','b',2,20,gca,1,0.6,0.6);
 axis([0,nit*dkeparam.dtn,mksa.ne_ref*0.98,mksa.ne_ref*1.02])
 line([0,20]*dkeparam.dtn,[mksa.ne_ref,mksa.ne_ref],'Color','red')
@@ -91,6 +96,7 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 equil.pzTi = equil.pzTi/2;
 dkeparam.boundary_mode_f = boundary_mode_f;
 dkeparam.coll_mode = coll_mode;
+dkeparam.dtn = dkeparam.tn;
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 [Znorm_u1,Zcurr_u1,ZP0_u1,dke_out_u1,radialDKE_u1,equilDKE_u1,momentumDKE_u1,gridDKE_u1,Zmomcoef_u1,Zbouncecoef_u1,Zmripple_u1,mksa,XXsinksource_u1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
@@ -106,6 +112,7 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 equil.pzTi = equil.pzTi/2;
 dkeparam.boundary_mode_f = boundary_mode_f;
 dkeparam.coll_mode = coll_mode;
+dkeparam.dtn = dkeparam.tn;
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 [Znorm1,Zcurr1,ZP01,dke_out1,radialDKE1,equilDKE1,momentumDKE1,gridDKE1,Zmomcoef1,Zbouncecoef1,Zmripple1,mksa,XXsinksource1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
@@ -121,7 +128,7 @@ axis([0,nit*dkeparam.dtn,mksa.ne_ref*0.97,mksa.ne_ref*1.03])
 line([0,20]*dkeparam.dtn,[mksa.ne_ref,mksa.ne_ref],'Color','red')
 legend('Uniform','Non-uniform','Location','SouthWest');
 %
-savefig_dke_yp('thermaldensity')
+print_jd(p_opt,'thermaldensity','./figures',1)
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
