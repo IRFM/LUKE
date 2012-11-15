@@ -28,6 +28,11 @@ spath{5} = sprintf('%s\n','   setpath_luke_jd(luke_root);');
 spath{6} = sprintf('%s\n','end');
 spath{7} = sprintf('%s\n','%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
 %
+disp('------------------------------------------------------------------------------');
+disp(['WARNING: Please check in ''',localpath,'Project_DKE/Database/PATH_files/'' directory']);
+disp(['that a path file named ''path_<machine_name>.m'' is existing and properly setup.']);
+disp('------------------------------------------------------------------------------');
+%
 opt = input('Do you want to setup your startup file automatically (y/n) [y] ? ','s');
 if isempty(opt),
     opt='y';
