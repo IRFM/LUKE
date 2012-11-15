@@ -149,8 +149,9 @@ for iref = 1:nref + 1,% vessel reflection index
 			end
 			%
 			filename_in = [id_wave,'_ray_',int2str(iray)];
-			[iabs_out,srho,stheta,sx,sy,sz,sNpar,sNperp,sepol_pmz,sphi_xyz,spmode,sD,ss,salphaphi_lin,sB,sBRHO,sBP,sBz,sTe,sne,szTi,szni,sr,salpha,sgradrhon,staune,szTi,szni,sr,salpha,sgradrhon,stau_lin,seikval,skr,seikval,skrho,sm,skz,sn,swpe2,swce2] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,fluct_fit,C3POdisplay.text,C3POdisplay.ray,C3POdisplay.p_opt,filename_in);
-			%
+            %
+			[iabs_out,srho,stheta,sx,sy,sz,sNpar,sNperp,sepol_pmz,sphi_xyz,spmode,sD,ss,salphaphi_lin,sB,sBRHO,sBP,sBz,sTe,sne,szTi,szni,sr,salpha,sgradrhon,stau_lin,seikval,skrho,sm,skz,sn,swpe2,swce2] = raypostprocessing_yp(tout,yout,yproc,rayparam,equil_fit,fluct_fit,C3POdisplay.text,C3POdisplay.ray,C3POdisplay.p_opt,filename_in);
+            %
 			if C3POdisplay.ray == 1,
 				pause(5)
             end
