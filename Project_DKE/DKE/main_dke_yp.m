@@ -291,7 +291,7 @@ for itn = itn0:nit,
     if dkeparam_out.timevol == 1,
         [ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...(itn)
             XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRR_fsav{itn},...
-            xne_norm_out{itn},xTe_norm_out{itn},xft_fsav{itn},xfteff_fsav{itn}] = ...
+            xne_norm_out{itn},xTe_norm_out{itn},xft_fsav{itn},xfteff_fsav{itn},xRfrac_fsav{itn}] = ...
             fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
             XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
             ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
@@ -329,7 +329,7 @@ if dkeparam_out.timevol == 0,
     %
     [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
         XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
-        xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
+        xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,xRfrac_fsav] = ...
         fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
         XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
         ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
@@ -413,8 +413,6 @@ dke_out.FPtime = FPtime;
 dke_out.normf0 = normf0;
 dke_out.curr0 = curr0;
 dke_out.residu_f = residu_f;
-dke_out.equil = equil;
-dke_out.waves = waves;
 dke_out.ZXXS = ZXXS;
 dke_out.ZXXD_c = ZXXD_c;
 dke_out.ZXXF_c = ZXXF_c;
@@ -434,6 +432,7 @@ dke_out.xTe_norm_out = xTe_norm_out;
 dke_out.xne_norm_out = xne_norm_out;
 dke_out.xft_fsav = xft_fsav;
 dke_out.xfteff_fsav = xfteff_fsav;
+dke_out.xRfrac_fsav = xRfrac_fsav;
 dke_out.memoryLU_f_out = memoryLU_f_out;
 dke_out.memoryLU_g_out = memoryLU_g_out;
 dke_out.time_out = time_out;
@@ -448,12 +447,17 @@ if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf) && nit_rf > 1,
     dke_out.residue_rf = residue_rf;
     dke_out.zS = zS;
     dke_out.zP_0_2piRp_mod = zP_0_2piRp_mod_old;
+    %
+    %waves = alphaphi_luke_jd(waves,dke_out,equilDKE);% calculates the QL ray absorption
+    %
 end
 dke_out.yb = yb;
 dke_out.XXsource = XXsinksource_in;
 dke_out.xRR_fsav = xRR_fsav;
 dke_out.Zmripple = Zmripple;
 %
+dke_out.equil = equil;
+dke_out.waves = waves;
 dke_out.simul = simul;
 %
 if exist('abs_frac_rf','var'),
