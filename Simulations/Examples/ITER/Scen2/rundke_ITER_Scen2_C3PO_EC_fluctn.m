@@ -10,11 +10,19 @@ close all
 warning('off','all')
 pause(1)
 %
+sigmar_max = [0.7];% Maximum value of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
+sigmar_hwhm = [0.02];% Radial half width at half maximum of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
+Nfluct = [1];% Ratio of the LUKE evolution time (phase refresh) to the fluctuation time - also equal to the number of duplicated rays
+%
+tn = [100i];% Final simulation time (normalized to the central thermal collision time) 
+dtn = [1i];% internal LUKE time step. As an imaginary number, dkeparam.dtn prescribes the number of internal time steps
+%
 p_opt = -1;
+opt_save = -2;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
 %
 % *********************** Specify LUKE structures *****************************
 %
-id_simul = '';%Simulation ID
+locid_simul = '_24rays';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
@@ -26,7 +34,7 @@ path_dkepath = '';%if nothing is specified, the working directory is first used 
 id_equil = 'ITER_Scen2_200103121816_430_129';%For plasma equilibrium
 path_equil = 'EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_fluct = 'ne_case1';%For fast electron radial transport
+id_fluct = 'fluctn';%For fast electron radial transport
 path_fluct = 'FLUCT/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'EC_RT';%For DKE code parameters
@@ -51,9 +59,9 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 % LAUNCH parameters
 %
-id = 'NTM_32_20MW_1ray';
+id = 'NTM_32';
 freq_GHz = 170;
-mmode = -1;% cold plasma mode (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1) :1
+mmode = -1;% cold plasma mode (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1)
 %
 R_L = 6.4848;
 Z_L = 4.110;
@@ -72,77 +80,35 @@ method = 'cubic';
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
-C3POparam.clustermode.main_C3PO_jd.timeout = 300;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-C3POparam.clustermode.main_C3PO_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+C3POparam = struct;
 %
-% Display parameters
+% Display parameters for C3PO
 %
-C3POdisplay.ray = 0;
-C3POdisplay.equilibrium = 0;
-C3POdisplay.p_opt = -1;%Printing or saving option of the figures
+C3POdisplay = struct;
 %
-% Wave parameters
+% Wave parameters for C3PO
 %
 waveparam.mmode = mmode;%cold plasma mode [1] : (-1) m (1) p, p is the slow mode when kperp > 0 (ex : LH slow wave)
-waveparam.kmode = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 %
-%Option parameter for FLR effects and cross-comparison between old FP code: 
-%	- (0): all FLR effects
-%	- (1): small FLR effects and 1/vpar dependence
-%	- (2): small FLR effects and no 1/vpar dependence and old grid technique for DQL calculations (Karney, Shoucri) (see rfdiff_dke_jd)
+% Equilibrium parameters C3PO
 %
-waveparam.opt_rf = 1;
+fitparam = struct;
 %
-waveparam.dsmin = 0;%minimum size for ray fragments
+% Global parameters for C3PO
 %
-waveparam.nd = 1;%Number of transverse distance positions for beamlets
-waveparam.nchi = 1;%Number of angular positions for beamlets
-%
-waveparam.n_rf_list = 1:2;
-waveparam.ns = 1;%ray smoothing parameter
-%
-% -------------------------------------------------------------------------
-%
-% Global parameters for the vectorial magnetic equilibrium
-%
-% Equilibrium parameters for the ray-tracing
-%
-fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
-fitparam.method = 'spline';%nearest,spline,pchip,cubic
-fitparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
-fitparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
-fitparam.opt_load = 0;%Reload existing vectorial magnetic equilibrium (1) or overwrite it (0).
-%
-% Global parameters for the ray-tracing
-%
-rayparam.testmode = 0;
-rayparam.tensortype = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
-rayparam.t0 = 0;
-rayparam.tfinal = 50000;
-rayparam.dt0 = 0.0001;
-rayparam.dS = 0.001;
-rayparam.tol = 1e-8;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 50000;
-rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
-rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
-rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
-rayparam.nperp =1000;%number of points in pperp integration for damping calculations
-rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
-rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
-rayparam.kextra = 1000;
+rayparam = struct;
 %
 %************************************************************************************************************************************
 %
 [dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,fluct] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_dkedisplay,path_dkedisplay,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple,'fluct',id_fluct,path_fluct);
 %
-% Parallel computing parameters
+C3POPARAM = load('C3POPARAM_EC.mat','fitparam','rayparam','C3POparam','C3POdisplay','waveparam');
 %
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%MatLab distributed computing environment
-C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
-%
-dkeparam.clustermode.wave_solver_yp = clustermode_luke(0,'',0,dkepath);%MatLab distributed computing environment
-dkeparam.clustermode.wave_solver_yp.scheduler.display = 1;
+fitparam = conc_struct_jd(C3POPARAM.fitparam,fitparam);
+rayparam = conc_struct_jd(C3POPARAM.rayparam,rayparam);
+C3POparam = conc_struct_jd(C3POPARAM.C3POparam,C3POparam);
+C3POdisplay = conc_struct_jd(C3POPARAM.C3POdisplay,C3POdisplay);
+waveparam = conc_struct_jd(C3POPARAM.waveparam,waveparam);
 %
 % launch structure
 %
@@ -174,7 +140,7 @@ wavestruct.fitequilparam = fitparam;
 wavestruct.raydisplay = C3POdisplay;
 wavestruct.C3POparam = C3POparam;
 %
-id_simul = [id_equil,'_',wavestruct.id,'_',id_fluct];
+id_simul = [id_equil,'_',wavestruct.id,'_',id_fluct,locid_simul];
 %
 fluct_fitparam.method = 'pchip';%nearest,spline,pchip,cubic
 fluct_fitparam.nharm = 32;%Number of harmonics in the plasma fluctuations interpolation (less than ntheta_equil/2)
@@ -183,95 +149,29 @@ fluct_fitparam.ngridresample = 201;%Number of grid points for resampling the rad
 %************************************************************************************************************************************
 %
 dkeparam.rt_mode = 1;
-dkeparam.dtn = 1i;% as an imaginary number, dkeparam.dtn prescribes the number of internal time steps
-dkeparam.tn = 5i;% as an imaginary number, dkeparam.tn prescribes the number of fluctuation iterations
-dkeparam.Nfluct = 2*1.052872583699049;% to retrieve previous results before merge
+dkeparam.rho_S = rho_S;
+dkeparam.psin_S = psin_S;
+dkeparam.timevol = 1;%to calculate time evolution of moments
 %
-dkedisplay.display_mode = 1;
-dkedisplay.display_time_mode = 1;
-%
-opt_save = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
+dkedisplay.display_mode = 0;
+dkedisplay.display_time_mode = 0;
 %
 equil.fluct = fluct;
 equil.fluct.fitparam = fluct_fitparam;
 %
-if exist('dmumpsmex','file');
-    dkeparam.invproc = -2;%MUMPSMEX
-end
-%
 %************************************************************************************************************************************
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,{wavestruct},[],psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],opt_save);
+luke_input.id_simul = id_simul;
+luke_input.dkeparam = dkeparam;
+luke_input.dkedisplay = dkedisplay;
+luke_input.equil = equil;
+luke_input.waves = '';
+luke_input.wavestructs = {wavestruct};
+luke_input.ohm = ohm;
+luke_input.transpfaste = transpfaste;
+luke_input.ripple = ripple;
+luke_input.Zf0_interp = '';
 %
-% ---------------------------------------------- Save results ----------------------------------------------
-%
-filename = [path_simul,'LUKE_RESULTS_',id_simul,'.mat'];
-save(filename);
-info_dke_yp(2,['LUKE Results saved in ',filename]);
-%
-% ---------------------------------------------- Display results ----------------------------------------------
-%
-p_opt = 2;
-path_simul = pwd;
-[tn,tn_all,fluctres] = fluctanalysis_yp(equilDKE,ZP0,Zcurr,dkeparam,mksa,0);
-%
-info_dke_yp(2,['Total co-current     : ',num2str(fluctres.I.Itotm*fluctres.I.scocurr),' +/- ',num2str(abs(fluctres.I.Itots)*fluctres.I.scocurr),' MA, relative unbiased accuracy: ',num2str(abs(fluctres.I.Itotr))]);
-info_dke_yp(2,['Total RF power    : ',num2str(fluctres.P.Ptotm),' +/- ',num2str(abs(fluctres.P.Ptots)),' MW, relative unbiased accuracy: ',num2str(abs(fluctres.P.Ptotr))]);
-disp(['Rejected simulations (Pin not equal to Pabs within error bars): ',int2str(fluctres.P.iPtotr(:)')]);
-%
-figure('Name','Time evolution EC current (fluctuation)')
-%
-if ~isscalar(fluctres.I.xJs), 
-    graph1D_jd(fluctres.I.tnI,fluctres.I.tI*fluctres.I.scocurr,0,0,'t\nu_{coll}','I_{lh} co-current (MA)',[],NaN,'','','-','none','r',2,20,gca,1,NaN);
-    graph1D_jd(fluctres.I.tnI,fluctres.I.tI*fluctres.I.scocurr,0,0,'t\nu_{coll}','I_{lh} co-current (MA)',[],NaN,'','','-','none','r',2,20,gca,1,NaN);
-    graph1D_jd(fluctres.I.tnI(fluctres.I.iItot),fluctres.I.tI(fluctres.I.iItot)*fluctres.I.scocurr,0,0,'t\nu_{coll}','I_{lh} co-current (MA)',[],NaN,'','','none','+','r',2,20,gca,1,NaN);
-    graph1D_jd(fluctres.I.tnI(fluctres.I.iItot),fluctres.I.Itotm*fluctres.I.scocurr*ones(1,length(tn(fluctres.I.iItot))),0,0,'t\nu_{coll}','I_{lh} (MA)',['I_{tot} = ',num2str(fluctres.I.Itotm),'\pm',num2str(fluctres.I.Itots*fluctres.I.scocurr),' (MA)'],NaN,'','','--','none','r',1,20,gca,1,NaN);
-    graph1D_jd(fluctres.I.tnI(fluctres.I.iItot),fluctres.I.Itotm*fluctres.I.scocurr*ones(1,length(fluctres.I.iItot)),0,0,'t\nu_{coll}','I_{lh} co-current (MA)',['I_{tot} = ',num2str(fluctres.I.Itotm),'\pm',num2str(fluctres.I.Itots*fluctres.I.scocurr),' (MA)'],NaN,[min(tn),max(tn)],'','none','+','r',1,20,gca,1,NaN,NaN,fluctres.I.Itots*ones(1,length(fluctres.I.iItot)),fluctres.I.Itots*ones(1,length(fluctres.I.iItot)));
-    %legend(['t_{fluct}\nu_{coll} = ',num2str(dtn_fluct)],['HWHM_{fluct} = ',num2str(hwhm_npar)]);
-    %
-    print_jd(p_opt,[id_simul,'_IEC_time'],path_simul);
-end
-%
-figure('Name','Time evolution EC power (fluctuation)')
-%
-if ~isscalar(fluctres.P.xPs), 
-    graph1D_jd(tn,fluctres.P.tP,0,0,'t*\nu_{coll}','P_{lh} (MW)',['P_{tot} = ',num2str(fluctres.P.Ptotm),'\pm',num2str(fluctres.P.Ptots),' (MW)'],NaN,[min(tn),max(tn)],[fluctres.P.Ptotm-10*abs(fluctres.P.Ptots),fluctres.P.Ptotm+10*abs(fluctres.P.Ptots)],'-','none','b',2,20,gca,1,NaN);
-    graph1D_jd(tn(fluctres.P.iPtot),fluctres.P.tP(fluctres.P.iPtot),0,0,'t\nu_{coll}','P_{lh} (MW)',['P_{tot} = ',num2str(fluctres.P.Ptotm),'\pm',num2str(fluctres.P.Ptots),' (MW)'],NaN,[min(tn),max(tn)],[fluctres.P.Ptotm-10*abs(fluctres.P.Ptots),fluctres.P.Ptotm+10*abs(fluctres.P.Ptots)],'+','none','b',2,20,gca,1,NaN);
-    graph1D_jd(tn,fluctres.P.Ptotm*ones(1,length(tn)),0,0,'t\nu_{coll}','P_{lh} (MW)',['P_{tot} = ',num2str(fluctres.P.Ptotm),'\pm',num2str(fluctres.P.Ptots),' (MW)'],NaN,[min(tn),max(tn)],'','--','none','b',1,20,gca,1,NaN);
-    graph1D_jd(tn(fluctres.P.iPtot),fluctres.P.Ptotm*ones(1,length(fluctres.P.iPtot)),0,0,'t\nu_{coll}','P_{lh} (MW)',['P_{tot} = ',num2str(fluctres.P.Ptotm),'\pm',num2str(fluctres.P.Ptots),' (MW)'],NaN,[min(tn),max(tn)],'','none','+','b',1,20,gca,1,NaN,NaN,fluctres.P.Ptots*ones(1,length(fluctres.P.iPtot)),fluctres.P.Ptots*ones(1,length(fluctres.P.iPtot)));
-    %
-    print_jd(p_opt,[id_simul,'_PEC_time'],path_simul);
-end
-%
-figure('Name','Mean co-current profile (fluctuation)')
-%
-index = find(fluctres.I.xJm*fluctres.I.scocurr > 1e-5*max(fluctres.I.xJm*fluctres.I.scocurr))
-[curve, goodness] = fit(equilDKE.xrho(index)',log(abs(fluctres.I.xJm(index)*fluctres.I.scocurr))','poly2');
-fitmax = max(exp(curve.p1*equilDKE.xrho(index).^2 + curve.p2*equilDKE.xrho(index) + curve.p3));
-xJmmax = max(fluctres.I.xJm*fluctres.I.scocurr);
-rhomax = equilDKE.xrho(fluctres.I.xJm*fluctres.I.scocurr == xJmmax);
-delta_Jm = 2*sqrt(-log(2)/curve.p1);
-%
-if isscalar(fluctres.I.xJs), 
-    graph1D_jd(equilDKE.xrho,fluctres.I.xJm*fluctres.I.scocurr,0,0,'\rho','J_{lh} co-current (MA/m^2)',['I_{lh} (co-current) = ',num2str(fluctres.I.Itotm*fluctres.I.scocurr),'\pm',num2str(abs(fluctres.I.Itots)*fluctres.I.scocurr),' (MA)'],NaN,'','','-','none','r',2,20,gca,1,NaN);
-else
-    graph1D_jd(equilDKE.xrho,fluctres.I.xJm*fluctres.I.scocurr,0,0,'\rho','J_{lh} co-current (MA/m^2)',['I_{lh} (co-current) = ',num2str(fluctres.I.Itotm*fluctres.I.scocurr),'\pm',num2str(abs(fluctres.I.Itots)*fluctres.I.scocurr),' (MA)'],NaN,'','','-','none','r',1,20,gca,1,NaN,NaN,fluctres.I.xJs*fluctres.I.scocurr,fluctres.I.xJs*fluctres.I.scocurr);
-    graph1D_jd(equilDKE.xrho,fluctres.I.xJm*fluctres.I.scocurr,0,0,'\rho','J_{lh} co-current (MA/m^2)',['I_{lh} (co-current) = ',num2str(fluctres.I.Itotm*fluctres.I.scocurr),'\pm',num2str(abs(fluctres.I.Itots)*fluctres.I.scocurr),' (MA)'],NaN,'','','-','none','r',2,20,gca,1,NaN);
-    graph1D_jd(equilDKE.xrho(index),xJmmax*exp(curve.p1*equilDKE.xrho(index).^2 + curve.p2*equilDKE.xrho(index) + curve.p3)/fitmax,0,0,'\rho','J_{lh} co-current (MA/m^2)',['I_{lh} (co-current) = ',num2str(fluctres.I.Itotm*fluctres.I.scocurr),'\pm',num2str(abs(fluctres.I.Itots)*fluctres.I.scocurr),' (MA)'],NaN,'','','--','none','k',1,20,gca,1,NaN);
-end
-%
-disp(['FWHM of the current density profile = ',num2str(delta_Jm)]);
-disp(['Position of the current density profile = ',num2str(rhomax)]);
-%
-print_jd(p_opt,[id_simul,'_jcocurr_EC_profile'],path_simul);
-%
-figure('Name','Mean EC power absorption profile (fluctuation)')
-%
-if isscalar(fluctres.P.xPs),
-    graph1D_jd(equilDKE.xrho,fluctres.P.xPm,0,0,'\rho','P_{tot} (MW/m^3)',['P_{tot} = ',num2str(fluctres.P.Ptotm),'\pm',num2str(fluctres.P.Ptots),' (MW)'],NaN,'','','-','none','b',2,20,gca,1,NaN);
-else
-    graph1D_jd(equilDKE.xrho,fluctres.P.xPm,0,0,'\rho','P_{tot} (MW/m^3)',['P_{tot} = ',num2str(fluctres.P.Ptotm),'\pm',num2str(fluctres.P.Ptots),' (MW)'],NaN,'','','-','none','b',1,20,gca,1,NaN,NaN,fluctres.P.xPs,fluctres.P.xPs);
-    graph1D_jd(equilDKE.xrho,fluctres.P.xPm,0,0,'\rho','P_{tot} (MW/m^3)',['P_{tot} = ',num2str(fluctres.P.Ptotm),'\pm',num2str(fluctres.P.Ptots),' (MW)'],NaN,'','','-','none','b',2,20,gca,1,NaN);
-end
-print_jd(p_opt,[id_simul,'_p_EC_profile'],path_simul);
+frundke_fluctn(luke_input,dkepath,opt_save,p_opt,path_simul,...
+    dtn,tn,Nfluct,sigmar_max,sigmar_hwhm)
 %
