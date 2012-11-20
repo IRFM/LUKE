@@ -1,6 +1,6 @@
 function [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
     XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
-    xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav] = ...
+    xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,xRfrac_fsav] = ...
     fmoments_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
                     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
                     ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp,gridindex_rf,...
@@ -754,6 +754,15 @@ end
 xc_g = -(Znorm.x_tp_fsav + Znorm.x_g_fsav)./xne_norm(rdke);%Flux surface averaged density conservation
 XXxc_g = shiftdim(repmat(repmat(xc_g(:),[1,npn,1]),[1,1,nmhu]),1);
 XXf0_g(:,:,rdke) = XXf0_g(:,:,rdke) + XXxc_g.*XXf0(:,:,rdke);%Normalisation in order to maintain the flux surface averaged density at the right level
+%
+% partial density above the minimum energy dkeparm.pnmin_S (typically used in runaway studies)
+%
+if isfield(dkeparam,'pnmin_S') && isscalar(dkeparam.pnmin_S),
+    pmask = pn > dkeparam.pnmin_S;
+    xRfrac_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn(pmask),XXlambda(pmask,:,rdke).*XXf0(pmask,:,rdke).*XXpn2(pmask,:,rdke),1),1)';
+else
+    xRfrac_fsav = NaN(1,nr);
+end
 %
 %   Current
 %
