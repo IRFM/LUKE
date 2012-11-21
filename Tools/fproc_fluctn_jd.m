@@ -33,7 +33,7 @@ end
 if isfield(data,'Ztime'),% new run_lukert
     Ztime = data.Ztime;%cumsum(data.Ztime);%
 elseif isfield(data.Zcurr,'xtn'),% old run_lukert, with fluct
-    Ztime = Zcurr.xtn;
+    Ztime = data.Zcurr.xtn;
 else% old run_lukert, no fluct
     data = conc_struct_jd(data,load(filename,'dke_out'));
     Ztime = data.dke_out.FPtime;

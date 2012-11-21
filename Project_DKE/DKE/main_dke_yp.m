@@ -266,7 +266,7 @@ for itn = itn0:nit,
                 end
                 %
                 if (residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == 0),
-                    if min(min(xyPabs_rf_dke_fsav_mksa)) < 0,
+                    if min(min(min(ZP0_rf.xyn_rf_fsav))) < 0,
                          info_dke_yp(2,['WARNING: residue below threshold but iterations continue while negative absorbed power occurs somewhere!']);                  
                     else
                         conv = 1;
@@ -324,14 +324,14 @@ end
 %
 if dkeparam_out.timevol == 0,
     %
-    XXf0 = XXf0{nit};
-    residue_rf = residue_rf{nit};
+    XXf0 = XXf0(nit);
+    residue_rf = residue_rf(nit);
     %
     [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
         XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
         xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,xRfrac_fsav] = ...
         fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
-        XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
+        XXf0{1},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
         ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
         ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor);%Calculate moments of the distribution function
     %
