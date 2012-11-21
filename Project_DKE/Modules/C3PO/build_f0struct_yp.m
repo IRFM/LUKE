@@ -63,7 +63,7 @@ if mode == 1,
     %
     f0struct.PSI_fit = interpequilpt_yp(method,sPSI,srho,equilDKE.mtheta,nharm);
     %
-	sXXf0 = interp1(equilDKE.xrho,reshape(dke_out.XXf0,length(momentumDKE.pn)*length(momentumDKE.mhu),length(equilDKE.xrho))',srho,method);
+	sXXf0 = interp1(equilDKE.xrho,reshape(dke_out.XXf0{end},length(momentumDKE.pn)*length(momentumDKE.mhu),length(equilDKE.xrho))',srho,method);
 	f0struct.XXf0_fit = interpequilpt_yp(method,sXXf0',srho);
     %
 else
