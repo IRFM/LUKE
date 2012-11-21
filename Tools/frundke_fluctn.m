@@ -22,7 +22,7 @@ dkeparam.Nfluct = Nfluct;% Ratio of the LUKE evolution time (phase refresh) to t
 equil.fluct.ne.sigmar_max = sigmar_max;% Maximum value of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
 equil.fluct.ne.sigmar_hwhm = sigmar_hwhm;%Radial half width at half maximum of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
 %
-id_simul = [id_simul,'_sigma',num2str(sigmar_max),'_delta',num2str(sigmar_hwhm),'_dtn',num2str(dtn),'_tn',num2str(tn),'_Nfluct',num2str(Nfluct)];
+id_simul = [id_simul,'_sigma',num2str(sigmar_max),'_delta',num2str(sigmar_hwhm),'_dtn',num2str(dtn),'_Nfluct',num2str(Nfluct)];
 id_simul(id_simul == '.') = 'p';
 id_simul(id_simul == '+') = 'p';
 %
