@@ -54,12 +54,10 @@ end
 %
 if matlabversion < 710,
 	rand('seed',sum(100*clock));%reset rand with clock (never same state)
+elseif matlabversion < 712,
+	RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
 else
-	if matlabversion < 712,
-		RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
-	else
-		RandStream.setGlobalStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
-	end
+	RandStream.setGlobalStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
 end
 %
 if ~isstruct(simul_in),
@@ -233,8 +231,12 @@ else
         disp(['The number of iterations already done is ',int2str(itn),'/',int2str(itnmax),'.']);
     end
     %
-    if opt_save_in == -1 && tn < tn_in,
-        overwrite_tn = input_dke_yp(['Do you want to overwrite the total simulation time from ',int2str(tn),' to ',int2str(tn_in),' (y/n) ?'],'n',{'y','n'});
+    if  tn < tn_in,
+        if opt_save_in == -1,
+            overwrite_tn = input_dke_yp(['Do you want to overwrite the total simulation time from ',int2str(tn),' to ',int2str(tn_in),' (y/n) ?'],'n',{'y','n'});
+        else
+            overwrite_tn = 'y';
+        end
         %
         if overwrite_tn == 'y',
             %
@@ -292,9 +294,9 @@ for itn = itnmin:itnmax,%time evolution
     time_luke = tic;
     %
     if isempty(loadstructs),
-        [Znorm,Zcurr,ZP0,dke_out,loadstructs.radialDKE,loadstructs.equilDKE,loadstructs.momentumDKE,loadstructs.gridDKE,loadstructs.Zmomcoef,loadstructs.Zbouncecoef,loadstructs.Zmripple,loadstructs.mksa,loadstructs.XXsinksource,loadstructs.loopDKE] = loop_run_lukert(simul,waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);
+        [Znorm_loc,Zcurr_loc,ZP0_loc,dke_out,loadstructs.radialDKE,loadstructs.equilDKE,loadstructs.momentumDKE,loadstructs.gridDKE,loadstructs.Zmomcoef,loadstructs.Zbouncecoef,loadstructs.Zmripple,loadstructs.mksa,loadstructs.XXsinksource,loadstructs.loopDKE] = loop_run_lukert(simul,waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);
     else
-        [Znorm,Zcurr,ZP0,dke_out] = loop_run_lukert(simul,waves,psin_S,loadstructs.radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);   
+        [Znorm_loc,Zcurr_loc,ZP0_loc,dke_out] = loop_run_lukert(simul,waves,psin_S,loadstructs.radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);   
     end
     %
     calctime(itn).luke = toc(time_luke);
@@ -343,17 +345,17 @@ for itn = itnmin:itnmax,%time evolution
     if itnmax > 1,
         %
         xrho = loadstructs.equilDKE.xrho(:);
-        xdA = loadstructs.equilDKE.xdA_dke(:)';
+        xdA = loadstructs.equilDKE.xdA_dke(:).';
         if isfield(loadstructs.equilDKE,'xdV_dke'),
-            xdV = loadstructs.equilDKE.xdV_dke(:)';
+            xdV = loadstructs.equilDKE.xdV_dke(:).';
         else
-            xdV = loadstructs.equilDKE.xdV_2piRp_dke(:)'*2*pi*loadstructs.equilDKE.Rp;
+            xdV = loadstructs.equilDKE.xdV_2piRp_dke(:).'*2*pi*loadstructs.equilDKE.Rp;
         end
         %
-        xtn(itn,:) = min([dtn_phase*itn,tn]);
+        xtn(itn) = min([dtn_phase*itn,tn]);
         %
-        xJ(itn,:) = Zcurr.x_0_fsav*loadstructs.mksa.j_ref;
-        xP(itn,:) = ZP0.x_rf_fsav'*loadstructs.mksa.P_ref;
+        xJ(itn,:) = Zcurr_loc(end).x_0_fsav*loadstructs.mksa.j_ref;
+        xP(itn,:) = ZP0_loc(end).x_rf_fsav.'*loadstructs.mksa.P_ref;
         %
         Itot(itn) = sum(xJ(itn,:).*xdA,2);
         Ptot(itn) = sum(xP(itn,:).*xdV,2);
@@ -388,14 +390,14 @@ for itn = itnmin:itnmax,%time evolution
             %
             figure(figbyname_yp(['Irf(t) / ',simul.id])),
             %
-            graph1D_jd([1:itn]*dtn_phase,Itot,0,0,'t*\nu','I_{tot} (MA)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'','','none','.','c',2);  
-            graph1D_jd([1:itn]*dtn_phase,Itot,0,0,'t*\nu','I_{tot} (MA)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'','','-','none','c',2);  
+            graph1D_jd(xtn,Itot,0,0,'t*\nu','I_{tot} (MA)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'','','none','.','c',2);  
+            graph1D_jd(xtn,Itot,0,0,'t*\nu','I_{tot} (MA)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'','','-','none','c',2);  
             %
             figure(figbyname_yp(['Prf(t) / ',simul.id])),
             %
-            graph1D_jd([1:itn]*dtn_phase,Ptot,0,0,'t*\nu','P_{tot} (MW)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'',[0,Ptot_inj*2],'none','.','k',2);drawnow
-            graph1D_jd([1:itn]*dtn_phase,Ptot,0,0,'t*\nu','P_{tot} (MW)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'',[0,Ptot_inj*2],'-','none','k',2);drawnow
-            graph1D_jd([1:itn]*dtn_phase,Ptot_inj*ones(1,itn),0,0,'t*\nu','P_{tot} (MW)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'',[0,Ptot_inj*2],'--','none','k',1);drawnow
+            graph1D_jd(xtn,Ptot,0,0,'t*\nu','P_{tot} (MW)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'',[0,Ptot_inj*2],'none','.','k',2);drawnow
+            graph1D_jd(xtn,Ptot,0,0,'t*\nu','P_{tot} (MW)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'',[0,Ptot_inj*2],'-','none','k',2);drawnow
+            graph1D_jd(xtn,Ptot_inj*ones(1,itn),0,0,'t*\nu','P_{tot} (MW)',['Iteration = ',int2str(itn),'/',int2str(itnmax)],NaN,'',[0,Ptot_inj*2],'--','none','k',1);drawnow
         else
             disp(' ');
             disp('------------------------------------------------------------------------------------');
@@ -410,7 +412,7 @@ for itn = itnmin:itnmax,%time evolution
         f0struct = build_f0struct_yp(dke_out,loadstructs.momentumDKE,loadstructs.equilDKE,loadstructs.mksa);%For absorption in C3PO with a non-Maxwellian electron distribution    
     end
     %
-    XXf0_t{itn} = dke_out.XXf0;%for saving the time evolution of the electron velocity distribution function
+    XXf0_t{itn} = dke_out.XXf0{end};%for saving the time evolution of the electron velocity distribution function
     %
     % Display ray dynamics on the FP radial grid
     %
@@ -420,17 +422,24 @@ for itn = itnmin:itnmax,%time evolution
         end
     end
     %
+    % build output structures by grouping internal and external time evolutions
     %
-	if itnmax > 1,
-   		Zcurr.xtn = xtn;
-   		Zcurr.t_x_0_fsav = xJ/loadstructs.mksa.j_ref;
-    	ZP0.t_x_rf_fsav = xP/loadstructs.mksa.P_ref;
+	if itn > 1,
+        Znorm = [Znorm,Znorm_loc];
+        Zcurr = [Zcurr,Zcurr_loc];
+        ZP0 = [ZP0,ZP0_loc];
+        %
+        Ztime = [Ztime,Ztime(end) + dke_out.FPtime];
+        Zitn = [Zitn,length(Ztime)];
     else
-        Zcurr.xtn = tn;
-    	Zcurr.t_x_0_fsav = Zcurr.x_0_fsav;
-    	ZP0.t_x_rf_fsav = ZP0.x_rf_fsav;
-	end
-	%
+        Znorm = Znorm_loc;
+        Zcurr = Zcurr_loc;
+        ZP0 = ZP0_loc;
+        %
+        Ztime = dke_out.FPtime;
+        Zitn = length(Ztime);
+    end
+    %
     if itnmax > 1 && opt_save > 0,
         wavetype = wavetype/length(wavestructs);
         %
@@ -453,7 +462,7 @@ for itn = itnmin:itnmax,%time evolution
             waves = '';
         end
         %
-        eval(['save ',save_str,' tn itn itnmax calctime xrho xtn xJ xP Itot Ptot byPnonabs wavestructs waves f0struct XXf0_t loadstructs simul psin_S dkepath equil dkeparam dkedisplay ohm transpfaste ripple XXsinksource_in opt_save Znorm Zcurr ZP0']);
+        eval(['save ',save_str,' tn itn itnmax calctime Ztime Zitn xrho xtn xJ xP Itot Ptot byPnonabs wavestructs waves f0struct XXf0_t loadstructs simul psin_S equil dkeparam dkedisplay ohm transpfaste ripple XXsinksource_in opt_save Znorm Zcurr ZP0']);
         disp('--------------------------------------------------------------------------------------------------');
         info_dke_yp(2,['Backup of iteration ',int2str(itn),'/',int2str(itnmax),' done in file ''',save_str,'''.']);
         disp('--------------------------------------------------------------------------------------------------');
