@@ -89,7 +89,11 @@ xne_norm = xne(r_dke)/ne_ref;
 xrho = xrho(r_dke);
 %
 XXfinit = dke_out.XXfinit(:,:,r_dke);
-XXf0 = dke_out.XXf0(:,:,r_dke);
+if iscell(dke_out.XXf0),
+    XXf0 = dke_out.XXf0{end}(:,:,r_dke);
+else
+    XXf0 = dke_out.XXf0(:,:,r_dke);
+end    
 %
 pn2 = pn.*pn;
 gamma = sqrt(1 + pn2*betath_ref^2);
