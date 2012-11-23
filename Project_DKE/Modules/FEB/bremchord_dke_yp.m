@@ -115,7 +115,7 @@ Bphi_mfl_lcs = interp1(theta,ptBphi(end,:),theta_mfl_lcs,method);
 ptBtheta = -ptBR.*sin(ones(size(ppsin(:)))*theta) + ptBZ.*cos(ones(size(ppsin(:)))*theta);
 Ipdir = sign(ptBtheta);%Btheta < 0 (clockwise poloidal) then Ip is counterclockwise toroidally from the top view (positive trigonometric). May change as function of plasma minor radius (negative shear case)
 Ipdir_mfl_lcs = sign(interp1(theta,Ipdir(end,:),theta_mfl_lcs,method));%Sign of Ip on the last closed magnetic surface
-Ipdkedir_mfl_lcs = -sign(Zcurr.x_tot_fsav(end))*ones(size(Ipdir_mfl_lcs));%Sign of the current calculated by DKE (- because of the elctron charge). If Ipdkedir_mfl_lcs and Ipdir_mfl_lcs, have the same sign, it is cocurrent, otherwise it is countercurrent
+Ipdkedir_mfl_lcs = -sign(Zcurr(end).x_tot_fsav(end))*ones(size(Ipdir_mfl_lcs));%Sign of the current calculated by DKE (- because of the elctron charge). If Ipdkedir_mfl_lcs and Ipdir_mfl_lcs, have the same sign, it is cocurrent, otherwise it is countercurrent
 Ipdir_psia = sign(equil.psi_apRp(end));
 %
 BX_mfl_lcs = BR_mfl_lcs.*cos(phi_mfl) - Bphi_mfl_lcs.*sin(phi_mfl);
