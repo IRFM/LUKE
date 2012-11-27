@@ -73,6 +73,9 @@ if isscalar(dkeparam.tn),
             dkeparam.tn = cumsum(dkeparam.dtn);%tn fixed by scalar or vector dtn
         end
     else
+        if imag(dkeparam.tn)~=0,
+            error('dkeparam.tn must be real in main_dke_yp');
+        end
         if ~isscalar(dkeparam.dtn),
             info_dke_yp(2,'Warning : dkeparam.dtn prescription overridden by dkeparam.tn');
             dkeparam.dtn = NaN;
