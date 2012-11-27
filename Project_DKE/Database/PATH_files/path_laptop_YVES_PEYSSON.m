@@ -29,8 +29,8 @@ macbookyves.path_profile = 1;
 %
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %
-macbookyves.yves(1).luke_root = [getenv('HOME'),'/Travail/Projets/',luke_ref,'/'];
-macbookyves.yves(1).local_root = [getenv('HOME'),'/Travail/Projets/'];
+macbookyves.yves(1).luke_root = [getenv('HOME'),'/Projets/',luke_ref,'/'];
+macbookyves.yves(1).local_root = [getenv('HOME'),'/Projets/'];
 macbookyves.yves(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 macbookyves.yves(1).startup{1} = [];
@@ -109,7 +109,7 @@ macbookyves.yves(1).remote(2).nproc = 28;
 macbookyves.yves(1).remote(2).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
 macbookyves.yves(1).remote(2).get_jobid = {'','.cephee'};%str_before,str_after
 macbookyves.yves(1).remote(2).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
-macbookyves.yves(1).remote(2).luke_root = '/home/sccp/gsem/decker/LUKE_1_10/';
+macbookyves.yves(1).remote(2).luke_root = ['/home/sccp/gsem/decker/',luke_ref,'/'];
 macbookyves.yves(1).remote(2).yves = 'YP105119';
 %
 % MACPRO yves (macproyves:xgrid)
@@ -158,7 +158,7 @@ macbookyves.yves(1).remote(3).set_jobid = {'condor_q ',''};
 macbookyves.yves(1).remote(3).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
 macbookyves.yves(1).remote(3).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
 macbookyves.yves(1).remote(3).remotedatapath = '/Users/yvespeysson/condor/';
-macbookyves.yves(1).remote(3).luke_root = ['/Users/yvespeysson/Travail/Projets/',luke_ref,'/'];
+macbookyves.yves(1).remote(3).luke_root = ['/Users/yvespeysson/Projets/',luke_ref,'/'];
 %
 %macbookyves.yves(1).remote(3).mat714.root = '/Applications/MATLAB_R2012a.app/bin/';
 %macbookyves.yves(1).remote(3).mat714.prefdir = '/Users/yvespeysson/.matlab/R2012a';
@@ -179,7 +179,7 @@ macbookyves.yves(1).remote(4).cmd = {'xgrid -h ',' -p ',' -job batch '};%
 macbookyves.yves(1).remote(4).get_jobid = {'jobIdentifier = ',';'};%
 macbookyves.yves(1).remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
 macbookyves.yves(1).remote(4).remotedatapath = '/Users/yvespeysson/xgrid/';
-macbookyves.yves(1).remote(4).luke_root = ['/Users/yvespeysson/Travail/Projets/LUKE/'];
+macbookyves.yves(1).remote(4).luke_root = ['/Users/yvespeysson/Projets/',luke_ref,'/'];
 %
 %macbookyves.yves(1).remote(4).mat714.root = '/Applications/MATLAB_R2012a.app/bin/';
 %macbookyves.yves(1).remote(4).mat714.prefdir = '/Users/yvespeysson/.matlab/R2012a';
