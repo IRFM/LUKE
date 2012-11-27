@@ -389,6 +389,14 @@ end
 if exist('flag_launch','var'),
     ii = 0;
     launchs = '';%List of structures for multiple RF waves
+    %
+    if ~iscell(ids_launch),
+        ids_launch={ids_launch};
+    end
+    if ~iscell(paths_launch),
+        paths_launch=repmat({paths_launch},[1,length(ids_launch)]);
+    end
+    %
     if isempty(ids_launch{1}),
         info_dke_yp(2,['No launching conditions requested']);
     else

@@ -60,12 +60,46 @@ else
 	RandStream.setGlobalStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
 end
 %
+if ~isfield(equil,'fluct') || isempty(equil.fluct),
+    equil.fluct = struct;%empty structure
+end
+%
 if ~isstruct(simul_in),
     simul.id = simul_in;
     simul.path = './';
 else
     simul = simul_in;
 end
+%
+if isempty(simul.id),% automatic generation of filename
+    %
+    simul.id = equil.id;
+    %
+    if isfield(equil.fluct,'id'),
+        simul.id = [simul.id,'_',equil.fluct.id];
+    end
+    %
+    if isfield(ohm,'id'),
+        simul.id = [simul.id,'_',ohm.id];
+    end
+    %
+    if isfield(transpfaste,'id'),
+        simul.id = [simul.id,'_',transpfaste.id];
+    end
+    %
+    if isfield(ripple,'id'),
+        simul.id = [simul.id,'_',ripple.id];
+    end
+    %
+    for iw = 1:length(waves),
+         simul.id = [simul.id,'_',waves{iw}.id];
+    end
+    %
+    for iw = 1:length(wavestructs),
+         simul.id = [simul.id,'_',wavestructs{iw}.id];
+    end
+    %
+end    
 %
 if ~exist(simul.path,'dir'), 
     mkdir(simul.path);
@@ -99,10 +133,6 @@ end
 if ~isfield(dkeparam_in,'tn') || (isempty(psin_S) && isempty(rho_S)),
     dkeparam_in.tn = NaN;
     disp('WARNING: dkeparam.tn = NaN has been set, since tn field is not existing in dkeparam structure.');
-end
-%
-if ~isfield(equil,'fluct'),
-    equil.fluct = struct;%empty structure
 end
 %
 if ~isfield(dkeparam_in,'Nfluct'),
