@@ -22,7 +22,7 @@ opt_save = -2;%In case of crash, to restart simulation from an intermediate step
 %
 % *********************** Specify LUKE structures *****************************
 %
-locid_simul = '_24rays';%Simulation ID
+locid_simul = '';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
@@ -46,8 +46,8 @@ path_dkedisplay = '';%if nothing is specified, the working directory is first us
 id_ohm = '';%For Ohmic electric contribution
 path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
-paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+ids_wavestruct = {'C3PO_NTM_32_24rays'};%For RF waves contribution (put all the type of waves needed)
+paths_wavestruct = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_transpfaste = '';%For fast electron radial transport
 path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -57,90 +57,9 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
-% LAUNCH parameters
+[dkepath,equil,dkeparam,dkedisplay,ohm,wavestructs,transpfaste,ripple,fluct] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_dkedisplay,path_dkedisplay,'ohm',id_ohm,path_ohm,'wavestructs',ids_wavestruct,paths_wavestruct,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple,'fluct',id_fluct,path_fluct);
 %
-id = 'NTM_32';
-freq_GHz = 170;
-mmode = -1;% cold plasma mode (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1)
-%
-R_L = 6.4848;
-Z_L = 4.110;
-P_L = 20;% [MW] 
-%
-cone_div = 1.08;% equivalent exp(-2) power cone divergence
-cone_ori = -0.5;% equivalent cone origin
-%
-z_L = 0.35;% focal point
-%
-alpha_prater = -63.5;% angle between N_P and horizontal plane
-beta_prater = 22;% angle between N and poloidal plane
-%
-ns = 1000;
-method = 'cubic';
-%
-% C3PO computing parameters
-%
-C3POparam = struct;
-%
-% Display parameters for C3PO
-%
-C3POdisplay = struct;
-%
-% Wave parameters for C3PO
-%
-waveparam.mmode = mmode;%cold plasma mode [1] : (-1) m (1) p, p is the slow mode when kperp > 0 (ex : LH slow wave)
-%
-% Equilibrium parameters C3PO
-%
-fitparam = struct;
-%
-% Global parameters for C3PO
-%
-rayparam = struct;
-%
-%************************************************************************************************************************************
-%
-[dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,fluct] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_dkedisplay,path_dkedisplay,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple,'fluct',id_fluct,path_fluct);
-%
-C3POPARAM = load('C3POPARAM_EC.mat','fitparam','rayparam','C3POparam','C3POdisplay','waveparam');
-%
-fitparam = conc_struct_jd(C3POPARAM.fitparam,fitparam);
-rayparam = conc_struct_jd(C3POPARAM.rayparam,rayparam);
-C3POparam = conc_struct_jd(C3POPARAM.C3POparam,C3POparam);
-C3POdisplay = conc_struct_jd(C3POPARAM.C3POdisplay,C3POdisplay);
-waveparam = conc_struct_jd(C3POPARAM.waveparam,waveparam);
-%
-% launch structure
-%
-launch.id = id;
-launch.type = 'EC';
-launch.omega_rf = [freq_GHz]*2*pi*1e9;%wave angular frequency (rad/s)
-%
-launch.yR_L = R_L;
-launch.yZ_L = Z_L;
-launch.yphi_L = 0;
-launch.yalpha_L = sign(beta_prater)*pi - atan(tand(beta_prater)/cosd(alpha_prater));
-launch.ybeta_L = acos(cosd(beta_prater)*sind(alpha_prater));
-launch.yP_L = P_L*1e6;
-launch.dNpar0 = NaN;
-launch.ns = ns;
-launch.method = method;
-%
-launch.w0 = 0.3/(freq_GHz*pi*cone_div*pi/180);
-launch.z_L = z_L;
-%
-% wavestruct
-%
-wavestruct.wavesolver = 'C3PO';
-wavestruct.launch = launch;
-wavestruct.id = [wavestruct.wavesolver,'_',launch.id];
-wavestruct.waveparam = waveparam;
-wavestruct.rayparam = rayparam;
-wavestruct.fitequilparam = fitparam;
-wavestruct.raydisplay = C3POdisplay;
-wavestruct.C3POparam = C3POparam;
-%
-id_simul = [id_equil,'_',wavestruct.id,'_',id_fluct,locid_simul];
+id_simul = [id_equil,'_',wavestructs{1}.id,'_',id_fluct,locid_simul];
 %
 fluct_fitparam.method = 'pchip';%nearest,spline,pchip,cubic
 fluct_fitparam.nharm = 32;%Number of harmonics in the plasma fluctuations interpolation (less than ntheta_equil/2)
@@ -166,7 +85,7 @@ luke_input.dkeparam = dkeparam;
 luke_input.dkedisplay = dkedisplay;
 luke_input.equil = equil;
 luke_input.waves = '';
-luke_input.wavestructs = {wavestruct};
+luke_input.wavestructs = wavestructs;
 luke_input.ohm = ohm;
 luke_input.transpfaste = transpfaste;
 luke_input.ripple = ripple;
