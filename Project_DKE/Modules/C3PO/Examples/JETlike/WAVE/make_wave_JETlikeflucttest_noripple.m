@@ -89,7 +89,7 @@ fitparam.fluct.ngridresample = 201;%Number of grid points for resampling the rad
 rayparam.testmode = 0;
 rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak relativistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 5000;
+rayparam.tfinal = 10000;
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
@@ -133,19 +133,19 @@ By_a0_fit = ppval(equil_fit.By_fit.pp_a0,rho0);
 By_an_fit = ppval(equil_fit.By_fit.pp_an,rho0);
 By_bn_fit = ppval(equil_fit.By_fit.pp_bn,rho0);
 %
-BPHI_a0_fit = ppval(equil_fit.BPHI_fit.pp_a0,rho0);
-BPHI_an_fit = ppval(equil_fit.BPHI_fit.pp_an,rho0);
-BPHI_bn_fit = ppval(equil_fit.BPHI_fit.pp_bn,rho0);
+Bz_a0_fit = ppval(equil_fit.Bz_fit.pp_a0,rho0);
+Bz_an_fit = ppval(equil_fit.Bz_fit.pp_an,rho0);
+Bz_bn_fit = ppval(equil_fit.Bz_fit.pp_bn,rho0);
 %
 % Build interpolated magnetic fields
 %
 for jt = 1:length(theta0),
     [xBx] = calcval_yp(equil_fit,theta0(jt),Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
     [xBy] = calcval_yp(equil_fit,theta0(jt),By_a0_fit,By_an_fit,By_bn_fit);
-    [xBPHI] = calcval_yp(equil_fit,theta0(jt),BPHI_a0_fit,BPHI_an_fit,BPHI_bn_fit);
+    [xBz] = calcval_yp(equil_fit,theta0(jt),Bz_a0_fit,Bz_an_fit,Bz_bn_fit);
     %
     xBp = sqrt(xBx.^2 + xBy.^2); 
-    xBt = xBPHI; 
+    xBt = xBz; 
     xB = sqrt(xBt.^2 + xBp.^2);
     xBphin = xBt./xB;
     %
