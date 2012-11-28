@@ -15,7 +15,7 @@ function [macbookyves] = path_laptop_YVES_PEYSSON(luke_ref)
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-if nargin == 0, luke_ref = 'LUKE';end
+if nargin == 0, luke_ref = 'LUKE_1_10';end
 %
 [dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
