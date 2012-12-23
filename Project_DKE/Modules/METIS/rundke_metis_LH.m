@@ -104,16 +104,10 @@ for ic = 1:nconf,
         %
         launch = struct;
         %
-        if isfield(config,'bNparmax_tail') && ~any(isnan(config.bNparmax_tail)),
-            launch.bNparmax_tail = config.bNparmax_tail;
-        end
         if isfield(config,'bn_tail') && ~any(isnan(config.bn_tail)),
+            launch.bNparmax_tail = config.bNparmax_tail;
             launch.bn_tail = config.bn_tail;
-        end
-        if isfield(config,'bP_tail') && ~any(isnan(config.bP_tail)),
             launch.bP_tail = config.bP_tail;
-        end
-        if isfield(config,'opt_tail') && ~any(isnan(config.opt_tail)),
             launch.opt_tail = config.opt_tail;
         end
         %
@@ -152,8 +146,14 @@ for ic = 1:nconf,
             %
             % process toroidal aloha spectrum for LUKE
             %
-            [bNtor0_b,bdNtor0_b,bPlhtor_b] = proc_aloha_spec_jd(aloha_b.antenna.nz,NaN,real(aloha_b.antenna.dP_nz),1,config.aloha_param(1),0,0);
-            [bNtor0_h,bdNtor0_h,bPlhtor_h] = proc_aloha_spec_jd(aloha_h.antenna.nz,NaN,real(aloha_h.antenna.dP_nz),1,config.aloha_param(1),0,0);
+            if isfield(config,'aloha_dir') && config.aloha_dir == 1,
+                Pin = 1+1i;
+            else
+                Pin = 1;
+            end
+            %
+            [bNtor0_b,bdNtor0_b,bPlhtor_b] = proc_aloha_spec_jd(aloha_b.antenna.nz,NaN,real(aloha_b.antenna.dP_nz),Pin,config.aloha_param(1),0,0);
+            [bNtor0_h,bdNtor0_h,bPlhtor_h] = proc_aloha_spec_jd(aloha_h.antenna.nz,NaN,real(aloha_h.antenna.dP_nz),Pin,config.aloha_param(1),0,0);
             %
             if opt_ny == 1,% process poloidal aloha spectrum for LUKE
                 [bNpol0_b,bdNpol0_b,bPlhpol_b] = proc_aloha_spec_jd(aloha_b.antenna.ny,NaN,sum(real(aloha_b.antenna.dP.')),1,config.aloha_param(2),0,0);
