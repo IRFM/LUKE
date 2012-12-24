@@ -214,8 +214,8 @@ for ishot = 1:nshots
         [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] ...
             = run_lukert(luke_input.simul_in,luke_input.wavestructs,luke_input.waves,luke_input.dkeparam.psin_S,luke_input.dkeparam.rho_S,dkepath,luke_input.equil,luke_input.dkeparam,luke_input.dkedisplay,luke_input.ohm,luke_input.transpfaste,luke_input.ripple,luke_input.Zf0_interp,luke_input.XXsinksource,luke_input.opt_save);
         %
-        filename = [path_simul,filesep,'LUKE_RESULTS_',luke_input.id_simul,'.mat'];
-        save(filename,'basestr','id_simul','luke_input','Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
+        filename = [path_simul,filesep,'LUKE_RESULTS_',luke_input.simul_in,'.mat'];
+        save(filename,'basestr','luke_input','Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
         info_dke_yp(2,['LUKE Results saved in ',filename]);
         %
     else
@@ -289,8 +289,8 @@ while any(completed_jobs == 0) && toc/3600 < w_opt,
             %
             luke_input = luke_inputs{ishot};
             %
-            filename = [path_simul,filesep,'LUKE_RESULTS_',luke_input.id_simul,'.mat'];
-            save(filename,'basestr','id_simul','luke_input','Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
+            filename = [path_simul,filesep,'LUKE_RESULTS_',luke_input.simul_in,'.mat'];
+            save(filename,'basestr','luke_input','Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
             info_dke_yp(2,['LUKE Results saved in ',filename]);
             %
             completed_jobs(ishot) = 1;
