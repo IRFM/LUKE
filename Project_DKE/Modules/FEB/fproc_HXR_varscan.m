@@ -24,6 +24,10 @@ if iscell(shotime),
     var.liststr = select_shotimes_jd([equilbase,basestr,'_',shotnum,'_'],[locid_simul,'.mat'],path_simul,shotime);
     nvar = length(var.liststr);
     %
+    if nvar == 0,
+        return
+    end
+    %
     ivar_disp = [];
     for ivar = 1:nvar,
         ttimes(ivar) = str2num(var.liststr{ivar});
@@ -33,9 +37,9 @@ if iscell(shotime),
     end
     ivar_dispexp = ivar_disp;
     %
-    if opt.xdisp == 0,
+    if real(opt.xdisp) == 0,
         var.list = ttimes;
-    else
+    elseif real(opt.xdisp) == 1,% density scan
         [nvol,tn]=tsbase(str2double(shotnum),'sprofnmoy');
         if isempty(nvol),
             [nvol,tn]=tsbase(str2double(shotnum),'snmoy');
@@ -44,6 +48,11 @@ if iscell(shotime),
         var.list = interp1(tn,nvol,ttimes);
         var.lab = '<n>';
         var.unit = '\times 10^{19} m^{-3}';
+    elseif real(opt.xdisp) == 2,% phase scan
+        [npardem,tn]=tsbase(str2double(shotnum),'gnpardem');
+        var.list = interp1(tn(:,imag(opt.xdisp)),npardem(:,imag(opt.xdisp)),ttimes);
+        var.lab = 'n_{||}';
+        var.unit = '';
     end
 else
     equilbase = [file_str,basestr,'_',shotnum,'_',shotime,'_'];
@@ -52,7 +61,7 @@ else
     ivar_disp = [];
     for ivar = 1:nvar,
         var.liststr{ivar} = num2str(var.list(ivar));
-        if any(var.list(ivar) == var.disp),
+        if any(abs(var.list(ivar) - var.disp) < 10*eps),
             ivar_disp = [ivar_disp,ivar];
             ivar_dispexp = ivar;
         end
@@ -224,10 +233,10 @@ dNdtexp(:,:,varmask) = NaN;
 %
 dt = 0.016;%%%%%
 %
-if ~all(all(k(:,~varmask) == repmat(k(:,1),[1,sum(~varmask)]))),
+if ~all(all(k(:,~varmask) == repmat(k(:,find(~varmask,1,'first')),[1,sum(~varmask)]))),
     error('verify energy list')
 else
-    k = k(:,1);
+    k = k(:,find(~varmask,1,'first'));
 end
 %
 nk = length(k);
@@ -280,7 +289,11 @@ lspace2 = 0.5;
 bspace = 0.7;
 bspace2 = 0.6;
 %
-xlab = [var.lab,' (',var.unit,')'];
+if ~isempty(var.unit),
+    xlab = [var.lab,' (',var.unit,')'];
+else
+    xlab = var.lab;
+end
 %
 if isfield(opt,'xlim'),
     xlim = opt.xlim;
@@ -294,10 +307,18 @@ else
     xtick = var.list;
 end
 %
+if isfield(opt,'xcont') && opt.xcont == 0;
+    stylex = style0;
+    stylex2 = style0;
+else
+    stylex = style;    
+    stylex2 = style2;
+end
+%
 if isfield(opt,'icrej_exp') && ~isempty(opt.icrej_exp),
     maskic_exp = ~any(repmat(ic,[length(opt.icrej_exp),1]) == repmat(opt.icrej_exp.',[1,length(ic)]),1);
 else
-    maskic_exp = 1:nc;
+    maskic_exp = true(1,nc);
 end
 %
 xlog = var.log;
@@ -341,20 +362,20 @@ end
 leg = {'LUKE'};
 %
 if var.firstref,
-    graph1D_jd(xlim,[dI_tot(1),dI_tot(1)]*1e3,xlog,0,'','','',NaN,xlim,ylim,style,marker,color3,width,siz);
+    graph1D_jd(xlim,[dI_tot(1),dI_tot(1)]*1e3,xlog,0,'','','',NaN,xlim,ylim,stylex,marker,color3,width,siz);
     leg = [[var.lab,' = ',num2str(var.list(1))],leg];
 end
 %
 if var.lastref,
-    graph1D_jd(xlim,[dI_tot(end),dI_tot(end)]*1e3,xlog,0,'','','',NaN,xlim,ylim,style2,marker,color3,width,siz);
+    graph1D_jd(xlim,[dI_tot(end),dI_tot(end)]*1e3,xlog,0,'','','',NaN,xlim,ylim,stylex2,marker,color3,width,siz);
     leg = [[var.lab,' = ',num2str(var.list(end))],leg];
 end
 %
 if ~all(isnan(dI_exp)) && (~isfield(opt,'I_exp') || opt.I_exp == 1),
-    graph1D_jd(var.list,dI_exp*1e3,0,0,'','','',NaN,xlim,ylim,style,marker,color1,width2,siz);
+    graph1D_jd(var.list,dI_exp*1e3,0,0,'','','',NaN,xlim,ylim,stylex,marker3,color1,width2,siz);
     leg = ['Exp.',leg];
 end
-graph1D_jd(var.list,dI_tot*1e3,xlog,0,xlab,ylab,tit,leg,xlim,ylim,style,marker2,color2,width2,siz,gca,red,lspace,bspace);
+graph1D_jd(var.list,dI_tot*1e3,xlog,0,xlab,ylab,tit,leg,xlim,ylim,stylex,marker2,color2,width2,siz,gca,red,lspace,bspace);
 %
 set(gca,'xtick',xtick);
 %set(gca,'xminorgrid','off')
@@ -371,7 +392,7 @@ print_jd(opt.print,['Fig_',savestr,'_I_tot'],[path_simul,'figures/'],ifig);
 plot_2D_jd(opt,path_simul,savestr,'TPH_2D',ic(maskic_exp),Tphexp(maskic_exp,ivar_dispexp),eTphexp(maskic_exp,ivar_dispexp),...
     ic,Tphdiag(:,ivar_disp),eTphdiag(:,ivar_disp),...ic,Tphplasma(:,ivar_disp),eTphplasma(:,ivar_disp),
     {'Exp.','LUKE'},2,'TPH2D',xlab_ic,'Photon Temperature (keV)',displeg,xlim_ic,'ylim_Tph',xtick_ic,'ytick_Tph',...{'Exp.','plasma','diag.'}
-    {style2,style},[marker,markers],[color1,colors],[width,width2],siz,red,lspace,bspace2);
+    {stylex2,stylex},markers,[color1,colors],[width,width2],siz,red,lspace,bspace2);
 % 
 % if ndisp >= 1,
 %     %
@@ -437,14 +458,14 @@ end
 leg = {'T_{ph} LUKE','CR LUKE (ms^{-1})'};%{'plasma','diag.'};%
 %
 if ~all(isnan(Tphexp(icdisp,:))),
-    graph1D_jd(var.list,Tphexp(icdisp,:),xlog,0,'','','',NaN,xlim,ylim,style,marker,color2,width,siz,gca,1,lspace,bspace2,eTphexp(icdisp,:));
-    graph1D_jd(var.list,sdNdtexp(icdisp,:)/fac,xlog,0,'','','',NaN,xlim,ylim,style,marker,color3,width,siz,gca,1,lspace,bspace2,sqrt(sdNdtexp(icdisp,:)/dt)/fac);
+    graph1D_jd(var.list,Tphexp(icdisp,:),xlog,0,'','','',NaN,xlim,ylim,stylex,marker3,color2,width,siz,gca,1,lspace,bspace2,eTphexp(icdisp,:));
+    graph1D_jd(var.list,sdNdtexp(icdisp,:)/fac,xlog,0,'','','',NaN,xlim,ylim,stylex,marker3,color3,width,siz,gca,1,lspace,bspace2,sqrt(sdNdtexp(icdisp,:)/dt)/fac);
     leg = ['T_{ph} Exp.','CR Exp. (ms^{-1})',leg];
 end
 %graph1D_jd(var.list,Tphplasma(icdisp,:),xlog,0,'','','',NaN,xlim,ylim,style,marker2,color2,width2,siz,gca,1,lspace,bspace2,eTphplasma(icdisp,:));
 %graph1D_jd(var.list,sdNdtplasma(icdisp,:)/fac,xlog,0,'','','',leg,xlim,ylim,style,marker2,color3,width2,siz,gca,1,lspace2,bspace,sqrt(sdNdtplasma(icdisp,:)/dt)/fac);
-graph1D_jd(var.list,Tphdiag(icdisp,:),xlog,0,xlab,ylab,tit,NaN,xlim,ylim,style2,marker2,color2,width2,siz,gca,red,lspace,bspace2,eTphdiag(icdisp,:));
-graph1D_jd(var.list,sdNdtdiag(icdisp,:)/fac,xlog,0,'','','',leg,xlim,ylim,style2,marker2,color3,width2,siz,gca,1,lspace,bspace2,sqrt(sdNdtdiag(icdisp,:)/dt)/fac);
+graph1D_jd(var.list,Tphdiag(icdisp,:),xlog,0,xlab,ylab,tit,NaN,xlim,ylim,stylex2,marker2,color2,width2,siz,gca,red,lspace,bspace2,eTphdiag(icdisp,:));
+graph1D_jd(var.list,sdNdtdiag(icdisp,:)/fac,xlog,0,'','','',leg,xlim,ylim,stylex2,marker2,color3,width2,siz,gca,1,lspace,bspace2,sqrt(sdNdtdiag(icdisp,:)/dt)/fac);
 %
 set(gca,'xtick',xtick);
 %
@@ -471,11 +492,11 @@ end
 leg = {'LUKE'};%{'plasma','diag.'};%
 %
 if ~all(isnan(Tphexp(icdisp,:))),
-    graph1D_jd(var.list,Tphexp(icdisp,:),xlog,0,'','','',NaN,xlim,ylim,style,marker,color1,width2,siz,gca,1,lspace,bspace2,eTphexp(icdisp,:));
+    graph1D_jd(var.list,Tphexp(icdisp,:),xlog,0,'','','',NaN,xlim,ylim,stylex,marker3,color1,width2,siz,gca,1,lspace,bspace2,eTphexp(icdisp,:));
     leg = ['Exp.',leg];
 end
-%graph1D_jd(var.list,Tphplasma(icdisp,:),xlog,0,'','','',NaN,xlim,ylim,style2,marker2,color2,width2,siz,gca,1,lspace,bspace2,eTphplasma(icdisp,:));
-graph1D_jd(var.list,Tphdiag(icdisp,:),xlog,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker2,color2,width2,siz,gca,red,lspace,bspace2,eTphdiag(icdisp,:));
+%graph1D_jd(var.list,Tphplasma(icdisp,:),xlog,0,'','','',NaN,xlim,ylim,stylex2,marker2,color2,width2,siz,gca,1,lspace,bspace2,eTphplasma(icdisp,:));
+graph1D_jd(var.list,Tphdiag(icdisp,:),xlog,0,xlab,ylab,tit,NaN,xlim,ylim,stylex,marker2,color2,width2,siz,gca,red,lspace,bspace2,eTphdiag(icdisp,:));
 %
 set(gca,'xtick',xtick);
 %
@@ -510,11 +531,11 @@ end
 leg = {'LUKE'};%{'plasma','diag.'};%
 %
 if ~all(isnan(sdNdtexp(icdisp,:))),
-    graph1D_jd(var.list,sdNdtexp(icdisp,:),xlog,ylog,'','','',NaN,xlim,ylim,style,marker,color1,width2,siz,gca,1,lspace,bspace2,sqrt(sdNdtexp(icdisp,:)/dt));
+    graph1D_jd(var.list,sdNdtexp(icdisp,:),xlog,ylog,'','','',NaN,xlim,ylim,stylex,marker3,color1,width2,siz,gca,1,lspace,bspace2,sqrt(sdNdtexp(icdisp,:)/dt));
     leg = ['Exp.',leg];
 end
-%graph1D_jd(var.list,sdNdtplasma(icdisp,:)/fac,xlog,ylog,'','','',leg,xlim,ylim,style2,marker2,color2,width2,siz,gca,1,lspace,bspace2,sqrt(sdNdtplasma(icdisp,:)/dt));
-graph1D_jd(var.list,sdNdtdiag(icdisp,:),xlog,ylog,xlab,ylab,tit,NaN,xlim,ylim,style,marker2,color2,width2,siz,gca,red,lspace,bspace2,sqrt(sdNdtdiag(icdisp,:)/dt));
+%graph1D_jd(var.list,sdNdtplasma(icdisp,:)/fac,xlog,ylog,'','','',leg,xlim,ylim,stylex2,marker2,color2,width2,siz,gca,1,lspace,bspace2,sqrt(sdNdtplasma(icdisp,:)/dt));
+graph1D_jd(var.list,sdNdtdiag(icdisp,:),xlog,ylog,xlab,ylab,tit,NaN,xlim,ylim,stylex,marker2,color2,width2,siz,gca,red,lspace,bspace2,sqrt(sdNdtdiag(icdisp,:)/dt));
 %
 set(gca,'xtick',xtick);
 %
@@ -549,11 +570,11 @@ end
 leg = {'LUKE'};%{'plasma','diag.'};%
 %
 if ~all(isnan(sdNdtexp(icdisp,:))),
-    graph1D_jd(var.list,dNdtexp_disp(:,ikdisp),xlog,ylog,'','','',NaN,xlim,ylim,style,marker,color1,width2,siz,gca,1,lspace,bspace2,sqrt(dNdtexp_disp(:,ikdisp)/dt));
+    graph1D_jd(var.list,dNdtexp_disp(:,ikdisp),xlog,ylog,'','','',NaN,xlim,ylim,stylex,marker3,color1,width2,siz,gca,1,lspace,bspace2,sqrt(dNdtexp_disp(:,ikdisp)/dt));
     leg = ['Exp.',leg];
 end
-%graph1D_jd(var.list,dNdtplasma_disp(:,ikdisp)/fac,xlog,ylog,'','','',leg,xlim,ylim,style2,marker2,color2,width2,siz,gca,1,lspace,bspace2,sqrt(dNdtplasma_disp(:,ikdisp)/dt));
-graph1D_jd(var.list,dNdtdiag_disp(:,ikdisp),xlog,ylog,xlab,ylab,tit,NaN,xlim,ylim,style,marker2,color2,width2,siz,gca,red,lspace,bspace2,sqrt(dNdtdiag_disp(:,ikdisp)/dt));
+%graph1D_jd(var.list,dNdtplasma_disp(:,ikdisp)/fac,xlog,ylog,'','','',leg,xlim,ylim,stylex2,marker2,color2,width2,siz,gca,1,lspace,bspace2,sqrt(dNdtplasma_disp(:,ikdisp)/dt));
+graph1D_jd(var.list,dNdtdiag_disp(:,ikdisp),xlog,ylog,xlab,ylab,tit,NaN,xlim,ylim,stylex,marker2,color2,width2,siz,gca,red,lspace,bspace2,sqrt(dNdtdiag_disp(:,ikdisp)/dt));
 %
 set(gca,'xtick',xtick);
 %
@@ -569,7 +590,7 @@ print_jd(opt.print,['Fig_',savestr,'_CR_SEL_1D_ic_',num2str(icdisp)],[path_simul
 plot_2D_jd(opt,path_simul,savestr,'CR_2D',ic(maskic_exp),sdNdtexp(maskic_exp,ivar_dispexp),sqrt(sdNdtexp(maskic_exp,ivar_dispexp)/dt),...
     ic,sdNdtdiag(:,ivar_disp),sqrt(sdNdtdiag(:,ivar_disp)/dt),...ic,sdNdtplasma(:,ivar_disp),sqrt(sdNdtplasma(:,ivar_disp)/dt),
     {'Exp.','LUKE'},4,'CR2D',xlab_ic,['Count rate (s^{-1}); ',krangestr],displeg,xlim_ic,'ylim_CRTOT',xtick_ic,'ytick_CRTOT',...{'Exp.','plasma','diag.'}
-    {style2,style},[marker,markers],[color1,colors],[width,width2],siz,red,lspace,bspace2);
+    {style2,style},markers,[color1,colors],[width,width2],siz,red,lspace,bspace2);
 %
 % if ndisp >= 1,
 %     %
@@ -622,7 +643,7 @@ plot_2D_jd(opt,path_simul,savestr,'CR_2D',ic(maskic_exp),sdNdtexp(maskic_exp,iva
 plot_2D_jd(opt,path_simul,savestr,'CR_2D_norm',ic(maskic_exp),ndNdtexp(maskic_exp,ivar_dispexp),endNdtexp(maskic_exp,ivar_dispexp),...
     ic,ndNdtdiag(:,ivar_disp),endNdtdiag(:,ivar_disp),...ic,ndNdtplasma(:,ivar_disp),endNdtplasma(:,ivar_disp),
     {'Exp.','LUKE'},5,'CR2D norm',xlab_ic,['Normalized count rate (s^{-1}); ',krangestr],displeg,xlim_ic,'ylim_CRNORM',xtick_ic,'ytick_CRNORM',...{'Exp.','plasma','diag.'}
-    {style2,style},[marker,markers],[color1,colors],[width,width2],siz,red,lspace,bspace2);
+    {style2,style},markers,[color1,colors],[width,width2],siz,red,lspace,bspace2);
 %
 % if ndisp >= 1,
 %     %
@@ -926,7 +947,7 @@ if ndisp >= 1,
         ifig = 700+ivar;figure(ifig),clf,set(ifig,'Name','Exp. CR')
         %
         dNdtexp_sel = dNdtexp(:,maskic_exp,ivar_dispexp(ivar));
-        dNdtexp_max = repmat(max(dNdtexp_sel,[],2),[1,nc]);
+        dNdtexp_max = repmat(max(dNdtexp_sel,[],2),[1,sum(maskic_exp)]);
         Nnorm = dNdtexp_sel./dNdtexp_max;
         eNnorm = sqrt(dNdtexp_sel/dt)./dNdtexp_max;
         %
@@ -935,7 +956,7 @@ if ndisp >= 1,
             leg{iik} = ['k = ',num2str(k(iik)),' keV'];
         end
         %
-        graph1D_jd(repmat(ic.',[1,length(k)]),Nnorm.',0,0,xlab_ic,ylab,tit,leg,xlim_ic,ylim,...
+        graph1D_jd(repmat(ic(maskic_exp).',[1,length(k)]),Nnorm.',0,0,xlab_ic,ylab,tit,leg,xlim_ic,ylim,...
             style,marker,color,width2,siz,gca,red,lspace,bspace,eNnorm.');
         % 
         set(gca,'xtick',xtick_ic);
@@ -957,8 +978,8 @@ ylim = [0,max([ds_c3po,ds_luke])]*1.5;
 %
 leg = {'C3PO','LUKE'};
 %
-graph1D_jd(var.list,ds_c3po,xlog,0,'','','',NaN,xlim,ylim,style,marker2,color3,width2,siz);
-graph1D_jd(var.list,ds_luke,xlog,0,xlab,ylab,tit,leg,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+graph1D_jd(var.list,ds_c3po,xlog,0,'','','',NaN,xlim,ylim,stylex,marker2,color3,width2,siz);
+graph1D_jd(var.list,ds_luke,xlog,0,xlab,ylab,tit,leg,xlim,ylim,stylex,marker1,color2,width2,siz,gca,red,lspace,bspace);
 %
 set(gca,'xtick',xtick);
 %set(gca,'xminorgrid','off')
@@ -976,8 +997,8 @@ ylim = [0,max([dPfrac,dPfrac_lin])]*1.5;
 %
 leg = {'C3PO','LUKE'};
 %
-graph1D_jd(var.list,dPfrac_lin,xlog,0,'','','',NaN,xlim,ylim,style,marker2,color3,width2,siz);
-graph1D_jd(var.list,dPfrac,xlog,0,xlab,ylab,tit,leg,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+graph1D_jd(var.list,dPfrac_lin,xlog,0,'','','',NaN,xlim,ylim,stylex,marker2,color3,width2,siz);
+graph1D_jd(var.list,dPfrac,xlog,0,xlab,ylab,tit,leg,xlim,ylim,stylex,marker1,color2,width2,siz,gca,red,lspace,bspace);
 %
 set(gca,'xtick',xtick);
 %set(gca,'xminorgrid','off')
