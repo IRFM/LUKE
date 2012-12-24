@@ -95,7 +95,7 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,d
 			ZXXF_c_tp = NaN;		
 		end
 		%
-		if isfield(dkeparam.clustermode,'coll_dke_jd') && dkeparam.clustermode.coll_dke_jd.scheduler.mode,
+		if isfield(dkeparam.clustermode,'coll_dke_jd') && isfield(dkeparam.clustermode.coll_dke_jd,'scheduler') && dkeparam.clustermode.coll_dke_jd.scheduler.mode,
 			for ir = 1:gridDKE.nr,arg_range{ir} = ir;end
 			[dkecluster] = clustermode_luke(dkeparam.clustermode,'coll_dke_jd',dkepath); 
 			[flag,XXfM_out,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_mm_ijp,ZXXD_c_mm_ijm,ZXXF_c_p_ipj,ZXXF_c_p_ij,ZXXF_c_p_imj] = mdce_luke(@loop_coll_dke_jd1,{ir,gridDKE,Zmomcoef,Zbouncecoef,equilDKE,mksa,dkepath,dkeparam,xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth},1,arg_range,dkecluster);			
