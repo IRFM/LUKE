@@ -411,8 +411,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                         fileids.data = data_file;
                         paths.data = data_path;
                         %
-                        id_simul = data.id_simul;
-                        %
                         if isfield(data,'id_dkepath') && ~isempty(data.id_dkepath) && exist([data.path_dkepath,'PATH_',data.id_dkepath,'.mat'],'file'),
                             fileids.dkepath = data.id_dkepath;
                             paths.dkepath = data.path_dkepath;
@@ -513,6 +511,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                             ohm = data.luke_input.ohm;
                             transpfaste = data.luke_input.transpfaste;
                             ripple = data.luke_input.ripple;
+                            %
+                            id_simul = data.luke_input.simul_in;
                         else
                             dkeparam = data.dkeparam;
                             dkedisplay = data.dkedisplay;
@@ -521,6 +521,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                             ohm = data.ohm;
                             transpfaste = data.transpfaste;
                             ripple = data.ripple;
+                            %
+                            id_simul = data.id_simul;
                         end
                         %
                         output.Znorm = data.Znorm;
