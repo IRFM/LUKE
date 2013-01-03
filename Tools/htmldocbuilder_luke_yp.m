@@ -1,4 +1,4 @@
-function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root_path,search_path,excludedfoldernames,overview_scripts)
+function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root_path,search_path,excludedfoldernames,overview_scripts,htmlview_mode)
 %LUKE - HTML documentation builder
 %
 % Create dynamically all the documentation in html format from *.m, *.c,
@@ -19,6 +19,8 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
 %       (default: empty)
 %   - overview_scripts: list of scripts to be put in the overview html file (structure)
 %       (default: none)
+%   - htmlview_mode: view html files tree in web browser if > 1
+%       (default: 0)
 %
 % OUTPUT:
 %
@@ -38,13 +40,16 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
     if nargin == 1,
         recursive_mode = 'on';
         root_path = '';
+        htmlview_mode = 0;
     end   
     if nargin == 2,
         root_path = '';
+        htmlview_mode = 0;
     end
     if nargin <=3,
         search_path = {};
         excludedfoldernames = {};
+        htmlview_mode = 0;
     end
     %
     if isempty(root_path),
@@ -115,9 +120,11 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
         end
     end
     %
-    stat = web(['file://',root_path,'Documentation/index.html'],'-browser');
-    if stat == 1 | stat == 2,
-        web(['file://',root_path,'Documentation/index.html'],'-helpbrowser');%Open in MatLab help browser    
+    if htmlview_mode <= 0,
+    	stat = web(['file://',root_path,'Documentation/index.html'],'-browser');
+    	if stat == 1 | stat == 2,
+        	web(['file://',root_path,'Documentation/index.html'],'-helpbrowser');%Open in MatLab help browser    
+    	end
     end
     disp(['----> The weblink to the documentation is ','file:/',root_path,'Documentation/index.html']);
     %

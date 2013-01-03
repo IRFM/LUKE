@@ -6,7 +6,7 @@ function install_doc_LUKE(test)
 %
 % INPUT:
 %
-%	- test: dummy argument. If exists, test mode is activated with reduced documentation
+%	- test: If exists, test< 0, test mode is activated with reduced documentation. If test > 0, no display in the web browser (for automatic wiki buildup)
 %
 % OUTPUT: none
 %
@@ -20,7 +20,12 @@ luke_root = dkepath.luke_root;
 cd(luke_root);
 %
 m2htmllib_path = fullfile(luke_root,'Packages','m2html');
+%
 if nargin == 0,
+	test = 0;
+end
+%
+if test >= 0,
 	search_path = {fullfile(luke_root,'Project_DKE','Database'),...              
               fullfile(luke_root,'Project_DKE','Database','DISPLAY_files'),...
               fullfile(luke_root,'Project_DKE','Database','DKEPARAM_files'),...
@@ -130,11 +135,11 @@ overview_scripts(3).path = fullfile(luke_root,'VERSIONS.m');overview_scripts(3).
 overview_scripts(4).path = fullfile(luke_root,'AUTHORS.m');overview_scripts(4).format = '';
 %
 excludedfoldernames = {};
-htmldocbuilder_luke_yp(m2htmllib_path,'off',luke_root,search_path,excludedfoldernames,overview_scripts);%build html doc
+htmldocbuilder_luke_yp(m2htmllib_path,'off',luke_root,search_path,excludedfoldernames,overview_scripts,test);%build html doc
 %
 % Check that the list of TeX files given below is similar in the html file ~','LUKE/Packages/m2html/templates/LUKE/lukeoverview.html
 %  
-if nargin == 0,
+if test >= 0,
 	texfilelist = {fullfile(luke_root,'Project_DKE','Doc','NoticeDKE.tex'),...      
             fullfile(luke_root,'Project_DKE','Modules','C3PO','Doc','raytracing.tex'),...
             fullfile(luke_root,'Project_DKE','Modules','FEB','Doc','3Tmodel.tex'),...
