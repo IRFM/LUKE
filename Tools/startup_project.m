@@ -1,4 +1,4 @@
-function startup_project(project_root,pmode_in,smode_in)
+function [project_root_old,pmode_old] = startup_project(project_root,pmode_in,smode_in)
 %LUKE -  Function which allows to swap between different LUKE branches or
 %versions (interative mode if no arguments). This function must be placed at the
 % of the startup.m file. All projects should be placed in the same
@@ -16,20 +16,25 @@ function startup_project(project_root,pmode_in,smode_in)
 %       - pmode_in: project name [1,1])
 %       - smode_in: working directory number [1,1]
 %
-%   OUTPUT : none
+%   OUTPUT : 
+%
+%       - project_root_old: previous project directory [1,1])
+%       - pmode_old: previous project name [1,1])
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr> and J. Decker (CEA/DSM/IRFM) <joan.decker@cea.fr>
-%
 %
 clc
 close all
 %
 startup;%load already existing startup file.
 %
+project_root_old = luke_root(1:strfind(luke_root,'LUKE')-2);
+pmode_old = luke_root(strfind(luke_root,'LUKE'):end-1);
+%
 flag = 0;
 %
 if nargin == 0,
-    project_root = pwd;%where the LUKE projects are located
+    project_root = project_root_old;%where the LUKE projects are located
 end
 %
 project_list = dir(project_root);%list all projects (including LUKE ones)
@@ -52,7 +57,7 @@ for ilist = 1:ipmode_menu-1,
 end
 pmode_menu = [pmode_menu0,' (',int2str(ipmode_menu),') NO PROJECT',char(10)];
 %
-if nargin == 1,
+if nargin <= 1,
     pmode = 0;
     %
     pmode_menu = [pmode_menu,' ? '];
@@ -206,7 +211,7 @@ smode_menu0 = [smode_menu0,' (11) TOOLS',char(10)];
 smode_menu0 = [smode_menu0,' (12) LUKE_SIMULATIONS',char(10)];
 smode_menu0 = [smode_menu0,' (13) ',lukebranch,char(10),' ? '];
 %
-if nargin == 2,
+if nargin <= 2,
     smode = 0;
     while smode == 0,
         smode = input(smode_menu0);
