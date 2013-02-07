@@ -16,6 +16,13 @@ else
     luke_job.memory = 7000;%mb default value without transport
 end
 %
+if isfield(remote,'memory') && isnan(remote.memory),% memory spec not compatible with remote computer
+    luke_job.memory = [];
+elseif isfield(remote,'memory') && ~isempty(remote.memory) && remote.memory < luke_job.memory,% max memory on remote computer
+    disp('WARNING : memory request limited by remote host')
+    luke_job.memory = remote.memory;
+end
+%
 luke_job.debugmode = debugmode;
 %
 luke_job = remoterunbatch(remote,luke_job,luke_input,debugmode);
