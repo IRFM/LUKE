@@ -71,6 +71,7 @@ laptopjoan.joan(1).MUMPS.mex712 = [laptopjoan.joan(1).local_root,'MUMPS_4.9.2/MA
 %
 laptopjoan.joan(1).remote(1).host = 'cephee15.intra.cea.fr';
 laptopjoan.joan(1).remote(1).nproc = 28;% limited to two jobs per PBS node to avoid cluster saturation
+laptopjoan.joan(1).remote(1).memory = 16000;%max memory on remote host (mb)
 laptopjoan.joan(1).remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
 laptopjoan.joan(1).remote(1).get_jobid = {'','.cephee'};%str_before,str_after
 laptopjoan.joan(1).remote(1).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
@@ -122,15 +123,32 @@ laptopjoan.joan(1).remote(3).JD211098 = 'yvespeysson';%'joandecker';
 % pleiades2 (pbs)
 %
 laptopjoan.joan(1).remote(4).host = 'pleiades2.epfl.ch';
+laptopjoan.joan(1).remote(4).hostname = 'pleiades2';% case where hostname must be specified as variable
 laptopjoan.joan(1).remote(4).nproc = 48;
+laptopjoan.joan(1).remote(4).memory = NaN;%no memory spec sent to remote host
+laptopjoan.joan(1).remote(4).ppn = 1;
 laptopjoan.joan(1).remote(4).cmd = 'qsub';
 laptopjoan.joan(1).remote(4).get_jobid = {'','.pleiades2.epfl.ch'};%str_before,str_after
 laptopjoan.joan(1).remote(4).set_jobid = {'qstat ','','Unknown Job Id'};%str_before,str_after,str_check
+laptopjoan.joan(1).remote(4).walltime = 24;%walltime necessary or one hour imposed
 laptopjoan.joan(1).remote(4).mat711.root = '/usr/local/matlab-7.11.0/bin/';
 laptopjoan.joan(1).remote(4).mat711.prefdir = '/home/jdecker/.matlab/R2010b';
 laptopjoan.joan(1).remote(4).matdef = laptopjoan.joan(1).remote(4).mat711;%default matlab on remote machine
 laptopjoan.joan(1).remote(4).luke_root = ['/home/jdecker/LUKE/'];
 laptopjoan.joan(1).remote(4).joan = 'jdecker';
+%
+% cadts-0412 (Timothee's computer)
+%
+laptopjoan.joan(1).remote(5).host = 'cadts-0412.intra.cea.fr';% empty for local host
+laptopjoan.joan(1).remote(5).nproc = 12;
+laptopjoan.joan(1).remote(5).cmd = 'qsub';
+laptopjoan.joan(1).remote(5).get_jobid = {'','.cadts-0412'};%str_before,str_after
+laptopjoan.joan(1).remote(5).set_jobid = {'qstat ','','Unknown Job Id'};%str_before,str_after,str_check
+laptopjoan.joan(1).remote(5).walltime = 24;%walltime necessary or one hour imposed
+laptopjoan.joan(1).remote(5).mat710.root = '/Applications/Matlab_2010A/bin/';
+laptopjoan.joan(1).remote(5).mat710.prefdir = '/home/sccp/gsem/decker/.matlab/R2010a';
+laptopjoan.joan(1).remote(5).matdef = laptopjoan.joan(1).remote(5).mat710;%default matlab on remote machine
+laptopjoan.joan(1).remote(5).luke_root = ['/home/sccp/gsem/decker/',luke_ref,'/'];
 %
 % saturne (pbs)
 %
