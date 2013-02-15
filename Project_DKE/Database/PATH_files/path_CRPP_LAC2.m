@@ -19,13 +19,17 @@ if nargin == 0, luke_ref = 'LUKE';end
 %
 LUKEversion_jd;
 %
-lac2.hostname = 'lac2';
+lac2.hostname = 'lac2.epfl.ch';
 lac2.machine = 'lac2';
 lac2.computer = computer;%machine type and supported OS
 %
 % Selected user profile (structure hostname.usernames(pathref).xxx)
 %
-lac2.path_profile = 1;
+lac2.path_profile.decker = 1;
+%
+% Selected user profile for unlisted users
+%
+lac2.default = 'decker';
 %
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
 %
