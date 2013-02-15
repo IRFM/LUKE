@@ -66,6 +66,9 @@ if i_opt == 0,% use data from external database
         if isempty(angles),
             disp(['-----> launching data not determined for shot :',shotnum]);
             return
+        elseif isfield(angles,'P0') && (isnan(angles.P0) || angles.P0 == 0),
+            disp(['-----> no power launched. Aborted']);
+            return            
         end
         %
         launch = imake_launch_angles_TCV_jd(angles);
@@ -384,7 +387,7 @@ if w_opt == 0; % C3PO Calculation
         launch.type = type;
         %
         launch.ns = 1000;
-        launch.method = 'pchip';
+        launch.method = 'cubic';
         %
         % BUILDING RAYINIT
         %
@@ -464,7 +467,7 @@ if w_opt == 0; % C3PO Calculation
     %
     sd = pwd;
     cd(workdir);
-    wave = main_C3PO_jd(dkepath,rayinit.id,equil,rayinit,waveparam,fitparam,rayparam,wavedisplay,C3POparam);
+    wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,waveparam,fitparam,rayparam,wavedisplay,C3POparam);
     cd(sd);
     %
     wave.info.type = 'RT';
