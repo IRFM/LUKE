@@ -503,6 +503,26 @@ end
 dke_out.dkeparam = dkeparam;%for data transfer only
 dke_out.calctime = calctime;
 %
+if isfield(simul,'save') && simul.save == 1,
+    %
+    radialDKE = loadstructs.radialDKE;
+    equilDKE = loadstructs.equilDKE;
+    equilDKE.fluct = equil.fluct;%for transfering info about plasma fluctuations
+    momentumDKE = loadstructs.momentumDKE;
+    gridDKE = loadstructs.gridDKE;
+    Zmomcoef = loadstructs.Zmomcoef;
+    Zbouncecoef = loadstructs.Zbouncecoef;
+    Zmripple = loadstructs.Zmripple;
+    mksa = loadstructs.mksa;
+    XXsinksource = loadstructs.XXsinksource;
+    %
+    filename = [simul.path,'LUKE_RESULTS_',simul.id,'.mat'];
+    save(filename,'simul','dkepath','equil','dkeparam','dkedisplay','ohm','transpfaste','ripple',...
+        'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
+    info_dke_yp(2,['LUKE Results saved in ',filename]);
+    %
+end
+%
 if ~isempty(loadstructs),
     if nargout >= 1,varargout{1} = Znorm;end
     if nargout >= 2,varargout{2} = Zcurr;end
