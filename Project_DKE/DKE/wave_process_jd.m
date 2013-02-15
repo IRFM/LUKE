@@ -57,34 +57,34 @@ for ib = 1:length(wave.rays),
             %
             salpha_lin_h = (salpha_lin(1:end-1) + salpha_lin(2:end))/2;
             sds = diff(ray.ss);
-            ray.stau = [0,cumsum(salpha_lin_h.*sds)];
+            ray.stau_lin = [0,cumsum(salpha_lin_h.*sds)];
             %
         end
         %
-        ray.sP_2piRp = ray.P0_2piRp*exp(-ray.stau);
-        ray.sdP_2piRp_ds = salpha_lin.*ray.sP_2piRp;
+        ray.sP_2piRp_lin = ray.P0_2piRp*exp(-ray.stau_lin);
+        ray.sdP_2piRp_ds_lin = salpha_lin.*ray.sP_2piRp_lin;
         %
-    elseif isfield(ray,'sP_2piRp'),%power along the ray was calculated
+    elseif isfield(ray,'sP_2piRp_lin'),%power along the ray was calculated
         %
-        stau = -log(ray.sP_2piRp/ray.sP_2piRp(1));
+        stau_lin = -log(ray.sP_2piRp_lin/ray.sP_2piRp_lin(1));
         %
         ss_h = (ray.ss(1:end - 1) + ray.ss(2:end))/2;
-        sdtauds_h = diff(stau)./diff(ray.ss);
-        salpha_lin = interp1(ss_h,sdtauds_h,ray.ss,'linear','extrap');
+        sdtauds_h_lin = diff(stau_lin)./diff(ray.ss);
+        salpha_lin = interp1(ss_h,sdtauds_h_lin,ray.ss,'linear','extrap');
         %
         sphi_norm = sqrt(abs(ray.sphi_xyz(1,:)).^2 + abs(ray.sphi_xyz(2,:)).^2 + abs(ray.sphi_xyz(3,:)).^2);
         salphaphi_lin = salpha_lin.*sphi_norm;
         salphaphi_lin(isnan(salphaphi_lin)) = 0;
         %
-        ray.stau = stau;
+        ray.stau_lin = stau_lin;
         ray.salphaphi_lin = salphaphi_lin;
-        ray.sdP_2piRp_ds = salpha_lin.*ray.sP_2piRp;
+        ray.sdP_2piRp_ds_lin = salpha_lin.*ray.sP_2piRp_lin;
     end
     %
-    if isfield(ray,'stau') & isfield(wave,'cut_fac'),
+    if isfield(ray,'stau_lin') & isfield(wave,'cut_fac'),
         ns = length(ray.ss);
-        is_max = min([ns,wave.kextra+find(ray.stau > 10*wave.cut_fac)]);
-        if ray.stau(end) < 10*wave.cut_fac & ~isinf(wave.cut_fac),
+        is_max = min([ns,wave.kextra+find(ray.stau_lin > 10*wave.cut_fac)]);
+        if ray.stau_lin(end) < 10*wave.cut_fac & ~isinf(wave.cut_fac),
             disp('WARNING: The ray might be too short. Increase tfinal')
         end
         %
