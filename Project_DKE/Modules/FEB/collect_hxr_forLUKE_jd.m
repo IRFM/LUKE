@@ -13,7 +13,7 @@ end
 %
 if strcmp(basestr,'TCV'),
     %
-    collect_hxr;
+    hxrs_collect_hxr_luke;
     %
     t = t{1};
     energy = energy{1};
