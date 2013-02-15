@@ -129,6 +129,8 @@ Ymax = max(max(Y_disp));
 %
 iy = 0;
 rays = '';
+legpol = {'SW','FW'};
+%
 for iw = 1:nw,
     ibb = 0;
     for ib = ymask{iw},
@@ -141,6 +143,8 @@ for iw = 1:nw,
         rays{iy}.style = styles{mod(iw-1,length(styles))+1};
         rays{iy}.sX = (Rp + rays{iy}.sx).*cos(-rays{iy}.sphi);
         rays{iy}.sY = (Rp + rays{iy}.sx).*sin(-rays{iy}.sphi);
+        %
+        rays{iy}.ns = length(rays{iy}.ss);
 		%
         if iscell(yabs),
             rays{iy}.mask_abs_lin = yabs{iw}(1,ibb):yabs{iw}(2,ibb);
@@ -149,9 +153,15 @@ for iw = 1:nw,
 			rays{iy}.mask_abs_lin = [];
 			rays{iy}.mask_abs = [];
         end
-        if ~isfield(rays{iy},'rayinits') || ~isfield(rays{iy}.rayinits{1},'type') || ~strcmp(rays{iy}.rayinits{1}.type,'EC'),
+        if 1,%~isfield(rays{iy},'rayinits') || ~isfield(rays{iy}.rayinits{1},'type') || ~strcmp(rays{iy}.rayinits{1}.type,'EC'),
             rays{iy}.refs = '';
+            rays{iy}.mask_pass = {true(1,rays{iy}.ns)};
         else
+            %
+            legpol = {'O','X'};
+            rays{iy}.mask_pass = {};
+            is0 = 1;
+            %
             for iref = 1:length(rays{iy}.rayinits),% for each reflection
                 %
                 rayinit = rays{iy}.rayinits{iref};
@@ -180,7 +190,10 @@ for iw = 1:nw,
                     rays{iy}.refs{iref}.y = [rays{iy}.sy(is),rays{iy}.refs{iref}.y,rays{iy}.sy(is+1)];
                     rays{iy}.refs{iref}.phi = [rays{iy}.sphi(is),rays{iy}.refs{iref}.phi,rays{iy}.sphi(is+1)];
                     %
-                elseif is ==1,
+                    rays{iy}.mask_pass = [rays{iy}.mask_pass,1:rays{iy}.ns >= is0 & 1:rays{iy}.ns <= is];
+                    is0 = is + 1;
+                    %
+                elseif is == 1,
                     %
                     rays{iy}.refs{iref}.x = [rays{iy}.refs{iref}.x,rays{iy}.sx(is)];
                     rays{iy}.refs{iref}.y = [rays{iy}.refs{iref}.y,rays{iy}.sy(is)];
@@ -191,6 +204,8 @@ for iw = 1:nw,
                     rays{iy}.refs{iref}.x = [rays{iy}.sx(is),rays{iy}.refs{iref}.x];
                     rays{iy}.refs{iref}.y = [rays{iy}.sy(is),rays{iy}.refs{iref}.y];
                     rays{iy}.refs{iref}.phi = [rays{iy}.sphi(is),rays{iy}.refs{iref}.phi];
+                    %
+                    rays{iy}.mask_pass = [rays{iy}.mask_pass,1:rays{iy}.ns >= is0 & 1:rays{iy}.ns <= is];
                     %
                 end
                 %
@@ -257,8 +272,8 @@ for iy = 1:ny,
             %
             spmode = rays{iy}.spmode(1:rays{iy}.is_abs_max_lin);
             %
-            rays{iy}.mask_p_lin{1} = 1;%to avoid legend problems
-            rays{iy}.mask_m_lin{1} = 1;%to avoid legend problems
+            rays{iy}.mask_p_lin{1} = 1:rays{iy}.ns == 1;%to avoid legend problems
+            rays{iy}.mask_m_lin{1} = 1:rays{iy}.ns == 1;%to avoid legend problems
             %
             imc_list = 1+[0,find(spmode(2:end) ~= spmode(1:end-1)),rays{iy}.is_abs_max_lin];
             %
@@ -266,7 +281,7 @@ for iy = 1:ny,
             %
             for imc = 1:length(imc_list)-1,
                 %
-                mask_mc = imc_list(imc):(imc_list(imc+1) - 1);
+                mask_mc = 1:rays{iy}.ns >= imc_list(imc) & 1:rays{iy}.ns < imc_list(imc+1);
                 %
                 if pmode == 1,
                     rays{iy}.mask_p_lin = [rays{iy}.mask_p_lin,mask_mc];
@@ -651,7 +666,6 @@ else
     Rpdisp = 0;
     Zpdisp = 0;
 	%
-	legpol = {'SW','FW'};
 end
 %
 xlim = [xmin + Rpdisp,xmax + Rpdisp];
@@ -670,27 +684,29 @@ for iy = 1:ny,
     	mask_abs = rays{iy}.mask_abs_lin;
     end
     %
-    if isfield(opt,'mode') && opt.mode == 'y',
-        %
-        if opt.luke,
-            mask_p = rays{iy}.mask_p;
-            mask_m = rays{iy}.mask_m;
+    for ipass = 1:length(rays{iy}.mask_pass),
+        if isfield(opt,'mode') && opt.mode == 'y',
+            %
+            if opt.luke,
+                mask_p = rays{iy}.mask_p;
+                mask_m = rays{iy}.mask_m;
+            else
+                mask_p = rays{iy}.mask_p_lin;
+                mask_m = rays{iy}.mask_m_lin;
+            end
+            %
+            graph1D_jd(rays{iy}.sx(mask_p{1} & rays{iy}.mask_pass{ipass}) + Rpdisp,rays{iy}.sy(mask_p{1} & rays{iy}.mask_pass{ipass}) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,siz);
+            graph1D_jd(rays{iy}.sx(mask_m{1} & rays{iy}.mask_pass{ipass}) + Rpdisp,rays{iy}.sy(mask_m{1} & rays{iy}.mask_pass{ipass}) + Zpdisp,0,0,'','','',legpol,xlim,ylim,style3,marker,rays{iy}.color,width1,siz);
+            for ip = 2:length(mask_p),
+                graph1D_jd(rays{iy}.sx(mask_p{ip} & rays{iy}.mask_pass{ipass}) + Rpdisp,rays{iy}.sy(mask_p{ip} & rays{iy}.mask_pass{ipass}) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,siz);
+            end
+            for im = 2:length(mask_m),
+                graph1D_jd(rays{iy}.sx(mask_m{im} & rays{iy}.mask_pass{ipass}) + Rpdisp,rays{iy}.sy(mask_m{im} & rays{iy}.mask_pass{ipass}) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style3,marker,rays{iy}.color,width1,siz);
+            end
         else
-            mask_p = rays{iy}.mask_p_lin;
-            mask_m = rays{iy}.mask_m_lin;
-        end
-        %
-        graph1D_jd(rays{iy}.sx(mask_p{1}) + Rpdisp,rays{iy}.sy(mask_p{1}) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,siz);
-        graph1D_jd(rays{iy}.sx(mask_m{1}) + Rpdisp,rays{iy}.sy(mask_m{1}) + Zpdisp,0,0,'','','',legpol,xlim,ylim,style3,marker,rays{iy}.color,width1,siz);
-        for ip = 2:length(mask_p),
-            graph1D_jd(rays{iy}.sx(mask_p{ip}) + Rpdisp,rays{iy}.sy(mask_p{ip}) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,siz);
-        end
-        for im = 2:length(mask_m),
-            graph1D_jd(rays{iy}.sx(mask_m{im}) + Rpdisp,rays{iy}.sy(mask_m{im}) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style3,marker,rays{iy}.color,width1,siz);
-        end
-    else
-        graph1D_jd(rays{iy}.sx(mask_max) + Rpdisp,rays{iy}.sy(mask_max) + Zpdisp,0,0,'','','',NaN,xlim,ylim,rays{iy}.style,marker,rays{iy}.color,width1,siz);
-    end      
+            graph1D_jd(rays{iy}.sx(mask_max & rays{iy}.mask_pass{ipass}) + Rpdisp,rays{iy}.sy(mask_max & rays{iy}.mask_pass{ipass}) + Zpdisp,0,0,'','','',NaN,xlim,ylim,rays{iy}.style,marker,rays{iy}.color,width1,siz);
+        end  
+    end
     %
     graph1D_jd(rays{iy}.sx(mask_abs) + Rpdisp,rays{iy}.sy(mask_abs) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,siz);
     if ~isempty(rays{iy}.refs),
