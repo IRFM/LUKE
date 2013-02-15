@@ -59,7 +59,7 @@ if size(brem_bd_in,1) == 1,
 end
 %
 for ik = 1:size(hxr.kdiag_hxr,2)-1,
-	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;%number of photons in energy channel ik per unit time
+	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,find(kinterp >= hxr.kdiag_hxr(1,ik),1,'first'):find(kinterp < hxr.kdiag_hxr(2,ik),1,'last'))')'*dkinterp;%number of photons in energy channel ik per unit time
 end
 brem_bd_plasma = abs(brem_bd_plasma);
 %

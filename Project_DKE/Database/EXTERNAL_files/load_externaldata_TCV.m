@@ -85,6 +85,7 @@ external.equil.magnetic.eqdsk_path = eqdsk_path;
 external.equil.magnetic.eqdsk_file = eqdsk_file;
 %
 external.equil.prof = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign','teflag');
+%
 external.equil.prof.data_path = data_path;
 external.equil.prof.data_file = data_file;
 external.wave = load([data_path,data_file],'shot','laun','angles*');
@@ -102,6 +103,11 @@ if m_opt == 0,
         %
     end
 end    
+%
+if isnan_jd(external,0),
+    disp('Warning : NaNs were found in the structure ''external'' : ')
+    isnan_jd(external,1),
+end
 %
 
 

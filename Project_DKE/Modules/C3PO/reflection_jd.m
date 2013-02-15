@@ -2,7 +2,7 @@ function [P_ref,N_ref,E_ref] = reflection_jd(equil,P_end,N_end,E_end)
 %
 % This function calculates the reflection on vessel
 %
-if isfield(equil,'shotnum') && isfield(equil,'shotime'),
+if isfield(equil,'tokamak') && isfield(equil,'shotnum') && isfield(equil,'shotime'),
     tokamak = equil.tokamak;
     shotnum = equil.shotnum;
     shotime = equil.shotime;
@@ -22,6 +22,7 @@ if strcmp(tokamak,'TCV'),
     addpath('/home/gnesin')
     %
     %save('rayend.mat','shotnum','shotime','P_end','K_end','E_end');
+    %
     [P_ref,N_ref,E_ref] = reflect_tcv(shotnum,shotime,P_end,N_end,E_end);
     %
 end

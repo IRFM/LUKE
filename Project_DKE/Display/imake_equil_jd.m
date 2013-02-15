@@ -535,6 +535,7 @@ equil = conc_struct_jd(equil_magnetic,equil_prof);
 %
 equil.signs = signs;
 equil.id = id_equil;
+equil.tokamak = basestr;
 equil.shotnum = shotnum;
 equil.shotime = shotime;
 %

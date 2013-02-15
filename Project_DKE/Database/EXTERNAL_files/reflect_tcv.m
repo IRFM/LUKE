@@ -35,6 +35,7 @@ function [P_ref, K_ref, E_ref] = reflect_tcv(shotnum, shotime , P_end, K_end, E_
 
 
 addpath /home/ffelici/matlab/ECPOL/pol_code_develop/
+addpath /home/ffelici/matlab/ECPOL/pol_code_develop/ECPOL/
 addpath /home/gnesin/
 
 % 
