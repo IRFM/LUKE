@@ -321,10 +321,10 @@ if exist('flag_wave','var'),
             else
                 for ifile = 1:length(filenames),
                     filename = [paths_wave{iw},filenames{ifile}];
-                    load(filename);
+                    data = load(filename);
                     info_dke_yp(2,['Structure ''wave'': ',filename,' successfully loaded']);
                     ii = ii + 1;
-                    waves{ii} = wave;
+                    waves{ii} = data.wave;
                 end
             end
         end
