@@ -395,7 +395,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                     elseif strfind(data_file,'LUKE_RESULTS_'),
                         %
-                        data = load([data_path,data_file],'basestr','id_simul','rho_S','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
+                        data = load([data_path,data_file],'basestr','id_simul','simul','rho_S','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
                             'id_equil','path_equil','ids_wave','paths_wave','id_ohm','path_ohm','id_transpfaste','path_transpfaste','id_ripple','path_ripple',...
                             'luke_input','dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
                             'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
@@ -522,7 +522,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                             transpfaste = data.transpfaste;
                             ripple = data.ripple;
                             %
-                            id_simul = data.id_simul;
+                            if isfield(data,'simul'),
+                                id_simul = data.simul.id;
+                            else
+                                id_simul = data.id_simul;
+                            end
                         end
                         %
                         output.Znorm = data.Znorm;
@@ -1429,11 +1433,13 @@ function irunluke_jd(basestr,signs,opt_gui)
                     luke_input.dkedisplay = dkedisplay;
                     luke_input.equil = equil;
                     luke_input.waves = waves;
-                    luke_input.wavestructs = '';
+                    luke_input.wavestructs = [];
                     luke_input.ohm = ohm;
                     luke_input.transpfaste = transpfaste;
                     luke_input.ripple = ripple;
-                    luke_input.Zf0_interp = '';
+                    luke_input.Zf0_interp = [];
+                    luke_input.XXsinksource = [];
+                    luke_input.opt_save = 0;                    
                     %
                     luke_job = runluke_remote_jd(luke_input,remote);
                     %
