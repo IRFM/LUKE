@@ -35,7 +35,9 @@ path_dkepath = '';%if nothing is specified, the working directory is first used 
 %
 % --------------------------------------------------------------------------------------------
 %
-equil.fluct = fluctstruct_yp(equil,'',naequilp);%Edge plasma fluctuations
+if ~isempty(naequilp),
+    equil.fluct = fluctstruct_yp(equil,'',naequilp);%Edge plasma fluctuations
+end
 %
 if ~isempty(Npar_p),
     if strfind(id_simul,'ALOHA'),
@@ -151,7 +153,9 @@ else
     dkedisplay.display_time_mode = 0;    
 end
 %
-dkeparam.Nfluct = Nfluct;
+if ~isempty(Nfluct) && ~isnan(Nfluct),
+    dkeparam.Nfluct = Nfluct;
+end
 dkeparam.tn = tn;%LUKE internal evolution time
 dkeparam.dtn = dtn;%LUKE internal time step
 dkeparam.finitabs = 0;%the initial distribution is used to first estimate the ray absorption (1) otherwise (0)
