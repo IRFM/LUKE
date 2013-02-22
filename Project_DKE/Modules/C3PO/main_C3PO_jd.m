@@ -82,6 +82,7 @@ elseif isfield(fluct,'xL_perp'),
     else
         disp('WARNING: empty field ''fitparam'' in structure ''fluct'', fluctuation effects discarded.')
     end
+elseif isfield(fluct,'npar0_lh'), 
 else
     disp('WARNING: The ''fluct'' structure is not recognized, fluctuation effects discarded.')
 end
@@ -144,9 +145,13 @@ if ~isfield(rayparam,'kextra'),% !!!! old rayparam, modify calling function
     rayparam.kextra = 0;
 end
 %
-if ~isfield(rayinit,'yn0'),% !!!! old rayparam, modify calling function
-    rayinit.yn0 = NaN*rayinit.ym0;
-end
+%if ~isfield(rayinit,'yn0'),% !!!! old rayparam, modify calling function
+%    rayinit.yn0 = NaN*rayinit.ym0;
+%end
+%
+%if ~isfield(rayinit,'ykz0'),% !!!! old rayparam, modify calling function
+%    rayinit.ykz0 = NaN*rayinit.ym0;
+%end
 %
 if ~isfield(rayinit,'w0'),% waist information
     rayinit.w0 = NaN;
