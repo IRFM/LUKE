@@ -77,15 +77,19 @@ if iscell(byPnonabs),%calculate fluctuation phases and adjust initial power in e
         %
         for iw = 1:nw,
             %
-            wavestructs{ifluct,iw}.equil_fit.fluct_fit = fluct_fit;%Replicate the same fluctuation structure to all wavestructs (core fluctuations)
+            wavestructs{ifluct,iw}.equil_fit.fluct_fit = fluct_fit;%Replicate the same fluctuation structure to all wavestructs
             %
             if isfield(wavestructs{ifluct,iw}.launch,'bPlhtot'),%LH wave
                 %
-                wavestructs{ifluct,iw}.launch.bPlhtot = wavestructs{ifluct,iw}.launch.bPlhtot_in + byPnonabs{ifluct,iw};%Total launched LH power is constant (sensitive to core and edge fluctuations)
+                if isfield(wavestructs{ifluct,iw}.equil.fluct,'npar0_lh'),%for LH wave only
+                    wavestructs{ifluct,iw}.equil.fluct.npar0_lh.flag = 1;  
+                end
+                %
+                wavestructs{ifluct,iw}.launch.bPlhtot = wavestructs{ifluct,iw}.launch.bPlhtot_in + byPnonabs{ifluct,iw};%Total launched LH power is constant
                 %
             elseif isfield(wavestructs{iw}.launch,'yP_L'),%EC wave
                 %
-                wavestructs{ifluct,iw}.launch.yP_L = wavestructs{ifluct,iw}.launch.yP_L_in + byPnonabs{ifluct,iw};%Total launched LH power is constant (sensitive to core and edge fluctuations)
+                wavestructs{ifluct,iw}.launch.yP_L = wavestructs{ifluct,iw}.launch.yP_L_in + byPnonabs{ifluct,iw};%Total launched LH power is constant
                 %
             end          
         end 
