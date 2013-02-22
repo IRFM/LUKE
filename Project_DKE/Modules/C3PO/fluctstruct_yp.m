@@ -182,6 +182,6 @@ end
 if isfield(fluct_in,'npar0_lh'), 
     if isfield(fluct_in.npar0_lh,'fluct'),
         fluct.npar0_lh.dtn = fluct_in.npar0_lh.fluct.dtn;
-        fluct.npar0_lh.hwhm_npar = fluct_in.npar0_lh.fluct.hwhm_npar;
+        fluct.npar0_lh.hwhm_npar0 = fluct_in.npar0_lh.fluct.hwhm_npar0;
     end
 end
