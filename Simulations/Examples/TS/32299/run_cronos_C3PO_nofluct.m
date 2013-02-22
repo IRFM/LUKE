@@ -15,18 +15,18 @@ load ('before_luke@TS_32299_100.0117.mat','equil');%data file from cronos
 %
 opt_dist = 0;% batch run index in dkepath.remote; (0) for local run, (1) local multicore, (2) remote cephee, (3) remote saturne
 opt_save = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
-tn = 10000;%Total normalized integration time. As an imaginary number, dkeparam.tn prescribes the number of fluctuation iterations
+tn = 10000;%Total normalized integration time.
 display_mode = [0,1,1];%option for display [C3PO, LUKE, time evolution]
 p_opt = 2;%option for printing
 %
-dtn = 10000;% LUKE internal time step. As an imaginary number, dkeparam.dtn prescribes the number of internal time steps
+dtn = 10000;% LUKE internal time step.
 % 
-% positive lobe (co-current)
+% LH wave: positive lobe (co-current)
 %
 Npar_p = [];%if empty, use the launch power spectrum calculated by CRONOS (negative value)
 dNpar_p = [];%if empty, use the launch power spectrum calculated by CRONOS (negative value)
 %
-% negative lobe (counter-current)
+% LH wave: negative lobe (counter-current)
 %
 Npar_m = [];%if empty, use the launch power spectrum calculated by CRONOS (positive value)
 dNpar_m = [];%if empty, use the launch power spectrum calculated by CRONOS (positive value)
@@ -50,7 +50,7 @@ end
 %
 if opt_dist == 0,%local calculations
     %
-    [timeid,jobid,dkeparam,dkepath,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_cronos_C3PO_yp(opt_dist,opt_save,id_simul,root_dir,scenario,'',tn,dtn,'',display_mode,Npar_p,Npar_m);
+    [timeid,jobid,dkeparam,dkepath,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_cronos_C3PO_yp(opt_dist,opt_save,id_simul,root_dir,'',tn,dtn,'',display_mode,Npar_p,Npar_m);
     %
     % ---------------------------------------------- Save results ----------------------------------------------
     %

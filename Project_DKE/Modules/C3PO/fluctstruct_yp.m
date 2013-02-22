@@ -1,13 +1,13 @@
-function [fluct] = fluctstruct_yp(equil,id,naequilp)
+function [fluct] = fluctstruct_yp(equil,id,fluct_in)
 %
-% Calculates the plasma fluctuations or modulations structure for C3PO
+% Calculates the fluctuations structure for C3PO
 %
 % INPUT
 %    - equil: axisymmetric magnetic equilibrium structure
 %    - id: fluct id 
-%    - naequilp: non axisymmetric perturbation of the toroidal MHD equilibrium
-%       - core perturbation (dynamic -> ne: density, B: magnetic field), or (static -> magnetic ripple)
-%       - edge perturbation (for LH only)
+%    - fluct_in: 
+%       - naequilp: non axisymmetric perturbation of the toroidal MHD equilibrium (dynamic -> ne: density, B: magnetic field), or (static -> magnetic ripple)
+%       - npar0_lh: perturbation of the launched npar for the LH wave only (simulate possible diffraction of the LH wave in the SOL by edge density fluctuations)
 %
 % OUTPUT:
 %
@@ -20,8 +20,8 @@ if nargin <= 2,
     warning('Not enough input arguments in fluctstruct_yp.m: fluctuation structure is empty.');
     return;
 else
-    if ~isfield(naequilp,'core') && ~isfield(naequilp,'edge'),
-        error('Unrecognized perturbation of the toroidal MHD equilibrium.');
+    if ~isfield(fluct_in,'naequilp') && ~isfield(fluct_in,'npar0_lh'),
+        error('Unrecognized fluctuation types: naequilp or npar0_lh.');
     end
 end
 %
@@ -85,56 +85,56 @@ fluct.Xcm = Xr./sqrt(1.0 + (XP2./XT2).*Xcalpha2)/equilDKE.ap;%kpar = 0 fluctuati
 fluct.Xcm(:,end) = fluct.Xcm(:,1);%for spline-Fourier series expansion in the interpolation procedure
 fluct.Xcn = -XR.*(XP./XT).*Xcalpha./sqrt(1.0 + (XP2./XT2).*Xcalpha2)/equilDKE.ap;%kpar = 0 fluctuation spectrum model
 fluct.Xcn(:,end) = fluct.Xcn(:,1);%for spline-Fourier series expansion in the interpolation procedure
-%
-if isfield(naequilp,'core'), 
+% 
+if isfield(fluct_in,'naequilp'), 
     %
     inefluct_model = 1;
     iBfluct_model = 1;
     %
-    if isfield(naequilp.core,'fluct'), 
-        for i = 1:length(naequilp.core.fluct.type),        
-            if strcmp(naequilp.core.fluct.type{i},'ne'),
-                fluct.ne(inefluct_model).model = naequilp.core.fluct.model(i);%fluctuation model
+    if isfield(fluct_in.naequilp,'fluct'),
+        for i = 1:length(fluct_in.naequilp.fluct.type),        
+            if strcmp(fluct_in.naequilp.fluct.type{i},'ne'),
+                fluct.ne(inefluct_model).model = fluct_in.naequilp.fluct.model(i);%fluctuation model
                 %
-                fluct.ne(inefluct_model).sigmar_max = naequilp.core.fluct.sigmar_max(i);%Maximum value of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
-                fluct.ne(inefluct_model).sigmar_hwhm = naequilp.core.fluct.sigmar_hwhm(i);%Radial half width at half maximum of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
-                fluct.ne(inefluct_model).sigmar_rho = naequilp.core.fluct.sigmar_rho(i);%Radial location where the relative fluctuations variance peaks at the poloidal angle theta = 0 [1,nfluct_types]
-                fluct.ne(inefluct_model).polmode = naequilp.core.fluct.polmode(i);%HFS/LFS relative fluctuations variance ratio. No poloidal dependency corresponds to 1 [1,nfluct_types]
+                fluct.ne(inefluct_model).sigmar_max = fluct_in.naequilp.fluct.sigmar_max(i);%Maximum value of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
+                fluct.ne(inefluct_model).sigmar_hwhm = fluct_in.naequilp.fluct.sigmar_hwhm(i);%Radial half width at half maximum of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
+                fluct.ne(inefluct_model).sigmar_rho = fluct_in.naequilp.fluct.sigmar_rho(i);%Radial location where the relative fluctuations variance peaks at the poloidal angle theta = 0 [1,nfluct_types]
+                fluct.ne(inefluct_model).polmode = fluct_in.naequilp.fluct.polmode(i);%HFS/LFS relative fluctuations variance ratio. No poloidal dependency corresponds to 1 [1,nfluct_types]
                 %
-                fluct.ne(inefluct_model).epsi_rho = naequilp.core.fluct.epsi_rho(i);%
-                fluct.ne(inefluct_model).epsi_theta = naequilp.core.fluct.epsi_theta(i);%
-                fluct.ne(inefluct_model).epsi_phi = naequilp.core.fluct.epsi_phi(i);%
+                fluct.ne(inefluct_model).epsi_rho = fluct_in.naequilp.fluct.epsi_rho(i);%
+                fluct.ne(inefluct_model).epsi_theta = fluct_in.naequilp.fluct.epsi_theta(i);%
+                fluct.ne(inefluct_model).epsi_phi = fluct_in.naequilp.fluct.epsi_phi(i);%
                 %
-                fluct.ne(inefluct_model).lmin = naequilp.core.fluct.lmin(i);%
-                fluct.ne(inefluct_model).mmin = naequilp.core.fluct.mmin(i);%
-                fluct.ne(inefluct_model).nmin = naequilp.core.fluct.nmin(i);%
+                fluct.ne(inefluct_model).lmin = fluct_in.naequilp.fluct.lmin(i);%
+                fluct.ne(inefluct_model).mmin = fluct_in.naequilp.fluct.mmin(i);%
+                fluct.ne(inefluct_model).nmin = fluct_in.naequilp.fluct.nmin(i);%
                 %
-                fluct.ne(inefluct_model).lmax = naequilp.core.fluct.lmax(i);%
-                fluct.ne(inefluct_model).mmax = naequilp.core.fluct.mmax(i);%
-                fluct.ne(inefluct_model).nmax = naequilp.core.fluct.nmax(i);%
+                fluct.ne(inefluct_model).lmax = fluct_in.naequilp.fluct.lmax(i);%
+                fluct.ne(inefluct_model).mmax = fluct_in.naequilp.fluct.mmax(i);%
+                fluct.ne(inefluct_model).nmax = fluct_in.naequilp.fluct.nmax(i);%
                 %
                 inefluct_model = inefluct_model + 1;
                 %       
-            elseif strcmp(naequilp.core.fluct.type{i},'B'),
+            elseif strcmp(fluct_in.naequilp.fluct.type{i},'B'),
                 %
-                fluct.B(iBfluct_model).model = naequilp.core.fluct.model(i);%fluctuation model
+                fluct.B(iBfluct_model).model = fluct_in.naequilp.fluct.model(i);%fluctuation model
                 %
-                fluct.B(iBfluct_model).sigmar_max = naequilp.core.fluct.sigmar_max(i);%Maximum value of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
-                fluct.B(iBfluct_model).sigmar_hwhm = naequilp.core.fluct.sigmar_hwhm(i);%Radial half width at half maximum of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
-                fluct.B(iBfluct_model).sigmar_rho = naequilp.core.fluct.sigmar_rho(i);%Radial location where the relative fluctuations variance peaks at the poloidal angle theta = 0 [1,nfluct_types]
-                fluct.B(iBfluct_model).polmode = naequilp.core.fluct.polmode(i);%HFS/LFS relative fluctuations variance ratio. No poloidal dependency corresponds to 1 [1,nfluct_types]
+                fluct.B(iBfluct_model).sigmar_max = fluct_in.naequilp.fluct.sigmar_max(i);%Maximum value of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
+                fluct.B(iBfluct_model).sigmar_hwhm = fluct_in.naequilp.fluct.sigmar_hwhm(i);%Radial half width at half maximum of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
+                fluct.B(iBfluct_model).sigmar_rho = fluct_in.naequilp.fluct.sigmar_rho(i);%Radial location where the relative fluctuations variance peaks at the poloidal angle theta = 0 [1,nfluct_types]
+                fluct.B(iBfluct_model).polmode = fluct_in.naequilp.fluct.polmode(i);%HFS/LFS relative fluctuations variance ratio. No poloidal dependency corresponds to 1 [1,nfluct_types]
                 %
-                fluct.B(iBfluct_model).epsi_rho = naequilp.core.fluct.epsi_rho(i);%
-                fluct.B(iBfluct_model).epsi_theta = naequilp.core.fluct.epsi_theta(i);%
-                fluct.B(iBfluct_model).epsi_phi = naequilp.core.fluct.epsi_phi(i);%
+                fluct.B(iBfluct_model).epsi_rho = fluct_in.naequilp.fluct.epsi_rho(i);%
+                fluct.B(iBfluct_model).epsi_theta = fluct_in.naequilp.fluct.epsi_theta(i);%
+                fluct.B(iBfluct_model).epsi_phi = fluct_in.naequilp.fluct.epsi_phi(i);%
                 %
-                fluct.B(iBfluct_model).lmin = naequilp.core.fluct.lmin(i);%
-                fluct.B(iBfluct_model).mmin= naequilp.core.fluct.mmin(i);%
-                fluct.B(iBfluct_model).nmin = naequilp.core.fluct.nmin(i);%
+                fluct.B(iBfluct_model).lmin = fluct_in.naequilp.fluct.lmin(i);%
+                fluct.B(iBfluct_model).mmin= fluct_in.naequilp.fluct.mmin(i);%
+                fluct.B(iBfluct_model).nmin = fluct_in.naequilp.fluct.nmin(i);%
                 %
-                fluct.B(iBfluct_model).lmax = naequilp.core.fluct.lmax(i);%
-                fluct.B(iBfluct_model).mmax= naequilp.core.fluct.mmax(i);%
-                fluct.B(iBfluct_model).nmax = naequilp.core.fluct.nmax(i);%
+                fluct.B(iBfluct_model).lmax = fluct_in.naequilp.fluct.lmax(i);%
+                fluct.B(iBfluct_model).mmax= fluct_in.naequilp.fluct.mmax(i);%
+                fluct.B(iBfluct_model).nmax = fluct_in.naequilp.fluct.nmax(i);%
                 %
                 iBfluct_model = iBfluct_model + 1;
             end
@@ -143,11 +143,11 @@ if isfield(naequilp,'core'),
     %
     % Magnetic ripple model
     %
-    if isfield(naequilp.core,'ripple'), 
+    if isfield(fluct_in.naequilp,'ripple'), 
         %
         % B field terms
         %
-        [aBx,aBy,aBz] = bripfield_yp(naequilp.core.ripple,equilDKE,3);%mode 3 for circular shaped windings cross-section
+        [aBx,aBy,aBz] = bripfield_yp(fluct_in.naequilp.ripple,equilDKE,3);%mode 3 for circular shaped windings cross-section
         B = sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2);%
         %
         fluct.B(iBfluct_model).model = 0;%Magnetic ripple model
@@ -163,11 +163,11 @@ if isfield(naequilp,'core'),
         %
         fluct.B(iBfluct_model).lmin = [];
         fluct.B(iBfluct_model).mmin= [];
-        fluct.B(iBfluct_model).nmin = naequilp.core.ripple.N;%Number of toroidal magnetic field coils (one harmonic)
+        fluct.B(iBfluct_model).nmin = fluct_in.naequilp.ripple.N;%Number of toroidal magnetic field coils (one harmonic)
         %
         fluct.B(iBfluct_model).lmax = [];
         fluct.B(iBfluct_model).mmax= [];
-        fluct.B(iBfluct_model).nmax = naequilp.core.ripple.N;%Number of toroidal magnetic field coils (one harmonic)
+        fluct.B(iBfluct_model).nmax = fluct_in.naequilp.ripple.N;%Number of toroidal magnetic field coils (one harmonic)
         %
         fluct.B(iBfluct_model).Xfx = aBx./B;
         fluct.B(iBfluct_model).Xfy = aBy./B;
@@ -177,9 +177,11 @@ if isfield(naequilp,'core'),
     end
 end
 %
-if isfield(naequilp,'edge'),
-    if isfield(naequilp.edge,'fluct'),
-        fluct.edge.dtn = naequilp.edge.fluct.dtn;
-        fluct.edge.hwhm_npar = naequilp.edge.fluct.hwhm_npar;
+% For the LH wave only
+%
+if isfield(fluct_in,'npar0_lh'), 
+    if isfield(fluct_in.npar0_lh,'fluct'),
+        fluct.npar0_lh.dtn = fluct_in.npar0_lh.fluct.dtn;
+        fluct.npar0_lh.hwhm_npar = fluct_in.npar0_lh.fluct.hwhm_npar;
     end
 end

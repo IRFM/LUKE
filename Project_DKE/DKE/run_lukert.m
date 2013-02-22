@@ -149,9 +149,9 @@ for iw = 1:length(wavestructs),
     end
 end    
 %
-if flag_LH == 0 && isfield(equil.fluct,'edge'),
-    disp('Edge fluctuation model for LH waves only; dismissed.')
-    equil.fluct = rmfield(equil.fluct,'edge');
+if flag_LH == 0 && isfield(equil.fluct,'npar0_lh'),
+    disp('Perturbation of the launched npar for the LH wave only; dismissed.')
+    equil.fluct = rmfield(equil.fluct,'npar0_lh');
 end
 %
 mksa = buildlukestruct_yp('mksa',psin_S,rho_S,equil,dkeparam_in,dkedisplay_in);
@@ -171,7 +171,7 @@ else% no fluctuation iterations
     tn_in = dkeparam_in.tn;
 end
 %
-dkeparam_in = rmfield(dkeparam_in,'tn');%tn is specified in ieration loop
+dkeparam_in = rmfield(dkeparam_in,'tn');%tn is specified in iteration loop
 %
 if opt_save_in >= 0;
     %

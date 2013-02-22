@@ -9,9 +9,19 @@ dbstop if error
 % Script for TORE-SUPRA LH discharge #32299 only
 %
 root_dir = '';%empty or pwd if local
+%
+% Non axisymmetric perturbation of the toroidal MHD equilibrium (ne fluctuations resuklting from electron drift wave at the plasma edge)
+%
 scenario = 'naequilp_ne';%Electron drift wave model for the density fluctuations at the plasma edge
 %
 load ('before_luke@TS_32299_100.0117.mat','equil');%data file from cronos
+%
+% WARNING: time definitions in LUKE with or without fluctuations
+%
+%if imag(tn) > 0 : dkeparam.tn = tn/Nfluct -> as an imaginary number, dkeparam.tn prescribes the number of fluctuation iterations
+%if imag(tn) == 0 : dkeparam.tn = tn -> as a real number, dkeparam.tn specifies the final time explicitly 
+%if imag(dtn) > 0: dkeparam.dtn = dtn*Nfluct -> as an imaginary number, dkeparam.dtn prescribes the number of internal time steps
+%if imag(dtn) == 0: dkeparam.dtn = dtn -> as a real number, dkeparam.dtn prescribes the number of internal time steps
 %
 opt_dist = 0;% batch run index in dkepath.remote; (0) for local run, (1) local multicore, (2) remote cephee, (3) remote saturne
 opt_save = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
@@ -61,7 +71,7 @@ for sigmar_max = sigmar_max_in,
         %
         id_simul = [scenario,'_',shot_ref];
         %
-        % Non axisymmetric perturbation of the toroidal MHD for any rf waves
+        % Non axisymmetric perturbation of the toroidal MHD equilibrium for any rf waves
         %
         fluctuations.naequilp.fluct.type = {'ne'};%Type of fluctuations or modulations ('ne': electron density, 'B': magnetic field) {1,nfluct_types}
         fluctuations.naequilp.fluct.model = [5];%Statistical ne fluctuation model (>= 1) : [1,nfluct_types]
@@ -91,7 +101,7 @@ for sigmar_max = sigmar_max_in,
         %
         if opt_dist == 0,%local calculations
             %
-            [timeid,jobid,dkeparam,dkepath,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_cronos_C3PO_yp(opt_dist,opt_save,id_simul,root_dir,scenario,Nfluct,tn,dtn,fluctuations,display_mode,Npar_p,Npar_m);
+            [timeid,jobid,dkeparam,dkepath,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_cronos_C3PO_yp(opt_dist,opt_save,id_simul,root_dir,Nfluct,tn,dtn,fluctuations,display_mode,Npar_p,Npar_m);
             %
             % ---------------------------------------------- Save results ----------------------------------------------
             %
