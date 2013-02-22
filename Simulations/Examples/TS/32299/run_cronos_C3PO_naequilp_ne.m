@@ -9,7 +9,7 @@ dbstop if error
 % Script for TORE-SUPRA LH discharge #32299 only
 %
 root_dir = '';%empty or pwd if local
-scenario = 'EDW_core_fluct';
+scenario = 'naequilp_ne';%Electron drift wave model for the density fluctuations at the plasma edge
 %
 load ('before_luke@TS_32299_100.0117.mat','equil');%data file from cronos
 %
