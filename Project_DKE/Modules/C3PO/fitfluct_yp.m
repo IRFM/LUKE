@@ -47,14 +47,14 @@ field_name = fieldnames(fluct_in);
 %
 test_field_name_ne = strfind(field_name,'ne');%test existence of density fluctuation
 test_field_name_B = strfind(field_name,'B');%test existence of magnetic field fluctuation
-flag_core_fluct = 0;
+flag_naequilp_fluct = 0;
 for i = 1:length(field_name),
-    if ~isempty(test_field_name_ne{i}) | ~isempty(test_field_name_B{i}), flag_core_fluct = flag_core_fluct + 1;end
+    if ~isempty(test_field_name_ne{i}) | ~isempty(test_field_name_B{i}), flag_naequilp_fluct = flag_naequilp_fluct + 1;end
 end
 %
 for i = 1:length(field_name),
     if isfield(fluct_in,field_name(i)),
-        if isstruct(fluct_in.(char(field_name(i)))) && isempty(strfind(char(field_name(i)),'fitparam')) && isempty(strfind(char(field_name(i)),'edge')),
+        if isstruct(fluct_in.(char(field_name(i)))) && isempty(strfind(char(field_name(i)),'fitparam')) && isempty(strfind(char(field_name(i)),'npar0_lh')),
             for istruct = 1:length(fluct_in.(char(field_name(i)))),
                 subfield_name = fieldnames(fluct_in.(char(field_name(i))));
                 % 
@@ -80,7 +80,7 @@ for i = 1:length(field_name),
             end
         else
             if strcmp(char(field_name{i}(1)),'x') || strcmp(char(field_name{i}(1)),'X'), 
-                if flag_core_fluct,%only is a fluctuation or a magnetic ripple model exists
+                if flag_naequilp_fluct,%only is a fluctuation or a magnetic ripple model exists
                     if size(fluct_in.(char(field_name(i))),1) == lrho && size(fluct_in.(char(field_name(i))),2) == mtheta && size(fluct_in.(char(field_name(i))),3) == nphi,%(rho,theta,phi) vectorisation 
                        %Not yet implemented
                     elseif size(fluct_in.(char(field_name(i))),1) == lrho && size(fluct_in.(char(field_name(i))),2) == mtheta && size(fluct_in.(char(field_name(i))),3) == 1,%(rho,theta) vectorisation 
@@ -91,10 +91,10 @@ for i = 1:length(field_name),
                 end
             else
                 if ~strcmp(char(field_name(i)),'rho') && ~strcmp(char(field_name(i)),'theta') && ~strcmp(char(field_name(i)),'phi')
-                    if strcmp(char(field_name(i)),'edge') || strcmp(char(field_name(i)),'id'),
+                    if strcmp(char(field_name(i)),'npar0_lh') || strcmp(char(field_name(i)),'id'),
                         fluct_out.(char(field_name(i))) = fluct_in.(char(field_name(i)));
                     else
-                    	if flag_core_fluct,
+                    	if flag_naequilp_fluct,
                         	fluct_out.(char(field_name(i))) = fluct_in.(char(field_name(i)));
                             if strcmp(char(field_name(i)),'equil_id'),fluct_out.method = method;end
                         end 

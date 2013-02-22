@@ -7,17 +7,17 @@ epsi_rho = [];
 epsi_theta = [];
 epsi_phi = [];
 %
-test_field_name_ne = strfind(field_name,'ne');%test existence of density fluctuation
+test_field_name_ne = strfind(field_name,'ne');%test existence of electron density fluctuation
 test_field_name_B = strfind(field_name,'B');%test existence of magnetic field fluctuation
 %
-flag_core_fluct = 0;
-flag_edge_fluct = 0;
+flag_naequilp = 0;
+flag_npar0_lh = 0;
 %
 for i = 1:length(field_name),
-    if ~isempty(test_field_name_ne{i}) || ~isempty(test_field_name_B{i}), flag_core_fluct = 1;end
+    if ~isempty(test_field_name_ne{i}) || ~isempty(test_field_name_B{i}), flag_naequilp = 1;end
 end
 %
-if flag_core_fluct,
+if flag_naequilp,
     for i = 1:length(field_name),
         if isstruct(fluct.(char(field_name(i)))) && (strcmp(char(field_name(i)),'B') || strcmp(char(field_name(i)),'ne'))
             for ifield = 1:length(fluct.(char(field_name(i)))),
@@ -56,44 +56,26 @@ if flag_core_fluct,
         dtn_phi = Inf;
     end
     %
-    dtn_fluct_core = min([dtn_rho,dtn_theta,dtn_phi]);
+    dtn_fluct_naequilp = min([dtn_rho,dtn_theta,dtn_phi]);
     %
-%     Nfluct_core = max(round(dkeparam.dtn/dtn_fluct_core),1);%Number of rays when dtn_fluct < dtn
-%     itn_core = max(round(dtn_fluct_core/dkeparam.dtn),1);
-%     %
-%     disp(['Nfluct_core = ',int2str(Nfluct_core)]);
 else
-%     disp('No plasma fluctuations');
-%     Nfluct_core = 1; 
-%     itn_core = 1;
-    dtn_fluct_core = Inf;
+    dtn_fluct_naequilp = Inf;
 end
 %
-if isfield(fluct,'edge')% & flag_LH,
+if isfield(fluct,'npar0_lh'),
     %
-    flag_edge_fluct = 1;
+    flag_npar0_lh = 1;
     %
-    if isfield(fluct.edge,'dtn'),
-        %
-%         Nfluct_edge = max(round(dkeparam.dtn/fluct.edge.dtn),1);%Number of rays when dtn_fluct < dtn
-        dtn_fluct_edge = fluct.edge.dtn;
-%         itn_edge = max(round(fluct.edge.dtn/dkeparam.dtn),1);
-%         disp(['Nfluct_edge = ',int2str(Nfluct_edge)]);
+    if isfield(fluct.npar0_lh,'dtn'),
+        dtn_fluct_npar0_lh = fluct.npar0_lh.dtn;
         %
     else
-        flag_edge_fluct = 0;
-%         disp('No fluctuations of the launched LH power spectrum');
-%         Nfluct_edge = 1;
-        dtn_fluct_edge = Inf;
-%         itn_edge = 1;
+        flag_npar0_lh = 0;
+        dtn_fluct_npar0_lh = Inf;
     end
 else
-    flag_edge_fluct = 0;
-%     disp('No fluctuations of the launched LH power spectrum');
-%     Nfluct_edge = 1;
-%     itn_edge = 1;
-    dtn_fluct_edge = Inf;
+    flag_npar0_lh = 0;
+    dtn_fluct_npar0_lh = Inf;
 end
 %
-%Nfluct = max(Nfluct_core,Nfluct_edge);
-dtn_fluct = min(dtn_fluct_core,dtn_fluct_edge);
+dtn_fluct = min(dtn_fluct_naequilp,dtn_fluct_npar0_lh);

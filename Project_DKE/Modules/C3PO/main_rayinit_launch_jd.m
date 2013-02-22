@@ -342,17 +342,17 @@ elseif strcmp(launch.type,'LH'),
                 % Statistical initial condition (edge fluctuation)
                 %
                 if isfield(equil,'fluct'),
-                    if isfield(equil.fluct,'edge'),
-                        if isfield(equil.fluct.edge,'hwhm_npar') && isfield(equil.fluct.edge,'dtn'),
-                            if ~isempty(equil.fluct.edge.hwhm_npar) && ~isinf(equil.fluct.edge.dtn),
-                                if isfield(equil.fluct.edge,'flag'),
-                                    if equil.fluct.edge.flag,%random npar0 with Gaussian distribution for each lobe
-                                        rayinit.yNpar0(iy) = randg_yp(1,bNpar0(ib),equil.fluct.edge.hwhm_npar);%New random Npar0
+                    if isfield(equil.fluct,'npar0_lh'),
+                        if isfield(equil.fluct.npar0_lh,'hwhm_npar0') && isfield(equil.fluct.npar0_lh,'dtn'),
+                            if ~isempty(equil.fluct.npar0_lh.hwhm_npar0) && ~isinf(equil.fluct.npar0_lh.dtn),
+                                if isfield(equil.fluct.npar0_lh,'flag'),
+                                    if equil.fluct.npar0_lh.flag,%random npar0 with Gaussian distribution for each lobe
+                                        rayinit.yNpar0(iy) = randg_yp(1,bNpar0(ib),equil.fluct.npar0_lh.hwhm_npar0);%New random npar0
                                     else
-                                        rayinit.yNpar0(iy) = equil.fluct.edge.Npar0(iy);%reload previous Npar0
+                                        rayinit.yNpar0(iy) = equil.fluct.npar0_lh.Npar0(iy);%reload previous npar0
                                     end
                                     %
-                                    disp(['Reference npar0: ',num2str(bNpar0(ib)),', new npar0: ',num2str(rayinit.yNpar0(iy)),' with Gaussian distribtion HWHM=',num2str(equil.fluct.edge.hwhm_npar)]);
+                                    disp(['Reference npar0: ',num2str(bNpar0(ib)),', new npar0: ',num2str(rayinit.yNpar0(iy)),' with Gaussian distribution HWHM=',num2str(equil.fluct.npar0_lh.hwhm_npar0)]);
                                     %
                                 end
                             end
