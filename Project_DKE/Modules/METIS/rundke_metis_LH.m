@@ -146,8 +146,8 @@ for ic = 1:nconf,
             %
             % process toroidal aloha spectrum for LUKE
             %
-            if isfield(config,'aloha_dir') && config.aloha_dir == 1,
-                Pin = 1+1i;
+            if isfield(config,'aloha_dir'),
+                Pin = 1 + config.aloha_dir*1i;
             else
                 Pin = 1;
             end
