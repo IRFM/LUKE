@@ -83,6 +83,7 @@ elseif isfield(fluct,'xL_perp'),
         disp('WARNING: empty field ''fitparam'' in structure ''fluct'', fluctuation effects discarded.')
     end
 elseif isfield(fluct,'npar0_lh'), 
+    %to validate that the field exists in the 'fluct' structure
 else
     disp('WARNING: The ''fluct'' structure is not recognized, fluctuation effects discarded.')
 end
