@@ -52,9 +52,9 @@ end
 %
 [dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
-if matlabversion < 710,
+if str2double(matlabversion) < 710,
 	rand('seed',sum(100*clock));%reset rand with clock (never same state)
-elseif matlabversion < 712,
+elseif str2double(matlabversion) < 712,
 	RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
 else
 	RandStream.setGlobalStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
