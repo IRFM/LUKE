@@ -343,17 +343,46 @@ elseif strcmp(launch.type,'LH'),
                 %
                 if isfield(equil,'fluct'),
                     if isfield(equil.fluct,'npar0_lh'),
-                        if isfield(equil.fluct.npar0_lh,'hwhm_npar0') && isfield(equil.fluct.npar0_lh,'dtn'),
-                            if ~isempty(equil.fluct.npar0_lh.hwhm_npar0) && ~isinf(equil.fluct.npar0_lh.dtn),
-                                if isfield(equil.fluct.npar0_lh,'flag'),
-                                    if equil.fluct.npar0_lh.flag,%random npar0 with Gaussian distribution for each lobe
-                                        rayinit.yNpar0(iy) = randg_yp(1,bNpar0(ib),equil.fluct.npar0_lh.hwhm_npar0);%New random npar0
-                                    else
-                                        rayinit.yNpar0(iy) = equil.fluct.npar0_lh.Npar0(iy);%reload previous npar0
+                        if isfield(equil.fluct.npar0_lh,'dtn') && (~isinf(equil.fluct.npar0_lh.dtn) && ~isnan(equil.fluct.npar0_lh.dtn) && ~isempty(equil.fluct.npar0_lh.dtn)),
+                            if isfield(equil.fluct.npar0_lh,'fwhm_npar0'),%random npar0 with Gaussian distribution for each lobe
+                                if (~isempty(equil.fluct.npar0_lh.fwhm_npar0) && ~isnan(equil.fluct.npar0_lh.fwhm_npar0)),
+                                    if isfield(equil.fluct.npar0_lh,'flag'),
+                                        if equil.fluct.npar0_lh.flag,%random npar0 with Gaussian distribution for each lobe
+                                            rayinit.yNpar0(iy) = randg_yp(1,bNpar0(ib),equil.fluct.npar0_lh.fwhm_npar0);%New random npar0 around npar_antenna
+                                        else
+                                            rayinit.yNpar0(iy) = equil.fluct.npar0_lh.Npar0(iy);%reload previous npar0
+                                        end
+                                        %
+                                        disp(['Gaussian distribution -> npar_antenna: ',num2str(bNpar0(ib)),', new npar0: ',num2str(rayinit.yNpar0(iy)),' with Gaussian distribution FWHM = ',num2str(equil.fluct.npar0_lh.fwhm_npar0)]);
+                                        %
                                     end
-                                    %
-                                    disp(['Reference npar0: ',num2str(bNpar0(ib)),', new npar0: ',num2str(rayinit.yNpar0(iy)),' with Gaussian distribution HWHM=',num2str(equil.fluct.npar0_lh.hwhm_npar0)]);
-                                    %
+                                end
+                            end
+                            %
+                            if isfield(equil.fluct.npar0_lh,'h_npar0'),%random npar0 with linear distribution for each lobe
+                                if (~isempty(equil.fluct.npar0_lh.h_npar0) && ~isnan(equil.fluct.npar0_lh.h_npar0)),
+                                    if isfield(equil.fluct.npar0_lh,'flag'),
+                                        if equil.fluct.npar0_lh.flag,%random npar0 with linear distribution for each lobe
+                                            if isfield(equil.fluct.npar0_lh,'nparmax_npar0'),
+                                                if (~isempty(equil.fluct.npar0_lh.nparmax_npar0) && ~isnan(equil.fluct.npar0_lh.nparmax_npar0)),
+                                                    nparmax = abs(equil.fluct.npar0_lh.nparmax_npar0);
+                                                else
+                                                    nparmax = 6.5/sqrt(max(equil.pTe)); %Linear Landau absorption (central electron temperature)
+                                                end
+                                            end
+                                            %
+                                            if sign(bNpar0(ib)) > 0 && bNpar0(ib) < nparmax,
+                                                rayinit.yNpar0(iy) = randlin_yp(1,equil.fluct.npar0_lh.h_npar0,[bNpar0(ib),nparmax]);%New random npar0
+                                            elseif sign(bNpar0(ib)) < 0 && abs(bNpar0(ib)) < nparmax,
+                                                 rayinit.yNpar0(iy) = randlin_yp(1,equil.fluct.npar0_lh.h_npar0,[-nparmax,bNpar0(ib)]);%New random npar0
+                                            end  
+                                        else
+                                            rayinit.yNpar0(iy) = equil.fluct.npar0_lh.Npar0(iy);%reload previous npar0
+                                        end
+                                        %
+                                        disp(['Linear distribution -> npar_antenna: ',num2str(bNpar0(ib)),', new npar0: ',num2str(rayinit.yNpar0(iy)),' with linear distribution h = ',num2str(equil.fluct.npar0_lh.h_npar0),', npar_max = ',num2str(nparmax)]);
+                                        %
+                                    end
                                 end
                             end
                         end
