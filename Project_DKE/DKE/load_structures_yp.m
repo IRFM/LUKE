@@ -150,7 +150,7 @@ if exist('flag_path','var'),%Paths
         nhosts = length(hostnames);
         hostname = '';
         %
-        [s,lhostname] = system('hostname');
+        [s,lhostname] = system('hostname -f');
         if s ~= 0,
             lhostname = getenv('hostname');%For remote computing (xgrid)
         end
