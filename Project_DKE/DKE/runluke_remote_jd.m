@@ -16,6 +16,11 @@ else
     luke_job.memory = 7000;%mb default value without transport
 end
 %
+if isfield(luke_input.dkeparam,'luke_ppn'),
+    luke_job.nodes = 1;
+    luke_job.ppn = luke_input.dkeparam.luke_ppn;% requested memory specified in dkeparam
+end
+%
 if isfield(remote,'memory') && isnan(remote.memory),% memory spec not compatible with remote computer
     luke_job.memory = [];
 elseif isfield(remote,'memory') && ~isempty(remote.memory) && remote.memory < luke_job.memory,% max memory on remote computer
