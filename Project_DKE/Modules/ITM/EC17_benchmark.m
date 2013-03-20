@@ -31,6 +31,7 @@ time_interp = 1;%nearest point
 remnum = 2;%See the path of the user to identify the remote number to a specific machine/scheduler. Empty is local calculations
 remtimout = 60;%Remote calculations time out (minutes)
 debug_mode = 0;%set to 1 in case of problem
+invproc = -2; %matrix inversion method (-2: MUMPS)
 %
 % Save euitm structures in mat-files
 %
@@ -99,11 +100,7 @@ elseif numrun_out == 502,%ray tracing
     end
 end
 %
-if isempty(remnum) & ~strcmp(mexext,'mexmaci64'),
-	dkeparam.invproc = 1;%MUMPS is not working on the ITM gateway
-	info_dke_yp(6,['The use of dmumpsmex is temporarily disabled on the ITM gateway.'])
-end
-%
+dkeparam.invproc = invproc;%matrix inversion method
 dkeparam.npresmin = 0;%for the quasilinear calculations
 %
 run_id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_CPO_',int2str(numrun_out)];
@@ -224,7 +221,7 @@ end
 dkepath.remnum = remnum;
 dkepath.remtimout = remtimout;
 %
-for it = 1:length(timeslice),%local calculations
+parfor it = 1:length(timeslice),%local calculations
 	[luke_out(it).Znorm,luke_out(it).Zcurr,luke_out(it).ZP0,luke_out(it).dke_out,luke_out(it).radialDKE,luke_out(it).equilDKE,luke_out(it).momentumDKE,luke_out(it).gridDKE,luke_out(it).Zmomcoef,luke_out(it).Zbouncecoef,luke_out(it).Zmripple,luke_out(it).mksa,luke_out(it).XXsinksource] = run_lukert(luke_in(it).id_simul,luke_in(it).wavestructs,luke_in(it).waves,[],luke_in(it).dkeparam.rho_S,dkepath,luke_in(it).equil,luke_in(it).dkeparam,luke_in(it).dkedisplay,luke_in(it).ohm,luke_in(it).transpfaste,luke_in(it).ripple,[],[]);
 end
 %
