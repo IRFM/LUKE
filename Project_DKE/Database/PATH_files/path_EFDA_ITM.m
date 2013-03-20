@@ -86,38 +86,8 @@ efdaitm.yvesp(1).compiler_opt.copts = '';
 %
 % macproyves (condor)
 %
-efdaitm.yvesp(1).remote(1).host = 'tolbachik.hd.free.fr';
-efdaitm.yvesp(1).remote(1).cmd = 'condor_submit';
-efdaitm.yvesp(1).remote(1).get_jobid = {'** Proc ',':'};
-efdaitm.yvesp(1).remote(1).set_jobid = {'condor_q ',''};
-%
-efdaitm.yvesp(1).remote(1).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
-efdaitm.yvesp(1).remote(1).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
-efdaitm.yvesp(1).remote(1).remotedatapath = '/Users/yvespeysson/condor/';
-efdaitm.yvesp(1).remote(1).luke_root = ['/Users/yvespeysson/Projets/',luke_ref,'/'];
-%
-efdaitm.yvesp(1).remote(1).mat800.root = '/Applications/MATLAB_R2012b.app/bin/';
-efdaitm.yvesp(1).remote(1).mat800.prefdir = '/Users/yvespeysson/.matlab/R2012b';
-efdaitm.yvesp(1).remote(1).matdef = efdaitm.yvesp(1).remote(1).mat800;%default matlab on remote machine
-%
-efdaitm.yvesp(1).remote(1).yvesp = 'yvespeysson';
-%
-% macproyves (xgrid)
-%
-efdaitm.yvesp(1).remote(2).host = 'tolbachik.hd.free.fr';
-efdaitm.yvesp(1).remote(2).cmd = {'xgrid -h ',' -p ',' -job batch '};%
-efdaitm.yvesp(1).remote(2).get_jobid = {'jobIdentifier = ',';'};%
-efdaitm.yvesp(1).remote(2).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
-efdaitm.yvesp(1).remote(2).remotedatapath = '/Users/yvespeysson/xgrid/';
-efdaitm.yvesp(1).remote(2).luke_root = ['/Users/yvespeysson/Projets/',luke_ref,'/'];
-%
-efdaitm.yvesp(1).remote(2).mat800.root = '/Applications/MATLAB_R2012b.app/bin/';
-efdaitm.yvesp(1).remote(2).mat800.prefdir = '/Users/yvespeysson/.matlab/R2012b';
-efdaitm.yvesp(1).remote(2).matdef = efdaitm.yvesp(1).remote(2).mat800;%default matlab on remote machine
-%
-efdaitm.yvesp(1).remote(2).password = {'ghm93'};
-efdaitm.yvesp(1).remote(2).yvesp = 'yvespeysson';
-%
+efdaitm.yvesp(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yves');
+efdaitm.yvesp(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves');
 
 
 
