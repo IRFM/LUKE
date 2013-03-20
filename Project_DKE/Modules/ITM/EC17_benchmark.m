@@ -28,12 +28,13 @@ time_interp = 1;%nearest point
 %
 % Remote computing options
 %
-remotename = '';%''
-debug_mode = 1;%set to 1 in case of problem
+remnum = 2;%See the path of the user to identify the remote number to a specific machine/scheduler. Empty is local calculations
+remtimout = 60;%Remote calculations time out (minutes)
+debug_mode = 0;%set to 1 in case of problem
 %
 % Save euitm structures in mat-files
 %
-save_mode = 0;% 0 -> no save, > 0 -> save
+save_mode = 0;% 0 -> no save, > 1 -> save
 %
 % LUKE post-processing options
 %
@@ -98,7 +99,7 @@ elseif numrun_out == 502,%ray tracing
     end
 end
 %
-if isempty(remotename) & ~strcmp(mexext,'mexmaci64'),
+if isempty(remnum) & ~strcmp(mexext,'mexmaci64'),
 	dkeparam.invproc = 1;%MUMPS is not working on the ITM gateway
 	info_dke_yp(6,['The use of dmumpsmex is temporarily disabled on the ITM gateway.'])
 end
@@ -220,41 +221,11 @@ if debug_mode,
 	info_dke_yp(2,['Debug mode: LUKE input data saved in ',filename]);
 end
 %
-if isempty(remotename),
-	for it = 1:length(timeslice),%local calculations
-		[luke_out(it).Znorm,luke_out(it).Zcurr,luke_out(it).ZP0,luke_out(it).dke_out,luke_out(it).radialDKE,luke_out(it).equilDKE,luke_out(it).momentumDKE,luke_out(it).gridDKE,luke_out(it).Zmomcoef,luke_out(it).Zbouncecoef,luke_out(it).Zmripple,luke_out(it).mksa,luke_out(it).XXsinksource] = run_lukert(luke_in(it).id_simul,luke_in(it).wavestructs,luke_in(it).waves,[],luke_in(it).dkeparam.rho_S,dkepath,luke_in(it).equil,luke_in(it).dkeparam,luke_in(it).dkedisplay,luke_in(it).ohm,luke_in(it).transpfaste,luke_in(it).ripple,[],[]);
-	end
-else
-    [flag,remote] = check_remote_yp(dkepath,remotename);
-	%
-	if ~flag,%local calculations
-		[luke_out(it).Znorm,luke_out(it).Zcurr,luke_out(it).ZP0,luke_out(it).dke_out,luke_out(it).radialDKE,luke_out(it).equilDKE,luke_out(it).momentumDKE,luke_out(it).gridDKE,luke_out(it).Zmomcoef,luke_out(it).Zbouncecoef,luke_out(it).Zmripple,luke_out(it).mksa,luke_out(it).XXsinksource] = run_lukert(luke_in(it).id_simul,luke_in(it).wavestructs,luke_in(it).waves,[],luke_in(it).dkeparam.rho_S,dkepath,luke_in(it).equil,luke_in(it).dkeparam,luke_in(it).dkedisplay,luke_in(it).ohm,luke_in(it).transpfaste,luke_in(it).ripple,[],[]);
-	else
-		for it = 1:length(timeslice),%local calculations
-			[tid,jid] = runluke_remote_jd(luke_in(it),remote,debug_mode);%Job submission
-			timeid(it) = {tid};
-			jobid(it) = {jid};
-		end
-		
-		%
-   	 	i_simul = 1;
-    	flag = ones(length(timeslice),1);
-    	%
-    	while 1,
-        	if flag(i_simul)
-            	output = getluke_remote_jd(timeid{i_simul},jobid{i_simul},remote,debug_mode);
-            	if ~isempty(output)
-                	luke_out(i_simul) = output;
-                	flag(i_simul) = 0;
-            	end
-        	end
-        	%
-        	i_simul = i_simul + 1;
-        	if i_simul > length(timeslice), i_simul = 1;end
-        	%
-        	if sum(flag) == 0;break;end
-    	end
-    end
+dkepath.remnum = remnum;
+dkepath.remtimout = remtimout;
+%
+for it = 1:length(timeslice),%local calculations
+	[luke_out(it).Znorm,luke_out(it).Zcurr,luke_out(it).ZP0,luke_out(it).dke_out,luke_out(it).radialDKE,luke_out(it).equilDKE,luke_out(it).momentumDKE,luke_out(it).gridDKE,luke_out(it).Zmomcoef,luke_out(it).Zbouncecoef,luke_out(it).Zmripple,luke_out(it).mksa,luke_out(it).XXsinksource] = run_lukert(luke_in(it).id_simul,luke_in(it).wavestructs,luke_in(it).waves,[],luke_in(it).dkeparam.rho_S,dkepath,luke_in(it).equil,luke_in(it).dkeparam,luke_in(it).dkedisplay,luke_in(it).ohm,luke_in(it).transpfaste,luke_in(it).ripple,[],[]);
 end
 %
 if debug_mode | ~itm_connect,
