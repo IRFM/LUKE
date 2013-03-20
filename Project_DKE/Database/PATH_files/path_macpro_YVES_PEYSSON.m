@@ -134,8 +134,8 @@ macproyves.yvespeysson(1).TSBASE.mex = [macproyves.yvespeysson(1).luke_root,'Pro
 %
 % LOCAL # 1 - CONDOR
 %
-macproyves.yvespeysson(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yvespeysson');
-macproyves.yvespeysson(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yvespeysson');
+macproyves.yvespeysson(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yves');
+macproyves.yvespeysson(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves');
 
 
 
