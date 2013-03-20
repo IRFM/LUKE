@@ -19,10 +19,8 @@ if nargin == 0, luke_ref = 'LUKE';end
 %
 [dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
-[dummy,hostname] = unix('hostname -f');hostname = hostname(1:end-1);%remove extra term
-%
 efdaitm.hostname = 'itm.rzg.mpg.de';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
-efdaitm.machine = 'itm';
+efdaitm.machine = 'efdaitm';
 efdaitm.computer = computer;%machine type and supported OS
 %
 % Selected user profile (structure hostname.usernames(path_profile).xxx)
@@ -35,29 +33,15 @@ efdaitm.yvesp(1).luke_root = '/pfs/home/yvesp/LUKE_ITM/trunk/LUKE/';
 efdaitm.yvesp(1).local_root = ['/pfs/home/yvesp/'];
 efdaitm.yvesp(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-ual_path = '/afs/ipp/itm/switm/ual/4.09a.1_R1.0';%UAL path in the ITM gateway. (4.10a.3_R1.0). See the .bashrc file on the gateway to have the correct UAL version (must be consistent)
-%
 efdaitm.yvesp(1).startup{1} = sprintf('%s\n','[lukeversion,matlabversion,matlabrelease] = LUKEversion_jd;');
-efdaitm.yvesp(1).startup{2} = sprintf('%s\n',['	javaaddpath ',ual_path,'/jar/ualjava.jar']);%add UAL access to classpath, UAL release 4.09a.1_R1.0
-efdaitm.yvesp(1).startup{3} = sprintf('%s\n','	import ualmemory.javainterface.*;%import Java packages');
 %
-%efdaitm.yvesp(1).cshrc{1} = sprintf('%s\n','#matlab version aliases');
-%efdaitm.yvesp(1).cshrc{2} = sprintf('%s\n','alias mat800 ''matlab -nodesktop''');
-%efdaitm.yvesp(1).cshrc{4} = sprintf('%s\n','#sourcing the correct UAL version (4.09a, 4.10a, etc). Patch for Matlab R2012b (13/03/2013). See TWIKI pages for details.');
-%efdaitm.yvesp(1).cshrc{5} = sprintf('%s\n',['source ',getenv('ITMSCRIPTDIR'),'/ITMv1 kepler test 4.09a.1_R1_DEVMATLAB']);%UAL release 4.09a.1_R1.0
-%efdaitm.yvesp(1).cshrc{5} = sprintf('%s\n',['source ',getenv('ITMSCRIPTDIR'),'/ITMv1 kepler test 4.10a.3_R1_DEVMATLAB']);%UAL release 4.10a.3_R1.0
+%efdaitm.yvesp(1).speclibpath.xml_io_tools = [efdaitm.yvesp(1).luke_root,'Project_DKE/Modules/ITM/xml_io_tools/'];%Other machine specific libraries (XML I/O)
+efdaitm.yvesp(1).speclibpath.ual = getenv('UAL');%UAL path in the ITM gateway. See the .bashrc file on the gateway to have the correct UAL version (must be consistent)
 %
-efdaitm.yvesp(1).speclibpath.xml_io_tools = [efdaitm.yvesp(1).luke_root,'Project_DKE/Modules/ITM/xml_io_tools/'];%Other machine specific libraries (XML I/O)
-efdaitm.yvesp(1).speclibpath.ual = ual_path;%Other machine specific libraries -> UAL for ITM: see the .bashrc file on the gateway to have the correct UAL version (must be consistent)
-%
-efdaitm.yvesp(1).mex706 = [efdaitm.yvesp(1).luke_root,'Project_DKE/MEX/Bin/efda/MATLAB706/'];
+efdaitm.yvesp(1).mex800 = [efdaitm.yvesp(1).luke_root,'Project_DKE/MEX/Bin/efda/MATLAB800/'];
 efdaitm.yvesp(1).compiler_opt.copts = '';
-%efdaitm.yvesp(1).compiler_opt.fopts.mex706 = ['-v FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132'''];
-%%efdaitm.yvesp(1).compiler_opt.helmex.mex706 = 'FLIBS=''-L/afs/efda-itm.eu/project/switm/lapack/amd64_g95/lib/ -llapack -ltmglib -L/afs/efda-itm.eu/project/switm/blas/amd64_g95/lib/ -lblas''';
-%efdaitm.yvesp(1).compiler_opt.helmex.mex706 = ['-L/usr/bin/g95 -lf95 -lgcc ',efdaitm.yvesp(1).local_root,'lapack/amd64_g95/lib/liblapack.so ',efdaitm.yvesp(1).local_root,'blas/amd64_g95/lib/libblas.so ',efdaitm.yvesp(1).local_root,'lapack/amd64_g95/lib/libtmglib.so '];% Optional argument for helmex compilation
-%efdaitm.yvesp(1).compiler_opt.helmex.mex706 = 'FLIBS=''-L/usr/bin/g95 -lf95 -lgcc -Wl,-rpath-link,/afs/efda-itm.eu/project/switm/matlab/bin/glnxa64 -L/afs/efda-itm.eu/project/switm/matlab/bin/glnxa64 -lmx -lmex -lmat -lm -L/afs/efda-itm.eu/project/switm/lapack/amd64_g95/lib/ -llapack -ltmglib -L/afs/efda-itm.eu/project/switm/blas/amd64_g95/lib/ -lblas -lguide -lpthread''';
 %
-efdaitm.yvesp(1).MUMPS.mex706 = [efdaitm.yvesp(1).local_root,'mumps/MUMPS_4.7.3_SEQ/MATLAB2008a/'];%Where MUMPS matrix solver is stored (MEX function)
+%efdaitm.yvesp(1).MUMPS.mex800 = [efdaitm.yvesp(1).local_root,'mumps/MUMPS_4.7.3_SEQ/MATLAB2012b/'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %--------------------------- Distributed computing -----------------------------
 %
@@ -102,48 +86,37 @@ efdaitm.yvesp(1).MUMPS.mex706 = [efdaitm.yvesp(1).local_root,'mumps/MUMPS_4.7.3_
 %
 % macproyves (condor)
 %
-macbookyves.yves(1).remote(3).host = 'tolbachik.hd.free.fr';
-macbookyves.yves(1).remote(3).cmd = 'condor_submit';
-macbookyves.yves(1).remote(3).get_jobid = {'** Proc ',':'};
-macbookyves.yves(1).remote(3).set_jobid = {'condor_q ',''};
+efdaitm.yvesp(1).remote(1).host = 'tolbachik.hd.free.fr';
+efdaitm.yvesp(1).remote(1).cmd = 'condor_submit';
+efdaitm.yvesp(1).remote(1).get_jobid = {'** Proc ',':'};
+efdaitm.yvesp(1).remote(1).set_jobid = {'condor_q ',''};
 %
-macbookyves.yves(1).remote(3).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
-macbookyves.yves(1).remote(3).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
-macbookyves.yves(1).remote(3).remotedatapath = '/Users/yvespeysson/condor/';
-macbookyves.yves(1).remote(3).luke_root = ['/Users/yvespeysson/Projets/',luke_ref,'/'];
+efdaitm.yvesp(1).remote(1).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
+efdaitm.yvesp(1).remote(1).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
+efdaitm.yvesp(1).remote(1).remotedatapath = '/Users/yvespeysson/condor/';
+efdaitm.yvesp(1).remote(1).luke_root = ['/Users/yvespeysson/Projets/',luke_ref,'/'];
 %
-%macbookyves.yves(1).remote(3).mat714.root = '/Applications/MATLAB_R2012a.app/bin/';
-%macbookyves.yves(1).remote(3).mat714.prefdir = '/Users/yvespeysson/.matlab/R2012a';
-%macbookyves.yves(1).remote(3).matdef = macbookyves.yves(1).remote(3).mat714;%default matlab on remote machine
+efdaitm.yvesp(1).remote(1).mat800.root = '/Applications/MATLAB_R2012b.app/bin/';
+efdaitm.yvesp(1).remote(1).mat800.prefdir = '/Users/yvespeysson/.matlab/R2012b';
+efdaitm.yvesp(1).remote(1).matdef = efdaitm.yvesp(1).remote(1).mat800;%default matlab on remote machine
 %
-macbookyves.yves(1).remote(3).mat800.root = '/Applications/MATLAB_R2012b.app/bin/';
-macbookyves.yves(1).remote(3).mat800.prefdir = '/Users/yvespeysson/.matlab/R2012b';
-macbookyves.yves(1).remote(3).matdef = macbookyves.yves(1).remote(3).mat800;%default matlab on remote machine
-%
-macbookyves.yves(1).remote(3).yves = 'yvespeysson';
-macbookyves.yves(1).remote(3).joan = 'yvespeysson';
-macbookyves.yves(1).remote(3).JD211098 = 'yvespeysson';
+efdaitm.yvesp(1).remote(1).yvesp = 'yvespeysson';
 %
 % macproyves (xgrid)
 %
-macbookyves.yves(1).remote(4).host = 'tolbachik.hd.free.fr';
-macbookyves.yves(1).remote(4).cmd = {'xgrid -h ',' -p ',' -job batch '};%
-macbookyves.yves(1).remote(4).get_jobid = {'jobIdentifier = ',';'};%
-macbookyves.yves(1).remote(4).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
-macbookyves.yves(1).remote(4).remotedatapath = '/Users/yvespeysson/xgrid/';
-macbookyves.yves(1).remote(4).luke_root = ['/Users/yvespeysson/Projets/',luke_ref,'/'];
+efdaitm.yvesp(1).remote(2).host = 'tolbachik.hd.free.fr';
+efdaitm.yvesp(1).remote(2).cmd = {'xgrid -h ',' -p ',' -job batch '};%
+efdaitm.yvesp(1).remote(2).get_jobid = {'jobIdentifier = ',';'};%
+efdaitm.yvesp(1).remote(2).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
+efdaitm.yvesp(1).remote(2).remotedatapath = '/Users/yvespeysson/xgrid/';
+efdaitm.yvesp(1).remote(2).luke_root = ['/Users/yvespeysson/Projets/',luke_ref,'/'];
 %
-%macbookyves.yves(1).remote(4).mat714.root = '/Applications/MATLAB_R2012a.app/bin/';
-%macbookyves.yves(1).remote(4).mat714.prefdir = '/Users/yvespeysson/.matlab/R2012a';
-%macbookyves.yves(1).remote(4).matdef = macbookyves.yves(1).remote(4).mat714;%default matlab on remote machine
+efdaitm.yvesp(1).remote(2).mat800.root = '/Applications/MATLAB_R2012b.app/bin/';
+efdaitm.yvesp(1).remote(2).mat800.prefdir = '/Users/yvespeysson/.matlab/R2012b';
+efdaitm.yvesp(1).remote(2).matdef = efdaitm.yvesp(1).remote(2).mat800;%default matlab on remote machine
 %
-macbookyves.yves(1).remote(3).mat800.root = '/Applications/MATLAB_R2012b.app/bin/';
-macbookyves.yves(1).remote(3).mat800.prefdir = '/Users/yvespeysson/.matlab/R2012b';
-macbookyves.yves(1).remote(3).matdef = macbookyves.yves(1).remote(3).mat800;%default matlab on remote machine
-%
-macbookyves.yves(1).remote(4).password = {'ghm93'};
-macbookyves.yves(1).remote(4).yves = 'yvespeysson';
-macbookyves.yves(1).remote(4).joan = 'yvespeysson';
+efdaitm.yvesp(1).remote(2).password = {'ghm93'};
+efdaitm.yvesp(1).remote(2).yvesp = 'yvespeysson';
 %
 
 
