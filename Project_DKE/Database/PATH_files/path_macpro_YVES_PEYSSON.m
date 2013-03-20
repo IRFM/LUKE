@@ -134,6 +134,13 @@ macproyves.yvespeysson(1).TSBASE.mex = [macproyves.yvespeysson(1).luke_root,'Pro
 %
 % LOCAL # 1 - CONDOR
 %
+macproyves.yvespeysson(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yvespeysson');
+macproyves.yvespeysson(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yvespeysson');
+
+
+
+
+if 0,
 macproyves.yvespeysson(1).remote(1).host = '';
 macproyves.yvespeysson(1).remote(1).nproc = feature('numCores');%number of cpu
 macproyves.yvespeysson(1).remote(1).cmd = 'condor_submit';
@@ -177,5 +184,6 @@ macproyves.yvespeysson(1).remote(3).get_jobid = {'Your job ',' '};%str_before,st
 macproyves.yvespeysson(1).remote(3).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
 macproyves.yvespeysson(1).remote(3).password = {''};
 macproyves.yvespeysson(1).remote(3).(getenv('USER')) = USER;
+end
 %
 
