@@ -34,7 +34,7 @@ dkepath.default = 'JD211098';
 %
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %
-dkepath.YP105119(1).luke_root = [getenv('HOME'),'/',luke_ref,'/'];
+dkepath.YP105119(1).luke_root = ['/home/sccp/gsem/peysson/',luke_ref,'/'];
 dkepath.YP105119(1).local_root = '/home/sccp/gsem/decker/Packages/cephee/';
 dkepath.YP105119(1).temppathroot = '/local/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -80,7 +80,7 @@ dkepath.YP105119(1).remote(2).YP105119 = 'YP105119';
 %
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
 %
-dkepath.JD211098(1).luke_root = [getenv('HOME'),'/',luke_ref,'/'];
+dkepath.JD211098(1).luke_root = ['/home/sccp/gsem/decker/',luke_ref,'/'];
 dkepath.JD211098(1).local_root = '/home/sccp/gsem/decker/Packages/cephee/';
 dkepath.JD211098(1).temppathroot = '/local/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -113,24 +113,82 @@ dkepath.JD211098(1).configurations.pbsproconfig = '/local/mdce/configurations/pb
 %
 %--------------------------- Remote computing -----------------------------
 %
+dkepath.JD211098(1).remote(1) = remote_CEA_CEPHEE('pbs','joan','JD211098');
 dkepath.JD211098(1).remote(1).host = '';% empty for local host
-dkepath.JD211098(1).remote(1).nproc = 28;
 dkepath.JD211098(1).remote(1).luke_root = dkepath.JD211098(1).luke_root;
-dkepath.JD211098(1).remote(1).matlabroot = '';
-dkepath.JD211098(1).remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
-dkepath.JD211098(1).remote(1).mem = {',mem=','mb','7000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
-dkepath.JD211098(1).remote(1).get_jobid = {'','.cephee'};%str_before,str_after
-dkepath.JD211098(1).remote(1).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
 %
-dkepath.JD211098(1).remote(2).host = 'saturne1.partenaires.cea.fr';
-dkepath.JD211098(1).remote(2).nproc = 12;
-dkepath.JD211098(1).remote(2).luke_root = ['/home/JD211098/',luke_ref,'/'];%official saturne package repository for collaborators
-dkepath.JD211098(1).remote(2).matlabroot = '';
-dkepath.JD211098(1).remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-dkepath.JD211098(1).remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
-dkepath.JD211098(1).remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
-dkepath.JD211098(1).remote(2).JD211098 = 'JD211098';
+% dkepath.JD211098(1).remote(2).host = 'saturne1.partenaires.cea.fr';
+% dkepath.JD211098(1).remote(2).nproc = 12;
+% dkepath.JD211098(1).remote(2).luke_root = ['/home/JD211098/',luke_ref,'/'];%official saturne package repository for collaborators
+% dkepath.JD211098(1).remote(2).matlabroot = '';
+% dkepath.JD211098(1).remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
+% dkepath.JD211098(1).remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
+% dkepath.JD211098(1).remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+% dkepath.JD211098(1).remote(2).JD211098 = 'JD211098';
+% %
+% % The computer cadts-0412 (Timothee's computer) shares the same filesystem as cephee
+% %
+% dkepath.JD211098(1).remote(3).host = 'cadts-0412.intra.cea.fr';% empty for local host
+% dkepath.JD211098(1).remote(3).nproc = 12;
+% dkepath.JD211098(1).remote(3).cmd = 'qsub';
+% dkepath.JD211098(1).remote(3).get_jobid = {'','.cadts-0412'};%str_before,str_after
+% dkepath.JD211098(1).remote(3).set_jobid = {'qstat ','','Unknown Job Id'};%str_before,str_after,str_check
+% dkepath.JD211098(1).remote(3).walltime = 24;%walltime necessary or one hour imposed
+% dkepath.JD211098(1).remote(3).mat710 = dkepath.JD211098(1).remote(1).mat710;
+% dkepath.JD211098(1).remote(3).matdef = dkepath.JD211098(1).remote(1).matdef;%default matlab on remote machine
+% dkepath.JD211098(1).remote(3).JD211098 = 'joan';
+% dkepath.JD211098(1).remote(3).luke_root = dkepath.JD211098(1).remote(1).luke_root;
+% %
+% % The cluster nunki shares the same filesystem as cephee
+% %
+% dkepath.JD211098(1).remote(4).host = 'nunki.intra.cea.fr';% empty for local host
+% dkepath.JD211098(1).remote(4).nproc = 48;
+% dkepath.JD211098(1).remote(4).cmd = 'qsub';
+% dkepath.JD211098(1).remote(4).get_jobid = {'','.pleione'};%str_before,str_after
+% dkepath.JD211098(1).remote(4).set_jobid = {'qstat ','.pleione','Unknown Job Id'};%str_before,str_after,str_check
+% dkepath.JD211098(1).remote(4).walltime = 24;%walltime necessary or one hour imposed
+% dkepath.JD211098(1).remote(4).mat710.root = '/Applications/Matlab_2010A/bin/';
+% dkepath.JD211098(1).remote(4).mat710.prefdir = '/home/sccp/gsem/decker/.matlab/R2010a';
+% dkepath.JD211098(1).remote(4).mat712.root = '/Applications/Matlab_2011A/bin/';
+% dkepath.JD211098(1).remote(4).mat712.prefdir = '/home/sccp/gsem/decker/.matlab/R2011a';
+% dkepath.JD211098(1).remote(4).luke_root = dkepath.JD211098(1).remote(1).luke_root;
+% %
+% % The cluster andromede shares the same filesystem as cephee
+% %
+% dkepath.JD211098(1).remote(5).host = 'andromede1.intra.cea.fr';% empty for local host
+% dkepath.JD211098(1).remote(5).nproc = 12;
+% dkepath.JD211098(1).remote(5).cmd = 'qsub';
+% dkepath.JD211098(1).remote(5).get_jobid = {'','.andromede1'};%str_before,str_after
+% dkepath.JD211098(1).remote(5).set_jobid = {'qstat ','.andromede1','Unknown Job Id'};%str_before,str_after,str_check
+% dkepath.JD211098(1).remote(5).walltime = 24;%walltime necessary or one hour imposed
+% dkepath.JD211098(1).remote(5).mat710.root = '/Applications/Matlab_2010A/bin/';
+% dkepath.JD211098(1).remote(5).mat710.prefdir = '/home/sccp/gsem/decker/.matlab/R2010a';
+% dkepath.JD211098(1).remote(5).mat712.root = '/Applications/Matlab_2011A/bin/';
+% dkepath.JD211098(1).remote(5).mat712.prefdir = '/home/sccp/gsem/decker/.matlab/R2011a';
+% dkepath.JD211098(1).remote(5).luke_root = dkepath.JD211098(1).remote(1).luke_root;
+% %
+% dkepath.JD211098(1).remote(6) = dkepath.JD211098(1).remote(5);
+% dkepath.JD211098(1).remote(6).host = 'andromede2.intra.cea.fr';% empty for local host
+% dkepath.JD211098(1).remote(6).get_jobid{2} = '.andromede2';%str_before,str_after
+% dkepath.JD211098(1).remote(6).set_jobid{2} = '.andromede2';%str_before,str_after,str_check
+% %
+% dkepath.JD211098(1).remote(7) = dkepath.JD211098(1).remote(5);
+% dkepath.JD211098(1).remote(7).host = 'andromede3.intra.cea.fr';% empty for local host
+% dkepath.JD211098(1).remote(7).get_jobid{2} = '.andromede3';%str_before,str_after
+% dkepath.JD211098(1).remote(7).set_jobid{2} = '.andromede3';%str_before,str_after,str_check
+% %
+% dkepath.JD211098(1).remote(8) = dkepath.JD211098(1).remote(5);
+% dkepath.JD211098(1).remote(8).host = 'andromede4.intra.cea.fr';% empty for local host
+% dkepath.JD211098(1).remote(8).get_jobid{2} = '.andromede4';%str_before,str_after
+% dkepath.JD211098(1).remote(8).set_jobid{2} = '.andromede4';%str_before,str_after,str_check
 %
+% macproyves (condor)
+%
+dkepath.JD211098(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','joan','JD211098');
+%
+% macproyves (xgrid)
+%
+dkepath.JD211098(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan','JD211098');
 %
 %------------------------------------ Profile number 1, Yves Buravand ------------------------------------
 %
