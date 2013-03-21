@@ -20,8 +20,8 @@ end
 %
 logname(double(logname) == 10) = [];% remove return character
 %
-if isfield(remote,logname) && ~isempty(remote.(logname)),
-    remotelogname = remote.(logname);
+if isfield(remote,'users') && isfield(remote.users,logname) && ~isempty(remote.users.(logname)),
+    remotelogname = remote.users.(logname);
 else
     remotelogname = logname;
 end
