@@ -127,23 +127,30 @@ dkepath.JD211098(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','joan','JD21
 %
 dkepath.JD211098(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan','JD211098');
 %
-% cadts-0412 (Timothee's computer). Shares the same filesystem as cephee
+% cadts-0412 (torque, Timothee's computer). Shares the same filesystem as cephee
 %
 dkepath.JD211098(1).remote(4) = remote_CEA_TIMDESKTOP('torque','joan','JD211098');
 dkepath.JD211098(1).remote(4).luke_root = dkepath.JD211098(1).luke_root;
 %
-% andromede. Shares the same filesystem as cephee
+% andromede (pbs). Shares the same filesystem as cephee
 %
 dkepath.JD211098(1).remote(5) = remote_CEA_ANDROMEDE('pbs','joan','JD211098');
 dkepath.JD211098(1).remote(5).luke_root = dkepath.JD211098(1).luke_root;
 %
-%
 % intra integrated pbspro system (pleione, merope, nashira, newpegase, nunki cluster). Shares the same filesystem as cephee
 %
-dkepath.JD211098(1).remote(5) = remote_CEA_PLEIONE('pbs','joan','JD211098');
-dkepath.JD211098(1).remote(5).luke_root = dkepath.JD211098(1).luke_root;
+dkepath.JD211098(1).remote(6) = remote_CEA_PLEIONE('pbs','joan','JD211098');
+dkepath.JD211098(1).remote(6).luke_root = dkepath.JD211098(1).luke_root;
 %
-dkepath.JD211098(1).remote(6) = remote_CEA_SATURNE('sun','joan','JD211098');
+% saturne (sun)
+%
+dkepath.JD211098(1).remote(7) = remote_CEA_SATURNE('sun','joan','JD211098');
+%
+% pleiades2 (pbs)
+%
+% does not work because of a ssh key pair problem from cephee to pleiades2
+%
+% dkepath.JD211098(1).remote(8) = remote_CRPP_PLEIADES2('torque','joan','JD211098');
 %
 %------------------------------------ Profile number 1, Yves Buravand ------------------------------------
 %
