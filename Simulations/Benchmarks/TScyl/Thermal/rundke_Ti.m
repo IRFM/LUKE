@@ -59,6 +59,9 @@ dkeparam.dtn = dtn;
 dkeparam.tn = tnmax;
 dkeparam.prec0_f = 0;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 pzTi = equil.pzTi;
 Tifac_list = logspace(-2,2,21);
 %
@@ -71,7 +74,7 @@ for iTi = 1:length(Tifac_list);
     dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
     dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
     %
-    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     normf0_final_0(iTi) = dke_out.normf0{end}(end);
     residue_final_0(iTi) = dke_out.residu_f{end}(end);
     %
@@ -80,7 +83,7 @@ for iTi = 1:length(Tifac_list);
     dkeparam.boundary_mode_f = 1;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
     dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
     %
-    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     normf0_final_1(iTi) = dke_out.normf0{end}(end);
     residue_final_1(iTi) = dke_out.residu_f{end}(end);
     %
@@ -89,7 +92,7 @@ for iTi = 1:length(Tifac_list);
     dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
     dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
     %
-    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     normf0_final_2(iTi) = dke_out.normf0{end}(end);
     residue_final_2(iTi) = dke_out.residu_f{end}(end);
 end

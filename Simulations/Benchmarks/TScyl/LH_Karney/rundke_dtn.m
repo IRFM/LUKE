@@ -89,6 +89,9 @@ dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, t
 dkeparam.nmhu_S = 201;
 dkeparam.np_S = 201;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
 betath = 0.001;%validated for NR limit
@@ -119,15 +122,15 @@ for idtn = 1:ndtn,
     dkeparam.dtn = repmat(dtn,[1,nit_list(idtn)]);
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     eta_0(idtn) = Zcurr.x_0/ZP0.x_rf_fsav;
     %
     dkeparam.coll_mode = 1;% High-velocity limit
-    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     eta_1(idtn) = Zcurr.x_0/ZP0.x_rf_fsav;
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
-    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         eta_2(idtn) = Zcurr.x_0/ZP0.x_rf_fsav;
     end        

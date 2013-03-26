@@ -83,6 +83,9 @@ wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 % with norm_mode_f = 0, uncomment n-1 plots
 %
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
@@ -100,7 +103,7 @@ dkeparam.mlprecinv = 1e-6;%Accuracy for the MatLab build-in matrix inversion. (d
 %
 dkeparam.invproc = 0;
 %
-[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 memory_ML = dke_out.memoryLU_f_out;
 time_ML = dke_out.time_DKE;
@@ -119,7 +122,7 @@ disp(['Direct MatLab inversion done'])
 dkeparam.invproc = 1;%MATLAB-CGS
 dkeparam.ludroptol = 0;%Full LU factorization for preconditionning
 %
-[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 memory_LU = dke_out.memoryLU_f_out;
 time_LU = dke_out.time_DKE;
@@ -171,7 +174,7 @@ for imeth = 1:3,%Numerical method (CGS, BICG, QMR)
         %
         try
             %
-            [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+            [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
             % 
             memory_LUi_1(iludroptol,imeth) = dke_out.memoryLU_f_out;
             time_LUi_1(iludroptol,imeth) = dke_out.time_DKE;
@@ -198,7 +201,7 @@ for imeth = 1:3,%Numerical method (CGS, BICG, QMR)
         %
         try
             %
-            [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+            [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
             % 
             memory_LUi_2(imlprecinv,imeth) = dke_out.memoryLU_f_out;
             time_LUi_2(imlprecinv,imeth) = dke_out.time_DKE;
@@ -232,7 +235,7 @@ disp('Incomplete LU calculation done')
 if isfield(dkepath,'MUMPS') && (isfield(dkepath.MUMPS,'seq') || isfield(dkepath.MUMPS,'par')),
     dkeparam.invproc = -1;
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     memory_MU = dke_out.memoryLU_f_out;
     time_MU = dke_out.time_DKE;
@@ -252,7 +255,7 @@ end
 if exist('dmumpsmex','file'),
     dkeparam.invproc = -2;
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     memory_MX = dke_out.memoryLU_f_out;
     time_MX = dke_out.time_DKE;
@@ -285,7 +288,7 @@ etaerr_MX = abs(eta_MX - eta_LU)/eta_LU;
 if exist('mexlusolve'),
     dkeparam.invproc = -3;
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     memory_SX = dke_out.memoryLU_f_out;
     time_SX = dke_out.time_DKE;
@@ -315,7 +318,7 @@ if isfield(dkepath,'PETSc'),
         %
         dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
         %
-        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         %
         memory_PS0 = dke_out.memoryLU_f_out;
         time_PS0 = dke_out.time_DKE;
@@ -331,7 +334,7 @@ if isfield(dkepath,'PETSc'),
         %
         dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
         %
-        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         %
         memory_PS1 = dke_out.memoryLU_f_out;
         time_PS1 = dke_out.time_DKE;
@@ -356,7 +359,7 @@ if isfield(dkepath,'PETSc'),
     %
     dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     memory_PB0 = dke_out.memoryLU_f_out;
     time_PB0 = dke_out.time_DKE;
@@ -372,7 +375,7 @@ if isfield(dkepath,'PETSc'),
     %
     dkeparam.PETScparam.cloop = 1;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     memory_PB1 = dke_out.memoryLU_f_out;
     time_PB1 = dke_out.time_DKE;

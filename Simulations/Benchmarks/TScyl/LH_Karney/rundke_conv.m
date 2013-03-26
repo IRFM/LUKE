@@ -95,6 +95,9 @@ dkeparam.nit_f = nit_f;
 dkeparam.tn = 100000;%time for asymptotic solution with norm_mode_f = 1
 dkeparam.dtn = NaN;%single time step for Legendre convergence studies
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
 betath = 0.001;%validated for NR limit
@@ -106,7 +109,7 @@ wavestruct.yvparmax_lh = [5];%LH wave square N// Spectrum: Upper limit of the pl
 %
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
-[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 j_k = 0.07092;
 %

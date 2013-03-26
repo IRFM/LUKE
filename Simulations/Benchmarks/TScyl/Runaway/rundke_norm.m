@@ -62,6 +62,9 @@ equil.pzTi = 1e-10*ones(size(equil.pzTi));
 dkeparam.coll_mode = 0;% Relativistic Maxwellian background
 dkeparam.timevol = 1;%to calculate moments at all internal times
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 dtn = 100;% time step
 nit = 100;% number of iterations
 tn_max = dtn*nit;% total time
@@ -80,7 +83,7 @@ dkeparam.tn = tn_max;
 dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
 dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 %
-[dummy,dummy,dummy,dke_out_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[dummy,dummy,dummy,dke_out_0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 xRRv_0 = NaN(1,nit);
 xRRs_0 = NaN(1,nit);
@@ -92,7 +95,7 @@ end
 dkeparam.boundary_mode_f = 1;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
 dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 %
-[dummy,dummy,dummy,dke_out_1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[dummy,dummy,dummy,dke_out_1] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 xRRv_1 = NaN(1,nit);
 xRRs_1 = NaN(1,nit);
@@ -104,7 +107,7 @@ end
 dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 %
-[dummy,dummy,dummy,dke_out_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[dummy,dummy,dummy,dke_out_2] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 xRRv_2 = NaN(1,nit);
 xRRs_2 = NaN(1,nit);

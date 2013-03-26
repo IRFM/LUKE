@@ -90,6 +90,9 @@ dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic sol
 dkeparam.np_S = 201;
 dkeparam.nmhu_S = 201;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 %equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 betath_list = [logspace(-5,-2,7),logspace(-1.85,-0.35,11)];
@@ -115,17 +118,17 @@ for ibetath = 1:nbetath,
     waves{1} = make_idealLHwave_jd(equil,wavestruct);
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     j_0(ibetath) = Zcurr.x_0;
     P_0(ibetath) = ZP0.x_rf_fsav;
     %
     dkeparam.coll_mode = 1;% High-velocity limit
-    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     j_1(ibetath) = Zcurr.x_0;
     P_1(ibetath) = ZP0.x_rf_fsav;
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
-    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_2(ibetath) = Zcurr.x_0;
@@ -133,7 +136,7 @@ for ibetath = 1:nbetath,
     end        
     %
     %dkeparam.coll_mode = 4;% Linearized Belaiev-Budker
-    %[Znorm,Zcurr_4,ZP0_4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %[Znorm,Zcurr_4,ZP0_4] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %j_4(ibetath) = Zcurr_4.x_0;
     %P_4(ibetath) = ZP0_4.x_rf_fsav;
     %

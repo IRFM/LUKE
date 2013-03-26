@@ -90,6 +90,9 @@ dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic sol
 dkeparam.np_S = 201;
 dkeparam.nmhu_S = 201;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 betath = 0.001;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
@@ -121,24 +124,24 @@ for iZi = 1:nZi,
     waves{1} = make_idealLHwave_jd(equil,wavestruct);
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     j_0(iZi) = Zcurr.x_0;
     P_0(iZi) = ZP0.x_rf_fsav;
     %
     dkeparam.coll_mode = 1;% High-velocity limit
-    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     j_1(iZi) = Zcurr.x_0;
     P_1(iZi) = ZP0.x_rf_fsav;
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
-    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_2(iZi) = Zcurr.x_0;
         P_2(iZi) = ZP0.x_rf_fsav;
     end
     %
 %    dkeparam.coll_mode = 4;% Linearized Belaiev-Budker
-%    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+%    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %    j_4(iZi) = Zcurr.x_0;
 %    P_4(iZi) = ZP0.x_rf_fsav;
     %

@@ -57,6 +57,9 @@ dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, t
 dkeparam.tn = 10000;%time for asymptotic solution with norm_mode_f = 1
 dkeparam.dtn = 1000;%10 time steps required for accurate runaway solution - see rundke_dtn
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 epsi = 0.04;
 %
 equil.pzTi = 1e-10*ones(size(equil.pzTi));
@@ -82,16 +85,16 @@ for ibetath = 1:nbetath,
     ohm = ohm_flat(equil,epsi);
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-    [dummy,dummy,dummy,dke_out_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out_0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     dkeparam.coll_mode = 1;% High-velocity limit
-    [dummy,dummy,dummy,dke_out_1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out_1] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
-    [dummy,dummy,dummy,dke_out_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out_2] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     %dkeparam.coll_mode = 4;% Maxwellian Background
-    %[dummy,dummy,dummy,dke_out_4] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    %[dummy,dummy,dummy,dke_out_4] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     RR_0(ibetath) = dke_out_0.XxRR_fsav(end,:);
     RR_1(ibetath) = dke_out_1.XxRR_fsav(end,:);

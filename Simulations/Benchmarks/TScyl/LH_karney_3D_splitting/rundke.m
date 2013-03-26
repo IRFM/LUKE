@@ -90,6 +90,9 @@ dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 dkeparam.timevol = 1;%to calculate moments at all internal times
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 %betath = 0.001;
 %
 %[qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
@@ -125,7 +128,7 @@ for icoll = 1:ncoll,
         	dkeparam.opsplit = optsplit_list(iopt);
         	dkeparam.dtn = dtn_list(idtn);
         	%
-        	[dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        	[dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         	%
             nit = tfinal/dkeparam.dtn;
             I{idtn,iopt,icoll} = NaN(1,nit);

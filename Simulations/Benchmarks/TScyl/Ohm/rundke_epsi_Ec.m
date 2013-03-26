@@ -54,6 +54,9 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 dkeparam.boundary_mode_f = 0;%2;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 0;%1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 betath = 0.1;%validated for NR limit
 %
 epsi_list = logspace(-2,-1,21);%logspace(-5,-1.4,19);
@@ -71,7 +74,7 @@ for iepsi = 1:length(epsi_list),
     ohm = ohm_flat(equil,epsi);
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(max([1,find(~isnan(dke_out.residu_f{end}))])) < dkeparam.prec0_f,
         sigma_0(iepsi) = Zcurr.x_0/epsi;
         sigma_0_noconv(iepsi) = NaN;
@@ -91,7 +94,7 @@ for iepsi = 1:length(epsi_list),
     %Ecmax_0(iepsi) = Zmomcoef.Ec_ref(ipnmax);
     %
     dkeparam.coll_mode = 1;% High-velocity limit
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(max([1,find(~isnan(dke_out.residu_f{end}))])) < dkeparam.prec0_f,
         sigma_1(iepsi) = Zcurr.x_0/epsi;
         sigma_1_noconv(iepsi) = NaN;
@@ -111,7 +114,7 @@ for iepsi = 1:length(epsi_list),
     %Ecmax_1(iepsi) = Zmomcoef.Ec_ref(ipnmax);
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(max([1,find(~isnan(dke_out.residu_f{end}))])) < dkeparam.prec0_f,
         sigma_2(iepsi) = Zcurr.x_0/epsi;
         sigma_2_noconv(iepsi) = NaN;

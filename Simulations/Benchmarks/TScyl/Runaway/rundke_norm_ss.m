@@ -61,6 +61,9 @@ equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 dkeparam.coll_mode = 0;% Relativistic Maxwellian background
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 tnmax = 100000;
 nit_list = round(logspace(0,2,11));
 dtn_list = tnmax./nit_list;
@@ -91,7 +94,7 @@ for idtn = 1:ndtn,
     dkeparam.boundary_mode_f = 1;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
     dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
     %
-	[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+	[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     xRRv_1(idtn) = (dke_out.normf0{end}(1) - dke_out.normf0{end}(end))/dtn;
     xRRs_1(idtn) = dke_out.XxRR_fsav(end,:);
@@ -99,7 +102,7 @@ for idtn = 1:ndtn,
     dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
     dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
     %
-	[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+	[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     xRRv_2(idtn) = (dke_out.normf0{end}(1) - dke_out.normf0{end}(end))/dtn;
     xRRs_2(idtn) = dke_out.XxRR_fsav(end,:);

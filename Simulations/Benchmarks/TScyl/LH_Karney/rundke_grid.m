@@ -84,6 +84,9 @@ dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 np_list = round(logspace(1,3,41));
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
@@ -123,7 +126,7 @@ for inp = 1:nnp,
     %
     dkeparam.nmhu_S = 51;
     %
-    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_rel_50(inp) = Zcurr.x_0;
@@ -132,7 +135,7 @@ for inp = 1:nnp,
     %
     dkeparam.nmhu_S = 101;
     %
-    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_rel_100(inp) = Zcurr.x_0;
@@ -141,7 +144,7 @@ for inp = 1:nnp,
     %
     dkeparam.nmhu_S = 201;
     %
-    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_rel_200(inp) = Zcurr.x_0;
@@ -163,7 +166,7 @@ for inp = 1:nnp,
     %
     dkeparam.nmhu_S = 51;
     %
-    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_nr_50(inp) = Zcurr.x_0;
@@ -172,7 +175,7 @@ for inp = 1:nnp,
     %
     dkeparam.nmhu_S = 101;
     %
-    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_nr_100(inp) = Zcurr.x_0;
@@ -181,7 +184,7 @@ for inp = 1:nnp,
     %
     dkeparam.nmhu_S = 201;
     %
-    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_nr_200(inp) = Zcurr.x_0;

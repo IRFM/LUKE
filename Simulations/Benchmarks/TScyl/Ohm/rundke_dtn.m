@@ -54,6 +54,9 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 betath = 0.01;%validated for NR limit
 %
 epsi = 0.001;
@@ -91,15 +94,15 @@ for idtn = 1:ndtn,
     dkeparam.dtn = repmat(dtn,[1,nit_list(idtn)]);
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-    [dummy,Zcurr] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     sigma_0(idtn) = Zcurr.x_0/epsi;
     %
     dkeparam.coll_mode = 1;% High-velocity limit
-    [dummy,Zcurr] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     sigma_1(idtn) = Zcurr.x_0/epsi;
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
-    [dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         sigma_2(idtn) = Zcurr.x_0/epsi;
     end        

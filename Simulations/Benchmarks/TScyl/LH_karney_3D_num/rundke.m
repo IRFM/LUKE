@@ -90,6 +90,9 @@ dkeparam.ludroptol = 1e-6;%Drop tolerance for the built-in MatLab partial LU dec
 dkeparam.mlmaxitinv = 20;%Maximum number of iterations for iterative built-in MatLab matrix inversion method (between 1 and 20 usualy, if empty, mlmaxitinv = min(matrixdim,20). See matlab documentation.
 dkeparam.mlprecinv = 1e-5;%Accuracy for the MatLab build-in matrix inversion.
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 np_list = 25:25:250;
@@ -110,7 +113,7 @@ for inp = 1:nnp,
     %
     dkeparam.np_S = np_list(inp) + 1;
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     % 
     memory_LUi_np(inp) = dke_out.memoryLU_f_out;
     time_LUi_np(inp) = dke_out.time_DKE;
@@ -127,7 +130,7 @@ for inmhu = 1:nnmhu,
     %
     dkeparam.nmhu_S = nmhu_list(inmhu) + 1;
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     % 
     memory_LUi_nmhu(inmhu) = dke_out.memoryLU_f_out;
     time_LUi_nmhu(inmhu) = dke_out.time_DKE;
@@ -144,7 +147,7 @@ for inr = 1:nnr,
     %
     rho_S = linspace(0,1,nr_list(inr)+1);
     %
-    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     % 
     memory_LUi_nr(inr) = dke_out.memoryLU_f_out;
     time_LUi_nr(inr) = dke_out.time_DKE;
@@ -161,7 +164,7 @@ for iDr0 = 1:nDr0,
     %
     transpfaste.Dr0 = Dr0_list(iDr0);
     %
-    [Znorm_MATLAB{iDr0},Zcurr_MATLAB{iDr0},ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_MATLAB{iDr0},Zcurr_MATLAB{iDr0},ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     % 
     memory_LUi_Dr0(iDr0) = dke_out.memoryLU_f_out;
     time_LUi_Dr0(iDr0) = dke_out.time_DKE;
@@ -187,7 +190,7 @@ if exist('dmumpsmex'),
         %
         dkeparam.np_S = np_list(inp) + 1;
         %
-        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         % 
         memory_MX_np(inp) = dke_out.memoryLU_f_out;
         time_MX_np(inp) = dke_out.time_DKE;
@@ -206,7 +209,7 @@ if exist('dmumpsmex'),
         %
         dkeparam.nmhu_S = nmhu_list(inmhu) + 1;
         %
-        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         % 
         memory_MX_nmhu(inmhu) = dke_out.memoryLU_f_out;
         time_MX_nmhu(inmhu) = dke_out.time_DKE;
@@ -225,7 +228,7 @@ if exist('dmumpsmex'),
         %
         rho_S = linspace(0,1,nr_list(inr)+1);
         %
-        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         % 
         memory_MX_nr(inr) = dke_out.memoryLU_f_out;
         time_MX_nr(inr) = dke_out.time_DKE;
@@ -244,7 +247,7 @@ if exist('dmumpsmex'),
         %
         transpfaste.Dr0 = Dr0_list(iDr0);
         %
-        [Znorm_MUMPS{iDr0},Zcurr_MUMPS{iDr0},ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        [Znorm_MUMPS{iDr0},Zcurr_MUMPS{iDr0},ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         % 
         memory_MX_Dr0(iDr0) = dke_out.memoryLU_f_out;
         time_MX_Dr0(iDr0) = dke_out.time_DKE;

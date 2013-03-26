@@ -56,6 +56,9 @@ dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 dkeparam.timevol = 1;%to calculate moments at all internal times
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 nit = 141;
 tn = logspace(-2,5,nit);
 %
@@ -77,7 +80,7 @@ sigma_Karney_nr_1 = 2.837;
 sigma_Karney_nr_2 = 7.429;
 %
 dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-[dummy,Zcurr] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[dummy,Zcurr] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 sigma_0 = NaN(1,nit);
 for it=1:nit,
@@ -85,7 +88,7 @@ for it=1:nit,
 end
 %
 dkeparam.coll_mode = 1;% High-velocity limit
-[dummy,Zcurr] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[dummy,Zcurr] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 sigma_1 = NaN(1,nit);
 for it=1:nit,
@@ -93,7 +96,7 @@ for it=1:nit,
 end
 %
 dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
-[dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 residue_2 = NaN(1,nit);
 sigma_2 = NaN(1,nit);
@@ -105,7 +108,7 @@ sigma_2(residue_2 > dkeparam.prec0_f) = NaN;
 %
 dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
 dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
-[dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 residue_2_0 = NaN(1,nit);
 sigma_2_0 = NaN(1,nit);
@@ -117,7 +120,7 @@ sigma_2_0(residue_2_0 > dkeparam.prec0_f) = NaN;
 %
 dkeparam.boundary_mode_f = 1;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
 dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
-[dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 residue_2_1 = NaN(1,nit);
 sigma_2_1 = NaN(1,nit);

@@ -91,6 +91,9 @@ dkeparam.np_S = 401;
 dkeparam.nmhu_S = 401;
 dkeparam.pnmax_S = 10;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 betath = 0.001;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
@@ -136,13 +139,13 @@ for iD0 = 1:nD0,
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
     %
     dkeparam.oldcross_mode = 0;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
-    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     j_0(iD0) = Zcurr.x_0;
     P_0(iD0) = ZP0.x_rf_fsav;
     Pc_0(iD0) = -ZP0.x_c_fsav;
     %
     dkeparam.oldcross_mode = 1;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
-    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     j_0a(iD0) = Zcurr.x_0;
 	P_0a(iD0) = ZP0.x_rf_fsav;
     Pc_0a(iD0) = -ZP0.x_c_fsav;
@@ -150,13 +153,13 @@ for iD0 = 1:nD0,
     dkeparam.coll_mode = 1;% High-velocity limit
     %
     dkeparam.oldcross_mode = 0;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
-    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     j_1(iD0) = Zcurr.x_0;
     P_1(iD0) = ZP0.x_rf_fsav;
     Pc_1(iD0) = -ZP0.x_c_fsav;
     %
     dkeparam.oldcross_mode = 1;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
-    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     j_1a(iD0) = Zcurr.x_0;
     P_1a(iD0) = ZP0.x_rf_fsav;
     Pc_1a(iD0) = -ZP0.x_c_fsav;
@@ -164,7 +167,7 @@ for iD0 = 1:nD0,
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
     %
     dkeparam.oldcross_mode = 0;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
-    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_2(iD0) = Zcurr.x_0;
         P_2(iD0) = ZP0.x_rf_fsav;
@@ -172,7 +175,7 @@ for iD0 = 1:nD0,
     end
     %
     dkeparam.oldcross_mode = 1;%Cross-derivatives as given in paper Peysson-Shoucri CPC 98
-    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_2a(iD0) = Zcurr.x_0;
         P_2a(iD0) = ZP0.x_rf_fsav;

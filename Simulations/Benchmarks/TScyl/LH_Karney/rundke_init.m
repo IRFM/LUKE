@@ -89,6 +89,9 @@ dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, t
 dkeparam.np_S = 201;
 dkeparam.nmhu_S = 201;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 %equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
 betath_list = [logspace(-3,-2,7),logspace(-1.85,-0.35,11)];betath_list = betath_list(1:15);
@@ -115,7 +118,7 @@ for ibetath = 1:nbetath,
     waves{1} = make_idealLHwave_jd(equil,wavestruct);
     %
     dkeparam.initguess_f =  0;
-    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     j0_0(ibetath) = dke_out.curr0{end}(1);
     jend_0(ibetath) = dke_out.curr0{end}(end);
@@ -125,7 +128,7 @@ for ibetath = 1:nbetath,
     if ibetath == 14,
         dkedisplay.display_init = 1;%Display the initial distribution function only
     end
-    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     dkedisplay.display_init = 0;
     %
     j0_1(ibetath) = dke_out.curr0{end}(1);

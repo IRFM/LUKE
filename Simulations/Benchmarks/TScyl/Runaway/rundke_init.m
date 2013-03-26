@@ -62,6 +62,9 @@ equil.pzTi = 1e-10*ones(size(equil.pzTi));
 dkeparam.boundary_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.timevol = 1;%to calculate moments at all internal times
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 dtn = 100;% time step
 nit = 100;% number of iterations
 tn_max = dtn*nit;% total time
@@ -81,11 +84,11 @@ dkeparam.tn = tn_max;
 %
 dkeparam.coll_mode = 0;% Relativistic Maxwellian background
 %
-[Znorm_0,Zcurr_0,ZP0_0,dke_out_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_0,Zcurr_0,ZP0_0,dke_out_0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
 %
-[Znorm_2,Zcurr_2,ZP0_2,dke_out_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_2,Zcurr_2,ZP0_2,dke_out_2] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 % One can check that dke_out_0.normf0{it}(1) is the same as dke_out_0.normf0{it-1}(end)
 %
@@ -133,11 +136,11 @@ for it = 1:nit,
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
     %
-    [Znorm_0,Zcurr_0,ZP0_0,dke_out_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_0,[]);
+    [Znorm_0,Zcurr_0,ZP0_0,dke_out_0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_0,[]);
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
     %
-    [Znorm_2,Zcurr_2,ZP0_2,dke_out_2] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_2,[]);
+    [Znorm_2,Zcurr_2,ZP0_2,dke_out_2] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_2,[]);
     %
     % One can check that : 
     %

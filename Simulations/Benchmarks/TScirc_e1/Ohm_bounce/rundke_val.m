@@ -57,6 +57,8 @@ dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution
 dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
+dkeparam.psin_S = psin_S;
+%
 iar_list = [0.1,0.2,0.3,0.5,0.8];
 %
 epsi = 0.001;
@@ -86,9 +88,10 @@ for irho = 1:nrho,
     %
     dkeparam.bounce_mode = 1;
     dkeparam.mhu_S = [];
-    rho_S = rho_list(irho);
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    dkeparam.rho_S = rho_list(irho);
+    %
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j(irho) = Zcurr.x_tot_vfsav;
@@ -96,9 +99,10 @@ for irho = 1:nrho,
     %
     dkeparam.bounce_mode = 0;
     dkeparam.mhu_S = momentumDKE.mhu_S;
-    rho_S = 0.5;
     %
-    [Znorm_cyl,Zcurr_cyl,ZP0_cyl,dke_out_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
+    dkeparam.rho_S = 0.5;
+    %
+    [Znorm_cyl,Zcurr_cyl,ZP0_cyl,dke_out_cyl] = main_dke_yp(id_simul,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
     %
     if dke_out_cyl.residu_f{end}(end) <= dkeparam.prec0_f,
         j_0(irho) = Zcurr_cyl.x_0;

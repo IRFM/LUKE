@@ -87,6 +87,9 @@ dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic sol
 %dkeparam.tn = 10000;%to retrieve early LUKE 1.9.0 results
 %dkeparam.dtn = 10000;%to retrieve early LUKE 1.9.0 results
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 % RELATIVISTIC CASE
 %
 dkeparam.pnmax_S = 30;
@@ -96,7 +99,7 @@ wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the pl
 %
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
-[Znorm_rel,Zcurr_rel,ZP0_rel] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_rel,Zcurr_rel,ZP0_rel] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 % NON-RELATIVISTIC CASE
 %
@@ -117,17 +120,17 @@ dkeparam.nmhu_S = 101;
 dkeparam.np_S = 101;
 dkeparam.pnmax_S = 10;
 %
-[Znorm_nr_0_10,Zcurr_0_10,ZP0_0_10] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_nr_0_10,Zcurr_0_10,ZP0_0_10] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 dkeparam.nmhu_S = 201;
 dkeparam.np_S = 201;
 dkeparam.pnmax_S = 20;
 %
-[Znorm_nr_0_20,Zcurr_0_20,ZP0_0_20] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_nr_0_20,Zcurr_0_20,ZP0_0_20] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 dkeparam.coll_mode = 2;%For comparison with theoretical results
 %
-[Znorm_nr_2_20,Zcurr_2_20,ZP0_2_20] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_nr_2_20,Zcurr_2_20,ZP0_2_20] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 j_r_k = '0.003732';
 p_r_k = '0.0001256';

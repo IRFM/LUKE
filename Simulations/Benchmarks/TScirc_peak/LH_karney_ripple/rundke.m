@@ -90,19 +90,22 @@ dkeparam.np_S = 201;
 dkeparam.nmhu_S = 201;
 dkeparam.pnmax_S = 30;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 % case with no ripple
 %
 id_simul_off = [id_simul0,'_rippleoff'];
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul_off,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,[],[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul_off,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,[],[],[]);
 str = ['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul_off,'.mat Znorm Zcurr ZP0 dke_out radialDKE equilDKE momentumDKE gridDKE Zmomcoef Zbouncecoef Zmripple mksa'];
 eval(str);
 %
 % case with ripple
 %
 id_simul_on = [id_simul0,'_rippleon'];
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul_on,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul_on,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 str = ['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul_on,'.mat Znorm Zcurr ZP0 dke_out radialDKE equilDKE momentumDKE gridDKE Zmomcoef Zbouncecoef Zmripple mksa'];
 eval(str);
 %

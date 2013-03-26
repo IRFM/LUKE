@@ -58,6 +58,7 @@ dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, t
 dkeparam.tn = 10000;%time for asymptotic solution with norm_mode_f = 1
 dkeparam.dtn = 1000;%10 time steps required for accurate runaway solution - see rundke_dtn
 %
+dkeparam.psin_S = psin_S;
 iar_list = [0.1,0.2,0.3,0.5,0.8];
 %
 epsi = 0.04;
@@ -90,18 +91,20 @@ for irho = 1:nrho,
     %
     dkeparam.bounce_mode = 1;
     dkeparam.mhu_S = [];
-    rho_S = rho_list(irho);
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    dkeparam.rho_S = rho_list(irho);
+    %
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         RR(irho) = dke_out.XxRR_fsav(end,:);
     end  
     %
     dkeparam.bounce_mode = 0;
     dkeparam.mhu_S = momentumDKE.mhu_S;
-    rho_S = 0.5;
     %
-    [Znorm_cyl,Zcurr_cyl,ZP0_cyl,dke_out_cyl] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
+    dkeparam.rho_S = 0.5;
+    %
+    [Znorm_cyl,Zcurr_cyl,ZP0_cyl,dke_out_cyl] = main_dke_yp(id_simul,dkepath,equil_cyl,dkeparam,dkedisplay,ohm_cyl,waves,transpfaste,ripple,[],[]);
     if dke_out_cyl.residu_f{end}(end) <= dkeparam.prec0_f,
         RR_0(irho) = dke_out_cyl.XxRR_fsav(end,:);
     end        

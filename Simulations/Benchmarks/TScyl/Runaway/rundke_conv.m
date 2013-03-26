@@ -63,6 +63,9 @@ dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the firs
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 epsi = 0.04;%corresponds to pc/pT = 5
 %
 ohm = ohm_flat(equil,epsi);
@@ -78,7 +81,7 @@ dkeparam.dtn = dtn;
 dkeparam.nit_f = nit_f;
 dkeparam.prec0_f = -1;%to reach end of Legendre iterations
 %
-[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 xRRs = dke_out.XxRR_fsav(end,:);
 xRRv = NaN(1,nit_f);

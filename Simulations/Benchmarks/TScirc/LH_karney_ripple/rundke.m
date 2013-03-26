@@ -89,11 +89,14 @@ dkeparam.np_S = 201;
 dkeparam.nmhu_S = 201;
 dkeparam.pnmax_S = 30;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 % case with no ripple
 %
-[Znorm_0,Zcurr_0,ZP0_0,dke_out_0] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,[],[],[]);
+[Znorm_0,Zcurr_0,ZP0_0,dke_out_0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,[],[],[]);
 if dke_out_0.residu_f{end}(end) <= dkeparam.prec0_f,
     j_0 = Zcurr_0.x_0;
     P_0 = ZP0_0.x_rf_fsav;
@@ -104,7 +107,7 @@ end
 %
 % case with ripple
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
     j = Zcurr.x_0;
     P = ZP0.x_rf_fsav;

@@ -56,6 +56,9 @@ dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 epsi = 0.001;
 %
 %equil.pzTi = 1e-10*ones(size(equil.pzTi));
@@ -81,15 +84,15 @@ for ibetath = 1:length(betath_list),
     ohm = ohm_flat(equil,epsi);
     %
     dkeparam.coll_mode = 0;% Relativistic Maxwellian background
-    [dummy,Zcurr] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     sigma_0(ibetath) = Zcurr.x_0/epsi;
     %
     dkeparam.coll_mode = 1;% High-velocity limit
-    [dummy,Zcurr] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     sigma_1(ibetath) = Zcurr.x_0/epsi;
     %
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
-    [dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,Zcurr,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         sigma_2(ibetath) = Zcurr.x_0/epsi;
     else

@@ -58,6 +58,9 @@ dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, t
 dkeparam.tn = 10000;%time for asymptotic solution with norm_mode_f = 1
 dkeparam.dtn = 1000;%10 time steps required for accurate runaway solution - see rundke_dtn
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 dkeparam.coll_mode = 0;%For comparison with theoretical results
 betath = 0.001;%validated for NR limit
 %
@@ -82,7 +85,7 @@ for iZi = 1:length(Zi_list),
         %
         ohm = ohm_flat(equil,epsi);
         %
-        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+        [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
         %
         RR(iZi,iepsi) = dke_out.XxRR_fsav(end,:);
         %

@@ -75,6 +75,9 @@ dkeparam.invproc = invproc;
 dkeparam.prec0_f = 0;
 dkeparam.tn = tnmax;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 ndtn = length(dtn_list);
 %
 normf0_u_1 = cell(1,ndtn);
@@ -92,7 +95,7 @@ for idtn = 1:length(dtn_list);
     dtn = dtn_list(idtn);
     dkeparam.dtn = dtn;
     %
-    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     normf0_u_1{idtn} = dke_out.normf0{end};
     residue_u_1{idtn} = dke_out.residu_f{end};
@@ -107,7 +110,7 @@ for idtn = 1:length(dtn_list);
     dtn = dtn_list(idtn);
     dkeparam.dtn = dtn;
     %
-    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     normf0_u_2{idtn} = dke_out.normf0{end};
     residue_u_2{idtn} = dke_out.residu_f{end};
@@ -127,6 +130,9 @@ dkeparam.invproc = invproc;
 dkeparam.prec0_f = 0;
 dkeparam.tn = tnmax;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 equil.pzTi = pzTi;
 %
 for idtn = 1:length(dtn_list);
@@ -134,7 +140,7 @@ for idtn = 1:length(dtn_list);
     dtn = dtn_list(idtn);
     dkeparam.dtn = dtn;
     %
-    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     normf0_nu_1{idtn} = dke_out.normf0{end};
     residue_nu_1{idtn} = dke_out.residu_f{end};
@@ -149,7 +155,7 @@ for idtn = 1:length(dtn_list);
     dtn = dtn_list(idtn);
     dkeparam.dtn = dtn;
     %
-    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     normf0_nu_2{idtn} = dke_out.normf0{end};
     residue_nu_2{idtn} = dke_out.residu_f{end};

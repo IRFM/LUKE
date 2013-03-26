@@ -9,6 +9,12 @@ clear functions
 warning off
 global nfig
 %
+remtimout = 0;%10;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
+remlist = 1;%NaN;%[];% list of remote profiles to check. Use NaN to check all
+%
+mdce_opt = 0;% option for testing distributed computing inside remote calculation
+%
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
 id_simul = 'LH_karney_remote';%Simulation ID
@@ -29,23 +35,11 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ohm = '';%For Ohmic electric contribution
-path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
-paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-id_transpfaste = '';%For fast electron radial transport
-path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-id_ripple = '';%For fast electron magnetic ripple losses
-path_ripple = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
-[dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
+[dkepath,equil,dkeparam,dkedisplay] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display);
 %
 %************************************************************************************************************************************
 %
@@ -86,10 +80,11 @@ dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, t
 dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 dkeparam.rt_mode = 1;% necessary to use run_lukert
 %
-dkeparam.clustermode.coll_dke_jd.scheduler.type = 'local';
-dkeparam.clustermode.eecoll_dke_yp.scheduler.type = 'local';
-dkeparam.clustermode.coll_dke_jd.scheduler.mode = 2;
-dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = 2;
+dkeparam.rho_S = rho_S;% radial flux grid points enforced
+dkeparam.psin_S = psin_S;% radial flux grid points enforced
+%
+dkeparam.clustermode.coll_dke_jd.scheduler.mode = mdce_opt;
+dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = mdce_opt;
 %
 % RELATIVISTIC CASE
 %
@@ -100,38 +95,72 @@ wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the pl
 %
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
-% all profiles in dkepath.remote are tested
+% generate luke_inputs structure
 %
-if isfield(dkepath,'remote'),
-    nrem = length(dkepath.remote);
-else
-    nrem = 0;
-end
-%
-Znorm = cell(1,nrem+1);
-Zcurr = cell(1,nrem+1);
-ZP0 = cell(1,nrem+1);
+lukestruct.simul.locid = id_simul;
+lukestruct.equil = equil;
+lukestruct.dkeparam = dkeparam;
+lukestruct.dkedisplay = dkedisplay;
+lukestruct.waves = waves;
 %
 % local calculation
 %
 disp('--> Local calculation')
 %
-[Znorm_0,Zcurr_0,ZP0_0] = run_lukert(id_simul,'',waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
+lukestruct_0 = run_lukert(lukestruct,dkepath);
 %
-dkepath.remtimout = 10;% timeout in minutes
+Znorm_0 = lukestruct_0.Znorm;
+Zcurr_0 = lukestruct_0.Zcurr;
+ZP0_0 = lukestruct_0.ZP0;
+%
+% profiles in dkepath.remote tested
+%
+if isfield(dkepath,'remote'),
+    nremote = length(dkepath.remote);
+    if isnan(remlist),
+        remlist = 1:nremote;
+    else
+        remlist(remlist > nremote) = [];
+    end
+else
+    remlist = [];
+end
+nrem = length(remlist);
+%
+% simulation filename
+%
+filename = [path_simul,'LUKE_RESULTS_',id_equil,'_',id_simul,'.mat'];
+%
+% check if current jobs exists to load possible existing jobs
+%
+if remtimout == 0 && remstart == 0 && exist(filename,'file'),% load existing simulation
+    load(filename,'lukestructs');
+else% new simulation
+    lukestructs = repmat({lukestruct},[1,nrem]);
+end
+%
+dkepath.remtimout = remtimout;% timeout in minutes
 dkepath.remenforce = 0;% exit if remote calculation failed 
 %
 for remnum = 1:nrem,
-    dkepath.remnum = remnum;
     %
-    disp(['--> Calculation with remote number ',num2str(remnum)])
+    dkepath.remnum = remlist(remnum);
     %
-    [rZnorm,rZcurr,rZP0] = run_lukert(id_simul,'',waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
+    disp(['--> Calculation with remote number ',num2str(dkepath.remnum)])
     %
-    if ~isempty(rZcurr),
-        Znorm{remnum} = rZnorm;
-        Zcurr{remnum} = rZcurr;
-        ZP0{remnum} = rZP0;
+    lukestructs{remnum} = run_lukert(lukestructs{remnum},dkepath);
+    %
+end
+%
+Znorm = cell(1,nrem);
+Zcurr = cell(1,nrem);
+ZP0 = cell(1,nrem);
+%
+for remnum = 1:nrem,
+    if isfield(lukestructs{remnum},'Zcurr'),
+        Znorm{remnum} = lukestructs{remnum}.Znorm;
+        Zcurr{remnum} = lukestructs{remnum}.Zcurr;
+        ZP0{remnum} = lukestructs{remnum}.ZP0;
     end
 end
 %
@@ -163,5 +192,5 @@ diary off
 %
 %************************************************************************************************************************************
 %
-eval(['save ',path_simul,'LUKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
-info_dke_yp(2,['Data saved in ',path_simul,'LUKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
+save(filename);
+info_dke_yp(2,['Data saved in ',filename]);

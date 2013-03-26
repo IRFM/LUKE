@@ -55,6 +55,9 @@ if exist('dmumpsmex');dkeparam.invproc = -2;end
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 betath = 0.01;%validated for NR limit
 %
 epsi = 0.001;
@@ -78,7 +81,7 @@ dkeparam.dtn = NaN;%specified by tn
 dkeparam.nit_f = nit_f;
 dkeparam.prec0_f = -1;%to reach end of Legendre iterations
 %
-[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[dummy,dummy,dummy,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 sigma_2 = dke_out.curr0{end}/epsi;
 %
 sigma_Z1s = 1/100*sqrt(me*qe/10)/(1.65*mu0*e0^2);%Spitzer conductivity (from 'Tokamaks' by J. Wesson, Oxford Science Publication, 3rd Eds., 2004)
