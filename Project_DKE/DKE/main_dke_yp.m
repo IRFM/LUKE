@@ -1,5 +1,5 @@
 function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = ...
-    main_dke_yp(simul_in,psin_S,rho_S,dkepath,equil,dkeparam_in,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct)
+    main_dke_yp(simul_in,dkepath,equil,dkeparam_in,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct)
 %
 %  Main function of the 3-D relativistic bounce-averaged electron drift kinetic equation solver 
 %  for the RF wave absorption problem in presence of an Ohmic electric field (electron bootstrap current consistent with non-Maxwellian distribution)
@@ -25,9 +25,9 @@ simul.hostname = dkepath.hostname;
 %
 dke_warnings = '';
 %
-if nargin < 13,
+if nargin < 11,
     error('Wrong number of input arguments in main_dke_yp');
-elseif nargin == 13,
+elseif nargin == 11,
     loadstruct = [];
 end
 %
@@ -65,7 +65,7 @@ else
         waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys,...
         ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf,...
         XXfinit]...
-         = buildlukestruct_yp(loadstruct,psin_S,rho_S,equil,dkeparam_in,dkedisplay,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
+         = buildlukestruct_yp(loadstruct,equil,dkeparam_in,dkedisplay,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
     %
     time0 = clock;
     %
@@ -291,7 +291,7 @@ for itn = itn0:nit,
     if dkeparam_out.timevol == 1,
         [ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...(itn)
             XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRR_fsav{itn},...
-            xne_norm_out{itn},xTe_norm_out{itn},xft_fsav{itn},xfteff_fsav{itn},xRfrac_fsav{itn}] = ...
+            xne_norm_out{itn},xTe_norm_out{itn},xft_fsav{itn},xfteff_fsav{itn},XXRintmask{itn},Zmom(itn)] = ...
             fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
             XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
             ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
@@ -300,12 +300,12 @@ for itn = itn0:nit,
     %
     if nit > 1 && dkedisplay.display_mode >= 1,
         figure(Fig_TimeIter),
-        if length(rho_S) == 1,
+        if length(equilDKE.xrho) == 1,
             graph1D_jd(FPtime(itn),curr0{itn}(end),0,0,'FP time (\tau_c)','J (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
         elseif dkeparam_out.timevol == 1,
             graph1D_jd(FPtime(itn),Zcurr(itn).I_tot,0,0,'FP time (\tau_c)','I (MA)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
         else
-            graph1D_jd(FPtime(itn),curr0{itn}(1,end),0,0,'FP time (\tau_c)','J_0 (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
+            graph1D_jd(FPtime(itn),max(abs(curr0{itn}(:,end))),0,0,'FP time (\tau_c)','max(|J|) (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
         end
         grid on
         drawnow;                
@@ -329,7 +329,7 @@ if dkeparam_out.timevol == 0,
     %
     [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
         XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
-        xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,xRfrac_fsav] = ...
+        xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,XXRintmask,Zmom] = ...
         fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
         XXf0{1},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
         ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
@@ -407,6 +407,7 @@ end
 %
 dke_out.XXfinit = XXfinit;
 dke_out.XXf0 = XXf0;
+dke_out.XXfM = XXfM;
 dke_out.Zf0_interp = Zf0_interp;
 dke_out.XXf0_g = XXf0_g;
 dke_out.FPtime = FPtime;
@@ -414,15 +415,34 @@ dke_out.normf0 = normf0;
 dke_out.curr0 = curr0;
 dke_out.residu_f = residu_f;
 dke_out.ZXXS = ZXXS;
+%
 dke_out.ZXXD_c = ZXXD_c;
 dke_out.ZXXF_c = ZXXF_c;
+dke_out.XXILor = XXILor;
+%
 dke_out.ZXXD_e = ZXXD_e;
 dke_out.ZXXF_e = ZXXF_e;
+dke_out.xepsi = xepsi;
+dke_out.xEfield_validity = xEfield_validity;
+%
+dke_out.waveparam = waveparam;
+dke_out.xyprop_dke = xyprop_dke;
+dke_out.xyP0_2piRp_mod = xyP0_2piRp_mod_old;
+dke_out.yb = yb;
+dke_out.yP0_2piRp = yP0_2piRp;
+dke_out.xys = xys;
+%
 dke_out.ZXXD_rf = ZXXD_rf;
 dke_out.ZXXF_rf = ZXXF_rf;
+if dkeparam_out.opt_struct == 1,
+    dke_out.ZXYD_rf = ZXYD_rf;
+    dke_out.ZXYF_rf = ZXYF_rf;
+end
+dke_out.gridindex_rf = gridindex_rf;
+%
 dke_out.ZXXD_a = ZXXD_a;
 dke_out.ZXXF_a = ZXXF_a;
-dke_out.gridindex_rf = gridindex_rf;
+%
 dke_out.XxRR_fsav = XxRR_fsav;
 dke_out.xMRR_flux = xMRR_flux;
 dke_out.xMRR_tau = xMRR_tau;
@@ -432,15 +452,13 @@ dke_out.xTe_norm_out = xTe_norm_out;
 dke_out.xne_norm_out = xne_norm_out;
 dke_out.xft_fsav = xft_fsav;
 dke_out.xfteff_fsav = xfteff_fsav;
-dke_out.xRfrac_fsav = xRfrac_fsav;
+dke_out.XXRintmask = XXRintmask;
+dke_out.Zmom = Zmom;
 dke_out.memoryLU_f_out = memoryLU_f_out;
 dke_out.memoryLU_g_out = memoryLU_g_out;
 dke_out.time_out = time_out;
 dke_out.time_DKE = time_DKE;
-dke_out.waveparam = waveparam;
-dke_out.xyprop_dke = xyprop_dke;
-dke_out.xyP0_2piRp_mod = xyP0_2piRp_mod_old;
-dke_out.xys = xys;
+%
 if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf) && nit_rf > 1,
     dke_out.yresidue_rf_mod = yresidue_rf_mod;
     dke_out.yresidue_rf_out = yresidue_rf_out;
@@ -451,7 +469,7 @@ if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf) && nit_rf > 1,
     %waves = alphaphi_luke_jd(waves,dke_out,equilDKE);% calculates the QL ray absorption
     %
 end
-dke_out.yb = yb;
+%
 dke_out.XXsource = XXsinksource_in;
 dke_out.xRR_fsav = xRR_fsav;
 dke_out.Zmripple = Zmripple;
