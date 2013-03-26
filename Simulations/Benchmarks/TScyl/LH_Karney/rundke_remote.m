@@ -10,8 +10,11 @@ warning off
 global nfig
 %
 remtimout = 0;%10;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remlist = 1;%NaN;%[];% list of remote profiles to check. Use NaN to check all
+remlist = 1;%[1,4,5];%NaN;%[];% list of remote profiles to check. Use NaN to check all
+%
+opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
 mdce_opt = 0;% option for testing distributed computing inside remote calculation
 %
@@ -95,6 +98,8 @@ wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the pl
 %
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
+opt.fields = {'Znorm','Zcurr','ZP0'};% select fields to be returned from lukestructs. Use NaN to return all fields.
+%
 % generate luke_inputs structure
 %
 lukestruct.simul.locid = id_simul;
@@ -102,6 +107,7 @@ lukestruct.equil = equil;
 lukestruct.dkeparam = dkeparam;
 lukestruct.dkedisplay = dkedisplay;
 lukestruct.waves = waves;
+lukestruct.opt = opt;
 %
 % local calculation
 %
@@ -109,9 +115,9 @@ disp('--> Local calculation')
 %
 lukestruct_0 = run_lukert(lukestruct,dkepath);
 %
-Znorm_0 = lukestruct_0.Znorm;
-Zcurr_0 = lukestruct_0.Zcurr;
-ZP0_0 = lukestruct_0.ZP0;
+Znorm_0 = lukestruct_0.output.Znorm;
+Zcurr_0 = lukestruct_0.output.Zcurr;
+ZP0_0 = lukestruct_0.output.ZP0;
 %
 % profiles in dkepath.remote tested
 %
@@ -140,6 +146,7 @@ else% new simulation
 end
 %
 dkepath.remtimout = remtimout;% timeout in minutes
+dkepath.rempause = rempause;% pause between job checks (in minutes) (only for remtimout > 0)
 dkepath.remenforce = 0;% exit if remote calculation failed 
 %
 for remnum = 1:nrem,
@@ -157,10 +164,10 @@ Zcurr = cell(1,nrem);
 ZP0 = cell(1,nrem);
 %
 for remnum = 1:nrem,
-    if isfield(lukestructs{remnum},'Zcurr'),
-        Znorm{remnum} = lukestructs{remnum}.Znorm;
-        Zcurr{remnum} = lukestructs{remnum}.Zcurr;
-        ZP0{remnum} = lukestructs{remnum}.ZP0;
+    if isfield(lukestructs{remnum},'output'),
+        Znorm{remnum} = lukestructs{remnum}.output.Znorm;
+        Zcurr{remnum} = lukestructs{remnum}.output.Zcurr;
+        ZP0{remnum} = lukestructs{remnum}.output.ZP0;
     end
 end
 %
