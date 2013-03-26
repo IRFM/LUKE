@@ -1,54 +1,220 @@
-function [varargout] = run_lukert(simul_in,wavestructs,waves,psin_S,rho_S,dkepath,equil,dkeparam_in,dkedisplay_in,ohm,transpfaste,ripple,XXf0,XXsinksource_in,opt_save_in)
+function [lukestucts] = run_lukert(lukestucts,dkepath)
 %
 % Wave and kinetic solver. Self-consistent calculations with or without plasma fluctuations
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 %
-% remote luke run if specified in dkepath
+% remote luke run possible if specified in dkepath
 %
-if nargin < 15,
-   opt_save_in = 1;%In case of crash, to restart simulation from an intermediate step stored in a *.mat file (<0 for launching simulation from backup, 0 no backup, >0 for performing backup)
-end
-%
-if isempty(dkepath),
+if nargin < 2,
     dkepath = load_structures_yp('dkepath','','');
 end
 %
+cellmode = 1;
+%
 if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && dkepath.remnum == round(dkepath.remnum) && dkepath.remnum >= 1 && dkepath.remnum <= length(dkepath.remote),
-    %
-    varargout = cell(1,nargout);
     %
     remote = dkepath.remote(dkepath.remnum);
     %
     if isfield(dkepath,'remtimout'),%timeout
         remote.remtimout = dkepath.remtimout;
     else
-        remote.remtimout = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes) [60]',60);
+        remote.remtimout = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes). Enter 0 to return and check later [0]',0);
     end
-    remote.rempause = 1;%pause between job checks (in minutes)
     %
-    remote.debugmode = dkedisplay_in.display_mode;
+    if isfield(dkepath,'rempause'),%timeout
+        remote.rempause = dkepath.rempause;
+    else
+        remote.rempause = 1;%pause between job checks (in minutes)
+    end
     %
-    [err,varargout{:}] = matremote_luke_jd('run_lukert',{simul_in,wavestructs,waves,psin_S,rho_S,'',equil,dkeparam_in,dkedisplay_in,ohm,transpfaste,ripple,XXf0,XXsinksource_in,opt_save_in},remote);
+    if isfield(dkepath,'debugmode'),
+        remote.debugmode = dkepath.debugmode;
+    else
+        remote.debugmode = 0;
+    end
     %
-    if isempty(err)
-        if isfield(equil,'fluct'),
-            varargout{6}.fluct = equil.fluct;%for transfering info about plasma fluctuations
+    if ~iscell(lukestucts),
+        cellmode = 0;
+        lukestucts = {lukestucts};% lukestucts must be in cell for remote calculation
+    end
+    %
+else
+    %
+    remote = '';%local sequential calculation
+    %
+end
+%
+if iscell(lukestucts),% remote and/or distributed calculation
+    %
+    lukestuctsize = size(lukestucts);
+    %
+    lukestucts = lukestucts(:);
+    %
+    njobs = length(lukestucts);
+    %
+    for ijob = 1:njobs,
+        if isempty(remote),%local sequential calculation
+            %
+            disp(['----> Starting job # ',num2str(ijob),'/',num2str(njobs),' locally'])
+            %
+            lukestucts{ijob} = run_lukert(lukestucts{ijob});
+        else            
+            %
+            lukestandardjob = '';
+            %
+            if isfield(lukestucts{ijob},'output'),
+                disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' already completed.'])
+                continue
+            elseif isfield(lukestucts{ijob},'err'),
+                disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' was run already but failed due to the following error :'])
+                if ischar(lukestucts{ijob}.err),
+                    disp(lukestucts{ijob}.err)
+                else
+                    for ierr = 1:length(lukestucts{ijob}.err),
+                        disp(lukestucts{ijob}.err{ierr})
+                    end
+                end
+                continue
+            elseif isfield(lukestucts{ijob},'job'),
+                disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is checked on remote cluster : ',remote.host])
+            else
+                disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is sent to remote cluster : ',remote.host])
+                %
+                lukestandardjob = matstandardjob_jd(remote,'runmat');
+                %
+                if isfield(lukestucts{ijob},'dkeparam') && isfield(lukestucts{ijob}.dkeparam,'luke_memory'),
+                    lukestandardjob.memory = lukestucts{ijob}.dkeparam.luke_memory;% requested memory specified in dkeparam
+                elseif isfield(lukestucts{ijob},'transpfaste') && ~isempty(lukestucts{ijob}.transpfaste), 
+                    lukestandardjob.memory = 14000;%mb default value with transport
+                else
+                    lukestandardjob.memory = 7000;%mb default value without transport
+                end
+                %
+                if isfield(lukestucts{ijob},'dkeparam') && isfield(lukestucts{ijob}.dkeparam,'luke_ppn'),
+                    luke_job.nodes = 1;
+                    luke_job.ppn = lukestucts{ijob}.dkeparam.luke_ppn;% number of cores specified in dkeparam
+                end
+                %
+            end
+            %
+            [err,lukestucts{ijob}] = matremote_luke_jd('run_lukert',lukestucts(ijob),remote,lukestandardjob);
+            %
+            if ~isempty(err),
+                %
+                if isfield(dkepath,'remenforce') && dkepath.remenforce == 0,%do not enforce local calculation, exit instead
+                    lukestucts{ijob}.err = err;
+                else
+                    lukestucts{ijob} = run_lukert(lukestucts{ijob});% local job enforced
+                end
+                %
+            end
         end
         %
-        return
     end
     %
-    if isfield(dkepath,'remenforce') && dkepath.remenforce == 0,%do not enforce local calculation, exit instead
-        varargout{1} = err;
-        for iarg = 2:13,
-            varargout{iarg} = '';
-        end
-        %
-        return
+    if cellmode == 0;
+        lukestucts = lukestucts{1};
+    else
+        lukestucts = reshape(lukestucts,lukestuctsize);
     end
+    %
+    return
     %
 end   
+%
+% case where the job was already run
+% 
+if isfield(lukestucts,'output'),
+    disp('Job was successfully completed already. Aborted.')
+    return
+elseif isfield(lukestucts,'err'),
+    disp('Job was run already but failed due to an error. See lukestucts.err. Remove field ''err'' from lukestucts to start again.')
+    return
+end
+%
+% mandatory fields
+%
+equil           = lukestucts.equil;
+dkeparam_in     = lukestucts.dkeparam;
+dkedisplay_in   = lukestucts.dkedisplay;
+%
+% optional fields
+%
+if ~isfield(lukestucts,'simul'),
+    simul_in = '';
+else
+    simul_in = lukestucts.simul;
+end
+%
+if ~isfield(lukestucts,'wavestructs'),
+    wavestructs = [];
+else
+    wavestructs = lukestucts.wavestructs;
+end
+%
+if ~isfield(lukestucts,'waves'),
+    waves = [];
+else
+    waves = lukestucts.waves;
+end
+%
+if ~isfield(lukestucts,'ohm'),
+    ohm = [];
+else
+    ohm = lukestucts.ohm;
+end
+%
+if ~isfield(lukestucts,'transpfaste'),
+    transpfaste = [];
+else
+    transpfaste = lukestucts.transpfaste;
+end
+%
+if ~isfield(lukestucts,'ripple'),
+    ripple = [];
+else
+    ripple = lukestucts.ripple;
+end
+%
+if ~isfield(lukestucts,'XXf0'),
+    XXf0 = [];
+else
+    XXf0 = lukestucts.XXf0;
+end
+%
+if ~isfield(lukestucts,'XXsinksource'),
+    XXsinksource_in = [];
+else
+    XXsinksource_in = lukestucts.XXsinksource;
+end
+%
+if ~isfield(lukestucts,'loadstructs'),
+    loadstructs = [];
+else
+    loadstructs = lukestucts.loadstructs;
+end
+%
+if ~isfield(lukestucts,'opt'),
+    opt.save = 0;% (1): save LUKE_RESULTS or return error (0): return results or error
+    opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
+    opt.backup = 0;% (1) save fluctuation time steps (0) do not save
+    opt.waves = 0;% (1) save waves at each time step (0) do not save
+else
+    opt = lukestucts.opt;
+    if ~isfield(opt,'save'),
+        opt.save = 0;
+    end
+    if ~isfield(opt,'fields'),
+        opt.fields = 0;
+    end
+    if ~isfield(opt,'backup'),
+        opt.backup = 0;
+    end
+    if ~isfield(opt,'waves'),    
+        opt.waves = 1;
+    end
+end
 %
 [dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
@@ -69,6 +235,12 @@ if ~isstruct(simul_in),
     simul.path = './';
 else
     simul = simul_in;
+    if ~isfield(simul,'id'),
+        simul.id = '';
+    end
+    if ~isfield(simul,'path'),
+        simul.path = './';
+    end
 end
 %
 if isempty(simul.id),% automatic generation of filename
@@ -92,27 +264,32 @@ if isempty(simul.id),% automatic generation of filename
     end
     %
     for iw = 1:length(waves),
-         simul.id = [simul.id,'_',waves{iw}.id];
+        simul.id = [simul.id,'_',waves{iw}.id];
     end
     %
     for iw = 1:length(wavestructs),
-         simul.id = [simul.id,'_',wavestructs{iw}.id];
+        simul.id = [simul.id,'_',wavestructs{iw}.id];
     end
     %
+    if isfield(simul,'locid'),
+        simul.id = [simul.id,'_',simul.locid];
+    end
 end    
 %
 if ~exist(simul.path,'dir'), 
     mkdir(simul.path);
 end
-if ~exist([simul.path,'wave_results'],'dir'), 
+if opt.waves && ~exist([simul.path,'wave_results'],'dir'), 
     mkdir([simul.path,'wave_results']);
 end
 %
-if opt_save_in <0 && ~exist([simul.path,'backup_',simul.id,'.mat'],'file'),
-    opt_save_in = 1;
+if opt.backup < 0 && ~exist([simul.path,'backup_',simul.id,'.mat'],'file'),% pas de reload if backup file not found - start again and save
+    opt.backup = 1;
 end
 %
-disp(simul.id);
+disp(' ');
+disp(['Simulation id : ',simul.id,' ; Simulation path : ',simul.path]);
+disp(' ');
 %
 itnmin = 1;
 wavetype = 0;
@@ -125,12 +302,12 @@ end
 %
 f0struct = [];%Ray absorption in C3PO is first calculated with a thermal electron distribution function
 %
-if isempty(psin_S) && isempty(rho_S),
-    dkeparam_in.rt_mode = 0;%Only ray-tracing is done, with or without plasma fluctuations. rt_mode is enforced
+if isempty(dkeparam_in.psin_S) && isempty(dkeparam_in.rho_S),
+    dkeparam_in.rt_mode = 0;%Only ray-tracing is done, with or without plasma fluctuations. rt_mode = 0 is enforced
     disp('WARNING: dkeparam.rt_mode = 0 has been enforced, since both psin_S and rho_S are empty.');
 end
 %    
-if ~isfield(dkeparam_in,'tn') || (isempty(psin_S) && isempty(rho_S)),
+if ~isfield(dkeparam_in,'tn') || (isempty(dkeparam_in.psin_S) && isempty(dkeparam_in.rho_S)),
     dkeparam_in.tn = NaN;
     disp('WARNING: dkeparam.tn = NaN has been set, since tn field is not existing in dkeparam structure.');
 end
@@ -154,7 +331,7 @@ if flag_LH == 0 && isfield(equil.fluct,'npar0_lh'),
     equil.fluct = rmfield(equil.fluct,'npar0_lh');
 end
 %
-mksa = buildlukestruct_yp('mksa',psin_S,rho_S,equil,dkeparam_in,dkedisplay_in);
+mksa = buildlukestruct_yp('mksa',equil,dkeparam_in,dkedisplay_in);
 %
 equil.fluct.dtn_fluct = calc_dtn_fluct_jd(equil.fluct,mksa);% maximum fluctuation time
 %
@@ -173,11 +350,10 @@ end
 %
 dkeparam_in = rmfield(dkeparam_in,'tn');%tn is specified in iteration loop
 %
-if opt_save_in >= 0;
+if opt.backup >= 0;% start simulation from beginning
     %
     dkeparam = dkeparam_in;
     dkedisplay = dkedisplay_in;
-    opt_save = opt_save_in;
     tn = tn_in;
     %
     calctime = struct;
@@ -188,8 +364,6 @@ if opt_save_in >= 0;
         Itot = [];
         Ptot = [];
     end
-    %
-    loadstructs = [];%Structure that pass parameters for recursive calculations between wave and kinetic solvers 
     %
     % Calculate vectorial axisymmetric magnetic equilibrium and eventually plasmas fluctuations (if substructure 'fluct' exists
     %
@@ -219,13 +393,13 @@ if opt_save_in >= 0;
             end     
         end
     end
-else
+else% reload mode
     %
     disp('------------------ RE-LOAD MODE ------------------');
     %
     load([simul.path,'backup_',simul.id,'.mat']);
     %
-    if opt_save_in == -1,%interactive update
+    if opt.backup == -1,%interactive update
         %
         overwrite_dkeparam_field = input_dke_yp('If you want to overwrite one field of the reloaded ''dkeparam'' structure, give its name ?');
         overwrite_dkedisplay_field = input_dke_yp('If you want to overwrite one field of the reloaded ''dkedisplay'' structure, give its name ?');
@@ -246,7 +420,7 @@ else
             end
         end
         %
-    elseif opt_save_in == -2,%non interactive update
+    elseif opt.backup == -2,%non interactive update
         dkedisplay.display_mode = dkedisplay_in.display_mode;
         if ~isfield(dkedisplay_in,'display_time_mode');
             dkedisplay.display_time_mode = 0;
@@ -278,14 +452,15 @@ else
         %
     end
     %
+    opt.backup = 1;
+    %
     disp('---------------------------------')
     disp('Iteration status')
     disp('---------------------------------')
     disp([' - tn = ',int2str(tn)])
     disp([' - number of iterations to be done = ',int2str(itnmax - itn)])
     %
-    if itn ~= itnmax,
-        opt_save = 1;
+    if itn < itnmax,
         itnmin = itn + 1;%restart from the saved iteration
     else
         itnmin = itnmax + 1;%no iteration
@@ -324,9 +499,56 @@ for itn = itnmin:itnmax,%time evolution
     time_luke = tic;
     %
     if isempty(loadstructs),
-        [Znorm_loc,Zcurr_loc,ZP0_loc,dke_out,loadstructs.radialDKE,loadstructs.equilDKE,loadstructs.momentumDKE,loadstructs.gridDKE,loadstructs.Zmomcoef,loadstructs.Zbouncecoef,loadstructs.Zmripple,loadstructs.mksa,loadstructs.XXsinksource,loadstructs.loopDKE] = loop_run_lukert(simul,waves,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);
+        [Znorm_loc,Zcurr_loc,ZP0_loc,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_run_lukert(simul,waves,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);
+        %
+        if isfield(equil,'fluct'),
+            equilDKE.fluct = equil.fluct;%for transfering info about plasma fluctuations
+        end
+        %
+        loadstructs.radialgrid_dke_jd.radialDKE = radialDKE;
+        loadstructs.equilibrium_jd.equilDKE = equilDKE;
+        loadstructs.momentumgrid_dke_jd.momentumDKE = momentumDKE;
+        loadstructs.matrix3Dgridbuilder_dke_yp.gridDKE = gridDKE;
+        loadstructs.momentumcoefbuilder_dke_yp.Zmomcoef = Zmomcoef;
+        loadstructs.bouncecoefbuilder_dke_yp.Zbouncecoef = Zbouncecoef;
+        loadstructs.mripplecoefbuilder_dke_yp.Zmripple = Zmripple;
+        loadstructs.mksacoefbuilder_dke_yp.mksa = mksa;
+        loadstructs.sinksourcecoeffbuilder_dke_yp.XXsinksource = XXsinksource;
+        %
+        loadstructs.rad_dke_yp.ZXXD_a = dke_out.ZXXD_a;
+        loadstructs.rad_dke_yp.ZXXF_a = dke_out.ZXXF_a;
+        %
+        loadstructs.coll_dke_jd.ZXXD_c = dke_out.ZXXD_c;
+        loadstructs.coll_dke_jd.ZXXF_c = dke_out.ZXXF_c;
+        loadstructs.coll_dke_jd.ZXXD_c_tp = NaN;%dke_out.ZXXD_c_tp;
+        loadstructs.coll_dke_jd.ZXXF_c_tp = NaN;%dke_out.ZXXF_c_tp;
+        loadstructs.coll_dke_jd.XXfM = dke_out.XXfM;
+        loadstructs.coll_dke_jd.XXILor = dke_out.XXILor;
+        %
+        loadstructs.efield_dke_jd.ZXXD_e = dke_out.ZXXD_e;
+        loadstructs.efield_dke_jd.ZXXF_e = dke_out.ZXXF_e;
+        loadstructs.efield_dke_jd.ZXXD_e_tp = NaN;%dke_out.ZXXD_e_tp;
+        loadstructs.efield_dke_jd.ZXXF_e_tp = NaN;%dke_out.ZXXF_e_tp;
+        loadstructs.efield_dke_jd.xepsi = dke_out.xepsi;
+        loadstructs.efield_dke_jd.xEfield_validity = dke_out.xEfield_validity;
+        %
+%         loadstructs.rfwave_dke_jd.waveparam = dke_out.waveparam;
+%         loadstructs.rfwave_dke_jd.xyprop_dke = dke_out.xyprop_dke;
+%         loadstructs.rfwave_dke_jd.xyP0_2piRp_mod = dke_out.xyP0_2piRp_mod;
+%         loadstructs.rfwave_dke_jd.yb = dke_out.yb;
+%         loadstructs.rfwave_dke_jd.yP0_2piRp = dke_out.yP0_2piRp;
+%         loadstructs.rfwave_dke_jd.xys = dke_out.xys;
+        %
+%         loadstructs.rfdiff_dke_jd.ZXYD_rf = dke_out.ZXYD_rf;
+%         loadstructs.rfdiff_dke_jd.ZXYF_rf = dke_out.ZXYF_rf;
+%         loadstructs.rfdiff_dke_jd.ZXYD_rf_tp = NaN;%dke_out.ZXYD_rf_tp;
+%         loadstructs.rfdiff_dke_jd.ZXYF_rf_tp = NaN;%dke_out.ZXYF_rf_tp;
+%         loadstructs.rfdiff_dke_jd.gridindex_rf = dke_out.gridindex_rf;
+        %
+%         loadstructs.finit_dke_yp.XXfinit = dke_out.XXfinit;   
+        %         
     else
-        [Znorm_loc,Zcurr_loc,ZP0_loc,dke_out] = loop_run_lukert(simul,waves,psin_S,loadstructs.radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);   
+        [Znorm_loc,Zcurr_loc,ZP0_loc,dke_out] = loop_run_lukert(simul,waves,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);   
     end
     %
     calctime(itn).luke = toc(time_luke);
@@ -470,16 +692,18 @@ for itn = itnmin:itnmax,%time evolution
         Zitn = length(Ztime);
     end
     %
-    if itnmax > 1 && opt_save > 0,
+    if itnmax > 1 && opt.backup > 0,
         wavetype = wavetype/length(wavestructs);
         %
         if isfield(dkedisplay,'display_time_mode'),
             if dkedisplay.display_time_mode >= 2,
-                rayevolution_yp(wavetype,wavestructs{1}.equil_fit,waves,0,loadstructs.radialDKE.xrho_S_dke,itn);
+                rayevolution_yp(wavetype,wavestructs{1}.equil_fit,waves,0,loadstructs.radialgrid_dke_jd.radialDKE.xrho_S_dke,itn);
             end
         end
         %
-        eval(['save ',simul.path,'wave_results/waves_',simul.id,'_',int2str(itn),'.mat wavetype waves wavestructs rho_S itn']);
+        if opt.waves,
+            eval(['save ',simul.path,'wave_results/waves_',simul.id,'_',int2str(itn),'.mat wavetype waves wavestructs itn']);
+        end
         %
         wavetype = 0;
         %
@@ -492,7 +716,7 @@ for itn = itnmin:itnmax,%time evolution
             waves = '';
         end
         %
-        eval(['save ',save_str,' tn itn itnmax calctime Ztime Zitn xrho xtn xJ xP Itot Ptot byPnonabs wavestructs waves f0struct XXf0_t loadstructs simul psin_S equil dkeparam dkedisplay ohm transpfaste ripple XXsinksource_in opt_save Znorm Zcurr ZP0']);
+        eval(['save ',save_str,' tn itn itnmax calctime Ztime Zitn xrho xtn xJ xP Itot Ptot byPnonabs wavestructs waves f0struct XXf0_t loadstructs simul equil dkeparam dkedisplay ohm transpfaste ripple XXsinksource_in Znorm Zcurr ZP0']);
         disp('--------------------------------------------------------------------------------------------------');
         info_dke_yp(2,['Backup of iteration ',int2str(itn),'/',int2str(itnmax),' done in file ''',save_str,'''.']);
         disp('--------------------------------------------------------------------------------------------------');
@@ -503,50 +727,34 @@ end
 dke_out.dkeparam = dkeparam;%for data transfer only
 dke_out.calctime = calctime;
 %
-if isfield(simul,'save') && simul.save == 1,
-    %
-    radialDKE = loadstructs.radialDKE;
-    equilDKE = loadstructs.equilDKE;
-    equilDKE.fluct = equil.fluct;%for transfering info about plasma fluctuations
-    momentumDKE = loadstructs.momentumDKE;
-    gridDKE = loadstructs.gridDKE;
-    Zmomcoef = loadstructs.Zmomcoef;
-    Zbouncecoef = loadstructs.Zbouncecoef;
-    Zmripple = loadstructs.Zmripple;
-    mksa = loadstructs.mksa;
-    XXsinksource = loadstructs.XXsinksource;
-    %
-    filename = [simul.path,'LUKE_RESULTS_',simul.id,'.mat'];
-    save(filename,'simul','dkepath','equil','dkeparam','dkedisplay','ohm','transpfaste','ripple',...
-        'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
-    info_dke_yp(2,['LUKE Results saved in ',filename]);
-    %
+output.Znorm = Znorm;
+output.Zcurr = Zcurr;
+output.ZP0 = ZP0;
+output.dke_out = dke_out;
+output.radialDKE = radialDKE;
+output.equilDKE = equilDKE;
+output.momentumDKE = momentumDKE;
+output.gridDKE = gridDKE;
+output.Zmomcoef = Zmomcoef;
+output.Zbouncecoef = Zbouncecoef;
+output.Zmripple = Zmripple;
+output.mksa = mksa;
+output.XXsinksource = XXsinksource;
+%
+lukestucts.output = output;
+%
+if opt.save,% save results in LUKE_RESULTS file
+    savefile = [simul.path,'LUKE_RESULTS_',simul.id,'.mat'];
+    save(savefile,'lukestucts');
 end
 %
-if ~isempty(loadstructs),
-    if nargout >= 1,varargout{1} = Znorm;end
-    if nargout >= 2,varargout{2} = Zcurr;end
-    if nargout >= 3,varargout{3} = ZP0;end
-    if nargout >= 4,varargout{4} = dke_out;end
-    if nargout >= 5,varargout{5} = loadstructs.radialDKE;end
-    %
-    if isfield(equil,'fluct'),
-        loadstructs.equilDKE.fluct = equil.fluct;%for transfering info about plasma fluctuations
-    end
-    if nargout >= 6,varargout{6} = loadstructs.equilDKE;end
-    %
-    if nargout >= 7,varargout{7} = loadstructs.momentumDKE;end
-    if nargout >= 8,varargout{8} = loadstructs.gridDKE;end
-    if nargout >= 9,varargout{9} = loadstructs.Zmomcoef;end
-    if nargout >= 10,varargout{10} = loadstructs.Zbouncecoef;end
-    if nargout >= 11,varargout{11} = loadstructs.Zmripple;end
-    if nargout >= 12,varargout{12} = loadstructs.mksa;end
-    if nargout >= 13,varargout{13} = loadstructs.XXsinksource;end
-  %  if nargout >= 14,varargout{14} = loadstructs.dke_warnings;end
-else
-    if nargout >= 1,varargout{1} = Znorm;end
-    if nargout >= 2,varargout{2} = Zcurr;end
-    if nargout >= 3,varargout{3} = ZP0;end
-    if nargout >= 4,varargout{4} = dke_out;end    
+if iscell(opt.fields),% select fields to return in output
+    lukestucts.output = selectfields_jd(lukestucts.output,opt.fields);
 end
+%
+if opt.save,% return at least savefile
+    lukestucts.output.savefile = savefile;
+end
+%
 
+    
