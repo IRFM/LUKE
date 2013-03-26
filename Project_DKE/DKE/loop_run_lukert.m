@@ -1,4 +1,4 @@
-function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = loop_run_lukert(simul,waves,psin_S,rho_S_init,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct)
+function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = loop_run_lukert(simul,waves,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct)
 %
 % Ray-tracing + quasilinear kinetic calculations using LUKE. Tool for implementation in other calculation packages.
 %
@@ -24,6 +24,8 @@ else
     w_mask = dkeparam.w_mask;%list of waves to account for in the radial grid determination
 end
 %
+rho_S_init = dkeparam.rho_S;
+%
 if isfield(dkeparam,'rho0') && length(rho_S_init) == 1,
     rho_S_init = rho_S_init + i*dkeparam.rho0;
 end
@@ -34,7 +36,7 @@ else
     nk_abs = 1;
 end
 %
-[rho_S,dkeparam.pnmax_S] = optgrid_dke_jd(waves,rho_S_init,dkeparam.pnmax_S,equil,w_mask,dkedisplay.display_mode);
+[dkeparam.rho_S,dkeparam.pnmax_S] = optgrid_dke_jd(waves,rho_S_init,dkeparam.pnmax_S,equil,w_mask,dkedisplay.display_mode);
 %
 % 3-D relativistic bounce averaged quasilinear kinetic calculations (LUKE)
 %
@@ -42,7 +44,7 @@ if dkeparam.rt_mode == 1,
 %
 % Case with sdNpar given by the waves structure (usualy constant along ray propagation)
 %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
 %
 % Case with sdNpar proportional to sNpar (in waves structure)
 %
@@ -72,7 +74,7 @@ elseif dkeparam.rt_mode == 2,
         end
     end
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
 %
 % *************************************************************************
 %
@@ -123,9 +125,9 @@ elseif dkeparam.rt_mode == 4,
         %
         % the radial grid is recalculated accounting for a_sdNpar effect
         %
-        [rho_S,dkeparam.pnmax_S] = optgrid_dke_jd(waves,rho_S_init,dkeparam.pnmax_S,equil,w_mask,dkedisplay.display_mode);
+        [dkeparam.rho_S,dkeparam.pnmax_S] = optgrid_dke_jd(waves,rho_S_init,dkeparam.pnmax_S,equil,w_mask,dkedisplay.display_mode);
         %
-        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
         %
         ny = size(ZP0(end).xy_rf_fsav,2);
         %
@@ -179,7 +181,7 @@ elseif dkeparam.rt_mode == 5,
         end
     end
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
 %
 % *************************************************************************
 %
@@ -237,7 +239,7 @@ elseif dkeparam.rt_mode == 3,%
         %
         % eval(['diary ',path_simul,'DKE_DIARY_',equil.id,'_',simul.id,'_',dNstr,'.txt']);
         %
-        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+        [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
         %
         % CD efficiency (A/W)
         %
@@ -299,7 +301,7 @@ elseif dkeparam.rt_mode == 3,%
         end
     end
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
     %
     % diary off
 elseif dkeparam.rt_mode == -1,

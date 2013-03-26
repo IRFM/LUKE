@@ -1,4 +1,4 @@
-function [radialDKE] = radialgrid_dke_jd(equil,dkeparam,display,xpsin_S_dke,xrho_S_dke)
+function [radialDKE] = radialgrid_dke_jd(equil,dkeparam,display)
 % 
 % Generates a non uniform radial grid. 
 %
@@ -34,9 +34,8 @@ function [radialDKE] = radialgrid_dke_jd(equil,dkeparam,display,xpsin_S_dke,xrho
 dke_mode = dkeparam.dke_mode;
 dpsin_dke = dkeparam.dpsin_dke;%for drift kinetic calculations
 %
-if isempty(xpsin_S_dke) == 1,%when the grid is defined by normalized radius in the equatorial mid-plane reference
-   xpsin_S_dke = sort([xpsin_S_dke,rho2psi_jd(equil,xrho_S_dke)]);
-end
+xpsin_S_dke = unique([dkeparam.psin_S,rho2psi_jd(equil,dkeparam.rho_S)]);
+%
 if isnan(display.psin_display), 
    psin_display_in=rho2psi_jd(equil,display.rho_display);
 else

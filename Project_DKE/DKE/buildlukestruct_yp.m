@@ -1,10 +1,8 @@
-function [varargout] = buildlukestruct_yp(loadstruct,psin_S,rho_S,equil,dkeparam_in,display,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in)
+function [varargout] = buildlukestruct_yp(loadstruct,equil,dkeparam_in,display,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in)
 %
 % Build main structures for LUKE that can be used also for other purposes
 %
 % INPUT
-%    - psin_S: normalized poloidal flux surface coordinate vector of the flux surfaces (for flux calculations) [1,npsi]
-%    - rho_S: normalized radial coordinate vector of the flux surfaces (for flux calculations) [1,npsi]
 %    - equil: axisymmetric toroidal magnetic equilibrium
 %    - dkeparam_in: dkeparam structure
 %    - display: dkedisplay structure
@@ -19,11 +17,11 @@ if ischar(loadstruct) && nargout ~= 1,
     error('There must be exactly one output argument in buildlukestruct_yp.m when a specific structure is requested.');
 end
 %
-dkeparam_out = paramconsistency_dke_yp(dkeparam_in,equil,psin_S,rho_S);%Check consistency between input parameters
+dkeparam_out = paramconsistency_dke_yp(dkeparam_in,equil);%Check consistency between input parameters
 %
 % Load data if existing in 'loadstruct' structure or recalculate them if not exists
 %
-radialDKE = make_struct_jd(loadstruct,display.display_mode,'radialgrid_dke_jd',equil,dkeparam_out,display,psin_S,rho_S);%Radial grid for DKE    
+radialDKE = make_struct_jd(loadstruct,display.display_mode,'radialgrid_dke_jd',equil,dkeparam_out,display);%Radial grid for DKE    
 equilDKE = make_struct_jd(loadstruct,display.display_mode,'equilibrium_jd',equil,radialDKE,display,'spline',dkeparam_out.mfactor);%Magnetic equilibrium for DKE
 momentumDKE = make_struct_jd(loadstruct,display.display_mode,'momentumgrid_dke_jd',dkeparam_out,equilDKE,radialDKE);%Momentum space 2D grid for DKE
 gridDKE = make_struct_jd(loadstruct,display.display_mode,'matrix3Dgridbuilder_dke_yp',dkeparam_out,display,equilDKE,radialDKE,momentumDKE);%General grid structure for the DKE solver

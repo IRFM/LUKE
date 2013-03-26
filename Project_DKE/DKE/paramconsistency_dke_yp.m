@@ -1,4 +1,4 @@
-function [dkeparam] = paramconsistency_dke_yp(dkeparam,equil,psin_S,rho_S)
+function [dkeparam] = paramconsistency_dke_yp(dkeparam,equil)
 %
 % Cross-check input parameter consistency
 %
@@ -13,10 +13,10 @@ if dkeparam.rt_mode == 0,dkeparam.nit_rf = 1;end
 %
 if (dkeparam.invproc == -1), dkeparam.luproc = -1;end,%MUMPS performs direct inversion only
 %
-if isempty(psin_S) == 1 && isempty(rho_S) == 1,%No iteration if one radial point
+if isempty(dkeparam.psin_S) && isempty(dkeparam.rho_S),%No iteration if one radial point
     error('No input radial flux grid is specified !');
 end
-if length(rho_S) + length(psin_S) == 1,%No iteration if one radial point
+if length(dkeparam.rho_S) + length(dkeparam.psin_S) == 1,%No iteration if one radial point
     dkeparam.rt_mode = 0;
 	dkeparam.nit_rf = 1;
 else
