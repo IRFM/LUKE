@@ -39,7 +39,7 @@ else
 end
 %
 if res ~= 0,
-    error(['File transfer failed : ',err])
+    error(['File transfer failed : ',remotehome])
 end
 disp(' ... done');
 remotehome(double(remotehome) == 10) = [];% remove return character
