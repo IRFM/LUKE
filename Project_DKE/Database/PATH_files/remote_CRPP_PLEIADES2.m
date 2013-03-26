@@ -17,6 +17,7 @@ remote.torque.joan.host = 'pleiades2.epfl.ch';% empty for local host
 remote.torque.joan.nproc = 48;% limited to two jobs per PBS node to avoid cluster saturation
 %remote.torque.joan.nodes = 1;% default number of nodes for job on cephee
 remote.torque.joan.ppn = 1;% default number of cores for job on cephee
+remote.torque.joan.wait = 0;% forbidden option
 remote.torque.joan.cmd = 'qsub';
 remote.torque.joan.get_jobid = {'','.pleiades2.epfl.ch'};%str_before,str_after
 remote.torque.joan.set_jobid = {'qstat ','','Unknown Job Id'};%str_before,str_after,str_check
