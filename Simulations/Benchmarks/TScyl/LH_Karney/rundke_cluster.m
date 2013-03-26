@@ -89,6 +89,9 @@ dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
 dkeparam.tn = [50000,100000];% 2 time steps to tn=100000 best for asymptotic solution
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 j_r_k = '0.003732';
 p_r_k = '0.0001256';
 eta_r_k = '29.72';
@@ -125,7 +128,7 @@ for iclustermode = iclustermode_min:iclustermode_max,
     %
     waves{1} = make_idealLHwave_jd(equil,wavestruct);
     %
-    [Znorm_rel{iclustermode},Zcurr_rel{iclustermode},ZP0_rel{iclustermode}] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_rel{iclustermode},Zcurr_rel{iclustermode},ZP0_rel{iclustermode}] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     % NON-RELATIVISTIC CASE
     %
@@ -146,17 +149,17 @@ for iclustermode = iclustermode_min:iclustermode_max,
     dkeparam.np_S = 101;
     dkeparam.pnmax_S = 10;
     %
-    [Znorm_nr_0_10{iclustermode},Zcurr_0_10{iclustermode},ZP0_0_10{iclustermode}] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_nr_0_10{iclustermode},Zcurr_0_10{iclustermode},ZP0_0_10{iclustermode}] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     dkeparam.nmhu_S = 201;
     dkeparam.np_S = 201;
     dkeparam.pnmax_S = 20;
     %
-    [Znorm_nr_0_20{iclustermode},Zcurr_0_20{iclustermode},ZP0_0_20{iclustermode}] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_nr_0_20{iclustermode},Zcurr_0_20{iclustermode},ZP0_0_20{iclustermode}] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     %
     dkeparam.coll_mode = 2;%For comparison with theoretical results
     %
-    [Znorm_nr_2_20{iclustermode},Zcurr_2_20{iclustermode},ZP0_2_20{iclustermode}] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    [Znorm_nr_2_20{iclustermode},Zcurr_2_20{iclustermode},ZP0_2_20{iclustermode}] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 end
 %
 clc

@@ -57,12 +57,15 @@ dkeparam.boundary_mode_f = boundary_mode_f;
 dkeparam.coll_mode = coll_mode;
 dkeparam.dtn = dkeparam.tn;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-[Znorm_u,Zcurr_u,ZP0_u,dke_out_u,radialDKE_u,equilDKE_u,momentumDKE_u,gridDKE_u,Zmomcoef_u,Zbouncecoef_u,Zmripple_u,mksa,XXsinksource_u] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_u,Zcurr_u,ZP0_u,dke_out_u,radialDKE_u,equilDKE_u,momentumDKE_u,gridDKE_u,Zmomcoef_u,Zbouncecoef_u,Zmripple_u,mksa,XXsinksource_u] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 ne_u(1) = Znorm_u.x_0_fsav;
 for i = 2:nit,
-   [Znorm_u,Zcurr_u,ZP0_u,dke_out_u] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out_u.XXf0,[]);
+   [Znorm_u,Zcurr_u,ZP0_u,dke_out_u] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out_u.XXf0,[]);
     ne_u(i) = Znorm_u.x_0_fsav;
 end
 %
@@ -72,12 +75,16 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 dkeparam.boundary_mode_f = boundary_mode_f;
 dkeparam.coll_mode = coll_mode;
 dkeparam.dtn = dkeparam.tn;
+%
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 ne(1) = Znorm.x_0_fsav;
 for i = 2:nit,
-   [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out.XXf0,[]);
+   [Znorm,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out.XXf0,[]);
     ne(i) = Znorm.x_0_fsav;
 end
 %
@@ -97,12 +104,16 @@ equil.pzTi = equil.pzTi/2;
 dkeparam.boundary_mode_f = boundary_mode_f;
 dkeparam.coll_mode = coll_mode;
 dkeparam.dtn = dkeparam.tn;
+%
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-[Znorm_u1,Zcurr_u1,ZP0_u1,dke_out_u1,radialDKE_u1,equilDKE_u1,momentumDKE_u1,gridDKE_u1,Zmomcoef_u1,Zbouncecoef_u1,Zmripple_u1,mksa,XXsinksource_u1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_u1,Zcurr_u1,ZP0_u1,dke_out_u1,radialDKE_u1,equilDKE_u1,momentumDKE_u1,gridDKE_u1,Zmomcoef_u1,Zbouncecoef_u1,Zmripple_u1,mksa,XXsinksource_u1] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 ne_u1(1) = Znorm_u1.x_0_fsav;
 for i = 2:nit,
-   [Znorm_u1,Zcurr_u1,ZP0_u1,dke_out_u1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out_u1.XXf0,[]);
+   [Znorm_u1,Zcurr_u1,ZP0_u1,dke_out_u1] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out_u1.XXf0,[]);
     ne_u1(i) = Znorm_u1.x_0_fsav;
 end
 %
@@ -113,12 +124,16 @@ equil.pzTi = equil.pzTi/2;
 dkeparam.boundary_mode_f = boundary_mode_f;
 dkeparam.coll_mode = coll_mode;
 dkeparam.dtn = dkeparam.tn;
+%
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
-[Znorm1,Zcurr1,ZP01,dke_out1,radialDKE1,equilDKE1,momentumDKE1,gridDKE1,Zmomcoef1,Zbouncecoef1,Zmripple1,mksa,XXsinksource1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm1,Zcurr1,ZP01,dke_out1,radialDKE1,equilDKE1,momentumDKE1,gridDKE1,Zmomcoef1,Zbouncecoef1,Zmripple1,mksa,XXsinksource1] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 ne1(1) = Znorm1.x_0_fsav;
 for i = 2:nit,
-   [Znorm1,Zcurr1,ZP01,dke_out1] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out1.XXf0,[]);
+   [Znorm1,Zcurr1,ZP01,dke_out1] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out1.XXf0,[]);
     ne1(i) = Znorm1.x_0_fsav;
 end
 %

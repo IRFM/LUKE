@@ -53,13 +53,16 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 transpfaste.Dr0 = 5;
 %
-[Znorm_p,Zcurr_p,ZP0_p,dke_out_p,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_p,Zcurr_p,ZP0_p,dke_out_p,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 ohm.epsi = -ohm.epsi;%The Ohmic electric field is reversed
 waves{1}.rays{1}.sNpar = -waves{1}.rays{1}.sNpar;%The wave direction is reversed
-[Znorm_m,Zcurr_m,ZP0_m,dke_out_m] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm_m,Zcurr_m,ZP0_m,dke_out_m] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 figure(1),clf,graph1D_jd(equilDKE.xrho,Zcurr_p.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd(equilDKE.xrho,Zcurr_m.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','-','none','b',2,20,gca,1,0.6,0.6);hold on

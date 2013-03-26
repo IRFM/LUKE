@@ -88,6 +88,9 @@ dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, t
 dkeparam.dtn = 10;%Normalized integration time step
 dkeparam.nit_f = 1;%Maximum number of internal iterations for f (>= 1)
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 ntime_step = 10;%number of time steps
 %
 transpfaste.Dr0 = 0;
@@ -171,7 +174,7 @@ drawnow
 %
 waves{1} = make_idealLHwave_jd(equil{1},wavestruct);
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil{1},dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,dkepath,equil{1},dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 j_fe(:,1) = Zcurr.x_0;
 P_fe(:,1) = ZP0.x_rf_fsav;
@@ -179,7 +182,7 @@ Itot_fe(1) = sum(Zcurr.x_0.*equilDKE.xdA_dke*mksa.j_ref);
 Ptot_2piRp_fe(1) = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
 %
 for it = 2:ntime_step,
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil{1},dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out.Zf0_interp,[]);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,dkepath,equil{1},dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out.Zf0_interp,[]);
     %
     j_fe(:,it) = Zcurr.x_0;
     P_fe(:,it) = ZP0.x_rf_fsav;
@@ -191,7 +194,7 @@ end
 %
 waves{1} = make_idealLHwave_jd(equil{1},wavestruct);
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil{1},dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,dkepath,equil{1},dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 j_ve(:,1) = Zcurr.x_0;
 P_ve(:,1) = ZP0.x_rf_fsav;
@@ -274,7 +277,7 @@ for it = 2:ntime_step,
     %
     waves{1} = make_idealLHwave_jd(equil{it},wavestruct);
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil{it},dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out.Zf0_interp,[]);
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp(id_simul,dkepath,equil{it},dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,dke_out.Zf0_interp,[]);
     %
     j_ve(:,it) = Zcurr.x_0*mksa.j_ref;
     P_ve(:,it) = ZP0.x_rf_fsav*mksa.P_ref;
