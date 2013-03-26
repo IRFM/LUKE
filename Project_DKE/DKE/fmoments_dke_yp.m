@@ -1,6 +1,6 @@
 function [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
     XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
-    xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,xRfrac_fsav] = ...
+    xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,XXRintmask,Zmom] = ...
     fmoments_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
                     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
                     ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp,gridindex_rf,...
@@ -755,15 +755,6 @@ xc_g = -(Znorm.x_tp_fsav + Znorm.x_g_fsav)./xne_norm(rdke);%Flux surface average
 XXxc_g = shiftdim(repmat(repmat(xc_g(:),[1,npn,1]),[1,1,nmhu]),1);
 XXf0_g(:,:,rdke) = XXf0_g(:,:,rdke) + XXxc_g.*XXf0(:,:,rdke);%Normalisation in order to maintain the flux surface averaged density at the right level
 %
-% partial density above the minimum energy dkeparm.pnmin_S (typically used in runaway studies)
-%
-if isfield(dkeparam,'pnmin_S') && isscalar(dkeparam.pnmin_S),
-    pmask = pn > dkeparam.pnmin_S;
-    xRfrac_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn(pmask),XXlambda(pmask,:,rdke).*XXf0(pmask,:,rdke).*XXpn2(pmask,:,rdke),1),1)';
-else
-    xRfrac_fsav = NaN(1,nr);
-end
-%
 %   Current
 %
 Zcurr.x_0 = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
@@ -802,6 +793,19 @@ if dkeparam.coll_mode == 3,%Lorentz model (test mode only, see documentation)
     Zcurr.x_L_g_fsav = 2*pi*(xq(rdke)./xqbar(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0_L_g(:,:,rdke).*XXheaviside(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
     Zcurr.x_L_tot = Zcurr.x_0_fsav + Zcurr.x_L_tp_fsav + Zcurr.x_L_g_fsav;%Total current density
 end
+%
+% Momentum transfer rate
+%
+% flux-suface averaging to be done
+%
+XXIntegrand_im = XXpnm(:,:,rdke).*XXpnm(:,:,rdke).*XXmhu(:,:,rdke);
+XXIntegrand_ip = XXpnp(:,:,rdke).*XXpnp(:,:,rdke).*XXmhu(:,:,rdke);
+%
+XXIntegrand_jm = XXpn(:,:,rdke).*XXpn(:,:,rdke).*sqrt(XX1mmhu2m);
+XXIntegrand_jp = XXpn(:,:,rdke).*XXpn(:,:,rdke).*sqrt(XX1mmhu2p);
+%
+Zmom.x_rf = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_im.*ZXXS.p0_rf_imj + XXIntegrand_ip.*ZXXS.p0_rf_ipj)/2,1),1).'...
+           -2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_jm.*ZXXS.m0_rf_ijm + XXIntegrand_jp.*ZXXS.m0_rf_ijp)/2,1),1).';
 %
 %  Wave-induced radial transport by adjoint technique (P. Helander model)
 %
@@ -857,6 +861,31 @@ end
 %xRR_secondary_fsav = 1/(gammaminRR-1)*pi*xnloss(rdke).*xrnhuth(rdke)./xlnc_e(rdke);
 %
 xRR_fsav = xRR_primary_fsav;% + xRR_secondary_fsav;%Runaway rate profile (primary + secondary contribution)
+%
+% Runaway fraction and current through internal boundary
+%
+% TODO : - calculate the flux through the RR internal boundary
+%        - use bounce-averaged force balance
+%
+if isfield(dkeparam,'pnmin_S') && isscalar(dkeparam.pnmin_S) && ~isnan(dkeparam.pnmin_S),% Rfrac calculated from dkeparm.pnmin_S (see Adam's work)
+    %
+    % partial density above the minimum energy dkeparm.pnmin_S (typically used in runaway studies)
+    %
+    XXRintmask = XXpn > dkeparam.pnmin_S;
+else
+    %
+    % Rfrac calculated from internal RR boundary based on force balance
+    %
+    XXRintmask = ZXXF_c.p_ij + ZXXF_e.p_ij > 0;% internal runaways from force balance
+end
+%
+Znorm.x_Rfrac_0 = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXRintmask(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
+Znorm.x_Rfrac_0_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda(:,:,rdke).*XXf0(:,:,rdke).*XXRintmask(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
+%
+Zcurr.x_Rfrac_0 = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXRintmask(:,:,rdke).*XXpn2(:,:,rdke).*XXpn(:,:,rdke).*XXmhu(:,:,rdke)./XXgamma(:,:,rdke),1),1)';
+Zcurr.x_Rfrac_0_fsav = (xq(rdke)./xqbar(rdke)).*Zcurr.x_Rfrac_0;
+%
+% Equivalent output temperature
 %
 Xxf0 = 0.5*integral_dke_jd(dmhu,XXf0(:,:,rdke),2);
 XxfM = squeeze(XXfM(:,1,rdke));
@@ -942,6 +971,7 @@ Zf0_interp.mksa = mksa;%Normalization is fixed
 % 0-D moments of the distribution
 %
 Zcurr.I_tot = sum(Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
+Zcurr.I_Rfrac_tot = sum(Zcurr.x_Rfrac_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
 ZP0.P_rf_2piRp = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
 ZP0.P_ohm_2piRp = sum(ZP0.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
 %
