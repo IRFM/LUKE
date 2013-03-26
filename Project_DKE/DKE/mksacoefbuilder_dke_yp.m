@@ -41,6 +41,7 @@ mksa.nhu_ref = qe^4*ne_ref*mksa.lnc_e_ref/(4*pi*e0^2*me^2*(clum*mksa.betath_ref)
 mksa.xftp_norm_ref = me*clum*mksa.betath_ref*equilDKE.ap*(1 + equilDKE.xx0/equilDKE.Rp).*equilDKE.xBT0./equilDKE.xB0/qe/equilDKE.psia_apRp;%Normalization factor for drift kinetic equation (ftilde)
 mksa.j_ref = -qe*clum*mksa.betath_ref*mksa.ne_ref/1e6;%MKSA current unit (MA)  (with respect to the parallel direction fo B, the negative charge of the electron is fully considered)
 mksa.P_ref = me*(clum*mksa.betath_ref)^2*mksa.nhu_ref*mksa.ne_ref/1e6; %power normalization constant (MW)
+mksa.dpdt_ref = me*clum*mksa.betath_ref*mksa.nhu_ref*mksa.ne_ref; %momentum transfer rate normalization constant (N/m^3)
 mksa.Edreicer_ref = me*clum*mksa.betath_ref*mksa.nhu_ref/qe;%MKSA Dreicer field unit
 mksa.wpe_ref = sqrt(ne_ref*qe^2/me/e0);%MKSA plasma frequency (s-1)
 mksa.wmabs2 = me*mksa.lnc_e_ref*mksa.wpe_ref^2/(4*pi^2);%coefficient relating the squared electric field amplitude to the diffusion coefficient
