@@ -67,6 +67,9 @@ dkeparam.pnmax_S = 30;
 %
 dkeparam.bounce_mode = 0;
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dkedisplay.display_mode = 0;
@@ -89,7 +92,7 @@ chordview = 0;%No heliticity enforced: 0 (perp), 1 (forward) or -1 (backward). I
 %
 disp('---------------------------------------------------------------------');
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp('test',[],rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,[],transpfaste,[],[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = main_dke_yp('test',dkepath,equil,dkeparam,dkedisplay,ohm,[],transpfaste,[],[],[]);
 return
 %
 for iEcut = 1:length(iEcut),arg_range{iEcut} = iEcut;end
