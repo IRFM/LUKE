@@ -1,8 +1,8 @@
-function frundke_fluctn(luke_input,dkepath,opt_save,p_opt,path_simul,dtn,tn,Nfluct,sigmar_max,sigmar_hwhm)
+function frundke_fluctn(lukestructs,dkepath,opt_save,p_opt,path_simul,dtn,tn,Nfluct,sigmar_max,sigmar_hwhm)
 %
-id_simul = luke_input.id_simul;
-dkeparam = luke_input.dkeparam;
-equil = luke_input.equil;
+id_simul = lukestructs.id_simul;
+dkeparam = lukestructs.dkeparam;
+equil = lukestructs.equil;
 %
 % in this scan, the imaginary part of tn specifies the number of iterations if Nfluct = 1
 % - dkeparam.tn is adjusted to have final time constant
@@ -26,13 +26,14 @@ id_simul = [id_simul,'_sigma',num2str(sigmar_max),'_delta',num2str(sigmar_hwhm),
 id_simul(id_simul == '.') = 'p';
 id_simul(id_simul == '+') = 'p';
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = ...
-    run_lukert(id_simul,luke_input.wavestructs,luke_input.waves,dkeparam.psin_S,dkeparam.rho_S,...
-    dkepath,equil,dkeparam,luke_input.dkedisplay,luke_input.ohm,luke_input.transpfaste,luke_input.ripple,luke_input.Zf0_interp,[],opt_save);
+lukestructs = rmfield(lukestructs,'id_simul');
+lukestructs.simul.id = id_simul;
+lukestructs.simul.path = path_simul;
+lukestructs.equil = equil;
+lukestructs.dkeparam = dkeparam;
+lukestructs.opt.save = 1;% to save result in file
+lukestructs.opt.backup = opt_save;% backup option with fluctuations
+lukestructs.opt.waves = 1;% save wave results with fluctuations
 %
-% ---------------------------------------------- Save results ----------------------------------------------
-%
-filename = [path_simul,'LUKE_RESULTS_',id_simul,'.mat'];
-save(filename);
-info_dke_yp(2,['LUKE Results saved in ',filename]);
+run_lukert(lukestructs,dkepath);
 %
