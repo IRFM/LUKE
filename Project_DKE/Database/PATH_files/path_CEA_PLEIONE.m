@@ -27,7 +27,9 @@ pleione.computer = computer;%machine type and supported OS
 %
 pleione.path_profile = 1;
 %
+%--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
+%--------------------------------------------------------------------------------------------------------
 %
 pleione.YP105119(1).luke_root = [getenv('HOME'),'/',luke_ref,'/'];
 pleione.YP105119(1).local_root = '/home/sccp/gsem/decker/Packages/pleione/';

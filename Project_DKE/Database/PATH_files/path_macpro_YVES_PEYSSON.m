@@ -28,7 +28,9 @@ macproyves.computer = computer;%machine type and supported OS
 macproyves.default = 'yvespeysson';
 macproyves.path_profile.yvespeysson = 1;
 %
+%--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
+%--------------------------------------------------------------------------------------------------------
 %
 %macproyves.yvespeysson(1).luke_root = [getenv('HOME'),'/Travail/Projets/',luke_ref,'/'];
 macproyves.yvespeysson(1).luke_root = [pwd,'/'];
@@ -94,96 +96,8 @@ macproyves.yvespeysson(1).TSBASE.mex = [macproyves.yvespeysson(1).luke_root,'Pro
 % WARNING: the setup of the scheduler may be complicated and is usually
 % machine dependent. 
 %
-% Xgrid and Matlab set-up
-%
-% WARNING about Xgrid scheduler for mac OSX (> 10.5.x)
-% Xgrid runs tasks using the "sandbox" facility. Tasks running as 'nobody' ie, 
-% any task where either the submitting client or the receiving agent 
-% are NOT using Kerberos authentication) have very restricted access to the
-% filesystem. To by-pass this strong protection (no password) on a local
-% cluster or a multi-core multi-processor machine, go to
-% /usr/share/sandbox/xgridagentd_task_nobody.sb file (root rights needed)
-% then, comment the following line (with a ';' at the beginning of the line):
-% (allow process* sysctl* mach* network* system-socket)
-% and replace it by
-% (allow process* sysctl* mach* file-read* file-write* network* system-socket)
-% omment the following lines (with a ';' at the beginning of the line):
-% (allow file-read* (regex "^/(bin|dev|(private/)?(etc|tmp|var)|usr|System|Library)(/|$)"))
-% (allow file-read* file-write* (regex "^/(private/)?(tmp|var)(/|$)"))
-% and replace it by
-% (allow file-read* file-write* (regex "^/all(/|$)"))
-%
-% NOTE that it should be done each time the system is updated.
-% furthermore, all *.m and *.mex* files must be read by anybody.
-% This lack of protection make the cluster more vulnerable to an external
-% attack, but on a personal computer, this risk is limited.
-%
-% Furthermore, on the remote session, before any calculation, it is
-% necessary to create a folder named 'xgrid' (~/xgrid)
-% that will contain all the files for the remote calculations. The owner is the
-% USER , and the group is 'nobody(-2)'. The rights are 777. It is also
-% necessary to done it the same for the Matlab_R20xx_y application (all the
-% package and inside) in such a way Matlab can write in the ~/xgrid folder,
-% and all the files in the directory 'Packages' which contain external tools (mexfiles,...)
-%
-% The IP address of the hostname can be given in the file /etc/hosts 
-%
-% WARNING: most of the problems come from the SSH without login
-% authentication, rights of the target directory, Matlab and Packages ! Use
-% the debug mode for identifying the problem.
-%
-% LOCAL # 1 - CONDOR
-%
 macproyves.yvespeysson(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yves');
 macproyves.yvespeysson(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves');
+macproyves.yvespeysson(1).remote(3) = remote_CEA_SATURNE('sun','yves','yves');
 
-
-
-
-if 0,
-macproyves.yvespeysson(1).remote(1).host = '';
-macproyves.yvespeysson(1).remote(1).nproc = feature('numCores');%number of cpu
-macproyves.yvespeysson(1).remote(1).cmd = 'condor_submit';
-macproyves.yvespeysson(1).remote(1).get_jobid = {'** Proc ',':'};
-macproyves.yvespeysson(1).remote(1).set_jobid = {'condor_q ',''};
-macproyves.yvespeysson(1).remote(1).luke_root = macproyves.yvespeysson(1).luke_root;%local host LUKE root
-macproyves.yvespeysson(1).remote(1).env.CONDOR_CONFIG = '/usr/local/condor/etc/condor_config';
-macproyves.yvespeysson(1).remote(1).env.PATH = '/usr/local/condor/sbin:/usr/local/condor/bin:${PATH}';
-%
-% LOCAL # 2 - XGRID
-%
-macproyves.yvespeysson(1).remote(2).host = 'tolbachik.hd.free.fr';
-macproyves.yvespeysson(1).remote(2).nproc = 6;
-macproyves.yvespeysson(1).remote(2).cmd = {'xgrid -h ',' -p ',' -job batch '};
-macproyves.yvespeysson(1).remote(2).get_jobid = {'jobIdentifier = ',';'};
-macproyves.yvespeysson(1).remote(2).set_jobid = {'xgrid -h ',' -job attributes -id ','jobStatus = Running','jobStatus = Pending','jobStatus = Finished',' -job results -id ',' -se ',' -so ',' -out ',' -job delete -id '};%
-macproyves.yvespeysson(1).remote(2).remotedatapath = '/Users/yvespeysson/xgrid/';
-macproyves.yvespeysson(1).remote(2).mat800.root = '/Applications/MATLAB_R2012b.app/bin/';
-macproyves.yvespeysson(1).remote(2).mat800.prefdir = '/Users/yvespeysson/.matlab/R2012b';
-macproyves.yvespeysson(1).remote(2).matdef = macproyves.yvespeysson(1).remote(2).mat800;%default matlab on remote machine
-macproyves.yvespeysson(1).remote(2).luke_root = ['/Users/yvespeysson/Travail/Projets/',luke_ref,'/'];
-macproyves.yvespeysson(1).remote(2).password = {'ghm93'};
-macproyves.yvespeysson(1).remote(2).(getenv('USER')) = 'yvespeysson';
-%
-% SATURNE CEA cluster
-%
-USER = 'YP105119';
-CLUSTER = 'saturne';
-HOST = 'saturne1.partenaires.cea.fr';
-HOME = '/home/YP105119';
-NPROC = 12;
-%
-macproyves.yvespeysson(1).remote(3).host = {HOST};
-macproyves.yvespeysson(1).remote(3).cluster = CLUSTER;
-macproyves.yvespeysson(1).remote(3).nproc = NPROC;
-macproyves.yvespeysson(1).remote(3).home = [HOME,'/'];
-macproyves.yvespeysson(1).remote(3).luke_root = [HOME,'/',luke_ref,'/'];
-macproyves.yvespeysson(1).remote(3).matlabroot = '';
-macproyves.yvespeysson(1).remote(3).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-macproyves.yvespeysson(1).remote(3).get_jobid = {'Your job ',' '};%str_before,str_after
-macproyves.yvespeysson(1).remote(3).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
-macproyves.yvespeysson(1).remote(3).password = {''};
-macproyves.yvespeysson(1).remote(3).(getenv('USER')) = USER;
-end
-%
 
