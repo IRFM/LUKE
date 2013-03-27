@@ -11,19 +11,13 @@ warning('off','all')
 pause(1)
 %
 remnum = 1;% remote profile number. Use 0 for local calculations
-remtimout = 60;%0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+remtimout = 0;%60;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
 %
 opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
 p_opt = -1;
-%
-% Use these parameters to compare with LUKE 1.8 only
-% In that case, use the old version of the function solver_dke_yp
-%
-% tn = 10000;
-% dtn = 10000;
 %
 % *********************** Specify LUKE structures *****************************
 %
@@ -53,9 +47,6 @@ path_ohm = '';%if nothing is specified, the working directory is first used and 
 %
 ids_launch = {'NTM_32'};%For RF waves contribution (put all the type of waves needed)
 paths_launch = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-%ids_wave = {'C3PO_NTM_32'};%For RF waves contribution (put all the type of waves needed)
-%paths_wave = {'LUKE_1_9/'};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
 paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -105,11 +96,6 @@ C3POparam.clustermode.main_C3PO_jd.scheduler.mode = 0;%MatLab distributed comput
 %
 %************************************************************************************************************************************
 %
-if exist('tn','var') && exist('dtn','var'),
-    dkeparam.tn = tn;
-    dkeparam.dtn = dtn;
-end    
-%
 launch = launchs{1};
 launch.yP_L = P_L*1e6;
 %
@@ -130,7 +116,7 @@ wavestruct.fitequilparam = fitparam;
 wavestruct.raydisplay = C3POdisplay;
 wavestruct.C3POparam = C3POparam;
 %
-wavestructs = {wavestruct};%[];% leave empty when run with waves is used
+wavestructs = {wavestruct};
 %
 %************************************************************************************************************************************
 %
