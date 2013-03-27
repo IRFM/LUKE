@@ -96,6 +96,12 @@ if iscell(lukestucts),% remote and/or distributed calculation
                     luke_job.ppn = lukestucts{ijob}.dkeparam.luke_ppn;% number of cores specified in dkeparam
                 end
                 %
+                if isfield(lukestucts{ijob},'dkeparam') && isfield(lukestucts{ijob}.dkeparam,'luke_walltime'),
+                    luke_job.walltime = lukestucts{ijob}.dkeparam.luke_walltime;% walltime for remote LUKE calculation
+                else
+                    luke_job.walltime = 12;% default walltime in hours
+                end
+                %
             end
             %
             [err,lukestucts{ijob}] = matremote_luke_jd('run_lukert',lukestucts(ijob),remote,lukestandardjob);
@@ -232,11 +238,15 @@ end
 %
 if ~isstruct(simul_in),
     simul.id = simul_in;
+    simul.locid = '';
     simul.path = './';
 else
     simul = simul_in;
     if ~isfield(simul,'id'),
         simul.id = '';
+    end
+    if ~isfield(simul,'locid'),
+        simul.locid = '';
     end
     if ~isfield(simul,'path'),
         simul.path = './';
@@ -244,36 +254,7 @@ else
 end
 %
 if isempty(simul.id),% automatic generation of filename
-    %
-    simul.id = equil.id;
-    %
-    if isfield(equil.fluct,'id'),
-        simul.id = [simul.id,'_',equil.fluct.id];
-    end
-    %
-    if isfield(ohm,'id'),
-        simul.id = [simul.id,'_',ohm.id];
-    end
-    %
-    if isfield(transpfaste,'id'),
-        simul.id = [simul.id,'_',transpfaste.id];
-    end
-    %
-    if isfield(ripple,'id'),
-        simul.id = [simul.id,'_',ripple.id];
-    end
-    %
-    for iw = 1:length(waves),
-        simul.id = [simul.id,'_',waves{iw}.id];
-    end
-    %
-    for iw = 1:length(wavestructs),
-        simul.id = [simul.id,'_',wavestructs{iw}.id];
-    end
-    %
-    if isfield(simul,'locid'),
-        simul.id = [simul.id,'_',simul.locid];
-    end
+    simul.id = make_luke_simulid_jd(equil,ohm,transpfaste,ripple,waves,wavestructs,simul.locid);
 end    
 %
 if ~exist(simul.path,'dir'), 
