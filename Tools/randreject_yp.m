@@ -85,10 +85,10 @@ if display_mode,
         axis([min(arg_range(1),arg_range(2)),max(arg_range(1),arg_range(2)),min(py),max(py)])
         xlabel('y');ylabel('f(y)');
         if arg_range(2) > arg_range(1),
-            title(['Linear distribution function between ',num2str(arg_range(1)),' and ',num2str(arg_range(2))])
+            title(['Distribution function between ',num2str(arg_range(1)),' and ',num2str(arg_range(2))])
             legend(['Numerical, norm. = ',num2str(norm)],['Theoretical, norm. = ',num2str(norm_th)],'Location','SouthWest')
         else
-            title(['Linear distribution function between ',num2str(arg_range(1)),' and ',num2str(arg_range(2))])
+            title(['Distribution function between ',num2str(arg_range(1)),' and ',num2str(arg_range(2))])
             legend(['Numerical, norm. = ',num2str(norm)],['Theoretical, norm. = ',num2str(norm_th)],'Location','NorthWest')
         end
     else
