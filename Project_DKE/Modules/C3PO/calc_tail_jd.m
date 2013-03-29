@@ -92,12 +92,14 @@ if display_mode == 2,
         xdPdN(in,:) = P0_2piRp_tail(in)/P0_2piRp*exp(-(xN - Npar0_tail(in)).^2/dNpar0_tail(in).^2)/(sqrt(pi)*dNpar0_tail(in));
     end
     %
+    [sxdPdN] = feval(@fcalc_tail_yp,{Npar0_tail,dNpar0_tail,P0_2piRp_tail,P0_2piRp},xlim,xN);
+    %
     leg = {'Orig.','Tail'};
     %
     figure(1),clf
     %
     graph1D_jd(xN,xdPdN_0,0,0,'','','',NaN,xlim,NaN,'-','none','b',2,20+14i);
-    graph1D_jd(xN,sum(xdPdN),0,0,'N_{||}','dPdN_{||} (norm.)','',leg,xlim,NaN,'-','none','r',2,20+14i,gca,0.9,0.7,0.7);
+    graph1D_jd(xN,sxdPdN,0,0,'N_{||}','dPdN_{||} (norm.)','',leg,xlim,NaN,'-','none','r',2,20+14i,gca,0.9,0.7,0.7);
     graph1D_jd(xN,xdPdN,0,0,'','','',NaN,xlim,NaN,'-','none','m',0.5,20+14i);
     %    
 end
