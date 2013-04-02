@@ -8,18 +8,20 @@ close all
 warning off
 global nfig
 %
-remtimout = 0;%10;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remnum = 1;% remote profile number. Use 0 for local sequential calculations
+remnum = 2;% remote profile number. Use 0 for local sequential calculations
+remdebug = 0;% remote debugmode
+%
 opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
 p_opt = -1;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-id_simul = 'LH_karney_Zi';%Simulation ID
-path_simul = [pwd,filesep];%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+id_simul = 'LH_karney_Zi_remote';%Simulation ID
+path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
 rho_S = [0.5];%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
@@ -148,6 +150,10 @@ dkepath.remtimout = remtimout;% timeout in minutes
 dkepath.rempause = rempause;% pause between job checks (in minutes) (only for remtimout > 0)
 dkepath.remenforce = 0;% exit if remote calculation failed 
 dkepath.remnum = remnum;% remote profile number
+%
+if exist('remdebug'),
+    dkepath.debugmode = remdebug;
+end
 %
 lukestructs = run_lukert(lukestructs,dkepath);
 %
