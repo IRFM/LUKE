@@ -44,7 +44,7 @@ dkepath.YP105119(1).mex705 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin
 dkepath.YP105119(1).mex710 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB710/'];
 dkepath.YP105119(1).mex712 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB712/'];
 %
-dkepath.YP105119(1).compiler_opt.copts.mex705 = '-f',dkepath.YP105119(1).local_root,'MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh';
+dkepath.YP105119(1).compiler_opt.copts.mex705 = ['-f',dkepath.YP105119(1).local_root,'MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh'];
 dkepath.YP105119(1).compiler_opt.fopts.mex705 = ['-f',dkepath.YP105119(1).local_root,'MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh FC=''',dkepath.YP105119(1).local_root,'bin/cephee/g95'' FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132'''];
 dkepath.YP105119(1).compiler_opt.helmex.mex705 = ['-L',dkepath.YP105119(1).local_root,'lib/cephee/g95 -lf95 -lgcc -L',dkepath.YP105119(1).local_root,'Packages/cephee/lapack-3.1.1/ -llapack_g95 -lblas_g95 -ltmglib_g95'];% Optional argument for helmex compilation
 %
