@@ -25,16 +25,23 @@ if nargin < 2,
     error('Wrong number of input arguments in randreject_yp.m');
 elseif nargin < 3,
     N = 100000;
-    display_mode = 100;
+    display_mode = 0;
 elseif nargin < 4,
-    display_mode = 100;
+    display_mode = 0;
 end
 %
 y = NaN(N,1);
 %
-if display_mode < 10;
-    display_mode = 10;
-    warning('display_mode must exceed 10 for a correct histogramm.');
+if nargin == 4,
+    if display_mode,
+        if display_mode < round(N/100),
+            disp(['WARNING: display_mode parameter must exceed be of the order of ',int2str(round(N/100)),' for a correct histogramm.']);
+            display_mode = round(N/100);
+        else
+            disp(['WARNING: not enough trials for drawing a correct histogramm -> display_mode parameter set to zero.']);
+            display_mode = 0;
+        end
+    end
 end
 %
 arg_range = args_in{length(args_in)};
@@ -71,11 +78,11 @@ while isnan(sum(y)),
     y(inan) = y0;
 end
 %
-y_th = (arg_range(2) - arg_range(1))*linspace(0,1,N) + arg_range(1);
-py_th = feval(fun_handle,args_in(1:length(args_in)-1),[arg_range(1),arg_range(2)],y_th);
-norm_th = trapz(y_th,py_th);
-%
 if display_mode,
+    y_th = (arg_range(2) - arg_range(1))*linspace(0,1,N) + arg_range(1);
+    py_th = feval(fun_handle,args_in(1:length(args_in)-1),[arg_range(1),arg_range(2)],y_th);
+    norm_th = trapz(y_th,py_th);
+    %
     if N/display_mode > display_mode,%for good statistics, display_mode is the number of bin for the histogram
         [h1,y1] = hist(y,display_mode);
         py = h1*display_mode/N/(max(y1) - min(y1));
@@ -94,4 +101,8 @@ if display_mode,
     else
         warning('Not enough points for histogram display');
     end
+else
+    y_th = NaN;
+    py_th = NaN;
+    norm_th = NaN;
 end

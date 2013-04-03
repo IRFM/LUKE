@@ -1,10 +1,10 @@
-function [y] = randg_yp(n,av,fwhm,display_mode)
+function [y] = randg_yp(N,av,fwhm,display_mode)
 %
 % White gaussian noise generator, with given mean and FWHM values.
 %
 %   INPUTS: 
 %
-%       - n: number of trials [1,n]
+%       - N: number of trials [1,N]
 %       (default = 100000)
 %       - av: average value [m,1]
 %       (default = 0)
@@ -16,15 +16,15 @@ function [y] = randg_yp(n,av,fwhm,display_mode)
 %
 %   OUTPUTS: [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha,kB]
 %   
-%   - y: white gaussian noise [1,n]
+%   - y: white gaussian noise [1,N]
 %
 % by Yves Peysson <yves.peysson@cea.fr> (CEA/DSM/IRFM) and Joan Decker <joan.decker@cea.fr> (CEA/DSM/IRFM)
 %
 if nargin == 0, 
-    n = 100000;
+    N = 100000;
     av = 0;
     fwhm = 0.5;
-    display_mode = 1;
+    display_mode = 100;
 end
 %
 if nargin == 1, 
@@ -47,10 +47,22 @@ av = av(:);
 if size(av) ~= size(fwhm), error('Inconsistent size of av and hwhm in randg_yp.m');end
 %
 sigma = fwhm/sqrt(2*log(2))/2;%standard deviation
-Xsigma = repmat(sigma,[1,n]);
-Xav = repmat(av,[1,n]);
+Xsigma = repmat(sigma,[1,N]);
+Xav = repmat(av,[1,N]);
 %
-y = sqrt(-2*log(rand(size(Xav,1),n))).*cos(2*pi*rand(size(Xav,1),n)).*Xsigma + Xav;
+y = sqrt(-2*log(rand(size(Xav,1),N))).*cos(2*pi*rand(size(Xav,1),N)).*Xsigma + Xav;
+%
+if nargin == 4,
+    if display_mode,
+        if display_mode < round(N/100),
+            disp(['WARNING: display_mode parameter must exceed be of the order of ',int2str(round(N/100)),' for a correct histogramm.']);
+            display_mode = round(N/100);
+        else
+            disp(['WARNING: not enough trials for drawing a correct histogramm -> display_mode parameter set to zero.']);
+            display_mode = 0;
+        end
+    end
+end
 %
 if display_mode,
     [z,x] = hist(y,display_mode);%display_mode is the number of bin for the histogram
