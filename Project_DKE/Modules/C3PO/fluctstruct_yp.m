@@ -182,8 +182,14 @@ end
 if isfield(fluct_in,'npar0_lh'), 
     if isfield(fluct_in.npar0_lh,'fluct'),
         fluct.npar0_lh.dtn = fluct_in.npar0_lh.fluct.dtn;
+        fluct.npar0_lh.gaussian_tail = fluct_in.npar0_lh.fluct.gaussian_tail;
         fluct.npar0_lh.fwhm_npar0 = fluct_in.npar0_lh.fluct.fwhm_npar0;
-        fluct.npar0_lh.h_npar0 = fluct_in.npar0_lh.fluct.h_npar0;
-        fluct.npar0_lh.nparmax_npar0 = fluct_in.npar0_lh.fluct.nparmax_npar0;
+        %
+        fluct.npar0_lh.linear_tail = fluct_in.npar0_lh.fluct.linear_tail;
+        fluct.npar0_lh.calc_tail = fluct_in.npar0_lh.fluct.calc_tail;
+        fluct.npar0_lh.P_tail = fluct_in.npar0_lh.fluct.P_tail;
+        fluct.npar0_lh.Nparmax_tail = fluct_in.npar0_lh.fluct.Nparmax_tail;
+        fluct.npar0_lh.n_tail = fluct_in.npar0_lh.fluct.n_tail;
+        fluct.npar0_lh.opt_tail = fluct_in.npar0_lh.fluct.opt_tail;
     end
 end
