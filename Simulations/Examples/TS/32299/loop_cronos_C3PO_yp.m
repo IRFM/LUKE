@@ -1,4 +1,4 @@
-function [timeid,jobid,dkeparam,dkepath,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_cronos_C3PO_yp(opt_dist,opt_save,id_simul,root_dir,Nfluct,tn,dtn,fluctuations,display_mode,Npar_p,Npar_m,XXfinit)
+function [timeid,jobid,dkeparam,dkepath,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_cronos_C3PO_yp(opts,id_simul,root_dir,Nfluct,tn,dtn,fluctuations,display_mode,Npar_p,Npar_m,XXfinit)
 %
 timeid = []; 
 jobid = [];
@@ -169,7 +169,34 @@ if opt_dist == 0,%local calculations
     %
     dkeparam.path_simul = [root_dir,id_simul,'/'];%Local directory
     %
-    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,wavestructs,[],dkeparam.psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXfinit,[],opt_save);
+    
+    
+    Zi = Zi_list(iZi);
+    equil.zZi = [1,1,1,Zi];
+    equil.pzni = [0;0;0;1/Zi]*equil.pne;
+    %
+    waves{1} = make_idealLHwave_jd(equil,wavestruct);
+    %
+    dkeparam.coll_mode = coll_mode_list(icoll);% Relativistic Maxwellian background
+    %
+    % generate initial luke_inputs structure
+    %
+    lukestructs{icoll,iZi}.simul.path = path_simul;
+    lukestructs{icoll,iZi}.simul.locid = [id_simul,'_coll_',num2str(coll_mode_list(icoll)),'_Zi_',num2str(Zi)];
+    lukestructs{icoll,iZi}.equil = equil;
+    lukestructs{icoll,iZi}.dkeparam = dkeparam;
+    lukestructs{icoll,iZi}.dkedisplay = dkedisplay;
+    lukestructs{icoll,iZi}.waves = waves;
+    lukestructs{icoll,iZi}.opt = opt;
+    
+    
+    id_simul,wavestructs,[],dkeparam.psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXfinit,[],opt_save
+    
+    lukestructs = run_lukert(lukestructs,dkepath);
+    
+    
+    
+    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert();
     %
     dkeparam = dke_out.dkeparam;
     %
