@@ -27,6 +27,7 @@ dkepath.computer = computer;%machine type and supported OS
 %
 dkepath.path_profile.YP105119 = 1;
 dkepath.path_profile.JD211098 = 1;
+dkepath.path_profile.YB109156 = 1;
 %
 % Selected user profile for unlisted users
 %
@@ -228,29 +229,6 @@ dkepath.YB109156.remote(3) = remote_CEA_PLEIONE('pbs','yvesb','YB109156');
 dkepath.YB109156.remote(3).luke_root = dkepath.YB109156.luke_root;
 %
 dkepath.YB109156.remote(3) = remote_CEA_SATURNE('sun','yvesb','YB109156');
-
-
-
-
-
-
-dkepath.YB109156(1).remote(1).host = '';% empty for local host
-dkepath.YB109156(1).remote(1).nproc = 28;
-dkepath.YB109156(1).remote(1).luke_root = dkepath.YB109156(1).luke_root;
-dkepath.YB109156(1).remote(1).matlabroot = '';
-dkepath.YB109156(1).remote(1).cmd = 'qsub -l inter=false,ncpus=2';% -l walltime=1:59:00 -l nodes=1:ppn=1
-dkepath.YB109156(1).remote(1).mem = {',mem=','mb','7000','14000'};% -l select=1:inter=false:ncpus=1:mem=4000mb
-dkepath.YB109156(1).remote(1).get_jobid = {'','.cephee'};%str_before,str_after
-dkepath.YB109156(1).remote(1).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
-%
-dkepath.YB109156(1).remote(2).host = 'saturne1.partenaires.cea.fr';
-dkepath.YB109156(1).remote(2).nproc = 12;
-dkepath.YB109156(1).remote(2).luke_root = ['/home/YB109156/',luke_ref,'/'];%official saturne package repository for collaborators
-dkepath.YB109156(1).remote(2).matlabroot = '';
-dkepath.YB109156(1).remote(2).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-dkepath.YB109156(1).remote(2).get_jobid = {'Your job ',' '};%str_before,str_after
-dkepath.YB109156(1).remote(2).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
-dkepath.YB109156(1).remote(2).YB109156 = 'YB109156';
 %
 
 
