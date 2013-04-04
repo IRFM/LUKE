@@ -12,11 +12,16 @@ global nfig
 remtimout = 0;%10;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remlist = 1;%[1,4,5];%NaN;%[];% list of remote profiles to check. Use NaN to check all
+remlist = NaN;%1;%[1:4,6:7];%[];% list of remote profiles to check. Use NaN to check all
+remdebugmode = 0;%1;% debug mode (0) off (1) on
+remclean = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 %
 opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
 mdce_opt = 0;% option for testing distributed computing inside remote calculation
+%
+luke_memory = 2000;% job memory in mb
+luke_walltime = 1;% job walltime in hours
 %
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -35,7 +40,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%For output code display
+id_display = 'NO_DISPLAY';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 %************************************************************************************************************************************
@@ -88,6 +93,9 @@ dkeparam.psin_S = psin_S;% radial flux grid points enforced
 %
 dkeparam.clustermode.coll_dke_jd.scheduler.mode = mdce_opt;
 dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = mdce_opt;
+%
+dkeparam.luke_memory = luke_memory;% job memory in mb
+dkeparam.luke_walltime = luke_walltime;% job walltime in hours
 %
 % RELATIVISTIC CASE
 %
@@ -148,6 +156,8 @@ end
 dkepath.remtimout = remtimout;% timeout in minutes
 dkepath.rempause = rempause;% pause between job checks (in minutes) (only for remtimout > 0)
 dkepath.remenforce = 0;% exit if remote calculation failed 
+dkepath.debugmode = remdebugmode;% debug mode 
+dkepath.clean = remclean;% clean mode 
 %
 for remnum = 1:nrem,
     %
