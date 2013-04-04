@@ -29,8 +29,8 @@ saturne.path_profile = 1;
 %
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
 %
-saturne.JD211098(1).luke_root = [getenv('HOME'),filesep,luke_ref,'/'];
-saturne.JD211098(1).local_root = [getenv('HOME'),filesep];%official saturne package repository for collaborators
+saturne.JD211098(1).luke_root = ['/home/JD211098',filesep,luke_ref,'/'];
+saturne.JD211098(1).local_root = ['/home/JD211098',filesep];%official saturne package repository for collaborators
 saturne.JD211098(1).temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 saturne.JD211098(1).mex705 = [saturne.JD211098(1).luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
@@ -40,22 +40,26 @@ saturne.JD211098(1).compiler_opt.helmex.mex705 = [' -L',saturne.JD211098(1).loca
 %
 saturne.JD211098(1).MUMPS.mex705 = [saturne.JD211098(1).local_root,'src/MUMPS_4.7.3/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
 %
-saturne.JD211098(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','joan','JD211098');
-saturne.JD211098(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','joan','JD211098');
+saturne.JD211098(1).remote(1) = remote_CEA_SATURNE('sun','joan','JD211098');
+saturne.JD211098(1).remote(1).host = '';
+saturne.JD211098(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','joan','JD211098');
+saturne.JD211098(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan','JD211098');
 %
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %
-saturne.YP105119(1).luke_root = [getenv('HOME'),filesep,luke_ref,'/'];
-saturne.YP105119(1).local_root = [getenv('HOME'),filesep];%official saturne package repository for collaborators
+saturne.YP105119(1).luke_root = ['/home/YP105119',filesep,luke_ref,'/'];
+saturne.YP105119(1).local_root = ['/home/YP105119',filesep];%official saturne package repository for collaborators
 saturne.YP105119(1).temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 saturne.YP105119(1).mex705 = [saturne.YP105119(1).luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
 saturne.YP105119(1).compiler_opt.copts = '';
 saturne.YP105119(1).compiler_opt.fopts.mex705 = [' -largeArrayDims'];
-saturne.YP105119(1).compiler_opt.helmex.mex705 = [' -L',saturne.YP105119(1).local_root,'lib -lf95 -lgcc -llapack -lblas'];% -ltmglib Optional argument for helmex compilation
+saturne.YP105119(1).compiler_opt.helmex.mex705 = [' -L',saturne.JD211098(1).local_root,'lib -lf95 -lgcc -llapack -lblas'];% -ltmglib Optional argument for helmex compilation
 %
 saturne.YP105119(1).MUMPS.mex705 = saturne.JD211098(1).MUMPS.mex705;%Where MUMPS matrix solver is stored (MEX function)
 %
-saturne.YP105119(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yves','YP105119');
-saturne.YP105119(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves','YP105119');%
+saturne.YP105119(1).remote(1) = remote_CEA_SATURNE('sun','yves','YP105119');
+saturne.YP105119(1).remote(1).host = '';
+saturne.YP105119(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','yves','YP105119');
+saturne.YP105119(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','yves','YP105119');%
 

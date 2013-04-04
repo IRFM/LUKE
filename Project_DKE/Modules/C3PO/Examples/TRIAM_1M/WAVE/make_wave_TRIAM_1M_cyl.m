@@ -9,7 +9,7 @@ clear all
 close all
 clc
 %
-id_wave = 'TRIAM_1M_cyl_1p4';
+id_wave = 'TRIAM_1M_cyl_1p3';
 %
 % Path parameters
 %
@@ -37,7 +37,7 @@ z0 = 0;
 %
 m0 = -0.1;
 kz0 = NaN;
-Npar0 = -1.4;%initial index of refraction
+Npar0 = -1.3;%initial index of refraction
 %
 dNpar0 = NaN;
 P0_2piRp = NaN;
