@@ -31,8 +31,8 @@ efdaitm.path_profile = 1;
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-efdaitm.yvesp(1).luke_root = '/pfs/home/yvesp/LUKE_ITM/trunk/LUKE/';
-efdaitm.yvesp(1).local_root = ['/pfs/home/yvesp/'];
+efdaitm.yvesp(1).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
+efdaitm.yvesp(1).local_root = ['/pfs/home/yvesp/public/'];
 efdaitm.yvesp(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 efdaitm.yvesp(1).startup{1} = sprintf('%s\n','[lukeversion,matlabversion,matlabrelease] = LUKEversion_jd;');
@@ -43,7 +43,7 @@ efdaitm.yvesp(1).speclibpath.ual = getenv('UAL');%UAL path in the ITM gateway. S
 efdaitm.yvesp(1).mex800 = [efdaitm.yvesp(1).luke_root,'Project_DKE/MEX/Bin/efda/MATLAB800/'];
 efdaitm.yvesp(1).compiler_opt.copts = '';
 %
-efdaitm.yvesp(1).MUMPS.mex800 = ['/afs/ipp/itm/switm/lib/mumps/4.10.0_serial/matlab/R2012b/amd64_intel_12/'];%Where MUMPS matrix solver is stored (MEX function)
+%efdaitm.yvesp(1).MUMPS.mex800 = ['/afs/ipp/itm/switm/lib/mumps/4.10.0_serial/matlab/R2012b/amd64_intel_12/'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %--------------------------- Distributed computing -----------------------------
 %
