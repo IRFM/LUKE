@@ -40,13 +40,8 @@ saturne.JD211098(1).compiler_opt.helmex.mex705 = [' -L',saturne.JD211098(1).loca
 %
 saturne.JD211098(1).MUMPS.mex705 = [saturne.JD211098(1).local_root,'src/MUMPS_4.7.3/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
 %
-saturne.JD211098(1).remote(1).host = '';% empty for local host
-saturne.JD211098(1).remote(1).nproc = 12;
-saturne.JD211098(1).remote(1).luke_root = saturne.JD211098(1).luke_root;
-saturne.JD211098(1).remote(1).matlabroot = '';
-saturne.JD211098(1).remote(1).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-saturne.JD211098(1).remote(1).get_jobid = {'Your job ',' '};%str_before,str_after
-saturne.JD211098(1).remote(1).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
+saturne.JD211098(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','joan','JD211098');
+saturne.JD211098(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','joan','JD211098');
 %
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %
@@ -61,12 +56,6 @@ saturne.YP105119(1).compiler_opt.helmex.mex705 = [' -L',saturne.YP105119(1).loca
 %
 saturne.YP105119(1).MUMPS.mex705 = saturne.JD211098(1).MUMPS.mex705;%Where MUMPS matrix solver is stored (MEX function)
 %
-saturne.YP105119(1).remote(1).host = '';% empty for local host
-saturne.YP105119(1).remote(1).nproc = 12;
-saturne.YP105119(1).remote(1).luke_root = saturne.YP105119(1).luke_root;
-saturne.YP105119(1).remote(1).matlabroot = '';
-saturne.YP105119(1).remote(1).cmd = 'qsub -q batch.q';% -l walltime=1:59:00 -l nodes=1:ppn=1
-saturne.YP105119(1).remote(1).get_jobid = {'Your job ',' '};%str_before,str_after
-saturne.YP105119(1).remote(1).set_jobid = {'qstat -j ','','Following jobs do not exist'};%str_before,str_after,str_check
-%
+saturne.YP105119(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yves','YP105119');
+saturne.YP105119(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves','YP105119');%
 

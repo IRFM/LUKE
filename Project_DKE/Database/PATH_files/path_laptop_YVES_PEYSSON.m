@@ -42,7 +42,7 @@ macbookyves.yves(1).cshrc{1} = [];
 macbookyves.yves(1).mex801 = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB801','/'];
 %
 macbookyves.yves(1).compiler_opt.copts = '';
-macbookyves.yves(1).compiler_opt.helmex = '  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+macbookyves.yves(1).compiler_opt.helmex = NaN;%'  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 macbookyves.yves(1).compiler_opt.fopts = ' -largeArrayDims';
 %
 % MUMPS matrix solver (parallel, sequential, mex)
