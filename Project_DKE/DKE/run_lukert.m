@@ -1,4 +1,4 @@
-function [lukestucts] = run_lukert(lukestucts,dkepath)
+function [lukestructs] = run_lukert(lukestructs,dkepath)
 %
 % Wave and kinetic solver. Self-consistent calculations with or without plasma fluctuations
 %
@@ -34,9 +34,15 @@ if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && dkepath.remnum == ro
         remote.debugmode = 0;
     end
     %
-    if ~iscell(lukestucts),
+    if isfield(dkepath,'clean'),
+        remote.clean = dkepath.clean;
+    else
+        remote.clean = 2;
+    end
+    %
+    if ~iscell(lukestructs),
         cellmode = 0;
-        lukestucts = {lukestucts};% lukestucts must be in cell for remote calculation
+        lukestructs = {lukestructs};% lukestructs must be in cell for remote calculation
     end
     %
 else
@@ -45,73 +51,73 @@ else
     %
 end
 %
-if iscell(lukestucts),% remote and/or distributed calculation
+if iscell(lukestructs),% remote and/or distributed calculation
     %
-    lukestuctsize = size(lukestucts);
+    lukestructsize = size(lukestructs);
     %
-    lukestucts = lukestucts(:);
+    lukestructs = lukestructs(:);
     %
-    njobs = length(lukestucts);
+    njobs = length(lukestructs);
     %
     for ijob = 1:njobs,
         if isempty(remote),%local sequential calculation
             %
             disp(['----> Starting job # ',num2str(ijob),'/',num2str(njobs),' locally'])
             %
-            lukestucts{ijob} = run_lukert(lukestucts{ijob});
+            lukestructs{ijob} = run_lukert(lukestructs{ijob});
         else            
             %
             lukestandardjob = '';
             %
-            if isfield(lukestucts{ijob},'output'),
+            if isfield(lukestructs{ijob},'output'),
                 disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' already completed.'])
                 continue
-            elseif isfield(lukestucts{ijob},'err'),
+            elseif isfield(lukestructs{ijob},'err'),
                 disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' was run already but failed due to the following error :'])
-                if ischar(lukestucts{ijob}.err),
-                    disp(lukestucts{ijob}.err)
+                if ischar(lukestructs{ijob}.err),
+                    disp(lukestructs{ijob}.err)
                 else
-                    for ierr = 1:length(lukestucts{ijob}.err),
-                        disp(lukestucts{ijob}.err{ierr})
+                    for ierr = 1:length(lukestructs{ijob}.err),
+                        disp(lukestructs{ijob}.err{ierr})
                     end
                 end
                 continue
-            elseif isfield(lukestucts{ijob},'job'),
+            elseif isfield(lukestructs{ijob},'job'),
                 disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is checked on remote cluster : ',remote.host])
             else
                 disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is sent to remote cluster : ',remote.host])
                 %
                 lukestandardjob = matstandardjob_jd(remote,'runmat');
                 %
-                if isfield(lukestucts{ijob},'dkeparam') && isfield(lukestucts{ijob}.dkeparam,'luke_memory'),
-                    lukestandardjob.memory = lukestucts{ijob}.dkeparam.luke_memory;% requested memory specified in dkeparam
-                elseif isfield(lukestucts{ijob},'transpfaste') && ~isempty(lukestucts{ijob}.transpfaste), 
+                if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_memory'),
+                    lukestandardjob.memory = lukestructs{ijob}.dkeparam.luke_memory;% requested memory specified in dkeparam
+                elseif isfield(lukestructs{ijob},'transpfaste') && ~isempty(lukestructs{ijob}.transpfaste), 
                     lukestandardjob.memory = 14000;%mb default value with transport
                 else
                     lukestandardjob.memory = 7000;%mb default value without transport
                 end
                 %
-                if isfield(lukestucts{ijob},'dkeparam') && isfield(lukestucts{ijob}.dkeparam,'luke_ppn'),
-                    luke_job.nodes = 1;
-                    luke_job.ppn = lukestucts{ijob}.dkeparam.luke_ppn;% number of cores specified in dkeparam
+                if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_ppn'),
+                    lukestandardjob.nodes = 1;
+                    lukestandardjob.ppn = lukestructs{ijob}.dkeparam.luke_ppn;% number of cores specified in dkeparam
                 end
                 %
-                if isfield(lukestucts{ijob},'dkeparam') && isfield(lukestucts{ijob}.dkeparam,'luke_walltime'),
-                    luke_job.walltime = lukestucts{ijob}.dkeparam.luke_walltime;% walltime for remote LUKE calculation
+                if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_walltime'),
+                    lukestandardjob.walltime = lukestructs{ijob}.dkeparam.luke_walltime;% walltime for remote LUKE calculation
                 else
-                    luke_job.walltime = 12;% default walltime in hours
+                    lukestandardjob.walltime = 12;% default walltime in hours
                 end
                 %
             end
             %
-            [err,lukestucts{ijob}] = matremote_luke_jd('run_lukert',lukestucts(ijob),remote,lukestandardjob);
+            [err,lukestructs{ijob}] = matremote_luke_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
             %
             if ~isempty(err),
                 %
                 if isfield(dkepath,'remenforce') && dkepath.remenforce == 0,%do not enforce local calculation, exit instead
-                    lukestucts{ijob}.err = err;
+                    lukestructs{ijob}.err = err;
                 else
-                    lukestucts{ijob} = run_lukert(lukestucts{ijob});% local job enforced
+                    lukestructs{ijob} = run_lukert(lukestructs{ijob});% local job enforced
                 end
                 %
             end
@@ -120,9 +126,9 @@ if iscell(lukestucts),% remote and/or distributed calculation
     end
     %
     if cellmode == 0;
-        lukestucts = lukestucts{1};
+        lukestructs = lukestructs{1};
     else
-        lukestucts = reshape(lukestucts,lukestuctsize);
+        lukestructs = reshape(lukestructs,lukestructsize);
     end
     %
     return
@@ -131,83 +137,83 @@ end
 %
 % case where the job was already run
 % 
-if isfield(lukestucts,'output'),
+if ~isempty(remote) && isfield(lukestructs,'output'),
     disp('Job was successfully completed already. Aborted.')
     return
-elseif isfield(lukestucts,'err'),
-    disp('Job was run already but failed due to an error. See lukestucts.err. Remove field ''err'' from lukestucts to start again.')
+elseif isfield(lukestructs,'err'),
+    disp('Job was run already but failed due to an error. See lukestructs.err. Remove field ''err'' from lukestructs to start again.')
     return
 end
 %
 % mandatory fields
 %
-equil           = lukestucts.equil;
-dkeparam_in     = lukestucts.dkeparam;
-dkedisplay_in   = lukestucts.dkedisplay;
+equil           = lukestructs.equil;
+dkeparam_in     = lukestructs.dkeparam;
+dkedisplay_in   = lukestructs.dkedisplay;
 %
 % optional fields
 %
-if ~isfield(lukestucts,'simul'),
+if ~isfield(lukestructs,'simul'),
     simul_in = '';
 else
-    simul_in = lukestucts.simul;
+    simul_in = lukestructs.simul;
 end
 %
-if ~isfield(lukestucts,'wavestructs'),
+if ~isfield(lukestructs,'wavestructs'),
     wavestructs = [];
 else
-    wavestructs = lukestucts.wavestructs;
+    wavestructs = lukestructs.wavestructs;
 end
 %
-if ~isfield(lukestucts,'waves'),
+if ~isfield(lukestructs,'waves'),
     waves = [];
 else
-    waves = lukestucts.waves;
+    waves = lukestructs.waves;
 end
 %
-if ~isfield(lukestucts,'ohm'),
+if ~isfield(lukestructs,'ohm'),
     ohm = [];
 else
-    ohm = lukestucts.ohm;
+    ohm = lukestructs.ohm;
 end
 %
-if ~isfield(lukestucts,'transpfaste'),
+if ~isfield(lukestructs,'transpfaste'),
     transpfaste = [];
 else
-    transpfaste = lukestucts.transpfaste;
+    transpfaste = lukestructs.transpfaste;
 end
 %
-if ~isfield(lukestucts,'ripple'),
+if ~isfield(lukestructs,'ripple'),
     ripple = [];
 else
-    ripple = lukestucts.ripple;
+    ripple = lukestructs.ripple;
 end
 %
-if ~isfield(lukestucts,'XXf0'),
+if ~isfield(lukestructs,'XXf0'),
     XXf0 = [];
 else
-    XXf0 = lukestucts.XXf0;
+    XXf0 = lukestructs.XXf0;
 end
 %
-if ~isfield(lukestucts,'XXsinksource'),
+if ~isfield(lukestructs,'XXsinksource'),
     XXsinksource_in = [];
 else
-    XXsinksource_in = lukestucts.XXsinksource;
+    XXsinksource_in = lukestructs.XXsinksource;
 end
 %
-if ~isfield(lukestucts,'loadstructs'),
+if ~isfield(lukestructs,'loadstructs'),
     loadstructs = [];
 else
-    loadstructs = lukestucts.loadstructs;
+    loadstructs = lukestructs.loadstructs;
 end
 %
-if ~isfield(lukestucts,'opt'),
+if ~isfield(lukestructs,'opt'),
     opt.save = 0;% (1): save LUKE_RESULTS or return error (0): return results or error
     opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
     opt.backup = 0;% (1) save fluctuation time steps (0) do not save
     opt.waves = 0;% (1) save waves at each time step (0) do not save
 else
-    opt = lukestucts.opt;
+    opt = lukestructs.opt;
     if ~isfield(opt,'save'),
         opt.save = 0;
     end
@@ -724,19 +730,19 @@ output.Zmripple = Zmripple;
 output.mksa = mksa;
 output.XXsinksource = XXsinksource;
 %
-lukestucts.output = output;
+lukestructs.output = output;
 %
 if opt.save,% save results in LUKE_RESULTS file
     savefile = [simul.path,'LUKE_RESULTS_',simul.id,'.mat'];
-    save(savefile,'lukestucts');
+    save(savefile,'lukestructs');
 end
 %
 if iscell(opt.fields),% select fields to return in output
-    lukestucts.output = selectfields_jd(lukestucts.output,opt.fields);
+    lukestructs.output = selectfields_jd(lukestructs.output,opt.fields);
 end
 %
 if opt.save,% return at least savefile
-    lukestucts.output.savefile = savefile;
+    lukestructs.output.savefile = savefile;
 end
 %
 
