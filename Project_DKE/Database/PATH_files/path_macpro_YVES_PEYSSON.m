@@ -32,7 +32,7 @@ macproyves.path_profile.yvespeysson = 1;
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-macproyves.yvespeysson(1).luke_root = ['/Users/yvespeysson/Projets/LUKE/'];
+macproyves.yvespeysson(1).luke_root = [pwd,filesep];% local path necessary to handle several LUKE versions 
 %
 % NOTE : It is better to use path_profile than pwd to separate between LUKE
 % versions, but this is not yet fully supported by load_strutctures_yp
