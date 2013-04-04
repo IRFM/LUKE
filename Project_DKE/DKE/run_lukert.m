@@ -258,7 +258,9 @@ if isempty(simul.id),% automatic generation of filename
 end    
 %
 if ~exist(simul.path,'dir'), 
-    mkdir(simul.path);
+    if ~isempty(simul.path),
+        mkdir(simul.path);
+    end
 end
 if opt.waves && ~exist([simul.path,'wave_results'],'dir'), 
     mkdir([simul.path,'wave_results']);
