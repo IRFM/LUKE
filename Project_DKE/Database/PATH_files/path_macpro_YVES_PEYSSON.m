@@ -32,13 +32,12 @@ macproyves.path_profile.yvespeysson = 1;
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-%macproyves.yvespeysson(1).luke_root = [getenv('HOME'),'/Travail/Projets/',luke_ref,'/'];
-macproyves.yvespeysson(1).luke_root = [pwd,'/'];
+macproyves.yvespeysson(1).luke_root = ['/Users/yvespeysson/Projets/LUKE/'];
 %
 % NOTE : It is better to use path_profile than pwd to separate between LUKE
 % versions, but this is not yet fully supported by load_strutctures_yp
 %
-macproyves.yvespeysson(1).local_root = [getenv('HOME'),'/Shared/'];
+macproyves.yvespeysson(1).local_root = ['/Users/yvespeysson/Shared/'];
 macproyves.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 macproyves.yvespeysson(1).mex800 = [macproyves.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB800','/'];
@@ -96,8 +95,8 @@ macproyves.yvespeysson(1).TSBASE.mex = [macproyves.yvespeysson(1).luke_root,'Pro
 % WARNING: the setup of the scheduler may be complicated and is usually
 % machine dependent. 
 %
-macproyves.yvespeysson(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yves');
-macproyves.yvespeysson(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves');
-macproyves.yvespeysson(1).remote(3) = remote_CEA_SATURNE('sun','yves','yves');
+macproyves.yvespeysson(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yves','yvespeysson');
+macproyves.yvespeysson(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves','yvespeysson');
+macproyves.yvespeysson(1).remote(3) = remote_CEA_SATURNE('sun','yves','yvespeysson');
 
 
