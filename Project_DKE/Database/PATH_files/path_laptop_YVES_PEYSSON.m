@@ -87,6 +87,11 @@ macbookyves.yves(1).TSBASE.mex = [macbookyves.yves(1).luke_root,'Project_DKE/Dat
 % WARNING: the setup of the scheduler may be complicated and is usually
 % machine dependent. 
 %
+% For testing the availablity of remote calculations, move to the folder
+% ~/LUKE_xxx/Project_DKE/Packages/MDCE/testremotebatch and type
+% testremotebatch(remote_laptop_YVES_PEYSSON('condor','yves','yves')) for
+% any of the remote computers listed below.
+%
 macbookyves.yves(1).remote(1) = remote_laptop_YVES_PEYSSON('condor','yves','yves');
 macbookyves.yves(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','yves','yves');
 macbookyves.yves(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','yves','yves');
