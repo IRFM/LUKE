@@ -229,6 +229,10 @@ if exist('flag_path','var'),%Paths
     %
     setpath_luke_jd(dkepath.luke_root,dkepath);
     %
+    % update and verify remote profiles
+    %
+    dkepath = update_remote_jd(dkepath);
+    %
     varargout{flag_path} = dkepath;
 end
 %
