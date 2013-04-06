@@ -50,6 +50,13 @@ if ~isfield(opt,'spec') || isempty(opt.spec)
     opt.spec = 1;
 end
 %
+if isfield(data,'lukestructs'),
+    data = data.lukestructs;
+end
+if isfield(data,'output'),
+    data = data.output;
+end
+%
 Znorm = data.Znorm;
 Zcurr = data.Zcurr;
 ZP0 = data.ZP0;

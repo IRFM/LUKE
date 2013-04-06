@@ -16,6 +16,10 @@ if isstruct(data),
     %
     % data from input structure
     %
+    if isfield(data,'lukestructs'),
+        data = data.lukestructs;
+    end
+    %
     if isfield(data,'luke_input'),
         equil = data.luke_input.equil;
         dkeparam = data.luke_input.dkeparam;
@@ -34,7 +38,11 @@ if isstruct(data),
         momentumDKE = data.output.momentumDKE;
         mksa = data.output.mksa;
         Zmomcoef = data.output.Zmomcoef;
-        external = data.external;
+        if isfield(data,'external'),
+            external = data.external;
+        else
+            external = '';
+        end
     else % case of LUKE_RESULTS file
         Zcurr = data.Zcurr;
         dke_out = data.dke_out;
@@ -199,15 +207,26 @@ if all(ischar(exp_file)),
     it1 = find(t >= t1,1,'first');
     it2 = find(t <= t2,1,'last');
     %
-    % time averaging
-    %
-    hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
-    dt = t(it2) - t(it1);
-    hxrexp = hxrexp/dt;%taux de comptage
-    %
-    % incremental contribution of energy canal
-    %
-    hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
+    if isempty(it1) || isempty(it2),% no data available in averaging range
+        %
+        hxrexp = NaN*ones(length(energy),nc);
+        dt = 1;
+        %
+    else        
+        %
+        % time averaging
+        %
+        hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
+        dt = t(it2) - t(it1);
+        hxrexp = hxrexp/dt;%taux de comptage
+        %
+        % incremental contribution of energy canal
+        %
+        hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
+        %
+        hxrexp(:,any(hxrexp < 0)) = NaN;% hxrexp cannot be negative - probably malfunctioning chords
+        %
+    end
     %
     hxrspec.kdiag_hxr = [energy(1:end-1),hxrspec.kdiag_hxr(1,end);energy(2:end),hxrspec.kdiag_hxr(2,end)];%redefine kdiag according to measurements
     %
