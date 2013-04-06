@@ -80,9 +80,36 @@ function [yN,ydN,yP,param,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pi
         opt_optim = 0;
     end
     %
-    if display_mode >= 1 && ((~isstruct(param_in) && isnan(param_in)) || (isstruct(param_in) && (~isfield(param,'dir') || ~isfield(param_in,'mode') || ~isfield(param_in,'nlobes')))),
+    if ~isstruct(param_in) && isnan(param_in),% default values
+        param_in.dir = 1;
+        param_in.mode = 0;
+        param_in.nlobes = 2;
+        param_in.inter = 1;
+    end
+    %
+    if isstruct(param_in) && ~isfield(param_in,'dir'),
+        param_in.dir = 1;
+    end
+    %
+    if isstruct(param_in) && ~isfield(param_in,'mode'),
+        param_in.mode = 0;
+    end
+    %
+    if isstruct(param_in) && ~isfield(param_in,'nlobes'),
+        param_in.nlobes = 2;
+    end
+    %
+    if isstruct(param_in) && isfield(param_in,'inter') && param_in.inter == 1,
         %
         inter_mode = 1;% interactive mode
+        %
+    else
+        %
+        inter_mode = 0;
+        %
+    end        
+    %
+    if display_mode >= 1 && inter_mode == 1,
         %
         disp('--------------------------------------------------------')
         disp('          ALOHA  ->  C3PO parametrization               ')
@@ -98,10 +125,6 @@ function [yN,ydN,yP,param,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pi
         disp(' ')      
         disp('  - Simple model (ideal spectrum, one lobe)   : param.dir = 1, param.mode = 1, param.nlobes = 1')           
         disp(' ')      
-        %
-    else
-        %
-        inter_mode = 0;
         %
     end
     %
@@ -120,13 +143,13 @@ function [yN,ydN,yP,param,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pi
             close(fig1),close(fig2),close(fig3),close(fig4)
         end
         %
-        if (~isstruct(param) && isnan(param)) || (isstruct(param) && ~isfield(param,'dir')),
+        if inter_mode == 1,
             param.dir = input_dke_yp(['Sort peaks according to : \n',...
                 '  (0) P     + preserve repartition and total power \n',...
                 '  (1) P/N^2 + preserve directivity and repartition \n',...
                 '  (2) P/N^2 + preserve directivity and total power \n',...
                 '  (3) P/N^2 + preserve repartition and total power \n',...
-                'param.dir ='],1,0:3,'',[1,1]);
+                'param.dir ='],param.dir,0:3,'',[1,1]);
             disp(' ')      
         end
         %
@@ -197,17 +220,15 @@ function [yN,ydN,yP,param,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pi
         %
         if isstruct(param),
             %
-            if ~isfield(param,'mode'),
+            if inter_mode == 1,
                 param.mode = input_dke_yp(['Mode for peak processing : \n',...
                     '  (0) select a number of Gaussian peaks left unchanged (WARNING : total power less than Pin) \n',...
                     '  (1) assemble peaks fixing Pmax and N, allowing dN to change \n',...
                     '  (2) assemble peaks allowing Pmax, N and dN to change \n',...
-                    'param.mode ='],0,0:2,'',[1,1]);
+                    'param.mode ='],param.mode,0:2,'',[1,1]);
                 disp(' ')      
-            end
-            %
-            if ~isfield(param,'nlobes'),
-                param.nlobes = input_dke_yp('Number of lobes to be selected : param.nlobes =',2,1:ny,'',[1,1]);
+                %
+                param.nlobes = input_dke_yp('Number of lobes to be selected : param.nlobes =',param.nlobes,1:ny,'',[1,1]);
                 disp(' ')      
             end
             %
@@ -354,16 +375,24 @@ function [yN,ydN,yP,param,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pi
                     yPpro = [yPpro,yP(iy)];
                     zyfacpro = [zyfacpro,zyfac(:,iy)];
                     %
+                    if opt_peak == 0,% recalculate dN// to keep Pmax.
+                        %
+                        ydNpro(end) = ydN(iy).*yP(iy)./yP0(iy);
+                        %
+                    end
+                    %
+                    Ptot = Ptot - yP(iy);
+                    %
                     yN(iy) = [];
                     ydN(iy) = [];
                     yP(iy) = [];
+                    yP0(iy) = [];
                     zyfac(:,iy) = [];
-                    %
-                    Ptot = Ptot - yP(iy);
                     %
                     ny = ny - 1;
                     %
                     nlobesmax = nlobesmax - 1;
+                    nlobespro = nlobespro + 1;
                     %
                     continue
                     %
@@ -393,16 +422,24 @@ function [yN,ydN,yP,param,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pi
                     yPpro = [yPpro,yP(iy)];
                     zyfacpro = [zyfacpro,zyfac(:,iy)];
                     %
+                    if opt_peak == 0,% recalculate dN// to keep Pmax.
+                        %
+                        ydNpro(end) = ydN(iy).*yP(iy)./yP0(iy);
+                        %
+                    end
+                    %
+                    Ptot = Ptot - yP(iy);
+                    %
                     yN(iy) = [];
                     ydN(iy) = [];
                     yP(iy) = [];
+                    yP0(iy) = [];
                     zyfac(:,iy) = [];
-                    %
-                    Ptot = Ptot - yP(iy);
                     %
                     ny = ny - 1;
                     %
                     nlobesmax = nlobesmax - 1;
+                    nlobespro = nlobespro + 1;
                     %
                     continue
                     %
