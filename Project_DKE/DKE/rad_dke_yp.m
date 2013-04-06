@@ -51,7 +51,7 @@ ZXXD_a.pm_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
 ZXXD_a.mp_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
 ZXXF_a.p_ij = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
 %
-if ~isempty(transpfaste), 
+if ~isempty(transpfaste) && isstruct(transpfaste) && ~isempty(fieldnames(transpfaste)), 
     %
     [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
     %

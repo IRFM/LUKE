@@ -24,7 +24,7 @@ xthetaloss = zeros(size(xrho));
 xpndetrap = zeros(size(xrho));
 xEseuil = zeros(size(xrho));
 %
-if ~isempty(ripple) & (isstruct(ripple) & ripple.mode == 1),
+if ~isempty(ripple) && (isstruct(ripple) && isfield(ripple,'mode') && ripple.mode == 1),
     etime_rip = 0;
     time0 = clock;
     %
@@ -44,7 +44,7 @@ if ~isempty(ripple) & (isstruct(ripple) & ripple.mode == 1),
     xnhuloss = ones(size(xrho))*1000;%Normalized to the reference frequency(forced to very large loss frequency, otherwise no physical meaning)
     %
     for ir = 1:nr,
-		if isnan(xnhuloss(ir)) == 0 & bounce_mode == 1 & ~isempty(findstr(tokname,'TS')) == 1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
+		if isnan(xnhuloss(ir)) == 0 && bounce_mode == 1 && ~isempty(findstr(tokname,'TS')) == 1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
 			if ir == 1, 
 				info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak, see main_dke_1yp.m for BeLi, Ip and Ncoils values');
 				disp('-------------------------------------------------------------------------------------------------------------------');

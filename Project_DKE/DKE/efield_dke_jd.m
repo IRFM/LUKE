@@ -30,7 +30,7 @@ else
   xrhoV = equilDKE.xrhoV;
 %
   xepsi_fsav = zeros(size(equilDKE.xrho));
-  if ~isempty(ohm),
+  if ~isempty(ohm) && isstruct(ohm) && ~isempty(fieldnames(ohm)),
       if ~isfield(ohm,'rhotype') || strcmp(ohm.rhotype,'g'),%geometric rho
           xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrho,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
       elseif strcmp(ohm.rhotype,'p'),
