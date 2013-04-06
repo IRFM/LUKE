@@ -60,6 +60,13 @@ if iscell(lukestructs),% remote and/or distributed calculation
     njobs = length(lukestructs);
     %
     for ijob = 1:njobs,
+        if isempty(lukestructs{ijob}),
+            error('One lukestruct at elast is empty, aborted.')
+        end
+    end
+    %
+    for ijob = 1:njobs,
+        %
         if isempty(remote),%local sequential calculation
             %
             disp(['----> Starting job # ',num2str(ijob),'/',num2str(njobs),' locally'])
@@ -84,14 +91,14 @@ if iscell(lukestructs),% remote and/or distributed calculation
                 continue
             elseif isfield(lukestructs{ijob},'job'),
                 disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is checked on remote cluster : ',remote.host])
-            else
+            elseif isfield(lukestructs{ijob},'equil'),
                 disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is sent to remote cluster : ',remote.host])
                 %
                 lukestandardjob = matstandardjob_jd(remote,'runmat');
                 %
                 if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_memory'),
                     lukestandardjob.memory = lukestructs{ijob}.dkeparam.luke_memory;% requested memory specified in dkeparam
-                elseif isfield(lukestructs{ijob},'transpfaste') && ~isempty(lukestructs{ijob}.transpfaste), 
+                elseif isfield(lukestructs{ijob},'transpfaste') && ~isempty(fieldnames(lukestructs{ijob}.transpfaste)), 
                     lukestandardjob.memory = 14000;%mb default value with transport
                 else
                     lukestandardjob.memory = 7000;%mb default value without transport
@@ -108,16 +115,19 @@ if iscell(lukestructs),% remote and/or distributed calculation
                     lukestandardjob.walltime = 12;% default walltime in hours
                 end
                 %
+            else
+                disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' structure is unknown. Aborted.'])
+                continue
             end
             %
             [err,lukestructs{ijob}] = matremote_luke_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
             %
             if ~isempty(err),
                 %
-                if isfield(dkepath,'remenforce') && dkepath.remenforce == 0,%do not enforce local calculation, exit instead
-                    lukestructs{ijob}.err = err;
-                else
+                if isfield(lukestructs{ijob},'equil') && isfield(dkepath,'remenforce') && dkepath.remenforce == 1,% enforce local calculation
                     lukestructs{ijob} = run_lukert(lukestructs{ijob});% local job enforced
+                else
+                    lukestructs{ijob}.err = err;
                 end
                 %
             end
@@ -142,6 +152,9 @@ if ~isempty(remote) && isfield(lukestructs,'output'),
     return
 elseif isfield(lukestructs,'err'),
     disp('Job was run already but failed due to an error. See lukestructs.err. Remove field ''err'' from lukestructs to start again.')
+    return
+elseif isfield(lukestructs,'job'),
+    disp('lukestructs contains a seemingly active job. dkepath must contain the structure ''remote'' associated with the job.')
     return
 end
 %
