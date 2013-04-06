@@ -1,12 +1,12 @@
-function rundke_metis_LH(c_opt,basestr,shotnum,shotimes,locpath_simul,locid_simul,configs,dkeparam,dkedisplay,equil,ohm,transpfaste,rayparam,waveparam,C3POparam)
+function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,configs,opt,dkepath,dkeparam,dkedisplay,equil,ohm,transpfaste,ripple,rayparam,waveparam,C3POparam)
 %
-if nargin < 15,
+if nargin < 17,
     C3POparam = struct;
 end
-if nargin < 14,
+if nargin < 16,
     waveparam = struct;
 end
-if nargin < 13,
+if nargin < 15,
     rayparam = struct;
 end
 %
@@ -22,7 +22,7 @@ end
 shotimes = select_shotimes_jd(['before_luke@',basestr,'_',shotnum,'_'],'.mat',path_simul,shotimes);
 nshots = length(shotimes);
 %
-dkepath = load_structures_yp('dkepath','','');
+dkepath = conc_struct_jd(load_structures_yp('dkepath','',''),dkepath);
 %
 % ---- RADIAL TRANSPORT ----
 %
@@ -146,18 +146,28 @@ for ic = 1:nconf,
             %
             % process toroidal aloha spectrum for LUKE
             %
-            if isfield(config,'aloha_dir'),
-                Pin = 1 + config.aloha_dir*1i;
+            if isfield(config,'aloha'),
+                [bNtor0_b,bdNtor0_b,bPlhtor_b] = proc_aloha_spec_jd(aloha_b.antenna.nz,NaN,real(aloha_b.antenna.dP_nz),1,config.aloha(1),0,config.aloha(1).display_mode);
+                [bNtor0_h,bdNtor0_h,bPlhtor_h] = proc_aloha_spec_jd(aloha_h.antenna.nz,NaN,real(aloha_h.antenna.dP_nz),1,config.aloha(1),0,config.aloha(1).display_mode);
             else
-                Pin = 1;
+                if isfield(config,'aloha_dir'),
+                    Pin = 1 + config.aloha_dir*1i;
+                else
+                    Pin = 1;
+                end
+                %
+                [bNtor0_b,bdNtor0_b,bPlhtor_b] = proc_aloha_spec_jd(aloha_b.antenna.nz,NaN,real(aloha_b.antenna.dP_nz),Pin,config.aloha_param(1),0,0);
+                [bNtor0_h,bdNtor0_h,bPlhtor_h] = proc_aloha_spec_jd(aloha_h.antenna.nz,NaN,real(aloha_h.antenna.dP_nz),Pin,config.aloha_param(1),0,0);                
             end
             %
-            [bNtor0_b,bdNtor0_b,bPlhtor_b] = proc_aloha_spec_jd(aloha_b.antenna.nz,NaN,real(aloha_b.antenna.dP_nz),Pin,config.aloha_param(1),0,0);
-            [bNtor0_h,bdNtor0_h,bPlhtor_h] = proc_aloha_spec_jd(aloha_h.antenna.nz,NaN,real(aloha_h.antenna.dP_nz),Pin,config.aloha_param(1),0,0);
-            %
             if opt_ny == 1,% process poloidal aloha spectrum for LUKE
-                [bNpol0_b,bdNpol0_b,bPlhpol_b] = proc_aloha_spec_jd(aloha_b.antenna.ny,NaN,sum(real(aloha_b.antenna.dP.')),1,config.aloha_param(2),0,0);
-                [bNpol0_h,bdNpol0_h,bPlhpol_h] = proc_aloha_spec_jd(aloha_h.antenna.ny,NaN,sum(real(aloha_h.antenna.dP.')),1,config.aloha_param(2),0,0);     
+                if isfield(config,'aloha'),
+                    [bNpol0_b,bdNpol0_b,bPlhpol_b] = proc_aloha_spec_jd(aloha_b.antenna.ny,NaN,sum(real(aloha_b.antenna.dP.')),1,config.aloha(2),0,config.aloha(2).display_mode);
+                    [bNpol0_h,bdNpol0_h,bPlhpol_h] = proc_aloha_spec_jd(aloha_h.antenna.ny,NaN,sum(real(aloha_h.antenna.dP.')),1,config.aloha(2),0,config.aloha(2).display_mode);     
+                else
+                    [bNpol0_b,bdNpol0_b,bPlhpol_b] = proc_aloha_spec_jd(aloha_b.antenna.ny,NaN,sum(real(aloha_b.antenna.dP.')),1,config.aloha_param(2),0,0);
+                    [bNpol0_h,bdNpol0_h,bPlhpol_h] = proc_aloha_spec_jd(aloha_h.antenna.ny,NaN,sum(real(aloha_h.antenna.dP.')),1,config.aloha_param(2),0,0);     
+                end
             else
                 bNpol0_b = 0;
                 bNpol0_h = 0;
@@ -221,7 +231,7 @@ for ic = 1:nconf,
                 %
                 [tplh,tbase] = tsbase(str2double(shotnum),'GPHYB');
                 xplh = 1e6*interp1(tbase(:,1),tplh,str2double(shotimes{ishot}));
-                if abs(xplh(end) - metisdata.cons.plh)/metisdata.cons.plh > 0.01,
+                if real(config.opt_aloha) == 2 && abs(xplh(end) - metisdata.cons.plh)/metisdata.cons.plh > 0.01,
                     disp('warning : total power from database is different from metis cons')
                     keyboard
                 end
@@ -267,5 +277,5 @@ end
 %
 % start rundke_metis function
 %
-rundke_metis(path_simul,locid_simul,c_opt,basestr,shotnum,shotimes,dkepath,wavestructs,equil,dkeparam,dkedisplay,ohm,transpfaste)
+rundke_metis(path_simul,locid_simul,basestr,shotnum,shotimes,opt,dkepath,wavestructs,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple)
 %
