@@ -1,170 +1,71 @@
-function [flag,remote] = check_remote_yp(dkepath,clustername)
+function flag = check_remote_yp(dkepath)
 %
-%	Check if remote links are available and if yes, extract the structure of the active
-%	cluster for remote calculations. If zero or one input arguments, scan the
-%	available clusters (or computers) for remote calculations from the
-%	dkepath structure.
+%	Check if remote links are available and functionning
 %
 %	Input:
 %
-%       - dkepath: path structure
+%       - dkepath: path structure with nrem remote profiles
 %         (default: if no input structure or empty, dkepath is automatically loaded from PATH_LOCAL.mat)
-%       - clustername: remote cluster (or computer) name [1,p]
 %        
 %
 %	Output:
 %
-%       - flag: 1 -> remote link available, 0 -> remote link not available [1,nlinks]
-%       - remote: structure of the active cluster for remote calculations
+%       - flag    : 1 -> remote link working, 0 -> remote link not working [1,nrem]
 %
 %   Warning: If the process is blocked (no automatic ssh login for example or remote computer behind a firewall or 
 %   remote cluster (or computer) not running, type CTRL-C to escape.
 %
-%by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
+% by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-%remote = dkepath.remote(clusternum);
-%
-if nargin == 0 || isempty(dkepath),
+if nargin == 0,
     dkepath = load_structures_yp('dkepath','','');
 end
 %
-if nargin < 2,
-    disp('------------------------------------------------------');
-    disp(['Number of remote computers: ',int2str(length(dkepath.remote))]);
-    clustername = '';
-end
+nrem = length(dkepath.remote);
 %
-flag = 0;
-flag_remote = 0;
+info_dke_yp(5,['Number of remote profiles: ',int2str(nrem)]);
+info_dke_yp(2,['If test of one profile does not complete in a minute or less, please use ''CTRL+C'' and check the following :']);
+info_dke_yp(4,'Direct ssh connection must be recorded in known_hosts');
+info_dke_yp(4,'Direct ssh connection must be free of user prompts (no password, use ssh key pair)');
+info_dke_yp(4,'Job might be stuck in queue - check cluster usage, priorities, and job attributes.');
+disp(' ')
 %
-iremote_min = 1;
-iremote_max = length(dkepath.remote);
-%
-if ~isempty(clustername),
-    %
-    scheduler = clustername([strfind(clustername,':')+1:end]);%for multiple schedulers on the same cluster
-    %
-    if isempty(scheduler),%search default local scheduler (xgrid or condor)
-        if iscell(dkepath.remote(1).cmd)
-            scheduler = dkepath.remote(1).cmd{1};
-        else
-            scheduler = dkepath.remote(1).cmd;
-        end
-        %
-        if strfind(scheduler,'condor'),scheduler='condor';end
-        if strfind(scheduler,'xgrid'),scheduler='xgrid';end
-        if strfind(scheduler,'qsub'),scheduler='pbs';end
-    else
-        clustername = clustername([1:strfind(clustername,':')-1]);
-    end
-    %
-    if strcmp(clustername,'local'),
-        iremote_min = 1;
-        iremote_max = 1;
-        remote = dkepath.remote(1);%first substructure is always corresponding to the local cluster (or computer)
-    else
-        if isfield(dkepath.remote,'cluster'), 
-            for iremote = 1:length(dkepath.remote),
-                clustername0 = dkepath.remote(iremote).cluster;
-                if ~isempty(clustername0)
-                    if ~isempty(strfind(clustername0,clustername)),
-                        scheduler_flag = strfind(dkepath.remote(iremote).cmd,scheduler);
-                        for isc = 1:length(scheduler_flag),
-                            if ~isempty(scheduler_flag(isc)),                     
-                                iremote_min = iremote;
-                                iremote_max = iremote;
-                                flag_remote = 1;
-                                remote = dkepath.remote(iremote);
-                                break
-                            end
-                        end
-                    end
-                else
-                    clustername0 = dkepath.remote(iremote).host{1};%look if the cluster name is in the hostname
-                    if ~isempty(strfind(clustername0,clustername)),
-                        scheduler_flag = strfind(dkepath.remote(iremote).cmd,scheduler);
-                        for isc = 1:length(scheduler_flag),
-                            if ~isempty(scheduler_flag(isc)),  
-                                iremote_min = iremote;
-                                iremote_max = iremote;
-                                flag_remote = 1;
-                                remote = dkepath.remote(iremote);
-                                break
-                            end
-                        end
-                    end                     
-                end
-            end
-        else
-            for iremote = 1:length(dkepath.remote),
-                clustername0 = dkepath.remote(iremote).host;%look if the cluster name is in the hostname
-                if ~isempty(strfind(clustername0,clustername)),
-                    scheduler_flag = strfind(dkepath.remote(iremote).cmd,scheduler);
-                    for isc = 1:length(scheduler_flag),
-                    	if ~isempty(scheduler_flag(isc)),
-                            iremote_min = iremote;
-                            iremote_max = iremote;
-                            flag_remote = 1;
-                            remote = dkepath.remote(iremote);
-                            break
-                        end
-                    end
-                end
-            end
-        end
-        %
-        if ~flag_remote,%error on the name of the remote computer
-            info_dke_yp(7,['The remote computer ''',clustername,''' with scheduler ''',scheduler,''' is NOT is the list (see the path script for ''',clustername,''' called by make_path_LOCAL.m).'],'','Red');
-            remote = [];
-            %
-            disp('------------------------------------------------------');
-            disp('Available remote computers: ');
-            %
-            for iremote = 1:length(dkepath.remote),
-                if isfield(dkepath.remote(iremote),'cluster')
-                    if iremote == 1,
-                        info_dke_yp(2,[dkepath.remote(iremote).cluster,' or local'],0,'Blue');
-                    else
-                        info_dke_yp(2,dkepath.remote(iremote).cluster,0,'Blue');
-                    end
-                else
-                    if iremote == 1,
-                        info_dke_yp(2,[dkepath.remote(iremote).host,' or local'],0,'Blue');
-                    else
-                        info_dke_yp(2,dkepath.remote(iremote).host,0,'Blue');
-                    end
-                end
-            end
-            %
-            return;
-        end
-    end
-end
+flag = false(1,nrem);
 %  
-for iremote = iremote_min:iremote_max,
+for irem = 1:nrem,
     %
-    HOST = dkepath.remote(iremote).host;
-    %
-    if isempty(dkepath.remote(iremote).(getenv('USER')));
-        USER = getenv('USER');
+    if ~iscell(dkepath.remote(irem).cmd) && ~isempty(strfind(dkepath.remote(irem).cmd,'qsub')),
+        cmdstr = 'qsub';
+    elseif ~iscell(dkepath.remote(irem).cmd) && ~isempty(strfind(dkepath.remote(irem).cmd,'condor')),
+        cmdstr = 'condor';
+    elseif iscell(dkepath.remote(irem).cmd) && any(~cellfun('isempty',strfind(dkepath.remote(irem).cmd,'xgrid'))),
+        cmdstr = 'xgrid';
     else
-        USER = dkepath.remote(iremote).(getenv('USER'));
+        cmdstr = 'unknown';
     end
     %
-    disp('------------------------------------------------------');
-    display(['Check if remote computer is accessible at to ',USER,'@',HOST,'.'])
-    info_dke_yp(0,'(If the process is blocked (waiting more than 10s approx.), type CTRL-C to escape)','','blue');
+    [err,remotelukever,~,remotematrel] = matremote_luke_jd('LUKEversion_jd',{},dkepath.remote(irem));
     %
-    [remote_access,dummy] = unix(['ssh ',USER,'@',HOST,' ''ls''']);
-    %
-    if ~remote_access,%test is the remote machine is working with ssh
-        [dummy,HOME] = unix(['ssh ',USER,'@',HOST,' pwd']);
-        HOME = HOME(1:end-1);%remove extra term    
-        info_dke_yp(2,['The remote computer ',USER,'@',HOST,' is available.'],'','Green');
-        flag(iremote) = 1;
+    if isempty(dkepath.remote(irem).host),
+        info_dke_yp(2,['Profile #',num2str(irem),' to host : local with cmd : ',cmdstr])
     else
-        info_dke_yp(6,['The remote computer ',USER,'@',HOST,' is NOT available.'],'','Red');
-        info_dke_yp(2,['Check that SSH login without password is well configured with the remote computer ''',HOST,'''.'],'','Red');
-        info_dke_yp(2,['Type manually the following command in a Matlab command window for investigating the problem : !ssh ',USER,'@',HOST,' ''ls'''],'','Red');
-    end    
+        info_dke_yp(2,['Profile #',num2str(irem),' to host : ',dkepath.remote(irem).host,' with cmd : ',cmdstr])
+    end        
+    %
+    if isempty(err),        
+        info_dke_yp(4,['Version ',remotelukever,' with Matlab ',remotematrel,' working.'])
+        flag(irem) = true;
+    else
+        info_dke_yp(4,'Remote link failed for the following reason : ')
+        if iscell(err),
+            for ierr = 1:length(err),
+                disp(err(ierr))
+            end
+        else
+            disp(err)
+        end
+    end
+    %
+    disp(' ')
 end
+%
