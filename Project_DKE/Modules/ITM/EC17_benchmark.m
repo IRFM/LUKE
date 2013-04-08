@@ -31,10 +31,10 @@ time_interp = 1;%nearest point
 remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remnum = 0;% remote profile number. Use 0 for local sequential calculations
+remnum = 2;% remote profile number. Use 0 for local sequential calculations
 remdebug = 0;% remote debugmode
 %
-debug_mode = 0;%set to 1 in case of problem
+debug_mode = 0;%set to 1 in case of problem. Allow to display results
 invproc = -2; %matrix inversion method (-2: MUMPS)
 %
 % Save euitm structures in mat-files
@@ -68,15 +68,8 @@ info_dke_yp(1,'-----------------------------------------------------------------
 %
 % simulation filename
 %
-if timeslice(1) > 0,
-    timeslice_equil = 0;
-else
-    timeslice_equil = timeslice(1);
-end
-%
-id_equil = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_time_',int2str(timeslice_equil),'_timeinterp_',int2str(time_interp)];
-%
-filename = ['EC17_benchmark_',id_equil,'.mat'];
+run_id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_CPO_',int2str(numrun_out)];
+filename = ['EC17_benchmark_',run_id,'.mat'];
 %
 % check if current jobs exists to load possible existing jobs
 %
@@ -85,6 +78,8 @@ if remtimout == 0 && remstart == 0 && exist(filename,'file'),% load existing sim
     load(filename,'lukestructs');
     %
 else% new simulation
+	%
+	delete(filename);
 	%
 	% Test if a connection to the ITM MDS+ database may be established
 	%
@@ -127,7 +122,6 @@ else% new simulation
 	dkeparam.invproc = invproc;%matrix inversion method
 	dkeparam.npresmin = 0;%for the quasilinear calculations
 	%
-	run_id = ['euitm_shot_',int2str(numshot),'_run_',int2str(numrun_in),'_CPO_',int2str(numrun_out)];
 	%
 	if timeslice(1) > 0,
     	timeslice_equil = 0;
@@ -238,11 +232,8 @@ else% new simulation
     	lukestructs{it}.opt = opt;
 	end
 	%
-	if debug_mode,
-		filename = ['EC17_benchmark_',run_id,'_input.mat'];
-		save(filename,'luke_in');
-		info_dke_yp(2,['Debug mode: LUKE input data saved in ',filename]);
-	end   
+	flag_output = ones(1,length(timeslice));
+	%
 end
 %
 dkepath.remtimout = remtimout;% timeout in minutes
@@ -256,76 +247,80 @@ end
 %
 lukestructs = run_lukert(lukestructs,dkepath);
 %
-flag_output = ones(1,length(timeslice));
+% Wait that all results are obtained
 %
-while sum(flag_output),
-	for it = 1:length(timeslice),
-    	if isfield(lukestructs{it},'output') & flag_output(it),
-        	flag_output(it) = 0;
-        	luke_out(it) = lukestructs{it}.output;
-    	end
-    end
+for it = 1:length(timeslice),
+	if isfield(lukestructs{it},'output') & flag_output(it),
+    	flag_output(it) = 0;
+    	luke_out(it) = lukestructs{it}.output;
+    	
+	end
 end
 %
-if debug_mode | ~itm_connect,
-	filename = ['EC17_benchmark_',run_id,'_output.mat'];
-	save(filename,'luke_out');
-	info_dke_yp(2,['Debug mode or no connection to the ITM database: LUKE output data saved in ',filename]);
-end
+save(filename);%data are save again, since lukestructs may evolve when calculations are done remotely
+info_dke_yp(2,['Data saved in ',filename]);
+%
+%if debug_mode | ~itm_connect,
+%	filename = ['EC17_benchmark_',run_id,'_output.mat'];
+%	save(filename,'lukestructs','luke_out');
+%	info_dke_yp(2,['Debug mode or no connection to the ITM database: LUKE output data saved in ',filename]);
+%end
 %
 % Build structure for CPO 'waves'
 %
 CPO_waves = [];
 %
-for it = 1:length(timeslice),%local calculations
+if sum(flag_output) == 0,
+	for it = 1:length(timeslice),%local calculations
+		%
+		id_simul = ['timeslice_',int2str(timeslice(it))];
+		%
+		Znorm = luke_out(it).Znorm;
+		Zcurr = luke_out(it).Zcurr;
+		ZP0 = luke_out(it).ZP0;
+		dke_out = luke_out(it).dke_out;
+    	%
+    	for iray = 1:length(dke_out.waves{1}.rays),
+        	if ~isfield(dke_out.waves{1}.rays{iray},'mask_p') | ~isfield(dke_out.waves{1}.rays{iray},'mask_m');
+            	dke_out.waves{1}.rays{iray}.mask_p = zeros(size(dke_out.waves{1}.rays{iray}.ss));
+            	dke_out.waves{1}.rays{iray}.mask_m = ones(size(dke_out.waves{1}.rays{iray}.ss));
+        	end
+    	end
+    	%
+		radialDKE = luke_out(it).radialDKE;
+		equilDKE = luke_out(it).equilDKE;
+		momentumDKE = luke_out(it).momentumDKE;
+		gridDKE = luke_out(it).gridDKE;
+		Zmomcoef = luke_out(it).Zmomcoef;
+		Zbouncecoef = luke_out(it).Zbouncecoef;
+		Zmripple = luke_out(it).Zmripple;
+		mksa = luke_out(it).mksa;
+		XXsinksource = luke_out(it).XXsinksource;
+		%
+		filename = ['EC17_benchmark_',run_id,'_',id_simul,'.mat'];
+		save(filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
+    	%
+		rawdata = load(filename);
+    	%
+    	if debug_mode,
+        	procdata = proc_luke_jd(rawdata,0,p_opt);
+        	graph_wave_jd(equil,dke_out.waves);
+    	else
+        	procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
+    	end
+		%
+		[CPO_waves] = LUKEstruct2CPO(numshot,numrun_out,timeslice(it),'waves',rawdata,procdata,CPO_waves);
+		%
+		delete(filename);
+	end
 	%
-	id_simul = ['timeslice_',int2str(timeslice(it))];
+	% Write results in CPO 'waves'
 	%
-	Znorm = luke_out(it).Znorm;
-	Zcurr = luke_out(it).Zcurr;
-	ZP0 = luke_out(it).ZP0;
-	dke_out = luke_out(it).dke_out;
-    %
-    for iray = 1:length(dke_out.waves{1}.rays),
-        if ~isfield(dke_out.waves{1}.rays{iray},'mask_p') | ~isfield(dke_out.waves{1}.rays{iray},'mask_m');
-            dke_out.waves{1}.rays{iray}.mask_p = zeros(size(dke_out.waves{1}.rays{iray}.ss));
-            dke_out.waves{1}.rays{iray}.mask_m = ones(size(dke_out.waves{1}.rays{iray}.ss));
-        end
-    end
-    %
-	radialDKE = luke_out(it).radialDKE;
-	equilDKE = luke_out(it).equilDKE;
-	momentumDKE = luke_out(it).momentumDKE;
-	gridDKE = luke_out(it).gridDKE;
-	Zmomcoef = luke_out(it).Zmomcoef;
-	Zbouncecoef = luke_out(it).Zbouncecoef;
-	Zmripple = luke_out(it).Zmripple;
-	mksa = luke_out(it).mksa;
-	XXsinksource = luke_out(it).XXsinksource;
-	%
-	filename = ['EC17_benchmark_',equil.id,'_',id_simul,'.mat'];
-	save(filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
-    %
-	rawdata = load(filename);
-    %
-    if debug_mode,
-        procdata = proc_luke_jd(rawdata,0,p_opt);
-        graph_wave_jd(equil,dke_out.waves);
-    else
-        procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
-    end
-	%
-	[CPO_waves] = LUKEstruct2CPO(numshot,numrun_out,timeslice(it),'waves',rawdata,procdata,CPO_waves);
-	%
-	delete(filename);
+	if itm_connect,
+		write_waves_ITM(numshot,numrun_out,CPO_waves);%build the structure to be transfered in the ITM MDS+ database
+		%info_dke_yp(2,['Data saved in ',filename]);
+	end
+else
+
 end
 %
-% Write results in CPO 'waves'
-%
-if itm_connect,
-	write_waves_ITM(numshot,numrun_out,CPO_waves);%build the structure to be transfered in the ITM MDS+ database
-end
-%
-filename = ['EC17_benchmark_',run_id,'.mat'];
-save(filename,'numshot','numrun_out','CPO_waves');
-info_dke_yp(2,['Results saved in ',filename]);
