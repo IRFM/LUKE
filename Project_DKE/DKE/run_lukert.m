@@ -335,14 +335,16 @@ end
 %
 mksa = buildlukestruct_yp('mksa',equil,dkeparam_in,dkedisplay_in);
 %
-equil.fluct.dtn_fluct = calc_dtn_fluct_jd(equil.fluct,mksa);% maximum fluctuation time
+% TODO : use dtns_fluct to flag fluctuation phase renewal
 %
-dtn_phase = dkeparam_in.Nfluct*equil.fluct.dtn_fluct;%time for phase renewal
+[dtnmin_fluct,dtns_fluct] = calc_dtn_fluct_jd(equil.fluct,wavestructs,mksa);% minimum and list of fluctuation times for all fluctuations scenarios
+%
+dtn_phase = dkeparam_in.Nfluct*dtnmin_fluct;%time for phase renewal
 %
 if isscalar(dkeparam_in.tn) && imag(dkeparam_in.tn) > 0,% the number of fluctuation iterations is specified by imag(tn)
     itnmax = imag(dkeparam_in.tn);
     tn_in = itnmax*dtn_phase;%final time
-elseif isscalar(dkeparam_in.tn) && ~isnan(dkeparam_in.tn),% the number of fluctuation iterations is specified by tn and Nfluct*dtn_fluct
+elseif isscalar(dkeparam_in.tn) && ~isnan(dkeparam_in.tn),% the number of fluctuation iterations is specified by tn and Nfluct*dtnmin_fluct
     itnmax = max(1,ceil(dkeparam_in.tn/dtn_phase));
     tn_in = dkeparam_in.tn;
 else% no fluctuation iterations
@@ -360,7 +362,7 @@ if opt.backup >= 0;% start simulation from beginning
     %
     calctime = struct;
     %
-    if ~isinf(equil.fluct.dtn_fluct),
+    if ~isinf(dtnmin_fluct),
         xJ = [];
         xP = [];
         Itot = [];
@@ -369,7 +371,7 @@ if opt.backup >= 0;% start simulation from beginning
     %
     % Calculate vectorial axisymmetric magnetic equilibrium and eventually plasmas fluctuations (if substructure 'fluct' exists
     %
-    if ~isinf(equil.fluct.dtn_fluct),
+    if isstruct(equil.fluct) && ~isempty(fieldnames(equil.fluct)),
         equil.fluct = fluctphase_yp(equil.fluct);
     end
     %
@@ -382,7 +384,7 @@ if opt.backup >= 0;% start simulation from beginning
                 [wavestructs{iws}.equil_fit] = fitequil_yp(equil,wavestructs{iws}.fitequilparam.mode_equil,wavestructs{iws}.fitequilparam.method,wavestructs{iws}.fitequilparam.ngridresample,wavestructs{iws}.fitequilparam.nharm);%backward compatibility         
             end  
             %
-            if ~isinf(equil.fluct.dtn_fluct),
+            if isstruct(equil.fluct) && ~isempty(fieldnames(equil.fluct)),
                 if isfield(wavestructs{iws},'fitparam'),
                     [wavestructs{iws}.equil_fit.fluct_fit] = fitfluct_yp(equil.fluct,wavestructs{iws}.fitparam.mode_equil,equil.fluct.fitparam.method,equil.fluct.fitparam.ngridresample,equil.fluct.fitparam.nharm);
                 else
@@ -486,7 +488,7 @@ for itn = itnmin:itnmax,%time evolution
     time_waves = tic;
     %
     if ~isempty(wavestructs), 
-        [waves,wavestructs,byisel] = wave_distribution_yp(dkepath,dkeparam,wavestructs,f0struct,equil.fluct.dtn_fluct/mksa.nhu_ref,byPnonabs);%ray propagation in fluctuating plasma. The fluctuation phase in wavestructs is output to be later re-used by the same function taling into account of the phase evolution
+        [waves,wavestructs,byisel] = wave_distribution_yp(dkepath,dkeparam,wavestructs,f0struct,dtnmin_fluct/mksa.nhu_ref,byPnonabs);%ray propagation in fluctuating plasma. The fluctuation phase in wavestructs is output to be later re-used by the same function taling into account of the phase evolution
     end
     %
     calctime(itn).waves = toc(time_waves);
@@ -503,9 +505,7 @@ for itn = itnmin:itnmax,%time evolution
     if isempty(loadstructs),
         [Znorm_loc,Zcurr_loc,ZP0_loc,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_run_lukert(simul,waves,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);
         %
-        if isfield(equil,'fluct'),
-            equilDKE.fluct = equil.fluct;%for transfering info about plasma fluctuations
-        end
+        equilDKE.fluct = equil.fluct;%for transfering info about plasma fluctuations
         %
         loadstructs.radialgrid_dke_jd.radialDKE = radialDKE;
         loadstructs.equilibrium_jd.equilDKE = equilDKE;
