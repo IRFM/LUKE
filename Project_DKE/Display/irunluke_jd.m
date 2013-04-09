@@ -1304,202 +1304,134 @@ function irunluke_jd(basestr,signs,opt_gui)
                 if ~isempty(luke_job) && input_dke_yp(['-----> There is a pending remote LUKE batch run.\n',...
                         'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
                     %
-                    sd  = pwd;
-                    cd(workdir);
-                    %
-                    output = getluke_remote_jd(luke_job,remote);
-                    %
-                    cd(sd);
-                    %
-                    if isempty(output),
-                        disp(['Remote LUKE still running under job id ',luke_job.id,' ...'])
-                    elseif isfield(output,'err'),
-                        disp('Remote LUKE run failed, aborted.')
-                        luke_job = '';
-                        output = '';
-                        status.data = 2;
-                    else
-                        luke_job = '';
-                        %
-                        status.output = 1;
-                        status.data = 2;            
-                    end
-                    %
-                    continue
-                    %
-                end                    
-                %
-                % RUN LUKE
-                %    
-                if isempty(dkepath) || isempty(dkeparam) || isempty(equil),
-                    disp('-----> the structures dkepath, dkeparam and equil must exist to run LUKE.');
-                    continue
-                end       
-                %
-                % DISPLAY
-                %
-                dkedisplay_file = 'DISPLAY_PARTIAL_VISUAL.mat';
-                dkedisplay_file = which(dkedisplay_file);
-                if isempty(dkedisplay_file),
-                    disp(quitmsg)
-                    return
-                end
-                load(dkedisplay_file,'dkedisplay');
-                %
-                display_mode = input('Option for run evolution display: 0 (none), 1 (partial), 2 (full) [0] : ');
-                if isempty(display_mode) | ~isnumeric(display_mode) | ~any(display_mode == [0,1,2]),
-                    display_mode = 0;
-                end
-                dkedisplay.display_mode = display_mode; 
-                %
-        %     %
-        %     % OTHER RUN PARAMETERS
-        %     %
-        %     rho_S = input('Please specify the radial grid: \nautomatic (provide number of points) \nmanual (vector of points from 0 to 1) \n[20] : ');
-        %     if isempty(rho_S),
-        %         rho_S = 20;
-        %     end
-        %     if ~isnumeric(rho_S),
-        %         disp('-----> Invalid radial grid specification');
-        %         return
-        %     end
-                %
-                if ~isfield(dkeparam,'clustermode'),
-                    dkeparam.clustermode.coll_dke_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
-                    dkeparam.clustermode.coll_dke_jd.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-                    dkeparam.clustermode.coll_dke_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
-                    dkeparam.clustermode.eecoll_dke_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
-                    dkeparam.clustermode.eecoll_dke_jd.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-                    dkeparam.clustermode.eecoll_dke_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
-                end
-                %
-                dkeparam.psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-                %
-                p_opt = input('Option for output figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
-                if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
-                    p_opt = -1;
-                end
-                %
-                if exist('dmumpsmex');%MUMPSMEX
-                    dkeparam.invproc = -2;
-                end
-                %
-                id_simul = input(['Please provide a name for the run [',id_simul_o,'] : '],'s');
-                if isempty(id_simul),
-                    id_simul = id_simul_o;
-                end
-    % 			if strfind(dkepath.hostname,'crpppc'),
-    % 				c_opt = input('Option for running LUKE? 0 (on local computer), 1 (on pleiades2) [0] : ');
-    %             	if isempty(c_opt) | ~isnumeric(c_opt) | ~any(c_opt == [0,1]),
-    %                 	c_opt = 0;
-    %             	end
-    % 				if c_opt == 1,
-    % 					[dummy,logname] = unix('whoami');
-    % 					logname(logname == 10) = [];
-    % 					if strfind(logname,'decker'),
-    % 						logname = 'jdecker';
-    % 					end
-    % 					if strfind(logname,'curchod'),
-    % 						logname = 'lcurchod';
-    % 					end
-    % 				end
-                %
-                if isfield(dkepath,'remote') && ~isempty(dkepath.remote),
-                    nrem = length(dkepath.remote);
-                    remstr = 'Option for running LUKE :\n0 : local session \n';
-                    for irem = 1:nrem,
-                        if ~iscell(dkepath.remote(irem).host),
-                            remstr = [remstr,num2str(irem),' : batch run on ',dkepath.remote(irem).host,':',dkepath.remote(irem).luke_root,'\n'];
-                        else
-                            remstr = [remstr,num2str(irem),' : batch run on ',dkepath.remote(irem).host{1},':',dkepath.remote(irem).luke_root,'\n'];
-                        end                            
-                    end
-                    %
-                    c_opt = input_dke_yp(remstr,0,0:nrem);
-                else
-                    c_opt = 0;
-                end
-                %
-                disp(' ');
-                disp('************** RUN LUKE **************')
-                disp(' ');
-                %
-                if c_opt > 0,
-                    %
-                    remote = dkepath.remote(c_opt);
-                    %
-                    luke_input.simul_in = id_simul;
-                    luke_input.dkeparam = dkeparam;
-                    luke_input.dkedisplay = dkedisplay;
-                    luke_input.equil = equil;
-                    luke_input.waves = waves;
-                    luke_input.wavestructs = [];
-                    luke_input.ohm = ohm;
-                    luke_input.transpfaste = transpfaste;
-                    luke_input.ripple = ripple;
-                    luke_input.Zf0_interp = [];
-                    luke_input.XXsinksource = [];
-                    luke_input.opt_save = 0;                    
-                    %
-                    luke_job = runluke_remote_jd(luke_input,remote);
-                    %
-                    w_opt = input_dke_yp(['Waiting for remote LUKE results... enter time out (minutes)'...
-                        '\n(enter 0 to load results later)'],60,[0:7*24*60]);
-                    %
-                    tic
-                    %
-                    output = '';
-                    status.output = 0;
-                    status.data = 2;
-                    %
-                    while isempty(output) && toc/60 < w_opt,
-                        %
-                        pause(60);
-                        %
-                        disp(['Still running , elapsed time (minutes) ',num2str(round(toc/60)),'/',num2str(w_opt)])
-                        %
-                        output = getluke_remote_jd(luke_job,remote);
-                        %
-                    end
-                    %
-                    if isempty(output),
-                        disp(['Stop waiting , elapsed time (minutes) ',num2str(round(toc/60)),'/',num2str(w_opt)])
-                    elseif isfield(output,'err'),
-                        disp('Remote LUKE run failed, aborted.')
-                        luke_job = '';
-                        output = '';
-                    else
-                        luke_job = '';
-                        %
-                        status.output = 1;
-                    end
+                    lukestructs = luke_job;
                     %
                 else
                     %
-                    [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,[],waves,dkeparam.psin_S,dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);
+                    % RUN LUKE
+                    %    
+                    if isempty(dkepath) || isempty(dkeparam) || isempty(equil),
+                        disp('-----> the structures dkepath, dkeparam and equil must exist to run LUKE.');
+                        continue
+                    end       
                     %
-                    output.Znorm = Znorm;
-                    output.Zcurr = Zcurr;
-                    output.ZP0 = ZP0;
-                    output.dke_out = dke_out;
-                    output.radialDKE = radialDKE;
-                    output.equilDKE = equilDKE;
-                    output.momentumDKE = momentumDKE;
-                    output.gridDKE = gridDKE;
-                    output.Zmomcoef = Zmomcoef;
-                    output.Zbouncecoef = Zbouncecoef;
-                    output.Zmripple = Zmripple;
-                    output.mksa = mksa;
-                    output.XXsinksource = XXsinksource;  
+                    % DISPLAY
                     %
-                    clear Znorm Zcurr ZP0 dke_out radialDKE equilDKE momentumDKE gridDKE Zmomcoef Zbouncecoef Zmripple mksa XXsinksource
-                    %	    
+                    dkedisplay_file = 'DISPLAY_PARTIAL_VISUAL.mat';
+                    dkedisplay_file = which(dkedisplay_file);
+                    if isempty(dkedisplay_file),
+                        disp(quitmsg)
+                        return
+                    end
+                    load(dkedisplay_file,'dkedisplay');
+                    %
+                    display_mode = input('Option for run evolution display: 0 (none), 1 (partial), 2 (full) [0] : ');
+                    if isempty(display_mode) | ~isnumeric(display_mode) | ~any(display_mode == [0,1,2]),
+                        display_mode = 0;
+                    end
+                    dkedisplay.display_mode = display_mode; 
+                    %
+                    if ~isfield(dkeparam,'clustermode'),
+                        dkeparam.clustermode.coll_dke_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+                        dkeparam.clustermode.coll_dke_jd.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
+                        dkeparam.clustermode.coll_dke_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+                        dkeparam.clustermode.eecoll_dke_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+                        dkeparam.clustermode.eecoll_dke_jd.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
+                        dkeparam.clustermode.eecoll_dke_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+                    end
+                    %
+                    dkeparam.psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
+                    %
+                    p_opt = input('Option for output figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
+                    if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
+                        p_opt = -1;
+                    end
+                    %
+                    if exist('dmumpsmex');%MUMPSMEX
+                        dkeparam.invproc = -2;
+                    end
+                    %
+                    id_simul = input(['Please provide a name for the run [',id_simul_o,'] : '],'s');
+                    if isempty(id_simul),
+                        id_simul = id_simul_o;
+                    end
+                    %
+                    if isfield(dkepath,'remote') && ~isempty(dkepath.remote),
+                        nrem = length(dkepath.remote);
+                        remstr = 'Option for running LUKE :\n0 : local session \n';
+                        for irem = 1:nrem,
+                            if ~iscell(dkepath.remote(irem).host),
+                                remstr = [remstr,num2str(irem),' : batch run on ',dkepath.remote(irem).host,':',dkepath.remote(irem).luke_root,'\n'];
+                            else
+                                remstr = [remstr,num2str(irem),' : batch run on ',dkepath.remote(irem).host{1},':',dkepath.remote(irem).luke_root,'\n'];
+                            end                            
+                        end
+                        %
+                        c_opt = input_dke_yp(remstr,0,0:nrem);
+                    else
+                        c_opt = 0;
+                    end
+                    %
+                    disp(' ');
+                    disp('************** RUN LUKE **************')
+                    disp(' ');
+                    %
+                    lukestructs.simul_in = id_simul;
+                    lukestructs.dkeparam = dkeparam;
+                    lukestructs.dkedisplay = dkedisplay;
+                    lukestructs.equil = equil;
+                    lukestructs.waves = waves;
+                    lukestructs.ohm = ohm;
+                    lukestructs.transpfaste = transpfaste;
+                    lukestructs.ripple = ripple;
+                    %
+                    dkepath.remnum = c_opt;
+                    %
+                end
+                %
+                lukestructs = run_lukert(lukestructs,dkepath);
+                %
+                if isfield(lukestructs,'output'),%job was run successfully
+                    %
+                    disp('LUKE run completed');
+                    %
+                    output = lukestructs.output;
+                    %
                     status.output = 1;
                     status.data = 2;
                     %
+                elseif isfield(lukestructs,'err'),%job failed
+                    %
+                    disp('Remote LUKE run failed for the following reason :');
+                    %
+                    if ischar(lukestucts.err),
+                        disp(lukestucts.err)
+                    else
+                        for ierr = 1:length(lukestucts.err),
+                            disp(lukestucts.err{ierr})
+                        end
+                    end
+                    %
+                elseif isfield(lukestructs,'job'),%job running, to be checked later
+                    %
+                    disp('LUKE run running.');
+                    %
+                    luke_job = lukestructs.job;
+                    %
+                    output = '';
+                    %
+                    status.output = 0;
+                    status.data = 2;
+                    %
+                else
+                    %
+                    error('LUKE output not recognized')
+                    %
                 end
                 %
-                if input_dke_yp('--> Do you want to update the waves structures with LUKE absorption (y/n)','y',{'y','n'}) == 'y',
+                clear lukestructs
+                %	    
+                if status.output == 1 && status.data == 2 && input_dke_yp('--> Do you want to update the waves structures with LUKE absorption (y/n)','y',{'y','n'}) == 'y',
                     waves = output.dke_out.waves;
                 end
                 %
