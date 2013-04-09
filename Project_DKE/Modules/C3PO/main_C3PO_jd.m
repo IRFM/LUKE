@@ -64,7 +64,7 @@ end
 %    
 fluct_fit = [];
 if isempty(fluct),
-    info_dke_yp(2,'No fluctuation effects included.',C3POdisplay.fluctuations);
+    info_dke_yp(2,'No equilibrium fluctuation effects included.',C3POdisplay.fluctuations);
 elseif rayparam.tensortype > 0
     disp('WARNING: Plasma fluctuations model inconsistent with the plasma dielectric tensor type, fluctuation effects discarded.');
 elseif ~isstruct(fluct),
