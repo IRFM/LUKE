@@ -1,34 +1,31 @@
-function luke_job = runluke_remote_jd(luke_input,remote,debugmode)
+function luke_job = runluke_remote_jd(lukestructs,remote)
 %
-if nargin < 3
+if isfield(remote,'debugmode'),
+    debugmode = remote.debugmode;
+else
     debugmode = 0;
 end
 %
-% path to LUKE
+luke_job = matstandardjob_jd(remote,'runmat');
 %
-luke_job = matstandardjob_jd(remote,'runluke');
+luke_job.debugmode = debugmode;
 %
-if isfield(luke_input.dkeparam,'luke_memory'),
-    luke_job.memory = luke_input.dkeparam.luke_memory;% requested memory specified in dkeparam
-elseif ~isempty(luke_input.transpfaste), 
+mat_input.fun = 'run_lukert';
+mat_input.args_in = lukestructs;
+mat_input.nargout = 2;
+%
+if isfield(lukestructs.dkeparam,'luke_memory'),
+    luke_job.memory = lukestructs.dkeparam.luke_memory;% requested memory specified in dkeparam
+elseif isfield(lukestructs,'transpfaste') && ~isempty(lukestructs.transpfaste), 
     luke_job.memory = 14000;%mb default value with transport
 else
     luke_job.memory = 7000;%mb default value without transport
 end
 %
-if isfield(luke_input.dkeparam,'luke_ppn'),
+if isfield(lukestructs.dkeparam,'luke_ppn'),
     luke_job.nodes = 1;
-    luke_job.ppn = luke_input.dkeparam.luke_ppn;% requested memory specified in dkeparam
+    luke_job.ppn = lukestructs.dkeparam.luke_ppn;% requested memory specified in dkeparam
 end
 %
-if isfield(remote,'memory') && isnan(remote.memory),% memory spec not compatible with remote computer
-    luke_job.memory = [];
-elseif isfield(remote,'memory') && ~isempty(remote.memory) && remote.memory < luke_job.memory,% max memory on remote computer
-    disp('WARNING : memory request limited by remote host')
-    luke_job.memory = remote.memory;
-end
-%
-luke_job.debugmode = debugmode;
-%
-luke_job = remoterunbatch(remote,luke_job,luke_input,debugmode);
+luke_job = remoterunbatch(remote,luke_job,mat_input,debugmode);
 %
