@@ -1,15 +1,30 @@
 function fproc_HXR_varscan(basestr,file_str,shotnum,shotime,id_simul_o,locid_simul,locpath_simul,...
     var,ic,krange,dtexp,HXRopt,cnumber,kdisp,opt)
 %
-savepath = [basestr,filesep,shotnum,filesep];
+if isfield(opt,'savepath'),
+    savepath = opt.savepath;
+else
+    savepath = [basestr,filesep,shotnum,filesep];
+end
+%
 path_simul = [savepath,locpath_simul];
 %
-hxr_file = [savepath,'HXR_',basestr,'_',shotnum,'.mat'];
+if isfield(opt,'hxr_file'),
+    hxr_file = opt.hxr_file;
+else
+    hxr_file = [savepath,'HXR_',basestr,'_',shotnum,'.mat'];
+end
+%
 if ~exist(hxr_file,'file'),
     get_hxrspec_forLUKE_jd(basestr,str2num(shotnum),savepath)
 end
 %
-exp_file = [savepath,'HXREXP_',basestr,'_',shotnum,'.mat'];
+%
+if isfield(opt,'exp_file'),
+    exp_file = opt.exp_file;
+else
+    exp_file = [savepath,'HXREXP_',basestr,'_',shotnum,'.mat'];
+end
 if ~exist(exp_file,'file'),
     collect_hxr_forLUKE_jd(basestr,str2num(shotnum),HXRopt,savepath)
 end
@@ -138,6 +153,8 @@ for ivar = 1:nvar,
     %
     if isfield(data_proc.scalar,'I_exp'),
         dI_exp(ivar) = data_proc.scalar.I_exp;
+    elseif isfield(opt,'I_exp'),
+        dI_exp(ivar) = opt.I_exp;
     end
     %
     dp0_rf_2piRp(ivar) = data_proc.scalar.p0_rf_2piRp;
