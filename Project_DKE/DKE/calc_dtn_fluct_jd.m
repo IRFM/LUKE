@@ -1,81 +1,60 @@
-function dtn_fluct = calc_dtn_fluct_jd(fluct,mksa)
+function [dtnmin_fluct,dtns_fluct] = calc_dtn_fluct_jd(fluct,wavestructs,mksa)
 %
-field_name = fieldnames(fluct);
 %
-model = [];
-epsi_rho = [];
-epsi_theta = [];
-epsi_phi = [];
+flucttypes = fieldnames(fluct);
 %
-test_field_name_ne = strfind(field_name,'ne');%test existence of electron density fluctuation
-test_field_name_B = strfind(field_name,'B');%test existence of magnetic field fluctuation
+dtns_fluct = struct;
+dtnmin_fluct = Inf;
 %
-flag_naequilp = 0;
-flag_npar0_lh = 0;
+% equilibrium fluctuations
 %
-for i = 1:length(field_name),
-    if ~isempty(test_field_name_ne{i}) || ~isempty(test_field_name_B{i}), flag_naequilp = 1;end
-end
-%
-if flag_naequilp,
-    for i = 1:length(field_name),
-        if isstruct(fluct.(char(field_name(i)))) && (strcmp(char(field_name(i)),'B') || strcmp(char(field_name(i)),'ne'))
-            for ifield = 1:length(fluct.(char(field_name(i)))),
-                    model = [model,fluct.(char(field_name(i)))(ifield).model];
-                if fluct.(char(field_name(i)))(ifield).model == 1,
-                    error('Fluctuation model ''1'' is not implemented in wave_distribution_yp.m (ray tracing benchmark only). Check the function that builds the fluct structure.'); 
-                elseif fluct.(char(field_name(i)))(ifield).model == 2,
-                    epsi_rho = [epsi_rho,fluct.(char(field_name(i)))(ifield).epsi_rho];
-                    epsi_theta = [epsi_theta,fluct.(char(field_name(i)))(ifield).epsi_theta]; 
-                    epsi_phi = [epsi_phi,fluct.(char(field_name(i)))(ifield).epsi_phi]; 
-                elseif fluct.(char(field_name(i)))(ifield).model == 3,
-                    epsi_rho = [epsi_rho,fluct.(char(field_name(i)))(ifield).epsi_rho];
-                    epsi_theta = [epsi_theta,fluct.(char(field_name(i)))(ifield).epsi_theta];
-                elseif fluct.(char(field_name(i)))(ifield).model == 4 || fluct.(char(field_name(i)))(ifield).model == 5,
-                    epsi_theta = [epsi_theta,fluct.(char(field_name(i)))(ifield).epsi_theta];
-                else
-                    error('Fluctuation model >=6 not implemented in wave_distribution_yp.m, check the function.');
-                end
-            end
-        end
-    end
+for ifluct = 1:length(flucttypes),% for each fluctuation type (ne, Be, etc)
     %
-    if exist('epsi_rho'),
-        dtn_rho = 2.14*mksa.nhu_ref*max(epsi_rho)/mksa.vde_ref;%See the documentation on plasma fluctuations for the coefficient 2.14 
-    else
-        dtn_rho = Inf;
-    end
-    if exist('epsi_theta'),
-        dtn_theta = 2.14*mksa.nhu_ref*max(epsi_theta)/mksa.vde_ref;
-    else
-        dtn_theta = Inf;
-    end
-    if exist('epsi_phi'),
-        dtn_phi = 2.14*mksa.nhu_ref*max(epsi_phi)/mksa.vde_ref;
-    else
-        dtn_phi = Inf;
-    end
+    flucttype = flucttypes{ifluct};
     %
-    dtn_fluct_naequilp = min([dtn_rho,dtn_theta,dtn_phi]);
-    %
-else
-    dtn_fluct_naequilp = Inf;
-end
-%
-if isfield(fluct,'npar0_lh'),
-    %
-    flag_npar0_lh = 1;
-    %
-    if isfield(fluct.npar0_lh,'dtn'),
-        dtn_fluct_npar0_lh = fluct.npar0_lh.dtn;
+    for imodel = 1:length(fluct.(flucttype)),% for each fluctuation model (ripple, drift, etc)
         %
-    else
-        flag_npar0_lh = 0;
-        dtn_fluct_npar0_lh = Inf;
+        if fluct.(flucttype)(imodel).model == 0,
+            epsi_rho = Inf;
+            epsi_theta = Inf;
+            epsi_phi = Inf;
+        elseif fluct.(flucttype)(imodel).model == 1,
+            error('Fluctuation model ''1'' is not implemented (ray tracing benchmark only). Check the function that builds the fluct structure.'); 
+        elseif fluct.(flucttype)(imodel).model == 2,
+            epsi_rho = fluct.(flucttype)(imodel).epsi_rho;
+            epsi_theta = fluct.(flucttype)(imodel).epsi_theta; 
+            epsi_phi = fluct.(flucttype)(imodel).epsi_phi; 
+        elseif fluct.(flucttype)(imodel).model == 3,
+            epsi_rho = fluct.(flucttype)(imodel).epsi_rho;
+            epsi_theta = fluct.(flucttype)(imodel).epsi_theta;
+            epsi_phi = Inf;
+        elseif fluct.(flucttype)(imodel).model == 4 || fluct.(flucttype)(imodel).model == 5,
+            epsi_rho = Inf;
+            epsi_theta = fluct.(flucttype)(imodel).epsi_theta;
+            epsi_phi = Inf;
+        else
+            error('Fluctuation model >=6 not implemented.');
+        end
+        %
+        dtns_fluct.(flucttype)(imodel).dtn_rho = 2.14*mksa.nhu_ref*max(epsi_rho)/mksa.vde_ref;%See the documentation on plasma fluctuations for the coefficient 2.14 
+        dtns_fluct.(flucttype)(imodel).dtn_theta = 2.14*mksa.nhu_ref*max(epsi_theta)/mksa.vde_ref;
+        dtns_fluct.(flucttype)(imodel).dtn_phi = 2.14*mksa.nhu_ref*max(epsi_phi)/mksa.vde_ref;
+        %
+        dtnmin_fluct = min([dtnmin_fluct,dtns_fluct.(flucttype)(imodel).dtn_rho,dtns_fluct.(flucttype)(imodel).dtn_theta,dtns_fluct.(flucttype)(imodel).dtn_phi]);
+        %
     end
-else
-    flag_npar0_lh = 0;
-    dtn_fluct_npar0_lh = Inf;
 end
 %
-dtn_fluct = min(dtn_fluct_naequilp,dtn_fluct_npar0_lh);
+% spectrum fluctuations
+%
+for iw = 1:length(wavestructs),
+    if isfield(wavestructs{iw}.launch,'tail') && isfield(wavestructs{iw}.launch.tail,'dtn'),
+        dtns_fluct.npar0_lh(iw).dtn = 2.14*wavestructs{iw}.launch.tail.dtn;
+    else
+        dtns_fluct.npar0_lh(iw).dtn = Inf;
+    end
+    %
+    dtnmin_fluct = min([dtnmin_fluct,dtns_fluct.npar0_lh(iw).dtn]);
+    %
+end 
+%

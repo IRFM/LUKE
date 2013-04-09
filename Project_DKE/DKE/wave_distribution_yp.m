@@ -27,7 +27,9 @@ end
 Nfluct = max([1,round(dkeparam.Nfluct)]);
 %
 nw = size(wavestructs,2);
-%        
+%
+% If Nfluct > 1, parallel fluctuation states are considered simultaneously
+%
 if ~iscell(byPnonabs) && isfield(wavestructs{1}.equil_fit,'fluct_fit'),% first time step, with fluctuations
     %
     if size(wavestructs,1) > 1,
@@ -65,6 +67,8 @@ if ~iscell(byPnonabs) && isfield(wavestructs{1}.equil_fit,'fluct_fit'),% first t
     end
 end
 %
+% byPnonabs contains the power not absorbed
+%
 if iscell(byPnonabs),%calculate fluctuation phases and adjust initial power in each ray
     %
     if size(wavestructs,1) ~= Nfluct,
@@ -73,17 +77,19 @@ if iscell(byPnonabs),%calculate fluctuation phases and adjust initial power in e
     %
     for ifluct = 1:Nfluct,
         %
-        fluct_fit = fluctphase_yp(wavestructs{ifluct,1}.equil_fit.fluct_fit);%Calculations with new random phase for each structure (core fluctuations). Edge fluctuations are done in main_rayinit_launch_jd.m
+        if isfield(wavestructs{ifluct,1}.equil_fit,'fluct_fit') && ~isempty(fieldnames(wavestructs{ifluct,1}.equil_fit.fluct_fit)),
+            %
+            fluct_fit = fluctphase_yp(wavestructs{ifluct,1}.equil_fit.fluct_fit);%Calculations with new random phase for each structure (equilibrium fluctuations). Spectrum fluctuations are done in main_rayinit_launch_jd.m
+            %
+            for iw = 1:nw,
+                %
+                wavestructs{ifluct,iw}.equil_fit.fluct_fit = fluct_fit;%Replicate the same fluctuation structure to all wavestructs (equilibrium fluctuations)
+                %
+            end
+        end
         %
         for iw = 1:nw,
-            %
-            wavestructs{ifluct,iw}.equil_fit.fluct_fit = fluct_fit;%Replicate the same fluctuation structure to all wavestructs
-            %
             if isfield(wavestructs{ifluct,iw}.launch,'bPlhtot'),%LH wave
-                %
-                if isfield(wavestructs{ifluct,iw}.equil.fluct,'npar0_lh'),%for LH wave only
-                    wavestructs{ifluct,iw}.equil.fluct.npar0_lh.flag = 1;  
-                end
                 %
                 wavestructs{ifluct,iw}.launch.bPlhtot = wavestructs{ifluct,iw}.launch.bPlhtot_in + byPnonabs{ifluct,iw};%Total launched LH power is constant
                 %
