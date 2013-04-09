@@ -1,4 +1,4 @@
-function wave = wave_process_jd(equil,wave,n_rf_list,method);
+function wave = wave_process_jd(equil,wave,n_rf_list,method)
 %
 % This function completes the missing wave characteristics. In particular, it calculates the wave
 % absorption coefficient and the wave lilnear damping.
@@ -53,7 +53,7 @@ for ib = 1:length(wave.rays),
         salpha_lin = salphaphi_lin./sphi_norm;
         salpha_lin(isnan(salpha_lin)) = 0;
         %
-        if ~isfield(ray,'stau') || all(isnan(ray.stau)) || abs(imag(wave.opt_disp)) >= 1,
+        if ~isfield(ray,'stau_lin') || all(isnan(ray.stau_lin)) || abs(imag(wave.opt_disp)) >= 1,
             %
             salpha_lin_h = (salpha_lin(1:end-1) + salpha_lin(2:end))/2;
             sds = diff(ray.ss);
@@ -81,18 +81,18 @@ for ib = 1:length(wave.rays),
         ray.sdP_2piRp_ds_lin = salpha_lin.*ray.sP_2piRp_lin;
     end
     %
-    if isfield(ray,'stau_lin') & isfield(wave,'cut_fac'),
+    if isfield(ray,'stau_lin') && isfield(wave,'cut_fac'),
         ns = length(ray.ss);
         is_max = min([ns,wave.kextra+find(ray.stau_lin > 10*wave.cut_fac)]);
-        if ray.stau_lin(end) < 10*wave.cut_fac & ~isinf(wave.cut_fac),
+        if ray.stau_lin(end) < 10*wave.cut_fac && ~isinf(wave.cut_fac),
             disp('WARNING: The ray might be too short. Increase tfinal')
         end
         %
         frays = fieldnames(ray);
         for ifield = 1:length(frays),
-            eval(['ns_field = length(ray.',frays{ifield},');'])
+            ns_field = length(ray.(frays{ifield}));
             if ns_field == ns,
-                eval(['ray.',frays{ifield},' = ray.',frays{ifield},'(:,1:is_max);'])
+                ray.(frays{ifield}) = ray.(frays{ifield})(:,1:is_max);
             end
         end
     end
