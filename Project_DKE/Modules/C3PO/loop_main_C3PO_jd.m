@@ -210,7 +210,7 @@ for iref = 1:nref + 1,% vessel reflection index
             rays{irayref}.swpe2 = [rays{irayref}.swpe2,swpe2];%Normalized electron plasma frequency
             rays{irayref}.swce2 = [rays{irayref}.swce2,swce2];%Normalized electron gyro frequency
             %
-			if iref <= nref && yout(end,1) > 1 - 2*rayparam.dS && ~isinf(equil.Rp),% ray reaches edge before full absorption and a reflection is enforced (toroidal case only)
+			if yout(end,1) > 1 - 2*rayparam.dS && ~isinf(equil.Rp),% ray reaches edge before full absorption and a reflection is enforced
 				%
                 sR = sx + equil.Rp;
                 sZ = sy + equil.Zp;
@@ -285,7 +285,7 @@ for iref = 1:nref + 1,% vessel reflection index
                     %try
                         save rayend.mat P_end N_end E_end
                         %keyboard
-                        [P_ref,N_ref,E_ref] = reflection_jd(equil_fit,P_end,N_end,E_end);
+                        [P_ref,N_ref,E_ref] = reflection_jd(equil,P_end,N_end,E_end);
                     %catch
                         %keyboard
                     %end
@@ -321,13 +321,17 @@ for iref = 1:nref + 1,% vessel reflection index
                         E_end = E_ref;
                     end
                 end
+                %
+                rayinit.tau0_lin = rays{irayref}.stau_lin(end);
+                rayinit.ss0 = rays{irayref}.ss(end);
 				%
-				if ~isempty(rayinit.yrho0) && ~isnan(rayinit.yrho0),% The reflected ray reaches the plasma, new rays are formed
+                if iref == nref + 1,% end of calculation, just add last point of reflection,
+                    %
+                    rays{irayref}.rayinits = [rays{irayref}.rayinits,rayinit];
+                    %
+                elseif ~isempty(rayinit.yrho0) && ~isnan(rayinit.yrho0),% The reflected ray reaches the plasma, new rays are formed
 					%
                     ray = rays{irayref};
-                    %
-                    rayinit.tau0_lin = ray.stau_lin(end);
-                    rayinit.ss0 = ray.ss(end);
                     %
                     rayX = ray;
                     rayO = ray;
