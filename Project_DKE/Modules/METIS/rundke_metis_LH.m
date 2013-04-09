@@ -104,11 +104,8 @@ for ic = 1:nconf,
         %
         launch = struct;
         %
-        if isfield(config,'bn_tail') && ~any(isnan(config.bn_tail)),
-            launch.bNparmax_tail = config.bNparmax_tail;
-            launch.bn_tail = config.bn_tail;
-            launch.bP_tail = config.bP_tail;
-            launch.opt_tail = config.opt_tail;
+        if isfield(config,'tail') && ~isempty(fieldnames(config.tail)),
+            launch.tail = config.tail;
         end
         %
         if real(config.opt_aloha) == 0, 
