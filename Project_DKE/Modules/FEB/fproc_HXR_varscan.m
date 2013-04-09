@@ -40,17 +40,13 @@ if iscell(shotime),
     nvar = length(var.liststr);
     %
     if nvar == 0,
+        keyboard
         return
     end
     %
-    ivar_disp = [];
     for ivar = 1:nvar,
         ttimes(ivar) = str2num(var.liststr{ivar});
-        if any(ttimes(ivar) == var.disp),
-            ivar_disp = [ivar_disp,ivar];
-        end
     end
-    ivar_dispexp = ivar_disp;
     %
     if real(opt.xdisp) == 0,
         var.list = ttimes;
@@ -68,7 +64,20 @@ if iscell(shotime),
         var.list = interp1(tn(:,imag(opt.xdisp)),npardem(:,imag(opt.xdisp)),ttimes);
         var.lab = 'n_{||}';
         var.unit = '';
+        %
+        [var.list,isort] = sort(var.list);
+        ttimes = ttimes(isort);
+        var.liststr = var.liststr(isort);
     end
+    %
+    ivar_disp = [];
+    for ivar = 1:nvar,
+        if any(ttimes(ivar) == var.disp),
+            ivar_disp = [ivar_disp,ivar];
+        end
+    end
+    ivar_dispexp = ivar_disp;
+    %
 else
     equilbase = [file_str,basestr,'_',shotnum,'_',shotime,'_'];
     nvar = length(var.list);
@@ -105,6 +114,8 @@ ds_luke = NaN(1,nvar);
 dp0_rf_2piRp = NaN(1,nvar);
 dp_rf_2piRp = NaN(1,nvar);
 dp_rf_2piRp_lin = NaN(1,nvar);
+%
+drho = NaN(1,nvar);
 %
 %dJ = NaN(nr,nvar);
 %dxrho = NaN(nr,nvar);
@@ -166,12 +177,16 @@ for ivar = 1:nvar,
     %
     if opt.rho == 'g',
         dxrho(:,ivar) = data_proc.radial.xrhoG.';
+        drho(ivar) = sum(data_proc.wave.wp_rf_2piRp.'.*data_proc.wave.wrhoG)/sum(data_proc.wave.wp_rf_2piRp);
     elseif opt.rho == 'p',
         dxrho(:,ivar) = data_proc.radial.xrhoP.';
+        drho(ivar) = sum(data_proc.wave.wp_rf_2piRp.'.*data_proc.wave.wrhoP)/sum(data_proc.wave.wp_rf_2piRp);
     elseif opt.rho == 't',
         dxrho(:,ivar) = data_proc.radial.xrhoT.';
+        drho(ivar) = sum(data_proc.wave.wp_rf_2piRp.'.*data_proc.wave.wrhoT)/sum(data_proc.wave.wp_rf_2piRp);
     elseif opt.rho == 'v',
         dxrho(:,ivar) = data_proc.radial.xrhoV.';
+        drho(ivar) = sum(data_proc.wave.wp_rf_2piRp.'.*data_proc.wave.wrhoV)/sum(data_proc.wave.wp_rf_2piRp);
     else
         error('rho type not recognized')
     end
@@ -241,6 +256,7 @@ end
 %
 if ~exist('k','var'),
     disp('No results found. Aborted.')
+    keyboard
     return
 end
 %
@@ -404,6 +420,42 @@ end
 %
 print_jd(opt.print,['Fig_',savestr,'_I_tot'],[path_simul,'figures/'],ifig);
 %
+ifig = 101;figure(ifig),clf,set(ifig,'Name','Current and Location')
+%
+ylab = '';
+tit = '';
+%
+if isfield(opt,'ylim_Irho'),
+    ylim = opt.ylim_Irho;
+else
+    ylim = [0,max([dI_tot,1])]*1.2;
+end
+%
+leg = {'I (MA)','r/a'};
+%
+if var.firstref,
+    graph1D_jd(xlim,[dI_tot(1),dI_tot(1)],xlog,0,'','','',NaN,xlim,ylim,stylex,marker,color2,width,siz);
+    graph1D_jd(xlim,[drho(1),drho(1)],xlog,0,'','','',NaN,xlim,ylim,stylex,marker,color3,width,siz);
+end
+%
+if var.lastref,
+    graph1D_jd(xlim,[dI_tot(end),dI_tot(end)],xlog,0,'','','',NaN,xlim,ylim,stylex2,marker,color2,width,siz);
+    graph1D_jd(xlim,[drho(end),drho(end)],xlog,0,'','','',NaN,xlim,ylim,stylex2,marker,color3,width,siz);
+end
+%
+graph1D_jd(var.list,dI_tot,xlog,0,'','','',NaN,xlim,ylim,stylex,marker2,color2,width2,siz);
+graph1D_jd(var.list,drho,xlog,0,xlab,ylab,tit,leg,xlim,ylim,stylex,marker3,color3,width2,siz,gca,red,lspace,bspace);
+%
+set(gca,'xtick',xtick);
+%set(gca,'xminorgrid','off')
+%set(gca,'xminortick','off')
+%
+if isfield(opt,'ytick_Irho'),
+    set(gca,'ytick',opt.ytick_Irho);
+end
+%
+print_jd(opt.print,['Fig_',savestr,'_I_tot_rho'],[path_simul,'figures/'],ifig);
+%
 % --------------------- TPH 2D -----------------------
 %
 plot_2D_jd(opt,path_simul,savestr,'TPH_2D',ic(maskic_exp),Tphexp(maskic_exp,ivar_dispexp),eTphexp(maskic_exp,ivar_dispexp),...
@@ -462,7 +514,13 @@ ifig = 3;figure(ifig),clf,set(ifig,'Name','TPHCR1D')
 %
 ylab = '';
 tit = [chordstr,'; ',krangestr];
-fac = 1e3;
+if isfield(opt,'CRfac'),
+    fac = opt.CRfac;
+    CRleg = ['(\times ',num2str(fac),' s^{-1})'];
+else
+    fac = 1e3;
+    CRleg = '(ms^{-1})';
+end
 %
 if isfield(opt,'ylim_Tph'),
     ylim = opt.ylim_Tph;
@@ -472,12 +530,12 @@ else
     ylim = max([ylim_Tph;ylim_CR/fac]);
 end
 %
-leg = {'T_{ph} LUKE','CR LUKE (ms^{-1})'};%{'plasma','diag.'};%
+leg = {'T_{ph} LUKE',['CR LUKE ',CRleg]};%{'plasma','diag.'};%
 %
 if ~all(isnan(Tphexp(icdisp,:))),
     graph1D_jd(var.list,Tphexp(icdisp,:),xlog,0,'','','',NaN,xlim,ylim,stylex,marker3,color2,width,siz,gca,1,lspace,bspace2,eTphexp(icdisp,:));
     graph1D_jd(var.list,sdNdtexp(icdisp,:)/fac,xlog,0,'','','',NaN,xlim,ylim,stylex,marker3,color3,width,siz,gca,1,lspace,bspace2,sqrt(sdNdtexp(icdisp,:)/dt)/fac);
-    leg = ['T_{ph} Exp.','CR Exp. (ms^{-1})',leg];
+    leg = ['T_{ph} Exp.',['CR Exp. ',CRleg],leg];
 end
 %graph1D_jd(var.list,Tphplasma(icdisp,:),xlog,0,'','','',NaN,xlim,ylim,style,marker2,color2,width2,siz,gca,1,lspace,bspace2,eTphplasma(icdisp,:));
 %graph1D_jd(var.list,sdNdtplasma(icdisp,:)/fac,xlog,0,'','','',leg,xlim,ylim,style,marker2,color3,width2,siz,gca,1,lspace2,bspace,sqrt(sdNdtplasma(icdisp,:)/dt)/fac);
@@ -1165,7 +1223,7 @@ function plot_2D_jd(opt,savepath,savestr,figlabel,x1,y1,ey1,x2,y2,ey2,yleg,ifig,
             graph1D_jd(x2,y2(:,ivar),0,0,'','','',NaN,xlim,ylim,styles{2},markers{1 + rem(ivar,ncol)},colors{1 + rem(ivar,ncol)},widths(2),siz,gca,1,lspace,bspace,ey2(:,ivar));
         end
         %
-        graph1D_jd(x2,y2(:,end),0,0,xlab,ylab,tit,leg,xlim,ylim,styles{2},markers{1 + rem(end,ncol)},colors{1 + rem(end,ncol)},widths(2),siz,gca,red,lspace,bspace,ey2(:,end));
+        graph1D_jd(x2,y2(:,end),0,0,xlab,ylab,tit,leg,xlim,ylim,styles{2},markers{1 + rem(size(y2,2),ncol)},colors{1 + rem(size(y2,2),ncol)},widths(2),siz,gca,red,lspace,bspace,ey2(:,end));
         %
         %for ivar = 1:size(y2,2),
             %graph1D_jd(x3,y3(:,ivar),0,0,'','','',NaN,xlim,ylim,styles{3},markers{1 + rem(ivar,ncol)},colors{1 + rem(ivar,ncol)},widths(3),siz,gca,1,lspace,bspace,ey3(:,ivar));
