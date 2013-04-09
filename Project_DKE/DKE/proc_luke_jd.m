@@ -178,6 +178,31 @@ ynP_rf = ZP0(end).xyn_rf_fsav*mksa.P_ref;
 P_e = ZP0(end).x_e_fsav*mksa.P_ref;
 P_tot = P_rf + P_e;
 %
+% parallel momentum
+%
+np = length(pn);
+nmhu = length(mhu);
+%
+XXpnm = repmat(momentumDKE.pn_S(1:end-1).',[1,nmhu,nr]);
+XXpn = repmat(pn.',[1,nmhu,nr]);
+XXpnp = repmat(momentumDKE.pn_S(2:end).',[1,nmhu,nr]);
+XXmhu = repmat(mhu,[np,1,nr]);
+XX1mmhu2m = repmat(1 - momentumDKE.mhu_S(1:end-1).*momentumDKE.mhu_S(1:end-1),[np,1,nr]);
+XX1mmhu2p = repmat(1 - momentumDKE.mhu_S(2:end).*momentumDKE.mhu_S(2:end),[np,1,nr]);
+%
+XXIntegrand_im = XXpnm.*XXpnm.*XXmhu;
+XXIntegrand_ip = XXpnp.*XXpnp.*XXmhu;
+%
+XXIntegrand_jm = XXpn.*XXpn.*sqrt(XX1mmhu2m);
+XXIntegrand_jp = XXpn.*XXpn.*sqrt(XX1mmhu2p);
+%
+Zmom.x_rf = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_im.*dke_out.ZXXS.p0_rf_imj + XXIntegrand_ip.*dke_out.ZXXS.p0_rf_ipj)/2,1),1).'...
+           -2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_jm.*dke_out.ZXXS.m0_rf_ijm + XXIntegrand_jp.*dke_out.ZXXS.m0_rf_ijp)/2,1),1).';
+%
+[~,me,~,~,~,~,~,~,clum] = pc_dke_yp;%Universal physics constants
+dpdt_ref = me*clum*mksa.betath_ref*mksa.nhu_ref*mksa.ne_ref; %power normalization constant (N/m^3)
+dpdt_rf = Zmom.x_rf*dpdt_ref;
+%
 if isfield(dke_out,'residue_rf'),
     if iscell(dke_out.residue_rf),
         residue_rf = dke_out.residue_rf{end}(end);
@@ -1154,6 +1179,23 @@ if nr > 1,
         %set(gca,'ylim',[0,max(get(gca,'ylim'))])
         %
         print_jd(p_opt,[simul_id,'_J_profile'],'figures_LUKE');
+        %
+        % parallel momentum transfer rate profile
+        %
+        figure(401),clf,set(3,'Name',['Parallel Momentum transfer rate density profile - ',dke_out.simul.id])
+        %
+        xlab = '\rho';
+        ylab = 'dp_{RF}/dt (N/m^3)';
+        tit = '';
+        %
+        xlim = [0,1];
+        xtick = 0:0.2:1;
+        ylim = NaN;
+        %
+        graph1D_jd(xrho,dpdt_rf,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,siz,gca,red,lspace,bspace);
+        set(gca,'xtick',xtick);
+        %
+        print_jd(p_opt,[simul_id,'_Ptrans_profile'],'figures_LUKE');
         %
         % efficiency profile
         %
