@@ -31,7 +31,7 @@ time_interp = 1;%nearest point
 remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remnum = 2;% remote profile number. Use 0 for local sequential calculations
+remnum = 1;% remsote profile number. Use 0 for local sequential calculations
 remdebug = 0;% remote debugmode
 %
 debug_mode = 0;%set to 1 in case of problem. Allow to display results
@@ -230,11 +230,13 @@ else% new simulation
     	lukestructs{it}.dkedisplay = dkedisplay;
     	lukestructs{it}.wavestructs = wavestructs;
     	lukestructs{it}.opt = opt;
+    	lukestructs{it}.itm_connect = itm_connect;
+
 	end
 	%
-	flag_output = ones(1,length(timeslice));
-	%
 end
+%
+flag_output = ones(1,length(timeslice));
 %
 dkepath.remtimout = remtimout;% timeout in minutes
 dkepath.rempause = rempause;% pause between job checks (in minutes) (only for remtimout > 0)
@@ -252,8 +254,6 @@ lukestructs = run_lukert(lukestructs,dkepath);
 for it = 1:length(timeslice),
 	if isfield(lukestructs{it},'output') & flag_output(it),
     	flag_output(it) = 0;
-    	luke_out(it) = lukestructs{it}.output;
-    	
 	end
 end
 %
@@ -275,10 +275,10 @@ if sum(flag_output) == 0,
 		%
 		id_simul = ['timeslice_',int2str(timeslice(it))];
 		%
-		Znorm = luke_out(it).Znorm;
-		Zcurr = luke_out(it).Zcurr;
-		ZP0 = luke_out(it).ZP0;
-		dke_out = luke_out(it).dke_out;
+		Znorm = lukestructs{it}.output.Znorm;
+		Zcurr = lukestructs{it}.output.Zcurr;
+		ZP0 = lukestructs{it}.output.ZP0;
+		dke_out = lukestructs{it}.output.dke_out;
     	%
     	for iray = 1:length(dke_out.waves{1}.rays),
         	if ~isfield(dke_out.waves{1}.rays{iray},'mask_p') | ~isfield(dke_out.waves{1}.rays{iray},'mask_m');
@@ -287,15 +287,18 @@ if sum(flag_output) == 0,
         	end
     	end
     	%
-		radialDKE = luke_out(it).radialDKE;
-		equilDKE = luke_out(it).equilDKE;
-		momentumDKE = luke_out(it).momentumDKE;
-		gridDKE = luke_out(it).gridDKE;
-		Zmomcoef = luke_out(it).Zmomcoef;
-		Zbouncecoef = luke_out(it).Zbouncecoef;
-		Zmripple = luke_out(it).Zmripple;
-		mksa = luke_out(it).mksa;
-		XXsinksource = luke_out(it).XXsinksource;
+		radialDKE = lukestructs{it}.output.radialDKE;
+		equilDKE = lukestructs{it}.output.equilDKE;
+		momentumDKE = lukestructs{it}.output.momentumDKE;
+		gridDKE = lukestructs{it}.output.gridDKE;
+		Zmomcoef = lukestructs{it}.output.Zmomcoef;
+		Zbouncecoef = lukestructs{it}.output.Zbouncecoef;
+		Zmripple = lukestructs{it}.output.Zmripple;
+		mksa = lukestructs{it}.output.mksa;
+		XXsinksource = lukestructs{it}.output.XXsinksource;
+		%
+		equil = lukestructs{it}.equil;ss
+		itm_connect = lukestructs{it}.itm_connect;
 		%
 		filename = ['EC17_benchmark_',run_id,'_',id_simul,'.mat'];
 		save(filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
