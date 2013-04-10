@@ -315,129 +315,172 @@ elseif strcmp(launch.type,'LH'),
         launch.m0 = launch.m0 + 1i/nm;%uniform power distribution
     end
     %
+    % tail model
+    %
+    if ~isfield(launch,'tail'),% no tail model
+        tail.mode = 0;
+    else
+        tail = launch.tail;
+    end
+    %
+    for ib = 1:nb,% sum over lobes
+        if imag(bNpar0(ib)) ~= 0,% case where Nz is prescribed instead of Npar - tail model only applies to Nz
+            %
+            bNy(ib) = real(bNpar0(ib));
+            bNpar0(ib) = imag(bNpar0(ib));% nz
+            %
+        else
+            Ny(ib) = NaN;
+        end
+    end
+    %
+    if tail.mode == 1,% Gaussian tail fluctuations
+        %
+        bfwhm = tail.bfwhm; 
+        %
+        if length(fwhm_npar0) == 1,% if tail bfwhm is the same for all lobes
+            bfwhm = repmat(bfwhm,[1,nb]);
+        end
+        %
+    elseif tail.mode == 2,% Linear tail fluctuations
+        %
+        bNparmax_tail = tail.bNparmax_tail;
+        bopt_tail = real(tail.bopt_tail);
+        %
+        if length(bNparmax_tail) == 1,% if tail bNparmax is the same for all lobes
+            bNparmax_tail = repmat(bNparmax_tail,[1,nb]);
+        end
+        %
+        if length(bopt_tail) == 1,
+            bopt_tail = repmat(bopt_tail,[1,nb]);
+        end
+        %
+        bNparmax_tail(bNparmax_tail == 0) = 6.5/sqrt(equil.pTe(1));
+        %
+    elseif tail.mode == 3,% calc_tail_jd fluctuation or static model
+        %
+        bNparmax_tail = tail.bNparmax_tail;
+        bn_tail = tail.bn_tail;
+        bP_tail = tail.bP_tail;
+        bopt_tail = tail.bopt_tail;
+        %
+        if length(bNparmax_tail) == 1,% if tail bNparmax is the same for all lobes
+            bNparmax_tail = repmat(bNparmax_tail,[1,nb]);
+        end
+        %
+        bNparmax_tail(bNparmax_tail == 0) = 6.5/sqrt(equil.pTe(1));
+        %
+        if length(bn_tail) == 1,
+            bn_tail = repmat(bn_tail,[1,nb]);
+        end
+        %
+        if length(bP_tail) == 1,
+            bP_tail = repmat(bP_tail,[1,nb]);
+        end
+        %
+        if length(bopt_tail) == 1,
+            bopt_tail = repmat(bopt_tail,[1,nb]);
+        end
+        %
+        for ib = 1:nb,% sum over lobes
+            %
+            [btNpar0_tail{ib},btdNpar0_tail{ib},btP0_2piRp_tail{ib}] = calc_tail_jd(bNpar0(ib),bdNpar0(ib),bP0_2piRp(ib),bNparmax_tail(ib),bn_tail(ib),bP_tail(ib),bopt_tail(ib));
+            %
+        end
+        %
+    end
+    %
     iy = 0;
     %
-    for ib = 1:nb,
-        for ir = 1:nr,
-            for im = 1:nm,
+    for ib = 1:nb,% sum over lobes
+        for ir = 1:nr,% sum over vertical positions
+            if tail.mode == 1,% Gaussian tail fluctuations
                 %
-                iy = iy + 1;
-                %
-                rayinit.yrho0(iy) = rho0;%Initial radial position at launch
-                rayinit.ytheta0(iy) = rbtheta0(ir,ib);%Initial poloidal position at launch
-                if isfield(launch,'z0')
-                    rayinit.yz0(iy) = launch.z0;%Initial axial position at launch
-                    rayinit.ykz0(iy) = launch.kz0;%Initial axial wave vector
-                elseif isfield(launch,'phi0') && ~isinf(equil.Rp),
-                    rayinit.yphi0(iy) = launch.phi0;%Initial toroidal position at launch
-                    rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
+                if ~isinf(tail.dtn),% fluctuating spectrum model
+                    if bfwhm(ib) > 0,
+                        tNpar0_tail = randg_yp(1,bNpar0(ib),bfwhm(ib));%New random npar0 around npar_antenna
+                    else
+                        tNpar0_tail = randg_yp(1,bNpar0(ib),bdNpar0(ib));%New random npar0 around npar_antenna
+                    end   
+                    %
+                    tdNpar0_tail = bdNpar0(ib);
+                    tP0_2piRp_tail = bP0_2piRp(ib);
+                    %
+                    disp(['Gaussian distribution -> npar_antenna: ',num2str(bNpar0(ib)),', new npar0: ',num2str(tNpar0_tail),' with Gaussian distribution FWHM = ',num2str(bfwhm(ib))]);
                 else
-                    error('ERROR in main_rayinit_launch_jd.m -> inconsistent launch input: use phi0 if Rp is finite only, or z0 otherwise.');
+                    error('static model for gaussian probability distribution not yet implemented.')%% TODO
                 end
                 %
-                rayinit.ym0(iy) = real(launch.m0(im));%Initial poloidal mode number              
+            elseif tail.mode == 2,% Linear tail fluctuations
                 %
-                rayinit.yNpar0(iy) = bNpar0(ib);%Initial index of refraction (default values, no fluctuations)
+                if ~isinf(tail.dtn),% fluctuating spectrum model
+                    if sign(bNpar0(ib)) > 0 && bNpar0(ib) < bNparmax_tail(ib),
+                        tNpar0_tail = randlin_yp(1,bopt_tail(ib),[bNpar0(ib),bNparmax_tail(ib)]);%New random npar0
+                    elseif sign(bNpar0(ib)) < 0 && bNpar0(ib) > - bNparmax_tail(ib),
+                        tNpar0_tail = randlin_yp(1,bopt_tail(ib),[-bNparmax_tail(ib),bNpar0(ib)]);%New random npar0
+                    end  
+                    %
+                    tdNpar0_tail = bdNpar0(ib);
+                    tP0_2piRp_tail = bP0_2piRp(ib);
+                    %
+                    disp(['Linear distribution -> npar_antenna: ',num2str(bNpar0(ib)),', new npar0: ',num2str(tNpar0_tail),' with linear distribution h = ',num2str(bopt_tail(ib)),', npar_max = ',num2str(bNparmax_tail(ib))]);
+                else
+                    error('Linear probability distribution only valid for fluctuating model.')
+                end
                 %
-                % Statistical initial condition (edge fluctuation)
+            elseif tail.mode == 3,% calc_tail_jd fluctuations or static model
                 %
-                if isfield(equil,'fluct'),
-                    if isfield(equil.fluct,'npar0_lh'),
-                        if isfield(equil.fluct.npar0_lh,'dtn') && (~isinf(equil.fluct.npar0_lh.dtn) && ~isnan(equil.fluct.npar0_lh.dtn) && ~isempty(equil.fluct.npar0_lh.dtn)),
-                            %
-                            if isfield(equil.fluct.npar0_lh,'gaussian_tail'),%random npar0 with Gaussian distribution for each lobe
-                                if (~isempty(equil.fluct.npar0_lh.gaussian_tail) && ~isnan(equil.fluct.npar0_lh.gaussian_tail)),
-                                    if isfield(equil.fluct.npar0_lh,'flag'),
-                                        if equil.fluct.npar0_lh.flag,%random npar0 with Gaussian distribution for each lobe
-                                            if (~isempty(equil.fluct.npar0_lh.fwhm_npar0) && ~isnan(equil.fluct.npar0_lh.fwhm_npar0)),
-                                                rayinit.yNpar0(iy) = randg_yp(1,bNpar0(ib),bdNpar0(ib));%New random npar0 around npar_antenna
-                                            else
-                                                rayinit.yNpar0(iy) = randg_yp(1,bNpar0(ib),equil.fluct.npar0_lh.fwhm_npar0);%New random npar0 around npar_antenna
-                                            end   
-                                        else
-                                            rayinit.yNpar0(iy) = equil.fluct.npar0_lh.Npar0(iy);%reload previous npar0
-                                        end
-                                        %
-                                        disp(['Gaussian distribution -> npar_antenna: ',num2str(bNpar0(ib)),', new npar0: ',num2str(rayinit.yNpar0(iy)),' with Gaussian distribution FWHM = ',num2str(equil.fluct.npar0_lh.fwhm_npar0)]);
-                                        %
-                                    end
-                                end
-                            end
-                            %
-                            if isfield(equil.fluct.npar0_lh,'linear_tail'),%random npar0 with linear distribution for each lobe
-                                if (~isempty(equil.fluct.npar0_lh.linear_tail) && ~isnan(equil.fluct.npar0_lh.linear_tail)),
-                                    if isfield(equil.fluct.npar0_lh,'flag'),
-                                        if equil.fluct.npar0_lh.flag,%random npar0 with linear distribution for each lobe
-                                            if isfield(equil.fluct.npar0_lh,'Nparmax_tail'),
-                                                if (~isempty(equil.fluct.npar0_lh.Nparmax_tail) && ~isnan(equil.fluct.npar0_lh.Nparmax_tail)),
-                                                    Nparmax_tail = abs(equil.fluct.npar0_lh.Nparmax_tail);
-                                                else
-                                                    Nparmax_tail = 6.5/sqrt(max(equil.pTe)); %Linear Landau absorption (central electron temperature)
-                                                end
-                                            else
-                                                Nparmax_tail = 6.5/sqrt(max(equil.pTe)); %Linear Landau absorption (central electron temperature)
-                                            end
-                                            %
-                                            opt_tail = equil.fluct.npar0_lh.opt_tail;%Final power fraction of the tail @ Nparmax_tail.
-                                            %
-                                            if sign(bNpar0(ib)) > 0 && bNpar0(ib) < Nparmax_tail,
-                                                rayinit.yNpar0(iy) = randlin_yp(1,opt_tail,[bNpar0(ib),Nparmax_tail]);%New random npar0
-                                            elseif sign(bNpar0(ib)) < 0 && abs(bNpar0(ib)) < Nparmax_tail,
-                                            	rayinit.yNpar0(iy) = randlin_yp(1,opt_tail,[-Nparmax_tail,bNpar0(ib)]);%New random npar0
-                                            end  
-                                        else
-                                            rayinit.yNpar0(iy) = equil.fluct.npar0_lh.Npar0(iy);%reload previous npar0
-                                        end
-                                        %
-                                        disp(['Linear distribution -> npar_antenna: ',num2str(bNpar0(ib)),', new npar0: ',num2str(rayinit.yNpar0(iy)),' with linear distribution h = ',num2str(equil.fluct.npar0_lh.h_npar0),', npar_max = ',num2str(nparmax)]);
-                                        %
-                                    end
-                                end
-                            end
-                            %
-                            if isfield(equil.fluct.npar0_lh,'calc_tail'),%random npar0 from the tail model (see calc_tail_jd.m)
-                                if (~isempty(equil.fluct.npar0_lh.calc_tail) && ~isnan(equil.fluct.npar0_lh.calc_tail)),
-                                    if isfield(equil.fluct.npar0_lh,'flag'),
-                                        if equil.fluct.npar0_lh.flag,%random npar0 from the tail model
-                                            if isfield(equil.fluct.npar0_lh,'Nparmax_tail'),
-                                                if (~isempty(equil.fluct.npar0_lh.Nparmax_tail) && ~isnan(equil.fluct.npar0_lh.Nparmax_tail)),
-                                                    Nparmax_tail = abs(equil.fluct.npar0_lh.Nparmax_tail);
-                                                else
-                                                    Nparmax_tail = 6.5/sqrt(max(equil.pTe)); %Linear Landau absorption (central electron temperature)
-                                                end
-                                            else
-                                                Nparmax_tail = 6.5/sqrt(max(equil.pTe)); %Linear Landau absorption (central electron temperature)
-                                            end
-                                            %
-                                            n_tail = equil.fluct.npar0_lh.n_tail;%number of lobes to describe the tail
-                                            P_tail = equil.fluct.npar0_lh.P_tail;%Power fraction in the tail
-                                            opt_tail = equil.fluct.npar0_lh.opt_tail;%Additional options
-                                            %
-                                            [Npar0_tail,dNpar0_tail,P0_2piRp_tail] = calc_tail_jd(bNpar0(ib),bdNpar0(ib),bP0_2piRp(ib),Nparmax_tail,n_tail,P_tail,opt_tail);
-                                            %
-                                            if length(Npar0_tail) > 1,
-                                                rayinit.yNpar0(iy) = randreject_yp(@fcalc_tail_yp,{Npar0_tail,dNpar0_tail,P0_2piRp_tail,bP0_2piRp(ib),[Npar0_tail(1)-2*dNpar0_tail(1),Npar0_tail(end)+dNpar0_tail(1)]},1,0);
-                                            else
-                                                rayinit.yNpar0(iy) = randg_yp(1,bNpar0(ib),bdNpar0(ib));%New random npar0 around npar_antenna Gaussian shape)
-                                                %rayinit.yNpar0(iy) = bNpar0(ib);%npar0 = npar_antenna
-                                            end
-                                        else
-                                            rayinit.yNpar0(iy) = equil.fluct.npar0_lh.Npar0(iy);%reload previous npar0
-                                        end
-                                        %
-                                        disp(['Calculated distribution -> npar_antenna: ',num2str(bNpar0(ib)),', new npar0: ',num2str(rayinit.yNpar0(iy)),' with linear distribution h = ',num2str(equil.fluct.npar0_lh.h_npar0),', npar_max = ',num2str(nparmax)]);
-                                        %
-                                    end
-                                end
-                            end
-                            %
-                        end
+                if ~isinf(tail.dtn),% fluctuating spectrum model
+                    %
+                    if length(btNpar0_tail{ib}) > 1,
+                        tNpar0_tail = randreject_yp(@fcalc_tail_yp,{btNpar0_tail{ib},btdNpar0_tail{ib},btP0_2piRp_tail{ib},bP0_2piRp(ib),[btNpar0_tail{ib}(1)-2*btdNpar0_tail{ib}(1),btNpar0_tail{ib}(end)+btdNpar0_tail{ib}(1)]},1,0);
+                    else
+                        tNpar0_tail = randg_yp(1,bNpar0(ib),bdNpar0(ib));%New random npar0 around npar_antenna Gaussian shape)
+                        %bNpar0_tail = bNpar0(ib);%npar0 = npar_antenna
                     end
+                    %
+                    tdNpar0_tail = bdNpar0(ib);
+                    tP0_2piRp_tail = bP0_2piRp(ib);
+                    %
+                    disp(['Calculated distribution -> npar_antenna: ',num2str(bNpar0(ib)),', new npar0: ',num2str(tNpar0_tail),' with linear distribution h = ',num2str(bopt_tail(ib)),', npar_max = ',num2str(bNparmax_tail(ib))]);
+                else
+                    % static spectrum model
+                    tNpar0_tail = btNpar0_tail{ib};
+                    tdNpar0_tail = btdNpar0_tail{ib};
+                    tP0_2piRp_tail = btP0_2piRp_tail{ib};
+                    %
+                end
+            end
+            %
+            for itail = 1:length(tNpar0_tail),% sum of tail lobes
+                %
+                if ~isnan(bNy(ib)),% Npar0 is in fact Nz readjust Npar0 with Ny
+                    tNpar0_tail(itail) = bNy(ib) + 1i*tNpar0_tail(itail);
                 end
                 %
-                rayinit.ydNpar0(iy) = bdNpar0(ib);%initial Ray spectral width
-                rayinit.yP0_2piRp(iy) = bP0_2piRp(ib)*imag(launch.m0(im))/nr;%Lineic initial power density initial power in the ray (W/m)
-                %
+                for im = 1:nm,% sum over initial m
+                    %
+                    iy = iy + 1;
+                    %
+                    rayinit.yrho0(iy) = rho0;%Initial radial position at launch
+                    rayinit.ytheta0(iy) = rbtheta0(ir,ib);%Initial poloidal position at launch
+                	if isfield(launch,'z0')
+                    	rayinit.yz0(iy) = launch.z0;%Initial axial position at launch
+                   		rayinit.ykz0(iy) = launch.kz0;%Initial axial wave vector
+                	elseif isfield(launch,'phi0') && ~isinf(equil.Rp),
+                    	rayinit.yphi0(iy) = launch.phi0;%Initial toroidal position at launch
+                    	rayinit.yn0(iy) = launch.n0;%Initial toroidal mode number
+                	else
+                    	error('ERROR in main_rayinit_launch_jd.m -> inconsistent launch input: use phi0 if Rp is finite only, or z0 otherwise.');
+                	end
+                	%
+                	rayinit.ym0(iy) = real(launch.m0(im));%Initial poloidal mode number              
+                    %
+                    rayinit.yNpar0(iy) = tNpar0_tail(itail);%Initial index of refraction
+                    rayinit.ydNpar0(iy) = tdNpar0_tail(itail);%initial Ray spectral width
+                    rayinit.yP0_2piRp(iy) = tP0_2piRp_tail(itail)*imag(launch.m0(im))/nr;%Lineic initial power density initial power in the ray (W/m)
+                    %
+                end
             end
         end
     end
