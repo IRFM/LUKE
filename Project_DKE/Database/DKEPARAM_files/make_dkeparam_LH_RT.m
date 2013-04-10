@@ -117,6 +117,8 @@ dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = 0;%MatLab distributed comput
 dkeparam.clustermode.eecoll_dke_yp.scheduler.memory = 500;%required memory (in mb)
 dkeparam.clustermode.wave_solver_yp.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
 dkeparam.clustermode.wave_solver_yp.scheduler.memory = 500;%required memory (in mb)
+dkeparam.clustermode.rfdiff_dke_jd.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+dkeparam.clustermode.rfdiff_dke_jd.scheduler.memory = 2000;%required memory (in mb)
 %
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 dkeparam.opt_load = 0;%Load intermediate calculations
