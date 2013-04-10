@@ -143,6 +143,17 @@ sxT = [xTe;zxTi(:)];
 %
 xNperp = zeros(1,1);
 %
+% Case with complex Npar, in which case Ns = real(Npar) & Nz = imag(Npar) 
+%
+if ~isreal(xNpar),
+    xNs = real(xNpar);
+    xNz = imag(xNpar);
+    %
+    xm = xr.*xNs.*xomega/clum./xc;
+    xkz = Upsilon.*xNz.*xomega/clum;
+    xNpar = xBsn.*xNs + xBzn.*xNz;
+end
+%
 % Cold plasma calculations
 %
 [Nperpp,Nperpm,dummy,...
@@ -179,11 +190,19 @@ end
 %
 xlambda = xc.*xBsn - xs.*xBrhon;
 %
-if isnan(xkz),%xm is specified at the plasma edge (tokamak case)
-    if abs(xBrhon) < 1e-6,
-        xkz = Upsilon.*(xNpar.*xomega/clum - xm.*xc.*xBsn./xr)./xBzn;
-        xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xkz./Upsilon).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho;
-    else
+if abs(xBrhon) < 1e-6,
+	%
+	if isnan(xn),%xm is specified at the plasma edge (tokamak case)
+		xkz = Upsilon.*(xNpar.*xomega/clum - xm.*xc.*xBsn./xr)./xBzn;
+	elseif isnan(xm),%xn is specified at the plasma edge (RFP case)
+		xm = xr.*(xNpar.*xomega/clum - xkz.*xBzn./Upsilon)./xc./xBsn; 
+	end
+	%
+	xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xkz./Upsilon).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho;
+	%
+else
+	%
+	if isnan(xkz),%xm is specified at the plasma edge (tokamak case)
         xdelta = xNpar.*xomega./clum - xm.*xlambda./xr;
         a = (1.0 - xBsn.*xBsn)./xBrhon./xBrhon;
         b = xBzn.*(xNpar.*xomega/clum - xm.*xBsn.*xc./xr)./xBrhon./xBrhon;
@@ -202,12 +221,7 @@ if isnan(xkz),%xm is specified at the plasma edge (tokamak case)
             xkz = xkzroots(find(xkrhoroots>0));
         end
         %
-    end
-elseif isnan(xm),%xkz is specified at the plasma edge (RFP case)
-    if abs(xBrhon) < eps,
-        xm = xr.*(xNpar.*xomega/clum - xkz.*xBzn./Upsilon)./xc./xBsn;
-        xkrho = (xm.*xs./xr + sigma*sqrt(-(xm.*xc./xr).^2 - (xkz./Upsilon).^2 + (xNperp.^2 + xNpar.^2).*xomega.^2/clum^2))./xgradrho;
-    else
+	elseif isnan(xm),%xkz is specified at the plasma edge (RFP case)
         %TODO: calculation for RFP
         %xdelta = xNpar.*xomega./clum - xkz.*xBzn./Uspilon;
         %a = ;
