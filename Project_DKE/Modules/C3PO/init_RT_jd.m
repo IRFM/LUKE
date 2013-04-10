@@ -192,7 +192,7 @@ xlambda = xc.*xBsn - xs.*xBrhon;
 %
 if abs(xBrhon) < 1e-6,
 	%
-	if isnan(xn),%xm is specified at the plasma edge (tokamak case)
+	if isnan(xkz),%xm is specified at the plasma edge (tokamak case)
 		xkz = Upsilon.*(xNpar.*xomega/clum - xm.*xc.*xBsn./xr)./xBzn;
 	elseif isnan(xm),%xn is specified at the plasma edge (RFP case)
 		xm = xr.*(xNpar.*xomega/clum - xkz.*xBzn./Upsilon)./xc./xBsn; 
