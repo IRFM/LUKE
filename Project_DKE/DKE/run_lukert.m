@@ -598,18 +598,18 @@ for itn = itnmin:itnmax,%time evolution
     %
     if itnmax > 1,
         %
-        xrho = loadstructs.equilDKE.xrho(:);
-        xdA = loadstructs.equilDKE.xdA_dke(:).';
-        if isfield(loadstructs.equilDKE,'xdV_dke'),
-            xdV = loadstructs.equilDKE.xdV_dke(:).';
+        xrho = loadstructs.equilibrium_jd.equilDKE.xrho(:);
+        xdA = loadstructs.equilibrium_jd.equilDKE.xdA_dke(:).';
+        if isfield(loadstructs.equilibrium_jd.equilDKE,'xdV_dke'),
+            xdV = loadstructs.equilibrium_jd.equilDKE.xdV_dke(:).';
         else
-            xdV = loadstructs.equilDKE.xdV_2piRp_dke(:).'*2*pi*loadstructs.equilDKE.Rp;
+            xdV = loadstructs.equilibrium_jd.equilDKE.xdV_2piRp_dke(:).'*2*pi*loadstructs.equilibrium_jd.equilDKE.Rp;
         end
         %
         xtn(itn) = min([dtn_phase*itn,tn]);
         %
-        xJ(itn,:) = Zcurr_loc(end).x_0_fsav*loadstructs.mksa.j_ref;
-        xP(itn,:) = ZP0_loc(end).x_rf_fsav.'*loadstructs.mksa.P_ref;
+        xJ(itn,:) = Zcurr_loc(end).x_0_fsav*loadstructs.mksacoefbuilder_dke_yp.mksa.j_ref;
+        xP(itn,:) = ZP0_loc(end).x_rf_fsav.'*loadstructs.mksacoefbuilder_dke_yp.mksa.P_ref;
         %
         Itot(itn) = sum(xJ(itn,:).*xdA,2);
         Ptot(itn) = sum(xP(itn,:).*xdV,2);
@@ -663,7 +663,7 @@ for itn = itnmin:itnmax,%time evolution
         %
         % Feedback kinetic calculations for calculating the wave absorption with a non-Mawellian electron distribution in the propagation solver 
         %
-        f0struct = build_f0struct_yp(dke_out,loadstructs.momentumDKE,loadstructs.equilDKE,loadstructs.mksa);%For absorption in C3PO with a non-Maxwellian electron distribution    
+        f0struct = build_f0struct_yp(dke_out,loadstructs.momentumgrid_dke_jd.momentumDKE,loadstructs.equilibrium_jd.equilDKE,loadstructs.mksacoefbuilder_dke_yp.mksa);%For absorption in C3PO with a non-Maxwellian electron distribution    
     end
     %
     XXf0_t{itn} = dke_out.XXf0{end};%for saving the time evolution of the electron velocity distribution function
