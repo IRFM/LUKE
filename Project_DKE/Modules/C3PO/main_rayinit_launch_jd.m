@@ -450,6 +450,10 @@ elseif strcmp(launch.type,'LH'),
                     tP0_2piRp_tail = btP0_2piRp_tail{ib};
                     %
                 end
+            else% to tail model
+                tNpar0_tail = bNpar0(ib);
+                tdNpar0_tail = bdNpar0(ib);
+                tP0_2piRp_tail = bP0_2piRp(ib);                
             end
             %
             for itail = 1:length(tNpar0_tail),% sum of tail lobes
