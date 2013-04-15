@@ -434,7 +434,7 @@ dke_out.xys = xys;
 %
 dke_out.ZXXD_rf = ZXXD_rf;
 dke_out.ZXXF_rf = ZXXF_rf;
-if dkeparam_out.opt_struct == 1,
+if dkeparam_out.opt_struct > 1,
     dke_out.ZXYD_rf = ZXYD_rf;
     dke_out.ZXYF_rf = ZXYF_rf;
 end
