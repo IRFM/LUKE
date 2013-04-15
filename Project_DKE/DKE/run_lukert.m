@@ -98,7 +98,7 @@ if iscell(lukestructs),% remote and/or distributed calculation
                 %
                 if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_memory'),
                     lukestandardjob.memory = lukestructs{ijob}.dkeparam.luke_memory;% requested memory specified in dkeparam
-                elseif isfield(lukestructs{ijob},'transpfaste') && ~isempty(fieldnames(lukestructs{ijob}.transpfaste)), 
+                elseif isfield(lukestructs{ijob},'transpfaste') && isstruct(lukestructs{ijob}.transpfaste) && ~isempty(fieldnames(lukestructs{ijob}.transpfaste)), 
                     lukestandardjob.memory = 14000;%mb default value with transport
                 else
                     lukestandardjob.memory = 7000;%mb default value without transport
@@ -147,8 +147,8 @@ end
 %
 % case where the job was already run
 % 
-if ~isempty(remote) && isfield(lukestructs,'output'),
-    disp('Job was successfully completed already. Aborted.')
+if isfield(lukestructs,'output'),%~isempty(remote) && 
+    disp('Job was successfully completed already.')
     return
 elseif isfield(lukestructs,'err'),
     disp('Job was run already but failed due to an error. See lukestructs.err. Remove field ''err'' from lukestructs to start again.')
