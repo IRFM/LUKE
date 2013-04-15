@@ -311,9 +311,24 @@ elseif dkeparam.rt_mode == -1,
     Znorm = [];
     Zcurr.x_0_fsav = [];
     ZP0.x_rf_fsav = [];
+    %
     dke_out.equil = equil;
     dke_out.waves = waves;
-    dke_out.XXf0 = [];
+    dke_out.simul = simul;
+    %
+    dke_out.XXf0 = {[]};
+    dke_out.XXfM = [];
+    dke_out.ZXXD_a = [];
+    dke_out.ZXXF_a = [];
+    dke_out.ZXXD_c = [];
+    dke_out.ZXXF_c = [];
+    dke_out.ZXXD_e = [];
+    dke_out.ZXXF_e = [];
+    dke_out.XXILor = [];
+    dke_out.xepsi = [];
+    dke_out.xEfield_validity = [];
+    dke_out.FPtime = [];
+    %
     radialDKE = [];
     equilDKE = [];
     momentumDKE = [];
