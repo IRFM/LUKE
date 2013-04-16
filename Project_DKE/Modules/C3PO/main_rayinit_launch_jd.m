@@ -392,7 +392,7 @@ elseif strcmp(launch.type,'LH'),
     %
     iy = 0;
     %
-    for ib = 1:nb,% sum over lobes
+    for ib = 1:nb,% sum over initial lobes
         for ir = 1:nr,% sum over vertical positions
             if tail.mode == 1,% Gaussian tail fluctuations
                 %
