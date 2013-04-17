@@ -569,7 +569,7 @@ for itn = itnmin:itnmax,%time evolution
                 for iy = 1:ny,
                     for iray = 1:length(byisel{ifluct,iw}{iy}),
                         Pnonabs_loc = 2*pi*equil.Rp*dke_out.zP_0_2piRp_mod{end}{byisel{ifluct,iw}{iy}(iray)}(end);
-                        byPnonabs{ifluct,iw} = byPnonabs{ifluct,iw} + Pnonabs_loc;
+                        byPnonabs{ifluct,iw}(iy) = byPnonabs{ifluct,iw}(iy) + Pnonabs_loc;
                         Pnonabs = Pnonabs + Pnonabs_loc/1e6;
                     end
                 end
