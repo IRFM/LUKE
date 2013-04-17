@@ -395,11 +395,41 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                     elseif strfind(data_file,'LUKE_RESULTS_'),
                         %
-                        data = load([data_path,data_file],'basestr','id_simul','simul','rho_S','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
-                            'id_equil','path_equil','ids_wave','paths_wave','id_ohm','path_ohm','id_transpfaste','path_transpfaste','id_ripple','path_ripple',...
-                            'luke_input','dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
-                            'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
+                        data = load([data_path,data_file],'lukestructs');
                         disp(['-----> The data file ',[data_path,data_file],' is loaded.']);
+                        %
+                        if isfield(data,'lukestructs'),% new run_lukert output
+                            %
+                            data = data.lukestructs;
+                            %
+                        else% old run_lukert output
+                            %
+                            data = load([data_path,data_file],'basestr','id_simul','simul','rho_S','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
+                                'id_equil','path_equil','ids_wave','paths_wave','id_ohm','path_ohm','id_transpfaste','path_transpfaste','id_ripple','path_ripple',...
+                                'luke_input','dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
+                                'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
+                            %
+                        end
+                        %
+                        if isfield(data,'output'),
+                            output = data.output;
+                        else
+                            %
+                            output.Znorm = data.Znorm;
+                            output.Zcurr = data.Zcurr;
+                            output.ZP0 = data.ZP0;
+                            output.dke_out = data.dke_out;
+                            output.radialDKE = data.radialDKE;
+                            output.equilDKE = data.equilDKE;
+                            output.momentumDKE = data.momentumDKE;
+                            output.gridDKE = data.gridDKE;
+                            output.Zmomcoef = data.Zmomcoef;
+                            output.Zbouncecoef = data.Zbouncecoef;
+                            output.Zmripple = data.Zmripple;
+                            output.mksa = data.mksa;
+                            output.XXsinksource = data.XXsinksource;  
+                            %
+                        end
                         %
                         if isfield(data,'basestr'),
                             basestr = data.basestr;
@@ -440,8 +470,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                         end
                         %
                         if ~isfield(data,'waves') || isempty(data.waves),
-                            if isfield(data.dke_out,'waves'),
-                                data.waves = data.dke_out.waves;
+                            if isfield(output,'dke_out') && isfield(output.dke_out,'waves'),
+                                data.waves = output.dke_out.waves;
                             else
                                 data.waves = '';
                             end
@@ -507,7 +537,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                             dkeparam = data.luke_input.dkeparam;
                             dkedisplay = data.luke_input.dkedisplay;
                             equil = data.luke_input.equil;
-                            waves = data.dke_out.waves;
+                            waves = data.waves;
                             ohm = data.luke_input.ohm;
                             transpfaste = data.luke_input.transpfaste;
                             ripple = data.luke_input.ripple;
@@ -522,26 +552,14 @@ function irunluke_jd(basestr,signs,opt_gui)
                             transpfaste = data.transpfaste;
                             ripple = data.ripple;
                             %
-                            if isfield(data,'simul'),
+                            if isfield(data,'simul') && isfield(data.simul,'id'),
                                 id_simul = data.simul.id;
+                            elseif isfield(output,'dke_out') && isfield(output.dke_out,'simul') && isfield(output.dke_out.simul,'id'),
+                                id_simul = output.dke_out.simul.id;
                             else
                                 id_simul = data.id_simul;
                             end
                         end
-                        %
-                        output.Znorm = data.Znorm;
-                        output.Zcurr = data.Zcurr;
-                        output.ZP0 = data.ZP0;
-                        output.dke_out = data.dke_out;
-                        output.radialDKE = data.radialDKE;
-                        output.equilDKE = data.equilDKE;
-                        output.momentumDKE = data.momentumDKE;
-                        output.gridDKE = data.gridDKE;
-                        output.Zmomcoef = data.Zmomcoef;
-                        output.Zbouncecoef = data.Zbouncecoef;
-                        output.Zmripple = data.Zmripple;
-                        output.mksa = data.mksa;
-                        output.XXsinksource = data.XXsinksource;  
                         %
                         status.dkeparam = 1;
                         status.dkepath = 1;
