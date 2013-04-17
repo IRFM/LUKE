@@ -18,7 +18,7 @@ config = configs(1);
 %
 locid_simul = ['aloha_',num2str(config.opt_aloha)];
 %
-if config.opt_aloha == 1,
+if real(config.opt_aloha) == 1 && config.aloha.inter == 0,
     if isfield(config,'aloha'),
         locid_simul = [locid_simul,'_nlobes_',num2str(config.aloha.nlobes),'_dir_',num2str(config.aloha.dir),'_mode_',num2str(config.aloha.mode),...
             '_nrZ0_',num2str(config.nrZ0),config.locid_aloha_b,config.locid_aloha_h];
