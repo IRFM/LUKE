@@ -405,24 +405,9 @@ else% reload mode
     %
     if opt.backup == -1,%interactive update
         %
-        overwrite_dkeparam_field = input_dke_yp('If you want to overwrite one field of the reloaded ''dkeparam'' structure, give its name ?');
-        overwrite_dkedisplay_field = input_dke_yp('If you want to overwrite one field of the reloaded ''dkedisplay'' structure, give its name ?');
-        %
-        if ~isempty(overwrite_dkeparam_field),
-            if isfield(dkeparam,overwrite_dkeparam_field),
-                dkeparam.(overwrite_dkeparam_field) = dkeparam_in.(overwrite_dkeparam_field);
-            else
-                disp(['The fieldname ''',overwrite_dkeparam_field, ''' does not exist in the structure ''dkeparam''. Nothing has been overwritten.'])    
-            end
-        end
-        %
-        if ~isempty(overwrite_dkedisplay_field),
-            if isfield(dkedisplay,overwrite_dkedisplay_field),
-                dkedisplay.(overwrite_dkedisplay_field) = dkedisplay_in.(overwrite_dkedisplay_field);
-            else
-                disp(['The fieldname ''',overwrite_dkedisplay_field, ''' does not exist in the structure ''dkedisplay''. Nothing has been overwritten.'])
-            end
-        end
+        dkeparam = imod_struct_jd(dkeparam,'dkeparam',1,dkedisplay.display_mode);
+        dkedisplay = imod_struct_jd(dkedisplay,'dkedisplay',1,dkedisplay.display_mode);
+        opt = imod_struct_jd(opt,'opt',1,dkedisplay.display_mode);
         %
     elseif opt.backup == -2,%non interactive update
         dkedisplay.display_mode = dkedisplay_in.display_mode;
