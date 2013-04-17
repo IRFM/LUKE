@@ -1,4 +1,4 @@
-function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,configs,opt,dkepath,dkeparam,dkedisplay,equil,ohm,transpfaste,ripple,rayparam,waveparam,C3POparam)
+function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul_end,configs,opt,dkepath,dkeparam,dkedisplay,equil,ohm,transpfaste,ripple,rayparam,waveparam,C3POparam)
 %
 if nargin < 17,
     C3POparam = struct;
@@ -8,6 +8,39 @@ if nargin < 16,
 end
 if nargin < 15,
     rayparam = struct;
+end
+%
+% Simulation locid from config
+%
+config = configs(1);
+%
+% aloha
+%
+locid_simul = ['aloha_',num2str(config.opt_aloha)];
+%
+if config.opt_aloha == 1,
+    if isfield(config,'aloha'),
+        locid_simul = [locid_simul,'_nlobes_',num2str(config.aloha.nlobes),'_dir_',num2str(config.aloha.dir),'_mode_',num2str(config.aloha.mode),...
+            '_nrZ0_',num2str(config.nrZ0),config.locid_aloha_b,config.locid_aloha_h];
+    else
+        locid_simul = [locid_simul,'_param_',num2str(config.aloha_param),'_dir_',num2str(config.aloha_dir),...
+            '_nrZ0_',num2str(config.nrZ0),config.locid_aloha_b,config.locid_aloha_h];
+    end
+elseif ~isnan(config.bNpar0),
+    locid_simul = [locid_simul,'_bNpar0',num2str(config.bNpar0),'_bdNpar0_',num2str(config.bdNpar0),'_bPlhtot_',num2str(config.bPlhtot)];
+end
+%
+% tail
+%
+if isfield(config,'tail'),
+    locid_simul_tail = make_tail_simulid_jd(config.tail);
+    if ~isempty(locid_simul_tail),
+        locid_simul = [locid_simul,'_',locid_simul_tail];
+    end
+end
+%
+if ~isempty(locid_simul_end),
+    locid_simul = [locid_simul,'_',locid_simul_end];
 end
 %
 % WARNING : use this line to invert spectra
