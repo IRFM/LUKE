@@ -8,12 +8,24 @@ if nargin < 2,
     display_mode = 0;
 end
 %
-data = load(filename,'Ztime','Zitn','Zcurr','ZP0','loadstructs','calctime');
+data = load(filename,'Ztime','Zitn','Zcurr','ZP0','loadstructs','calctime','lukestructs');
 %
-if isfield(data,'loadstructs'),% new run_lukert
+if isfield(data,'loadstructs') && isfield(data.loadstructs,'equilibrium_jd'),% new run_lukert
+    equilDKE = data.loadstructs.equilibrium_jd.equilDKE;
+    mksa = data.loadstructs.mksacoefbuilder_dke_yp.mksa;
+    radialDKE = data.loadstructs.radialgrid_dke_jd.radialDKE;
+elseif isfield(data,'loadstructs'),% old run_lukert, with fluct
     equilDKE = data.loadstructs.equilDKE;
     mksa = data.loadstructs.mksa;
     radialDKE = data.loadstructs.radialDKE;
+elseif isfield(data,'lukestructs'),% new run_lukert, no fluct
+    data.Ztime = data.lukestructs.output.dke_out.FPtime;
+    data.Zitn = length(data.Ztime);
+    data.Zcurr = data.lukestructs.output.Zcurr;
+    data.ZP0 = data.lukestructs.output.ZP0;
+    equilDKE = data.lukestructs.output.equilDKE;
+    mksa = data.lukestructs.output.mksa;
+    radialDKE = data.lukestructs.output.radialDKE;
 else% old run_lukert, no fluct
     data = conc_struct_jd(data,load(filename,'equilDKE','mksa','radialDKE'));
     equilDKE = data.equilDKE;
