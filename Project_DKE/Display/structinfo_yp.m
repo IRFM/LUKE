@@ -65,6 +65,7 @@ switch struct
             case 'store_mode',expert = 1;values = {true,false};info = 'Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight';
             case 'opt_load',expert = 1;values = {true,false};info = 'Load intermediate calculations';
             case 'opt_save',expert = 1;values = {true,false};info = 'Save intermediate calculations';
+            case 'clustermode',expert = 0;info = 'Distributed calculation parameters';
             otherwise,
             %
         end 
@@ -127,6 +128,44 @@ switch struct
         end
 		%
     case 'clustermode',
+        %
+        switch field 
+            case 'coll_dke_jd',expert = 0;info = 'Distributed calculation of collision operator';
+            case 'eecoll_dke_yp',expert = 0;info = 'Distributed calculation of electron collision integrals';
+            case 'wave_solver_yp',expert = 0;info = 'Distributed calculation of RF antennas';
+            case 'rfdiff_dke_jd',expert = 0;info = 'Distributed calculation of quasilinear operator';
+            otherwise,
+        end
+        %
+    case 'coll_dke_jd',
+        %
+        switch field 
+            case 'scheduler',expert = 0;info = 'Scheduler parameters for distributed calculation';
+            otherwise,
+        end
+		%
+    case 'eecoll_dke_yp',
+        %
+        switch field 
+            case 'scheduler',expert = 0;info = 'Scheduler parameters for distributed calculation';
+            otherwise,
+        end
+		%
+    case 'wave_solver_yp',
+        %
+        switch field 
+            case 'scheduler',expert = 0;info = 'Scheduler parameters for distributed calculation';
+            otherwise,
+        end
+		%
+    case 'rfdiff_dke_jd',
+        %
+        switch field 
+            case 'scheduler',expert = 0;info = 'Scheduler parameters for distributed calculation';
+            otherwise,
+        end
+		%
+    case 'scheduler',
         %
         switch field 
             case 'mode',expert = 0;values = 0:2;info = 'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)';
