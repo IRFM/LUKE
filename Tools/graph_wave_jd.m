@@ -677,10 +677,10 @@ tit = '';
 for iy = 1:ny,
     %
     if opt.luke,
-        mask_max = 1:rays{iy}.is_abs_max;
+        mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
     	mask_abs = rays{iy}.mask_abs;
     else
-        mask_max = 1:rays{iy}.is_abs_max_lin;
+        mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
     	mask_abs = rays{iy}.mask_abs_lin;
     end
     %
