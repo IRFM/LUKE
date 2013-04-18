@@ -354,6 +354,8 @@ end
 %
 dkeparam_in = rmfield(dkeparam_in,'tn');%tn is specified in iteration loop
 %
+byPnonabs = NaN;% leftover power in each wave
+%
 if opt.backup >= 0;% start simulation from beginning
     %
     dkeparam = dkeparam_in;
@@ -455,8 +457,6 @@ else% reload mode
         itnmin = itnmax + 1;%no iteration
     end
 end
-%
-byPnonabs = NaN;% leftover power in each wave
 %
 for itn = itnmin:itnmax,%time evolution
     %
