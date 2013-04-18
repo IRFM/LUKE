@@ -184,6 +184,12 @@ for ishot = 1:nshots
     %
     lukestructs{ishot} = lukestruct;
     %
+    if isfield(opt,'saveinputs') && opt.saveinputs == 1,
+        %
+        saveinputs_jd(lukestruct);
+        %
+    end
+    %
 end
 %
 % Run LUKE
@@ -194,11 +200,15 @@ lukestructs = run_lukert(lukestructs,dkepath);
 %
 % Save results if needed
 %
-savestr = [basestr,'_',shotnum];
-%
-if ~isempty(locid_simul),
-    savestr = [savestr,'_',locid_simul];
+if ~isfield(opt,'save') || opt.save == 0,
+    %
+    savestr = [basestr,'_',shotnum];
+    %
+    if ~isempty(locid_simul),
+        savestr = [savestr,'_',locid_simul];
+    end
+    %
+    save_batch_jd(lukestructs,dkepath,savestr)
+    %
 end
-%
-save_batch_jd(lukestructs,dkepath,savestr)
 %
