@@ -332,18 +332,22 @@ end
 %
 if ir_display >= 0,
     %
-    if ir_display == 0,
-        diaryname = ['res_',simul_id,'.log'];
+    if isfield(opt,'diaryname') && ischar(opt.diaryname),
+        diaryname = opt.diaryname;
     else
-        tir_display = num2str(ir_display);
-        diaryname = ['res_',simul_id,'_irho_',tir_display,'.log'];
+        if ir_display == 0,
+            diaryname = ['res_',simul_id,'.log'];
+        else
+            tir_display = num2str(ir_display);
+            diaryname = ['res_',simul_id,'_irho_',tir_display,'.log'];
+        end
+        %
+        if exist(diaryname,'file') && gettime_jd(diaryname) > datenum(timeid_jd(dke_out.simul.timeid),'mm/dd/yyyy HH:MM:SS'),
+            diaryname = '';
+        end
+        %
+        diaryname = input_dke_yp('Provide a name for the log file? (return empty string if no log file)',diaryname);
     end
-    %
-    if exist(diaryname,'file') && gettime_jd(diaryname) > datenum(timeid_jd(dke_out.simul.timeid),'mm/dd/yyyy HH:MM:SS'),
-        diaryname = '';
-    end
-    %
-    diaryname = input_dke_yp('Provide a name for the log file? (return empty string if no log file)',diaryname);
     %
     if ~isempty(diaryname),
         if exist(diaryname,'file'),
@@ -417,9 +421,9 @@ if timevol == 1,
     %
     nit = length(FPtime);
     %
-    tJ_tot = reshape([Zcurr.x_0_fsav],[nr,nit])*mksa.j_ref*scocurr;
-    tP_rf = [ZP0.x_rf_fsav]*mksa.P_ref;
-    tP_e = reshape([ZP0.x_e_fsav],[nr,nit])*mksa.P_ref;
+    tJ_tot = reshape([Zcurr(end-nit+1:end).x_0_fsav],[nr,nit])*mksa.j_ref*scocurr;
+    tP_rf = [ZP0(end-nit+1:end).x_rf_fsav]*mksa.P_ref;
+    tP_e = reshape([ZP0(end-nit+1:end).x_e_fsav],[nr,nit])*mksa.P_ref;
     tP_tot = tP_rf + tP_e;
     tI_tot = sum(tJ_tot.*repmat(equilDKE.xdA_dke.',[1,nit]));
     %
