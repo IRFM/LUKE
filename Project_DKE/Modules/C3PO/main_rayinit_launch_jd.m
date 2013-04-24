@@ -433,7 +433,7 @@ elseif strcmp(launch.type,'LH'),
                 if ~isinf(tail.dtn),% fluctuating spectrum model
                     %
                     if length(btNpar0_tail{ib}) > 1,
-                        tNpar0_tail = randreject_yp(@fcalc_tail_yp,{btNpar0_tail{ib},btdNpar0_tail{ib},btP0_2piRp_tail{ib},bP0_2piRp(ib),[btNpar0_tail{ib}(1)-2*btdNpar0_tail{ib}(1),btNpar0_tail{ib}(end)+btdNpar0_tail{ib}(1)]},1,0);
+                        tNpar0_tail = randreject_yp(@fcalc_tail_yp,{btNpar0_tail{ib},btdNpar0_tail{ib},btP0_2piRp_tail{ib},bP0_2piRp(ib),[btNpar0_tail{ib}(1)-2*btdNpar0_tail{ib}(1)*sign(btNpar0_tail{ib}(1)),btNpar0_tail{ib}(end)+2.0*btdNpar0_tail{ib}(1)*sign(btNpar0_tail{ib}(end))]},1,0);
                     else
                         tNpar0_tail = randg_yp(1,bNpar0(ib),bdNpar0(ib));%New random npar0 around npar_antenna Gaussian shape)
                         %bNpar0_tail = bNpar0(ib);%npar0 = npar_antenna
