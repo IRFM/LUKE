@@ -34,12 +34,9 @@ y = NaN(N,1);
 %
 if nargin == 4,
     if display_mode,
-        if display_mode < round(N/100),
-            disp(['WARNING: display_mode parameter must exceed be of the order of ',int2str(round(N/100)),' for a correct histogramm.']);
-            display_mode = round(N/100);
-        else
-            disp(['WARNING: not enough trials for drawing a correct histogramm -> display_mode parameter set to zero.']);
-            display_mode = 0;
+        if round(N/display_mode) < 100,
+            disp(['WARNING: reduce the number of bins or increase the number of trials for a correct histogramm -> display_mode parameter set to zero.']);
+            display_mode = 0;            
         end
     end
 end
@@ -83,7 +80,7 @@ if display_mode,
     py_th = feval(fun_handle,args_in(1:length(args_in)-1),[arg_range(1),arg_range(2)],y_th);
     norm_th = trapz(y_th,py_th);
     %
-    if N/display_mode > display_mode,%for good statistics, display_mode is the number of bin for the histogram
+    if round(N/display_mode) >= 100,%for good statistics, display_mode is the number of bin for the histogram
         [h1,y1] = hist(y,display_mode);
         py = h1*display_mode/N/(max(y1) - min(y1));
         norm = trapz(y1,py);
