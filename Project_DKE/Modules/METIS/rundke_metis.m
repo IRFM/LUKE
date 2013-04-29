@@ -1,4 +1,4 @@
-function rundke_metis(path_sources,locid_simul,basestr,shotnum,shotimes,opt,dkepath,wavestructs,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple)
+function rundke_metis(path_sources,locid_simul,basestr,shotnum,shotimes,opt,dkepath,wavestructs,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,metisevol)
 %
 % function running LUKE using METIS output and possibly user-defined
 % parameters
@@ -20,46 +20,59 @@ function rundke_metis(path_sources,locid_simul,basestr,shotnum,shotimes,opt,dkep
 %   - ohm         (optional): user-defined ohm parameters (structure array of size 1 or shotimes)
 %   - transpfaste (optional): user-defined transpfaste parameters (structure array of size 1 or shotimes)
 %   - ripple      (optional): user-defined ripple parameters (structure array of size 1 or shotimes)
+%   - metisevol   (optional): time evolution (1) or indepedent times (0)
 %
 % NOTE: the optional structures wavestructs ... ripple do not need to contain all fields. They are concatenated with METIS parameters.
 %
 % by J. Decker (joan.decker@cea.fr) and E. Nilsson (emelie.nilsson@cea.fr)
 %
-maxnargin = 14;
+maxnargin = 15;
 %
-if nargin < maxnargin || (~isstruct(ripple) && any(isnan(ripple))),
+if nargin < maxnargin,
+    metisevol = 0;
+end
+if nargin < maxnargin-1 || (~isstruct(ripple) && any(isnan(ripple))),
     ripple = struct;
 end
-if nargin < maxnargin-1 || (~isstruct(transpfaste) && any(isnan(transpfaste))),
+if nargin < maxnargin-2 || (~isstruct(transpfaste) && any(isnan(transpfaste))),
     transpfaste = struct;
 end
-if nargin < maxnargin-2 || (~isstruct(ohm) && any(isnan(ohm))),
+if nargin < maxnargin-3 || (~isstruct(ohm) && any(isnan(ohm))),
     ohm = struct;
     %ohm='';
 end
-if nargin < maxnargin-3 || (~isstruct(dkedisplay) && any(isnan(dkedisplay))),
+if nargin < maxnargin-4 || (~isstruct(dkedisplay) && any(isnan(dkedisplay))),
     dkedisplay = struct;
 end
-if nargin < maxnargin-4 || (~isstruct(dkeparam) && any(isnan(dkeparam))),
+if nargin < maxnargin-5 || (~isstruct(dkeparam) && any(isnan(dkeparam))),
     dkeparam = struct;
 end
-if nargin < maxnargin-5 || (~isstruct(equil) && any(isnan(equil))),
+if nargin < maxnargin-6 || (~isstruct(equil) && any(isnan(equil))),
     equil = struct;
 end
-if nargin < maxnargin-6 || (~iscell(wavestructs) && ~isstruct(wavestructs) && any(isnan(wavestructs))),
+if nargin < maxnargin-7 || (~iscell(wavestructs) && ~isstruct(wavestructs) && any(isnan(wavestructs))),
     wavestructs = struct;
 end
-if nargin < maxnargin-7 || (~isstruct(dkepath) && any(isnan(dkepath))),
+if nargin < maxnargin-8 || (~isstruct(dkepath) && any(isnan(dkepath))),
     dkepath = load_structures_yp('dkepath','','');
 end
-if nargin < maxnargin-8 || (~isstruct(opt) && any(isnan(dkepath))),
+if nargin < maxnargin-9 || (~isstruct(opt) && any(isnan(opt))),
     opt = struct;
 end
-if nargin < maxnargin-9,
+if nargin < maxnargin-10,
     shotimes = {};% all shot times
 end
-if nargin < maxnargin-10,
+if nargin < maxnargin-11,
     error('shot number must be specified');
+end
+%
+if metisevol == 0,
+    dkepath.remtimout = 0;% do not return results, as it could be too heavy in terms of memory
+else    
+    dkepath.remtimout = Inf;% return result needed for next step
+    opt.save = 1;% save each time step for later processing
+    opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
+    dkeparam.tn_mode = 1;% time given in seconds
 end
 %
 % select source files associated with the current shot
@@ -182,6 +195,10 @@ for ishot = 1:nshots
     lukestruct.simul.id = ['METIS_',make_luke_simulid_jd(lukestruct.equil,lukestruct.ohm,lukestruct.transpfaste,lukestruct.ripple,...
         '',lukestruct.wavestructs,locid_simul)];
     %
+    if ~isfield(dkepath,'remnum') || dkepath.remnum == 0,
+        lukestruct.simul.path = path_sources;
+    end
+    %
     lukestructs{ishot} = lukestruct;
     %
     if isfield(opt,'saveinputs') && opt.saveinputs == 1,
@@ -194,9 +211,33 @@ end
 %
 % Run LUKE
 %
-dkepath.remtimout = 0;% do not return results, as it could be too heavy in terms of memory
-%
-lukestructs = run_lukert(lukestructs,dkepath);
+if metisevol == 0,
+    %
+    lukestructs = run_lukert(lukestructs,dkepath);
+    %
+else
+    %
+    if metisevol == 1,% start from t = -inf
+        lukestructs{1}.dkeparam.tn = NaN;% asymptotic first time calculation
+    else % start from t = 0
+        lukestructs{1}.dkeparam.tn = str2double(shotimes{1});% asymptotic first time calculation
+    end
+    %
+    lukestruct = run_lukert(lukestructs{1},dkepath);
+    %
+    if ~isfield(lukestruct.dkeparam,'Te_ref') || ~isfield(lukestruct.dkeparam,'ne_ref'),% reference from first time
+        lukestruct.dkeparam.Te_ref = lukestruct.output.mksa.Te_ref;
+        lukestruct.dkeparam.ne_ref = lukestruct.output.mksa.ne_ref;
+    end
+    %
+    for ishot = 2:nshots,
+        lukestructs{ishot}.XXf0 = lukestruct.output.dke_out.Zf0_interp(end);% start from previous distribution
+        lukestructs{ishot}.dkeparam.rho_S = lukestruct.output.radialDKE.xrho_S_dke;% use same radial grid
+        lukestructs{ishot}.dkeparam.tn = str2double(shotimes{ishot}) - str2double(shotimes{ishot-1});% time in seconds
+        %
+        lukestruct = run_lukert(lukestructs{ishot},dkepath);
+    end
+end
 %
 % Save results if needed
 %
