@@ -94,8 +94,8 @@ dkepath.YP105119(1).luke_root = ['/home/sccp/gsem/peysson/',luke_ref,'/'];
 dkepath.YP105119(1).local_root = '/home/sccp/gsem/decker/Packages/nunki/';
 dkepath.YP105119(1).temppathroot = '/home/sccp/gsem/peysson/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.YP105119(1).mex710 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB710/'];
-dkepath.YP105119(1).mex712 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB712/'];
+dkepath.YP105119(1).mex710 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB710/'];
+dkepath.YP105119(1).mex712 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB712/'];
 %
 dkepath.YP105119(1).compiler_opt.copts = '';
 dkepath.YP105119(1).compiler_opt.fopts = 'FC=''gfortran''';
@@ -103,8 +103,8 @@ dkepath.YP105119(1).compiler_opt.helmex = NaN;%['-L',dkepath.JD211098(1).local_r
 %
 %Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.YP105119(1).MUMPS.mex710 = [dkepath.YP105119(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).MUMPS.mex712 = [dkepath.YP105119(1).local_root,'MUMPS_4.10.0/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).MUMPS.mex710 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).MUMPS.mex712 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %--------------------------- Remote computing -----------------------------
 %
