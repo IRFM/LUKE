@@ -8,7 +8,10 @@ function [mksa] = mksacoefbuilder_dke_yp(dkeparam,display,equilDKE,radialDKE)
 %
 %Reference plasma parameters (for the normalization: pth_ref, nhuth_ref)
 %
-if length(radialDKE.r_dke) > 1 | dkeparam.ref_mode == 0,
+if isfield(dkeparam,'Te_ref') && isfield(dkeparam,'ne_ref'),
+    Te_ref = dkeparam.Te_ref;%Reference temperature
+    ne_ref = dkeparam.ne_ref;%Reference density
+elseif length(radialDKE.r_dke) > 1 || dkeparam.ref_mode == 0,
     Te_ref = max(equilDKE.xTe);%Core temperature
     ne_ref = max(equilDKE.xne);%Core density
     if display.display_mode >= 1
