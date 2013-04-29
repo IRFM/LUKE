@@ -335,6 +335,17 @@ end
 %
 mksa = buildlukestruct_yp('mksa',equil,dkeparam_in,dkedisplay_in);
 %
+if isfield(dkeparam_in,'tn_mode') && dkeparam_in.tn_mode == 1,%time given in seconds
+    %
+    if ~isscalar(dkeparam_in.tn) || (~isnan(dkeparam_in.tn) && imag(dkeparam_in.tn) == 0),%real tn specified,
+        dkeparam_in.tn = mksa.nhu_ref*dkeparam_in.tn;% time normalized to collision time
+    end
+    if ~isscalar(dkeparam_in.dtn) || (~isnan(dkeparam_in.dtn) && imag(dkeparam_in.dtn) == 0),%real dtn specified,
+        dkeparam_in.dtn = mksa.nhu_ref*dkeparam_in.dtn;% time normalized to collision time
+    end
+    %
+end
+%
 % TODO : use dtns_fluct to flag fluctuation phase renewal
 %
 [dtnmin_fluct,dtns_fluct] = calc_dtn_fluct_jd(equil.fluct,wavestructs,mksa);% minimum and list of fluctuation times for all fluctuations scenarios
@@ -554,25 +565,29 @@ for itn = itnmin:itnmax,%time evolution
                 % calculate power injected at t=0 et t=tin
                 %
                 if isfield(wavestructs{ifluct,iw}.launch,'bPlhtot'),
-                    Ptot_0 = Ptot_0 + sum(wavestructs{ifluct,iw}.launch.bPlhtot_in)/1e6;%LH injected power at t=0
-                    Ptot_inj = Ptot_inj + sum(wavestructs{ifluct,iw}.launch.bPlhtot)/1e6;%LH injected power at t=itn
-                    ny = length(wavestructs{ifluct,iw}.launch.bPlhtot);
+                    yPtot_0 = wavestructs{ifluct,iw}.launch.bPlhtot_in;%LH injected power at t=0
+                    yPtot_inj = wavestructs{ifluct,iw}.launch.bPlhtot;%LH injected power at t=itn
                 elseif isfield(wavestructs{ifluct,iw}.launch,'yP_L'),
-                    Ptot_0 = Ptot_0 + sum(wavestructs{ifluct,iw}.launch.yP_L)/1e6;%EC injected power at t=0
-                    Ptot_inj = Ptot_inj + sum(wavestructs{ifluct,iw}.launch.yP_L)/1e6;%EC injected power at t=itn
-                    ny = length(wavestructs{ifluct,iw}.launch.yP_L);
+                    yPtot_0 = wavestructs{ifluct,iw}.launch.yP_L;%EC injected power at t=0
+                    yPtot_inj = wavestructs{ifluct,iw}.launch.yP_L;%EC injected power at t=itn
                 end
+                %
+                Ptot_0 = Ptot_0 + sum(yPtot_0)/1e6;%LH injected power at t=0
+                Ptot_inj = Ptot_inj + sum(yPtot_inj)/1e6;%LH injected power at t=itn
+                ny = length(yPtot_0);
                 %
                 % calculate ql power not absorbed at t=tn
                 %
-                byPnonabs{ifluct,iw} = zeros(1,ny);
+                byPnonabs{ifluct,iw} = yPtot_inj;
                 for iy = 1:ny,
                     for iray = 1:length(byisel{ifluct,iw}{iy}),
-                        Pnonabs_loc = 2*pi*equil.Rp*dke_out.zP_0_2piRp_mod{end}{byisel{ifluct,iw}{iy}(iray)}(end);
-                        byPnonabs{ifluct,iw}(iy) = byPnonabs{ifluct,iw}(iy) + Pnonabs_loc;
-                        Pnonabs = Pnonabs + Pnonabs_loc/1e6;
+                        Pabs_loc = 2*pi*equil.Rp*( dke_out.yP0_2piRp(byisel{ifluct,iw}{iy}(iray)) - dke_out.zP_0_2piRp_mod{end}{byisel{ifluct,iw}{iy}(iray)}(end));
+                        byPnonabs{ifluct,iw}(iy) = byPnonabs{ifluct,iw}(iy) - Pabs_loc;
                     end
                 end
+                %
+                Pnonabs = Pnonabs + sum(byPnonabs{ifluct,iw})/1e6;
+                %
             end
         end
         %
