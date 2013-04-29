@@ -50,11 +50,11 @@ else
 end
 %
 for ir = 1:nr,	
+    %
+    fM = maxwellian_dke_yp(gamma(:),pn2(:),dpn(:),xne_norm,xTe_norm,ir);%Maxwellian distribution normalized to normalized density ne_norm (1st order gamma corrections)
+    XfM = fM*ones(1,nmhu);
+    %
 	if dkeparam.initguess_f == 0 && isempty(XXf0_in),
-		fM = exp(-pn.*pn./(1 + gamma)/xTe_norm(ir))/2/pi/xTe_norm(ir)/sqrt(2*pi*xTe_norm(ir));%Maxwellian distribution normalized to normalized density ne_norm (1st order gamma corrections)
-		XfM = fM'*ones(1,nmhu);
-		normfM = 2*pi*integral_dke_jd(dpn(:),pn(:).*pn(:).*integral_dke_jd(dmhu,XfM,2),1);
-		XfM = xne_norm(ir)*XfM/normfM;
 		Xf0 = XfM;
 		title_initguess = 'Relativistic Maxwellian';        
 	elseif dkeparam.initguess_f == 1 && isempty(XXf0_in),
@@ -93,6 +93,9 @@ for ir = 1:nr,
 		title_initguess = 'V. Fuchs et al., Phys. Fluids, 28 (1985) 3619';
     else
         if isstruct(XXf0_in),
+            if ~comp_struct_jd(mksa,XXf0_in.mksa,0),
+                error('initial distribution cannot be used with a different normalization. Use dkeparam.Te_ref and dkeparam.ne_ref, or use loadstructs')
+            end
             if size(XXf0_in.XXf0_leg,2) == nmhu,
                 Xf0 = XXf0_in.XXf0_leg(:,:,ir);
                 title_initguess = 'Initial distribution from input arguments';
@@ -100,6 +103,21 @@ for ir = 1:nr,
                 Xf0 = interpleg_yp(XXf0_in.XXf0_leg(:,:,ir),mhu);%interpolate using Legendre polynomials
                 title_initguess = 'Initial distribution interpolated from input arguments';
             end
+            %
+            if isfield(dkeparam,'ne_ref'),
+                %
+                % density variations between time steps are accounted for by adding or substracting a maxwellian component
+                %
+                normf0 = 2*pi*integral_dke_jd(dpn(:),pn2(:).*integral_dke_jd(dmhu,Xf0,2),1);
+                Xf0 = Xf0 + (1 - normf0/xne_norm(ir))*XfM;
+                %
+                % avoiding negative values for the distribution
+                %
+                Xf0(Xf0 < 0) = 0;
+                normf0 = 2*pi*integral_dke_jd(dpn(:),pn2(:).*integral_dke_jd(dmhu,Xf0,2),1);
+                Xf0 = Xf0*xne_norm(ir)/normf0;
+            end
+            %
         else
             if size(XXf0_in,2) == nmhu,
                 Xf0 = XXf0_in(:,:,ir);
