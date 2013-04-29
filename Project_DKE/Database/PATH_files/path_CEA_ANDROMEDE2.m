@@ -26,3 +26,4 @@ dkepath.machine = 'andromede2';
 %
 dkepath.JD211098(1).remote(1).host = 'andromede1.intra.cea.fr';% empty for local host
 %
+dkepath.YP105119(1).remote(1).host = 'andromede1.intra.cea.fr';% empty for local host
