@@ -843,6 +843,9 @@ if nr > 1,
     data_proc.radial.xrhoP = xrhoP;
     data_proc.radial.xrhoT = xrhoT;
     data_proc.radial.xrhoV = xrhoV;
+    data_proc.radial.xdA_dke = equilDKE.xdA_dke;
+    data_proc.radial.xdV_2piRp_dke = equilDKE.xdV_2piRp_dke;
+    data_proc.radial.xepsi = dke_out.xepsi;
     data_proc.radial.J_tot = J_tot;
     data_proc.radial.P_tot = P_tot;
     data_proc.radial.eta = eta;
