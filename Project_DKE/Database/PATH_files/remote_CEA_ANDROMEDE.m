@@ -21,7 +21,9 @@ remote.pbs.joan.matver.mat710.root = '/Applications/Matlab_2010A/bin/';
 remote.pbs.joan.matver.mat710.prefdir = '/home/sccp/gsem/decker/.matlab/R2010a';
 remote.pbs.joan.matver.mat712.root = '/Applications/Matlab_2011A/bin/';
 remote.pbs.joan.matver.mat712.prefdir = '/home/sccp/gsem/decker/.matlab/R2011a';
-remote.pbs.joan.matver.matdef = remote.pbs.joan.matver.mat710;%default matlab on remote machine
+remote.pbs.joan.matver.mat800.root = '/Applications/Matlab_2012B/bin/';
+remote.pbs.joan.matver.mat800.prefdir = '/home/sccp/gsem/decker/.matlab/R2012b';
+remote.pbs.joan.matver.matdef = remote.pbs.joan.matver.mat800;%default matlab on remote machine
 remote.pbs.joan.luke_root = '/home/sccp/gsem/decker/LUKE_1_10/';
 remote.pbs.joan.users.remoteuser = 'JD211098';
 %

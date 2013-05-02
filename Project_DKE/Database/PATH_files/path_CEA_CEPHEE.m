@@ -112,6 +112,7 @@ dkepath.JD211098(1).temppathroot = '/local/';%'/scratch/';%Absolute root directo
 dkepath.JD211098(1).mex705 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB75/'];
 dkepath.JD211098(1).mex710 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB710/'];
 dkepath.JD211098(1).mex712 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB712/'];
+dkepath.JD211098(1).mex800 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB800/'];
 %
 dkepath.JD211098(1).compiler_opt.copts.mex705 = '-f /home/sccp/gsem/decker/Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh';
 dkepath.JD211098(1).compiler_opt.fopts.mex705 = ['-f /home/sccp/gsem/decker/Packages/cephee/MUMPS_4.7.3_S_g95/MATLAB75/gccopts.sh FC=''',dkepath.JD211098(1).local_root,'bin/cephee/g95'' FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132'''];
@@ -125,11 +126,20 @@ dkepath.JD211098(1).compiler_opt.copts.mex712 = '';
 dkepath.JD211098(1).compiler_opt.fopts.mex712 = 'FC=''ifort''';
 dkepath.JD211098(1).compiler_opt.helmex.mex712 = ['-L',dkepath.JD211098(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
+dkepath.JD211098(1).compiler_opt.copts.mex800 = '';
+dkepath.JD211098(1).compiler_opt.fopts.mex800 = 'FC=''ifort''';
+%dkepath.JD211098(1).compiler_opt.helmex.mex800 = ['-L',dkepath.JD211098(1).local_root,'lapack-3.4.2/ -llapack -lrefblas'];% Optional argument for helmex compilation
+%dkepath.JD211098(1).compiler_opt.helmex.mex800 = ['-L',dkepath.JD211098(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.JD211098(1).compiler_opt.helmex.mex800 = NaN;% Optional argument for helmex compilation
+%
 %Where MUMPS matrix solver is stored (MEX function)
 dkepath.JD211098(1).MUMPS.mex705 = [dkepath.JD211098(1).local_root,'MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.JD211098(1).MUMPS.mex710 = [dkepath.JD211098(1).local_root,'MUMPS_4.9.2_S_ifort/MATLAB710'];%MUMPS_4.9.2 not compatible with matlab 7.5
 %dkepath.JD211098(1).MUMPS.mex710 = [dkepath.JD211098(1).local_root,'MUMPS_4.9.2_S_g95/MATLAB710'];%alternative option
-dkepath.JD211098(1).MUMPS.mex712 = [dkepath.JD211098(1).local_root,'MUMPS_4.9.2_S_ifort/MATLAB712'];%MUMPS_4.9.2 not compatible with matlab 7.5
+%dkepath.JD211098(1).MUMPS.mex710 = [dkepath.JD211098(1).local_root,'MUMPS_4.9.2_S_ifort/MATLAB710'];%MUMPS_4.9.2 not compatible with matlab 7.5
+dkepath.JD211098(1).MUMPS.mex710 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB710'];%MUMPS_4.9.2 not compatible with matlab 7.5
+%dkepath.JD211098(1).MUMPS.mex712 = [dkepath.JD211098(1).local_root,'MUMPS_4.9.2_S_ifort/MATLAB712'];%MUMPS_4.9.2 not compatible with matlab 7.5
+dkepath.JD211098(1).MUMPS.mex712 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB712'];%MUMPS_4.9.2 not compatible with matlab 7.5
+dkepath.JD211098(1).MUMPS.mex800 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB800'];%MUMPS_4.9.2 not compatible with matlab 7.5
 %
 %--------------------------- Distributed computing -----------------------------
 %

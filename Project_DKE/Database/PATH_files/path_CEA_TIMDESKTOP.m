@@ -34,18 +34,24 @@ dkepath.default = 'joan';
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
 %
 dkepath.joan(1).luke_root = ['/home/sccp/gsem/decker/',luke_ref,'/'];
-dkepath.joan(1).local_root = '/home/joan/';
+dkepath.joan(1).local_root = '/home/sccp/gsem/decker/Packages/cadts-0412/';
 dkepath.joan(1).temppathroot = '/home/joan/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.joan(1).mex77 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/timdesktop/MATLAB77'];
 dkepath.joan(1).mex710 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/timdesktop/MATLAB710']; 
+dkepath.joan(1).mex800 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/timdesktop/MATLAB800']; 
 %
 dkepath.joan(1).compiler_opt.copts = '';
-dkepath.joan(1).compiler_opt.fopts = 'FC=''ifort''';
-dkepath.joan(1).compiler_opt.helmex = NaN;% Optional argument for helmex compilation
+dkepath.joan(1).compiler_opt.fopts.mex77 = 'FC=''ifort''';
+dkepath.joan(1).compiler_opt.fopts.mex710 = '';
+dkepath.joan(1).compiler_opt.fopts.mex800 = '';
+dkepath.joan(1).compiler_opt.helmex.mex77 = NaN;% Optional argument for helmex compilation
+dkepath.joan(1).compiler_opt.helmex.mex710 = NaN;% Optional argument for helmex compilation
+dkepath.joan(1).compiler_opt.helmex.mex800 = ['-L',dkepath.joan(1).local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.JD211098(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
-dkepath.joan(1).MUMPS.mex77 = [dkepath.joan(1).local_root,'MUMPS_4.9.2/MATLAB77'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.joan(1).MUMPS.mex710 = [dkepath.joan(1).local_root,'MUMPS_4.9.2/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.joan(1).MUMPS.mex77 = '/home/joan/MUMPS_4.9.2/MATLAB77';%Where MUMPS matrix solver is stored (MEX function)
+dkepath.joan(1).MUMPS.mex710 = [dkepath.joan(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.joan(1).MUMPS.mex800 = [dkepath.joan(1).local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %--------------------------- Remote computing -----------------------------
 %
