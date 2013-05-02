@@ -1,5 +1,5 @@
 function [lukeversion,matlabversion,matlabrelease] = LUKEversion_jd
-%LUKE - This function specifies the tag of the current LUKE version and the corrsonding supported MatLab version
+%LUKE - This function specifies the tag of the current LUKE version and the corresponding supported MatLab version
 %
 % This function specifies the tag of the current LUKE version and the
 % corresponding supported MatLab version and release
@@ -18,20 +18,8 @@ function [lukeversion,matlabversion,matlabrelease] = LUKEversion_jd
 %
 lukeversion = 'LUKE 1.10.0';
 %
-ver = version;
+[matlabversion,matlabrelease] = matversion_yp;
 %
-[iver] = strfind(ver,'.');
-if iver(2)-iver(1) == 2,
-	mver = [ver(1:iver(1)-1),'0',ver(iver(1)+1:iver(2)-1)];
-else
-	mver = [ver(1:iver(1)-1),ver(iver(1)+1:iver(2)-1)];
-end
-%
-matlabversion = mver;
-%
-[iver] = strfind(ver,'(');
-matlabrelease = [ver(iver(1)+1:iver(1)+6)];
-%
-if str2double(ver) < 705;
+if str2double(matlabversion) < 705;
 	error('Version of MatLab prior to R2007B (7.5) are no longer supported');
 end
