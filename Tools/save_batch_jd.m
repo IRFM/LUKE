@@ -3,7 +3,7 @@ function save_batch_jd(lukestructs,dkepath,savestr,savepath)
 % This function saves the results from run_lukert in a file for laterprocessing
 %
 if nargin < 4,
-    savepath = './';
+    savepath = '.';
 end
 if nargin < 3,
     savestr = '';
