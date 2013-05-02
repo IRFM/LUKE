@@ -330,7 +330,7 @@ elseif strcmp(launch.type,'LH'),
             bNpar0(ib) = imag(bNpar0(ib));% nz
             %
         else
-            Ny(ib) = NaN;
+            bNy(ib) = NaN;
         end
     end
     %

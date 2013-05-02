@@ -438,7 +438,7 @@ else% reload mode
     end
     %
     if  tn < tn_in,
-        if opt_save_in == -1,
+        if opt.backup == -1,
             overwrite_tn = input_dke_yp(['Do you want to overwrite the total simulation time from ',int2str(tn),' to ',int2str(tn_in),' (y/n) ?'],'n',{'y','n'});
         else
             overwrite_tn = 'y';
@@ -733,15 +733,15 @@ output.Znorm = Znorm;
 output.Zcurr = Zcurr;
 output.ZP0 = ZP0;
 output.dke_out = dke_out;
-output.radialDKE = radialDKE;
-output.equilDKE = equilDKE;
-output.momentumDKE = momentumDKE;
-output.gridDKE = gridDKE;
-output.Zmomcoef = Zmomcoef;
-output.Zbouncecoef = Zbouncecoef;
-output.Zmripple = Zmripple;
-output.mksa = mksa;
-output.XXsinksource = XXsinksource;
+output.radialDKE = loadstructs.radialgrid_dke_jd.radialDKE;
+output.equilDKE = loadstructs.equilibrium_jd.equilDKE;
+output.momentumDKE = loadstructs.momentumgrid_dke_jd.momentumDKE;
+output.gridDKE = loadstructs.matrix3Dgridbuilder_dke_yp.gridDKE;
+output.Zmomcoef = loadstructs.momentumcoefbuilder_dke_yp.Zmomcoef;
+output.Zbouncecoef = loadstructs.bouncecoefbuilder_dke_yp.Zbouncecoef;
+output.Zmripple = loadstructs.mripplecoefbuilder_dke_yp.Zmripple;
+output.mksa = loadstructs.mksacoefbuilder_dke_yp.mksa;
+output.XXsinksource = loadstructs.sinksourcecoeffbuilder_dke_yp.XXsinksource;
 %
 lukestructs.output = output;
 %
