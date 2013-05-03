@@ -120,7 +120,7 @@ if iscell(lukestructs),% remote and/or distributed calculation
                 continue
             end
             %
-            [err,lukestructs{ijob}] = matremote_luke_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
+            [err,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
             %
             if ~isempty(err),
                 %

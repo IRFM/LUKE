@@ -44,7 +44,7 @@ for irem = 1:nrem,
         cmdstr = 'unknown';
     end
     %
-    [err,remotelukever,~,remotematrel] = matremote_luke_jd('LUKEversion_jd',{},dkepath.remote(irem));
+    [err,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem));
     %
     if isempty(dkepath.remote(irem).host),
         info_dke_yp(2,['Profile #',num2str(irem),' to host : local with cmd : ',cmdstr])
