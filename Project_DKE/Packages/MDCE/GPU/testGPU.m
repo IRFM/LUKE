@@ -18,10 +18,10 @@ try
         disp(['Max. GPU free memory available :',GPUmem]);
         disp('---------------------------------');
         %
-        nmax_single = round(sqrt(GPUstatus.FreeMemory/8));
-        nmax_double = round(sqrt(GPUstatus.FreeMemory/16));
+        nmax_single = round(sqrt(GPUstatus.FreeMemory/8)/3);%the factor three comes from the number input variable in funGPU.m
+        nmax_double = round(sqrt(GPUstatus.FreeMemory/16)/3);
         %
-        dummy = gather(arrayfun(@funGPU,gpuArray(rand(10))));clear dummy;%Initialisation of Matlab in GPU
+        [dummy,dummy] = arrayfun(@funGPU,gpuArray(rand(5)),gpuArray(rand(5)),gpuArray(rand(5)));clear dummy;%Initialisation of Matlab in GPU
         %
         % Single precision
         %
@@ -31,15 +31,22 @@ try
         etime_GPU = zeros(1,length(nm_single));
         sizeX_single = zeros(1,length(nm_single));
         %
+        a = single(2);
+        b = single(3);
+        %
         for im = 1:length(nm_single),
             %
             X = rand(nm_single(im),'single');
             sizeX = whos('X');
             sizeX_single(im) = sizeX.bytes/1e6;%Mbytes
             %
-            tic,Y = funGPU(X);etime(im) = toc;
+            tic,[Y,Z] = funGPU(X,a,b);etime(im) = toc;
             %
-            tic,Y_GPU = gather(arrayfun(@funGPU,gpuArray(X)));etime_GPU(im) = toc;
+            tic,
+                [Y_GPU,Z_GPU] = arrayfun(@funGPU,gpuArray(X),gpuArray.ones(size(X))*a,gpuArray.ones(size(X))*b);
+                Y = gather(Y_GPU);
+                Z = gather(Z_GPU);
+            etime_GPU(im) = toc;
         end
         %
         gain_GPU_single = etime./etime_GPU;
@@ -52,15 +59,22 @@ try
         etime_GPU = zeros(1,length(nm_double));
         sizeX_double = zeros(1,length(nm_double));
         %
+        a = double(2);
+        b = double(3);
+        %
         for im = 1:length(nm_double),
             %
             X = rand(nm_double(im),'double');
             sizeX = whos('X');
             sizeX_double(im) = sizeX.bytes/1e6;%Mbytes
             %
-            tic,Y = funGPU(X);etime(im) = toc;
+            tic,[Y] = funGPU(X,a,b);etime(im) = toc;
             %
-            tic,Y_GPU = gather(arrayfun(@funGPU,gpuArray(X)));etime_GPU(im) = toc;
+            tic,
+                [Y_GPU,Z_GPU]= arrayfun(@funGPU,gpuArray(X),gpuArray.ones(size(X))*a,gpuArray.ones(size(X))*b);
+                Y = gather(Y_GPU);
+                Z = gather(Z_GPU);
+            etime_GPU(im) = toc;
         end
         %
         gain_GPU_double = etime./etime_GPU;
