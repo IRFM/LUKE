@@ -55,6 +55,7 @@ remotedirtest_jd(remotehost,remotelogname,[remotehome,filesep,'remotebatchtest/m
 remotefilecopy_jd(remotehost,remotelogname,which('matlabbatch.sh'),[remotehome,filesep,'remotebatchtest/bin/'])
 remotefilecopy_jd(remotehost,remotelogname,'remotetest.m',[remotehome,filesep,'remotebatchtest/mat/'])
 remotefilecopy_jd(remotehost,remotelogname,which('remotematrun.m'),[remotehome,filesep,'remotebatchtest/mat/'])
+remotefilecopy_jd(remotehost,remotelogname,which('runmat.m'),[remotehome,filesep,'remotebatchtest/mat/'])
 %
 disp('-------------------------------------------------------')
 disp('-------------------- setting done ---------------------')
