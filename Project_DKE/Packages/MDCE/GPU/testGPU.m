@@ -184,8 +184,8 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
         %
         if gpu_mode == 2,
             figure('Name','Random matrix size'),
-            graph1D_jd(nm_single,gain_single_GPU,0,0,'Random matrix size: (n*n)','GPU Speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
-            graph1D_jd(nm_single,gain_single_arrayfun_GPU,0,0,'Random matrix size: (n*n)','GPU Speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
+            graph1D_jd(nm_single,gain_single_GPU,0,0,'Random matrix size: (n*n)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
+            graph1D_jd(nm_single,gain_single_arrayfun_GPU,0,0,'Random matrix size: (n*n)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
             graph1D_jd(nm_double,gain_double_GPU,0,0,'','','','Double',NaN,NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);hold on
             graph1D_jd(nm_double,gain_double_arrayfun_GPU,0,0,'','','','Double',NaN,NaN,'--','none','b',2,20,gca,0.9,0.7,0.7);hold on
             legend(['Single              ';'Single with Arrayfun';'Double              ';'Double with Arrayfun']);
@@ -193,8 +193,8 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             print_jd(p_opt,'fig_GPU_MatrixSize','./figures',1)
             %
             figure('Name','Random matrix memory size')
-            graph1D_jd(sizeX_single,gain_single_GPU,0,0,'Random matrix (MBytes)','GPU Speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
-            graph1D_jd(sizeX_single,gain_single_arrayfun_GPU,0,0,'Random matrix (MBytes)','GPU Speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
+            graph1D_jd(sizeX_single,gain_single_GPU,0,0,'Random matrix (MBytes)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
+            graph1D_jd(sizeX_single,gain_single_arrayfun_GPU,0,0,'Random matrix (MBytes)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
             graph1D_jd(sizeX_double,gain_double_GPU,0,0,'','','','Double',NaN,NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);hold on
             graph1D_jd(sizeX_double,gain_double_arrayfun_GPU,0,0,'','','','Double',NaN,NaN,'--','none','b',2,20,gca,0.9,0.7,0.7);hold on
             legend(['Single              ';'Single with Arrayfun';'Double              ';'Double with Arrayfun']);
@@ -202,8 +202,8 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             print_jd(p_opt,'fig_GPU_MatrixMemorySize','./figures',1)
         else
             figure('Name','Uniform matrix size'),
-            graph1D_jd([1:length(gain_single_GPU)],gain_single_GPU,0,0,'Number of trials','GPU Speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
-            graph1D_jd([1:length(gain_single_arrayfun_GPU)],gain_single_arrayfun_GPU,0,0,'Random matrix size: (n*n)','GPU Speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
+            graph1D_jd([1:length(gain_single_GPU)],gain_single_GPU,0,0,'Number of trials','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
+            graph1D_jd([1:length(gain_single_arrayfun_GPU)],gain_single_arrayfun_GPU,0,0,'Number of trials','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
             graph1D_jd([1:length(gain_double_GPU)],gain_double_GPU,0,0,'','','','Double',NaN,NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);hold on
             graph1D_jd([1:length(gain_double_arrayfun_GPU)],gain_double_arrayfun_GPU,0,0,'','','','Double',NaN,NaN,'--','none','b',2,20,gca,0.9,0.7,0.7);hold on
             legend(['Single              ';'Single with Arrayfun';'Double              ';'Double with Arrayfun']);
