@@ -16,4 +16,4 @@ function [Y,Z] = funGPU(X,a,b)
 % by Yves Peysson <yves.peysson@cea.fr> (CEA-IRFM) and Joan Decker <joan.decker@cea.fr> (CEA-IRFM)
 %	
 Y = a - 3*b + X.*(1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X./9)./8))./7))./6))./5))./4))./3))./2)) + sin(X.^3);
-Z = X.^2;        
+Z = X.^2;
