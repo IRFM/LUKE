@@ -44,7 +44,7 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
         %
         nm_single = [100:100:nmax_single];
         %
-        if gpu_mode == 1,
+        if strcmp(gpu_mode,'1'),
             nm_single = ones(size(nm_single))*round(nmax_single/2);
         end
         %
@@ -57,47 +57,20 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
         %
         for im = 1:length(nm_single),
             %
-            if gpu_mode == 2,
-                X = ones(nm_single(im),'single');   
+            if strcmp(gpu_mode,'2'),
+                X = rand(nm_single(im),'single');   
             end
             %
             sizeX = whos('X');
             sizeX_single(im) = sizeX.bytes/1e6;%Mbytes
             %
-            Y = zeros(size(X));
-            Z = zeros(size(X));
-            %
-            tic,[Y,Z] = funGPU(X,a,b);etime(im) = toc;
-            %
-            Y_GPU = gpuArray.zeros(size(X));
-            Z_GPU = gpuArray.zeros(size(X));
+            tic,[Y,Z] = funGPU(X,a,b);etime_single(im) = toc;
             %
             tic,
             [Y_GPU,Z_GPU] = arrayfun(@funGPU,gpuArray(X),gpuArray.ones(size(X))*a,gpuArray.ones(size(X))*b);%
             Y = gather(Y_GPU);
             Z = gather(Z_GPU);
             etime_single_arrayfun_GPU(im) = toc;
-            %
-        end
-        %
-        reset(gpuDevice(igpu));
-        %
-        for im = 1:length(nm_single),
-            %
-            if gpu_mode == 2,
-                X = ones(nm_single(im),'single');   
-            end
-            %
-            sizeX = whos('X');
-            sizeX_single(im) = sizeX.bytes/1e6;%Mbytes
-            %
-            Y = zeros(size(X));
-            Z = zeros(size(X));
-            %
-            tic,[Y,Z] = funGPU(X,a,b);etime(im) = toc;
-            %
-            Y_GPU = gpuArray.zeros(size(X));
-            Z_GPU = gpuArray.zeros(size(X));
             %
             tic,
             [Y_GPU,Z_GPU] = funGPU(gpuArray(X),a,b);
@@ -107,16 +80,14 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             %
         end
         %
-        gain_single_GPU = etime./etime_single_GPU;
-        gain_single_arrayfun_GPU = etime./etime_single_arrayfun_GPU;
+        gain_single_GPU = etime_single./etime_single_GPU;
+        gain_single_arrayfun_GPU = etime_single./etime_single_arrayfun_GPU;
         %
         % Double precision calculations
         %
-        reset(gpuDevice(igpu));
-        %
         nm_double = [100:100:nmax_double];
         %
-        if gpu_mode == 1,
+        if strcmp(gpu_mode,'1'),
             nm_double = ones(size(nm_double))*round(nmax_double/2);
         end
         %
@@ -129,47 +100,20 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
         %
         for im = 1:length(nm_double),
             %
-            if gpu_mode == 2,
+            if strcmp(gpu_mode,'2'),
                 X = rand(nm_double(im),'double');
             end
             %
             sizeX = whos('X');
             sizeX_double(im) = sizeX.bytes/1e6;%Mbytes
             %
-            Y = zeros(size(X));
-            Z = zeros(size(X));
-            %
-            tic,[Y,Z] = funGPU(X,a,b);etime(im) = toc;
-            %
-            Y_GPU = gpuArray.zeros(size(X));
-            Z_GPU = gpuArray.zeros(size(X));
+            tic,[Y,Z] = funGPU(X,a,b);etime_double(im) = toc;
             %
             tic,
             [Y_GPU,Z_GPU] = arrayfun(@funGPU,gpuArray(X),gpuArray.ones(size(X))*a,gpuArray.ones(size(X))*b);%
             Y = gather(Y_GPU);
             Z = gather(Z_GPU);
             etime_double_arrayfun_GPU(im) = toc; 
-            %
-        end
-        %
-        reset(gpuDevice(igpu));
-        %
-        for im = 1:length(nm_double),
-            %
-            if gpu_mode == 2,
-                X = rand(nm_double(im),'double');
-            end
-            %
-            sizeX = whos('X');
-            sizeX_double(im) = sizeX.bytes/1e6;%Mbytes
-            %
-            Y = zeros(size(X));
-            Z = zeros(size(X));
-            %
-            tic,[Y,Z] = funGPU(X,a,b);etime(im) = toc;
-            %
-            Y_GPU = gpuArray.zeros(size(X));
-            Z_GPU = gpuArray.zeros(size(X));
             %
             tic,
             [Y_GPU,Z_GPU] = funGPU(gpuArray(X),gpuArray(a),gpuArray(b));
@@ -179,10 +123,10 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             %
         end
         %
-        gain_double_GPU = etime./etime_double_GPU;
-        gain_double_arrayfun_GPU = etime./etime_double_arrayfun_GPU;
+        gain_double_GPU = etime_double./etime_double_GPU;
+        gain_double_arrayfun_GPU = etime_double./etime_double_arrayfun_GPU;
         %
-        if gpu_mode == 2,
+        if strcmp(gpu_mode,'2'),
             figure('Name','Random matrix size'),
             graph1D_jd(nm_single,gain_single_GPU,0,0,'Random matrix size: (n*n)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
             graph1D_jd(nm_single,gain_single_arrayfun_GPU,0,0,'Random matrix size: (n*n)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
@@ -209,7 +153,6 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             legend(['Single              ';'Single with Arrayfun';'Double              ';'Double with Arrayfun']);
             %
             print_jd(p_opt,'fig_GPU_MatrixSize','./figures',1)
-
         end
     else
         disp('------------------------------------------------------------');
