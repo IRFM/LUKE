@@ -24,7 +24,10 @@ catch
     error(['No supported GPU device was found on this computer']);
 end
 %
-gpu_mode = input('GPU test mode (1): uniform matrix size, (2): non-uniform matrix size ? ','s');
+gpu_mode = input('GPU test mode (1): repetitive scan (same matrix), (2): progressive scan (matrix size is growing to the max. allowed by the GPU memory) ? ','s');
+matrix_type = input('Matrix type (1): all coefficients are set to 1, (2): random coefficients ? ','s');
+fun_mode = input('Operation type (1): full matrix product, (2): dot-product between coefficients  ? ','s');
+extra_mode = input('Extra inputs (1): none, (2): table of cells, (3): table of cells and structures ? ','s');
 %
 for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
     if flag_GPU && gpuStatus(igpu).DeviceSupported,
@@ -53,31 +56,84 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
         etime_single_arrayfun_GPU = zeros(1,length(nm_single));
         sizeX_single = zeros(1,length(nm_single));
         %
-        X = rand(round(nmax_single),'single');
+        if strcmp(matrix_type,'1'),
+            X = ones(round(nmax_single),'single');
+        else
+            X = rand(round(nmax_single),'single');    
+        end
         %
         for im = 1:length(nm_single),
             %
             if strcmp(gpu_mode,'2'),
-                X = rand(nm_single(im),'single');   
+                if strcmp(matrix_type,'1'),
+                    X = ones(nm_single(im),'single');  
+                else
+                    X = rand(nm_single(im),'single');    
+                end    
             end
             %
             sizeX = whos('X');
             sizeX_single(im) = sizeX.bytes/1e6;%Mbytes
             %
-            tic,[Y,Z] = funGPU(X,a,b);etime_single(im) = toc;
+            if strcmp(fun_mode,'2'),
+                tic,[Y,Z] = funGPU(X,a,b);etime_single(im) = toc;
+            else
+                if strcmp(extra_mode,'1'),
+                    tic,[Y,Z] = funGPU(X,a,b,[]);etime_single(im) = toc;
+                elseif strcmp(extra_mode,'1'),
+                    tic,[Y,Z] = funGPU(X,a,b,c);etime_single(im) = toc;
+                else
+                    tic,[Y,Z] = funGPU(X,a,b,c,d);etime_single(im) = toc;
+                end
+            end
+            %           
+            if strcmp(fun_mode,'2'),
+                tic,[Y_GPU,Z_GPU] = arrayfun(@funGPU,gpuArray(X),gpuArray.ones(size(X))*a,gpuArray.ones(size(X))*b);%
+                Y = gather(Y_GPU);
+                Z = gather(Z_GPU);
+                etime_single_arrayfun_GPU(im) = toc;
+            else
+                if strcmp(extra_mode,'1'),
+                    tic,[Y_GPU,Z_GPU] = arrayfun(@funGPU,gpuArray(X),gpuArray.ones(size(X))*a,gpuArray.ones(size(X))*b);%
+                    Y = gather(Y_GPU);
+                    Z = gather(Z_GPU);
+                    etime_single_arrayfun_GPU(im) = toc;
+                elseif strcmp(extra_mode,'1'),
+                    tic,[Y_GPU,Z_GPU] = arrayfun(@funGPU,gpuArray(X),gpuArray.ones(size(X))*a,gpuArray.ones(size(X))*b);%
+                    Y = gather(Y_GPU);
+                    Z = gather(Z_GPU);
+                    etime_single_arrayfun_GPU(im) = toc;
+                else
+                    tic,[Y_GPU,Z_GPU] = arrayfun(@funGPU,gpuArray(X),gpuArray.ones(size(X))*a,gpuArray.ones(size(X))*b);%
+                    Y = gather(Y_GPU);
+                    Z = gather(Z_GPU);
+                    etime_single_arrayfun_GPU(im) = toc;
+                end
+            end
             %
-            tic,
-            [Y_GPU,Z_GPU] = arrayfun(@funGPU,gpuArray(X),gpuArray.ones(size(X))*a,gpuArray.ones(size(X))*b);%
-            Y = gather(Y_GPU);
-            Z = gather(Z_GPU);
-            etime_single_arrayfun_GPU(im) = toc;
-            %
-            tic,
-            [Y_GPU,Z_GPU] = funGPU(gpuArray(X),a,b);
-            Y = gather(Y_GPU);
-            Z = gather(Z_GPU);
-            etime_single_GPU(im) = toc;    
-            %
+            if strcmp(fun_mode,'2'),
+                tic,[Y_GPU,Z_GPU] = funGPU(gpuArray(X),a,b);
+                Y = gather(Y_GPU);
+                Z = gather(Z_GPU);
+                etime_single_arrayfun_GPU(im) = toc;
+            else
+                if strcmp(extra_mode,'1'),
+                    tic,[Y_GPU,Z_GPU] = funGPU(gpuArray(X),a,b);
+                    Y = gather(Y_GPU);
+                    Z = gather(Z_GPU);
+                    etime_single_arrayfun_GPU(im) = toc;
+                elseif strcmp(extra_mode,'1'),
+                    tic,[Y_GPU,Z_GPU] = funGPU(gpuArray(X),a,b);
+                    Y = gather(Y_GPU);
+                    Z = gather(Z_GPU);
+                    etime_single_arrayfun_GPU(im) = toc;
+                else
+                    tic,[Y_GPU,Z_GPU] = funGPU(gpuArray(X),a,b);
+                    Y = gather(Y_GPU);
+                    Z = gather(Z_GPU);
+                    etime_single_arrayfun_GPU(im) = toc;
+                end
+            end
         end
         %
         gain_single_GPU = etime_single./etime_single_GPU;
@@ -96,12 +152,20 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
         etime_double_arrayfun_GPU = zeros(1,length(nm_double));
         sizeX_double = zeros(1,length(nm_double));
         %
-        X = rand(round(nmax_double),'double');
+        if strcmp(matrix_type,'1'),
+            X = ones(round(nmax_double),'double');
+        else
+            X = rand(round(nmax_double),'double');    
+        end
         %
         for im = 1:length(nm_double),
             %
             if strcmp(gpu_mode,'2'),
-                X = rand(nm_double(im),'double');
+                if strcmp(matrix_type,'1'),
+                    X = ones(nm_double(im),'double');  
+                else
+                    X = rand(nm_double(im),'double');    
+                end 
             end
             %
             sizeX = whos('X');
