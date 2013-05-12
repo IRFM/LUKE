@@ -39,7 +39,7 @@ macbookyves.yves(1).startup{1} = [];
 %
 macbookyves.yves(1).cshrc{1} = [];
 %
-macbookyves.yves(1).mex801 = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB801','/'];
+macbookyves.yves(1).mex810 = [macbookyves.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB801','/'];
 %
 macbookyves.yves(1).compiler_opt.copts = '';
 macbookyves.yves(1).compiler_opt.helmex = NaN;%'  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
@@ -50,11 +50,11 @@ macbookyves.yves(1).compiler_opt.fopts = ' -largeArrayDims';
 %macbookyves.yves(1).MUMPS.par = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
 %macbookyves.yves(1).MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 macbookyves.yves(1).MUMPS.seq = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-macbookyves.yves(1).MUMPS.mex801 = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
+macbookyves.yves(1).MUMPS.mex810 = [macbookyves.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB810'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % SUPERLU matrix solver (parallel, sequential)
 %
-macbookyves.yves(1).SUPERLU.mex801 = [macbookyves.yves(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB801'];%Where SUPERLU matrix solver is stored (MEX function)
+macbookyves.yves(1).SUPERLU.mex810 = [macbookyves.yves(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB810'];%Where SUPERLU matrix solver is stored (MEX function)
 %
 % PETSc matrix solver (parallel, sequential)
 %
