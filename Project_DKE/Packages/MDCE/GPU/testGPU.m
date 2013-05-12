@@ -29,9 +29,9 @@ end
 %
 test_mode = input('GPU test mode (1): repetitive scan (same matrix), (2): progressive scan (matrix size is growing to the max. allowed by the GPU memory) ? ','s');
 matrix_type = input('Matrix type (1): all coefficients are set to 1, (2): random coefficients ? ','s');
-fun_mode = input('Operation type (1): full matrix product, (2): dot-product between coefficients  ? ','s');
+fun_mode = input('Operation type (1): dot-product between matrix coefficients, (2): full matrix product ? ','s');
 inputs_mode = input('Inputs type (1): basic, (2): basic + table of cells, (3): basic + table of cells and structures ? ','s');
-outputs_mode = input('Outputs type (0): none, (1): ones tensor, (2): two tensors, (3): one structure with two fields, (4): all data ? ','s');
+outputs_mode = input('Outputs type (0): none, (1): ones tensor, (2): two tensors, (3): one structure with two fields, (4): table of cells (5): all data ? ','s');
 %
 for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
     if flag_GPU && gpuStatus(igpu).DeviceSupported,
@@ -44,9 +44,12 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
         a = 2;%for parametric dependence of funGPU
         b = 3;%for parametric dependence of funGPU
         %
-        if strcmp(fun_mode,'1'),
+        if strcmp(fun_mode,'2'),
             a = a + i;
         end
+        %
+        c{1} = pi;c{2} = 3.0*i;c{3} = 2.0;
+        d(1).a = 4.0;d(2).a = 3.0;d(1).b = 1.0+i;
         %
         if strcmp(inputs_mode,'1'),
             nmax_single = round(sqrt(gpuStatus.FreeMemory/8)/3);%the factor three comes from the number input variables in funGPU.m
@@ -66,10 +69,6 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
         % Single precision calculations
         %
         nm_single = [100:100:nmax_single];
-        as = single(a);
-        bs = single(b);
-        cs{1} = single(pi);cs{2} = single(3*i);cs{3} = single(2);
-        ds(1).a = single(4);ds(2).a = single(3);ds(1).b = single(1+i);
         %
         if strcmp(test_mode,'1'),
             nm_single = ones(size(nm_single))*round(nmax_single/2);
@@ -100,11 +99,11 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             sizeX_single(im) = sizeX.bytes/1e6;%Mbytes
             %
             if strcmp(inputs_mode,'1'),
-                tic,[Ys0,Zs0,Ts0] = funGPU(X,as,bs);etime_single(im) = toc;
+                tic,[Ys0,Zs0,Ts0,Ws0] = funGPU(X,a,b);etime_single(im) = toc;
             elseif strcmp(inputs_mode,'2'),
-                tic,[Ys0,Zs0,Ts0] = funGPU(X,as,bs,cs);etime_single(im) = toc;
+                tic,[Ys0,Zs0,Ts0,Ws0] = funGPU(X,a,b,c);etime_single(im) = toc;
             elseif strcmp(inputs_mode,'3'),
-                tic,[Ys0,Zs0,Ts0] = funGPU(X,as,bs,cs,ds);etime_single(im) = toc;
+                tic,[Ys0,Zs0,Ts0,Ws0] = funGPU(X,a,b,c,d);etime_single(im) = toc;
             end
             %           
             %if strcmp(inputs_mode,'1'),
@@ -127,11 +126,11 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             %etime_single_arrayfun_GPU(im) = toc;
             %
             if strcmp(inputs_mode,'1'),
-                tic,[Y_GPU,Z_GPU,T_GPU] = funGPU(gpuArray(X),as,bs);
+                tic,[Y_GPU,Z_GPU,T_GPU,W_GPU] = funGPU(gpuArray(X),a,b);
             elseif strcmp(inputs_mode,'2'), 
-                tic,[Y_GPU,Z_GPU,T_GPU] = funGPU(gpuArray(X),as,bs,cs);
+                tic,[Y_GPU,Z_GPU,T_GPU,W_GPU] = funGPU(gpuArray(X),a,b,c);
             elseif strcmp(inputs_mode,'3'), 
-                tic,[Y_GPU,Z_GPU,T_GPU] = funGPU(gpuArray(X),as,bs,cs,ds);
+                tic,[Y_GPU,Z_GPU,T_GPU,W_GPU] = funGPU(gpuArray(X),a,b,c,d);
             end
             %
             if strcmp(outputs_mode,'1'),
@@ -142,9 +141,12 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             elseif strcmp(outputs_mode,'3'),
                 Ts1 = gather(T_GPU);
             elseif strcmp(outputs_mode,'4'),
+                Ws1 = gather(W_GPU);
+            elseif strcmp(outputs_mode,'5'),
                 Ys1 = gather(Y_GPU);
                 Zs1 = gather(Z_GPU);
                 Ts1 = gather(T_GPU);
+                Ws1 = gather(W_GPU);
             end
             %
             etime_single_GPU(im) = toc;
@@ -159,10 +161,6 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
         % Double precision calculations
         %
         nm_double = [100:100:nmax_double];
-        ad = double(a);
-        bd = double(b);
-        cd{1} = pi;cd{2} = 3.0*i;cd{3} = 2.0;
-        dd(1).a = 4.0;dd(2).a = 3.0;dd(1).b = 1.0+i;
         %
         if strcmp(test_mode,'1'),
             nm_double = ones(size(nm_double))*round(nmax_double/2);
@@ -193,11 +191,11 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             sizeX_double(im) = sizeX.bytes/1e6;%Mbytes
             %
             if strcmp(inputs_mode,'1'),
-                tic,[Yd0,Zd0,Td0] = funGPU(X,ad,bd);etime_double(im) = toc;
+                tic,[Yd0,Zd0,Td0,Wd0] = funGPU(X,a,b);etime_double(im) = toc;
             elseif strcmp(inputs_mode,'2'),
-                tic,[Yd0,Zd0,Td0] = funGPU(X,ad,bd,cd);etime_double(im) = toc;
+                tic,[Yd0,Zd0,Td0,Wd0] = funGPU(X,a,b,c);etime_double(im) = toc;
             elseif strcmp(inputs_mode,'3'),
-                tic,[Yd0,Zd0,Td0] = funGPU(X,ad,bd,cd,dd);etime_double(im) = toc;
+                tic,[Yd0,Zd0,Td0,Wd0] = funGPU(X,a,b,c,d);etime_double(im) = toc;
             end
             %           
             %if strcmp(inputs_mode,'1'),
@@ -220,11 +218,11 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             %etime_double_arrayfun_GPU(im) = toc;
             %
             if strcmp(inputs_mode,'1'),
-                tic,[Y_GPU,Z_GPU,T_GPU] = funGPU(gpuArray(X),ad,bd);
+                tic,[Y_GPU,Z_GPU,T_GPU,W_GPU] = funGPU(gpuArray(X),a,b);
             elseif strcmp(inputs_mode,'2'), 
-                tic,[Y_GPU,Z_GPU,T_GPU] = funGPU(gpuArray(X),ad,bd,cd);
+                tic,[Y_GPU,Z_GPU,T_GPU,W_GPU] = funGPU(gpuArray(X),a,b,c);
             elseif strcmp(inputs_mode,'3'), 
-                tic,[Y_GPU,Z_GPU,T_GPU] = funGPU(gpuArray(X),ad,bd,cd,dd);
+                tic,[Y_GPU,Z_GPU,T_GPU,W_GPU] = funGPU(gpuArray(X),a,b,c,d);
             end
             %
             if strcmp(outputs_mode,'1'),
@@ -235,9 +233,12 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             elseif strcmp(outputs_mode,'3'),
                 Td1 = gather(T_GPU);
             elseif strcmp(outputs_mode,'4'),
+                Wd1 = gather(W_GPU);
+            elseif strcmp(outputs_mode,'5'),
                 Yd1 = gather(Y_GPU);
                 Zd1 = gather(Z_GPU);
                 Td1 = gather(T_GPU);
+                Wd1 = gather(W_GPU);
             end
             %
             etime_double_GPU(im) = toc;

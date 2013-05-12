@@ -1,4 +1,4 @@
-function [Y,Z,T] = funGPU(X,a,b,c,d) 
+function [Y,Z,T,W] = funGPU(X,a,b,c,d) 
 %
 % For testing the GPU capabilities on Matlab with testGPU.m
 %
@@ -15,6 +15,7 @@ function [Y,Z,T] = funGPU(X,a,b,c,d)
 %       - Y: processed tensor [n,m,p,....]
 %       - Z: processed tensor [n,m,p,....]
 %       - T: processed structure T.y = Y and T.z = Z [structure]
+%       - W: processed cell W{Y}, W{Z} [table of cells]
 %
 % by Yves Peysson <yves.peysson@cea.fr> (CEA-IRFM) and Joan Decker <joan.decker@cea.fr> (CEA-IRFM)
 %	
@@ -46,6 +47,9 @@ end
 %
 T.y = Y;
 T.z = Z;
+%
+W{1} = Y;
+W{2} = Z;
 %
 end
 %
