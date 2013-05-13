@@ -661,13 +661,20 @@ else
             prec_normf0(ir,it_f) = (normf0(ir,it_f+1) - normf0(ir,1))/normf0(ir,1);
             prec_normf(ir,it_f) = (normf0(ir,it_f+1) - normf0(ir,it_f))/normf0(ir,it_f);
             %
-            if dkeparam.norm_mode_f == 1,
-                if isfield(dkeparam,'convtest'),%Absolute residu calculation for convergence tests
-                    residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf0*xne_norm(ir)/normf0(ir,it_f+1) - XXf0_ref(:,:,ir)).^2.*XXf0_ref(:,:,ir),2),1)/normf0(ir,it_f+1)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
-                else
-                    residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf0*xne_norm(ir)/normf0(ir,it_f+1) - XXf0(:,:,ir)).^2.*XXf0(:,:,ir),2),1)/normf0(ir,it_f+1)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
+            if dkeparam.norm_mode_f >= 1,
+                if dkeparam.norm_mode_f == 1,
+                    Xf0 = Xf0*xne_norm(ir)/normf0(ir,it_f+1);%Normalization to the maxwellian local density
+                elseif dkeparam.norm_mode_f == 2,
+                    Xf0 = Xf0*normf0(ir,1)/normf0(ir,it_f+1);%Normalization to the initial local density
                 end
-                XXf0(:,:,ir) = Xf0*xne_norm(ir)/normf0(ir,it_f+1);%Normalization to the local density
+                %
+                if isfield(dkeparam,'convtest'),%Absolute residu calculation for convergence tests
+                    residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf0 - XXf0_ref(:,:,ir)).^2.*XXf0_ref(:,:,ir),2),1)/normf0(ir,it_f+1)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
+                else
+                    residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf0 - XXf0(:,:,ir)).^2.*XXf0(:,:,ir),2),1)/normf0(ir,it_f+1)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
+                end
+                XXf0(:,:,ir) = Xf0;
+                %
             else
                 residu_f(ir,it_f) = sqrt(2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,(Xf0-XXf0(:,:,ir)).^2.*XXf0(:,:,ir),2),1)/normf0(ir,it_f+1)/dtn/dtn);%As done by J.P. Bizarro et al., Nuclear Fusion, 37 (1997) 1509
                 XXf0(:,:,ir) = Xf0;%The default value in principle. If OK, tells that the numerical conservative scheme is correct
