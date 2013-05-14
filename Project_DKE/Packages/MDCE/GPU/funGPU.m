@@ -1,6 +1,8 @@
 function [Y,Z,T,W] = funGPU(X,a,b,c,d) 
 %
-% For testing the GPU capabilities on Matlab with testGPU.m
+% For testing the GPU capabilities on Matlab with testGPU.m script
+% Y = exp(X) [by the Horner's rule]  + sinc(X^2)
+% Z is based on matrix product for testing the effect of network between cores on GPU calculations
 %
 %   INPUTS:
 %
@@ -55,21 +57,15 @@ end
 %
 function [Y,Z] = funGPU1(X,a,b,c)
     %
-    if nargin == 4,
-        if imag(a)==0 && imag(b)==0,%matrix dot-product
-            Y = c{1}*a - c{2}*3*b + c{3}*X.*(1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X./9)./8))./7))./6))./5))./4))./3))./2)) + sin(X.^3);
-            Z = X.^2;
-        else,%matrix product
-            Y = c{1}*a - c{2}*3*b + c{3}*X*(1 + X*((1 + X*((1 + X*((1 + X*((1 + X*((1 + X*((1 + X*((1 + X/9)/8))/7))/6))/5))/4))/3))/2)) + sin(X^3);
-            Z = X^2;
-        end
+    Y = 1 + X.*(1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X./9)./8))./7))./6))./5))./4))./3))./2)) + sinc(X.^2);%matrix dot-product (Horner's rule to compute y = exp(x) + sinc(x^2))
+    %
+    if imag(a)~=0 || imag(b)~=0,
+        Z = a - 3*b + Y*(1 + Y*((1 + Y*((1 + Y*((1 + Y*((1 + Y*((1 + Y*((1 + Y*((1 + Y/9)/8))/7))/6))/5))/4))/3))/2));%for testing matrix product that uses heavily network between cores
     else
-    	if imag(a)==0 && imag(b)==0,%matrix dot-product
-            Y = a - 3*b + X.*(1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X.*((1 + X./9)./8))./7))./6))./5))./4))./3))./2)) + sin(X.^3);
-            Z = X.^2;
-        else,%matrix product
-            Y = a - 3*b + X*(1 + X*((1 + X*((1 + X*((1 + X*((1 + X*((1 + X*((1 + X*((1 + X/9)/8))/7))/6))/5))/4))/3))/2)) + sin(X^3);
-            Z = X^2;
-        end
+        Z = '';
+    end
+    %
+    if nargin == 4,
+        Z = c{1}.*Y - c{2}.*Y.^2 + c{3}.*Y.^3;
     end
 end
