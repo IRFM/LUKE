@@ -100,6 +100,7 @@ macbookyves.yves(1).remote(5) = remote_CEA_CEPHEE('pbs','yves','yves');
 macbookyves.yves(1).remote(6) = remote_CEA_PLEIONE('pbs','yves','yves');
 macbookyves.yves(1).remote(7) = remote_CEA_TIMDESKTOP('torque','yves','yves');
 macbookyves.yves(1).remote(8) = remote_CEA_SATURNE('sun','yves','yves');
+macbookyves.yves(1).remote(9) = remote_laptop_YVES_PEYSSON('xgrid','yves','yves');
 
 
 
