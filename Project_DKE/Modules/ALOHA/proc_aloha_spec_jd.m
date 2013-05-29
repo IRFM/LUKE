@@ -1,4 +1,4 @@
-function [yN,ydN,yP,param,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pin_in,param_in,opt_optim,display_mode)
+function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pin_in,param_in,opt_optim,display_mode)
 	%
     % function for coupling ALOHA outputs and C3PO inputs. 
     %   parametrization can be performed interactively
@@ -54,7 +54,7 @@ function [yN,ydN,yP,param,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pi
     %       - yN : values for output lobes
     %       - ydN : respective gaussian width
     %       - yP : respective power
-    %       - param : processing parameter used to generate spectrum
+    %       - param_out : processing parameter used to generate spectrum
     %       - Pin : initial power used to generate spectrum
     %       - zyfac : distribution matrix
     %
@@ -730,6 +730,26 @@ function [yN,ydN,yP,param,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pi
     if imag(param) >= 2 && enforcedir == 1;
         param = real(param) - 1i*imag(param);
     end 
+    %
+    param_out.calc = param;
+    param_out.dir = imag(Pin);
+    %
+    if imag(param) == -Inf && real(param) <= -1,
+        param_out.mode = 0;
+        param_out.nlobes = -real(param);
+    elseif param == - 1 - 2i;
+        param_out.mode = 1;
+        param_out.nlobes = 1;
+    elseif imag(param) < -1 && real(param) == 0,
+        param_out.mode = 1;
+        param_out.nlobes = -imag(param);
+    elseif imag(param) == 0 && real(param) >= 1,
+        param_out.mode = 2;
+        param_out.nlobes = real(param);
+    else
+        param_out.mode = NaN;
+        param_out.nlobes = NaN;
+    end
     %
 end       
 %
