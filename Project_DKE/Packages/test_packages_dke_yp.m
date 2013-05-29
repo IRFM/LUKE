@@ -347,17 +347,20 @@ while ipass < npass,
     if exist([local_root,'Packages/Bin/PARDISO']) & PARDISO,
         list_of_packages = dir([local_root,'Packages/Bin/PARDISO']);
         for ifile = 1:length(list_of_packages),
-            if strfind(list_of_packages(ifile).name,'PARDISO'),
-                dkepath.PARDISO.mex = [local_root,'Packages/Bin/PARDISO/',list_of_packages(ifile).name,'/MATLAB',matver];
+            if strfind(list_of_packages(ifile).name,'MATLAB'),
+                dkepath.PARDISO.mex = [local_root,'Packages/Bin/PARDISO/MATLAB',matver];
                 if exist([dkepath.PARDISO.mex,filesep,'pardisosolve.',mexext]),
                     addpath(dkepath.PARDISO.mex);
-                    isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-ILU (MEX) by CPU with sparse matrix']),tic,job_PARDISOMEX = 1;PARDISOMEX_dke_yp;job_PARDISOMEX = 2;PARDISOMEX_dke_yp;t(isim) = toc;
-                    Zname{isim} = ['MEX_',list_of_packages(ifile).name,'_LU_FACTORISATION by CPU with sparse matrix'];
-                    isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-SOLVE (MEX) by CPU with sparse matrix']),tic,job_PARDISOMEX = 3;PARDISOMEX_dke_yp;t(isim) = toc;MMXS_t_PARDISO = X_PARDISOMEX;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds.']);job_PARDISOMEX = -2;PARDISOMEX_dke_yp;
+                    addpath([local_root,'Packages/Bin/PARDISO']);
+                    cd([local_root,'Packages/Bin/PARDISO']);
+                    isim = isim + 1;disp(['- PARDISO-ILU (MEX) by CPU with sparse matrix']),tic,job_PARDISOMEX = 1;PARDISOMEX_dke_yp;job_PARDISOMEX = 2;PARDISOMEX_dke_yp;t(isim) = toc;
+                    Zname{isim} = ['MEX_PARDISO_',list_of_packages(ifile).name,'_LU_FACTORISATION by CPU with sparse matrix'];
+                    isim = isim + 1;disp(['- PARDISO-SOLVE (MEX) by CPU with sparse matrix']),tic,job_PARDISOMEX = 3;PARDISOMEX_dke_yp;t(isim) = toc;MMXS_t_PARDISO = X_PARDISOMEX;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds.']);job_PARDISOMEX = -2;PARDISOMEX_dke_yp;
                     ZMMXS_t{isim} = MMXS_t_PARDISO;
-                    Zname{isim} = ['MEX_',list_of_packages(ifile).name];  
+                    Zname{isim} = ['MEX_PARDISO_',list_of_packages(ifile).name];  
                 end 
                 rmpath(dkepath.PARDISO.mex);
+                rmpath([local_root,'Packages/Bin/PARDISO']);
             end
         end
     end

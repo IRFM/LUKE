@@ -68,7 +68,7 @@ macproyves.yvespeysson(1).SUPERLU.mex801 = [macproyves.yvespeysson(1).local_root
 %
 % PARDISO matrix solver (mex)
 %
-%macproyves.yvespeysson(1).PARDISO.(['mex',matlabversion]) = [macproyves.yvespeysson(1).local_root,'Packages/Bin/PARDISO/PARDISO/MATLAB',matlabversion];%Where PARDISO matrix solver is stored (MEX function)
+macproyves.yvespeysson(1).PARDISO.mex801 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB801'];%Where PARDISO matrix solver is stored (MEX function)
 %
 %--------------------------- Access to the experimental databases -----------------------------
 %
