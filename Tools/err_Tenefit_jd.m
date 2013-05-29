@@ -1,5 +1,8 @@
-function err = err_Tenefit_jd(fit,rho,f)
+function err = err_Tenefit_jd(fit,rho,f,boundsfac,enforce)
 %
-%err = norm(f-Tenefit_jd(rho,fit(1),fit(2),fit(3),fit(4)));
-err = norm(f-Tenefit_jd(rho,fit(1),fit(2),fit(3),fit(4))) + ...
-    0.2*norm(f([1,end])-Tenefit_jd(rho([1,end]),fit(1),fit(2),fit(3),fit(4)));
+y = enforce;
+y(isnan(enforce)) = fit;
+%
+%err = norm(f-Tenefit_jd(rho,y(1),y(2),y(3),y(4)));
+err = norm(f-Tenefit_jd(rho,y(1),y(2),y(3),y(4))) + ...
+    boundsfac*norm(f([1,end])-Tenefit_jd(rho([1,end]),y(1),y(2),y(3),y(4)));

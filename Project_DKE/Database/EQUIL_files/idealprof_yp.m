@@ -21,10 +21,24 @@ zmi = mi;%[1,ni]
 %
 % Plasma parameters
 %
-if ~isnan(eTe2) && ~isempty (eTe2)
-    pTe = (Te0 - Tea)*(1 - prho.^eTe1).^eTe2 + Tea;%Electron temperature (keV)
-    pne = (ne0 - nea)*(1 - prho.^ene1).^ene2 + nea;%Electron density (m-3)
-    pTi = (Ti0 - Tia)*(1 - prho.^eTi1).^eTi2 + Tia;%Ion temperatures (keV)    
+if ~isnan(eTe2) && ~isempty (eTe2),
+    if imag(Tea) > 0,
+        pTe = Te0*((1 - imag(Tea))*(1 - prho.^eTe1).^eTe2 + imag(Tea));%Electron temperature (keV)
+    else
+        pTe = (Te0 - Tea)*(1 - prho.^eTe1).^eTe2 + Tea;%Electron temperature (keV)
+    end
+    %
+    if imag(nea) > 0,
+        pne = ne0*((1 - imag(nea))*(1 - prho.^ene1).^ene2 + imag(nea));%Electron density (m-3)
+    else
+        pne = (ne0 - nea)*(1 - prho.^ene1).^ene2 + nea;%Electron density (m-3)
+    end
+    %
+    if imag(Tia) > 0,
+        pTi = Ti0*((1 - imag(Tia))*(1 - prho.^eTi1).^eTi2 + imag(Tia));%Ion temperatures (keV)
+    else
+        pTi = (Ti0 - Tia)*(1 - prho.^eTi1).^eTi2 + Tia;%Ion temperatures (keV)    
+    end
 else,% Bonoli's paper notation, IEEE Transactions on plasma science Vol. PS-12, No 2, june 1984, p100
     pTe = (Te0 - Tea)*(exp(-eTe1*prho.^2) - exp(-eTe1))/(1 - exp(-eTe1)) + Tea;% Electron temperature (keV)
     pne = (ne0 - nea)*(exp(ene1) - exp(ene1*prho.^2))/(exp(ene1) - 1) + nea;% Electron density (m-3)
