@@ -34,6 +34,22 @@ rayinit.yNpar0 = rayinit.yNpar0(iray);
 rayinit.ydNpar0 = rayinit.ydNpar0(iray);
 rayinit.yP0_2piRp = rayinit.yP0_2piRp(iray);
 %
+if isfield(rayinit,'yib'),
+    rayinit.yib = rayinit.yib(iray);
+end
+%
+if isfield(rayinit,'yir'),
+    rayinit.yir = rayinit.yir(iray);
+end
+%
+if isfield(rayinit,'yim'),
+    rayinit.yim = rayinit.yim(iray);
+end
+%
+if isfield(rayinit,'yit'),
+    rayinit.yit = rayinit.yit(iray);
+end
+%
 tau_lim_init = rayparam.tau_lim;%Initial optical depth limit
 kmode = waveparam.kmode;
 ydNpar0 = rayinit.ydNpar0;

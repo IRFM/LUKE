@@ -484,6 +484,10 @@ elseif strcmp(launch.type,'LH'),
                     rayinit.ydNpar0(iy) = tdNpar0_tail(itail);%initial Ray spectral width
                     rayinit.yP0_2piRp(iy) = tP0_2piRp_tail(itail)*imag(launch.m0(im))/nr;%Lineic initial power density initial power in the ray (W/m)
                     %
+                    rayinit.yib(iy) = ib;
+                    rayinit.yir(iy) = ir;
+                    rayinit.yim(iy) = im;
+                    rayinit.yit(iy) = itail;
                 end
             end
         end

@@ -118,22 +118,40 @@ for iw = 1:nw,
     for ifluct = 1:Nfluct,
         wave = waves{ifluct+Nfluct*(iw-1)};
         %
-        ny = length(wave.rayinit.yrho0);
+        if isfield(wavestructs{ifluct,iw}.launch,'bPlhtot'),%LH wave
+            ny = length(wavestructs{ifluct,iw}.launch.bPlhtot);%number of lobes
+        elseif isfield(wavestructs{iw}.launch,'yP_L'),%EC wave
+            ny = length(wavestructs{ifluct,iw}.launch.yP_L);%number of rays
+        end          
+        %        
         byisel{ifluct,iw} = cell(1,ny);
         %
         for iy = 1:ny,
             byisel{ifluct,iw}{iy} = [];
         end
         %
+        % byisel contains the ray number belonging to the same lobe with possibly different launching positions (LH) or
+        % to the same beam with different beamlets (EC)
+        %
         for ib = 1:length(wave.rays),
             iray = iray+1;
-            rayinit = wave.rays{ib}.rayinits{1};
-            iy = find((isnan(wave.rayinit.yrho0) | rayinit.yrho0 == wave.rayinit.yrho0) & ...
-                  (isnan(wave.rayinit.ytheta0) | rayinit.ytheta0 == wave.rayinit.ytheta0) & ...
-                  (isnan(wave.rayinit.ym0) | rayinit.ym0 == wave.rayinit.ym0) & ... 
-                  (isnan(wave.rayinit.yP0_2piRp) | rayinit.yP0_2piRp == wave.rayinit.yP0_2piRp) & ...
-                  (isnan(wave.rayinit.yNpar0) | rayinit.yNpar0 == wave.rayinit.yNpar0) & ...
-                  (isnan(wave.rayinit.ydNpar0) | rayinit.ydNpar0 == wave.rayinit.ydNpar0),1,'first');
+            %
+            if isfield(wavestructs{ifluct,iw}.launch,'bPlhtot'),%LH wave
+                %
+                iy = wave.rays{ib}.rayinits{1}.yib;
+                %
+            elseif isfield(wavestructs{iw}.launch,'yP_L'),%EC wave
+                %
+                launch = wave.rays{ib}.rayinits{1}.launch;
+                iy = find((isnan(wave.rayinit.yrho0) | rayinit.yrho0 == wave.rayinit.yrho0) & ...
+                      (isnan(wave.rayinit.ytheta0) | rayinit.ytheta0 == wave.rayinit.ytheta0) & ...
+                      (isnan(wave.rayinit.ym0) | rayinit.ym0 == wave.rayinit.ym0) & ... 
+                      (isnan(wave.rayinit.yP0_2piRp) | rayinit.yP0_2piRp == wave.rayinit.yP0_2piRp) & ...
+                      (isnan(wave.rayinit.yNpar0) | rayinit.yNpar0 == wave.rayinit.yNpar0) & ...
+                      (isnan(wave.rayinit.ydNpar0) | rayinit.ydNpar0 == wave.rayinit.ydNpar0),1,'first');
+                %
+            end
+            %
             byisel{ifluct,iw}{iy} = [byisel{ifluct,iw}{iy},iray];
         end
     end

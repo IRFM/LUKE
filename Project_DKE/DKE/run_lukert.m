@@ -579,7 +579,7 @@ for itn = itnmin:itnmax,%time evolution
                 % calculate ql power not absorbed at t=tn
                 %
                 byPnonabs{ifluct,iw} = yPtot_inj;
-                for iy = 1:ny,
+                for iy = 1:ny,% sum over lobes
                     for iray = 1:length(byisel{ifluct,iw}{iy}),
                         Pabs_loc = 2*pi*equil.Rp*( dke_out.yP0_2piRp(byisel{ifluct,iw}{iy}(iray)) - dke_out.zP_0_2piRp_mod{end}{byisel{ifluct,iw}{iy}(iray)}(end));
                         byPnonabs{ifluct,iw}(iy) = byPnonabs{ifluct,iw}(iy) - Pabs_loc;
