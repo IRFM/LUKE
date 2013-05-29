@@ -48,11 +48,14 @@ for irun = 1:nruns,% load runs in a loop to avoid memory excess
                 saveid = num2str(irun);
             end
             %
-            savename = [path_simul,filesep,'LUKE_RESULTS_',saveid,'.mat'];
+            if ~strcmp(path_simul(end),filesep),
+                path_simul = [path_simul,filesep];
+            end
+            savename = [path_simul,'LUKE_RESULTS_',saveid,'.mat'];
             %
             if exist(savename,'file'),
-                disp(['Warning : file ',savename,' already exists. Case aborted.'])
-                continue
+                disp(['Warning : file ',savename,' already exists.'])
+                keyboard
             end
             %
             save(savename,'lukestructs');
