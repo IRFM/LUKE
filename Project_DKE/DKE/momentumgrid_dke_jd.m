@@ -292,16 +292,26 @@ if ~isfield(dkeparam,'pn_S') || isempty(dkeparam.pn_S),
     %end
     %
     pn_S(1) = 0;
-    dpn_S_ref = pnmax_S/(np_S - 1);
+    dpn_S_ref = pnmax_S(1)/(np_S(1) - 1);
     dpn_S_0 = dpn_S_ref/pgridfactor;%Momentum step close to p = 0
     ip = 1;
-    while pn_S(ip) <= pnmax_S + dpn_S_ref*1e-3,%Small steps close to p = 0
-    %   dpn_S(ip) = (dpn_S_ref-dpn_S_0)*tanh((np_S - ip - np_S_ref)/25)/2 + (dpn_S_ref+dpn_S_0)/2;
+    while pn_S(ip) <= pnmax_S(1) + dpn_S_ref*1e-3,%Small steps close to p = 0
+    %   dpn_S(ip) = (dpn_S_ref-dpn_S_0)*tanh((np_S(1) - ip - np_S_ref)/25)/2 + (dpn_S_ref+dpn_S_0)/2;
        dpn_S(ip) = (dpn_S_ref-dpn_S_0)*tanh((ip-np_S_ref))/2 + (dpn_S_ref+dpn_S_0)/2;
         pn_S(ip+1) = pn_S(ip) + dpn_S(ip);
         ip = ip+1;
     end
     pn_S = pn_S(1:length(pn_S) - 1);
+    %
+    if length(np_S) > 1 && length(pnmax_S) > 1,% high energy sparse grid (runaway studies)
+        if imag(pnmax_S(2)) == 0,
+            pn_S_tail = linspace(pnmax_S(1),pnmax_S(2),np_S(2));
+        else
+            pn_S_tail = linspace(pnmax_S(1),imag(pnmax_S(2))*pnmax_S(1),np_S(2));
+        end
+        %
+        pn_S = unique([pn_S,pn_S_tail]);
+    end
     %
 else% momentum grid specified in dkeparam
     %

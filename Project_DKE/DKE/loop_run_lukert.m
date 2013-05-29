@@ -27,7 +27,7 @@ end
 rho_S_init = dkeparam.rho_S;
 %
 if isfield(dkeparam,'rho0') && length(rho_S_init) == 1,
-    rho_S_init = rho_S_init + i*dkeparam.rho0;
+    rho_S_init = rho_S_init + 1i*dkeparam.rho0;
 end
 %
 if isfield(dkeparam,'nk_abs'),
@@ -36,7 +36,7 @@ else
     nk_abs = 1;
 end
 %
-[dkeparam.rho_S,dkeparam.pnmax_S] = optgrid_dke_jd(waves,rho_S_init,dkeparam.pnmax_S,equil,w_mask,dkedisplay.display_mode);
+[dkeparam.rho_S,dkeparam.pnmax_S(1)] = optgrid_dke_jd(waves,rho_S_init,dkeparam.pnmax_S(1),equil,w_mask,dkedisplay.display_mode);
 %
 % 3-D relativistic bounce averaged quasilinear kinetic calculations (LUKE)
 %
