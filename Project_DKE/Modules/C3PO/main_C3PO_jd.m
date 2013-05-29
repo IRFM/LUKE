@@ -177,9 +177,23 @@ end
 %
 if isempty(C3POparam),
     C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster parameters and paths
+    schedulertype = 'local';%type of scheduler, '' or 'local' for any machine or cluster,'pbspro' for CEPHEE or SATURNE cluster,'xgrid' on mac computers,... [1,1]
+    mdce_remnum = 0;%remote index (0 for local cluster calculations) [1,1]
 end
 %
-dkecluster = clustermode_luke(C3POparam.clustermode,'main_C3PO_jd',dkepath);%MatLab distributed computing environment
+if ~isfield(C3POparam,'schedulertype');
+    schedulertype = 'local';
+else
+    schedulertype = C3POparam.schedulertype;
+end
+%
+if ~isfield(C3POparam,'mdce_remnum');
+    mdce_remnum = 'local';
+else
+    mdce_remnum = C3POparam.mdce_remnum;
+end
+%
+dkecluster = clustermode_luke(C3POparam.clustermode,'main_C3PO_jd',dkepath,schedulertype,mdce_remnum);%MatLab distributed computing environment
 %
 [dummy,rayss] = mdce_luke(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay,f0struct,fluct_fit},1,arg_range,dkecluster);
 %
