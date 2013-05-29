@@ -5,7 +5,7 @@
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-dkeparam_id = 'NONUNIFORM10010020';%Set here the name (identifier) of the drift kinetic code parameters
+dkeparam.id = 'NONUNIFORM10010020';%Set here the name (identifier) of the drift kinetic code parameters
 %
 %Mesh size calculation
 %
@@ -14,6 +14,8 @@ dkeparam.grid_method = 1;%Pitch-angle grid calculation technique: (0): old metho
 dkeparam.nmhu_S = 101;%Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)
 dkeparam.np_S = 101;%Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.
 dkeparam.pnmax_S = 20;%Maximum value of the flux momentum grid (pth_ref)
+dkeparam.rho_S = 20;% number of points for radial grid calculation
+dkeparam.psin_S = [];% number of points for radial grid calculation
 %
 %Pitch-angle grid
 %
@@ -49,7 +51,7 @@ dkeparam.coll_mode = 2;%No collision operator (space plasmas): (-1), Relativisti
 dkeparam.rt_mode = 0;%RT-DKE power consistency
 dkeparam.abs_lim = 0.95;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
 dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
-dkeparam.prec_rf = 1e-4;%relative precision in RT-DKE iterations
+dkeparam.prec_rf = 1e-2;%relative precision in RT-DKE iterations
 dkeparam.n_rf_list = 0;%List of harmonics in the Dql calculations
 dkeparam.delta_rt = 0;%smoothering parameter of quasilinear iterations
 dkeparam.Dparparmax = Inf;%Upper limit of the quasilinear diffusion coefficient. Important for low temperature plasmas et high power level for stability of the code
@@ -125,4 +127,4 @@ dkeparam.method = 'spline';%For the pitch-angle interpolation in the prjectioon 
 dkeparam.n_gauleg = 35;%Number of Legendre polynomials for projections of the electron velocity distribution
 dkeparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
 %
-eval(['save DKEPARAM_',dkeparam_id,'.mat dkeparam']);
+eval(['save DKEPARAM_',dkeparam.id,'.mat dkeparam']);

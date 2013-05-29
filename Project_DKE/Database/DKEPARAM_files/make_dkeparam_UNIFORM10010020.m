@@ -5,7 +5,7 @@
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-dkeparam_id = 'UNIFORM10010020';%Set here the name (identifier) of the drift kinetic code parameters
+dkeparam.id = 'UNIFORM10010020';%Set here the name (identifier) of the drift kinetic code parameters
 %
 %Mesh size calculation
 %
@@ -125,4 +125,4 @@ dkeparam.method = 'spline';%For the pitch-angle interpolation in the prjectioon 
 dkeparam.n_gauleg = 35;%Number of Legendre polynomials for projections of the electron velocity distribution
 dkeparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
 %
-eval(['save DKEPARAM_',dkeparam_id,'.mat dkeparam']);
+eval(['save DKEPARAM_',dkeparam.id,'.mat dkeparam']);
