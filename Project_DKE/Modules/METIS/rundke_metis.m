@@ -1,68 +1,72 @@
-function rundke_metis(path_sources,locid_simul,basestr,shotnum,shotimes,opt,dkepath,wavestructs,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,metisevol)
+function rundke_metis(path_sources,locid_simul,basestr,shotnum,shotimes,opt,dkepath,wavestructs,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,metisevol,scheduler_run_lukert)
 %
 % function running LUKE using METIS output and possibly user-defined
 % parameters
 %
 % INPUTS :
 %
-%   - path_sources          : Source files path (leave empty for current path)
-%   - locid_simul           : Simulation local id (leave empty for standard id)
-%   - c_opt                 : Option for distributed batch jobs (0) : sequential, (1, 2, ...) remote profile number 
-%   - basestr               : tokamak name (ex: TS, ITER, ...)
-%   - shotnum               : shot number (string)
-%   - shotimes    (optional): shot times to consider (cell array of strings *.****). Leave empty to include all relevant METIS data files in directory (default)
-%   - opt         (optional): options for saving LUKE results remotely, backup, wave, etc...
-%   - dkepath     (optional): path structure for LUKE simulations (Leave empty for LOCAL path)
-%   - wavestructs (optional): user-defined wavestruct parameters (cell array of structure array, of size 1 or shotimes)
-%   - equil       (optional): user-defined equil parameters (structure array of size 1 or shotimes)
-%   - dkeparam    (optional): user-defined dkeparam parameters (structure array of size 1 or shotimes)
-%   - dkedisplay  (optional): user-defined dkedisplay parameters (structure array of size 1 or shotimes)
-%   - ohm         (optional): user-defined ohm parameters (structure array of size 1 or shotimes)
-%   - transpfaste (optional): user-defined transpfaste parameters (structure array of size 1 or shotimes)
-%   - ripple      (optional): user-defined ripple parameters (structure array of size 1 or shotimes)
-%   - metisevol   (optional): time evolution (1) or indepedent times (0)
+%   - path_sources                    : Source files path (leave empty for current path)
+%   - locid_simul                     : Simulation local id (leave empty for standard id)
+%   - c_opt                           : Option for distributed batch jobs (0) : sequential, (1, 2, ...) remote profile number 
+%   - basestr                         : tokamak name (ex: TS, ITER, ...)
+%   - shotnum                         : shot number (string)
+%   - shotimes              (optional): shot times to consider (cell array of strings *.****). Leave empty to include all relevant METIS data files in directory (default)
+%   - opt                   (optional): options for saving LUKE results remotely, backup, wave, etc...
+%   - dkepath               (optional): path structure for LUKE simulations (Leave empty for LOCAL path)
+%   - wavestructs           (optional): user-defined wavestruct parameters (cell array of structure array, of size 1 or shotimes)
+%   - equil                 (optional): user-defined equil parameters (structure array of size 1 or shotimes)
+%   - dkeparam              (optional): user-defined dkeparam parameters (structure array of size 1 or shotimes)
+%   - dkedisplay            (optional): user-defined dkedisplay parameters (structure array of size 1 or shotimes)
+%   - ohm                   (optional): user-defined ohm parameters (structure array of size 1 or shotimes)
+%   - transpfaste           (optional): user-defined transpfaste parameters (structure array of size 1 or shotimes)
+%   - ripple                (optional): user-defined ripple parameters (structure array of size 1 or shotimes)
+%   - metisevol             (optional): time evolution (1) or indepedent times (0)
+%   - scheduler_run_lukert  (optional): distributed calculation options for run_lukert
 %
 % NOTE: the optional structures wavestructs ... ripple do not need to contain all fields. They are concatenated with METIS parameters.
 %
 % by J. Decker (joan.decker@cea.fr) and E. Nilsson (emelie.nilsson@cea.fr)
 %
-maxnargin = 15;
+maxnargin = 16;
 %
 if nargin < maxnargin,
+    scheduler_run_lukert = struct;
+end
+if nargin < maxnargin-1,
     metisevol = 0;
 end
-if nargin < maxnargin-1 || (~isstruct(ripple) && any(isnan(ripple))),
+if nargin < maxnargin-2 || (~isstruct(ripple) && any(isnan(ripple))),
     ripple = struct;
 end
-if nargin < maxnargin-2 || (~isstruct(transpfaste) && any(isnan(transpfaste))),
+if nargin < maxnargin-3 || (~isstruct(transpfaste) && any(isnan(transpfaste))),
     transpfaste = struct;
 end
-if nargin < maxnargin-3 || (~isstruct(ohm) && any(isnan(ohm))),
+if nargin < maxnargin-4 || (~isstruct(ohm) && any(isnan(ohm))),
     ohm = struct;
     %ohm='';
 end
-if nargin < maxnargin-4 || (~isstruct(dkedisplay) && any(isnan(dkedisplay))),
+if nargin < maxnargin-5 || (~isstruct(dkedisplay) && any(isnan(dkedisplay))),
     dkedisplay = struct;
 end
-if nargin < maxnargin-5 || (~isstruct(dkeparam) && any(isnan(dkeparam))),
+if nargin < maxnargin-6 || (~isstruct(dkeparam) && any(isnan(dkeparam))),
     dkeparam = struct;
 end
-if nargin < maxnargin-6 || (~isstruct(equil) && any(isnan(equil))),
+if nargin < maxnargin-7 || (~isstruct(equil) && any(isnan(equil))),
     equil = struct;
 end
-if nargin < maxnargin-7 || (~iscell(wavestructs) && ~isstruct(wavestructs) && any(isnan(wavestructs))),
+if nargin < maxnargin-8 || (~iscell(wavestructs) && ~isstruct(wavestructs) && any(isnan(wavestructs))),
     wavestructs = struct;
 end
-if nargin < maxnargin-8 || (~isstruct(dkepath) && any(isnan(dkepath))),
+if nargin < maxnargin-9 || (~isstruct(dkepath) && any(isnan(dkepath))),
     dkepath = load_structures_yp('dkepath','','');
 end
-if nargin < maxnargin-9 || (~isstruct(opt) && any(isnan(opt))),
+if nargin < maxnargin-10 || (~isstruct(opt) && any(isnan(opt))),
     opt = struct;
 end
-if nargin < maxnargin-10,
+if nargin < maxnargin-11,
     shotimes = {};% all shot times
 end
-if nargin < maxnargin-11,
+if nargin < maxnargin-12,
     error('shot number must be specified');
 end
 %
@@ -213,7 +217,18 @@ end
 %
 if metisevol == 0,
     %
-    lukestructs = run_lukert(lukestructs,dkepath);
+    if isfield(dkepath,'remnum') && dkepath.remnum > 0,% calculations distributed within run_lukert
+        %
+        lukestructs = run_lukert(lukestructs,dkepath);
+        %
+    else % calculations distributed using mdce_luke
+        %
+        clustermode.run_lukert.scheduler = scheduler_run_lukert;
+        dkecluster = clustermode_luke(clustermode,'run_lukert',dkepath);
+        %
+        [~,lukestructs] = mdce_luke(@run_lukert,{''},1,lukestructs,dkecluster);
+        %
+    end
     %
 else
     %
