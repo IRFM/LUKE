@@ -1,4 +1,4 @@
-function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,configs,opt,dkepath,dkeparam,dkedisplay,equil,ohm,transpfaste,ripple,rayparam,waveparam,C3POparam,scheduler_run_lukert)
+function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,configs,opt,dkepath,dkeparam,dkedisplay,equil,ohm,transpfaste_in,ripple,rayparam,waveparam,C3POparam,scheduler_run_lukert)
     %
     if nargin < 18,
         scheduler_run_lukert = struct;
@@ -72,16 +72,22 @@ function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,conf
     %
     % ---- RADIAL TRANSPORT ----
     %
-    if transpfaste.Dr0 > 0,
+    if transpfaste_in.Dr0 > 0,
         %
-        transpfaste.id = ['ES_',num2str(transpfaste.Dr_model),'_Dr0_',num2str(transpfaste.Dr0)];
+        % initialization
         %
+        transpfaste.Dr0 = 0;%Core radial diffusion coefficient (m/s)
         transpfaste.pDr = 0;%Coefficient for the Dr radial profile
+        transpfaste.Dr_model = 0;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), (2) Energy dependence
         transpfaste.Vr0 = 0;%Core radial pinch coefficient (m/s)
         transpfaste.pVr = 0;%Coefficient for the Vr radial profile
         transpfaste.Vr_model = 0;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), (2) Energy dependence
         transpfaste.vparmin = 3.5;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
         transpfaste.norm_ref = 1;%Normalization procedure for the lower limit of the parallel velocity dependence of the radial diffusion and pinch: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
+        %
+        transpfaste = conc_struct_jd(transpfaste,transpfaste_in);
+        %
+        transpfaste.id = ['TR_',num2str(transpfaste.Dr_model),'_Dr0_',num2str(transpfaste.Dr0),'_pDr_',num2str(transpfaste.pDr)];
     else
         transpfaste = struct;
     end
@@ -305,6 +311,12 @@ function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,conf
                         [bNtor0_h,bdNtor0_h,bPlhtor_h,param_out_h] = proc_aloha_spec_jd(aloha_h.antenna.nz,NaN,real(aloha_h.antenna.dP_nz),Pin,config.aloha_param(1),0,0);                
                     end
                     %
+                    config_b = rmfield(config,{'locid_aloha_b','locid_aloha_h'});
+                    config_h = rmfield(config,{'locid_aloha_b','locid_aloha_h'});                 
+                    %
+                    config_b.locid_aloha = config.locid_aloha_b;
+                    config_h.locid_aloha = config.locid_aloha_h;
+                    %
                     config_b.aloha = conc_struct_jd(config.aloha,param_out_b);
                     config_h.aloha = conc_struct_jd(config.aloha,param_out_h);
                     %
@@ -461,23 +473,21 @@ function id_launch = make_launchid_jd(config)
     if isfield(config,'locid'),
         id_launch = [id_launch,'_',config.locid];
     elseif real(config.opt_aloha) >= 1,
-        if isfield(config,'locid_aloha'),% one spectrum for both modules
-            %
-            id_launch = [id_launch,'_nr_',num2str(config.nrZ0),'_nl_',num2str(config.aloha.nlobes),'_dir_',num2str(config.aloha.dir),'_md_',num2str(config.aloha.mode),...
-                config.locid_aloha];
-            %
-        elseif isfield(config,'locid_aloha_b') && isfield(config,'locid_aloha_h'),% one spectrum for each modules
-            %
-            id_launch = [id_launch,'_nr_',num2str(config.nrZ0)];
-            id_launch = [id_launch,'_b_nl_',num2str(config.aloha_b.nlobes),'_dir_',num2str(config.aloha_b.dir),'_md_',num2str(config.aloha_b.mode),config.locid_aloha_b];
-            id_launch = [id_launch,'_h_nl_',num2str(config.aloha_h.nlobes),'_dir_',num2str(config.aloha_h.dir),'_md_',num2str(config.aloha_h.mode),config.locid_aloha_h];
-            %
-        else
-            error('aloha module division not consistent')
-        end
+        %
+        id_launch = [id_launch,'_nr_',num2str(config.nrZ0),'_nl_',num2str(config.aloha.nlobes),'_dir_',num2str(config.aloha.dir),'_md_',num2str(config.aloha.mode),...
+            config.locid_aloha];
         %
     elseif ~isnan(config.bNpar0),
-        id_launch = [id_launch,'_bNpar0',num2str(config.bNpar0),'_bdNpar0_',num2str(config.bdNpar0),'_bPlhtot_',num2str(config.bPlhtot)];
+        bNpar0str = '';
+        bdNpar0str = '';
+        bPlhtotstr = '';
+        for ib = 1:length(config.bNpar0),
+            bNpar0str = [bNpar0str,'_',num2str(config.bNpar0(ib))];
+            bdNpar0str = [bdNpar0str,'_',num2str(config.bdNpar0(ib))];
+            bPlhtotstr = [bPlhtotstr,'_',num2str(config.bPlhtot(ib)/1e6)];
+        end
+        %
+        id_launch = [id_launch,'_N0',bNpar0str,'_dN0',bdNpar0str,'_P',bPlhtotstr];
     end
     %
     % tail
