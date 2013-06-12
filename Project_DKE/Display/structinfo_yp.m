@@ -168,9 +168,10 @@ switch struct
     case 'scheduler',
         %
         switch field 
-            case 'mode',expert = 0;values = 0:2;info = 'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)';
+            case 'mode',expert = 0;values = [-Inf;3];info = 'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)';
+            case 'memory',expert = 0;values = [0;Inf];info = 'Allocated memory (in mb)';
             case 'timeout',expert = 1;values = 50:50:500;info = 'MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor';
-            case 'size',expert = 0;values = [0;Inf];info = '%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations';
+            case 'clustersize',expert = 0;values = [0;Inf];info = '%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations';
             otherwise,
         end
 		%
