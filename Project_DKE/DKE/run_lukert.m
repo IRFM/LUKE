@@ -231,13 +231,13 @@ else
         opt.save = 0;
     end
     if ~isfield(opt,'fields'),
-        opt.fields = 0;
+        opt.fields = NaN;
     end
     if ~isfield(opt,'backup'),
         opt.backup = 0;
     end
     if ~isfield(opt,'waves'),    
-        opt.waves = 1;
+        opt.waves = 0;
     end
 end
 %
@@ -421,6 +421,13 @@ else% reload mode
         dkeparam = imod_struct_jd(dkeparam,'dkeparam',1,dkedisplay.display_mode);
         dkedisplay = imod_struct_jd(dkedisplay,'dkedisplay',1,dkedisplay.display_mode);
         opt = imod_struct_jd(opt,'opt',1,dkedisplay.display_mode);
+        %
+        for ifluct = 1:size(wavestructs,1),
+            for iw = 1:size(wavestructs,2),
+                %
+                wavestructs{ifluct,iw} = imod_struct_jd(wavestructs{ifluct,iw},['wavestructs{',num2str(ifluct),',',num2str(iw),'}'],1,dkedisplay.display_mode);
+            end
+        end                
         %
     elseif opt.backup == -2,%non interactive update
         dkedisplay.display_mode = dkedisplay_in.display_mode;
@@ -747,7 +754,7 @@ lukestructs.output = output;
 %
 if opt.save,% save results in LUKE_RESULTS file
     savefile = [simul.path,'LUKE_RESULTS_',simul.id,'.mat'];
-    save(savefile,'lukestructs');
+    save(savefile,'lukestructs','-v7.3');
 end
 %
 if iscell(opt.fields),% select fields to return in output

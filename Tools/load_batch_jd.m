@@ -58,7 +58,7 @@ for irun = 1:nruns,% load runs in a loop to avoid memory excess
                 keyboard
             end
             %
-            save(savename,'lukestructs');
+            save(savename,'lukestructs','-v7.3');
             info_dke_yp(2,['LUKE Results saved in ',savename]);
             %
             completed_jobs(irun) = 1;
