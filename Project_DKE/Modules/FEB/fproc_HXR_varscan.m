@@ -150,7 +150,15 @@ for ivar = 1:nvar,
     %
     texp = [ttimes(ivar) - dtexp/2,ttimes(ivar) + dtexp/2]; 
     %
-    id_simul = [equilbase,id_simul_o,'_',var.str,'_',var.liststr{ivar},locid_simul];%Simulation ID
+    id_simul = equilbase;
+    if iscell(id_simul_o),
+        for iid = 1:length(id_simul_o),
+            id_simul = [id_simul,id_simul_o{iid},'_',var.str,'_',var.liststr{ivar}];%Simulation ID
+        end
+    else
+        id_simul = [id_simul,id_simul_o,'_',var.str,'_',var.liststr{ivar}];%Simulation ID
+    end
+    id_simul = [id_simul,locid_simul];%Simulation ID
     %
     [hxr_proc,hxr,data_proc] = fproc_hxr(basestr,path_simul,id_simul,hxr_file,exp_file,texp,ic,krange,opt);
     %
@@ -189,6 +197,12 @@ for ivar = 1:nvar,
         drho(ivar) = sum(data_proc.wave.wp_rf_2piRp.'.*data_proc.wave.wrhoV)/sum(data_proc.wave.wp_rf_2piRp);
     else
         error('rho type not recognized')
+    end
+    %
+    if isfield(data_proc.radial,'xdA_dke'),
+        dxdA(:,ivar) = data_proc.radial.xdA_dke.';
+    else
+        dxdA(:,ivar) = NaN*dxrho(:,ivar);
     end
     %
     %dxrho(:,ivar) = data_proc.radial.xrho.';
@@ -260,6 +274,8 @@ if ~exist('k','var'),
     return
 end
 %
+dxdrho = diff([zeros(1,nvar);(dxrho(1:end-1,:) + dxrho(2:end,:))/2;ones(1,nvar)]);
+%
 dNdtplasma(:,:,varmask) = NaN;
 dNdtdiag(:,:,varmask) = NaN;
 dNdtexp(:,:,varmask) = NaN;
@@ -283,13 +299,17 @@ sdNdtdiag = reshape(sum(dNdtdiag,1),[nc,nvar]);%count rate
 sdNdtplasma = reshape(sum(dNdtplasma,1),[nc,nvar]);%count rate
 sdNdtexp = reshape(sum(dNdtexp,1),[nc,nvar]);%count rate
 %
-ndNdtdiag = sdNdtdiag./repmat(sdNdtdiag(icdisp,:),[nc,1]);%count rate
-ndNdtplasma = sdNdtplasma./repmat(sdNdtplasma(icdisp,:),[nc,1]);%count rate
-ndNdtexp = sdNdtexp./repmat(sdNdtexp(icdisp,:),[nc,1]);%count rate
+sdNdtexpmax = sdNdtexp == repmat(max(sdNdtexp),[nc,1]);
+sdNdtexpmax(cumsum(sdNdtexpmax) > 1) = 0;% case with two maxima
+icnorm = find(sdNdtexpmax).';
 %
-endNdtdiag = sqrt(sdNdtdiag/dt)./repmat(sdNdtdiag(icdisp,:),[nc,1]);%count rate
-endNdtplasma = sqrt(sdNdtplasma/dt)./repmat(sdNdtplasma(icdisp,:),[nc,1]);%count rate
-endNdtexp = sqrt(sdNdtexp/dt)./repmat(sdNdtexp(icdisp,:),[nc,1]);%count rate
+ndNdtdiag = sdNdtdiag./repmat(sdNdtdiag(icnorm),[nc,1]);%count rate
+ndNdtplasma = sdNdtplasma./repmat(sdNdtplasma(icnorm),[nc,1]);%count rate
+ndNdtexp = sdNdtexp./repmat(sdNdtexp(icnorm),[nc,1]);%count rate
+%
+endNdtdiag = sqrt(sdNdtdiag/dt)./repmat(sdNdtdiag(icnorm),[nc,1]);%count rate
+endNdtplasma = sqrt(sdNdtplasma/dt)./repmat(sdNdtplasma(icnorm),[nc,1]);%count rate
+endNdtexp = sqrt(sdNdtexp/dt)./repmat(sdNdtexp(icnorm),[nc,1]);%count rate
 %
 dPfrac = dp_rf_2piRp./dp0_rf_2piRp;
 dPfrac_lin = dp_rf_2piRp_lin./dp0_rf_2piRp;
@@ -377,7 +397,15 @@ kmax = max(k);
 %
 krangestr = ['k = ',num2str(kmin),' - ',num2str(kmax),' keV'];
 %
-savestr = [equilbase,id_simul_o,locid_simul];%Save string
+savestr = equilbase;
+if iscell(id_simul_o),
+    for iid = 1:length(id_simul_o),
+        savestr = [savestr,id_simul_o{iid},'_',var.str,'_scan'];%Simulation ID
+    end
+else
+    savestr = [savestr,id_simul_o,'_',var.str,'_scan'];%Simulation ID
+end
+savestr = [savestr,locid_simul];%Simulation ID
 %
 % --------------------- Current -----------------------
 %
@@ -799,6 +827,39 @@ if ndisp >= 1,
     end
     % 
     print_jd(opt.print,['Fig_',savestr,'_J'],[path_simul,'figures/'],ifig);
+    %
+    %
+    ifig = 61;figure(ifig),clf,set(ifig,'Name','dJdrho profiles')
+    %
+    xlab_rho = '\rho';
+    xlim_rho = [0,1];
+    xtick_rho = 0:0.2:1;
+    %
+    ylab = 'dJ/d\rho (MA)';
+    tit = '';
+    %
+    dJdxdrho = dJ.*dxdA./dxdrho;
+    %
+    if isfield(opt,'ylim_dJdrho'),
+        ylim = opt.ylim_dJdrho;
+    else
+        ylim = [min(min(dJdxdrho(:,ivar_disp))),max(max(dJdxdrho(:,ivar_disp)))]*1.2;
+    end
+    %
+    leg = {};%{'LUKE'};%{'plasma','diag.'};%
+    %
+    for ivar = 1:ndisp-1,
+        graph1D_jd(dxrho(:,ivar_disp(ivar)),dJdxdrho(:,ivar_disp(ivar)).',0,0,'','','',NaN,xlim_rho,ylim,style,markers{rem(ivar,ncol)},colors{rem(ivar,ncol)},width2,siz);
+    end
+    %
+    graph1D_jd(dxrho(:,ivar_disp(ndisp)),dJdxdrho(:,ivar_disp(ndisp)).',0,0,xlab_rho,ylab,tit,displeg,xlim_rho,ylim,style,markers{rem(ndisp,ncol)},colors{rem(ndisp,ncol)},width2,siz,gca,red,lspace,bspace);
+    %
+    set(gca,'xtick',xtick_rho);
+    if isfield(opt,'ytick_dJdrho'),
+        set(gca,'ytick',opt.ytick_dJdrho);
+    end
+    % 
+    print_jd(opt.print,['Fig_',savestr,'_dJdrho'],[path_simul,'figures/'],ifig);
     %
 end
 %
