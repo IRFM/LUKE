@@ -40,8 +40,12 @@ elseif iscell(shotimes),
     for ishotime = 1:nshots,
         if any(strcmp(shotimes{ishotime},dirshotimes))
             isel(ishotime) = 1;
+            disp(['The data file for shot time ',shotimes{ishotime},' was found'])
         else
             disp(['WARNING : The data file for shot time ',shotimes{ishotime},' was not found'])
+            disp(['str_before : ',str_before])
+            disp(['str_after : ',str_after])
+            disp(['path_simul : ',path_simul])
         end
     end
     isel = find(isel);
