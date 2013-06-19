@@ -20,10 +20,10 @@ function [XXS,XXthetastar]=avalanche_en(mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,eq
 display_mode = display.display_mode;
 npn = size(gridDKE.XXmhu,1);
 nmhu = size(gridDKE.XXmhu,2);
-npsi=length(equil.ptBx);
+npsi=size(equilDKE.XBx,1); %nr of radial positions
 %
  if Zbouncecoef.XXlambda~=1
-    [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(equilDKE,gridDKE,Zmomcoef,ohm,equil,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches
+    [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(equilDKE,gridDKE,Zmomcoef,ohm,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches
 else
     XXsig=ones(npn,nmhu,npsi);
     XXthetastar1=0;
@@ -32,13 +32,14 @@ end
 %
 Lambd=mksa.lnc_e_ref;
 ne_ref=mksa.ne_ref;
-ne=equil.pne/ne_ref;
+ne=equilDKE.xne/ne_ref;
 beta=mksa.betath_ref;
 ap=equilDKE.ap; % should be a_p like in the rest of LUKE, in literature it is Rp. Check this!
-Rp=equil.Rp;
+Rp=equilDKE.Rp;
 nr=0.1*ne;
 %
-B0=sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2);
+B0=equilDKE.xB0;
+%B0=sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2);
 %B0=min(sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2));
 for l=1:npsi
   Srp(:,l)=1/(4*pi)*beta^2/log(Lambd)*ne(l)*nr(l)./(Zmomcoef.xz(:,1).*Zmomcoef.XXgamma(:,1).*(Zmomcoef.XXgamma(:,1)-1).^2); %rosenbluth (S*)
@@ -48,7 +49,7 @@ if Zbouncecoef.XXlambda~=1
 C=NaN(npn,nmhu,npsi);
 for l=1:npsi 
     for m=1:nmhu
-    C(:,m,l)=2/pi.*1/Rp./(Zmomcoef.XXgamma(:,m)+1)*B0(l)./(Zbouncecoef.XXlambda(:,m).*Zbouncecoef.xqtilde).*abs(gridDKE.XXmhu(:,m))./(1-gridDKE.XXmhu(:,m).^2).^2; 
+    C(:,m,l)=2/pi.*1/Rp./(Zmomcoef.XXgamma(:,m)+1)*B0(l)./(Zbouncecoef.XXlambda(:,m,l).*Zbouncecoef.xqtilde(l)).*abs(gridDKE.XXmhu(:,m))./(1-gridDKE.XXmhu(:,m).^2).^2; 
     end
 end
 else 
@@ -61,12 +62,12 @@ XXS=Srp2.*C.*XXsig; %<S()>
 if display_mode>0
     if Zbouncecoef.XXlambda~=1
         l=round(display.rho_display*npsi); %nr of the flux surface to be displayed
-        figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:),XXthetastar1(:,:,l),'p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
-        figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:),XXthetastar2(:,:,l),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30);colorbar;
-        figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:),log(XXS(:,:,l)),'p','mhu','log(S)',NaN,NaN,1,NaN,30);colorbar;
+        figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:,l),XXthetastar1(:,:,l),'p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
+        figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:,l),XXthetastar2(:,:,l),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30);colorbar;
+        figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:,l),log(XXS(:,:,l)),'p','mhu','log(S)',NaN,NaN,1,NaN,30);colorbar;
         %figure;graph2D_jd(Zmomcoef.xz.*gridDKE.XXmhu,Zmomcoef.xz.*sqrt(1-gridDKE.XXmhu.^2),log(XXS(:,:,l)),'p_{par}/p_{th}','p_{perp}/p_{th}','log(S)',NaN,NaN,1,NaN,30);colorbar;
-        figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:),C(:,:,l),'p/p_{th}','mhu','C',NaN,NaN,0,NaN,30);
-        figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:),log(XXsig(:,:,l)),'p/p_{th}','mhu','log(XXsig)',NaN,NaN,0,NaN,50);
+        figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:,l),C(:,:,l),'p/p_{th}','mhu','C',NaN,NaN,0,NaN,30);
+        figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:,l),log(XXsig(:,:,l)),'p/p_{th}','mhu','log(XXsig)',NaN,NaN,0,NaN,50);
         %check that the thetas appear in the same place in matrix:
         figure;hold on
         for n=1:npsi
@@ -80,8 +81,8 @@ if display_mode>0
 %             plot(Zmomcoef.xz,XXthetastar1(:,k,55),'b');
 %             plot(Zmomcoef.xz,XXthetastar2(:,k,55),'r');
 %         end
-  %      figure; graph2D_jd(Zmomcoef.xz.*gridDKE.XXmhu,Zmomcoef.xz.*sqrt(1-gridDKE.XXmhu.^2),XXthetastar1(:,:,l)'/pi,'p_{par}/p_{th}','p_{perp}/p_{th}','theta^*_1/pi',NaN,NaN,0,NaN,60);colorbar;
-  %      figure; graph2D_jd(Zmomcoef.xz.*gridDKE.XXmhu,Zmomcoef.xz.*sqrt(1-gridDKE.XXmhu.^2),XXthetastar2(:,:,l)'/pi,'p_{par}/p_{th}','p_{perp}/p_{th}','theta^*_2/pi',NaN,NaN,0,NaN,60);colorbar;
+%        figure; graph2D_jd(Zmomcoef.xz(:,1).*gridDKE.XXmhu(1,:,l),Zmomcoef.xz(:,1).*sqrt(1-gridDKE.XXmhu(1,:,l).^2),XXthetastar1(:,:,l)'/pi,'p_{par}/p_{th}','p_{perp}/p_{th}','theta^*_1/pi',NaN,NaN,0,NaN,60);colorbar;
+%       figure; graph2D_jd(Zmomcoef.xz(:,1).*gridDKE.XXmhu(1,:,l),Zmomcoef.xz(:,1).*sqrt(1-gridDKE.XXmhu(1,:,l).^2),XXthetastar2(:,:,l)'/pi,'p_{par}/p_{th}','p_{perp}/p_{th}','theta^*_2/pi',NaN,NaN,0,NaN,60);colorbar;
     end
     
     figure

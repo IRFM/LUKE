@@ -1,4 +1,4 @@
-function [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(equilDKE,gridDKE,Zmomcoef,ohm,equil,radialDKE)
+function [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(equilDKE,gridDKE,Zmomcoef,ohm,radialDKE)
 %
 % Calculation of the critical poloidal angle value theta_star for runaway avalanches
 %
@@ -20,17 +20,18 @@ function [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(equilDKE,gridDKE,Z
 % (CEA-DRFC, joan.decker@cea.fr) 
 %
 method='linear';%'linear';
-%[equil_fit] = fitequil_yp(equil);%Vectorial form of the magnetic equilibrium
 npn = size(gridDKE.XXmhu,1);
 nmhu = size(gridDKE.XXmhu,2);
-npsi=length(equil.ptBx);
-theta=equil.theta;
+npsi=size(equilDKE.XBx,1); %nr of radial positions
+
+theta=equilDKE.mtheta;
 ntheta = length(theta);
-xpsin = radialDKE.xpsin_f;
-ap=equilDKE.ap;%equil.ap;
-Rp=equil.Rp;Zp=equil.Zp;
-B0=sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2); %min bfield
-Bmax=sqrt(equil.ptBx(:,(ntheta+1)/2).^2 + equil.ptBy(:,(ntheta+1)/2).^2 + equil.ptBPHI(:,(ntheta+1)/2)).^2;
+xpsin = equilDKE.xpsin;
+ap=equilDKE.ap;
+Rp=equilDKE.Rp;Zp=equilDKE.Zp;
+B0=equilDKE.xB0;
+%B0=sqrt(equilDKE.XBx(:,1).^2 + equilDKE.XBy(:,1).^2 + equilDKE.XBphi(:,1).^2); %min bfield
+Bmax=sqrt(equilDKE.XBx(:,(ntheta+1)/2).^2 + equilDKE.XBy(:,(ntheta+1)/2).^2 + equilDKE.XBphi(:,(ntheta+1)/2)).^2;
 XXthetastar1=NaN(npn,nmhu,npsi);
 XXthetastar2=NaN(npn,nmhu,npsi);
 XXBstar=NaN(npn,nmhu,npsi);
@@ -42,9 +43,9 @@ Bzk1=NaN(npn,nmhu,npsi);
 Bzk2=NaN(npn,nmhu,npsi);
 %
 for l=1:length(B0)
-    Br=equil.ptBx(l,:);
-    Bz=equil.ptBy(l,:);
-    Bphi=equil.ptBPHI(l,:);
+    Br=equilDKE.XBx(l,:);
+    Bz=equilDKE.XBy(l,:);
+    Bphi=equilDKE.XBphi(l,:);
     Bp=sqrt(Br.^2+Bz.^2);        %poloidal Bfield
     Bt=abs(Bphi);                %toroidal Bfield
     B=sqrt(Bt.^2+Bp.^2);
