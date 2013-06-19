@@ -88,7 +88,7 @@ dkeparam.bounce_mode=1; %bounce average
 %
 equil.pzTi = 1e-10*ones(size(equil.pzTi));% cold ions
 %
-[~,~,~,~,~,~,~,mc2] = pc_dke_yp;%Universal physics constants
+[dummy,dummy,dummy,dummy,dummy,dummy,dummy,mc2] = pc_dke_yp;%Universal physics constants
 %
 equil.pTe = betath2*mc2*ones(size(equil.pTe));
 %
@@ -102,7 +102,10 @@ if nargin >= 6,
     dkeparam.pn_S = pn_S;
 end
 %
-[~,~,~,dke_out,~,~,~,~,~,~,~,mksa,~] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,'','','',[],[]);
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
+[dummy,dummy,dummy,dke_out,dummy,dummy,dummy,dummy,dummy,dummy,dummy,mksa,dummy] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,'','','',[],[]);
 %
 RR = dke_out.XxRR_fsav(end,:);
 %
