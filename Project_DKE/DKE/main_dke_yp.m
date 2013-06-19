@@ -66,7 +66,7 @@ else
         ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf,...
         XXfinit]...
          = buildlukestruct_yp(loadstruct,equil,dkeparam_in,dkedisplay,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
-    %
+     %
     time0 = clock;
     %
     if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf),%initialization of wave parameters  
