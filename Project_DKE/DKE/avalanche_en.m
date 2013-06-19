@@ -1,4 +1,4 @@
-function [XXS,XXthetastar1,XXthetastar2]=avalanche_en(mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equil,equilDKE,radialDKE,display)
+function [XXS,XXthetastar]=avalanche_en(mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE,display)
 %
 % This function calculates the avalanche source term
 %
@@ -106,3 +106,4 @@ if display_mode>0
      
 end
 %
+XXthetastar = [];

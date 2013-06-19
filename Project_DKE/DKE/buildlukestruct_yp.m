@@ -50,7 +50,7 @@ Zmripple = make_struct_jd(loadstruct,display.display_mode,'mripplecoefbuilder_dk
 [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = make_struct_jd(loadstruct,display.display_mode,'coll_dke_jd',dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);%Collisions flux coefficients 
 [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = make_struct_jd(loadstruct,display.display_mode,'efield_dke_jd',dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c);%Electric field flux coefficients
 [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys] = make_struct_jd(loadstruct,display.display_mode,'rfwave_dke_jd',dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
-%[XXS,XXthetastar1,XXthetastar2]=make_struct_jd(loadstruct,display.display_mode,'avalanche_en',mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equil,equilDKE,radialDKE,display);%the complete avalanche operator
+[XXS,XXthetastar] = make_struct_jd(loadstruct,display.display_mode,'avalanche_en',mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE,display);%the complete avalanche operator
 %
 if strcmp(waveparam.model,'RT'),% ray tracing simulation
     [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = make_struct_jd(loadstruct,display.display_mode,'loop_rfdiff_dke_jd',dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waveparam);%RF waves flux coefficients
