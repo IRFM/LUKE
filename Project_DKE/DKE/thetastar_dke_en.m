@@ -50,8 +50,6 @@ for l=1:length(B0)
     Bt=abs(Bphi);                %toroidal Bfield
     B=sqrt(Bt.^2+Bp.^2);
     XXBstar(:,:,l)=2*B0(l)./(1-gridDKE.XXmhu(:,:,1).^2)./(1 + Zmomcoef.XXgamma(:,:,1));
-    %xi0(:,:,l)=sqrt(1+(gridDKE.XXmhu.^2-1).*B0(l)/B(l));
-    %XXBstar(:,:,l)=2*B0(l)./(1-xi0(:,:,l).^2)./(1 + Zmomcoef.XXgamma(:,:,1));
     for ip=1:npn
         for im=1:nmhu
             if XXBstar(ip,im,l)>=B0(l) && XXBstar(ip,im,l)<=Bmax(l) %criterion, XXBstar>=XXB0 and XXBstar<=Bmax
