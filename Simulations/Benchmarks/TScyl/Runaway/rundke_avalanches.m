@@ -15,6 +15,8 @@ pnmax_S = 50;
 np_S = 51;
 pn_S = linspace(0,pnmax_S,np_S);
 %
+mfactor = 10;%Factor for super theta grid (equil -> equilDKE)
+%
 %
 % normalized electric field (with respect to the Critical field Ec)
 %
@@ -104,6 +106,7 @@ end
 %
 dkeparam.psin_S = psin_S;
 dkeparam.rho_S = rho_S;
+dkeparam.mfactor = mfactor;
 %
 [dummy,dummy,dummy,dke_out,dummy,dummy,dummy,dummy,dummy,dummy,dummy,mksa,dummy] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,'','','',[],[]);
 %
