@@ -29,17 +29,20 @@ if isfield(data,'loadstructs') && isfield(data.loadstructs,'equilibrium_jd'),% n
     mksa = data.loadstructs.mksacoefbuilder_dke_yp.mksa;
     radialDKE = data.loadstructs.radialgrid_dke_jd.radialDKE;
     momentumDKE = data.loadstructs.momentumgrid_dke_jd.momentumDKE;
+    data.XXfM = data.loadstructs.coll_dke_jd.XXfM;
 elseif isfield(data,'loadstructs'),% old run_lukert, backup file, with fluct
     equilDKE = data.loadstructs.equilDKE;
     mksa = data.loadstructs.mksa;
     radialDKE = data.loadstructs.radialDKE;
     momentumDKE = data.loadstructs.momentumDKE;
+    data.XXfM = data.loadstructs.XXfM;
 elseif isfield(data,'lukestructs'),% new run_lukert, LUKE_RESULTS, no fluct
     data.Ztime = data.lukestructs.output.dke_out.FPtime;
     data.Zitn = length(data.Ztime);
     data.Zcurr = data.lukestructs.output.Zcurr;
     data.ZP0 = data.lukestructs.output.ZP0;
     data.XXf0_t = data.lukestructs.output.dke_out.XXf0;
+    data.XXfM = data.lukestructs.output.dke_out.XXfM;
     data.simul = data.lukestructs.output.dke_out.simul;
     data.equil = data.lukestructs.output.dke_out.equil;
     equilDKE = data.lukestructs.output.equilDKE;
@@ -49,6 +52,7 @@ elseif isfield(data,'lukestructs'),% new run_lukert, LUKE_RESULTS, no fluct
 else% old run_lukert, LUKE_RESULT, no fluct
     data = conc_struct_jd(data,load(filename,'equilDKE','mksa','radialDKE','momentumDKE'));
     data.XXf0_t = data.dke_out.XXf0;
+    data.XXfM = data.dke_out.XXfM;
     data.simul = data.dke_out.simul;
     data.equil = data.dke_out.equil;
     equilDKE = data.equilDKE;
@@ -123,7 +127,7 @@ P_rf = P*xdV;
 %
 %
 if nitn > 1 && fluct_display.evol,
-    plot_fluct_jd(Zitn,xrho,momentumDKE.pn,J,P,data.XXf0_t,data.simul,data.equil.pTe(1))
+    plot_fluct_jd(Zitn,xrho,momentumDKE.pn,J,P,data.XXfM,data.XXf0_t,data.simul,data.equil.pTe(1),opt)
 end
 %
 %
@@ -264,10 +268,10 @@ if fluct_display.mode >= 2,
     ylim = NaN;
     ylab = 'I (MA)';
     tit = '';
-    leg = {'With fluct.','Average'};
+    leg = {'Fluctuations'};%{'With fluct.','Average'};
     %
     graph1D_jd(stn,sI_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7);
-    graph1D_jd(stn,sI_totm,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
+    %graph1D_jd(stn,sI_totm,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
     %graph1D_jd(xlim,sI_totm(end)*[1,1],0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
     if ~isempty(Zfluct_ref),
         leg_loc = [leg,leg_ref];
@@ -438,8 +442,8 @@ if fluct_display.mode >= 2,
     if ~isempty(Zfluct_ref),
         leg_loc = [leg,leg_ref];
         for iref = 1:length(Zfluct_ref),
-            xdIdrhom_ref = Zfluct_ref(iref).J.sJm.*(xdA./xdrho).';
-            graph1D_jd(xrho,xdIdrhom_ref,0,0,'','','',NaN,xlim,ylim,'-','none',colors{iref},2,20+14i);
+            xdIdrhom_ref = Zfluct_ref(iref).J.sJm.*(Zfluct_ref(iref).dA./Zfluct_ref(iref).drho).';
+            graph1D_jd(Zfluct_ref(iref).rho,xdIdrhom_ref,0,0,'','','',NaN,xlim,ylim,'-','none',colors{iref},2,20+14i);
         end             
     else
         leg_loc = leg;
@@ -475,8 +479,8 @@ if fluct_display.mode >= 2,
     if ~isempty(Zfluct_ref),
         leg_loc = [leg,leg_ref];
         for iref = 1:length(Zfluct_ref),
-            xdPdrhom_ref = Zfluct_ref(iref).P.sPm.*(xdV./xdrho).';
-            graph1D_jd(xrho,xdPdrhom_ref,0,0,'','','',NaN,xlim,ylim,'-','none',colors{iref},2,20+14i);
+            xdPdrhom_ref = Zfluct_ref(iref).P.sPm.*(Zfluct_ref(iref).dV./Zfluct_ref(iref).drho).';
+            graph1D_jd(Zfluct_ref(iref).rho,xdPdrhom_ref,0,0,'','','',NaN,xlim,ylim,'-','none',colors{iref},2,20+14i);
         end             
     else
         leg_loc = leg;
@@ -488,11 +492,49 @@ if fluct_display.mode >= 2,
         graph1D_jd(NaN,NaN,0,0,'','','',leg_loc,xlim,ylim,'--','none','b',2,20+14i);
     end
     %
+    % --------- power density profile ---------
+    %
+    figure(19),clf
+    %
+    xlim = [0,1];
+    xlab = 'r/a';
+    ylim = NaN;
+    ylab = 'P_{RF} (MW/m^3)';
+    tit = '';
+    %
+    if isfield(opt,'hxrinv');
+        %
+        hxrinv = load(opt.hxrinv);
+        hxrinv.rho = hxrinv.rayon/(1000*hxrinv.ap);
+        hxrinv.Xinterp = interp1(hxrinv.rho,hxrinv.X,xrho).';
+        hxrinv.P = hxrinv.Xinterp*(sPm(end,:)*xdrho)/(hxrinv.Xinterp*xdrho);
+        hxrinv.P(find(hxrinv.P < 0,1,'first'):end) = 0;
+        %
+        graph1D_jd(xrho,hxrinv.P,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,20+14i);
+        %
+        leg_loc = {'Exp. HXR'};
+        %
+    else
+        leg_loc = {};
+    end
+    %
+    if ~isempty(Zfluct_ref),
+        leg_loc = [leg_loc,leg_ref];
+        for iref = 1:length(Zfluct_ref),
+            graph1D_jd(Zfluct_ref(iref).rho,Zfluct_ref(iref).P.sPm,0,0,'','','',NaN,xlim,ylim,'-','none',colors{iref},2,20+14i);
+        end             
+    end
+    %
+    leg = [leg_loc,'With fluct.'];
+    graph1D_jd(xrho,sPm(end,:),0,0,xlab,ylab,tit,leg,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7,sxdPdrhom(end,:).*srPm(end,:));
+    %
 end
 %
 Zfluct_out.stn = stn;
 Zfluct_out.rho = xrho;
 Zfluct_out.drho = xdrho;
+Zfluct_out.dA = xdA;
+Zfluct_out.dV = xdV;
 Zfluct_out.calctime = calctime;
 Zfluct_out.J.sJ = sJ;
 Zfluct_out.J.sJm = sJm;
