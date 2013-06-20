@@ -4,7 +4,6 @@ function [XXS,XXthetastar]=avalanche_en(mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,eq
 %
 % INPUT
 %    - gridDKE: grid structure, XXmhu
-%    - equil: axisymmetric toroidal magnetic equilibrium
 %    - display: dkedisplay structure
 %    - Zmomcoef
 %    - Zbouncecoef
@@ -57,6 +56,8 @@ else
 end
 %
 XXS=Srp2.*C.*XXsig; %<S()>
+XXthetastar{1}=XXthetastar1;
+XXthetastar{2}=XXthetastar2;
 %
 %display section:
 if display_mode>0
@@ -107,4 +108,3 @@ if display_mode>0
      
 end
 %
-XXthetastar = [];
