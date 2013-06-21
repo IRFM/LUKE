@@ -44,7 +44,6 @@ XXBstar=XXBstar1.*XXmaskBstar;
 %
 XXthetastar1 = NaN(npn,nmhu,npsi);
 XXthetastar2 = NaN(npn,nmhu,npsi);
-%XXBstar = NaN(npn,nmhu,npsi);
 dPsi1=NaN(npn,nmhu,npsi);
 dPsi2=NaN(npn,nmhu,npsi);
 Brk1=NaN(npn,nmhu,npsi);
@@ -59,6 +58,7 @@ Bp=sqrt(Br.^2+Bz.^2);        %poloidal Bfield
 Bt=abs(Bphi);                %toroidal Bfield
 B=sqrt(Bt.^2+Bp.^2);
 %
+keyboard
 tic
 
 
@@ -102,9 +102,9 @@ for l=1:length(B0)
                 XXthetastar1(ip,im,l)=interp1(B(1:(ntheta+1)/2),theta(1:(ntheta+1)/2),XXBstar(ip,im,l),method);     %calc theta_k* <pi
                 XXthetastar2(ip,im,l)=interp1(B((ntheta+1)/2:end),theta((ntheta+1)/2:end),XXBstar(ip,im,l),method);%calc theta_k* >pi
                 [dummy, I] = min(abs(theta-XXthetastar1(ip,im,l))); %find nearest neighbor
-                dPsi1(ip,im,l)=(B(I)-XXBstar(ip,im,l))/(theta(I)-XXthetastar1(ip,im,l))/B0(l); %calc psi' for theta)k*1
+                dPsi1(ip,im,l)=(B(I)-B(I+1))/(theta(I)-theta(I+1))/B0(l); %calc psi' for theta)k*1
                 [dummy, J] = min(abs(theta-XXthetastar2(ip,im,l)));
-                dPsi2(ip,im,l)=(B(J)-XXBstar(ip,im,l))/(theta(J)-XXthetastar2(ip,im,l))/B0(l); %calc psi' for theta)k*2
+                dPsi2(ip,im,l)=(B(J)-B(J+1))/(theta(J)-theta(J+1))/B0(l); %calc psi' for theta)k*2
                 Brk1(ip,im,l)=interp1(theta,Br,XXthetastar1(ip,im,l),method);
                 Brk2(ip,im,l)=interp1(theta,Br,XXthetastar2(ip,im,l),method);
                 Bzk1(ip,im,l)=interp1(theta,Bz,XXthetastar1(ip,im,l),method);
