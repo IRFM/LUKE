@@ -683,5 +683,9 @@ equilDKE.ap = ap;
 equilDKE.xmhu0T2 = xmhu0T2;
 equilDKE.xdV_2piRp_dke = xdV_2piRp_dke;
 equilDKE.xdA_dke = xdA_dke;
+%
+if isfield(equil,'equil_fit'),
+    equilDKE.equil_fit = equil.equil_fit;
+end
 
 
