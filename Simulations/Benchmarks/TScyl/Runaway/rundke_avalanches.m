@@ -108,6 +108,15 @@ dkeparam.psin_S = psin_S;
 dkeparam.rho_S = rho_S;
 dkeparam.mfactor = mfactor;
 %
+% Global parameters for the vectorial magnetic equilibrium
+%
+fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
+fitparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
+fitparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
+fitparam.method = 'pchip';%nearest,spline,pchip
+%
+equil.equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
+%
 [dummy,dummy,dummy,dke_out,dummy,dummy,dummy,dummy,dummy,dummy,dummy,mksa,dummy] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,'','','',[],[]);
 %
 RR = dke_out.XxRR_fsav(end,:);

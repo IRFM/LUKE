@@ -19,12 +19,85 @@ function [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(equilDKE,gridDKE,Z
 % By E. Nilsson (CEA-IRFM, emelie.nilsson@cea.fr) Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker
 % (CEA-DRFC, joan.decker@cea.fr) 
 %
-method='linear';%'linear';
-%
 npn = size(gridDKE.XXmhu,1);
 nmhu = size(gridDKE.XXmhu,2);
-npsi = size(equilDKE.XBx,1); %nr of radial positions
+npsi = size(equilDKE.xB0,1); %nr of radial positions
 ntheta = length(equilDKE.mtheta);
+%
+XXthetastar1 = NaN(npn,nmhu,npsi);
+XXthetastar2 = NaN(npn,nmhu,npsi);
+XXalpha = NaN(npn,nmhu,npsi);
+%
+for ipsi = 1:npsi*0+1,
+    for ipn = 1:npn,
+        for imhu = 1:nmhu,
+            ymin = fthetastar_dke_en(0,equilDKE.xrho(ipsi),equilDKE.equil_fit,equilDKE.xB0(ipsi),gridDKE.mhu(imhu),Zmomcoef.gamma(ipn));
+            ymax = fthetastar_dke_en(pi,equilDKE.xrho(ipsi),equilDKE.equil_fit,equilDKE.xB0(ipsi),gridDKE.mhu(imhu),Zmomcoef.gamma(ipn));
+            if ymin*ymax < 0,
+                thetastar1 = fzero(@(theta) fthetastar_dke_en(theta,equilDKE.xrho(ipsi),equilDKE.equil_fit,equilDKE.xB0(ipsi),gridDKE.mhu(imhu),Zmomcoef.gamma(ipn)),pi/4);
+                thetastar2 = fzero(@(theta) fthetastar_dke_en(theta,equilDKE.xrho(ipsi),equilDKE.equil_fit,equilDKE.xB0(ipsi),gridDKE.mhu(imhu),Zmomcoef.gamma(ipn)),pi/4 + pi);
+                %
+                if thetastar1 >= 0 && thetastar1 <= 2*pi,
+                    XXthetastar1(ipn,imhu,ipsi) = thetastar1;
+                    %
+                    [dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+                    x1,dummy,dummy,dummy,dummy,y1,dummy,dummy,dummy,dummy,...
+                    dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+                    Bx1,dummy,dummy,dummy,dummy,...
+                    By1,dummy,dummy,dummy,dummy,...
+                    dummy,dummy,dummy,dummy,dummy,...
+                    dummy,dummy,dummy,dummy,dB1dtheta,dummy,...
+                    dummy,dummy,dummy] = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),thetastar1);
+                    %
+                end
+                %
+                if thetastar2 >= 0 && thetastar2 <= 2*pi,
+                    XXthetastar2(ipn,imhu,ipsi) = thetastar2;
+                    %
+                    [dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+                    x2,dummy,dummy,dummy,dummy,y2,dummy,dummy,dummy,dummy,...
+                    dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+                    Bx2,dummy,dummy,dummy,dummy,...
+                    By2,dummy,dummy,dummy,dummy,...
+                    dummy,dummy,dummy,dummy,dummy,...
+                    dummy,dummy,dummy,dummy,dB2dtheta,dummy,...
+                    dummy,dummy,dummy] = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),thetastar2);
+                    %
+                end
+                %
+                if ~isnan(XXthetastar1(ipn,imhu,ipsi)) && ~isnan(XXthetastar2(ipn,imhu,ipsi)),
+                    XXalpha(ipn,imhu,ipsi) = equilDKE.xB0(ipsi)*((x1*x1+y1*y1)/abs(-By1*x1+Bx1*y1)/abs(dB1dtheta) + (x2*x2+y2*y2)/abs(-By2*x2+Bx2*y2)/abs(dB2dtheta));
+                end
+                %
+                disp([' - imhu: ',int2str(imhu),'/',int2str(nmhu),' - ipn: ',int2str(ipn),'/',int2str(npn),' - ipsi: ',int2str(ipsi),'/',int2str(npsi)])
+            end
+        end
+    end
+end
+%
+figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXthetastar1(:,:,1),'p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
+figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXthetastar2(:,:,1),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30); colorbar;
+%
+figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXalpha(:,:,1),'p','mhu','alpha',NaN,NaN,0,NaN,30); colorbar;
+
+
+
+
+
+
+
+
+keyboard
+
+
+
+
+
+
+%
+method='linear';%'linear';
+%
+
 %
 theta = equilDKE.mtheta;
 xpsin = equilDKE.xpsin;
