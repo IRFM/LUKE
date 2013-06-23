@@ -1,4 +1,4 @@
-function [XXS,XXthetastar]=avalanche_en(mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE,display)
+function [XXS,XXthetastar] = avalanche_en(dkepath,dkeparam,dkedisplay,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE)
 %
 % This function calculates the avalanche source term
 %
@@ -16,13 +16,12 @@ function [XXS,XXthetastar]=avalanche_en(mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,eq
 % By E. Nilsson (CEA-IRFM, emelie.nilsson@cea.fr) Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker
 % (CEA-DRFC, joan.decker@cea.fr) 
 %
-display_mode = display.display_mode;
 npn = size(gridDKE.XXmhu,1);
 nmhu = size(gridDKE.XXmhu,2);
 npsi=size(equilDKE.XBx,1); %nr of radial positions
 %
  if Zbouncecoef.XXlambda~=1
-    [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(equilDKE,gridDKE,Zmomcoef,ohm,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches
+    [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches
 else
     XXsig=ones(npn,nmhu,npsi);
     XXthetastar1=0;
@@ -60,9 +59,9 @@ XXthetastar{1}=XXthetastar1;
 XXthetastar{2}=XXthetastar2;
 %
 %display section:
-if display_mode>0
+if dkedisplay.display_mode>0
     if Zbouncecoef.XXlambda~=1
-        l=round(display.rho_display*npsi); %nr of the flux surface to be displayed
+        l=round(dkedisplay.rho_display*npsi); %nr of the flux surface to be displayed
         figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:,l),XXthetastar1(:,:,l),'p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
         figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:,l),XXthetastar2(:,:,l),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30);colorbar;
         figure;graph2D_jd(Zmomcoef.xz(:,1),gridDKE.XXmhu(1,:,l),log(XXS(:,:,l)),'p','mhu','log(S)',NaN,NaN,1,NaN,30);colorbar;

@@ -1,4 +1,4 @@
-function [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(equilDKE,gridDKE,Zmomcoef,ohm,radialDKE)
+function [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE)
 %
 % Calculation of the critical poloidal angle value theta_star for runaway avalanches
 %
@@ -19,16 +19,58 @@ function [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(equilDKE,gridDKE,Z
 % By E. Nilsson (CEA-IRFM, emelie.nilsson@cea.fr) Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker
 % (CEA-DRFC, joan.decker@cea.fr) 
 %
-npn = size(gridDKE.XXmhu,1);
-nmhu = size(gridDKE.XXmhu,2);
-npsi = size(equilDKE.xB0,1); %nr of radial positions
 ntheta = length(equilDKE.mtheta);
 %
-XXthetastar1 = NaN(npn,nmhu,npsi);
-XXthetastar2 = NaN(npn,nmhu,npsi);
-XXalpha = NaN(npn,nmhu,npsi);
+jj = 1;
 %
-for ipsi = 1:npsi*0+1,
+for ir = 1:gridDKE.nr*0+1,
+    for ipn = 1:gridDKE.npn,
+        for imhu = 1:gridDKE.nmhu,
+            grid_index(jj).ir = ir;
+            grid_index(jj).ipn = ipn;
+            grid_index(jj).imhu = imhu;
+            jj = jj + 1;
+        end
+    end
+end
+%
+%clustermode.ftest_mdce.scheduler.mode = real(mdce_mode);
+%if ~isreal(mdce_mode),
+%    clustermode.ftest_mdce.scheduler.gpu = imag(mdce_mode);
+%else
+%    clustermode.ftest_mdce.scheduler.gpu = 0;
+%end
+%clustermode.ftest_mdce.scheduler.clustersize = mdce_size;
+%clustermode.ftest_mdce.scheduler.memory = mdce_memory;
+%clustermode.ftest_mdce.scheduler.enforce = mdce_enforce;
+%
+%clustermode.ftest_mdce.scheduler.display = 1;
+%
+%dkecluster = clustermode_luke(clustermode,'ftest_mdce',dkepath,schedulertype,mdce_remnum);
+
+[dkecluster] = clustermode_luke(dkeparam.clustermode,'loop_thetastar_dke_en',dkepath,'local',3);
+
+dkecluster.scheduler.mode = 0;
+tic
+[flag,XXalpha,XXthetastar1,XXthetastar2] = mdce_luke(@loop_thetastar_dke_en,{NaN,grid_index,equilDKE.xrho,equilDKE.equil_fit,equilDKE.xB0,gridDKE.mhu,Zmomcoef.gamma},1,1:length(grid_index),dkecluster);
+toc
+XXalpha = cell2mat(reshape(XXalpha,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
+XXthetastar1 = cell2mat(reshape(XXthetastar1,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
+XXthetastar2 = cell2mat(reshape(XXthetastar2,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
+% 
+
+
+%
+%
+%for igrid = 1:length(grid_index),
+%    [XXalpha(igrid),XXthetastar1(igrid),XXthetastar2(igrid)] = loop_thetastar_dke_en(igrid,grid_index,equilDKE.xrho,equilDKE.equil_fit,equilDKE.xB0,gridDKE.mhu,Zmomcoef.gamma);
+%igrid
+% end
+keyboard
+if 0,
+
+%
+for ipsi = 1:npsi,
     for ipn = 1:npn,
         for imhu = 1:nmhu,
             ymin = fthetastar_dke_en(0,equilDKE.xrho(ipsi),equilDKE.equil_fit,equilDKE.xB0(ipsi),gridDKE.mhu(imhu),Zmomcoef.gamma(ipn));
@@ -75,6 +117,11 @@ for ipsi = 1:npsi*0+1,
     end
 end
 %
+end
+%
+
+toc
+%
 figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXthetastar1(:,:,1),'p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
 figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXthetastar2(:,:,1),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30); colorbar;
 %
@@ -84,121 +131,54 @@ figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXalpha(:,:,1),'p','mhu','a
 
 
 
-
-
-
-keyboard
-
-
-
-
-
-
-%
-method='linear';%'linear';
-%
-
-%
-theta = equilDKE.mtheta;
-xpsin = equilDKE.xpsin;
-ap = equilDKE.ap;
-Rp = equilDKE.Rp;
-Zp = equilDKE.Zp;
-%
-B0 = equilDKE.xB0;
-XXB0 = permute(repmat((ones(npn,1)*B0),[1,1,nmhu]),[1,3,2]);
-%B0=sqrt(equilDKE.XBx(:,1).^2 + equilDKE.XBy(:,1).^2 + equilDKE.XBphi(:,1).^2); %min bfield
-%Bmax=sqrt(equilDKE.XBx(:,(ntheta+1)/2).^2 + equilDKE.XBy(:,(ntheta+1)/2).^2 + equilDKE.XBphi(:,(ntheta+1)/2)).^2;
-Bmax = max(sqrt(equilDKE.XBx'.^2 + equilDKE.XBy'.^2 + equilDKE.XBphi').^2);
-XXBmax = permute(repmat((ones(npn,1)*Bmax),[1,1,nmhu]),[1,3,2]);
-XXBstar1 = 2*XXB0./(1 - gridDKE.XXmhu.^2)./(1 + Zmomcoef.XXgamma);
-XXmaskBstar = XXBstar1 >= XXB0 & XXBstar1 <= XXBmax;
-XXBstar=XXBstar1.*XXmaskBstar;
-%
-XXthetastar1 = NaN(npn,nmhu,npsi);
-XXthetastar2 = NaN(npn,nmhu,npsi);
-dPsi1=NaN(npn,nmhu,npsi);
-dPsi2=NaN(npn,nmhu,npsi);
-Brk1=NaN(npn,nmhu,npsi);
-Brk2=NaN(npn,nmhu,npsi);
-Bzk1=NaN(npn,nmhu,npsi);
-Bzk2=NaN(npn,nmhu,npsi);
-%
-Br=equilDKE.XBx;
-Bz=equilDKE.XBy;
-Bphi=equilDKE.XBphi;
-Bp=sqrt(Br.^2+Bz.^2);        %poloidal Bfield
-Bt=abs(Bphi);                %toroidal Bfield
-B=sqrt(Bt.^2+Bp.^2);
-%
-keyboard
-tic
-
-
-%
-for l=1:length(B0)
-    for ip=1:npn
-        for im=1:nmhu
-            if XXBstar(ip,im,l)>0 %criterion, XXBstar>=XXB0 and XXBstar<=Bmax, on the mask XXBstar>0
-                XXthetastar1(ip,im,l) = interp1(B(l,1:(ntheta+1)/2),theta(1:(ntheta+1)/2),XXBstar(ip,im,l),method);     %calc theta_k* <pi
-                XXthetastar2(ip,im,l) = interp1(B(l,(ntheta+1)/2:end),theta((ntheta+1)/2:end),XXBstar(ip,im,l),method);%calc theta_k* >pi
-                [dummy, I] = min(abs(theta-XXthetastar1(ip,im,l))); %find nearest neighbor
-                dPsi1(ip,im,l) = (B(l,I)-B(l,I+1))/(theta(I)-theta(I+1))/B0(l); %calc psi' for theta)k*1
-                [dummy, J] = min(abs(theta-XXthetastar2(ip,im,l)));
-                dPsi2(ip,im,l) = (B(l,J)-B(l,J+1))/(theta(J)-theta(J+1))/B0(l); %calc psi' for theta)k*2
-            end
-        end
-    end
-    Brk1(:,:,l) = interp1(theta,Br(l,:),XXthetastar1(:,:,l),method);
-    Brk2(:,:,l) = interp1(theta,Br(l,:),XXthetastar2(:,:,l),method);
-    Bzk1(:,:,l) = interp1(theta,Bz(l,:),XXthetastar1(:,:,l),method);
-    Bzk2(:,:,l) = interp1(theta,Bz(l,:),XXthetastar2(:,:,l),method);
 end
-    %
-%
-toc
 
-tic 
-%
-for l=1:length(B0)
-    Br=equilDKE.XBx(l,:);
-    Bz=equilDKE.XBy(l,:);
-    Bphi=equilDKE.XBphi(l,:);
-    Bp=sqrt(Br.^2+Bz.^2);        %poloidal Bfield
-    Bt=abs(Bphi);                %toroidal Bfield
-    B=sqrt(Bt.^2+Bp.^2);
-    XXBstar(:,:,l)=2*B0(l)./(1-gridDKE.XXmhu(:,:,1).^2)./(1 + Zmomcoef.XXgamma(:,:,1));
-    %
-    for ip=1:npn
-        for im=1:nmhu
-            if XXBstar(ip,im,l)>=B0(l) && XXBstar(ip,im,l)<=Bmax(l) %criterion, XXBstar>=XXB0 and XXBstar<=Bmax
-                XXthetastar1(ip,im,l)=interp1(B(1:(ntheta+1)/2),theta(1:(ntheta+1)/2),XXBstar(ip,im,l),method);     %calc theta_k* <pi
-                XXthetastar2(ip,im,l)=interp1(B((ntheta+1)/2:end),theta((ntheta+1)/2:end),XXBstar(ip,im,l),method);%calc theta_k* >pi
-                [dummy, I] = min(abs(theta-XXthetastar1(ip,im,l))); %find nearest neighbor
-                dPsi1(ip,im,l)=(B(I)-B(I+1))/(theta(I)-theta(I+1))/B0(l); %calc psi' for theta)k*1
-                [dummy, J] = min(abs(theta-XXthetastar2(ip,im,l)));
-                dPsi2(ip,im,l)=(B(J)-B(J+1))/(theta(J)-theta(J+1))/B0(l); %calc psi' for theta)k*2
-                Brk1(ip,im,l)=interp1(theta,Br,XXthetastar1(ip,im,l),method);
-                Brk2(ip,im,l)=interp1(theta,Br,XXthetastar2(ip,im,l),method);
-                Bzk1(ip,im,l)=interp1(theta,Bz,XXthetastar1(ip,im,l),method);
-                Bzk2(ip,im,l)=interp1(theta,Bz,XXthetastar2(ip,im,l),method);
 
-            end
+function [alpha,thetastar1,thetastar2] = loop_thetastar_dke_en(igrid,grid_index,xrho,equil_fit,xB0,mhu,gamma)
+    %
+    ymin = fthetastar_dke_en(0,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn));
+    ymax = fthetastar_dke_en(pi,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn));
+    if ymin*ymax < 0,
+        thetastar1 = fzero(@(theta) fthetastar_dke_en(theta,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn)),pi/4);
+        thetastar2 = fzero(@(theta) fthetastar_dke_en(theta,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn)),pi/4 + pi);
+        %
+        if thetastar1 >= 0 && thetastar1 <= 2*pi,
+            %
+            [dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+            x1,dummy,dummy,dummy,dummy,y1,dummy,dummy,dummy,dummy,...
+            dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+            Bx1,dummy,dummy,dummy,dummy,...
+            By1,dummy,dummy,dummy,dummy,...
+            dummy,dummy,dummy,dummy,dummy,...
+            dummy,dummy,dummy,dummy,dB1dtheta,dummy,...
+            dummy,dummy,dummy] = equilval_yp(equil_fit,xrho(grid_index(igrid).ir),thetastar1);
+        else
+            thetastar1 = NaN;
         end
+        %
+        if thetastar2 >= 0 && thetastar2 <= 2*pi,
+            %
+            [dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+            x2,dummy,dummy,dummy,dummy,y2,dummy,dummy,dummy,dummy,...
+            dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+            Bx2,dummy,dummy,dummy,dummy,...
+            By2,dummy,dummy,dummy,dummy,...
+            dummy,dummy,dummy,dummy,dummy,...
+            dummy,dummy,dummy,dummy,dB2dtheta,dummy,...
+            dummy,dummy,dummy] = equilval_yp(equil_fit,xrho(grid_index(igrid).ir),thetastar2);
+        else
+            thetastar2 = NaN;
+        end
+        %
+        if ~isnan(thetastar1) && ~isnan(thetastar2),
+            alpha = xB0(grid_index(igrid).ir)*((x1*x1+y1*y1)/abs(-By1*x1+Bx1*y1)/abs(dB1dtheta) + (x2*x2+y2*y2)/abs(-By2*x2+Bx2*y2)/abs(dB2dtheta));
+        else
+            alpha = NaN;
+        end
+    else
+        thetastar1 = NaN;
+        thetastar2 = NaN;
+        alpha = NaN;
     end
-    %
 end
 %
-toc
-
-Rk1 = ap.*cos(XXthetastar1)+Rp;
-Rk2 = ap.*cos(XXthetastar2)+Rp;
-Zk1 = ap.*sin(XXthetastar1)+Zp;
-Zk2 = ap.*sin(XXthetastar2)+Zp;
-%
-%  if any(XXthetastar1<0) || any(XXthetastar1 > pi) || any(XXthetastar2<pi) || any(XXthetastar2>2*pi)
-%      disp('Warning! Theta* out of range (theta* [0,2pi])')
-%   else
-    XXsig = ((Rk1-Rp).^2+(Zk1-Zp).^2)./abs(-Bzk1.*(Rk1-Rp)+Brk1.*(Zk1-Zp)).*1./abs(dPsi1)+...
-        ((Rk2-Rp).^2+(Zk2-Zp).^2)./abs(-Bzk2.*(Rk2-Rp)+Brk2.*(Zk2-Zp)).*1./abs(dPsi2); %sum in 1.50 lukedoc, k=1,2
-%end
