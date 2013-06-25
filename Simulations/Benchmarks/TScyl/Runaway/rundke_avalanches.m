@@ -50,7 +50,7 @@ id_simul = 'Runaway';%Simulation ID
 %path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = 0.4:0.1:1;%0.5%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = 0.4;%0.5%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -74,7 +74,7 @@ path_display = '';%if nothing is specified, the working directory is first used 
 %**************************************************************************
 %
 %dkeparam.np_S=301;
-dkeparam.nmhu_S=201;
+dkeparam.nmhu_S=101;
 
 %
 if exist('dmumpsmex','file') == 3,
