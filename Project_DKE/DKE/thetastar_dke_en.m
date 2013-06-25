@@ -95,9 +95,9 @@ b=squeeze(b);
 % end
 
 %
-figure
-hold on
-plot(theta,Bstar,'r')
+%figure
+%hold on
+%plot(theta,Bstar,'r')
 % if(~isempty(k2))
 % plot(k2,f,'ko')
 % end
