@@ -63,7 +63,6 @@ XXthetastar{2}=XXthetastar2;
 if dkedisplay.display_mode>0
     if Zbouncecoef.XXlambda~=1
         l=1; %nr of the flux surface to be displayed
-        keyboard
         figure;graph2D_jd(gridDKE.pn,gridDKE.XXmhu(l,:,1),squeeze(XXthetastar1(l,:,:))','p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
         figure;graph2D_jd(gridDKE.pn,gridDKE.XXmhu(l,:,1),squeeze(XXthetastar2(l,:,:))','p','mhu','theta^*_2',NaN,NaN,0,NaN,30); colorbar;
         %figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,l),XXthetastar2(:,:,l),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30);colorbar;
@@ -100,9 +99,9 @@ if dkedisplay.display_mode>0
 %     end
         figure
     for g=l
-        XS=XXS(g,:,:);
+        XS = squeeze(XXS(g,:,:));
         XS(isnan(XS)) = 0;
-        XS(g,:) = integral_dke_jd(gridDKE.dmhu,XS,1)/2; %integrate over mhu, pos n neg : /2
+        XS = integral_dke_jd(gridDKE.dmhu,XS,1)/2; %integrate over mhu, pos n neg : /2
         semilogy(gridDKE.pn(:),XS,'.-')
         %graph1D_jd(Zmomcoef.xz,XS,0,1,'S_{bounce}','p','S on each flux surface',NaN,NaN,NaN,'-','.')
         hold all,
