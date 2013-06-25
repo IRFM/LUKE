@@ -74,7 +74,7 @@ path_display = '';%if nothing is specified, the working directory is first used 
 %**************************************************************************
 %
 %dkeparam.np_S=301;
-dkeparam.nmhu_S=101;
+dkeparam.nmhu_S=201;
 
 %
 if exist('dmumpsmex','file') == 3,
@@ -87,6 +87,10 @@ dkeparam.tn = 10000;%time for asymptotic solution with norm_mode_f = 1
 dkeparam.dtn = 1000;%10 time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
 dkeparam.bounce_mode=1; %bounce average
+%
+options_fzero = optimset('fzero');
+options_fzero.TolX = 1e-5;%convergence tolerance
+dkeparam.options_fzero = options_fzero;
 %
 equil.pzTi = 1e-10*ones(size(equil.pzTi));% cold ions
 %
