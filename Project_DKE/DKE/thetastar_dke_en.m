@@ -1,4 +1,4 @@
-function [XXthetastar1,XXthetastar2,XXsig] = thetastar_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE)
+function [XXthetastar1,XXthetastar2,XXalpha] = thetastar_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE)
 %
 % Calculation of the critical poloidal angle value theta_star for runaway avalanches
 %
@@ -46,8 +46,8 @@ end
 %
 %clustermode.ftest_mdce.scheduler.display = 1;
 %
-%dkecluster = clustermode_luke(clustermode,'ftest_mdce',dkepath,schedulertype,mdce_remnum);
-
+%dkecluster =
+%clustermode_luke(clustermode,'ftest_mdce',dkepath,schedulertype,mdce_remnum);
 [dkecluster] = clustermode_luke(dkeparam.clustermode,'loop_thetastar_dke_en',dkepath,'local',3);
 
 dkecluster.scheduler.mode = 0;
@@ -58,26 +58,57 @@ XXalpha = cell2mat(reshape(XXalpha,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
 XXthetastar1 = cell2mat(reshape(XXthetastar1,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
 XXthetastar2 = cell2mat(reshape(XXthetastar2,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
 % 
+keyboard
+%check discrepancies between thetastar1 and 2
+a=isnan(XXthetastar1(1,:,:))
+b=isnan(XXthetastar2(1,:,:))
+a=squeeze(a)
+b=squeeze(b)
+[I,J]=find(abs(a-b)>0)
+for k=1:length(I)
+k1(k)=XXthetastar1(1,I(k),J(k));
+k2(k)=XXthetastar2(1,I(k),J(k));
+f(k)=2.0/(1 - gridDKE.XXmhu(1,I(k)).^2)./(Zmomcoef.gamma(J(k))+ 1.0)
+end
+%
+for k=1:601
+theta(k)=(k-1)*2*pi/600;
 
-
+    [dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+    dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+    dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+    Bx1,dummy,dummy,dummy,dummy,...
+    By1,dummy,dummy,dummy,dummy,...
+    dummy,dummy,dummy,dummy,dummy,...
+    dummy,dummy,dummy,B,dB1dtheta,dummy,...
+    dummy,dummy,dummy] = equilval_yp(equilDKE.equil_fit,0.4,theta(k));
+Bstar(k)=B/equilDKE.xB0;
+dBdth(k)=dB1dtheta;
+Bfield(k)=B;
+end
+%
+figure
+hold on
+plot(theta,Bstar,'r')
+plot(k2,f,'ko')
 %
 %
 %for igrid = 1:length(grid_index),
 %    [XXalpha(igrid),XXthetastar1(igrid),XXthetastar2(igrid)] = loop_thetastar_dke_en(igrid,grid_index,equilDKE.xrho,equilDKE.equil_fit,equilDKE.xB0,gridDKE.mhu,Zmomcoef.gamma);
 %igrid
 % end
-keyboard
 if 0,
 
 %
 for ipsi = 1:npsi,
-    for ipn = 1:npn,
-        for imhu = 1:nmhu,
+    for ipn = 5,%1:npn,
+        for imhu = 26,%1:nmhu,
+            keyboard
             ymin = fthetastar_dke_en(0,equilDKE.xrho(ipsi),equilDKE.equil_fit,equilDKE.xB0(ipsi),gridDKE.mhu(imhu),Zmomcoef.gamma(ipn));
             ymax = fthetastar_dke_en(pi,equilDKE.xrho(ipsi),equilDKE.equil_fit,equilDKE.xB0(ipsi),gridDKE.mhu(imhu),Zmomcoef.gamma(ipn));
-            if ymin*ymax < 0,
-                thetastar1 = fzero(@(theta) fthetastar_dke_en(theta,equilDKE.xrho(ipsi),equilDKE.equil_fit,equilDKE.xB0(ipsi),gridDKE.mhu(imhu),Zmomcoef.gamma(ipn)),pi/4);
-                thetastar2 = fzero(@(theta) fthetastar_dke_en(theta,equilDKE.xrho(ipsi),equilDKE.equil_fit,equilDKE.xB0(ipsi),gridDKE.mhu(imhu),Zmomcoef.gamma(ipn)),pi/4 + pi);
+            if ymin*ymax <= 0,
+                thetastar1 = fzero(@(theta) fthetastar_dke_en(theta,equilDKE.xrho(ipsi),equilDKE.equil_fit,equilDKE.xB0(ipsi),gridDKE.mhu(imhu),Zmomcoef.gamma(ipn)),pi/2);
+                thetastar2 = fzero(@(theta) fthetastar_dke_en(theta,equilDKE.xrho(ipsi),equilDKE.equil_fit,equilDKE.xB0(ipsi),gridDKE.mhu(imhu),Zmomcoef.gamma(ipn)),pi/2 + pi);
                 %
                 if thetastar1 >= 0 && thetastar1 <= 2*pi,
                     XXthetastar1(ipn,imhu,ipsi) = thetastar1;
@@ -122,10 +153,10 @@ end
 
 toc
 %
-figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXthetastar1(:,:,1),'p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
-figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXthetastar2(:,:,1),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30); colorbar;
+%figure;graph2D_jd(gridDKE.XXmhu(1,:),gridDKE.pn(1,:),XXthetastar1(1,:,:),'p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
+%figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXthetastar2(1,:,:),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30); colorbar;
 %
-figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXalpha(:,:,1),'p','mhu','alpha',NaN,NaN,0,NaN,30); colorbar;
+%figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXalpha(:,:,1),'p','mhu','alpha',NaN,NaN,0,NaN,30); colorbar;
 
 
 
