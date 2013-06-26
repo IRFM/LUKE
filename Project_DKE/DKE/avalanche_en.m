@@ -1,4 +1,4 @@
-function [XXS,XXthetastar] = avalanche_en(dkepath,dkeparam,dkedisplay,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE)
+function [XXS,XXthetastar1, XXthetastar2] = avalanche_en(dkepath,dkeparam,dkedisplay,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE)
 %
 % This function calculates the avalanche source term
 %
@@ -40,7 +40,7 @@ nr=0.1*ne;
 B0=equilDKE.xB0;
 %B0=sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2);
 %B0=min(sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2));
-for l=1:npsi*0+1
+for l=1:npsi
   Srp(l,:)=1/(4*pi)*beta^2/log(Lambd)*ne(l)*nr(l)./(gridDKE.pn.*Zmomcoef.gamma.*(Zmomcoef.gamma-1).^2); %rosenbluth (S*)
 end
 Srp2=permute(repmat(Srp, [1,1,nmhu]),[1,3,2]);
@@ -56,14 +56,12 @@ else
 end
 %
 XXS=Srp2.*C.*XXalpha; %<S()>
-XXthetastar{1}=XXthetastar1;
-XXthetastar{2}=XXthetastar2;
 %
 %display section:
 if dkedisplay.display_mode>0
     if Zbouncecoef.XXlambda~=1
         l=1; %nr of the flux surface to be displayed
-        figure;graph2D_jd(gridDKE.pn,gridDKE.XXmhu(l,:,1),squeeze(XXthetastar1(l,:,:))','p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
+        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXthetastar1(l,:,:))','p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
         figure;graph2D_jd(gridDKE.pn,gridDKE.XXmhu(l,:,1),squeeze(XXthetastar2(l,:,:))','p','mhu','theta^*_2',NaN,NaN,0,NaN,30); colorbar;
         %figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,l),XXthetastar2(:,:,l),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30);colorbar;
         figure;graph2D_jd(gridDKE.pn,gridDKE.XXmhu(l,:,1),squeeze(log(XXS(l,:,:)))','p','mhu','log(S)',NaN,NaN,0,NaN,30); colorbar;
