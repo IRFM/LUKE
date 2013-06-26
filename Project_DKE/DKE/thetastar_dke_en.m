@@ -20,10 +20,11 @@ function [XXthetastar1,XXthetastar2,XXalpha] = thetastar_dke_en(dkepath,dkeparam
 % (CEA-DRFC, joan.decker@cea.fr) 
 %
 ntheta = length(equilDKE.mtheta);
+Bmax=max(sqrt(sqrt(equilDKE.XBx'.^2+equilDKE.XBy'.^2)+equilDKE.XBphi'.^2));
 %
 jj = 1;
 %
-for ir = 1:gridDKE.nr*0+1,
+for ir = 1:gridDKE.nr,
     for ipn = 1:gridDKE.npn,
         for imhu = 1:gridDKE.nmhu,
             grid_index(jj).ir = ir;
@@ -58,19 +59,22 @@ else
     options_fzero = [];
 end
 %
-[flag,XXalpha,XXthetastar1,XXthetastar2] = mdce_luke(@loop_thetastar_dke_en,{NaN,grid_index,equilDKE.xrho,equilDKE.equil_fit,equilDKE.xB0,gridDKE.mhu,Zmomcoef.gamma,options_fzero},1,1:length(grid_index),dkecluster);
+[flag,XXalpha,XXthetastar1,XXthetastar2] = mdce_luke(@loop_thetastar_dke_en,{NaN,grid_index,equilDKE.xrho,equilDKE.equil_fit,equilDKE.xB0,Bmax,gridDKE.mhu,Zmomcoef.gamma,options_fzero},1,1:length(grid_index),dkecluster);
 toc
+keyboard
 XXalpha = cell2mat(reshape(XXalpha,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
 XXthetastar1 = cell2mat(reshape(XXthetastar1,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
 XXthetastar2 = cell2mat(reshape(XXthetastar2,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
 % 
 %keyboard
 %check discrepancies between thetastar1 and 2
-a=isnan(XXthetastar1(1,:,:));
-b=isnan(XXthetastar2(1,:,:));
+for ir=1:gridDKE.nr
+a=isnan(XXthetastar1(ir,:,:));
+b=isnan(XXthetastar2(ir,:,:));
 a=squeeze(a);
 b=squeeze(b);
 [I,J]=find(abs(a-b)>0)
+end
 % for k=1:length(I)
 % k1(k)=XXthetastar1(1,I(k),J(k));
 % k2(k)=XXthetastar2(1,I(k),J(k));
@@ -174,15 +178,16 @@ toc
 end
 
 
-function [alpha,thetastar1,thetastar2] = loop_thetastar_dke_en(igrid,grid_index,xrho,equil_fit,xB0,mhu,gamma,options_fzero)
+function [alpha,thetastar1,thetastar2] = loop_thetastar_dke_en(igrid,grid_index,xrho,equil_fit,xB0,Bmax,mhu,gamma,options_fzero)
     %
     ymin = fthetastar_dke_en(0,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn));
     ymax = fthetastar_dke_en(pi,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn));
     if ymin*ymax <= 0,
         %keyboard
-        theta_guess = asin((2/(1-mhu(grid_index(igrid).imhu)^2)/(gamma(grid_index(igrid).ipn)+1)-1)./(4.077089236454936/xB0-1))+pi/2;
-        thetastar1 = fzero(@(theta) fthetastar_dke_en(theta,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn)),theta_guess,options_fzero);
-        thetastar2 = fzero(@(theta) fthetastar_dke_en(theta,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn)),2*pi-theta_guess,options_fzero);       
+        theta_guess = 2*asin((2/(1-mhu(grid_index(igrid).imhu)^2)/(gamma(grid_index(igrid).ipn)+1)-1)./(Bmax(grid_index(igrid).ir)/xB0(grid_index(igrid).ir)-1));
+        del = (pi-theta_guess)/10;
+        thetastar1 = fzero(@(theta) fthetastar_dke_en(theta,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn)),theta_guess+del,options_fzero);
+        thetastar2 = fzero(@(theta) fthetastar_dke_en(theta,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn)),2*pi-theta_guess-del,options_fzero);       
         %
         if thetastar1 >= 0 && thetastar1 <= 2*pi,
             %
