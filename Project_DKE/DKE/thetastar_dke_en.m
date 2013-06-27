@@ -35,23 +35,29 @@ for ir = 1:gridDKE.nr,
     end
 end
 %
-%clustermode.ftest_mdce.scheduler.mode = real(mdce_mode);
-%if ~isreal(mdce_mode),
-%    clustermode.ftest_mdce.scheduler.gpu = imag(mdce_mode);
-%else
-%    clustermode.ftest_mdce.scheduler.gpu = 0;
-%end
-%clustermode.ftest_mdce.scheduler.clustersize = mdce_size;
-%clustermode.ftest_mdce.scheduler.memory = mdce_memory;
-%clustermode.ftest_mdce.scheduler.enforce = mdce_enforce;
+mdce_mode = 3;%3 for parfor, i or 3+i for GPU
+mdce_remote = 0;%0 local, x remotely (see dkepath structure)
+mdce_enforce = 1;
+mdce_display = 1;
 %
-%clustermode.ftest_mdce.scheduler.display = 1;
 %
-%dkecluster =
-%clustermode_luke(clustermode,'ftest_mdce',dkepath,schedulertype,mdce_remnum);
-[dkecluster] = clustermode_luke(dkeparam.clustermode,'loop_thetastar_dke_en',dkepath,'local',3);
+clustermode.loop_thetastar_dke_en.scheduler.mode = real(mdce_mode);
+if ~isreal(mdce_mode),
+    clustermode.loop_thetastar_dke_en.scheduler.gpu = imag(mdce_mode);
+else
+    clustermode.loop_thetastar_dke_en.scheduler.gpu = 0;
+end
+%
+clustermode.loop_thetastar_dke_en.scheduler.enforce = mdce_enforce;
+%
+clustermode.ftest_mdce.scheduler.display = mdce_display;
+%
+[dkecluster] = clustermode_luke(clustermode,'loop_thetastar_dke_en',dkepath,'local',mdce_remote);
 
-dkecluster.scheduler.mode = 0;
+%[dkecluster] = clustermode_luke(dkeparam.clustermode,'loop_thetastar_dke_en',dkepath,'local',3);
+
+%dkecluster.scheduler.mode = 0;
+keyboard
 tic
 if isfield(dkeparam,'options_fzero'),
     options_fzero = dkeparam.options_fzero;
@@ -59,12 +65,28 @@ else
     options_fzero = [];
 end
 %
-[flag,XXalpha,XXthetastar1,XXthetastar2] = mdce_luke(@loop_thetastar_dke_en,{NaN,grid_index,equilDKE.xrho,equilDKE.equil_fit,equilDKE.xB0,Bmax,gridDKE.mhu,Zmomcoef.gamma,options_fzero},1,1:length(grid_index),dkecluster);
+%for igrid = 1:length(grid_index),
+%    [YYalpha(igrid),YYthetastar1(igrid),YYthetastar2(igrid)] = loop_thetastar_dke_en(igrid,grid_index,equilDKE.xrho,equilDKE.equil_fit,equilDKE.xB0,Bmax,gridDKE.mhu,Zmomcoef.gamma,options_fzero);
+%    igrid
+%end
+
+[flag,YYalpha,YYthetastar1,YYthetastar2] = mdce_luke(@loop_thetastar_dke_en,{NaN,grid_index,equilDKE.xrho,equilDKE.equil_fit,equilDKE.xB0,Bmax,gridDKE.mhu,Zmomcoef.gamma,options_fzero},1,1:length(grid_index),dkecluster);
+
 toc
-keyboard
-XXalpha = cell2mat(reshape(XXalpha,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
-XXthetastar1 = cell2mat(reshape(XXthetastar1,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
-XXthetastar2 = cell2mat(reshape(XXthetastar2,gridDKE.nr,gridDKE.nmhu,gridDKE.npn));
+
+
+
+for ir = 1:gridDKE.nr,
+    XXalpha(ir,:,:) = reshape(YYalpha(gridDKE.npn*gridDKE.nmhu*(ir-1)+1:gridDKE.npn*gridDKE.nmhu*ir),gridDKE.nmhu,gridDKE.npn)';
+    XXthetastar1(ir,:,:) = reshape(YYthetastar1(gridDKE.npn*gridDKE.nmhu*(ir-1)+1:gridDKE.npn*gridDKE.nmhu*ir),gridDKE.nmhu,gridDKE.npn)';
+    XXthetastar2(ir,:,:) = reshape(YYthetastar2(gridDKE.npn*gridDKE.nmhu*(ir-1)+1:gridDKE.npn*gridDKE.nmhu*ir),gridDKE.nmhu,gridDKE.npn)';
+end
+%
+if iscell(XXalpha) && iscell(XXthetastar1) && iscell(XXthetastar2)
+    XXalpha = cell2mat(XXalpha);
+    XXthetastar1 = cell2mat(XXthetastar1);
+    XXthetastar2 = cell2mat(XXthetastar2);
+end
 % 
 %keyboard
 %check discrepancies between thetastar1 and 2
@@ -107,10 +129,11 @@ end
 % end
 % %
 %
-%for igrid = 1:length(grid_index),
-%    [XXalpha(igrid),XXthetastar1(igrid),XXthetastar2(igrid)] = loop_thetastar_dke_en(igrid,grid_index,equilDKE.xrho,equilDKE.equil_fit,equilDKE.xB0,gridDKE.mhu,Zmomcoef.gamma);
-%igrid
-% end
+ 
+
+
+
+
 if 0,
 
 %
@@ -166,10 +189,10 @@ end
 
 toc
 %
-%figure;graph2D_jd(gridDKE.XXmhu(1,:),gridDKE.pn(1,:),XXthetastar1(1,:,:),'p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
-%figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXthetastar2(1,:,:),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30); colorbar;
+figure;graph2D_jd(gridDKE.XXmhu(1,:),gridDKE.pn(1,:),XXthetastar1(1,:,:),'p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
+figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXthetastar2(1,:,:),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30); colorbar;
 %
-%figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXalpha(:,:,1),'p','mhu','alpha',NaN,NaN,0,NaN,30); colorbar;
+figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,1),XXalpha(:,:,1),'p','mhu','alpha',NaN,NaN,0,NaN,30); colorbar;
 
 
 
@@ -179,6 +202,8 @@ end
 
 
 function [alpha,thetastar1,thetastar2] = loop_thetastar_dke_en(igrid,grid_index,xrho,equil_fit,xB0,Bmax,mhu,gamma,options_fzero)
+    %
+    if nargin < 9,options_fzero = [];end
     %
     ymin = fthetastar_dke_en(0,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn));
     ymax = fthetastar_dke_en(pi,xrho(grid_index(igrid).ir),equil_fit,xB0(grid_index(igrid).ir),mhu(grid_index(igrid).imhu),gamma(grid_index(igrid).ipn));
