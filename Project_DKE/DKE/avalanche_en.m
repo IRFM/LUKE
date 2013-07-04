@@ -28,7 +28,6 @@ else
     XXthetastar2=0;
 end
 %
-keyboard
 Lambd=mksa.lnc_e_ref;
 ne_ref=mksa.ne_ref;
 ne=equilDKE.xne/ne_ref;
@@ -57,7 +56,6 @@ end
 %
 XXS=Srp2.*C.*XXalpha; %<S()>
 %
-keyboard
 %display section:
 if dkedisplay.display_mode>0
 ir=3; %nr of the flux surface to be displayed
