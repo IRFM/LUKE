@@ -122,6 +122,10 @@ if iscell(lukestructs),% remote and/or distributed calculation
             %
             [err,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
             %
+            if isfield(remote,'cvs')
+                remote.cvs.CVSROOT = '';%such that cvs update is done once (see remoterunbatch.m)
+            end
+            %
             if ~isempty(err),
                 %
                 if isfield(lukestructs{ijob},'equil') && isfield(dkepath,'remenforce') && dkepath.remenforce == 1,% enforce local calculation
