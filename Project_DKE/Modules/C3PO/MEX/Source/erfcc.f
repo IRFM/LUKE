@@ -92,15 +92,15 @@ C
         QRHO  = (1-0.85*Y)*DSQRT(QRHO)
         N     = IDNINT(6 + 72*QRHO)
         J     = 2*N+1
-        XSUM  = 1.0/J
+        XSUM  = 1.0D0/J
         YSUM  = 0.0D0
         DO 10 I=N, 1, -1
           J    = J - 2
           XAUX = (XSUM*XQUAD - YSUM*YQUAD)/I
           YSUM = (XSUM*YQUAD + YSUM*XQUAD)/I
-          XSUM = XAUX + 1.0/J
+          XSUM = XAUX + 1.0D0/J
  10     CONTINUE
-        U1   = -FACTOR*(XSUM*YABS + YSUM*XABS) + 1.0
+        U1   = -FACTOR*(XSUM*YABS + YSUM*XABS) + 1.0D0
         V1   =  FACTOR*(XSUM*XABS - YSUM*YABS)
         DAUX =  DEXP(-XQUAD)
         U2   =  DAUX*DCOS(YQUAD)
