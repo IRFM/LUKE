@@ -1,7 +1,10 @@
-function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui)
+function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
     %
     % This function interactively modifies the fields of structure s
     %
+    if nargin < 5,
+        sextra = struct;
+    end
     if nargin < 4,
         opt_gui = 0;
     end
@@ -36,6 +39,8 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui)
     nf_all = length(fnames_all);
     %
     s = putinfo_yp(s,sname,fexcept);
+    %
+    s = conc_struct_jd(s,sextra);
     %
     expert = zeros(1,nf_all);
     for iname = 1:nf_all,
