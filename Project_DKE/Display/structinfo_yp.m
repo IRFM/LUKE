@@ -222,6 +222,16 @@ switch struct
             case 'norm_ref',expert = 0;values = [0,1];info = 'Normalization procedure for the lower limit of radial transport parallel velocity dependence: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref';
             otherwise,
         end
+        %
+    case 'external',
+        %
+        switch field 
+            case 'basestr',expert = 0;values = '';info = 'Name of the tokamak';
+            case 'shotnum',expert = 0;values = '';info = 'Shot number';
+            case 't1',expert = 0;values = [0;Inf];info = 'Minimum time for data averaging (s)';
+            case 't2',expert = 0;values = [0;Inf];info = 'Maximum time for data averaging (s)';
+            otherwise,
+        end        
 		%
         % -------------------------- AMR structures -----------------------
         %
