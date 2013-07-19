@@ -1,8 +1,10 @@
-%function varargout = iluke(varargin)
+%
+% GUI FOR LUKE/C3PO/R5X2
+%
 clear all
 close all
 %
-% GUI FOR LUKE/C3PO/R5X2
+dkepath = load_structures_yp('dkepath','','');
 %
 % -------------------------------------------------------------------------
 %
@@ -16,7 +18,8 @@ figbasewidth = 1200;
 graphwidth = 400;
 graphheight = 300;
 %
-shotnumwidth = 250; 
+shotnumtitlewidth = 90; 
+shotnumwidth = 150; 
 titlestrheight = 30;
 %
 titlewidth = 105;
@@ -25,7 +28,7 @@ butwidth = 50;%80;% width of button
 buthsep = 10;% horizontal separation between buttons
 butvsep = 10;% vertical separation between buttons
 %
-fontname = 'fixedwidth';% font type
+fontname = 'Liberation Mono';%get(0,'FixedWidthFontName');%'fixedwidth';% font type
 fontsize = 10;% font size
 titlefontsize = 2*fontsize;
 %
@@ -93,16 +96,20 @@ controlstr.position = [buthsep,controlheight - controlstrcorr,panelwidth - 2*but
 %
 % SIMULATION INFO DIMENSIONS
 %
-tokamak.position = [buthsep,2*textheight + butvsep + textheightcorr,shotnumwidth,textheight];
-shotnum.position = [buthsep,textheight + butvsep + textheightcorr,shotnumwidth,textheight];
-shotime.position = [buthsep,butvsep + textheightcorr,shotnumwidth,textheight];
+tokamaktitle.position = [buthsep,2*textheight + butvsep + textheightcorr,shotnumtitlewidth,textheight];
+shotnumtitle.position = [buthsep,textheight + butvsep + textheightcorr,shotnumtitlewidth,textheight];
+shotimetitle.position = [buthsep,butvsep + textheightcorr,shotnumtitlewidth,textheight];
 %
-exitluke.position = [shotnumwidth + 2*buthsep,butheight + 2*butvsep,butwidth,butheight];
-newshot.position = [shotnumwidth + 2*buthsep,butvsep,butwidth,butheight];
-loadshot.position = [shotnumwidth + butwidth + 3*buthsep,butheight + 2*butvsep,butwidth,butheight];
-saveshot.position = [shotnumwidth + butwidth + 3*buthsep,butvsep,butwidth,butheight];
+tokamak.position = [2*buthsep+shotnumtitlewidth,2*textheight + butvsep + textheightcorr,shotnumwidth,textheight];
+shotnum.position = [2*buthsep+shotnumtitlewidth,textheight + butvsep + textheightcorr,shotnumwidth,textheight];
+shotime.position = [2*buthsep+shotnumtitlewidth,butvsep + textheightcorr,shotnumwidth,textheight];
 %
-simulfilewidth = panelwidth - shotnumwidth - 5*buthsep - 3*butwidth;%- 2*butwidth
+exitluke.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,butheight + 2*butvsep,butwidth,butheight];
+newshot.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,butvsep,butwidth,butheight];
+loadshot.position = [shotnumtitlewidth + shotnumwidth + butwidth + 4*buthsep,butheight + 2*butvsep,butwidth,butheight];
+saveshot.position = [shotnumtitlewidth + shotnumwidth + butwidth + 4*buthsep,butvsep,butwidth,butheight];
+%
+simulfilewidth = panelwidth - shotnumtitlewidth - shotnumwidth - 6*buthsep - 3*butwidth;%- 2*butwidth
 simulfile.position = [panelwidth - simulfilewidth - buthsep,butvsep + textheightcorr,simulfilewidth,2*butheight + butvsep];
 %
 titlestr.position = [buthsep,2*butheight + 3*butvsep,panelwidth - 2*buthsep,titlestrheight];
@@ -185,9 +192,14 @@ r5x2text.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 8*buthe
 %
 
 
-tokamak.string = 'TOKAMAK       : < empty >';
-shotnum.string = 'SHOT NUMBER   : < empty >';
-shotime.string = 'SHOT TIME (s) : < empty >';
+tokamaktitle.string = 'TOKAMAK       : ';
+shotnumtitle.string = 'SHOT NUMBER   : ';
+shotimetitle.string = 'SHOT TIME (s) : ';
+
+tokamak.string = '< empty >';
+shotnum.string = '< empty >';
+shotime.string = '< empty >';
+
 simulfile.string = {'SIMULATION FILE','','< empty >'};
 titlestr.string = {'SUMMARY'};
 
@@ -208,7 +220,7 @@ wavetitle.string = 'RF Waves';
 luketitle.string = 'Fokker-Planck Equation';
 r5x2title.string = 'Fast Electron Bremsstrahlung';
 
-datamake.string = 'New';%'Create';
+datamake.string = 'Import';%'Create';
 equilmake.string = 'New';%'Create';
 ohmmake.string = 'New';%'Create';
 transpmake.string = 'New';%'Create';
@@ -308,8 +320,13 @@ r5x2disp.state = 'off';
 
 %
 
-exitluke.callback = @callback_closeobject;
-exitluke.data = struct;
+exitluke.callback = 'close(mainfig.handle)';
+%
+datamake.callback = 'action = ''datamake'';iluke_callbacks;';
+datasave.callback = 'action = ''datasave'';iluke_callbacks;';
+dataload.callback = 'action = ''dataload'';iluke_callbacks;';
+
+%exitluke.data = struct;
 
 %
 % CREATE GUI
@@ -328,13 +345,16 @@ plot2.handle = uipanel('Parent',mainfig.handle,'Title','','units','pixels','Posi
 plot3.handle = uipanel('Parent',mainfig.handle,'Title','','units','pixels','Position',plot3.position);
 %
 
+tokamaktitle.handle = uicontrol(titlepanel.handle,'Style','text','String',tokamaktitle.string,'Position',tokamaktitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+shotnumtitle.handle = uicontrol(titlepanel.handle,'Style','text','String',shotnumtitle.string,'Position',shotnumtitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+shotimetitle.handle = uicontrol(titlepanel.handle,'Style','text','String',shotimetitle.string,'Position',shotimetitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 tokamak.handle = uicontrol(titlepanel.handle,'Style','text','String',tokamak.string,'Position',tokamak.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 shotnum.handle = uicontrol(titlepanel.handle,'Style','text','String',shotnum.string,'Position',shotnum.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 shotime.handle = uicontrol(titlepanel.handle,'Style','text','String',shotime.string,'Position',shotime.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 simulfile.handle = uicontrol(titlepanel.handle,'Style','text','String',simulfile.string,'Position',simulfile.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 titlestr.handle = uicontrol(titlepanel.handle,'Style','text','String',titlestr.string,'Position',titlestr.position,'FontName',fontname,'FontSize',titlefontsize,'HorizontalAlignment','center');
 
-exitluke.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',exitluke.string,'Position',exitluke.position,'Callback',{exitluke.callback,exitluke.data},'FontName',fontname,'FontSize',fontsize,'Enable',exitluke.state);
+exitluke.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',exitluke.string,'Position',exitluke.position,'FontName',fontname,'FontSize',fontsize,'Enable',exitluke.state,'Callback',exitluke.callback);
 newshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',newshot.string,'Position',newshot.position,'FontName',fontname,'FontSize',fontsize,'Enable',newshot.state);
 loadshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',loadshot.string,'Position',loadshot.position,'FontName',fontname,'FontSize',fontsize,'Enable',loadshot.state);
 saveshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',saveshot.string,'Position',saveshot.position,'FontName',fontname,'FontSize',fontsize,'Enable',saveshot.state);
@@ -351,21 +371,21 @@ wavetitle.handle = uicontrol(controlpanel.handle,'Style','text','String',wavetit
 luketitle.handle = uicontrol(controlpanel.handle,'Style','text','String',luketitle.string,'Position',luketitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 r5x2title.handle = uicontrol(controlpanel.handle,'Style','text','String',r5x2title.string,'Position',r5x2title.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 
-datamake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datamake.string,'Position',datamake.position,'FontName',fontname,'FontSize',fontsize,'Enable',datamake.state);
+datamake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datamake.string,'Position',datamake.position,'FontName',fontname,'FontSize',fontsize,'Enable',datamake.state,'Callback',datamake.callback);
 equilmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilmake.string,'Position',equilmake.position,'FontName',fontname,'FontSize',fontsize,'Enable',equilmake.state);
 ohmmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmmake.string,'Position',ohmmake.position,'FontName',fontname,'FontSize',fontsize,'Enable',ohmmake.state);
 transpmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpmake.string,'Position',transpmake.position,'FontName',fontname,'FontSize',fontsize,'Enable',transpmake.state);
 ripplemake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ripplemake.string,'Position',ripplemake.position,'FontName',fontname,'FontSize',fontsize,'Enable',ripplemake.state);
 wavemake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',wavemake.string,'Position',wavemake.position,'FontName',fontname,'FontSize',fontsize,'Enable',wavemake.state);
 
-dataload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',dataload.string,'Position',dataload.position,'FontName',fontname,'FontSize',fontsize,'Enable',dataload.state);
+dataload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',dataload.string,'Position',dataload.position,'FontName',fontname,'FontSize',fontsize,'Enable',dataload.state,'Callback',dataload.callback);
 equilload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilload.string,'Position',equilload.position,'FontName',fontname,'FontSize',fontsize,'Enable',equilload.state);
 ohmload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmload.string,'Position',ohmload.position,'FontName',fontname,'FontSize',fontsize,'Enable',ohmload.state);
 transpload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpload.string,'Position',transpload.position,'FontName',fontname,'FontSize',fontsize,'Enable',transpload.state);
 rippleload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',rippleload.string,'Position',rippleload.position,'FontName',fontname,'FontSize',fontsize,'Enable',rippleload.state);
 waveload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',waveload.string,'Position',waveload.position,'FontName',fontname,'FontSize',fontsize,'Enable',waveload.state);
 
-datasave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datasave.string,'Position',datasave.position,'FontName',fontname,'FontSize',fontsize,'Enable',datasave.state);
+datasave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datasave.string,'Position',datasave.position,'FontName',fontname,'FontSize',fontsize,'Enable',datasave.state,'Callback',datasave.callback);
 equilsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilsave.string,'Position',equilsave.position,'FontName',fontname,'FontSize',fontsize,'Enable',equilsave.state);
 ohmsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmsave.string,'Position',ohmsave.position,'FontName',fontname,'FontSize',fontsize,'Enable',ohmsave.state);
 transpsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpsave.string,'Position',transpsave.position,'FontName',fontname,'FontSize',fontsize,'Enable',transpsave.state);
@@ -405,10 +425,4 @@ r5x2text.handle = uicontrol(controlpanel.handle,'Style','text','String',r5x2text
 infotext.handle = uicontrol(infopanel.handle,'Style','text','String',infotext.string,'Position',infotext.position,'FontName',fontname,'FontSize',fontsize);
 infostr.handle = uicontrol(infopanel.handle,'Style','text','String',infostr.string,'Position',infostr.position,'FontName',fontname,'FontSize',titlefontsize,'HorizontalAlignment','center');
 
-%  INITIALIZATION TASKS
-
-exitluke.data.handle = mainfig.handle;
-
-
-%end
 
