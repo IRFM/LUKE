@@ -14,10 +14,19 @@ set(plot3.handle,'Position',plot3.position);
 set(tokamaktitle.handle,'String',tokamaktitle.string,'Position',tokamaktitle.position);
 set(shotnumtitle.handle,'String',shotnumtitle.string,'Position',shotnumtitle.position);
 set(shotimetitle.handle,'String',shotimetitle.string,'Position',shotimetitle.position);
+
 set(tokamak.handle,'String',tokamak.string,'Position',tokamak.position);
 set(shotnum.handle,'String',shotnum.string,'Position',shotnum.position);
 set(shotime.handle,'String',shotime.string,'Position',shotime.position);
+
+set(lukeroottitle.handle,'String',lukeroottitle.string,'Position',lukeroottitle.position);
+set(lukevertitle.handle,'String',lukevertitle.string,'Position',lukevertitle.position);
+set(simulfiletitle.handle,'String',simulfiletitle.string,'Position',simulfiletitle.position);
+
+set(lukeroot.handle,'String',lukeroot.string,'Position',lukeroot.position);
+set(lukever.handle,'String',lukever.string,'Position',lukever.position);
 set(simulfile.handle,'String',simulfile.string,'Position',simulfile.position);
+
 set(titlestr.handle,'String',titlestr.string,'Position',titlestr.position);
 
 set(exitluke.handle,'String',exitluke.string,'Position',exitluke.position,'Enable',exitluke.state,'Callback',exitluke.callback);

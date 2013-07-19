@@ -46,7 +46,7 @@ switch action
             tokamak.string = external.basestr;
             shotnum.string = external.shotnum;
             shotime.string = external.shotime;
-            datatext.string = [pathname,filename];
+            datatext.string = filename;%[pathname,filename];
         end  
         %
     case 'datasave'
@@ -64,7 +64,7 @@ switch action
             %
             save([pathname,filename],'external');
             %
-            datatext.string = [pathname,filename];
+            datatext.string = filename;%[pathname,filename];
         end  
 end
 %

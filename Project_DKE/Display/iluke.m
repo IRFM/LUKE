@@ -18,13 +18,14 @@ figbasewidth = 1200;
 graphwidth = 400;
 graphheight = 300;
 %
-shotnumtitlewidth = 90; 
-shotnumwidth = 150; 
+simulfiletitlewidth = 140;
+shotnumtitlewidth = 120; 
+shotnumwidth = 80; 
 titlestrheight = 30;
 %
 titlewidth = 105;
 butheight = 25;%40;% height of button
-butwidth = 50;%80;% width of button
+butwidth = 60;%80;% width of button
 buthsep = 10;% horizontal separation between buttons
 butvsep = 10;% vertical separation between buttons
 %
@@ -35,10 +36,10 @@ titlefontsize = 2*fontsize;
 infotext.string = {'','To get started :',...
                       '==============  ','',...
     '- "Load" Existing simulation                                       ','',...
-    '- "New" Experimental data to import from database                  ',...
-    '- "Load" Experimental data to load from existing EXTERNAL file     ',...
-    '- "New" Equilibrium data to create equilibrium or import EQDSK file',...
-    '- "Load" Equilibrium data to load from existing EQUIL file         '};
+    '- "Import" Exp. data to import from database                  ',...
+    '- "Load" Exp. data to load from existing EXTERNAL file     ',...
+    '- "New" Equilibrium to create equilibrium or import EQDSK file',...
+    '- "Load" Equilibrium  to load from existing EQUIL file         '};
 %
 % -------------------------------------------------------------------------
 %
@@ -109,8 +110,15 @@ newshot.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,butvsep,butwidt
 loadshot.position = [shotnumtitlewidth + shotnumwidth + butwidth + 4*buthsep,butheight + 2*butvsep,butwidth,butheight];
 saveshot.position = [shotnumtitlewidth + shotnumwidth + butwidth + 4*buthsep,butvsep,butwidth,butheight];
 %
-simulfilewidth = panelwidth - shotnumtitlewidth - shotnumwidth - 6*buthsep - 3*butwidth;%- 2*butwidth
-simulfile.position = [panelwidth - simulfilewidth - buthsep,butvsep + textheightcorr,simulfilewidth,2*butheight + butvsep];
+simulfilewidth = panelwidth - shotnumtitlewidth - shotnumwidth - simulfiletitlewidth - 7*buthsep - 2*butwidth;
+%
+lukeroottitle.position = [panelwidth - simulfilewidth - simulfiletitlewidth - 2*buthsep,2*textheight + butvsep + textheightcorr,simulfiletitlewidth,textheight];
+lukevertitle.position = [panelwidth - simulfilewidth - simulfiletitlewidth - 2*buthsep,textheight + butvsep + textheightcorr,simulfiletitlewidth,textheight];
+simulfiletitle.position = [panelwidth - simulfilewidth - simulfiletitlewidth - 2*buthsep,butvsep + textheightcorr,simulfiletitlewidth,textheight];
+%
+lukeroot.position = [panelwidth - simulfilewidth - buthsep,2*textheight + butvsep + textheightcorr,simulfilewidth,textheight];
+lukever.position = [panelwidth - simulfilewidth - buthsep,textheight + butvsep + textheightcorr,simulfilewidth,textheight];
+simulfile.position = [panelwidth - simulfilewidth - buthsep,butvsep + textheightcorr,simulfilewidth,textheight];
 %
 titlestr.position = [buthsep,2*butheight + 3*butvsep,panelwidth - 2*buthsep,titlestrheight];
 %
@@ -200,7 +208,14 @@ tokamak.string = '< empty >';
 shotnum.string = '< empty >';
 shotime.string = '< empty >';
 
-simulfile.string = {'SIMULATION FILE','','< empty >'};
+lukeroottitle.string =  'LUKE VERSION    : ';
+lukevertitle.string =   'MATLAB VERSION  : ';
+simulfiletitle.string = 'SIMULATION FILE : ';
+
+lukeroot.string = dkepath.luke_root;
+lukever.string = LUKEversion_jd;
+simulfile.string = '< not saved >';
+
 titlestr.string = {'SUMMARY'};
 
 exitluke.string = 'Exit';
@@ -348,10 +363,19 @@ plot3.handle = uipanel('Parent',mainfig.handle,'Title','','units','pixels','Posi
 tokamaktitle.handle = uicontrol(titlepanel.handle,'Style','text','String',tokamaktitle.string,'Position',tokamaktitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 shotnumtitle.handle = uicontrol(titlepanel.handle,'Style','text','String',shotnumtitle.string,'Position',shotnumtitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 shotimetitle.handle = uicontrol(titlepanel.handle,'Style','text','String',shotimetitle.string,'Position',shotimetitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+
 tokamak.handle = uicontrol(titlepanel.handle,'Style','text','String',tokamak.string,'Position',tokamak.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 shotnum.handle = uicontrol(titlepanel.handle,'Style','text','String',shotnum.string,'Position',shotnum.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 shotime.handle = uicontrol(titlepanel.handle,'Style','text','String',shotime.string,'Position',shotime.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+
+lukeroot.handle = uicontrol(titlepanel.handle,'Style','text','String',lukeroot.string,'Position',lukeroot.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+lukever.handle = uicontrol(titlepanel.handle,'Style','text','String',lukever.string,'Position',lukever.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
 simulfile.handle = uicontrol(titlepanel.handle,'Style','text','String',simulfile.string,'Position',simulfile.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+
+lukeroottitle.handle = uicontrol(titlepanel.handle,'Style','text','String',lukeroottitle.string,'Position',lukeroottitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+lukevertitle.handle = uicontrol(titlepanel.handle,'Style','text','String',lukevertitle.string,'Position',lukevertitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+simulfiletitle.handle = uicontrol(titlepanel.handle,'Style','text','String',simulfiletitle.string,'Position',simulfiletitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+
 titlestr.handle = uicontrol(titlepanel.handle,'Style','text','String',titlestr.string,'Position',titlestr.position,'FontName',fontname,'FontSize',titlefontsize,'HorizontalAlignment','center');
 
 exitluke.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',exitluke.string,'Position',exitluke.position,'FontName',fontname,'FontSize',fontsize,'Enable',exitluke.state,'Callback',exitluke.callback);
