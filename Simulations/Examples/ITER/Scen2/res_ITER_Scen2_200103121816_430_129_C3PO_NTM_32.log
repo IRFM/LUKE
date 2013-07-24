@@ -1,21 +1,21 @@
-Simulation id: ITER_Scen2_200103121816_430_129_C3PO_NTM_32_LUKE_1_10
-Simulation date: 07/24/2013  15:25:56
+Simulation id: ITER_Scen2_200103121816_430_129_C3PO_NTM_32
+Simulation date: 07/23/2013  17:31:55
 User id: JD211098
 LUKE Version: LUKE 1.11.0
 MATLAB Version: 710
 MACHINE: cephee
-Final RF convergence parameter: 3.3955e-08
+Final RF convergence parameter: 3.1002e-08
  
-Total current (I): 8.8851e-06 MA (positive for co-current)
-Location of current peak (rhog): 0.74052 (peak mode = 0; jpeak = 0)
-Current FWHM (drhog): 0.038358 (peak mode = 0; jpeak = 0)
-RF efficiency (n_19*I*Rp/P): 0.5807 10^19 A/(W.m^2)
+Total current (I): 8.8679e-06 MA (positive for co-current)
+Location of current peak (rhog): 0.74058 (peak mode = 0; jpeak = 0)
+Current FWHM (drhog): 0.039573 (peak mode = 0; jpeak = 0)
+RF efficiency (n_19*I*Rp/P): 0.57958 10^19 A/(W.m^2)
 Launched RF power (P): 0.001 MW
 RF power (P): 0.001 MW ---> 100 %.
 RF power on harm. 1 (P): 0.001 MW ---> 100 %.
-RF power on harm. 2 (P): 3.0149e-16 MW ---> 3.0149e-11 %.
-RF power on harm. 3 (P): 5.0227e-36 MW ---> 5.0227e-31 %.
+RF power on harm. 2 (P): 3.0228e-16 MW ---> 3.0228e-11 %.
+RF power on harm. 3 (P): 5.1872e-36 MW ---> 5.1872e-31 %.
 Linear RF power (P): 0.001 MW ---> 100 %.
 Ohmic power (P): 0 MW
 Total power (P): 0.001 MW
-CD efficiency (I/P): 0.0088851 A/W
+CD efficiency (I/P): 0.0088679 A/W
