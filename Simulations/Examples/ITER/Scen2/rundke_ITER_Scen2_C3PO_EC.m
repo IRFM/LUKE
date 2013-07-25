@@ -10,22 +10,34 @@ close all
 warning('off','all')
 pause(1)
 %
-remnum = 1;% remote profile number. Use 0 for local calculations
-remtimout = 0;%60;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
-rempause = 1;%pause between job checks (in minutes) (only for remtimout > 0)
+% remote computing parameters
+%
+remnum = 0;% remote profile number. Use 0 for local sequential calculations
+remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+rempause = 1;% pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
+remdebugmode = 0;% debug mode (0) off (1) on
+remclean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 %
-opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
+% distributed computing parameters
 %
-p_opt = -1;
+mdce_mode_coll_dke_jd = 0;% mdce mode for wave_solver_yp : (0) none (1) jobs (2) dcluke (3) parfor (-remnum) remote on profile remnum
+mdce_mode_eecoll_dke_yp = 0;% mdce mode for wave_solver_yp : (0) none (1) jobs (2) dcluke (3) parfor (-remnum) remote on profile remnum
+mdce_mode_rfdiff_dke_jd = 0;% mdce mode for rfdiff_dke_jd  : (0) none (1) jobs (2) dcluke (3) parfor (-remnum) remote on profile remnum
+mdce_mode_wave_solver_yp = 0;% mdce mode for wave_solver_yp : (0) none (1) jobs (2) dcluke (3) parfor (-remnum) remote on profile remnum
+mdce_mode_main_C3PO_jd = 0;% mdce mode for main_C3PO_jd : (0) none (1) jobs (2) dcluke (3) parfor (-remnum) remote on profile remnum
+%
+% backup & save options
+%
+opt.save = 0;% (1): save LUKE_RESULTS or return error (0): return results or error
+opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
+opt.backup = 0;% (1) save fluctuation time steps (0) do not save
+opt.waves = 0;% (1) save waves at each time step (0) do not save
 %
 % *********************** Specify LUKE structures *****************************
 %
 locid_simul = '';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = 20;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_dkepath = '';%For all paths used by DKE solver
 path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -42,20 +54,8 @@ path_rtparam = '';%if nothing is specified, the working directory is first used 
 id_dkedisplay = 'NO_DISPLAY';%For output code display
 path_dkedisplay = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_ohm = '';%For Ohmic electric contribution
-path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-ids_launch = {'NTM_32'};%For RF waves contribution (put all the type of waves needed)
+ids_launch =  {'NTM_32'};%For RF waves contribution (put all the type of waves needed)
 paths_launch = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
-paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-id_transpfaste = '';%For fast electron radial transport
-path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-id_ripple = '';%For fast electron magnetic ripple losses
-path_ripple = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 %************************************************************************************************************************************
 %
@@ -67,16 +67,6 @@ P_L = 1e-3;% [MW] linear limit
 %
 % C3PO parameters
 %
-%   C3PO Display parameters
-%
-C3POdisplay = struct;
-%
-%   C3PO Wave parameters
-%
-waveparam.mmode = -1;% cold plasma mode (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1) :1
-waveparam.nchi = 4;%Number of angular positions for beamlets
-waveparam.n_rf_list = 1:2;% harmonic numbers to be considered
-%
 %   C3PO Equilibrium parameters
 %
 fitparam = struct;
@@ -86,33 +76,48 @@ fitparam = struct;
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
 rayparam.kextra = 50;%extra points if QL absorption is delayed
 %
+%   C3PO Wave parameters
+%
+waveparam.mmode = -1;% cold plasma mode (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1) :1
+waveparam.nchi = 4;%Number of angular positions for beamlets
+waveparam.n_rf_list = 1:2;% harmonic numbers to be considered
+%
+%   C3PO Display parameters
+%
+C3POdisplay = struct;
+%
 % 	C3PO computing parameters
 %
 C3POparam.clustermode.main_C3PO_jd.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
 %
 %************************************************************************************************************************************
 %
-[dkepath,equil,dkeparam,rtparam,dkedisplay,ohm,launchs,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'rtparam',id_rtparam,path_rtparam,'dkedisplay',id_dkedisplay,path_dkedisplay,'ohm',id_ohm,path_ohm,'launchs',ids_launch,paths_launch,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
+[dkepath,equil,dkeparam,rtparam,dkedisplay,launchs] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'rtparam',id_rtparam,path_rtparam,'dkedisplay',id_dkedisplay,path_dkedisplay,'launchs',ids_launch,paths_launch);
 %
 %************************************************************************************************************************************
+%
+dkeparam.clustermode.coll_dke_jd.scheduler.mode = mdce_mode_coll_dke_jd;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = mdce_mode_eecoll_dke_yp;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+dkeparam.clustermode.wave_solver_yp.scheduler.mode = mdce_mode_wave_solver_yp;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+dkeparam.clustermode.rfdiff_dke_jd.scheduler.mode = mdce_mode_rfdiff_dke_jd;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+%
+% wavestruct
 %
 launch = launchs{1};
 launch.yP_L = P_L*1e6;
 %
 fitparam = conc_struct_jd(rtparam.fitparam,fitparam);
 rayparam = conc_struct_jd(rtparam.rayparam,rayparam);
-C3POparam = conc_struct_jd(rtparam.C3POparam,C3POparam);
-C3POdisplay = conc_struct_jd(rtparam.C3POdisplay,C3POdisplay);
 waveparam = conc_struct_jd(rtparam.waveparam,waveparam);
-%
-% wavestruct
+C3POdisplay = conc_struct_jd(rtparam.C3POdisplay,C3POdisplay);
+C3POparam = conc_struct_jd(rtparam.C3POparam,C3POparam);
 %
 wavestruct.wavesolver = 'C3PO';
 wavestruct.launch = launch;
-wavestruct.id = [wavestruct.wavesolver,'_',launch.id];
-wavestruct.waveparam = waveparam;
-wavestruct.rayparam = rayparam;
+wavestruct.id = [wavestruct.wavesolver,'_',wavestruct.launch.id];
 wavestruct.fitequilparam = fitparam;
+wavestruct.rayparam = rayparam;
+wavestruct.waveparam = waveparam;
 wavestruct.raydisplay = C3POdisplay;
 wavestruct.C3POparam = C3POparam;
 %
@@ -120,12 +125,14 @@ wavestructs = {wavestruct};
 %
 %************************************************************************************************************************************
 %
-simul.id = make_luke_simulid_jd(equil,ohm,transpfaste,ripple,waves,wavestructs,locid_simul);
+simul.id = make_luke_simulid_jd(equil,'','','','',wavestructs,locid_simul);
 simul.path = path_simul;
+%
+%************************************************************************************************************************************
 %
 filename = [simul.path,'LUKE_RESULTS_',simul.id,'.mat'];
 %
-if remtimout == 0 && remstart == 0 && exist(filename,'file'),% load existing simulation
+if remtimout == 0 && remstart == 0 && exist(filename,'file') && input_dke_yp('Do you want to check, import or reload results (y/n) ',{'y','n'},'y') == 'y',% load existing simulation
     %
     load(filename,'lukestructs');
     %
@@ -135,11 +142,7 @@ else% new simulation
     lukestructs.equil = equil;
     lukestructs.dkeparam = dkeparam;
     lukestructs.dkedisplay = dkedisplay;
-    lukestructs.ohm = ohm;
-    lukestructs.waves = waves;
     lukestructs.wavestructs = wavestructs;
-    lukestructs.transpfaste = transpfaste;
-    lukestructs.ripple = ripple;
     lukestructs.opt = opt;
     %
 end
@@ -147,14 +150,24 @@ end
 dkepath.remnum = remnum;
 dkepath.remtimout = remtimout;
 dkepath.rempause = rempause;
+dkepath.debugmode = remdebugmode;
+dkepath.clean = remclean;
 %
 lukestructs = run_lukert(lukestructs,dkepath);
 %
 %************************************************************************************************************************************
+%
+% ---------------------------------------------- Save LUKE or job results ----------------------------------------------
+%
+% if remnum > 0 && remtimout == 0, only the job infos are saved in
+% filename. In this case, run the script again to check/load results
+%
 save(filename);
 info_dke_yp(2,['LUKE Results saved in ',filename]);
 %
+% process results if available
+%
 if isfield(lukestructs,'output'),
-    proc_luke_jd(lukestructs.output,0,p_opt);
+    proc_luke_jd(lukestructs.output);
 end
 %
