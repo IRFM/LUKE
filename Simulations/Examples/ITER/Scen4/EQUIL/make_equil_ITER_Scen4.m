@@ -37,9 +37,14 @@ p_opt = -1;
 dispname = 'ITER Scenario 4';
 savename = 'ITER_Scen4';
 %
+% RZ2PT options
+%
+opt.sfac = 10;% factor for (x,y) supergrid
+opt.axenforce = true;% option to enforce center position and psi value in supergrid
+%
 % --------------------------------------------------------------
 %
-[equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd([eqdsk_path,eqdsk_file],display_mode,p_opt,dispname,savename);
+[equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd([eqdsk_path,eqdsk_file],display_mode,p_opt,dispname,savename,opt);
 equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
 %
 % signs
