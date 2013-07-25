@@ -1,14 +1,14 @@
 Simulation id: ITER_Scen4_C3PO_f5_N2_dN0.2
-Simulation date: 07/25/2013  22:32:93
+Simulation date: 07/25/2013  23:17:50
 User id: JD211098
 LUKE Version: LUKE 1.11.0
-MATLAB Version: 710
-MACHINE: cephee
-Final RF convergence parameter: 3.2301e-06
+MATLAB Version: 800
+MACHINE: andromede1
+Final RF convergence parameter: 3.2295e-06
  
-Total current (I): 0.66125 MA (positive for co-current)
+Total current (I): 0.66124 MA (positive for co-current)
 Location of current peak (rhog): 0.71473 (peak mode = 0; jpeak = 0)
-Current FWHM (drhog): 0.046154 (peak mode = 0; jpeak = 0)
+Current FWHM (drhog): 0.04615 (peak mode = 0; jpeak = 0)
 RF efficiency (n_19*I*Rp/P): 1.5495 10^19 A/(W.m^2)
 Launched RF power (P): 20 MW
 RF power (P): 20.0001 MW ---> 100.0005 %.
