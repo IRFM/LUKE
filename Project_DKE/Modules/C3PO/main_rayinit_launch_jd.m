@@ -218,6 +218,8 @@ if strcmp(launch.type,'EC'),
             rayinit.ydNpar0(iy) = dNpar0;%initial Ray spectral width
             rayinit.yP0_2piRp(iy) = yP0_2piRp(iy);%Lineic initial power density initial power in the ray (W/m)
             %
+            rayinit.yib(iy) = iy;% beam index for tracking (fluctuations)
+            %
             if ny == 1 && isfield(launch,'w0'),%beam waist  
                 rayinit.w0 = launch.w0;
                 if isfield(launch,'z_L'),%for divergence calculation
