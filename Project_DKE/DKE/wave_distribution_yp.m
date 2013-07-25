@@ -136,21 +136,7 @@ for iw = 1:nw,
         for ib = 1:length(wave.rays),
             iray = iray+1;
             %
-            if isfield(wavestructs{ifluct,iw}.launch,'bPlhtot'),%LH wave
-                %
-                iy = wave.rays{ib}.rayinits{1}.yib;
-                %
-            elseif isfield(wavestructs{iw}.launch,'yP_L'),%EC wave
-                %
-                launch = wave.rays{ib}.rayinits{1}.launch;
-                iy = find((isnan(wave.rayinit.yrho0) | rayinit.yrho0 == wave.rayinit.yrho0) & ...
-                      (isnan(wave.rayinit.ytheta0) | rayinit.ytheta0 == wave.rayinit.ytheta0) & ...
-                      (isnan(wave.rayinit.ym0) | rayinit.ym0 == wave.rayinit.ym0) & ... 
-                      (isnan(wave.rayinit.yP0_2piRp) | rayinit.yP0_2piRp == wave.rayinit.yP0_2piRp) & ...
-                      (isnan(wave.rayinit.yNpar0) | rayinit.yNpar0 == wave.rayinit.yNpar0) & ...
-                      (isnan(wave.rayinit.ydNpar0) | rayinit.ydNpar0 == wave.rayinit.ydNpar0),1,'first');
-                %
-            end
+            iy = wave.rays{ib}.rayinits{1}.yib;
             %
             byisel{ifluct,iw}{iy} = [byisel{ifluct,iw}{iy},iray];
         end
