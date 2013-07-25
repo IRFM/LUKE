@@ -19,7 +19,7 @@ for irun = 1:nruns,% load runs in a loop to avoid memory excess
         %
         if nargin >= 3,
             path_simul = savepath;
-        elseif isfield(lukestructs,'simul') && isfield(lukestructs.simul,'path'),
+        elseif isfield(lukestructs,'simul') && isfield(lukestructs.simul,'path') && ~isempty(lukestructs.simul.path),
             path_simul = lukestructs.simul.path;
         else
             path_simul = './';

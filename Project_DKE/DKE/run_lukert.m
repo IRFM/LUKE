@@ -579,7 +579,7 @@ for itn = itnmin:itnmax,%time evolution
                     yPtot_0 = wavestructs{ifluct,iw}.launch.bPlhtot_in;%LH injected power at t=0
                     yPtot_inj = wavestructs{ifluct,iw}.launch.bPlhtot;%LH injected power at t=itn
                 elseif isfield(wavestructs{ifluct,iw}.launch,'yP_L'),
-                    yPtot_0 = wavestructs{ifluct,iw}.launch.yP_L;%EC injected power at t=0
+                    yPtot_0 = wavestructs{ifluct,iw}.launch.yP_L_in;%EC injected power at t=0
                     yPtot_inj = wavestructs{ifluct,iw}.launch.yP_L;%EC injected power at t=itn
                 end
                 %
