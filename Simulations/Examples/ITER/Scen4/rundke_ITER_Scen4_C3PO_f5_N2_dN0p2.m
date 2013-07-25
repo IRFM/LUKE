@@ -10,46 +10,48 @@ close all
 warning('off','all')
 pause(1)
 %
-p_opt = -1;
+% remote computing parameters
 %
-% Use these parameters to compare with LUKE 1.8 only
-% In that case, use the old version of the function solver_dke_yp
+remnum = 0;% remote profile number. Use 0 for local sequential calculations
+remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+rempause = 1;% pause between job checks (in minutes) (only for remtimout > 0)
+remdebugmode = 0;% debug mode (0) off (1) on
+remclean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 %
-% tn = 10000;
-% dtn = 10000;
+% distributed computing parameters
+%
+mdce_mode_coll_dke_jd = 0;% mdce mode for wave_solver_yp : (0) none (1) jobs (2) dcluke (3) parfor (-remnum) remote on profile remnum
+mdce_mode_eecoll_dke_yp = 0;% mdce mode for wave_solver_yp : (0) none (1) jobs (2) dcluke (3) parfor (-remnum) remote on profile remnum
+mdce_mode_rfdiff_dke_jd = 0;% mdce mode for rfdiff_dke_jd  : (0) none (1) jobs (2) dcluke (3) parfor (-remnum) remote on profile remnum
+mdce_mode_wave_solver_yp = 0;% mdce mode for wave_solver_yp : (0) none (1) jobs (2) dcluke (3) parfor (-remnum) remote on profile remnum
+mdce_mode_main_C3PO_jd = 0;% mdce mode for main_C3PO_jd : (0) none (1) jobs (2) dcluke (3) parfor (-remnum) remote on profile remnum
+%
+% backup & save options
+%
+opt.save = 1;% (1): save LUKE_RESULTS or return error (0): return results or error
+opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
+opt.backup = 0;% (1) save fluctuation time steps (0) do not save
+opt.waves = 0;% (1) save waves at each time step (0) do not save
 %
 % *********************** Specify LUKE structures *****************************
 %
-id_simul = '';%Simulation ID
+locid_simul = '';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = 20;%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_dkepath = '';%For all paths used by DKE solver
 path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_equil = 'ITER_Scen4';%For plasma equilibrium
 path_equil = 'EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%path_equil = '/luke/LUKE_Simulations_1_9/Examples/ITER/Scen4/EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'LH_RT';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
+id_rtparam = 'LH';%For C3PO code parameters
+path_rtparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 id_dkedisplay = 'NO_DISPLAY';%For output code display
 path_dkedisplay = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-id_ohm = '';%For Ohmic electric contribution
-path_ohm = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-ids_wave = {''};%For RF waves contribution (put all the type of waves needed)
-paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-id_transpfaste = '';%For fast electron radial transport
-path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
-%
-id_ripple = '';%For fast electron magnetic ripple losses
-path_ripple = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 %************************************************************************************************************************************
 %
@@ -66,101 +68,101 @@ launch.m0 = 0;
 launch.phi0 = 0;
 launch.LFS = 1;
 %
-% Display parameters
+%************************************************************************************************************************************
 %
-C3POdisplay.ray = 0;
-C3POdisplay.equilibrium = 0;
-C3POdisplay.p_opt = -1;%Printing or saving option of the figures
+% SPECIFIC C3PO PARAMETERS
 %
-% Wave parameters
+%   C3PO Equilibrium parameters
 %
-waveparam.mmode = -1;%cold plasma mode [1] : (-1) m (1) p, p is the slow mode when kperp > 0 (ex : LH slow wave)
-waveparam.kmode = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
+fitparam.method = 'spline';%nearest,spline,pchip,cubic
 %
-%Option parameter for FLR effects and cross-comparison between old FP code: 
-%	- (0): all FLR effects
-%	- (1): small FLR effects and 1/vpar dependence
-%	- (2): small FLR effects and no 1/vpar dependence and old grid technique for DQL calculations (Karney, Shoucri) (see rfdiff_dke_jd)
+% 	C3PO ray-tracing parameters
 %
-waveparam.opt_rf = 1;
+rayparam = struct;
+%
+%   C3PO Wave parameters
 %
 waveparam.dsmin = 0;%minimum size for ray fragments
 %
-waveparam.nd = 1;%Number of transverse distance positions for beamlets
-waveparam.nchi = 1;%Number of angular positions for beamlets
+%   C3PO Display parameters
 %
-waveparam.n_rf_list = 0;
-waveparam.ns = 1;%ray smoothing parameter
+C3POdisplay = struct;
 %
-% -------------------------------------------------------------------------
+% 	C3PO computing parameters
 %
-% Global parameters for the vectorial magnetic equilibrium
-%
-% Equilibrium parameters for the ray-tracing
-%
-fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
-fitparam.method = 'spline';%nearest,spline,pchip,cubic
-fitparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
-fitparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
-fitparam.opt_load = 0;%Reload existing vectorial magnetic equilibrium (1) or overwrite it (0).
-%
-% Global parameters for the ray-tracing
-%
-rayparam.testmode = 0;
-rayparam.tensortype = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
-rayparam.t0 = 0;
-rayparam.tfinal = 50000;
-rayparam.dt0 = 0.0001;
-rayparam.dS = 0.001;
-rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 50000;
-rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
-rayparam.reflection = 1;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
-rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
-rayparam.nperp =1000;%number of points in pperp integration for damping calculations
-rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
-rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
-rayparam.kextra = 1000;
+C3POparam.clustermode.main_C3PO_jd.scheduler.mode = mdce_mode_main_C3PO_jd;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
 %
 %************************************************************************************************************************************
 %
-[dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_dkedisplay,path_dkedisplay,'ohm',id_ohm,path_ohm,'waves',ids_wave,paths_wave,'transpfaste',id_transpfaste,path_transpfaste,'ripple',id_ripple,path_ripple);
+[dkepath,equil,dkeparam,rtparam,dkedisplay] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'rtparam',id_rtparam,path_rtparam,'dkedisplay',id_dkedisplay,path_dkedisplay);
 %
-if exist('tn','var') && exist('dtn','var'),
-    dkeparam.tn = tn;
-    dkeparam.dtn = dtn;
-end    
+%************************************************************************************************************************************
 %
-% Parallel computing parameters
-%
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
-C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
-%
-dkeparam.clustermode.wave_solver_yp = clustermode_luke(0,'',dkepath);%MatLab distributed computing environment
-dkeparam.clustermode.wave_solver_yp.scheduler.display = 1;
+dkeparam.clustermode.coll_dke_jd.scheduler.mode = mdce_mode_coll_dke_jd;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = mdce_mode_eecoll_dke_yp;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+dkeparam.clustermode.wave_solver_yp.scheduler.mode = mdce_mode_wave_solver_yp;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+dkeparam.clustermode.rfdiff_dke_jd.scheduler.mode = mdce_mode_rfdiff_dke_jd;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
 %
 % wavestruct
 %
+fitparam = conc_struct_jd(rtparam.fitparam,fitparam);
+rayparam = conc_struct_jd(rtparam.rayparam,rayparam);
+waveparam = conc_struct_jd(rtparam.waveparam,waveparam);
+C3POdisplay = conc_struct_jd(rtparam.C3POdisplay,C3POdisplay);
+C3POparam = conc_struct_jd(rtparam.C3POparam,C3POparam);
+%
 wavestruct.wavesolver = 'C3PO';
 wavestruct.launch = launch;
-wavestruct.id = [wavestruct.wavesolver,'_',launch.id];
-wavestruct.waveparam = waveparam;
-wavestruct.rayparam = rayparam;
+wavestruct.id = [wavestruct.wavesolver,'_',wavestruct.launch.id];
 wavestruct.fitequilparam = fitparam;
+wavestruct.rayparam = rayparam;
+wavestruct.waveparam = waveparam;
 wavestruct.raydisplay = C3POdisplay;
 wavestruct.C3POparam = C3POparam;
 %
-id_simul = [id_equil,'_',wavestruct.id];
+wavestructs = {wavestruct};
 %
 %************************************************************************************************************************************
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = run_lukert(id_simul,{wavestruct},[],psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);
+simul.id = make_luke_simulid_jd(equil,'','','','',wavestructs,locid_simul);
+simul.path = path_simul;
 %
 %************************************************************************************************************************************
-filename = [path_simul,'LUKE_RESULTS_',id_simul,'.mat'];
-save(filename);
-info_dke_yp(2,['LUKE Results saved in ',filename]);
 %
-data = load(filename);
-proc_luke_jd(data,0,p_opt);
+lukestruct.simul = simul;
+lukestruct.equil = equil;
+lukestruct.dkeparam = dkeparam;
+lukestruct.dkedisplay = dkedisplay;
+lukestruct.wavestructs = wavestructs;
+lukestruct.opt = opt;
 %
+dkepath.remnum = remnum;
+dkepath.remtimout = remtimout;
+dkepath.rempause = rempause;
+dkepath.debugmode = remdebugmode;
+dkepath.clean = remclean;
+%
+lukestructs = run_lukert({lukestruct},dkepath);
+%
+%************************************************************************************************************************************
+%
+% ---------------------------------------------- Save batch results ----------------------------------------------
+%
+% Note : if opt.save = 0, results or jobs are saved in file LUKE_BATCH_...
+%
+% To process and save individual LUKE_RESULTS files, use : 
+% >> completed_jobs = load_batch_jd('LUKE_BATCH_....mat')
+%
+% If not all jobs are completed, use again with :
+% >> completed_jobs = load_batch_jd('LUKE_BATCH_....mat',completed_jobs)
+%
+if opt.save == 0,
+    save_batch_jd(lukestructs,dkepath,simul.id)
+end
+%
+% process results if available
+%
+if remnum == 0 || remtimout > 0,% results are returned
+    proc_luke_jd(lukestructs{1}.output);
+end
+
