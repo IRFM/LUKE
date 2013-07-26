@@ -266,7 +266,7 @@ for itn = itn0:nit,
                 end
                 %
                 if (residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == 0),
-                    if min(min(min(ZP0_rf.xyn_rf_fsav))) < 0,
+                    if dkeparam_out.postest_rf && min(min(min(ZP0_rf.xyn_rf_fsav))) < 0,
                          info_dke_yp(2,['WARNING: residue below threshold but iterations continue while negative absorbed power occurs somewhere!']);                  
                     else
                         conv = 1;

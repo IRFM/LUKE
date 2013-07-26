@@ -52,6 +52,7 @@ dkeparam.rt_mode = 1;%RT-DKE power consistency
 dkeparam.abs_lim = 0.95;%Relative level of RF power absorption that is accpeted for in the quasilinear convergence loop (0: no threshold, 1: full absorption)
 dkeparam.nit_rf = 20;%Maximum number of iteration in ray-tracing. Works only if rt_mode = 1 and more than one radial point (default = 1)
 dkeparam.prec_rf = 1e-2;%relative precision in RT-DKE iterations
+dkeparam.postest_rf = true;%Test that the power absorbed is positive everywhere, or continue convergence process
 dkeparam.n_rf_list = [0];%List of harmonics in the Dql calculations
 dkeparam.delta_rt = 0.5;%smoothering parameter of quasilinear iterations
 dkeparam.Dparparmax = Inf;%Upper limit of the quasilinear diffusion coefficient. Important for low temperature plasmas et high power level for stability of the code

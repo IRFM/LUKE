@@ -49,6 +49,10 @@ if ~isfield(dkeparam,'finitabs'),
     dkeparam.finitabs = 0;%The initial distribution is used to first estimate the ray absorption
 end
 %
+if ~isfield(dkeparam,'postest_rf'),
+    dkeparam.postest_rf = true;%Test that the power absorbed is positive everywhere, or continue convergence process
+end
+%
 if ~isfield(dkeparam,'finsert'),
     dkeparam.finsert = 0;%The initial distribution is used to first estimate the ray absorption
 end
