@@ -509,7 +509,7 @@ for itn = itnmin:itnmax,%time evolution
     %
     time_luke = tic;
     %
-    if isempty(loadstructs),
+    if itn == 1,
         [Znorm_loc,Zcurr_loc,ZP0_loc,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = loop_run_lukert(simul,waves,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,XXf0,XXsinksource_in,loadstructs);
         %
         equilDKE.fluct = equil.fluct;%for transfering info about plasma fluctuations
