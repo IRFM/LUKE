@@ -1,0 +1,49 @@
+Simulation id: TS_32299_100.1733_ES_0_Dr0_0.2_C3PO_LH_C3_ne3
+Simulation date: 04/19/2013  12:02:42
+User id: JD211098
+LUKE Version: LUKE 1.10.0
+MATLAB Version: 710
+MACHINE: andromede3
+Final RF convergence parameter: 0.00080798
+ 
+Total current (I): 0.44392 MA (positive for co-current)
+Location of current peak (rhot): 0.38084 (peak mode = 0; jpeak = 0)
+Current FWHM (drhot): 0.12494 (peak mode = 0; jpeak = 0)
+RF efficiency (n_19*I*Rp/P): 1.5525 10^19 A/(W.m^2)
+Launched RF power (P): 1.5874 MW
+RF power (P): 1.5875 MW ---> 100.0086 %.
+RF power on harm. 0 (P): 1.5875 MW ---> 100.0086 %.
+Linear RF power (P): 1.5874 MW ---> 100 %.
+Ohmic power (P): 0 MW
+Total power (P): 1.5875 MW
+CD efficiency (I/P): 0.27963 A/W
+ 
+----------------------------------------
+ 
+RF Peak # 1
+Position rho G: 0.44934
+Position rho P: 0.57463
+Position rho T: 0.38084
+Position rho V: 0.39988
+Temperature Te: 3.0819 keV
+Density ne: 0.22404 *10^20 m^-3
+ 
+RF power (P): 1.5875 MW
+Total current (I): 0.44392 MA
+CD efficiency (I/P): 0.27963 A/W
+Normalized CD efficiency xi: 1.6473
+ 
+----------------------------------------
+ 
+RF Wave # 1
+Position rho G: 0.44934
+Position rho P: 0.57463
+Position rho T: 0.38084
+Position rho V: 0.39988
+Temperature Te: 3.0819 keV
+Density ne: 0.22404 *10^20 m^-3
+ 
+Launched RF power (P): 1.5874MW
+Deposited RF power (P): 1.5875 MW ---> 100.0086 %.
+RF power on harm. 0 (P): 1.5875 MW ---> 100.0086 %.
+Linear RF power (P): 1.5874 MW ---> 100 %.
