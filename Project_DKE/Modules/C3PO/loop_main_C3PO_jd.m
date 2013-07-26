@@ -226,7 +226,7 @@ for iref = 1:nref + 1,% vessel reflection index
             rays{irayref}.swpe2 = [rays{irayref}.swpe2,swpe2];%Normalized electron plasma frequency
             rays{irayref}.swce2 = [rays{irayref}.swce2,swce2];%Normalized electron gyro frequency
             %
-			if yout(end,1) > 1 - 2*rayparam.dS && ~isinf(equil.Rp),% ray reaches edge before full absorption and a reflection is enforced
+			if rayparam.reflection <= 0 && yout(end,1) > 1 - 2*rayparam.dS && ~isinf(equil.Rp),% ray reaches edge before full absorption and a reflection is enforced
 				%
                 sR = sx + equil.Rp;
                 sZ = sy + equil.Zp;
