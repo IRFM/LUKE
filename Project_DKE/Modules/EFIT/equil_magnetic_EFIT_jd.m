@@ -1,4 +1,4 @@
-function [equil_magnetic,prho,pspsin,pspsinT,pp] = equil_magnetic_EFIT_jd(filename,display_mode,p_opt,dispname,savename)
+function [equil_magnetic,prho,pspsin,pspsinT,pp] = equil_magnetic_EFIT_jd(filename,display_mode,p_opt,dispname,savename,opt)
 %
 % This function reads and returns the magnetic equilibrium parameters from 
 % eqdsk files created
@@ -11,6 +11,11 @@ function [equil_magnetic,prho,pspsin,pspsinT,pp] = equil_magnetic_EFIT_jd(filena
 %		- p_opt: option for printing
 %
 % by J. Decker (joan.decker@cea.fr) 11/01/04
+%
+if nargin < 6,
+    opt.sfac = 10;% factor for (x,y) supergrid
+    opt.axenforce = true;% option to enforce center position and psi value in supergrid
+end
 %
 if nargin < 5,
     savename = filename;
@@ -37,7 +42,7 @@ nt = 65;
 %
 % Transforms on a (psi,theta) grid
 %
-[ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,nt,method,display_mode,p_opt,savename);
+[ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,nt,method,display_mode,p_opt,savename,opt);
 %
 np = length(psin);
 ap = ptx(np,1);%Plasma minor radius on the LFS midplane

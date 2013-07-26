@@ -1,11 +1,12 @@
-function [ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,theta,method,display_mode,p_opt,filename,sfac);
+function [ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,theta,method,display_mode,p_opt,filename,opt)
 %
 % This function inverts the magnetic geometry data.
 %
 % by J. Decker (jodecker@alum.mit.edu) 11/02/04
 %
 if nargin < 10
-    sfac = 10;
+    opt.sfac = 10;% factor for (x,y) supergrid
+    opt.axenforce = true;% option to enforce center position and psi value in supergrid
 end
 if nargin < 9
     filename = 'tokamak';
@@ -50,8 +51,8 @@ xmax = max(x);
 ymin = min(y);
 ymax = max(y);
 %
-snx = sfac*(nx-1) + 1;
-sny = sfac*(ny-1) + 1;
+snx = opt.sfac*(nx-1) + 1;
+sny = opt.sfac*(ny-1) + 1;
 %
 sx = linspace(xmin,xmax,snx);
 sy = linspace(ymin,ymax,sny);
@@ -61,28 +62,33 @@ sy = linspace(ymin,ymax,sny);
 %ix = find(abs(sx) == min(abs(sx)));
 %iy = find(abs(sy) == min(abs(sy)));
 %
-%sx = sort([sx([1:ix-2,ix+2:end]),linspace(sx(ix - 1),sx(ix + 1),2*sfac+1)]);
-%sy = sort([sy([1:iy-2,iy+2:end]),linspace(sy(iy - 1),sy(iy + 1),2*sfac+1)]);
+%sx = sort([sx([1:ix-2,ix+2:end]),linspace(sx(ix - 1),sx(ix + 1),2*opt.sfac+1)]);
+%sy = sort([sy([1:iy-2,iy+2:end]),linspace(sy(iy - 1),sy(iy + 1),2*opt.sfac+1)]);
 %
 %
 %snx = length(sx)
 %sny = length(sy)
 %
-ix = find(abs(sx) == min(abs(sx)));
-iy = find(abs(sy) == min(abs(sy)));
-%
-if abs(sx(ix)) > 10*eps | abs(sy(iy)) > 10*eps,
-    warning('location of magnetic axis enforced')
+if opt.axenforce,
+    ix = find(abs(sx) == min(abs(sx)));
+    iy = find(abs(sy) == min(abs(sy)));
+    %
+    if abs(sx(ix)) > 10*eps || abs(sy(iy)) > 10*eps,
+        warning('location of magnetic axis enforced')
+    end
+    sx(ix) = 0;
+    sy(iy) = 0;
 end
-sx(ix) = 0;
-sy(iy) = 0;
 %
 sxypsin = interp2(x,y,xypsin.',sx.',sy,method).';
 %
-if abs(sxypsin(ix,iy)) > 10*eps,
-    warning('value of psi at magnetic axis enforced')
+if opt.axenforce,
+    if abs(sxypsin(ix,iy)) > 10*eps,
+        warning('value of psi at magnetic axis enforced')
+    end
+    sxypsin(ix,iy) = 0;
+    %
 end
-sxypsin(ix,iy) = 0;
 %
 % calculation of grad psi
 %
@@ -107,8 +113,10 @@ sxydpsindy(:,1) = (hxypsin_y(:,1) - sxypsin(:,1))/(hy(1) - sy(1));
 sxydpsindx(snx,:) = (sxypsin(snx,:) - hxypsin_x(snx-1,:))/(sx(snx) - hx(snx-1));
 sxydpsindy(:,sny) = (sxypsin(:,sny) - hxypsin_y(:,sny-1))/(sy(sny) - hy(sny-1));
 %
-sxydpsindx(ix,iy) = 0;
-sxydpsindy(ix,iy) = 0;
+if opt.axenforce,
+    sxydpsindx(ix,iy) = 0;
+    sxydpsindy(ix,iy) = 0;
+end
 %
 % change to (r,theta) grid
 %
@@ -219,7 +227,7 @@ pty = ptr.*sin(pttheta);
 %p2tR = griddata(sXpsin,sXtheta,sXR,p2psin',ttheta,gdmethod)';
 %p2tZ = griddata(sXpsin,sXtheta,sXZ,p2psin',ttheta,gdmethod)';
 %
-%h2psin = [hpsin(1:end-1),linspace(hpsin(end),1,sfac)];
+%h2psin = [hpsin(1:end-1),linspace(hpsin(end),1,opt.sfac)];
 h2psin = hpsin;
 %
 h2ptdpsindx = griddata(sXpsin,sXtheta,sXdpsindx,h2psin.',theta,gdmethod).';
@@ -289,8 +297,4 @@ if display_mode >= 2,
     axis([xmin,xmax,ymin,ymax]);
     print_jd(p_opt,[filename,'_spsin']);
     %
-    %figure_yp('','Toroidal view - MHD equilibrium','clf');
-    %
-    
-
 end
