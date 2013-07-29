@@ -20,15 +20,40 @@ npn = size(gridDKE.XXmhu,1);
 nmhu = size(gridDKE.XXmhu,2);
 npsi=size(equilDKE.XBx,1); %nr of radial positions
 %
+
  if Zbouncecoef.XXlambda~=1
-    [XXthetastar1,XXthetastar2,XXalpha] = thetastar_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches
-else
+    [XXalpha_an,XXmask_ctsa,thetastar_an,thetastar_an2]=S_anal(equilDKE,gridDKE,Zmomcoef,npsi,nmhu,npn);
+    tic
+    [XXthetastar1,XXthetastar2,XXalpha] = thetastar_dke_interp_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches
+    toc
+    keyboard
+%     tic
+%     [XXthetastar1f,XXthetastar2f,XXalphaf] = thetastar_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches
+%     toc
+      %thetastar_an(isnan(thetastar_an)) = 0;
+  %XXthetastar1(isnan(XXthetastar1)) = 0;
+    %keyboard
+    figure; hold on;
+    for ip=1:npn
+        graph1D_jd(gridDKE.mhu,squeeze(XXalpha_an(1,ip,:)-XXalpha(1,ip,:)),0,0,'mhu','Xalpha an-Xalphaip','',NaN,NaN,NaN,'-','.','r')
+    end
+    figure;hold on;
+    for ip=1:npn
+        graph1D_jd(gridDKE.mhu,squeeze(thetastar_an(1,ip,:)-XXthetastar1(1,ip,:)),0,0,'mhu','theta an-XXtheta1ip','',NaN,NaN,NaN,'none','.','r')
+    end
+    figure; hold on;
+%     for ip=1:npn
+%         graph1D_jd(gridDKE.mhu,squeeze(thetastar_an(1,ip,:)-XXthetastar1f(1,ip,:)),0,0,'mhu','theta an-XXtheta1fz','',NaN,NaN,NaN,'none','.','r')
+%     end
+%     %
+ else
     XXalpha=ones(npsi,npn,nmhu);
     XXthetastar1=0;
     XXthetastar2=0;
-end
+    XXalpha_an=ones(npsi,npn,nmhu);
+ end
 %
-Lambd=mksa.lnc_e_ref;
+Lambd = mksa.lnc_e_ref;
 ne_ref=mksa.ne_ref;
 ne=equilDKE.xne/ne_ref;
 beta=mksa.betath_ref;
@@ -38,32 +63,43 @@ nr=0.1*ne;
 %
 B0=equilDKE.xB0;
 %B0=sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2);
-%B0=min(sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2));
-for l=1:npsi
-  Srp(l,:)=1/(4*pi)*beta^2/log(Lambd)*ne(l)*nr(l)./(gridDKE.pn.*Zmomcoef.gamma.*(Zmomcoef.gamma-1).^2); %rosenbluth (S*)
+%B0=sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2);
+for ipsi=1:npsi
+  Srp(ipsi,:)=1/(4*pi)*beta^2/log(Lambd)*ne(ipsi)*nr(ipsi)./(gridDKE.pn.*Zmomcoef.gamma.*(Zmomcoef.gamma-1).^2); %rosenbluth (S*)
 end
-Srp2=permute(repmat(Srp, [1,1,nmhu]),[1,2,3]);
+XXSrp=permute(repmat(Srp, [1,1,nmhu]),[1,2,3]);
 if Zbouncecoef.XXlambda~=1
 C=NaN(npsi,npn,nmhu);
 for ipsi=1:npsi 
     for m=1:nmhu
-    C(ipsi,:,m)=2/pi.*1/Rp./(Zmomcoef.gamma'+1)*B0(ipsi)./(Zbouncecoef.XXlambda(:,m).*Zbouncecoef.xqtilde(ipsi)).*abs(gridDKE.mhu(m))./(1-gridDKE.mhu(m).^2).^2; 
+    C(ipsi,:,m)=2/pi./(Zmomcoef.gamma+1)./(Zbouncecoef.Xxlambda(m,ipsi).*Zbouncecoef.xqtilde(ipsi)).*abs(gridDKE.mhu(m))./(1-gridDKE.mhu(m).^2).^2; 
     end
 end
 else 
     C=ones(npsi,npn,nmhu);
 end
 %
-XXS=Srp2.*C.*XXalpha; %<S()>
+XXS_an=XXSrp.*C.*XXalpha_an;
+XXbouncef=C.*XXalpha;
+XXS=XXSrp.*XXbouncef; %<S()>
 %
 %display section:
 if dkedisplay.display_mode>0
-ir=3; %nr of the flux surface to be displayed
+%ir=2; %nr of the flux surface to be displayed
     if Zbouncecoef.XXlambda~=1
+
         for ir=1:gridDKE.nr
-        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXthetastar1(ir,:,:)),'p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;title(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
-        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXthetastar2(ir,:,:)),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30); colorbar;title(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
-        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(log(XXS(ir,:,:))),'p','mhu','log(S)',NaN,NaN,0,NaN,30); colorbar;title( sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
+        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXthetastar1(ir,:,:)),'p','mhu','theta^*_1',NaN,NaN,0,NaN,30); colorbar;
+        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXthetastar2(ir,:,:)),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30); colorbar;
+        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXS(ir,:,:)),'p','mhu','S',NaN,NaN,0,NaN,30); colorbar;
+        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXbouncef(ir,:,:)),'p','mhu','Bouncefactor',NaN,NaN,0,NaN,100); colorbar;    
+        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXalpha(ir,:,:)),'p','mhu','XXalpha',NaN,NaN,0,NaN,100); colorbar;
+        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(C(ir,:,:)),'p','mhu','C',NaN,NaN,0,NaN,100); colorbar;
+        end
+        for ir=1:gridDKE.nr
+        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(thetastar_an(ir,:,:)),'p','mhu','theta^*_1 anal.',NaN,NaN,0,NaN,30); colorbar;
+        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(thetastar_an2(ir,:,:)),'p','mhu','theta^*_2 anal.',NaN,NaN,0,NaN,30); colorbar;   
+        figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXalpha_an(ir,:,:)),'p','mhu','XXalpha analytical',NaN,NaN,0,NaN,100); colorbar;
         end
         %figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,l),XXthetastar2(:,:,l),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30);colorbar;
         %figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,l),log(XXS(:,:,l)),'p','mhu','log(S)',NaN,NaN,1,NaN,30);colorbar;
@@ -80,24 +116,124 @@ ir=3; %nr of the flux surface to be displayed
 %       figure; graph2D_jd(gridDKE.pn(:).*gridDKE.XXmhu(1,:,l),gridDKE.pn(:).*sqrt(1-gridDKE.XXmhu(1,:,l).^2),XXthetastar2(:,:,l)'/pi,'p_{par}/p_{th}','p_{perp}/p_{th}','theta^*_2/pi',NaN,NaN,0,NaN,60);colorbar;
     end
     %
+figure
+ylabel('XXalpha')
+hold on
+for h=1:nmhu
+plot(XXalpha(1,:,h),'r*')
+end
+figure
+ylabel('XXalpha anal.')
+hold on
+for h=1:nmhu
+plot(XXalpha_an(1,:,h),'r*')
+end
     figure
     for g=1:npsi
         XS=squeeze(XXS(g,:,:));
         XS(isnan(XS)) = 0;
-        XS = integral_dke_jd(gridDKE.dmhu,XS,2)/2; %integrate over mhu, pos n neg : /2
-        semilogy(gridDKE.pn(:),XS,'.-')
+        XSint = integral_dke_jd(gridDKE.dmhu,XS,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+        graph1D_jd(gridDKE.pn,XSint,0,1,'p','S_{bounce}','S on each flux surface',NaN,NaN,NaN,'-','.')
         hold all,
     end
+    
         figure
+    for g=1:npsi
+        XS=squeeze(XXS(g,:,:));
+        XS(isnan(XS)) = 0;
+        XSint = integral_dke_jd(gridDKE.pn,XS,1)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+        graph1D_jd(gridDKE.mhu,XSint,0,0,'mhu','S_{bounce}','S on each flux surface',NaN,NaN,NaN,'-','.')
+        hold all,
+    end
+    figure
+    for g=1:npsi
+        XSan=squeeze(XXS_an(g,:,:));
+        XSan(isnan(XSan)) = 0;
+        XSan_int = integral_dke_jd(gridDKE.dmhu,XSan,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+        graph1D_jd(gridDKE.pn,XSan_int,0,1,'p','S_{bounce} analytical','S on each flux surface',NaN,NaN,NaN,'-','.')
+    end
+    %compare analytic alpha
+         figure
+    for g=1:npsi
+        XSan=squeeze(XXS_an(g,:,:));
+        XSan(isnan(XSan)) = 0;
+        XSan_int = integral_dke_jd(gridDKE.pn,XSan,1)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+        graph1D_jd(gridDKE.mhu,XSan_int,0,0,'mhu','S_{bounce} anal.','S on each flux surface',NaN,NaN,NaN,'-','.')
+        hold all,
+    end
+    
+        figure
+        %
     for g=ir
         XS = squeeze(XXS(g,:,:));
         XS(isnan(XS)) = 0;
-        XS = integral_dke_jd(gridDKE.dmhu,XS,2)/2; %integrate over mhu, pos n neg : /2
-        semilogy(gridDKE.pn(:),XS,'.-')
-        legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
-        %graph1D_jd(Zmomcoef.xz,XS,0,1,'S_{bounce}','p','S on each flux surface',NaN,NaN,NaN,'-','.')
+        XSint = integral_dke_jd(gridDKE.dmhu,XS,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+        %semilogy(gridDKE.pn,XSint,'.-')
+        %legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
+        graph1D_jd(gridDKE.pn,XSint,0,1,'p','S_{bounce}','S on each flux surface',NaN,NaN,NaN,'-','.')
         hold all,
     end
-        semilogy(gridDKE.pn(:), Srp(g,:),'rx');title('Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
+        semilogy(gridDKE.pn, Srp(g,:),'rx');title('Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
+%as fcn of mhu, for each slize of p
+
+figure
+for g=1:ir
+    Xbouncef = squeeze(XXbouncef(g,:,:));
+    Xbouncef(isnan(Xbouncef)) = 0;
+    Xbouncefint = integral_dke_jd(gridDKE.dmhu,Xbouncef,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+    graph1D_jd(gridDKE.pn,Xbouncefint,0,0,'p','Bounce factor','',NaN,NaN,NaN,'-','.','b')
+    legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
+    %graph1D_jd(Zmomcoef.xz,XS,0,1,'S_{bounce}','p','S on each flux surface',NaN,NaN,NaN,'-','.')
+    hold all,
 end
-%
+figure
+for g=1:npsi
+    Xalpha = squeeze(XXalpha(g,:,:));
+    Xalpha(isnan(Xalpha)) = 0;
+    Xalphaint = integral_dke_jd(gridDKE.dmhu,Xalpha,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+    graph1D_jd(gridDKE.pn,Xalphaint,0,0,'p','Xalpha','',NaN,NaN,NaN,'-','.','b')
+    legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
+    %graph1D_jd(Zmomcoef.xz,XS,0,1,'S_{bounce}','p','S on each flux surface',NaN,NaN,NaN,'-','.')
+    hold all,
+end
+figure
+    for g=1:npsi
+        Xalpha_anal=squeeze(XXalpha_an(g,:,:));
+        Xalpha_anal(isnan(Xalpha_anal)) = 0;
+        Xalpha_anal_int = integral_dke_jd(gridDKE.dmhu,Xalpha_anal,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+        graph1D_jd(gridDKE.pn,Xalpha_anal_int,0,0,'p','Xalpha analytical','alpha on each flux surface',NaN,NaN,NaN,'-','.')
+    end
+figure
+for g=1:ir
+    Xmask = squeeze(XXmask_ctsa(g,:,:));
+    Xmaskint = integral_dke_jd(gridDKE.dmhu,Xmask,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+    graph1D_jd(gridDKE.pn,Xmaskint,0,0,'p','Xmask','',NaN,NaN,NaN,'-','.','b')
+    legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
+    %graph1D_jd(Zmomcoef.xz,XS,0,1,'S_{bounce}','p','S on each flux surface',NaN,NaN,NaN,'-','.')
+    hold all,
+end
+figure
+hold on
+for ip=1:npn 
+        Xalpha = squeeze(XXalpha(1,:,:));
+graph1D_jd(gridDKE.mhu,Xalpha(ip,:),0,0,'mhu','Xalpha','',NaN,NaN,NaN,'-','.','b')
+end
+figure
+hold on
+for ip=1:npn 
+        Xalphaan = squeeze(XXalpha_an(1,:,:));
+graph1D_jd(gridDKE.mhu,Xalphaan(ip,:),0,0,'mhu','Xalpha anal.','',NaN,NaN,NaN,'-','.','b')
+end
+figure
+hold on
+figure
+for g=1:ir
+    XC = squeeze(C(g,:,:));
+    XC(isnan(XC)) = 0;
+    XCint = integral_dke_jd(gridDKE.dmhu,XC,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+    graph1D_jd(gridDKE.pn,XCint,0,0,'p','XC','',NaN,NaN,NaN,'-','.','b')
+    legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
+    %graph1D_jd(Zmomcoef.xz,XS,0,1,'S_{bounce}','p','S on each flux surface',NaN,NaN,NaN,'-','.')
+    hold all,
+end
+end
