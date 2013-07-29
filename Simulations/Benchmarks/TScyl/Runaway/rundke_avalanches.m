@@ -12,10 +12,10 @@ warning('off')
 % grid parameters
 %
 pnmax_S = 50;
-np_S = 31;
-nmhu_S = 41;
+np_S = 51;
+nmhu_S = 101;
 %
-mfactor = 10;%Factor for super theta grid (equil -> equilDKE)
+mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 %
 %
 % normalized electric field (with respect to the Critical field Ec)
@@ -50,7 +50,7 @@ id_simul = 'Runaway';%Simulation ID
 %path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [0.4,0.6];%0.5%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.6];%1%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -85,7 +85,8 @@ dkeparam.coll_mode = coll_mode;% mode for the collision operator
 dkeparam.bounce_mode=1; %bounce average
 %
 options_fzero = optimset('fzero');
-options_fzero.TolX = 1e-5;%convergence tolerance
+options_fzero.Display = 'iter';
+options_fzero.TolX = 1e-10;%convergence tolerance
 dkeparam.options_fzero = options_fzero;
 %
 equil.pzTi = 1e-10*ones(size(equil.pzTi));% cold ions
