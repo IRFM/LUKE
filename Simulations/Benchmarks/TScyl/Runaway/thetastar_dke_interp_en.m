@@ -60,6 +60,7 @@ XXBstarnew = 2*XXB0./(1 + Zmomcoef.XXgamma)./(1 - XXmhui.^2);
 %
 XXBstarnew=permute(XXBstarnew,[3,1,2]);
 %
+keyboard
 Br=equilDKE.XBx;
 Bz=equilDKE.XBy;
 Bphi=equilDKE.XBphi;
