@@ -373,6 +373,25 @@ hxr_proc.dvardiag = sqrt(sum(hxr_proc.dvardiagk.^2))/nk;
 %hxr_proc.icpeak = ic(find(sum(hxr.brem_bd_diag(ic,ik),2) == max(sum(hxr.brem_bd_diag(ic,ik),2)),1,'first'));
 hxr_proc.icpeak = ic(find(sum(hxr.brem_bd_plasma(ic,ik),2) == max(sum(hxr.brem_bd_plasma(ic,ik),2)),1,'first'));
 %
+if isfield(opt,'diaryname') && ~isempty(opt.diaryname),
+    diary(opt.diaryname)
+    disp(' ');
+    disp(' ---- HXR results on the central chord ---- ');
+    disp(' ');
+    %
+    disp('k (keV) | CR exp (1/ms) | CR sim (1/ms)')
+    %
+    for iik = 1:length(hxr_proc.k),
+        sk = num2str(hxr_proc.k(iik),3);
+        sdNdtdiag_iikiicc = num2str(hxr_proc.dNdtdiag(iik,opt.icc),'%6.2f');
+        sdNdtexp_iikiicc = num2str(hxr_proc.dNdtexp(iik,opt.icc),'%6.2f');
+        %
+        disp(['  ',repmat(' ',[1,3-length(sk)]),sk,'   |   ',repmat(' ',[1,9-length(sdNdtexp_iikiicc)]),sdNdtexp_iikiicc,'   |   ',repmat(' ',[1,9-length(sdNdtdiag_iikiicc)]),sdNdtdiag_iikiicc])
+        %
+    end
+    diary off;
+end    
+%
 if display_mode > 0,
     %
     style0 = 'none';
