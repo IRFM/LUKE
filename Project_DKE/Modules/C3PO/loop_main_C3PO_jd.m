@@ -124,6 +124,10 @@ rays{1}.rayinits{1} = rayinit;
 % 	* 0 : no reflection
 %	* 1 : reflections in C3PO on LCFS (LH waves...)
 %	* -n : up to n reflections on vessel internal wall
+%   * (+1i) : calc rayinit for last reflection, no new C3PO calculation (ex: stray emission)
+%
+lastref = imag(rayparam.reflection);% calc rayinit for last reflection, no new C3PO calculation (ex: stray emission)
+rayparam.reflection = real(rayparam.reflection);
 %
 nref = max([0,-rayparam.reflection]);
 rayparam.reflection = max([rayparam.reflection,0]);% take only positive or null in C3PO
@@ -226,7 +230,7 @@ for iref = 1:nref + 1,% vessel reflection index
             rays{irayref}.swpe2 = [rays{irayref}.swpe2,swpe2];%Normalized electron plasma frequency
             rays{irayref}.swce2 = [rays{irayref}.swce2,swce2];%Normalized electron gyro frequency
             %
-			if rayparam.reflection <= 0 && yout(end,1) > 1 - 2*rayparam.dS && ~isinf(equil.Rp),% ray reaches edge before full absorption and a reflection is enforced
+			if (iref <= nref || lastref) && yout(end,1) > 1 - 2*rayparam.dS && ~isinf(equil.Rp),% ray reaches edge before full absorption and a reflection is enforced
 				%
                 sR = sx + equil.Rp;
                 sZ = sy + equil.Zp;
@@ -260,7 +264,7 @@ for iref = 1:nref + 1,% vessel reflection index
                 % calculate the polarization in the zero-density limit so that K is perpendicular to E
                 %
                 B_end = sB(end);
-                BPHI_end = sBPHI(end);
+                BPHI_end = sBz(end);
                 Bx_end = sBP(end)*sin(alpha_end - theta_end);%note that sBP is signed
                 By_end = sBP(end)*cos(alpha_end - theta_end);
                 %
