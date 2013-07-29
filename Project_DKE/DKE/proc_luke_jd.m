@@ -332,7 +332,7 @@ end
 %
 if ir_display >= 0,
     %
-    if isfield(opt,'diaryname') && ischar(opt.diaryname),
+    if isfield(opt,'diaryname') && ischar(opt.diaryname) && ~isempty(opt.diaryname),
         diaryname = opt.diaryname;
     else
         if ir_display == 0,
