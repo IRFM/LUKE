@@ -61,7 +61,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'PARTIAL_VISUAL';%'NO_DISPLAY';%For output code display, files from Project_DKE/DISPLAY_FILES/
+id_display = 'VISUAL';%'NO_DISPLAY''PARTIAL_VISUAL';%For output code display, files from Project_DKE/DISPLAY_FILES/
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 %************************************************************************************************************************************
@@ -82,7 +82,8 @@ dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, t
 dkeparam.tn = 10000;%time for asymptotic solution with norm_mode_f = 1
 dkeparam.dtn = 1000;%10 time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
-dkeparam.bounce_mode=1; %bounce average
+dkeparam.bounce_mode = 1; %bounce average
+dkeparam.avalanche_mode = 1; %if the field was specified, avalanche mode on
 %
 options_fzero = optimset('fzero');
 options_fzero.Display = 'iter';
