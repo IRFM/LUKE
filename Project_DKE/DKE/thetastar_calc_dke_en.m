@@ -32,37 +32,49 @@ Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
 XXB0 = permute(repmat(B0',[1,npn,nmhu]), [2,3,1]);
 XXBmax = permute(repmat(Bmax',[1,npn,nmhu]), [2,3,1]);
 %
-keyboard
-mhu0min=sqrt(1-2./(Zmomcoef.gamma+1));
-mhu0max=sqrt(1-2*B0./(Zmomcoef.gamma+1)./Bmax);
+mhu0min=repmat(sqrt(1-2./(Zmomcoef.gamma+1)),[3,1]);
+for ipsi=1:npsi
+    mhu0max(ipsi,:)=sqrt(1-2*B0(ipsi)./(Zmomcoef.gamma+1)./Bmax(ipsi));
+end
 %
-keyboard
-mhuF = 700; %factor of increase in mhu grid points >=1
+for ipo = 2;
+mhuF = ipo; %factor of increase in mhu grid points >=1
 noP = mhuF*nmhu/2+1; %nr of cells on HALF the refined grid
 %
-gridmhu_S=NaN(npn,noP);
+gridmhu_S = NaN(npsi,npn,noP);
+XXthetastar1new = NaN(npsi,npn,mhuF*nmhu);
+XXthetastar2new = NaN(npsi,npn,mhuF*nmhu);
+XXalphaNew = NaN(npsi,npn,mhuF*nmhu);
 %
-for ip=1:npn
-    gridmhu_S(ip,:)=linspace(mhu0min(ip),mhu0max(ip),noP); %cells
+for ipsi=1:npsi
+    for ip=1:npn
+        gridmhu_S(ipsi,ip,:)=linspace(mhu0min(ipsi,ip),mhu0max(ipsi,ip),noP); %cells
+    end
 end
-XXmhuip=(gridmhu_S(:,1:(end-1))+gridmhu_S(:,(2:end)))./2;
-dmhuip=gridmhu_S(:,(2:end))-gridmhu_S(:,1:(end-1));
+XXmhuip=(gridmhu_S(:,:,1:(end-1))+gridmhu_S(:,:,(2:end)))./2;
+dmhuip=gridmhu_S(:,:,(2:end))-gridmhu_S(:,:,1:(end-1));
 %
-XXmhuim = -fliplr(XXmhuip);
-dmhuim = fliplr(dmhuip);
+XXmhuim = -flipdim(XXmhuip,3);
+%XXmhuim = -fliplr(XXmhuip);
+dmhuim =  flipdim(dmhuip,3);
 %
-XXmhui = [XXmhuim,XXmhuip];
-dmhui = [dmhuim, dmhuip];
+XXmhui = cat(3, XXmhuim, XXmhuip);
+%XXmhui = [XXmhuim,XXmhuip];
+dmhui = cat(3, dmhuim, dmhuip);
+%dmhui = [dmhuim, dmhuip];
 %
-XXgammai=permute(repmat(Zmomcoef.gamma,[noP*2-2,1]),[2,1]);
-XXB0i=permute(repmat(B0',[1,npn,noP*2-2]), [2,3,1]);
-XXBstarnew = 2*XXB0i./(1 + XXgammai)./(1 - XXmhui.^2);
+XXmhuiper = permute(XXmhui,[2,3,1]); %permute for Bstar calc
+XXgammai=permute(repmat(Zmomcoef.gamma,[noP*2-2,1,npsi]),[2,1,3]);
+XXB0i=permute(repmat(B0',[1,npn,noP*2-2]),[2,3,1]);
+XXBstarnew = 2*XXB0i./(1 + XXgammai)./(1 - XXmhuiper.^2);
 %
 XXBstarnew=permute(XXBstarnew,[3,1,2]);
 %
+tic
 Br=equilDKE.XBx;
 Bz=equilDKE.XBy;
 Bphi=equilDKE.XBphi;
+keyboard
 for ipsi=1:npsi
     Bp=sqrt(Br(ipsi,:).^2+Bz(ipsi,:).^2);        %poloidal Bfield
     Bt=abs(Bphi(ipsi,:));                %toroidal Bfield
@@ -71,51 +83,83 @@ for ipsi=1:npsi
     XXthetastar2new(ipsi,:,:)=interp1(B((ntheta+1)/2:end),theta((ntheta+1)/2:end),XXBstarnew(ipsi,:,:),method);%calc theta_k* >pi
     [x1,y1,Bx1,By1,Bp1,dB1dtheta] = equilval_B_dB_en(equilDKE.equil_fit,equilDKE.xrho(ipsi),XXthetastar1new(ipsi,:,:));
     [x2,y2,Bx2,By2,Bp2,dB2dtheta] = equilval_B_dB_en(equilDKE.equil_fit,equilDKE.xrho(ipsi),XXthetastar2new(ipsi,:,:));
-    XXalphaNew(ipsi,:,:)=B0(ipsi)^2.*equilDKE.xrho(ipsi)./abs(dB1dtheta)./Bp1 + B0(ipsi)^2.*equilDKE.xrho(ipsi)./abs(dB2dtheta)./Bp2;
+    r1Rp=sqrt(x1.^2+y1.^2)./equilDKE.Rp;
+    r2Rp=sqrt(x2.^2+y2.^2)./equilDKE.Rp;
+    XXalphaNew(ipsi,:,:)=B0(ipsi)^2.*r1Rp./abs(dB1dtheta)./Bp1 + B0(ipsi)^2.*r2Rp./abs(dB2dtheta)./Bp2;
 end
 %
-keyboard
 XXalpha=NaN(npsi,npn,nmhu);
+XXthetastar1=NaN(npsi,npn,nmhu);
+XXthetastar2=NaN(npsi,npn,nmhu);
+%
 yp=gridDKE.mhu(nmhu/2:end)+gridDKE.dmhup(nmhu/2:end)/2;
 ym=gridDKE.mhu(1:nmhu/2+1)-gridDKE.dmhup(1:nmhu/2+1)/2;
 %
 for ipsi = 1:npsi;
-    difINT=0;
     for ip = 1:npn;
-        xp = gridmhu_S(ip,:);
+        xp = squeeze(gridmhu_S(ipsi,ip,:))';
         xm = -fliplr(xp);
         fp = XXalphaNew(ipsi,ip,noP:end);
         fm = XXalphaNew(ipsi,ip,1:noP-1);
-        [XXalpha(ipsi,ip,1:nmhu/2), difINT1] = redistrib_jd(xm,fm,ym,1);
-        [XXalpha(ipsi,ip,nmhu/2+1:end),difINT2] = redistrib_jd(xp,fp,yp,1);
-        difINT=difINT1+difINT2+difINT;
+        XXalpha(ipsi,ip,1:nmhu/2) = redistrib_jd(xm,fm,ym,1);
+        XXalpha(ipsi,ip,nmhu/2+1:end) = redistrib_jd(xp,fp,yp,1);
+        fpt1 = XXthetastar1new(ipsi,ip,noP:end);
+        fmt1 = XXthetastar1new(ipsi,ip,1:noP-1);
+        XXthetastar1(ipsi,ip,1:nmhu/2) = redistrib_jd(xm,fmt1,ym,0);
+        XXthetastar1(ipsi,ip,nmhu/2+1:end) = redistrib_jd(xp,fpt1,yp,0);
+        fpt2 = XXthetastar2new(ipsi,ip,noP:end);
+        fmt2 = XXthetastar2new(ipsi,ip,1:noP-1);
+        XXthetastar2(ipsi,ip,1:nmhu/2) = redistrib_jd(xm,fmt2,ym,0);
+        XXthetastar2(ipsi,ip,nmhu/2+1:end) = redistrib_jd(xp,fpt2,yp,0);
     end
-    disp(['The total relative difference on the integral is : ',num2str(difINT)])
 end
+t(ipo) = toc;
+%
+% XXthetastar1(find(~XXthetastar1))=NaN;
+% XXthetastar2(find(~XXthetastar2))=NaN;
+%
+for ip = 1:npn
+    ind = find(XXalpha(1,ip,1:nmhu/2));
+    alphmin(ipo,ip) = XXalpha(1,ip,ind(1));
+    alphmax(ipo,ip) = XXalpha(1,ip,ind(end));
+end
+end
+keyboard
+%convergence test
+% figure; graph1D_jd((1:ipo)*nmhu,alphmin,0,0,'nr of points in refined grid','alpha(ximin,p=const)','',NaN,NaN,NaN,'-','.','b')
+% figure; graph1D_jd((1:ipo)*nmhu,alphmax,0,0,'nr of points in refined grid','alpha(ximax,p=const)','',NaN,NaN,NaN,'-','.','r')
+% figure; graph1D_jd((1:ipo)*nmhu,t,0,0,'nr of points in refined grid','time (s) for calc.','',NaN,NaN,NaN,'-','.','b')
 %
 %figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXalphaNew(1,:,:)),'p','mhu','alphaNew',NaN,NaN,0,NaN,100); colorbar;
 %
-for ip=1:npn
-    XalphaNewINT(ip) = integral_dke_jd(dmhui(ip,:),squeeze(XXalphaNew(1,ip,:))',2); %integrate over mhu, pos n neg : /2
-end
 figure
-graph1D_jd(gridDKE.pn,XalphaNewINT,0,0,'p','XalphaNew','',NaN,NaN,NaN,'-','.','b')
+hold on
+for ipsi=1:npsi
+    for ip=1:npn
+        XalphaNewINT(ip) = integral_dke_jd(dmhui(ipsi,ip,:),squeeze(XXalphaNew(ipsi,ip,:))',2); %integrate over mhu, pos n neg : /2
+    end
+    graph1D_jd(gridDKE.pn,XalphaNewINT,0,0,'p','XalphaNew','',NaN,NaN,NaN,'-','.','b')
+end
+
+
 %
 figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXalpha(1,:,:)),'p','mhu','alpha LUKE',NaN,NaN,0,NaN,100); colorbar;
 %
 figure;
-Xalpha = squeeze(XXalpha(1,:,:));
+hold on
+for ipsi=1:npsi
+Xalpha = squeeze(XXalpha(ipsi,:,:));
 Xalpha(isnan(Xalpha)) = 0;
 Xalpha_int = integral_dke_jd(gridDKE.dmhu,Xalpha,2);
 graph1D_jd(gridDKE.pn,Xalpha_int,0,0,'p','Xalpha LUKE','',NaN,NaN,NaN,'-','.','b')
-legend(sprintf( '%s: %d', 'rho'));
-%
-figure
-hold on
-for ip=1:npn
-plot(plot(XXmhui(ip,:),squeeze(XXalphaNew(1,ip,:)),'o'))
-plot(gridDKE.mhu,squeeze(XXalpha(1,ip,:)),'r*')
 end
+%
+% figure
+% hold on
+% for ip=1:npn
+% plot(plot(XXmhui(1,ip,:),squeeze(XXalphaNew(1,ip,:)),'o'))
+% plot(gridDKE.mhu,squeeze(XXalpha(1,ip,:)),'r*')
+% end
 
 % figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXthetastar1(1,:,:)),'p','mhu','theta^*_1',NaN,NaN,0,NaN,100); colorbar;
 % figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXthetastar2(1,:,:)),'p','mhu','theta^*_2',NaN,NaN,0,NaN,100); colorbar;
