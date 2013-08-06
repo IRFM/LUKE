@@ -52,12 +52,12 @@ Zmripple = make_struct_jd(loadstruct,display.display_mode,'mripplecoefbuilder_dk
 [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys] = make_struct_jd(loadstruct,display.display_mode,'rfwave_dke_jd',dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
 %
 if isfield(dkeparam_in,'avalanche_mode') %if the field was specified, avalanche mode on
-XXS = make_struct_jd(loadstruct,display.display_mode,'avalanche_en',dkepath,dkeparam_out,display,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE);%the complete avalanche operator
+    XXS = make_struct_jd(loadstruct,display.display_mode,'avalanche_en',dkepath,dkeparam_out,display,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE);%the complete avalanche operator
 else
-nr = gridDKE.nr;
-npn = gridDKE.npn;
-nmhu = gridDKE.nmhu;
-XXS=squeeze(zeros(npn,nmhu,nr));
+    nr = gridDKE.nr;
+    npn = gridDKE.npn;
+    nmhu = gridDKE.nmhu;
+    XXS=squeeze(zeros(npn,nmhu,nr));
 end
 %
 XXsinksource=XXsinksource+XXS;
@@ -72,7 +72,6 @@ end
 %
 [XXfinit] = make_struct_jd(loadstruct,display.display_mode,'finit_dke_yp',dkeparam_out,display,equilDKE,gridDKE,mksa,Zmomcoef,waveparam,XXf0_in);%Initial distribution function
 %
-keyboard
 varargout_loc = {dkeparam_out,radialDKE,equilDKE,momentumDKE,gridDKE,mksa,Zmomcoef,Zbouncecoef,XXsinksource,Zmripple...
                  ZXXD_a,ZXXF_a,...
                  ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor,...
