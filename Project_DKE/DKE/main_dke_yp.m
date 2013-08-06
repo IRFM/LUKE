@@ -58,7 +58,7 @@ else
     %
     % Load data if existing in 'loadstruct' structure or recalculate them otherwise
     %
-    [dkeparam_out,radialDKE,equilDKE,momentumDKE,gridDKE,mksa,Zmomcoef,Zbouncecoef,XXsinksource,Zmripple,XXS...
+    [dkeparam_out,radialDKE,equilDKE,momentumDKE,gridDKE,mksa,Zmomcoef,Zbouncecoef,XXsinksource,Zmripple...
         ZXXD_a,ZXXF_a,...
         ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor,...
         ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity,...
@@ -68,8 +68,7 @@ else
          = buildlukestruct_yp(loadstruct,equil,dkeparam_in,dkedisplay,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
      %
     time0 = clock;
-    %
-    XXsinksource=XXsinksource+XXS;
+   keyboard
     %
     if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf),%initialization of wave parameters  
         %
