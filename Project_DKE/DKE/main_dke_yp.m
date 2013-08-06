@@ -68,7 +68,6 @@ else
          = buildlukestruct_yp(loadstruct,equil,dkeparam_in,dkedisplay,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
      %
     time0 = clock;
-   keyboard
     %
     if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf),%initialization of wave parameters  
         %
