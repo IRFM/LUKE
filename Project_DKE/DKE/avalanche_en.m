@@ -79,11 +79,22 @@ else
     C=ones(npsi,npn,nmhu);
 end
 %
+delt=zeros(npsi,npn,nmhu);
+%
+for ip=1:npn
+    [dummy,I] = min(abs(gridDKE.mhu - sqrt((Zmomcoef.gamma(ip)-1)/(Zmomcoef.gamma(ip)+1))));
+    delt(:,ip,I) = 1;
+    delt(:,ip,nmhu-I+1) = 1;
+end
+%
 XXS_an=XXSrp.*C.*XXalpha_an;
 XXbouncef=C.*XXalpha;
-XXS=XXSrp.*XXbouncef; %<S()>
-XXS=squeeze(permute(XXS,[2,3,1]));
-XXSrp_xis=XXSrp.*XXmask_ctsa;
+XXSl = XXSrp.*XXbouncef; %<S()>
+%
+XXSrp_xis=XXSrp.*delt; %3D analytical rosenbluth operator, non bounce averaged
+XXSl2=XXSrp_xis;
+%
+XXS=squeeze(permute(XXSl,[2,3,1])); 
 %
 %display section:
 % if dkedisplay.display_mode>0
@@ -171,19 +182,31 @@ XXSrp_xis=XXSrp.*XXmask_ctsa;
 %         hold all,
 %     end
 %     
-%         figure
-%         %
-%     for g=1:npsi
-%         XS = squeeze(XXS(g,:,:));
-%         XS(isnan(XS)) = 0;
-%         XSint = integral_dke_jd(gridDKE.dmhu,XS,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
-%         %semilogy(gridDKE.pn,XSint,'.-')
-%         %legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
-%         graph1D_jd(gridDKE.pn,XSint,0,1,'p','S_{bounce}','S on each flux surface',NaN,NaN,NaN,'-','.')
-%         hold all,
-%     end
-%         semilogy(gridDKE.pn, Srp(g,:),'rx');title('Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
-% %as fcn of mhu, for each slize of p
+        figure
+        %
+    for g=1:npsi
+        XS = squeeze(XXSl(g,:,:));
+        XS(isnan(XS)) = 0;
+        XSint = integral_dke_jd(gridDKE.dmhu,XS,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+        %semilogy(gridDKE.pn,XSint,'.-')
+        %legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
+        graph1D_jd(gridDKE.pn,XSint,0,1,'p','S_{bounce}','S on each flux surface',NaN,NaN,NaN,'-','.')
+        hold all,
+    end
+        semilogy(gridDKE.pn, Srp(g,:),'rx');title('Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
+ %       
+          figure
+        %
+    for g=1:npsi
+        XSrp = squeeze(XXSrp_xis(g,:,:)); %integrate the 3D analytical S_RP, should get same as plotting the 2D Srp
+        XSrpint = integral_dke_jd(ones(1,nmhu)/2,XSrp,2);%/(gridDKE.dmhu(1)); %integrate over mhu, pos n neg : /2
+        %semilogy(gridDKE.pn,XSint,'.-')
+        %legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
+        graph1D_jd(gridDKE.pn,XSrpint,0,1,'p','S_{RP}','S on each flux surface',NaN,NaN,NaN,'-','.')
+        hold all,
+    end
+        semilogy(gridDKE.pn, Srp(g,:),'rx');title('Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
+%as fcn of mhu, for each slize of p
 % figure
 % hold on
 % for ip=1:npn 
