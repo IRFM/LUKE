@@ -19,7 +19,7 @@ for irem = 1:nrem
         if isfield(dkepath.remote(irem).luke_root,lukever),
             dkepath.remote(irem).luke_root = dkepath.remote(irem).luke_root.(lukever);
         elseif isfield(dkepath.remote(irem).luke_root,'LUKE_default') && ~isempty(dkepath.remote(irem).luke_root.LUKE_default),
-            dkepath.remote(irem).luke_root = dkepath.remote(irem).luke_root.(lukever);
+            dkepath.remote(irem).luke_root = dkepath.remote(irem).luke_root.LUKE_default;
         else
             flag(irem) = false;
             if isempty(dkepath.remote(irem).host),
