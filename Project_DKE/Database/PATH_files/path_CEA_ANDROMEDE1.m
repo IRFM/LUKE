@@ -146,4 +146,35 @@ dkepath.YP105119(1).remote(6).luke_root = dkepath.YP105119(1).luke_root;
 % saturne (sun)
 %
 dkepath.YP105119(1).remote(7) = remote_CEA_SATURNE('sun','yves','YP105119');
-
+%
+%------------------------------------ Profile number 1, EN232106 Nilsson ------------------------------------
+%
+dkepath.EN232106(1).luke_root = ['/home/sccp/gchf/EN290612/',luke_ref,'/'];
+dkepath.EN232106(1).local_root = '/home/sccp/gsem/decker/Packages/nunki/';
+dkepath.EN232106(1).temppathroot = '/home/sccp/gchf/EN290612/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+dkepath.EN232106(1).mex710 = [dkepath.EN232106(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB710/'];
+dkepath.EN232106(1).mex712 = [dkepath.EN232106(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB712/'];
+dkepath.EN232106(1).mex800 = [dkepath.EN232106(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB800/'];
+%
+dkepath.EN232106(1).compiler_opt.copts = '';
+dkepath.EN232106(1).compiler_opt.fopts.mex710 = 'FC=''gfortran''';
+dkepath.EN232106(1).compiler_opt.fopts.mex712 = 'FC=''gfortran''';
+dkepath.EN232106(1).compiler_opt.fopts.mex800 = '';
+dkepath.EN232106(1).compiler_opt.helmex.mex710 = NaN;%['-L',dkepath.EN232106(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.EN232106(1).compiler_opt.helmex.mex712 = NaN;%['-L',dkepath.EN232106(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.EN232106(1).compiler_opt.helmex.mex800 = ['-L',dkepath.EN232106(1).local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.EN232106(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+%
+%Where MUMPS matrix solver is stored (MEX function)
+dkepath.EN232106(1).MUMPS.mex710 = [dkepath.EN232106(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.EN232106(1).MUMPS.mex712 = [dkepath.EN232106(1).local_root,'MUMPS_4.10.0/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.EN232106(1).MUMPS.mex800 = [dkepath.EN232106(1).local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
+%
+%--------------------------- Remote computing -----------------------------
+%
+% local
+%
+dkepath.EN232106(1).remote(1) = remote_CEA_ANDROMEDE('pbs','emelie','EN232106');
+dkepath.EN232106(1).remote(1).host = '';% empty for local host
+dkepath.EN232106(1).remote(1).luke_root = dkepath.EN232106(1).luke_root;
+%

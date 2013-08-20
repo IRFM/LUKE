@@ -59,6 +59,26 @@ remote.pbs.yvesb.matver.matdef = remote.pbs.yvesb.matver.mat710;%default matlab 
 remote.pbs.yvesb.luke_root = '/home/sccp/gsem/peysson/LUKE/';
 remote.pbs.yvesb.users.remoteuser = 'YB109156';
 %
+% EMELIE NILSSON
+%
+% andromede (pbs pro)
+%
+remote.pbs.emelie = default_remote_profile;
+remote.pbs.emelie.host = 'andromede1.intra.cea.fr';% empty for local host
+remote.pbs.emelie.nproc = 12;
+remote.pbs.emelie.cmd = 'qsub';
+remote.pbs.emelie.get_jobid = {'','.andromede1'};%str_before,str_after
+remote.pbs.emelie.set_jobid = {'qstat ','.andromede1','Unknown Job Id'};%str_before,str_after,str_check
+remote.pbs.emelie.matver.mat710.root = '/Applications/Matlab_2010A/bin/';
+remote.pbs.emelie.matver.mat710.prefdir = '/home/sccp/gsem/decker/.matlab/R2010a';
+remote.pbs.emelie.matver.mat712.root = '/Applications/Matlab_2011A/bin/';
+remote.pbs.emelie.matver.mat712.prefdir = '/home/sccp/gsem/decker/.matlab/R2011a';
+remote.pbs.emelie.matver.mat800.root = '/Applications/Matlab_2012B/bin/';
+remote.pbs.emelie.matver.mat800.prefdir = '/home/sccp/gsem/decker/.matlab/R2012b';
+remote.pbs.emelie.matver.matdef = remote.pbs.emelie.matver.mat800;%default matlab on remote machine
+remote.pbs.emelie.luke_root = '/home/sccp/gchf/EN290612/LUKE/';
+remote.pbs.emelie.users.remoteuser = 'EN290612';
+%
 % -------------------------------------------------
 % this part should be common to all remote profiles
 % -------------------------------------------------
