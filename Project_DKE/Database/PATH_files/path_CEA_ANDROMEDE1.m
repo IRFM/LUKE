@@ -178,3 +178,11 @@ dkepath.EN232106(1).remote(1) = remote_CEA_ANDROMEDE('pbs','emelie','EN232106');
 dkepath.EN232106(1).remote(1).host = '';% empty for local host
 dkepath.EN232106(1).remote(1).luke_root = dkepath.EN232106(1).luke_root;
 %
+% macproyves (condor)
+%
+dkepath.EN232106(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','emelie','EN232106');
+%
+% macproyves (xgrid)
+%
+dkepath.EN232106(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','emelie','EN232106');
+%
