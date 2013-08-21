@@ -1,4 +1,4 @@
-function [XXS,XXthetastar1, XXthetastar2] = avalanche_en(dkepath,dkeparam,dkedisplay,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE)
+function [XXS] = avalanche_en(dkepath,dkeparam,dkedisplay,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE)
 %
 % This function calculates the avalanche source term
 %
@@ -16,80 +16,70 @@ function [XXS,XXthetastar1, XXthetastar2] = avalanche_en(dkepath,dkeparam,dkedis
 % By E. Nilsson (CEA-IRFM, emelie.nilsson@cea.fr) Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker
 % (CEA-DRFC, joan.decker@cea.fr) 
 %
-npn = size(gridDKE.XXmhu,1);
-nmhu = size(gridDKE.XXmhu,2);
-npsi=size(equilDKE.XBx,1); %nr of radial positions
+npsi = gridDKE.nr;
+npn = gridDKE.npn;
+nmhu = gridDKE.nmhu;
 %
-
- if Zbouncecoef.XXlambda~=1
-    [XXalpha_an,XXmask_ctsa,thetastar_an,thetastar_an2]=S_anal(equilDKE,gridDKE,Zmomcoef,npsi,nmhu,npn);
+if Zbouncecoef.XXlambda~=1
+    [XXalpha_an,XXmask_ctsa,thetastar_an,thetastar_an2]=S_anal(equilDKE,gridDKE,Zmomcoef); %calculates alpha and theta* with analytical formula in circ concentric case
     tic
-    [XXthetastar1,XXthetastar2,XXalpha] = thetastar_calc_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches
+    [XXthetastar1,XXthetastar2,XXalpha] = thetastar_calc_dke_en(equilDKE,gridDKE,Zmomcoef);%calc the critical poloidal angle value theta_star for runaway avalanches with interp1
     toc
-%     tic
-%     [XXthetastar1f,XXthetastar2f,XXalphaf] = thetastar_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches
-%     toc
-      %thetastar_an(isnan(thetastar_an)) = 0;
-  %XXthetastar1(isnan(XXthetastar1)) = 0;
-    %keyboard
-%     figure; hold on;
-%     for ip=1:npn
-%         graph1D_jd(gridDKE.mhu,squeeze(XXalpha_an(1,ip,:)-XXalpha(1,ip,:)),0,0,'mhu','Xalpha an-Xalphaip','',NaN,NaN,NaN,'-','.','r')
-%     end
-%     figure;hold on;
-%     for ip=1:npn
-%         graph1D_jd(gridDKE.mhu,squeeze(thetastar_an(1,ip,:)-XXthetastar1(1,ip,:)),0,0,'mhu','theta an-XXtheta1ip','',NaN,NaN,NaN,'none','.','r')
-%     end
-%     figure; hold on;
-% %     for ip=1:npn
-% %         graph1D_jd(gridDKE.mhu,squeeze(thetastar_an(1,ip,:)-XXthetastar1f(1,ip,:)),0,0,'mhu','theta an-XXtheta1fz','',NaN,NaN,NaN,'none','.','r')
-% %     end
-% %     %
- else
+    %     tic
+    %     [XXthetastar1f,XXthetastar2f,XXalphaf] =
+    %     thetastar_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches with fzero
+    %     toc
+else
     XXalpha=ones(npsi,npn,nmhu);
     XXthetastar1=0;
     XXthetastar2=0;
     XXalpha_an=ones(npsi,npn,nmhu);
- end
+end
 %
 Lambd = mksa.lnc_e_ref;
 ne_ref=mksa.ne_ref;
 ne=equilDKE.xne/ne_ref;
 beta=mksa.betath_ref;
-ap=equilDKE.ap; % should be a_p like in the rest of LUKE, in literature it is Rp. Check this!
+ap=equilDKE.ap;
 Rp=equilDKE.Rp;
-nr=0.1*ne;
+nr=0.05*ne;
 %
 B0=equilDKE.xB0;
 Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
+%
 mhuT=sqrt(1-B0./Bmax);
 %
 for ipsi=1:npsi
-  Srp(ipsi,:)=1/(4*pi)*beta^2/log(Lambd)*ne(ipsi)*nr(ipsi)./(gridDKE.pn.*Zmomcoef.gamma.*(Zmomcoef.gamma-1).^2); %rosenbluth (S*)
+  Srp(ipsi,:)=1/(4*pi)*beta^2/Lambd*ne(ipsi)*nr(ipsi)./(gridDKE.pn.*Zmomcoef.gamma.*(Zmomcoef.gamma-1).^2); %rosenbluth (S*)
 end
 XXSrp=permute(repmat(Srp, [1,1,nmhu]),[1,2,3]);
-if Zbouncecoef.XXlambda~=1
-C=NaN(npsi,npn,nmhu);
-for ipsi=1:npsi 
-    for m=1:nmhu
-    C(ipsi,:,m)=2/pi./(Zmomcoef.gamma+1)./(Zbouncecoef.Xxlambda(m,ipsi).*Zbouncecoef.xqtilde(ipsi)).*abs(gridDKE.mhu(m))./(1-gridDKE.mhu(m).^2).^2; 
-    end
-end
-else 
-    C=ones(npsi,npn,nmhu);
-end
 %
 delt=zeros(npsi,npn,nmhu);
 %
 for ip=1:npn
     [dummy,I] = min(abs(gridDKE.mhu - sqrt((Zmomcoef.gamma(ip)-1)/(Zmomcoef.gamma(ip)+1))));
     delt(:,ip,I) = 1;
-    delt(:,ip,nmhu-I+1) = 1;
+    %delt(:,ip,nmhu-I+1) = 1;
+end
+if Zbouncecoef.XXlambda~=1
+C=NaN(npsi,npn,nmhu);
+%
+for ipsi=1:npsi 
+    for m=1:nmhu
+    C(ipsi,:,m)=2/pi./(Zmomcoef.gamma+1)./(Zbouncecoef.Xxlambda(m,ipsi).*Zbouncecoef.xqtilde(ipsi)).*abs(gridDKE.mhu(m))./(1-gridDKE.mhu(m).^2).^2; 
+    end
 end
 %
-XXS_an=XXSrp.*C.*XXalpha_an;
-XXbouncef=C.*XXalpha;
-XXSl = XXSrp.*XXbouncef; %<S()>
+else 
+    C=ones(npsi,npn,nmhu).*delt; %cylindrical case
+end
+%
+%XXS_an=XXSrp.*C.*XXalpha_an;
+ximask = zeros(npsi,npn,nmhu);
+ximask(:,:,nmhu/2+1:end) = 1;
+XXbouncef=C.*XXalpha.*ximask; %numerical
+
+XXSl = XXSrp.*XXbouncef; %<S()> numerical
 %
 XXSrp_xis=XXSrp.*delt; %3D analytical rosenbluth operator, non bounce averaged
 XXSl2=XXSrp_xis;
@@ -110,13 +100,16 @@ XXS=squeeze(permute(XXSl,[2,3,1]));
 %             figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXalpha(ipsi,:,:)),'p','mhu','XXalpha',NaN,NaN,0,NaN,100); colorbar;
 %             figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(C(ipsi,:,:)),'p','mhu','C',NaN,NaN,0,NaN,100); colorbar;
 %         end
-% for ipsi=1:npsi
-% figure;graph2D_jd(gridDKE.xpn.*gridDKE.Xmhu,gridDKE.xpn.*sqrt(1-gridDKE.Xmhu.^2),squeeze(XXbouncef(ipsi,:,:))','p_{par}/p_{th}','p_{perp}/p_{th}','BF',NaN,NaN,0,NaN,30); colorbar;
-%  hold on 
-% plot(gridDKE.pn.*mhuT(ipsi),gridDKE.pn.*sqrt(1-mhuT(ipsi).^2),'m')
-% plot(-gridDKE.pn.*mhuT(ipsi),gridDKE.pn.*sqrt(1-mhuT(ipsi).^2),'m')
-% end
-% %
+
+for ipsi=1:npsi
+figure;graph2D_jd(gridDKE.xpn.*gridDKE.Xmhu,gridDKE.xpn.*sqrt(1-gridDKE.Xmhu.^2),squeeze(XXbouncef(ipsi,:,:))','p_{par}/p_{th}','p_{perp}/p_{th}','BF',NaN,NaN,0,NaN,30); colorbar;
+ hold on 
+h = plot(gridDKE.pn.*mhuT(ipsi),gridDKE.pn.*sqrt(1-mhuT(ipsi).^2));
+%h2 = plot(-gridDKE.pn.*mhuT(ipsi),gridDKE.pn.*sqrt(1-mhuT(ipsi).^2));
+set(h,'Color','k','LineWidth',2)
+%set(h2,'Color','k','LineWidth',2)
+end
+%
 % 
 %         figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(thetastar_an2(ir,:,:)),'p','mhu','theta^*_2 anal.',NaN,NaN,0,NaN,30); colorbar;   
 %         figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXalpha_an(ir,:,:)),'p','mhu','XXalpha analytical',NaN,NaN,0,NaN,100); colorbar;
@@ -187,10 +180,10 @@ XXS=squeeze(permute(XXSl,[2,3,1]));
     for g=1:npsi
         XS = squeeze(XXSl(g,:,:));
         XS(isnan(XS)) = 0;
-        XSint = integral_dke_jd(gridDKE.dmhu,XS,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+        XSint = integral_dke_jd(ones(1,nmhu),XS,2); %integrate over mhu, pos n neg : /2
         %semilogy(gridDKE.pn,XSint,'.-')
         %legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
-        graph1D_jd(gridDKE.pn,XSint,0,1,'p','S_{bounce}','S on each flux surface',NaN,NaN,NaN,'-','.')
+        graph1D_jd(gridDKE.pn,XSint,0,1,'p','S_{bounce} LUKE','S on each flux surface',NaN,NaN,NaN,'-','.')
         hold all,
     end
         semilogy(gridDKE.pn, Srp(g,:),'rx');title('Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
@@ -199,13 +192,13 @@ XXS=squeeze(permute(XXSl,[2,3,1]));
         %
     for g=1:npsi
         XSrp = squeeze(XXSrp_xis(g,:,:)); %integrate the 3D analytical S_RP, should get same as plotting the 2D Srp
-        XSrpint = integral_dke_jd(ones(1,nmhu)/2,XSrp,2);%/(gridDKE.dmhu(1)); %integrate over mhu, pos n neg : /2
+        XSrpint = integral_dke_jd(ones(1,nmhu),XSrp,2);%/(gridDKE.dmhu(1)); %integrate over mhu, pos n neg : /2
         %semilogy(gridDKE.pn,XSint,'.-')
         %legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
         graph1D_jd(gridDKE.pn,XSrpint,0,1,'p','S_{RP}','S on each flux surface',NaN,NaN,NaN,'-','.')
         hold all,
     end
-        semilogy(gridDKE.pn, Srp(g,:),'rx');title('Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
+        semilogy(gridDKE.pn, Srp(g,:),'rx');title('S_RP compared to Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
 %as fcn of mhu, for each slize of p
 % figure
 % hold on
