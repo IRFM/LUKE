@@ -1,27 +1,32 @@
-function [XXthetastar1,XXthetastar2,XXalpha] = thetastar_calc_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE)
-% Calculation of the critical poloidal angle value theta_star for runaway avalanches
+function [XXthetastar1,XXthetastar2,XXalpha] = thetastar_calc_dke_en(equilDKE,gridDKE,Zmomcoef)
+% Calculation of the equilibrium dependent factor alpha of the bouncefactor C*alpha for runaway
+% avalanches, by applying a refined mhu grid, then redistributing it on the
+% LUKE mhu grid.
 %
 % INPUT:
 %
 %   - equil: magnetic equilibrium structure
 %   - gridDKE: grid structure
 %   - Zmomcoef: momentum dynamics structure
-%   - radialDKE: radial grid structure
 %
 % OUTPUT:
 %
+%   - XXalpha: poloidal angle value theta_star between 0 and pi
+%       [nr,np,nmhu] on each flux surface
 %   - XXthetastar1: poloidal angle value theta_star between 0 and pi
-%       [np,nmhu,nr] on each flux surface ie [np,nmhu,length(B)]
+%       [nr,np,nmhu] on each flux surface
 %   - XXthetastar2: poloidal angle value theta_star between pi and 2*pi
-%   -the sum sig [npn,nmhu,l]
+%   -the sum sig [nr,npn,nmhu]
 %
 % By E. Nilsson (CEA-IRFM, emelie.nilsson@cea.fr) Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker
 % (CEA-DRFC, joan.decker@cea.fr)
 %
 method='spline';%'linear';
-npn = size(gridDKE.XXmhu,1);
-nmhu = size(gridDKE.XXmhu,2);
-npsi=size(equilDKE.XBx,1); %nr of radial positions
+%
+npsi = gridDKE.nr;
+npn = gridDKE.npn;
+nmhu = gridDKE.nmhu;
+%
 theta=equilDKE.mtheta;
 ntheta = length(theta);
 xpsin = equilDKE.xpsin;
@@ -48,20 +53,18 @@ XXalphaNew = NaN(npsi,npn,mhuF*nmhu);
 %
 for ipsi=1:npsi
     for ip=1:npn
-        gridmhu_S(ipsi,ip,:)=linspace(mhu0min(ipsi,ip),mhu0max(ipsi,ip),noP); %cells
+        gridmhu_S(ipsi,ip,:)=linspace(mhu0min(ipsi,ip),mhu0max(ipsi,ip),noP); % refined grid cells
     end
 end
+%
 XXmhuip=(gridmhu_S(:,:,1:(end-1))+gridmhu_S(:,:,(2:end)))./2;
 dmhuip=gridmhu_S(:,:,(2:end))-gridmhu_S(:,:,1:(end-1));
 %
 XXmhuim = -flipdim(XXmhuip,3);
-%XXmhuim = -fliplr(XXmhuip);
 dmhuim =  flipdim(dmhuip,3);
 %
-XXmhui = cat(3, XXmhuim, XXmhuip);
-%XXmhui = [XXmhuim,XXmhuip];
+XXmhui = cat(3, XXmhuim, XXmhuip); %concatenate [-xi,0] and [0,xi]
 dmhui = cat(3, dmhuim, dmhuip);
-%dmhui = [dmhuim, dmhuip];
 %
 XXmhuiper = permute(XXmhui,[2,3,1]); %permute for Bstar calc
 XXgammai=permute(repmat(Zmomcoef.gamma,[noP*2-2,1,npsi]),[2,1,3]);
@@ -74,7 +77,6 @@ tic
 Br=equilDKE.XBx;
 Bz=equilDKE.XBy;
 Bphi=equilDKE.XBphi;
-keyboard
 for ipsi=1:npsi
     Bp=sqrt(Br(ipsi,:).^2+Bz(ipsi,:).^2);        %poloidal Bfield
     Bt=abs(Bphi(ipsi,:));                %toroidal Bfield
@@ -83,9 +85,9 @@ for ipsi=1:npsi
     XXthetastar2new(ipsi,:,:)=interp1(B((ntheta+1)/2:end),theta((ntheta+1)/2:end),XXBstarnew(ipsi,:,:),method);%calc theta_k* >pi
     [x1,y1,Bx1,By1,Bp1,dB1dtheta] = equilval_B_dB_en(equilDKE.equil_fit,equilDKE.xrho(ipsi),XXthetastar1new(ipsi,:,:));
     [x2,y2,Bx2,By2,Bp2,dB2dtheta] = equilval_B_dB_en(equilDKE.equil_fit,equilDKE.xrho(ipsi),XXthetastar2new(ipsi,:,:));
-    r1Rp=sqrt(x1.^2+y1.^2)./equilDKE.Rp;
-    r2Rp=sqrt(x2.^2+y2.^2)./equilDKE.Rp;
-    XXalphaNew(ipsi,:,:)=B0(ipsi)^2.*r1Rp./abs(dB1dtheta)./Bp1 + B0(ipsi)^2.*r2Rp./abs(dB2dtheta)./Bp2;
+    r1Rp=sqrt(x1.^2+y1.^2)./equilDKE.ap; %should be changed to ap to be consistent with LUKE bounce definition, should be ap!
+    r2Rp=sqrt(x2.^2+y2.^2)./equilDKE.ap;
+    XXalphaNew(ipsi,:,:) = B0(ipsi)^2.*r1Rp./abs(dB1dtheta)./Bp1 + B0(ipsi)^2.*r2Rp./abs(dB2dtheta)./Bp2;
 end
 %
 XXalpha=NaN(npsi,npn,nmhu);
@@ -113,10 +115,10 @@ for ipsi = 1:npsi;
         XXthetastar2(ipsi,ip,nmhu/2+1:end) = redistrib_jd(xp,fpt2,yp,0);
     end
 end
-t(ipo) = toc;
 %
-% XXthetastar1(find(~XXthetastar1))=NaN;
-% XXthetastar2(find(~XXthetastar2))=NaN;
+XXalpha = XXalpha.*permute(gridDKE.XXdmhu,[3,2,1]);
+%
+t(ipo) = toc;
 %
 for ip = 1:npn
     ind = find(XXalpha(1,ip,1:nmhu/2));
@@ -124,7 +126,6 @@ for ip = 1:npn
     alphmax(ipo,ip) = XXalpha(1,ip,ind(end));
 end
 end
-keyboard
 %convergence test
 % figure; graph1D_jd((1:ipo)*nmhu,alphmin,0,0,'nr of points in refined grid','alpha(ximin,p=const)','',NaN,NaN,NaN,'-','.','b')
 % figure; graph1D_jd((1:ipo)*nmhu,alphmax,0,0,'nr of points in refined grid','alpha(ximax,p=const)','',NaN,NaN,NaN,'-','.','r')
@@ -140,8 +141,6 @@ for ipsi=1:npsi
     end
     graph1D_jd(gridDKE.pn,XalphaNewINT,0,0,'p','XalphaNew','',NaN,NaN,NaN,'-','.','b')
 end
-
-
 %
 figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXalpha(1,:,:)),'p','mhu','alpha LUKE',NaN,NaN,0,NaN,100); colorbar;
 %
