@@ -53,14 +53,14 @@ Zmripple = make_struct_jd(loadstruct,display.display_mode,'mripplecoefbuilder_dk
 %
 if isfield(dkeparam_in,'avalanche_mode') %if the field was specified, avalanche mode on
     XXS = make_struct_jd(loadstruct,display.display_mode,'avalanche_en',dkepath,dkeparam_out,display,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE);%the complete avalanche operator
-else
+else %if no avalanche mode is specified, zero contribution
     nr = gridDKE.nr;
     npn = gridDKE.npn;
     nmhu = gridDKE.nmhu;
     XXS=squeeze(zeros(npn,nmhu,nr));
 end
 %
-XXsinksource=XXsinksource+XXS;
+XXsinksource=XXsinksource+gridDKE.XXpn2.*XXS; %add avalanche term to sinksourceterm (RHS), partial Jacobian multiplication to avoid singularities (XXS already normalized to mksa.nhu_ref*mksa.ne_ref)
 %
 if strcmp(waveparam.model,'RT'),% ray tracing simulation
     [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = make_struct_jd(loadstruct,display.display_mode,'loop_rfdiff_dke_jd',dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waveparam);%RF waves flux coefficients
