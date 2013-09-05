@@ -592,7 +592,7 @@ for itn = itnmin:itnmax,%time evolution
                 byPnonabs{ifluct,iw} = yPtot_inj;
                 for iy = 1:ny,% sum over lobes
                     for iray = 1:length(byisel{ifluct,iw}{iy}),
-                        Pabs_loc = 2*pi*equil.Rp*( dke_out.yP0_2piRp(byisel{ifluct,iw}{iy}(iray)) - dke_out.zP_0_2piRp_mod{end}{byisel{ifluct,iw}{iy}(iray)}(end));
+                        Pabs_loc = 2*pi*equil.Rp*(dke_out.yP0_2piRp(byisel{ifluct,iw}{iy}(iray)) - dke_out.zP_0_2piRp_mod{end}{byisel{ifluct,iw}{iy}(iray)}(end));
                         byPnonabs{ifluct,iw}(iy) = byPnonabs{ifluct,iw}(iy) - Pabs_loc;
                     end
                 end
@@ -715,7 +715,7 @@ for itn = itnmin:itnmax,%time evolution
         end
         %
         if opt.waves,
-            eval(['save ',simul.path,'wave_results/waves_',simul.id,'_',int2str(itn),'.mat wavetype waves wavestructs itn']);
+            save([simul.path,'wave_results/waves_',simul.id,'_',int2str(itn),'.mat'],'wavetype','waves','wavestructs','itn');
         end
         %
         wavetype = 0;
@@ -734,6 +734,11 @@ for itn = itnmin:itnmax,%time evolution
         info_dke_yp(2,['Backup of iteration ',int2str(itn),'/',int2str(itnmax),' done in file ''',save_str,'''.']);
         disp('--------------------------------------------------------------------------------------------------');
         clear waves
+        %
+    elseif itnmax == 1 && opt.waves
+        %
+        save([simul.path,'wave_results/waves_',simul.id,'.mat'],'waves','wavestructs');
+        %
     end
 end
 %
@@ -753,6 +758,34 @@ output.Zbouncecoef = loadstructs.bouncecoefbuilder_dke_yp.Zbouncecoef;
 output.Zmripple = loadstructs.mripplecoefbuilder_dke_yp.Zmripple;
 output.mksa = loadstructs.mksacoefbuilder_dke_yp.mksa;
 output.XXsinksource = loadstructs.sinksourcecoeffbuilder_dke_yp.XXsinksource;
+%
+if abs(opt.waves),
+    output.dke_out = rmfield(output.dke_out,'waves');
+end
+%
+% Reduced output
+%
+if ~isfield(dkeparam,'opt_struct') || dkeparam.opt_struct == 0,
+    savefields_radialDKE = {'xrho_S_dke','xpsin_f','xpsin_f_dke','xdpsin_f_dke','xpsin_S_dke','r_dke'};
+    savefields_momentumDKE = {'pn','pnp','pn_S','dpn','mhu','mhu_S','dmhu'};
+    savefields_gridDKE = {'X1mmhu2','xmhubounce2'};
+    savefields_Zmomcoef = {'gamma','v','Ec_ref','dEc_ref'};
+    savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda'};
+    savefields_Zmripple = {'XXlossripple','xdeltaripple','xNq','Xnhuloss','xthetabanana','xthetaloss','xpndetrap','xpnth','xEseuil'};
+    %
+    savefields_ZXXD_rf = {'parpar_ij','pp_ij'};
+    rmfields_dke_out = {'ZXXS','ZXXF_rf','ZXXD_c','ZXXF_c','ZXXD_e','ZXXF_e','ZXXD_a','ZXXF_a','XXILor'};
+    %
+    output.radialDKE = selectfields_jd(output.radialDKE,savefields_radialDKE);
+    output.momentumDKE = selectfields_jd(output.momentumDKE,savefields_momentumDKE);
+    output.gridDKE = selectfields_jd(output.gridDKE,savefields_gridDKE);
+    output.Zmomcoef = selectfields_jd(output.Zmomcoef,savefields_Zmomcoef);
+    output.Zbouncecoef = selectfields_jd(output.Zbouncecoef,savefields_Zbouncecoef);
+    output.Zmripple = selectfields_jd(output.Zmripple,savefields_Zmripple);
+    %
+    output.dke_out.ZXXD_rf = selectfields_jd(output.dke_out.ZXXD_rf,savefields_ZXXD_rf);
+    output.dke_out = rmfield(output.dke_out,rmfields_dke_out);
+end
 %
 lukestructs.output = output;
 %
