@@ -30,7 +30,6 @@ waveparam = dke_out.waveparam;
 ZXXD_rf = dke_out.ZXXD_rf;
 ZXXD_rf_tp = dke_out.ZXXD_rf_tp;
 ZXXF_rf_tp = dke_out.ZXXF_rf_tp;
-gridindex_rf = dke_out.gridindex_rf;
 %
 XXfinit = dke_out.XXfinit;
 XXf0 = dke_out.XXf0;
