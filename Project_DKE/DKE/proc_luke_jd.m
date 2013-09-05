@@ -71,7 +71,13 @@ Zmripple = data.Zmripple;
 mksa = data.mksa;
 %
 simul_id = dke_out.simul.id;
-waves = proc_wave_alphaphi_luke_jd(data,dke_out.waves,1);
+%
+if isfield(dke_out,'waves'),
+    waves = proc_wave_alphaphi_luke_jd(data,dke_out.waves,1);
+else
+    waves = {};
+end
+%
 if isfield(dke_out,'dkeparam')
     dkeparam = dke_out.dkeparam;
 elseif isfield(data,'dkeparam')
@@ -171,37 +177,21 @@ end
 %
 scocurr = sign(equilDKE.psia_apRp)*sign(equilDKE.XBphi(1,1));
 %
+% current
+%
 J_tot = Zcurr(end).x_0_fsav*mksa.j_ref*scocurr;
+%
+% power deposition
+%
 P_rf = ZP0(end).x_rf_fsav.'*mksa.P_ref;
 yP_rf = ZP0(end).xy_rf_fsav.'*mksa.P_ref;
 ynP_rf = ZP0(end).xyn_rf_fsav*mksa.P_ref;
 P_e = ZP0(end).x_e_fsav*mksa.P_ref;
 P_tot = P_rf + P_e;
 %
-% parallel momentum
+% parallel momentum transfer rate
 %
-np = length(pn);
-nmhu = length(mhu);
-%
-XXpnm = repmat(momentumDKE.pn_S(1:end-1).',[1,nmhu,nr]);
-XXpn = repmat(pn.',[1,nmhu,nr]);
-XXpnp = repmat(momentumDKE.pn_S(2:end).',[1,nmhu,nr]);
-XXmhu = repmat(mhu,[np,1,nr]);
-XX1mmhu2m = repmat(1 - momentumDKE.mhu_S(1:end-1).*momentumDKE.mhu_S(1:end-1),[np,1,nr]);
-XX1mmhu2p = repmat(1 - momentumDKE.mhu_S(2:end).*momentumDKE.mhu_S(2:end),[np,1,nr]);
-%
-XXIntegrand_im = XXpnm.*XXpnm.*XXmhu;
-XXIntegrand_ip = XXpnp.*XXpnp.*XXmhu;
-%
-XXIntegrand_jm = XXpn.*XXpn.*sqrt(XX1mmhu2m);
-XXIntegrand_jp = XXpn.*XXpn.*sqrt(XX1mmhu2p);
-%
-Zmom.x_rf = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_im.*dke_out.ZXXS.p0_rf_imj + XXIntegrand_ip.*dke_out.ZXXS.p0_rf_ipj)/2,1),1).'...
-           -2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,(XXIntegrand_jm.*dke_out.ZXXS.m0_rf_ijm + XXIntegrand_jp.*dke_out.ZXXS.m0_rf_ijp)/2,1),1).';
-%
-[~,me,~,~,~,~,~,~,clum] = pc_dke_yp;%Universal physics constants
-dpdt_ref = me*clum*mksa.betath_ref*mksa.nhu_ref*mksa.ne_ref; %power normalization constant (N/m^3)
-dpdt_rf = Zmom.x_rf*dpdt_ref;
+dpdt_rf = dke_out.Zmom.x_rf*mksa.dpdt_ref;
 %
 if isfield(dke_out,'residue_rf'),
     if iscell(dke_out.residue_rf),
@@ -518,7 +508,7 @@ end
 %
 %nbtot = sum(nb);
 %
-p0_rf_2piRp = sum(wp0_rf_2piRp);
+p0_rf_2piRp = sum(dke_out.yP0_2piRp)/1e6;%sum(wp0_rf_2piRp);
 %
 %
 if nr > 1,
@@ -1265,7 +1255,7 @@ if nr > 1,
             iw = NaN;
             ibb = NaN;
             ib = 0;
-            iwdef = 1;
+            iwdef = 0;%1;
             %
             while iw ~= 0 && ibb ~= 0
                 %
