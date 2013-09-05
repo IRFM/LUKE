@@ -409,7 +409,6 @@ dke_out.XXfinit = XXfinit;
 dke_out.XXf0 = XXf0;
 dke_out.XXfM = XXfM;
 dke_out.Zf0_interp = Zf0_interp;
-dke_out.XXf0_g = XXf0_g;
 dke_out.FPtime = FPtime;
 dke_out.normf0 = normf0;
 dke_out.curr0 = curr0;
@@ -434,11 +433,12 @@ dke_out.xys = xys;
 %
 dke_out.ZXXD_rf = ZXXD_rf;
 dke_out.ZXXF_rf = ZXXF_rf;
-if dkeparam_out.opt_struct > 1,
+%
+if dkeparam_out.opt_struct > 1,% save heavy structures containing individual ray element contributions to Dql
     dke_out.ZXYD_rf = ZXYD_rf;
     dke_out.ZXYF_rf = ZXYF_rf;
+    dke_out.gridindex_rf = gridindex_rf;
 end
-dke_out.gridindex_rf = gridindex_rf;
 %
 dke_out.ZXXD_a = ZXXD_a;
 dke_out.ZXXF_a = ZXXF_a;
@@ -470,7 +470,6 @@ if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf) && nit_rf > 1,
     %
 end
 %
-dke_out.XXsource = XXsinksource_in;
 dke_out.xRR_fsav = xRR_fsav;
 dke_out.Zmripple = Zmripple;
 %
@@ -530,24 +529,6 @@ else
     dke_out.memoryLU_bc_f_out = [];
     dke_out.time_bc_out = [];
     dke_out.xRR_bc_fsav = [];
-end
-%
-% Flexible output
-%
-if dkeparam_out.opt_struct == 0,
-    savefields_radialDKE = {'xrho_S_dke','xpsin_f','xpsin_f_dke','xdpsin_f_dke','xpsin_S_dke','r_dke'};
-    savefields_momentumDKE = {'pn','pnp','pn_S','dpn','mhu','mhu_S','dmhu'};
-    savefields_gridDKE = {'X1mmhu2','xmhubounce2'};
-    savefields_Zmomcoef = {'gamma','v','Ec_ref','dEc_ref'};
-    savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda'};
-    savefields_Zmripple = {'XXlossripple','xdeltaripple','xNq','Xnhuloss','xthetabanana','xthetaloss','xpndetrap','xpnth','xEseuil'};
-    %
-    radialDKE = selectfields_jd(radialDKE,savefields_radialDKE);
-    momentumDKE = selectfields_jd(momentumDKE,savefields_momentumDKE);
-    gridDKE = selectfields_jd(gridDKE,savefields_gridDKE);
-    Zmomcoef = selectfields_jd(Zmomcoef,savefields_Zmomcoef);
-    Zbouncecoef = selectfields_jd(Zbouncecoef,savefields_Zbouncecoef);
-    Zmripple = selectfields_jd(Zmripple,savefields_Zmripple);
 end
 %
 if exist(dkepath.temppath,'dir')
