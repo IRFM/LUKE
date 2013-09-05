@@ -117,6 +117,7 @@ dkeparam.clustermode.wave_random_yp.scheduler.mode = 0;%MatLab distributed compu
 dkeparam.clustermode.wave_random_yp.scheduler.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
 dkeparam.clustermode.wave_random_yp.scheduler.size = 2;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
 %
+dkeparam.opt_struct = 0;% (0) select only main fields from output structures (1) select all fields except ZXYD_rf and gridindex_rf (2) also select ZXYD_rf and gridindex_rf 
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 dkeparam.opt_save = 0;%Save intermediate calculations
 dkeparam.opt_load = 0;%Load intermediate calculations

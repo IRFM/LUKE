@@ -116,6 +116,7 @@ dkeparam.clustermode.eecoll_dke_yp.scheduler.memory = 500;%required memory (in m
 dkeparam.clustermode.wave_solver_yp.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
 dkeparam.clustermode.wave_solver_yp.scheduler.memory = 500;%required memory (in mb)
 %
+dkeparam.opt_struct = 0;% (0) select only main fields from output structures (1) select all fields except ZXYD_rf and gridindex_rf (2) also select ZXYD_rf and gridindex_rf 
 dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
 dkeparam.opt_save = 0;%Save intermediate calculations
 dkeparam.opt_load = 0;%Load intermediate calculations
