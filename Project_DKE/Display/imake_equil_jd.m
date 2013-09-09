@@ -1,9 +1,13 @@
-function equil = imake_equil_jd(dkepath,basestr,signs,external,workdir,opt_gui)
+function equil = imake_equil_jd(dkepath,basestr,signs,external,workdir,opt_gui,select)
 %
 % This function interactively builds the equilibrium structure
 %
+if nargin < 7,
+	select = struct;
+end
+%
 if nargin < 6,
-	opt_gui = 1;
+	opt_gui = true;
 end
 %
 if nargin < 5,
@@ -17,6 +21,12 @@ end
 if nargin < 3,
 	signs = '';
 end
+%
+if ~isfield(select,'style'),
+    select.style = struct;
+end
+%
+select.style.textwidth = 400;
 %
 equil = '';
 Zaxis = 0;
@@ -34,18 +44,20 @@ disp(' ')
 %
 if isfield(external,'magnetic'),% magnetic equilibrium from external database?
     %
-    i_opt = input_dke_yp(['Do you want to :\n',...
-        '(0) use data loaded from the external database \n',...
-        '(1) use data from an existing equilibrium file \n',...
-        '(2) build the magnetic equilibrium data locally \n'],...
-        0,{0,1,2},'Invalid selection');
+    titletext = 'For the MAGNETIC equilibrium :';      
+    s = {'Use data loaded from the external database',...
+              'Use data from an existing equilibrium file',...
+              'Build the magnetic equilibrium data locally'};
+    %    
+    i_opt = iselect_jd(s,titletext,opt_gui,select.style,1) - 1;
     %
 else
     %
-    i_opt = input_dke_yp(['Do you want to :\n',...
-        '(1) use data from an existing equilibrium file \n',...
-        '(2) build the magnetic equilibrium data locally \n'],...
-        1,{1,2},'Invalid selection');
+    titletext = 'For the MAGNETIC equilibrium :';      
+    s.text = {'Use data from an existing equilibrium file',...
+              'Build the magnetic equilibrium data locally'};
+    %    
+    i_opt = iselect_jd(s,titletext,opt_gui,select.style,1);
     %
 end
 % 
@@ -176,18 +188,20 @@ disp(' ')
 if e_opt ~= -2,
     if isfield(external,'prof'),% magnetic equilibrium from external database?
         %
-        i_opt = input_dke_yp(['Do you want to :\n',...
-            '(0) use data loaded from the external database \n',...
-            '(1) use data from an existing equilibrium profiles file \n',...
-            '(2) build the equilibrium profiles data locally \n'],...
-            0,{0,1,2},'Invalid selection');
+        titletext = 'For the equilibrium PROFILES:';      
+        s = {'Use data loaded from the external database',...
+             'Use data from an existing equilibrium profiles file',...
+             'Build the equilibrium profiles data locally'};
+        %    
+        i_opt = iselect_jd(s,titletext,opt_gui,select.style,1) - 1;
         %
     else
         %
-        i_opt = input_dke_yp(['Do you want to :\n',...
-            '(1) use data from an existing equilibrium profiles file \n',...
-            '(2) build the equilibrium profiles data locally \n'],...
-            1,{1,2},'Invalid selection');
+        titletext = 'For the equilibrium PROFILES:';      
+        s = {'Use data from an existing equilibrium profiles file',...
+             'Build the equilibrium profiles data locally'};
+        %    
+        i_opt = iselect_jd(s,titletext,opt_gui,select.style,1);
         %
     end
     % 
@@ -305,19 +319,27 @@ end
 %
 shotid = [basestr,'_',shotnum,'_',shotime];
 %
-id_equil = input(['Please provide a name for the equilibrium file [',shotid,'] : '],'s');
+if ~isfield(select,'idequil') || ~select.idequil 
+    id_equil = input(['Please provide a name for the equilibrium file [',shotid,'] : '],'s');
+else
+    id_equil = '';
+end
+%
 if isempty(id_equil),
     id_equil = shotid;
 end
 %
-d_opt = input_dke_yp('Do you want to display the equilibrium','n',{'y','n'},'',[1,1]);
-if strcmp(d_opt,'y'),
+if (~isfield(select,'disp') || ~select.disp) && strcmp(input_dke_yp('Do you want to display the equilibrium','n',{'y','n'},'',[1,1]),'y'),
     display_mode = 2;
 else
     display_mode = 1;
 end
 %
-p_opt = input_dke_yp('Option for equilibrium figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
+if (~isfield(select,'print') || ~select.print)
+    p_opt = input_dke_yp('Option for equilibrium figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
+else
+    p_opt = -1;
+end
 %
 dispname = '';
 savename = id_equil;
@@ -340,40 +362,37 @@ if type == 1 && n_opt <= 1,
     pne = equil_prof_data.ne(ishot,:);
     pTe = equil_prof_data.te(ishot,:);
     %
-    if length(equil_prof_data.ti(ishot,:)) == 1 || ...
-      input_dke_yp('Do you want to specify Ti manually','n',{'y','n'},'',[1,1]) == 'y';
-        %
-        TeTi = input_dke_yp('Please provide an estimated value for Te/Ti',6,'','',[1,1]);
-        %
+    datamod.Zaxis = equil_prof_data.zaxis(ishot);
+    %
+    if isscalar(equil_prof_data.ti(ishot,:)) && isnan(equil_prof_data.ti(ishot,:)), 
+        datamod.TeTiratio = 6;
+    end
+    %
+    if isscalar(equil_prof_data.zeff(ishot,:)),
+        if ~isnan(equil_prof_data.zeff(ishot,:)),
+            datamod.Zeff = equil_prof_data.zeff(ishot,:);
+        else
+            datamod.Zeff = 3;
+        end
+    end
+    %
+    s.expert.Zaxis = 0;
+    s.expert.TeTiratio = 0;
+    s.expert.Zeff = 0;    
+    %
+    datamod = imod_struct_jd(datamod,'equil. data',1,opt_gui,s);
+    %
+    if isfield(datamod,'TeTiratio')%constant Te/Ti ratio
         pTi = pTe/TeTi;
     else
         pTi = equil_prof_data.ti(ishot,:);
     end
     %
-    pZeff = equil_prof_data.zeff(ishot,:);
-    %
-    if isscalar(pZeff),%uniform profile
-        %
-        Zeff = pZeff;
-        %
-        if isnan(Zeff),
-            %
-            Zeff = input_dke_yp('No measure of Zeff is available. Please provide an estimated value for Zeff',3,[1;6],'',[1,1]);
-            %
-        else
-            Zeff_new = input(['Confirm Zeff value? [',num2str(Zeff),']: ']);
-            %
-            if Zeff_new ~= Zeff,
-                disp(['-----> WARNING: Zeff value has been changed from ',num2str(Zeff),' to ',num2str(Zeff_new)]);
-                Zeff = Zeff_new;
-            end
-        end
-        %
+    if isfield(datamod,'TeTiratio'),%uniform profile
         pZeff = Zeff*ones(size(prho));
-        %
+    else
+        pZeff = equil_prof_data.zeff(ishot,:);
     end
-    %
-    Zaxis = equil_prof_data.zaxis(ishot);
     %
     profname = [id_equil,'.prof'];        
     %
@@ -435,11 +454,7 @@ elseif e_opt == -1,% (R,Z) to (psi,theta) conversion specific to eqdsk
     %
     % Correction for the equilibrium offset
     %
-    Zp_offset = input(['Vertical equilibrium offset (vacuum) [',num2str(Zaxis),'] : ']);
-    if isempty(Zp_offset) || ~isnumeric(Zp_offset),
-        Zp_offset = Zaxis;
-    end
-    equil_magnetic.Zp = equil_magnetic.Zp + Zp_offset;
+    equil_magnetic.Zp = datamod.Zaxis;
     %
 elseif e_opt == -2,% AMR equilibrium
     %

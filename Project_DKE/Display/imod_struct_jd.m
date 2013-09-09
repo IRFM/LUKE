@@ -29,7 +29,12 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
     %
     numlim = 10;%maximum number of elements for horizontal vectors
     ftsize = 10;%font size
-    scsz = get(0,'screensize');
+    if islogical(opt_gui) || ~ishandle(opt_gui),
+        scsz = get(0,'screensize');
+    else
+        scsz = get(opt_gui,'position');
+    end
+    
     margin = 40;%marge
     nspaces = 1.5;%number of spaces between fields and pushbuttons
     lfactor = 1.0;%factor between fontsize and width
@@ -105,8 +110,13 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
             nfh = ceil(nf/ncl);% number of fields per column
             height = (nfh+nspaces)*3*ftsize;
             %
-            cgui = figure('visible','on','name',sname,'Position',[(scsz(3) - width)/2,(scsz(4) - height)/2,width,height],...
-                'menubar','none','numbertitle','off','resize','off');
+            cguipos = [(scsz(3) - width)/2,(scsz(4) - height)/2,width,height];
+            %
+            if islogical(opt_gui) || ~ishandle(opt_gui),
+                cgui = figure('visible','on','name',sname,'Position',cguipos,'menubar','none','numbertitle','off','resize','off');
+            else
+                cgui = uipanel('Parent',opt_gui,'Title',sname,'units','pixels','Position',cguipos);
+            end
             %
             cguis = zeros(1,nf);
             cguic = zeros(1,nf);
@@ -267,7 +277,7 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
         end
         %
         if opt_gui,
-            uiwait(cgui);
+            uiwait;%(cgui)
             delete(cgui);
         end
         %
