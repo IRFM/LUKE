@@ -39,6 +39,7 @@ dkepath.joan(1).temppathroot = '/tmp/';%Absolute root directory path adress wher
 dkepath.joan(1).mex710 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB710']; 
 dkepath.joan(1).mex711 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB711']; 
 dkepath.joan(1).mex712 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB712']; 
+dkepath.joan(1).mex801 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB801']; 
 %
 % this version compiles but helmex still seems to use libc.so.6 instead of
 % libgcc... to continue
