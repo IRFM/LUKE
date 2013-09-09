@@ -20,7 +20,7 @@ if nargin < 1,
     opt_gui = 1;
 end
 %
-if opt_gui == 1,
+if opt_gui,
     %
     if multiselect == 0;
         %
