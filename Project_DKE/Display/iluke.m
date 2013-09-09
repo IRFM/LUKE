@@ -5,6 +5,7 @@ clear all
 close all
 %
 dkepath = load_structures_yp('dkepath','','');
+workdir = pwd;
 %
 % -------------------------------------------------------------------------
 %
@@ -21,7 +22,7 @@ graphheight = 300;
 simulfiletitlewidth = 140;
 shotnumtitlewidth = 120; 
 shotnumwidth = 80; 
-titlestrheight = 30;
+titlestrheight = 50;
 %
 titlewidth = 105;
 butheight = 25;%40;% height of button
@@ -30,16 +31,16 @@ buthsep = 10;% horizontal separation between buttons
 butvsep = 10;% vertical separation between buttons
 %
 fontname = 'Liberation Mono';%get(0,'FixedWidthFontName');%'fixedwidth';% font type
-fontsize = 10;% font size
+fontsize = 14;% font size
 titlefontsize = 2*fontsize;
 %
 infotext.string = {'','To get started :',...
                       '==============  ','',...
-    '- "Load" Existing simulation                                       ','',...
+    '- "Load" Existing simulation                                  ','',...
     '- "Import" Exp. data to import from database                  ',...
-    '- "Load" Exp. data to load from existing EXTERNAL file     ',...
+    '- "Load" Exp. data to load from existing EXTERNAL file        ',...
     '- "New" Equilibrium to create equilibrium or import EQDSK file',...
-    '- "Load" Equilibrium  to load from existing EQUIL file         '};
+    '- "Load" Equilibrium  to load from existing EQUIL file        '};
 %
 % -------------------------------------------------------------------------
 %
@@ -63,7 +64,7 @@ mainfig.position = [figleft,figbottom,figwidth,figheight];
 %
 panelwidth = figbasewidth - graphwidth;
 %
-titleheight = 2*butheight + 4*butvsep + titlestrheight;
+titleheight = 3*butheight + 5*butvsep + titlestrheight;
 %
 controlpaneltop = figbaseheight - titleheight + 2*panelsep;% top position of button group
 controlheight = 8*butheight + 12*butvsep + titlestrheight;
@@ -97,14 +98,15 @@ controlstr.position = [buthsep,controlheight - controlstrcorr,panelwidth - 2*but
 %
 % SIMULATION INFO DIMENSIONS
 %
-tokamaktitle.position = [buthsep,2*textheight + butvsep + textheightcorr,shotnumtitlewidth,textheight];
-shotnumtitle.position = [buthsep,textheight + butvsep + textheightcorr,shotnumtitlewidth,textheight];
+tokamaktitle.position = [buthsep,2*butheight + 3*butvsep + textheightcorr,shotnumtitlewidth,textheight];
+shotnumtitle.position = [buthsep,butheight + 2*butvsep + textheightcorr,shotnumtitlewidth,textheight];
 shotimetitle.position = [buthsep,butvsep + textheightcorr,shotnumtitlewidth,textheight];
 %
-tokamak.position = [2*buthsep+shotnumtitlewidth,2*textheight + butvsep + textheightcorr,shotnumwidth,textheight];
-shotnum.position = [2*buthsep+shotnumtitlewidth,textheight + butvsep + textheightcorr,shotnumwidth,textheight];
+tokamak.position = [2*buthsep+shotnumtitlewidth,2*butheight + 3*butvsep + textheightcorr,shotnumwidth,textheight];
+shotnum.position = [2*buthsep+shotnumtitlewidth,butheight + 2*butvsep + textheightcorr,shotnumwidth,textheight];
 shotime.position = [2*buthsep+shotnumtitlewidth,butvsep + textheightcorr,shotnumwidth,textheight];
 %
+lukedist.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,2*butheight + 3*butvsep,2*butwidth+ buthsep,butheight];
 exitluke.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,butheight + 2*butvsep,butwidth,butheight];
 newshot.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,butvsep,butwidth,butheight];
 loadshot.position = [shotnumtitlewidth + shotnumwidth + butwidth + 4*buthsep,butheight + 2*butvsep,butwidth,butheight];
@@ -112,15 +114,15 @@ saveshot.position = [shotnumtitlewidth + shotnumwidth + butwidth + 4*buthsep,but
 %
 simulfilewidth = panelwidth - shotnumtitlewidth - shotnumwidth - simulfiletitlewidth - 7*buthsep - 2*butwidth;
 %
-lukeroottitle.position = [panelwidth - simulfilewidth - simulfiletitlewidth - 2*buthsep,2*textheight + butvsep + textheightcorr,simulfiletitlewidth,textheight];
-lukevertitle.position = [panelwidth - simulfilewidth - simulfiletitlewidth - 2*buthsep,textheight + butvsep + textheightcorr,simulfiletitlewidth,textheight];
+lukeroottitle.position = [panelwidth - simulfilewidth - simulfiletitlewidth - 2*buthsep,2*butheight + 3*butvsep + textheightcorr,simulfiletitlewidth,textheight];
+lukevertitle.position = [panelwidth - simulfilewidth - simulfiletitlewidth - 2*buthsep,butheight + 2*butvsep + textheightcorr,simulfiletitlewidth,textheight];
 simulfiletitle.position = [panelwidth - simulfilewidth - simulfiletitlewidth - 2*buthsep,butvsep + textheightcorr,simulfiletitlewidth,textheight];
 %
-lukeroot.position = [panelwidth - simulfilewidth - buthsep,2*textheight + butvsep + textheightcorr,simulfilewidth,textheight];
-lukever.position = [panelwidth - simulfilewidth - buthsep,textheight + butvsep + textheightcorr,simulfilewidth,textheight];
+lukeroot.position = [panelwidth - simulfilewidth - buthsep,2*butheight + 3*butvsep + textheightcorr,simulfilewidth,textheight];
+lukever.position = [panelwidth - simulfilewidth - buthsep,butheight + 2*butvsep + textheightcorr,simulfilewidth,textheight];
 simulfile.position = [panelwidth - simulfilewidth - buthsep,butvsep + textheightcorr,simulfilewidth,textheight];
 %
-titlestr.position = [buthsep,2*butheight + 3*butvsep,panelwidth - 2*buthsep,titlestrheight];
+titlestr.position = [buthsep,3*butheight + 4*butvsep,panelwidth - 2*buthsep,titlestrheight];
 %
 % title column
 %
@@ -218,6 +220,7 @@ simulfile.string = '< not saved >';
 
 titlestr.string = {'SUMMARY'};
 
+lukedist.string = 'LUKE FOLDER';
 exitluke.string = 'Exit';
 newshot.string = 'New';
 loadshot.string = 'Load';
@@ -286,6 +289,7 @@ wavetext.string = '< empty >';
 luketext.string = '< empty >';
 r5x2text.string = '< empty >';
 
+lukedist.state = 'on';
 exitluke.state = 'on';
 newshot.state = 'on';
 loadshot.state = 'on';
@@ -338,6 +342,7 @@ r5x2disp.state = 'off';
 exitluke.callback = 'close(mainfig.handle)';
 %
 datamake.callback = 'action = ''datamake'';iluke_callbacks;';
+equilmake.callback = 'action = ''equilmake'';iluke_callbacks;';
 datasave.callback = 'action = ''datasave'';iluke_callbacks;';
 dataload.callback = 'action = ''dataload'';iluke_callbacks;';
 
@@ -360,93 +365,101 @@ plot2.handle = uipanel('Parent',mainfig.handle,'Title','','units','pixels','Posi
 plot3.handle = uipanel('Parent',mainfig.handle,'Title','','units','pixels','Position',plot3.position);
 %
 
-tokamaktitle.handle = uicontrol(titlepanel.handle,'Style','text','String',tokamaktitle.string,'Position',tokamaktitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-shotnumtitle.handle = uicontrol(titlepanel.handle,'Style','text','String',shotnumtitle.string,'Position',shotnumtitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-shotimetitle.handle = uicontrol(titlepanel.handle,'Style','text','String',shotimetitle.string,'Position',shotimetitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+tokamaktitle.handle = uicontrol(titlepanel.handle,'Style','text','String',tokamaktitle.string,'Position',tokamaktitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+shotnumtitle.handle = uicontrol(titlepanel.handle,'Style','text','String',shotnumtitle.string,'Position',shotnumtitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+shotimetitle.handle = uicontrol(titlepanel.handle,'Style','text','String',shotimetitle.string,'Position',shotimetitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
 
-tokamak.handle = uicontrol(titlepanel.handle,'Style','text','String',tokamak.string,'Position',tokamak.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-shotnum.handle = uicontrol(titlepanel.handle,'Style','text','String',shotnum.string,'Position',shotnum.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-shotime.handle = uicontrol(titlepanel.handle,'Style','text','String',shotime.string,'Position',shotime.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+tokamak.handle = uicontrol(titlepanel.handle,'Style','text','String',tokamak.string,'Position',tokamak.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+shotnum.handle = uicontrol(titlepanel.handle,'Style','text','String',shotnum.string,'Position',shotnum.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+shotime.handle = uicontrol(titlepanel.handle,'Style','text','String',shotime.string,'Position',shotime.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
 
-lukeroot.handle = uicontrol(titlepanel.handle,'Style','text','String',lukeroot.string,'Position',lukeroot.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-lukever.handle = uicontrol(titlepanel.handle,'Style','text','String',lukever.string,'Position',lukever.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-simulfile.handle = uicontrol(titlepanel.handle,'Style','text','String',simulfile.string,'Position',simulfile.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+lukeroot.handle = uicontrol(titlepanel.handle,'Style','text','String',lukeroot.string,'Position',lukeroot.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+lukever.handle = uicontrol(titlepanel.handle,'Style','text','String',lukever.string,'Position',lukever.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+simulfile.handle = uicontrol(titlepanel.handle,'Style','text','String',simulfile.string,'Position',simulfile.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
 
-lukeroottitle.handle = uicontrol(titlepanel.handle,'Style','text','String',lukeroottitle.string,'Position',lukeroottitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-lukevertitle.handle = uicontrol(titlepanel.handle,'Style','text','String',lukevertitle.string,'Position',lukevertitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-simulfiletitle.handle = uicontrol(titlepanel.handle,'Style','text','String',simulfiletitle.string,'Position',simulfiletitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+lukeroottitle.handle = uicontrol(titlepanel.handle,'Style','text','String',lukeroottitle.string,'Position',lukeroottitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+lukevertitle.handle = uicontrol(titlepanel.handle,'Style','text','String',lukevertitle.string,'Position',lukevertitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+simulfiletitle.handle = uicontrol(titlepanel.handle,'Style','text','String',simulfiletitle.string,'Position',simulfiletitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
 
-titlestr.handle = uicontrol(titlepanel.handle,'Style','text','String',titlestr.string,'Position',titlestr.position,'FontName',fontname,'FontSize',titlefontsize,'HorizontalAlignment','center');
+titlestr.handle = uicontrol(titlepanel.handle,'Style','text','String',titlestr.string,'Position',titlestr.position,'FontName',fontname,'FontUnits','pixels','FontSize',titlefontsize,'HorizontalAlignment','center');
 
-exitluke.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',exitluke.string,'Position',exitluke.position,'FontName',fontname,'FontSize',fontsize,'Enable',exitluke.state,'Callback',exitluke.callback);
-newshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',newshot.string,'Position',newshot.position,'FontName',fontname,'FontSize',fontsize,'Enable',newshot.state);
-loadshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',loadshot.string,'Position',loadshot.position,'FontName',fontname,'FontSize',fontsize,'Enable',loadshot.state);
-saveshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',saveshot.string,'Position',saveshot.position,'FontName',fontname,'FontSize',fontsize,'Enable',saveshot.state);
+lukedist.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',lukedist.string,'Position',lukedist.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',lukedist.state);
+exitluke.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',exitluke.string,'Position',exitluke.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',exitluke.state,'Callback',exitluke.callback);
+newshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',newshot.string,'Position',newshot.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',newshot.state);
+loadshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',loadshot.string,'Position',loadshot.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',loadshot.state);
+saveshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',saveshot.string,'Position',saveshot.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',saveshot.state);
 
 %
-controlstr.handle = uicontrol(controlpanel.handle,'Style','text','String',controlstr.string,'Position',controlstr.position,'FontName',fontname,'FontSize',titlefontsize,'HorizontalAlignment','center');
+controlstr.handle = uicontrol(controlpanel.handle,'Style','text','String',controlstr.string,'Position',controlstr.position,'FontName',fontname,'FontUnits','pixels','FontSize',titlefontsize,'HorizontalAlignment','center');
 
-datatitle.handle = uicontrol(controlpanel.handle,'Style','text','String',datatitle.string,'Position',datatitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-equiltitle.handle = uicontrol(controlpanel.handle,'Style','text','String',equiltitle.string,'Position',equiltitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-ohmtitle.handle = uicontrol(controlpanel.handle,'Style','text','String',ohmtitle.string,'Position',ohmtitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-transptitle.handle = uicontrol(controlpanel.handle,'Style','text','String',transptitle.string,'Position',transptitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-rippletitle.handle = uicontrol(controlpanel.handle,'Style','text','String',rippletitle.string,'Position',rippletitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-wavetitle.handle = uicontrol(controlpanel.handle,'Style','text','String',wavetitle.string,'Position',wavetitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-luketitle.handle = uicontrol(controlpanel.handle,'Style','text','String',luketitle.string,'Position',luketitle.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
-r5x2title.handle = uicontrol(controlpanel.handle,'Style','text','String',r5x2title.string,'Position',r5x2title.position,'FontName',fontname,'FontSize',fontsize,'HorizontalAlignment','left');
+datatitle.handle = uicontrol(controlpanel.handle,'Style','text','String',datatitle.string,'Position',datatitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+equiltitle.handle = uicontrol(controlpanel.handle,'Style','text','String',equiltitle.string,'Position',equiltitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+ohmtitle.handle = uicontrol(controlpanel.handle,'Style','text','String',ohmtitle.string,'Position',ohmtitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+transptitle.handle = uicontrol(controlpanel.handle,'Style','text','String',transptitle.string,'Position',transptitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+rippletitle.handle = uicontrol(controlpanel.handle,'Style','text','String',rippletitle.string,'Position',rippletitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+wavetitle.handle = uicontrol(controlpanel.handle,'Style','text','String',wavetitle.string,'Position',wavetitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+luketitle.handle = uicontrol(controlpanel.handle,'Style','text','String',luketitle.string,'Position',luketitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+r5x2title.handle = uicontrol(controlpanel.handle,'Style','text','String',r5x2title.string,'Position',r5x2title.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
 
-datamake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datamake.string,'Position',datamake.position,'FontName',fontname,'FontSize',fontsize,'Enable',datamake.state,'Callback',datamake.callback);
-equilmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilmake.string,'Position',equilmake.position,'FontName',fontname,'FontSize',fontsize,'Enable',equilmake.state);
-ohmmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmmake.string,'Position',ohmmake.position,'FontName',fontname,'FontSize',fontsize,'Enable',ohmmake.state);
-transpmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpmake.string,'Position',transpmake.position,'FontName',fontname,'FontSize',fontsize,'Enable',transpmake.state);
-ripplemake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ripplemake.string,'Position',ripplemake.position,'FontName',fontname,'FontSize',fontsize,'Enable',ripplemake.state);
-wavemake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',wavemake.string,'Position',wavemake.position,'FontName',fontname,'FontSize',fontsize,'Enable',wavemake.state);
+datamake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datamake.string,'Position',datamake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',datamake.state,'Callback',datamake.callback);
+equilmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilmake.string,'Position',equilmake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',equilmake.state,'Callback',equilmake.callback);
+ohmmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmmake.string,'Position',ohmmake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ohmmake.state);
+transpmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpmake.string,'Position',transpmake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',transpmake.state);
+ripplemake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ripplemake.string,'Position',ripplemake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ripplemake.state);
+wavemake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',wavemake.string,'Position',wavemake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',wavemake.state);
 
-dataload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',dataload.string,'Position',dataload.position,'FontName',fontname,'FontSize',fontsize,'Enable',dataload.state,'Callback',dataload.callback);
-equilload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilload.string,'Position',equilload.position,'FontName',fontname,'FontSize',fontsize,'Enable',equilload.state);
-ohmload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmload.string,'Position',ohmload.position,'FontName',fontname,'FontSize',fontsize,'Enable',ohmload.state);
-transpload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpload.string,'Position',transpload.position,'FontName',fontname,'FontSize',fontsize,'Enable',transpload.state);
-rippleload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',rippleload.string,'Position',rippleload.position,'FontName',fontname,'FontSize',fontsize,'Enable',rippleload.state);
-waveload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',waveload.string,'Position',waveload.position,'FontName',fontname,'FontSize',fontsize,'Enable',waveload.state);
+dataload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',dataload.string,'Position',dataload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',dataload.state,'Callback',dataload.callback);
+equilload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilload.string,'Position',equilload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',equilload.state);
+ohmload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmload.string,'Position',ohmload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ohmload.state);
+transpload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpload.string,'Position',transpload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',transpload.state);
+rippleload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',rippleload.string,'Position',rippleload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',rippleload.state);
+waveload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',waveload.string,'Position',waveload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',waveload.state);
 
-datasave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datasave.string,'Position',datasave.position,'FontName',fontname,'FontSize',fontsize,'Enable',datasave.state,'Callback',datasave.callback);
-equilsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilsave.string,'Position',equilsave.position,'FontName',fontname,'FontSize',fontsize,'Enable',equilsave.state);
-ohmsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmsave.string,'Position',ohmsave.position,'FontName',fontname,'FontSize',fontsize,'Enable',ohmsave.state);
-transpsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpsave.string,'Position',transpsave.position,'FontName',fontname,'FontSize',fontsize,'Enable',transpsave.state);
-ripplesave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ripplesave.string,'Position',ripplesave.position,'FontName',fontname,'FontSize',fontsize,'Enable',ripplesave.state);
-wavesave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',wavesave.string,'Position',wavesave.position,'FontName',fontname,'FontSize',fontsize,'Enable',wavesave.state);
+datasave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datasave.string,'Position',datasave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',datasave.state,'Callback',datasave.callback);
+equilsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilsave.string,'Position',equilsave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',equilsave.state);
+ohmsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmsave.string,'Position',ohmsave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ohmsave.state);
+transpsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpsave.string,'Position',transpsave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',transpsave.state);
+ripplesave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ripplesave.string,'Position',ripplesave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ripplesave.state);
+wavesave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',wavesave.string,'Position',wavesave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',wavesave.state);
 
-lukerun.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukerun.string,'Position',lukerun.position,'FontName',fontname,'FontSize',fontsize,'Enable',lukerun.state);
-r5x2run.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',r5x2run.string,'Position',r5x2run.position,'FontName',fontname,'FontSize',fontsize,'Enable',r5x2run.state);
+lukerun.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukerun.string,'Position',lukerun.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',lukerun.state);
+r5x2run.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',r5x2run.string,'Position',r5x2run.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',r5x2run.state);
 
-dataclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',dataclear.string,'Position',dataclear.position,'FontName',fontname,'FontSize',fontsize,'Enable',dataclear.state);
-equilclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilclear.string,'Position',equilclear.position,'FontName',fontname,'FontSize',fontsize,'Enable',equilclear.state);
-ohmclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmclear.string,'Position',ohmclear.position,'FontName',fontname,'FontSize',fontsize,'Enable',ohmclear.state);
-transpclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpclear.string,'Position',transpclear.position,'FontName',fontname,'FontSize',fontsize,'Enable',transpclear.state);
-rippleclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',rippleclear.string,'Position',rippleclear.position,'FontName',fontname,'FontSize',fontsize,'Enable',rippleclear.state);
-waveclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',waveclear.string,'Position',waveclear.position,'FontName',fontname,'FontSize',fontsize,'Enable',waveclear.state);
-lukeclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeclear.string,'Position',lukeclear.position,'FontName',fontname,'FontSize',fontsize,'Enable',lukeclear.state);
-r5x2clear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',r5x2clear.string,'Position',r5x2clear.position,'FontName',fontname,'FontSize',fontsize,'Enable',r5x2clear.state);
+dataclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',dataclear.string,'Position',dataclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',dataclear.state);
+equilclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilclear.string,'Position',equilclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',equilclear.state);
+ohmclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmclear.string,'Position',ohmclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ohmclear.state);
+transpclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpclear.string,'Position',transpclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',transpclear.state);
+rippleclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',rippleclear.string,'Position',rippleclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',rippleclear.state);
+waveclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',waveclear.string,'Position',waveclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',waveclear.state);
+lukeclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeclear.string,'Position',lukeclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',lukeclear.state);
+r5x2clear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',r5x2clear.string,'Position',r5x2clear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',r5x2clear.state);
 
-datadisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datadisp.string,'Position',datadisp.position,'FontName',fontname,'FontSize',fontsize,'Enable',datadisp.state);
-equildisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equildisp.string,'Position',equildisp.position,'FontName',fontname,'FontSize',fontsize,'Enable',equildisp.state);
-ohmdisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmdisp.string,'Position',ohmdisp.position,'FontName',fontname,'FontSize',fontsize,'Enable',ohmdisp.state);
-transpdisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpdisp.string,'Position',transpdisp.position,'FontName',fontname,'FontSize',fontsize,'Enable',transpdisp.state);
-rippledisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',rippledisp.string,'Position',rippledisp.position,'FontName',fontname,'FontSize',fontsize,'Enable',rippledisp.state);
-wavedisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',wavedisp.string,'Position',wavedisp.position,'FontName',fontname,'FontSize',fontsize,'Enable',wavedisp.state);
-lukedisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukedisp.string,'Position',lukedisp.position,'FontName',fontname,'FontSize',fontsize,'Enable',lukedisp.state);
-r5x2disp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',r5x2disp.string,'Position',r5x2disp.position,'FontName',fontname,'FontSize',fontsize,'Enable',r5x2disp.state);
+datadisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datadisp.string,'Position',datadisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',datadisp.state);
+equildisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equildisp.string,'Position',equildisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',equildisp.state);
+ohmdisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmdisp.string,'Position',ohmdisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ohmdisp.state);
+transpdisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpdisp.string,'Position',transpdisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',transpdisp.state);
+rippledisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',rippledisp.string,'Position',rippledisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',rippledisp.state);
+wavedisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',wavedisp.string,'Position',wavedisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',wavedisp.state);
+lukedisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukedisp.string,'Position',lukedisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',lukedisp.state);
+r5x2disp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',r5x2disp.string,'Position',r5x2disp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',r5x2disp.state);
 
-datatext.handle = uicontrol(controlpanel.handle,'Style','text','String',datatext.string,'Position',datatext.position,'FontName',fontname,'FontSize',fontsize);
-equiltext.handle = uicontrol(controlpanel.handle,'Style','text','String',equiltext.string,'Position',equiltext.position,'FontName',fontname,'FontSize',fontsize);
-ohmtext.handle = uicontrol(controlpanel.handle,'Style','text','String',ohmtext.string,'Position',ohmtext.position,'FontName',fontname,'FontSize',fontsize);
-transptext.handle = uicontrol(controlpanel.handle,'Style','text','String',transptext.string,'Position',transptext.position,'FontName',fontname,'FontSize',fontsize);
-rippletext.handle = uicontrol(controlpanel.handle,'Style','text','String',rippletext.string,'Position',rippletext.position,'FontName',fontname,'FontSize',fontsize);
-wavetext.handle = uicontrol(controlpanel.handle,'Style','text','String',wavetext.string,'Position',wavetext.position,'FontName',fontname,'FontSize',fontsize);
-luketext.handle = uicontrol(controlpanel.handle,'Style','text','String',luketext.string,'Position',luketext.position,'FontName',fontname,'FontSize',fontsize);
-r5x2text.handle = uicontrol(controlpanel.handle,'Style','text','String',r5x2text.string,'Position',r5x2text.position,'FontName',fontname,'FontSize',fontsize);
+datatext.handle = uicontrol(controlpanel.handle,'Style','text','String',datatext.string,'Position',datatext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+equiltext.handle = uicontrol(controlpanel.handle,'Style','text','String',equiltext.string,'Position',equiltext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+ohmtext.handle = uicontrol(controlpanel.handle,'Style','text','String',ohmtext.string,'Position',ohmtext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+transptext.handle = uicontrol(controlpanel.handle,'Style','text','String',transptext.string,'Position',transptext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+rippletext.handle = uicontrol(controlpanel.handle,'Style','text','String',rippletext.string,'Position',rippletext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+wavetext.handle = uicontrol(controlpanel.handle,'Style','text','String',wavetext.string,'Position',wavetext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+luketext.handle = uicontrol(controlpanel.handle,'Style','text','String',luketext.string,'Position',luketext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+r5x2text.handle = uicontrol(controlpanel.handle,'Style','text','String',r5x2text.string,'Position',r5x2text.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
 
-infotext.handle = uicontrol(infopanel.handle,'Style','text','String',infotext.string,'Position',infotext.position,'FontName',fontname,'FontSize',fontsize);
-infostr.handle = uicontrol(infopanel.handle,'Style','text','String',infostr.string,'Position',infostr.position,'FontName',fontname,'FontSize',titlefontsize,'HorizontalAlignment','center');
+infotext.handle = uicontrol(infopanel.handle,'Style','text','String',infotext.string,'Position',infotext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+infostr.handle = uicontrol(infopanel.handle,'Style','text','String',infostr.string,'Position',infostr.position,'FontName',fontname,'FontUnits','pixels','FontSize',titlefontsize,'HorizontalAlignment','center');
 
+style.fontname = fontname;
+style.fontsize = fontsize;
+style.butheight = butheight;
+style.butwidth = butwidth;
+style.buthsep = buthsep;
+style.butvsep = butvsep;
+style.butheight = butheight;
 

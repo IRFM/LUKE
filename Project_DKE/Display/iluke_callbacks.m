@@ -1,7 +1,11 @@
 % callbacks script for iluke
 
+datainfo = {'','Next step :',...
+               '=========  ','',...
+    '- "New" Equilibrium to create equilibrium from EXTERNAL structure'};
+
 switch action
-    %
+        %
     case 'datamake'
         %
         % importing external data
@@ -9,7 +13,7 @@ switch action
         external = iload_externaldata_jd(dkepath);
         %
         if isfield(external,'err'),
-            infotext.string = {'Error laoding external data : ',external.err};
+            infotext.string = {'Error loading external data : ',external.err};
             external = '';
         else
             datasave.state = 'on';
@@ -21,6 +25,8 @@ switch action
             shotime.string = external.shotime;
             %
             datatext.string = '< not saved >';
+            %
+            infotext.string = datainfo;
         end
         %
         iluke_update;
@@ -47,6 +53,8 @@ switch action
             shotnum.string = external.shotnum;
             shotime.string = external.shotime;
             datatext.string = filename;%[pathname,filename];
+            %
+            infotext.string = datainfo;
         end  
         %
     case 'datasave'
@@ -66,6 +74,40 @@ switch action
             %
             datatext.string = filename;%[pathname,filename];
         end  
+        %
+    case 'equilmake'
+        %
+        % creating equilibrium structure
+        %
+        set(infotext.handle,'visible','off');
+        set(infostr.handle,'visible','off');
+        %
+        select.style = style;
+        %
+        select.idequil = 1;
+        select.disp = 1;
+        select.print = 1;
+        %
+        equil = imake_equil_jd(dkepath,tokamak.string,'',external.equil,workdir,infopanel.handle,select);
+        %
+        if isfield(equil,'err'),
+            infotext.string = {'Error creating equil structure : ',equil.err};
+            equil = '';
+        else
+            equilsave.state = 'on';
+            equilclear.state = 'on';
+            equildisp.state = 'on';
+            %
+            datatext.string = '< not saved >';
+            %
+            infotext.string = equilinfo;
+        end
+        %
+        set(infotext.handle,'visible','on');
+        set(infostr.handle,'visible','on');
+        %
+        iluke_update;
+        %
 end
 %
 iluke_update;
