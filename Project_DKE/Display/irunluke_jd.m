@@ -402,6 +402,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                             %
                             data = data.lukestructs;
                             %
+                            if iscell(data) && length(data) == 1,
+                                data = data{1};
+                            end
+                            %
                         else% old run_lukert output
                             %
                             data = load([data_path,data_file],'basestr','id_simul','simul','rho_S','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
