@@ -1,12 +1,15 @@
-function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
+function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra,style)
     %
     % This function interactively modifies the fields of structure s
     %
+    if nargin < 6,
+        style = struct;
+    end
     if nargin < 5,
         sextra = struct;
     end
     if nargin < 4,
-        opt_gui = 0;
+        opt_gui = false;
     end
     if nargin < 3,
         d_opt = 1;
@@ -19,6 +22,18 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
         error('This function applies only to (1,1) structures')
     end
     %
+    if ~isfield(style,'fontname')
+        style.fontname = 'fixedwidth';
+    end
+    %
+    if ~isfield(style,'fontsize')
+        style.fontsize = 10;
+    end
+    %
+    if ~isfield(style,'titlefontsize')
+        style.titlefontsize = 2*style.fontsize;
+    end
+    %
     fexcept = {'info','expert','values'};
     %
     for ifield = 1:length(fexcept),
@@ -29,13 +44,13 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
     %
     numlim = 10;%maximum number of elements for horizontal vectors
     ftsize = 10;%font size
-    if islogical(opt_gui) || ~ishandle(opt_gui),
+    if islogical(opt_gui) || ~ishandle(opt_gui) || opt_gui == 0,
         scsz = get(0,'screensize');
     else
         scsz = get(opt_gui,'position');
     end
     
-    margin = 40;%marge
+    margin = 50;%marge
     nspaces = 1.5;%number of spaces between fields and pushbuttons
     lfactor = 1.0;%factor between fontsize and width
     lmaxmin = 18;%
@@ -115,7 +130,8 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
             if islogical(opt_gui) || ~ishandle(opt_gui),
                 cgui = figure('visible','on','name',sname,'Position',cguipos,'menubar','none','numbertitle','off','resize','off');
             else
-                cgui = uipanel('Parent',opt_gui,'Title',sname,'units','pixels','Position',cguipos);
+                cguipos(4) = cguipos(4) + 2*ftsize + style.titlefontsize;
+                cgui = uipanel('Parent',opt_gui,'Title',sname,'units','pixels','Position',cguipos,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize);
             end
             %
             cguis = zeros(1,nf);
@@ -192,10 +208,10 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
                 cposition = [lref + cwidth/2  - 0.5*margin,bref,cwidth/2  - 2.5*margin,2*ftsize];
                 rposition = [lref + cwidth - 2*margin,bref,margin,2*ftsize];
                 %
-                cguis(iname) = uicontrol(cgui,'style','text','string',fname,'position',sposition,'tooltipstring',sprintf(s.info.(fname)));
+                cguis(iname) = uicontrol(cgui,'style','text','string',fname,'position',sposition,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'tooltipstring',sprintf(s.info.(fname)));
                 %
                 if stype(iname) == 0,%logical
-                    cguic(iname) = uicontrol(cgui,'style','checkbox','string','','value',fval,'position',cposition,'callback',@field_cbf);
+                    cguic(iname) = uicontrol(cgui,'style','checkbox','string','','value',fval,'position',cposition,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'callback',@field_cbf);
                 elseif stype(iname) == 1,%string
                     if iscell(values),
                         for ielem = 1:length(values),
@@ -204,9 +220,9 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
                             end
                         end
                         % 
-                        cguic(iname) = uicontrol(cgui,'style','popupmenu','string',values,'value',ielem,'position',cposition,'callback',@field_cbf);
+                        cguic(iname) = uicontrol(cgui,'style','popupmenu','string',values,'value',ielem,'position',cposition,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'callback',@field_cbf);
                     else
-                        cguic(iname) = uicontrol(cgui,'style','edit','string',sval,'position',cposition,'callback',@field_cbf);
+                        cguic(iname) = uicontrol(cgui,'style','edit','string',sval,'position',cposition,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'callback',@field_cbf);
                     end                
                 elseif stype(iname) == 2,%scalar or small vector    
                     if iscell(values) || size(values,1) == 1,
@@ -220,14 +236,14 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
                             ielem = find(fval == values,1,'first');
                         end
                         % 
-                        cguic(iname) = uicontrol(cgui,'style','popupmenu','string',values,'value',ielem,'position',cposition,'callback',@field_cbf);
+                        cguic(iname) = uicontrol(cgui,'style','popupmenu','string',values,'value',ielem,'position',cposition,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'callback',@field_cbf);
                     elseif size(values,1) == 2,
-                        cguic(iname) = uicontrol(cgui,'style','edit','string',sval,'position',cposition,'callback',@field_cbf);
+                        cguic(iname) = uicontrol(cgui,'style','edit','string',sval,'position',cposition,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'callback',@field_cbf);
                     else
                         error('GUI error');
                     end                
                 elseif any(stype(iname) == [3:6]),%structure, cell, or large vector or 2D+ array 
-                    cguic(iname) = uicontrol(cgui,'style','pushbutton','string',sval,'position',cposition,'callback',@field_cbf);
+                    cguic(iname) = uicontrol(cgui,'style','pushbutton','string',sval,'position',cposition,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'callback',@field_cbf);
                     if d_opt == 0,
                         set(cguic(iname),'enable','off');
                     end
@@ -242,7 +258,7 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
                     sinitstrings.(fname) = get(cguic(iname),'string');
                 end
                 %
-                cguir(iname) = uicontrol(cgui,'style','pushbutton','string','reset','position',rposition,'tooltipstring','Reset field to original value','callback',@pushbutton_cbf);
+                cguir(iname) = uicontrol(cgui,'style','pushbutton','string','reset','position',rposition,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'tooltipstring','Reset field to original value','callback',@pushbutton_cbf);
                 %
             end
             %
@@ -270,9 +286,9 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
             rposition2 = [width/2 - pwidth/2,0.5*ftsize,pwidth,2*ftsize];
             rposition3 = [5*width/6 - pwidth/2,0.5*ftsize,pwidth,2*ftsize];
             %
-            cguir(nf+1) = uicontrol(cgui,'style','pushbutton','string',buttonstr{1},'position',rposition1,'callback',@pushbutton_cbf);
-            cguir(nf+2) = uicontrol(cgui,'style','pushbutton','string',buttonstr{2},'position',rposition2,'tooltipstring','Reset all fields to original value','callback',@pushbutton_cbf);
-            cguir(nf+3) = uicontrol(cgui,'style','pushbutton','string',buttonstr{3},'position',rposition3,'tooltipstring','Press to continue when done modifying the structure','callback',@pushbutton_cbf);
+            cguir(nf+1) = uicontrol(cgui,'style','pushbutton','string',buttonstr{1},'position',rposition1,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'callback',@pushbutton_cbf);
+            cguir(nf+2) = uicontrol(cgui,'style','pushbutton','string',buttonstr{2},'position',rposition2,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'tooltipstring','Reset all fields to original value','callback',@pushbutton_cbf);
+            cguir(nf+3) = uicontrol(cgui,'style','pushbutton','string',buttonstr{3},'position',rposition3,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'tooltipstring','Press to continue when done modifying the structure','callback',@pushbutton_cbf);
             %
         end
         %
@@ -340,7 +356,7 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
                 %
                 if d_opt == 1
                     %
-                    [fval,locmod] = imod_struct_jd(fval,fname,1,opt_gui);
+                    [fval,locmod] = imod_struct_jd(fval,fname,1,opt_gui,struct,style);
                     s.(fname) = fval;
                     %
                 else
@@ -458,7 +474,7 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra)
             end            
             %
         elseif stype(iname) == 3,%structure
-            [s.(fname),mod(imod)] = imod_struct_jd(s.(fname),fname,d_opt,opt_gui);
+            [s.(fname),mod(imod)] = imod_struct_jd(s.(fname),fname,d_opt,opt_gui,struct,style);
         elseif stype(iname) == 4,%cell
             [s.(fname),mod(imod)] = imod_cell_jd(s.(fname),fname,d_opt,opt_gui);
         elseif stype(iname) == 5,%unidentified type 

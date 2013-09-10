@@ -26,7 +26,7 @@ if ~isfield(select,'style'),
     select.style = struct;
 end
 %
-select.style.textwidth = 400;
+select.style.textwidth = 420;
 %
 equil = '';
 Zaxis = 0;
@@ -46,8 +46,8 @@ if isfield(external,'magnetic'),% magnetic equilibrium from external database?
     %
     titletext = 'For the MAGNETIC equilibrium :';      
     s = {'Use data loaded from the external database',...
-              'Use data from an existing equilibrium file',...
-              'Build the magnetic equilibrium data locally'};
+         'Use data from an existing equilibrium file',...
+         'Build the magnetic equilibrium data locally'};
     %    
     i_opt = iselect_jd(s,titletext,opt_gui,select.style,1) - 1;
     %
@@ -392,20 +392,22 @@ if type == 1 && n_opt <= 1,
         end
     end
     %
+    s = struct;
+    %
     s.expert.Zaxis = 0;
     s.expert.TeTiratio = 0;
     s.expert.Zeff = 0;    
     %
-    datamod = imod_struct_jd(datamod,'equil. data',1,opt_gui,s);
+    datamod = imod_struct_jd(datamod,'equil. data',1,opt_gui,s,select.style);
     %
     if isfield(datamod,'TeTiratio')%constant Te/Ti ratio
-        pTi = pTe/TeTi;
+        pTi = pTe/datamod.TeTiratio;
     else
         pTi = equil_prof_data.ti(ishot,:);
     end
     %
-    if isfield(datamod,'TeTiratio'),%uniform profile
-        pZeff = Zeff*ones(size(prho));
+    if isfield(datamod,'Zeff'),%uniform profile
+        pZeff = datamod.Zeff*ones(size(prho));
     else
         pZeff = equil_prof_data.zeff(ishot,:);
     end
@@ -550,9 +552,7 @@ end
 %
 if exist('mp_magnetic','var'),
     %
-    d_opt = input('Do you want to compare the pressure profiles? [y/n] : ','s');
-    %
-    if strcmp(d_opt,'y'),
+    if (~isfield(select,'comp') || ~select.comp) && strcmp(input_dke_yp('Do you want to compare the pressure profiles','n',{'y','n'},'',[1,1]),'y'),
         %
         % Verify consistency on pressure between profiles and EFIT
         %
@@ -610,3 +610,17 @@ elseif e_opt == -2,
     equil.info.datapath = amr_psi_path;
 end
 %
+%
+%
+equil.info.txt = {...
+    ['Plasma major radius (m)               : ',num2str(equil.Rp)],...
+    ['Plasma vertical position (m)          : ',num2str(equil.Zp)],...
+    ['Plasma minor radius (m)               : ',num2str(equil.ptx(end,1))],...
+    ['Magnetic field on axis (T)            : ',num2str(equil.ptBPHI(1,1))],...
+    ['Poloidal flux on LCFS (W)             : ',num2str(equil.psi_apRp(end)*2*pi*equil.Rp/equil.ptx(end,1))],...
+    ['Central electron temperature (keV)    : ',num2str(equil.pTe(1))],...
+    ['Central electron density (10^19 m^-3) : ',num2str(equil.pne(1)/1e19)]};
+
+
+
+

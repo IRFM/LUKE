@@ -1,4 +1,4 @@
-function [equilDKE] = equilibrium_jd(equil,radialDKE,display,method,mfactor,fig_id)
+function [equilDKE] = equilibrium_jd(equil,radialDKE,display,method,mfactor,axs,font)
 %
 %   This function interpolates the equilibrium data on the radial grid.
 %
@@ -34,7 +34,8 @@ function [equilDKE] = equilibrium_jd(equil,radialDKE,display,method,mfactor,fig_
 %       - method: interpolation method (linear,pchip,spline,...) 
 %           (default: linear)
 %       - mfactor: factor for super theta grid (default: 50)
-%       - fig_id: figure ID of figure for the magnetic equilibrium (default = 51)
+%       - axs: list of axes to update
+%       - font : structure containing font parameters for graphs
 %
 %   OUTPUTS:
 %
@@ -72,11 +73,13 @@ function [equilDKE] = equilibrium_jd(equil,radialDKE,display,method,mfactor,fig_
 %
 %   By J. Decker RLE-MIT <jodecker@alum.mit.edu> and Y. Peysson DRFC-CEA <yves.peysson@cea.fr>
 %
-if nargin < 6
-    fig_id = 51;
-    flag_id = 1;
-else
-    flag_id = 0;
+if nargin < 7,
+    font = struct;
+end
+if nargin < 6,% individual figures are created
+    flag_id = true;
+else% graphs added to current object
+    flag_id = false;
 end
 if nargin < 5
     mfactor = 10;%Factor for super theta grid 
@@ -541,10 +544,8 @@ if abs(display_mode) >= 2,
     %
     if abs(display_mode) == 2,
         p_opt = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
-        flag_id = 1;
     else
         p_opt = -1;
-        flag_id = 0;
     end
     %    
     prho = mx(:,1)'/ap;
@@ -567,23 +568,42 @@ if abs(display_mode) >= 2,
     ymin = min(min(equil.pty));
     ymax = max(max(equil.pty));
     %
-    figure('Name','Magnetic equilibrium flux surface contour'),clf
-    %    
-    [ax] = graph1D_jd(sx',sy',0,0,'x(m)','y(m)','',NaN,[xmin,xmax],[ymin,ymax],'-','none','r',2,20,gca,0.9,0.7,0.5);drawnow
-    if imag(display_mode) == 0,
-        [ax] = graph1D_jd(stx,sty,0,0,'','','Flux-surfaces labeled by \rho=0,0.05,0.1...1',NaN,[xmin,xmax],[ymin,ymax],'-','none','b',0.5);
+    if flag_id,
+        figure('Name','Magnetic equilibrium flux surface contour'),clf
+        ax = gca;
+        red = 0.9;
+        lspace = 0.7;
+        bspace = 0.5;
+        tit = 'Flux-surfaces labeled by \rho=0,0.05,0.1...1';
+    else
+        ax = axs(1);
+        red = 1;
+        lspace = NaN;
+        bspace = NaN;
+        tit = '';
     end
-    axis('equal');drawnow  
+    %    
+    [ax] = graph1D_jd(sx',sy',0,0,'x(m)','y(m)','',NaN,[xmin,xmax],[ymin,ymax],'-','none','r',2,font,ax,red,lspace,bspace);drawnow
+    if imag(display_mode) == 0,
+        [ax] = graph1D_jd(stx,sty,0,0,'','',tit,NaN,[xmin,xmax],[ymin,ymax],'-','none','b',0.5,font,ax);
+    end
+    axis(ax,'equal');drawnow  
     print_jd(p_opt,['Fig_EQUIL_',equil.id,'_mag'])
     %
     if flag_id,
         figure('Name','Electron Temperature and Density Profiles'),clf
-        %    
         [ax] = graph1D2jd(prho,xTe,prho,xne/1e19,'\rho','T_e (keV)','n_e (10^{19} m^{-3})','',...
             [0,1],NaN,NaN,'-','none','r',2,'--','none','b',2,20,0.9,0.5,0.7);
         set(ax(1),'xtick',[0:0.2:1]);set(ax(2),'xtick',[0:0.2:1])
-        print_jd(p_opt,['Fig_EQUIL_',equil.id,'_tene'])
+    else
+        ax = axs(2);
+        leg = {'T_e (keV)','n_e (10^{19} m^{-3})','Location','NorthEast'};
+        [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],NaN,'-','none','r',2,font,ax);
+        [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'\rho','','',leg,[0,1],NaN,'--','none','b',2,font,ax);
+        set(ax,'xtick',[0:0.2:1]);
     end
+    %    
+    print_jd(p_opt,['Fig_EQUIL_',equil.id,'_tene'])
     %
     % displays the equilibrium profiles
     %
@@ -610,7 +630,11 @@ if abs(display_mode) >= 2,
         subplot('position',[2/3+1/12,1/8,5/24,5/16])
           [ax] = graph1D_jd(prho,pZeff,0,0,'','','',NaN,[0,1],[-eps,max(pZeff)],'-','none','b',0.5);
           [ax] = graph1D_jd(xrho,xZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[-eps,max(pZeff)],'none','+','r',2);
-        end
+    else
+        ax = axs(3);
+        [ax] = graph1D_jd(prho,pZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[0,ceil(max(pZeff))],'-','none','r',2,font,ax,red,lspace,bspace);drawnow     
+        set(ax,'ytick',[0:ceil(max(pZeff))]);
+    end
     %
     if p_opt >= 0,
         %
