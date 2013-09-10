@@ -16,7 +16,7 @@ if nargin < 15,
     opt_multi = 0;
 end
 if nargin < 14,
-    opt_gui = 1;
+    opt_gui = true;
 end
 if nargin < 13,
     sdefault = '';
