@@ -4,7 +4,11 @@ function irunluke_jd(basestr,signs,opt_gui)
     % either C3PO, TORAY or ART ray-tracing data.
     %
     if nargin < 3,
-        opt_gui = input_dke_yp('Graphical User Interface mode (yes:1,no:0)',0);
+        opt_gui = input_dke_yp('Graphical User Interface mode (yes:1,no:0)',0,[0,1]) == 1;
+    elseif ~isscalar(opt_gui) || ~any(opt_gui == [0,1]),
+        error('opt_gui must be a logical scalar')
+    elseif ~islogical(opt_gui),
+            opt_gui = opt_gui == 1;
     end
     %
     if nargin < 2,
