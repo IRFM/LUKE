@@ -398,7 +398,7 @@ if type == 1 && n_opt <= 1,
     s.expert.TeTiratio = 0;
     s.expert.Zeff = 0;    
     %
-    datamod = imod_struct_jd(datamod,'equil. data',1,opt_gui,s,select.style);
+    datamod = imod_struct_jd(datamod,'equil.data',1,opt_gui,s,select.style);
     %
     if isfield(datamod,'TeTiratio')%constant Te/Ti ratio
         pTi = pTe/datamod.TeTiratio;
@@ -465,7 +465,7 @@ elseif type == 1.4 && n_opt == 0,%EAST
     %
     if ~isstruct(signs) 
 		if isfield(external,'jbdirections'),
-            if strcmp(external.jbdirections.Ip,'anti-clockwise')
+            if strcmp(external.jbdirections.Ip,'clockwise')
                 signs.Ip = 1;
             else
                 signs.Ip = -1;
@@ -506,7 +506,16 @@ elseif e_opt == -1,% (R,Z) to (psi,theta) conversion specific to eqdsk
     %
     % Correction for the equilibrium offset
     %
-    equil_magnetic.Zp = datamod.Zaxis;
+    if ~exist('datamod','var')
+        Zp_offset = input(['Vertical equilibrium offset (vacuum) [',num2str(Zaxis),'] : ']);
+        if isempty(Zp_offset) || ~isnumeric(Zp_offset),
+            Zp_offset = Zaxis;
+        end
+        equil_magnetic.Zp = equil_magnetic.Zp + Zp_offset;
+        %
+    else
+        equil_magnetic.Zp = datamod.Zaxis;
+    end
     %
 elseif e_opt == -2,% AMR equilibrium
     %
