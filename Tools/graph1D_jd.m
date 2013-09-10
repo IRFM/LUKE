@@ -1,4 +1,4 @@
-function [ax] = graph1D_jd(x,y,logx,logy,xlab,ylab,tit,leg,xlim,ylim,style,marker,color,width,siz,ax,red,lspace,bspace,eym,eyp,exm,exp);
+function [ax] = graph1D_jd(x,y,logx,logy,xlab,ylab,tit,leg,xlim,ylim,style,marker,color,width,font,ax,red,lspace,bspace,eym,eyp,exm,exp);
 
 if nargin < 22
     exm = NaN;
@@ -27,7 +27,18 @@ if nargin < 16
     ax = gca;
 end
 if nargin < 15
-    siz = 20;
+    font.fontsize = 20;
+    font.fontname = 'Times';%'Courier';
+elseif ~isstruct(font),
+    font.fontsize = font;
+    font.fontname = 'Times';%'Courier';
+else
+    if ~isfield(font,'fontsize'),
+        font.fontsize = 20;
+    end
+    if ~isfield(font,'fontname'),
+        font.fontname = 'Times';%'Courier';
+    end
 end
 if nargin < 14
     width = 0.5;
@@ -73,11 +84,9 @@ if nargin == 0
     error('no argument')
 end
 %
-if imag(siz) == 0,
-	siz = siz+i*siz;
+if imag(font.fontsize) == 0,
+	font.fontsize = font.fontsize+i*font.fontsize;
 end
-%
-fontname = 'Times';%'Courier';
 %
 hold(ax,'on');
 % if logx == 1 & logy ~= 1
@@ -152,27 +161,27 @@ end
 %
 if ~isempty(xlab),
     xl = xlabel(xlab);
-    set(xl,'fontsize',real(siz),'fontname',fontname);
+    set(xl,'fontsize',real(font.fontsize),'fontname',font.fontname,'parent',ax);
 end
 if ~isempty(ylab),
     yl = ylabel(ylab);
-    set(yl,'fontsize',real(siz),'fontname',fontname);
+    set(yl,'fontsize',real(font.fontsize),'fontname',font.fontname,'parent',ax);
 end
 if ~isempty(tit),
     tl = title(tit);
-    set(tl,'fontsize',real(siz),'fontname',fontname);
+    set(tl,'fontsize',real(font.fontsize),'fontname',font.fontname,'parent',ax);
 end
-if iscell(leg) | ~any(isnan(leg)),
+if iscell(leg) || ~any(isnan(leg)),
     Nleg = length(leg);
     if iscell(leg) && Nleg > 2 && strcmp(leg(Nleg - 1),'Location'),
-        lg = legend(leg(1:Nleg - 2),'location',leg{Nleg});
+        lg = legend(ax,leg(1:Nleg - 2),'location',leg{Nleg});
     else
-        lg = legend(leg,'location','best');
+        lg = legend(ax,leg,'location','best');
     end
-    set(lg,'fontsize',imag(siz),'fontname',fontname);
+    set(lg,'fontsize',imag(font.fontsize),'fontname',font.fontname);
 end
 %
-set(ax,'fontsize',real(siz),'fontname',fontname);
+set(ax,'fontsize',real(font.fontsize),'fontname',font.fontname);
 %
 set(gcf,'PaperPositionMode','auto');
 %
