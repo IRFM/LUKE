@@ -54,7 +54,7 @@ if isfield(external,'magnetic'),% magnetic equilibrium from external database?
 else
     %
     titletext = 'For the MAGNETIC equilibrium :';      
-    s.text = {'Use data from an existing equilibrium file',...
+    s = {'Use data from an existing equilibrium file',...
               'Build the magnetic equilibrium data locally'};
     %    
     i_opt = iselect_jd(s,titletext,opt_gui,select.style,1);
