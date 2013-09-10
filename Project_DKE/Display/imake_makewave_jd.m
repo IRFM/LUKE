@@ -57,9 +57,8 @@ end
 s = [s,{'%'}];
 s = [s,{'% C3PO computing parameters'}];
 s = [s,{'%'}];
-s = [s,{['C3POparam.clustermode.main_C3PO_jd.mode = ',num2str(wave.C3POparam.clustermode.main_C3PO_jd.mode),';%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)']}];
-s = [s,{['C3POparam.clustermode.main_C3PO_jd.timeout = ',num2str(wave.C3POparam.clustermode.main_C3PO_jd.timeout),';%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor']}];
-s = [s,{['C3POparam.clustermode.main_C3PO_jd.size = ',num2str(wave.C3POparam.clustermode.main_C3PO_jd.size),';%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations']}];
+s = [s,{['C3POparam.clustermode.main_C3PO_jd.scheduler.mode = ',num2str(wave.C3POparam.clustermode.main_C3PO_jd.scheduler.mode),';%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)']}];
+s = [s,{['C3POparam.clustermode.main_C3PO_jd.scheduler.size = ',num2str(wave.C3POparam.clustermode.main_C3PO_jd.scheduler.memory),';%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations']}];
 s = [s,{'%'}];
 s = [s,{'% Display parameters'}];
 s = [s,{'%'}];
