@@ -112,6 +112,45 @@ if i_opt == 0,% use data from external database
             %
         end
         %
+    elseif strcmp(basestr,'EAST'),
+        %
+        % WAVE TYPE
+        %
+        if isfield(external,'LH') && isfield(external,'EC')
+            %
+            t_opt = input_dke_yp('Option for wave type : 0 (LH), 1 (EC)',0,0:1,'',[1,1]);
+            %
+            if t_opt == 0,
+                %
+                type = 'LH';
+            else
+                %
+                type = 'EC';
+            end
+            %
+        elseif isfield(external,'LH'),
+            %
+            type = 'LH';
+            %
+        elseif isfield(external,'EC'),
+            %
+            type = 'EC';
+            %
+        end
+        %
+        % BUILDING LAUNCH
+        %
+        if strcmp(type,'LH'),
+            %
+            launch = imake_launch_LH_jd(basestr,equil,external.LH);
+            %
+        elseif strcmp(type,'EC'),
+            %
+            keyboard
+            %launch = imake_launch_EC_jd(external.EC); 
+            %
+        end
+        %
     else
         %
         disp(['-----> wave data not yet implemented for :',basestr]);

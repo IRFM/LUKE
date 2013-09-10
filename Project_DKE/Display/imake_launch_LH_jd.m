@@ -43,6 +43,17 @@ if ~isempty(external),
             lob = 'No';
         end
         %
+    elseif strcmp(basestr,'EAST'),
+        %
+        Plh = [];
+        %
+        if isfield(external,'antenna_2p45GHz')
+            Plh = [Plh,external.antenna_2p45GHz.total_launched_power.power*1e6];
+        end
+        %
+        if isfield(external,'antenna_4p60GHz')
+            Plh = [Plh,external.antenna_4p60GHz.total_launched_power.power*1e6];
+        end        
     else
         %
         error(['-----> wave data not yet implemented for :',basestr]);
@@ -84,6 +95,57 @@ if strcmp(basestr,'TS') || strcmp(basestr,'JET'),% default values from make_wave
     end
     %
     launch = launchs{a_opt};
+    %
+elseif strcmp(basestr,'EAST'),%EAST chinese tokamak
+    %
+    fexternal = fieldnames(external);
+    %
+    a_str = '';
+    for iw = 1:length(fexternal),
+        a_str = [a_str,' (',num2str(iw),') ',fexternal{iw},','];
+    end
+    %
+    if iw > 1,
+        %
+        a_opt = input_dke_yp(['Please select an antenna :',a_str],1,1:iw,'',[1,1]);
+        %
+    else
+        a_opt = 1;
+    end
+    %
+    power_spectrum = external.(fexternal{a_opt}).power_spectrum;
+    frequency = external.(fexternal{a_opt}).frequency;
+    position = external.(fexternal{a_opt}).position;
+    %
+    launch.id = fexternal{a_opt};
+    launch.phi0 = 0;
+    launch.omega_rf = 2*pi*1e9*frequency.flh;
+    launch.LFS = 1;
+    launch.m0 = 0;
+    %launch.rZ0 = position.Z;
+    launch.rZ0 = 0;
+    %
+    if ~isfield(power_spectrum,'dn_par'),
+        %
+        zdP_in = power_spectrum.power;
+        zN_in = power_spectrum.n_par;
+        %
+        zN_in(find(diff(zdP_in)==0)) = [];%remove points with equal power density (for proc_aloha_spec_jd)
+        zdP_in(find(diff(zdP_in)==0)) = [];%remove points with equal power density (for proc_aloha_spec_jd)
+        %
+        [bNpar0,bdNpar0,bPlhtot] = proc_aloha_spec_jd(zN_in,NaN,zdP_in,Plh(a_opt));%ALOHA like spectra
+        %
+        launch.bPlhtot = bPlhtot;  
+        launch.bdNpar0 = bdNpar0;  
+        launch.bNpar0 = bNpar0;
+        %
+    else
+        %
+        launch.bPlhtot = power_spectrum.power*1e6;  
+        launch.bdNpar0 = power_spectrum.dn_par;  
+        launch.bNpar0 = power_spectrum.n_par;
+        %
+    end
     %
 else % default values
     %

@@ -44,6 +44,14 @@ elseif type == 1.3 ,%.mat, EVE profiles
     zZi = eve.Zs(2:end).';
     zmi = eve.As(2:end).';
     %
+elseif type == 1.4 ,%.mat, EAST profiles
+    %
+    eval(['load -mat ',filename,' prho pne pTe pTi frac_H frac_D Zimp Aimp Zeff']);
+    %
+    zZi = [1,1,1,Zimp];
+    zmi = [1,2,3,Aimp];
+    fi = [frac_H frac_D,0];
+    %
 elseif type == 2,%ascii - 203040
     [prho,pTi,pTe,pni,pne] = textread(filename,'%n%n%n%n%n');
 elseif type == 3,%ascii formatted (CMOD)
@@ -203,7 +211,7 @@ elseif type == 6,%ascii formatted (FTU)
     pTi = pTe/2.0;%As done in RANT3D/AORSA  
 end
 %
-if type < 4 && type >= 0 && type ~= 1.3,
+if type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4,
     %
     zZi = [1,1,1,6];
     zmi = [1,2,3,12];
@@ -291,7 +299,7 @@ elseif type == 1,%TCV
     pzni = [fi.'*pnH;pnZ];
     pzTi = ones(nz,1)*pTi;
 end
-if type == 1.1 || type == 1.2 || type>= 3 && type ~=5 && type ~=6,
+if type == 1.1 || type == 1.2 || type == 1.4 || type>= 3 && type ~=5 && type ~=6,
     %
     pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);

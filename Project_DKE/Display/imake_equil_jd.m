@@ -87,6 +87,17 @@ if i_opt == 0, % use data from from external database
         %
         e_opt = -3;% standard rz -> pt transformation needed
         %
+    elseif strcmp(basestr,'EAST'),
+        %
+        eqdsk_path = external.magnetic.eqdsk_path;
+        eqdsk_file = external.magnetic.eqdsk_file;
+        %
+        if ~exist([eqdsk_path,eqdsk_file],'file'),
+            error(['The file ',eqdsk_path,eqdsk_file,' does not exist. Aborted.'])
+        end
+        %
+        e_opt = -1;% eqdsk equilibrium
+        %
     else
         %
         disp('-----> function not yet implemented for this machine.')
@@ -231,6 +242,11 @@ if e_opt ~= -2,
                 n_opt = 0;
                 %
             end
+        elseif strcmp(basestr,'EAST'),
+            %
+            type = 1.4;%EAST data format
+            n_opt = 0;
+            %
         else
             %
             disp('-----> function not yet implemented for this machine.')
@@ -270,9 +286,9 @@ if e_opt ~= -2,
                 %
                 type = 0.2;
                 %
-            elseif strcmp(basestr,'EAST'),% EAST ideal profiles from make_profile script
+            elseif strcmp(basestr,'EAST'),% EAST profile data
                 %
-                type = 1.1;
+                type = 1.4;
                 %
             else
                 disp(['-----> profiles data files not treated yet for :',basestr]);
@@ -426,7 +442,41 @@ elseif type == 1.2 && n_opt == 0,
     profname = [id_equil,'.prof'];        
     %
     save(profname,'pspsin','pne','pTe','pTi','Zeff','-mat');          
-    %    
+    %
+elseif type == 1.4 && n_opt == 0,%EAST
+    %
+    profname = [id_equil,'.prof'];
+    %
+    Zeff = equil_prof_data.species.Zeff;
+    prho = equil_prof_data.rho;
+    pne = equil_prof_data.ne;
+    pTe = equil_prof_data.Te;
+    pTi = pTe/equil_prof_data.TeTi;
+    frac_H = equil_prof_data.species.frac_H;
+    frac_D = equil_prof_data.species.frac_D;
+    Zimp = equil_prof_data.species.Zimp;
+    Aimp = equil_prof_data.species.Aimp;
+    %
+    save(profname,'prho','pne','pTe','pTi','frac_H','frac_D','Zimp','Aimp','Zeff','-mat');
+    %
+    % sign management as most equilibrium codes do not account for these.
+    %
+    if ~isstruct(signs) 
+		if isfield(external,'jbdirections'),
+            if strcmp(external.jbdirections.Ip,'anti-clockwise')
+                signs.Ip = 1;
+            else
+                signs.Ip = -1;
+            end
+            %
+            if strcmp(external.jbdirections.Bt,'clockwise')
+                signs.Bt = 1;
+            else
+                signs.Bt = -1;
+            end
+        end
+    end
+    %
 end
 %
 if e_opt >= 0 || e_opt <= -2,
