@@ -1,9 +1,13 @@
-function wave = imake_wave_jd(dkepath,basestr,equil,external,workdir,opt_gui)
+function wave = imake_wave_jd(dkepath,basestr,equil,external,workdir,opt_gui,select)
 %
 % This function interactively builds the wave structure
 %
+if nargin < 7,
+	select = struct;
+end
+%
 if nargin < 6,
-	opt_gui = 1;
+	opt_gui = true;
 end
 %
 if nargin < 5,
@@ -20,26 +24,29 @@ type = '';
 %
 if ~isempty(external) && ~isfield(external,'wavestructs'),% wave data from external database
     %
-    i_opt = input_dke_yp(['Do you want to :\n',...
-        '(0) use data loaded from the external database \n',...
-        '(1) use data from an existing file \n',...
-        '(2) build the wave data locally \n'],...
-        0,{0,1,2},'Invalid selection');
+    titletext = 'For the wave structure :';      
+    s = {'Use data loaded from the external database',...
+         'Use data from an existing file',...
+         'Build the wave data locally'};
+    %    
+    i_opt = iselect_jd(s,titletext,opt_gui,select.style,1) - 1;
     %
 elseif ~isempty(external) && isfield(external,'wavestructs'),% wave data from wavestructs
     %
-    i_opt = input_dke_yp(['Do you want to :\n',...
-        '(1) use data from an existing file \n',...
-        '(2) build the wave data locally \n',...
-        '(3) use data from wavestructs \n'],...
-        1,{1,2,3},'Invalid selection');
+    titletext = 'For the wave structure :';      
+    s = {'Use data from an existing file',...
+         'Build the wave data locally',...
+         'Use data from wavestructs'};
+    %    
+    i_opt = iselect_jd(s,titletext,opt_gui,select.style,1);
     %
 else
     %
-    i_opt = input_dke_yp(['Do you want to :\n',...
-        '(1) use data from an existing file \n',...
-        '(2) build the wave data locally \n'],...
-        1,{1,2},'Invalid selection');
+    titletext = 'For the wave structure :';      
+    s = {'Use data from an existing file',...
+         'Build the wave data locally'};
+    %    
+    i_opt = iselect_jd(s,titletext,opt_gui,select.style,1);
     %
 end
 % 

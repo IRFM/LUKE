@@ -1,10 +1,17 @@
-function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui)
-%
-% This function loads data from external database
-%
+function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
+    %
+    % This function loads data from external database
+    %
+    if nargin < 5,
+        style = struct;
+    end
+    if nargin < 4,
+        opt_gui = true;
+    end
+    %
     external = '';
     %
-    if nargin > 1,% from irunluke
+    if nargin > 1 && ~isempty(basestr),% from irunluke
         %
         fname = ['load_externaldata_',basestr];
         %
@@ -39,15 +46,20 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui)
             return
         end
         %
-        external.basestr = '';
+        external.basestr = 'TS';
         external.shotnum = '';
         external.t1 = 0;
         external.t2 = 0;
         external.values.basestr = basestrs;
         %
-        external = imod_struct_jd(external,'external',0,1,external);
+        external = imod_struct_jd(external,'external',0,opt_gui,external,style);
         %
         external.shotime = num2str((external.t1 + external.t2)/2,'%6.4f');
+        %
+        if isempty(external.basestr),
+            external.err = 'No valid tokamak selected.';
+            return
+        end
         %
         external = conc_struct_jd(external,feval(['load_externaldata_',external.basestr],pwd,external.shotnum,external.shotime,external.t1,external.t2,1,''));
         %

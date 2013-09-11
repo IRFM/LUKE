@@ -35,15 +35,27 @@ if ~isempty(data),
         ishot = ishot(1);
     end
     %
-    launch_list = data.laun;
-    %
     if isnan(l_opt),
-        l_opt = input(['Launcher? (',num2str(launch_list),') : ']);
-    end
-    %
-    if isempty(l_opt) || ~isnumeric(l_opt) || ~any(l_opt == launch_list),
-        disp('-----> Invalid launcher selection');
-        return
+        %
+        titletext = 'Select EC launcher :';   
+        nlaun = length(data.laun);
+        s = {};
+        launch_list = [];
+        for ilaun = 1:nlaun,
+            laun = data.laun(ilaun);
+            P0 = data.(['angles_',num2str(laun)]).P0;
+            if ~isnan(P0)
+                launch_list(end+1) = laun;
+                s{end+1} = ['Launcher # ',num2str(laun),' ; P =  ',num2str(P0/1e3),' kW'];
+            end
+        end
+        if isempty(launch_list),
+            disp('-----> No valid launcher');
+            return
+        end
+        %    
+        l_opt = launch_list(iselect_jd(s,titletext,true,struct,1));
+        %
     end
     %
     eval(['angles = data.angles_',num2str(l_opt),'(ishot);'])
@@ -53,23 +65,19 @@ if ~isempty(data),
         return
     end
     %
+    angles_mod = struct;
+    angles_mod.freq = angles.freq/1e9;
+    angles_mod.P0 = angles.P0/1e3;
     if force_mode == 0,
-        freq_new = input(['Confirm wave frequency (GHz)? [',num2str(angles.freq/1e9),']: '])*1e9;
-    else
-        freq_new = angles.freq;
+        angles_mod = imod_struct_jd(angles_mod,'angles',1,true,struct,struct);
     end
+    %
+    freq_new = angles_mod.freq*1e9;
+    P0_new = angles_mod.P0*1e3;
     %
     if freq_new ~= angles.freq,
         disp(['-----> WARNING: frequency has been changed from ',num2str(angles.freq/1e9),' GHZ to ',num2str(freq_new/1e9),' GHZ']);
         angles.freq = freq_new;
-    end
-    %
-    % To confirm the injected wave power
-    %
-    if force_mode == 0,
-        P0_new = input(['Confirm injected power (kW)? [',num2str(angles.P0/1e3),']: '])*1e3;
-    else
-        P0_new = angles.P0;
     end
     %
     if P0_new ~= angles.P0,

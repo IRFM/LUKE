@@ -1,9 +1,13 @@
-function ohm = imake_ohm_jd(dkepath,basestr,equil,external,workdir,opt_gui)
+function ohm = imake_ohm_jd(dkepath,basestr,equil,external,workdir,opt_gui,select)
 %
 % This function interactively builds the ohm structure
 %
+if nargin < 7,
+	select = struct;
+end
+%
 if nargin < 6,
-	opt_gui = 1;
+	opt_gui = true;
 end
 %
 if nargin < 5,
@@ -14,22 +18,27 @@ if nargin < 4,
 	external = '';
 end
 %
+select.style.textwidth = 420;
+%
 ohm = '';
 %
 if ~isempty(external),
     %
-    i_opt = input_dke_yp(['Do you want to :\n',...
-        '(0) use data loaded from the external database \n',...
-        '(1) use data from an existing file \n',...
-        '(2) build the ohmic data locally \n'],...
-        0,{0,1,2},'Invalid selection');
+    titletext = 'For the OHMIC field :';      
+    s = {'Use data loaded from the external database',...
+         'Use data from an existing file',...
+         'Build the ohmic data locally'};
+    %    
+    i_opt = iselect_jd(s,titletext,opt_gui,select.style,1) - 1;
     %
 else
     %
-    i_opt = input_dke_yp(['Do you want to :\n',...
-        '(1) use data from an existing file \n',...
-        '(2) build the ohmic data locally \n'],...
-        2,{1,2},'Invalid selection');
+    titletext = 'For the OHMIC field :';      
+    s = {'Use data from an existing file',...
+         'Build the ohmic data locally'};
+    %    
+    i_opt = iselect_jd(s,titletext,opt_gui,select.style,1);
+    %
     %
 end
 %
@@ -130,7 +139,12 @@ if o_opt == 0,% ohm from constant VLOOP
     %
     sigma = - sign(equil.ptBPHI(1,1));%epsi is defined versus B, electron charge included
     %
-    id_ohm = input('Please specify a name for the ohm structure : [VLOOP]','s');
+    if ~isfield(select,'idohm') || ~select.idohm 
+        id_ohm = input('Please specify a name for the ohm structure : [VLOOP]','s');
+    else
+        id_ohm = '';
+    end
+    %
     if isempty(id_ohm),
         id_ohm = 'VLOOP';
     end
@@ -144,7 +158,12 @@ elseif o_opt == 1,% ohm from E/ED
     %
     ohm = ohm_flat(equil,epsi);
     %
-    id_ohm = input('Please specify a name for the ohm structure : [ED]','s');
+    if ~isfield(select,'idohm') || ~select.idohm 
+        id_ohm = input('Please specify a name for the ohm structure : [ED]','s');
+    else
+        id_ohm = '';
+    end
+    %
     if isempty(id_ohm),
         id_ohm = 'ED';
     end
@@ -155,7 +174,12 @@ elseif o_opt == 2,% ohm from varying VLOOP
     %
     sigma = - sign(equil.ptBPHI(1,1)*equil.psi_apRp(end));
     %
-    id_ohm = input('Please specify a name for the ohm structure : [VLOOP]','s');
+    if ~isfield(select,'idohm') || ~select.idohm 
+        id_ohm = input('Please specify a name for the ohm structure : [VLOOP]','s');
+    else
+        id_ohm = '';
+    end
+    %    
     if isempty(id_ohm),
         id_ohm = 'VLOOP';
     end
@@ -165,4 +189,13 @@ elseif o_opt == 2,% ohm from varying VLOOP
     ohm.epsi = sigma*pvloop/(2*pi*equil.Rp);%(V/m)
     %    
 end
+%
+%
+%
+ohm.info.txt = {...
+    ['Central loop voltage (V) : ',num2str(ohm.epsi(1)*(2*pi*equil.Rp))],...
+    ['Edge loop voltage (V)    : ',num2str(ohm.epsi(end)*(2*pi*equil.Rp))]};
+
+
+
 %    
