@@ -51,7 +51,7 @@ Zmripple = make_struct_jd(loadstruct,display.display_mode,'mripplecoefbuilder_dk
 [ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = make_struct_jd(loadstruct,display.display_mode,'efield_dke_jd',dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c);%Electric field flux coefficients
 [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys] = make_struct_jd(loadstruct,display.display_mode,'rfwave_dke_jd',dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
 %
-if isfield(dkeparam_in,'avalanche_mode') %if the field was specified, avalanche mode on
+if dkeparam_out.avalanche_mode == 1 %if 1, avalanche mode on
     XXS = make_struct_jd(loadstruct,display.display_mode,'avalanche_en',dkepath,dkeparam_out,display,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE);%the complete avalanche operator
 else %if no avalanche mode is specified, zero contribution
     nr = gridDKE.nr;
