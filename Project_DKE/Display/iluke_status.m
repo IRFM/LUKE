@@ -1,4 +1,4 @@
-function [s,sobj] = iluke_status(s,status,sobj,mode)
+function [s,sobj,cleartags] = iluke_status(s,status,sobj,mode,cleartags)
 %
 % mode = 0 : input structures
 % mode = 1 : output structures
@@ -34,6 +34,12 @@ if status <= 0,% s does not exist
     sobj.clear.state = 'off';
     sobj.disp.state = 'off';
     %
+    sname = inputname(1);
+    %
+    if ~any(strcmp(cleartags,sname)),
+        cleartags = [cleartags,sname];
+    end
+    %        
 else % s exists
     %
     if mode == 0,

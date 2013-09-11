@@ -6,8 +6,12 @@ if isfield(s,'handle'),
     if isfield(s,'state')
         set(s.handle,'Enable',s.state);
     end
-    if isfield(s,'string')
+    if isfield(s,'value') && isfield(s,'string')
+        set(s.handle,'String',s.string,'Value',s.value);
+    elseif isfield(s,'string')
         set(s.handle,'String',s.string);
+    elseif isfield(s,'value')
+        set(s.handle,'Value',s.value);
     end
 elseif isstruct(s),
     %
