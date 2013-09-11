@@ -42,7 +42,7 @@ ne=equilDKE.xne/ne_ref;
 beta=mksa.betath_ref;
 ap=equilDKE.ap;
 Rp=equilDKE.Rp;
-nr=0.05*ne;
+%nr=0.05*ne;
 %
 B0=equilDKE.xB0;
 Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
@@ -50,7 +50,7 @@ Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
 mhuT=sqrt(1-B0./Bmax);
 %
 for ipsi=1:npsi
-  Srp(ipsi,:)=1/(4*pi)*beta^2/Lambd*ne(ipsi)*nr(ipsi)./(gridDKE.pn.*Zmomcoef.gamma.*(Zmomcoef.gamma-1).^2); %rosenbluth (S*)
+  Srp(ipsi,:)=1/(4*pi)*beta^2/Lambd*ne(ipsi)./(gridDKE.pn.*Zmomcoef.gamma.*(Zmomcoef.gamma-1).^2); %rosenbluth (S*)
 end
 XXSrp=permute(repmat(Srp, [1,1,nmhu]),[1,2,3]);
 %
@@ -180,7 +180,7 @@ end
     for g=1:npsi
         XS = squeeze(XXSl(g,:,:));
         XS(isnan(XS)) = 0;
-        XSint = integral_dke_jd(ones(1,nmhu),XS,2); %integrate over mhu, pos n neg : /2
+        XSint = integral_dke_jd(ones(1,nmhu),XS,2);
         %semilogy(gridDKE.pn,XSint,'.-')
         %legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
         graph1D_jd(gridDKE.pn,XSint,0,1,'p','S_{bounce} LUKE','S on each flux surface',NaN,NaN,NaN,'-','.')
