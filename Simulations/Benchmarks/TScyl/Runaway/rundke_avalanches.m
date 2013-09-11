@@ -12,15 +12,15 @@ warning('off')
 % grid parameters
 %
 pnmax_S = 50;
-np_S = 301;
-nmhu_S = 301;
+np_S = 201;
+nmhu_S = 201;
 %
 mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 %
 %
 % normalized electric field (with respect to the Critical field Ec)
 %
-alpha = 20;%E/Ec
+alpha = 10;%E/Ec
 %
 % temperature betath2 = Te/mc2
 % (betath2 = 10^(-6) is validated for NR limit)
@@ -51,7 +51,7 @@ rho_S = [0.6];%1%Normalized radial flux grid where calculations are performed (0
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScirc_e1';%For plasma equilibrium
+id_equil = 'TScyl';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
@@ -73,13 +73,14 @@ if exist('dmumpsmex','file') == 3,
     dkeparam.invproc = -2;
 end
 %
-dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
-dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+dkeparam.boundary_mode_f = 1;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
+dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
+dkeparam.timevol = 1;
 dkeparam.tn = 100;%time for asymptotic solution with norm_mode_f = 1
-dkeparam.dtn = 10;%10 time steps required for accurate runaway solution - see rundke_dtn
+dkeparam.dtn = 20;%10 time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
 dkeparam.bounce_mode = 1; %bounce average
-dkeparam.avalanche_mode = 1; %if the field is defined, avalanche mode on, comment out for off
+dkeparam.avalanche_mode = 1; %if 1 avalanche mode on, 0 or undefined for off
 %
 options_fzero = optimset('fzero');
 options_fzero.Display = 'iter';
@@ -88,7 +89,7 @@ dkeparam.options_fzero = options_fzero;
 %
 equil.pzTi = 1e-10*ones(size(equil.pzTi));% cold ions
 %
-[qe,me,dummy,dummy,dummy,dummy,dummy,mc2,clum] = pc_dke_yp;%Universal physics constants
+[qe,me,dummy,dummy,e0,dummy,dummy,mc2,clum] = pc_dke_yp;%Universal physics constants
 %
 equil.pTe = betath2*mc2*ones(size(equil.pTe));
 %
@@ -115,15 +116,28 @@ equil.equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,'','','',[],[]);
 %
-RR = dke_out.XxRR_fsav(end,:);
+%RR = dke_out.XxRR_fsav(end,:);
+RR = dke_out.XxRR_fsav{end};
+RR = RR(end); %[vol-1 tau_c^-1]
+RRunnorm = RR*mksa.nhu_ref; %s^-1
 %
 if isfield(dkeparam,'avalanche_mode')
-gamma_min = 3;
-dtn_min = me*clum*sqrt(gamma_min^2-1)/(qe*mksa.Edreicer_ref*epsi*alpha)*mksa.nhu_ref; %mininmum time step dtn for dreicer acc from rest to gamma 
-disp(['     Mininmum time step dtn for dreicer acc from rest to gamma = : ',num2str(gamma_min),' is tau*nhu_ref = ',num2str(dtn_min)])
+    %gamma_max = 1/sqrt(1-50*betath2);
+    gamma_max = sqrt((pnmax_S/sqrt(1-betath2)*sqrt(betath2))^2+1);
+    dtn_min = me*clum*sqrt(gamma_max^2-1)/(qe*mksa.Edreicer_ref*epsi)*mksa.nhu_ref; %mininmum time step dtn for dreicer acc from rest to gamma
+    gam = 1:0.01:(gamma_max+1);
+    dt_acc = me*clum*sqrt(gam.^2-1)/(qe*mksa.Edreicer_ref*epsi)*mksa.nhu_ref; %mininmum time step dtn for dreicer acc from rest to gamma
+    titl=['(ro): gamma @ p_{max} = ',num2str(pnmax_S),'p_{th}'];
+    figure;graph1D_jd(gam,dt_acc,0,0,'gamma','dt_n Dreicer',titl,NaN,NaN,NaN,'-','none','b',2)
+    hold on
+    graph1D_jd(gamma_max,dtn_min,0,0,'','','',NaN, NaN,NaN,'none','o','r',3);
+    hold off
+    disp(['     Mininmum time step dtn for dreicer acc from rest to gamma(p_max) = : ',num2str(gamma_max),' is tau*nhu_ref = ',num2str(dtn_min)])
 end
 %
-[logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(cell2mat(dke_out.XXf0)),momentumDKE.pn,momentumDKE.mhu,0.1);%Spherical to cylindrical coordinate transformation
+if length(rho_S) == 1
+%[logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(cell2mat(dke_out.XXf0)),momentumDKE.pn,momentumDKE.mhu,0.1);%Spherical to cylindrical coordinate transformation
+[logXf0_cyl_ref,ppar_cyl_ref,dppar_cyl_ref,pperp_cyl_ref,dpperp_cyl_ref] = s2c_dke_yp(log(dke_out.XXf0{end}),momentumDKE.pn,momentumDKE.mhu,0.1);%Spherical to cylindrical coordinate transformation
 Xf0_cyl_ref = exp(logXf0_cyl_ref);%For accurate representation in figures 
 %
 logXfinit_cyl_ref = s2c_dke_yp(log(dke_out.XXfinit),momentumDKE.pn,momentumDKE.mhu,0.1);%Spherical to cylindrical coordinate transformation
@@ -179,6 +193,7 @@ graph1D_jd(x1,y9,0,0,xlab1,xlab2,'',NaN,xlim1,xlim2,'-','none','k',2,20+14i,gca,
 %
 axis('equal');axis([xlim1,xlim2]);
 legend(leg);
+end
 %
 disp('Simulation parameters : ')
 disp(['coll_mode = ',num2str(coll_mode),' ; Te/mc2 = ',num2str(betath2),' ; E/Ec = ',num2str(alpha),' ; E/ED = ',num2str(alpha*betath2),' ; Zi = ',num2str(Zi)])
@@ -187,8 +202,11 @@ disp(['Relativ. : pc/pT = ',num2str(1/sqrt((alpha - 1)*betath2)),' ; pmax/pc = '
 disp(' ')
 disp(['--> LUKE RR (normalized to ne and tauc) : ',num2str(RR)])
 disp('----------------------')
+disp(['--> RR (normalized to ne) : ',num2str(RRunnorm)])
+disp('----------------------')
 %
 diary off
+%gRA = qe^4*alpha*mksa.ne_ref/(8*pi*e0^2*me^2*clum^3)
 %
 %************************************************************************************************************************************
 %
