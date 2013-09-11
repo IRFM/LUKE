@@ -34,6 +34,10 @@ end
 if ~isfield(dkeparam,'mfactor'),
     dkeparam.mfactor = 10;
 end
+%
+if ~isfield(dkeparam,'avalanche_mode'),
+    dkeparam.avalanche_mode = 0;
+end
 % 
 if dkeparam.pnmax_S < 0,
 	dkeparam.pnmax_S = -dkeparam.pnmax_S;
@@ -117,6 +121,10 @@ end
 %
 if ~isfield(dkeparam,'timevol'),
     dkeparam.timevol = 0;
+end
+%
+if dkeparam.avalanche_mode == 1,
+    dkeparam.timevol = 1;
 end
 %
 if ~isfield(dkeparam,'redfac'),
