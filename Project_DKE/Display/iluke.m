@@ -16,10 +16,13 @@ panelsep = 5;
 figbaseheight = 900;
 figbasewidth = 1200;
 %
-graphwidth = 400;
-graphheight = 300;
+plotwidth = 340;
+plotheight = 300;
 %
-simulfiletitlewidth = 140;
+graphwidth = 272;
+graphheight = 204;
+%
+simulfiletitlewidth = 120;
 shotnumtitlewidth = 120; 
 shotnumwidth = 80; 
 titlestrheight = 50;
@@ -34,13 +37,14 @@ fontname = 'Liberation Mono';%get(0,'FixedWidthFontName');%'fixedwidth';% font t
 fontsize = 14;% font size
 titlefontsize = 2*fontsize;
 %
-infotext.string = {'','To get started :',...
-                      '==============  ','',...
-    '- "Load" Existing simulation                                  ','',...
-    '- "Import" Exp. data to import from database                  ',...
-    '- "Load" Exp. data to load from existing EXTERNAL file        ',...
-    '- "New" Equilibrium to create equilibrium or import EQDSK file',...
-    '- "Load" Equilibrium  to load from existing EQUIL file        '};
+infotext.string = {'',...
+    '            To get started :',...
+    '            ==============','',...
+    '    - "Load" Existing simulation','',...
+    '    - "Import" Exp. data to import from database',...
+    '    - "Load" Exp. data to load from existing EXTERNAL file',...
+    '    - "New" Equilibrium to create equilibrium or import EQDSK file',...
+    '    - "Load" Equilibrium  to load from existing EQUIL file'};
 %
 % -------------------------------------------------------------------------
 %
@@ -62,7 +66,7 @@ mainfig.position = [figleft,figbottom,figwidth,figheight];
 %
 % PANELS DIMENSIONS
 %
-panelwidth = figbasewidth - graphwidth;
+panelwidth = figbasewidth - plotwidth;
 %
 titleheight = 3*butheight + 5*butvsep + titlestrheight;
 %
@@ -79,9 +83,32 @@ infopanel.position = [panelsep,panelsep,panelwidth,infopanelheight];
 infotext.position = [panelsep + buthsep,panelsep + butvsep,panelwidth - 2*buthsep,infopanelheight - 3*butvsep - titlestrheight];
 infostr.position = [buthsep,infopanelheight - titlestrheight - butvsep,panelwidth - 2*buthsep,titlestrheight];
 %
-plot1.position = [panelwidth + 2*panelsep,2*graphheight + 3*panelsep,graphwidth,graphheight];
-plot2.position = [panelwidth + 2*panelsep,graphheight + 2*panelsep,graphwidth,graphheight];
-plot3.position = [panelwidth + 2*panelsep,panelsep,graphwidth,graphheight];
+plot1.position = [panelwidth + 2*panelsep,2*plotheight + 3*panelsep,plotwidth,plotheight];
+plot2.position = [panelwidth + 2*panelsep,plotheight + 2*panelsep,plotwidth,plotheight];
+plot3.position = [panelwidth + 2*panelsep,panelsep,plotwidth,plotheight];
+%
+% GRAPHS DIMENSIONS
+%
+graph_position = [plotwidth - buthsep - graphwidth,plotheight - 2*butvsep - fontsize - butheight - graphheight,graphwidth,graphheight];  
+gsel_position = [buthsep,plotheight - butvsep - butheight,plotwidth - 4*buthsep - 2*butwidth,butheight];
+gsave_position = [plotwidth - 2*buthsep - 2*butwidth,plotheight - butvsep - butheight,butwidth,butheight];
+gprint_position = [plotwidth - buthsep - butwidth,plotheight - butvsep - butheight,butwidth,butheight];
+%
+% graph1.position = graph_position;
+% graph2.position = graph_position;
+% graph3.position = graph_position;
+%
+graph1sel.position = gsel_position;
+graph2sel.position = gsel_position;
+graph3sel.position = gsel_position;
+%
+graph1save.position = gsave_position;
+graph2save.position = gsave_position;
+graph3save.position = gsave_position;
+%
+graph1print.position = gprint_position;
+graph2print.position = gprint_position;
+graph3print.position = gprint_position;
 %
 % CONTROLS DIMENSIONS
 %
@@ -106,21 +133,20 @@ tokamak.position = [2*buthsep+shotnumtitlewidth,2*butheight + 3*butvsep + texthe
 shotnum.position = [2*buthsep+shotnumtitlewidth,butheight + 2*butvsep + textheightcorr,shotnumwidth,textheight];
 shotime.position = [2*buthsep+shotnumtitlewidth,butvsep + textheightcorr,shotnumwidth,textheight];
 %
-lukedist.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,2*butheight + 3*butvsep,2*butwidth+ buthsep,butheight];
-exitluke.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,butheight + 2*butvsep,butwidth,butheight];
-newshot.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,butvsep,butwidth,butheight];
-loadshot.position = [shotnumtitlewidth + shotnumwidth + butwidth + 4*buthsep,butheight + 2*butvsep,butwidth,butheight];
-saveshot.position = [shotnumtitlewidth + shotnumwidth + butwidth + 4*buthsep,butvsep,butwidth,butheight];
+exitluke.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,2*butheight + 3*butvsep,butwidth,butheight];
+newshot.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,butheight + 2*butvsep,butwidth,butheight];
+loadshot.position = [shotnumtitlewidth + shotnumwidth + butwidth + 4*buthsep,2*butheight + 3*butvsep,butwidth,butheight];
+saveshot.position = [shotnumtitlewidth + shotnumwidth + butwidth + 4*buthsep,butheight + 2*butvsep,butwidth,butheight];
 %
-simulfilewidth = panelwidth - shotnumtitlewidth - shotnumwidth - simulfiletitlewidth - 7*buthsep - 2*butwidth;
+simulfilewidth = panelwidth - shotnumtitlewidth - shotnumwidth - 8*buthsep - 2*butwidth;
 %
-lukeroottitle.position = [panelwidth - simulfilewidth - simulfiletitlewidth - 2*buthsep,2*butheight + 3*butvsep + textheightcorr,simulfiletitlewidth,textheight];
-lukevertitle.position = [panelwidth - simulfilewidth - simulfiletitlewidth - 2*buthsep,butheight + 2*butvsep + textheightcorr,simulfiletitlewidth,textheight];
-simulfiletitle.position = [panelwidth - simulfilewidth - simulfiletitlewidth - 2*buthsep,butvsep + textheightcorr,simulfiletitlewidth,textheight];
+lukeroottitle.position = [panelwidth - simulfilewidth - 2*buthsep,2*butheight + 3*butvsep + textheightcorr,simulfiletitlewidth,textheight];
+lukevertitle.position = [panelwidth - simulfilewidth - 2*buthsep,butheight + 2*butvsep + textheightcorr,simulfiletitlewidth,textheight];
+simulfiletitle.position = [shotnumtitlewidth + shotnumwidth + 3*buthsep,butvsep + textheightcorr,2*buthsep + 2*butwidth,textheight];
 %
-lukeroot.position = [panelwidth - simulfilewidth - buthsep,2*butheight + 3*butvsep + textheightcorr,simulfilewidth,textheight];
-lukever.position = [panelwidth - simulfilewidth - buthsep,butheight + 2*butvsep + textheightcorr,simulfilewidth,textheight];
-simulfile.position = [panelwidth - simulfilewidth - buthsep,butvsep + textheightcorr,simulfilewidth,textheight];
+lukeroot.position = [panelwidth - simulfilewidth + simulfiletitlewidth - buthsep,2*butheight + 3*butvsep + textheightcorr,simulfilewidth - simulfiletitlewidth,textheight];
+lukever.position = [panelwidth - simulfilewidth + simulfiletitlewidth - buthsep,butheight + 2*butvsep + textheightcorr,simulfilewidth - simulfiletitlewidth,textheight];
+simulfile.position = [panelwidth - simulfilewidth - 2*buthsep,butvsep + textheightcorr,simulfilewidth + buthsep,textheight];
 %
 titlestr.position = [buthsep,3*butheight + 4*butvsep,panelwidth - 2*buthsep,titlestrheight];
 %
@@ -128,79 +154,90 @@ titlestr.position = [buthsep,3*butheight + 4*butvsep,panelwidth - 2*buthsep,titl
 %
 controlheightcorr = controlheight - controlstrcorr;
 %
-datatitle.position = [buthsep,controlheightcorr - butheightcorr + textheightcorr,titlewidth,textheight];
-equiltitle.position = [buthsep,controlheightcorr - 2*butheightcorr + textheightcorr,titlewidth,textheight];
-ohmtitle.position = [buthsep,controlheightcorr - 3*butheightcorr + textheightcorr,titlewidth,textheight];
-transptitle.position = [buthsep,controlheightcorr - 4*butheightcorr + textheightcorr,titlewidth,textheight];
-rippletitle.position = [buthsep,controlheightcorr - 5*butheightcorr + textheightcorr,titlewidth,textheight];
-wavetitle.position = [buthsep,controlheightcorr - 6*butheightcorr + textheightcorr,titlewidth,textheight];
-luketitle.position = [buthsep,controlheightcorr - 7*butheightcorr - butvsep + textheightcorr,titlewidthcorr + butwidthcorr + butwidth,textheight];
-r5x2title.position = [buthsep,controlheightcorr - 8*butheightcorr - 2*butvsep + textheightcorr,titlewidthcorr + butwidthcorr + butwidth,textheight];
+lukeobj.data.title.position = [buthsep,controlheightcorr - butheightcorr + textheightcorr,titlewidth,textheight];
+lukeobj.equil.title.position = [buthsep,controlheightcorr - 2*butheightcorr + textheightcorr,titlewidth,textheight];
+lukeobj.ohm.title.position = [buthsep,controlheightcorr - 3*butheightcorr + textheightcorr,titlewidth,textheight];
+lukeobj.transp.title.position = [buthsep,controlheightcorr - 4*butheightcorr + textheightcorr,titlewidth,textheight];
+lukeobj.ripple.title.position = [buthsep,controlheightcorr - 5*butheightcorr + textheightcorr,titlewidth,textheight];
+lukeobj.wave.title.position = [buthsep,controlheightcorr - 6*butheightcorr + textheightcorr,titlewidth,textheight];
+lukeobj.luke.title.position = [buthsep,controlheightcorr - 7*butheightcorr - butvsep + textheightcorr,titlewidthcorr + butwidthcorr + butwidth,textheight];
+lukeobj.r5x2.title.position = [buthsep,controlheightcorr - 8*butheightcorr - 2*butvsep + textheightcorr,titlewidthcorr + butwidthcorr + butwidth,textheight];
 %
 % create column
 %
-datamake.position = [titlewidthcorr,controlheightcorr - butheightcorr,butwidth,butheight];
-equilmake.position = [titlewidthcorr,controlheightcorr - 2*butheightcorr,butwidth,butheight];
-ohmmake.position = [titlewidthcorr,controlheightcorr - 3*butheightcorr,butwidth,butheight];
-transpmake.position = [titlewidthcorr,controlheightcorr - 4*butheightcorr,butwidth,butheight];
-ripplemake.position = [titlewidthcorr,controlheightcorr - 5*butheightcorr,butwidth,butheight];
-wavemake.position = [titlewidthcorr,controlheightcorr - 6*butheightcorr,butwidth,butheight];
+lukeobj.data.import.position = [titlewidthcorr,controlheightcorr - butheightcorr,butwidth,butheight];
+%
+lukeobj.equil.make.position = [titlewidthcorr,controlheightcorr - 2*butheightcorr,butwidth,butheight];
+lukeobj.ohm.make.position = [titlewidthcorr,controlheightcorr - 3*butheightcorr,butwidth,butheight];
+lukeobj.transp.make.position = [titlewidthcorr,controlheightcorr - 4*butheightcorr,butwidth,butheight];
+lukeobj.ripple.make.position = [titlewidthcorr,controlheightcorr - 5*butheightcorr,butwidth,butheight];
+lukeobj.wave.make.position = [titlewidthcorr,controlheightcorr - 6*butheightcorr,butwidth,butheight];
 %
 % load column
 %
-dataload.position = [titlewidthcorr + butwidthcorr,controlheightcorr - butheightcorr,butwidth,butheight];
-equilload.position = [titlewidthcorr + butwidthcorr,controlheightcorr - 2*butheightcorr,butwidth,butheight];
-ohmload.position = [titlewidthcorr + butwidthcorr,controlheightcorr - 3*butheightcorr,butwidth,butheight];
-transpload.position = [titlewidthcorr + butwidthcorr,controlheightcorr - 4*butheightcorr,butwidth,butheight];
-rippleload.position = [titlewidthcorr + butwidthcorr,controlheightcorr - 5*butheightcorr,butwidth,butheight];
-waveload.position = [titlewidthcorr + butwidthcorr,controlheightcorr - 6*butheightcorr,butwidth,butheight];
+lukeobj.data.load.position = [titlewidthcorr + butwidthcorr,controlheightcorr - butheightcorr,butwidth,butheight];
+lukeobj.equil.load.position = [titlewidthcorr + butwidthcorr,controlheightcorr - 2*butheightcorr,butwidth,butheight];
+lukeobj.ohm.load.position = [titlewidthcorr + butwidthcorr,controlheightcorr - 3*butheightcorr,butwidth,butheight];
+lukeobj.transp.load.position = [titlewidthcorr + butwidthcorr,controlheightcorr - 4*butheightcorr,butwidth,butheight];
+lukeobj.ripple.load.position = [titlewidthcorr + butwidthcorr,controlheightcorr - 5*butheightcorr,butwidth,butheight];
+lukeobj.wave.load.position = [titlewidthcorr + butwidthcorr,controlheightcorr - 6*butheightcorr,butwidth,butheight];
 %
 % save column
 %
-datasave.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - butheightcorr,butwidth,butheight];
-equilsave.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 2*butheightcorr,butwidth,butheight];
-ohmsave.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 3*butheightcorr,butwidth,butheight];
-transpsave.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 4*butheightcorr,butwidth,butheight];
-ripplesave.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 5*butheightcorr,butwidth,butheight];
-wavesave.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 6*butheightcorr,butwidth,butheight];
+lukeobj.data.save.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - butheightcorr,butwidth,butheight];
+lukeobj.equil.save.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 2*butheightcorr,butwidth,butheight];
+lukeobj.ohm.save.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 3*butheightcorr,butwidth,butheight];
+lukeobj.transp.save.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 4*butheightcorr,butwidth,butheight];
+lukeobj.ripple.save.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 5*butheightcorr,butwidth,butheight];
+lukeobj.wave.save.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 6*butheightcorr,butwidth,butheight];
 %
-lukerun.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 7*butheightcorr - butvsep,butwidth,butheight];
-r5x2run.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 8*butheightcorr - 2*butvsep,butwidth,butheight];
+lukeobj.luke.run.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 7*butheightcorr - butvsep,butwidth,butheight];
+lukeobj.r5x2.run.position = [titlewidthcorr + 2*butwidthcorr,controlheightcorr - 8*butheightcorr - 2*butvsep,butwidth,butheight];
 %
 % clear column
 %
-dataclear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - butheightcorr,butwidth,butheight];
-equilclear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 2*butheightcorr,butwidth,butheight];
-ohmclear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 3*butheightcorr,butwidth,butheight];
-transpclear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 4*butheightcorr,butwidth,butheight];
-rippleclear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 5*butheightcorr,butwidth,butheight];
-waveclear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 6*butheightcorr,butwidth,butheight];
-lukeclear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 7*butheightcorr - butvsep,butwidth,butheight];
-r5x2clear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 8*butheightcorr - 2*butvsep,butwidth,butheight];
+lukeobj.data.clear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - butheightcorr,butwidth,butheight];
+lukeobj.equil.clear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 2*butheightcorr,butwidth,butheight];
+lukeobj.ohm.clear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 3*butheightcorr,butwidth,butheight];
+lukeobj.transp.clear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 4*butheightcorr,butwidth,butheight];
+lukeobj.ripple.clear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 5*butheightcorr,butwidth,butheight];
+lukeobj.wave.clear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 6*butheightcorr,butwidth,butheight];
+lukeobj.luke.clear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 7*butheightcorr - butvsep,butwidth,butheight];
+lukeobj.r5x2.clear.position = [titlewidthcorr + 3*butwidthcorr,controlheightcorr - 8*butheightcorr - 2*butvsep,butwidth,butheight];
 %
 % disp column
 %
-datadisp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - butheightcorr,butwidth,butheight];
-equildisp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 2*butheightcorr,butwidth,butheight];
-ohmdisp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 3*butheightcorr,butwidth,butheight];
-transpdisp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 4*butheightcorr,butwidth,butheight];
-rippledisp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 5*butheightcorr,butwidth,butheight];
-wavedisp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 6*butheightcorr,butwidth,butheight];
-lukedisp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 7*butheightcorr - butvsep,butwidth,butheight];
-r5x2disp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 8*butheightcorr - 2*butvsep,butwidth,butheight];
+lukeobj.data.disp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - butheightcorr,butwidth,butheight];
+lukeobj.equil.disp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 2*butheightcorr,butwidth,butheight];
+lukeobj.ohm.disp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 3*butheightcorr,butwidth,butheight];
+lukeobj.transp.disp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 4*butheightcorr,butwidth,butheight];
+lukeobj.ripple.disp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 5*butheightcorr,butwidth,butheight];
+lukeobj.wave.disp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 6*butheightcorr,butwidth,butheight];
+lukeobj.luke.disp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 7*butheightcorr - butvsep,butwidth,butheight];
+lukeobj.r5x2.disp.position = [titlewidthcorr + 4*butwidthcorr,controlheightcorr - 8*butheightcorr - 2*butvsep,butwidth,butheight];
 %
 % info column
 %
-datatext.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - butheightcorr + textheightcorr,infowidth,textheight];
-equiltext.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 2*butheightcorr + textheightcorr,infowidth,textheight];
-ohmtext.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 3*butheightcorr + textheightcorr,infowidth,textheight];
-transptext.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 4*butheightcorr + textheightcorr,infowidth,textheight];
-rippletext.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 5*butheightcorr + textheightcorr,infowidth,textheight];
-wavetext.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 6*butheightcorr + textheightcorr,infowidth,textheight];
-luketext.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 7*butheightcorr - butvsep + textheightcorr,infowidth,textheight];
-r5x2text.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 8*butheightcorr - 2*butvsep + textheightcorr,infowidth,textheight];
-%
+lukeobj.data.text.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - butheightcorr + textheightcorr,infowidth,textheight];
+lukeobj.equil.text.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 2*butheightcorr + textheightcorr,infowidth,textheight];
+lukeobj.ohm.text.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 3*butheightcorr + textheightcorr,infowidth,textheight];
+lukeobj.transp.text.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 4*butheightcorr + textheightcorr,infowidth,textheight];
+lukeobj.ripple.text.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 5*butheightcorr + textheightcorr,infowidth,textheight];
+lukeobj.wave.text.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 6*butheightcorr + textheightcorr,infowidth,textheight];
+lukeobj.luke.text.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 7*butheightcorr - butvsep + textheightcorr,infowidth,textheight];
+lukeobj.r5x2.text.position = [titlewidthcorr + 5*butwidthcorr,controlheightcorr - 8*butheightcorr - 2*butvsep + textheightcorr,infowidth,textheight];
 
+graph1sel.string = {''};
+graph2sel.string = {''};
+graph3sel.string = {''};
+
+graph1save.string = 'Save';
+graph2save.string = 'Save';
+graph3save.string = 'Save';
+
+graph1print.string = 'Print';
+graph2print.string = 'Print';
+graph3print.string = 'Print';
 
 tokamaktitle.string = 'TOKAMAK       : ';
 shotnumtitle.string = 'SHOT NUMBER   : ';
@@ -210,8 +247,8 @@ tokamak.string = '< empty >';
 shotnum.string = '< empty >';
 shotime.string = '< empty >';
 
-lukeroottitle.string =  'LUKE VERSION    : ';
-lukevertitle.string =   'MATLAB VERSION  : ';
+lukeroottitle.string =  'LUKE SOURCE  : ';
+lukevertitle.string =   'LUKE VERSION : ';
 simulfiletitle.string = 'SIMULATION FILE : ';
 
 lukeroot.string = dkepath.luke_root;
@@ -220,7 +257,6 @@ simulfile.string = '< not saved >';
 
 titlestr.string = {'SUMMARY'};
 
-lukedist.string = 'LUKE FOLDER';
 exitluke.string = 'Exit';
 newshot.string = 'New';
 loadshot.string = 'Load';
@@ -229,123 +265,88 @@ saveshot.string = 'Save';
 controlstr.string = {'CONTROLS'};
 infostr.string = {'INFOS'};
 
-datatitle.string = 'Exp. Data';
-equiltitle.string = 'Equilibrium';
-ohmtitle.string = 'Ohmic Field';
-transptitle.string = 'Transport';
-rippletitle.string = 'Mag. Ripple';
-wavetitle.string = 'RF Waves';
-luketitle.string = 'Fokker-Planck Equation';
-r5x2title.string = 'Fast Electron Bremsstrahlung';
+lukeobj.data.title.string = 'Exp. Data';
+lukeobj.equil.title.string = 'Equilibrium';
+lukeobj.ohm.title.string = 'Ohmic Field';
+lukeobj.transp.title.string = 'Transport';
+lukeobj.ripple.title.string = 'Mag. Ripple';
+lukeobj.wave.title.string = 'RF Waves';
+lukeobj.luke.title.string = 'Fokker-Planck Equation';
+lukeobj.r5x2.title.string = 'Fast Electron Bremsstrahlung';
 
-datamake.string = 'Import';%'Create';
-equilmake.string = 'New';%'Create';
-ohmmake.string = 'New';%'Create';
-transpmake.string = 'New';%'Create';
-ripplemake.string = 'New';%'Create';
-wavemake.string = 'New';%'Create';
+lukeobj.data.import.string = 'Import';%'Create';
+%
+lukeobj.equil.make.string = 'New';%'Create';
+lukeobj.ohm.make.string = 'New';%'Create';
+lukeobj.transp.make.string = 'New';%'Create';
+lukeobj.ripple.make.string = 'New';%'Create';
+lukeobj.wave.make.string = 'New';%'Create';
 
-dataload.string = 'Load';
-equilload.string = 'Load';
-ohmload.string = 'Load';
-transpload.string = 'Load';
-rippleload.string = 'Load';
-waveload.string = 'Load';
+lukeobj.data.load.string = 'Load';
+lukeobj.equil.load.string = 'Load';
+lukeobj.ohm.load.string = 'Load';
+lukeobj.transp.load.string = 'Load';
+lukeobj.ripple.load.string = 'Load';
+lukeobj.wave.load.string = 'Load';
 
-datasave.string = 'Save';
-equilsave.string = 'Save';
-ohmsave.string = 'Save';
-transpsave.string = 'Save';
-ripplesave.string = 'Save';
-wavesave.string = 'Save';
+lukeobj.data.save.string = 'Save';
+lukeobj.equil.save.string = 'Save';
+lukeobj.ohm.save.string = 'Save';
+lukeobj.transp.save.string = 'Save';
+lukeobj.ripple.save.string = 'Save';
+lukeobj.wave.save.string = 'Save';
 
-lukerun.string = 'Run';
-r5x2run.string = 'Run';
+lukeobj.luke.run.string = 'Run';
+lukeobj.r5x2.run.string = 'Run';
 
-dataclear.string = 'Clear';
-equilclear.string = 'Clear';
-ohmclear.string = 'Clear';
-transpclear.string = 'Clear';
-rippleclear.string = 'Clear';
-waveclear.string = 'Clear';
-lukeclear.string = 'Clear';
-r5x2clear.string = 'Clear';
+lukeobj.data.clear.string = 'Clear';
+lukeobj.equil.clear.string = 'Clear';
+lukeobj.ohm.clear.string = 'Clear';
+lukeobj.transp.clear.string = 'Clear';
+lukeobj.ripple.clear.string = 'Clear';
+lukeobj.wave.clear.string = 'Clear';
+lukeobj.luke.clear.string = 'Clear';
+lukeobj.r5x2.clear.string = 'Clear';
 
-datadisp.string = 'Disp';%'Display';
-equildisp.string = 'Disp';%'Display';
-ohmdisp.string = 'Disp';%'Display';
-transpdisp.string = 'Disp';%'Display';
-rippledisp.string = 'Disp';%'Display';
-wavedisp.string = 'Disp';%'Display';
-lukedisp.string = 'Disp';
-r5x2disp.string = 'Disp';
+lukeobj.data.disp.string = 'Disp';%'Display';
+lukeobj.equil.disp.string = 'Disp';%'Display';
+lukeobj.ohm.disp.string = 'Disp';%'Display';
+lukeobj.transp.disp.string = 'Disp';%'Display';
+lukeobj.ripple.disp.string = 'Disp';%'Display';
+lukeobj.wave.disp.string = 'Disp';%'Display';
+lukeobj.luke.disp.string = 'Disp';
+lukeobj.r5x2.disp.string = 'Disp';
 
-datatext.string = '< empty >';
-equiltext.string = '< empty >';
-ohmtext.string = '< empty >';
-transptext.string = '< empty >';
-rippletext.string = '< empty >';
-wavetext.string = '< empty >';
-luketext.string = '< empty >';
-r5x2text.string = '< empty >';
+graph1save.state = 'on';
+graph2save.state = 'on';
+graph3save.state = 'on';
 
-lukedist.state = 'on';
+graph1print.state = 'on';
+graph2print.state = 'on';
+graph3print.state = 'on';
+
 exitluke.state = 'on';
 newshot.state = 'on';
 loadshot.state = 'on';
 saveshot.state = 'on';
 
-datamake.state = 'on';
-equilmake.state = 'on';
-ohmmake.state = 'off';
-transpmake.state = 'off';
-ripplemake.state = 'off';
-wavemake.state = 'off';
-
-dataload.state = 'on';
-equilload.state = 'on';
-ohmload.state = 'off';
-transpload.state = 'off';
-rippleload.state = 'off';
-waveload.state = 'off';
-
-datasave.state = 'off';
-equilsave.state = 'off';
-ohmsave.state = 'off';
-transpsave.state = 'off';
-ripplesave.state = 'off';
-wavesave.state = 'off';
-
-lukerun.state = 'off';
-r5x2run.state = 'off';
-
-dataclear.state = 'off';
-equilclear.state = 'off';
-ohmclear.state = 'off';
-transpclear.state = 'off';
-rippleclear.state = 'off';
-waveclear.state = 'off';
-lukeclear.state = 'off';
-r5x2clear.state = 'off';
-
-datadisp.state = 'off';
-equildisp.state = 'off';
-ohmdisp.state = 'off';
-transpdisp.state = 'off';
-rippledisp.state = 'off';
-wavedisp.state = 'off';
-lukedisp.state = 'off';
-r5x2disp.state = 'off';
-
 %
 
 exitluke.callback = 'close(mainfig.handle)';
 %
-datamake.callback = 'action = ''datamake'';iluke_callbacks;';
-equilmake.callback = 'action = ''equilmake'';iluke_callbacks;';
-datasave.callback = 'action = ''datasave'';iluke_callbacks;';
-dataload.callback = 'action = ''dataload'';iluke_callbacks;';
-
+lukeobj.data.import.callback = 'action = ''datamake'';iluke_callbacks;';
+lukeobj.data.save.callback = 'action = ''datasave'';iluke_callbacks;';
+lukeobj.data.load.callback = 'action = ''dataload'';iluke_callbacks;';
+%
+lukeobj.equil.make.callback = 'action = ''equilmake'';iluke_callbacks;';
+lukeobj.equil.save.callback = 'action = ''equilsave'';iluke_callbacks;';
+lukeobj.equil.load.callback = 'action = ''equilload'';iluke_callbacks;';
+lukeobj.equil.disp.callback = 'action = ''equildisp'';iluke_callbacks;';
+%
+graph1sel.callback = 'plot1.gindex = get(graph1sel.handle,''Value'') - 1;iluke_update;';
+graph2sel.callback = 'plot2.gindex = get(graph2sel.handle,''Value'') - 1;iluke_update;';
+graph3sel.callback = 'plot3.gindex = get(graph3sel.handle,''Value'') - 1;iluke_update;';
+%
 %exitluke.data = struct;
 
 %
@@ -364,6 +365,21 @@ plot1.handle = uipanel('Parent',mainfig.handle,'Title','','units','pixels','Posi
 plot2.handle = uipanel('Parent',mainfig.handle,'Title','','units','pixels','Position',plot2.position);
 plot3.handle = uipanel('Parent',mainfig.handle,'Title','','units','pixels','Position',plot3.position);
 %
+% graph1.handle = axes('Parent',plot1.handle,'units','pixels','Position',graph1.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+% graph2.handle = axes('Parent',plot2.handle,'units','pixels','Position',graph2.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+% graph3.handle = axes('Parent',plot3.handle,'units','pixels','Position',graph3.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+
+graph1sel.handle = uicontrol(plot1.handle,'Style','popupmenu','String',graph1sel.string,'Position',graph1sel.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Callback',graph1sel.callback);
+graph2sel.handle = uicontrol(plot2.handle,'Style','popupmenu','String',graph2sel.string,'Position',graph2sel.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Callback',graph2sel.callback);
+graph3sel.handle = uicontrol(plot3.handle,'Style','popupmenu','String',graph3sel.string,'Position',graph3sel.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Callback',graph3sel.callback);
+
+graph1save.handle = uicontrol(plot1.handle,'Style','pushbutton','String',graph1save.string,'Position',graph1save.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',graph1save.state);
+graph2save.handle = uicontrol(plot2.handle,'Style','pushbutton','String',graph2save.string,'Position',graph2save.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',graph2save.state);
+graph3save.handle = uicontrol(plot3.handle,'Style','pushbutton','String',graph3save.string,'Position',graph3save.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',graph3save.state);
+
+graph1print.handle = uicontrol(plot1.handle,'Style','pushbutton','String',graph1print.string,'Position',graph1print.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',graph1print.state);
+graph2print.handle = uicontrol(plot2.handle,'Style','pushbutton','String',graph2print.string,'Position',graph2print.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',graph2print.state);
+graph3print.handle = uicontrol(plot3.handle,'Style','pushbutton','String',graph3print.string,'Position',graph3print.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',graph3print.state);
 
 tokamaktitle.handle = uicontrol(titlepanel.handle,'Style','text','String',tokamaktitle.string,'Position',tokamaktitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
 shotnumtitle.handle = uicontrol(titlepanel.handle,'Style','text','String',shotnumtitle.string,'Position',shotnumtitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
@@ -383,7 +399,6 @@ simulfiletitle.handle = uicontrol(titlepanel.handle,'Style','text','String',simu
 
 titlestr.handle = uicontrol(titlepanel.handle,'Style','text','String',titlestr.string,'Position',titlestr.position,'FontName',fontname,'FontUnits','pixels','FontSize',titlefontsize,'HorizontalAlignment','center');
 
-lukedist.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',lukedist.string,'Position',lukedist.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',lukedist.state);
 exitluke.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',exitluke.string,'Position',exitluke.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',exitluke.state,'Callback',exitluke.callback);
 newshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',newshot.string,'Position',newshot.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',newshot.state);
 loadshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',loadshot.string,'Position',loadshot.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',loadshot.state);
@@ -392,74 +407,101 @@ saveshot.handle = uicontrol(titlepanel.handle,'Style','pushbutton','String',save
 %
 controlstr.handle = uicontrol(controlpanel.handle,'Style','text','String',controlstr.string,'Position',controlstr.position,'FontName',fontname,'FontUnits','pixels','FontSize',titlefontsize,'HorizontalAlignment','center');
 
-datatitle.handle = uicontrol(controlpanel.handle,'Style','text','String',datatitle.string,'Position',datatitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
-equiltitle.handle = uicontrol(controlpanel.handle,'Style','text','String',equiltitle.string,'Position',equiltitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
-ohmtitle.handle = uicontrol(controlpanel.handle,'Style','text','String',ohmtitle.string,'Position',ohmtitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
-transptitle.handle = uicontrol(controlpanel.handle,'Style','text','String',transptitle.string,'Position',transptitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
-rippletitle.handle = uicontrol(controlpanel.handle,'Style','text','String',rippletitle.string,'Position',rippletitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
-wavetitle.handle = uicontrol(controlpanel.handle,'Style','text','String',wavetitle.string,'Position',wavetitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
-luketitle.handle = uicontrol(controlpanel.handle,'Style','text','String',luketitle.string,'Position',luketitle.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
-r5x2title.handle = uicontrol(controlpanel.handle,'Style','text','String',r5x2title.string,'Position',r5x2title.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+lukeobj.data.title.handle = uicontrol(controlpanel.handle,'Style','text','String',lukeobj.data.title.string,'Position',lukeobj.data.title.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+lukeobj.equil.title.handle = uicontrol(controlpanel.handle,'Style','text','String',lukeobj.equil.title.string,'Position',lukeobj.equil.title.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+lukeobj.ohm.title.handle = uicontrol(controlpanel.handle,'Style','text','String',lukeobj.ohm.title.string,'Position',lukeobj.ohm.title.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+lukeobj.transp.title.handle = uicontrol(controlpanel.handle,'Style','text','String',lukeobj.transp.title.string,'Position',lukeobj.transp.title.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+lukeobj.ripple.title.handle = uicontrol(controlpanel.handle,'Style','text','String',lukeobj.ripple.title.string,'Position',lukeobj.ripple.title.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+lukeobj.wave.title.handle = uicontrol(controlpanel.handle,'Style','text','String',lukeobj.wave.title.string,'Position',lukeobj.wave.title.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+lukeobj.luke.title.handle = uicontrol(controlpanel.handle,'Style','text','String',lukeobj.luke.title.string,'Position',lukeobj.luke.title.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
+lukeobj.r5x2.title.handle = uicontrol(controlpanel.handle,'Style','text','String',lukeobj.r5x2.title.string,'Position',lukeobj.r5x2.title.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
 
-datamake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datamake.string,'Position',datamake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',datamake.state,'Callback',datamake.callback);
-equilmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilmake.string,'Position',equilmake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',equilmake.state,'Callback',equilmake.callback);
-ohmmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmmake.string,'Position',ohmmake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ohmmake.state);
-transpmake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpmake.string,'Position',transpmake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',transpmake.state);
-ripplemake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ripplemake.string,'Position',ripplemake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ripplemake.state);
-wavemake.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',wavemake.string,'Position',wavemake.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',wavemake.state);
+lukeobj.data.import.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.data.import.string,'Position',lukeobj.data.import.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Callback',lukeobj.data.import.callback);
 
-dataload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',dataload.string,'Position',dataload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',dataload.state,'Callback',dataload.callback);
-equilload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilload.string,'Position',equilload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',equilload.state);
-ohmload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmload.string,'Position',ohmload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ohmload.state);
-transpload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpload.string,'Position',transpload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',transpload.state);
-rippleload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',rippleload.string,'Position',rippleload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',rippleload.state);
-waveload.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',waveload.string,'Position',waveload.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',waveload.state);
+lukeobj.equil.make.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.equil.make.string,'Position',lukeobj.equil.make.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Callback',lukeobj.equil.make.callback);
+lukeobj.ohm.make.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.ohm.make.string,'Position',lukeobj.ohm.make.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.transp.make.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.transp.make.string,'Position',lukeobj.transp.make.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.ripple.make.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.ripple.make.string,'Position',lukeobj.ripple.make.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.wave.make.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.wave.make.string,'Position',lukeobj.wave.make.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
 
-datasave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datasave.string,'Position',datasave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',datasave.state,'Callback',datasave.callback);
-equilsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilsave.string,'Position',equilsave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',equilsave.state);
-ohmsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmsave.string,'Position',ohmsave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ohmsave.state);
-transpsave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpsave.string,'Position',transpsave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',transpsave.state);
-ripplesave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ripplesave.string,'Position',ripplesave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ripplesave.state);
-wavesave.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',wavesave.string,'Position',wavesave.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',wavesave.state);
+lukeobj.data.load.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.data.load.string,'Position',lukeobj.data.load.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Callback',lukeobj.data.load.callback);
+lukeobj.equil.load.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.equil.load.string,'Position',lukeobj.equil.load.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Callback',lukeobj.equil.load.callback);
+lukeobj.ohm.load.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.ohm.load.string,'Position',lukeobj.ohm.load.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.transp.load.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.transp.load.string,'Position',lukeobj.transp.load.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.ripple.load.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.ripple.load.string,'Position',lukeobj.ripple.load.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.wave.load.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.wave.load.string,'Position',lukeobj.wave.load.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
 
-lukerun.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukerun.string,'Position',lukerun.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',lukerun.state);
-r5x2run.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',r5x2run.string,'Position',r5x2run.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',r5x2run.state);
+lukeobj.data.save.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.data.save.string,'Position',lukeobj.data.save.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Callback',lukeobj.data.save.callback);
+lukeobj.equil.save.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.equil.save.string,'Position',lukeobj.equil.save.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Callback',lukeobj.equil.save.callback);
+lukeobj.ohm.save.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.ohm.save.string,'Position',lukeobj.ohm.save.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.transp.save.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.transp.save.string,'Position',lukeobj.transp.save.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.ripple.save.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.ripple.save.string,'Position',lukeobj.ripple.save.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.wave.save.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.wave.save.string,'Position',lukeobj.wave.save.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
 
-dataclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',dataclear.string,'Position',dataclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',dataclear.state);
-equilclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equilclear.string,'Position',equilclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',equilclear.state);
-ohmclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmclear.string,'Position',ohmclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ohmclear.state);
-transpclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpclear.string,'Position',transpclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',transpclear.state);
-rippleclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',rippleclear.string,'Position',rippleclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',rippleclear.state);
-waveclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',waveclear.string,'Position',waveclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',waveclear.state);
-lukeclear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeclear.string,'Position',lukeclear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',lukeclear.state);
-r5x2clear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',r5x2clear.string,'Position',r5x2clear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',r5x2clear.state);
+lukeobj.luke.run.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.luke.run.string,'Position',lukeobj.luke.run.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.r5x2.run.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.r5x2.run.string,'Position',lukeobj.r5x2.run.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
 
-datadisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',datadisp.string,'Position',datadisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',datadisp.state);
-equildisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',equildisp.string,'Position',equildisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',equildisp.state);
-ohmdisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',ohmdisp.string,'Position',ohmdisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',ohmdisp.state);
-transpdisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',transpdisp.string,'Position',transpdisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',transpdisp.state);
-rippledisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',rippledisp.string,'Position',rippledisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',rippledisp.state);
-wavedisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',wavedisp.string,'Position',wavedisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',wavedisp.state);
-lukedisp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukedisp.string,'Position',lukedisp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',lukedisp.state);
-r5x2disp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',r5x2disp.string,'Position',r5x2disp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Enable',r5x2disp.state);
+lukeobj.data.clear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.data.clear.string,'Position',lukeobj.data.clear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.equil.clear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.equil.clear.string,'Position',lukeobj.equil.clear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.ohm.clear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.ohm.clear.string,'Position',lukeobj.ohm.clear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.transp.clear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.transp.clear.string,'Position',lukeobj.transp.clear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.ripple.clear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.ripple.clear.string,'Position',lukeobj.ripple.clear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.wave.clear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.wave.clear.string,'Position',lukeobj.wave.clear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.luke.clear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.luke.clear.string,'Position',lukeobj.luke.clear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.r5x2.clear.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.r5x2.clear.string,'Position',lukeobj.r5x2.clear.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
 
-datatext.handle = uicontrol(controlpanel.handle,'Style','text','String',datatext.string,'Position',datatext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
-equiltext.handle = uicontrol(controlpanel.handle,'Style','text','String',equiltext.string,'Position',equiltext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
-ohmtext.handle = uicontrol(controlpanel.handle,'Style','text','String',ohmtext.string,'Position',ohmtext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
-transptext.handle = uicontrol(controlpanel.handle,'Style','text','String',transptext.string,'Position',transptext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
-rippletext.handle = uicontrol(controlpanel.handle,'Style','text','String',rippletext.string,'Position',rippletext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
-wavetext.handle = uicontrol(controlpanel.handle,'Style','text','String',wavetext.string,'Position',wavetext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
-luketext.handle = uicontrol(controlpanel.handle,'Style','text','String',luketext.string,'Position',luketext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
-r5x2text.handle = uicontrol(controlpanel.handle,'Style','text','String',r5x2text.string,'Position',r5x2text.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.data.disp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.data.disp.string,'Position',lukeobj.data.disp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.equil.disp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.equil.disp.string,'Position',lukeobj.equil.disp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'Callback',lukeobj.equil.disp.callback);
+lukeobj.ohm.disp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.ohm.disp.string,'Position',lukeobj.ohm.disp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.transp.disp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.transp.disp.string,'Position',lukeobj.transp.disp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.ripple.disp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.ripple.disp.string,'Position',lukeobj.ripple.disp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.wave.disp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.wave.disp.string,'Position',lukeobj.wave.disp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.luke.disp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.luke.disp.string,'Position',lukeobj.luke.disp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.r5x2.disp.handle = uicontrol(controlpanel.handle,'Style','pushbutton','String',lukeobj.r5x2.disp.string,'Position',lukeobj.r5x2.disp.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
 
-infotext.handle = uicontrol(infopanel.handle,'Style','text','String',infotext.string,'Position',infotext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.data.text.handle = uicontrol(controlpanel.handle,'Style','text','Position',lukeobj.data.text.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.equil.text.handle = uicontrol(controlpanel.handle,'Style','text','Position',lukeobj.equil.text.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.ohm.text.handle = uicontrol(controlpanel.handle,'Style','text','Position',lukeobj.ohm.text.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.transp.text.handle = uicontrol(controlpanel.handle,'Style','text','Position',lukeobj.transp.text.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.ripple.text.handle = uicontrol(controlpanel.handle,'Style','text','Position',lukeobj.ripple.text.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.wave.text.handle = uicontrol(controlpanel.handle,'Style','text','Position',lukeobj.wave.text.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.luke.text.handle = uicontrol(controlpanel.handle,'Style','text','Position',lukeobj.luke.text.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+lukeobj.r5x2.text.handle = uicontrol(controlpanel.handle,'Style','text','Position',lukeobj.r5x2.text.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize);
+
+infotext.handle = uicontrol(infopanel.handle,'Style','text','String',infotext.string,'Position',infotext.position,'FontName',fontname,'FontUnits','pixels','FontSize',fontsize,'HorizontalAlignment','left');
 infostr.handle = uicontrol(infopanel.handle,'Style','text','String',infostr.string,'Position',infostr.position,'FontName',fontname,'FontUnits','pixels','FontSize',titlefontsize,'HorizontalAlignment','center');
 
 style.fontname = fontname;
 style.fontsize = fontsize;
+style.titlefontsize = titlefontsize;
 style.butheight = butheight;
 style.butwidth = butwidth;
 style.buthsep = buthsep;
 style.butvsep = butvsep;
 style.butheight = butheight;
 
+graphs = struct;
+graphs.handles = [];
+graphs.info = '';
+graphs.tag = '';
+graphs(1) = [];% empty structure but keep memory of fields
+
+plot1.gindex = 0;
+plot2.gindex = 0;
+plot3.gindex = 0;
+
+cleartags = {};
+
+status.external = 0;
+
+external = '';
+equil = '';
+ohm = '';
+transpfaste = '';
+ripple = '';
+waves = '';
+
+output = '';
+hxr = '';
+
+iluke_update;

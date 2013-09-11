@@ -1,0 +1,50 @@
+function [s,sobj] = iluke_status(s,status,sobj,mode)
+%
+% mode = 0 : input structures
+% mode = 1 : output structures
+%
+if status <= 0,% s does not exist
+    %
+    if status < 0 % s cannot exist
+        if mode == 0,
+            sobj.make.state = 'off';
+            sobj.load.state = 'off';
+        else
+            sobj.run.state = 'off';
+        end
+    else % s can be built
+        if mode == 0,
+            sobj.make.state = 'on';
+            sobj.load.state = 'on';
+        else
+            sobj.run.state = 'on';
+        end
+    end
+    %
+    if isempty(s) % s did not exist
+        sobj.text.string = '< empty >';
+    else % s must be cleared
+        sobj.text.string = '< outdated >';
+        s = '';
+    end
+    % s does not exist
+    if mode == 0,
+        sobj.save.state = 'off';
+    end
+    sobj.clear.state = 'off';
+    sobj.disp.state = 'off';
+    %
+else % s exists
+    %
+    if mode == 0,
+        if status > 1 % ohm is not saved
+            sobj.text.string = '< not saved >';
+        end
+        %
+        sobj.save.state = 'on';
+    end
+    %
+    sobj.clear.state = 'on';
+    sobj.disp.state = 'on';    
+    %
+end
