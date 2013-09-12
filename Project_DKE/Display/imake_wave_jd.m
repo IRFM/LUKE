@@ -18,8 +18,12 @@ if nargin < 4,
 	external = '';
 end
 %
+if ~isfield(select,'style'),
+    select.style = struct;
+end
+%
 wave = '';
-wavestruct = '';
+wavestruct = struct;
 type = '';
 %
 if ~isempty(external) && ~isfield(external,'wavestructs'),% wave data from external database
@@ -68,7 +72,7 @@ if i_opt == 0,% use data from external database
         %
         type = 'EC';
         %
-        angles = imake_angles_TCV_jd(external,shotnum);
+        angles = imake_angles_TCV_jd(external,shotnum,NaN,0,'',opt_gui,select.style);
         %
         if isempty(angles),
             disp(['-----> launching data not determined for shot :',shotnum]);
@@ -320,7 +324,13 @@ end
 %
 if any(i_opt == [0,2,3]),
     %
-    w_opt = input_dke_yp('Which ray-tracing code do you want to run ? 0 (C3PO), 1 (TORAY), 2 (ART), 3 (AMR), ',0,0:3,'',[1,1]);
+    titletext = 'Which ray-tracing code do you want to run :';      
+    s = {'C3PO',...
+         'TORAY',...
+         'ART',...
+         'AMR'};
+    %    
+    w_opt = iselect_jd(s,titletext,opt_gui,select.style,1) - 1;
     %
     if w_opt == 1,% Run TORAY from LUKE interface
         %
@@ -339,15 +349,17 @@ end
 %
 if w_opt == 0; % C3PO Calculation
     %
-    % WAVE TYPE
+    % WAVE TYPE AND DEFAULT WAVE PARAMETERS
     %
     if strcmp(type,'LH') || strcmp(type,'IC') || strcmp(type,'FW'),
         %
         ftype = 'LF';
+        rtparam = load_structures_yp('rtparam','LH','');
         %
     elseif strcmp(type,'EC') || strcmp(type,'EB'),
         %
         ftype = 'HF';
+        rtparam = load_structures_yp('rtparam','EC','');
         %
     else
         %
@@ -356,76 +368,42 @@ if w_opt == 0; % C3PO Calculation
         %
     end
     %
-    [qe,me] = pc_dke_yp;
+    wavestruct = conc_struct_jd(rtparam,wavestruct);
     %
-    if isfield(wavestruct,'waveparam'),
-        %
-        waveparam = wavestruct.waveparam;
-        %
-        waveparam.nd = 1;
-        waveparam.nchi = 1;
-        %
-        if strcmp(ftype,'LF'),
-            %
-            reflection = 1;
-            method = 'pchip';
-            %
-        else
-            %
-            reflection = 0;
-            method = 'spline';
-            %
-        end
-        %
-    elseif strcmp(ftype,'LF'), 
-        %
-        waveparam.mmode = -1;
-        waveparam.kmode = 0;
-        waveparam.opt_rf = 1;
-        waveparam.dsmin = 0.01;
-        waveparam.nd = 1;
-        waveparam.nchi = 1;
-        waveparam.n_rf_list = 0;%List of cyclotron harmonics to consider in wave power deposition
-        %
-        reflection = 1;
-		method = 'pchip';
-		%
-    else
-        %        
-        waveparam.mmode = 1;
-        waveparam.kmode = 0;
-        waveparam.opt_rf = 0;
-        waveparam.dsmin = 0.001;
-        waveparam.nd = 3;
-        waveparam.nchi = 4;
-        waveparam.n_rf_list = 1:3;%List of cyclotron harmonics to consider in wave power deposition
-        %
-        reflection = 0;
-		method = 'spline';
-        %
-    end
+    wavestruct = imod_struct_jd(wavestruct,'wavestruct',1,opt_gui,struct,select.style);
     %
     % BUILDING RAYINIT
     %
     if d_opt <= 1,% rayinit built from launching conditions
         %
-        if strcmp(ftype,'HF'), 
+        if strcmp(ftype,'HF') && ~isfield(launch,'dNpar0'),
             %
             dNpar0 = 0.06;
             %
             % SPECTRAL WIDTH
             %
+            titletext = 'Spectral width :';      
             if isfield(launch,'w0'),
-                launch.dNpar0 = input_dke_yp(['Spectral width :',...
-                    '\n - specify fixed value, or ',...
-                    '\n - type ''NaN'' if calculated from waist and focal point, or ',...
-                    '\n - type ''0'' if minimum width within numerical constraints'],NaN,[0;Inf],'',[1,1]);
+                s = {'Calculated from waist and focal point',...
+                     'Fixed value',...
+                     'Minimum width within numerical constraints'};
+                %    
+                dNpar0_opt = iselect_jd(s,titletext,opt_gui,select.style,1) - 1;
                 %
             else
-                launch.dNpar0 = input_dke_yp(['Spectral width :',...
-                    '\n - specify fixed value, or ',...
-                    '\n - type ''0'' if minimum width within numerical constraints'],dNpar0,[0;Inf],'',[1,1]);
+                s = {'Specify fixed value',...
+                     'Minimum width within numerical constraints'};
+                %    
+                dNpar0_opt = iselect_jd(s,titletext,opt_gui,select.style,1);
                 %
+            end
+            %
+            if dNpar0_opt == 0,
+                launch.dNpar0 = NaN;
+            elseif dNpar0_opt == 2,
+                launch.dNpar0 = 0;
+            else
+                launch.dNpar0 = input_dke_yp(['Specify fixed dNpar0 value'],dNpar0,[0;Inf],'',[1,1]);
             end
             %
         end
@@ -442,8 +420,9 @@ if w_opt == 0; % C3PO Calculation
         rayinit.id = ['C3PO_',launch.id];
         rayinit.type = launch.type;
         %
-        r_opt = input_dke_yp('Do you want to save the rayinit structure [y/n]','n',{'y','n'},'',[1,1]);
-        if strcmp(r_opt,'y'),
+        r_opt = iselect_jd({'No','Yes'},'Do you want to save the rayinit structure ?',opt_gui,select.style,1) - 1;
+        %
+        if r_opt == 1,
             sd = pwd;
             cd(workdir);
             [rayinit_file,rayinit_path] = iputfile_jd(opt_gui,['RAYINIT_',equil.id,'*.mat'],'Please provide the RAYINIT file name',['RAYINIT_',equil.id,'_',rayinit.id,'.mat']);
@@ -459,68 +438,18 @@ if w_opt == 0; % C3PO Calculation
         %
     end
     %
-    waveparam.ns = 1;%Ray smoothing parameter
-    %
-    waveparam = imod_struct_jd(waveparam,'waveparam',1,opt_gui);
-    %
-    d_opt = input_dke_yp('Do you want to display the rays [y/n]','n',{'y','n'},'',[1,1]);
-    if strcmp(d_opt,'y'),
-        wavedisplay.ray = 2;
-    else
-        wavedisplay.ray = 0;
-    end
-    %
-    p_opt = input_dke_yp('Option for equilibrium figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
-    %
-    %waveparam.a_sdNpar = a_sdNpar;
-    %
-    wavedisplay.equilibrium = 0;
-    wavedisplay.p_opt = p_opt;%Printing or saving option of the figures
-    %
-    if ~isfield(rayinit,'id'),
-        rayinit.id = input_dke_yp('The existing rayinit structure has no ''id'' field. Please provide an id','');%backward compatibility
-    end
-    %
-    % RAY, WAVE, AND DISPLAY PARAMETERS
-    %
-    if isfield(wavestruct,'fitequilparam') && isfield(wavestruct,'rayparam') && isfield(wavestruct,'C3POparam'),
-        fitparam = wavestruct.fitequilparam;
-        rayparam = wavestruct.rayparam;
-        C3POparam = wavestruct.C3POparam;
-    else    
-        c3poparam_file = which('C3POPARAM.mat');
-        [c3poparam_file,c3poparam_path] = igetfile_jd(opt_gui,'*.*','Please select the C3PO default parameters file',c3poparam_file);
-        if c3poparam_file == 0,
-            return
-        end
-        load([c3poparam_path,c3poparam_file],'fitparam','rayparam','C3POparam');
-    end
-    %
-    rayparam.tensortype = waveparam.kmode;
-    rayparam.reflection = reflection;
-	fitparam.method = method;
-    %
-    c_opt = input_dke_yp('Do you want to see/modify the C3PO parameters [y/n]','n',{'y','n'},'',[1,1]);
-    if strcmp(c_opt,'y'),
-        %
-        fitparam = imod_struct_jd(fitparam,'fitparam',1,opt_gui);
-        rayparam = imod_struct_jd(rayparam,'rayparam',1,opt_gui);
-		C3POparam.clustermode.main_C3PO_jd = imod_struct_jd(C3POparam.clustermode.main_C3PO_jd,'clustermode',1,opt_gui);
-        %
-    end
-    %
     % C3PO ray tracing
     %
     sd = pwd;
     cd(workdir);
-    wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,waveparam,fitparam,rayparam,wavedisplay,C3POparam);
+    wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam);
     cd(sd);
     %
     wave.info.type = 'RT';
     wave.info.RT = 'C3PO';
     wave.info.ftype = ftype;
     %
-    s_opt = input_dke_yp('Do you want to generate an equivalent make_wave script? [y/n]','n',{'y','n'},'',[1,1]);
+    s_opt = iselect_jd({'No','Yes'},'Do you want to generate an equivalent make_wave script ?',opt_gui,select.style,1) - 1;
     %
     if s_opt == 'y',
         % 
@@ -528,7 +457,7 @@ if w_opt == 0; % C3PO Calculation
         %
     end
     %
-    n_rf_list = waveparam.n_rf_list;
+    n_rf_list = wavestruct.waveparam.n_rf_list;
     %
 elseif w_opt == 1,% TORAY calculations
     %
