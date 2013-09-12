@@ -1,4 +1,4 @@
-function [asipp] = path_ASIPP_SHENMA(luke_ref)
+function [dkepath] = path_ASIPP_SHENMA(luke_ref)
 %
 % path definitions for ASIPP cluster SHENMA (Heifei, China) 
 %
@@ -43,9 +43,7 @@ dkepath.bjding(1).temppathroot = '/local/';%Absolute root directory path adress 
 dkepath.bjding(1).mex800 = [dkepath.bjding(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB800/'];
 %
 dkepath.bjding(1).compiler_opt.copts.mex800 = '';
-dkepath.bjding(1).compiler_opt.fopts.mex800 = 'FC=''ifort''';
-%dkepath.bjding(1).compiler_opt.helmex.mex800 = ['-L',dkepath.bjding(1).local_root,'lapack-3.4.2/ -llapack -lrefblas'];% Optional argument for helmex compilation
-%dkepath.bjding(1).compiler_opt.helmex.mex800 = ['-L',dkepath.bjding(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.bjding(1).compiler_opt.fopts.mex800 = 'FC=''gfortran''';
 dkepath.bjding(1).compiler_opt.helmex.mex800 = NaN;% Optional argument for helmex compilation
 %
 %Where MUMPS matrix solver is stored (MEX function)
@@ -84,9 +82,7 @@ dkepath.PEYSSON(1).temppathroot = '/local/';%'/scratch/';%Absolute root director
 dkepath.PEYSSON(1).mex800 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB800/'];
 %
 dkepath.PEYSSON(1).compiler_opt.copts.mex800 = '';
-dkepath.PEYSSON(1).compiler_opt.fopts.mex800 = 'FC=''ifort''';
-%dkepath.PEYSSON(1).compiler_opt.helmex.mex800 = ['-L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2/ -llapack -lrefblas'];% Optional argument for helmex compilation
-%dkepath.PEYSSON(1).compiler_opt.helmex.mex800 = ['-L',dkepath.PEYSSON(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.PEYSSON(1).compiler_opt.fopts.mex800 = 'FC=''gfortran''';
 dkepath.PEYSSON(1).compiler_opt.helmex.mex800 = NaN;% Optional argument for helmex compilation
 %
 %Where MUMPS matrix solver is stored (MEX function)
