@@ -128,14 +128,9 @@ end
 % nested convergence on the wave absorption and explicit collision
 % integral term must be obtained.
 %
-XXsinksource_nrenorm = XXsinksource;
-nre_init = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr); %0.001*ones(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-nre = nre_init; 
-%
 for itn = itn0:nit,
     %
     dkeparam_out.dtn = dtn_list(itn);
-    XXsinksource = XXsinksource_nrenorm.*nre;
     %
     if itn == 1,
         XXfin = XXfinit;
@@ -300,11 +295,8 @@ for itn = itn0:nit,
             fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
             XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
             ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
-            ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor); %Calculate moments of the distribution function
+            ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor);%Calculate moments of the distribution function
     end
-    %
-    nbound = permute(repmat(xRR_fsav{itn}*dtn_list(itn),[gridDKE.npn,1,gridDKE.nmhu]),[1,3,2]); % nr of electron crossing pmax
-    nre = nre + nbound;
     %
     if nit > 1 && dkedisplay.display_mode >= 1,
         figure(Fig_TimeIter),
