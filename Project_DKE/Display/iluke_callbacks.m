@@ -517,6 +517,9 @@ switch action
         %
         % saving wave structure
         %
+        set(lukeobj.infotext.handle,'visible','off');
+        set(lukeobj.infostr.handle,'visible','off');
+        %
         sbase = 'WAVE';
         filestr = [sbase,'_*.mat'];
         %
@@ -527,7 +530,7 @@ switch action
             s{iw} = ['Wave # ',num2str(iw),' : ',waves{iw}.id];
         end
         %    
-        iw = iselect_jd(s,titletext,true,select.style,1);
+        iw = iselect_jd(s,titletext,lukeobj.infopanel.handle,style,1);
         %
         wave = waves{iw};
         % 
@@ -542,9 +545,15 @@ switch action
             %
         end  
         %
+        set(lukeobj.infotext.handle,'visible','on');
+        set(lukeobj.infostr.handle,'visible','on');
+        %
     case 'waveclear'
         %
         % clearing wave structure
+        %
+        set(lukeobj.infotext.handle,'visible','off');
+        set(lukeobj.infostr.handle,'visible','off');
         %
         titletext = 'Select the wave structure to clear:';   
         nw = length(waves);
@@ -553,9 +562,17 @@ switch action
             s{iw} = ['Wave # ',num2str(iw),' : ',waves{iw}.id];
         end
         %    
-        iw = iselect_jd(s,titletext,true,select.style,1);
+        iw = iselect_jd(s,titletext,lukeobj.infopanel.handle,style,1);
         %
         waves(iw) = [];
+        if isempty(waves),
+            status.waves = 0;
+        end
+        %
+        lukeobj.infotext.string = iluke_waveinfo(waves);
+        %
+        set(lukeobj.infotext.handle,'visible','on');
+        set(lukeobj.infostr.handle,'visible','on');
         %
     case 'wavedisp'
         %
@@ -592,9 +609,9 @@ switch action
         %   
         ngraphs = length(graphs);
         %
-        graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,1,'radial diffusion','transpfaste');
-        graphs(end+1) = iluke_graphs(lukeobj.plot2.handle,1,'radial pinch','transpfaste');% includes legend
-        graphs(end+1) = iluke_graphs(lukeobj.plot3.handle,1,'radial pinch','transpfaste');% includes legend
+        graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,1,'poloidal view','waves');
+        graphs(end+1) = iluke_graphs(lukeobj.plot2.handle,1,'top view','waves');% includes legend
+        graphs(end+1) = iluke_graphs(lukeobj.plot3.handle,1,'linear damping','waves');% includes legend
         %
         lukeobj.plot1.gindex = ngraphs + 1;
         lukeobj.plot2.gindex = ngraphs + 2;
