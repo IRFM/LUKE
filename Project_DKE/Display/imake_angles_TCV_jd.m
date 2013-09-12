@@ -1,4 +1,4 @@
-function angles = imake_angles_TCV_jd(data,shotnum,l_opt,force_mode,angles)
+function angles = imake_angles_TCV_jd(data,shotnum,l_opt,force_mode,angles,opt_gui,style)
 %
 % This function takes the data from TCV data file or user input
 % and creates the angles structure
@@ -54,7 +54,7 @@ if ~isempty(data),
             return
         end
         %    
-        l_opt = launch_list(iselect_jd(s,titletext,true,struct,1));
+        l_opt = launch_list(iselect_jd(s,titletext,opt_gui,style,1));
         %
     end
     %
@@ -69,7 +69,7 @@ if ~isempty(data),
     angles_mod.freq = angles.freq/1e9;
     angles_mod.P0 = angles.P0/1e3;
     if force_mode == 0,
-        angles_mod = imod_struct_jd(angles_mod,'angles',1,true,struct,struct);
+        angles_mod = imod_struct_jd(angles_mod,'angles',1,opt_gui,struct,style);
     end
     %
     freq_new = angles_mod.freq*1e9;
