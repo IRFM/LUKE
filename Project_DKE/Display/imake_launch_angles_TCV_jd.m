@@ -59,4 +59,6 @@ launch.yP_L = angles.P0;
 launch.w0 = angles.w0;
 launch.z_L = angles.z_L;
 %
+launch.dNpar0 = NaN;%Calculated from waist and focal point
+%
 launch.angles = angles;
