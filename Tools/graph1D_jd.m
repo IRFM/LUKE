@@ -27,14 +27,16 @@ if nargin < 16
     ax = gca;
 end
 if nargin < 15
-    font.fontsize = 20;
+    font.fontsize = 20+14i;
     font.fontname = 'Times';%'Courier';
 elseif ~isstruct(font),
-    font.fontsize = font;
+    fontsize = font;
+    font = struct;
+    font.fontsize = fontsize;
     font.fontname = 'Times';%'Courier';
 else
     if ~isfield(font,'fontsize'),
-        font.fontsize = 20;
+        font.fontsize = 20+14i;
     end
     if ~isfield(font,'fontname'),
         font.fontname = 'Times';%'Courier';
@@ -160,16 +162,13 @@ if ~isnan(ylim)
 end
 %
 if ~isempty(xlab),
-    xl = xlabel(xlab);
-    set(xl,'fontsize',real(font.fontsize),'fontname',font.fontname,'parent',ax);
+    xl = xlabel(ax,xlab,'fontsize',real(font.fontsize),'fontname',font.fontname);
 end
 if ~isempty(ylab),
-    yl = ylabel(ylab);
-    set(yl,'fontsize',real(font.fontsize),'fontname',font.fontname,'parent',ax);
+    yl = ylabel(ax,ylab,'fontsize',real(font.fontsize),'fontname',font.fontname);
 end
 if ~isempty(tit),
-    tl = title(tit);
-    set(tl,'fontsize',real(font.fontsize),'fontname',font.fontname,'parent',ax);
+    tl = title(ax,tit,'fontsize',real(font.fontsize),'fontname',font.fontname);
 end
 if iscell(leg) || ~any(isnan(leg)),
     Nleg = length(leg);
