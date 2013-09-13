@@ -37,7 +37,7 @@ dkepath.default = 'bjding';
 %--------------------------------------------------------------------------------------------------------
 %
 dkepath.bjding(1).luke_root = ['/home/bjding/',luke_ref,'/'];
-dkepath.bjding(1).local_root = '/home/bjding/Packages/';
+dkepath.bjding(1).local_root = '/home/PEYSSON/Packages/';
 dkepath.bjding(1).temppathroot = '/local/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.bjding(1).mex800 = [dkepath.bjding(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB800/'];
@@ -48,7 +48,7 @@ dkepath.bjding(1).compiler_opt.helmex.mex800 = NaN;% Optional argument for helme
 %
 %Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.bjding(1).MUMPS.mex800 = [dkepath.bjding(1).local_root,'MUMPS_4.10.0/MATLAB800'];%MUMPS_4.10.0 not compatible with matlab 8.0
+dkepath.bjding(1).MUMPS.mex800 = [dkepath.bjding(1).local_root,'MUMPS_4.10.0/MATLAB800'];
 %
 %--------------------------- Distributed computing -----------------------------
 %
@@ -86,7 +86,7 @@ dkepath.PEYSSON(1).compiler_opt.fopts.mex800 = 'FC=''gfortran''';
 dkepath.PEYSSON(1).compiler_opt.helmex.mex800 = NaN;% Optional argument for helmex compilation
 %
 %Where MUMPS matrix solver is stored (MEX function)
-dkepath.PEYSSON(1).MUMPS.mex800 = [dkepath.PEYSSON(1).local_root,'MUMPS_4.10.0/MATLAB800'];%MUMPS_4.9.2 not compatible with matlab 7.5
+dkepath.PEYSSON(1).MUMPS.mex800 = [dkepath.PEYSSON(1).local_root,'MUMPS_4.10.0/MATLAB800'];
 %
 %--------------------------- Distributed computing -----------------------------
 %
@@ -108,8 +108,4 @@ dkepath.PEYSSON(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','yves','PEYSS
 % macproyves (xgrid)
 %
 dkepath.PEYSSON(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','yves','PEYSSON');
-%
-%asipp.bojiangding(1).MUMPS.seq = [asipp.bojiangding(1).local_root,'PACKAGES/Bin/MUMPS/MUMPS_4.7.3_S_PGF90/dke'];
-%asipp.bojiangding(1).MUMPS.mex710 = [asipp.bojiangding(1).local_root,'PACKAGES/Bin/MUMPS/MUMPS_4.7.3_S_PGF90/MATLAB'];%Where MUMPS matrix solver is stored (MEX function)
-%asipp.bojiangding(1).compiler_opt.helmex = '-L/home/bojiangding/PACKAGES/Bin/GotoBLAS -lgoto';% Optional arguments for compilation 
-%
+
