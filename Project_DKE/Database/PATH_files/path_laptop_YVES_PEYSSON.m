@@ -93,12 +93,15 @@ macbookyves.yves(1).TSBASE.mex = [macbookyves.yves(1).luke_root,'Project_DKE/Dat
 % any of the remote computers listed below.
 %
 macbookyves.yves(1).remote(1) = remote_laptop_YVES_PEYSSON('condor','yves','yves');
+macbookyves.yves(1).remote(1).host = '';% empty for local host
+macbookyves.yves(1).remote(1).luke_root = macbookyves.yves(1).luke_root;
+%
 macbookyves.yves(1).remote(2) = remote_laptop_YVES_PEYSSON('xgrid','yves','yves');
 macbookyves.yves(1).remote(3) = remote_macpro_YVES_PEYSSON('condor','yves','yves');
 macbookyves.yves(1).remote(4) = remote_macpro_YVES_PEYSSON('xgrid','yves','yves');
-macbookyves.yves(1).remote(5) = remote_CEA_ANDROMEDE('pbs','yves','yves');
+macbookyves.yves(1).remote(5) = remote_ASIPP_SHENMA('torque','yves','yves');
 macbookyves.yves(1).remote(6) = remote_CEA_CEPHEE('pbs','yves','yves');
-macbookyves.yves(1).remote(7) = remote_ASIPP_SHENMA('torque','yves','yves');
+macbookyves.yves(1).remote(7) = remote_CEA_ANDROMEDE('pbs','yves','yves');
 %macbookyves.yves(1).remote(8) = remote_CEA_PLEIONE('pbs','yves','yves');
 %macbookyves.yves(1).remote(9) = remote_CEA_SATURNE('sun','yves','yves');
 %macbookyves.yves(1).remote(10) = remote_CEA_TIMDESKTOP('torque','yves','yves');
