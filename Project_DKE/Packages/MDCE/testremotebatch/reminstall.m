@@ -47,8 +47,11 @@ remotehome(double(remotehome) == 10) = [];% remove return character
 % check if directories exist - create them if needed
 %
 remotedirtest_jd(remotehost,remotelogname,[remotehome,filesep,'remotebatchtest/'])
+pause(2);
 remotedirtest_jd(remotehost,remotelogname,[remotehome,filesep,'remotebatchtest/bin/'])
+pause(2);
 remotedirtest_jd(remotehost,remotelogname,[remotehome,filesep,'remotebatchtest/mat/'])
+pause(2);
 %
 % copy test files into directory
 %
@@ -124,7 +127,13 @@ function remotefilecopy_jd(remotehost,remotelogname,filename,location)
     %
     % copy file into destimation
     %
-    remotecmd = ['chmod a+x ',location,filename];
+    %
+    ifilesep = strfind(filename,filesep);
+    if ifilesep > 0,
+        remotecmd = ['chmod a+x ',location,filename(ifilesep(end)+1:end)];%extract filename only, not the path
+    else
+        remotecmd = ['chmod a+x ',location,filename];
+    end
     %
     if ~isempty(remotehost),%remote calculation 
         %
