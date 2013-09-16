@@ -134,7 +134,6 @@ nre = nre_init;
 %
 for itn = itn0:nit,
     %
-    keyboard
     dkeparam_out.dtn = dtn_list(itn);
     XXsinksource = XXsinksource_nrenorm.*nre;
     %
