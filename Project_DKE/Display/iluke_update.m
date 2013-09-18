@@ -17,15 +17,25 @@ if status.equil == 0,
     status.ripple = -1;
     status.waves = -1;
     status.output = -1;
+    lukeobj.lukeid.string = '';
+    %
     if status.external == 0,
-        lukeobj.infotext.string = infostrs.startup;
+        lukeobj = iluke_info(lukeobj,'startup');% info display
     else
-        lukeobj.infotext.string = infostrs.data;
+        lukeobj = iluke_info(lukeobj,'data');% info display
     end
+end
+
+if isempty(external) && isempty(equil)
+    lukeobj.tokamak.string = '< empty >';
+    lukeobj.shotnum.string = '< empty >';
+    lukeobj.shotime.string = '< empty >';
 end
 
 if status.output < 1,
     status.hxr = -1;
+else
+    status.hxr = 0;
 end
 
 %
@@ -106,12 +116,89 @@ lukeobj.graph1sel.string = graphsel_string;
 lukeobj.graph2sel.string = graphsel_string;
 lukeobj.graph3sel.string = graphsel_string;
 %
+clear plothandles plotindices graphsel_string igraph iplot ich ngraphs
+%
 lukeobj.graph1sel.value = 1 + lukeobj.plot1.gindex;
 lukeobj.graph2sel.value = 1 + lukeobj.plot2.gindex;
 lukeobj.graph3sel.value = 1 + lukeobj.plot3.gindex;
 %
 cleartags = {};
-    
+%
+if lukeobj.plot1.gindex > 0,
+    lukeobj.graph1save.state = 'on';
+    lukeobj.graph1print.state = 'on';
+else
+    lukeobj.graph1save.state = 'off';
+    lukeobj.graph1print.state = 'off';
+end    
+if lukeobj.plot2.gindex > 0,
+    lukeobj.graph2save.state = 'on';
+    lukeobj.graph2print.state = 'on';
+else
+    lukeobj.graph2save.state = 'off';
+    lukeobj.graph2print.state = 'off';
+end    
+if lukeobj.plot3.gindex > 0,
+    lukeobj.graph3save.state = 'on';
+    lukeobj.graph3print.state = 'on';
+else
+    lukeobj.graph3save.state = 'off';
+    lukeobj.graph3print.state = 'off';
+end    
+%
+% REMOTE
+%
+nrem = length(dkepath.remote);
+lukeobj.remote.select.string = cell(1,1 + nrem);
+lukeobj.remote.select.string{1} = 'Local interactive calculation';
+%
+for irem = 1:nrem,
+    %
+    hoststr = dkepath.remote(irem).host;
+    if iscell(hoststr),
+        hoststr = hoststr{1};
+    end
+    if isempty(hoststr),
+        hoststr = 'Local batch calculation';
+    end
+    %
+    cmdstr = dkepath.remote(irem).cmd;
+    if iscell(cmdstr),
+        cmdstr = cmdstr{1};
+    end
+    cmdstr = cmdstr(1:min([end,find(cmdstr == ' ' | cmdstr == '_',1,'first') - 1]));
+    %
+    lukeobj.remote.select.string{irem + 1} = [hoststr,' : ',cmdstr];
+    %
+end
+%
+clear irem nrem cmdstr hoststr
+%
+if lukeobj.remote.select.value > 1,
+    lukeobj.remote.timeout.state = 'on';
+else
+    lukeobj.remote.timeout.state = 'off';
+end
+
+%
+% WAVESTRUCTS
+%
+nw = length(wavestructs);
+lukeobj.wavestruct.select.string = cell(1,nw);
+%
+for iw = 1:nw,
+    %
+    lukeobj.wavestruct.select.string{iwavestruct} = wavestructs{iw}.id;
+    %
+end
+%
+if nw > 0 && strcmp(lukeobj.wavestruct.visible,'on'),
+    lukeobj.wavestruct.select.visible = 'on';
+end
+%
+clear iw nw
+%
+
 %
 % UPDATE OBJECTS
 %
