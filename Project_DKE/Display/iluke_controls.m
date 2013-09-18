@@ -1,39 +1,35 @@
 function s = iluke_controls(h,s,sname,list,titlestring,vertpos,style)
 
-fieldnames = {'title','import','make','load','save','run','clear','disp','text'};
-strings = {titlestring,'Import','New','Load','Save','Run','Clear','Disp',''};
-styles = {'Text','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','Text'};
-positionindices = [1,2,2,3,4,4,5,6,7];
-%
-s.(sname) = struct;
-for ilist = 1:length(list),
-    s.(sname).(fieldnames{list(ilist)}) = struct;
-end
+fieldnames = {'title','import','make','modify','load','save','run','clear','reset','test','disp','text'};
+strings = {titlestring,'Import','New','Modify','Load','Save','Run','Clear','Reset','Test','Disp',''};
+styles = {'Text','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','Text'};
 %
 butwidthcorr = style.butwidth + style.buthsep;
 titlewidthcorr = style.buthsep + (style.titlewidth + style.buthsep);
 infowidth = style.panelwidth - titlewidthcorr - 5*butwidthcorr - style.buthsep;
 %
-for ifield = 1:length(fieldnames),
-    %
-    fname = fieldnames{ifield};
-    fstyle = styles{ifield};
-    fstring = strings{ifield};
-    positionindex = positionindices(ifield);
-    %
-    if positionindex == 1,%title
-        if ~isfield(s.(sname),'run'),% mode = 0
-            fposition = [style.buthsep,vertpos + style.textheightcorr,style.titlewidth,style.textheight];
-        else % mode = 1
-            fposition = [style.buthsep,vertpos + style.textheightcorr,titlewidthcorr + butwidthcorr + style.butwidth,style.textheight];
+s.(sname) = struct;
+for ilist = 1:length(list),
+    if ~isempty(list{ilist}),
+        fname = list{ilist};
+        s.(sname).(fname) = struct;
+        %
+        ifield = strcmp(fieldnames,fname);
+        %
+        fstyle = styles{ifield};
+        fstring = strings{ifield};
+        positionindex = ilist;
+        %
+        if positionindex == 1,%title
+            next = find(~strcmp(list(2:end),''),1,'first') - 1;% number of button space occupied by title
+            fposition = [style.buthsep,vertpos + style.textheightcorr,style.titlewidth + next*butwidthcorr,style.textheight];
+        elseif positionindex == 7,%text
+            next = 6 - find(~strcmp(list(1:end-1),''),1,'last');% number of button space occupied by title
+            fposition = [titlewidthcorr + (positionindex - 2 - next)*butwidthcorr,vertpos + style.textheightcorr,infowidth +  next*butwidthcorr,style.textheight];
+        else %pushbutton
+            fposition = [titlewidthcorr + (positionindex - 2)*butwidthcorr,vertpos,style.butwidth,style.butheight];
         end
-    elseif positionindex == 7,%text
-        fposition = [titlewidthcorr + (positionindex - 2)*butwidthcorr,vertpos + style.textheightcorr,infowidth,style.textheight];
-    else %pushbutton
-        fposition = [titlewidthcorr + (positionindex - 2)*butwidthcorr,vertpos,style.butwidth,style.butheight];
-    end
-    %
-    if isfield(s.(sname),fname),
+        %
         s.(sname).(fname).handle = uicontrol(h,'Style',fstyle,'String',fstring,'Position',fposition,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
         if strcmp(fstyle,'pushbutton'),
             set(s.(sname).(fname).handle,'Callback',['action = ''',sname,fname,''';iluke_callbacks;']);
