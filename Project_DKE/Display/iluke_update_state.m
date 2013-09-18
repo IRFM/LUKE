@@ -1,4 +1,4 @@
-function iluke_update_state(s)
+function iluke_update_state(s,visible)
 %
 % This function recursively update the state of objects
 %
@@ -13,13 +13,24 @@ if isfield(s,'handle'),
     elseif isfield(s,'value')
         set(s.handle,'Value',s.value);
     end
+    if isfield(s,'visible')
+        set(s.handle,'Visible',s.visible);
+    elseif nargin > 1
+        set(s.handle,'Visible',visible);
+    end
 elseif isstruct(s),
     %
     fnames = fieldnames(s);
     %
     for ifield = 1:length(fnames),
         %
-        iluke_update_state(s.(fnames{ifield}))
+        if isfield(s,'visible'),
+            iluke_update_state(s.(fnames{ifield}),s.visible)
+        elseif nargin > 1
+            iluke_update_state(s.(fnames{ifield}),visible)
+        else
+            iluke_update_state(s.(fnames{ifield}))
+        end
         %
     end
 end
