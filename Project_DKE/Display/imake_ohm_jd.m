@@ -22,7 +22,6 @@ select.style.textwidth = 420;
 %
 ohm = '';
 %
-keyboard
 if ~isempty(external),
     %
     titletext = 'For the OHMIC field :';      
