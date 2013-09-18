@@ -442,7 +442,9 @@ if w_opt == 0; % C3PO Calculation
     %
     sd = pwd;
     cd(workdir);
+    %
     wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam);
+    %
     cd(sd);
     %
     wave.info.type = 'RT';
