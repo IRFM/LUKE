@@ -5,7 +5,7 @@
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clear all
-display_id = 'NO_DISPLAY';%Set here the name (identifier) of the display parameters
+dkedisplay.id = 'NO_DISPLAY';%Set here the name (identifier) of the display parameters
 %
 dkedisplay.psin_display = NaN;%Approximate radial position in poloidal flux coordinate at which results are displayed if display.display_mode >= 1 [1,1]. Not used if NaN
 dkedisplay.rho_display = 0.5;%Approximate radial position at which results are displayed if display.display_mode >= 1 [1,1]. Not used if NaN
@@ -20,4 +20,4 @@ dkedisplay.auto_mode = 0;%(0): Interactive mode for multiple radius output displ
 %
 dkedisplay.mdce = 0;%Display warning when the Distributed Computing Environment is enabled (0 otherwise)
 %
-eval(['save DISPLAY_',display_id,'.mat dkedisplay']);
+eval(['save DISPLAY_',dkedisplay.id,'.mat dkedisplay']);
