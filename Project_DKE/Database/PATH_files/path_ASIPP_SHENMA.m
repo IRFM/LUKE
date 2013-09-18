@@ -38,7 +38,7 @@ dkepath.default = 'bjding';
 %
 dkepath.bjding(1).luke_root = ['/home/bjding/',luke_ref,'/'];
 dkepath.bjding(1).local_root = '/home/PEYSSON/Packages/';
-dkepath.bjding(1).temppathroot = '/local/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.bjding(1).temppathroot = '/scratch/bjding/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.bjding(1).mex800 = [dkepath.bjding(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB800/'];
 %
@@ -77,7 +77,7 @@ dkepath.bjding(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','bojiang','bjdi
 %
 dkepath.PEYSSON(1).luke_root = ['/home/PEYSSON/',luke_ref,'/'];
 dkepath.PEYSSON(1).local_root = '/home/PEYSSON/Packages/';
-dkepath.PEYSSON(1).temppathroot = '/local/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.PEYSSON(1).temppathroot = '/scratch/PEYSSON/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.PEYSSON(1).mex800 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB800/'];
 %
