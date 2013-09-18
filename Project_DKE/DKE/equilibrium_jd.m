@@ -1,4 +1,4 @@
-function [equilDKE] = equilibrium_jd(equil,radialDKE,display,method,mfactor,axs,font)
+function [varargout] = equilibrium_jd(equil,radialDKE,display,method,mfactor,axs,font)
 %
 %   This function interpolates the equilibrium data on the radial grid.
 %
@@ -710,6 +710,10 @@ equilDKE.xdA_dke = xdA_dke;
 %
 if isfield(equil,'equil_fit'),
     equilDKE.equil_fit = equil.equil_fit;
+end
+%
+if nargout >= 1,
+    varargout{1} = equilDKE;
 end
 
 
