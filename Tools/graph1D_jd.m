@@ -1,5 +1,5 @@
-function [ax] = graph1D_jd(x,y,logx,logy,xlab,ylab,tit,leg,xlim,ylim,style,marker,color,width,font,ax,red,lspace,bspace,eym,eyp,exm,exp);
-
+function [ax] = graph1D_jd(x,y,logx,logy,xlab,ylab,tit,leg,xlim,ylim,style,marker,color,width,font,ax,red,lspace,bspace,eym,eyp,exm,exp)
+%
 if nargin < 22
     exm = NaN;
     exp = NaN;
@@ -170,7 +170,8 @@ end
 if ~isempty(tit),
     tl = title(ax,tit,'fontsize',real(font.fontsize),'fontname',font.fontname);
 end
-if iscell(leg) || ~any(isnan(leg)),
+%
+if iscell(leg) | ~any(isnan(leg)),
     Nleg = length(leg);
     if iscell(leg) && Nleg > 2 && strcmp(leg(Nleg - 1),'Location'),
         lg = legend(ax,leg(1:Nleg - 2),'location',leg{Nleg});
