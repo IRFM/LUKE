@@ -809,13 +809,15 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %			
                     if ~isempty(fileids.dkepath) && exist([paths.dkepath,'PATH_',fileids.dkepath,'.mat'],'file'),
                         %
-                        dkepath = load_structures_yp('dkepath',fileids.dkepath,paths.dkepath);
+                        if exist('dkepath',var)
+                            dkepath = load_structures_yp('dkepath',fileids.dkepath,paths.dkepath);
+                        end
                         %
                     else
                         %
                         status.dkepath = 0;
                         %
-                        [dkepath,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepath,paths,fileids,status,opt_gui);
+                        [dkepath1,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepath,paths,fileids,status,opt_gui);
                         %
                     end
                     %
@@ -1327,15 +1329,41 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 % CHECK IF THERE IS A BATCH RUN OF LUKE
                 %
-                if ~isempty(luke_job) && input_dke_yp(['-----> There is a pending remote LUKE batch run.\n',...
+                if ~isempty(luke_job) && input_dke_yp(['-----> There is a pending remote LUKE batch run (time ID: ',luke_job.timeid,').\n',...
                         'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
                     %
-                    lukestructs = luke_job;
+                    lukestructs.job = luke_job;
+                    %                
+                    if ~isfield(dkepath,'remnum'),
+                        dummydkepath = load_structures_yp('dkepath','','');
+                        remnum = input_dke_yp('WARNING: The remote number has not been saved. Give it for the machine on which the simulations are supposed to have been launched : ',1,[1:length(dummydkepath.remote)]);
+                        clear dummydkepath;
+                    end
+                    %
+                    flag_runluke = 0;
                     %
                 else
                     %
                     % RUN LUKE
-                    %    
+                    %
+                    if ~isempty(luke_job)
+                        if input_dke_yp(['-----> There is a pending remote LUKE batch run (time ID: ',luke_job.timeid,').\n',...
+                        'Do you want to run nevertheless a new job (if yes, the previous is lost if active) (y/n)'],'y',{'y','n'}) == 'y',
+                            flag_runluke = 1;
+                            %
+                            delete([luke_job.localdatapath,luke_job.save_id]);
+                            disp(['-----> The file ',luke_job.save_id,' has been deleted locally. Please do it manually on the remote computer in the directory ',luke_job.remotedatapath]);
+                            %
+                        else
+                            flag_runluke = 0;
+                        end
+                    else
+                        flag_runluke = 1;
+                    end
+                end
+                %
+                if flag_runluke == 1,
+                    %
                     if isempty(dkepath) || isempty(dkeparam) || isempty(equil),
                         disp('-----> the structures dkepath, dkeparam and equil must exist to run LUKE.');
                         continue
@@ -1412,53 +1440,54 @@ function irunluke_jd(basestr,signs,opt_gui)
                     lukestructs.ripple = ripple;
                     %
                     dkepath.remnum = c_opt;
-                    %
                 end
                 %
-                lukestructs = run_lukert(lukestructs,dkepath);
-                %
-                if isfield(lukestructs,'output'),%job was run successfully
+                if exist('lukestructs','var'),
+                    lukestructs = run_lukert(lukestructs,dkepath);
                     %
-                    disp('LUKE run completed');
-                    %
-                    output = lukestructs.output;
-                    %
-                    status.output = 1;
-                    status.data = 2;
-                    %
-                elseif isfield(lukestructs,'err'),%job failed
-                    %
-                    disp('Remote LUKE run failed for the following reason :');
-                    %
-                    if ischar(lukestucts.err),
-                        disp(lukestucts.err)
-                    else
-                        for ierr = 1:length(lukestucts.err),
-                            disp(lukestucts.err{ierr})
+                    if isfield(lukestructs,'output'),%job was run successfully
+                        %
+                        disp('LUKE run completed');
+                        %
+                        output = lukestructs.output;
+                        %
+                        status.output = 1;
+                        status.data = 2;
+                        %
+                    elseif isfield(lukestructs,'err'),%job failed
+                        %
+                        disp('Remote LUKE run failed for the following reason :');
+                        %
+                        if ischar(lukestructs.err),
+                            disp(lukestructs.err)
+                        else
+                            for ierr = 1:length(lukestructs.err),
+                                disp(lukestructs.err{ierr})
+                            end
                         end
+                        %
+                    elseif isfield(lukestructs,'job'),%job running, to be checked later
+                        %
+                        disp('LUKE run running.');
+                        %
+                        luke_job = lukestructs.job;
+                        %
+                        output = '';
+                        %
+                        status.output = 0;
+                        status.data = 2;
+                        %
+                    else
+                        %
+                        error('LUKE output not recognized')
+                        %
                     end
                     %
-                elseif isfield(lukestructs,'job'),%job running, to be checked later
-                    %
-                    disp('LUKE run running.');
-                    %
-                    luke_job = lukestructs.job;
-                    %
-                    output = '';
-                    %
-                    status.output = 0;
-                    status.data = 2;
-                    %
-                else
-                    %
-                    error('LUKE output not recognized')
-                    %
-                end
-                %
-                clear lukestructs
-                %	    
-                if status.output == 1 && status.data == 2 && input_dke_yp('--> Do you want to update the waves structures with LUKE absorption (y/n)','y',{'y','n'}) == 'y',
-                    waves = output.dke_out.waves;
+                    clear lukestructs
+                    %	    
+                    if status.output == 1 && status.data == 2 && input_dke_yp('--> Do you want to update the waves structures with LUKE absorption (y/n)','y',{'y','n'}) == 'y',
+                        waves = output.dke_out.waves;
+                    end
                 end
                 %
             elseif isel < 0 && status.data == 2,
