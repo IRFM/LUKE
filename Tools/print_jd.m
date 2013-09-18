@@ -24,7 +24,7 @@ if isnan(savedir),
     savedir = './figures';
 end
 if ~isnan(fignum),
-    figure(fignum)
+%     figure(fignum)
 else
     fignum = get(0,'currentfigure');
 end
@@ -39,7 +39,7 @@ set(gca, 'XTickMode','manual');
 set(gca, 'YTickMode','manual');
 set(gca, 'ZTickMode','manual');
 %
-if opt >= 0 & opt <= 1,
+if opt >= 0 && opt <= 1,
     print
 end
 %
@@ -50,14 +50,17 @@ if opt >= 1,
     if exist(savedir,'dir') ~= 7
         mkdir(savedir)
     end
-    wd = pwd;
-    cd(savedir)
-    eval(['print -depsc -loose -r',num2str(res),' ',savename,'.eps']); 
-    saveas(gcf,[savename,'.fig'],'fig')
+%     wd = pwd;
+%     cd(savedir)
+    print(fignum,'-depsc','-loose',['-r',num2str(res)],[savedir,savename,'.eps']);
+%     eval(['print -depsc -loose -r',num2str(res),' ',savename,'.eps']); 
+    saveas(fignum,[savedir,savename,'.fig'],'fig')
     if strcmp(computer,'PCWIN'),
-        eval(['print -dmeta -r',num2str(res),' ',savename,'.emf']); 
+%         eval(['print -dmeta -r',num2str(res),' ',savename,'.emf']); 
+        print(fignum,'-dmeta',['-r',num2str(res)],[savedir,savename,'.emf']);
     else
-        eval(['print -dpng -r',num2str(res),' ',savename,'.png']);
+%         eval(['print -dpng -r',num2str(res),' ',savename,'.png']);
+        print(fignum,'-dpng',['-r',num2str(res)],[savedir,savename,'.png']);
         %eval(['print -djpeg90 -r',num2str(res),' ',savename,'.jpg']); 
     end    
     %
@@ -65,11 +68,11 @@ if opt >= 1,
     % readable by LyX word TeX processor
     %
     if strcmp(computer,'MAC'),
-        eval(['!/Applications/Edition/TeX/macghostview/bin/eps2eps ',savename,'.eps temp_',savename,'.eps'])
-        eval(['!/Applications/Edition/TeX/macghostview/bin/eps2eps temp_',savename,'.eps ',savename,'.eps'])
-        eval(['delete temp_',savename,'.eps']) 
+        eval(['!/Applications/Edition/TeX/macghostview/bin/eps2eps ''',savedir,savename,'.eps'' ''temp_',savedir,savename,'.eps'''])
+        eval(['!/Applications/Edition/TeX/macghostview/bin/eps2eps ''temp_',savedir,savename,'.eps'' ''',savedir,savename,'.eps'''])
+        eval(['delete ''temp_',savedir,savename,'.eps''']) 
     end
     %
-    cd(wd)
+%     cd(wd)
 end
 
