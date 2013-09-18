@@ -1329,38 +1329,42 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 % CHECK IF THERE IS A BATCH RUN OF LUKE
                 %
-                if ~isempty(luke_job) && input_dke_yp(['-----> There is a pending remote LUKE batch run (time ID: ',luke_job.timeid,').\n',...
-                        'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
-                    %
-                    lukestructs.job = luke_job;
-                    %                
-                    if ~isfield(dkepath,'remnum'),
-                        dummydkepath = load_structures_yp('dkepath','','');
-                        remnum = input_dke_yp('WARNING: The remote number has not been saved. Give it for the machine on which the simulations are supposed to have been launched : ',1,[1:length(dummydkepath.remote)]);
-                        clear dummydkepath;
-                    end
-                    %
-                    flag_runluke = 0;
-                    %
+                if ~exist([luke_job.localdatapath,luke_job.save_id]) & ~isempty(luke_job),
+                    flag_runluke = 1;
                 else
-                    %
-                    % RUN LUKE
-                    %
-                    if ~isempty(luke_job)
-                        if input_dke_yp(['-----> There is a pending remote LUKE batch run (time ID: ',luke_job.timeid,').\n',...
-                        'Do you want to run nevertheless a new job (if yes, the previous is lost if active) (y/n)'],'y',{'y','n'}) == 'y',
-                            flag_runluke = 1;
-                            %
-                            delete([luke_job.localdatapath,luke_job.save_id]);
-                            disp(['-----> The file ',luke_job.save_id,' has been deleted locally. Please do it manually on the remote computer in the directory ',luke_job.remotedatapath]);
-                            %
-                        else
-                            flag_runluke = 0;
+                    if ~isempty(luke_job) && input_dke_yp(['-----> There is a pending remote LUKE batch run (time ID: ',luke_job.timeid,').\n',...
+                            'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
+                        %
+                        lukestructs.job = luke_job;
+                        %                
+                        if ~isfield(dkepath,'remnum'),
+                            dummydkepath = load_structures_yp('dkepath','','');
+                            remnum = input_dke_yp('WARNING: The remote number has not been saved. Give it for the machine on which the simulations are supposed to have been launched : ',1,[1:length(dummydkepath.remote)]);
+                            clear dummydkepath;
                         end
+                        %
+                        flag_runluke = 0;
+                        %
                     else
-                        flag_runluke = 1;
+                        %
+                        % RUN LUKE
+                        %
+                        if ~isempty(luke_job)
+                            if input_dke_yp(['-----> There is a pending remote LUKE batch run (time ID: ',luke_job.timeid,').\n',...
+                            'Do you want to run nevertheless a new job (if yes, the previous is lost if active) (y/n)'],'y',{'y','n'}) == 'y',
+                                flag_runluke = 1;
+                                %
+                                delete([luke_job.localdatapath,luke_job.save_id]);
+                                disp(['-----> The file ',luke_job.save_id,' has been deleted locally. Please do it manually on the remote computer in the directory ',luke_job.remotedatapath]);
+                                %
+                            else
+                                flag_runluke = 0;
+                            end
+                        else
+                            flag_runluke = 1;
+                        end
                     end
-                end
+                end  
                 %
                 if flag_runluke == 1,
                     %
