@@ -2,12 +2,58 @@
 
 switch action
         %
+    case 'loadshot'
+        %
+        % loading simulation
+        %
+        sbase = 'LUKE_DATA';
+        filestr = [sbase,'_*.mat'];
+        %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
+        %
+        %
+        if filename ~= 0,
+            %
+            load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equil','ohm','transpfaste','ripple','waves','output','job','hxr','status');
+            lukeobj = conc_struct_jd(lukeobj,lukeobjmod);
+            iluke_update;
+            %
+            lukeobj.simulfile.string = filename;%[pathname,filename];
+            %
+        end  
+        %
+    case 'saveshot'
+        %
+        % saving simulation
+        %
+        sbase = 'LUKE_DATA';
+        filestr = [sbase,'_*.mat'];
+        %
+        if ~isempty(lukeobj.lukeid.string),
+            filename = [sbase,'_',lukeobj.lukeid.string,'.mat'];
+        else
+            filename = [sbase,'_',make_luke_simulid_jd(equil,ohm,transpfaste,ripple,waves),'.mat'];
+        end
+        %
+        [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
+        %
+        %
+        if filename ~= 0,
+            %
+            % select fields to save and remote subfields handle 
+            %
+            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotime','data','equil','ohm','transp','ripple','wave','luke','r5x2','param','display'});
+            lukeobjmod = rmfields_jd(lukeobjmod,{'handle','position'},1);
+            save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equil','ohm','transpfaste','ripple','waves','output','job','hxr','status');
+            %
+            lukeobj.simulfile.string = filename;%[pathname,filename];
+        end  
+        %
     case 'dataimport'
         %
         % importing external data
         %
-        set(lukeobj.infotext.handle,'visible','off');
-        set(lukeobj.infostr.handle,'visible','off');
+        lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         external = iload_externaldata_jd(dkepath,'',workdir,lukeobj.infopanel.handle,style);
         %
@@ -22,16 +68,13 @@ switch action
             %
             lukeobj.data.text.string = '< not saved >';
             %
-            lukeobj.infotext.string = infostrs.data;
-            %
             status.external = 1;
             %
             status.equil = 0;
             %
         end
         %
-        set(lukeobj.infotext.handle,'visible','on');
-        set(lukeobj.infostr.handle,'visible','on');
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'dataload'
         %
@@ -58,8 +101,6 @@ switch action
             lukeobj.shotnum.string = external.shotnum;
             lukeobj.shotime.string = external.shotime;
             lukeobj.data.text.string = filename;%[pathname,filename];
-            %
-            lukeobj.infotext.string = infostrs.data;
             %
             status.external = 1;
             %
@@ -98,8 +139,7 @@ switch action
         %
         % creating equilibrium structure
         %
-        set(lukeobj.infotext.handle,'visible','off');
-        set(lukeobj.infostr.handle,'visible','off');
+        lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         select.style = style;
         %
@@ -123,8 +163,6 @@ switch action
             %
             lukeobj.equil.text.string = '< not saved >';
             %
-            lukeobj.infotext.string = equil.info.txt;
-            %
             status.equil = 1;
             status.ohm = 0;
             status.transpfaste = 0;
@@ -133,10 +171,13 @@ switch action
             status.output = 0;
             status.data = 2;
             %
+            lukeobj.lukeid.string = '';
+            %
+            action = 'equildisp';iluke_callbacks;
+            %
         end
         %
-        set(lukeobj.infotext.handle,'visible','on');
-        set(lukeobj.infostr.handle,'visible','on');
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'equilload'
         %
@@ -157,8 +198,6 @@ switch action
             lukeobj.shotime.string = equil.shotime;
             lukeobj.equil.text.string = filename;%[pathname,filename];
             %
-            lukeobj.infotext.string = equil.info.txt;
-            %
             status.equil = 1;
             status.ohm = 0;
             status.transpfaste = 0;
@@ -166,7 +205,14 @@ switch action
             status.waves = 0;
             status.output = 0;
             status.data = 2;
+            %
+            lukeobj.lukeid.string = '';
+            %
+            action = 'equildisp';iluke_callbacks;
+            %
         end  
+        %
+        clear sbase filestr filename pathname
         %
     case 'equilsave'
         %
@@ -221,12 +267,15 @@ switch action
         lukeobj.plot2.gindex = ngraphs + 2;
         lukeobj.plot3.gindex = ngraphs + 3;
         %
+        lukeobj.infotext.string = equil.info.txt;
+        %
+        clear ngraphs newgraph1_handle newgraph2_handle newgraph3_handle  
+        %
     case 'ohmmake'
         %
         % creating ohmic structure
         %
-        set(lukeobj.infotext.handle,'visible','off');
-        set(lukeobj.infostr.handle,'visible','off');
+        lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         select.style = style;
         %
@@ -247,15 +296,16 @@ switch action
             %
             lukeobj.ohm.text.string = '< not saved >';
             %
-            lukeobj.infotext.string = ohm.info.txt;
-            %
             status.ohm = 1;
             status.data = 2;
             %
+            lukeobj.lukeid.string = '';
+            %
+            action = 'ohmdisp';iluke_callbacks;
+            %
         end
         %
-        set(lukeobj.infotext.handle,'visible','on');
-        set(lukeobj.infostr.handle,'visible','on');
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'ohmload'
         %
@@ -273,9 +323,12 @@ switch action
             %
             lukeobj.ohm.text.string = filename;%[pathname,filename];
             %
-            lukeobj.infotext.string = ohm.info.txt;
-            %
             status.ohm = 1;
+            %
+            lukeobj.lukeid.string = '';
+            %
+            action = 'ohmdisp';iluke_callbacks;
+            %
         end  
         %
     case 'ohmsave'
@@ -303,6 +356,10 @@ switch action
         ohm = '';
         status.ohm = 0;
         %
+        lukeobj.lukeid.string = '';
+        %
+        lukeobj = iluke_info(lukeobj,'output');% enable info display
+        %
     case 'ohmdisp'
         %
         % displaying ohm data
@@ -323,12 +380,13 @@ switch action
         %
         lukeobj.plot1.gindex = ngraphs + 1;
         %
+        lukeobj.infotext.string = ohm.info.txt;
+        %
     case 'transpmake'
         %
         % creating transpfaste structure
         %
-        set(lukeobj.infotext.handle,'visible','off');
-        set(lukeobj.infostr.handle,'visible','off');
+        lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         select.style = style;
         %
@@ -350,15 +408,16 @@ switch action
             %
             lukeobj.transp.text.string = '< not saved >';
             %
-            lukeobj.infotext.string = transpfaste.info.txt;
-            %
             status.transpfaste = 1;
             status.data = 2;
             %
+            lukeobj.lukeid.string = '';
+            %
+            action = 'transpdisp';iluke_callbacks;
+            %
         end
         %
-        set(lukeobj.infotext.handle,'visible','on');
-        set(lukeobj.infostr.handle,'visible','on');
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'transpload'
         %
@@ -376,9 +435,12 @@ switch action
             %
             lukeobj.transp.text.string = filename;%[pathname,filename];
             %
-            lukeobj.infotext.string = transpfaste.info.txt;
-            %
             status.transpfaste = 1;
+            %
+            lukeobj.lukeid.string = '';
+            %
+            action = 'transpdisp';iluke_callbacks;
+            %
         end  
         %
     case 'transpsave'
@@ -406,6 +468,10 @@ switch action
         transpfaste = '';
         status.transpfaste = 0;
         %
+        lukeobj.lukeid.string = '';
+        %
+        lukeobj = iluke_info(lukeobj,'output');% enable info display
+        %
     case 'transpdisp'
         %
         % displaying ohm data
@@ -430,12 +496,19 @@ switch action
         lukeobj.plot1.gindex = ngraphs + 1;
         lukeobj.plot2.gindex = ngraphs + 2;
         %
-    case 'wavemake'
+        lukeobj.infotext.string = transpfaste.info.txt;
+        %
+    case 'newwavemake'%'wavemake'
+        %
+        % show run luke pannel
+        %
+        lukeobj = iluke_info(lukeobj,'c3po');% disable info display
+        %
+    case 'wavemake'%'oldwavemake'
         %
         % creating wave structure
         %
-        set(lukeobj.infotext.handle,'visible','off');
-        set(lukeobj.infostr.handle,'visible','off');
+        lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         select.style = style;
         %
@@ -462,15 +535,13 @@ switch action
             status.waves = 1;
             status.data = 2;
             %
+            lukeobj.lukeid.string = '';
+            %
+            action = 'wavedisp';iluke_callbacks;
+            %
         end
         %
-        if ~isempty(waves),
-            lukeobj.wave.text.string = [num2str(length(waves)),' wave structures'];
-            lukeobj.infotext.string = iluke_waveinfo(waves);
-        end
-        %
-        set(lukeobj.infotext.handle,'visible','on');
-        set(lukeobj.infostr.handle,'visible','on');
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'waveload'
         %
@@ -506,19 +577,17 @@ switch action
             status.waves = 1;
             status.data = 2;
             %
-        end
-        %
-        if ~isempty(waves),
-            lukeobj.wave.text.string = [num2str(length(waves)),' wave structures'];
-            lukeobj.infotext.string = iluke_waveinfo(waves);
+            lukeobj.lukeid.string = '';
+            %
+            action = 'wavedisp';iluke_callbacks;
+            %
         end
         %
     case 'wavesave'
         %
         % saving wave structure
         %
-        set(lukeobj.infotext.handle,'visible','off');
-        set(lukeobj.infostr.handle,'visible','off');
+        lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         sbase = 'WAVE';
         filestr = [sbase,'_*.mat'];
@@ -545,15 +614,13 @@ switch action
             %
         end  
         %
-        set(lukeobj.infotext.handle,'visible','on');
-        set(lukeobj.infostr.handle,'visible','on');
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'waveclear'
         %
         % clearing wave structure
         %
-        set(lukeobj.infotext.handle,'visible','off');
-        set(lukeobj.infostr.handle,'visible','off');
+        lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         titletext = 'Select the wave structure to clear:';   
         nw = length(waves);
@@ -569,10 +636,18 @@ switch action
             status.waves = 0;
         end
         %
-        lukeobj.infotext.string = iluke_waveinfo(waves);
+        if ~isempty(iw),
+            lukeobj.lukeid.string = '';
+        end
         %
-        set(lukeobj.infotext.handle,'visible','on');
-        set(lukeobj.infostr.handle,'visible','on');
+        if ~isempty(waves),
+            lukeobj.wave.text.string = [num2str(length(waves)),' wave structure(s)'];
+            lukeobj.infotext.string = iluke_waveinfo(waves);
+        else
+            lukeobj = iluke_info(lukeobj,'output');% enable info display            
+        end
+        %
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'wavedisp'
         %
@@ -617,7 +692,87 @@ switch action
         lukeobj.plot2.gindex = ngraphs + 2;
         lukeobj.plot3.gindex = ngraphs + 3;
         %
+        lukeobj.wave.text.string = [num2str(length(waves)),' wave structure(s)'];
+        lukeobj.infotext.string = iluke_waveinfo(waves);
+        %
+    case 'lukerun'
+        %
+        % show run luke pannel
+        %
+        lukeobj = iluke_info(lukeobj,'luke');% disable info display
+        %
+        if isempty(job),
+            lukeobj.runcheck.visible = 'off';
+        end
+        %
+        if isempty(lukeobj.lukeid.string),
+            %
+            lukeobj.lukeid.string = make_luke_simulid_jd(equil,ohm,transpfaste,ripple,waves);
+            %
+        end
+        %
+    case 'lukeclear'
+        %
+        % clearing output structure
+        %
+        job = '';
+        %
+        status.output = 0;
+        %
+        lukeobj = iluke_info(lukeobj,'output');% enable info display
+        %
+    case 'lukedisp'
+        %
+        % displaying luke data
+        %
+        lukeobj.plot1.gindex = 0;
+        lukeobj.plot2.gindex = 0;
+        lukeobj.plot3.gindex = 0;
+        %
+        cleartags = {'luke'};
+        %
+        iluke_update;% initialize display
+        %
+        newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
+        newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        %
+        opt.save = 0;
+        opt.nr_dep = 0;
+        opt.spec = 0;
+        opt.peak = 'n';
+        opt.wave = 'n';
+        opt.rho = 't'; 
+        opt.blist = [];
+        opt.diaryname = '';
+        opt.peakmode = 1;
+        %
+        opt.axs = [newgraph1_handle,newgraph2_handle,newgraph3_handle];
+        opt.font = style;
+        %
+        proc_luke_jd(output,0,-1,0.1,NaN,'',opt);
+        %   
+        ngraphs = length(graphs);
+        %
+        graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,2,'RF power profile','luke');
+        graphs(end+1) = iluke_graphs(lukeobj.plot2.handle,1,'ohmic power profile','luke');
+        graphs(end+1) = iluke_graphs(lukeobj.plot3.handle,1,'current profile','luke');
+        %
+        lukeobj.plot1.gindex = ngraphs + 1;
+        lukeobj.plot2.gindex = ngraphs + 2;
+        lukeobj.plot3.gindex = ngraphs + 3;
+        %
+        lukeobj.infotext.string = output.info.txt;
+        %
+    case 'lukestart'
+        %
+        % run luke
+        %
+        iluke_run;
+        %
 end
+%
+clear action
 %
 iluke_update;
 %

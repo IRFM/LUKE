@@ -4,11 +4,10 @@
 clear all
 close all
 %
-dkepath = load_structures_yp('dkepath','','');
+[dkepath,dkeparam,dkedisplay] = load_structures_yp('dkepath','','','dkeparam','RT','','dkedisplay','NO_DISPLAY','');
 workdir = pwd;
 %
 lukeobj = struct;
-infostrs = iluke_info;
 %
 % -------------------------------------------------------------------------
 %
@@ -74,8 +73,13 @@ lukeobj.titlepanel.position = [style.panelsep,style.figbaseheight - style.titleh
 lukeobj.controlpanel.position = [style.panelsep,style.controlpanelbottom,style.panelwidth,style.controlheight];
 lukeobj.infopanel.position = [style.panelsep,style.panelsep,style.panelwidth,style.infopanelheight];
 %
+style.panelstrcorr = style.titlestrheight + style.butvsep;
+%
+style.controlheightcorr = style.controlheight - style.panelstrcorr;
+style.infoheightcorr = style.infopanelheight - style.panelstrcorr;
+%
 lukeobj.infotext.position = [style.panelsep + style.buthsep,style.panelsep + style.butvsep,style.panelwidth - 2*style.buthsep,style.infopanelheight - 3*style.butvsep - style.titlestrheight];
-lukeobj.infostr.position = [style.buthsep,style.infopanelheight - style.titlestrheight - style.butvsep,style.panelwidth - 2*style.buthsep,style.titlestrheight];
+lukeobj.infostr.position = [style.buthsep,style.infoheightcorr,style.panelwidth - 2*style.buthsep,style.titlestrheight];
 %
 lukeobj.plot1.position = [style.panelwidth + 2*style.panelsep,2*style.plotheight + 3*style.panelsep,style.plotwidth,style.plotheight];
 lukeobj.plot2.position = [style.panelwidth + 2*style.panelsep,style.plotheight + 2*style.panelsep,style.plotwidth,style.plotheight];
@@ -103,12 +107,11 @@ lukeobj.graph3print.position = style.gprint_position;
 % CONTROLS DIMENSIONS
 %
 style.textheightcorr = (style.butheight - 3*style.fontsize)/2;% correction to center text within button
-style.controlstrcorr = style.titlestrheight + style.butvsep;
 style.butheightcorr = style.butheight + style.butvsep;
 %
 style.textheight = 2*style.fontsize;
 %
-lukeobj.controlstr.position = [style.buthsep,style.controlheight - style.controlstrcorr,style.panelwidth - 2*style.buthsep,style.titlestrheight];
+lukeobj.controlstr.position = [style.buthsep,style.controlheightcorr,style.panelwidth - 2*style.buthsep,style.titlestrheight];
 %
 % SIMULATION INFO DIMENSIONS
 %
@@ -137,9 +140,16 @@ lukeobj.simulfile.position = [style.panelwidth - style.simulfilewidth - 2*style.
 %
 lukeobj.titlestr.position = [style.buthsep,3*style.butheight + 4*style.butvsep,style.panelwidth - 2*style.buthsep,style.titlestrheight];
 %
+% LUKE RUN PANEL DIMENSIONS
+%
+lukeobj.runluke.position = [style.buthsep,style.infoheightcorr - 6*style.butheightcorr,2*style.titlewidth,2*style.butheight];
+lukeobj.lukeidtitle.position = [2*style.titlewidth + 2*style.buthsep,style.infoheightcorr - 6*style.butheightcorr + style.butvsep + style.textheightcorr,style.titlewidth,style.butheight];
+lukeobj.lukeid.position = [3*style.titlewidth + 3*style.buthsep,style.infoheightcorr - 6*style.butheightcorr + style.butvsep,style.panelwidth - 3*style.titlewidth - 4*style.buthsep,style.butheight];
+lukeobj.runcheck.position = [style.buthsep,style.infoheightcorr - 8*style.butheightcorr,2*style.titlewidth,2*style.butheight];
+
+%
 % title column
 %
-style.controlheightcorr = style.controlheight - style.controlstrcorr;
 
 lukeobj.graph1sel.string = {''};
 lukeobj.graph2sel.string = {''};
@@ -177,7 +187,13 @@ lukeobj.loadshot.string = 'Load';
 lukeobj.saveshot.string = 'Save';
 
 lukeobj.controlstr.string = {'CONTROLS'};
-lukeobj.infostr.string = {'INFOS'};
+
+lukeobj.runluke.string = 'LUKE START';
+lukeobj.lukeidtitle.string = 'Run ID';
+lukeobj.runcheck.string = 'CHECK RUN';
+
+lukeobj.runc3po.string = 'C3PO START CURRENT';
+lukeobj.runc3poall.string = 'C3PO START ALL';
 
 lukeobj.graph1save.state = 'on';
 lukeobj.graph2save.state = 'on';
@@ -193,12 +209,28 @@ lukeobj.loadshot.state = 'on';
 lukeobj.saveshot.state = 'on';
 
 lukeobj.exitluke.callback = 'close(lukeobj.mainfig.handle)';
+lukeobj.newshot.callback = 'status.external = 0;status.equil = 0;iluke_update;';
+lukeobj.loadshot.callback = 'action = ''loadshot'';iluke_callbacks;';
+lukeobj.saveshot.callback = 'action = ''saveshot'';iluke_callbacks;';
 
 lukeobj.graph1sel.callback = 'lukeobj.plot1.gindex = get(lukeobj.graph1sel.handle,''Value'') - 1;iluke_update;';
 lukeobj.graph2sel.callback = 'lukeobj.plot2.gindex = get(lukeobj.graph2sel.handle,''Value'') - 1;iluke_update;';
 lukeobj.graph3sel.callback = 'lukeobj.plot3.gindex = get(lukeobj.graph3sel.handle,''Value'') - 1;iluke_update;';
 
-lukeobj.infotext.string = infostrs.startup;
+lukeobj.graph1save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',lukeobj.shotime.string,'' '',lukeobj.graph1sel.string{lukeobj.graph1sel.value}],''figures/'',graphs(lukeobj.plot1.gindex).handles);';
+lukeobj.graph2save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',lukeobj.shotime.string,'' '',lukeobj.graph2sel.string{lukeobj.graph2sel.value}],''figures/'',graphs(lukeobj.plot2.gindex).handles);';
+lukeobj.graph3save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',lukeobj.shotime.string,'' '',lukeobj.graph3sel.string{lukeobj.graph3sel.value}],''figures/'',graphs(lukeobj.plot3.gindex).handles);';
+
+lukeobj.graph1print.callback = 'iluke_print(0,'','',graphs(lukeobj.plot1.gindex).handles);';
+lukeobj.graph2print.callback = 'iluke_print(0,'','',graphs(lukeobj.plot2.gindex).handles);';
+lukeobj.graph3print.callback = 'iluke_print(0,'','',graphs(lukeobj.plot3.gindex).handles);';
+
+lukeobj.runluke.callback = 'action = ''lukestart'';iluke_callbacks;';
+lukeobj.lukeid.callback = 'lukeobj.lukeid.string = get(lukeobj.lukeid.handle,''String'');iluke_update;';
+lukeobj.runcheck.callback = 'action = ''runcheck'';iluke_callbacks;';
+
+lukeobj.runc3po.callback = 'action = ''c3postart'';iluke_callbacks;';
+lukeobj.runc3poall.callback = 'action = ''c3poallstart'';iluke_callbacks;';
 
 %
 % CREATE GUI
@@ -220,13 +252,13 @@ lukeobj.graph1sel.handle = uicontrol(lukeobj.plot1.handle,'Style','popupmenu','S
 lukeobj.graph2sel.handle = uicontrol(lukeobj.plot2.handle,'Style','popupmenu','String',lukeobj.graph2sel.string,'Position',lukeobj.graph2sel.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.graph2sel.callback);
 lukeobj.graph3sel.handle = uicontrol(lukeobj.plot3.handle,'Style','popupmenu','String',lukeobj.graph3sel.string,'Position',lukeobj.graph3sel.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.graph3sel.callback);
 
-lukeobj.graph1save.handle = uicontrol(lukeobj.plot1.handle,'Style','pushbutton','String',lukeobj.graph1save.string,'Position',lukeobj.graph1save.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Enable',lukeobj.graph1save.state);
-lukeobj.graph2save.handle = uicontrol(lukeobj.plot2.handle,'Style','pushbutton','String',lukeobj.graph2save.string,'Position',lukeobj.graph2save.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Enable',lukeobj.graph2save.state);
-lukeobj.graph3save.handle = uicontrol(lukeobj.plot3.handle,'Style','pushbutton','String',lukeobj.graph3save.string,'Position',lukeobj.graph3save.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Enable',lukeobj.graph3save.state);
+lukeobj.graph1save.handle = uicontrol(lukeobj.plot1.handle,'Style','pushbutton','String',lukeobj.graph1save.string,'Position',lukeobj.graph1save.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.graph1save.callback);
+lukeobj.graph2save.handle = uicontrol(lukeobj.plot2.handle,'Style','pushbutton','String',lukeobj.graph2save.string,'Position',lukeobj.graph2save.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.graph2save.callback);
+lukeobj.graph3save.handle = uicontrol(lukeobj.plot3.handle,'Style','pushbutton','String',lukeobj.graph3save.string,'Position',lukeobj.graph3save.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.graph3save.callback);
 
-lukeobj.graph1print.handle = uicontrol(lukeobj.plot1.handle,'Style','pushbutton','String',lukeobj.graph1print.string,'Position',lukeobj.graph1print.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Enable',lukeobj.graph1print.state);
-lukeobj.graph2print.handle = uicontrol(lukeobj.plot2.handle,'Style','pushbutton','String',lukeobj.graph2print.string,'Position',lukeobj.graph2print.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Enable',lukeobj.graph2print.state);
-lukeobj.graph3print.handle = uicontrol(lukeobj.plot3.handle,'Style','pushbutton','String',lukeobj.graph3print.string,'Position',lukeobj.graph3print.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Enable',lukeobj.graph3print.state);
+lukeobj.graph1print.handle = uicontrol(lukeobj.plot1.handle,'Style','pushbutton','String',lukeobj.graph1print.string,'Position',lukeobj.graph1print.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.graph1print.callback);
+lukeobj.graph2print.handle = uicontrol(lukeobj.plot2.handle,'Style','pushbutton','String',lukeobj.graph2print.string,'Position',lukeobj.graph2print.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.graph2print.callback);
+lukeobj.graph3print.handle = uicontrol(lukeobj.plot3.handle,'Style','pushbutton','String',lukeobj.graph3print.string,'Position',lukeobj.graph3print.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.graph3print.callback);
 
 lukeobj.tokamaktitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.tokamaktitle.string,'Position',lukeobj.tokamaktitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.shotnumtitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.shotnumtitle.string,'Position',lukeobj.shotnumtitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
@@ -246,25 +278,73 @@ lukeobj.simulfiletitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','tex
 
 lukeobj.titlestr.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.titlestr.string,'Position',lukeobj.titlestr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'HorizontalAlignment','center');
 
-lukeobj.exitluke.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.exitluke.string,'Position',lukeobj.exitluke.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Enable',lukeobj.exitluke.state,'Callback',lukeobj.exitluke.callback);
-lukeobj.newshot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.newshot.string,'Position',lukeobj.newshot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Enable',lukeobj.newshot.state);
-lukeobj.loadshot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.loadshot.string,'Position',lukeobj.loadshot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Enable',lukeobj.loadshot.state);
-lukeobj.saveshot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.saveshot.string,'Position',lukeobj.saveshot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Enable',lukeobj.saveshot.state);
+lukeobj.exitluke.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.exitluke.string,'Position',lukeobj.exitluke.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.exitluke.callback);
+lukeobj.newshot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.newshot.string,'Position',lukeobj.newshot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.newshot.callback);
+lukeobj.loadshot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.loadshot.string,'Position',lukeobj.loadshot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.loadshot.callback);
+lukeobj.saveshot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.saveshot.string,'Position',lukeobj.saveshot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.saveshot.callback);
 
 %
 lukeobj.controlstr.handle = uicontrol(lukeobj.controlpanel.handle,'Style','text','String',lukeobj.controlstr.string,'Position',lukeobj.controlstr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'HorizontalAlignment','center');
 
-lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'data',[1,2,4,5,7:9],'Exp. Data',style.controlheightcorr - style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'equil',[1,3:5,7:9],'Equilibrium',style.controlheightcorr - 2*style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'ohm',[1,3:5,7:9],'Ohmic Field',style.controlheightcorr - 3*style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'transp',[1,3:5,7:9],'Transport',style.controlheightcorr - 4*style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'ripple',[1,3:5,7:9],'Mag. Ripple',style.controlheightcorr - 5*style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'wave',[1,3:5,7:9],'RF Waves',style.controlheightcorr - 6*style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'luke',[1,6:9],'Fokker-Planck Equation',style.controlheightcorr - 7*style.butheightcorr - style.butvsep,style);
-lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'r5x2',[1,6:9],'Fast Electron Bremsstrahlung',style.controlheightcorr - 8*style.butheightcorr - 2*style.butvsep,style);
+lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'data',{'title','import','load','save','clear','disp','text'},'Exp. Data',style.controlheightcorr - style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'equil',{'title','make','load','save','clear','disp','text'},'Equilibrium',style.controlheightcorr - 2*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'ohm',{'title','make','load','save','clear','disp','text'},'Ohmic Field',style.controlheightcorr - 3*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'transp',{'title','make','load','save','clear','disp','text'},'Transport',style.controlheightcorr - 4*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'ripple',{'title','make','load','save','clear','disp','text'},'Mag. Ripple',style.controlheightcorr - 5*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'wave',{'title','make','load','save','clear','disp','text'},'RF Waves',style.controlheightcorr - 6*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'luke',{'title','','','run','clear','disp','text'},'Fokker-Planck Equation',style.controlheightcorr - 7*style.butheightcorr - style.butvsep,style);
+lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'r5x2',{'title','','','run','clear','disp','text'},'Fast Electron Bremsstrahlung',style.controlheightcorr - 8*style.butheightcorr - 2*style.butvsep,style);
 
-lukeobj.infotext.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.infotext.string,'Position',lukeobj.infotext.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
-lukeobj.infostr.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.infostr.string,'Position',lukeobj.infostr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'HorizontalAlignment','center');
+lukeobj.infotext.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','Position',lukeobj.infotext.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.infostr.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','Position',lukeobj.infostr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'HorizontalAlignment','center');
+
+%
+% RUN LUKE PANEL
+%
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'param',{'title','modify','load','save','clear','','text'},'Parameters',style.infoheightcorr - style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'display',{'title','modify','load','save','clear','','text'},'Display',style.infoheightcorr - 2*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'remote',{'title','make','load','save','test','',''},'Server',style.infoheightcorr - 3*style.butheightcorr,style);
+
+lukeobj.remote.select.position = [style.titlewidth + 6*style.buthsep + 4*style.butwidth,style.infoheightcorr - 3*style.butheightcorr,style.panelwidth - style.titlewidth - 7*style.buthsep - 4*style.butwidth,style.butheight];
+lukeobj.remote.timeout.position = [style.buthsep,style.infoheightcorr - 4*style.butheightcorr,style.panelwidth - 2*style.buthsep,style.butheight];
+
+lukeobj.remote.select.callback = 'lukeobj.remote.select.value = get(lukeobj.remote.select.handle,''Value'');iluke_update;';
+lukeobj.remote.timeout.callback = 'lukeobj.remote.timeout.value = get(lukeobj.remote.timeout.handle,''Value'');iluke_update;';
+
+lukeobj.remote.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.remote.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.remote.select.callback);
+lukeobj.remote.timeout.handle = uicontrol(lukeobj.infopanel.handle,'Style','checkbox','Position',lukeobj.remote.timeout.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.remote.timeout.callback);
+lukeobj.runluke.handle = uicontrol(lukeobj.infopanel.handle,'Style','pushbutton','String',lukeobj.runluke.string,'Position',lukeobj.runluke.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'Callback',lukeobj.runluke.callback);
+lukeobj.lukeidtitle.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.lukeidtitle.string,'Position',lukeobj.lukeidtitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.lukeid.handle = uicontrol(lukeobj.infopanel.handle,'Style','edit','Position',lukeobj.lukeid.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.lukeid.callback);
+lukeobj.runcheck.handle = uicontrol(lukeobj.infopanel.handle,'Style','pushbutton','String',lukeobj.runcheck.string,'Position',lukeobj.runcheck.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'Callback',lukeobj.runcheck.callback);
+
+lukeobj.param.text.string = dkeparam.id;
+lukeobj.display.text.string = dkedisplay.id;
+lukeobj.remote.timeout.string = ' Check box to return hand to iluke after submitting job';
+
+lukeobj.remote.select.value = 1;
+lukeobj.remote.timeout.value = 0;
+
+%
+% RUN C3PO PANEL
+%
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'wavestruct',{'title','import','make','load','save','clear',''},'Structures',style.infoheightcorr - style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'angles',{'title','modify','load','save','reset','','text'},'Angles',style.infoheightcorr - 2*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'spectrum',{'title','modify','load','save','reset','','text'},'Spectrum',style.infoheightcorr - 2*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'launch',{'title','modify','load','save','reset','','text'},'Launch',style.infoheightcorr - 3*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'c3poparam',{'title','modify','load','save','reset','','text'},'Parameters',style.infoheightcorr - 5*style.butheightcorr,style);
+
+lukeobj.wavestruct.select.position = [style.titlewidth + 7*style.buthsep + 5*style.butwidth,style.infoheightcorr - style.butheightcorr,style.panelwidth - style.titlewidth - 8*style.buthsep - 5*style.butwidth,style.butheight];
+lukeobj.runc3po.position = [style.buthsep,style.infoheightcorr - 8*style.butheightcorr,style.panelwidth/2 - 2*style.buthsep,2*style.butheight];
+lukeobj.runc3poall.position = [style.panelwidth/2 + style.buthsep,style.infoheightcorr - 8*style.butheightcorr,style.panelwidth/2 - 2*style.buthsep,2*style.butheight];
+
+lukeobj.wavestruct.select.callback = 'lukeobj.wavestruct.select.value = get(lukeobj.wavestruct.select.handle,''Value'');iluke_update;';
+
+lukeobj.wavestruct.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.wavestruct.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.wavestruct.select.callback);
+lukeobj.runc3po.handle = uicontrol(lukeobj.infopanel.handle,'Style','pushbutton','String',lukeobj.runc3po.string,'Position',lukeobj.runc3po.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'Callback',lukeobj.runc3po.callback);
+lukeobj.runc3poall.handle = uicontrol(lukeobj.infopanel.handle,'Style','pushbutton','String',lukeobj.runc3poall.string,'Position',lukeobj.runc3poall.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'Callback',lukeobj.runc3poall.callback);
+
+lukeobj = iluke_info(lukeobj,'startup');% info display
 
 graphs = struct;
 graphs.handles = [];
@@ -287,6 +367,9 @@ transpfaste = '';
 ripple = '';
 waves = '';
 
+wavestructs = {};
+
+job = '';
 output = '';
 hxr = '';
 
