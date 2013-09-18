@@ -22,6 +22,7 @@ select.style.textwidth = 420;
 %
 ohm = '';
 %
+keyboard
 if ~isempty(external),
     %
     titletext = 'For the OHMIC field :';      
@@ -70,7 +71,11 @@ if i_opt == 0,% data loaded from external database
         ishot = 1;
     end
     %
-    vloop = external.vloop(ishot);
+    if strcmp(basestr,'EAST'),
+        vloop = external.Vloop.value;
+    else
+        vloop = external.vloop(ishot);
+    end
 	%
     if strcmp(basestr,'TCV'),
 		vloop = - vloop;%sign convention in TCV
