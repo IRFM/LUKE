@@ -53,7 +53,66 @@ if ~isempty(external),
         %
         if isfield(external,'antenna_4p60GHz')
             Plh = [Plh,external.antenna_4p60GHz.total_launched_power.power*1e6];
-        end        
+        end
+        %
+        disp(['----> Injected LH power: ',num2str(Plh/1e6),' MW']);
+        %
+        fexternal = fieldnames(external);
+        %
+        a_str = '';
+        for iw = 1:length(fexternal),
+            a_str = [a_str,' (',num2str(iw),') ',fexternal{iw},','];
+        end
+        %
+        if iw > 1,
+            %
+            a_opt = input_dke_yp(['Please select an antenna :',a_str],1,1:iw,'',[1,1]);
+            %
+        else
+            a_opt = 1;
+        end
+        %
+        power_spectrum = external.(fexternal{a_opt}).power_spectrum;
+        frequency = external.(fexternal{a_opt}).frequency;
+        position = external.(fexternal{a_opt}).position;
+        %
+        launch.id = fexternal{a_opt};
+        launch.phi0 = 0;
+        launch.omega_rf = 2*pi*1e9*frequency.flh;
+        launch.LFS = 1;
+        launch.m0 = 0;
+        %
+        disp(['----> The LH antenna has ',int2str(length(position.Z)), ' poloidal rows.']);
+        position_rZ0_opt = input_dke_yp('Do you want to consider all of them or just averaged position [y/n]','n',{'y','n'},'',[1,1]);
+        %
+        if strcmp(position_rZ0_opt,'y'),
+            launch.rZ0 = position.Z;
+        else 
+            launch.rZ0 = sum(position.Z);
+            disp(['----> The averaged poloidal position of the LH antenna is ',num2str(launch.rZ0), ' (m).']);
+        end
+        %
+        if ~isfield(power_spectrum,'dn_par'),
+            %
+            zdP_in = power_spectrum.power;
+            zN_in = power_spectrum.n_par;
+            %
+            zN_in(find(diff(zdP_in)==0)) = [];%remove points with equal power density (for proc_aloha_spec_jd)
+            zdP_in(find(diff(zdP_in)==0)) = [];%remove points with equal power density (for proc_aloha_spec_jd)
+            %
+            [bNpar0,bdNpar0,bPlhtot] = proc_aloha_spec_jd(zN_in,NaN,zdP_in,Plh(a_opt));%ALOHA like spectra
+            %
+            launch.bPlhtot = bPlhtot;  
+            launch.bdNpar0 = bdNpar0;  
+            launch.bNpar0 = bNpar0;
+            %
+        else
+            %
+            launch.bPlhtot = power_spectrum.power*1e6;  
+            launch.bdNpar0 = power_spectrum.dn_par;  
+            launch.bNpar0 = power_spectrum.n_par;
+            %
+        end
     else
         %
         error(['-----> wave data not yet implemented for :',basestr]);
@@ -96,57 +155,8 @@ if strcmp(basestr,'TS') || strcmp(basestr,'JET'),% default values from make_wave
     %
     launch = launchs{a_opt};
     %
-elseif strcmp(basestr,'EAST'),%EAST chinese tokamak
-    %
-    fexternal = fieldnames(external);
-    %
-    a_str = '';
-    for iw = 1:length(fexternal),
-        a_str = [a_str,' (',num2str(iw),') ',fexternal{iw},','];
-    end
-    %
-    if iw > 1,
-        %
-        a_opt = input_dke_yp(['Please select an antenna :',a_str],1,1:iw,'',[1,1]);
-        %
-    else
-        a_opt = 1;
-    end
-    %
-    power_spectrum = external.(fexternal{a_opt}).power_spectrum;
-    frequency = external.(fexternal{a_opt}).frequency;
-    position = external.(fexternal{a_opt}).position;
-    %
-    launch.id = fexternal{a_opt};
-    launch.phi0 = 0;
-    launch.omega_rf = 2*pi*1e9*frequency.flh;
-    launch.LFS = 1;
-    launch.m0 = 0;
-    %launch.rZ0 = position.Z;
-    launch.rZ0 = 0;
-    %
-    if ~isfield(power_spectrum,'dn_par'),
-        %
-        zdP_in = power_spectrum.power;
-        zN_in = power_spectrum.n_par;
-        %
-        zN_in(find(diff(zdP_in)==0)) = [];%remove points with equal power density (for proc_aloha_spec_jd)
-        zdP_in(find(diff(zdP_in)==0)) = [];%remove points with equal power density (for proc_aloha_spec_jd)
-        %
-        [bNpar0,bdNpar0,bPlhtot] = proc_aloha_spec_jd(zN_in,NaN,zdP_in,Plh(a_opt));%ALOHA like spectra
-        %
-        launch.bPlhtot = bPlhtot;  
-        launch.bdNpar0 = bdNpar0;  
-        launch.bNpar0 = bNpar0;
-        %
-    else
-        %
-        launch.bPlhtot = power_spectrum.power*1e6;  
-        launch.bdNpar0 = power_spectrum.dn_par;  
-        launch.bNpar0 = power_spectrum.n_par;
-        %
-    end
-    %
+elseif strcmp(basestr,'EAST'),
+    
 else % default values
     %
     launch.omega_rf = 2*pi*1e9*4.6;
@@ -166,6 +176,50 @@ else % default values
     launch.rZ0 = 0;  
     launch.id = '';
     %
+end
+%
+% Introduction of the tail model for the npar0 fluctuations
+%
+
+% N//0 model
+%
+% Note : The tail spectrum can be described either in a static mode (if
+% dtn_fluct_correlation_npar0_lh = Inf) or in a fluctuating mode (if
+% dtn_fluct_correlation_npar0_lh < Inf).
+%
+if length(launch.bNpar0) <= 2,%only if one may main lobe in one or two directions
+    %
+    tail_opt = input_dke_yp('Do you want to describe the launched power spectrum with the tail model (npar0 fluctuations) [y/n]','n',{'y','n'},'',[1,1]);
+    %
+    if strcmp(tail_opt,'y'),
+    
+
+        dtn_fluct_correlation_npar0_lh = Inf;
+        tail_mode = 3;% mode for tail spectrum : (0) no tail model, (1)  Gaussian, (2) Linear, (3) calc_tail_jd
+        Nparmax_tail = 0;%npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is 0, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)
+        opt_tail_0 = 0;%Final power fraction of the tail @ Nparmax_tail.
+        n_tail = 5;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (tail_mode = 3 only). 
+        P_tail = 0.5;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (tail_mode = 3 only). 
+        dnpar0_tail = 1;% Adjust (1) or not (0) the initial dNpar0 such that intial and tail lobes have the same width (tail_mode = 3 only).
+        %
+
+
+        tail.dtn = dtn_fluct_correlation_npar0_lh;
+        tail.mode = tail_mode;% mode for tail spectrum : (0)  Gaussian, (1) Linear, (2) calc_tail_jd
+        tail.bNparmax_tail = Nparmax_tail;%npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is NaN or empty, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)
+        tail.bn_tail = n_tail;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen) 
+        tail.bP_tail = P_tail;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (no used if linear_tail is chosen) 
+        tail.bopt_tail = opt_tail_0 + dnpar0_tail*1i;%Final power fraction of the tail @ Nparmax_tail (+1i) Adjust initial dNpar0 such that initial and tail lobes have the same width
+        %
+        if tail_mode > 0,
+            locid_tail = make_tail_simulid_jd(tail);
+        else
+            locid_tail = '';
+        end    
+        %
+        launch.tail = tail;
+        %
+    end   
 end
 %
 if ~isempty(external),
@@ -188,3 +242,4 @@ launch.phi0 = launch.phi0_deg*pi/180;
 launch.bPlhtot = launch.bPlhtot_MW*1e6;
 launch = rmfield(launch,{'frequency_GHz','phi0_deg','bPlhtot_MW'});
 %
+
