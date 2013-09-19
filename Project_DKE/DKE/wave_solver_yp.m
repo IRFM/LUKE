@@ -16,8 +16,20 @@ end
 if strcmp(wavestruct.wavesolver,'C3PO'),% C3P0 ray tracing
     rayinit = main_rayinit_launch_jd(wavestruct.equil,wavestruct.launch);
     %
+    if ~isfield(wavestruct,'raydisplay') && isfield(wavestruct,'C3POdisplay'),
+        wavestruct.raydisplay = wavestruct.C3POdisplay;
+    end
+    %
     if ~isfield(wavestruct,'C3POparam'),
         wavestruct.C3POparam = [];
+    end
+    %
+    if ~isfield(wavestruct,'equil_fit'),
+        if isfield(wavestruct,'fitparam'),
+            [wavestruct.equil_fit] = fitequil_yp(wavestruct.equil,wavestruct.fitparam.mode_equil,wavestruct.fitparam.method,wavestruct.fitparam.ngridresample,wavestruct.fitparam.nharm);
+        else
+            [wavestruct.equil_fit] = fitequil_yp(wavestruct.equil,wavestruct.fitequilparam.mode_equil,wavestruct.fitequilparam.method,wavestruct.fitequilparam.ngridresample,wavestruct.fitequilparam.nharm);%backward compatibility         
+        end  
     end
     %
     if ~isfield(wavestruct.equil_fit,'fluct_fit'),

@@ -24,6 +24,10 @@ elseif isstruct(s),
     %
     for ifield = 1:length(fnames),
         %
+        if isfield(s,'state') && isfield(s.(fnames{ifield}),'handle'),
+            s.(fnames{ifield}).state = s.state;
+        end
+        %    
         if isfield(s,'visible'),
             iluke_update_state(s.(fnames{ifield}),s.visible)
         elseif nargin > 1

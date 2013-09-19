@@ -498,13 +498,73 @@ switch action
         %
         lukeobj.infotext.string = transpfaste.info.txt;
         %
-    case 'newwavemake'%'wavemake'
+    case 'wavestructimport'
+        %
+        % creating wavestruct structure from external
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
+        select.style = style;
+        %
+        launchs = imake_launch_jd(dkepath,lukeobj.tokamak.string,equil,external.wave,workdir,lukeobj.infopanel.handle,select);
+        %
+        for iw = 1:length(launchs);
+            %
+            id_rtparam = launchs{iw}.type;
+            wavestruct = load_structures_yp('rtparam',id_rtparam,'');
+            wavestruct.rtparam = ['C3POPARAM_',id_rtparam,'.mat'];
+            %
+            wavestruct.launch = launchs{iw};
+            wavestruct.wavesolver = 'C3PO';
+            wavestruct.id = [wavestruct.wavesolver,'_',wavestruct.launch.id];
+            wavestruct.equil = equil;
+            wavestruct.equil_id = equil.id;
+            %
+            wavestructs{end+1} = wavestruct;
+            %
+            lukeobj.wavestruct.select.value = length(wavestructs);
+            %
+        end
+        %
+        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        %
+    case 'wavestructclear'
+        %
+        % creating wavestruct structure from external
+        %
+        wavestructs(lukeobj.wavestruct.select.value) = [];
+        lukeobj.wavestruct.select.value = length(wavestructs);
+        %
+    case 'c3postart'
+        %
+        % running C3PO for current or all wavestructs
+        %
+        wavesolverparam.clustermode.wave_solver_yp.scheduler.mode = str2double(lukeobj.wsparam.string);
+        %
+        [newwaves] = wave_distribution_yp(dkepath,wavesolverparam,wavestructs(iw));
+        %
+        if isempty(waves),
+            waves = newwaves;
+        else
+            waves = [waves,newwaves];
+        end
+        %
+        status.waves = 1;
+        status.data = 2;
+        %
+        lukeobj.lukeid.string = '';
+        %
+        action = 'wavedisp';iluke_callbacks;
+        %
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
+        %
+    case 'wavemake'%'newwavemake'%
         %
         % show run luke pannel
         %
-        lukeobj = iluke_info(lukeobj,'c3po');% disable info display
+        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
         %
-    case 'wavemake'%'oldwavemake'
+    case 'oldwavemake'%'wavemake'%
         %
         % creating wave structure
         %
@@ -694,6 +754,8 @@ switch action
         %
         lukeobj.wave.text.string = [num2str(length(waves)),' wave structure(s)'];
         lukeobj.infotext.string = iluke_waveinfo(waves);
+        %
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'lukerun'
         %

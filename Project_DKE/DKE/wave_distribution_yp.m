@@ -16,7 +16,7 @@ function [waves,wavestructs,byisel] = wave_distribution_yp(dkepath,dkeparam,wave
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
-if nargin < 5,
+if nargin < 3,
     error('Wrong number of input arguments in wave_distribution_yp.m.');
 end
 %
@@ -24,7 +24,19 @@ if nargin < 6,
     byPnonabs = NaN;
 end
 %
-Nfluct = max([1,round(dkeparam.Nfluct)]);
+if nargin < 5,
+    dt_fluct = Inf;
+end
+%
+if nargin < 4,
+    f0struct = [];
+end
+%
+if isfield(dkeparam,'Nfluct'),
+    Nfluct = max([1,round(dkeparam.Nfluct)]);
+else
+    Nfluct = 1;
+end
 %
 nw = size(wavestructs,2);
 %

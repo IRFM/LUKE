@@ -183,21 +183,7 @@ end
 %
 % WAVESTRUCTS
 %
-nw = length(wavestructs);
-lukeobj.wavestruct.select.string = cell(1,nw);
-%
-for iw = 1:nw,
-    %
-    lukeobj.wavestruct.select.string{iwavestruct} = wavestructs{iw}.id;
-    %
-end
-%
-if nw > 0 && strcmp(lukeobj.wavestruct.visible,'on'),
-    lukeobj.wavestruct.select.visible = 'on';
-end
-%
-clear iw nw
-%
+iluke_update_wavestruct;
 
 %
 % UPDATE OBJECTS
