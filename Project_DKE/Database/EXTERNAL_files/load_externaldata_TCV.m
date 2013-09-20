@@ -1,11 +1,25 @@
-function external = load_externaldata_TCV(workdir,shotnum,shotime,t1,t2,opt_gui)
+function external = load_externaldata_TCV(workdir,shotnum,shotime,t1,t2,opt_gui,select)
 %
 % This function loads data from TCV database
+%
+if nargin < 7,
+    select = struct;
+elseif ~isstruct(select) && isempty(select),% no user prompt - default options
+    %
+    select.m_opt = 0;
+    select.l_opt = 1;
+    select.laun = 1:6;
+    select.f_opt = 0;
+    select.s_opt = 'n';
+    %
+end
 %
 external = '';
 basestr = 'TCV';
 %
-m_opt = input_dke_yp('Do you want to: (0) load data from database, (1) load data from files',0,[0,1],'',[1,1]);
+if ~isfield(select,'m_opt'),
+    select.m_opt = input_dke_yp('Do you want to: (0) load data from database, (1) load data from files',0,[0,1],'',[1,1]);
+end
 %
 eqdsk_path = [workdir,'/'];
 %
@@ -15,7 +29,7 @@ data_path = [workdir,'/'];
 %
 data_str = ['data_',basestr,'_',shotnum,'_',num2str(t1),'_',num2str(t2)];
 %
-if m_opt == 0,
+if select.m_opt == 0,
     %
     if ~exist('make_eqdsk.m','file'),
         disp('-----> Access to the TCV database is not granted.');
@@ -29,32 +43,40 @@ if m_opt == 0,
         return;
     end
     %
-    l_opt = input('Option for liuqe version? (1,2,3) [1] : ');
-    if isempty(l_opt),
-        l_opt = 1;
-    elseif ~isnumeric(l_opt) || ~any(l_opt == 1:3),
+    if ~isfield(select,'l_opt'),
+        select.l_opt = input('Option for liuqe version? (1,2,3) [1] : ');
+    end
+    %
+    if isempty(select.l_opt),
+        select.l_opt = 1;
+    elseif ~isnumeric(select.l_opt) || ~any(select.l_opt == 1:3),
         return
     end
     %
-    make_eqdsk(str2num(shotnum),str2num(shotime),workdir,'TCV',l_opt);%call LIUQUE
+    make_eqdsk(str2num(shotnum),str2num(shotime),workdir,'TCV',select.l_opt);%call LIUQUE
     %
-    laun = input('Vector of EC launchers to account for (ex: [1,3]) : ');
-    if isempty(laun) || ~isnumeric(laun) ,
+    if ~isfield(select,'laun'),
+        select.laun = input('Vector of EC launchers to account for (ex: [1,3]) : ');
+    end
+    %
+    if isempty(select.laun) || ~isnumeric(select.laun) ,
         disp('-----> Invalid entry');
         return
     end
     %
-    f_opt = input_dke_yp('Do you want to: (0) load Te from fitted Thomson only, (1) load Te with Xte renormalization',0,[0,1],'',[1,1]);
+    if ~isfield(select,'f_opt'),
+        select.f_opt = input_dke_yp('Do you want to: (0) load Te from fitted Thomson only, (1) load Te with Xte renormalization',0,[0,1],'',[1,1]);
+    end
     %
     launstr = '';
-    for il = 1:length(laun),
-        launstr = [launstr,'_',num2str(laun(il))];
+    for il = 1:length(select.laun),
+        launstr = [launstr,'_',num2str(select.laun(il))];
     end
     %
     data_path = [workdir,'/'];
     data_file = [data_str,launstr,'.mat'];
     %
-    collect_parameters_for_luke(str2num(shotnum),t1,t2,laun,[data_path,data_file],f_opt);%load shot parameters
+    collect_parameters_for_luke(str2num(shotnum),t1,t2,select.laun,[data_path,data_file],select.f_opt);%load shot parameters
     %
 else
     %
@@ -93,11 +115,13 @@ external.ohm = load([data_path,data_file],'shot','vloop');
 %
 external.id = ['TCV_',shotnum,'_',shotime,'_',num2str(t1),'_',num2str(t2),'_L',launstr];
 %
-if m_opt == 0,
+if select.m_opt == 0,
     %
-    s_opt = input_dke_yp('Do you want to generate an equivalent make_external_TCV script? [y/n]','n',{'y','n'},'',[1,1]);
+    if ~isfield(select,'s_opt'),
+        select.s_opt = input_dke_yp('Do you want to generate an equivalent make_external_TCV script? [y/n]','n',{'y','n'},'',[1,1]);
+    end
     %
-    if s_opt == 'y',
+    if select.s_opt == 'y',
         % 
         imake_makeexternal_TCV_jd(workdir,external,opt_gui);
         %
