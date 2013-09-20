@@ -61,6 +61,8 @@ function lukeobj = iluke_info(lukeobj,s)
         %
     end
     %
+    iluke_update_state(lukeobj);
+    %
 end
 
 function lukeobj = iluke_switch(lukeobj,str)

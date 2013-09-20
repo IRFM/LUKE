@@ -44,6 +44,16 @@ if nw == 0,
     lukeobj.angles.text.string = '';
     lukeobj.launch.text.string = '';
     lukeobj.c3poparam.text.string = '';
+    %
+    if isfield(external,'wave'),
+        lukeobj.wavestruct.import.highlight = true;
+        lukeobj.wavestruct.make.highlight = false;
+    else
+        lukeobj.wavestruct.make.highlight = true;
+        lukeobj.wavestruct.import.highlight = false;
+    end
+    lukeobj.runc3po.highlight = false;
+    lukeobj.runc3poall.highlight = false;    
 else
     iw = lukeobj.wavestruct.select.value;
     %
@@ -140,6 +150,11 @@ else
     if strcmp(lukeobj.wavestruct.visible,'on'),
         lukeobj.wavestruct.select.visible = 'on';
     end
+    %
+    lukeobj.wavestruct.import.highlight = false;
+    lukeobj.wavestruct.make.highlight = false;
+    lukeobj.runc3po.highlight = true;
+    lukeobj.runc3poall.highlight = true;    
     %
 end
 %

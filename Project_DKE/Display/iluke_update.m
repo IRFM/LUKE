@@ -38,6 +38,12 @@ else
     status.hxr = 0;
 end
 
+if status.output == 0,
+    lukeobj.runluke.highlight = true;
+else
+    lukeobj.runluke.highlight = false;
+end
+
 %
 % UPDATE STATES/STRINGS
 %
@@ -51,6 +57,17 @@ end
 
 [output,lukeobj.luke,cleartags] = iluke_status(output,status.output,lukeobj.luke,1,cleartags);
 [hxr,lukeobj.r5x2,cleartags] = iluke_status(hxr,status.hxr,lukeobj.r5x2,1,cleartags);
+
+if status.equil == 0 && status.external == 0,
+    lukeobj.data.import.highlight = true;
+    lukeobj.equil.make.highlight = false;
+elseif status.equil == 0,
+    lukeobj.equil.make.highlight = true;
+    lukeobj.data.import.highlight = false;
+else
+    lukeobj.data.import.highlight = false;
+    lukeobj.equil.make.highlight = false;    
+end
 
 %
 % SPECIFIC CASES

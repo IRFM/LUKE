@@ -18,6 +18,13 @@ if isfield(s,'handle'),
     elseif nargin > 1
         set(s.handle,'Visible',visible);
     end
+    if isfield(s,'highlight'),
+        if s.highlight,
+            set(s.handle,'BackgroundColor',[0 0.75 0]);
+        else
+            set(s.handle,'BackgroundColor',[0.701961 0.701961 0.701961]);
+        end
+    end
 elseif isstruct(s),
     %
     fnames = fieldnames(s);

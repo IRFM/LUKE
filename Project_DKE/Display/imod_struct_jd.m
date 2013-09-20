@@ -288,7 +288,7 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra,style)
             %
             cguir(nf+1) = uicontrol(cgui,'style','pushbutton','string',buttonstr{1},'position',rposition1,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'callback',@pushbutton_cbf);
             cguir(nf+2) = uicontrol(cgui,'style','pushbutton','string',buttonstr{2},'position',rposition2,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'tooltipstring','Reset all fields to original value','callback',@pushbutton_cbf);
-            cguir(nf+3) = uicontrol(cgui,'style','pushbutton','string',buttonstr{3},'position',rposition3,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'tooltipstring','Press to continue when done modifying the structure','callback',@pushbutton_cbf);
+            cguir(nf+3) = uicontrol(cgui,'style','pushbutton','string',buttonstr{3},'position',rposition3,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'tooltipstring','Press to continue when done modifying the structure','callback',@pushbutton_cbf,'BackgroundColor',[0 0.75 0]);
             %
         end
         %

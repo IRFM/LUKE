@@ -54,3 +54,18 @@ else % s exists
     sobj.disp.state = 'on';    
     %
 end
+%
+if status == 0,% s does not exist
+    if mode == 0,
+        sobj.make.highlight = true;
+    else
+        sobj.run.highlight = true;
+    end
+else
+    if mode == 0,
+        sobj.make.highlight = false;
+    else
+        sobj.run.highlight = false;
+    end
+end    
+

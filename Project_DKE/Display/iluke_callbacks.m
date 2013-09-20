@@ -54,7 +54,6 @@ switch action
         % importing external data
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
-        iluke_update;
         %
         external = iload_externaldata_jd(dkepath,'',workdir,lukeobj.infopanel.handle,style);
         %
@@ -141,7 +140,6 @@ switch action
         % creating equilibrium structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
-        iluke_update;
         %
         select.style = style;
         %
@@ -278,7 +276,6 @@ switch action
         % creating ohmic structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
-        iluke_update;
         %
         select.style = style;
         %
@@ -390,7 +387,6 @@ switch action
         % creating transpfaste structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
-        iluke_update;
         %
         select.style = style;
         %
@@ -507,7 +503,6 @@ switch action
         % creating wavestruct structure from external
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
-        iluke_update;
         %
         select = struct;
         select.style = style;
@@ -531,7 +526,6 @@ switch action
         % creating wavestruct structure from scratch
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
-        iluke_update;
         %
         select = struct;
         select.style = style;
@@ -603,7 +597,6 @@ switch action
         % modifying angles data
         %
         %lukeobj = iluke_info(lukeobj,'');% disable info display
-        %iluke_update;
         %
         iw = lukeobj.wavestruct.select.value;
         %
@@ -702,7 +695,6 @@ switch action
         % modifying launch data
         %
         %lukeobj = iluke_info(lukeobj,'');% disable info display
-        %iluke_update;
         %
         iw = lukeobj.wavestruct.select.value;
         %
@@ -840,7 +832,6 @@ switch action
         % modifying c3po parameters
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
-        iluke_update;
         %
         iw = lukeobj.wavestruct.select.value;
         %
@@ -976,7 +967,6 @@ switch action
         % creating wave structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
-        iluke_update;
         %
         select.style = style;
         %
@@ -1056,7 +1046,6 @@ switch action
         % saving wave structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
-        iluke_update;
         %
         sbase = 'WAVE';
         filestr = [sbase,'_*.mat'];
@@ -1090,7 +1079,6 @@ switch action
         % clearing wave structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
-        iluke_update;
         %
         titletext = 'Select the wave structure to clear:';   
         nw = length(waves);
@@ -1172,7 +1160,6 @@ switch action
         % show run luke pannel
         %
         lukeobj = iluke_info(lukeobj,'luke');% disable info display
-        iluke_update;
         %
         if isempty(job),
             lukeobj.runcheck.visible = 'off';
