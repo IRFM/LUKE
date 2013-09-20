@@ -474,7 +474,9 @@ function [s,mod] = imod_struct_jd(s,sname,d_opt,opt_gui,sextra,style)
             end            
             %
         elseif stype(iname) == 3,%structure
+            set(cgui,'Visible','off');
             [s.(fname),mod(imod)] = imod_struct_jd(s.(fname),fname,d_opt,opt_gui,struct,style);
+            set(cgui,'Visible','on');
         elseif stype(iname) == 4,%cell
             [s.(fname),mod(imod)] = imod_cell_jd(s.(fname),fname,d_opt,opt_gui);
         elseif stype(iname) == 5,%unidentified type 
