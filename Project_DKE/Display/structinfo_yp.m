@@ -95,6 +95,17 @@ switch struct
         end
 		%
         %
+    case 'rtparam',
+        %
+        switch field 
+            case 'rayparam',expert = 0;info = 'ray parameters';
+            case 'waveparam',expert = 0;info = 'wave parameters';
+            case 'fitparam',expert = 0;info = 'interpolation parameters';
+            case 'C3POparam',expert = 0;info = 'distributed computing parameters';
+            case 'C3POdisplay',expert = 0;info = 'display parameters';
+            otherwise,
+        end
+		%
     case 'rayparam',
         %
         switch field 
@@ -195,6 +206,7 @@ switch struct
             case 'id',expert = 0;values = '';info = 'Provide an id for this launching structure';
             case 'omega_rf',expert = 0;values = [0;Inf];info = 'Wave angular frequency (rad/s)';
             case 'frequency_GHz',expert = 0;values =[0;Inf];info = 'Wave frequency (GHz)';
+            % LH    
             case 'LFS',expert = 0;values = [-1,1];info = 'Launching side : (-1) high field side, (1) low field side';
             case 'm0',expert = 0;values = [-Inf;Inf];info = 'Initial poloidal mode number (enter ''NaN'' to use toroidal mode number)';
             case 'n0',expert = 1;values = [-Inf;Inf];info = 'Initial toroidal mode number (enter ''NaN'' to use poloidal mode number)';
@@ -205,6 +217,45 @@ switch struct
             case 'bNpar0',expert = 0;values = [-Inf;Inf];info = 'Initial Npar in each lobe';
             case 'bdNpar0',expert = 0;values = [0;Inf];info = 'Spectral width in each lobe : specify fixed value, or type ''0'' if minimum width within numerical constraints';
             case 'rZ0',expert = 0;values = [-Inf;Inf];info = 'Vertical launching positions (m)';
+            % EC
+            case 'yP_L',expert = 0;values = [0;Inf];info = 'Ray initial power (W)';
+            case 'yP_L_kW',expert = 0;values = [0;Inf];info = 'Ray initial power (kW)';
+            case 'yR_L',expert = 0;values = [0;Inf];info = 'Ray initial major radius (m)';
+            case 'yZ_L',expert = 0;values = [-Inf;Inf];info = 'Ray initial vertical position (m)';
+            case 'yphi_L',expert = 0;values = [-pi;pi];info = 'Ray initial toroidal position (in rad.)';
+            case 'yphi_L_deg',expert = 0;values = [-180;180];info = 'Ray initial toroidal position (in deg.)';
+            case 'yalpha_L',expert = 0;values = [-pi;pi];info = 'Ray initial toroidal angle (with resp. to R) (in rad.)';
+            case 'yalpha_L_deg',expert = 0;values = [-180;180];info = 'Ray initial toroidal angle (with resp. to R) (in deg.)';
+            case 'ybeta_L',expert = 0;values = [-pi/2;pi/2];info = 'Ray initial poloidal angle (with resp. to Z) (in rad.)';
+            case 'ybeta_L_deg',expert = 0;values = [-90;90];info = 'Ray initial poloidal angle (with resp. to Z) (in deg.)';
+            case 'w0',expert = 1;values = [0;Inf];info = 'Beam waist (m)';
+            case 'z_L',expert = 1;values = [-Inf;Inf];info = 'Distance from last mirror to focal point (m)';            
+            case 'dNpar0',expert = 1;values = [0;Inf];info = 'Beam dNpar : (0) minimal, (0->Inf) specify, (NaN) calculate from beam size';
+            otherwise,
+        end
+        %
+    case 'angles',
+        %
+        switch field 
+            case 'id',expert = 0;values = '';info = 'Provide an id for this angles structure';
+            case 'freq',expert = 0;values = [0;Inf];info = 'Wave frequency (Hz)';
+            case 'frequency_GHz',expert = 0;values =[0;Inf];info = 'Wave frequency (GHz)';
+            case 'P0',expert = 0;values = [0;Inf];info = 'Launched power (W)';
+            case 'P0_kW',expert = 0;values = [0;Inf];info = 'Launched power (kW)';
+            case 'theta',expert = 0;values = [-pi/2;pi/2];info = 'Launcher tilt angle (in rad.)';
+            case 'theta_deg',expert = 0;values = [-90;90];info = 'Launcher tilt angle (in deg.)';
+            case 'phi',expert = 0;values = [-pi;pi];info = 'Launcher rotation angle (in rad.)';
+            case 'phi_deg',expert = 0;values = [-180;180];info = 'Launcher rotation angle (in deg.)';
+            case 'w0',expert = 1;values = [0;Inf];info = 'Beam waist (m)';
+            case 'z_L',expert = 1;values = [-Inf;Inf];info = 'Distance from last mirror to focal point (m)';
+            case 'P1_R',expert = 1;values = [0;Inf];info = 'First mirror major radius (m)';
+            case 'P1_Z',expert = 1;values = [-Inf;Inf];info = 'First mirror vertical position (m)';
+            case 'P1_theta',expert = 1;values = [-pi/2;pi/2];info = 'First mirror angle (in rad.)';
+            case 'P1_theta_deg',expert = 1;values = [-90;90];info = 'First mirror angle (in deg.)';
+            case 'P2_R',expert = 1;values = [0;Inf];info = 'Second mirror major radius (m)';
+            case 'P2_Z',expert = 1;values = [-Inf;Inf];info = 'Second mirror vertical position (m)';
+            case 'P2_d',expert = 1;values = [0;Inf];info = 'Second mirror thickness (m)';
+            case 'P3_Z',expert = 1;values = [-Inf;Inf];info = 'Third mirror vertical position (m)';
             otherwise,
         end
         %
