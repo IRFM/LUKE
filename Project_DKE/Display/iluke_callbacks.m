@@ -54,6 +54,7 @@ switch action
         % importing external data
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
+        iluke_update;
         %
         external = iload_externaldata_jd(dkepath,'',workdir,lukeobj.infopanel.handle,style);
         %
@@ -140,6 +141,7 @@ switch action
         % creating equilibrium structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
+        iluke_update;
         %
         select.style = style;
         %
@@ -276,6 +278,7 @@ switch action
         % creating ohmic structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
+        iluke_update;
         %
         select.style = style;
         %
@@ -387,6 +390,7 @@ switch action
         % creating transpfaste structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
+        iluke_update;
         %
         select.style = style;
         %
@@ -503,30 +507,89 @@ switch action
         % creating wavestruct structure from external
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
+        iluke_update;
         %
+        select = struct;
         select.style = style;
         %
         launchs = imake_launch_jd(dkepath,lukeobj.tokamak.string,equil,external.wave,workdir,lukeobj.infopanel.handle,select);
         %
         for iw = 1:length(launchs);
             %
-            id_rtparam = launchs{iw}.type;
-            wavestruct = load_structures_yp('rtparam',id_rtparam,'');
-            wavestruct.rtparam = ['C3POPARAM_',id_rtparam,'.mat'];
-            %
-            wavestruct.launch = launchs{iw};
-            wavestruct.wavesolver = 'C3PO';
-            wavestruct.id = [wavestruct.wavesolver,'_',wavestruct.launch.id];
-            wavestruct.equil = equil;
-            wavestruct.equil_id = equil.id;
-            %
-            wavestructs{end+1} = wavestruct;
+            wavestructs{end+1} = imake_wavestructs_jd(equil,launchs{iw});
             %
             lukeobj.wavestruct.select.value = length(wavestructs);
             %
         end
         %
+        clear select launchs
+        %
         lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        %
+    case 'wavestructmake'
+        %
+        % creating wavestruct structure from scratch
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        iluke_update;
+        %
+        select = struct;
+        select.style = style;
+        %
+        launchs = imake_launch_jd(dkepath,lukeobj.tokamak.string,equil,'',workdir,lukeobj.infopanel.handle,select);
+        %
+        wavestructs{end+1} = imake_wavestructs_jd(equil,launchs{1});
+        %
+        lukeobj.wavestruct.select.value = length(wavestructs);
+        %
+        clear select launchs
+        %
+        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        %
+    case 'wavestructload'
+        %
+        % loading wavestruct data
+        %
+        sbase = 'WAVESTRUCTS';
+        filestr = [sbase,'_*.mat'];
+        %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
+        %
+        %
+        if filename ~= 0,
+            %
+            load([pathname,filename],'wavestruct');
+            %
+            wavestructs{end+1} = wavestruct;
+            %
+            lukeobj.wavestruct.select.value = length(wavestructs);
+            %
+            clear wavestruct
+            %
+        end  
+        %
+        clear sbase filestr filename pathname
+        %
+    case 'wavestructsave'
+        %
+        % saving wavestruct structure
+        %
+        wavestruct = wavestructs{lukeobj.wavestruct.select.value};
+        %
+        sbase = 'WAVESTRUCTS';
+        filestr = [sbase,'_*.mat'];
+        filename = [sbase,'_',equil.id,'_',wavestruct.id,'.mat'];
+        %
+        [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
+        %
+        %
+        if filename ~= 0,
+            %
+            save([pathname,filename],'wavestruct');
+            %
+        end  
+        %
+        clear wavestruct sbase filestr filename pathname
         %
     case 'wavestructclear'
         %
@@ -534,6 +597,350 @@ switch action
         %
         wavestructs(lukeobj.wavestruct.select.value) = [];
         lukeobj.wavestruct.select.value = length(wavestructs);
+        %        
+    case 'anglesmodify'
+        %
+        % modifying angles data
+        %
+        %lukeobj = iluke_info(lukeobj,'');% disable info display
+        %iluke_update;
+        %
+        iw = lukeobj.wavestruct.select.value;
+        %
+        angles = wavestructs{iw}.launch.angles;
+        if isfield(angles,'orig'),
+            orig = angles.orig;
+            angles = rmfield(angles,'orig');
+        else
+            orig = angles;
+        end
+        %
+        angles.frequency_GHz = angles.freq/1e9;
+        angles.P0_kW = angles.P0/1e3;
+        angles.theta_deg = angles.theta*180/pi;
+        angles.phi_deg = angles.phi*180/pi;
+        angles.P1_theta_deg = angles.P1_theta*180/pi;
+        %
+        [angles,mod] = imod_struct_jd(rmfield(angles,{'freq','P0','theta','phi','P1_theta'}),'angles',1,true,struct,style);%lukeobj.infopanel.handle
+        %
+        if any(mod),
+            angles.freq = angles.frequency_GHz*1e9;
+            angles.P0 = angles.P0_kW*1e3;
+            angles.theta = angles.theta_deg*pi/180;
+            angles.phi = angles.phi_deg*pi/180;
+            angles.P1_theta = angles.P1_theta_deg*pi/180;
+            %
+            angles.orig = orig;
+            %
+            wavestructs{iw}.launch = imake_launch_angles_TCV_jd(rmfield(angles,{'frequency_GHz','P0_kW','theta_deg','phi_deg','P1_theta_deg'}));
+            wavestructs{iw}.id = [wavestructs{iw}.wavesolver,'_',wavestructs{iw}.launch.id];
+            %
+        end
+        %
+        clear iw angles orig mod
+        %
+        %lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        %        
+    case 'anglesload'
+        %
+        % loading angles data
+        %
+        sbase = 'ANGLES';
+        filestr = [sbase,'_*.mat'];
+        %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
+        %
+        %
+        if filename ~= 0,
+            %
+            load([pathname,filename],'angles');
+            %
+            wavestructs{end+1} = imake_wavestructs_jd(equil,imake_launch_angles_TCV_jd(angles));
+            %
+            lukeobj.wavestruct.select.value = length(wavestructs);
+            %
+            clear angles
+            %
+        end  
+        %
+        clear sbase filestr filename pathname
+        %
+    case 'anglessave'
+        %
+        % saving angles structure
+        %
+        angles = wavestructs{lukeobj.wavestruct.select.value}.launch.angles;
+        %
+        sbase = 'ANGLES';
+        filestr = [sbase,'_*.mat'];
+        filename = [sbase,'_',angles.id,'.mat'];
+        %
+        [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
+        %
+        %
+        if filename ~= 0,
+            %
+            save([pathname,filename],'angles');
+            %
+        end  
+        %
+        clear angles sbase filestr filename pathname 
+        %
+    case 'anglesreset'
+        %
+        % resetting angles data
+        %
+        iw = lukeobj.wavestruct.select.value;
+        %
+        wavestructs{iw}.launch = imake_launch_angles_TCV_jd(wavestructs{iw}.launch.angles.orig);
+        wavestructs{iw}.id = [wavestructs{iw}.wavesolver,'_',wavestructs{iw}.launch.id];
+        %
+        clear iw
+        %
+    case 'launchmodify'
+        %
+        % modifying launch data
+        %
+        %lukeobj = iluke_info(lukeobj,'');% disable info display
+        %iluke_update;
+        %
+        iw = lukeobj.wavestruct.select.value;
+        %
+        launch = wavestructs{iw}.launch;
+        if isfield(launch,'orig'),
+            orig = launch.orig;
+            launch = rmfield(launch,'orig');
+        else
+            orig = launch;
+        end
+        %
+        type = launch.type;
+        launch = rmfield(launch,'type');
+        %
+        if strcmp(type,'EC'),
+            %
+            launch.frequency_GHz = launch.omega_rf/(2*pi*1e9);
+            launch.yP_L_kW = launch.yP_L/1e3;
+            launch.yphi_L_deg = launch.yphi_L*180/pi;
+            launch.yalpha_L_deg = launch.yalpha_L*180/pi;
+            launch.ybeta_L_deg = launch.ybeta_L*180/pi;
+            %
+            launch = rmfield(launch,{'omega_rf','yP_L','yphi_L','yalpha_L','ybeta_L'});
+            if isfield(launch,'angles'),
+                launch = rmfield(launch,'angles');
+            end
+            %
+        elseif strcmp(type,'LH'),
+            %
+            launch.frequency_GHz = launch.omega_rf/(2*pi*1e9);
+            launch.bPlhtot_MW = launch.bPlhtot/1e6;
+            launch.phi0_deg = launch.phi0*180/pi;
+            %
+            launch = rmfield(launch,{'omega_rf','bPlhtot','phi0'});
+            if isfield(launch,'aloha'),
+                launch = rmfield(launch,'aloha');
+            end
+            %
+        end
+        %
+        [launch,mod] = imod_struct_jd(launch,'launch',1,true,struct,style);%lukeobj.infopanel.handle
+        %
+        if any(mod),
+            %
+            if strcmp(type,'EC'),
+                %
+                launch.omega_rf = launch.frequency_GHz*(2*pi*1e9);
+                launch.yP_L = launch.yP_L_kW*1e3;
+                launch.yphi_L = launch.yphi_L_deg*pi/180;
+                launch.yalpha_L = launch.yalpha_L_deg*pi/180;
+                launch.ybeta_L = launch.ybeta_L_deg*pi/180;
+                %
+                launch = rmfield(launch,{'frequency_GHz','yP_L_kW','yphi_L_deg','yalpha_L_deg','ybeta_L_deg'});
+                %
+            elseif strcmp(type,'LH'),
+                %
+                launch.omega_rf = launch.frequency_GHz*(2*pi*1e9);
+                launch.bPlhtot = launch.bPlhtot_MW*1e6;
+                launch.phi0 = launch.phi0_deg*pi/180;
+                %
+                launch = rmfield(launch,{'frequency_GHz','bPlhtot_MW','phi0_deg'});
+                %
+            end
+            %
+            launch.type = type;
+            launch.orig = orig;
+            %
+            wavestructs{iw}.launch = launch;
+            wavestructs{iw}.id = [wavestructs{iw}.wavesolver,'_',wavestructs{iw}.launch.id];
+            %
+        end
+        %
+        clear iw launch orig type mod
+        %
+        %lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        %        
+    case 'launchload'
+        %
+        % loading angles data
+        %
+        sbase = 'LAUNCH';
+        filestr = [sbase,'_*.mat'];
+        %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
+        %
+        %
+        if filename ~= 0,
+            %
+            load([pathname,filename],'launch');
+            %
+            wavestructs{end+1} = imake_wavestructs_jd(equil,launch);
+            %
+            lukeobj.wavestruct.select.value = length(wavestructs);
+            %
+            clear launch
+            %
+        end  
+        %
+        clear sbase filestr filename pathname
+        %
+    case 'launchsave'
+        %
+        % saving angles structure
+        %
+        launch = wavestructs{lukeobj.wavestruct.select.value}.launch;
+        %
+        sbase = 'LAUNCH';
+        filestr = [sbase,'_*.mat'];
+        filename = [sbase,'_',launch.id,'.mat'];
+        %
+        [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
+        %
+        %
+        if filename ~= 0,
+            %
+            save([pathname,filename],'launch');
+            %
+        end  
+        %
+        clear launch sbase filestr filename pathname 
+        %
+    case 'launchreset'
+        %
+        % resetting launch data
+        %
+        iw = lukeobj.wavestruct.select.value;
+        %
+        wavestructs{iw}.launch = wavestructs{iw}.launch.orig;
+        wavestructs{iw}.id = [wavestructs{iw}.wavesolver,'_',wavestructs{iw}.launch.id];
+        %
+        clear iw
+        %
+    case 'c3poparammodify'
+        %
+        % modifying c3po parameters
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        iluke_update;
+        %
+        iw = lukeobj.wavestruct.select.value;
+        %
+        rtparam = selectfields_jd(wavestructs{iw},{'rtparam','rayparam','waveparam','fitparam','C3POparam','C3POdisplay'});
+        if isfield(wavestructs{iw},'orig'),
+            orig = wavestructs{iw}.orig;
+        else
+            orig = rtparam;
+        end
+        %
+        [rtparam,mod] = imod_struct_jd(rtparam,'rtparam',1,lukeobj.infopanel.handle,struct,style);
+        %
+        if any(mod),
+            %
+            wavestructs{iw}.rayparam = rtparam.rayparam;
+            wavestructs{iw}.waveparam = rtparam.waveparam;
+            wavestructs{iw}.fitparam = rtparam.fitparam;
+            wavestructs{iw}.C3POparam = rtparam.C3POparam;
+            wavestructs{iw}.C3POdisplay = rtparam.C3POdisplay;
+            wavestructs{iw}.rtparam = '< not saved >';
+            %
+            wavestructs{iw}.orig = orig;
+            %
+        end
+        %
+        clear iw rtparam orig mod
+        %
+        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        %        
+    case 'c3poparamload'
+        %
+        % loading c3po parameters
+        %
+        sbase = 'C3POPARAM';
+        filestr = [sbase,'_*.mat'];
+        %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
+        %
+        if filename ~= 0,
+            %
+            iw = lukeobj.wavestruct.select.value;
+            %
+            rtparam = load([pathname,filename],'rayparam','waveparam','fitparam','C3POparam','C3POdisplay');
+            %
+            wavestructs{iw}.rayparam = rtparam.rayparam;
+            wavestructs{iw}.waveparam = rtparam.waveparam;
+            wavestructs{iw}.fitparam = rtparam.fitparam;
+            wavestructs{iw}.C3POparam = rtparam.C3POparam;
+            wavestructs{iw}.C3POdisplay = rtparam.C3POdisplay;
+            wavestructs{iw}.rtparam = filename;
+            %
+            if isfield(wavestructs{iw},'orig'),
+                wavestructs{iw} = rmfield(wavestructs{iw},'orig');
+            end
+            %
+            clear iw rtparam
+            %
+        end  
+        %
+        clear sbase filestr filename pathname
+        %
+    case 'c3poparamsave'
+        %
+        % saving c3po parameters
+        %
+        iw = lukeobj.wavestruct.select.value;
+        %
+        rtparam = selectfields_jd(wavestructs{iw},{'rtparam','rayparam','waveparam','fitparam','C3POparam','C3POdisplay'});
+        %
+        sbase = 'C3POPARAM';
+        filestr = [sbase,'_*.mat'];
+        filename = [sbase,'_',wavestructs{iw}.id,'.mat'];
+        %
+        [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
+        %
+        %
+        if filename ~= 0,
+            %
+            save([pathname,filename],'-struct','rtparam');
+            %
+        end  
+        %
+        clear iw rtparam sbase filestr filename pathname 
+        %
+    case 'c3poparamreset'
+        %
+        % resetting c3po parameters
+        %
+        iw = lukeobj.wavestruct.select.value;
+        %
+        wavestructs{iw}.rayparam = wavestructs{iw}.orig.rayparam;
+        wavestructs{iw}.waveparam = wavestructs{iw}.orig.waveparam;
+        wavestructs{iw}.fitparam = wavestructs{iw}.orig.fitparam;
+        wavestructs{iw}.C3POparam = wavestructs{iw}.orig.C3POparam;
+        wavestructs{iw}.C3POdisplay = wavestructs{iw}.orig.C3POdisplay;
+        wavestructs{iw}.rtparam = wavestructs{iw}.orig.rtparam;
+        %
+        wavestructs{iw} = rmfield(wavestructs{iw},'orig');
+        %
+        clear iw
         %
     case 'c3postart'
         %
@@ -569,6 +976,7 @@ switch action
         % creating wave structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
+        iluke_update;
         %
         select.style = style;
         %
@@ -648,6 +1056,7 @@ switch action
         % saving wave structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
+        iluke_update;
         %
         sbase = 'WAVE';
         filestr = [sbase,'_*.mat'];
@@ -681,6 +1090,7 @@ switch action
         % clearing wave structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
+        iluke_update;
         %
         titletext = 'Select the wave structure to clear:';   
         nw = length(waves);
@@ -762,6 +1172,7 @@ switch action
         % show run luke pannel
         %
         lukeobj = iluke_info(lukeobj,'luke');% disable info display
+        iluke_update;
         %
         if isempty(job),
             lukeobj.runcheck.visible = 'off';

@@ -99,6 +99,8 @@ function lukeobj = iluke_switch(lukeobj,str)
         %
         lukeobj.wavestruct.visible = 'on';
         lukeobj.wavestruct.select.visible = 'off';
+        lukeobj.angles.visible = 'on';
+        lukeobj.spectrum.visible = 'on';
         lukeobj.launch.visible = 'on';
         lukeobj.c3poparam.visible = 'on';
         lukeobj.runc3po.visible = 'on';

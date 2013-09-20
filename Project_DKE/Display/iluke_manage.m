@@ -10,3 +10,5 @@ end
 
 lukeobj.data.disp.state = 'off';
 
+lukeobj.r5x2.run.state = 'off';
+

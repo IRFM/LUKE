@@ -143,7 +143,58 @@ if ~isempty(external),% import wave data from external structure
     %
 else% create default launch structure
     %
-    
+    % WAVE TYPE
+    %
+    if strcmp(basestr,'TCV'),
+        %
+        type = 'EC';
+        %
+    else
+        %
+        t_opt = iselect_jd({'LH','EC'},'Specify wave type',opt_gui,select.style,1) - 1;
+        %
+        if t_opt == 0,
+            %
+            type = 'LH';
+        else
+            %
+            type = 'EC';
+        end
+        %
+    end
+    %
+    % BUILDING LAUNCH
+    %
+    if strcmp(type,'LH'),
+        %
+        launch = imake_launch_LH_jd(basestr,equil,'',opt_gui);
+        %
+    elseif strcmp(type,'EC'),
+        % 
+        if strcmp(basestr,'TCV'),% TCV launching data
+            %
+            % default angles (perpendicular midplane launching)
+            %
+            angles = imake_angles_TCV_jd('',NaN,NaN,1,NaN,opt_gui,select.style);
+            %
+            launch = imake_launch_angles_TCV_jd(angles);
+            %
+        elseif strcmp(basestr,'TS')
+            %
+            launch = imake_launch_TS_jd('');
+            %
+        else
+            %
+            launch = imake_launch_EC_jd;
+            %
+        end
+    else
+        %
+        disp('-----> wave type not yet implemented');
+        %
+    end   
+    %
+    launchs{1} = launch;
     %
 end
 %
@@ -227,69 +278,6 @@ elseif i_opt == 2,% build the wave data locally
     %
     %
     if d_opt == 0,% user-specified initial conditions 
-        %
-        % WAVE TYPE
-        %
-        if strcmp(basestr,'TCV'),
-            %
-            type = 'EC';
-            %
-        else
-            %
-            t_opt = input_dke_yp('Option for wave type : 0 (LH), 1 (EC)',0,0:1,'',[1,1]);
-            %
-            if t_opt == 0,
-                %
-                type = 'LH';
-            else
-                %
-                type = 'EC';
-            end
-            %
-        end
-        %
-        % BUILDING LAUNCH
-        %
-        if strcmp(type,'LH'),
-            %
-            launch = imake_launch_LH_jd(basestr,equil,'',opt_gui);
-            %
-        elseif strcmp(type,'EC'),
-            % 
-            if strcmp(basestr,'TCV'),% TCV launching data
-                %
-				a_opt = input_dke_yp('Do you want to specify : launcher angles (0) or initial ray parameters (1)',0,0:1,'',[1,1]);
-				%
-				if a_opt == 0,
-					angles = imake_angles_TCV_jd;
-					%
-					if isempty(angles),
-						disp('-----> launching data not determined');
-						return
-					end
-					%
-					launch = imake_launch_angles_TCV_jd(angles);
-					launch.type = type;
-					%
-				else
-					launch = imake_launch_EC_jd;
-				end
-                %
-            elseif strcmp(basestr,'TS')
-                %
-                launch = imake_launch_TS_jd('');
-                %
-            else
-                %
-                launch = imake_launch_EC_jd;
-                %
-            end
-        else
-            %
-            disp('-----> wave type not yet implemented');
-            return  
-            %
-        end
         %
     elseif d_opt == 1,%initial conditions from an existing LAUNCH file 
         %

@@ -88,7 +88,7 @@ if ~isempty(data),
 else
     %
     if isnan(l_opt),
-        l_opt = input('Select the launcher number? (1-6) : ');
+        l_opt = iselect_jd({'L1','L2','L3','L4','L5','L6'},'Specify launcher',opt_gui,style,1,'popupmenu');
     end
     %
     if isempty(l_opt) || ~isnumeric(l_opt) || ~any(l_opt == 1:6),
@@ -187,6 +187,14 @@ else
         %
         angles.theta = theta;%(end) temporary, wait for bug to be fixed
         angles.phi = phi;%(end) temporary, wait for bug to be fixed
+        %
+    elseif isnan(angles), %default value for perpendicular midplane launching
+        %
+        angles = struct;
+        angles.theta = 0;
+        angles.phi = 0;
+        angles.freq = 82.7e9;
+        angles.P0 = 500e3;
         %
     end
     %

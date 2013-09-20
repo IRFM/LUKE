@@ -332,9 +332,9 @@ lukeobj.remote.timeout.value = 0;
 % RUN C3PO PANEL
 %
 lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'wavestruct',{'title','import','make','load','save','clear',''},'Structures',style.infoheightcorr - style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'angles',{'title','modify','load','save','reset','','text'},'Angles',style.infoheightcorr - 2*style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'spectrum',{'title','modify','load','save','reset','','text'},'Spectrum',style.infoheightcorr - 2*style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'launch',{'title','modify','load','save','reset','','text'},'Launch',style.infoheightcorr - 3*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'angles',{'title','modify','load','save','reset','','text'},'EC Angles',style.infoheightcorr - 2*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'spectrum',{'title','modify','load','save','reset','','text'},'LH Spectrum',style.infoheightcorr - 3*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'launch',{'title','modify','load','save','reset','','text'},'Launch',style.infoheightcorr - 4*style.butheightcorr,style);
 lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'c3poparam',{'title','modify','load','save','reset','','text'},'Parameters',style.infoheightcorr - 5*style.butheightcorr,style);
 
 set(lukeobj.angles.text.handle,'HorizontalAlignment','left');
