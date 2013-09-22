@@ -443,8 +443,23 @@ if w_opt == 0; % C3PO Calculation
     sd = pwd;
     cd(workdir);
     %
-    wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam);
+    if length(rayinit.yrho0) > 1,
+        disp(['-----> There are ',int2str(length(rayinit.yrho0)),' rays to calculate. It may be valuable to consider parallel and remote computing for time saving.']);
+        %
+        wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = input_dke_yp(['Distributed computing mode: (0) disabled, (1) Matlab toolbox, (2) LUKE toolbox, (3) parfor. (+i enables GPU calculations for all modes)'],0,[0;3],'');
+        %
+        update_remote_jd(dkepath);
+        %
+        wavestruct.C3POparam.mdce_remnum = input_dke_yp(['Remote calculations: (0) disabled:local, (1-',int2str(length(dkepath.remote)),') remote computing'],0,[0;length(dkepath.remote)],'');
+        %
+    end
+    %   
+    tstart = tic;wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam);telapsed = toc(tstart);    
     %
+    disp(' ');
+    disp(['The calculation of ',int2str(length(rayinit.yrho0)),' rays has been done in ',num2str(telapsed),' (s).']);
+    disp(' ');
+    %i
     cd(sd);
     %
     wave.info.type = 'RT';
