@@ -83,13 +83,13 @@ if ~isempty(external),
         launch.m0 = 0;
         %
         disp(['----> The LH antenna has ',int2str(length(position.Z)), ' poloidal rows.']);
-        position_rZ0_opt = input_dke_yp('Do you want to consider all of them or just averaged position [y/n]','n',{'y','n'},'',[1,1]);
+        position_rZ0_opt = input_dke_yp('Do you want to consider all poloidal rows [y]','y',{'y','n'},'',[1,1]);
         %
         if strcmp(position_rZ0_opt,'y'),
             launch.rZ0 = position.Z;
         else 
             launch.rZ0 = sum(position.Z);
-            disp(['----> The averaged poloidal position of the LH antenna is ',num2str(launch.rZ0), ' (m).']);
+            disp(['----> The averaged poloidal position of the LH antenna at the vertical position Zant = ',num2str(launch.rZ0), ' (m).']);
         end
         %
         if ~isfield(power_spectrum,'dn_par'),
