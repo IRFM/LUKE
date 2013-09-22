@@ -11,7 +11,7 @@ global nfig
 remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remnum = 0;% remote profile number. Use 0 for local sequential calculations
+remnum = 1;% remote profile number. Use 0 for local sequential calculations
 remdebugmode = 0;%1;% debug mode (0) off (1) on
 remclean = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 %
