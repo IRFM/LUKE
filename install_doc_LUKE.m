@@ -179,7 +179,7 @@ overview_scripts(3).path = fullfile(luke_root,'VERSIONS.m');overview_scripts(3).
 overview_scripts(4).path = fullfile(luke_root,'AUTHORS.m');overview_scripts(4).format = '';
 %
 excludedfoldernames = {};
-htmldocbuilder_luke_yp(m2htmllib_path,'off',luke_root,search_path,excludedfoldernames,overview_scripts,test);%build html doc
+htmldocbuilder_luke_yp(m2htmllib_path,'off',luke_root,search_path,dot_path,excludedfoldernames,overview_scripts,test,verbose);%build html doc
 %
 % Check that the list of TeX files given below is similar in the html file ~','LUKE/Packages/m2html/templates/LUKE/lukeoverview.html
 %  

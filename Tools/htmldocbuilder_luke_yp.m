@@ -42,16 +42,21 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
     if nargin == 1,
         recursive_mode = 'on';
         root_path = '';
+        dot_path = '';
         htmlview_mode = 0;
+        verbose = '';
     end   
     if nargin == 2,
         root_path = '';
+        dot_path = '';
         htmlview_mode = 0;
+        verbose = '';
     end
     if nargin <=3,
         search_path = {};
         excludedfoldernames = {};
         htmlview_mode = 0;
+        verbose = '';
     end
     %
     if isempty(root_path),
