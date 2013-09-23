@@ -294,6 +294,8 @@ function irunluke_jd(basestr,signs,opt_gui)
         disp(' ');
         disp('[17]  Go to command line')
         disp('[18]  Close all figures')
+        disp('[19]  LUKE documentation')
+        disp('[20]  LUKE project management (redmine): bug report, documentation, tutorial, repositories, etc')
         disp(' ');
         disp('[0]   Run LUKE or load BATCH LUKE results');
         disp('[-1]  Exit LUKE');
@@ -304,7 +306,7 @@ function irunluke_jd(basestr,signs,opt_gui)
         %
         clc
         %
-        if isempty(isel) | ~isnumeric(isel) | ~any(isel == [-2:18]),
+        if isempty(isel) | ~isnumeric(isel) | ~any(isel == [-2:20]),
             isel = -1;
         end
         %
@@ -1324,6 +1326,37 @@ function irunluke_jd(basestr,signs,opt_gui)
             elseif isel == 18,
                 %
                 close all;    
+                %
+            elseif isel == 19,
+                %
+                if ~isempty(dkepath),
+                    %
+                    if exist([dkepath.luke_root,'Documentation/index.html'])
+                        %
+                        disp('The LUKE documentation has not been created on this computer during the install process.');
+                        %
+                        doc_opt = input('Do you want to build it now (WARNING: it may take several minutes) (y/n)? [y] : ','s');
+                        %
+                        if strcmp(doc_opt,'y'),
+                            %
+                            dirinit = pwd;
+                            cd(dkepath.luke_root);
+                            %                       
+                            eval('install_doc_LUKE');
+                            %
+                            cd(dirinit);
+                        end
+                    else
+                        web(['file://',dkepath.luke_root,'Documentation/index.html'],'-notoolbar', '-new');
+                    end    
+                    %
+                else
+                    error('Use menu [5] first to set the LUKE paths !'); 
+                end
+                %
+            elseif isel == 20,
+                %
+                web('http://tolbachik.hd.free.fr:8080/redmine','-notoolbar', '-new');
                 % 
             elseif isel == 0,
                 %
