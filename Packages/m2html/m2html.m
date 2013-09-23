@@ -101,6 +101,7 @@ function m2html(varargin)
 msgInvalidPair = 'Bad value for argument: ''%s''';
 
 options = struct('verbose', 1,...
+                 'dotpath','./',...
 				 'mFiles', {{'.'}},...
 				 'htmlDir', '.',...
 				 'recursive', 0,...
@@ -162,6 +163,16 @@ for i=1:2:length(paramlist)
 					options.htmlDir = '.';
 				else
 					options.htmlDir = pvalue;
+				end
+			else
+				error(sprintf(msgInvalidPair,pname));
+            end
+        case 'dotpath'
+			if ischar(pvalue)
+				if isempty(pvalue),
+					options.dotpath = './';
+				else
+					options.dotpath = pvalue;
 				end
 			else
 				error(sprintf(msgInvalidPair,pname));
@@ -677,7 +688,7 @@ end
 %- Create a dependency graph for each output directory, if requested
 %-------------------------------------------------------------------------------
 tpl_graph = 'graph.tpl';
-dot_exec  = 'dot';
+dot_exec  = [options.dotpath,'dot'];
 %dotbase defined earlier
 
 if options.graph
@@ -712,7 +723,7 @@ if options.graph
 % paths in PATH have to be separated by a colon. Her is an example how the final
 % Path should look like:  ...;C:\WINNT\System32;...;C:\GraphViz\bin
 % (Note that this should have been done automatically during GraphViz installation)
-            if strcmp(computer,'MAC'),%for bug on MAC OS X with GTK+ lib
+            if strfind(computer,'MAC'),%for bug on MAC OS X with GTK+ lib
                 render = ':quartz ';
             else
                 render = ' ';
