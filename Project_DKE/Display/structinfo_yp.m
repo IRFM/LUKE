@@ -207,16 +207,19 @@ switch struct
             case 'omega_rf',expert = 0;values = [0;Inf];info = 'Wave angular frequency (rad/s)';
             case 'frequency_GHz',expert = 0;values =[0;Inf];info = 'Wave frequency (GHz)';
             % LH    
-            case 'LFS',expert = 0;values = [-1,1];info = 'Launching side : (-1) high field side, (1) low field side';
-            case 'm0',expert = 0;values = [-Inf;Inf];info = 'Initial poloidal mode number (enter ''NaN'' to use toroidal mode number)';
+            case 'LFS',expert = 1;values = [-1,1];info = 'Launching side : (-1) high field side, (1) low field side';
+            case 'm0',expert = 1;values = [-Inf;Inf];info = 'Initial poloidal mode number (enter ''NaN'' to use toroidal mode number)';
             case 'n0',expert = 1;values = [-Inf;Inf];info = 'Initial toroidal mode number (enter ''NaN'' to use poloidal mode number)';
-            case 'phi0',expert = 0;values = [-pi;pi];info = 'Initial toroidal angle (in rad.)';
-            case 'phi0_deg',expert = 0;values = [-180;180];info = 'Initial toroidal angle (in deg.)';
+            case 'phi0',expert = 1;values = [-pi;pi];info = 'Initial toroidal angle (in rad.)';
+            case 'phi0_deg',expert = 1;values = [-180;180];info = 'Initial toroidal angle (in deg.)';
             case 'bPlhtot',expert = 0;values = [0;Inf];info = 'Initial power in each lobe (W)';
             case 'bPlhtot_MW',expert = 0;values = [0;Inf];info = 'Initial power in each lobe (MW)';
             case 'bNpar0',expert = 0;values = [-Inf;Inf];info = 'Initial Npar in each lobe';
+            case 'bNy',expert = 0;values = [-Inf;Inf];info = 'Initial Ny in each lobe';
+            case 'bNz',expert = 0;values = [-Inf;Inf];info = 'Initial Nz in each lobe';
             case 'bdNpar0',expert = 0;values = [0;Inf];info = 'Spectral width in each lobe : specify fixed value, or type ''0'' if minimum width within numerical constraints';
             case 'rZ0',expert = 0;values = [-Inf;Inf];info = 'Vertical launching positions (m)';
+            case 'tail',expert = 0;info = 'Tail model parameters (m)';
             % EC
             case 'yP_L',expert = 0;values = [0;Inf];info = 'Ray initial power (W)';
             case 'yP_L_kW',expert = 0;values = [0;Inf];info = 'Ray initial power (kW)';
@@ -256,6 +259,21 @@ switch struct
             case 'P2_Z',expert = 1;values = [-Inf;Inf];info = 'Second mirror vertical position (m)';
             case 'P2_d',expert = 1;values = [0;Inf];info = 'Second mirror thickness (m)';
             case 'P3_Z',expert = 1;values = [-Inf;Inf];info = 'Third mirror vertical position (m)';
+            otherwise,
+        end
+        %
+    case 'tail',
+        %
+        switch field 
+            case 'mode',expert = 0;values = 0:3;info = 'mode for tail spectrum : (0) no tail model, (1)  Gaussian, (2) Linear, (3) calc_tail_jd';
+            case 'dtn',expert = 1;values = [0;Inf];info = 'statistical autocorrelation time (if dtn is Inf, no fluctuations)';
+            case 'bfwhm',expert = 1;values =[0;Inf];info = 'Gaussian distribution for npar0';
+            case 'bNparmax_tail',expert = 0;values =[0;Inf];info = 'maximum value of the high-n// tail (0) : 6.5/sqrt(Te0)';
+            case 'bopt_tail',expert = 0;values = [0;1];info = 'real part : fraction of final power height. (1) linear tail power profile (+1i) : adjust dNpar0';
+            case 'bh_tail',expert = 0;values = [0;1];info = 'fraction of final power height -> (1) linear tail power profile';
+            case 'opt_dnpar0',expert = 0;values = {true,false};info = 'adjust dNpar0 (true) or not';
+            case 'bn_tail',expert = 0;values = 0:100;info = 'number of peaks in the high-n// tail';
+            case 'bP_tail',expert = 0;values = [0;1];info = 'fraction of power in the high-n// tail (NaN : main lobe follows tail power distribution)';
             otherwise,
         end
         %

@@ -101,7 +101,7 @@ else
     lukeobj.wsparam.state = 'on';
     %
     if strcmp(wavestructs{iw}.launch.type,'LH'),
-        if isfield(wavestructs{iw}.launch,'aloha'),
+        if isfield(wavestructs{iw}.launch,'spectrum'),
             lukeobj.spectrum.modify.state = 'on';
             lukeobj.spectrum.save.state = 'on';
             %
@@ -110,14 +110,23 @@ else
             else
                 lukeobj.spectrum.reset.state = 'off';
             end
+            %
+            lukeobj.spectrum.text.string = ['ne0_17 = ',num2str(wavestructs{iw}.launch.spectrum.plasma.ne0/1e17,3),'',...
+                ' ; l1 = ',num2str(wavestructs{iw}.launch.spectrum.plasma.lambda_n(1)/1e3,3),' mm',...
+                ' ; l2 = ',num2str(wavestructs{iw}.launch.spectrum.plasma.lambda_n(2)/1e3,3),' mm'];
+            %
         else
             lukeobj.spectrum.modify.state = 'off';
             lukeobj.spectrum.save.state = 'off';
-            lukeobj.spectrum.reset.state = 'off'
+            lukeobj.spectrum.reset.state = 'off';
             lukeobj.spectrum.text.string = '';
         end
         %
         lukeobj.angles.text.string = '';
+        %
+        lukeobj.launch.text.string = [lukeobj.launch.text.string,...
+            ' ; N//0 : ',num2str(imag(wavestructs{iw}.launch.bNpar0(find(wavestructs{iw}.launch.bPlhtot == max(wavestructs{iw}.launch.bPlhtot),1,'first'))),3),'',...
+            ' ; P = ',num2str(sum(wavestructs{iw}.launch.bPlhtot)/1e6,3),' MW'];
         %
     elseif strcmp(wavestructs{iw}.launch.type,'EC'),
         if isfield(wavestructs{iw}.launch,'angles'),
@@ -142,8 +151,8 @@ else
         %
         lukeobj.spectrum.text.string = '';
         lukeobj.launch.text.string = [lukeobj.launch.text.string,...
-            ' ; alpha ',num2str(wavestructs{iw}.launch.yalpha_L*180/pi,3),' °',...
-            ' ; beta : ',num2str(wavestructs{iw}.launch.ybeta_L*180/pi,3),' °'];
+            ' ; alpha = ',num2str(wavestructs{iw}.launch.yalpha_L*180/pi,3),' °',...
+            ' ; beta = ',num2str(wavestructs{iw}.launch.ybeta_L*180/pi,3),' °'];
         %
     end
     %

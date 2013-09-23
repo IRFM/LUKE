@@ -203,6 +203,12 @@ end
 iluke_update_wavestruct;
 
 %
+% WORKDIR
+%
+cd(workdir)
+lukeobj.workdir.string = workdir;
+
+%
 % UPDATE OBJECTS
 %
 

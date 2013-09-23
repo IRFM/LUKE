@@ -24,10 +24,13 @@ style.plotheight = 300;
 style.graphwidth = 272;
 style.graphheight = 204;
 %
+style.titlestrwidth = 150;
+%
 style.simulfiletitlewidth = 120;
 style.shotnumtitlewidth = 120; 
 style.shotnumwidth = 80; 
 style.titlestrheight = 50;
+style.workdirtitlecorr = 4;
 %
 style.titlewidth = 105;
 style.butheight = 25;%40;% height of button
@@ -115,13 +118,16 @@ lukeobj.controlstr.position = [style.buthsep,style.controlheightcorr,style.panel
 %
 % SIMULATION INFO DIMENSIONS
 %
+lukeobj.lukevertitle.position = [style.buthsep,style.titleheight - style.butheight - style.butvsep + style.textheightcorr,style.simulfiletitlewidth,style.textheight];
+lukeobj.lukever.position = [2*style.buthsep + style.shotnumtitlewidth,style.titleheight - style.butheight - style.butvsep + style.textheightcorr,style.shotnumwidth + style.buthsep + style.butwidth,style.textheight];
+%
 lukeobj.tokamaktitle.position = [style.buthsep,2*style.butheight + 3*style.butvsep + style.textheightcorr,style.shotnumtitlewidth,style.textheight];
 lukeobj.shotnumtitle.position = [style.buthsep,style.butheight + 2*style.butvsep + style.textheightcorr,style.shotnumtitlewidth,style.textheight];
 lukeobj.shotimetitle.position = [style.buthsep,style.butvsep + style.textheightcorr,style.shotnumtitlewidth,style.textheight];
 %
-lukeobj.tokamak.position = [2*style.buthsep+style.shotnumtitlewidth,2*style.butheight + 3*style.butvsep + style.textheightcorr,style.shotnumwidth,style.textheight];
-lukeobj.shotnum.position = [2*style.buthsep+style.shotnumtitlewidth,style.butheight + 2*style.butvsep + style.textheightcorr,style.shotnumwidth,style.textheight];
-lukeobj.shotime.position = [2*style.buthsep+style.shotnumtitlewidth,style.butvsep + style.textheightcorr,style.shotnumwidth,style.textheight];
+lukeobj.tokamak.position = [2*style.buthsep + style.shotnumtitlewidth,2*style.butheight + 3*style.butvsep + style.textheightcorr,style.shotnumwidth,style.textheight];
+lukeobj.shotnum.position = [2*style.buthsep + style.shotnumtitlewidth,style.butheight + 2*style.butvsep + style.textheightcorr,style.shotnumwidth,style.textheight];
+lukeobj.shotime.position = [2*style.buthsep + style.shotnumtitlewidth,style.butvsep + style.textheightcorr,style.shotnumwidth,style.textheight];
 %
 lukeobj.exitluke.position = [style.shotnumtitlewidth + style.shotnumwidth + 3*style.buthsep,2*style.butheight + 3*style.butvsep,style.butwidth,style.butheight];
 lukeobj.newshot.position = [style.shotnumtitlewidth + style.shotnumwidth + 3*style.buthsep,style.butheight + 2*style.butvsep,style.butwidth,style.butheight];
@@ -131,14 +137,16 @@ lukeobj.saveshot.position = [style.shotnumtitlewidth + style.shotnumwidth + styl
 style.simulfilewidth = style.panelwidth - style.shotnumtitlewidth - style.shotnumwidth - 8*style.buthsep - 2*style.butwidth;
 %
 lukeobj.lukeroottitle.position = [style.panelwidth - style.simulfilewidth - 2*style.buthsep,2*style.butheight + 3*style.butvsep + style.textheightcorr,style.simulfiletitlewidth,style.textheight];
-lukeobj.lukevertitle.position = [style.panelwidth - style.simulfilewidth - 2*style.buthsep,style.butheight + 2*style.butvsep + style.textheightcorr,style.simulfiletitlewidth,style.textheight];
+%lukeobj.workdirtitlestr.position = [style.panelwidth - style.simulfilewidth - 2*style.buthsep,style.butheight + 2*style.butvsep + style.textheightcorr,style.simulfiletitlewidth,style.textheight];
+lukeobj.workdirtitle.position = [style.panelwidth - style.simulfilewidth - 2*style.buthsep - style.workdirtitlecorr,style.butheight + 2*style.butvsep,style.simulfiletitlewidth + style.workdirtitlecorr,style.butheight];
 lukeobj.simulfiletitle.position = [style.shotnumtitlewidth + style.shotnumwidth + 3*style.buthsep,style.butvsep + style.textheightcorr,2*style.buthsep + 2*style.butwidth,style.textheight];
 %
 lukeobj.lukeroot.position = [style.panelwidth - style.simulfilewidth + style.simulfiletitlewidth - style.buthsep,2*style.butheight + 3*style.butvsep + style.textheightcorr,style.simulfilewidth - style.simulfiletitlewidth,style.textheight];
-lukeobj.lukever.position = [style.panelwidth - style.simulfilewidth + style.simulfiletitlewidth - style.buthsep,style.butheight + 2*style.butvsep + style.textheightcorr,style.simulfilewidth - style.simulfiletitlewidth,style.textheight];
+lukeobj.workdir.position = [style.panelwidth - style.simulfilewidth + style.simulfiletitlewidth - style.buthsep,style.butheight + 2*style.butvsep + style.textheightcorr,style.simulfilewidth - style.simulfiletitlewidth,style.textheight];
 lukeobj.simulfile.position = [style.panelwidth - style.simulfilewidth - 2*style.buthsep,style.butvsep + style.textheightcorr,style.simulfilewidth + style.buthsep,style.textheight];
 %
-lukeobj.titlestr.position = [style.buthsep,3*style.butheight + 4*style.butvsep,style.panelwidth - 2*style.buthsep,style.titlestrheight];
+lukeobj.titlestr.position = [(style.panelwidth - style.titlestrwidth)/2,3*style.butheight + 4*style.butvsep,style.titlestrwidth,style.titlestrheight];
+lukeobj.documentation.position = [style.panelwidth - 2*style.buthsep - 2*style.butwidth,style.titleheight - style.butheight - style.butvsep,style.buthsep + 2*style.butwidth,style.butheight];
 %
 % LUKE RUN PANEL DIMENSIONS
 %
@@ -163,23 +171,27 @@ lukeobj.graph1print.string = 'Print';
 lukeobj.graph2print.string = 'Print';
 lukeobj.graph3print.string = 'Print';
 
+lukeobj.lukevertitle.string = 'LUKE VERSION  : ';
 lukeobj.tokamaktitle.string = 'TOKAMAK       : ';
 lukeobj.shotnumtitle.string = 'SHOT NUMBER   : ';
 lukeobj.shotimetitle.string = 'SHOT TIME (s) : ';
 
+lukeobj.lukever.string = LUKEversion_jd;
 lukeobj.tokamak.string = '< empty >';
 lukeobj.shotnum.string = '< empty >';
 lukeobj.shotime.string = '< empty >';
 
-lukeobj.lukeroottitle.string =  'LUKE SOURCE  : ';
-lukeobj.lukevertitle.string =   'LUKE VERSION : ';
+lukeobj.lukeroottitle.string =   'LUKE SOURCE : ';
+%lukeobj.workdirtitlestr.string = '            : ';
+lukeobj.workdirtitle.string =    'WORK DIRECT.: ';
+
 lukeobj.simulfiletitle.string = 'SIMULATION FILE : ';
 
 lukeobj.lukeroot.string = dkepath.luke_root;
-lukeobj.lukever.string = LUKEversion_jd;
 lukeobj.simulfile.string = '< not saved >';
 
 lukeobj.titlestr.string = {'SUMMARY'};
+lukeobj.documentation.string = 'LUKE DOC & HELP';
 
 lukeobj.exitluke.string = 'Exit';
 lukeobj.newshot.string = 'New';
@@ -214,6 +226,8 @@ lukeobj.exitluke.callback = 'close(lukeobj.mainfig.handle)';
 lukeobj.newshot.callback = 'status.external = 0;status.equil = 0;iluke_update;';
 lukeobj.loadshot.callback = 'action = ''loadshot'';iluke_callbacks;';
 lukeobj.saveshot.callback = 'action = ''saveshot'';iluke_callbacks;';
+lukeobj.workdirtitle.callback = 'action = ''workdir'';iluke_callbacks;';
+lukeobj.documentation.callback = 'action = ''documentation'';iluke_callbacks;';
 
 lukeobj.graph1sel.callback = 'lukeobj.plot1.gindex = get(lukeobj.graph1sel.handle,''Value'') - 1;iluke_update;';
 lukeobj.graph2sel.callback = 'lukeobj.plot2.gindex = get(lukeobj.graph2sel.handle,''Value'') - 1;iluke_update;';
@@ -273,18 +287,22 @@ lukeobj.shotime.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','Str
 
 lukeobj.lukeroot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.lukeroot.string,'Position',lukeobj.lukeroot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.lukever.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.lukever.string,'Position',lukeobj.lukever.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.workdir.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','Position',lukeobj.workdir.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.simulfile.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.simulfile.string,'Position',lukeobj.simulfile.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 
 lukeobj.lukeroottitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.lukeroottitle.string,'Position',lukeobj.lukeroottitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+%lukeobj.workdirtitlestr.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.workdirtitlestr.string,'Position',lukeobj.workdirtitlestr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.lukevertitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.lukevertitle.string,'Position',lukeobj.lukevertitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.simulfiletitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.simulfiletitle.string,'Position',lukeobj.simulfiletitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 
 lukeobj.titlestr.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.titlestr.string,'Position',lukeobj.titlestr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'HorizontalAlignment','center');
+lukeobj.documentation.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.documentation.string,'Position',lukeobj.documentation.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.documentation.callback);
 
 lukeobj.exitluke.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.exitluke.string,'Position',lukeobj.exitluke.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.exitluke.callback);
 lukeobj.newshot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.newshot.string,'Position',lukeobj.newshot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.newshot.callback);
 lukeobj.loadshot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.loadshot.string,'Position',lukeobj.loadshot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.loadshot.callback);
 lukeobj.saveshot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.saveshot.string,'Position',lukeobj.saveshot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.saveshot.callback);
+lukeobj.workdirtitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.workdirtitle.string,'Position',lukeobj.workdirtitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left','Callback',lukeobj.workdirtitle.callback);
 
 %
 lukeobj.controlstr.handle = uicontrol(lukeobj.controlpanel.handle,'Style','text','String',lukeobj.controlstr.string,'Position',lukeobj.controlstr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'HorizontalAlignment','center');
