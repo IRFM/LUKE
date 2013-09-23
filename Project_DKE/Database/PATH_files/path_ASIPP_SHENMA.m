@@ -102,6 +102,7 @@ dkepath.PEYSSON(1).MUMPS.mex800 = [dkepath.PEYSSON(1).local_root,'MUMPS_4.10.0/M
 dkepath.PEYSSON(1).graphviz.dotpath = '/usr/bin/';% Graphviz 'dot' command path
 dkepath.PEYSSON(1).latex.htlatexpath = '';% Latex 'htlatex' command path
 dkepath.PEYSSON(1).latex.pdflatexpath = '/usr/bin/';% Latex environment variable
+dkepath.PEYSSON(1).latex.env = '/usr/bin/';% Latex environment variable
 dkepath.PEYSSON(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Distributed computing -----------------------------
