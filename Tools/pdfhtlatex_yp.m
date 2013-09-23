@@ -135,6 +135,8 @@ function pdfhtlatex_yp(root_path,htlatex_path,pdflatex_path,latex_env,imagemagic
                 else
                     [status_ht, result] = unix([htlatex_path,'htlatex  ',texfile,' ''html,index=2,3,next'''],'-echo');
                 end
+            else
+                status_ht = 1;
             end
             %
             if ~isempty(pdflatex_path),
@@ -142,7 +144,9 @@ function pdfhtlatex_yp(root_path,htlatex_path,pdflatex_path,latex_env,imagemagic
                     [status_pdf, result] = unix(['pdflatex  ',texfile],'-echo');
                 else
                     [status_pdf, result] = unix(['pdflatex  ',texfile]);
-                end     
+                end 
+            else
+                status_pdf = 1;
             end        
             %
             if status_ht == 0,
