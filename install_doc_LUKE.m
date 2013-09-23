@@ -1,4 +1,4 @@
-function install_doc_LUKE(test)
+function install_doc_LUKE(test,verbose)
 %LUKE - Installation script for automatic generation of the on-line documentation 
 %
 %Installation script for automatic generation of the on-line documentation
@@ -7,10 +7,20 @@ function install_doc_LUKE(test)
 % INPUT:
 %
 %	- test: If exists, test< 0, test mode is activated with reduced documentation. If test > 0, no display in the web browser (for automatic wiki buildup)
+%	- verbose: display the output of the documentation build-up is not empty
 %
 % OUTPUT: none
 %
 %By Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
+%
+if nargin == 0,
+	test = 0;
+    verbose = 1;
+end
+%
+if nargin == 1,
+    verbose = 1;
+end
 %
 dirinit = pwd;
 %
@@ -21,8 +31,42 @@ cd(luke_root);
 %
 m2htmllib_path = fullfile(luke_root,'Packages','m2html');
 %
-if nargin == 0,
-	test = 0;
+if ~isfield(dkepath,'graphviz'),
+    disp(' --------------------------------------------------------------------------------------------')
+    disp(' -----> WARNING: the path to the GRAPHVIZ ''dot'' command is not setup in dkepath. ')
+    disp(' ****** No graphs can be built ******')
+    disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE documentation.'])
+    disp(' --------------------------------------------------------------------------------------------')
+    dot_path = '';
+else
+    dot_path = dkepath.graphviz.dotpath;
+end
+%
+if ~isfield(dkepath,'latex'),
+    disp(' ------------------------------------------------------------------------------------------------------')
+    disp(' -----> WARNING: the paths to the LATEX commands ''htlatex'' and ''pdflatex'' are not setup in dkepath.')
+    disp(' -----> WARNING: the environment variable LATEX is not setup in dkepath.')
+    disp(' ****** The latex files cannot be created ******')
+    disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE documentation.'])
+    disp(' ------------------------------------------------------------------------------------------------------')
+    htlatex_path = '';
+    pdflatex_path = '';
+    latex_env = '';
+else
+    htlatex_path = dkepath.latex.htlatexpath;
+    pdflatex_path = dkepath.latex.pdflatexpath;    
+    latex_env = dkepath.latex.env;
+end
+%
+if ~isfield(dkepath,'imagemagick'),
+    disp(' ---------------------------------------------------------------------------------------------------')
+    disp(' -----> WARNING: the environment variable for the IMAGEMAGICK is not setup in dkepath.')
+    disp(' ****** The conversion of the latex files to html ones cannot be done ******')
+    disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE documentation.'])
+    disp(' ---------------------------------------------------------------------------------------------------')
+    imagemagick_env = '';
+else
+    imagemagick_env = dkepath.imagemagick.env;
 end
 %
 if test >= 0,
@@ -154,6 +198,6 @@ else
 		   };
 end
 %
-pdfhtlatex_yp(luke_root,texfilelist);%build html and pdf doc from tex files
+pdfhtlatex_yp(luke_root,htlatex_path,pdflatex_path,latex_env,imagemagick_env,texfilelist,verbose);%build html and pdf doc from tex files
 %
 cd(dirinit);
