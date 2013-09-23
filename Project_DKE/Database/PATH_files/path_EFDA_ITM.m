@@ -48,6 +48,14 @@ itm.yvesp(1).compiler_opt.fopts = ' -largeArrayDims';
 %
 %itm.yvesp(1).MUMPS.mex800 = ['/afs/ipp/itm/switm/lib/mumps/4.10.0_serial/matlab/R2012b/amd64_intel_12/'];%Where MUMPS matrix solver is stored (MEX function)
 %
+% LUKE documentation
+%
+itm.yvesp(1).graphviz.dotpath = '/afs/@cell/common/soft/doxygen/@sys/graphviz-2.28/bin/';% Graphviz 'dot' command path
+itm.yvesp(1).latex.htlatexpath = '/afs/ipp/tok/soft/texlive/2012/@sys/bin/x86_64-linux/';% Latex 'htlatex' command path
+itm.yvesp(1).latex.pdflatexpath = '/afs/ipp/tok/soft/texlive/2012/@sys/bin/x86_64-linux/';% Latex 'pdflatex' command path
+itm.yvesp(1).latex.env = '/afs/ipp/tok/soft/texlive/2012/@sys/bin/x86_64-linux/';% Latex environment variable
+itm.yvesp(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+%
 %--------------------------- Distributed computing -----------------------------
 %
 %

@@ -50,6 +50,14 @@ dkepath.bjding(1).compiler_opt.helmex.mex800 = NaN;% Optional argument for helme
 %
 dkepath.bjding(1).MUMPS.mex800 = [dkepath.bjding(1).local_root,'MUMPS_4.10.0/MATLAB800'];
 %
+% LUKE documentation
+%
+dkepath.bjding(1).graphviz.dotpath = '/usr/bin/';% Graphviz 'dot' command path
+dkepath.bjding(1).latex.htlatexpath = '';% Latex 'htlatex' command path
+dkepath.bjding(1).latex.pdflatexpath = '/usr/bin/';% Latex 'pdflatex' command path
+dkepath.bjding(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.bjding(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+%
 %--------------------------- Distributed computing -----------------------------
 %
 %dkepath.bjding(1).configurations.localconfig = '/local/mdce/configurations/localconfig.mat';
@@ -86,7 +94,15 @@ dkepath.PEYSSON(1).compiler_opt.fopts.mex800 = 'FC=''gfortran''';
 dkepath.PEYSSON(1).compiler_opt.helmex.mex800 = NaN;% Optional argument for helmex compilation
 %
 %Where MUMPS matrix solver is stored (MEX function)
+%
 dkepath.PEYSSON(1).MUMPS.mex800 = [dkepath.PEYSSON(1).local_root,'MUMPS_4.10.0/MATLAB800'];
+%
+% LUKE documentation
+%
+dkepath.PEYSSON(1).graphviz.dotpath = '/usr/bin/';% Graphviz 'dot' command path
+dkepath.PEYSSON(1).latex.htlatexpath = '';% Latex 'htlatex' command path
+dkepath.PEYSSON(1).latex.pdflatexpath = '/usr/bin/';% Latex environment variable
+dkepath.PEYSSON(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Distributed computing -----------------------------
 %

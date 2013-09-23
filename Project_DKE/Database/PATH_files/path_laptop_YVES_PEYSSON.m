@@ -68,6 +68,14 @@ macbookyves.yves(1).SUPERLU.mex801 = [macbookyves.yves(1).local_root,'Packages/B
 %
 macbookyves.yves(1).TSBASE.mex = [macbookyves.yves(1).luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase'];%Where tsbase, tsmat and tsdernier_choc functions are stored (MEX function)
 %
+% LUKE documentation
+%
+macbookyves.yves(1).graphviz.dotpath = '/usr/local/bin/';% Graphviz 'dot' command path
+macbookyves.yves(1).latex.htlatexpath = '/usr/texbin/';% Latex 'htlatex' command path
+macbookyves.yves(1).latex.pdflatexpath = '/usr/texbin/';% Latex 'pdflatex' command path
+macbookyves.yves(1).latex.env = '/usr/texbin/';% Latex environment variable
+macbookyves.yves(1).imagemagick.env = '/opt/local/bin/';% ImageMagick environment variable
+%
 %--------------------------- Distributed computing -----------------------------
 %
 %
