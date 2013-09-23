@@ -1,4 +1,4 @@
-function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root_path,search_path,excludedfoldernames,overview_scripts,htmlview_mode)
+function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root_path,search_path,dot_path,excludedfoldernames,overview_scripts,htmlview_mode,verbose)
 %LUKE - HTML documentation builder
 %
 % Create dynamically all the documentation in html format from *.m, *.c,
@@ -21,6 +21,8 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
 %       (default: none)
 %   - htmlview_mode: view html files tree in web browser if > 1
 %       (default: 0)
+%   - verbose: display html compilation results if not empty
+%       (default: empty)
 %
 % OUTPUT:
 %
@@ -89,10 +91,16 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
     %
     % todo: initial description in documentation
     %
+    if isempty(verbose),
+        verbose = 'off';
+    else
+        verbose = 'on';
+    end
+    %
     try
-        m2html('mfiles',search_path, 'htmldir',dochtmlpath,'recursive','off','global','on', 'template','LUKE','index','menu','graph','on','todo','on');
+        m2html('verbose',verbose,'dotpath',dot_path,'mfiles',search_path, 'htmldir',dochtmlpath,'recursive','off','global','on', 'template','LUKE','index','menu','graph','on','todo','on');
     catch
-        m2html('mfiles',search_path, 'htmldir',dochtmlpath,'recursive','off', 'global','on', 'template','LUKE','index','menu','graph','off','todo','on');%if graphviz not installed
+        m2html('verbose',verbose,'dotpath',dot_path,'mfiles',search_path, 'htmldir',dochtmlpath,'recursive','off', 'global','on', 'template','LUKE','index','menu','graph','off','todo','on');%if graphviz not installed
         %
         disp('WARNING: Graphes have not been generated, since the ''graphviz'' maker is not installed on your computer.');
         disp('WARNING: Download ''graphviz'' maker from www.graphviz.org, and install it first.');
@@ -121,9 +129,9 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
     end
     %
     if htmlview_mode <= 0,
-    	stat = web(['file://',root_path,'Documentation/index.html'],'-browser');
+    	stat = web(['file://',root_path,'Documentation/index.html'],'-notoolbar', '-new');
     	if stat == 1 | stat == 2,
-        	web(['file://',root_path,'Documentation/index.html'],'-helpbrowser');%Open in MatLab help browser    
+        	web(['file://',root_path,'Documentation/index.html'],'-notoolbar', '-new');%Open in MatLab help browser    
     	end
     end
     disp(['----> The weblink to the documentation is ','file:/',root_path,'Documentation/index.html']);
