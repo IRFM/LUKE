@@ -74,7 +74,7 @@ macbookyves.yves(1).graphviz.dotpath = '/usr/local/bin/';% Graphviz 'dot' comman
 macbookyves.yves(1).latex.htlatexpath = '/usr/texbin/';% Latex 'htlatex' command path
 macbookyves.yves(1).latex.pdflatexpath = '/usr/texbin/';% Latex 'pdflatex' command path
 macbookyves.yves(1).latex.env = '/usr/texbin/';% Latex environment variable
-macbookyves.yves(1).imagemagick.env = '/opt/local/bin/';% ImageMagick environment variable
+macbookyves.yves(1).imagemagick.env = '/usr/local/bin/';% ImageMagick environment variable
 %
 %--------------------------- Distributed computing -----------------------------
 %
