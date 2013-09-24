@@ -124,9 +124,16 @@ else
         %
         lukeobj.angles.text.string = '';
         %
+        if any(imag(wavestructs{iw}.launch.bNpar0) ~= 0),
+            npar0disp = imag(wavestructs{iw}.launch.bNpar0(find(wavestructs{iw}.launch.bPlhtot == max(wavestructs{iw}.launch.bPlhtot),1,'first')));
+        else
+            npar0disp = wavestructs{iw}.launch.bNpar0(find(wavestructs{iw}.launch.bPlhtot == max(wavestructs{iw}.launch.bPlhtot),1,'first'));
+        end
         lukeobj.launch.text.string = [lukeobj.launch.text.string,...
-            ' ; N//0 : ',num2str(imag(wavestructs{iw}.launch.bNpar0(find(wavestructs{iw}.launch.bPlhtot == max(wavestructs{iw}.launch.bPlhtot),1,'first'))),3),'',...
+            ' ; N//0 : ',num2str(npar0disp,3),'',...
             ' ; P = ',num2str(sum(wavestructs{iw}.launch.bPlhtot)/1e6,3),' MW'];
+        %
+        clear npar0disp
         %
     elseif strcmp(wavestructs{iw}.launch.type,'EC'),
         if isfield(wavestructs{iw}.launch,'angles'),
