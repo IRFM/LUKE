@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "Fokker-Planck_DKE_loop.h"
+#include "Fokker_Planck_DKE_loop.h"
 
 void Tensor_Create(int ndims,int* sizedim,struct Tensor *A)
 {int i;

@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "Fokker-Planck_DKE_loop.h"
+#include "Fokker_Planck_DKE_loop.h"
 
 void ReadBinaryArray_DKE(char* file,struct Tensor **Array)
 {

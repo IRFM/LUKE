@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "Fokker-Planck_DKE_loop.h"
+#include "Fokker_Planck_DKE_loop.h"
 
 void ReadBinarySparseMatrix_DKE(char* file,struct SparseMatrix *A)
 {

@@ -3,7 +3,7 @@ static char help[] = "Solver loop";
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include "Fokker-Planck_DKE_loop.h"
+#include "Fokker_Planck_DKE_loop.h"
 #include "petscksp.h"
 
 int main(int argc, char **args){

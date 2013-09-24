@@ -3,7 +3,7 @@ are Matlabs int32*/
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "Fokker-Planck_DKE_loop.h"
+#include "Fokker_Planck_DKE_loop.h"
 
 void ReadBinaryIntArray_DKE(char* file,struct IntTensor **Array)
 {

@@ -1,4 +1,4 @@
-#include "Fokker-Planck_DKE_loop.h"
+#include "Fokker_Planck_DKE_loop.h"
 #include <stdio.h>
 
 void Tensor_Transpose(struct Tensor *A){

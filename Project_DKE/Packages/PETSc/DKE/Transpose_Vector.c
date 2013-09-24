@@ -1,4 +1,4 @@
-#include "Fokker-Planck_DKE_loop.h"
+#include "Fokker_Planck_DKE_loop.h"
 #include <stdio.h>
 void Transpose_Vector(struct Tensor *A){
 /*Simple routine to make column vectors from row vectors and vice-versa*/
