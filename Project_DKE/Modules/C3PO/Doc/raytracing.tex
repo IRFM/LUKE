@@ -1,4 +1,4 @@
-%% LyX 2.0.3 created this file.  For more info, see http://www.lyx.org/.
+%% LyX 2.0.6 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass[12pt,english,a4paper]{article}
 \usepackage[T1]{fontenc}
@@ -6,7 +6,6 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
-\usepackage[authoryear]{natbib}
 
 \makeatletter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
@@ -77,11 +76,11 @@ on a scale that is much larger than the wavelength, it is possible
 to calculate the wave propagation from antenna or mirror conditions
 and equilibrium properties using the ray-tracing techniques. This
 method has been used extensively for calculating lower-hybrid and
-electron cyclotron wave propagation \citet{bon84,biz93,pey96,imb05}.
+electron cyclotron wave propagation \cite{bon84,biz93,pey96,imb05}.
 
 Many ray tracing codes in axisymmetric toroidal plasmas use the toroidal
 coordinates $(R,Z,\phi)$ which are attractive because of the simplicity
-of implementing the equations in this system \citet{mat89,smi95,smi03,imb05}.
+of implementing the equations in this system \cite{mat89,smi95,smi03,imb05}.
 In this work we use the flux coordinates $(\rho,\theta,\phi)$ instead.
 While the equations in this system require somewhat more complicated
 metric coefficients, there are several advantages to this choice:
@@ -92,22 +91,22 @@ $\theta$ allows the use of Fourier series that are particularly useful
 for accurate interpolation and the calculation of derivatives up to
 second order; third, this system is used by a variety of codes that
 are coupled to the ray-tracing solver, such as equilibrium codes (HELENA)
-and Fokker-Planck solvers (LUKE) \citet{huy91,dec04a}. Using the
-same system in the ray-tracing code saves any coordinates conversions
-and grid interpolations which introduce numerical errors.
+and Fokker-Planck solvers (LUKE) \cite{huy91,dec04a}. Using the same
+system in the ray-tracing code saves any coordinates conversions and
+grid interpolations which introduce numerical errors.
 
 The new ray-tracing code developed here is designed for arbitrary
 wave frequencies (including the lower hybrid and electron cyclotron
 frequency ranges), provided the WKB approximation is valid. The structure
 of the code allows to choose from several dielectric tensor types:
-cold plasma, \textquotedbl{}warm\textquotedbl{} plasma \citet{bon86},
+cold plasma, \textquotedbl{}warm\textquotedbl{} plasma \cite{bon86},
 and kinetic plasma in the non-, weakly-, or fully relativistic regime.
 In addition to ray trajectories, the code calculates waves properties
 of interest for heating and current drive calculations such as the
 polarization, energy flow and linear absorption.
 
 Based on a standard $6^{th}$ order Runge-Kutta differential scheme
-\citet{pre92}, the ray-tracing code uses a spline-Fourier expansion
+\cite{pre92}, the ray-tracing code uses a spline-Fourier expansion
 for equilibrium interpolation, which results in fast yet accurate
 calculations. The code is distributed as a mexfile%
 \footnote{The code runs in the MatLab 7 programming environment.%
@@ -298,7 +297,7 @@ $\mathbb{D}^{\text{H}}=(\mathbb{D}+\mathbb{D}^{\dag})/2$ and $\mathbb{D}^{\text{
 are the hermitian and antihermitian parts of $\mathbb{D}$, respectively.
 In this work, the weak damping approximation is considered, which
 is valid if $|D_{ij}^{\text{A}}|\ll|D_{ij}^{\text{H}}|$.\ In that
-case, it can be shown \citet{dec06} that $|N_{\bot i}|\ll|N_{\bot r}|$
+case, it can be shown \cite{dec06} that $|N_{\bot i}|\ll|N_{\bot r}|$
 and $N_{\bot r}$ can be determined from solving the approximate wave
 equation
 \begin{equation}
@@ -392,7 +391,7 @@ ray equations. From the first and the third equations,
 \end{equation}
  meaning that the ray is directed along the group velocity $\mathbf{v}_{g}$
 and thus indicates the direction of energy flow since $\mathbf{v}_{g}\Vert\mathbf{S}$
-\citet{bra98}. In a constant plasma $\partial\mathcal{D}/\partial t=0$
+\cite{bra98}. In a constant plasma $\partial\mathcal{D}/\partial t=0$
 and $\omega$ is a constant of the ray dynamics. The time $t$ is
 considered as the evolution parameter of the ray and the two remaining
 equations are 
@@ -456,7 +455,7 @@ is a radial coordinate that varies between $0$ on the axis and $1$
 at the plasma edge. The coordinate $\rho=\rho\left(\psi\right)$ must
 be a flux function, i.e. a monotonic function of the poloidal magnetic
 flux coordinate $\psi$ defined by the following expression of the
-magnetic field \citet{dec04a} 
+magnetic field \cite{dec04a} 
 \begin{equation}
 \mathbf{B}=I\left(\psi\right)\mathbf{\nabla}\phi+\mathbf{\nabla}\phi\times\mathbf{\nabla}\psi
 \end{equation}
@@ -894,7 +893,7 @@ of problem.
 
 This procedure, which has been highlighted for order $2,$ may be
 expanded in a similar manner to higher orders. Detailed calculations
-can be found in the literature \citet{pre92}.
+can be found in the literature \cite{pre92}.
 
 In the ray-tracing code, a sixth order adaptative Runge-Kutta integration
 method is used. The numerical accuracy obtained with this method is
@@ -917,7 +916,7 @@ dielectric response models can be implemented.
 Among possible future improvements, \textit{C3PO} could be developed
 into a beam tracing code to include diffraction effects and calculate
 the beam size. It could also be extended to account for toroidal equilibrium
-inhomogeneities such as the magnetic ripple \citet{pey96,imb05}.
+inhomogeneities such as the magnetic ripple \cite{pey96,imb05}.
 
 \appendix
 %dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
@@ -1262,7 +1261,7 @@ Low frequency fluctuations of the electron density or the magnetic
 field can strongly affect the propagation of rf waves in a magnetized
 plasma. This effect has been extensively investigated for the Lower
 Hybrid wave by solving a wave kinetic equation in the weak turbulence
-approximation. \citep{bon82,vah92}. In this approach, the flow of
+approximation. \cite{bon82,vah92}. In this approach, the flow of
 rf energy is described by a usual ray-tracing between random scattering
 events where the initial wave vector $\mathbf{k}$ can be modified
 both in amplitude and direction with the constraint to remain solution
@@ -1339,7 +1338,7 @@ of propagation and $k_{\bot}^{\prime}\neq k_{\bot}$, otherwise $k_{\bot}^{\prime
 for like transitions. From the relations (\ref{disprel}), (\ref{eq:kparconservation})
 and (\ref{eq:wskperprotation}), all the components $\left(k_{\rho}^{\prime},m^{\prime},n^{\prime}\right)$
 of $\mathbf{k}^{\prime}$ can be deduced from those of $\mathbf{k}$.%
-\footnote{In Ref. \citet{bon82}, the relation $\mathbf{b}\cdot\left(\mathbf{k}_{\bot}\times\mathbf{k}_{\bot}^{\prime}\right)=k_{\bot}k_{\bot}^{\prime}\sin\beta$
+\footnote{In Ref. \cite{bon82}, the relation $\mathbf{b}\cdot\left(\mathbf{k}_{\bot}\times\mathbf{k}_{\bot}^{\prime}\right)=k_{\bot}k_{\bot}^{\prime}\sin\beta$
 is also introduced in addition to (\ref{eq:kparconservation}) and
 (\ref{eq:wskperprotation}). However, it is fully equivalent to (\ref{eq:wskperprotation})
 and does not provide any additional information. %
@@ -1581,7 +1580,7 @@ Z_{ns} & =Z\left(\zeta_{ns}\right)\\
 \end{align*}
  where $I_{n}\left(N_{\Vert}\right)$ is the modified Bessel function
 of the first kind and $Z\left(N_{\Vert}\right)$ is the plasma dispersion
-function \citet{bra98}.
+function \cite{bra98}.
 
 
 \section{\label{sec:Benchmarking-of-C3PO}Benchmarking of C3PO}
@@ -1635,7 +1634,7 @@ $N_{\phi0}=-1.8$}
 \includegraphics[clip,width=3.6in]{figs/Paper_Heikkinen_et_al} 
 \par\end{centering}
 
-\caption{Poloidal projection of the ray trajectory from Ref.\citet{hei99}}
+\caption{Poloidal projection of the ray trajectory from Ref.\cite{hei99}}
 
 
 \label{FigHei} 
@@ -1687,7 +1686,7 @@ $N_{\phi0}=-2.0$.}
 \end{figure}
 
 
-A JET-like equilibrium was used in Ref.\citet{hei99} where results
+A JET-like equilibrium was used in Ref.\cite{hei99} where results
 from a ray-tracing code using the cold plasma model is presented.
 A circular concentric toroidal plasma is considered such that
 \begin{equation}
@@ -1828,7 +1827,7 @@ N_{\Vert0}=\sigma_{B}\dfrac{B_{T}}{B}N_{\phi0}
 
 The results are plotted in figures \ref{Jet20}-\ref{Jet20d}. The
 wave is mode-converted between the slow to the fast mode several times.
-The results agree remarkably well with those from Ref.\citet{hei99}.
+The results agree remarkably well with those from Ref.\cite{hei99}.
 A small difference in the ray path between the analytical and the
 interpolated magnetic equilibria is observed in the case $N_{\phi0}=-1.8$.
 The deviation is certainly due to the ray passing near the center
@@ -1981,7 +1980,7 @@ as function of the toroidal angle (PLT). $N_{\Vert}=1.33$.}
 
 Lower Hybrid heating and current drive simulations have been performed
 for the VERSATOR II and PLT tokamaks, which both have almost circular
-concentric magnetic flux surfaces \citet{bon84,bon86}. For the sake
+concentric magnetic flux surfaces \cite{bon84,bon86}. For the sake
 of benchmarking, the Shafranov shift is neglected, and a plasma with
 exact circular concentric magnetic flux surfaces is considered with
 the following magnetic equilibrium parameters 
@@ -2060,14 +2059,14 @@ For both tokamaks, the ray is launched in the slow mode from the position
 
 
 The non-zero $m_{0}$ arises from the fact that simulations in references
-\citet{bon84} \citet{bon86} use $m_{0}=0$ in the scrape-off layer
+\cite{bon84} \cite{bon86} use $m_{0}=0$ in the scrape-off layer
 and not at $\psi=\psi_{a}.$
 
 
 \subsubsection{Results}
 
 The results are plotted in figures \ref{FigVer}-\ref{FigPLTne}.
-A good agreement is found with references \citet{bon84} and \citet{bon86}
+A good agreement is found with references \cite{bon84} and \cite{bon86}
 despite differences in the magnetic equilibrium. An excellent agreement
 is found between numerical and analytical magnetic equilibrium for
 the case of VERSATOR II where the ray never approaches the plasma
@@ -2311,7 +2310,7 @@ geometrical optics is excellent.
 
 In Reverse Field Pinch, the plasma evolves to a quasi-stationary magnetic
 equilibrium close to the force free minimum energy states described
-by Taylor \citet{tay74}. The fully relaxed Taylor states are characterized
+by Taylor \cite{tay74}. The fully relaxed Taylor states are characterized
 by
 \begin{equation}
 \nabla\times\mathbf{B}=\lambda\mathbf{B}\label{RFPequilibrium}
