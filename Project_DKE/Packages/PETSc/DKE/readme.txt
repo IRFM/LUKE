@@ -59,6 +59,6 @@ gcc -c Tensor_Fill.c
 
 7) set in the path file (see in $HOME/LUKE/Project_DKE/Database/PATH_files/)
 
-mode séquentiel (1 processeur): dkepath.PETSC.seq = <petscdir>;%Where PETSC matrix solver (independent program) is stored
-mode parallèle (n processeurs): dkepath.PETSC.par = <petscdir>;%Where PETSC matrix solver (independent program) is stored
+mode sequentiel (1 processeur): dkepath.PETSC.seq = <petscdir>;%Where PETSC matrix solver (independent program) is stored
+mode parallele (n processeurs): dkepath.PETSC.par = <petscdir>;%Where PETSC matrix solver (independent program) is stored
 
