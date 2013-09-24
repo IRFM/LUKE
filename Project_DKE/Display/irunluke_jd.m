@@ -1331,11 +1331,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 if ~isempty(dkepath),
                     %
-                    if exist([dkepath.luke_root,'Documentation/index.html'])
+                    if ~exist([dkepath.luke_root,'Documentation/index.html'])
                         %
                         disp('The LUKE documentation has not been created on this computer during the install process.');
                         %
-                        doc_opt = input('Do you want to build it now (WARNING: it may take several minutes) (y/n)? [y] : ','s');
+                        doc_opt = input('Do you want to build it now (WARNING: it may take long minutes) (y/n)? [y] : ','s');
                         %
                         if strcmp(doc_opt,'y'),
                             %
@@ -1347,7 +1347,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                             cd(dirinit);
                         end
                     else
-                        web(['file://',dkepath.luke_root,'Documentation/index.html'],'-notoolbar', '-new');
+                        web(['file://',dkepath.luke_root,'Documentation/index.html'], '-new');
                     end    
                     %
                 else
@@ -1356,7 +1356,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
             elseif isel == 20,
                 %
-                web('http://tolbachik.hd.free.fr:8080/redmine','-notoolbar', '-new');
+                web('http://tolbachik.hd.free.fr:8080/redmine', '-new');
                 % 
             elseif isel == 0,
                 %
