@@ -57,8 +57,6 @@ else
     disp(' --------------------------------------------------------------------------------------------')
 end
 %
-getenv('PATH')
-%
 cd(luke_root);
 %
 m2htmllib_path = fullfile(luke_root,'Packages','m2html');
