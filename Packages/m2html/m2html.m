@@ -101,7 +101,6 @@ function m2html(varargin)
 msgInvalidPair = 'Bad value for argument: ''%s''';
 
 options = struct('verbose', 1,...
-                 'dotpath','./',...
 				 'mFiles', {{'.'}},...
 				 'htmlDir', '.',...
 				 'recursive', 0,...
@@ -167,16 +166,6 @@ for i=1:2:length(paramlist)
 			else
 				error(sprintf(msgInvalidPair,pname));
             end
-        case 'dotpath'
-			if ischar(pvalue)
-				if isempty(pvalue),
-					options.dotpath = './';
-				else
-					options.dotpath = pvalue;
-				end
-			else
-				error(sprintf(msgInvalidPair,pname));
-			end
 		case 'recursive'
 			if strcmpi(pvalue,'on')
 				options.recursive = 1;
@@ -688,7 +677,7 @@ end
 %- Create a dependency graph for each output directory, if requested
 %-------------------------------------------------------------------------------
 tpl_graph = 'graph.tpl';
-dot_exec  = [options.dotpath,'dot'];
+dot_exec  = 'dot';
 %dotbase defined earlier
 
 if options.graph

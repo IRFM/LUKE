@@ -78,9 +78,7 @@ macproyves.yvespeysson(1).TSBASE.mex = [macproyves.yvespeysson(1).luke_root,'Pro
 %
 % LUKE documentation
 %
-macproyves.yvespeysson(1).graphviz.dotpath = '/usr/local/bin/';% Graphviz 'dot' command path
-macproyves.yvespeysson(1).latex.htlatexpath = '/usr/texbin/';% Latex 'htlatex' command path
-macproyves.yvespeysson(1).latex.pdflatexpath = '/usr/texbin/';% Latex 'pdflatex' command path
+macproyves.yvespeysson(1).graphviz.env = '/usr/local/bin/';% Graphviz environment variable
 macproyves.yvespeysson(1).latex.env = '/usr/texbin/';% Latex environment variable
 macproyves.yvespeysson(1).imagemagick.env = '/opt/local/bin/';% ImageMagick environment variable
 %

@@ -1,4 +1,4 @@
-function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root_path,search_path,dot_path,excludedfoldernames,overview_scripts,htmlview_mode,verbose)
+function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root_path,search_path,excludedfoldernames,overview_scripts,htmlview_mode,verbose)
 %LUKE - HTML documentation builder
 %
 % Create dynamically all the documentation in html format from *.m, *.c,
@@ -42,13 +42,11 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
     if nargin == 1,
         recursive_mode = 'on';
         root_path = '';
-        dot_path = '';
         htmlview_mode = 0;
         verbose = '';
     end   
     if nargin == 2,
         root_path = '';
-        dot_path = '';
         htmlview_mode = 0;
         verbose = '';
     end
@@ -103,9 +101,9 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
     end
     %
     try
-        m2html('verbose',verbose,'dotpath',dot_path,'mfiles',search_path, 'htmldir',dochtmlpath,'recursive','off','global','on', 'template','LUKE','index','menu','graph','on','todo','on');
+        m2html('verbose',verbose,'mfiles',search_path, 'htmldir',dochtmlpath,'recursive','off','global','on', 'template','LUKE','index','menu','graph','on','todo','on');
     catch
-        m2html('verbose',verbose,'dotpath',dot_path,'mfiles',search_path, 'htmldir',dochtmlpath,'recursive','off', 'global','on', 'template','LUKE','index','menu','graph','off','todo','on');%if graphviz not installed
+        m2html('verbose',verbose,'mfiles',search_path, 'htmldir',dochtmlpath,'recursive','off', 'global','on', 'template','LUKE','index','menu','graph','off','todo','on');%if graphviz not installed
         %
         disp('WARNING: Graphes have not been generated, since the ''graphviz'' maker is not installed on your computer.');
         disp('WARNING: Download ''graphviz'' maker from www.graphviz.org, and install it first.');

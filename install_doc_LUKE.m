@@ -25,49 +25,43 @@ end
 dirinit = pwd;
 %
 dkepath = load_structures_yp('dkepath','','');
-luke_root = dkepath.luke_root;    
+luke_root = dkepath.luke_root;   
 %
-cd(luke_root);
-%
-m2htmllib_path = fullfile(luke_root,'Packages','m2html');
-%
-if ~isfield(dkepath,'graphviz'),
-    disp(' --------------------------------------------------------------------------------------------')
-    disp(' -----> WARNING: the path to the GRAPHVIZ ''dot'' command is not setup in dkepath. ')
-    disp(' ****** No graphs can be built ******')
-    disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE documentation.'])
-    disp(' --------------------------------------------------------------------------------------------')
-    dot_path = '';
+if isfield(dkepath,'latex') && ~isempty(dkepath.latex.env)
+    setenv('PATH', [getenv('PATH'),':',dkepath.latex.env]);
 else
-    dot_path = dkepath.graphviz.dotpath;
-end
-%
-if ~isfield(dkepath,'latex'),
     disp(' ------------------------------------------------------------------------------------------------------')
-    disp(' -----> WARNING: the paths to the LATEX commands ''htlatex'' and ''pdflatex'' are not setup in dkepath.')
-    disp(' -----> WARNING: the environment variable LATEX is not setup in dkepath.')
+    disp(' -----> WARNING: the environment variable for LATEX is not setup in dkepath.')
     disp(' ****** The latex files cannot be created ******')
     disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE documentation.'])
-    disp(' ------------------------------------------------------------------------------------------------------')
-    htlatex_path = '';
-    pdflatex_path = '';
-    latex_env = '';
-else
-    htlatex_path = dkepath.latex.htlatexpath;
-    pdflatex_path = dkepath.latex.pdflatexpath;    
-    latex_env = dkepath.latex.env;
+    disp(' ------------------------------------------------------------------------------------------------------')    
 end
 %
-if ~isfield(dkepath,'imagemagick'),
+if isfield(dkepath,'imagemagick') && ~isempty(dkepath.imagemagick.env)
+    setenv('PATH', [getenv('PATH'),':',dkepath.imagemagick.env]);
+else
     disp(' ---------------------------------------------------------------------------------------------------')
     disp(' -----> WARNING: the environment variable for the IMAGEMAGICK is not setup in dkepath.')
     disp(' ****** The conversion of the latex files to html ones cannot be done ******')
     disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE documentation.'])
-    disp(' ---------------------------------------------------------------------------------------------------')
-    imagemagick_env = '';
-else
-    imagemagick_env = dkepath.imagemagick.env;
+    disp(' ---------------------------------------------------------------------------------------------------')    
 end
+%
+if isfield(dkepath,'graphviz') && ~isempty(dkepath.graphviz.env)
+    setenv('PATH', [getenv('PATH'),':',dkepath.graphviz.env]);
+else
+    disp(' --------------------------------------------------------------------------------------------')
+    disp(' ----->  WARNING: the environment variable for GRAPHVIZ is not setup in dkepath.')
+    disp(' ****** No graphs can be built ******')
+    disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE documentation.'])
+    disp(' --------------------------------------------------------------------------------------------')
+end
+%
+getenv('PATH')
+%
+cd(luke_root);
+%
+m2htmllib_path = fullfile(luke_root,'Packages','m2html');
 %
 if test >= 0,
 	search_path = {fullfile(luke_root,'Project_DKE','Database'),...              
@@ -179,7 +173,7 @@ overview_scripts(3).path = fullfile(luke_root,'VERSIONS.m');overview_scripts(3).
 overview_scripts(4).path = fullfile(luke_root,'AUTHORS.m');overview_scripts(4).format = '';
 %
 excludedfoldernames = {};
-htmldocbuilder_luke_yp(m2htmllib_path,'off',luke_root,search_path,dot_path,excludedfoldernames,overview_scripts,test,verbose);%build html doc
+htmldocbuilder_luke_yp(m2htmllib_path,'off',luke_root,search_path,excludedfoldernames,overview_scripts,test,verbose);%build html doc
 %
 % Check that the list of TeX files given below is similar in the html file ~','LUKE/Packages/m2html/templates/LUKE/lukeoverview.html
 %  
@@ -198,6 +192,6 @@ else
 		   };
 end
 %
-pdfhtlatex_yp(luke_root,htlatex_path,pdflatex_path,latex_env,imagemagick_env,texfilelist,verbose);%build html and pdf doc from tex files
+pdfhtlatex_yp(luke_root,texfilelist,verbose);%build html and pdf doc from tex files
 %
 cd(dirinit);

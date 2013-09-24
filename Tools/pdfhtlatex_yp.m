@@ -1,4 +1,4 @@
-function pdfhtlatex_yp(root_path,htlatex_path,pdflatex_path,latex_env,imagemagick_env,filelist,verbose)
+function pdfhtlatex_yp(root_path,filelist,verbose)
 %LUKE - LaTeX to PDF and HTML documentation builder
 %
 % Create dynamically all the documentation for C3PO/LUKE in html format from Latex files
@@ -8,14 +8,6 @@ function pdfhtlatex_yp(root_path,htlatex_path,pdflatex_path,latex_env,imagemagic
 %
 
 %   - root_path: path where the documentation directory should be placed (string)
-%       (default: local directory)
-%   - htlatex_path: path where the htlatex command is located (string)
-%       (default: local directory)
-%   - pdflatex_path: path where the pdflatex command is located (string)
-%       (default: local directory)
-%   - latex_env: latex environment path (string)
-%       (default: local directory)
-%   - imagemagick_env: imagemagick environment path (string)
 %       (default: local directory)
 %   - filelist: full path to LaTeX files (celles of string)
 %       (default: local directory)
@@ -36,22 +28,15 @@ function pdfhtlatex_yp(root_path,htlatex_path,pdflatex_path,latex_env,imagemagic
         filelist = {};
     end
     %
-    if isempty(htlatex_path),
+    if unix('which htlatex') || unix('which convert'),
         info_dke_yp(1,'The package TeX4ht is not available. LaTeX to HTML conversion is not possible.');
     end
-    if isempty(pdflatex_path),
+    if unix('which pdflatex')
         info_dke_yp(1,'The package pdfLatex is not available. LaTeX to PDF conversion is not possible.');
     end
     %
-    if isempty(pdflatex_path) && isempty(htlatex_path) && isempty(latex_env) && isempty(imagemagick_env)
+    if unix('which htlatex') && unix('which pdflatex') && unix('which convert'),
         return
-    end
-    %
-    if ~isempty(latex_env)
-        getenv('PATH')
-        setenv('PATH', [getenv('PATH'),':',latex_env]);
-        setenv('PATH', [getenv('PATH'),':',imagemagick_env]);
-        getenv('PATH')
     end
     %
     dirinit = pwd;%initial directory name
@@ -129,25 +114,33 @@ function pdfhtlatex_yp(root_path,htlatex_path,pdflatex_path,latex_env,imagemagic
             %
             delete_cvsdir_yp(destination_dir);
             %
-            if ~isempty(htlatex_path),
-                if isempty(verbose)
-                    [status_ht, result] = unix([htlatex_path,'htlatex  ',texfile,' ''html,index=2,3,next''']);
+            try
+                if ~unix('which htlatex') && ~unix('which convert')
+                    if isempty(verbose)
+                        [status_ht, result] = unix(['htlatex  ',texfile,' ''html,index=2,3,next''']);
+                    else
+                        [status_ht, result] = unix(['htlatex  ',texfile,' ''html,index=2,3,next'''],'-echo');
+                    end
                 else
-                    [status_ht, result] = unix([htlatex_path,'htlatex  ',texfile,' ''html,index=2,3,next'''],'-echo');
+                    status_ht = 1;
                 end
-            else
+            catch
                 status_ht = 1;
             end
             %
-            if ~isempty(pdflatex_path),
-                if isempty(verbose)
-                    [status_pdf, result] = unix(['pdflatex  ',texfile],'-echo');
+            try
+                if ~unix('which pdflatex')
+                    if isempty(verbose)
+                        [status_pdf, result] = unix(['pdflatex  ',texfile],'-echo');
+                    else
+                        [status_pdf, result] = unix(['pdflatex  ',texfile]);
+                    end 
                 else
-                    [status_pdf, result] = unix(['pdflatex  ',texfile]);
-                end 
-            else
+                    status_pdf = 1;
+                end
+            catch
                 status_pdf = 1;
-            end        
+            end
             %
             if status_ht == 0,
                 info_dke_yp(1,['Successfull LaTeX to HTML conversion of the file ',texfile]);

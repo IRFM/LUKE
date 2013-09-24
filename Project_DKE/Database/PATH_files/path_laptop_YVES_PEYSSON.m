@@ -70,9 +70,7 @@ macbookyves.yves(1).TSBASE.mex = [macbookyves.yves(1).luke_root,'Project_DKE/Dat
 %
 % LUKE documentation
 %
-macbookyves.yves(1).graphviz.dotpath = '/usr/local/bin/';% Graphviz 'dot' command path
-macbookyves.yves(1).latex.htlatexpath = '/usr/texbin/';% Latex 'htlatex' command path
-macbookyves.yves(1).latex.pdflatexpath = '/usr/texbin/';% Latex 'pdflatex' command path
+macbookyves.yves(1).graphviz.env = '/usr/local/bin/';% Graphviz environment variable
 macbookyves.yves(1).latex.env = '/usr/texbin/';% Latex environment variable
 macbookyves.yves(1).imagemagick.env = '/usr/local/bin/';% ImageMagick environment variable
 %

@@ -39,9 +39,7 @@ dkepath.bojiang(1).mex800 = [dkepath.bojiang(1).luke_root,'Project_DKE/MEX/Bin/l
 %
 % LUKE documentation
 %
-%dkepath.bojiang(1).graphviz.dotpath = '';% Graphviz 'dot' command path
-%dkepath.bojiang(1).latex.htlatexpath = '';% Latex 'htlatex' command path
-%dkepath.bojiang(1).latex.pdflatexpath = '';% Latex 'pdflatex' command path
+%dkepath.bojiang(1).graphviz.env = '';% Graphviz environment variable
 %dkepath.bojiang(1).latex.env = '';% Latex environment variable
 %dkepath.bojiang(1).imagemagick.env = '';% ImageMagick environment variable
 %

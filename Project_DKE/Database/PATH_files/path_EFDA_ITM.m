@@ -50,9 +50,7 @@ itm.yvesp(1).compiler_opt.fopts = ' -largeArrayDims';
 %
 % LUKE documentation
 %
-itm.yvesp(1).graphviz.dotpath = '/afs/@cell/common/soft/doxygen/@sys/graphviz-2.28/bin/';% Graphviz 'dot' command path
-itm.yvesp(1).latex.htlatexpath = '/afs/ipp/tok/soft/texlive/2012/@sys/bin/x86_64-linux/';% Latex 'htlatex' command path
-itm.yvesp(1).latex.pdflatexpath = '/afs/ipp/tok/soft/texlive/2012/@sys/bin/x86_64-linux/';% Latex 'pdflatex' command path
+itm.yvesp(1).graphviz.env = '/afs/@cell/common/soft/doxygen/@sys/graphviz-2.28/bin/';% Graphviz environment variable
 itm.yvesp(1).latex.env = '/afs/ipp/tok/soft/texlive/2012/@sys/bin/x86_64-linux/';% Latex environment variable
 itm.yvesp(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
