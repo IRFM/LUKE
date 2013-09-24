@@ -1,4 +1,4 @@
-function [equil_magnetic,prho,pspsin,pspsinT,pp] = equil_magnetic_EFIT_jd(filename,display_mode,p_opt,dispname,savename,opt)
+function [equil_magnetic,prho,pspsin,pspsinT,pp] = equil_magnetic_EFIT_jd(eqdsk,display_mode,p_opt,dispname,savename,opt)
 %
 % This function reads and returns the magnetic equilibrium parameters from 
 % eqdsk files created
@@ -18,11 +18,11 @@ if nargin < 6,
 end
 %
 if nargin < 5,
-    savename = filename;
+    savename = 'equil';
 end
 %
 if nargin < 4,
-    dispname = filename;
+    dispname = '';
 end
 %
 if nargin < 3,
@@ -38,7 +38,7 @@ nt = 65;
 %
 % Reads EFIT eqdsk data
 %
-[x,y,xypsin,psia,psin,pF,pp,pq,Rp,Zp] = eqdsk_jd(filename,display_mode,p_opt,dispname,savename);
+[x,y,xypsin,psia,psin,pF,pp,pq,Rp,Zp] = eqdsk_jd(eqdsk,display_mode,p_opt,dispname,savename);
 %
 % Transforms on a (psi,theta) grid
 %
@@ -128,5 +128,5 @@ equil_magnetic.ptBy = ptBy;
 equil_magnetic.ptBPHI = ptBPHI;
 equil_magnetic.Rp = Rp;
 equil_magnetic.Zp = Zp;
-equil_magnetic.equi_src = filename;
+equil_magnetic.equi_src = eqdsk;
 %

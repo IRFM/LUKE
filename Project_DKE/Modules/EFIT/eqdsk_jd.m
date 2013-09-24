@@ -1,4 +1,4 @@
-function [x,y,xypsin,psia,rpsin,rF,rp,rq,Rp,Zp,Ip,Rv,Zv,Bv] = eqdsk_jd(filename,display_mode,p_opt,dispname,savename,Ns);
+function [x,y,xypsin,psia,rpsin,rF,rp,rq,Rp,Zp,Ip,Rv,Zv,Bv] = eqdsk_jd(eqdsk,display_mode,p_opt,dispname,savename,Ns)
 %
 % This function reads the equilibrium parameters from eqdsk files created
 % by EFIT and saved in the formatted text file "filename"
@@ -9,29 +9,19 @@ if nargin < 6
     Ns = 101;%magnetic axis recalculation supergrid factor 
 end
 if nargin < 5
-    savename = filename;
+    savename = 'equil';
 end
 if nargin < 4
-    dispname = filename;
+    dispname = '';
 end
 %
-fid = fopen(filename);
+if exist(eqdsk,'file'),
+    eqdsk = fileread(eqdsk);
+end
 %
-% str_intro = ' ';
-% while max(str_intro < 48 | str_intro > 57) | length(str_intro) < 2 | length(str_intro) > 3,
-%     str_intro = fscanf(fid,'%s',1);
-% end
-% %
-% nnx = str2num(str_intro);
-% %nnx = data(1);% number of points in the horizontal direction
-% data = fscanf(fid,'%d',2);
-% nny = data(1);% number of points in the vertical direction
-% nnr = data(2);% number of radial flux surfaces
-% if nnr == 0, 
-%     nnr = nnx;
-% end
-%
-str_intro = fgetl(fid);
+istr = find(double(eqdsk) == 10,1,'first');
+str_intro = eqdsk(1:istr-1);
+eqdsk = eqdsk(istr+1 : end);
 sc = 0;
 nn = [];
 while length(str_intro) > 0 & length(nn) < 3,
@@ -61,46 +51,63 @@ else
     nnr = nn(1);
 end
 %
-data = fscanf(fid,'%e',5);
+[data,~,~,ind] = sscanf(eqdsk,'%e',5);
 xbox = data(1);% horizontal full-width of the rectangle on which poloidal flux values are given
 ybox = data(2);% vertical full-width of the rectangle on which poloidal flux values are given
 Rv = data(3);% nominal major radius of the torus
 Rmin = data(4);% major radius of the inner edge of the box of rectangular grid
 Zv = data(5);% vertical shift of the rectangular box midplane
 %
-data = fscanf(fid,'%e',5);
+eqdsk = eqdsk(ind:end);
+[data,~,~,ind] = sscanf(eqdsk,'%e',5);
 Rp = data(1);% major radius of magnetic axis
 Zp = data(2);% vertical height of magnetic axis
 psip = data(3);% poloidal flux function value at the magnetic axis 
 psia = data(4);% poloidal flux function value at the last closed flux surface (touching the limiter or the separatrix)
 Bv = data(5);% vacuum toroidal magnetic field at radmaj
 %
-data = fscanf(fid,'%e',5);
+eqdsk = eqdsk(ind:end);
+[data,~,~,ind] = sscanf(eqdsk,'%e',5);
 Ip = data(1);% toroidal current
 psimx1 = data(2);% not used
 psimx2 = data(3);% not used
 xax1 = data(4);% not used
 xax2 = data(5);% not used
 %
-data = fscanf(fid,'%e',5);
+eqdsk = eqdsk(ind:end);
+[data,~,~,ind] = sscanf(eqdsk,'%e',5);
 zax1 = data(1);% not used
 zax2 = data(2);% not used
 psisep = data(3);% not used
 xsep = data(4);% not used
 zsep = data(5);% not used
 %
-rF = fscanf(fid,'%e',nnr).';% R*BPHI  at nnr equispaced points in psi from psimag to psilim.
-rp = fscanf(fid,'%e',nnr).';% pressure values at the same points
-rdFdpsi = fscanf(fid,'%e',nnr).';% fpsiar_prime, [i.e., d f/d (psi)] at the same points
-rdpdpsi = fscanf(fid,'%e',nnr).';% p_prime [i.e., d prar/d (psi)] at the same points
-xypsi = fscanf(fid,'%e',[nnx,nny]);% psi values on the nnr * nnz equispaced grid
-rq = fscanf(fid,'%e',nnr).'; % safety factor q on the equispaced psi grid
+eqdsk = eqdsk(ind:end);
+[rF,~,~,ind] = sscanf(eqdsk,'%e',nnr);% R*BPHI  at nnr equispaced points in psi from psimag to psilim.
+eqdsk = eqdsk(ind:end);
+[rp,~,~,ind] = sscanf(eqdsk,'%e',nnr);% pressure values at the same points
+eqdsk = eqdsk(ind:end);
+[rdFdpsi,~,~,ind] = sscanf(eqdsk,'%e',nnr);% fpsiar_prime, [i.e., d f/d (psi)] at the same points
+eqdsk = eqdsk(ind:end);
+[rdpdpsi,~,~,ind] = sscanf(eqdsk,'%e',nnr);% p_prime [i.e., d prar/d (psi)] at the same points
 %
-ncoil = fscanf(fid,'%d',5);
-ncoil = ncoil(ncoil>0)';% not used
-ccoil = fscanf(fid,'%e',[ncoil(1),length(ncoil)]);% not used
+rF = rF.';
+rp = rp.';
+rdFdpsi = rdFdpsi.';
+rdpdpsi = rdpdpsi.';
 %
-fclose(fid);
+eqdsk = eqdsk(ind:end);
+[xypsi,~,~,ind] = sscanf(eqdsk,'%e',[nnx,nny]);% psi values on the nnr * nnz equispaced grid
+%
+eqdsk = eqdsk(ind:end);
+[rq,~,~,ind] = sscanf(eqdsk,'%e',nnr); % safety factor q on the equispaced psi grid
+rq = rq.';
+%
+eqdsk = eqdsk(ind:end);
+[ncoil,~,~,ind] = sscanf(eqdsk,'%d',5);
+ncoil = ncoil(ncoil>0).';% not used
+eqdsk = eqdsk(ind:end);
+[ccoil,~,~,ind] = sscanf(eqdsk,'%e',[ncoil(1),length(ncoil)]);% not used
 %
 R = Rmin + linspace(0,xbox,nnx);
 Z = Zv + linspace(-ybox/2,ybox/2,nny);

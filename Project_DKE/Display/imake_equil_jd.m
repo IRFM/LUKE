@@ -28,6 +28,8 @@ end
 %
 select.style.textwidth = 420;
 %
+eqdsk_path = './';
+%
 equil = '';
 Zaxis = 0;
 Zeff = NaN;
@@ -66,13 +68,27 @@ if i_opt == 0, % use data from from external database
     shotnum = external.shotnum;
     shotime = external.shotime;
     %
-    if strcmp(basestr,'TCV'),
+    if strcmp(basestr,'TCV') || strcmp(basestr,'EAST'),
         %
-        eqdsk_path = external.magnetic.eqdsk_path;
-        eqdsk_file = external.magnetic.eqdsk_file;
-        %
-        if ~exist([eqdsk_path,eqdsk_file],'file'),
-            error(['The file ',eqdsk_path,eqdsk_file,' does not exist. Aborted.'])
+        if isfield(external.magnetic,'eqdsk'),
+            %
+            eqdsk = external.magnetic.eqdsk;
+            %
+        elseif isfield(external.magnetic,'eqdsk_path') && isfield(external.magnetic,'eqdsk_file')
+            %
+            eqdsk_path = external.magnetic.eqdsk_path;
+            eqdsk_file = external.magnetic.eqdsk_file;
+            %
+            if ~exist(eqdsk_path,'dir'),
+                disp(['WARNING : The directory ',eqdsk_path,' does not exist. local directory enforced.'])
+                eqdsk_path = './';
+            end
+            if ~exist([eqdsk_path,eqdsk_file],'file'),
+                error(['The file ',eqdsk_path,eqdsk_file,' does not exist. Aborted.'])
+            end
+            %
+            eqdsk = fileread([eqdsk_path,eqdsk_file]);
+            %
         end
         %
         e_opt = -1;% eqdsk equilibrium
@@ -86,17 +102,6 @@ if i_opt == 0, % use data from from external database
         equil_magnetic_data = external.magnetic;
         %
         e_opt = -3;% standard rz -> pt transformation needed
-        %
-    elseif strcmp(basestr,'EAST'),
-        %
-        eqdsk_path = external.magnetic.eqdsk_path;
-        eqdsk_file = external.magnetic.eqdsk_file;
-        %
-        if ~exist([eqdsk_path,eqdsk_file],'file'),
-            error(['The file ',eqdsk_path,eqdsk_file,' does not exist. Aborted.'])
-        end
-        %
-        e_opt = -1;% eqdsk equilibrium
         %
     else
         %
@@ -118,6 +123,8 @@ elseif i_opt == 1, % use data from an existing equilibrium file
             disp('-----> No eqdsk file selected.')            
             return
         end
+        %
+        eqdsk = fileread([eqdsk_path,eqdsk_file]);
         %
         it = strfind(eqdsk_file,'t');
         %
@@ -501,7 +508,7 @@ if e_opt >= 0,
     %
 elseif e_opt == -1,% (R,Z) to (psi,theta) conversion specific to eqdsk    
     %
-    [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd([eqdsk_path,eqdsk_file],display_mode,p_opt,dispname,savename);
+    [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd(eqdsk,display_mode,p_opt,dispname,savename);
     [np,nt] = size(equil_magnetic.ptx);
     %
     % Correction for the equilibrium offset
@@ -613,7 +620,7 @@ equil.tokamak = basestr;
 equil.shotnum = shotnum;
 equil.shotime = shotime;
 %
-if e_opt == -1,
+if e_opt == -1 && exist('eqdsk_file','var'),
     equil.info.eqdsk = [eqdsk_path,eqdsk_file];
 elseif e_opt == -2,
     equil.info.datapath = amr_psi_path;
