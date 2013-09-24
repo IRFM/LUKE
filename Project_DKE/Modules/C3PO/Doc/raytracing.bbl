@@ -1,0 +1,102 @@
+\begin{thebibliography}{10}
+
+\bibitem{bon84}
+P.T. Bonoli.
+\newblock Linear theory of lower hybrid heating.
+\newblock {\em IEEE Trans. on Plasma Sci.}, PS-12(2):95--107, 1984.
+
+\bibitem{biz93}
+J.~P. Bizarro, Y.~Peysson, P.T. Bonoli, J.~Carrasco, T.~Dudok de~Wit, V.~Fuchs,
+  G.~T. Hoang, X.~Litaudon, D.~Moreau, C.~Pocheau, and I.~P. Shkarofsky.
+\newblock On self-consistent ray-tracing and fokker-planck modeling of the hard
+  x-ray emission during lower hybrid current drive in tokamaks.
+\newblock {\em Phys. Fluids B}, 5(9):3276--3283, 1993.
+
+\bibitem{pey96}
+Y.~Peysson, R.~Arslanbekov, V.~Basiuk, J.~Carrasco, X.~Litaudon, and J.~P.
+  Bizarro.
+\newblock Magnetic ripple and the modeling of the lower-hybrid curent drive in
+  tokamaks.
+\newblock {\em Phys. Plasmas}, 3(10):3668--3688, 1996.
+
+\bibitem{imb05}
+F.~Imbeaux and Y.~Peysson.
+\newblock Ray-tracing and fokker--planck modelling of the effect of plasma
+  current on the propagation and absorption of lower hybrid waves.
+\newblock {\em Plasma Phys. Control. Fusion}, 47(11):2041--2065, 2005.
+
+\bibitem{mat89}
+K.~Matsuda.
+\newblock Ray tracing study of the electron cyclotron current drive in diii-d
+  using 60 ghz.
+\newblock {\em IEEE Transactions on Plasma Science}, 17(1):6--11, 1989.
+
+\bibitem{smi95}
+A.~P. Smirnov and R.~W. Harvey.
+\newblock Calculations of the current drive in diii-d with the genray ray
+  tracing code.
+\newblock {\em Bull. Amer. Physical Society}, 40:1837, 1995.
+\newblock 37th Annual Meeting of the Division of Plasma Physics November 6-10,
+  1995 Louisville, Kentucky abstract 8p35.
+
+\bibitem{smi03}
+A.~P. Smirnov and R.~W. Harvey.
+\newblock The genray ray tracing code.
+\newblock Technical report, Report CompX-2000-01, Ver. 2, 2003.
+
+\bibitem{huy91}
+G.~T.~A. Huysmans, J.~P. Goedbloed, and W.~Kerner.
+\newblock Helena code.
+\newblock In Armin Tenner, editor, {\em CP90 Europhysics Conference on
+  Computational Physics, Amsterdam, the Netherlands, 10-13 September 1990},
+  page 371. Word Scientific, Singapore, 1991.
+
+\bibitem{dec04a}
+J.~Decker and Y.~Peysson.
+\newblock {DKE}: A fast numerical solver for the {3D} drift kinetic equation.
+\newblock report EUR-CEA-FC-1736, Euratom-CEA, 2004.
+
+\bibitem{bon86}
+P.T. Bonoli and R.C. Englade.
+\newblock Simulation model for lower hybrid current drive.
+\newblock {\em Phys. Fluids}, 29(9):2937--2950, 1986.
+
+\bibitem{pre92}
+W.~H. Press, S.~A. Teukolsky, W.~T. Vetterling, and B.~P. Flannery.
+\newblock {\em Numerical Recipes in C}.
+\newblock Cambridge University Press, 2nd edition, 1992.
+
+\bibitem{dec06}
+Joan Decker and Abhay~K. Ram.
+\newblock {Relativistic description of electron Bernstein waves}.
+\newblock {\em Phys. Plasmas}, {13}({11}), {NOV} 2006.
+
+\bibitem{bra98}
+M.~Brambilla.
+\newblock {\em Kinetic Theory of Plasma Waves}.
+\newblock Oxford Science Publications, 1998.
+
+\bibitem{bon82}
+P.~T. Bonoli and E.~Ott.
+\newblock Toroldal and scattering effects on lower-hybrid wave propagation.
+\newblock {\em Phys. Fluids}, 25(2):359--375, 1982.
+
+\bibitem{vah92}
+G.~Vahala, L.~Vahala, and P.T. Bonoli.
+\newblock Effect of magnetic and density fluctuations of the propagation of
+  lower-hybrid waves in tokamaks.
+\newblock {\em Phys. Fluids B}, 4(12):4033--4045, 1992.
+
+\bibitem{hei99}
+J.A. Heikkinen, T.J.J. Tala, T.J.H. Pattikangas, A.D. Piliya, A.N. Saveliev,
+  and S.J. Karttunen.
+\newblock Role of fast waves in the central deposition of lower hybrid power.
+\newblock {\em Plasma Phys. Control. Fusion}, 41:1231--1249, 1999.
+
+\bibitem{tay74}
+J.~B. Taylor.
+\newblock Relaxation of toroidal plasma and generation of reverse magnetic
+  fields.
+\newblock {\em Phys. Rev. Lett.}, 33(19):1139--1141, 1974.
+
+\end{thebibliography}
