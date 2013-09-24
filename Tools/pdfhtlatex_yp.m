@@ -132,8 +132,10 @@ function pdfhtlatex_yp(root_path,filelist,verbose)
                 if ~unix('which pdflatex')
                     if isempty(verbose)
                         [status_pdf, result] = unix(['pdflatex  ',texfile],'-echo');
+                        [status_pdf, result] = unix(['pdflatex  ',texfile],'-echo');%run twice for the references
                     else
                         [status_pdf, result] = unix(['pdflatex  ',texfile]);
+                        [status_pdf, result] = unix(['pdflatex  ',texfile]);%run twice for the references
                     end 
                 else
                     status_pdf = 1;
