@@ -30,8 +30,12 @@ display([' --> Bt direction is ',external.equil.jbdirections.Bt]);
 external.equil.shotnum = shotnum;
 external.equil.shotime = shotime;
 %
-external.equil.magnetic.eqdsk_path = [workdir,'/'];
-external.equil.magnetic.eqdsk_file = ['g',shotnum,'.',shotime];;
+filename = [workdir,'/g',shotnum,'.',shotime];
+if exist(filename,'file'),
+    external.equil.magnetic.eqdsk = fileread(filename);
+else
+    error('eqdsk file not found');
+end
 %
 external.equil.prof = load([workdir,'/','profiles_',shotnum,'_',shotime,'.mat']);
 external.equil.prof.species = load([workdir,'/','species_',shotnum,'_',shotime,'.mat']);

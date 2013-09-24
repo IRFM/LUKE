@@ -1,7 +1,10 @@
-function launch = imake_launch_LH_jd(basestr,equil,external,opt_gui)
+function launch = imake_launch_LH_jd(basestr,equil,external,opt_gui,select)
 %
 % This function builts the launch structure for LH waves from external and/or user-specified data
 %
+if nargin < 5,
+    select = structs;
+end
 if nargin < 4,
     opt_gui = 0;
 end
@@ -59,17 +62,21 @@ if ~isempty(external),
         %
         fexternal = fieldnames(external);
         %
-        a_str = '';
-        for iw = 1:length(fexternal),
-            a_str = [a_str,' (',num2str(iw),') ',fexternal{iw},','];
-        end
-        %
-        if iw > 1,
-            %
-            a_opt = input_dke_yp(['Please select an antenna :',a_str],1,1:iw,'',[1,1]);
-            %
+        if isfield(select,'a_opt'),
+            a_opt = select.a_opt;
         else
-            a_opt = 1;
+            a_str = '';
+            for iw = 1:length(fexternal),
+                a_str = [a_str,' (',num2str(iw),') ',fexternal{iw},','];
+            end
+            %
+            if iw > 1,
+                %
+                a_opt = input_dke_yp(['Please select an antenna :',a_str],1,1:iw,'',[1,1]);
+                %
+            else
+                a_opt = 1;
+            end
         end
         %
         power_spectrum = external.(fexternal{a_opt}).power_spectrum;
@@ -83,7 +90,12 @@ if ~isempty(external),
         launch.m0 = 0;
         %
         disp(['----> The LH antenna has ',int2str(length(position.Z)), ' poloidal rows.']);
-        position_rZ0_opt = input_dke_yp('Do you want to consider all poloidal rows [y]','y',{'y','n'},'',[1,1]);
+        %
+        if isfield(select,'position_rZ0_opt'),
+            position_rZ0_opt = select.position_rZ0_opt;
+        else
+            position_rZ0_opt = input_dke_yp('Do you want to consider all poloidal rows [y]','y',{'y','n'},'',[1,1]);
+        end
         %
         if strcmp(position_rZ0_opt,'y'),
             launch.rZ0 = position.Z;

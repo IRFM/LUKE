@@ -97,37 +97,23 @@ if ~isempty(external),% import wave data from external structure
         %
     elseif strcmp(basestr,'EAST'),
         %
-        % WAVE TYPE
-        %
-        if isfield(external,'LH') && isfield(external,'EC')
+        if isfield(external,'LH'),
             %
-            t_opt = input_dke_yp('Option for wave type : 0 (LH), 1 (EC)',0,0:1,'',[1,1]);
+            select.position_rZ0_opt = 'y';
             %
-            if t_opt == 0,
+            for a_opt = 1:length(fieldnames(external.LH)),
                 %
-                type = 'LH';
-            else
+                select.a_opt = a_opt;
                 %
-                type = 'EC';
+                launch = imake_launch_LH_jd(basestr,equil,external.LH,opt_gui,select);
+                launch.type = 'LH';
+                %
+                launchs = [launchs,launch];
+                %
             end
-            %
-        elseif isfield(external,'LH'),
-            %
-            type = 'LH';
-            %
-        elseif isfield(external,'EC'),
-            %
-            type = 'EC';
-            %
         end
         %
-        % BUILDING LAUNCH
-        %
-        if strcmp(type,'LH'),
-            %
-            launch = imake_launch_LH_jd(basestr,equil,external.LH);
-            %
-        elseif strcmp(type,'EC'),
+        if isfield(external,'EC'),
             %
             keyboard
             %launch = imake_launch_EC_jd(external.EC); 
