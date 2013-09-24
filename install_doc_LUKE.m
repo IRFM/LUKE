@@ -165,6 +165,34 @@ else
     };
 end
 %
+for j = 1:length(search_path),
+    %
+    not_compatible_filename_list = check_LUKE_filenames_yp(search_path{j});
+    %
+    if length(not_compatible_filename_list)
+        %
+        disp('******************************** WARNING ***********************************')
+        disp('****************************************************************************')
+        for i = 1:length(not_compatible_filename_list),
+            disp([' -----> ',not_compatible_filename_list{i}]);
+        end
+        %
+        disp('****************************************************************************')
+        disp('****************************************************************************')
+        disp(' -----> Before building of the documentation,')
+        disp(' 1) Rename all the files identified with the wrong name.')
+        disp(' 2) Check the dependencies.')
+        disp(' 3) Commit all the changes in the CVS repository.')
+        disp('    WARNING: the whole history of the files whose name has changed must be saved.')
+        disp('****************************************************************************')
+        disp('****************************************************************************')
+        %
+        return
+    end
+end
+
+
+%
 overview_scripts(1).path = fullfile(luke_root,'INSTALL.m');overview_scripts(1).format = '';
 overview_scripts(2).path = fullfile(luke_root,'README.m');overview_scripts(2).format = '';
 overview_scripts(3).path = fullfile(luke_root,'VERSIONS.m');overview_scripts(3).format = '';
