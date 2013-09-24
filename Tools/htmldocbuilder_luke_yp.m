@@ -132,9 +132,9 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
     end
     %
     if htmlview_mode <= 0,
-    	stat = web(['file://',root_path,'Documentation/index.html'],'-notoolbar', '-new');
+    	stat = web(['file://',root_path,'Documentation/index.html'],'-new');
     	if stat == 1 | stat == 2,
-        	web(['file://',root_path,'Documentation/index.html'],'-notoolbar', '-new');%Open in MatLab help browser    
+        	web(['file://',root_path,'Documentation/index.html'],'-new');%Open in MatLab help browser    
     	end
     end
     disp(['----> The weblink to the documentation is ','file:/',root_path,'Documentation/index.html']);
