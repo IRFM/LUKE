@@ -43,7 +43,7 @@ ptBPHI = griddata(x,y,xyBPHI',ptx,pty);
 %
 np = length(psin);
 ap = ptx(np,1);%Plasma minor radius on the LFS midplane
-psi_apRp = -psin*psia*ap/Rp;%The poloidal flux coordinate is normalized by the aspect ratio 
+psi_apRp = psin*psia*ap/Rp;%The poloidal flux coordinate is normalized by the aspect ratio 
 ptR = Rp + ptx;
 %
 % Note that in DKE we have B = F.gradphi + gradphi x gradpsi.
@@ -51,8 +51,8 @@ ptR = Rp + ptx;
 %WARNING: not very accurate because psi grid provided by ACCOME seems to be noisy in the vicinity of the plasma center
 %
 if isempty(xyBR) | isempty(xyBZ),
-	ptBx = ptdpsindy*psia./ptR;%Reverse sign for ACCOME/LUKE compatibility
-	ptBy = -ptdpsindx*psia./ptR;%Reverse sign for ACCOME/LUKE compatibility
+	ptBx = ptdpsindy*psia./ptR;
+	ptBy = -ptdpsindx*psia./ptR;
 	%
 	disp('***********************************************************************************************************');
 	disp('WARNING: The BR and BZ magnetic field components are not given directly by ACCOME (not in the source file).');
@@ -60,8 +60,10 @@ if isempty(xyBR) | isempty(xyBZ),
 	disp('         It is recommanded to re-create ACCOME source file for LUKE.');
 	disp('***********************************************************************************************************');
 else
-	ptBx = -griddata(x,y,xyBR',ptx,pty);
-	ptBy = -griddata(x,y,xyBZ',ptx,pty);
+	%ptBx = -griddata(x,y,xyBR',ptx,pty);
+	%ptBy = -griddata(x,y,xyBZ',ptx,pty);
+    ptBx = griddata(x,y,xyBR',ptx,pty);
+	ptBy = griddata(x,y,xyBZ',ptx,pty);
 end
 %
 ptBP = sqrt(ptBx.^2 +ptBy.^2);
