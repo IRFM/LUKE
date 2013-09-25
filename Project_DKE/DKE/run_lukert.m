@@ -294,7 +294,8 @@ if opt.backup < 0 && ~exist([simul.path,'backup_',simul.id,'.mat'],'file'),% pas
 end
 %
 disp(' ');
-disp(['Simulation id : ',simul.id,' ; Simulation path : ',simul.path]);
+disp(['Simulation id : ',simul.id]);
+disp(['Simulation path : ',simul.path]);
 disp(' ');
 %
 itnmin = 1;
