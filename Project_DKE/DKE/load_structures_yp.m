@@ -339,10 +339,14 @@ if exist('flag_wave','var'),
         info_dke_yp(2,['Simulations are performed without RF Waves']);
     else
         for iw = 1:length(ids_wave),
-            filename = ['WAVE_',id_equil,'_',ids_wave{iw},'.mat'];
+            if isempty(id_equil) && strfind(ids_wave{iw},'WAVE_'),
+                filename = [ids_wave{iw}];
+            else
+                filename = ['WAVE_',id_equil,'_',ids_wave{iw},'.mat'];
+            end
             filenames = getlist_jd(paths_wave{iw},filename);
             if isempty(filenames),
-                info_dke_yp(2,['Warning : Structure ',filename,' could not be found in directory',paths_wave{iw},'.']);
+                info_dke_yp(2,['Warning : Structure ',filename,' could not be found in the directory ',paths_wave{iw},'.']);
             else
                 for ifile = 1:length(filenames),
                     filename = [paths_wave{iw},filenames{ifile}];
