@@ -44,7 +44,7 @@ else XXsinksource=XXsinksource_in;
 end
 %
 % partial Jacobian multiplication to avoid singularities, and normalization
-XXsinksource=XXpn2.*XXsinksource/(mksa.nhu_ref*mksa.ne_ref);
+XXsinksource = XXsinksource/(mksa.nhu_ref*mksa.ne_ref);
 end
 %
 %
