@@ -58,7 +58,8 @@ else
     %
     % Load data if existing in 'loadstruct' structure or recalculate them otherwise
     %
-    [dkeparam_out,radialDKE,equilDKE,momentumDKE,gridDKE,mksa,Zmomcoef,Zbouncecoef,XXsinksource,Zmripple,...
+    [dkeparam_out,radialDKE,equilDKE,momentumDKE,gridDKE,mksa,Zmomcoef,Zbouncecoef,...
+        XXsinksource,Zmripple,XXSavalanches_norm,xnre_init,xnre_out_norm,...
         ZXXD_a,ZXXF_a,...
         ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor,...
         ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity,...
@@ -101,6 +102,7 @@ else
     residu_f = cell(1,nit);
     XXf0 = cell(1,nit);
     zP_0_2piRp_mod_old = cell(1,nit);
+    xnre = cell(1,nit+1);
     %
     if dkeparam_out.timevol == 1,
     %     ZP0 = cell(1,nit);
@@ -115,6 +117,7 @@ else
         xTe_norm_out = cell(1,nit);
         xft_fsav = cell(1,nit);
         xfteff_fsav = cell(1,nit);
+        %
     end
     %
     itn0 = 1;
@@ -128,14 +131,12 @@ end
 % nested convergence on the wave absorption and explicit collision
 % integral term must be obtained.
 %
-XXsinksource_nrenorm = XXsinksource;
-nre_init = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr); %0.001*ones(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-nre = nre_init; 
+xnre{1} = xnre_init; 
 %
 for itn = itn0:nit,
     %
     dkeparam_out.dtn = dtn_list(itn);
-    XXsinksource = XXsinksource_nrenorm.*nre;
+    XXSavalanches = XXSavalanches_norm.*repmat(reshape(xnre{itn},[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1]);% multiple the avalanche source term by the runaway electron density
     %
     if itn == 1,
         XXfin = XXfinit;
@@ -177,7 +178,7 @@ for itn = itn0:nit,
         [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,dkedisplay,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_a,ZXXF_a);%Build the 3D DKE matrix
         %
         if conv >= 0,
-            [XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0{itn},curr0{itn},residu_f{itn}] = solver_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfin);% Solve the DKE equation
+            [XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0{itn},curr0{itn},residu_f{itn}] = solver_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource + XXSavalanches,XXfM,XXfin);% Solve the DKE equation
         else% case where the initial distribution is used to first estimate the ray absorption
             XXf0{itn} = XXfin;
             XXf0_tp = zeros(size(XXf0{itn}));
@@ -194,7 +195,7 @@ for itn = itn0:nit,
                 %
                 % Calculation of the density of power absorbed for all rays
                 %
-                [ZP0_rf] = fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
+                [ZP0_rf] = fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
                     XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
                     ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod,gridindex_rf);%Calculate RF absorbed power of the distribution function
                 if dkeparam_out.dke_mode >= 1,
@@ -297,13 +298,20 @@ for itn = itn0:nit,
         [ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...(itn)
             XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRR_fsav{itn},...
             xne_norm_out{itn},xTe_norm_out{itn},xft_fsav{itn},xfteff_fsav{itn},XXRintmask{itn},Zmom(itn)] = ...
-            fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
+            fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
             XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
             ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
             ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor); %Calculate moments of the distribution function
         %
-        nbound = permute(repmat(xRR_fsav{itn}*dtn_list(itn),[gridDKE.npn,1,gridDKE.nmhu]),[1,3,2]); % nr of electron crossing pmax
-        nre = nre + nbound;
+        % the number of runaway electrons for next iteration is the sum of :
+        %   - the existing runaways
+        %   - the runaways created outside pmax
+        %   - the runaways passing through pmax
+        %
+        xnre{itn + 1} = xnre{itn} + xnre_out_norm*xnre{itn}*dtn_list(itn) + xRR_fsav{itn}*dtn_list(itn);   
+    else
+        %
+        xnre{itn + 1} = xnre{itn};
         %
     end
     %
@@ -339,7 +347,7 @@ if dkeparam_out.timevol == 0,
     [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
         XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
         xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,XXRintmask,Zmom] = ...
-        fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
+        fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
         XXf0{1},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
         ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
         ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor);%Calculate moments of the distribution function
@@ -394,8 +402,8 @@ if dkeparam_out.syn_mode == 1,
     %
     [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(dkeparam_out,dkedisplay,waveparam_bc,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa);% RF wave flux coefficients
     [MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,dkedisplay,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp);%Build the 3D DKE matrix
-    [XXf0_bc,XXf0_bc_tp,XXf0_bc_g,XXf0_bc_L_tp,XXf0_bc_L_g,memoryLU_bc_f,memoryLU_bc_g] = solver_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource,XXfinit);% Solve the DKE equation
-    [ZP0_bc,Zcurr_bc,Znorm_bc,ZXXS_bc,ZYXXD_bc_rf,XxRR_bc_fsav,xMRR_flux_bc,xMRR_tau_bc,xMRR_power_flux_bc,xMRR_power_tau_bc,xRR_bc_fsav,xne_norm_bc_out_bc,xTe_norm_bc_out,xft_bc_fsav,xfteff_bc_fsav] = fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,[],radial_mode,Zdelta,XXf0{nit},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,ZXXD_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp);%Calculate moments of the distribution function
+    [XXf0_bc,XXf0_bc_tp,XXf0_bc_g,XXf0_bc_L_tp,XXf0_bc_L_g,memoryLU_bc_f,memoryLU_bc_g] = solver_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource + XXSavalanches,XXfinit);% Solve the DKE equation
+    [ZP0_bc,Zcurr_bc,Znorm_bc,ZXXS_bc,ZYXXD_bc_rf,XxRR_bc_fsav,xMRR_flux_bc,xMRR_tau_bc,xMRR_power_flux_bc,xMRR_power_tau_bc,xRR_bc_fsav,xne_norm_bc_out_bc,xTe_norm_bc_out,xft_bc_fsav,xfteff_bc_fsav] = fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,[],radial_mode,Zdelta,XXSavalanches,XXf0{nit},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,ZXXD_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp);%Calculate moments of the distribution function
 %
     time_bc_out = etime(clock,time0_bc);
     memoryLU_bc_f_out = memoryLU_bc_f;
@@ -480,6 +488,9 @@ if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf) && nit_rf > 1,
 end
 %
 dke_out.xRR_fsav = xRR_fsav;
+dke_out.xnre = xnre;
+dke_out.xnre_init = xnre_init;
+dke_out.xnre_out_norm = xnre_out_norm;
 dke_out.Zmripple = Zmripple;
 %
 dke_out.equil = equil;
