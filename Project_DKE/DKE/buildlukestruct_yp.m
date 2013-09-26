@@ -52,15 +52,12 @@ Zmripple = make_struct_jd(loadstruct,display.display_mode,'mripplecoefbuilder_dk
 [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys] = make_struct_jd(loadstruct,display.display_mode,'rfwave_dke_jd',dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
 %
 if dkeparam_out.avalanche_mode == 1 %if 1, avalanche mode on
-    XXS = make_struct_jd(loadstruct,display.display_mode,'avalanche_en',dkepath,dkeparam_out,display,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE);%the complete avalanche operator
+    [XXSavalanches_norm,xnre_init,xnre_out_norm] = make_struct_jd(loadstruct,display.display_mode,'avalanche_en',dkepath,dkeparam_out,display,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE);%the complete avalanche operator
 else %if no avalanche mode is specified, zero contribution
-    nr = gridDKE.nr;
-    npn = gridDKE.npn;
-    nmhu = gridDKE.nmhu;
-    XXS=squeeze(zeros(npn,nmhu,nr));
+    XXSavalanches_norm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
+    xnre_init = zeros(1,gridDKE.nr); 
+    xnre_out_norm = zeros(1,gridDKE.nr); 
 end
-%
-XXsinksource=XXsinksource+gridDKE.XXpn2.*XXS; %add avalanche term to sinksourceterm (RHS), partial Jacobian multiplication to avoid singularities (XXS already normalized to mksa.nhu_ref*mksa.ne_ref)
 %
 if strcmp(waveparam.model,'RT'),% ray tracing simulation
     [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = make_struct_jd(loadstruct,display.display_mode,'loop_rfdiff_dke_jd',dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waveparam);%RF waves flux coefficients
@@ -72,7 +69,8 @@ end
 %
 [XXfinit] = make_struct_jd(loadstruct,display.display_mode,'finit_dke_yp',dkeparam_out,display,equilDKE,gridDKE,mksa,Zmomcoef,waveparam,XXf0_in);%Initial distribution function
 %
-varargout_loc = {dkeparam_out,radialDKE,equilDKE,momentumDKE,gridDKE,mksa,Zmomcoef,Zbouncecoef,XXsinksource,Zmripple,...
+varargout_loc = {dkeparam_out,radialDKE,equilDKE,momentumDKE,gridDKE,mksa,Zmomcoef,Zbouncecoef,...
+                 XXsinksource,Zmripple,XXSavalanches_norm,xnre_init,xnre_out_norm,...
                  ZXXD_a,ZXXF_a,...
                  ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor,...
                  ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity,...
