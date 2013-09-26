@@ -451,6 +451,8 @@ end
 time0 = clock;
 XXf0 = XXfinit;%Initial guess (normalized to xne_norm)
 %
+XXsinksource_pn2 = repmat(betath_ref^2*Xpn2,[1,1,nr]).*XXsinksource;
+%
 MMXfinit_t = [];
 for ir = 1:nr,
     MMXfinit_t = [MMXfinit_t;reshape(XXfinit(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
@@ -461,7 +463,7 @@ if dkeparam.PETScparam.cloop & dkeparam.invproc == -4,
 %	writeCloopinput_dke_ft(nit_f,boundary_mode_f,bounce_mode,dkeparam.coll_mode,dkeparam.norm_mode_f,prec0_f,display_mode,betath_ref,xTe_norm,xne_norm,dtn,mhu,nmhu,npn,ns_f,nr,sm_f,...
      %   masku,maskl,dpn,dmhu,xpn,xpn2,xpn3,xsigma,xgamma,xz,xz2,pn,pn2,pn3,...
      %   sigma,gamma,z,z2,xJ1,xJ2,xJ3,xJ4,J1,J2,J3,J4,...
-    %    Xmhu,XXsinksource,Xmask_r_edge,XXfM,XXfinit,XXRlambda_b_p1p1,rdke,Xpn2,Zpn2_t,...
+    %    Xmhu,XXsinksource_pn2,Xmask_r_edge,XXfM,XXfinit,XXRlambda_b_p1p1,rdke,Xpn2,Zpn2_t,...
     %    Zmask_f0_t,...
     %    MMXT_f_t,MMXR_f_t,MMXP_f_t,MMXPC_f_t,MMXPDI_f_t,...
     %    XXI,XXf0,time_scheme,dkepath);
@@ -515,7 +517,7 @@ else
             end
             %
             MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
-            MMXsource_t = [MMXsource_t;reshape(XXsinksource(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
+            MMXsource_t = [MMXsource_t;reshape(XXsinksource_pn2(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
 			%
             if ir == nr & ~isempty(Xmask_r_edge),%Edge radial boundary condition: XI_t = 0 if radial transport operates
             	%TODO: justifiying edge conditions for the Legendre integral
