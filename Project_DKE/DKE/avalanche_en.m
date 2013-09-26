@@ -1,4 +1,4 @@
-function [XXS] = avalanche_en(dkepath,dkeparam,dkedisplay,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE)
+function [XXSavalanches_norm,xnre_init,xnre_out_norm] = avalanche_en(dkepath,dkeparam,dkedisplay,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE)
 %
 % This function calculates the avalanche source term
 %
@@ -19,21 +19,38 @@ function [XXS] = avalanche_en(dkepath,dkeparam,dkedisplay,mksa,gridDKE,Zmomcoef,
 npsi = gridDKE.nr;
 npn = gridDKE.npn;
 nmhu = gridDKE.nmhu;
+pnmax_S = dkeparam.pnmax_S;
+f_pmax = dkeparam.f_pmax; % multiplication of p grid. f_pmax*p_max
+%
+%extending the grid so that we can count the avalanche created beyond pmax
+npnRA = f_pmax*gridDKE.npn;
+pnRA = gridDKE.pn;
+dpnRA = gridDKE.dpn;
+%
+for ig = 1:(f_pmax-1)
+    pnRA = [pnRA, gridDKE.pn + ig*pnmax_S];
+    dpnRA = [dpnRA, gridDKE.dpn];
+end
+%
+XXpnRA2 = permute(repmat(pnRA.^2,[nmhu 1]),[2,1]);
+XXpnRA = permute(repmat(pnRA,[nmhu 1]),[2,1]);
+gammaRA = sqrt(1+(pnRA*mksa.betath_ref).^2);
+xnre_init = ohm.xnre_init;
 %
 if Zbouncecoef.XXlambda~=1
-    [XXalpha_an,XXmask_ctsa,thetastar_an,thetastar_an2]=S_anal(equilDKE,gridDKE,Zmomcoef); %calculates alpha and theta* with analytical formula in circ concentric case
+    %[XXalpha_an,XXmask_ctsa,thetastar_an,thetastar_an2]=S_anal(equilDKE,gridDKE,Zmomcoef, pnRA, dpnRA, npnRA, gammaRA); %calculates alpha and theta* with analytical formula in circ concentric case
     tic
-    [XXthetastar1,XXthetastar2,XXalpha] = thetastar_calc_dke_en(equilDKE,gridDKE,Zmomcoef);%calc the critical poloidal angle value theta_star for runaway avalanches with interp1
+    [XXthetastar1,XXthetastar2,XXalpha] = thetastar_calc_dke_en(equilDKE,gridDKE,Zmomcoef, pnRA, dpnRA, npnRA, gammaRA);%calc the critical poloidal angle value theta_star for runaway avalanches with interp1
     toc
     %     tic
     %     [XXthetastar1f,XXthetastar2f,XXalphaf] =
     %     thetastar_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches with fzero
     %     toc
 else
-    XXalpha=ones(npsi,npn,nmhu);
+    XXalpha=ones(npsi,npnRA,nmhu);
     XXthetastar1=0;
     XXthetastar2=0;
-    XXalpha_an=ones(npsi,npn,nmhu);
+    XXalpha_an=ones(npsi,npnRA,nmhu);
 end
 %
 Lambd = mksa.lnc_e_ref;
@@ -50,45 +67,82 @@ Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
 mhuT=sqrt(1-B0./Bmax);
 %
 for ipsi=1:npsi
-  Srp(ipsi,:)=1/(4*pi)*beta^2/Lambd*ne(ipsi)./(gridDKE.pn.*Zmomcoef.gamma.*(Zmomcoef.gamma-1).^2); %rosenbluth (S*)
+  Srp(ipsi,:) = beta^3*1/(4*pi)/Lambd*ne(ipsi)./(beta*pnRA.*gammaRA.*(gammaRA-1).^2); %rosenbluth (S*)
 end
 XXSrp=permute(repmat(Srp, [1,1,nmhu]),[1,2,3]);
 %
-delt=zeros(npsi,npn,nmhu);
+delt = zeros(npsi,npnRA,nmhu);
 %
-for ip=1:npn
-    [dummy,I] = min(abs(gridDKE.mhu - sqrt((Zmomcoef.gamma(ip)-1)/(Zmomcoef.gamma(ip)+1))));
-    delt(:,ip,I) = 1;
-    %delt(:,ip,nmhu-I+1) = 1;
+%delta function in the cylindrical + analytical case. To do: make the redistribution
+%correctly with redistrib_jd.m
+for ip=1:npnRA
+    xistar(ip) = sqrt((gammaRA(ip)-1)/(gammaRA(ip)+1));
+    dxistar=gridDKE.dmhu(1);
+    xigrid = linspace(xistar(ip)-3/2*dxistar,xistar(ip)+3/2*dxistar,4);
+    fdel = [0,1,0];
+    mhu_S = linspace(gridDKE.mhu(1)-gridDKE.dmhu(1)/2, gridDKE.mhu(end)+gridDKE.dmhu(end)/2,nmhu+1);
+    delt(:,ip,:) = redistrib_jd(xigrid,fdel,mhu_S,0);
 end
+%[dummy,I] = min(abs(gridDKE.mhu - sqrt((gammaRA(ip)-1)/(gammaRA(ip)+1))))
+%delt(:,ip,I) = 1;
+%delt(:,ip,nmhu-I+1) = 1;
+
 if Zbouncecoef.XXlambda~=1
-C=NaN(npsi,npn,nmhu);
+C=NaN(npsi,npnRA,nmhu);
 %
 for ipsi=1:npsi 
     for m=1:nmhu
-    C(ipsi,:,m)=2/pi./(Zmomcoef.gamma+1)./(Zbouncecoef.Xxlambda(m,ipsi).*Zbouncecoef.xqtilde(ipsi)).*abs(gridDKE.mhu(m))./(1-gridDKE.mhu(m).^2).^2; 
+    C(ipsi,:,m)=2/pi./(gammaRA+1)./(Zbouncecoef.Xxlambda(m,ipsi).*Zbouncecoef.xqtilde(ipsi)).*abs(gridDKE.mhu(m))./(1-gridDKE.mhu(m).^2).^2; 
     end
 end
 %
 else 
-    C=ones(npsi,npn,nmhu).*delt; %cylindrical case
+    C=ones(npsi,npnRA,nmhu).*delt; %cylindrical case
 end
 %
 %XXS_an=XXSrp.*C.*XXalpha_an;
-ximask = zeros(npsi,npn,nmhu);
-ximask(:,:,nmhu/2+1:end) = 1;
+ximask = zeros(npsi,npnRA,nmhu);
+ximask(:,:,nmhu/2+1:end) = 1; %positiv xi
 XXbouncef=C.*XXalpha.*ximask; %numerical
-
+%
 XXSl = XXSrp.*XXbouncef; %<S()> numerical
 %
 XXSrp_xis=XXSrp.*delt; %3D analytical rosenbluth operator, non bounce averaged
 XXSl2=XXSrp_xis;
+XXSavalanches_normtot = permute(XXSl,[2,3,1]);
 %
-XXS=squeeze(permute(XXSl,[2,3,1])); 
+%check the operator, compare with theory RP NF 1997
+alpha = 1:1:20;%E/Ec
+Zi = 1;
+betath2 = 0.01;%
+%
+for ia = 1:length(alpha)
+pc = 1/sqrt((alpha(ia)-1)*betath2);
+%calculate secondary growth rate pmax<p<pext NORMALIZED to nr
+XXRintmask = XXpnRA > pc;
+%hejSRP = mksa.nhu_ref*beta^3*2*pi*integral_dke_jd(gridDKE.dmhu*nmhu/2,integral_dke_jd(dpnRA,squeeze(XXSrp_xis(1,:,:)).*gridDKE.XXpn2,1),1)'/2; %
+Srp_int_norm_nr(ia) = mksa.nhu_ref*beta^3*2*pi*integral_dke_jd(gridDKE.dmhu*nmhu/2,integral_dke_jd(dpnRA,XXSavalanches_normtot(:,:,gridDKE.rdke).*XXRintmask.*XXpnRA2(:,:,gridDKE.rdke),1),1)'/2; %
+end
+%
+RR_an = RR_rosenbluth(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
+%
+figure;graph1D_jd(alpha,Srp_int_norm_nr,0,0,'E/E_c','growth rate (s^-1)','Numerical growth rate',NaN,NaN,NaN,'-','o','b',2);hold on
+graph1D_jd(alpha,RR_an,0,0,'','','',NaN, NaN,NaN,'-','none','r',3);hold off
+figure;graph1D_jd(alpha,Srp_int_norm_nr./RR_an,0,0,'E/E_c','growth rate (s^-1)','Numerical growth rate',NaN,NaN,NaN,'-','o','b',2);hold on
+graph1D_jd(alpha,RR_an./RR_an,0,0,'','','',NaN, NaN,NaN,'-','none','r',3);hold off
+%
+if f_pmax>1
+    xnre_out_norm(1,gridDKE.rdke) =beta^3*2*pi*integral_dke_jd(gridDKE.dmhu,integral_dke_jd(dpnRA((npn+1):end),XXSavalanches_normtot((npn+1):end,:,gridDKE.rdke).*XXpnRA2((npn+1):end,:,gridDKE.rdke),1),1)'; % runaway electrons created outisde pmax THIS IS A RATE! (per collision time)
+else
+    xnre_out_norm(1,gridDKE.rdke) = 0;
+end
+%
+XXSavalanches_norm = XXSavalanches_normtot(1:npn,:,:); %the avalanche part with p < pmax
+%
 %
 %display section:
 % if dkedisplay.display_mode>0
-% %ir=2; %nr of the flux surface to be displayed
+%ir=1; %nr of the flux surface to be displayed
 %     if Zbouncecoef.XXlambda~=1
 % 
 %        ir=1
@@ -101,18 +155,18 @@ XXS=squeeze(permute(XXSl,[2,3,1]));
 %             figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(C(ipsi,:,:)),'p','mhu','C',NaN,NaN,0,NaN,100); colorbar;
 %         end
 
-for ipsi=1:npsi
-figure;graph2D_jd(gridDKE.xpn.*gridDKE.Xmhu,gridDKE.xpn.*sqrt(1-gridDKE.Xmhu.^2),squeeze(XXbouncef(ipsi,:,:))','p_{par}/p_{th}','p_{perp}/p_{th}','BF',NaN,NaN,0,NaN,30); colorbar;
- hold on 
-h = plot(gridDKE.pn.*mhuT(ipsi),gridDKE.pn.*sqrt(1-mhuT(ipsi).^2));
-%h2 = plot(-gridDKE.pn.*mhuT(ipsi),gridDKE.pn.*sqrt(1-mhuT(ipsi).^2));
-set(h,'Color','k','LineWidth',2)
-%set(h2,'Color','k','LineWidth',2)
-end
+% for ipsi=1:npsi
+% figure;graph2D_jd(gridDKE.xpn.*gridDKE.Xmhu,gridDKE.xpn.*sqrt(1-gridDKE.Xmhu.^2),squeeze(XXbouncef(ipsi,:,:))','p_{par}/p_{th}','p_{perp}/p_{th}','BF',NaN,NaN,0,NaN,30); colorbar;
+%  hold on 
+% h = plot(gridDKE.pn.*mhuT(ipsi),gridDKE.pn.*sqrt(1-mhuT(ipsi).^2));
+% %h2 = plot(-gridDKE.pn.*mhuT(ipsi),gridDKE.pn.*sqrt(1-mhuT(ipsi).^2));
+% set(h,'Color','k','LineWidth',2)
+% %set(h2,'Color','k','LineWidth',2)
+% end
 %
 % 
 %         figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(thetastar_an2(ir,:,:)),'p','mhu','theta^*_2 anal.',NaN,NaN,0,NaN,30); colorbar;   
-%         figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXalpha_an(ir,:,:)),'p','mhu','XXalpha analytical',NaN,NaN,0,NaN,100); colorbar;
+%         figure;graph2D_jd(pnRA,gridDKE.mhu,squeeze(XXalpha_an(ir,:,:)),'p','mhu','XXalpha analytical',NaN,NaN,0,NaN,100); colorbar;
 % figure;graph2D_jd(gridDKE.xpn.*gridDKE.XXmhu,gridDKE.xpn.*sqrt(1-gridDKE.XXmhu.^2),squeeze(thetastar_an(ir,:,:))','p_{par}/p_{th}','p_{perp}/p_{th}','theta^*_1 anal.',NaN,NaN,0,NaN,30); colorbar;
 %         %figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,l),XXthetastar2(:,:,l),'p','mhu','theta^*_2',NaN,NaN,0,NaN,30);colorbar;
 %         %figure;graph2D_jd(gridDKE.pn(:),gridDKE.XXmhu(1,:,l),log(XXS(:,:,l)),'p','mhu','log(S)',NaN,NaN,1,NaN,30);colorbar;
@@ -183,10 +237,10 @@ end
         XSint = integral_dke_jd(ones(1,nmhu),XS,2);
         %semilogy(gridDKE.pn,XSint,'.-')
         %legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
-        graph1D_jd(gridDKE.pn,XSint,0,1,'p','S_{bounce} LUKE','S on each flux surface',NaN,NaN,NaN,'-','.')
+        graph1D_jd(pnRA,XSint,0,1,'p','S_{bounce} LUKE','S on each flux surface',NaN,NaN,NaN,'-','.')
         hold all,
     end
-        semilogy(gridDKE.pn, Srp(g,:),'rx');title('Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
+        semilogy(pnRA, Srp(g,:),'rx');title('Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
  %       
           figure
         %
@@ -195,10 +249,10 @@ end
         XSrpint = integral_dke_jd(ones(1,nmhu),XSrp,2);%/(gridDKE.dmhu(1)); %integrate over mhu, pos n neg : /2
         %semilogy(gridDKE.pn,XSint,'.-')
         %legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
-        graph1D_jd(gridDKE.pn,XSrpint,0,1,'p','S_{RP}','S on each flux surface',NaN,NaN,NaN,'-','.')
+        graph1D_jd(pnRA,XSrpint,0,1,'p','S_{RP}','S on each flux surface',NaN,NaN,NaN,'-','.')
         hold all,
     end
-        semilogy(gridDKE.pn, Srp(g,:),'rx');title('S_RP compared to Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
+        semilogy(pnRA, Srp(g,:),'rx');title('S_RP compared to Rosenbluth theory (red x)'); xlabel('p'); ylabel('S')   
 %as fcn of mhu, for each slize of p
 % figure
 % hold on
