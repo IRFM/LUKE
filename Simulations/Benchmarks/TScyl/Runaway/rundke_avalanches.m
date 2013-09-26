@@ -11,21 +11,26 @@ warning('off')
 %
 % grid parameters
 %
-pnmax_S = 50;
-np_S = 201;
-nmhu_S = 201;
+
+f_pmax = 5; %for avalanche calculation. if avalanche_mode and not specified = 1
+pnmax_S = 10;
+np_S = 101;
+nmhu_S = 101;
 %
 mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 %
 %
 % normalized electric field (with respect to the Critical field Ec)
 %
-alpha = 10;%E/Ec
+alpha = 3;%E/Ec
+
 %
 % temperature betath2 = Te/mc2
 % (betath2 = 10^(-6) is validated for NR limit)
 %
 betath2 = 0.01;%
+%
+pnmin_S = 1/sqrt((alpha-1)*betath2);
 %
 % ion charge (single species, cold ions)
 %
@@ -51,7 +56,7 @@ rho_S = [0.6];%1%Normalized radial flux grid where calculations are performed (0
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScyl';%For plasma equilibrium
+id_equil = 'TScirc';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
@@ -73,14 +78,17 @@ if exist('dmumpsmex','file') == 3,
     dkeparam.invproc = -2;
 end
 %
-dkeparam.boundary_mode_f = 1;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
+%dkeparam.pnmin_S = pnmin_S;
+dkeparam.f_pmax = f_pmax; % multiplication of p grid. f_pmax*p_max
+dkeparam.pnmax_S = pnmax_S;
+dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
 dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.timevol = 1;
-dkeparam.tn = 100;%time for asymptotic solution with norm_mode_f = 1
-dkeparam.dtn = 20;%10 time steps required for accurate runaway solution - see rundke_dtn
+dkeparam.tn = 1000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.dtn = 100;%10 time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
 dkeparam.bounce_mode = 1; %bounce average
-dkeparam.avalanche_mode = 1; %if 1 avalanche mode on, 0 or undefined for off
+dkeparam.avalanche_mode = 0; %if 1 avalanche mode on, 0 or undefined for off
 %
 options_fzero = optimset('fzero');
 options_fzero.Display = 'iter';
@@ -97,7 +105,12 @@ equil.zZi = [1,1,1,Zi];
 equil.pzni = [0;0;0;1/Zi]*equil.pne;% single ion species
 %
 epsi = alpha*betath2;
+%
+xnre_init = zeros(1,length(rho_S));
+%
 ohm = ohm_flat(equil,epsi);
+%
+ohm.xnre_init = xnre_init;
 %
 dkeparam.pn_S = linspace(0,pnmax_S,np_S);
 dkeparam.nmhu_S = nmhu_S;
@@ -116,21 +129,42 @@ equil.equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,'','','',[],[]);
 %
-%RR = dke_out.XxRR_fsav(end,:);
-RR = dke_out.XxRR_fsav{end};
-RR = RR(end); %[vol-1 tau_c^-1]
-RRunnorm = RR*mksa.nhu_ref; %s^-1
+RR_an = RR_rosenbluth(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
 %
-if isfield(dkeparam,'avalanche_mode')
-    %gamma_max = 1/sqrt(1-50*betath2);
-    gamma_max = sqrt((pnmax_S/sqrt(1-betath2)*sqrt(betath2))^2+1);
-    dtn_min = me*clum*sqrt(gamma_max^2-1)/(qe*mksa.Edreicer_ref*epsi)*mksa.nhu_ref; %mininmum time step dtn for dreicer acc from rest to gamma
-    gam = 1:0.01:(gamma_max+1);
-    dt_acc = me*clum*sqrt(gam.^2-1)/(qe*mksa.Edreicer_ref*epsi)*mksa.nhu_ref; %mininmum time step dtn for dreicer acc from rest to gamma
+%RR = dke_out.XxRR_fsav(end,:);
+Rfrac = Znorm(1,end).x_Rfrac_0; %runaway fraction (nr of runaways between pmin and pmax) primary + avalanche
+%
+xnre = cell2mat(dke_out.xnre);
+xnre_out_norm = dke_out.xnre_out_norm; %runaway population for avalanche generation
+%
+RRAint = Znorm(1,end).xRRAint; %integral over S[pmin pmax]
+RRAintegral = RRAint/xnre(end-1)*mksa.nhu_ref;
+RR = dke_out.XxRR_fsav{end}; %runaway loss rate (primary)
+RR = RR(end); %[vol-1 tau_c^-1]
+%RRunnorm = RR*mksa.nhu_ref; %vol-1 s^-1
+%RRRP = RR*mksa.nhu_ref/nre(1,1);
+for it = 1:(length(xnre)-1)
+    gr(it) = (xnre(it+1) - xnre(it))/xnre(it)/dkeparam.dtn*mksa.nhu_ref;
+end
+figure;graph1D_jd(1:(length(xnre)-1),gr,0,0,'iteration','growth rate (s^-1)','Numerical growth rate',NaN,NaN,NaN,'-','o','b',2)
+%
+if dkeparam.avalanche_mode == 1
+    pnext = pnmax_S*f_pmax;
+    gamma_max = sqrt((pnmax_S*mksa.betath_ref)^2+1);
+    gamma_ext = sqrt((pnext*mksa.betath_ref)^2+1);
+    %Ec = mksa.ne_ref*qe^3*mksa.lnc_e_ref/(4*pi*e0^2*me*clum^2);
+    %E = alpha * Ec;
+    %nhu_c = qe^4*mksa.ne_ref*mksa.lnc_e_ref/(4*pi*e0^2*me^2*clum^3);
+    %nhu_c = mksa.nhu_ref*mksa.betath_ref^3;
+    dtn_min = me*clum*(sqrt(gamma_ext^2-1)-sqrt(gamma_max^2-1))/(qe*mksa.Edreicer_ref*epsi)*mksa.nhu_ref; %mininmum time step dtn for dreicer acc from pmax to pext
+   
+    %dtn_min = me*clum*(sqrt(gamma_ext^2-1)-sqrt(gamma_max^2-1))/(qe*E)*mksa.nhu_ref; %mininmum time step dtn for dreicer acc from rest to gamma
+    gam = gamma_max:0.01:(gamma_max+10);
+    dt_acc = me*clum*(sqrt(gam.^2-1)-sqrt(gamma_max^2-1))/(qe*mksa.Edreicer_ref*epsi)*mksa.nhu_ref; %mininmum time step dtn for dreicer acc from rest to gamma
     titl=['(ro): gamma @ p_{max} = ',num2str(pnmax_S),'p_{th}'];
     figure;graph1D_jd(gam,dt_acc,0,0,'gamma','dt_n Dreicer',titl,NaN,NaN,NaN,'-','none','b',2)
     hold on
-    graph1D_jd(gamma_max,dtn_min,0,0,'','','',NaN, NaN,NaN,'none','o','r',3);
+    graph1D_jd(gamma_ext,dtn_min,0,0,'','','',NaN, NaN,NaN,'none','o','r',3);
     hold off
     disp(['     Mininmum time step dtn for dreicer acc from rest to gamma(p_max) = : ',num2str(gamma_max),' is tau*nhu_ref = ',num2str(dtn_min)])
 end
@@ -184,6 +218,7 @@ y2 = Xf0_cyl_ref;
 %
 y9 = sqrt(pnmax^2 - x1.^2);
 %
+figure;
 graph2D_jd(x1,x2,y1','','','',xlim1,xlim2,0,mksa.betath_ref,[0:0.5:pnmax],0,'-','b',0.5,20+14i,1,max(max(y1)));
 hold on
 graph2D_jd(x1,x2,y2','','','',xlim1,xlim2,0,mksa.betath_ref,[0:0.5:pnmax],0,'-','r',2,20+14i,1,max(max(y1)));
@@ -202,10 +237,12 @@ disp(['Relativ. : pc/pT = ',num2str(1/sqrt((alpha - 1)*betath2)),' ; pmax/pc = '
 disp(' ')
 disp(['--> LUKE RR (normalized to ne and tauc) : ',num2str(RR)])
 disp('----------------------')
-disp(['--> RR (normalized to ne) : ',num2str(RRunnorm)])
-disp('----------------------')
+%disp(['--> RR (normalized to ne) : ',num2str(RRunnorm)])
+%disp('----------------------')
 %
 diary off
+%
+figure;graph1D_jd(0:dkeparam.dtn:dkeparam.tn,mksa.ne_ref*xnre,0,0,'t_n','number of runaways','',NaN,NaN,NaN,'-','none','b',2)
 %gRA = qe^4*alpha*mksa.ne_ref/(8*pi*e0^2*me^2*clum^3)
 %
 %************************************************************************************************************************************
