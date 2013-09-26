@@ -1,7 +1,7 @@
 function [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
     XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
     xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,XXRintmask,Zmom] = ...
-    fmoments_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,...
+    fmoments_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
                     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
                     ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp,gridindex_rf,...
                     ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor)
@@ -950,9 +950,13 @@ else
     xMRR_power_tau = NaN*ones(1,nr_dke);
 end
 %
-%Integral of the source term
+xne_norm_out = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXsinksource(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%transfer rate trought sink/source term
 %
-xne_norm_out = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXsinksource(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%Flux of electrons leaving the plasma through the loss cone
+Znorm.xRRAtot = mksa.betath_ref^3*2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
+Znorm.xRRAint = mksa.betath_ref^32*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke).*XXRintmask(:,:,rdke),1),1)';
+%
+Znorm.xRRAtot_fsav = mksa.betath_ref^3*2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';
+Znorm.xRRAint_fsav = mksa.betath_ref^3*2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke).*XXRintmask(:,:,rdke),1),1)';
 %
 % Projection of the distribution function on the Legendre polynomial basis
 %
