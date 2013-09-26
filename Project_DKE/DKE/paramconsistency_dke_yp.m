@@ -125,6 +125,9 @@ end
 %
 if dkeparam.avalanche_mode == 1,
     dkeparam.timevol = 1;
+    if ~isfield(dkeparam,'f_pmax')
+        dkeparam.f_pmax = 1;
+    end
 end
 %
 if ~isfield(dkeparam,'redfac'),
