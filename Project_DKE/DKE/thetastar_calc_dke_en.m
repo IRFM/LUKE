@@ -1,4 +1,4 @@
-function [XXthetastar1,XXthetastar2,XXalpha] = thetastar_calc_dke_en(equilDKE,gridDKE,Zmomcoef)
+function [XXthetastar1,XXthetastar2,XXalpha] = thetastar_calc_dke_en(equilDKE,gridDKE,Zmomcoef,pnRA,dpnRA,npnRA, gammaRA)
 % Calculation of the equilibrium dependent factor alpha of the bouncefactor C*alpha for runaway
 % avalanches, by applying a refined mhu grid, then redistributing it on the
 % LUKE mhu grid.
@@ -34,25 +34,25 @@ ap=equilDKE.ap;
 Rp=equilDKE.Rp;Zp=equilDKE.Zp;
 B0=equilDKE.xB0;
 Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
-XXB0 = permute(repmat(B0',[1,npn,nmhu]), [2,3,1]);
-XXBmax = permute(repmat(Bmax',[1,npn,nmhu]), [2,3,1]);
+XXB0 = permute(repmat(B0',[1,npnRA,nmhu]), [2,3,1]);
+XXBmax = permute(repmat(Bmax',[1,npnRA,nmhu]), [2,3,1]);
 %
-mhu0min=repmat(sqrt(1-2./(Zmomcoef.gamma+1)),[3,1]);
+mhu0min=repmat(sqrt(1-2./(gammaRA+1)),[3,1]);
 for ipsi=1:npsi
-    mhu0max(ipsi,:)=sqrt(1-2*B0(ipsi)./(Zmomcoef.gamma+1)./Bmax(ipsi));
+    mhu0max(ipsi,:)=sqrt(1-2*B0(ipsi)./(gammaRA+1)./Bmax(ipsi));
 end
 %
 for ipo = 2;
 mhuF = ipo; %factor of increase in mhu grid points >=1
 noP = mhuF*nmhu/2+1; %nr of cells on HALF the refined grid
 %
-gridmhu_S = NaN(npsi,npn,noP);
-XXthetastar1new = NaN(npsi,npn,mhuF*nmhu);
-XXthetastar2new = NaN(npsi,npn,mhuF*nmhu);
-XXalphaNew = NaN(npsi,npn,mhuF*nmhu);
+gridmhu_S = NaN(npsi,npnRA,noP);
+XXthetastar1new = NaN(npsi,npnRA,mhuF*nmhu);
+XXthetastar2new = NaN(npsi,npnRA,mhuF*nmhu);
+XXalphaNew = NaN(npsi,npnRA,mhuF*nmhu);
 %
 for ipsi=1:npsi
-    for ip=1:npn
+    for ip=1:npnRA
         gridmhu_S(ipsi,ip,:)=linspace(mhu0min(ipsi,ip),mhu0max(ipsi,ip),noP); % refined grid cells
     end
 end
@@ -67,8 +67,8 @@ XXmhui = cat(3, XXmhuim, XXmhuip); %concatenate [-xi,0] and [0,xi]
 dmhui = cat(3, dmhuim, dmhuip);
 %
 XXmhuiper = permute(XXmhui,[2,3,1]); %permute for Bstar calc
-XXgammai=permute(repmat(Zmomcoef.gamma,[noP*2-2,1,npsi]),[2,1,3]);
-XXB0i=permute(repmat(B0',[1,npn,noP*2-2]),[2,3,1]);
+XXgammai=permute(repmat(gammaRA,[noP*2-2,1,npsi]),[2,1,3]);
+XXB0i=permute(repmat(B0',[1,npnRA,noP*2-2]),[2,3,1]);
 XXBstarnew = 2*XXB0i./(1 + XXgammai)./(1 - XXmhuiper.^2);
 %
 XXBstarnew=permute(XXBstarnew,[3,1,2]);
@@ -90,15 +90,15 @@ for ipsi=1:npsi
     XXalphaNew(ipsi,:,:) = B0(ipsi)^2.*r1Rp./abs(dB1dtheta)./Bp1 + B0(ipsi)^2.*r2Rp./abs(dB2dtheta)./Bp2;
 end
 %
-XXalpha=NaN(npsi,npn,nmhu);
-XXthetastar1=NaN(npsi,npn,nmhu);
-XXthetastar2=NaN(npsi,npn,nmhu);
+XXalpha=NaN(npsi,npnRA,nmhu);
+XXthetastar1=NaN(npsi,npnRA,nmhu);
+XXthetastar2=NaN(npsi,npnRA,nmhu);
 %
 yp=gridDKE.mhu(nmhu/2:end)+gridDKE.dmhup(nmhu/2:end)/2;
 ym=gridDKE.mhu(1:nmhu/2+1)-gridDKE.dmhup(1:nmhu/2+1)/2;
 %
 for ipsi = 1:npsi;
-    for ip = 1:npn;
+    for ip = 1:npnRA;
         xp = squeeze(gridmhu_S(ipsi,ip,:))';
         xm = -fliplr(xp);
         fp = XXalphaNew(ipsi,ip,noP:end);
@@ -116,17 +116,18 @@ for ipsi = 1:npsi;
     end
 end
 %
-XXalpha = XXalpha.*permute(gridDKE.XXdmhu,[3,2,1]);
+dmhu = permute(repmat(gridDKE.dmhu',[1,1,npnRA,]), [2,3,1]);
+XXalpha = XXalpha.*dmhu;%.*permute(gridDKE.XXdmhu,[3,1,2]); WHY DID I MULTIPLY WITH DMHU HERE?
 %
 t(ipo) = toc;
 %
-for ip = 1:npn
+for ip = 1:npnRA
     ind = find(XXalpha(1,ip,1:nmhu/2));
     alphmin(ipo,ip) = XXalpha(1,ip,ind(1));
     alphmax(ipo,ip) = XXalpha(1,ip,ind(end));
 end
 end
-%convergence test
+%plot the convergence test
 % figure; graph1D_jd((1:ipo)*nmhu,alphmin,0,0,'nr of points in refined grid','alpha(ximin,p=const)','',NaN,NaN,NaN,'-','.','b')
 % figure; graph1D_jd((1:ipo)*nmhu,alphmax,0,0,'nr of points in refined grid','alpha(ximax,p=const)','',NaN,NaN,NaN,'-','.','r')
 % figure; graph1D_jd((1:ipo)*nmhu,t,0,0,'nr of points in refined grid','time (s) for calc.','',NaN,NaN,NaN,'-','.','b')
@@ -136,13 +137,13 @@ end
 figure
 hold on
 for ipsi=1:npsi
-    for ip=1:npn
+    for ip=1:npnRA
         XalphaNewINT(ip) = integral_dke_jd(dmhui(ipsi,ip,:),squeeze(XXalphaNew(ipsi,ip,:))',2); %integrate over mhu, pos n neg : /2
     end
-    graph1D_jd(gridDKE.pn,XalphaNewINT,0,0,'p','XalphaNew','',NaN,NaN,NaN,'-','.','b')
+    graph1D_jd(pnRA,XalphaNewINT,0,0,'p','XalphaNew','',NaN,NaN,NaN,'-','.','b')
 end
 %
-figure;graph2D_jd(gridDKE.pn,gridDKE.mhu,squeeze(XXalpha(1,:,:)),'p','mhu','alpha LUKE',NaN,NaN,0,NaN,100); colorbar;
+figure;graph2D_jd(pnRA,gridDKE.mhu,squeeze(XXalpha(1,:,:)),'p','mhu','alpha LUKE',NaN,NaN,0,NaN,100); colorbar;
 %
 figure;
 hold on
@@ -150,8 +151,9 @@ for ipsi=1:npsi
 Xalpha = squeeze(XXalpha(ipsi,:,:));
 Xalpha(isnan(Xalpha)) = 0;
 Xalpha_int = integral_dke_jd(gridDKE.dmhu,Xalpha,2);
-graph1D_jd(gridDKE.pn,Xalpha_int,0,0,'p','Xalpha LUKE','',NaN,NaN,NaN,'-','.','b')
+graph1D_jd(pnRA,Xalpha_int,0,0,'p','Xalpha LUKE','',NaN,NaN,NaN,'-','.','b')
 end
+hold off
 %
 % figure
 % hold on
