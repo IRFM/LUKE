@@ -3,7 +3,7 @@ function launch = imake_launch_LH_jd(basestr,equil,external,opt_gui,select)
 % This function builts the launch structure for LH waves from external and/or user-specified data
 %
 if nargin < 5,
-    select = structs;
+    select = struct;
 end
 if nargin < 4,
     opt_gui = 0;
