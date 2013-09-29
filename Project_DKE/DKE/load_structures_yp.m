@@ -159,6 +159,9 @@ if exist('flag_path','var'),%Paths
         [s,lhostname] = system('hostname -f');
         if s ~= 0,
             lhostname = getenv('hostname');%For remote computing (xgrid)
+            if isempty(lhostname),
+                [s,lhostname] = system('hostname');
+            end
         end
         %
         for ihost = 1:nhosts, 
