@@ -9,7 +9,7 @@ function [macproyves] = path_macpro_YVES_PEYSSON(luke_ref)
 %
 %	Output:
 %
-%       - dkepath: path structure
+%       - macproyves: path structure
 %
 %   Warning: none
 %
