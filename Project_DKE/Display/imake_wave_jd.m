@@ -157,8 +157,7 @@ if i_opt == 0,% use data from external database
             %
         elseif strcmp(type,'EC'),
             %
-            keyboard
-            %launch = imake_launch_EC_jd(external.EC); 
+            launch = imake_launch_EC_jd(basestr,equil,external.EC); 
             %
         end
         %
@@ -242,7 +241,7 @@ elseif i_opt == 2,% build the wave data locally
                 %
             else
                 %
-                launch = imake_launch_EC_jd;
+                launch = imake_launch_EC_jd(basestr,equil,'',opt_gui);
                 %
             end
         else
