@@ -1331,32 +1331,27 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 if ~isempty(dkepath),
                     %
-                    if ~exist([dkepath.luke_root,'Documentation/index.html'])
-                        %
-                        disp('The LUKE documentation has not been created on this computer during the install process.');
-                        %
-                        doc_opt = input('Do you want to build it now (WARNING: it may take long minutes) (y/n)? [y] : ','s');
-                        %
-                        if strcmp(doc_opt,'y'),
-                            %
-                            dirinit = pwd;
-                            cd(dkepath.luke_root);
-                            %                       
-                            eval('install_doc_LUKE');
-                            %
-                            cd(dirinit);
-                        end
-                    else
-                        web(['file://',dkepath.luke_root,'Documentation/index.html'], '-new');
-                    end    
+                    doc_LUKE(dkepath);
                     %
                 else
+                    %
                     error('Use menu [5] first to set the LUKE paths !'); 
+                    %
                 end
                 %
             elseif isel == 20,
                 %
-                web('http://tolbachik.hd.free.fr:8080/redmine', '-new');
+                redmine_opt = input_dke_yp('Do you want to access REDMINE for LUKE in the Matlab browser (y/n)? [y] : ','y',{'y','n'},'',[1,1]);
+                %
+                if strcmp(redmine_opt,'y'),
+                    %
+                    redmine_LUKE;
+                    %
+                else
+                    %
+                    redmine_LUKE('-browser');
+                    %
+                end
                 % 
             elseif isel == 0,
                 %
