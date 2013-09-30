@@ -219,6 +219,8 @@ switch struct
             case 'bNz',expert = 0;values = [-Inf;Inf];info = 'Initial Nz in each lobe';
             case 'bdNpar0',expert = 0;values = [0;Inf];info = 'Spectral width in each lobe : specify fixed value, or type ''0'' if minimum width within numerical constraints';
             case 'rZ0',expert = 0;values = [-Inf;Inf];info = 'Vertical launching positions (m)';
+            case 'nrZ0',expert = 0;values = 1:12;info = 'Number of vertical launching positions (m)';
+            case 'module',expert = 0;values = {'upper','lower','full antenna'};info = 'Launcher module';
             case 'tail',expert = 0;info = 'Tail model parameters (m)';
             % EC
             case 'yP_L',expert = 0;values = [0;Inf];info = 'Ray initial power (W)';
