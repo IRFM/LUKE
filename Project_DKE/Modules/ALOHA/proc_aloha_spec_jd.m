@@ -107,24 +107,66 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
         %
         inter_mode = 0;
         %
-    end        
+    end     
+    %
+    if isstruct(param_in) && isfield(param_in,'style'),
+        style = param_in.style;
+    else
+        style = struct;
+    end
+    %
+    if isstruct(param_in) && isfield(param_in,'opt_gui'),
+        %
+        selectheight = 175;
+        panelposition = get(param_in.opt_gui,'Position');
+        %
+        select.position = [style.panelsep,style.panelsep,panelposition(3) - 2*style.panelsep,selectheight];
+        info.position = [style.panelsep,2*style.panelsep + selectheight,panelposition(3) - 2*style.panelsep,panelposition(4) - selectheight - 3*style.panelsep];
+        info1.position = [style.panelsep,2*style.panelsep + selectheight,panelposition(3)/2 - 2*style.panelsep,panelposition(4) - selectheight - 3*style.panelsep];
+        info2.position = [panelposition(3)/2 + style.panelsep,2*style.panelsep + selectheight,panelposition(3)/2 - 2*style.panelsep,panelposition(4) - selectheight - 3*style.panelsep];
+        %
+        select.handle = uipanel('Parent',param_in.opt_gui,'Title','','units','pixels','Position',select.position);
+        info.handle = uicontrol(param_in.opt_gui,'Style','text','Position',info.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+        info1.handle = uicontrol(param_in.opt_gui,'Style','text','Position',info1.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+        info2.handle = uicontrol(param_in.opt_gui,'Style','text','Position',info2.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','center');
+        %
+        opt_gui = select.handle;
+        opt_info = true;
+        %
+        style.textwidth = panelposition(3) - 2*style.panelsep - style.butwidth - 5*style.buthsep;
+        %
+    else
+        opt_gui = false;
+        opt_info = false;
+    end
     %
     if display_mode >= 1 && inter_mode == 1,
         %
-        disp('--------------------------------------------------------')
-        disp('          ALOHA  ->  C3PO parametrization               ')
-        disp('--------------------------------------------------------')
-        disp(' ')
-        disp('Recommended parametrization for aloha - >C3PO :')
-        disp(' ')      
-        disp('  - Multi-lobe model (strong absorption case) : param.dir = 1, param.mode = 0, param.nlobes >= 2')
-        disp('        Note : adjust param.nlobes to approximately conserve absolute directivity and repartition')
-        disp(' ')      
-        disp('  - Tail-lobes model (weak absorption case)   : param.dir = 2, param.mode = 1, param.nlobes = 2')
-        disp('        Note : absolute directivity and repartition should be fairly well conserved')
-        disp(' ')      
-        disp('  - Simple model (ideal spectrum, one lobe)   : param.dir = 1, param.mode = 1, param.nlobes = 1')           
-        disp(' ')      
+        infostr = {...
+        '--------------------------------------------------------',...
+        '          ALOHA  ->  C3PO parametrization               ',...
+        '--------------------------------------------------------',...
+        ' ',...
+        'Recommended parametrization for aloha -> C3PO :',...
+        ' ',...      
+        '  - Multi-lobe model (strong absorption case,... : param.dir = 1, param.mode = 0, param.nlobes >= 2',...
+        '        Note : adjust param.nlobes to approximately conserve absolute directivity and repartition',...
+        ' ',...      
+        '  - Tail-lobes model (weak absorption case,...   : param.dir = 2, param.mode = 1, param.nlobes = 2',...
+        '        Note : absolute directivity and repartition should be fairly well conserved',...
+        ' ',...      
+        '  - Simple model (ideal spectrum, one lobe,...   : param.dir = 1, param.mode = 1, param.nlobes = 1',...           
+        ' '};     
+        %
+        if opt_info,
+            set(info1.handle,'Visible','off');
+            set(info2.handle,'Visible','off');
+            set(info.handle,'String',infostr([5:13]));
+        else
+            for iinfo = 1:length(infostr),
+                disp(infostr{iinfo});
+            end
+        end        
         %
     end
     %
@@ -132,7 +174,7 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
     figs = 0;
     %
     while exit_loop == 0,
-        %
+        %       
         zN = zN_in;
         zdN = zdN_in;
         zdP = zdP_in;
@@ -144,12 +186,11 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
         end
         %
         if inter_mode == 1,
-            param.dir = input_dke_yp(['Sort peaks according to : \n',...
-                '  (0) P     + preserve repartition and total power \n',...
-                '  (1) P/N^2 + preserve directivity and repartition \n',...
-                '  (2) P/N^2 + preserve directivity and total power \n',...
-                '  (3) P/N^2 + preserve repartition and total power \n',...
-                'param.dir ='],param.dir,0:3,'',[1,1]);
+            param.dir = iselect_jd({'P     + preserve repartition and total power',...
+                                    'P/N^2 + preserve directivity and repartition',...
+                                    'P/N^2 + preserve directivity and total power',...
+                                    'P/N^2 + preserve repartition and total power'},'Sort peaks according to :',opt_gui,style,param.dir + 1) - 1;
+            %            
             disp(' ')      
         end
         %
@@ -221,14 +262,12 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
         if isstruct(param),
             %
             if inter_mode == 1,
-                param.mode = input_dke_yp(['Mode for peak processing : \n',...
-                    '  (0) select a number of Gaussian peaks left unchanged (WARNING : total power less than Pin) \n',...
-                    '  (1) assemble peaks fixing Pmax and N, allowing dN to change \n',...
-                    '  (2) assemble peaks allowing Pmax, N and dN to change \n',...
-                    'param.mode ='],param.mode,0:2,'',[1,1]);
+                param.mode = iselect_jd({'select a number of Gaussian peaks left unchanged (WARNING : total power less than Pin)',...
+                                         'assemble peaks fixing Pmax and N, allowing dN to change',...
+                                         'assemble peaks allowing Pmax, N and dN to change'},'Mode for peak processing :',opt_gui,style,param.mode + 1) - 1;
                 disp(' ')      
                 %
-                param.nlobes = input_dke_yp('Number of lobes to be selected : param.nlobes =',param.nlobes,1:ny,'',[1,1]);
+                param.nlobes = iselect_jd(num2cell(num2str((1:ny).'),2).','Number of lobes to be selected :',opt_gui,style,param.nlobes,'popupmenu');
                 disp(' ')      
             end
             %
@@ -644,31 +683,35 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
             ri = sum(zdP(zmaskp).*zdN(zmaskp))/pti;
             rf = sum(yP(ymaskp))/ptf; 
             %
-            disp(['Initial   directivity : ',num2str(di)])
-            disp(['Processed directivity : ',num2str(df)])        
+            infostr = {...
+            ['Initial   directivity : ',num2str(di)],...
+            ['Processed directivity : ',num2str(df)],...        
+            ' ',...
+            ['Initial   power : ',num2str(pti)],...
+            ['Processed power : ',num2str(ptf)],...        
+            ' ',...
+            ['Initial   rel. directivity : ',num2str(dri)],...
+            ['Processed rel. directivity : ',num2str(drf)],...        
+            ' ',...
+            ['Initial   repartition : ',num2str(ri)],...
+            ['Processed repartition : ',num2str(rf)],...        
+            ' ',...
+            '   yN     ydN     yP   ',...
+            '-----------------------',...
+            num2str([yN.',ydN.',yP.'],3),...
+            ' '};
             %
-            disp(' ');
-            %
-            disp(['Initial   power : ',num2str(pti)])
-            disp(['Processed power : ',num2str(ptf)])        
-            %
-            disp(' ');
-            %
-            disp(['Initial   rel. directivity : ',num2str(dri)])
-            disp(['Processed rel. directivity : ',num2str(drf)])        
-            %
-            disp(' ');
-            %
-            disp(['Initial   repartition : ',num2str(ri)])
-            disp(['Processed repartition : ',num2str(rf)])        
-            %
-            disp(' ');
-            %
-            disp('   yN     ydN     yP   ')
-            disp('-----------------------')
-            disp(num2str([yN.',ydN.',yP.'],3))
-            %
-            disp(' ');
+            if opt_info,
+                set(info.handle,'Visible','off');
+                set(info1.handle,'Visible','on');
+                set(info2.handle,'Visible','on');
+                set(info1.handle,'String',infostr([1,2,4,5,7,8,10,11]));
+                set(info2.handle,'String',infostr(13:end-1));
+            else
+                for iinfo = 1:length(infostr),
+                    disp(infostr{iinfo});
+                end
+            end        
             %
         end
         %
@@ -696,35 +739,69 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
                 ylab = 'dP/dn_z (MW)';
             end            
             %
-            fig1 = figure('Name','Gaussian fit calculation');
-            leg = {'Gaussian','Fit'};
-            graph1D_jd(xy(:),xyf(:)/fac,0,1,'n_z',ylab,'',NaN,'',ylim/fac,'-','none','b',2,20,gca,0.9,0.7,0.7);
-            graph1D_jd(x,xf/fac,0,1,'','','',leg,'',ylim/fac,'--','none','r',2);
+            if isstruct(param_in) && isfield(param_in,'ax'),
+                ax = param_in.ax;
+                set(ax,'Visible','on');
+                red = 1;
+                lspace = NaN;
+                bspace = NaN;
+            else
+                fig1 = figure('Name','Gaussian fit vs. ALOHA');
+                ax = gca;
+                red = 0.9;
+                lspace = 0.7;
+                bspace = 0.5;
+            end
             %
-            fig2 = figure('Name','Gaussian fit calculation');
-            graph1D_jd(xy(:),xyf(:)/fac,0,0,'n_z',ylab,'',NaN,'',NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);
-            graph1D_jd(x,xf/fac,0,0,'','','',leg,'',NaN,'--','none','r',2);
-            %
-            fig3 = figure('Name','Gaussian fit vs. ALOHA');
             leg = {'ALOHA','Gaussian fit','Location','NorthWest'};
-            graph1D_jd(zN,zdP/fac,0,1,'n_z',ylab,'',NaN,'',ylim/fac,'-','none','b',2,20,gca,0.9,0.7,0.7);
-            graph1D_jd(x,xf/fac,0,1,'','','',leg,'',ylim/fac,'--','none','r',2);
+            graph1D_jd(zN,zdP/fac,0,0,'n_z',ylab,'',NaN,'',NaN,'-','none','b',2,style,ax,red,lspace,bspace);
+            graph1D_jd(x,xf/fac,0,0,'','','',leg,'',NaN,'--','none','r',2,style,ax);
             %
-            fig4 = figure('Name','Gaussian fit vs. ALOHA');
-            graph1D_jd(zN,zdP/fac,0,0,'n_z',ylab,'',NaN,'',NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);
-            graph1D_jd(x,xf/fac,0,0,'','','',leg,'',NaN,'--','none','r',2);
-            %    
-            figs = 1;
+            if ~isstruct(param_in) || ~isfield(param_in,'ax'),
+                fig2 = figure('Name','Gaussian fit vs. ALOHA');
+                graph1D_jd(zN,zdP/fac,0,1,'n_z',ylab,'',NaN,'',ylim/fac,'-','none','b',2,style,gca,red,lspace,bspace);
+                graph1D_jd(x,xf/fac,0,1,'','','',leg,'',ylim/fac,'--','none','r',2);
+                %
+                fig3 = figure('Name','Gaussian fit calculation');
+                leg = {'Gaussian','Fit'};
+                graph1D_jd(xy(:),xyf(:)/fac,0,0,'n_z',ylab,'',NaN,'',NaN,'-','none','b',2,style,gca,red,lspace,bspace);
+                graph1D_jd(x,xf/fac,0,0,'','','',leg,'',NaN,'--','none','r',2);
+                %    
+                fig4 = figure('Name','Gaussian fit calculation');
+                graph1D_jd(xy(:),xyf(:)/fac,0,1,'n_z',ylab,'',NaN,'',ylim/fac,'-','none','b',2,style,gca,red,lspace,bspace);
+                graph1D_jd(x,xf/fac,0,1,'','','',leg,'',ylim/fac,'--','none','r',2);
+                %
+                figs = 1;
+                %
+            end
             %
         end
         %
         if inter_mode == 0,
             exit_loop = 1;
         else
-            exit_loop = input_dke_yp('Do you accept this process (1) or start again (0)',1,[0,1],'',[1,1]);
+            exit_loop = 2 - iselect_jd({'Accept this process','Start again'},'Do you want to :',opt_gui,style,1);
             disp(' ')      
         end
         %
+        if exit_loop == 0 && isstruct(param_in) && isfield(param_in,'ax'),% start again - clear new plot
+            cla;% clear graph of lines
+            chs = get(get(ax,'parent'),'children');% list of panel elements
+            delete(chs(1));% delete legend
+        end
+        %
+        if exit_loop == 0 && opt_info,% start again - clear disp
+            set(info.handle,'Visible','on');
+            set(info1.handle,'Visible','off');
+            set(info2.handle,'Visible','off');
+        end
+    end
+    %
+    if opt_info,
+        delete(select.handle);
+        delete(info.handle);
+        delete(info1.handle);
+        delete(info2.handle);
     end
     %
     if imag(param) >= 2 && enforcedir == 1;
