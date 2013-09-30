@@ -14,7 +14,7 @@ function redmine_LUKE(opts)
 %by Y.PEYSSON CEA/IRFM <yves.peysson@cea.fr> and Joan Decker CEA/IRFM <joan.decker@cea.fr>
 %
 if nargin == 0,
-	web('http://tolbachik.hd.free.fr:8080/redmine', '-new');
+	web('http://82.227.179.204:8080/redmine', '-new');
 else
     if ischar(opts) & size(opts,1) == 1
         opts = {opts};
@@ -23,7 +23,7 @@ else
     if ~iscell(opts),
         error('Inputs in redmine_LUKE must have a cell type.');
     else
-        webstr = ['''http://tolbachik.hd.free.fr:8080/redmine'', ', '''-new'''];
+        webstr = ['''http://82.227.179.204:8080/redmine'', ', '''-new'''];
         for iopts = 1:length(opts),
             webstr = [webstr,', ''',opts{iopts},''''];
         end
