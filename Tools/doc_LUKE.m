@@ -1,7 +1,7 @@
     function [stat,h1] = doc_LUKE(dkepath)
-%	LUKE - Access the on-line LUKE documentation
+%	LUKE - Access the on-line LUKE help
 %
-%	Access the on-line LUKE documentation. Enables to build it if necessary
+%	Access the on-line LUKE help. Enables to build it if necessary
 %
 %   dkepath: dkepath structure 
 %
@@ -22,9 +22,9 @@ end
 %
 if nargin > 1,error('Too many input arguments in doc_LUKE.m');end
 %
-if ~exist([dkepath.luke_root,'Documentation/index.html'])
+if ~exist([dkepath.luke_root,'Help/index.html'])
     %
-    disp('The LUKE documentation has not been created on this computer during the install process.');
+    disp('The LUKE help has not been created on this computer during the install process.');
     %
     doc_opt = input('Do you want to build it now (WARNING: it may take long minutes) (y/n)? [y] : ','s');
     %
@@ -38,5 +38,5 @@ if ~exist([dkepath.luke_root,'Documentation/index.html'])
         cd(dirinit);
     end
 else
-    web(['file://',dkepath.luke_root,'Documentation/index.html'], '-new');
+    web(['file://',dkepath.luke_root,'Help/index.html'], '-new');
 end    
