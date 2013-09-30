@@ -2,6 +2,18 @@
 
 switch action
         %
+    case 'redmine'
+        %
+        % Open the web page of redmine for LUKE
+        %      
+        redmine_LUKE;
+        %
+     case 'help'
+        %
+        % Open the on-line help of LUKE
+        %      
+        doc_LUKE;
+        %
     case 'workdir'
         %
         % changing working directory

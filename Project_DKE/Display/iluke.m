@@ -148,8 +148,8 @@ lukeobj.workdir.position = [style.panelwidth - style.simulfilewidth + style.simu
 lukeobj.simulfile.position = [style.panelwidth - style.simulfilewidth - 2*style.buthsep,style.butvsep + style.textheightcorr,style.simulfilewidth + style.buthsep,style.textheight];
 %
 lukeobj.titlestr.position = [(style.panelwidth - style.titlestrwidth)/2,3*style.butheight + 4*style.butvsep,style.titlestrwidth,style.titlestrheight];
-lukeobj.documentation.position = [style.panelwidth - style.buthsep - style.longbutwidth,style.titleheight - style.butheight - style.butvsep,style.longbutwidth,style.butheight];
-lukeobj.redmine.position = [style.panelwidth - style.buthsep - style.longbutwidth,style.titleheight - 2*style.butheight - 2*style.butvsep,style.longbutwidth,style.butheight];
+lukeobj.redmine.position = [style.panelwidth - style.buthsep - style.longbutwidth - 25,style.titleheight - style.butheight - style.butvsep,style.longbutwidth + 25,style.butheight];
+lukeobj.help.position = [style.panelwidth - style.buthsep - style.longbutwidth,style.titleheight - 2*style.butheight - 2*style.butvsep,style.longbutwidth,style.butheight];
 %
 % LUKE RUN PANEL DIMENSIONS
 %
@@ -186,7 +186,7 @@ lukeobj.shotime.string = '< empty >';
 
 lukeobj.lukeroottitle.string =   'LUKE SOURCE : ';
 %lukeobj.workdirtitlestr.string = '            : ';
-lukeobj.workdirtitle.string =    'WORK DIRECT.: ';
+lukeobj.workdirtitle.string =    'WORKING DIR : ';
 
 lukeobj.simulfiletitle.string = 'SIMULATION FILE : ';
 
@@ -194,8 +194,8 @@ lukeobj.lukeroot.string = dkepath.luke_root;
 lukeobj.simulfile.string = '< not saved >';
 
 lukeobj.titlestr.string = {'SUMMARY'};
-lukeobj.documentation.string = 'LUKE HELP';
-lukeobj.redmine.string = 'BUG REPORT';
+lukeobj.help.string = 'LUKE HELP';
+lukeobj.redmine.string = 'BUG TRACKING';
 
 lukeobj.import.string = 'METIS/CRONOS';
 lukeobj.exitluke.string = 'Exit';
@@ -233,7 +233,7 @@ lukeobj.newshot.callback = 'status.external = 0;status.equil = 0;iluke_update;';
 lukeobj.loadshot.callback = 'action = ''loadshot'';iluke_callbacks;';
 lukeobj.saveshot.callback = 'action = ''saveshot'';iluke_callbacks;';
 lukeobj.workdirtitle.callback = 'action = ''workdir'';iluke_callbacks;';
-lukeobj.documentation.callback = 'action = ''documentation'';iluke_callbacks;';
+lukeobj.help.callback = 'action = ''help'';iluke_callbacks;';
 lukeobj.redmine.callback = 'action = ''redmine'';iluke_callbacks;';
 
 lukeobj.graph1sel.callback = 'lukeobj.plot1.gindex = get(lukeobj.graph1sel.handle,''Value'') - 1;iluke_update;';
@@ -303,7 +303,7 @@ lukeobj.lukevertitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text'
 lukeobj.simulfiletitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.simulfiletitle.string,'Position',lukeobj.simulfiletitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 
 lukeobj.titlestr.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.titlestr.string,'Position',lukeobj.titlestr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'HorizontalAlignment','center');
-lukeobj.documentation.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.documentation.string,'Position',lukeobj.documentation.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.documentation.callback);
+lukeobj.help.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.help.string,'Position',lukeobj.help.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.help.callback);
 lukeobj.redmine.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.redmine.string,'Position',lukeobj.redmine.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.redmine.callback);
 
 lukeobj.import.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushbutton','String',lukeobj.import.string,'Position',lukeobj.import.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.import.callback);
