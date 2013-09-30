@@ -153,7 +153,9 @@ else% create default launch structure
     %
     if strcmp(type,'LH'),
         %
-        launch = imake_launch_LH_jd(basestr,equil,'',opt_gui);
+        select.tail = true;
+        %
+        launch = imake_launch_LH_jd(basestr,equil,'',opt_gui,select);
         %
     elseif strcmp(type,'EC'),
         % 
