@@ -6,7 +6,7 @@ if nargin < 5,
     select = struct;
 end
 if nargin < 4,
-    opt_gui = 0;
+    opt_gui = false;
 end
 if nargin < 3,
     external = '';
@@ -16,12 +16,126 @@ if nargin < 2,
     error('Not enough arguments')
 end
 %
+if ~isfield(select,'style'),
+    select.style = struct;
+end
+%
+launchsfile = ['get_launchs_',basestr];
+%
+if exist(launchsfile,'file'),
+    %
+    launchs = feval(launchsfile);
+    %
+    nlaunchs = length(launchs);
+    if nlaunchs == 1,
+        ilaunch = 1;
+    else
+        titletext = ['Select antenna for tokamak ',basestr,' :'];      
+        s = cell(1,nlaunchs);
+        for ilaunch = 1:nlaunchs,
+            s{ilaunch} = launchs{ilaunch}.id;
+        end
+        %    
+        ilaunch = iselect_jd(s,titletext,opt_gui,select.style,1);
+        %
+    end
+    %
+    launch = launchs{ilaunch};
+    %
+else
+    %
+    launch.id = 'default';
+    launch.type = 'LH';
+    %
+    launch.omega_rf = 3.7*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
+    launch.rZ0 = 0;%vertical launching positions (m) [1,m_pol]
+    % 
+    launch.phi0 = 0;%toroidal angle position [1,1]
+    launch.LFS = 1;% (-1) high field side launching, (1) low field side launching [1,1]
+    %    
+end
+%
 signe.ip = sign(equil.psi_apRp(end));
 signe.b0 = sign(equil.ptBPHI(1,1));
 %
 if ~isempty(external),
     %
-    if strcmp(basestr,'TS'),
+    if isfield(external,'plasma') && isfield(external,'antenna'),% spectrum from ALOHA type structure
+        %
+        launch = rmfield(conc_struct_jd(launch,launch.default),'default');% create default fields
+        %
+        specparam.nlobes = 2; % number of lobes selected
+        %
+        specparam.dir = 0;% sort peaks according to : 
+        %                       (0) P     + preserve repartition and total power 
+        %                       (1) P/N^2 + preserve directivity and repartition 
+        %                       (2) P/N^2 + preserve directivity and total power (treating positive and negative spectra as blocks. Warning : some transfer of P/N^2 across N=0 necessary in this case)
+        %                       (3) P/N^2 + preserve repartition and total power 
+        %
+        specparam.mode = 0;% aloha mode :
+        %                       (0) select a number of Gaussian peaks left unchanged (WARNING : total power less than Pin)
+        %                       (1) assemble peaks fixing Pmax and N, allowing dN to change
+        %                       (2) assemble peaks allowing Pmax, N and dN to change
+        %
+        specparam.inter = 1;% interactive mode to select aloha parameters
+        specparam.display_mode = 2;% display initial and treated spectrum : (0) none (1) text (2) figures
+        %
+        specparam.opt_gui = opt_gui;
+        specparam.style = select.style;
+        specparam.ax = select.ax;
+        %
+        [bNtor0,bdNtor0,bPlhtor,launch.param_tor] = proc_aloha_spec_jd(external.antenna.nz,NaN,real(external.antenna.dP_nz),1,specparam,0,specparam.display_mode);
+        %
+        opt_ny = iselect_jd({'With multiple vertical positions','With poloidal spectrum'},'How do you want to describe the wave poloidally ?',opt_gui,select.style,1) - 1;
+        %
+        if opt_ny == 1,% process poloidal aloha spectrum for LUKE
+            %
+            [bNpol0,bdNpol0,bPlhpol,launch.param_pol] = proc_aloha_spec_jd(external.antenna.ny,NaN,sum(real(external.antenna.dP.')),1,specparam,0,specparam.display_mode);     
+            %
+        else
+            bNpol0 = 0;
+            %
+            bdNpol0 = 0;
+            %
+            bPlhpol = 1;                
+        end
+        %
+        % Since N// is not strictly speaking Ntor, we make it imaginary to notify init_RT_jd. In this case, the real part is Npol
+        %
+        launch.bNpar0 = [];
+        %
+        launch.bdNpar0 = [];
+        %
+        launch.bPlhtot = [];
+        %
+        for iy = 1:length(bNtor0),
+            launch.bNpar0 = [launch.bNpar0,1i*bNtor0(iy) + bNpol0];
+            %
+            % the combined spectral width effect is not yet implemented
+            % (TODO) see how to include it, maybe in init_RT_jd
+            % watch for possible conflicts with square spectrum prescriptions
+            %
+%                 launch.bdNpar0 = [launch.bdNpar0,1i*bdNtor0(iy) + bdNpol0];
+            %
+            launch.bdNpar0 = [launch.bdNpar0,bdNtor0(iy)*ones(1,length(bdNpol0))];
+            %
+            launch.bPlhtot = [launch.bPlhtot,bPlhtor(iy)*bPlhpol];
+        end
+        %
+        % load METIS data for sign and/or power correction
+        %
+        %metisdata = load([path_simul,filesep,'before_luke@',basestr,'_',shotnum,'_',shotimes{ishot},'.mat']);
+        %
+        %launch.bNpar0 = launch.bNpar0*(-metisdata.option.signe);% case of N//
+        %launch.bNpar0 = launch.bNpar0*(-sign(metisdata.equil.psi_apRp(end)));% case of Npol +iNtor
+        %
+        % assuming the spectrum is always "positive for co-current"
+        %
+        launch.bNpar0 = - launch.bNpar0*signe.ip*signe.b0;
+        %
+        launch.spectrum = external;
+        %
+    elseif strcmp(basestr,'TS'),
         %
         % !!!! Warning : older antenna configurations not yet operational
         %
@@ -133,73 +247,79 @@ if ~isempty(external),
     %
 else
     %
-    config = basestr;
+    % default spectrum values for the antenna specified
     %
-    nant = 2;%maximum number of antennas in make_wavelaunchs_cronos_lh
+    launch = rmfield(conc_struct_jd(launch,launch.default),'default');
     %
-    Plh = 1e6*[1]*ones(1,nant);
-    npar = -signe.ip*signe.b0*[2]*ones(1,nant);
-    %
-    lob = 'Yes';
+    launch.bNpar0 = - launch.bNpar0*signe.ip*signe.b0;
     %
 end
 %
-if strcmp(basestr,'TS') || strcmp(basestr,'JET'),% default values from make_wavelaunchs_cronos_lh
-    %
-    cons = Plh.*exp(i*npar);
-    %
-    cons_spec = NaN;
-    %
-    launchs = make_wavelaunchs_cronos_lh('','',cons,signe,config,lob);
-    %
-    a_str = '';
-    for iw = 1:length(launchs),
-        a_str = [a_str,' (',num2str(iw),') ',launchs{iw}.id,','];
-    end
-    %
-    if iw > 1,
-        %
-        a_opt = input_dke_yp(['Please select an antenna :',a_str],1,1:iw,'',[1,1]);
-        %
-    else
-        a_opt = 1;
-    end
-    %
-    launch = launchs{a_opt};
-    %
-elseif strcmp(basestr,'EAST'),
-    
-else % default values
-    %
-    launch.omega_rf = 2*pi*1e9*4.6;
-    launch.LFS = 1;    
-    launch.m0 = 0;
-    %
-    if isnan(launch.m0),
-        launch.n0 = 0;
-    else
-        launch.n0 = NaN;
-    end
-    %
-    launch.phi0 = 0;
-    launch.bPlhtot = Plh(1);  
-    launch.bNpar0 = npar(1);  
-    launch.bdNpar0 = 0.2;
-    launch.rZ0 = 0;  
-    launch.id = '';
-    %
-end
-%
-% Introduction of the tail model for the npar0 fluctuations
+% if strcmp(basestr,'TS') || strcmp(basestr,'JET'),% default values from make_wavelaunchs_cronos_lh
+%     %
+%     cons = Plh.*exp(i*npar);
+%     %
+%     cons_spec = NaN;
+%     %
+%     launchs = make_wavelaunchs_cronos_lh('','',cons,signe,config,lob);
+%     %
+%     a_str = '';
+%     for iw = 1:length(launchs),
+%         a_str = [a_str,' (',num2str(iw),') ',launchs{iw}.id,','];
+%     end
+%     %
+%     if iw > 1,
+%         %
+%         a_opt = input_dke_yp(['Please select an antenna :',a_str],1,1:iw,'',[1,1]);
+%         %
+%     else
+%         a_opt = 1;
+%     end
+%     %
+%     launch = launchs{a_opt};
+%     %
+% elseif strcmp(basestr,'EAST'),
+%     
+% else % default values
+%     %
+%     launch.omega_rf = 2*pi*1e9*4.6;
+%     launch.LFS = 1;    
+%     launch.m0 = 0;
+%     %
+%     if isnan(launch.m0),
+%         launch.n0 = 0;
+%     else
+%         launch.n0 = NaN;
+%     end
+%     %
+%     launch.phi0 = 0;
+%     launch.bPlhtot = Plh(1);  
+%     launch.bNpar0 = npar(1);  
+%     launch.bdNpar0 = 0.2;
+%     launch.rZ0 = 0;  
+%     launch.id = '';
+%     %
+% end
 %
 
-% N//0 model
+%
+% Introduction of the tail model for the npar0 fluctuations
 %
 % Note : The tail spectrum can be described either in a static mode (if
 % dtn_fluct_correlation_npar0_lh = Inf) or in a fluctuating mode (if
 % dtn_fluct_correlation_npar0_lh < Inf).
 %
-if length(launch.bNpar0) <= 2,%only if one may main lobe in one or two directions
+if isfield(select,'tail') && select.tail,% add default tail model
+    tail.dtn = Inf;
+    tail.mode = 3;% mode for tail spectrum : (0) no tail model, (1)  Gaussian, (2) Linear, (3) calc_tail_jd
+    tail.bNparmax_tail = 0;%npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is NaN or empty, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)
+    tail.bn_tail = 0;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen) 
+    tail.bP_tail = 0.5;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (no used if linear_tail is chosen) 
+    tail.bopt_tail = 1 + 1i;%Final power fraction of the tail @ Nparmax_tail (+1i) Adjust initial dNpar0 such that initial and tail lobes have the same width
+    %
+    launch.tail = tail;
+    %
+elseif length(launch.bNpar0) <= 2,%only if one may main lobe in one or two directions
     %
     tail_opt = input_dke_yp('Do you want to describe the launched power spectrum with the tail model (npar0 fluctuations) [y/n]','n',{'y','n'},'',[1,1]);
     %
@@ -234,24 +354,26 @@ if length(launch.bNpar0) <= 2,%only if one may main lobe in one or two direction
     end   
 end
 %
+launch.id = make_launchid_jd(launch);
+%
 if ~isempty(external),
     %
     return
     %
 end
 %
-launch.i_ref = -1;%index of the flux surface where the rays are launched
-%
-launch.frequency_GHz = launch.omega_rf/(2*pi*1e9);
-launch.phi0_deg = launch.phi0*180/pi;
-launch.bPlhtot_MW = launch.bPlhtot/1e6;
-launch = rmfield(launch,{'omega_rf','phi0','bPlhtot'});
-%
-launch = imod_struct_jd(launch,'launch',1,opt_gui);
-%
-launch.omega_rf = launch.frequency_GHz*(2*pi*1e9);
-launch.phi0 = launch.phi0_deg*pi/180;
-launch.bPlhtot = launch.bPlhtot_MW*1e6;
-launch = rmfield(launch,{'frequency_GHz','phi0_deg','bPlhtot_MW'});
-%
+% launch.i_ref = -1;%index of the flux surface where the rays are launched
+% %
+% launch.frequency_GHz = launch.omega_rf/(2*pi*1e9);
+% launch.phi0_deg = launch.phi0*180/pi;
+% launch.bPlhtot_MW = launch.bPlhtot/1e6;
+% launch = rmfield(launch,{'omega_rf','phi0','bPlhtot'});
+% %
+% launch = imod_struct_jd(launch,'launch',1,opt_gui);
+% %
+% launch.omega_rf = launch.frequency_GHz*(2*pi*1e9);
+% launch.phi0 = launch.phi0_deg*pi/180;
+% launch.bPlhtot = launch.bPlhtot_MW*1e6;
+% launch = rmfield(launch,{'frequency_GHz','phi0_deg','bPlhtot_MW'});
+% %
 
