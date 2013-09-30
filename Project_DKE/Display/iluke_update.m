@@ -18,6 +18,7 @@ if status.equil == 0,
     status.waves = -1;
     status.output = -1;
     lukeobj.lukeid.string = '';
+    wavestructs = {};
     %
     if status.external == 0,
         lukeobj = iluke_info(lukeobj,'startup');% info display
@@ -68,6 +69,12 @@ else
     lukeobj.data.import.highlight = false;
     lukeobj.equil.make.highlight = false;    
 end
+
+%
+% WAVESTRUCTS
+%
+
+iluke_update_wavestruct;
 
 %
 % SPECIFIC CASES
@@ -196,11 +203,6 @@ if lukeobj.remote.select.value > 1,
 else
     lukeobj.remote.timeout.state = 'off';
 end
-
-%
-% WAVESTRUCTS
-%
-iluke_update_wavestruct;
 
 %
 % WORKDIR
