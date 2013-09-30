@@ -1,13 +1,13 @@
 function pdfhtlatex_yp(root_path,filelist,verbose)
-%LUKE - LaTeX to PDF and HTML documentation builder
+%LUKE - LaTeX to PDF and HTML LUKE help builder
 %
-% Create dynamically all the documentation for C3PO/LUKE in html format from Latex files
+% Create dynamically all the help for C3PO/LUKE in html format from Latex files
 % (needs standard TeX package with TeX4ht. TeXLive 2007 or above package is strongly recommanded)
 %
 % INPUT:
 %
 
-%   - root_path: path where the documentation directory should be placed (string)
+%   - root_path: path where the help directory should be placed (string)
 %       (default: local directory)
 %   - filelist: full path to LaTeX files (celles of string)
 %       (default: local directory)
@@ -64,15 +64,15 @@ function pdfhtlatex_yp(root_path,filelist,verbose)
     %
     docpath = root_path;
     if nargin > 1,
-        latexdochtmlpath = fullfile(docpath,'Documentation','LaTeX');
+        latexdochtmlpath = fullfile(docpath,'Help','LaTeX');
     end
     %
     if nargin > 1,
         if ~exist(latexdochtmlpath),
-            mkdir(docpath,fullfile('Documentation','LaTeX'));
+            mkdir(docpath,fullfile('Help','LaTeX'));
         else
             rmdir(latexdochtmlpath,'s');
-            mkdir(docpath,fullfile('Documentation','LaTeX'));
+            mkdir(docpath,fullfile('Help','LaTeX'));
         end
     else
         latexdochtmlpath = docpath;

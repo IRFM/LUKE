@@ -33,7 +33,7 @@ else
     disp(' ------------------------------------------------------------------------------------------------------')
     disp(' -----> WARNING: the environment variable for LATEX is not setup in dkepath.')
     disp(' ****** The latex files cannot be created ******')
-    disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE documentation.'])
+    disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE help.'])
     disp(' ------------------------------------------------------------------------------------------------------')    
 end
 %
@@ -43,7 +43,7 @@ else
     disp(' ---------------------------------------------------------------------------------------------------')
     disp(' -----> WARNING: the environment variable for the IMAGEMAGICK is not setup in dkepath.')
     disp(' ****** The conversion of the latex files to html ones cannot be done ******')
-    disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE documentation.'])
+    disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE help.'])
     disp(' ---------------------------------------------------------------------------------------------------')    
 end
 %
@@ -53,7 +53,7 @@ else
     disp(' --------------------------------------------------------------------------------------------')
     disp(' ----->  WARNING: the environment variable for GRAPHVIZ is not setup in dkepath.')
     disp(' ****** No graphs can be built ******')
-    disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE documentation.'])
+    disp([' -----> Fix this problem first in ',luke_root,'path_***.m, before building the LUKE help.'])
     disp(' --------------------------------------------------------------------------------------------')
 end
 %
@@ -179,7 +179,7 @@ for j = 1:length(search_path),
         %
         disp('****************************************************************************')
         disp('****************************************************************************')
-        disp(' -----> Before building of the documentation,')
+        disp(' -----> Before building of the LUKE help,')
         disp(' 1) Rename all the files identified with the wrong name.')
         disp(' 2) Check the dependencies.')
         disp(' 3) Commit all the changes in the CVS repository.')

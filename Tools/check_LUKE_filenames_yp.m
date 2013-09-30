@@ -1,7 +1,7 @@
 function not_compatible_filename_list = check_LUKE_filenames_yp(dirName)
-%LUKE - check the compatibility of LUKE file names for buiding the documentation
+%LUKE - check the compatibility of LUKE file names for buiding the LUKE help
 %
-% Check the compatibility of LUKE file names for buiding the documentation
+% Check the compatibility of LUKE file names for buiding the LUKE help
 %
 % INPUTS: 
 %
@@ -40,7 +40,7 @@ if ~isempty(filelist),
         %
         if strcmp(fext,'.m') || strcmp(fext,'.c') || strcmp(fext,'.f') || strcmp(fext,'.f90') || strcmp(fext,'.h') || strcmp(fext,'.cpp'),
             if strfind(filename,'-'),
-                not_compatible_filename_list{j} = ['The name of the file ''',filename,fext,''' in the directory ''',dirname,''' is not compatible to build the documentation (No ''-'' is allowed).'];
+                not_compatible_filename_list{j} = ['The name of the file ''',filename,fext,''' in the directory ''',dirname,''' is not compatible to build the LUKE help (No ''-'' is allowed).'];
                 j = j+1;
             end
         end

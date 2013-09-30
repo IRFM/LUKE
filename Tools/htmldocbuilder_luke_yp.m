@@ -1,7 +1,7 @@
 function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root_path,search_path,excludedfoldernames,overview_scripts,htmlview_mode,verbose)
-%LUKE - HTML documentation builder
+%LUKE - HTML LUKE help builder
 %
-% Create dynamically all the documentation in html format from *.m, *.c,
+% Create dynamically all the LUKE help in html format from *.m, *.c,
 % *.f and *.h text files. Recognize binary files. If a TODO comment is
 % written somewhere, it is considered in the links.
 % Creates also graphes (needs graphviz graph maker which can be downloaded at www.graphviz.org)
@@ -66,12 +66,12 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
     end
     %
     docpath = root_path;
-    dochtmlpath = [root_path,'Documentation'];
+    dochtmlpath = [root_path,'Help'];
     if ~exist(dochtmlpath),
-        mkdir(docpath,'Documentation');
+        mkdir(docpath,'Help');
     else
         rmdir(dochtmlpath,'s');
-        mkdir(docpath,'Documentation');
+        mkdir(docpath,'Help');
     end
     %
     addpath(m2htmllib_path,'-BEGIN');
@@ -92,7 +92,7 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
     cd(root_path);
     cd ..;%for m2html needs
     %
-    % todo: initial description in documentation
+    % todo: initial description in LUKE help
     %
     if isempty(verbose),
         verbose = 'off';
@@ -107,14 +107,14 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
         %
         disp('WARNING: Graphes have not been generated, since the ''graphviz'' maker is not installed on your computer.');
         disp('WARNING: Download ''graphviz'' maker from www.graphviz.org, and install it first.');
-        disp('WARNING: Execute htmldocbuilder_luke_yp MatLab script do rebuild the documentation.');
+        disp('WARNING: Execute htmldocbuilder_luke_yp MatLab script do rebuild the LUKE help.');
     end    
     %
     rmpath(m2htmllib_path);
     %
-    mkdir(fullfile(root_path,'Documentation'),'OVERVIEW_files');
+    mkdir(fullfile(root_path,'Help'),'OVERVIEW_files');
     %
-    opts.outputDir = fullfile(root_path,'Documentation','OVERVIEW_files');
+    opts.outputDir = fullfile(root_path,'Help','OVERVIEW_files');
     opts.evalCode = false;
     %
     if exist('overview_scripts'),
@@ -132,12 +132,12 @@ function search_path = htmldocbuilder_luke_yp(m2htmllib_path,recursive_mode,root
     end
     %
     if htmlview_mode <= 0,
-    	stat = web(['file://',root_path,'Documentation/index.html'],'-new');
+    	stat = web(['file://',root_path,'Help/index.html'],'-new');
     	if stat == 1 | stat == 2,
-        	web(['file://',root_path,'Documentation/index.html'],'-new');%Open in MatLab help browser    
+        	web(['file://',root_path,'Help/index.html'],'-new');%Open in MatLab help browser    
     	end
     end
-    disp(['----> The weblink to the documentation is ','file:/',root_path,'Documentation/index.html']);
+    disp(['----> The weblink to the LUKE help is ','file:/',root_path,'Help/index.html']);
     %
     cd(dirinit);%back to the initial directory
     %
@@ -192,7 +192,7 @@ function [search_path] = dirscan_yp(root_path,search_path,excludedfoldernames,re
     nsearch_path = nsearch_path0;
     %
     for ii = 1:length(dirlist),
-        if dirlist(ii).isdir == 1 & ~strcmp(dirlist(ii).name(1),'.') & ~strcmp(dirlist(ii).name,'CVS') & ~strcmp(dirlist(ii).name,'Doc') & ~strcmp(dirlist(ii).name,'Documentation'),
+        if dirlist(ii).isdir == 1 && ~strcmp(dirlist(ii).name(1),'.') && ~strcmp(dirlist(ii).name,'CVS') && ~strcmp(dirlist(ii).name,'Doc') && ~strcmp(dirlist(ii).name,'Help'),
             search_path = [search_path,[root_path,dirlist(ii).name]];
             nsearch_path = nsearch_path + 1;%a valid new directory has been found
         end
