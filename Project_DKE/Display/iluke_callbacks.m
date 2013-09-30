@@ -16,6 +16,85 @@ switch action
         %
         clear pathname
         %
+    case 'import'
+        %
+        % importing from METIS or CRONOS simulation
+        %
+        sbase = 'before_luke@';
+        filestr = [sbase,'*.mat'];
+        %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the METIS/CRONOS ',sbase,' file(s)'],'',0);
+        %
+        %
+        if filename ~= 0,
+            %
+            import = load([pathname,filename],'dkeparam','dkedisplay','equil','ohm','transpfaste','ripple','wavestructs');
+            %
+            if isfield(import,'equil') && ~isempty(import.equil)
+                % 
+                % clear current simulation
+                %
+                status.external = 0;
+                status.equil = 0;
+                iluke_update;
+                %
+                % new equil
+                %
+                equil = import.equil;
+                status.equil = 1;
+                lukeobj = iluke_equilstrings(lukeobj,equil);
+                %
+                action = 'equildisp';iluke_callbacks;
+                %
+                iluke_update;
+                %
+                if isfield(import,'dkeparam') && ~isempty(import.dkeparam),
+                    dkeparam = import.dkeparam;
+                end
+                if isfield(import,'dkedisplay') && ~isempty(import.dkedisplay),
+                    dkedisplay = import.dkedisplay;
+                end
+                if isfield(import,'ohm') && ~isempty(import.ohm),
+                    ohm = import.ohm;
+                    status.ohm = 1;
+                    %
+                    action = 'ohmdisp';iluke_callbacks;
+                else
+                    status.ohm = 0;                    
+                end
+                if isfield(import,'transpfaste') && ~isempty(import.transpfaste),
+                    transpfaste = import.transpfaste;
+                    status.transpfaste = 1;
+                    %
+                    action = 'transpdisp';iluke_callbacks;
+                else
+                    status.transpfaste = 0;                    
+                end
+                if isfield(import,'ripple') && ~isempty(import.ripple),
+                    ripple = import.ripple;
+                    status.ripple = 1;
+                    %
+                    action = 'rippledisp';iluke_callbacks;
+                else
+                    status.ripple = 0;
+                end
+                if isfield(import,'wavestructs') && ~isempty(import.wavestructs),
+                    wavestructs = [wavestructs,import.wavestructs];
+                    lukeobj.wavestruct.select.value = length(wavestructs);
+                    %
+                    action = 'wavemake';iluke_callbacks;
+                end                
+                status.waves = 0;
+                status.output = 0;
+            end                          
+            %
+            clear import
+            %
+        end  
+        %
+        clear sbase filestr filename pathname
+        %
+        %
     case 'loadshot'
         %
         % loading simulation
@@ -216,26 +295,7 @@ switch action
             %
             load([pathname,filename],'equil');
             %
-            if isfield(equil,'tokamak') && isfield(equil,'shotnum') && isfield(equil,'shotime'),
-                lukeobj.tokamak.string = equil.tokamak;
-                lukeobj.shotnum.string = equil.shotnum;
-                lukeobj.shotime.string = equil.shotime;
-            else
-                isep = find(equil.id == '_');
-                if length(isep) >= 2,
-                    lukeobj.tokamak.string = equil.id(1:isep(1) - 1);
-                    lukeobj.shotnum.string = equil.id(isep(1) + 1:isep(2) - 1);
-                    if length(isep) > 2,
-                        lukeobj.shotime.string = equil.id(isep(2) + 1:isep(3) - 1);
-                    else
-                        lukeobj.shotime.string = equil.id(isep(2) + 1:end);
-                    end
-                else
-                    lukeobj.tokamak.string = '< ? >';
-                    lukeobj.shotnum.string = '< ? >';
-                    lukeobj.shotime.string = '< ? >';
-                end
-            end
+            lukeobj = iluke_equilstrings(lukeobj,equil);
             %
             lukeobj.equil.text.string = filename;%[pathname,filename];
             %
@@ -313,6 +373,8 @@ switch action
         else
             lukeobj.infotext.string = '';
         end
+        %
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
         clear ngraphs newgraph1_handle newgraph2_handle newgraph3_handle  
         %
@@ -425,7 +487,13 @@ switch action
         %
         lukeobj.plot1.gindex = ngraphs + 1;
         %
-        lukeobj.infotext.string = ohm.info.txt;
+        if isfield(ohm,'info') && isfield(ohm.info,'txt'),
+            lukeobj.infotext.string = ohm.info.txt;
+        else
+            lukeobj.infotext.string = '';
+        end
+        %
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'transpmake'
         %
@@ -541,7 +609,13 @@ switch action
         lukeobj.plot1.gindex = ngraphs + 1;
         lukeobj.plot2.gindex = ngraphs + 2;
         %
-        lukeobj.infotext.string = transpfaste.info.txt;
+        if isfield(transpfaste,'info') && isfield(transpfaste.info,'txt'),
+            lukeobj.infotext.string = transpfaste.info.txt;
+        else
+            lukeobj.infotext.string = '';
+        end
+        %
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'wavestructimport'
         %
@@ -779,25 +853,60 @@ switch action
         %
         % loading spectrum data
         %
-        sbase = 'SPECTRUM';
-        filestr = [sbase,'_*.mat'];
+        sbase1 = 'SPECTRUM';
+        sbase2 = 'ALOHA';
+        filestr = {[sbase1,'_*.mat'];[sbase2,'_*.mat']};
         %
-        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase1,' file(s)'],'',0);
         %
         %
         if filename ~= 0,
             %
-            load([pathname,filename],'spectrum');
+            if any(strfind(filename,sbase2)),
+                load([pathname,filename],'plasma','antenna');
+                spectrum.plasma = plasma;
+                spectrum.antenna = antenna;
+                clear plasma antenna
+            else
+                load([pathname,filename],'spectrum');
+            end
             %
-            wavestructs{end+1} = imake_wavestructs_jd(equil,imake_launch_aloha_jd(lukeobj.tokamak.string,spectrum,lukeobj.infopanel.handle));
+            if ~exist('spectrum','var'),
+                error('SPECTRUM file not compatible')
+            end
+            %
+            lukeobj = iluke_info(lukeobj,'');% disable info display
+            %
+            lukeobj.plot1.gindex = 0;
+            %
+            cleartags = {'spectrum'};
+            %
+            iluke_update;% initialize display
+            %
+            newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Visible','off');% create new graphic objects with requested characteristics
+            %
+            select = struct;
+            select.style = style;
+            select.tail = true;
+            select.ax = newgraph1_handle;
+            %
+            wavestructs{end+1} = imake_wavestructs_jd(equil,imake_launch_LH_jd(lukeobj.tokamak.string,equil,spectrum,lukeobj.infopanel.handle,select));
+            %   
+            ngraphs = length(graphs);
+            %
+            graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,2,['spectrum for ',wavestructs{end}.id],'spectrum');
+            %
+            lukeobj.plot1.gindex = ngraphs + 1;
             %
             lukeobj.wavestruct.select.value = length(wavestructs);
             %
-            clear spectrum
+            clear spectrum select
+            %
+            lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
             %
         end  
         %
-        clear sbase filestr filename pathname
+        clear sbase1 sbase2 filestr filename pathname
         %
     case 'spectrumsave'
         %
@@ -838,98 +947,10 @@ switch action
         %lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         iw = lukeobj.wavestruct.select.value;
+        %        
+        wavestructs{iw} = iluke_launchmodify(wavestructs{iw},style);        
         %
-        launch = wavestructs{iw}.launch;
-        if isfield(launch,'orig'),
-            orig = launch.orig;
-            launch = rmfield(launch,'orig');
-        else
-            orig = launch;
-        end
-        %
-        type = launch.type;
-        launch = rmfield(launch,'type');
-        %
-        if strcmp(type,'EC'),
-            %
-            launch.frequency_GHz = launch.omega_rf/(2*pi*1e9);
-            launch.yP_L_kW = launch.yP_L/1e3;
-            launch.yphi_L_deg = launch.yphi_L*180/pi;
-            launch.yalpha_L_deg = launch.yalpha_L*180/pi;
-            launch.ybeta_L_deg = launch.ybeta_L*180/pi;
-            %
-            launch = rmfield(launch,{'omega_rf','yP_L','yphi_L','yalpha_L','ybeta_L'});
-            if isfield(launch,'angles'),
-                launch = rmfield(launch,'angles');
-            end
-            %
-        elseif strcmp(type,'LH'),
-            %
-            launch.frequency_GHz = launch.omega_rf/(2*pi*1e9);
-            launch.bPlhtot_MW = launch.bPlhtot/1e6;
-            launch.phi0_deg = launch.phi0*180/pi;
-            %
-            if any(imag(launch.bNpar0) ~= 0),% = ny + i*nz
-                launch.bNy = real(launch.bNpar0);
-                launch.bNz = imag(launch.bNpar0);
-                launch = rmfield(launch,'bNpar0');
-            end
-            %
-            if isfield(launch,'tail') && isfield(launch.tail,'bopt_tail'),
-                launch.tail.h_tail = real(launch.tail.bopt_tail);
-                launch.tail.opt_dnpar0 = imag(launch.tail.bopt_tail) == 1;
-                launch.tail = rmfield(launch.tail,'bopt_tail');
-            end                
-            %
-            launch = rmfield(launch,{'omega_rf','bPlhtot','phi0'});
-            if isfield(launch,'aloha'),
-                launch = rmfield(launch,'aloha');
-            end
-            %
-        end
-        %
-        [launch,mod] = imod_struct_jd(launch,'launch',1,true,struct,style);%lukeobj.infopanel.handle
-        %
-        if any(mod),
-            %
-            if strcmp(type,'EC'),
-                %
-                launch.omega_rf = launch.frequency_GHz*(2*pi*1e9);
-                launch.yP_L = launch.yP_L_kW*1e3;
-                launch.yphi_L = launch.yphi_L_deg*pi/180;
-                launch.yalpha_L = launch.yalpha_L_deg*pi/180;
-                launch.ybeta_L = launch.ybeta_L_deg*pi/180;
-                %
-                launch = rmfield(launch,{'frequency_GHz','yP_L_kW','yphi_L_deg','yalpha_L_deg','ybeta_L_deg'});
-                %
-            elseif strcmp(type,'LH'),
-                %
-                launch.omega_rf = launch.frequency_GHz*(2*pi*1e9);
-                launch.bPlhtot = launch.bPlhtot_MW*1e6;
-                launch.phi0 = launch.phi0_deg*pi/180;
-                %
-                launch = rmfield(launch,{'frequency_GHz','bPlhtot_MW','phi0_deg'});
-                %
-                if isfield(launch,'bNy') && isfield(launch,'bNz'),
-                    launch.bNpar0 = launch.bNy + 1i*launch.bNz;
-                    launch = rmfield(launch,{'bNy','bNz'});
-                end
-                %
-                if isfield(launch,'tail') && isfield(launch.tail,'h_tail') && isfield(launch.tail,'opt_dnpar0'),
-                    launch.tail.bopt_tail = launch.tail.h_tail + 1i*launch.tail.opt_dnpar0;
-                    launch.tail = rmfield(launch.tail,{'h_tail','opt_dnpar0'});
-                end                
-            end
-            %
-            launch.type = type;
-            launch.orig = orig;
-            %
-            wavestructs{iw}.launch = launch;
-            wavestructs{iw}.id = [wavestructs{iw}.wavesolver,'_',wavestructs{iw}.launch.id];
-            %
-        end
-        %
-        clear iw launch orig type mod
+        clear iw 
         %
         %lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
         %        
