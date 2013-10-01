@@ -6,7 +6,7 @@ type  = 'LH';
 %
 % ------- LH antenna #1 (2.45 GHz - FAM) -------
 %
-launchs{1}.id = '2p45';
+launchs{1}.id = 'antenna_2p45GHz';
 launchs{1}.type = type;
 %
 launchs{1}.omega_rf = 2.45*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
@@ -24,7 +24,7 @@ launchs{1}.default.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 % ------- LH antenna #2 (4.60 GHz - FAM) -------
 %
-launchs{2}.id = '4p60';
+launchs{2}.id = 'antenna_4p60GHz';
 launchs{2}.type = type;
 %
 launchs{2}.omega_rf = 4.60*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
