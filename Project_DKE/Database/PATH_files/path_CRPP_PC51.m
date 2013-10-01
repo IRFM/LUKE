@@ -37,3 +37,10 @@ crpppc51.joan(1).mex76 = [crpppc51.joan(1).luke_root,'Project_DKE/MEX/Bin/crpppc
 crpppc51.joan(1).compiler_opt.helmex = '-v -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas LDFLAGS="-fPIC -shared" -largeArrayDims';%  -ltmglib Optional argument for helmex compilation
 %
 crpppc51.joan(1).MUMPS.mex76 = [crpppc51.joan(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB_7.6'];%Where MUMPS matrix solver is stored (MEX function)
+%
+% LUKE documentation
+%
+crpppc51.joan(1).graphviz.env = '';% Graphviz environment variable
+crpppc51.joan(1).latex.env = '';% Latex environment variable
+crpppc51.joan(1).imagemagick.env = '';% ImageMagick environment variable
+%

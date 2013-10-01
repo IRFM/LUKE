@@ -50,9 +50,16 @@ dkepath.JD211098(1).compiler_opt.helmex.mex712 = NaN;%['-L',dkepath.JD211098(1).
 dkepath.JD211098(1).compiler_opt.helmex.mex800 = ['-L',dkepath.JD211098(1).local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.JD211098(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
 %Where MUMPS matrix solver is stored (MEX function)
+%
 dkepath.JD211098(1).MUMPS.mex710 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.JD211098(1).MUMPS.mex712 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.JD211098(1).MUMPS.mex800 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
+%
+% LUKE documentation
+%
+dkepath.JD211098(1).graphviz.env = '/home/sccp/gsem/peysson/bin/';% Graphviz environment variable
+dkepath.JD211098(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.JD211098(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
@@ -112,6 +119,12 @@ dkepath.YP105119(1).MUMPS.mex710 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0
 dkepath.YP105119(1).MUMPS.mex712 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).MUMPS.mex800 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 %
+% LUKE documentation
+%
+dkepath.YP105119(1).graphviz.env = '/home/sccp/gsem/peysson/bin/';% Graphviz environment variable
+dkepath.YP105119(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.YP105119(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+%
 %--------------------------- Remote computing -----------------------------
 %
 % local
@@ -166,9 +179,16 @@ dkepath.EN232106(1).compiler_opt.helmex.mex712 = NaN;%['-L',dkepath.EN232106(1).
 dkepath.EN232106(1).compiler_opt.helmex.mex800 = ['-L',dkepath.EN232106(1).local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.EN232106(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
 %Where MUMPS matrix solver is stored (MEX function)
+%
 dkepath.EN232106(1).MUMPS.mex710 = [dkepath.EN232106(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.EN232106(1).MUMPS.mex712 = [dkepath.EN232106(1).local_root,'MUMPS_4.10.0/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.EN232106(1).MUMPS.mex800 = [dkepath.EN232106(1).local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
+%
+% LUKE documentation
+%
+dkepath.EN232106(1).graphviz.env = '/home/sccp/gsem/peysson/bin/';% Graphviz environment variable
+dkepath.EN232106(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.EN232106(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %

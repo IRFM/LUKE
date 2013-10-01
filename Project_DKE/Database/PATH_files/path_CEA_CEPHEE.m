@@ -72,6 +72,12 @@ dkepath.YP105119(1).MUMPS.mex710 = [dkepath.YP105119(1).local_root,'MUMPS_4.9.2_
 dkepath.YP105119(1).MUMPS.mex712 = [dkepath.YP105119(1).local_root,'MUMPS_4.9.2_S_ifort/MATLAB712'];%MUMPS_4.9.2 not compatible with matlab 7.5
 dkepath.YP105119(1).MUMPS.mex800 = [dkepath.YP105119(1).local_root,'MUMPS_4.10.0/MATLAB800'];%MUMPS_4.10.0 not compatible with matlab 8.0
 %
+% LUKE documentation
+%
+dkepath.YP105119(1).graphviz.env = '/home/sccp/gsem/peysson/bin/';% Graphviz environment variable
+dkepath.YP105119(1).latex.env = '';% Latex environment variable
+dkepath.YP105119(1).imagemagick.env = '';% ImageMagick environment variable
+%
 %--------------------------- Distributed computing -----------------------------
 %
 dkepath.YP105119(1).configurations.localconfig = '/local/mdce/configurations/localconfig.mat';
@@ -148,6 +154,12 @@ dkepath.JD211098(1).MUMPS.mex710 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0
 %dkepath.JD211098(1).MUMPS.mex712 = [dkepath.JD211098(1).local_root,'MUMPS_4.9.2_S_ifort/MATLAB712'];%MUMPS_4.9.2 not compatible with matlab 7.5
 dkepath.JD211098(1).MUMPS.mex712 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB712'];%MUMPS_4.9.2 not compatible with matlab 7.5
 dkepath.JD211098(1).MUMPS.mex800 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB800'];%MUMPS_4.9.2 not compatible with matlab 7.5
+%
+% LUKE documentation
+%
+dkepath.JD211098(1).graphviz.env = '/home/sccp/gsem/peysson/bin/';% Graphviz environment variable
+dkepath.JD211098(1).latex.env = '';% Latex environment variable
+dkepath.JD211098(1).imagemagick.env = '';% ImageMagick environment variable
 %
 %--------------------------- Distributed computing -----------------------------
 %
@@ -232,6 +244,12 @@ dkepath.YB109156(1).MUMPS.mex710 = [dkepath.YB109156(1).local_root,'MUMPS_4.9.2_
 %dkepath.YB109156(1).MUMPS.mex710 = [dkepath.YB109156(1).local_root,'MUMPS_4.9.2_S_g95/MATLAB710'];%alternative option
 dkepath.YB109156(1).MUMPS.mex712 = [dkepath.YB109156(1).local_root,'MUMPS_4.9.2_S_ifort/MATLAB712'];%MUMPS_4.9.2 not compatible with matlab 7.5
 dkepath.YB109156(1).MUMPS.mex800 = [dkepath.YB109156(1).local_root,'MUMPS_4.10.0/MATLAB800'];%MUMPS_4.9.2 not compatible with matlab 7.5
+%
+% LUKE documentation
+%
+dkepath.YB109156(1).graphviz.env = '/home/sccp/gsem/peysson/bin/';% Graphviz environment variable
+dkepath.YB109156(1).latex.env = '';% Latex environment variable
+dkepath.YB109156(1).imagemagick.env = '';% ImageMagick environment variable
 %
 %--------------------------- Distributed computing -----------------------------
 %

@@ -54,6 +54,12 @@ dkepath.JD211098(1).MUMPS.mex710 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0
 dkepath.JD211098(1).MUMPS.mex712 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.JD211098(1).MUMPS.mex800 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 %
+% LUKE documentation
+%
+dkepath.JD211098(1).graphviz.env = '';% Graphviz environment variable
+dkepath.JD211098(1).latex.env = '';% Latex environment variable
+dkepath.JD211098(1).imagemagick.env = '';% ImageMagick environment variable
+%
 %--------------------------- Remote computing -----------------------------
 %
 % intra integrated pbspro system (pleione, merope, nashira, newpegase, nunki cluster). Shares the same filesystem as cephee

@@ -49,3 +49,9 @@ dkepath.joan(1).compiler_opt.fopts = '';
 dkepath.joan(1).MUMPS.mex800 = [dkepath.joan(1).local_root,'MUMPS_4.10.0_gf/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.joan(1).MUMPS.mex801 = [dkepath.joan(1).local_root,'MUMPS_4.10.0_gf/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
 %
+% LUKE documentation
+%
+dkepath.joan(1).graphviz.env = '';% Graphviz environment variable
+dkepath.joan(1).latex.env = '';% Latex environment variable
+dkepath.joan(1).imagemagick.env = '';% ImageMagick environment variable
+%

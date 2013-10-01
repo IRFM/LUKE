@@ -43,6 +43,12 @@ lac2.decker(1).compiler_opt.fopts.mex710 = '';%'FFLAGS=''-fexceptions -fPIC -fno
 %
 lac2.decker(1).MUMPS.mex710 = [lac2.decker(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 %
+% LUKE documentation
+%
+lac2.decker(1).graphviz.env = '';% Graphviz environment variable
+lac2.decker(1).latex.env = '';% Latex environment variable
+lac2.decker(1).imagemagick.env = '';% ImageMagick environment variable
+%
 % pleiades2 (pbs)
 %
 lac2.decker(1).remote(1).host = 'pleiades2.epfl.ch';

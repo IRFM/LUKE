@@ -42,6 +42,12 @@ pleiades2.jdecker(1).compiler_opt.helmex = NaN;%' -v -L/home/jdecker/Packages/Bi
 pleiades2.jdecker(1).MUMPS.mex705 = [pleiades2.jdecker(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB75'];%Where MUMPS matrix solver is stored (MEX function)
 pleiades2.jdecker(1).MUMPS.mex711 = [pleiades2.jdecker(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_g95/MATLAB711'];%Where MUMPS matrix solver is stored (MEX function)
 %
+% LUKE documentation
+%
+dkepath.jdecker(1).graphviz.env = '';% Graphviz environment variable
+dkepath.jdecker(1).latex.env = '';% Latex environment variable
+dkepath.jdecker(1).imagemagick.env = '';% ImageMagick environment variable
+%
 pleiades2.jdecker(1).remote(1).host = '';
 pleiades2.jdecker(1).remote(1).nproc = 48;
 pleiades2.jdecker(1).remote(1).ppn = 1;

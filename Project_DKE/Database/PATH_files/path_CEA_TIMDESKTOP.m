@@ -53,6 +53,12 @@ dkepath.joan(1).MUMPS.mex77 = '/home/joan/MUMPS_4.9.2/MATLAB77';%Where MUMPS mat
 dkepath.joan(1).MUMPS.mex710 = [dkepath.joan(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.joan(1).MUMPS.mex800 = [dkepath.joan(1).local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 %
+% LUKE documentation
+%
+dkepath.joan(1).graphviz.env = '';% Graphviz environment variable
+dkepath.joan(1).latex.env = '';% Latex environment variable
+dkepath.joan(1).imagemagick.env = '';% ImageMagick environment variable
+%
 %--------------------------- Remote computing -----------------------------
 %
 % cadts-0412 (torque, Timothee's computer). 

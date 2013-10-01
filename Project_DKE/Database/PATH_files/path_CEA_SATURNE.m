@@ -45,6 +45,12 @@ dkepath.JD211098(1).compiler_opt.helmex.mex705 = [' -L',dkepath.JD211098(1).loca
 %
 dkepath.JD211098(1).MUMPS.mex705 = [dkepath.JD211098(1).local_root,'src/MUMPS_4.7.3/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
 %
+% LUKE documentation
+%
+dkepath.JD211098(1).graphviz.env = '';% Graphviz environment variable
+dkepath.JD211098(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.JD211098(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+%
 % local
 %
 dkepath.JD211098(1).remote(1) = remote_CEA_SATURNE('sun','joan','JD211098');
@@ -68,6 +74,12 @@ dkepath.YP105119(1).compiler_opt.fopts.mex705 = ' -largeArrayDims';
 dkepath.YP105119(1).compiler_opt.helmex.mex705 = [' -L',dkepath.JD211098(1).local_root,'lib -lf95 -lgcc -llapack -lblas'];% -ltmglib Optional argument for helmex compilation
 %
 dkepath.YP105119(1).MUMPS.mex705 = dkepath.JD211098(1).MUMPS.mex705;%Where MUMPS matrix solver is stored (MEX function)
+%
+% LUKE documentation
+%
+dkepath.YP105119(1).graphviz.env = '';% Graphviz environment variable
+dkepath.YP105119(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.YP105119(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 % local
 %
