@@ -148,7 +148,7 @@ lukeobj.workdir.position = [style.panelwidth - style.simulfilewidth + style.simu
 lukeobj.simulfile.position = [style.panelwidth - style.simulfilewidth - 2*style.buthsep,style.butvsep + style.textheightcorr,style.simulfilewidth + style.buthsep,style.textheight];
 %
 lukeobj.titlestr.position = [(style.panelwidth - style.titlestrwidth)/2,3*style.butheight + 4*style.butvsep,style.titlestrwidth,style.titlestrheight];
-lukeobj.redmine.position = [style.panelwidth - style.buthsep - style.longbutwidth - 25,style.titleheight - style.butheight - style.butvsep,style.longbutwidth + 25,style.butheight];
+lukeobj.redmine.position = [style.panelwidth - style.buthsep - 2*style.butwidth,style.titleheight - style.butheight - style.butvsep,2*style.butwidth,style.butheight];
 lukeobj.help.position = [style.panelwidth - style.buthsep - style.longbutwidth,style.titleheight - 2*style.butheight - 2*style.butvsep,style.longbutwidth,style.butheight];
 %
 % LUKE RUN PANEL DIMENSIONS
