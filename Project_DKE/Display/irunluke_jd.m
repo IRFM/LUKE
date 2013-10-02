@@ -397,6 +397,23 @@ function irunluke_jd(basestr,signs,opt_gui)
                             status.external = 0;
                         end
                         %
+                        if ~isfield(fileids,'dkeparam') || (~isempty(fileids.dkeparam) && ~exist([paths.dkeparam,'EXTERNAL_',fileids.dkeparam,'.mat'],'file')),
+                            fileids.external = '';
+                            paths.external = '';
+                        end
+                        %
+                        if ~isfield(status,'dkeparam'),
+                            if ~isempty(dkeparam),
+                                status.dkeparam = 1;
+                            else
+                                status.dkeparam = 0;
+                            end
+                        end
+                        %
+                        if status.output == 1 && ~exist('id_simul','var'),
+                            id_simul = output.dke_out.simul.id;
+                        end
+                        %
                         status.data = 1;
                         %
                     elseif strfind(data_file,'LUKE_RESULTS_'),
@@ -819,7 +836,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                         status.dkepath = 0;
                         %
-                        [dkepath1,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepath,paths,fileids,status,opt_gui);
+                        [dkepath,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepath,paths,fileids,status,opt_gui);
                         %
                     end
                     %
