@@ -41,9 +41,10 @@ s = struct('synopsis',   '', ...
 		   'ismex',      zeros(size(mexexts)),...
 		   'isc',        zeros(size(cexts)),...
 		   'isf',        zeros(size(fexts)),...
-		   'ish',        zeros(size(hexts)));
+           'ish',        zeros(size(hexts)),...
+		   'iss',        zeros(size(sexts)));
 
-flagm = 1;flagc = 0;flagf = 0;flagh = 0;;%M-file
+flagm = 1;flagc = 0;flagf = 0;flagh = 0;flags = 0;;%M-file
 
 %- Look for MEX-files
 [pathstr,name] = fileparts(mfile);
@@ -55,25 +56,31 @@ end
 %
 if exist('ext') & sum(ismember(mexexts,ext)),
         s.ismex = ismember(mexexts,ext);
-        flagm = 0;flagc = 0;flagf = 0;flagh = 0;
+        flagm = 0;flagc = 0;flagf = 0;flagh = 0;flags = 0;
 end
 
 %- Look for C-files
 if exist('ext') & sum(ismember(cexts,ext)),
         s.isc = ismember(cexts,ext);
-        flagm = 0;flagc = 1;flagf = 0;flagh = 0;
+        flagm = 0;flagc = 1;flagf = 0;flagh = 0;flags = 0;
 end
 
 %- Look for F-files
 if exist('ext') & sum(ismember(fexts,ext)),
         s.isf = ismember(fexts,ext);
-        flagm = 0;flagc = 0;flagf = 1;flagh = 0;
+        flagm = 0;flagc = 0;flagf = 1;flagh = 0;flags = 0;
 end
 
 %- Look for H-files
 if exist('ext') & sum(ismember(hexts,ext)),
         s.ish = ismember(hexts,ext);
-        flagm = 0;flagc = 0;flagf = 0;flagh = 1;
+        flagm = 0;flagc = 0;flagf = 0;flagh = 1;flags = 0;
+end
+
+%- Look for SH-files
+if exist('ext') & sum(ismember(sexts,ext)),
+        s.iss = ismember(sexts,ext);
+        flagm = 0;flagc = 0;flagf = 0;flagh = 0;flags = 1;
 end
 
 if flagm,
@@ -207,6 +214,12 @@ if flagh,
     s.h1line = 'Header source';
     %
 end
-
+%
+if flags,
+    %
+    s.synopsis = 'Shell script';
+    s.h1line = 'Shell script';
+    %
+end
 
 

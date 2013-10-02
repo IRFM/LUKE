@@ -282,7 +282,7 @@ if exist(options.template) ~= 7
 end
 
 %-------------------------------------------------------------------------------
-%- Get list of M-files, MEX-files, C-Files, F-Files and H-Files
+%- Get list of M-files, MEX-files, C-Files, F-Files, H-Files and SH-Files
 %-------------------------------------------------------------------------------
 if ~options.load
     excludedFiles = {'AUTHORS.m','INSTALL.m','README.m','VERSIONS.m'};
@@ -293,6 +293,7 @@ if ~options.load
         lffile = 0;
         lmfile = 0;
         lhfile = 0;
+        lsfile = 0;
         for i=1:length(mfiles)
             [dummy, dummmy,ext] = fileparts(mfiles{i});
             switch ext
@@ -304,14 +305,17 @@ if ~options.load
                     lhfile = lhfile + 1;
                 case {'.m' '.M'}
                      lmfile = lmfile + 1;
+                case {'.sh'}
+                     lsfile = lsfile + 1;
             end
         end
         %
-        fprintf('Found %d M-files.\n',lmfile);
-        fprintf('Found %d C-files.\n',lcfile);
-        fprintf('Found %d F-files.\n',lffile);
-        fprintf('Found %d H-files.\n',lhfile);
-	end
+        fprintf('Found %d Matlab - files.\n',lmfile);
+        fprintf('Found %d C language - files.\n',lcfile);
+        fprintf('Found %d FORTRAN language -files.\n',lffile);
+        fprintf('Found %d Header - files.\n',lhfile);
+        fprintf('Found %d Shell - files.\n',lsfile);
+    end
 	mfiles = sort(mfiles); % sort list of M-files in dictionary order
 end
 
@@ -370,7 +374,8 @@ if ~options.load
 	ismex      = zeros(length(mfiles),length(mexexts));
     isc        = zeros(length(mfiles),length(cexts));
     isf        = zeros(length(mfiles),length(fexts));
-    ish        = zeros(length(mfiles),length(hexts));  
+    ish        = zeros(length(mfiles),length(hexts)); 
+    iss        = zeros(length(mfiles),length(sexts)); 
     
 	for i=1:length(mfiles)
 		s = mfileparse(mfiles{i}, mdirs, names, options);
@@ -384,7 +389,8 @@ if ~options.load
 		ismex(i,:)    = s.ismex;
 		isc(i,:)    = s.isc;
 		isf(i,:)    = s.isf;
-		ish(i,:)    = s.ish;        
+		ish(i,:)    = s.ish;
+        iss(i,:)    = s.iss;
 	end
 	hrefs = hrefs > 0;
 end
@@ -400,7 +406,7 @@ if options.save
 	end
 	save(fullfile(options.htmlDir,matfilesave), ...
 		'mfiles', 'names', 'mdirs', 'name', 'mdir', 'options', ...
-		'hrefs', 'synopsis', 'h1line', 'subroutine', 'todo', 'ismex','isc','isf','ish');
+		'hrefs', 'synopsis', 'h1line', 'subroutine', 'todo', 'ismex','isc','isf','ish','iss');
 end
 
 %-------------------------------------------------------------------------------
@@ -525,6 +531,12 @@ tpl = template(options.template,'remove');
 tpl = set(tpl,'file','TPL_MDIR',tpl_mdir);
 tpl = set(tpl,'block','TPL_MDIR','row-m','rows-m');
 tpl = set(tpl,'block','row-m','mexfile','mex');
+tpl = set(tpl,'block','TPL_MDIR','row-f','rows-f');
+tpl = set(tpl,'block','row-f','fortranfile','f');
+tpl = set(tpl,'block','TPL_MDIR','row-c','rows-c');
+tpl = set(tpl,'block','row-c','cfile','c');
+tpl = set(tpl,'block','TPL_MDIR','row-s','rows-s');
+tpl = set(tpl,'block','row-s','shfile','sh');
 tpl = set(tpl,'block','TPL_MDIR','othermatlab','other');
 tpl = set(tpl,'block','othermatlab','row-other','rows-other');
 tpl = set(tpl,'block','TPL_MDIR','subfolder','subfold');
@@ -561,8 +573,43 @@ for i=1:length(mdir)
 			end
            tpl = parse(tpl,'rows-m','row-m',1);
 		end
+    end
+    
+    
+    %- Display FORTRAN f-files, their H2 line
+	tpl = set(tpl,'var','rows-f','');
+	for j=1:length(mdirs)
+		if strcmp(mdirs{j},mdir{i})
+			tpl = set(tpl,'var','F_NAME', [names{j} options.extension]);
+			tpl = set(tpl,'var','NAME',   names{j});
+			tpl = set(tpl,'var','H2LINE', h1line{j});
+            tpl = parse(tpl,'rows-f','row-f',1);
+		end
 	end
-	
+    
+    %- Display C/C++/H c-files, their H3 line
+	tpl = set(tpl,'var','rows-c','');
+	for j=1:length(mdirs)
+		if strcmp(mdirs{j},mdir{i})
+			tpl = set(tpl,'var','C_NAME', [names{j} options.extension]);
+			tpl = set(tpl,'var','NAME',   names{j});
+			tpl = set(tpl,'var','H3LINE', h1line{j});
+           tpl = parse(tpl,'rows-c','row-c',1);
+		end
+    end
+    
+    %- Display SH script sh-files, their H4 line
+	tpl = set(tpl,'var','rows-s','');
+	for j=1:length(mdirs)
+		if strcmp(mdirs{j},mdir{i})
+			tpl = set(tpl,'var','S_NAME', [names{j} options.extension]);
+			tpl = set(tpl,'var','NAME',   names{j});
+			tpl = set(tpl,'var','H4LINE', h1line{j});
+           tpl = parse(tpl,'rows-s','row-s',1);
+		end
+    end
+    
+    
 	%- Display other Matlab-specific files (.mat,.mdl,.p)
 	tpl = set(tpl,'var','other','');
 	tpl = set(tpl,'var','rows-other','');
@@ -725,7 +772,12 @@ if options.graph
             
             [s,w] =  unix([dot_exec,'  -Tcmap -Tpng',render mdotfile,' -o ',fullfile(options.htmlDir,mdir{i},[dotbase '.map']),' -o ',fullfile(options.htmlDir,mdir{i},[dotbase '.png'])])
             
-            
+            if ~isempty(w),
+            	disp('****************************************')
+            	disp(w)
+            	disp('****************************************')
+                keyboard
+            end
             
             
 			% use '!' rather than 'system' for backward compability
@@ -1235,11 +1287,110 @@ for i=1:length(mdir)
                 tpl = parse(tpl,'OUT','TPL_MFILE');
                 fprintf(fid,'%s',get(tpl,'OUT'));
             end
+			%
+            if strcmp(ext,'.sh'), %for SH-files
 
+               if strcmp(ext,'.sh'), tpl = set(tpl,'var','DESCRIPTION',horztab('Shell script',options.tabs));end
+               tpl = set(tpl,'var','H1LINE_CALLED', ' ');
+               
+               tpl = set(tpl,'var','crossrefcalleds','');
+               tpl = set(tpl,'var','crossrefcalls','');
+               tpl = set(tpl,'var','subf','');
+               tpl = set(tpl,'var','onesubf','');
+               
+               % 
+               %- Display source code with highlight sh keywords
+               %
+                if options.source & ~strcmpi(names{j},'contents')
+                    fseek(fid2,0,-1);
+                    it = 1;
+                    fsource = '';
+                    flag_comment = 0;                     
+                    %- Loop over lines    
+                    %keyboard
+                    iline = 0;
+                    while 1
+                        tline = fgetl(fid2); 
+                        iline = iline+1;
+                       % if iline == 348,keyboard,end
+                        if ~ischar(tline), break, end
+                        myline = '';
+                        splitc = splitcodec(tline);
+                        for k=1:length(splitc)
+                            if isempty(splitc{k})
+                            elseif splitc{k}(1) == '"'
+                                myline = [myline sprintf(tpl_mfile_string,entity(splitc{k}))];                                                                    
+                            elseif splitc{k}(1) == ''''  & ~flag_comment
+                                myline = [myline sprintf(tpl_mfile_string,entity(splitc{k}))];                                                                    
+                             else
+                                %- Look for keywords
+                                r = splitc{k};
+                                rr = splitc{k};
+                                while 1                                       
+                                    if size(rr,2) >= 1,
+                                        if options.syntaxHighlighting & strcmp('#',rr(1)) & ~flag_comment, 
+                                            myline = [myline sprintf(tpl_mfile_include,entity(rr))];%Include part 
+                                            break;
+                                        end
+                                    end
+                                    if size(rr,2) >= 2,
+                                        if options.syntaxHighlighting & strcmp('//',rr(1:2)),
+                                            myline = [myline sprintf(tpl_mfile_comment,entity(rr))];%Include part 
+                                            break;
+                                        end                                      
+                                        if options.syntaxHighlighting & strcmp('/*',rr(1:2)),
+                                            myline = [myline sprintf(tpl_mfile_comment,entity(rr))];%Include part 
+                                            flag_comment = 1;
+                                            break;
+                                        end                                          
+                                        if options.syntaxHighlighting & strcmp('*/',rr(1:2)),
+                                            myline = [myline sprintf(tpl_mfile_comment,entity(rr))];%Include part 
+                                            flag_comment = 0;
+                                            break;
+                                        end
+                                    end
+                                    if options.syntaxHighlighting & flag_comment,
+                                        myline = [myline sprintf(tpl_mfile_comment,entity(rr))];%Include part 
+                                        break;
+                                    end     
+                                    [t,r,q] = mstrtok(r,strtok_delim);
+                                    myline = [myline q];
 
+                                    if isempty(t),break,end 
 
-
-
+                                    %- Highlight SH keywords 
+                                     
+                                    if options.syntaxHighlighting & any(strcmp(cKeywords,lower(t)))
+                                        if strcmp('end',t)
+                                            rr = fliplr(deblank(fliplr(r)));
+                                            icomma = strmatch(',',rr);
+                                            isemicolon = strmatch(';',rr);
+                                            if ~(isempty(rr) | ~isempty([icomma isemicolon]))
+                                                myline = [myline t];
+                                            else
+                                                myline = [myline sprintf(tpl_mfile_keyword,t)];
+                                            end
+                                        else
+                                            myline = [myline sprintf(tpl_mfile_keyword,t)];
+                                        end
+                                    else
+                                        myline = [myline t];
+                                    end
+                                end
+                            end
+                        end
+                        fsource = [fsource sprintf(tpl_mfile_line,it,myline)];
+                        it = it + 1;
+                    end
+                    tpl = set(tpl,'var','SOURCECODE',...
+                              horztab(fsource,options.tabs));
+                    tpl = parse(tpl,'thesource','source');
+                else
+                    tpl = set(tpl,'var','thesource','');
+                end
+                tpl = parse(tpl,'OUT','TPL_MFILE');
+                fprintf(fid,'%s',get(tpl,'OUT'));
+            end
             %
 			fclose(fid2);
 			fclose(fid);
@@ -1249,7 +1400,7 @@ end
 
 %===============================================================================
 function mfiles = getmfiles(mdirs,mfiles,recursive,excludedFiles)
-	%- Extract M-files, MEX-files, C-files, F-files and H-files from a list of directories and/or M-files
+	%- Extract M-files, MEX-files, C-files, F-files, H-files and SH-files from a list of directories and/or M-files
     if nargin < 4,
         excludedFiles = [];
     end
@@ -1283,7 +1434,9 @@ function mfiles = getmfiles(mdirs,mfiles,recursive,excludedFiles)
             for j=1:length(w.f)
 				mfiles{end+1} = fullfile(mdirs{i},w.f{j});%.f files
             end
-            
+            for j=1:length(w.s)
+				mfiles{end+1} = fullfile(mdirs{i},w.s{j});%.sh files
+            end            
 			if recursive
 				d = dir(mdirs{i});
 				d = {d([d.isdir]).name};

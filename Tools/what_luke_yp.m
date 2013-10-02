@@ -1,16 +1,17 @@
 function s = what_luke_yp(folder)
 %LUKE - Extension of WHAT MatLab built-in command
 %
-% This function extends the built-in MatLab command WHAT for listing *.c, *.h
-% and *.f type files. The recognized extensions are
+% This function extends the built-in MatLab command WHAT for listing *.c,
+% *.h,*.f and *.sh type files. The recognized extensions are
 %
 % - C/C++ type files: *.c, *.cpp, *.c++, *.cxx, *.C
-% - Header type files *.h
-% - Fortran type files: .for, *.f, *.FOR, *.F
+% - Header type files: *.h
+% - Fortran type files: *.for, *.f, *.FOR, *.F
+% - Shell type files: *.sh
 %
 % Useful for the automatic documentation builder.
 %
-% by Y.Peysson <CEA/DSM/IRFM, yves.peysson@cea.fr> J. Decker <CEA/DSM/IRFM, joan.decker@cea.fr>
+% by Y.Peysson <CEA/DSM/IRFM, yves.peysson@cea.fr> and J. Decker <CEA/DSM/IRFM, joan.decker@cea.fr>
 %
 dirinit = pwd;%initial directory
 %
@@ -30,17 +31,22 @@ C_files = struct2cell(dir('*.C'));
 %
 h_files = struct2cell(dir('*.h'));
 %
-% Fortran type files (.for, *.f, *.FOR, *.F)
+% Fortran type files (*.for, *.f, *.FOR, *.F)
 %
 for_files = struct2cell(dir('*.for'));
 f_files = struct2cell(dir('*.f'));
 FOR_files = struct2cell(dir('*.FOR'));
 F_files = struct2cell(dir('*.F'));
 %
+% Shell type files (*.sh)
+%
+s_files = struct2cell(dir('*.sh'));
+%
 for is = 1:size(s,1),%Case insensitive system (mac OSX, Windows,...)
     s(is).c = {};
     s(is).f = {};
     s(is).h = {};
+    s(is).s = {};
     %
     ic = 1;
     for ii = 1:size(c_files,2),
@@ -91,6 +97,10 @@ for is = 1:size(s,1),%Case insensitive system (mac OSX, Windows,...)
     %
     for ih = 1:size(h_files,2),
         s(is).h{ih,1} = h_files{1,ih};     
+    end
+    %
+    for ish = 1:size(s_files,2),
+        s(is).s{ish,1} = s_files{1,ish};     
     end
 end
 %
