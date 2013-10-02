@@ -834,91 +834,124 @@ switch action
         %
         % modifying spectrum data
         %
-        %lukeobj = iluke_info(lukeobj,'');% disable info display
+        lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         iw = lukeobj.wavestruct.select.value;
         %
-        spectrum = wavestructs{iw}.launch.spectrum;
-        if isfield(spectrum,'orig'),
-            orig = spectrum.orig;
-            spectrum = rmfield(spectrum,'orig');
-        else
-            orig = spectrum;
+        wavestruct = wavestructs{iw};
+        wavestructs(iw) = [];
+        %
+        iluke_update;% to clear older spectrum figures 
+        %
+        if isfield(wavestruct.launch.spectrum,'orig'),
+            wavestruct.launch.spectrum = rmfield(wavestruct.launch.spectrum,'orig');
         end
         %
-        [spectrum,mod] = imod_struct_jd(spectrum,'spectrum',1,true,struct,style);%lukeobj.infopanel.handle
+        wavestruct.launch.spectrum.orig = wavestruct.launch.spectrum;
         %
-        if any(mod),
-            %
-            spectrum.orig = orig;
-            %
-            wavestructs{iw}.launch = imake_launch_aloha_jd(lukeobj.tokamak.string,spectrum,lukeobj.infopanel.handle);
-            wavestructs{iw}.id = [wavestructs{iw}.wavesolver,'_',wavestructs{iw}.launch.id];
-            %
+        lukeobj.plot1.gindex = 0;
+        %
+        iluke_update;% initialize display
+        %
+        newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Visible','off');% create new graphic objects with requested characteristics
+        %
+        select = struct;
+        select.style = style;
+        select.axs = newgraph1_handle;
+        select.inter = 1;% interactive mode
+        select.opt_gui = lukeobj.infopanel.handle;
+        select.mode = 2;% display mode
+        %
+        signs.ip = sign(equil.psi_apRp(end));
+        signs.b0 = sign(equil.ptBPHI(1,1));
+        %
+        [wavestruct.launch.bNpar0,wavestruct.launch.bdNpar0,wavestruct.launch.bPlhtot,wavestruct.launch.spectrum.param_tor,wavestruct.launch.spectrum.param_pol] = ...
+            iproc_spectrum_jd(wavestruct.launch.spectrum,select,signs);
+        %
+        if wavestruct.launch.spectrum.param_pol.opt_ny == 1,
+            wavestruct.launch.rZ0 = mean(wavestruct.launch.rZ0);
         end
         %
-        clear iw spectrum orig mod
+        % wavestruct.launch.id = make_launchid_jd(wavestruct.launch);
         %
-        %lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        % wavestruct.id = [wavestruct.wavesolver,'_',wavestruct.launch.id];
+        %
+        wavestructs{end+1} = wavestruct;
+        %   
+        ngraphs = length(graphs);
+        %
+        graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,2,['spectrum for ',wavestructs{end}.id],'spectrum');
+        %
+        lukeobj.plot1.gindex = ngraphs + 1;
+        %
+        lukeobj.wavestruct.select.value = length(wavestructs);
+        %
+        clear iw newgraph1_handle specparam select signs wavestruct ngraphs
+        %
+        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
         %        
     case 'spectrumload'
         %
         % loading spectrum data
         %
-        sbase1 = 'SPECTRUM';
-        sbase2 = 'ALOHA';
-        filestr = {[sbase1,'_*.mat'];[sbase2,'_*.mat']};
+        filestr = {'*.mat'};
         %
-        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase1,' file(s)'],'',0);
-        %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the LH spectrum file(s)'],'',0);
         %
         if filename ~= 0,
             %
-            if any(strfind(filename,sbase2)),
-                load([pathname,filename],'plasma','antenna');
-                spectrum.plasma = plasma;
-                spectrum.antenna = antenna;
-                clear plasma antenna
-            else
-                load([pathname,filename],'spectrum');
-            end
+            spectrum = load([pathname,filename]);
             %
-            if ~exist('spectrum','var'),
-                error('SPECTRUM file not compatible')
+            spectrum.id = filename;
+            if any(strfind(spectrum.id,'.mat')),
+                spectrum.id = spectrum.id(1:end-4);
             end
             %
             lukeobj = iluke_info(lukeobj,'');% disable info display
             %
             lukeobj.plot1.gindex = 0;
-            %
-            cleartags = {'spectrum'};
+            %lukeobj.plot2.gindex = 0;
             %
             iluke_update;% initialize display
             %
             newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Visible','off');% create new graphic objects with requested characteristics
+            %newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Visible','off');% create new graphic objects with requested characteristics
             %
             select = struct;
             select.style = style;
-            select.tail = true;
-            select.ax = newgraph1_handle;
+            select.tail = false;
+            select.axs = [newgraph1_handle];
+            select.inter = 0;% non interactive mode
+            select.mode = 2;% display mode
             %
-            wavestructs{end+1} = imake_wavestructs_jd(equil,imake_launch_LH_jd(lukeobj.tokamak.string,equil,spectrum,lukeobj.infopanel.handle,select));
-            %   
-            ngraphs = length(graphs);
+            launchs = imake_launch_jd(dkepath,lukeobj.tokamak.string,equil,spectrum,workdir,lukeobj.infopanel.handle,select);
             %
-            graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,2,['spectrum for ',wavestructs{end}.id],'spectrum');
+            if ~isempty(launchs),
+                wavestructs{end+1} = imake_wavestructs_jd(equil,launchs{1});
+                %   
+                ngraphs = length(graphs);
+                %
+                graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,2,['spectrum for ',wavestructs{end}.id],'spectrum');
+                %
+                lukeobj.plot1.gindex = ngraphs + 1;
+                %
+                lukeobj.wavestruct.select.value = length(wavestructs);
+                %
+                clear ngraphs
+                %
+            else
+                %
+                iluke_cleangraphs(lukeobj.plot1.handle)
+                %
+            end
             %
-            lukeobj.plot1.gindex = ngraphs + 1;
-            %
-            lukeobj.wavestruct.select.value = length(wavestructs);
-            %
-            clear spectrum select
+            clear spectrum select newgraph1_handle launchs
             %
             lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
             %
         end  
         %
-        clear sbase1 sbase2 filestr filename pathname
+        clear filestr filename pathname
         %
     case 'spectrumsave'
         %
@@ -945,12 +978,54 @@ switch action
         %
         % resetting spectrum data
         %
+        %
         iw = lukeobj.wavestruct.select.value;
         %
-        wavestructs{iw}.launch = imake_launch_aloha_jd(lukeobj.tokamak.string,wavestructs{iw}.launch.spectrum.orig,lukeobj.infopanel.handle);
-        wavestructs{iw}.id = [wavestructs{iw}.wavesolver,'_',wavestructs{iw}.launch.id];
+        wavestruct = wavestructs{iw};
+        wavestructs(iw) = [];
         %
-        clear iw
+        wavestruct.launch.spectrum = wavestruct.launch.spectrum.orig;
+        %
+        lukeobj.plot1.gindex = 0;
+        %
+        iluke_update;% to clear older spectrum figures 
+        %
+        newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Visible','off');% create new graphic objects with requested characteristics
+        %
+        select = struct;
+        select.style = style;
+        select.axs = newgraph1_handle;
+        select.inter = 0;% interactive mode
+        select.opt_gui = lukeobj.infopanel.handle;
+        select.mode = 2;% display mode
+        %
+        select.opt_ny = wavestruct.launch.spectrum.param_pol.opt_ny;
+        %
+        signs.ip = sign(equil.psi_apRp(end));
+        signs.b0 = sign(equil.ptBPHI(1,1));
+        %
+        [wavestruct.launch.bNpar0,wavestruct.launch.bdNpar0,wavestruct.launch.bPlhtot,wavestruct.launch.spectrum.param_tor,wavestruct.launch.spectrum.param_pol] = ...
+            iproc_spectrum_jd(wavestruct.launch.spectrum,select,signs);
+        %
+        if wavestruct.launch.spectrum.param_pol.opt_ny == 1,
+            wavestruct.launch.rZ0 = mean(wavestruct.launch.rZ0);
+        end
+        %
+        % wavestruct.launch.id = make_launchid_jd(wavestruct.launch);
+        %
+        % wavestruct.id = [wavestruct.wavesolver,'_',wavestruct.launch.id];
+        %
+        wavestructs{end+1} = wavestruct;
+        %   
+        ngraphs = length(graphs);
+        %
+        graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,2,['spectrum for ',wavestructs{end}.id],'spectrum');
+        %
+        lukeobj.plot1.gindex = ngraphs + 1;
+        %
+        lukeobj.wavestruct.select.value = length(wavestructs);
+        %
+        clear iw newgraph1_handle specparam select signs wavestruct ngraphs
         %
     case 'launchmodify'
         %
