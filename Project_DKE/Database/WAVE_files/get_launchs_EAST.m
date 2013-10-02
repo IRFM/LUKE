@@ -1,4 +1,4 @@
-function launchs = get_launchs_EAST
+function [launchs,ids] = get_launchs_EAST
 %
 % This function contains the characteristics of the LH antennas of the EAST Chinese tokamak
 %
@@ -39,4 +39,13 @@ launchs{2}.default.bPlhtot = 0.8667*1e6*[0.5862,0.3185,4.2508,0.1708,0.6738];% m
 launchs{2}.default.m0 = 0;% default initial poloidal mode number [1,1]
 launchs{2}.default.i_ref = -1;% Initial radial position index [1,1]
 launchs{2}.default.mmode = -1;% (-1) for slow wave, (1) for fast wave
+%
+% ------- ids -------
+%
+nlaunchs = length(launchs);
+ids = cell(1,nlaunchs);
+for ilaunch = 1:nlaunchs,
+    ids{ilaunch} = launchs{ilaunch}.id;
+end
+
 

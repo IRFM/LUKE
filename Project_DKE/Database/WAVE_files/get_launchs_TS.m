@@ -1,4 +1,4 @@
-function launchs = get_launchs_TS
+function [launchs,ids] =  = get_launchs_TS
 %
 % This function contains the characteristics of the LH antennas of the Tore
 % Supra tokamak
@@ -59,4 +59,12 @@ launchs{3}.default.bPlhtot = 3.7e6*[0.7,0.3];% maximum coupled power and standar
 launchs{3}.default.m0 = 0;% default initial poloidal mode number [1,1]
 launchs{3}.default.i_ref = -1;% Initial radial position index [1,1]
 launchs{3}.default.mmode = -1;% (-1) for slow wave, (1) for fast wave
+%
+% ------- ids -------
+%
+nlaunchs = length(launchs);
+ids = cell(1,nlaunchs);
+for ilaunch = 1:nlaunchs,
+    ids{ilaunch} = launchs{ilaunch}.id;
+end
 %
