@@ -718,11 +718,18 @@ if options.graph
                 render = ' ';
             end
 
-			eval(['!' dot_exec ' -Tcmap -Tpng' render mdotfile ...
-				' -o ' fullfile(options.htmlDir,mdir{i},[dotbase '.map']) ... 
-				' -o ' fullfile(options.htmlDir,mdir{i},[dotbase '.png'])])
+%            keyboard
+			%eval(['!' dot_exec ' -Tcmap -Tpng' render mdotfile ...
+			%	' -o ' fullfile(options.htmlDir,mdir{i},[dotbase '.map']) ... 
+			%	' -o ' fullfile(options.htmlDir,mdir{i},[dotbase '.png'])])
+            
+            [s,w] =  unix([dot_exec,'  -Tcmap -Tpng',render mdotfile,' -o ',fullfile(options.htmlDir,mdir{i},[dotbase '.map']),' -o ',fullfile(options.htmlDir,mdir{i},[dotbase '.png'])])
+            
+            
+            
+            
 			% use '!' rather than 'system' for backward compability
-		catch
+        catch
 			fprintf('failed.');
         end
 		fprintf('\n');
