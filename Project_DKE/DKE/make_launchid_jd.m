@@ -13,15 +13,15 @@ function id_launch = make_launchid_jd(launch)
     %
     % spectrum
     %
-    if isfield(launch,'param_tor'),
+    if isfield(launch,'spectrum') && isfield(launch.spectrum,'param_tor'),
         %
-        id_launch = [id_launch,'_nl_',num2str(launch.param_tor.nlobes),'_dir_',num2str(launch.param_tor.dir),'_md_',num2str(launch.param_tor.mode)];
+        id_launch = [id_launch,'_nl_',num2str(launch.spectrum.param_tor.nlobes),'_dir_',num2str(launch.spectrum.param_tor.dir),'_md_',num2str(launch.spectrum.param_tor.mode)];
         %
     else
         bNpar0str = '';
         bdNpar0str = '';
         bPlhtotstr = '';
-        for ib = 1:length(config.bNpar0),
+        for ib = 1:length(launch.bNpar0),
             bNpar0str = [bNpar0str,'_',num2str(real(launch.bNpar0(ib)))];
             bdNpar0str = [bdNpar0str,'_',num2str(launch.bdNpar0(ib))];
             bPlhtotstr = [bPlhtotstr,'_',num2str(launch.bPlhtot(ib)/1e6)];
