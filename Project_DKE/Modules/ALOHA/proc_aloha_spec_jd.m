@@ -1,4 +1,4 @@
-function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pin_in,param_in,opt_optim,display_mode)
+function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pin_in,param_in,opt_optim,sdisplay)
 	%
     % function for coupling ALOHA outputs and C3PO inputs. 
     %   parametrization can be performed interactively
@@ -48,7 +48,13 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
     %             WARNING : in this case the total power is less than Pin
     %                   
     %       - opt_optim : use of function lsqnonlin for gaussian lobe fit (default : 0)
-    %       - display_mode : display initial and treated spectrum (default : 0)
+    %       - sdisplay : display structure, with the following field
+    %           o inter : interactive mode for selecting parameters
+    %           o mode : display (0) none (1) text only (2) text and figures (default : 0)
+    %           o style (optional) : style properties (font...) for interactive windows and figures
+    %           o opt_gui (optional) : use gui for interactive windows, use as handle if opt_gui is handle
+    %           o axs (optional) : use axs to plot spectrum (iluke only)
+    %           
     %
     % OUTPUTS : 
     %       - yN : values for output lobes
@@ -61,7 +67,7 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
     % by J. Decker and Y. Peysson
     %
 	if nargin < 7,
-    	display_mode = 0;
+    	sdisplay = struct;
 	end
 	%
 	if nargin < 6,
@@ -76,6 +82,8 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
     	Pin_in = NaN;
     end
     %
+    % PARAMETERS
+    %
     if opt_optim == 1 && exist('lsqnonlin') ~= 2,
         opt_optim = 0;
     end
@@ -84,7 +92,6 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
         param_in.dir = 1;
         param_in.mode = 0;
         param_in.nlobes = 2;
-        param_in.inter = 1;
     end
     %
     if isstruct(param_in) && ~isfield(param_in,'dir'),
@@ -99,42 +106,58 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
         param_in.nlobes = 2;
     end
     %
-    if isstruct(param_in) && isfield(param_in,'inter') && param_in.inter == 1,
+    % DISPLAY
+    %
+    if ~isstruct(sdisplay),
+        display_mode = sdisplay;
+        sdisplay = struct;
+    elseif isfield(sdisplay,'mode'),
+        display_mode = sdisplay.mode;
+    else
+        display_mode = 0;
+    end
+    %
+    if isfield(sdisplay,'inter'),
         %
-        inter_mode = 1;% interactive mode
+        inter_mode = sdisplay.inter;% interactive mode
         %
     else
         %
-        inter_mode = 0;
+        inter_mode = 1;
         %
     end     
     %
-    if isstruct(param_in) && isfield(param_in,'style'),
-        style = param_in.style;
+    if isfield(sdisplay,'style'),
+        style = sdisplay.style;
     else
         style = struct;
     end
     %
-    if isstruct(param_in) && isfield(param_in,'opt_gui'),
+    if isfield(sdisplay,'opt_gui'),
         %
-        selectheight = 175;
-        panelposition = get(param_in.opt_gui,'Position');
-        %
-        select.position = [style.panelsep,style.panelsep,panelposition(3) - 2*style.panelsep,selectheight];
-        info.position = [style.panelsep,2*style.panelsep + selectheight,panelposition(3) - 2*style.panelsep,panelposition(4) - selectheight - 3*style.panelsep];
-        info1.position = [style.panelsep,2*style.panelsep + selectheight,panelposition(3)/2 - 2*style.panelsep,panelposition(4) - selectheight - 3*style.panelsep];
-        info2.position = [panelposition(3)/2 + style.panelsep,2*style.panelsep + selectheight,panelposition(3)/2 - 2*style.panelsep,panelposition(4) - selectheight - 3*style.panelsep];
-        %
-        select.handle = uipanel('Parent',param_in.opt_gui,'Title','','units','pixels','Position',select.position);
-        info.handle = uicontrol(param_in.opt_gui,'Style','text','Position',info.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
-        info1.handle = uicontrol(param_in.opt_gui,'Style','text','Position',info1.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
-        info2.handle = uicontrol(param_in.opt_gui,'Style','text','Position',info2.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','center');
-        %
-        opt_gui = select.handle;
-        opt_info = true;
-        %
-        style.textwidth = panelposition(3) - 2*style.panelsep - style.butwidth - 5*style.buthsep;
-        %
+        if ishandle(sdisplay.opt_gui),
+            selectheight = 175;
+            panelposition = get(sdisplay.opt_gui,'Position');
+            %
+            select.position = [style.panelsep,style.panelsep,panelposition(3) - 2*style.panelsep,selectheight];
+            info.position = [style.panelsep,2*style.panelsep + selectheight,panelposition(3) - 2*style.panelsep,panelposition(4) - selectheight - 3*style.panelsep];
+            info1.position = [style.panelsep,2*style.panelsep + selectheight,panelposition(3)/2 - 2*style.panelsep,panelposition(4) - selectheight - 3*style.panelsep];
+            info2.position = [panelposition(3)/2 + style.panelsep,2*style.panelsep + selectheight,panelposition(3)/2 - 2*style.panelsep,panelposition(4) - selectheight - 3*style.panelsep];
+            %
+            select.handle = uipanel('Parent',sdisplay.opt_gui,'Title','','units','pixels','Position',select.position);
+            info.handle = uicontrol(sdisplay.opt_gui,'Style','text','Position',info.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+            info1.handle = uicontrol(sdisplay.opt_gui,'Style','text','Position',info1.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+            info2.handle = uicontrol(sdisplay.opt_gui,'Style','text','Position',info2.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','center');
+            %
+            opt_gui = select.handle;
+            opt_info = true;
+            %
+            style.textwidth = panelposition(3) - 2*style.panelsep - style.butwidth - 5*style.buthsep;
+            %
+        else
+            opt_gui = true;
+            opt_info = false;
+        end
     else
         opt_gui = false;
         opt_info = false;
@@ -222,6 +245,49 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
             zN_S = [zN(1) - (zN(2)-zN(1))/2, (zN(1:end-1) + zN(2:end))/2, zN(end) + (zN(end)-zN(end-1))/2];
             zdN = diff(zN_S);
         end
+        %
+        % remove edge points with zdP = 0
+        %
+        mask = find(zdP > 0,1,'first'):find(zdP > 0,1,'last');
+        zdP = zdP(mask);
+        zdN = zdN(mask);
+        zN = zN(mask);
+        %
+        % manages case of successive points with equal power density
+        %
+        zptrend = sign(diff(zdP));
+        %
+        while any(zptrend == 0),
+            %
+            disp('Fixing the case of successive points with equal power density')
+            %
+            iflat = find(zptrend == 0);% zppdP(iflat) = zppdP(iflat+1)
+            %
+            while ~isempty(iflat),
+                if length(iflat) > 1,% could be more than two successive equal values
+                    imask = find(diff(iflat) > 1,1,'first');% number of successive equal values
+                    if isempty(imask),% remaining cases are all successive equal values
+                        imask = length(iflat);
+                    end
+                else
+                    imask = 1;
+                end
+                %
+                mask = iflat(1):iflat(imask)+1;% indices successive points with equal values
+                zN = [zN(1:mask(1)-1),mean(zN(mask)),zN(mask(end)+1:end)];
+                zdP = [zdP(1:mask(1)-1),zdP(mask(1)),zdP(mask(end)+1:end)];
+                zdN = [zdN(1:mask(1)-1),sum(zdN(mask)),zdN(mask(end)+1:end)];
+                %
+                iflat(1:imask) = [];
+                iflat = iflat - imask;% shift indices 
+                %
+            end              
+            %
+            zptrend = sign(diff(zdP));
+            %
+        end
+        %
+        %
         %
         Ptot = sum(zdP.*zdN);
         nz = length(zdP);
@@ -739,8 +805,8 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
                 ylab = 'dP/dn_z (MW)';
             end            
             %
-            if isstruct(param_in) && isfield(param_in,'ax'),
-                ax = param_in.ax;
+            if isfield(sdisplay,'axs'),
+                ax = sdisplay.axs(1);
                 set(ax,'Visible','on');
                 red = 1;
                 lspace = NaN;
@@ -757,7 +823,7 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
             graph1D_jd(zN,zdP/fac,0,0,'n_z',ylab,'',NaN,'',NaN,'-','none','b',2,style,ax,red,lspace,bspace);
             graph1D_jd(x,xf/fac,0,0,'','','',leg,'',NaN,'--','none','r',2,style,ax);
             %
-            if ~isstruct(param_in) || ~isfield(param_in,'ax'),
+            if ~isfield(sdisplay,'axs'),
                 fig2 = figure('Name','Gaussian fit vs. ALOHA');
                 graph1D_jd(zN,zdP/fac,0,1,'n_z',ylab,'',NaN,'',ylim/fac,'-','none','b',2,style,gca,red,lspace,bspace);
                 graph1D_jd(x,xf/fac,0,1,'','','',leg,'',ylim/fac,'--','none','r',2);
@@ -784,7 +850,7 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
             disp(' ')      
         end
         %
-        if exit_loop == 0 && isstruct(param_in) && isfield(param_in,'ax'),% start again - clear new plot
+        if exit_loop == 0 && isfield(sdisplay,'axs'),% start again - clear new plot
             cla;% clear graph of lines
             chs = get(get(ax,'parent'),'children');% list of panel elements
             delete(chs(1));% delete legend
