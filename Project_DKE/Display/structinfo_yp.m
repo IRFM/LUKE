@@ -298,7 +298,8 @@ switch struct
         %
         switch field 
             case 'basestr',expert = 0;values = '';info = 'Name of the tokamak';
-            case 'shotnum',expert = 0;values = '';info = 'Shot number';
+            case 'shotnum',expert = 0;values = [0;Inf];info = 'Shot number';
+            case 'shotime',expert = 0;values = [0;Inf];info = 'Shot time (s)';
             case 't1',expert = 0;values = [0;Inf];info = 'Minimum time for data averaging (s)';
             case 't2',expert = 0;values = [0;Inf];info = 'Maximum time for data averaging (s)';
             otherwise,

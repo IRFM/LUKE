@@ -52,14 +52,16 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
         end
         %
         external.basestr = 'TS';
-        external.shotnum = '';
+        external.shotnum = 0;
+        external.shotime = 0;
         external.t1 = 0;
         external.t2 = 0;
         external.values.basestr = basestrs;
         %
         external = imod_struct_jd(external,'external',0,opt_gui,external,style);
         %
-        external.shotime = num2str((external.t1 + external.t2)/2,'%6.4f');
+        external.shotnum = num2str(external.shotnum);
+        external.shotime = num2str(external.shotime,'%6.4f');
         %
         if isempty(external.basestr),
             external.err = 'No valid tokamak selected.';
