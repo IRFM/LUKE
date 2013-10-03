@@ -514,8 +514,7 @@ elseif e_opt == -1,% (R,Z) to (psi,theta) conversion specific to eqdsk
     % Correction for the equilibrium offset
     %
     if ~exist('datamod','var'),
-        Zp_offset = [];%input(['Vertical equilibrium offset (vacuum) [',num2str(Zaxis),'] : ']);
-        %Zp_offset = iselect_jd(Zaxis,'Vertical equilibrium offset (vacuum)',opt_gui,select.style,1,'edit');
+        Zp_offset = iselect_jd({},'Vertical equilibrium offset (vacuum)',opt_gui,select.style,Zaxis,'edit');
         if isempty(Zp_offset) || ~isnumeric(Zp_offset),
             Zp_offset = Zaxis;
         end
