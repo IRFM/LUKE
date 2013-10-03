@@ -941,7 +941,7 @@ switch action
                 %
             else
                 %
-                iluke_cleangraphs(lukeobj.plot1.handle)
+                delete(newgraph1_handle);
                 %
             end
             %
