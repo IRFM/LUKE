@@ -50,7 +50,7 @@ style.titlefontsize = 2*style.fontsize;
 style.figwidth = style.figbasewidth + 3*style.panelsep;
 style.figheight = style.figbaseheight + 4*style.panelsep;
 %
-style.screensize = get(0,'MonitorPositions');
+style.screensize = get(0,'ScreenSize');%get(0,'MonitorPositions');
 %
 style.figleft = fix((style.screensize(3) - style.figwidth)/2);
 style.figbottom = fix((style.screensize(4) - style.figheight)/2);
