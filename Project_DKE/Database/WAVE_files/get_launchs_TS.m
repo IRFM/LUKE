@@ -1,4 +1,4 @@
-function [launchs,ids] =  = get_launchs_TS
+function [launchs,ids] = get_launchs_TS
 %
 % This function contains the characteristics of the LH antennas of the Tore
 % Supra tokamak
