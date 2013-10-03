@@ -326,7 +326,7 @@ if ~options.load
 	mdirs = {};
 	names = {};
 	for i=1:length(mfiles)
-		[mdirs{i}, names{i}] = fileparts(mfiles{i});
+		[mdirs{i}, names{i}, extfiles{i}] = fileparts(mfiles{i});
 		if isempty(mdirs{i}), mdirs{i} = '.'; end
 	end
 
@@ -561,55 +561,91 @@ for i=1:length(mdir)
 	
 	%- Display Matlab m-files, their H1 line and their Mex status
 	tpl = set(tpl,'var','rows-m','');
+    w = what_luke_yp(mdir{i}); w = w(1);
+    w = {w.m{:}};
+    %            
 	for j=1:length(mdirs)
 		if strcmp(mdirs{j},mdir{i})
-			tpl = set(tpl,'var','L_NAME', [names{j} options.extension]);
-			tpl = set(tpl,'var','NAME',   names{j});
-			tpl = set(tpl,'var','H1LINE', h1line{j});
-			if any(ismex(j,:))
-				tpl = parse(tpl,'mex','mexfile');
-            else
-				tpl = set(tpl,'var','mex','');
-			end
-           tpl = parse(tpl,'rows-m','row-m',1);
+            wn = strfind(w,names{j});
+            flag_wn = 0;
+            for iwn = 1:length(wn)
+                if ~isempty(wn{iwn}),flag_wn = 1;break;end
+            end
+            if flag_wn,
+                tpl = set(tpl,'var','L_NAME', [names{j} options.extension]);
+                tpl = set(tpl,'var','NAME',   names{j});
+                tpl = set(tpl,'var','H1LINE', h1line{j});
+                if any(ismex(j,:))
+                    tpl = parse(tpl,'mex','mexfile');
+                else
+                    tpl = set(tpl,'var','mex','');
+                end
+                tpl = parse(tpl,'rows-m','row-m',1);
+            end
 		end
     end
-    
-    
+ 
     %- Display FORTRAN f-files, their H2 line
 	tpl = set(tpl,'var','rows-f','');
-	for j=1:length(mdirs)
-		if strcmp(mdirs{j},mdir{i})
-			tpl = set(tpl,'var','F_NAME', [names{j} options.extension]);
-			tpl = set(tpl,'var','NAME',   names{j});
-			tpl = set(tpl,'var','H2LINE', h1line{j});
-            tpl = parse(tpl,'rows-f','row-f',1);
-		end
-	end
+    w = what_luke_yp(mdir{i}); w = w(1);
+	w = {w.f{:}};
+	for j=1:length(w)
+        [dummy,wname,wext] = fileparts(w{j});
+        wn = strfind(name,wname);
+        jwn = 0;
+        for iwn = 1:length(wn)
+            if ~isempty(wn{iwn}),jwn = iwn;break;end
+        end
+        tpl = set(tpl,'var','F_NAME', [wname,'.html']);
+        tpl = set(tpl,'var','NAME',   wname);
+        tpl = set(tpl,'var','H2LINE', w{j});
+        tpl = parse(tpl,'rows-f','row-f',1); 
+        if any(ismex(jwn,:))
+            tpl = parse(tpl,'mex','mexfile');
+        else
+            tpl = set(tpl,'var','mex','');
+        end
+        
+    end
+        
     
     %- Display C/C++/H c-files, their H3 line
 	tpl = set(tpl,'var','rows-c','');
-	for j=1:length(mdirs)
-		if strcmp(mdirs{j},mdir{i})
-			tpl = set(tpl,'var','C_NAME', [names{j} options.extension]);
-			tpl = set(tpl,'var','NAME',   names{j});
-			tpl = set(tpl,'var','H3LINE', h1line{j});
-           tpl = parse(tpl,'rows-c','row-c',1);
-		end
+    w = what_luke_yp(mdir{i}); w = w(1);
+	w = {w.c{:} w.h{:}};
+    for j=1:length(w)
+        [dummy,wname,wext] = fileparts(w{j});
+        wn = strfind(name,wname);
+        jwn = 0;
+        for iwn = 1:length(wn)
+            if ~isempty(wn{iwn}),jwn = iwn;break;end
+        end
+        %
+        tpl = set(tpl,'var','C_NAME', [wname,'.html']);
+        tpl = set(tpl,'var','NAME',   wname);
+        tpl = set(tpl,'var','H3LINE', w{j});
+        tpl = parse(tpl,'rows-c','row-c',1);
+        if any(ismex(jwn,:))
+			tpl = parse(tpl,'mex','mexfile');
+        else
+            tpl = set(tpl,'var','mex','');
+        end
+    end
+    if isempty(w),
     end
     
-    %- Display SH script sh-files, their H4 line
+    %- Display SH script sh-files, their H4 line (.sh)
 	tpl = set(tpl,'var','rows-s','');
-	for j=1:length(mdirs)
-		if strcmp(mdirs{j},mdir{i})
-			tpl = set(tpl,'var','S_NAME', [names{j} options.extension]);
-			tpl = set(tpl,'var','NAME',   names{j});
-			tpl = set(tpl,'var','H4LINE', h1line{j});
-           tpl = parse(tpl,'rows-s','row-s',1);
-		end
+	w = what_luke_yp(mdir{i}); w = w(1);
+	w = {w.s{:}};
+	for j=1:length(w)
+        [dummy,wname,wext] = fileparts(w{j});
+        tpl = set(tpl,'var','S_NAME',   [wname,'.html']);
+        tpl = set(tpl,'var','NAME',   wname);
+		tpl = set(tpl,'var','H4LINE',w{j});
+		tpl = parse(tpl,'rows-s','row-s',1);
     end
-    
-    
+
 	%- Display other Matlab-specific files (.mat,.mdl,.p)
 	tpl = set(tpl,'var','other','');
 	tpl = set(tpl,'var','rows-other','');
@@ -770,7 +806,7 @@ if options.graph
 			%	' -o ' fullfile(options.htmlDir,mdir{i},[dotbase '.map']) ... 
 			%	' -o ' fullfile(options.htmlDir,mdir{i},[dotbase '.png'])])
             
-            [s,w] =  unix([dot_exec,'  -Tcmap -Tpng',render mdotfile,' -o ',fullfile(options.htmlDir,mdir{i},[dotbase '.map']),' -o ',fullfile(options.htmlDir,mdir{i},[dotbase '.png'])])
+            [s,w] =  unix([dot_exec,'  -Tcmap -Tpng',render mdotfile,' -o ',fullfile(options.htmlDir,mdir{i},[dotbase '.map']),' -o ',fullfile(options.htmlDir,mdir{i},[dotbase '.png'])]);
             
             if ~isempty(w),
             	disp('****************************************')
@@ -831,9 +867,15 @@ tpl_mfile_line     = '%04d %s\n';
 for i=1:length(mdir)
 	for j=1:length(mdirs)
 		if strcmp(mdirs{j},mdir{i})
-			curfile = fullfile(options.htmlDir,mdir{i},...
+            
+            if strfind(extfiles{j},'mex')
+                 curfile = fullfile(options.htmlDir,mdir{i},...
+							   [names{j} '_mex' options.extension]);
+            else   
+                curfile = fullfile(options.htmlDir,mdir{i},...
 							   [names{j} options.extension]);
-
+            end
+            
 			%- Open for writing the HTML file
 			if options.verbose
 				fprintf('Creating HTML file %s...\n',curfile);
@@ -892,9 +934,9 @@ for i=1:length(mdir)
 			for k=1:length(samename)
 				[dummy, dummy, ext] = fileparts(samename{k});
 				switch ext
-					case '.c'
+					case {'.c' '.C'}
 						tpl = set(tpl,'var','MEXTYPE', 'c');
-					case {'.cpp' '.c++' '.cxx' '.C'}
+					case {'.cpp' '.c++' '.cxx'}
 						tpl = set(tpl,'var','MEXTYPE', 'c++');
 					case {'.for' '.f' '.FOR' '.F'}
 						tpl = set(tpl,'var','MEXTYPE', 'fortran');
