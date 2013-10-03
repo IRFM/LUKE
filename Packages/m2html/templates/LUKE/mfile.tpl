@@ -58,6 +58,6 @@ This function is called by:
 <div class="fragment"><pre>{SOURCECODE}</pre></div>
 <!-- END source -->
 
-<hr><address>Generated on {DATE} by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+<!-- <hr><address>Generated on {DATE} by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address> -->
 </body>
 </html>
