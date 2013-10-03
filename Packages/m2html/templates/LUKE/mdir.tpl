@@ -23,6 +23,27 @@
 <!-- END row-m -->
 </ul>
 
+<h2>Fortran files in this directory:</h2>
+<ul style="list-style-image:url({MASTERPATH}matlabicon.gif)">
+<!-- BEGIN row-f -->
+<li><a href="{F_NAME}" target="function" title="{H2LINE}">{NAME} <!-- BEGIN mexfile --> <img src="{MASTERPATH}mex.png" alt="MEX" border="0"> <!-- END mexfile --> </a></li>
+<!-- END row-f -->
+</ul>
+
+<h2>C/C++/H files in this directory:</h2>
+<ul style="list-style-image:url({MASTERPATH}matlabicon.gif)">
+<!-- BEGIN row-c -->
+<li><a href="{C_NAME}" target="function" title="{H3LINE}">{NAME} <!-- BEGIN mexfile --> <img src="{MASTERPATH}mex.png" alt="MEX" border="0"> <!-- END mexfile --> </a></li>
+<!-- END row-c -->
+</ul>
+
+<h2>Shell scripts in this directory:</h2>
+<ul style="list-style-image:url({MASTERPATH}matlabicon.gif)">
+<!-- BEGIN row-s -->
+<li><a href="{S_NAME}" target="function" title="{H4LINE}">{NAME} <!-- BEGIN mexfile --> <img src="{MASTERPATH}mex.png" alt="MEX" border="0"> <!-- END mexfile --> </a></li>
+<!-- END row-s -->
+</ul>
+
 <!-- BEGIN othermatlab -->
 <h2>Other Matlab-specific files in this directory:</h2>
 <ul style="list-style-image:url({MASTERPATH}matlabicon.gif)">
