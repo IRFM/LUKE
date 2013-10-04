@@ -91,6 +91,16 @@ switch action
                     status.ripple = 0;
                 end
                 if isfield(import,'wavestructs') && ~isempty(import.wavestructs),
+                    for iw = 1:length(import.wavestructs),
+                        if isfield(import.wavestructs{iw},'fitequilparam'),
+                            import.wavestructs{iw}.fitparam = import.wavestructs{iw}.fitequilparam;
+                            import.wavestructs{iw} = rmfield(import.wavestructs{iw},'fitequilparam');
+                        end
+                        if isfield(import.wavestructs{iw},'raydisplay'),
+                            import.wavestructs{iw}.C3POdisplay = import.wavestructs{iw}.raydisplay;
+                            import.wavestructs{iw} = rmfield(import.wavestructs{iw},'raydisplay');
+                        end
+                    end
                     wavestructs = [wavestructs,import.wavestructs];
                     lukeobj.wavestruct.select.value = length(wavestructs);
                     %
@@ -1157,6 +1167,8 @@ switch action
                 wavestructs{iw} = rmfield(wavestructs{iw},'orig');
             end
             %
+            lukeobj.c3poparam.text.string = filename;%[pathname,filename];
+            %
             clear iw rtparam
             %
         end  
@@ -1181,6 +1193,8 @@ switch action
         if filename ~= 0,
             %
             save([pathname,filename],'-struct','rtparam');
+            %
+            lukeobj.c3poparam.text.string = filename;%[pathname,filename];
             %
         end  
         %
