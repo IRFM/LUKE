@@ -157,6 +157,7 @@ lukeobj.runluke.position = [style.buthsep,style.infoheightcorr - 6*style.butheig
 lukeobj.lukeidtitle.position = [2*style.titlewidth + 2*style.buthsep,style.infoheightcorr - 6*style.butheightcorr + style.butvsep + style.textheightcorr,style.titlewidth,style.butheight];
 lukeobj.lukeid.position = [3*style.titlewidth + 3*style.buthsep,style.infoheightcorr - 6*style.butheightcorr + style.butvsep,style.panelwidth - 3*style.titlewidth - 4*style.buthsep,style.butheight];
 lukeobj.runcheck.position = [style.buthsep,style.infoheightcorr - 8*style.butheightcorr,2*style.titlewidth,2*style.butheight];
+lukeobj.lukechecktext.position = [2*style.titlewidth + 2*style.buthsep,style.infoheightcorr - 8*style.butheightcorr + style.butvsep + style.textheightcorr,style.panelwidth - 2*style.titlewidth - 3*style.buthsep,style.butheight];
 
 %
 % title column
@@ -347,6 +348,7 @@ lukeobj.runluke.handle = uicontrol(lukeobj.infopanel.handle,'Style','pushbutton'
 lukeobj.lukeidtitle.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.lukeidtitle.string,'Position',lukeobj.lukeidtitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.lukeid.handle = uicontrol(lukeobj.infopanel.handle,'Style','edit','Position',lukeobj.lukeid.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.lukeid.callback);
 lukeobj.runcheck.handle = uicontrol(lukeobj.infopanel.handle,'Style','pushbutton','String',lukeobj.runcheck.string,'Position',lukeobj.runcheck.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'Callback',lukeobj.runcheck.callback);
+lukeobj.lukechecktext.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','Position',lukeobj.lukechecktext.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 
 lukeobj.param.text.string = dkeparam.id;
 lukeobj.display.text.string = dkedisplay.id;

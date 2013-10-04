@@ -81,6 +81,7 @@ function lukeobj = iluke_switch(lukeobj,str)
         lukeobj.lukeidtitle.visible = 'on';
         lukeobj.lukeid.visible = 'on';
         lukeobj.runcheck.visible = 'on';
+        lukeobj.lukechecktext.visible = 'on';
         %
     else
         %
@@ -91,6 +92,7 @@ function lukeobj = iluke_switch(lukeobj,str)
         lukeobj.lukeidtitle.visible = 'off';
         lukeobj.lukeid.visible = 'off';
         lukeobj.runcheck.visible = 'off';
+        lukeobj.lukechecktext.visible = 'off';
         %
     end
     %
