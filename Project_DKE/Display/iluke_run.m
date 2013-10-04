@@ -1,8 +1,19 @@
-% script iluke_run
 %
-lukestructs = '';
+% script iluke_run to run and check luke runs
 %
-if isempty(lukestructs),
+if lukeobj.remote.timeout.value == 1,
+    dkepath.remtimout = 0;
+else
+    dkepath.remtimout = 60*24;
+end
+%
+dkepath.rempause = 1;
+dkepath.debugmode = 0;
+dkepath.clean = 2;
+%
+if strcmp(action,'lukestart'),
+    %
+    lukestructs = struct;
     %
     lukestructs.simul.id = lukeobj.lukeid.string;
     lukestructs.simul.path = workdir;
@@ -15,27 +26,48 @@ if isempty(lukestructs),
     lukestructs.ripple = ripple;
     lukestructs.waves = waves;
     %
+    dkepath.remnum = lukeobj.remote.select.value - 1;
+    %
+    if dkepath.remnum == 0 || dkepath.remtimout > 0,
+        lukeobj.lukechecktext.string = 'LUKE started. Please wait for result.';
+        iluke_update_state(lukeobj);
+    end
+    %
+elseif strcmp(action,'runcheck'),
+    %
+    nrem = length(dkepath.remote);
+    %
+    flag = false(1,nrem);
+    %
+    for irem = 1:nrem,
+        if comp_struct_jd(dkepath.remote(irem),job.remote,0,{},{'host','cmd'}),
+            flag(irem) = true;
+        end
+    end
+    %
+    if sum(flag) == 0,
+        error('Remote profile from job cannot be found in dkepath. aborted.')
+    elseif sum(flag) > 1,
+        disp('WARNING : more than one remote profile from dkepath found to be compatible with job.remote. First choice selected.')
+    end
+    %
+    dkepath.remnum = find(flag,1,'first');
+    %
+    lukestructs.job = job;
+    %
 end
-%
-dkepath.remnum = lukeobj.remote.select.value - 1;
-%
-if lukeobj.remote.timeout.value == 1,
-    dkepath.remtimout = 0;
-else
-    dkepath.remtimout = 60*24;
-end
-%
-dkepath.rempause = 1;
-dkepath.debugmode = 0;
-dkepath.clean = 2;
+%    
+% run or check luke
 %
 lukestructs = run_lukert(lukestructs,dkepath);
+%
+% manange output
 %
 if isfield(lukestructs,'job'),
     %
     job = lukestructs.job;
     %
-    
+    action = 'lukerun';iluke_callbacks;
     %
 elseif isfield(lukestructs,'err'),
     %
