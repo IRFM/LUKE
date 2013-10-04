@@ -137,6 +137,8 @@ switch action
             %
             clear lukeobjmod
             %
+            lukeobj = iluke_info(lukeobj,'');% disable info display
+            %
         end  
         %
         clear sbase filestr filename pathname
@@ -1447,6 +1449,10 @@ switch action
         %
         if isempty(job),
             lukeobj.runcheck.visible = 'off';
+            %
+        else
+            lukeobj.runcheck.visible = 'on';
+            lukeobj.lukechecktext.string = ['LUKE started under job ID ',job.id];
         end
         %
         if isempty(lukeobj.lukeid.string),
@@ -1514,6 +1520,12 @@ switch action
         %
         iluke_run;
         %
+    case 'runcheck'
+        %
+        % run check
+        %
+        iluke_run;
+        %       
 end
 %
 clear action
