@@ -19,7 +19,7 @@ end
 %
 dkepath.remnum = lukeobj.remote.select.value - 1;
 %
-if lukeobj.remote.timeout.value == 0,
+if lukeobj.remote.timeout.value == 1,
     dkepath.remtimout = 0;
 else
     dkepath.remtimout = 60*24;
