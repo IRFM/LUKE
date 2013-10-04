@@ -39,11 +39,12 @@ else
     status.hxr = 0;
 end
 
-if status.output == 0,
+if status.output == 0 && isempty(job),
     lukeobj.runluke.highlight = true;
 else
     lukeobj.runluke.highlight = false;
 end
+lukeobj.runcheck.highlight = true;
 
 %
 % UPDATE STATES/STRINGS
