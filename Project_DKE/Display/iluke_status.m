@@ -47,12 +47,15 @@ else % s exists
             sobj.text.string = '< not saved >';
         end
         %
+        sobj.make.state = 'on';
+        sobj.load.state = 'on';
         sobj.save.state = 'on';
+    else
+        sobj.run.state = 'on';
     end
     %
     sobj.clear.state = 'on';
     sobj.disp.state = 'on';    
-    %
 end
 %
 if status == 0,% s does not exist
