@@ -3,6 +3,13 @@ function iluke_update_state(s,visible)
 % This function recursively update the state of objects
 %
 if isfield(s,'handle'),
+    if isfield(s,'highlight'),
+        if s.highlight,
+            set(s.handle,'BackgroundColor',[0 0.75 0]);
+        else
+            set(s.handle,'BackgroundColor',[0.701961 0.701961 0.701961]);
+        end
+    end
     if isfield(s,'state')
         set(s.handle,'Enable',s.state);
     end
@@ -17,13 +24,6 @@ if isfield(s,'handle'),
         set(s.handle,'Visible',s.visible);
     elseif nargin > 1
         set(s.handle,'Visible',visible);
-    end
-    if isfield(s,'highlight'),
-        if s.highlight,
-            set(s.handle,'BackgroundColor',[0 0.75 0]);
-        else
-            set(s.handle,'BackgroundColor',[0.701961 0.701961 0.701961]);
-        end
     end
 elseif isstruct(s),
     %
