@@ -81,7 +81,7 @@ dkepath.bjding(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','bojiang','bjdi
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %-------------------------------------------------------------------------------------------------------
 %
-dkepath.PEYSSON(1).luke_root = ['/home/PEYSSON/',luke_ref,'/'];
+dkepath.PEYSSON(1).luke_root = [pwd,'/'];
 dkepath.PEYSSON(1).local_root = '/home/PEYSSON/Packages/';
 dkepath.PEYSSON(1).temppathroot = '/scratch/PEYSSON/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
