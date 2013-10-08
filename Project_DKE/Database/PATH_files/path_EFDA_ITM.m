@@ -59,9 +59,13 @@ itm.yvesp(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
-itm.yvesp(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yves','yvesp');
-itm.yvesp(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves','yvesp');
-
+itm.yvesp(1).remote(1) = remote_EFDA_ITM('sge','yves','yvesp');
+itm.yvesp(1).remote(1).host = '';% empty for local host
+itm.yvesp(1).remote(1).luke_root = itm.yvesp(1).luke_root;
+%
+itm.yvesp(1).remote(2) = remote_ASIPP_SHENMA('torque','yves','yvesp');
+itm.yvesp(1).remote(3) = remote_macpro_YVES_PEYSSON('condor','yves','yvesp');
+itm.yvesp(1).remote(4) = remote_macpro_YVES_PEYSSON('xgrid','yves','yvesp');
 
 
 
