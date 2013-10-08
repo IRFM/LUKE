@@ -99,8 +99,8 @@ macbookyves.yves(1).imagemagick.env = '/usr/local/bin/';% ImageMagick environmen
 % any of the remote computers listed below.
 %
 macbookyves.yves(1).remote(1) = remote_laptop_YVES_PEYSSON('condor','yves','yves');
-macbookyves.yves(1).remote(1).host = '';% empty for local host
-macbookyves.yves(1).remote(1).luke_root = macbookyves.yves(1).luke_root;
+%macbookyves.yves(1).remote(1).host = '';% empty for local host
+%macbookyves.yves(1).remote(1).luke_root = macbookyves.yves(1).luke_root;
 %
 macbookyves.yves(1).remote(2) = remote_laptop_YVES_PEYSSON('xgrid','yves','yves');
 macbookyves.yves(1).remote(3) = remote_macpro_YVES_PEYSSON('condor','yves','yves');
