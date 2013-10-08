@@ -309,8 +309,7 @@ end
 if nw == 1 && (~isfield(waves{1},'model') || strcmp(waves{1}.model,'RT')),
     if ~isfield(opt,'blist') || (isscalar(opt.blist) && isnan(opt.blist)),
         nb = length(waves{1}.rays);
-        %opt_blist = input(['You can group the ',num2str(nb),' rays by vectors in cell (leave empty otherwise) :']);
-        opt_blist = [];
+        opt_blist = input(['You can group the ',num2str(nb),' rays by vectors in cell (leave empty otherwise) :']);
     else
         opt_blist = opt.blist;
     end
