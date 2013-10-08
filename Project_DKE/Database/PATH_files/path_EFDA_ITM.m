@@ -59,7 +59,7 @@ itm.yvesp(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
-itm.yvesp(1).remote(1) = remote_EFDA_ITM('sge','yves','yvesp');
+itm.yvesp(1).remote(1) = remote_EFDA_ITM('sun','yves','yvesp');
 itm.yvesp(1).remote(1).host = '';% empty for local host
 itm.yvesp(1).remote(1).luke_root = itm.yvesp(1).luke_root;
 %
