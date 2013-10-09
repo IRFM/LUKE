@@ -451,7 +451,7 @@ end
 time0 = clock;
 XXf0 = XXfinit;%Initial guess (normalized to xne_norm)
 %
-XXsinksource_pn2 = repmat(betath_ref^2*Xpn2,[1,1,nr]).*XXsinksource;
+XXsinksource_pn2 = repmat(Xpn2,[1,1,nr]).*XXsinksource;
 %
 MMXfinit_t = [];
 for ir = 1:nr,
