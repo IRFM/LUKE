@@ -67,14 +67,15 @@ Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
 %
 mhuT=sqrt(1-B0./Bmax);
 %
+keyboard
 for ipsi=1:npsi
-    pthmask = pnRA >= 0;%dkeparam.pnmin_S; %only take p>p0
-  Srp(ipsi,:) = 1/2*beta^3*1/(4*pi)/Lambd*ne(ipsi)./(beta*pnRA.*gammaRA.*(gammaRA-1).^2).*pthmask; %rosenbluth (S*)
+    pthmask = pnRA >= dkeparam.pnmin_S; %only take p>p0
+    Srp(ipsi,:) = beta^3*1/2*beta^3*1/(4*pi)/Lambd*ne(ipsi)./(beta*pnRA.*gammaRA.*(gammaRA-1).^2).*pthmask; % rosenbluth (S*), first beta3 is from the Jacobian
 end
 %
 for ip0=1:length(pnRA)
 p0mask = pnRA >= pnRA(ip0);
-I(ip0) = beta^3*2*pi*integral_dke_jd(dpnRA,p0mask.*Srp(gridDKE.rdke,:).*pnRA2(gridDKE.rdke,:),2); 
+I(ip0) = 2*pi*integral_dke_jd(dpnRA,p0mask.*Srp(gridDKE.rdke,:).*pnRA2(gridDKE.rdke,:),2); 
 end
 %
 figure;graph1D_jd(pnRA,I/I(1),0,0,'p>p0','integral over S [p0,pmax]','',NaN,NaN,NaN,'-','.','b',2);
@@ -83,13 +84,13 @@ XXSrp=permute(repmat(Srp, [1,1,nmhu]),[1,2,3]);
 %
 delt = zeros(npsi,npnRA,nmhu);
 %
-%delta function in the cylindrical + analytical case. To do: make the redistribution
-%correctly with redistrib_jd.m
+%delta function in the cylindrical + analytical case
+%
 for ip=1:npnRA
     xistar(ip) = sqrt((gammaRA(ip)-1)/(gammaRA(ip)+1));
     dxistar=gridDKE.dmhu(1);
-    xigrid = linspace(xistar(ip)-3/2*dxistar,xistar(ip)+3/2*dxistar,4);
-    fdel = [0,1,0];
+    xigrid = linspace(xistar(ip)-1/2*dxistar,xistar(ip)+1/2*dxistar,2);
+    fdel = 1*nmhu/2;
     mhu_S = linspace(gridDKE.mhu(1)-gridDKE.dmhu(1)/2, gridDKE.mhu(end)+gridDKE.dmhu(end)/2,nmhu+1);
     delt(:,ip,:) = redistrib_jd(xigrid,fdel,mhu_S,0);
 end
@@ -100,20 +101,22 @@ end
 if Zbouncecoef.XXlambda~=1
 C=NaN(npsi,npnRA,nmhu);
 %
-for ipsi=1:npsi 
+for ipsi=1:npsi
     for m=1:nmhu
-    C(ipsi,:,m)=2/pi./(gammaRA+1)./(Zbouncecoef.Xxlambda(m,ipsi).*Zbouncecoef.xqtilde(ipsi)).*abs(gridDKE.mhu(m))./(1-gridDKE.mhu(m).^2).^2; 
+        C(ipsi,:,m)=2/pi./(gammaRA+1)./(Zbouncecoef.Xxlambda(m,ipsi).*Zbouncecoef.xqtilde(ipsi)).*abs(gridDKE.mhu(m))./(1-gridDKE.mhu(m).^2).^2;
+        %
+        %XXS_an=XXSrp.*C.*XXalpha_an;
+        ximask = zeros(npsi,npnRA,nmhu);
+        ximask(:,:,nmhu/2+1:end) = 1; %positiv xi
+        XXbouncef=C.*XXalpha.*ximask; %numerical
     end
 end
 %
 else 
     C=ones(npsi,npnRA,nmhu).*delt; %cylindrical case
+    XXbouncef=C.*XXalpha;
 end
-%
-%XXS_an=XXSrp.*C.*XXalpha_an;
-ximask = zeros(npsi,npnRA,nmhu);
-ximask(:,:,nmhu/2+1:end) = 1; %positiv xi
-XXbouncef=C.*XXalpha;%.*ximask; %numerical
+
 %
 XXSl = XXSrp.*XXbouncef; %<S()> numerical
 %
@@ -130,8 +133,7 @@ for ia = 1:length(alpha)
 pc = 1/sqrt((alpha(ia)-1)*betath2);
 %calculate secondary growth rate pmax<p<pext NORMALIZED to nr
 XXRintmask = XXpnRA > pc;
-%hejSRP = mksa.nhu_ref*beta^3*2*pi*integral_dke_jd(gridDKE.dmhu*nmhu/2,integral_dke_jd(dpnRA,squeeze(XXSrp_xis(1,:,:)).*gridDKE.XXpn2,1),1)'/2; %
-Srp_int_norm_nr(ia) = mksa.nhu_ref*beta^3*2*pi*integral_dke_jd(gridDKE.dmhu*nmhu/2,integral_dke_jd(dpnRA,XXSavalanches_normtot(:,:,gridDKE.rdke).*XXRintmask.*XXpnRA2(:,:,gridDKE.rdke),1),1)'; %
+Srp_int_norm_nr(ia) = mksa.nhu_ref*2*pi*integral_dke_jd(gridDKE.dmhu,integral_dke_jd(dpnRA,XXSavalanches_normtot(:,:,gridDKE.rdke).*XXRintmask.*XXpnRA2(:,:,gridDKE.rdke),1),1)'; %
 end
 %
 RR_an = RR_rosenbluth_en(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
@@ -275,7 +277,7 @@ XXSavalanches_norm = XXSavalanches_normtot(1:npn,:,:); %the avalanche part with 
 % for g=1:npsi
 %     Xbouncef = squeeze(XXbouncef(g,:,:));
 %     Xbouncef(isnan(Xbouncef)) = 0;
-%     Xbouncefint = integral_dke_jd(gridDKE.dmhu,Xbouncef,2)/sum(gridDKE.dmhu); %integrate over mhu, pos n neg : /2
+%     Xbouncefint = integral_dke_jd(ones(1,length(gridDKE.dmhu)),Xbouncef,2); %integrate over mhu, pos n neg : /2
 %     graph1D_jd(gridDKE.pn,Xbouncefint,0,0,'p','Bounce factor','',NaN,NaN,NaN,'-','.','b')
 %     legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(g)));
 %     %graph1D_jd(Zmomcoef.xz,XS,0,1,'S_{bounce}','p','S on each flux surface',NaN,NaN,NaN,'-','.')
