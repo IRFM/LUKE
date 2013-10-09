@@ -952,11 +952,11 @@ end
 %
 xne_norm_out = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXsinksource(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';%transfer rate trought sink/source term
 %
-Znorm.xRRAtot = mksa.betath_ref^3*2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
-Znorm.xRRAint = mksa.betath_ref^32*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke).*XXRintmask(:,:,rdke),1),1)';
+Znorm.xRRAtot = mksa.betath_ref^3*2*pi*integral_dke_jd(dmhu*gridDKE.nmhu/2,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
+Znorm.xRRAint = mksa.betath_ref^3*2*pi*integral_dke_jd(dmhu*gridDKE.nmhu/2,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke).*XXRintmask(:,:,rdke),1),1)';
 %
-Znorm.xRRAtot_fsav = mksa.betath_ref^3*2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';
-Znorm.xRRAint_fsav = mksa.betath_ref^3*2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke).*XXRintmask(:,:,rdke),1),1)';
+Znorm.xRRAtot_fsav = mksa.betath_ref^3*2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu*gridDKE.nmhu/2,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';
+Znorm.xRRAint_fsav = mksa.betath_ref^3*2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu*gridDKE.nmhu/2,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke).*XXRintmask(:,:,rdke),1),1)';
 %
 % Projection of the distribution function on the Legendre polynomial basis
 %
