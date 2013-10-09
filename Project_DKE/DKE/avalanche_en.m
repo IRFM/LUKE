@@ -32,13 +32,14 @@ for ig = 1:(f_pmax-1)
     dpnRA = [dpnRA, gridDKE.dpn];
 end
 %
+pnRA2 = pnRA.^2;
 XXpnRA2 = permute(repmat(pnRA.^2,[nmhu 1]),[2,1]);
 XXpnRA = permute(repmat(pnRA,[nmhu 1]),[2,1]);
 gammaRA = sqrt(1+(pnRA*mksa.betath_ref).^2);
 xnre_init = ohm.xnre_init;
 %
 if Zbouncecoef.XXlambda~=1
-    %[XXalpha_an,XXmask_ctsa,thetastar_an,thetastar_an2]=S_anal(equilDKE,gridDKE,Zmomcoef, pnRA, dpnRA, npnRA, gammaRA); %calculates alpha and theta* with analytical formula in circ concentric case
+    %[XXalpha_an,XXmask_ctsa,thetastar_an,thetastar_an2]=S_anal_en(equilDKE,gridDKE,Zmomcoef, pnRA, dpnRA, npnRA, gammaRA); %calculates alpha and theta* with analytical formula in circ concentric case
     tic
     [XXthetastar1,XXthetastar2,XXalpha] = thetastar_calc_dke_en(equilDKE,gridDKE,Zmomcoef, pnRA, dpnRA, npnRA, gammaRA);%calc the critical poloidal angle value theta_star for runaway avalanches with interp1
     toc
@@ -67,8 +68,17 @@ Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
 mhuT=sqrt(1-B0./Bmax);
 %
 for ipsi=1:npsi
-  Srp(ipsi,:) = beta^3*1/(4*pi)/Lambd*ne(ipsi)./(beta*pnRA.*gammaRA.*(gammaRA-1).^2); %rosenbluth (S*)
+    pthmask = pnRA >= 0;%dkeparam.pnmin_S; %only take p>p0
+  Srp(ipsi,:) = 1/2*beta^3*1/(4*pi)/Lambd*ne(ipsi)./(beta*pnRA.*gammaRA.*(gammaRA-1).^2).*pthmask; %rosenbluth (S*)
 end
+%
+for ip0=1:length(pnRA)
+p0mask = pnRA >= pnRA(ip0);
+I(ip0) = beta^3*2*pi*integral_dke_jd(dpnRA,p0mask.*Srp(gridDKE.rdke,:).*pnRA2(gridDKE.rdke,:),2); 
+end
+%
+figure;graph1D_jd(pnRA,I/I(1),0,0,'p>p0','integral over S [p0,pmax]','',NaN,NaN,NaN,'-','.','b',2);
+%
 XXSrp=permute(repmat(Srp, [1,1,nmhu]),[1,2,3]);
 %
 delt = zeros(npsi,npnRA,nmhu);
@@ -103,7 +113,7 @@ end
 %XXS_an=XXSrp.*C.*XXalpha_an;
 ximask = zeros(npsi,npnRA,nmhu);
 ximask(:,:,nmhu/2+1:end) = 1; %positiv xi
-XXbouncef=C.*XXalpha.*ximask; %numerical
+XXbouncef=C.*XXalpha;%.*ximask; %numerical
 %
 XXSl = XXSrp.*XXbouncef; %<S()> numerical
 %
@@ -112,8 +122,8 @@ XXSl2=XXSrp_xis;
 XXSavalanches_normtot = permute(XXSl,[2,3,1]);
 %
 %check the operator, compare with theory RP NF 1997
-alpha = 1:1:20;%E/Ec
-Zi = 1;
+alpha = 1:0.5:10;%E/Ec
+Zi = -1;
 betath2 = 0.01;%
 %
 for ia = 1:length(alpha)
@@ -121,18 +131,18 @@ pc = 1/sqrt((alpha(ia)-1)*betath2);
 %calculate secondary growth rate pmax<p<pext NORMALIZED to nr
 XXRintmask = XXpnRA > pc;
 %hejSRP = mksa.nhu_ref*beta^3*2*pi*integral_dke_jd(gridDKE.dmhu*nmhu/2,integral_dke_jd(dpnRA,squeeze(XXSrp_xis(1,:,:)).*gridDKE.XXpn2,1),1)'/2; %
-Srp_int_norm_nr(ia) = mksa.nhu_ref*beta^3*2*pi*integral_dke_jd(gridDKE.dmhu*nmhu/2,integral_dke_jd(dpnRA,XXSavalanches_normtot(:,:,gridDKE.rdke).*XXRintmask.*XXpnRA2(:,:,gridDKE.rdke),1),1)'/2; %
+Srp_int_norm_nr(ia) = mksa.nhu_ref*beta^3*2*pi*integral_dke_jd(gridDKE.dmhu*nmhu/2,integral_dke_jd(dpnRA,XXSavalanches_normtot(:,:,gridDKE.rdke).*XXRintmask.*XXpnRA2(:,:,gridDKE.rdke),1),1)'; %
 end
 %
-RR_an = RR_rosenbluth(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
+RR_an = RR_rosenbluth_en(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
 %
-figure;graph1D_jd(alpha,Srp_int_norm_nr,0,0,'E/E_c','growth rate (s^-1)','Numerical growth rate',NaN,NaN,NaN,'-','o','b',2);hold on
-graph1D_jd(alpha,RR_an,0,0,'','','',NaN, NaN,NaN,'-','none','r',3);hold off
 figure;graph1D_jd(alpha,Srp_int_norm_nr./RR_an,0,0,'E/E_c','growth rate (s^-1)','Numerical growth rate',NaN,NaN,NaN,'-','o','b',2);hold on
 graph1D_jd(alpha,RR_an./RR_an,0,0,'','','',NaN, NaN,NaN,'-','none','r',3);hold off
+figure;graph1D_jd(alpha,Srp_int_norm_nr,0,0,'E/E_c','growth rate (s^-1)','Numerical growth rate',NaN,NaN,NaN,'-','o','b',2);hold on
+graph1D_jd(alpha,RR_an,0,0,'','','',NaN, NaN,NaN,'-','none','r',3);hold off
 %
 if f_pmax>1
-    xnre_out_norm(1,gridDKE.rdke) =beta^3*2*pi*integral_dke_jd(gridDKE.dmhu,integral_dke_jd(dpnRA((npn+1):end),XXSavalanches_normtot((npn+1):end,:,gridDKE.rdke).*XXpnRA2((npn+1):end,:,gridDKE.rdke),1),1)'; % runaway electrons created outisde pmax THIS IS A RATE! (per collision time)
+    xnre_out_norm(1,gridDKE.rdke) =beta^3*2*pi*integral_dke_jd(gridDKE.dmhu*nmhu/2,integral_dke_jd(dpnRA((npn+1):end),XXSavalanches_normtot((npn+1):end,:,gridDKE.rdke).*XXpnRA2((npn+1):end,:,gridDKE.rdke),1),1)'; % runaway electrons created outisde pmax THIS IS A RATE! (per collision time)
 else
     xnre_out_norm(1,gridDKE.rdke) = 0;
 end
