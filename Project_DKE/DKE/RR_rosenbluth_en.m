@@ -1,4 +1,4 @@
-function [RR_an] = RR_rosenbluth(alpha, Zi, ne, lnc_e_ref, epsi)
+function [RR_an] = RR_rosenbluth_en(alpha, Zi, ne, lnc_e_ref, epsi)
 %
 %   Evaluates Eq. 18 in Rosenbluth Putvinski NF 1997 as a function of alpha
 %   or Zi
