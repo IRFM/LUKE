@@ -25,8 +25,11 @@ macproyves.computer = computer;%machine type and supported OS
 %
 % Selected user profile (structure hostname.usernames(path_profile).xxx)
 %
-macproyves.default = 'yvespeysson';
 macproyves.path_profile.yvespeysson = 1;
+%
+% Selected user profile for unlisted users
+%
+macproyves.default = 'yvespeysson';
 %
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------

@@ -25,11 +25,11 @@ bjdingLinux.computer = computer;%machine type and supported OS
 %
 % Selected user profile (structure hostname.usernames(path_profile).xxx)
 %
+bjdingLinux.path_profile.bjding = 1;
 %
-% Selected user profile (structure hostname.usernames(path_profile).xxx)
+% Selected user profile for unlisted users
 %
 bjdingLinux.default = 'bjding';
-bjdingLinux.path_profile.bjding = 1;
 %
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
 %
