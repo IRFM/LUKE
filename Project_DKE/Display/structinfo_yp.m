@@ -45,7 +45,7 @@ switch struct
             case 'dke_mode',expert = 1;values = {true,false};info = 'Fokker-Planck equation (0), Drift Kinetic equation (1)';
             case 'equil_mode',expert = 1;values = [0,1];info = 'Equilibrium option: (0) circular concentric flux-surfaces, (1) numerical equilibrium';
             case 'syn_mode',expert = 1;values = {true,false};info = 'Synergy calculation: (0) none, (1) yes: the code runs twice, including once without RF or electric fields. (only if dke_mode = 1)';
-            case 'norm_mode_f',expert = 0;values = {true,false};info = 'Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes';
+            case 'norm_mode_f',expert = 0;values = 0:2;info = 'Local normalization of f0 at each iteration: (0) none (1) with respect to ref density (2) with respect to init density (+1i) adjust for boundary losses and gains';
             case 'boundary_mode_f',expert = 0;values = 0:5;info = 'Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)';
             case 'prec0_f',expert = 0;values = [0;1];info = 'Convergence level of the residu';
             case 'nit_f',expert = 0;values = [1;Inf];info = 'Maximum number of iterations for f (> 1)';
