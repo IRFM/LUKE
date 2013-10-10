@@ -60,28 +60,28 @@ else
     error(['The file species_',shotnum,'_',shotime,'.mat is missing in the directory ',workdir]);
 end
 %
-filename = [workdir,'/','LH_antenna_2p45GHz_',shotnum,'_',shotime,'.mat'];
+filename = [workdir,'/','LH_antenna_2p45Ghz_',shotnum,'_',shotime,'.mat'];
 %
 if exist(filename,'file'),
-    external.wave.LH.antenna_2p45GHz = load([workdir,'/','LH_antenna_2p45GHz_',shotnum,'_',shotime,'.mat']);
+    external.wave.LH.antenna_2p45Ghz = load([workdir,'/','LH_antenna_2p45Ghz_',shotnum,'_',shotime,'.mat']);
 else
-    disp(['--> WARNING: The file LH_antenna_2p45GHz_',shotnum,'_',shotime,'.mat does not exist in the directory ',workdir]);
+    disp(['--> WARNING: The file LH_antenna_2p45Ghz_',shotnum,'_',shotime,'.mat does not exist in the directory ',workdir]);
 end
 %
-filename = [workdir,'/','LH_antenna_4p60GHz_',shotnum,'_',shotime,'.mat'];
+filename = [workdir,'/','LH_antenna_4p60Ghz_',shotnum,'_',shotime,'.mat'];
 %
 if exist(filename,'file'),
-    external.wave.LH.antenna_4p60GHz = load([workdir,'/','LH_antenna_4p60GHz_',shotnum,'_',shotime,'.mat']);
+    external.wave.LH.antenna_4p60Ghz = load([workdir,'/','LH_antenna_4p60Ghz_',shotnum,'_',shotime,'.mat']);
 else
-    disp(['--> WARNING: The file LH_antenna_4p60GHz_',shotnum,'_',shotime,'.mat does not exist in the directory ',workdir]);
+    disp(['--> WARNING: The file LH_antenna_4p60Ghz_',shotnum,'_',shotime,'.mat does not exist in the directory ',workdir]);
 end
 %
-filename = [workdir,'/','EC_mirror_140GHz_',shotnum,'_',shotime,'.mat'];
+filename = [workdir,'/','EC_mirror_140Ghz_',shotnum,'_',shotime,'.mat'];
 %
 if exist(filename,'file'),
-    external.wave.EC.mirror_140GHz = load([workdir,'/','EC_mirror_140GHz_',shotnum,'_',shotime,'.mat']);
+    external.wave.EC.mirror_140Ghz = load([workdir,'/','EC_mirror_140Ghz_',shotnum,'_',shotime,'.mat']);
 else
-    disp(['--> WARNING: The file EC_mirror_140GHz_',shotnum,'_',shotime,'.mat does not exist in the directory ',workdir]);
+    disp(['--> WARNING: The file EC_mirror_140Ghz_',shotnum,'_',shotime,'.mat does not exist in the directory ',workdir]);
 end
 %
 filename = [workdir,'/','vloop_',shotnum,'_',shotime,'.mat'];
