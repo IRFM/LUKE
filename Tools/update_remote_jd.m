@@ -35,6 +35,7 @@ dkepath.remote = dkepath.remote(flag);
 %
 disp (' ')
 info_dke_yp(2,'List of compatible remote profiles available :')
+disp(' ')
 %
 for irem = 1:length(dkepath.remote),
     %
@@ -54,10 +55,7 @@ for irem = 1:length(dkepath.remote),
         info_dke_yp(4,['#',num2str(irem),' to host : ',dkepath.remote(irem).host,' with cmd : ',cmdstr])
     end
 end
-info_dke_yp(0,'To check if the remote profiles are currently functionning, please run :')
-info_dke_yp(4,'check_remote_yp(load_structures_yp(''dkepath'','''',''''));')
-disp (' ')
-%
+disp(' ')
 
 
         

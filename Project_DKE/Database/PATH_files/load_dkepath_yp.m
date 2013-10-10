@@ -16,7 +16,14 @@ function [dkepath] = load_dkepath_yp(dkepath,luke_ref)
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-list_path = dir('Project_DKE/Database/PATH_files/path_*.m');% list of path configurations
+if ~isempty(dkepath) && ~isempty(luke_ref),
+    list_path = dir('Project_DKE/Database/PATH_files/path_*.m');% list of path configurations
+else
+    [dkepath] = load_structures_yp('dkepath','','');
+    list_path = dir([dkepath.luke_root,'Project_DKE/Database/PATH_files/path_*.m']);% list of path configurations
+    dkepath = '';
+    luke_ref = '';
+end
 %
 for ipath = 1:length(list_path),
     %
