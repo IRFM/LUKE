@@ -138,7 +138,7 @@ function remotefilecopy_jd(remotehost,remotelogname,filename,location)
     if ~isempty(remotehost),%remote calculation 
         %
         disp(['    --> Copying script file ',filename,' to remote host ',remotehost,':',location,' as user ',remotelogname,' ...'])  
-        [res,err] = unix(['scp ',filename,' ',remotelogname,'@',remotehost,':',location]);
+        [res,err] = scp2remote_yp(remotelogname,remotehost,filename,'',location);
         [res2,txt2] = unix(['ssh ',remotelogname,'@',remotehost,' ''',remotecmd,'''']);
         %
     else
