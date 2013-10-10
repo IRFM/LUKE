@@ -236,6 +236,10 @@ if exist('flag_path','var'),%Paths
     %
     dkepath = update_remote_jd(dkepath);
     %
+    info_dke_yp(0,'To check if the remote profiles are currently functionning, please run :')
+    info_dke_yp(4,'check_remote_yp(load_structures_yp(''dkepath'','''',''''));')
+    disp (' ');
+    %
     varargout{flag_path} = dkepath;
 end
 %
