@@ -1,4 +1,4 @@
-function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0,curr0,residu_f] = solver_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXfM,XXfinit)
+function [XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0,curr0,residu_f] = solver_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXSavalanches,xrr_out,XXfM,XXfinit)
 %
 %
 %   Self-consistent 3-D relativistic solver of the drift kinetic equation in momentum space with Beliaev-Budker collision integrals 
@@ -149,6 +149,7 @@ Xpnp = gridDKE.Xpnp;
 Xpnpp = gridDKE.Xpnpp;
 Xpn2m = gridDKE.Xpn2m;
 Xpn2 = gridDKE.Xpn2;
+XXpn2 = gridDKE.XXpn2;
 Xpn2p = gridDKE.Xpn2p;
 xpsin = gridDKE.xpsin;
 rdke = gridDKE.rdke;
@@ -193,6 +194,11 @@ Zmask_f0_t = Zbouncecoef.Zmask_f0_t;
 ns_f = Zbouncecoef.ns_f; 
 Zmask_g = Zbouncecoef.Zmask_g;
 ns_g = Zbouncecoef.ns_g;
+xqtilde = Zbouncecoef.xqtilde;
+xqhat =  Zbouncecoef.xqhat;
+xq = Zbouncecoef.xq;
+xqbar =  Zbouncecoef.xqbar;
+%
 MMXR_t = [];
 %
 xB0 = equilDKE.xB0;               
@@ -238,8 +244,10 @@ if display_mode >=1,
     elseif (dkeparam.invproc == -3),  disp('   - SUPERLUMEX matrix inversion - C sequential processing.');
     elseif (dkeparam.invproc == -4),  disp('   - PETSc matrix inversion. Several solvers may be used in this package.');end
 %Boundary and normalization conditions
-    if (dkeparam.norm_mode_f == 1),    disp('   - Normalization of f0 at each iteration and radius');
-    elseif (dkeparam.norm_mode_f == 0),disp('   - No normalization of f0 at each iteration and radius: fully natural conservative mode');end
+    if real(dkeparam.norm_mode_f) == 0,disp('   - No normalization of f0 at each iteration and radius: fully natural conservative mode');
+    elseif real(dkeparam.norm_mode_f) == 1,    disp('   - Normalization of f0 with respect to reference density at each iteration and radius');
+    elseif real(dkeparam.norm_mode_f) == 2,disp('   - No normalization of f0 with respect to initial density at each iteration and radius: fully natural conservative mode');end
+    if imag(dkeparam.norm_mode_f) == 1,    disp('   - Normalization of f0 accounting for boundary fluxes at each iteration and radius');end
     if (dkeparam.boundary_mode_f >= 1),    disp(['   - Maxwellian distribution for FPE enforced on ',int2str(dkeparam.boundary_mode_f),' momentum grid point around p = 0']);
     elseif (dkeparam.boundary_mode_f == 0),disp('   - No Maxwellian distribution for FPE enforced around p = 0');end
     if (dkeparam.boundary_mode_g >= 1) & (dke_mode == 1),    disp(['   - Lorentz model distribution for DKE enforced on ',int2str(dkeparam.boundary_mode_g),' momentum grid point around p = 0']);
@@ -451,7 +459,12 @@ end
 time0 = clock;
 XXf0 = XXfinit;%Initial guess (normalized to xne_norm)
 %
-XXsinksource_pn2 = repmat(Xpn2,[1,1,nr]).*XXsinksource;
+% The avalanche operator is assumed to be conservative. 
+% The corresponding source term is compensated for by removing an equivalent fraction of the Maxwellian
+%
+xnormavalanches = xrr_out + 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*XXpn2.*XXSavalanches,1),1).';
+%
+XXsinksource_pn2 = XXpn2.*(XXsinksource + XXSavalanches);
 %
 MMXfinit_t = [];
 for ir = 1:nr,
@@ -460,7 +473,7 @@ end
 %
 if dkeparam.PETScparam.cloop & dkeparam.invproc == -4,
     %
-%	writeCloopinput_dke_ft(nit_f,boundary_mode_f,bounce_mode,dkeparam.coll_mode,dkeparam.norm_mode_f,prec0_f,display_mode,betath_ref,xTe_norm,xne_norm,dtn,mhu,nmhu,npn,ns_f,nr,sm_f,...
+%	writeCloopinput_dke_ft(nit_f,boundary_mode_f,bounce_mode,dkeparam.coll_mode,real(dkeparam.norm_mode_f),prec0_f,display_mode,betath_ref,xTe_norm,xne_norm,dtn,mhu,nmhu,npn,ns_f,nr,sm_f,...
      %   masku,maskl,dpn,dmhu,xpn,xpn2,xpn3,xsigma,xgamma,xz,xz2,pn,pn2,pn3,...
      %   sigma,gamma,z,z2,xJ1,xJ2,xJ3,xJ4,J1,J2,J3,J4,...
     %    Xmhu,XXsinksource_pn2,Xmask_r_edge,XXfM,XXfinit,XXRlambda_b_p1p1,rdke,Xpn2,Zpn2_t,...
@@ -472,13 +485,9 @@ if dkeparam.PETScparam.cloop & dkeparam.invproc == -4,
 else
     %
     for ir = 1:nr,
-        %normf0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,XXf0(:,:,ir),2),1);
-        %curr0(ir,1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*XXf0(:,:,ir),2),1);
         % 
-        % for compatibility with fmoments
-        % 
-        normf0(ir,1) = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,ir).*Xpn2,1),1);
-        curr0(ir,1) = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,ir).*Xpn2.*Xpn.*Xmhu./Xgamma,1),1);
+        normf0(ir,1) = 2*pi*(xqtilde(ir)./xqhat(ir))*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda(:,:,ir).*XXf0(:,:,ir).*Xpn2,1),1);
+        curr0(ir,1) = 2*pi*(xq(ir)./xqbar(ir))*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,ir).*Xpn2.*Xpn.*Xmhu./Xgamma,1),1);
         %
     end
     %
@@ -650,24 +659,26 @@ else
                 Xf0(:,nmhu/2 + 1 - ns_f(ir):nmhu/2) = fliplr(Xf0_t(:,nmhu/2 + 1 - ns_f(ir):nmhu/2));
             end
             %
-            %normf0(ir,it_f+1) = 2*pi*integral_dke_jd(dpn',pn2'.*integral_dke_jd(dmhu,Xf0,2),1);
-            %curr0(ir,it_f+1) = 2*pi*integral_dke_jd(dpn',pn2'.*(pn'./gamma').*integral_dke_jd(dmhu,Xmhu.*Xf0,2),1);
-            % 
-            % for compatibility with fmoments
-            % 
-            normf0(ir,it_f+1) = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,Xf0.*Xpn2,1),1);
-            curr0(ir,it_f+1) = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,Xf0.*Xpn2.*Xpn.*Xmhu./Xgamma,1),1);
+            % compensate for avalanche source term to maintain density conservation
+            %
+            Xf0 = Xf0 - XXfM(:,:,ir)*dtn*xnormavalanches(ir)/xne_norm(ir);
+            %
+            % normf0 must be FS averaged to be compared with xne_norm
+            %
+            normf0(ir,it_f+1) = 2*pi*(xqtilde(ir)./xqhat(ir))*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda(:,:,ir).*Xf0.*Xpn2,1),1);
+            curr0(ir,it_f+1) = 2*pi*(xq(ir)./xqbar(ir))*integral_dke_jd(dmhu,integral_dke_jd(dpn,Xf0.*Xpn2.*Xpn.*Xmhu./Xgamma,1),1);
             %
             prec_curr0(ir,it_f) = (curr0(ir,it_f+1) - curr0(ir,1))/curr0(ir,1);
             prec_curr(ir,it_f) = (curr0(ir,it_f+1) - curr0(ir,it_f))/curr0(ir,it_f);
             prec_normf0(ir,it_f) = (normf0(ir,it_f+1) - normf0(ir,1))/normf0(ir,1);
             prec_normf(ir,it_f) = (normf0(ir,it_f+1) - normf0(ir,it_f))/normf0(ir,it_f);
             %
-            if dkeparam.norm_mode_f >= 1,
-                if dkeparam.norm_mode_f == 1,
-                    Xf0 = Xf0*xne_norm(ir)/normf0(ir,it_f+1);%Normalization to the maxwellian local density
-                elseif dkeparam.norm_mode_f == 2,
-                    Xf0 = Xf0*normf0(ir,1)/normf0(ir,it_f+1);%Normalization to the initial local density
+            if real(dkeparam.norm_mode_f) >= 1,% use real(dkeparam.norm_mode_f) == 0 if physical losses or gains are permitted (runaway, ripple, avalanches)
+                %                          in that case, density conservation can be ensured in fmoments_dke_yp using boundary losses calculations     
+                if real(dkeparam.norm_mode_f) == 1,
+                    Xf0 = Xf0*xne_norm(ir)/normf0(ir,it_f+1);%Normalization to the maxwellian local density. Any loss or gain is assumed to be numerical.
+                elseif real(dkeparam.norm_mode_f) == 2,
+                    Xf0 = Xf0*normf0(ir,1)/normf0(ir,it_f+1);%Normalization to the initial local density. Any loss or gain is assumed to be numerical.
                 end
                 %
                 if isfield(dkeparam,'convtest'),%Absolute residu calculation for convergence tests
