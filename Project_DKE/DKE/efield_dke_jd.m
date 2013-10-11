@@ -29,6 +29,12 @@ else
   xrhoP = equilDKE.xrhoP;
   xrhoV = equilDKE.xrhoV;
 %
+  if dkeparam.nit_ohm > 1 && (isempty(ohm) || any(ohm.epsi == 0)),% in frozen current mode, a non-zero initial field is needed to calculate consistent field
+      ohm.id = 'jconst';
+      ohm.rho = equilDKE.xrho;
+      ohm.epsi = dkeparam.vloop_ohm*ones(size(ohm.rho))/(2*pi*equilDKE.Rp);%(V/m)
+  end    
+%
   xepsi_fsav = zeros(size(equilDKE.xrho));
   if ~isempty(ohm) && isstruct(ohm) && ~isempty(fieldnames(ohm)),
       if ~isfield(ohm,'rhotype') || strcmp(ohm.rhotype,'g'),%geometric rho
