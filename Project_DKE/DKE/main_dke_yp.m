@@ -59,10 +59,10 @@ else
     % Load data if existing in 'loadstruct' structure or recalculate them otherwise
     %
     [dkeparam_out,radialDKE,equilDKE,momentumDKE,gridDKE,mksa,Zmomcoef,Zbouncecoef,...
-        XXsinksource,Zmripple,XXSavalanches_norm,xnre_init,xnre_out_norm,...
+        XXsinksource,Zmripple,XXSavalanches_norm,xnre_init,xrr_out_norm,...
         ZXXD_a,ZXXF_a,...
         ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor,...
-        ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity,...
+        ZXXD_e_init,ZXXF_e_init,ZXXD_e_tp,ZXXF_e_tp,xepsi_init,xEfield_validity,...
         waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys,...
         ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf,...
         XXfinit]...
@@ -102,7 +102,8 @@ else
     residu_f = cell(1,nit);
     XXf0 = cell(1,nit);
     zP_0_2piRp_mod_old = cell(1,nit);
-    xnre = cell(1,nit+1);
+    xnorm_re = cell(1,nit);
+    xnorm_ri = cell(1,nit);
     %
     if dkeparam_out.timevol == 1,
     %     ZP0 = cell(1,nit);
@@ -121,6 +122,54 @@ else
     end
     %
     itn0 = 1;
+    XXfin = XXfinit;
+    xepsi_in = xepsi_init;
+    %
+    xqtilde = Zbouncecoef.xqtilde(gridDKE.rdke);
+    xqhat = Zbouncecoef.xqhat(gridDKE.rdke);
+    xq = Zbouncecoef.xq(gridDKE.rdke);
+    xqbar = Zbouncecoef.xqbar(gridDKE.rdke);
+    XXlambda = Zbouncecoef.XXlambda(:,:,gridDKE.rdke);
+    %
+    dpn = gridDKE.dpn;
+    dmhu = gridDKE.dmhu;
+    XXpn2 = gridDKE.XXpn2(:,:,gridDKE.rdke);
+    XXpn = gridDKE.XXpn(:,:,gridDKE.rdke);
+    XXmhu = gridDKE.XXmhu(:,:,gridDKE.rdke);
+    %
+    XXgamma = Zmomcoef.XXgamma(:,:,gridDKE.rdke);
+    %
+    % initial f0 normalized density
+    %
+    xnorm_0 = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*XXfin(:,:,gridDKE.rdke).*XXpn2,1),1).';
+    %
+    % initial internal runaway normalized density
+    %
+    XXRintmask_init = ZXXF_c.p_ij + ZXXF_e_init.p_ij > 0;
+    xnorm_ri_init = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*XXRintmask_init(:,:,gridDKE.rdke).*XXfin(:,:,gridDKE.rdke).*XXpn2,1),1).';
+    %
+    % In frozen current mode, LUKE assumes that the current is frozen to its value calculated from
+    % the initial distribution and number of runaways (beyond pmax)
+    %
+    % It is assumed that the initial distribution function was calculated
+    % with the input value for the ohmic field 
+    %
+    if dkeparam_out.nit_ohm > 1,% frozen current mode
+        %
+        % runaways beyond pmax are assumed to have a parallel velocity equal to the speed of light 
+        %
+        %
+        % initial runaway current
+        %
+        xcurr_re = (xq./xqbar).*(xqhat./xqtilde).*xnre_init/mksa.betath_ref;
+        %
+        % initial f0 current
+        %
+        xcurr_0 = 2*pi*(xq./xqbar).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXfin(:,:,gridDKE.rdke).*XXpn2.*XXpn.*XXmhu./XXgamma,1),1).';
+        %
+        xcurr_init = xcurr_re + xcurr_0;
+        %
+    end
     %
 end
 %
@@ -131,189 +180,275 @@ end
 % nested convergence on the wave absorption and explicit collision
 % integral term must be obtained.
 %
-xnre{1} = xnre_init; 
-%
 for itn = itn0:nit,
     %
     dkeparam_out.dtn = dtn_list(itn);
-    XXSavalanches = XXSavalanches_norm.*repmat(reshape(xnre{itn},[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1]);% multiple the avalanche source term by the runaway electron density
     %
-    if itn == 1,
-        XXfin = XXfinit;
-        %
-        if dkeparam_out.finitabs == 1,%The initial distribution is used to first estimate the ray absorption
-            conv = -1;
-        else
-            conv = 0;
-        end
+    % The internal and external avalanche terms are proportional to both the runaway fraction and
+    % the bulk fraction
+    %
+    if itn == 1,   
+        xnorm = (xnre_init + xnorm_ri_init).*(xnorm_0 - xnorm_ri_init);
     else
-        XXfin = XXf0{itn - 1};
-        %
+        xnorm = (xnorm_re{itn - 1} + xnorm_ri{itn - 1}).*(xnorm_0 - xnorm_ri{itn - 1});
+    end
+    %
+    XXSavalanches = XXSavalanches_norm.*repmat(reshape(xnorm,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1]);% multiple the avalanche source term by the runaway electron density
+    xrr_out = xrr_out_norm.*xnorm;
+    %
+    if itn == 1 && dkeparam_out.finitabs == 1,%The initial distribution is used to first estimate the ray absorption
+        conv = -1;
+    else
         conv = 0;
     end
     %
-    for it_rf=1:nit_rf, % convergence in the ray-tracing mode
-        if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf),%in the case of RF waves only
-            %
-            if it_rf > 1 && conv <= 0,
-                xyP0_2piRp_mod = delta_rt*xyP0_2piRp_mod_old + (1 - delta_rt)*xyP0_2piRp_mod;
+    % Convergence on Ohmic field in frozen current mode
+    %
+    for it_ohm = 1:dkeparam_out.nit_ohm,
+        %
+        if dkeparam_out.nit_ohm > 1,
+            if it_ohm == 1,
+                xepsi{itn} = zeros(1,gridDKE.nr);% first iteration without ohmic field
             end
             %
-            if dkeparam_out.redfac == 1 && nit_rf > 1,
-                if it_rf == 1,
-                    redfac = max(sum(xyP0_2piRp_mod.'))/sum(max(xyP0_2piRp_mod(:,yb)));
-                else
-                    redfac = redfac - 1;
+            ZXXD_e = structtimes_jd(ZXXD_e_init,repmat(reshape(xepsi{itn}./xepsi_init,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1]));
+            ZXXF_e = structtimes_jd(ZXXF_e_init,repmat(reshape(xepsi{itn}./xepsi_init,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1]));
+            %ZXXD_e_tp = structtimes_jd(ZXXD_e_tp,xepsi{itn}/xepsi_init);
+            %ZXXF_e_tp = structtimes_jd(ZXXF_e_tp,xepsi{itn}/xepsi_init);          
+            %
+        else
+            ZXXD_e = ZXXD_e_init;
+            ZXXF_e = ZXXF_e_init;
+            xepsi{itn} = xepsi_in;
+        end
+        %
+        % Convergence on RF deposition with ray-tracing formalism
+        %
+        for it_rf = 1:nit_rf,
+            if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf),%in the case of RF waves only
+                %
+                if it_rf > 1 && conv <= 0,
+                    xyP0_2piRp_mod = delta_rt*xyP0_2piRp_mod_old + (1 - delta_rt)*xyP0_2piRp_mod;
                 end
-                %redfac = 10/it_rf;
                 %
-                redfac = max([redfac,1]);
-                %
-            else
-                redfac = 1;
+                if dkeparam_out.redfac == 1 && nit_rf > 1,
+                    if it_rf == 1,
+                        redfac = max(sum(xyP0_2piRp_mod.'))/sum(max(xyP0_2piRp_mod(:,yb)));
+                    else
+                        redfac = redfac - 1;
+                    end
+                    %redfac = 10/it_rf;
+                    %
+                    redfac = max([redfac,1]);
+                    %
+                else
+                    redfac = 1;
+                end
             end
-        end
-        %
-        [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd(dkeparam_out,ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod/redfac,gridindex_rf);
-        [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,dkedisplay,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_a,ZXXF_a);%Build the 3D DKE matrix
-        %
-        if conv >= 0,
-            [XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0{itn},curr0{itn},residu_f{itn}] = solver_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource + XXSavalanches,XXfM,XXfin);% Solve the DKE equation
-        else% case where the initial distribution is used to first estimate the ray absorption
-            XXf0{itn} = XXfin;
-            XXf0_tp = zeros(size(XXf0{itn}));
-            XXf0_g = zeros(size(XXf0{itn}));
-            XXf0_L_tp = zeros(size(XXf0{itn}));
-            XXf0_L_g = zeros(size(XXf0{itn}));
-            radial_mode = NaN;
-        end
-        %
-        xyP0_2piRp_mod_old = xyP0_2piRp_mod;
-        %
-        if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf),%In the case of RF waves and quasilinear iteration
-            if nit_rf > 1,  
-                %
-                % Calculation of the density of power absorbed for all rays
-                %
-                [ZP0_rf] = fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
-                    XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
-                    ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod,gridindex_rf);%Calculate RF absorbed power of the distribution function
-                if dkeparam_out.dke_mode >= 1,
-                    xyPabs_rf_dke_fsav_out = ZP0_rf.xy_rf_fsav + ZP0_rf.xy_rf_tp_fsav + ZP0_rf.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
-                else
-                    xyPabs_rf_dke_fsav_out = ZP0_rf.xy_rf_fsav; % flux-surface averaged density of absorbed power.
-                end	    
-                xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*mksa.P_ref*1e6;%RF power (W)
-                %
-                % Calculation of the power flow along the rays from DKE calculations
-                %
-                [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke,xyP0_2piRp_mod_old,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
-                %
-                zP_0_2piRp_mod_old{itn} = raypath_jd(xyP0_2piRp_mod_old,xyprop_dke,yb,radialDKE.r_dke);
-                zP_0_2piRp_mod = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
-                zP_0_2piRp_out = raypath_jd(xyP0_2piRp_out,xyprop_dke,yb,radialDKE.r_dke);
-                %
-                P_0_2piRp_in = sum(yP0_2piRp);
-                P_0_2piRp_out = 0;
-                for iray = 1:length(yb),
-                     P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp_mod_old{itn}{iray}(end);
-                end
-                %
-                abs_frac = (P_0_2piRp_in - P_0_2piRp_out)/P_0_2piRp_in;
-                %
-                for iray = 1:length(yb),
-                    yresidue_rf_mod(iray,it_rf) = max(abs(zP_0_2piRp_mod{iray} - zP_0_2piRp_mod_old{itn}{iray})./zP_0_2piRp_mod{iray}(1));
-                    yresidue_rf_out(iray,it_rf) = max(abs(zP_0_2piRp_mod{iray} - zP_0_2piRp_out{iray})./zP_0_2piRp_mod{iray}(1));
-                end
-                %
-                %residue_rf{itn}(it_rf) = max([yresidue_rf_mod(:,it_rf);yresidue_rf_out(:,it_rf)]);
-                residue_rf{itn}(it_rf) = max(yresidue_rf_mod(:,it_rf));
-                %
-                if dkedisplay.display_mode >= 1,
-                    figure(Fig_QLIter),
-                    [ax] = graph1D_jd(1:it_rf,residue_rf{itn},0,1,'Iteration number','\DeltaP/P','Quasilinear convergence',NaN,[0,nit_rf],[dkeparam_out.prec_rf,1],'none','+','r',2);
-                    grid  on
-                    drawnow;                
-    %             
-                    if dkedisplay.display_mode >= 2,
-                        for iray = 1:length(zS),
-                            figure(Fig_Pray + iray - 1);clf
-                            [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod_old{itn}{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','--','none','r',2);
-                            [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','-','none','r',2);
-                            legend(['Iteration #',int2str(it_rf-1)],['Iteration #',int2str(it_rf)])
-                            title(['Ray #',num2str(iray),', residue: ',num2str(max([yresidue_rf_mod(iray,it_rf);yresidue_rf_out(iray,it_rf)]))])
-                            grid on
-                            drawnow;
+            %
+            [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd(dkeparam_out,ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod/redfac,gridindex_rf);
+            [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,dkedisplay,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_a,ZXXF_a);%Build the 3D DKE matrix
+            %
+            if conv >= 0,
+                [XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,radial_mode,memoryLU_f,memoryLU_g,time_DKE,normf0{itn},curr0{itn},residu_f{itn}] = solver_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,Xmask_r_edge,XXsinksource,XXSavalanches,xrr_out,XXfM,XXfin);% Solve the DKE equation
+            else% case where the initial distribution is used to first estimate the ray absorption
+                XXf0{itn} = XXfin;
+                XXf0_tp = zeros(size(XXf0{itn}));
+                XXf0_g = zeros(size(XXf0{itn}));
+                XXf0_L_tp = zeros(size(XXf0{itn}));
+                XXf0_L_g = zeros(size(XXf0{itn}));
+                radial_mode = NaN;
+            end
+            %
+            xyP0_2piRp_mod_old = xyP0_2piRp_mod;
+            %
+            if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf),%In the case of RF waves and quasilinear iteration
+                if nit_rf > 1,  
+                    %
+                    % Calculation of the density of power absorbed for all rays
+                    %
+                    [ZP0_rf] = fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi{itn},waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
+                        XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
+                        ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod,gridindex_rf);%Calculate RF absorbed power of the distribution function
+                    if dkeparam_out.dke_mode >= 1,
+                        xyPabs_rf_dke_fsav_out = ZP0_rf.xy_rf_fsav + ZP0_rf.xy_rf_tp_fsav + ZP0_rf.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
+                    else
+                        xyPabs_rf_dke_fsav_out = ZP0_rf.xy_rf_fsav; % flux-surface averaged density of absorbed power.
+                    end	    
+                    xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*mksa.P_ref*1e6;%RF power (W)
+                    %
+                    % Calculation of the power flow along the rays from DKE calculations
+                    %
+                    [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke,xyP0_2piRp_mod_old,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
+                    %
+                    zP_0_2piRp_mod_old{itn} = raypath_jd(xyP0_2piRp_mod_old,xyprop_dke,yb,radialDKE.r_dke);
+                    zP_0_2piRp_mod = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
+                    zP_0_2piRp_out = raypath_jd(xyP0_2piRp_out,xyprop_dke,yb,radialDKE.r_dke);
+                    %
+                    P_0_2piRp_in = sum(yP0_2piRp);
+                    P_0_2piRp_out = 0;
+                    for iray = 1:length(yb),
+                         P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp_mod_old{itn}{iray}(end);
+                    end
+                    %
+                    abs_frac = (P_0_2piRp_in - P_0_2piRp_out)/P_0_2piRp_in;
+                    %
+                    for iray = 1:length(yb),
+                        yresidue_rf_mod(iray,it_rf) = max(abs(zP_0_2piRp_mod{iray} - zP_0_2piRp_mod_old{itn}{iray})./zP_0_2piRp_mod{iray}(1));
+                        yresidue_rf_out(iray,it_rf) = max(abs(zP_0_2piRp_mod{iray} - zP_0_2piRp_out{iray})./zP_0_2piRp_mod{iray}(1));
+                    end
+                    %
+                    %residue_rf{itn}(it_rf) = max([yresidue_rf_mod(:,it_rf);yresidue_rf_out(:,it_rf)]);
+                    residue_rf{itn}(it_rf) = max(yresidue_rf_mod(:,it_rf));
+                    %
+                    if dkedisplay.display_mode >= 1,
+                        figure(Fig_QLIter),
+                        [ax] = graph1D_jd(1:it_rf,residue_rf{itn},0,1,'Iteration number','\DeltaP/P','Quasilinear convergence',NaN,[0,nit_rf],[dkeparam_out.prec_rf,1],'none','+','r',2);
+                        grid  on
+                        drawnow;                
+        %             
+                        if dkedisplay.display_mode >= 2,
+                            for iray = 1:length(zS),
+                                figure(Fig_Pray + iray - 1);clf
+                                [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod_old{itn}{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','--','none','r',2);
+                                [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','-','none','r',2);
+                                legend(['Iteration #',int2str(it_rf-1)],['Iteration #',int2str(it_rf)])
+                                title(['Ray #',num2str(iray),', residue: ',num2str(max([yresidue_rf_mod(iray,it_rf);yresidue_rf_out(iray,it_rf)]))])
+                                grid on
+                                drawnow;
+                            end
                         end
                     end
-                end
-    %
-                if dkedisplay.display_mode >=1,
-                    info_dke_yp(2,'---------------------------------------------------------');
-                    info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf{itn}(it_rf)),', delta_rt = ',num2str(delta_rt)]);
-                    info_dke_yp(2,'---------------------------------------------------------');
-                end
-    %  
-                if (residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == 1) || it_rf == nit_rf,
-                    %
-                    dke_warnings = '';               
-                    if isfield(dkeparam_out,'abs_lim') && abs_frac < dkeparam_out.abs_lim,
-                        dke_warnings = 'The RF power is not fully absorbed. To bypass this error set dkeparam.abs_lim between 0 and 1';
+        %
+                    if dkedisplay.display_mode >=1,
+                        info_dke_yp(2,'---------------------------------------------------------');
+                        info_dke_yp(2,['Quasilinear iteration : ',int2str(it_rf),', Residu = ',num2str(residue_rf{itn}(it_rf)),', delta_rt = ',num2str(delta_rt)]);
+                        info_dke_yp(2,'---------------------------------------------------------');
+                    end
+        %  
+                    if (residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == 1) || it_rf == nit_rf,
+                        %
+                        dke_warnings = '';               
+                        if isfield(dkeparam_out,'abs_lim') && abs_frac < dkeparam_out.abs_lim,
+                            dke_warnings = 'The RF power is not fully absorbed. To bypass this error set dkeparam.abs_lim between 0 and 1';
+                        end
+                        %
+                        if residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == 1,
+                            if dkedisplay.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);end
+                            break
+                        else
+                            info_dke_yp(2,['WARNING: convergence for ray-tracing coupling was not achieved after ',int2str(it_rf),' iterations !']);                  
+                        end
+                    else   	
+                        if dkedisplay.display_mode >=1,info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf{itn}(it_rf))]);end       
                     end
                     %
-                    if residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == 1,
-                        if dkedisplay.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling after ',int2str(it_rf),' iterations !']);end
-                        break
-                    else
-                        info_dke_yp(2,['WARNING: convergence for ray-tracing coupling was not achieved after ',int2str(it_rf),' iterations !']);                  
+                    if (residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == 0),
+                        if dkeparam_out.postest_rf && min(min(min(ZP0_rf.xyn_rf_fsav))) < 0,
+                             info_dke_yp(2,['WARNING: residue below threshold but iterations continue while negative absorbed power occurs somewhere!']);                  
+                        else
+                            conv = 1;
+                        end
+                    end		
+                    %
+                    if (residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == -1),
+                        if dkedisplay.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling on initial distribution after ',int2str(it_rf),' iterations !']);end
+                        conv = 0;
+                    end	
+                    %
+                    if 0,%dkeparam_out.finsert == 1,
+                        XXfin = XXf0{itn};
+                        abs_frac_rf(it_rf) = abs_frac;
                     end
-                else   	
-                    if dkedisplay.display_mode >=1,info_dke_yp(2,['Iteration ',int2str(it_rf),', residue = ',num2str(residue_rf{itn}(it_rf))]);end       
+                end     
+            end
+        end
+        %
+        XXfout = XXf0{itn};
+        %
+        % Moments of the distribution function
+        %
+        if dkeparam_out.timevol == 1,
+            [ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...(itn)
+                XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRR_fsav{itn},...
+                xne_norm_out{itn},xTe_norm_out{itn},xft_fsav{itn},xfteff_fsav{itn},XXRintmask{itn},Zmom(itn)] = ...
+                fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi{itn},waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
+                XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
+                ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
+                ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor); %Calculate moments of the distribution function
+            %
+            % the external runaway increment is the sum of :
+            %   - the runaways created outside pmax
+            %   - the runaways passing through pmax
+            %
+            dxnorm_re = (xrr_out + xRR_fsav{itn})*dtn_list(itn);
+            xnorm_ri{itn} = Znorm(itn).x_Rfrac_0_fsav;
+            %
+            % adjust internal density if requested 
+            %
+            if imag(dkeparam_out.norm_mode_f) == 1,% in this case, the xnorm_0 evolution is governed by boundary losses instead of volumic losses
+                %
+                % for real(dkeparam_out.norm_mode_f), this should only compensate for numerical errors. 
+                % for real(dkeparam_out.norm_mode_f), this should also compensate for the flux through pmax
+                %
+                xnorm_0 = xnorm_0 - dxnorm_re;
+                %
+                XXfout = XXfout*repmat(reshape(xnorm_0./Znorm(itn).x_0_fsav,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1]);
+                %
+            else
+                %
+                xnorm_0 = Znorm(itn).x_0_fsav;
+                %
+            end
+            %
+        else
+            %
+            dxnorm_re = zeros(1,gridDKE.nr);
+            xnorm_ri{itn} = 0;
+            %
+        end
+        %
+        if itn == 1,
+            xnorm_re{itn} = xnre_init + dxnorm_re;
+        else
+            xnorm_re{itn} = xnorm_re{itn - 1} + dxnorm_re;
+        end                
+        %
+        % calculate total current and adjust ohmic field in frozen current mode
+        %
+        if dkeparam_out.nit_ohm > 1,% frozen current mode
+            %
+            % runaway current
+            %
+            xcurr_re = (xq./xqbar).*(xqhat./xqtilde).*xnorm_re{itn}/mksa.betath_ref;
+            %
+            % initial f0 current
+            %
+            xcurr_0 = 2*pi*(xq./xqbar).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXfout(:,:,gridDKE.rdke).*XXpn2.*XXpn.*XXmhu./XXgamma,1),1).';
+            %
+            xcurr = xcurr_re + xcurr_0;
+            %
+            if it_ohm == 1,% first iteration without field
+                %
+                xcurr_in = xcurr;
+                xepsi{itn} = xepsi_in;
+                %
+            elseif max(abs(xcurr - xcurr_init))/max(abs(xcurr_init)) <= dkeparam_out.tol_ohm,% *dkeparam_out.dtn,
+                if dkedisplay.display_mode >= 1,
+                    disp(['Convergence reached after ',num2str(it_ohm),' iterations at time step ',num2str(itn)])
                 end
+                break
+            else
                 %
-                if (residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == 0),
-                    if dkeparam_out.postest_rf && min(min(min(ZP0_rf.xyn_rf_fsav))) < 0,
-                         info_dke_yp(2,['WARNING: residue below threshold but iterations continue while negative absorbed power occurs somewhere!']);                  
-                    else
-                        conv = 1;
-                    end
-                end		
+                xepsi{itn} = xepsi{itn}.*(1 - (xcurr - xcurr_init)./(xcurr - xcurr_in));
+                xepsi{itn}(end) = xepsi{itn}(end - 1);% to avoid edge pb
                 %
-                if (residue_rf{itn}(it_rf) <= dkeparam_out.prec_rf && redfac == 1 && it_rf > 1 && conv == -1),
-                    if dkedisplay.display_mode >=1,info_dke_yp(2,['Successfull convergence achieved for ray-tracing coupling on initial distribution after ',int2str(it_rf),' iterations !']);end
-                    conv = 0;
-                end	
-                %
-                if 0,%dkeparam_out.finsert == 1,
-                    XXfin = XXf0{itn};
-                    abs_frac_rf(it_rf) = abs_frac;
-                end
-            end     
+            end
+            %
         end
     end
     %
-    % Moments of the distribution function
-    %
-    if dkeparam_out.timevol == 1,
-        [ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...(itn)
-            XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRR_fsav{itn},...
-            xne_norm_out{itn},xTe_norm_out{itn},xft_fsav{itn},xfteff_fsav{itn},XXRintmask{itn},Zmom(itn)] = ...
-            fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
-            XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
-            ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
-            ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor); %Calculate moments of the distribution function
-        %
-        % the number of runaway electrons for next iteration is the sum of :
-        %   - the existing runaways
-        %   - the runaways created outside pmax
-        %   - the runaways passing through pmax
-        %
-        xnre{itn + 1} = xnre{itn} + xnre_out_norm*xnre{itn}*dtn_list(itn) + xRR_fsav{itn}*dtn_list(itn);   
-    else
-        %
-        xnre{itn + 1} = xnre{itn};
-        %
-    end
+    xepsi_in = xepsi{itn};
     %
     if nit > 1 && dkedisplay.display_mode >= 1,
         figure(Fig_TimeIter),
@@ -331,6 +466,9 @@ for itn = itn0:nit,
     if dkeparam_in.opt_save,
         save(tmpfile);
     end
+    %
+    XXfin = XXfout;
+    %
 end
 %
 if nit > 1 && dkedisplay.display_mode >= 1,
@@ -343,11 +481,12 @@ if dkeparam_out.timevol == 0,
     %
     XXf0 = XXf0(nit);
     residue_rf = residue_rf(nit);
+    xepsi = xepsi(nit);
     %
     [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
         XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
         xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,XXRintmask,Zmom] = ...
-        fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
+        fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi{1},waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
         XXf0{1},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
         ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
         ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor);%Calculate moments of the distribution function
@@ -402,7 +541,7 @@ if dkeparam_out.syn_mode == 1,
     %
     [ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp,ylist_rf] = rfdiff_dke_jd(dkeparam_out,dkedisplay,waveparam_bc,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa);% RF wave flux coefficients
     [MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,dkedisplay,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZYXXD_rf,ZYXXF_rf,ZYXXD_rf_tp,ZYXXF_rf_tp);%Build the 3D DKE matrix
-    [XXf0_bc,XXf0_bc_tp,XXf0_bc_g,XXf0_bc_L_tp,XXf0_bc_L_g,memoryLU_bc_f,memoryLU_bc_g] = solver_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource + XXSavalanches,XXfinit);% Solve the DKE equation
+    [XXf0_bc,XXf0_bc_tp,XXf0_bc_g,XXf0_bc_L_tp,XXf0_bc_L_g,memoryLU_bc_f,memoryLU_bc_g] = solver_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,Zpn2_t,sm_f,sm_g,sm_tp,it_rf,MMXR_f_t,MMXP_f_t,MMXT_f_t,MMXP_tp,MMXP_g_t,MMH_tp,XXILor,XXsinksource,XXSavalanches,XXfinit);% Solve the DKE equation
     [ZP0_bc,Zcurr_bc,Znorm_bc,ZXXS_bc,ZYXXD_bc_rf,XxRR_bc_fsav,xMRR_flux_bc,xMRR_tau_bc,xMRR_power_flux_bc,xMRR_power_tau_bc,xRR_bc_fsav,xne_norm_bc_out_bc,xTe_norm_bc_out,xft_bc_fsav,xfteff_bc_fsav] = fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,[],radial_mode,Zdelta,XXSavalanches,XXf0{nit},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,ZXXD_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp);%Calculate moments of the distribution function
 %
     time_bc_out = etime(clock,time0_bc);
@@ -488,9 +627,9 @@ if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf) && nit_rf > 1,
 end
 %
 dke_out.xRR_fsav = xRR_fsav;
-dke_out.xnre = xnre;
+dke_out.xnorm_re = xnorm_re;
 dke_out.xnre_init = xnre_init;
-dke_out.xnre_out_norm = xnre_out_norm;
+dke_out.xrr_out_norm = xrr_out_norm;
 dke_out.Zmripple = Zmripple;
 %
 dke_out.equil = equil;
