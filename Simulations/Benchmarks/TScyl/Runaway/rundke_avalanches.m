@@ -11,27 +11,27 @@ warning('off')
 %
 % grid parameters
 %
-%for ia = 2:9
-ia = 8;
-f_pmax = 1; %for avalanche calculation. if avalanche_mode and not specified = 1
-pnmax_S =  20;
-np_S = 201;
-nmhu_S = 201;
+f_pmax = 5;%1;% %for avalanche calculation. if avalanche_mode and not specified = 1
+pnmax_S = 20;%20;% for E/Ec = 4, Pc = 5; for E/Ec = 6, Pc = 4;
+np_S = 101;%201;%
+nmhu_S = 101;
 %
 mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 %
 %
 % normalized electric field (with respect to the Critical field Ec)
 %
-alpha = ia;%E/Ec
-
+%alpha = 4;%E/Ec
 %
 % temperature betath2 = Te/mc2
 % (betath2 = 10^(-6) is validated for NR limit)
 %
-betath2 = 0.01;%
+betath2 = 0.01;%1e-5;%
 %
-pnmin_S = 1/sqrt((alpha-1)*betath2);
+epsi = 0.04;
+alpha = epsi/betath2;
+%
+pnmin_S = NaN;%5;%1/sqrt((alpha-1)*betath2);%NaN;%
 %
 % ion charge (single species, cold ions)
 %
@@ -52,18 +52,19 @@ id_simul = 'Runaway';%Simulation ID
 %path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [0.6];%1%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.5];%1%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScirc';%For plasma equilibrium
+id_equil = 'TScyl';%For plasma equilibrium
+%id_equil = 'TScirc';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'NO_DISPLAY';%'NO_DISPLAY''PARTIAL_VISUAL';%For output code display, files from Project_DKE/DISPLAY_FILES/
+id_display = 'PARTIAL_VISUAL';%'NO_DISPLAY''PARTIAL_VISUAL';%For output code display, files from Project_DKE/DISPLAY_FILES/
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 %************************************************************************************************************************************
@@ -78,17 +79,17 @@ path_display = '';%if nothing is specified, the working directory is first used 
 if exist('dmumpsmex','file') == 3,
     dkeparam.invproc = -2;
 end
-%t
+%
 dkeparam.pnmin_S = pnmin_S;
 dkeparam.f_pmax = f_pmax; % multiplication of p grid. f_pmax*p_max
 dkeparam.pnmax_S = pnmax_S;
 dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
-dkeparam.norm_mode_f = 0;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
+dkeparam.norm_mode_f = 0;% + 1i;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.timevol = 1;
-dkeparam.tn = 10000;%time for asymptotic solution with norm_mode_f = 1
-dkeparam.dtn = 10;%10 time steps required for accurate runaway solution - see rundke_dtn
+dkeparam.tn = 100000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.dtn = 100;% time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
-dkeparam.bounce_mode = 1; %bounce average
+dkeparam.bounce_mode = 0; %bounce average
 dkeparam.avalanche_mode = 1; %if 1 avalanche mode on, 0 or undefined for off
 %
 options_fzero = optimset('fzero');
@@ -133,10 +134,10 @@ equil.equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam
 RR_an = RR_rosenbluth_en(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
 %
 %RR = dke_out.XxRR_fsav(end,:);
-Rfrac = Znorm(1,end).x_Rfrac_0; %runaway fraction (nr of runaways between pmin and pmax) primary + avalanche
+Rfrac = Znorm(end).x_Rfrac_0_fsav; %runaway fraction (nr of runaways between pmin and pmax) primary + avalanche
 %
-xnre = cell2mat(dke_out.xnre);
-xnre_out_norm = dke_out.xnre_out_norm; %runaway population for avalanche generation
+xnre = cell2mat(dke_out.xnorm_re);
+xnre_out_norm = dke_out.xrr_out_norm; %runaway population for avalanche generation
 %
 RRAint = Znorm(1,end).xRRAint/xnre(end-1); %integral over S[pmin pmax]
 RRAinttot = Znorm(1,end).xRRAtot/xnre(end-1); %total integral S[0 pmax]
