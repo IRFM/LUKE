@@ -67,9 +67,8 @@ Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
 %
 mhuT=sqrt(1-B0./Bmax);
 %
-keyboard
 for ipsi=1:npsi
-    pthmask = pnRA >= dkeparam.pnmin_S; %only take p>p0
+    pthmask = pnRA >= 0;%dkeparam.pnmin_S; %only take p>p0
     Srp(ipsi,:) = beta^3*1/2*beta^3*1/(4*pi)/Lambd*ne(ipsi)./(beta*pnRA.*gammaRA.*(gammaRA-1).^2).*pthmask; % rosenbluth (S*), first beta3 is from the Jacobian
 end
 %
@@ -144,7 +143,7 @@ figure;graph1D_jd(alpha,Srp_int_norm_nr,0,0,'E/E_c','growth rate (s^-1)','Numeri
 graph1D_jd(alpha,RR_an,0,0,'','','',NaN, NaN,NaN,'-','none','r',3);hold off
 %
 if f_pmax>1
-    xnre_out_norm(1,gridDKE.rdke) =beta^3*2*pi*integral_dke_jd(gridDKE.dmhu*nmhu/2,integral_dke_jd(dpnRA((npn+1):end),XXSavalanches_normtot((npn+1):end,:,gridDKE.rdke).*XXpnRA2((npn+1):end,:,gridDKE.rdke),1),1)'; % runaway electrons created outisde pmax THIS IS A RATE! (per collision time)
+    xnre_out_norm(1,gridDKE.rdke) = 2*pi*integral_dke_jd(gridDKE.dmhu,integral_dke_jd(dpnRA((npn+1):end),XXSavalanches_normtot((npn+1):end,:,gridDKE.rdke).*XXpnRA2((npn+1):end,:,gridDKE.rdke),1),1)'; % runaway electrons created outisde pmax THIS IS A RATE! (per collision time)
 else
     xnre_out_norm(1,gridDKE.rdke) = 0;
 end
@@ -246,7 +245,7 @@ XXSavalanches_norm = XXSavalanches_normtot(1:npn,:,:); %the avalanche part with 
     for g=1:npsi
         XS = squeeze(XXSl(g,:,:));
         XS(isnan(XS)) = 0;
-        XSint = integral_dke_jd(ones(1,nmhu),XS,2);
+        XSint = integral_dke_jd(gridDKE.dmhu,XS,2);
         %semilogy(gridDKE.pn,XSint,'.-')
         %legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
         graph1D_jd(pnRA,XSint,0,1,'p','S_{bounce} LUKE','S on each flux surface',NaN,NaN,NaN,'-','.')
@@ -258,7 +257,7 @@ XXSavalanches_norm = XXSavalanches_normtot(1:npn,:,:); %the avalanche part with 
         %
     for g=1:npsi
         XSrp = squeeze(XXSrp_xis(g,:,:)); %integrate the 3D analytical S_RP, should get same as plotting the 2D Srp
-        XSrpint = integral_dke_jd(ones(1,nmhu),XSrp,2);%/(gridDKE.dmhu(1)); %integrate over mhu, pos n neg : /2
+        XSrpint = integral_dke_jd(gridDKE.dmhu,XSrp,2);%/(gridDKE.dmhu(1)); %integrate over mhu, pos n neg : /2
         %semilogy(gridDKE.pn,XSint,'.-')
         %legend(sprintf( '%s: %d', 'rho', gridDKE.xrho(ir)));
         graph1D_jd(pnRA,XSrpint,0,1,'p','S_{RP}','S on each flux surface',NaN,NaN,NaN,'-','.')
