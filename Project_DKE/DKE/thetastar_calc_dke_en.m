@@ -117,7 +117,7 @@ for ipsi = 1:npsi;
 end
 %
 dmhu = permute(repmat(gridDKE.dmhu',[1,1,npnRA,]), [2,3,1]);
-XXalpha = XXalpha.*dmhu;%.*permute(gridDKE.XXdmhu,[3,1,2]); WHY DID I MULTIPLY WITH DMHU HERE?
+XXalpha = XXalpha;%.*permute(gridDKE.XXdmhu,[3,1,2]); WHY DID I MULTIPLY WITH DMHU HERE?
 %
 t(ipo) = toc;
 %
@@ -138,7 +138,7 @@ figure
 hold on
 for ipsi=1:npsi
     for ip=1:npnRA
-        XalphaNewINT(ip) = integral_dke_jd(dmhui(ipsi,ip,:),squeeze(XXalphaNew(ipsi,ip,:))',2); %integrate over mhu, pos n neg : /2
+        XalphaNewINT(ip) = integral_dke_jd(dmhui(ipsi,ip,:),squeeze(XXalphaNew(ipsi,ip,:))',2); %integrate over mhu
     end
     graph1D_jd(pnRA,XalphaNewINT,0,0,'p','XalphaNew','',NaN,NaN,NaN,'-','.','b')
 end
