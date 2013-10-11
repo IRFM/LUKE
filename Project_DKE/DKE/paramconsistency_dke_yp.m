@@ -38,6 +38,18 @@ end
 if ~isfield(dkeparam,'avalanche_mode'),
     dkeparam.avalanche_mode = 0;
 end
+%
+if ~isfield(dkeparam,'nit_ohm'),
+    dkeparam.nit_ohm = 1;
+elseif dkeparam.nit_ohm > 1,
+    %
+    if ~isfield(dkeparam,'tol_ohm'),
+        dkeparam.tol_ohm = 1e-3;
+    end
+    if ~isfield(dkeparam,'vloop_ohm'),
+        dkeparam.vloop_ohm = 1e-1;
+    end
+end
 % 
 if dkeparam.pnmax_S < 0,
 	dkeparam.pnmax_S = -dkeparam.pnmax_S;
@@ -123,11 +135,12 @@ if ~isfield(dkeparam,'timevol'),
     dkeparam.timevol = 0;
 end
 %
-if dkeparam.avalanche_mode == 1,
+if dkeparam.avalanche_mode == 1 || dkeparam.nit_ohm > 1 || imag(dkeparam.norm_mode_f) > 0
     dkeparam.timevol = 1;
-    if ~isfield(dkeparam,'f_pmax')
-        dkeparam.f_pmax = 1;
-    end
+end
+%
+if dkeparam.avalanche_mode == 1 && ~isfield(dkeparam,'f_pmax')
+    dkeparam.f_pmax = 1;
 end
 %
 if ~isfield(dkeparam,'redfac'),
