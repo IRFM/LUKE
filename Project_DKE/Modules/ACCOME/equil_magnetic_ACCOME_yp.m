@@ -105,7 +105,7 @@ if display_mode == 2,
     graph1D_jd(rx,rB,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker,color3,width);
     print_jd(p_opt,[savename,'_Bfield']);
 %
-    figure(13),,clf
+    figure(13),clf
     graph1D_jd(theta,ptB(2,:),0,0,'','','',NaN,'','',style,marker,'b',width);hold on
     plot(theta,ptB([2:end],:))
     legend(['r/a = ',num2str(prho(2))])
