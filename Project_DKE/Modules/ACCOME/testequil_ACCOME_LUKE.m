@@ -1,7 +1,10 @@
+function [] = testequil_ACCOME_LUKE(filename_equil)
+%
 close all
+%
 filename_equil = dir('EQUIL_*.mat');
 load(filename_equil.name);
-load test_ACCOME.mat
+load(['test_',filename_equil.name])
 %
 disp('***************************************************************************************************************');
 disp('WARNING: the sign of the poloidal flux, of BR and BZ in LUKE corresponds to clockwise Ip and Bt. Therefore     ');
