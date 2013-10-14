@@ -47,3 +47,14 @@ Launched RF power (P): 1.5874MW
 Deposited RF power (P): 1.5875 MW ---> 100.0086 %.
 RF power on harm. 0 (P): 1.5875 MW ---> 100.0086 %.
 Linear RF power (P): 1.5874 MW ---> 100 %.
+ 
+ ---- HXR results on the central chord ---- 
+ 
+k (keV) | CR exp (1/ms) | CR sim (1/ms)
+   30   |    28042.45   |    10064.09
+   50   |    35859.82   |    11230.98
+   70   |    17128.83   |     6411.30
+   90   |     6203.84   |     2721.72
+  110   |     2784.50   |      917.65
+  130   |     1098.73   |      414.18
+  150   |      419.62   |      218.68
