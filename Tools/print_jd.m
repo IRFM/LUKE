@@ -52,6 +52,8 @@ if opt >= 1,
     end
 %     wd = pwd;
 %     cd(savedir)
+    if strcmp(savedir,'./figures'),savedir = 'figures/';end
+    %
     print(fignum,'-depsc','-loose',['-r',num2str(res)],[savedir,savename,'.eps']);
 %     eval(['print -depsc -loose -r',num2str(res),' ',savename,'.eps']); 
     saveas(fignum,[savedir,savename,'.fig'],'fig')
