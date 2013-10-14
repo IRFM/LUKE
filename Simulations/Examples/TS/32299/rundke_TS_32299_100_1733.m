@@ -16,7 +16,6 @@ basestr = 'TS';
 shotnum = '32299';
 shotime = '100.1733';
 %
-scenario = 'standard';% for batch savename
 p_opt = -1;% Figure printing or saving option (-1) none (0) printer (1) printer & file (2) file
 %
 % remote computing parameters
@@ -86,12 +85,18 @@ for iw = 1:length(wavestructs),
     wavestructs{iw}.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = mdce_mode_main_C3PO_jd;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
 end
 %
-lukestruct.simul.locid = locid_simul;
+%************************************************************************************************************************************
+%
+simul.id = make_luke_simulid_jd(equil,ohm,transpfaste,ripple,'',wavestructs,locid_simul);
+simul.path = path_simul;
+%
+%************************************************************************************************************************************
+%
+lukestruct.simul = simul;
 lukestruct.equil = equil;
 lukestruct.dkeparam = dkeparam;
 lukestruct.dkedisplay = dkedisplay;
 lukestruct.ohm = ohm;
-lukestruct.waves = '';
 lukestruct.wavestructs = wavestructs;
 lukestruct.transpfaste = transpfaste;
 lukestruct.ripple = ripple;
@@ -116,7 +121,7 @@ lukestructs = run_lukert({lukestruct},dkepath);
 % >> completed_jobs = load_batch_jd('LUKE_BATCH_....mat',completed_jobs)
 %
 if opt.save == 0,
-    save_batch_jd(lukestructs,dkepath,scenario)
+    save_batch_jd(lukestructs,dkepath,simul.id)
 end
 %
 if remnum == 0 || remtimout > 0,% results are returned
@@ -130,7 +135,7 @@ if remnum == 0 || remtimout > 0,% results are returned
     opt.wave = 'y';
     opt.rho = 't'; 
     opt.blist = [];
-    opt.diaryname = ['res_',id_equil,'_',scenario];
+    opt.diaryname = ['res_',id_equil,'_',simul.id];
     %
     proc_luke_jd(lukestructs{1}.output,0,p_opt,0.1,NaN,'',opt);
     %
@@ -147,6 +152,6 @@ if remnum == 0 || remtimout > 0,% results are returned
     opt.icrej_exp = [24,30,46,47,52,53];% chords to be rejected
     opt.icc = 41;%chord number for display
     %
-    fproc_hxr(basestr,path_simul,lukestructs{1}.output.dke_out.simul.id,hxr_file,exp_file,texp,ic,krange,opt,1,p_opt)
+    fproc_hxr(basestr,path_simul,lukestructs{1}.output.dke_out.simul.id,hxr_file,exp_file,texp,ic,krange,opt,1,p_opt);
 end
 %
