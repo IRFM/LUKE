@@ -88,5 +88,5 @@ psia = (psia - psip);
 xypsin = xypsi/psia;
 rpsin = linspace(0,1,nx);
 %
-save test_ACCOME.mat
+save(['test_EQUIL_',savename,'.mat'])
 
