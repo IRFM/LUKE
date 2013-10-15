@@ -28,10 +28,18 @@ if ~isnan(xlim)
     set(ax(1),'xlim',xlim);
     set(ax(2),'xlim',xlim);
 end
-if ~isnan(ylim1)
+
+if isstruct(ylim1),
+    set(ax(1),'ylim',ylim1.lim);
+    set(ax(1),'ytick',ylim1.tick);
+elseif ~isnan(ylim1)
     set(ax(1),'ylim',ylim1);
 end
-if ~isnan(ylim2)
+
+if isstruct(ylim2),
+    set(ax(1),'ylim',ylim2.lim);
+    set(ax(1),'ytick',ylim2.tick);
+elseif ~isnan(ylim2)
     set(ax(2),'ylim',ylim2);
 end
 
