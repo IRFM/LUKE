@@ -55,10 +55,28 @@ pause(2);
 %
 % copy test files into directory
 %
-remotefilecopy_jd(remotehost,remotelogname,which('matlabbatch.sh'),[remotehome,filesep,'remotebatchtest/bin/'])
-remotefilecopy_jd(remotehost,remotelogname,'remotetest.m',[remotehome,filesep,'remotebatchtest/mat/'])
-remotefilecopy_jd(remotehost,remotelogname,which('remotematrun.m'),[remotehome,filesep,'remotebatchtest/mat/'])
-remotefilecopy_jd(remotehost,remotelogname,which('runmat.m'),[remotehome,filesep,'remotebatchtest/mat/'])
+
+filename = which('matlabbatch.sh');
+ifilesep = strfind(filename,filesep);
+local_path = filename(1:ifilesep(end));
+filename = filename(ifilesep(end)+1:end);
+remotefilecopy_jd(remotehost,remotelogname,local_path,filename,[remotehome,filesep,'remotebatchtest/bin/'])
+%
+filename = 'remotetest.m';
+local_path = [pwd,'/'];
+remotefilecopy_jd(remotehost,remotelogname,local_path,filename,[remotehome,filesep,'remotebatchtest/mat/'])
+%
+filename = which('remotematrun.m');
+ifilesep = strfind(filename,filesep);
+local_path = filename(1:ifilesep(end));
+filename = filename(ifilesep(end)+1:end);
+remotefilecopy_jd(remotehost,remotelogname,local_path,filename,[remotehome,filesep,'remotebatchtest/mat/'])
+%
+filename = which('runmat.m');
+ifilesep = strfind(filename,filesep);
+local_path = filename(1:ifilesep(end));
+filename = filename(ifilesep(end)+1:end);
+remotefilecopy_jd(remotehost,remotelogname,local_path,filename,[remotehome,filesep,'remotebatchtest/mat/'])
 %
 disp('-------------------------------------------------------')
 disp('-------------------- setting done ---------------------')
@@ -96,12 +114,12 @@ function remotedirtest_jd(remotehost,remotelogname,location)
     end   
 end
 %
-function remotefilecopy_jd(remotehost,remotelogname,filename,location)
+function remotefilecopy_jd(remotehost,remotelogname,local_path,filename,remote_path)
 %     %
 %     % test if file exists. 
 %     %
 %     disp(['testing if the remote file ',location,filename,'exists'])
-%     remotecmd = ['test -f ',location,filename];% test if remote directory exists
+%     remotecmd = ['test -f ',remote_path,filename];% test if remote directory exists
 %     %
 %     if ~isempty(remotehost),
 %         res = unix(['ssh ',remotelogname,'@',remotehost,' ''',remotecmd,'''']);
@@ -112,8 +130,8 @@ function remotefilecopy_jd(remotehost,remotelogname,filename,location)
 %     % delete remote files if they exist
 %     %
 %     if res == 0,% remote file does exist
-%         remotecmd = ['rm ',location,filename];%create remote directory
-%         disp(['    --> Deleting remote file ',location,filename])  
+%         remotecmd = ['rm ',remote_path,filename];%create remote directory
+%         disp(['    --> Deleting remote file ',remote_path,filename])  
 %         if ~isempty(remotehost),
 %             [res,err] = unix(['ssh ',remotelogname,'@',remotehost,' ''',remotecmd,'''']);
 %         else
@@ -128,23 +146,18 @@ function remotefilecopy_jd(remotehost,remotelogname,filename,location)
     % copy file into destimation
     %
     %
-    ifilesep = strfind(filename,filesep);
-    if ifilesep > 0,
-        remotecmd = ['chmod a+x ',location,filename(ifilesep(end)+1:end)];%extract filename only, not the path
-    else
-        remotecmd = ['chmod a+x ',location,filename];
-    end
+    remotecmd = ['chmod a+x ',remote_path,filename];
     %
     if ~isempty(remotehost),%remote calculation 
         %
-        disp(['    --> Copying script file ',filename,' to remote host ',remotehost,':',location,' as user ',remotelogname,' ...'])  
-        [res,err] = scp2remote_yp(remotelogname,remotehost,filename,'',location);
+        disp(['    --> Copying script file ',local_path,filename,' to remote host ',remotehost,':',remote_path,' as user ',remotelogname,' ...'])  
+        [res,err] = scp2remote_yp(remotelogname,remotehost,filename,local_path,remote_path);
         [res2,txt2] = unix(['ssh ',remotelogname,'@',remotehost,' ''',remotecmd,'''']);
         %
     else
         %
-        disp(['    --> Copying script file ',filename,' to ',location])  ;
-        [res,err] = unix(['cp ',filename,' ',location]);
+        disp(['    --> Copying script file ',local_path,filename,' to ',remote_path])  ;
+        [res,err] = unix(['cp ',local_path,filename,' ',remote_path]);
         [res2,txt2] = unix(remotecmd);
         %
     end
