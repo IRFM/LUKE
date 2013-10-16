@@ -78,6 +78,10 @@ dkepath.bjding(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','bojiang','bjd
 %
 dkepath.bjding(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','bojiang','bjding');
 %
+% ANDROMEDE CEA PARTENAIRES
+%
+dkepath.bjding(1).remote(4) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','bojiang','bjding');
+%
 %-------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %-------------------------------------------------------------------------------------------------------
@@ -123,4 +127,8 @@ dkepath.PEYSSON(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','yves','PEYSS
 % macproyves (xgrid)
 %
 dkepath.PEYSSON(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','yves','PEYSSON');
+%
+% ANDROMEDE CEA PARTENAIRES
+%
+dkepath.PEYSSON(1).remote(4) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','yves','PEYSSON');
 

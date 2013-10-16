@@ -109,6 +109,7 @@ macproyves.yvespeysson(1).remote(1).luke_root = macproyves.yvespeysson(1).luke_r
 %
 macproyves.yvespeysson(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves','yvespeysson');
 macproyves.yvespeysson(1).remote(3) = remote_ASIPP_SHENMA('torque','yves','yvespeysson');
-%macproyves.yvespeysson(1).remote(4) = remote_CEA_SATURNE('sun','yves','yvespeysson');
+macproyves.yvespeysson(1).remote(4) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','yves','yvespeysson');
+%macproyves.yvespeysson(1).remote(5) = remote_CEA_SATURNE('sun','yves','yvespeysson');
 
 

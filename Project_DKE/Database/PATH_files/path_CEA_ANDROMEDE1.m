@@ -26,6 +26,8 @@ dkepath.computer = computer;%machine type and supported OS
 % Selected default user profile 
 %
 dkepath.path_profile.JD211098 = 1;
+dkepath.path_profile.YP105119 = 1;
+dkepath.path_profile.EN232106 = 1;
 %
 % Selected user profile for unlisted users
 %
@@ -33,9 +35,9 @@ dkepath.default = 'JD211098';
 %
 %------------------------------------ Profile number 1, JD211098 Decker ------------------------------------
 %
-dkepath.JD211098(1).luke_root = ['/home/sccp/gsem/decker/',luke_ref,'/'];
-dkepath.JD211098(1).local_root = '/home/sccp/gsem/decker/Packages/nunki/';
-dkepath.JD211098(1).temppathroot = '/home/sccp/gsem/decker/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.JD211098(1).luke_root = ['/home/JD211098/',luke_ref,'/'];
+dkepath.JD211098(1).local_root = '/home/JD211098/Packages/nunki/';
+dkepath.JD211098(1).temppathroot = '/home/JD211098/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.JD211098(1).mex710 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB710/'];
 dkepath.JD211098(1).mex712 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB712/'];
@@ -57,7 +59,7 @@ dkepath.JD211098(1).MUMPS.mex800 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0
 %
 % LUKE documentation
 %
-dkepath.JD211098(1).graphviz.env = '/home/sccp/gsem/peysson/bin/';% Graphviz environment variable
+dkepath.JD211098(1).graphviz.env = '/YP105119/bin/';% Graphviz environment variable
 dkepath.JD211098(1).latex.env = '/usr/bin/';% Latex environment variable
 dkepath.JD211098(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
@@ -96,11 +98,15 @@ dkepath.JD211098(1).remote(6).luke_root = dkepath.JD211098(1).luke_root;
 %
 dkepath.JD211098(1).remote(7) = remote_CEA_SATURNE('sun','joan','JD211098');
 %
+% andromede (pbs)
+%
+dkepath.JD211098(1).remote(8) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','joan','JD211098');
+%
 %------------------------------------ Profile number 1, YP105119 Decker ------------------------------------
 %
-dkepath.YP105119(1).luke_root = ['/home/sccp/gsem/peysson/',luke_ref,'/'];
-dkepath.YP105119(1).local_root = '/home/sccp/gsem/decker/Packages/nunki/';
-dkepath.YP105119(1).temppathroot = '/home/sccp/gsem/peysson/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.YP105119(1).luke_root = ['/YP105119/',luke_ref,'/'];
+dkepath.YP105119(1).local_root = '/JD211098/Packages/nunki/';
+dkepath.YP105119(1).temppathroot = '/YP105119/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.YP105119(1).mex710 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB710/'];
 dkepath.YP105119(1).mex712 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB712/'];
@@ -121,7 +127,7 @@ dkepath.YP105119(1).MUMPS.mex800 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0
 %
 % LUKE documentation
 %
-dkepath.YP105119(1).graphviz.env = '/home/sccp/gsem/peysson/bin/';% Graphviz environment variable
+dkepath.YP105119(1).graphviz.env = '/YP105119/bin/';% Graphviz environment variable
 dkepath.YP105119(1).latex.env = '/usr/bin/';% Latex environment variable
 dkepath.YP105119(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
@@ -160,11 +166,15 @@ dkepath.YP105119(1).remote(6).luke_root = dkepath.YP105119(1).luke_root;
 %
 dkepath.YP105119(1).remote(7) = remote_CEA_SATURNE('sun','yves','YP105119');
 %
+% andromede (pbs)
+%
+dkepath.YP105119(1).remote(8) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','yves','YP105119');
+%
 %------------------------------------ Profile number 1, EN232106 Nilsson ------------------------------------
 %
-dkepath.EN232106(1).luke_root = ['/home/sccp/gchf/EN290612/',luke_ref,'/'];
-dkepath.EN232106(1).local_root = '/home/sccp/gsem/decker/Packages/nunki/';
-dkepath.EN232106(1).temppathroot = '/home/sccp/gchf/EN290612/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.EN232106(1).luke_root = ['/home/EN290612/',luke_ref,'/'];
+dkepath.EN232106(1).local_root = '/home/JD211098/Packages/nunki/';
+dkepath.EN232106(1).temppathroot = '/home/EN290612/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.EN232106(1).mex710 = [dkepath.EN232106(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB710/'];
 dkepath.EN232106(1).mex712 = [dkepath.EN232106(1).luke_root,'Project_DKE/MEX/Bin/nunki/MATLAB712/'];
@@ -186,7 +196,7 @@ dkepath.EN232106(1).MUMPS.mex800 = [dkepath.EN232106(1).local_root,'MUMPS_4.10.0
 %
 % LUKE documentation
 %
-dkepath.EN232106(1).graphviz.env = '/home/sccp/gsem/peysson/bin/';% Graphviz environment variable
+dkepath.EN232106(1).graphviz.env = '/home/YP105119/bin/';% Graphviz environment variable
 dkepath.EN232106(1).latex.env = '/usr/bin/';% Latex environment variable
 dkepath.EN232106(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
@@ -206,3 +216,11 @@ dkepath.EN232106(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','emelie','EN
 %
 dkepath.EN232106(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','emelie','EN232106');
 %
+%
+% andromede partenaires (pbs)
+%
+dkepath.EN290612(1).remote(8) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','emelie','EN290612');
+
+
+
+
