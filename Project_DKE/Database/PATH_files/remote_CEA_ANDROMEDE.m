@@ -1,6 +1,7 @@
 function remote_profile = remote_CEA_ANDROMEDE(clustername,profilename,localuser)
 %
 % This function regroups the remote profiles run on the ANDROMEDE cluster
+% in the CEA INTRANET 
 %
 default_cluster = 'pbs';% default cluster profile if 'clustername' is not an existing cluster profile
 default_profile = 'joan';% default user profile if 'remoteuser' is not an existing user profile
@@ -12,11 +13,11 @@ default_profile = 'joan';% default user profile if 'remoteuser' is not an existi
 % andromede (pbs pro)
 %
 remote.pbs.joan = default_remote_profile;
-remote.pbs.joan.host = 'andromede1.intra.cea.fr';% empty for local host
+remote.pbs.joan.host = 'andromede.intra.cea.fr';% empty for local host
 remote.pbs.joan.nproc = 12;
 remote.pbs.joan.cmd = 'qsub';
-remote.pbs.joan.get_jobid = {'','.andromede1'};%str_before,str_after
-remote.pbs.joan.set_jobid = {'qstat ','.andromede1','Unknown Job Id'};%str_before,str_after,str_check
+remote.pbs.joan.get_jobid = {'','.andromede'};%str_before,str_after
+remote.pbs.joan.set_jobid = {'qstat ','.andromede','Unknown Job Id'};%str_before,str_after,str_check
 remote.pbs.joan.matver.mat710.root = '/Applications/Matlab_2010A/bin/';
 remote.pbs.joan.matver.mat710.prefdir = '/home/sccp/gsem/decker/.matlab/R2010a';
 remote.pbs.joan.matver.mat712.root = '/Applications/Matlab_2011A/bin/';
@@ -30,11 +31,11 @@ remote.pbs.joan.users.remoteuser = 'JD211098';
 % YVES PEYSSON
 %
 remote.pbs.yves = default_remote_profile;
-remote.pbs.yves.host = 'andromede1.intra.cea.fr';
+remote.pbs.yves.host = 'andromede.intra.cea.fr';
 remote.pbs.yves.nproc = 12;
 remote.pbs.yves.cmd = 'qsub';
-remote.pbs.yves.get_jobid = {'','.andromede1'};%str_before,str_after
-remote.pbs.yves.set_jobid = {'qstat ','.andromede1','Unknown Job Id'};%str_before,str_after,str_check
+remote.pbs.yves.get_jobid = {'','.andromede'};%str_before,str_after
+remote.pbs.yves.set_jobid = {'qstat ','.andromede','Unknown Job Id'};%str_before,str_after,str_check
 remote.pbs.yves.matver.mat710.root = '/Applications/Matlab_2010A/bin/';
 remote.pbs.yves.matver.mat710.prefdir = '/home/sccp/gsem/peysson/.matlab/R2010a';
 remote.pbs.yves.matver.mat712.root = '/Applications/Matlab_2011A/bin/';
@@ -46,11 +47,11 @@ remote.pbs.yves.users.remoteuser = 'YP105119';
 % YVES BURAVAND
 %
 remote.pbs.yvesb = default_remote_profile;
-remote.pbs.yvesb.host = 'andromede1.intra.cea.fr';
+remote.pbs.yvesb.host = 'andromede.intra.cea.fr';
 remote.pbs.yvesb.nproc = 12;
 remote.pbs.yvesb.cmd = 'qsub';
-remote.pbs.yvesb.get_jobid = {'','.andromede1'};%str_before,str_after
-remote.pbs.yvesb.set_jobid = {'qstat ','.andromede1','Unknown Job Id'};%str_before,str_after,str_check
+remote.pbs.yvesb.get_jobid = {'','.andromede'};%str_before,str_after
+remote.pbs.yvesb.set_jobid = {'qstat ','.andromede','Unknown Job Id'};%str_before,str_after,str_check
 remote.pbs.yvesb.matver.mat710.root = '/Applications/Matlab_2010A/bin/';
 remote.pbs.yvesb.matver.mat710.prefdir = '/home/sccp/gsem/peysson/.matlab/R2010a';
 remote.pbs.yvesb.matver.mat712.root = '/Applications/Matlab_2011A/bin/';
@@ -64,11 +65,11 @@ remote.pbs.yvesb.users.remoteuser = 'YB109156';
 % andromede (pbs pro)
 %
 remote.pbs.emelie = default_remote_profile;
-remote.pbs.emelie.host = 'andromede1.intra.cea.fr';% empty for local host
+remote.pbs.emelie.host = 'andromede.intra.cea.fr';% empty for local host
 remote.pbs.emelie.nproc = 12;
 remote.pbs.emelie.cmd = 'qsub';
-remote.pbs.emelie.get_jobid = {'','.andromede1'};%str_before,str_after
-remote.pbs.emelie.set_jobid = {'qstat ','.andromede1','Unknown Job Id'};%str_before,str_after,str_check
+remote.pbs.emelie.get_jobid = {'','.andromede'};%str_before,str_after
+remote.pbs.emelie.set_jobid = {'qstat ','.andromede','Unknown Job Id'};%str_before,str_after,str_check
 remote.pbs.emelie.matver.mat710.root = '/Applications/Matlab_2010A/bin/';
 remote.pbs.emelie.matver.mat710.prefdir = '/home/sccp/gsem/decker/.matlab/R2010a';
 remote.pbs.emelie.matver.mat712.root = '/Applications/Matlab_2011A/bin/';
