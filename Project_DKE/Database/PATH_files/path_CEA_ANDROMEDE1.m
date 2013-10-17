@@ -216,7 +216,6 @@ dkepath.EN232106(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','emelie','EN
 %
 dkepath.EN232106(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','emelie','EN232106');
 %
-%
 % andromede partenaires (pbs)
 %
 dkepath.EN290612(1).remote(8) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','emelie','EN290612');
