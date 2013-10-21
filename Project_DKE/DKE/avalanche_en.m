@@ -21,6 +21,7 @@ npn = gridDKE.npn;
 nmhu = gridDKE.nmhu;
 pnmax_S = dkeparam.pnmax_S;
 f_pmax = dkeparam.f_pmax; % multiplication of p grid. f_pmax*p_max
+f_pmin = dkeparam.f_pmin; % lower p-limit for avalanche operator
 %
 %extending the grid so that we can count the avalanche created beyond pmax
 npnRA = f_pmax*gridDKE.npn;
@@ -67,8 +68,8 @@ Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
 mhuT=sqrt(1-B0./Bmax);
 %
 for ipsi=1:npsi
-    pthmask = pnRA >= 1;%dkeparam.pnmax_S;% %only take p>p0
-    Srp(ipsi,:) = beta^3*1/2*beta^3*1/(4*pi)/Lambd./(beta*pnRA.*gammaRA.*(gammaRA-1).^2).*pthmask; % rosenbluth (S*), first beta3 is from the Jacobian
+    pthmask = pnRA >= f_pmin; % S(p>=f_pmin)
+    Srp(ipsi,:) = beta^3*beta^3*1/(4*pi)/Lambd./(beta*pnRA.*gammaRA.*(gammaRA-1).^2).*pthmask; % rosenbluth (S*), first beta3 is from the Jacobian
 end
 %
 for ip0=1:length(pnRA)
@@ -90,7 +91,7 @@ for ip=1:npnRA
     xigrid = linspace(xistar(ip)-1/2*dxistar,xistar(ip)+1/2*dxistar,2);
     fdel = 1*nmhu/2;
     mhu_S = linspace(gridDKE.mhu(1)-gridDKE.dmhu(1)/2, gridDKE.mhu(end)+gridDKE.dmhu(end)/2,nmhu+1);
-    delt(:,ip,:) = redistrib_jd(xigrid,fdel,mhu_S,0);
+    delt(:,ip,:) = redistrib_jd(xigrid,fdel,mhu_S,0);%integral_dke_jd(gridDKE.dmhu',delt(1,ip,:),3)
 end
 %[dummy,I] = min(abs(gridDKE.mhu - sqrt((gammaRA(ip)-1)/(gammaRA(ip)+1))))
 %delt(:,ip,I) = 1;
@@ -123,14 +124,14 @@ XXSl2=XXSrp_xis;
 XXSavalanches_normtot = permute(XXSl,[2,3,1]);
 %
 %check the operator, compare with theory RP NF 1997
-alpha = 1:0.5:10;%E/Ec
+alpha = 1:0.5:20;%E/Ec
 Zi = -1;
-betath2 = 0.01;%
+betath2 = mksa.betath_ref^2;%
 %
 for ia = 1:length(alpha)
     pc = 1/sqrt((alpha(ia)-1)*betath2);
     %calculate secondary growth rate pmax<p<pext NORMALIZED to nr
-    XXRintmask = XXpnRA > pc;
+    XXRintmask = XXpnRA >= pc;
     Srp_int_norm_nr(ia) = mksa.nhu_ref*2*pi*(Zbouncecoef.xqtilde./Zbouncecoef.xqhat).*integral_dke_jd(gridDKE.dmhu,Zbouncecoef.Xxlambda.*integral_dke_jd(dpnRA,XXSavalanches_normtot(:,:,gridDKE.rdke).*XXRintmask.*XXpnRA2(:,:,gridDKE.rdke),1),1)'; %
 end
 %
