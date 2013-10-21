@@ -191,6 +191,8 @@ XXRlambda_b_p1p1 = Zbouncecoef.XXRlambda_b_p1p1;
 XXlambda_b_p2 = Zbouncecoef.XXlambda_b_p2;
 XXlambda = Zbouncecoef.XXlambda;
 Zmask_f0_t = Zbouncecoef.Zmask_f0_t;
+Zmask_f0_Tm = Zbouncecoef.Zmask_f0_Tm;
+Zmask_f0_Tp = Zbouncecoef.Zmask_f0_Tp;
 ns_f = Zbouncecoef.ns_f; 
 Zmask_g = Zbouncecoef.Zmask_g;
 ns_g = Zbouncecoef.ns_g;
@@ -464,7 +466,20 @@ XXf0 = XXfinit;%Initial guess (normalized to xne_norm)
 %
 xnormavalanches = xrr_out + 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*XXpn2.*XXSavalanches,1),1).';
 %
+% For differential operators, the TP symmetrization and the multiplication
+% by pn^2 is done in matrixcalc. For the sink/source terms, it is done here for
+% the sake of simplicity.
+%
 XXsinksource_pn2 = XXpn2.*(XXsinksource + XXSavalanches);
+%
+if bounce_mode > 0,
+    for ir = 1:nr,
+        XXsinksource_pn2(:,Zmask_f0_Tp{ir},ir) = (XXsinksource_pn2(:,Zmask_f0_Tp{ir},ir) + fliplr(XXsinksource_pn2(:,Zmask_f0_Tm{ir},ir)))/2;
+        XXsinksource_pn2(:,Zmask_f0_Tm{ir},ir) = fliplr(XXsinksource_pn2(:,Zmask_f0_Tp{ir},ir));% to avoid confusion if writeCloopinput_dke_ft is used.
+    end
+end
+%
+% Initial distribution
 %
 MMXfinit_t = [];
 for ir = 1:nr,
@@ -525,8 +540,8 @@ else
                 XI_t(1:boundary_mode_f,:) = 0;
             end
             %
-            MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
-            MMXsource_t = [MMXsource_t;reshape(XXsinksource_pn2(:,Zmask_f0_t{ir},ir)',(nmhu - ns_f(ir))*npn,1)];
+            MMXf0_t = [MMXf0_t;reshape(XXf0(:,Zmask_f0_t{ir},ir).',(nmhu - ns_f(ir))*npn,1)];
+            MMXsource_t = [MMXsource_t;reshape(XXsinksource_pn2(:,Zmask_f0_t{ir},ir).',(nmhu - ns_f(ir))*npn,1)];
 			%
             if ir == nr & ~isempty(Xmask_r_edge),%Edge radial boundary condition: XI_t = 0 if radial transport operates
             	%TODO: justifiying edge conditions for the Legendre integral
