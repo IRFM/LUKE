@@ -142,6 +142,9 @@ end
 if dkeparam.avalanche_mode == 1 && ~isfield(dkeparam,'f_pmax')
     dkeparam.f_pmax = 1;
 end
+if dkeparam.avalanche_mode == 1 && ~isfield(dkeparam,'f_pmin')
+    dkeparam.f_pmin = 1;
+end
 %
 if ~isfield(dkeparam,'redfac'),
     dkeparam.redfac = 0;
