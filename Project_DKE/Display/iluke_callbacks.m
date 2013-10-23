@@ -1219,6 +1219,33 @@ switch action
         %
         clear iw
         %
+    case 'c3pooptim'
+        %
+        % optimize Bt, Zp & launching angles to deposit power in target area
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
+        lukeobj.plot1.gindex = 0;
+        %
+        iluke_update;% initialize display
+        %
+        newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Visible','off');% create new graphic objects with requested characteristics
+        %
+        select = struct;
+        select.style = style;
+        select.axs = newgraph1_handle;
+        select.opt_gui = lukeobj.infopanel.handle;
+        %
+        iw = lukeobj.wavestruct.select.value;
+        %
+        wavestructs{iw} = wave_optim_jd(dkepath,wavestructs{iw},select);
+        %
+        delete(newgraph1_handle);
+        %
+        clear iw newgraph1_handle select
+        %
+        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        %
     case 'c3postart'
         %
         % running C3PO for current or all wavestructs

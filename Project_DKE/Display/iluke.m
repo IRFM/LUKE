@@ -210,8 +210,9 @@ lukeobj.runluke.string = 'LUKE START';
 lukeobj.lukeidtitle.string = 'Run ID';
 lukeobj.runcheck.string = 'CHECK RUN';
 
-lukeobj.runc3po.string = 'C3PO START CURRENT';
-lukeobj.runc3poall.string = 'C3PO START ALL';
+lukeobj.runc3po.string = 'START CURRENT';
+lukeobj.runc3poall.string = 'START ALL';
+lukeobj.runc3pooptim.string = 'OPTIMIZE';
 lukeobj.wsparamtitle.string = 'Distributed computing mode for C3PO';
 lukeobj.wsparam.string = '0';
 
@@ -255,6 +256,7 @@ lukeobj.runcheck.callback = 'action = ''runcheck'';iluke_callbacks;';
 
 lukeobj.runc3po.callback = 'iw = lukeobj.wavestruct.select.value;action = ''c3postart'';iluke_callbacks;clear iw;';
 lukeobj.runc3poall.callback = 'iw = 1:length(wavestructs);action = ''c3postart'';iluke_callbacks;clear iw;';
+lukeobj.runc3pooptim.callback = 'action = ''c3pooptim'';iluke_callbacks;';
 lukeobj.wsparam.callback = 'lukeobj.wsparam.string = get(lukeobj.wsparam.handle,''String'');iluke_update;';
 
 %
@@ -371,9 +373,12 @@ set(lukeobj.spectrum.text.handle,'HorizontalAlignment','left');
 set(lukeobj.launch.text.handle,'HorizontalAlignment','left');
 set(lukeobj.c3poparam.text.handle,'HorizontalAlignment','left');
 
+style.c3powidth = (style.panelwidth - 4*style.buthsep)/3;
+
 lukeobj.wavestruct.select.position = [style.titlewidth + 7*style.buthsep + 5*style.butwidth,style.infoheightcorr - style.butheightcorr,style.panelwidth - style.titlewidth - 8*style.buthsep - 5*style.butwidth,style.butheight];
-lukeobj.runc3po.position = [style.buthsep,style.infoheightcorr - 8*style.butheightcorr,style.panelwidth/2 - 2*style.buthsep,2*style.butheight];
-lukeobj.runc3poall.position = [style.panelwidth/2 + style.buthsep,style.infoheightcorr - 8*style.butheightcorr,style.panelwidth/2 - 2*style.buthsep,2*style.butheight];
+lukeobj.runc3po.position = [style.buthsep,style.infoheightcorr - 8*style.butheightcorr,style.c3powidth,2*style.butheight];
+lukeobj.runc3poall.position = [style.c3powidth + 2*style.buthsep,style.infoheightcorr - 8*style.butheightcorr,style.c3powidth,2*style.butheight];
+lukeobj.runc3pooptim.position = [2*style.c3powidth + 3*style.buthsep,style.infoheightcorr - 8*style.butheightcorr,style.c3powidth,2*style.butheight];
 lukeobj.wsparamtitle.position = [style.buthsep,style.infoheightcorr - 6*style.butheightcorr + style.textheightcorr,style.titlewidth + 4*(style.butwidth + style.buthsep),style.butheight];
 lukeobj.wsparam.position = [style.titlewidth + 4*style.butwidth + 6*style.buthsep,style.infoheightcorr - 6*style.butheightcorr,style.butwidth,style.butheight];
 
@@ -382,6 +387,7 @@ lukeobj.wavestruct.select.callback = 'lukeobj.wavestruct.select.value = get(luke
 lukeobj.wavestruct.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.wavestruct.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.wavestruct.select.callback);
 lukeobj.runc3po.handle = uicontrol(lukeobj.infopanel.handle,'Style','pushbutton','String',lukeobj.runc3po.string,'Position',lukeobj.runc3po.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'Callback',lukeobj.runc3po.callback);
 lukeobj.runc3poall.handle = uicontrol(lukeobj.infopanel.handle,'Style','pushbutton','String',lukeobj.runc3poall.string,'Position',lukeobj.runc3poall.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'Callback',lukeobj.runc3poall.callback);
+lukeobj.runc3pooptim.handle = uicontrol(lukeobj.infopanel.handle,'Style','pushbutton','String',lukeobj.runc3pooptim.string,'Position',lukeobj.runc3pooptim.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'Callback',lukeobj.runc3pooptim.callback);
 lukeobj.wsparamtitle.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.wsparamtitle.string,'Position',lukeobj.wsparamtitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.wsparam.handle = uicontrol(lukeobj.infopanel.handle,'Style','edit','String',lukeobj.wsparam.string,'Position',lukeobj.wsparam.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.wsparam.callback);
 

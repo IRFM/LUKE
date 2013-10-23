@@ -37,6 +37,7 @@ if nw == 0,
     lukeobj.c3poparam.reset.state = 'off';
     lukeobj.runc3po.state = 'off';
     lukeobj.runc3poall.state = 'off';    
+    lukeobj.runc3pooptim.state = 'off';    
     lukeobj.wsparamtitle.state = 'off';
     lukeobj.wsparam.state = 'off';
     %
@@ -54,6 +55,7 @@ if nw == 0,
     end
     lukeobj.runc3po.highlight = false;
     lukeobj.runc3poall.highlight = false;    
+    lukeobj.runc3pooptim.highlight = false;    
 else
     iw = lukeobj.wavestruct.select.value;
     %
@@ -97,6 +99,7 @@ else
     %
     lukeobj.runc3po.state = 'on';
     lukeobj.runc3poall.state = 'on';    
+    lukeobj.runc3pooptim.state = 'on';    
     lukeobj.wsparamtitle.state = 'on';
     lukeobj.wsparam.state = 'on';
     %
@@ -175,6 +178,7 @@ else
     lukeobj.wavestruct.make.highlight = false;
     lukeobj.runc3po.highlight = true;
     lukeobj.runc3poall.highlight = true;    
+    lukeobj.runc3pooptim.highlight = true;    
     %
 end
 %

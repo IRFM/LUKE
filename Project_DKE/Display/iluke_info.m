@@ -109,6 +109,7 @@ function lukeobj = iluke_switch(lukeobj,str)
         lukeobj.c3poparam.visible = 'on';
         lukeobj.runc3po.visible = 'on';
         lukeobj.runc3poall.visible = 'on';
+        lukeobj.runc3pooptim.visible = 'on';
         lukeobj.wsparamtitle.visible = 'on';
         lukeobj.wsparam.visible = 'on';
         %
@@ -122,6 +123,7 @@ function lukeobj = iluke_switch(lukeobj,str)
         lukeobj.c3poparam.visible = 'off';
         lukeobj.runc3po.visible = 'off';
         lukeobj.runc3poall.visible = 'off';
+        lukeobj.runc3pooptim.visible = 'off';
         lukeobj.wsparamtitle.visible = 'off';
         lukeobj.wsparam.visible = 'off';
         %
