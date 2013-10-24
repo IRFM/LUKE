@@ -250,10 +250,55 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
         gain_double_GPU = etime_double./etime_double_GPU;
         %gain_double_arrayfun_GPU = etime_double./etime_double_arrayfun_GPU;
         %
-        if strcmp(test_mode,'2'),
+        dkepath = load_structures_yp('dkepath','','');
+        %
+        for im = 1:length(nm_single),
+            %
+            if strcmp(test_mode,'2'),
+                if strcmp(matrix_type,'1'),
+                    Xmdce{im} = ones(nm_single(im),'single');  
+                else
+                    Xmdce{im} = rand(nm_single(im),'single');    
+                end 
+            end
+        end
+        %
+        mdce_mode = 0;
+        %
+        clustermode.funGPU.scheduler.mode = real(mdce_mode);
+        if ~isreal(mdce_mode),
+            clustermode.funGPU.scheduler.gpu = imag(mdce_mode);
+        else
+            clustermode.funGPU.scheduler.gpu = 0;
+        end
+        %
+        dkecluster = clustermode_luke(clustermode,'funGPU',dkepath);
+        %
+        for j = 1:length(nm_single),
+        	tic,[flag,Y_GPU,Z_GPU,T_GPU,W_GPU] = mdce_luke(@funGPU,{NaN,a,b},1,Xmdce(1:j),dkecluster);etime_single_tot(j) = toc;
+        end
+        %
+        mdce_mode = i;
+        %
+        clustermode.funGPU.scheduler.mode = real(mdce_mode);
+        if ~isreal(mdce_mode),
+            clustermode.funGPU.scheduler.gpu = imag(mdce_mode);
+        else
+            clustermode.funGPU.scheduler.gpu = 0;
+        end
+        %
+        dkecluster = clustermode_luke(clustermode,'funGPU',dkepath);
+        %
+        for j = 1:length(nm_single),
+        	tic,[flag,Y_GPU,Z_GPU,T_GPU,W_GPU] = mdce_luke(@funGPU,{NaN,a,b},1,Xmdce(1:j),dkecluster);etime_single_GPU_tot(j) = toc;
+        end
+        %
+        disp(['Single precision calculations, ',int2str(length(nm_single)),' iterations, tfun_mdce = ',num2str(etime_single_tot(end)),', tfunGPU_mdce = ',num2str(etime_single_GPU_tot(end))])
+        %
+        if strcmp(matrix_type,'2'),
             figure('Name','Random matrix size'),
-            graph1D_jd(nm_single,gain_single_GPU,0,0,'Random matrix size: (n*n)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
-            %graph1D_jd(nm_single,gain_single_arrayfun_GPU,0,0,'Random matrix size: (n*n)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
+            graph1D_jd(nm_single,gain_single_GPU,0,0,'Random number matrix size: (n*n)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
+            %graph1D_jd(nm_single,gain_single_arrayfun_GPU,0,0,'Random number matrix size: (n*n)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
             graph1D_jd(nm_double,gain_double_GPU,0,0,'','','','Double',NaN,NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);hold on
             %graph1D_jd(nm_double,gain_double_arrayfun_GPU,0,0,'','','','Double',NaN,NaN,'--','none','b',2,20,gca,0.9,0.7,0.7);hold on
             %legend(['Single              ';'Single with Arrayfun';'Double              ';'Double with Arrayfun']);
@@ -262,8 +307,8 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             print_jd(p_opt,'fig_GPU_MatrixSize','./figures',1)
             %
             figure('Name','Random matrix memory size')
-            graph1D_jd(sizeX_single,gain_single_GPU,0,0,'Random matrix (MBytes)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
-            %graph1D_jd(sizeX_single,gain_single_arrayfun_GPU,0,0,'Random matrix (MBytes)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
+            graph1D_jd(sizeX_single,gain_single_GPU,0,0,'Random number matrix (MBytes)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
+            %graph1D_jd(sizeX_single,gain_single_arrayfun_GPU,0,0,'Random number matrix (MBytes)','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
             graph1D_jd(sizeX_double,gain_double_GPU,0,0,'','','','Double',NaN,NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);hold on
             %graph1D_jd(sizeX_double,gain_double_arrayfun_GPU,0,0,'','','','Double',NaN,NaN,'--','none','b',2,20,gca,0.9,0.7,0.7);hold on
             %legend(['Single              ';'Single with Arrayfun';'Double              ';'Double with Arrayfun']);
@@ -272,7 +317,7 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             print_jd(p_opt,'fig_GPU_MatrixMemorySize','./figures',1)
         else
             figure('Name','Uniform matrix size'),
-            graph1D_jd([1:length(gain_single_GPU)],gain_single_GPU,0,0,'Number of trials','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
+            graph1D_jd([1:length(gain_single_GPU)],gain_single_GPU,0,0,'Number of iterations','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
             %graph1D_jd([1:length(gain_single_arrayfun_GPU)],gain_single_arrayfun_GPU,0,0,'Number of trials','GPU speed gain',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
             graph1D_jd([1:length(gain_double_GPU)],gain_double_GPU,0,0,'','','','Double',NaN,NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);hold on
             %graph1D_jd([1:length(gain_double_arrayfun_GPU)],gain_double_arrayfun_GPU,0,0,'','','','Double',NaN,NaN,'--','none','b',2,20,gca,0.9,0.7,0.7);hold on
@@ -281,6 +326,15 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             %
             print_jd(p_opt,'fig_GPU_MatrixSize','./figures',1)
         end
+        %
+        figure('Name','Cumulative time'),
+        graph1D_jd(1:length(nm_single),cumsum(etime_single),0,0,'Iteration number (n/100)','Cumulative time (s)',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'-','none','r',2,20,gca,0.9,0.7,0.7);
+        graph1D_jd(1:length(nm_single),etime_single_tot,0,0,'Iteration number (n/100)','Cumulative time (s)',[gpuStatus.Name,', ',GPUmem],'Single',NaN,NaN,'--','none','r',2,20,gca,0.9,0.7,0.7);
+        graph1D_jd(1:length(nm_single),etime_init(1)+cumsum(etime_single_GPU),0,0,'','','','Double',NaN,NaN,'-','none','b',2,20,gca,0.9,0.7,0.7);hold on
+        graph1D_jd(1:length(nm_single),etime_single_GPU_tot,0,0,'','','','Double',NaN,NaN,'--','none','b',2,20,gca,0.9,0.7,0.7);hold on
+        legend(['CPU - Single      ';'CPU(LUKE) - Single';'GPU - Single      ';'GPU(LUKE) - Single']);
+        %
+        print_jd(p_opt,'fig_GPU_Cumulative_time','./figures',1)
         %
         filename = ['GPU_test_',test_mode,'_matrix_',matrix_type,'_fun_',fun_mode,'_inputs_',inputs_mode,'_outputs_',outputs_mode,'.mat'];
         save(filename,'etime_init','nm_single','etime_single','etime_single_GPU','nm_double','etime_double','etime_double_GPU');
