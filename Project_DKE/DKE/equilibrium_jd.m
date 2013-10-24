@@ -328,7 +328,7 @@ if Rp < Inf,
         %
         thetah = equil.theta(1:ntheta-1);
         %
-        nt = 100*nc;
+        nt = 1000*nc;
         %
         for t = 1:nt,
             %

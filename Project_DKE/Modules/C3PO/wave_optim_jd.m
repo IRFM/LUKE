@@ -11,8 +11,8 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
     %
     ninputs(1) = abs(wavestruct.equil.ptBPHI(1,1));% magnetic field on axis
     ninputs(2) = wavestruct.equil.Zp;%vertical position
-    ninputs(3) = wavestruct.launch.angles.theta*180/pi;% tilt angle
-    ninputs(4) = wavestruct.launch.angles.phi*180/pi;% rotation angle
+    ninputs(3) = wavestruct.launch.angles.theta;% tilt angle
+    ninputs(4) = wavestruct.launch.angles.phi;% rotation angle
     %
     ntargets(1) = NaN;
     ntargets(2) = NaN;
@@ -52,9 +52,9 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
         '  Only the central ray is used for optimization. Do not pay attention to deposition width.',...
         '  Warning : if Zp is modified, all other wavestructs and waves will be deleted.',...      
         '    - When all inputs are specified, you can press ''Run'' to calculate the deposition',...  
-        '    - Otherwise, press ''Optimize'' to calculate the missing parameters''',...           
-        '    - The total number of specified (not empty) input and target parameters must always be 4, ',...
-        '    - Press ''Return'' to return optimized parameters to C3PO console''',...           
+        '    - Otherwise, press ''Optimize'' to calculate the missing parameters',...           
+        '    - The total number of specified (not empty) input and target parameters must always be 4',...
+        '    - Press ''Return'' to return optimized parameters to C3PO console',...           
         ' '};
             %
             infostr2 = {...
@@ -64,7 +64,16 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
         ' ',...
         ' ',...
         ' ',...
-        '    - The total number of specified (not empty) input and target parameters must always be 4, '};
+        '    - The total number of specified (not empty) input and target parameters must always be 4'};
+            %
+            infostr3 = {...
+        ' ',...
+        ' ',...
+        ' ',...
+        ' ',...
+        ' ',...
+        ' ',...
+        '    - The wave did not enter the plasma. Modify input parameters'};
             %
             inputs.string = 'Input parameters';
             targets.string = 'Deposition target';
@@ -75,13 +84,18 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
             inputs.theta.title.string = 'theta_L [deg]';
             inputs.phi.title.string = 'phi_L [deg]';
             %
+            inputs.bt.clear.string = 'Clear';
+            inputs.zp.clear.string = 'Clear';
+            inputs.theta.clear.string = 'Clear';
+            inputs.phi.clear.string ='Clear';
+            %
             inputs.bt.reset.string = 'Reset';
             inputs.zp.reset.string = 'Reset';
             inputs.theta.reset.string = 'Reset';
             inputs.phi.reset.string ='Reset';
             %
 %             targets..title.string = '';
-            targets.rho.title.string = 'r/a [sqrt(psi/psia)]';
+            targets.rho.title.string = 'r/a (psiP)';% [sqrt(psi/psia)]
             targets.theta.title.string = 'theta [deg]';
             targets.npar.title.string = 'n//';
             %
@@ -89,6 +103,11 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
             targets.rho.val.string = '';
             targets.theta.val.string = '';
             targets.npar.val.string = '';            
+            %
+%             targets..clear.string = 'Clear';
+            targets.rho.clear.string = 'Clear';
+            targets.theta.clear.string = 'Clear';
+            targets.npar.clear.string ='Clear';
             %
 %             targets..reset.string = 'Reset';
             targets.rho.reset.string = 'Reset';
@@ -100,37 +119,45 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
             optim.string = 'Optimize';
             finish.string = 'Return';
             %
-            inputs.bt.title.position = [style.buthsep,4*style.butvsep + 3*style.butheight + style.textheightcorr,columnwidth - 4*style.buthsep - style.butwidth - style.longbutwidth,style.butheight];
-            inputs.bt.val.position = [columnwidth - 2*style.buthsep - style.butwidth - style.longbutwidth,4*style.butvsep + 3*style.butheight,style.longbutwidth,style.butheight];
+            inputs.bt.title.position = [style.buthsep,4*style.butvsep + 3*style.butheight + style.textheightcorr,columnwidth - 5*style.buthsep - 2*style.butwidth - style.longbutwidth,style.butheight];
+            inputs.bt.val.position = [columnwidth - 3*style.buthsep - 2*style.butwidth - style.longbutwidth,4*style.butvsep + 3*style.butheight,style.longbutwidth,style.butheight];
+            inputs.bt.clear.position = [columnwidth - 2*style.buthsep - 2*style.butwidth,4*style.butvsep + 3*style.butheight,style.butwidth,style.butheight];
             inputs.bt.reset.position = [columnwidth - style.buthsep - style.butwidth,4*style.butvsep + 3*style.butheight,style.butwidth,style.butheight];
             %
-            inputs.zp.title.position = [style.buthsep,3*style.butvsep + 2*style.butheight + style.textheightcorr,columnwidth - 4*style.buthsep - style.butwidth - style.longbutwidth,style.butheight];
-            inputs.zp.val.position = [columnwidth - 2*style.buthsep - style.butwidth - style.longbutwidth,3*style.butvsep + 2*style.butheight,style.longbutwidth,style.butheight];
+            inputs.zp.title.position = [style.buthsep,3*style.butvsep + 2*style.butheight + style.textheightcorr,columnwidth - 5*style.buthsep - 2*style.butwidth - style.longbutwidth,style.butheight];
+            inputs.zp.val.position = [columnwidth - 3*style.buthsep - 2*style.butwidth - style.longbutwidth,3*style.butvsep + 2*style.butheight,style.longbutwidth,style.butheight];
+            inputs.zp.clear.position = [columnwidth - 2*style.buthsep - 2*style.butwidth,3*style.butvsep + 2*style.butheight,style.butwidth,style.butheight];
             inputs.zp.reset.position = [columnwidth - style.buthsep - style.butwidth,3*style.butvsep + 2*style.butheight,style.butwidth,style.butheight];
             %
-            inputs.theta.title.position = [style.buthsep,2*style.butvsep + style.butheight + style.textheightcorr,columnwidth - 4*style.buthsep - style.butwidth - style.longbutwidth,style.butheight];
-            inputs.theta.val.position = [columnwidth - 2*style.buthsep - style.butwidth - style.longbutwidth,2*style.butvsep + style.butheight,style.longbutwidth,style.butheight];
+            inputs.theta.title.position = [style.buthsep,2*style.butvsep + style.butheight + style.textheightcorr,columnwidth - 5*style.buthsep - 2*style.butwidth - style.longbutwidth,style.butheight];
+            inputs.theta.val.position = [columnwidth - 3*style.buthsep - 2*style.butwidth - style.longbutwidth,2*style.butvsep + style.butheight,style.longbutwidth,style.butheight];
+            inputs.theta.clear.position = [columnwidth - 2*style.buthsep - 2*style.butwidth,2*style.butvsep + style.butheight,style.butwidth,style.butheight];
             inputs.theta.reset.position = [columnwidth - style.buthsep - style.butwidth,2*style.butvsep + style.butheight,style.butwidth,style.butheight];
             %
-            inputs.phi.title.position = [style.buthsep,style.butvsep + style.textheightcorr,columnwidth - 4*style.buthsep - style.butwidth - style.longbutwidth,style.butheight];
-            inputs.phi.val.position = [columnwidth - 2*style.buthsep - style.butwidth - style.longbutwidth,style.butvsep,style.longbutwidth,style.butheight];
+            inputs.phi.title.position = [style.buthsep,style.butvsep + style.textheightcorr,columnwidth - 5*style.buthsep - 2*style.butwidth - style.longbutwidth,style.butheight];
+            inputs.phi.val.position = [columnwidth - 3*style.buthsep - 2*style.butwidth - style.longbutwidth,style.butvsep,style.longbutwidth,style.butheight];
+            inputs.phi.clear.position = [columnwidth - 2*style.buthsep - 2*style.butwidth,style.butvsep,style.butwidth,style.butheight];
             inputs.phi.reset.position = [columnwidth - style.buthsep - style.butwidth,style.butvsep,style.butwidth,style.butheight];
             %
             %
-%             targets..title.position = [style.buthsep,4*style.butvsep + 3*style.butheight + style.textheightcorr,columnwidth - 4*style.buthsep - style.butwidth - style.longbutwidth,style.butheight];
-%             targets..val.position = [columnwidth - 2*style.buthsep - style.butwidth - style.longbutwidth,4*style.butvsep + 3*style.butheight,style.longbutwidth,style.butheight];
+%             targets..title.position = [style.buthsep,4*style.butvsep + 3*style.butheight + style.textheightcorr,columnwidth - 5*style.buthsep - 2*style.butwidth - style.longbutwidth,style.butheight];
+%             targets..val.position = [columnwidth - 3*style.buthsep - 2*style.butwidth - style.longbutwidth,4*style.butvsep + 3*style.butheight,style.longbutwidth,style.butheight];
+%             targets..clear.position = [columnwidth - 2*style.buthsep - 2*style.butwidth,4*style.butvsep + 3*style.butheight,style.butwidth,style.butheight];
 %             targets..reset.position = [columnwidth - style.buthsep - style.butwidth,4*style.butvsep + 3*style.butheight,style.butwidth,style.butheight];
             %
-            targets.rho.title.position = [style.buthsep,3*style.butvsep + 2*style.butheight + style.textheightcorr,columnwidth - 4*style.buthsep - style.butwidth - style.longbutwidth,style.butheight];
-            targets.rho.val.position = [columnwidth - 2*style.buthsep - style.butwidth - style.longbutwidth,3*style.butvsep + 2*style.butheight,style.longbutwidth,style.butheight];
+            targets.rho.title.position = [style.buthsep,3*style.butvsep + 2*style.butheight + style.textheightcorr,columnwidth - 5*style.buthsep - 2*style.butwidth - style.longbutwidth,style.butheight];
+            targets.rho.val.position = [columnwidth - 3*style.buthsep - 2*style.butwidth - style.longbutwidth,3*style.butvsep + 2*style.butheight,style.longbutwidth,style.butheight];
+            targets.rho.clear.position = [columnwidth - 2*style.buthsep - 2*style.butwidth,3*style.butvsep + 2*style.butheight,style.butwidth,style.butheight];
             targets.rho.reset.position = [columnwidth - style.buthsep - style.butwidth,3*style.butvsep + 2*style.butheight,style.butwidth,style.butheight];
             %
-            targets.theta.title.position = [style.buthsep,2*style.butvsep + style.butheight + style.textheightcorr,columnwidth - 4*style.buthsep - style.butwidth - style.longbutwidth,style.butheight];
-            targets.theta.val.position = [columnwidth - 2*style.buthsep - style.butwidth - style.longbutwidth,2*style.butvsep + style.butheight,style.longbutwidth,style.butheight];
+            targets.theta.title.position = [style.buthsep,2*style.butvsep + style.butheight + style.textheightcorr,columnwidth - 5*style.buthsep - 2*style.butwidth - style.longbutwidth,style.butheight];
+            targets.theta.val.position = [columnwidth - 3*style.buthsep - 2*style.butwidth - style.longbutwidth,2*style.butvsep + style.butheight,style.longbutwidth,style.butheight];
+            targets.theta.clear.position = [columnwidth - 2*style.buthsep - 2*style.butwidth,2*style.butvsep + style.butheight,style.butwidth,style.butheight];
             targets.theta.reset.position = [columnwidth - style.buthsep - style.butwidth,2*style.butvsep + style.butheight,style.butwidth,style.butheight];
             %
-            targets.npar.title.position = [style.buthsep,style.butvsep + style.textheightcorr,columnwidth - 4*style.buthsep - style.butwidth - style.longbutwidth,style.butheight];
-            targets.npar.val.position = [columnwidth - 2*style.buthsep - style.butwidth - style.longbutwidth,style.butvsep,style.longbutwidth,style.butheight];
+            targets.npar.title.position = [style.buthsep,style.butvsep + style.textheightcorr,columnwidth - 5*style.buthsep - 2*style.butwidth - style.longbutwidth,style.butheight];
+            targets.npar.val.position = [columnwidth - 3*style.buthsep - 2*style.butwidth - style.longbutwidth,style.butvsep,style.longbutwidth,style.butheight];
+            targets.npar.clear.position = [columnwidth - 2*style.buthsep - 2*style.butwidth,style.butvsep,style.butwidth,style.butheight];
             targets.npar.reset.position = [columnwidth - style.buthsep - style.butwidth,style.butvsep,style.butwidth,style.butheight];
             % 
             %
@@ -157,10 +184,15 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
             inputs.theta.val.handle = uicontrol(inputs.handle,'Style','edit','Position',inputs.theta.val.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left','Callback',@setval_cbf);
             inputs.phi.val.handle = uicontrol(inputs.handle,'Style','edit','Position',inputs.phi.val.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left','Callback',@setval_cbf);
             %
-            inputs.bt.reset.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.bt.reset.string,'Position',inputs.bt.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@pushbutton_cbf);
-            inputs.zp.reset.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.zp.reset.string,'Position',inputs.zp.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@pushbutton_cbf);
-            inputs.theta.reset.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.theta.reset.string,'Position',inputs.theta.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@pushbutton_cbf);
-            inputs.phi.reset.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.phi.reset.string,'Position',inputs.phi.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@pushbutton_cbf);
+            inputs.bt.clear.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.bt.clear.string,'Position',inputs.bt.clear.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            inputs.zp.clear.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.zp.clear.string,'Position',inputs.zp.clear.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            inputs.theta.clear.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.theta.clear.string,'Position',inputs.theta.clear.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            inputs.phi.clear.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.phi.clear.string,'Position',inputs.phi.clear.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            %
+            inputs.bt.reset.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.bt.reset.string,'Position',inputs.bt.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            inputs.zp.reset.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.zp.reset.string,'Position',inputs.zp.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            inputs.theta.reset.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.theta.reset.string,'Position',inputs.theta.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            inputs.phi.reset.handle  = uicontrol(inputs.handle,'Style','pushbutton','String',inputs.phi.reset.string,'Position',inputs.phi.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
             %
 %             targets..title.handle = uicontrol(targets.handle,'Style','text','String',targets..title.string,'Position',targets..title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
             targets.rho.title.handle = uicontrol(targets.handle,'Style','text','String',targets.rho.title.string,'Position',targets.rho.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
@@ -172,10 +204,15 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
             targets.theta.val.handle = uicontrol(targets.handle,'Style','edit','Position',targets.theta.val.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left','Callback',@setval_cbf);
             targets.npar.val.handle = uicontrol(targets.handle,'Style','edit','Position',targets.npar.val.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left','Callback',@setval_cbf);
             %
-%             targets..reset.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets..reset.string,'Position',targets..reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@pushbutton_cbf);
-            targets.rho.reset.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets.rho.reset.string,'Position',targets.rho.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@pushbutton_cbf);
-            targets.theta.reset.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets.theta.reset.string,'Position',targets.theta.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@pushbutton_cbf);
-            targets.npar.reset.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets.npar.reset.string,'Position',targets.npar.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@pushbutton_cbf);
+%             targets..clear.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets..clear.string,'Position',targets..clear.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            targets.rho.clear.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets.rho.clear.string,'Position',targets.rho.clear.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            targets.theta.clear.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets.theta.clear.string,'Position',targets.theta.clear.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            targets.npar.clear.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets.npar.clear.string,'Position',targets.npar.clear.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            %
+%             targets..reset.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets..reset.string,'Position',targets..reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            targets.rho.reset.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets.rho.reset.string,'Position',targets.rho.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            targets.theta.reset.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets.theta.reset.string,'Position',targets.theta.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
+            targets.npar.reset.handle  = uicontrol(targets.handle,'Style','pushbutton','String',targets.npar.reset.string,'Position',targets.npar.reset.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@setval_cbf);
             %
             run.handle  = uicontrol(controls.handle,'Style','pushbutton','String',run.string,'Position',run.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@pushbutton_cbf);
 %             guess.handle  = uicontrol(controls.handle,'Style','pushbutton','String',guess.string,'Position',guess.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',@pushbutton_cbf);
@@ -184,6 +221,11 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
             %
             inputs.handles = [inputs.bt.val.handle,inputs.zp.val.handle,inputs.theta.val.handle,inputs.phi.val.handle];
             targets.handles = [targets.rho.val.handle,targets.theta.val.handle,targets.npar.val.handle];
+            %
+            inputs.clearhandles = [inputs.bt.clear.handle,inputs.zp.clear.handle,inputs.theta.clear.handle,inputs.phi.clear.handle];
+            inputs.resethandles = [inputs.bt.reset.handle,inputs.zp.reset.handle,inputs.theta.reset.handle,inputs.phi.reset.handle];
+            targets.clearhandles = [targets.rho.clear.handle,targets.theta.clear.handle,targets.npar.clear.handle];
+            targets.resethandles = [targets.rho.reset.handle,targets.theta.reset.handle,targets.npar.reset.handle];            
             %
             opt_info = true;
             %
@@ -199,14 +241,19 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
     exit_loop = 0;    
     optim_done = 0;
     %
-    optim.tolfun = 1e-3;% tolerance on target (in m)
-    optim.nitmax = 10;%
+    optim.tolfun = 1e-3;% tolerance on targets (in m)
+    optim.tolx = 1e-3;% tolerance on inputs (in m)
+    optim.nitmax = 20;%
     %
-    ninputs_init = ninputs;
+    inputs.resetval = cell(1,length(inputs.resethandles));
+    targets.resetval = cell(1,length(targets.resethandles));
     %
     while exit_loop == 0,
         %
         if ~any(isnan(ninputs)),% all inputs defined or calculated
+            %
+            ninputs_init = ninputs;
+            %
             set(finish.handle,'Enable','on');
             set(run.handle,'Enable','on');
             if optim_done == 1,
@@ -223,25 +270,69 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
             %
             if sum(isnan(ninputs)) + sum(isnan(ntargets)) == 3,
                 set(optim.handle,'Enable','on','BackgroundColor',[0 0.75 0]);
+                %
+                set(info.handle,'String',infostr,'Fontweight','normal');
             else
                 set(optim.handle,'Enable','off','BackgroundColor',[0.701961 0.701961 0.701961]);
+                %
                 set(info.handle,'String',infostr2,'Fontweight','bold');
             end
             %
         end
         %
+        for ihandle = 1:length(inputs.handles),
+            if isnan(ninputs(ihandle)),
+                set(inputs.clearhandles(ihandle),'Enable','off');
+                if ~isempty(inputs.resetval{ihandle}),
+                    set(inputs.resethandles(ihandle),'Enable','on');
+                else
+                    set(inputs.resethandles(ihandle),'Enable','off');
+                end
+            else
+                set(inputs.clearhandles(ihandle),'Enable','on');
+                set(inputs.resethandles(ihandle),'Enable','off');
+            end
+        end
+        %
+        for ihandle = 1:length(targets.handles),
+            if isnan(ntargets(ihandle)),
+                set(targets.clearhandles(ihandle),'Enable','off');
+                if ~isempty(targets.resetval{ihandle}),
+                    set(targets.resethandles(ihandle),'Enable','on');
+                else
+                    set(targets.resethandles(ihandle),'Enable','off');
+                end
+            else
+                set(targets.clearhandles(ihandle),'Enable','on');
+                set(targets.resethandles(ihandle),'Enable','off');
+            end
+        end
+        %
         set(inputs.bt.val.handle,'String',num2str(ninputs(1*find(~isnan(ninputs(1))))));
         set(inputs.zp.val.handle,'String',num2str(ninputs(2*find(~isnan(ninputs(2))))));
-        set(inputs.theta.val.handle,'String',num2str(ninputs(3*find(~isnan(ninputs(3))))));
-        set(inputs.phi.val.handle,'String',num2str(ninputs(4*find(~isnan(ninputs(4))))));
+        set(inputs.theta.val.handle,'String',num2str(180/pi*ninputs(3*find(~isnan(ninputs(3))))));
+        set(inputs.phi.val.handle,'String',num2str(180/pi*ninputs(4*find(~isnan(ninputs(4))))));
         %
         set(targets.rho.val.handle,'String',num2str(ntargets(1*find(~isnan(ntargets(1))))));
-        set(targets.theta.val.handle,'String',num2str(ntargets(2*find(~isnan(ntargets(2))))));
+        set(targets.theta.val.handle,'String',num2str(180/pi*ntargets(2*find(~isnan(ntargets(2))))));
         set(targets.npar.val.handle,'String',num2str(ntargets(3*find(~isnan(ntargets(3))))));
         %
         uiwait;
         %
     end
+    %
+    if wavestruct_out.equil.Zp ~= ninputs(2),
+        wavestruct_out.equil.Zp = ninputs(2);
+        flag_Zp = true;
+    else
+        flag_Zp = false;
+    end
+    %
+    wavestruct_out.launch.angles.freq = wavestruct_out.launch.angles.freq*abs(wavestruct_out.equil.ptBPHI(1,1))/ninputs(1);
+    wavestruct_out.launch.angles.theta = ninputs(3);
+    wavestruct_out.launch.angles.phi = ninputs(4);
+    %
+    wavestruct_out.launch = imake_launch_angles_TCV_jd(wavestruct_out.launch.angles);
     %
     if opt_info,
         delete(inputs.handle);
@@ -258,10 +349,34 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
         %
         optim_done = 0;
         %
+        if any(hObject == inputs.clearhandles),
+            hObject = inputs.handles(hObject == inputs.clearhandles);
+            inputs.resetval{hObject == inputs.handles} = get(hObject,'String');
+            set(hObject,'String','');
+        elseif any(hObject == targets.clearhandles),
+            hObject = targets.handles(hObject == targets.clearhandles);
+            targets.resetval{hObject == targets.handles} = get(hObject,'String');
+            set(hObject,'String','');
+        elseif any(hObject == inputs.resethandles),
+            hObject = inputs.handles(hObject == inputs.resethandles);
+            set(hObject,'String',inputs.resetval{hObject == inputs.handles});
+        elseif any(hObject == targets.resethandles),
+            hObject = targets.handles(hObject == targets.resethandles);
+            set(hObject,'String',targets.resetval{hObject == targets.handles});
+        end
+        %
         if any(hObject == inputs.handles),
-            ninputs(hObject == inputs.handles) = str2double(get(hObject,'String'));
+            if any(hObject == inputs.handles(3:4)),%angle
+                ninputs(hObject == inputs.handles) = pi/180*str2double(get(hObject,'String'));
+            else
+                ninputs(hObject == inputs.handles) = str2double(get(hObject,'String'));
+            end
         elseif any(hObject == targets.handles),
-            ntargets(hObject == targets.handles) = str2double(get(hObject,'String'));
+            if hObject == targets.handles(2),%angle
+                ntargets(hObject == targets.handles) = pi/180*str2double(get(hObject,'String'));
+            else
+                ntargets(hObject == targets.handles) = str2double(get(hObject,'String'));
+            end
         end
         %
         uiresume;
@@ -276,47 +391,34 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
         cla(select.opt.axs(2));
         cla(select.opt.axs(3));
         %
+        wave = [];
+        %
         optim_done = 0;
         %
         if hObject == finish.handle,
             %
             exit_loop = 1;
-            wave = [];
-            %
-            if wavestruct_out.equil.Zp ~= ninputs(2),
-                wavestruct_out.equil.Zp = ninputs(2);
-                flag_Zp = true;
-            else
-                flag_Zp = false;
-            end
-            %
-            wavestruct_out.launch.angles.freq = wavestruct_out.launch.angles.freq*abs(wavestruct_out.equil.ptBPHI(1,1))/ninputs(1);
-            wavestruct_out.launch.angles.theta = ninputs(3)*pi/180;
-            wavestruct_out.launch.angles.phi = ninputs(4)*pi/180;
-            %
-            wavestruct_out.launch = imake_launch_angles_TCV_jd(wavestruct.launch.angles);
             %
         elseif hObject == run.handle,
             %
             [~,wave] = calc_delta_jd([],ninputs,[],dkepath,wavestruct);
+            %
+            if isempty(wave),
+                set(info.handle,'String',infostr3,'Fontweight','bold');
+            end
             %
         elseif hObject == optim.handle,
             %
             ninputs_mask = isnan(ninputs);
             %
             [Xopt,delta] = fminsearch(@(X) calc_delta_jd(X,ninputs,ntargets,dkepath,wavestruct),ninputs_init(ninputs_mask),...
-                optimset('TolFun',optim.tolfun,'MaxIter',optim.nitmax));
+                optimset('TolFun',optim.tolfun,'TolX',optim.tolx,'MaxIter',optim.nitmax));
             %
             ninputs(ninputs_mask) = Xopt;
-%             ninputs(1) = freq*Bt/wavestruct.launch.angles.freq;
-%             ninputs(2) = wavestruct.equil.Zp;
-%             ninputs(3) = wavestruct.launch.angles.theta*180/pi;
-%             ninputs(4) = wavestruct.launch.angles.phi*180/pi;
             %
             [~,wave] = calc_delta_jd([],ninputs,[],dkepath,wavestruct);
             %
             optim_done = 1;
-            ninputs_init = ninputs;
             %
         end
         %
@@ -347,17 +449,27 @@ function [delta,wave] = calc_delta_jd(X,ninputs,ntargets,dkepath,wavestruct)
     wavestruct.equil_fit.Zp = ninputs(2);
     %
     wavestruct.launch.angles.freq = wavestruct.launch.angles.freq*abs(wavestruct.equil.ptBPHI(1,1))/ninputs(1);
-    wavestruct.launch.angles.theta = ninputs(3)*pi/180;
-    wavestruct.launch.angles.phi = ninputs(4)*pi/180;
+    wavestruct.launch.angles.theta = ninputs(3);
+    wavestruct.launch.angles.phi = ninputs(4);
     %
     wavestruct.launch = imake_launch_angles_TCV_jd(wavestruct.launch.angles);
     %
     wave = wave_solver_yp(dkepath,wavestruct,[]);
     %
-    if ~isempty(ntargets),
-        delta = delta_wave_optim_jd(wave,wavestruct.equil_fit,ntargets);
-    else
-        delta = [];
+    if isempty(wave.rays),
+        wave = [];
+        delta = 1;
+    else        
+        %
+        if ~isempty(ntargets),
+            delta = delta_wave_optim_jd(wave,wavestruct.equil_fit,ntargets);
+            %
+            disp(' ');
+            disp(['---> delta : ',num2str(delta),' ; norm(X) : ',num2str(norm(X))]);
+            %
+        else
+            delta = [];
+        end
     end
     %
 end

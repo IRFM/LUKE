@@ -27,6 +27,7 @@ function dummy = collect_parameters_for_luke (shot,t1,t2,laun,filename,teflag,ze
 
 %	S. Coda, 30/04/07
 %		 21/06/11
+%   J. Kamleitner 18/10/13
 
 if nargin<7|isempty(zeff),zeff.data=NaN;end
 if nargin<6|isempty(teflag),teflag=0;end
@@ -84,14 +85,35 @@ for i=1:length(shot),
      rhotiraw=mdsdata('dim_of(\results::cxrs:ti,0)');
    end
    ttiraw=mdsdata('dim_of(\results::cxrs:ti,1)');
-   tiind1=min(find(ttiraw>=t1(i)&ttiraw<=t2(i)));
-   tiind2=max(find(ttiraw>=t1(i)&ttiraw<=t2(i)));
+   tiind1=find(ttiraw>=t1(i)&ttiraw<=t2(i), 1 );
+   tiind2=find(ttiraw>=t1(i)&ttiraw<=t2(i), 1, 'last' );
    if ~isempty(tiind1),
     tiraw=mean(tiraw(:,tiind1:tiind2),2);
     rhotiraw=mean(rhotiraw(:,tiind1:tiind2),2);
     tiraw=tiraw(~isnan(tiraw));
     rhotiraw=rhotiraw(~isnan(tiraw));
-    ti(:,i)=interp1(rhotiraw,tiraw,rho(:,i),'spline');
+    titemp=interp1(rhotiraw,tiraw,rho(:,i),'spline');
+    if(min(rhotiraw)>0.5)
+        warning('DNBI:DataProblem','DNBI penetration only up to rho=%g>0.5 => ignoring Ti measurement',min(rhotiraw));
+        clearti=true;
+    elseif(min(titemp)<0)
+        warning('DNBI:DataProblem','Ti from DNBI spline interpolation gives negative Ti values => ignoring Ti measurement');
+        clearti=true;
+    elseif(max(titemp)>2*max(tiraw))
+        warning('DNBI:DataProblem','Ti from DNBI spline interpolation goes up to Ti=%geV, this is twice the maximal underlying raw data Ti=%geV => ignoring Ti measurement',max(titemp),2*max(tiraw));
+        clearti=true;
+    else
+        clearti=false;
+    end
+    if(clearti)
+        ti(:,i)=NaN;
+        tiind1=[];
+        tiind2=[];
+        tiraw=[];
+    else
+        ti(:,i)=titemp;
+        clear('titemp');
+    end
    else
     ti(:,i)=NaN;
    end

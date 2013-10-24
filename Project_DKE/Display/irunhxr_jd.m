@@ -247,7 +247,10 @@ else
     %
  end        
 %
-hxrspec.kdiag_hxr = [energy(1:end-1),hxrspec.kdiag_hxr(1,end);energy(2:end),hxrspec.kdiag_hxr(2,end)];%redefine kdiag according to measurements
+if(n_opt~=-1) % only if measured data selected
+    %redefine kdiag according to measurements
+    hxrspec.kdiag_hxr = [energy(1:(end-1)),hxrspec.kdiag_hxr(1,end);energy(2:end),hxrspec.kdiag_hxr(2,end)];
+end
 %
 % HXR emission calculations
 %

@@ -24,7 +24,7 @@ xh = x_a0h + x_anh*cos(equil_fit.x_fit.n*thetah) + x_bnh*sin(equil_fit.x_fit.n*t
 yh = y_a0h + y_anh*cos(equil_fit.y_fit.n*thetah) + y_bnh*sin(equil_fit.y_fit.n*thetah);
 %
 ntargetsh(1) = rhoh;
-ntargetsh(2) = thetah*180/pi;
+ntargetsh(2) = thetah;
 ntargetsh(3) = nparh;
 %
 if ~isempty(ntargets),
@@ -36,7 +36,7 @@ if ~isempty(ntargets),
     end
     %
     if ~isnan(ntargets(2)),
-        theta = ntargets(2)*pi/180;
+        theta = ntargets(2);
     else
         theta = thetah;
     end
