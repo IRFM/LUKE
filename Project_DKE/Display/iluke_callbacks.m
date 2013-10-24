@@ -218,9 +218,15 @@ switch action
             %
             if ~isfield(external,'basestr'),
                 ilims = find(external.id == '_');
+                if length(ilims) < 2,
+                    error('could not determine shot characteristics from external.id. Please arrange manually')
+                elseif length(ilims) == 2,
+                    ilims(3) = length(external.id) + 1;
+                end
+                %
                 external.basestr = external.id(1:ilims(1) - 1);
                 external.shotnum = external.id(ilims(1) + 1:ilims(2) - 1);
-                external.shotime = external.id(ilims(2) + 1:ilims(3) - 1);
+                external.shotime = num2str(str2double(external.id(ilims(2) + 1:ilims(3) - 1)),'%6.4f');
             end
             %
             lukeobj.tokamak.string = external.basestr;
@@ -1226,23 +1232,59 @@ switch action
         lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         lukeobj.plot1.gindex = 0;
+        lukeobj.plot2.gindex = 0;
+        lukeobj.plot3.gindex = 0;
         %
         iluke_update;% initialize display
         %
-        newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Visible','off');% create new graphic objects with requested characteristics
+        newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
+        newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        %
+        opt.vessel_opt = 'n';
+        opt.abs_max = 0;
+        opt.mode = 'n';
+        opt.print = -1;
+        opt.TeNpar = 1;
+        opt.nospec = 1;
+        %
+        opt.nr_dep = 40;
+        opt.rho_disp = 0:0.1:1;
+        opt.ymask = NaN;
+        opt.xvar = 'p';
+        %
+        opt.axs = [newgraph1_handle,newgraph2_handle,newgraph3_handle];
+        opt.font = style;
         %
         select = struct;
         select.style = style;
-        select.axs = newgraph1_handle;
         select.opt_gui = lukeobj.infopanel.handle;
+        select.opt = opt;
         %
         iw = lukeobj.wavestruct.select.value;
         %
-        wavestructs{iw} = wave_optim_jd(dkepath,wavestructs{iw},select);
+        if isfield(wavestructs{iw}.launch.angles,'orig'),
+            wavestructs{iw}.launch.angles = rmfield(wavestructs{iw}.launch.angles,'orig');
+        end
         %
-        delete(newgraph1_handle);
+        [wavestructs{iw},flag_Zp] = wave_optim_jd(dkepath,wavestructs{iw},select);
         %
-        clear iw newgraph1_handle select
+        if flag_Zp,% Zp was changed, all waves and other existing wavestructs are cleared
+            %
+            equil.Zp = wavestructs{iw}.equil.Zp;
+            status.output = 0;
+            %
+            wavestructs([1:iw-1,iw+1:end]) = [];
+            lukeobj.wavestruct.select.value = 1;
+            %
+            if ~isempty(waves),
+                waves = '';
+                status.waves = 0;
+                lukeobj.lukeid.string = '';
+            end
+        end                        
+        %
+        clear iw wavestruct flag_Zp newgraph1_handle newgraph2_handle newgraph3_handle opt select
         %
         lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
         %
