@@ -23,6 +23,7 @@ p_opt = -1;% Figure printing or saving option (-1) none (0) printer (1) printer 
 remnum = 0;% remote profile number. Use 0 for local sequential calculations
 remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1;% pause between job checks (in minutes) (only for remtimout > 0)
+remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
 remdebugmode = 0;% debug mode (0) off (1) on
 remclean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 %
@@ -92,23 +93,36 @@ simul.path = path_simul;
 %
 %************************************************************************************************************************************
 %
-lukestruct.simul = simul;
-lukestruct.equil = equil;
-lukestruct.dkeparam = dkeparam;
-lukestruct.dkedisplay = dkedisplay;
-lukestruct.ohm = ohm;
-lukestruct.wavestructs = wavestructs;
-lukestruct.transpfaste = transpfaste;
-lukestruct.ripple = ripple;
-lukestruct.opt = opt;
+% simulation filename
 %
-dkepath.remnum = remnum;
-dkepath.remtimout = remtimout;
-dkepath.rempause = rempause;
-dkepath.debugmode = remdebugmode;
-dkepath.clean = remclean;
+filename = [path_simul,'LUKE_RESULTS_',simul.id,'.mat'];
 %
-lukestructs = run_lukert({lukestruct},dkepath);
+% check if current jobs exists to load possible existing jobs
+%
+if remtimout == 0 && remstart == 0 && exist(filename,'file'),% load existing simulation
+    %
+    load(filename,'lukestructs');
+    %
+else% new simulation
+    %
+    lukestruct.simul = simul;
+    lukestruct.equil = equil;
+    lukestruct.dkeparam = dkeparam;
+    lukestruct.dkedisplay = dkedisplay;
+    lukestruct.ohm = ohm;
+    lukestruct.wavestructs = wavestructs;
+    lukestruct.transpfaste = transpfaste;
+    lukestruct.ripple = ripple;
+    lukestruct.opt = opt;
+    %
+    dkepath.remnum = remnum;
+    dkepath.remtimout = remtimout;
+    dkepath.rempause = rempause;
+    dkepath.debugmode = remdebugmode;
+    dkepath.clean = remclean;
+    %   
+    lukestructs = run_lukert({lukestruct},dkepath);
+end
 %
 % ---------------------------------------------- Save batch results ----------------------------------------------
 %
@@ -137,7 +151,11 @@ if remnum == 0 || remtimout > 0,% results are returned
     opt.blist = [];
     opt.diaryname = ['res_',id_equil,'_',simul.id];
     %
-    proc_luke_jd(lukestructs{1}.output,0,p_opt,0.1,NaN,'',opt);
+    if isstruct(lukestructs)
+        proc_luke_jd(lukestructs.output,0,p_opt,0.1,NaN,'',opt);
+    else
+        proc_luke_jd(lukestructs{1}.output,0,p_opt,0.1,NaN,'',opt);
+    end
     %
     % HXR results
     %
@@ -152,6 +170,10 @@ if remnum == 0 || remtimout > 0,% results are returned
     opt.icrej_exp = [24,30,46,47,52,53];% chords to be rejected
     opt.icc = 41;%chord number for display
     %
-    fproc_hxr(basestr,path_simul,lukestructs{1}.output.dke_out.simul.id,hxr_file,exp_file,texp,ic,krange,opt,1,p_opt);
+    if isstruct(lukestructs)
+        fproc_hxr(basestr,path_simul,lukestructs.output.dke_out.simul.id,hxr_file,exp_file,texp,ic,krange,opt,1,p_opt);
+    else
+        fproc_hxr(basestr,path_simul,lukestructs{1}.output.dke_out.simul.id,hxr_file,exp_file,texp,ic,krange,opt,1,p_opt);
+    end
 end
 %
