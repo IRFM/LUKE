@@ -1260,6 +1260,7 @@ switch action
         select.style = style;
         select.opt_gui = lukeobj.infopanel.handle;
         select.opt = opt;
+        select.busyhandle = lukeobj.busy.handle;
         %
         iw = lukeobj.wavestruct.select.value;
         %
@@ -1294,7 +1295,11 @@ switch action
         %
         wavesolverparam.clustermode.wave_solver_yp.scheduler.mode = str2double(lukeobj.wsparam.string);
         %
+        set(lukeobj.busy.handle,'Visible','on');drawnow;
+        %
         [newwaves] = wave_distribution_yp(dkepath,wavesolverparam,wavestructs(iw));
+        %
+        set(lukeobj.busy.handle,'Visible','off');drawnow;
         %
         if isempty(waves),
             waves = newwaves;

@@ -59,7 +59,11 @@ end
 %    
 % run or check luke
 %
+set(lukeobj.busy.handle,'Visible','on');drawnow;
+%
 lukestructs = run_lukert(lukestructs,dkepath);
+%
+set(lukeobj.busy.handle,'Visible','off');drawnow;
 %
 % manange output
 %

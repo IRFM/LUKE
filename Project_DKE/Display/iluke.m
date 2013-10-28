@@ -115,7 +115,8 @@ style.butheightcorr = style.butheight + style.butvsep;
 %
 style.textheight = 2*style.fontsize;
 %
-lukeobj.controlstr.position = [style.buthsep,style.controlheightcorr,style.panelwidth - 2*style.buthsep,style.titlestrheight];
+lukeobj.controlstr.position = [2*style.buthsep + style.longbutwidth,style.controlheightcorr,style.panelwidth - 4*style.buthsep - 2*style.longbutwidth,style.titlestrheight];
+lukeobj.busy.position = [style.buthsep,style.controlheightcorr,style.longbutwidth,style.titlestrheight];
 %
 % SIMULATION INFO DIMENSIONS
 %
@@ -205,6 +206,7 @@ lukeobj.loadshot.string = 'Load';
 lukeobj.saveshot.string = 'Save';
 
 lukeobj.controlstr.string = {'CONTROLS'};
+lukeobj.busy.string = {'BUSY'};
 
 lukeobj.runluke.string = 'LUKE START';
 lukeobj.lukeidtitle.string = 'Run ID';
@@ -318,6 +320,7 @@ lukeobj.workdirtitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushb
 
 %
 lukeobj.controlstr.handle = uicontrol(lukeobj.controlpanel.handle,'Style','text','String',lukeobj.controlstr.string,'Position',lukeobj.controlstr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'HorizontalAlignment','center');
+lukeobj.busy.handle = uicontrol(lukeobj.controlpanel.handle,'Style','text','String',lukeobj.busy.string,'Position',lukeobj.busy.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'FontWeight','bold','ForegroundColor',[1 0 0],'HorizontalAlignment','center','Visible','off');
 
 lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'data',{'title','import','load','save','clear','disp','text'},'Exp. Data',style.controlheightcorr - style.butheightcorr,style);
 lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'equil',{'title','make','load','save','clear','disp','text'},'Equilibrium',style.controlheightcorr - 2*style.butheightcorr,style);

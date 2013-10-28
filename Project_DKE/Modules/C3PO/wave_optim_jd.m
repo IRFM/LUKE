@@ -21,7 +21,11 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
     wavestruct.waveparam.nd = 1;% central ray only
     wavestruct.waveparam.nchi = 1;
     %
+    set(select.busyhandle,'Visible','on');drawnow;
+    %
     wavestruct.equil_fit = fitequil_yp(wavestruct.equil,wavestruct.fitparam.mode_equil,wavestruct.fitparam.method,wavestruct.fitparam.ngridresample,wavestruct.fitparam.nharm);
+    %
+    set(select.busyhandle,'Visible','off');drawnow;
     %
     if isfield(select,'style'),
         style = select.style;
@@ -401,7 +405,11 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
             %
         elseif hObject == run.handle,
             %
+            set(select.busyhandle,'Visible','on');drawnow;
+            %
             [~,wave] = calc_delta_jd([],ninputs,[],dkepath,wavestruct);
+            %
+            set(select.busyhandle,'Visible','off');drawnow;
             %
             if isempty(wave),
                 set(info.handle,'String',infostr3,'Fontweight','bold');
@@ -411,8 +419,12 @@ function [wavestruct_out,flag_Zp] = wave_optim_jd(dkepath,wavestruct,select)
             %
             ninputs_mask = isnan(ninputs);
             %
+            set(select.busyhandle,'Visible','on');drawnow;
+            %
             [Xopt,delta] = fminsearch(@(X) calc_delta_jd(X,ninputs,ntargets,dkepath,wavestruct),ninputs_init(ninputs_mask),...
                 optimset('TolFun',optim.tolfun,'TolX',optim.tolx,'MaxIter',optim.nitmax));
+            %
+            set(select.busyhandle,'Visible','off');drawnow;
             %
             ninputs(ninputs_mask) = Xopt;
             %
