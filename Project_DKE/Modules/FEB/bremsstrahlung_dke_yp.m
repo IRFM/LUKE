@@ -224,7 +224,7 @@ end
 %
 dkepath = load_structures_yp('dkepath','','');
 %
-mdce_mode = i;%in order to test the GPU mode (see test_mdce.m)
+mdce_mode = 1i;%in order to test the GPU mode (see test_mdce.m)
 %
 clustermode.loop_brem_chord_yp.scheduler.mode = real(mdce_mode);
 if ~isreal(mdce_mode),
