@@ -5,7 +5,8 @@ function [Te,dTedrho,d2Tedrho2,ne,dnedrho,d2nedrho2,zTi,dzTidrho,d2zTidrho2,zni,
     By,dBydtheta,d2Bydtheta2,dBydrho,d2Bydthetadrho,...
     Bz,dBzdtheta,d2Bzdtheta2,dBzdrho,d2Bzdthetadrho,...
     BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho,...
-    gradrho,dgradrhodtheta,dgradrhodrho] = equilval_yp(equil_fit,rho,theta,mode)
+    gradrho,dgradrhodtheta,dgradrhodrho,...
+    Upsilon,dUpsilondrho,dUpsilondtheta] = equilval_yp(equil_fit,rho,theta,mode)
 %
 % This function calculates all parameters of the axisymmetric magnetic equilibrium at any position in the plasma
 %
@@ -19,20 +20,21 @@ function [Te,dTedrho,d2Tedrho2,ne,dnedrho,d2nedrho2,zTi,dzTidrho,d2zTidrho2,zni,
 %
 %   OUTPUT :
 %
-%       - Te,dTedrho,d2Tedrho2: electron temperature and it's derivatives [1,1]
-%       - ne,dnedrho,d2nedrho2: electron desnity and it's derivatives [1,1]
+%       - Te,dTedrho,d2Tedrho2: electron temperature and its derivatives [1,1]
+%       - ne,dnedrho,d2nedrho2: electron desnity and its derivatives [1,1]
 %       - zTi,dzTidrho,d2zTidrho2: ion temperatures and their derivatives [1,1]
 %       - zni,dznidrho,d2znidrho2: ion densities and their derivatives [1,1]
-%       - x,dxdtheta,d2xdtheta2,dxdrho,d2xdthetadrho: horizontal coordinate and it's derivatives [1,1]
-%       - y,dydtheta,d2ydtheta2,dydrho,d2ydthetadrho: vertical coordinate and it's derivatives [1,1]
-%       - r,drdtheta,drdrho: minor radius and it's derivatives [1,1]
-%       - salpha,dsalphadtheta,dsalphadrho: sin(alpha) and it's derivatives [1,1]
-%       - calpha,dcalphadtheta,dcalphadrho: cos(alpha) and it's derivatives [1,1]
-%       - Bx,dBxdtheta,d2Bxdtheta2,dBxdrho,d2Bxdthetadrho: horizontal B-field and it's derivatives
-%       - By,dBydtheta,d2Bydtheta2,dBydrho,d2Bydthetadrho: vertical B-field and it's derivatives [1,1]
-%       - Bz,dBzdtheta,d2Bzdtheta2,dBzdrho,d2Bzdthetadrho: toroidal or axial B-field and it's derivatives (signed value) [1,1]
-%       - BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho: poloidal B-field [1,1]
-%       - gradrho,dgradrhodtheta,dgradrhodrho: normalized gradient of rho and it'derivatives [1,1]
+%       - x,dxdtheta,d2xdtheta2,dxdrho,d2xdthetadrho: horizontal coordinate and its derivatives [1,1]
+%       - y,dydtheta,d2ydtheta2,dydrho,d2ydthetadrho: vertical coordinate and its derivatives [1,1]
+%       - r,drdtheta,drdrho: minor radius and its derivatives [1,1]
+%       - salpha,dsalphadtheta,dsalphadrho: sin(alpha) and its derivatives [1,1]
+%       - calpha,dcalphadtheta,dcalphadrho: cos(alpha) and its derivatives [1,1]
+%       - Bx,dBxdtheta,d2Bxdtheta2,dBxdrho,d2Bxdthetadrho: horizontal B-field and its derivatives
+%       - By,dBydtheta,d2Bydtheta2,dBydrho,d2Bydthetadrho: vertical B-field and its derivatives [1,1]
+%       - Bz,dBzdtheta,d2Bzdtheta2,dBzdrho,d2Bzdthetadrho: toroidal or axial B-field and its derivatives (signed value) [1,1]
+%       - BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho: poloidal B-field and its derivatives [1,1]
+%       - gradrho,dgradrhodtheta,dgradrhodrho: normalized gradient of rho and its derivatives [1,1]
+%       - Upsilon,dUpsilondrho,dUpsilondtheta: toroidal form factor and its derivatives [1,1]
 %
 % by Y. Peysson DRFC-CEA <yves.peysson@cea.fr> and J. Decker DRFC-CEA <joan.decker@cea.fr> 
 %
