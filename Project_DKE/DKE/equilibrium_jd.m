@@ -676,6 +676,11 @@ if abs(display_mode) >=1,
 	disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
+if abs(display_mode) >= 2,
+  [equil_fit] = fitequil_yp(equil);
+  equilconsistency_yp(equil,equil_fit,prho);
+end
+%
 equilDKE.tokname = equil.id;
 equilDKE.mtheta = mtheta;
 equilDKE.xpsin = xpsin;
