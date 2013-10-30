@@ -38,7 +38,7 @@ for ip = 1:length(prho),
     B = sqrt(BP*BP + Bz*Bz);
     %
     gradpkin(ip,im) = (Te.*dnedrho + dTedrho.*ne + sum(zTi.*dznidrho + dzTidrho.*zni,2))*kB*1e3;
-    gradpmag(ip,im) = (-BP*calpha*(gradrhon*(drdrho*BP + r*dBPdrho - (dsalphadtheta/Upsilon/calpha - salpha*dcalphadtheta/Upsilon/calpha/calpha - salpha*dUpsilondtheta/calpha/Upsilon/Upsilon))/r - Bz*(dUpsilondrho*Bz + Upsilon*dBzdrho))*(gradrhon/Upsilon/BP))/mu0;
+    gradpmag(ip,im) = (-BP*calpha*(gradrhon*(drdrho*BP/calpha + r*dBPdrho/calpha - r*BP*dcalphadrho/calpha/calpha - (dsalphadtheta/Upsilon/calpha - salpha*dcalphadtheta/Upsilon/calpha/calpha - salpha*dUpsilondtheta/calpha/Upsilon/Upsilon))/r - Bz*(dUpsilondrho*Bz + Upsilon*dBzdrho))*(gradrhon/Upsilon/BP))/mu0;
     %
     jpar(ip,im) = -(BP*BP*calpha*calpha*(dUpsilondrho*Bz + Upsilon*dBzdrho) + BP*Bz*calpha*((drdrho*BP + r*dBPdrho - (dsalphadtheta/Upsilon/calpha - salpha*dcalphadtheta/Upsilon/calpha/calpha - salpha*dUpsilondtheta/calpha/Upsilon/Upsilon))))/B/mu0;
     jparz(ip,im) = jpar(ip,im)*Bz/B;
@@ -47,12 +47,9 @@ for ip = 1:length(prho),
 end
 %
 figure('Name','Pressure gradient'),clf
+leg = {'Kinetic','Magnetic','Location','NorthEast'}
 [ax] = graph1D_jd(prho,gradpkin,0,0,'\rho','\nablap','',NaN,NaN,NaN,'-','none','r',2);drawnow
 [ax] = graph1D_jd(prho,gradpmag,0,0,'\rho','\nablap','',NaN,NaN,NaN,'--','none','b',2);drawnow
-leg = {'Kinetic','Magnetic','Location','NorthEast'}
-%
-
-
 %
 
 
