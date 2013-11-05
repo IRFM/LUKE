@@ -39,9 +39,9 @@ t0=0.5*(t1+t2);
 for i=1:length(shot),
   mdsopen(shot(i));
   [tvloop,vl]=tcvget('VLOOP',[t1(i):.002:t2(i)]);
-  vloop(i)=-mean(vl);
+  vloop(i)=-meann(vl);
   [tnel,n]=tcvget('NEL',[t1(i):.002:t2(i)]);
-  nel(i)=mean(n);
+  nel(i)=meann(n);
   if shot(i)<16000,
     teraw=mdsdata('\results::th_prof_te');
     dteraw=mdsdata('\results::th_prof_te:error_bar');
@@ -61,12 +61,12 @@ for i=1:length(shot),
   teind1=min(find(tth>=t1(i)&tth<=t2(i)));
   teind2=max(find(tth>=t1(i)&tth<=t2(i)));
   if ~isempty(teind1),
-    te(:,i)=mean(teraw(teind1:teind2,:),1)';
+    te(:,i)=meann(teraw(teind1:teind2,:),1)';
     dte(:,i)=max(std(dteraw(teind1:teind2,:),0,1), ...
-	         sqrt(mean(dteraw(teind1:teind2,:).^2,1)/(teind2-teind1)))';
-    ne(:,i)=mean(neraw(teind1:teind2,:),1)';
+	         sqrt(meann(dteraw(teind1:teind2,:).^2,1)/(teind2-teind1)))';
+    ne(:,i)=meann(neraw(teind1:teind2,:),1)';
     dne(:,i)=max(std(dneraw(teind1:teind2,:),0,1), ...
-	         sqrt(mean(dneraw(teind1:teind2,:).^2,1)/(teind2-teind1)))';
+	         sqrt(meann(dneraw(teind1:teind2,:).^2,1)/(teind2-teind1)))';
   else
     te(:,i)=NaN;
     dte(:,i)=NaN;
@@ -88,10 +88,8 @@ for i=1:length(shot),
    tiind1=find(ttiraw>=t1(i)&ttiraw<=t2(i), 1 );
    tiind2=find(ttiraw>=t1(i)&ttiraw<=t2(i), 1, 'last' );
    if ~isempty(tiind1),
-    tiraw=mean(tiraw(:,tiind1:tiind2),2);
-    rhotiraw=mean(rhotiraw(:,tiind1:tiind2),2);
-    tiraw=tiraw(~isnan(tiraw));
-    rhotiraw=rhotiraw(~isnan(tiraw));
+    tiraw=meann(tiraw(:,tiind1:tiind2),2);
+    rhotiraw=meann(rhotiraw(:,tiind1:tiind2),2);
     titemp=interp1(rhotiraw,tiraw,rho(:,i),'spline');
     if(min(rhotiraw)>0.5)
         warning('DNBI:DataProblem','DNBI penetration only up to rho=%g>0.5 => ignoring Ti measurement',min(rhotiraw));
@@ -124,11 +122,11 @@ for i=1:length(shot),
     clear ang
     js=int2str(j);
     if j<7,
-      ang.theta=mean(mdsdata(['\ecrh::launchers:theta_l:x2_',js, ...
+      ang.theta=meann(mdsdata(['\ecrh::launchers:theta_l:x2_',js, ...
 		   '[[$1]:[$2]:*]'],t1(i),t2(i)))/180*pi;
-      ang.phi=mean(mdsdata(['\ecrh::launchers:phi_l:x2_',js, ...
+      ang.phi=meann(mdsdata(['\ecrh::launchers:phi_l:x2_',js, ...
 		   '[[$1]:[$2]:*]'],t1(i),t2(i)))/180*pi;
-      ang.theta_eff=mean(mdsdata( ...
+      ang.theta_eff=meann(mdsdata( ...
 	['-atand(tand(\ecrh::launchers:theta_l:x2_',js, ...
 	'[[$1]:[$2]:*])*cosd(\ecrh::launchers:phi_l:x2_',js, ...
 	'[[$1]:[$2]:*]))'],t1(i),t2(i)))/180*pi;
@@ -136,7 +134,7 @@ for i=1:length(shot),
 		    '[[$1]:[$2]:*])'],t1(i),t2(i));
       dummy=mdsdata(['_y02=\ecrh::launchers:phi_l:x2_',js, ...
 		'[[$1]:[$2]:*]'],t1(i),t2(i));
-      ang.phi_eff=mean(mdsdata(['atand(_y01*sind(_y02)/', ...
+      ang.phi_eff=meann(mdsdata(['atand(_y01*sind(_y02)/', ...
 		 'sqrt(1+_y01^2*(cosd(_y02))^2))']))/180*pi;
       ang.freq=82.7e9;
       pow=mdsdata('_p=\results::toray.input:p_gyro[*,$1]',j)*1000;
@@ -144,7 +142,7 @@ for i=1:length(shot),
       i1=min(find(tpow>=t1(i)));
       if ~isempty(i1),
         i2=max(find(tpow<=t2(i)));
-        ang.P0=mean(pow(i1:i2));
+        ang.P0=meann(pow(i1:i2));
       else
 	ang.P0=NaN;
       end
@@ -163,7 +161,7 @@ for i=1:length(shot),
       end
       ang.P3_tor=0.;
     else
-      thetaraw=mean(mdsdata(['\ecrh::launchers:theta_l:x3', ...
+      thetaraw=meann(mdsdata(['\ecrh::launchers:theta_l:x3', ...
 		   '[[$1]:[$2]:*]'],t1(i),t2(i)))/180*pi;
       phiraw=mdsdata(['\ecrh::launchers:phi_l:x3_',js])/180*pi;
 %  convert from X3 theta and phi to X2 theta and phi:
@@ -177,10 +175,10 @@ for i=1:length(shot),
       dummy=mdsdata(['_y01=cosd(\ecrh::launchers:theta_l:x3', ...
 		     '[[$1]:[$2]:*])'],t1(i),t2(i));
       dummy=mdsdata(['_y02=tand(\ecrh::launchers:phi_l:x3_',js,')']);
-      ang.phi_eff=mean(mdsdata('atan2(_y02,abs(_y01))'));
+      ang.phi_eff=meann(mdsdata('atan2(_y02,abs(_y01))'));
       ang.freq=118.e9;
       ang.P0=0.47e6;
-      ang.P1_R=mean(mdsdata('\ecrh::launchers:R:x3[[$1]:[$2]:*]',t1(i),t2(i)));
+      ang.P1_R=meann(mdsdata('\ecrh::launchers:R:x3[[$1]:[$2]:*]',t1(i),t2(i)));
       ang.P1_Z=.9885;
       ang.P1_theta=0;
       ang.P2_R=ang.P1_R;
@@ -195,16 +193,16 @@ for i=1:length(shot),
   if isnan(zeff(1).data),
    z=mdsdata('\results::zx[[$1]:[$2]:0.05]',t1(i),t2(i));
    if ~isempty(z)&~iscell(z)&~ischar(z),
-    zefff(i)=mean(z(:,1));
+    zefff(i)=meann(z(:,1));
    else
     zefff(i)=NaN;
    end
   else
    [dummy,jt1]=min(abs(zeff(i).time-t1(i)));
    [dummy,jt2]=min(abs(zeff(i).time-t1(i)));
-   zefff(:,i)=mean(interp1(zeff(i).rho(:),zeff(i).data(:,jt1:jt2),rho(:,i)),2);
+   zefff(:,i)=meann(interp1(zeff(i).rho(:),zeff(i).data(:,jt1:jt2),rho(:,i)),2);
   end
-  zaxis(:,i)=mean(mdsdata('\results::z_axis[[$1]:[$2]:0.05]',t1(i),t2(i)));
+  zaxis(:,i)=meann(mdsdata('\results::z_axis[[$1]:[$2]:0.05]',t1(i),t2(i)));
   ip0=mdsdata('\ipol[[0.0,0.01],"OH_001"]');
   if ip0(2)>=ip0(1),
     ipsign(i)=-1;
