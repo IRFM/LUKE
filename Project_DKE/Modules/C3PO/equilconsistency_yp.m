@@ -86,7 +86,7 @@ end
 %
 jparz_fsav = jparz_fsav./S;
 %
-disp(['Plasma current, Ip = ',num2str(Ip/1e6),' (MA')]);
+disp(['Plasma current, Ip = ',num2str(Ip/1e6),' (MA)']);
 %
 deltagradpsgradrhon = abs(gradpmagsgradrhon(2:end,:) - gradpkinsgradrhon(2:end,:));
 %
