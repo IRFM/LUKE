@@ -283,7 +283,7 @@ if e_opt ~= -2,
                 %
                 type = 1;
                 %
-                equil_prof_data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign');
+                equil_prof_data = load([data_path,data_file],'shot','rho','ne','te','ti','zeff','zaxis','btsign','ipsign','Ip');
                 %
             elseif strcmp(basestr,'TS'),% TS profile data file
                 %
@@ -398,12 +398,19 @@ if type == 1 && n_opt <= 1,
             datamod.Zeff = 3;
         end
     end
+		%
+		if isfield(equil_prof_data,'Ip') 
+			datamod.Ip = - equil_prof_data.Ip(ishot)/1e6;
+		else
+			datamod.Ip = NaN;
+		end
     %
     s = struct;
     %
     s.expert.Zaxis = 0;
     s.expert.TeTiratio = 0;
     s.expert.Zeff = 0;    
+    s.expert.Ip = 0;    
     %
     datamod = imod_struct_jd(datamod,'equil.data',1,opt_gui,s,select.style);
     %
@@ -418,6 +425,8 @@ if type == 1 && n_opt <= 1,
     else
         pZeff = equil_prof_data.zeff(ishot,:);
     end
+		%
+		Ip = datamod.Ip*1e6;
     %
     profname = [id_equil,'.prof'];        
     %
@@ -620,6 +629,12 @@ equil.tokamak = basestr;
 equil.shotnum = shotnum;
 equil.shotime = shotime;
 %
+if exist('Ip','var'),
+	equil.Ip = Ip;
+else
+	equil.Ip = NaN;
+end
+%
 if e_opt == -1 && exist('eqdsk_file','var'),
     equil.info.eqdsk = [eqdsk_path,eqdsk_file];
 elseif e_opt == -2,
@@ -634,6 +649,7 @@ equil.info.txt = {...
     ['Plasma minor radius (m)               : ',num2str(equil.ptx(end,1))],...
     ['Magnetic field on axis (T)            : ',num2str(equil.ptBPHI(1,1))],...
     ['Poloidal flux on LCFS (W)             : ',num2str(equil.psi_apRp(end)*2*pi*equil.Rp/equil.ptx(end,1))],...
+    ['Plasma current (MA)                   : ',num2str(equil.Ip/1e6)],...
     ['Central electron temperature (keV)    : ',num2str(equil.pTe(1))],...
     ['Central electron density (10^19 m^-3) : ',num2str(equil.pne(1)/1e19)]};
 
