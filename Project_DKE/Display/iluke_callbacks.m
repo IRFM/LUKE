@@ -1304,7 +1304,7 @@ switch action
         if isempty(waves),
             waves = newwaves;
         else
-            waves = [waves,newwaves];
+            waves(end+1:end+length(newwaves)) = newwaves;
         end
         %
         status.waves = 1;
