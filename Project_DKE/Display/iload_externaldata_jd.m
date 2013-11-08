@@ -24,19 +24,14 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
         %
         shotnum = input_dke_yp('Shot number','');
         %
-        t1 = input_dke_yp('Averaging of shot data, initial time (leave empty if unused)','','','');
+        t1 = input_dke_yp('Averaging of shot data, initial time (leave empty if unused)',[],'','');
         if ~isempty(t1),
-            t2 = input_dke_yp('Averaging of shot data, final time','','','');
-            if isempty(t2), t1 = '';end
-        else
-            t2 = '';
-        end
-        %
-        if isnumeric(t1) && isnumeric(t2),
+            t2 = input_dke_yp('Averaging of shot data, final time',[],'','');
             shotime = input_dke_yp('Shot time)',(t1 + t2)/2,'','',[1,1]);
             %
             shotime = num2str(shotime,'%6.4f');
         else
+            t2 = [];
             shotime = input_dke_yp('Shot time','','','');
         end
         %
