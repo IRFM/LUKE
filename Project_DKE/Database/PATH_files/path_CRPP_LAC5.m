@@ -69,7 +69,7 @@ dkepath.decker(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan','decker'
 %
 % andromede (pbs).
 %
-dkepath.decker(1).remote(4) = remote_CEA_ANDROMEDE('pbs','joan','decker');
+dkepath.decker(1).remote(4) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','joan','decker');
 %
 % saturne (sun)
 %
