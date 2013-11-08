@@ -16,7 +16,6 @@ if strcmp(action,'lukestart'),
     lukestructs = struct;
     %
     lukestructs.simul.id = lukeobj.lukeid.string;
-    lukestructs.simul.path = workdir;
     lukestructs.dkeparam = dkeparam;
     lukestructs.dkedisplay = dkedisplay;
     %
@@ -27,6 +26,10 @@ if strcmp(action,'lukestart'),
     lukestructs.waves = waves;
     %
     dkepath.remnum = lukeobj.remote.select.value - 1;
+    %
+    if dkepath.remnum == 0,% local calculation
+        lukestructs.simul.path = workdir;
+    end        
     %
     if dkepath.remnum == 0 || dkepath.remtimout > 0,
         lukeobj.lukechecktext.string = 'LUKE started. Please wait for result.';
