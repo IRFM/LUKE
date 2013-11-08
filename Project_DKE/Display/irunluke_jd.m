@@ -89,7 +89,7 @@ function irunluke_jd(basestr,signs,opt_gui)
             if isfield(dkepath,'id'),
                 statstr.dkepath = dkepath.id;
             else
-                disp('WARNING : the dkepath structure must be updated and the field ''path_id'' chnged to ''id''');
+                disp('WARNING : the dkepath structure must be updated and the field ''path_id'' changed to ''id''');
                 statstr.dkepath = dkepath.path_id;
             end
         else
@@ -828,7 +828,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %			
                     if ~isempty(fileids.dkepath) && exist([paths.dkepath,'PATH_',fileids.dkepath,'.mat'],'file'),
                         %
-                        if exist('dkepath',var)
+                        if exist('dkepath','var')
                             dkepath = load_structures_yp('dkepath',fileids.dkepath,paths.dkepath);
                         end
                         %
