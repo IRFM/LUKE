@@ -4,7 +4,15 @@
 clear all
 close all
 %
-[dkepath,dkeparam,dkedisplay] = load_structures_yp('dkepath','','','dkeparam','RT','','dkedisplay','NO_DISPLAY','');
+[dkepath,dkedisplay] = load_structures_yp('dkepath','','','dkedisplay','NO_DISPLAY','');
+if length(dkepath.hostname) >= 3 && strcmp(dkepath.hostname(1:3),'lac'),
+    id_dkeparam = 'EC_RT';
+else
+    id_dkeparam = 'RT';
+end
+%
+dkeparam = load_structures_yp('dkeparam',id_dkeparam,'');
+%
 workdir = pwd;
 %
 lukeobj = struct;
