@@ -89,7 +89,7 @@ dkepath.joan(1).remote(4) = remote_CEA_TIMDESKTOP('torque','joan','joan');
 %
 % andromede (pbs).
 %
-dkepath.joan(1).remote(5) = remote_CEA_ANDROMEDE('pbs','joan','joan');
+dkepath.joan(1).remote(5) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','joan','joan');
 %
 % intra integrated pbspro system (pleione, merope, nashira, newpegase, nunki cluster).
 %
