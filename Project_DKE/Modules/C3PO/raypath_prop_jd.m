@@ -30,8 +30,8 @@ function [sysh,sysy,syx,syy,syz,syalpha,sybeta,sygx,sygy,sygz] = raypath_prop_jd
 if nargin < 7
     error('not enough arguments')
 end
-if min(yx_L) < 0
-    error('x_L must be positive')
+if min(yx_L) < -Rp
+    error('R_L must be positive')
 end
 if min(yalpha_L) <= -pi || max(yalpha_L) > pi
     error('need -pi < alpha_L <= pi')
@@ -78,7 +78,7 @@ else
     %
     syz = Rp*syphi + syz_L;
     %
-    syalpha = syalpha_L - syphi + syz_L/Rp;
+    syalpha = syalpha_L - syphi;
 end
 %
 sygx = sin(sybeta).*cos(syalpha);
