@@ -60,6 +60,11 @@ else
     launch0 = '';
 end
 %
+if isfield(launch0,'mmode') && launch0.mmode ~= waveparam.mmode,
+    disp('WARNING : waveparam.mmode enforced with the value from launch0.mmode');
+    waveparam.mmode = launch0.mmode;
+end
+%
 rays{1}.P0_2piRp = rayinit.yP0_2piRp;%Initial lineic power density in the ray (W/m) [1,1]
 %
 rays{1}.sx = [];% Ray location (horizontal) along the propagation [1,ns]
