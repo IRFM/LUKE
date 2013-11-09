@@ -221,8 +221,19 @@ if ~isempty(external),% import wave data from external structure
             %
             if isfield(external,'EC'),
                 %
-                keyboard
-                %launch = imake_launch_EC_jd(external.EC); 
+                fnames = fieldnames(external.EC);
+                %
+                for l_opt = 1:length(fnames),% launcher list
+                    %
+                    fname = fnames{l_opt};
+                    %
+                    external.EC.(fname).id = fname;
+                    %
+                    launch = imake_launch_EAST_jd(external.EC.(fname));
+                    %
+                    launchs = [launchs,launch];
+                    %
+                end
                 %
             end
         end
@@ -280,6 +291,10 @@ else% create default launch structure
         elseif strcmp(basestr,'TS')
             %
             launch = imake_launch_TS_jd('');
+            %
+        elseif strcmp(basestr,'EAST')
+            %
+            launch = imake_launch_EAST_jd('',opt_gui,select.style);
             %
         else
             %
