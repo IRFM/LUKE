@@ -129,7 +129,7 @@ switch action
         %
         if filename ~= 0,
             %
-            load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equil','ohm','transpfaste','ripple','waves','output','job','hxr','status');
+            load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equil','ohm','transpfaste','ripple','waves','wavestructs','output','job','hxr','status');
             lukeobj = conc_struct_jd(lukeobj,lukeobjmod);
             iluke_update;
             %
@@ -163,9 +163,9 @@ switch action
             %
             % select fields to save and remote subfields handle 
             %
-            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotime','data','equil','ohm','transp','ripple','wave','luke','r5x2','param','display'});
+            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotime','data','equil','ohm','transp','ripple','wave','wavestruct','luke','r5x2','param','display'});
             lukeobjmod = rmfields_jd(lukeobjmod,{'handle','position'},1);
-            save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equil','ohm','transpfaste','ripple','waves','output','job','hxr','status');
+            save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equil','ohm','transpfaste','ripple','waves','wavestructs','output','job','hxr','status');
             %
             lukeobj.simulfile.string = filename;%[pathname,filename];
             %
@@ -858,6 +858,8 @@ switch action
         %
         wavestruct = wavestructs{iw};
         wavestructs(iw) = [];
+        %
+        lukeobj.wavestruct.select.value = length(wavestructs);
         %
         iluke_update;% to clear older spectrum figures 
         %
