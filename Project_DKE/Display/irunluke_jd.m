@@ -26,7 +26,6 @@ function irunluke_jd(basestr,signs,opt_gui)
     isel = 1;
     %
     status.data = 0;
-    status.dkepath = 0;
     status.dkeparam = 0;
     status.equil = 0;
     status.waves = 0;
@@ -38,7 +37,6 @@ function irunluke_jd(basestr,signs,opt_gui)
     status.output = 0;
     %
     fileids.data = '';
-    fileids.dkepath = '';
     fileids.dkeparam = '';
     fileids.equil = '';
     fileids.waves = '';
@@ -48,7 +46,6 @@ function irunluke_jd(basestr,signs,opt_gui)
     fileids.external = '';
     %
     paths.data = '';
-    paths.dkepath = '';
     paths.dkeparam = '';
     paths.equil = '';
     paths.waves = '';
@@ -57,7 +54,6 @@ function irunluke_jd(basestr,signs,opt_gui)
     paths.ripple = '';
     paths.external = '';
     %
-    dkepath = '';
     dkeparam = '';
     equil = '';
     waves = '';
@@ -70,6 +66,15 @@ function irunluke_jd(basestr,signs,opt_gui)
     luke_job = '';
     %
     workdir = [pwd,'/'];
+    %
+    dkepath = load_structures_yp('dkepath','','');
+    if isfield(dkepath,'remote'),
+        remote = dkepath.remote;
+    else
+        remote = '';
+    end
+    %
+    nrem = length(remote);
     %
     while isel >= 0,
         %
@@ -84,24 +89,7 @@ function irunluke_jd(basestr,signs,opt_gui)
         end
         %
         statstr.workdir = workdir;
-        %
-        if status.dkepath == 1,
-            if isfield(dkepath,'id'),
-                statstr.dkepath = dkepath.id;
-            else
-                disp('WARNING : the dkepath structure must be updated and the field ''path_id'' changed to ''id''');
-                statstr.dkepath = dkepath.path_id;
-            end
-        else
-            if ~isempty(dkepath),
-                disp('The structure ''dkepath'' is outdated and cleared.');
-                dkepath = '';
-                ostr = ' outdated.';
-            else
-                ostr = '';
-            end            
-            statstr.dkepath = ['<',ostr,' Must load/create a structure ''path'' >'];
-        end
+        statstr.dkepath = dkepath.luke_root;
         %
         if status.dkeparam == 1,
     %         statstr.dkeparam = dkeparam.id;
@@ -217,7 +205,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 statstr.output = ['< LUKE is currently running under job id ',luke_job.id,' >'];
                 %                
-            elseif ~isempty(dkepath) && ~isempty(dkeparam) && ~isempty(equil),
+            elseif ~isempty(dkeparam) && ~isempty(equil),
                 %
                 statstr.output = ['<',ostr,' You can start LUKE now. >'];
                 %
@@ -249,7 +237,7 @@ function irunluke_jd(basestr,signs,opt_gui)
         % MAIN MENU
         %
         disp(' ');
-        disp(' ----------- < LUKE > ----------- ')
+        disp([' ----------- < ',LUKEversion_jd,' Version > ----------- '])
         disp(' ');
         disp(['Machine : ',basestr]);
         disp(' ');
@@ -277,7 +265,6 @@ function irunluke_jd(basestr,signs,opt_gui)
         disp('[3]   Specify work directory');
         disp('[4]   Load/clear data from external database');
         disp(' ');
-        disp('[5]   Load/create/modify ''dkepath'' structure (LUKE paths)');
         disp('[6]   Load/create/modify ''dkeparam'' structure (LUKE parameters)');
         disp('[7]   Load/create/modify ''equil'' structure (Plasma equilibrium)');
         disp('[8]   Load/create/modify ''wave'' structures (RF waves)');
@@ -306,7 +293,7 @@ function irunluke_jd(basestr,signs,opt_gui)
         %
         clc
         %
-        if isempty(isel) | ~isnumeric(isel) | ~any(isel == [-2:20]),
+        if isempty(isel) || ~isnumeric(isel) || ~any(isel == [-2:4,6:20]),
             isel = -1;
         end
         %
@@ -334,21 +321,28 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     if strfind(data_file,'LUKE_DATA_'),
                         %
-                        load([data_path,data_file],'basestr','signs','status','fileids','paths','id_simul','luke_job','remote',...
-                            'dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple','output','external');
+                        load([data_path,data_file],'basestr','signs','status','fileids','paths','id_simul','luke_job',...
+                            'dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple','output','external');
                         disp(['-----> The data file ',[data_path,data_file],' is loaded.']);
+                        %
+                        if exist('equil','var') && isfield(equil,'tokamak'),
+                            basestr = equil.tokamak;
+                        end
                         %
                         fileids.data = data_file;
                         paths.data = data_path;
                         %
-                        if ~isfield(fileids,'dkepath') || (~isempty(fileids.dkepath) && ~exist([paths.dkepath,'PATH_',fileids.dkepath,'.mat'],'file')),
-                            fileids.dkepath = '';
-                            paths.dkepath = '';
-                        end
-                        %
                         if ~isfield(fileids,'dkeparam') || (~isempty(fileids.dkeparam) && ~exist([paths.dkeparam,'DKEPARAM_',fileids.dkeparam,'.mat'],'file')),
                             fileids.dkeparam = '';
                             paths.dkeparam = '';
+                        end
+                        %
+                        if ~isfield(status,'dkeparam'),
+                            if ~isempty(dkeparam),
+                                status.dkeparam = 1;
+                            else
+                                status.dkeparam = 0;
+                            end
                         end
                         %
                         if ~isfield(fileids,'equil') || (~isempty(fileids.equil) && ~exist([paths.equil,'EQUIL_',fileids.equil,'.mat'],'file')),
@@ -397,19 +391,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                             status.external = 0;
                         end
                         %
-                        if ~isfield(fileids,'dkeparam') || (~isempty(fileids.dkeparam) && ~exist([paths.dkeparam,'EXTERNAL_',fileids.dkeparam,'.mat'],'file')),
-                            fileids.external = '';
-                            paths.external = '';
-                        end
-                        %
-                        if ~isfield(status,'dkeparam'),
-                            if ~isempty(dkeparam),
-                                status.dkeparam = 1;
-                            else
-                                status.dkeparam = 0;
-                            end
-                        end
-                        %
                         if status.output == 1 && ~exist('id_simul','var'),
                             id_simul = output.dke_out.simul.id;
                         end
@@ -431,9 +412,9 @@ function irunluke_jd(basestr,signs,opt_gui)
                             %
                         else% old run_lukert output
                             %
-                            data = load([data_path,data_file],'basestr','id_simul','simul','rho_S','id_dkepath','path_dkepath','id_dkeparam','path_dkeparam',...
+                            data = load([data_path,data_file],'basestr','id_simul','simul','rho_S','id_dkeparam','path_dkeparam',...
                                 'id_equil','path_equil','ids_wave','paths_wave','id_ohm','path_ohm','id_transpfaste','path_transpfaste','id_ripple','path_ripple',...
-                                'luke_input','dkepath','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
+                                'luke_input','dkeparam','dkedisplay','equil','waves','ohm','transpfaste','ripple',...
                                 'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
                             %
                         end
@@ -467,14 +448,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                         fileids.data = data_file;
                         paths.data = data_path;
-                        %
-                        if isfield(data,'id_dkepath') && ~isempty(data.id_dkepath) && exist([data.path_dkepath,'PATH_',data.id_dkepath,'.mat'],'file'),
-                            fileids.dkepath = data.id_dkepath;
-                            paths.dkepath = data.path_dkepath;
-                        else
-                            fileids.dkepath = '';
-                            paths.dkepath = '';
-                        end
                         %
                         if isfield(data,'id_dkeparam') && ~isempty(data.id_dkeparam) && exist([data.path_dkeparam,'DKEPARAM_',data.id_dkeparam,'.mat'],'file'),
                             fileids.dkeparam = data.id_dkeparam;
@@ -554,12 +527,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                         fileids.external = '';
                         paths.external = '';
                         %
-                        if isfield(data,'dkepath'),
-                            dkepath = data.dkepath;
-                        else
-                            dkepath = '';
-                        end
-                        %
                         if isfield(data,'luke_input'),
                             dkeparam = data.luke_input.dkeparam;
                             dkedisplay = data.luke_input.dkedisplay;
@@ -589,7 +556,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                         end
                         %
                         status.dkeparam = 1;
-                        status.dkepath = 1;
                         status.equil = 1;
                         status.output = 1;
                         %
@@ -631,7 +597,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                     elseif strfind(data_file,'last_luke@'),
                         %
-                        data = load([data_path,data_file],'par','tokamak','dkepath','dkeparam','dkedisplay','equil','ohm','transpfaste','ripple',...
+                        data = load([data_path,data_file],'par','tokamak','dkeparam','dkedisplay','equil','ohm','transpfaste','ripple',...
                             'Znorm_RF','Zcurr_RF','ZP0_RF','dke_out_RF','radialDKE','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource');
                         %
                         if isfield(data,'tokamak'),
@@ -665,11 +631,9 @@ function irunluke_jd(basestr,signs,opt_gui)
                         end
                         %
                         status.dkeparam = 1;
-                        status.dkepath = 1;
                         status.equil = 1;
                         status.output = 1;
                         %
-                        dkepath = data.dkepath;
                         dkeparam = data.dkeparam;
                         dkedisplay = data.dkedisplay;
                         equil = data.equil;
@@ -683,7 +647,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                             dkeparam.rho_S = data.par.rho_S;
                         end
                         %
-                        fileids.dkepath = '';
                         fileids.dkeparam = '';
                         fileids.equil = '';
                         fileids.ohm = '';
@@ -691,7 +654,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                         fileids.ripple = '';
                         fileids.external = '';
                         %
-                        paths.dkepath = '';
                         paths.dkeparam = '';
                         paths.equil = '';
                         paths.ohm = '';
@@ -740,7 +702,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                     elseif strfind(data_file,'before_luke@'),
                         %
-                        data = load([data_path,data_file],'par','dkepath','dkeparam','dkedisplay','equil','ohm','transpfaste','ripple','wavestructs');
+                        data = load([data_path,data_file],'par','dkeparam','dkedisplay','equil','ohm','transpfaste','ripple','wavestructs');
                         %
                         fileids.data = data_file;
                         paths.data = data_path;
@@ -750,11 +712,9 @@ function irunluke_jd(basestr,signs,opt_gui)
                         output = '';
                         %
                         status.dkeparam = 1;
-                        status.dkepath = 1;
                         status.equil = 1;
                         status.output = 0;
                         %
-                        dkepath = data.dkepath;
                         dkeparam = data.dkeparam;
                         dkedisplay = data.dkedisplay;
                         equil = data.equil;
@@ -768,7 +728,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                             dkeparam.rho_S = data.par.rho_S;
                         end
                         %
-                        fileids.dkepath = '';
                         fileids.dkeparam = '';
                         fileids.equil = '';
                         fileids.ohm = '';
@@ -777,7 +736,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                         fileids.ripple = '';
                         fileids.external = '';
                         %
-                        paths.dkepath = '';
                         paths.dkeparam = '';
                         paths.equil = '';
                         paths.ohm = '';
@@ -825,20 +783,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                     end  
                     %
                     workdir = data_path;
-                    %			
-                    if ~isempty(fileids.dkepath) && exist([paths.dkepath,'PATH_',fileids.dkepath,'.mat'],'file'),
-                        %
-                        if exist('dkepath','var')
-                            dkepath = load_structures_yp('dkepath',fileids.dkepath,paths.dkepath);
-                        end
-                        %
-                    else
-                        %
-                        status.dkepath = 0;
-                        %
-                        [dkepath,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepath,paths,fileids,status,opt_gui);
-                        %
-                    end
                     %
                     if ~strcmp(workdir,[pwd,'/']) && input_dke_yp('Do you want to move to the source directory (y/n)','y',{'y','n'}) == 'y',
                         cd(workdir);
@@ -938,6 +882,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                     else
                         status.external = 0;
                     end
+                    %
+                    if isfield(external,'basestr'),
+                        basestr = external.basestr;
+                    end
+                    %
                     status.equil = 0;
                     status.waves = 0;
                     status.ohm = 0;
@@ -947,16 +896,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                 end
                 %
                 clear newstruct smakecmd
-                %
-            elseif isel == 5, 
-                %
-                % PATH
-                %
-                disp(' ');
-                disp('************** LUKE PATH **************')
-                disp(' ');
-                %
-                [dkepath,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepath,paths,fileids,status,opt_gui);
                 %
             elseif isel == 6,
                 %
@@ -1346,15 +1285,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
             elseif isel == 19,
                 %
-                if ~isempty(dkepath),
-                    %
-                    doc_LUKE(dkepath);
-                    %
-                else
-                    %
-                    error('Use menu [5] first to set the LUKE paths !'); 
-                    %
-                end
+                doc_LUKE(dkepath);
                 %
             elseif isel == 20,
                 %
@@ -1374,52 +1305,42 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 % CHECK IF THERE IS A BATCH RUN OF LUKE
                 %
-                if ~isstruct(luke_job),
-                    flag_runluke = 1;
-                else
+                flag_runluke = 1;
+                %
+                if isfield(luke_job,'remote'),% a remote job exists
                     %
-                    if ~exist([luke_job.localdatapath,luke_job.save_id]) & ~isempty(luke_job),
-                        flag_runluke = 1;
-                    else
-                        if ~isempty(luke_job) && input_dke_yp(['-----> There is a pending remote LUKE batch run (time ID: ',luke_job.timeid,').\n',...
-                                'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
-                            %
-                            lukestructs.job = luke_job;
-                            %                
-                            if ~isfield(dkepath,'remnum'),
-                                dummydkepath = load_structures_yp('dkepath','','');
-                                remnum = input_dke_yp('WARNING: The remote number has not been saved. Give it for the machine on which the simulations are supposed to have been launched : ',1,[1:length(dummydkepath.remote)]);
-                                clear dummydkepath;
-                            end
-                            %
-                            flag_runluke = 0;
-                            %
-                        else
-                            %
-                            % RUN LUKE
-                            %
-                            if ~isempty(luke_job)
-                                if input_dke_yp(['-----> There is a pending remote LUKE batch run (time ID: ',luke_job.timeid,').\n',...
-                                'Do you want to run nevertheless a new job (if yes, the previous is lost if active) (y/n)'],'y',{'y','n'}) == 'y',
-                                    flag_runluke = 1;
-                                    %
-                                    delete([luke_job.localdatapath,luke_job.save_id]);
-                                    disp(['-----> The file ',luke_job.save_id,' has been deleted locally. Please do it manually on the remote computer in the directory ',luke_job.remotedatapath]);
-                                    %
-                                else
-                                    flag_runluke = 0;
-                                end
-                            else
-                                flag_runluke = 1;
-                            end
+                    remnum = 0;
+                    for irem = 1:nrem,
+                        if comp_struct_jd(luke_job.remote,remote(irem),0,{'remtimout','rempause','debugmode','clean'}),
+                            remnum = irem;
+                            break
                         end
+                    end
+                    %
+                    if remnum > 0 && input_dke_yp(['-----> There is a pending remote LUKE batch run (time ID: ',luke_job.timeid,') on host ',remote(remnum).host,'.\n',...
+                        'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
+                        %
+                        if ~exist(luke_job.localdatapath,'dir'),
+                            disp(['WARNING : The directory ',luke_job.localdatapath,' does not exist. Working directory used.']);
+                            %
+                            luke_job.localdatapath = workdir;
+                        end
+                        %
+                        flag_runluke = 0;
+                        %
+                        dkepath.remtimout = 0;
+                        %
+                        lukestructs.job = luke_job;
+                        %
+                        % RUN LUKE
+                        %
                     end  
                 end
                 %
                 if flag_runluke == 1,
                     %
-                    if isempty(dkepath) || isempty(dkeparam) || isempty(equil),
-                        disp('-----> the structures dkepath, dkeparam and equil must exist to run LUKE.');
+                    if isempty(dkeparam) || isempty(equil),
+                        disp('-----> the structures dkeparam and equil must exist to run LUKE.');
                         continue
                     end       
                     %
@@ -1464,20 +1385,23 @@ function irunluke_jd(basestr,signs,opt_gui)
                         id_simul = id_simul_o;
                     end
                     %
-                    if isfield(dkepath,'remote') && ~isempty(dkepath.remote),
-                        nrem = length(dkepath.remote);
+                    if ~isempty(remote),
                         remstr = 'Option for running LUKE :\n0 : local session \n';
                         for irem = 1:nrem,
-                            if ~iscell(dkepath.remote(irem).host),
-                                remstr = [remstr,num2str(irem),' : batch run on ',dkepath.remote(irem).host,':',dkepath.remote(irem).luke_root,'\n'];
+                            if ~iscell(remote(irem).host),
+                                remstr = [remstr,num2str(irem),' : batch run on ',remote(irem).host,':',remote(irem).luke_root,'\n'];
                             else
-                                remstr = [remstr,num2str(irem),' : batch run on ',dkepath.remote(irem).host{1},':',dkepath.remote(irem).luke_root,'\n'];
+                                remstr = [remstr,num2str(irem),' : batch run on ',remote(irem).host{1},':',remote(irem).luke_root,'\n'];
                             end                            
                         end
                         %
-                        c_opt = input_dke_yp(remstr,0,0:nrem);
+                        remnum = input_dke_yp(remstr,0,0:nrem);
                     else
-                        c_opt = 0;
+                        remnum = 0;
+                    end
+                    %
+                    if remnum > 0,
+                        dkepath.remtimout = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes). Enter 0 to return and check later [0]',0);
                     end
                     %
                     disp(' ');
@@ -1493,55 +1417,54 @@ function irunluke_jd(basestr,signs,opt_gui)
                     lukestructs.transpfaste = transpfaste;
                     lukestructs.ripple = ripple;
                     %
-                    dkepath.remnum = c_opt;
                 end
                 %
-                if exist('lukestructs','var'),
-                    lukestructs = run_lukert(lukestructs,dkepath);
+                dkepath.remnum = remnum;
+                %
+                lukestructs = run_lukert(lukestructs,dkepath);
+                %
+                if isfield(lukestructs,'output'),%job was run successfully
                     %
-                    if isfield(lukestructs,'output'),%job was run successfully
-                        %
-                        disp('LUKE run completed');
-                        %
-                        output = lukestructs.output;
-                        %
-                        status.output = 1;
-                        status.data = 2;
-                        %
-                    elseif isfield(lukestructs,'err'),%job failed
-                        %
-                        disp('Remote LUKE run failed for the following reason :');
-                        %
-                        if ischar(lukestructs.err),
-                            disp(lukestructs.err)
-                        else
-                            for ierr = 1:length(lukestructs.err),
-                                disp(lukestructs.err{ierr})
-                            end
-                        end
-                        %
-                    elseif isfield(lukestructs,'job'),%job running, to be checked later
-                        %
-                        disp('LUKE run running.');
-                        %
-                        luke_job = lukestructs.job;
-                        %
-                        output = '';
-                        %
-                        status.output = 0;
-                        status.data = 2;
-                        %
+                    disp('LUKE run completed');
+                    %
+                    output = lukestructs.output;
+                    %
+                    status.output = 1;
+                    status.data = 2;
+                    %
+                elseif isfield(lukestructs,'err'),%job failed
+                    %
+                    disp('Remote LUKE run failed for the following reason :');
+                    %
+                    if ischar(lukestructs.err),
+                        disp(lukestructs.err)
                     else
-                        %
-                        error('LUKE output not recognized')
-                        %
+                        for ierr = 1:length(lukestructs.err),
+                            disp(lukestructs.err{ierr})
+                        end
                     end
                     %
-                    clear lukestructs
-                    %	    
-                    if status.output == 1 && status.data == 2 && input_dke_yp('--> Do you want to update the waves structures with LUKE absorption (y/n)','y',{'y','n'}) == 'y',
-                        waves = output.dke_out.waves;
-                    end
+                elseif isfield(lukestructs,'job'),%job running, to be checked later
+                    %
+                    disp('LUKE run running.');
+                    %
+                    luke_job = lukestructs.job;
+                    %
+                    output = '';
+                    %
+                    status.output = 0;
+                    status.data = 2;
+                    %
+                else
+                    %
+                    error('LUKE output not recognized')
+                    %
+                end
+                %
+                clear lukestructs
+                %	    
+                if status.output == 1 && status.data == 2 && input_dke_yp('--> Do you want to update the waves structures with LUKE absorption (y/n)','y',{'y','n'}) == 'y',
+                    waves = output.dke_out.waves;
                 end
                 %
             elseif isel < 0 && status.data == 2,
@@ -1574,39 +1497,6 @@ function irunluke_jd(basestr,signs,opt_gui)
     %
 end
 %
-function [dkepath,paths,fileids,status] = imake_dkepath_jd(basestr,workdir,dkepath,paths,fileids,status,opt_gui)
-	%
-	% determine default DKEPARAM file 
-	%
-	dkepath_default = which('PATH_LOCAL.mat');
-	%
-	% treatment of the dkepath structure
-	%
-	smakecmd = '';
-	%
-	[dkepath,paths.dkepath,fileids.dkepath,newstruct] = ...
-		imake_struct_jd(dkepath,dkepath,'dkepath',paths.dkepath,fileids.dkepath,'',basestr,smakecmd,'',status.dkepath,'PATH',workdir,dkepath_default,opt_gui,0,0,1,0);
-	%
-	% structure interdependences
-	%
-	if newstruct == 1,
-		if ~isempty(dkepath),
-			%
-			status.dkepath = 1;
-			%
-			dkepath = load_structures_yp('dkepath',fileids.dkepath,paths.dkepath);
-			%
-		else
-			status.dkepath = 0;
-		end
-		%status.output = 0;
-		%status.data = 2;
-	end
-	%
-	%clear newstruct smakecmd dkepath_default
-    %
-end
-
 
 
 
