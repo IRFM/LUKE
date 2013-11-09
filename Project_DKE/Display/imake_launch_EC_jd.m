@@ -6,7 +6,7 @@ if nargin < 5,
     select = struct;
 end
 if nargin < 4,
-    opt_gui = 0;
+    opt_gui = false;
 end
 if nargin < 3,
     external = '';

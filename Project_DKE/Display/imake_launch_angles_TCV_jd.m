@@ -1,4 +1,4 @@
-function launch = imake_launch_angles_TCV_jd(angles);
+function launch = imake_launch_angles_TCV_jd(angles)
 %
 % This function creates a launch structure based on the launched angles and
 % posision in TCV.
