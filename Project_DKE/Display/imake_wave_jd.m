@@ -58,115 +58,27 @@ if i_opt == 0,% use data from external database
     %
     d_opt = 0;% rayinit built from launching conditions
     %
-    istru = find(equil.id == '_');
-    if length(istru) >= 2 && strcmp(equil.id(1:istru(1)-1),basestr),
-        shotnum = equil.id(istru(1)+1:istru(2)-1);
-    else           
-        disp('-----> Shot number information missing');
+    launchs = imake_launch_jd(dkepath,basestr,equil,external,workdir,opt_gui,select);
+    %
+    nlaun = length(launchs);
+    %
+    if nlaun == 0,
         return
+    elseif nlaun == 1,
+        launch = launchs{1};
+    else
+        titletext = 'Please select a launch structure from external data :';      
+        s = cell(1,nlaun);
+        for ilaun = 1:nlaun,
+            s{ilaun} = launchs{ilaun}.id;
+        end
+        %    
+        launch = launchs{iselect_jd(s,titletext,opt_gui,select.style,1)};
     end
     %
-    if strcmp(basestr,'TCV'),% TCV launching data
-        %
-        % BUILDING LAUNCH
-        %
-        type = 'EC';
-        %
-        angles = imake_angles_TCV_jd(external,shotnum,NaN,0,'',opt_gui,select.style);
-        %
-        if isempty(angles),
-            disp(['-----> launching data not determined for shot :',shotnum]);
-            return
-        elseif isfield(angles,'P0') && (isnan(angles.P0) || angles.P0 == 0),
-            disp(['-----> no power launched. Aborted']);
-            return            
-        end
-        %
-        launch = imake_launch_angles_TCV_jd(angles);
-		launch.type = type;
-        %
-    elseif strcmp(basestr,'TS'),
-        %
-        % WAVE TYPE
-        %
-        if isfield(external,'LH') && isfield(external,'EC')
-            %
-            t_opt = input_dke_yp('Option for wave type : 0 (LH), 1 (EC)',0,0:1,'',[1,1]);
-            %
-            if t_opt == 0,
-                %
-                type = 'LH';
-            else
-                %
-                type = 'EC';
-            end
-            %
-        elseif isfield(external,'LH'),
-            %
-            type = 'LH';
-            %
-        elseif isfield(external,'EC'),
-            %
-            type = 'EC';
-            %
-        end
-        %
-        % BUILDING LAUNCH
-        %
-        if strcmp(type,'LH'),
-            %
-            launch = imake_launch_LH_jd(basestr,equil,external.LH);
-            %
-        elseif strcmp(type,'EC'),
-            %
-            launch = imake_launch_TS_jd(external.EC); 
-            %
-        end
-        %
-    elseif strcmp(basestr,'EAST'),
-        %
-        % WAVE TYPE
-        %
-        if isfield(external,'LH') && isfield(external,'EC')
-            %
-            t_opt = input_dke_yp('Option for wave type : 0 (LH), 1 (EC)',0,0:1,'',[1,1]);
-            %
-            if t_opt == 0,
-                %
-                type = 'LH';
-            else
-                %
-                type = 'EC';
-            end
-            %
-        elseif isfield(external,'LH'),
-            %
-            type = 'LH';
-            %
-        elseif isfield(external,'EC'),
-            %
-            type = 'EC';
-            %
-        end
-        %
-        % BUILDING LAUNCH
-        %
-        if strcmp(type,'LH'),
-            %
-            launch = imake_launch_LH_jd(basestr,equil,external.LH);
-            %
-        elseif strcmp(type,'EC'),
-            %
-            launch = imake_launch_EC_jd(basestr,equil,external.EC); 
-            %
-        end
-        %
-    else
-        %
-        disp(['-----> wave data not yet implemented for :',basestr]);
-        return      
-        %
-    end
+    launch = imod_struct_jd(launch,'launch',1,opt_gui);
+    %
+    type = launch.type;
     %
 elseif i_opt == 1,% use data from an existing file
     %
@@ -188,72 +100,16 @@ elseif i_opt == 2,% build the wave data locally
     %
     if d_opt == 0,% user-specified initial conditions 
         %
-        % WAVE TYPE
+        launchs = imake_launch_jd(dkepath,basestr,equil,'',workdir,opt_gui,select);
         %
-        if strcmp(basestr,'TCV'),
-            %
-            type = 'EC';
-            %
-        else
-            %
-            t_opt = input_dke_yp('Option for wave type : 0 (LH), 1 (EC)',0,0:1,'',[1,1]);
-            %
-            if t_opt == 0,
-                %
-                type = 'LH';
-            else
-                %
-                type = 'EC';
-            end
-            %
-        end
+        launch = imod_struct_jd(launchs{1},'launch',1,opt_gui);
         %
-        % BUILDING LAUNCH
-        %
-        if strcmp(type,'LH'),
-            %
-            launch = imake_launch_LH_jd(basestr,equil,'',opt_gui);
-            %
-        elseif strcmp(type,'EC'),
-            % 
-            if strcmp(basestr,'TCV'),% TCV launching data
-                %
-				a_opt = input_dke_yp('Do you want to specify : launcher angles (0) or initial ray parameters (1)',0,0:1,'',[1,1]);
-				%
-				if a_opt == 0,
-					angles = imake_angles_TCV_jd;
-					%
-					if isempty(angles),
-						disp('-----> launching data not determined');
-						return
-					end
-					%
-					launch = imake_launch_angles_TCV_jd(angles);
-					launch.type = type;
-					%
-				else
-					launch = imake_launch_EC_jd;
-				end
-                %
-            elseif strcmp(basestr,'TS')
-                %
-                launch = imake_launch_TS_jd('');
-                %
-            else
-                %
-                launch = imake_launch_EC_jd(basestr,equil,'',opt_gui);
-                %
-            end
-        else
-            %
-            disp('-----> wave type not yet implemented');
-            return  
-            %
-        end
+        type = launch.type;
         %
     elseif d_opt == 1,%initial conditions from an existing LAUNCH file 
         %
         launch = iload_struct_jd('launch','LAUNCH',workdir,opt_gui);
+        %
         launch = imod_struct_jd(launch,'launch',1,opt_gui);
         %
         type = launch.type;
@@ -272,7 +128,9 @@ elseif i_opt == 2,% build the wave data locally
         if ischar(alohafile),
             %
             aloha = load([alohapath,alohafile]);
-            launch = make_launch_aloha_jd(aloha);
+            launchs = imake_launch_jd(dkepath,basestr,equil,aloha,workdir,opt_gui,select);
+            %
+            launch = imod_struct_jd(launchs{1},'launch',1,opt_gui);
             %
         else
             disp('No file selected, aborted.')
@@ -304,13 +162,21 @@ elseif i_opt == 3,% use data from wavestructs
     %
     wavestructs = external.wavestructs;
     %
-    if length(wavestructs) > 1,
-        t_opt = input_dke_yp(['Select the wave number (1:',num2str(length(wavestructs)),')'],1,1:length(wavestructs),'',[1,1]);
-    else
-        t_opt = 1;
-    end
+    nwavestr = length(wavestructs);
     %
-    wavestruct = wavestructs{t_opt};
+    if nwavestr == 0,
+        return
+    elseif nwavestr == 1,
+        wavestruct = wavestructs{1};
+    else
+        titletext = 'Please select a wavestruct structure :';      
+        s = cell(1,nwavestr);
+        for iwavestr = 1:nwavestr,
+            s{iwavestr} = wavestructs{iwavestr}.id;
+        end
+        %    
+        wavestruct = wavestructs{iselect_jd(s,titletext,opt_gui,select.style,1)};
+    end
     %
     % WAVE TYPE
     %
