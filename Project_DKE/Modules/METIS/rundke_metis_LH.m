@@ -256,9 +256,20 @@ function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,conf
                         %
                         launch.bPlhtot = launch.bPlhtot*plh;%/sum(launch.bPlhtot)
                         %
-                    else % power from database
+                    else
                         %
-                        [tplh,tbase] = tsbase(str2double(shotnum),'GPHYB');
+                        filename = [basestr,filesep,shotnum,filesep,'GPHYB_',shotnum,'.mat'];
+                        %
+                        if exist(filename,'file'),%power from file
+                            %
+                            load(filename,'tplh','tbase')
+                            %
+                        else% power from database
+                            %
+                            [tplh,tbase] = tsbase(str2double(shotnum),'GPHYB');
+                            %
+                        end
+                        %    
                         xplh = 1e6*interp1(tbase(:,1),tplh,str2double(shotimes{ishot}));
                         if any(xplh < 0) || (real(config.opt_aloha) == 2 && abs(xplh(end) - metisdata.cons.plh)/metisdata.cons.plh > 0.01),
                             disp('warning : total power from database is different from metis cons')
@@ -392,9 +403,20 @@ function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,conf
                         launch_b.bPlhtot = launch_b.bPlhtot*plh;%/sum(launch_b.bPlhtot)
                         launch_h.bPlhtot = launch_h.bPlhtot*plh;%/sum(launch_h.bPlhtot)
                         %
-                    else % power from database
+                    else
                         %
-                        [tplh,tbase] = tsbase(str2double(shotnum),'GPHYB');
+                        filename = [basestr,filesep,shotnum,filesep,'GPHYB_',shotnum,'.mat'];
+                        %
+                        if exist(filename,'file'),%power from file
+                            %
+                            load(filename,'tplh','tbase')
+                            %
+                        else% power from database
+                            %
+                            [tplh,tbase] = tsbase(str2double(shotnum),'GPHYB');
+                            %
+                        end
+                        %
                         xplh = 1e6*interp1(tbase(:,1),tplh,str2double(shotimes{ishot}));
                         if real(config.opt_aloha) == 2 && abs(xplh(end) - metisdata.cons.plh)/metisdata.cons.plh > 0.01,
                             disp('warning : total power from database is different from metis cons')
