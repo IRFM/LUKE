@@ -1,143 +1,75 @@
-%Script that runs all C3PO examples in one pass. 
+%Script that runs all C3PO examples in one pass (only cases recognized by CVS)
 %
 % by Yves Peysson (CEA/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA-IRFM, joan.decker@cea.fr)
 %
-allforcerun = 0;%force run of all case
+allforcerun = 1;%force run of all cases
 %
-% --------------------------- JETlike -------------------------------------
+init_dir = pwd;
 %
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['JETlike',filesep,'EQUIL']);
-if exist('EQUIL_JETliketest.mat','file') == 0 || forcerun || allforcerun,
-   make_equil_JETliketest
-else
-   info_dke_yp(2,['Calculation in JETlike',filesep,'EQUIL skipped because already done !'])      
+dirlist = dir;
+for id = 1:length(dirlist),
+    %
+    if ~strcmp(dirlist(id).name,'.') && ~strcmp(dirlist(id).name,'..') && ~strcmp(dirlist(id).name,'.DS_store') && ~strcmp(dirlist(id).name,'CVS') && dirlist(id).isdir && exist([dirlist(id).name,filesep,'EQUIL']),
+        %
+        dirlist_equil = dir([dirlist(id).name,filesep,'EQUIL']);
+        %
+        for id_equil = 1:length(dirlist_equil),
+            if ~strcmp(dirlist_equil(id_equil).name,'.') && ~strcmp(dirlist_equil(id_equil).name,'..') && ~strcmp(dirlist_equil(id_equil).name,'.DS_store') && ~strcmp(dirlist_equil(id_equil).name,'CVS') && ~isempty(strfind(dirlist_equil(id_equil).name,'make_equil_')) && ~strcmp(dirlist_equil(id_equil).name(1),'.'),
+                equilname = dirlist_equil(id_equil).name(12:end-2);
+                if ~exist([dirlist(id).name,filesep,'EQUIL',filesep,'EQUIL_',equilname,'.mat'],'file') || allforcerun,
+                    cd([dirlist(id).name,filesep,'EQUIL']),
+                    eval(dirlist_equil(id_equil).name(1:end-2));
+                    cd(init_dir)
+                    if allforcerun
+                        disp([' - ',dirlist(id).name,filesep,'EQUIL',filesep,'EQUIL_',equilname,'.mat is build (overwritten)']);
+                    else
+                        disp([' - ',dirlist(id).name,filesep,'EQUIL',filesep,'EQUIL_',equilname,'.mat is build']);
+                    end
+                else
+                    disp([' - ',dirlist(id).name,filesep,'EQUIL',filesep,'EQUIL_',equilname,'.mat is already build']);
+                end
+            end
+        end
+        %
+        dirlist_fluct = dir([dirlist(id).name,filesep,'FLUCT']);
+        %
+        for id_fluct = 1:length(dirlist_fluct),
+            if ~strcmp(dirlist_fluct(id_fluct).name,'.') && ~strcmp(dirlist_fluct(id_fluct).name,'..') && ~strcmp(dirlist_fluct(id_fluct).name,'.DS_store') && ~strcmp(dirlist_fluct(id_fluct).name,'CVS') && ~isempty(strfind(dirlist_fluct(id_fluct).name,'make_fluct_')) && ~strcmp(dirlist_fluct(id_fluct).name(1),'.'),
+                fluctname = dirlist_fluct(id_fluct).name(12:end-2);
+                if ~exist([dirlist(id).name,filesep,'FLUCT',filesep,'FLUCT_',fluctname,'.mat'],'file') || allforcerun,
+                    cd([dirlist(id).name,filesep,'FLUCT']),
+                    eval(dirlist_fluct(id_fluct).name(1:end-2));
+                    cd(init_dir)
+                    if allforcerun
+                        disp([' - ',dirlist(id).name,filesep,'FLUCT',filesep,'FLUCT_',fluctname,'.mat is build (overwritten)']);
+                    else
+                        disp([' - ',dirlist(id).name,filesep,'FLUCT',filesep,'FLUCT_',fluctname,'.mat is build']);
+                    end
+                else
+                    disp([' - ',dirlist(id).name,filesep,'FLUCT',filesep,'FLUCT_',fluctname,'.mat is already build']);
+                end
+            end
+        end
+        %
+        dirlist_wave = dir([dirlist(id).name,filesep,'WAVE']);
+        %
+        for id_wave = 1:length(dirlist_wave),
+            if ~strcmp(dirlist_wave(id_wave).name,'.') && ~strcmp(dirlist_wave(id_wave).name,'..') && ~strcmp(dirlist_wave(id_wave).name,'.DS_store') && ~strcmp(dirlist_wave(id_wave).name,'CVS') && ~isempty(strfind(dirlist_wave(id_wave).name,'make_wave_')) && ~strcmp(dirlist_wave(id_wave).name(1),'.'),
+                wavename = dirlist_wave(id_wave).name(11:end-2);
+                if ~exist([dirlist(id).name,filesep,'WAVE',filesep,'WAVE_',wavename,'.mat'],'file') || allforcerun,
+                    cd([dirlist(id).name,filesep,'WAVE']),
+                    eval(dirlist_wave(id_wave).name(1:end-2));
+                    cd(init_dir)
+                    if allforcerun
+                        disp([' - ',dirlist(id).name,filesep,'WAVE',filesep,'WAVE_',wavename,'.mat is build (overwritten)']);
+                    else
+                        disp([' - ',dirlist(id).name,filesep,'WAVE',filesep,'WAVE_',wavename,'.mat is build']);
+                    end
+                else
+                    disp([' - ',dirlist(id).name,filesep,'WAVE',filesep,'WAVE_',wavename,'.mat is already build']);
+                end
+            end
+        end
+        %
+    end
 end
-cd ../..
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['JETlike',filesep,'WAVE']);
-if exist('WAVE_JETliketest_JETliketest2p0.mat','file') == 0 || forcerun || allforcerun,
-   make_wave_JETliketest
-else
-   info_dke_yp(2,['Calculation in JETlike',filesep,'WAVE skipped because already done !'])      
-end
-cd ../..
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['JETlike',filesep,'WAVE']);
-if exist('WAVE_JETliketest_JETliketest1p8.mat','file') == 0 || forcerun || allforcerun,
-   make_wave_JETliketest_bis
-else
-   info_dke_yp(2,['Calculation in JETlike',filesep,'WAVE skipped because already done !'])      
-end
-cd ../..
-%
-% ----------------------------- PLT ---------------------------------------
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['PLT',filesep,'EQUIL']);
-if exist('EQUIL_PLTtest.mat','file') == 0 || forcerun || allforcerun,
-   make_equil_PLTtest
-else
-   info_dke_yp(2,['Calculation in PLT',filesep,'EQUIL skipped because already done !'])      
-end
-cd ../..
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['PLT',filesep,'WAVE']);
-if exist('WAVE_PLTtest_PLTtest.mat','file') == 0 || forcerun || allforcerun,
-   make_wave_PLTtest
-else
-   info_dke_yp(2,['Calculation in PLT',filesep,'WAVE skipped because already done !'])      
-end
-cd ../..
-%
-% ---------------------------- RTtest -------------------------------------
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['RTtest',filesep,'EQUIL']);
-if exist('EQUIL_RTtest.mat','file') == 0 || forcerun || allforcerun,
-   make_equil_RTtest
-else
-   info_dke_yp(2,['Calculation in RTtest',filesep,'EQUIL skipped because already done !'])      
-end
-cd ../..
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['RTtest',filesep,'EQUIL']);
-if exist('EQUIL_RTtest_vacuum.mat','file') == 0 || forcerun || allforcerun,
-   make_equil_RTtest_vacuum
-else
-   info_dke_yp(2,['Calculation in RTtest',filesep,'EQUIL skipped because already done !'])      
-end
-cd ../..
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['RTtest',filesep,'WAVE']);
-if exist('WAVE_RTtest_RTtest.mat','file') == 0 || forcerun || allforcerun,
-   make_wave_RTtest
-else
-   info_dke_yp(2,['Calculation in RTtest',filesep,'WAVE skipped because already done !'])      
-end
-cd ../..
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['RTtest',filesep,'WAVE']);
-if exist('WAVE_RTtest_vacuum_RTtest_straight.mat','file') == 0 || forcerun || allforcerun,
-   info_dke_yp(2,['TODO: RT calculations do not stop with file make_wave_RTtest_straight. To be corrected.']) 
-   %make_wave_RTtest_straight
-else
-   info_dke_yp(2,['Calculation in RTtest',filesep,'WAVE skipped because already done !'])      
-end
-cd ../..
-%
-% --------------------------- VERSATOR2 -----------------------------------
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['VERSATOR2',filesep,'EQUIL']);
-if exist('EQUIL_VERSATOR2test.mat','file') == 0 || forcerun || allforcerun,
-   make_equil_VERSATOR2test
-else
-   info_dke_yp(2,['Calculation in VERSATOR2',filesep,'EQUIL skipped because already done !'])      
-end
-cd ../..
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['VERSATOR2',filesep,'WAVE']);
-if exist('WAVE_VERSATOR2test_VERSATOR2test.mat','file') == 0 || forcerun || allforcerun,
-   make_wave_VERSATOR2test
-else
-   info_dke_yp(2,['Calculation in VERSATOR2',filesep,'WAVE skipped because already done !'])      
-end
-cd ../..
-%
-% ------------------------------ RFP --------------------------------------
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['RFP',filesep,'EQUIL']);
-if exist('EQUIL_RFP.mat','file') == 0 || forcerun || allforcerun,
-   make_equil_RFP
-else
-   info_dke_yp(2,['Calculation in RFP',filesep,'EQUIL skipped because already done !'])      
-end
-cd ../..
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['RFP',filesep,'WAVE']);
-if exist('RAYINIT_RFP_LH.mat','file') == 0 || forcerun || allforcerun,
-   make_rayinit_RFP
-else
-   info_dke_yp(2,['Calculation in RFP',filesep,'WAVE skipped because already done !'])      
-end
-cd ../..
-%
-forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
-cd(['RFP',filesep,'WAVE']);
-if exist('WAVE_RFP_RFP_LH.mat','file') == 0 || forcerun || allforcerun,
-   make_wave_RFP
-else
-   info_dke_yp(2,['Calculation in RFP',filesep,'WAVE skipped because already done !'])      
-end
-cd ../..
-%
