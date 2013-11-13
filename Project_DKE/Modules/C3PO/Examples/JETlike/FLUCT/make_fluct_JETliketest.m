@@ -6,7 +6,7 @@
 close all
 clear fluct
 %
-id_fluct = '';%Plasma fluctuations identifier
+id_fluct = 'noripple_ne1ne3B1';%Plasma fluctuations identifier
 %
 % Path parameters
 %
