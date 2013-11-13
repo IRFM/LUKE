@@ -99,7 +99,6 @@ else
     %
     lukeobj.runc3po.state = 'on';
     lukeobj.runc3poall.state = 'on';    
-    lukeobj.runc3pooptim.state = 'on';    
     lukeobj.wsparamtitle.state = 'on';
     lukeobj.wsparam.state = 'on';
     %
@@ -130,6 +129,7 @@ else
         end
         %
         lukeobj.angles.text.string = '';
+        lukeobj.runc3pooptim.state = 'off';
         %
         if any(imag(wavestructs{iw}.launch.bNpar0) ~= 0),
             npar0disp = imag(wavestructs{iw}.launch.bNpar0(find(wavestructs{iw}.launch.bPlhtot == max(wavestructs{iw}.launch.bPlhtot),1,'first')));
@@ -156,11 +156,14 @@ else
                 ' ; P = ',num2str(wavestructs{iw}.launch.angles.P0/1e3,3),' kW',...
                 ' ; f = ',num2str(wavestructs{iw}.launch.angles.freq/1e9,3),' GHz'];
             %
+            lukeobj.runc3pooptim.state = 'on';
+            %
         else
             lukeobj.angles.modify.state = 'off';
             lukeobj.angles.save.state = 'off';
             lukeobj.angles.reset.state = 'off';
             lukeobj.angles.text.string = '';
+            lukeobj.runc3pooptim.state = 'off';
         end
         %
         lukeobj.spectrum.text.string = '';
