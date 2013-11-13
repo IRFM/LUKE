@@ -5,9 +5,7 @@
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
-clear all
 close all
-clc
 %
 id_wave = 'RTtest';
 flag_analytic = 1;
@@ -121,7 +119,7 @@ wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,'',rayinit,wave
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
-save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
+save_str = ['WAVE_',id_wave,'.mat'];
 save(save_str,'id_wave','wave_numeric','wave_analytic');
 %
 info_dke_yp(2,'Wave parameters saved');

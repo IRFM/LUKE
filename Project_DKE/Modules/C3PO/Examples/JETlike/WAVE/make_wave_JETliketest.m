@@ -5,11 +5,9 @@
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
-clear all
 close all
-clc
 %
-id_wave = 'JETliketest2p0';
+id_wave = 'JETliketest';
 flag_analytic = 2;
 %
 % Path parameters
@@ -166,7 +164,7 @@ C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster
 % ray-tracing calculations
 %
 tstart = tic;
-wave_numeric_pchip = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip,C3POparam,[],[],0);clear mex;clear functions
+wave_numeric_pchip = main_C3PO_jd(dkepath,[id_wave,'_numeric_pchip'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip,C3POparam,[],[],0);clear mex;clear functions
 telapsed_ray_numeric_pchip = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with pchip method)');
@@ -216,7 +214,7 @@ C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster
 % ray-tracing calculations
 %
 tstart = tic;
-wave_numeric_spline = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit_spline,rayinit,waveparam,[],rayparam,C3POdisplay_spline,C3POparam,[],[],0);clear mex;clear functions
+wave_numeric_spline = main_C3PO_jd(dkepath,[id_wave,'_numeric_spline'],equil,equil_fit_spline,rayinit,waveparam,[],rayparam,C3POdisplay_spline,C3POparam,[],[],0);clear mex;clear functions
 telapsed_ray_numeric_spline = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with spline method)');
@@ -227,7 +225,7 @@ telapsed_ray_analytic = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
-save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
+save_str = ['WAVE_',id_wave,'.mat'];
 save(save_str,'id_wave','wave_numeric_pchip','wave_numeric_spline','wave_analytic','equil_fit_pchip','equil_fit_spline');
 %
 info_dke_yp(2,'Wave parameters saved');
@@ -241,10 +239,11 @@ disp(['Elapsed time (s):',num2str(telapsed_ray_analytic),' for ray calculations 
 %
 % --- display results ---
 %
+waves = {wave_numeric_pchip,wave_numeric_spline,wave_analytic};
 rays = {wave_numeric_pchip.rays{1},wave_numeric_spline.rays{1},wave_analytic.rays{1}};
 %
 legs = {'Numeric - pchip','Numeric - spline','Analytic';...
-       'Numeric_pchip','Numeric_spline','Analytic'};
+        'Numeric_pchip','Numeric_spline','Analytic'};
 %
 equil_fit = [equil_fit_pchip,equil_fit_spline,equil_fit_pchip];
 %
@@ -257,3 +256,4 @@ opt.propvar = 1;
 %
 graph_comp_RT_jd(rays,legs,equil_fit,filename,opt)
 %
+diary4cvs_C3PO_yp(id_wave,dkepath,waves);% diary some results for CVS validation

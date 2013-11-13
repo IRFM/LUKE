@@ -5,11 +5,9 @@
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
-clear all
 close all
-clc
 %
-id_wave = 'TRIAM_1M_1p4';
+id_wave = 'TRIAM_1M';
 %
 % Path parameters
 %
@@ -37,7 +35,7 @@ phi0 = 0;
 %
 m0 = 0;
 n0 = NaN;
-Npar0 = -1.3;%initial index of refraction
+Npar0 = -1.4;%initial index of refraction
 %
 dNpar0 = NaN;
 P0_2piRp = NaN;
@@ -124,7 +122,7 @@ telapsed_ray = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with pchip method)');
 %
-save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
+save_str = ['WAVE_',id_wave,'.mat'];
 save(save_str,'id_wave','wave');
 %
 info_dke_yp(2,'Wave parameters saved');
@@ -144,3 +142,6 @@ opt.propvar = 1;
 %
 graph_comp_RT_jd(rays,legs,equil_fit,filename,opt)
 %
+diary4cvs_C3PO_yp(id_wave,dkepath,wave);% diary some results for CVS validation
+
+

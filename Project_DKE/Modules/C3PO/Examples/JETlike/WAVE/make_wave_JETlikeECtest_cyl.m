@@ -5,11 +5,9 @@
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
-clear all
 close all
-clc
 %
-id_wave = 'JETlikeECtest110GHz';
+id_wave = 'JETlikeECtest_cyl';
 %
 % Path parameters
 %
@@ -144,15 +142,18 @@ C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster
 % ray-tracing calculations
 %
 tstart = tic;
-wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
-telapsed_ray_numeric = toc(tstart);
+wave = main_C3PO_jd(dkepath,[id_wave],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
+telapsed_ray = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
-save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
-save(save_str,'id_wave','wave_numeric');
+save_str = ['WAVE_',id_wave,'.mat'];
+save(save_str,'id_wave','wave');
 %
 info_dke_yp(2,'Wave parameters saved');
 %
-disp(['Elapsed time (s):',num2str(telapsed_ray_numeric),' for ray calculations (PCHIP interp. technique)']);
+disp(['Elapsed time (s):',num2str(telapsed_ray),' for ray calculations (PCHIP interp. technique)']);
 %
+diary4cvs_C3PO_yp(id_wave,dkepath,wave);% diary some results for CVS validation
+
+

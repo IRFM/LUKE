@@ -131,3 +131,29 @@ opt.propvar = 1;
 %
 graph_comp_RT_jd(rays,legs,'',filename,opt)
 %
+% diary some results for CVS validation
+%
+diaryname = ['res_',id_wave,'.log'];
+[LUKEversion,matver] = LUKEversion_jd;
+%
+if exist(diaryname,'file'),
+    delete(diaryname)
+end
+%
+diary(diaryname)
+%
+disp(['Simulation id: ',id_wave]);
+disp(['Simulation date: ',timeid_jd(timeid_jd(clock))]);
+disp(['User id: ',userid_jd]);
+disp(['LUKE Version: ',LUKEversion]);
+disp(['MATLAB Version: ',matver]);
+disp(['MACHINE: ',dkepath.hostname]);
+%
+disp(['----------------------'])
+%
+for iray = 1:10,
+    disp(['Npar(numeric) = ',num2str(wave_numeric.rays{1}.sNpar(iray),'%17.15f'),' - Npar(analytic) = ',num2str(wave_analytic.rays{1}.sNpar(iray),'%17.15f')])
+end
+disp(['----------------------'])
+%
+diary off

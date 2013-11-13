@@ -5,12 +5,9 @@
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
-clear all
 close all
-clc
-format long
 %
-id_wave = 'JETliketestEC_fluct';
+id_wave = 'JETlikeECflucttest';
 %
 % Path parameters
 %
@@ -24,7 +21,7 @@ path_equil = '../EQUIL/';%if nothing is specified, the working directory is firs
 %
 % Density and magnetic field fluctuation
 %
-id_fluct = 'test_noripple';%For density and magnetic field fluctuation
+id_fluct = 'noripple';%For density and magnetic field fluctuation
 path_fluct = '../FLUCT/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % Load structures
@@ -159,22 +156,23 @@ C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster
 % ray-tracing calculations
 %
 rayinit = main_rayinit_launch_jd(equil,launch);
-wave_nofluct = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
+wave_nofluct = main_C3PO_jd(dkepath,[id_wave,'_nofluct'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],[],0);clear mex;clear functions
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with no plasma fluctuations)');
 %
-rayinit = main_rayinit_launch_jd(equil,launch,fluct);
-[wave_fluct] = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],fluct_fit,0);
+rayinit = main_rayinit_launch_jd(equil,launch);
+[wave_fluct] = main_C3PO_jd(dkepath,[id_wave,'_fluct'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay,C3POparam,[],fluct_fit,0);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with plasma fluctuations)');
 %
-save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
+save_str = ['WAVE_',id_wave,'.mat'];
 save(save_str,'id_wave','wave_fluct','wave_nofluct','equil_fit','fluct');
 %
 info_dke_yp(2,'Wave parameters saved');
 %
 % --- display results ---
 %
+waves = {wave_nofluct,wave_fluct};
 rays = {wave_nofluct.rays{1},wave_fluct.rays{1}};
 %
 legs = {'No fluct.','With fluct.';...
@@ -189,4 +187,6 @@ opt.propvar = 1;
 %
 graph_comp_RT_jd(rays,legs,equil_fit,filename,opt)
 %
+diary4cvs_C3PO_yp(id_wave,dkepath,waves);% diary some results for CVS validation
+
 

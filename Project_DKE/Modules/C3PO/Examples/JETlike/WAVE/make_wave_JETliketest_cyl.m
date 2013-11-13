@@ -5,11 +5,9 @@
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
-clear all
 close all
-clc
 %
-id_wave = 'JETliketest1p3';
+id_wave = 'JETliketest_cyl';
 %
 % Path parameters
 %
@@ -37,7 +35,7 @@ z0 = 0;
 %
 m0 = -100;
 kz0 = NaN;
-Nz0 = -1.3;%initial index of refraction
+Nz0 = -1.8;%initial index of refraction
 %
 dNpar0 = NaN;
 P0_2piRp = NaN;
@@ -160,7 +158,7 @@ C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster
 % ray-tracing calculations
 %
 tstart = tic;
-wave_numeric_pchip = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip,C3POparam,[],[],0);clear mex;clear functions
+wave_numeric_pchip = main_C3PO_jd(dkepath,[id_wave,'_numeric_pchip'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip,C3POparam,[],[],0);clear mex;clear functions
 telapsed_ray_numeric_pchip = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with pchip method)');
@@ -210,12 +208,12 @@ C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster
 % ray-tracing calculations
 %
 tstart = tic;
-wave_numeric_spline = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit_spline,rayinit,waveparam,[],rayparam,C3POdisplay_spline,C3POparam,[],[],0);clear mex;clear functions
+wave_numeric_spline = main_C3PO_jd(dkepath,[id_wave,'_numeric_spline'],equil,equil_fit_spline,rayinit,waveparam,[],rayparam,C3POdisplay_spline,C3POparam,[],[],0);clear mex;clear functions
 telapsed_ray_numeric_spline = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with spline method)');
 %
-save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
+save_str = ['WAVE_',id_wave,'.mat'];
 save(save_str,'id_wave','wave_numeric_pchip','wave_numeric_spline','equil_fit_pchip','equil_fit_spline');
 %
 info_dke_yp(2,'Wave parameters saved');
@@ -226,3 +224,6 @@ disp(['Elapsed time (s):',num2str(telapsed_equil_spline),' for interpolating MHD
 disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_pchip),' for ray calculations with numerical MHD equilibrium (PCHIP interp. technique)']);
 disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_spline),' for ray calculations with numerical MHD equilibrium (SPLINE interp. technique)']);
 %
+waves = {wave_numeric_pchip,wave_numeric_spline};
+%
+diary4cvs_C3PO_yp(id_wave,dkepath,waves);% diary some results for CVS validation

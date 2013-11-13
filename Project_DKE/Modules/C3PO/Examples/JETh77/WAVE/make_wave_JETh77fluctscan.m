@@ -5,9 +5,6 @@
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
-clear all
-close all
-clc
 format long
 %
 id_wave = 'JETh772p0_fluctscan';
@@ -155,7 +152,7 @@ rayevolution_yp(equil_fit,waves);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with plasma fluctuations)');
 %
-save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
+save_str = ['WAVE_',id_wave,'.mat'];
 eval(['save ',save_str,' waves']);
 %
 info_dke_yp(2,'Wave parameters saved');

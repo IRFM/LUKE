@@ -5,9 +5,6 @@
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
-clear all
-close all
-clc
 format long
 %
 id_wave = 'JETh772p0_flucttest';
@@ -148,7 +145,7 @@ wave_fluct = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit,rayinit,
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with plasma fluctuations)');
 %
-save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
+save_str = ['WAVE_',id_wave,'.mat'];
 save(save_str,'id_wave','wave_fluct','wave_nofluct','equil_fit','fluct');
 %
 info_dke_yp(2,'Wave parameters saved');
