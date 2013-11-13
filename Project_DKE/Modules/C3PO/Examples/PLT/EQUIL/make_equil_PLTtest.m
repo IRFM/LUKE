@@ -5,8 +5,6 @@
 %   By J. Decker <jodecker@alum.mit.edu> and Y. Peysson <yves.peysson@cea.fr>
 %   Created Feb. 17, 2004
 %
-%clear all
-%
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
 npsi = 101;% number of points in psi grid

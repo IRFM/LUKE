@@ -3,10 +3,6 @@
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
-clear all
-close all
-clc
-%
 id_fluct = 'test';%Plasma fluctuations identifier
 %
 % Path parameters

@@ -4,11 +4,6 @@
 %
 %   By J. Decker <joan.decker@cea.fr> and Y. Peysson <yves.peysson@cea.fr>
 %
-clear all
-close all
-clear functions
-clear mex
-%
 npsi = 101;% number of points in psi grid
 ntheta = 65;% number of points in theta grid
 %

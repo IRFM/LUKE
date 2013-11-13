@@ -4,9 +4,6 @@
 %
 %   By J. Decker <joan.decker@cea.fr> and Y. Peysson <yves.peysson@cea.fr>
 %  
-%
-clear all
-%
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
 npsi = 101;% number of points in psi grid
