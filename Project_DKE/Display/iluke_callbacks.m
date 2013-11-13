@@ -137,8 +137,13 @@ switch action
             %
             clear lukeobjmod
             %
-            lukeobj = iluke_info(lukeobj,'');% disable info display
+            if ~isempty(job),
+            	action = lukerun;iluke_callbacks;
+            else
+            	lukeobj = iluke_info(lukeobj,'');% disable info display
+            end
             %
+            	
         end  
         %
         clear sbase filestr filename pathname
