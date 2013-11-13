@@ -130,22 +130,22 @@ By_a0_fit = ppval(equil_fit.By_fit.pp_a0,rho0);
 By_an_fit = ppval(equil_fit.By_fit.pp_an,rho0);
 By_bn_fit = ppval(equil_fit.By_fit.pp_bn,rho0);
 %
-BPHI_a0_fit = ppval(equil_fit.BPHI_fit.pp_a0,rho0);
-BPHI_an_fit = ppval(equil_fit.BPHI_fit.pp_an,rho0);
-BPHI_bn_fit = ppval(equil_fit.BPHI_fit.pp_bn,rho0);
+Bz_a0_fit = ppval(equil_fit.Bz_fit.pp_a0,rho0);
+Bz_an_fit = ppval(equil_fit.Bz_fit.pp_an,rho0);
+Bz_bn_fit = ppval(equil_fit.Bz_fit.pp_bn,rho0);
 %
 % Build interpolated magnetic fields
 %	
 [xBx] = calcval_yp(equil_fit,theta0,Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
 [xBy] = calcval_yp(equil_fit,theta0,By_a0_fit,By_an_fit,By_bn_fit);
-[xBPHI] = calcval_yp(equil_fit,theta0,BPHI_a0_fit,BPHI_an_fit,BPHI_bn_fit);
+[xBz] = calcval_yp(equil_fit,theta0,Bz_a0_fit,Bz_an_fit,Bz_bn_fit);
 %
 xBp = sqrt(xBx.^2 + xBy.^2); 
-xBt = xBPHI; 
+xBt = xBz; 
 xB = sqrt(xBt.^2 + xBp.^2);
-xBphin = xBt./xB;
+xBzn = xBt./xB;
 %
-Npar0 = Nphi0.*xBphin;
+Npar0 = Nphi0.*xBzn;
 %
 rayinit.omega_rf = omega_rf;
 rayinit.yrho0 = rho0;%Initial radial position at launch
