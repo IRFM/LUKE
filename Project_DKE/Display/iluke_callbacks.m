@@ -279,6 +279,7 @@ switch action
         select.disp = 1;
         select.print = 1;
         select.comp = 1;
+        select.busyhandle = lukeobj.busy.handle;
         %
         if isfield(external,'equil'),
             external_equil = external.equil;

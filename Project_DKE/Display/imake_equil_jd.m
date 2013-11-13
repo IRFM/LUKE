@@ -517,7 +517,14 @@ if e_opt >= 0,
     %
 elseif e_opt == -1,% (R,Z) to (psi,theta) conversion specific to eqdsk    
     %
+    if isfield(select,'busyhandle'),
+        set(select.busyhandle,'Visible','on');drawnow;
+    end
     [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd(eqdsk,display_mode,p_opt,dispname,savename);
+    if isfield(select,'busyhandle'),
+        set(select.busyhandle,'Visible','off');drawnow;
+    end
+    %
     [np,nt] = size(equil_magnetic.ptx);
     %
     % Correction for the equilibrium offset
