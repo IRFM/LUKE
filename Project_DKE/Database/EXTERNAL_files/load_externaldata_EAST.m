@@ -23,6 +23,14 @@ while 1,
     end
 end
 %
+while 1,
+    if length(shotnum) < 6,%six digits in EAST
+        shotnum = ['0',shotnum];
+    else
+        break;
+    end
+end
+%
 filename = [workdir,'/','jbdirections_',shotnum,'_',shotime,'.mat'];
 %
 if exist(filename,'file'),
