@@ -95,7 +95,11 @@ end
 %
 % Data saving
 %
-save_str = ['FLUCT_',id_equil,'_',id_fluct,'.mat'];
+if isempty(id_fluct),
+    save_str = ['FLUCT_',id_equil,'_',id_fluct,'.mat'];
+else
+    save_str = ['FLUCT_',id_equil,'_',id_fluct,'.mat'];
+end
 eval(['save ',save_str,' fluct']);
 %
 info_dke_yp(2,'Fluctuations structure saved');
