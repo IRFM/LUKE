@@ -96,7 +96,7 @@ end
 % Data saving
 %
 if isempty(id_fluct),
-    save_str = ['FLUCT_',id_equil,'_',id_fluct,'.mat'];
+    save_str = ['FLUCT_',id_equil,'.mat'];
 else
     save_str = ['FLUCT_',id_equil,'_',id_fluct,'.mat'];
 end
