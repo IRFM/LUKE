@@ -92,25 +92,14 @@ y_dbndrho = ppval(equil_fit.y_fit.pp_dbndrho,rho);
 %
 [y,dydtheta,d2ydtheta2,dydrho,d2ydthetadrho] = calcval_yp(equil_fit,theta,y_a0,y_an,y_bn,y_da0drho,y_dandrho,y_dbndrho);
 %
-r = sqrt(x.^2 + y.^2);
-drdtheta = (dxdtheta.*x + dydtheta.*y)./r;
-drdrho = (dxdrho.*x + dydrho.*y)./r;
+r_a0 = ppval(equil_fit.r_fit.pp_a0,rho);
+r_an = ppval(equil_fit.r_fit.pp_an,rho);
+r_bn = ppval(equil_fit.r_fit.pp_bn,rho);
+r_da0drho = ppval(equil_fit.r_fit.pp_da0drho,rho);
+r_dandrho = ppval(equil_fit.r_fit.pp_dandrho,rho);
+r_dbndrho = ppval(equil_fit.r_fit.pp_dbndrho,rho);
 %
-salpha = (x.*dxdtheta + y.*dydtheta)./r./sqrt(dxdtheta.^2 + dydtheta.^2);
-dsalphadtheta = ...
-  sqrt(dxdtheta.^2 + dydtheta.^2)./r ...
-  + (x.*d2xdtheta2 + y.*d2ydtheta2)./r./sqrt(dxdtheta.^2 + dydtheta.^2) ...
-  -drdtheta.*(x.*dxdtheta + y.*dydtheta)./r.^2./sqrt(dxdtheta.^2 + dydtheta.^2) ...
-  -(dxdtheta.*d2xdtheta2 + dydtheta.*d2ydtheta2).*(x.*dxdtheta + y.*dydtheta)./r./sqrt(dxdtheta.^2 + dydtheta.^2)./(dxdtheta.^2 + dydtheta.^2);
-dsalphadrho = ...
-  (dxdtheta.*dxdrho + dydtheta.*dydrho)./r./sqrt(dxdtheta.^2 + dydtheta.^2)...
-  + (x.*d2xdthetadrho + y.*d2ydthetadrho)./r./sqrt(dxdtheta.^2 + dydtheta.^2) ...
-  -drdrho.*(x.*dxdtheta + y.*dydtheta)./r.^2./sqrt(dxdtheta.^2 + dydtheta.^2) ...
-  -(dxdtheta.*d2xdthetadrho + dydtheta.*d2ydthetadrho).*(x.*dxdtheta + y.*dydtheta)./r./sqrt(dxdtheta.^2 + dydtheta.^2)./(dxdtheta.^2 + dydtheta.^2);
-%
-calpha = sqrt(1.0 - salpha.^2);
-dcalphadtheta = -salpha.*dsalphadtheta./calpha;
-dcalphadrho = -salpha.*dsalphadrho./calpha;
+[r,drdtheta,d2rdtheta2,drdrho,d2rdthetadrho] = calcval_yp(equil_fit,theta,r_a0,r_an,r_bn,r_da0drho,r_dandrho,r_dbndrho);
 %
 Bx_a0 = ppval(equil_fit.Bx_fit.pp_a0,rho);
 Bx_an = ppval(equil_fit.Bx_fit.pp_an,rho);
@@ -140,13 +129,41 @@ Bz_dbndrho = ppval(equil_fit.Bz_fit.pp_dbndrho,rho);
 %
 [Bz,dBzdtheta,d2Bzdtheta2,dBzdrho,d2Bzdthetadrho] = calcval_yp(equil_fit,theta,Bz_a0,Bz_an,Bz_bn,Bz_da0drho,Bz_dandrho,Bz_dbndrho);
 %
-BP = sqrt(Bx^2 + By^2);
-dBPdtheta = (Bx*dBxdtheta + By*dBydtheta)/BP;
-dBPdrho = (Bx*dBxdrho + By*dBydrho)/BP;
+BP_a0 = ppval(equil_fit.BP_fit.pp_a0,rho);
+BP_an = ppval(equil_fit.BP_fit.pp_an,rho);
+BP_bn = ppval(equil_fit.BP_fit.pp_bn,rho);
+BP_da0drho = ppval(equil_fit.BP_fit.pp_da0drho,rho);
+BP_dandrho = ppval(equil_fit.BP_fit.pp_dandrho,rho);
+BP_dbndrho = ppval(equil_fit.BP_fit.pp_dbndrho,rho);
 %
-B = sqrt(Bx^2 + By^2 + Bz^2);
-dBdtheta = (Bx*dBxdtheta + By*dBydtheta + Bz*dBzdtheta)/B;
-dBdrho = (Bx*dBxdrho + By*dBydrho + Bz*dBzdrho)/B;
+[BP,dBPdtheta,d2BPdtheta2,dBPdrho,d2BPdthetadrho] = calcval_yp(equil_fit,theta,BP_a0,BP_an,BP_bn,BP_da0drho,BP_dandrho,BP_dbndrho);
+%
+B_a0 = ppval(equil_fit.B_fit.pp_a0,rho);
+B_an = ppval(equil_fit.B_fit.pp_an,rho);
+B_bn = ppval(equil_fit.B_fit.pp_bn,rho);
+B_da0drho = ppval(equil_fit.B_fit.pp_da0drho,rho);
+B_dandrho = ppval(equil_fit.B_fit.pp_dandrho,rho);
+B_dbndrho = ppval(equil_fit.B_fit.pp_dbndrho,rho);
+%
+[B,dBdtheta,d2Bdtheta2,dBdrho,d2Bdthetadrho] = calcval_yp(equil_fit,theta,B_a0,B_an,B_bn,B_da0drho,B_dandrho,B_dbndrho);
+%
+calpha_a0 = ppval(equil_fit.calpha_fit.pp_a0,rho);
+calpha_an = ppval(equil_fit.calpha_fit.pp_an,rho);
+calpha_bn = ppval(equil_fit.calpha_fit.pp_bn,rho);
+calpha_da0drho = ppval(equil_fit.calpha_fit.pp_da0drho,rho);
+calpha_dandrho = ppval(equil_fit.calpha_fit.pp_dandrho,rho);
+calpha_dbndrho = ppval(equil_fit.calpha_fit.pp_dbndrho,rho);
+%
+[calpha,dcalphadtheta,d2calphadtheta2,dcalphadrho,d2calphadthetadrho] = calcval_yp(equil_fit,theta,calpha_a0,calpha_an,calpha_bn,calpha_da0drho,calpha_dandrho,calpha_dbndrho);
+%
+salpha_a0 = ppval(equil_fit.salpha_fit.pp_a0,rho);
+salpha_an = ppval(equil_fit.salpha_fit.pp_an,rho);
+salpha_bn = ppval(equil_fit.salpha_fit.pp_bn,rho);
+salpha_da0drho = ppval(equil_fit.salpha_fit.pp_da0drho,rho);
+salpha_dandrho = ppval(equil_fit.salpha_fit.pp_dandrho,rho);
+salpha_dbndrho = ppval(equil_fit.salpha_fit.pp_dbndrho,rho);
+%
+[salpha,dsalphadtheta,d2salphadtheta2,dsalphadrho,d2salphadthetadrho] = calcval_yp(equil_fit,theta,salpha_a0,salpha_an,salpha_bn,salpha_da0drho,salpha_dandrho,salpha_dbndrho);
 %
 if isinf(Rp),
     Upsilon = 1;

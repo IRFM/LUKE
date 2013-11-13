@@ -1,4 +1,5 @@
 function [equil_out] = fitequil_yp(equil_in,mode,method,ngrid,nharm)
+% C3PO - Build vectorial tokamak magnetic equilibrium from its numerical counterpart
 %
 % Build vectorial tokamak magnetic equilibrium from its numerical counterpart
 % Two operating modes :
@@ -67,6 +68,13 @@ if mode == 1,
     sx = interp1(rho,equil_in.ptx,srho,method);%x coordinate
     sy = interp1(rho,equil_in.pty,srho,method);%y coordinate
     %
+    sr = sqrt(sx.^2 + sy.^2);%r
+    sBp = sqrt(sBx.*sBx + sBy.*sBy);%Bp field 
+    sB = sqrt(sBx.*sBx +sBy.*sBy + sBz.*sBz);%B field 
+    scalpha = (sx.*sBy - sy.*sBx)./sqrt(sBx.*sBx + sBy.*sBy)./sr;%cos(alpha)
+    scalpha(1,:) = scalpha(2,:);%to avoid singularity at r = 0
+    ssalpha = sqrt(1.0 - min(scalpha.*scalpha,1));%sin(alpha)
+    %
     % Calculation of the vectorial magnetic equilibrium
     %
     equil_out.psin_fit = interpequilpt_yp(method,spsin,srho);
@@ -85,8 +93,13 @@ if mode == 1,
     equil_out.Bx_fit = interpequilpt_yp(method,sBx,srho,equil_in.theta,nharm);%Bx field component
     equil_out.By_fit = interpequilpt_yp(method,sBy,srho,equil_in.theta,nharm);%By field component
     equil_out.Bz_fit = interpequilpt_yp(method,sBz,srho,equil_in.theta,nharm);%PHI field component
+    equil_out.BP_fit = interpequilpt_yp(method,sBp,srho,equil_in.theta,nharm);%BP field 
+    equil_out.B_fit = interpequilpt_yp(method,sB,srho,equil_in.theta,nharm);%B field 
     equil_out.x_fit = interpequilpt_yp(method,sx,srho,equil_in.theta,nharm);%x coordinate
     equil_out.y_fit = interpequilpt_yp(method,sy,srho,equil_in.theta,nharm);%y coordinate
+    equil_out.r_fit = interpequilpt_yp(method,sr,srho,equil_in.theta,nharm);%y coordinate
+    equil_out.calpha_fit = interpequilpt_yp(method,scalpha,srho,equil_in.theta,nharm);%cos(alpha)
+    equil_out.salpha_fit = interpequilpt_yp(method,ssalpha,srho,equil_in.theta,nharm);%sin(alpha)
 else
     if ~isempty(equil_in.pTe),xyTe = interp1(psi_apRp,equil_in.pTe,xypsi_apRp,method);end
     if ~isempty(equil_in.pne),xyne = interp1(psi_apRp,equil_in.pne,xypsi_apRp,method);end
