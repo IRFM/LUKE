@@ -138,7 +138,7 @@ switch action
             clear lukeobjmod
             %
             if ~isempty(job),
-            	action = lukerun;iluke_callbacks;
+            	action = 'lukerun';iluke_callbacks;
             else
             	lukeobj = iluke_info(lukeobj,'');% disable info display
             end
