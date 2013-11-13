@@ -1,4 +1,5 @@
 function [gradpkin,gradpmag,jpar,jparz] = equilconsistency_yp(equil,equil_fit,prho)
+% LUKE - Test the consistency of the interpolated magnetic equilibrium
 %
 % Test the consistency of the interpolated magnetic equilibrium
 %
@@ -58,22 +59,19 @@ for irho = 1:length(rho),
     %
     a1 = drdrho(irho,itheta)*BP(irho,itheta)/calpha(irho,itheta) + r(irho,itheta)*dBPdrho(irho,itheta)/calpha(irho,itheta) - r(irho,itheta)*BP(irho,itheta)*dcalphadrho(irho,itheta)/calpha(irho,itheta)/calpha(irho,itheta);
     a2 = dsalphadtheta(irho,itheta)/Upsilon(irho,itheta)/calpha(irho,itheta) - salpha(irho,itheta)*dcalphadtheta(irho,itheta)/Upsilon(irho,itheta)/calpha(irho,itheta)/calpha(irho,itheta) - salpha(irho,itheta)*dUpsilondtheta(irho,itheta)/calpha(irho,itheta)/Upsilon(irho,itheta)/Upsilon(irho,itheta);
-    a3 = dUpsilondtheta(irho,itheta).*Bz(irho,itheta) + Upsilon(irho,itheta)*dBzdtheta(irho,itheta);
     a4 = dUpsilondrho(irho,itheta)*Bz(irho,itheta) + Upsilon(irho,itheta)*dBzdrho(irho,itheta);
     %
     b1 = -a1*BP(irho,itheta)*calpha(irho,itheta)./r(irho,itheta);
     b2 = a2*BP(irho,itheta)*BP(irho,itheta)*Upsilon(irho,itheta).*calpha(irho,itheta)./r(irho,itheta)./gradrhon(irho,itheta);
-    b3 = a3*Bz(irho,itheta)*salpha(irho,itheta)./Upsilon(irho,itheta)./r(irho,itheta)./gradrhon(irho,itheta);
     b4 = -a4*Bz(irho,itheta)/Upsilon(irho,itheta);
     %
     c1 = a1*Bz(irho,itheta)*gradrhon(irho,itheta)*calpha(irho,itheta)/r(irho,itheta)/B(irho,itheta);
     c2 = -a2*BP(irho,itheta)*Upsilon(irho,itheta)*calpha(irho,itheta)*Bz(irho,itheta)/r(irho,itheta)/B(irho,itheta);  
-    c3 =  a3*BP(irho,itheta)*salpha(irho,itheta)/Upsilon(irho,itheta)/r(irho,itheta)/B(irho,itheta);   
-    c4 =  -a4*BP(irho,itheta)*gradrhon(irho,itheta)/Upsilon(irho,itheta)/B(irho,itheta);  
+    c4 =  -a4*BP(irho,itheta)*gradrhon(irho,itheta)/Upsilon(irho,itheta)/B(irho,itheta);
     %
-    gradpmagsgradrhon(irho,itheta) = (b1 + b2 + b3 + b4)/mu0;
+    gradpmagsgradrhon(irho,itheta) = (b1 + b2 + b4)/mu0;
     %
-    jpar(irho,itheta) = (c1 + c2 + c3 + c4)/mu0;
+    jpar(irho,itheta) = (c1 + c2 + c4)/mu0;
     jparz(irho,itheta) = jpar(irho,itheta)*Bz(irho,itheta)/B(irho,itheta);
     %
     jparz_fsav(irho) = jparz_fsav(irho) + jparz(irho,itheta)*r(irho,itheta)/Upsilon(irho,itheta)/B(irho,itheta)/calpha(irho,itheta)*dtheta;
@@ -91,10 +89,10 @@ disp(['Plasma current, Ip = ',num2str(Ip/1e6),' (MA)']);
 deltagradpsgradrhon = abs(gradpmagsgradrhon(2:end,:) - gradpkinsgradrhon(2:end,:));
 %
 figure('Name','Pressure gradient'),clf
-leg = {'Kinetic','Magnetic','Location','NorthEast'};
-[ax] = graph1D_jd(rho,gradpkinsgradrhon(:,1),0,0,'\rho','\nablap/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
-[ax] = graph1D_jd(rho,gradpmagsgradrhon,0,0,'\rho','\nablap/|\nabla\rho|',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],leg,NaN,NaN,'--','none','b',2);drawnow
-[ax] = graph1D_jd(rho,gradpkinsgradrhon(:,1),0,0,'\rho','\nablap/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+leg = {'Kinetic','Magnetic','Location','NorthEast'};%\cdot\widehat{\psi}
+[ax] = graph1D_jd(rho,gradpkinsgradrhon(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+[ax] = graph1D_jd(rho,gradpmagsgradrhon,0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],leg,NaN,NaN,'--','none','b',2);drawnow
+[ax] = graph1D_jd(rho,gradpkinsgradrhon(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
 %
 figure('Name','Pressure gradient differences'),clf
 graph2D_jd(rho(2:end),theta,deltagradpsgradrhon,'\rho','\theta (rd)',[strrep(equil.id,'_','-'),', |\nablap/|\nabla\rho|| absolute error'],NaN,NaN,1,NaN,20);colorbar
@@ -107,7 +105,7 @@ leg = {'j_{||z}','<j_{||z}>','Location','NorthEast'};
 L = 0;
 LB = 0;
 %
-for itheta = 1:length(theta)-1,
+for itheta = 1:length(theta),
     %
     L = L + r(end,itheta)*dtheta/calpha(end,itheta);
     LB = LB + r(end,itheta)*dtheta*BP(end,itheta)*BP(end,itheta)/calpha(end,itheta);
@@ -117,8 +115,8 @@ end
 VB = 0;
 V = 0;
 %
-for irho = 1:length(rho)-1,
-	for itheta = 1:length(theta)-1,
+for irho = 1:length(rho),
+	for itheta = 1:length(theta),
         %
         VB = VB + r(irho,itheta)*Upsilon(irho,itheta)*drho*dtheta*BP(irho,itheta)*BP(irho,itheta)/gradrhon(irho,itheta)/calpha(irho,itheta);
         V = V + r(irho,itheta)*Upsilon(irho,itheta)*drho*dtheta/gradrhon(irho,itheta)/calpha(irho,itheta);
@@ -128,5 +126,6 @@ end
 li = L*VB/LB/V;
 %
 disp(['Normalized internal inductance, li = ',num2str(li)]);
+%
 
 
