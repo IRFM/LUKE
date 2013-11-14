@@ -55,6 +55,6 @@ for iw = 1:length(waves),
         end
         jj = jj + 1;
     end
-    %
-    diary off
 end
+%
+diary off
