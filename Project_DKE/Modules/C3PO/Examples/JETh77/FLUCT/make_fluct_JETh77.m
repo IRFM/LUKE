@@ -1,3 +1,4 @@
+function [] = make_fluct_JETh77
 %
 % Parameters for testing the effect of density or magnetic field fluctuations on ray trajectories
 %

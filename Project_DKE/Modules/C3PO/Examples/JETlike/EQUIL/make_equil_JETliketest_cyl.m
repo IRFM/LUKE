@@ -1,3 +1,4 @@
+function [] = make_equil_JETliketest_cyl
 %
 %   This script generates the data file of an ideal circular equilibrium based on
 %   equilibrium profile parameters

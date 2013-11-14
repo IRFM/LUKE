@@ -1,3 +1,4 @@
+function [] = make_rayinit_RFP
 % script make_rayinit_MST_400ka
 %
 % Creates rayinit structure 
@@ -17,9 +18,7 @@
 % to the toroidal magnetic field must be specified, as well as if the RF
 % wave is driving co or counter current.
 %
-clear all
 close all
-clc
 %
 % Path parameters
 %

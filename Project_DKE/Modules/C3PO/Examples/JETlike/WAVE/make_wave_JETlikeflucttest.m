@@ -1,3 +1,4 @@
+function [] = make_wave_JETlikeflucttest
 % script make_wave_test_RT
 %
 % Parameters for test mode ray-tracing calculations
@@ -21,7 +22,7 @@ path_equil = '../EQUIL/';%if nothing is specified, the working directory is firs
 %
 % Density and magnetic field fluctuation
 %
-id_fluct = 'ne_Bperp_k_ripple';%For density and magnetic field fluctuation
+id_fluct = 'noripple_ne1ne3';%For density and magnetic field fluctuation
 path_fluct = '../FLUCT/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % Load structures

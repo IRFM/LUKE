@@ -1,3 +1,4 @@
+function [] = make_wave_RTtest
 % script make_wave_test_RT
 %
 % Parameters for test mode ray-tracing calculations
@@ -126,6 +127,7 @@ info_dke_yp(2,'Wave parameters saved');
 %
 % --- display results ---
 %
+waves = {wave_numeric,wave_analytic};
 rays = {wave_numeric.rays{1},wave_analytic.rays{1}};
 %
 legs = {'Numeric','Analytic'};
@@ -139,3 +141,4 @@ opt.propvar = 1;
 %
 graph_comp_RT_jd(rays,legs,'',filename,opt)
 %
+diary4cvs_C3PO_yp(id_wave,dkepath,waves);% diary some results for CVS validation

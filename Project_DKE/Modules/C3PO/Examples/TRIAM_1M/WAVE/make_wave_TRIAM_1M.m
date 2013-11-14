@@ -1,3 +1,5 @@
+function [] = make_wave_TRIAM_1M
+%
 % script make_wave_test_RT
 %
 % Parameters for test mode ray-tracing calculations

@@ -1,3 +1,5 @@
+function [] = make_wave_JET77fluctscan
+%
 % script make_wave_test_RT
 %
 % Parameters for test mode ray-tracing calculations

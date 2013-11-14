@@ -1,3 +1,4 @@
+function [] = make_wave_JETliketest_pureripple
 % script make_wave_test_RT
 %
 % Parameters for test mode ray-tracing calculations

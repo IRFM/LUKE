@@ -1,3 +1,5 @@
+function [] = make_equil_TRIAM_1M
+%
 %
 %   This script generates the data file of an ideal circular equilibrium based on
 %   equilibrium profile parameters

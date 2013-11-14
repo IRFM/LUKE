@@ -1,9 +1,8 @@
 % script proc_rundke_splitting
 %
 clear all
-return
 %
-Dr0 = 0;
+Dr0 = 1;
 %
 load(['DKE_RESULTS_TScyl_LH_karney_3D_splitting_',num2str(Dr0),'.mat'])
 %
@@ -43,21 +42,21 @@ for icoll = 1:ncoll,
         set(gcf,'name',str)
         %
         for idtn = 1:ndtn - 1, 
-            graph1D_jd(dtn_list(idtn):dtn_list(idtn):tfinal,I{idtn,iopt,icoll},1,1,'','','',NaN,xlim,ylim,style{idtn},marker{idtn},color{idtn},lsize(idtn),20,gca);
+            graph1D_jd(dtn_list(idtn):dtn_list(idtn):tfinal,abs(I{idtn,iopt,icoll}),1,1,'','','',NaN,xlim,ylim,style{idtn},marker{idtn},color{idtn},lsize(idtn),20,gca);
             %
             leg{idtn} = ['\Deltat/\tau_c = ',num2str(dtn_list(idtn))];
         end
         leg{length(dtn_list)} = ['\Deltat/\tau_c = ',num2str(dtn_list(end))];
         leg = [leg,'Location','SouthEast'];
         %
-        graph1D_jd(dtn_list(idtn):dtn_list(idtn):tfinal,I{idtn,iopt,icoll},1,1,xlab,ylab,tit,leg,xlim,ylim,style{ndtn},marker{ndtn},color{ndtn},lsize(ndtn),20,gca,red,0.7,bspace);
+        graph1D_jd(dtn_list(idtn):dtn_list(idtn):tfinal,abs(I{idtn,iopt,icoll}),1,1,xlab,ylab,tit,leg,xlim,ylim,style{ndtn},marker{ndtn},color{ndtn},lsize(ndtn),20,gca,red,0.7,bspace);
         %
         set(gca,'ytick',10.^[-1:2])
         set(gca,'xtick',10.^[0:5])
         set(gca,'xminorgrid','off')
         set(gca,'yminorgrid','off')
         %
-        print_jd(p_opt,['Fig_splitting_',num2str(Dr0),'_coll_',num2str(coll_mode_list(icoll)),'_split_',num2str(optsplit_list(iopt))],'.',ifig)
+        print_jd(p_opt,['Fig_splitting_',num2str(Dr0),'_coll_',num2str(coll_mode_list(icoll)),'_split_',num2str(optsplit_list(iopt))],'./figures',ifig)
         %
     end
 end

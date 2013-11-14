@@ -1,10 +1,10 @@
+function [] = make_fluct_JETliketest_purerippple
 %
 % Parameters for testing the effect of fluctuations on ray trajectories
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
 close all
-clear fluct
 %
 id_fluct = 'pureripple';%Plasma fluctuations identifier
 %

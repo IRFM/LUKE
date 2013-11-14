@@ -30,7 +30,7 @@ path_equil = '';%if nothing is specified, the working directory is first used an
 id_dkeparam = 'UNIFORM10010020';%For DKE code parameters
 path_dkeparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_display = 'NO_DISPLAY';%For output code display
+id_display = 'PARTIAL_VISUAL';%For output code display
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ohm = '';%For Ohmic electric contribution
@@ -108,6 +108,7 @@ waves{1} = make_idealLHwave_jd(equil,wavestruct);
 tfinal = 2000;
 %
 dtn_list = [1,10,100,1000];
+dtn_list = [10,100,1000];
 coll_mode_list = [0,2];
 optsplit_list = [0,1];
 %

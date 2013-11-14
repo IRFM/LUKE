@@ -1,3 +1,4 @@
+function [] = make_wave_RFP
 % script make_wave_MST_400ka
 %
 % runs C3PO based on formatted ray launching parameters and builds the WAVE structure
@@ -5,9 +6,9 @@
 % by 	J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 % and   Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
 %
-clear all
 close all
-clc
+%
+make_rayinit_RFP;
 %
 % Path parameters
 %
@@ -15,7 +16,7 @@ id_dkepath = '';%For all paths used by DKE solver
 path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 %
-id_wave = 'RFP_LH';
+id_wave = 'RFP';
 flag_analytic = 6;
 p_opt = -1;
 %
@@ -111,7 +112,7 @@ wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,'',rayinits{1},
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
-save_str = ['WAVE_',id_equil,'_',id_wave,'.mat'];
+save_str = ['WAVE_',id_wave,'.mat'];
 save(save_str,'id_wave','wave_numeric','wave_analytic');
 %
 info_dke_yp(2,'Wave parameters saved');

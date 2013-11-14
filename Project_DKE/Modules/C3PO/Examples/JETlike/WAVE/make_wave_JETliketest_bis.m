@@ -1,3 +1,4 @@
+function [] = make_wave_JETliketest_bis
 % script make_wave_test_RT
 %
 % Parameters for test mode ray-tracing calculations
@@ -225,7 +226,7 @@ telapsed_ray_analytic = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
-save_str = ['WAVE_'id_wave,'.mat'];
+save_str = ['WAVE_',id_wave,'.mat'];
 save(save_str,'id_wave','wave_numeric_pchip','wave_numeric_spline','wave_analytic','equil_fit_pchip','equil_fit_spline');
 %
 info_dke_yp(2,'Wave parameters saved');

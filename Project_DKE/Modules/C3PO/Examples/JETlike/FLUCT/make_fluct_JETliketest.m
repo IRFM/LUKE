@@ -1,12 +1,12 @@
+function [] = make_fluct_JETliketest
 %
 % Parameters for testing the effect fluctuations on ray trajectories
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
 close all
-clear fluct
 %
-id_fluct = 'noripple_ne1ne3B1';%Plasma fluctuations identifier
+id_fluct = 'noripple_ne1ne3';%Plasma fluctuations identifier
 %
 % Path parameters
 %
@@ -20,8 +20,8 @@ path_equil = '../EQUIL/';%if nothing is specified, the working directory is firs
 %
 % Non axisymmetric perturbation of the toroidal MHD equilibrium for any rf waves
 %
-fluctuations.naequilp.fluct.type = {'ne','ne','B'};%Type of fluctuations or modulations ('ne': electron density, 'B': magnetic field) {1,nfluct_types}
-fluctuations.naequilp.fluct.model = [1,3,1];%Statistical ne fluctuation model (>= 1) : [1,nfluct_types]
+fluctuations.naequilp.fluct.type = {'ne','ne'};%Type of fluctuations or modulations ('ne': electron density, 'B': magnetic field) {1,nfluct_types}
+fluctuations.naequilp.fluct.model = [1,3];%Statistical ne fluctuation model (>= 1) : [1,nfluct_types]
                         %    - (1) -> 3-D Gaussian model (rho,theta,phi), relative epsi values (benchmark of C3PO)
                         %    - (2) -> 3-D Gaussian model (rho,theta,phi), absolute epsi values (m)
                         %    - (3) -> 2-D Gaussian drift-wave like model global (rho,curtheta), absolute epsi values (m)
@@ -29,22 +29,22 @@ fluctuations.naequilp.fluct.model = [1,3,1];%Statistical ne fluctuation model (>
                         %    - (5) -> 1-D Gaussian drift-wave like model local (cn,cm), absolute epsi values (m)
                         %    - (6) -> 2-D Gaussian drift-wave like model local (rho,cn,cm), absolute epsi values (m)
                         %    - (7) -> *** NOT IMPLEMENTED *** 2-D Gaussian drift-wave like model local (rho,lperp), absolute epsi values (m)
-fluctuations.naequilp.fluct.sigmar_max = [0.3,0.1,1e-5];%Maximum value of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
-fluctuations.naequilp.fluct.sigmar_hwhm = [0.2,0.3,0.2];%Radial half width at half maximum of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
-fluctuations.naequilp.fluct.sigmar_rho = [1,1,0];%Radial location where the relative fluctuations variance peaks at the poloidal angle theta = 0 [1,nfluct_types]
-fluctuations.naequilp.fluct.polmode = [0.2,1,0.3];%HFS/LFS relative fluctuations variance ratio. No poloidal dependency corresponds to 1 [1,nfluct_types]
+fluctuations.naequilp.fluct.sigmar_max = [0.3,0.1];%Maximum value of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
+fluctuations.naequilp.fluct.sigmar_hwhm = [0.2,0.3];%Radial half width at half maximum of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
+fluctuations.naequilp.fluct.sigmar_rho = [1,1];%Radial location where the relative fluctuations variance peaks at the poloidal angle theta = 0 [1,nfluct_types]
+fluctuations.naequilp.fluct.polmode = [0.2,1];%HFS/LFS relative fluctuations variance ratio. No poloidal dependency corresponds to 1 [1,nfluct_types]
 %
-fluctuations.naequilp.fluct.epsi_rho = [0.02,0.03,0.04];%
-fluctuations.naequilp.fluct.epsi_theta = [0.02,0.03,0.04];%theta direction is perp direction for models 3 & 4
-fluctuations.naequilp.fluct.epsi_phi = [0.02,0.03,0.04];%useless for models 3 & 4
+fluctuations.naequilp.fluct.epsi_rho = [0.02,0.03];%
+fluctuations.naequilp.fluct.epsi_theta = [0.02,0.03];%theta direction is perp direction for models 3 & 4
+fluctuations.naequilp.fluct.epsi_phi = [0.02,0.03];%useless for models 3 & 4
 %
-fluctuations.naequilp.fluct.lmin = [1,1,1];%
-fluctuations.naequilp.fluct.mmin = [1,1,1];%for perp direction for models 3 & 4
-fluctuations.naequilp.fluct.nmin = [1,1,1];%useless for models 3 & 4
+fluctuations.naequilp.fluct.lmin = [1,1];%
+fluctuations.naequilp.fluct.mmin = [1,1];%for perp direction for models 3 & 4
+fluctuations.naequilp.fluct.nmin = [1,1];%useless for models 3 & 4
 %
-fluctuations.naequilp.fluct.lmax = [10,20,30];%
-fluctuations.naequilp.fluct.mmax = [30,40,50];%for perp direction for models 3 & 4
-fluctuations.naequilp.fluct.nmax = [20,25,30];%useless for models 3 & 4
+fluctuations.naequilp.fluct.lmax = [10,20];%
+fluctuations.naequilp.fluct.mmax = [30,40];%for perp direction for models 3 & 4
+fluctuations.naequilp.fluct.nmax = [20,25];%useless for models 3 & 4
 %
 % Magnetic field fluctuations 
 %
