@@ -68,10 +68,10 @@ if mode == 1,
     sx = interp1(rho,equil_in.ptx,srho,method);%x coordinate
     sy = interp1(rho,equil_in.pty,srho,method);%y coordinate
     %
-    sr = sqrt(sx.^2 + sy.^2);%r
+    sr = sqrt(sx.*sx + sy.*sy);%r
     sBp = sqrt(sBx.*sBx + sBy.*sBy);%Bp field 
     sB = sqrt(sBx.*sBx +sBy.*sBy + sBz.*sBz);%B field 
-    scalpha = (sx.*sBy - sy.*sBx)./sqrt(sBx.*sBx + sBy.*sBy)./sr;%cos(alpha)
+    scalpha = (sx.*sBy - sy.*sBx)./sBp./sr;%cos(alpha)
     scalpha(1,:) = scalpha(2,:);%to avoid singularity at r = 0
     ssalpha = sqrt(1.0 - min(scalpha.*scalpha,1));%sin(alpha)
     %
@@ -88,7 +88,7 @@ if mode == 1,
     if ~isempty(equil_in.pzTi),equil_out.zTi_fit = interpequilpt_yp(method,szTi,srho);end
     if ~isempty(equil_in.pzni),equil_out.zni_fit = interpequilpt_yp(method,szni,srho);end
     %
-    if isempty(nharm),nharm = length(equil_in.theta) - 1;end
+    if isempty(nharm) || isinf(nharm) || isnan(nharm) ,nharm = length(equil_in.theta) - 1;end
     %
     equil_out.Bx_fit = interpequilpt_yp(method,sBx,srho,equil_in.theta,nharm);%Bx field component
     equil_out.By_fit = interpequilpt_yp(method,sBy,srho,equil_in.theta,nharm);%By field component
