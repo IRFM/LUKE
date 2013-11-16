@@ -5,13 +5,15 @@ clear all
 close all
 %
 [dkepath,dkedisplay] = load_structures_yp('dkepath','','','dkedisplay','NO_DISPLAY','');
-if length(dkepath.hostname) >= 3 && strcmp(dkepath.hostname(1:3),'lac'),
+if length(dkepath.hostname) >= 3 && strcmp(dkepath.hostname(1:3),'lac'),% %% TODO tmp condition, test grid effects on 18532
     id_dkeparam = 'EC_RT';
 else
     id_dkeparam = 'RT';
 end
 %
 dkeparam = load_structures_yp('dkeparam',id_dkeparam,'');
+%
+clear id_dkeparam
 %
 workdir = pwd;
 %
@@ -201,7 +203,6 @@ lukeobj.workdirtitle.string =    'WORKING DIR : ';
 lukeobj.simulfiletitle.string = 'SIMULATION FILE : ';
 
 lukeobj.lukeroot.string = dkepath.luke_root;
-lukeobj.simulfile.string = '< not saved >';
 
 lukeobj.titlestr.string = {'SUMMARY'};
 lukeobj.help.string = 'LUKE HELP';
@@ -241,7 +242,7 @@ lukeobj.saveshot.state = 'on';
 
 lukeobj.import.callback = 'action = ''import'';iluke_callbacks;';
 lukeobj.exitluke.callback = 'close(lukeobj.mainfig.handle)';
-lukeobj.newshot.callback = 'status.external = 0;status.equil = 0;iluke_update;';
+lukeobj.newshot.callback = 'status.external = 0;status.equil = 0;job = '''';iluke_update;';
 lukeobj.loadshot.callback = 'action = ''loadshot'';iluke_callbacks;';
 lukeobj.saveshot.callback = 'action = ''saveshot'';iluke_callbacks;';
 lukeobj.workdirtitle.callback = 'action = ''workdir'';iluke_callbacks;';
@@ -308,7 +309,7 @@ lukeobj.shotime.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','Str
 lukeobj.lukeroot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.lukeroot.string,'Position',lukeobj.lukeroot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.lukever.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.lukever.string,'Position',lukeobj.lukever.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.workdir.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','Position',lukeobj.workdir.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
-lukeobj.simulfile.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.simulfile.string,'Position',lukeobj.simulfile.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.simulfile.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','Position',lukeobj.simulfile.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 
 lukeobj.lukeroottitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.lukeroottitle.string,'Position',lukeobj.lukeroottitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 %lukeobj.workdirtitlestr.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.workdirtitlestr.string,'Position',lukeobj.workdirtitlestr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
