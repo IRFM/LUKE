@@ -1,4 +1,4 @@
-function wavestruct = iluke_launchmodify(wavestruct,style)
+function [wavestruct,mod] = iluke_launchmodify(wavestruct,style)
 %
 launch = wavestruct.launch;
 %
@@ -141,3 +141,6 @@ if any(mod),
     wavestruct.id = [wavestruct.wavesolver,'_',wavestruct.launch.id];
     %
 end
+%
+mod = any(mod);
+%

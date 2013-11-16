@@ -27,10 +27,20 @@ if status.equil == 0,
     end
 end
 
-if isempty(external) && isempty(equil)
+
+if status.external == 0 && status.equil == 0,
     lukeobj.tokamak.string = '< empty >';
     lukeobj.shotnum.string = '< empty >';
     lukeobj.shotime.string = '< empty >';
+    status.data = -1;
+end
+
+if status.data == -1,
+    lukeobj.simulfile.string = '< no data >';
+elseif status.data == 0,
+    lukeobj.simulfile.string = '< not saved >';
+elseif status.data == 2,
+    lukeobj.simulfile.string = '< outdated >';
 end
 
 if status.output < 1,

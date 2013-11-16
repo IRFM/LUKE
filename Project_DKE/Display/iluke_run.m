@@ -36,6 +36,8 @@ if strcmp(action,'lukestart'),
         iluke_update_state(lukeobj);
     end
     %
+    status.data = 2;
+    %
 elseif strcmp(action,'runcheck'),
     %
     nrem = length(dkepath.remote);
@@ -57,6 +59,10 @@ elseif strcmp(action,'runcheck'),
     dkepath.remnum = find(flag,1,'first');
     %
     lukestructs.job = job;
+    %
+    job = '';
+    %
+    clear flag irem nrem
     %
 end
 %    
@@ -87,6 +93,7 @@ elseif isfield(lukestructs,'output'),
     output = lukestructs.output;
     %
     status.output = 1;
+    status.data = 2;
     %
     lukeobj.luke.text.string = lukestructs.simul.id;
     %
