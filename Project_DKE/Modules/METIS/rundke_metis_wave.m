@@ -1,61 +1,70 @@
-function rundke_metis_wave(c_opt,basestr,shotnum,shotimes,locpath_simul,locid_simul,launch,dkeparam,dkedisplay,equil,ohm,transpfaste,rayparam_in,waveparam_in,C3POparam_in)
+function rundke_metis_wave(basestr,shotnum,shotimes,locpath_simul,locid_simul,launch,dkeparam,dkedisplay,equil,ohm,transpfaste_in,fitparam,rayparam,waveparam,C3POdisplay,C3POparam)
 %
 if ~iscell(locpath_simul),
     path_simul = [basestr,filesep,shotnum,filesep,locpath_simul];% Simulation path (leave empty for current path)
 else
-    path_simul = [locpath_simul{1},basestr,filesep,shotnum,filesep,locpath_simul{2}];% Simulation path (leave empty for current path)
+    if length(locpath_simul) == 2,
+        path_simul = [locpath_simul{1},basestr,filesep,shotnum,filesep,locpath_simul{2}];% Simulation path (leave empty for current path)
+    else
+        path_simul = locpath_simul{1};
+    end
 end    
 %
 % -------------------------------------------------------------------------
 %
-% Wave parameters
-%
-waveparam.mmode = -1;% cold plasma mode (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1) :1
-waveparam.kmode = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
-%
-%Option parameter for FLR effects and cross-comparison between old FP code: 
-%	- (0): all FLR effects
-%	- (1): small FLR effects and 1/vpar dependence
-%	- (2): small FLR effects and no 1/vpar dependence and old grid technique for DQL calculations (Karney, Shoucri) (see rfdiff_dke_jd)
-%
-waveparam.opt_rf = 1;
-%
-waveparam.dsmin = 0.01;%minimum size for ray fragments
-%
-waveparam.nd = 1;%Number of transverse distance positions for beamlets
-waveparam.nchi = 1;%Number of angular positions for beamlets
-waveparam.ns = 1;%Smoothing parameter
-%
-waveparam.n_rf_list = 0;
-%
-% Display parameters
-%
-C3POdisplay.ray = 0;
-C3POdisplay.equilibrium = 0;
-C3POdisplay.p_opt = -1;%Printing or saving option of the figures
-%
-dkepath = load_structures_yp('dkepath','','');
-%
-load('C3POPARAM_LH.mat','fitparam','rayparam','C3POparam');
+[dkepath,rtparam] = load_structures_yp('dkepath','','','rtparam','LH','');
 %
 % ====================================================
 %
-waveparam = conc_struct_jd(waveparam,waveparam_in);
-rayparam = conc_struct_jd(rayparam,rayparam_in);
-C3POparam = conc_struct_jd(C3POparam,C3POparam_in);
+fitparam = conc_struct_jd(rtparam.fitparam,fitparam);
+rayparam = conc_struct_jd(rtparam.rayparam,rayparam);
+waveparam = conc_struct_jd(rtparam.waveparam,waveparam);
+C3POdisplay = conc_struct_jd(rtparam.C3POdisplay,C3POdisplay);
+C3POparam = conc_struct_jd(rtparam.C3POparam,C3POparam);
 %
-wavestruct.id = launch.id;
-wavestruct.wavesolver = 'C3PO';
 wavestruct.launch = launch;
+wavestruct.wavesolver = 'C3PO';
+if isfield(wavestruct.launch,'id'),
+    wavestruct.id = [wavestruct.wavesolver,'_',wavestruct.launch.id];
+end
 wavestruct.waveparam = waveparam;
 wavestruct.fitequilparam = fitparam;
 wavestruct.rayparam = rayparam;
 wavestruct.C3POparam = C3POparam;
 wavestruct.raydisplay = C3POdisplay;
 %
+% backup & save options
+%
+opt.save = 1;% (1): save LUKE_RESULTS or return error (0): return results or error
+opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
+opt.backup = 0;% (1) save fluctuation time steps (0) do not save
+opt.waves = 0;% (1) save waves at each time step (0) do not save
+%
+% ---- RADIAL TRANSPORT ----
+%
+if transpfaste_in.Dr0 > 0,
+    %
+    % initialization
+    %
+    transpfaste.Dr0 = 0;%Core radial diffusion coefficient (m/s)
+    transpfaste.pDr = 0;%Coefficient for the Dr radial profile
+    transpfaste.Dr_model = 0;%Radial diffusion type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), (2) Energy dependence
+    transpfaste.Vr0 = 0;%Core radial pinch coefficient (m/s)
+    transpfaste.pVr = 0;%Coefficient for the Vr radial profile
+    transpfaste.Vr_model = 0;%Radial pinch type: (0) no vpar dependence, (1) magnetic turbulence model (vpar/vth), (2) Energy dependence
+    transpfaste.vparmin = 3.5;%Lower limit of the parallel velocity dependence of the radial diffusion and pinch (vth_ref or vth)
+    transpfaste.norm_ref = 1;%Normalization procedure for the lower limit of the parallel velocity dependence of the radial diffusion and pinch: (0) from local values Te and ne, (1) from reference values Te_ref and ne_ref 
+    %
+    transpfaste = conc_struct_jd(transpfaste,transpfaste_in);
+    %
+    transpfaste.id = ['TR_',num2str(transpfaste.Dr_model),'_Dr0_',num2str(transpfaste.Dr0),'_pDr_',num2str(transpfaste.pDr)];
+else
+    transpfaste = struct;
+end
+%
 % ====================================================
 %
 % start rundke_metis function
 %
-rundke_metis(path_simul,locid_simul,c_opt,basestr,shotnum,shotimes,dkepath,{wavestruct},equil,dkeparam,dkedisplay,ohm,transpfaste)
+rundke_metis(path_simul,locid_simul,basestr,shotnum,shotimes,opt,dkepath,{wavestruct},equil,dkeparam,dkedisplay,ohm,transpfaste)
 %
