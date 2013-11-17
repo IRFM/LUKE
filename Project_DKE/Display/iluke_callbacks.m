@@ -611,7 +611,7 @@ switch action
         %
         sbase = 'TRANSP';
         filestr = [sbase,'_*.mat'];
-        filename = [sbase,'_',equil.id,'_',ohm.id,'.mat'];
+        filename = [sbase,'_',equil.id,'_',transpfaste.id,'.mat'];
         %
         [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
         %
