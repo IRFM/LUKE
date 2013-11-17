@@ -189,7 +189,7 @@ function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,conf
                     % process toroidal aloha spectrum for LUKE
                     %
                     if isfield(config,'aloha'),
-                        [bNtor0,bdNtor0,bPlhtor,param_out] = proc_aloha_spec_jd(aloha.antenna.nz,NaN,real(aloha.antenna.dP_nz),1,config.aloha(1),0,config.aloha(1).display_mode);
+                        [bNtor0,bdNtor0,bPlhtor,param_out] = proc_aloha_spec_jd(aloha.antenna.nz,NaN,real(aloha.antenna.dP_nz),1,config.aloha(1),0,config.aloha(1));
                     else
                         if isfield(config,'aloha_dir'),
                             Pin = 1 + config.aloha_dir*1i;
@@ -208,7 +208,7 @@ function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,conf
                     %
                     if opt_ny == 1,% process poloidal aloha spectrum for LUKE
                         if isfield(config,'aloha'),
-                            [bNpol0,bdNpol0,bPlhpol] = proc_aloha_spec_jd(aloha.antenna.ny,NaN,sum(real(aloha.antenna.dP.')),1,config.aloha(2),0,config.aloha(2).display_mode);     
+                            [bNpol0,bdNpol0,bPlhpol] = proc_aloha_spec_jd(aloha.antenna.ny,NaN,sum(real(aloha.antenna.dP.')),1,config.aloha(2),0,config.aloha(2));     
                         else
                             [bNpol0,bdNpol0,bPlhpol] = proc_aloha_spec_jd(aloha.antenna.ny,NaN,sum(real(aloha.antenna.dP.')),1,config.aloha_param(2),0,0);     
                         end
@@ -258,7 +258,7 @@ function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,conf
                         %
                     else
                         %
-                        filename = [basestr,filesep,shotnum,filesep,'GPHYB_',shotnum,'.mat'];
+                        filename = [path_simul,'GPHYB_',shotnum,'.mat'];
                         %
                         if exist(filename,'file'),%power from file
                             %
@@ -309,8 +309,8 @@ function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,conf
                     % process toroidal aloha spectrum for LUKE
                     %
                     if isfield(config,'aloha'),
-                        [bNtor0_b,bdNtor0_b,bPlhtor_b,param_out_b] = proc_aloha_spec_jd(aloha_b.antenna.nz,NaN,real(aloha_b.antenna.dP_nz),1,config.aloha(1),0,config.aloha(1).display_mode);
-                        [bNtor0_h,bdNtor0_h,bPlhtor_h,param_out_h] = proc_aloha_spec_jd(aloha_h.antenna.nz,NaN,real(aloha_h.antenna.dP_nz),1,config.aloha(1),0,config.aloha(1).display_mode);
+                        [bNtor0_b,bdNtor0_b,bPlhtor_b,param_out_b] = proc_aloha_spec_jd(aloha_b.antenna.nz,NaN,real(aloha_b.antenna.dP_nz),1,config.aloha(1),0,config.aloha(1));
+                        [bNtor0_h,bdNtor0_h,bPlhtor_h,param_out_h] = proc_aloha_spec_jd(aloha_h.antenna.nz,NaN,real(aloha_h.antenna.dP_nz),1,config.aloha(1),0,config.aloha(1));
                     else
                         if isfield(config,'aloha_dir'),
                             Pin = 1 + config.aloha_dir*1i;
@@ -338,8 +338,8 @@ function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,conf
                     %
                     if opt_ny == 1,% process poloidal aloha spectrum for LUKE
                         if isfield(config,'aloha'),
-                            [bNpol0_b,bdNpol0_b,bPlhpol_b] = proc_aloha_spec_jd(aloha_b.antenna.ny,NaN,sum(real(aloha_b.antenna.dP.')),1,config.aloha(2),0,config.aloha(2).display_mode);
-                            [bNpol0_h,bdNpol0_h,bPlhpol_h] = proc_aloha_spec_jd(aloha_h.antenna.ny,NaN,sum(real(aloha_h.antenna.dP.')),1,config.aloha(2),0,config.aloha(2).display_mode);     
+                            [bNpol0_b,bdNpol0_b,bPlhpol_b] = proc_aloha_spec_jd(aloha_b.antenna.ny,NaN,sum(real(aloha_b.antenna.dP.')),1,config.aloha(2),0,config.aloha(2));
+                            [bNpol0_h,bdNpol0_h,bPlhpol_h] = proc_aloha_spec_jd(aloha_h.antenna.ny,NaN,sum(real(aloha_h.antenna.dP.')),1,config.aloha(2),0,config.aloha(2));     
                         else
                             [bNpol0_b,bdNpol0_b,bPlhpol_b] = proc_aloha_spec_jd(aloha_b.antenna.ny,NaN,sum(real(aloha_b.antenna.dP.')),1,config.aloha_param(2),0,0);
                             [bNpol0_h,bdNpol0_h,bPlhpol_h] = proc_aloha_spec_jd(aloha_h.antenna.ny,NaN,sum(real(aloha_h.antenna.dP.')),1,config.aloha_param(2),0,0);     
@@ -405,7 +405,7 @@ function rundke_metis_LH(basestr,shotnum,shotimes,locpath_simul,locid_simul,conf
                         %
                     else
                         %
-                        filename = [basestr,filesep,shotnum,filesep,'GPHYB_',shotnum,'.mat'];
+                        filename = [path_simul,'GPHYB_',shotnum,'.mat'];
                         %
                         if exist(filename,'file'),%power from file
                             %
