@@ -145,7 +145,8 @@ switch action
             	lukeobj = iluke_info(lukeobj,'');% disable info display
             end
             %
-            	
+            workdir = pathname;
+            %
         end  
         %
         clear sbase filestr filename pathname
@@ -170,7 +171,7 @@ switch action
             %
             % select fields to save and remote subfields handle 
             %
-            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotime','data','equil','ohm','transp','ripple','wave','wavestruct','luke','r5x2','param','display'});
+            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotime','data','equil','ohm','transp','ripple','wave','wavestruct','luke','r5x2','param','display','lukeid'});
             lukeobjmod = rmfields_jd(lukeobjmod,{'handle','position'},1);
             save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equil','ohm','transpfaste','ripple','waves','wavestructs','output','job','hxr','status');
             %
