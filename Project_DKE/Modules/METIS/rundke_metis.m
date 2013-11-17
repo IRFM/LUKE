@@ -226,7 +226,7 @@ if metisevol == 0,
         clustermode.run_lukert.scheduler = scheduler_run_lukert;
         dkecluster = clustermode_luke(clustermode,'run_lukert',dkepath);
         %
-        [~,lukestructs] = mdce_luke(@run_lukert,{''},1,lukestructs,dkecluster);
+        [dummy,lukestructs] = mdce_luke(@run_lukert,{''},1,lukestructs,dkecluster);
         %
     end
     %
