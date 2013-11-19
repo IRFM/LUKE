@@ -42,73 +42,7 @@ switch action
             %
             import = load([pathname,filename],'dkeparam','dkedisplay','equil','ohm','transpfaste','ripple','wavestructs');
             %
-            if isfield(import,'equil') && ~isempty(import.equil)
-                % 
-                % clear current simulation
-                %
-                status.external = 0;
-                status.equil = 0;
-                iluke_update;
-                %
-                % new equil
-                %
-                equil = import.equil;
-                status.equil = 1;
-                lukeobj = iluke_equilstrings(lukeobj,equil);
-                %
-                action = 'equildisp';iluke_callbacks;
-                %
-                iluke_update;
-                %
-                if isfield(import,'dkeparam') && ~isempty(import.dkeparam),
-                    dkeparam = import.dkeparam;
-                end
-                if isfield(import,'dkedisplay') && ~isempty(import.dkedisplay),
-                    dkedisplay = import.dkedisplay;
-                end
-                if isfield(import,'ohm') && ~isempty(import.ohm),
-                    ohm = import.ohm;
-                    status.ohm = 1;
-                    %
-                    action = 'ohmdisp';iluke_callbacks;
-                else
-                    status.ohm = 0;                    
-                end
-                if isfield(import,'transpfaste') && ~isempty(import.transpfaste),
-                    transpfaste = import.transpfaste;
-                    status.transpfaste = 1;
-                    %
-                    action = 'transpdisp';iluke_callbacks;
-                else
-                    status.transpfaste = 0;                    
-                end
-                if isfield(import,'ripple') && ~isempty(import.ripple),
-                    ripple = import.ripple;
-                    status.ripple = 1;
-                    %
-                    action = 'rippledisp';iluke_callbacks;
-                else
-                    status.ripple = 0;
-                end
-                if isfield(import,'wavestructs') && ~isempty(import.wavestructs),
-                    for iw = 1:length(import.wavestructs),
-                        if isfield(import.wavestructs{iw},'fitequilparam'),
-                            import.wavestructs{iw}.fitparam = import.wavestructs{iw}.fitequilparam;
-                            import.wavestructs{iw} = rmfield(import.wavestructs{iw},'fitequilparam');
-                        end
-                        if isfield(import.wavestructs{iw},'raydisplay'),
-                            import.wavestructs{iw}.C3POdisplay = import.wavestructs{iw}.raydisplay;
-                            import.wavestructs{iw} = rmfield(import.wavestructs{iw},'raydisplay');
-                        end
-                    end
-                    wavestructs = [wavestructs,import.wavestructs];
-                    lukeobj.wavestruct.select.value = length(wavestructs);
-                    %
-                    action = 'wavemake';iluke_callbacks;
-                end                
-                status.waves = 0;
-                status.output = 0;
-            end                          
+            iluke_import
             %
             clear import
             %
@@ -121,35 +55,56 @@ switch action
         %
         % loading simulation
         %
-        sbase = 'LUKE_DATA';
-        filestr = [sbase,'_*.mat'];
+        filestr = 'LUKE_*.mat';
         %
-        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
-        %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the LUKE_DATA_*.mat or  LUKE_RESULTS_*.mat file'],'',0);
         %
         if filename ~= 0,
             %
-            load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equil','ohm','transpfaste','ripple','waves','wavestructs','output','job','hxr','status');
-            lukeobj = conc_struct_jd(lukeobj,lukeobjmod);
-            iluke_update;
-            %
-            lukeobj.simulfile.string = filename;%[pathname,filename];
-            %
-            status.data = 1;
-            %
-            clear lukeobjmod
-            %
-            if ~isempty(job),
-            	action = 'lukerun';iluke_callbacks;
+            if ~isempty(fieldnames(load([pathname,filename],'lukeobjmod'))),
+                %
+                % iluke made LUKE_DATA_*.mat file
+                %
+                load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equil','ohm','transpfaste','ripple','waves','wavestructs','output','job','hxr','status');
+                lukeobj = conc_struct_jd(lukeobj,lukeobjmod);
+                iluke_update;
+                %
+                lukeobj.simulfile.string = filename;%[pathname,filename];
+                %
+                status.data = 1;
+                %
+                clear lukeobjmod
+                %
+                if ~isempty(job),
+                    action = 'lukerun';iluke_callbacks;
+                else
+                    lukeobj = iluke_info(lukeobj,'');% disable info display
+                end
+                %
             else
-            	lukeobj = iluke_info(lukeobj,'');% disable info display
+                dataloaded = load([pathname,filename]);
+                %
+                % recent LUKE_RESULTS_*.mat file with lukestructq
+                %
+                if isfield(dataloaded,'lukestructs'),
+                    %
+                    import = dataloaded.lukestructs;
+                    %
+                    iluke_import
+                    %
+                    clear import
+                    %
+                end                    
+                %
+                clear dataloaded
+                %
             end
             %
             workdir = pathname;
             %
         end  
         %
-        clear sbase filestr filename pathname
+        clear filestr filename pathname
         %
     case 'saveshot'
         %
@@ -1658,7 +1613,11 @@ switch action
         lukeobj.plot2.gindex = ngraphs + 2;
         lukeobj.plot3.gindex = ngraphs + 3;
         %
-        lukeobj.infotext.string = output.info.txt;
+        if isfield(output,'info') && isfield(output.info,'txt'),
+            lukeobj.infotext.string = output.info.txt;
+        else
+            lukeobj.infotext.string = '';
+        end
         %
     case 'lukestart'
         %
