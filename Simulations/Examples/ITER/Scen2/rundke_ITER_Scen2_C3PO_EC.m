@@ -132,7 +132,7 @@ simul.path = path_simul;
 %
 filename = [simul.path,'LUKE_RESULTS_',simul.id,'.mat'];
 %
-if remtimout == 0 && remstart == 0 && exist(filename,'file') && input_dke_yp('Do you want to check, import or reload results (y/n) ',{'y','n'},'y') == 'y',% load existing simulation
+if remtimout == 0 && remstart == 0 && exist(filename,'file') && input_dke_yp('Do you want to check, import or reload results (y/n) ','y') == 'y',% load existing simulation
     %
     load(filename,'lukestructs');
     %
