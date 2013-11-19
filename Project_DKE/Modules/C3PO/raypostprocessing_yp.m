@@ -266,6 +266,9 @@ if display_mode,
         Xp_fit = equil_fit.Rp*cos(phi_fit);   
         Yp_fit = equil_fit.Rp*sin(phi_fit); 
         ss = sign(diff(rho_ray));
+        for iss = 1:length(ss),
+            if ss(iss)==0,ss(iss) = ss(iss-1);end
+        end
         %
         % Display results 
         %
@@ -347,6 +350,9 @@ if display_mode,
         Yp_fit = 0*sin(theta_fit);
         Zp_fit = 0*sin(theta_fit); 
         ss = sign(diff(rho_ray));
+        for iss = 1:length(ss),
+            if ss(iss)==0,ss(iss) = ss(iss-1);end
+        end
         %
         % Display results 
         %
