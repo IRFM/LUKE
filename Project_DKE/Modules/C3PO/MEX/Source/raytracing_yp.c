@@ -262,8 +262,8 @@ struct rayfluctuations {
 };
 
 struct rayequil {
-    pp_1D_format Te_fit,ne_fit,zTi_fit,zni_fit,dxstardpsin_fit;
-    pp_2D_format x_fit,y_fit,Bx_fit,By_fit,Bz_fit;	
+    pp_1D_format Te_fit,ne_fit,zTi_fit,zni_fit;
+    pp_2D_format x_fit,y_fit,r_fit,calpha_fit,salpha_fit,gradrho_fit,Bx_fit,By_fit,Bz_fit,BP_fit,B_fit;	
 };
 
 typedef struct susceptibilitytensor susceptibilitytensor_format;
@@ -506,7 +506,6 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
         }
 
 		ns = equilparam.ns[0];/* number of species for memory allocation */
-		rayequil.dxstardpsin_fit = load_profile_1D(EQUIL_IN,"dxstardpsin_fit");
         
     	if (equilparam.zZi[0] > 0) {/*Vacuum case otherwise (no density, temperature...)*/
         	rayequil.Te_fit = load_profile_1D(EQUIL_IN,"Te_fit");
@@ -517,10 +516,17 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
     
     	rayequil.x_fit = load_grid_2D(EQUIL_IN,"x_fit",0);
     	rayequil.y_fit = load_grid_2D(EQUIL_IN,"y_fit",0);
+        rayequil.r_fit = load_grid_2D(EQUIL_IN,"r_fit",0);
+        rayequil.calpha_fit = load_grid_2D(EQUIL_IN,"calpha_fit",0);
+        rayequil.salpha_fit = load_grid_2D(EQUIL_IN,"salpha_fit",0);
+        rayequil.gradrho_fit = load_grid_2D(EQUIL_IN,"gradrho_fit",0);
+        
     	rayequil.Bx_fit = load_grid_2D(EQUIL_IN,"Bx_fit",0);
     	rayequil.By_fit = load_grid_2D(EQUIL_IN,"By_fit",0);
     	rayequil.Bz_fit = load_grid_2D(EQUIL_IN,"Bz_fit",0);
-    
+        rayequil.BP_fit = load_grid_2D(EQUIL_IN,"BP_fit",0);
+        rayequil.B_fit = load_grid_2D(EQUIL_IN,"B_fit",0);
+        
     	if (flag_f0 == 1) {
         	distriparam = load_distri_param(DISTRI_IN);
         	raydistri.f0_fit = load_profile_1D(DISTRI_IN,"XXf0_fit");
@@ -2623,10 +2629,15 @@ int flag_fluct;
     double d2TidY2[equilparam.ns[0]],d2nidY2[equilparam.ns[0]];
     double x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho;
     double y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho;
+    double r=0,drdrho=0,drdtheta=0,d2rdtheta2=0,d2rdthetadrho=0;
+    double calpha=0,dcalphadrho=0,dcalphadtheta=0,d2calphadtheta2=0,d2calphadthetadrho=0;
+    double salpha=0,dsalphadrho=0,dsalphadtheta=0,d2salphadtheta2=0,d2salphadthetadrho=0;
+    double gradrho=0,dgradrhodrho=0,dgradrhodtheta=0,d2gradrhodtheta2=0,d2gradrhodthetadrho=0;
     double Bx=0,dBxdrho=0,dBxdtheta=0,dBxdz=0;
     double By=0,dBydrho=0,dBydtheta=0,dBydz=0;
     double Bz=0,dBzdrho=0,dBzdtheta=0,dBzdz=0;
-    double dxstardpsin,ddxstardpsindrho;
+    double BP=0,dBPdrho=0,dBPdtheta=0,dBPdz=0;
+    double BB=0,dBBdrho=0,dBBdtheta=0,dBBdz=0;
    
     double icm,idcmdrho,cm,cn0,dcn0drho;
     
@@ -2722,16 +2733,21 @@ int flag_fluct;
     
     /* Axisymmetric magnetic field equilibrium interpolation */
     
-    ppvald_1D(rayequil.dxstardpsin_fit,rayparam.dS[0],Y[0],&dxstardpsin,&ddxstardpsindrho,&dummy1);
     
     ppvald_2D(rayequil.x_fit,rayparam.dS[0],Y[0],Y[1],&x,&dxdrho,&dxdtheta,&d2xdtheta2,&d2xdthetadrho);
     ppvald_2D(rayequil.y_fit,rayparam.dS[0],Y[0],Y[1],&y,&dydrho,&dydtheta,&d2ydtheta2,&d2ydthetadrho);
+    ppvald_2D(rayequil.r_fit,rayparam.dS[0],Y[0],Y[1],&r,&drdrho,&drdtheta,&d2rdtheta2,&d2rdthetadrho);
+    ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],Y[0],Y[1],&calpha,&dcalphadrho,&dcalphadtheta,&d2calphadtheta2,&d2calphadthetadrho);
+    ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],Y[0],Y[1],&salpha,&dsalphadrho,&dsalphadtheta,&d2salphadtheta2,&d2salphadthetadrho);
+    ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],Y[0],Y[1],&gradrho,&dgradrhodrho,&dgradrhodtheta,&d2gradrhodtheta2,&d2gradrhodthetadrho);
         
     ppvald_2D(rayequil.Bx_fit,rayparam.dS[0],Y[0],Y[1],&Bx,&dBxdrho,&dBxdtheta,&dummy1,&dummy2);
     ppvald_2D(rayequil.By_fit,rayparam.dS[0],Y[0],Y[1],&By,&dBydrho,&dBydtheta,&dummy1,&dummy2);
-    ppvald_2D(rayequil.Bz_fit,rayparam.dS[0],Y[0],Y[1],&Bz,&dBzdrho,&dBzdtheta,&dummy1,&dummy2);
+    ppvald_2D(rayequil.Bz_fit,rayparam.dS[0],Y[0],Y[1],&Bz,&dBzdrho,&dBzdtheta,&dummy1,&dummy2);  
+    ppvald_2D(rayequil.BP_fit,rayparam.dS[0],Y[0],Y[1],&BP,&dBPdrho,&dBPdtheta,&dummy1,&dummy2);
+    ppvald_2D(rayequil.B_fit,rayparam.dS[0],Y[0],Y[1],&BB,&dBBdrho,&dBBdtheta,&dummy1,&dummy2);
     
-    build_raymagnetic(Y[1],raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,Bx,dBxdrho,dBxdtheta,dBxdz,By,dBydrho,dBydtheta,dBydz,Bz,dBzdrho,dBzdtheta,dBzdz,dxstardpsin,ddxstardpsindrho);     
+    build_raymagnetic(Y[1],raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho,calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho,salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho,gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho,Bx,dBxdrho,dBxdtheta,dBxdz,By,dBydrho,dBydtheta,dBydz,Bz,dBzdrho,dBzdtheta,dBzdz,BP,dBPdrho,dBPdtheta,dBPdz,BB,dBBdrho,dBBdtheta,dBBdz);     
 
     if (equilparam.zZi[0] > 0) { /* Plasma case, otherwise vacuum */
     		        	
@@ -3611,7 +3627,6 @@ int flag_fluct;
             dBdtheta = Brhon*dBrhodtheta + Bsn*dBsdtheta + Bphin*dBphidtheta;
             dBdphi = Brhon*dBrhodphi + Bsn*dBsdphi + Bphin*dBphidphi;
             
-
             raymagnetic.Brhon[0] = Brhon;
             raymagnetic.dBrhondY[0] = (dBrhodrho - Brhon*dBdrho)/B;
             raymagnetic.dBrhondY[1] = (dBrhodtheta - Brhon*dBdtheta)/B;
@@ -3674,24 +3689,24 @@ int flag_fluct;
     }
 }
 
-void build_raymagnetic(theta,raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,Bx,dBxdrho,dBxdtheta,dBxdz,By,dBydrho,dBydtheta,dBydz,Bz,dBzdrho,dBzdtheta,dBzdz,dxstardpsin,ddxstardpsindrho) 
+void build_raymagnetic(theta,raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho,calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho,salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho,gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho,Bx,dBxdrho,dBxdtheta,dBxdz,By,dBydrho,dBydtheta,dBydz,Bz,dBzdrho,dBzdtheta,dBzdz,BP,dBPdrho,dBPdtheta,dBPdz,B,dBdrho,dBdtheta,dBdz) 
 raymagnetic_format raymagnetic;
 equilparam_format equilparam;
 
 double theta;
 double x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho;
 double y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho;
+double r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho;
+double calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho;
+double salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho;
+double gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho;
 double Bx,dBxdrho,dBxdtheta,dBxdz;
 double By,dBydrho,dBydtheta,dBydz;
 double Bz,dBzdrho,dBzdtheta,dBzdz;
-double dxstardpsin,ddxstardpsindrho;
+double BP,dBPdrho,dBPdtheta;
+double B,dBdrho,dBdtheta;
 
 {
-    double r,drdrho,drdtheta;
-    double BP,dBPdrho,dBPdtheta;
-    double B,dBdrho,dBdtheta;
-    double salpha,dsalphadrho,dsalphadtheta;
-    double sn,sigmaIp;
     double Upsilon,dUpsilondrho,dUpsilondtheta;
 
     
@@ -3714,25 +3729,15 @@ double dxstardpsin,ddxstardpsindrho;
         dUpsilondrho = dxdrho/equilparam.Rp[0];
         dUpsilondtheta = dxdtheta/equilparam.Rp[0];
     }
-    
-    sigmaIp =  sgn(equilparam.psia_apRp[0]);/* Sign of the plasma current (only valid for tokamak, not for RFP !) */
-    
-    BP = sqrt(Bx*Bx + By*By);/* Poloidal magnetic field */
-    dBPdrho = (Bx*dBxdrho + By*dBydrho)/BP;
-    dBPdtheta = (Bx*dBxdtheta + By*dBydtheta)/BP;
-    
-    B = sqrt(Bx*Bx + By*By + Bz*Bz);/* Total magnetic field */
-    dBdrho = (Bx*dBxdrho + By*dBydrho + Bz*dBzdrho)/B;
-    dBdtheta = (Bx*dBxdtheta + By*dBydtheta + Bz*dBzdtheta)/B;
-    
+        
     raymagnetic.Brhon[0] = 0.0;/* Normalized radial magnetic field */
     raymagnetic.dBrhondY[0] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
     raymagnetic.dBrhondY[1] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
     raymagnetic.dBrhondY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
     
-    raymagnetic.Bsn[0] = sigmaIp*BP/B;/* Normlaized poloidal magnetic field */
-    raymagnetic.dBsndY[0] = sigmaIp*(dBPdrho/B - BP*dBdrho/B/B);
-    raymagnetic.dBsndY[1] = sigmaIp*(dBPdtheta/B - BP*dBdtheta/B/B);
+    raymagnetic.Bsn[0] = BP/B;/* Normlaized poloidal magnetic field */
+    raymagnetic.dBsndY[0] = (dBPdrho/B - BP*dBdrho/B/B);
+    raymagnetic.dBsndY[1] = (dBPdtheta/B - BP*dBdtheta/B/B);
     raymagnetic.dBsndY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
    
     raymagnetic.Bzn[0] = Bz/B;/* Normlaized toroidal magnetic field */
@@ -3744,10 +3749,6 @@ double dxstardpsin,ddxstardpsindrho;
     raymagnetic.dBdY[0] = dBdrho;
     raymagnetic.dBdY[1] = dBdtheta;
     raymagnetic.dBdY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
-    
-    r = sqrt(x*x+y*y);
-    drdrho = (dxdrho*x + dydrho*y)/r;
-    drdtheta = (dxdtheta*x + dydtheta*y)/r;
     
     raymagnetic.rn[0] = r/equilparam.ap[0];
     raymagnetic.drndY[0] = drdrho/equilparam.ap[0];
@@ -3763,33 +3764,22 @@ double dxstardpsin,ddxstardpsindrho;
     raymagnetic.dyndY[0] = dydrho/equilparam.ap[0];
     raymagnetic.dyndY[1] = dydtheta/equilparam.ap[0];
     raymagnetic.dyndY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
-    
-    sn = sqrt(dxdtheta*dxdtheta + dydtheta*dydtheta);
-    salpha = (x*dxdtheta + y*dydtheta)/r/sn;
-    dsalphadrho = (dxdtheta*dxdrho + dydtheta*dydrho)/r/sn 
-                  + (x*d2xdthetadrho + y*d2ydthetadrho)/r/sn
-                  - drdrho*salpha/r
-                  - (dxdtheta*d2xdthetadrho + dydtheta*d2ydthetadrho)*salpha/sn/sn;
-    dsalphadtheta = sn/r
-                    + (x*d2xdtheta2 + y*d2ydtheta2)/r/sn
-                    - drdtheta*salpha/r 
-                    - (dxdtheta*d2xdtheta2 + dydtheta*d2ydtheta2)*salpha/sn/sn;    
-    
+
+    raymagnetic.calpha[0] = calpha;
+    raymagnetic.dcalphadY[0] = dcalphadrho;
+    raymagnetic.dcalphadY[1] = dcalphadtheta;
+    raymagnetic.dcalphadY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
+
     raymagnetic.salpha[0] = salpha;
     raymagnetic.dsalphadY[0] = dsalphadrho;
     raymagnetic.dsalphadY[1] = dsalphadtheta;
     raymagnetic.dsalphadY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
-            
-    raymagnetic.calpha[0] = sqrt(1.0 - salpha*salpha);
-    raymagnetic.dcalphadY[0] = -salpha*dsalphadrho/sqrt(1.0 - salpha*salpha);
-    raymagnetic.dcalphadY[1] = -salpha*dsalphadtheta/sqrt(1.0 - salpha*salpha);
-    raymagnetic.dcalphadY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
 
-    raymagnetic.gradrhon[0] = Upsilon*BP*dxstardpsin/fabs(equilparam.psia_apRp[0])*equilparam.ap[0];
-    raymagnetic.dgradrhondY[0] = (dUpsilondrho*BP*dxstardpsin + Upsilon*dBPdrho*dxstardpsin + Upsilon*BP*ddxstardpsindrho)/fabs(equilparam.psia_apRp[0])*equilparam.ap[0];
-    raymagnetic.dgradrhondY[1] = (dUpsilondtheta*BP*dxstardpsin + Upsilon*dBPdtheta*dxstardpsin)/fabs(equilparam.psia_apRp[0])*equilparam.ap[0];
+    raymagnetic.gradrhon[0] = gradrho*equilparam.ap[0];
+    raymagnetic.dgradrhondY[0] = dgradrhodrho*equilparam.ap[0];
+    raymagnetic.dgradrhondY[1] = dgradrhodtheta*equilparam.ap[0];
     raymagnetic.dgradrhondY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
-    
+        
     raymagnetic.rhorip[0] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
     raymagnetic.drhoripdY[0] = 1.0;/* the unperturbed magnetic equilibrium is axisymmetric */
     raymagnetic.drhoripdY[1] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
@@ -3806,11 +3796,9 @@ double dxstardpsin,ddxstardpsindrho;
     mexPrintf("Bzn[0],dBzndY[0],dBzndY[1]:%g,%g,%g\n",raymagnetic.Bzn[0],raymagnetic.dBzndY[0],raymagnetic.dBzndY[1]);
     mexPrintf("B[0],dBdY[0],dBdY[1]:%g,%g,%g\n",raymagnetic.B[0],raymagnetic.dBdY[0],raymagnetic.dBdY[1]);
     mexPrintf("salpha[0],dsalphadY[0],dsalphadY[1]:%g,%g,%g\n",raymagnetic.salpha[0],raymagnetic.dsalphadY[0],raymagnetic.dsalphadY[1]);
- 
-  
     mexPrintf("calpha[0],dcalphadY[0],dcalphadY[1]:%g,%g,%g\n",raymagnetic.calpha[0],raymagnetic.dcalphadY[0],raymagnetic.dcalphadY[1]);
     mexPrintf("gradrhon[0],dgradrhondY[0],dgradrhondY[1]:%g,%g,%g\n",raymagnetic.gradrhon[0],raymagnetic.dgradrhondY[0],raymagnetic.dgradrhondY[1]);
-    mexPrintf("dxstardpsin,ddxstardpsindrho,psia_apRp:%g,%g,%g\n",dxstardpsin,ddxstardpsindrho,equilparam.psia_apRp[0]);
+    mexPrintf("psia_apRp:%g,%g,%g\n",equilparam.psia_apRp[0]);
     mexPrintf("Upsilon,dUpsilondrho,dUpsilondtheta:%g,%g,%g\n",Upsilon,dUpsilondrho,dUpsilondtheta);
     */
 }
@@ -3844,7 +3832,7 @@ double flag;
     double Zeff0,Zeffa,eZeff,pZeff,dpZeffdrho;
     double lambda;
     
-    double Ip,BPa,sigmaIp,eq,qmin_Rpap,qmax_Rpap,q_Rpap,dqdrho_Rpap;
+    double Ip,BPa,eq,qmin_Rpap,qmax_Rpap,q_Rpap,dqdrho_Rpap;
     
     double Upsilon,dUpsilondrho,dUpsilondtheta;
     
@@ -4034,7 +4022,6 @@ double flag;
     }
 
     /* mexPrintf("ap,Rp,BPa,rho,BP,Bz0,x,theta,dBPdrho,dBPdtheta:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",ap,Rp,BPa,rho,theta,BP,Bz0,x,dBPdrho,dBPdtheta);*/
-    sigmaIp = sgn(Ip);
     
     B = sqrt(BP*BP + Bz*Bz);
     dBdrho = (BP*dBPdrho + Bz*dBzdrho)/B;
@@ -4050,9 +4037,9 @@ double flag;
     raymagnetic.dBzndY[1] = dBzdtheta/B - Bz*dBdtheta/B/B;
     raymagnetic.dBzndY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
     
-    raymagnetic.Bsn[0] = sigmaIp*BP/B;
-    raymagnetic.dBsndY[0] = sigmaIp*(dBPdrho/B - BP*dBdrho/B/B);
-    raymagnetic.dBsndY[1] = sigmaIp*(dBPdtheta/B - BP*dBdtheta/B/B);
+    raymagnetic.Bsn[0] = BP/B;
+    raymagnetic.dBsndY[0] = dBPdrho/B - BP*dBdrho/B/B;
+    raymagnetic.dBsndY[1] = dBPdtheta/B - BP*dBdtheta/B/B;
     raymagnetic.dBsndY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
     
     raymagnetic.B[0] = B;
