@@ -20,12 +20,12 @@ function [equil_out] = fitequil_yp(equil_in,mode,method,ngrid,nharm)
 %
 if nargin == 1, 
     mode = 1;%Spline-Fourier case
-    method = 'pchip';
+    method = 'spline';
     ngrid = 2000;
     nharm = [];
 end
 if nargin == 2, 
-    method = 'pchip';
+    method = 'spline';
     ngrid = 2000;
     nharm = [];
 end
@@ -47,14 +47,17 @@ Rp = equil_in.Rp;
 ap = equil_in.ptx(end,1);
 psi_apRp = equil_in.psi_apRp;
 psia_apRp = equil_in.psi_apRp(end);
-%xypsi_apRp = equil_in.xypsi_apRp;
 %
-if mode == 1,
-    [rho] = psi2rho_jd(equil_in,psi_apRp/psia_apRp,method);
+sigmaIp =  sign(psia_apRp);%Sign of the plasma current (> 0 if Ip is clock-wise when the tokamak in viewed from the top)
+%
+if mode == 1,   
     %
     %Resampling on a finer mesh close to psi_apRp = 0 before Hermite-Fourier calculations. 
     %
     srho = linspace(0,1,ngrid).^2;
+    %
+    [rho] = psi2rho_jd(equil_in,psi_apRp/psia_apRp,method);
+    %
     spsin = interp1(rho,psi_apRp/psia_apRp,srho,method);
     %
     if ~isempty(equil_in.pTe),sTe = interp1(rho,equil_in.pTe,srho,method);end
@@ -65,15 +68,40 @@ if mode == 1,
     sBx = interp1(rho,equil_in.ptBx,srho,method);%Bx field component
     sBy = interp1(rho,equil_in.ptBy,srho,method);%By field component
     sBz = interp1(rho,equil_in.ptBPHI,srho,method);%PHI field component
+    %
+    sBx(:,end) = sBx(:,1);
+    sBy(:,end) = sBy(:,1);
+    sBz(:,end) = sBz(:,1);
+    %
     sx = interp1(rho,equil_in.ptx,srho,method);%x coordinate
     sy = interp1(rho,equil_in.pty,srho,method);%y coordinate
     %
+    sx(:,end) = sx(:,1);
+    sy(:,end) = sy(:,1);
+    %
     sr = sqrt(sx.*sx + sy.*sy);%r
-    sBp = sqrt(sBx.*sBx + sBy.*sBy);%Bp field 
-    sB = sqrt(sBx.*sBx +sBy.*sBy + sBz.*sBz);%B field 
-    scalpha = (sx.*sBy - sy.*sBx)./sBp./sr;%cos(alpha)
+    %
+    sBP = sqrt(sBx.*sBx + sBy.*sBy);%BP field 
+    sB = sqrt(sBx.*sBx +sBy.*sBy + sBz.*sBz);%B field
+    %
+    scalpha = (sx.*sBy - sy.*sBx)./sBP./sr;%cos(alpha)
+    ssalpha = sigmaIp*(sx.*sBx + sy.*sBy)./sBP./sr;%sin(alpha)
+    %
     scalpha(1,:) = scalpha(2,:);%to avoid singularity at r = 0
-    ssalpha = sqrt(1.0 - min(scalpha.*scalpha,1));%sin(alpha)
+    ssalpha(1,:) = ssalpha(2,:);%to avoid singularity at r = 0
+    %
+    if isinf(Rp),
+        sUpsilon = 1;
+    else
+        sUpsilon = 1 + sx/Rp;
+    end
+    %
+    sdpsin = gradient(spsin(:));
+    sdxstardpsin = gradient(sx(:,1))./sdpsin(:);
+    %
+    sgradrho = sUpsilon.*sBP.*(sdxstardpsin*ones(1,size(sx,2)))/abs(equil_in.psi_apRp(end));
+    sgradrho(1,:) = sgradrho(2,:);
+    sgradrho(:,end) = sgradrho(:,1);
     %
     % Calculation of the vectorial magnetic equilibrium
     %
@@ -92,14 +120,15 @@ if mode == 1,
     %
     equil_out.Bx_fit = interpequilpt_yp(method,sBx,srho,equil_in.theta,nharm);%Bx field component
     equil_out.By_fit = interpequilpt_yp(method,sBy,srho,equil_in.theta,nharm);%By field component
-    equil_out.Bz_fit = interpequilpt_yp(method,sBz,srho,equil_in.theta,nharm);%PHI field component
-    equil_out.BP_fit = interpequilpt_yp(method,sBp,srho,equil_in.theta,nharm);%BP field 
+    equil_out.Bz_fit = interpequilpt_yp(method,sBz,srho,equil_in.theta,nharm);%Bz field component
+    equil_out.BP_fit = interpequilpt_yp(method,sBP,srho,equil_in.theta,nharm);%BP field 
     equil_out.B_fit = interpequilpt_yp(method,sB,srho,equil_in.theta,nharm);%B field 
     equil_out.x_fit = interpequilpt_yp(method,sx,srho,equil_in.theta,nharm);%x coordinate
     equil_out.y_fit = interpequilpt_yp(method,sy,srho,equil_in.theta,nharm);%y coordinate
     equil_out.r_fit = interpequilpt_yp(method,sr,srho,equil_in.theta,nharm);%y coordinate
     equil_out.calpha_fit = interpequilpt_yp(method,scalpha,srho,equil_in.theta,nharm);%cos(alpha)
     equil_out.salpha_fit = interpequilpt_yp(method,ssalpha,srho,equil_in.theta,nharm);%sin(alpha)
+    equil_out.gradrho_fit = interpequilpt_yp(method,sgradrho,srho,equil_in.theta,nharm);%sin(alpha)
 else
     if ~isempty(equil_in.pTe),xyTe = interp1(psi_apRp,equil_in.pTe,xypsi_apRp,method);end
     if ~isempty(equil_in.pne),xyne = interp1(psi_apRp,equil_in.pne,xypsi_apRp,method);end
