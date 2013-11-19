@@ -165,6 +165,15 @@ salpha_dbndrho = ppval(equil_fit.salpha_fit.pp_dbndrho,rho);
 %
 [salpha,dsalphadtheta,d2salphadtheta2,dsalphadrho,d2salphadthetadrho] = calcval_yp(equil_fit,theta,salpha_a0,salpha_an,salpha_bn,salpha_da0drho,salpha_dandrho,salpha_dbndrho);
 %
+gradrho_a0 = ppval(equil_fit.gradrho_fit.pp_a0,rho);
+gradrho_an = ppval(equil_fit.gradrho_fit.pp_an,rho);
+gradrho_bn = ppval(equil_fit.gradrho_fit.pp_bn,rho);
+gradrho_da0drho = ppval(equil_fit.gradrho_fit.pp_da0drho,rho);
+gradrho_dandrho = ppval(equil_fit.gradrho_fit.pp_dandrho,rho);
+gradrho_dbndrho = ppval(equil_fit.gradrho_fit.pp_dbndrho,rho);
+%
+[gradrho,dgradrhodtheta,d2gradrhodtheta2,dgradrhodrho,d2gradrhodthetadrho] = calcval_yp(equil_fit,theta,gradrho_a0,gradrho_an,gradrho_bn,gradrho_da0drho,gradrho_dandrho,gradrho_dbndrho);
+%
 if isinf(Rp),
     Upsilon = 1;
     dUpsilondrho = 0;
@@ -175,6 +184,4 @@ else
     dUpsilondtheta = dxdtheta/Rp;
 end
 %
-gradrho = Upsilon.*BP.*dxstardpsin/equil_fit.psia_apRp;
-dgradrhodrho = (dUpsilondrho.*BP.*dxstardpsin + Upsilon.*dBPdrho.*dxstardpsin + Upsilon.*BP.*ddxstardpsindrho)/equil_fit.psia_apRp;
-dgradrhodtheta = (dUpsilondtheta.*BP.*dxstardpsin + Upsilon.*dBPdtheta.*dxstardpsin)/equil_fit.psia_apRp;
+
