@@ -21,7 +21,7 @@ if nargin < 1
 end
 %
 if isnan(savedir),
-    savedir = './figures';
+    savedir = 'figures/';
 end
 if ~isnan(fignum),
 %     figure(fignum)
@@ -52,7 +52,6 @@ if opt >= 1,
     end
 %     wd = pwd;
 %     cd(savedir)
-    if strcmp(savedir,'./figures'),savedir = 'figures/';end
     %
     print(fignum,'-depsc','-loose',['-r',num2str(res)],[savedir,savename,'.eps']);
 %     eval(['print -depsc -loose -r',num2str(res),' ',savename,'.eps']); 
