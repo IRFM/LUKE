@@ -178,6 +178,7 @@ print_jd(p_opt,[filename,'_RhoComp']);
 % --- poloidal position ---
 %
 figure('Name','Normalized poloidal position')
+ylim = NaN;
 for ib = 1:nb,
     ieq = min([ib,neq]);%equil_fit number
     graph1D_jd(abs(rays{ib}.(propfield))/propfac,rays{ib}.stheta/(2*pi),0,0,'','','',NaN,xlim,ylim,style,marker,colors{rem(ib,ncol)},width2);
@@ -188,6 +189,7 @@ print_jd(p_opt,[filename,'_ThetaComp']);
 % --- toroidal position ---
 %
 figure('Name','Normalized toroidal position')
+ylim = NaN;
 for ib = 1:nb,
     ieq = min([ib,neq]);%equil_fit number
     graph1D_jd(abs(rays{ib}.(propfield))/propfac,rays{ib}.sphi/(2*pi),0,0,'','','',NaN,xlim,ylim,style,marker,colors{rem(ib,ncol)},width2);
