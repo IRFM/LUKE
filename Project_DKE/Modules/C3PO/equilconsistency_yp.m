@@ -37,7 +37,7 @@ for irho = 1:length(rho),
         By(irho,itheta),dBydtheta(irho,itheta),d2Bydtheta2(irho,itheta),dBydrho(irho,itheta),d2Bydthetadrho(irho,itheta),...
         Bz(irho,itheta),dBzdtheta(irho,itheta),d2Bzdtheta2(irho,itheta),dBzdrho(irho,itheta),d2Bzdthetadrho(irho,itheta),...
         BP(irho,itheta),dBPdtheta(irho,itheta),dBPdrho(irho,itheta),B(irho,itheta),dBdtheta(irho,itheta),dBdrho(irho,itheta),...
-        gradrhon(irho,itheta),dgradrhondtheta(irho,itheta),dgradrhondrho(irho,itheta),...
+        gradrho(irho,itheta),dgradrhodtheta(irho,itheta),dgradrhodrho(irho,itheta),...
 	    Upsilon(irho,itheta),dUpsilondrho(irho,itheta),dUpsilondtheta(irho,itheta)] = equilval_yp(equil_fit,rho(irho),theta(itheta),1);
     %
     B(irho,itheta) = sqrt(BP(irho,itheta)*BP(irho,itheta) + Bz(irho,itheta)*Bz(irho,itheta));
@@ -55,21 +55,21 @@ S = zeros(prho,1);
 for irho = 1:length(rho),
   for itheta = 1:length(theta),
     %       
-    gradpkinsgradrhon(irho,itheta) = (Te(irho,itheta).*dnedrho(irho,itheta) + dTedrho(irho,itheta).*ne(irho,itheta) + sum(zTi{irho,itheta}.*dznidrho{irho,itheta} + dzTidrho{irho,itheta}.*zni{irho,itheta},2))*qe*1000;%T converted from eV to J
+    gradpkinsgradrho(irho,itheta) = (Te(irho,itheta).*dnedrho(irho,itheta) + dTedrho(irho,itheta).*ne(irho,itheta) + sum(zTi{irho,itheta}.*dznidrho{irho,itheta} + dzTidrho{irho,itheta}.*zni{irho,itheta},2))*qe*1000;%T converted from eV to J
     %
     a1 = drdrho(irho,itheta)*BP(irho,itheta)/calpha(irho,itheta) + r(irho,itheta)*dBPdrho(irho,itheta)/calpha(irho,itheta) - r(irho,itheta)*BP(irho,itheta)*dcalphadrho(irho,itheta)/calpha(irho,itheta)/calpha(irho,itheta);
     a2 = dsalphadtheta(irho,itheta)/Upsilon(irho,itheta)/calpha(irho,itheta) - salpha(irho,itheta)*dcalphadtheta(irho,itheta)/Upsilon(irho,itheta)/calpha(irho,itheta)/calpha(irho,itheta) - salpha(irho,itheta)*dUpsilondtheta(irho,itheta)/calpha(irho,itheta)/Upsilon(irho,itheta)/Upsilon(irho,itheta);
     a4 = dUpsilondrho(irho,itheta)*Bz(irho,itheta) + Upsilon(irho,itheta)*dBzdrho(irho,itheta);
     %
     b1 = -a1*BP(irho,itheta)*calpha(irho,itheta)./r(irho,itheta);
-    b2 = a2*BP(irho,itheta)*BP(irho,itheta)*Upsilon(irho,itheta).*calpha(irho,itheta)./r(irho,itheta)./gradrhon(irho,itheta);
+    b2 = a2*BP(irho,itheta)*BP(irho,itheta)*Upsilon(irho,itheta).*calpha(irho,itheta)./r(irho,itheta)./gradrho(irho,itheta);
     b4 = -a4*Bz(irho,itheta)/Upsilon(irho,itheta);
     %
-    c1 = a1*Bz(irho,itheta)*gradrhon(irho,itheta)*calpha(irho,itheta)/r(irho,itheta)/B(irho,itheta);
+    c1 = a1*Bz(irho,itheta)*gradrho(irho,itheta)*calpha(irho,itheta)/r(irho,itheta)/B(irho,itheta);
     c2 = -a2*BP(irho,itheta)*Upsilon(irho,itheta)*calpha(irho,itheta)*Bz(irho,itheta)/r(irho,itheta)/B(irho,itheta);  
-    c4 =  -a4*BP(irho,itheta)*gradrhon(irho,itheta)/Upsilon(irho,itheta)/B(irho,itheta);
+    c4 =  -a4*BP(irho,itheta)*gradrho(irho,itheta)/Upsilon(irho,itheta)/B(irho,itheta);
     %
-    gradpmagsgradrhon(irho,itheta) = (b1 + b2 + b4)/mu0;
+    gradpmagsgradrho(irho,itheta) = (b1 + b2 + b4)/mu0;
     %
     jpar(irho,itheta) = (c1 + c2 + c4)/mu0;
     jparz(irho,itheta) = jpar(irho,itheta)*Bz(irho,itheta)/B(irho,itheta);
@@ -77,7 +77,7 @@ for irho = 1:length(rho),
     jparz_fsav(irho) = jparz_fsav(irho) + jparz(irho,itheta)*r(irho,itheta)/Upsilon(irho,itheta)/B(irho,itheta)/calpha(irho,itheta)*dtheta;
     S(irho) = S(irho) + r(irho,itheta)/Upsilon(irho,itheta)/B(irho,itheta)/calpha(irho,itheta)*dtheta;
     %
-    Ip = Ip + jparz(irho,itheta)*r(irho,itheta)*dtheta*drho/gradrhon(irho,itheta)/calpha(irho,itheta);
+    Ip = Ip + jparz(irho,itheta)*r(irho,itheta)*dtheta*drho/gradrho(irho,itheta)/calpha(irho,itheta);
     %
   end
 end
@@ -86,16 +86,16 @@ jparz_fsav = jparz_fsav./S;
 %
 disp(['Plasma current, Ip = ',num2str(Ip/1e6),' (MA)']);
 %
-deltagradpsgradrhon = abs(gradpmagsgradrhon(2:end,:) - gradpkinsgradrhon(2:end,:));
+deltagradpsgradrho = abs(gradpmagsgradrho(2:end,:) - gradpkinsgradrho(2:end,:));
 %
 figure('Name','Pressure gradient'),clf
 leg = {'Kinetic','Magnetic','Location','NorthEast'};%\cdot\widehat{\psi}
-[ax] = graph1D_jd(rho,gradpkinsgradrhon(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
-[ax] = graph1D_jd(rho,gradpmagsgradrhon,0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],leg,NaN,NaN,'--','none','b',2);drawnow
-[ax] = graph1D_jd(rho,gradpkinsgradrhon(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+[ax] = graph1D_jd(rho,gradpkinsgradrho(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+[ax] = graph1D_jd(rho,gradpmagsgradrho,0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],leg,NaN,NaN,'--','none','b',2);drawnow
+[ax] = graph1D_jd(rho,gradpkinsgradrho(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
 %
 figure('Name','Pressure gradient differences'),clf
-graph2D_jd(rho(2:end),theta,deltagradpsgradrhon,'\rho','\theta (rd)',[strrep(equil.id,'_','-'),', |\nablap/|\nabla\rho|| absolute error'],NaN,NaN,1,NaN,20);colorbar
+graph2D_jd(rho(2:end),theta,deltagradpsgradrho,'\rho','\theta (rd)',[strrep(equil.id,'_','-'),', |\nablap/|\nabla\rho|| absolute error'],NaN,NaN,1,NaN,20);colorbar
 %
 figure('Name','Current density'),clf
 [ax] = graph1D_jd(rho,jparz/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],NaN,NaN,NaN,'-','+','r',2);drawnow
@@ -118,8 +118,8 @@ V = 0;
 for irho = 1:length(rho),
 	for itheta = 1:length(theta),
         %
-        VB = VB + r(irho,itheta)*Upsilon(irho,itheta)*drho*dtheta*BP(irho,itheta)*BP(irho,itheta)/gradrhon(irho,itheta)/calpha(irho,itheta);
-        V = V + r(irho,itheta)*Upsilon(irho,itheta)*drho*dtheta/gradrhon(irho,itheta)/calpha(irho,itheta);
+        VB = VB + r(irho,itheta)*Upsilon(irho,itheta)*drho*dtheta*BP(irho,itheta)*BP(irho,itheta)/gradrho(irho,itheta)/calpha(irho,itheta);
+        V = V + r(irho,itheta)*Upsilon(irho,itheta)*drho*dtheta/gradrho(irho,itheta)/calpha(irho,itheta);
 	end
 end
 %
