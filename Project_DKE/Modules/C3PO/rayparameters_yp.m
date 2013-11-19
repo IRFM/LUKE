@@ -56,9 +56,9 @@ salpha_a0 = ppval(equil_fit.salpha_fit.pp_a0,rho);
 salpha_an = ppval(equil_fit.salpha_fit.pp_an,rho);
 salpha_bn = ppval(equil_fit.salpha_fit.pp_bn,rho);
 %
-gradrho_a0_fit = ppval(equil_fit.gradrho_fit.pp_a0,xrho);
-gradrho_an_fit = ppval(equil_fit.gradrho_fit.pp_an,xrho);
-gradrho_bn_fit = ppval(equil_fit.gradrho_fit.pp_bn,xrho);
+gradrho_a0 = ppval(equil_fit.gradrho_fit.pp_a0,rho);
+gradrho_an = ppval(equil_fit.gradrho_fit.pp_an,rho);
+gradrho_bn = ppval(equil_fit.gradrho_fit.pp_bn,rho);
 %
 x = zeros(length(rho),1);
 y = zeros(length(rho),1);
