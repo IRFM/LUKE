@@ -72,8 +72,8 @@ waveparam.dsmin = NaN;%minimum size for ray fragments
 %
 % Global parameters for the vectorial magnetic equilibrium and the plasma fluctuations (if calculated)
 %
-fitparam.equil.method = 'pchip';%nearest,spline,pchip
-fitparam.equil.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
+fitparam.equil.method = 'spline';%nearest,spline,pchip
+fitparam.equil.nharm = NaN;%Number of harmonics in the magnetic equilibrium interpolation (NaN, Inf or empty, nharm = ntheta-1)
 fitparam.equil.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
 fitparam.equil.mode_equil = 1;%(rho,theta) -> 0, (x,y) -> 1
 %
@@ -135,19 +135,21 @@ Bz_a0_fit = ppval(equil_fit.Bz_fit.pp_a0,rho0);
 Bz_an_fit = ppval(equil_fit.Bz_fit.pp_an,rho0);
 Bz_bn_fit = ppval(equil_fit.Bz_fit.pp_bn,rho0);
 %
+B_a0_fit = ppval(equil_fit.B_fit.pp_a0,rho0);
+B_an_fit = ppval(equil_fit.B_fit.pp_an,rho0);
+B_bn_fit = ppval(equil_fit.B_fit.pp_bn,rho0);
+%
 % Build interpolated magnetic fields
 %
 for jt = 1:length(theta0),
     [xBx] = calcval_yp(equil_fit,theta0(jt),Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
     [xBy] = calcval_yp(equil_fit,theta0(jt),By_a0_fit,By_an_fit,By_bn_fit);
     [xBz] = calcval_yp(equil_fit,theta0(jt),Bz_a0_fit,Bz_an_fit,Bz_bn_fit);
+    [xB] = calcval_yp(equil_fit,theta0(jt),B_a0_fit,B_an_fit,B_bn_fit);
     %
-    xBp = sqrt(xBx.^2 + xBy.^2); 
-    xBt = xBz; 
-    xB = sqrt(xBt.^2 + xBp.^2);
-    xBphin = xBt./xB;
+    xBzn = xBz./xB;
     %
-    Npar0(jt) = Nphi0.*xBphin;
+    Npar0(jt) = Nphi0.*xBzn;
 end
 %
 rayinit.omega_rf = omega_rf;

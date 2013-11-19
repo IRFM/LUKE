@@ -145,8 +145,6 @@ B_bn_fit = ppval(equil_fit_pchip.B_fit.pp_bn,rho0);
 [xBz] = calcval_yp(equil_fit_pchip,theta0,Bz_a0_fit,Bz_an_fit,Bz_bn_fit);
 [xB] = calcval_yp(equil_fit_pchip,theta0,B_a0_fit,B_an_fit,B_bn_fit);
 %
-%xBp = sqrt(xBx.^2 + xBy.^2);
-%xB = sqrt(xBz.^2 + xBp.^2);
 xBzn = xBz./xB;
 %
 Npar0 = Nphi0.*xBzn;

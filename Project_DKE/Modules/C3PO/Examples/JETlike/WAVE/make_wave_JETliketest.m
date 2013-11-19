@@ -78,7 +78,7 @@ waveparam.dsmin = NaN;%minimum size for ray fragments
 % Global parameters for the vectorial magnetic equilibrium
 %
 fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
-fitparam.nharm = 32;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
+fitparam.nharm = NaN;%Number of harmonics in the magnetic equilibrium interpolation (NaN, Inf or empty, nharm = ntheta-1)
 fitparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
 %
 % Global parameters for the ray-tracing
@@ -134,14 +134,17 @@ Bz_a0_fit = ppval(equil_fit_pchip.Bz_fit.pp_a0,rho0);
 Bz_an_fit = ppval(equil_fit_pchip.Bz_fit.pp_an,rho0);
 Bz_bn_fit = ppval(equil_fit_pchip.Bz_fit.pp_bn,rho0);
 %
+B_a0_fit = ppval(equil_fit_pchip.B_fit.pp_a0,rho0);
+B_an_fit = ppval(equil_fit_pchip.B_fit.pp_an,rho0);
+B_bn_fit = ppval(equil_fit_pchip.B_fit.pp_bn,rho0);
+%
 % Build interpolated magnetic fields
 %	
 [xBx] = calcval_yp(equil_fit_pchip,theta0,Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
 [xBy] = calcval_yp(equil_fit_pchip,theta0,By_a0_fit,By_an_fit,By_bn_fit);
 [xBz] = calcval_yp(equil_fit_pchip,theta0,Bz_a0_fit,Bz_an_fit,Bz_bn_fit);
+[xB] = calcval_yp(equil_fit_pchip,theta0,B_a0_fit,B_an_fit,B_bn_fit);
 %
-xBp = sqrt(xBx.^2 + xBy.^2); 
-xB = sqrt(xBz.^2 + xBp.^2);
 xBzn = xBz./xB;
 %
 Npar0 = Nphi0.*xBzn;
@@ -186,14 +189,17 @@ Bz_a0_fit = ppval(equil_fit_spline.Bz_fit.pp_a0,rho0);
 Bz_an_fit = ppval(equil_fit_spline.Bz_fit.pp_an,rho0);
 Bz_bn_fit = ppval(equil_fit_spline.Bz_fit.pp_bn,rho0);
 %
+B_a0_fit = ppval(equil_fit_spline.B_fit.pp_a0,rho0);
+B_an_fit = ppval(equil_fit_spline.B_fit.pp_an,rho0);
+B_bn_fit = ppval(equil_fit_spline.B_fit.pp_bn,rho0);
+%
 % Build interpolated magnetic fields
 %	
 [xBx] = calcval_yp(equil_fit_spline,theta0,Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
 [xBy] = calcval_yp(equil_fit_spline,theta0,By_a0_fit,By_an_fit,By_bn_fit);
 [xBz] = calcval_yp(equil_fit_spline,theta0,Bz_a0_fit,Bz_an_fit,Bz_bn_fit);
+[xB] = calcval_yp(equil_fit_spline,theta0,B_a0_fit,B_an_fit,B_bn_fit);
 %
-xBp = sqrt(xBx.^2 + xBy.^2); 
-xB = sqrt(xBz.^2 + xBp.^2);
 xBzn = xBz./xB;
 %
 Npar0 = Nphi0.*xBzn;
