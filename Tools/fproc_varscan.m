@@ -1,6 +1,10 @@
 function fproc_varscan(basestr,file_str,shotnum,shotime,id_simul_o,locid_simul,locpath_simul,var,opt)
 %
-path_simul = [basestr,filesep,shotnum,filesep,locpath_simul];
+if ischar(locpath_simul),
+    path_simul = [basestr,filesep,shotnum,filesep,locpath_simul];
+elseif iscell(locpath_simul),
+    path_simul = locpath_simul{1};
+end
 %
 % select shot times if time scan
 %
@@ -435,14 +439,16 @@ if ndisp >= 1,
     xlim = [0,1];
     ylab = 'J (MA/m^2)';
     tit = '';
+    leg = {};
     %
-    leg = {[var.lab,' = ',var_disp{end}]};
-    %
-    for idisp = ndisp-1:-1:1,
+    for idisp = 1:ndisp-1,
         graph1D_jd(dxrho{ivar_disp(idisp)},dxJ{ivar_disp(idisp)},0,0,'','','',NaN,xlim,ylim,style,markers{idisp},colors{idisp},width2,siz);
-        leg = [[var.lab,' = ',var_disp{idisp}],leg];
+        leg = [leg,[var.lab,' = ',var_disp{idisp}]];
     end
+    %
+    leg = [leg,[var.lab,' = ',var_disp{ndisp}]];
     graph1D_jd(dxrho{ivar_disp(ndisp)},dxJ{ivar_disp(ndisp)},0,0,xlab,ylab,tit,leg,xlim,ylim,style,markers{ndisp},colors{ndisp},width2,siz,gca,red,lspace2,bspace2);
+    %
     if isfield(opt,'xtick_xJ') && ~any(isnan(opt.xtick_xJ)),
         set(gca,'xtick',opt.xtick_xJ);
     end
@@ -463,7 +469,7 @@ if ndisp >= 1,
     ylab = 'P (MW/m^3)';
     tit = '';
     %
-    for idisp = ndisp-1:-1:1,
+    for idisp = 1:ndisp-1,
         graph1D_jd(dxrho{ivar_disp(idisp)},dxP{ivar_disp(idisp)},0,0,'','','',NaN,xlim,ylim,style,markers{idisp},colors{idisp},width2,siz);
     end
     graph1D_jd(dxrho{ivar_disp(ndisp)},dxP{ivar_disp(ndisp)},0,0,xlab,ylab,tit,leg,xlim,ylim,style,markers{ndisp},colors{ndisp},width2,siz,gca,red,lspace2,bspace2);
@@ -478,19 +484,19 @@ end
 %
 p_opt = input_dke_yp('Printing option (-1->2)',-1,-1:2);%option for printing
 % 
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_I_rho'],[datapath,filesep,'figures'],1);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_I'],[datapath,filesep,'figures'],101);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_rho'],[datapath,filesep,'figures'],102);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_eta'],[datapath,filesep,'figures'],2);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_ksi'],[datapath,filesep,'figures'],3);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_P'],[datapath,filesep,'figures'],4);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_s'],[datapath,filesep,'figures'],5);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_Npar'],[datapath,filesep,'figures'],6);
+print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_I_rho'],[datapath,filesep,'figures',filesep],1);
+print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_I'],[datapath,filesep,'figures',filesep],101);
+print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_rho'],[datapath,filesep,'figures',filesep],102);
+print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_eta'],[datapath,filesep,'figures',filesep],2);
+print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_ksi'],[datapath,filesep,'figures',filesep],3);
+print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_P'],[datapath,filesep,'figures',filesep],4);
+print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_s'],[datapath,filesep,'figures',filesep],5);
+print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_Npar'],[datapath,filesep,'figures',filesep],6);
 %
 if ndisp >= 1,
     %
-    print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_xJ'],[datapath,filesep,'figures'],7);
-    print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_xP'],[datapath,filesep,'figures'],8);
+    print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_xJ'],[datapath,filesep,'figures',filesep],7);
+    print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_xP'],[datapath,filesep,'figures',filesep],8);
     %
 end
 % 
