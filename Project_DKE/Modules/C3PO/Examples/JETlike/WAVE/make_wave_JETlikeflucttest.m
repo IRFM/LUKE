@@ -135,7 +135,7 @@ Bz_a0_fit = ppval(equil_fit.Bz_fit.pp_a0,rho0);
 Bz_an_fit = ppval(equil_fit.Bz_fit.pp_an,rho0);
 Bz_bn_fit = ppval(equil_fit.Bz_fit.pp_bn,rho0);
 %
-B_a0_fit = ppval(equil_fi.B_fit.pp_a0,rho0);
+B_a0_fit = ppval(equil_fit.B_fit.pp_a0,rho0);
 B_an_fit = ppval(equil_fit.B_fit.pp_an,rho0);
 B_bn_fit = ppval(equil_fit.B_fit.pp_bn,rho0);
 %
