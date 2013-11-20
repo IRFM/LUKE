@@ -129,7 +129,7 @@ Zi = -1;
 betath2 = mksa.betath_ref^2;%
 %
 for ia = 1:length(alpha)
-    pc = 1/sqrt((alpha(ia)-1)*betath2);
+    pc = sqrt(2)/sqrt((alpha(ia)-1)*betath2);
     %calculate secondary growth rate pmax<p<pext NORMALIZED to nr
     XXRintmask = XXpnRA >= pc;
     Srp_int_norm_nr(ia) = mksa.nhu_ref*2*pi*(Zbouncecoef.xqtilde./Zbouncecoef.xqhat).*integral_dke_jd(gridDKE.dmhu,Zbouncecoef.Xxlambda.*integral_dke_jd(dpnRA,XXSavalanches_normtot(:,:,gridDKE.rdke).*XXRintmask.*XXpnRA2(:,:,gridDKE.rdke),1),1)'; %
