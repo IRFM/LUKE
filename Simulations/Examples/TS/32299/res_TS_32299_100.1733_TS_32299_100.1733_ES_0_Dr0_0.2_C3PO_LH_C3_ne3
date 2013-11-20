@@ -1,42 +1,42 @@
 Simulation id: TS_32299_100.1733_ES_0_Dr0_0.2_C3PO_LH_C3_ne3
-Simulation date: 07/26/2013  10:35:38
-User id: JD211098
+Simulation date: 10/24/2013  16:41:68
+User id: yves
 LUKE Version: LUKE 1.11.0
-MATLAB Version: 800
-MACHINE: andromede1
-Final RF convergence parameter: 0.00080808
+MATLAB Version: 801
+MACHINE: macbookyves
+Final RF convergence parameter: 0.00081631
  
-Total current (I): 0.44391 MA (positive for co-current)
+Total current (I): 0.44413 MA (positive for co-current)
 Location of current peak (rhot): 0.38084 (peak mode = 0; jpeak = 0)
-Current FWHM (drhot): 0.12494 (peak mode = 0; jpeak = 0)
-RF efficiency (n_19*I*Rp/P): 1.5525 10^19 A/(W.m^2)
+Current FWHM (drhot): 0.12473 (peak mode = 0; jpeak = 0)
+RF efficiency (n_19*I*Rp/P): 1.5532 10^19 A/(W.m^2)
 Launched RF power (P): 1.5874 MW
-RF power (P): 1.5875 MW ---> 100.0086 %.
-RF power on harm. 0 (P): 1.5875 MW ---> 100.0086 %.
+RF power (P): 1.5877 MW ---> 100.015 %.
+RF power on harm. 0 (P): 1.5877 MW ---> 100.015 %.
 Linear RF power (P): 1.5874 MW ---> 100 %.
 Ohmic power (P): 0 MW
-Total power (P): 1.5875 MW
-CD efficiency (I/P): 0.27962 A/W
+Total power (P): 1.5877 MW
+CD efficiency (I/P): 0.27974 A/W
  
 ----------------------------------------
  
 RF Peak # 1
-Position rho G: 0.44934
+Position rho G: 0.44933
 Position rho P: 0.57463
 Position rho T: 0.38084
 Position rho V: 0.39988
 Temperature Te: 3.0819 keV
 Density ne: 0.22404 *10^20 m^-3
  
-RF power (P): 1.5875 MW
-Total current (I): 0.44391 MA
-CD efficiency (I/P): 0.27962 A/W
-Normalized CD efficiency xi: 1.6473
+RF power (P): 1.5877 MW
+Total current (I): 0.44413 MA
+CD efficiency (I/P): 0.27974 A/W
+Normalized CD efficiency xi: 1.648
  
 ----------------------------------------
  
 RF Wave # 1
-Position rho G: 0.44934
+Position rho G: 0.44933
 Position rho P: 0.57463
 Position rho T: 0.38084
 Position rho V: 0.39988
@@ -44,17 +44,6 @@ Temperature Te: 3.0819 keV
 Density ne: 0.22404 *10^20 m^-3
  
 Launched RF power (P): 1.5874MW
-Deposited RF power (P): 1.5875 MW ---> 100.0086 %.
-RF power on harm. 0 (P): 1.5875 MW ---> 100.0086 %.
+Deposited RF power (P): 1.5877 MW ---> 100.015 %.
+RF power on harm. 0 (P): 1.5877 MW ---> 100.015 %.
 Linear RF power (P): 1.5874 MW ---> 100 %.
- 
- ---- HXR results on the central chord ---- 
- 
-k (keV) | CR exp (1/ms) | CR sim (1/ms)
-   30   |    28042.45   |    10064.09
-   50   |    35859.82   |    11230.98
-   70   |    17128.83   |     6411.30
-   90   |     6203.84   |     2721.72
-  110   |     2784.50   |      917.65
-  130   |     1098.73   |      414.18
-  150   |      419.62   |      218.68
