@@ -985,6 +985,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                     signs = equil.signs;
                 end
                 %
+                if isfield(equil,'tokamak'),
+                    basestr = equil.tokamak;
+                end
+                %
                 % structure interdependences
                 %
                 if newstruct == 1,
