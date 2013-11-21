@@ -204,6 +204,8 @@ else% spectral parameters directly specified - no spectrum to process
     %
     launch = conc_struct_jd(launch,selectfields_jd(data,{'bNpar0','bdNpar0','bPlhtot','m0','i_ref','mmode'},false));% replace default values by prescription from data  
     %
+    plot_spectrum_from_launch_jd(launch,NaN,-1,select);
+    %
 end
 %
 if ~isfield(select,'tail'),
