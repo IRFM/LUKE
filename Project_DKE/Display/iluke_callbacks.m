@@ -944,7 +944,7 @@ switch action
                 %   
                 ngraphs = length(graphs);
                 %
-                graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,2,['spectrum for ',wavestructs{end}.id],'spectrum');
+                graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,[1,2],['spectrum for ',wavestructs{end}.id],'spectrum');
                 %
                 lukeobj.plot1.gindex = ngraphs + 1;
                 %

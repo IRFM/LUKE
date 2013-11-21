@@ -8,7 +8,7 @@ for ich = 1:nch,
     flag(ich) = strcmp(get(children(ich),'Type'),'axes') && strcmp(get(children(ich),'Visible'),'on');
 end
 %
-if sum(flag) ~= n,
+if all(sum(flag) ~= n),
     error('Problem identifying graphs');
 else
     graph.handles = children(flag);
