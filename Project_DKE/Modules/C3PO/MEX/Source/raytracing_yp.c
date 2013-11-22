@@ -591,8 +591,8 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
     raymagnetic.yn = mxCalloc(1,sizeof(double));
     raymagnetic.Brhon = mxCalloc(1,sizeof(double));
     raymagnetic.Bsn = mxCalloc(1,sizeof(double));
-    raymagnetic.B = mxCalloc(1,sizeof(double));
     raymagnetic.Bzn = mxCalloc(1,sizeof(double));
+    raymagnetic.B = mxCalloc(1,sizeof(double));
     raymagnetic.salpha = mxCalloc(1,sizeof(double));
     raymagnetic.calpha = mxCalloc(1,sizeof(double));
     raymagnetic.gradrhon = mxCalloc(1,sizeof(double));
@@ -3735,7 +3735,7 @@ double B,dBdrho,dBdtheta;
     raymagnetic.dBrhondY[1] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
     raymagnetic.dBrhondY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
     
-    raymagnetic.Bsn[0] = BP/B;/* Normlaized poloidal magnetic field */
+    raymagnetic.Bsn[0] = BP/B;/* Normalized poloidal magnetic field */
     raymagnetic.dBsndY[0] = (dBPdrho/B - BP*dBdrho/B/B);
     raymagnetic.dBsndY[1] = (dBPdtheta/B - BP*dBdtheta/B/B);
     raymagnetic.dBsndY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
