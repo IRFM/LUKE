@@ -263,7 +263,10 @@ struct rayfluctuations {
 
 struct rayequil {
     pp_1D_format Te_fit,ne_fit,zTi_fit,zni_fit;
-    pp_2D_format x_fit,y_fit,r_fit,calpha_fit,salpha_fit,gradrho_fit,Bx_fit,By_fit,Bz_fit,BP_fit,B_fit;	
+    pp_2D_format x_fit,y_fit,r_fit;
+    pp_2D_format calpha_fit,salpha_fit;
+    pp_2D_format gradrho_fi;
+    pp_2D_format Bx_fit,By_fit,Bz_fit,BP_fit,B_fit;	
 };
 
 typedef struct susceptibilitytensor susceptibilitytensor_format;
