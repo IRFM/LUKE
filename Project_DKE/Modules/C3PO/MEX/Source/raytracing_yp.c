@@ -265,7 +265,7 @@ struct rayequil {
     pp_1D_format Te_fit,ne_fit,zTi_fit,zni_fit;
     pp_2D_format x_fit,y_fit,r_fit;
     pp_2D_format calpha_fit,salpha_fit;
-    pp_2D_format gradrho_fi;
+    pp_2D_format gradrho_fit;
     pp_2D_format Bx_fit,By_fit,Bz_fit,BP_fit,B_fit;	
 };
 
@@ -3706,8 +3706,8 @@ double gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho;
 double Bx,dBxdrho,dBxdtheta,dBxdz;
 double By,dBydrho,dBydtheta,dBydz;
 double Bz,dBzdrho,dBzdtheta,dBzdz;
-double BP,dBPdrho,dBPdtheta;
-double B,dBdrho,dBdtheta;
+double BP,dBPdrho,dBPdtheta,dBPdz;
+double B,dBdrho,dBdtheta,dBdz;
 
 {
     double Upsilon,dUpsilondrho,dUpsilondtheta;
