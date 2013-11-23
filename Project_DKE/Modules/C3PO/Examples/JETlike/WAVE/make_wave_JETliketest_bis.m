@@ -227,7 +227,7 @@ telapsed_ray_numeric_spline = toc(tstart);
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with spline method)');
 %
 tstart = tic;
-wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_analytic,C3POparam,[],[],flag_analytic);
+wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit_spline,rayinit,waveparam,[],rayparam,C3POdisplay_analytic,C3POparam,[],[],flag_analytic);
 telapsed_ray_analytic = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
@@ -252,7 +252,7 @@ rays = {wave_numeric_pchip.rays{1},wave_numeric_spline.rays{1},wave_analytic.ray
 legs = {'Numeric - pchip','Numeric - spline','Analytic';...
        'Numeric_pchip','Numeric_spline','Analytic'};
 %
-equil_fit = [equil_fit_pchip,equil_fit_spline,equil_fit_pchip];
+equil_fit = [equil_fit_pchip,equil_fit_spline,equil_fit_spline];
 %
 filename = ['Fig_',id_wave];
 %
