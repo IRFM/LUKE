@@ -209,6 +209,71 @@ elseif type == 6,%ascii formatted (FTU)
     zmi = [1,2,3];
     fi = [0,1,0];%Deuterium plasma
     pTi = pTe/2.0;%As done in RANT3D/AORSA  
+elseif type == 7,%ascii formatted (ASCOT)
+    prho = [];
+    pspsin = [];
+    pspsinT = [];
+    pne = [];
+    pTe = [];
+    fid = fopen(filename);
+    s = fgetl(fid);
+    dummy = sscanf(s,'%s%c');s = fgetl(fid);
+    dummy = sscanf(s,'%s%c');s = fgetl(fid);
+    dummy = sscanf(s,'%s%c');s = fgetl(fid);
+    d = sscanf(s,'%d %d %s');s = fgetl(fid);nrho = d(1);nion = d(2);
+    d = sscanf(s,'%d %d %d %d %d %d');s = fgetl(fid);zZi = d';
+    d = sscanf(s,'%d %d %d %d %d %d');s = fgetl(fid);zmi = d';
+    dummy = sscanf(s,'%s%c');s = fgetl(fid);
+    dummy = sscanf(s,'%s%c');s = fgetl(fid);
+    %
+    if length(find(zZi==1)) == 1,
+        pzni = zeros(nion+2,nrho);
+        pzTi = zeros(nion+2,nrho);
+    elseif length(find(zZi==1)) == 2,
+        pzni = zeros(nion+1,nrho);
+        pzTi = zeros(nion+1,nrho);
+    else length(find(zZi==1)) == 3,
+        pzni = zeros(nion,nrho);
+        pzTi = zeros(nion,nrho);
+    end
+    %
+    j = 1;
+    %
+    while s ~= -1,
+        d = sscanf(s,'%f %f %f %f %f %f %f %f %f %f %f');     
+        prho = [prho,d(1)];
+        pTe = [pTe,d(2)/1000];% in eV units  
+        pne = [pne,d(3)];
+        %
+        for iion = 1:nion,
+            if length(find(zZi==1)) == 3,
+                pzni(iion,j) = d(5+iion);
+                pzTi(iion,j) = d(5)/1000;% in eV units
+            elseif length(find(zZi==1)) == 2,
+                pzni(iion+1,j) = d(5+iion);
+                pzTi(iion+1,j) = d(5)/1000;% in eV units
+            elseif length(find(zZi==1)) == 1,
+                pzni(iion+2,j) = d(5+iion);
+                pzTi(iion+2,j) = d(5)/1000;% in eV units
+            end
+        end
+        %
+        j = j+1;
+        %
+        s = fgetl(fid);        
+    end
+    %
+    fclose(fid);
+    %
+    if length(find(zZi==1)) == 1,
+        zZi = [1,1,zZi];
+        zmi = [1,2,zmi];
+    elseif length(find(zZi==1)) == 2,
+        zZi = [1,zZi];
+        zmi = [1,zmi];
+    end
+    %
+    nion = length(zZi);
 end
 %
 if type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4,
@@ -299,7 +364,7 @@ elseif type == 1,%TCV
     pzni = [fi.'*pnH;pnZ];
     pzTi = ones(nz,1)*pTi;
 end
-if type == 1.1 || type == 1.2 || type == 1.4 || type>= 3 && type ~=5 && type ~=6,
+if type == 1.1 || type == 1.2 || type == 1.4 || type>= 3 && type ~=5 && type ~=6 && type ~=7,
     %
     pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
@@ -321,7 +386,7 @@ if display_mode >= 2,
     red = 0.9;
     lspace = 0.7;
     bspace = 0.6;
-    tit = [dispname];
+    tit = strrep(dispname,'_','-');
     %
     if ~isempty(prho),
         xlab = '\rho';
