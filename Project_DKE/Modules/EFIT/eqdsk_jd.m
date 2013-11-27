@@ -203,7 +203,7 @@ if display_mode >= 2,
     red = 0.9;
     lspace = 0.7;
     bspace = 0.6;
-    tit = [dispname];
+    tit = strrep(dispname,'_','-');
     %
     figure(1),clf
     %
