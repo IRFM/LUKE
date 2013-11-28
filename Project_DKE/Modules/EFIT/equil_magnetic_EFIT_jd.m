@@ -130,3 +130,13 @@ equil_magnetic.Rp = Rp;
 equil_magnetic.Zp = Zp;
 equil_magnetic.equi_src = eqdsk;
 %
+equil_magnetic.eqdsk.x = x;
+equil_magnetic.eqdsk.y = y;
+equil_magnetic.eqdsk.xypsin = xypsin;
+equil_magnetic.eqdsk.psia = psia;
+equil_magnetic.eqdsk.psin = psin;
+equil_magnetic.eqdsk.pF = pF;
+equil_magnetic.eqdsk.pp = pp;
+equil_magnetic.eqdsk.pq = pq;
+equil_magnetic.eqdsk.Rp = Rp;
+equil_magnetic.eqdsk.Zp = Zp;  
