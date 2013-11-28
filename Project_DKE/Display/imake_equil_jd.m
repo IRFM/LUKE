@@ -637,9 +637,9 @@ equil.shotnum = shotnum;
 equil.shotime = shotime;
 %
 if exist('Ip','var'),
-	equil.Ip = Ip;
+	equil.ip = Ip;
 else
-	equil.Ip = NaN;
+	equil.ip = NaN;
 end
 %
 if e_opt == -1 && exist('eqdsk_file','var'),
@@ -648,7 +648,11 @@ elseif e_opt == -2,
     equil.info.datapath = amr_psi_path;
 end
 %
+s_opt = input_dke_yp('Do you want to check the equilibrium consistency [y/n]','n',{'y','n'});
 %
+if strcmp(s_opt,'y'),
+    equil = equilconsistency_yp(equil,fitequil_yp(equil),1);
+end
 %
 equil.info.txt = {...
     ['Plasma major radius (m)               : ',num2str(equil.Rp)],...
@@ -656,10 +660,10 @@ equil.info.txt = {...
     ['Plasma minor radius (m)               : ',num2str(equil.ptx(end,1))],...
     ['Magnetic field on axis (T)            : ',num2str(equil.ptBPHI(1,1))],...
     ['Poloidal flux on LCFS (W)             : ',num2str(equil.psi_apRp(end)*2*pi*equil.Rp/equil.ptx(end,1))],...
-    ['Plasma current (MA)                   : ',num2str(equil.Ip/1e6)],...
+    ['Plasma current (MA)                   : ',num2str(equil.ip/1e6)],...
     ['Central electron temperature (keV)    : ',num2str(equil.pTe(1))],...
     ['Central electron density (10^19 m^-3) : ',num2str(equil.pne(1)/1e19)]};
-
+%
 
 
 
