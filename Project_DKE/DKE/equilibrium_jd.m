@@ -78,8 +78,15 @@ if nargin < 7,
 end
 if nargin < 6,% individual figures are created
     flag_id = true;
+    flag_consistency = true;
 else% graphs added to current object
-    flag_id = false;
+    flag_consistency = false;
+    if isnan(axs)
+        flag_id = true;
+        clear axs
+    else
+        flag_id = false;
+    end
 end
 if nargin < 5
     mfactor = 10;%Factor for super theta grid 
@@ -99,6 +106,14 @@ if nargin < 2,
 end
 if nargin < 1,
     error('Not enough input arguments in equilibrium_jd.m');
+end
+%
+if isnan(method) || isempty(method),
+    method = 'linear';
+end
+%
+if isnan(mfactor) || isempty(mfactor),
+    mfactor = 10;
 end
 %
 if isstruct(radialDKE),
@@ -676,8 +691,8 @@ if abs(display_mode) >=1,
 	disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
-if flag_id && abs(display_mode) >= 2,
-	disp('Calculation of the equilibrium consistency.');
+if flag_consistency && abs(display_mode) >= 2,
+	disp('Calculation of the equilibrium consistency (wait few seconds).');
     equilconsistency_yp(equil,fitequil_yp(equil));
 end
 %
