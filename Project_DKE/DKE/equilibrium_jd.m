@@ -677,8 +677,8 @@ if abs(display_mode) >=1,
 end
 %
 if flag_id && abs(display_mode) >= 2,
-    [equil_fit] = fitequil_yp(equil);
-    equilconsistency_yp(equil,equil_fit,prho);
+	disp('Calculation of the equilibrium consistency.');
+    equilconsistency_yp(equil,fitequil_yp(equil));
 end
 %
 equilDKE.tokname = equil.id;
