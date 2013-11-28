@@ -1132,7 +1132,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 % DISPLAY LUKE EQUILIBRIUM
                 %
                 if status.equil == 1,
-                    equilibrium_jd(equil,NaN,2);
+                    equilibrium_jd(equil,NaN,2,NaN,NaN,NaN);
                 else
                     disp('-----> The equilibrium structure does not exist.');
                 end
