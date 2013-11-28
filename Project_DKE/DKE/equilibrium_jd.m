@@ -732,6 +732,14 @@ if isfield(equil,'equil_fit'),
     equilDKE.equil_fit = equil.equil_fit;
 end
 %
+if isfield(equil,'ip'),
+    equilDKE.ip = equil.ip;
+end
+%
+if isfield(equil,'li'),
+    equilDKE.li = equil.li;
+end
+%
 if nargout >= 1,
     varargout{1} = equilDKE;
 end
