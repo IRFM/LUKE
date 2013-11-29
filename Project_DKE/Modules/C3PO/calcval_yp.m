@@ -1,6 +1,8 @@
 function [varargout] = calcval_yp(fit,theta,a0,an,bn,da0drho,dandrho,dbndrho,d2a0drho2,d2andrho2,d2bndrho2)
 %
-% Calculate the local interpolated value at any poloidal angle position
+% Calculate the local interpolated value at any poloidal angle position,
+% modified 29/11/2013 by E. Nilsson to take vectorial form of
+% theta* as input
 %
 % INPUT
 %    - fit: interpolated structure
@@ -37,14 +39,25 @@ end
 %
 n = fit.n;
 %
-X = a0 + an*cos(n*theta) + bn*sin(n*theta);
-dXdtheta = -an*(n.*sin(n*theta)) + bn*(n.*cos(n*theta));
-d2Xdtheta2 = -an*(n.^2.*cos(n*theta)) - bn*(n.^2.*sin(n*theta));
+npn=size(theta,2);
+nmhu=size(theta,3);
+%
+for ip=1:size(theta,2)
+    for im=1:size(theta,3)
+X(ip,im) = a0 + an*cos(n*theta(1,ip,im)) + bn*sin(n*theta(1,ip,im));
+dXdtheta(ip,im) = -an*(n.*sin(n*theta(1,ip,im))) + bn*(n.*cos(n*theta(1,ip,im)));
+d2Xdtheta2(ip,im) = -an*(n.^2.*cos(n*theta(1,ip,im))) - bn*(n.^2.*sin(n*theta(1,ip,im)));
+    end
+end
 %
 if nargin >= 8,
     if ~isempty(da0drho) & ~isempty(dandrho) & ~isempty(dbndrho),
-        dXdrho = da0drho + dandrho*cos(n*theta) + dbndrho*sin(n*theta);
-        d2Xdthetadrho = -dandrho*(n.*sin(n*theta)) + dbndrho*(n.*cos(n*theta));
+        for ip=1:size(theta,2)
+            for im=1:size(theta,3)
+                dXdrho(ip,im) = da0drho + dandrho*cos(n*theta(1,ip,im)) + dbndrho*sin(n*theta(1,ip,im));
+                d2Xdthetadrho(ip,im) = -dandrho*(n.*sin(n*theta(1,ip,im))) + dbndrho*(n.*cos(n*theta(1,ip,im)));
+            end
+        end
     else
         dXdrho = [];
         d2Xdthetadrho = [];
