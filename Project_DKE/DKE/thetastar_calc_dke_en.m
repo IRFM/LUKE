@@ -83,9 +83,27 @@ for ipsi=1:npsi
     B=sqrt(Bt.^2+Bp.^2);
     XXthetastar1new(ipsi,:,:)=interp1(B(1:(ntheta+1)/2),theta(1:(ntheta+1)/2),XXBstarnew(ipsi,:,:),method);     %calc theta_k* <pi
     XXthetastar2new(ipsi,:,:)=interp1(B((ntheta+1)/2:end),theta((ntheta+1)/2:end),XXBstarnew(ipsi,:,:),method);%calc theta_k* >pi
-    [x1,y1,Bx1,By1,Bp1,dB1dtheta] = equilval_B_dB_en(equilDKE.equil_fit,equilDKE.xrho(ipsi),XXthetastar1new(ipsi,:,:));
-    [x2,y2,Bx2,By2,Bp2,dB2dtheta] = equilval_B_dB_en(equilDKE.equil_fit,equilDKE.xrho(ipsi),XXthetastar2new(ipsi,:,:));
-    r1Rp=sqrt(x1.^2+y1.^2)./equilDKE.ap; %should be changed to ap to be consistent with LUKE bounce definition, should be ap!
+    %
+    [dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+    x1,dummy,dummy,dummy,dummy,y1,dummy,dummy,dummy,dummy,...
+    dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+    Bx1,dBx1dtheta,dummy,dummy,dummy,By1,dBy1dtheta,dummy,dummy,dummy,...
+    Bz1,dB1zdtheta,dummy,dummy,dummy,Bp1,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+    dummy,dummy,dummy] = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),XXthetastar1new(ipsi,:,:));
+    %
+    B1 = sqrt(Bx1.^2 + By1.^2 + Bz1.^2);
+    dB1dtheta = (Bx1.*dBx1dtheta + By1.*dBy1dtheta + Bz1.*dB1zdtheta)./B1;
+    %
+    [dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+    x2,dummy,dummy,dummy,dummy,y2,dummy,dummy,dummy,dummy,...
+    dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+    Bx2,dBx2dtheta,dummy,dummy,dummy,By2,dBy2dtheta,dummy,dummy,dummy,...
+    Bz2,dB2zdtheta,dummy,dummy,dummy,Bp2,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
+    dummy,dummy,dummy] = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),XXthetastar2new(ipsi,:,:));
+    %
+    B2 = sqrt(Bx2.^2 + By2.^2 + Bz2.^2);
+    dB2dtheta = (Bx2.*dBx2dtheta + By2.*dBy2dtheta + Bz2.*dB2zdtheta)./B2;
+    r1Rp=sqrt(x1.^2+y1.^2)./equilDKE.ap; %LUKE definition with ap
     r2Rp=sqrt(x2.^2+y2.^2)./equilDKE.ap;
     XXalphaNew(ipsi,:,:) = B0(ipsi)^2.*r1Rp./abs(dB1dtheta)./Bp1 + B0(ipsi)^2.*r2Rp./abs(dB2dtheta)./Bp2;
 end
@@ -117,7 +135,7 @@ for ipsi = 1:npsi;
 end
 %
 dmhu = permute(repmat(gridDKE.dmhu',[1,1,npnRA,]), [2,3,1]);
-XXalpha = XXalpha;%.*permute(gridDKE.XXdmhu,[3,1,2]); WHY DID I MULTIPLY WITH DMHU HERE?
+XXalpha = XXalpha;
 %
 t(ipo) = toc;
 %
