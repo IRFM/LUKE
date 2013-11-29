@@ -7,8 +7,12 @@ function [equil,gradpthermalsgradrho,gradpmagsgradrho,gradpkinsgradrho,jparz_fsa
 %
 %    - equil_in: numerical magnetic equilibrium structure
 %    - equil_fit: interpolated magnetic equilibrium structure
+%    - display_mode: display the results
+%       (default display_mode = 0)
 %    - prho: number of radial points
+%       (default prho = max(101,length(equil.psi_apRp)))
 %    - mtheta: number of poloidal points
+%       (default mtheta = max(105,length(equil.theta)))
 %
 % OUTPUT: 
 %
