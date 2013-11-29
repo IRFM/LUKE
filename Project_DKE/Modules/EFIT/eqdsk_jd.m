@@ -1,18 +1,70 @@
-function [x,y,xypsin,psia,rpsin,rF,rp,rq,Rp,Zp,Ip,Rv,Zv,Bv] = eqdsk_jd(eqdsk,display_mode,p_opt,dispname,savename,Ns)
+function [x,y,xypsin,psia,rpsin,rF,rp,rq,Rp,Zp,Ip,Rv,Zv,Bv,rdFdpsi,rdpdpsi] = eqdsk_jd(eqdsk,display_mode,p_opt,dispname,savename,Ns)
+% EFIT - function that reads the equilibrium parameters from eqdsk files by EFIT
 %
 % This function reads the equilibrium parameters from eqdsk files created
 % by EFIT and saved in the formatted text file "filename"
 %
-% by J. Decker (jodecke@alum.mit.edu) 10/28/04
+% INPUT
+%
+%    - eqdsk: file that contains the EQDSK structure
+%    - display_mode: display option (0,2)
+%       (default display_mode = 0, no display)
+%    - p_opt: printing option
+%       (default p_opt = 2, print mutiple formats)
+%    - dispname: name displayed in the figures
+%       (default dispname = '')
+%    - savename: name used for saving the the figures
+%       (default savename = 'equil')
+%    - Ns: magnetic axis recalculation supergrid factor
+%       (default Ns = 101; 
+%
+% OUTPUT: 
+%    - x: R - Rp values on the nnr * nnz equispaced grid
+%    - y: Z - Zp values on the nnr * nnz equispaced grid
+%    - xypsin: normalized psi values on the nnr * nnz equispaced grid
+%    - psia: poloidal flux function value at the last closed flux surface (touching the limiter or the separatrix)
+%    - rpsin: normalized poloidal magnetic flux grid
+%    - rF: R*BPHI at nnr equispaced points in psi from psimag to psilim.
+%    - rp: pressure values at nnr equispaced points in psi from psimag to psilim.
+%    - rq: safety factor q on the equispaced psi grid
+%    - Rp: major radius of magnetic axis
+%    - Zp: vertical height of magnetic axis
+%    - Ip: toroidal lasma current
+%    - Rv: nominal major radius of the torus
+%    - Zv: vertical shift of the rectangular box midplane
+%    - Bv: vacuum toroidal magnetic field at radmaj
+%    - rdFdpsi: fpsiar_prime, [i.e., d f/d (psi)] at nnr equispaced points in psi from psimag to psilim.
+%    - rdpdpsi: p_prime [i.e., d prar/d (psi)] at nnr equispaced points in psi from psimag to psilim.
+%
+% WARNING: EFIT sign treatment
+%
+% By convention, the EFIT calculations always give psia > 0 regardless of the direction of the
+% toroidal current. The signs of Bv and Ip are given with respect to phi_eqdsk which is such that
+% (R,phi_eqdsk,Z) is right handed. The sign of phi_dke is opposite such that (R,Z,phi_dke) and
+% (r,theta,phi_dke) be both right handed. The outputs of eqdsk_jd must respect the DKE convention.
+% In that case the signs of Ip and of psia must be identical.
+%
+% by J. Decker (joan.decker@alum.mit.edu) 10/28/04
+%
 %
 if nargin < 6
     Ns = 101;%magnetic axis recalculation supergrid factor 
 end
+%
 if nargin < 5
     savename = 'equil';
 end
+%
 if nargin < 4
     dispname = '';
+end
+%
+if nargin < 3
+    p_opt = 2;
+end
+%
+if nargin < 2
+    display_mode = 0;
 end
 %
 if exist(eqdsk,'file'),
