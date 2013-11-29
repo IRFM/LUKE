@@ -34,10 +34,10 @@ for ig = 1:(f_pmax-1)
 end
 %
 pnRA2 = pnRA.^2;
-XXpnRA2 = permute(repmat(pnRA.^2,[nmhu 1]),[2,1]);
+XXpnRA2 = permute(repmat(pnRA.^2,[npsi,1,nmhu]),[2,3,1]);
 XXpnRA = permute(repmat(pnRA,[nmhu 1]),[2,1]);
 gammaRA = sqrt(1+(pnRA*mksa.betath_ref).^2);
-xnre_init = ohm.xnre_init;
+xnre_init = repmat(ohm.xnre_init,[1,npsi]);
 %
 if dkeparam.bounce_mode > 0,
     %[XXalpha_an,XXmask_ctsa,thetastar_an,thetastar_an2]=S_anal_en(equilDKE,gridDKE,Zmomcoef, pnRA, dpnRA, npnRA, gammaRA); %calculates alpha and theta* with analytical formula in circ concentric case
@@ -70,18 +70,17 @@ mhuT=sqrt(1-B0./Bmax);
 for ipsi=1:npsi
     pthmask = pnRA >= f_pmin; % S(p>=f_pmin)
     Srp(ipsi,:) = beta^3*beta^3*1/(4*pi)/Lambd./(beta*pnRA.*gammaRA.*(gammaRA-1).^2).*pthmask; % rosenbluth (S*), first beta3 is from the Jacobian
-end
-%
-for ip0=1:length(pnRA)
-    p0mask = pnRA >= pnRA(ip0);
-    I(ip0) = 2*pi*integral_dke_jd(dpnRA,p0mask.*Srp(gridDKE.rdke,:).*pnRA2(gridDKE.rdke,:),2); 
+    for ip0=1:length(pnRA)
+        p0mask = pnRA >= pnRA(ip0);
+        I(ipsi,ip0) = 2*pi*integral_dke_jd(dpnRA,p0mask.*Srp(ipsi,:).*pnRA2,2);
+    end
 end
 %
 figure;graph1D_jd(pnRA,I/I(1),0,0,'p>p0','integral over S [p0,pmax]','',NaN,NaN,NaN,'-','.','b',2);
 %
 XXSrp=permute(repmat(Srp, [1,1,nmhu]),[1,2,3]);
 %
-delt = zeros(npsi,npnRA,nmhu);
+delt = zeros(npnRA,nmhu);
 %
 %delta function in the cylindrical + analytical case
 %
@@ -91,8 +90,9 @@ for ip=1:npnRA
     xigrid = linspace(xistar(ip)-1/2*dxistar,xistar(ip)+1/2*dxistar,2);
     fdel = 1*nmhu/2;
     mhu_S = linspace(gridDKE.mhu(1)-gridDKE.dmhu(1)/2, gridDKE.mhu(end)+gridDKE.dmhu(end)/2,nmhu+1);
-    delt(:,ip,:) = redistrib_jd(xigrid,fdel,mhu_S,0);%integral_dke_jd(gridDKE.dmhu',delt(1,ip,:),3)
+    delt(ip,:) = redistrib_jd(xigrid,fdel,mhu_S,0);%integral_dke_jd(gridDKE.dmhu',delt(1,ip,:),3)
 end
+delt = permute(repmat(delt, [1,1,npsi]),[3,1,2]);
 %[dummy,I] = min(abs(gridDKE.mhu - sqrt((gammaRA(ip)-1)/(gammaRA(ip)+1))))
 %delt(:,ip,I) = 1;
 %delt(:,ip,nmhu-I+1) = 1;
@@ -112,7 +112,7 @@ if dkeparam.bounce_mode > 0,
     end
     %
 else 
-    C=ones(npsi,npnRA,nmhu).*delt; %cylindrical case
+    C=1*delt; %cylindrical case
     XXbouncef=C.*XXalpha;
 end
 
@@ -132,10 +132,10 @@ for ia = 1:length(alpha)
     pc = sqrt(2)/sqrt((alpha(ia)-1)*betath2);
     %calculate secondary growth rate pmax<p<pext NORMALIZED to nr
     XXRintmask = XXpnRA >= pc;
-    Srp_int_norm_nr(ia) = mksa.nhu_ref*2*pi*(Zbouncecoef.xqtilde./Zbouncecoef.xqhat).*integral_dke_jd(gridDKE.dmhu,Zbouncecoef.Xxlambda.*integral_dke_jd(dpnRA,XXSavalanches_normtot(:,:,gridDKE.rdke).*XXRintmask.*XXpnRA2(:,:,gridDKE.rdke),1),1)'; %
+    Srp_int_norm_nr(ia) = mksa.nhu_ref*2*pi*(Zbouncecoef.xqtilde(1,1)./Zbouncecoef.xqhat(1,1)).*integral_dke_jd(gridDKE.dmhu,Zbouncecoef.Xxlambda(:,1).*integral_dke_jd(dpnRA,XXSavalanches_normtot(:,:,1).*XXRintmask.*XXpnRA2(:,:,1),1),1)'; %
 end
 %
-RR_an = RR_rosenbluth_en(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
+RR_an = RR_rosenbluth_en(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho(1)/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
 %
 figure;graph1D_jd(alpha,Srp_int_norm_nr./RR_an,0,0,'E/E_c','growth rate (s^-1)','Numerical growth rate',NaN,NaN,NaN,'-','o','b',2);hold on
 graph1D_jd(alpha,RR_an./RR_an,0,0,'','','',NaN, NaN,NaN,'-','none','r',3);hold off
