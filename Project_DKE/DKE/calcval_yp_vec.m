@@ -37,8 +37,8 @@ end
 %
 n = fit.n;
 %
-% npn=size(theta,2);
-% nmhu=size(theta,3);
+npn=size(theta,2);
+nmhu=size(theta,3);
 % Xn=repmat(n,[1 npn nmhu]);
 % Xa0=repmat(a0,[1 npn nmhu]);
 % Xan=repmat(an',[1 npn nmhu]);
