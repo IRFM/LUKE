@@ -8,28 +8,28 @@ clear mex
 clear functions
 close all
 warning('off')
+for ipmax = 50
 %
 % grid parameters
 %
-f_pmax = 5;%1;% %for avalanche calculation. if avalanche_mode and not specified = 1
-pnmax_S = 20;%20;% for E/Ec = 4, Pc = 5; for E/Ec = 6, Pc = 4;
-np_S = 101;%201;%
-nmhu_S = 101;
+f_pmax = floor(50/ipmax); %1;% %for avalanche calculation. if avalanche_mode and not specified = 1
+f_pmin = 1; %lower limit for avalanche calculation. if avalanche_mode and not specified = 1
+pnmax_S = ipmax;%20;% for E/Ec = 4, Pc = 5; for E/Ec = 6, Pc = 4;
+np_S = 201;%201;%
+nmhu_S = 51;
 %
 mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 %
 %
 % normalized electric field (with respect to the Critical field Ec)
 %
-%alpha = 4;%E/Ec
-%
 % temperature betath2 = Te/mc2
 % (betath2 = 10^(-6) is validated for NR limit)
 %
-betath2 = 0.01;%1e-5;%
+betath2 = 0.001;%1e-5;%
 %
-epsi = 0.04;
-alpha = epsi/betath2;
+epsi = 0.06;
+alpha = epsi/betath2; %E/Ec
 %
 pnmin_S = NaN;%5;%1/sqrt((alpha-1)*betath2);%NaN;%
 %
@@ -57,7 +57,7 @@ rho_S = [0.5];%1%Normalized radial flux grid where calculations are performed (0
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScyl';%For plasma equilibrium
+id_equil = 'TScirc';%For plasma equilibrium
 %id_equil = 'TScirc';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
@@ -82,14 +82,15 @@ end
 %
 dkeparam.pnmin_S = pnmin_S;
 dkeparam.f_pmax = f_pmax; % multiplication of p grid. f_pmax*p_max
+dkeparam.f_pmin = f_pmin; % multiplication of p grid. f_pmax*p_max
 dkeparam.pnmax_S = pnmax_S;
 dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
 dkeparam.norm_mode_f = 0;% + 1i;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.timevol = 1;
-dkeparam.tn = 100000;%time for asymptotic solution with norm_mode_f = 1
-dkeparam.dtn = 100;% time steps required for accurate runaway solution - see rundke_dtn
+dkeparam.tn = 1000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.dtn = 10;% time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
-dkeparam.bounce_mode = 0; %bounce average
+dkeparam.bounce_mode = 1; %bounce average
 dkeparam.avalanche_mode = 1; %if 1 avalanche mode on, 0 or undefined for off
 %
 options_fzero = optimset('fzero');
@@ -108,7 +109,7 @@ equil.pzni = [0;0;0;1/Zi]*equil.pne;% single ion species
 %
 epsi = alpha*betath2;
 %
-xnre_init = zeros(1,length(rho_S)); % 0.1*ones
+xnre_init = 0;%zeros(1,length(rho_S)); const. value, should be changed to vectorial form(one for each rho)
 %
 ohm = ohm_flat(equil,epsi);
 %
@@ -125,13 +126,13 @@ dkeparam.mfactor = mfactor;
 fitparam.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
 fitparam.nharm = NaN;%Number of harmonics in the magnetic equilibrium interpolation (less than ntheta_equil/2)
 fitparam.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
-fitparam.method = 'spline';%nearest,spline,pchip
+fitparam.method = 'spline';%'linear';%nearest,spline,pchip
 %
 equil.equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,'','','',[],[]);
 %
-RR_an = RR_rosenbluth_en(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
+%RR_an = RR_rosenbluth_en(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
 %
 %RR = dke_out.XxRR_fsav(end,:);
 Rfrac = Znorm(end).x_Rfrac_0_fsav; %runaway fraction (nr of runaways between pmin and pmax) primary + avalanche
@@ -141,19 +142,17 @@ xnre_out_norm = dke_out.xrr_out_norm; %runaway population for avalanche generati
 %
 RRAint = Znorm(1,end).xRRAint/xnre(end-1); %integral over S[pmin pmax]
 RRAinttot = Znorm(1,end).xRRAtot/xnre(end-1); %total integral S[0 pmax]
-RRAintegral = RRAint*mksa.nhu_ref;
 RR = dke_out.XxRR_fsav{end}; %runaway loss rate (primary)
 RR = RR(end); %[vol-1 tau_c^-1]
 %RRunnorm = RR*mksa.nhu_ref; %vol-1 s^-1
 %RRRP = RR*mksa.nhu_ref/nre(1,1);
 for it = 1:(length(xnre)-1)
-    gr2(it) = (log(xnre(it+1)) - log(xnre(it)))/dkeparam.dtn;
     gr(it) = (xnre(it+1) - xnre(it))/xnre(it)/dkeparam.dtn;
 end
 figure;graph1D_jd(1:(length(xnre)-1),gr,0,0,'iteration','growth rate (s^-1)','Numerical growth rate',NaN,NaN,NaN,'-','o','b',1)
 hold on
-plot(1:(length(xnre)-1), RRAinttot,'rx')
-plot(1:(length(xnre)-1), RRAint,'kx'); hold off
+%plot(1:(length(xnre)-1), RRAinttot,'rx')
+%plot(1:(length(xnre)-1), RRAint,'kx'); hold off
 %
 if dkeparam.avalanche_mode == 1
     pnext = pnmax_S*f_pmax;
@@ -249,17 +248,29 @@ disp('----------------------')
 %
 diary off
 %
-figure;graph1D_jd((0:dkeparam.dtn:dkeparam.tn),xnre,0,0,'t_n','number of runaways (norm to n_e)','',NaN,NaN,NaN,'-','none','b',2)
-figure;graph1D_jd((0:dkeparam.dtn:dkeparam.tn),xnre,0,1,'t_n','number of runaways (norm to n_e)','',NaN,NaN,NaN,'-','none','b',2)
+%figure;graph1D_jd((0:dkeparam.dtn:dkeparam.tn),xnre,0,0,'t_n','number of runaways (norm to n_e)','',NaN,NaN,NaN,'-','none','b',2)
+%figure;graph1D_jd((0:dkeparam.dtn:dkeparam.tn),xnre,0,1,'t_n','number of runaways (norm to n_e)','',NaN,NaN,NaN,'-','none','b',2)
 %
 figure;graph1D_jd((1:dkeparam.dtn:dkeparam.tn),cell2mat(dke_out.curr0(1:2:end)),0,0,'t_n','J_0','',NaN,NaN,NaN,'-','none','b',2)
 %
-growthrate(ia) = gr(end)*mksa.nhu_ref
-%end
-%gRA = qe^4*alpha*mksa.ne_ref/(8*pi*e0^2*me^2*clum^3)
+%growthrate(ia) = gr(end)*mksa.nhu_ref
+%
+figure
+graph1D_jd((1:dkeparam.dtn:dkeparam.tn),xnre,0,0,'t_n','n_{re}/n_{tot}','',NaN,NaN,NaN,'-','none','b',2)
+figure
+grDA = diff(xnre)/dkeparam.dtn./(1-xnre(1:(end-1)));
+graph1D_jd(xnre(1:(end-1)),grDA,0,0,'n_r','1/(1-n_r)dn_r/dt_n','',NaN,NaN,NaN,'-','none','b',2)
+grA = (grDA(end)-grDA(end-100))/(xnre(end-1)-xnre(end-99));
 %
 %************************************************************************************************************************************
 %
 % 
-eval(['save ','test','.mat']);
- %info_dke_yp(2,['Data saved in',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'_',filename,'.mat']);
+%
+%eval(['save ','DKE_RESULTS_',id_equil,'_DA','_rho_',num2str(irho),'_tn_',num2str(dkeparam.tn),'_E_',num2str(alpha),'.mat']);
+%info_dke_yp(2,['Data saved in ','DKE_RESULTS_',id_equil,'_DA','_rho_0',num2str(irho),'_tn_',num2str(dkeparam.tn),'_E_',num2str(alpha),'.mat']);
+eval(['save ','DKE_RESULTS_',id_equil,'_pmax_',num2str(ipmax),'_DA_','beta2_1e-3','_EEc_',num2str(alpha),'.mat']);
+info_dke_yp(2,['Data saved in ','DKE_RESULTS_',id_equil,'_pmax_',num2str(ipmax),'_DA_','beta2_1e-3','_EEc_',num2str(alpha),'.mat']);
+%eval(['save ','test','.mat']);
+%info_dke_yp(2,['Data saved in',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'_',filename,'.mat']);
+close all
+end
