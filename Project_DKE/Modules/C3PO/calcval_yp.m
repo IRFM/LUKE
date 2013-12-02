@@ -6,7 +6,7 @@ function [varargout] = calcval_yp(fit,theta,a0,an,bn,da0drho,dandrho,dbndrho,d2a
 %
 % INPUT
 %    - fit: interpolated structure
-%    - poloidal angle value (rad) [1,1]
+%    - poloidal angle value (rad) [1,1], can be up to 3D
 %    - a0,an,bn: Fourier expansion coefficients
 %    - da0drho,dandrho,dbndrho: 1st order radial derivatives of the Fourier expansion coefficients
 %    - d2a0drho2,d2andrho2,d2bndrho2: 2nd order radial derivatives of the Fourier expansion coefficients
@@ -39,14 +39,11 @@ end
 %
 n = fit.n;
 %
-npn=size(theta,2);
-nmhu=size(theta,3);
-%
 for ip=1:size(theta,2)
     for im=1:size(theta,3)
-X(ip,im) = a0 + an*cos(n*theta(1,ip,im)) + bn*sin(n*theta(1,ip,im));
-dXdtheta(ip,im) = -an*(n.*sin(n*theta(1,ip,im))) + bn*(n.*cos(n*theta(1,ip,im)));
-d2Xdtheta2(ip,im) = -an*(n.^2.*cos(n*theta(1,ip,im))) - bn*(n.^2.*sin(n*theta(1,ip,im)));
+        X(ip,im) = a0 + an*cos(n*theta(1,ip,im)) + bn*sin(n*theta(1,ip,im));
+        dXdtheta(ip,im) = -an*(n.*sin(n*theta(1,ip,im))) + bn*(n.*cos(n*theta(1,ip,im)));
+        d2Xdtheta2(ip,im) = -an*(n.^2.*cos(n*theta(1,ip,im))) - bn*(n.^2.*sin(n*theta(1,ip,im)));
     end
 end
 %
