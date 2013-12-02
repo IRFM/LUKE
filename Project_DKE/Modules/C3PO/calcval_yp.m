@@ -39,22 +39,28 @@ end
 %
 n = fit.n;
 %
-for ip=1:size(theta,2)
-    for im=1:size(theta,3)
-        X(ip,im) = a0 + an*cos(n*theta(1,ip,im)) + bn*sin(n*theta(1,ip,im));
-        dXdtheta(ip,im) = -an*(n.*sin(n*theta(1,ip,im))) + bn*(n.*cos(n*theta(1,ip,im)));
-        d2Xdtheta2(ip,im) = -an*(n.^2.*cos(n*theta(1,ip,im))) - bn*(n.^2.*sin(n*theta(1,ip,im)));
-    end
-end
+Xa0 = repmat(a0(:),[1,size(theta,1),size(theta,2)]);
+%
+Zan = repmat(an,[1,1,size(theta,1),size(theta,2)]);
+Zbn = repmat(bn,[1,1,size(theta,1),size(theta,2)]);
+%
+Zn = permute(repmat(n(:),[1,size(a0(:),1),size(theta,1),size(theta,2)]),[2,1,3,4]);
+%
+Ztheta = permute(repmat(theta,[1,1,size(a0(:),1),size(n(:),1)]),[3,4,1,2]);
+%
+X = squeeze(Xa0) + squeeze(sum(Zan.*cos(Zn.*Ztheta) + Zbn.*sin(Zn.*Ztheta),2));
+dXdtheta = squeeze(sum(-Zan.*(Zn.*sin(Zn.*Ztheta)) + Zbn.*(Zn.*cos(Zn.*Ztheta)),2));
+d2Xdtheta2 = squeeze(sum(-Zan.*(Zn.^2.*cos(Zn.*Ztheta)) - Zbn.*(Zn.^2.*sin(Zn.*Ztheta)),2));
 %
 if nargin >= 8,
     if ~isempty(da0drho) & ~isempty(dandrho) & ~isempty(dbndrho),
-        for ip=1:size(theta,2)
-            for im=1:size(theta,3)
-                dXdrho(ip,im) = da0drho + dandrho*cos(n*theta(1,ip,im)) + dbndrho*sin(n*theta(1,ip,im));
-                d2Xdthetadrho(ip,im) = -dandrho*(n.*sin(n*theta(1,ip,im))) + dbndrho*(n.*cos(n*theta(1,ip,im)));
-            end
-        end
+        %
+        Xda0drho = repmat(da0drho(:),[1,size(theta,1),size(theta,2)]);
+        Zdandrho = repmat(dandrho,[1,1,size(theta,1),size(theta,2)]);
+        Zdbndrho = repmat(dbndrho,[1,1,size(theta,1),size(theta,2)]);
+        %
+        dXdrho = squeeze(Xda0drho) + squeeze(sum(Zdandrho.*cos(Zn.*Ztheta) + Zdbndrho.*sin(Zn.*Ztheta),2));
+        d2Xdthetadrho = squeeze(sum(-Zdandrho.*(Zn.*sin(Zn.*Ztheta)) + Zdbndrho.*(Zn.*cos(Zn.*Ztheta)),2));
     else
         dXdrho = [];
         d2Xdthetadrho = [];
@@ -63,7 +69,11 @@ end
 %
 if nargin == 11,
     if ~isempty(d2a0drho2) & ~isempty(d2andrho2) & ~isempty(d2bndrho2),
-        d2Xdrho2 = d2a0drho2 + d2andrho2*cos(n*theta) + d2bndrho2*sin(n*theta);
+        %
+        Zd2andrho2 = repmat(d2andrho2,[1,1,size(theta,1),size(theta,2)]);
+        Zd2bndrho2 = repmat(d2bndrho2,[1,1,size(theta,1),size(theta,2)]);
+        %
+        d2Xdrho2 = squeeze(Xd2a0drho2) + squeeze(sum(Zd2andrho2.*cos(Zn.*Ztheta) + Zd2bndrho2.*sin(Zn.*Ztheta),2));
     else
         d2Xdrho2 = [];
     end

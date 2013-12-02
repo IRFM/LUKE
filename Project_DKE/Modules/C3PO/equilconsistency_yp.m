@@ -25,6 +25,20 @@ function [equil,gradpthermalsgradrho,gradpmagsgradrho,gradpkinsgradrho,jparz_fsa
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
+if nargin == 1,
+    if isfield(equil,'equil_fit'),
+        equil_fit = equil.equil_fit;
+    else
+        info_dke_yp(2,['Vectorized form of the magnetic equilibrium ',equil.id,' is being calculated...'],0);
+        equil_fit = fitequil_yp(equil);
+        info_dke_yp(2,'    ...done',0);
+    end
+    %
+    display_mode = 0;%no display
+    prho = max(101,length(equil.psi_apRp));
+    mtheta = max(105,length(equil.theta));
+end
+%
 if nargin == 2,
     display_mode = 0;%no display
     prho = max(101,length(equil.psi_apRp));
@@ -46,6 +60,34 @@ drho = rho(2)-rho(1);
 theta = linspace(0,2*pi,mtheta);
 dtheta = theta(2)-theta(1);
 %
+if isempty(equil_fit),    
+    if isfield(equil,'equil_fit'),
+        equil_fit = equil.equil_fit;
+    else
+        info_dke_yp(2,['Vectorized form of the magnetic equilibrium ',equil.id,' is being calculated...'],0);
+        equil_fit = fitequil_yp(equil);
+        info_dke_yp(2,'    ...done',0);
+    end
+end
+%
+[Te,dTedrho,d2Tedrho2,...
+    ne,dnedrho,d2nedrho2,...
+    zTi,dzTidrho,d2zTidrho2,...
+    zni,dznidrho,d2znidrho2,...
+    x,dxdtheta,d2xdtheta2,dxdrho,d2xdthetadrho,...
+    y,dydtheta,d2ydtheta2,dydrho,d2ydthetadrho,...
+    r,drdtheta,drdrho,...
+    salpha,dsalphadtheta,dsalphadrho,...
+    calpha,dcalphadtheta,dcalphadrho,...
+    Bx,dBxdtheta,d2Bxdtheta2,dBxdrho,d2Bxdthetadrho,...
+    By,dBydtheta,d2Bydtheta2,dBydrho,d2Bydthetadrho,...
+    Bz,dBzdtheta,d2Bzdtheta2,dBzdrho,d2Bzdthetadrho,...
+    BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho,...
+    gradrho,dgradrhodtheta,dgradrhodrho,...
+    Upsilon,dUpsilondrho,dUpsilondtheta] = equilval_yp(equil_fit,rho,theta,1);
+
+%
+if 0,
 for irho = 1:length(rho),
     for itheta = 1:length(theta),
     %
@@ -59,9 +101,9 @@ for irho = 1:length(rho),
         gradrho(irho,itheta),dgradrhodtheta(irho,itheta),dgradrhodrho(irho,itheta),...
 	    Upsilon(irho,itheta),dUpsilondrho(irho,itheta),dUpsilondtheta(irho,itheta)] = equilval_yp(equil_fit,rho(irho),theta(itheta),1);
     %
-    B(irho,itheta) = sqrt(BP(irho,itheta)*BP(irho,itheta) + Bz(irho,itheta)*Bz(irho,itheta));
-    %
   end
+end
+%
 end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha,kB] = pc_dke_yp;
@@ -79,12 +121,8 @@ jparz_fsav = zeros(prho,1);
 S = zeros(prho,1);
 jparz_ohm_fsav = zeros(prho,1);
 %
-for irho = 1:length(rho),
-  for itheta = 1:length(theta),
-    pthermal_ion(irho,itheta) = sum(zTi{irho,itheta}.*zni{irho,itheta},2);
-    dpthermal_iondrho(irho,itheta) = sum(zTi{irho,itheta}.*dznidrho{irho,itheta} + dzTidrho{irho,itheta}.*zni{irho,itheta},2);
-  end
-end
+pthermal_ion = sum(zTi.*zni,2);
+dpthermal_iondrho = sum(zTi.*dznidrho + dzTidrho.*zni,2);
 %
 pthermal = (Te.*ne  + pthermal_ion)*qe*1000;%T converted from eV to J
 gradpthermalsgradrho = (Te.*dnedrho + dTedrho.*ne + dpthermal_iondrho)*qe*1000;%T converted from eV to J
@@ -126,7 +164,7 @@ end
 %
 Surf_cyl = pi*equil_fit.ap*equil_fit.ap;
 %
-jparz_ohm = Te.^1.5;
+jparz_ohm = (Te*ones(1,mtheta)).^1.5;
 jparz_ohm_fsav = sum(jparz_ohm.*r./Upsilon.*Bz./B./BP./calpha.*dtheta,2);
 Ip_ohm = sum(sum(jparz_ohm.*r.*dtheta.*drho./gradrho./calpha));
 %
