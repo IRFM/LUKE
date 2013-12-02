@@ -108,7 +108,7 @@ if nargin < 1,
     error('Not enough input arguments in equilibrium_jd.m');
 end
 %
-if isnan(method) || isempty(method),
+if (~ischar(method) && isnan(method)) || isempty(method),
     method = 'linear';
 end
 %
