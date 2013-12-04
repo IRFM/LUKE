@@ -32,14 +32,23 @@ nt = 65;
 %
 % Reads ACCOME data
 %
-accomename = [filename,'.bfield'];
-[x,y,xypsin,psia,psin,xyBPHI,xyBR,xyBZ,Rp,Zp] = accome_yp(accomename,display_mode,p_opt,dispname,savename);
+if exist([filename,'.bfield'],'file'),
+    disp(' ---> ACCOME toroidal MHD equilibrium file format found.');
+    [x,y,xypsin,psia,rpsin,xyBPHI,xyBR,xyBZ,Rp,Zp] = accome_yp([filename,'.bfield'],display_mode,p_opt,dispname,savename);
+elseif exist([filename,'.eqdsk'],'file'),
+    disp(' ---> EQDSK toroidal MHD equilibrium file format found.');
+    [x,y,xypsin,psia,rpsin,rF,rp,rq,Rp,Zp,Ip,Rv,Zv,Bv,rdFdpsi,rdpdpsi] = eqdsk_jd([filename,'.eqdsk'],display_mode,p_opt,dispname,savename);
+else
+    error(' ---> Unknown toroidal MHD equilibrium file format found.')
+end
 %
 % Transforms on a (psi,theta) grid
 %
-[ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,nt,method,display_mode,p_opt,savename);
+[ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,rpsin,nt,method,display_mode,p_opt,savename);
 %
-ptBPHI = griddata(x,y,xyBPHI',ptx,pty);
+if exist('xyBPHI','var');
+    ptBPHI = griddata(x,y,xyBPHI',ptx,pty);
+end
 %
 np = length(psin);
 ap = ptx(np,1);%Plasma minor radius on the LFS midplane
@@ -50,10 +59,14 @@ ptR = Rp + ptx;
 %
 %WARNING: not very accurate because psi grid provided by ACCOME seems to be noisy in the vicinity of the plasma center
 %
-if isempty(xyBR) | isempty(xyBZ),
-	ptBx = ptdpsindy*psia./ptR;
-	ptBy = -ptdpsindx*psia./ptR;
-	%
+if ~exist('xyBR','var') || ~exist('xyBZ','var') || isempty(xyBR) || isempty(xyBZ),
+    %
+	ptBx = -ptdpsindy*psia./ptR;
+	ptBy = +ptdpsindx*psia./ptR;
+    %
+    ptF = repmat(rF.',[1,nt]);
+    ptBPHI = ptF./ptR;
+    %
 	disp('***********************************************************************************************************');
 	disp('WARNING: The BR and BZ magnetic field components are not given directly by ACCOME (not in the source file).');
 	disp('         The poloidal magnetic field is likely not accurate in the vicinity of the magnetic axis !');

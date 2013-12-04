@@ -100,7 +100,11 @@ if nn(3) < 10,
 else
     nnx = nn(3);
     nny = nn(2);
-    nnr = nn(1);
+    if nn(1) == 0,
+        nnr = nn(2);%CQL3D (COMPASS)
+    else
+        nnr = nn(1);
+    end
 end
 %
 [data,~,~,ind] = sscanf(eqdsk,'%e',5);
