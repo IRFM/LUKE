@@ -333,7 +333,7 @@ if display_mode >= 2,
     ylab = 'y (m)';
     xlim = [min(x),max(x)];
     ylim = [min(y),max(y)];
-    tit = [dispname];
+    tit = strrep(dispname,'_','-');
     %
     graph2D_jd(x,y,xypsin,xlab,ylab,tit,xlim,ylim,0,NaN,rpsi,0,style,color,width,siz,red);
     axis('equal');
