@@ -40,8 +40,10 @@ end
 equil_out.id = equil_in.id;
 equil_out.method = method;
 %
-if ~isempty(equil_in.zZi),equil_out.zZi = equil_in.zZi;else equil_out.zZi = [0,0,0];end
-if ~isempty(equil_in.zmi),equil_out.zmi = equil_in.zmi;else equil_out.zmi = [1,1,1];end
+if isfield(equil_in,'pzni') && isfield(equil_in,'pzTi') && isfield(equil_in,'zZi') && isfield(equil_in,'pne') && isfield(equil_in,'pTe') 
+    if ~isempty(equil_in.zZi),equil_out.zZi = equil_in.zZi;else equil_out.zZi = [0,0,0];end
+    if ~isempty(equil_in.zmi),equil_out.zmi = equil_in.zmi;else equil_out.zmi = [1,1,1];end
+end
 %
 Rp = equil_in.Rp;
 ap = equil_in.ptx(end,1);
@@ -60,10 +62,12 @@ if mode == 1,
     %
     spsin = interp1(rho,psi_apRp/psia_apRp,srho,method);
     %
-    if ~isempty(equil_in.pTe),sTe = interp1(rho,equil_in.pTe,srho,method);end
-    if ~isempty(equil_in.pne),sne = interp1(rho,equil_in.pne,srho,method);end
-    if ~isempty(equil_in.pzTi),szTi = interp1(rho,equil_in.pzTi',srho',method)';end
-    if ~isempty(equil_in.pzni),szni = interp1(rho,equil_in.pzni',srho',method)';end
+    if isfield(equil_in,'pzni') && isfield(equil_in,'pzTi') && isfield(equil_in,'zZi') && isfield(equil_in,'pne') && isfield(equil_in,'pTe') 
+        if ~isempty(equil_in.pTe),sTe = interp1(rho,equil_in.pTe,srho,method);end
+        if ~isempty(equil_in.pne),sne = interp1(rho,equil_in.pne,srho,method);end
+        if ~isempty(equil_in.pzTi),szTi = interp1(rho,equil_in.pzTi',srho',method)';end
+        if ~isempty(equil_in.pzni),szni = interp1(rho,equil_in.pzni',srho',method)';end
+    end
     %
     sBx = interp1(rho,equil_in.ptBx,srho,method);%Bx field component
     sBy = interp1(rho,equil_in.ptBy,srho,method);%By field component
@@ -111,10 +115,12 @@ if mode == 1,
     sdxstardpsin_psin = ppval(sxstar_psin_fit.pp_dfdrho,spsin);
     equil_out.dxstardpsin_fit = interpequilpt_yp(method,sdxstardpsin_psin,srho);
     %
-    if ~isempty(equil_in.pTe),equil_out.Te_fit = interpequilpt_yp(method,sTe,srho);end
-    if ~isempty(equil_in.pne),equil_out.ne_fit = interpequilpt_yp(method,sne,srho);end
-    if ~isempty(equil_in.pzTi),equil_out.zTi_fit = interpequilpt_yp(method,szTi,srho);end
-    if ~isempty(equil_in.pzni),equil_out.zni_fit = interpequilpt_yp(method,szni,srho);end
+    if isfield(equil_in,'pzni') && isfield(equil_in,'pzTi') && isfield(equil_in,'zZi') && isfield(equil_in,'pne') && isfield(equil_in,'pTe') 
+        if ~isempty(equil_in.pTe),equil_out.Te_fit = interpequilpt_yp(method,sTe,srho);end
+        if ~isempty(equil_in.pne),equil_out.ne_fit = interpequilpt_yp(method,sne,srho);end
+        if ~isempty(equil_in.pzTi),equil_out.zTi_fit = interpequilpt_yp(method,szTi,srho);end
+        if ~isempty(equil_in.pzni),equil_out.zni_fit = interpequilpt_yp(method,szni,srho);end
+    end
     %
     if isempty(nharm) || isinf(nharm) || isnan(nharm) ,nharm = length(equil_in.theta) - 1;end
     %
@@ -130,17 +136,19 @@ if mode == 1,
     equil_out.salpha_fit = interpequilpt_yp(method,ssalpha,srho,equil_in.theta,nharm);%sin(alpha)
     equil_out.gradrho_fit = interpequilpt_yp(method,sgradrho,srho,equil_in.theta,nharm);%sin(alpha)
 else
-    if ~isempty(equil_in.pTe),xyTe = interp1(psi_apRp,equil_in.pTe,xypsi_apRp,method);end
-    if ~isempty(equil_in.pne),xyne = interp1(psi_apRp,equil_in.pne,xypsi_apRp,method);end
-    for ii = 1:length(equil_in.zZi),
-        if ~isempty(equil_in.pzTi),xyzTi(:,:,ii) = interp1(psi_apRp,equil_in.pzTi(ii,:),xypsi_apRp,method);end
-        if ~isempty(equil_in.pzni),xyzni(:,:,ii) = interp1(psi_apRp,equil_in.pzni(ii,:),xypsi_apRp,method);end
+    if isfield(equil_in,'pzni') && isfield(equil_in,'pzTi') && isfield(equil_in,'zZi') && isfield(equil_in,'pne') && isfield(equil_in,'pTe') 
+        if ~isempty(equil_in.pTe),xyTe = interp1(psi_apRp,equil_in.pTe,xypsi_apRp,method);end
+        if ~isempty(equil_in.pne),xyne = interp1(psi_apRp,equil_in.pne,xypsi_apRp,method);end
+        for ii = 1:length(equil_in.zZi),
+            if ~isempty(equil_in.pzTi),xyzTi(:,:,ii) = interp1(psi_apRp,equil_in.pzTi(ii,:),xypsi_apRp,method);end
+            if ~isempty(equil_in.pzni),xyzni(:,:,ii) = interp1(psi_apRp,equil_in.pzni(ii,:),xypsi_apRp,method);end
+        end
+        %
+        if ~isempty(equil_in.pTe),equil_out.Te_fit = interpequilxy_yp(method,xyTe,equil_in.x,equil_in.y);end
+        if ~isempty(equil_in.pne),equil_out.ne_fit = interpequilxy_yp(method,xyne,equil_in.x,equil_in.y);end
+        if ~isempty(equil_in.pzTi),equil_out.zTi_fit = interpequilxy_yp(method,xyzTi,equil_in.x,equil_in.y);end
+        if ~isempty(equil_in.pzni),equil_out.zni_fit = interpequilxy_yp(method,xyzni,equil_in.x,equil_in.y);end
     end
-    %
-    if ~isempty(equil_in.pTe),equil_out.Te_fit = interpequilxy_yp(method,xyTe,equil_in.x,equil_in.y);end
-    if ~isempty(equil_in.pne),equil_out.ne_fit = interpequilxy_yp(method,xyne,equil_in.x,equil_in.y);end
-    if ~isempty(equil_in.pzTi),equil_out.zTi_fit = interpequilxy_yp(method,xyzTi,equil_in.x,equil_in.y);end
-    if ~isempty(equil_in.pzni),equil_out.zni_fit = interpequilxy_yp(method,xyzni,equil_in.x,equil_in.y);end
     %
     xyF = interp1(psi_apRp,equil_in.pF,xypsi_apRp,method);
     [xydpsidy_apRp,xydpsidx_apRp] = gradient(xypsi_apRp,equil_in.x,equil_in.y);

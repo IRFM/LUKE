@@ -457,7 +457,9 @@ psi_apRp = reshape(equil.psi_apRp,[1,npsi]);
 psia_apRp = psi_apRp(npsi);%Poloidal flux at the edge
 psin = psi_apRp/psia_apRp;%Normalized poloidal flux
 %
-pZeff = sum(equil.pzni.*repmat((equil.zZi.^2)',[1,npsi]))./equil.pne;%Effective charge (a.u.)
+if isfield(equil,'pzni') && isfield(equil,'pzTi') && isfield(equil,'zZi') && isfield(equil,'pne') && isfield(equil,'pTe') 
+    pZeff = sum(equil.pzni.*repmat((equil.zZi.^2)',[1,npsi]))./equil.pne;%Effective charge (a.u.)
+end
 %
 if isnan(xpsin)
     xpsin = psin;
@@ -482,11 +484,13 @@ XBphi(isnan(XBphi)) = Inf;
 %
 xrho = Xx(:,1)'/ap;%Normalized radius on the horizontal LFS midplane
 %
-xTe = interp1(psin,equil.pTe,xpsin,method);
-xne = interp1(psin,equil.pne,xpsin,method);
-xzTi = interp1(psin,equil.pzTi.',xpsin,method).';
-xzni = interp1(psin,equil.pzni.',xpsin,method).';
-xZeff = interp1(psin,pZeff,xpsin,method);
+if isfield(equil,'pzni') && isfield(equil,'pzTi') && isfield(equil,'zZi') && isfield(equil,'pne') && isfield(equil,'pTe') 
+    xTe = interp1(psin,equil.pTe,xpsin,method);
+    xne = interp1(psin,equil.pne,xpsin,method);
+    xzTi = interp1(psin,equil.pzTi.',xpsin,method).';
+    xzni = interp1(psin,equil.pzni.',xpsin,method).';
+    xZeff = interp1(psin,pZeff,xpsin,method);
+end
 %
 XBT = abs(XBphi);%Toroidal B-field
 XBp = sqrt(XBx.^2 + XBy.^2);%Poloidal B-field
@@ -605,75 +609,82 @@ if abs(display_mode) >= 2,
     axis(ax,'equal');drawnow  
     print_jd(p_opt,['Fig_EQUIL_',equil.id,'_mag'])
     %
-    if flag_id,
-        figure('Name','Electron Temperature and Density Profiles'),clf
-        [ax] = graph1D2jd(prho,xTe,prho,xne/1e19,'\rho','T_e (keV)','n_e (10^{19} m^{-3})','',...
-            [0,1],NaN,NaN,'-','none','r',2,'--','none','b',2,20,0.9,0.5,0.7);
-        set(ax(1),'xtick',[0:0.2:1]);set(ax(2),'xtick',[0:0.2:1])
-    else
-        ax = axs(2);
-        leg = {'T_e (keV)','n_e (10^{19} m^{-3})','Location','NorthEast'};
-        [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],NaN,'-','none','r',2,font,ax);
-        [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'\rho','','',leg,[0,1],NaN,'--','none','b',2,font,ax);
-        set(ax,'xtick',[0:0.2:1]);
+    if isfield(equil,'pzni') && isfield(equil,'pzTi') && isfield(equil,'zZi') && isfield(equil,'pne') && isfield(equil,'pTe') 
+        if flag_id,
+            figure('Name','Electron Temperature and Density Profiles'),clf
+            [ax] = graph1D2jd(prho,xTe,prho,xne/1e19,'\rho','T_e (keV)','n_e (10^{19} m^{-3})','',...
+                [0,1],NaN,NaN,'-','none','r',2,'--','none','b',2,20,0.9,0.5,0.7);
+            set(ax(1),'xtick',[0:0.2:1]);set(ax(2),'xtick',[0:0.2:1])
+        else
+            ax = axs(2);
+            leg = {'T_e (keV)','n_e (10^{19} m^{-3})','Location','NorthEast'};
+            [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],NaN,'-','none','r',2,font,ax);
+            [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'\rho','','',leg,[0,1],NaN,'--','none','b',2,font,ax);
+            set(ax,'xtick',[0:0.2:1]);
+        end
+        %    
+        print_jd(p_opt,['Fig_EQUIL_',equil.id,'_tene'])
     end
-    %    
-    print_jd(p_opt,['Fig_EQUIL_',equil.id,'_tene'])
     %
     % displays the equilibrium profiles
     %
-    if flag_id, 
-        figure('Name','Equilibrium profile parameters'),clf
-        set(gcf,'units','inches','position',[0.5,1,10,6]);
-        set(gca,'position',[0,0,1,1]);
+    if isfield(equil,'pzni') && isfield(equil,'pzTi') && isfield(equil,'zZi') && isfield(equil,'pne') && isfield(equil,'pTe') 
         %
-        subplot('position',[1/12,0.5+1/16,5/24,5/16])
-          [ax] = graph1D_jd(prho,psin,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xpsin,0,0,'\rho','\psi_n','',NaN,[0,1],[-eps,1],'none','+','r',2);
-        subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
-          [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],[-eps,max(equil.pTe)],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xTe,0,0,'\rho','T_e (keV)',equil.id,NaN,[0,1],[-eps,max(equil.pTe)],'none','+','r',2);
-        subplot('position',[2/3+1/12,0.5+1/16,5/24,5/16])
-          [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'','','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xne/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'none','+','r',2);
-        subplot('position',[1/12,1/8,5/24,5/16])
-          [ax] = graph1D_jd(prho,equil.pzTi,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xzTi,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'none','+','r',2);
-        subplot('position',[1/3+1/12,1/8,5/24,5/16])
-          [ax] = graph1D_jd(prho,equil.pzni/1e19,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xzni/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'none','+','r',2);
-        subplot('position',[2/3+1/12,1/8,5/24,5/16])
-          [ax] = graph1D_jd(prho,pZeff,0,0,'','','',NaN,[0,1],[-eps,max(pZeff)],'-','none','b',0.5);
-          [ax] = graph1D_jd(xrho,xZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[-eps,max(pZeff)],'none','+','r',2);
-    else
-        ax = axs(3);
-        [ax] = graph1D_jd(prho,pZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[0,ceil(max(pZeff))],'-','none','r',2,font,ax,red,lspace,bspace);drawnow     
-        set(ax,'ytick',[0:ceil(max(pZeff))]);
-    end
-    %
-    if p_opt >= 0,
+        if flag_id, 
+            figure('Name','Equilibrium profile parameters'),clf
+            set(gcf,'units','inches','position',[0.5,1,10,6]);
+            set(gca,'position',[0,0,1,1]);
+            %
+            subplot('position',[1/12,0.5+1/16,5/24,5/16])
+              [ax] = graph1D_jd(prho,psin,0,0,'','','',NaN,[0,1],[-eps,1],'-','none','b',0.5);
+              [ax] = graph1D_jd(xrho,xpsin,0,0,'\rho','\psi_n','',NaN,[0,1],[-eps,1],'none','+','r',2);
+            subplot('position',[1/3+1/12,0.5+1/16,5/24,5/16])
+              [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],[-eps,max(equil.pTe)],'-','none','b',0.5);
+              [ax] = graph1D_jd(xrho,xTe,0,0,'\rho','T_e (keV)',equil.id,NaN,[0,1],[-eps,max(equil.pTe)],'none','+','r',2);
+            subplot('position',[2/3+1/12,0.5+1/16,5/24,5/16])
+              [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'','','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'-','none','b',0.5);
+              [ax] = graph1D_jd(xrho,xne/1e19,0,0,'\rho','n_e (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(equil.pne/1e19)],'none','+','r',2);
+            subplot('position',[1/12,1/8,5/24,5/16])
+              [ax] = graph1D_jd(prho,equil.pzTi,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'-','none','b',0.5);
+              [ax] = graph1D_jd(xrho,xzTi,0,0,'\rho','T_i (keV)','',NaN,[0,1],[-eps,max(max(equil.pzTi))],'none','+','r',2);
+            subplot('position',[1/3+1/12,1/8,5/24,5/16])
+              [ax] = graph1D_jd(prho,equil.pzni/1e19,0,0,'','','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'-','none','b',0.5);
+              [ax] = graph1D_jd(xrho,xzni/1e19,0,0,'\rho','n_i (10^{19} m^{-3})','',NaN,[0,1],[-eps,max(max(equil.pzni/1e19))],'none','+','r',2);
+            subplot('position',[2/3+1/12,1/8,5/24,5/16])
+              [ax] = graph1D_jd(prho,pZeff,0,0,'','','',NaN,[0,1],[-eps,max(pZeff)],'-','none','b',0.5);
+              [ax] = graph1D_jd(xrho,xZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[-eps,max(pZeff)],'none','+','r',2);
+        else
+            ax = axs(3);
+            [ax] = graph1D_jd(prho,pZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[0,ceil(max(pZeff))],'-','none','r',2,font,ax,red,lspace,bspace);drawnow     
+            set(ax,'ytick',[0:ceil(max(pZeff))]);
+        end
         %
-        axlist = get(gcf,'children');
-        figure('Name','Equilibrium profile > print'),clf
-        cpaxlist = copyobj(axlist,gcf);
-        %
-        set(gcf,'position',[0,0,600,900]),
-        set(cpaxlist(1),'units','normalized','position',[0.65,0.1,0.3,0.2])
-        set(cpaxlist(2),'units','normalized','position',[0.65,0.4,0.3,0.2])
-        set(cpaxlist(3),'units','normalized','position',[0.15,0.4,0.3,0.2])
-        set(cpaxlist(4),'units','normalized','position',[0.65,0.7,0.3,0.2])
-        set(cpaxlist(5),'units','normalized','position',[0.15,0.7,0.3,0.2])
-        set(cpaxlist(6),'units','normalized','position',[0.15,0.1,0.3,0.2])    
-        %
-        set(get(cpaxlist(5),'title'),'string','')
-        %
-        print_jd(p_opt,['Fig_EQUIL_',equil.id,'_prof']);	
-        %
+        if p_opt >= 0,
+            %
+            axlist = get(gcf,'children');
+            figure('Name','Equilibrium profile > print'),clf
+            cpaxlist = copyobj(axlist,gcf);
+            %
+            set(gcf,'position',[0,0,600,900]),
+            set(cpaxlist(1),'units','normalized','position',[0.65,0.1,0.3,0.2])
+            set(cpaxlist(2),'units','normalized','position',[0.65,0.4,0.3,0.2])
+            set(cpaxlist(3),'units','normalized','position',[0.15,0.4,0.3,0.2])
+            set(cpaxlist(4),'units','normalized','position',[0.65,0.7,0.3,0.2])
+            set(cpaxlist(5),'units','normalized','position',[0.15,0.7,0.3,0.2])
+            set(cpaxlist(6),'units','normalized','position',[0.15,0.1,0.3,0.2])    
+            %
+            set(get(cpaxlist(5),'title'),'string','')
+            %
+            print_jd(p_opt,['Fig_EQUIL_',equil.id,'_prof']);	
+            %
+        end
     end
 end
 %
-zZi = equil.zZi;
-zmi = equil.zmi;
+if isfield(equil,'pzni') && isfield(equil,'pzTi') && isfield(equil,'zZi') && isfield(equil,'pne') && isfield(equil,'pTe') 
+    zZi = equil.zZi;
+    zmi = equil.zmi;
+end
 %
 if abs(display_mode) >=1,
     disp('-------------------------------------------------------------------------------------------------------------------');
@@ -693,7 +704,7 @@ end
 %
 if flag_consistency && abs(display_mode) >= 2,
 	disp('Calculation of the equilibrium consistency (wait few seconds).');
-    equilconsistency_yp(equil,fitequil_yp(equil));
+    equil = equilconsistency_yp(equil,'',abs(display_mode));
 end
 %
 equilDKE.tokname = equil.id;
@@ -713,13 +724,17 @@ equilDKE.xrho = xrho;
 equilDKE.xrhoP = xrhoP;
 equilDKE.xrhoT = xrhoT;
 equilDKE.xrhoV = xrhoV;
-equilDKE.xTe = xTe;
-equilDKE.xne = xne;
-equilDKE.xzTi = xzTi;
-equilDKE.xzni = xzni;
-equilDKE.zZi = zZi;
-equilDKE.zmi = zmi;
-equilDKE.xZeff = xZeff;
+%
+if isfield(equil,'pzni') && isfield(equil,'pzTi') && isfield(equil,'zZi') && isfield(equil,'pne') && isfield(equil,'pTe') 
+    equilDKE.xTe = xTe;
+    equilDKE.xne = xne;
+    equilDKE.xzTi = xzTi;
+    equilDKE.xzni = xzni;
+    equilDKE.zZi = zZi;
+    equilDKE.zmi = zmi;
+    equilDKE.xZeff = xZeff;
+end
+%
 equilDKE.Rp = Rp;
 equilDKE.Zp = Zp;
 equilDKE.Bax = Bax;

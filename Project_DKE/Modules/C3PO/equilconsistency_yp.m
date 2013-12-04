@@ -121,11 +121,18 @@ jparz_fsav = zeros(prho,1);
 S = zeros(prho,1);
 jparz_ohm_fsav = zeros(prho,1);
 %
-pthermal_ion = sum(zTi.*zni,2);
-dpthermal_iondrho = sum(zTi.*dznidrho + dzTidrho.*zni,2);
-%
-pthermal = (Te.*ne  + pthermal_ion)*qe*1000;%T converted from eV to J
-gradpthermalsgradrho = (Te.*dnedrho + dTedrho.*ne + dpthermal_iondrho)*qe*1000;%T converted from eV to J
+if ~isempty(zni) && ~isempty(zTi) && ~isempty(Te) && ~isempty(ne')
+    pthermal_ion = sum(zTi.*zni,2);
+    dpthermal_iondrho = sum(zTi.*dznidrho + dzTidrho.*zni,2);
+    %
+    pthermal = (Te.*ne  + pthermal_ion)*qe*1000;%T converted from eV to J
+    gradpthermalsgradrho = (Te.*dnedrho + dTedrho.*ne + dpthermal_iondrho)*qe*1000;%T converted from eV to J
+else
+    pthermal_ion = NaN;
+    dpthermal_iondrho = NaN;
+    pthermal = NaN;
+    gradpthermalsgradrho = NaN;
+end   
 %
 a1 = drdrho.*BP./calpha + r.*dBPdrho./calpha - r.*BP.*dcalphadrho./calpha./calpha;
 a2 = dsalphadtheta./Upsilon./calpha - salpha.*dcalphadtheta./Upsilon./calpha./calpha - salpha.*dUpsilondtheta./calpha./Upsilon./Upsilon;
@@ -164,11 +171,19 @@ end
 %
 Surf_cyl = pi*equil_fit.ap*equil_fit.ap;
 %
-jparz_ohm = (Te*ones(1,mtheta)).^1.5;
-jparz_ohm_fsav = sum(jparz_ohm.*r./Upsilon.*Bz./B./BP./calpha.*dtheta,2);
-Ip_ohm = sum(sum(jparz_ohm.*r.*dtheta.*drho./gradrho./calpha));
-%
-jparz_ohm_fsav = abs(jparz_ohm_fsav*Ip/Ip_ohm./S).*sign(jparz_fsav);
+if ~isempty(zni) && ~isempty(zTi) && ~isempty(Te) && ~isempty(ne')
+    jparz_ohm = (Te*ones(1,mtheta)).^1.5;
+    jparz_ohm_fsav = sum(jparz_ohm.*r./Upsilon.*Bz./B./BP./calpha.*dtheta,2);
+    Ip_ohm = sum(sum(jparz_ohm.*r.*dtheta.*drho./gradrho./calpha));
+    %
+    jparz_ohm_fsav = abs(jparz_ohm_fsav*Ip/Ip_ohm./S).*sign(jparz_fsav);
+else
+    jparz_ohm = NaN;
+    jparz_ohm_fsav = NaN;
+    Ip_ohm = NaN;
+    %
+    jparz_ohm_fsav = NaN;
+end
 %
 L = sum(r(end,:).*dtheta./calpha(end,:));
 LB = sum(r(end,:).*dtheta.*BP(end,:)./calpha(end,:));
@@ -190,20 +205,33 @@ if display_mode,
     %
     figure('Name','Pressure gradient'),clf
     if isfield(equil,'eqdsk')
-        leg = {'Thermal','Kinetic','Magnetic','Location','SouthWest'};
+        if ~isnan(jparz_ohm_fsav),
+            leg = {'Thermal','Kinetic','Magnetic','Location','SouthWest'};
+        else
+            leg = {'Kinetic','Magnetic','Location','SouthWest'};
+        end
     else
-        leg = {'Thermal','Magnetic','Location','SouthWest'};
+        if ~isnan(jparz_ohm_fsav),
+            leg = {'Thermal','Magnetic','Location','SouthWest'};
+        else
+            leg = {'Magnetic','Location','SouthWest'};
+        end
     end
-    [ax] = graph1D_jd(rho,gradpthermalsgradrho(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
-
+    if ~isnan(jparz_ohm_fsav),
+        [ax] = graph1D_jd(rho,gradpthermalsgradrho(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+    end
     if isfield(equil,'eqdsk')
         [ax] = graph1D_jd(equil.eqdsk.prho,equil.eqdsk.gradpkinsgradrho,0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','g',1);
         [ax] = graph1D_jd(rho,gradpmagsgradrho,0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],NaN,NaN,NaN,'--','none','b',2);
-        [ax] = graph1D_jd(rho,gradpthermalsgradrho(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+        if ~isnan(jparz_ohm_fsav),
+            [ax] = graph1D_jd(rho,gradpthermalsgradrho(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+        end
         [ax] = graph1D_jd(equil.eqdsk.prho,equil.eqdsk.gradpkinsgradrho,0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','g',1);
     else
         [ax] = graph1D_jd(rho,gradpmagsgradrho,0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','b',2);drawnow
-        [ax] = graph1D_jd(rho,gradpthermalsgradrho(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','r',2);drawnow
+        if ~isnan(jparz_ohm_fsav),
+            [ax] = graph1D_jd(rho,gradpthermalsgradrho(:,1),0,0,'\rho','\nablap\cdot\psi/|\nabla\rho|',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','r',2);drawnow
+        end
     end
     print_jd(2,['Pressure_gradient_',equil.id]);
     %
@@ -238,7 +266,9 @@ if display_mode,
     figure('Name','Current density and li'),clf
     leg = {['<j_{||z}>, l_i=',num2str(li)],'<j_{||z (\Omega)}>','Location','NorthEast'};
     [ax] = graph1D_jd(rho,jparz_fsav/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],NaN,NaN,NaN,'-','none','b',2);drawnow
-    [ax] = graph1D_jd(rho,jparz_ohm_fsav/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],leg,NaN,NaN,'-','none','g',1);drawnow
+    if ~isnan(jparz_ohm_fsav),
+        [ax] = graph1D_jd(rho,jparz_ohm_fsav/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],leg,NaN,NaN,'-','none','g',1);drawnow
+    end
     for j = 1:6,
         [ax] = graph1D_jd(rho,abs(jparz_fsav_cyl(:,j)),0,0,'\rho','<j_{||z}> (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],leg,NaN,NaN,'--','none','r',1);drawnow
     end
