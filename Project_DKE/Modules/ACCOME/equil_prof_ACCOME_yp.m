@@ -34,6 +34,13 @@ method = 'spline';%'linear';
 % Reads profile T and n data
 %
 profname = [filename,'.params'];
+%
+if ~exist(profname,'file'),
+    disp(' ---> Unknown profile file.');
+    equil_prof = struct();
+    return;
+end
+%
 fid = fopen(profname);
 %
 npsi = fscanf(fid,'%d',1);
