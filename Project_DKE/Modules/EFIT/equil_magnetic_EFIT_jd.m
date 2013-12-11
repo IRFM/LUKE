@@ -38,7 +38,7 @@ nt = 65;
 %
 % Reads EFIT eqdsk data
 %
-[x,y,xypsin,psia,psin,pF,pp,pq,Rp,Zp] = eqdsk_jd(eqdsk,display_mode,p_opt,dispname,savename);
+[x,y,xypsin,psia,psin,pF,pp,pq,Rp,Zp,Ip,Rv,Zv,Bv,pdFdpsi,pdpdpsi] = eqdsk_jd(eqdsk,display_mode,p_opt,dispname,savename);
 %
 % Transforms on a (psi,theta) grid
 %
@@ -140,3 +140,10 @@ equil_magnetic.eqdsk.pp = pp;
 equil_magnetic.eqdsk.pq = pq;
 equil_magnetic.eqdsk.Rp = Rp;
 equil_magnetic.eqdsk.Zp = Zp;  
+equil_magnetic.eqdsk.Ip = Ip;  
+equil_magnetic.eqdsk.Rv = Rv;  
+equil_magnetic.eqdsk.Zv = Zv;  
+equil_magnetic.eqdsk.Bv = Bv;  
+equil_magnetic.eqdsk.pdFdpsi = pdFdpsi;  
+equil_magnetic.eqdsk.pdpdpsi = pdpdpsi;  
+%
