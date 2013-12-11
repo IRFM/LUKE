@@ -651,7 +651,7 @@ end
 s_opt = input_dke_yp('Do you want to check the equilibrium consistency [y/n]','n',{'y','n'});
 %
 if strcmp(s_opt,'y'),
-    equil = equilconsistency_yp(equil,fitequil_yp(equil),1);
+    equil = equilconsistency_yp(equil,'',1);
 end
 %
 equil.info.txt = {...
