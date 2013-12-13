@@ -110,14 +110,36 @@ else
     %     Zf0_interp = cell(1,nit);
     %     Zcurr = cell(1,nit);
     %     Znorm = cell(1,nit);
+    %     Zmom = cell(1,nit);
         XxRR_fsav = cell(1,nit);
         xMRR_flux = cell(1,nit);
         xMRR_tau = cell(1,nit);
+        xMRR_power_flux = cell(1,nit);
+        xMRR_power_tau = cell(1,nit);
         xRR_fsav = cell(1,nit);
         xne_norm_out = cell(1,nit);
         xTe_norm_out = cell(1,nit);
         xft_fsav = cell(1,nit);
         xfteff_fsav = cell(1,nit);
+        XXRintmask = cell(1,nit);
+        %
+    elseif dkeparam_out.timevol == 2,
+    %     ZP0 = cell(nit_rf,nit);
+    %     Zf0_interp = cell(nit_rf,nit);
+    %     Zcurr = cell(nit_rf,nit);
+    %     Znorm = cell(nit_rf,nit);
+    %     Zmom = cell(nit_rf,nit);
+        XxRR_fsav = cell(nit_rf,nit);
+        xMRR_flux = cell(nit_rf,nit);
+        xMRR_tau = cell(nit_rf,nit);
+        xMRR_power_flux = cell(nit_rf,nit);
+        xMRR_power_tau = cell(nit_rf,nit);
+        xRR_fsav = cell(nit_rf,nit);
+        xne_norm_out = cell(nit_rf,nit);
+        xTe_norm_out = cell(nit_rf,nit);
+        xft_fsav = cell(nit_rf,nit);
+        xfteff_fsav = cell(nit_rf,nit);
+        XXRintmask = cell(nit_rf,nit);
         %
     end
     %
@@ -148,27 +170,34 @@ else
     XXRintmask_init = ZXXF_c.p_ij + ZXXF_e_init.p_ij > 0;
     xnorm_ri_init = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*XXRintmask_init(:,:,gridDKE.rdke).*XXfin(:,:,gridDKE.rdke).*XXpn2,1),1).';
     %
-    % In frozen current mode, LUKE assumes that the current is frozen to its value calculated from
-    % the initial distribution and number of runaways (beyond pmax)
+    % In frozen current mode, LUKE assumes that the current is frozen to either :
+    %   - a prescribed scalar value (dkeparam_out.Itot_ohm) assuming a uniform electric field  
+    %   - a prescribed profile (dkeparam_out.Jtot_ohm)
+    %   - its original value calculated from the initial distribution and number of runaways (beyond pmax)
+    %       (It is assumed that the initial distribution function was calculated with the input value for the ohmic field)
     %
-    % It is assumed that the initial distribution function was calculated
-    % with the input value for the ohmic field 
-    %
-    if dkeparam_out.nit_ohm > 1,% frozen current mode
+    if dkeparam_out.nit_ohm > 1 && isnan(dkeparam_out.Itot_ohm),% frozen current mode with current profile specified
         %
-        % runaways beyond pmax are assumed to have a parallel velocity equal to the speed of light 
-        %
-        %
-        % initial runaway current
-        %
-        xcurr_re = (xq./xqbar).*(xqhat./xqtilde).*xnre_init/mksa.betath_ref;
-        %
-        % initial f0 current
-        %
-        xcurr_0 = 2*pi*(xq./xqbar).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXfin(:,:,gridDKE.rdke).*XXpn2.*XXpn.*XXmhu./XXgamma,1),1).';
-        %
-        xcurr_init = xcurr_re + xcurr_0;
-        %
+        if ~any(isnan(dkeparam_out.Jtot_ohm)),% prescribed current specified by dkeparam_out.Jtot_ohm on the grid dkeparam_out.rho_ohm
+            %
+            xcurr_init = interp1(dkeparam_out.rho_ohm,dkeparam_out.Jtot_ohm,equilDKE.xrho,'spline')/mksa.j_ref;%Normalized current
+            %        
+        else % prescribed current specified by xnre_init and XXfin
+            %
+            % runaways beyond pmax are assumed to have a parallel velocity equal to the speed of light 
+            %
+            %
+            % initial runaway current
+            %
+            xcurr_re = (xq./xqbar).*(xqhat./xqtilde).*xnre_init/mksa.betath_ref;
+            %
+            % initial f0 current
+            %
+            xcurr_0 = 2*pi*(xq./xqbar).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXfin(:,:,gridDKE.rdke).*XXpn2.*XXpn.*XXmhu./XXgamma,1),1).';
+            %
+            xcurr_init = xcurr_re + xcurr_0;
+            %
+        end
     end
     %
 end
@@ -301,6 +330,18 @@ for itn = itn0:nit,
                     %residue_rf{itn}(it_rf) = max([yresidue_rf_mod(:,it_rf);yresidue_rf_out(:,it_rf)]);
                     residue_rf{itn}(it_rf) = max(yresidue_rf_mod(:,it_rf));
                     %
+                    % Moments of the distribution function
+                    %
+                    if dkeparam_out.timevol == 2,
+                        [ZP0(it_rf,itn),Zf0_interp(it_rf,itn),Zcurr(it_rf,itn),Znorm(it_rf,itn),ZXXS,...(itn)
+                            XxRR_fsav{it_rf,itn},xMRR_flux{it_rf,itn},xMRR_tau{it_rf,itn},xMRR_power_flux{it_rf,itn},xMRR_power_tau{it_rf,itn},xRR_fsav{it_rf,itn},...
+                            xne_norm_out{it_rf,itn},xTe_norm_out{it_rf,itn},xft_fsav{it_rf,itn},xfteff_fsav{it_rf,itn},XXRintmask{it_rf,itn},Zmom(it_rf,itn)] = ...
+                            fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi{itn},waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
+                            XXf0{itn},XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
+                            ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
+                            ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor); %Calculate moments of the distribution function
+                    end
+                    %
                     if dkedisplay.display_mode >= 1,
                         figure(Fig_QLIter),
                         [ax] = graph1D_jd(1:it_rf,residue_rf{itn},0,1,'Iteration number','\DeltaP/P','Quasilinear convergence',NaN,[0,nit_rf],[dkeparam_out.prec_rf,1],'none','+','r',2);
@@ -428,20 +469,44 @@ for itn = itn0:nit,
             %
             xcurr = xcurr_re + xcurr_0;
             %
-            if it_ohm == 1,% first iteration without field
+            if isnan(dkeparam_out.Itot_ohm),% convergence on the current profile
                 %
-                xcurr_in = xcurr;
-                xepsi{itn} = xepsi_in;
-                %
-            elseif max(abs(xcurr - xcurr_init))/max(abs(xcurr_init)) <= dkeparam_out.tol_ohm,% *dkeparam_out.dtn,
-                if dkedisplay.display_mode >= 1,
-                    disp(['Convergence reached after ',num2str(it_ohm),' iterations at time step ',num2str(itn)])
+                if it_ohm == 1,% first iteration without electric field
+                    %
+                    xcurr_in = xcurr;
+                    xepsi{itn} = xepsi_in;% previous converged field is first guess for new time
+                    %
+                elseif max(abs(xcurr - xcurr_init))/max(abs(xcurr_init)) <= dkeparam_out.tol_ohm,% *dkeparam_out.dtn,
+                    if dkedisplay.display_mode >= 1,
+                        disp(['Convergence reached after ',num2str(it_ohm),' iterations at time step ',num2str(itn)])
+                    end
+                    break
+                else
+                    %
+                    xepsi{itn} = xepsi{itn}.*(1 - (xcurr - xcurr_init)./(xcurr - xcurr_in));
+                    xepsi{itn}(end) = xepsi{itn}(end - 1);% to avoid edge pb
+                    %
                 end
-                break
-            else
                 %
-                xepsi{itn} = xepsi{itn}.*(1 - (xcurr - xcurr_init)./(xcurr - xcurr_in));
-                xepsi{itn}(end) = xepsi{itn}(end - 1);% to avoid edge pb
+            else% convergence on the total current
+                %
+                I_tot = sum(xcurr.*equilDKE.xdA_dke*mksa.j_ref);% total driven current
+                %
+                if it_ohm == 1,% first iteration without electric field
+                    %
+                    I_tot_in = I_tot;
+                    xepsi{itn} = xepsi_in;% previous converged field is first guess for new time
+                    %
+                elseif abs(I_tot - dkeparam_out.Itot_ohm)/abs(dkeparam_out.Itot_ohm) <= dkeparam_out.tol_ohm,% *dkeparam_out.dtn,
+                    if dkedisplay.display_mode >= 1,
+                        disp(['Convergence reached after ',num2str(it_ohm),' iterations at time step ',num2str(itn)])
+                    end
+                    break
+                else
+                    %
+                    xepsi{itn} = xepsi{itn}*(1 - (I_tot - dkeparam_out.Itot_ohm)./(I_tot - I_tot_in));
+                    %
+                end                
                 %
             end
             %
@@ -456,6 +521,8 @@ for itn = itn0:nit,
             graph1D_jd(FPtime(itn),curr0{itn}(end),0,0,'FP time (\tau_c)','J (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
         elseif dkeparam_out.timevol == 1,
             graph1D_jd(FPtime(itn),Zcurr(itn).I_tot,0,0,'FP time (\tau_c)','I (MA)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
+        elseif dkeparam_out.timevol == 2,
+            graph1D_jd(FPtime(itn),Zcurr(it_rf,itn).I_tot,0,0,'FP time (\tau_c)','I (MA)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
         else
             graph1D_jd(FPtime(itn),max(abs(curr0{itn}(:,end))),0,0,'FP time (\tau_c)','max(|J|) (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
         end
