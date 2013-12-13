@@ -42,7 +42,7 @@ switch action
             %
             import = load([pathname,filename],'dkeparam','dkedisplay','equil','ohm','transpfaste','ripple','wavestructs');
             %
-            iluke_import
+            iluke_import;
             %
             clear import
             %
@@ -90,7 +90,7 @@ switch action
                     %
                     import = dataloaded.lukestructs;
                     %
-                    iluke_import
+                    iluke_import;
                     %
                     clear import
                     %
@@ -289,7 +289,7 @@ switch action
             %
             load([pathname,filename],'equil');
             %
-            lukeobj = iluke_equilstrings(lukeobj,equil);
+            [lukeobj,equil] = iluke_equilstrings(lukeobj,equil);
             %
             lukeobj.equil.text.string = filename;%[pathname,filename];
             %

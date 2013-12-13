@@ -11,7 +11,7 @@ if isfield(import,'equil') && ~isempty(import.equil)
     %
     equil = import.equil;
     status.equil = 1;
-    lukeobj = iluke_equilstrings(lukeobj,equil);
+    [lukeobj,equil] = iluke_equilstrings(lukeobj,equil);
     %
     action = 'equildisp';iluke_callbacks;
     %
