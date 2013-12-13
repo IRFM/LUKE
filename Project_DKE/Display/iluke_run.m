@@ -100,6 +100,7 @@ elseif isfield(lukestructs,'output'),
     opt.save = 0;
     opt.nr_dep = 0;
     opt.spec = 0;
+    opt.its_rf = 0;
     opt.peak = 'n';
     opt.wave = 'n';
     opt.rho = 't'; 
