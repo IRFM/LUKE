@@ -10,6 +10,16 @@ end
 %
 % This function processes LUKE data
 %
+if length(load_id) > 5 && strcmp(load_id(1:5),'PROC_'),
+    load_id = load_id(6:end);
+end
+if length(load_id) > 13 && strcmp(load_id(1:13),'LUKE_RESULTS_'),
+    load_id = load_id(14:end);
+end
+if length(load_id) > 10 && strcmp(load_id(1:10),'LUKE_DATA_'),
+    load_id = load_id(11:end);
+end
+%
 datafile1 = ['LUKE_RESULTS_',load_id,'.mat'];
 datafile2 = ['LUKE_DATA_',load_id,'.mat'];
 proc_datafile1 = ['PROC_',datafile1];
