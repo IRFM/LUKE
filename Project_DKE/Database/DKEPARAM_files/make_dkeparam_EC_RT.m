@@ -61,6 +61,22 @@ dkeparam.nk_abs = 1;%maximum number of iterations on a_sdNpar for full absorptio
 %
 dkeparam.Nfluct = 1;%-log(sqrt(0.01));%ratio of LUKE to FLUCT time to reset phases (-log(sqrt(tol)) where tol is the tolerance on decorrelation)
 %
+% Current prescription mode : (nit_ohm > 1)
+%
+% - first target is Itot_ohm
+% - if Itot_ohm == NaN, target is Jtot_ohm
+% - if Jtot_ohm == NaN, target is the current calculated from XXfinit
+%
+% Note : The use of Itot_ohm or Jtot_ohm makes sense only in the search of a time-asymptotic solution
+%
+dkeparam.nit_ohm = 1;% max number of iterations to converge on the current prescription (nit_ohm > 1). If nit_ohm == 1, frozen current mode is off
+dkeparam.tol_ohm = 1e-3;% tolerance for converge on the current prescription
+dkeparam.vloop_ohm = 1e-1;% [V] initial (uniform) vloop guess for convergence. used if ohm is empty or any(ohm.epsi == 0)
+dkeparam.Itot_ohm = NaN;% [MA] scalar target for generated current. In this mode, vloop is uniform
+%
+dkeparam.Jtot_ohm = NaN;% [MA/m^2] target current profile
+dkeparam.rho_ohm = NaN;% (LFS midplane x/a) corresponding rho grid
+%
 %dkeparam.w_mask = ;%%%%%%TODO%%%%%%%
 %dkeparam.rho0 = ;%%%%%%TODO%%%%%%%
 %dkeparam.seekparam.submode = ;%%%%%%TODO%%%%%%%
