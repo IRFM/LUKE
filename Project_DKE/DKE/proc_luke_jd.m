@@ -166,8 +166,8 @@ else
     nfrags = NaN;
 end
 %
-if isfield(dkeparam,'timevol') && dkeparam.timevol == 1,
-    timevol = 1;
+if isfield(dkeparam,'timevol'),
+    timevol = dkeparam.timevol;
 else
     timevol = 0;
 end
@@ -188,7 +188,7 @@ P_tot = P_rf + P_e;
 %
 % parallel momentum transfer rate
 %
-dpdt_rf = dke_out.Zmom.x_rf*mksa.dpdt_ref;
+xdpdt_rf = dke_out.Zmom.x_rf*mksa.dpdt_ref;
 %
 if isfield(dke_out,'residue_rf'),
     if iscell(dke_out.residue_rf),
@@ -402,6 +402,8 @@ if isfield(dke_out,'equil') && isfield(dke_out.equil,'icd'),% integrated modelli
     end
 end
 %
+I_tot_rf = [];
+%
 if timevol == 1,
     %
     FPtime = dke_out.FPtime;
@@ -419,6 +421,34 @@ if timevol == 1,
     tp_rf_2piRp = sum(tP_rf.*xtdV_2piRp_dke);
     tp_e_2piRp = sum(tP_e.*xtdV_2piRp_dke);
     tp_tot_2piRp = sum(tP_tot.*xtdV_2piRp_dke);
+    %
+elseif timevol == 2,
+    %
+    FPtime = dke_out.FPtime;
+    %
+    nit = length(FPtime);
+    %
+    for itn = 1:nit,
+        %
+        it_rf = length(dke_out.residue_rf{itn})
+        %
+        tJ_tot(:,itn) = Zcurr(it_rf,itn).x_0_fsav.'*mksa.j_ref*scocurr;
+        tP_rf(:,itn) = ZP0(it_rf,itn).x_rf_fsav*mksa.P_ref;
+        tP_e(:,itn) = ZP0(it_rf,itn).x_e_fsav.'*mksa.P_ref;
+        %
+    end
+    %
+    tP_tot = tP_rf + tP_e;
+    tI_tot = sum(tJ_tot.*repmat(equilDKE.xdA_dke.',[1,nit]));
+    %
+    xtdV_2piRp_dke = repmat(equilDKE.xdV_2piRp_dke.',[1,nit]);
+    %
+    tp_rf_2piRp = sum(tP_rf.*xtdV_2piRp_dke);
+    tp_e_2piRp = sum(tP_e.*xtdV_2piRp_dke);
+    tp_tot_2piRp = sum(tP_tot.*xtdV_2piRp_dke);
+    %
+    J_tot_rf = reshape([Zcurr(1:it_rf,end).x_0_fsav],[nr,it_rf])*mksa.j_ref*scocurr;
+    I_tot_rf = sum(J_tot_rf.*repmat(equilDKE.xdA_dke.',[1,it_rf]));
     %
 end
 %
@@ -838,6 +868,7 @@ if nr > 1,
     data_proc.radial.eta = eta;
     data_proc.radial.P_rf = P_rf;
     data_proc.radial.P_e = P_e;
+    data_proc.radial.xdpdt_rf = xdpdt_rf;    
     data_proc.radial.xp_rf_2piRp = xp_rf_2piRp;
     data_proc.radial.xnp_rf_2piRp = xnp_rf_2piRp;
     data_proc.radial.xdPdrho_rf_2piRp = xdPdrho_rf_2piRp;
@@ -847,7 +878,7 @@ if nr > 1,
     data_proc.radial.xp_rf_2piRp_lin = xp_rf_2piRp_lin;
     data_proc.radial.xdPdrho_rf_2piRp_lin = xdPdrho_rf_2piRp_lin;
     % TIME EVOLUTION
-    if timevol == 1,
+    if timevol >= 1,
         data_proc.timevol.FPtime = FPtime;
         data_proc.timevol.tJ_tot = tJ_tot;
         data_proc.timevol.tP_rf = tP_rf;
@@ -1227,10 +1258,29 @@ if nr > 1,
             xtick = 0:0.2:1;
             ylim = NaN;
             %
-            graph1D_jd(xrho,dpdt_rf,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,opt.font,gca,red,lspace,bspace);
+            graph1D_jd(xrho,xdpdt_rf,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker1,color2,width2,opt.font,gca,red,lspace,bspace);
             set(gca,'xtick',xtick);
             %
             print_jd(p_opt,[simul_id,'_Ptrans_profile'],'figures_LUKE');
+            %
+            % current convergence
+            %
+            if ~isempty(I_tot_rf),
+                %
+                figure(402),clf,set(4021,'Name',['Current convergence - ',dke_out.simul.id])
+                %
+                locxlab = 'RF iterations';
+                ylab = 'I (MA)';
+                tit = '';
+                locxlim = [0,it_rf + 1];
+                ylim = NaN;
+                %
+                graph1D_jd(1:it_rf,I_tot_rf,0,0,locxlab,ylab,tit,NaN,locxlim,ylim,style,marker1,color2,width2,opt.font,gca,red,lspace,bspace2);
+                %set(gca,'xtick',xtick);
+                %set(gca,'ylim',[0,max(get(gca,'ylim'))])
+                %
+                print_jd(p_opt,[simul_id,'_I_convergence'],'figures_LUKE');
+            end
             %
             % efficiency profile
             %
