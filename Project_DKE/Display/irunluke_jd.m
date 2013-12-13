@@ -1190,11 +1190,44 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     nr_dep = 40;
                     rho_disp = 0:0.1:1;
+                    %
+                    if length(w_list) == 1 && input_dke_yp('Do you want to split the wave into subwaves (n/y)','y',{'n','y'}) == 'y',
+                        %
+                        wave = waves{w_list};
+                        nrays = length(wave.rays);
+                        %
+                        if strcmp(wave.rayinit.launch.type,'LH') && input_dke_yp('Do you want to define the subwaves by initial lobe?','y',{'n','y'}) == 'y',
+                            raygroups = repmat({[]},[1,length(wave.rayinit.launch.bNpar0)]);
+                            for iray = 1:nrays,
+                                raygroups{find(wave.rays{iray}.rayinits{1}.yNpar0 == wave.rayinit.launch.bNpar0,1,'first')}(end+1) = iray;
+                            end
+                        else%if strcmp(wave.rayinit.launch.type,'LH') && input_dke_yp('Do you want to define the subwaves by initial vertical position?','y',{'n','y'}) == 'y',
+                            % TODO
+                        %else
+                            raygroups = input_dke_yp(['Please regroup the ',num2str(nrays),' rays in cells of arrays'],{1:nrays});
+                        end      
+                        %
+                        dispwaves = {};
+                        for iw = 1:length(raygroups),
+                            if ~isempty(raygroups{iw}),
+                                dispwaves{end+1} = wave;
+                                dispwaves{end}.id = [dispwaves{end}.id,'_',num2str(iw)];
+                                dispwaves{end}.rays = dispwaves{end}.rays(raygroups{iw});
+                            end
+                        end
+                        %
+                        w_list = input_dke_yp('List of subwaves to display',1:length(dispwaves),[1;length(dispwaves)],'');
+                        dispwaves = dispwaves(w_list);
+                        %
+                    else
+                        dispwaves = waves(w_list);
+                    end
+                    %
                     ymask = NaN;
                     %
-                    graph_wave_jd(equil,waves(w_list),nr_dep,g_opt,rho_disp,ymask,xvar);
+                    graph_wave_jd(equil,dispwaves,nr_dep,g_opt,rho_disp,ymask,xvar);
                     %
-                    clear rayinits nw
+                    clear rayinits nw wave dispwaves
                     %
                 else
                     disp('-----> The equilibrium structure does not exist.');
