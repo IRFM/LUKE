@@ -131,13 +131,15 @@ else
         lukeobj.angles.text.string = '';
         lukeobj.runc3pooptim.state = 'off';
         %
-        if any(imag(wavestructs{iw}.launch.bNpar0) ~= 0),
+        if any(imag(wavestructs{iw}.launch.bNpar0) ~= 0),            
+            nparstr = 'Nz0';
             npar0disp = imag(wavestructs{iw}.launch.bNpar0(find(wavestructs{iw}.launch.bPlhtot == max(wavestructs{iw}.launch.bPlhtot),1,'first')));
         else
+            nparstr = 'N//0';
             npar0disp = wavestructs{iw}.launch.bNpar0(find(wavestructs{iw}.launch.bPlhtot == max(wavestructs{iw}.launch.bPlhtot),1,'first'));
         end
         lukeobj.launch.text.string = [lukeobj.launch.text.string,...
-            ' ; N//0 : ',num2str(npar0disp,3),'',...
+            ' ; ',nparstr,' : ',num2str(npar0disp,3),'',...
             ' ; P = ',num2str(sum(wavestructs{iw}.launch.bPlhtot)/1e6,3),' MW'];
         %
         clear npar0disp
