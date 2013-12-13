@@ -1,14 +1,50 @@
-function fproc_varscan(basestr,file_str,shotnum,shotime,id_simul_o,locid_simul,locpath_simul,var,opt)
+function fproc_varscan(varargin)
 %
-if ischar(locpath_simul),
+if nargin == 3,
+    [simulist,var,opt] = varargin{:};
+elseif nargin == 9,
+    [basestr,file_str,shotnum,shotime,id_simul_o,locid_simul,locpath_simul,var,opt] = varargin{:};
+else
+    error('fproc_varscan takes either 3 or 9 arguments')
+end
+%
+if nargin == 9 && ischar(locpath_simul),
     path_simul = [basestr,filesep,shotnum,filesep,locpath_simul];
-elseif iscell(locpath_simul),
+elseif nargin == 9 && iscell(locpath_simul),
     path_simul = locpath_simul{1};
+else
+    path_simul = '';
 end
 %
 % select shot times if time scan
 %
-if iscell(shotime),
+if nargin == 3,%simulation files directly given
+    %
+    flag = false(1,length(simulist));
+    %
+    for ivar = 1:length(simulist),
+        if exist(simulist{ivar},'file'),
+            flag(ivar) = true;
+        end
+    end
+    %
+    simulist = simulist(flag);
+    nvar = length(simulist);
+    %
+    ivar_disp = [];
+    for ivar = 1:nvar,
+        var.liststr{ivar} = num2str(var.list(ivar));
+        if any(abs(var.list(ivar) - var.disp) < 10*eps),
+            ivar_disp = [ivar_disp,ivar];
+        end
+    end
+    %
+    clear basestr
+    %
+    figstr = 'fig';
+    figdir = './';
+    %
+elseif iscell(shotime),
     equilbase = file_str;
     id_simul_o = basestr;
     var.str = shotnum;
@@ -36,6 +72,10 @@ if iscell(shotime),
         var.lab = '<n>';
         var.unit = '\times 10^{19} m^{-3}';
     end
+    %
+    figstr = [equilbase,id_simul_o,'_',var.str,'_scan',locid_simul];
+    figdir = path_simul;
+    %
 else
     equilbase = [file_str,basestr,'_',shotnum,'_',shotime];
     nvar = length(var.list);
@@ -47,6 +87,9 @@ else
             ivar_disp = [ivar_disp,ivar];
         end
     end
+    %
+    figstr = [equilbase,id_simul_o,'_',var.str,'_scan',locid_simul];
+    figdir = path_simul;
     %
 end
 %
@@ -80,16 +123,25 @@ dNpar_luke = NaN(1,nvar);
 dxrho = cell(1,nvar);
 dxJ = cell(1,nvar);
 dxP = cell(1,nvar);
+dxdpdt_rf = cell(1,nvar);
 %
 drho_P_lin = NaN(1,nvar);
 dTe_lin = NaN(1,nvar);
 dne_lin = NaN(1,nvar);
 %
-datapath = path_simul;
+if ~isfield(opt,'enforce'),
+    opt.enforce = 0;
+end
 %
 for ivar = 1:nvar,
     %
-    id_simul = [equilbase,id_simul_o,'_',var.str,'_',var.liststr{ivar},locid_simul];%Simulation ID
+    if nargin == 3,
+        [datapath,id_simul] = fileparts(simulist{ivar});
+        datapath = [datapath,filesep];
+    else
+        datapath = path_simul;        
+        id_simul = [equilbase,id_simul_o,'_',var.str,'_',var.liststr{ivar},locid_simul];%Simulation ID
+    end
     %
     data_proc = fproc_data(datapath,id_simul,opt);
     %
@@ -101,12 +153,12 @@ for ivar = 1:nvar,
     dP_lin_rf(ivar) = data_proc.scalar.p_rf_2piRp_lin(1)*2*pi*data_proc.scalar.Rp;
     dP0_rf(ivar) = data_proc.scalar.p0_rf_2piRp(1)*2*pi*data_proc.scalar.Rp;
     %
-    if data_proc.simul.residue_rf > 1e-2
+    if ~opt.enforce && data_proc.simul.residue_rf > 1e-2
         disp(['Case ',var.lab,' = ',var.liststr{ivar},' : LUKE run did not converge or numerical instability developed.'])
-    elseif abs(dP_rf(ivar) - dP0_rf(ivar))/abs(dP0_rf(ivar)) > tol_P0,
+    elseif ~opt.enforce && abs(dP_rf(ivar) - dP0_rf(ivar))/abs(dP0_rf(ivar)) > tol_P0,
         disp(['Case ',var.lab,' = ',var.liststr{ivar},' : verify wave power absorption'])
         keyboard
-    elseif isfield(opt,'P0_min') && dP0_rf(ivar) < opt.P0_min,
+    elseif ~opt.enforce && isfield(opt,'P0_min') && dP0_rf(ivar) < opt.P0_min,
         disp(['Case ',var.lab,' = ',var.liststr{ivar},' : some rays did not enter the plasma.'])
     else
         %
@@ -120,39 +172,67 @@ for ivar = 1:nvar,
         if opt.rho == 'g',
             drho_J(ivar) = data_proc.scalar.jrhoG(1);
             ddrho_J(ivar) = data_proc.scalar.jdrhoG(1);
-            drho_P(ivar) = data_proc.wave.wrhoG(1);
-            drho_P_lin(ivar) = data_proc.wave.wrhoG_lin(1);
+            if isfield(data_proc.wave,'wrhoG') && ~isempty(data_proc.wave.wrhoG),
+                drho_P(ivar) = data_proc.wave.wrhoG(1);
+            end
+            if isfield(data_proc.wave,'wrhoG_lin') && ~isempty(data_proc.wave.wrhoG_lin),
+                drho_P_lin(ivar) = data_proc.wave.wrhoG_lin(1);
+            end
             dxrho{ivar} = data_proc.radial.xrhoG;
         elseif opt.rho == 'p',
             drho_J(ivar) = data_proc.scalar.jrhoP(1);
             ddrho_J(ivar) = data_proc.scalar.jdrhoP(1);
-            drho_P(ivar) = data_proc.wave.wrhoP(1);
-            drho_P_lin(ivar) = data_proc.wave.wrhoP_lin(1);
+            if isfield(data_proc.wave,'wrhoP') && ~isempty(data_proc.wave.wrhoP),
+                drho_P(ivar) = data_proc.wave.wrhoP(1);
+            end
+            if isfield(data_proc.wave,'wrhoP_lin') && ~isempty(data_proc.wave.wrhoP_lin),
+                drho_P_lin(ivar) = data_proc.wave.wrhoP_lin(1);
+            end
             dxrho{ivar} = data_proc.radial.xrhoP;
         elseif opt.rho == 't',
             drho_J(ivar) = data_proc.scalar.jrhoT(1);
             ddrho_J(ivar) = data_proc.scalar.jdrhoT(1);
-            drho_P(ivar) = data_proc.wave.wrhoT(1);
-            drho_P_lin(ivar) = data_proc.wave.wrhoT_lin(1);
+            if isfield(data_proc.wave,'wrhoT') && ~isempty(data_proc.wave.wrhoT),
+                drho_P(ivar) = data_proc.wave.wrhoT(1);
+            end
+            if isfield(data_proc.wave,'wrhoT_lin') && ~isempty(data_proc.wave.wrhoT_lin),
+                drho_P_lin(ivar) = data_proc.wave.wrhoT_lin(1);
+            end
             dxrho{ivar} = data_proc.radial.xrhoT;
         elseif opt.rho == 'v',
             drho_J(ivar) = data_proc.scalar.jrhoV(1);
-            ddrho_J(ivar) = data_proc.scalar.jdrhoV(1);
-            drho_P(ivar) = data_proc.wave.wrhoV(1);
-            drho_P_lin(ivar) = data_proc.wave.wrhoV_lin(1);
+            ddrho_J(ivar) = data_proc.scalar.wrhoV(1);
+            if isfield(data_proc.wave,'wrhoV') && ~isempty(data_proc.wave.wrhoV),
+                drho_P(ivar) = data_proc.wave.wrhoG(1);
+            end
+            if isfield(data_proc.wave,'wrhoV_lin') && ~isempty(data_proc.wave.wrhoV_lin),
+                drho_P_lin(ivar) = data_proc.wave.wrhoV_lin(1);
+            end
             dxrho{ivar} = data_proc.radial.xrhoV;
         else
             error('rho type not recognized')
         end
         %
-        dTe(ivar) = data_proc.wave.wTe(1);
-        dne(ivar) = data_proc.wave.wne(1);
+        if isfield(data_proc.wave,'wTe') && ~isempty(data_proc.wave.wTe),
+            dTe(ivar) = data_proc.wave.wTe(1);
+        end
+        if isfield(data_proc.wave,'wne') && ~isempty(data_proc.wave.wne),
+            dne(ivar) = data_proc.wave.wne(1);
+        end
         %
-        dTe_lin(ivar) = data_proc.wave.wTe_lin(1);
-        dne_lin(ivar) = data_proc.wave.wne_lin(1);
+        if isfield(data_proc.wave,'wTe_lin') && ~isempty(data_proc.wave.wTe_lin),
+            dTe_lin(ivar) = data_proc.wave.wTe_lin(1);
+        end
+        if isfield(data_proc.wave,'wne_lin') && ~isempty(data_proc.wave.wne_lin),
+            dne_lin(ivar) = data_proc.wave.wne_lin(1);
+        end
         %
         dxJ{ivar} = data_proc.radial.J_tot;
         dxP{ivar} = data_proc.radial.P_rf;
+        %
+        if isfield(data_proc.radial,'xdpdt_rf'),
+            dxdpdt_rf{ivar} = data_proc.radial.xdpdt_rf;
+        end
         %
         ds_c3po(ivar) = 0;
         ds_luke(ivar) = 0;
@@ -257,7 +337,7 @@ else
     xtick = var.list;
 end
 %
-tit0 = [basestr,' #',shotnum];
+tit0 = '';%[basestr,' #',shotnum];
 %
 figure(1),clf
 %
@@ -464,10 +544,7 @@ if ndisp >= 1,
         ylim = NaN;
     end
     %
-    xlab = {'r/a'};
-    xlim = [0,1];
     ylab = 'P (MW/m^3)';
-    tit = '';
     %
     for idisp = 1:ndisp-1,
         graph1D_jd(dxrho{ivar_disp(idisp)},dxP{ivar_disp(idisp)},0,0,'','','',NaN,xlim,ylim,style,markers{idisp},colors{idisp},width2,siz);
@@ -480,23 +557,44 @@ if ndisp >= 1,
         set(gca,'ytick',opt.ytick_xP);
     end
     %
+    figure(9),clf
+    %
+    if isfield(opt,'ylim_xP'),
+        ylim = opt.ylim_xP;
+    else
+        ylim = NaN;
+    end
+    %
+    ylab = 'dp_{RF}/dt (N/m^3)';
+    %
+    for idisp = 1:ndisp-1,
+        graph1D_jd(dxrho{ivar_disp(idisp)},dxdpdt_rf{ivar_disp(idisp)},0,0,'','','',NaN,xlim,ylim,style,markers{idisp},colors{idisp},width2,siz);
+    end
+    graph1D_jd(dxrho{ivar_disp(ndisp)},dxdpdt_rf{ivar_disp(ndisp)},0,0,xlab,ylab,tit,leg,xlim,ylim,style,markers{ndisp},colors{ndisp},width2,siz,gca,red,lspace2,bspace2);
+    if isfield(opt,'xtick_xdpdt_rf') && ~any(isnan(opt.xtick_xdpdt_rf)),
+        set(gca,'xtick',opt.xtick_xdpdt_rf);
+    end
+    if isfield(opt,'ytick_xdpdt_rf') && ~any(isnan(opt.ytick_xdpdt_rf)),
+        set(gca,'ytick',opt.ytick_xdpdt_rf);
+    end
+    %
 end
 %
 p_opt = input_dke_yp('Printing option (-1->2)',-1,-1:2);%option for printing
 % 
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_I_rho'],[datapath,filesep,'figures',filesep],1);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_I'],[datapath,filesep,'figures',filesep],101);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_rho'],[datapath,filesep,'figures',filesep],102);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_eta'],[datapath,filesep,'figures',filesep],2);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_ksi'],[datapath,filesep,'figures',filesep],3);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_P'],[datapath,filesep,'figures',filesep],4);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_s'],[datapath,filesep,'figures',filesep],5);
-print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_Npar'],[datapath,filesep,'figures',filesep],6);
+print_jd(p_opt,[figstr,'_I_rho'],[datapath,filesep,'figures',filesep],1);
+print_jd(p_opt,[figstr,'_I'],[figdir,filesep,'figures',filesep],101);
+print_jd(p_opt,[figstr,'_rho'],[figdir,filesep,'figures',filesep],102);
+print_jd(p_opt,[figstr,'_eta'],[figdir,filesep,'figures',filesep],2);
+print_jd(p_opt,[figstr,'_ksi'],[figdir,filesep,'figures',filesep],3);
+print_jd(p_opt,[figstr,'_P'],[figdir,filesep,'figures',filesep],4);
+print_jd(p_opt,[figstr,'_s'],[figdir,filesep,'figures',filesep],5);
+print_jd(p_opt,[figstr,'_Npar'],[figdir,filesep,'figures',filesep],6);
 %
 if ndisp >= 1,
     %
-    print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_xJ'],[datapath,filesep,'figures',filesep],7);
-    print_jd(p_opt,[equilbase,id_simul_o,'_',var.str,'_scan',locid_simul,'_xP'],[datapath,filesep,'figures',filesep],8);
+    print_jd(p_opt,[figstr,'_xJ'],[figdir,filesep,'figures',filesep],7);
+    print_jd(p_opt,[figstr,'_xP'],[figdir,filesep,'figures',filesep],8);
     %
 end
 % 
