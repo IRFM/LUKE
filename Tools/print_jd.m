@@ -22,6 +22,10 @@ end
 %
 if isnan(savedir),
     savedir = 'figures/';
+elseif isempty(savedir),
+    savedir = './';
+elseif ~strcmp(savedir(end),filesep),
+    savedir = [savedir,filesep];
 end
 if ~isnan(fignum),
 %     figure(fignum)
