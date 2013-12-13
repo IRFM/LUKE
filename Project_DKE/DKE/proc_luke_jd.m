@@ -16,6 +16,7 @@ if nargin < 7,
     opt.peakmode = 0;
     opt.rho = '';
     opt.spec = 1;
+    opt.its_rf = true;
     opt.blist = '';
 end
 if nargin < 6,
@@ -60,6 +61,7 @@ end
 Znorm = data.Znorm;
 Zcurr = data.Zcurr;
 ZP0 = data.ZP0;
+Zmom = data.dke_out.Zmom;
 dke_out = data.dke_out;
 radialDKE = data.radialDKE;
 equilDKE = data.equilDKE;
@@ -188,21 +190,23 @@ P_tot = P_rf + P_e;
 %
 % parallel momentum transfer rate
 %
-xdpdt_rf = dke_out.Zmom.x_rf*mksa.dpdt_ref;
+xdpdt_rf = Zmom(end).x_rf*mksa.dpdt_ref;
 %
 if isfield(dke_out,'residue_rf'),
     if iscell(dke_out.residue_rf),
-        residue_rf = dke_out.residue_rf{end}(end);
+        residue_rf = dke_out.residue_rf{end};
     else
-        residue_rf = dke_out.residue_rf(end);
+        residue_rf = dke_out.residue_rf;
     end
 else
     residue_rf = NaN;
 end
 %
+nit_rf = length(residue_rf);
+%
 if isfield(dke_out,'zS'),
     zS = dke_out.zS;
-    zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod{end};
+    zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod(:,end);
 else
     zS = '';
     zP_0_2piRp_mod = '';
@@ -351,7 +355,7 @@ if ir_display >= 0,
         disp(['MATLAB Version: ',dke_out.simul.matver]);
         disp(['MACHINE: ',dke_out.simul.hostname]);
     end
-    disp(['Final RF convergence parameter: ',num2str(residue_rf)]);
+    disp(['Final RF convergence parameter: ',num2str(residue_rf(end))]);
     disp(' ');
     %
 end
@@ -404,37 +408,32 @@ end
 %
 I_tot_rf = [];
 %
-if timevol == 1,
+if timevol >= 1,
     %
     FPtime = dke_out.FPtime;
     %
     nit = length(FPtime);
     %
-    tJ_tot = reshape([Zcurr(end-nit+1:end).x_0_fsav],[nr,nit])*mksa.j_ref*scocurr;
-    tP_rf = [ZP0(end-nit+1:end).x_rf_fsav]*mksa.P_ref;
-    tP_e = reshape([ZP0(end-nit+1:end).x_e_fsav],[nr,nit])*mksa.P_ref;
-    tP_tot = tP_rf + tP_e;
-    tI_tot = sum(tJ_tot.*repmat(equilDKE.xdA_dke.',[1,nit]));
-    %
-    xtdV_2piRp_dke = repmat(equilDKE.xdV_2piRp_dke.',[1,nit]);
-    %
-    tp_rf_2piRp = sum(tP_rf.*xtdV_2piRp_dke);
-    tp_e_2piRp = sum(tP_e.*xtdV_2piRp_dke);
-    tp_tot_2piRp = sum(tP_tot.*xtdV_2piRp_dke);
-    %
-elseif timevol == 2,
-    %
-    FPtime = dke_out.FPtime;
-    %
-    nit = length(FPtime);
-    %
-    for itn = 1:nit,
+    if timevol == 1,
         %
-        it_rf = length(dke_out.residue_rf{itn})
+        tJ_tot = reshape([Zcurr(end-nit+1:end).x_0_fsav],[nr,nit])*mksa.j_ref*scocurr;
+        tP_rf = [ZP0(end-nit+1:end).x_rf_fsav]*mksa.P_ref;
+        tP_e = reshape([ZP0(end-nit+1:end).x_e_fsav],[nr,nit])*mksa.P_ref;
         %
-        tJ_tot(:,itn) = Zcurr(it_rf,itn).x_0_fsav.'*mksa.j_ref*scocurr;
-        tP_rf(:,itn) = ZP0(it_rf,itn).x_rf_fsav*mksa.P_ref;
-        tP_e(:,itn) = ZP0(it_rf,itn).x_e_fsav.'*mksa.P_ref;
+    elseif timevol == 2,
+        %
+        for itn = 1:nit,
+            %
+            it_rf = length(dke_out.residue_rf{itn});
+            %
+            tJ_tot(:,itn) = Zcurr(it_rf,itn).x_0_fsav.'*mksa.j_ref*scocurr;
+            tP_rf(:,itn) = ZP0(it_rf,itn).x_rf_fsav*mksa.P_ref;
+            tP_e(:,itn) = ZP0(it_rf,itn).x_e_fsav.'*mksa.P_ref;
+            %
+        end
+        %
+        J_tot_rf = reshape([Zcurr(1:nit_rf,end).x_0_fsav],[nr,nit_rf])*mksa.j_ref*scocurr;
+        I_tot_rf = sum(J_tot_rf.*repmat(equilDKE.xdA_dke.',[1,nit_rf]));
         %
     end
     %
@@ -446,9 +445,6 @@ elseif timevol == 2,
     tp_rf_2piRp = sum(tP_rf.*xtdV_2piRp_dke);
     tp_e_2piRp = sum(tP_e.*xtdV_2piRp_dke);
     tp_tot_2piRp = sum(tP_tot.*xtdV_2piRp_dke);
-    %
-    J_tot_rf = reshape([Zcurr(1:it_rf,end).x_0_fsav],[nr,it_rf])*mksa.j_ref*scocurr;
-    I_tot_rf = sum(J_tot_rf.*repmat(equilDKE.xdA_dke.',[1,it_rf]));
     %
 end
 %
@@ -1267,19 +1263,38 @@ if nr > 1,
             %
             if ~isempty(I_tot_rf),
                 %
-                figure(402),clf,set(4021,'Name',['Current convergence - ',dke_out.simul.id])
+                figure(402),clf,set(402,'Name',['Current convergence - ',dke_out.simul.id])
                 %
                 locxlab = 'RF iterations';
                 ylab = 'I (MA)';
                 tit = '';
-                locxlim = [0,it_rf + 1];
+                locxlim = [0,nit_rf + 1];
                 ylim = NaN;
                 %
-                graph1D_jd(1:it_rf,I_tot_rf,0,0,locxlab,ylab,tit,NaN,locxlim,ylim,style,marker1,color2,width2,opt.font,gca,red,lspace,bspace2);
+                graph1D_jd(1:nit_rf,I_tot_rf,0,0,locxlab,ylab,tit,NaN,locxlim,ylim,style,marker1,color2,width2,opt.font,gca,red,lspace,bspace2);
+                %set(gca,'xtick',xtick);
+                set(gca,'ylim',[0,max(get(gca,'ylim'))])
+                %
+                print_jd(p_opt,[simul_id,'_I_convergence'],'figures_LUKE');
+            end
+            %
+            % rf convergence
+            %
+            if ~all(isnan(residue_rf)),
+                %
+                figure(403),clf,set(403,'Name',['RF convergence - ',dke_out.simul.id])
+                %
+                locxlab = 'RF iterations';
+                ylab = 'Conv. Param.';
+                tit = '';
+                locxlim = [0,nit_rf + 1];
+                ylim = NaN;
+                %
+                graph1D_jd(1:nit_rf,residue_rf,0,1,locxlab,ylab,tit,NaN,locxlim,ylim,style,marker1,color2,width2,opt.font,gca,red,lspace,bspace2);
                 %set(gca,'xtick',xtick);
                 %set(gca,'ylim',[0,max(get(gca,'ylim'))])
                 %
-                print_jd(p_opt,[simul_id,'_I_convergence'],'figures_LUKE');
+                print_jd(p_opt,[simul_id,'_RF_convergence'],'figures_LUKE');
             end
             %
             % efficiency profile
@@ -1338,6 +1353,57 @@ if nr > 1,
             end
         end
         %
+        if timevol == 2 && isfield(opt,'its_rf') && any(opt.its_rf),
+            %
+            if islogical(opt.its_rf),
+                its_rf = input_dke_yp('RF interation indices to compare',[1,nit_rf],[1;nit_rf]);
+            else
+                its_rf = opt.its_rf;
+            end
+            %
+            nits_rf = length(its_rf);
+            %
+            % current profile
+            %
+            figure(404),clf,set(404,'Name',['Current density profile it_rf comp - ',dke_out.simul.id])
+            %
+            ylab = 'J (MA/m^2)';
+            tit = '';
+            ylim = NaN;
+            leg = cell(1,nits_rf);
+            %
+            for iit_rf = 1:nits_rf-1,
+                graph1D_jd(xrho,Zcurr(its_rf(iit_rf),end).x_0_fsav*mksa.j_ref*scocurr,0,0,'','','',NaN,xlim,ylim,style,marker1,colors{iit_rf},width2,opt.font);
+                leg{iit_rf} = ['Iteration # ',num2str(its_rf(iit_rf))];
+            end
+            leg{nits_rf} = ['Iteration # ',num2str(its_rf(nits_rf))];
+            graph1D_jd(xrho,Zcurr(its_rf(nits_rf),end).x_0_fsav*mksa.j_ref*scocurr,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker1,colors{nits_rf},width2,opt.font,gca,red,lspace,bspace);
+            %
+            set(ax,'xtick',xtick);
+            set(ax,'ytickmode','auto')
+            %set(gca,'ylim',[0,max(get(gca,'ylim'))])
+            %
+            print_jd(p_opt,[simul_id,'_J_rfcomp_profile'],'figures_LUKE');
+            %
+            % power profile
+            %
+            figure(405),clf,set(404,'Name',['Power density profile it_rf comp - ',dke_out.simul.id])
+            %
+            ylab = 'P_{RF} (MW/m^3)';
+            %
+            for iit_rf = 1:nits_rf-1,
+                graph1D_jd(xrho,ZP0(its_rf(iit_rf),end).x_rf_fsav.'*mksa.P_ref,0,0,'','','',NaN,xlim,ylim,style,marker1,colors{iit_rf},width2,opt.font);
+            end
+            graph1D_jd(xrho,ZP0(its_rf(nits_rf),end).x_rf_fsav.'*mksa.P_ref,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker1,colors{nits_rf},width2,opt.font,gca,red,lspace,bspace);
+            %
+            set(ax,'xtick',xtick);
+            set(ax,'ytickmode','auto')
+            %set(gca,'ylim',[0,max(get(gca,'ylim'))])
+            %
+            print_jd(p_opt,[simul_id,'_P_rfcomp_profile'],'figures_LUKE');
+            %
+        end
+        %
         if opt.spec == 1
             disp('******** power absorption along specific rays ********');
             %
@@ -1372,7 +1438,7 @@ if nr > 1,
                 sP_c3po = ray.sP_2piRp_lin*2*pi*equilDKE.Rp;
                 %
                 sS_luke = zS{iy};
-                sP_luke = zP_0_2piRp_mod{iy}*2*pi*equilDKE.Rp;
+                sP_luke = zP_0_2piRp_mod{end}{iy}*2*pi*equilDKE.Rp;
                 %
                 leg = {'Ray-Tracing','Fokker-Planck'};
                 %    
@@ -1389,6 +1455,21 @@ if nr > 1,
                 %
                 graph1D_jd(sS_c3po,sP_c3po/1e3,0,0,xlab,ylab,figlab,NaN,xlim,ylim,style2,marker,color3,width2,opt.font,gca,red,lspace,bspace2);
                 graph1D_jd(sS_luke,sP_luke/1e3,0,0,'','','',leg,xlim,ylim,style,marker2,color2,width2,opt.font);
+                %
+                if timevol == 2 && isfield(opt,'its_rf') && any(opt.its_rf) && length(zP_0_2piRp_mod) == nit_rf;
+                    %
+                    figure(414+iy),clf,set(404,'Name',['Power it_rf comp - ',figlab])
+                    %
+                    for iit_rf = 1:nits_rf-1,
+                        graph1D_jd(sS_luke,zP_0_2piRp_mod{its_rf(iit_rf)}{iy}*2*pi*equilDKE.Rp/1e3,0,0,'','','',NaN,xlim,ylim,style,marker1,colors{iit_rf},width2,opt.font);
+                    end
+                    graph1D_jd(sS_luke,zP_0_2piRp_mod{its_rf(nits_rf)}{iy}*2*pi*equilDKE.Rp/1e3,0,0,xlab,ylab,tit,leg,xlim,ylim,style,marker1,colors{nits_rf},width2,opt.font,gca,red,lspace,bspace);
+                    %
+                    set(ax,'xtick',xtick);
+                    set(ax,'ytickmode','auto')
+                    %set(gca,'ylim',[0,max(get(gca,'ylim'))])
+                    %
+                end
                 %
             end
         %
