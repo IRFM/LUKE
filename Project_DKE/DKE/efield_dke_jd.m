@@ -29,10 +29,20 @@ else
   xrhoP = equilDKE.xrhoP;
   xrhoV = equilDKE.xrhoV;
 %
-  if dkeparam.nit_ohm > 1 && (isempty(ohm) || any(ohm.epsi == 0)),% in frozen current mode, a non-zero initial field is needed to calculate consistent field
-      ohm.id = 'jconst';
-      ohm.rho = equilDKE.xrho;
-      ohm.epsi = dkeparam.vloop_ohm*ones(size(ohm.rho))/(2*pi*equilDKE.Rp);%(V/m)
+  if dkeparam.nit_ohm > 1,% frozen current mode
+      if ~isnan(dkeparam.Itot_ohm),% uniform electric field enforced to reach scalar current target
+          ohm.id = 'Iconst';
+          ohm.rho = equilDKE.xrho;
+          if ~isfield(ohm,'epsi') || mean(ohm.epsi) == 0,
+              ohm.epsi = dkeparam.vloop_ohm*ones(size(ohm.rho))/(2*pi*equilDKE.Rp);%(V/m)
+          else
+              ohm.epsi = mean(ohm.epsi)*ones(size(ohm.rho));
+          end
+      elseif isempty(ohm) || any(ohm.epsi == 0),% a non-zero initial field is needed to calculate consistent field
+          ohm.id = 'jconst';
+          ohm.rho = equilDKE.xrho;
+          ohm.epsi = dkeparam.vloop_ohm*ones(size(ohm.rho))/(2*pi*equilDKE.Rp);%(V/m)
+      end
   end    
 %
   xepsi_fsav = zeros(size(equilDKE.xrho));

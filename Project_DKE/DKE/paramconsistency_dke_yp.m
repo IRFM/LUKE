@@ -49,6 +49,15 @@ elseif dkeparam.nit_ohm > 1,
     if ~isfield(dkeparam,'vloop_ohm'),
         dkeparam.vloop_ohm = 1e-1;
     end
+    if ~isfield(dkeparam,'Itot_ohm'),
+        dkeparam.Itot_ohm = NaN;
+    end
+    if ~isfield(dkeparam,'Jtot_ohm'),
+        dkeparam.Jtot_ohm = NaN;
+        dkeparam.rho_ohm = NaN;
+    elseif ~isfield(dkeparam,'rho_ohm') || any(size(dkeparam.Jtot_ohm) ~= size(dkeparam.rho_ohm)),
+        error('error on the current prescription (efield adjusment mode)')
+    end
 end
 % 
 if dkeparam.pnmax_S < 0,
