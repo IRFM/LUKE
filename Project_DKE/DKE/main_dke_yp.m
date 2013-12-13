@@ -101,7 +101,7 @@ else
     curr0 = cell(1,nit);
     residu_f = cell(1,nit);
     XXf0 = cell(1,nit);
-    zP_0_2piRp_mod_old = cell(1,nit);
+    zP_0_2piRp_mod_old = cell(nit_rf,nit);
     xnorm_re = cell(1,nit);
     xnorm_ri = cell(1,nit);
     %
@@ -310,20 +310,20 @@ for itn = itn0:nit,
                     %
                     [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke,xyP0_2piRp_mod_old,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
                     %
-                    zP_0_2piRp_mod_old{itn} = raypath_jd(xyP0_2piRp_mod_old,xyprop_dke,yb,radialDKE.r_dke);
+                    zP_0_2piRp_mod_old{it_rf,itn} = raypath_jd(xyP0_2piRp_mod_old,xyprop_dke,yb,radialDKE.r_dke);
                     zP_0_2piRp_mod = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
                     zP_0_2piRp_out = raypath_jd(xyP0_2piRp_out,xyprop_dke,yb,radialDKE.r_dke);
                     %
                     P_0_2piRp_in = sum(yP0_2piRp);
                     P_0_2piRp_out = 0;
                     for iray = 1:length(yb),
-                         P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp_mod_old{itn}{iray}(end);
+                         P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp_mod_old{it_rf,itn}{iray}(end);
                     end
                     %
                     abs_frac = (P_0_2piRp_in - P_0_2piRp_out)/P_0_2piRp_in;
                     %
                     for iray = 1:length(yb),
-                        yresidue_rf_mod(iray,it_rf) = max(abs(zP_0_2piRp_mod{iray} - zP_0_2piRp_mod_old{itn}{iray})./zP_0_2piRp_mod{iray}(1));
+                        yresidue_rf_mod(iray,it_rf) = max(abs(zP_0_2piRp_mod{iray} - zP_0_2piRp_mod_old{it_rf,itn}{iray})./zP_0_2piRp_mod{iray}(1));
                         yresidue_rf_out(iray,it_rf) = max(abs(zP_0_2piRp_mod{iray} - zP_0_2piRp_out{iray})./zP_0_2piRp_mod{iray}(1));
                     end
                     %
@@ -351,7 +351,7 @@ for itn = itn0:nit,
                         if dkedisplay.display_mode >= 2,
                             for iray = 1:length(zS),
                                 figure(Fig_Pray + iray - 1);clf
-                                [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod_old{itn}{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','--','none','r',2);
+                                [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod_old{it_rf,itn}{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','--','none','r',2);
                                 [ax] = graph1D_jd(zS{iray},zP_0_2piRp_mod{iray},0,0,'','P_{LH}/2\piR_p (W/m)',['QL convergence, ray #',int2str(iray)],NaN,'','','-','none','r',2);
                                 legend(['Iteration #',int2str(it_rf-1)],['Iteration #',int2str(it_rf)])
                                 title(['Ray #',num2str(iray),', residue: ',num2str(max([yresidue_rf_mod(iray,it_rf);yresidue_rf_out(iray,it_rf)]))])
