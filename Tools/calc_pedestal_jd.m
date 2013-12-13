@@ -1,4 +1,4 @@
-function calc_pedestal_jd(equil,diary_mode)
+function data_pedestal = calc_pedestal_jd(equil,diary_mode)
 %
 if nargin < 2,
     diary_mode = false;
@@ -89,37 +89,67 @@ if diary_mode
     print_jd(2,['Fig_',equil.id,'_pedestal_1'],NaN,1)
     print_jd(2,['Fig_',equil.id,'_pedestal_2'],NaN,2)
     %
-    diary(['PROFILES_EQUIL_',equil.id,'.txt']);
+    filename = ['PROFILES_EQUIL_',equil.id];
+    %
+    if exist([filename,'.txt'],'file'),
+        delete([filename,'.txt'])
+    end
+    diary([filename,'.txt']);
 end
+%
+data_pedestal.position.rho_G = prho_G(irho);
+data_pedestal.position.rho_P = prho_P(irho);
+%
+data_pedestal.bhoriz.edge_HFS = pB_HFS(end);
+data_pedestal.bhoriz.ped_HFS = pB_HFS(irho);
+data_pedestal.bhoriz.core = pB_LFS(1);
+data_pedestal.bhoriz.ped_LFS = pB_LFS(irho);
+data_pedestal.bhoriz.edge_LFS = pB_LFS(end);
+%
+data_pedestal.ne20.max = nemax/1e20;
+data_pedestal.ne20.core = pne(1)*nemax/1e20;
+data_pedestal.ne20.ped = pne(irho)*nemax/1e20;
+data_pedestal.ne20.edge = pne(end)*nemax/1e20;
+%
+data_pedestal.tekeV.max = Temax;
+data_pedestal.tekeV.core = pTe(1)*Temax;
+data_pedestal.tekeV.ped = pTe(irho)*Temax;
+data_pedestal.tekeV.edge = pTe(end)*Temax;
 %
 disp('-------------------------')
 disp('   PROFILES PARAMETERS   ')
 disp('-------------------------')
 disp(' ');
 disp('Pedestal : ');
-disp(['  - rho G : ',num2str(prho_G(irho))]);
-disp(['  - rho P : ',num2str(prho_P(irho))]);
+disp(['  - rho G : ',num2str(data_pedestal.position.rho_G)]);
+disp(['  - rho P : ',num2str(data_pedestal.position.rho_P)]);
 disp(' ');
 disp('Density (ne20) : ')
-disp(['  - Maximum  : ',num2str(nemax/1e20)]);
-disp(['  - Central  : ',num2str(pne(1)*nemax/1e20)]);
-disp(['  - Pedestal : ',num2str(pne(irho)*nemax/1e20)]);
+disp(['  - Maximum  : ',num2str(data_pedestal.ne20.max)]);
+disp(['  - Central  : ',num2str(data_pedestal.ne20.core)]);
+disp(['  - Pedestal : ',num2str(data_pedestal.ne20.ped)]);
+disp(['  - Edge     : ',num2str(data_pedestal.ne20.edge)]);
 disp(' ');
 disp('Temperature (keV) : ')
-disp(['  - Maximum  : ',num2str(Temax)]);
-disp(['  - Central  : ',num2str(pTe(1)*Temax)]);
-disp(['  - Pedestal : ',num2str(pTe(irho)*Temax)]);
+disp(['  - Maximum  : ',num2str(data_pedestal.tekeV.max)]);
+disp(['  - Central  : ',num2str(data_pedestal.tekeV.core)]);
+disp(['  - Pedestal : ',num2str(data_pedestal.tekeV.ped)]);
+disp(['  - Edge     : ',num2str(data_pedestal.tekeV.edge)]);
 disp(' ');
 disp('Magnetic field (T) : ')
-disp(['  - Central        : ',num2str(pB_LFS(1))]);
-disp(['  - Pedestal (LFS) : ',num2str(pB_LFS(irho))]);
-disp(['  - Pedestal (HFS) : ',num2str(pB_HFS(irho))]);
+disp(['  - Edge     (HFS) : ',num2str(data_pedestal.bhoriz.edge_HFS)]);
+disp(['  - Pedestal (HFS) : ',num2str(data_pedestal.bhoriz.ped_HFS)]);
+disp(['  - Central        : ',num2str(data_pedestal.bhoriz.core)]);
+disp(['  - Pedestal (LFS) : ',num2str(data_pedestal.bhoriz.ped_LFS)]);
+disp(['  - Edge     (LFS) : ',num2str(data_pedestal.bhoriz.edge_LFS)]);
 %
 disp(' ');
 disp('-------------------------')
 %
 if diary_mode
     diary off
+    %
+    save([filename,'.mat'],'data_pedestal');
 end
 
 
