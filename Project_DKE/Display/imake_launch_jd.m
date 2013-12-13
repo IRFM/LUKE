@@ -86,11 +86,87 @@ if ~isempty(external),% import wave data from external structure
             spectrum.dP_nz = external.antenna.dP_nz;
             spectrum.nz = external.antenna.nz;
             spectrum.ny = external.antenna.ny;
+            %
+            opt_module = iselect_jd({'full antenna','upper module','lower module'},'This ALOHA spectrum corresponds to :',opt_gui,select.style,1);
+            %
+            if opt_module > 1,
+                pfac = 1/2;
+                pstr = ' (half antenna)';
+            else
+                pfac = 1;
+                pstr = '';
+            end                
+            %
+            val(1) = sum(external.antenna.dP_nz*external.antenna.dnz);
+            s{1} = ['Power from ALOHA spectrum',pstr,'        : PLH = ',num2str(val(1)/1e6),' MW'];
+            %
+            if isfield(equil,'shotnum') && ~isempty(str2double(equil.shotnum)) && isfield(equil,'shotime') && ~isempty(str2double(equil.shotime)),% shot number and time info
+                %
+                filename = [workdir,'GPHYB_',equil.shotnum,'.mat'];
+                %
+                if exist(filename,'file'),%power from file
+                    %
+                    load(filename,'tplh','tbase')
+                    %    
+                    xplh = pfac*1e6*interp1(tbase(:,1),tplh,str2double(equil.shotime));
+                    %
+                    xplh = xplh(xplh > 0);
+                    %
+                    if length(xplh) == 1,
+                        val(end+1) = xplh;
+                        s{end+1} = ['Power from GPHYB_* file',pstr,'          : PLH = ',num2str(xplh/1e6),' MW'];
+                    elseif length(xplh) == 2,
+                        val(end+1:end+2) = xplh;
+                        s{end+1} = ['Power from GPHYB_* file, ant. #1',pstr,' : PLH = ',num2str(xplh(1)/1e6),' MW'];
+                        s{end+1} = ['Power from GPHYB_* file, ant. #2',pstr,' : PLH = ',num2str(xplh(2)/1e6),' MW'];
+                    end
+                    %
+                end
+                %
+                if exist('tsbase','file') == 3% power from TS database
+                    %
+                    [tplh,tbase] = tsbase(str2double(equil.shotnum),'GPHYB');
+                    %
+                    xplh = pfac*1e6*interp1(tbase(:,1),tplh(:,1:2),str2double(equil.shotime));
+                    %
+                    xplh = xplh(xplh > 0);
+                    %
+                    if length(xplh) == 1,
+                        val(end+1) = xplh;
+                        s{end+1} = ['Power from TSBASE',pstr,'                : PLH = ',num2str(xplh/1e6),' MW'];
+                    elseif length(xplh) == 2,
+                        val(end+1:end+2) = xplh;
+                        s{end+1} = ['Power from TSBASE, ant. #1',pstr,'       : PLH = ',num2str(xplh(1)/1e6),' MW'];
+                        s{end+1} = ['Power from TSBASE, ant. #2',pstr,'       : PLH = ',num2str(xplh(2)/1e6),' MW'];
+                    end
+                    %
+                end
+                %
+            end
+            %
+            s{end+1} = 'Specify power manually';
             %   
+            locstyle = select.style;
+            locstyle.textwidth = 600;
+            %
+            opt_Plhtot = iselect_jd(s,['LH power associated with this spectrum',pstr,' :'],opt_gui,locstyle,length(s)-1);
+            %
+            if opt_Plhtot < length(s),
+                spectrum.Plhtot = val(opt_Plhtot);
+            else
+                spectrum.Plhtot = 1e6*iselect_jd({},['Specify LH power',pstr,' (MW) :'],opt_gui,select.style,val(1)/1e6);
+            end
+            %
             data = struct;
             data.spectrum = spectrum;
             %
             launchs{1} = imake_launch_LH_jd(basestr,signs,data,opt_gui,select);
+            %
+            if opt_module == 2,
+                launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 >= 0);
+            elseif opt_module == 3,
+                launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 <= 0);
+            end                
         %
         % Case of structure external
         %
