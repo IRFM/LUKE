@@ -87,7 +87,7 @@ dkepath.JD211098(1).remote(5) = remote_CRPP_PLEIADES2('torque','joan','JD211098'
 %
 dkepath.JD211098(1).remote(6) = remote_ASIPP_SHENMA('torque','joan','JD211098');
 %
-%------------------------------------ Profile number 1, YP105119 Decker ------------------------------------
+%------------------------------------ Profile number 1, YP105119 Peysson ------------------------------------
 %
 dkepath.YP105119(1).luke_root = ['/home/YP105119/',luke_ref,'/'];
 dkepath.YP105119(1).local_root = '/home/JD211098/Packages/andromede/';
@@ -174,7 +174,51 @@ dkepath.EN232106(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','emelie','EN2
 % saturne (sun)
 %
 dkepath.EN232106(1).remote(4) = remote_CEA_SATURNE('sun','yves','EN232106');
-
-
+%
+%------------------------------------ Profile number 1, CRONOS ------------------------------------
+%
+dkepath.CRONOS(1).luke_root = ['/home/YP105119/',luke_ref,'/'];
+dkepath.CRONOS(1).local_root = '/home/JD211098/Packages/andromede/';
+dkepath.CRONOS(1).temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+dkepath.CRONOS(1).mex710 = [dkepath.CRONOS(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB710/'];
+dkepath.CRONOS(1).mex800 = [dkepath.CRONOS(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB800/'];
+%
+dkepath.CRONOS(1).compiler_opt = dkepath.JD211098(1).compiler_opt;
+%
+%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.CRONOS(1).MUMPS.mex710 = [dkepath.CRONOS(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.CRONOS(1).MUMPS.mex800 = [dkepath.CRONOS(1).local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
+%
+% LUKE documentation
+%
+dkepath.CRONOS(1).graphviz.env = '/home/YP105119/bin/';% Graphviz environment variable
+dkepath.CRONOS(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.CRONOS(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+%
+%--------------------------- Remote computing -----------------------------
+%
+% local
+%
+dkepath.CRONOS(1).remote(1) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','yves','YP105119');
+dkepath.CRONOS(1).remote(1).host = '';% empty for local host
+dkepath.CRONOS(1).remote(1).luke_root = dkepath.CRONOS(1).luke_root;
+%
+% macproyves (condor)
+%
+dkepath.CRONOS(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','yves','YP105119');
+%
+% macproyves (xgrid)
+%
+dkepath.CRONOS(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','yves','YP105119');
+%
+% saturne (sun)
+%
+dkepath.CRONOS(1).remote(4) = remote_CEA_SATURNE('sun','yves','YP105119');
+%
+% shenma (torque)
+%
+dkepath.CRONOS(1).remote(5) = remote_ASIPP_SHENMA('torque','yves','YP105119');
 
 
