@@ -40,7 +40,9 @@ remote.pbs.yves.matver.mat710.root = '/Applications/Matlab_2010A/bin/';
 remote.pbs.yves.matver.mat710.prefdir = '/home/sccp/gsem/peysson/.matlab/R2010a';
 remote.pbs.yves.matver.mat712.root = '/Applications/Matlab_2011A/bin/';
 remote.pbs.yves.matver.mat712.prefdir = '/home/sccp/gsem/peysson/.matlab/R2011a';
-remote.pbs.yves.matver.matdef = remote.pbs.yves.matver.mat710;%default matlab on remote machine
+remote.pbs.yves.matver.mat800.root = '/Applications/Matlab_2012B/bin/';
+remote.pbs.yves.matver.mat800.prefdir = '/home/sccp/gsem/peysson/.matlab/R2012b';
+remote.pbs.yves.matver.matdef = remote.pbs.yves.matver.mat800;%default matlab on remote machine
 remote.pbs.yves.luke_root = '/home/sccp/gsem/peysson/LUKE/';
 remote.pbs.yves.users.remoteuser = 'YP105119';
 %

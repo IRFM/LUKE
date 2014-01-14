@@ -28,6 +28,7 @@ dkepath.computer = computer;%machine type and supported OS
 dkepath.path_profile.YP105119 = 1;
 dkepath.path_profile.JD211098 = 1;
 dkepath.path_profile.YB109156 = 1;
+dkepath.path_profile.EN232106 = 1;
 %
 % Selected user profile for unlisted users
 %
@@ -89,31 +90,10 @@ dkepath.YP105119.remote(1) = remote_CEA_CEPHEE('pbs','yves','YP105119');
 dkepath.YP105119.remote(1).host = '';% empty for local host
 dkepath.YP105119.remote(1).luke_root = dkepath.YP105119.luke_root;
 %
-% macproyves (condor)
+dkepath.YP105119.remote(2) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','yves','yves');
 %
-dkepath.YP105119.remote(2) = remote_macpro_YVES_PEYSSON('condor','yves','YP105119');
-%
-% macproyves (xgrid)
-%
-dkepath.YP105119.remote(3) = remote_macpro_YVES_PEYSSON('xgrid','yves','YP105119');
-%
-% cadts-0412 (Timothee's computer). Shares the same filesystem as cephee
-%
-dkepath.YP105119.remote(4) = remote_CEA_TIMDESKTOP('torque','yves','YP105119');
-dkepath.YP105119.remote(4).luke_root = dkepath.YP105119.luke_root;
-%
-% andromede. Shares the same filesystem as cephee
-%
-dkepath.YP105119.remote(5) = remote_CEA_ANDROMEDE('pbs','yves','YP105119');
-dkepath.YP105119.remote(5).luke_root = dkepath.YP105119.luke_root;
-%
-%
-% intra integrated pbspro system (pleione, merope, nashira, newpegase, nunki cluster). Shares the same filesystem as cephee
-%
-dkepath.YP105119.remote(5) = remote_CEA_PLEIONE('pbs','yves','JD211098');
-dkepath.YP105119.remote(5).luke_root = dkepath.YP105119.luke_root;
-%
-dkepath.YP105119.remote(6) = remote_CEA_SATURNE('sun','yves','YP105119');
+dkepath.YP105119.remote(3) = remote_macpro_YVES_PEYSSON('condor','yves','YP105119');%condor
+dkepath.YP105119.remote(4) = remote_macpro_YVES_PEYSSON('xgrid','yves','YP105119');%xgrid
 %
 %-------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
