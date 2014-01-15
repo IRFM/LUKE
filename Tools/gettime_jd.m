@@ -26,5 +26,5 @@ for ifile = 1:length(files),
 end
 %
 if test,
-    error('The source file was not found')
+    error(['The source file ',filename,' was not found in ',filepath])
 end
