@@ -142,7 +142,7 @@ if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.s
 end
 %
 if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.helmex77.source > filetime.helmex77.mex)),
-    eval(['mex ',fopts,' ',sourcepath.helmex,'helmex77.F ',helmex]);
+    eval(['mex ',helmex,' ',sourcepath.helmex,'helmex77.F ',helmex]);
     disp(['The helmex77.',mexext,' mexfile has been compiled.'])
 end
 %
