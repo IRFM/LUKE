@@ -8,7 +8,7 @@ C
 C--------------------------------------------------------------
 C Interface mex-file (matlab 5) pour le code HELENA
 C F. Imbeaux - Aout 2000
-C mise à jour pour plateforme quelconque 32 ou 64 bits Y. Peysson 08/04/2009
+C mise  jour pour plateforme quelconque 32 ou 64 bits Y. Peysson 08/04/2009
 C
 C Appel depuis Matlab :
 C [C2,C3,rho2m,R,Z,rho,Vp,drhoor,qpsi,psipout,ftra,Fdia,psiT,B2,invB2,Sp, ...
@@ -105,12 +105,15 @@ C BZSPOT : BZ on (psi,theta) grid
 C
 C Compilation : mex helmex77.f -lcxml
 C--------------------------------------------------------------
-
+ 
       IMPLICIT REAL*8 (A-H,O-Z)
       IMPLICIT integer (I-N)
 
-      integer   m,n,sizeIN,sizeOUT,mxGetM,mxGetN,mRext,nRext
-      integer   sizeR,NBFR,MBMAX,N_GEM,KKLDA,MAXNODE,NRMMAX,NPMMAX
+      mwSize   m,n,sizeIN,sizeOUT
+      mwSize, external ::   mxGetM,mxGetN
+      mwSize    sizeR,mRext,nRext
+      integer   KKLDA,MAXNODE,NRMMAX,NPMMAX
+      mwSize   NBFR,NBFRM, NBFRN, MBMAX,N_GEM
 
 C-----------------------------------------------------------
 C Taille des tableaux de sortie. Cette liste de parametres
@@ -190,7 +193,8 @@ C-----------------------------------------------------------------------
 C DECLARATION DES VARIABLES
 c pointeurs mex   
       mwPointer plhs(*), prhs(*)
-      integer nlhs, nrhs
+      
+      integer nlhs,nrhs
       mwPointer mxGetPr, mxCreateDoubleMatrix
 c pointeurs et tailles      
       mwPointer VP_pr,C2_pr,C3_pr,R2M_pr,RHO_pr
@@ -210,12 +214,12 @@ c pointeurs et tailles
       mwPointer GEM11_pr, GEM12_pr, GEM33_pr      
       mwPointer RSPOT_pr, ZSPOT_pr, BRSPOT_pr, BZSPOT_pr
 C
-      integer mat1,mat2,mat3,mat4,mat101
-      parameter (mat1=1)
-      parameter (mat2=2)
-      parameter (mat3=3)
-      parameter (mat4=4)
-      parameter (mat101=101)
+      mwSize mat1,mat2,mat3,mat4,mat101
+C      parameter (mat1=1)
+C      parameter (mat2=2)
+C      parameter (mat3=3)
+C      parameter (mat4=4)
+C      parameter (mat101=101)
 c variables de sortie
       real*8 VP(NRMMAX),C2(NRMMAX),C3(NRMMAX),R2M(NRMMAX),RHO(NRMMAX)
       real*8 FTRA(NRMMAX),FDIA(NRMMAX),INVB2(NRMMAX)
@@ -240,6 +244,13 @@ c taille d'autres tableaux
 C---------------------------------------------------------------------
 C GESTION DES ENTREES     
 C taille des tableaux (nb de points radiaux)
+
+      mat1=1
+      mat2=2
+      mat3=3
+      mat4=4
+      mat101=101
+
       m = mxGetM(prhs(1))
       n = mxGetN(prhs(1))
       sizeIN = m*n
@@ -316,6 +327,8 @@ C        petit rayon (m)
         call mxCopyPtrToReal8(Zext_pr,Zext,sizeR)
         NBext = sizeR
       ENDIF
+       
+      if (.false.) call mexprintf("Hello A1")
       
 C init (pour partir d'un equilibre deja specifie)
       init_pr = mxGetPr(prhs(14))
@@ -350,11 +363,15 @@ C        KKBIG
           xrsig(2) = 99.0
       ENDIF  
 
+      if (.false.) call mexprintf("Hello A1.5\n")
 C entree pour recacul exact de helena
       IEXACT = 1
       IF (nrhs.GE.21) THEN
+      if (.false.) call mexprintf("Hello A1.53\n")
           DPR_pr = mxGetPr(prhs(20))
+      if (.false.) call mexprintf("Hello A1.54\n")
           call mxCopyPtrToReal8(DPR_pr,DPR,mat101)
+      if (.false.) call mexprintf("Hello A1.55\n")
           FR_pr = mxGetPr(prhs(21))
           DO I = 1,2*MBMAX+2
             FR(I) = 0.D0
@@ -362,11 +379,13 @@ C entree pour recacul exact de helena
           NBFRM = mxGetM(prhs(21))
           NBFRN = mxGetN(prhs(21))
           NBFR = NBFRN * NBFRM
+      if (.false.) call mexprintf("Hello A1.6\n")
           call mxCopyPtrToReal8(FR_pr,FR,NBFR)
 C ajouter pour cette option
 C         B
           b_pr = mxGetPr(prhs(15))
           call mxCopyPtrToReal8(b_pr,B,mat1)
+      if (.false.) call mexprintf("Hello A1.8\n")
 C         DF2
           df2_pr = mxGetPr(prhs(16))
           call mxCopyPtrToReal8(df2_pr,DF2,mat101)
@@ -375,8 +394,9 @@ C         DF2
       ENDIF      
 
 c      write(*,*) 'Avant Helena',IEXACT
+      if (.false.) call mexprintf("Hello A3")
     
-      CALL HELENA(PSIPIN,PTOT,Jin,sizeIN,INI,amin,R0,B0,Ip,
+      CALL HELENA(PSIPIN,PTOT,Jin,int(sizeIN),INI,amin,R0,B0,Ip,
      >            C2,C3,R2M,RR,ZZ,RHO,VP,DRHOOR,QPSI,PSIPOUT,FTRA,FDIA,
      >            PSIT,B2,INVB2,SP,Jout,RAV,OOR,DRHOAV,XRAD,XSHIFT,
      >            XELL,XTRIAPOS,XTRIANEG,Pout,
@@ -390,6 +410,8 @@ C---------------------------------------------------------------------
 C GESTION DES SORTIES
 C Recuperation du nombre de valeurs du flux poloidal et de l'angle poloidal
 C de la grille de sortie
+
+      if (.false.) call mexprintf("Hello A4")
       sizeOUT = NRMAP * NPMAP
 C C2 : Vp <gradient(rho)^2/R^2 >
       plhs(1) = mxCreateDoubleMatrix(NRMAP,mat1,0)
@@ -625,6 +647,7 @@ c      write(*,*) '55'
       plhs(55) = mxCreateDoubleMatrix(N_GEM,mat1,0)
       BZSPOT_pr = mxGetPr(plhs(55))
       call mxCopyReal8ToPtr(BZSPOT,BZSPOT_pr,N_GEM)
+      !call mexprintf("Done Assignments")
 
 c      write(*,*) 'end'
 
@@ -787,6 +810,7 @@ C-----------------------------------------------------------------------
       real*8 S1(101),S2(101),S3(101),S4(101)
       real*8 ecrit, xrsig(2)
                                                                                          
+      if (.false.) call mexprintf("Hello B1")
       CALL INIVAL
       IF ((INI.EQ.0) .AND. (IEXACT.EQ. 0)) THEN
          B = 0.002D0
@@ -802,6 +826,7 @@ C-----------------------------------------------------------------------
 	NITER = 1000
         write(*,*) 'XR1 = ',XR1,' ;SIG1 = ',SIG1
       endif
+      if (.false.) call mexprintf("Hello B2")
             
       PSI0 = PSIN(1)
       DO I=1,NPRFL
@@ -817,6 +842,7 @@ c      NBEXT = 33
 	ENDDO
       ENDIF
 
+      if (.false.) call mexprintf("Hello B2.1")
 c       write(*,*) 'Iexact dans helena =',IEXACT
 C le mode FR = 0 est pour le couplage avec DINA
       IF ((IEXACT .EQ. 0) .OR. (FR(1) .EQ. 0.0D0)) THEN
@@ -824,10 +850,12 @@ C le mode FR = 0 est pour le couplage avec DINA
         DO I=1,2*MBMAX+2
            FR(I)  = 0.0
         ENDDO
+      if (.false.) call mexprintf("Hello B2.11")
 
         IF (NBext.GT.0) THEN
           CALL FBND(Rext,Zext,NBext-1,FR,MF,AMIN,R0,1)
         ENDIF
+      if (.false.) call mexprintf("Hello B2.12")
       ELSE
         IF (NBext.GT.0) THEN
           CALL FBND(Rext,Zext,NBext-1,FR,MF,AMIN,R0,0)
@@ -838,6 +866,7 @@ C le mode FR = 0 est pour le couplage avec DINA
       BETAP = PIN(1) * 1.6022D-16 * 12.56637D-7 / B0**2
       XIAB = 12.56637D-7 * XI / (AMIN * B0)
       ALFA =  2.*PI* AMIN**2 * B0 / DABS(PSIN(NPRFL))
+      if (.false.) call mexprintf("Hello B2.2")
       
       IF (IWRT.NE.0) THEN
          WRITE(*,*) ' IAS   : ',IAS
@@ -861,8 +890,9 @@ c------------------------ quadratic extraolation to axis
 c        write(*,*) 'avant spline PIN'
         CALL SPLINE(NPRFL,PSIN,PIN,0.D0,0.D0,2,S1,S2,S3,S4)
 c        write(*,*) 'apres spline'
+      if (.false.) call mexprintf("Hello B2.2")
 
-	NPTS=101
+	     NPTS=101
         PSIB = DABS(PSIN(NPRFL))                                           
         DO I=1,NPTS   
           SS =  dble(I-1)/dble(NPTS-1)                                                   
@@ -887,6 +917,7 @@ c             DF2(I) = DPR(I)
          ICUR = 0
          NMESH = 1
       ENDIF
+      if (.false.) call mexprintf("Hello B3")
                                                                         
 C------------------------------------------ALLOCATE LARGE MATRIX        
       IF ((NR.GT.NRMAX).OR.(NP.GT.NPMAX)) THEN                          
@@ -927,6 +958,7 @@ C------------------------------------ NORMALIZE PROFILES ---------------
       IF ((INI.EQ.0) .AND. (IEXACT .EQ. 0)) THEN
         B = - B * PSCALE/DABS(PSCALE)
       ENDIF
+      if (.false.) call mexprintf("Hello B4")
 C-------------------------------- INITIAL GUESS FOR A ------------------
       A = 4.D0 * B/DABS(B)                          
 C--------------------------------- INITIALIZE PRES AND GAM PROFILES ----
@@ -998,6 +1030,7 @@ C------------------------------------ NORMALIZE FLUX TO ZERO ON AXIS ---
 	    WRITE(*,*) ' AXIS NOT FOUND'
 	    RETURN
 	  ENDIF
+      if (.false.) call mexprintf("Hello B5")
 	  CALL NORMAL(PSI,NR,NP,PSAXIS) 
 	  IF (AMIX.NE.0.) THEN
             DO  I=1,4*NR*NP
@@ -1041,6 +1074,7 @@ c        write(*,*) 'avant remesh'
      >              CX,CY,XAXIS,YAXIS,NAX,RAX,SAX,IGAM,IAS,
      >              XR1,SIG1,IFAIL)
 c        write(*,*) 'apres remesh'
+      if (.false.) call mexprintf("Hello B6")
 
 	IF (IFAIL.NE.0) RETURN
         DO I = 1, NPTS
@@ -1114,6 +1148,7 @@ ccc             B =  PAXIS /(BBB * BETAP) * B1
 	if (NMG .ge. (NMESH-1)) then
 	  write(*,*) 'convergence problem, NMG=',NMG
 	endif
+      if (.false.) call mexprintf("Hello B7")
 
         IF (((DIFDF2.LT.ERRCUR).AND.(DABS(PAXIS-BETAP).LT.0.001*PAXIS))
      >          .OR.(NMG.EQ.NMESH-1)) THEN
@@ -1330,6 +1365,7 @@ c      WRITE(*,*) ' HELENA ENDS OK',TAU(NR)
       REAL*8 r(*),z(*),FR(*)
       REAL*8 theta(3*MBMAX),radius(3*MBMAX)
       REAL*8 ar(3*MBMAX),br(3*MBMAX),cr(3*MBMAX),dr(3*MBMAX),dummy(3)
+      if (.false.) call mexprintf("Hello C1")
       
       rmax = -1.D10
       rmin = -rmax
@@ -1344,6 +1380,7 @@ c      WRITE(*,*) ' HELENA ENDS OK',TAU(NR)
           jmin = i
         endif
       enddo
+      if (.false.) call mexprintf("Hello C2")
       r0 = (rmin+rmax)/2.D0
 c      do i=1,ntht
 c        theta(i) = atan2(z(i)-z0,r(i)-r0)
@@ -1372,13 +1409,16 @@ c
       do i=2,ntht
         if (theta(i+1) .lt. theta(i) ) theta(i+1) = theta(i+1) + 2.*PI
       enddo
+      if (.false.) call mexprintf("Hello C3")
       
 C      write(*,*) 'avant spline r'
       call spline(ntht,theta,r,0.D0,0.D0,2,ar,br,cr,dr)
+      if (.false.) call mexprintf("Hello C3.1")
       rmin = spwert(ntht,PI,ar,br,cr,dr,theta,dummy)
       r0 = (rmin+rmax)/2.D0
       amin = (rmax-rmin)/2.D0
       
+      if (.false.) call mexprintf("Hello C3.2")
       do i=1,ntht
         theta(i) = atan2(z(i)-z0,r(i)-r0)
         if (theta(i).lt.0.D0) then
@@ -1391,10 +1431,12 @@ C      write(*,*) 'avant spline r'
          if (theta(i).eq.theta(i+1)) theta(i+1)=theta(i+1)+1.d-6
 C         write(*,*) 'theta(',i,':',i+1,')=',theta(i),theta(i+1)  
       enddo
+      if (.false.) call mexprintf("Hello C3.3")
       do i=1,ntht
         theta(i+ntht) = theta(i) + 2.*pi
 	radius(i+ntht) = radius(i)
       enddo
+      if (.false.) call mexprintf("Hello C3.3")
       do i=1,ntht
         theta(i+2*ntht)  = theta(i) + 4.*pi
 	radius(i+2*ntht) = radius(i)
@@ -1402,6 +1444,7 @@ C         write(*,*) 'theta(',i,':',i+1,')=',theta(i),theta(i+1)
 C      write(*,*) 'avant spline radius'
       call spline(3*ntht,theta,radius,0.D0,0.D0,2,ar,br,cr,dr)
 
+      if (.false.) call mexprintf("Hello C4")
       NP=MF
       NTHT3 = 3*NTHT
       DO i=1,NP
@@ -5843,7 +5886,7 @@ C     BEI ANWENDUNGSFEHLERN WIRD DAS PROGRAMM MIT ENTSPRECHENDER
 C     FEHLERMELDUNG ABGEBROCHEN                                         
 C-----------------------------------------------------------------------
 C                                                                       
-      IMPLICIT REAL*8 (A-H,O-Z)
+      IMPLICIT REAL*8 (E-H,O-Z)
       IMPLICIT integer (I-N)
       integer  N, TYP
       real*8     X(N), Y(N), ALFA, BETA, A(N), B(N), C(N), D(N)           
@@ -5851,6 +5894,8 @@ C
       real*8     H(1001)                                                  
                                                                               
 C                                                                       
+                                                                              
+      if (.false.) call mexprintf("Hello D1")
       NMAX = 1001                                                       
       IF((TYP.LT.0).OR.(TYP.GT.3)) THEN
          WRITE(*,*) 'FEHLER IN ROUTINE SPLINE: FALSCHER TYP'
@@ -5866,6 +5911,7 @@ C
 C     BERECHNE DIFFERENZ AUFEINENDERFOLGENDER X-WERTE UND               
 C     UNTERSUCHE MONOTONIE                                              
 C                                                                       
+      if (.false.) call mexprintf("Hello D2")
       DO 10 I = 1, N-1                                                  
          H(I) = X(I+1)- X(I)
          IF(H(I).LE.0.0D0) THEN                                           
@@ -5887,6 +5933,7 @@ C     BERUECKSICHTIGEN DER RANDBEDINGUNGEN
 C                                                                       
 C     NOT-A-KNOT                                                        
 C                
+      if (.false.) call mexprintf("Hello D3")
       IF(TYP.EQ.0) THEN
          A(1)   = A(1) * H(2) / (H(1) + H(2))                           
          A(N-2) = A(N-2) * H(N-2) / (H(N-1) + H(N-2))                   
@@ -5923,15 +5970,18 @@ C
 C                                                                       
 C     BERECHNUNG DER KOEFFIZIENTEN                                      
 C            
+      if (.false.) call mexprintf("Hello D4")
       CALL SGTSL(N-2,B,D,C,A,IERR)                                      
       IF(IERR.NE.0) THEN                                                
          WRITE(*,21)                                                    
          CALL mexErrMsgTxt('ERROR IN SGTSL: MATRIX SINGULAR')                                                           
       ENDIF                                                             
+      if (.false.) call mexprintf("Hello D4.1")
 C                                                                       
 C     UEBERSCHREIBEN DES LOESUNGSVEKTORS                                
 C     
-      CALL DCOPY(N-2,A,1,C(2),1)
+      CALL DCOPY(N-2,A,1,C(2:),1)
+      if (.false.) call mexprintf("Hello D4.11")
 C                                                                       
 C     IN ABHAENGIGKEIT VON DEN RANDBEDINGUNGEN WIRD DER 1. UND          
 C     DER LETZTE WERT VON C KORRIGIERT                                  
@@ -5940,6 +5990,7 @@ C
          C(1) = C(2) + H(1) * (C(2)-C(3)) / H(2)                        
          C(N) = C(N-1) + H(N-1) * (C(N-1)-C(N-2)) / H(N-2)              
       ENDIF                                                             
+      if (.false.) call mexprintf("Hello D4.2")
 C                                                                       
       IF(TYP.EQ.1) THEN
       C(1) = 1.5D0*((Y(2)-Y(1)) / H(1) - ALFA) / H(1) - 0.5D0 * C(2)     
@@ -5950,6 +6001,7 @@ C
          C(1) = 0.5D0 * ALFA                                              
          C(N) = 0.5D0 * BETA                                              
       ENDIF                                                             
+      if (.false.) call mexprintf("Hello D5")
 C                                                                       
       IF(TYP.EQ.3) THEN                                                 
          C(1) = C(2) - 0.5D0 * ALFA * H(1)                                
@@ -5957,12 +6009,14 @@ C
       ENDIF                                                             
 C                                                                       
       CALL DCOPY(N,Y,1,A,1)                                             
+      if (.false.) call mexprintf("Hello D6")
 C                                                                       
       DO 30 I = 1, N-1                                                  
          B(I) = (A(I+1)-A(I))/H(I) - H(I) * (C(I+1)+2.0D0 * C(I))/3.0D0 
          D(I) = (C(I+1)-C(I))/(3.0D0 * H(I))                            
    30 CONTINUE                                                          
 C                                                                       
+      if (.false.) call mexprintf("Hello D7")
       B(N) = (3.0D0 * D(N-1) * H(N-1) + 2.0D0 * C(N-1)) * H(N-1) 
      >         + B(N-1)   
 C                                                                       
