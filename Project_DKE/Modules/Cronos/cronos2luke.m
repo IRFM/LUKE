@@ -39,6 +39,29 @@
 %
 function [sortie,memoire] = zstarwars(par,equi,neo,gene,prof,compo,impur,geo,proto,memoire)
 %
+% test d'incompatibilte ascendante
+%
+set_incompatible = 0;
+if nargin <= 1
+    set_incompatible = 1;   
+else
+    st = dbstack;
+        count = 0;
+    for l=1:length(dbstack)
+        if ~isempty(strfind(st(l).name,'zstarwars')),
+            count = count +1;
+        end
+    end 
+    if count < 2
+        set_incompatible = 1;   
+    end 
+end
+
+if set_incompatible
+    error(sprintf('ZSTARWARS : the module to connect LUKE to cronos must be now zstartwars_LH, zstartwars_EC  or zstartwars_LH_EC.\n zstarwars is no longer a module interface for LUKE in CRONOS'));
+end
+%
+%
 %
 shotime = par.shotime;
 %
@@ -75,7 +98,7 @@ if equi.psiRZ(1) == equi.psiRZ(2)
 else
    psiRZ = double(equi.psiRZ); 
 end
-
+%
 equil = make_equil_cronos(equil_id,equi,gene,prof,compo,impur);
 %
 % PARAMETRES OHMIC, transformation en flux poloidal puis en coordonnees radials de LUKE
@@ -85,8 +108,9 @@ equil = make_equil_cronos(equil_id,equi,gene,prof,compo,impur);
 % psitncronoshel : coordonnee radiale normalisee en flux toroidal associee a HELENA pour BR BZ et BPHI 
 % psipn_jd       : coordonnee radiale normalisee en flux poloidal associee a LUKE
 %
-ohm.rho        = linspace(0,1,101);
-psipncronos    = abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1)));
+nrho_ohm       = 101;
+ohm.rho        = linspace(0,1,nrho_ohm);
+%psipncronos    = abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1)));
 psipncronoshel = abs(psiRZ-psiRZ(1))/max(abs(psiRZ-psiRZ(1)));
 psitncronoshel = equi.rhoRZ/equi.rhomax;
 psipn_ohm       = rho2psi_jd(equil,ohm.rho);
@@ -157,9 +181,11 @@ for iw = 1:length(launchs),
         wprf = sum(launchs{iw}.yP_L);
     end
     %
-    if ~isfield(par,'prfmin') || wprf > par.prfmin,
+    if ~isfield(par,'prfmin') || wprf >= par.prfmin,
         mask = [mask,iw];
         prf = prf + wprf;
+    else
+        disp(['wave #',int2str(iw),': dismissed as Prf = ',num2str(wprf),' < Prfmin = ',num2str(par.prfmin),'.'])
     end
 end
 launchs = launchs(mask);  
@@ -188,11 +214,11 @@ for iw = 1:nw,
     if strcmp(launchs{iw}.type,'EC')
         %
         dkeparam.w_mask = [dkeparam.w_mask,iw];
-        disp(['wave :',int2str(iw),' type :',launchs{iw}.type])
+        disp(['wave #',int2str(iw),': type :',launchs{iw}.type])
         %
     else
-        disp(['wave :',int2str(iw),' type :',launchs{iw}.type,' n// = ',num2str(wavestructs{iw}.launch.bNpar0,4)])
-        disp(['wave :',int2str(iw),' type :',launchs{iw}.type,' Plh = ',num2str(wavestructs{iw}.launch.bPlhtot,4)])
+        disp(['wave #',int2str(iw),': type :',launchs{iw}.type,' n// = ',num2str(wavestructs{iw}.launch.bNpar0,4)])
+        disp(['wave #',int2str(iw),': type :',launchs{iw}.type,' Plh = ',num2str(wavestructs{iw}.launch.bPlhtot,4)])
     end
     %
 end
@@ -206,8 +232,10 @@ if nw > 0
   acces_lh
 end
 %
-distrib     = [];
-distrib_ohm = [];
+distrib_RF  = [];
+distrib_TOT = [];
+distrib_OHM = [];
+%
 if ~isempty(memoire)
   if isfield(memoire,'data')
     if isfield(memoire.data,'edistribution')  
@@ -218,10 +246,11 @@ if ~isempty(memoire)
         end
         %
         if length(memoire.data.edistribution) >= 1,% the time here is necessarily anterior
-            distrib        = memoire.data.edistribution(end).f0;
-            distrib_ohm    = memoire.data.edistribution(end).f0_ohm;
+            distrib_RF     = memoire.data.edistribution(end).f0_RF;
+            distrib_TOT    = memoire.data.edistribution(end).f0_TOT;
+            distrib_OHM    = memoire.data.edistribution(end).f0_OHM;
             dkeparam.rho_S = memoire.data.edistribution(end).rho_S;
-            dkeparam.tn    = (shotime - memoire.data.edistribution(end).shotime)*distrib.mksa.nhu_ref;% LUKE time step
+            dkeparam.tn    = (shotime - memoire.data.edistribution(end).shotime)*distrib_RF.mksa.nhu_ref;% LUKE time step
         end
     end
   end
@@ -249,101 +278,70 @@ ik = 1;
 warning off
 disp(['LUKE is running ....'])
 %
-if strcmp(par.batch,'Yes') && isfield(dkepath,'remote') && ~isempty(dkepath.remote),% batch calculation of run_lukert
-    %
-    remote = dkepath.remote(1);
-    dkeparam.psin_S = [];
-    %
-    luke_input.id_simul = 'cronos';
-    luke_input.dkeparam = dkeparam;
-    luke_input.dkepath = dkepath;
-    luke_input.dkedisplay = dkedisplay;
-    luke_input.equil = equil;
-    luke_input.waves = [];
-    luke_input.wavestructs = wavestructs;
-    luke_input.ohm = ohm;
-    luke_input.transpfaste = transpfaste;
-    luke_input.ripple = ripple;
-    luke_input.Zf0_interp = distrib;
-    %
-    [timeid,jobid] = runluke_remote_jd(luke_input,remote);
-    %
-    %w_opt = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes)',60,0:7*24*60);
-    w_opt = 240;disp('LUKE time out : 4 hours')
-    %
-    tic
-    %
-    output = '';
-    %
-    while isempty(output) && toc/60 < w_opt,
-        %
-        pause(60);
-        %
-        disp(['LUKE Still running , elapsed time (minutes) ',num2str(round(toc/60)),'/',num2str(w_opt)])
-        %
-        output = getluke_remote_jd(timeid,jobid,remote);
-        %
-    end
-    %
-    if isempty(output),
-        error(['Stop waiting , elapsed time (minutes) ',num2str(round(toc/60)),'/',num2str(w_opt)])
-    elseif isfield(output,'err'),
-        error('Remote LUKE run failed, aborted.')
-    else
-        %
-        Znorm_RF = output.Znorm;
-        Zcurr_RF = output.Zcurr;
-        ZP0_RF = output.ZP0;
-        dke_out_RF = output.dke_out;
-        radialDKE = output.radialDKE;
-        equilDKE = output.equilDKE;
-        momentumDKE = output.momentumDKE;
-        gridDKE = output.gridDKE;
-        Zmomcoef = output.Zmomcoef;
-        Zbouncecoef = output.Zbouncecoef;
-        Zmripple = output.Zmripple;
-        mksa = output.mksa;
-        XXsinksource = output.XXsinksource;
-        %
-    end
-    %
-else
-    %
-    [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = run_lukert('cronos',wavestructs,[],[],dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib,[]);
-    %
-end
-clear raytracing_yp alphaphimex_jd trapz_dke_yp dmumpsmex
-%
 signe_out = -par.signe.ip;
 %
-j_TOT_c = signe_out*Zcurr_RF.x_0_vcfsav*mksa.j_ref;
-I_TOT_c = sum(signe_out*Zcurr_RF.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
-p_TOT_c = (ZP0_RF.x_rf_fsav.' + ZP0_RF.x_e_fsav)*mksa.P_ref;
-p_RF_c = ZP0_RF.x_rf_fsav.'*mksa.P_ref;
-P_TOT_c = sum(p_TOT_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
-P_RF_c = sum(p_RF_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
+% CALCULATION WITH RF ONLY
 %
-if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to the plasma current
+[Znorm_RF,Zcurr_RF,ZP0_RF,dke_out_RF,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = ...
+    run_lukert_batchopt('cronos',wavestructs,[],dkepath,equil,dkeparam,dkedisplay,[],transpfaste,ripple,distrib_RF,par);
+%
+j_RF_c = signe_out*Zcurr_RF.x_0_vcfsav*mksa.j_ref*1e6;
+I_RF_c = sum(signe_out*Zcurr_RF.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref*1e6);
+p_RF_c = ZP0_RF.x_rf_fsav.'*mksa.P_ref*1e6;
+P_RF_c = sum(p_RF_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
+f0_RF = dke_out_RF.Zf0_interp;%For time evolution
+%
+waves = dke_out_RF.waves;%waves reused for synergy calculations
+dkeparam.rho_S = radialDKE.xrho_S_dke;% retrieve RF rho grid if (re)calculated within run_lukert
+dkeparam.rt_mode = 1;%a_sdNpar fixed by previous RF calculation
+%
+if strcmp(par.syn,'Yes') && sum(abs(ohm.epsi)) ~= 0,%Calculate the synergy between RF and OHMIC
     %
-    [Znorm_ohm,Zcurr_ohm,ZP0_ohm,dke_out_ohm] = run_lukert('cronos',[],[],[],radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib_ohm,[]);
+    % CALCULATION WITH RF AND OHMIC
     %
-    j_OHM_c = signe_out*Zcurr_ohm.x_0_vcfsav*mksa.j_ref;
-    I_OHM_c = sum(signe_out*Zcurr_ohm.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);
-    p_OHM_c = ZP0_ohm.x_e_fsav*mksa.P_ref;
-    P_OHM_c = sum(p_OHM_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
+    [Znorm_TOT,Zcurr_TOT,ZP0_TOT,dke_out_TOT] = run_lukert_batchopt('cronos',[],waves,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib_TOT,par);
+    %
+    j_TOT_c = signe_out*Zcurr_TOT.x_0_vcfsav*mksa.j_ref*1e6;
+    I_TOT_c = sum(signe_out*Zcurr_TOT.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref*1e6);
+    p_RF_TOT_c = ZP0_TOT.x_rf_fsav.'*mksa.P_ref*1e6;
+    % p_OHM_TOT_c = ZP0_TOT.x_e_fsav*mksa.P_ref*1e6;
+    % P_RF_TOT_c = sum(p_RF_TOT_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
+    % P_OHM_TOT_c = sum(p_OHM_TOT_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
+    %
+    f0_TOT = dke_out_TOT.Zf0_interp;%For time evolution
+    %
+    % CALCULATION OHMIC ONLY
+    %
+    [Znorm_OHM,Zcurr_OHM,ZP0_OHM,dke_out_OHM] = run_lukert_batchopt('cronos',[],[],dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib_OHM,par);
+    %
+    j_OHM_c = signe_out*Zcurr_OHM.x_0_vcfsav*mksa.j_ref*1e6;
+    I_OHM_c = sum(signe_out*Zcurr_OHM.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref*1e6);
+    % p_OHM_c = ZP0_OHM.x_e_fsav*mksa.P_ref*1e6;
+    % P_OHM_c = sum(p_OHM_c.*equilDKE.xdV_2piRp_dke*2*pi*equilDKE.Rp);
+    %
+    f0_OHM = dke_out_OHM.Zf0_interp;%For time evolution
+    %
 else
-    j_OHM_c = 0;
-    I_OHM_c = 0;
-    p_OHM_c = 0;  
-    P_OHM_c = 0;
+    %
+    j_TOT_c     = j_RF_c;% total current is RF current
+    I_TOT_c     = I_RF_c;
+    p_RF_TOT_c  = p_RF_c;% RF deposition profile in the absence of ohmic
+    j_OHM_c     = zeros(1,length(j_RF_c));% no ohmic current
+    I_OHM_c     = 0;
+    f0_TOT      = f0_RF;% electron distribution in the absence of ohmic
+    f0_OHM      = [];% maxwellian distribution
+    %
 end
 %
-warning on
+% SYNERGISTIC EFFECTS - proportional to the electric field in linear limit
 %
-j_RF_c = j_TOT_c - j_OHM_c;
-I_RF_c = I_TOT_c - I_OHM_c;
-p_OHMsyn_c = p_TOT_c - p_OHM_c - p_RF_c;% synergistic power spent on electric field, already accounted for in cronos E.J
-P_OHMsyn_c = P_TOT_c - P_OHM_c - P_RF_c;% synergistic power spent on electric field, already accounted for in cronos E.J
+% Note : p_OHM_SYN_c is commented as it should be already accounted for in cronos E.J with J including j_SYN_c
+%
+j_SYN_c = j_TOT_c - j_RF_c - j_OHM_c;% synergistic current
+I_SYN_c = I_TOT_c - I_RF_c - I_OHM_c;% synergistic current
+% p_OHM_SYN_c = p_OHM_TOT_c - p_OHM_c;% synergistic ohmic heating
+%
+warning on
 %
 if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') || strcmp(dkedisplay.display_mode,'VISUAL'),
     %
@@ -351,13 +349,15 @@ if strcmp(dkedisplay.display_mode,'PARTIAL_VISUAL') || strcmp(dkedisplay.display
     %
 end
 %
+% par.ipfrac : maximum fraction of IP allowed for RF current
+%
 if isfield(par,'ipfrac'),
     %
-    I_boot = equi.rhomax*trapz(gene.x,neo.jboot.*equi.spr,2);
+    I_boot = zintsurf(neo.jboot,gene.x,equi.spr,equi.rhomax);
     %
-    if (I_RF_c*1e6+I_boot)/equi.ip > par.ipfrac,
+    if (I_RF_c+I_boot)/equi.ip > par.ipfrac,
         %
-        normip = par.ipfrac*equi.ip/(I_RF_c*1e6+I_boot);
+        normip = par.ipfrac*equi.ip/(I_RF_c+I_boot);
         disp(['----> to avoid I_L_H + I_b_o_o_t > Ip'])
         disp(['normalisation =',num2str(normip,3)])
         %
@@ -368,72 +368,110 @@ if isfield(par,'ipfrac'),
     end
 end
 %
+sortie.err = normip;
+%
 %--------------------------- REMPLISSAGE DE LA STRUCTURE DE SORTIE POUR CRONOS --------------------------- 
 %
 %
-% preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS sur la bonne grille
-% et avec les bonnes unites
+% preparation des variables de sortie (sortie.j, sortie.el) pour CRONOS
 %
 method = 'linear';
 %
 xrhoT = [0,equilDKE.xrhoT,1];
 j_RF_c = [j_RF_c(1),j_RF_c,0];
-p_RF_c = [p_RF_c(1),p_RF_c,0];
+j_SYN_c = [j_SYN_c(1),j_SYN_c,0];
+p_RF_TOT_c = [p_RF_TOT_c(1),p_RF_c,0];
 %
-sortie.j  = interp1(xrhoT,j_RF_c,gene.x,method)*1e6*normip;% (A/m2)
-sortie.el = interp1(xrhoT,p_RF_c,gene.x,method)*1e6;% (W/m3)
+cj_RF_c  = interp1(xrhoT,j_RF_c,gene.x,method);% (A/m2)
+cj_SYN_c  = interp1(xrhoT,j_SYN_c,gene.x,method);% (A/m2)
+cp_RF_TOT_c = interp1(xrhoT,p_RF_TOT_c,gene.x,method);% (W/m3)
 %
 % remise de la puissance et du courant de LUKE
 %
-irfnew = zintsurf(sortie.j,gene.x,equi.spr,equi.rhomax);
-paddrfnew = zintvol(sortie.el,gene.x,equi.vpr,equi.rhomax);
+irfnew = zintsurf(cj_RF_c,gene.x,equi.spr,equi.rhomax);
+isynnew = zintsurf(cj_SYN_c,gene.x,equi.spr,equi.rhomax);
+paddrfnew = zintvol(cp_RF_TOT_c,gene.x,equi.vpr,equi.rhomax);
 %
-if abs(paddrfnew - P_RF_c)/abs(P_RF_c) > 0.01,
-	disp(['WARNING : volume integral on LUKE and CRONOS grids give different results. RF power renormalized by ',num2str(P_RF_c / paddrfnew * 1e6)])
-end
 if abs(irfnew - I_RF_c)/abs(I_RF_c) > 0.01,
-	disp(['WARNING : surface integral on LUKE and CRONOS grids give different results. RF current renormalized by ',num2str(I_RF_c / irfnew * 1e6)])
+    disp(['WARNING : surface integral on LUKE and CRONOS grids give different results. RF current renormalized by ',num2str(I_RF_c / irfnew)])
 end
-sortie.el = sortie.el * P_RF_c / paddrfnew * 1e6;
-sortie.j  = sortie.j  * I_RF_c / irfnew * 1e6;
+if abs(isynnew - I_SYN_c)/max([abs(I_SYN_c),eps]) > 0.01,
+    disp(['WARNING : surface integral on LUKE and CRONOS grids give different results. SYN current renormalized by ',num2str(I_SYN_c / isynnew)])
+end
+if abs(paddrfnew - P_RF_c)/abs(P_RF_c) > 0.01,
+    disp(['WARNING : volume integral on LUKE and CRONOS grids give different results. RF power renormalized by ',num2str(P_RF_c / paddrfnew)])
+end
+cj_RF_c  = cj_RF_c  * I_RF_c / irfnew * normip;
+if isynnew ~= 0,
+    cj_SYN_c  = cj_SYN_c  * I_SYN_c / isynnew;
+end
+if paddrfnew ~= 0,
+    cp_RF_TOT_c = cp_RF_TOT_c * P_RF_c / paddrfnew;
+end
 %
 % SMOOTHING
 %
 if isfield(par,'smooth') && strcmp(par.smooth,'Yes')
-    newj  = smooth_dke_yp(sortie.j.',par.width_smooth,par.method_smooth).';  % diffusion phenomenologique du courant
-    norm1 = trapz(gene.x,sortie.j.*equi.spr);
-    norm2 = trapz(gene.x,newj.*equi.spr);
-    sortie.j = newj/norm2*norm1;
-    newel  = smooth_dke_yp(sortie.el.',par.width_smooth,par.method_smooth).';  % diffusion phenomenologique du courant
-    norm1 = trapz(gene.x,sortie.el.*equi.vpr);
-    norm2 = trapz(gene.x,newel.*equi.vpr);
-    sortie.el = newel/norm2*norm1;
+    newj  = smooth_dke_yp(cj_RF_c.',par.width_smooth,par.method_smooth).';  % diffusion phenomenologique du courant
+    norm1 = zintsurf(cj_RF_c,gene.x,equi.spr,equi.rhomax);
+    norm2 = zintsurf(newj,gene.x,equi.spr,equi.rhomax);
+    cj_RF_c = newj/norm2*norm1;
+    %
+    newjsyn  = smooth_dke_yp(cj_SYN_c.',par.width_smooth,par.method_smooth).';  % diffusion phenomenologique du courant
+    norm1 = zintsurf(cj_SYN_c,gene.x,equi.spr,equi.rhomax);
+    norm2 = zintsurf(newjsyn,gene.x,equi.spr,equi.rhomax);
+    if norm1 ~= 0,
+        cj_SYN_c  = newjsyn/norm2*norm1;
+    end
+    %
+    newel  = smooth_dke_yp(cp_RF_TOT_c.',par.width_smooth,par.method_smooth).';  % diffusion phenomenologique du courant
+    norm1 = zintvol(cp_RF_TOT_c,gene.x,equi.vpr,equi.rhomax);
+    norm2 = zintvol(newel,gene.x,equi.vpr,equi.rhomax);
+    if norm1 ~= 0,
+        cp_RF_TOT_c = newel/norm2*norm1;
+    end
 end
 %
-sortie.err = normip;
-%
-if any(p_RF_c < 0),
+% if negative RF power is found at any xy grid point, it means the calculation was somewhat unstable
+% 
+if any(any(ZP0_RF.xy_rf_fsav < 0)),
     %
     sortie.err = sortie.err + 1i;
     %
-    disp('Problem in LUKE, negative absorbed power, use the last value if possible')
+    disp('Problem in LUKE, negative absorbed power calculated for some value, use the previous LUKE calculation if possible')
     %
     if isfield(memoire.data,'output')
         %
-        sortie.j   = memoire.data.output.j*prf/memoire.data.output.prf.*memoire.data.output.ne./prof.ne;
-        sortie.el  = memoire.data.output.el*prf/memoire.data.output.prf;
+        % assume constant efficiency n.I/P
+        %
+        cj_RF_c   = memoire.data.output.j*prf/memoire.data.output.prf.*memoire.data.output.ne./prof.ne;
+        cj_SYN_c = 0;
+        cp_RF_TOT_c  = memoire.data.output.el*prf/memoire.data.output.prf;
         %
     end
 end    
 %
-irf = zintsurf(sortie.j,gene.x,equi.spr,equi.rhomax);
-paddrf = zintvol(sortie.el,gene.x,equi.vpr,equi.rhomax);
+% In principle the synergy increases with both RF power and efield. Thus it
+% makes sense, to avoid divergence in sigmasyn, to cap the sigmasyn with 
+% its value obtained at the max of abs(cj_SYN_c)
+%
+sigmasyn = cj_SYN_c./prof.epar;
+sigmasyn(prof.epar == 0) = 0;% To avoid NAN
+sigmasynmax = sigmasyn(find(abs(cj_SYN_c) == max(abs(cj_SYN_c)),1,'first'));%value obtained at the max of abs(cj_SYN_c)
+sigmasyn = sign(sigmasyn).*min([abs(sigmasyn);repmat(abs(sigmasynmax),[1,length(sigmasyn)])]);% caping
+%
+sortie.j = cj_RF_c;% RF current in the absence of ohmic
+sortie.sigmasyn = sigmasyn;% synergistic conductivity (= HOT - COLD). 
+sortie.el = cp_RF_TOT_c;% Note : the RF power deposition profile calculated in the presence of ohmic must be used.
+%
+irf = zintsurf(cj_RF_c,gene.x,equi.spr,equi.rhomax);
+paddrf = zintvol(cp_RF_TOT_c,gene.x,equi.vpr,equi.rhomax);
 %
 disp(['I_L_H = ',num2str(irf/1e3,3),' kA / I_p =',num2str(equi.ip/1e3,4),' kA'])
 disp(['P_L_H = ',num2str(paddrf/1e3,3),' kW / P_r_e_f = ',num2str(prf/1e3,3),' kW'])
 %
-memoire.data.output.j         = sortie.j;
-memoire.data.output.el        = sortie.el;
+memoire.data.output.j         = cj_RF_c;
+memoire.data.output.el        = cp_RF_TOT_c;
 memoire.data.output.paddrf    = paddrf;
 memoire.data.output.prf       = prf;
 memoire.data.output.ne        = prof.ne;
@@ -441,29 +479,38 @@ memoire.data.output.irf       = irf;
 %
 for iw = 1:nw,
     if isfield(wavestructs{iw}.launch,'aloha') & wavestructs{iw}.launch.aloha.mode ~= 0
-       if isfield(memoire.data.output,'npar')        
-           memoire.data.output.npar{iw} = [memoire.data.output.npar{iw};wavestructs{iw}.launch.bNpar0];
-           memoire.data.output.pow{iw} = [memoire.data.output.pow{iw};wavestructs{iw}.launch.bPlhtot];
-           memoire.data.output.fr{iw} = [memoire.data.output.fr{iw};wavestructs{iw}.launch.bPlhtot/sum(wavestructs{iw}.launch.bPlhtot)*100];
+       if isfield(memoire.data.output,'npar') 
+           if iw <= length(memoire.data.output.npar)
+             memoire.data.output.npar{iw}(end+1,:) = wavestructs{iw}.launch.bNpar0;
+           else
+             memoire.data.output.npar{iw}(1,:) = wavestructs{iw}.launch.bNpar0;
+           end
        else
-           memoire.data.output.npar{iw} = wavestructs{iw}.launch.bNpar0;
-           memoire.data.output.pow{iw} = wavestructs{iw}.launch.bPlhtot;
-           memoire.data.output.fr{iw} = wavestructs{iw}.launch.bPlhtot/sum(wavestructs{iw}.launch.bPlhtot)*100;   
+           memoire.data.output.npar{iw}(1,:) = wavestructs{iw}.launch.bNpar0;
+       end
+       if isfield(memoire.data.output,'pow') 
+           if iw <= length(memoire.data.output.pow)
+             memoire.data.output.pow{iw}(end+1,:) = wavestructs{iw}.launch.bPlhtot;
+           else
+             memoire.data.output.pow{iw}(1,:) = wavestructs{iw}.launch.bPlhtot;
+           end
+       else
+           memoire.data.output.pow{iw}(1,:) = wavestructs{iw}.launch.bPlhtot;
        end
     end
 end
 %
 if isfield(memoire.data,'edistribution')
-  memoire.data.edistribution(end + 1).shotime = shotime;%For time evolution
-  memoire.data.edistribution(end).f0      = dke_out_RF.Zf0_interp;%For time evolution
-  memoire.data.edistribution(end).f0_ohm  = dke_out_ohm.Zf0_interp;%For time evolution
-  memoire.data.edistribution(end).rho_S   = radialDKE.xrho_S_dke;
+    memoire.data.edistribution(end + 1).shotime = shotime;%For time evolution
 else
-  memoire.data.edistribution(1).shotime = shotime;%For time evolution
-  memoire.data.edistribution(1).f0      = dke_out_RF.Zf0_interp;%For time evolution
-  memoire.data.edistribution(1).f0_ohm  = dke_out_ohm.Zf0_interp;%For time evolution
-  memoire.data.edistribution(1).rho_S   = radialDKE.xrho_S_dke;
+    memoire.data.edistribution.shotime = shotime;%For time evolution
 end
+%
+memoire.data.edistribution(end).f0_RF   = f0_RF;%For time evolution
+memoire.data.edistribution(end).f0_TOT  = f0_TOT;%For time evolution
+memoire.data.edistribution(end).f0_OHM  = f0_OHM;%For time evolution
+memoire.data.edistribution(end).rho_S   = radialDKE.xrho_S_dke;
+%
 %
 % For diagnostic post-processing (HXR,...)
 %
@@ -490,7 +537,88 @@ if par.save == 1,
     save([workdir,'/last_luke@',equil_id,'.mat']);
   end
 end
+end
 %
-
-
-
+% Generic function to use either direct call to run_lukert or batch run
+%
+function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = ...
+    run_lukert_batchopt(id_simul,wavestructs,waves,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib,par)
+%
+dkepath.remnum = par.remnum;% remote profile number. Use 0 for local sequential calculations
+dkepath.remtimout = par.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+dkepath.rempause = par.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
+dkepath.debugmode = par.debugmode;% debug mode (0) off (1) on
+dkepath.clean = par.clean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+%
+% backup & save options
+%
+opt.save = par.saveluke;% (1): save LUKE_RESULTS or return error (0): return results or error
+if isinf(par.fields),
+    opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
+else
+    opt.fields = par.fields;% selected fields in returned lukestructs. Use NaN for all fields
+end
+opt.backup = par.backup% (1) save fluctuation time steps (0) do not save
+opt.waves = par.waves;% (1) save waves at each time step (0) do not save
+%
+lukestruct.simul.id_simul = id_simul;
+lukestruct.simul.path = '';
+lukestruct.dkeparam = dkeparam;
+lukestruct.dkepath = dkepath;
+lukestruct.dkedisplay = dkedisplay;
+lukestruct.equil = equil;
+lukestruct.waves = waves;
+lukestruct.wavestructs = wavestructs;
+lukestruct.ohm = ohm;
+lukestruct.transpfaste = transpfaste;
+lukestruct.ripple = ripple;
+lukestruct.Zf0_interp = distrib;
+lukestruct.opt = opt;
+%
+lukestructs = {lukestruct};
+%
+if dkepath.remnum > 0,
+	while ~isfield(lukestructs{1},'output')
+	    %
+	    disp(['LUKE Still running'])
+	    %
+	    pause(30);
+	    %
+	    lukestructs = run_lukert(lukestructs,dkepath);
+	    %
+	    if isfield(lukestructs{1},'err'),
+	    	break;
+	    end
+	    %
+	end
+else
+	lukestructs = run_lukert(lukestructs,dkepath);
+end
+%
+if isfield(lukestructs{1}.output,'err') || isfield(lukestructs{1},'err'),
+    zverbose('Remote LUKE run failed, aborted.')
+else
+    if isempty(lukestructs{1}.output),
+        zverbose('Remote LUKE run failed, output is empty.')
+    else
+        %
+        Znorm = lukestructs{1}.output.Znorm;
+        Zcurr = lukestructs{1}.output.Zcurr;
+        ZP0 = lukestructs{1}.output.ZP0;
+        dke_out = lukestructs{1}.output.dke_out;
+        radialDKE = lukestructs{1}.output.radialDKE;
+        equilDKE = lukestructs{1}.output.equilDKE;
+        momentumDKE = lukestructs{1}.output.momentumDKE;
+        gridDKE = lukestructs{1}.output.gridDKE;
+        Zmomcoef = lukestructs{1}.output.Zmomcoef;
+        Zbouncecoef = lukestructs{1}.output.Zbouncecoef;
+        Zmripple = lukestructs{1}.output.Zmripple;
+        mksa = lukestructs{1}.output.mksa;
+        XXsinksource = lukestructs{1}.output.XXsinksource;
+        %
+    end
+end
+%
+clear raytracing_yp alphaphimex_jd trapz_dke_yp dmumpsmex
+%
+end
