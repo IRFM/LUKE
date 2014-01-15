@@ -115,7 +115,7 @@ if strcmp(par.luke_mode,'lh') || strcmp(par.luke_mode,'mixte');%For the Lower Hy
     dkeparam.clustermode.coll_dke_jd.scheduler.memory = 500;%required memory (in mb)
     dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
     dkeparam.clustermode.eecoll_dke_yp.scheduler.memory = 500;%required memory (in mb)
-    dkeparam.clustermode.wave_solver_yp.scheduler.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
+    dkeparam.clustermode.eecoll_dke_yp.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
     dkeparam.clustermode.wave_solver_yp.scheduler.memory = 500;%required memory (in mb)
     %
     dkeparam.store_mode = 0;%Temporary storing option for sparse matrices calculations (in RAM: 0, in disk file 1) when memory space is tight
@@ -262,15 +262,20 @@ end
 %
 if ischar(par.rho_S)
   if strcmp(par.lob,'No')
-      eval(['par.rho_S = ',par.rho_S,';']);
+      eval(['par.rho_S = [',par.rho_S,'];']);
   else
-      eval(['par.rho_S = ',par.rho_S,';']); 
-      par.rho_S=min(25,par.rho_S+5);
-      disp(['Increase the number of radial point due to the LH negative lob : ',int2str(par.rho_S)])
+      eval(['par.rho_S = [',par.rho_S,'];']); 
+      if isscalar(par.rho_S),
+        par.rho_S=min(25,par.rho_S+5);
+        disp(['Increase the number of radial point due to the LH negative lob : ',int2str(par.rho_S)])
+      end
   end
 end
 %
 if isfield(par,'rho_S')
    dkeparam.rho_S = par.rho_S;   
 end
+%
+dkeparam.psin_S = [];
+%
 
