@@ -8,7 +8,7 @@ if isempty(waves),
 end
 % 
 zS = dke_out.zS;
-zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod;
+zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod(end,:);
 xyprop_dke = dke_out.xyprop_dke;
 yb = dke_out.yb;
 nit = length(zP_0_2piRp_mod);
