@@ -14,20 +14,25 @@ for irem = 1:nrem
     %
     % if dkepath.remote(irem).luke_root is a string, it is considered as the default value
     %
-    if isstruct(dkepath.remote(irem).luke_root), 
+    if isfield(dkepath.remote(irem).env,'luke_root'),
         %
-        if isfield(dkepath.remote(irem).luke_root,lukever),
-            dkepath.remote(irem).luke_root = dkepath.remote(irem).luke_root.(lukever);
-        elseif isfield(dkepath.remote(irem).luke_root,'LUKE_default') && ~isempty(dkepath.remote(irem).luke_root.LUKE_default),
-            dkepath.remote(irem).luke_root = dkepath.remote(irem).luke_root.LUKE_default;
-        else
-            flag(irem) = false;
-            if isempty(dkepath.remote(irem).host),
-                info_dke_yp(6,['no compatible LUKE version found for remote profile #',num2str(irem),' to host : local. profile disabled.'])
+        if isstruct(dkepath.remote(irem).env.luke_root), 
+            %
+            if isfield(dkepath.remote(irem).env.luke_root,lukever),
+                dkepath.remote(irem).env.luke_root = dkepath.remote(irem).env.luke_root.(lukever);
+            elseif isfield(dkepath.remote(irem).env.luke_root,'LUKE_default') && ~isempty(dkepath.remote(irem).env.luke_root.LUKE_default),
+                dkepath.remote(irem).env.luke_root = dkepath.remote(irem).env.luke_root.LUKE_default;
             else
-                info_dke_yp(6,['no compatible LUKE version found for remote profile #',num2str(irem),' to host : ',dkepath.remote(irem).host,'. profile disabled.'])
+                flag(irem) = false;
+                if isempty(dkepath.remote(irem).host),
+                    info_dke_yp(6,['no compatible LUKE version found for remote profile #',num2str(irem),' to host : local. profile disabled.'])
+                else
+                    info_dke_yp(6,['no compatible LUKE version found for remote profile #',num2str(irem),' to host : ',dkepath.remote(irem).host,'. profile disabled.'])
+                end
             end
         end
+    else
+        flag(irem) = false;% no remote luke root specified
     end
 end
 %

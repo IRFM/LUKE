@@ -44,7 +44,11 @@ for irem = 1:nrem,
         cmdstr = 'unknown';
     end
     %
-    [err,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem));
+    job = lukestandardjob_jd(dkepath.remote(irem),'runmat');% standard job
+    job.debugmode = 1; % to display info and debug
+    job.funcopy = 0; % to use function LUKEversion_jd on the remote host within matlab path
+    %
+    [err,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem),job);
     %
     if isempty(dkepath.remote(irem).host),
         info_dke_yp(2,['Profile #',num2str(irem),' to host : local with cmd : ',cmdstr])
@@ -56,14 +60,7 @@ for irem = 1:nrem,
         info_dke_yp(4,['Version ',remotelukever,' with Matlab ',remotematrel,' working.'])
         flag(irem) = true;
     else
-        info_dke_yp(4,'Remote link failed for the following reason : ')
-        if iscell(err),
-            for ierr = 1:length(err),
-                disp(err(ierr))
-            end
-        else
-            disp(err)
-        end
+        disperr_jd(err)
     end
     %
     disp(' ')
