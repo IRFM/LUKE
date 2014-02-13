@@ -1,11 +1,6 @@
-function [dkepath] = path_CEA_ANDROMEDE1(luke_ref)
+function dkepath = path_CEA_ANDROMEDE1
 %
-% path definitions for the ANDROMEDE cluster 
-%
-%	Input:
-%
-%       - luke_ref: for CVS tagged LUKE version [1,1]
-%         (default: 'LUKE')
+% path definitions for the ANDROMEDE1 cluster 
 %
 %	Output:
 %
@@ -15,19 +10,10 @@ function [dkepath] = path_CEA_ANDROMEDE1(luke_ref)
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-if nargin == 0, 
-    luke_ref = 'LUKE';
-end
 %
 dkepath.hostname = 'andromede1';
 dkepath.machine = 'andromede1';
 dkepath.computer = computer;%machine type and supported OS
-%
-% Selected default user profile 
-%
-dkepath.path_profile.JD211098 = 1;
-dkepath.path_profile.YP105119 = 1;
-dkepath.path_profile.EN232106 = 1;
 %
 % Selected user profile for unlisted users
 %
@@ -35,7 +21,7 @@ dkepath.default = 'JD211098';
 %
 %------------------------------------ Profile number 1, JD211098 Decker ------------------------------------
 %
-dkepath.JD211098(1).luke_root = ['/home/JD211098/',luke_ref,'/'];
+dkepath.JD211098(1).luke_root = [pwd,filesep];
 dkepath.JD211098(1).local_root = '/home/JD211098/Packages/andromede/';
 dkepath.JD211098(1).temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -63,33 +49,28 @@ dkepath.JD211098(1).imagemagick.env = '/usr/bin/';% ImageMagick environment vari
 %
 % local
 %
-dkepath.JD211098(1).remote(1) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','joan','JD211098');
+dkepath.JD211098(1).remote(1) = remote_CEA_ANDROMEDE('pbs','joan');
 dkepath.JD211098(1).remote(1).host = '';% empty for local host
-dkepath.JD211098(1).remote(1).luke_root = dkepath.JD211098(1).luke_root;
+dkepath.JD211098(1).remote(1).env.luke_root = dkepath.JD211098(1).luke_root;
 %
 % macproyves (condor)
 %
-dkepath.JD211098(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','joan','JD211098');
+dkepath.JD211098(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','joan');
+dkepath.JD211098(1).remote(2).env.luke_root = '/Users/yvespeysson/joandecker/Work/LUKE_1_10/';
 %
 % macproyves (xgrid)
 %
-dkepath.JD211098(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan','JD211098');
-%
-% saturne (sun)
-%
-dkepath.JD211098(1).remote(4) = remote_CEA_SATURNE('sun','joan','JD211098');
-%
-% pleiades2 (pbs)
-%
-dkepath.JD211098(1).remote(5) = remote_CRPP_PLEIADES2('torque','joan','JD211098');
+dkepath.JD211098(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan');
+dkepath.JD211098(1).remote(3).env.luke_root = dkepath.JD211098(1).remote(2).env.luke_root;
 %
 % shenma (torque)
 %
-dkepath.JD211098(1).remote(6) = remote_ASIPP_SHENMA('torque','joan','JD211098');
+dkepath.JD211098(1).remote(4) = remote_ASIPP_SHENMA('torque','joan');
+dkepath.JD211098(1).remote(4).env.luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 %
 %------------------------------------ Profile number 1, YP105119 Peysson ------------------------------------
 %
-dkepath.YP105119(1).luke_root = ['/home/YP105119/',luke_ref,'/'];
+dkepath.YP105119(1).luke_root = [pwd,filesep];
 dkepath.YP105119(1).local_root = '/home/JD211098/Packages/andromede/';
 dkepath.YP105119(1).temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -113,29 +94,34 @@ dkepath.YP105119(1).imagemagick.env = '/usr/bin/';% ImageMagick environment vari
 %
 % local
 %
-dkepath.YP105119(1).remote(1) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','yves','YP105119');
+dkepath.YP105119(1).remote(1) = remote_CEA_ANDROMEDE('pbs','yves');
 dkepath.YP105119(1).remote(1).host = '';% empty for local host
-dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;
+dkepath.YP105119(1).remote(1).env.luke_root = dkepath.YP105119(1).luke_root;
 %
 % macproyves (condor)
 %
-dkepath.YP105119(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','yves','YP105119');
+dkepath.YP105119(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','yves');
+dkepath.YP105119(1).remote(2).env.luke_root = '/Users/yvespeysson/Projets/LUKE/';
+dkepath.YP105119(1).remote(2).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
+dkepath.YP105119(1).remote(2).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(2).env.luke_root];%CVS command
 %
 % macproyves (xgrid)
 %
-dkepath.YP105119(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','yves','YP105119');
-%
-% saturne (sun)
-%
-dkepath.YP105119(1).remote(4) = remote_CEA_SATURNE('sun','yves','YP105119');
+dkepath.YP105119(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','yves');
+dkepath.YP105119(1).remote(3).env.luke_root = dkepath.YP105119(1).remote(2).env.luke_root;
+dkepath.YP105119(1).remote(3).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
+dkepath.YP105119(1).remote(3).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(3).env.luke_root];%CVS command
 %
 % shenma (torque)
 %
-dkepath.YP105119(1).remote(5) = remote_ASIPP_SHENMA('torque','yves','YP105119');
+dkepath.YP105119(1).remote(4) = remote_ASIPP_SHENMA('torque','yves');
+dkepath.YP105119(1).remote(4).env.luke_root = '/home/PEYSSON/LUKE/';
+dkepath.YP105119(1).remote(4).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
+dkepath.YP105119(1).remote(4).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(4).env.luke_root];%CVS command
 %
 %------------------------------------ Profile number 1, EN232106 Nilsson ------------------------------------
 %
-dkepath.EN232106(1).luke_root = ['/home/EN290612/',luke_ref,'/'];
+dkepath.EN232106(1).luke_root = [pwd,filesep];
 dkepath.EN232106(1).local_root = '/home/JD211098/Packages/andromede/';
 dkepath.EN232106(1).temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -159,21 +145,19 @@ dkepath.EN232106(1).imagemagick.env = '/usr/bin/';% ImageMagick environment vari
 %
 % local
 %
-dkepath.EN232106(1).remote(1) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','emelie','EN232106');
+dkepath.EN232106(1).remote(1) = remote_CEA_ANDROMEDE('pbs','emelie');
 dkepath.EN232106(1).remote(1).host = '';% empty for local host
-dkepath.EN232106(1).remote(1).luke_root = dkepath.EN232106(1).luke_root;
+dkepath.EN232106(1).remote(1).env.luke_root = dkepath.EN232106(1).luke_root;
 %
 % macproyves (condor)
 %
-dkepath.EN232106(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','emelie','EN232106');
+dkepath.EN232106(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','emelie');
+dkepath.EN232106(1).remote(2).env.luke_root = '/Users/yvespeysson/emelienilsson/LUKE/';
 %
 % macproyves (xgrid)
 %
-dkepath.EN232106(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','emelie','EN232106');
-%
-% saturne (sun)
-%
-dkepath.EN232106(1).remote(4) = remote_CEA_SATURNE('sun','yves','EN232106');
+dkepath.EN232106(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','emelie');
+dkepath.EN232106(1).remote(3).env.luke_root = dkepath.EN232106(1).remote(2).env.luke_root;
 %
 
 

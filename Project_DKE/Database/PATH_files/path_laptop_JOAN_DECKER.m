@@ -1,11 +1,6 @@
-function [dkepath] = path_laptop_JOAN_DECKER(luke_ref)
+function dkepath = path_laptop_JOAN_DECKER
 %
 % path definitions for laptop of Joan Decker 
-%
-%	Input:
-%
-%       - luke_ref: for CVS tagged LUKE version [1,m]
-%         (default: 'LUKE')
 %
 %	Output:
 %
@@ -15,19 +10,13 @@ function [dkepath] = path_laptop_JOAN_DECKER(luke_ref)
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-if nargin == 0, luke_ref = 'LUKE';end
-%
 dkepath.hostname = 'CADTS-0096';%WARNING: for laptop, may change with connection status.
 dkepath.machine = 'laptopjoan';
 dkepath.computer = computer;%machine type and supported OS
 %
-% Selected user profile (structure hostname.usernames(path_profile).xxx)
-%
-dkepath.path_profile = 1;
-%
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
 %
-dkepath.joan(1).luke_root = [pwd,'/'];
+dkepath.joan(1).luke_root = [pwd,filesep];
 dkepath.joan(1).local_root = '/opt/';
 dkepath.joan(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -71,56 +60,46 @@ dkepath.joan(1).MUMPS.mex801 = [dkepath.joan(1).local_root,'MUMPS_4.10.0_ifort/M
 %
 %--------------------------- Remote computing -----------------------------
 %
-% local
+% andromede (pbs)
 %
-dkepath.joan(1).remote(1) = remote_CEA_CEPHEE('pbs','joan','joan');
+dkepath.joan(1).remote(1) = remote_CEA_ANDROMEDE('pbs','joan');
+dkepath.joan(1).remote(1).env.luke_root = '/home/JD211098/LUKE/';
 %
 % macproyves (condor)
 %
-dkepath.joan(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','joan','joan');
+dkepath.joan(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','joan');
+dkepath.joan(1).remote(2).env.luke_root = '/Users/yvespeysson/joandecker/Work/LUKE_1_10/';
 %
 % macproyves (xgrid)
 %
-dkepath.joan(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan','joan');
-%
-% cadts-0412 (torque, Timothee's computer)
-%
-dkepath.joan(1).remote(4) = remote_CEA_TIMDESKTOP('torque','joan','joan');
-%
-% andromede (pbs).
-%
-dkepath.joan(1).remote(5) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','joan','joan');
-%
-% intra integrated pbspro system (pleione, merope, nashira, newpegase, nunki cluster).
-%
-dkepath.joan(1).remote(6) = remote_CEA_PLEIONE('pbs','joan','joan');
-%
-% saturne (sun)
-%
-dkepath.joan(1).remote(7) = remote_CEA_SATURNE('sun','joan','joan');
-%
-% pleiades2 (pbs)
-%
-dkepath.joan(1).remote(8) = remote_CRPP_PLEIADES2('torque','joan','joan');
+dkepath.joan(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan');
+dkepath.joan(1).remote(3).env.luke_root = dkepath.joan(1).remote(2).env.luke_root;
 %
 % shenma (torque)
 %
-dkepath.joan(1).remote(9) = remote_ASIPP_SHENMA('torque','joan','joan');
+dkepath.joan(1).remote(4) = remote_ASIPP_SHENMA('torque','joan');
+dkepath.joan(1).remote(4).env.luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
+%
+% cephee (pbs)
+%
+dkepath.joan(1).remote(5) = remote_CEA_CEPHEE('pbs','joan');
+dkepath.joan(1).remote(5).env.luke_root.LUKE_1_8_6 = '/home/sccp/gsem/decker/LUKE_1_8/';
+dkepath.joan(1).remote(5).env.luke_root.LUKE_1_9_1 = '/home/sccp/gsem/decker/LUKE_1_9/';
+dkepath.joan(1).remote(5).env.luke_root.LUKE_1_10_0 = '/home/sccp/gsem/decker/LUKE_1_10/';
+dkepath.joan(1).remote(5).env.luke_root.LUKE_default = dkepath.joan(1).remote(5).env.luke_root.LUKE_1_10_0;% default remote LUKE version. Leave empty to enforce error if no match
+%
+% cadts-0412 (torque, Timothee's computer)
+%
+dkepath.joan(1).remote(6) = remote_CEA_TIMDESKTOP('torque','joan');
+dkepath.joan(1).remote(6).env.luke_root = dkepath.joan(1).remote(5).env.luke_root;% same FS as cephee
+%
+% intra integrated pbspro system (pleione, merope, nashira, newpegase, nunki cluster).
+%
+dkepath.joan(1).remote(7) = remote_CEA_PLEIONE('pbs','joan');
+dkepath.joan(1).remote(7).env.luke_root = dkepath.joan(1).remote(5).env.luke_root;% same FS as cephee
+%
+% saturne (sun)
+%
+dkepath.joan(1).remote(8) = remote_CEA_SATURNE('sun','joan');
+dkepath.joan(1).remote(8).env.luke_root = dkepath.joan(1).remote(1).env.luke_root;% same FS as andromede
 % 
-% cephee (direct)
-% 
-% dkepath.joan(1).remote(1).host = 'cephee15.intra.cea.fr';
-% dkepath.joan(1).remote(1).nproc = 1;% limited to two jobs per PBS node to avoid cluster saturation
-% dkepath.joan(1).remote(1).memory = 16000;%max memory on remote host (mb)
-% dkepath.joan(1).remote(1).cmd = '';
-% dkepath.joan(1).remote(1).get_jobid = {'','.cephee'};%str_before,str_after
-% dkepath.joan(1).remote(1).set_jobid = {'qstat ','.cephee','Unknown Job Id'};%str_before,str_after,str_check
-% dkepath.joan(1).remote(1).mat705.root = '/applications/matlab_2007b/bin/';
-% dkepath.joan(1).remote(1).mat705.prefdir = '/home/sccp/gsem/decker/.matlab/R2007b';
-% dkepath.joan(1).remote(1).mat710.root = '/Applications/Matlab_2010A/bin/';
-% dkepath.joan(1).remote(1).mat710.prefdir = '/home/sccp/gsem/decker/.matlab/R2010a';
-% dkepath.joan(1).remote(1).mat712.root = '/Applications/Matlab_2011A/bin/';
-% dkepath.joan(1).remote(1).mat712.prefdir = '/home/sccp/gsem/decker/.matlab/R2011a';
-% dkepath.joan(1).remote(1).matdef = dkepath.joan(1).remote(1).mat710;%default matlab on remote machine
-% dkepath.joan(1).remote(1).luke_root = '/home/sccp/gsem/decker/LUKE_1_10/';
-% dkepath.joan(1).remote(1).joan = 'JD211098';

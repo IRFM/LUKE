@@ -1,89 +1,76 @@
-function [macproyves] = path_macpro_YVES_PEYSSON(luke_ref)
+function dkepath = path_macpro_YVES_PEYSSON
 %
 % path definitions for macpro 2011 (Core i7 Intel) of Yves Peysson 
 %
-%	Input:
-%
-%       - luke_ref: for CVS tagged LUKE version [1,m]
-%         (default: 'LUKE')
-%
 %	Output:
 %
-%       - macproyves: path structure
+%       - dkepath: path structure
 %
 %   Warning: none
 %
 % by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
 %
-if nargin == 0, luke_ref = 'LUKE';end
-%
-[dummy,matlabversion,matlabrelease] = LUKEversion_jd;
-%
-macproyves.hostname = 'macproyves';
-macproyves.machine = 'macproyves';
-macproyves.computer = computer;%machine type and supported OS
-%
-% Selected user profile (structure hostname.usernames(path_profile).xxx)
-%
-macproyves.path_profile.yvespeysson = 1;
+dkepath.hostname = 'macproyves';
+dkepath.machine = 'macproyves';
+dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
 %
-macproyves.default = 'yvespeysson';
+dkepath.default = 'yvespeysson';
 %
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-macproyves.yvespeysson(1).luke_root = [pwd,filesep];% local path necessary to handle several LUKE versions 
+dkepath.yvespeysson(1).luke_root = [pwd,filesep];% local path necessary to handle several LUKE versions 
 %
 % NOTE : It is better to use path_profile than pwd to separate between LUKE
 % versions, but this is not yet fully supported by load_strutctures_yp
 %
-macproyves.yvespeysson(1).local_root = ['/Users/yvespeysson/Shared/'];
-macproyves.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.yvespeysson(1).local_root = ['/Users/yvespeysson/Shared/'];
+dkepath.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-macproyves.yvespeysson(1).mex800 = [macproyves.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB800','/'];
-macproyves.yvespeysson(1).mex801 = [macproyves.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB801','/'];
+dkepath.yvespeysson(1).mex800 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB800','/'];
+dkepath.yvespeysson(1).mex801 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB801','/'];
 %
-macproyves.yvespeysson(1).compiler_opt.copts = '';
-macproyves.yvespeysson(1).compiler_opt.helmex = NaN;%'-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-macproyves.yvespeysson(1).compiler_opt.fopts = ' ';
+dkepath.yvespeysson(1).compiler_opt.copts = '';
+dkepath.yvespeysson(1).compiler_opt.helmex = NaN;%'-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvespeysson(1).compiler_opt.fopts = ' ';
 %
 % MUMPS matrix solver (parallel, sequential, mex)
 %
-%macproyves.yvespeysson(1).MUMPS.par = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
-%macproyves.yvespeysson(1).MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-macproyves.yvespeysson(1).MUMPS.seq = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-macproyves.yvespeysson(1).MUMPS.mex800 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
-macproyves.yvespeysson(1).MUMPS.mex801 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yvespeysson(1).MUMPS.par = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
+%dkepath.yvespeysson(1).MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+dkepath.yvespeysson(1).MUMPS.seq = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
+dkepath.yvespeysson(1).MUMPS.mex800 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).MUMPS.mex801 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % SUPERLU matrix solver (parallel, sequential)
 %
-macproyves.yvespeysson(1).SUPERLU.mex800 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB800'];%Where SUPERLU matrix solver is stored (MEX function)
-macproyves.yvespeysson(1).SUPERLU.mex801 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB801'];%Where SUPERLU matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).SUPERLU.mex800 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB800'];%Where SUPERLU matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).SUPERLU.mex801 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB801'];%Where SUPERLU matrix solver is stored (MEX function)
 %
 % PETSc matrix solver (parallel, sequential)
 %
-%macproyves.yvespeysson(1).PETSc.par = [macproyves.yvespeysson(1).local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
-%macproyves.yvespeysson(1).PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
-%macproyves.yvespeysson(1).PETSc.seq = [macproyves.yvespeysson(1).local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S_gfortran/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
+%dkepath.yvespeysson(1).PETSc.par = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PETSC/petsc-2.3.2-p10_P_openmpig95/DKE'];%Where PETSc matrix solver is stored (stand-alone application for parallel processing)
+%dkepath.yvespeysson(1).PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
+%dkepath.yvespeysson(1).PETSc.seq = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S_gfortran/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
 %
 % PARDISO matrix solver (mex)
 %
-macproyves.yvespeysson(1).PARDISO.mex801 = [macproyves.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB801'];%Where PARDISO matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).PARDISO.mex801 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB801'];%Where PARDISO matrix solver is stored (MEX function)
 %
 %--------------------------- Access to the experimental databases -----------------------------
 %
 % Tore Supra (TSBase)
 %
-macproyves.yvespeysson(1).TSBASE.mex = [macproyves.yvespeysson(1).luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase'];%Where tsbase, tsmat and tsdernier_choc functions are stored (MEX function)
+dkepath.yvespeysson(1).TSBASE.mex = [dkepath.yvespeysson(1).luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase'];%Where tsbase, tsmat and tsdernier_choc functions are stored (MEX function)
 %
 % LUKE documentation
 %
-macproyves.yvespeysson(1).graphviz.env = '/usr/local/bin/';% Graphviz environment variable
-macproyves.yvespeysson(1).latex.env = '/usr/texbin/';% Latex environment variable
-macproyves.yvespeysson(1).imagemagick.env = '/opt/local/bin/';% ImageMagick environment variable
+dkepath.yvespeysson(1).graphviz.env = '/usr/local/bin/';% Graphviz environment variable
+dkepath.yvespeysson(1).latex.env = '/usr/texbin/';% Latex environment variable
+dkepath.yvespeysson(1).imagemagick.env = '/opt/local/bin/';% ImageMagick environment variable
 %
 %--------------------------- Distributed computing -----------------------------
 %
@@ -104,12 +91,29 @@ macproyves.yvespeysson(1).imagemagick.env = '/opt/local/bin/';% ImageMagick envi
 % WARNING: the setup of the scheduler may be complicated and is usually
 % machine dependent. 
 %
-macproyves.yvespeysson(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yves','yvespeysson');
-macproyves.yvespeysson(1).remote(1).luke_root = macproyves.yvespeysson(1).luke_root;
 %
-macproyves.yvespeysson(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves','yvespeysson');
-macproyves.yvespeysson(1).remote(3) = remote_ASIPP_SHENMA('torque','yves','yvespeysson');
-macproyves.yvespeysson(1).remote(4) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','yves','yvespeysson');
-%macproyves.yvespeysson(1).remote(5) = remote_CEA_SATURNE('sun','yves','yvespeysson');
-
+% local (condor)
+%
+dkepath.yvespeysson(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yves');
+dkepath.yvespeysson(1).remote(1).host = '';% empty for local host
+dkepath.yvespeysson(1).remote(1).env.luke_root = dkepath.yvespeysson(1).luke_root;
+%
+% local (xgrid)
+%
+dkepath.yvespeysson(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves');
+dkepath.yvespeysson(1).remote(2).host = '';% empty for local host
+dkepath.yvespeysson(1).remote(2).env.luke_root = dkepath.yvespeysson(1).luke_root;
+%
+% shenma (torque)
+%
+dkepath.yvespeysson(1).remote(3) = remote_ASIPP_SHENMA('torque','yves');
+dkepath.yvespeysson(1).remote(3).env.luke_root = '/home/PEYSSON/LUKE/';
+dkepath.yvespeysson(1).remote(3).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
+dkepath.yvespeysson(1).remote(3).cvs.cmd = ['update -d ',dkepath.yvespeysson(1).remote(3).env.luke_root];%CVS command
+%
+% andromede (pbs)
+%
+dkepath.yvespeysson(1).remote(4) = remote_CEA_ANDROMEDE('pbs','yves');
+dkepath.yvespeysson(1).remote(4).env.luke_root = '/home/YP105119/LUKE/';
+%
 
