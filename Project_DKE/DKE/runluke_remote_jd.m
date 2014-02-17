@@ -1,14 +1,6 @@
 function luke_job = runluke_remote_jd(lukestructs,remote)
 %
-if isfield(remote,'debugmode'),
-    debugmode = remote.debugmode;
-else
-    debugmode = 0;
-end
-%
-luke_job = matstandardjob_jd(remote,'runmat');
-%
-luke_job.debugmode = debugmode;
+luke_job = lukestandardjob_jd(remote,'runmat');
 %
 mat_input.fun = 'run_lukert';
 mat_input.args_in = lukestructs;
@@ -27,5 +19,5 @@ if isfield(lukestructs.dkeparam,'luke_ppn'),
     luke_job.ppn = lukestructs.dkeparam.luke_ppn;% requested memory specified in dkeparam
 end
 %
-luke_job = remoterunbatch(remote,luke_job,mat_input,debugmode);
+luke_job = remoterunbatch(remote,luke_job,mat_input);
 %

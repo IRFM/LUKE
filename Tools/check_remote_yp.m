@@ -46,7 +46,7 @@ for irem = 1:nrem,
     %
     job = lukestandardjob_jd(dkepath.remote(irem),'runmat');% standard job
     job.debugmode = 1; % to display info and debug
-    job.funcopy = 0; % to use function LUKEversion_jd on the remote host within matlab path
+    job.funcopy = 0; % (0) to use function LUKEversion_jd on the remote host within matlab path
     %
     [err,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem),job);
     %

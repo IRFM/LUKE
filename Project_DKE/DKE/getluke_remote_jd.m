@@ -1,8 +1,8 @@
-function output = getluke_remote_jd(luke_job,remote,debugmode)
+function output = getluke_remote_jd(luke_job,debugmode)
 %
-if nargin < 3
-    debugmode = 0;
+if nargin < 2,
+    debugmode = luke_job.debugmode;
 end
 %
-output = remotegetbatch(remote,luke_job,debugmode);
+output = remotegetbatch(luke_job,debugmode);
 %
