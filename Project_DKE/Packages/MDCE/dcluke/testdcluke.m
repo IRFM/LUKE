@@ -8,8 +8,7 @@ if isappdata(0,'BATCH_DISTRIBUE_LUKE'),rmappdata(0,'BATCH_DISTRIBUE_LUKE');end
 %
 nrun = 7;%number of jobs
 %
-dkepath = load_structures_yp('dkepath','','');
-[dkecluster] = clustermode_luke(2,'',dkepath);%Cluster parameters, paths and warnings. Must be called once before distributed computing
+[dkecluster] = mdce_clustermode(2);%Cluster parameters, paths and warnings. Must be called once before distributed computing
 %
 if dkecluster.scheduler.mode == 2,
     mkdir(dkecluster.scheduler.temppath);

@@ -3,7 +3,7 @@ function [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = loop_rfdiff_dke_
 % This function splits the calculation of rfdiff_dke_jd
 % with possible use of distributed computing
 %
-[dkecluster] = clustermode_luke(dkeparam.clustermode,'rfdiff_dke_jd',dkepath);
+[dkecluster] = mdce_clustermode(dkeparam.clustermode,'rfdiff_dke_jd');
 nproc = dkecluster.scheduler.clustersize;
 %
 ny = max(waveparam.biy_rf);
@@ -37,7 +37,7 @@ for iproc=1:nproc,
     %
 end
 %
-[flags,ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = mdce_luke('rfdiff_dke_jd',{dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,''},9,waveparams,dkecluster);
+[flags,ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = mdce_run('rfdiff_dke_jd',{dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,''},9,waveparams,dkecluster);
 %
 ZXYD_rf = conc_field_jd(ZXYD_rf);
 ZXYF_rf = conc_field_jd(ZXYF_rf);

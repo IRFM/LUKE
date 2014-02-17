@@ -164,7 +164,7 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',dkepath);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd = mdce_clustermode(0);%All cluster parameters and paths
 %
 % ray-tracing calculations
 %

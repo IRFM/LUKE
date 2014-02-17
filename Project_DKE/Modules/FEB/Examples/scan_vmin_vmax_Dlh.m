@@ -73,9 +73,9 @@ fieldside = NaN;%Distribution enforced corresponding to 'HFS' (theta = pi) or 'L
 chordview = 0;%No heliticity enforced: 0 (perp), 1 (forward) or -1 (backward). If NaN, the exact heliticity of the magnetic equilibrium is considered.
 %
 disp('---------------------------------------------------------------------');
-[clusterparam] = clustermode_luke(dkedisplay,scanparam,'scanloop');
+[clusterparam] = mdce_clustermode(dkedisplay,scanparam);
 for iD0 = 1:length(D0),arg_range{iD0} = iD0;end
-[flag,norm,curr,Tph,Tph_star] = mdce_luke(@loop_scan_vmin_vmax_Dlh,{iD0,vmin,vmax,D0,epsi,Te,rho_S,dkepath,equil,dkeparam,dkedisplay,hxr,hxrparam,fieldside,chordview},1,arg_range,clusterparam);
+[flag,norm,curr,Tph,Tph_star] = mdce_run(@loop_scan_vmin_vmax_Dlh,{iD0,vmin,vmax,D0,epsi,Te,rho_S,dkepath,equil,dkeparam,dkedisplay,hxr,hxrparam,fieldside,chordview},1,arg_range,clusterparam);
 %
 norm1 = cell2mat(norm);
 curr1 = cell2mat(curr);

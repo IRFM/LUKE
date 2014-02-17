@@ -138,10 +138,10 @@ rayparam.kextra = 1000;
 %
 % Parallel computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = clustermode_luke(0,'',0,dkepath);%MatLab distributed computing environment
+C3POparam.clustermode.main_C3PO_jd = mdce_clustermode(0);%MatLab distributed computing environment
 C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
 %
-dkeparam.clustermode.wave_solver_yp = clustermode_luke(0,'',0,dkepath);%MatLab distributed computing environment
+dkeparam.clustermode.wave_solver_yp = mdce_clustermode(0);%MatLab distributed computing environment
 dkeparam.clustermode.wave_solver_yp.scheduler.display = 1;
 %
 % launch structure

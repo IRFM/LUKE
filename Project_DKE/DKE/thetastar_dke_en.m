@@ -52,9 +52,9 @@ clustermode.loop_thetastar_dke_en.scheduler.enforce = mdce_enforce;
 %
 clustermode.ftest_mdce.scheduler.display = mdce_display;
 %
-[dkecluster] = clustermode_luke(clustermode,'loop_thetastar_dke_en',dkepath,'local',mdce_remote);
+[dkecluster] = mdce_clustermode(clustermode,'loop_thetastar_dke_en');
 
-%[dkecluster] = clustermode_luke(dkeparam.clustermode,'loop_thetastar_dke_en',dkepath,'local',3);
+%[dkecluster] = mdce_clustermode(dkeparam.clustermode,'loop_thetastar_dke_en');
 
 %dkecluster.scheduler.mode = 0;
 tic
@@ -69,7 +69,7 @@ end
 %    igrid
 %end
 %
-[flag,YYalpha,YYthetastar1,YYthetastar2] = mdce_luke(@loop_thetastar_dke_en,{NaN,grid_index,equilDKE.xrho,equilDKE.equil_fit,equilDKE.xB0,Bmax,gridDKE.mhu,Zmomcoef.gamma,options_fzero},1,1:length(grid_index),dkecluster);
+[flag,YYalpha,YYthetastar1,YYthetastar2] = mdce_run(@loop_thetastar_dke_en,{NaN,grid_index,equilDKE.xrho,equilDKE.equil_fit,equilDKE.xB0,Bmax,gridDKE.mhu,Zmomcoef.gamma,options_fzero},1,1:length(grid_index),dkecluster);
 %
 toc
 %

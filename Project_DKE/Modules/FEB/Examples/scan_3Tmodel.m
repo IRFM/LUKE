@@ -96,7 +96,7 @@ disp('---------------------------------------------------------------------');
 return
 %
 for iEcut = 1:length(iEcut),arg_range{iEcut} = iEcut;end
-[flag,norm,curr,Tph,Tph_star] = mdce_luke(@loop_scan_3Tmodel,{iEcut,frac,Ecut,Tpar,Tperp,Tback,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,hxr,hxrparam,fieldside,chordview},1,arg_range,clusterparam);
+[flag,norm,curr,Tph,Tph_star] = mdce_run(@loop_scan_3Tmodel,{iEcut,frac,Ecut,Tpar,Tperp,Tback,Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,hxr,hxrparam,fieldside,chordview},1,arg_range,clusterparam);
 %
 norm1 = cell2mat(norm);
 curr1 = cell2mat(curr);

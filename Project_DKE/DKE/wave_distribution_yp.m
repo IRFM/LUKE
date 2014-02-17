@@ -114,12 +114,12 @@ if iscell(byPnonabs),%calculate fluctuation phases and adjust initial power in e
     end          
 end    
 %
-dkecluster = clustermode_luke(dkeparam.clustermode,'wave_solver_yp',dkepath);%MatLab distributed computing environment
+dkecluster = mdce_clustermode(dkeparam.clustermode,'wave_solver_yp');%MatLab distributed computing environment
 %
 if dkecluster.scheduler.mode >= 0,
-    [flag,waves] = mdce_luke(@wave_solver_yp,{dkepath,'',f0struct},2,wavestructs(:),dkecluster);
+    [flag,waves] = mdce_run(@wave_solver_yp,{dkepath,'',f0struct},2,wavestructs(:),dkecluster);
 else% remote computing
-    [flag,waves] = mdce_luke(@wave_solver_yp,{'','',f0struct},2,wavestructs(:),dkecluster);
+    [flag,waves] = mdce_run(@wave_solver_yp,{'','',f0struct},2,wavestructs(:),dkecluster);
 end    
 %
 % determines which rays actually enter the plasma and report the ray number in zP_0_2piRp_mod

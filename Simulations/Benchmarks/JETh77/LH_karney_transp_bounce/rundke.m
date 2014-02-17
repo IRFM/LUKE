@@ -117,11 +117,11 @@ iDr0_save = 8;
 nDr0 = length(Dr0_list);
 nr = length(rho_S) - 1;
 %
-dkecluster = clustermode_luke(mdce_mode,'',dkepath,scheduler);
+dkecluster = mdce_clustermode(mdce_mode);
 dkecluster.clustersize = nDr0;
 dkecluster.enforce = mdce_enforce;%enforce sequential run if distributed computing failed
 %
-[flag,cZcurr,cZP0,cdke_out,cequilDKE,cmksa] = mdce_luke(@loop_rundke,...
+[flag,cZcurr,cZP0,cdke_out,cequilDKE,cmksa] = mdce_run(@loop_rundke,...
     {'',Dr0_list,iDr0_save,id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple},...
     1,1:nDr0,dkecluster);
 %
