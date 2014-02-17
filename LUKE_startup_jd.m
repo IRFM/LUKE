@@ -1,168 +1,335 @@
-function flag = LUKE_startup_jd(spath,pathforstartup,mode)
-%
-% This function creates or mofifies a startup file to include LUKE paths
-%
-%By Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
-%
-if nargin < 3,
-    mode = 0;
-end
-%
-flag = 0;%existing startup file
-%
-disp(' ');
-%
-if isempty(pathforstartup);
-    pathforstartup = which('startup.m');%The default directory for startup.m is the same as the always existing startup.m file
-    if isempty(pathforstartup),
-        matlabpath = path;
-        pathforstartup = [matlabpath(1:find(matlabpath == ':',1,'first') - 1),filesep];%first path location selected.
-        disp('No startup file found in matlab path.')
-        disp(['Default location for startup file : ',pathforstartup])
-        flag = 1;%new startup file
+function [MatToolspath,MatRemotepath] = LUKE_startup_jd
+    %
+    % This function creates or mofifies a startup file to include LUKE paths
+    %
+    % By Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
+    %
+    MatRemotepath = '';
+    %
+    % -------------------------------------------------------------
+    % verify that the MatRemote and MatTools toolboxes 
+    % are available on the local machine
+    % select active directory if there is more than one
+    % -------------------------------------------------------------
+    %
+    %
+    MatToolspath = findandselect_jd('MatTools','d',false);
+    disp(' ');
+    if isempty(MatToolspath),
+        disp('Aborting startup setup.')
+        return
     else
-        pathforstartup = pathforstartup(1:end-length('startup.m'));
-        disp(['File startup.m found at this location : ',pathforstartup])
+        disp(['--> following toolbox selected : ',MatToolspath])
     end
-else
-    disp(['Location selected for startup file : ',pathforstartup])
-end
-%
-if strcmp(pathforstartup(end),filesep);
-    startupfile = [pathforstartup,'startup.m'];
-else
-    startupfile = [pathforstartup,filesep,'startup.m'];
-end
-%
-if exist(startupfile,'file'),%startup.m file already exist
     %
-    % test that file can be written
-    %
-    fid = fopen(startupfile,'r+');  
-    if fid == -1,
-        %
-        disp('Warning : Cannot write to startup.m, permission denied. Please setup startup file manually.');
-        %
-        flag = 2;
-        %
+    MatRemotepath = findandselect_jd('MatRemote','d',false);
+    disp(' ');
+    if isempty(MatRemotepath),
+        disp('Aborting startup setup.')
+        return
     else
+        disp(['--> following toolbox selected : ',MatRemotepath])
+    end
+    %
+    % -------------------------------------------------------------
+    %                   locate & select LUKE installations
+    % -------------------------------------------------------------
+    %
+    LUKEpaths = findandselect_jd('install_LUKE.m','f',true,true,'Which LUKE distributions do you want to include in the startup choice list?');
+    %
+    nLUKEpaths = length(LUKEpaths);
+    disp(' ');
+    if isempty(LUKEpaths),
+        disp('Aborting startup setup.')
+        return
+    else
+        disp('--> following LUKE versions selected : ')
+        for iLUKEpath = 1:nLUKEpaths,
+            disp([' - ',LUKEpaths{iLUKEpath}]);
+        end
+    end
+    %
+    % -------------------------------------------------------------
+    %                   locate startup.m file
+    % -------------------------------------------------------------
+    %
+    pathforstartup = fileparts(which('startup.m'));% find existing startup.m file
+    disp(' ');
+    if isempty(pathforstartup),
+        pathforstartup = getenv('HOME');% choose home folder to find or create startup.m file
+    end
+    %
+    startupfile = [pathforstartup,filesep,'startup.m'];
+    %
+    if ~exist(startupfile,'file'),
+        disp(['File startup.m created in folder ',pathforstartup,filesep])
+    else
+        disp(['File ',startupfile,' selected.'])
+    end
+    %
+    % -------------------------------------------------------------
+    %               find or create startup_LUKE.m
+    % -------------------------------------------------------------
+    %
+    startup_LUKE_files = which('startup_LUKE.m','-all');
+    nfiles = length(startup_LUKE_files);
+    %
+    if nfiles > 0,% existing startup_LUKE.m file found on the matlab path
         %
-        % look for existing LUKE path in file
+        startup_LUKEfile = startup_LUKE_files{1};% first file on the matlab path
+        startup_LUKEpath = fileparts(startup_LUKEfile);
         %
-        sfile = fread(fid);
-        cfile = char(sfile.');
+        disp(' ');
+        if strcmp(pathforstartup,startup_LUKEpath),% startup_LUKE.m found in the same location as startup.m
+            disp('A startup_LUKE.m file have been found in the same location as startup.m.');
+        else% startup_LUKE.m found in a different location
+            disp(['A startup_LUKE.m file have been found at the following location : ',startup_LUKEpath]);
+        end
+        opt = input('It will be replaced by a new one. Are you sure you want to proceed? (y/n) [y] ? ','s');
+        if isempty(opt),
+            opt = 'y';
+        end
         %
-        sf1 = strfind(cfile,'%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
-        sf2 = strfind(cfile,'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
+        if ~strcmp(opt,'y'),
+            disp(' ');
+            disp('Operation aborted. Please setup startup file manually.');
+            return
+        end
         %
-        if length(sf1) ~= length(sf2),
-            disp('Warning : Problem in old startup.m file. Please setup startup.m file manually.');
-            flag = 2;
+        if ~strcmp(pathforstartup,startup_LUKEpath),
+            disp('Please ensure manually that the file ',startup_LUKEfile,' will be in the matlab path upon startup.')
+        end
+        %
+        if nfiles > 1,% other startup_LUKE.m found on the matlab path
+            disp(' ');
+            disp('Additional startup_LUKE.m file have been found in the following locations on the matlab path :');
+            disp(' ');
+            %
+            for ifile = 2:nfiles,
+                disp(startup_LUKE_files{ifile});
+            end
+            %
+            disp(' ');
+            disp(['Please ensure that these additional startup_LUKE.m files will be below the file ',startup_LUKEfile,' on the matlab path']);
+            disp(' ');
+            %
+        end
+    else
+        startup_LUKEfile = [pathforstartup,filesep,'startup_LUKE.m'];% startup_LUKE.m file created at the same location as startup.m
+    end
+    %
+    % test that startup_LUKE.m can be created or overwritten
+    %
+    fid = fopen(startup_LUKEfile,'w');  
+    %
+    if fid == -1,
+        disp('Warning : Cannot create startup_LUKE.m, permission denied. Please setup startup file manually.');
+        return
+    else
+        fclose(fid);
+    end
+    %
+    if nfiles > 0,% delete existing startup_LUKE.m file
+        delete(startup_LUKEfile)
+    end
+    %
+    disp('---------------------------------------------------------')
+    disp(' ');
+    %
+    diary(startup_LUKEfile),% create startup_LUKE.m
+    %
+    disp('function startup_LUKE');
+    disp('%');
+    disp('% Setup paths to MatRemote and MatTools toolboxes');
+    disp('%');
+    disp(['matremote_path = ''',MatRemotepath,''';']);% change if needed');
+    disp(['mattools_path = ''',MatToolspath,''';']);% change if needed');
+    disp('%');
+    disp('addpath(matremote_path);% MatRemote toolbox');
+    disp('addpath([matremote_path,filesep,''Profiles'']);% remote profiles');
+    disp('addpath(mattools_path);% MatTools toolbox');
+    disp('%');
+    disp('%');
+    disp('lukeversions = {...');
+    for ifile = 1:nLUKEpaths,
+        disp(['   ''',LUKEpaths{ifile},filesep,''',...']);
+    end
+    disp('   };');
+    disp('%');
+    disp('select_LUKE_jd(lukeversions)');
+    disp('%');
+    %
+    diary off
+    disp(' ');
+    disp('---------------------------------------------------------')
+    %
+    % -------------------------------------------------------------
+    %       check or add call to startup_LUKE in startup.m
+    % -------------------------------------------------------------
+    %
+    flag = 0;
+    %
+    if exist(startupfile,'file'),%startup.m file already exist
+        %
+        % check if call to startup_LUKE is implemented in startup.m
+        %
+        filestr = fileread(startupfile);
+        %
+        if strfind(filestr,'startup_LUKE'),
+            disp(' ');
+            disp('Call to startup_LUKE already implemented in startup.m');
+            %
         else
             %
-            mask = zeros(3,0);
-            %
-            for isf = 1:length(sf1),
-                %
-                % test for LUKE path at the present location, ignore others
-                %
-                if any(strfind(cfile(sf1(isf):sf2(isf)),[pwd,'/'])),
-                    tabl = find(sfile(sf1(isf) + 54:sf2(isf)) ~= 32,1,'first') - 1;% length of tabulation
-                    mask = [mask,[sf1(isf);sf2(isf)+53;tabl]];% indices to be replaced
-                end
-            end
-            %
-            if isempty(mask),% no existing LUKE path at present location
-                %
-                if isempty(sf1),% no existing LUKE path anywhere
-                    flag = -1;% write LUKE path at end of file
-                else
-                    disp('Warning : Too complex startup.m file. Please setup startup.m file manually.');
-                    flag = 2;
-                end
-                %    
-            else% found older LUKE path at present location in startup file. Replaced.                    
-                %
-                if mode == 0
-                    cfile_new = cfile(1:mask(1,1)-1);
-                else
-                    cfile_new = cfile(1:sf2-1);
-                end
-                %
-                for imk = 1:size(mask,2),
-                    if imk < size(mask,2),
-                        inext = mask(1,imk+1)-1;
-                    else
-                        inext = length(cfile);
-                    end
-                    %
-                    tabstr = repmat(' ',[1,mask(3,imk)]);
-                    %
-                    if mode == 0
-                        cfilenew1 = '';
-                    else
-                        cfilenew1 = sprintf('%s\n','%');
-                    end
-                    %
-                    for ispath = 1:length(spath)-1
-                        cfilenew1 =[cfilenew1,spath{ispath},tabstr];
-                    end
-                    %
-                    if mode == 0
-                        cfile_new = [cfile_new,cfilenew1,spath{end},cfile(mask(2,imk)+1:inext)];
-                    else
-                        cfile_new = [cfile_new,cfilenew1,spath{end},tabstr,'%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%',cfile(mask(2,imk)+1:inext)];                       
-                    end                                       
-                end
-                %
+            % test that startup.m can be written into
+            % 
+            fid = fopen(startupfile,'r+');  
+            if fid == -1,
+                disp('Warning : Cannot write to startup.m, permission denied. Please setup startup file manually.');
+                flag = 2;
+            else
                 fclose(fid);
-                %
-                fid = fopen(startupfile,'w');  
-                fwrite(fid,double(cfile_new).'); 
-                disp('LUKE path updated in startup.m file.')
-                %
+                flag = 1;
             end
+            %
         end
+    else    
         %
-        fclose(fid); 
+        % test that startup.m can be created
+        %
+        fid = fopen(startupfile,'w');  
+        %
+        if fid == -1,
+            disp('Warning : Cannot create startup.m, permission denied. Please setup startup file manually.');
+            flag = 2;
+        else
+            fclose(fid);
+            flag = 1;
+        end
         %
     end
     %
-else %startup.m file does not exist. It will be created
-    %
-    if flag == 0,
-        disp(['No startup.m file found at selected location : ',pathforstartup,'.'])
-        disp('It will be created there.')
-        flag = 1;
+    if flag == 1,
+        %
+        % add call to startup_LUKE a the end of startup.m
+        %
+        diary(startupfile)
+        %
+        disp('%')
+        disp('startup_LUKE;% set up path to LUKE as well as the toolboxes MatRemote and MatTools')
+        disp('%')
+        %
+        diary off
+        %
     end
     %
 end
 %
-if abs(flag) == 1,%path added in new startup file or at end of existing file
+%
+function foundpaths = findandselect_jd(pathname,pathtype,multi,optlocal,message)
     %
-    cfile = '';
-    for ispath = 1:length(spath),
-        cfile = [cfile,spath{ispath}];
-    end
-    %                
-    fid = fopen(startupfile,'a+');%Create or open startup.m file and append LUKE path at the end of the existing startup file
+    % This function searches for the file(s) (pathtype == 'f') or folder(s) (pathtype == 'd') named 'pathname' in the home directory. 
+    % if multi = true, can select more than one instances
+    % if optlocal == true, put local folder first if in the list
+    % use 'message' for selection, or default message if left empty
     %
-    if fid == -1,
-        %
-        disp('Warning : Cannot write to startup.m, permission denied. Please setup startup file manually.');
-        %
-        flag = 2;
-        %
+    if multi,
+        foundpaths = {};
     else
+        foundpaths = '';
+    end
+    %
+    [res,foundpathstr] = unix(['find ',getenv('HOME'),' -type ',pathtype,' -name "',pathname,'"']);
+    %
+    if res ~= 0,
+        disp(['Error trying to locate ',pathname,' :',foundpathstr])
+        return
+    elseif isempty(foundpathstr),
+        disp([pathname,' not found on the local machine. Please download before starting LUKE install again.'])
+        return
+    else
+        ieof = [0,find(double(foundpathstr) == 10)];
+        nfoundpaths = length(ieof) - 1;
         %
-        if flag == 1,
-            disp(['startup.m file created in folder ',pathforstartup])
+        foundpaths = cell(1,nfoundpaths);
+        for ifoundpath = 1:nfoundpaths,
+            foundpaths{ifoundpath} = foundpathstr(ieof(ifoundpath) + 1:ieof(ifoundpath + 1) - 1);% char -> cell
+            %
+            if pathtype == 'f',
+                foundpaths{ifoundpath} = fileparts(foundpaths{ifoundpath});
+            end
+        end  
+        %
+        if nargin > 3 && optlocal,
+            %
+            localpath = fileparts(which(mfilename));% local version
+            %
+            foundpaths = [{localpath},foundpaths(~strcmp(foundpaths,localpath))];% move local version to first position in list   
+            %
+        end        
+        %
+        if nfoundpaths > 1,
+            %
+            ipath = [];
+            %
+            while isempty(ipath),
+                if nargin < 4 || isempty(message),
+                    if multi,
+                        message = ['Please select one or more version(s) of ',pathname,' :'];
+                    else
+                        message = ['Please select a version of ',pathname,' :'];
+                    end
+                end
+                %   
+                disp(' ');
+                disp(message)
+                if multi,
+                    disp('---> Enter array of choices (ex : [1,2,4]), or simply return to include entire list');
+                end
+                disp(' ');
+                %
+                for ifoundpath = 1:nfoundpaths,
+                    disp(['[',num2str(ifoundpath),'] : ',foundpaths{ifoundpath}])
+                end
+                %
+                disp(' ');
+                if multi,
+                    selection = input(' ? : ');
+                else
+                    selection = input(' ? default : [1] : ');
+                end
+                %
+                if multi,
+                    if isempty(selection),
+                        ipath = 1:nfoundpaths;
+                    elseif isnumeric(selection) && all(sum(repmat(selection(:),[1,nfoundpaths]) == repmat(1:nfoundpaths,[length(selection(:)),1]),2) == ones(length(selection(:)),1)),
+                        ipath = selection(:).';
+                    else
+                        disp('Invalid choice.')
+                    end
+                else
+                    if isempty(selection),
+                        ipath = 1;
+                    elseif isnumeric(selection) && isscalar(selection) && any(selection == 1:nfoundpaths),
+                        ipath = selection;
+                    else
+                        disp('Invalid choice.')
+                    end
+                end                    
+            end
+            %
+        else
+            ipath = 1;
         end
         %
-        fwrite(fid,double(cfile).');  
-        disp('LUKE path added to startup.m file.')
-        fclose(fid);
+        if multi,
+            foundpaths = foundpaths(ipath);
+        else
+            foundpaths = foundpaths{ipath};
+        end
         %
     end
+    %
 end
 %
+

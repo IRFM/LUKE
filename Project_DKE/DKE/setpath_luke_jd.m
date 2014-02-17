@@ -21,7 +21,10 @@ while ~isempty(P),
 end
 %
 if nargin == 0, 
-    return
+    luke_root = getenv('luke_root');
+    if isempty(luke_root),
+        return
+    end
 end
 %
 % Path for LUKE and Modules

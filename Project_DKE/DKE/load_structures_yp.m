@@ -1,4 +1,4 @@
-function [varargout] = load_structures_yp(varargin);
+function [varargout] = load_structures_yp(varargin)
 %LUKE - Load structures for LUKE 
 %
 % Load structures for LUKE 
@@ -127,100 +127,30 @@ end
 %
 if exist('flag_path','var'),%Paths
     %
-    if isnumeric(id_path),% path profile number selected
-        profnum = id_path;
-        id_path = '';
-    else
-        profnum = NaN;% default profile number
-    end
-    %
-    if isempty(id_path),%path is taken relative to local directory
-        dkepath = path_LUKE_LOCAL;
-        info_dke_yp(2,['Local LUKE path selected']);
+    if isempty(id_path),% load file LUKE_PATH.mat in PATH
+        %
+        filenames = which('LUKE_PATH.mat','-all');
+        %
+        if length(filenames) > 1,
+            ifile = iselect_jd(filenames,'Warning : more than one LUKE_PATH.mat file found. Please select one of the following :',false);
+        elseif isempty(filenames),
+            error('No LUKE_PATH.mat found on the matlab path')
+        else
+            ifile = 1;
+        end
+        filename = filenames{ifile};
+        %
     else
         %
         filename = [path_path,'PATH_',id_path,'.mat'];
         %
-        if exist(filename) == 0,
+        if ~exist(filename,'file'),
             error([filename,' does not exist']);
-        else
-            load(filename);
-            info_dke_yp(2,['Structure ''path'': ',filename,' successfully loaded']);
-            %
         end
     end
     %
-    if isfield(dkepath,'hostname') && isstruct(dkepath.hostname),
-        %
-        hostnames = fieldnames(dkepath.hostname);
-        nhosts = length(hostnames);
-        hostname = '';
-        %
-        [s,lhostname] = system('hostname -f');
-        if s ~= 0,
-            lhostname = getenv('hostname');%For remote computing (xgrid)
-            if isempty(lhostname),
-                [s,lhostname] = system('hostname');
-            end
-        end
-        %
-        for ihost = 1:nhosts, 
-            if strfind(lhostname,dkepath.hostname.(hostnames{ihost})),
-                hostname = hostnames{ihost};
-            end
-        end
-        if isempty(hostname),
-            if isfield(dkepath,'default'),
-                hostname = 'default';
-                warning('The computer is not listed in dkepath: default hostname.')
-            else
-                error('The computer is not listed in dkepath')
-            end
-        end
-        %
-        path_id = dkepath.id;
-        %
-        username = getenv('USER');
-        %
-        if ~isfield(dkepath.(hostname),username),%user not listed in machine profiles
-            if isfield(dkepath.(hostname),'default'),
-                disp(['Warning : user ',username,' not found on machine ',hostname,'; selecting profile from default user ',dkepath.(hostname).default])
-                username = dkepath.(hostname).default;
-            else
-                error(['Warning : user ',username,' not found on machine ',hostname,'; no default profile found.'])
-            end
-        end
-        %
-        dkepath_local = dkepath.(hostname).(username);
-        %
-        if profnum > length(dkepath_local),
-            disp(['Warning : profile index exceeds number of profiles for user ',username,' on machine ',hostname,'; selecting default profile.'])
-            profnum = NaN;
-        end
-        %
-        if isnan(profnum),
-            if isfield(dkepath.(hostname),'path_profile') && isfield(dkepath.(hostname).path_profile,username),
-                profnum = dkepath.(hostname).path_profile.(username);
-            else
-                profnum = 1;
-            end
-        end
-        %
-        dkepath_local = dkepath_local(profnum);
-        %
-        info_dke_yp(2,['Path profile number ',num2str(profnum),' for user ',username,' on machine ',hostname,' selected'],'','Green');
-        %
-        dkepath_local.hostname = hostname;
-        dkepath_local.computer = dkepath.(hostname).computer;
-        dkepath_local.id = path_id;
-        %
-        dkepath = dkepath_local;
-        %
-        if ~isfield(dkepath,'remote'),
-            dkepath.remote = '';
-        end
-        %
-    end
+    load(filename,'dkepath');
+    info_dke_yp(2,['Structure ''path'': ',filename,' successfully loaded']);
     %
     if ~strcmp(dkepath.computer,computer),
         error('The path structure is not consistent with the computer !'),
@@ -228,7 +158,7 @@ if exist('flag_path','var'),%Paths
     %
     % dynamic compilation of MEX files
     %
-    % Set path for Project_DKE
+    % Set path for LUKE including mex files and matrix inverters
     %
     setpath_luke_jd(dkepath.luke_root,dkepath);
     %

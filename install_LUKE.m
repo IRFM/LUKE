@@ -1,77 +1,66 @@
-function install_LUKE(pathforstartup)
-%LUKE - Installation package script
+function install_LUKE
 %
-%Install LUKE path in existing default MatLab startup.m, build all *.mat and *.mex files
-%build documentation and launch some tests procedure.
+% LUKE - Installation package script
 %
-%By Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
+% Install LUKE path in existing default MatLab startup.m, build all *.mat and *.mex files
+% build documentation and launch some tests procedure.
 %
-if nargin < 1,
-    pathforstartup = '';
-end
+% By Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
 %
-localpath = [pwd,'/'];
-%
-startuppath = fileparts(which('startup.m'));
-%
-if isempty(startuppath),
-    startup;%create a startup.m file as it does not exist
-    startuppath = fileparts(which('startup.m'));
-    disp(['WARNING: an empty ''startup.m'' file has been created in the local directory: ',startuppath])
-end
-%
-spath{1} = sprintf('%s\n','%%%%%%%%%%%%%%%%%%%BEGIN-LUKE-PATH%%%%%%%%%%%%%%%%%%%');
-spath{2} = sprintf('%s\n','if ~isdeployed,');
-spath{3} = sprintf('%s\n',['   luke_root = ''',localpath,''';']);
-spath{4} = sprintf('%s\n','   addpath([luke_root,''Project_DKE/DKE'']);');
-spath{5} = sprintf('%s\n','   setpath_luke_jd(luke_root);');
-spath{6} = sprintf('%s\n','end');
-spath{7} = sprintf('%s\n','%%%%%%%%%%%%%%%%%%%%END-LUKE-PATH%%%%%%%%%%%%%%%%%%%%');
-%
-disp('------------------------------------------------------------------------------');
-disp(['WARNING: Please check in ''',localpath,'Project_DKE/Database/PATH_files/'' directory']);
-disp(['that a path file named ''path_<machine_name>.m'' is existing and properly setup.']);
-disp('------------------------------------------------------------------------------');
-%
-opt = input('Do you want to setup your startup file automatically (y/n) [y] ? ','s');
+disp(' ');
+disp(' ============= LUKE INSTALL =============');
+disp(' ');
+disp('The standard setup of LUKE is to add a function startup_LUKE.m in the startup.m file and save it in the same folder.');
+disp(' ');
+opt = input('Do you want to setup your startup file automatically? (y/n) [y] ? ','s');
 if isempty(opt),
-    opt='y';
+    opt = 'y';
 end
+%
+% setup startup.m to add paths to LUKE as well as MatRemote and MatTools toolboxes
 %
 if strcmp(opt,'y')
-    flag = LUKE_startup_jd(spath,pathforstartup);
-else
-    flag = 2;
+    [MatToolspath,MatRemotepath] = LUKE_startup_jd;
+    %
+    addpath(MatToolspath)
+    addpath(MatRemotepath)
+    addpath([MatRemotepath,filesep,'Profiles'])    
 end
 %
-if flag == 2,
-    disp('Warning : LUKE paths were not written in a startup file.');
-    disp('          Please verify or include manually the following lines in matlab startup :');
-    disp(' ');
-    %
-    cfile = '';
-    for ispath = 1:length(spath),
-        cfile = [cfile,spath{ispath}];
-    end
-    %
-    disp(cfile)
+% test access to MatRemote and MatTools toolboxes
+%
+disp(' ');
+if isempty(which('select_LUKE_jd.m')),
+    disp('No path set to MatTools toolbox. Please download and/or set path to toolbox.')
+    return
+end
+if isempty(which('list_remoteprofiles_jd.m')),
+    disp('No path set to MatRemote toolbox. Please download and/or set path to toolbox.')
+    return
 end
 %
-% add paths
+% add paths to LUKE
 %
-addpath([localpath,'Project_DKE/DKE']);
-setpath_luke_jd(localpath);
+luke_root = [fileparts(which(mfilename)),filesep];% local LUKE version
+addpath([luke_root,'Project_DKE/DKE']);
+setpath_luke_jd(luke_root);
 %
+disp(' ');
 disp('The LUKE paths have been installed.');
+disp(' ');
 %
-% Creates and loads the PATH_LOCAL.mat structure, build *.mex files  
+% Creates athe LUKE_PATH.mat structure
 %
 make_path_LOCAL;
-luke_root = dkepath.luke_root;
+%
+% load LUKE paths, compile mex, setup path to mex files and matrix inverters
+%
+dkepath = load_structures_yp('dkepath','','');
 %
 % Build *.mat files
 %
 %
+disp(' ');
 opt = input_dke_yp('Do you want to rebuild the database (necessary for new installs and upgrades)','y',{'y','n'});
 %
 if opt == 'y',
@@ -119,7 +108,7 @@ if opt == 'y',
     %
     cd([luke_root,'Simulations/Benchmarks/TScyl/LH_Karney']);
     disp('---------------------------------------------------------------------------')
-    disp('---------------------------SEQUENTIAL COMPUTING----------------------------')
+    disp('-------------------------- SEQUENTIAL COMPUTING ---------------------------')
     disp('---------------------------------------------------------------------------')
     rundke;
     cd(dkepath.luke_root);
@@ -130,7 +119,7 @@ opt = input_dke_yp('Do you want to run the test case with distributed calculatio
 if opt == 'y' && isfield(dkepath,'remote'),
 	cd([dkepath.luke_root,'Simulations/Benchmarks/TScyl/LH_Karney']);
 	disp('---------------------------------------------------------------------------')
-	disp('---------------------------DISTRIBUTED COMPUTING---------------------------')
+	disp('-------------------------- DISTRIBUTED COMPUTING --------------------------')
     disp('---------------------------------------------------------------------------')
     rundke_cluster;
     cd(dkepath.luke_root);
@@ -146,7 +135,7 @@ if ~isempty(machine) && ~isempty(user) && ~isempty(ver),
 	if opt == 'y',
 		cd([luke_root,'Simulations/Benchmarks/TScyl/LH_Karney']);
     	disp('---------------------------------------------------------------------------')
-    	disp('--------------------------ACCESS FROM ITM DATABASE-------------------------')
+    	disp('------------------------- ACCESS FROM ITM DATABASE ------------------------')
     	disp('---------------------------------------------------------------------------')
    		rundke_ITM;
    		cd(dkepath.luke_root);
@@ -159,8 +148,10 @@ if opt == 'y',
 end
 %
 info_dke_yp(1,'The installation of LUKE is successfully done',1,'green');
+%
+end
 
 
 
 
-
+ 
