@@ -171,72 +171,34 @@ dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(cloc
 %
 simul_id = ['METIS_',equil.id,simul_wid,ohm.id,transpfaste_id];
 %
-if lukeparam.batch_mode == 1 && isfield(dkepath,'remote') && ~isempty(dkepath.remote),% batch calculation of run_lukert
-    %
-    % BATCH LUKE RUN
-    %
-    remote = dkepath.remote(1);
-    dkeparam.psin_S = [];
-    %
-    luke_input.id_simul = simul_id;
-    luke_input.dkeparam = dkeparam;
-    luke_input.dkepath = dkepath;
-    luke_input.dkedisplay = dkedisplay;
-    luke_input.equil = equil;
-    luke_input.waves = [];
-    luke_input.wavestructs = wavestructs;
-    luke_input.ohm = ohm;
-    luke_input.transpfaste = transpfaste;
-    luke_input.ripple = ripple;
-    luke_input.Zf0_interp = [];
-    %
-    [timeid,jobid] = runluke_remote_jd(luke_input,remote);
-    %
-    %w_opt = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes)',60,0:7*24*60);
-    w_opt = 240;disp('LUKE time out : 4 hours')
-    %
-    tic
-    %
-    output = '';
-    %
-    while isempty(output) && toc/60 < w_opt,
-        %
-        disp(['LUKE Still running , elapsed time (minutes) ',num2str(round(toc/60)),'/',num2str(w_opt)])
-        %
-        pause(30);
-        %
-        output = getluke_remote_jd(timeid,jobid,remote);
-        %
-    end
-    %
-    if isempty(output),
-        error(['Stop waiting , elapsed time (minutes) ',num2str(round(toc/60)),'/',num2str(w_opt)])
-    elseif isfield(output,'err'),
-        error('Remote LUKE run failed, aborted.')
-    else
-        %
-        Znorm_RF = output.Znorm;
-        Zcurr_RF = output.Zcurr;
-        ZP0_RF = output.ZP0;
-        dke_out = output.dke_out;
-        radialDKE = output.radialDKE;
-        equilDKE = output.equilDKE;
-        momentumDKE = output.momentumDKE;
-        gridDKE = output.gridDKE;
-        Zmomcoef = output.Zmomcoef;
-        Zbouncecoef = output.Zbouncecoef;
-        Zmripple = output.Zmripple;
-        mksa = output.mksa;
-        %
-        clear output
-        %
-    end
-    %
+dkeparam.psin_S = [];
+%
+lukestructs = struct;
+lukestructs.id_simul = simul_id;
+lukestructs.dkeparam = dkeparam;
+lukestructs.dkepath = dkepath;
+lukestructs.dkedisplay = dkedisplay;
+lukestructs.equil = equil;
+lukestructs.waves = [];
+lukestructs.wavestructs = wavestructs;
+lukestructs.ohm = ohm;
+lukestructs.transpfaste = transpfaste;
+lukestructs.ripple = ripple;
+lukestructs.Zf0_interp = [];
+%
+lukestructs = run_lukert(lukestructs,dkepath);
+%
+if isfield(lukestructs,'err'),
+    disp('LUKE run failed for the following reason :')
+    disperr_jd(lukestructs.err);
+    error('LUKE run failed')
 else
     %
-    % INTERACTIVE LUKE RUN
-    %
-    [Znorm_RF,Zcurr_RF,ZP0_RF,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa] = run_lukert(simul_id,wavestructs,[],[],dkeparam.rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
+    Zcurr_RF = lukestructs.output.Zcurr;
+    ZP0_RF = lukestructs.output.ZP0;
+    dke_out = lukestructs.output.dke_out;
+    radialDKE = lukestructs.output.radialDKE;
+    equilDKE = lukestructs.output.equilDKE;
     %
 end
 %
@@ -257,7 +219,31 @@ if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to t
     %
     simul_id = ['METIS_',equil.id,ohm.id,transpfaste_id];
     %
-    [void,Zcurr,ZP0] = run_lukert(simul_id,[],[],[],radialDKE.xrho_S_dke,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[]);
+    lukestructs = struct;
+    lukestructs.id_simul = simul_id;
+    lukestructs.dkeparam = dkeparam;
+    lukestructs.dkepath = dkepath;
+    lukestructs.dkedisplay = dkedisplay;
+    lukestructs.equil = equil;
+    lukestructs.waves = [];
+    lukestructs.wavestructs = [];
+    lukestructs.ohm = ohm;
+    lukestructs.transpfaste = transpfaste;
+    lukestructs.ripple = ripple;
+    lukestructs.Zf0_interp = [];
+    %
+    lukestructs = run_lukert(lukestructs,dkepath);
+    %
+    if isfield(lukestructs,'err'),
+        disp('LUKE run failed for the following reason :')
+        disperr_jd(lukestructs.err);
+        error('LUKE run failed')
+    else
+        %
+        Zcurr = lukestructs.output.Zcurr;
+        ZP0 = lukestructs.output.ZP0;
+        %
+    end
     %
     j_OHM_c = signe_out*Zcurr.x_0_vcfsav*mksa.j_ref;
     I_OHM_c = sum(signe_out*Zcurr.x_0_fsav.*equilDKE.xdA_dke*mksa.j_ref);

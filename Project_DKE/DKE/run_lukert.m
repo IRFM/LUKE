@@ -25,7 +25,7 @@ if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && dkepath.remnum == ro
     if isfield(dkepath,'rempause'),%timeout
         remote.rempause = dkepath.rempause;
     else
-        remote.rempause = 1;%pause between job checks (in minutes)
+        remote.rempause = 0.5;%pause between job checks (in minutes)
     end
     %
     if isfield(dkepath,'debugmode'),
@@ -59,82 +59,102 @@ if iscell(lukestructs),% remote and/or distributed calculation
     %
     njobs = length(lukestructs);
     %
-    for ijob = 1:njobs,
-        if isempty(lukestructs{ijob}),
-            error('One lukestruct at elast is empty, aborted.')
+    luke_flag = zeros(1,njobs);% flags to control LUKE jobs status
+    luke_time = tic;
+    %
+    while any(luke_flag == 0) || toc(luke_time)/60 < remote.remtimout,
+        %
+        for ijob = 1:njobs,
+            %
+            if isempty(remote),%local sequential calculation
+                %
+                disp(['----> Starting job # ',num2str(ijob),'/',num2str(njobs),' locally'])
+                %
+                lukestructs{ijob} = run_lukert(lukestructs{ijob});
+                %
+                luke_flag(ijob) = 1;% job completed.
+                %
+            else            
+                %
+                lukestandardjob = '';
+                %
+                if isfield(lukestructs{ijob},'output'),
+                    disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' already completed.'])
+                    luke_flag(ijob) = 1;% job completed.
+                    continue
+                elseif isfield(lukestructs{ijob},'err'),
+                    disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' was run already but failed due to the following error :'])
+                    if ischar(lukestructs{ijob}.err),
+                        disp(lukestructs{ijob}.err)
+                    else
+                        for ierr = 1:length(lukestructs{ijob}.err),
+                            disp(lukestructs{ijob}.err{ierr})
+                        end
+                    end
+                    luke_flag(ijob) = 1;% job completed.
+                    continue
+                elseif isfield(lukestructs{ijob},'job'),
+                    disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is checked on remote cluster : ',remote.host])
+                elseif isfield(lukestructs{ijob},'equil'),
+                    disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is sent to remote cluster : ',remote.host])
+                    %
+                    lukestandardjob = lukestandardjob_jd(remote,'runmat');
+                    %
+                    if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_memory'),
+                        lukestandardjob.memory = lukestructs{ijob}.dkeparam.luke_memory;% requested memory specified in dkeparam
+                    elseif isfield(lukestructs{ijob},'transpfaste') && isstruct(lukestructs{ijob}.transpfaste) && ~isempty(fieldnames(lukestructs{ijob}.transpfaste)), 
+                        lukestandardjob.memory = 14000;%mb default value with transport
+                    else
+                        lukestandardjob.memory = 7000;%mb default value without transport
+                    end
+                    %
+                    if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_ppn'),
+                        lukestandardjob.nodes = 1;
+                        lukestandardjob.ppn = lukestructs{ijob}.dkeparam.luke_ppn;% number of cores specified in dkeparam
+                    end
+                    %
+                    if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_walltime'),
+                        lukestandardjob.walltime = lukestructs{ijob}.dkeparam.luke_walltime;% walltime for remote LUKE calculation
+                    else
+                        lukestandardjob.walltime = 12;% default walltime in hours
+                    end
+                    %
+                else
+                    disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' structure is unknown. Aborted.'])
+                    lukestructs{ijob}.err = 'Job aborted for unknown reasons';
+                    luke_flag(ijob) = 1;% job completed.
+                    continue
+                end
+                %
+                [err,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
+                %
+                if isfield(remote,'cvs')
+                    remote.cvs.CVSROOT = '';%such that cvs update is done once (see remoterunbatch.m)
+                end
+                %
+                if ~isempty(err),
+                    %
+                    if isfield(lukestructs{ijob},'equil') && isfield(dkepath,'remenforce') && dkepath.remenforce == 1,% enforce local calculation
+                        lukestructs{ijob} = run_lukert(lukestructs{ijob});% local job enforced
+                    else
+                        lukestructs{ijob}.err = err;
+                    end
+                    %
+                end
+            end
+            %
+            if remote.remtimout == 0,% return hand to caller
+                luke_flag(ijob) = 1;% job completed.
+            end
+            %
         end
     end
     %
-    for ijob = 1:njobs,
+    for ijob = find(luke_flag == 0),
         %
-        if isempty(remote),%local sequential calculation
-            %
-            disp(['----> Starting job # ',num2str(ijob),'/',num2str(njobs),' locally'])
-            %
-            lukestructs{ijob} = run_lukert(lukestructs{ijob});
-        else            
-            %
-            lukestandardjob = '';
-            %
-            if isfield(lukestructs{ijob},'output'),
-                disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' already completed.'])
-                continue
-            elseif isfield(lukestructs{ijob},'err'),
-                disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' was run already but failed due to the following error :'])
-                if ischar(lukestructs{ijob}.err),
-                    disp(lukestructs{ijob}.err)
-                else
-                    for ierr = 1:length(lukestructs{ijob}.err),
-                        disp(lukestructs{ijob}.err{ierr})
-                    end
-                end
-                continue
-            elseif isfield(lukestructs{ijob},'job'),
-                disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is checked on remote cluster : ',remote.host])
-            elseif isfield(lukestructs{ijob},'equil'),
-                disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is sent to remote cluster : ',remote.host])
-                %
-                lukestandardjob = matstandardjob_jd(remote,'runmat');
-                %
-                if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_memory'),
-                    lukestandardjob.memory = lukestructs{ijob}.dkeparam.luke_memory;% requested memory specified in dkeparam
-                elseif isfield(lukestructs{ijob},'transpfaste') && isstruct(lukestructs{ijob}.transpfaste) && ~isempty(fieldnames(lukestructs{ijob}.transpfaste)), 
-                    lukestandardjob.memory = 14000;%mb default value with transport
-                else
-                    lukestandardjob.memory = 7000;%mb default value without transport
-                end
-                %
-                if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_ppn'),
-                    lukestandardjob.nodes = 1;
-                    lukestandardjob.ppn = lukestructs{ijob}.dkeparam.luke_ppn;% number of cores specified in dkeparam
-                end
-                %
-                if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_walltime'),
-                    lukestandardjob.walltime = lukestructs{ijob}.dkeparam.luke_walltime;% walltime for remote LUKE calculation
-                else
-                    lukestandardjob.walltime = 12;% default walltime in hours
-                end
-                %
-            else
-                disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' structure is unknown. Aborted.'])
-                continue
-            end
-            %
-            [err,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
-            %
-            if isfield(remote,'cvs')
-                remote.cvs.CVSROOT = '';%such that cvs update is done once (see remoterunbatch.m)
-            end
-            %
-            if ~isempty(err),
-                %
-                if isfield(lukestructs{ijob},'equil') && isfield(dkepath,'remenforce') && dkepath.remenforce == 1,% enforce local calculation
-                    lukestructs{ijob} = run_lukert(lukestructs{ijob});% local job enforced
-                else
-                    lukestructs{ijob}.err = err;
-                end
-                %
-            end
+        if isfield(lukestructs{ijob},'job')
+            disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' timed out after ',num2str(remote.remtimout),' minutes.'])
+            lukestructs{ijob}.err = ['Job timed out after ',num2str(remote.remtimout),' minutes.'];
         end
         %
     end

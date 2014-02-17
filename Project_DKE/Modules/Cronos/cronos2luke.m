@@ -1,87 +1,68 @@
-%  ZSTARWARS profil de depot hybride + EC calcule par C3PO + LUKE
-%-------------------------------------------------------------
-% fichier zstarwars.m -> fichiers source dans repertoire
-% ~/Project_DKE/Modules/Cronos/
+function [sortie,memoire] = cronos2luke(par,equi,neo,gene,prof,compo,impur,proto,memoire)
 %
-% Cette fonction calcule le depot pour l'onde hybride et de l'onde EC avec le code cinetique LUKE
-% et le trace de rayon C3PO.
+%  Non-thermal distribution and associated current (LH, EC, runaways, ...) calculated  by the codes C3PO/LUKE for CRONOS
+%
+% INPUTS :
+%
+%   - par     : parametres C3PO/LUKE 
+%   - equi    : donnees de l'equilibre plasma (data.equi)
+%   - neo     : donnees neoclassiques (data.neo)
+%   - gene    : parametres generaux (param.gene)
+%   - prof    : profils des donnees calculees par le code (data.prof) 
+%   - compo   : composition du plasma: charge et masse des atomes (param.compo)
+%   - impur   : sous strcuture des impurtes (data.impur)
+%   - proto   : prototype de la structure pour les sources, valeurs a zeros (proto : zsourceproto;)
+%   - memoire : structure des dernieres valeurs calculees
 % 
-% syntaxe  :
-%  
-%      [sortie,memoire] = zstarwars(par,proto,cons,cons_spec,geo,equi,injection,prof,neo,impur,phy,compo,gene,memoire);
-%
-% entree :
-%
-%      par             =    parametre propre a la fonction (param.cons.hyb)
-%      proto           =    prototype de la structure pour les sources, valeurs a zeros (proto = zsourceproto;)
-%      cons            =    consigne de puissance par coupleur (data.cons.hyb)
-%      cons_spec       =    spectre en puissance par coupleur (data.cons.hybspec)
-%      geo             =    geometrie du plasma (data.geo)
-%      equi            =    donnees de l'equilibre plasma (data.equi)
-%      injection       =    consigne d'injection de gaz (data.cons.c)
-%      prof            =    profils des donnees calculees par le code (data.prof) 
-%      neo             =    donnees neoclassiques (data.neo)
-%      impur           =    sous strcuture des impurtes (data.impur)
-%      phy             =    constantes physiques (param.phys)
-%      compo           =    composition du plasma: charge et masse des atomes (param.compo)
-%      gene            =    parametres generaux (param.gene)
-%      memoire         =    structure des dernieres valeurs calculees
+% OUTPUTS :
 % 
-% sortie :
-% 
-%     sortie           =  structure de type source remplie par le module (sortie === proto)
-%     memoire          =  datak.memoire.hyb (valeur de reference pour le dernier calcul complet, 
-%                         pas utiliser dans cette fonction, reserve pour d'autres modules)
-% 
+%     sortie  : structure de type source remplie par le module (sortie = proto)
+%     memoire : datak.memoire.hyb (valeur de reference pour le dernier calcul complet, ne pas utiliser dans cette fonction, reserve pour d'autres modules)
 %
-% fonction ecrite par Y. Peyssson, J. Decker et V. Basiuk, poste 6290 ou
-% 6126
+% by J. Decker, Y. Peysson, J.-F. Artaud and V. Basiuk
 %
-function [sortie,memoire] = zstarwars(par,equi,neo,gene,prof,compo,impur,geo,proto,memoire)
-%
-% test d'incompatibilte ascendante
-%
-set_incompatible = 0;
-if nargin <= 1
-    set_incompatible = 1;   
-else
-    st = dbstack;
-        count = 0;
-    for l=1:length(dbstack)
-        if ~isempty(strfind(st(l).name,'zstarwars')),
-            count = count +1;
-        end
-    end 
-    if count < 2
-        set_incompatible = 1;   
-    end 
-end
-
-if set_incompatible
-    error(sprintf('ZSTARWARS : the module to connect LUKE to cronos must be now zstartwars_LH, zstartwars_EC  or zstartwars_LH_EC.\n zstarwars is no longer a module interface for LUKE in CRONOS'));
-end
-%
-%
-%
-shotime = par.shotime;
-%
-equil_id = [par.tok,'_',num2str(par.shot),'_',num2str(shotime,'%6.4f')];
-
-sortie.err = 0;
-sortie     = proto;
-%
-% on definit le flag d'erreur a 0 par defaut (pas d'erreur)
+sortie     = proto;% output initialization
+sortie.err = 0;% flag d'erreur a 0 par defaut (pas d'erreur)
 %
 %--------------------------- LIEN AVEC C3PO + LUKE ------------------
+%
+% tokamak name
+%
+if ~isfield(par,'tok')
+    tokamak = 'unknown';
+else
+    tokamak = par.tok;
+end
+%
+% shot number
+%
+if ~isfield(par,'shot')
+    shotnum = '0';
+else
+    shotnum = num2str(par.shot); 
+end
+%
+% shot time
+%
+if isempty(memoire.data),
+    shotime = par.temps_cons.tempsini;% the distribution is evolved between -infinity and the initial time
+else
+    shotime = par.temps_cons.tempsend;% the distribution is evolved between the initial and the final time
+end
+%
+shotimestr = num2str(shotime,'%6.4f');
+%
+% equil ID
+%
+equil_id = [tokamak,'_',shotnum,'_',shotimestr];
 %
 % PARAMETRES LUKE
 %
 dkeparam = make_dkeparam_cronos(par);
 %
-% TMP PATH LUKE
+% PATH LUKE
 %
-dkepath = getappdata(0,'DKEPATH');
-dkepath.temppath = [dkepath.temppathroot,filesep,'CRONOS',filesep,timeid_jd(clock)];%Temporary subdirectory in scratch folder
+dkepath = load_structures_yp('dkepath','','');
 %
 % PARAMETRES DISPLAY
 %
@@ -124,7 +105,7 @@ psipn_ohm       = rho2psi_jd(equil,ohm.rho);
 % ohm.epsi (V/m): signe par rapport à BT
 % - signe is electron charge
 %----------------------------------------------------------
-ohm.epsi     = -sign(par.signe.ip)*sign(par.signe.b0)*interp1(gene.x,prof.epar,psitncronoshel);
+ohm.epsi     = -sign(gene.signe.ip)*sign(gene.signe.b0)*interp1(gene.x,prof.epar,psitncronoshel);
 ohm.epsi     = complex(interp1(psipncronoshel,ohm.epsi,psipn_ohm));%Imaginary for considering the definition of the flux surface averaging of CRONOS in LUKE
 %
 % PARAMETRES RIPPLE 
@@ -278,7 +259,7 @@ ik = 1;
 warning off
 disp(['LUKE is running ....'])
 %
-signe_out = -par.signe.ip;
+signe_out = -gene.signe.ip;
 %
 % CALCULATION WITH RF ONLY
 %
@@ -543,82 +524,61 @@ end
 %
 function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = ...
     run_lukert_batchopt(id_simul,wavestructs,waves,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,distrib,par)
-%
-dkepath.remnum = par.remnum;% remote profile number. Use 0 for local sequential calculations
-dkepath.remtimout = par.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
-dkepath.rempause = par.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
-dkepath.debugmode = par.debugmode;% debug mode (0) off (1) on
-dkepath.clean = par.clean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
-%
-% backup & save options
-%
-opt.save = par.saveluke;% (1): save LUKE_RESULTS or return error (0): return results or error
-if isinf(par.fields),
-    opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
-else
-    opt.fields = par.fields;% selected fields in returned lukestructs. Use NaN for all fields
-end
-opt.backup = par.backup% (1) save fluctuation time steps (0) do not save
-opt.waves = par.waves;% (1) save waves at each time step (0) do not save
-%
-lukestruct.simul.id_simul = id_simul;
-lukestruct.simul.path = '';
-lukestruct.dkeparam = dkeparam;
-lukestruct.dkepath = dkepath;
-lukestruct.dkedisplay = dkedisplay;
-lukestruct.equil = equil;
-lukestruct.waves = waves;
-lukestruct.wavestructs = wavestructs;
-lukestruct.ohm = ohm;
-lukestruct.transpfaste = transpfaste;
-lukestruct.ripple = ripple;
-lukestruct.Zf0_interp = distrib;
-lukestruct.opt = opt;
-%
-lukestructs = {lukestruct};
-%
-if dkepath.remnum > 0,
-	while ~isfield(lukestructs{1},'output')
-	    %
-	    disp(['LUKE Still running'])
-	    %
-	    pause(30);
-	    %
-	    lukestructs = run_lukert(lukestructs,dkepath);
-	    %
-	    if isfield(lukestructs{1},'err'),
-	    	break;
-	    end
-	    %
-	end
-else
-	lukestructs = run_lukert(lukestructs,dkepath);
-end
-%
-if isfield(lukestructs{1}.output,'err') || isfield(lukestructs{1},'err'),
-    zverbose('Remote LUKE run failed, aborted.')
-else
-    if isempty(lukestructs{1}.output),
-        zverbose('Remote LUKE run failed, output is empty.')
+    %
+    dkepath.remnum = par.remnum;% remote profile number. Use 0 for local sequential calculations
+    dkepath.remtimout = par.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+    dkepath.rempause = par.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
+    dkepath.debugmode = par.debugmode;% debug mode (0) off (1) on
+    dkepath.clean = par.clean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+    %
+    % backup & save options
+    %
+    opt.save = par.saveluke;% (1): save LUKE_RESULTS or return error (0): return results or error
+    if isinf(par.fields),
+        opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
+    else
+        opt.fields = par.fields;% selected fields in returned lukestructs. Use NaN for all fields
+    end
+    opt.backup = par.backup;% (1) save fluctuation time steps (0) do not save
+    opt.waves = par.waves;% (1) save waves at each time step (0) do not save
+    %
+    lukestructs = struct;
+    lukestructs.simul.id_simul = id_simul;
+    lukestructs.simul.path = '';
+    lukestructs.dkeparam = dkeparam;
+    lukestructs.dkepath = dkepath;
+    lukestructs.dkedisplay = dkedisplay;
+    lukestructs.equil = equil;
+    lukestructs.waves = waves;
+    lukestructs.wavestructs = wavestructs;
+    lukestructs.ohm = ohm;
+    lukestructs.transpfaste = transpfaste;
+    lukestructs.ripple = ripple;
+    lukestructs.Zf0_interp = distrib;
+    lukestructs.opt = opt;
+    %
+    lukestructs = run_lukert(lukestructs,dkepath);
+    %
+    if isfield(lukestructs,'err'),
+        zverbose('Remote LUKE run failed, aborted.')
     else
         %
-        Znorm = lukestructs{1}.output.Znorm;
-        Zcurr = lukestructs{1}.output.Zcurr;
-        ZP0 = lukestructs{1}.output.ZP0;
-        dke_out = lukestructs{1}.output.dke_out;
-        radialDKE = lukestructs{1}.output.radialDKE;
-        equilDKE = lukestructs{1}.output.equilDKE;
-        momentumDKE = lukestructs{1}.output.momentumDKE;
-        gridDKE = lukestructs{1}.output.gridDKE;
-        Zmomcoef = lukestructs{1}.output.Zmomcoef;
-        Zbouncecoef = lukestructs{1}.output.Zbouncecoef;
-        Zmripple = lukestructs{1}.output.Zmripple;
-        mksa = lukestructs{1}.output.mksa;
-        XXsinksource = lukestructs{1}.output.XXsinksource;
+        Znorm = lukestructs.output.Znorm;
+        Zcurr = lukestructs.output.Zcurr;
+        ZP0 = lukestructs.output.ZP0;
+        dke_out = lukestructs.output.dke_out;
+        radialDKE = lukestructs.output.radialDKE;
+        equilDKE = lukestructs.output.equilDKE;
+        momentumDKE = lukestructs.output.momentumDKE;
+        gridDKE = lukestructs.output.gridDKE;
+        Zmomcoef = lukestructs.output.Zmomcoef;
+        Zbouncecoef = lukestructs.output.Zbouncecoef;
+        Zmripple = lukestructs.output.Zmripple;
+        mksa = lukestructs.output.mksa;
+        XXsinksource = lukestructs.output.XXsinksource;
         %
     end
-end
-%
-clear raytracing_yp alphaphimex_jd trapz_dke_yp dmumpsmex
-%
+    %
+    clear raytracing_yp alphaphimex_jd trapz_dke_yp dmumpsmex
+    %
 end

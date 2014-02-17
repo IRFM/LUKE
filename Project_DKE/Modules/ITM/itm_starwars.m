@@ -113,58 +113,45 @@ end
 %
 id_simul = ['timeslice_',int2str(timeslice)];
 %
-luke_in.id_simul = id_simul;
-luke_in.dkeparam = dkeparam;
-luke_in.equil = equil;
-luke_in.dkedisplay = dkedisplay;
-luke_in.wavestructs = wavestructs;
-luke_in.waves = '';
-luke_in.ohm = '';
-luke_in.transpfaste = '';
-luke_in.ripple = '';
-%
 %--------------------------- Run C3PO/LUKE --------------------------- 
 %
-if isempty(remotename),
-	[luke_out.Znorm,luke_out.Zcurr,luke_out.ZP0,luke_out.dke_out,luke_out.radialDKE,luke_out.equilDKE,luke_out.momentumDKE,luke_out.gridDKE,luke_out.Zmomcoef,luke_out.Zbouncecoef,luke_out.Zmripple,luke_out.mksa,luke_out.XXsinksource] = run_lukert(luke_in.id_simul,luke_in.wavestructs,luke_in.waves,[],luke_in.dkeparam.rho_S,dkepath,luke_in.equil,luke_in.dkeparam,luke_in.dkedisplay,luke_in.ohm,luke_in.transpfaste,luke_in.ripple,[],[]);
+lukestructs = struct;
+lukestructs.simul.id_simul = id_simul;
+lukestructs.dkeparam = dkeparam;
+lukestructs.dkepath = dkepath;
+lukestructs.dkedisplay = dkedisplay;
+lukestructs.equil = equil;
+lukestructs.wavestructs = wavestructs;
+%
+lukestructs = run_lukert(lukestructs,dkepath);
+%
+if isfield(lukestructs,'err'),
+    disp('LUKE run failed for the following reason :')
+    disperr_jd(lukestructs.err);
+    error('LUKE run failed')
 else
-    [flag,remote] = check_remote_yp(dkepath,remotename);
-	%
-	if ~flag,%local calculations
-		[luke_out.Znorm,luke_out.Zcurr,luke_out.ZP0,luke_out.dke_out,luke_out.radialDKE,luke_out.equilDKE,luke_out.momentumDKE,luke_out.gridDKE,luke_out.Zmomcoef,luke_out.Zbouncecoef,luke_out.Zmripple,luke_out.mksa,luke_out.XXsinksource] = run_lukert(luke_in.id_simul,luke_in.wavestructs,luke_in.waves,[],luke_in.dkeparam.rho_S,dkepath,luke_in.equil,luke_in.dkeparam,luke_in.dkedisplay,luke_in.ohm,luke_in.transpfaste,luke_in.ripple,[],[]);
-	else
-		[tid,jid] = runluke_remote_jd(luke_in,remote);%Job submission
-		timeid = {tid};
-		jobid = {jid};
-		%
-   	 	i_simul = 1;
-    	flag = ones(length(timeslice),1);
-    	%
-    	while 1,
-        	if flag(i_simul)
-            	output = getluke_remote_jd(timeid{i_simul},jobid{i_simul},remote);
-            	if ~isempty(output)
-                	luke_out(i_simul) = output;
-                	flag(i_simul) = 0;
-            	end
-        	end
-        	%
-        	i_simul = i_simul + 1;
-        	if i_simul > length(timeslice), i_simul = 1;end
-        	%
-        	if sum(flag) == 0;break;end
-    	end
-    end
+    %
+    Znorm = lukestructs.output.Znorm;
+    Zcurr = lukestructs.output.Zcurr;
+    ZP0 = lukestructs.output.ZP0;
+    dke_out = lukestructs.output.dke_out;
+    radialDKE = lukestructs.output.radialDKE;
+    equilDKE = lukestructs.output.equilDKE;
+    momentumDKE = lukestructs.output.momentumDKE;
+    gridDKE = lukestructs.output.gridDKE;
+    Zmomcoef = lukestructs.output.Zmomcoef;
+    Zbouncecoef = lukestructs.output.Zbouncecoef;
+    Zmripple = lukestructs.output.Zmripple;
+    mksa = lukestructs.output.mksa;
+    XXsinksource = lukestructs.output.XXsinksource;
+    %
 end
+%
 %--------------------------- WRITE CPO's' into ITM database ------------------%
+%
 CPO_waves = [];
 %
 id_simul = ['timeslice_',int2str(timeslice)];
-%
-Znorm = luke_out.Znorm;
-Zcurr = luke_out.Zcurr;
-ZP0 = luke_out.ZP0;
-dke_out = luke_out.dke_out;
 %
 for iray = 1:length(dke_out.waves{1}.rays),
     if ~isfield(dke_out.waves{1}.rays{iray},'mask_p') | ~isfield(dke_out.waves{1}.rays{iray},'mask_m');
@@ -172,16 +159,6 @@ for iray = 1:length(dke_out.waves{1}.rays),
         dke_out.waves{1}.rays{iray}.mask_m = ones(size(dke_out.waves{1}.rays{iray}.ss));
     end
 end
-%
-radialDKE = luke_out.radialDKE;
-equilDKE = luke_out.equilDKE;
-momentumDKE = luke_out.momentumDKE;
-gridDKE = luke_out.gridDKE;
-Zmomcoef = luke_out.Zmomcoef;
-Zbouncecoef = luke_out.Zbouncecoef;
-Zmripple = luke_out.Zmripple;
-mksa = luke_out.mksa;
-XXsinksource = luke_out.XXsinksource;
 %
 filename = ['EC17_benchmark_',equil.id,'_',id_simul,'.mat'];
 save(filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
