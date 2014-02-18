@@ -176,10 +176,10 @@ if isempty(dkepath),
 end
 %
 if isempty(C3POparam),
-    C3POparam.clustermode.main_C3PO_jd = mdce_clustermode(0);%All cluster parameters and paths
+    C3POparam.clustermode.main_C3PO_jd.scheduler.mode = 0;%sequential mode
 end
 %
-dkecluster = mdce_clustermode(C3POparam.clustermode,'main_C3PO_jd');%MatLab distributed computing environment
+dkecluster = clustermode_luke(C3POparam.clustermode,'main_C3PO_jd',dkepath,C3POparam.mdce_remnum);%MatLab distributed computing environment
 %
 [flag_mdce_main_C3PO_jd,rayss] = mdce_run(@loop_main_C3PO_jd,{iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay,f0struct,fluct_fit},1,arg_range,dkecluster);
 %

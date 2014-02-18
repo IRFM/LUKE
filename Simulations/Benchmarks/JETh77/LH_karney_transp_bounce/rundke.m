@@ -11,10 +11,10 @@ global nfig
 opt_proc = 1;%test of numerical performances with number of processors at fixed Dpsipsi = 10 m2/s.
 nproc_max = 10;%max number of processors
 %
-scheduler = 'local';%'' or 'local', 'pbspro', 'xgrid' or otherwise
-mdce_mode = 2;%distributed computing environment state: (0) disabled, (1) enabled with the dedicated Matlab toolbox which must be installed, (2) enabled with a private method (LDCE), (3) parfor parallel computing [1,1]
-mdce_enforce = 1;%enforce sequential run if distributed computing failed
-mdce_memory = 7500;%memory allocated to batch runs, in MB
+mdceparam.type = 'local';%'' or 'local', 'pbspro', 'xgrid' or otherwise
+mdceparam.mode = 2;%distributed computing environment state: (0) disabled, (1) enabled with the dedicated Matlab toolbox which must be installed, (2) enabled with a private method (LDCE), (3) parfor parallel computing [1,1]
+mdceparam.enforce = 1;%enforce sequential run if distributed computing failed
+mdceparam.memory = 7500;%memory allocated to batch runs, in MB
 %
 p_opt = 2;
 % 
@@ -117,9 +117,8 @@ iDr0_save = 8;
 nDr0 = length(Dr0_list);
 nr = length(rho_S) - 1;
 %
-dkecluster = mdce_clustermode(mdce_mode);
-dkecluster.clustersize = nDr0;
-dkecluster.enforce = mdce_enforce;%enforce sequential run if distributed computing failed
+mdceparam.clustersize = nDr0;
+dkecluster = clustermode_luke(mdceparam,'',dkepath);
 %
 [flag,cZcurr,cZP0,cdke_out,cequilDKE,cmksa] = mdce_run(@loop_rundke,...
     {'',Dr0_list,iDr0_save,id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple},...

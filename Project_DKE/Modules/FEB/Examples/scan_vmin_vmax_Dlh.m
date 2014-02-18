@@ -59,9 +59,9 @@ dkedisplay.display_mode = 0;
 %
 % C3PO computing parameters
 %
-scanparam.clustermode.scanloop.mode = 2;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
-scanparam.clustermode.scanloop.timeout = 500;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-scanparam.clustermode.scanloop.size = 12;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+scanparam.clustermode.scanloop.scheduler.mode = 2;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
+scanparam.clustermode.scanloop.scheduler.timeout = 500;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
+scanparam.clustermode.scanloop.scheduler.clustersize = 12;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
 %
 vmin = [3,3.5];
 vmax = [5.5,6.5,7.5];
@@ -73,7 +73,7 @@ fieldside = NaN;%Distribution enforced corresponding to 'HFS' (theta = pi) or 'L
 chordview = 0;%No heliticity enforced: 0 (perp), 1 (forward) or -1 (backward). If NaN, the exact heliticity of the magnetic equilibrium is considered.
 %
 disp('---------------------------------------------------------------------');
-[clusterparam] = mdce_clustermode(dkedisplay,scanparam);
+[clusterparam] = clustermode_luke(scanparam.clustermode,'scanloop',dkepath);
 for iD0 = 1:length(D0),arg_range{iD0} = iD0;end
 [flag,norm,curr,Tph,Tph_star] = mdce_run(@loop_scan_vmin_vmax_Dlh,{iD0,vmin,vmax,D0,epsi,Te,rho_S,dkepath,equil,dkeparam,dkedisplay,hxr,hxrparam,fieldside,chordview},1,arg_range,clusterparam);
 %

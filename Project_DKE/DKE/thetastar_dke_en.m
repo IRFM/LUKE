@@ -52,11 +52,8 @@ clustermode.loop_thetastar_dke_en.scheduler.enforce = mdce_enforce;
 %
 clustermode.ftest_mdce.scheduler.display = mdce_display;
 %
-[dkecluster] = mdce_clustermode(clustermode,'loop_thetastar_dke_en');
-
-%[dkecluster] = mdce_clustermode(dkeparam.clustermode,'loop_thetastar_dke_en');
-
-%dkecluster.scheduler.mode = 0;
+[dkecluster] = clustermode_luke(clustermode,'loop_thetastar_dke_en',dkepath,mdce_remote);
+%
 tic
 if isfield(dkeparam,'options_fzero'),
     options_fzero = dkeparam.options_fzero;

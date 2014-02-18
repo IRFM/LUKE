@@ -3,7 +3,7 @@ function [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = loop_rfdiff_dke_
 % This function splits the calculation of rfdiff_dke_jd
 % with possible use of distributed computing
 %
-[dkecluster] = mdce_clustermode(dkeparam.clustermode,'rfdiff_dke_jd');
+[dkecluster] = clustermode_luke(dkeparam.clustermode,'rfdiff_dke_jd',dkepath);
 nproc = dkecluster.scheduler.clustersize;
 %
 ny = max(waveparam.biy_rf);

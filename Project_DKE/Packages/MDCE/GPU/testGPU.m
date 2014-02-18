@@ -272,7 +272,7 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             clustermode.funGPU.scheduler.gpu = 0;
         end
         %
-        dkecluster = mdce_clustermode(clustermode,'funGPU');
+        dkecluster = clustermode_luke(clustermode,'funGPU',dkepath);
         %
         for j = 1:length(nm_single),
         	tic,[flag,Y_GPU,Z_GPU,T_GPU,W_GPU] = mdce_run(@funGPU,{NaN,a,b},1,Xmdce(1:j),dkecluster);etime_single_tot(j) = toc;
@@ -287,7 +287,7 @@ for igpu = 1:length(gpuDevice),%loop over the number of available GPU units
             clustermode.funGPU.scheduler.gpu = 0;
         end
         %
-        dkecluster = mdce_clustermode(clustermode,'funGPU');
+        dkecluster = clustermode_luke(clustermode,'funGPU',dkepath);
         %
         for j = 1:length(nm_single),
         	tic,[flag,Y_GPU,Z_GPU,T_GPU,W_GPU] = mdce_run(@funGPU,{NaN,a,b},1,Xmdce(1:j),dkecluster);etime_single_GPU_tot(j) = toc;

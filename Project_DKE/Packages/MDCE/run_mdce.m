@@ -60,6 +60,8 @@ if ~isfield(scheduler,'memory'),
     scheduler.memory = 500 + round(8*nX^2/1e6);
 end
 %
+dkepath = load_structures_yp('dkepath','','');
+%
 modestrs = {'SEQUENTIAL','MDCE JOBS','DCLUKE','MDCE PARFOR'};
 colors = {'k','b','r','g'};
 markers = {'o','+','s','d'};
@@ -91,7 +93,7 @@ for n=[1,1:N],% case 1 calculated twice to avoid preallocation time delays
         scheduler.mode = mode;
         scheduler.clustersize = min(n,Nmax);
         %
-        [flag{imode,n},tmdce(imode,n),texe{imode,n},test(imode,n)] = nloop_mdce(modestr,scheduler,X_in(1:n),tpause,datamode);
+        [flag{imode,n},tmdce(imode,n),texe{imode,n},test(imode,n)] = nloop_mdce(modestr,dkepath,scheduler,X_in(1:n),tpause,datamode);
         %
     end
 end
@@ -140,9 +142,9 @@ if display_mode > 0,
 end
 end
 %
-function [flag,tmdce,texe,test] = nloop_mdce(modestr,scheduler,X_in,tpause,datamode)
+function [flag,tmdce,texe,test] = nloop_mdce(modestr,dkepath,scheduler,X_in,tpause,datamode)
     %
-    [dkecluster] = mdce_clustermode(scheduler,'');%All cluster parameters and paths
+    [dkecluster] = clustermode_luke(scheduler,'',dkepath);%All cluster parameters and paths
     %
     dkecluster.scheduler.clustersize = length(X_in);
     %

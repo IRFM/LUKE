@@ -224,7 +224,7 @@ if metisevol == 0,
     else % calculations distributed using mdce_run
         %
         clustermode.run_lukert.scheduler = scheduler_run_lukert;
-        dkecluster = mdce_clustermode(clustermode,'run_lukert');
+        dkecluster = clustermode_luke(clustermode,'run_lukert',dkepath);
         %
         [dummy,lukestructs] = mdce_run(@run_lukert,{''},1,lukestructs,dkecluster);
         %

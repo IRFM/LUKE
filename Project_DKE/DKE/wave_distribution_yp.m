@@ -114,7 +114,7 @@ if iscell(byPnonabs),%calculate fluctuation phases and adjust initial power in e
     end          
 end    
 %
-dkecluster = mdce_clustermode(dkeparam.clustermode,'wave_solver_yp');%MatLab distributed computing environment
+dkecluster = clustermode_luke(dkeparam.clustermode,'wave_solver_yp',dkepath);%MatLab distributed computing environment
 %
 if dkecluster.scheduler.mode >= 0,
     [flag,waves] = mdce_run(@wave_solver_yp,{dkepath,'',f0struct},2,wavestructs(:),dkecluster);
