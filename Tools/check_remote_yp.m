@@ -44,7 +44,7 @@ for irem = 1:nrem,
         cmdstr = 'unknown';
     end
     %
-    job = lukestandardjob_jd(dkepath.remote(irem),'runmat');% standard job
+    job = lukestandardjob_jd('runmat');% standard job
     job.debugmode = 1; % to display info and debug
     job.funcopy = 0; % (0) to use function LUKEversion_jd on the remote host within matlab path
     %

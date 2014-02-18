@@ -1,6 +1,6 @@
 function luke_job = runluke_remote_jd(lukestructs,remote)
 %
-luke_job = lukestandardjob_jd(remote,'runmat');
+luke_job = lukestandardjob_jd('runmat');
 %
 mat_input.fun = 'run_lukert';
 mat_input.args_in = lukestructs;
