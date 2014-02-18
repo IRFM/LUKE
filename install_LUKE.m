@@ -34,7 +34,7 @@ if isempty(which('select_LUKE_jd.m')),
     disp('No path set to MatTools toolbox. Please download and/or set path to toolbox.')
     return
 end
-if isempty(which('list_remoteprofiles_jd.m')),
+if isempty(which('load_remoteprofiles_jd.m')),
     disp('No path set to MatRemote toolbox. Please download and/or set path to toolbox.')
     return
 end
