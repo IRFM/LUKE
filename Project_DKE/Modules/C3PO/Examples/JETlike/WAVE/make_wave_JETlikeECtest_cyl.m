@@ -43,6 +43,10 @@ dNpar0 = 0.05;%spectral width
 ns = 1000;%discrtization parameter for free space propagation
 method = 'linear';%interpolation method for ray separatrix crossing
 %
+% C3PO computing parameters
+%
+mdce_mode_main_C3PO_jd = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
+%
 % Display parameters
 %
 C3POdisplay.ray = 1;
@@ -138,7 +142,7 @@ rayinit = main_rayinit_launch_jd(equil,launch);
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = mdce_clustermode(0);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd.scheduler.mode = mdce_mode_main_C3PO_jd;%MatLab distributed computing environment
 %
 % ray-tracing calculations
 %

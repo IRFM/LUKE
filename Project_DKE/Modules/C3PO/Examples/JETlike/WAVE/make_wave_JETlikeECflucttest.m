@@ -48,6 +48,10 @@ z_L = 0.0;% focal point
 alpha_prater = -10;% angle between N_P and horizontal plane
 beta_prater = 22;% angle between N and poloidal plane
 %
+% C3PO computing parameters
+%
+mdce_mode_main_C3PO_jd = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
+%
 % Display parameters
 %
 C3POdisplay.ray = 0;
@@ -152,7 +156,7 @@ end
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = mdce_clustermode(0);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd.scheduler.mode = mdce_mode_main_C3PO_jd;%MatLab distributed computing environment
 %
 % ray-tracing calculations
 %

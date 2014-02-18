@@ -72,9 +72,7 @@ method = 'cubic';
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
-C3POparam.clustermode.main_C3PO_jd.timeout = 300;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-C3POparam.clustermode.main_C3PO_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
+mdce_mode_main_C3PO_jd = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
 %
 % Display parameters
 %
@@ -138,11 +136,7 @@ rayparam.kextra = 1000;
 %
 % Parallel computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = mdce_clustermode(0);%MatLab distributed computing environment
-C3POparam.clustermode.main_C3PO_jd.scheduler.display = 1;
-%
-dkeparam.clustermode.wave_solver_yp = mdce_clustermode(0);%MatLab distributed computing environment
-dkeparam.clustermode.wave_solver_yp.scheduler.display = 1;
+C3POparam.clustermode.main_C3PO_jd.scheduler.mode = mdce_mode_main_C3PO_jd;%MatLab distributed computing environment
 %
 % launch structure
 %

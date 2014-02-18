@@ -42,6 +42,10 @@ Nphi0 = -2.0;%initial index of refraction
 dNpar0 = NaN;
 P0_2piRp = NaN;
 %
+% C3PO computing parameters
+%
+mdce_mode_main_C3PO_jd = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2)for the function main_C3PO_jd.m (MDC toolbox must be installed for option 1)
+%
 % Display parameters
 %
 C3POdisplay_pchip.ray = 1;
@@ -163,7 +167,7 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = mdce_clustermode(0);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd.scheduler.mode = mdce_mode_main_C3PO_jd;%MatLab distributed computing environment
 %
 % ray-tracing calculations
 %
@@ -216,7 +220,7 @@ rayinit.yP0_2piRp = P0_2piRp;%Lineic initial power density initial power in the 
 %
 % C3PO computing parameters
 %
-C3POparam.clustermode.main_C3PO_jd = mdce_clustermode(0);%All cluster parameters and paths
+C3POparam.clustermode.main_C3PO_jd.scheduler.mode = mdce_mode_main_C3PO_jd;%MatLab distributed computing environment
 %
 % ray-tracing calculations
 %
