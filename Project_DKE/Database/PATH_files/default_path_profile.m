@@ -16,21 +16,15 @@ function dkepath = default_path_profile
 dkepath.machine = 'default';
 dkepath.computer = computer;%machine type and supported OS
 %
-% Selected user profile for unlisted users
+dkepath.luke_root = [pwd,filesep];
+dkepath.local_root = [pwd,filesep];
+dkepath.temppathroot = [pwd,filesep];
 %
-dkepath.default = 'default';
+dkepath.(['mex',matver]) = [dkepath.luke_root,'Project_DKE/MEX/Bin/default/MATLAB',matver]; 
 %
-%------------------------------------ Profile number 1, Joan Decker ------------------------------------
+dkepath.compiler_opt.helmex = NaN;  
+dkepath.compiler_opt.fopts = '';
+dkepath.compiler_opt.copts = '';
 %
-dkepath.default(1).luke_root = [pwd,filesep];
-dkepath.default(1).local_root = [pwd,filesep];
-dkepath.default(1).temppathroot = [pwd,filesep];
-%
-dkepath.default(1).(['mex',matver]) = [dkepath.default(1).luke_root,'Project_DKE/MEX/Bin/default/MATLAB',matver]; 
-%
-dkepath.default(1).compiler_opt.helmex = NaN;  
-dkepath.default(1).compiler_opt.fopts = '';
-dkepath.default(1).compiler_opt.copts = '';
-%
-dkepath.default(1).remote = [];
+dkepath.remote = [];
 %
