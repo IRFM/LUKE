@@ -62,7 +62,7 @@ if iscell(lukestructs),% remote and/or distributed calculation
     luke_flag = zeros(1,njobs);% flags to control LUKE jobs status
     luke_time = tic;
     %
-    while any(luke_flag == 0) || toc(luke_time)/60 < remote.remtimout,
+    while any(luke_flag == 0) && (isempty(remote) || toc(luke_time)/60 < remote.remtimout),
         %
         for ijob = 1:njobs,
             %
@@ -98,7 +98,7 @@ if iscell(lukestructs),% remote and/or distributed calculation
                 elseif isfield(lukestructs{ijob},'equil'),
                     disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is sent to remote cluster : ',remote.host])
                     %
-                    lukestandardjob = lukestandardjob_jd('runmat');
+                    lukestandardjob = matstandardjob_jd('runmat','setpath_luke_jd',[remote.env.luke_root,'Project_DKE/DKE/']);
                     %
                     if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_memory'),
                         lukestandardjob.memory = lukestructs{ijob}.dkeparam.luke_memory;% requested memory specified in dkeparam
@@ -141,10 +141,10 @@ if iscell(lukestructs),% remote and/or distributed calculation
                     end
                     %
                 end
-            end
-            %
-            if remote.remtimout == 0,% return hand to caller
-                luke_flag(ijob) = 1;% job completed.
+                %
+                if remote.remtimout == 0,% return hand to caller
+                    luke_flag(ijob) = 1;% job completed.
+                end
             end
             %
         end

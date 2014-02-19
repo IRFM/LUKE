@@ -34,26 +34,28 @@ flag = false(1,nrem);
 %  
 for irem = 1:nrem,
     %
-    if ~iscell(dkepath.remote(irem).cmd) && ~isempty(strfind(dkepath.remote(irem).cmd,'qsub')),
+    remote = dkepath.remote(irem);
+    %
+    if ~iscell(remote.cmd) && ~isempty(strfind(remote.cmd,'qsub')),
         cmdstr = 'qsub';
-    elseif ~iscell(dkepath.remote(irem).cmd) && ~isempty(strfind(dkepath.remote(irem).cmd,'condor')),
+    elseif ~iscell(remote.cmd) && ~isempty(strfind(remote.cmd,'condor')),
         cmdstr = 'condor';
-    elseif iscell(dkepath.remote(irem).cmd) && any(~cellfun('isempty',strfind(dkepath.remote(irem).cmd,'xgrid'))),
+    elseif iscell(remote.cmd) && any(~cellfun('isempty',strfind(remote.cmd,'xgrid'))),
         cmdstr = 'xgrid';
     else
         cmdstr = 'unknown';
     end
     %
-    job = lukestandardjob_jd('runmat');% standard job
+    job = matstandardjob_jd('runmat','setpath_luke_jd',[remote.env.luke_root,'Project_DKE/DKE/']);% standard job
     job.debugmode = 1; % to display info and debug
     job.funcopy = 0; % (0) to use function LUKEversion_jd on the remote host within matlab path
     %
-    [err,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem),job);
+    [err,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},remote,job);
     %
-    if isempty(dkepath.remote(irem).host),
+    if isempty(remote.host),
         info_dke_yp(2,['Profile #',num2str(irem),' to host : local with cmd : ',cmdstr])
     else
-        info_dke_yp(2,['Profile #',num2str(irem),' to host : ',dkepath.remote(irem).host,' with cmd : ',cmdstr])
+        info_dke_yp(2,['Profile #',num2str(irem),' to host : ',remote.host,' with cmd : ',cmdstr])
     end        
     %
     if isempty(err),        

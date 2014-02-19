@@ -20,10 +20,17 @@ while ~isempty(P),
     P(1:ilim) = '';
 end
 %
+if nargin < 2,
+    dkepath = [];
+end
+%
 if nargin == 0, 
     luke_root = getenv('luke_root');
     if isempty(luke_root),
         return
+    else
+        filename = [luke_root,'Project_DKE/Database/PATH_files/LUKE_PATH.mat'];
+        load(filename,'dkepath');
     end
 end
 %
@@ -69,11 +76,11 @@ addpath([luke_root,'Tools']);
 %
 % Path for machine specific libraries
 %
-if nargin == 2,
+if ~isempty(dkepath),
 	if isfield(dkepath,'speclibpath'),
 		speclibpathfields = fieldnames(dkepath.speclibpath);
 		for ifield = 1:length(speclibpathfields)
-			addpath(getfield(dkepath.speclibpath,speclibpathfields{ifield}));
+			addpath(dkepath.speclibpath.(speclibpathfields{ifield}));
 		end
 	end 
 end
@@ -86,7 +93,7 @@ sourcepath.DKE = [luke_root,'Project_DKE/MEX/Source/'];
 sourcepath.C3PO = [luke_root,'Project_DKE/Modules/C3PO/MEX/Source/'];
 sourcepath.helmex = [luke_root,'Project_DKE/Modules/Helena/MEX/Source/'];
 %
-if nargin == 2, 
+if ~isempty(dkepath), 
     %
 	if isfield(dkepath,['mex',matver]),
         mexpath = dkepath.(['mex',matver]);
@@ -103,7 +110,7 @@ end
 %
 % Path for external packages
 %
-if nargin == 2, 
+if ~isempty(dkepath), 
     if isfield(dkepath,'MUMPS') 
 		if isfield(dkepath.MUMPS,['mex',matver]),
 			addpath(dkepath.MUMPS.(['mex',matver]));
@@ -112,7 +119,7 @@ if nargin == 2,
 		end
     end
     %
-    if isfield(dkepath,'SUPERLU') & isfield(dkepath.SUPERLU,'mex'),
+    if isfield(dkepath,'SUPERLU') && isfield(dkepath.SUPERLU,'mex'),
         addpath(dkepath.SUPERLU.mex);
     end
     %
