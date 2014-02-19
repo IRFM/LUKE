@@ -58,6 +58,8 @@ elseif strcmp(action,'runcheck'),
     %
     dkepath.remnum = find(flag,1,'first');
     %
+    lukeobj.remote.select.value = dkepath.remnum + 1;
+    %
     lukestructs.job = job;
     %
     job = '';

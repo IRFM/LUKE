@@ -187,27 +187,7 @@ nrem = length(dkepath.remote);
 lukeobj.remote.select.string = cell(1,1 + nrem);
 lukeobj.remote.select.string{1} = 'Local interactive calculation';
 %
-for irem = 1:nrem,
-    %
-    hoststr = dkepath.remote(irem).host;
-    if iscell(hoststr),
-        hoststr = hoststr{1};
-    end
-    if isempty(hoststr),
-        hoststr = 'Local batch calculation';
-    end
-    %
-    cmdstr = dkepath.remote(irem).cmd;
-    if iscell(cmdstr),
-        cmdstr = cmdstr{1};
-    end
-    cmdstr = cmdstr(1:min([end,find(cmdstr == ' ' | cmdstr == '_',1,'first') - 1]));
-    %
-    lukeobj.remote.select.string{irem + 1} = [hoststr,' : ',cmdstr];
-    %
-end
-%
-clear irem nrem cmdstr hoststr
+[~,lukeobj.remote.select.string(2:nrem + 1)] = load_remoteprofiles_jd(dkepath.remote);
 %
 if lukeobj.remote.select.value > 1,
     lukeobj.remote.timeout.state = 'on';

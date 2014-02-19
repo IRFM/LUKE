@@ -76,6 +76,7 @@ switch action
                 clear lukeobjmod
                 %
                 if ~isempty(job),
+                    lukeobj.remote.timeout.value = 1;
                     action = 'lukerun';iluke_callbacks;
                 else
                     lukeobj = iluke_info(lukeobj,'');% disable info display
