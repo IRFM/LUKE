@@ -83,10 +83,10 @@ else
     %
     if ~isfield(dkepath,username),%user not listed in local profile
         if isfield(dkepath,'default'),
-            disp(['Warning : user ',username,' not found on machine ',dkepaths{ifile}.hostname,'; selecting profile from default user ',dkepath.default])
+            disp(['Warning : user ',username,' not found on machine ',dkepath.hostname,'; selecting profile from default user ',dkepath.default])
             username = dkepath.default;
         else
-            error(['Warning : user ',username,' not found on machine ',dkepaths{ifile}.hostname,'; no default user specified.'])
+            error(['Warning : user ',username,' not found on machine ',dkepath.hostname,'; no default user specified.'])
         end
     end
     %
@@ -99,6 +99,11 @@ else
         dkepath = dkepath(input_dke_yp(['Please select one of the profiles numbers for user : ',username,' (1 => ',num2str(length(dkepath)),') '],1,1:length(dkepath)));
     end
     %
+    % if no remote profile
+    %
+    if ~isfield(dkepath,'remote'),
+        dkepath.remote = [];
+    end
 end
 
 
