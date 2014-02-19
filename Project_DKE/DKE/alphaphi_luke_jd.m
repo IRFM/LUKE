@@ -8,10 +8,11 @@ if isempty(waves),
 end
 % 
 zS = dke_out.zS;
-zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod(end,:);
+zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod;
+residue_rf = dke_out.residue_rf;
 xyprop_dke = dke_out.xyprop_dke;
 yb = dke_out.yb;
-nit = length(zP_0_2piRp_mod);
+nit = size(zP_0_2piRp_mod,2);
 ny = size(xyprop_dke,2);
 nb = length(yb);
 %
@@ -42,10 +43,13 @@ for itn = 1:nit,
             else%inward propagating ray fragment
                 Prf_end_2piRp = xyPrf_2piRp(find(xyprop_dke(:,iy_end) == -1,1,'first'),iy_end);
             end
-            zP_end_2piRp = max([0,zP_0_2piRp_mod{itn}{ibb}(end) - Prf_end_2piRp/2]);%to account for all QL absorbed power
+            %
+            nit_rf = length(residue_rf{itn});
+            %
+            zP_end_2piRp = max([0,zP_0_2piRp_mod{nit_rf,itn}{ibb}(end) - Prf_end_2piRp/2]);%to account for all QL absorbed power
             %
             zS_fit = [ray.ss(1),zS{ibb},ray.ss(end)];
-            zP_0_2piRp_fit = [ray.P0_2piRp,zP_0_2piRp_mod{itn}{ibb},zP_end_2piRp];
+            zP_0_2piRp_fit = [ray.P0_2piRp,zP_0_2piRp_mod{nit_rf,itn}{ibb},zP_end_2piRp];
             %
             % power along the ray
             %

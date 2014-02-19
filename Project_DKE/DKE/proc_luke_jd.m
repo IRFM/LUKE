@@ -210,11 +210,11 @@ else
     residue_rf = NaN;
 end
 %
-nit_rf = length(residue_rf);
+nit_rf = length(residue_rf);%number of RF iterations in last LUKE time
 %
 if isfield(dke_out,'zS'),
     zS = dke_out.zS;
-    zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod(:,end);
+    zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod(1:nit_rf,end);
 else
     zS = '';
     zP_0_2piRp_mod = '';

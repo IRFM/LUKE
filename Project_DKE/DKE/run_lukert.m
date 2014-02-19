@@ -62,7 +62,7 @@ if iscell(lukestructs),% remote and/or distributed calculation
     luke_flag = zeros(1,njobs);% flags to control LUKE jobs status
     luke_time = tic;
     %
-    while any(luke_flag == 0) && (isempty(remote) || toc(luke_time)/60 < remote.remtimout),
+    while any(luke_flag == 0) && (isempty(remote) || remote.remtimout == 0 || toc(luke_time)/60 < remote.remtimout),
         %
         for ijob = 1:njobs,
             %
@@ -591,6 +591,8 @@ for itn = itnmin:itnmax,%time evolution
     %
     if ~isinf(dtn_phase),
         %
+        nit_rf = length(dke_out.residue_rf{end});%number of RF iterations in last LUKE time
+        %
         for ifluct = 1:size(wavestructs,1),
             for iw = 1:size(wavestructs,2),
                 %
@@ -613,7 +615,7 @@ for itn = itnmin:itnmax,%time evolution
                 byPnonabs{ifluct,iw} = yPtot_inj;
                 for iy = 1:ny,% sum over lobes
                     for iray = 1:length(byisel{ifluct,iw}{iy}),
-                        Pabs_loc = 2*pi*equil.Rp*(dke_out.yP0_2piRp(byisel{ifluct,iw}{iy}(iray)) - dke_out.zP_0_2piRp_mod{end}{byisel{ifluct,iw}{iy}(iray)}(end));
+                        Pabs_loc = 2*pi*equil.Rp*(dke_out.yP0_2piRp(byisel{ifluct,iw}{iy}(iray)) - dke_out.zP_0_2piRp_mod{nit_rf,end}{byisel{ifluct,iw}{iy}(iray)}(end));
                         byPnonabs{ifluct,iw}(iy) = byPnonabs{ifluct,iw}(iy) - Pabs_loc;
                     end
                 end
