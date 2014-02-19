@@ -61,7 +61,11 @@ end
 Znorm = data.Znorm;
 Zcurr = data.Zcurr;
 ZP0 = data.ZP0;
-Zmom = data.dke_out.Zmom;
+if isfield(data.dke_out,'Zmom'),
+    Zmom = data.dke_out.Zmom;
+else
+    Zmom = struct;
+end
 dke_out = data.dke_out;
 radialDKE = data.radialDKE;
 equilDKE = data.equilDKE;
@@ -190,7 +194,11 @@ P_tot = P_rf + P_e;
 %
 % parallel momentum transfer rate
 %
-xdpdt_rf = Zmom(end).x_rf*mksa.dpdt_ref;
+if isfield(Zmom,'x_rf'),
+    xdpdt_rf = Zmom(end).x_rf*mksa.dpdt_ref;
+else
+    xdpdt_rf = NaN(1,nr);
+end
 %
 if isfield(dke_out,'residue_rf'),
     if iscell(dke_out.residue_rf),
@@ -531,7 +539,11 @@ end
 %
 %nbtot = sum(nb);
 %
-p0_rf_2piRp = sum(dke_out.yP0_2piRp)/1e6;%sum(wp0_rf_2piRp);
+if isfield(dke_out,'yP0_2piRp'),
+    p0_rf_2piRp = sum(dke_out.yP0_2piRp)/1e6;%sum(wp0_rf_2piRp);
+else
+    p0_rf_2piRp = sum(wp0_rf_2piRp);
+end
 %
 %
 if nr > 1,
@@ -858,7 +870,9 @@ if nr > 1,
     data_proc.radial.xrhoV = xrhoV;
     data_proc.radial.xdA_dke = equilDKE.xdA_dke;
     data_proc.radial.xdV_2piRp_dke = equilDKE.xdV_2piRp_dke;
-    data_proc.radial.xepsi = dke_out.xepsi;
+    if isfield(dke_out,'xepsi'),
+        data_proc.radial.xepsi = dke_out.xepsi;
+    end
     data_proc.radial.J_tot = J_tot;
     data_proc.radial.P_tot = P_tot;
     data_proc.radial.eta = eta;
@@ -1271,6 +1285,9 @@ if nr > 1,
                 locxlim = [0,nit_rf + 1];
                 ylim = NaN;
                 %
+                if ~isnan(I_exp),
+                    graph1D_jd(locxlim,I_exp*[1,1],0,0,'','','',NaN,locxlim,ylim,style,marker,color1,width2,opt.font);
+                end
                 graph1D_jd(1:nit_rf,I_tot_rf,0,0,locxlab,ylab,tit,NaN,locxlim,ylim,style,marker1,color2,width2,opt.font,gca,red,lspace,bspace2);
                 %set(gca,'xtick',xtick);
                 set(gca,'ylim',[0,max(get(gca,'ylim'))])
