@@ -43,10 +43,17 @@ if ~isempty(yrho),% profiles given on rho grid
     pzni = interp1(yrho,yzni.',prho,method).';
     %
 elseif ~isempty(yspsin),% profiles given on poloidal flux based grid
-    pTe = interp1(yspsin,yTe,pspsin,method);
-    pne = interp1(yspsin,yne,pspsin,method);
-    pzTi = interp1(yspsin,yzTi.',pspsin,method).';
-    pzni = interp1(yspsin,yzni.',pspsin,method).'; 
+    if isstruct(yspsin),% different rho grid for each parameter
+        pTe = interp1(yspsin.pTe,yTe,pspsin,method);
+        pne = interp1(yspsin.pne,yne,pspsin,method);
+        pzTi = interp1(yspsin.pzTi,yzTi.',pspsin,method).';
+        pzni = interp1(yspsin.pzni,yzni.',pspsin,method).'; 
+    else
+        pTe = interp1(yspsin,yTe,pspsin,method);
+        pne = interp1(yspsin,yne,pspsin,method);
+        pzTi = interp1(yspsin,yzTi.',pspsin,method).';
+        pzni = interp1(yspsin,yzni.',pspsin,method).'; 
+    end
     %
 elseif ~isempty(yspsinT),% profiles given on toroidal flux based grid
     pTe = interp1(yspsinT,yTe,pspsinT,method);

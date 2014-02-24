@@ -44,7 +44,9 @@ disp(' ')
 disp('*********** MAGNETIC EQUILIBRIUM ***********')
 disp(' ')
 %
-if isfield(external,'magnetic'),% magnetic equilibrium from external database?
+if isfield(select,'i_opt'),
+    i_opt = select.i_opt;
+elseif isfield(external,'magnetic'),% magnetic equilibrium from external database?
     %
     titletext = 'For the MAGNETIC equilibrium :';      
     s = {'Use data loaded from the external database',...
@@ -204,7 +206,9 @@ disp('*********** EQUILIBRIUM PROFILES ***********')
 disp(' ')
 %
 if e_opt ~= -2,
-    if isfield(external,'prof'),% magnetic equilibrium from external database?
+    if isfield(select,'i_opt'),
+        i_opt = select.i_opt;
+    elseif isfield(external,'prof'),% magnetic equilibrium from external database?
         %
         titletext = 'For the equilibrium PROFILES:';      
         s = {'Use data loaded from the external database',...
@@ -229,7 +233,20 @@ if e_opt ~= -2,
         %
         if strcmp(basestr,'TCV'),
             %
-            type = 1;% TCV data format
+            if isfield(equil_prof_data,'shot'),
+                type = 1;% TCV collect_parameters_for_luke data format
+            else
+                type = -2;% TCV MultiTimes database function
+                %
+                datamod.Zaxis = equil_prof_data.zaxis;
+                Ip = - equil_prof_data.ip;
+                signs.Bt = - equil_prof_data.btsign;
+                signs.Ip = - equil_prof_data.ipsign;
+                %
+                profname = rmfield(equil_prof_data,{'zaxis','ip','btsign','ipsign'});
+                %
+            end
+            %
             n_opt = 0;
             %
         elseif strcmp(basestr,'TS'),
@@ -398,12 +415,12 @@ if type == 1 && n_opt <= 1,
             datamod.Zeff = 3;
         end
     end
-		%
-		if isfield(equil_prof_data,'Ip') 
-			datamod.Ip = - equil_prof_data.Ip(ishot)/1e6;
-		else
-			datamod.Ip = NaN;
-		end
+    %
+    if isfield(equil_prof_data,'Ip') 
+        datamod.Ip = - equil_prof_data.Ip(ishot)/1e6;
+    else
+        datamod.Ip = NaN;
+    end
     %
     s = struct;
     %
@@ -425,8 +442,8 @@ if type == 1 && n_opt <= 1,
     else
         pZeff = equil_prof_data.zeff(ishot,:);
     end
-		%
-		Ip = datamod.Ip*1e6;
+    %
+    Ip = datamod.Ip*1e6;
     %
     profname = [id_equil,'.prof'];        
     %
@@ -648,9 +665,8 @@ elseif e_opt == -2,
     equil.info.datapath = amr_psi_path;
 end
 %
-s_opt = input_dke_yp('Do you want to check the equilibrium consistency [y/n]','n',{'y','n'});
 %
-if strcmp(s_opt,'y'),
+if (~isfield(select,'consist') || ~select.consist) && strcmp(input_dke_yp('Do you want to check the equilibrium consistency','n',{'y','n'},'',[1,1]),'y'),
     equil = equilconsistency_yp(equil,'',1);
 end
 %

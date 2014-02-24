@@ -46,24 +46,39 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
             return
         end
         %
-        external.basestr = 'TS';
-        external.shotnum = 0;
-        external.shotime = 0;
-        external.t1 = 0;
-        external.t2 = 0;
-        external.values.basestr = basestrs;
+        LUKE_EXTERNAL = getenv('LUKE_EXTERNAL');
+        ibasestr = find(strcmp(basestrs,LUKE_EXTERNAL));
         %
-        external = imod_struct_jd(external,'external',0,opt_gui,external,style);
-        %
-        external.shotnum = num2str(external.shotnum);
-        external.shotime = num2str(external.shotime,'%6.4f');
-        %
-        if isempty(external.basestr),
-            external.err = 'No valid tokamak selected.';
-            return
+        if isempty(ibasestr),% defautl is TS
+            ibasestr = find(strcmp(basestrs,'TS'));
         end
         %
-        external = conc_struct_jd(external,feval(['load_externaldata_',external.basestr],pwd,external.shotnum,external.shotime,external.t1,external.t2,1,''));
+        style.butwidth = 150;
+        baseselect = iselect_jd(basestrs,'Select tokamak (and eventually database function)',opt_gui,style,ibasestr,'popupmenu');
+        basestr = basestrs{baseselect};
+        %
+        iMultiTimes = strfind(basestr,'MultiTimes');
+        %
+        if ~any(iMultiTimes),% select one time
+            %
+            external.shotnum = 0;
+            external.shotime = 0;
+            external.t1 = 0;
+            external.t2 = 0;
+            %
+            external = imod_struct_jd(external,'external',0,opt_gui,struct,style);
+            %
+            external.basestr = basestr;
+            external.shotnum = num2str(external.shotnum);
+            external.shotime = num2str(external.shotime,'%6.4f');
+            %
+            external = conc_struct_jd(external,feval(['load_externaldata_',basestr],pwd,external.shotnum,external.shotime,external.t1,external.t2,1,''));
+            %
+        else
+            %
+            external = feval(['load_externaldata_',basestr],pwd,opt_gui,style);
+            %
+        end
         %
     end
 end

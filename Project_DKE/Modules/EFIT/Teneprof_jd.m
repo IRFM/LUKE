@@ -17,7 +17,27 @@ prho = [];
 pspsin = [];
 pspsinT = [];
 %
-if type == -1,
+if type == -2,% filename is a structure - TCV
+    pTe = filename.te.data.';
+    prho.pTe = filename.te.rho.';
+    pne = filename.ne.data.';
+    prho.pne = filename.ne.rho.';
+    if isfield(filename.ti,'data'),
+        pTi = filename.ti.data.';
+        prho.pzTi = filename.ti.rho.';
+    else
+        pTi = pTe/6;%%%% default for TCV
+        prho.pzTi = prho.pTe;
+    end
+    if isfield(filename.zeff,'data'),
+        pZeff = interp1(filename.zeff.rho.',filename.zeff.data.',prho.pne,'linear','extrap');%interpolate on ne grid for zni calculation
+    elseif ~isnan(filename.zeff),
+        pZeff = filename.zeff;
+    else
+        pZeff = 3;%%%% default for TCV
+    end
+    prho.pzni = prho.pne;
+elseif type == -1,
 	eval(['load -mat ',filename,' prho pne pTe pzTi pzni zZi zmi']);
 elseif type == 0,%ascii
     [prho,pTe,pne,pTi,pni] = textread(filename,'%n%n%n%n%n');
@@ -276,7 +296,7 @@ elseif type == 7,%ascii formatted (ASCOT)
     nion = length(zZi);
 end
 %
-if type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4,
+if type == -2 || (type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4),
     %
     zZi = [1,1,1,6];
     zmi = [1,2,3,12];
@@ -348,15 +368,12 @@ elseif type == 0.2,% note pnH, pnalpha and pnimp not accounted for because impur
     pzni = [fi.'*pnH;pnZ];
     pzTi = ones(nz,1)*pTi;
     %
-elseif type == 1,%TCV
+elseif type == -2 || type == 1,%TCV
     %
     pTe = pTe/1e3;
     pTi = pTi/1e3;
     %
-    %pzni = pni;
-    pzTi = pTi;
-    %
-    pspsin = prho;
+    pspsin = prho;% rho definition in TCV
     prho = [];
     %
     pnH = pne.*(zZi(4) - pZeff)/(zZi(4) - 1);
