@@ -3,9 +3,19 @@ function [s,sobj,cleartags] = iluke_status(s,status,sobj,mode,cleartags)
 % mode = 0 : input structures
 % mode = 1 : output structures
 %
-if status <= 0,% s does not exist
+if iscell(s),% clear outdated structures
+    s(status <= 0) = {[]};
+    ns = sum(status > 0);
+    if ns == 0,
+        sobj.text.string = '< empty >';
+    else
+        sobj.text.string = [num2str(ns),' structures'];
+    end;
+end
+%
+if max(status) <= 0,% s does not exist
     %
-    if status < 0 % s cannot exist
+    if max(status) < 0 % s cannot exist
         if mode == 0,
             sobj.make.state = 'off';
             sobj.load.state = 'off';
@@ -21,11 +31,15 @@ if status <= 0,% s does not exist
         end
     end
     %
-    if isempty(s) % s did not exist
-        sobj.text.string = '< empty >';
-    else % s must be cleared
-        sobj.text.string = '< outdated >';
-        s = '';
+    if ~iscell(s),
+        if isempty(s), % s did not exist
+            sobj.text.string = '< empty >';
+        else % s must be cleared
+            sobj.text.string = '< outdated >';
+            s = [];
+        end
+    else
+        
     end
     % s does not exist
     if mode == 0,
@@ -43,10 +57,6 @@ if status <= 0,% s does not exist
 else % s exists
     %
     if mode == 0,
-        if status > 1 % ohm is not saved
-            sobj.text.string = '< not saved >';
-        end
-        %
         sobj.make.state = 'on';
         sobj.load.state = 'on';
         sobj.save.state = 'on';
@@ -56,9 +66,18 @@ else % s exists
     %
     sobj.clear.state = 'on';
     sobj.disp.state = 'on';    
+    %
+    if ~iscell(s), 
+        if ~isfield(sobj,'filename') || isempty(sobj.filename), % s is not saved
+            sobj.text.string = '< not saved >';
+        else
+            sobj.text.string = sobj.filename;
+        end            
+    end
+    %
 end
 %
-if status == 0,% s does not exist
+if max(status) == 0,% s does not exist
     if mode == 0,
         sobj.make.highlight = true;
     else
