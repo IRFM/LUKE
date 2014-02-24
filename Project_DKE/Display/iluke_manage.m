@@ -2,9 +2,7 @@
 
 if ~strcmp(lukeobj.tokamak.string,'TS'),
     %
-    status.ripple = -1;
-    %
-    [ripple,lukeobj.ripple,cleartags] = iluke_status(ripple,status.ripple,lukeobj.ripple,0,cleartags);
+    status.ripple = -ones(1,ntimes);
     %
 end
 

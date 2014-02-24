@@ -43,6 +43,7 @@ switch action
             import = load([pathname,filename],'dkeparam','dkedisplay','equil','ohm','transpfaste','ripple','wavestructs');
             %
             iluke_import;
+            curtime = 1;
             %
             clear import
             %
@@ -65,8 +66,15 @@ switch action
                 %
                 % iluke made LUKE_DATA_*.mat file
                 %
-                load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equil','ohm','transpfaste','ripple','waves','wavestructs','output','job','hxr','status');
+                load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','outputs','jobs','hxrs','status');
                 lukeobj = conc_struct_jd(lukeobj,lukeobjmod);
+                %
+                if length(lukeobj.shotimes.string) == 1,
+                    curtime = 1;        
+                else
+                    curtime = 0; 
+                end
+                %
                 iluke_update;
                 %
                 lukeobj.simulfile.string = filename;%[pathname,filename];
@@ -116,8 +124,12 @@ switch action
         %
         if ~isempty(lukeobj.lukeid.string),
             filename = [sbase,'_',lukeobj.lukeid.string,'.mat'];
+        elseif isempty(equils) && isempty(external),
+            filename = [sbase,'.mat'];
+        elseif ntimes == 1 && ~isempty(equils{1}),
+            filename = [sbase,'_',make_luke_simulid_jd(equils{1},ohms{1},transpfastes{1},ripples{1},wavess{1}),'.mat'];
         else
-            filename = [sbase,'_',make_luke_simulid_jd(equil,ohm,transpfaste,ripple,waves),'.mat'];
+            filename = [sbase,'_',lukeobj.tokamak.string,'_',lukeobj.shotnum.string,'_',shotimestr,'.mat'];
         end
         %
         [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
@@ -127,9 +139,9 @@ switch action
             %
             % select fields to save and remote subfields handle 
             %
-            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotime','data','equil','ohm','transp','ripple','wave','wavestruct','luke','r5x2','param','display','lukeid'});
+            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotime','shotimes','data','equil','ohm','transp','ripple','wave','wavestruct','luke','r5x2','param','display','lukeid'});
             lukeobjmod = rmfields_jd(lukeobjmod,{'handle','position'},1);
-            save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equil','ohm','transpfaste','ripple','waves','wavestructs','output','job','hxr','status');
+            save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','outputs','jobs','hxrs','status');
             %
             lukeobj.simulfile.string = filename;%[pathname,filename];
             %
@@ -154,15 +166,11 @@ switch action
             external = '';
         else
             %
-            lukeobj.tokamak.string = external.basestr;
-            lukeobj.shotnum.string = external.shotnum;
-            lukeobj.shotime.string = external.shotime;
-            %
             lukeobj.data.text.string = '< not saved >';
             %
             status.external = 1;
             %
-            status.equil = 0;
+            status.equil = -1;
             %
         end
         %
@@ -183,6 +191,9 @@ switch action
             load([pathname,filename],'external');
             %
             if ~isfield(external,'basestr'),
+                %
+                % fix external structures with missing information
+                %
                 ilims = find(external.id == '_');
                 if length(ilims) < 2,
                     error('could not determine shot characteristics from external.id. Please arrange manually')
@@ -192,19 +203,30 @@ switch action
                 %
                 external.basestr = external.id(1:ilims(1) - 1);
                 external.shotnum = external.id(ilims(1) + 1:ilims(2) - 1);
-                external.shotime = num2str(str2double(external.id(ilims(2) + 1:ilims(3) - 1)),'%6.4f');
+                shotimestr = external.id(ilims(2) + 1:ilims(3) - 1);
+                if strcmp(shotimestr,'MultiTimes'),
+                    nt = length(external.nshotimes);
+                    for it = 1:nt
+                        external.shotimes{it} = num2str(external.nshotimes(it),'%6.4f');
+                    end
+                    %
+                    clear it nt
+                else
+                    external.shotime = num2str(str2double(shotimestr),'%6.4f');
+                end
+                %
+                clear ilims shotimestr
             end
             %
-            lukeobj.tokamak.string = external.basestr;
-            lukeobj.shotnum.string = external.shotnum;
-            lukeobj.shotime.string = external.shotime;
             lukeobj.data.text.string = filename;%[pathname,filename];
             %
             status.external = 1;
             %
-            status.equil = 0;
+            status.equil = -1;
             %
         end  
+        %
+        clear sbase filestr filename pathname
         %
     case 'datasave'
         %
@@ -212,7 +234,12 @@ switch action
         %
         sbase = 'EXTERNAL';
         filestr = [sbase,'_*.mat'];
-        filename = [sbase,'_',external.basestr,'_',external.shotnum,'_',external.shotime,'.mat'];
+        if length(lukeobj.shotimes.string) > 1,
+            shotimestr = 'MultiTimes';
+        else
+            shotimestr = external.shotime;
+        end
+        filename = [sbase,'_',external.basestr,'_',external.shotnum,'_',shotimestr,'.mat'];
         %
         [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
         %
@@ -224,12 +251,14 @@ switch action
             lukeobj.data.text.string = filename;%[pathname,filename];
         end  
         %
+        clear sbase filestr filename pathname shotimestr
+        %
     case 'dataclear'
         %
         % clearing external data
         %
         status.external = 0;
-        status.equil = 0;
+        status.equil = -1;
         %
     case 'equilmake'
         %
@@ -237,35 +266,89 @@ switch action
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
         %
+        select = struct;
+        %
         select.style = style;
         %
         select.idequil = 1;
         select.disp = 1;
         select.print = 1;
         select.comp = 1;
-        select.busyhandle = lukeobj.busy.handle;
+        select.consist = 1;
         %
         if isfield(external,'equil'),
-            external_equil = external.equil;
+            %
+            if curtime == 0,% treat all times
+                external_equil = external.equil;
+            else% treat one time
+                external_equil = external.equil(curtime);
+            end
         else
             external_equil = '';
         end
         %
-        equil = imake_equil_jd(dkepath,lukeobj.tokamak.string,'',external_equil,workdir,lukeobj.infopanel.handle,select);
+        if length(external_equil) > 1,% treat all times,
+            %
+            s = [remprofiles(1),'MDCE Job scheduler','MDCE parfor',remprofiles(2:end)];
+            %
+            locstyle = style;
+            locstyle.textwidth = 200;
+            locstyle.butwidth = 400;
+            %
+            mdce_mode = iselect_jd(s,'Distribution of calc. : ',lukeobj.infopanel.handle,locstyle,1,'popupmenu') - 1;
+            %
+            clear s locstyle 
+            %
+            if mdce_mode > 2,
+                mdce_mode = 2 - mdce_mode;%use of remcomputing with negative mdce_mode
+            end
+            %
+            dkecluster = clustermode_luke(mdce_mode,'',dkepath);%MatLab distributed computing environment
+            %
+            select.i_opt = 0;
+            %
+            set(lukeobj.busy.handle,'Visible','on');drawnow;
+            [flag,newequil] = mdce_run('imake_equil_jd',{dkepath,lukeobj.tokamak.string,'',external_equil,workdir,lukeobj.infopanel.handle,select},4,external_equil,dkecluster);
+            set(lukeobj.busy.handle,'Visible','off');drawnow;
+            %
+            clear mdce_mode dkecluster flag 
+            %            
+        else% treat one time 
+            %
+            select.busyhandle = lukeobj.busy.handle;
+            %    
+            newequil = imake_equil_jd(dkepath,lukeobj.tokamak.string,'',external_equil,workdir,lukeobj.infopanel.handle,select);
+            %
+        end
         %
-        if isfield(equil,'err'),
-            lukeobj.infotext.string = {'Error creating equil structure : ',equil.err};
-            equil = '';
+        if isfield(newequil,'err'),
+            lukeobj.infotext.string = {'Error creating equil structure(s) : ',newequil.err};
         else
             %
             lukeobj.equil.text.string = '< not saved >';
             %
-            status.equil = 1;
-            status.ohm = 0;
-            status.transpfaste = 0;
-            status.ripple = 0;
-            status.waves = 0;
-            status.output = 0;
+            if curtime == 0,
+                equils = newequil.';
+                %
+                status.equil(:) = 1;
+                status.ohm(:) = 0;
+                status.transpfaste(:) = 0;
+                status.ripple(:) = 0;
+                status.waves(:) = 0;
+                status.wavestructs(:) = 0;
+                status.output(:) = 0;
+            else
+                equils{curtime} = newequil;
+                %
+                status.equil(currtime) = 1;
+                status.ohm(currtime) = 0;
+                status.transpfaste(currtime) = 0;
+                status.ripple(currtime) = 0;
+                status.waves(currtime) = 0;
+                status.wavestructs(currtime) = 0;
+                status.output(currtime) = 0;
+            end
+            %
             status.data = 2;
             %
             lukeobj.lukeid.string = '';
@@ -275,6 +358,8 @@ switch action
         end
         %
         lukeobj = iluke_info(lukeobj,'text');% enable info display
+        %
+        clear select newequil external_equil
         %
     case 'equilload'
         %
@@ -316,14 +401,17 @@ switch action
         %
         sbase = 'EQUIL';
         filestr = [sbase,'_*.mat'];
-        filename = [sbase,'_',equil.id,'.mat'];
+        %
+        filename = [sbase,'_',equil{curtime}.id,'.mat'];
         %
         [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
         %
-        %
         if filename ~= 0,
             %
+            equil_save = equil;
+            equil = equil{curtime};
             save([pathname,filename],'equil');
+            equil = equil_save;
             %
             lukeobj.equil.text.string = filename;%[pathname,filename];
         end  

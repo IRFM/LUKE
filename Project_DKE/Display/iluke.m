@@ -5,6 +5,13 @@ clear all
 close all
 %
 [dkepath,dkedisplay] = load_structures_yp('dkepath','','','dkedisplay','NO_DISPLAY','');
+%
+nrem = length(dkepath.remote);
+remprofiles = cell(1,1 + nrem);
+remprofiles{1} = 'Local interactive calculation';
+%
+[~,remprofiles(2:nrem + 1)] = load_remoteprofiles_jd(dkepath.remote);
+%
 if length(dkepath.hostname) >= 3 && strcmp(dkepath.hostname(1:3),'lac'),% %% TODO tmp condition, test grid effects on 18532
     id_dkeparam = 'EC_RT';
 else
@@ -38,7 +45,7 @@ style.titlestrwidth = 150;
 %
 style.simulfiletitlewidth = 120;
 style.shotnumtitlewidth = 120; 
-style.shotnumwidth = 80; 
+style.shotnumwidth = 90; 
 style.titlestrheight = 50;
 style.workdirtitlecorr = 4;
 %
@@ -139,7 +146,7 @@ lukeobj.shotimetitle.position = [style.buthsep,style.butvsep + style.textheightc
 %
 lukeobj.tokamak.position = [2*style.buthsep + style.shotnumtitlewidth,2*style.butheight + 3*style.butvsep + style.textheightcorr,style.shotnumwidth,style.textheight];
 lukeobj.shotnum.position = [2*style.buthsep + style.shotnumtitlewidth,style.butheight + 2*style.butvsep + style.textheightcorr,style.shotnumwidth,style.textheight];
-lukeobj.shotime.position = [2*style.buthsep + style.shotnumtitlewidth,style.butvsep + style.textheightcorr,style.shotnumwidth,style.textheight];
+lukeobj.shotimes.position = [2*style.buthsep + style.shotnumtitlewidth,style.butvsep,style.shotnumwidth,style.butheight];
 %
 lukeobj.import.position = [style.shotnumtitlewidth + style.shotnumwidth + 3*style.buthsep,3*style.butheight + 4*style.butvsep,style.buthsep + 2*style.butwidth,style.butheight];
 lukeobj.exitluke.position = [style.shotnumtitlewidth + style.shotnumwidth + 3*style.buthsep,2*style.butheight + 3*style.butvsep,style.butwidth,style.butheight];
@@ -186,15 +193,15 @@ lukeobj.graph1print.string = 'Print';
 lukeobj.graph2print.string = 'Print';
 lukeobj.graph3print.string = 'Print';
 
-lukeobj.lukevertitle.string = 'LUKE VERSION  : ';
-lukeobj.tokamaktitle.string = 'TOKAMAK       : ';
-lukeobj.shotnumtitle.string = 'SHOT NUMBER   : ';
-lukeobj.shotimetitle.string = 'SHOT TIME (s) : ';
+lukeobj.lukevertitle.string = 'LUKE VERSION : ';
+lukeobj.tokamaktitle.string = 'TOKAMAK      : ';
+lukeobj.shotnumtitle.string = 'SHOT NUMBER  : ';
+lukeobj.shotimetitle.string = 'SHOT TIME(S) : ';
 
 lukeobj.lukever.string = LUKEversion_jd;
 lukeobj.tokamak.string = '< empty >';
 lukeobj.shotnum.string = '< empty >';
-lukeobj.shotime.string = '< empty >';
+lukeobj.shotimes.string = {'< all >','< empty >'};
 
 lukeobj.lukeroottitle.string =   'LUKE SOURCE : ';
 %lukeobj.workdirtitlestr.string = '            : ';
@@ -240,9 +247,10 @@ lukeobj.newshot.state = 'on';
 lukeobj.loadshot.state = 'on';
 lukeobj.saveshot.state = 'on';
 
+lukeobj.shotimes.callback = 'curtime = get(lukeobj.shotimes.handle,''Value'') - 1;iluke_update;';
 lukeobj.import.callback = 'action = ''import'';iluke_callbacks;';
 lukeobj.exitluke.callback = 'close(lukeobj.mainfig.handle)';
-lukeobj.newshot.callback = 'status.external = 0;status.equil = 0;job = '''';iluke_update;';
+lukeobj.newshot.callback = 'status.external = 0;status.equil = -1;iluke_update;';
 lukeobj.loadshot.callback = 'action = ''loadshot'';iluke_callbacks;';
 lukeobj.saveshot.callback = 'action = ''saveshot'';iluke_callbacks;';
 lukeobj.workdirtitle.callback = 'action = ''workdir'';iluke_callbacks;';
@@ -253,9 +261,9 @@ lukeobj.graph1sel.callback = 'lukeobj.plot1.gindex = get(lukeobj.graph1sel.handl
 lukeobj.graph2sel.callback = 'lukeobj.plot2.gindex = get(lukeobj.graph2sel.handle,''Value'') - 1;iluke_update;';
 lukeobj.graph3sel.callback = 'lukeobj.plot3.gindex = get(lukeobj.graph3sel.handle,''Value'') - 1;iluke_update;';
 
-lukeobj.graph1save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',lukeobj.shotime.string,'' '',lukeobj.graph1sel.string{lukeobj.graph1sel.value}],''figures/'',graphs(lukeobj.plot1.gindex).handles);';
-lukeobj.graph2save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',lukeobj.shotime.string,'' '',lukeobj.graph2sel.string{lukeobj.graph2sel.value}],''figures/'',graphs(lukeobj.plot2.gindex).handles);';
-lukeobj.graph3save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',lukeobj.shotime.string,'' '',lukeobj.graph3sel.string{lukeobj.graph3sel.value}],''figures/'',graphs(lukeobj.plot3.gindex).handles);';
+lukeobj.graph1save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',shotimestr,'' '',lukeobj.graph1sel.string{lukeobj.graph1sel.value}],''figures/'',graphs(lukeobj.plot1.gindex).handles);';
+lukeobj.graph2save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',shotimestr,'' '',lukeobj.graph2sel.string{lukeobj.graph2sel.value}],''figures/'',graphs(lukeobj.plot2.gindex).handles);';
+lukeobj.graph3save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',shotimestr,'' '',lukeobj.graph3sel.string{lukeobj.graph3sel.value}],''figures/'',graphs(lukeobj.plot3.gindex).handles);';
 
 lukeobj.graph1print.callback = 'iluke_print(0,'','',graphs(lukeobj.plot1.gindex).handles);';
 lukeobj.graph2print.callback = 'iluke_print(0,'','',graphs(lukeobj.plot2.gindex).handles);';
@@ -304,7 +312,7 @@ lukeobj.shotimetitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text'
 
 lukeobj.tokamak.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.tokamak.string,'Position',lukeobj.tokamak.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.shotnum.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.shotnum.string,'Position',lukeobj.shotnum.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
-lukeobj.shotime.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.shotime.string,'Position',lukeobj.shotime.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.shotimes.handle = uicontrol(lukeobj.titlepanel.handle,'Style','popupmenu','String',lukeobj.shotimes.string,'Position',lukeobj.shotimes.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left','Callback',lukeobj.shotimes.callback);
 
 lukeobj.lukeroot.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.lukeroot.string,'Position',lukeobj.lukeroot.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.lukever.handle = uicontrol(lukeobj.titlepanel.handle,'Style','text','String',lukeobj.lukever.string,'Position',lukeobj.lukever.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
@@ -403,6 +411,8 @@ lukeobj.runc3pooptim.handle = uicontrol(lukeobj.infopanel.handle,'Style','pushbu
 lukeobj.wsparamtitle.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.wsparamtitle.string,'Position',lukeobj.wsparamtitle.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.wsparam.handle = uicontrol(lukeobj.infopanel.handle,'Style','edit','String',lukeobj.wsparam.string,'Position',lukeobj.wsparam.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.wsparam.callback);
 
+lukeobj.runcheck.highlight = true;
+
 lukeobj = iluke_info(lukeobj,'startup');% info display
 
 graphs = struct;
@@ -417,19 +427,13 @@ lukeobj.plot3.gindex = 0;
 
 cleartags = {};
 
-status.external = 0;
+ntimes = 1;% number of times considered
+curtime = 1;% current time of work : (0) none or all, or index in shotimes
 
-external = '';
-equil = '';
-ohm = '';
-transpfaste = '';
-ripple = '';
-waves = '';
+external = [];
 
-wavestructs = {};
+status.equil = -1;
 
-job = '';
-output = '';
-hxr = '';
+lukeobj.remote.select.string = remprofiles;
 
 iluke_update;
