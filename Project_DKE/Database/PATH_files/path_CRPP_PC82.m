@@ -45,7 +45,7 @@ dkepath.decker(1).imagemagick.env = '';% ImageMagick environment variable
 %
 % local
 %
-dkepath.decker(1).remote(1) = remote_CRPP_PC82('bash','joan');
+dkepath.decker(1).remote(1) = remote_CRPP_PC82('direct','joan');
 dkepath.decker(1).remote(1).host = '';% empty for local host
 dkepath.decker(1).remote(1).env.luke_root = dkepath.decker(1).luke_root;
 %
