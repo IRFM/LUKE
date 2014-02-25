@@ -60,6 +60,12 @@ dkepath.joan(1).MUMPS.mex801 = [dkepath.joan(1).local_root,'MUMPS_4.10.0_ifort/M
 %
 %--------------------------- Remote computing -----------------------------
 %
+% local (direct)
+%
+dkepath.joan(1).remote(1) = remote_laptop_JOAN_DECKER('direct','joan');
+dkepath.joan(1).remote(1).host = '';
+dkepath.joan(1).remote(1).env.luke_root = dkepath.joan(1).luke_root;
+%
 % andromede (pbs)
 %
 dkepath.joan(1).remote(1) = remote_CEA_ANDROMEDE('pbs','joan');
