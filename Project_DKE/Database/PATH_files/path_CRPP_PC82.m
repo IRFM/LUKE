@@ -49,23 +49,33 @@ dkepath.decker(1).remote(1) = remote_CRPP_PC82('direct','joan');
 dkepath.decker(1).remote(1).host = '';% empty for local host
 dkepath.decker(1).remote(1).env.luke_root = dkepath.decker(1).luke_root;
 %
-% CEA andromede (pbs)
+% CRPP lac5
 %
-dkepath.decker(1).remote(2) = remote_CEA_ANDROMEDE('pbs','joan');
-dkepath.decker(1).remote(2).env.luke_root = '/home/JD211098/LUKE_CRONOS/';
-%
-% macproyves (condor)
-%
-dkepath.decker(1).remote(3) = remote_macpro_YVES_PEYSSON('condor','joan');
-dkepath.decker(1).remote(3).env.luke_root = '/Users/yvespeysson/joandecker/Work/LUKE_1_10/';
-%
-% macproyves (xgrid)
-%
-dkepath.decker(1).remote(4) = remote_macpro_YVES_PEYSSON('xgrid','joan');
-dkepath.decker(1).remote(4).env.luke_root = dkepath.decker(1).remote(3).env.luke_root;
-%
-% shenma (torque)
-%
-dkepath.decker(1).remote(5) = remote_ASIPP_SHENMA('torque','joan');
-dkepath.decker(1).remote(5).env.luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
+% dkepath.decker(1).remote(2) = remote_CRPP_LAC5('direct','joan');
+% dkepath.decker(1).remote(2).env.luke_root = '/home/decker/LUKE/';
+% %
+% % CRPP PPB 110
+% %
+% dkepath.decker(1).remote(3) = remote_CRPP_PPB110('slurm','joan');
+% dkepath.decker(1).remote(3).env.luke_root = '/home/G09625/LUKE/';
+% %
+% % CEA andromede (pbs)
+% %
+% dkepath.decker(1).remote(4) = remote_CEA_ANDROMEDE('pbs','joan');
+% dkepath.decker(1).remote(4).env.luke_root = '/home/JD211098/LUKE_CRONOS/';
+% %
+% % macproyves (condor)
+% %
+% dkepath.decker(1).remote(5) = remote_macpro_YVES_PEYSSON('condor','joan');
+% dkepath.decker(1).remote(5).env.luke_root = '/Users/yvespeysson/joandecker/Work/LUKE_1_10/';
+% %
+% % macproyves (xgrid)
+% %
+% dkepath.decker(1).remote(6) = remote_macpro_YVES_PEYSSON('xgrid','joan');
+% dkepath.decker(1).remote(6).env.luke_root = dkepath.decker(1).remote(3).env.luke_root;
+% %
+% % shenma (torque)
+% %
+% dkepath.decker(1).remote(7) = remote_ASIPP_SHENMA('torque','joan');
+% dkepath.decker(1).remote(7).env.luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 %
