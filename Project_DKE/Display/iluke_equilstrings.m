@@ -3,7 +3,7 @@ function [lukeobj,equil] = iluke_equilstrings(lukeobj,equil)
 if isfield(equil,'tokamak') && isfield(equil,'shotnum') && isfield(equil,'shotime'),
     lukeobj.tokamak.string = equil.tokamak;
     lukeobj.shotnum.string = equil.shotnum;
-    lukeobj.shotime.string = equil.shotime;
+    lukeobj.shotimes.string{2} = equil.shotime;
 else
     isep = find(equil.id == '_');
     if length(isep) >= 2,
@@ -17,7 +17,7 @@ else
         %
         lukeobj.tokamak.string = equil.tokamak;
         lukeobj.shotnum.string = equil.shotnum;
-        lukeobj.shotime.string = equil.shotime;
+        lukeobj.shotimes.string{2} = equil.shotime;
     else
         equil.tokamak = '';
         equil.shotnum = '';
@@ -25,6 +25,6 @@ else
         %
         lukeobj.tokamak.string = '< ? >';
         lukeobj.shotnum.string = '< ? >';
-        lukeobj.shotime.string = '< ? >';
+        lukeobj.shotimes.string{2}.string = '< ? >';
     end
 end

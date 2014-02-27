@@ -44,42 +44,40 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style)
     %
     % get relevant times  - reference is te
     %
-    nshotimes = dataoutput.te.time;
+    shotimes = dataoutput.te.time;
     %
-    nshotimes = intersect(nshotimes,dataoutput.ne.time);
+    shotimes = intersect(shotimes,dataoutput.ne.time);
     if ~all(isnan(dataoutput.ti.data(:))),
-        nshotimes = intersect(nshotimes,dataoutput.ti.time);
+        shotimes = intersect(shotimes,dataoutput.ti.time);
     else
         disp('No ti data');        
     end
-    nshotimes = intersect(nshotimes,dataoutput.zeff.time);
-    nshotimes = intersect(nshotimes,dataoutput.zaxis.time);
-    nshotimes = intersect(nshotimes,dataoutput.ip.time);
-    nshotimes = intersect(nshotimes,dataoutput.vloop.time);
+    shotimes = intersect(shotimes,dataoutput.zeff.time);
+    shotimes = intersect(shotimes,dataoutput.zaxis.time);
+    shotimes = intersect(shotimes,dataoutput.ip.time);
+    shotimes = intersect(shotimes,dataoutput.vloop.time);
     %
     for iisel = 1:length(dataoutput.ecrh.isel),
-        nshotimes = intersect(nshotimes,dataoutput.ecrh.ang{iisel}.time);
-        nshotimes = intersect(nshotimes,dataoutput.ecrh.pow{iisel}.time);
+        shotimes = intersect(shotimes,dataoutput.ecrh.ang{iisel}.time);
+        shotimes = intersect(shotimes,dataoutput.ecrh.pow{iisel}.time);
     end
     %
-    discnshotimes = setdiff(dataoutput.te.time,nshotimes);
+    discnshotimes = setdiff(dataoutput.te.time,shotimes);
     if ~isempty(discnshotimes),
         disp(['WARNING : ',num2str(length(discnshotimes)),'/',num2str(length(dataoutput.te.time)),' times were discarded as they are missing from some diagnostics']);
     end
     %
-    external.nshotimes = nshotimes;
-    nt = length(external.nshotimes);
-    external.shotimes = cell(1,nt);
+    external.shotimes = shotimes;
+    nt = length(external.shotimes);
     %
     for it = 1:nt,
-        shotime = external.nshotimes(it);
-        external.shotimes{it} = num2str(shotime,'%6.4f');
+        shotime = external.shotimes(it);
         %
         external.equil(it).basestr =  external.basestr;
         external.equil(it).shotnum =  external.shotnum;
-        external.equil(it).shotime =  external.shotimes{it};
+        external.equil(it).shotime =  shotime;
         %
-        eqdsk_file = [dataoutput.equil.data,filesep,'eqdsk.',external.shotnum,'t',external.shotimes{it}];
+        eqdsk_file = [dataoutput.equil.data,filesep,'eqdsk.',external.shotnum,'t',num2str(shotime,'%6.4f')];
         if exist(eqdsk_file,'file'),
             external.equil(it).magnetic.eqdsk = fileread(eqdsk_file);% magnetic equilibrium
         else

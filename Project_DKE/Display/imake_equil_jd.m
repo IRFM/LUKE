@@ -69,6 +69,12 @@ if i_opt == 0, % use data from from external database
     %
     shotnum = external.shotnum;
     shotime = external.shotime;
+    if ischar(shotime),
+        shotimestr = shotime;
+        shotime = str2double(shotimestr);
+    else
+        shotimestr = num2str(shotime,'%6.4f');
+    end
     %
     if strcmp(basestr,'TCV') || strcmp(basestr,'EAST'),
         %
@@ -132,10 +138,10 @@ elseif i_opt == 1, % use data from an existing equilibrium file
         %
         if (~isempty(strfind(eqdsk_file,'EQDSK.')) || ~isempty(strfind(eqdsk_file,'eqdsk.'))) && ~isempty(it),
             shotnum = eqdsk_file(7:it-1);
-            shotime = eqdsk_file(it+1:end);
+            shotimestr = eqdsk_file(it+1:end);
         else
             shotnum = '0';
-            shotime = '0';
+            shotimestr = '0';
         end
         %
         shotnum_new = input(['Please provide the shot number [',shotnum,'] : '],'s');
@@ -145,12 +151,14 @@ elseif i_opt == 1, % use data from an existing equilibrium file
             shotnum = '0';
         end
         %
-        shotime_new = input(['Please provide the shot time [',shotime,'] : '],'s');
+        shotime_new = input(['Please provide the shot time [',shotimestr,'] : '],'s');
         if ~isempty(shotime_new),
-            shotime = shotime_new;
-        elseif isempty(shotime),
-            shotime = '0';
+            shotimestr = shotime_new;
+        elseif isempty(shotimestr),
+            shotimestr = '0';
         end
+        %
+        shotime = str2double(shotimestr);
         % 
         e_opt = -1;% eqdsk equilibrium
         %
@@ -174,7 +182,7 @@ elseif i_opt == 1, % use data from an existing equilibrium file
             it1 = 8 + strfind(amr_psi_file(9:end),'_');
             shotnum = amr_psi_file(9:it1(1)-1);
             it2 = it1(1) + strfind(amr_psi_file(it1+1:end),'_');
-            shotime = amr_psi_file(it1(1)+1:it2(1)-1);
+            shotimestr = amr_psi_file(it1(1)+1:it2(1)-1);
         else
             disp('-----> The AMR equilibrium file selected is not valid.')
             return
@@ -182,6 +190,8 @@ elseif i_opt == 1, % use data from an existing equilibrium file
         %
         e_opt = -2;% AMR equilibrium
         n_opt = 0;
+        %
+        shotime = str2double(shotimestr);
         %
     end
     %
@@ -195,7 +205,9 @@ end
 %
 if i_opt == 2, % equilibrium data specified by user
     %
-    [equil_magnetic_data,shotnum,shotime] = imake_equil_ideal(e_opt);
+    [equil_magnetic_data,shotnum,shotimestr] = imake_equil_ideal(e_opt);
+    %
+    shotime = str2double(shotimestr);
     %
 end
 %
@@ -286,7 +298,7 @@ if e_opt ~= -2,
             '3 (EVE profiles)\n'],...
             0,{0,1,2,3},'Invalid selection');
         %
-        [data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotime,' :'],eqdsk_path);
+        [data_file,data_path] = igetfile_jd(opt_gui,'*.*',['Please select the data file for shot ',shotnum,' at time ',shotimestr,' :'],eqdsk_path);
         %
         if data_file == 0,
             return
@@ -357,7 +369,7 @@ end
 %
 % ************** BUILT EQUILLIBRIUM *****************
 %
-shotid = [basestr,'_',shotnum,'_',shotime];
+shotid = [basestr,'_',shotnum,'_',shotimestr];
 %
 if ~isfield(select,'idequil') || ~select.idequil 
     id_equil = input(['Please provide a name for the equilibrium file [',shotid,'] : '],'s');
@@ -559,7 +571,7 @@ elseif e_opt == -1,% (R,Z) to (psi,theta) conversion specific to eqdsk
     %
 elseif e_opt == -2,% AMR equilibrium
     %
-    [equil_magnetic,equil_prof] = make_equil_AMR_jd(amr_psi_path,shotnum,shotime,display_mode,p_opt,dispname,savename,np,nt);
+    [equil_magnetic,equil_prof] = make_equil_AMR_jd(amr_psi_path,shotnum,shotimestr,display_mode,p_opt,dispname,savename,np,nt);
     %
 elseif e_opt == -3,% standard rz -> pt transformation needed
     %

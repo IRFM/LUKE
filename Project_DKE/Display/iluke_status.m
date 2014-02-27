@@ -1,93 +1,111 @@
-function [s,sobj,cleartags] = iluke_status(s,status,sobj,mode,cleartags)
+function [s,sobj,cleartags] = iluke_status(s,status,sobj,mode,curtime,cleartags)
 %
 % mode = 0 : input structures
 % mode = 1 : output structures
 %
-if iscell(s),% clear outdated structures
-    s(status <= 0) = {[]};
-    ns = sum(status > 0);
-    if ns == 0,
-        sobj.text.string = '< empty >';
+% clear outdated structures
+%
+sname = inputname(1);
+%
+if iscell(s),
+    mask = status <= 0;
+    if any(mask),
+        if iscell(s(mask(1))),
+            s(mask) = {{}};%waves & wavestructs
+        else
+            s(mask) = {[]};
+        end
+    end
+    %
+    % setup string
+    %
+    if curtime > 0,
+        if status(curtime) <= 0,
+            sobj.text.string = '< empty >';
+        elseif ~isfield(s{curtime},'filename') || isempty(s{curtime}.filename), % s is not saved
+            sobj.text.string = '< not saved >';
+        else
+            sobj.text.string = s{curtime}.filename;
+        end            
+    elseif curtime == 0,
+        ns = sum(status > 0);
+        if ns == 0,
+            sobj.text.string = '< empty >';
+        else
+            sobj.text.string = [num2str(ns),' structures'];
+        end
     else
-        sobj.text.string = [num2str(ns),' structures'];
-    end;
+        sobj.text.string = '< empty >';
+    end
+    %        
+elseif status <= 0,
+    s = [];
+    sobj.text.string = '< empty >';
+elseif ~isfield(s,'filename') || isempty(s.filename), % s is not saved
+    sobj.text.string = '< not saved >';
+else
+    sobj.text.string = s.filename;
 end
 %
-if max(status) <= 0,% s does not exist
-    %
-    if max(status) < 0 % s cannot exist
-        if mode == 0,
-            sobj.make.state = 'off';
-            sobj.load.state = 'off';
-        else
-            sobj.run.state = 'off';
-        end
-    else % s can be built
-        if mode == 0,
-            sobj.make.state = 'on';
-            sobj.load.state = 'on';
-        else
-            sobj.run.state = 'on';
-        end
-    end
-    %
-    if ~iscell(s),
-        if isempty(s), % s did not exist
-            sobj.text.string = '< empty >';
-        else % s must be cleared
-            sobj.text.string = '< outdated >';
-            s = [];
-        end
+% setup action state
+%
+if isempty(status),
+    status = -1;% s cannot exist
+elseif curtime > 0,
+    status = status(curtime);% status for a given time
+else
+    status = max(status);% status for multiple times
+end
+%
+if status < 0,% s cannot exist except for mode == -1 (new equil)
+    if mode == -1,% equil can always be built
+        sobj.make.state = 'on';
+        sobj.load.state = 'on';
+    elseif mode == 0,
+        sobj.make.state = 'off';
+        sobj.load.state = 'off';
     else
-        
+        sobj.run.state = 'off';
     end
-    % s does not exist
-    if mode == 0,
+else% s can be built
+    if mode <= 0,
+        sobj.make.state = 'on';
+        sobj.load.state = 'on';
+    else
+        sobj.run.state = 'on';
+    end
+end
+%
+if status <= 0,% s does not exist
+    if mode <= 0,
         sobj.save.state = 'off';
     end
     sobj.clear.state = 'off';
     sobj.disp.state = 'off';
     %
-    sname = inputname(1);
-    %
     if ~any(strcmp(cleartags,sname)),
         cleartags = [cleartags,sname];
     end
-    %        
-else % s exists
-    %
-    if mode == 0,
-        sobj.make.state = 'on';
-        sobj.load.state = 'on';
+else% s exists
+    if mode <= 0,
         sobj.save.state = 'on';
-    else
-        sobj.run.state = 'on';
     end
-    %
     sobj.clear.state = 'on';
     sobj.disp.state = 'on';    
-    %
-    if ~iscell(s), 
-        if ~isfield(sobj,'filename') || isempty(sobj.filename), % s is not saved
-            sobj.text.string = '< not saved >';
-        else
-            sobj.text.string = sobj.filename;
-        end            
-    end
-    %
 end
 %
-if max(status) == 0,% s does not exist
-    if mode == 0,
+if status == 0,% s does not exist
+    if mode <= 0,
         sobj.make.highlight = true;
     else
         sobj.run.highlight = true;
     end
 else
-    if mode == 0,
+    if mode <= 0,
         sobj.make.highlight = false;
     else
         sobj.run.highlight = false;
     end
-end    
+end  
+%  
 

@@ -23,16 +23,18 @@ l_data = '';
 %
 if ~isempty(data),
     %
-    ishot = find(data.shot == str2num(shotnum));
-    %
-    if isempty(ishot),
-        disp(['-----> launching data not found for shot :',shotnum]);
-        return
-    end
-    %
-    if length(ishot) > 1,
-        disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
-        ishot = ishot(1);
+    if isfield(data,'shot'),
+        ishot = find(data.shot == str2num(shotnum));
+        %
+        if isempty(ishot),
+            disp(['-----> launching data not found for shot :',shotnum]);
+            return
+        end
+        %
+        if length(ishot) > 1,
+            disp(['-----> WARNING : Several entries are found for shot :',shotnum,', first entry selected']);
+            ishot = ishot(1);
+        end
     end
     %
     if isnan(l_opt),
@@ -58,11 +60,19 @@ if ~isempty(data),
         %
     end
     %
-    eval(['angles = data.angles_',num2str(l_opt),'(ishot);'])
-    %
-    if ~strcmp(shotnum,angles.id),
-        disp('-----> Shot number mismatch. Verify data file');
-        return
+    if isfield(data,'angles'),%case of structure array
+        %
+        angles = data.angles(l_opt == data.laun);
+        %
+    else% case of multiple fields
+        %
+        eval(['angles = data.angles_',num2str(l_opt),'(ishot);'])
+        %
+        if ~strcmp(shotnum,angles.id),
+            disp('-----> Shot number mismatch. Verify data file');
+            return
+        end
+        %
     end
     %
     angles_mod = struct;
@@ -80,7 +90,7 @@ if ~isempty(data),
         angles.freq = freq_new;
     end
     %
-    if P0_new ~= angles.P0,
+    if P0_new ~= angles.P0 && (~isnan(P0_new) || ~isnan(angles.P0)),
         disp(['-----> WARNING: injected power has been changed from ',num2str(angles.P0/1e3),' kW to ',num2str(P0_new/1e3),' kW']);
         angles.P0 = P0_new;
     end

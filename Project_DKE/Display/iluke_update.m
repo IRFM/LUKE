@@ -4,146 +4,191 @@
 % UPDATE STATUS
 %
 
-if isempty(external),
-    status.external = 0;
+[external,lukeobj.data,cleartags] = iluke_status(external,status.external,lukeobj.data,0,1,cleartags);
+
+%
+% manage the data structures based on status.equil, which refers to each shotime
+%
+% at this point it is necessary that shotimes, status.equil, and equils all have the same dimension.
+%
+%   - status.equil(it) = -1 : equil & shotime to be removed
+%   - status.equil(it) = 0 : equil to be cleared & shotime kept (external not empty)
+%   - status.equil(it) = 1 : equil exists & shotime maintained
+%   - status.equil(it) = 2 : new shot time & empty equils 
+%   - status.equil(it) = 3 : new shot time & full equils 
+%
+if length(status.equil) ~= length(equils),
+    error('Inconsistency between status.equil & equils')
+end
+if length(status.equil) ~= length(shotimes),
+    error('Inconsistency between status.equil & shotimes')
+end
+%
+flag_remove = status.equil == -1;
+%
+% remove outdated times
+%
+shotimes(flag_remove) = [];
+
+equils(flag_remove) = [];
+ohms(flag_remove) = [];
+transpfastes(flag_remove) = [];
+ripples(flag_remove) = [];
+wavess(flag_remove) = [];
+%
+wavestructss(flag_remove) = [];
+%
+jobs(flag_remove) = [];
+outputs(flag_remove) = [];
+hxrs(flag_remove) = [];
+
+status.equil(flag_remove) = [];
+status.ohm(flag_remove) = [];
+status.transpfaste(flag_remove) = [];
+status.ripple(flag_remove) = [];
+status.waves(flag_remove) = [];
+status.wavestructs(flag_remove) = [];
+status.job(flag_remove) = [];
+status.output(flag_remove) = [];
+status.hxr(flag_remove) = [];
+
+flag_clear = status.equil == 0;
+flag_newempty = status.equil == 2;
+flag_newfull = status.equil == 3;
+
+flag_new = flag_newempty | flag_newfull;
+%
+if any(diff(flag_new) < 0),
+    error('New equils must be added at the end')
 end
 
-[external,lukeobj.data,cleartags] = iluke_status(external,status.external,lukeobj.data,0,cleartags);
+%
+% add new times 
+%
+nnew = sum(flag_new);%number of new times
 
-if isscalar(status.equil) && status.equil == -1,
-    %
-    % new external structure : update structures, statuses, and lukeobj.shotimes.string
-    %
-    % Note : a new (or cleared) external structure is the only way to modify ntimes
-    %
-    if isfield(external,'shotime'),% one time external data
-        lukeobj.shotimes.string = [lukeobj.shotimes.string(1),external.shotime];
-        curtime = 1;
-    elseif isfield(external,'shotimes'),% multi times external data
-        lukeobj.shotimes.string = [lukeobj.shotimes.string(1),external.shotimes];
-        curtime = 0;
-    elseif isempty(external),% empty external data
-        lukeobj.shotimes.string = [lukeobj.shotimes.string(1),'< empty >'];
-        curtime = 1;
-    else
-        error('status of structure ''external'' cannot be identified')
-    end
-    %
-    ntimes = length(lukeobj.shotimes.string) - 1;
-    %
-    equils = repmat({[]},[1,ntimes]);
-    ohms = repmat({[]},[1,ntimes]);
-    transpfastes = repmat({[]},[1,ntimes]);
-    ripples = repmat({[]},[1,ntimes]);
-    wavess = repmat({{}},[1,ntimes]);
-    %
-    wavestructss = repmat({{}},[1,ntimes]);
-    %
-    jobs = repmat({[]},[1,ntimes]);
-    outputs = repmat({[]},[1,ntimes]);
-    hxrs = repmat({[]},[1,ntimes]);
-    %
-    status.equil = zeros(1,ntimes);
-    %
-    status.ohm = -ones(1,ntimes);
-    status.transpfaste = -ones(1,ntimes);
-    status.ripple = -ones(1,ntimes);
-    status.waves = -ones(1,ntimes);
-    status.wavestructs = -ones(1,ntimes);
-    status.output = -ones(1,ntimes);
-    status.hxr = -ones(1,ntimes);
-    %
-    if ~isempty(external),
-        lukeobj.tokamak.string = external.basestr;
-        lukeobj.shotnum.string = external.shotnum;
-    end    
-    %
-else    
-    ntimes = length(equils);
+ohms(end+1:end+nnew) = {[]};
+transpfastes(end+1:end+nnew) = {[]};
+ripples(end+1:end+nnew) = {[]};
+wavess(end+1:end+nnew) = {{}};
+%
+wavestructss(end+1:end+nnew) = {{}};
+%
+jobs(end+1:end+nnew) = {[]};
+outputs(end+1:end+nnew) = {[]};
+hxrs(end+1:end+nnew) = {[]};
+
+status.ohm(end+1:end+nnew) = 0;
+status.transpfaste(end+1:end+nnew) = 0;
+status.ripple(end+1:end+nnew) = 0;
+status.waves(end+1:end+nnew) = 0;
+status.wavestructs(end+1:end+nnew) = 0;
+status.job(end+1:end+nnew) = 0;
+status.output(end+1:end+nnew) = 0;
+status.hxr(end+1:end+nnew) = 0;
+
+%
+% structures to be cleared
+%
+equils(flag_clear) = {[]};
+ohms(flag_clear) = {[]};
+transpfastes(flag_clear) = {[]};
+ripples(flag_clear) = {[]};
+wavess(flag_clear) = {{}};
+%
+wavestructss(flag_clear) = {{}};
+%
+jobs(flag_clear) = {[]};
+outputs(flag_clear) = {[]};
+hxrs(flag_clear) = {[]};
+
+status.equil(flag_newempty) = 0;
+status.equil(flag_newfull) = 1;
+
+flag_clear = flag_clear | flag_newempty;
+
+status.ohm(flag_clear) = -1;
+status.transpfaste(flag_clear) = -1;
+status.ripple(flag_clear) = -1;
+status.waves(flag_clear) = -1;
+status.wavestructs(flag_clear) = -1;
+status.job(flag_clear) = -1;
+status.output(flag_clear) = -1;
+status.hxr(flag_clear) = -1;
+
+%
+% sort times removing previous structures if recurrence
+%
+[shotimes,mask] = unique(shotimes,'last');
+ntimes = length(shotimes);
+
+equils = equils(mask);
+ohms = ohms(mask);
+transpfastes = transpfastes(mask);
+ripples = ripples(mask);
+wavess = wavess(mask);
+%
+wavestructss = wavestructss(mask);
+%
+jobs = jobs(mask);
+outputs = outputs(mask);
+hxrs = hxrs(mask);
+
+status.equil = status.equil(mask);
+status.ohm = status.ohm(mask);
+status.transpfaste = status.transpfaste(mask);
+status.ripple = status.ripple(mask);
+status.waves = status.waves(mask);
+status.wavestructs = status.wavestructs(mask);
+status.job = status.job(mask);
+status.output = status.output(mask);
+status.hxr = status.hxr(mask);
+
+status.hxr(status.output < 1) = -1;% synthetic diagnostics need distribution
+
+clear flag_remove flag_clear flag_newempty flag_newfull flag_new nnew mask
+
+if ntimes == 1 && curtime == 0,
+    curtime = 1;
 end
 
 if curtime > 0,
-
-    if isempty(equils{curtime}),
-        status.equil(curtime) = 0;
-    end
-
-    if status.equil(curtime) == 0,
-        status.ohm(curtime) = -1;
-        status.transpfaste(curtime) = -1;
-        status.ripple(curtime) = -1;
-        status.waves(curtime) = -1;
-        status.wavestructs(curtime) = -1;
-        %wavestructs{curtime} = {};
-        status.output(curtime) = -1;
-        lukeobj.lukeid.string{curtime} = '';
-        %
-        lukeobj = iluke_info(lukeobj,'data');% info display
-        %
-        lukeobj.equil.make.highlight = true;      
-    else
-        lukeobj.equil.make.highlight = false;    
-    end
-
-    if status.output(curtime) < 1,
-        status.hxr(curtime) = -1;
-    else
-        status.hxr(curtime) = 0;
-    end
-    
     if status.output(curtime) == 0 && isempty(jobs{curtime}),
         lukeobj.runluke.highlight = true;
     else
         lukeobj.runluke.highlight = false;
-    end    
-    
-    shotimestr = lukeobj.shotimes.string{1 + curtime};
-   
-    %
-    % UPDATE STATES/STRINGS
-    %
-
-    [equils{curtime},lukeobj.equil,cleartags] = iluke_status(equils{curtime},status.equil(curtime),lukeobj.equil,0,cleartags);
-    [ohms{curtime},lukeobj.ohm,cleartags] = iluke_status(ohms{curtime},status.ohm(curtime),lukeobj.ohm,0,cleartags);
-    [transpfastes{curtime},lukeobj.transp,cleartags] = iluke_status(transpfastes{curtime},status.transpfaste(curtime),lukeobj.transp,0,cleartags);
-    [ripples{curtime},lukeobj.ripple,cleartags] = iluke_status(ripples{curtime},status.ripple(curtime),lukeobj.ripple,0,cleartags);
-    [wavess{curtime},lukeobj.wave,cleartags] = iluke_status(wavess{curtime},status.waves(curtime),lukeobj.wave,0,cleartags);
-
-    [outputs{curtime},lukeobj.luke,cleartags] = iluke_status(outputs{curtime},status.output(curtime),lukeobj.luke,1,cleartags);
-    [hxrs{curtime},lukeobj.r5x2,cleartags] = iluke_status(hxrs{curtime},status.hxr(curtime),lukeobj.r5x2,1,cleartags);
-    
-    %
-    % WAVESTRUCTS
-    %
-
-    iluke_update_wavestruct;
-    
-else% curtime = 0, treat or display all times at once  
-    
+    end            
+else% curtime = 0, treat or display all times at once      
     if all(status.equil == 0),
         lukeobj.equil.make.highlight = true;      
     else
         lukeobj.equil.make.highlight = false;    
-    end
-    
-    shotimestr = 'MultiTimes';
-    
-    [equils,lukeobj.equil,cleartags] = iluke_status(equils,status.equil,lukeobj.equil,0,cleartags);
-    [ohms,lukeobj.ohm,cleartags] = iluke_status(ohms,status.ohm,lukeobj.ohm,0,cleartags);
-    [transpfastes,lukeobj.transp,cleartags] = iluke_status(transpfastes,status.transpfaste,lukeobj.transp,0,cleartags);
-    [ripples,lukeobj.ripple,cleartags] = iluke_status(ripples,status.ripple,lukeobj.ripple,0,cleartags);
-    [wavess,lukeobj.wave,cleartags] = iluke_status(wavess,status.waves,lukeobj.wave,0,cleartags);
-
-    [outputs,lukeobj.luke,cleartags] = iluke_status(outputs,status.output,lukeobj.luke,1,cleartags);
-    [hxrs,lukeobj.r5x2,cleartags] = iluke_status(hxrs,status.hxr,lukeobj.r5x2,1,cleartags);
-    
+    end      
 end
 
-if status.external == 0 && all(status.equil == 0),
-    lukeobj.tokamak.string = '< empty >';
-    lukeobj.shotnum.string = '< empty >';
-    
-    curtime = 1;% current time of work : (0) none or all, or index in shotimes
+%
+% UPDATE STATES/STRINGS
+%
+
+[equils,lukeobj.equil,cleartags] = iluke_status(equils,status.equil,lukeobj.equil,-1,curtime,cleartags);
+[ohms,lukeobj.ohm,cleartags] = iluke_status(ohms,status.ohm,lukeobj.ohm,0,curtime,cleartags);
+[transpfastes,lukeobj.transp,cleartags] = iluke_status(transpfastes,status.transpfaste,lukeobj.transp,0,curtime,cleartags);
+[ripples,lukeobj.ripple,cleartags] = iluke_status(ripples,status.ripple,lukeobj.ripple,0,curtime,cleartags);
+[wavess,lukeobj.wave,cleartags] = iluke_status(wavess,status.waves,lukeobj.wave,0,curtime,cleartags);
+
+[outputs,lukeobj.luke,cleartags] = iluke_status(outputs,status.output,lukeobj.luke,1,curtime,cleartags);
+[hxrs,lukeobj.r5x2,cleartags] = iluke_status(hxrs,status.hxr,lukeobj.r5x2,1,curtime,cleartags);
+
+%
+% WAVESTRUCTS
+%
+
+iluke_update_wavestruct;
+
+
+if ntimes == 0,
+    tokamak = '';
+    shotnum = '';
     
     status.data = -1;
     lukeobj = iluke_info(lukeobj,'startup');% info display
@@ -153,6 +198,28 @@ if status.external == 0 && all(status.equil == 0),
 else
     lukeobj.data.import.highlight = false;
 end
+
+
+if ~isempty(tokamak),
+    lukeobj.tokamak.string = tokamak;
+else
+    lukeobj.tokamak.string = '< empty >';
+end
+
+if ~isempty(shotnum),
+    lukeobj.shotnum.string = shotnum;
+else
+    lukeobj.shotnum.string = '< empty >';
+end
+
+lukeobj.shotimes.string = cell(1,ntimes + 2);
+lukeobj.shotimes.string{1} = '< new >';
+lukeobj.shotimes.string{2} = '< all >';
+for it = 1:ntimes,
+    lukeobj.shotimes.string{it + 2} = num2str(shotimes(it),'%6.4f');
+end
+
+clear it
 
 if status.data == -1,
     lukeobj.simulfile.string = '< no data >';
@@ -273,6 +340,6 @@ lukeobj.workdir.string = workdir;
 %
 % UPDATE OBJECTS
 %
-lukeobj.shotimes.value = 1 + curtime;
+lukeobj.shotimes.value = 2 + curtime;
 
 iluke_update_state(lukeobj);

@@ -18,11 +18,21 @@ if nargin < 4,
 	external = '';
 end
 %
+if isempty(equil),
+    if isfield(external,'equil'),
+        equil = external.equil;
+    else
+        error('no equilibrium provided')
+    end
+end
+%
 select.style.textwidth = 420;
 %
 ohm = '';
 %
-if ~isempty(external),
+if isfield(select,'i_opt'),
+    i_opt = select.i_opt;
+elseif ~isempty(external),
     %
     titletext = 'For the OHMIC field :';      
     s = {'Use data loaded from the external database',...

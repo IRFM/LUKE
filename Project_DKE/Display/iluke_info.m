@@ -59,6 +59,12 @@ function lukeobj = iluke_info(lukeobj,s)
         %
         lukeobj.infostr.string = {'RUN C3PO'};
         %
+    elseif ischar(s) && strcmp(s,'c3po_MultiTimes'),% display after external
+        %
+        lukeobj = iluke_switch(lukeobj,'c3po_MultiTimes');
+        %
+        lukeobj.infostr.string = {'RUN C3PO'};
+        %
     end
     %
     iluke_update_state(lukeobj);
@@ -75,7 +81,8 @@ function lukeobj = iluke_switch(lukeobj,str)
         set(lukeobj.infostr.handle,'visible','on');
         %
         lukeobj.param.visible = 'on';
-        lukeobj.display.visible = 'on';
+%         lukeobj.display.visible = 'on';
+        lukeobj.timedep.visible = 'on';
         lukeobj.remote.visible = 'on';
         lukeobj.runluke.visible = 'on';
         lukeobj.lukeidtitle.visible = 'on';
@@ -86,7 +93,8 @@ function lukeobj = iluke_switch(lukeobj,str)
     else
         %
         lukeobj.param.visible = 'off';
-        lukeobj.display.visible = 'off';
+%         lukeobj.display.visible = 'off';
+        lukeobj.timedep.visible = 'off';
         lukeobj.remote.visible = 'off';
         lukeobj.runluke.visible = 'off';
         lukeobj.lukeidtitle.visible = 'off';
@@ -101,31 +109,58 @@ function lukeobj = iluke_switch(lukeobj,str)
         set(lukeobj.infotext.handle,'visible','off');
         set(lukeobj.infostr.handle,'visible','on');
         %
-        lukeobj.wavestruct.visible = 'on';
-        lukeobj.wavestruct.select.visible = 'off';
         lukeobj.angles.visible = 'on';
         lukeobj.spectrum.visible = 'on';
         lukeobj.launch.visible = 'on';
-        lukeobj.c3poparam.visible = 'on';
-        lukeobj.runc3po.visible = 'on';
-        lukeobj.runc3poall.visible = 'on';
+        lukeobj.c3poparam.visible = 'on';%
         lukeobj.runc3pooptim.visible = 'on';
         lukeobj.wsparamtitle.visible = 'on';
         lukeobj.wsparam.visible = 'on';
         %
     else
         %
-        lukeobj.wavestruct.visible = 'off';
-        lukeobj.wavestruct.select.visible = 'off';
         lukeobj.angles.visible = 'off';
         lukeobj.spectrum.visible = 'off';
         lukeobj.launch.visible = 'off';
-        lukeobj.c3poparam.visible = 'off';
-        lukeobj.runc3po.visible = 'off';
-        lukeobj.runc3poall.visible = 'off';
+        lukeobj.c3poparam.visible = 'off';%
         lukeobj.runc3pooptim.visible = 'off';
         lukeobj.wsparamtitle.visible = 'off';
         lukeobj.wsparam.visible = 'off';
+        %
+    end
+    %
+    if strcmp(str,'c3po_MultiTimes'),
+        %
+%         lukeobj.shotdist.visible = 'on';
+%         lukeobj.wavedist.visible = 'on';
+%         lukeobj.raydist.visible = 'on';
+        %
+    else
+        %
+%         lukeobj.shotdist.visible = 'off';
+%         lukeobj.wavedist.visible = 'off';
+%         lukeobj.raydist.visible = 'off';
+        %
+    end
+    %
+    if any(strcmp(str,{'c3po_MultiTimes','c3po'})),
+        %
+        set(lukeobj.infotext.handle,'visible','off');
+        set(lukeobj.infostr.handle,'visible','on');
+        %
+        lukeobj.wavestruct.visible = 'on';
+        lukeobj.wavestruct.select.visible = 'off';
+%         lukeobj.c3poparam.visible = 'on';
+        lukeobj.runc3po.visible = 'on';
+        lukeobj.runc3poall.visible = 'on';
+        %
+    else
+        %
+        lukeobj.wavestruct.visible = 'off';
+        lukeobj.wavestruct.select.visible = 'off';
+%         lukeobj.c3poparam.visible = 'off';
+        lukeobj.runc3po.visible = 'off';
+        lukeobj.runc3poall.visible = 'off';
         %
     end
     %

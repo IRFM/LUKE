@@ -13,18 +13,39 @@ dkepath.clean = 2;
 %
 if strcmp(action,'lukestart'),
     %
-    lukestructs = struct;
+    if curtime > 0,
+        %
+        lukestructs = struct;
+        %
+        lukestructs.simul.id = lukeobj.lukeid.string;
+        lukestructs.dkeparam = dkeparam;
+        lukestructs.dkedisplay = dkedisplay;
+        %
+        lukestructs.equil = equils{curtime};
+        lukestructs.ohm = ohms{curtime};
+        lukestructs.transpfaste = transpfastes{curtime};
+        lukestructs.ripple = ripples{curtime};
+        lukestructs.waves = wavess{curtime};
+        %
+    else
+        %
+        lukestructs = cell(1,ntimes);
+        %
+        for it = 1:ntimes,
+            lukestructs{it}.simul.id = make_luke_simulid_jd(equils{it},ohms{it},transpfastes{it},ripples{it},wavess{it});
+            lukestructs{it}.dkeparam = dkeparam;
+            lukestructs{it}.dkedisplay = dkedisplay;
+            %
+            lukestructs{it}.equil = equils{it};
+            lukestructs{it}.ohm = ohms{it};
+            lukestructs{it}.transpfaste = transpfastes{it};
+            lukestructs{it}.ripple = ripples{it};
+            lukestructs{it}.waves = wavess{it};
+        end
+        %
+    end
     %
-    lukestructs.simul.id = lukeobj.lukeid.string;
-    lukestructs.dkeparam = dkeparam;
-    lukestructs.dkedisplay = dkedisplay;
-    %
-    lukestructs.equil = equil;
-    lukestructs.ohm = ohm;
-    lukestructs.transpfaste = transpfaste;
-    lukestructs.ripple = ripple;
-    lukestructs.waves = waves;
-    %
+    timedep = 1 - lukeobj.timedep.value;
     dkepath.remnum = lukeobj.remote.select.value - 1;
     %
     if dkepath.remnum == 0,% local calculation
@@ -36,16 +57,50 @@ if strcmp(action,'lukestart'),
         iluke_update_state(lukeobj);
     end
     %
-    status.data = 2;
+    status.data = 2;    
     %
 elseif strcmp(action,'runcheck'),
+    %
+    if curtime > 0,
+        %
+        lukestructs = struct;
+        lukestructs.job = jobs{curtime};
+        %
+        jobs{curtime} = [];
+        status.job(curtime) = 0;
+        %
+        remote = jobs{curtime}.remote;
+        %
+    else
+        %
+        job_mask = find(startus.job > 0);
+        nt = length(job_mask);
+        %
+        lukestructs = cell(1,nt);
+        %
+        for it = 1:nt
+            lukestructs{it}.job = jobs{job_mask(it)};
+            %
+            jobs{job_mask(it)} = [];
+            status.job(job_mask(it)) = 0;
+        end
+        %
+        for it = 2:nt,
+            if ~comp_struct_jd(jobs{job_mask(it)}.remote,jobs{job_mask(1)}.remote,0,{},{'host','cmd'}),
+                error('Not all jobs use the same remote profile. Aborted')
+            end
+        end
+        %
+        remote = jobs{job_mask(1)}.remote;
+        %
+    end
     %
     nrem = length(dkepath.remote);
     %
     flag = false(1,nrem);
     %
     for irem = 1:nrem,
-        if comp_struct_jd(dkepath.remote(irem),job.remote,0,{},{'host','cmd'}),
+        if comp_struct_jd(dkepath.remote(irem),remote,0,{},{'host','cmd'}),
             flag(irem) = true;
         end
     end
@@ -56,121 +111,82 @@ elseif strcmp(action,'runcheck'),
         disp('WARNING : more than one remote profile from dkepath found to be compatible with job.remote. First choice selected.')
     end
     %
+    timedep = [];
     dkepath.remnum = find(flag,1,'first');
     %
     lukeobj.remote.select.value = dkepath.remnum + 1;
     %
-    lukestructs.job = job;
-    %
-    job = '';
-    %
-    clear flag irem nrem
-    %
+    clear flag irem nrem remote
 end
 %    
 % run or check luke
 %
 set(lukeobj.busy.handle,'Visible','on');drawnow;
 %
-lukestructs = run_lukert(lukestructs,dkepath);
+lukestructs = run_lukert(lukestructs,dkepath,timedep);
 %
 set(lukeobj.busy.handle,'Visible','off');drawnow;
 %
 % manange output
 %
-if isfield(lukestructs,'job'),
-    %
-    job = lukestructs.job;
-    %
-    action = 'lukerun';iluke_callbacks;
-    %
-elseif isfield(lukestructs,'err'),
-    %
-    lukeobj.infotext.string = {'Error running LUKE : ',lukestructs.err};
-    %
-    lukeobj = iluke_info(lukeobj,'text');% enable info display
-    %    
-elseif isfield(lukestructs,'output'),
-    %
-    output = lukestructs.output;
-    %
-    status.output = 1;
-    status.data = 2;
-    %
-    lukeobj.luke.text.string = lukestructs.simul.id;
-    %
-    opt.save = 0;
-    opt.nr_dep = 0;
-    opt.spec = 0;
-    opt.its_rf = 0;
-    opt.peak = 'n';
-    opt.wave = 'n';
-    opt.rho = 't'; 
-    opt.blist = [];
-    opt.diaryname = '';
-    opt.peakmode = 1;
-    %
-    data_proc = proc_luke_jd(output,-1,-1,0.1,NaN,'',opt);
-    %
-    flag_rf = data_proc.scalar.p0_rf_2piRp ~= 0;
-    %
-    output.info.txt = {...
-            ['Total current       : ',num2str(data_proc.scalar.I_tot),' MA (positive for co-current)'],...
-            ['Current peak r/a    : ',num2str(data_proc.scalar.jrhoT),' (square root of toroidal flux)'],...
-            ['Current FWHM        : ',num2str(data_proc.scalar.jdrhoT),' (square root of toroidal flux)']};
-    if flag_rf,
-        output.info.txt = [output.info.txt,...
-            ['RF conv. param.    : ',num2str(data_proc.simul.residue_rf)]];
+if curtime > 0,
+    if isfield(lukestructs,'job'),
+        %
+        jobs{curtime} = lukestructs.job;
+        status.job(curtime) = 1;
+        %
+        action = 'lukerun';iluke_callbacks;
+        %
+    elseif isfield(lukestructs,'err'),
+        %
+        lukeobj.infotext.string = {'Error running LUKE : ',lukestructs.err};
+        %
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
+        %    
+    elseif isfield(lukestructs,'output'),
+        %
+        outputs{curtime} = iluke_output(lukestructs.output);
+        %
+        status.output(curtime) = 1;
+        status.data = 2;
+        %
+        action = 'lukedisp';iluke_callbacks;
+        %
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
+        %
+    end
+else
+    for it = 1:nt,
+        if isfield(lukestructs{it},'job'),
+            %
+            jobs{job_mask(it)} = lukestructs{it}.job;
+            status.job(job_mask(it)) = 1;
+            %
+        elseif isfield(lukestructs{it},'err'),
+            %
+            disp(' ')
+            disp(['Error running LUKE for shot time ',num2str(shotimes(job_mask(it))),' s : ']);
+            disperr_jd(lukestructs{it}.err);
+            %    
+        elseif isfield(lukestructs,'output'),
+            %
+            outputs{job_mask(it)} = iluke_output(lukestructs{it}.output);
+            %
+            status.output(job_mask(it)) = 1;
+            status.data = 2;
+            %
+        end
     end
     %
-    if isinf(data_proc.scalar.Rp),
-        if flag_rf,
-            output.info.txt = [output.info.txt,...
-            ['Launched RF power   : ',num2str(data_proc.scalar.p0_rf_2piRp),' MW/m (P/2piRp)'],...
-            ['Absorbed RF power   : ',num2str(data_proc.scalar.p_rf_2piRp),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %. (P/2piRp)']];
-            for in_rf = 1:length(data_proc.scalar.n_rf_list),
-                output.info.txt = [output.info.txt,...
-            ['RF power on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' : ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)),' MW/m ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %. (P/2piRp)']];
-            end
-            if opt.nr_dep >= 0,
-                output.info.txt = [output.info.txt,...
-            ['Linear RF power     : ',num2str(data_proc.scalar.p_rf_2piRp_lin),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %. (P/2piRp)']];
-            end
-        end
-        %
-        output.info.txt = [output.info.txt,...
-            ['Ohmic power         : ',num2str(data_proc.scalar.p_e_2piRp),' MW/m (P/2piRp)'],...
-            ['Total power         : ',num2str(data_proc.scalar.p_tot_2piRp),' MW/m (P/2piRp)'],...
-            ['CD efficiency       : ',num2str(data_proc.scalar.EtaRp),' A.m/W (I*Rp/P)']];
+    clear job_mask it nt
+    %
+    if any(status.job > 0),
+        action = 'lukerun';iluke_callbacks;
+    elseif any(status.output > 0), 
+        action = 'lukedisp';iluke_callbacks;
     else
-        if flag_rf,
-            output.info.txt = [output.info.txt,...
-            ['Launched RF power   : ',num2str(data_proc.scalar.p0_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'],...
-            ['Absorbed RF power   : ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.']];
-            for in_rf = 1:length(data_proc.scalar.n_rf_list),
-                output.info.txt = [output.info.txt,...
-            ['RF power on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' : ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.']];
-            end
-            if opt.nr_dep >= 0,
-                output.info.txt = [output.info.txt,...
-            ['Linear RF power     : ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.']];
-            end
-        end
-        %
-        output.info.txt = [output.info.txt,...
-            ['Ohmic power         : ',num2str(data_proc.scalar.p_e_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'],...
-            ['Total power         : ',num2str(data_proc.scalar.p_tot_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'],...
-            ['CD efficiency       : ',num2str(data_proc.scalar.EtaRp/data_proc.scalar.Rp),' A/W (I/P)']];
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
     end
-    %
-    if flag_rf,
-        output.info.txt = [output.info.txt,...
-                ['RF efficiency       : ',num2str(data_proc.scalar.EtaRFRp),' 10^19 A/(W.m^2) (n_19*I*Rp/PRF)']];
-    end
-    %
-    action = 'lukedisp';iluke_callbacks;
-    %
-    lukeobj = iluke_info(lukeobj,'text');% enable info display
     %
 end
 %

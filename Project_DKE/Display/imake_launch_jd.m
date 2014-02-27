@@ -30,6 +30,14 @@ if nargin < 3,
 	error('Not enough arguments')
 end
 %
+if isempty(equil),
+    if isfield(external,'equil'),
+        equil = external.equil;
+    else
+        error('no equilibrium provided')
+    end
+end
+%
 if ~isfield(select,'style'),
     select.style = struct;
 end

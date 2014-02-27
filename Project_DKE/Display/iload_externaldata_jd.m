@@ -9,7 +9,7 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
         opt_gui = true;
     end
     %
-    external = '';
+    external = [];
     %
     if nargin > 1 && ~isempty(basestr),% from irunluke
         %
@@ -70,7 +70,6 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
             %
             external.basestr = basestr;
             external.shotnum = num2str(external.shotnum);
-            external.shotime = num2str(external.shotime,'%6.4f');
             %
             external = conc_struct_jd(external,feval(['load_externaldata_',basestr],pwd,external.shotnum,external.shotime,external.t1,external.t2,1,''));
             %
