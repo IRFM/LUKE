@@ -146,7 +146,16 @@ if ~isnan(color)
 end
 %
 if ~isnan(xlim)
-    set(ax,'xlim',xlim);
+    if length(xlim) == 1
+        xlim_old = get(ax,'xlim');
+        if xlim_old(2) > xlim
+            set(ax,'xlim',[xlim,xlim_old(2)]);
+        else
+            set(ax,'xlim',[xlim_old(1),xlim]);
+        end            
+    else
+        set(ax,'xlim',xlim);
+    end
 end
 if ~isnan(ylim)
     if length(ylim) == 1
