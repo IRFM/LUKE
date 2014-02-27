@@ -1,4 +1,4 @@
-function [lukestructs] = run_lukert(lukestructs,dkepath)
+function [lukestructs] = run_lukert(lukestructs,dkepath,timedep)
 %
 % Wave and kinetic solver. Self-consistent calculations with or without plasma fluctuations
 %
@@ -147,6 +147,24 @@ if iscell(lukestructs),% remote and/or distributed calculation
                 end
             end
             %
+            if isfield(lukestructs{ijob},'output') && isfield(lukestructs{ijob},'opt') && isfield(lukestructs{ijob}.opt,'save') && lukestructs{ijob}.opt.save == -1,
+                %
+                % save output on local machine and return data_proc
+                %
+                savestruct.lukestructs = lukestructs{ijob};
+                savefile = ['LUKE_RESULTS_',savestruct.lukestructs.simul.id,'.mat'];
+                save(savefile,'-struct','savestruct','-v7.3');
+                %
+                if ~isfield(savestruct.lukestructs.opt,'proc') || ~isstruct(savestruct.lukestructs.opt.proc),
+                    savestruct.lukestructs.opt.proc = struct;
+                end
+                %
+                lukestructs{ijob}.output = struct;
+                lukestructs{ijob}.output.data_proc = proc_luke_jd(savestruct.lukestructs.output,savestruct.lukestructs.opt.proc);
+                lukestructs{ijob}.output.savefile = savefile;
+                %
+            end
+            %
         end
     end
     %
@@ -249,6 +267,7 @@ if ~isfield(lukestructs,'opt'),
     opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
     opt.backup = 0;% (1) save fluctuation time steps (0) do not save
     opt.waves = 0;% (1) save waves at each time step (0) do not save
+    opt.proc = [];% if not empty, structure containing options for proc_luke. In that case, opt.fields = {'data_proc'}.
 else
     opt = lukestructs.opt;
     if ~isfield(opt,'save'),
@@ -263,14 +282,17 @@ else
     if ~isfield(opt,'waves'),    
         opt.waves = 0;
     end
+    if ~isfield(opt,'proc'),    
+        opt.proc = [];
+    end
 end
 %
 [dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
 if str2double(matlabversion) < 710,
 	rand('seed',sum(100*clock));%reset rand with clock (never same state)
-elseif str2double(matlabversion) < 712,
-	RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
+% elseif str2double(matlabversion) < 712,
+% 	RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
 else
 	RandStream.setGlobalStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
 end
@@ -812,16 +834,21 @@ end
 %
 lukestructs.output = output;
 %
-if opt.save,% save results in LUKE_RESULTS file
+if opt.save == 1,% save results in LUKE_RESULTS file
     savefile = [simul.path,'LUKE_RESULTS_',simul.id,'.mat'];
     save(savefile,'lukestructs','-v7.3');
+end
+%
+if opt.save >= 0 && isfield(opt,'proc') && isstruct(opt.proc),
+    lukestructs.output.data_proc = proc_luke_jd(output,opt.proc);
+    opt.fields = {'data_proc'};
 end
 %
 if iscell(opt.fields),% select fields to return in output
     lukestructs.output = selectfields_jd(lukestructs.output,opt.fields);
 end
 %
-if opt.save,% return at least savefile
+if opt.save == 1,% return at least savefile
     lukestructs.output.savefile = savefile;
 end
 %
