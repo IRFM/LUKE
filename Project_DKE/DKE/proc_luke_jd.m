@@ -18,6 +18,7 @@ if nargin < 7,
     opt.spec = 1;
     opt.its_rf = true;
     opt.blist = '';
+    opt.diaryname = [];
 end
 if nargin < 6,
     subtitle = '';
@@ -32,7 +33,52 @@ if nargin < 3,
     p_opt = -1;
 end
 if nargin < 2,
-    ir_display = 0;
+    ir_display = struct;
+end
+%
+if isstruct(ir_display),% case with no display; no user prompt, and all options as structure
+    %
+    opt = ir_display;
+    %
+    ir_display = -1;% no display
+    %
+    if isfield(opt,'p_opt'),
+        p_opt = opt.p_opt;
+    end
+    if isfield(opt,'pnmax'),
+        pnmax = opt.pnmax;
+    end
+    if isfield(opt,'p_opt'),
+        p_opt = opt.p_opt;
+    end
+    %
+    if ~isfield(opt,'nr_dep'),
+        opt.nr_dep = 0;
+    end
+    if ~isfield(opt,'peak'),
+        opt.peak = 'y';
+    end
+    if ~isfield(opt,'wave'),
+        opt.wave = 'y';
+    end
+    if ~isfield(opt,'peakmode'),
+        opt.peakmode = 1;
+    end
+    if ~isfield(opt,'rho'),
+        opt.rho = 't';
+    end
+    if ~isfield(opt,'spec'),
+        opt.spec = 0;
+    end
+    if ~isfield(opt,'its_rf'),
+        opt.its_rf = [];
+    end
+    if ~isfield(opt,'blist'),
+        opt.blist = [];
+    end
+    if ~isfield(opt,'diaryname'),
+        opt.diaryname = [];
+    end
 end
 %
 if ~isfield(opt,'peakmode'),

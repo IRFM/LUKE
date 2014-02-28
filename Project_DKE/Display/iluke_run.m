@@ -13,11 +13,22 @@ dkepath.clean = 2;
 %
 if strcmp(action,'lukestart'),
     %
+    timedep = 1 - lukeobj.timedep.value;
+    dkepath.remnum = lukeobj.remote.select.value - 1;
+    %
     if curtime > 0,
+        %
+        opt.save = 0;% (1): save LUKE_RESULTS or return error (0): return results or error
+        opt.proc = [];% if not empty, structure containing options for proc_luke. In that case, opt.fields = {'data_proc'}.
         %
         lukestructs = struct;
         %
         lukestructs.simul.id = lukeobj.lukeid.string;
+        if dkepath.remnum == 0,% local calculation
+            lukestructs.simul.path = workdir;
+        end        
+        %
+        lukestructs.opt = opt;
         lukestructs.dkeparam = dkeparam;
         lukestructs.dkedisplay = dkedisplay;
         %
@@ -29,10 +40,18 @@ if strcmp(action,'lukestart'),
         %
     else
         %
+        opt.save = -1;% (1): save LUKE_RESULTS or return error (0): return results or error
+        opt.proc = struct;% if not empty, structure containing options for proc_luke. In that case, opt.fields = {'data_proc'}.
+        %
         lukestructs = cell(1,ntimes);
         %
         for it = 1:ntimes,
             lukestructs{it}.simul.id = make_luke_simulid_jd(equils{it},ohms{it},transpfastes{it},ripples{it},wavess{it});
+            if dkepath.remnum == 0,% local calculation
+                lukestructs{it}.simul.path = workdir;
+            end        
+            %
+            lukestructs{it}.opt = opt;
             lukestructs{it}.dkeparam = dkeparam;
             lukestructs{it}.dkedisplay = dkedisplay;
             %
@@ -43,14 +62,9 @@ if strcmp(action,'lukestart'),
             lukestructs{it}.waves = wavess{it};
         end
         %
+        nt = ntimes;
+        job_mask = 1:nt;
     end
-    %
-    timedep = 1 - lukeobj.timedep.value;
-    dkepath.remnum = lukeobj.remote.select.value - 1;
-    %
-    if dkepath.remnum == 0,% local calculation
-        lukestructs.simul.path = workdir;
-    end        
     %
     if dkepath.remnum == 0 || dkepath.remtimout > 0,
         lukeobj.lukechecktext.string = 'LUKE started. Please wait for result.';
@@ -59,6 +73,8 @@ if strcmp(action,'lukestart'),
     %
     status.data = 2;    
     %
+    clear opt
+    %
 elseif strcmp(action,'runcheck'),
     %
     if curtime > 0,
@@ -66,15 +82,23 @@ elseif strcmp(action,'runcheck'),
         lukestructs = struct;
         lukestructs.job = jobs{curtime};
         %
+        remote = jobs{curtime}.remote;
+        %
         jobs{curtime} = [];
         status.job(curtime) = 0;
         %
-        remote = jobs{curtime}.remote;
-        %
     else
         %
-        job_mask = find(startus.job > 0);
+        job_mask = find(status.job > 0);
         nt = length(job_mask);
+        %
+        for it = 2:nt,
+            if ~comp_struct_jd(jobs{job_mask(it)}.remote,jobs{job_mask(1)}.remote,0,{},{'host','cmd'}),
+                error('Not all jobs use the same remote profile. Aborted')
+            end
+        end
+        %
+        remote = jobs{job_mask(1)}.remote;
         %
         lukestructs = cell(1,nt);
         %
@@ -84,14 +108,6 @@ elseif strcmp(action,'runcheck'),
             jobs{job_mask(it)} = [];
             status.job(job_mask(it)) = 0;
         end
-        %
-        for it = 2:nt,
-            if ~comp_struct_jd(jobs{job_mask(it)}.remote,jobs{job_mask(1)}.remote,0,{},{'host','cmd'}),
-                error('Not all jobs use the same remote profile. Aborted')
-            end
-        end
-        %
-        remote = jobs{job_mask(1)}.remote;
         %
     end
     %
@@ -168,7 +184,7 @@ else
             disp(['Error running LUKE for shot time ',num2str(shotimes(job_mask(it))),' s : ']);
             disperr_jd(lukestructs{it}.err);
             %    
-        elseif isfield(lukestructs,'output'),
+        elseif isfield(lukestructs{it},'output'),
             %
             outputs{job_mask(it)} = iluke_output(lukestructs{it}.output);
             %
@@ -190,7 +206,7 @@ else
     %
 end
 %
-clear lukestructs
+clear lukestructs timedep
 %
     
     
