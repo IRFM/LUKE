@@ -1,34 +1,59 @@
 function dkepath = update_remote_jd(dkepath)
 %
-% this function updates luke_root to call remote cluster with compatible LUKE version 
+% this function load remote profiles and selects accessible remote clusters with compatible LUKE version 
 %
 lukever = LUKEversion_jd;% local LUKE version
-%
 lukever(lukever == ' ' | lukever == '.') = '_';% syntax for comparison
 %
-nrem = length(dkepath.remote);
+% Local hostname
+%
+[s,lochostname] = system('hostname -f');% local hostname
+if s ~= 0,
+    lochostname = getenv('hostname');%For remote computing (xgrid)
+    if isempty(lhostname),
+        error('local hostname could not be retrieved either from ''hostname -f'' or ''getenv(''hostname'')''');
+    end
+end
+%
+% load remote profiles
+%
+nrem = 0;
+%
+for irem = 1:length(dkepath.remote),
+    remotestr = ['remote_',dkepath.remote(irem).remoteid];
+    if exist([remotestr,'.m'],'file'),
+        %
+        nrem = nrem+1;
+        remote(nrem) = feval(remotestr,dkepath.remote(irem).schedulername,dkepath.remote(irem).profilename); 
+        remote(nrem).env.luke_root = dkepath.remote(irem).luke_root;
+        %
+        if any(strfind(lochostname,remote(nrem).hostname)),
+            remote(nrem).host = '';
+        end
+        %
+    end
+end
+    
+%
+% test compatibility of local and remote LUKE versions
 %
 flag = true(1,nrem);
 %
 for irem = 1:nrem
     %
-    % if dkepath.remote(irem).luke_root is a string, it is considered as the default value
+    % if remote(irem).luke_root is a string, it is considered as the default value
     %
-    if isfield(dkepath.remote(irem).env,'luke_root'),
+    if isfield(remote(irem).env,'luke_root'),
         %
-        if isstruct(dkepath.remote(irem).env.luke_root), 
+        if isstruct(remote(irem).env.luke_root), 
             %
-            if isfield(dkepath.remote(irem).env.luke_root,lukever),
-                dkepath.remote(irem).env.luke_root = dkepath.remote(irem).env.luke_root.(lukever);
-            elseif isfield(dkepath.remote(irem).env.luke_root,'LUKE_default') && ~isempty(dkepath.remote(irem).env.luke_root.LUKE_default),
-                dkepath.remote(irem).env.luke_root = dkepath.remote(irem).env.luke_root.LUKE_default;
+            if isfield(remote(irem).env.luke_root,lukever),
+                remote(irem).env.luke_root = remote(irem).env.luke_root.(lukever);
+            elseif isfield(remote(irem).env.luke_root,'LUKE_default') && ~isempty(remote(irem).env.luke_root.LUKE_default),
+                remote(irem).env.luke_root = remote(irem).env.luke_root.LUKE_default;
             else
                 flag(irem) = false;
-                if isempty(dkepath.remote(irem).host),
-                    info_dke_yp(6,['no compatible LUKE version found for remote profile #',num2str(irem),' to host : local. profile disabled.'])
-                else
-                    info_dke_yp(6,['no compatible LUKE version found for remote profile #',num2str(irem),' to host : ',dkepath.remote(irem).host,'. profile disabled.'])
-                end
+                info_dke_yp(6,['no compatible LUKE version found for remote profile #',num2str(irem),' to host : ',remote(irem).host,'. Profile disabled.'])
             end
         end
     else
@@ -36,29 +61,16 @@ for irem = 1:nrem
     end
 end
 %
-dkepath.remote = dkepath.remote(flag);
+% test connection and identify local profiles
+%
+[dkepath.remote,profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false);
 %
 disp (' ')
 info_dke_yp(2,'List of compatible remote profiles available :')
 disp(' ')
 %
 for irem = 1:length(dkepath.remote),
-    %
-    if ~iscell(dkepath.remote(irem).cmd) && ~isempty(strfind(dkepath.remote(irem).cmd,'qsub')),
-        cmdstr = 'qsub';
-    elseif ~iscell(dkepath.remote(irem).cmd) && ~isempty(strfind(dkepath.remote(irem).cmd,'condor')),
-        cmdstr = 'condor';
-    elseif iscell(dkepath.remote(irem).cmd) && any(~cellfun('isempty',strfind(dkepath.remote(irem).cmd,'xgrid'))),
-        cmdstr = 'xgrid';
-    else
-        cmdstr = 'unknown';
-    end
-    %
-    if isempty(dkepath.remote(irem).host),
-        info_dke_yp(4,['#',num2str(irem),' to host : local with cmd : ',cmdstr])
-    else
-        info_dke_yp(4,['#',num2str(irem),' to host : ',dkepath.remote(irem).host,' with cmd : ',cmdstr])
-    end
+    info_dke_yp(4,['#',num2str(irem),' : ',profilestr{irem}]);
 end
 disp(' ')
 
