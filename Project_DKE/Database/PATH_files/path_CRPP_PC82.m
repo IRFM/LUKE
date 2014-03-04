@@ -43,62 +43,22 @@ dkepath.decker(1).imagemagick.env = '';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
-% local
+% remote profiles 
 %
-dkepath.decker(1).remote(1) = remote_CRPP_PC82('direct','joan');
-dkepath.decker(1).remote(1).host = '';% empty for local host
-dkepath.decker(1).remote(1).env.luke_root = dkepath.decker(1).luke_root;
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-% CRPP lac5
+dkepath.decker(1).remote(1).remoteid = 'CRPP_PC82';
+dkepath.decker(1).remote(1).schedulername = 'direct';
+dkepath.decker(1).remote(1).profilename = 'local';
+dkepath.decker(1).remote(1).luke_root = dkepath.decker(1).luke_root;% local cluster
 %
-dkepath.decker(1).remote(2) = remote_CRPP_LAC5('direct','joan');
-dkepath.decker(1).remote(2).env.luke_root = '/home/decker/LUKE/';
+dkepath.decker(1).remote(2).remoteid = 'CRPP_LAC5';
+dkepath.decker(1).remote(2).schedulername = 'direct';
+dkepath.decker(1).remote(2).profilename = 'local';
+dkepath.decker(1).remote(2).luke_root = '/home/decker/LUKE/';
 %
-% CRPP PPB 110
-%
-dkepath.decker(1).remote(3) = remote_CRPP_PPB110('slurm','joan');
-dkepath.decker(1).remote(3).env.luke_root = '/home/G09625/LUKE/';
-% %
-% % CEA andromede (pbs)
-% %
-% dkepath.decker(1).remote(4) = remote_CEA_ANDROMEDE('pbs','joan');
-% dkepath.decker(1).remote(4).env.luke_root = '/home/JD211098/LUKE_CRONOS/';
-% %
-% % macproyves (condor)
-% %
-% dkepath.decker(1).remote(5) = remote_macpro_YVES_PEYSSON('condor','joan');
-% dkepath.decker(1).remote(5).env.luke_root = '/Users/yvespeysson/joandecker/Work/LUKE_1_10/';
-% %
-% % macproyves (xgrid)
-% %
-% dkepath.decker(1).remote(6) = remote_macpro_YVES_PEYSSON('xgrid','joan');
-% dkepath.decker(1).remote(6).env.luke_root = dkepath.decker(1).remote(3).env.luke_root;
-% %
-% % shenma (torque)
-% %
-% dkepath.decker(1).remote(7) = remote_ASIPP_SHENMA('torque','joan');
-% dkepath.decker(1).remote(7).env.luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
-%
-%
-%------------------------------------ Profile number 1, Josef Kamleitner ------------------------------------
-%
-dkepath.kamleitn(1) = dkepath.decker(1);
-%
-%--------------------------- Remote computing -----------------------------
-%
-% local
-%
-dkepath.kamleitn(1).remote(1) = remote_CRPP_PC82('direct','kamleitn');
-dkepath.kamleitn(1).remote(1).host = '';% empty for local host
-dkepath.kamleitn(1).remote(1).env.luke_root = dkepath.kamleitn(1).luke_root;
-%
-% CRPP lac5
-%
-dkepath.kamleitn(1).remote(2) = remote_CRPP_LAC5('direct','kamleitn');
-dkepath.kamleitn(1).remote(2).env.luke_root = '/home/decker/LUKE/';
-%
-% CRPP PPB 110
-%
-dkepath.kamleitn(1).remote(3) = remote_CRPP_PPB110('slurm','kamleitn');
-dkepath.kamleitn(1).remote(3).env.luke_root = '/home/G09625/LUKE/';
+dkepath.decker(1).remote(3).remoteid = 'CRPP_PPB110';
+dkepath.decker(1).remote(3).schedulername = 'slurm';
+dkepath.decker(1).remote(3).profilename = 'local';
+dkepath.decker(1).remote(3).luke_root = '/home/G09625/LUKE/';
 %
