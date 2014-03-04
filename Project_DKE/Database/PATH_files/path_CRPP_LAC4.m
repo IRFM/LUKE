@@ -1,11 +1,6 @@
-function [dkepath] = path_CRPP_LAC4(luke_ref)
+function [dkepath] = path_CRPP_LAC4
 %
 % path definitions for CRPP (EPFL, Suisse) lac4 computer
-%
-%	Input:
-%
-%       - luke_ref: for CVS tagged LUKE version [1,m]
-%         (default: 'LUKE')
 %
 %	Output:
 %
@@ -17,6 +12,6 @@ function [dkepath] = path_CRPP_LAC4(luke_ref)
 %
 dkepath = path_CRPP_LAC2;% LAC2 and LAC4 have equivalent settings
 %
-dkepath.hostname = 'crpppc296';
+dkepath.hostname = 'crpppc296.epfl.ch';
 dkepath.machine = 'lac4';
 %

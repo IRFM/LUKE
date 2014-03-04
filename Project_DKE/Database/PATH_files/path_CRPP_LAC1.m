@@ -1,11 +1,6 @@
-function [dkepath] = path_CRPP_LAC1(luke_ref)
-%
+function [dkepath] = path_CRPP_LAC1
+
 % path definitions for CRPP (EPFL, Suisse) lac1 computer
-%
-%	Input:
-%
-%       - luke_ref: for CVS tagged LUKE version [1,m]
-%         (default: 'LUKE')
 %
 %	Output:
 %
