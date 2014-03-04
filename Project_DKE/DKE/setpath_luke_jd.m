@@ -1,4 +1,4 @@
-function setpath_luke_jd(luke_root,dkepath)
+function dkepath = setpath_luke_jd(luke_root,dkepath)
 %LUKE - This function sets the path such that the simulations run on the specified LUKE version.
 %
 % This function sets the path such that the simulations run on the specified LUKE version.
@@ -32,6 +32,30 @@ if nargin == 0,
         filename = [luke_root,'Project_DKE/Database/PATH_files/LUKE_PATH.mat'];
         load(filename,'dkepath');
     end
+end
+%
+% identify local hostname if multiple profiles on the same filesystem
+%
+% Load all path files and select local path profile according to hostname
+%
+if isfield(dkepath,'hostname') && iscell(dkepath.hostname),
+    %
+    isel = find(strcmp(dkepath.hostname,hostname_jd));
+    %
+    if isempty(isel),
+        error('The local hostname could not be identified in dkepath')
+    elseif length(isel) > 1,
+        disp('WARNING : more than one positive identification for local hostname in dkepath. First match enforced.')
+        isel = isel(1);
+    end
+    %
+    dkepath = conc_struct_jd(dkepath,dkepath.(dkepath.machine{isel}));% add fields specific to local profile
+    %
+    dkepath = rmfield(dkepath,dkepath.machine);% remove profile-specific fields 
+    %
+    dkepath.hostname = dkepath.hostname{isel};
+    dkepath.machine = dkepath.machine{isel};
+    %
 end
 %
 % Path for LUKE and Modules

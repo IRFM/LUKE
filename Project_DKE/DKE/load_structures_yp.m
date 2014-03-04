@@ -160,7 +160,7 @@ if exist('flag_path','var'),%Paths
     %
     % Set path for LUKE including mex files and matrix inverters
     %
-    setpath_luke_jd(dkepath.luke_root,dkepath);
+    dkepath = setpath_luke_jd(dkepath.luke_root,dkepath);
     %
     % update and verify remote profiles
     %

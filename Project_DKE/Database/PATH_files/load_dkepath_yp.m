@@ -25,13 +25,7 @@ end
 %
 % Load all path files and select local path profile according to hostname
 %
-[s,lochostname] = system('hostname -f');% local hostname
-if s ~= 0,
-    lochostname = getenv('hostname');%For remote computing (xgrid)
-    if isempty(lhostname),
-        error('local hostname could not be retrieved either from ''hostname -f'' or ''getenv(''hostname'')''');
-    end
-end
+lochostname = hostname_jd;
 %
 dkepaths = cell(1,npathfiles);
 flag = false(1,npathfiles);
@@ -47,7 +41,7 @@ for ifile = 1:npathfiles,
     %
     disp(['Path from profile ',PathFileNames{ifile},'.m successfully loaded'])
     %
-    if any(strfind(lochostname,dkepaths{ifile}.hostname)),% local cluster,
+    if any(strcmp(lochostname,dkepaths{ifile}.hostname)),% local cluster,
         %
         flag(ifile) = true;
         %
@@ -90,7 +84,7 @@ else
         end
     end
     %
-    dkepath = conc_struct_jd(selectfields_jd(dkepath,{'hostname','computer'}),dkepath.(username));
+    dkepath = conc_struct_jd(selectfields_jd(dkepath,{'hostname','machine','computer'}),dkepath.(username));
     %
     % select user profile number
     %
