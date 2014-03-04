@@ -10,8 +10,8 @@ function dkepath = path_laptop_JOAN_DECKER
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.hostname = 'CADTS-0096';%WARNING: for laptop, may change with connection status.
 dkepath.machine = 'laptopjoan';
+dkepath.hostname = 'CADTS-0096';%WARNING: for laptop, may change with connection status.
 dkepath.computer = computer;%machine type and supported OS
 %
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
@@ -60,52 +60,58 @@ dkepath.joan(1).MUMPS.mex801 = [dkepath.joan(1).local_root,'MUMPS_4.10.0_ifort/M
 %
 %--------------------------- Remote computing -----------------------------
 %
-% local (direct)
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-dkepath.joan(1).remote(1) = remote_laptop_JOAN_DECKER('direct','joan');
-dkepath.joan(1).remote(1).host = '';
-dkepath.joan(1).remote(1).env.luke_root = dkepath.joan(1).luke_root;
+dkepath.joan(1).remote(1).remoteid = 'laptop_JOAN_DECKER';
+dkepath.joan(1).remote(1).schedulername = 'direct';
+dkepath.joan(1).remote(1).profilename = 'joan';
+dkepath.joan(1).remote(1).luke_root = dkepath.joan(1).luke_root;% local cluster
 %
-% andromede (pbs)
+dkepath.joan(1).remote(2).remoteid = 'CEA_ANDROMEDE';
+dkepath.joan(1).remote(2).schedulername = 'pbs';
+dkepath.joan(1).remote(2).profilename = 'joan';
+dkepath.joan(1).remote(2).luke_root = '/home/JD211098/LUKE/';
 %
-dkepath.joan(1).remote(1) = remote_CEA_ANDROMEDE('pbs','joan');
-dkepath.joan(1).remote(1).env.luke_root = '/home/JD211098/LUKE/';
+dkepath.joan(1).remote(3).remoteid = 'macpro_YVES_PEYSSON';
+dkepath.joan(1).remote(3).schedulername = 'condor';
+dkepath.joan(1).remote(3).profilename = 'joan';
+dkepath.joan(1).remote(3).luke_root = '/Users/yvespeysson/joandecker/Work/LUKE_1_10/';
 %
-% macproyves (condor)
+dkepath.joan(1).remote(4).remoteid = 'macpro_YVES_PEYSSON';
+dkepath.joan(1).remote(4).schedulername = 'xgrid';
+dkepath.joan(1).remote(4).profilename = 'joan';
+dkepath.joan(1).remote(4).luke_root = dkepath.joan(1).remote(3).luke_root;
 %
-dkepath.joan(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','joan');
-dkepath.joan(1).remote(2).env.luke_root = '/Users/yvespeysson/joandecker/Work/LUKE_1_10/';
+dkepath.joan(1).remote(5).remoteid = 'macpro_YVES_PEYSSON';
+dkepath.joan(1).remote(5).schedulername = 'direct';
+dkepath.joan(1).remote(5).profilename = 'joan';
+dkepath.joan(1).remote(5).luke_root = dkepath.joan(1).remote(3).luke_root;
 %
-% macproyves (xgrid)
+dkepath.joan(1).remote(6).remoteid = 'ASIPP_SHENMA';
+dkepath.joan(1).remote(6).schedulername = 'torque';
+dkepath.joan(1).remote(6).profilename = 'joan';
+dkepath.joan(1).remote(6).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 %
-dkepath.joan(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan');
-dkepath.joan(1).remote(3).env.luke_root = dkepath.joan(1).remote(2).env.luke_root;
+dkepath.joan(1).remote(7).remoteid = 'CEA_CEPHEE';
+dkepath.joan(1).remote(7).schedulername = 'pbs';
+dkepath.joan(1).remote(7).profilename = 'joan';
+dkepath.joan(1).remote(7).luke_root.LUKE_1_8_6 = '/home/sccp/gsem/decker/LUKE_1_8/';
+dkepath.joan(1).remote(7).luke_root.LUKE_1_9_1 = '/home/sccp/gsem/decker/LUKE_1_9/';
+dkepath.joan(1).remote(7).luke_root.LUKE_1_10_0 = '/home/sccp/gsem/decker/LUKE_1_10/';
+dkepath.joan(1).remote(7).luke_root.LUKE_default = '/home/sccp/gsem/decker/LUKE/';% default remote LUKE version. Leave empty to enforce error if no match
 %
-% shenma (torque)
+dkepath.joan(1).remote(8).remoteid = 'CEA_TIMDESKTOP';
+dkepath.joan(1).remote(8).schedulername = 'torque';
+dkepath.joan(1).remote(8).profilename = 'joan';
+dkepath.joan(1).remote(8).luke_root = dkepath.joan(1).remote(7).luke_root;% same FS as cephee
 %
-dkepath.joan(1).remote(4) = remote_ASIPP_SHENMA('torque','joan');
-dkepath.joan(1).remote(4).env.luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
+dkepath.joan(1).remote(9).remoteid = 'CEA_PLEIONE';% pleione, merope, nashira, newpegase, nunki cluster
+dkepath.joan(1).remote(9).schedulername = 'pbs';
+dkepath.joan(1).remote(9).profilename = 'joan';
+dkepath.joan(1).remote(9).luke_root = dkepath.joan(1).remote(7).luke_root;% same FS as cephee
 %
-% cephee (pbs)
+dkepath.joan(1).remote(10).remoteid = 'CEA_SATURNE';
+dkepath.joan(1).remote(10).schedulername = 'sun';
+dkepath.joan(1).remote(10).profilename = 'joan';
+dkepath.joan(1).remote(10).luke_root = dkepath.joan(1).remote(2).luke_root;% same FS as andromede
 %
-dkepath.joan(1).remote(5) = remote_CEA_CEPHEE('pbs','joan');
-dkepath.joan(1).remote(5).env.luke_root.LUKE_1_8_6 = '/home/sccp/gsem/decker/LUKE_1_8/';
-dkepath.joan(1).remote(5).env.luke_root.LUKE_1_9_1 = '/home/sccp/gsem/decker/LUKE_1_9/';
-dkepath.joan(1).remote(5).env.luke_root.LUKE_1_10_0 = '/home/sccp/gsem/decker/LUKE_1_10/';
-dkepath.joan(1).remote(5).env.luke_root.LUKE_default = dkepath.joan(1).remote(5).env.luke_root.LUKE_1_10_0;% default remote LUKE version. Leave empty to enforce error if no match
-%
-% cadts-0412 (torque, Timothee's computer)
-%
-dkepath.joan(1).remote(6) = remote_CEA_TIMDESKTOP('torque','joan');
-dkepath.joan(1).remote(6).env.luke_root = dkepath.joan(1).remote(5).env.luke_root;% same FS as cephee
-%
-% intra integrated pbspro system (pleione, merope, nashira, newpegase, nunki cluster).
-%
-dkepath.joan(1).remote(7) = remote_CEA_PLEIONE('pbs','joan');
-dkepath.joan(1).remote(7).env.luke_root = dkepath.joan(1).remote(5).env.luke_root;% same FS as cephee
-%
-% saturne (sun)
-%
-dkepath.joan(1).remote(8) = remote_CEA_SATURNE('sun','joan');
-dkepath.joan(1).remote(8).env.luke_root = dkepath.joan(1).remote(1).env.luke_root;% same FS as andromede
-% 

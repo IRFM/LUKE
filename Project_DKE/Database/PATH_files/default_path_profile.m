@@ -12,8 +12,8 @@ function dkepath = default_path_profile
 %
 [~,matver] = LUKEversion_jd;
 %
-[~,dkepath.hostname] = system('hostname -f');
 dkepath.machine = 'default';
+dkepath.hostname = hostname_jd;
 dkepath.computer = computer;%machine type and supported OS
 %
 dkepath.luke_root = [pwd,filesep];
