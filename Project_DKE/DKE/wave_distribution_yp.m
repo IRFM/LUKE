@@ -116,7 +116,7 @@ end
 %
 dkecluster = clustermode_luke(dkeparam.clustermode,'wave_solver_yp',dkepath);%MatLab distributed computing environment
 %
-if dkecluster.scheduler.mode >= 0,
+if dkecluster.scheduler.mode <= 2,
     [flag,waves] = mdce_run(@wave_solver_yp,{dkepath,'',f0struct},2,wavestructs(:),dkecluster);
 else% remote computing
     [flag,waves] = mdce_run(@wave_solver_yp,{'','',f0struct},2,wavestructs(:),dkecluster);
