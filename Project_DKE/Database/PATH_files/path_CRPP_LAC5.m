@@ -1,11 +1,6 @@
-function [dkepath] = path_CRPP_LAC5(luke_ref)
+function [dkepath] = path_CRPP_LAC5
 %
 % path definitions for CRPP (EPFL, Suisse) lac5 computer
-%
-%	Input:
-%
-%       - luke_ref: for CVS tagged LUKE version [1,m]
-%         (default: 'LUKE')
 %
 %	Output:
 %
@@ -19,17 +14,13 @@ dkepath.hostname = 'crpppc401.epfl.ch';
 dkepath.machine = 'lac5';
 dkepath.computer = computer;%machine type and supported OS
 %
-% Selected user profile (structure hostname.usernames(pathref).xxx)
-%
-dkepath.path_profile.decker = 1;
-%
 % Selected user profile for unlisted users
 %
 dkepath.default = 'decker';
 %
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
 %
-dkepath.decker(1).luke_root = [pwd,'/'];
+dkepath.decker(1).luke_root = [pwd,filesep];
 dkepath.decker(1).local_root = '/home/decker/NoTivoli/Packages/lac5/';
 dkepath.decker(1).temppathroot = '/home/decker/NoTivoli/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -55,27 +46,43 @@ dkepath.decker(1).imagemagick.env = '';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
-% pleiades2 (pbs)
+% local
 %
-dkepath.decker(1).remote(1) = remote_CRPP_PLEIADES2('torque','joan','decker');
+dkepath.decker(1).remote(1) = remote_CRPP_LAC5('direct','decker');
+dkepath.decker(1).remote(1).host = '';% empty for local host
+dkepath.decker(1).remote(1).env.luke_root = dkepath.decker(1).luke_root;
 %
-% macproyves (condor)
+% CRPP PC82
 %
-dkepath.decker(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','joan','decker');
+dkepath.decker(1).remote(2) = remote_CRPP_PC82('direct','decker');
+dkepath.decker(1).remote(2).env.luke_root = '/home/decker/LUKE/';
 %
-% macproyves (xgrid)
+% CRPP PPB 110
 %
-dkepath.decker(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan','decker');
-%
-% andromede (pbs).
-%
-dkepath.decker(1).remote(4) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','joan','decker');
-%
-% saturne (sun)
-%
-dkepath.decker(1).remote(5) = remote_CEA_SATURNE('sun','joan','decker');
-%
-% shenma (torque)
-%
-dkepath.decker(1).remote(6) = remote_ASIPP_SHENMA('torque','joan','decker');
-%
+dkepath.decker(1).remote(3) = remote_CRPP_PPB110('slurm','joan');
+dkepath.decker(1).remote(3).env.luke_root = '/home/G09625/LUKE/';
+% %
+% % pleiades2 (pbs)
+% %
+% dkepath.decker(1).remote(1) = remote_CRPP_PLEIADES2('torque','joan','decker');
+% %
+% % macproyves (condor)
+% %
+% dkepath.decker(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','joan','decker');
+% %
+% % macproyves (xgrid)
+% %
+% dkepath.decker(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan','decker');
+% %
+% % andromede (pbs).
+% %
+% dkepath.decker(1).remote(4) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','joan','decker');
+% %
+% % saturne (sun)
+% %
+% dkepath.decker(1).remote(5) = remote_CEA_SATURNE('sun','joan','decker');
+% %
+% % shenma (torque)
+% %
+% dkepath.decker(1).remote(6) = remote_ASIPP_SHENMA('torque','joan','decker');
+% %
