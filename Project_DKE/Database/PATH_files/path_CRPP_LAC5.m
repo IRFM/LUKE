@@ -46,43 +46,25 @@ dkepath.decker(1).imagemagick.env = '';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
-% local
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-dkepath.decker(1).remote(1) = remote_CRPP_LAC5('direct','decker');
-dkepath.decker(1).remote(1).host = '';% empty for local host
-dkepath.decker(1).remote(1).env.luke_root = dkepath.decker(1).luke_root;
+dkepath.decker(1).remote(1).remoteid = 'CRPP_LAC5';
+dkepath.decker(1).remote(1).schedulername = 'direct';
+dkepath.decker(1).remote(1).profilename = 'local';
+dkepath.decker(1).remote(1).luke_root = dkepath.decker(1).luke_root;% local cluster
 %
-% CRPP PC82
+dkepath.decker(1).remote(2).remoteid = 'CRPP_PC82';
+dkepath.decker(1).remote(2).schedulername = 'direct';
+dkepath.decker(1).remote(2).profilename = 'local';
+dkepath.decker(1).remote(2).luke_root = '/home/decker/LUKE/';
 %
-dkepath.decker(1).remote(2) = remote_CRPP_PC82('direct','decker');
-dkepath.decker(1).remote(2).env.luke_root = '/home/decker/LUKE/';
+dkepath.decker(1).remote(3).remoteid = 'CRPP_PPB110';
+dkepath.decker(1).remote(3).schedulername = 'slurm';
+dkepath.decker(1).remote(3).profilename = 'local';
+dkepath.decker(1).remote(3).luke_root = '/home/G09625/LUKE/';
 %
-% CRPP PPB 110
+dkepath.decker(1).remote(4).remoteid = 'CRPP_PPB110';
+dkepath.decker(1).remote(4).schedulername = 'direct';
+dkepath.decker(1).remote(4).profilename = 'local';
+dkepath.decker(1).remote(4).luke_root = '/home/G09625/LUKE/';
 %
-dkepath.decker(1).remote(3) = remote_CRPP_PPB110('slurm','joan');
-dkepath.decker(1).remote(3).env.luke_root = '/home/G09625/LUKE/';
-% %
-% % pleiades2 (pbs)
-% %
-% dkepath.decker(1).remote(1) = remote_CRPP_PLEIADES2('torque','joan','decker');
-% %
-% % macproyves (condor)
-% %
-% dkepath.decker(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','joan','decker');
-% %
-% % macproyves (xgrid)
-% %
-% dkepath.decker(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','joan','decker');
-% %
-% % andromede (pbs).
-% %
-% dkepath.decker(1).remote(4) = remote_CEA_PARTENAIRES_ANDROMEDE('pbs','joan','decker');
-% %
-% % saturne (sun)
-% %
-% dkepath.decker(1).remote(5) = remote_CEA_SATURNE('sun','joan','decker');
-% %
-% % shenma (torque)
-% %
-% dkepath.decker(1).remote(6) = remote_ASIPP_SHENMA('torque','joan','decker');
-% %

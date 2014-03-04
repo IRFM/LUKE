@@ -43,8 +43,6 @@ dkepath.decker(1).imagemagick.env = '';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
-% remote profiles 
-%
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
 dkepath.decker(1).remote(1).remoteid = 'CRPP_PC82';
@@ -61,4 +59,9 @@ dkepath.decker(1).remote(3).remoteid = 'CRPP_PPB110';
 dkepath.decker(1).remote(3).schedulername = 'slurm';
 dkepath.decker(1).remote(3).profilename = 'local';
 dkepath.decker(1).remote(3).luke_root = '/home/G09625/LUKE/';
+%
+dkepath.decker(1).remote(4).remoteid = 'CRPP_PPB110';
+dkepath.decker(1).remote(4).schedulername = 'direct';
+dkepath.decker(1).remote(4).profilename = 'local';
+dkepath.decker(1).remote(4).luke_root = '/home/G09625/LUKE/';
 %
