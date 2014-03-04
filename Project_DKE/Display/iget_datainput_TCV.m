@@ -40,9 +40,9 @@ if ~opt_full,% simplified interface
     %
     shotdata.expert.shotnum = 0;
     shotdata.expert.times = 0;
-    shotdata.expert.dtmax = 0;
-    shotdata.expert.outputdir = 0;
-    shotdata.expert.isel = 0;
+    shotdata.expert.dtmax = 1;
+    shotdata.expert.outputdir = 1;
+    shotdata.expert.isel = 1;
     %
     shotdata.values.shotnum = [0;Inf];
     shotdata.values.times = [0;Inf];
