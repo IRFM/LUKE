@@ -38,7 +38,11 @@ function d = luke_get_trdata( a )
 
 % some constants
 % dtres0_pgyro=1e-4;
-outputpath_default=sprintf('/tmp/LUKE_%s',getenv('USER'));
+try
+    outputpath_default=sprintf('/tmp/LUKE_%s_%s',getenv('USER'),timeid_jd(clock));
+catch
+    outputpath_default=sprintf('/tmp/LUKE_%s',getenv('USER'));
+end
 
 % common time base if not defined
 if(~isfield(a,'t') || ~isfield(a,'dtres'))
@@ -303,14 +307,22 @@ for i=1:length(a.diag)
                 % specify times
                 d.equil.time=t;
                 % get times where equilibria exist already
+                mdsopen(shot);
                 t_liuqe=mdsvalue('dim_of(\results::i_p)');
+                mdsclose;
                 for it=1:length(d.equil.time)
                     if(all(d.equil.time(it)~=t_liuqe))
                         fprintf('  . LIUQE not available in MDS tree for t=%gs.\n',d.equil.time(it));
                         job = matstandardjob_jd('runmat');
                         job.funcopy=false;
                         tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g %d',shot,d.equil.time(it),d.equil.time(it),1);
-                        sprintf('  . running LIUQE on lac5 for all requested times linspace(%g,%g,%d)s.\n',t1,t2,n12);
+                        sprintf('  . running LIUQE on lac5 for requested time point %gs.\n',d.equil.time(it));
+                        if(~exist('matremote_jd','file'))
+                            pwd_save=pwd;
+                            cd('/home/decker');
+                            startup;
+                            cd(pwd_save);
+                        end
                         [err,res,text]=matremote_jd('system',{tempcommand},feval('remote_CRPP_LAC5','','local'),job);
                         % check if LIUQE ran on lac5 (warning if not)
                         if(~isempty(err))
@@ -334,7 +346,7 @@ for i=1:length(a.diag)
                     t1=d.equil.time(1);
                     t2=d.equil.time(end);
                     n12=length(d.equil.time);
-                else
+                else % equidistant with dtres specified
                     z1=ceil(t(1)/dtres);
                     z2=floor(t(end)/dtres);
                     t1=z1*dtres;
@@ -343,20 +355,31 @@ for i=1:length(a.diag)
                     d.equil.time=linspace(t1,t2,n12);
                 end
                 % check if equilibria exist already
+                mdsopen(shot);
                 t_liuqe=mdsvalue('dim_of(\results::i_p)');
-                flag_run=false;
+                mdsclose;
+                flag_run=false(size(d.equil.time));
                 for it=length(d.equil.time)
                     if(all(d.equil.time(it)~=t_liuqe))
                         fprintf('  . LIUQE not available in MDS tree for t=%gs.\n',d.equil.time(it));
-                        flag_run=true;
+                        flag_run(it)=true;
                     end
                 end
-                if(flag_run)
+                if(any(flag_run))
                     % run LIUQE if not all equilibria available (using matremote_jd)
                     job = matstandardjob_jd('runmat');
                     job.funcopy=false;
-                    tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g %d',shot,t1,t2,n12);
-                    sprintf('  . running LIUQE on lac5 for all requested times linspace(%g,%g,%d)s.\n',t1,t2,n12);
+                    if(sum(flag_run)==1)
+                        tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g 1',shot,d.equil.time(flag_run),d.equil.time(flag_run));
+                        sprintf('  . running LIUQE on lac5 for requested time point %gs.\n',d.equil.time(flag_run));
+                    elseif(sum(flag_run)==2)
+                        t_temp=d.equil.time(flag_run);
+                        tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g 2',shot,t_temp(1),t_temp(2));
+                        sprintf('  . running LIUQE on lac5 for requested time points %gs and %gs.\n',t_temp(1),t_temp(2));
+                    else
+                        tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g %d',shot,t1,t2,n12);
+                        sprintf('  . running LIUQE on lac5 for all requested times linspace(%g,%g,%d)s.\n',t1,t2,n12);
+                    end
                     if(~exist('matremote_jd','file'))
                         pwd_save=pwd;
                         cd('/home/decker');
