@@ -7,13 +7,7 @@ lukever(lukever == ' ' | lukever == '.') = '_';% syntax for comparison
 %
 % Local hostname
 %
-[s,lochostname] = system('hostname -f');% local hostname
-if s ~= 0,
-    lochostname = getenv('hostname');%For remote computing (xgrid)
-    if isempty(lhostname),
-        error('local hostname could not be retrieved either from ''hostname -f'' or ''getenv(''hostname'')''');
-    end
-end
+lochostname = hostname_jd;
 %
 % load remote profiles
 %
@@ -27,7 +21,7 @@ for irem = 1:length(dkepath.remote),
         remote(nrem) = feval(remotestr,dkepath.remote(irem).schedulername,dkepath.remote(irem).profilename); 
         remote(nrem).env.luke_root = dkepath.remote(irem).luke_root;
         %
-        if any(strfind(lochostname,remote(nrem).hostname)),
+        if strcmp(lochostname,remote(nrem).hostname),
             remote(nrem).host = '';
         end
         %
