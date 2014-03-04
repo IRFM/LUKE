@@ -10,8 +10,8 @@ function dkepath = path_CRPP_PPB110
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.hostname = 'ws0';
 dkepath.machine = 'ppb110';
+dkepath.hostname = 'ws0.epfl.ch';% should match the output of hostname_jd on the machine
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users

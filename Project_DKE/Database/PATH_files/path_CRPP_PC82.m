@@ -10,8 +10,8 @@ function dkepath = path_CRPP_PC82
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.hostname = 'crpppc82';
 dkepath.machine = 'crpppc82';
+dkepath.hostname = 'crpppc82.epfl.ch';% should match the output of hostname_jd on the machine
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -45,23 +45,38 @@ dkepath.decker(1).imagemagick.env = '';% ImageMagick environment variable
 %
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-dkepath.decker(1).remote(1).remoteid = 'CRPP_PC82';
-dkepath.decker(1).remote(1).schedulername = 'direct';
+dkepath.decker(1).remote(1).remoteid = 'CRPP_PPB110';
+dkepath.decker(1).remote(1).schedulername = 'slurm';
 dkepath.decker(1).remote(1).profilename = 'local';
-dkepath.decker(1).remote(1).luke_root = dkepath.decker(1).luke_root;% local cluster
+dkepath.decker(1).remote(1).luke_root = '/home/G09625/LUKE/';
 %
-dkepath.decker(1).remote(2).remoteid = 'CRPP_LAC5';
+dkepath.decker(1).remote(2).remoteid = 'CRPP_PPB110';
 dkepath.decker(1).remote(2).schedulername = 'direct';
 dkepath.decker(1).remote(2).profilename = 'local';
-dkepath.decker(1).remote(2).luke_root = '/home/decker/LUKE/';
+dkepath.decker(1).remote(2).luke_root = '/home/G09625/LUKE/';
 %
-dkepath.decker(1).remote(3).remoteid = 'CRPP_PPB110';
-dkepath.decker(1).remote(3).schedulername = 'slurm';
+dkepath.decker(1).remote(3).remoteid = 'CRPP_PC82';
+dkepath.decker(1).remote(3).schedulername = 'direct';
 dkepath.decker(1).remote(3).profilename = 'local';
-dkepath.decker(1).remote(3).luke_root = '/home/G09625/LUKE/';
+dkepath.decker(1).remote(3).luke_root = dkepath.decker(1).luke_root;% local cluster
 %
-dkepath.decker(1).remote(4).remoteid = 'CRPP_PPB110';
+dkepath.decker(1).remote(4).remoteid = 'CRPP_LAC5';
 dkepath.decker(1).remote(4).schedulername = 'direct';
 dkepath.decker(1).remote(4).profilename = 'local';
-dkepath.decker(1).remote(4).luke_root = '/home/G09625/LUKE/';
+dkepath.decker(1).remote(4).luke_root = '/home/decker/LUKE/';
+%
+dkepath.decker(1).remote(5).remoteid = 'CRPP_LAC1';
+dkepath.decker(1).remote(5).schedulername = 'direct';
+dkepath.decker(1).remote(5).profilename = 'local';
+dkepath.decker(1).remote(5).luke_root = '/home/decker/LUKE/';
+%
+dkepath.decker(1).remote(6).remoteid = 'CRPP_LAC2';
+dkepath.decker(1).remote(6).schedulername = 'direct';
+dkepath.decker(1).remote(6).profilename = 'local';
+dkepath.decker(1).remote(6).luke_root = '/home/decker/LUKE/';
+%
+dkepath.decker(1).remote(7).remoteid = 'CRPP_LAC4';
+dkepath.decker(1).remote(7).schedulername = 'direct';
+dkepath.decker(1).remote(7).profilename = 'local';
+dkepath.decker(1).remote(7).luke_root = '/home/decker/LUKE/';
 %
