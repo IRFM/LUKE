@@ -2177,7 +2177,7 @@ switch action
             %
         end  
         %
-        clear ngraphs newgraph1_handle newgraph2_handle newgraph3_handle  
+        clear ngraphs newgraph1_handle newgraph2_handle newgraph3_handle newgraph4_handle  
         %
     case 'lukestart'
         %
@@ -2191,6 +2191,31 @@ switch action
         %
         iluke_run;
         %       
+    case 'cleargraphs'
+        %
+        % run check
+        %
+        for h = [lukeobj.plot1.handle,lukeobj.plot2.handle,lukeobj.plot3.handle],
+            ch = get(h,'children');
+            delete(ch(1:end-3));% keep handles for plot list, print & save
+        end
+        %
+        graphs = struct;
+        graphs.handles = [];
+        graphs.info = '';
+        graphs.tag = '';
+        graphs(1) = [];% empty structure but keep memory of fields
+        %
+        lukeobj.plot1.gindex = 0;
+        lukeobj.plot2.gindex = 0;
+        lukeobj.plot3.gindex = 0;
+        %       
+        lukeobj.graph1sel.string = {''};
+        lukeobj.graph2sel.string = {''};
+        lukeobj.graph3sel.string = {''};
+        %
+        clear h ch
+        %
 end
 %
 clear action

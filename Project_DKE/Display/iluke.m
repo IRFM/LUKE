@@ -137,6 +137,7 @@ style.textheight = 2*style.fontsize;
 %
 lukeobj.controlstr.position = [2*style.buthsep + style.longbutwidth,style.controlheightcorr,style.panelwidth - 4*style.buthsep - 2*style.longbutwidth,style.titlestrheight];
 lukeobj.busy.position = [style.buthsep,style.controlheightcorr,style.longbutwidth,style.titlestrheight];
+lukeobj.cleargraphs.position = [style.panelwidth - style.buthsep - 2*style.butwidth,style.controlheight - style.butheight - style.butvsep,2*style.butwidth,style.butheight];
 %
 % SIMULATION INFO DIMENSIONS
 %
@@ -224,6 +225,7 @@ lukeobj.saveshot.string = 'Save';
 
 lukeobj.controlstr.string = {'CONTROLS'};
 lukeobj.busy.string = {'BUSY'};
+lukeobj.cleargraphs.string = {'CLEAR GRAPHS'};
 
 lukeobj.runluke.string = 'LUKE START';
 lukeobj.lukeidtitle.string = 'Run ID';
@@ -261,6 +263,8 @@ lukeobj.saveshot.callback = 'action = ''saveshot'';iluke_callbacks;';
 lukeobj.workdirtitle.callback = 'action = ''workdir'';iluke_callbacks;';
 lukeobj.help.callback = 'action = ''help'';iluke_callbacks;';
 lukeobj.redmine.callback = 'action = ''redmine'';iluke_callbacks;';
+
+lukeobj.cleargraphs.callback = 'action = ''cleargraphs'';iluke_callbacks;';
 
 lukeobj.graph1sel.callback = 'lukeobj.plot1.gindex = get(lukeobj.graph1sel.handle,''Value'') - 1;iluke_update;';
 lukeobj.graph2sel.callback = 'lukeobj.plot2.gindex = get(lukeobj.graph2sel.handle,''Value'') - 1;iluke_update;';
@@ -343,6 +347,7 @@ lukeobj.workdirtitle.handle = uicontrol(lukeobj.titlepanel.handle,'Style','pushb
 %
 lukeobj.controlstr.handle = uicontrol(lukeobj.controlpanel.handle,'Style','text','String',lukeobj.controlstr.string,'Position',lukeobj.controlstr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'HorizontalAlignment','center');
 lukeobj.busy.handle = uicontrol(lukeobj.controlpanel.handle,'Style','text','String',lukeobj.busy.string,'Position',lukeobj.busy.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'FontWeight','bold','ForegroundColor',[1 0 0],'HorizontalAlignment','center','Visible','off');
+lukeobj.cleargraphs.handle = uicontrol(lukeobj.controlpanel.handle,'Style','pushbutton','String',lukeobj.cleargraphs.string,'Position',lukeobj.cleargraphs.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.cleargraphs.callback);
 
 lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'data',{'title','import','load','save','clear','disp','text'},'Exp. Data',style.controlheightcorr - style.butheightcorr,style);
 lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'equil',{'title','make','load','save','clear','disp','text'},'Equilibrium',style.controlheightcorr - 2*style.butheightcorr,style);
