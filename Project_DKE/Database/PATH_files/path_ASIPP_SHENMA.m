@@ -10,8 +10,8 @@ function dkepath = path_ASIPP_SHENMA
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.hostname = 'shenma';
 dkepath.machine = 'shenma';
+dkepath.hostname = 'shenma';
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -51,25 +51,12 @@ dkepath.bjding(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variab
 %
 %--------------------------- Remote computing -----------------------------
 %
-% local (shenma)
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-dkepath.bjding(1).remote(1) = remote_ASIPP_SHENMA('torque','bojiang');
-dkepath.bjding(1).remote(1).env.luke_root = dkepath.bjding(1).luke_root;
-%
-% macproyves (condor)
-%
-dkepath.bjding(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','bojiang');
-dkepath.bjding(1).remote(2).env.luke_root = '/Users/yvespeysson/Projets/LUKE/';
-%
-% macproyves (xgrid)
-%
-dkepath.bjding(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','bojiang');
-dkepath.bjding(1).remote(3).env.luke_root = dkepath.bjding(1).remote(2).env.luke_root;
-%
-% ANDROMEDE CEA PARTENAIRES
-%
-dkepath.bjding(1).remote(4) = remote_CEA_ANDROMEDE('pbs','bojiang');
-dkepath.bjding(1).remote(4).env.luke_root = '/home/JD211098/LUKE/';
+dkepath.bjding(1).remote(1).remoteid = 'ASIPP_SHENMA';
+dkepath.bjding(1).remote(1).schedulername = 'torque';
+dkepath.bjding(1).remote(1).profilename = 'bojiang';
+dkepath.bjding(1).remote(1).luke_root = dkepath.bjding(1).luke_root;% local cluster
 %
 %-------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
@@ -97,30 +84,20 @@ dkepath.PEYSSON(1).graphviz.env = '/usr/bin/';% Graphviz environment variable
 dkepath.PEYSSON(1).latex.env = '/usr/bin/';% Latex environment variable
 dkepath.PEYSSON(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
-%--------------------------- Distributed computing -----------------------------
-%
-%dkepath.PEYSSON(1).configurations.localconfig = '/local/mdce/configurations/localconfig.mat';
-%dkepath.PEYSSON(1).configurations.pbsproconfig = '/local/mdce/configurations/pbsproconfig.mat';
-%
 %--------------------------- Remote computing -----------------------------
-% 
-% local (shenma)
 %
-dkepath.PEYSSON(1).remote(1) = remote_ASIPP_SHENMA('torque','yves');
-dkepath.PEYSSON(1).remote(1).env.luke_root = dkepath.PEYSSON(1).luke_root;
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-% macproyves (condor)
+dkepath.PEYSSON(1).remote(1).remoteid = 'ASIPP_SHENMA';
+dkepath.PEYSSON(1).remote(1).schedulername = 'torque';
+dkepath.PEYSSON(1).remote(1).profilename = 'yves';
+dkepath.PEYSSON(1).remote(1).luke_root = dkepath.PEYSSON(1).luke_root;% local cluster
 %
-dkepath.PEYSSON(1).remote(2) = remote_macpro_YVES_PEYSSON('condor','yves');
-dkepath.PEYSSON(1).remote(2).env.luke_root = '/Users/yvespeysson/Projets/LUKE/';
+%-------------------------------------------------------------------------------------------------------
+%------------------------------------ Profile number 2, Joan Decker  ------------------------------------
+%--------------------------------------------------------------------------------------------------------
 %
-% macproyves (xgrid)
+dkepath.PEYSSON(2) = dkepath.PEYSSON(1);
 %
-dkepath.PEYSSON(1).remote(3) = remote_macpro_YVES_PEYSSON('xgrid','yves');
-dkepath.PEYSSON(1).remote(3).env.luke_root = dkepath.PEYSSON(1).remote(2).env.luke_root;
-%
-% ANDROMEDE CEA PARTENAIRES
-%
-dkepath.PEYSSON(1).remote(4) = remote_CEA_ANDROMEDE('pbs','yves');
-dkepath.PEYSSON(1).remote(4).env.luke_root = '/home/YP105119/LUKE/';
+dkepath.PEYSSON(2).remote(1).profilename = 'joan';
 %
