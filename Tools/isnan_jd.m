@@ -24,15 +24,17 @@ function test = isnan_jd(var,svar,display_mode,ntab)
         %
     elseif isstruct(var),
         %
-        disp_jd(display_mode,ntab,['  o recursively checking the structure ',svar])
-        %
         fnames = fieldnames(var);
         %
-        for ifield = 1:length(fnames),
+        for iarray = 1:length(var)
+            disp_jd(display_mode,ntab,['  o recursively checking the structure ',svar,'(',num2str(iarray),') :'])
             %
-            fname = fnames{ifield};
-            test = isnan_jd(var.(fname),fname,display_mode,ntab + 2) || test;
-            %
+            for ifield = 1:length(fnames),
+                %
+                fname = fnames{ifield};
+                test = isnan_jd(var(iarray).(fname),fname,display_mode,ntab + 2) || test;
+                %
+            end
         end
         %
     elseif iscell(var),
