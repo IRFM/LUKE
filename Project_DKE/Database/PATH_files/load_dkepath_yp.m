@@ -75,9 +75,6 @@ else
         iflag = 1;
     end
     %
-    disp(' ');
-    disp(['Local cluster identified : ',dkepaths{ifiles(iflag)}.hostname]);
-    %
     dkepath = dkepaths{ifiles(iflag)};
     %
     % select user name
@@ -93,13 +90,31 @@ else
         end
     end
     %
+    % select user profile number if applicable
+    %
+    if length(dkepath.(username)) > 1,
+        disp(' ');
+        isel = input_dke_yp(['Please select one of the profiles numbers for user : ',username,' (1 => ',num2str(length(dkepath.(username))),') '],1,1:length(dkepath.(username)));
+    else
+        isel = 1;
+    end
+    %
+    dkepath.(username) = dkepath.(username)(isel);
+    %
     dkepath = conc_struct_jd(selectfields_jd(dkepath,{'hostname','machine','computer'}),dkepath.(username));
     %
-    % select user profile number
-    %
-    if length(dkepath) > 1,
-        disp(' ');
-        dkepath = dkepath(input_dke_yp(['Please select one of the profiles numbers for user : ',username,' (1 => ',num2str(length(dkepath)),') '],1,1:length(dkepath)));
+    if iscell(dkepath.hostname),%case of multiple machines on the same filesystem
+        nhost = length(dkepath.hostname);
+        flag = false(1,nhost);
+        for ihost = 1:nhost,
+            if isfield(dkepath,dkepath.hostname{ihost}),% meaning the machine 'dkepath.hostname{ihost}' is referenced for user 'username'
+                flag(ihost) = true;
+            end
+        end
+        %
+        dkepath.hostname = dkepath.hostname(flag);
+        dkepath.machine = dkepath.machine(flag);
+        %
     end
     %
     % if no remote profile
@@ -107,6 +122,19 @@ else
     if ~isfield(dkepath,'remote'),
         dkepath.remote = [];
     end
+    %
+    if iscell(dkepath.machine),
+        machinestr = dkepath.machine{1};
+        for ihost = 2:length(dkepath.machine),
+            machinestr = [machinestr,', ',dkepath.machine{ihost}];
+        end
+    else
+        machinestr = dkepath.machine;
+    end
+    %
+    disp(' ');
+    disp(['PATH Profile #',num2str(isel),' for user ',username,' from file ',PathFileNames{ifiles(iflag)},' selected for machine(s) : ',machinestr]);
+    %
 end
 
 
