@@ -103,11 +103,11 @@ else
     %
     dkepath = conc_struct_jd(selectfields_jd(dkepath,{'hostname','machine','computer'}),dkepath.(username));
     %
-    if iscell(dkepath.hostname),%case of multiple machines on the same filesystem
-        nhost = length(dkepath.hostname);
+    if iscell(dkepath.machine),%case of multiple machines on the same filesystem
+        nhost = length(dkepath.machine);
         flag = false(1,nhost);
         for ihost = 1:nhost,
-            if isfield(dkepath,dkepath.hostname{ihost}),% meaning the machine 'dkepath.hostname{ihost}' is referenced for user 'username'
+            if isfield(dkepath,dkepath.machine{ihost}),% meaning the machine 'dkepath.machine{ihost}' is referenced for user 'username'
                 flag(ihost) = true;
             end
         end
