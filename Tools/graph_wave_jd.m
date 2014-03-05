@@ -13,7 +13,7 @@ end
 if nargin < 8
     yabs = NaN;
 end
-if nargin < 7
+if nargin < 7 || isempty(xvar)
     xvar = input_dke_yp('Option for rho definition : ''g'' (geometric), ''p'' (poloidal flux), ''t'' (toroidal flux), ''v'' (volumic rho)','g',{'g','p','t','v'},'',[1,1]);
 end
 if nargin < 6
@@ -23,14 +23,26 @@ if nargin < 5
     rho_disp = 0:0.1:1;
 end
 if nargin < 4,
-    opt.vessel_opt = 'n';
-    opt.abs_max = input_dke_yp('Option for ray trajectories : 0 (full trajectory), 1 (cut when damped)',0,0:1,'',[1,1]);
-    opt.mode = input_dke_yp('Option for showing ray polarization (n/y)','n',{'n','y'});
-    opt.print = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
-    opt.TeNpar = 1;
+    opt = struct;
 end
 if nargin < 3,
     nr_dep = 40;
+end
+%
+if ~isfield(opt,'vessel_opt'),
+    opt.vessel_opt = 'n';
+end
+if ~isfield(opt,'TeNpar'),
+    opt.TeNpar = 1;
+end
+if ~isfield(opt,'abs_max'),
+    opt.abs_max = input_dke_yp('Option for ray trajectories : 0 (full trajectory), 1 (cut when damped @ 99.9%), 0 <value < 1 (cut when remaining power fraction is below value) ',1,[0;1],'',[1,1]);
+end
+if ~isfield(opt,'mode'),
+    opt.mode = input_dke_yp('Option for showing ray polarization (n/y)','n',{'n','y'});
+end
+if ~isfield(opt,'print'),
+    opt.print = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
 end
 %
 nw = length(waves);
@@ -147,12 +159,12 @@ for iw = 1:nw,
         rays{iy}.ns = length(rays{iy}.ss);
 		%
         if iscell(yabs),
-            rays{iy}.mask_abs_lin = yabs{iw}(1,ibb):yabs{iw}(2,ibb);
-            rays{iy}.mask_abs = yabs{iw}(1,ibb):yabs{iw}(2,ibb);
+            rays{iy}.mask_abs_lin = 1:rays{iy}.ns >= yabs{iw}(1,ibb) & 1:rays{iy}.ns <= yabs{iw}(2,ibb);  
 		else
-			rays{iy}.mask_abs_lin = [];
-			rays{iy}.mask_abs = [];
+			rays{iy}.mask_abs_lin = false(1,rays{iy}.ns);
         end
+        rays{iy}.mask_abs = rays{iy}.mask_abs_lin;
+        %
         if 1,%~isfield(rays{iy},'rayinits') || ~isfield(rays{iy}.rayinits{1},'type') || ~strcmp(rays{iy}.rayinits{1}.type,'EC'),
             rays{iy}.refs = '';
             rays{iy}.mask_pass = {true(1,rays{iy}.ns)};
@@ -245,6 +257,10 @@ yNpar_abs = NaN(1,ny);
 dPdrho_lin = 0;
 dPdrho = 0;
 %
+if opt.abs_max == 1,
+    opt.abs_max = 1e-3;% default value
+end
+%
 for iy = 1:ny,
     ns = length(rays{iy}.ss);
     %
@@ -252,10 +268,10 @@ for iy = 1:ny,
         sP_2piRp_lin_norm = rays{iy}.sP_2piRp_lin/rays{iy}.sP_2piRp_lin(1);
         sdP_2piRp_ds_lin_norm = rays{iy}.sdP_2piRp_ds_lin/max(rays{iy}.sdP_2piRp_ds_lin+eps).*(1 - sP_2piRp_lin_norm(end)/sP_2piRp_lin_norm(1));
         if ~iscell(yabs),
-            rays{iy}.mask_abs_lin = find(sdP_2piRp_ds_lin_norm > 0.01);
+            rays{iy}.mask_abs_lin = sdP_2piRp_ds_lin_norm > 0.01;
         end
-        if opt.abs_max == 1,
-            rays{iy}.is_abs_max_lin = min([ns,find(sP_2piRp_lin_norm < 0.001)]);        
+        if opt.abs_max > 0,
+            rays{iy}.is_abs_max_lin = min([ns,find(sP_2piRp_lin_norm < opt.abs_max)]);        
         else
             rays{iy}.is_abs_max_lin = ns;
         end
@@ -314,10 +330,10 @@ for iy = 1:ny,
             sP_2piRp_norm = rays{iy}.sP_2piRp{end}/rays{iy}.sP_2piRp{end}(1);
             sdP_2piRp_ds_norm = rays{iy}.sdP_2piRp_ds{end}/max(rays{iy}.sdP_2piRp_ds{end}+eps).*(1 - sP_2piRp_norm(end)/sP_2piRp_norm(1));
             if ~iscell(yabs),
-                rays{iy}.mask_abs = find(sdP_2piRp_ds_norm > 0.01);
+                rays{iy}.mask_abs = sdP_2piRp_ds_norm > 0.01;
             end
-            if opt.abs_max == 1,
-                rays{iy}.is_abs_max = min([ns,find(sP_2piRp_norm < 0.001)]);        
+            if opt.abs_max > 0,
+                rays{iy}.is_abs_max = min([ns,find(sP_2piRp_norm < opt.abs_max)]);        
             else
                 rays{iy}.is_abs_max = ns;
             end
@@ -689,7 +705,7 @@ for iy = 1:ny,
     %
     if opt.luke,
         mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
-    	mask_abs = rays{iy}.mask_abs;
+    	mask_abs =rays{iy}.mask_abs;
     else
         mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
     	mask_abs = rays{iy}.mask_abs_lin;
@@ -719,7 +735,7 @@ for iy = 1:ny,
         end  
     end
     %
-    graph1D_jd(rays{iy}.sx(mask_abs) + Rpdisp,rays{iy}.sy(mask_abs) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,opt.font,ax);
+    graph1D_jd(rays{iy}.sx(mask_max & mask_abs) + Rpdisp,rays{iy}.sy(mask_max & mask_abs) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,opt.font,ax);
     if ~isempty(rays{iy}.refs),
         for iref = 1:length(rays{iy}.refs),
             graph1D_jd(rays{iy}.refs{iref}.x + Rpdisp,rays{iy}.refs{iref}.y + Zpdisp,0,0,'','','',NaN,xlim,ylim,style,marker3,rays{iy}.color,width2,opt.font,ax);
@@ -732,7 +748,7 @@ if 0,%opt.res >= 1,
 end
 axis(ax,'equal');
 axis(ax,[xlim,ylim]);
-if strfind(equil.id,'TCV') & strcmp(opt.vessel_opt,'y')
+if any(strfind(equil.id,'TCV')) && strcmp(opt.vessel_opt,'y')
    axis(ax,'auto');
    set(ax,'XTick',[0:0.2:1.4],'YTick',[-0.8:0.2:0.8]);
 end
@@ -763,10 +779,10 @@ tit = '';
 for iy = 1:ny,
     %
     if opt.luke,
-        mask_max = 1:rays{iy}.is_abs_max;
-    	mask_abs = rays{iy}.mask_abs;
+        mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
+    	mask_abs =rays{iy}.mask_abs;
     else
-        mask_max = 1:rays{iy}.is_abs_max_lin;
+        mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
     	mask_abs = rays{iy}.mask_abs_lin;
     end
     %
@@ -792,7 +808,7 @@ for iy = 1:ny,
         graph1D_jd(rays{iy}.sX(mask_max),rays{iy}.sY(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,opt.font,ax);
     end
     %
-    graph1D_jd(rays{iy}.sX(mask_abs),rays{iy}.sY(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,opt.font,ax);
+    graph1D_jd(rays{iy}.sX(mask_max & mask_abs),rays{iy}.sY(mask_max & mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,opt.font,ax);
     if ~isempty(rays{iy}.refs),
         for iref = 1:length(rays{iy}.refs),
             graph1D_jd(rays{iy}.refs{iref}.X,rays{iy}.refs{iref}.Y,0,0,'','','',NaN,xlim,ylim,style,marker3,rays{iy}.color,width2,opt.font,ax);
@@ -939,12 +955,12 @@ while iw ~= 0 && any(ibb ~= 0)
         ray = rays_disp{iray};
         %
         if opt.luke,
-            mask_max = 1:ray.is_abs_max;
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
             mask_abs = ray.mask_abs;
             mask_p = ray.mask_p;
             mask_m = ray.mask_m;
         else
-            mask_max = 1:ray.is_abs_max_lin;
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
             mask_abs = ray.mask_abs_lin;
             mask_p = ray.mask_p_lin;
             mask_m = ray.mask_m_lin;
@@ -964,7 +980,7 @@ while iw ~= 0 && any(ibb ~= 0)
             graph1D_jd(ray.sx(mask_max),ray.sy(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,colors{rem(iray,ncols+1)},width1,opt.font);
         end       
         %
-        graph1D_jd(ray.sx(mask_abs),ray.sy(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,opt.font);
+        graph1D_jd(ray.sx(mask_max & mask_abs),ray.sy(mask_max & mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,opt.font);
         %
         if ~isempty(ray.refs),
             for iref = 1:length(ray.refs),
@@ -994,12 +1010,12 @@ while iw ~= 0 && any(ibb ~= 0)
         ray = rays_disp{iray};
         %
         if opt.luke,
-            mask_max = 1:ray.is_abs_max;
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
             mask_abs = ray.mask_abs;
             mask_p = ray.mask_p;
             mask_m = ray.mask_m;
         else
-            mask_max = 1:ray.is_abs_max_lin;
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
             mask_abs = ray.mask_abs_lin;
             mask_p = ray.mask_p_lin;
             mask_m = ray.mask_m_lin;
@@ -1018,7 +1034,7 @@ while iw ~= 0 && any(ibb ~= 0)
             graph1D_jd(ray.sX(mask_max),ray.sY(mask_max),0,0,'','','',NaN,xlim,ylim,style,marker,colors{rem(iray,ncols+1)},width1,opt.font);
         end 
         %
-        graph1D_jd(ray.sX(mask_abs),ray.sY(mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,opt.font);
+        graph1D_jd(ray.sX(mask_max & mask_abs),ray.sY(mask_max & mask_abs),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,opt.font);
         %
         if ~isempty(ray.refs),
             for iref = 1:length(ray.refs),
@@ -1048,12 +1064,12 @@ while iw ~= 0 && any(ibb ~= 0)
         ray = rays_disp{iray};
         %
         if opt.luke,
-            mask_max = 1:ray.is_abs_max;
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
             mask_abs = ray.mask_abs;
             mask_p = ray.mask_p;
             mask_m = ray.mask_m;
         else
-            mask_max = 1:ray.is_abs_max_lin;
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
             mask_abs = ray.mask_abs_lin;
             mask_p = ray.mask_p_lin;
             mask_m = ray.mask_m_lin;
@@ -1091,9 +1107,9 @@ while iw ~= 0 && any(ibb ~= 0)
         end
         %
         if iray == 1,
-            graph1D_jd(ray.ss(mask_abs),abs(real(ray.sNpar(mask_abs))),0,0,xlab,ylab,tit,leg,xlim,ylim,style2,marker2,color5,width2,opt.font);%,gca,red,lspace,bspace
+            graph1D_jd(ray.ss(mask_max & mask_abs),abs(real(ray.sNpar(mask_max & mask_abs))),0,0,xlab,ylab,tit,leg,xlim,ylim,style2,marker2,color5,width2,opt.font);%,gca,red,lspace,bspace
         else
-            graph1D_jd(ray.ss(mask_abs),abs(real(ray.sNpar(mask_abs))),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,opt.font);
+            graph1D_jd(ray.ss(mask_max & mask_abs),abs(real(ray.sNpar(mask_max & mask_abs))),0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,opt.font);
         end
         %
     end
@@ -1110,12 +1126,12 @@ while iw ~= 0 && any(ibb ~= 0)
         ray = rays_disp{iray};
         %
         if opt.luke,
-            mask_max = 1:ray.is_abs_max;
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
             mask_abs = ray.mask_abs;
             mask_p = ray.mask_p;
             mask_m = ray.mask_m;
         else
-            mask_max = 1:ray.is_abs_max_lin;
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
             mask_abs = ray.mask_abs_lin;
             mask_p = ray.mask_p_lin;
             mask_m = ray.mask_m_lin;
@@ -1137,12 +1153,12 @@ while iw ~= 0 && any(ibb ~= 0)
         ray = rays_disp{iray};
         %
         if opt.luke,
-            mask_max = 1:ray.is_abs_max;
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
             mask_abs = ray.mask_abs;
             mask_p = ray.mask_p;
             mask_m = ray.mask_m;
         else
-            mask_max = 1:ray.is_abs_max_lin;
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
             mask_abs = ray.mask_abs_lin;
             mask_p = ray.mask_p_lin;
             mask_m = ray.mask_m_lin;

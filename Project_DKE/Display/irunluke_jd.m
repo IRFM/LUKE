@@ -1153,16 +1153,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     w_list = input_dke_yp('List of waves to display',1:nw,[1;nw],'');
                     %
-                    p_opt = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
-                    g_opt.abs_max = input_dke_yp('Option for ray trajectories : 0 (full trajectory), 1 (cut when damped)',0,0:1,'',[1,1]);
-                    %
-                    g_opt.mode = input_dke_yp('Option for showing ray polarization (n/y)','n',{'n','y'});
-                    %xvaropt = input_dke_yp('Option for rho definition : 0 (geometric), 1 (poloidal flux), 2 (toroidal flux)',0,0:2,'',[1,1]);
-                    xvar = input_dke_yp('Option for rho definition : ''g'' (geometric), ''p'' (poloidal flux), ''t'' (toroidal flux), ''v'' (volumic rho)','g',{'g','p','t','v'},'',[1,1]);
-                    %
-                    g_opt.print = p_opt;
-                    g_opt.TeNpar = 1;
-                    %
                     if status.output == 1,
                         g_opt.luke = input_dke_yp('Do you want to show waves using LUKE absorption (n/y)','y',{'n','y'}) == 'y';
                         %
@@ -1225,7 +1215,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     ymask = NaN;
                     %
-                    graph_wave_jd(equil,dispwaves,nr_dep,g_opt,rho_disp,ymask,xvar);
+                    graph_wave_jd(equil,dispwaves,nr_dep,g_opt,rho_disp,ymask);
                     %
                     clear rayinits nw wave dispwaves
                     %
