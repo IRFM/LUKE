@@ -10,8 +10,8 @@ function dkepath = path_macpro_YVES_PEYSSON
 %
 % by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
 %
-dkepath.hostname = 'macproyves';
 dkepath.machine = 'macproyves';
+dkepath.hostname = 'macproyves';
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -27,7 +27,7 @@ dkepath.yvespeysson(1).luke_root = [pwd,filesep];% local path necessary to handl
 % NOTE : It is better to use path_profile than pwd to separate between LUKE
 % versions, but this is not yet fully supported by load_strutctures_yp
 %
-dkepath.yvespeysson(1).local_root = ['/Users/yvespeysson/Shared/'];
+dkepath.yvespeysson(1).local_root = '/Users/yvespeysson/Shared/';
 dkepath.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.yvespeysson(1).mex800 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB800','/'];
@@ -72,48 +72,48 @@ dkepath.yvespeysson(1).graphviz.env = '/usr/local/bin/';% Graphviz environment v
 dkepath.yvespeysson(1).latex.env = '/usr/texbin/';% Latex environment variable
 dkepath.yvespeysson(1).imagemagick.env = '/opt/local/bin/';% ImageMagick environment variable
 %
-%--------------------------- Distributed computing -----------------------------
-%
-%
 %--------------------------- Remote computing -----------------------------
 %
-% For remote computing with Matlab, an automatic login from local host A to
-% the remote host B is need. This is the first prior requirement:
-% !ssh login@remote_host should give directly the prompt of the remote machine 
-% (not asking the password)
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-% Each remote machine must have a working scheduler (PBS, XGRID, etc). The local
-% machine may have one for local check of the program or using multicores
-% capabilities. In that case, the self automatic login with ssh should be
-% setup from local host to local host. If the program does not work
-% locally, it won't work remotely ! 
+dkepath.yvespeysson(1).remote(1).remoteid = 'macpro_YVES_PEYSSON';
+dkepath.yvespeysson(1).remote(1).schedulername = 'condor';
+dkepath.yvespeysson(1).remote(1).profilename = 'yves';
+dkepath.yvespeysson(1).remote(1).luke_root = dkepath.yvespeysson(1).luke_root;% local cluster
 %
-% WARNING: the setup of the scheduler may be complicated and is usually
-% machine dependent. 
+dkepath.yvespeysson(1).remote(2) = dkepath.yvespeysson(1).remote(1);
+dkepath.yvespeysson(1).remote(2).schedulername = 'xgrid';
 %
+dkepath.yvespeysson(1).remote(3) = dkepath.yvespeysson(1).remote(1);
+dkepath.yvespeysson(1).remote(3).schedulername = 'direct';
 %
-% local (condor)
+dkepath.yvespeysson(1).remote(4).remoteid = 'ASIPP_SHENMA';
+dkepath.yvespeysson(1).remote(4).schedulername = 'torque';
+dkepath.yvespeysson(1).remote(4).profilename = 'yves';
+dkepath.yvespeysson(1).remote(4).luke_root = '/home/PEYSSON/LUKE/';
+dkepath.yvespeysson(1).remote(4).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
+dkepath.yvespeysson(1).remote(4).cvs.cmd = ['update -d ',dkepath.yvespeysson(1).remote(4).luke_root];%CVS command
 %
-dkepath.yvespeysson(1).remote(1) = remote_macpro_YVES_PEYSSON('condor','yves');
-dkepath.yvespeysson(1).remote(1).host = '';% empty for local host
-dkepath.yvespeysson(1).remote(1).env.luke_root = dkepath.yvespeysson(1).luke_root;
+dkepath.yvespeysson(1).remote(5).remoteid = 'CEA_ANDROMEDE';
+dkepath.yvespeysson(1).remote(5).schedulername = 'pbs';
+dkepath.yvespeysson(1).remote(5).profilename = 'YP105119';
+dkepath.yvespeysson(1).remote(5).luke_root = '/home/YP105119/LUKE/';
 %
-% local (xgrid)
+%--------------------------------------------------------------------------------------------------------
+%------------------------------------ Profile number 2, Joan Decker  ------------------------------------
+%--------------------------------------------------------------------------------------------------------
 %
-dkepath.yvespeysson(1).remote(2) = remote_macpro_YVES_PEYSSON('xgrid','yves');
-dkepath.yvespeysson(1).remote(2).host = '';% empty for local host
-dkepath.yvespeysson(1).remote(2).env.luke_root = dkepath.yvespeysson(1).luke_root;
+dkepath.yvespeysson(2) = dkepath.yvespeysson(1);
 %
-% shenma (torque)
+dkepath.yvespeysson(2).remote(1).profilename = 'joan';
+dkepath.yvespeysson(2).remote(2).profilename = 'joan';
+dkepath.yvespeysson(2).remote(3).profilename = 'joan';
 %
-dkepath.yvespeysson(1).remote(3) = remote_ASIPP_SHENMA('torque','yves');
-dkepath.yvespeysson(1).remote(3).env.luke_root = '/home/PEYSSON/LUKE/';
-dkepath.yvespeysson(1).remote(3).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
-dkepath.yvespeysson(1).remote(3).cvs.cmd = ['update -d ',dkepath.yvespeysson(1).remote(3).env.luke_root];%CVS command
+dkepath.yvespeysson(2).remote(4).profilename = 'joan';
+dkepath.yvespeysson(2).remote(4).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 %
-% andromede (pbs)
+dkepath.yvespeysson(2).remote(5).profilename = 'JD211098';
+dkepath.yvespeysson(2).remote(5).luke_root = '/home/JD211098/LUKE/';
 %
-dkepath.yvespeysson(1).remote(4) = remote_CEA_ANDROMEDE('pbs','yves');
-dkepath.yvespeysson(1).remote(4).env.luke_root = '/home/YP105119/LUKE/';
-%
+
 

@@ -69,7 +69,7 @@ dkepath.joan(1).remote(1).luke_root = dkepath.joan(1).luke_root;% local cluster
 %
 dkepath.joan(1).remote(2).remoteid = 'CEA_ANDROMEDE';
 dkepath.joan(1).remote(2).schedulername = 'pbs';
-dkepath.joan(1).remote(2).profilename = 'joan';
+dkepath.joan(1).remote(2).profilename = 'JD211098';
 dkepath.joan(1).remote(2).luke_root = '/home/JD211098/LUKE/';
 %
 dkepath.joan(1).remote(3).remoteid = 'macpro_YVES_PEYSSON';
