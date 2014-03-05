@@ -75,17 +75,14 @@ dkepath.joan(1).remote(2).luke_root = '/home/JD211098/LUKE/';
 dkepath.joan(1).remote(3).remoteid = 'macpro_YVES_PEYSSON';
 dkepath.joan(1).remote(3).schedulername = 'condor';
 dkepath.joan(1).remote(3).profilename = 'joan';
-dkepath.joan(1).remote(3).luke_root = '/Users/yvespeysson/joandecker/Work/LUKE_1_10/';
+dkepath.joan(1).remote(3).luke_root.LUKE_1_10_0 = '/Users/yvespeysson/joandecker/Work/LUKE_1_10/';
+dkepath.joan(1).remote(3).luke_root.LUKE_default = '/Users/yvespeysson/joandecker/Work/LUKE/';
 %
-dkepath.joan(1).remote(4).remoteid = 'macpro_YVES_PEYSSON';
+dkepath.joan(1).remote(4) = dkepath.joan(1).remote(3);
 dkepath.joan(1).remote(4).schedulername = 'xgrid';
-dkepath.joan(1).remote(4).profilename = 'joan';
-dkepath.joan(1).remote(4).luke_root = dkepath.joan(1).remote(3).luke_root;
 %
-dkepath.joan(1).remote(5).remoteid = 'macpro_YVES_PEYSSON';
+dkepath.joan(1).remote(5) = dkepath.joan(1).remote(3);
 dkepath.joan(1).remote(5).schedulername = 'direct';
-dkepath.joan(1).remote(5).profilename = 'joan';
-dkepath.joan(1).remote(5).luke_root = dkepath.joan(1).remote(3).luke_root;
 %
 dkepath.joan(1).remote(6).remoteid = 'ASIPP_SHENMA';
 dkepath.joan(1).remote(6).schedulername = 'torque';

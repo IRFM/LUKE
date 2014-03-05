@@ -11,8 +11,8 @@ function dkepath = path_CEA_ANDROMEDE
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
 %
-dkepath.machine = 'andromede';
-dkepath.hostname = 'andromede';
+dkepath.machine = {'andromede','saturne','altair'};
+dkepath.hostname = {'andromede','saturne','altair'};
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -22,28 +22,59 @@ dkepath.default = 'JD211098';
 %------------------------------------ Profile number 1, JD211098 Decker ------------------------------------
 %
 dkepath.JD211098(1).luke_root = [pwd,filesep];
-dkepath.JD211098(1).local_root = '/home/JD211098/Packages/andromede/';
-dkepath.JD211098(1).temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.JD211098(1).mex710 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB710/'];
-dkepath.JD211098(1).mex800 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB800/'];
+% ---------------------------- andromede -------------------------------
 %
-dkepath.JD211098(1).compiler_opt.copts = '';
-dkepath.JD211098(1).compiler_opt.fopts.mex710 = 'FC=''gfortran''';
-dkepath.JD211098(1).compiler_opt.fopts.mex800 = '';
-dkepath.JD211098(1).compiler_opt.helmex.mex710 = NaN;%['-L',dkepath.JD211098(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.JD211098(1).compiler_opt.helmex.mex800 = ['-L',dkepath.JD211098(1).local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.JD211098(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.JD211098(1).andromede.local_root = '/home/JD211098/Packages/andromede/';
+dkepath.JD211098(1).andromede.temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-%Where MUMPS matrix solver is stored (MEX function)
+dkepath.JD211098(1).andromede.mex710 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB710/'];
+dkepath.JD211098(1).andromede.mex800 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB800/'];
 %
-dkepath.JD211098(1).MUMPS.mex710 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.JD211098(1).MUMPS.mex800 = [dkepath.JD211098(1).local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.JD211098(1).andromede.compiler_opt.copts = '';
+dkepath.JD211098(1).andromede.compiler_opt.fopts.mex710 = 'FC=''gfortran''';
+dkepath.JD211098(1).andromede.compiler_opt.fopts.mex800 = '';
+dkepath.JD211098(1).andromede.compiler_opt.helmex.mex710 = NaN;%['-L',dkepath.JD211098(1).andromede.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.JD211098(1).andromede.compiler_opt.helmex.mex800 = ['-L',dkepath.JD211098(1).andromede.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.JD211098(1).andromede.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
-% LUKE documentation
+dkepath.JD211098(1).andromede.MUMPS.mex710 = [dkepath.JD211098(1).andromede.local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.JD211098(1).andromede.MUMPS.mex800 = [dkepath.JD211098(1).andromede.local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.JD211098(1).graphviz.env = '/home/YP105119/bin/';% Graphviz environment variable
-dkepath.JD211098(1).latex.env = '/usr/bin/';% Latex environment variable
-dkepath.JD211098(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+dkepath.JD211098(1).andromede.graphviz.env = '/home/YP105119/bin/';% Graphviz environment variable
+dkepath.JD211098(1).andromede.latex.env = '/usr/bin/';% Latex environment variable
+dkepath.JD211098(1).andromede.imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+%
+% ---------------------------- saturne -------------------------------
+%
+dkepath.JD211098(1).saturne.local_root = ['/home/JD211098',filesep];%official saturne package repository for collaborators
+dkepath.JD211098(1).saturne.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+dkepath.JD211098(1).saturne.mex705 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
+dkepath.JD211098(1).saturne.compiler_opt.copts = '';
+dkepath.JD211098(1).saturne.compiler_opt.fopts.mex705 = ' -largeArrayDims';
+dkepath.JD211098(1).saturne.compiler_opt.helmex.mex705 = [' -L',dkepath.JD211098(1).saturne.local_root,'lib -lf95 -lgcc -llapack -lblas'];% -ltmglib Optional argument for helmex compilation
+%
+dkepath.JD211098(1).saturne.MUMPS.mex705 = [dkepath.JD211098(1).saturne.local_root,'src/MUMPS_4.7.3/MATLAB_7.5'];%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.JD211098(1).saturne.graphviz.env = '';% Graphviz environment variable
+dkepath.JD211098(1).saturne.latex.env = '/usr/bin/';% Latex environment variable
+dkepath.JD211098(1).saturne.imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+%
+% ---------------------------- altair -------------------------------
+%
+dkepath.JD211098(1).altair.local_root = '/home/JD211098/altair/';%official saturne package repository for collaborators
+dkepath.JD211098(1).altair.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+dkepath.JD211098(1).altair.mex707 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/altair/MATLAB77/'];
+dkepath.JD211098(1).altair.compiler_opt.copts = '';
+dkepath.JD211098(1).altair.compiler_opt.fopts.mex707 = ' -largeArrayDims FC="gfortran"';
+dkepath.JD211098(1).altair.compiler_opt.helmex = NaN;% -ltmglib Optional argument for helmex compilation
+%
+dkepath.JD211098(1).altair.MUMPS.mex707 = [dkepath.JD211098(1).altair.local_root,'src/MUMPS_4.7.3/MATLAB_7.7'];%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.JD211098(1).altair.graphviz.env = '';% Graphviz environment variable
+dkepath.JD211098(1).altair.latex.env = '/usr/bin/';% Latex environment variable
+dkepath.JD211098(1).altair.imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
@@ -74,24 +105,41 @@ dkepath.JD211098(1).remote(5).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 %------------------------------------ Profile number 1, YP105119 Peysson ------------------------------------
 %
 dkepath.YP105119(1).luke_root = [pwd,filesep];
-dkepath.YP105119(1).local_root = '/home/JD211098/Packages/andromede/';
-dkepath.YP105119(1).temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.YP105119(1).mex710 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB710/'];
-dkepath.YP105119(1).mex800 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB800/'];
+% ---------------------------- andromede -------------------------------
 %
-dkepath.YP105119(1).compiler_opt = dkepath.JD211098(1).compiler_opt;
+dkepath.YP105119(1).andromede.local_root = '/home/JD211098/Packages/andromede/';
+dkepath.YP105119(1).andromede.temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).andromede.mex710 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB710/'];
+dkepath.YP105119(1).andromede.mex800 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB800/'];
 %
-dkepath.YP105119(1).MUMPS.mex710 = [dkepath.YP105119(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).MUMPS.mex800 = [dkepath.YP105119(1).local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).andromede.compiler_opt = dkepath.JD211098(1).andromede.compiler_opt;
+%
+dkepath.YP105119(1).andromede.MUMPS.mex710 = [dkepath.YP105119(1).andromede.local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).andromede.MUMPS.mex800 = [dkepath.YP105119(1).andromede.local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.YP105119(1).andromede.graphviz.env = '/home/YP105119/bin/';% Graphviz environment variable
+dkepath.YP105119(1).andromede.latex.env = '/usr/bin/';% Latex environment variable
+dkepath.YP105119(1).andromede.imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+%
+% ---------------------------- saturne -------------------------------
+%
+dkepath.YP105119(1).saturne.local_root = ['/home/YP105119',filesep];%official saturne package repository for collaborators
+dkepath.YP105119(1).saturne.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+dkepath.YP105119(1).saturne.mex705 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
+dkepath.YP105119(1).saturne.compiler_opt.copts = '';
+dkepath.YP105119(1).saturne.compiler_opt.fopts.mex705 = ' -largeArrayDims';
+dkepath.YP105119(1).saturne.compiler_opt.helmex.mex705 = [' -L',dkepath.JD211098(1).saturne.local_root,'lib -lf95 -lgcc -llapack -lblas'];% -ltmglib Optional argument for helmex compilation
+%
+dkepath.YP105119(1).saturne.MUMPS.mex705 = dkepath.JD211098(1).saturne.MUMPS.mex705;%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
-dkepath.YP105119(1).graphviz.env = '/home/YP105119/bin/';% Graphviz environment variable
-dkepath.YP105119(1).latex.env = '/usr/bin/';% Latex environment variable
-dkepath.YP105119(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+dkepath.YP105119(1).saturne.graphviz.env = '';% Graphviz environment variable
+dkepath.YP105119(1).saturne.latex.env = '/usr/bin/';% Latex environment variable
+dkepath.YP105119(1).saturne.imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
@@ -125,24 +173,23 @@ dkepath.YP105119(1).remote(5).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote
 %------------------------------------ Profile number 1, EN232106 Nilsson ------------------------------------
 %
 dkepath.EN232106(1).luke_root = [pwd,filesep];
-dkepath.EN232106(1).local_root = '/home/JD211098/Packages/andromede/';
-dkepath.EN232106(1).temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.EN232106(1).mex710 = [dkepath.EN232106(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB710/'];
-dkepath.EN232106(1).mex800 = [dkepath.EN232106(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB800/'];
+% ---------------------------- andromede -------------------------------
 %
-dkepath.EN232106(1).compiler_opt = dkepath.JD211098(1).compiler_opt;
+dkepath.EN232106(1).andromede.local_root = '/home/JD211098/Packages/andromede/';
+dkepath.EN232106(1).andromede.temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-%Where MUMPS matrix solver is stored (MEX function)
+dkepath.EN232106(1).andromede.mex710 = [dkepath.EN232106(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB710/'];
+dkepath.EN232106(1).andromede.mex800 = [dkepath.EN232106(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB800/'];
 %
-dkepath.EN232106(1).MUMPS.mex710 = [dkepath.EN232106(1).local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.EN232106(1).MUMPS.mex800 = [dkepath.EN232106(1).local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.EN232106(1).andromede.compiler_opt = dkepath.JD211098(1).andromede.compiler_opt;
 %
-% LUKE documentation
+dkepath.EN232106(1).andromede.MUMPS.mex710 = [dkepath.EN232106(1).andromede.local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.EN232106(1).andromede.MUMPS.mex800 = [dkepath.EN232106(1).andromede.local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.EN232106(1).graphviz.env = '/home/YP105119/bin/';% Graphviz environment variable
-dkepath.EN232106(1).latex.env = '/usr/bin/';% Latex environment variable
-dkepath.EN232106(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+dkepath.EN232106(1).andromede.graphviz.env = '/home/YP105119/bin/';% Graphviz environment variable
+dkepath.EN232106(1).andromede.latex.env = '/usr/bin/';% Latex environment variable
+dkepath.EN232106(1).andromede.imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
