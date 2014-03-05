@@ -41,10 +41,19 @@ for ifile = 1:npathfiles,
     %
     disp(['Path from profile ',PathFileNames{ifile},'.m successfully loaded'])
     %
-    if any(strcmp(lochostname,dkepaths{ifile}.hostname)),% local cluster,
-        %
-        flag(ifile) = true;
-        %
+    if ~iscell(dkepaths{ifile}.hostname),% case of single hostname in path profile
+        hostnames = {dkepaths{ifile}.hostname};
+    else% multiple profiles on the same filesystem
+        hostnames = dkepaths{ifile}.hostname;
+    end
+    %
+    for ihost = 1:length(hostnames),
+        if any(strfind(lochostname,hostnames{ihost})),% local cluster,
+            %
+            flag(ifile) = true;
+            break
+            %
+        end
     end
     %
 end

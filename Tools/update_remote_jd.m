@@ -21,7 +21,7 @@ for irem = 1:length(dkepath.remote),
         remote(nrem) = feval(remotestr,dkepath.remote(irem).schedulername,dkepath.remote(irem).profilename); 
         remote(nrem).env.luke_root = dkepath.remote(irem).luke_root;
         %
-        if strcmp(lochostname,remote(nrem).hostname),
+        if any(strfind(lochostname,remote(nrem).hostname)),
             remote(nrem).host = '';
         end
         %

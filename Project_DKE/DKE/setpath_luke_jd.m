@@ -40,7 +40,14 @@ end
 %
 if isfield(dkepath,'hostname') && iscell(dkepath.hostname),
     %
-    isel = find(strcmp(dkepath.hostname,hostname_jd));
+    nhosts = length(dkepath.hostname);
+    flag = false(1,nhosts);
+    for ihost = 1:nhosts,
+        if any(strfind(lochostname,dkepath.hostname{ihost})),% local cluster,
+            flag(ihost) = true;
+        end
+    end
+    isel = find(flag);
     %
     if isempty(isel),
         error('The local hostname could not be identified in dkepath')
