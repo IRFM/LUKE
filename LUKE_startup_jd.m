@@ -147,8 +147,8 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
     disp('%');
     disp('addpath(matremote_path);% MatRemote toolbox');
     disp('addpath([matremote_path,filesep,''Profiles'']);% remote profiles');
+    disp('addpath([matremote_path,filesep,''Bridge'']);% remote profiles');
     disp('addpath(mattools_path);% MatTools toolbox');
-    disp('%');
     disp('%');
     disp('lukeversions = {...');
     for ifile = 1:nLUKEpaths,
@@ -156,7 +156,17 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
     end
     disp('   };');
     disp('%');
-    disp('select_LUKE_jd(lukeversions)');
+    disp('setappdata(0,''lukeversions'',lukeversions)');
+    disp('%');
+    disp('if strcmp(getenv(''select_LUKE''),''yes''),');
+    disp('    %');
+    disp('    select_LUKE_jd(lukeversions)');
+    disp('    %');
+    disp('else');
+    disp('    %');
+    disp('    disp(''To set LUKE paths type "select_LUKE_jd;"'')');
+    disp('    %');
+    disp('end');
     disp('%');
     %
     diary off
