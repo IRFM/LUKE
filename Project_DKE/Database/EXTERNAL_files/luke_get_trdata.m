@@ -144,7 +144,7 @@ for i=1:length(a.diag)
             d.ne.shot=shot;
             if(dtres_bt(0.016,t,dtres,dtreslim))
                 d.ne.rawdiag={'FIR','LIUQE'};
-                firpar=gti_gds(shot,t,'FIR','Flux1D','MinFishReg','Unique','Unique',0);
+                firpar=gti_gds(shot,t([1 end]),'FIR','Flux1D','MinFishReg','Unique','Unique',0);
                 firpar.diag.frequency.filter.hlb='no';
                 firout=gti_expert(firpar);
                 d.ne.source='GTI';
@@ -217,6 +217,8 @@ for i=1:length(a.diag)
             mdsopen(shot);
             praw=tdi('\results::toray.input:p_gyro');
             mdsclose;
+            % get the polarisation
+            [ox_xfrac,ox_times,~]=ecpol_ox_fraction(shot,0,gti_chdtres([],[],t,dtres,dtreslim));
             for j=1:length(isel)    % do a loop over all selected launchers
                 k=isel(j);
                 % get power: independent of harmonic, kW->W
@@ -254,6 +256,10 @@ for i=1:length(a.diag)
                     ang.phi=allangdata(2,:);
                     ang.theta_eff=-atan(ang.theta).*cos(ang.phi);
                     ang.phi_eff=atan(tan(ang.theta).*sin(ang.phi))./sqrt(1+tan(ang.theta).^2.*cos(ang.phi).^2);
+                    % ox fraction data
+%                   put into d.ecrh.xfrac{k}.time and .data
+                    d.ecrh.xfrac{k}.time=ox_times;
+                    d.ecrh.xfrac{k}.data=ox_xfrac(k,:);
                 else    % X3 launchers 7-9
                     % constant data (from collect_parameters_for_luke.m)
                     ang.freq=118.e9;
