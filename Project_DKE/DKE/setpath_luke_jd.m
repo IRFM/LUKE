@@ -40,6 +40,7 @@ end
 %
 if isfield(dkepath,'hostname') && iscell(dkepath.hostname),
     %
+    lochostname = hostname_jd;
     nhosts = length(dkepath.hostname);
     flag = false(1,nhosts);
     for ihost = 1:nhosts,
