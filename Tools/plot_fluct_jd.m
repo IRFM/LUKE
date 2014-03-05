@@ -97,6 +97,9 @@ else
     %
 end
     %
+    colors = repmat({'r';'b';'k';[0,0.5,0]},[1,4]);
+    markers = repmat({'+','o','s','d'},[4,1]);
+    %
     yNpar = abs(yNpar);
     %yNpar(real(yNpar) == 0) = imag(yNpar(real(yNpar) == 0));
     %
@@ -171,9 +174,6 @@ end
         ylab = 'N_{||0}';
         tit = '';
         %
-        colors = repmat({'r';'b';'k';[0,0.5,0]},[1,4]);
-        markers = repmat({'+','o','s','d'},[4,1]);
-        %
         yNpar_true = yNpar;
         yNpar_false = yNpar;
         %
@@ -210,7 +210,7 @@ end
         %
         bar(edges,counts,'histc');
         %
-        xlab = 'N_{||0}';
+        xlab = 'N_{||}';
         ylim = NaN;
         ylab = 'dPdN_{||} (norm.)';
         tit = '';
@@ -307,6 +307,75 @@ end
                 graph1D_jd(xN,xdPdN,0,0,'N_{||}','dPdN_{||} (norm.)','',leg,xlim,NaN,'-','none','r',2,20+14i,gca,0.9,0.7,0.7); 
                 %
             end
+            %
+        end
+        %
+    end
+    %
+    if isfield(opt,'itcomp') && length(opt.itcomp) > 1,
+        %
+        figure(1001),clf
+        %
+        locxlim = [0,1];
+        xlab = 'r/a';
+        ylim = 1.1*[min(min([txJ(opt.itcomp,:);txP(opt.itcomp,:)])),max(max([txJ(opt.itcomp,:);txP(opt.itcomp,:)]))];
+        ylab = '';
+        tit = '';
+        %
+        nitcomp = length(opt.itcomp);
+        locleg = cell(1,2*nitcomp);
+        for locit = 1:nitcomp-1,
+            locleg{1+2*(locit - 1)} = ['it. # ',num2str(opt.itcomp(locit)),': J (MA/m^2)'];
+            locleg{2+2*(locit - 1)} = ['it. # ',num2str(opt.itcomp(locit)),': P (MW/m^3)'];
+            graph1D_jd(xrho,txJ(opt.itcomp(locit),:),0,0,'','','',NaN,locxlim,ylim,'-','+',colors{locit},2,20+14i);
+            graph1D_jd(xrho,txP(opt.itcomp(locit),:),0,0,'','','',NaN,locxlim,ylim,'-','o',colors{locit},2,20+14i);
+        end
+        locleg{1+2*(nitcomp - 1)} = ['it. # ',num2str(opt.itcomp(nitcomp)),': J (MA/m^2)'];
+        locleg{2+2*(nitcomp - 1)} = ['it. # ',num2str(opt.itcomp(nitcomp)),': P (MW/m^3)'];
+        graph1D_jd(xrho,txJ(opt.itcomp(nitcomp),:),0,0,'','','',NaN,locxlim,ylim,'-','+',colors{nitcomp},2,20+14i);
+        graph1D_jd(xrho,txP(opt.itcomp(nitcomp),:),0,0,xlab,ylab,tit,locleg,locxlim,ylim,'-','o',colors{nitcomp},2,20+14i,gca,0.9,0.7,0.7);
+        %
+        %
+        if opt.iy > 0,
+            %
+            xdPdN0comp = NaN(nitcomp,nx);
+            for locit = 1:nitcomp,
+                xdPdN0comp(locit,:) = spec0(yNpar(opt.itcomp(locit),opt.iy),ydNpar(opt.itcomp(locit),opt.iy),xN);
+            end
+            xdPdN0comp = xdPdN0comp*diff(xlim)/nbins*fac0;
+            counts = histc(yNpar(:,opt.iy),edges)/nt;
+            %
+            figure(1002),clf
+            %
+            xlab = 'N_{||}';
+            ylim = NaN;
+            ylab = 'dPdN_{||} (norm.)';
+            tit = '';
+            %
+            locleg = cell(1,nitcomp);
+            for locit = 1:nitcomp-1,
+                locleg{locit} = ['it. # ',num2str(opt.itcomp(locit))];
+                graph1D_jd(xN,xdPdN0comp(locit,:),0,0,'','','',NaN,xlim,ylim,'-','none',colors{locit},2,20+14i); 
+            end
+            locleg{nitcomp} = ['it. # ',num2str(opt.itcomp(nitcomp))];
+            graph1D_jd(xN,xdPdN0comp(nitcomp,:),0,0,xlab,ylab,tit,locleg,xlim,ylim,'-','none',colors{nitcomp},2,20+14i,gca,0.9,0.7,0.7); 
+            %
+            hold on
+            bar(edges,counts,0.6,'histc');
+            hold off
+            %
+            figure(1003),clf
+            %
+            xlab = 'N_{||}';
+            ylim = NaN;
+            ylab = 'counts';
+            tit = '';
+            %
+            graph1D_jd(NaN,NaN,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,20+14i,gca,0.9,0.7,0.7); 
+            %
+            hold on
+            bar(edges,counts*nt,0.6,'histc');
+            hold off
             %
         end
         %
