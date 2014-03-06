@@ -16,47 +16,7 @@ dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
 %
-dkepath.default = 'bjding';
-%
-%--------------------------------------------------------------------------------------------------------
-%------------------------------------ Profile number 1, Bojiang Ding ------------------------------------
-%--------------------------------------------------------------------------------------------------------
-%
-dkepath.bjding(1).luke_root = [pwd,filesep];
-dkepath.bjding(1).local_root = '/home/PEYSSON/Packages/';
-dkepath.bjding(1).temppathroot = '/scratch/bjding/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-%
-dkepath.bjding(1).localdatapath = dkepath.bjding(1).temppathroot;
-%
-dkepath.bjding(1).mex800 = [dkepath.bjding(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB800/'];
-%
-dkepath.bjding(1).compiler_opt.copts.mex800 = '';
-dkepath.bjding(1).compiler_opt.fopts.mex800 = 'FC=''gfortran''';
-dkepath.bjding(1).compiler_opt.helmex.mex800 = NaN;% Optional argument for helmex compilation
-%
-%Where MUMPS matrix solver is stored (MEX function)
-%
-dkepath.bjding(1).MUMPS.mex800 = [dkepath.bjding(1).local_root,'MUMPS_4.10.0/MATLAB800'];
-%
-% LUKE documentation
-%
-dkepath.bjding(1).graphviz.env = '/usr/bin/';% Graphviz environment variable
-dkepath.bjding(1).latex.env = '/usr/bin/';% Latex environment variable
-dkepath.bjding(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
-%
-%--------------------------- Distributed computing -----------------------------
-%
-%dkepath.bjding(1).configurations.localconfig = '/local/mdce/configurations/localconfig.mat';
-%dkepath.bjding(1).configurations.pbsproconfig = '/local/mdce/configurations/pbsproconfig.mat';
-%
-%--------------------------- Remote computing -----------------------------
-%
-% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
-%
-dkepath.bjding(1).remote(1).remoteid = 'ASIPP_SHENMA';
-dkepath.bjding(1).remote(1).schedulername = 'torque';
-dkepath.bjding(1).remote(1).profilename = 'bojiang';
-dkepath.bjding(1).remote(1).luke_root = dkepath.bjding(1).luke_root;% local cluster
+dkepath.default = 'PEYSSON';
 %
 %-------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
