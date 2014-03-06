@@ -20,7 +20,7 @@ function flag = check_remote_yp(dkepath,debugmode)
 if nargin < 2,
     debugmode = 0;
 end
-if nargin < 1,
+if nargin < 1 || isempty(dkepath),
     dkepath = load_structures_yp('dkepath','','');
 end
 %
