@@ -1,11 +1,6 @@
-function [itm] = path_EFDA_ITM(luke_ref)
+function dkepath = path_EFDA_ITM
 %
 % path definitions for EFDA ITM cluster
-%
-%	Input:
-%
-%       - luke_ref: for CVS tagged LUKE version [1,m]
-%         (default: 'LUKE')
 %
 %	Output:
 %
@@ -15,58 +10,67 @@ function [itm] = path_EFDA_ITM(luke_ref)
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-if nargin == 0, luke_ref = 'LUKE';end
-%
-[dummy,matlabversion,matlabrelease] = LUKEversion_jd;
-%
-itm.hostname = 'itm.rzg.mpg.de';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
-itm.machine = 'itm';
-itm.computer = computer;%machine type and supported OS
-%
-% Selected user profile (structure hostname.usernames(path_profile).xxx)
-%
-itm.path_profile = 1;
+dkepath.machine = 'itm';
+dkepath.hostname = 'itm.rzg.mpg.de';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
+dkepath.computer = computer;%machine type and supported OS
 %
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-itm.yvesp(1).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
-itm.yvesp(1).local_root = ['/pfs/home/yvesp/public/'];
-itm.yvesp(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.yvesp(1).luke_root = [pwd,filesep];
+dkepath.yvesp(1).local_root = '/pfs/home/yvesp/public/';
+dkepath.yvesp(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-itm.yvesp(1).startup{1} = sprintf('%s\n','[lukeversion,matlabversion,matlabrelease] = LUKEversion_jd;');
+dkepath.yvesp(1).startup{1} = sprintf('%s\n','[lukeversion,matlabversion,matlabrelease] = LUKEversion_jd;');
 %
-%itm.yvesp(1).speclibpath.xml_io_tools = [itm.yvesp(1).luke_root,'Project_DKE/Modules/ITM/xml_io_tools/'];%Other machine specific libraries (XML I/O)
-itm.yvesp(1).speclibpath.ual = getenv('UAL');%UAL path in the ITM gateway. See the .bashrc file on the gateway to have the correct UAL version (must be consistent)
+%dkepath.yvesp(1).speclibpath.xml_io_tools = [dkepath.yvesp(1).luke_root,'Project_DKE/Modules/ITM/xml_io_tools/'];%Other machine specific libraries (XML I/O)
+dkepath.yvesp(1).speclibpath.ual = getenv('UAL');%UAL path in the ITM gateway. See the .bashrc file on the gateway to have the correct UAL version (must be consistent)
 %
-itm.yvesp(1).mex800 = [itm.yvesp(1).luke_root,'Project_DKE/MEX/Bin/efda/MATLAB800/'];
+dkepath.yvesp(1).mex800 = [dkepath.yvesp(1).luke_root,'Project_DKE/MEX/Bin/efda/MATLAB800/'];
 %
-itm.yvesp(1).compiler_opt.copts = '';
-itm.yvesp(1).compiler_opt.helmex = NaN;%'  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-itm.yvesp(1).compiler_opt.fopts = ' -largeArrayDims';
+dkepath.yvesp(1).compiler_opt.copts = '';
+dkepath.yvesp(1).compiler_opt.helmex = NaN;%'  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvesp(1).compiler_opt.fopts = ' -largeArrayDims';
 %
-itm.yvesp(1).MUMPS.mex800 = ['/afs/ipp/itm/switm/lib/mumps/4.10.0_serial/matlab/R2012b/amd64_intel_12/'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yvesp(1).MUMPS.mex800 = '/afs/ipp/itm/switm/lib/mumps/4.10.0_serial/matlab/R2012b/amd64_intel_12/';%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
-itm.yvesp(1).graphviz.env = '/afs/@cell/common/soft/doxygen/@sys/graphviz-2.28/bin/';% Graphviz environment variable
-itm.yvesp(1).latex.env = '/afs/ipp/tok/soft/texlive/2012/@sys/bin/x86_64-linux/';% Latex environment variable
-itm.yvesp(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
-%
-%--------------------------- Distributed computing -----------------------------
-%
+dkepath.yvesp(1).graphviz.env = '/afs/@cell/common/soft/doxygen/@sys/graphviz-2.28/bin/';% Graphviz environment variable
+dkepath.yvesp(1).latex.env = '/afs/ipp/tok/soft/texlive/2012/@sys/bin/x86_64-linux/';% Latex environment variable
+dkepath.yvesp(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
-itm.yvesp(1).remote(1) = remote_EFDA_ITM('sun','yves','yvesp');
-itm.yvesp(1).remote(1).luke_root = itm.yvesp(1).luke_root;
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-itm.yvesp(1).remote(2) = remote_ASIPP_SHENMA('torque','yves','yvesp');
-itm.yvesp(1).remote(3) = remote_macpro_YVES_PEYSSON('condor','yves','yvesp');
-itm.yvesp(1).remote(4) = remote_macpro_YVES_PEYSSON('xgrid','yves','yvesp');
-
-
+dkepath.yvesp(1).remote(1).remoteid = 'EFDA_ITM';
+dkepath.yvesp(1).remote(1).schedulername = 'condor';
+dkepath.yvesp(1).remote(1).profilename = 'yves';
+dkepath.yvesp(1).remote(1).luke_root = dkepath.yvesp(1).luke_root;
+%
+dkepath.yvesp(1).remote(2).remoteid = 'macpro_YVES_PEYSSON';
+dkepath.yvesp(1).remote(2).schedulername = 'condor';
+dkepath.yvesp(1).remote(2).profilename = 'yves';
+dkepath.yvesp(1).remote(2).luke_root = '/Users/yvespeysson/Projets/LUKE/';
+%
+dkepath.yvesp(1).remote(3) = dkepath.yvesp(1).remote(2);
+dkepath.yvesp(1).remote(3).schedulername = 'xgrid';
+%
+dkepath.yvesp(1).remote(4) = dkepath.yvesp(1).remote(2);
+dkepath.yvesp(1).remote(4).schedulername = 'direct';
+%
+dkepath.yvesp(1).remote(5).remoteid = 'CEA_ANDROMEDE';
+dkepath.yvesp(1).remote(5).schedulername = 'pbs';
+dkepath.yvesp(1).remote(5).profilename = 'YP105119';
+dkepath.yvesp(1).remote(5).luke_root = '/home/YP105119/LUKE/';
+%
+dkepath.yvesp(1).remote(6).remoteid = 'ASIPP_SHENMA';
+dkepath.yvesp(1).remote(6).schedulername = 'torque';
+dkepath.yvesp(1).remote(6).profilename = 'yves';
+dkepath.yvesp(1).remote(6).luke_root = '/home/PEYSSON/LUKE/';
+%
 
 
 
