@@ -26,9 +26,9 @@ dkepath.yves(1).luke_root = [pwd,filesep];
 dkepath.yves(1).local_root = [getenv('HOME'),'/Projets/'];
 dkepath.yves(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.yves(1).startup{1} = [];
+%%%dkepath.yves(1).startup{1} = [];
 %
-dkepath.yves(1).cshrc{1} = [];
+%%%dkepath.yves(1).cshrc{1} = [];
 %
 dkepath.yves(1).mex801 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB801','/'];
 %
