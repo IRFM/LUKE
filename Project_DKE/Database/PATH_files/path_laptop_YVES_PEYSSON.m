@@ -1,4 +1,4 @@
-function [dkepath] = path_laptop_YVES_PEYSSON
+function dkepath = path_laptop_YVES_PEYSSON
 %
 % path definitions for macbook pro 2010 (Core i7 Intel) of Yves Peysson 
 %
@@ -100,6 +100,11 @@ dkepath.yves(1).remote(8).remoteid = 'ASIPP_SHENMA';
 dkepath.yves(1).remote(8).schedulername = 'torque';
 dkepath.yves(1).remote(8).profilename = 'yves';
 dkepath.yves(1).remote(8).luke_root = '/home/PEYSSON/LUKE/';
+%
+dkepath.yves(1).remote(9).remoteid = 'EFDA_ITM';
+dkepath.yves(1).remote(9).schedulername = 'sge';
+dkepath.yves(1).remote(9).profilename = 'yvesp';
+dkepath.yves(1).remote(9).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
 %
 
 
