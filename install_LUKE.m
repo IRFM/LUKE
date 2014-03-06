@@ -25,6 +25,7 @@ if strcmp(opt,'y')
     addpath(MatToolspath)
     addpath(MatRemotepath)
     addpath([MatRemotepath,filesep,'Profiles'])    
+    addpath([MatRemotepath,filesep,'Bridge'])    
 end
 %
 % test access to MatRemote and MatTools toolboxes
