@@ -57,16 +57,33 @@ end
 %
 % test connection and identify local profiles
 %
-[dkepath.remote,profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false);
+[dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false);
+%
+nrem = length(dkepath.remote);
 %
 disp (' ')
 info_dke_yp(2,'List of compatible remote profiles available :')
 disp(' ')
 %
-for irem = 1:length(dkepath.remote),
-    info_dke_yp(4,['#',num2str(irem),' : ',profilestr{irem}]);
+for irem = 1:nrem,
+    info_dke_yp(4,['#',num2str(irem),' : ',dkepath.profilestr{irem}]);
 end
 disp(' ')
+%
+dkepath.remprofiles = cell(1,1 + nrem);
+dkepath.distprofiles = cell(1,3 + nrem);
+%
+dkepath.remprofiles{1} = 'Local interactive calculation';
+%
+dkepath.distprofiles{1} = 'Sequential';
+dkepath.distprofiles{2} = 'MDCE Job scheduler';
+dkepath.distprofiles{3} = 'MDCE parfor';
+%
+for irem = 1:nrem,
+    dkepath.remprofiles{irem+1} = dkepath.profilestr{irem};
+    dkepath.distprofiles{irem+3} = ['batch jobs on ',dkepath.profilestr{irem}];
+end
+
 
 
         

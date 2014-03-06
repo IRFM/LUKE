@@ -308,23 +308,35 @@ if w_opt == 0; % C3PO Calculation
     sd = pwd;
     cd(workdir);
     %
-    if length(rayinit.yrho0) > 1,
-        disp(['-----> There are ',int2str(length(rayinit.yrho0)),' rays to calculate. It may be valuable to consider parallel and remote computing for time saving.']);
+    if length(rayinit.yrho0) > 1,      
+        disp(['-----> There are ',int2str(length(rayinit.yrho0)),' rays to calculate.']);
         %
-        wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = input_dke_yp(['Distributed computing mode: (0) disabled, (1) Matlab toolbox, (2) LUKE toolbox, (3) parfor. (+i enables GPU calculations for all modes)'],0,[0;3],'');
+        wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.remnum = ...
+            iselect_jd(dkepath.remprofiles,'Remote calculation mode (mdce_remote): ',opt_gui,select.style,1) - 1;
         %
-        update_remote_jd(dkepath);
+        if wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.remnum == 0,%local distribution
+            flag_mdce = 1:length(dkepath.distprofiles);% all mdce modes
+        else
+            flag_mdce = 1:3;% remcomputing within mdce_remote disabled
+        end        
         %
-        wavestruct.C3POparam.mdce_remnum = input_dke_yp(['Remote calculations: (0) disabled:local, (1-',int2str(length(dkepath.remote)),') remote computing'],0,[0;length(dkepath.remote)],'');
+        wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = ...
+            iselect_jd(dkepath.distprofiles(flag_mdce),'Distributed computing mode : ',opt_gui,select.style,1) - 1;
+        %
+        if wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode > 2,
+            wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = 2 - wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode;
+        end
         %
     end
     %   
-    tstart = tic;wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam);telapsed = toc(tstart);    
+    tstart = tic;
+    wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam);
+    telapsed = toc(tstart);    
     %
     disp(' ');
     disp(['The calculation of ',int2str(length(rayinit.yrho0)),' rays has been done in ',num2str(telapsed),' (s).']);
     disp(' ');
-    %i
+    %
     cd(sd);
     %
     wave.info.type = 'RT';
