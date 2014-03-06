@@ -252,7 +252,16 @@ function foundpaths = findandselect_jd(pathname,pathtype,multi,optlocal,message)
     [res,foundpathstr] = unix(['find ',getenv('HOME'),' -type ',pathtype,' -name "',pathname,'"']);
     %
     if res ~= 0,
-        [res,foundpathstr] = unix(['find ',getenv('HOME'),' -type ',pathtype,' -name "',pathname,'" |& grep -v "Permission denied"']);
+        %
+        [res1,foundpathstr1] = unix(['find ',getenv('HOME'),' -type ',pathtype,' -name "',pathname,'" |& grep -v "Permission denied"']);
+        %
+        if res1 ~= 0
+            ierr = findstr(foundpathstr,'Permission denied');
+            foundpathstr = foundpathstr(ierr(end)+18:end);
+            res = 0;
+        else
+            foundpathstr = foundpathstr1;
+        end
     end
     %
     if res ~= 0,
