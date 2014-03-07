@@ -42,7 +42,7 @@ for irem = 1:nrem,
     disp(' ')
     info_dke_yp(2,['Testing profile : ',profilestr{irem}]);
     %
-    job = matstandardjob_jd('runmat','setpath_luke_jd',[remote(irem).env.luke_root,'Project_DKE/DKE/']);% standard LUKE job
+    job = matstandardjob_jd('runmat');% standard matlab job
     job.debugmode = debugmode; % to display info and debug
     job.funcopy = 0; % (0) to use function LUKEversion_jd on the remote host within matlab path - TEST REMOTE PATH
     %

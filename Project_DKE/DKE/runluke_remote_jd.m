@@ -1,6 +1,6 @@
 function luke_job = runluke_remote_jd(lukestructs,remote)
 %
-luke_job = matstandardjob_jd('runmat','setpath_luke_jd',[remote.env.luke_root,'Project_DKE/DKE/']);
+luke_job = matstandardjob_jd('runmat');
 %
 mat_input.fun = 'run_lukert';
 mat_input.args_in = lukestructs;

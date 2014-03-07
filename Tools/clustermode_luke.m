@@ -85,7 +85,6 @@ elseif any(mode == -nrem:-1),
         dkecluster.scheduler.mode = 0;%sequential mode enforced     
     else
         dkecluster.scheduler.mode = remote(-mode);
-        dkecluster.scheduler.mode.env.remotepathfnc = [remote(-mode).env.luke_root,'Project_DKE/DKE/setpath_luke_jd'];% (optional, called by remotematrun) matlab function to set the path on the remote machine
     end
 end
 %
@@ -110,8 +109,6 @@ if remnum{1} > 0,
                     disp(['Warning : luke_root not specified in dkepath.remote(',remnum{irem},'). Switching to sequential mode'])
                     dkecluster.scheduler.mode = 0;%sequential mode enforced  
                     dkecluster.scheduler.remote = [];                    
-                else
-                    dkecluster.scheduler.remote{irem}.env.remotepathfnc = [remote(remnum{irem}).env.luke_root,'Project_DKE/DKE/setpath_luke_jd'];% (optional, called by remotematrun) matlab function to set the path on the remote machine
                 end
             end
         else

@@ -98,7 +98,7 @@ if iscell(lukestructs),% remote and/or distributed calculation
                 elseif isfield(lukestructs{ijob},'equil'),
                     disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is sent to remote cluster : ',remote.host])
                     %
-                    lukestandardjob = matstandardjob_jd('runmat','setpath_luke_jd',[remote.env.luke_root,'Project_DKE/DKE/']);
+                    lukestandardjob = matstandardjob_jd('runmat');
                     %
                     if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_memory'),
                         lukestandardjob.memory = lukestructs{ijob}.dkeparam.luke_memory;% requested memory specified in dkeparam
