@@ -35,11 +35,9 @@ for ifile = 1:npathfiles,
     try
         dkepaths{ifile} = feval(PathFileNames{ifile});
     catch err
-        disp(['Warning : path from profile ',PathFileNames{ifile},'.m could not be loaded because of the following error :',err.message]);
+        dkepaths{ifile} = err.message;
         continue
     end
-    %
-    disp(['Path from profile ',PathFileNames{ifile},'.m successfully loaded'])
     %
     if ~iscell(dkepaths{ifile}.hostname),% case of single hostname in path profile
         hostnames = {dkepaths{ifile}.hostname};
@@ -59,7 +57,20 @@ for ifile = 1:npathfiles,
 end
 %
 if ~any(flag),
-    disp('Warning : no local path profile found. Default path profile selected')
+    %
+    disp(' ');
+    disp('Warning : no local path profile found. Here is the list of tested profiles :')
+    disp(' ');
+    %
+    for ifile = 1:npathfiles,
+        if isstruct(dkepaths{ifile}),
+            disp(['Profile from ',PathFileNames{ifile},'.m successfully loaded.'])
+        else
+            disp(['Error loading profile from ',PathFileNames{ifile},'.m : ',dkepaths{ifile}])
+        end
+    end
+    disp(' ');
+    disp('Default path profile selected')
     %
     dkepath = default_path_profile;
 else  
@@ -92,9 +103,12 @@ else
     %
     % select user profile number if applicable
     %
-    if length(dkepath.(username)) > 1,
+    nusers = length(dkepath.(username));
+    if nusers > 1,
         disp(' ');
-        isel = input_dke_yp(['Please select one of the profiles numbers for user : ',username,' (1 => ',num2str(length(dkepath.(username))),') '],1,1:length(dkepath.(username)));
+        disp(['A total of ',num2str(nusers),' profiles are defined for user ',username,' in file ',PathFileNames{ifiles(iflag)},'.m']);
+        disp(' ');
+        isel = input_dke_yp(['Please check the file ',PathFileNames{ifiles(iflag)},'.m and select one of the profiles (1 => ',num2str(nusers),') '],1,1:nusers);
     else
         isel = 1;
     end
@@ -133,7 +147,7 @@ else
     end
     %
     disp(' ');
-    disp(['PATH Profile #',num2str(isel),' for user ',username,' from file ',PathFileNames{ifiles(iflag)},' selected for machine(s) : ',machinestr]);
+    disp(['PATH Profile #',num2str(isel),' for user ',username,' from file ',PathFileNames{ifiles(iflag)},'.m selected for machine(s) : ',machinestr]);
     %
 end
 

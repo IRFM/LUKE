@@ -158,13 +158,21 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
     disp('%');
     disp('setappdata(0,''lukeversions'',lukeversions)');
     disp('%');
+    disp('select_LUKE = getenv(''select_LUKE'');');
+    disp('%');
     disp('if strcmp(getenv(''select_LUKE''),''yes''),');
     disp('    %');
     disp('    select_LUKE_jd(lukeversions)');
     disp('    %');
+    disp('elseif ~isempty(select_LUKE),');
+    disp('    %');
+    disp('    select_LUKE_jd(select_LUKE)');
+    disp('    %');
     disp('else');
     disp('    %');
+    disp('    disp('' '');');
     disp('    disp(''To set LUKE paths type "select_LUKE_jd;"'')');
+    disp('    disp('' '');');
     disp('    %');
     disp('end');
     disp('%');
@@ -251,106 +259,106 @@ function foundpaths = findandselect_jd(pathname,pathtype,multi,optlocal,message)
     %
     [res,foundpathstr] = unix(['find ',getenv('HOME'),' -type ',pathtype,' -name "',pathname,'"']);
     %
-    if res ~= 0,
-        %
-        [res1,foundpathstr1] = unix(['find ',getenv('HOME'),' -type ',pathtype,' -name "',pathname,'" |& grep -v "Permission denied"']);
-        %
-        if res1 ~= 0
-            ierr = findstr(foundpathstr,'Permission denied');
-            foundpathstr = foundpathstr(ierr(end)+18:end);
-            res = 0;
-        else
-            foundpathstr = foundpathstr1;
-        end
+    if foundpathstr(1) == 10,
+        foundpathstr = foundpathstr(2:end);%remove possible initial EoF
     end
     %
-    if res ~= 0,
-        disp(['Error trying to locate ',pathname,' :',foundpathstr])
-        return
-    elseif isempty(foundpathstr),
-        disp([pathname,' not found on the local machine. Please download before starting LUKE install again.'])
-        return
-    else
-        ieof = [0,find(double(foundpathstr) == 10)];
-        nfoundpaths = length(ieof) - 1;
+    ieof = [0,find(foundpathstr == 10)];
+    %
+    nfoundpaths = length(ieof) - 1;
+    %
+    foundpaths = cell(1,nfoundpaths);
+    flag = false(1,nfoundpaths);
+    %
+    for ifoundpath = 1:nfoundpaths,
+        foundpaths{ifoundpath} = foundpathstr(ieof(ifoundpath) + 1:ieof(ifoundpath + 1) - 1);% char -> cell
         %
-        foundpaths = cell(1,nfoundpaths);
-        for ifoundpath = 1:nfoundpaths,
-            foundpaths{ifoundpath} = foundpathstr(ieof(ifoundpath) + 1:ieof(ifoundpath + 1) - 1);% char -> cell
-            %
-            if pathtype == 'f',
+        if pathtype == 'f',% file
+            if exist(foundpaths{ifoundpath},'file'),% to test it is a valid path (reject "Permission denied", etc)
+                flag(ifoundpath) = true;
                 foundpaths{ifoundpath} = fileparts(foundpaths{ifoundpath});
             end
-        end  
+        elseif pathtype == 'd',% directory
+            if exist(foundpaths{ifoundpath},'dir'),% to test it is a valid path (reject "Permission denied", etc)
+                flag(ifoundpath) = true;
+            end            
+        end
+    end  
+    %
+    foundpaths = foundpaths(flag);
+    nfoundpaths = length(foundpaths);
+    %
+    if nfoundpaths == 0,
+        disp([pathname,' not found on the local machine. Please download before starting LUKE install again.'])
+        return
+    end
+    %
+    if nargin > 3 && optlocal,
         %
-        if nargin > 3 && optlocal,
-            %
-            localpath = fileparts(which(mfilename));% local version
-            %
-            foundpaths = [{localpath},foundpaths(~strcmp(foundpaths,localpath))];% move local version to first position in list   
-            %
-        end        
+        localpath = fileparts(which(mfilename));% local version
         %
-        if nfoundpaths > 1,
-            %
-            ipath = [];
-            %
-            while isempty(ipath),
-                if nargin < 4 || isempty(message),
-                    if multi,
-                        message = ['Please select one or more version(s) of ',pathname,' :'];
-                    else
-                        message = ['Please select a version of ',pathname,' :'];
-                    end
-                end
-                %   
-                disp(' ');
-                disp(message)
+        foundpaths = [{localpath},foundpaths(~strcmp(foundpaths,localpath))];% move local version to first position in list   
+        %
+    end        
+    %
+    if nfoundpaths > 1,
+        %
+        ipath = [];
+        %
+        while isempty(ipath),
+            if nargin < 4 || isempty(message),
                 if multi,
-                    disp('---> Enter array of choices (ex : [1,2,4]), or simply return to include entire list');
-                end
-                disp(' ');
-                %
-                for ifoundpath = 1:nfoundpaths,
-                    disp(['[',num2str(ifoundpath),'] : ',foundpaths{ifoundpath}])
-                end
-                %
-                disp(' ');
-                if multi,
-                    selection = input(' ? : ');
+                    message = ['Please select one or more version(s) of ',pathname,' :'];
                 else
-                    selection = input(' ? default : [1] : ');
+                    message = ['Please select a version of ',pathname,' :'];
                 end
-                %
-                if multi,
-                    if isempty(selection),
-                        ipath = 1:nfoundpaths;
-                    elseif isnumeric(selection) && all(sum(repmat(selection(:),[1,nfoundpaths]) == repmat(1:nfoundpaths,[length(selection(:)),1]),2) == ones(length(selection(:)),1)),
-                        ipath = selection(:).';
-                    else
-                        disp('Invalid choice.')
-                    end
-                else
-                    if isempty(selection),
-                        ipath = 1;
-                    elseif isnumeric(selection) && isscalar(selection) && any(selection == 1:nfoundpaths),
-                        ipath = selection;
-                    else
-                        disp('Invalid choice.')
-                    end
-                end                    
+            end
+            %   
+            disp(' ');
+            disp(message)
+            if multi,
+                disp('---> Enter array of choices (ex : [1,2,4]), or simply return to include entire list');
+            end
+            disp(' ');
+            %
+            for ifoundpath = 1:nfoundpaths,
+                disp(['[',num2str(ifoundpath),'] : ',foundpaths{ifoundpath}])
             end
             %
-        else
-            ipath = 1;
+            disp(' ');
+            if multi,
+                selection = input(' ? : ');
+            else
+                selection = input(' ? default : [1] : ');
+            end
+            %
+            if multi,
+                if isempty(selection),
+                    ipath = 1:nfoundpaths;
+                elseif isnumeric(selection) && all(sum(repmat(selection(:),[1,nfoundpaths]) == repmat(1:nfoundpaths,[length(selection(:)),1]),2) == ones(length(selection(:)),1)),
+                    ipath = selection(:).';
+                else
+                    disp('Invalid choice.')
+                end
+            else
+                if isempty(selection),
+                    ipath = 1;
+                elseif isnumeric(selection) && isscalar(selection) && any(selection == 1:nfoundpaths),
+                    ipath = selection;
+                else
+                    disp('Invalid choice.')
+                end
+            end                    
         end
         %
-        if multi,
-            foundpaths = foundpaths(ipath);
-        else
-            foundpaths = foundpaths{ipath};
-        end
-        %
+    else
+        ipath = 1;
+    end
+    %
+    if multi,
+        foundpaths = foundpaths(ipath);
+    else
+        foundpaths = foundpaths{ipath};
     end
     %
 end
