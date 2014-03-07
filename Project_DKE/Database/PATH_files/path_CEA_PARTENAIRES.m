@@ -10,7 +10,6 @@ function dkepath = path_CEA_ANDROMEDE
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-%
 dkepath.machine = {'andromede','saturne','altair'};
 dkepath.hostname = {'andromede','saturne','altair'};
 dkepath.computer = computer;%machine type and supported OS
