@@ -158,15 +158,11 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
     disp('%');
     disp('setappdata(0,''lukeversions'',lukeversions)');
     disp('%');
-    disp('select_LUKE = getenv(''select_LUKE'');');
+    disp('luke_root = getenv(''luke_root'');');
     disp('%');
-    disp('if strcmp(getenv(''select_LUKE''),''yes''),');
+    disp('if ~isempty(luke_root),');
     disp('    %');
-    disp('    select_LUKE_jd(lukeversions)');
-    disp('    %');
-    disp('elseif ~isempty(select_LUKE),');
-    disp('    %');
-    disp('    select_LUKE_jd(select_LUKE)');
+    disp('    select_LUKE_jd(luke_root)');
     disp('    %');
     disp('else');
     disp('    %');
