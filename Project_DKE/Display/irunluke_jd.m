@@ -203,7 +203,17 @@ function irunluke_jd(basestr,signs,opt_gui)
             %
             if ~isempty(luke_job),
                 %
-                statstr.output = ['< LUKE is currently running under job id ',luke_job.id,' >'];
+                if ~isempty(luke_job.id),
+                    idstr = ['id ',luke_job.id];
+                else
+                    idstr = ['timeid ',luke_job.timeid];
+                end
+                if ~isempty(luke_job.remote.host),
+                    hoststr = ['on host ',luke_job.remote.host];
+                else
+                    hoststr = 'on localhost';
+                end
+                statstr.output = ['< LUKE is currently running under job ',idstr,' ',hoststr,' >'];
                 %                
             elseif ~isempty(dkeparam) && ~isempty(equil),
                 %
@@ -1344,7 +1354,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         end
                     end
                     %
-                    if remnum > 0 && input_dke_yp(['-----> There is a pending remote LUKE batch run (time ID: ',luke_job.timeid,') on host ',remote(remnum).host,'.\n',...
+                    if remnum > 0 && input_dke_yp(['-----> There is a pending remote LUKE batch run.\n',...
                         'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
                         %
                         if ~exist(luke_job.localdatapath,'dir'),
@@ -1358,6 +1368,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                         dkepath.remtimout = 0;
                         %
                         lukestructs.job = luke_job;
+                        %
+                        luke_job = '';
                         %
                         % RUN LUKE
                         %
@@ -1387,15 +1399,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                     end
                     dkedisplay.display_mode = display_mode; 
                     %
-                    if ~isfield(dkeparam,'clustermode'),
-                        dkeparam.clustermode.coll_dke_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
-                        dkeparam.clustermode.coll_dke_jd.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-                        dkeparam.clustermode.coll_dke_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
-                        dkeparam.clustermode.eecoll_dke_jd.mode = 0;%MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
-                        dkeparam.clustermode.eecoll_dke_jd.timeout = 200;%MatLab distributed computing environment time out (s). after time out is reached, calculations are performed in a sequential mode on a single processor
-                        dkeparam.clustermode.eecoll_dke_jd.size = 4;%MatLab distributed computing environment cluster size. Can be Inf is all the processors of the cluster are free for distributed calculations
-                    end
-                    %
                     dkeparam.psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
                     %
                     p_opt = input('Option for output figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
@@ -1412,20 +1415,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         id_simul = id_simul_o;
                     end
                     %
-                    if ~isempty(remote),
-                        remstr = 'Option for running LUKE :\n0 : local session \n';
-                        for irem = 1:nrem,
-                            if ~iscell(remote(irem).host),
-                                remstr = [remstr,num2str(irem),' : batch run on ',remote(irem).host,':',remote(irem).luke_root,'\n'];
-                            else
-                                remstr = [remstr,num2str(irem),' : batch run on ',remote(irem).host{1},':',remote(irem).luke_root,'\n'];
-                            end                            
-                        end
-                        %
-                        remnum = input_dke_yp(remstr,0,0:nrem);
-                    else
-                        remnum = 0;
-                    end
+                    remnum = iselect_jd(dkepath.remprofiles,'Where do you want to run LUKE ?',opt_gui,struct,1) - 1;
                     %
                     if remnum > 0,
                         dkepath.remtimout = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes). Enter 0 to return and check later [0]',0);
