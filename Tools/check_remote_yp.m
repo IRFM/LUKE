@@ -1,4 +1,4 @@
-function flag = check_remote_yp(dkepath,debugmode)
+function flag = check_remote_yp(dkepath,debugmode,bridge_enforce)
 %
 %	Check if remote links are available and functionning
 %
@@ -7,6 +7,11 @@ function flag = check_remote_yp(dkepath,debugmode)
 %       - dkepath: path structure with remote profiles
 %         (default: if no input structure or empty, dkepath is automatically loaded from PATH_LOCAL.mat)
 %       - debugmode: display details   
+%       - bridge_enforce : [NaN, empty, 0 or 1] if 1, provides step by step information, and save diary file in remote job folder 
+%           o NaN : (default) use value from remote.bridge_enforce
+%           o []  : tests both modes and give priority to ssh key pair
+%           o 0   : tests only ssh key pair,
+%           o 1   : tests only bridge mode
 %
 %	Output:
 %
@@ -17,6 +22,9 @@ function flag = check_remote_yp(dkepath,debugmode)
 %
 % by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
+if nargin < 3,
+    bridge_enforce = NaN;
+end
 if nargin < 2,
     debugmode = 0;
 end
@@ -29,7 +37,7 @@ end
 disp(' ')
 info_dke_yp(2,'Testing remote connection for dkepath.remote profiles');
 %
-[remote,profilestr] = load_remoteprofiles_jd(dkepath.remote,true,false,NaN,NaN,false,false);
+[remote,profilestr] = load_remoteprofiles_jd(dkepath.remote,true,false,NaN,NaN,false,false,bridge_enforce);
 %
 nrem = length(remote);
 %
