@@ -21,18 +21,3 @@ save(pathfile,'dkepath');
 disp('------------------------------------------------------');
 info_dke_yp(2,['The dkepath structure is saved in ',pathfile],'','Green');
 %
-%update startup.m file with parameters in dkepath
-%
-if isfield(dkepath,'startup'),
-    if ~isempty(dkepath.startup),
-        LUKE_startup_jd(dkepath.startup,'',1);%update startup.m 
-    end
-end
-%
-%update .cshrc.perso file with parameters in dkepath
-%
-if isfield(dkepath,'cshrc'),
-    if ~isempty(dkepath.cshrc),
-        LUKE_cshrc_yp(dkepath.cshrc);%update .cshrc.perso file if a .cshrc file exists in the session
-    end
-end
