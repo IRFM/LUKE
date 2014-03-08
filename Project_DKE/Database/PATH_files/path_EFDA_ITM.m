@@ -22,8 +22,6 @@ dkepath.yvesp(1).luke_root = [pwd,filesep];
 dkepath.yvesp(1).local_root = '/pfs/home/yvesp/public/';
 dkepath.yvesp(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.yvesp(1).startup{1} = sprintf('%s\n','[lukeversion,matlabversion,matlabrelease] = LUKEversion_jd;');
-%
 %dkepath.yvesp(1).speclibpath.xml_io_tools = [dkepath.yvesp(1).luke_root,'Project_DKE/Modules/ITM/xml_io_tools/'];%Other machine specific libraries (XML I/O)
 dkepath.yvesp(1).speclibpath.ual = getenv('UAL');%UAL path in the ITM gateway. See the .bashrc file on the gateway to have the correct UAL version (must be consistent)
 %
