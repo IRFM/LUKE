@@ -1,17 +1,21 @@
-function flag = check_remote_yp(dkepath,debugmode,bridge_enforce)
+function flag = check_remote_yp(dkepath,debugmode,bridge_enforce,remlist)
 %
 %	Check if remote links are available and functionning
 %
 %	Input:
 %
 %       - dkepath: path structure with remote profiles
-%         (default: if no input structure or empty, dkepath is automatically loaded from PATH_LOCAL.mat)
+%           (default: if no input structure or empty, dkepath is automatically loaded from LUKE_PATH.mat
 %       - debugmode: display details   
 %       - bridge_enforce : [NaN, empty, 0 or 1] if 1, provides step by step information, and save diary file in remote job folder 
 %           o NaN : (default) use value from remote.bridge_enforce
 %           o []  : tests both modes and give priority to ssh key pair
 %           o 0   : tests only ssh key pair,
 %           o 1   : tests only bridge mode
+%       - remlist : list of profiles indices to be tested
+%           o NaN : (default) test all profiles
+%           o []  : user-prompt profile list
+%           o [1,3...] : tests specified profiles
 %
 %	Output:
 %
@@ -28,33 +32,39 @@ end
 if nargin < 2,
     debugmode = 0;
 end
-if nargin < 1 || isempty(dkepath),
-    dkepath = load_structures_yp('dkepath','','');
+if nargin < 1,
+    dkepath = '';
 end
+%
+dkepath = setpath_luke_jd(dkepath,bridge_enforce);
 %
 % test connection and identify local profiles
 %
 disp(' ')
 info_dke_yp(2,'Testing remote connection for dkepath.remote profiles');
 %
-[remote,profilestr] = load_remoteprofiles_jd(dkepath.remote,true,false,NaN,NaN,false,false,bridge_enforce);
-%
-nrem = length(remote);
+nrem = length(dkepath.remote);
 %
 flag = false(1,nrem);
 %  
-for irem = 1:nrem,
+if nargin < 4 || isempty(remlist),
+    remlist = input_dke_yp('Please identify profiles to be tested.',1:nrem,[1;nrem]);
+elseif isnan(remlist),
+    remlist = 1:nrem;
+end
+%
+for irem = remlist,
     %
     disp(' ')
     disp('-----------------------------------------------------')
     disp(' ')
-    info_dke_yp(2,['Testing profile : ',profilestr{irem}]);
+    info_dke_yp(2,['Testing profile : ',dkepath.profilestr{irem}]);
     %
     job = matstandardjob_jd('runmat');% standard matlab job
     job.debugmode = debugmode; % to display info and debug
     job.funcopy = 0; % (0) to use function LUKEversion_jd on the remote host within matlab path - TEST REMOTE PATH
     %
-    [err,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},remote(irem),job);
+    [err,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem),job);
     %
     disp(' ')
     if isempty(err),        

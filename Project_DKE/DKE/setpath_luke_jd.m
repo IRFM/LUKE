@@ -1,9 +1,80 @@
-function dkepath = setpath_luke_jd(luke_root,dkepath)
-%LUKE - This function sets the path such that the simulations run on the specified LUKE version.
+function dkepath = setpath_luke_jd(dkepath,bridge_enforce)
 %
-% This function sets the path such that the simulations run on the specified LUKE version.
+% LUKE - This function sets the path such that the simulations run on the specified LUKE version.
 %
-%by Joan Decker CEA-IRFM (joan.decker@cea.fr) and Y.Peysson CEA-IRFM <yves.peysson@cea.fr>
+% Actions :
+%   - remove exisiting LUKE paths
+%   - load LUKE_PATH.mat and process for hostname and username
+%   - test remote connections
+%   - compile MEX files if needed
+%   - setup new LUKE paths, including MEX files and matrix inverters
+%
+% INPUTS :
+%
+%   - dkepath :
+%       o '' (or nargin == 0) : LUKE_PATH.mat is searched for in the current path
+%       o luke_root (string)  : LUKE root path
+%       o dkepath (struct)    : an existing dkepath structure (setpath_luke_jd then used to reset paths, recompile MEX, or test remote connections)
+%
+%   - bridge_enforce : [NaN, empty, 0 or 1] 
+%       o NaN : (default) use value from remote.bridge_enforce
+%       o []  : tests both modes and give priority to ssh key pair
+%       o 0   : tests and authorize only ssh key pair,
+%       o 1   : tests and authorize only bridge mode
+%
+% OUTPUTS : 
+%
+%   - dkepath : structure containing LUKE path and remote LUKE data specific to local filesystem, hostname and username.
+%               if nargout = 0, dkepath is saved in matlab application data
+%
+% by Joan Decker CEA-IRFM (joan.decker@cea.fr) and Y.Peysson CEA-IRFM <yves.peysson@cea.fr>
+
+%
+if nargin == 0 || isempty(dkepath),
+    %
+    filenames = which('LUKE_PATH.mat','-all');
+    %
+    if length(filenames) > 1,
+        ifile = iselect_jd(filenames,'Warning : more than one LUKE_PATH.mat file found. Please select one of the following :',false);
+    elseif isempty(filenames),
+        error('No LUKE_PATH.mat found on the matlab path')
+    else
+        ifile = 1;
+    end
+    %
+    load(filenames{ifile},'dkepath');
+    %
+elseif ischar(dkepath),% luke_root  
+    %
+    luke_root = dkepath;
+    %
+    if ~strcmp(luke_root(end),filesep),
+        luke_root = [luke_root,filesep];
+    end
+    %
+    filename = [luke_root,'Project_DKE/Database/PATH_files/LUKE_PATH.mat'];
+    %
+    if ~exist(filename,'file'),
+        error(['The file ',filename,' does not exist'])
+    else
+        load(filename,'dkepath');
+    end
+    %
+elseif ~isfield(dkepath,'luke_root'),
+    %
+    error('Input variable ''dkepath'' cannot be identified');
+    %
+end
+%
+if ~strcmp(dkepath.luke_root(end),filesep),
+    dkepath.luke_root = [dkepath.luke_root,filesep];
+end
+%
+luke_root = dkepath.luke_root;
+%
+if nargin < 2,
+    bridge_enforce = NaN;
+end
 %
 %remove old DKE and packages path
 %
@@ -18,20 +89,6 @@ while ~isempty(P),
         rmpath(pathline);
     end
     P(1:ilim) = '';
-end
-%
-if nargin < 2,
-    dkepath = [];
-end
-%
-if nargin == 0, 
-    luke_root = getenv('luke_root');
-    if isempty(luke_root),
-        return
-    else
-        filename = [luke_root,'Project_DKE/Database/PATH_files/LUKE_PATH.mat'];
-        load(filename,'dkepath');
-    end
 end
 %
 % identify local hostname if multiple profiles on the same filesystem
@@ -108,14 +165,12 @@ addpath([luke_root,'Tools']);
 %
 % Path for machine specific libraries
 %
-if ~isempty(dkepath),
-	if isfield(dkepath,'speclibpath'),
-		speclibpathfields = fieldnames(dkepath.speclibpath);
-		for ifield = 1:length(speclibpathfields)
-			addpath(dkepath.speclibpath.(speclibpathfields{ifield}));
-		end
-	end 
-end
+if isfield(dkepath,'speclibpath'),
+    speclibpathfields = fieldnames(dkepath.speclibpath);
+    for ifield = 1:length(speclibpathfields)
+        addpath(dkepath.speclibpath.(speclibpathfields{ifield}));
+    end
+end 
 %
 % Path for MEX files
 %
@@ -125,43 +180,44 @@ sourcepath.DKE = [luke_root,'Project_DKE/MEX/Source/'];
 sourcepath.C3PO = [luke_root,'Project_DKE/Modules/C3PO/MEX/Source/'];
 sourcepath.helmex = [luke_root,'Project_DKE/Modules/Helena/MEX/Source/'];
 %
-if ~isempty(dkepath), 
-    %
-	if isfield(dkepath,['mex',matver]),
-        mexpath = dkepath.(['mex',matver]);
-        force_compile = 0;
-    else
-        mexpath = [luke_root,'Project_DKE/MEX/Bin'];
-        force_compile = 1;
-    end
-    mex_compile_luke(sourcepath,mexpath,dkepath.compiler_opt,force_compile);
-    %
-    addpath(mexpath);
-    %
+if isfield(dkepath,['mex',matver]),
+    mexpath = dkepath.(['mex',matver]);
+    force_compile = 0;
+else
+    mexpath = [luke_root,'Project_DKE/MEX/Bin'];
+    force_compile = 1;
 end
+mex_compile_luke(sourcepath,mexpath,dkepath.compiler_opt,force_compile);
+%
+addpath(mexpath);
 %
 % Path for external packages
 %
-if ~isempty(dkepath), 
-    if isfield(dkepath,'MUMPS') 
-		if isfield(dkepath.MUMPS,['mex',matver]),
-			addpath(dkepath.MUMPS.(['mex',matver]));
-        elseif isfield(dkepath.MUMPS,'mex'),
-			addpath(dkepath.MUMPS.mex);
-		end
+if isfield(dkepath,'MUMPS') 
+    if isfield(dkepath.MUMPS,['mex',matver]),
+        addpath(dkepath.MUMPS.(['mex',matver]));
+    elseif isfield(dkepath.MUMPS,'mex'),
+        addpath(dkepath.MUMPS.mex);
     end
-    %
-    if isfield(dkepath,'SUPERLU') && isfield(dkepath.SUPERLU,'mex'),
-        addpath(dkepath.SUPERLU.mex);
+end
+%
+if isfield(dkepath,'SUPERLU') && isfield(dkepath.SUPERLU,'mex'),
+    addpath(dkepath.SUPERLU.mex);
+end
+%
+if isfield(dkepath,'PARDISO') 
+    if isfield(dkepath.PARDISO,['mex',matver]),
+        addpath(dkepath.PARDISO.(['mex',matver]));
+    elseif isfield(dkepath.PARDISO,'mex'),
+        addpath(dkepath.PARDISO.mex);
     end
-    %
-    if isfield(dkepath,'PARDISO') 
-		if isfield(dkepath.PARDISO,['mex',matver]),
-			addpath(dkepath.PARDISO.(['mex',matver]));
-        elseif isfield(dkepath.PARDISO,'mex'),
-			addpath(dkepath.PARDISO.mex);
-		end
-    end
-
+end
+%
+% update and verify remote profiles
+%
+dkepath = update_remote_jd(dkepath,bridge_enforce);
+%
+if nargout == 0,
+    setappdata(0,'dkepath',dkepath');
 end
 %

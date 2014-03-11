@@ -1,4 +1,4 @@
-function dkepath = update_remote_jd(dkepath)
+function dkepath = update_remote_jd(dkepath,bridge_enforce)
 %
 % this function load remote profiles and selects accessible remote clusters with compatible LUKE version 
 %
@@ -9,25 +9,31 @@ lukever(lukever == ' ' | lukever == '.') = '_';% syntax for comparison
 %
 lochostname = hostname_jd;
 %
-% load remote profiles
+% load remote profiles if needed
 %
 nrem = 0;
 %
 for irem = 1:length(dkepath.remote),
-    remotestr = ['remote_',dkepath.remote(irem).remoteid];
-    if exist([remotestr,'.m'],'file'),
-        %
-        nrem = nrem+1;
-        remote(nrem) = feval(remotestr,dkepath.remote(irem).schedulername,dkepath.remote(irem).profilename); 
-        remote(nrem).env.luke_root = dkepath.remote(irem).luke_root;
-        %
-        if any(strfind(lochostname,remote(nrem).hostname)),
-            remote(nrem).host = '';
+    if isfield(dkepath.remote(irem),'remoteid'),% process remote profile with schedulername, profilename & luke_root
+        remotestr = ['remote_',dkepath.remote(irem).remoteid];
+        if exist([remotestr,'.m'],'file'),
+            %
+            nrem = nrem+1;
+            remote(nrem) = feval(remotestr,dkepath.remote(irem).schedulername,dkepath.remote(irem).profilename); 
+            remote(nrem).env.luke_root = dkepath.remote(irem).luke_root;
+            %
         end
+    else
+        %
+        nrem = irem;
+        remote(nrem) = dkepath.remote(nrem);
         %
     end
+    %
+    if any(strfind(lochostname,remote(nrem).hostname)),
+        remote(nrem).host = '';
+    end
 end
-    
 %
 % test compatibility of local and remote LUKE versions
 %
@@ -57,7 +63,10 @@ end
 %
 % test connection and identify local profiles
 %
-[dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false);
+disp (' ')
+info_dke_yp(3,'Testing remote profile connections ')
+%
+[dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false,bridge_enforce);
 %
 nrem = length(dkepath.remote);
 %
@@ -83,8 +92,7 @@ for irem = 1:nrem,
     dkepath.remprofiles{irem+1} = dkepath.profilestr{irem};
     dkepath.distprofiles{irem+3} = ['batch jobs on ',dkepath.profilestr{irem}];
 end
-
-
+%
 
         
     

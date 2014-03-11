@@ -127,44 +127,49 @@ end
 %
 if exist('flag_path','var'),%Paths
     %
-    if isempty(id_path),% load file LUKE_PATH.mat in PATH
+    if isempty(id_path),% load dkepath from getappdata(0,'dkepath') or find LUKE_PATH.mat in current path
         %
-        filenames = which('LUKE_PATH.mat','-all');
-        %
-        if length(filenames) > 1,
-            ifile = iselect_jd(filenames,'Warning : more than one LUKE_PATH.mat file found. Please select one of the following :',false);
-        elseif isempty(filenames),
-            error('No LUKE_PATH.mat found on the matlab path')
+        if isappdata(0,'dkepath'),
+            dkepath = getappdata(0,'dkepath');
+            loadstr = 'getappdata(0,''dkepath'')';
         else
-            ifile = 1;
+            %
+            filenames = which('LUKE_PATH.mat','-all');
+            %
+            if length(filenames) > 1,
+                ifile = iselect_jd(filenames,'Warning : more than one LUKE_PATH.mat file found. Please select one of the following :',false);
+            elseif isempty(filenames),
+                error('No LUKE_PATH.mat found on the matlab path')
+            else
+                ifile = 1;
+            end
+            %
+            load(filenames{ifile},'dkepath');
+            loadstr = filenames{ifile};
+            %
         end
-        filename = filenames{ifile};
         %
-    else
+    else% load dkepath from [path_path,id_path,'.mat']
         %
-        filename = [path_path,'PATH_',id_path,'.mat'];
+        filename = [path_path,id_path,'.mat'];
         %
         if ~exist(filename,'file'),
-            error([filename,' does not exist']);
+            error(['The file ',filename,' does not exist'])
+        else
+            load(filename,'dkepath');
+            loadstr = filename;
         end
     end
     %
-    load(filename,'dkepath');
-    info_dke_yp(2,['Structure ''path'': ',filename,' successfully loaded']);
+    info_dke_yp(2,['Structure ''dkepath'' successfully loaded from ',loadstr]);
     %
     if ~strcmp(dkepath.computer,computer),
         error('The path structure is not consistent with the computer !'),
     end
     %
-    % dynamic compilation of MEX files
-    %
     % Set path for LUKE including mex files and matrix inverters
     %
-    dkepath = setpath_luke_jd(dkepath.luke_root,dkepath);
-    %
-    % update and verify remote profiles
-    %
-    dkepath = update_remote_jd(dkepath);
+    dkepath = setpath_luke_jd(dkepath);
     %
     info_dke_yp(0,'To check if the remote profiles are currently functionning, please run ''check_remote_yp;'':')
     disp (' ');
