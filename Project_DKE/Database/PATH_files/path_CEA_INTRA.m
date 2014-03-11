@@ -98,23 +98,27 @@ dkepath.JD211098(1).pleione = dkepath.JD211098(1).nunki;% both machines have ide
 %
 % ---------------------------- timdesktop -------------------------------
 %
-dkepath.JD211098(1).timdesktop.local_root = '/home/sccp/gsem/decker/Packages/cadts-0412/';
+dkepath.JD211098(1).timdesktop.local_root = '/home/joan/Packages/cadts-0412/';%'/home/sccp/gsem/decker/Packages/cadts-0412/';
 dkepath.JD211098(1).timdesktop.temppathroot = '/home/joan/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.JD211098(1).timdesktop.mex77 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/timdesktop/MATLAB77'];
 dkepath.JD211098(1).timdesktop.mex710 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/timdesktop/MATLAB710']; 
+dkepath.JD211098(1).timdesktop.mex712 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/timdesktop/MATLAB712']; 
 dkepath.JD211098(1).timdesktop.mex800 = [dkepath.JD211098(1).luke_root,'Project_DKE/MEX/Bin/timdesktop/MATLAB800']; 
 %
 dkepath.JD211098(1).timdesktop.compiler_opt.copts = '';
 dkepath.JD211098(1).timdesktop.compiler_opt.fopts.mex77 = 'FC=''ifort''';
 dkepath.JD211098(1).timdesktop.compiler_opt.fopts.mex710 = '';
+dkepath.JD211098(1).timdesktop.compiler_opt.fopts.mex712 = '';
 dkepath.JD211098(1).timdesktop.compiler_opt.fopts.mex800 = '';
 dkepath.JD211098(1).timdesktop.compiler_opt.helmex.mex77 = NaN;% Optional argument for helmex compilation
 dkepath.JD211098(1).timdesktop.compiler_opt.helmex.mex710 = NaN;% Optional argument for helmex compilation
+dkepath.JD211098(1).timdesktop.compiler_opt.helmex.mex712 = ['-L',dkepath.JD211098(1).timdesktop.local_root,'lapack-3.4.2 -llapack -lrefblas'];% Optional argument for helmex compilation
 dkepath.JD211098(1).timdesktop.compiler_opt.helmex.mex800 = ['-L',dkepath.JD211098(1).timdesktop.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.JD211098(1).local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
 dkepath.JD211098(1).timdesktop.MUMPS.mex77 = '/home/joan/MUMPS_4.9.2/MATLAB77';%Where MUMPS matrix solver is stored (MEX function)
 dkepath.JD211098(1).timdesktop.MUMPS.mex710 = [dkepath.JD211098(1).timdesktop.local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.JD211098(1).timdesktop.MUMPS.mex712 = [dkepath.JD211098(1).timdesktop.local_root,'MUMPS_4.10.0/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.JD211098(1).timdesktop.MUMPS.mex800 = [dkepath.JD211098(1).timdesktop.local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.JD211098(1).timdesktop.graphviz.env = '';% Graphviz environment variable
