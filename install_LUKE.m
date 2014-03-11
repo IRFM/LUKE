@@ -40,19 +40,21 @@ if isempty(which('load_remoteprofiles_jd.m')),
     return
 end
 %
+luke_root = [fileparts(which(mfilename)),filesep];% local LUKE version
+%
+% Creates athe LUKE_PATH.mat structure
+%
+addpath([luke_root,'Project_DKE/Database/PATH_files']);
+make_path_LOCAL;
+%
 % add paths to LUKE
 %
-luke_root = [fileparts(which(mfilename)),filesep];% local LUKE version
 addpath([luke_root,'Project_DKE/DKE']);
 setpath_luke_jd(luke_root);
 %
 disp(' ');
 disp('The LUKE paths have been installed.');
 disp(' ');
-%
-% Creates athe LUKE_PATH.mat structure
-%
-make_path_LOCAL;
 %
 % load LUKE paths, compile mex, setup path to mex files and matrix inverters
 %
