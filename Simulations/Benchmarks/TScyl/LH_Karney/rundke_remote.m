@@ -12,9 +12,11 @@ global nfig
 remtimout = 0;%10;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remlist = NaN;%1;%[1:4,6:7];%[];% list of remote profiles to check. Use NaN to check all
+remlist = [];%NaN;%1;%[1:4,6:7];% list of remote profiles to check. Use NaN to check all, [] to prompt for user selection
 remdebugmode = 0;%1;% debug mode (0) off (1) on
 remclean = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+%
+bridge_enforce = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
 %
 opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
@@ -127,20 +129,6 @@ Znorm_0 = lukestruct_0.output.Znorm;
 Zcurr_0 = lukestruct_0.output.Zcurr;
 ZP0_0 = lukestruct_0.output.ZP0;
 %
-% profiles in dkepath.remote tested
-%
-if isfield(dkepath,'remote'),
-    nremote = length(dkepath.remote);
-    if isnan(remlist),
-        remlist = 1:nremote;
-    else
-        remlist(remlist > nremote) = [];
-    end
-else
-    remlist = [];
-end
-nrem = length(remlist);
-%
 % simulation filename
 %
 filename = [path_simul,'LUKE_RESULTS_',id_equil,'_',id_simul,'.mat'];
@@ -148,16 +136,38 @@ filename = [path_simul,'LUKE_RESULTS_',id_equil,'_',id_simul,'.mat'];
 % check if current jobs exists to load possible existing jobs
 %
 if remtimout == 0 && remstart == 0 && exist(filename,'file'),% load existing simulation
-    load(filename,'lukestructs');
+    load(filename,'lukestructs','remlist','dkepath');
+    %
+    nrem = length(remlist);
 else% new simulation
+    %
+    % profiles in dkepath.remote tested
+    %
+    dkepath = setpath_luke_jd(dkepath,bridge_enforce);
+    %
+    if isfield(dkepath,'remote'),
+        nrem = length(dkepath.remote);
+        if isempty(remlist),
+            remlist = input_dke_yp('Please identify profiles to be tested.',1:nrem,[1;nrem]);
+        elseif isnan(remlist),
+            remlist = 1:nrem;
+        else
+            remlist(remlist > nrem) = [];
+        end
+    else
+        remlist = [];
+    end
+    %
+    nrem = length(remlist);
+    %
+    dkepath.remtimout = remtimout;% timeout in minutes
+    dkepath.rempause = rempause;% pause between job checks (in minutes) (only for remtimout > 0)
+    dkepath.remenforce = 0;% exit if remote calculation failed 
+    dkepath.debugmode = remdebugmode;% debug mode 
+    dkepath.clean = remclean;% clean mode 
+    %
     lukestructs = repmat({lukestruct},[1,nrem]);
 end
-%
-dkepath.remtimout = remtimout;% timeout in minutes
-dkepath.rempause = rempause;% pause between job checks (in minutes) (only for remtimout > 0)
-dkepath.remenforce = 0;% exit if remote calculation failed 
-dkepath.debugmode = remdebugmode;% debug mode 
-dkepath.clean = remclean;% clean mode 
 %
 for remnum = 1:nrem,
     %
@@ -173,11 +183,15 @@ Znorm = cell(1,nrem);
 Zcurr = cell(1,nrem);
 ZP0 = cell(1,nrem);
 %
+flag_running = false(1,nrem);
+%
 for remnum = 1:nrem,
     if isfield(lukestructs{remnum},'output'),
         Znorm{remnum} = lukestructs{remnum}.output.Znorm;
         Zcurr{remnum} = lukestructs{remnum}.output.Zcurr;
         ZP0{remnum} = lukestructs{remnum}.output.ZP0;
+    elseif isfield(lukestructs{remnum},'job'),
+        flag_running(remnum) = true;
     end
 end
 %
@@ -193,6 +207,15 @@ delete res_karney_remote
 %
 diary res_karney_remote
 %
+disp(' ')
+disp(' Remote profiles tested : ')
+disp(' ')
+%
+for remnum = 1:nrem,
+    info_dke_yp(4,['#',num2str(remnum),' : ',dkepath.profilestr{remnum}]);
+end
+disp(' ')
+
 disp(['----------------------'])
 disp(['Comparison LUKE/Karney - Relativistic case (4,7,1) - with tn = ',int2str(dkeparam.tn),', dtn = ',int2str(dkeparam.dtn),' and nit_f = ',int2str(dkeparam.nit_f)])
 disp(['----------------------'])
@@ -201,7 +224,11 @@ disp(['Local calculation : j = ',num2str(Zcurr_0.x_0),'/',j_r_k,' ; P = ',num2st
 %
 for remnum = 1:nrem,
     if ~isempty(Zcurr{remnum}),
-        disp(['Remote calc.  # ',num2str(remnum),' : j = ',num2str(Zcurr{remnum}.x_0),'/',j_r_k,' ; P = ',num2str(ZP0{remnum}.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr{remnum}.x_0./ZP0{remnum}.x_rf_fsav),'/',eta_r_k]) 
+        disp(['Remote calc. # ',num2str(remnum),' : j = ',num2str(Zcurr{remnum}.x_0),'/',j_r_k,' ; P = ',num2str(ZP0{remnum}.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr{remnum}.x_0./ZP0{remnum}.x_rf_fsav),'/',eta_r_k]) 
+    elseif flag_running(remnum),
+        disp(['Remote calc. # ',num2str(remnum),' : running'])
+    else
+        disp(['Remote calc. # ',num2str(remnum),' : failed'])
     end
 end
 %
