@@ -100,7 +100,7 @@ if iscell(lukestructs),% remote and/or distributed calculation
                     %
                     lukestandardjob = matstandardjob_jd('runmat');
                     %
-                    if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_memory'),
+                    if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_memory') && ~isempty(lukestructs{ijob}.dkeparam.luke_memory),
                         lukestandardjob.memory = lukestructs{ijob}.dkeparam.luke_memory;% requested memory specified in dkeparam
                     elseif isfield(lukestructs{ijob},'transpfaste') && isstruct(lukestructs{ijob}.transpfaste) && ~isempty(fieldnames(lukestructs{ijob}.transpfaste)), 
                         lukestandardjob.memory = 14000;%mb default value with transport
