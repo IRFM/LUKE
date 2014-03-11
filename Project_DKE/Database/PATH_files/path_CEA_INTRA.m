@@ -44,7 +44,7 @@ dkepath.JD211098(1).cephee.compiler_opt.helmex.mex710 = ['-L',dkepath.JD211098(1
 %
 dkepath.JD211098(1).cephee.compiler_opt.copts.mex712 = '';
 dkepath.JD211098(1).cephee.compiler_opt.fopts.mex712 = 'FC=''ifort''';
-dkepath.JD211098(1).cephee.compiler_opt.helmex.mex712 = ['-L',dkepath.JD211098(1).cephee.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.JD211098(1).cephee.compiler_opt.helmex.mex712 = ['FC=''ifort'' -L',dkepath.JD211098(1).cephee.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
 dkepath.JD211098(1).cephee.compiler_opt.copts.mex800 = '';
 dkepath.JD211098(1).cephee.compiler_opt.fopts.mex800 = 'FC=''ifort''';
