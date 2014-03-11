@@ -131,7 +131,8 @@ if exist('flag_path','var'),%Paths
         %
         if isappdata(0,'dkepath'),
             dkepath = getappdata(0,'dkepath');
-            loadstr = 'getappdata(0,''dkepath'')';
+            filename = '';
+            info_dke_yp(2,'Structure ''dkepath'' successfully loaded from getappdata(0,''dkepath'')');
         else
             %
             filenames = which('LUKE_PATH.mat','-all');
@@ -144,8 +145,7 @@ if exist('flag_path','var'),%Paths
                 ifile = 1;
             end
             %
-            load(filenames{ifile},'dkepath');
-            loadstr = filenames{ifile};
+            filename = filenames{ifile};
             %
         end
         %
@@ -155,21 +155,24 @@ if exist('flag_path','var'),%Paths
         %
         if ~exist(filename,'file'),
             error(['The file ',filename,' does not exist'])
-        else
-            load(filename,'dkepath');
-            loadstr = filename;
         end
     end
     %
-    info_dke_yp(2,['Structure ''dkepath'' successfully loaded from ',loadstr]);
+    if ~isempty(filename),
+        %
+        load(filename,'dkepath');
+        %
+        info_dke_yp(2,['Structure ''dkepath'' successfully loaded from ',filename]);
+        %
+        % Set path for LUKE including mex files and matrix inverters
+        %
+        dkepath = setpath_luke_jd(dkepath);
+        %
+    end
     %
     if ~strcmp(dkepath.computer,computer),
         error('The path structure is not consistent with the computer !'),
     end
-    %
-    % Set path for LUKE including mex files and matrix inverters
-    %
-    dkepath = setpath_luke_jd(dkepath);
     %
     info_dke_yp(0,'To check if the remote profiles are currently functionning, please run ''check_remote_yp;'':')
     disp (' ');
