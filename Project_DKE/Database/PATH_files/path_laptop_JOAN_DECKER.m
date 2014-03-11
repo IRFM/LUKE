@@ -112,3 +112,8 @@ dkepath.joan(1).remote(10).schedulername = 'sun';
 dkepath.joan(1).remote(10).profilename = 'joan';
 dkepath.joan(1).remote(10).luke_root = dkepath.joan(1).remote(2).luke_root;% same FS as andromede
 %
+dkepath.joan(1).remote(11).remoteid = 'EFDA_ITM';
+dkepath.joan(1).remote(11).schedulername = 'sge';
+dkepath.joan(1).remote(11).profilename = 'yvesp';
+dkepath.joan(1).remote(11).luke_root = '/u/yvesp/public/LUKE_ITM/trunk/LUKE/';
+%
