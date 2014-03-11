@@ -174,9 +174,6 @@ if exist('flag_path','var'),%Paths
         error('The path structure is not consistent with the computer !'),
     end
     %
-    info_dke_yp(0,'To check if the remote profiles are currently functionning, please run ''check_remote_yp;'':')
-    disp (' ');
-    %
     varargout{flag_path} = dkepath;
 end
 %

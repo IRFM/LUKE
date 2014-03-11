@@ -221,3 +221,6 @@ if nargout == 0,
     setappdata(0,'dkepath',dkepath');
 end
 %
+info_dke_yp(0,'To check if the remote profiles are currently functionning within LUKE environment, please run ''check_remote_yp;'':')
+disp (' ');
+%
