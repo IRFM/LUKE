@@ -100,7 +100,8 @@ dkepath.joan(1).remote(7).luke_root.LUKE_default = '/home/sccp/gsem/decker/LUKE/
 dkepath.joan(1).remote(8).remoteid = 'CEA_TIMDESKTOP';
 dkepath.joan(1).remote(8).schedulername = 'torque';
 dkepath.joan(1).remote(8).profilename = 'joan';
-dkepath.joan(1).remote(8).luke_root = dkepath.joan(1).remote(7).luke_root;% same FS as cephee
+%dkepath.joan(1).remote(8).luke_root = dkepath.joan(1).remote(7).luke_root;% same FS as cephee %%%%% mount not working
+dkepath.joan(1).remote(8).luke_root = '/home/joan/LUKE/';% same FS as cephee
 %
 dkepath.joan(1).remote(9).remoteid = 'CEA_PLEIONE';% pleione, merope, nashira, newpegase, nunki cluster
 dkepath.joan(1).remote(9).schedulername = 'pbs';

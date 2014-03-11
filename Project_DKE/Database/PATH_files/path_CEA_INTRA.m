@@ -137,7 +137,8 @@ dkepath.JD211098(1).remote(1).luke_root = dkepath.JD211098(1).luke_root;% local 
 dkepath.JD211098(1).remote(2).remoteid = 'CEA_TIMDESKTOP';
 dkepath.JD211098(1).remote(2).schedulername = 'torque';
 dkepath.JD211098(1).remote(2).profilename = 'joan';
-dkepath.JD211098(1).remote(2).luke_root = dkepath.JD211098(1).luke_root;% local filesystem
+%dkepath.JD211098(1).remote(2).luke_root = dkepath.JD211098(1).luke_root;% local filesystem %%%%% mount not working
+dkepath.JD211098(1).remote(2).luke_root = '/home/joan/LUKE/';% same FS as cephee
 %
 dkepath.JD211098(1).remote(3).remoteid = 'CEA_PLEIONE';% pleione, merope, nashira, newpegase, nunki cluster
 dkepath.JD211098(1).remote(3).schedulername = 'pbs';
