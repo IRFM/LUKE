@@ -94,10 +94,10 @@ else
     %
     if ~isfield(dkepath,username),%user not listed in local profile
         if isfield(dkepath,'default'),
-            disp(['Warning : user ',username,' not found on machine ',dkepath.hostname,'; selecting profile from default user ',dkepath.default])
+            disp(['Warning : user ',username,' not found in file ',PathFileNames{ifiles(iflag)},'.m; selecting profile from default user ',dkepath.default])
             username = dkepath.default;
         else
-            error(['Warning : user ',username,' not found on machine ',dkepath.hostname,'; no default user specified.'])
+            error(['Warning : user ',username,' not found in file ',PathFileNames{ifiles(iflag)},'.m; no default user specified.'])
         end
     end
     %
