@@ -19,5 +19,5 @@ dkepath = load_dkepath_yp;% Load local path profile
 pathfile = [dkepath.luke_root,'Project_DKE/Database/PATH_files/LUKE_PATH.mat'];
 save(pathfile,'dkepath');
 disp('------------------------------------------------------');
-info_dke_yp(2,['The dkepath structure is saved in ',pathfile],'','Green');
+disp(['---> The dkepath structure is saved in ',pathfile]);
 %
