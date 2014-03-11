@@ -143,7 +143,7 @@ else% new simulation
     %
     % profiles in dkepath.remote tested
     %
-    dkepath = setpath_luke_jd(dkepath,bridge_enforce);
+    dkepath = setpath_luke_jd('',bridge_enforce);
     %
     if isfield(dkepath,'remote'),
         nrem = length(dkepath.remote);
