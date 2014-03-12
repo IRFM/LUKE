@@ -12,7 +12,7 @@ global nfig
 remtimout = 0;%10;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remlist = [];%NaN;%1;%[1:4,6:7];% list of remote profiles to check. Use NaN to check all, [] to prompt for user selection
+remlist = [1];%NaN;%1;%[1:4,6:7];% list of remote profiles to check. Use NaN to check all, [] to prompt for user selection
 remdebugmode = 0;%1;% debug mode (0) off (1) on
 remclean = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 %
@@ -84,6 +84,7 @@ wavestruct.ythetab_lh = [0]*pi/180;%(deg -> rad). Poloidal location of LH beam [
 %************************************************************************************************************************************
 %
 if exist('dmumpsmex');dkeparam.invproc = -2;end
+%dkeparam.invproc = 1;
 %
 dkeparam.boundary_mode_f = 0;%Number of points where the Maxwellian distribution is enforced from p = 0 (p=0, free conservative mode but param_inv(1) must be less than 1e-4, otherwise 1e-3 is OK most of the time. Sensitive to the number of points in p)
 dkeparam.norm_mode_f = 1;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
@@ -212,7 +213,7 @@ disp(' Remote profiles tested : ')
 disp(' ')
 %
 for remnum = 1:nrem,
-    info_dke_yp(4,['#',num2str(remnum),' : ',dkepath.profilestr{remnum}]);
+    info_dke_yp(4,['#',num2str(remnum),' : ',dkepath.profilestr{remlist(remnum)}]);
 end
 disp(' ')
 
