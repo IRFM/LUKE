@@ -99,6 +99,11 @@ dkepath.yvespeysson(1).remote(5).schedulername = 'pbs';
 dkepath.yvespeysson(1).remote(5).profilename = 'YP105119';
 dkepath.yvespeysson(1).remote(5).luke_root = '/home/YP105119/LUKE/';
 %
+dkepath.yvespeysson(1).remote(6).remoteid = 'EFDA_ITM';
+dkepath.yvespeysson(1).remote(6).schedulername = 'sge';
+dkepath.yvespeysson(1).remote(6).profilename = 'yvesp';
+dkepath.yvespeysson(1).remote(6).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
+%
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 2, Joan Decker  ------------------------------------
 %--------------------------------------------------------------------------------------------------------
@@ -115,5 +120,9 @@ dkepath.yvespeysson(2).remote(4).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 dkepath.yvespeysson(2).remote(5).profilename = 'JD211098';
 dkepath.yvespeysson(2).remote(5).luke_root = '/home/JD211098/LUKE/';
 %
-
-
+%
+dkepath.yvespeysson(2).remote(6).remoteid = 'EFDA_ITM';
+dkepath.yvespeysson(2).remote(6).schedulername = 'sge';
+dkepath.yvespeysson(2).remote(6).profilename = 'yvesp';
+dkepath.yvespeysson(2).remote(6).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
+%
