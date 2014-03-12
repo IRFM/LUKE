@@ -1,9 +1,10 @@
+function [] = rundke_remote(remlist,bridge_enforce)
+%
 %Script for running the DKE solver (can be modified by the user for specific simulations)
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %
 clc
 close all
-clear all
 clear mex
 clear functions
 warning off
@@ -12,15 +13,34 @@ global nfig
 remtimout = 0;%10;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remlist = [];%NaN;%1;%[1:4,6:7];% list of remote profiles to check. Use NaN to check all, [] to prompt for user selection
 remdebugmode = 0;%1;% debug mode (0) off (1) on
 remclean = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
-%
-bridge_enforce = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
 %
 opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
 mdce_opt = 0;% option for testing distributed computing inside remote calculation
+%
+if nargin == 0,
+    remlist = [];%NaN;%1;%[1:4,6:7];% list of remote profiles to check. Use NaN to check all, [] to prompt for user selection
+    bridge_enforce = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
+elseif nargin == 1,
+    if isempty(remlist),
+        disp('WARNING: the ''remlist'' variable has be set to NaN (check all)');
+        remlist = NaN;
+    end
+    %
+    bridge_enforce = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
+elseif nargin == 2,
+    if isempty(remlist),
+        disp('WARNING: the ''remlist'' variable has be set to NaN (check all)');
+        remlist = NaN;
+    end      
+    %
+    if bridge_enforce ~= 0 && bridge_enforce ~= 1,
+        disp('WARNING: the ''bridge_enforce'' variable has be set to NaN (no bridge enforce)');
+        bridge_enforce = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
+    end
+end  
 %
 luke_memory = 2000;% job memory in mb
 luke_walltime = 1;% job walltime in hours
