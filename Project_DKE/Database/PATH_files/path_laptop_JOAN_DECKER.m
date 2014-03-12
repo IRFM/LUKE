@@ -105,15 +105,15 @@ dkepath.joan(1).remote(7).luke_root = dkepath.joan(1).remote(5).luke_root;% same
 dkepath.joan(1).remote(8).remoteid = 'EFDA_ITM';
 dkepath.joan(1).remote(8).schedulername = 'sge';
 dkepath.joan(1).remote(8).profilename = 'yvesp';
-dkepath.joan(1).remote(8).luke_root = '/u/yvesp/public/LUKE_ITM/trunk/LUKE/';
+dkepath.joan(1).remote(8).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
 % %
 % dkepath.joan(1).remote(end+1).remoteid = 'CEA_SATURNE';
 % dkepath.joan(1).remote(end).schedulername = 'sun';
 % dkepath.joan(1).remote(end).profilename = 'joan';
 % dkepath.joan(1).remote(end).luke_root = dkepath.joan(1).remote(2).luke_root;% same FS as andromede
 %
-% dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(2);
-% dkepath.joan(1).remote(end).schedulername = 'direct';
+dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(2);
+dkepath.joan(1).remote(end).schedulername = 'direct';
 %
 dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(3);
 dkepath.joan(1).remote(end).schedulername = 'xgrid';
@@ -121,12 +121,9 @@ dkepath.joan(1).remote(end).schedulername = 'xgrid';
 dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(3);
 dkepath.joan(1).remote(end).schedulername = 'direct';
 %
-% dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(4);
-% dkepath.joan(1).remote(end).schedulername = 'direct';
+dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(5);
+dkepath.joan(1).remote(end).schedulername = 'direct';
 %
-% dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(5);
-% dkepath.joan(1).remote(end).schedulername = 'direct';
-%
-% dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(8);
-% dkepath.joan(1).remote(end).schedulername = 'direct';
+dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(8);
+dkepath.joan(1).remote(end).schedulername = 'direct';
 %
