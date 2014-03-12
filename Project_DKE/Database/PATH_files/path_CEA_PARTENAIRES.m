@@ -122,24 +122,6 @@ dkepath.YP105119(1).andromede.graphviz.env = '/home/YP105119/bin/';% Graphviz en
 dkepath.YP105119(1).andromede.latex.env = '/usr/bin/';% Latex environment variable
 dkepath.YP105119(1).andromede.imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
-% ---------------------------- saturne -------------------------------
-%
-dkepath.YP105119(1).saturne.local_root = ['/home/YP105119',filesep];%official saturne package repository for collaborators
-dkepath.YP105119(1).saturne.temppathroot = '/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-%
-dkepath.YP105119(1).saturne.mex705 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/saturne/MATLAB75/'];
-dkepath.YP105119(1).saturne.compiler_opt.copts = '';
-dkepath.YP105119(1).saturne.compiler_opt.fopts.mex705 = ' -largeArrayDims';
-dkepath.YP105119(1).saturne.compiler_opt.helmex.mex705 = [' -L',dkepath.JD211098(1).saturne.local_root,'lib -lf95 -lgcc -llapack -lblas'];% -ltmglib Optional argument for helmex compilation
-%
-dkepath.YP105119(1).saturne.MUMPS.mex705 = dkepath.JD211098(1).saturne.MUMPS.mex705;%Where MUMPS matrix solver is stored (MEX function)
-%
-% LUKE documentation
-%
-dkepath.YP105119(1).saturne.graphviz.env = '';% Graphviz environment variable
-dkepath.YP105119(1).saturne.latex.env = '/usr/bin/';% Latex environment variable
-dkepath.YP105119(1).saturne.imagemagick.env = '/usr/bin/';% ImageMagick environment variable
-%
 %--------------------------- Remote computing -----------------------------
 %
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)

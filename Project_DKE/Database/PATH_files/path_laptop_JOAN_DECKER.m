@@ -78,43 +78,55 @@ dkepath.joan(1).remote(3).profilename = 'joan';
 dkepath.joan(1).remote(3).luke_root.LUKE_1_10_0 = '/Users/yvespeysson/joandecker/Work/LUKE_1_10/';
 dkepath.joan(1).remote(3).luke_root.LUKE_default = '/Users/yvespeysson/joandecker/Work/LUKE/';
 %
-dkepath.joan(1).remote(4) = dkepath.joan(1).remote(3);
-dkepath.joan(1).remote(4).schedulername = 'xgrid';
+dkepath.joan(1).remote(4).remoteid = 'ASIPP_SHENMA';
+dkepath.joan(1).remote(4).schedulername = 'torque';
+dkepath.joan(1).remote(4).profilename = 'joan';
+dkepath.joan(1).remote(4).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 %
-dkepath.joan(1).remote(5) = dkepath.joan(1).remote(3);
-dkepath.joan(1).remote(5).schedulername = 'direct';
+dkepath.joan(1).remote(5).remoteid = 'CEA_CEPHEE';
+dkepath.joan(1).remote(5).schedulername = 'pbs';
+dkepath.joan(1).remote(5).profilename = 'joan';
+dkepath.joan(1).remote(5).luke_root.LUKE_1_8_6 = '/home/sccp/gsem/decker/LUKE_1_8/';
+dkepath.joan(1).remote(5).luke_root.LUKE_1_9_1 = '/home/sccp/gsem/decker/LUKE_1_9/';
+dkepath.joan(1).remote(5).luke_root.LUKE_1_10_0 = '/home/sccp/gsem/decker/LUKE_1_10/';
+dkepath.joan(1).remote(5).luke_root.LUKE_default = '/home/sccp/gsem/decker/LUKE/';% default remote LUKE version. Leave empty to enforce error if no match
 %
-dkepath.joan(1).remote(6).remoteid = 'ASIPP_SHENMA';
+dkepath.joan(1).remote(6).remoteid = 'CEA_TIMDESKTOP';
 dkepath.joan(1).remote(6).schedulername = 'torque';
 dkepath.joan(1).remote(6).profilename = 'joan';
-dkepath.joan(1).remote(6).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
+%dkepath.joan(1).remote(6).luke_root = dkepath.joan(1).remote(5).luke_root;% same FS as cephee %%%%% mount not working
+dkepath.joan(1).remote(6).luke_root = '/home/joan/LUKE/';% same FS as cephee
 %
-dkepath.joan(1).remote(7).remoteid = 'CEA_CEPHEE';
+dkepath.joan(1).remote(7).remoteid = 'CEA_PLEIONE';% pleione, merope, nashira, newpegase, nunki cluster
 dkepath.joan(1).remote(7).schedulername = 'pbs';
 dkepath.joan(1).remote(7).profilename = 'joan';
-dkepath.joan(1).remote(7).luke_root.LUKE_1_8_6 = '/home/sccp/gsem/decker/LUKE_1_8/';
-dkepath.joan(1).remote(7).luke_root.LUKE_1_9_1 = '/home/sccp/gsem/decker/LUKE_1_9/';
-dkepath.joan(1).remote(7).luke_root.LUKE_1_10_0 = '/home/sccp/gsem/decker/LUKE_1_10/';
-dkepath.joan(1).remote(7).luke_root.LUKE_default = '/home/sccp/gsem/decker/LUKE/';% default remote LUKE version. Leave empty to enforce error if no match
+dkepath.joan(1).remote(7).luke_root = dkepath.joan(1).remote(5).luke_root;% same FS as cephee
 %
-dkepath.joan(1).remote(8).remoteid = 'CEA_TIMDESKTOP';
-dkepath.joan(1).remote(8).schedulername = 'torque';
-dkepath.joan(1).remote(8).profilename = 'joan';
-%dkepath.joan(1).remote(8).luke_root = dkepath.joan(1).remote(7).luke_root;% same FS as cephee %%%%% mount not working
-dkepath.joan(1).remote(8).luke_root = '/home/joan/LUKE/';% same FS as cephee
+dkepath.joan(1).remote(8).remoteid = 'EFDA_ITM';
+dkepath.joan(1).remote(8).schedulername = 'sge';
+dkepath.joan(1).remote(8).profilename = 'yvesp';
+dkepath.joan(1).remote(8).luke_root = '/u/yvesp/public/LUKE_ITM/trunk/LUKE/';
+% %
+% dkepath.joan(1).remote(end+1).remoteid = 'CEA_SATURNE';
+% dkepath.joan(1).remote(end).schedulername = 'sun';
+% dkepath.joan(1).remote(end).profilename = 'joan';
+% dkepath.joan(1).remote(end).luke_root = dkepath.joan(1).remote(2).luke_root;% same FS as andromede
 %
-dkepath.joan(1).remote(9).remoteid = 'CEA_PLEIONE';% pleione, merope, nashira, newpegase, nunki cluster
-dkepath.joan(1).remote(9).schedulername = 'pbs';
-dkepath.joan(1).remote(9).profilename = 'joan';
-dkepath.joan(1).remote(9).luke_root = dkepath.joan(1).remote(7).luke_root;% same FS as cephee
+% dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(2);
+% dkepath.joan(1).remote(end).schedulername = 'direct';
 %
-dkepath.joan(1).remote(10).remoteid = 'CEA_SATURNE';
-dkepath.joan(1).remote(10).schedulername = 'sun';
-dkepath.joan(1).remote(10).profilename = 'joan';
-dkepath.joan(1).remote(10).luke_root = dkepath.joan(1).remote(2).luke_root;% same FS as andromede
+dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(3);
+dkepath.joan(1).remote(end).schedulername = 'xgrid';
 %
-dkepath.joan(1).remote(11).remoteid = 'EFDA_ITM';
-dkepath.joan(1).remote(11).schedulername = 'sge';
-dkepath.joan(1).remote(11).profilename = 'yvesp';
-dkepath.joan(1).remote(11).luke_root = '/u/yvesp/public/LUKE_ITM/trunk/LUKE/';
+dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(3);
+dkepath.joan(1).remote(end).schedulername = 'direct';
+%
+% dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(4);
+% dkepath.joan(1).remote(end).schedulername = 'direct';
+%
+% dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(5);
+% dkepath.joan(1).remote(end).schedulername = 'direct';
+%
+% dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(8);
+% dkepath.joan(1).remote(end).schedulername = 'direct';
 %

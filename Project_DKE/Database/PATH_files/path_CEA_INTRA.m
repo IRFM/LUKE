@@ -167,11 +167,6 @@ dkepath.JD211098(1).remote(8).schedulername = 'torque';
 dkepath.JD211098(1).remote(8).profilename = 'joan';
 dkepath.JD211098(1).remote(8).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 %
-dkepath.JD211098(1).remote(9).remoteid = 'CEA_SATURNE';
-dkepath.JD211098(1).remote(9).schedulername = 'sun';
-dkepath.JD211098(1).remote(9).profilename = 'joan';
-dkepath.JD211098(1).remote(9).luke_root = dkepath.JD211098(1).remote(4).luke_root;% same FS as andromede
-%
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
