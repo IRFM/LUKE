@@ -50,6 +50,12 @@ if isfield(rayinit,'yit'),
     rayinit.yit = rayinit.yit(iray);
 end
 %
+if isfield(rayinit,'yXfrac'),
+    rayinit.yXfrac = rayinit.yXfrac(iray);
+else
+    rayinit.yXfrac = NaN;
+end
+%
 tau_lim_init = rayparam.tau_lim;%Initial optical depth limit
 kmode = waveparam.kmode;
 ydNpar0 = rayinit.ydNpar0;
@@ -117,11 +123,40 @@ rays{1}.szni = zeros(length(equil_fit.zZi),0);% Ion densities along the ray [ni,
 rays{1}.swpe2 = [];%Normalized electron plasma frequency
 rays{1}.swce2 = [];%Normalized electron gyro frequency
 %
-rayinit.mmode = waveparam.mmode;%initial polarization
 rayinit.tau0_lin = 0;%initial optical depth
 rayinit.ss0 = 0;%initial ray length
 %
 rays{1}.rayinits{1} = rayinit;
+%
+if isnan(rayinit.yXfrac),% polarization enforced by waveparam.mmode
+    mmode = sign(waveparam.mmode);%initial polarization
+else%
+    %  polarization enforced by rayinit.yXfrac. 
+    %
+    mmodethres = 1 - abs(waveparam.mmode);% waveparam.mmode sets the threshold for considering both polarizations.
+    %
+    if rayinit.yXfrac <= mmodethres || rayinit.yXfrac >= (1 - mmodethres),% approximate to dominant mode
+        mmode = sign(rayinit.yXfrac - 1/2);
+    else% split power according to rayinit.yXfrac
+        mmode = [rayinit.yXfrac,1-rayinit.yXfrac];%[Xfrac, Ofrac]
+    end
+end
+%
+if length(mmode) == 1,% one mode only
+    rays{1}.rayinits{1}.mmode = mmode;
+else% split power according to mmode
+    %
+    rays{2} = rays{1};% copy ray parameters
+    %
+    rays{1}.rayinits{1}.mmode = 1;% X mode
+    rays{1}.rayinits{1}.yP0_2piRp = rays{1}.rayinits{1}.yP0_2piRp*mmode(1);
+    rays{1}.P0_2piRp = rays{1}.P0_2piRp*mmode(1);
+    %
+    rays{2}.rayinits{1}.mmode = -1;% O mode
+    rays{2}.rayinits{1}.yP0_2piRp = rays{2}.rayinits{1}.yP0_2piRp*mmode(2);
+    rays{2}.P0_2piRp = rays{2}.P0_2piRp*mmode(2);
+    %
+end  
 %
 % --------------
 %

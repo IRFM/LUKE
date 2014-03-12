@@ -232,6 +232,12 @@ if strcmp(launch.type,'EC'),
                 rayinit.z0 = NaN;
             end
             %
+            if isfield(launch,'yXfrac'),
+                rayinit.yXfrac(iy) = launch.yXfrac(iy);
+            else
+                rayinit.yXfrac(iy) = NaN;
+            end
+            %
             if isfield(launch,'epol_XYZ') && isfield(launch,'N_XYZ');
                 %
                 [Nperpp,Nperpm,Kxyz,ep_xyz,em_xyz] = colddisp_dke_jd(Npar0,launch.omega_rf,NaN,0,1,1,B0);
@@ -272,6 +278,7 @@ if strcmp(launch.type,'EC'),
             rayinit.z0 = NaN;
             rayinit.ap2 = NaN;
             rayinit.am2 = NaN;
+            rayinit.yXfrac = NaN;
         end
     end
     %

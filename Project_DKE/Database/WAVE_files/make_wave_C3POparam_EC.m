@@ -41,7 +41,7 @@ C3POdisplay.p_opt = -1;%Printing or saving option of the figures
 %
 % Wave parameters
 %
-waveparam.mmode = 1;%cold plasma mode [1] : (-1) m (1) p, p is the slow mode when kperp > 0 (slow/fast LH wave: -1/+1, O/X mode: -1/+1)
+waveparam.mmode = 0.5;%cold plasma mode [1] : (-1) m (1) p, p is the slow mode when kperp > 0 (slow/fast LH wave: -1/+1, O/X mode: -1/+1)
 waveparam.kmode = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 %
 %Option parameter for FLR effects and cross-comparison between old FP code: 

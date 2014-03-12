@@ -60,6 +60,7 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style)
     for iisel = 1:length(dataoutput.ecrh.isel),
         shotimes = intersect(shotimes,dataoutput.ecrh.ang{iisel}.time);
         shotimes = intersect(shotimes,dataoutput.ecrh.pow{iisel}.time);
+        shotimes = intersect(shotimes,dataoutput.ecrh.xfrac{iisel}.time);
     end
     %
     discnshotimes = setdiff(dataoutput.te.time,shotimes);
@@ -112,6 +113,7 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style)
             angles.phi_eff = dataprocess(dataoutput.ecrh.ang{iisel},'phi_eff',shotime,'phi_eff');% phi_eff
             %
             angles.P0 = dataprocess(dataoutput.ecrh.pow{iisel},'pow',shotime);% P0
+            angles.Xfrac = dataprocess(dataoutput.ecrh.xfrac{iisel},'xfrac',shotime);% Power fraction in X mode
             %
             external.wave(it).angles(iisel) = angles;
             %

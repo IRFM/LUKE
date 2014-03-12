@@ -218,7 +218,8 @@ for i=1:length(a.diag)
             praw=tdi('\results::toray.input:p_gyro');
             mdsclose;
             % get the polarisation
-            [ox_xfrac,ox_times,~]=ecpol_ox_fraction(shot,0,gti_chdtres([],[],t,dtres,dtreslim));
+            ox_t=gti_chdtres([],[],t,dtres,dtreslim);
+            [ox_xfrac,ox_times,~]=ecpol_ox_fraction(shot,0,ox_t);
             for j=1:length(isel)    % do a loop over all selected launchers
                 k=isel(j);
                 % get power: independent of harmonic, kW->W
@@ -258,8 +259,13 @@ for i=1:length(a.diag)
                     ang.phi_eff=atan(tan(ang.theta).*sin(ang.phi))./sqrt(1+tan(ang.theta).^2.*cos(ang.phi).^2);
                     % ox fraction data
 %                   put into d.ecrh.xfrac{k}.time and .data
-                    d.ecrh.xfrac{k}.time=ox_times;
-                    d.ecrh.xfrac{k}.data=ox_xfrac(k,:);
+                    d.ecrh.xfrac{k}.time=ox_t;
+                    d.ecrh.xfrac{k}.data=NaN(1,numel(ox_t));
+                    for ell=1:length(ox_t)
+                        if(any(ox_times==ox_t(ell)))
+                            d.ecrh.xfrac{k}.data(1,ell)=ox_xfrac(k,ox_times==ox_t(ell));
+                        end
+                    end
                 else    % X3 launchers 7-9
                     % constant data (from collect_parameters_for_luke.m)
                     ang.freq=118.e9;

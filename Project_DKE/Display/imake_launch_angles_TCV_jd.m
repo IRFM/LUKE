@@ -61,4 +61,8 @@ launch.z_L = angles.z_L;
 %
 launch.dNpar0 = NaN;%Calculated from waist and focal point
 %
+if isfield(angles,'Xfrac'),
+    launch.yXfrac = angles.Xfrac;
+end
+%
 launch.angles = angles;
