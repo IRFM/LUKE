@@ -36,6 +36,26 @@ if nargin < 1,
     dkepath = '';
 end
 %
+if ~isempty(bridge_enforce) && ~isnan(bridge_enforce),
+    bridgestr = ['_bridge_',num2str(bridge_enforce)];
+else
+    bridgestr = '';
+end
+%
+filename = ['res_check_remote_yp_',datestr(now,29),bridgestr,'.log'];
+%
+if input_dke_yp(['Do you want to save the results in the log file ',filename,' ? (y/n)'],'y',{'y','n'}) == 'y',
+    %
+    if exist(filename,'file'),
+        delete(filename);
+    end
+    %
+    diary(filename);
+    %
+else
+    filename = '';
+end
+%
 dkepath = setpath_luke_jd(dkepath,bridge_enforce);
 %
 % test connection and identify local profiles
@@ -77,4 +97,8 @@ for irem = remlist,
 end
 %
 disp(' ')
+%
+if ~isempty(filename),
+    diary('off');
+end
 %

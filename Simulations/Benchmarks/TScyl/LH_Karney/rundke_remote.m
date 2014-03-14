@@ -1,14 +1,12 @@
 function [] = rundke_remote(remlist,bridge_enforce)
 %
-%Script for running the DKE solver (can be modified by the user for specific simulations)
-%by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
+if nargin < 2 || (~isempty(bridge_enforce) && (~isnumeric(bridge_enforce) || ~isscalar(bridge_enforce) || ~any(bridge_enforce == [0,1]))),
+    bridge_enforce = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
+end
 %
-clc
-close all
-clear mex
-clear functions
-warning off
-global nfig
+if nargin < 1 || isempty(remlist) || ~isnumeric(bridge_enforce),
+    remlist = NaN;% test all cases
+end
 %
 remtimout = 0;%10;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
@@ -19,28 +17,6 @@ remclean = 2;%0;% clean job files/folders : both on remote and local (2), only o
 opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
 mdce_opt = 0;% option for testing distributed computing inside remote calculation
-%
-if nargin == 0,
-    remlist = [];%NaN;%1;%[1:4,6:7];% list of remote profiles to check. Use NaN to check all, [] to prompt for user selection
-    bridge_enforce = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
-elseif nargin == 1,
-    if isempty(remlist),
-        disp('WARNING: the ''remlist'' variable has be set to NaN (check all)');
-        remlist = NaN;
-    end
-    %
-    bridge_enforce = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
-elseif nargin == 2,
-    if isempty(remlist),
-        disp('WARNING: the ''remlist'' variable has be set to NaN (check all)');
-        remlist = NaN;
-    end      
-    %
-    if bridge_enforce ~= 0 && bridge_enforce ~= 1,
-        disp('WARNING: the ''bridge_enforce'' variable has be set to NaN (no bridge enforce)');
-        bridge_enforce = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
-    end
-end  
 %
 luke_memory = 2000;% job memory in mb
 luke_walltime = 1;% job walltime in hours
@@ -223,9 +199,25 @@ eta_r_k = '29.72';
 %
 format
 %
-delete res_karney_remote
+if ~isempty(bridge_enforce) && ~isnan(bridge_enforce),
+    bridgestr = ['_bridge_',num2str(bridge_enforce)];
+else
+    bridgestr = '';
+end
 %
-diary res_karney_remote
+diaryname = ['res_karney_remote_',datestr(now,29),bridgestr,'.log'];
+%
+if input_dke_yp(['Do you want to save the results in the log file ',diaryname,' ? (y/n)'],'y',{'y','n'}) == 'y',
+    %
+    if exist(diaryname,'file'),
+        delete(diaryname);
+    end
+    %
+    diary(diaryname);
+    %
+else
+    diaryname = '';
+end
 %
 disp(' ')
 disp(' Remote profiles tested : ')
@@ -252,9 +244,16 @@ for remnum = 1:nrem,
     end
 end
 %
-diary off
+if ~isempty(diaryname),
+    diary off
+end
 %
 %************************************************************************************************************************************
 %
-save(filename);
-info_dke_yp(2,['Data saved in ',filename]);
+if ~any(flag_running) && input_dke_yp(['All jobs completed. Do you want to delete the file ',filename,' to avoid future conflict ? (y/n)'],'y',{'y','n'}) == 'y',
+    delete(filename);
+else
+    save(filename);
+    info_dke_yp(2,['Data saved in ',filename]);
+end
+%
