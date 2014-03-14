@@ -425,7 +425,7 @@ function neteraw=luke_get_nete_raw(nete,shot)
         proffitnode='\results::proffit.avg_time:neft_abs';
         autonode='\results::thomson.profiles.auto:ne:foo';
     elseif(strcmp(nete,'TE'))
-        proffitnode='\results::proffit.avg_time:teft_abs';
+        proffitnode='\results::proffit.avg_time:teft';
         autonode='\results::thomson.profiles.auto:te:foo';
     end
     mdsopen(shot);
