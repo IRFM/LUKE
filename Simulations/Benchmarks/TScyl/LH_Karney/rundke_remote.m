@@ -4,7 +4,7 @@ if nargin < 2 || (~isempty(bridge_enforce) && (~isnumeric(bridge_enforce) || ~is
     bridge_enforce = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
 end
 %
-if nargin < 1 || isempty(remlist) || ~isnumeric(bridge_enforce),
+if nargin < 1 || (~isempty(remlist) && ~isnumeric(bridge_enforce)),
     remlist = NaN;% test all cases
 end
 %
