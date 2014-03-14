@@ -22,6 +22,8 @@ for irem = 1:length(dkepath.remote),
             remote(nrem) = feval(remotestr,dkepath.remote(irem).schedulername,dkepath.remote(irem).profilename); 
             remote(nrem).env.luke_root = dkepath.remote(irem).luke_root;
             %
+        else
+            continue
         end
     else
         %
@@ -33,6 +35,10 @@ for irem = 1:length(dkepath.remote),
     if any(strfind(lochostname,remote(nrem).hostname)),
         remote(nrem).host = '';
     end
+end
+%
+if nrem == 0,
+    remote = [];
 end
 %
 % test compatibility of local and remote LUKE versions
