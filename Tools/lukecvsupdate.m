@@ -12,7 +12,7 @@ if nargin < 1,
     dkepath = load_structures_yp('dkepath','','');
 end
 %
-remotefunctions = {'select_LUKE_jd','load_remoteprofiles_jd','LUKEversions_jd'};% update MatTools, MatRemote, and LUKE
+remotefunctions = {'select_LUKE_jd.m','load_remoteprofiles_jd.m','luke_root'};% update MatTools, MatRemote, and LUKE
 %
 remotecvsupdate(dkepath.remote,remotefunctions)
 %
