@@ -14,5 +14,9 @@ end
 %
 remotefunctions = {'select_LUKE_jd.m','load_remoteprofiles_jd.m','luke_root'};% update MatTools, MatRemote, and LUKE
 %
-remotecvsupdate(dkepath.remote,remotefunctions)
+display_mode = 3;% show detailed results
+%
+exclude = {'.mat','~','.mexa64','.o'};
+%
+remotecvsupdate(dkepath.remote,remotefunctions,display_mode,exclude)
 %
