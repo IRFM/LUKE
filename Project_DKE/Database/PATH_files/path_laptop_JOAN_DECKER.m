@@ -106,7 +106,12 @@ dkepath.joan(1).remote(8).remoteid = 'EFDA_ITM';
 dkepath.joan(1).remote(8).schedulername = 'sge';
 dkepath.joan(1).remote(8).profilename = 'yvesp';
 dkepath.joan(1).remote(8).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
-% %
+%
+dkepath.joan(1).remote(9).remoteid = 'CRPP_BELLATRIX';
+dkepath.joan(1).remote(9).schedulername = 'pbs';
+dkepath.joan(1).remote(9).profilename = 'kamleitn';
+dkepath.joan(1).remote(9).luke_root = '/home/kamleitn/LUKE/';
+%
 % dkepath.joan(1).remote(end+1).remoteid = 'CEA_SATURNE';
 % dkepath.joan(1).remote(end).schedulername = 'sun';
 % dkepath.joan(1).remote(end).profilename = 'joan';
@@ -125,5 +130,8 @@ dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(5);
 dkepath.joan(1).remote(end).schedulername = 'direct';
 %
 dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(8);
+dkepath.joan(1).remote(end).schedulername = 'direct';
+%
+dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(9);
 dkepath.joan(1).remote(end).schedulername = 'direct';
 %
