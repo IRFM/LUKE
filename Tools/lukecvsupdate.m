@@ -34,7 +34,7 @@ remotefunctions = {'select_LUKE_jd.m','load_remoteprofiles_jd.m','luke_root'};% 
 %
 display_mode = 3;% show detailed results
 %
-exclude = {'.mat','~','.mexa64','.o'};
+exclude = {'.mat','~','.mexa64','.mexglx','.mexmaci64','.o','.DS_Store'};
 %
 remotecvsupdate(remote,remotefunctions,display_mode,exclude)
 %
