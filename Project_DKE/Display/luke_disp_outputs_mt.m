@@ -4,56 +4,80 @@ nt = length(equils);
 %
 waveids = {};
 %
+t = NaN(1,nt);
+Ip = NaN(1,nt);
+%
+I_tot = NaN(1,nt);
+P0_rf = NaN(1,nt);
+P_rf = NaN(1,nt);
+P_e = NaN(1,nt);
+%
 for it = 1:nt,
-    if ~isfield(outputs{it},'data_proc'),
-        outputs{it}.data_proc = proc_luke_jd(outputs{it},struct);
-    end
-    %
-    t(it) = equils{it}.shotime;
-    Ip(it) = equils{it}.ip/1e6;
-    %
-    scalar = outputs{it}.data_proc.scalar;
-    wave = outputs{it}.data_proc.wave;
-    id = [outputs{it}.data_proc.simul.id,'_'];
-    %
-    I_tot(it) = -scalar.I_tot;%%%%%%%%%%%%%%%
-    P0_rf(it) = scalar.p0_rf_2piRp*(2*pi*scalar.Rp);
-    P_rf(it) = scalar.p_rf_2piRp*(2*pi*scalar.Rp);
-    P_e(it) = scalar.p_e_2piRp*(2*pi*scalar.Rp);
-    %
-    nw = length(wave.wp0_rf_2piRp);
-    %
-    iC3PO = strfind(id,'C3PO');
-    %
-    if length(iC3PO) ~= nw,
-        disp(['Warning : wave identification failed for time : ',num2str(t(it))])
-        continue
-    elseif nw > 0,
-        iiws = zeros(1,nw);
-        for iw = 1:nw,
-            waveid = id(iC3PO(iw) + 4 + (1:min(strfind(id(iC3PO(iw)+5 : end),'_'))-1));
-            iiw = find(strcmp(waveids,waveid));
-            if isempty(iiw),
-                waveids = [waveids,waveid];
-                iiws(iw) = length(waveids);
-            else
-                iiws(iw) = iiw;
-            end
+    if isempty(outputs{it}),% times for which LUKE is not run
+        if ~isempty(waveids),
+            %
+            wP0_rf(it,:) = NaN;
+            wP_rf(it,:) = NaN;
+            wrhoP_rf(it,:) = NaN;
+            %
+            wP_rf_lin(it,:) = NaN;
+            wrhoP_rf_lin(it,:) = NaN;
+            %
         end
-        wP0_rf(it,iiws) = wave.wp0_rf_2piRp*(2*pi*scalar.Rp);
-        wP_rf(it,iiws) = wave.wp_rf_2piRp*(2*pi*scalar.Rp);
-        wrhoP_rf(it,iiws) = wave.wrhoP;
         %
-        wP_rf_lin(it,iiws) = wave.wp_rf_2piRp_lin*(2*pi*scalar.Rp);
-        wrhoP_rf_lin(it,iiws) = wave.wrhoP;
-    elseif length(waveids) > 0,
+    else% times for which LUKE is run
         %
-        wP0_rf(it,:) = 0;
-        wP_rf(it,:) = 0;
-        wrhoP_rf(it,:) =0;
+        if ~isfield(outputs{it},'data_proc'),% times for which LUKE is not processed
+            outputs{it}.data_proc = proc_luke_jd(outputs{it},struct);
+        end
         %
-        wP_rf_lin(it,:) = NaN;
-        wrhoP_rf_lin(it,:) = NaN;
+        t(it) = equils{it}.shotime;
+        Ip(it) = equils{it}.ip/1e6;
+        %
+        scalar = outputs{it}.data_proc.scalar;
+        wave = outputs{it}.data_proc.wave;
+        id = [outputs{it}.data_proc.simul.id,'_'];
+        %
+        I_tot(it) = -scalar.I_tot;%%%%%%%%%%%%%%%
+        P0_rf(it) = scalar.p0_rf_2piRp*(2*pi*scalar.Rp);
+        P_rf(it) = scalar.p_rf_2piRp*(2*pi*scalar.Rp);
+        P_e(it) = scalar.p_e_2piRp*(2*pi*scalar.Rp);
+        %
+        nw = length(wave.wp0_rf_2piRp);
+        %
+        iC3PO = strfind(id,'C3PO');
+        %
+        if length(iC3PO) ~= nw,
+            disp(['Warning : wave identification failed for time : ',num2str(t(it))])
+            continue
+        elseif nw > 0,
+            iiws = zeros(1,nw);
+            for iw = 1:nw,
+                waveid = id(iC3PO(iw) + 4 + (1:min(strfind(id(iC3PO(iw)+5 : end),'_'))-1));
+                iiw = find(strcmp(waveids,waveid));
+                if isempty(iiw),
+                    waveids = [waveids,waveid];
+                    iiws(iw) = length(waveids);
+                else
+                    iiws(iw) = iiw;
+                end
+            end
+            wP0_rf(it,iiws) = wave.wp0_rf_2piRp*(2*pi*scalar.Rp);
+            wP_rf(it,iiws) = wave.wp_rf_2piRp*(2*pi*scalar.Rp);
+            wrhoP_rf(it,iiws) = wave.wrhoP;
+            %
+            wP_rf_lin(it,iiws) = wave.wp_rf_2piRp_lin*(2*pi*scalar.Rp);
+            wrhoP_rf_lin(it,iiws) = wave.wrhoP;
+        elseif ~isempty(waveids),
+            %
+            wP0_rf(it,:) = 0;
+            wP_rf(it,:) = 0;
+            wrhoP_rf(it,:) = 0;
+            %
+            wP_rf_lin(it,:) = NaN;
+            wrhoP_rf_lin(it,:) = NaN;
+            %
+        end
         %
     end
     %
