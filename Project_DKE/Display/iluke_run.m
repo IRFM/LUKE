@@ -41,12 +41,27 @@ if strcmp(action,'lukestart'),
     else
         %
         opt.save = -1;% (1): save LUKE_RESULTS or return error (0): return results or error
+        opt.savepath = [workdir,'LUKE_files',filesep];% (1): save LUKE_RESULTS or return error (0): return results or error
         opt.proc = struct;% if not empty, structure containing options for proc_luke. In that case, opt.fields = {'data_proc'}.
         %
-        lukestructs = cell(1,ntimes);
+        if any(status.output),% LUKE is already run for some times
+            %
+            lukeobj = iluke_info(lukeobj,'');% disable info display
+            %
+            job_mask = iselect_jd({},'LUKE already run for some times. Select time incides to calculate : ',lukeobj.infopanel.handle,style.editselectstyle,find(status.output == 0),'edit');
+            %
+            lukeobj = iluke_info(lukeobj,'luke');drawnow;% disable info display
+            %
+        else
+            job_mask = 1:ntimes;
+        end
         %
-        for it = 1:ntimes,
-            lukestructs{it}.simul.id = make_luke_simulid_jd(equils{it},ohms{it},transpfastes{it},ripples{it},wavess{it});
+        nt = length(job_mask);
+        %
+        lukestructs = cell(1,nt);
+        %
+        for it = 1:nt,
+            lukestructs{it}.simul.id = make_luke_simulid_jd(equils{job_mask(it)},ohms{job_mask(it)},transpfastes{job_mask(it)},ripples{job_mask(it)},wavess{job_mask(it)});
             if dkepath.remnum == 0,% local calculation
                 lukestructs{it}.simul.path = workdir;
             end        
@@ -55,15 +70,12 @@ if strcmp(action,'lukestart'),
             lukestructs{it}.dkeparam = dkeparam;
             lukestructs{it}.dkedisplay = dkedisplay;
             %
-            lukestructs{it}.equil = equils{it};
-            lukestructs{it}.ohm = ohms{it};
-            lukestructs{it}.transpfaste = transpfastes{it};
-            lukestructs{it}.ripple = ripples{it};
-            lukestructs{it}.waves = wavess{it};
+            lukestructs{it}.equil = equils{job_mask(it)};
+            lukestructs{it}.ohm = ohms{job_mask(it)};
+            lukestructs{it}.transpfaste = transpfastes{job_mask(it)};
+            lukestructs{it}.ripple = ripples{job_mask(it)};
+            lukestructs{it}.waves = wavess{job_mask(it)};
         end
-        %
-        nt = ntimes;
-        job_mask = 1:nt;
     end
     %
     if dkepath.remnum == 0 || dkepath.remtimout > 0,
