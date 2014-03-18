@@ -151,8 +151,11 @@ if iscell(lukestructs),% remote and/or distributed calculation
                 %
                 % save output on local machine and return data_proc
                 %
+                if ~isfield(lukestructs{ijob}.opt,'savepath'),
+                    lukestructs{ijob}.opt.savepath = '';
+                end
                 savestruct.lukestructs = lukestructs{ijob};
-                savefile = ['LUKE_RESULTS_',savestruct.lukestructs.simul.id,'.mat'];
+                savefile = [lukestructs{ijob}.opt.savepath,'LUKE_RESULTS_',savestruct.lukestructs.simul.id,'.mat'];
                 save(savefile,'-struct','savestruct','-v7.3');
                 %
                 if ~isfield(savestruct.lukestructs.opt,'proc') || ~isstruct(savestruct.lukestructs.opt.proc),
