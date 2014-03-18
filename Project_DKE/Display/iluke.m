@@ -257,7 +257,7 @@ lukeobj.saveshot.state = 'on';
 lukeobj.shotimes.callback = 'curtime = get(lukeobj.shotimes.handle,''Value'') - 2;lukeobj = iluke_info(lukeobj,''text'');iluke_update;';
 lukeobj.import.callback = 'action = ''import'';iluke_callbacks;';
 lukeobj.exitluke.callback = 'close(lukeobj.mainfig.handle)';
-lukeobj.newshot.callback = 'status.external = 0;status.equil(:) = -1;iluke_update;';
+lukeobj.newshot.callback = 'status.external = 0;status.equil(:) = -1;action = ''cleargraphs'';iluke_callbacks;';
 lukeobj.loadshot.callback = 'action = ''loadshot'';iluke_callbacks;';
 lukeobj.saveshot.callback = 'action = ''saveshot'';iluke_callbacks;';
 lukeobj.workdirtitle.callback = 'action = ''workdir'';iluke_callbacks;';
