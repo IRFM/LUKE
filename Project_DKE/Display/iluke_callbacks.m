@@ -143,7 +143,7 @@ switch action
             %
             % select fields to save and remote subfields handle 
             %
-            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotime','shotimes','data','equil','ohm','transp','ripple','wave','wavestruct','luke','r5x2','param','display','lukeid'});
+            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotimes','data','equil','ohm','transp','ripple','wave','wavestruct','luke','r5x2','param','lukeid'});
             lukeobjmod = rmfields_jd(lukeobjmod,{'handle','position'},1);
             save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','outputs','jobs','hxrs','status','tokamak','shotnum','shotimes');
             %
