@@ -509,4 +509,9 @@ style.distselectstyle = style;% for dist profile selection
 style.distselectstyle.textwidth = 200;
 style.distselectstyle.butwidth = 400;
 
+style.editselectstyle = style;% for edition within GUI
+%
+style.editselectstyle.longbutwidth = 200;
+style.editselectstyle.textwidth = style.panelwidth - style.editselectstyle.butwidth - style.editselectstyle.longbutwidth - 4*style.editselectstyle.buthsep - 2*style.buthsep;
+
 iluke_update;
