@@ -72,6 +72,19 @@ dkedisplay.display_mode = par.display_mode;%Display mode: (0): no, (1): partial,
 %
 % PARAMETRES EQUILIBRE
 %
+equil = make_equil_cronos(equil_id,equi,gene,prof,compo,impur);
+%
+% PARAMETRES OHMIC, transformation en flux poloidal puis en coordonnees radiales de LUKE
+%
+% psipncronos    : coordonnee radiale normalisee de CRONOS en flux poloidal
+% psipncronoshel : coordonnee radiale normalisee en flux poloidal associee a HELENA pour BR BZ et BPHI
+% psitncronoshel : coordonnee radiale normalisee en flux toroidal associee a HELENA pour BR BZ et BPHI 
+% psipn_jd       : coordonnee radiale normalisee en flux poloidal associee a LUKE
+%
+nrho_ohm       = 101;
+ohm.rho        = linspace(0,1,nrho_ohm);% grille radiale rhoG de LUKE
+%psipncronos    = abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1)));
+%
 if equi.psiRZ(1) == equi.psiRZ(2)
    disp('non monotonic psiRZ');
    psiRZ = interp1(gene.x*equi.rhomax,equi.psi,double(equi.rhoRZ),'pchip','extrap');
@@ -80,18 +93,6 @@ else
    psiRZ = double(equi.psiRZ); 
 end
 %
-equil = make_equil_cronos(equil_id,equi,gene,prof,compo,impur);
-%
-% PARAMETRES OHMIC, transformation en flux poloidal puis en coordonnees radials de LUKE
-%
-% psipncronos    : coordonnee radiale normalisee de CRONOS en flux poloidal
-% psipncronoshel : coordonnee radiale normalisee en flux poloidal associee a HELENA pour BR BZ et BPHI
-% psitncronoshel : coordonnee radiale normalisee en flux toroidal associee a HELENA pour BR BZ et BPHI 
-% psipn_jd       : coordonnee radiale normalisee en flux poloidal associee a LUKE
-%
-nrho_ohm       = 101;
-ohm.rho        = linspace(0,1,nrho_ohm);
-%psipncronos    = abs(equi.psi-equi.psi(1))/max(abs(equi.psi-equi.psi(1)));
 psipncronoshel = abs(psiRZ-psiRZ(1))/max(abs(psiRZ-psiRZ(1)));
 psitncronoshel = equi.rhoRZ/equi.rhomax;
 psipn_ohm       = rho2psi_jd(equil,ohm.rho);
@@ -105,8 +106,8 @@ psipn_ohm       = rho2psi_jd(equil,ohm.rho);
 % ohm.epsi (V/m): signe par rapport à BT
 % - signe is electron charge
 %----------------------------------------------------------
-ohm.epsi     = -sign(gene.signe.ip)*sign(gene.signe.b0)*interp1(gene.x,prof.epar,psitncronoshel);
-ohm.epsi     = complex(interp1(psipncronoshel,ohm.epsi,psipn_ohm));%Imaginary for considering the definition of the flux surface averaging of CRONOS in LUKE
+epsicronoshel     = -sign(gene.signe.ip)*sign(gene.signe.b0)*interp1(gene.x,prof.epar,psitncronoshel);% electric field with respect to BT on helena grid
+ohm.epsi     = complex(interp1(psipncronoshel,epsicronoshel,psipn_ohm));%Imaginary for considering the definition of the flux surface averaging of CRONOS in LUKE
 %
 % PARAMETRES RIPPLE 
 %
@@ -581,4 +582,15 @@ function [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoe
     %
     clear raytracing_yp alphaphimex_jd trapz_dke_yp dmumpsmex
     %
+end
+%
+% integralle surfacique (d'une grandeur independante de theta)
+%  s = integrale de surface
+%  e = valeur a integree
+%  x = coordonnees normalisee
+%  sp = datak.equi.sp
+%  rhomax = datak.equi.rhomax   
+function s=zintsurf(e,x,sp,rhomax)   
+
+    s = rhomax .* trapz(x,sp .* e,2);
 end
