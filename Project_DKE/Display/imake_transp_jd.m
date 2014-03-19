@@ -4,6 +4,8 @@ function transpfaste = imake_transp_jd(dkepath,basestr,equil,external,workdir,op
 %
 transpfaste = '';
 %
+if nargin < 7,select = struct;end
+%
 if ~isfield(select,'table') || ~select.table,
     %
     Dr_model = input('Radial diffusion type: \n0 electrostatic (no v|| dependence), \n1 electromagnetic (linear increase with v||) \n[0] : ');
@@ -117,8 +119,6 @@ else
     transpfaste = imod_struct_jd(transpfaste,'transpfaste',1,opt_gui,struct,select.style);    
     %
 end
-%
-%
 %
 transpfaste.info.txt = {...
     ['Central radial diffusion (m^2/s) : ',num2str(transpfaste.Dr0)],...
