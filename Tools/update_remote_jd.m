@@ -2,6 +2,13 @@ function dkepath = update_remote_jd(dkepath,bridge_enforce)
 %
 % this function load remote profiles and selects accessible remote clusters with compatible LUKE version 
 %
+%       - bridge_enforce : [NaN, empty, -1, 0 or 1] 
+%           o -1  : disable remote profiles
+%           o NaN : (default) use value from remote.bridge_enforce
+%           o []  : tests both modes and give priority to ssh key pair
+%           o 0   : tests only ssh key pair,
+%           o 1   : tests only bridge mode
+%
 lukever = LUKEversion_jd;% local LUKE version
 lukever(lukever == ' ' | lukever == '.') = '_';% syntax for comparison
 %
@@ -69,21 +76,31 @@ end
 %
 % test connection and identify local profiles
 %
-disp (' ')
-info_dke_yp(3,'Testing remote profile connections ')
-%
-[dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false,bridge_enforce);
-%
-nrem = length(dkepath.remote);
-%
-disp (' ')
-info_dke_yp(2,'List of compatible remote profiles available :')
-disp(' ')
-%
-for irem = 1:nrem,
-    info_dke_yp(4,['#',num2str(irem),' : ',dkepath.profilestr{irem}]);
+if isempty(bridge_enforce) || isnan(bridge_enforce) || bridge_enforce >= 0,% remote profiles enabled : test connections and display output following bridge_enforce
+    %
+    disp (' ')
+    info_dke_yp(3,'Testing remote profile connections ')
+    %
+    [dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false,bridge_enforce);
+    %
+    nrem = length(dkepath.remote);
+    %
+    disp (' ')
+    info_dke_yp(2,'List of compatible remote profiles available :')
+    disp(' ')
+    %
+    for irem = 1:nrem,
+        info_dke_yp(4,['#',num2str(irem),' : ',dkepath.profilestr{irem}]);
+    end
+    disp(' ')
+    %
+else% remote profiles disabled
+    %
+    dkepath.remote = [];
+    dkepath.profilestr = {};
+    nrem = 0;
+    %
 end
-disp(' ')
 %
 dkepath.remprofiles = cell(1,1 + nrem);
 dkepath.distprofiles = cell(1,3 + nrem);

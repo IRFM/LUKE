@@ -16,7 +16,8 @@ function dkepath = setpath_luke_jd(dkepath,bridge_enforce)
 %       o luke_root (string)  : LUKE root path
 %       o dkepath (struct)    : an existing dkepath structure (setpath_luke_jd then used to reset paths, recompile MEX, or test remote connections)
 %
-%   - bridge_enforce : [NaN, empty, 0 or 1] 
+%   - bridge_enforce : [NaN, empty, -1, 0 or 1] 
+%       o -1  : disable remote profiles
 %       o NaN : (default) use value from remote.bridge_enforce
 %       o []  : tests both modes and give priority to ssh key pair
 %       o 0   : tests and authorize only ssh key pair,
@@ -220,6 +221,8 @@ if nargout == 0,
     setappdata(0,'dkepath',dkepath');
 end
 %
-info_dke_yp(0,'To check if the remote profiles are currently functionning within LUKE environment, please run ''check_remote_yp;'':')
-disp (' ');
+if ~isempty(dkepath.remote),
+    info_dke_yp(0,'To check if the remote profiles are currently functionning within LUKE environment, please run ''check_remote_yp;'':')
+    disp (' ');
+end
 %
