@@ -18,15 +18,39 @@ disp (' ')
 info_dke_yp(2,'List of remote profiles available :')
 disp(' ')
 %
-for irem = 1:nrem,
-    info_dke_yp(4,['#',num2str(irem),' : ',dkepath.profilestr{irem}]);
+iirem = 1;
+%
+for irem = 1:nrem-1,
+    flag = 0;
+    host0 = dkepath.remote(irem).host;
+    for jrem = irem+1:nrem,
+        host1 = dkepath.remote(jrem).host;
+        scheduler = dkepath.remote(jrem).scheduler;
+        if strcmp(host0,host1) && strcmp(scheduler,'direct'),
+            remote_index(iirem) = jrem;
+            iirem = iirem + 1;
+            flag = 1;
+            break
+        end 
+    end
+    %
+    if flag == 0, 
+        remote_index(iirem) = irem;
+        iirem = iirem + 1;
+    end
+end
+%
+remote_index = sort(unique(remote_index));
+
+for irem = 1:length(remote_index),
+    info_dke_yp(4,['#',num2str(irem),' : ',dkepath.profilestr{remote_index(irem)}]);
 end
 disp(' ')
 %  
-remlist = input_dke_yp('Please identify profiles to be updated',1:nrem,[1;nrem]);
+remlist = input_dke_yp('Please identify profiles to be updated',1:length(remote_index),[1;length(remote_index)]);
 disp(' ')
 %
-remote = dkepath.remote(remlist);
+remote = dkepath.remote(remote_index(remlist));
 %
 % ----------------------------
 %
