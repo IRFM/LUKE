@@ -12,10 +12,16 @@ remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return l
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
 remnum = 1;% remote profile number. Use 0 for local sequential calculations
-remdebugmode = 0;%1;% debug mode (0) off (1) on
+remdebugmode = 1;%1;% debug mode (0) off (1) on
 remclean = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 %
 opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
+%
+%
+mdce_opt = 0;% option for testing distributed computing inside remote calculation
+%
+luke_memory = 2000;% job memory in mb
+luke_walltime = 1;% job walltime in hours
 %
 p_opt = -1;
 % 
@@ -91,6 +97,12 @@ dkeparam.nmhu_S = 201;
 dkeparam.rho_S = rho_S;% radial flux grid points enforced
 dkeparam.psin_S = psin_S;% radial flux grid points enforced
 %
+dkeparam.clustermode.coll_dke_jd.scheduler.mode = mdce_opt;
+dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = mdce_opt;
+%
+dkeparam.luke_memory = luke_memory;% job memory in mb
+dkeparam.luke_walltime = luke_walltime;% job walltime in hours
+%
 betath = 0.001;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
@@ -101,7 +113,7 @@ equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
 %
 opt.fields = {'Zcurr','ZP0'};% select fields to be returned from lukestructs. Use NaN to return all fields.
 %
-Zi_list = [1:20];
+Zi_list = [1:20*0+4];
 coll_mode_list = [0:2];
 %
 nZi = length(Zi_list);
@@ -144,7 +156,6 @@ else% new simulation
             %
         end
     end
-    %
 end
 %
 dkepath.remtimout = remtimout;% timeout in minutes
