@@ -99,19 +99,21 @@ dkepath.yves(1).remote(7).luke_root = '/home/YP105119/LUKE/';
 dkepath.yves(1).remote(8) = dkepath.yves(1).remote(7);
 dkepath.yves(1).remote(8).schedulername = 'direct';
 %
-dkepath.yves(1).remote(9).remoteid = 'ASIPP_SHENMA';
-dkepath.yves(1).remote(9).schedulername = 'torque';
-dkepath.yves(1).remote(9).profilename = 'yves';
-dkepath.yves(1).remote(9).luke_root = '/home/PEYSSON/LUKE/';
+dkepath.yves(1).remote(9).remoteid = 'EFDA_ITM';
+dkepath.yves(1).remote(9).schedulername = 'sge';
+dkepath.yves(1).remote(9).profilename = 'yvesp';
+dkepath.yves(1).remote(9).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
 %
-dkepath.yves(1).remote(10).remoteid = 'EFDA_ITM';
-dkepath.yves(1).remote(10).schedulername = 'sge';
-dkepath.yves(1).remote(10).profilename = 'yvesp';
-dkepath.yves(1).remote(10).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
+dkepath.yves(1).remote(10) = dkepath.yves(1).remote(9);
+dkepath.yves(1).remote(10).schedulername = 'direct';
 %
-dkepath.yves(1).remote(11) = dkepath.yves(1).remote(10);
-dkepath.yves(1).remote(11).schedulername = 'direct';
+dkepath.yves(1).remote(11).remoteid = 'ASIPP_SHENMA';
+dkepath.yves(1).remote(11).schedulername = 'torque';
+dkepath.yves(1).remote(11).profilename = 'yves';
+dkepath.yves(1).remote(11).luke_root = '/home/PEYSSON/LUKE/';
 %
+dkepath.yves(1).remote(12) = dkepath.yves(1).remote(11);
+dkepath.yves(1).remote(12).schedulername = 'direct';
 
 
 
