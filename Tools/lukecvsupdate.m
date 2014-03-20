@@ -1,4 +1,4 @@
-function lukecvsupdate(dkepath)
+function lukecvsupdate(dkepath,debugmode)
 %
 % This function updates LUKE and associated toolboxes remotely for the profiles stored
 % in dkepath
@@ -8,7 +8,14 @@ function lukecvsupdate(dkepath)
 %       - dkepath: path structure with remote profiles
 %           (default: if no input structure or empty, dkepath is automatically loaded from LUKE_PATH.mat
 %
-if nargin < 1,
+if nargin == 0,
+    dkepath = '';
+    debugmode = 0;  
+elseif nargin == 1,
+    debugmode = 0;  
+end
+%
+if isempty(dkepath)
     dkepath = load_structures_yp('dkepath','','');
 end
 %
@@ -51,6 +58,8 @@ remlist = input_dke_yp('Please identify profiles to be updated',1:length(remote_
 disp(' ')
 %
 remote = dkepath.remote(remote_index(remlist));
+%
+remote.debugmode = debugmode;
 %
 % ----------------------------
 %
