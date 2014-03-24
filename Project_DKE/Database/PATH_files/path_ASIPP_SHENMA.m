@@ -32,7 +32,7 @@ dkepath.PEYSSON(1).mex800 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/s
 %
 dkepath.PEYSSON(1).compiler_opt.copts.mex800 = '';
 dkepath.PEYSSON(1).compiler_opt.fopts.mex800 = 'FC=''gfortran''';
-dkepath.PEYSSON(1).compiler_opt.helmex.mex800 = NaN;% Optional argument for helmex compilation
+%dkepath.PEYSSON(1).compiler_opt.helmex.mex800 = NaN;% Optional argument for helmex compilation
 %
 %Where MUMPS matrix solver is stored (MEX function)
 %

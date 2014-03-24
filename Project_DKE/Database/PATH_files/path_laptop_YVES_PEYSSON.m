@@ -34,7 +34,7 @@ dkepath.yves(1).mex801 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbook
 %
 dkepath.yves(1).compiler_opt.copts = '';
 dkepath.yves(1).compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
-dkepath.yves(1).compiler_opt.helmex.mex801 = ' -llapack -lblas';%-O2 -fdefault-real-8 -fdefault-double-8 -lgfortran';%'  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+%dkepath.yves(1).compiler_opt.helmex.mex801 = ' -llapack -lblas';%-O2 -fdefault-real-8 -fdefault-double-8 -lgfortran';%'  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 %
 % MUMPS matrix solver (parallel, sequential, mex)
 %
