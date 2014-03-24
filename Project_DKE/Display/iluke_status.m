@@ -22,6 +22,9 @@ if iscell(s),
     if curtime > 0,
         if status(curtime) <= 0,
             sobj.text.string = '< empty >';
+            if ~any(strcmp(cleartags{2+curtime},'all')) && ~any(strcmp(cleartags{2+curtime},sname)),
+                cleartags{2+curtime} = [cleartags{2+curtime},sname];
+            end
         elseif ~isfield(s{curtime},'filename') || isempty(s{curtime}.filename), % s is not saved
             sobj.text.string = '< not saved >';
         else
@@ -82,10 +85,6 @@ if status <= 0,% s does not exist
     end
     sobj.clear.state = 'off';
     sobj.disp.state = 'off';
-    %
-    if ~any(strcmp(cleartags,sname)),
-        cleartags = [cleartags,sname];
-    end
 else% s exists
     if mode <= 0,
         sobj.save.state = 'on';

@@ -1,5 +1,8 @@
-function graph = iluke_graphs(h,n,str,tag)
+function graph = iluke_graphs(h,n,str,tag,curtime)
 %
+if nargin < 5,
+    curtime = 0;% case with all times considered
+end
 if isscalar(n),
     n=1:n;
 end
@@ -35,6 +38,7 @@ else
         graph(in).handles = children(flag(n{in}));
         graph(in).info = str{in};
         graph(in).tag = tag{in};
+        graph(in).curtime = curtime;
     end
 end
 %

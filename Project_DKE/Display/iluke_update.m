@@ -52,11 +52,27 @@ status.job(flag_remove) = [];
 status.output(flag_remove) = [];
 status.hxr(flag_remove) = [];
 
+% delete outdated graphs
+flag_remove_g = find(flag_remove) + 2;% +2 for <new>,<all>
+for it = flag_remove_g,
+    %
+    ngraphs = length(graphss{it});
+    for igraph = ngraphs:-1:1,% sum over graphs
+        delete(graphss{it}(igraph).handles);% clear all graph components
+    end
+    %
+end
+graphss(flag_remove_g) = [];
+cleartags(flag_remove_g) = [];
+lukeobj.plot1.gindex(flag_remove_g) = [];
+lukeobj.plot2.gindex(flag_remove_g) = [];
+lukeobj.plot3.gindex(flag_remove_g) = [];
+
 flag_clear = status.equil == 0;
 flag_newempty = status.equil == 2;
 flag_newfull = status.equil == 3;
 
-flag_new = flag_newempty | flag_newfull;
+flag_new = flag_newempty | flag_newfull;% new equils
 %
 if any(diff(flag_new) < 0),
     error('New equils must be added at the end')
@@ -87,6 +103,12 @@ status.job(end+1:end+nnew) = 0;
 status.output(end+1:end+nnew) = 0;
 status.hxr(end+1:end+nnew) = 0;
 
+graphss(end+1:end+nnew) = graphss(1);% fill with empty structures with memory of fields
+cleartags(end+1:end+nnew) = {{}};
+lukeobj.plot1.gindex(end+1:end+nnew) = 0;
+lukeobj.plot2.gindex(end+1:end+nnew) = 0;
+lukeobj.plot3.gindex(end+1:end+nnew) = 0;
+
 %
 % structures to be cleared
 %
@@ -101,6 +123,9 @@ wavestructss(flag_clear) = {{}};
 jobs(flag_clear) = {[]};
 outputs(flag_clear) = {[]};
 hxrs(flag_clear) = {[]};
+
+flag_clear_g = find(flag_clear) + 2;% +2 for <new>,<all>
+cleartags(flag_clear_g) = {'all'};% clear all graphs corresponding to cleared times
 
 status.equil(flag_newempty) = 0;
 status.equil(flag_newfull) = 1;
@@ -120,6 +145,7 @@ status.hxr(flag_clear) = -1;
 % sort times removing previous structures if recurrence
 %
 [shotimes,mask] = unique(shotimes,'last');
+
 ntimes = length(shotimes);
 
 equils = equils(mask);
@@ -146,7 +172,14 @@ status.hxr = status.hxr(mask);
 
 status.hxr(status.output < 1) = -1;% synthetic diagnostics need distribution
 
-clear flag_remove flag_clear flag_newempty flag_newfull flag_new nnew mask
+mask_g = [1,2,2+mask];% 1,2 for <new>,<all>
+graphss = graphss(mask_g);
+cleartags = cleartags(mask_g);
+lukeobj.plot1.gindex = lukeobj.plot1.gindex(mask_g);
+lukeobj.plot2.gindex = lukeobj.plot2.gindex(mask_g);
+lukeobj.plot3.gindex = lukeobj.plot3.gindex(mask_g);
+
+clear flag_remove flag_remove_g flag_clear flag_clear_g flag_newempty flag_newfull flag_new nnew mask mask_g
 
 if ntimes == 1 && curtime == 0,
     curtime = 1;
@@ -240,52 +273,61 @@ iluke_manage;
 %
 
 %
-% graphs cannot have two parents
+% clear tagged graphs and fix indices 
 %
-if lukeobj.plot2.gindex == lukeobj.plot1.gindex,
-    lukeobj.plot2.gindex = 0;
-end
-if any(lukeobj.plot3.gindex == [lukeobj.plot1.gindex,lukeobj.plot2.gindex]),
-    lukeobj.plot3.gindex = 0;
-end
-%
-plothandles = [lukeobj.plot1.handle,lukeobj.plot2.handle,lukeobj.plot3.handle];
-plotindices = [lukeobj.plot1.gindex,lukeobj.plot2.gindex,lukeobj.plot3.gindex];
-%
-% clear outdated graphs
-%
-ngraphs = length(graphs);
-for igraph = ngraphs:-1:1,
-    if any(strcmp(graphs(igraph).tag,cleartags)),
-        for ich = 1:length(graphs(igraph).handles),
-            delete(graphs(igraph).handles(ich))
-        end
-        graphs(igraph) = [];
-        plotindices(plotindices == igraph) = 0;
-        plotindices(plotindices > igraph) = plotindices(plotindices > igraph) - 1;
+for it = 1:ntimes+2,
+    %
+    % graphs cannot have two parents
+    %
+    if lukeobj.plot2.gindex(it) == lukeobj.plot1.gindex(it),
+        lukeobj.plot2.gindex(it) = 0;
     end
+    if any(lukeobj.plot3.gindex(it) == [lukeobj.plot1.gindex(it),lukeobj.plot2.gindex(it)]),
+        lukeobj.plot3.gindex(it) = 0;
+    end
+    %    
+    plotindices = [lukeobj.plot1.gindex(it),lukeobj.plot2.gindex(it),lukeobj.plot3.gindex(it)];
+    %
+    % clear outdated graphs and make others not visible
+    %
+    ngraphs = length(graphss{it});
+    for igraph = ngraphs:-1:1,
+        if any(strcmp(cleartags{it},'all')) || any(strcmp(graphss{it}(igraph).tag,cleartags{it})),
+            delete(graphss{it}(igraph).handles)
+            graphss{it}(igraph) = [];
+            plotindices(plotindices == igraph) = 0;
+            plotindices(plotindices > igraph) = plotindices(plotindices > igraph) - 1;
+        else
+            recset_jd(graphss{it}(igraph).handles,'Visible','off',true)
+        end
+    end
+    %
+    lukeobj.plot1.gindex(it) = plotindices(1);
+    lukeobj.plot2.gindex(it) = plotindices(2);
+    lukeobj.plot3.gindex(it) = plotindices(3);
+    % 
+    cleartags{it} = {};% cleartags can be purged
+    %
 end
-%
-lukeobj.plot1.gindex = plotindices(1);
-lukeobj.plot2.gindex = plotindices(2);
-lukeobj.plot3.gindex = plotindices(3);
+clear it 
+
 %
 % move and/or show selected graphs
 %
+graphs = graphss{2+curtime};
 ngraphs = length(graphs);
 graphsel_string = cell(1,ngraphs+1);
 graphsel_string{1} = '';
 %
+plothandles = [lukeobj.plot1.handle,lukeobj.plot2.handle,lukeobj.plot3.handle];
+plotindices = [lukeobj.plot1.gindex(2+curtime),lukeobj.plot2.gindex(2+curtime),lukeobj.plot3.gindex(2+curtime)];
+%
 for igraph = 1:ngraphs,
     graphsel_string{igraph+1} = graphs(igraph).info;
     iplot = find(igraph == plotindices);
-    for ich = 1:length(graphs(igraph).handles),
-        if isempty(iplot),
-            recset_jd(graphs(igraph).handles(ich),'Visible','off')
-        else
-            set(graphs(igraph).handles(ich),'Parent',plothandles(iplot))
-            recset_jd(graphs(igraph).handles(ich),'Visible','on')
-        end
+    if ~isempty(iplot),
+        recset_jd(graphs(igraph).handles,'Parent',plothandles(iplot),false)
+        recset_jd(graphs(igraph).handles,'Visible','on',true)
     end
 end
 %
@@ -293,13 +335,11 @@ lukeobj.graph1sel.string = graphsel_string;
 lukeobj.graph2sel.string = graphsel_string;
 lukeobj.graph3sel.string = graphsel_string;
 %
-clear plothandles plotindices graphsel_string igraph iplot ich ngraphs
+lukeobj.graph1sel.value = 1 + plotindices(1);
+lukeobj.graph2sel.value = 1 + plotindices(2);
+lukeobj.graph3sel.value = 1 + plotindices(3);
 %
-lukeobj.graph1sel.value = 1 + lukeobj.plot1.gindex;
-lukeobj.graph2sel.value = 1 + lukeobj.plot2.gindex;
-lukeobj.graph3sel.value = 1 + lukeobj.plot3.gindex;
-%
-cleartags = {};
+clear plothandles plotindices graphsel_string igraph iplot ich graphs ngraphs
 %
 if lukeobj.plot1.gindex > 0,
     lukeobj.graph1save.state = 'on';
@@ -322,6 +362,7 @@ else
     lukeobj.graph3save.state = 'off';
     lukeobj.graph3print.state = 'off';
 end    
+
 %
 % REMOTE
 %

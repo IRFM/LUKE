@@ -77,6 +77,8 @@ switch action
                     curtime = -1; 
                 end
                 %
+                iluke_initgraphs;% to initialize graphs according to loaded data
+                %
                 iluke_update;
                 %
                 lukeobj.simulfile.string = filename;%[pathname,filename];
@@ -602,72 +604,57 @@ switch action
         %
         % displaying equilibrium data
         %
+        it_g = 2 + curtime;%<new>,<all>,...
+        %
+        lukeobj.plot1.gindex(it_g) = 0;
+        lukeobj.plot2.gindex(it_g) = 0;
+        lukeobj.plot3.gindex(it_g) = 0;
+        %
+        cleartags{it_g} = {'equil'};
+        %
+        iluke_update;% initialize display
+        %
+        newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
+        newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
+        %
         if curtime > 1,
-            lukeobj.plot1.gindex = 0;
-            lukeobj.plot2.gindex = 0;
-            lukeobj.plot3.gindex = 0;
             %
-            cleartags = {'equil'};
+            equilibrium_jd(equils{curtime},NaN,3,'linear',10,[newgraph1_handle,newgraph2_handle,newgraph3_handle],style);
             %
-            iluke_update;% initialize display
+            graphs(1) = iluke_graphs(lukeobj.plot1.handle,1,'magnetic equilibrium','equil',curtime);
+            graphs(2) = iluke_graphs(lukeobj.plot2.handle,2,'temperature and density','equil',curtime);% includes legend
+            graphs(3) = iluke_graphs(lukeobj.plot3.handle,1,'effective charge','equil',curtime);
             %
-            newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
-            newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
-            newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
-            %
-            equilibrium_jd(equil,NaN,3,'linear',10,[newgraph1_handle,newgraph2_handle,newgraph3_handle],style);
-            %   
-            ngraphs = length(graphs);
-            %
-            graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,1,'magnetic equilibrium','equil');
-            graphs(end+1) = iluke_graphs(lukeobj.plot2.handle,2,'temperature and density','equil');% includes legend
-            graphs(end+1) = iluke_graphs(lukeobj.plot3.handle,1,'effective charge','equil');
-            %
-            lukeobj.plot1.gindex = ngraphs + 1;
-            lukeobj.plot2.gindex = ngraphs + 2;
-            lukeobj.plot3.gindex = ngraphs + 3;
-            %
-            if isfield(equil,'info') && isfield(equil.info,'txt'),
-                lukeobj.infotext.string = equil.info.txt;
+            if isfield(equils{curtime},'info') && isfield(equils{curtime}.info,'txt'),
+                lukeobj.infotext.string = equils{curtime}.info.txt;
             else
                 lukeobj.infotext.string = '';
             end
             %
             lukeobj = iluke_info(lukeobj,'text');% enable info display
             %
-            clear ngraphs newgraph1_handle newgraph2_handle newgraph3_handle  
-            %
         else
-            %
-            lukeobj.plot1.gindex = 0;
-            lukeobj.plot2.gindex = 0;
-            lukeobj.plot3.gindex = 0;
-            %
-            cleartags = {'equils'};
-            %
-            iluke_update;% initialize display
-            %
-            newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
-            newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
-            newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
             %
             luke_disp_equils_mt(equils,1,newgraph1_handle,style)
             luke_disp_equils_mt(equils,2,newgraph2_handle,style)
             luke_disp_equils_mt(equils,3,newgraph3_handle,style)
-            %   
-            ngraphs = length(graphs);
             %
-            graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,2,'temperature and density','equils');
-            graphs(end+1) = iluke_graphs(lukeobj.plot2.handle,2,'magnetic field and current','equils');% includes legend
-            graphs(end+1) = iluke_graphs(lukeobj.plot3.handle,2,'plasma shape','equils');
-            %
-            lukeobj.plot1.gindex = ngraphs + 1;
-            lukeobj.plot2.gindex = ngraphs + 2;
-            lukeobj.plot3.gindex = ngraphs + 3;
-            %
-            clear ngraphs newgraph1_handle newgraph2_handle newgraph3_handle  
+            graphs(1) = iluke_graphs(lukeobj.plot1.handle,2,'temperature and density','equil');
+            graphs(2) = iluke_graphs(lukeobj.plot2.handle,2,'magnetic field and current','equil');% includes legend
+            graphs(3) = iluke_graphs(lukeobj.plot3.handle,2,'plasma shape','equil');
             %
         end
+        %   
+        ngraphs = length(graphss{it_g});
+        %
+        graphss{it_g}(end+1:end+3) = graphs;
+        %
+        lukeobj.plot1.gindex(it_g) = ngraphs + 1;
+        lukeobj.plot2.gindex(it_g) = ngraphs + 2;
+        lukeobj.plot3.gindex(it_g) = ngraphs + 3;
+        %
+        clear it_g ngraphs newgraph1_handle newgraph2_handle newgraph3_handle  
         %
     case 'ohmmake'
         %
@@ -760,9 +747,7 @@ switch action
             %
             lukeobj.lukeid.string = '';
             %
-            if curtime > 0,
-                action = 'ohmdisp';iluke_callbacks;
-            end
+            action = 'ohmdisp';iluke_callbacks;
             %
             clear flag_shotimes
             %
@@ -862,31 +847,45 @@ switch action
         %
         % displaying ohm data
         %
-        lukeobj.plot1.gindex = 0;
+        it_g = 2 + curtime;%<new>,<all>,...
         %
-        cleartags = {'ohm'};
+        lukeobj.plot1.gindex(it_g) = 0;
+        %
+        cleartags{it_g} = {'ohm'};
         %
         iluke_update;% initialize display
         %
         newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
         %
-        graph_ohm_jd(equil,ohm,newgraph1_handle,style);
-        %   
-        ngraphs = length(graphs);
-        %
-        graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,1,'loop voltage','ohm');
-        %
-        lukeobj.plot1.gindex = ngraphs + 1;
-        %
-        if isfield(ohm,'info') && isfield(ohm.info,'txt'),
-            lukeobj.infotext.string = ohm.info.txt;
+        if curtime > 1,
+            %
+            graph_ohm_jd(equils{curtime},ohms{curtime},newgraph1_handle,style);
+            %
+            graphs = iluke_graphs(lukeobj.plot1.handle,1,'loop voltage','ohm');
+            %
+            if isfield(ohms{curtime},'info') && isfield(ohms{curtime}.info,'txt'),
+                lukeobj.infotext.string = ohms{curtime}.info.txt;
+            else
+                lukeobj.infotext.string = '';
+            end
+            %
+            lukeobj = iluke_info(lukeobj,'text');% enable info display
+            %
         else
-            lukeobj.infotext.string = '';
+            %
+            luke_disp_ohms_mt(equils,ohms,newgraph1_handle,style)
+            %
+            graphs = iluke_graphs(lukeobj.plot1.handle,2,'center and edge loop voltage','ohm');
+            %
         end
+        %   
+        ngraphs = length(graphss{it_g});
         %
-        lukeobj = iluke_info(lukeobj,'text');% enable info display
+        graphss{it_g}(end+1) = graphs;
         %
-        clear ngraphs newgraph1_handle 
+        lukeobj.plot1.gindex(it_g) = ngraphs + 1;
+        %
+        clear it_g ngraphs newgraph1_handle
         %
     case 'transpmake'
         %
@@ -984,37 +983,51 @@ switch action
         %
     case 'transpdisp'
         %
-        % displaying ohm data
+        % displaying transpfaste data
         %
-        lukeobj.plot1.gindex = 0;
-        lukeobj.plot2.gindex = 0;
+        it_g = 2 + curtime;%<new>,<all>,...
         %
-        cleartags = {'transpfaste'};
+        lukeobj.plot1.gindex(it_g) = 0;
+        lukeobj.plot2.gindex(it_g) = 0;
+        %
+        cleartags{it_g} = {'transpfaste'};
         %
         iluke_update;% initialize display
         %
         newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
         newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
         %
-        graph_transp_jd(equil,transpfaste,[newgraph1_handle,newgraph2_handle],style);
-        %   
-        ngraphs = length(graphs);
-        %
-        graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,1,'radial diffusion','transpfaste');
-        graphs(end+1) = iluke_graphs(lukeobj.plot2.handle,1,'radial pinch','transpfaste');% includes legend
-        %
-        lukeobj.plot1.gindex = ngraphs + 1;
-        lukeobj.plot2.gindex = ngraphs + 2;
-        %
-        if isfield(transpfaste,'info') && isfield(transpfaste.info,'txt'),
-            lukeobj.infotext.string = transpfaste.info.txt;
+        if curtime > 1,
+            %
+            graph_transp_jd(equils{curtime},transpfastes{curtime},[newgraph1_handle,newgraph2_handle],style);
+            %
+            graphs(1) = iluke_graphs(lukeobj.plot1.handle,1,'radial diffusion','transpfaste');
+            graphs(2) = iluke_graphs(lukeobj.plot2.handle,1,'radial pinch','transpfaste');% includes legend
+            %
+            if isfield(transpfastes{curtime},'info') && isfield(transpfastes{curtime}.info,'txt'),
+                lukeobj.infotext.string = transpfastes{curtime}.info.txt;
+            else
+                lukeobj.infotext.string = '';
+            end
+            %
+            lukeobj = iluke_info(lukeobj,'text');% enable info display
+            %
         else
-            lukeobj.infotext.string = '';
+            %
+            clear it_g newgraph1_handle newgraph2_handle action           
+            %
+            error('Not yet implemented')
+            %
         end
+        %   
+        ngraphs = length(graphss{it_g});
         %
-        lukeobj = iluke_info(lukeobj,'text');% enable info display
+        graphss{it_g}(end+1:end+2) = graphs;
         %
-        clear ngraphs newgraph1_handle newgraph2_handle 
+        lukeobj.plot1.gindex(it_g) = ngraphs + 1;
+        lukeobj.plot2.gindex(it_g) = ngraphs + 2;
+        %
+        clear it_g ngraphs newgraph1_handle newgraph2_handle 
         %
     case 'wavestructimport'
         %
@@ -2011,51 +2024,65 @@ switch action
         %
         % displaying wave data
         %
-        lukeobj.plot1.gindex = 0;
-        lukeobj.plot2.gindex = 0;
-        lukeobj.plot3.gindex = 0;
+        it_g = 2 + curtime;%<new>,<all>,...
         %
-        cleartags = {'waves'};
+        lukeobj.plot1.gindex(it_g) = 0;
+        lukeobj.plot2.gindex(it_g) = 0;
+        lukeobj.plot3.gindex(it_g) = 0;
+        %
+        cleartags{it_g} = {'waves'};
         %
         iluke_update;% initialize display
         %
         newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
         newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
-        newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
         %
-        opt.vessel_opt = 'n';
-        opt.abs_max = 0;
-        opt.mode = 'n';
-        opt.print = -1;
-        opt.TeNpar = 1;
-        opt.nospec = 1;
-        %
-        opt.axs = [newgraph1_handle,newgraph2_handle,newgraph3_handle];
-        opt.font = style;
-        %
-        opt.nr_dep = 40;
-        opt.rho_disp = 0:0.1:1;
-        opt.ymask = NaN;
-        opt.xvar = 'p';
-        %
-        graph_wave_jd(equil,waves,opt.nr_dep,opt,opt.rho_disp,opt.ymask,opt.xvar);
+        if curtime > 1,
+            %
+            opt.vessel_opt = 'n';
+            opt.abs_max = 0;
+            opt.mode = 'n';
+            opt.print = -1;
+            opt.TeNpar = 1;
+            opt.nospec = 1;
+            %
+            opt.axs = [newgraph1_handle,newgraph2_handle,newgraph3_handle];
+            opt.font = style;
+            %
+            opt.nr_dep = 40;
+            opt.rho_disp = 0:0.1:1;
+            opt.ymask = NaN;
+            opt.xvar = 'p';
+            %
+            graph_wave_jd(equils{curtime},wavess{curtime},opt.nr_dep,opt,opt.rho_disp,opt.ymask,opt.xvar);
+            %
+            graphs(1) = iluke_graphs(lukeobj.plot1.handle,1,'poloidal view','waves');
+            graphs(2) = iluke_graphs(lukeobj.plot2.handle,1,'top view','waves');% includes legend
+            graphs(3) = iluke_graphs(lukeobj.plot3.handle,1,'linear damping','waves');% includes legend
+            %
+            lukeobj.wave.text.string = [num2str(length(wavess{curtime})),' wave structure(s)'];
+            lukeobj.infotext.string = iluke_waveinfo(wavess{curtime});
+            %
+            lukeobj = iluke_info(lukeobj,'text');% enable info display
+            %
+        else
+            %
+            clear it_g newgraph1_handle newgraph2_handle newgraph3_handle action           
+            %
+            error('Not yet implemented')
+            %
+        end
         %   
-        ngraphs = length(graphs);
+        ngraphs = length(graphss{it_g});
         %
-        graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,1,'poloidal view','waves');
-        graphs(end+1) = iluke_graphs(lukeobj.plot2.handle,1,'top view','waves');% includes legend
-        graphs(end+1) = iluke_graphs(lukeobj.plot3.handle,1,'linear damping','waves');% includes legend
+        graphss{it_g}(end+1:end+3) = graphs;
         %
-        lukeobj.plot1.gindex = ngraphs + 1;
-        lukeobj.plot2.gindex = ngraphs + 2;
-        lukeobj.plot3.gindex = ngraphs + 3;
+        lukeobj.plot1.gindex(it_g) = ngraphs + 1;
+        lukeobj.plot2.gindex(it_g) = ngraphs + 2;
+        lukeobj.plot3.gindex(it_g) = ngraphs + 3;
         %
-        lukeobj.wave.text.string = [num2str(length(waves)),' wave structure(s)'];
-        lukeobj.infotext.string = iluke_waveinfo(waves);
-        %
-        lukeobj = iluke_info(lukeobj,'text');% enable info display
-        %
-        clear ngraphs newgraph1_handle newgraph2_handle newgraph3_handle opt
+        clear it_g ngraphs newgraph1_handle newgraph2_handle newgraph3_handle  
         %
     case 'lukerun'
         %
@@ -2104,18 +2131,21 @@ switch action
         %
         % displaying luke data
         %
-        if curtime > 0,
-            lukeobj.plot1.gindex = 0;
-            lukeobj.plot2.gindex = 0;
-            lukeobj.plot3.gindex = 0;
-            %
-            cleartags = {'output'};
-            %
-            iluke_update;% initialize display
-            %
-            newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
-            newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
-            newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        it_g = 2 + curtime;%<new>,<all>,...
+        %
+        lukeobj.plot1.gindex(it_g) = 0;
+        lukeobj.plot2.gindex(it_g) = 0;
+        lukeobj.plot3.gindex(it_g) = 0;
+        %
+        cleartags{it_g} = {'output'};
+        %
+        iluke_update;% initialize display
+        %
+        newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
+        newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
+        %
+        if curtime > 1,
             %
             opt.save = 0;
             opt.nr_dep = 0;
@@ -2130,54 +2160,43 @@ switch action
             opt.axs = [newgraph1_handle,newgraph2_handle,newgraph3_handle];
             opt.font = style;
             %
-            proc_luke_jd(output,0,-1,0.1,NaN,'',opt);
-            %   
-            ngraphs = length(graphs);
+            proc_luke_jd(outputs{curtime},0,-1,0.1,NaN,'',opt);
             %
-            graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,2,'RF power profile','output');
-            graphs(end+1) = iluke_graphs(lukeobj.plot2.handle,1,'ohmic power profile','output');
-            graphs(end+1) = iluke_graphs(lukeobj.plot3.handle,1,'current profile','output');
+            clear opt
             %
-            lukeobj.plot1.gindex = ngraphs + 1;
-            lukeobj.plot2.gindex = ngraphs + 2;
-            lukeobj.plot3.gindex = ngraphs + 3;
+            graphs(1) = iluke_graphs(lukeobj.plot1.handle,2,'RF power profile','output');
+            graphs(2) = iluke_graphs(lukeobj.plot2.handle,1,'ohmic power profile','output');
+            graphs(3) = iluke_graphs(lukeobj.plot3.handle,1,'current profile','output');
             %
-            if isfield(output,'info') && isfield(output.info,'txt'),
-                lukeobj.infotext.string = output.info.txt;
+            if isfield(outputs{curtime},'info') && isfield(outputs{curtime}.info,'txt'),
+                lukeobj.infotext.string = outputs{curtime}.info.txt;
             else
                 lukeobj.infotext.string = '';
             end
             %
-        else%
+            lukeobj = iluke_info(lukeobj,'text');% enable info display
             %
-            lukeobj.plot1.gindex = 0;
-            lukeobj.plot2.gindex = 0;
-            lukeobj.plot3.gindex = 0;
+        else
             %
-            cleartags = {'outputs'};
-            %
-            iluke_update;% initialize display
-            %
-            newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
-            newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
-            newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
             newgraph4_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
             %
             outputs = luke_disp_outputs_mt(equils,outputs,style,[newgraph1_handle,newgraph2_handle,newgraph3_handle,newgraph4_handle]);
-            %   
-            ngraphs = length(graphs);
             %
-            graphs(end+1) = iluke_graphs(lukeobj.plot1.handle,2,'Current','outputs');
-            graphs(end+1) = iluke_graphs(lukeobj.plot2.handle,2,'Power','outputs');
-            graphs(end+1:end+2) = iluke_graphs(lukeobj.plot3.handle,{[2,4],[1,3]},{'RF power absorption','RF power deposition'},'outputs');
+            graphs(1) = iluke_graphs(lukeobj.plot1.handle,2,'Current','output');
+            graphs(2) = iluke_graphs(lukeobj.plot2.handle,2,'Power','output');
+            graphs(3:4) = iluke_graphs(lukeobj.plot3.handle,{[2,4],[1,3]},{'RF power absorption','RF power deposition'},'output');
             %
-            lukeobj.plot1.gindex = ngraphs + 1;
-            lukeobj.plot2.gindex = ngraphs + 2;
-            lukeobj.plot3.gindex = ngraphs + 3;
-            %
-        end  
+        end
+        %   
+        ngraphs = length(graphss{it_g});
         %
-        clear ngraphs newgraph1_handle newgraph2_handle newgraph3_handle newgraph4_handle  
+        graphss{it_g}(end+1:end+length(graphs)) = graphs;
+        %
+        lukeobj.plot1.gindex(it_g) = ngraphs + 1;
+        lukeobj.plot2.gindex(it_g) = ngraphs + 2;
+        lukeobj.plot3.gindex(it_g) = ngraphs + 3;
+        %
+        clear it_g ngraphs newgraph1_handle newgraph2_handle newgraph3_handle newgraph4_handle  
         %
     case 'lukestart'
         %
@@ -2195,24 +2214,17 @@ switch action
         %
         % run check
         %
+        cleartags(:) = {{'all'}};% clear graphss
+        %
+        iluke_update
+        %
         for h = [lukeobj.plot1.handle,lukeobj.plot2.handle,lukeobj.plot3.handle],
             ch = get(h,'children');
-            delete(ch(1:end-3));% keep handles for plot list, print & save
-        end
-        %
-        graphs = struct;
-        graphs.handles = [];
-        graphs.info = '';
-        graphs.tag = '';
-        graphs(1) = [];% empty structure but keep memory of fields
-        %
-        lukeobj.plot1.gindex = 0;
-        lukeobj.plot2.gindex = 0;
-        lukeobj.plot3.gindex = 0;
-        %       
-        lukeobj.graph1sel.string = {''};
-        lukeobj.graph2sel.string = {''};
-        lukeobj.graph3sel.string = {''};
+            if length(ch) > 3,
+                disp('WARNING : some graphs were not deleted by cleartags. Clearing enforced.')
+                delete(ch(1:end-3));% keep handles for plot list, print & save
+            end
+        end        
         %
         clear h ch
         %

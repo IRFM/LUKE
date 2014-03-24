@@ -1,4 +1,4 @@
-function [ output_args ] = luke_disp_ohms_mt( equils, ohms, ax )
+function [ output_args ] = luke_disp_ohms_mt( equils, ohms, ax, style )
 %LUKE_DISP_OHMS_MT [ output_args ] = luke_disp_ohms_mt( equils, ohms, ax )
 %   plots the ohms information for multi times
 %
@@ -7,6 +7,7 @@ function [ output_args ] = luke_disp_ohms_mt( equils, ohms, ax )
 %   ohms ...... cell with ohm structures from LUKE (multi times)
 %   ax ........ axis handle of axis where the plot should be done.
 %               default: open a new figure
+%   style ..... plot style parameters for iluke integration (optional) 
 %
 % OUTPUT:
 %   none
@@ -47,19 +48,28 @@ end
 legstr={sprintf('V_{loop,0}/%s',sVloopref),sprintf('V_{loop,edge}/%s',sVloopref)};
 
 % do the plotting
-for j=1:ntr
-    plot(ax,time,dat(j,:),gti_plot_symcol('sym',j,ntr),'Color',gti_plot_symcol('col',j,ntr));
-    if(j==1)
-        hold on;
+if nargin < 4 || isempty(style),
+    for j=1:ntr
+        plot(ax,time,dat(j,:),gti_plot_symcol('sym',j,ntr),'Color',gti_plot_symcol('col',j,ntr));
+        if(j==1)
+            hold on;
+        end
     end
-end
-hold off;
-legend(legstr);
-YL=ylim;
-if(YL(1)>0)
-    ylim([0 YL(2)]);
-elseif(YL(2)<0)
-    ylim([YL(1) 0]);
+    hold off;
+    legend(legstr);
+    YL=ylim;
+    if(YL(1)>0)
+        ylim([0 YL(2)]);
+    elseif(YL(2)<0)
+        ylim([YL(1) 0]);
+    end
+else
+    colors = {'r','b',[0,0.5,0],'k'};
+    markers = {'s','d','+','o'};
+    for j=1:ntr-1
+        [ax] = graph1D_jd(time,dat(j,:),0,0,'','','',NaN,NaN,NaN,'-',markers{j},colors{j},2,style,ax);
+    end
+    [ax] = graph1D_jd(time,dat(ntr,:),0,0,'t (s)','','',legstr,0,0,'-',markers{ntr},colors{ntr},2,style,ax);   
 end
 
 % end of function

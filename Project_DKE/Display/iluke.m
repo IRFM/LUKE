@@ -6,13 +6,6 @@ close all
 %
 [dkepath,dkedisplay] = load_structures_yp('dkepath','','','dkedisplay','NO_DISPLAY','');
 %
-nrem = length(dkepath.remote);
-dkepath.remprofiles = cell(1,1 + nrem);
-dkepath.remprofiles{1} = 'Local interactive calculation';
-[~,dkepath.remprofiles(2:nrem + 1)] = load_remoteprofiles_jd(dkepath.remote);
-dkepath.distprofiles = [dkepath.remprofiles(1),'MDCE Job scheduler','MDCE parfor',dkepath.remprofiles(2:end)];
-clear nrem
-%
 if length(dkepath.hostname) >= 3 && strcmp(dkepath.hostname(1:3),'lac'),% %% TODO tmp condition, test grid effects on 18532
     id_dkeparam = 'EC_RT';
 else
@@ -229,6 +222,7 @@ lukeobj.cleargraphs.string = {'CLEAR GRAPHS'};
 
 lukeobj.runluke.string = 'LUKE START';
 lukeobj.lukeidtitle.string = 'Run ID';
+lukeobj.lukeid.string = '';
 lukeobj.runcheck.string = 'CHECK RUN';
 
 lukeobj.runc3po.string = 'START CURRENT';
@@ -266,9 +260,9 @@ lukeobj.redmine.callback = 'action = ''redmine'';iluke_callbacks;';
 
 lukeobj.cleargraphs.callback = 'action = ''cleargraphs'';iluke_callbacks;';
 
-lukeobj.graph1sel.callback = 'lukeobj.plot1.gindex = get(lukeobj.graph1sel.handle,''Value'') - 1;iluke_update;';
-lukeobj.graph2sel.callback = 'lukeobj.plot2.gindex = get(lukeobj.graph2sel.handle,''Value'') - 1;iluke_update;';
-lukeobj.graph3sel.callback = 'lukeobj.plot3.gindex = get(lukeobj.graph3sel.handle,''Value'') - 1;iluke_update;';
+lukeobj.graph1sel.callback = 'lukeobj.plot1.gindex(2+curtime) = get(lukeobj.graph1sel.handle,''Value'') - 1;iluke_update;';
+lukeobj.graph2sel.callback = 'lukeobj.plot2.gindex(2+curtime) = get(lukeobj.graph2sel.handle,''Value'') - 1;iluke_update;';
+lukeobj.graph3sel.callback = 'lukeobj.plot3.gindex(2+curtime) = get(lukeobj.graph3sel.handle,''Value'') - 1;iluke_update;';
 
 lukeobj.graph1save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',shotimestr,'' '',lukeobj.graph1sel.string{lukeobj.graph1sel.value}],''figures/'',graphs(lukeobj.plot1.gindex).handles);';
 lukeobj.graph2save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',shotimestr,'' '',lukeobj.graph2sel.string{lukeobj.graph2sel.value}],''figures/'',graphs(lukeobj.plot2.gindex).handles);';
@@ -462,17 +456,18 @@ lukeobj.runcheck.highlight = true;
 
 lukeobj = iluke_info(lukeobj,'startup');% info display
 
-graphs = struct;
-graphs.handles = [];
-graphs.info = '';
-graphs.tag = '';
-graphs(1) = [];% empty structure but keep memory of fields
+tokamak = '';
+shotnum = '';
+shotimes = [];
 
-lukeobj.plot1.gindex = 0;
-lukeobj.plot2.gindex = 0;
-lukeobj.plot3.gindex = 0;
+%
+% graphs
+%
+iluke_initgraphs
 
-cleartags = {};
+%
+% data structures
+%
 
 external = [];
 equils = cell(1,0);
@@ -485,10 +480,6 @@ wavestructss = cell(1,0);
 jobs = cell(1,0);
 outputs = cell(1,0);
 hxrs = cell(1,0);
-
-tokamak = '';
-shotnum = '';
-shotimes = [];
 
 curtime = -1;% current time of work : (-1) new, (0) all, or index in shotimes
 
