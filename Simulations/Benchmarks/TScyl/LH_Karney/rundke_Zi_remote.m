@@ -8,15 +8,17 @@ close all
 warning off
 global nfig
 %
+dkepath = setpath_luke_jd('',NaN);
+%
 remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remnum = 1;% remote profile number. Use 0 for local sequential calculations
+remnum = 3;% remote profile number. Use 0 for local sequential calculations
 remdebugmode = 1;%1;% debug mode (0) off (1) on
 remclean = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 %
 opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
-%
+%  
 %
 mdce_opt = 0;% option for testing distributed computing inside remote calculation
 %
@@ -49,7 +51,7 @@ path_display = '';%if nothing is specified, the working directory is first used 
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
-[dkepath,equil,dkeparam,dkedisplay] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display);
+[equil,dkeparam,dkedisplay] = load_structures_yp('equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display);
 %
 %************************************************************************************************************************************
 %
@@ -113,7 +115,7 @@ equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
 %
 opt.fields = {'Zcurr','ZP0'};% select fields to be returned from lukestructs. Use NaN to return all fields.
 %
-Zi_list = [1:20*0+4];
+Zi_list = [1:20];
 coll_mode_list = [0:2];
 %
 nZi = length(Zi_list);
@@ -172,6 +174,8 @@ P = NaN(ncoll,nZi);
 %
 plotresults = 0;
 %
+flag_running = true(ncoll,nZi);
+%
 for iZi = 1:nZi,
     for icoll = 1:ncoll,
         if isfield(lukestructs{icoll,iZi},'output'),
@@ -180,6 +184,8 @@ for iZi = 1:nZi,
             %
             j(icoll,iZi) = lukestructs{icoll,iZi}.output.Zcurr.x_0;
             P(icoll,iZi) = lukestructs{icoll,iZi}.output.ZP0.x_rf_fsav;
+            %
+            flag_running(icoll,iZi) = false;
         end
     end
 end
@@ -257,6 +263,9 @@ end
 %
 %************************************************************************************************************************************
 %
-save(filename,'-v7.3');
-info_dke_yp(2,['Data saved in ',filename]);
-
+if ~any(flag_running) & input_dke_yp(['All jobs completed. Do you want to delete the file ',filename,' to avoid future conflict ? (y/n)'],'y',{'y','n'}) == 'y',
+    delete(filename);
+else
+    save(filename,'-v7.3');
+    info_dke_yp(2,['Data saved in ',filename]);
+end
