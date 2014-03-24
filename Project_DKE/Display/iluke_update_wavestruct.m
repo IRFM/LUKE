@@ -256,29 +256,31 @@ else
     %
 end
 %
+clear external_wave wavestructs iw nw 
+%
 % upgrade graph status
 %
-plotindices = [lukeobj.plot1.gindex,lukeobj.plot2.gindex,lukeobj.plot3.gindex];
+% plotindices = [lukeobj.plot1.gindex,lukeobj.plot2.gindex,lukeobj.plot3.gindex];
+% %
+% nstr = length('spectrum for ');
+% %
+% ngraphs = length(graphs);
+% for igraph = ngraphs:-1:1,
+%     if strcmp(graphs(igraph).tag,'spectrum') && ~any(strcmp(graphs(igraph).info(nstr+1:end),lukeobj.wavestruct.select.string)),% the corresponding wavestruct no longer exists
+%         for ich = 1:length(graphs(igraph).handles),
+%             delete(graphs(igraph).handles(ich))
+%         end
+%         graphs(igraph) = [];
+%         plotindices(plotindices == igraph) = 0;
+%         plotindices(plotindices > igraph) = plotindices(plotindices > igraph) - 1;
+%     end
+% end
+% %
+% lukeobj.plot1.gindex = plotindices(1);
+% lukeobj.plot2.gindex = plotindices(2);
+% lukeobj.plot3.gindex = plotindices(3);
 %
-nstr = length('spectrum for ');
-%
-ngraphs = length(graphs);
-for igraph = ngraphs:-1:1,
-    if strcmp(graphs(igraph).tag,'spectrum') && ~any(strcmp(graphs(igraph).info(nstr+1:end),lukeobj.wavestruct.select.string)),% the corresponding wavestruct no longer exists
-        for ich = 1:length(graphs(igraph).handles),
-            delete(graphs(igraph).handles(ich))
-        end
-        graphs(igraph) = [];
-        plotindices(plotindices == igraph) = 0;
-        plotindices(plotindices > igraph) = plotindices(plotindices > igraph) - 1;
-    end
-end
-%
-lukeobj.plot1.gindex = plotindices(1);
-lukeobj.plot2.gindex = plotindices(2);
-lukeobj.plot3.gindex = plotindices(3);
-%
-clear external_wave wavestructs iw nw nstr igraph ngraphs plotindices
+clear nstr igraph ngraphs plotindices
 
 
 
