@@ -14,7 +14,7 @@ output.info.txt = {...
         ['Current FWHM        : ',num2str(output.data_proc.scalar.jdrhoT),' (square root of toroidal flux)']};
 if flag_rf,
     output.info.txt = [output.info.txt,...
-        ['RF conv. param.    : ',num2str(output.data_proc.simul.residue_rf)]];
+        ['RF conv. param.    : ',num2str(output.data_proc.simul.residue_rf(end))]];
 end
 %
 if isinf(output.data_proc.scalar.Rp),
