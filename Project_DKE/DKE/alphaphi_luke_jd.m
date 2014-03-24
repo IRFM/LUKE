@@ -8,11 +8,10 @@ if isempty(waves),
 end
 % 
 zS = dke_out.zS;
-zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod;
 residue_rf = dke_out.residue_rf;
 xyprop_dke = dke_out.xyprop_dke;
 yb = dke_out.yb;
-nit = size(zP_0_2piRp_mod,2);
+nit = size(dke_out.zP_0_2piRp_mod,2);
 ny = size(xyprop_dke,2);
 nb = length(yb);
 %
@@ -23,6 +22,14 @@ for itn = 1:nit,
     xyPabs_rf_dke_fsav_mksa = ZP0(itn).xy_rf_fsav*mksa.P_ref*1e6;% absorbed power density in W/m3
     xyPrf_2piRp = xyPabs_rf_dke_fsav_mksa.*xydV_2piRp_dke;%power absorbed from each ray within each FS
     xyPrf_2piRp(xyPrf_2piRp < 0) = 0;
+    %
+    nit_rf = length(residue_rf{itn});
+    %
+    if size(dke_out.zP_0_2piRp_mod,1) >= nit_rf,% all RF states kept in zP_0_2piRp_mod
+        zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod{nit_rf,itn};
+    else
+        zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod{1,itn};% old case where only last  RF state kept in zP_0_2piRp_mod
+    end
     %
     ibb = 0;
     %
@@ -44,12 +51,10 @@ for itn = 1:nit,
                 Prf_end_2piRp = xyPrf_2piRp(find(xyprop_dke(:,iy_end) == -1,1,'first'),iy_end);
             end
             %
-            nit_rf = length(residue_rf{itn});
-            %
-            zP_end_2piRp = max([0,zP_0_2piRp_mod{nit_rf,itn}{ibb}(end) - Prf_end_2piRp/2]);%to account for all QL absorbed power
+            zP_end_2piRp = max([0,zP_0_2piRp_mod{ibb}(end) - Prf_end_2piRp/2]);%to account for all QL absorbed power
             %
             zS_fit = [ray.ss(1),zS{ibb},ray.ss(end)];
-            zP_0_2piRp_fit = [ray.P0_2piRp,zP_0_2piRp_mod{nit_rf,itn}{ibb},zP_end_2piRp];
+            zP_0_2piRp_fit = [ray.P0_2piRp,zP_0_2piRp_mod{ibb},zP_end_2piRp];
             %
             % power along the ray
             %

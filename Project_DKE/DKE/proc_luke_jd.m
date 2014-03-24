@@ -300,7 +300,12 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
         %
         if isfield(dke_out,'zS'),
             zS = dke_out.zS;
-            zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod(1:nit_rf,end);
+            %
+            if size(dke_out.zP_0_2piRp_mod,1) >= nit_rf,
+                zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod(1:nit_rf,end);% new main_dke_yp - all RF states kept
+            else
+                zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod(1,end);% old main_dke_yp - only last RF state kept
+            end
         else
             zS = '';
             zP_0_2piRp_mod = '';
@@ -328,10 +333,10 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
         [jrhoT,jdrhoT] = calc_peak_jd(xrhoT,xdrhoT,J_tot,equilDKE.xdA_dke,opt.jpeak,opt.peakmode);
         [jrhoV,jdrhoV] = calc_peak_jd(xrhoV,xdrhoV,J_tot,equilDKE.xdA_dke,opt.jpeak,opt.peakmode);
         %
-        [P_rf_rhoG,P_rf_drhoG] = calc_peak_jd(xrhoG,xdrhoG,P_rf,equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
-        [P_rf_rhoP,P_rf_drhoP] = calc_peak_jd(xrhoP,xdrhoP,P_rf,equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
-        [P_rf_rhoT,P_rf_drhoT] = calc_peak_jd(xrhoT,xdrhoT,P_rf,equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
-        [P_rf_rhoV,P_rf_drhoV] = calc_peak_jd(xrhoV,xdrhoV,P_rf,equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
+        [P_rf_rhoG,P_rf_drhoG] = calc_peak_jd(xrhoG,xdrhoG,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+        [P_rf_rhoP,P_rf_drhoP] = calc_peak_jd(xrhoP,xdrhoP,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+        [P_rf_rhoT,P_rf_drhoT] = calc_peak_jd(xrhoT,xdrhoT,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+        [P_rf_rhoV,P_rf_drhoV] = calc_peak_jd(xrhoV,xdrhoV,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
         %
         jTe = interp1(xrhoG,xTe,jrhoG);
         jne = interp1(xrhoG,xne,jrhoG);
@@ -549,7 +554,7 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
                             ray = waves{iw}.rays{iray};
                             %
                             if isfield(ray,'sP_2piRp_lin')  && isfield(ray,'srho'),
-                                wxP_rf_lin(iw,:) = wxP_rf_lin(iw,:) + 1e-6*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin,rhoG_dep_S)./equilDKE.xdV_2piRp_dke;
+                                wxP_rf_lin(iw,:) = wxP_rf_lin(iw,:) + 1e-6*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin,xrhoG_S)./equilDKE.xdV_2piRp_dke;
                             else
                                 wxP_rf_lin(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
                             end
@@ -583,13 +588,13 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
                         error('Wave type not recognized.')
                     end
                     %    
-                    [wP_rf_rhoG_lin(iw)] = calc_peak_jd(xrhoG,xdrhoG,wxP_rf_lin(iw,:),equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
-                    [wP_rf_rhoP_lin(iw)] = calc_peak_jd(xrhoP,xdrhoP,wxP_rf_lin(iw,:),equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
-                    [wP_rf_rhoT_lin(iw)] = calc_peak_jd(xrhoT,xdrhoT,wxP_rf_lin(iw,:),equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
-                    [wP_rf_rhoV_lin(iw)] = calc_peak_jd(xrhoV,xdrhoV,wxP_rf_lin(iw,:),equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoG_lin(iw)] = calc_peak_jd(xrhoG,xdrhoG,wxP_rf_lin(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoP_lin(iw)] = calc_peak_jd(xrhoP,xdrhoP,wxP_rf_lin(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoT_lin(iw)] = calc_peak_jd(xrhoT,xdrhoT,wxP_rf_lin(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoV_lin(iw)] = calc_peak_jd(xrhoV,xdrhoV,wxP_rf_lin(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
                 end
                 %
-                wxp_rf_2piRp_lin = wxP_rf_lin.*repmat(equilDKE.xdV_dke,[nw,1]);
+                wxp_rf_2piRp_lin = wxP_rf_lin.*repmat(equilDKE.xdV_2piRp_dke,[nw,1]);
                 wp_rf_2piRp_lin = sum(wxp_rf_2piRp_lin,2);
                 xp_rf_2piRp_lin = sum(wxp_rf_2piRp_lin,1);
                 p_rf_2piRp_lin = sum(wp_rf_2piRp_lin);
@@ -627,10 +632,10 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
                     wxp_rf_2piRp(iw,:) = sum(yxp_rf_2piRp(ymask{iw},:),1);
                     wnp_rf_2piRp(iw,:) = reshape(sum(sum(yxnp_rf_2piRp(:,ymask{iw},:),2),1),[1,nn_rf]);
                     %    
-                    [wP_rf_rhoG(iw)] = calc_peak_jd(xrhoG,xdrhoG,wxP_rf(iw,:),equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
-                    [wP_rf_rhoP(iw)] = calc_peak_jd(xrhoP,xdrhoP,wxP_rf(iw,:),equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
-                    [wP_rf_rhoT(iw)] = calc_peak_jd(xrhoT,xdrhoT,wxP_rf(iw,:),equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
-                    [wP_rf_rhoV(iw)] = calc_peak_jd(xrhoV,xdrhoV,wxP_rf(iw,:),equilDKE.xdV_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoG(iw)] = calc_peak_jd(xrhoG,xdrhoG,wxP_rf(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoP(iw)] = calc_peak_jd(xrhoP,xdrhoP,wxP_rf(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoT(iw)] = calc_peak_jd(xrhoT,xdrhoT,wxP_rf(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoV(iw)] = calc_peak_jd(xrhoV,xdrhoV,wxP_rf(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
                     %
                     if ~isfield(waves{iw},'model') || strcmp(waves{iw}.model,'RT'),
                         %
@@ -692,13 +697,13 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
                         else% ir-1 is a low - power and current shared
                             %
                             p_rf_2piRp_peak = p_rf_2piRp_peak - xp_rf_2piRp(ir-1)/2;  
-                            I_tot_peak = I_tot_peak - xI_tot(ir-1)/2;
+                            I_tot_peak = I_tot_peak - xI(ir-1)/2;
                             %
                             peaks.p_rf_2piRp = [peaks.p_rf_2piRp,p_rf_2piRp_peak];
                             peaks.I_tot = [peaks.I_tot,I_tot_peak];
                             %
                             p_rf_2piRp_peak = xp_rf_2piRp(ir-1)/2;  
-                            I_tot_peak = xI_tot(ir-1)/2;
+                            I_tot_peak = xI(ir-1)/2;
                             %
                             dep = 1;
                         end
@@ -826,38 +831,42 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
             %
             % WAVE QUASI-LINEAR
             %
-            data_proc.wave.wids = wids;
-            %
-            data_proc.wave.wxP_rf = wxP_rf;
-            data_proc.wave.wp0_rf_2piRp = wp0_rf_2piRp;
-            data_proc.wave.wp_rf_2piRp = wp_rf_2piRp;
-            data_proc.wave.wnp_rf_2piRp = wnp_rf_2piRp;
-            data_proc.wave.wn_rf_list = n_rf_list;
-            data_proc.wave.wxp_rf_2piRp = wxp_rf_2piRp;
-            %
-            data_proc.wave.wP_rf_rhoG = wP_rf_rhoG;
-            data_proc.wave.wP_rf_rhoP = wP_rf_rhoP;
-            data_proc.wave.wP_rf_rhoT = wP_rf_rhoT;
-            data_proc.wave.wP_rf_rhoV = wP_rf_rhoV;
-            %
-            data_proc.wave.wTe = wTe;
-            data_proc.wave.wne = wne;
-            %
-            data_proc.wave.wrays = wrays;
-            %
-            % WAVE LINEAR
-            %
-            data_proc.wave.wxP_rf_lin = wxP_rf_lin;
-            data_proc.wave.wp_rf_2piRp_lin = wp_rf_2piRp_lin;
-            data_proc.wave.wxp_rf_2piRp_lin = wxp_rf_2piRp_lin;
-            %
-            data_proc.wave.wP_rf_rhoG_lin = wP_rf_rhoG_lin;
-            data_proc.wave.wP_rf_rhoP_lin = wP_rf_rhoP_lin;
-            data_proc.wave.wP_rf_rhoT_lin = wP_rf_rhoT_lin;
-            data_proc.wave.wP_rf_rhoV_lin = wP_rf_rhoV_lin;
-            %
-            data_proc.wave.wTe_lin = wTe_lin;
-            data_proc.wave.wne_lin = wne_lin;
+            if opt.wave == 'y',
+                data_proc.wave.wids = wids;
+                %
+                data_proc.wave.wxP_rf = wxP_rf;
+                data_proc.wave.wp0_rf_2piRp = wp0_rf_2piRp;
+                data_proc.wave.wp_rf_2piRp = wp_rf_2piRp;
+                data_proc.wave.wnp_rf_2piRp = wnp_rf_2piRp;
+                data_proc.wave.wn_rf_list = n_rf_list;
+                data_proc.wave.wxp_rf_2piRp = wxp_rf_2piRp;
+                %
+                data_proc.wave.wP_rf_rhoG = wP_rf_rhoG;
+                data_proc.wave.wP_rf_rhoP = wP_rf_rhoP;
+                data_proc.wave.wP_rf_rhoT = wP_rf_rhoT;
+                data_proc.wave.wP_rf_rhoV = wP_rf_rhoV;
+                %
+                data_proc.wave.wTe = wTe;
+                data_proc.wave.wne = wne;
+                %
+                data_proc.wave.wrays = wrays;
+                %
+                % WAVE LINEAR
+                %
+                data_proc.wave.wxP_rf_lin = wxP_rf_lin;
+                data_proc.wave.wp_rf_2piRp_lin = wp_rf_2piRp_lin;
+                data_proc.wave.wxp_rf_2piRp_lin = wxp_rf_2piRp_lin;
+                %
+                data_proc.wave.wP_rf_rhoG_lin = wP_rf_rhoG_lin;
+                data_proc.wave.wP_rf_rhoP_lin = wP_rf_rhoP_lin;
+                data_proc.wave.wP_rf_rhoT_lin = wP_rf_rhoT_lin;
+                data_proc.wave.wP_rf_rhoV_lin = wP_rf_rhoV_lin;
+                %
+                data_proc.wave.wTe_lin = wTe_lin;
+                data_proc.wave.wne_lin = wne_lin;
+            else
+                data_proc.wave = '';
+            end
             %
             % PEAKS
             %
@@ -1020,9 +1029,7 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
                         for in_rf = 1:nn_rf,
                             disp(['RF power absorbed on harm. ',num2str(data_proc.wave.wn_rf_list(in_rf)),' (P/2piRp): ',num2strdata_proc.wave.(wnp_rf_2piRp(iw,in_rf)),' MW/m ---> ',num2str(100*data_proc.wave.wnp_rf_2piRp(iw,in_rf)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
                         end
-                        if opt.nr_dep >= 0,
-                            disp(['Linear RF power absorbed (P/2piRp): ',num2str(data_proc.wave.wp_rf_2piRp_lin(iw)),' MW/m ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
-                        end
+                        disp(['Linear RF power absorbed (P/2piRp): ',num2str(data_proc.wave.wp_rf_2piRp_lin(iw)),' MW/m ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
                     end
                 end
                 %
@@ -1032,9 +1039,7 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
                 for in_rf = 1:nn_rf,
                     disp(['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'])
                 end
-                if opt.nr_dep >= 0,
-                    disp(['Linear RF power absorbed (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'])
-                end
+                disp(['Linear RF power absorbed (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'])
                 disp(['Ohmic power deposited (P): ',num2str(data_proc.scalar.p_e_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
                 disp(['Total power deposited (P): ',num2str(data_proc.scalar.p_tot_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
                 disp(['CD efficiency (I/P): ',num2str(data_proc.scalar.EtaRp/data_proc.scalar.Rp),' A/W'])
@@ -1079,9 +1084,7 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
                         for in_rf = 1:nn_rf,
                             disp(['RF power absorbed on harm. ',num2str(data_proc.wave.wn_rf_list(in_rf)),' (P): ',num2str(data_proc.wave.wnp_rf_2piRp(iw,in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wnp_rf_2piRp(iw,in_rf)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
                         end
-                        if opt.nr_dep >= 0,
-                            disp(['Linear RF power absorbed (P): ',num2str(data_proc.wave.wp_rf_2piRp_lin(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
-                        end
+                        disp(['Linear RF power absorbed (P): ',num2str(data_proc.wave.wp_rf_2piRp_lin(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
                     end
                 end
             end
@@ -1801,7 +1804,7 @@ function [rho,drho] = calc_peak_jd(xrho,xdrho,xQ,xdV,opt_dens,opt_peak)
         ixp = find(diff(xprof(xmaskp))*peaksign >= 0,1,'first');
         xmaskp = xmaskp(1:min([ixp,length(xmaskp)]));% first point for the current lobe containing peak
         %
-        ixm = 1 + find(diff(xmaskp(xmaskm))*peaksign <= 0,1,'last');
+        ixm = 1 + find(diff(xprof(xmaskm))*peaksign <= 0,1,'last');
         xmaskm = xmaskm(max([1,ixm]):end);% last point for the current lobe containing peak
         %
         rho = xrho(ipeak);
