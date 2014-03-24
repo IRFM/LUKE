@@ -16,7 +16,7 @@ elseif nargin == 1,
 end
 %
 if isempty(dkepath)
-    dkepath = load_structures_yp('dkepath','','');
+    dkepath = setpath_luke_jd('',NaN);
 end
 %
 nrem = length(dkepath.remote);
@@ -59,7 +59,9 @@ disp(' ')
 %
 remote = dkepath.remote(remote_index(remlist));
 %
-remote.debugmode = debugmode;
+for irem = 1:length(remote)
+    remote(irem).debugmode = debugmode;
+end
 %
 % ----------------------------
 %
