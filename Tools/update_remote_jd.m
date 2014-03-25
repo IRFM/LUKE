@@ -1,13 +1,14 @@
-function dkepath = update_remote_jd(dkepath,bridge_enforce)
+function dkepath = update_remote_jd(dkepath,link_mode)
 %
 % this function load remote profiles and selects accessible remote clusters with compatible LUKE version 
 %
-%       - bridge_enforce : [NaN, empty, -1, 0 or 1] 
-%           o -1  : disable remote profiles
-%           o NaN : (default) use value from remote.bridge_enforce
-%           o []  : tests both modes and give priority to ssh key pair
-%           o 0   : tests only ssh key pair,
-%           o 1   : tests only bridge mode
+%   - link_mode : connection mode prescription
+%       o -1  : disable remote profiles
+%       o NaN : (default) use value from remote.link_mode
+%       o []  : give priority to (0) ssh key pair, (1) ssh bridge, (2) url/ftp bridge
+%       o 0   : ssh key pair enforced
+%       o 1   : ssh bridge enforced
+%       o 2   : url/ftp bridge enforced
 %
 lukever = LUKEversion_jd;% local LUKE version
 lukever(lukever == ' ' | lukever == '.') = '_';% syntax for comparison
@@ -76,12 +77,12 @@ end
 %
 % test connection and identify local profiles
 %
-if isempty(bridge_enforce) || isnan(bridge_enforce) || bridge_enforce >= 0,% remote profiles enabled : test connections and display output following bridge_enforce
+if isempty(link_mode) || isnan(link_mode) || link_mode >= 0,% remote profiles enabled : test connections and display output following link_mode
     %
     disp (' ')
     info_dke_yp(3,'Testing remote profile connections ')
     %
-    [dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false,bridge_enforce);
+    [dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false,link_mode);
     %
     nrem = length(dkepath.remote);
     %

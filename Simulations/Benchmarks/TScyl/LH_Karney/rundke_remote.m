@@ -1,10 +1,10 @@
-function [] = rundke_remote(remlist,bridge_enforce)
+function [] = rundke_remote(remlist,link_mode)
 %
-if nargin < 2 || (~isempty(bridge_enforce) && (~isnumeric(bridge_enforce) || ~isscalar(bridge_enforce) || ~any(bridge_enforce == [0,1]))),
-    bridge_enforce = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
+if nargin < 2 || (~isempty(link_mode) && (~isnumeric(link_mode) || ~isscalar(link_mode) || ~any(link_mode == [0:2]))),
+    link_mode = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
 end
 %
-if nargin < 1 || (~isempty(remlist) && ~isnumeric(bridge_enforce)),
+if nargin < 1 || (~isempty(remlist) && ~isnumeric(remlist)),
     remlist = NaN;% test all cases
 end
 %
@@ -139,7 +139,7 @@ else% new simulation
     %
     % profiles in dkepath.remote tested
     %
-    dkepath = setpath_luke_jd('',bridge_enforce);
+    dkepath = setpath_luke_jd('',link_mode);
     %
     if isfield(dkepath,'remote'),
         nrem = length(dkepath.remote);
@@ -199,13 +199,13 @@ eta_r_k = '29.72';
 %
 format
 %
-if ~isempty(bridge_enforce) && ~isnan(bridge_enforce),
-    bridgestr = ['_bridge_',num2str(bridge_enforce)];
+if ~isempty(link_mode) && ~isnan(link_mode),
+    link_modestr = ['_link_mode_',num2str(link_mode)];
 else
-    bridgestr = '';
+    link_modestr = '';
 end
 %
-diaryname = ['res_karney_remote_',datestr(now,29),bridgestr,'.log'];
+diaryname = ['res_karney_remote_',datestr(now,29),link_modestr,'.log'];
 %
 if input_dke_yp(['Do you want to save the results in the log file ',diaryname,' ? (y/n)'],'y',{'y','n'}) == 'y',
     %
