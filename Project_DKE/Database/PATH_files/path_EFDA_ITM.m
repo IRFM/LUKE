@@ -44,7 +44,7 @@ dkepath.yvesp(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variabl
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
 dkepath.yvesp(1).remote(1).remoteid = 'EFDA_ITM';
-dkepath.yvesp(1).remote(1).schedulername = 'condor';
+dkepath.yvesp(1).remote(1).schedulername = 'sge';
 dkepath.yvesp(1).remote(1).profilename = 'yves';
 dkepath.yvesp(1).remote(1).luke_root = dkepath.yvesp(1).luke_root;
 %
