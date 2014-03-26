@@ -54,11 +54,11 @@ status.hxr(flag_remove) = [];
 
 % delete outdated graphs
 flag_remove_g = find(flag_remove) + 2;% +2 for <new>,<all>
-for it = flag_remove_g,
+for it = 1:length(flag_remove_g),
     %
-    ngraphs = length(graphss{it});
+    ngraphs = length(graphss{flag_remove_g(it)});
     for igraph = ngraphs:-1:1,% sum over graphs
-        delete(graphss{it}(igraph).handles);% clear all graph components
+        delete(graphss{flag_remove_g(it)}(igraph).handles);% clear all graph components
     end
     %
 end
@@ -172,7 +172,7 @@ status.hxr = status.hxr(mask);
 
 status.hxr(status.output < 1) = -1;% synthetic diagnostics need distribution
 
-mask_g = [1,2,2+mask];% 1,2 for <new>,<all>
+mask_g = [1,2,2+mask(:).'];% 1,2 for <new>,<all>
 graphss = graphss(mask_g);
 cleartags = cleartags(mask_g);
 lukeobj.plot1.gindex = lukeobj.plot1.gindex(mask_g);

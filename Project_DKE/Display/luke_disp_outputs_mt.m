@@ -64,10 +64,10 @@ for it = 1:nt,
             end
             wP0_rf(it,iiws) = wave.wp0_rf_2piRp*(2*pi*scalar.Rp);
             wP_rf(it,iiws) = wave.wp_rf_2piRp*(2*pi*scalar.Rp);
-            wrhoP_rf(it,iiws) = wave.wrhoP;
+            wrhoP_rf(it,iiws) = wave.wP_rf_rhoP;
             %
             wP_rf_lin(it,iiws) = wave.wp_rf_2piRp_lin*(2*pi*scalar.Rp);
-            wrhoP_rf_lin(it,iiws) = wave.wrhoP;
+            wrhoP_rf_lin(it,iiws) = wave.wP_rf_rhoP_lin;
         elseif ~isempty(waveids),
             %
             wP0_rf(it,:) = 0;
