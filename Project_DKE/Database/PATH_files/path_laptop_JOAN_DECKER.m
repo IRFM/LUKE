@@ -105,7 +105,7 @@ dkepath.joan(1).remote(7).luke_root = dkepath.joan(1).remote(5).luke_root;% same
 dkepath.joan(1).remote(8).remoteid = 'EFDA_ITM';
 dkepath.joan(1).remote(8).schedulername = 'sge';
 dkepath.joan(1).remote(8).profilename = 'yvesp';
-dkepath.joan(1).remote(8).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
+dkepath.joan(1).remote(8).luke_root = '/pfs/home/yvesp/public/LUKE/';
 %
 dkepath.joan(1).remote(9).remoteid = 'CRPP_BELLATRIX';
 dkepath.joan(1).remote(9).schedulername = 'pbs';

@@ -102,7 +102,7 @@ dkepath.yves(1).remote(8).schedulername = 'direct';
 dkepath.yves(1).remote(9).remoteid = 'EFDA_ITM';
 dkepath.yves(1).remote(9).schedulername = 'sge';
 dkepath.yves(1).remote(9).profilename = 'yvesp';
-dkepath.yves(1).remote(9).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
+dkepath.yves(1).remote(9).luke_root = '/pfs/home/yvesp/public/LUKE/';
 %
 dkepath.yves(1).remote(10) = dkepath.yves(1).remote(9);
 dkepath.yves(1).remote(10).schedulername = 'direct';

@@ -124,5 +124,5 @@ dkepath.yvespeysson(2).remote(5).luke_root = '/home/JD211098/LUKE/';
 dkepath.yvespeysson(2).remote(6).remoteid = 'EFDA_ITM';
 dkepath.yvespeysson(2).remote(6).schedulername = 'sge';
 dkepath.yvespeysson(2).remote(6).profilename = 'yvesp';
-dkepath.yvespeysson(2).remote(6).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
+dkepath.yvespeysson(2).remote(6).luke_root = '/pfs/home/yvesp/public/LUKE/';
 %

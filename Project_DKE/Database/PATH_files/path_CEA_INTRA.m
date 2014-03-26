@@ -222,7 +222,7 @@ dkepath.YP105119(1).remote(6).luke_root = '/home/PEYSSON/LUKE/';
 dkepath.YP105119(1).remote(7).remoteid = 'EFDA_ITM';
 dkepath.YP105119(1).remote(7).schedulername = 'sge';
 dkepath.YP105119(1).remote(7).profilename = 'yvesp';
-dkepath.YP105119(1).remote(7).luke_root = '/pfs/home/yvesp/public/LUKE_ITM/trunk/LUKE/';
+dkepath.YP105119(1).remote(7).luke_root = '/pfs/home/yvesp/public/LUKE/';
 %
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Emelie Nilsson ------------------------------------
