@@ -130,21 +130,6 @@ elseif opt == 'y' && ~isfield(dkepath,'remote'),
 	warning('The field ''remote'' must exist in the dkepath structure !')
 end
 %
-[machine,user,ver] = which_MDSdatabase(dkepath,1);%Check access to database (Environment variable must be set-up before launching MatLab)
-if ~isempty(machine) && ~isempty(user) && ~isempty(ver),
-	%
-	opt = input_dke_yp('Do you want to run the test case with a magnetic equilibrium downloaded from the ITM database','n',{'y','n'});
-	%
-	if opt == 'y',
-		cd([luke_root,'Simulations/Benchmarks/TScyl/LH_Karney']);
-    	disp('---------------------------------------------------------------------------')
-    	disp('------------------------- ACCESS FROM ITM DATABASE ------------------------')
-    	disp('---------------------------------------------------------------------------')
-   		rundke_ITM;
-   		cd(dkepath.luke_root);
-   	end
-end
-%
 opt = input_dke_yp('Do you want to run all tests and examples (long process, several hours)','n',{'y','n'});
 if opt == 'y',
 	alltests_LUKE
