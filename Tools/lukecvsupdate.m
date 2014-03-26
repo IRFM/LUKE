@@ -1,4 +1,4 @@
-function lukecvsupdate(dkepath,debugmode)
+function lukecvsupdate(dkepath,debugmode,link_mode)
 %
 % This function updates LUKE and associated toolboxes remotely for the profiles stored
 % in dkepath
@@ -7,16 +7,27 @@ function lukecvsupdate(dkepath,debugmode)
 %
 %       - dkepath: path structure with remote profiles
 %           (default: if no input structure or empty, dkepath is automatically loaded from LUKE_PATH.mat
+%       - debugmode
+%       - link_mode : connection mode prescription
+%           o -1  : disable remote profiles
+%           o NaN : (default) use value from remote.link_mode
+%           o []  : give priority to (0) ssh key pair, (1) ssh bridge, (2) url/ftp bridge
+%           o 0   : ssh key pair enforced
+%           o 1   : ssh bridge enforced
+%           o 2   : url/ftp bridge enforced
 %
-if nargin == 0,
+if nargin < 3,
+    link_mode = NaN;
+end
+if nargin < 2,
+    debugmode = 0;  
+end
+if nargin < 1,
     dkepath = '';
-    debugmode = 0;  
-elseif nargin == 1,
-    debugmode = 0;  
 end
 %
 if isempty(dkepath)
-    dkepath = setpath_luke_jd('',NaN);
+    dkepath = setpath_luke_jd(dkepath,link_mode);
 end
 %
 nrem = length(dkepath.remote);
@@ -25,36 +36,27 @@ disp (' ')
 info_dke_yp(2,'List of remote profiles available :')
 disp(' ')
 %
-iirem = 1;
+flag_remote = true(1,nrem);
+hosts = cell(1,nrem);
 %
-for irem = 1:nrem-1,
-    flag = 0;
-    host0 = dkepath.remote(irem).host;
-    for jrem = irem+1:nrem,
-        host1 = dkepath.remote(jrem).host;
-        scheduler = dkepath.remote(jrem).scheduler;
-        if strcmp(host0,host1) && strcmp(scheduler,'direct'),
-            remote_index(iirem) = jrem;
-            iirem = iirem + 1;
-            flag = 1;
-            break
-        end 
+for irem = 1:nrem,
+    ihost = find(flag_remote & strcmp(dkepath.remote(irem).host,hosts));
+    if ~isempty(ihost) && strcmp(dkepath.remote(irem).scheduler,'direct'),% give priority to direct mode
+        flag_remote(ihost) = false;
+    elseif ~isempty(ihost)% discard profile
+        flag_remote(irem) = false;
     end
-    %
-    if flag == 0, 
-        remote_index(iirem) = irem;
-        iirem = iirem + 1;
-    end
+    hosts{irem} = dkepath.remote(irem).host;
 end
-%
-remote_index = sort(unique(remote_index));
+remote_index = find(flag_remote);
+nrem = length(remote_index);
 
-for irem = 1:length(remote_index),
+for irem = 1:nrem,
     info_dke_yp(4,['#',num2str(irem),' : ',dkepath.profilestr{remote_index(irem)}]);
 end
 disp(' ')
 %  
-remlist = input_dke_yp('Please identify profiles to be updated',1:length(remote_index),[1;length(remote_index)]);
+remlist = input_dke_yp('Please identify profiles to be updated',1:nrem,[1;nrem]);
 disp(' ')
 %
 remote = dkepath.remote(remote_index(remlist));

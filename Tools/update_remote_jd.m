@@ -29,6 +29,9 @@ for irem = 1:length(dkepath.remote),
             nrem = nrem+1;
             remote(nrem) = feval(remotestr,dkepath.remote(irem).schedulername,dkepath.remote(irem).profilename); 
             remote(nrem).env.luke_root = dkepath.remote(irem).luke_root;
+            if isfield(dkepath.remote(nrem),'link_mode'),
+                remote(nrem).link_mode = dkepath.remote(irem).link_mode;
+            end
             %
         else
             continue
