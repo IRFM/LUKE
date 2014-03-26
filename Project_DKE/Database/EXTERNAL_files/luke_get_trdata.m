@@ -359,8 +359,8 @@ for i=1:length(a.diag)
                     t2=d.equil.time(end);
                     n12=length(d.equil.time);
                 else % equidistant with dtres specified
-                    z1=ceil(t(1)/dtres);
-                    z2=floor(t(end)/dtres);
+                    z1=ceil(t(1)/dtres-5*eps);
+                    z2=floor(t(end)/dtres+5*eps);
                     t1=z1*dtres;
                     t2=z2*dtres;
                     n12=z2-z1+1;
