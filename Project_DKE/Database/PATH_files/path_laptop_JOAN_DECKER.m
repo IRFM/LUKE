@@ -89,7 +89,7 @@ dkepath.joan(1).remote(4).schedulername = 'torque';
 dkepath.joan(1).remote(4).profilename = 'joan';
 dkepath.joan(1).remote(4).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 dkepath.joan(1).remote(4).link_mode = [];
-dkepath.joan(1).remote(4).cvsupdate = true;
+dkepath.joan(1).remote(4).cvsupdate = false;% update done in 'direct' mode
 %
 dkepath.joan(1).remote(5).remoteid = 'CEA_CEPHEE';
 dkepath.joan(1).remote(5).schedulername = 'pbs';
@@ -179,6 +179,10 @@ dkepath.joan(1).remote(end).schedulername = 'xgrid';
 dkepath.joan(1).remote(end).cvsupdate = false;% update done in 'direct' mode
 %
 dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(3);
+dkepath.joan(1).remote(end).schedulername = 'direct';
+dkepath.joan(1).remote(end).cvsupdate = true;
+%
+dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(4);
 dkepath.joan(1).remote(end).schedulername = 'direct';
 dkepath.joan(1).remote(end).cvsupdate = true;
 %
