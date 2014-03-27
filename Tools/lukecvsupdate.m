@@ -55,8 +55,9 @@ remlist = input_dke_yp('Please identify profiles to be updated',1:nrem,[1;nrem])
 disp(' ')
 %
 remote = dkepath.remote(remote_index(remlist));
+nrem = length(remote);
 %
-for irem = 1:length(remote)
+for irem = 1:nrem,
     remote(irem).debugmode = debugmode;
 end
 %
@@ -68,5 +69,30 @@ display_mode = 3;% show detailed results
 %
 exclude = {'.mat','~','.mexa64','.mexglx','.mexmaci64','.o','.DS_Store'};
 %
-remotecvsupdate(remote,remotefunctions,display_mode,exclude)
+flag = remotecvsupdate(remote,remotefunctions,display_mode,exclude);
+%
+disp('--------------------------------------')
+disp('           GLOBAL RESULTS             ')
+disp('--------------------------------------')
+disp(' ')
+disp('  -2 : the remote process failed')
+disp('  -1 : the cvs update process failed')
+disp('   0 : the cvs update succeeded without remote conflicts or remote modified files')
+disp('   1 : the cvs update succeeded without remote conflicts and with remote modified files')
+disp('   2 : the cvs update succeeded with remote conflicts')
+disp(' ')
+disp(' Results for : MatTools / MatRemote / LUKE ')
+disp(' ')
+disp('--------------------------------------')
+disp(' ')
+disp(' ')
+disp(' ')
+%
+flag1 = num2str(flag(:,1));
+flag2 = num2str(flag(:,2));
+flag3 = num2str(flag(:,3));
+%
+for irem = 1:nrem,
+    disp([flag1(irem,:),' / ',flag2(irem,:),' / ',flag3(irem,:),' : ',dkepath.profilestr{remote_index(remlist(irem))}])
+end
 %
