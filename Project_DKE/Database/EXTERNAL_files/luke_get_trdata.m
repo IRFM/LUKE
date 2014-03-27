@@ -63,12 +63,23 @@ end
 
 % go through the list of requested diagnostics
 for i=1:length(a.diag)
+    % set the parameters (priority for parameters in the diag struct)
+    diag=a.diag{i};
+    % shot
     shot=a.shot;
+    if(isfield(diag,'shot'))
+        shot=diag.shot;
+    end
+    % t
     if(isfield(a,'t'))
         t=a.t;
     else
         t=t_default;
     end
+    if(isfield(diag,'t'))
+        t=diag.t;
+    end
+    % dtres
     if(isfield(a,'dtres'))
         if(~isfield(a,'t') && isempty(a.dtres))
             dtres=dtres_default;
@@ -78,35 +89,54 @@ for i=1:length(a.diag)
     else
         dtres=dtres_default;
     end
+    if(isfield(diag,'dtres'))
+        dtres=diag.dtres;
+    end
+    % dtreslim
     if(isfield(a,'dtreslim') && ~isempty(a.dtreslim))
         dtres=a.dtres;
     else
         dtreslim=dtreslim_default;
     end
-    diag=a.diag{i};
+    if(isfield(diag,'dtreslim'))
+        dtres=diag.dtreslim;
+    end
+    % outputpath
     if(isfield(a,'outputpath'))
         outputpath=a.outputpath;
     else
         outputpath=outputpath_default;
     end
-    if(~exist(outputpath,'dir'))
-        system(sprintf('mkdir -p %s',outputpath));
-    end
-    if(isfield(diag,'shot'))
-        shot=diag.shot;
-    end
-    if(isfield(diag,'t'))
-        t=diag.t;
-    end
-    if(isfield(diag,'dtres'))
-        dtres=diag.dtres;
-    end
-    if(isfield(diag,'isel'))
-        isel=diag.isel;
-    end
     if(isfield(diag,'outputpath'))
         outputpath=diag.outputpath;
     end
+    if(~exist(outputpath,'dir'))
+        system(sprintf('mkdir -p %s',outputpath));
+    end
+    % isel
+    if(isfield(diag,'isel'))
+        isel=diag.isel;
+    end
+    % tca
+    if(isfield(a,'tca'))
+        tca=a.tca;
+    else
+        tca=NaN;
+    end
+    if(isfield(diag,'tca'))
+        tca=diag.tca;
+    end
+    % tcr
+    if(isfield(a,'tcr'))
+        tcr=a.tcr;
+    else
+        tcr=NaN;
+    end
+    if(isfield(diag,'tcr'))
+        tcr=diag.tcr;
+    end
+    
+    % read the data of the diagnostic
     fprintf('- Get %s data for shot %d, t=[%g,%g]s.\n',diag.name,shot,t(1),t(end));
     switch diag.name
         case 'BT'
@@ -142,6 +172,7 @@ for i=1:length(a.diag)
             end
         case 'NE'
             d.ne.shot=shot;
+            % if no coherent/condistional averaging:
             if(dtres_bt(0.016,t,dtres,dtreslim))
                 d.ne.rawdiag={'FIR','LIUQE'};
                 firpar=gti_gds(shot,t([1 end]),'FIR','Flux1D','MinFishReg','Unique','Unique',0);
@@ -162,6 +193,7 @@ for i=1:length(a.diag)
             end
         case 'TE'
             d.te.shot=shot;
+            % if no coherent/condistional averaging:
 %             if(dtres_bt(0.016,t,dtres,dtreslim))
 %                 d.te.rawdiag={'DMPX','LIUQE','Thomson'};
 %                 par=
@@ -194,21 +226,22 @@ for i=1:length(a.diag)
                 d.zeff.source='proffit';
                 zeff_tdi=zeffproffit;
             else
+                mdsopen(shot);
                 zeff_zx=tdi('\results::zx');
+                mdsclose;
                 d.zeff.source='zx';
                 zeff_tdi=zeff_zx;
             end
             fprintf('  . Using Z_eff value from %s.\n',d.zeff.source);
+            % if no coherent/condistional averaging:
             [d.zeff.time,d.zeff.data]=gti_chdtres(zeff_tdi.dim{1},zeff_tdi.data(:,1)',t,dtres,dtreslim);
-            itake=(t(1)<=d.zeff.time & d.zeff.time<=t(end));
-            d.zeff.time=d.zeff.time(itake);
-            d.zeff.data=d.zeff.data(:,itake);
         case 'ZAXIS'
             d.zaxis.shot=shot;
             d.zaxis.rawdiag={'LIUQE'};
             mdsopen(shot);
             zraw=tdi('\results::z_axis');
             mdsclose;
+            % if no coherent/condistional averaging:
             [d.zaxis.time,d.zaxis.data]=gti_chdtres(zraw.dim{1},zraw.data',t,dtres,dtreslim);
         case 'ECRH'
             d.ecrh.shot=shot;
@@ -218,12 +251,14 @@ for i=1:length(a.diag)
             praw=tdi('\results::toray.input:p_gyro');
             mdsclose;
             % get the polarisation
+            % if no coherent/condistional averaging:
             ox_t=gti_chdtres([],[],t,dtres,dtreslim);
             [ox_xfrac,ox_times,~]=ecpol_ox_fraction(shot,0,ox_t);
             for j=1:length(isel)    % do a loop over all selected launchers
                 k=isel(j);
                 % get power: independent of harmonic, kW->W
                 itknotnan=~isnan(praw.data(:,k));
+                % if no coherent/condistional averaging:
                 if(~any(itknotnan))
                     [d.ecrh.pow{k}.time,d.ecrh.pow{k}.data]=gti_chdtres(mean(t),NaN,t,dtres,dtreslim);
                 else
@@ -252,13 +287,15 @@ for i=1:length(a.diag)
                     timeraw=mdsvalue('dim_of(_theta)');
                     phiraw=mdsvalue(sprintf('\\ecrh::launchers:phi_l:x2_%d',k))'*pi/180;
                     mdsclose;
+                    % if no coherent/condistional averaging:
                     [ang.time,allangdata]=gti_chdtres(timeraw,[thetaraw;phiraw],t,dtres,dtreslim);
                     ang.theta=allangdata(1,:);
                     ang.phi=allangdata(2,:);
                     ang.theta_eff=-atan(ang.theta).*cos(ang.phi);
                     ang.phi_eff=atan(tan(ang.theta).*sin(ang.phi))./sqrt(1+tan(ang.theta).^2.*cos(ang.phi).^2);
                     % ox fraction data
-%                   put into d.ecrh.xfrac{k}.time and .data
+                    % if no coherent/condistional averaging:
+                    % put into d.ecrh.xfrac{k}.time and .data
                     d.ecrh.xfrac{k}.time=ox_t;
                     d.ecrh.xfrac{k}.data=NaN(1,numel(ox_t));
                     for ell=1:length(ox_t)
@@ -297,6 +334,7 @@ for i=1:length(a.diag)
                         rraw=datatemp';
                     end
                     mdsclose;
+                    % if no coherent/condistional averaging:
                     [ang.time,allangdata]=gti_chdtres(timeraw,[thetaraw;phiraw;rraw],t,dtres,dtreslim);
                     thetaraw=allangdata(1,:);
                     phiraw=allangdata(2,:);
@@ -314,8 +352,9 @@ for i=1:length(a.diag)
         case 'EQUIL'
             d.equil.shot=shot;
             d.equil.rawdiag={'LIUQE'};
+            % if no coherent/condistional averaging:
             fprintf('- Checking availability of LIUQE equilibria for shot %d at requested time points\n',shot);
-            if( isempty(dtres) && ~((max(diff(t))/min(diff(t))-1)<5*eps) )
+            if( isempty(dtres) && (length(t)==1 || ~((max(diff(t))/min(diff(t))-1)<5*eps)) )
                 % specify times
                 d.equil.time=t;
                 % get times where equilibria exist already
@@ -323,7 +362,7 @@ for i=1:length(a.diag)
                 t_liuqe=mdsvalue('dim_of(\results::i_p)');
                 mdsclose;
                 for it=1:length(d.equil.time)
-                    if(all(d.equil.time(it)~=t_liuqe))
+                    if(min(d.equil.time(it)-t_liuqe)>eps(single(1)))
                         fprintf('  . LIUQE not available in MDS tree for t=%gs.\n',d.equil.time(it));
                         job = matstandardjob_jd('runmat');
                         job.funcopy=false;
@@ -353,7 +392,7 @@ for i=1:length(a.diag)
                 d.equil.data=outputpath;                
             else
                 % specify times
-                if(isempty(dtres)) % equidistant with dtres=[]
+                if(isempty(dtres) || length(t)==1) % equidistant with dtres=[]
                     d.equil.time=t;
                     t1=d.equil.time(1);
                     t2=d.equil.time(end);
@@ -372,7 +411,7 @@ for i=1:length(a.diag)
                 mdsclose;
                 flag_run=false(size(d.equil.time));
                 for it=length(d.equil.time)
-                    if(all(d.equil.time(it)~=t_liuqe))
+                    if(min(d.equil.time(it)-t_liuqe)>eps(single(1)))
                         fprintf('  . LIUQE not available in MDS tree for t=%gs.\n',d.equil.time(it));
                         flag_run(it)=true;
                     end
