@@ -33,26 +33,21 @@ end
 nrem = length(dkepath.remote);
 %
 disp (' ')
-info_dke_yp(2,'List of remote profiles available :')
+info_dke_yp(2,'List of remote profiles tagged for cvs update :')
 disp(' ')
 %
-flag_remote = true(1,nrem);
-hosts = cell(1,nrem);
+flag_cvsupdate = false(1,nrem);
 %
 for irem = 1:nrem,
-    ihost = find(flag_remote & strcmp(dkepath.remote(irem).host,hosts));
-    if ~isempty(ihost) && strcmp(dkepath.remote(irem).scheduler,'direct'),% give priority to direct mode
-        flag_remote(ihost) = false;
-    elseif ~isempty(ihost)% discard profile
-        flag_remote(irem) = false;
+    if isfield(dkepath.remote(irem),'cvsupdate') && ~isempty(dkepath.remote(irem).cvsupdate) && dkepath.remote(irem).cvsupdate,
+        flag_cvsupdate(irem) = true;
     end
-    hosts{irem} = dkepath.remote(irem).host;
 end
-remote_index = find(flag_remote);
+remote_index = find(flag_cvsupdate);
 nrem = length(remote_index);
-
+%
 for irem = 1:nrem,
-    info_dke_yp(4,['#',num2str(irem),' : ',dkepath.profilestr{remote_index(irem)}]);
+    info_dke_yp(4,['#',num2str(irem),' : ',dkepath.profilestr{remote_index(irem)},' for LUKE root : ',dkepath.remote(remote_index(irem)).env.luke_root]);
 end
 disp(' ')
 %  

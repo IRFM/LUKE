@@ -32,6 +32,9 @@ for irem = 1:length(dkepath.remote),
             if isfield(dkepath.remote(nrem),'link_mode'),
                 remote(nrem).link_mode = dkepath.remote(irem).link_mode;
             end
+            if isfield(dkepath.remote(nrem),'cvsupdate'),
+                remote(nrem).cvsupdate = dkepath.remote(irem).cvsupdate;
+            end
             %
         else
             continue

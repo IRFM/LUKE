@@ -73,47 +73,62 @@ dkepath.yves(1).remote(1).remoteid = 'laptop_YVES_PEYSSON';
 dkepath.yves(1).remote(1).schedulername = 'condor';
 dkepath.yves(1).remote(1).profilename = 'yves';
 dkepath.yves(1).remote(1).luke_root = dkepath.yves(1).luke_root;% local cluster
+dkepath.yves(1).remote(1).link_mode = [];
+dkepath.yves(1).remote(1).cvsupdate = false;% update done in 'direct' mode
 %
 dkepath.yves(1).remote(2) = dkepath.yves(1).remote(1);
 dkepath.yves(1).remote(2).schedulername = 'xgrid';
 %
 dkepath.yves(1).remote(3) = dkepath.yves(1).remote(1);
 dkepath.yves(1).remote(3).schedulername = 'direct';
+dkepath.yves(1).remote(3).cvsupdate = true;
 %
 dkepath.yves(1).remote(4).remoteid = 'macpro_YVES_PEYSSON';
 dkepath.yves(1).remote(4).schedulername = 'condor';
 dkepath.yves(1).remote(4).profilename = 'yves';
 dkepath.yves(1).remote(4).luke_root = '/Users/yvespeysson/Projets/LUKE/';
+dkepath.yves(1).remote(4).link_mode = [];
+dkepath.yves(1).remote(4).cvsupdate = false;% update done in 'direct' mode
 %
 dkepath.yves(1).remote(5) = dkepath.yves(1).remote(4);
 dkepath.yves(1).remote(5).schedulername = 'xgrid';
 %
 dkepath.yves(1).remote(6) = dkepath.yves(1).remote(4);
 dkepath.yves(1).remote(6).schedulername = 'direct';
+dkepath.yves(1).remote(6).cvsupdate = true;% update done in 'direct' mode
 %
 dkepath.yves(1).remote(7).remoteid = 'CEA_ANDROMEDE';
 dkepath.yves(1).remote(7).schedulername = 'pbs';
 dkepath.yves(1).remote(7).profilename = 'YP105119';
 dkepath.yves(1).remote(7).luke_root = '/home/YP105119/LUKE/';
+dkepath.yves(1).remote(7).link_mode = [];
+dkepath.yves(1).remote(7).cvsupdate = false;% update done in 'direct' mode
 %
 dkepath.yves(1).remote(8) = dkepath.yves(1).remote(7);
 dkepath.yves(1).remote(8).schedulername = 'direct';
+dkepath.yves(1).remote(8).cvsupdate = true;% update done in 'direct' mode
 %
 dkepath.yves(1).remote(9).remoteid = 'EFDA_ITM';
 dkepath.yves(1).remote(9).schedulername = 'sge';
 dkepath.yves(1).remote(9).profilename = 'yvesp';
 dkepath.yves(1).remote(9).luke_root = '/pfs/home/yvesp/public/LUKE/';
+dkepath.yves(1).remote(9).link_mode = 2;
+dkepath.yves(1).remote(9).cvsupdate = false;% update done in 'direct' mode
 %
 dkepath.yves(1).remote(10) = dkepath.yves(1).remote(9);
 dkepath.yves(1).remote(10).schedulername = 'direct';
+dkepath.yves(1).remote(10).cvsupdate = true;% update done in 'direct' mode
 %
 dkepath.yves(1).remote(11).remoteid = 'ASIPP_SHENMA';
 dkepath.yves(1).remote(11).schedulername = 'torque';
 dkepath.yves(1).remote(11).profilename = 'yves';
 dkepath.yves(1).remote(11).luke_root = '/home/PEYSSON/LUKE/';
+dkepath.yves(1).remote(11).link_mode = [];
+dkepath.yves(1).remote(11).cvsupdate = false;% update done in 'direct' mode
 %
 dkepath.yves(1).remote(12) = dkepath.yves(1).remote(11);
 dkepath.yves(1).remote(12).schedulername = 'direct';
-
+dkepath.yves(1).remote(12).cvsupdate = true;% update done in 'direct' mode
+%
 
 
