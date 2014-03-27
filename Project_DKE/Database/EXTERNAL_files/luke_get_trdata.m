@@ -387,9 +387,6 @@ for i=1:length(a.diag)
                         fprintf('  . LIUQE available in MDS tree for t=%gs.\n',d.equil.time(it));
                     end
                 end
-                % create the equilibrium files                
-                make_eqdsk(shot,d.equil.time,outputpath,'TCV');
-                d.equil.data=outputpath;                
             else
                 % specify times
                 if(isempty(dtres) || length(t)==1) % equidistant with dtres=[]
@@ -449,9 +446,17 @@ for i=1:length(a.diag)
                 else
                     fprintf('  . LIUQE already available in MDS tree for all requested times: no LIUQE run.\n');
                 end
-                % create the equilibrium files
-                make_eqdsk(shot,d.equil.time,outputpath,'TCV');
-                d.equil.data=outputpath;
+            end
+            % create the equilibrium files                
+            make_eqdsk(shot,d.equil.time,outputpath,'TCV');
+            % read the equilibrium files
+            for it=1:length(d.equil.time)
+                eqdsk_file = [outputpath,filesep,'eqdsk.',num2str(d.equil.shot),'t',num2str(d.equil.time(it),'%6.4f')];
+                if exist(eqdsk_file,'file'),
+                    d.equil.eqdsk{it} = fileread(eqdsk_file);% magnetic equilibrium
+                else
+                    warning(['File ',eqdsk_file,' could not be found.']);
+                end
             end
     end
 end
