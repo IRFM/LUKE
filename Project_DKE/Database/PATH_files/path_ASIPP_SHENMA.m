@@ -50,7 +50,7 @@ dkepath.PEYSSON(1).imagemagick.env = '/usr/bin/';% ImageMagick environment varia
 %
 dkepath.PEYSSON(1).remote(1).remoteid = 'ASIPP_SHENMA';
 dkepath.PEYSSON(1).remote(1).schedulername = 'torque';
-dkepath.PEYSSON(1).remote(1).profilename = 'yves';
+dkepath.PEYSSON(1).remote(1).profilename = 'local';
 dkepath.PEYSSON(1).remote(1).luke_root = dkepath.PEYSSON(1).luke_root;% local cluster
 %
 %-------------------------------------------------------------------------------------------------------
