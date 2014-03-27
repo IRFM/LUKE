@@ -153,6 +153,8 @@ if iscell(lukestructs),% remote and/or distributed calculation
                 %
                 if ~isfield(lukestructs{ijob}.opt,'savepath'),
                     lukestructs{ijob}.opt.savepath = '';
+                elseif ~isempty(lukestructs{ijob}.opt.savepath) && ~exist(lukestructs{ijob}.opt.savepath,'dir'),
+                    mkdir(lukestructs{ijob}.opt.savepath)
                 end
                 savestruct.lukestructs = lukestructs{ijob};
                 savefile = [lukestructs{ijob}.opt.savepath,'LUKE_RESULTS_',savestruct.lukestructs.simul.id,'.mat'];
