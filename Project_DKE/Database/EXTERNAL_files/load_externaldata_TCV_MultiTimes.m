@@ -1,4 +1,4 @@
-function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style)
+function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remote)
     %
     % This function loads data from TCV database
     %
@@ -34,7 +34,11 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style)
         %
     end
     %
-    dataoutput = luke_get_trdata(datainput);
+    [err,dataoutput] = matremote_jd('luke_get_trdata',{datainput},remote);
+    if ~isempty(err),
+        external = '';
+        return
+    end
     %
     % fill external structure fields
     %
@@ -78,11 +82,17 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style)
         external.equil(it).shotnum =  external.shotnum;
         external.equil(it).shotime =  shotime;
         %
-        eqdsk_file = [dataoutput.equil.data,filesep,'eqdsk.',external.shotnum,'t',num2str(shotime,'%6.4f')];
-        if exist(eqdsk_file,'file'),
-            external.equil(it).magnetic.eqdsk = fileread(eqdsk_file);% magnetic equilibrium
+        if isfield(dataoutput.equil,'eqdsk'),
+            external.equil(it).magnetic.eqdsk = dataoutput.equil.eqdsk{it};% magnetic equilibrium
+        elseif isfield(dataoutput.equil,'data') && isempty(remote),% eqdsk files created locally, can be read
+            eqdsk_file = [dataoutput.equil.data,filesep,'eqdsk.',external.shotnum,'t',num2str(shotime,'%6.4f')];
+            if exist(eqdsk_file,'file'),
+                external.equil(it).magnetic.eqdsk = fileread(eqdsk_file);% magnetic equilibrium
+            else
+                error(['File ',eqdsk_file,' could not be found. Aborted.']);
+            end
         else
-            error(['File ',eqdsk_file,' could not be found. aborted.']);
+            error('eqdsk data could not be retrieved. Aborted.');
         end
         %
         external.equil(it).prof.te = dataprocess(dataoutput.te,'te',shotime);% te

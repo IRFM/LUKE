@@ -8,8 +8,21 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
     if nargin < 4,
         opt_gui = true;
     end
+    if ~isfield(style,'distselectstyle'),
+        style.distselectstyle = style;
+    end
     %
     external = [];
+    %
+    remnum = iselect_jd(dkepath.remprofiles,'Select local or remote location for database quest',opt_gui,style.distselectstyle,1,'popupmenu') - 1;
+    %
+    if remnum == 0,
+        remote = [];
+        select = struct;% interactively select options
+    else
+        remote = dkepath.remote(remnum);
+        select = '';% default options
+    end
     %
     if nargin > 1 && ~isempty(basestr),% from irunluke
         %
@@ -35,7 +48,7 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
             shotime = input_dke_yp('Shot time','','','');
         end
         %
-        external = feval(fname,workdir,shotnum,shotime,t1,t2,opt_gui);
+        [err,external] = matremote_jd(fname,{workdir,shotnum,shotime,t1,t2,opt_gui,select},remote);
         %
     else
         %
@@ -71,11 +84,16 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
             external.basestr = basestr;
             external.shotnum = num2str(external.shotnum);
             %
-            external = conc_struct_jd(external,feval(['load_externaldata_',basestr],pwd,external.shotnum,external.shotime,external.t1,external.t2,1,''));
+            [err,external_res] = matremote_jd(['load_externaldata_',basestr],{pwd,external.shotnum,external.shotime,external.t1,external.t2,1,''},remote);
+            if isempty(err),
+                external = conc_struct_jd(external,external_res);
+            else
+                external = '';
+            end
             %
         else
             %
-            external = feval(['load_externaldata_',basestr],pwd,opt_gui,style);
+            external = feval(['load_externaldata_',basestr],pwd,opt_gui,style,remote);
             %
         end
         %

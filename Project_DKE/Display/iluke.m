@@ -497,8 +497,8 @@ status.hxr = [];
 
 style.distselectstyle = style;% for dist profile selection
 %
-style.distselectstyle.textwidth = 200;
 style.distselectstyle.butwidth = 400;
+style.distselectstyle.textwidth = style.panelwidth - style.distselectstyle.butwidth - 3*style.distselectstyle.buthsep - 2*style.buthsep;%200;%
 
 style.editselectstyle = style;% for edition within GUI
 %
