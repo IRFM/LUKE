@@ -459,6 +459,59 @@ function irunluke_jd(basestr,signs,opt_gui)
                         fileids.data = data_file;
                         paths.data = data_path;
                         %
+                        if isfield(data,'luke_input'),
+                            dkeparam = data.luke_input.dkeparam;
+                            dkedisplay = data.luke_input.dkedisplay;
+                            equil = data.luke_input.equil;
+                            waves = data.luke_input.waves;
+                            ohm = data.luke_input.ohm;
+                            transpfaste = data.luke_input.transpfaste;
+                            ripple = data.luke_input.ripple;
+                            %
+                            if isfield(data.luke_input,'id_simul'),
+                                id_simul = data.luke_input.id_simul;
+                            else
+                                id_simul = data.luke_input.simul_in;
+                            end
+                        else
+                            dkeparam = data.dkeparam;
+                            dkedisplay = data.dkedisplay;
+                            equil = data.equil;
+                            waves = data.waves;
+                            ohm = data.ohm;
+                            transpfaste = data.transpfaste;
+                            ripple = data.ripple;
+                            %
+                            if isfield(data,'simul') && isfield(data.simul,'id'),
+                                id_simul = data.simul.id;
+                            elseif isfield(output,'dke_out') && isfield(output.dke_out,'simul') && isfield(output.dke_out.simul,'id'),
+                                id_simul = output.dke_out.simul.id;
+                            else
+                                id_simul = data.id_simul;
+                            end
+                        end
+                        %
+                        if isempty(waves),
+                            if isfield(output,'dke_out') && isfield(output.dke_out,'waves'),
+                                waves = output.dke_out.waves;
+                            else
+                                waves = '';
+                            end
+                        end
+                        %
+                        if isfield(data,'luke_input') && isfield(data.luke_input,'wavestructs') && ~isempty(data.luke_input.wavestructs)
+                            %
+                            external.id = ['wavestructs : ',num2str(length(data.luke_input.wavestructs)),' waves'];
+                            external.wave.wavestructs = data.luke_input.wavestructs;
+                            %
+                            status.external = 1;
+                            %
+                        else
+                            %
+                            status.external = 0;
+                            %
+                        end
+                        %
                         if isfield(data,'id_dkeparam') && ~isempty(data.id_dkeparam) && exist([data.path_dkeparam,'DKEPARAM_',data.id_dkeparam,'.mat'],'file'),
                             fileids.dkeparam = data.id_dkeparam;
                             paths.dkeparam = data.path_dkeparam;
@@ -479,15 +532,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                             paths.equil = '';
                         end
                         %
-                        if ~isfield(data,'waves') || isempty(data.waves),
-                            if isfield(output,'dke_out') && isfield(output.dke_out,'waves'),
-                                data.waves = output.dke_out.waves;
-                            else
-                                data.waves = '';
-                            end
-                        end
-                        %
-                        for iw = 1:length(data.waves),
+                        for iw = 1:length(waves),
                             if isfield(data,'ids_wave') && length(data.ids_wave) >= iw && ~isempty(data.ids_wave{iw}) && ...
                                     ((iscell(data.paths_wave) && exist([data.paths_wave{iw},'WAVE_',data.ids_wave{iw},'.mat'],'file')) || (~iscell(data.paths_wave) && exist([data.paths_wave,'WAVE_',data.ids_wave{iw},'.mat'],'file'))),
                                 fileids.waves{iw} = data.ids_wave{iw};
@@ -498,10 +543,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                             end
                         end
                         %
-                        if ~isfield(data,'ohm'),
-                            data.ohm = '';
-                        end
-                        %
                         if isfield(data,'id_ohm') && ~isempty(data.id_ohm) && exist([data.path_ohm,'OHM_',data.id_ohm,'.mat'],'file'),
                             fileids.ohm = data.id_ohm;
                             paths.ohm = data.path_ohm;
@@ -510,20 +551,12 @@ function irunluke_jd(basestr,signs,opt_gui)
                             paths.ohm = '';
                         end
                         %
-                        if ~isfield(data,'transpfaste'),
-                            data.transpfaste = '';
-                        end
-                        %
                         if isfield(data,'id_transpfaste') && ~isempty(data.id_transpfaste) && exist([data.path_transpfaste,'TRANSP_',data.id_transpfaste,'.mat'],'file'),
                             fileids.transpfaste = data.id_transpfaste;
                             paths.transpfaste = data.path_transpfaste;
                         else
                             fileids.transpfaste = '';
                             paths.transpfaste = '';
-                        end
-                        %
-                        if ~isfield(data,'ripple'),
-                            data.ripple = '';
                         end
                         %
                         if isfield(data,'id_ripple') && ~isempty(data.id_ripple) && exist([data.path_ripple,'RIPPLE_',data.id_ripple,'.mat'],'file'),
@@ -536,34 +569,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                         fileids.external = '';
                         paths.external = '';
-                        %
-                        if isfield(data,'luke_input'),
-                            dkeparam = data.luke_input.dkeparam;
-                            dkedisplay = data.luke_input.dkedisplay;
-                            equil = data.luke_input.equil;
-                            waves = data.waves;
-                            ohm = data.luke_input.ohm;
-                            transpfaste = data.luke_input.transpfaste;
-                            ripple = data.luke_input.ripple;
-                            %
-                            id_simul = data.luke_input.simul_in;
-                        else
-                            dkeparam = data.dkeparam;
-                            dkedisplay = data.dkedisplay;
-                            equil = data.equil;
-                            waves = data.waves;
-                            ohm = data.ohm;
-                            transpfaste = data.transpfaste;
-                            ripple = data.ripple;
-                            %
-                            if isfield(data,'simul') && isfield(data.simul,'id'),
-                                id_simul = data.simul.id;
-                            elseif isfield(output,'dke_out') && isfield(output.dke_out,'simul') && isfield(output.dke_out.simul,'id'),
-                                id_simul = output.dke_out.simul.id;
-                            else
-                                id_simul = data.id_simul;
-                            end
-                        end
                         %
                         status.dkeparam = 1;
                         status.equil = 1;
@@ -599,8 +604,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                         end                    
                         %
                         luke_job = '';
-                        %
-                        status.external = 0;
                         status.data = 2;
                         %
                         clear data
