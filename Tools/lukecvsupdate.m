@@ -67,7 +67,7 @@ end
 %
 % ----------------------------
 %
-remotefunctions = {'select_LUKE_jd.m','load_remoteprofiles_jd.m','luke_root'};% update MatTools, MatRemote, and LUKE
+remotefunctions = {'select_LUKE.m','load_remoteprofiles_jd.m','luke_root'};% update MatTools, MatRemote, and LUKE
 %
 display_mode = 3;% show detailed results
 %

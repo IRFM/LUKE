@@ -31,7 +31,7 @@ end
 % test access to MatRemote and MatTools toolboxes
 %
 disp(' ');
-if isempty(which('select_LUKE_jd.m')),
+if isempty(which('select_LUKE.m')),
     disp('No path set to MatTools toolbox. Please download and/or set path to toolbox.')
     return
 end
