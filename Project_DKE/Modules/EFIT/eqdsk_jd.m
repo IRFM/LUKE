@@ -182,7 +182,18 @@ else %IPHI is negative, PHI clockwise from top
     sigma = -1;
 end
 %
-[iR,iZ] = find(sigma*xypsi == min(min(sigma*xypsi)));
+% create mask to search for minimum... within the plasma
+%
+xR = repmat(R.',[1,nny]);
+xZ = repmat(Z,[nnx,1]);
+xmask_out = (sigma*xypsi > sigma*psia);% these points are outside the plasma
+xd = sqrt((xR(xmask_out) - Rp).^2 + (xZ(xmask_out) - Zp).^2);
+dmin = min(xd);
+xmask_excl = (xd > dmin);
+xypsi_excl = xypsi;
+xypsi_excl(xmask_excl) = sigma*Inf;
+%
+[iR,iZ] = find(sigma*xypsi_excl == min(min(sigma*xypsi_excl)));
 %
 if length(iR) ~= 1,
     error('unable to locate minimum in xypsi data');
