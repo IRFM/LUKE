@@ -30,24 +30,37 @@ if nargin < 3,
 	error('Not enough arguments')
 end
 %
-if isempty(equil),
-    if isfield(external,'equil'),
-        equil = external.equil;
-    else
-        error('no equilibrium provided')
-    end
+if isempty(equil) && isfield(external,'equil'),
+    equil = external.equil;
 end
 %
 if ~isfield(select,'style'),
     select.style = struct;
 end
 %    
-signs.ip = sign(equil.psi_apRp(end));
-signs.b0 = sign(equil.ptBPHI(1,1));
+if isfield(equil,'psi_apRp'),
+    signs.ip = sign(equil.psi_apRp(end));
+elseif isfield(equil,'ip'),
+    signs.ip = sign(equil.ip);
+else
+    signs.ip = 1;
+end
+%
+if isfield(equil,'ptBPHI'),
+    signs.b0 = sign(equil.ptBPHI(1,1));
+elseif isfield(equil,'b0'),
+    signs.b0 = sign(equil.b0);
+else
+    signs.b0 = 1;
+end
 %
 launchs = {};
 %
 if ~isempty(external),% import wave data from external structure
+    %
+    if isempty(equil),
+        error('no equilibrium provided')
+    end        
     %
     if isfield(equil,'shotnum'),
         shotnum = equil.shotnum;
@@ -379,6 +392,10 @@ else% create default launch structure
         elseif strcmp(basestr,'EAST')
             %
             launch = imake_launch_EAST_jd('',opt_gui,select.style);
+            %
+        elseif strcmp(basestr,'KSTAR')
+            %
+            launch = imake_launch_KSTAR_jd('',opt_gui,select.style);
             %
         else
             %

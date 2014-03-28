@@ -232,15 +232,14 @@ else
                     ' ; P = ',num2str(wavestruct.launch.angles.P0/1e3,3),' kW',...
                     ' ; f = ',num2str(wavestruct.launch.angles.freq/1e9,3),' GHz'];
                 %
-                lukeobj.runc3pooptim.state = 'on';
-                %
             else
                 lukeobj.angles.modify.state = 'off';
                 lukeobj.angles.save.state = 'off';
                 lukeobj.angles.reset.state = 'off';
                 lukeobj.angles.text.string = '';
-                lukeobj.runc3pooptim.state = 'off';
             end
+            %
+            lukeobj.runc3pooptim.state = 'on';
             %
             lukeobj.spectrum.text.string = '';
             lukeobj.launch.text.string = [lukeobj.launch.text.string,...
@@ -252,6 +251,11 @@ else
         lukeobj.runc3pooptim.highlight = true;    
         %
         clear wavestruct
+    else
+        %
+        lukeobj.runc3poall.state = 'off'; 
+        lukeobj.runc3pooptim.highlight = false;
+        %
     end
     %
 end
