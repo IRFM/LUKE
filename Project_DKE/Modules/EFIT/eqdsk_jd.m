@@ -186,9 +186,9 @@ end
 %
 xR = repmat(R.',[1,nny]);
 xZ = repmat(Z,[nnx,1]);
+xd = sqrt((xR - Rp).^2 + (xZ - Zp).^2);
 xmask_out = (sigma*xypsi > sigma*psia);% these points are outside the plasma
-xd = sqrt((xR(xmask_out) - Rp).^2 + (xZ(xmask_out) - Zp).^2);
-dmin = min(xd);
+dmin = min(xd(xmask_out));
 xmask_excl = (xd > dmin);
 xypsi_excl = xypsi;
 xypsi_excl(xmask_excl) = sigma*Inf;
