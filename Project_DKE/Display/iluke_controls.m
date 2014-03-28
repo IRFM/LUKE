@@ -14,10 +14,15 @@ for ilist = 1:length(list),
         fname = list{ilist};
         s.(sname).(fname) = struct;
         %
-        ifield = strcmp(fieldnames,fname);
+        ifield = find(strcmp(fieldnames,fname));
         %
-        fstyle = styles{ifield};
-        fstring = strings{ifield};
+        if ~isempty(ifield),
+            fstyle = styles{ifield};
+            fstring = strings{ifield};
+        else
+            fstyle = 'pushbutton';
+            fstring = fname;
+        end            
         positionindex = ilist;
         %
         if positionindex == 1,%title

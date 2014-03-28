@@ -66,8 +66,10 @@ switch action
                 %
                 % iluke made LUKE_DATA_*.mat file
                 %
-                load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','outputs','jobs','hxrs','status','tokamak','shotnum','shotimes');
+                load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
                 lukeobj = conc_struct_jd(lukeobj,lukeobjmod);
+                %
+                iluke_updateoldsimul;
                 %
                 if length(shotimes) == 1,% only one time
                     curtime = 1;        
@@ -145,9 +147,9 @@ switch action
             %
             % select fields to save and remote subfields handle 
             %
-            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotimes','data','equil','ohm','transp','ripple','wave','wavestruct','luke','r5x2','param','lukeid'});
+            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotimes','data','equil','ohm','transp','ripple','wave','wavestruct','luke','sdiag','param','lukeid'});
             lukeobjmod = rmfields_jd(lukeobjmod,{'handle','position'},1);
-            save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','outputs','jobs','hxrs','status','tokamak','shotnum','shotimes');
+            save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
             %
             lukeobj.simulfile.string = filename;%[pathname,filename];
             %
@@ -445,12 +447,17 @@ switch action
         %
         [filenames,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',1);
         %
+        if ischar(filenames),
+            filenames = {filenames};
+        end
+        %
         nt = length(filenames);
         %
         for it = 1:nt,
             %
             load([pathname,filenames{it}],'equil');
             %
+            equil = iluke_equilcorr(equil);
             if ~isempty(tokamak) && ~strcmp(tokamak,equil.tokamak),% shotimes are added to the same machine and shot number
                 continue
             elseif isempty(tokamak)
@@ -618,7 +625,7 @@ switch action
         newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
         newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
         %
-        if curtime > 1,
+        if curtime > 0,
             %
             equilibrium_jd(equils{curtime},NaN,3,'linear',10,[newgraph1_handle,newgraph2_handle,newgraph3_handle],style);
             %
@@ -1140,13 +1147,30 @@ switch action
         select = struct;
         select.style = style;
         %
-        launchs = imake_launch_jd(dkepath,tokamak,equil,'',workdir,lukeobj.infopanel.handle,select);
-        %
-        wavestructs{end+1} = imake_wavestructs_jd(equil,launchs{1});
+        if curtime > 0,
+            %
+            launchs = imake_launch_jd(dkepath,tokamak,equils{curtime},'',workdir,lukeobj.infopanel.handle,select);
+            %
+            wavestructss{curtime}{end+1} = imake_wavestructs_jd(equils{curtime},launchs{1});
+            %
+        else
+            %
+            signs.ip = sign(equils{1}.psi_apRp(end));
+            signs.b0 = sign(equils{1}.ptBPHI(1,1));
+            %
+            launchs = imake_launch_jd(dkepath,tokamak,signs,'',workdir,lukeobj.infopanel.handle,select);
+            %
+            for it = find(status.wavestructs >= 0),
+                wavestructss{it}{end+1} = imake_wavestructs_jd(equils{it},launchs{1});
+            end
+            %
+            clear signs
+            %
+        end           
         %
         status.data = 2;
         %
-        lukeobj.wavestruct.select.value = length(wavestructs);
+        lukeobj.wavestruct.select.value = 1;
         %
         clear select launchs
         %
@@ -1726,9 +1750,11 @@ switch action
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
         %
-        lukeobj.plot1.gindex = 0;
-        lukeobj.plot2.gindex = 0;
-        lukeobj.plot3.gindex = 0;
+        it_g = 2 + curtime;%<new>,<all>,...
+        %
+        lukeobj.plot1.gindex(it_g) = 0;
+        lukeobj.plot2.gindex(it_g) = 0;
+        lukeobj.plot3.gindex(it_g) = 0;
         %
         iluke_update;% initialize display
         %
@@ -1759,29 +1785,33 @@ switch action
         %
         iw = lukeobj.wavestruct.select.value;
         %
-        if isfield(wavestructs{iw}.launch.angles,'orig'),
+        if isfield(wavestructss{curtime}{iw}.launch,'angles') && isfield(wavestructss{curtime}{iw}.launch.angles,'orig'),
             wavestructs{iw}.launch.angles = rmfield(wavestructs{iw}.launch.angles,'orig');
         end
         %
-        [newwavestruct,flag_Zp] = wave_optim_jd(dkepath,wavestructs{iw},select);
+        if isfield(wavestructss{curtime}{iw}.launch,'orig'),
+            wavestructs{iw}.launch = rmfield(wavestructs{iw}.launch,'orig');
+        end
         %
-        if flag_Zp || ~comp_struct_jd(newwavestruct,wavestructs{iw},0),
+        [newwavestruct,flag_Zp] = wave_optim_jd(dkepath,wavestructss{curtime}{iw},select);
+        %
+        if flag_Zp || ~comp_struct_jd(newwavestruct,wavestructss{curtime}{iw},0),
             status.data = 2;
         end
         %
-        wavestructs{iw} = newwavestruct;
+        wavestructss{curtime}{iw} = newwavestruct;
         %
         if flag_Zp,% Zp was changed, all waves and other existing wavestructs are cleared
             %
-            equil.Zp = wavestructs{iw}.equil.Zp;
-            status.output = 0;
+            equils{curtime}.Zp = wavestructss{curtime}{iw}.equil.Zp;
+            status.output(curtime) = 0;
             %
-            wavestructs([1:iw-1,iw+1:end]) = [];
+            wavestructss{curtime}([1:iw-1,iw+1:end]) = [];
             lukeobj.wavestruct.select.value = 1;
             %
-            if ~isempty(waves),
-                waves = '';
-                status.waves = 0;
+            if ~isempty(wavess{curtime}),
+                wavess{curtime} = '';
+                status.waves(curtime) = 0;
                 lukeobj.lukeid.string = '';
             end
         end     
@@ -2038,7 +2068,7 @@ switch action
         newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
         newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
         %
-        if curtime > 1,
+        if curtime > 0,
             %
             opt.vessel_opt = 'n';
             opt.abs_max = 0;
@@ -2120,9 +2150,9 @@ switch action
         %
         % clearing output structure
         %
-        job = '';
+        jobs(:) = {[]};
         %
-        status.output = 0;
+        status.output(:) = 0;
         status.data = 2;
         %
         lukeobj = iluke_info(lukeobj,'output');% enable info display
@@ -2180,12 +2210,17 @@ switch action
             %
             newgraph4_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
             %
-            outputs = luke_disp_outputs_mt(equils,outputs,style,[newgraph1_handle,newgraph2_handle,newgraph3_handle,newgraph4_handle]);
+            [outputs,nw] = luke_disp_outputs_mt(equils,outputs,style,[newgraph1_handle,newgraph2_handle,newgraph3_handle,newgraph4_handle]);
             %
             graphs(1) = iluke_graphs(lukeobj.plot1.handle,2,'Current','output');
             graphs(2) = iluke_graphs(lukeobj.plot2.handle,2,'Power','output');
-            graphs(3:4) = iluke_graphs(lukeobj.plot3.handle,{[2,4],[1,3]},{'RF power absorption','RF power deposition'},'output');
+            if nw > 0,% RF wave
+                graphs(3:4) = iluke_graphs(lukeobj.plot3.handle,{[2,4],[1,3]},{'RF power absorption','RF power deposition'},'output');
+            else
+                delete([newgraph3_handle,newgraph4_handle]);
+            end
             %
+            clear nw
         end
         %   
         ngraphs = length(graphss{it_g});
@@ -2194,7 +2229,9 @@ switch action
         %
         lukeobj.plot1.gindex(it_g) = ngraphs + 1;
         lukeobj.plot2.gindex(it_g) = ngraphs + 2;
-        lukeobj.plot3.gindex(it_g) = ngraphs + 3;
+        if length(graphs) > 2,
+            lukeobj.plot3.gindex(it_g) = ngraphs + 3;
+        end
         %
         clear it_g ngraphs newgraph1_handle newgraph2_handle newgraph3_handle newgraph4_handle  
         %
@@ -2210,6 +2247,12 @@ switch action
         %
         iluke_run;
         %       
+    case 'sdiagFEB'
+        %
+        % fast electron bremsstrahlung pannel
+        %
+        lukeobj = iluke_info(lukeobj,'r5x2');% disable info display
+        %
     case 'cleargraphs'
         %
         % run check

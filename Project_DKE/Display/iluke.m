@@ -14,6 +14,10 @@ end
 %
 dkeparam = load_structures_yp('dkeparam',id_dkeparam,'');
 %
+hxr.param = '';
+hxr.cam = '';
+hxr.exp = '';
+%
 clear id_dkeparam
 %
 workdir = pwd;
@@ -350,7 +354,7 @@ lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'transp',{'title','
 lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'ripple',{'title','make','load','save','clear','disp','text'},'Mag. Ripple',style.controlheightcorr - 5*style.butheightcorr,style);
 lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'wave',{'title','make','load','save','clear','disp','text'},'RF Waves',style.controlheightcorr - 6*style.butheightcorr,style);
 lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'luke',{'title','','','run','clear','disp','text'},'Fokker-Planck Equation',style.controlheightcorr - 7*style.butheightcorr - style.butvsep,style);
-lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'r5x2',{'title','','','run','clear','disp','text'},'Fast Electron Bremsstrahlung',style.controlheightcorr - 8*style.butheightcorr - 2*style.butvsep,style);
+lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'sdiag',{'title','','','FEB','ECE'},'Synthetic Diagnostics',style.controlheightcorr - 8*style.butheightcorr - 2*style.butvsep,style);
 
 lukeobj.infotext.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','Position',lukeobj.infotext.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.infostr.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','Position',lukeobj.infostr.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'HorizontalAlignment','center');
@@ -452,6 +456,29 @@ lukeobj.wsparam.handle = uicontrol(lukeobj.infopanel.handle,'Style','edit','Stri
 % lukeobj.raydist.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.raydist.title.string,'Position',lukeobj.raydist.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 % lukeobj.raydist.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','String',lukeobj.raydist.select.string,'Position',lukeobj.raydist.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.raydist.select.callback);
 
+%
+% RUN R5X2 PANEL
+%
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrcam',{'title','import','load','save','clear','disp',''},'HXR cameras',style.infoheightcorr - style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrexp',{'title','import','load','save','clear','disp','text'},'HXR exp. data',style.infoheightcorr - 2*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrparam',{'title','modify','load','save','clear','','text'},'FEB params',style.infoheightcorr - 4*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrbrem',{'title','','','run','clear','disp','text'},'FEB emissivity',style.infoheightcorr - 5*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrdiag',{'title','','','run','clear','disp','text'},'FEB diagnostic',style.infoheightcorr - 6*style.butheightcorr,style);
+
+
+lukeobj.hxrcam.select.position = [style.titlewidth + 7*style.buthsep + 5*style.butwidth,style.infoheightcorr - style.butheightcorr,style.panelwidth - style.titlewidth - 8*style.buthsep - 5*style.butwidth,style.butheight];
+lukeobj.hxrcam.select.string = {};
+lukeobj.hxrcam.select.callback = 'lukeobj.hxrcam.select.value = get(lukeobj.hxrcam.select.handle,''Value'');iluke_update;';
+
+lukeobj.hxrcam.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.hxrcam.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrcam.select.callback);
+
+
+
+
+%
+% INITIALIZE PARAMETERS
+%
+
 lukeobj.runcheck.highlight = true;
 
 lukeobj = iluke_info(lukeobj,'startup');% info display
@@ -479,7 +506,7 @@ wavestructss = cell(1,0);
 %
 jobs = cell(1,0);
 outputs = cell(1,0);
-hxrs = cell(1,0);
+sdiags = cell(1,0);
 
 curtime = -1;% current time of work : (-1) new, (0) all, or index in shotimes
 
@@ -492,7 +519,7 @@ status.waves = [];
 status.wavestructs = [];
 status.job = [];
 status.output = [];
-status.hxr = [];
+status.sdiag = [];
 
 
 style.distselectstyle = style;% for dist profile selection

@@ -65,6 +65,12 @@ function lukeobj = iluke_info(lukeobj,s)
         %
         lukeobj.infostr.string = {'RUN C3PO'};
         %
+    elseif ischar(s) && strcmp(s,'r5x2'),% display after external
+        %
+        lukeobj = iluke_switch(lukeobj,'r5x2');
+        %
+        lukeobj.infostr.string = {'RUN R5X2'};
+        %
     end
     %
     iluke_update_state(lukeobj);
@@ -162,6 +168,28 @@ function lukeobj = iluke_switch(lukeobj,str)
         lukeobj.runc3po.visible = 'off';
         lukeobj.runc3poall.visible = 'off';
         %
+    end
+    %
+    if strcmp(str,'r5x2'),
+        %
+        set(lukeobj.infotext.handle,'visible','off');
+        set(lukeobj.infostr.handle,'visible','on');
+        %
+        lukeobj.hxrcam.visible = 'on';
+        lukeobj.hxrcam.select.visible = 'on';
+        lukeobj.hxrexp.visible = 'on';
+        lukeobj.hxrparam.visible = 'on';
+        lukeobj.hxrbrem.visible = 'on';
+        lukeobj.hxrdiag.visible = 'on';
+        %
+    else
+        %
+        lukeobj.hxrcam.visible = 'off';
+        lukeobj.hxrcam.select.visible = 'off';
+        lukeobj.hxrexp.visible = 'off';
+        lukeobj.hxrparam.visible = 'off';
+        lukeobj.hxrbrem.visible = 'off';
+        lukeobj.hxrdiag.visible = 'off';
     end
     %
     if isempty(str),

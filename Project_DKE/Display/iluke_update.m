@@ -40,7 +40,7 @@ wavestructss(flag_remove) = [];
 %
 jobs(flag_remove) = [];
 outputs(flag_remove) = [];
-hxrs(flag_remove) = [];
+sdiags(flag_remove) = [];
 
 status.equil(flag_remove) = [];
 status.ohm(flag_remove) = [];
@@ -50,7 +50,7 @@ status.waves(flag_remove) = [];
 status.wavestructs(flag_remove) = [];
 status.job(flag_remove) = [];
 status.output(flag_remove) = [];
-status.hxr(flag_remove) = [];
+status.sdiag(flag_remove) = [];
 
 % delete outdated graphs
 flag_remove_g = find(flag_remove) + 2;% +2 for <new>,<all>
@@ -92,7 +92,7 @@ wavestructss(end+1:end+nnew) = {{}};
 %
 jobs(end+1:end+nnew) = {[]};
 outputs(end+1:end+nnew) = {[]};
-hxrs(end+1:end+nnew) = {[]};
+sdiags(end+1:end+nnew) = {[]};
 
 status.ohm(end+1:end+nnew) = 0;
 status.transpfaste(end+1:end+nnew) = 0;
@@ -101,7 +101,7 @@ status.waves(end+1:end+nnew) = 0;
 status.wavestructs(end+1:end+nnew) = 0;
 status.job(end+1:end+nnew) = 0;
 status.output(end+1:end+nnew) = 0;
-status.hxr(end+1:end+nnew) = 0;
+status.sdiag(end+1:end+nnew) = 0;
 
 graphss(end+1:end+nnew) = graphss(1);% fill with empty structures with memory of fields
 cleartags(end+1:end+nnew) = {{}};
@@ -122,7 +122,7 @@ wavestructss(flag_clear) = {{}};
 %
 jobs(flag_clear) = {[]};
 outputs(flag_clear) = {[]};
-hxrs(flag_clear) = {[]};
+sdiags(flag_clear) = {[]};
 
 flag_clear_g = find(flag_clear) + 2;% +2 for <new>,<all>
 cleartags(flag_clear_g) = {'all'};% clear all graphs corresponding to cleared times
@@ -139,7 +139,7 @@ status.waves(flag_clear) = -1;
 status.wavestructs(flag_clear) = -1;
 status.job(flag_clear) = -1;
 status.output(flag_clear) = -1;
-status.hxr(flag_clear) = -1;
+status.sdiag(flag_clear) = -1;
 
 %
 % sort times removing previous structures if recurrence
@@ -158,7 +158,7 @@ wavestructss = wavestructss(mask);
 %
 jobs = jobs(mask);
 outputs = outputs(mask);
-hxrs = hxrs(mask);
+sdiags = sdiags(mask);
 
 status.equil = status.equil(mask);
 status.ohm = status.ohm(mask);
@@ -168,9 +168,11 @@ status.waves = status.waves(mask);
 status.wavestructs = status.wavestructs(mask);
 status.job = status.job(mask);
 status.output = status.output(mask);
-status.hxr = status.hxr(mask);
+status.sdiag = status.sdiag(mask);
 
-status.hxr(status.output < 1) = -1;% synthetic diagnostics need distribution
+status.sdiag(status.output < 1) = -1;% synthetic diagnostics need distribution
+status.sdiag(status.output == 1) = 0;% enable sdiag for times with distribution
+
 
 mask_g = [1,2,2+mask(:).'];% 1,2 for <new>,<all>
 graphss = graphss(mask_g);
@@ -210,7 +212,7 @@ end
 [wavess,lukeobj.wave,cleartags] = iluke_status(wavess,status.waves,lukeobj.wave,0,curtime,cleartags);
 
 [outputs,lukeobj.luke,cleartags] = iluke_status(outputs,status.output,lukeobj.luke,1,curtime,cleartags);
-[hxrs,lukeobj.r5x2,cleartags] = iluke_status(hxrs,status.hxr,lukeobj.r5x2,1,curtime,cleartags);
+[sdiags,lukeobj.sdiag,cleartags] = iluke_status(sdiags,status.sdiag,lukeobj.sdiag,2,curtime,cleartags);
 
 %
 % WAVESTRUCTS
@@ -218,6 +220,11 @@ end
 
 iluke_update_wavestruct;
 
+%
+% R5X2
+%
+
+iluke_update_hxr;
 
 if ntimes == 0,
     tokamak = '';
