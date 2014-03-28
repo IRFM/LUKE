@@ -1,4 +1,4 @@
-function outputs = luke_disp_outputs_mt(equils,outputs,style,axs)
+function [outputs,nw] = luke_disp_outputs_mt(equils,outputs,style,axs)
 %
 nt = length(equils);
 %
@@ -11,6 +11,8 @@ I_tot = NaN(1,nt);
 P0_rf = NaN(1,nt);
 P_rf = NaN(1,nt);
 P_e = NaN(1,nt);
+%
+nw = 0;
 %
 for it = 1:nt,
     if isempty(outputs{it}),% times for which LUKE is not run
@@ -143,6 +145,10 @@ leg = {'P_{RF0}','P_{RF}','P_{\Omega}'};
 [ax] = graph1D_jd(t,P0_rf,0,0,'','','',NaN,NaN,NaN,'-',markers{1},colors{1},2,style,ax);
 [ax] = graph1D_jd(t,P_rf,0,0,'','','',NaN,NaN,NaN,'-',markers{2},colors{2},2,style,ax);
 [ax] = graph1D_jd(t,P_e,0,0,xlab,ylab,'',leg,xlim,ylim,'-',markers{3},colors{3},2,style,ax);
+%
+if nw == 0,
+    return
+end
 %
 % wave absorption rate
 %
