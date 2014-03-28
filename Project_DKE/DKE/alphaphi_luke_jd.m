@@ -23,7 +23,11 @@ for itn = 1:nit,
     xyPrf_2piRp = xyPabs_rf_dke_fsav_mksa.*xydV_2piRp_dke;%power absorbed from each ray within each FS
     xyPrf_2piRp(xyPrf_2piRp < 0) = 0;
     %
-    nit_rf = length(residue_rf{itn});
+    if iscell(residue_rf),
+        nit_rf = length(residue_rf{itn});
+    else
+        nit_rf  = length(residue_rf);% old simulation
+    end
     %
     if size(dke_out.zP_0_2piRp_mod,1) >= nit_rf,% all RF states kept in zP_0_2piRp_mod
         zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod{nit_rf,itn};
