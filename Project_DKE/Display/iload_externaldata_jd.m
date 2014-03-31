@@ -2,6 +2,24 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
     %
     % This function loads data from external database
     %
+    % Note : the structure 'external' must have the following fields
+    %
+    %   - basestr (string) : name of the tomakak
+    %   - shotnum (string) : shot number
+    %
+    % either
+    %   - shotime (scalar) : shot time (s)
+    % or 
+    %   - shotimes (scalar array) : shot times (s)
+    %
+    % external data grouped according to the corresponding CPO, such as
+    %   - equil (struct)
+    %   - wave (struct)
+    %   - ohm (struct)
+    %   - transpfaste (struct)
+    %   - ripple (struct)
+    %   - hxr (struct)     
+    %
     if nargin < 5,
         style = struct;
     end
@@ -14,15 +32,17 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
     %
     external = [];
     %
+    % select remote profile for calculation
+    %
     remnum = iselect_jd(dkepath.remprofiles,'Select local or remote location for database quest',opt_gui,style.distselectstyle,1,'popupmenu') - 1;
     %
     if remnum == 0,
         remote = [];
-        select = struct;% interactively select options
     else
         remote = dkepath.remote(remnum);
-        select = '';% default options
     end
+    %
+    % load_externaldata file selection
     %
     if nargin > 1 && ~isempty(basestr),% from irunluke
         %
@@ -35,22 +55,7 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
             %
         end    
         %
-        shotnum = input_dke_yp('Shot number','');
-        %
-        t1 = input_dke_yp('Averaging of shot data, initial time (leave empty if unused)',[],'','');
-        if ~isempty(t1),
-            t2 = input_dke_yp('Averaging of shot data, final time',[],'','');
-            shotime = input_dke_yp('Shot time)',(t1 + t2)/2,'','',[1,1]);
-            %
-            shotime = num2str(shotime,'%6.4f');
-        else
-            t2 = [];
-            shotime = input_dke_yp('Shot time','','','');
-        end
-        %
-        [err,external] = matremote_jd(fname,{workdir,shotnum,shotime,t1,t2,opt_gui,select},remote);
-        %
-    else
+    else% from iluke
         %
         basestrs = find_externalbases_jd(dkepath.luke_root);
         %
@@ -70,32 +75,33 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
         baseselect = iselect_jd(basestrs,'Select tokamak (and eventually database function)',opt_gui,style,ibasestr,'popupmenu');
         basestr = basestrs{baseselect};
         %
-        iMultiTimes = strfind(basestr,'MultiTimes');
+        fname = ['load_externaldata_',basestr];
         %
-        if ~any(iMultiTimes),% select one time
-            %
-            external.shotnum = 0;
-            external.shotime = 0;
-            external.t1 = 0;
-            external.t2 = 0;
-            %
-            external = imod_struct_jd(external,'external',0,opt_gui,struct,style);
-            %
-            external.basestr = basestr;
-            external.shotnum = num2str(external.shotnum);
-            %
-            [err,external_res] = matremote_jd(['load_externaldata_',basestr],{pwd,external.shotnum,external.shotime,external.t1,external.t2,1,''},remote);
-            if isempty(err),
-                external = conc_struct_jd(external,external_res);
-            else
-                external = '';
-            end
-            %
-        else
-            %
-            external = feval(['load_externaldata_',basestr],pwd,opt_gui,style,remote);
-            %
+    end
+    %
+    iMultiTimes = strfind(basestr,'MultiTimes');
+    %
+    % multitimes case only valid for TCV for now... not yet part of generalized process
+    %
+    if ~any(iMultiTimes),% select one time
+        %
+        % get input arguments for file load_externaldata
+        % 
+        external_in = feval(fname);% call to load_externaldata with no arguments returns requested options from the function
+        %
+        % user-modified options
+        %
+        external_in = imod_struct_jd(external_in,'external',0,boolean(opt_gui),external_in,style);
+        %
+        [err,external_out] = matremote_jd(fname,{external_in,opt_gui},remote);
+        %
+        if isempty(err),
+            external = external_out;
         end
+        %
+    else
+        %
+        external = feval(fname,pwd,opt_gui,style,remote);
         %
     end
 end
