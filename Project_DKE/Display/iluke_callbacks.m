@@ -1558,7 +1558,7 @@ switch action
         %
         iw = lukeobj.wavestruct.select.value;
         %        
-        [wavestructs{iw},mod] = iluke_launchmodify(wavestructs{iw},style);        
+        [wavestructss{curtime}{iw},mod] = iluke_launchmodify(wavestructss{curtime}{iw},style);        
         %
         if mod,
             status.data = 2;
@@ -1950,68 +1950,126 @@ switch action
         filestr = [sbase,'_*.mat'];
         %
         [filenames,pathnames] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',1);
+        if isnumeric(filenames) || isempty(filenames),
+            filenames = {};
+            pathnames = {};
+        elseif ~iscell(filenames),
+            filenames = {filenames};
+            pathnames = {pathnames};
+        elseif ~iscell(pathnames),
+            pathnames = repmat({pathnames},[1,length(filenames)]);
+        end
         %
-        newwaves = {};
+        % list of equil ids for identifications
         %
-        if filenames ~= 0,
-            %
-            if ~iscell(filenames),
-                load([pathnames,filenames],'wave');
-                newwaves = [newwaves,wave];
+        equilids = cell(1,ntimes);
+        for it=1:ntimes,
+            if status.equil(it) == 1,
+                equilids{it} = equils{it}.id;
             else
-                for iw = 1:length(filenames),
-                    load([pathnames{iw},filenames{iw}],'wave');
-                    newwaves = [newwaves,wave];
+                equilids{it} = '';
+            end
+        end
+        %
+        % load new waves and identify equilibrium
+        %
+        for iw = 1:length(filenames),
+            load([pathnames{iw},filenames{iw}],'wave');
+            %
+            it = strcmp(equilids,wave.equil_id);
+            %
+            if isempty(it),
+                disp(['WARNING : wave with id ',wave.id,' cannot be identified with any existing equilibrium. Discarded.'])
+            else
+                if length(it) > 1,
+                    disp(['WARNING : wave with id ',wave.id,' identified with more than one existing equilibrium. First match enforced.'])
+                    it = it(1);
                 end
+                %
+                wavess{it}{end+1} = wave;
+                %
+                status.waves(it) = 1;
+                status.data = 2;
+                %
+                lukeobj.lukeid.string = '';
             end
         end
         %
-        if ~isempty(newwaves),
-            if isempty(waves),
-                waves = newwaves;
-            else
-                waves = [waves,newwaves];
-            end
-            %
-            status.waves = 1;
-            status.data = 2;
-            %
-            lukeobj.lukeid.string = '';
-            %
-            action = 'wavedisp';iluke_callbacks;
-            %
-        end
+        clear sbase filestr filenames pathnames equilids it iw 
         %
     case 'wavesave'
         %
-        % saving wave structure
+        % saving WAVE structure
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
         %
-        sbase = 'WAVE';
-        filestr = [sbase,'_*.mat'];
+        % loading external data
         %
-        titletext = 'Select the wave structure to save:';   
-        nw = length(waves);
-        s = cell(1,nw);
-        for iw = 1:nw,
-            s{iw} = ['Wave # ',num2str(iw),' : ',waves{iw}.id];
+        if curtime == 0,
+            opt_continue = iselect_jd({'No','Yes'},'Save each structure ''wave'' separately and automatically ? ',lukeobj.infopanel.handle,style,1) - 1;
+        else
+            opt_continue = 1;
         end
-        %    
-        iw = iselect_jd(s,titletext,lukeobj.infopanel.handle,style,1);
         %
-        wave = waves{iw};
-        % 
-        filename = [sbase,'_',equil.id,'_',wave.id,'.mat'];
-        %
-        [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
-        %
-        %
-        if filename ~= 0,
+        if opt_continue,
             %
-            save([pathname,filename],'wave');
+            sbase = 'WAVE';
             %
-        end  
+            if curtime == 0,
+                %
+                pathname = workdir;
+                %
+                for it = 1:ntimes,
+                    for iw = 1:length(wavess{it}),
+                        wave = wavess{it}{iw};
+                        filename = [sbase,'_',equils{it}.id,'_',wave.id,'.mat'];
+                        %
+                        save([pathname,filename],'wave');
+                        wavess{it}{iw}.pathname = pathname;
+                        wavess{it}{iw}.filename = filename;
+                    end
+                end
+                %
+                clear it
+                %
+            else
+                %
+                filestr = [sbase,'_*.mat'];
+                %
+                nw = length(wavess{curtime});
+                if nw > 1,
+                    titletext = 'Select the wave structure to save:';   
+                    s = cell(1,nw);
+                    for iw = 1:nw,
+                        s{iw} = ['Wave # ',num2str(iw),' : ',wavess{curtime}{iw}.id];
+                    end
+                    %    
+                    iw = iselect_jd(s,titletext,lukeobj.infopanel.handle,style,1);
+                else
+                    iw = 1;
+                end
+                %
+                wave = wavess{curtime}{iw};
+                % 
+                filename = [sbase,'_',equils{curtime}.id,'_',wave.id,'.mat'];
+                %
+                [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
+                %
+                if filename ~= 0,
+                    save([pathname,filename],'wave');
+                    wavess{curtime}{iw}.pathname = pathname;
+                    wavess{curtime}{iw}.filename = filename;
+                end  
+                %
+                clear filestr nw titletext s 
+                %
+            end
+            %
+            clear sbase filename pathname wave iw
+            %
+        end
+        %
+        clear opt_continue
         %
         lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
@@ -2021,32 +2079,47 @@ switch action
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
         %
-        titletext = 'Select the wave structure to clear:';   
-        nw = length(waves);
-        s = cell(1,nw);
-        for iw = 1:nw,
-            s{iw} = ['Wave # ',num2str(iw),' : ',waves{iw}.id];
-        end
-        %    
-        iw = iselect_jd(s,titletext,lukeobj.infopanel.handle,style,1);
-        %
-        waves(iw) = [];
-        if isempty(waves),
-            status.waves = 0;
-        end
-        %
-        status.data = 2;
-        %
-        if ~isempty(iw),
-            lukeobj.lukeid.string = '';
-        end
-        %
-        if ~isempty(waves),
-            lukeobj.wave.text.string = [num2str(length(waves)),' wave structure(s)'];
-            lukeobj.infotext.string = iluke_waveinfo(waves);
+        if curtime == 0,
+            opt_continue = iselect_jd({'No','Yes'},'Clear all ''wave'' structures ? ',lukeobj.infopanel.handle,style,1) - 1;
         else
-            lukeobj = iluke_info(lukeobj,'output');% enable info display            
+            opt_continue = 1;
         end
+        %
+        if opt_continue,
+            %
+            if curtime == 0,
+                if any(status.waves == 1),
+                    status.data = 2;
+                    lukeobj.lukeid.string = '';
+                end
+                status.waves(:) = 0;
+            else
+                %
+                titletext = 'Select the wave structure(s) to clear:';   
+                nw = length(wavess{curtime});
+                s = cell(1,nw);
+                for iw = 1:nw,
+                    s{iw} = ['Wave # ',num2str(iw),' : ',wavess{curtime}{iw}.id];
+                end
+                %    
+                iw = iselect_jd(s,titletext,lukeobj.infopanel.handle,style,1,'listbox');
+                %
+                wavess{curtime}(iw) = [];
+                if isempty(wavess{curtime}),
+                    status.waves(curtime) = 0;
+                end
+                %
+                if ~isempty(iw),
+                    status.data = 2;
+                    lukeobj.lukeid.string = '';
+                end
+                %
+                clear titletext nw s iw
+            end
+            %
+        end
+        %
+        clear opt_continue
         %
         lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
