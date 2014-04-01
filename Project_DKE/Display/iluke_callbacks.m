@@ -1786,11 +1786,11 @@ switch action
         iw = lukeobj.wavestruct.select.value;
         %
         if isfield(wavestructss{curtime}{iw}.launch,'angles') && isfield(wavestructss{curtime}{iw}.launch.angles,'orig'),
-            wavestructs{iw}.launch.angles = rmfield(wavestructs{iw}.launch.angles,'orig');
+            wavestructss{curtime}{iw}.launch.angles = rmfield(wavestructss{curtime}{iw}.launch.angles,'orig');
         end
         %
         if isfield(wavestructss{curtime}{iw}.launch,'orig'),
-            wavestructs{iw}.launch = rmfield(wavestructs{iw}.launch,'orig');
+            wavestructss{curtime}{iw}.launch = rmfield(wavestructss{curtime}{iw}.launch,'orig');
         end
         %
         [newwavestruct,flag_Zp] = wave_optim_jd(dkepath,wavestructss{curtime}{iw},select);
