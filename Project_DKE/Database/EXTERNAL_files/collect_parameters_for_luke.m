@@ -1,4 +1,4 @@
-function dummy = collect_parameters_for_luke (shot,t1,t2,laun,filename,teflag,zeff)
+function collect_parameters_for_luke (shot,t1,t2,laun,filename,teflag,zeff)
 
 %
 %	function dummy = collect_parameters_for_luke (shot,t1,t2,laun,filename,teflag,zeff)
@@ -29,6 +29,9 @@ function dummy = collect_parameters_for_luke (shot,t1,t2,laun,filename,teflag,ze
 %               21/06/11
 %   J. Kamleitner   18/10/13
 %                   06/11/13
+%
+%                   19/03/2014: new version based on luke_get_trdata
+%
 
 if(nargin<7 || isempty(zeff))
     zeff.data=NaN;
@@ -44,226 +47,287 @@ laun=laun(:)';
 
 t0=0.5*(t1+t2);
 
-for i=1:length(shot)
-    mdsopen(shot(i));
+newversion=true;
+
+if(newversion)
+    a.shot=shot;
+    a.t=t0;
+    a.dtres=0.5*(t2-t1);
+    a.diag{1}.name='EQUIL';
+    a.diag{2}.name='IP';
+    a.diag{3}.name='VLOOP';
+    a.diag{4}.name='NE';
+    a.diag{5}.name='TE';
+    a.diag{6}.name='BT';
+    a.diag{7}.name='ZEFF';
+    a.diag{8}.name='ZAXIS';
+    a.diag{9}.name='TI';
+    a.diag{10}.name='ECRH';
+    a.diag{10}.isel=laun;
     
-    % get B_T sign
-    btsign(i)=sign(mdsdata('\magnetics::iphi[$]',(t1(i)+t2(i))/2));
+    % get the data
+    d=luke_get_trdata(a);
     
-    % get I_P sign
-    ip0=mdsdata('\ipol[[0.0,0.01],"OH_001"]');
-    if(ip0(2)>=ip0(1))
-        ipsign(i)=-1;
+    % arrange the data for saving
+    vloop=-d.vloop.data;
+%     nel=nel';
+    te=d.te.data';
+%     dte=dte';
+    ne=d.ne.data';
+%     dne=dne';
+    rho=d.te.rho';
+    ti=d.ti.data';
+    if(~all(isnan(zeff.data)))
+        % interpolate the zeff from input (as in old version)
+        [~,jt1]=min(abs(zeff.time-t1));
+        [~,jt2]=min(abs(zeff.time-t1));
+        zefff=nanmean(interp1(zeff.rho(:),zeff.data(:,jt1:jt2),rho),2);
+        clear zeff;
+        zeff=zefff';
+        clear zefff;
     else
-        ipsign(i)=1;
+        % get zeff data
+        clear zeff;
+        zeff=d.zeff.data';
     end
-    clear ip0;
-    
-    % get loop voltage and plasma current
-    [~,vl]=tcvget('VLOOP',[t1(i):.002:t2(i)]);
-    vloop(i)=-nanmean(vl);
-    clear vl;
-    
-    % get plasma current
-    nipavg=10;
-    ipabs=ipsign(i)*mdsdata('\magnetics::iplasma:trapeze');
-    tip=mdsdata('dim_of(\magnetics::iplasma:trapeze,0)');
-    [~,itip0]=min(abs(tip-t0(i)));  % index of acquired time point closest to t0
-    [~,itipmin(1)]=min(ipabs(tip<t1(i)));    % position of minimum (baseline) before plasma
-    [~,itipmin(2)]=min(ipabs(tip>t2(i)));    % position of minimum (baseline) after plasma
-    itipmin(2)=itipmin(2)+find(tip<=t2(i),1,'last');    %correct the shotening of the ipabs vector in the command above
-    ipoff(1)=nanmean(ipabs(max(1,itipmin(1)-nipavg):itipmin(1)));
-    ipoff(2)=nanmean(ipabs(itipmin(2):min(length(ipabs),itipmin(2)+nipavg)));
-    Ip(i)=ipsign(i)*(nanmean(ipabs( tip>=t1(i) & tip<=t2(i) ))-interp1(tip(itipmin),ipoff,tip(itip0)));  % subtract linearly interpolated baseline off the averaged measured Ip value and multiply with ipsign again to get the correct value for Ip
-    clear nipavg ipbas tip itip0 itipmin ipoff;
-    
-    % get electron density and temperature from Thomson measurements
-    [~,netemp]=tcvget('NEL',[t1(i):.002:t2(i)]);
-    nel(i)=nanmean(netemp);
-    if(shot(i)<16000)
-        teraw=mdsdata('\results::th_prof_te');
-        dteraw=mdsdata('\results::th_prof_te:error_bar');
-        neraw=mdsdata('\results::th_prof_ne');
-        dneraw=mdsdata('\results::th_prof_ne:error_bar');
-        rho(:,i)=mdsdata('dim_of(\results::th_prof_te,1)');
-        tth=mdsdata('dim_of(\results::th_prof_te,0)');
-    else
-        teraw=mdsdata('\results::proffit.avg_time:teft')';
-        dteraw=mdsdata('\results::proffit.avg_time:teft_std')';
-        neraw=mdsdata('\results::proffit.avg_time:neft_abs')';
-        dneraw=mdsdata('\results::proffit.avg_time:neft_std')'.*repmat(mdsdata('\results::proffit.avg_time:neft_firat'),1,size(neraw,2));
-        rho(:,i)=mdsdata('dim_of(\results::proffit.avg_time:teft)');
-        tth=mdsdata('dim_of(\results::proffit.avg_time:teft,1)');
+    zaxis=d.zaxis.data';
+    ipsign=d.ipsign.data';
+    btsign=d.btsign.data';
+    Ip=d.ip.data';
+    for j=laun
+        ang=d.ecrh.ang{j};
+        ang.P0=d.ecrh.pow{j}.data;
+        ang.id=sprintf('%d',shot);
+        eval(['angles_',int2str(j),'=ang;']);
+        clear ang;
     end
-    teind1=find(tth>=t1(i)&tth<=t2(i), 1 );
-    teind2=find(tth>=t1(i)&tth<=t2(i), 1, 'last' );
-    if(~isempty(teind1))
-        te(:,i)=nanmean(teraw(teind1:teind2,:),1)';
-        dte(:,i)=max(std(dteraw(teind1:teind2,:),0,1),sqrt(nanmean(dteraw(teind1:teind2,:).^2,1)/(teind2-teind1)))';
-        ne(:,i)=nanmean(neraw(teind1:teind2,:),1)';
-        dne(:,i)=max(std(dneraw(teind1:teind2,:),0,1),sqrt(nanmean(dneraw(teind1:teind2,:).^2,1)/(teind2-teind1)))';
-    else
-        te(:,i)=NaN;
-        dte(:,i)=NaN;
-        ne(:,i)=NaN;
-        dne(:,i)=NaN;
-    end
-    if(teflag)
-        te0(i)=mdsdata('\results::te_x_a[[$1],13]',t0(i));
-        te(:,i)=te(:,i)/max(te(:,i))*te0(i);
-        dte(:,i)=dte(:,i)/max(te(:,i))*te0(i);
-    end
-    clear netemp teraw dteraw neraw dneraw tth teind1 teind2;
+    clear a d j;
     
-    % get Ti data if available and reasonable
-    tiraw=mdsdata('\results::cxrs:ti');
-    if ~isempty(tiraw),
-        rhotiraw=mdsdata('\results::cxrs:rho');
-        if isempty(rhotiraw),
-            rhotiraw=mdsdata('dim_of(\results::cxrs:ti,0)');
+else % old version
+    for i=1:length(shot)
+    
+        mdsopen(shot(i));
+
+        % get B_T sign
+        btsign(i)=sign(mdsdata('\magnetics::iphi[$]',(t1(i)+t2(i))/2));
+
+        % get I_P sign
+        ip0=mdsdata('\ipol[[0.0,0.01],"OH_001"]');
+        if(ip0(2)>=ip0(1))
+            ipsign(i)=-1;
+        else
+            ipsign(i)=1;
         end
-        ttiraw=mdsdata('dim_of(\results::cxrs:ti,1)');
-        tiind1=find(ttiraw>=t1(i)&ttiraw<=t2(i), 1 );
-        tiind2=find(ttiraw>=t1(i)&ttiraw<=t2(i), 1, 'last' );
-        if ~isempty(tiind1),
-            tiraw=nanmean(tiraw(:,tiind1:tiind2),2);
-            rhotiraw=nanmean(rhotiraw(:,tiind1:tiind2),2);
-            titemp=interp1(rhotiraw,tiraw,rho(:,i),'spline');
-            if(min(rhotiraw)>0.5)
-                warning('DNBI:DataProblem','DNBI penetration only up to rho=%g>0.5 => ignoring Ti measurement',min(rhotiraw));
-                clearti=true;
-            elseif(min(titemp)<0)
-                warning('DNBI:DataProblem','Ti from DNBI spline interpolation gives negative Ti values => ignoring Ti measurement');
-                clearti=true;
-            elseif(max(titemp)>2*max(tiraw))
-                warning('DNBI:DataProblem','Ti from DNBI spline interpolation goes up to Ti=%geV, this is twice the maximal underlying raw data Ti=%geV => ignoring Ti measurement',max(titemp),2*max(tiraw));
-                clearti=true;
-            else
-                clearti=false;
+        clear ip0;
+
+        % get loop voltage and plasma current
+        [~,vl]=tcvget('VLOOP',[t1(i):.002:t2(i)]);
+        vloop(i)=-nanmean(vl);
+        clear vl;
+
+        % get plasma current
+        nipavg=10;
+        ipabs=ipsign(i)*mdsdata('\magnetics::iplasma:trapeze');
+        tip=mdsdata('dim_of(\magnetics::iplasma:trapeze,0)');
+        [~,itip0]=min(abs(tip-t0(i)));  % index of acquired time point closest to t0
+        [~,itipmin(1)]=min(ipabs(tip<t1(i)));    % position of minimum (baseline) before plasma
+        [~,itipmin(2)]=min(ipabs(tip>t2(i)));    % position of minimum (baseline) after plasma
+        itipmin(2)=itipmin(2)+find(tip<=t2(i),1,'last');    %correct the shortening of the ipabs vector in the command above
+        ipoff(1)=nanmean(ipabs(max(1,itipmin(1)-nipavg):itipmin(1)));
+        ipoff(2)=nanmean(ipabs(itipmin(2):min(length(ipabs),itipmin(2)+nipavg)));
+        Ip(i)=ipsign(i)*(nanmean(ipabs( tip>=t1(i) & tip<=t2(i) ))-interp1(tip(itipmin),ipoff,tip(itip0)));  % subtract linearly interpolated baseline off the averaged measured Ip value and multiply with ipsign again to get the correct value for Ip
+        clear nipavg ipabs tip itip0 itipmin ipoff;
+
+        % get electron density and temperature from Thomson measurements
+        [~,netemp]=tcvget('NEL',[t1(i):.002:t2(i)]);
+        nel(i)=nanmean(netemp);
+        if(shot(i)<16000)
+            teraw=mdsdata('\results::th_prof_te');
+            dteraw=mdsdata('\results::th_prof_te:error_bar');
+            neraw=mdsdata('\results::th_prof_ne');
+            dneraw=mdsdata('\results::th_prof_ne:error_bar');
+            rho(:,i)=mdsdata('dim_of(\results::th_prof_te,1)');
+            tth=mdsdata('dim_of(\results::th_prof_te,0)');
+        else
+            teraw=mdsdata('\results::proffit.avg_time:teft')';
+            dteraw=mdsdata('\results::proffit.avg_time:teft_std')';
+            neraw=mdsdata('\results::proffit.avg_time:neft_abs')';
+            dneraw=mdsdata('\results::proffit.avg_time:neft_std')'.*repmat(mdsdata('\results::proffit.avg_time:neft_firat'),1,size(neraw,2));
+            rho(:,i)=mdsdata('dim_of(\results::proffit.avg_time:teft)');
+            tth=mdsdata('dim_of(\results::proffit.avg_time:teft,1)');
+        end
+        teind1=find(tth>=t1(i)&tth<=t2(i), 1 );
+        teind2=find(tth>=t1(i)&tth<=t2(i), 1, 'last' );
+        if(~isempty(teind1))
+            te(:,i)=nanmean(teraw(teind1:teind2,:),1)';
+            dte(:,i)=max(std(dteraw(teind1:teind2,:),0,1),sqrt(nanmean(dteraw(teind1:teind2,:).^2,1)/(teind2-teind1)))';
+            ne(:,i)=nanmean(neraw(teind1:teind2,:),1)';
+            dne(:,i)=max(std(dneraw(teind1:teind2,:),0,1),sqrt(nanmean(dneraw(teind1:teind2,:).^2,1)/(teind2-teind1)))';
+        else
+            te(:,i)=NaN;
+            dte(:,i)=NaN;
+            ne(:,i)=NaN;
+            dne(:,i)=NaN;
+        end
+        if(teflag)
+            te0(i)=mdsdata('\results::te_x_a[[$1],13]',t0(i));
+            te(:,i)=te(:,i)/max(te(:,i))*te0(i);
+            dte(:,i)=dte(:,i)/max(te(:,i))*te0(i);
+        end
+        clear netemp teraw dteraw neraw dneraw tth teind1 teind2;
+
+        % get Ti data if available and reasonable
+        tiraw=mdsdata('\results::cxrs:ti');
+        if ~isempty(tiraw),
+            rhotiraw=mdsdata('\results::cxrs:rho');
+            if isempty(rhotiraw),
+                rhotiraw=mdsdata('dim_of(\results::cxrs:ti,0)');
             end
-            if(clearti)
-                ti(:,i)=NaN;
-                tiind1=[];
-                tiind2=[];
-                tiraw=[];
+            ttiraw=mdsdata('dim_of(\results::cxrs:ti,1)');
+            tiind1=find(ttiraw>=t1(i)&ttiraw<=t2(i), 1 );
+            tiind2=find(ttiraw>=t1(i)&ttiraw<=t2(i), 1, 'last' );
+            if ~isempty(tiind1),
+                tiraw=nanmean(tiraw(:,tiind1:tiind2),2);
+                rhotiraw=nanmean(rhotiraw(:,tiind1:tiind2),2);
+                titemp=interp1(rhotiraw,tiraw,rho(:,i),'spline');
+                if(min(rhotiraw)>0.5)
+                    warning('DNBI:DataProblem','DNBI penetration only up to rho=%g>0.5 => ignoring Ti measurement',min(rhotiraw));
+                    clearti=true;
+                elseif(min(titemp)<0)
+                    warning('DNBI:DataProblem','Ti from DNBI spline interpolation gives negative Ti values => ignoring Ti measurement');
+                    clearti=true;
+                elseif(max(titemp)>2*max(tiraw))
+                    warning('DNBI:DataProblem','Ti from DNBI spline interpolation goes up to Ti=%geV, this is twice the maximal underlying raw data Ti=%geV => ignoring Ti measurement',max(titemp),2*max(tiraw));
+                    clearti=true;
+                else
+                    clearti=false;
+                end
+                if(clearti)
+                    ti(:,i)=NaN;
+                    tiind1=[];
+                    tiind2=[];
+                    tiraw=[];
+                else
+                    ti(:,i)=titemp;
+                    clear('titemp');
+                end
             else
-                ti(:,i)=titemp;
-                clear('titemp');
+                ti(:,i)=NaN;
             end
         else
             ti(:,i)=NaN;
         end
-    else
-        ti(:,i)=NaN;
-    end
-    clear rhotiraw tiraw;
-    
-    % get data for X2 and X3 launchers
-    for j=laun
-        clear ang
-        js=int2str(j);
-        if(j<7) % X2 launcher
-            ang.theta=nanmean(mdsdata(['\ecrh::launchers:theta_l:x2_',js,'[[$1]:[$2]:*]'],t1(i),t2(i)))/180*pi;
-            ang.phi=nanmean(mdsdata(['\ecrh::launchers:phi_l:x2_',js,'[[$1]:[$2]:*]'],t1(i),t2(i)))/180*pi;
-            ang.theta_eff=nanmean(mdsdata(['-atand(tand(\ecrh::launchers:theta_l:x2_',js, ...
-                '[[$1]:[$2]:*])*cosd(\ecrh::launchers:phi_l:x2_',js, ...
-                '[[$1]:[$2]:*]))'],t1(i),t2(i)))/180*pi;
-            dummy=mdsdata(['_y01=tand(\ecrh::launchers:theta_l:x2_',js,'[[$1]:[$2]:*])'],t1(i),t2(i));
-            dummy=mdsdata(['_y02=\ecrh::launchers:phi_l:x2_',js,'[[$1]:[$2]:*]'],t1(i),t2(i));
-            ang.phi_eff=nanmean(mdsdata(['atand(_y01*sind(_y02)/','sqrt(1+_y01^2*(cosd(_y02))^2))']))/180*pi;
-            ang.freq=82.7e9;
-            pow=mdsdata('_p=\results::toray.input:p_gyro[*,$1]',j)*1000;
-            tpow=mdsdata('dim_of(_p)');
-            i1=find(tpow>=t1(i), 1 );
-            if ~isempty(i1),
-                i2=find(tpow<=t2(i), 1, 'last' );
-                ang.P0=nanmean(pow(i1:i2));
-            else
-                ang.P0=NaN;
+        clear rhotiraw tiraw;
+
+        % get data for X2 and X3 launchers
+        for j=laun
+            clear ang
+            js=int2str(j);
+            if(j<7) % X2 launcher
+                ang.theta=nanmean(mdsdata(['\ecrh::launchers:theta_l:x2_',js,'[[$1]:[$2]:*]'],t1(i),t2(i)))/180*pi;
+                ang.phi=nanmean(mdsdata(['\ecrh::launchers:phi_l:x2_',js,'[[$1]:[$2]:*]'],t1(i),t2(i)))/180*pi;
+                ang.theta_eff=nanmean(mdsdata(['-atand(tand(\ecrh::launchers:theta_l:x2_',js, ...
+                    '[[$1]:[$2]:*])*cosd(\ecrh::launchers:phi_l:x2_',js, ...
+                    '[[$1]:[$2]:*]))'],t1(i),t2(i)))/180*pi;
+                dummy=mdsdata(['_y01=tand(\ecrh::launchers:theta_l:x2_',js,'[[$1]:[$2]:*])'],t1(i),t2(i));
+                dummy=mdsdata(['_y02=\ecrh::launchers:phi_l:x2_',js,'[[$1]:[$2]:*]'],t1(i),t2(i));
+                ang.phi_eff=nanmean(mdsdata(['atand(_y01*sind(_y02)/','sqrt(1+_y01^2*(cosd(_y02))^2))']))/180*pi;
+                ang.freq=82.7e9;
+                pow=mdsdata('_p=\results::toray.input:p_gyro[*,$1]',j)*1000;
+                tpow=mdsdata('dim_of(_p)');
+                i1=find(tpow>=t1(i), 1 );
+                if ~isempty(i1),
+                    i2=find(tpow<=t2(i), 1, 'last' );
+                    ang.P0=nanmean(pow(i1:i2));
+                else
+                    ang.P0=NaN;
+                end
+                ang.P1_R=1.3072;
+                ang.P1_theta=52.013/180*pi;
+                ang.P2_R=1.1906;
+                ang.P2_d=0.01;
+                if(j==1 || j==4)
+                    ang.P1_Z=-0.05865;
+                    ang.P2_Z=0.0645;
+                    ang.P3_Z=-0.0025;
+                else
+                    ang.P1_Z=0.39885;
+                    ang.P2_Z=0.522;
+                    ang.P3_Z=0.455;
+                end
+                ang.P3_tor=0.;
+            else % X3 launcher
+                thetaraw=nanmean(mdsdata(['\ecrh::launchers:theta_l:x3','[[$1]:[$2]:*]'],t1(i),t2(i)))/180*pi;
+                phiraw=mdsdata(['\ecrh::launchers:phi_l:x3_',js])/180*pi;
+                %  convert from X3 theta and phi to X2 theta and phi:
+                %	X3: tan(theta_l)=-y/x, tan(phi_l)=z/sqrt(x^2+y^2)
+                %	   x radially inward, y upward, z toroidal clockwise from top
+                %	X2: tan(theta_l)=sqrt(y^2+z^2)/x, tan(phi_l)=z/y
+                %	x radially inward, y upward, z toroidal counterclockwise from top
+                ang.theta=atan2(sqrt(sin(thetaraw)^2+tan(phiraw)^2),cos(thetaraw));
+                ang.phi=atan2(tan(phiraw),sin(thetaraw));
+                ang.theta_eff=-thetaraw;
+                dummy=mdsdata(['_y01=cosd(\ecrh::launchers:theta_l:x3','[[$1]:[$2]:*])'],t1(i),t2(i));
+                dummy=mdsdata(['_y02=tand(\ecrh::launchers:phi_l:x3_',js,')']);
+                ang.phi_eff=nanmean(mdsdata('atan2(_y02,abs(_y01))'));
+                ang.freq=118.e9;
+                ang.P0=0.47e6;
+                ang.P1_R=nanmean(mdsdata('\ecrh::launchers:R:x3[[$1]:[$2]:*]',t1(i),t2(i)));
+                ang.P1_Z=.9885;
+                ang.P1_theta=0;
+                ang.P2_R=ang.P1_R;
+                ang.P2_Z=ang.P1_Z;
+                ang.P2_d=0;
+                ang.P3_Z=ang.P1_Z;
+                ang.P3_tor=(ang.P1_R+0.125)*tan(phiraw);
             end
-            ang.P1_R=1.3072;
-            ang.P1_theta=52.013/180*pi;
-            ang.P2_R=1.1906;
-            ang.P2_d=0.01;
-            if(j==1 || j==4)
-                ang.P1_Z=-0.05865;
-                ang.P2_Z=0.0645;
-                ang.P3_Z=-0.0025;
-            else
-                ang.P1_Z=0.39885;
-                ang.P2_Z=0.522;
-                ang.P3_Z=0.455;
-            end
-            ang.P3_tor=0.;
-        else % X3 launcher
-            thetaraw=nanmean(mdsdata(['\ecrh::launchers:theta_l:x3','[[$1]:[$2]:*]'],t1(i),t2(i)))/180*pi;
-            phiraw=mdsdata(['\ecrh::launchers:phi_l:x3_',js])/180*pi;
-            %  convert from X3 theta and phi to X2 theta and phi:
-            %	X3: tan(theta_l)=-y/x, tan(phi_l)=z/sqrt(x^2+y^2)
-            %	   x radially inward, y upward, z toroidal clockwise from top
-            %	X2: tan(theta_l)=sqrt(y^2+z^2)/x, tan(phi_l)=z/y
-            %	x radially inward, y upward, z toroidal counterclockwise from top
-            ang.theta=atan2(sqrt(sin(thetaraw)^2+tan(phiraw)^2),cos(thetaraw));
-            ang.phi=atan2(tan(phiraw),sin(thetaraw));
-            ang.theta_eff=-thetaraw;
-            dummy=mdsdata(['_y01=cosd(\ecrh::launchers:theta_l:x3','[[$1]:[$2]:*])'],t1(i),t2(i));
-            dummy=mdsdata(['_y02=tand(\ecrh::launchers:phi_l:x3_',js,')']);
-            ang.phi_eff=nanmean(mdsdata('atan2(_y02,abs(_y01))'));
-            ang.freq=118.e9;
-            ang.P0=0.47e6;
-            ang.P1_R=nanmean(mdsdata('\ecrh::launchers:R:x3[[$1]:[$2]:*]',t1(i),t2(i)));
-            ang.P1_Z=.9885;
-            ang.P1_theta=0;
-            ang.P2_R=ang.P1_R;
-            ang.P2_Z=ang.P1_Z;
-            ang.P2_d=0;
-            ang.P3_Z=ang.P1_Z;
-            ang.P3_tor=(ang.P1_R+0.125)*tan(phiraw);
+            ang.id=int2str(shot(i));
+            eval(['angles_',int2str(j),'(1,i)=ang;']);
         end
-        ang.id=int2str(shot(i));
-        eval(['angles_',int2str(j),'(1,i)=ang;']);
-    end
-    
-    % get Zeff
-    if isnan(zeff(1).data),
-        z=mdsdata('\results::zx[[$1]:[$2]:0.05]',t1(i),t2(i));
-        if(~isempty(z) && ~iscell(z) && ~ischar(z))
-            zefff(i)=nanmean(z(:,1));
+
+        % get Zeff
+        if isnan(zeff(1).data),
+            z=mdsdata('\results::zx[[$1]:[$2]:0.05]',t1(i),t2(i));
+            if(~isempty(z) && ~iscell(z) && ~ischar(z))
+                zefff(i)=nanmean(z(:,1));
+            else
+                zefff(i)=NaN;
+            end
         else
-            zefff(i)=NaN;
+            [dummy,jt1]=min(abs(zeff(i).time-t1(i)));
+            [dummy,jt2]=min(abs(zeff(i).time-t1(i)));
+            zefff(:,i)=nanmean(interp1(zeff(i).rho(:),zeff(i).data(:,jt1:jt2),rho(:,i)),2);
         end
-    else
-        [dummy,jt1]=min(abs(zeff(i).time-t1(i)));
-        [dummy,jt2]=min(abs(zeff(i).time-t1(i)));
-        zefff(:,i)=nanmean(interp1(zeff(i).rho(:),zeff(i).data(:,jt1:jt2),rho(:,i)),2);
+
+        % get z position
+        zaxis(:,i)=nanmean(mdsdata('\results::z_axis[[$1]:[$2]:0.05]',t1(i),t2(i)));
+
+        mdsclose;
     end
     
-    % get z position
-    zaxis(:,i)=nanmean(mdsdata('\results::z_axis[[$1]:[$2]:0.05]',t1(i),t2(i)));
-    
-    mdsclose;
+    % arrange data for saving in the old version:
+    %   clear what is not needed and transpose if required
+    clear ang dummy i i1 i2 j js pow tpow z
+    vloop=vloop';
+    nel=nel';
+    te=te';
+    dte=dte';
+    ne=ne';
+    dne=dne';
+    rho=rho';
+    ti=ti';
+    clear zeff;
+    zeff=zefff';
+    clear zefff
+    zaxis=zaxis';
+    ipsign=ipsign';
+    btsign=btsign';
+    Ip=Ip';
 end
-
-% arrange data for saving:
-%   clear what is not needed and transpose if required
-clear ang dummy i i1 i2 j js pow tpow z
-vloop=vloop';
-nel=nel';
-te=te';
-dte=dte';
-ne=ne';
-dne=dne';
-rho=rho';
-ti=ti';
-clear zeff;
-zeff=zefff';
-clear zefff
-zaxis=zaxis';
-ipsign=ipsign';
-btsign=btsign';
-Ip=Ip';
-
 
 % save the data to a mat file
 save(filename,'-v7.3');
+%save(filename,'-v7.3','vloop','te','ne','rho','ti','zeff','zaxis','ipsign','btsign','Ip');
 fprintf('\n\nData saved to %s\n',filename);
+
+end
