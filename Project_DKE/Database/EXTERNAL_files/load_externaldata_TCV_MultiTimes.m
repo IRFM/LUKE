@@ -2,7 +2,7 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
     %
     % This function loads data from TCV database
     %
-    diagnames = {'BT','IP','VLOOP','NE','TE','TI','ZEFF','ZAXIS','ECRH','EQUIL'};
+    diagnames = {'BT','IP','VLOOP','NE','TE','TI','ZEFF','ZAXIS','ECRH','EQUIL','HXR'};
     ndiag = length(diagnames);
     %
     shotdata = iget_datainput_TCV(diagnames,workdir,opt_gui,style);% setup user-defined inputs with GUI or command line
@@ -32,6 +32,10 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
             end
         end
         %
+    end
+    %
+    if ~isempty(remote),
+        remote.funcopy = 0;%use file version on remote cluster
     end
     %
     [err,dataoutput] = matremote_jd('luke_get_trdata',{datainput},remote);
@@ -128,6 +132,8 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
             external.wave(it).angles(iisel) = angles;
             %
         end
+        %
+        external.hxr = dataoutput.hxr;
         %    
     end
     %
