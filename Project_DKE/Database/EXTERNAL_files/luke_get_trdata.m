@@ -135,6 +135,13 @@ for i=1:length(a.diag)
     if(isfield(diag,'tcr'))
         tcr=diag.tcr;
     end
+    if(~all(isnan(tca)) && ~all(isnan(tcr)))
+        % conditional averaging on
+        docrca=true;
+    else
+        % no conditional averaging
+        docrca=false;
+    end
     
     % read the data of the diagnostic
     fprintf('- Get %s data for shot %d, t=[%g,%g]s.\n',diag.name,shot,t(1),t(end));
@@ -160,40 +167,66 @@ for i=1:length(a.diag)
             mdsopen(shot);
             vloop=tdi('\magnetics::vloop[*,"001"]');
             mdsclose;
-            % if no coherent/condistional averaging:
-            if(dtres_bt(2e-3,t,dtres,dtreslim))
-                % if requested time resolution better than 2ms filter out
-                % the strong 1.3kHz noise using a 630Hz low-pass filter
-                [tvl,vl]=gti_filter(vloop.dim{1},vloop.data',[-Inf 630]);
-                [d.vloop.time,d.vloop.data]=gti_chdtres(tvl,vl,t,dtres,dtreslim);
-            else
-                % otherwise no filter is applied, just averaging
-                [d.vloop.time,d.vloop.data]=gti_chdtres(vloop.dim{1},vloop.data',t,dtres,dtreslim);
+            if(docrca)
+                d.vloop.atime=tca;
+                d.vloop.otime=vloop.dim{1};
+                d.vloop.rtime=tcr;
+                d.vloop.time=d.vloop.rtime;
+                d.vloop.data=gti_crca(vloop.dim{1},vloop.data',tca,tcr,dtreslim);
+            else % if no coherent/condistional averaging:
+                if(dtres_bt(2e-3,t,dtres,dtreslim))
+                    % if requested time resolution better than 2ms filter out
+                    % the strong 1.3kHz noise using a 630Hz low-pass filter
+                    [tvl,vl]=gti_filter(vloop.dim{1},vloop.data',[-Inf 630]);
+                    [d.vloop.time,d.vloop.data]=gti_chdtres(tvl,vl,t,dtres,dtreslim);
+                else
+                    % otherwise no filter is applied, just averaging
+                    [d.vloop.time,d.vloop.data]=gti_chdtres(vloop.dim{1},vloop.data',t,dtres,dtreslim);
+                end
             end
         case 'NE'
             d.ne.shot=shot;
-            % if no coherent/condistional averaging:
-            if(dtres_bt(0.016,t,dtres,dtreslim))
+            if(docrca)
+                % take FIR measurements in any case for the moment
                 d.ne.rawdiag={'FIR','LIUQE'};
                 firpar=gti_gds(shot,t([1 end]),'FIR','Flux1D','MinFishReg','Unique','Unique',0);
                 firpar.diag.frequency.filter.hlb='no';
+                firpar.diag.frequency.crca.tca=tca;
+                firpar.diag.frequency.crca.tcr=tcr;
+                firpar.diag.frequency.crca.dtreslim=dtreslim;
                 firout=gti_expert(firpar);
                 d.ne.source='GTI';
                 fprintf('  . Using %s profiles from %s for NE.\n',d.ne.rawdiag{1},d.ne.source);
-                [d.ne.time,d.ne.data]=gti_chdtres(firout.res.time,firout.res.inverted,t,dtres,dtreslim);
+                d.ne.atime=tca;
+                d.ne.otime=firout.diag.otime;
+                d.ne.rtime=tcr;
+                d.ne.time=firout.res.time;
+                d.ne.data=firout.res.inverted;
                 d.ne.rho=firout.res.rho;
-            else
-                d.ne.rawdiag={'Thomson','LIUQE','FIR'};
-                neraw=luke_get_nete_raw(diag.name,shot);
-                d.ne.source=neraw.source;
-                fprintf('  . Using %s profiles from %s for NE.\n',d.ne.rawdiag{1},d.ne.source);
-                jnotnan=~any(isnan(neraw.data));
-                [d.ne.time,d.ne.data]=gti_chdtres(neraw.time(jnotnan),neraw.data(:,jnotnan),t,dtres,dtreslim);
-                d.ne.rho=neraw.rho;
+            else % if no coherent/condistional averaging:
+                if(dtres_bt(0.016,t,dtres,dtreslim))
+                    d.ne.rawdiag={'FIR','LIUQE'};
+                    firpar=gti_gds(shot,t([1 end]),'FIR','Flux1D','MinFishReg','Unique','Unique',0);
+                    firpar.diag.frequency.filter.hlb='no';
+                    firout=gti_expert(firpar);
+                    d.ne.source='GTI';
+                    fprintf('  . Using %s profiles from %s for NE.\n',d.ne.rawdiag{1},d.ne.source);
+                    [d.ne.time,d.ne.data]=gti_chdtres(firout.res.time,firout.res.inverted,t,dtres,dtreslim);
+                    d.ne.rho=firout.res.rho;
+                else
+                    d.ne.rawdiag={'Thomson','LIUQE','FIR'};
+                    neraw=luke_get_nete_raw(diag.name,shot);
+                    d.ne.source=neraw.source;
+                    fprintf('  . Using %s profiles from %s for NE.\n',d.ne.rawdiag{1},d.ne.source);
+                    jnotnan=~any(isnan(neraw.data));
+                    [d.ne.time,d.ne.data]=gti_chdtres(neraw.time(jnotnan),neraw.data(:,jnotnan),t,dtres,dtreslim);
+                    d.ne.rho=neraw.rho;
+                end
             end
         case 'TE'
             d.te.shot=shot;
-            % if no coherent/condistional averaging:
+            if(docrca)
+            else % if no coherent/condistional averaging:
 %             if(dtres_bt(0.016,t,dtres,dtreslim))
 %                 d.te.rawdiag={'DMPX','LIUQE','Thomson'};
 %                 par=
@@ -206,6 +239,7 @@ for i=1:length(a.diag)
                 [d.te.time,d.te.data]=gti_chdtres(teraw.time(jnotnan),teraw.data(:,jnotnan),t,dtres,dtreslim);
                 d.te.rho=teraw.rho;
 %             end
+            end
         case 'TI'
             d.ti.shot=shot;
             % for the moment, do not set T_i (will lead to usage of T_e normalization)
@@ -233,16 +267,30 @@ for i=1:length(a.diag)
                 zeff_tdi=zeff_zx;
             end
             fprintf('  . Using Z_eff value from %s.\n',d.zeff.source);
-            % if no coherent/condistional averaging:
-            [d.zeff.time,d.zeff.data]=gti_chdtres(zeff_tdi.dim{1},zeff_tdi.data(:,1)',t,dtres,dtreslim);
+            if(docrca)
+                d.zeff.atime=tca;
+                d.zeff.otime=zeff_tdi.dim{1};
+                d.zeff.rtime=tcr;
+                d.zeff.time=d.zeff.rtime;
+                d.zeff.data=gti_crca(zeff_tdi.dim{1},zeff_tdi.data(:,1)',tca,tcr,dtreslim);
+            else % if no coherent/condistional averaging:
+                [d.zeff.time,d.zeff.data]=gti_chdtres(zeff_tdi.dim{1},zeff_tdi.data(:,1)',t,dtres,dtreslim);
+            end
         case 'ZAXIS'
             d.zaxis.shot=shot;
             d.zaxis.rawdiag={'LIUQE'};
             mdsopen(shot);
             zraw=tdi('\results::z_axis');
             mdsclose;
-            % if no coherent/condistional averaging:
-            [d.zaxis.time,d.zaxis.data]=gti_chdtres(zraw.dim{1},zraw.data',t,dtres,dtreslim);
+            if(docrca)
+                d.zaxis.atime=tca;
+                d.zaxis.otime=zraw.dim{1};
+                d.zaxis.rtime=tcr;
+                d.zaxis.time=d.zaxis.rtime;
+                d.zaxis.data=gti_crca(zraw.dim{1},zraw.data',tca,tcr,dtreslim);
+            else % if no coherent/condistional averaging:
+                [d.zaxis.time,d.zaxis.data]=gti_chdtres(zraw.dim{1},zraw.data',t,dtres,dtreslim);
+            end
         case 'ECRH'
             d.ecrh.shot=shot;
             d.ecrh.rawdiag={'ECRH'};
@@ -251,18 +299,35 @@ for i=1:length(a.diag)
             praw=tdi('\results::toray.input:p_gyro');
             mdsclose;
             % get the polarisation
-            % if no coherent/condistional averaging:
-            ox_t=gti_chdtres([],[],t,dtres,dtreslim);
-            [ox_xfrac,ox_times,~]=ecpol_ox_fraction(shot,0,ox_t);
+            if(docrca)
+            else % if no coherent/condistional averaging:
+                ox_t=gti_chdtres([],[],t,dtres,dtreslim);
+                [ox_xfrac,ox_times,~]=ecpol_ox_fraction(shot,0,ox_t);
+            end
             for j=1:length(isel)    % do a loop over all selected launchers
                 k=isel(j);
                 % get power: independent of harmonic, kW->W
                 itknotnan=~isnan(praw.data(:,k));
-                % if no coherent/condistional averaging:
-                if(~any(itknotnan))
-                    [d.ecrh.pow{k}.time,d.ecrh.pow{k}.data]=gti_chdtres(mean(t),NaN,t,dtres,dtreslim);
-                else
-                    [d.ecrh.pow{k}.time,d.ecrh.pow{k}.data]=gti_chdtres(praw.dim{1}(itknotnan),1e3*praw.data(itknotnan,k)',t,dtres,dtreslim);
+                if(docrca)
+                    d.ecrh.pow{k}.atime=tca;
+                    if(~any(itknotnan))
+                        d.ecrh.pow{k}.otime=mean(t);
+                    else
+                        d.ecrh.pow{k}.otime=praw.dim{1}(itknotnan);
+                    end
+                    d.ecrh.pow{k}.rtime=tcr;
+                    d.ecrh.pow{k}.time=d.ecrh.pow{k}.rtime;
+                    if(~any(itknotnan))
+                        d.ecrh.pow{k}.time=gti_crca(mean(t),NaN,tca,tcr,dtreslim);
+                    else
+                        d.ecrh.pow{k}.time=gti_crca(praw.dim{1}(itknotnan),1e3*praw.data(itknotnan,k)',tca,tcr,dtreslim);
+                    end
+                else % if no coherent/condistional averaging:
+                    if(~any(itknotnan))
+                        [d.ecrh.pow{k}.time,d.ecrh.pow{k}.data]=gti_chdtres(mean(t),NaN,t,dtres,dtreslim);
+                    else
+                        [d.ecrh.pow{k}.time,d.ecrh.pow{k}.data]=gti_chdtres(praw.dim{1}(itknotnan),1e3*praw.data(itknotnan,k)',t,dtres,dtreslim);
+                    end
                 end
                 if(k<7) % X2 launchers 1-6
                     % constant data (from collect_parameters_for_luke.m)
@@ -287,20 +352,32 @@ for i=1:length(a.diag)
                     timeraw=mdsvalue('dim_of(_theta)');
                     phiraw=mdsvalue(sprintf('\\ecrh::launchers:phi_l:x2_%d',k))'*pi/180;
                     mdsclose;
-                    % if no coherent/condistional averaging:
-                    [ang.time,allangdata]=gti_chdtres(timeraw,[thetaraw;phiraw],t,dtres,dtreslim);
+                    if(docrca)
+                        ang.atime=tca;
+                        ang.otime=timeraw;
+                        ang.rtime=tcr;
+                        ang.time=ang.rtime;
+                        allangdata=gti_crca(timeraw,[thetaraw;phiraw],tca,tcr,dtreslim);
+                    else % if no coherent/condistional averaging:
+                        [ang.time,allangdata]=gti_chdtres(timeraw,[thetaraw;phiraw],t,dtres,dtreslim);
+                    end
                     ang.theta=allangdata(1,:);
                     ang.phi=allangdata(2,:);
                     ang.theta_eff=-atan(ang.theta).*cos(ang.phi);
                     ang.phi_eff=atan(tan(ang.theta).*sin(ang.phi))./sqrt(1+tan(ang.theta).^2.*cos(ang.phi).^2);
                     % ox fraction data
-                    % if no coherent/condistional averaging:
-                    % put into d.ecrh.xfrac{k}.time and .data
-                    d.ecrh.xfrac{k}.time=ox_t;
-                    d.ecrh.xfrac{k}.data=NaN(1,numel(ox_t));
-                    for ell=1:length(ox_t)
-                        if(any(ox_times==ox_t(ell)))
-                            d.ecrh.xfrac{k}.data(1,ell)=ox_xfrac(k,ox_times==ox_t(ell));
+                    if(docrca)
+                        % assume 100% X-mode for the moment (O-mode fraction only on request since takes a long time: need to specify parameter or shot range if it should be read)
+                        d.ecrh.xfrac{k}.time=tcr;
+                        d.ecrh.xfrac{k}.data=ones(1,numel(tcr));
+                    else % if no coherent/condistional averaging:
+                        % put into d.ecrh.xfrac{k}.time and .data
+                        d.ecrh.xfrac{k}.time=ox_t;
+                        d.ecrh.xfrac{k}.data=NaN(1,numel(ox_t));
+                        for ell=1:length(ox_t)
+                            if(any(ox_times==ox_t(ell)))
+                                d.ecrh.xfrac{k}.data(1,ell)=ox_xfrac(k,ox_times==ox_t(ell));
+                            end
                         end
                     end
                 else    % X3 launchers 7-9
@@ -334,8 +411,15 @@ for i=1:length(a.diag)
                         rraw=datatemp';
                     end
                     mdsclose;
-                    % if no coherent/condistional averaging:
-                    [ang.time,allangdata]=gti_chdtres(timeraw,[thetaraw;phiraw;rraw],t,dtres,dtreslim);
+                    if(docrca)
+                        ang.atime=tca;
+                        ang.otime=timeraw;
+                        ang.rtime=tcr;
+                        ang.time=ang.rtime;
+                        allangdata=gti_crca(timeraw,[thetaraw;phiraw;rraw],tca,tcr,dtreslim);
+                    else % if no coherent/condistional averaging:
+                        [ang.time,allangdata]=gti_chdtres(timeraw,[thetaraw;phiraw;rraw],t,dtres,dtreslim);
+                    end
                     thetaraw=allangdata(1,:);
                     phiraw=allangdata(2,:);
                     ang.P1_R=allangdata(3,:);
@@ -458,6 +542,20 @@ for i=1:length(a.diag)
                     warning(['File ',eqdsk_file,' could not be found.']);
                 end
             end
+        case 'HXR'
+            [d.hxr.hxr,d.hxr.hxrparam,d.hxr.ap]=luke_get_hxr_diag_tcv(shot);
+            Etphot=d.hxr.hxr.kdiag_hxr(:,end); % the interval for photon temperature should be kept
+            if(shot<40000) % HXRC, no conditional averaging
+                [tcbn,cbn,Ebin]=hxrc_getcbn(shot,d.hxr.ap.chords{1});
+                [d.hxr.time,d.hxr.data]=gti_chdtres(tcbn,cbn,t,dtres,dtreslim);
+            else % HXRS
+                Ebin=d.hxr.hxr.kdiag_hxr(1,1:(end-1));
+                % for the moment, use high time resolution and chdtres
+                [tcbn,cbn]=hxrs_getcbn(shot,d.hxr.ap.cams,d.hxr.ap.chords,[],1e-4,Ebin);
+                [d.hxr.time,d.hxr.data]=gti_chdtres(tcbn,cbn,t,dtres,dtreslim);
+            end
+            % redefine kdiag_hxr parameter according to measurement
+            d.hxr.hxr.kdiag_hxr=[Ebin,Etphot(1);Ebin(2:end),2*Ebin(end)-Ebin(end-1),Etphot(2)];
     end
 end
 
