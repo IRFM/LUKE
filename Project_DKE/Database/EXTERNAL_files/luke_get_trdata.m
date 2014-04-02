@@ -547,12 +547,29 @@ for i=1:length(a.diag)
             Etphot=d.hxr.hxr.kdiag_hxr(:,end); % the interval for photon temperature should be kept
             if(shot<40000) % HXRC, no conditional averaging
                 [tcbn,cbn,Ebin]=hxrc_getcbn(shot,d.hxr.ap.chords{1});
-                [d.hxr.time,d.hxr.data]=gti_chdtres(tcbn,cbn,t,dtres,dtreslim);
+                if(docrca)
+                    d.hxr.atime=tca;
+                    d.hxr.otime=tcbn;
+                    d.hxr.rtime=tcr;
+                    d.hxr.time=d.hxr.rtime;
+                    d.hxr.data=gti_crca(tcbn,cbn,tca,tcr,dtreslim);
+                else % if no coherent/condistional averaging:
+                    [d.hxr.time,d.hxr.data]=gti_chdtres(tcbn,cbn,t,dtres,dtreslim);
+                end
             else % HXRS
                 Ebin=d.hxr.hxr.kdiag_hxr(1,1:(end-1));
-                % for the moment, use high time resolution and chdtres
-                [tcbn,cbn]=hxrs_getcbn(shot,d.hxr.ap.cams,d.hxr.ap.chords,[],1e-4,Ebin);
-                [d.hxr.time,d.hxr.data]=gti_chdtres(tcbn,cbn,t,dtres,dtreslim);
+                % use the vrca version of hxrs_getcbn
+                if(docrca)
+                    d.hxr.atime=tca;
+                    d.hxr.rtime=tcr;
+                    [d.hxr.time,d.hxr.data]=hxrs_getcbn(shot,d.hxr.ap.cams,d.hxr.ap.chords,[],Ebin,[],tca,tcr);
+                else % if no coherent/condistional averaging:
+                    tcr=gti_chdtres([],[],t,dtres,dtreslim);
+                    [d.hxr.time,d.hxr.data]=hxrs_getcbn(shot,d.hxr.ap.cams,d.hxr.ap.chords,[],Ebin,[],0,tcr);
+                end
+%                 % for the moment, use high time resolution and chdtres
+%                 [tcbn,cbn]=hxrs_getcbn(shot,d.hxr.ap.cams,d.hxr.ap.chords,[],1e-4,Ebin);
+%                 [d.hxr.time,d.hxr.data]=gti_chdtres(tcbn,cbn,t,dtres,dtreslim);
             end
             % redefine kdiag_hxr parameter according to measurement
             d.hxr.hxr.kdiag_hxr=[Ebin,Etphot(1);Ebin(2:end),2*Ebin(end)-Ebin(end-1),Etphot(2)];
