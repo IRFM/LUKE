@@ -34,7 +34,12 @@ efitname = [filename,'.efit'];
 % Reads EFIT numerical text T and n data
 %
 profname = [filename,'.prof'];
-[yrho,yspsin,yspsinT,yTe,yne,yzTi,yzni,zZi,zmi] = Teneprof_jd(profname,type,display_mode,p_opt,Zeff,dispname,savename);
+if exist(profname,'file')
+    [yrho,yspsin,yspsinT,yTe,yne,yzTi,yzni,zZi,zmi] = Teneprof_jd(profname,type,display_mode,p_opt,Zeff,dispname,savename);
+    flagprof = 1;
+else
+    flagprof = 0;
+end
 %
 [ptx,pty,ptdpsindx,ptdpsindy,psin,theta] = rz2pt_jd(x,y,xypsin,psin,nt,method,display_mode,p_opt,savename);
 %
@@ -60,19 +65,19 @@ pspsinT = sqrt(ppsiT/ppsiT(end));
 %
 pspsin = sqrt(psin);
 %
-if ~isempty(yrho),% profiles given on rho grid
+if flagprof && ~isempty(yrho),% profiles given on rho grid
     pTe = interp1(yrho,yTe,prho,method);
     pne = interp1(yrho,yne,prho,method);
     pzTi = interp1(yrho,yzTi.',prho,method).';
     pzni = interp1(yrho,yzni.',prho,method).';
     %
-elseif ~isempty(yspsin),% profiles given on poloidal flux based grid
+elseif flagprof && ~isempty(yspsin),% profiles given on poloidal flux based grid
     pTe = interp1(yspsin,yTe,pspsin,method);
     pne = interp1(yspsin,yne,pspsin,method);
     pzTi = interp1(yspsin,yzTi.',pspsin,method).';
     pzni = interp1(yspsin,yzni.',pspsin,method).'; 
     %
-elseif ~isempty(yspsinT),% profiles given on toroidal flux based grid
+elseif flagprof &&~isempty(yspsinT),% profiles given on toroidal flux based grid
     pTe = interp1(yspsinT,yTe,pspsinT,method);
     pne = interp1(yspsinT,yne,pspsinT,method);
     pzTi = interp1(yspsinT,yzTi.',pspsinT,method).';
@@ -124,14 +129,18 @@ ptBPHI(:,65) = ptBPHI(:,1);
 % equil structure
 %
 equil.id = savename;
-equil.zZi = zZi;
-equil.zmi = zmi;
+%
+if flagprof,
+    equil.zZi = zZi;
+    equil.zmi = zmi;
+    equil.pTe = pTe;
+    equil.pne = pne;
+    equil.pzTi = pzTi;
+    equil.pzni = pzni;
+end
+%
 equil.psi_apRp = psi_apRp;
 equil.theta = theta;
-equil.pTe = pTe;
-equil.pne = pne;
-equil.pzTi = pzTi;
-equil.pzni = pzni;
 equil.ptx = ptx;
 equil.pty = pty;
 equil.ptBx = ptBx;
@@ -162,7 +171,7 @@ eval(['save EQUIL_',savename,' equil'])
 %
 % Verify consistency on pressure between profiles and EFIT
 %
-if display_mode == 2, 
+if flagprof && display_mode == 2, 
     qe = pc_dke_yp;
     %
     yp = (yTe.*yne + sum(yzTi.*yzni,1))*qe*1e3;%pressure from Tene data
