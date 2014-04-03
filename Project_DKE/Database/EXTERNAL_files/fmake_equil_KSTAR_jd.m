@@ -16,6 +16,10 @@ p_opt = -1;
 basestr = 'KSTAR';
 %
 equil_id =  [basestr,'_',shotnum,'_',shotime];
+%
+if isfield(shotdata,'locid_equil'),
+    equil_id = [equil_id,shotdata.locid_equil];
+end
 dispname = [basestr,' #',shotnum,'; t = ',shotime,' s'];
 savename = equil_id;
 %
@@ -97,10 +101,17 @@ else
     %
     data = dlmread([ece_path,ece_file]);
     %
-    prho_prof = data(:,2).';
-    pTe_prof = data(:,3).';
-    pTi_prof = data(:,4).';
-    pne_prof = 1e19*data(:,5).';
+    if size(data,2) == 5,
+        prho_prof = data(:,2).';
+        pTe_prof = data(:,3).';
+        pTi_prof = data(:,4).';
+        pne_prof = 1e19*data(:,5).';
+    elseif size(data,2) == 3,
+        prho_prof = data(:,1).';
+        pTe_prof = data(:,2).';
+        pne_prof = 1e19*data(:,3).';   
+        pTi_prof = pTe_prof*equil_prof_data.Tifac;
+    end
     %
     pTe = interp1(prho_prof,pTe_prof,pspsinT,method);
     pTi = interp1(prho_prof,pTi_prof,pspsinT,method);
