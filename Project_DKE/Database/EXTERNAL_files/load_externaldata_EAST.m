@@ -84,7 +84,7 @@ if exist(filename,'file'),
     external.equil.shotnum = shotnum;
     external.equil.shotime = shotime;
 else
-    error(['The file eqdesk g',shotnum,'.',shotime,' is missing in the directory ',workdir]);
+    error(['The EQDSK file g',shotnum,'.',shotime,' is missing in the directory ',workdir]);
 end
 %
 filename = [workdir,'profiles_',shotnum,'_',shotime,'.mat'];
