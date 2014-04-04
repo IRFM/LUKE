@@ -92,6 +92,13 @@ script = external_in.script;
 external = '';
 basestr = 'TCV';
 %
+if isempty(workdir),
+    workdir = pwd;
+end
+if workdir(end) ~= filesep,
+    workdir = [workdir,filesep];
+end
+%
 eqdsk_path = workdir;
 %
 eqdsk_str = ['eqdsk.',num2str(shotnum),'t',num2str(shotime,'%6.4f')];
@@ -121,10 +128,11 @@ if ~opt_file,
     %
     make_eqdsk(shotnum,shotime,workdir,'TCV',liuqe);%call LIUQUE
     %
-    data_path = [workdir,'/'];
+    eqdsk_file = eqdsk_str;
+    %
     data_file = [data_str,launstr,'.mat'];
     %
-    collect_parameters_for_luke(shotnum,t1,t2,launchers,[data_path,data_file],Xte);%load shot parameters
+    collect_parameters_for_luke(shotnum,t1,t2,launchers,[workdir,data_file],Xte);%load shot parameters
     %
 else
     %
@@ -183,6 +191,9 @@ end
 external.basestr = basestr;
 external.shotnum = num2str(shotnum);
 external.shotime = shotime;
+%
+external.equil.shotnum = external.shotnum;
+external.equil.shotime = external.shotime;
 %
 external.equil.magnetic.eqdsk_path = eqdsk_path;
 external.equil.magnetic.eqdsk_file = eqdsk_file;

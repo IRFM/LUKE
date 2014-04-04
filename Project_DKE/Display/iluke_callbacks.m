@@ -1827,7 +1827,7 @@ switch action
         if curtime > 0,
             %
             wavestructs = wavestructss{curtime}(iw);
-            it_flag = curtime;
+            it_flag = curtime*ones(1,length(wavestructs));
             %
             mdce_mode = str2double(lukeobj.wsparam.string);
             %

@@ -253,7 +253,7 @@ else
         clear wavestruct
     else
         %
-        lukeobj.runc3poall.state = 'off'; 
+        lukeobj.runc3pooptim.state = 'off'; 
         lukeobj.runc3pooptim.highlight = false;
         %
     end

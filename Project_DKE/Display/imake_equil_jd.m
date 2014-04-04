@@ -416,7 +416,7 @@ if type == 1 && n_opt <= 1,
     %
     datamod.Zaxis = equil_prof_data.zaxis(ishot);
     %
-    if isscalar(equil_prof_data.ti(ishot,:)) && isnan(equil_prof_data.ti(ishot,:)), 
+    if any(isnan(equil_prof_data.ti(ishot,:))), 
         datamod.TeTiratio = 6;
     end
     %
