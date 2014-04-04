@@ -9,7 +9,6 @@ function launchs = imake_launch_jd(dkepath,basestr,equil,external,workdir,opt_gu
 % In non-interactive mode, in the presence of external data, all the RF
 % structures listed in external are processed with default missing parameters
 % 
-%
 if nargin < 7,
 	select = struct;
 end
@@ -237,67 +236,71 @@ if ~isempty(external),% import wave data from external structure
         %
         % Case of LH spectrum from file
         %
-        if isfield(external,'power_spectrum'),
+        if isfield(external,'LH'),
             %
-            data = struct;
+            select.position_rZ0_opt = 'y';
             %
-            launchsfile = ['get_launchs_',basestr];
+            fnames = fieldnames(external.LH);
             %
-            if isfield(external,'id') && exist(launchsfile,'file');
-                [~,a_list] = feval(launchsfile);
-                na_list = length(a_list);
-                a_opt = false(1,na_list);
-                %    
-                for ia_list = 1:na_list,
-                    %
-                    a_opt(ia_list) = any(strfind(lower(external.id),lower(a_list{ia_list})));
-                    %
-                end
+            for a_opt = 1:length(fnames),
                 %
-                if sum(a_opt) == 1,
-                    data.id = a_list{a_opt};
+                fname = fnames{a_opt};
+                %
+                if isfield(external.LH.(fname),'power_spectrum'),
+                    %
+                    data = struct;
+                    %
+                    launchsfile = ['get_launchs_',basestr];
+                    %
+                    if isfield(external.LH.(fname),'id') && exist(launchsfile,'file');
+                        [~,a_list] = feval(launchsfile);
+                        na_list = length(a_list);
+                        a_opt = false(1,na_list);
+                        %    
+                        for ia_list = 1:na_list,
+                            %
+                            a_opt(ia_list) = any(strfind(lower(external.LH.(fname).id),lower(a_list{ia_list})));
+                            %
+                        end
+                        %
+                        if sum(a_opt) == 1,
+                            data.id = a_list{a_opt};
+                        else
+                            disp(['The antenna index could not be determined from the filename']);
+                        end
+                        %
+                    end
+                    %
+                    data.id = fname;
+                    data.omega_rf = 2*pi*1e9*external.LH.(fname).frequency.flh;
+                    data.rZ0 = sort(external.LH.(fname).position.Z);
+                    %
+                    if isfield(external.LH.(fname).power_spectrum,'dn_par'),% lobes already processed
+                        %
+                        data.bNpar0 = external.LH.(fname).power_spectrum.n_par;
+                        data.bdNpar0 = external.LH.(fname).power_spectrum.dn_par;
+                        data.bPlhtot = external.LH.(fname).power_spectrum.power*1e6;
+                        %
+                    else% spectrum to be processed
+                        %
+                        spectrum = struct;
+                        if isfield(external.LH.(fname),'id'),
+                            spectrum.id = external.LH.(fname).id;
+                        end
+                        spectrum.dP_nz = external.LH.(fname).power_spectrum.power;
+                        spectrum.nz = external.LH.(fname).power_spectrum.n_par;
+                        %   
+                        data.spectrum = spectrum;
+                        %
+                    end
+                    %
+                    launch = imake_launch_LH_jd(basestr,signs,data,opt_gui,select);
+                    %
+                    launchs = [launchs,launch];
+                    %
+                    % Case of structure external
+                    %
                 else
-                    disp(['The antenna index could not be determined from the filename']);
-                end
-                %
-            end
-            %
-            data.omega_rf = 2*pi*1e9*external.frequency.flh;
-            data.rZ0 = sort(external.position.Z);
-            %
-            if isfield(external.power_spectrum,'dn_par'),% lobes already processed
-                %
-                data.bNpar0 = external.power_spectrum.n_par;
-                data.bdNpar0 = external.power_spectrum.dn_par;
-                data.bPlhtot = external.power_spectrum.power*1e6;
-                %
-            else% spectrum to be processed
-                %
-                spectrum = struct;
-                if isfield(external,'id'),
-                    spectrum.id = external.id;
-                end
-                spectrum.dP_nz = external.power_spectrum.power;
-                spectrum.nz = external.power_spectrum.n_par;
-                %   
-                data.spectrum = spectrum;
-                %
-            end
-            %
-            launchs{1} = imake_launch_LH_jd(basestr,signs,data,opt_gui,select);
-            %
-            % Case of structure external
-            %
-        else
-            if isfield(external,'LH'),
-                %
-                select.position_rZ0_opt = 'y';
-                %
-                fnames = fieldnames(external.LH);
-                %
-                for a_opt = 1:length(fnames),
-                    %
-                    fname = fnames{a_opt};
                     %
                     data = struct;
                     data.id = fname;
@@ -315,24 +318,24 @@ if ~isempty(external),% import wave data from external structure
                     %
                 end
             end
+        end
+        %
+        if isfield(external,'EC'),
             %
-            if isfield(external,'EC'),
+            fnames = fieldnames(external.EC);
+            %
+            for l_opt = 1:length(fnames),% launcher list
                 %
-                fnames = fieldnames(external.EC);
+                fname = fnames{l_opt};
                 %
-                for l_opt = 1:length(fnames),% launcher list
-                    %
-                    fname = fnames{l_opt};
-                    %
-                    external.EC.(fname).id = fname;
-                    %
-                    launch = imake_launch_EAST_jd(external.EC.(fname));
-                    %
-                    launchs = [launchs,launch];
-                    %
-                end
+                external.EC.(fname).id = fname;
+                %
+                launch = imake_launch_EAST_jd(external.EC.(fname));
+                %
+                launchs = [launchs,launch];
                 %
             end
+            %
         end
         %
     else
