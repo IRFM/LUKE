@@ -67,6 +67,7 @@ if isempty(equil_fit),
         info_dke_yp(2,['Vectorized form of the magnetic equilibrium ',equil.id,' is being calculated...'],0);
         equil_fit = fitequil_yp(equil);
         info_dke_yp(2,'    ...done',0);
+        equil.equil_fit = equil_fit;
     end
 end
 %
@@ -86,25 +87,6 @@ end
     gradrho,dgradrhodtheta,dgradrhodrho,...
     Upsilon,dUpsilondrho,dUpsilondtheta] = equilval_yp(equil_fit,rho,theta,1);
 
-%
-if 0,
-for irho = 1:length(rho),
-    for itheta = 1:length(theta),
-    %
-    [Te(irho,itheta),dTedrho(irho,itheta),d2Tedrho2(irho,itheta),ne(irho,itheta),dnedrho(irho,itheta),d2nedrho2(irho,itheta),zTi{irho,itheta},dzTidrho{irho,itheta},d2zTidrho2{irho,itheta},zni{irho,itheta},dznidrho{irho,itheta},d2znidrho2{irho,itheta},...
-        x(irho,itheta),dxdtheta,d2xdtheta2(irho,itheta),dxdrho(irho,itheta),d2xdthetadrho(irho,itheta),y(irho,itheta),dydtheta(irho,itheta),d2ydtheta2(irho,itheta),dydrho(irho,itheta),d2ydthetadrho(irho,itheta),...
-        r(irho,itheta),drdtheta,drdrho(irho,itheta),salpha(irho,itheta),dsalphadtheta(irho,itheta),dsalphadrho(irho,itheta),calpha(irho,itheta),dcalphadtheta(irho,itheta),dcalphadrho(irho,itheta),...
-        Bx(irho,itheta),dBxdtheta(irho,itheta),d2Bxdtheta2(irho,itheta),dBxdrho(irho,itheta),d2Bxdthetadrho(irho,itheta),...
-        By(irho,itheta),dBydtheta(irho,itheta),d2Bydtheta2(irho,itheta),dBydrho(irho,itheta),d2Bydthetadrho(irho,itheta),...
-        Bz(irho,itheta),dBzdtheta(irho,itheta),d2Bzdtheta2(irho,itheta),dBzdrho(irho,itheta),d2Bzdthetadrho(irho,itheta),...
-        BP(irho,itheta),dBPdtheta(irho,itheta),dBPdrho(irho,itheta),B(irho,itheta),dBdtheta(irho,itheta),dBdrho(irho,itheta),...
-        gradrho(irho,itheta),dgradrhodtheta(irho,itheta),dgradrhodrho(irho,itheta),...
-	    Upsilon(irho,itheta),dUpsilondrho(irho,itheta),dUpsilondtheta(irho,itheta)] = equilval_yp(equil_fit,rho(irho),theta(itheta),1);
-    %
-  end
-end
-%
-end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha,kB] = pc_dke_yp;
 %
@@ -155,6 +137,8 @@ jparz_fsav = sum(jparz.*r./Upsilon./BP./calpha.*dtheta,2);
 S = sum(r./Upsilon./BP./calpha.*dtheta,2);
 %
 Ip = sum(sum(jparz.*r.*dtheta*drho./gradrho./calpha));
+Ip_fsav = sum(jparz_fsav.*S);
+%
 Surf = sum(sum(abs(r./gradrho./calpha)*dtheta*drho));
 %
 if isfield(equil,'eqdsk')
@@ -164,6 +148,17 @@ else
 end
 %
 jparz_fsav = jparz_fsav./S;
+%
+%keyboard
+if isfield(equil,'eqdsk')
+    %
+	%jparz_eqdsk = 
+%jparz_eqdsk_fsav = jparz_eqdsk./Bz./B.
+
+
+%Ip_eqdsk_fsav = 
+
+end
 %
 for j = 1:6,
     jparz_fsav_cyl(:,j) = j*Ip*(1 - rho(:).^2).^(j-1)/pi/equil_fit.ap/equil_fit.ap/1e6;
@@ -203,6 +198,7 @@ disp(['Plasma triangularity = ',num2str(ptrian(end))]);
 %
 if display_mode,
     %
+    %keyboard
     figure('Name','Pressure gradient'),clf
     if isfield(equil,'eqdsk')
         if ~isnan(jparz_ohm_fsav),
