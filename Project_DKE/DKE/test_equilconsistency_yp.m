@@ -1,4 +1,4 @@
-function [] = test_equiconsistency_yp(filein,equilformat)
+function [] = test_equilconsistency_yp(filein,equilformat)
 % LUKE - Test the consistency of the of a toroidal MHD equilibrium in a file
 %
 % Test the consistency of the of a toroidal MHD equilibrium in a file
@@ -47,7 +47,7 @@ elseif strcmp(equilformat,'EFIT') || strcmp(equilformat,'EQDSK'),
             flag = 1;
         end
         %
-        equil = equil_EFIT_jd(filename,0,2,0);
+        equil = equil_EFIT_jd(filename,0,2,-1);
         %
         if flag,unix(['rm -f ',filein_tmp]);end
     end
