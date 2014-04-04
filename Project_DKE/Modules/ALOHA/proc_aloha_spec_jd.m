@@ -155,7 +155,7 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
             style.textwidth = panelposition(3) - 2*style.panelsep - style.butwidth - 5*style.buthsep;
             %
         else
-            opt_gui = true;
+            opt_gui = sdisplay.opt_gui;
             opt_info = false;
         end
     else
