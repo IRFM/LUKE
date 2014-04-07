@@ -95,13 +95,10 @@ dkepath.joan(1).remote(4).link_mode = [];
 dkepath.joan(1).remote(4).cvsupdate = false;% update done in 'direct' mode
 dkepath.joan(1).remote(4).cvsrights = '';
 %
-dkepath.joan(1).remote(5).remoteid = 'CEA_CEPHEE';
+dkepath.joan(1).remote(5).remoteid = 'IPP_ABACUS';
 dkepath.joan(1).remote(5).schedulername = 'pbs';
-dkepath.joan(1).remote(5).profilename = 'joan';
-dkepath.joan(1).remote(5).luke_root.LUKE_1_8_6 = '/home/sccp/gsem/decker/LUKE_1_8/';
-dkepath.joan(1).remote(5).luke_root.LUKE_1_9_1 = '/home/sccp/gsem/decker/LUKE_1_9/';
-dkepath.joan(1).remote(5).luke_root.LUKE_1_10_0 = '/home/sccp/gsem/decker/LUKE_1_10/';
-dkepath.joan(1).remote(5).luke_root.LUKE_default = '/home/sccp/gsem/decker/LUKE/';% default remote LUKE version. Leave empty to enforce error if no match
+dkepath.joan(1).remote(5).profilename = 'decker';
+dkepath.joan(1).remote(5).luke_root = '/compass/Shared/Common/IT/projects/luke/LUKE/';
 dkepath.joan(1).remote(5).link_mode = [];
 dkepath.joan(1).remote(5).cvsupdate = false;% update done in 'direct' mode
 dkepath.joan(1).remote(5).cvsrights = '';
@@ -162,14 +159,14 @@ dkepath.joan(1).remote(12).luke_root = '/home/decker/LUKE/';
 dkepath.joan(1).remote(12).link_mode = 1;% lac911 gateway
 dkepath.joan(1).remote(12).cvsupdate = true;
 dkepath.joan(1).remote(12).cvsrights = '';
-%
-dkepath.joan(1).remote(13).remoteid = 'SWIP_CLUSTER02';
-dkepath.joan(1).remote(13).schedulername = 'torque';
-dkepath.joan(1).remote(13).profilename = 'joan';
-dkepath.joan(1).remote(13).luke_root = '/home/Yves/LUKE/';
-dkepath.joan(1).remote(13).link_mode = [];
-dkepath.joan(1).remote(13).cvsupdate = false;% update done in 'direct' mode
-dkepath.joan(1).remote(13).cvsrights = '';
+% %
+% dkepath.joan(1).remote(13).remoteid = 'SWIP_CLUSTER02';
+% dkepath.joan(1).remote(13).schedulername = 'torque';
+% dkepath.joan(1).remote(13).profilename = 'joan';
+% dkepath.joan(1).remote(13).luke_root = '/home/Yves/LUKE/';
+% dkepath.joan(1).remote(13).link_mode = [];
+% dkepath.joan(1).remote(13).cvsupdate = false;% update done in 'direct' mode
+% dkepath.joan(1).remote(13).cvsrights = '';
 %
 dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(12);
 dkepath.joan(1).remote(end).remoteid = 'CRPP_LAC1';
@@ -186,6 +183,17 @@ dkepath.joan(1).remote(end).remoteid = 'CRPP_LAC4';
 dkepath.joan(1).remote(end).cvsupdate = false;% same FS as lac5
 dkepath.joan(1).remote(end).cvsrights = '';
 %
+% dkepath.joan(1).remote(end+1).remoteid = 'CEA_CEPHEE';
+% dkepath.joan(1).remote(end).schedulername = 'pbs';
+% dkepath.joan(1).remote(end).profilename = 'joan';
+% dkepath.joan(1).remote(end).luke_root.LUKE_1_8_6 = '/home/sccp/gsem/decker/LUKE_1_8/';
+% dkepath.joan(1).remote(end).luke_root.LUKE_1_9_1 = '/home/sccp/gsem/decker/LUKE_1_9/';
+% dkepath.joan(1).remote(end).luke_root.LUKE_1_10_0 = '/home/sccp/gsem/decker/LUKE_1_10/';
+% dkepath.joan(1).remote(end).luke_root.LUKE_default = '/home/sccp/gsem/decker/LUKE/';% default remote LUKE version. Leave empty to enforce error if no match
+% dkepath.joan(1).remote(end).link_mode = [];
+% dkepath.joan(1).remote(end).cvsupdate = false;% update done in 'direct' mode
+% dkepath.joan(1).remote(end).cvsrights = '';
+%
 % dkepath.joan(1).remote(end+1).remoteid = 'CEA_SATURNE';
 % dkepath.joan(1).remote(end).schedulername = 'sun';
 % dkepath.joan(1).remote(end).profilename = 'joan';
@@ -196,6 +204,11 @@ dkepath.joan(1).remote(end).cvsrights = '';
 %
 dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(2);
 dkepath.joan(1).remote(end).schedulername = 'direct';
+dkepath.joan(1).remote(end).cvsupdate = true;
+dkepath.joan(1).remote(end).cvsrights = '';
+%
+dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(end);
+dkepath.joan(1).remote(end).luke_root = '/home/JD211098/LUKE_1_11/';
 dkepath.joan(1).remote(end).cvsupdate = true;
 dkepath.joan(1).remote(end).cvsrights = '';
 %
@@ -234,8 +247,8 @@ dkepath.joan(1).remote(end).schedulername = 'direct';
 dkepath.joan(1).remote(end).cvsupdate = true;
 dkepath.joan(1).remote(end).cvsrights = 'chgrp -R RFSCAT ./';
 %
-dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(13);
-dkepath.joan(1).remote(end).schedulername = 'direct';
-dkepath.joan(1).remote(end).cvsupdate = false;% managed by Yves
-dkepath.joan(1).remote(end).cvsrights = '';
+% dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(13);
+% dkepath.joan(1).remote(end).schedulername = 'direct';
+% dkepath.joan(1).remote(end).cvsupdate = false;% managed by Yves
+% dkepath.joan(1).remote(end).cvsrights = '';
 %
