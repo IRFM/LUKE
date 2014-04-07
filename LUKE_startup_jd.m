@@ -12,8 +12,12 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
     % select active directory if there is more than one
     % -------------------------------------------------------------
     %
+    searchpath = input('Provide a location to search for Toolboxes and LUKE installations (leave empty to select HOME folder)? ','s');
+    if ~exist(searchpath,'dir'),
+        searchpath = '';
+    end
     %
-    MatToolspath = findandselect_jd('MatTools','d',false);
+    MatToolspath = findandselect_jd('MatTools','d',false,false,'',searchpath);
     disp(' ');
     if isempty(MatToolspath),
         disp('Aborting startup setup.')
@@ -22,7 +26,7 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
         disp(['--> following toolbox selected : ',MatToolspath])
     end
     %
-    MatRemotepath = findandselect_jd('MatRemote','d',false);
+    MatRemotepath = findandselect_jd('MatRemote','d',false,false,'',searchpath);
     disp(' ');
     if isempty(MatRemotepath),
         disp('Aborting startup setup.')
@@ -35,7 +39,7 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
     %                   locate & select LUKE installations
     % -------------------------------------------------------------
     %
-    LUKEpaths = findandselect_jd('install_LUKE.m','f',true,true,'Which LUKE distributions do you want to include in the startup choice list?');
+    LUKEpaths = findandselect_jd('install_LUKE.m','f',true,true,'Which LUKE distributions do you want to include in the startup choice list?',searchpath);
     %
     nLUKEpaths = length(LUKEpaths);
     disp(' ');
@@ -246,7 +250,7 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
 end
 %
 %
-function foundpaths = findandselect_jd(pathname,pathtype,multi,optlocal,message)
+function foundpaths = findandselect_jd(pathname,pathtype,multi,optlocal,message,searchpath)
     %
     % This function searches for the file(s) (pathtype == 'f') or folder(s) (pathtype == 'd') named 'pathname' in the home directory. 
     % if multi = true, can select more than one instances
@@ -259,7 +263,11 @@ function foundpaths = findandselect_jd(pathname,pathtype,multi,optlocal,message)
         foundpaths = '';
     end
     %
-    [res,foundpathstr] = unix(['find ',getenv('HOME'),' -type ',pathtype,' -name "',pathname,'"']);
+    if nargin < 6 || isempty(searchpath),
+        searchpath = getenv('HOME');
+    end
+    %
+    [res,foundpathstr] = unix(['find ',searchpath,' -type ',pathtype,' -name "',pathname,'"']);
     %
     if foundpathstr(1) == 10,
         foundpathstr = foundpathstr(2:end);%remove possible initial EoF
