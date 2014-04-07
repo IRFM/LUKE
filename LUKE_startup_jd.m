@@ -168,11 +168,11 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
     disp('%');
     disp('if ~isempty(luke_root),');
     disp('    %');
-    disp('    select_LUKE_jd(luke_root)');
+    disp('    select_LUKE(luke_root)');
     disp('    %');
     disp('elseif ~isempty(LUKE),');
     disp('    %');
-    disp('    select_LUKE_jd(LUKE)');
+    disp('    select_LUKE(LUKE)');
     disp('    %');
     disp('else');
     disp('    %');
