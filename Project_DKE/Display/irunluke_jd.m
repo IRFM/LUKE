@@ -477,10 +477,26 @@ function irunluke_jd(basestr,signs,opt_gui)
                             dkeparam = data.dkeparam;
                             dkedisplay = data.dkedisplay;
                             equil = data.equil;
-                            waves = data.waves;
-                            ohm = data.ohm;
-                            transpfaste = data.transpfaste;
-                            ripple = data.ripple;
+                            if isfield(data,'waves'),
+                                waves = data.waves;
+                            else
+                                waves = '';
+                            end
+                            if isfield(data,'ohm'),
+                                ohm = data.ohm;
+                            else
+                                ohm = '';
+                            end
+                            if isfield(data,'transpfaste'),
+                                transpfaste = data.transpfaste;
+                            else
+                                transpfaste = '';
+                            end
+                            if isfield(data,'ripple'),
+                                ripple = data.ripple;
+                            else
+                                ripple = '';
+                            end
                             %
                             if isfield(data,'simul') && isfield(data.simul,'id'),
                                 id_simul = data.simul.id;
