@@ -268,9 +268,9 @@ lukeobj.graph1sel.callback = 'lukeobj.plot1.gindex(2+curtime) = get(lukeobj.grap
 lukeobj.graph2sel.callback = 'lukeobj.plot2.gindex(2+curtime) = get(lukeobj.graph2sel.handle,''Value'') - 1;iluke_update;';
 lukeobj.graph3sel.callback = 'lukeobj.plot3.gindex(2+curtime) = get(lukeobj.graph3sel.handle,''Value'') - 1;iluke_update;';
 
-lukeobj.graph1save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',shotimestr,'' '',lukeobj.graph1sel.string{lukeobj.graph1sel.value}],''figures/'',graphs(lukeobj.plot1.gindex).handles);';
-lukeobj.graph2save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',shotimestr,'' '',lukeobj.graph2sel.string{lukeobj.graph2sel.value}],''figures/'',graphs(lukeobj.plot2.gindex).handles);';
-lukeobj.graph3save.callback = 'iluke_print(2,[''Fig_'',lukeobj.tokamak.string,''_'',lukeobj.shotnum.string,''_'',shotimestr,'' '',lukeobj.graph3sel.string{lukeobj.graph3sel.value}],''figures/'',graphs(lukeobj.plot3.gindex).handles);';
+lukeobj.graph1save.callback = 'igraph = ''1'';action = ''savegraphs'';iluke_callbacks;';
+lukeobj.graph2save.callback = 'igraph = ''2'';action = ''savegraphs'';iluke_callbacks;';
+lukeobj.graph3save.callback = 'igraph = ''3'';action = ''savegraphs'';iluke_callbacks;';
 
 lukeobj.graph1print.callback = 'iluke_print(0,'','',graphs(lukeobj.plot1.gindex).handles);';
 lukeobj.graph2print.callback = 'iluke_print(0,'','',graphs(lukeobj.plot2.gindex).handles);';

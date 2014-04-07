@@ -348,21 +348,21 @@ lukeobj.graph3sel.value = 1 + plotindices(3);
 %
 clear plothandles plotindices graphsel_string igraph iplot ich graphs ngraphs
 %
-if lukeobj.plot1.gindex > 0,
+if lukeobj.plot1.gindex(2+curtime) > 0,
     lukeobj.graph1save.state = 'on';
     lukeobj.graph1print.state = 'on';
 else
     lukeobj.graph1save.state = 'off';
     lukeobj.graph1print.state = 'off';
 end    
-if lukeobj.plot2.gindex > 0,
+if lukeobj.plot2.gindex(2+curtime) > 0,
     lukeobj.graph2save.state = 'on';
     lukeobj.graph2print.state = 'on';
 else
     lukeobj.graph2save.state = 'off';
     lukeobj.graph2print.state = 'off';
 end    
-if lukeobj.plot3.gindex > 0,
+if lukeobj.plot3.gindex(2+curtime) > 0,
     lukeobj.graph3save.state = 'on';
     lukeobj.graph3print.state = 'on';
 else

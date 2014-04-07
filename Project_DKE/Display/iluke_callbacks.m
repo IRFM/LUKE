@@ -2326,9 +2326,23 @@ switch action
         %
         lukeobj = iluke_info(lukeobj,'r5x2');% disable info display
         %
+    case 'savegraphs'
+        %
+        % save graphs
+        %
+        if curtime > 0,
+            shotimestr = num2str(shotimes(curtime),'%6.4f');
+        else
+            shotimestr = '_MultiTimes';
+        end
+        %
+        iluke_print(2,['Fig_',tokamak,'_',shotnum,'_',shotimestr,' ',lukeobj.(['graph',igraph,'sel']).string{lukeobj.(['graph',igraph,'sel']).value}],'figures/',graphss{2+curtime}(lukeobj.(['plot',igraph]).gindex(2+curtime)).handles);
+        %
+        clear igraph
+        %    
     case 'cleargraphs'
         %
-        % run check
+        % clear all graphs
         %
         cleartags(:) = {{'all'}};% clear graphss
         %
