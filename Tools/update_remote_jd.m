@@ -35,6 +35,9 @@ for irem = 1:length(dkepath.remote),
             if isfield(dkepath.remote(nrem),'cvsupdate'),
                 remote(nrem).cvsupdate = dkepath.remote(irem).cvsupdate;
             end
+            if isfield(dkepath.remote(nrem),'cvsrights'),
+                remote(nrem).cvsrights = dkepath.remote(irem).cvsrights;
+            end
             %
         else
             continue

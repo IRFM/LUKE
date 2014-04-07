@@ -232,7 +232,7 @@ dkepath.joan(1).remote(end).cvsrights = '';
 dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(10);
 dkepath.joan(1).remote(end).schedulername = 'direct';
 dkepath.joan(1).remote(end).cvsupdate = true;
-dkepath.joan(1).remote(end).cvsrights = 'chgrp -R RFSCAT';
+dkepath.joan(1).remote(end).cvsrights = 'chgrp -R RFSCAT ./';
 %
 dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(13);
 dkepath.joan(1).remote(end).schedulername = 'direct';
