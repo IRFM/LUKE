@@ -177,7 +177,7 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
     disp('else');
     disp('    %');
     disp('    disp('' '');');
-    disp('    disp(''To set LUKE paths type "select_LUKE_jd;"'')');
+    disp('    disp(''To set LUKE paths type "select_LUKE;"'')');
     disp('    disp('' '');');
     disp('    %');
     disp('end');
