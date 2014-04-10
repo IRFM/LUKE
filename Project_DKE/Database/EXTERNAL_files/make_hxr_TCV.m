@@ -55,13 +55,13 @@ cg=hxrs_getchords;
 
 % data from hxrs_getchords
 % focal point position
-hxrs.R_hxr=cg.rd([cg.all.chords{cg.all.cams}]);
-hxrs.Z_hxr=cg.zd([cg.all.chords{cg.all.cams}]);
+hxrs.R_hxr=cg.rd([cg.chords_abs{cg.cams(2:end)}]);
+hxrs.Z_hxr=cg.zd([cg.chords_abs{cg.cams(2:end)}]);
 % chord angles
-hxrs.alpha_hxr=cg.alpha([cg.all.chords{cg.all.cams}]);
-hxrs.beta_hxr=cg.beta([cg.all.chords{cg.all.cams}]);
+hxrs.alpha_hxr=cg.alpha([cg.chords_abs{cg.cams(2:end)}]);
+hxrs.beta_hxr=cg.beta([cg.chords_abs{cg.cams(2:end)}]);
 % etendue data
-hxrs.EG_hxr = cg.etendue([cg.all.chords{cg.all.cams}]);% etendue [1,nchord]
+hxrs.EG_hxr = cg.etendue([cg.chords_abs{cg.cams(2:end)}]);% etendue [1,nchord]
 
 % keep data for HXRC detector for the moment
 hxrs.kd_hxr = ones(96,1)*[10,30,50,70,90,110,130,150,170,190,210,250];%Parameters approximately corresponding to  photon energy spectra of gamma sources 57Co and 241Am. Reference energies for the photofraction [m,p]
