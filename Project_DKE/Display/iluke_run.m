@@ -201,6 +201,7 @@ else
             outputs{job_mask(it)} = iluke_output(lukestructs{it}.output);
             %
             status.output(job_mask(it)) = 1;
+            status.sdiag(:,job_mask(it)) = 1;% enable sdiag for times with distribution
             status.data = 2;
             %
         end
