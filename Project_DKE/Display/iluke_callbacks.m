@@ -99,7 +99,7 @@ switch action
             else
                 dataloaded = load([pathname,filename]);
                 %
-                % recent LUKE_RESULTS_*.mat file with lukestructq
+                % recent LUKE_RESULTS_*.mat file with lukestructs
                 %
                 if isfield(dataloaded,'lukestructs'),
                     %
@@ -530,9 +530,9 @@ switch action
                 %
                 if filename ~= 0,
                     savetimes = curtime;
+                    filenames = {filename};
                 else
                     savetimes = [];
-                    filenames = {filename};
                 end
                 %
             else
@@ -2248,13 +2248,13 @@ switch action
         newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
         newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
         %
-        if curtime > 1,
+        if curtime > 0,
             %
             opt.save = 0;
             opt.nr_dep = 0;
             opt.spec = 0;
-            opt.peak = 'n';
-            opt.wave = 'n';
+            opt.peak = 'y';
+            opt.wave = 'y';
             opt.rho = 't'; 
             opt.blist = [];
             opt.diaryname = '';
@@ -2263,7 +2263,7 @@ switch action
             opt.axs = [newgraph1_handle,newgraph2_handle,newgraph3_handle];
             opt.font = style;
             %
-            proc_luke_jd(outputs{curtime},0,-1,0.1,NaN,'',opt);
+            outputs{curtime}.data_proc = proc_luke_jd(outputs{curtime},0,-1,0.1,NaN,'',opt);
             %
             clear opt
             %
@@ -2354,26 +2354,18 @@ switch action
         newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
         newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
         %
-        %equilibrium_jd(equils{curtime},NaN,3,'linear',10,newgraph1_handle,style);
+        equilibrium_jd(equils{curtime},NaN,3+1i,'linear',10,[newgraph1_handle,newgraph2_handle],style);
         %
         if lukeobj.hxrcam.select.value == 1,
-            ncams = length(hxr.cam);
-            chordnums = NaN(1,ncams);
-            Zbremchords = cell(1,ncams);
-            icams = 1:ncams;
-            for icam = 1:ncams,
-                chordnums(icam) = hxr.cam{icam}.selectedchord;
-                Zbremchords{icam} = sdiags{1,curtime}{icam}.Zbremchord;
-            end
-            %
-            clear ncams icam
+            icams = 1:length(hxr.cam);
         else
             icams = lukeobj.hxrcam.select.value - 1;
-            chordnums = hxr.cam{icams}.selectedchord;
-            Zbremchords = {sdiags{1,curtime}{icams}.Zbremchord};
         end
         %
-        bremchorddisplay_dke_yp(Zbremchords,chordnums,[newgraph1_handle,newgraph2_handle],-1,'',style)
+        xlim = [min(equils{curtime}.ptx(end,:)),max(equils{curtime}.ptx(end,:))];
+        ylim = [min(equils{curtime}.pty(end,:)),max(equils{curtime}.pty(end,:))];
+        %
+        iluke_hxrcamdisp(hxr.cam(icams),xlim,ylim,equils{curtime}.Rp,equils{curtime}.Zp,[newgraph1_handle,newgraph2_handle],style)
         %
         graphs(1) = iluke_graphs(lukeobj.plot1.handle,1,'HXR Chords, Poloidal view','hxrcam');
         graphs(2) = iluke_graphs(lukeobj.plot2.handle,1,'HXR Chords, Toroidal view','hxrcam');
@@ -2385,7 +2377,7 @@ switch action
         lukeobj.plot1.gindex(it_g) = ngraphs + 1;
         lukeobj.plot2.gindex(it_g) = ngraphs + 2;
         %
-        clear it_g icams ngraphs graphs newgraph1_handle newgraph2_handle
+        clear it_g xlim ylim icams ngraphs graphs newgraph1_handle newgraph2_handle
         %
     case 'hxrparammodify'
         %

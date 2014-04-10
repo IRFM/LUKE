@@ -65,7 +65,7 @@ else
     lukeobj.hxrcam.save.state = 'on';
     lukeobj.hxrcam.clear.state = 'on';
     %
-    if curtime > 0,
+    if curtime > 0 && status.equil(curtime) == 1,
         lukeobj.hxrcam.disp.state = 'on';
     else
         lukeobj.hxrcam.disp.state = 'off';
@@ -155,7 +155,15 @@ else
     %
 end
 %
-if any(status.sdiag(1,:) >= 1),
+if (curtime == 0 && any(status.sdiag(1,:) >= 1)) || (curtime > 0 && status.sdiag(1,curtime) >= 1),% FEB calc is enabled
+    lukeobj.hxrbrem.run.highlight = true;
+    lukeobj.hxrbrem.run.state = 'on';
+else
+    lukeobj.hxrbrem.run.highlight = false;
+    lukeobj.hxrbrem.run.state = 'off';
+end    
+%
+if (curtime == 0 && any(status.sdiag(1,:) >= 2)) || (curtime > 0 && status.sdiag(1,curtime) >= 2),% FEB calc is done
     lukeobj.hxrbrem.run.highlight = false;
     %
     lukeobj.hxrbrem.clear.state = 'on';
@@ -176,7 +184,7 @@ else
     %
 end    
 %
-if any(status.sdiag(1,:) >= 2),
+if (curtime == 0 && any(status.sdiag(1,:) >= 3)) || (curtime > 0 && status.sdiag(1,curtime) >= 3),% FEB diag calc is done
     lukeobj.hxrdiag.run.highlight = false;
     %
     lukeobj.hxrdiag.clear.state = 'on';
