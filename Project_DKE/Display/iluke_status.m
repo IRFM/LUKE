@@ -2,6 +2,7 @@ function [s,sobj,cleartags] = iluke_status(s,status,sobj,mode,curtime,cleartags)
 %
 % mode = 0 : input structures
 % mode = 1 : output structures
+% mode = 2 : sdiag structures
 %
 % clear outdated structures
 %
@@ -17,7 +18,7 @@ if iscell(s),
     mask = status <= 0;
     if any(mask),
         if iscell(s(mask(1))),
-            s(mask) = {{}};%waves & wavestructs
+            s(mask) = {{}};%waves & wavestructs, sdiag
         else
             s(mask) = {[]};
         end
