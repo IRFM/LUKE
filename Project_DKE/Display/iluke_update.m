@@ -125,7 +125,7 @@ outputs(:,flag_clear) = {[]};
 sdiags(:,flag_clear) = {[]};
 
 flag_clear_g = find(flag_clear) + 2;% +2 for <new>,<all>
-cleartags(:,flag_clear_g) = {'all'};% clear all graphs corresponding to cleared times
+cleartags(:,flag_clear_g) = {{'equil','ohm','transpfaste','waves','output','hxrcam'}};% clear all graphs corresponding to cleared times
 
 status.equil(flag_newempty) = 0;
 status.equil(flag_newfull) = 1;
@@ -139,7 +139,7 @@ status.waves(:,flag_clear) = -1;
 status.wavestructs(:,flag_clear) = -1;
 status.job(:,flag_clear) = -1;
 status.output(:,flag_clear) = -1;
-status.sdiag(:,flag_clear) = -1;
+status.sdiag(:,flag_clear) = 0;
 
 %
 % sort times removing previous structures if recurrence
@@ -170,8 +170,6 @@ status.job = status.job(:,mask);
 status.output = status.output(:,mask);
 status.sdiag = status.sdiag(:,mask);
 
-status.sdiag(:,status.output < 1) = -1;% synthetic diagnostics need distribution
-
 mask_g = [1,2,2+mask(:).'];% 1,2 for <new>,<all>
 graphss = graphss(:,mask_g);
 cleartags = cleartags(:,mask_g);
@@ -183,6 +181,10 @@ clear flag_remove flag_remove_g flag_clear flag_clear_g flag_newempty flag_newfu
 
 if ntimes == 1 && curtime == 0,
     curtime = 1;
+end
+
+if ntimes == 0 && curtime > 0,
+    curtime = 0;
 end
 
 if curtime > 0,

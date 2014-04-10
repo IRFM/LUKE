@@ -161,9 +161,9 @@ else% display for one time step
             %
         else% display spectrum
             %
-            xlim = [0,max(energysep)];
-            %
             if ibin == 0,% display for all energies - show global count rate and photon temperature
+                %
+                xlim = [0,max(energysep)];
                 %
                 [Tphexp,~,Aexp] = tphfit_dke_yp(energy(energyind).',Nphotons(energyind),sqrt(Nphotons(energyind)));
                 %

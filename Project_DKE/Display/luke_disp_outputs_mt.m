@@ -40,7 +40,7 @@ for it = 1:nt,
         wave = outputs{it}.data_proc.wave;
         id = [outputs{it}.data_proc.simul.id,'_'];
         %
-        I_tot(it) = -scalar.I_tot;%%%%%%%%%%%%%%%
+        I_tot(it) = scalar.I_tot;
         P0_rf(it) = scalar.p0_rf_2piRp*(2*pi*scalar.Rp);
         P_rf(it) = scalar.p_rf_2piRp*(2*pi*scalar.Rp);
         P_e(it) = scalar.p_e_2piRp*(2*pi*scalar.Rp);

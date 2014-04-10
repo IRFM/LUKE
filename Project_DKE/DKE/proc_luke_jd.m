@@ -554,7 +554,7 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
                             ray = waves{iw}.rays{iray};
                             %
                             if isfield(ray,'sP_2piRp_lin')  && isfield(ray,'srho'),
-                                wxP_rf_lin(iw,:) = wxP_rf_lin(iw,:) + 1e-6*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin,xrhoG_S)./equilDKE.xdV_2piRp_dke;
+                                wxP_rf_lin(iw,:) = wxP_rf_lin(iw,:) + 1e-6*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin,xrhoG_S).*xdrhoG./equilDKE.xdV_2piRp_dke;
                             else
                                 wxP_rf_lin(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
                             end
@@ -1247,7 +1247,7 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
             %
             graph1D_jd(xrho,data_proc.radial.J_tot,0,0,xlab_rho,ylab,tit,NaN,xlim_rho,NaN,style,marker1,color2,width2,opt.font,ax,red,lspace,bspace);
             %
-            set(ax,'xtick',xtick_rho);
+            set(ax,'xtick',xtick_rho,'ytickmode','auto');drawnow;
             %
             print_jd(p_opt,[data_proc.simul.id,'_J_profile'],'figures_LUKE');
             %
