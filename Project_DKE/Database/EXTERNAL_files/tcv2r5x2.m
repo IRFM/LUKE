@@ -8,8 +8,6 @@ hxrcam.id = ['TCV HXR camera # ',num2str(hxrcam.camnum)];
 hxrcam.chordsnum = ap.cg.chords{hxrcam.camnum};
 hxrcam.chordsind = ap.cg.chords_abs{hxrcam.camnum};
 %
-ap.cg.cc = {1,1,[],1,1,[],1};%%%%%%%%%
-%
 hxrcam.centralchord = ap.cg.cc{hxrcam.camnum};
 %
 nc = length(hxrcam.chordsind);
