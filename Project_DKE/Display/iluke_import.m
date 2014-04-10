@@ -9,9 +9,19 @@ if isfield(import,'equil') && ~isempty(import.equil)
     %
     % new equil
     %
-    equil = import.equil;
-    status.equil = 1;
-    [lukeobj,equil] = iluke_equilstrings(lukeobj,equil);
+    equil = iluke_equilcorr(import.equil);
+    %
+    tokamak = equil.tokamak;
+    shotnum = equil.shotnum;
+    %
+    curtime = 1;
+    %
+    equils{curtime} = equil;
+    status.equil(curtime) = 3;
+    shotimes(curtime) = equil.shotime;
+    %
+    status.data = 2;
+    lukeobj.lukeid.string = '';
     %
     action = 'equildisp';iluke_callbacks;
     %
@@ -22,48 +32,48 @@ if isfield(import,'equil') && ~isempty(import.equil)
     %
     if isfield(import,'dkedisplay') && ~isempty(import.dkedisplay),
         dkedisplay = import.dkedisplay;
-        lukeobj.display.text.string = dkedisplay.id;
+        %lukeobj.display.text.string = dkedisplay.id;
     end
     %
     if isfield(import,'ohm') && ~isempty(import.ohm),
-        ohm = import.ohm;
-        status.ohm = 1;
+        ohms{curtime} = import.ohm;
+        status.ohm(curtime) = 1;
         %
         action = 'ohmdisp';iluke_callbacks;
     else
-        status.ohm = 0;                    
+        status.ohm(curtime) = 0;                    
     end
     %
     if isfield(import,'transpfaste') && ~isempty(import.transpfaste),
-        transpfaste = import.transpfaste;
-        status.transpfaste = 1;
+        transpfastes{curtime} = import.transpfaste;
+        status.transpfaste(curtime) = 1;
         %
         action = 'transpdisp';iluke_callbacks;
     else
-        status.transpfaste = 0;                    
+        status.transpfaste(curtime) = 0;                    
     end
     %
     if isfield(import,'ripple') && ~isempty(import.ripple),
-        ripple = import.ripple;
-        status.ripple = 1;
+        ripples{curtime} = import.ripple;
+        status.ripple(curtime) = 1;
         %
         action = 'rippledisp';iluke_callbacks;
     else
-        status.ripple = 0;
+        status.ripple(curtime) = 0;
     end
     %
     if isfield(import,'waves') && ~isempty(import.waves),
-        waves = import.waves;
-        status.waves = 1;
+        wavess{curtime} = import.waves;
+        status.waves(curtime) = 1;
         %
         action = 'wavedisp';iluke_callbacks;
     elseif isfield(import,'output') && isfield(import.output,'dke_out') && isfield(import.output.dke_out,'waves') && ~isempty(import.output.dke_out.waves),
-        waves = import.output.dke_out.waves;
-        status.waves = 1;
+        wavess{curtime} = import.output.dke_out.waves;
+        status.waves(curtime) = 1;
         %
         action = 'wavedisp';iluke_callbacks;
     else
-        status.waves = 0;
+        status.waves(curtime) = 0;
     end
     %
     if isfield(import,'wavestructs') && ~isempty(import.wavestructs),
@@ -77,12 +87,12 @@ if isfield(import,'equil') && ~isempty(import.equil)
                 import.wavestructs{iw} = rmfield(import.wavestructs{iw},'raydisplay');
             end
         end
-        wavestructs = [wavestructs,import.wavestructs];
-        lukeobj.wavestruct.select.value = length(wavestructs);
+        wavestructss{curtime} = import.wavestructs;
+        lukeobj.wavestruct.select.value = length(wavestructss{curtime});
     end                
     if isfield(import,'output') && ~isempty(import.output),
-        output = import.output;
-        status.output = 1;
+        outputs{curtime} = import.output;
+        status.output(curtime) = 1;
         %
         action = 'lukedisp';iluke_callbacks;
     else
