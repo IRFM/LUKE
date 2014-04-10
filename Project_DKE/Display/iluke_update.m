@@ -28,29 +28,29 @@ flag_remove = status.equil == -1;
 %
 % remove outdated times
 %
-shotimes(flag_remove) = [];
+shotimes(:,flag_remove) = [];
 
-equils(flag_remove) = [];
-ohms(flag_remove) = [];
-transpfastes(flag_remove) = [];
-ripples(flag_remove) = [];
-wavess(flag_remove) = [];
+equils(:,flag_remove) = [];
+ohms(:,flag_remove) = [];
+transpfastes(:,flag_remove) = [];
+ripples(:,flag_remove) = [];
+wavess(:,flag_remove) = [];
 %
-wavestructss(flag_remove) = [];
+wavestructss(:,flag_remove) = [];
 %
-jobs(flag_remove) = [];
-outputs(flag_remove) = [];
-sdiags(flag_remove) = [];
+jobs(:,flag_remove) = [];
+outputs(:,flag_remove) = [];
+sdiags(:,flag_remove) = [];
 
-status.equil(flag_remove) = [];
-status.ohm(flag_remove) = [];
-status.transpfaste(flag_remove) = [];
-status.ripple(flag_remove) = [];
-status.waves(flag_remove) = [];
-status.wavestructs(flag_remove) = [];
-status.job(flag_remove) = [];
-status.output(flag_remove) = [];
-status.sdiag(flag_remove) = [];
+status.equil(:,flag_remove) = [];
+status.ohm(:,flag_remove) = [];
+status.transpfaste(:,flag_remove) = [];
+status.ripple(:,flag_remove) = [];
+status.waves(:,flag_remove) = [];
+status.wavestructs(:,flag_remove) = [];
+status.job(:,flag_remove) = [];
+status.output(:,flag_remove) = [];
+status.sdiag(:,flag_remove) = [];
 
 % delete outdated graphs
 flag_remove_g = find(flag_remove) + 2;% +2 for <new>,<all>
@@ -62,11 +62,11 @@ for it = 1:length(flag_remove_g),
     end
     %
 end
-graphss(flag_remove_g) = [];
-cleartags(flag_remove_g) = [];
-lukeobj.plot1.gindex(flag_remove_g) = [];
-lukeobj.plot2.gindex(flag_remove_g) = [];
-lukeobj.plot3.gindex(flag_remove_g) = [];
+graphss(:,flag_remove_g) = [];
+cleartags(:,flag_remove_g) = [];
+lukeobj.plot1.gindex(:,flag_remove_g) = [];
+lukeobj.plot2.gindex(:,flag_remove_g) = [];
+lukeobj.plot3.gindex(:,flag_remove_g) = [];
 
 flag_clear = status.equil == 0;
 flag_newempty = status.equil == 2;
@@ -83,63 +83,63 @@ end
 %
 nnew = sum(flag_new);%number of new times
 
-ohms(end+1:end+nnew) = {[]};
-transpfastes(end+1:end+nnew) = {[]};
-ripples(end+1:end+nnew) = {[]};
-wavess(end+1:end+nnew) = {{}};
+ohms(:,end+1:end+nnew) = {[]};
+transpfastes(:,end+1:end+nnew) = {[]};
+ripples(:,end+1:end+nnew) = {[]};
+wavess(:,end+1:end+nnew) = {{}};
 %
-wavestructss(end+1:end+nnew) = {{}};
+wavestructss(:,end+1:end+nnew) = {{}};
 %
-jobs(end+1:end+nnew) = {[]};
-outputs(end+1:end+nnew) = {[]};
-sdiags(end+1:end+nnew) = {[]};
+jobs(:,end+1:end+nnew) = {[]};
+outputs(:,end+1:end+nnew) = {[]};
+sdiags(:,end+1:end+nnew) = {[]};
 
-status.ohm(end+1:end+nnew) = 0;
-status.transpfaste(end+1:end+nnew) = 0;
-status.ripple(end+1:end+nnew) = 0;
-status.waves(end+1:end+nnew) = 0;
-status.wavestructs(end+1:end+nnew) = 0;
-status.job(end+1:end+nnew) = 0;
-status.output(end+1:end+nnew) = 0;
-status.sdiag(end+1:end+nnew) = 0;
+status.ohm(:,end+1:end+nnew) = 0;
+status.transpfaste(:,end+1:end+nnew) = 0;
+status.ripple(:,end+1:end+nnew) = 0;
+status.waves(:,end+1:end+nnew) = 0;
+status.wavestructs(:,end+1:end+nnew) = 0;
+status.job(:,end+1:end+nnew) = 0;
+status.output(:,end+1:end+nnew) = 0;
+status.sdiag(:,end+1:end+nnew) = 0;
 
-graphss(end+1:end+nnew) = graphss(1);% fill with empty structures with memory of fields
-cleartags(end+1:end+nnew) = {{}};
-lukeobj.plot1.gindex(end+1:end+nnew) = 0;
-lukeobj.plot2.gindex(end+1:end+nnew) = 0;
-lukeobj.plot3.gindex(end+1:end+nnew) = 0;
+graphss(:,end+1:end+nnew) = graphss(1);% fill with empty structures with memory of fields
+cleartags(:,end+1:end+nnew) = {{}};
+lukeobj.plot1.gindex(:,end+1:end+nnew) = 0;
+lukeobj.plot2.gindex(:,end+1:end+nnew) = 0;
+lukeobj.plot3.gindex(:,end+1:end+nnew) = 0;
 
 %
 % structures to be cleared
 %
-equils(flag_clear) = {[]};
-ohms(flag_clear) = {[]};
-transpfastes(flag_clear) = {[]};
-ripples(flag_clear) = {[]};
-wavess(flag_clear) = {{}};
+equils(:,flag_clear) = {[]};
+ohms(:,flag_clear) = {[]};
+transpfastes(:,flag_clear) = {[]};
+ripples(:,flag_clear) = {[]};
+wavess(:,flag_clear) = {{}};
 %
-wavestructss(flag_clear) = {{}};
+wavestructss(:,flag_clear) = {{}};
 %
-jobs(flag_clear) = {[]};
-outputs(flag_clear) = {[]};
-sdiags(flag_clear) = {[]};
+jobs(:,flag_clear) = {[]};
+outputs(:,flag_clear) = {[]};
+sdiags(:,flag_clear) = {[]};
 
 flag_clear_g = find(flag_clear) + 2;% +2 for <new>,<all>
-cleartags(flag_clear_g) = {'all'};% clear all graphs corresponding to cleared times
+cleartags(:,flag_clear_g) = {'all'};% clear all graphs corresponding to cleared times
 
 status.equil(flag_newempty) = 0;
 status.equil(flag_newfull) = 1;
 
 flag_clear = flag_clear | flag_newempty;
 
-status.ohm(flag_clear) = -1;
-status.transpfaste(flag_clear) = -1;
-status.ripple(flag_clear) = -1;
-status.waves(flag_clear) = -1;
-status.wavestructs(flag_clear) = -1;
-status.job(flag_clear) = -1;
-status.output(flag_clear) = -1;
-status.sdiag(flag_clear) = -1;
+status.ohm(:,flag_clear) = -1;
+status.transpfaste(:,flag_clear) = -1;
+status.ripple(:,flag_clear) = -1;
+status.waves(:,flag_clear) = -1;
+status.wavestructs(:,flag_clear) = -1;
+status.job(:,flag_clear) = -1;
+status.output(:,flag_clear) = -1;
+status.sdiag(:,flag_clear) = -1;
 
 %
 % sort times removing previous structures if recurrence
@@ -148,38 +148,36 @@ status.sdiag(flag_clear) = -1;
 
 ntimes = length(shotimes);
 
-equils = equils(mask);
-ohms = ohms(mask);
-transpfastes = transpfastes(mask);
-ripples = ripples(mask);
-wavess = wavess(mask);
+equils = equils(:,mask);
+ohms = ohms(:,mask);
+transpfastes = transpfastes(:,mask);
+ripples = ripples(:,mask);
+wavess = wavess(:,mask);
 %
-wavestructss = wavestructss(mask);
+wavestructss = wavestructss(:,mask);
 %
-jobs = jobs(mask);
-outputs = outputs(mask);
-sdiags = sdiags(mask);
+jobs = jobs(:,mask);
+outputs = outputs(:,mask);
+sdiags = sdiags(:,mask);
 
-status.equil = status.equil(mask);
-status.ohm = status.ohm(mask);
-status.transpfaste = status.transpfaste(mask);
-status.ripple = status.ripple(mask);
-status.waves = status.waves(mask);
-status.wavestructs = status.wavestructs(mask);
-status.job = status.job(mask);
-status.output = status.output(mask);
-status.sdiag = status.sdiag(mask);
+status.equil = status.equil(:,mask);
+status.ohm = status.ohm(:,mask);
+status.transpfaste = status.transpfaste(:,mask);
+status.ripple = status.ripple(:,mask);
+status.waves = status.waves(:,mask);
+status.wavestructs = status.wavestructs(:,mask);
+status.job = status.job(:,mask);
+status.output = status.output(:,mask);
+status.sdiag = status.sdiag(:,mask);
 
-status.sdiag(status.output < 1) = -1;% synthetic diagnostics need distribution
-status.sdiag(status.output == 1) = 0;% enable sdiag for times with distribution
-
+status.sdiag(:,status.output < 1) = -1;% synthetic diagnostics need distribution
 
 mask_g = [1,2,2+mask(:).'];% 1,2 for <new>,<all>
-graphss = graphss(mask_g);
-cleartags = cleartags(mask_g);
-lukeobj.plot1.gindex = lukeobj.plot1.gindex(mask_g);
-lukeobj.plot2.gindex = lukeobj.plot2.gindex(mask_g);
-lukeobj.plot3.gindex = lukeobj.plot3.gindex(mask_g);
+graphss = graphss(:,mask_g);
+cleartags = cleartags(:,mask_g);
+lukeobj.plot1.gindex = lukeobj.plot1.gindex(:,mask_g);
+lukeobj.plot2.gindex = lukeobj.plot2.gindex(:,mask_g);
+lukeobj.plot3.gindex = lukeobj.plot3.gindex(:,mask_g);
 
 clear flag_remove flag_remove_g flag_clear flag_clear_g flag_newempty flag_newfull flag_new nnew mask mask_g
 
