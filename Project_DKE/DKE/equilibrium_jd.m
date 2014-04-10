@@ -559,9 +559,9 @@ end
 %
 % Display of equilibrium properties
 %
-if abs(display_mode) >= 2,
+if real(display_mode) >= 2,
     %
-    if abs(display_mode) == 2,
+    if real(display_mode) == 2,
         p_opt = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
     else
         p_opt = -1;
@@ -576,7 +576,9 @@ if abs(display_mode) >= 2,
     else
         srho = linspace(0,1,11);
     end
-    stheta = linspace(0,2*pi,31);
+    %
+    nthetad = 25;
+    stheta = linspace(0,2*pi,nthetad);
     sx = interp1(prho,mx,srho,method);  
     sy = interp1(prho,my,srho,method); 
     stx = interp1(mtheta,mx',stheta,method)';  
@@ -602,9 +604,11 @@ if abs(display_mode) >= 2,
         tit = '';
     end
     %    
-    [ax] = graph1D_jd(sx',sy',0,0,'x(m)','y(m)','',NaN,[xmin,xmax],[ymin,ymax],'-','none','r',2,font,ax,red,lspace,bspace);drawnow
     if imag(display_mode) == 0,
+        [ax] = graph1D_jd(sx',sy',0,0,'x(m)','y(m)','',NaN,[xmin,xmax],[ymin,ymax],'-','none','r',2,font,ax,red,lspace,bspace);drawnow
         [ax] = graph1D_jd(stx,sty,0,0,'','',tit,NaN,[xmin,xmax],[ymin,ymax],'-','none','b',0.5,font,ax);
+    else
+        [ax] = graph1D_jd(sx',sy',0,0,'x(m)','y(m)','',NaN,[xmin,xmax],[ymin,ymax],'-','none','r',0.5,font,ax,red,lspace,bspace);drawnow
     end
     axis(ax,'equal');drawnow  
     print_jd(p_opt,['Fig_EQUIL_',equil.id,'_mag'])
@@ -615,15 +619,30 @@ if abs(display_mode) >= 2,
             [ax] = graph1D2jd(prho,xTe,prho,xne/1e19,'\rho','T_e (keV)','n_e (10^{19} m^{-3})','',...
                 [0,1],NaN,NaN,'-','none','r',2,'--','none','b',2,20,0.9,0.5,0.7);
             set(ax(1),'xtick',[0:0.2:1]);set(ax(2),'xtick',[0:0.2:1])
-        else
-            ax = axs(2);
-            leg = {'T_e (keV)','n_e (10^{19} m^{-3})','Location','NorthEast'};
-            [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],NaN,'-','none','r',2,font,ax);
-            [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'\rho','','',leg,[0,1],NaN,'--','none','b',2,font,ax);
-            set(ax,'xtick',[0:0.2:1]);
+            %    
+            print_jd(p_opt,['Fig_EQUIL_',equil.id,'_tene'])
+        elseif length(axs) >= 2,
+            if imag(display_mode) == 0,
+                ax = axs(2);
+                leg = {'T_e (keV)','n_e (10^{19} m^{-3})','Location','NorthEast'};
+                [ax] = graph1D_jd(prho,equil.pTe,0,0,'','','',NaN,[0,1],NaN,'-','none','r',2,font,ax);
+                [ax] = graph1D_jd(prho,equil.pne/1e19,0,0,'\rho','','',leg,[0,1],NaN,'--','none','b',2,font,ax);
+                set(ax,'xtick',[0:0.2:1]);
+            else
+                ax = axs(2);
+                %
+                nphi = 361;
+                nm = length(mtheta);
+                sR = Rp + [sx(end:-1:2,(nm + 1)/2);sx(:,1)];
+                sphi = linspace(0,2*pi,nphi);
+                XR = repmat(sR.',[nphi,1]);
+                Xphi = repmat(sphi.',[1,21]);
+                Rmax = max(sR);
+                %
+                [ax] = graph1D_jd(XR.*cos(Xphi),XR.*sin(Xphi),0,0,'X(m)','Y(m)','',NaN,[-Rmax,Rmax],[-Rmax,Rmax],'-','none','r',0.5,font,ax,red,lspace,bspace);
+                axis(ax,'equal');set(ax,'xtickmode','auto','ytickmode','auto');drawnow;                
+            end
         end
-        %    
-        print_jd(p_opt,['Fig_EQUIL_',equil.id,'_tene'])
     end
     %
     % displays the equilibrium profiles
@@ -653,7 +672,7 @@ if abs(display_mode) >= 2,
             subplot('position',[2/3+1/12,1/8,5/24,5/16])
               [ax] = graph1D_jd(prho,pZeff,0,0,'','','',NaN,[0,1],[-eps,max(pZeff)],'-','none','b',0.5);
               [ax] = graph1D_jd(xrho,xZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[-eps,max(pZeff)],'none','+','r',2);
-        else
+        elseif length(axs) >= 3,
             ax = axs(3);
             [ax] = graph1D_jd(prho,pZeff,0,0,'\rho','Z_{eff}','',NaN,[0,1],[0,ceil(max(pZeff))],'-','none','r',2,font,ax,red,lspace,bspace);drawnow     
             set(ax,'ytick',[0:ceil(max(pZeff))]);
@@ -686,7 +705,7 @@ if isfield(equil,'pzni') && isfield(equil,'pzTi') && isfield(equil,'zZi') && isf
     zmi = equil.zmi;
 end
 %
-if abs(display_mode) >=1,
+if real(display_mode) >=1,
     disp('-------------------------------------------------------------------------------------------------------------------');
     disp(['- Scenario name = ',equil.id]);
     disp('-------------------------------------------------------------------------------------------------------------------');
@@ -702,9 +721,9 @@ if abs(display_mode) >=1,
 	disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
-if flag_consistency && abs(display_mode) >= 2,
+if flag_consistency && real(display_mode) >= 2,
 	disp('Calculation of the equilibrium consistency (wait few seconds).');
-    equil = equilconsistency_yp(equil,'',abs(display_mode));
+    equil = equilconsistency_yp(equil,'',real(display_mode));
 end
 %
 equilDKE.tokname = equil.id;
