@@ -2326,6 +2326,125 @@ switch action
         %
         lukeobj = iluke_info(lukeobj,'r5x2');% disable info display
         %
+    case 'hxrcamimport'
+        %
+        % fast electron bremsstrahlung camera parameters
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
+        iluke_hxrcamimport; 
+        %
+        lukeobj.hxrcam.select.value = 1;
+        %
+        lukeobj = iluke_info(lukeobj,'r5x2');% disable info display
+        %
+    case 'hxrcamdisp'
+        %
+        % fast electron bremsstrahlung camera display
+        %
+        it_g = 2 + curtime;%<new>,<all>,...
+        %
+        lukeobj.plot1.gindex(it_g) = 0;
+        lukeobj.plot2.gindex(it_g) = 0;
+        %
+        cleartags{it_g} = {'hxrcam'};
+        %
+        iluke_update;% initialize display
+        %
+        newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
+        newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        %
+        %equilibrium_jd(equils{curtime},NaN,3,'linear',10,newgraph1_handle,style);
+        %
+        if lukeobj.hxrcam.select.value == 1,
+            ncams = length(hxr.cam);
+            chordnums = NaN(1,ncams);
+            Zbremchords = cell(1,ncams);
+            icams = 1:ncams;
+            for icam = 1:ncams,
+                chordnums(icam) = hxr.cam{icam}.selectedchord;
+                Zbremchords{icam} = sdiags{1,curtime}{icam}.Zbremchord;
+            end
+            %
+            clear ncams icam
+        else
+            icams = lukeobj.hxrcam.select.value - 1;
+            chordnums = hxr.cam{icams}.selectedchord;
+            Zbremchords = {sdiags{1,curtime}{icams}.Zbremchord};
+        end
+        %
+        bremchorddisplay_dke_yp(Zbremchords,chordnums,[newgraph1_handle,newgraph2_handle],-1,'',style)
+        %
+        graphs(1) = iluke_graphs(lukeobj.plot1.handle,1,'HXR Chords, Poloidal view','hxrcam');
+        graphs(2) = iluke_graphs(lukeobj.plot2.handle,1,'HXR Chords, Toroidal view','hxrcam');
+        %   
+        ngraphs = length(graphss{it_g});
+        %
+        graphss{it_g}(end+1:end+length(graphs)) = graphs;
+        %
+        lukeobj.plot1.gindex(it_g) = ngraphs + 1;
+        lukeobj.plot2.gindex(it_g) = ngraphs + 2;
+        %
+        clear it_g icams ngraphs graphs newgraph1_handle newgraph2_handle
+        %
+    case 'hxrparammodify'
+        %
+        % fast electron bremsstrahlung computing parameters
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
+        hxr.param = imod_struct_jd(hxr.param,'hxrparam',1,lukeobj.infopanel.handle,struct,style);
+        %
+        lukeobj = iluke_info(lukeobj,'r5x2');% disable info display
+        %
+    case 'hxrexpimport'
+        %
+        % fast electron bremsstrahlung experimental data
+        %
+        hxr.exp = iluke_hxrexpimport(external.hxr); 
+        %
+    case 'hxrexpdisp'
+        %
+        % fast electron bremsstrahlung experimental data
+        %
+        it_g = 2 + curtime;%<new>,<all>,...
+        %
+        lukeobj.plot1.gindex(it_g) = 0;
+        lukeobj.plot2.gindex(it_g) = 0;
+        lukeobj.plot3.gindex(it_g) = 0;
+        %
+        cleartags{it_g} = {'hxrexp'};
+        %
+        iluke_update;% initialize display
+        %
+        axs(1) = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
+        axs(2) = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        axs(3) = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        %
+        ic = lukeobj.hxrcam.select.value - 1;% selected camera
+        ichord = lukeobj.hxrchord.select.value - 1;% selected chord
+        ibin = lukeobj.hxrbin.select.value - 1;% selected energy bin
+        %
+        if curtime == 0,
+            hxrtimes = shotimes;
+        else
+            hxrtimes = shotimes(curtime);
+        end
+        %
+        [nobj,graphids] = iluke_hxrexpdisp(hxr,hxrtimes,ic,ichord,ibin,axs,style);
+        %
+        for iplot = 1:3,
+            if nobj(iplot) > 0,
+                plotstr = ['plot',num2str(iplot)];
+                graphss{it_g}(end+1) = iluke_graphs(lukeobj.(plotstr).handle,nobj(iplot),graphids{iplot},'hxrexp');
+                lukeobj.(plotstr).gindex(it_g) = length(graphss{it_g});
+            else
+                delete(axs(iplot));
+            end
+        end
+        %
+        clear it_g ic ichord ibin nobj graphids iplot axs
+        %
     case 'savegraphs'
         %
         % save graphs

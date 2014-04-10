@@ -176,7 +176,10 @@ function lukeobj = iluke_switch(lukeobj,str)
         set(lukeobj.infostr.handle,'visible','on');
         %
         lukeobj.hxrcam.visible = 'on';
-        lukeobj.hxrcam.select.visible = 'on';
+        lukeobj.hxrrange1.visible = 'on';
+        lukeobj.hxrrange2.visible = 'on';
+        lukeobj.hxrchord.visible = 'on';
+        lukeobj.hxrbin.visible = 'on';
         lukeobj.hxrexp.visible = 'on';
         lukeobj.hxrparam.visible = 'on';
         lukeobj.hxrbrem.visible = 'on';
@@ -185,7 +188,10 @@ function lukeobj = iluke_switch(lukeobj,str)
     else
         %
         lukeobj.hxrcam.visible = 'off';
-        lukeobj.hxrcam.select.visible = 'off';
+        lukeobj.hxrrange1.visible = 'off';
+        lukeobj.hxrrange2.visible = 'off';
+        lukeobj.hxrchord.visible = 'off';
+        lukeobj.hxrbin.visible = 'off';
         lukeobj.hxrexp.visible = 'off';
         lukeobj.hxrparam.visible = 'off';
         lukeobj.hxrbrem.visible = 'off';

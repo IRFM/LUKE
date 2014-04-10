@@ -15,7 +15,7 @@ end
 dkeparam = load_structures_yp('dkeparam',id_dkeparam,'');
 %
 hxr.param = '';
-hxr.cam = '';
+hxr.cam = {};
 hxr.exp = '';
 %
 clear id_dkeparam
@@ -48,6 +48,7 @@ style.titlestrheight = 50;
 style.workdirtitlecorr = 4;
 %
 style.titlewidth = 105;
+style.titlewidth2 = 110;
 style.butheight = 25;%40;% height of button
 style.butwidth = 60;%80;% width of button
 style.longbutwidth = 90;%80;% width of button
@@ -460,18 +461,57 @@ lukeobj.wsparam.handle = uicontrol(lukeobj.infopanel.handle,'Style','edit','Stri
 % RUN R5X2 PANEL
 %
 lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrcam',{'title','import','load','save','clear','disp',''},'HXR cameras',style.infoheightcorr - style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrexp',{'title','import','load','save','clear','disp','text'},'HXR exp. data',style.infoheightcorr - 2*style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrparam',{'title','modify','load','save','clear','','text'},'FEB params',style.infoheightcorr - 4*style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrbrem',{'title','','','run','clear','disp','text'},'FEB emissivity',style.infoheightcorr - 5*style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrdiag',{'title','','','run','clear','disp','text'},'FEB diagnostic',style.infoheightcorr - 6*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrexp',{'title','import','load','save','clear','disp','text'},'HXR exp. data',style.infoheightcorr - 3*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrparam',{'title','modify','load','save','clear',''},'FEB params',style.infoheightcorr - 5*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrbrem',{'title','','','run','clear','disp','text'},'FEB emissivity',style.infoheightcorr - 6*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrdiag',{'title','','','run','clear','disp','text'},'FEB diagnostic',style.infoheightcorr - 7*style.butheightcorr,style);
 
 
 lukeobj.hxrcam.select.position = [style.titlewidth + 7*style.buthsep + 5*style.butwidth,style.infoheightcorr - style.butheightcorr,style.panelwidth - style.titlewidth - 8*style.buthsep - 5*style.butwidth,style.butheight];
-lukeobj.hxrcam.select.string = {};
+lukeobj.hxrcam.select.string = {'all cameras'};
+lukeobj.hxrcam.select.value = 1;
 lukeobj.hxrcam.select.callback = 'lukeobj.hxrcam.select.value = get(lukeobj.hxrcam.select.handle,''Value'');iluke_update;';
 
 lukeobj.hxrcam.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.hxrcam.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrcam.select.callback);
 
+
+lukeobj.hxrrange1.title.position = [style.panelwidth - 5*style.buthsep - 2*style.butwidth - 2*style.titlewidth2,style.infoheightcorr - 5*style.butheightcorr + style.textheightcorr,style.titlewidth2,style.textheight];
+lukeobj.hxrrange1.title.string = 'Tph kmin (keV)';
+lukeobj.hxrrange1.edit.position = [style.panelwidth - 4*style.buthsep - 2*style.butwidth - style.titlewidth2,style.infoheightcorr - 5*style.butheightcorr,style.butwidth,style.butheight];
+lukeobj.hxrrange1.edit.callback = 'hxr.param.kmin = str2double(get(lukeobj.hxrrange1.edit.handle,''String''));iluke_update;';
+
+lukeobj.hxrrange1.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.hxrrange1.title.string,'Position',lukeobj.hxrrange1.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.hxrrange1.edit.handle = uicontrol(lukeobj.infopanel.handle,'Style','edit','Position',lukeobj.hxrrange1.edit.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrrange1.edit.callback);
+
+lukeobj.hxrrange2.title.position = [style.panelwidth - 2*style.buthsep - style.butwidth - style.titlewidth2,style.infoheightcorr - 5*style.butheightcorr + style.textheightcorr,style.titlewidth2,style.textheight];
+lukeobj.hxrrange2.title.string = 'Tph kmax (keV)';
+lukeobj.hxrrange2.edit.position = [style.panelwidth - style.buthsep - style.butwidth,style.infoheightcorr - 5*style.butheightcorr,style.butwidth,style.butheight];
+lukeobj.hxrrange2.edit.callback = 'hxr.param.kmax = str2double(get(lukeobj.hxrrange2.edit.handle,''String''));iluke_update;';
+
+lukeobj.hxrrange2.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.hxrrange2.title.string,'Position',lukeobj.hxrrange2.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.hxrrange2.edit.handle = uicontrol(lukeobj.infopanel.handle,'Style','edit','Position',lukeobj.hxrrange2.edit.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrrange2.edit.callback);
+
+
+lukeobj.hxrchord.title.position = [style.panelwidth - 2*style.buthsep - 3*style.butwidth - style.longbutwidth,style.infoheightcorr - 2*style.butheightcorr + style.textheightcorr,2*style.butwidth,style.textheight];
+lukeobj.hxrchord.title.string = 'Chord number';
+lukeobj.hxrchord.select.position = [style.panelwidth - style.buthsep - style.butwidth - style.longbutwidth,style.infoheightcorr - 2*style.butheightcorr,style.butwidth + style.longbutwidth,style.butheight];
+lukeobj.hxrchord.select.string = {'all chords'};
+lukeobj.hxrchord.select.value = 1;
+lukeobj.hxrchord.select.callback = 'hxr.cam{lukeobj.hxrcam.select.value - 1}.selectedchord = get(lukeobj.hxrchord.select.handle,''Value'') - 1;iluke_update;';
+
+lukeobj.hxrchord.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.hxrchord.title.string,'Position',lukeobj.hxrchord.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.hxrchord.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.hxrchord.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrchord.select.callback);
+
+
+lukeobj.hxrbin.title.position = [style.panelwidth - 2*style.buthsep - 3*style.butwidth - style.longbutwidth,style.infoheightcorr - 3*style.butheightcorr + style.textheightcorr,style.longbutwidth,style.textheight];
+lukeobj.hxrbin.title.string = 'Energy bin';
+lukeobj.hxrbin.select.position = [style.panelwidth - style.buthsep - 3*style.butwidth,style.infoheightcorr - 3*style.butheightcorr,3*style.butwidth,style.butheight];
+lukeobj.hxrbin.select.string = {'all energies'};
+lukeobj.hxrbin.select.value = 1;
+lukeobj.hxrbin.select.callback = 'lukeobj.hxrbin.select.value = get(lukeobj.hxrbin.select.handle,''Value'');iluke_update;';
+
+lukeobj.hxrbin.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.hxrbin.title.string,'Position',lukeobj.hxrbin.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.hxrbin.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.hxrbin.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrbin.select.callback);
 
 
 
@@ -485,7 +525,7 @@ lukeobj = iluke_info(lukeobj,'startup');% info display
 
 tokamak = '';
 shotnum = '';
-shotimes = [];
+shotimes = zeros(1,0);
 
 %
 % graphs
@@ -506,20 +546,20 @@ wavestructss = cell(1,0);
 %
 jobs = cell(1,0);
 outputs = cell(1,0);
-sdiags = cell(1,0);
+sdiags = cell(2,0);% sdiags has the dimension of the number of synthetic diagnostics by time steps
 
 curtime = -1;% current time of work : (-1) new, (0) all, or index in shotimes
 
 status.external = 0;
-status.equil = [];
-status.ohm = [];
-status.transpfaste = [];
-status.ripple = [];
-status.waves = [];
-status.wavestructs = [];
-status.job = [];
-status.output = [];
-status.sdiag = [];
+status.equil = zeros(1,0);
+status.ohm = zeros(1,0);
+status.transpfaste = zeros(1,0);
+status.ripple = zeros(1,0);
+status.waves = zeros(1,0);
+status.wavestructs = zeros(1,0);
+status.job = zeros(1,0);
+status.output = zeros(1,0);
+status.sdiag = zeros(2,0);
 
 
 style.distselectstyle = style;% for dist profile selection

@@ -1,4 +1,4 @@
-function [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,dkedisplay,equil,radialDKE,Zcurr,hxr,hxrparam);
+function [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,dkedisplay,equil,radialDKE,Zcurr,hxr,hxrparam)
 %R5-X2 - calculation of the  chord characteristics for bremsstrahlung tomography in a torus along unit vector g from LUKE grid structure
 %
 % This function calculates chord positions for bremsstrahlung tomography in a torus along unit vector g from LUKE grid structure
@@ -35,6 +35,29 @@ function [Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,dkedisplay,equil,radi
 %
 if nargin < 7,
    error('Not enough input arguments in bremchord_dke_yp')
+end
+%
+if iscell(hxr),% run for multime cameras,
+    %
+    ncams = length(hxr);
+    %
+    Zbremchord = cell(1,ncams);
+    equilHXR = cell(1,ncams);
+    %
+    for icam = 1:ncams,
+        [Zbremchord{icam},equilHXR{icam}] = bremchord_dke_yp(dkeparam,dkedisplay,equil,radialDKE,Zcurr,hxr{icam},hxrparam);
+    end
+    %
+    return
+end
+%
+% variables added to equil for distributed computing
+%
+if isempty(radialDKE),
+    radialDKE = equil.radialDKE;
+end
+if isempty(Zcurr),
+    Zcurr = equil.Zcurr;
 end
 %	
 mfactor = hxrparam.mfactor;

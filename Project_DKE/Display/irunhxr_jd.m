@@ -309,7 +309,7 @@ if strcmp(d_opt,'y'),
         ik = find(k_opt == Zbremdiag.kfit);
     end
     %
-    bremchorddisplay_dke_yp(equilHXR,Zbremchord,c_opt,p_opt,equil.id);
+    bremchorddisplay_dke_yp(Zbremchord,c_opt,[],p_opt,equil.id);
     %
     if ~isempty(r_opt) & ~isempty(t_opt) & ~isempty(k_opt)
         bremlocaldisplay_dke_yp(dkeparam,dkedisplay,equilDKE,momentumDKE,Zmomcoef,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_opt,t_opt,k_opt,p_opt,equil.id)
