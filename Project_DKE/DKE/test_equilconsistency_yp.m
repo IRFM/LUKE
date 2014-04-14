@@ -14,6 +14,8 @@ function [] = test_equilconsistency_yp(filein,equilformat)
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
+close all
+%
 if nargin <= 0,
     filein = input_dke_yp('Enter the file name (with extension) of the toroidal MHD equilibrium','');
 end
@@ -39,17 +41,27 @@ elseif strcmp(equilformat,'EFIT') || strcmp(equilformat,'EQDSK'),
     if strcmp(fileext,'.mat'),
         equil = equil_EFIT_jd(filename,1,2,-1);       
     else
-        flag = 0;
+        flag1 = 0;
+        flag2 = 0;
+        type = 0;
         %
         if strcmp(fileext,'efit') == 0,
             unix(['cp ',filename,fileext,' ',filename,'.efit']);
-            filein_tmp = [filename,'.efit']; 
-            flag = 1;
+            filein_tmp1 = [filename,'.efit']; 
+            flag1 = 1;
         end
         %
-        equil = equil_EFIT_jd(filename,0,2,-1);
+        if exist([filename,'_kinetic_profiles.mat'],'file')
+            type = 1.5;
+            flag2 = 1;
+            unix(['cp ',filename,'_kinetic_profiles.mat',' ',filename,'.prof']);
+            filein_tmp2 = [filename,'.prof'];   
+        end
         %
-        if flag,unix(['rm -f ',filein_tmp]);end
+        equil = equil_EFIT_jd(filename,type,2,-1);%
+        %
+        if flag1,unix(['rm -f ',filein_tmp1]);end
+        if flag2,unix(['rm -f ',filein_tmp2]);end
     end
     %
 elseif strcmp(equilformat,'ACCOME'),
