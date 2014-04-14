@@ -72,6 +72,18 @@ elseif type == 1.4 ,%.mat, EAST profiles
     zmi = [1,2,3,Aimp];
     fi = [frac_H frac_D,0];
     %
+elseif type == 1.5 ,%.mat, DEMO profile (Artaud)
+    %
+    load(filename,'-mat');%prof data save in equil_prof structure  
+    %
+    pspsin = (equil_prof.psi - equil_prof.psi(1))/(equil_prof.psi(end) - equil_prof.psi(1));
+    pTe = equil_prof.pTe/1000;%keV
+    pne = equil_prof.pne;
+    pzTi = equil_prof.pzTi/1000;%keV
+    pzni = equil_prof.pzni;
+    zZi = equil_prof.zZi;
+    zmi = equil_prof.zmi;
+    %
 elseif type == 2,%ascii - 203040
     [prho,pTi,pTe,pni,pne] = textread(filename,'%n%n%n%n%n');
 elseif type == 3,%ascii formatted (CMOD)
@@ -296,7 +308,7 @@ elseif type == 7,%ascii formatted (ASCOT)
     nion = length(zZi);
 end
 %
-if type == -2 || (type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4),
+if type == -2 || (type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4 && type ~= 1.5),
     %
     zZi = [1,1,1,6];
     zmi = [1,2,3,12];
