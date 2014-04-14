@@ -85,8 +85,8 @@ end
     Bz,dBzdtheta,d2Bzdtheta2,dBzdrho,d2Bzdthetadrho,...
     BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho,...
     gradrho,dgradrhodtheta,dgradrhodrho,...
-    Upsilon,dUpsilondrho,dUpsilondtheta] = equilval_yp(equil_fit,rho,theta,1);
-
+    Upsilon,dUpsilondrho,dUpsilondtheta,...
+    psin,dpsindrho,dxstardpsin,ddxstardpsindrho] = equilval_yp(equil_fit,rho,theta,1);
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha,kB] = pc_dke_yp;
 %
@@ -95,13 +95,15 @@ if isfield(equil,'eqdsk')
     equil.eqdsk.gradpkinsgradrho = gradient(equil.eqdsk.pp)./gradient(equil.eqdsk.prho);
 end
 %
+jparz_fsav = zeros(prho,1);
+jparz_ohm_fsav = zeros(prho,1);
+jperpz_fsav = zeros(prho,1);
+%
 Ip = 0;
 Ip_ohm = 0;
-Surf = 0;
 %
-jparz_fsav = zeros(prho,1);
 S = zeros(prho,1);
-jparz_ohm_fsav = zeros(prho,1);
+Surf = 0;
 %
 if ~isempty(zni) && ~isempty(zTi) && ~isempty(Te) && ~isempty(ne')
     pthermal_ion = sum(zTi.*zni,2);
@@ -116,9 +118,9 @@ else
     gradpthermalsgradrho = NaN;
 end   
 %
-a1 = drdrho.*BP./calpha + r.*dBPdrho./calpha - r.*BP.*dcalphadrho./calpha./calpha;
-a2 = dsalphadtheta./Upsilon./calpha - salpha.*dcalphadtheta./Upsilon./calpha./calpha - salpha.*dUpsilondtheta./calpha./Upsilon./Upsilon;
-a4 = dUpsilondrho.*Bz + Upsilon.*dBzdrho;
+a1 = drdrho.*BP./calpha + r.*dBPdrho./calpha - r.*BP.*dcalphadrho./calpha./calpha;%d(rBp/cosalpha)/drho
+a2 = dsalphadtheta./Upsilon./calpha - salpha.*dcalphadtheta./Upsilon./calpha./calpha - salpha.*dUpsilondtheta./calpha./Upsilon./Upsilon;%d(sinalpha/Upsilon/cosalpha)/dtheta
+a4 = dUpsilondrho.*Bz + Upsilon.*dBzdrho;%d(Upsilon*Bt)/drho
 %
 b1 = -a1.*BP.*calpha./r;
 b2 = a2.*BP.*BP.*Upsilon.*calpha./r./gradrho;
@@ -128,60 +130,83 @@ c1 = a1.*Bz.*gradrho.*calpha./r./B;
 c2 = -a2.*BP.*Upsilon.*calpha.*Bz./r./B;  
 c4 =  -a4.*BP.*gradrho./Upsilon./B;
 %
+d1 = a1.*gradrho.*calpha./r;
+d2 = -a2.*BP.*Upsilon.*calpha./r;
+%
+e1 = a1.*BP.*BP.*gradrho.*calpha./r./B./B;
+e2 = -a2.*BP.*BP.*BP.*Upsilon.*calpha./r./B./B;
+e4 = a4.*BP.*Bz.*gradrho./Upsilon./B./B;
+%
 gradpmagsgradrho = (b1 + b2 + b4)./mu0;
+%
+jz = (d1 + d2)./mu0;
 %
 jpar = (c1 + c2 + c4)./mu0;
 jparz = jpar.*Bz./B;
 %
-jparz_fsav = sum(jparz.*r./Upsilon./BP./calpha.*dtheta,2);
+jperpz = (e1 + e2 + e4)./mu0;
+%
 S = sum(r./Upsilon./BP./calpha.*dtheta,2);
-%
-Ip = sum(sum(jparz.*r.*dtheta*drho./gradrho./calpha));
-Ip_fsav = sum(jparz_fsav.*S);
-%
 Surf = sum(sum(abs(r./gradrho./calpha)*dtheta*drho));
 %
-if isfield(equil,'eqdsk')
-    gradpkinsgradrho = equil.eqdsk.gradpkinsgradrho;
-else
-    gradpkinsgradrho = [];
-end
+jz_fsav = sum(jz.*r./Upsilon./BP./calpha.*dtheta,2)./S;
+jparz_fsav = sum(jparz.*r./Upsilon./BP./calpha.*dtheta,2)./S;
+jperpz_fsav = sum(jperpz.*r./Upsilon./BP./calpha.*dtheta,2)./S;
 %
-jparz_fsav = jparz_fsav./S;
+Ip_z = sum(sum(jz.*r.*dtheta*drho./gradrho./calpha));
+Ip_z_fsav = abs(equil.psi_apRp(end))*sum(jz_fsav.*S./dxstardpsin(:)*drho);
 %
-%keyboard
+Ip_parperpz = sum(sum((jparz + jperpz).*r.*dtheta*drho./gradrho./calpha));
+Ip_parperpz_fsav = abs(equil.psi_apRp(end))*sum((jparz_fsav + jperpz_fsav).*S./dxstardpsin(:)*drho);
+%
+F = Bz.*(x + equil.Rp);%
+dFdpsi = (dBzdrho.*(x + equil.Rp) + Bz.*dxdrho)./(dpsindrho(:)*ones(1,mtheta))/(equil.psi_apRp(end)*equil.Rp/equil.ptx(end,1));%
+%
 if isfield(equil,'eqdsk')
     %
-	%jparz_eqdsk = 
-%jparz_eqdsk_fsav = jparz_eqdsk./Bz./B.
-
-
-%Ip_eqdsk_fsav = 
-
+    gradpkinsgradrho = equil.eqdsk.gradpkinsgradrho;
+    %*******************************************
+    keyboard
+    pF_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pF,rho)'*ones(1,length(theta));%to be checked
+    pdFdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pdFdpsi,rho)'*ones(1,length(theta));%to be checked
+    %pdpdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pdpdpsi,rho)'*ones(1,length(theta));%to be checked
+    %   
+    jz_eqdsk = -Upsilon.*pdpdpsi_eqdsk - mu0*pdFdpsi_eqdsk.*pF_eqdsk./Upsilon;%to be checked
+    jpar_eqdsk = pdFdpsi_eqdsk.*B - mu0.*pF_eqdsk.*pdpdpsi_eqdsk.*B;%to be checked
+    %********************************************
+    if isfield( equil.eqdsk,'Ip'),
+        Ip_eqdsk = equil.eqdsk.Ip;
+    end
+else
+    gradpkinsgradrho = [];
+    jphi_eqdsk = [];
+    Ip_eqdsk = [];
 end
 %
 for j = 1:6,
-    jparz_fsav_cyl(:,j) = j*Ip*(1 - rho(:).^2).^(j-1)/pi/equil_fit.ap/equil_fit.ap/1e6;
+    jparz_fsav_cyl(:,j) = j*abs(Ip_z)*(1 - rho(:).^2).^(j-1)/pi/equil_fit.ap/equil_fit.ap/1e6;
 end
 %
 Surf_cyl = pi*equil_fit.ap*equil_fit.ap;
 %
-if ~isempty(zni) && ~isempty(zTi) && ~isempty(Te) && ~isempty(ne')
+if ~isempty(zni) && ~isempty(zTi) && ~isempty(Te) && ~isempty(ne),
     jparz_ohm = (Te*ones(1,mtheta)).^1.5;
-    jparz_ohm_fsav = sum(jparz_ohm.*r./Upsilon.*Bz./B./BP./calpha.*dtheta,2);
-    Ip_ohm = sum(sum(jparz_ohm.*r.*dtheta.*drho./gradrho./calpha));
+    Ip_parz_ohm= sum(sum(jparz_ohm.*r.*dtheta*drho./gradrho./calpha));
     %
-    jparz_ohm_fsav = abs(jparz_ohm_fsav*Ip/Ip_ohm./S).*sign(jparz_fsav);
+    jparz_ohm_fsav = sum(jparz_ohm.*r./Upsilon./BP./calpha.*dtheta,2)./S;
+    Ip_parz_ohm_fsav = abs(equil.psi_apRp(end))*sum(jparz_ohm_fsav.*S./dxstardpsin(:)*drho);
+    %
+    jparz_ohm_fsav = abs(jparz_ohm_fsav*Ip_parperpz_fsav/Ip_parz_ohm_fsav./S).*sign(jparz_fsav);
 else
     jparz_ohm = NaN;
     jparz_ohm_fsav = NaN;
-    Ip_ohm = NaN;
-    %
-    jparz_ohm_fsav = NaN;
+    Ip_parz_ohm_fsav = NaN;
 end
 %
 L = sum(r(end,:).*dtheta./calpha(end,:));
 LB = sum(r(end,:).*dtheta.*BP(end,:)./calpha(end,:));
+%
+Ip_contour = LB/mu0;
 %
 VB2 = sum(sum(r.*Upsilon.*drho.*dtheta.*BP.*BP./gradrho./calpha));
 V = sum(sum(r.*Upsilon.*drho.*dtheta./gradrho./calpha));
@@ -190,15 +215,23 @@ li = L*L*VB2/LB/LB/V;
 %
 [pshift,pelong,ptrian,pli] = equilmoments_jd(equil.theta,equil.ptx,equil.pty,mtheta);
 %
-disp(['Plasma current, Ip = ',num2str(Ip/1e6),' (MA)']);
+disp(['Plasma current, Ip(from j_z) = ',num2str(Ip_z/1e6),' (MA)']);
+disp(['Plasma current, Ip(from j_z_fsav) = ',num2str(Ip_z_fsav/1e6),' (MA)']);
+disp(['Plasma current, Ip(from j_par_z + j_perp_z) = ',num2str(Ip_parperpz/1e6),' (MA)']);
+disp(['Plasma current, Ip(from j_par_z_fsav + j_perp_z_fsav) = ',num2str(Ip_parperpz_fsav/1e6),' (MA)']);
+disp(['Plasma current, Ip(from contour) = ',num2str(Ip_contour/1e6),' (MA)']);
+if ~isempty(Ip_eqdsk),
+    disp(['Plasma current, Ip(eqdsk) = ',num2str(Ip_eqdsk/1e6),' (MA)']);
+end
+disp('-------------------------------------------------------------')
 disp(['Normalized internal inductance, li = ',num2str(li)]);
+disp('-------------------------------------------------------------')
 disp(['Shafranov shift = ',num2str(pshift(end))]);
 disp(['Plasma elongation = ',num2str(pelong(end))]);
 disp(['Plasma triangularity = ',num2str(ptrian(end))]);
 %
 if display_mode,
     %
-    %keyboard
     figure('Name','Pressure gradient'),clf
     if isfield(equil,'eqdsk')
         if ~isnan(jparz_ohm_fsav),
@@ -231,14 +264,41 @@ if display_mode,
     end
     print_jd(2,['Pressure_gradient_',equil.id]);
     %
-    figure('Name','Current density'),clf
+    figure('Name','Axial current density'),clf
+    [ax] = graph1D_jd(rho,jz/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','r',2);drawnow
+    [ax] = graph1D_jd(rho,jz_fsav/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],NaN,NaN,NaN,'-','none','b',1);drawnow
+    if isfield(equil,'eqdsk'),
+        %[ax] = graph1D_jd(equil.eqdsk.prho,jz_eqdsk/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','g',2);drawnow
+    end
+    %
+    leg = {'j_{z}','<j_{z}>','<j_{z}>_{(eqdsk)}','Location','NorthEast'};
+    axf = axis(ax);
+    text(0.1,axf(3)+(axf(4)-axf(3))/10, ['I_p = ',num2str(Ip_z/1e6),' (MA)'], 'Color', 'b','FontSize',18);
+    text(0.1,axf(3)+2*(axf(4)-axf(3))/10, ['l_i = ',num2str(li),], 'Color', 'b','FontSize',18);
+    print_jd(2,['Axial_current_density_',equil.id]);
+    %
+    figure('Name','Axial component of the parallel current density'),clf
     [ax] = graph1D_jd(rho,jparz/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','r',2);drawnow
     [ax] = graph1D_jd(rho,jparz_fsav/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],NaN,NaN,NaN,'-','none','b',1);drawnow
+    if isfield(equil,'eqdsk'),
+        %[ax] = graph1D_jd(equil.eqdsk.prho,jparz_eqdsk/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','g',2);drawnow
+    end
+    %
     leg = {'j_{||z}','<j_{||z}>','Location','NorthEast'};
     axf = axis(ax);
-    text(0.1,axf(3)+(axf(4)-axf(3))/10, ['I_p = ',num2str(Ip/1e6),' (MA)'], 'Color', 'b','FontSize',18);
+    text(0.1,axf(3)+(axf(4)-axf(3))/10, ['I_p = ',num2str(Ip_parperpz/1e6),' (MA)'], 'Color', 'b','FontSize',18);
     text(0.1,axf(3)+2*(axf(4)-axf(3))/10, ['l_i = ',num2str(li),], 'Color', 'b','FontSize',18);
-    print_jd(2,['Current_density_',equil.id]);
+    print_jd(2,['Parallel_z_current_density_',equil.id]);
+    %
+    figure('Name','Axial component of the perpendicular current density'),clf
+    [ax] = graph1D_jd(rho,jperpz/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','r',2);drawnow
+    [ax] = graph1D_jd(rho,jperpz_fsav/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],NaN,NaN,NaN,'-','none','b',1);drawnow
+    %
+    leg = {'j_{perpz}','<j_{perpz}>','Location','NorthEast'};
+    axf = axis(ax);
+    text(0.1,axf(3)+(axf(4)-axf(3))/10, ['I_p = ',num2str(Ip_parperpz/1e6),' (MA)'], 'Color', 'b','FontSize',18);
+    text(0.1,axf(3)+2*(axf(4)-axf(3))/10, ['l_i = ',num2str(li),], 'Color', 'b','FontSize',18);
+    print_jd(2,['Perpendicular_z_current_density_',equil.id]);
     %
     if isfield(equil,'eqdsk'),
         equilDKE = equilibrium_jd(equil,equil.eqdsk.psin,0,'spline');
@@ -254,30 +314,59 @@ if display_mode,
             [ax] = graph1D_jd(equil.eqdsk.prho(2:end),xq*equilDKE.ap/equilDKE.Rp,0,0,'\rho','q(\rho)',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','b',1);drawnow
         end
         axf = axis(ax);
-        text(0.1,axf(3)+9*(axf(4)-axf(3))/10, ['I_p = ',num2str(Ip/1e6),' (MA)'], 'Color', 'b','FontSize',18);
+        text(0.1,axf(3)+9*(axf(4)-axf(3))/10, ['I_p = ',num2str(Ip_z/1e6),' (MA)'], 'Color', 'b','FontSize',18);
         text(0.1,axf(3)+8*(axf(4)-axf(3))/10, ['l_i = ',num2str(li),], 'Color', 'b','FontSize',18);  
-        print_jd(2,['Safety factor_',equil.id]);
+        print_jd(2,['Safety_factor_',equil.id]);
+        %
+        figure('Name','Current flux function'),clf
+        leg = {'Magnetic','EQDSK','Location','NorthEast'};
+        %
+        if ~isinf(equilDKE.Rp),
+            [ax] = graph1D_jd(rho,pF_eqdsk,0,0,'\rho','q(\rho)',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+            [ax] = graph1D_jd(rho,F,0,0,'\rho','F(\psi)',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','b',1);drawnow
+        end
+        axf = axis(ax);
+        text(0.1,axf(3)+9*(axf(4)-axf(3))/10, ['I_p = ',num2str(Ip_z/1e6),' (MA)'], 'Color', 'b','FontSize',18);
+        text(0.1,axf(3)+8*(axf(4)-axf(3))/10, ['l_i = ',num2str(li),], 'Color', 'b','FontSize',18);  
+        print_jd(2,['Current_flux_function_',equil.id]);
+        %
+        figure('Name','Flux derivative of the current flux function'),clf
+        leg = {'Magnetic','EQDSK','Location','NorthEast'};
+        %
+        if ~isinf(equilDKE.Rp),
+            [ax] = graph1D_jd(rho,pdFdpsi_eqdsk,0,0,'\rho','q(\rho)',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+            [ax] = graph1D_jd(rho,dFdpsi,0,0,'\rho','F(\psi)',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','b',1);drawnow
+        end
+        axf = axis(ax);
+        text(0.1,axf(3)+9*(axf(4)-axf(3))/10, ['I_p = ',num2str(Ip_z/1e6),' (MA)'], 'Color', 'b','FontSize',18);
+        text(0.1,axf(3)+8*(axf(4)-axf(3))/10, ['l_i = ',num2str(li),], 'Color', 'b','FontSize',18);  
+        print_jd(2,['Flux_derivative _urrent_flux_function_',equil.id]);
+        %
+
     end
     %
-    figure('Name','Current density and li'),clf
-    leg = {['<j_{||z}>, l_i=',num2str(li)],'<j_{||z (\Omega)}>','Location','NorthEast'};
-    [ax] = graph1D_jd(rho,jparz_fsav/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],NaN,NaN,NaN,'-','none','b',2);drawnow
     if ~isnan(jparz_ohm_fsav),
-        [ax] = graph1D_jd(rho,jparz_ohm_fsav/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],leg,NaN,NaN,'-','none','g',1);drawnow
+        %
+        figure('Name','Current density and li'),clf 
+        [ax] = graph1D_jd(rho,jparz_fsav/1e6/max(abs(jparz_fsav/1e6)),0,0,'\rho','j_{||z}/max(j_{||z})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],NaN,NaN,NaN,'-','none','b',2);drawnow
+        [ax] = graph1D_jd(rho,jparz_ohm_fsav/1e6,0,0,'\rho','j_{||z}/max(j_{||z})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],leg,NaN,NaN,'-','none','g',1);drawnow
+        %       
+        leg = {['<j_{||z}>, l_i=',num2str(li)],'<j_{||z}>_{Ohm}','Location','NorthEast'};
+        %
+        for j = 1:6,
+            [ax] = graph1D_jd(rho,jparz_fsav_cyl(:,j)/max(abs(jparz_fsav_cyl(:,j))),0,0,'\rho','j_{||z}/max(j_{||z})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],leg,NaN,NaN,'--','none','r',1);drawnow
+        end
+        %
+        text(0.02,0.52, '<j_{||z}>_{circ.} ~ (1-\rho^2)^n', 'Color', 'r','FontSize',18);
+        text(0.02,0.44, ['n = 5, l_i = ',num2str(1.80)], 'Color', 'r','FontSize',18);
+        text(0.02,0.36, ['n = 4, l_i = ',num2str(1.67)], 'Color', 'r','FontSize',18);
+        text(0.02,0.28, ['n = 3, l_i = ',num2str(1.45)], 'Color', 'r','FontSize',18);
+        text(0.02,0.20, ['n = 2, l_i = ',num2str(1.21)], 'Color', 'r','FontSize',18);
+        text(0.02,0.12, ['n = 1, l_i = ',num2str(0.91)], 'Color', 'r','FontSize',18);
+        text(0.02,0.04, ['n = 0, l_i = ',num2str(0.5)], 'Color', 'r','FontSize',18);
+        %
+        print_jd(2,['Current_density_li_',equil.id]);
     end
-    for j = 1:6,
-        [ax] = graph1D_jd(rho,abs(jparz_fsav_cyl(:,j)),0,0,'\rho','<j_{||z}> (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],leg,NaN,NaN,'--','none','r',1);drawnow
-    end
-    %
-    irho = max(find(rho <= 0.2));
-    text(rho(irho),abs(jparz_fsav_cyl(irho,1)), ['n = 0, l_i = ',num2str(0.5*Surf/Surf_cyl)], 'Color', 'r','FontSize',18);
-    text(rho(irho),abs(jparz_fsav_cyl(irho,2)), ['n = 1, l_i = ',num2str(0.91*Surf/Surf_cyl)], 'Color', 'r','FontSize',18);
-    text(rho(irho),abs(jparz_fsav_cyl(irho,3)), ['n = 2, l_i = ',num2str(1.21*Surf/Surf_cyl)], 'Color', 'r','FontSize',18);
-    text(rho(irho),abs(jparz_fsav_cyl(irho,4)), ['n = 3, l_i = ',num2str(1.45*Surf/Surf_cyl)], 'Color', 'r','FontSize',18);
-    text(rho(irho),abs(jparz_fsav_cyl(irho,5)), ['n = 4, l_i = ',num2str(1.67*Surf/Surf_cyl)], 'Color', 'r','FontSize',18);
-    text(rho(irho),abs(jparz_fsav_cyl(irho,6)), ['n = 5, l_i = ',num2str(1.80*Surf/Surf_cyl)], 'Color', 'r','FontSize',18);
-    %
-    print_jd(2,['Current_density_li_',equil.id]);
     %
     disp(['Normalized surface Sn = ',num2str(Surf/Surf_cyl)])
     %
