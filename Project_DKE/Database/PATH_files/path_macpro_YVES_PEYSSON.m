@@ -91,8 +91,6 @@ dkepath.yvespeysson(1).remote(4).remoteid = 'ASIPP_SHENMA';
 dkepath.yvespeysson(1).remote(4).schedulername = 'torque';
 dkepath.yvespeysson(1).remote(4).profilename = 'yves';
 dkepath.yvespeysson(1).remote(4).luke_root = '/home/PEYSSON/LUKE/';
-dkepath.yvespeysson(1).remote(4).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
-dkepath.yvespeysson(1).remote(4).cvs.cmd = ['update -d ',dkepath.yvespeysson(1).remote(4).luke_root];%CVS command
 %
 dkepath.yvespeysson(1).remote(5).remoteid = 'CEA_ANDROMEDE';
 dkepath.yvespeysson(1).remote(5).schedulername = 'pbs';
@@ -103,6 +101,11 @@ dkepath.yvespeysson(1).remote(6).remoteid = 'EFDA_ITM';
 dkepath.yvespeysson(1).remote(6).schedulername = 'sge';
 dkepath.yvespeysson(1).remote(6).profilename = 'yvesp';
 dkepath.yvespeysson(1).remote(6).luke_root = '/pfs/home/yvesp/public/LUKE/';
+%
+dkepath.yvespeysson(1).remote(7).remoteid = 'SWIP_CLUSTER02';
+dkepath.yvespeysson(1).remote(7).schedulername = 'torque';
+dkepath.yvespeysson(1).remote(7).profilename = 'Yves';
+dkepath.yvespeysson(1).remote(7).luke_root = '/home/Yves/LUKE/';
 %
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 2, Joan Decker  ------------------------------------
@@ -120,9 +123,10 @@ dkepath.yvespeysson(2).remote(4).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 dkepath.yvespeysson(2).remote(5).profilename = 'JD211098';
 dkepath.yvespeysson(2).remote(5).luke_root = '/home/JD211098/LUKE/';
 %
-%
 dkepath.yvespeysson(2).remote(6).remoteid = 'EFDA_ITM';
 dkepath.yvespeysson(2).remote(6).schedulername = 'sge';
 dkepath.yvespeysson(2).remote(6).profilename = 'yvesp';
 dkepath.yvespeysson(2).remote(6).luke_root = '/pfs/home/yvesp/public/LUKE/';
 %
+dkepath.yvespeysson(2).remote(7).profilename = 'joan';
+dkepath.yvespeysson(2).remote(7).luke_root = '/home/Yves/joandecker/LUKE/';

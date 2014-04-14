@@ -130,5 +130,15 @@ dkepath.yves(1).remote(12) = dkepath.yves(1).remote(11);
 dkepath.yves(1).remote(12).schedulername = 'direct';
 dkepath.yves(1).remote(12).cvsupdate = true;% update done in 'direct' mode
 %
-
+dkepath.yves(1).remote(13).remoteid = 'SWIP_CLUSTER02';
+dkepath.yves(1).remote(13).schedulername = 'torque';
+dkepath.yves(1).remote(13).profilename = 'yves';
+dkepath.yves(1).remote(13).luke_root = '/home/Yves/LUKE/';
+dkepath.yves(1).remote(13).link_mode = [];
+dkepath.yves(1).remote(13).cvsupdate = false;% update done in 'direct' mode
+%
+dkepath.yves(1).remote(14) = dkepath.yves(1).remote(13);
+dkepath.yves(1).remote(14).schedulername = 'direct';
+dkepath.yves(1).remote(14).cvsupdate = true;% update done in 'direct' mode
+%
 
