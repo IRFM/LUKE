@@ -164,7 +164,9 @@ equil_magnetic.eqdsk.Rv = Rv;
 equil_magnetic.eqdsk.Zv = Zv;  
 equil_magnetic.eqdsk.Bv = Bv;  
 equil_magnetic.eqdsk.pdFdpsi = pdFdpsi;  
-equil_magnetic.eqdsk.pdpdpsi = pdpdpsi;  
+equil_magnetic.eqdsk.pdpdpsi = pdpdpsi;
+%
+equil.eqdsk = equil_magnetic.eqdsk;
 %
 %
 eval(['save EQUIL_',savename,' equil'])
