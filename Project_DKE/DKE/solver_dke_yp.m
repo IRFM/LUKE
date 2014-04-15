@@ -224,6 +224,13 @@ spparms('default');%Set parameters for sparse matrix ordering algorithms and dir
 spparms('supernd',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
 spparms('rreduce',4);%Set parameters for sparse matrix ordering algorithms and direct linear equation solver MatLab build-in functions only
 %
+if isempty(which('initmumps')),
+    dkeparam.invproc = 1;%MatLab CGS iterative matrix inversion method enforced
+    disp('**************************************************************************************************************');
+    disp('WARNING: MUMPS solver called but not installed for LUKE. MatLab CGS iterative matrix inversion method enforced');
+    disp('**************************************************************************************************************');
+end
+%
 %************************************************** Simulation parameter display ******************************************************** 
 %
 if display_mode >=1,
