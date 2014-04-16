@@ -237,8 +237,8 @@ switch struct
             case 'yphi_L_deg',expert = 0;values = [-180;180];info = 'Ray initial toroidal position (in deg.)';
             case 'yalpha_L',expert = 0;values = [-pi;pi];info = 'Ray initial toroidal angle (with resp. to R) (in rad.)';
             case 'yalpha_L_deg',expert = 0;values = [-180;180];info = 'Ray initial toroidal angle (with resp. to R) (in deg.)';
-            case 'ybeta_L',expert = 0;values = [-pi/2;pi/2];info = 'Ray initial poloidal angle (with resp. to Z) (in rad.)';
-            case 'ybeta_L_deg',expert = 0;values = [-90;90];info = 'Ray initial poloidal angle (with resp. to Z) (in deg.)';
+            case 'ybeta_L',expert = 0;values = [0;pi];info = 'Ray initial poloidal angle (with resp. to Z) (in rad.)';
+            case 'ybeta_L_deg',expert = 0;values = [0;180];info = 'Ray initial poloidal angle (with resp. to Z) (in deg.)';
             case 'w0',expert = 1;values = [0;Inf];info = 'Beam waist (m)';
             case 'z_L',expert = 1;values = [-Inf;Inf];info = 'Distance from last mirror to focal point (m)';            
             case 'dNpar0',expert = 1;values = [0;Inf];info = 'Beam dNpar : (0) minimal, (0->Inf) specify, (NaN) calculate from beam size';
