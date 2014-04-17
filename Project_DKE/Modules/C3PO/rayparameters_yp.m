@@ -129,7 +129,7 @@ end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
-Npar = clum*(krho.*krho.*gradrho.*gradrho.*Brho./B + m.*(calpha.*Bs./B - salpha.*Brho./B)./r + kz.*Bz./Upsilon./B)./omega;
+Npar = clum*(krho.*gradrho.*Brho./B + m.*(calpha.*Bs./B - salpha.*Brho./B)./r + kz.*Bz./Upsilon./B)./omega;
 Nperp = sqrt(clum*clum*(krho.*krho.*gradrho.*gradrho - 2*krho.*m.*gradrho.*salpha./r + (m./r).^2 + (kz./Upsilon).^2)./omega./omega - Npar.^2);
 %
 D = zeros(length(rho),1);
