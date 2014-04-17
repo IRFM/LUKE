@@ -17,7 +17,7 @@ function rayinit = main_rayinit_launch_jd(equil,launch)
 %       - ry0: vertical launching positions [m_pol,1]
 %
 %       - m0: initial poloidal mode number
-%       - kz0: initial axial wabe vector
+%       - kz0: initial axial wave vector
 %       - z0: initial axial position
 %       - i_ref: Initial radial position index
 %       - LFS: (-1) high field side launching, (1) low field side launching
