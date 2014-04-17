@@ -136,6 +136,7 @@ struct rayparam {
     double *pperpmax;
     double *tau_lim;
     double *kextra;
+    double *rhomin;
 };
 
 struct equilparam {
@@ -1034,7 +1035,29 @@ Update the solution only if the error is acceptable
                
             S2 = S1 + h*Sdot;
             
+            /* mexPrintf("t2,rho2,theta2,z2,krho2,m2,kz2:%g,%g,%g,%g,%g,%g,%g\n",t2,rho2,theta2,z2,krho2,m2,kz2);*/
+
+            if (rho2 < rayparam.rhomin[0]) { /* The ray is stopped when too close to the magnetic axis */
+                mexPrintf("The distance of the ray to the magnetic axis (rho = %g) is less than the minimal distance (rho_min = %g)\n",rho2,rayparam.rhomin[0]);                
+                flag1 = 3;
+                
+                k++;
             
+                tempt[k] = t2;
+                temp0[k] = rho2;
+                temp1[k] = theta2;
+                temp2[k] = z2;
+                temp3[k] = krho2;
+                temp4[k] = m2;
+                temp5[k] = kz2;
+                temp6[k] = omega2;
+                temp7[k] = S2;
+                
+                k++;
+                
+                goto Endloop;  
+            }   
+
             if (rho2 > 1.0) {/* Wave reflexion at rho = 1  */ 
                 if (rayparam.reflection[0] >=1.0) {/* The reflection is always enforced */
                     mexPrintf("********************************** Wave reflection is enforced at rho = %g**********************************\n",rho1);
@@ -1105,6 +1128,9 @@ Update the step size
            }
            if (flag1 == 2) {
                mexPrintf("WARNING: the code has reached a stationary point. Exit forced at %i steps.\n",iimax);
+           }
+           if (flag1 == 3) {
+               mexPrintf("WARNING: The distance of the ray to the magnetic axis is less than the minimal distance. Exit enforced.\n",delta);
            }
            goto Endloop;
         }

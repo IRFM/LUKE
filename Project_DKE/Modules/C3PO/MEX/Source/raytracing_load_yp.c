@@ -108,6 +108,7 @@ struct rayparam {
     double *pperpmax;
     double *tau_lim;
     double *kextra;
+    double *rhomin;
 };
 
 struct equilparam {
@@ -215,6 +216,7 @@ mxArray *structure_name;
     data.pperpmax = mxGetData(mxGetField(structure_name, 0, "pperpmax")); 
     data.tau_lim = mxGetData(mxGetField(structure_name, 0, "tau_lim")); 
     data.kextra = mxGetData(mxGetField(structure_name, 0, "kextra"));
+    data.rhomin = mxGetData(mxGetField(structure_name, 0, "rhomin"));
     
     return(data);
 }

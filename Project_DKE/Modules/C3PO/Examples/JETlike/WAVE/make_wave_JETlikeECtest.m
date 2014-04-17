@@ -40,6 +40,8 @@ P_L = 1e-6;% [MW]
 alpha_L = 165;% With respect to R axis
 beta_L = 90;% With respect to Z axis
 %
+rhomin = 0.2;
+%
 dNpar0 = 0.05;%spectral width
 ns = 1000;%discrtization parameter for free space propagation
 method = 'linear';%interpolation method for ray separatrix crossing
@@ -103,6 +105,7 @@ rayparam.nperp = 1000;%number of points in pperp integration for damping calcula
 rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
 rayparam.kextra = 50;
+rayparam.rhomin = rhomin;
 %
 % launch structure
 %
