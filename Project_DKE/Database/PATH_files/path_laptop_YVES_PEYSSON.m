@@ -34,7 +34,7 @@ dkepath.yves(1).mex801 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbook
 %
 dkepath.yves(1).compiler_opt.copts = '';
 dkepath.yves(1).compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
-%dkepath.yves(1).compiler_opt.helmex.mex801 = ' -llapack -lblas';%-O2 -fdefault-real-8 -fdefault-double-8 -lgfortran';%'  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yves(1).compiler_opt.helmex.mex801 = NaN;%' -llapack -lblas';%-O2 -fdefault-real-8 -fdefault-double-8 -lgfortran';%'  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 %
 % MUMPS matrix solver (parallel, sequential, mex)
 %
@@ -82,6 +82,7 @@ dkepath.yves(1).remote(2).schedulername = 'xgrid';
 dkepath.yves(1).remote(3) = dkepath.yves(1).remote(1);
 dkepath.yves(1).remote(3).schedulername = 'direct';
 dkepath.yves(1).remote(3).cvsupdate = true;
+dkepath.yves(1).remote(3).cvsrights = 'chmod -R a+rx ./';
 %
 dkepath.yves(1).remote(4).remoteid = 'macpro_YVES_PEYSSON';
 dkepath.yves(1).remote(4).schedulername = 'condor';
@@ -96,6 +97,7 @@ dkepath.yves(1).remote(5).schedulername = 'xgrid';
 dkepath.yves(1).remote(6) = dkepath.yves(1).remote(4);
 dkepath.yves(1).remote(6).schedulername = 'direct';
 dkepath.yves(1).remote(6).cvsupdate = true;% update done in 'direct' mode
+dkepath.yves(1).remote(6).cvsrights = 'chmod -R a+rx ./';
 %
 dkepath.yves(1).remote(7).remoteid = 'CEA_ANDROMEDE';
 dkepath.yves(1).remote(7).schedulername = 'pbs';
@@ -107,6 +109,7 @@ dkepath.yves(1).remote(7).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(8) = dkepath.yves(1).remote(7);
 dkepath.yves(1).remote(8).schedulername = 'direct';
 dkepath.yves(1).remote(8).cvsupdate = true;% update done in 'direct' mode
+dkepath.yves(1).remote(8).cvsrights = 'chmod -R a+rx ./';
 %
 dkepath.yves(1).remote(9).remoteid = 'EFDA_ITM';
 dkepath.yves(1).remote(9).schedulername = 'sge';
@@ -118,6 +121,7 @@ dkepath.yves(1).remote(9).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(10) = dkepath.yves(1).remote(9);
 dkepath.yves(1).remote(10).schedulername = 'direct';
 dkepath.yves(1).remote(10).cvsupdate = true;% update done in 'direct' mode
+dkepath.yves(1).remote(10).cvsrights = 'chmod -R a+rx ./';
 %
 dkepath.yves(1).remote(11).remoteid = 'ASIPP_SHENMA';
 dkepath.yves(1).remote(11).schedulername = 'torque';
@@ -129,6 +133,7 @@ dkepath.yves(1).remote(11).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(12) = dkepath.yves(1).remote(11);
 dkepath.yves(1).remote(12).schedulername = 'direct';
 dkepath.yves(1).remote(12).cvsupdate = true;% update done in 'direct' mode
+dkepath.yves(1).remote(12).cvsrights = 'chmod -R a+rx ./';
 %
 dkepath.yves(1).remote(13).remoteid = 'SWIP_CLUSTER02';
 dkepath.yves(1).remote(13).schedulername = 'torque';
@@ -140,5 +145,6 @@ dkepath.yves(1).remote(13).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(14) = dkepath.yves(1).remote(13);
 dkepath.yves(1).remote(14).schedulername = 'direct';
 dkepath.yves(1).remote(14).cvsupdate = true;% update done in 'direct' mode
+dkepath.yves(1).remote(14).cvsrights = 'chmod -R a+rx ./';
 %
 
