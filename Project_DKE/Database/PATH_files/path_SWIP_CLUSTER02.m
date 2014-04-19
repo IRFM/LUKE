@@ -40,9 +40,9 @@ dkepath.Yves(1).MUMPS.mex714 = [dkepath.Yves(1).local_root,'MUMPS_4.10.0/MATLAB7
 %
 % LUKE documentation
 %
-%dkepath.Yves(1).graphviz.env = '/usr/bin/';% Graphviz environment variable
+dkepath.Yves(1).graphviz.env = '/usr/bin/';%Graphviz environment variable
 %dkepath.Yves(1).latex.env = '/usr/bin/';% Latex environment variable
-%dkepath.Yves(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+dkepath.Yves(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
