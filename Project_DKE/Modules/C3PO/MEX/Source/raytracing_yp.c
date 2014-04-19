@@ -1007,7 +1007,7 @@ Estimate the error and the acceptable error
 Update the solution only if the error is acceptable
 */    
         
-/* mexPrintf("t1,delta,ymax,h,rho1,theta1,z1,krho1,m1,kz1:%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",t1,delta,ymax,h,rho1,theta1,z1,krho1,m1,kz1); */
+ /*mexPrintf("k,kmax,t1,delta,ymax,h,rho1,theta1,z1,krho1,m1,kz1:%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n",k,kmax,t1,delta,ymax,h,rho1,theta1,z1,krho1,m1,kz1);*/
         
  
         if (delta <= tau) {
