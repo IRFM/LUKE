@@ -61,9 +61,9 @@ dkepath.yves(1).TSBASE.mex = [dkepath.yves(1).luke_root,'Project_DKE/Database/EX
 %
 % LUKE documentation
 %
-dkepath.yves(1).graphviz.env = '/usr/local/bin/';% Graphviz environment variable
-dkepath.yves(1).latex.env = '/usr/texbin/';% Latex environment variable
-dkepath.yves(1).imagemagick.env = '/usr/local/bin/';% ImageMagick environment variable
+dkepath.yves(1).graphviz.env = '/usr/local/bin/';% Graphviz environment variable ('which dot' and 'dot -v')
+dkepath.yves(1).latex.env = '/usr/texbin/';% Latex environment variable ('which latex' and 'latex -v')
+dkepath.yves(1).imagemagick.env = '/usr/local/bin/';% ImageMagick environment variable ('which convert' and 'convert -v')
 %
 %--------------------------- Remote computing -----------------------------
 %
