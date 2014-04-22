@@ -59,5 +59,7 @@ waveparam.nchi = 6;%Number of angular positions for beamlets
 waveparam.n_rf_list = 1:3;
 waveparam.ns = 1;%ray smoothing parameter
 %
+waveparam.rhomin = 0.01;%minimum rho allowed in C3PO (to avoid spurious kicks)
+%
 save('C3POPARAM_EC.mat','fitparam','rayparam','C3POparam','C3POdisplay','waveparam');
 
