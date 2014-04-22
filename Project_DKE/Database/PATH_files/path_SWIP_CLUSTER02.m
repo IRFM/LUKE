@@ -29,14 +29,20 @@ dkepath.Yves(1).temppathroot = '/home/Yves/tmp/';%Absolute root directory path a
 dkepath.Yves(1).localdatapath = dkepath.Yves(1).temppathroot;
 %
 dkepath.Yves(1).mex714 = [dkepath.Yves(1).luke_root,'Project_DKE/MEX/Bin/cluster02/MATLAB714/'];
+dkepath.Yves(1).mex801 = [dkepath.Yves(1).luke_root,'Project_DKE/MEX/Bin/cluster02/MATLAB801/'];
 %
 dkepath.Yves(1).compiler_opt.copts.mex714 = '';
 dkepath.Yves(1).compiler_opt.fopts.mex714 = 'FC=''gfortran''';
 dkepath.Yves(1).compiler_opt.helmex.mex714= NaN;% Optional argument for helmex compilation
 %
+dkepath.Yves(1).compiler_opt.copts.mex801 = '';
+dkepath.Yves(1).compiler_opt.fopts.mex801 = 'FC=''gfortran''';
+dkepath.Yves(1).compiler_opt.helmex.mex801= NaN;% Optional argument for helmex compilation
+%
 %Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.Yves(1).MUMPS.mex714 = [dkepath.Yves(1).local_root,'MUMPS_4.10.0/MATLAB714'];
+dkepath.Yves(1).MUMPS.mex801 = [dkepath.Yves(1).local_root,'MUMPS_4.10.0/MATLAB801'];
 %
 % LUKE documentation
 %
