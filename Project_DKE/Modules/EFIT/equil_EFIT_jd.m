@@ -29,7 +29,7 @@ nt = 65;
 % Reads EFIT eqdsk data
 %
 efitname = [filename,'.efit'];
-[x,y,xypsin,psia,psin,pF,pp,pq,Rp,Zp,Ip,Rv,Zv,Bv,pdFdpsi,pdpdpsi] = eqdsk_jd(efitname,display_mode,p_opt,dispname,savename);
+[x,y,xypsin,psia,psin,pF,pp,pq,Rp,Zp,Ip,Rv,Zv,Bv,pFdFdpsi,pdpdpsi] = eqdsk_jd(efitname,display_mode,p_opt,dispname,savename);
 %
 % Reads EFIT numerical text T and n data
 %
@@ -163,7 +163,7 @@ equil_magnetic.eqdsk.Ip = Ip;
 equil_magnetic.eqdsk.Rv = Rv;  
 equil_magnetic.eqdsk.Zv = Zv;  
 equil_magnetic.eqdsk.Bv = Bv;  
-equil_magnetic.eqdsk.pdFdpsi = pdFdpsi;  
+equil_magnetic.eqdsk.pFdFdpsi = pFdFdpsi;  
 equil_magnetic.eqdsk.pdpdpsi = pdpdpsi;
 %
 equil.eqdsk = equil_magnetic.eqdsk;

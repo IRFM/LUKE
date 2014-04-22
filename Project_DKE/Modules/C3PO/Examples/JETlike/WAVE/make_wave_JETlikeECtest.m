@@ -38,9 +38,9 @@ phi_L = 0;
 P_L = 1e-6;% [MW] 
 %
 alpha_L = 165;% With respect to R axis
-beta_L = 90;% With respect to Z axis
+beta_L = 92;%90;% With respect to Z axis
 %
-rhomin = 0.2;
+rhomin = 0.05;
 %
 dNpar0 = 0.05;%spectral width
 ns = 1000;%discrtization parameter for free space propagation

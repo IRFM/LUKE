@@ -1,4 +1,4 @@
-function rayinit = main_rayinit_launch_jd(equil,launch)
+function [rayinit,yout] = main_rayinit_launch_jd(equil,launch,rhomin)
 %
 % This function creates the rayinit structure based on ray launching parameters. Straight ray
 % propagation is assumed up to the last closed flux-surface for the EC wave
@@ -149,7 +149,12 @@ if strcmp(launch.type,'EC'),
                 spsin(is) = interp1(pstr(:,is),psin,syr(is,iy),method,NaN);%psi(s)
             end
             %
-            is0 = find(~isnan(spsin),1,'first');
+            if nargin == 2, %ray that enters the plasma
+                is0 = find(~isnan(spsin),1,'first');
+                is0 = find(spsin <= 1,1,'first');
+            else %ray that leaves the small torus around the magnetic axis
+                is0 = find(spsin >= rho2psi_jd(equil,rhomin)/psi_apRp(end),1,'first');
+            end
             %
             psin0 = spsin(is0);
             %
@@ -195,6 +200,23 @@ if strcmp(launch.type,'EC'),
             %
         end
         %
+        if nargout == 2 && ny == 1,%for the rhomin > 0 case (EC wave only)
+            %
+            yout(1:is0,1) = psi2rho_jd(equil,spsin(1:is0));%rho
+            yout(1:is0,2) = sytheta(1:is0);%theta
+            yout(1:is0,3) = syz(1:is0);%z
+            %
+            yout(1:is0,4) = NaN;%krho
+            yout(1:is0,5) = NaN;%m
+            yout(1:is0,6) = NaN;%kz
+            %
+            yout(1:is0,7) = launch.omega_rf;
+            yout(1:is0,8) = sqrt(sysh(1:is0).^2 + sysy(1:is0).^2);%distance along the ray  
+            %
+        else
+            yout = [];
+        end
+        %
         if ~isempty(psin0),
             %
             Bx0 = interp2(psin,equil.theta,equil.ptBx.',psin0,theta0,method);
@@ -217,6 +239,10 @@ if strcmp(launch.type,'EC'),
             rayinit.yNpar0(iy) = Npar0;%Initial index of refraction
             rayinit.ydNpar0(iy) = dNpar0;%initial Ray spectral width
             rayinit.yP0_2piRp(iy) = yP0_2piRp(iy);%Lineic initial power density initial power in the ray (W/m)
+            %
+            if nargout == 2 && ny == 1,%for the rhomin > 0 case (EC wave only)
+                yout(is0,5) = m0;%m0 guess
+            end
             %
             rayinit.yib(iy) = iy;% beam index for tracking (fluctuations)
             %

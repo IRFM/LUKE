@@ -1,4 +1,4 @@
-function [x,y,xypsin,psia,rpsin,rF,rp,rq,Rp,Zp,Ip,Rv,Zv,Bv,rdFdpsi,rdpdpsi] = eqdsk_jd(eqdsk,display_mode,p_opt,dispname,savename,Ns)
+function [x,y,xypsin,psia,rpsin,rF,rp,rq,Rp,Zp,Ip,Rv,Zv,Bv,rFdFdpsi,rdpdpsi] = eqdsk_jd(eqdsk,display_mode,p_opt,dispname,savename,Ns)
 % EFIT - function that reads the equilibrium parameters from eqdsk files by EFIT
 %
 % This function reads the equilibrium parameters from eqdsk files created
@@ -33,7 +33,7 @@ function [x,y,xypsin,psia,rpsin,rF,rp,rq,Rp,Zp,Ip,Rv,Zv,Bv,rdFdpsi,rdpdpsi] = eq
 %    - Rv: nominal major radius of the torus
 %    - Zv: vertical shift of the rectangular box midplane
 %    - Bv: vacuum toroidal magnetic field at radmaj
-%    - rdFdpsi: fpsiar_prime, [i.e., d f/d (psi)] at nnr equispaced points in psi from psimag to psilim.
+%    - rFdFdpsi: ffpsiar_prime, [i.e., d f/d (psi)] at nnr equispaced points in psi from psimag to psilim.
 %    - rdpdpsi: p_prime [i.e., d prar/d (psi)] at nnr equispaced points in psi from psimag to psilim.
 %
 % WARNING: EFIT sign treatment
@@ -143,7 +143,7 @@ eqdsk = eqdsk(ind:end);
 eqdsk = eqdsk(ind:end);
 [rp,~,~,ind] = sscanf(eqdsk,'%e',nnr);% pressure values at the same points
 eqdsk = eqdsk(ind:end);
-[rdFdpsi,~,~,ind] = sscanf(eqdsk,'%e',nnr);% fpsiar_prime, [i.e., d f/d (psi)] at the same points
+[rFdFdpsi,~,~,ind] = sscanf(eqdsk,'%e',nnr);% ffpsiar_prime, [i.e., d f/d (psi)] at the same points
 eqdsk = eqdsk(ind:end);
 [rdpdpsi,~,~,ind] = sscanf(eqdsk,'%e',nnr);% p_prime [i.e., d prar/d (psi)] at the same points
 %
@@ -249,7 +249,7 @@ rpsin = linspace(0,1,nnr);
 Ip = - Ip;
 Bv = - Bv;
 rF = - rF;
-rdFdpsi = - rdFdpsi;
+rFdFdpsi = - rFdFdpsi;
 %
 if sign(Ip) ~= sign(psia),
     psia = - psia;
@@ -257,7 +257,7 @@ end
 %
 if sign(Bv) ~= sign(rF(1)),
     rF = - rF;
-    rdFdpsi = - rdFdpsi;
+    rFdFdpsi = - rFdFdpsi;
 end
 %
 if display_mode >= 2,
@@ -307,12 +307,12 @@ if display_mode >= 2,
     %
     figure(4),clf
     %
-    ylab = 'dF/d\psi (m^{-1})';
+    ylab = 'FdF/d\psi (m^{-1})';
     ylim = NaN;
     %
-    graph1D_jd(sqrt(rpsin),rdFdpsi,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(sqrt(rpsin),rFdFdpsi,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
-    print_jd(p_opt,[savename,'_dF_psi']);
+    print_jd(p_opt,[savename,'_FdF_psi']);
     %
     figure(5),clf
     %

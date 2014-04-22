@@ -159,21 +159,32 @@ Ip_z_fsav = abs(equil.psi_apRp(end))*sum(jz_fsav.*S./dxstardpsin(:)*drho);
 Ip_parperpz = sum(sum((jparz + jperpz).*r.*dtheta*drho./gradrho./calpha));
 Ip_parperpz_fsav = abs(equil.psi_apRp(end))*sum((jparz_fsav + jperpz_fsav).*S./dxstardpsin(:)*drho);
 %
-F = Bz.*(x + equil.Rp);%
-dFdpsi = (dBzdrho.*(x + equil.Rp) + Bz.*dxdrho)./(dpsindrho(:)*ones(1,mtheta))/(equil.psi_apRp(end)*equil.Rp/equil.ptx(end,1));%
+F = Bz.*(x + equil.Rp);%RBz
+dFdpsi = (dBzdrho.*(x + equil.Rp) + Bz.*dxdrho).*(dxstardpsin(:)*ones(1,mtheta))/equil.psi_apRp(end)*equil.Rp;
+FdFdpsi = F.*dFdpsi;
 %
 if isfield(equil,'eqdsk')
     %
+    equilDKE = equilibrium_jd(equil,equil.eqdsk.psin,0,'spline');
+    xq = qfactors_dke_yp(1,equilDKE.Rp,equilDKE.ap,equilDKE.Xx,equilDKE.Xy,equilDKE.XBx,equilDKE.XBy,equilDKE.XBphi,equilDKE.xx0,equilDKE.xB0,equilDKE.xBT0,equilDKE.xBp0);
+    %
+    pF_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pF,rho)'*ones(1,length(theta));%
+    pFdFdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pdFdpsi,rho)'*ones(1,length(theta));%
+    figure,plot(rho,pFdFdpsi_eqdsk,'r',rho,FdFdpsi/3.5,'b')
+    %
+    pp_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pp,rho)'*ones(1,length(theta));%
+    pdpdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pdpdpsi,rho)'*ones(1,length(theta));%
+    pdpdpsi_eqdsk1 = gradient(equil.eqdsk.pp)./gradient(equil.eqdsk.psin)*abs(equil.eqdsk.psia);%
+    figure,plot(rho,pdpdpsi_eqdsk,'r',rho,pdpdpsi_eqdsk1,'b');
+    %
     gradpkinsgradrho = equil.eqdsk.gradpkinsgradrho;
-    %*******************************************
+
+    
+    
     keyboard
-    pF_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pF,rho)'*ones(1,length(theta));%to be checked
-    pdFdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pdFdpsi,rho)'*ones(1,length(theta));%to be checked
-    %pdpdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pdpdpsi,rho)'*ones(1,length(theta));%to be checked
-    %   
-    jz_eqdsk = -Upsilon.*pdpdpsi_eqdsk - mu0*pdFdpsi_eqdsk.*pF_eqdsk./Upsilon;%to be checked
-    jpar_eqdsk = pdFdpsi_eqdsk.*B - mu0.*pF_eqdsk.*pdpdpsi_eqdsk.*B;%to be checked
-    %********************************************
+    jz_eqdsk = Upsilon.*pdpdpsi_eqdsk*equilDKE.Rp + pFdFdpsi_eqdsk./Upsilon/equilDKE.Rp;%
+    %jpar_eqdsk = pdFdpsi_eqdsk.*B - mu0.*pF_eqdsk.*pdpdpsi_eqdsk.*B;%
+    %
     if isfield( equil.eqdsk,'Ip'),
         Ip_eqdsk = equil.eqdsk.Ip;
     end
@@ -265,7 +276,7 @@ if display_mode,
     print_jd(2,['Pressure_gradient_',equil.id]);
     %
     figure('Name','Axial current density'),clf
-    [ax] = graph1D_jd(rho,jz/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','r',2);drawnow
+    [ax] = graph1D_jd(rho,jz/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip_z/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','r',2);drawnow
     [ax] = graph1D_jd(rho,jz_fsav/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],NaN,NaN,NaN,'-','none','b',1);drawnow
     if isfield(equil,'eqdsk'),
         %[ax] = graph1D_jd(equil.eqdsk.prho,jz_eqdsk/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','g',2);drawnow
@@ -278,7 +289,7 @@ if display_mode,
     print_jd(2,['Axial_current_density_',equil.id]);
     %
     figure('Name','Axial component of the parallel current density'),clf
-    [ax] = graph1D_jd(rho,jparz/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','r',2);drawnow
+    [ax] = graph1D_jd(rho,jparz/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip_z/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','r',2);drawnow
     [ax] = graph1D_jd(rho,jparz_fsav/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],NaN,NaN,NaN,'-','none','b',1);drawnow
     if isfield(equil,'eqdsk'),
         %[ax] = graph1D_jd(equil.eqdsk.prho,jparz_eqdsk/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','g',2);drawnow
@@ -291,7 +302,7 @@ if display_mode,
     print_jd(2,['Parallel_z_current_density_',equil.id]);
     %
     figure('Name','Axial component of the perpendicular current density'),clf
-    [ax] = graph1D_jd(rho,jperpz/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','r',2);drawnow
+    [ax] = graph1D_jd(rho,jperpz/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi], I_{p} = ',num2str(Ip_z/1e6),' (MA), li = ',num2str(li)],NaN,NaN,NaN,'-','none','r',2);drawnow
     [ax] = graph1D_jd(rho,jperpz_fsav/1e6,0,0,'\rho','j_{||z} (MA/m^{2})',[strrep(equil.id,'_','-'),', \theta\in[0:\pi/',int2str((mtheta-1)/2),':2\pi]'],NaN,NaN,NaN,'-','none','b',1);drawnow
     %
     leg = {'j_{perpz}','<j_{perpz}>','Location','NorthEast'};
@@ -301,8 +312,6 @@ if display_mode,
     print_jd(2,['Perpendicular_z_current_density_',equil.id]);
     %
     if isfield(equil,'eqdsk'),
-        equilDKE = equilibrium_jd(equil,equil.eqdsk.psin,0,'spline');
-        xq = qfactors_dke_yp(1,equilDKE.Rp,equilDKE.ap,equilDKE.Xx,equilDKE.Xy,equilDKE.XBx,equilDKE.XBy,equilDKE.XBphi,equilDKE.xx0,equilDKE.xB0,equilDKE.xBT0,equilDKE.xBp0);
         %
         figure('Name','Safety factor'),clf
         leg = {'Magnetic','EQDSK','Location','NorthEast'};
@@ -319,11 +328,13 @@ if display_mode,
         print_jd(2,['Safety_factor_',equil.id]);
         %
         figure('Name','Current flux function'),clf
-        leg = {'Magnetic','EQDSK','Location','NorthEast'};
         %
         if ~isinf(equilDKE.Rp),
-            [ax] = graph1D_jd(rho,pF_eqdsk,0,0,'\rho','q(\rho)',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
-            [ax] = graph1D_jd(rho,F,0,0,'\rho','F(\psi)',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','b',1);drawnow
+            [ax] = graph1D_jd(rho,pF_eqdsk(:,1),0,0,'\rho','F(\psi)=RB_{\phi} [mT]',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+            [ax] = graph1D_jd(rho,F(:,1),0,0,'\rho','F(\psi)=RB_{\phi} [mT]',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','b',1);drawnow
+            leg = {'EQDSK','Magnetic','Location','NorthEast'};
+            [ax] = graph1D_jd(rho,pF_eqdsk(:,2:end),0,0,'\rho','F(\psi)=RB_{\phi} [mT]',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+            [ax] = graph1D_jd(rho,F(:,2:end),0,0,'\rho','F(\psi)=RB_{\phi} [mT]',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','b',1);drawnow
         end
         axf = axis(ax);
         text(0.1,axf(3)+9*(axf(4)-axf(3))/10, ['I_p = ',num2str(Ip_z/1e6),' (MA)'], 'Color', 'b','FontSize',18);

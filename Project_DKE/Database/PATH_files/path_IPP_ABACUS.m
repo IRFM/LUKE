@@ -1,6 +1,6 @@
-function dkepath = path_EFDA_ITM
+function dkepath = path_IPP_ABACUS
 %
-% path definitions for EFDA ITM cluster
+% path definitions for IPP ABACUS cluster
 %
 %	Output:
 %
@@ -19,7 +19,7 @@ dkepath.computer = computer;%machine type and supported OS
 %--------------------------------------------------------------------------------------------------------
 %
 dkepath.peysson(1).luke_root = [pwd,filesep];
-dkepath.peysson(1).local_root = '/compass/home/peysson/';
+dkepath.peysson(1).local_root = '/compass/home/peysson/Packages/';
 dkepath.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.peysson(1).mex801 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB801/'];
@@ -45,8 +45,3 @@ dkepath.peysson(1).remote(1).schedulername = 'pbs';
 dkepath.peysson(1).remote(1).profilename = 'local';
 dkepath.peysson(1).remote(1).luke_root = dkepath.peysson(1).luke_root;% local cluster
 %
-
-
-
-
-

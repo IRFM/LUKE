@@ -239,144 +239,130 @@ for iref = 1:nref + 1,% vessel reflection index
         %
 		if C3POdisplay.ray,
 			info_dke_yp(2,['Initial conditions of ray #',int2str(iray),' are calculated']);
-		end
-		%
+        end
+        %
 		if isreal(y0(4)) && abs(y0(4)) > 0,%ray enters the plasma
             %
             rayparam.tau_lim = tau_lim_init - rayinit.tau0_lin;% the absorption criterion accounts for previous steps
 			%
 			[tout,yout,yproc] = raytracing_yp(rayparam,equil_fit,y0,f0struct,fluct_fit,flag);
             %
-            if yout(end,1) <= rayparam.rhomin,
+            flag_rhomin = 0;
+            %
+            while 1,
                 %
-                tout1 = tout(1:end-1,:);
-                yout1 = yout(1:end-1,:);
-                yproc1 = yproc(1:end-1,:);
-                %
-                if ~isinf(equil_fit.Rp),%
+                if yout(end,1) <= rayparam.rhomin,
                     %
-                    Rp = equil_fit.Rp;
-                    Zp = equil_fit.Zp;
-                    ap = equil_fit.ap;
+                    flag_rhomin = flag_rhomin + 1;
                     %
-                    X0 = (yproc(end-2,14)*ap + Rp).*cos(yout(end-2,3)/Rp);
-                    Y0 = - (yproc(end-2,14)*ap  + Rp).*sin(yout(end-2,3)/Rp);%Note : phi is clockwise from top
-                    Z0 = yproc(end-2,15)*ap + Zp;
-                    %
-                    X1 = (yproc(end-1,14)*ap + Rp).*cos(yout(end-1,3)/Rp);%input point
-                    Y1 = - (yproc(end-1,14)*ap  + Rp).*sin(yout(end-1,3)/Rp);%input point
-                    Z1 = yproc(end-1,15)*ap + Zp;%input point
-                    %
-                    r1 = yproc(end-1,20)*ap;
-                    theta1 = yout(end-1,2);
-                    %
-                    salpha1 = yproc(end-1,21);
-                    calpha1 = sqrt(1 - salpha1^2);
-                    talpha1 = salpha1/calpha1;
-                    %
-                    gradrho1 = yproc(end-1,22)/ap;
-                    Upsilon1 = yproc(end-1,24);
-                    %
-                    kr1 = yout(end-1,4)*gradrho1*calpha1/ap;
-                    ktheta1 = yout(end-1,5)/r1 - kr1*talpha1;
-                    kz1 = yout(end-1,6)/ap,
-                    %
-                    Nx1 = (cos(theta1)*kr1 - sin(theta1)*ktheta1)*clum/rayinit.omega_rf;
-                    Ny1 = (sin(theta1)*kr1 + cos(theta1)*ktheta1)*clum/rayinit.omega_rf;
-                    Nz1 = kz1/Upsilon1*clum/rayinit.omega_rf;
-                    %
-                    psin1 = rho2psi_jd(equil,yout(end-1,1));
-                    Bx1 = interp2(equil.psi_apRp/equil.psi_apRp(end),equil.theta,equil.ptBx.',psin1,theta1,'spline');
-                    By1 = interp2(equil.psi_apRp/equil.psi_apRp(end),equil.theta,equil.ptBy.',psin1,theta1,'spline');
-                    Bz1 = interp2(equil.psi_apRp/equil.psi_apRp(end),equil.theta,equil.ptBPHI.',psin1,theta1,'spline'); 
-                    %
-                    B1 = sqrt(Bx1.^2 + By1.^2 + Bz1.^2);
-                    Bp1 = sqrt(Bx1.^2 + By1.^2);                    
-                    %
-                    Npar1 = (Nx1*Bx1 + Ny1*By1 + Nz1*Bz1)/B1
-                    yproc(end-1,2)
-                    clum*(yout(end-1,5).*calpha1.*Bp1./B1./r1 + kz1.*Bz1./yproc(end-1,24)./B1)/rayinit.omega_rf
-                    %
-                    m1 = yout(end-1,5)
-                    %
-                    d = sqrt((X1 - X0)^2 + (Y1 - Y0)^2 + (Z1 - Z0)^2);
-                    %
-                    Vx = (X1 - X0)/d;%local direction of the ray
-                    Vy = (Y1 - Y0)/d;%local direction of the ray
-                    Vz = (Z1 - Z0)/d;%local direction of the ray
-                    %
-                    a = sqrt((sqrt(X1^2 + Y1^2) - Rp)^2 + (Z1 - Zp)^2);%minor radius of the small torus around the magnetic axis
-                    %
-                    p0 = a^4 - 2*a^2*Rp^2 + Rp^4 - 2*a^2*X1^2 - 2*Rp^2*X1^2 + X1^4 - 2*a^2*Y1^2 - 2*Rp^2*Y1^2 + 2*X1^2*Y1^2 + Y1^4 - 2*a^2*Z1^2 + 2*Rp^2*Z1^2 + 2*X1^2*Z1^2 + 2*Y1^2*Z1^2 + Z1^4 + 4*a^2*Z1*Zp - 4*Rp^2*Z1*Zp - 4*X1^2*Z1*Zp - 4*Y1^2*Z1*Zp - 4*Z1^3*Zp - 2*a^2*Zp^2 + 2*Rp^2*Zp^2 + 2*X1^2*Zp^2 + 2*Y1^2*Zp^2 + 6*Z1^2*Zp^2 - 4*Z1*Zp^3 + Zp^4;
-                    p1 = -4*a^2*Vx*X1 - 4*Rp^2*Vx*X1 + 4*Vx*X1^3 - 4*a^2*Vy*Y1 - 4*Rp^2*Vy*Y1 + 4*Vy*X1^2*Y1 + 4*Vx*X1*Y1^2 + 4*Vy*Y1^3 - 4*a^2*Vz*Z1 + 4*Rp^2*Vz*Z1 + 4*Vz*X1^2*Z1 + 4*Vz*Y1^2*Z1 + 4*Vx*X1*Z1^2 + 4*Vy*Y1*Z1^2 + 4*Vz*Z1^3 + 4*a^2*Vz*Zp - 4*Rp^2*Vz*Zp - 4*Vz*X1^2*Zp - 4*Vz*Y1^2*Zp - 8*Vx*X1*Z1*Zp - 8*Vy*Y1*Z1*Zp - 12*Vz*Z1^2*Zp + 4*Vx*X1*Zp^2 + 4*Vy*Y1*Zp^2 + 12*Vz*Z1*Zp^2 - 4*Vz*Zp^3;  
-                    p2 = -2*a^2*Vx^2 - 2*Rp^2*Vx^2 - 2*a^2*Vy^2 - 2*Rp^2*Vy^2 - 2*a^2*Vz^2 + 2*Rp^2*Vz^2 + 6*Vx^2*X1^2 + 2*Vy^2*X1^2 + 2*Vz^2*X1^2 + 8*Vx*Vy*X1*Y1 + 2*Vx^2*Y1^2 + 6*Vy^2*Y1^2 + 2*Vz^2*Y1^2 + 8*Vx*Vz*X1*Z1 + 8*Vy*Vz*Y1*Z1 + 2*Vx^2*Z1^2 + 2*Vy^2*Z1^2 + 6*Vz^2*Z1^2 - 8*Vx*Vz*X1*Zp - 8*Vy*Vz*Y1*Zp - 4*Vx^2*Z1*Zp - 4*Vy^2*Z1*Zp - 12*Vz^2*Z1*Zp + 2*Vx^2*Zp^2 + 2*Vy^2*Zp^2 + 6*Vz^2*Zp^2;
-                    p3 = 4*Vx^3*X1 + 4*Vx*Vy^2*X1 + 4*Vx*Vz^2*X1 + 4*Vx^2*Vy*Y1 + 4*Vy^3*Y1 + 4*Vy*Vz^2*Y1 + 4*Vx^2*Vz*Z1 + 4*Vy^2*Vz*Z1 + 4*Vz^3*Z1 - 4*Vx^2*Vz*Zp - 4*Vy^2*Vz*Zp - 4*Vz^3*Zp;
-                    p4 = Vx^4 + 2*Vx^2*Vy^2 + Vy^4 + 2*Vx^2*Vz^2 + 2*Vy^2*Vz^2 + Vz^4;
-                    %
-                    p = [p4 p3 p2 p1 p0];
-                    r = roots(p);%roots of the intersection between the torus and the straight line (X1 belongs to the torus and the straight line)
-                    %
-                    jr = 1;
-                    for ir = 1:length(r),
-                        if isreal(r(ir)) ~= 0 && abs(r(ir)) > eps,
-                            tr(jr) = r(ir);
-                            jr = jr + 1;
-                        end
+                    if ~isinf(equil_fit.Rp),%torus
+                        %
+                        X0 = (yproc(end-2,14)*equil_fit.ap + equil_fit.Rp).*cos(yout(end-2,3)/equil_fit.Rp);
+                        Y0 = - (yproc(end-2,14)*equil_fit.ap  + equil_fit.Rp).*sin(yout(end-2,3)/equil_fit.Rp);%Note : phi is clockwise from top
+                        Z0 = yproc(end-2,15)*equil_fit.ap + equil_fit.Zp;
+                        %
+                        X1 = (yproc(end-1,14)*equil_fit.ap + equil_fit.Rp).*cos(yout(end-1,3)/equil_fit.Rp);%input point
+                        Y1 = - (yproc(end-1,14)*equil_fit.ap  + equil_fit.Rp).*sin(yout(end-1,3)/equil_fit.Rp);%input point
+                        Z1 = yproc(end-1,15)*equil_fit.ap + equil_fit.Zp;%input point
+                        %
+                        d = sqrt((X1 - X0)^2 + (Y1 - Y0)^2 + (Z1 - Z0)^2);
+                        %
+                        Vx = (X1 - X0)/d;%local direction of the ray
+                        Vy = (Y1 - Y0)/d;%local direction of the ray
+                        Vz = (Z1 - Z0)/d;%local direction of the ray
+                        V = [Vx,Vy,Vz];
+                        %
+                        R_ref = sqrt(X1.^2 + Y1.^2);
+                        Z_ref = Z1;
+                        phi_ref = -atan(Y1./X1) + pi*(X1 < 0) - 2*pi*(X1 < 0 && Y1 > 0);% -pi < phi < pi
+                        %	
+                        NR_ref = Vx*cos(phi_ref) - Vy*sin(phi_ref);
+                        Nphi_ref = -Vx*sin(phi_ref) - Vy*cos(phi_ref);
+                        NZ_ref = Vz;
+                        %
+                        launch1 = launch0;
+                        launch1.launch0 = launch0;
+                        %
+                        launch1.yR_L = R_ref;
+                        launch1.yZ_L = Z_ref;
+                        launch1.yphi_L = phi_ref;
+                        launch1.yalpha_L = - atan(Nphi_ref/NR_ref) + pi*(NR_ref < 0) - 2*pi*(NR_ref < 0 && Nphi_ref > 0);% -pi < alpha < pi
+                        launch1.ybeta_L = acos(NZ_ref);% 0 < beta < pi
+                        %                 
+                        [rayinit_guess,yout1] = main_rayinit_launch_jd(equil,launch1,rayparam.rhomin);
+                        %
+                        yout1(:,6) = yout(1,6);%axisymmetry. kz is constant
+                        %
+                        % start m optimization 
+                        %
+                        rayparam_guess = rayparam;
+                        %
+                        rayparam_guess.tfinal = 100;%not too smal to avoid memory problem in C3PO
+                        %
+                        rayinit_guess.tau0_lin = rayinit.tau0_lin;
+                        rayinit_guess.ss0 = rayinit.ss0;
+                        rayinit_guess.mmode = rayinit.mmode + j;%j is for outward propagation from the considered plasma domain
+                        %
+                        
+                        m_guess = rayinit_guess.ym0;
+                        
+                        %m_guess = m_guess0;
+                        %m_guess_min = m_guess;
+                        %m_guess_max = m_guess;
+                        %i_guess = 1;
+                        %for m_guess = m_guess_min:m_guess_max,
+                            
+                            %delta_guess = mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_guess,rayinit_guess,V,m_guess)
+                            %i_guess = i_guess + 1
+                        %end
+                        
+                                                keyboard
+                        delta = fminsearch(@(m_guess) mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_guess,rayinit_guess,V,m_guess),m_guess)
+
+                        %
+                        %for ii = 1:length(yout1)
+                        %    yout1(:,5) = (yout1(ii,8) - yout1(1,8))*(yout1(ii,5) - yout1(1,8))/(yout1(ii,8) - yout1(1,8))
+                        %    y0_guess = init_RT_jd(equil_fit,...
+                        %        rayinit_guess.yrho0,rayinit_guess.ytheta0,rayinit_guess.yz0,omega_rf,...
+                        %        rayinit_guess.yNpar0,rayinit_guess.ym0,rayinit_guess.ykz0,rayinit_guess.mmode,kmode,fluct_fit).';
+                        %end
+                        
+                        
+                        
+                        %
+                        tout = [tout(1:end-1,:);zeros(length(yout1),1)];
+                        yout = [yout(1:end-1,:);yout1];
+                        yproc = [yproc(1:end-1,:);zeros(length(yout1),size(yproc,2))];
+                        %
+                    else,%cylinder
+                        disp('WARNING: cylindrical case not yet implemented');
+                        keyboard
                     end
                     %
-                    t = min(sort(tr));%first point is chosen (t > 0 by definition)
+                    rayinit1.tau0_lin = rayinit.tau0_lin;
+                    rayinit1.ss0 = rayinit.ss0;
+                    rayinit1.mmode = rayinit.mmode + j;%j is for outward propagation from the considered plasma domain
                     %
-                    if length(t) > 1,
-                        t = t(1);%case a a degenarate solution
-                    end
+                    
+                        
+                        
+                    y1 = init_RT_jd(equil_fit,...
+                        rayinit1.yrho0,rayinit1.ytheta0,rayinit1.yz0,omega_rf,...
+                        rayinit1.yNpar0,rayinit1.ym0,rayinit1.ykz0,rayinit1.mmode,kmode,fluct_fit).';
                     %
-                    X2 = X1 + t*Vx;%output point
-                    Y2 = Y1 + t*Vy;%output point
-                    Z2 = Z1 + t*Vz;%output point
+                    [tout1, yout1, yproc1] = raytracing_yp(rayparam,equil_fit,y1,f0struct,fluct_fit,flag);
                     %
-                    x2 = sqrt(X2^2 + Y2^2) - Rp;
-                    y2 = Z2 - Zp;
-                    z2 = (-atan(Y2/X2) - pi*(X2 < 0) - 2*pi*(X2 > 0 & Y2 < 0))*Rp;%*******to be verified
-                    %
-                    r2 = sqrt(x2^2 + y2^2);
-                    psin2 = griddata(equil.ptx,equil.pty,equil.psi_apRp(:)*ones(1,length(equil.theta)),x2,y2)/equil.psi_apRp(end);
-                    rho2 = psi2rho_jd(equil,psin2);
-                    theta2 = atan(y2./x2) + pi*(x2 < 0) + 2*pi*(x2 > 0 & y2 < 0);
-                    Upsilon2 = 1 + x2/Rp;
-                    %
-                    Bx2 = interp2(equil.psi_apRp/equil.psi_apRp(end),equil.theta,equil.ptBx.',psin2,theta2,'spline');
-                    By2 = interp2(equil.psi_apRp/equil.psi_apRp(end),equil.theta,equil.ptBy.',psin2,theta2,'spline');
-                    Bz2 = interp2(equil.psi_apRp/equil.psi_apRp(end),equil.theta,equil.ptBPHI.',psin2,theta2,'spline'); 
-                    %
-                    B2 = sqrt(Bx2.^2 + By2.^2 + Bz2.^2);
-                    Bp2 = sqrt(Bx2.^2 + By2.^2);
-                    cosalpha2 = (By2*x2 - Bx2*y2)/r2/Bp2;
-                    %
-                    Npar2 = (Nx1*Bx2 + Ny1*By2 + Nz1*Bz2)/B2
-                    Ns2 = (Nx1*Bx2 + Ny1*By2)/Bp2;
-                    m2 = r2*Ns2*rayinit.omega_rf/clum/cosalpha2
-                    kz2 = kz1,%locally axisymmetry (invariant)
+                    tout = [tout;tout1];
+                    yout = [yout;yout1];
+                    yproc = [yproc;yproc1];
                     %
                 else
-                    disp('WARNING: not yet implemented');
-                    keyboard
+                    if flag_rhomin > 0,
+                        yproc = [];%ray properties are not calculated in the C program is rhomin is catched
+                    end
+                    %
+                    break
                 end
-                %
-                y0 = init_RT_jd(equil_fit,...
-                    rho2,theta2,z2,omega_rf,...
-                    Npar2,m2,kz2,rayinit.mmode,kmode,fluct_fit).';
-                %
-                [tout2, yout2, yproc2] = raytracing_yp(rayparam,equil_fit,y0,f0struct,fluct_fit,flag);
-                %
-                % ******** tout2(1) = 0 
-                % ********* multiple point in the small torus for absorption
-                % ********* ray propagate inward
-                
-                tout = [tout1;tout2];
-                yout = [yout1;yout2];
-                yproc = [yproc1;yproc2];
-                %
-                keyboard
                 %
             end
 			%
@@ -621,3 +607,30 @@ function [delta] = calc_rhomin_jd(ym0,iray,equil,equil_fit,id_wave,omega_rf,rayi
     %
 end
 
+function delta = mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_guess,rayinit_guess,V,m_guess)
+    %
+    y0_guess = init_RT_jd(equil_fit,...
+    rayinit_guess.yrho0,rayinit_guess.ytheta0,rayinit_guess.yz0,rayinit_guess.omega_rf,...
+    rayinit_guess.yNpar0,m_guess,rayinit_guess.ykz0,rayinit_guess.mmode,kmode,fluct_fit).';
+    %
+    [tout_guess, yout_guess, yproc_guess] = raytracing_yp(rayparam_guess,equil_fit,y0_guess,f0struct,fluct_fit,flag);
+    %
+    X2 = (yproc_guess(1,14)*equil_fit.ap + equil_fit.Rp).*cos(yout_guess(1,3)/equil_fit.Rp);
+    Y2 = - (yproc_guess(1,14)*equil_fit.ap  + equil_fit.Rp).*sin(yout_guess(1,3)/equil_fit.Rp);%Note : phi is clockwise from top
+    Z2 = yproc_guess(1,15)*equil_fit.ap + equil_fit.Zp;
+    %
+    X3 = (yproc_guess(2,14)*equil_fit.ap + equil_fit.Rp).*cos(yout_guess(2,3)/equil_fit.Rp);%input point
+    Y3 = - (yproc_guess(2,14)*equil_fit.ap  + equil_fit.Rp).*sin(yout_guess(2,3)/equil_fit.Rp);%input point
+    Z3 = yproc_guess(2,15)*equil_fit.ap + equil_fit.Zp;%input point
+    %
+    d_guess = sqrt((X3 - X2)^2 + (Y3 - Y2)^2 + (Z3 - Z2)^2);
+    %
+    Vx_guess = (X3 - X2)/d_guess;%local direction of the ray
+    Vy_guess = (Y3 - Y2)/d_guess;%local direction of the ray
+    Vz_guess = (Z3 - Z2)/d_guess;%local direction of the ray
+    V_guess = [Vx_guess,Vy_guess,Vz_guess];
+    %
+    delta = 1 - V(:)'*V_guess(:);
+end
+
+end

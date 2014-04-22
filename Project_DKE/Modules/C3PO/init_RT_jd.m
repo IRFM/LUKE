@@ -13,8 +13,9 @@ function xY = init_RT_jd(equil_fit,xrho,xtheta,xz,xomega,xNpar,xm,xkz,mmode,kmod
 %       - xNpar: parallel indices of refraction [1,1]
 %       - xm: poloidal mode numbers [1,1]
 %       - xkz: axial or toroidal wave vector [1,1]
-%       - xmode: cold plasma mode [1,1] : (-1) m (1) p 
+%       - mmode: cold plasma mode [1,1] : (-1) m (1) p 
 %           p is the slow mode when kperp > 0 (ex : LH slow wave)
+%           if mmode has an imaginary part, it is outward propagation, otherwise inward
 %       - sigma: direction of the wave propagation (outward, or inward)
 %       - kmode: kinetic (1) or cold (0) plasma model
 %       - fluct_fit: fluctuations of the magnetic equilibrium
@@ -180,19 +181,23 @@ end
     dummy,dummy,dummy,dummy,dummy,dummy,...
     phip_xyz,phim_xyz] = colddisp_dke_jd(xNpar,xomega,xne,zxni,zZi,zmi,xB);
 %
-if mmode == 1,
+if real(mmode) == 1,
     Nperpc = Nperpm;
     phic_xyz = phim_xyz;
-elseif mmode == -1,
+elseif real(mmode) == -1,
     Nperpc = Nperpp;
     phic_xyz = phip_xyz;
 else
     error('Wrong input in mmode')
 end
 %
-% Sign for choosing the inward propagating root
+% Sign for choosing the inward propagating root (mmode real)
 %
 sigma = -sign(phic_xyz(1));
+%
+if ~isreal(mmode)
+    sigma = - sigma;
+end
 %
 % Normalization
 %

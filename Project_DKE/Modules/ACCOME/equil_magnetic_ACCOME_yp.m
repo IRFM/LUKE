@@ -37,7 +37,8 @@ if exist([filename,'.bfield'],'file'),
     [x,y,xypsin,psia,rpsin,xyBPHI,xyBR,xyBZ,Rp,Zp] = accome_yp([filename,'.bfield'],display_mode,p_opt,dispname,savename);
 elseif exist([filename,'.eqdsk'],'file'),
     disp(' ---> EQDSK toroidal MHD equilibrium file format found.');
-    [x,y,xypsin,psia,rpsin,rF,rp,rq,Rp,Zp,Ip,Rv,Zv,Bv,rdFdpsi,rdpdpsi] = eqdsk_jd([filename,'.eqdsk'],display_mode,p_opt,dispname,savename);
+    [x,y,xypsin,psia,rpsin,rF,rp,rq,Rp,Zp,Ip,Rv,Zv,Bv,rFdFdpsi,rdpdpsi] = eqdsk_jd([filename,'.eqdsk'],display_mode,p_opt,dispname,savename);
+    rF = -rF;%reverse BPHI direction
 else
     error(' ---> Unknown toroidal MHD equilibrium file format found.')
 end
@@ -49,6 +50,8 @@ end
 if exist('xyBPHI','var');
     ptBPHI = griddata(x,y,xyBPHI',ptx,pty);
 end
+%
+psia = -psia;%reverse current direction
 %
 np = length(psin);
 ap = ptx(np,1);%Plasma minor radius on the LFS midplane
@@ -143,4 +146,23 @@ equil_magnetic.ptBy = ptBy;
 equil_magnetic.ptBPHI = ptBPHI;
 equil_magnetic.Rp = Rp;
 equil_magnetic.Zp = Zp;
+%
+if exist([filename,'.eqdsk'],'file'),
+    equil_magnetic.eqdsk.x = x;
+    equil_magnetic.eqdsk.y = y;
+    equil_magnetic.eqdsk.xypsin = xypsin;
+    equil_magnetic.eqdsk.psia = psia;
+    equil_magnetic.eqdsk.psin = psin;
+    equil_magnetic.eqdsk.pF = rF;
+    equil_magnetic.eqdsk.pp = rp;
+    equil_magnetic.eqdsk.pq = rq;
+    equil_magnetic.eqdsk.Rp = Rp;
+    equil_magnetic.eqdsk.Zp = Zp;  
+    equil_magnetic.eqdsk.Ip = Ip;  
+    equil_magnetic.eqdsk.Rv = Rv;  
+    equil_magnetic.eqdsk.Zv = Zv;  
+    equil_magnetic.eqdsk.Bv = Bv;  
+    equil_magnetic.eqdsk.pFdFdpsi = rFdFdpsi;  
+    equil_magnetic.eqdsk.pdpdpsi = rdpdpsi;  
+end
 %
