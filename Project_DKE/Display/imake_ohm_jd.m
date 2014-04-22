@@ -151,7 +151,7 @@ end
 %
 if o_opt == 0,% ohm from constant VLOOP
     %
-    sigma = - sign(equil.ptBPHI(1,1));%epsi is defined versus B, electron charge included
+    sigma = - sign(equil.ptBPHI(1,1));%epsi is defined versus B, electron charge included epsi = -E.B
     %
     if ~isfield(select,'idohm') || ~select.idohm 
         id_ohm = input('Please specify a name for the ohm structure : [VLOOP]','s');
@@ -166,7 +166,7 @@ if o_opt == 0,% ohm from constant VLOOP
     %
     psin = equil.psi_apRp/equil.psi_apRp(end);
     ohm.rho = psi2rho_jd(equil,psin);%Arbitrary normalized minor radius
-    ohm.epsi = sigma*vloop*ones(1,length(ohm.rho))/(2*pi*equil.Rp);%(V/m)
+    ohm.epsi = -sigma*vloop*ones(1,length(ohm.rho))/(2*pi*equil.Rp);%(V/m) E=-grad V
     %
 elseif o_opt == 1,% ohm from E/ED
     %

@@ -30,18 +30,21 @@ else
   xrhoV = equilDKE.xrhoV;
 %
   if dkeparam.nit_ohm > 1,% frozen current mode
+      %
+      sigma = - sign(equilDKE.XBphi(1,1));%epsi is defined versus B, electron charge included : epsi = -E.B
+      %
       if ~isnan(dkeparam.Itot_ohm),% uniform electric field enforced to reach scalar current target
           ohm.id = 'Iconst';
           ohm.rho = equilDKE.xrho;
           if ~isfield(ohm,'epsi') || mean(ohm.epsi) == 0,
-              ohm.epsi = dkeparam.vloop_ohm*ones(size(ohm.rho))/(2*pi*equilDKE.Rp);%(V/m)
+              ohm.epsi = -sigma*dkeparam.vloop_ohm*ones(size(ohm.rho))/(2*pi*equilDKE.Rp);%(V/m) E=-grad V
           else
               ohm.epsi = mean(ohm.epsi)*ones(size(ohm.rho));
           end
       elseif isempty(ohm) || any(ohm.epsi == 0),% a non-zero initial field is needed to calculate consistent field
           ohm.id = 'jconst';
           ohm.rho = equilDKE.xrho;
-          ohm.epsi = dkeparam.vloop_ohm*ones(size(ohm.rho))/(2*pi*equilDKE.Rp);%(V/m)
+          ohm.epsi = -sigma*dkeparam.vloop_ohm*ones(size(ohm.rho))/(2*pi*equilDKE.Rp);%(V/m) E=-grad V
       end
   end    
 %

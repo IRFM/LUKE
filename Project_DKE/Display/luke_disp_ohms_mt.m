@@ -69,7 +69,7 @@ else
     for j=1:ntr-1
         [ax] = graph1D_jd(time,dat(j,:),0,0,'','','',NaN,NaN,NaN,'-',markers{j},colors{j},2,style,ax);
     end
-    [ax] = graph1D_jd(time,dat(ntr,:),0,0,'t (s)','','',legstr,0,0,'-',markers{ntr},colors{ntr},2,style,ax);   
+    [ax] = graph1D_jd(time,dat(ntr,:),0,0,'t (s)','','',legstr,0,NaN,'-',markers{ntr},colors{ntr},2,style,ax);   
 end
 
 % end of function
