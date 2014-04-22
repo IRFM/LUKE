@@ -1,6 +1,6 @@
 function equil = iluke_equilcorr(equil)
 %
-if ~isfield(equil,'tokamak') || ~isfield(equil,'shotnum') || ~isfield(equil,'shotime'),
+if ~isfield(equil,'tokamak') || ~isfield(equil,'shotnum') || ~isfield(equil,'shotime')
     %
     % default parameters
     %
@@ -37,6 +37,8 @@ if ~isfield(equil,'tokamak') || ~isfield(equil,'shotnum') || ~isfield(equil,'sho
         equil.shotime = str2double(strs{inum(2)});% shotnum
         %
     end
+elseif ischar(equil.shotime),
+    equil.shotime = str2double(equil.shotime);
 end
 %
 if ~isfield(equil,'ip'),

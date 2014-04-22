@@ -44,7 +44,7 @@ if strcmp(action,'lukestart'),
         opt.savepath = [workdir,'LUKE_files',filesep];% (1): save LUKE_RESULTS or return error (0): return results or error
         opt.proc = struct;% if not empty, structure containing options for proc_luke. In that case, opt.fields = {'data_proc'}.
         %
-        if any(status.output),% LUKE is already run for some times
+        if any(status.output == 1),% LUKE is already run for some times
             %
             lukeobj = iluke_info(lukeobj,'');% disable info display
             %
@@ -53,7 +53,7 @@ if strcmp(action,'lukestart'),
             lukeobj = iluke_info(lukeobj,'luke');drawnow;% disable info display
             %
         else
-            job_mask = 1:ntimes;
+            job_mask = find(status.output == 0);
         end
         %
         nt = length(job_mask);

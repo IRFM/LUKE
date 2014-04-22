@@ -17,6 +17,10 @@ else
     end
 end
 %
+if ~ischar(shotime),
+    shotime = num2str(shotime);
+end
+%
 if strcmp(tokamak,'TCV'),
     %
     addpath('/home/gnesin')

@@ -1223,7 +1223,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         else%if strcmp(wave.rayinit.launch.type,'LH') && input_dke_yp('Do you want to define the subwaves by initial vertical position?','y',{'n','y'}) == 'y',
                             % TODO
                         %else
-                            raygroups = input_dke_yp(['Please regroup the ',num2str(nrays),' rays in cells of arrays'],{1:nrays});
+                            keyboard;%raygroups = {1:24,25:48,49:72,73:96};%input_dke_yp(['Please regroup the ',num2str(nrays),' rays in cells of arrays'],{1:nrays});
                         end      
                         %
                         dispwaves = {};

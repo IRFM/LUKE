@@ -883,7 +883,10 @@ if opt.luke,
 end
 graph1D_jd(rho_dep,dPdrho_lin/1e6,0,0,xlab,ylab,tit,leg,xlim,ylim,style3,marker1,color2,width1,opt.font,ax,red,lspace,bspace);
 %
-set(ax,'xtickmode','auto','ytickmode','auto');
+set(ax,'xtickmode','auto');drawnow;
+set(ax,'ytickmode','auto');drawnow;
+%
+pause(0.1);
 %
 print_jd(opt.print,[figname,'Tot_dep_prof'],'figures_WAVE');
 %

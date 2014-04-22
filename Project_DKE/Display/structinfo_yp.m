@@ -195,7 +195,7 @@ switch struct
     case 'waveparam',
         %
         switch field 
-            case 'mmode',expert = 0;values = [-1,1];info = 'Polarization : (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1)';
+            case 'mmode',expert = 0;values = [-1;1];info = 'Polarization : (1) m (-1) p, (slow/fast LH wave: -1/+1, O/X mode: -1/+1)';
             case 'kmode',expert = 0;values = [0,1];info = 'Plasma model for wave propagation : (0:cold, 1:kinetic)';
             case 'opt_rf',expert = 0;values = [0,1];info = 'FLR effects : (0:all, 1:small)';
             case 'dsmin',expert = 1;values = [0;Inf];info = 'Minimum length of ray fragments';

@@ -10,6 +10,10 @@ if ~strcmp(lukeobj.tokamak.string,'TCV'),
     %
     lukeobj.angles.load.state = 'off';
     %
+else
+    %
+    lukeobj.angles.load.state = 'on';
+    %    
 end
 
 lukeobj.data.disp.state = 'off';

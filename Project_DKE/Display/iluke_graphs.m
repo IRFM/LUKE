@@ -3,10 +3,10 @@ function graph = iluke_graphs(h,n,str,tag,curtime)
 if nargin < 5,
     curtime = 0;% case with all times considered
 end
-if isscalar(n),
-    n=1:n;
-end
 if ~iscell(n),
+    if isscalar(n),
+        n=1:n;
+    end
     n={n};
 end
 nn = length(n);

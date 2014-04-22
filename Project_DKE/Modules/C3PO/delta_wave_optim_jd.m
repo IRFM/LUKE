@@ -1,6 +1,9 @@
 function [delta,ntargetsh] = delta_wave_optim_jd(wave,equil_fit,ntargets)
 %
 ray = wave.rays{1};
+if ray.P0_2piRp == ray.sP_2piRp_lin(end),% no absorption
+    ray.sP_2piRp_lin(end) = ray.P0_2piRp*(1 - 10*eps);
+end
 Ph_2piRp_lin = (ray.P0_2piRp + ray.sP_2piRp_lin(end))/2;
 %
 smask = 1 + [0,find(diff(ray.sP_2piRp_lin) < 0)];% monotonic evolution
