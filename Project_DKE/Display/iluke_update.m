@@ -88,7 +88,7 @@ transpfastes(:,end+1:end+nnew) = {[]};
 ripples(:,end+1:end+nnew) = {[]};
 wavess(:,end+1:end+nnew) = {{}};
 %
-wavestructss(:,end+1:end+nnew) = {{}};
+wavestructss(:,end+1:end+nnew) = cell(length(wavestructids),nnew);
 %
 jobs(:,end+1:end+nnew) = {[]};
 outputs(:,end+1:end+nnew) = {[]};
@@ -98,7 +98,7 @@ status.ohm(:,end+1:end+nnew) = 0;
 status.transpfaste(:,end+1:end+nnew) = 0;
 status.ripple(:,end+1:end+nnew) = 0;
 status.waves(:,end+1:end+nnew) = 0;
-status.wavestructs(:,end+1:end+nnew) = 0;
+status.wavestructs(:,end+1:end+nnew) = zeros(length(wavestructids),nnew);
 status.job(:,end+1:end+nnew) = 0;
 status.output(:,end+1:end+nnew) = 0;
 status.sdiag(:,end+1:end+nnew) = 0;
@@ -383,6 +383,9 @@ end
 % WORKDIR
 %
 cd(workdir)
+if ~strcmp(workdir(end),filesep),
+    workdir = [workdir,filesep];
+end
 lukeobj.workdir.string = workdir;
 
 %
