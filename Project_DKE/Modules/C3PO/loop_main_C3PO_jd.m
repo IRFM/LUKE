@@ -1,4 +1,4 @@
-function [rays] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay,f0struct,fluct_fit)
+function [rays,rhomin] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay,f0struct,fluct_fit)
 %C3PO - Set ray initial characteristics and launches the C3PO ray-tracing code (loop function for distributed computing environment)
 %
 %This function calculates the ray initial characteristics and launches the C3PO ray-tracing code
@@ -6,6 +6,39 @@ function [rays] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayini
 %by Yves Peysson (CEA-IRFM,yves.peysson@cea.fr) and Joan Decker (CEA-IRFM,joan.decker@cea.fr) and 
 %
 % this function is called for a single ray
+%
+if isfield(waveparam,'rhomin'),
+   %
+   [rays,rhomin] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,rmfield(waveparam,'rhomin'),C3POdisplay,f0struct,fluct_fit);
+   %
+   if rhomin < waveparam.rhomin,
+        %
+        disp(' ');
+        disp(['Minimum rho = ',num2str(rhomin),' below the threshold ',num2str(waveparam.rhomin),' : adjusting rayinit.ym0 to reach threshold']);
+        %
+        optim.tolfun = 1e-1;% tolerance on targets
+        optim.tolx = 1e-1;% tolerance on inputs
+        optim.nitmax = 20;%
+        %
+        ym0 = fminsearch(@(X) calc_rhomin_jd(X,...
+            iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay,f0struct,fluct_fit),...
+            rayinit.ym0,optimset('TolFun',optim.tolfun,'TolX',optim.tolx,'MaxIter',optim.nitmax));
+        %
+        disp(' ');
+        disp(['  --> rayinit.ym0 changed from ',num2str(rayinit.ym0),' to ',num2str(ym0)]);
+        %
+        rayinit.ym0 = ym0;
+        %
+        [rays,rhomin] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,rmfield(waveparam,'rhomin'),C3POdisplay,f0struct,fluct_fit);
+        %
+        disp(' ');
+        disp(['  --> New minimum rho = ',num2str(rhomin)]);
+        %
+   end
+   %
+   return
+   %
+end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
@@ -137,15 +170,23 @@ else%
     %
     mmodethres = 1 - abs(waveparam.mmode);% waveparam.mmode sets the threshold for considering both polarizations.
     %
-    if rayinit.yXfrac <= mmodethres || rayinit.yXfrac >= (1 - mmodethres),% approximate to dominant mode
-        mmode = sign(rayinit.yXfrac - 1/2);
+    if mmodethres > 1/2,
+        mmodethres = 1 - mmodethres;% threshold is defined between 0 and 1/2
+    end
+    %
+    if rayinit.yXfrac <= mmodethres,% enforce O mode
+        mmode = -(1-rayinit.yXfrac);
+    elseif rayinit.yXfrac >= (1 - mmodethres),% enforce X mode
+        mmode = rayinit.yXfrac;
     else% split power according to rayinit.yXfrac
         mmode = [rayinit.yXfrac,1-rayinit.yXfrac];%[Xfrac, Ofrac]
     end
 end
 %
 if length(mmode) == 1,% one mode only
-    rays{1}.rayinits{1}.mmode = mmode;
+    rays{1}.rayinits{1}.mmode = sign(mmode);
+    rays{1}.rayinits{1}.yP0_2piRp = rays{1}.rayinits{1}.yP0_2piRp*abs(mmode);
+    rays{1}.P0_2piRp = rays{1}.P0_2piRp*abs(mmode);
 else% split power according to mmode
     %
     rays{2} = rays{1};% copy ray parameters
@@ -553,5 +594,30 @@ for iref = 1:nref + 1,% vessel reflection index
 	%
     rays = [rays(oldrays == 0),newrays];
 	%
+end
+%
+if nargout > 1,
+   %
+   rhomin = 1;
+   %
+   for iray = 1:length(rays),
+       rhomin = min([rhomin,rays{iray}.srho]);
+   end
+end
+end
+%
+function [delta] = calc_rhomin_jd(ym0,iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay,f0struct,fluct_fit)
+    %
+    ym0_init = rayinit.ym0;
+    %
+    rayinit.ym0 = ym0;
+    %
+    [~,rhomin] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,rmfield(waveparam,'rhomin'),C3POdisplay,f0struct,fluct_fit);
+    %
+    delta = abs(waveparam.rhomin - rhomin);
+    %
+    disp(' ');
+    disp([' ym0 : ',num2str(ym0_init),' -> ',num2str(ym0),' ; rhomin : ',num2str(rhomin),' ; delta : ',num2str(delta)]);
+    %
 end
 
