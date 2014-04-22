@@ -1,5 +1,8 @@
-function [ax] = graph2D_jd(x,y,Z,xlab,ylab,tit,xlim,ylim,fill,maxw,cont,lab,style,color,width,siz,red,Z_0)
+function [ax] = graph2D_jd(x,y,Z,xlab,ylab,tit,xlim,ylim,fill,maxw,cont,lab,style,color,width,font,red,Z_0,ax)
 
+if nargin < 19
+    ax = gca;
+end
 if nargin < 18
     Z_0 = NaN;
 end
@@ -7,7 +10,20 @@ if nargin < 17
     red = 1;
 end
 if nargin < 16
-    siz = 20;
+    font.fontsize = 20+14i;
+    font.fontname = 'Times';%'Courier';
+elseif ~isstruct(font),
+    fontsize = font;
+    font = struct;
+    font.fontsize = fontsize;
+    font.fontname = 'Times';%'Courier';
+else
+    if ~isfield(font,'fontsize'),
+        font.fontsize = 20+14i;
+    end
+    if ~isfield(font,'fontname'),
+        font.fontname = 'Times';%'Courier';
+    end
 end
 if nargin < 15
     width = 0.5;
@@ -74,35 +90,35 @@ end
 if ~isnan(color)
     if fill == 0
         if ~isnan(cont)
-            [C,H] = contour(x,y,Z',cont,color);
+            [C,H] = contour(ax,x,y,Z',cont,color);
         else
-            [C,H] = contour(x,y,Z',color);
+            [C,H] = contour(ax,x,y,Z',color);
         end 
     else
         if ~isnan(cont)
-            [C,H] = contourf(x,y,Z',cont,color);
+            [C,H] = contourf(ax,x,y,Z',cont,color);
         else
-            [C,H] = contourf(x,y,Z',color);
+            [C,H] = contourf(ax,x,y,Z',color);
         end 
     end
 else
     if fill == 0
         if ~isnan(cont)
-            [C,H] = contour(x,y,Z',cont);
+            [C,H] = contour(ax,x,y,Z',cont);
         else
-            [C,H] = contour(x,y,Z');
+            [C,H] = contour(ax,x,y,Z');
         end 
     else
         if ~isnan(cont)
-            [C,H] = contourf(x,y,Z',cont);
+            [C,H] = contourf(ax,x,y,Z',cont);
         else
-            [C,H] = contourf(x,y,Z');
+            [C,H] = contourf(ax,x,y,Z');
         end 
     end
 end    
 %
 if any(isnan(color)) && ~any(isnan(cont)) && length(cont) > 1,
-    caxis([min(cont),max(cont)]);
+    caxis(ax,[min(cont),max(cont)]);
 end
 %hold off
 %
@@ -112,29 +128,27 @@ if ~isnan(style)
 end
 %
 if lab ~= 0
-    clabel(C,H,'manual','fontsize',20);%,'fontsize',14
+    clabel(C,H,'manual','fontsize',font.fontsize,'fontname',font.fontname);%,'fontsize',14
 end
 if ~isnan(xlim)
-    set(gca,'xlim',xlim);
+    set(ax,'xlim',xlim);
 end
 if ~isnan(ylim)
-    set(gca,'ylim',ylim);
+    set(ax,'ylim',ylim);
 end
 %
 if ~isempty(xlab),
-    xl = xlabel(xlab);set(xl,'fontsize',siz);
+    xl = xlabel(ax,xlab);set(xl,'fontsize',font.fontsize,'fontname',font.fontname);
 end
 if ~isempty(ylab),
-    yl = ylabel(ylab);set(yl,'fontsize',siz);
+    yl = ylabel(ax,ylab);set(yl,'fontsize',font.fontsize,'fontname',font.fontname);
 end
 if ~isempty(tit),
-    tl = title(tit);set(tl,'fontsize',siz);
+    tl = title(ax,tit);set(tl,'fontsize',font.fontsize,'fontname',font.fontname);
 end
 %
-set(gca,'fontsize',siz);
+set(ax,'fontsize',font.fontsize,'fontname',font.fontname);
 %
-ax = gca;
-%
-[lspace,bspace,apos_new] = resizejd(gca,red);
+[lspace,bspace,apos_new] = resizejd(ax,red);
 %
 box on
