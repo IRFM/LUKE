@@ -37,26 +37,42 @@ if ~opt_full,% simplified interface
     shotdata.dtmax = [];
     shotdata.outputdir = '';
     shotdata.isel = [];
+    shotdata.flagTPG = true;
+    shotdata.flagFF = true;
+    shotdata.flagHXR = true;
+    shotdata.flagZeff = true;
     %
     shotdata.expert.shotnum = 0;
     shotdata.expert.times = 0;
     shotdata.expert.dtmax = 1;
     shotdata.expert.outputdir = 1;
     shotdata.expert.isel = 1;
+    shotdata.expert.flagTPG = 1;
+    shotdata.expert.flagFF = 1;
+    shotdata.expert.flagHXR = 1;
+    shotdata.expert.flagZeff = 1;
     %
     shotdata.values.shotnum = [0;Inf];
     shotdata.values.times = [0;Inf];
     shotdata.values.dtmax = [0;Inf];
     shotdata.values.outputdir = '';
     shotdata.values.isel = [0;6];%[0;9];%
+    shotdata.values.flagTPG = {true,false};
+    shotdata.values.flagFF = {true,false};
+    shotdata.values.flagHXR = {true,false};
+    shotdata.values.flagZeff = {true,false};
     %
     shotdata.info.shotnum = 'Shot number';
     shotdata.info.times = timestxt;
     shotdata.info.dtmax = dtmaxtxt;
     shotdata.info.outputdir = 'Output Directory. Leave empty to use default tmp folder';
     shotdata.info.isel = iseltxt;
+    shotdata.info.flagTPG = 'Option to calculate O/X fraction with TPG function';
+    shotdata.info.flagFF = 'Option to calculate O/X fraction with FF function';
+    shotdata.info.flagHXR = 'Option to load HXR data';
+    shotdata.info.flagZeff = 'Option to load Zeff data';
     %
-    shotdata = imod_struct_jd(shotdata,'shotdata',0,opt_gui,shotdata,style);
+    shotdata = imod_struct_jd(shotdata,'shotdata',0,true,shotdata,style);%opt_gui
     %
 else% full interface
     %
