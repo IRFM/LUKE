@@ -3,7 +3,6 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
     % This function loads data from TCV database
     %
     diagnames = {'BT','IP','VLOOP','NE','TE','TI','ZEFF','ZAXIS','ECRH','EQUIL','HXR'};
-    ndiag = length(diagnames);
     %
     shotdata = iget_datainput_TCV(diagnames,workdir,opt_gui,style);% setup user-defined inputs with GUI or command line
     %
@@ -20,6 +19,19 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
     if ~isempty(shotdata.outputdir),
         datainput.outputpath = shotdata.outputdir;
     end
+    datainput.flagTPG = shotdata.flagTPG;
+    datainput.flagFF = shotdata.flagFF;
+    %
+    if ~shotdata.flagHXR,
+        diagnames(strcmp(diagnames,'HXR')) = [];
+    end
+    %
+    if ~shotdata.flagZeff,
+        diagnames(strcmp(diagnames,'ZEFF')) = [];
+    end
+    %
+    ndiag = length(diagnames);
+    %
     for idiag = 1:ndiag,
         %
         datainput.diag{idiag}.name = diagnames{idiag};
@@ -40,8 +52,11 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
     %
     [err,dataoutput] = matremote_jd('luke_get_trdata',{datainput},remote);
     if ~isempty(err),
+        disperr_jd(err);
         external = '';
         return
+    else
+        disp(['Data successfully loaded for shot ',num2str(shotdata.shotnum)])
     end
     %
     % fill external structure fields
@@ -60,15 +75,30 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
     else
         disp('No ti data');        
     end
-    shotimes = intersect(shotimes,dataoutput.zeff.time);
+    if shotdata.flagZeff,
+        shotimes = intersect(shotimes,dataoutput.zeff.time);
+    end
     shotimes = intersect(shotimes,dataoutput.zaxis.time);
     shotimes = intersect(shotimes,dataoutput.ip.time);
     shotimes = intersect(shotimes,dataoutput.vloop.time);
     %
-    for iisel = 1:length(dataoutput.ecrh.isel),
+    nlaun = length(dataoutput.ecrh.isel);
+    %
+    for iisel = 1:nlaun,
         shotimes = intersect(shotimes,dataoutput.ecrh.ang{iisel}.time);
         shotimes = intersect(shotimes,dataoutput.ecrh.pow{iisel}.time);
-        shotimes = intersect(shotimes,dataoutput.ecrh.xfrac{iisel}.time);
+        if isfield(dataoutput.ecrh,'xfrac'),
+            shotimes = intersect(shotimes,dataoutput.ecrh.xfrac{iisel}.time);
+        end
+        if isfield(dataoutput.ecrh,'xfrac_FF'),
+            shotimes = intersect(shotimes,dataoutput.ecrh.xfrac_FF{iisel}.time);
+        end
+        if isfield(dataoutput.ecrh,'xfrac_TPG'),
+            shotimes = intersect(shotimes,dataoutput.ecrh.xfrac_TPG{iisel}.time);
+        end        
+        if isfield(dataoutput.ecrh,'stray'),
+            shotimes = intersect(shotimes,dataoutput.ecrh.stray{iisel}.time);
+        end        
     end
     %
     discnshotimes = setdiff(dataoutput.te.time,shotimes);
@@ -78,6 +108,9 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
     %
     external.shotimes = shotimes;
     nt = length(external.shotimes);
+    %
+    Xfrac_FF = NaN(nt,nlaun);
+    Xfrac_TPG = NaN(nt,nlaun);
     %
     for it = 1:nt,
         shotime = external.shotimes(it);
@@ -108,7 +141,12 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
             external.equil(it).prof.ti = dataprocess(dataoutput.ti,'ti',shotime);% ti
         end
         %
-        external.equil(it).prof.zeff = dataprocess(dataoutput.zeff,'zeff',shotime);% zeff
+        if shotdata.flagZeff,
+            external.equil(it).prof.zeff = dataprocess(dataoutput.zeff,'zeff',shotime);% zeff
+        else
+            external.equil(it).prof.zeff = NaN;
+        end
+        %
         external.equil(it).prof.zaxis = dataprocess(dataoutput.zaxis,'zaxis',shotime);% zaxis
         external.equil(it).prof.ip = dataprocess(dataoutput.ip,'ip',shotime);% ip
         external.equil(it).prof.btsign = dataoutput.btsign.data;% btsign
@@ -117,7 +155,7 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
         external.ohm(it).vloop = dataprocess(dataoutput.vloop,'vloop',shotime);% vloop
         %
         external.wave(it).laun = dataoutput.ecrh.isel;
-        for iisel = 1:length(dataoutput.ecrh.isel),
+        for iisel = 1:nlaun,
             %
             angles = selectfields_jd(dataoutput.ecrh.ang{iisel},{'freq','P1_R','P1_theta','P2_R','P2_d','P1_Z','P2_Z','P3_Z'});% mirrors
             %
@@ -127,14 +165,65 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
             angles.phi_eff = dataprocess(dataoutput.ecrh.ang{iisel},'phi_eff',shotime,'phi_eff');% phi_eff
             %
             angles.P0 = dataprocess(dataoutput.ecrh.pow{iisel},'pow',shotime);% P0
-            angles.Xfrac = dataprocess(dataoutput.ecrh.xfrac{iisel},'xfrac',shotime);% Power fraction in X mode
+            if isfield(dataoutput.ecrh,'xfrac'),
+                angles.Xfrac = dataprocess(dataoutput.ecrh.xfrac{iisel},'xfrac',shotime);% Power fraction in X mode
+            end
+            if isfield(dataoutput.ecrh,'xfrac_FF'),
+                angles.Xfrac_FF = dataprocess(dataoutput.ecrh.xfrac_FF{iisel},'xfrac_FF',shotime);% Power fraction in X mode
+                Xfrac_FF(it,iisel) = angles.Xfrac_FF;
+            end
+            if isfield(dataoutput.ecrh,'xfrac_TPG'),
+                angles.Xfrac_TPG = dataprocess(dataoutput.ecrh.xfrac_TPG{iisel},'xfrac_TPG',shotime);% Power fraction in X mode
+                Xfrac_TPG(it,iisel) = angles.Xfrac_TPG;
+            end        
+            if isfield(dataoutput.ecrh,'stray'),
+                angles.stray = dataprocess(dataoutput.ecrh.stray{iisel},'stray',shotime);% Power fraction in X mode
+            end        
             %
             external.wave(it).angles(iisel) = angles;
             %
         end
         %
-        external.hxr = dataoutput.hxr;
+        if shotdata.flagHXR,
+            external.hxr = dataoutput.hxr;
+        end
         %    
+    end
+    %
+    if ~isfield(angles,'Xfrac'),
+        Xfrac_list{1} = 'FF code, mean Xfrac';
+        Xfrac_list{2} = 'TPG code, mean Xfrac';
+        for iisel = 1:nlaun, 
+            mask = ~isnan(Xfrac_FF(:,iisel));
+            if ~any(mask),
+                mXfrac_FF = NaN;
+            else
+                mXfrac_FF = mean(Xfrac_FF(mask,iisel));
+            end
+            %
+            mask = ~isnan(Xfrac_TPG(:,iisel));
+            if ~any(mask),
+                mXfrac_TPG = NaN;
+            else
+                mXfrac_TPG = mean(Xfrac_TPG(mask,iisel));
+            end
+            %
+            Xfrac_list{1} = [Xfrac_list{1},' : L',num2str(iisel),' = ',num2str(mXfrac_FF,'%0.2f')];
+            Xfrac_list{2} = [Xfrac_list{2},' : L',num2str(iisel),' = ',num2str(mXfrac_TPG,'%0.2f')];
+        end
+        %
+        Xfrac_opt = iselect_jd(Xfrac_list,'Which X mode fraction do you want to select ?',opt_gui,style.buttonselectstyle,1);
+        %
+        for it = 1:nt,
+            for iisel = 1:nlaun,
+                if Xfrac_opt == 1,
+                    external.wave(it).angles(iisel).Xfrac = external.wave(it).angles(iisel).Xfrac_FF;
+                else
+                    external.wave(it).angles(iisel).Xfrac = external.wave(it).angles(iisel).Xfrac_TPG;
+                end
+            end
+        end
+        %
     end
     %
     external.id = ['TCV_',external.shotnum,'_MultiTimes'];
