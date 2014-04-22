@@ -77,7 +77,8 @@ if nshotimes > 1,% display time dependence
             %
             Nphotons = repmat(dt,[nbins,1]).*hxrdata.';% number of photons measured per energy bin
             %
-            hxrsum = sum(hxrdata(:,energyind),2);
+            hxrsum = sum(hxrdata(:,energyind),2).';
+            ehxrsum = sqrt(hxrsum./dt);
             %
             [Tphexp,eTphexp] = tphfit_dke_yp(repmat(energy(energyind).',[1,nt]),Nphotons(energyind,:),sqrt(Nphotons(energyind,:)));
             Tphmax = 2*Tphexp(find(hxrsum == max(hxrsum),1,'first'));
@@ -87,19 +88,23 @@ if nshotimes > 1,% display time dependence
             %
             graph1D_jd(shotimes,Tphexp,0,0,'t (s)','T_{ph.} (keV)','',NaN,xlim,'','-','o','r',2,style,axs(1),1,NaN,NaN,eTphexp);%Poloidal plot
             ylim = get(axs(1),'ylim');
-            set(axs(1),'ylim',[0,min([ylim(2),Tphmax])]);drawnow
+            if ~isnan(Tphmax),
+                set(axs(1),'ylim',[0,min([ylim(2),Tphmax])]);drawnow
+            end
             %
             nobj(1) = 1;
             graphids{1} = ['Tph - ',camstr,'; ',chordstr,'; ',energystr];  
             %
-            graph1D_jd(shotimes,hxrsum,0,0,'t (s)','CR (Hz)','',NaN,xlim,'','-','o','r',2,style,axs(2));%Poloidal plot
+            graph1D_jd(shotimes,hxrsum,0,0,'t (s)','CR (Counts/s)','',NaN,xlim,'','-','o','r',2,style,axs(2),1,NaN,NaN,ehxrsum);%Poloidal plot
             %
             nobj(2) = 1;
             graphids{2} = ['CR - ',camstr,'; ',chordstr,'; ',energystr];                  
             %
         else% display for one energy - display specific count rate
             %
-            graph1D_jd(shotimes,hxrdata,0,0,'t (s)','CR (Hz)','',NaN,xlim,'','-','o','r',2,style,axs(1));%Poloidal plot
+            ehxrdata = sqrt(hxrdata./dt.');
+            %
+            graph1D_jd(shotimes,hxrdata,0,0,'t (s)','CR (Counts/s)','',NaN,xlim,'','-','o','r',2,style,axs(1),1,NaN,NaN,ehxrdata);%Poloidal plot
             %
             nobj(1) = 1;
             graphids{1} = ['CR - ',camstr,'; ',chordstr,'; ',energystr];  
@@ -132,6 +137,8 @@ else% display for one time step
                 %
                 hxrsum = sum(hxrdata(energyind,:),1);
                 %
+                ehxrsum = sqrt(hxrsum/dt);
+                %
                 [Tphexp,eTphexp] = tphfit_dke_yp(repmat(energy(energyind).',[1,nchords]),Nphotons(energyind,:),sqrt(Nphotons(energyind,:)));
                 Tphmax = 2*Tphexp(find(hxrsum == max(hxrsum),1,'first'));
                 Tphmask = Tphexp > 0 & Tphexp < Tphmax & eTphexp < Tphexp;
@@ -140,19 +147,23 @@ else% display for one time step
                 %
                 graph1D_jd(chordsnum,Tphexp,0,0,'chord #','T_{ph.} (keV)','',NaN,xlim,'','-','o','r',2,style,axs(1),1,NaN,NaN,eTphexp);%Poloidal plot
                 ylim = get(axs(1),'ylim');
-                set(axs(1),'ylim',[0,min([ylim(2),Tphmax])]);drawnow
+                if ~isnan(Tphmax),
+                    set(axs(1),'ylim',[0,min([ylim(2),Tphmax])]);drawnow
+                end
                 %
                 nobj(1) = 1;
                 graphids{1} = ['Tph - ',camstr,'; ',timestr,'; ',energystr];  
                 %
-                graph1D_jd(chordsnum,hxrsum,0,0,'chord #','CR (Hz)','',NaN,xlim,'','-','o','r',2,style,axs(2));%Poloidal plot
+                graph1D_jd(chordsnum,hxrsum,0,0,'chord #','CR (Counts/s)','',NaN,xlim,'','-','o','r',2,style,axs(2),1,NaN,NaN,ehxrsum);%Poloidal plot
                 %
                 nobj(2) = 1;
                 graphids{2} = ['CR - ',camstr,'; ',timestr,'; ',energystr];                  
                 %
             else% display for one energy - display specific count rate
                 %
-                graph1D_jd(chordsnum,hxrdata,0,0,'chord #','CR (Hz)','',NaN,xlim,'','-','o','r',2,style,axs(1));%Poloidal plot
+                ehxrdata = sqrt(hxrdata/dt);
+                %
+                graph1D_jd(chordsnum,hxrdata,0,0,'chord #','CR (Counts/s)','',NaN,xlim,'','-','o','r',2,style,axs(1),1,NaN,NaN,ehxrdata);%Poloidal plot
                 %
                 nobj(1) = 1;
                 graphids{1} = ['CR - ',camstr,'; ',timestr,'; ',energystr];  
@@ -169,9 +180,11 @@ else% display for one time step
                 %
                 %log(Ei*Ni/dE) = a+b*Ei -> Tph = -1/b
                 %
+                ehxrdata = sqrt(hxrdata/dt);
+                %
                 hxrdatafit = Aexp*exp(-energy/Tphexp).*denergy./energy/dt;
                 %
-                graph1D_jd(energy,hxrdata,0,1,'k (keV)','CR (Hz)','',NaN,xlim,'','-','o','r',2,style,axs(1));%Poloidal plot
+                graph1D_jd(energy,hxrdata,0,1,'k (keV)','CR (Counts/s)','',NaN,xlim,'','-','o','r',2,style,axs(1),1,NaN,NaN,ehxrdata);%Poloidal plot
                 graph1D_jd(energy,hxrdatafit,0,1,'','','',NaN,xlim,'','-','none','b',1,style,axs(1));%Poloidal plot
                 graph1D_jd(hxr.param.kmin*[1,1],get(axs(1),'ylim'),0,1,'','','',NaN,xlim,'','--','none','k',2,style,axs(1));%Poloidal plot
                 graph1D_jd(hxr.param.kmax*[1,1],get(axs(1),'ylim'),0,1,'','','',NaN,xlim,'','--','none','k',2,style,axs(1));%Poloidal plot
