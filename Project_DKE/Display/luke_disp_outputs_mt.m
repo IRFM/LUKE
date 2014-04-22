@@ -85,6 +85,8 @@ for it = 1:nt,
     %
 end
 %
+nw = length(waveids);
+%
 colors = {'r','b',[0,0.5,0],'k'};
 markers = {'s','d','+','o'};
 %

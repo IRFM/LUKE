@@ -1,4 +1,4 @@
-function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,opt)
+function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,opt)
 %LUKE -  Function which plots the results from LUKE data structures
 %
 % This function plots the results from LUKE data structures
@@ -104,6 +104,14 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
     end
     if isfield(data,'output'),
         data = data.output;
+    end
+    %
+    if ~isfield(opt,'gui'),
+        opt.gui = false;
+    end
+    %
+    if ~isfield(opt,'style'),
+        opt.style = struct;
     end
     %
     style0 = 'none';
@@ -233,19 +241,6 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
         %
         xTe = equilDKE.xTe;
         xne = equilDKE.xne;
-        %
-        pn = momentumDKE.pn;
-        dpn = momentumDKE.dpn;
-        mhu = momentumDKE.mhu;
-        dmhu = momentumDKE.dmhu;
-        gamma = Zmomcoef.gamma;
-        Ec_ref = Zmomcoef.Ec_ref;%Fast electron kinetic energy in keV
-        if isfield(Zmomcoef,'dEc_ref'),
-            dEc_ref = Zmomcoef.dEc_ref;
-        else
-            [dummy,dummy,dummy,dummy,dummy,dummy,dummy,mc2] = pc_dke_yp;
-            dEc_ref = diff(mc2*(sqrt(1 + momentumDKE.pn_S.*momentumDKE.pn_S*mksa.betath_ref^2) - 1));
-        end
         %
         nr = length(xrhoG);
         nw = length(waves);
@@ -901,17 +896,12 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
         xlab_rho = '\rho_V';
     end
     %
-    if ir_display >= 0,
+    if isnan(ir_display) || ir_display >= 0,
         %
         if isfield(opt,'diaryname') && ischar(opt.diaryname),
             diaryname = opt.diaryname;
         else
-            if ir_display == 0,
-                diaryname = ['res_',data_proc.simul.id,'.log'];
-            else
-                tir_display = num2str(ir_display);
-                diaryname = ['res_',data_proc.simul.id,'_irho_',tir_display,'.log'];
-            end
+            diaryname = ['res_',data_proc.simul.id,'.log'];
             %
             if exist(diaryname,'file') && gettime_jd(diaryname) > datenum(timeid_jd(data_proc.simul.timeid),'mm/dd/yyyy HH:MM:SS'),
                 diaryname = '';
@@ -1247,7 +1237,8 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
             %
             graph1D_jd(xrho,data_proc.radial.J_tot,0,0,xlab_rho,ylab,tit,NaN,xlim_rho,NaN,style,marker1,color2,width2,opt.font,ax,red,lspace,bspace);
             %
-            set(ax,'xtick',xtick_rho,'ytickmode','auto');drawnow;
+            set(ax,'xtick',xtick_rho);
+            set(ax,'ytickmode','auto');drawnow;
             %
             print_jd(p_opt,[data_proc.simul.id,'_J_profile'],'figures_LUKE');
             %
@@ -1503,9 +1494,60 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
         %
     end
     %
+    if isnan(ir_display),
+        %
+        if isfield(opt,'axs'),
+            recset_jd(opt.axs(4:5),'Visible','off',true)
+        end
+        %
+        sir = cell(1,nr+1);
+        for ir = 0:nr,
+            sir{ir+1} = num2str(ir);
+        end
+        ir_display = iselect_jd(sir,'Select radial position for display (0 to return)',opt.gui,opt.style.distselectstyle,1,'popupmenu') - 1;
+        %
+        if isfield(opt,'axs'),
+            recset_jd(opt.axs(4:5),'Visible','on',true)
+        end
+        %
+    end
+    %
     if ir_display > 0 && ir_display <= nr,
         %
+        tir_display = num2str(ir_display);
+        %
         disp(['normalized radius for distribution plots: ',num2str(xrho(ir_display))])
+        %
+        if isfield(data,'savefile'),% must load LUKE data
+            lukedata = load(data.savefile);
+%             Znorm = lukedata.lukestructs.output.mksa;
+%             Zcurr = lukedata.lukestructs.output.Zcurr;
+%             ZP0 = lukedata.lukestructs.output.ZP0;
+            dke_out = lukedata.lukestructs.output.dke_out;
+            radialDKE = lukedata.lukestructs.output.radialDKE;
+            equilDKE = lukedata.lukestructs.output.equilDKE;
+            momentumDKE = lukedata.lukestructs.output.momentumDKE;
+            gridDKE = lukedata.lukestructs.output.gridDKE;
+            Zmomcoef = lukedata.lukestructs.output.Zmomcoef;
+            Zbouncecoef = lukedata.lukestructs.output.Zbouncecoef;
+            Zmripple = lukedata.lukestructs.output.Zmripple;
+            mksa = lukedata.lukestructs.output.mksa;
+            %
+            scocurr = sign(equilDKE.psia_apRp)*sign(equilDKE.XBphi(1,1));
+        end
+        %
+        pn = momentumDKE.pn;
+        dpn = momentumDKE.dpn;
+        mhu = momentumDKE.mhu;
+        dmhu = momentumDKE.dmhu;
+        gamma = Zmomcoef.gamma;
+        Ec_ref = Zmomcoef.Ec_ref;%Fast electron kinetic energy in keV
+        if isfield(Zmomcoef,'dEc_ref'),
+            dEc_ref = Zmomcoef.dEc_ref;
+        else
+            [dummy,dummy,dummy,dummy,dummy,dummy,dummy,mc2] = pc_dke_yp;
+            dEc_ref = diff(mc2*(sqrt(1 + momentumDKE.pn_S.*momentumDKE.pn_S*mksa.betath_ref^2) - 1));
+        end
         %
         Xf0 = dke_out.XXf0{end}(:,:,ir_display);
         Xfinit = dke_out.XXfinit(:,:,ir_display);
@@ -1554,6 +1596,10 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
         pnmax_S = max(momentumDKE.pn_S);
         pnmax_0 = min(min(Xp_cyl_ref(Xmask)));
         %
+        if isempty(pnmax),
+            pnmax = iselect_jd({},'Select the maximum momentum for display',opt.gui,opt.style.editselectstyle,min([pnmax_0,pnmax_S]),'edit');
+        end
+        %
         if isnan(pnmax),
             pnmax = min([pnmax_0,pnmax_S]);
         end
@@ -1585,19 +1631,26 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
         %
         % ---------- energy-space density of current deposition -----------
         %
-        figure(10),clf,set(10,'Name',['dj/dp - ',data_proc.simul.id])
-        %
-        xlab = 'p/p_{Te}';
-        ylab = 'dj/dp_n (MA/m^2)';
-        xlim = [0,pnmax];
-        %
-        graph1D_jd(pn,pdj0dp,0,0,xlab,ylab,[radialloc,' ; dj/dp positive for co-current'],NaN,xlim,NaN,style,marker,color2,width2,opt.font,gca,red,lspace,bspace2);
-        %
-        print_jd(p_opt,[data_proc.simul.id,'_djdp_',tir_display],'figures_LUKE');
+        if ~isfield(opt,'axs'),
+            figure(10),clf,set(10,'Name',['dj/dp - ',data_proc.simul.id])
+            %
+            xlab = 'p/p_{Te}';
+            ylab = 'dj/dp_n (MA/m^2)';
+            xlim = [0,pnmax];
+            %
+            graph1D_jd(pn,pdj0dp,0,0,xlab,ylab,[radialloc,' ; dj/dp positive for co-current'],NaN,xlim,NaN,style,marker,color2,width2,opt.font,gca,red,lspace,bspace2);
+            %
+            print_jd(p_opt,[data_proc.simul.id,'_djdp_',tir_display],'figures_LUKE');
+        end
         %
         % ---------- 2D distribution function -----------
         %
-        figure(11),clf,set(11,'Name',['2-D contour of f - ',data_proc.simul.id])
+        if ~isfield(opt,'axs'),
+            figure(11),clf,set(11,'Name',['2-D contour of f - ',data_proc.simul.id])
+            ax = gca;
+        else
+            ax = opt.axs(4);
+        end   
         %
         x1 = ppar_cyl_ref;
         xlab1 = 'p_{||}/p_{Te}';
@@ -1623,27 +1676,27 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
         %
         y9 = sqrt(pnmax^2 - x1.^2);
         %
-        graph2D_jd(x1,x2,y1','','',radialloc,xlim1,xlim2,0,mksa.betath_ref,[0:0.5:pnmax],0,style,color3,width,opt.font,1,max(max(y1)));
-        hold on
-        graph2D_jd(x1,x2,y2','','',radialloc,xlim1,xlim2,0,mksa.betath_ref,[0:0.5:pnmax],0,style,color2,width2,opt.font,1,max(max(y1)));
+        graph2D_jd(x1,x2,y1','','',radialloc,xlim1,xlim2,0,mksa.betath_ref,[0:0.5:pnmax],0,style,color3,width,opt.font,1,max(max(y1)),ax);
+        hold(ax,'on')
+        graph2D_jd(x1,x2,y2','','',radialloc,xlim1,xlim2,0,mksa.betath_ref,[0:0.5:pnmax],0,style,color2,width2,opt.font,1,max(max(y1)),ax);
         %
         if y3max > 1e-5,
-            graph2D_jd(x1,x2,y3','','',radialloc,xlim1,xlim2,0,NaN,y3max/100,0,style,color4,width2,opt.font);
+            graph2D_jd(x1,x2,y3','','',radialloc,xlim1,xlim2,0,NaN,y3max/100,0,style,color4,width2,opt.font,1,NaN,ax);
         end
-        hold off
+        hold(ax,'off')
         %
-        graph1D_jd(x1,y9,0,0,xlab1,xlab2,radialloc,NaN,xlim1,xlim2,style,marker,color1,width2,opt.font,gca,red,lspace,bspace2);
+        graph1D_jd(x1,y9,0,0,xlab1,xlab2,radialloc,NaN,xlim1,xlim2,style,marker,color1,width2,opt.font,ax,red,lspace,bspace2);
         %
-        axis('equal');axis([xlim1,xlim2]);
-        legend(leg);
+        axis(ax,'equal');axis(ax,[xlim1,xlim2]);
+        legend(ax,leg);
         %
         if data_proc.scalar.Rp ~= Inf,
-            bounce_ripple_jd(1,pnmax,gridDKE.xmhubounce2,ir_display,Zmripple);
+            bounce_ripple_jd(1,pnmax,gridDKE.xmhubounce2,ir_display,Zmripple,opt.font,ax);
         end
         %
         print_jd(p_opt,[data_proc.simul.id,'_f_2D',tir_display],'figures_LUKE');
         %
-        if max(max(abs(y3))) > 0,
+        if ~isfield(opt,'axs') && max(max(abs(y3))) > 0,
             %
             figure(12),clf,set(12,'Name',['2-D contour of ',y3lab,' - ',data_proc.simul.id])
             %
@@ -1676,91 +1729,101 @@ function data_proc = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnmax,subtitle,op
         %
         % ---------- 2D suprathermal distribution function -----------
         %
-        figure(111),clf,set(11,'Name',['2-D contour of fh - ',data_proc.simul.id])
-        %
-        x1 = ppar_cyl_ref;
-        xlab1 = 'p_{||}/p_{Te}';
-        xlim1 = [-pnmax,pnmax];
-        %
-        x2 = pperp_cyl_ref;
-        xlab2 = 'p_{\perp}/p_{Te}';
-        xlim2 = [0,pnmax];
-        %
-        y = Xfh_cyl_ref;
-        %
-        if max(max(XDparpar_cyl_ref)) > max(max(XDpp_cyl_ref)),
-            y3 = XDparpar_cyl_ref;
-            y3lab = 'D||';
-        else
-            y3 = XDpp_cyl_ref;
-            y3lab = 'Dpp';
+        if ~isfield(opt,'axs'),
+            figure(111),clf,set(11,'Name',['2-D contour of fh - ',data_proc.simul.id])
+            %
+            x1 = ppar_cyl_ref;
+            xlab1 = 'p_{||}/p_{Te}';
+            xlim1 = [-pnmax,pnmax];
+            %
+            x2 = pperp_cyl_ref;
+            xlab2 = 'p_{\perp}/p_{Te}';
+            xlim2 = [0,pnmax];
+            %
+            y = Xfh_cyl_ref;
+            %
+            if max(max(XDparpar_cyl_ref)) > max(max(XDpp_cyl_ref)),
+                y3 = XDparpar_cyl_ref;
+                y3lab = 'D||';
+            else
+                y3 = XDpp_cyl_ref;
+                y3lab = 'Dpp';
+            end
+            y3max = max(max(y3));
+            %
+            y9 = sqrt(pnmax^2 - x1.^2);
+            %
+            graph2D_jd(x1,x2,y','','',radialloc,xlim1,xlim2,0,mksa.betath_ref,[0:0.5:pnmax],0,style,color3,width,opt.font,1,max(max(y1)));
+            hold on
+            %
+            if y3max > 1e-5,
+                graph2D_jd(x1,x2,y3','','',radialloc,xlim1,xlim2,0,NaN,y3max/100,0,style,color4,width2,opt.font);
+            end
+            hold off
+            %
+            graph1D_jd(x1,y9,0,0,xlab1,xlab2,radialloc,NaN,xlim1,xlim2,style,marker,color1,width2,opt.font,gca,red,lspace,bspace2);
+            %
+            axis('equal');axis([xlim1,xlim2]);
+            legend(leg);
+            %
+            if data_proc.scalar.Rp ~= Inf,
+                bounce_ripple_jd(1,pnmax,gridDKE.xmhubounce2,ir_display,Zmripple);
+            end
+            %
+            print_jd(p_opt,[data_proc.simul.id,'_fh_2D',tir_display],'figures_LUKE');
+            %
         end
-        y3max = max(max(y3));
-        %
-        y9 = sqrt(pnmax^2 - x1.^2);
-        %
-        graph2D_jd(x1,x2,y','','',radialloc,xlim1,xlim2,0,mksa.betath_ref,[0:0.5:pnmax],0,style,color3,width,opt.font,1,max(max(y1)));
-        hold on
-        %
-        if y3max > 1e-5,
-            graph2D_jd(x1,x2,y3','','',radialloc,xlim1,xlim2,0,NaN,y3max/100,0,style,color4,width2,opt.font);
-        end
-        hold off
-        %
-        graph1D_jd(x1,y9,0,0,xlab1,xlab2,radialloc,NaN,xlim1,xlim2,style,marker,color1,width2,opt.font,gca,red,lspace,bspace2);
-        %
-        axis('equal');axis([xlim1,xlim2]);
-        legend(leg);
-        %
-        if data_proc.scalar.Rp ~= Inf,
-            bounce_ripple_jd(1,pnmax,gridDKE.xmhubounce2,ir_display,Zmripple);
-        end
-        %
-        print_jd(p_opt,[data_proc.simul.id,'_fh_2D',tir_display],'figures_LUKE');
-        %
         %
         % ---------- parallel distribution difference-----------
         %
-        figure(13),clf,set(13,'Name',['F||-F||M - ',data_proc.simul.id])
-        %
-        y1 = Fpar0_cyl_ref - Fparinit_cyl_ref;
-        ylab = 'F_{||} - F_{||M}';
-        %
-        graph1D_jd(x1,y1,0,0,xlab1,ylab,radialloc,NaN,xlim1,NaN,style,marker,color2,width2,opt.font,gca,red,lspace,bspace2);
-        %
-        print_jd(p_opt,[data_proc.simul.id,'_F0mFM_1D',tir_display],'figures_LUKE');
+        if ~isfield(opt,'axs'),figure(13),clf,set(13,'Name',['F||-F||M - ',data_proc.simul.id])
+            %
+            y1 = Fpar0_cyl_ref - Fparinit_cyl_ref;
+            ylab = 'F_{||} - F_{||M}';
+            %
+            graph1D_jd(x1,y1,0,0,xlab1,ylab,radialloc,NaN,xlim1,NaN,style,marker,color2,width2,opt.font,gca,red,lspace,bspace2);
+            %
+            print_jd(p_opt,[data_proc.simul.id,'_F0mFM_1D',tir_display],'figures_LUKE');
+        end
         %
         % ---------- parallel distribution -----------
         %
-        figure(14),clf,set(14,'Name',['F|| - ',data_proc.simul.id])
+        if ~isfield(opt,'axs'),
+            figure(14),clf,set(14,'Name',['F|| - ',data_proc.simul.id])
+            ax = gca;
+        else
+            ax = opt.axs(5);
+        end   
         %
         y1 = Fparinit_cyl_ref;
         y2 = Fpar0_cyl_ref;
         ylab = 'F_{||}';
         ylim = [eps,1];
         %
-        graph1D_jd(x1,y1,0,1,'','',radialloc,NaN,xlim1,ylim,style,marker,color3,width,opt.font,gca,red,lspace,bspace2);
-        graph1D_jd(x1,y2,0,1,xlab1,ylab,radialloc,leg,xlim1,ylim,style,marker,color2,width2,opt.font);
-        legend(leg);
+        graph1D_jd(x1,y1,0,1,'','',radialloc,NaN,xlim1,ylim,style,marker,color3,width,opt.font,ax,red,lspace,bspace2);
+        graph1D_jd(x1,y2,0,1,xlab1,ylab,radialloc,NaN,xlim1,ylim,style,marker,color2,width2,opt.font,ax);
+        legend(ax,leg);
         %
         print_jd(p_opt,[data_proc.simul.id,'_F0pFM_1D_',tir_display],'figures_LUKE');
         %
         % ---------- energy distribution -----------
         %
-        figure(15),clf,set(14,'Name',['dNdEc - ',data_proc.simul.id])
-        %
-        x1 = Ec_ref;
-        xlab1 = 'E_c (keV)';
-        xlim1 = [0,max(x1)];
-        y1 = pdNinit_dEc_ref;
-        y2 = pdN0_dEc_ref;
-        ylab = 'dn_e/dE_c/n_0 (keV^{-1})';
-        %
-        graph1D_jd(x1,y1,0,1,'','',radialloc,NaN,xlim1,NaN,style2,marker,color3,width2,opt.font,gca,red,lspace,bspace2);
-        graph1D_jd(x1,y2,0,1,xlab1,ylab,radialloc,leg,xlim1,NaN,style,marker,color2,width2,opt.font);
-        legend(leg);
-        %
-        print_jd(p_opt,[data_proc.simul.id,'_dNdEc_',tir_display],'figures_LUKE');
+        if ~isfield(opt,'axs'),
+            figure(15),clf,set(14,'Name',['dNdEc - ',data_proc.simul.id])
+            %
+            x1 = Ec_ref;
+            xlab1 = 'E_c (keV)';
+            xlim1 = [0,max(x1)];
+            y1 = pdNinit_dEc_ref;
+            y2 = pdN0_dEc_ref;
+            ylab = 'dn_e/dE_c/n_0 (keV^{-1})';
+            %
+            graph1D_jd(x1,y1,0,1,'','',radialloc,NaN,xlim1,NaN,style2,marker,color3,width2,opt.font,gca,red,lspace,bspace2);
+            graph1D_jd(x1,y2,0,1,xlab1,ylab,radialloc,leg,xlim1,NaN,style,marker,color2,width2,opt.font);
+            legend(leg);
+            %
+            print_jd(p_opt,[data_proc.simul.id,'_dNdEc_',tir_display],'figures_LUKE');
+        end
         %
     end
 end

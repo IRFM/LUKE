@@ -1,6 +1,13 @@
-function bounce_ripple_jd(bounce_mode,pnmax,xmhubounce2,ir_display,Zmripple)
+function bounce_ripple_jd(bounce_mode,pnmax,xmhubounce2,ir_display,Zmripple,fontsize,ax)
 %
 % Draws the bounce and ripple loss domains
+%
+if nargin < 7,
+    ax = gca;
+end
+if nargin < 6,
+    fontsize = 20+14i;
+end
 %
 nmhu_ripple = 100;
 %
@@ -9,8 +16,8 @@ if bounce_mode >= 1,%Draw bounce domain boundaries
     pparmax = pnmax*sqrt(xmhubounce2(ir_display));
     pperpmax = pnmax*sqrt(1 - xmhubounce2(ir_display));
     %
-    graph1D_jd([0,pparmax],[0,pperpmax],0,0,'','','',NaN,NaN,NaN,'-','none','k',2);
-    graph1D_jd([0,-pparmax],[0,pperpmax],0,0,'','','',NaN,NaN,NaN,'-','none','k',2);
+    graph1D_jd([0,pparmax],[0,pperpmax],0,0,'','','',NaN,NaN,NaN,'-','none','k',2,fontsize,ax);
+    graph1D_jd([0,-pparmax],[0,pperpmax],0,0,'','','',NaN,NaN,NaN,'-','none','k',2,fontsize,ax);
     %
 	if isempty(Zmripple) == 0,
     	%if isnan(Zmripple) == 0,%Draw the magnetic ripple loss cone
@@ -27,9 +34,9 @@ if bounce_mode >= 1,%Draw bounce domain boundaries
             pparmax = pnmax*xmhusupertrap(ir_display);
             pperpmax = pnmax*sqrt(1-xmhusupertrap(ir_display)^2);
             %
-            graph1D_jd(pparsupertrap,pperpsupertrap,0,0,'','','',NaN,NaN,NaN,'--','none','k',2);
-            graph1D_jd([pparmin,pparmax],[pperpmin,pperpmax],0,0,'','','',NaN,NaN,NaN,'--','none','k',2);
-            graph1D_jd([-pparmin,-pparmax],[pperpmin,pperpmax],0,0,'','','',NaN,NaN,NaN,'--','none','k',2);
+            graph1D_jd(pparsupertrap,pperpsupertrap,0,0,'','','',NaN,NaN,NaN,'--','none','k',2,fontsize,ax);
+            graph1D_jd([pparmin,pparmax],[pperpmin,pperpmax],0,0,'','','',NaN,NaN,NaN,'--','none','k',2,fontsize,ax);
+            graph1D_jd([-pparmin,-pparmax],[pperpmin,pperpmax],0,0,'','','',NaN,NaN,NaN,'--','none','k',2,fontsize,ax);
 		%end
     end
 end
