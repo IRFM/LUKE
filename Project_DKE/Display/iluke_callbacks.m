@@ -66,7 +66,7 @@ switch action
                 %
                 % iluke made LUKE_DATA_*.mat file
                 %
-                load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
+                load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','wavestructids','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
                 lukeobj = conc_struct_jd(lukeobj,lukeobjmod);
                 %
                 iluke_updateoldsimul;
@@ -149,7 +149,7 @@ switch action
             %
             lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotimes','data','equil','ohm','transp','ripple','wave','wavestruct','luke','sdiag','param','lukeid'});
             lukeobjmod = rmfields_jd(lukeobjmod,{'handle','position'},1);
-            save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
+            save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','wavestructids','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
             %
             lukeobj.simulfile.string = filename;%[pathname,filename];
             %
@@ -377,33 +377,33 @@ switch action
             %
             if length(flag_shotimes) > 1,% more than one time - case with curtime == 0 and external data with multiple times
                 %
-                equils(flag_shotimes) = newequil.';
+                equils(1,flag_shotimes) = newequil.';
                 %
-                status.equil(flag_shotimes) = 1;
-                status.ohm(flag_shotimes) = 0;
-                status.transpfaste(flag_shotimes) = 0;
-                status.ripple(flag_shotimes) = 0;
-                status.waves(flag_shotimes) = 0;
-                status.wavestructs(flag_shotimes) = 0;
-                status.output(flag_shotimes) = 0;
+                status.equil(:,flag_shotimes) = 1;
+                status.ohm(:,flag_shotimes) = 0;
+                status.transpfaste(:,flag_shotimes) = 0;
+                status.ripple(:,flag_shotimes) = 0;
+                status.waves(:,flag_shotimes) = 0;
+                status.wavestructs(:,flag_shotimes) = 0;
+                status.output(:,flag_shotimes) = 0;
                 %
             elseif length(flag_shotimes) == 1,% replace or fill an existing time
                 %
-                equils{flag_shotimes} = newequil;
+                equils{1,flag_shotimes} = newequil;
                 %
-                status.equil(flag_shotimes) = 1;
-                status.ohm(flag_shotimes) = 0;
-                status.transpfaste(flag_shotimes) = 0;
-                status.ripple(flag_shotimes) = 0;
-                status.waves(flag_shotimes) = 0;
-                status.wavestructs(flag_shotimes) = 0;
-                status.output(flag_shotimes) = 0;
+                status.equil(:,flag_shotimes) = 1;
+                status.ohm(:,flag_shotimes) = 0;
+                status.transpfaste(:,flag_shotimes) = 0;
+                status.ripple(:,flag_shotimes) = 0;
+                status.waves(:,flag_shotimes) = 0;
+                status.wavestructs(:,flag_shotimes) = 0;
+                status.output(:,flag_shotimes) = 0;
                 %
             else% new time
                 %
-                equils{end+1} = newequil;
-                status.equil(end+1) = 3;
-                shotimes(end+1) = equil.shotime;
+                equils{1,end+1} = newequil;
+                status.equil(:,end+1) = 3;
+                shotimes(1,end+1) = equil.shotime;
                 %
                 curtime = length(shotimes);
                 %
@@ -578,7 +578,7 @@ switch action
                 cleartimes = find(status.equil == 1);
             elseif curtime > 0 && status.equil(curtime) == 1,
                 cleartimes = curtime;
-                curtime = curtime - 1;
+                curtime = 0;
             else
                 cleartimes = [];
             end
@@ -880,7 +880,7 @@ switch action
             %
         else
             %
-            luke_disp_ohms_mt(equils,ohms,newgraph1_handle,style)
+            luke_disp_ohms_mt(equils(status.ohm == 1),ohms(status.ohm == 1),newgraph1_handle,style)
             %
             graphs = iluke_graphs(lukeobj.plot1.handle,2,'center and edge loop voltage','ohm');
             %
@@ -1042,99 +1042,7 @@ switch action
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
         %
-        select = struct;
-        select.style = style;
-        %
-        if isfield(external,'wave'),% include data from external structure if available
-            if curtime == 0,% treat all times from external structure if available
-                flag_calc = find(status.wavestructs >= 0);
-                [~,flag_calctimes,flag_external] = intersect(shotimes(flag_calc),external.times);
-                flag_shotimes = flag_calc(flag_calctimes);
-            elseif curtime > 0,% select one time from external structure if available
-                flag_external = find(external.times == shotimes(curtime));
-                flag_shotimes = curtime;
-            else
-                flag_external = [];% no action
-                flag_shotimes = [];% no action
-            end
-            %
-            external_wave = external.wave(flag_external);
-            nt = length(external_wave);
-            %
-            for it = 1:nt,
-                 external_wave(it).equil = equils{flag_shotimes(it)};% for distributed computing
-            end
-            %
-            clear flag_calc flag_calctimes it nt
-            %
-        else
-            %
-            if curtime < 1,% no action
-                flag_shotimes = [];
-            else% replace existing
-                flag_shotimes = curtime;
-            end
-            %
-            external_wave = [];% no external structure
-            %
-        end 
-        %
-        if length(flag_shotimes) > 1,% more than one time - case with curtime == 0 and external data with multiple times
-            %
-            mdce_mode = iselect_jd(dkepath.distprofiles,'Distribution of calc. : ',lukeobj.infopanel.handle,style.distselectstyle,1,'popupmenu') - 1;
-            %
-            if mdce_mode > 2,
-                mdce_mode = 2 - mdce_mode;%use of remcomputing with negative mdce_mode
-            end
-            %
-            dkecluster = clustermode_luke(mdce_mode,'',dkepath);%MatLab distributed computing environment
-            %
-            set(lukeobj.busy.handle,'Visible','on');drawnow;
-            [flag,launchs] = mdce_run('imake_launch_jd',{dkepath,tokamak,'','',workdir,lukeobj.infopanel.handle,select},4,external_wave,dkecluster);
-            set(lukeobj.busy.handle,'Visible','off');drawnow;
-            %
-            clear mdce_mode dkecluster flag 
-            %            
-        elseif length(flag_shotimes) == 1% treat one time 
-            %
-            launchs = imake_launch_jd(dkepath,tokamak,equils{flag_shotimes},external_wave,workdir,lukeobj.infopanel.handle,select);
-            %
-        else
-            launchs = [];
-        end
-        %
-        if isfield(launchs,'err'),
-            lukeobj.infotext.string = {'Error creating structure(s) ''launchs'' : ',launchs.err};
-        elseif ~isempty(launchs),
-            %
-            if length(flag_shotimes) > 1,% more than one time - case with curtime == 0 and external data with multiple times
-                %
-                nt = length(flag_shotimes);
-                for it = 1:nt,
-                    for iw = 1:length(launchs{it});
-                        wavestructss{flag_shotimes(it)}{end+1} = imake_wavestructs_jd(equils{flag_shotimes(it)},launchs{it}{iw});
-                    end
-                end
-                %
-            elseif length(flag_shotimes) == 1,% replace or fill an existing time
-                %
-                for iw = 1:length(launchs);
-                    wavestructss{flag_shotimes}{end+1} = imake_wavestructs_jd(equils{flag_shotimes},launchs{iw});
-                end
-                %
-            end
-            %
-            lukeobj.wavestruct.select.value = 1;
-            %
-            status.wavestructs(flag_shotimes) = 1;
-            %
-            status.data = 2;
-            %
-            clear flag_shotimes
-            %
-        end
-        %
-        clear select launchs external_wave
+        iluke_wavestructsimport;
         %
         action = 'wavemake';iluke_callbacks;
         %
@@ -1149,30 +1057,30 @@ switch action
         %
         if curtime > 0,
             %
-            launchs = imake_launch_jd(dkepath,tokamak,equils{curtime},'',workdir,lukeobj.infopanel.handle,select);
+            flag_shotimes = curtime;
             %
-            wavestructss{curtime}{end+1} = imake_wavestructs_jd(equils{curtime},launchs{1});
+            launchs{1} = imake_launch_jd(dkepath,tokamak,equils{curtime},'',workdir,lukeobj.infopanel.handle,select);
             %
         else
+            %
+            flag_shotimes = find(status.equil == 1);
+            %
+            clear flag_calc flag_calctimes
             %
             signs.ip = sign(equils{1}.psi_apRp(end));
             signs.b0 = sign(equils{1}.ptBPHI(1,1));
             %
-            launchs = imake_launch_jd(dkepath,tokamak,signs,'',workdir,lukeobj.infopanel.handle,select);
+            launchs{1} = imake_launch_jd(dkepath,tokamak,signs,'',workdir,lukeobj.infopanel.handle,select);
             %
-            for it = find(status.wavestructs >= 0),
-                wavestructss{it}{end+1} = imake_wavestructs_jd(equils{it},launchs{1});
-            end
+            launchs = repmat(launchs,[1,length(flag_shotimes)]);
             %
             clear signs
             %
         end           
         %
-        status.data = 2;
+        iluke_newwavestructs;% update wavestructs, status and wavestructids
         %
-        lukeobj.wavestruct.select.value = 1;
-        %
-        clear select launchs
+        clear select launchs flag_shotimes
         %
         lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
         %
@@ -1234,22 +1142,50 @@ switch action
         %
     case 'wavestructclear'
         %
-        % creating wavestruct structure from external
+        % clearing wavestruct structure (s)
         %
-        wavestructs(lukeobj.wavestruct.select.value) = [];
-        lukeobj.wavestruct.select.value = length(wavestructs);
-        %  
-        status.data = 2;
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
+        if curtime == 0,
+            iw_curtime = 1:length(wavestructids);
+            opt_continue = iselect_jd({'No','Yes'},['Clear all ''wavestruct'' structures labeled ',lukeobj.wavestruct.select.string{lukeobj.wavestruct.select.value},' ? '],lukeobj.infopanel.handle,style,1) - 1;
+        else
+            iw_curtime = find(status.wavestructs(:,curtime) == 1);
+            opt_continue = 1;
+        end
+        %
+        iw = iw_curtime(lukeobj.wavestruct.select.value);% current index in wavestructss
+        %
+        if opt_continue,
+            %
+            status.data = 2;
+            %
+            if curtime == 0,
+                status.wavestructs(iw,:) = 0;
+            else
+                status.wavestructs(iw,curtime) = 0;
+            end
+            %
+        end
+        %
+        clear opt_continue iw_curtime iw
+        %
+        lukeobj = iluke_info(lukeobj,'c3po');% enable info display
         %        
     case 'anglesmodify'
         %
         % modifying angles data
         %
-        %lukeobj = iluke_info(lukeobj,'');% disable info display
+        lukeobj = iluke_info(lukeobj,'');% disable info display
         %
-        iw = lukeobj.wavestruct.select.value;
+        if curtime == 0,
+            iw_curtime = 1:length(wavestructids);
+        else
+            iw_curtime = find(status.wavestructs(:,curtime) == 1);
+        end
+        iw = iw_curtime(lukeobj.wavestruct.select.value);% current index in wavestructss
         %
-        angles = wavestructs{iw}.launch.angles;
+        angles = wavestructss{iw,curtime}.launch.angles;
         if isfield(angles,'orig'),
             orig = angles.orig;
             angles = rmfield(angles,'orig');
@@ -1274,16 +1210,19 @@ switch action
             %
             angles.orig = orig;
             %
-            wavestructs{iw}.launch = imake_launch_angles_TCV_jd(rmfield(angles,{'frequency_GHz','P0_kW','theta_deg','phi_deg','P1_theta_deg'}));
-            wavestructs{iw}.id = [wavestructs{iw}.wavesolver,'_',wavestructs{iw}.launch.id];
+            launchs{1}{1} = imake_launch_angles_TCV_jd(rmfield(angles,{'frequency_GHz','P0_kW','theta_deg','phi_deg','P1_theta_deg'}));
             %
-            status.data = 2;
+            flag_shotimes = curtime;
+            %
+            iluke_newwavestructs;
+            %
+            clear launchs flag_shotimes
             %
         end
         %
-        clear iw angles orig mod
+        clear iw_curtime iw angles orig mod 
         %
-        %lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
         %        
     case 'anglesload'
         %
@@ -1570,7 +1509,9 @@ switch action
         %        
     case 'launchload'
         %
-        % loading angles data
+        % creating wavestruct structure from launch file
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         sbase = 'LAUNCH';
         filestr = [sbase,'_*.mat'];
@@ -1580,25 +1521,34 @@ switch action
         %
         if filename ~= 0,
             %
-            load([pathname,filename],'launch');
+            data = load([pathname,filename],'launch');
             %
-            wavestructs{end+1} = imake_wavestructs_jd(equil,launch);
+            if curtime > 0,
+                flag_shotimes = curtime;
+            else
+                flag_shotimes = find(status.equil == 1);
+            end
             %
-            lukeobj.wavestruct.select.value = length(wavestructs);
+            launchs = repmat({{data.launch}},[1,length(flag_shotimes)]);
             %
-            status.data = 2;
+            iluke_newwavestructs;% update wavestructs, status and wavestructids
             %
-            clear launch
+            clear data launchs flag_shotimes
             %
         end  
         %
         clear sbase filestr filename pathname
         %
+        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        %
     case 'launchsave'
         %
         % saving angles structure
         %
-        launch = wavestructs{lukeobj.wavestruct.select.value}.launch;
+        iw_curtime = find(status.wavestructs(:,curtime) == 1);
+        iw = iw_curtime(lukeobj.wavestruct.select.value);% current index in wavestructss
+        %
+        launch = wavestructss{iw,curtime}.launch;
         %
         sbase = 'LAUNCH';
         filestr = [sbase,'_*.mat'];
@@ -1613,7 +1563,7 @@ switch action
             %
         end  
         %
-        clear launch sbase filestr filename pathname 
+        clear iw_curtime iw launch sbase filestr filename pathname 
         %
     case 'launchreset'
         %
@@ -1634,27 +1584,54 @@ switch action
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
         %
-        iw = lukeobj.wavestruct.select.value;
-        %
-        rtparam = selectfields_jd(wavestructs{iw},{'rtparam','rayparam','waveparam','fitparam','C3POparam','C3POdisplay'});
-        if isfield(wavestructs{iw},'orig'),
-            orig = wavestructs{iw}.orig;
+        if curtime > 0,
+            iw_curtime = find(status.wavestructs(:,curtime) == 1);
+            iw = iw_curtime(lukeobj.wavestruct.select.value);% current index in wavestructss
+            %
+            rtparam = selectfields_jd(wavestructss{iw,curtime},{'rtparam','rayparam','waveparam','fitparam','C3POparam','C3POdisplay'});
+            if isfield(wavestructss{iw,curtime},'orig'),
+                orig = wavestructss{iw,curtime}.orig;
+            else
+                orig = rtparam;
+            end
         else
-            orig = rtparam;
+            iw = lukeobj.wavestruct.select.value;
+            itlist = find(status.wavestructs(iw,:) == 1);% list of times
+            rtparam = selectfields_jd(wavestructss{iw,itlist(1)},{'rtparam','rayparam','waveparam','fitparam','C3POparam','C3POdisplay'});
+            if isfield(wavestructss{iw,itlist(1)},'orig'),
+                orig = wavestructss{iw,itlist(1)}.orig;
+            else
+                orig = rtparam;
+            end
         end
         %
         [rtparam,mod] = imod_struct_jd(rtparam,'rtparam',1,lukeobj.infopanel.handle,struct,style);
         %
         if any(mod),
             %
-            wavestructs{iw}.rayparam = rtparam.rayparam;
-            wavestructs{iw}.waveparam = rtparam.waveparam;
-            wavestructs{iw}.fitparam = rtparam.fitparam;
-            wavestructs{iw}.C3POparam = rtparam.C3POparam;
-            wavestructs{iw}.C3POdisplay = rtparam.C3POdisplay;
-            wavestructs{iw}.rtparam = '< not saved >';
-            %
-            wavestructs{iw}.orig = orig;
+            if curtime > 0,
+                wavestructss{iw,curtime}.rayparam = rtparam.rayparam;
+                wavestructss{iw,curtime}.waveparam = rtparam.waveparam;
+                wavestructss{iw,curtime}.fitparam = rtparam.fitparam;
+                wavestructss{iw,curtime}.C3POparam = rtparam.C3POparam;
+                wavestructss{iw,curtime}.C3POdisplay = rtparam.C3POdisplay;
+                wavestructss{iw,curtime}.rtparam = '< not saved >';
+                %
+                wavestructss{iw,curtime}.orig = orig;
+            else
+                for it = itlist,
+                    wavestructss{iw,it}.rayparam = rtparam.rayparam;
+                    wavestructss{iw,it}.waveparam = rtparam.waveparam;
+                    wavestructss{iw,it}.fitparam = rtparam.fitparam;
+                    wavestructss{iw,it}.C3POparam = rtparam.C3POparam;
+                    wavestructss{iw,it}.C3POdisplay = rtparam.C3POdisplay;
+                    wavestructss{iw,it}.rtparam = '< not saved >';
+                    %
+                    wavestructss{iw,it}.orig = orig;
+                end
+                %
+                clear it itlist iwlist
+            end
             %
             status.data = 2;
             %
@@ -1662,7 +1639,7 @@ switch action
         %
         clear iw rtparam orig mod
         %
-        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        action = 'wavemake';iluke_callbacks;
         %        
     case 'c3poparamload'
         %
@@ -1783,40 +1760,38 @@ switch action
         select.opt = opt;
         select.busyhandle = lukeobj.busy.handle;
         %
-        iw = lukeobj.wavestruct.select.value;
+        iw_curtime = find(status.wavestructs(:,curtime) == 1);
+        iw = iw_curtime(lukeobj.wavestruct.select.value);% current index in wavestructss
         %
-        if isfield(wavestructss{curtime}{iw}.launch,'angles') && isfield(wavestructss{curtime}{iw}.launch.angles,'orig'),
-            wavestructss{curtime}{iw}.launch.angles = rmfield(wavestructss{curtime}{iw}.launch.angles,'orig');
+        if isfield(wavestructss{iw,curtime}.launch,'angles') && isfield(wavestructss{iw,curtime}.launch.angles,'orig'),
+            wavestructss{iw,curtime}.launch.angles = rmfield(wavestructss{iw,curtime}.launch.angles,'orig');
         end
         %
-        if isfield(wavestructss{curtime}{iw}.launch,'orig'),
-            wavestructss{curtime}{iw}.launch = rmfield(wavestructss{curtime}{iw}.launch,'orig');
+        if isfield(wavestructss{iw,curtime}.launch,'orig'),
+            wavestructss{iw,curtime}.launch = rmfield(wavestructss{iw,curtime}.launch,'orig');
         end
         %
-        [newwavestruct,flag_Zp] = wave_optim_jd(dkepath,wavestructss{curtime}{iw},select);
+        [newwavestruct,flag_Zp] = wave_optim_jd(dkepath,wavestructss{iw,curtime},select);
         %
-        if flag_Zp || ~comp_struct_jd(newwavestruct,wavestructss{curtime}{iw},0),
+        if flag_Zp || ~comp_struct_jd(newwavestruct,wavestructss{iw,curtime},0),
             status.data = 2;
         end
         %
-        wavestructss{curtime}{iw} = newwavestruct;
+        wavestructss{iw,curtime} = newwavestruct;
+        status.wavestructs(iw,curtime) = 1;
         %
         if flag_Zp,% Zp was changed, all waves and other existing wavestructs are cleared
             %
-            equils{curtime}.Zp = wavestructss{curtime}{iw}.equil.Zp;
+            equils{curtime}.Zp = wavestructss{iw,curtime}.equil.Zp;
+            %
+            status.waves(curtime) = 0;
             status.output(curtime) = 0;
+            status.wavestructs([1:iw-1,iw+1:end],curtime) = 0;
             %
-            wavestructss{curtime}([1:iw-1,iw+1:end]) = [];
-            lukeobj.wavestruct.select.value = 1;
-            %
-            if ~isempty(wavess{curtime}),
-                wavess{curtime} = '';
-                status.waves(curtime) = 0;
-                lukeobj.lukeid.string = '';
-            end
+            lukeobj.lukeid.string = '';
         end     
         %
-        clear iw newwavestructs flag_Zp newgraph1_handle newgraph2_handle newgraph3_handle opt select
+        clear iw_curtime iw newwavestructs flag_Zp newgraph1_handle newgraph2_handle newgraph3_handle opt select
         %
         lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
         %
@@ -1824,35 +1799,33 @@ switch action
         %
         % running C3PO for current or all wavestructs
         %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
         if curtime > 0,
             %
-            wavestructs = wavestructss{curtime}(iw);
+            iw_curtime = find(status.wavestructs(:,curtime) == 1);
+            iw_flag = iw_curtime(iw);
+            %
+            clear iw_curtime
+            %
+            wavestructs = wavestructss(iw_flag,curtime);
             it_flag = curtime*ones(1,length(wavestructs));
             %
             mdce_mode = str2double(lukeobj.wsparam.string);
             %
         else% treat all shot times
             %
-            wavestructs = {};
-            it_flag = [];
-            %
-            if ~isscalar(iw) || length(lukeobj.wavestruct.select.string) == 1,% treat all wavestructs
+            if ~isscalar(iw),% treat all wavestructs
                 %
-                for it=1:ntimes,
-                    wavestructs = [wavestructs,wavestructss{it}];
-                    it_flag = [it_flag,it*ones(1,length(wavestructss{it}))];
-                end
+                wavestructs = wavestructss(status.wavestructs == 1);
+                [iw_flag,it_flag] = find(status.wavestructs == 1);
                 %
             else% treat only wavestructs with  wavestruct.id = wavestruct.select.string{iw};
                 %
-                for it=1:ntimes,
-                    for iiw = 1:length(wavestructss{it}),
-                        if strcmp(wavestructss{it}{iiw},lukeobj.wavestruct.select.string{iw}.id),                            
-                            wavestructs = [wavestructs,wavestructss{it}{iiw}];
-                            it_flag = [it_flag,it];
-                        end
-                    end
-                end
+                wavestructs = wavestructss(iw,status.wavestructs(iw,:) == 1);
+                it_flag = find(status.wavestructs(iw,:) == 1);
+                iw_flag = repmat(iw,size(it_flag));
+                %
             end
             %
             mdce_mode = iselect_jd(dkepath.distprofiles,'Distribution of calc. : ',lukeobj.infopanel.handle,style.distselectstyle,1,'popupmenu') - 1;
@@ -2127,6 +2100,9 @@ switch action
         %
         % displaying wave data
         %
+        %
+        lukeobj = iluke_info(lukeobj,'');% enable info display
+        %
         it_g = 2 + curtime;%<new>,<all>,...
         %
         lukeobj.plot1.gindex(it_g) = 0;
@@ -2158,7 +2134,33 @@ switch action
             opt.ymask = NaN;
             opt.xvar = 'p';
             %
-            graph_wave_jd(equils{curtime},wavess{curtime},opt.nr_dep,opt,opt.rho_disp,opt.ymask,opt.xvar);
+            waves = wavess{curtime};
+            if length(waves) == 1,% single wave, can be subdivided for plotting
+                wave = waves{1};
+                nrays = length(wave.rays);
+                if nrays > 1 && iselect_jd({'No','Yes'},'Do you want to subdivide the rays into groups for plotting ? ',lukeobj.infopanel.handle,style,1) == 2,
+                    %
+                    raygroups = iselect_jd({},...
+                        ['Please select groups of rays in the list 1->',num2str(nrays),'. Ex : {1:',num2str(fix(nrays/2)),',',num2str(fix(nrays/2)+1),':',num2str(nrays),'} '],...
+                        lukeobj.infopanel.handle,style.editselectstyle,{1:nrays},'edit');
+                    %
+                    nwaves = length(raygroups);
+                    waves = cell(1,nwaves);
+                    for iw = 1:nwaves,
+                        waves{iw} = wave;
+                        waves{iw}.id = [waves{iw}.id,'_',num2str(iw)];
+                        waves{iw}.rays = waves{iw}.rays(raygroups{iw});
+                    end
+                    %
+                    clear nwaves iw
+                end
+                %
+                clear wave nrays 
+            end
+            %
+            graph_wave_jd(equils{curtime},waves,opt.nr_dep,opt,opt.rho_disp,opt.ymask,opt.xvar);
+            %
+            clear waves
             %
             graphs(1) = iluke_graphs(lukeobj.plot1.handle,1,'poloidal view','waves');
             graphs(2) = iluke_graphs(lukeobj.plot2.handle,1,'top view','waves');% includes legend
@@ -2170,22 +2172,32 @@ switch action
             lukeobj = iluke_info(lukeobj,'text');% enable info display
             %
         else
+            newgraph4_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
+            newgraph5_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
             %
-            clear it_g newgraph1_handle newgraph2_handle newgraph3_handle action           
+            set(lukeobj.busy.handle,'Visible','on');drawnow;
             %
-            error('Not yet implemented')
+            wave_disp_outputs_mt(wavess,shotimes,style,[newgraph1_handle,newgraph2_handle,newgraph3_handle,newgraph4_handle,newgraph5_handle]);
+            %
+            set(lukeobj.busy.handle,'Visible','off');drawnow;
+            %
+            graphs(1) = iluke_graphs(lukeobj.plot1.handle,2,'poloidal angle','waves');
+            graphs(2) = iluke_graphs(lukeobj.plot2.handle,2,'toroidal angle','waves');% includes legend
+            graphs(3:5) = iluke_graphs(lukeobj.plot3.handle,{[3,6],[2,5],[1,4]},{'wave power','fraction of power absorbed','linear power deposition'},'waves');% includes legend
             %
         end
         %   
         ngraphs = length(graphss{it_g});
         %
-        graphss{it_g}(end+1:end+3) = graphs;
+        graphss{it_g}(end+1:end+length(graphs)) = graphs;
         %
         lukeobj.plot1.gindex(it_g) = ngraphs + 1;
         lukeobj.plot2.gindex(it_g) = ngraphs + 2;
         lukeobj.plot3.gindex(it_g) = ngraphs + 3;
         %
         clear it_g ngraphs newgraph1_handle newgraph2_handle newgraph3_handle  
+        %
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'lukerun'
         %
@@ -2234,6 +2246,8 @@ switch action
         %
         % displaying luke data
         %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
         it_g = 2 + curtime;%<new>,<all>,...
         %
         lukeobj.plot1.gindex(it_g) = 0;
@@ -2244,12 +2258,16 @@ switch action
         %
         iluke_update;% initialize display
         %
-        newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
-        newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
-        newgraph3_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
+        axs(1) = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
+        axs(2) = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        axs(5) = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
+        axs(4) = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        axs(3) = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
         %
         if curtime > 0,
             %
+            opt.gui = lukeobj.infopanel.handle;
+            opt.style = style;
             opt.save = 0;
             opt.nr_dep = 0;
             opt.spec = 0;
@@ -2260,16 +2278,22 @@ switch action
             opt.diaryname = '';
             opt.peakmode = 1;
             %
-            opt.axs = [newgraph1_handle,newgraph2_handle,newgraph3_handle];
+            opt.axs = axs;
             opt.font = style;
             %
-            outputs{curtime}.data_proc = proc_luke_jd(outputs{curtime},0,-1,0.1,NaN,'',opt);
+            [outputs{curtime}.data_proc,ir_display] = proc_luke_jd(outputs{curtime},NaN,-1,0.1,[],'',opt);
             %
             clear opt
             %
             graphs(1) = iluke_graphs(lukeobj.plot1.handle,2,'RF power profile','output');
             graphs(2) = iluke_graphs(lukeobj.plot2.handle,1,'ohmic power profile','output');
-            graphs(3) = iluke_graphs(lukeobj.plot3.handle,1,'current profile','output');
+            %
+            if ir_display > 0,
+                graphs(3:5) = iluke_graphs(lukeobj.plot3.handle,{[3],[1,5],[2,4]},{'current profile',['f1D ir ',num2str(ir_display)],['f2D ir ',num2str(ir_display)]},'output');
+            else
+                graphs(3) = iluke_graphs(lukeobj.plot3.handle,{1},{'current profile'},'output');
+                delete(axs(4:5));
+            end
             %
             if isfield(outputs{curtime},'info') && isfield(outputs{curtime}.info,'txt'),
                 lukeobj.infotext.string = outputs{curtime}.info.txt;
@@ -2281,16 +2305,15 @@ switch action
             %
         else
             %
-            newgraph4_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
-            %
-            [outputs,nw] = luke_disp_outputs_mt(equils,outputs,style,[newgraph1_handle,newgraph2_handle,newgraph3_handle,newgraph4_handle]);
+            [outputs,nw] = luke_disp_outputs_mt(equils,outputs,style,axs);
             %
             graphs(1) = iluke_graphs(lukeobj.plot1.handle,2,'Current','output');
             graphs(2) = iluke_graphs(lukeobj.plot2.handle,2,'Power','output');
             if nw > 0,% RF wave
-                graphs(3:4) = iluke_graphs(lukeobj.plot3.handle,{[2,4],[1,3]},{'RF power absorption','RF power deposition'},'output');
+                graphs(3:4) = iluke_graphs(lukeobj.plot3.handle,{[1,4],[2,3]},{'RF power absorption','RF power deposition'},'output');
+                delete(axs(5));
             else
-                delete([newgraph3_handle,newgraph4_handle]);
+                delete(axs(3:5));
             end
             %
             clear nw
@@ -2306,7 +2329,9 @@ switch action
             lukeobj.plot3.gindex(it_g) = ngraphs + 3;
         end
         %
-        clear it_g ngraphs newgraph1_handle newgraph2_handle newgraph3_handle newgraph4_handle  
+        clear it_g ngraphs axs
+        %
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
     case 'lukestart'
         %
@@ -2367,8 +2392,14 @@ switch action
         %
         iluke_hxrcamdisp(hxr.cam(icams),xlim,ylim,equils{curtime}.Rp,equils{curtime}.Zp,[newgraph1_handle,newgraph2_handle],style)
         %
-        graphs(1) = iluke_graphs(lukeobj.plot1.handle,1,'HXR Chords, Poloidal view','hxrcam');
-        graphs(2) = iluke_graphs(lukeobj.plot2.handle,1,'HXR Chords, Toroidal view','hxrcam');
+        if length(icams) == 1,
+            camstr = ['Cam #',num2str(hxr.cam{icams}.camnum)];
+        else
+            camstr = 'All Cams';
+        end            
+        %
+        graphs(1) = iluke_graphs(lukeobj.plot1.handle,1,[camstr,' HXR Chords, Poloidal view'],'hxrcam');
+        graphs(2) = iluke_graphs(lukeobj.plot2.handle,1,[camstr,' HXR Chords, Toroidal view'],'hxrcam');
         %   
         ngraphs = length(graphss{it_g});
         %
