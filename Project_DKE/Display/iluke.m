@@ -253,7 +253,8 @@ lukeobj.newshot.state = 'on';
 lukeobj.loadshot.state = 'on';
 lukeobj.saveshot.state = 'on';
 
-lukeobj.shotimes.callback = 'curtime = get(lukeobj.shotimes.handle,''Value'') - 2;lukeobj = iluke_info(lukeobj,''text'');iluke_update;';
+%lukeobj.shotimes.callback = 'curtime = get(lukeobj.shotimes.handle,''Value'') - 2;lukeobj = iluke_info(lukeobj,''text'');iluke_update;';
+lukeobj.shotimes.callback = 'curtime = get(lukeobj.shotimes.handle,''Value'') - 2;iluke_update;';
 lukeobj.import.callback = 'action = ''import'';iluke_callbacks;';
 lukeobj.exitluke.callback = 'close(lukeobj.mainfig.handle)';
 lukeobj.newshot.callback = 'status.external = 0;status.equil(:) = -1;action = ''cleargraphs'';iluke_callbacks;';
@@ -433,6 +434,7 @@ lukeobj.wsparam.position = [style.titlewidth + 4*style.butwidth + 6*style.buthse
 % lukeobj.shotdist.title.position = [style.buthsep,style.infoheightcorr - 3*style.butheightcorr + style.textheightcorr,style.disttitlewidth,style.textheight];
 % lukeobj.shotdist.select.position = [style.disttitlewidth + 2*style.buthsep,style.infoheightcorr - 3*style.butheightcorr,style.panelwidth - style.disttitlewidth - 3*style.buthsep,style.butheight];
 
+lukeobj.wavestruct.select.value = 0;
 lukeobj.wavestruct.select.callback = 'lukeobj.wavestruct.select.value = get(lukeobj.wavestruct.select.handle,''Value'');iluke_update;';
 
 % lukeobj.shotdist.select.callback = 'lukeobj.shotdist.select.value = get(lukeobj.shotdist.select.handle,''Value'');iluke_update;';
@@ -542,7 +544,10 @@ ohms = cell(1,0);
 transpfastes = cell(1,0);
 ripples = cell(1,0);
 wavess = cell(1,0);
-wavestructss = cell(1,0);
+wavestructss = cell(0,0);
+
+wavestructids = cell(0,1);
+
 %
 jobs = cell(1,0);
 outputs = cell(1,0);
@@ -556,7 +561,7 @@ status.ohm = zeros(1,0);
 status.transpfaste = zeros(1,0);
 status.ripple = zeros(1,0);
 status.waves = zeros(1,0);
-status.wavestructs = zeros(1,0);
+status.wavestructs = zeros(0,0);
 status.job = zeros(1,0);
 status.output = zeros(1,0);
 status.sdiag = zeros(2,0);
@@ -571,5 +576,9 @@ style.editselectstyle = style;% for edition within GUI
 %
 style.editselectstyle.longbutwidth = 200;
 style.editselectstyle.textwidth = style.panelwidth - style.editselectstyle.butwidth - style.editselectstyle.longbutwidth - 4*style.editselectstyle.buthsep - 2*style.buthsep;
+
+style.buttonselectstyle = style;% for edition within GUI
+%
+style.buttonselectstyle.textwidth = style.panelwidth - style.editselectstyle.butwidth - 4*style.editselectstyle.buthsep;
 
 iluke_update;

@@ -1,81 +1,42 @@
 % script iluke_update_wavestruct
 %
 
-wavestructs(status.wavestructs <= 0) = {{}};
-
 %
-% flag_shotimes &  external_wave
+% clear outdated wavestructs and update list, status
+%
+
+wavestructss(status.wavestructs <= 0) = {[]};
+
+iwclearmask = ~any(status.wavestructs == 1,2);
+wavestructids(iwclearmask,:) = [];
+wavestructss(iwclearmask,:) = [];
+status.wavestructs(iwclearmask,:) = [];
+%
+clear iwclearmask
+%
+% flag_external &  external_wave
 %
 if isfield(external,'wave'),% include data from external structure if available
     if curtime == 0,% treat all times from external structure if available
-        flag_calc = find(status.wavestructs >= 0);
-        [~,flag_calctimes,flag_external] = intersect(shotimes(flag_calc),external.times);
-        flag_shotimes = flag_calc(flag_calctimes);
+        flag_external = any(intersect(shotimes(status.equil == 1),external.times));
     elseif curtime > 0,% select one time from external structure if available
-        flag_external = find(external.times == shotimes(curtime));
-        flag_shotimes = curtime;
+        flag_external = any(external.times == shotimes(curtime));
     else
-        flag_external = [];% no action
-        flag_shotimes = [];% no action
+        flag_external = false;
     end
-    %
-    external_wave = external.wave(flag_external);
-    nt = length(external_wave);
-    %
-    for it = 1:nt,
-         external_wave(it).equil = equils{flag_shotimes(it)};% for distributed computing
-    end
-    %
-    clear flag_external flag_calc flag_calctimes it nt
-    %
 else
-    %
-    if curtime < 1,% no action
-        flag_shotimes = [];
-    else% replace existing
-        flag_shotimes = curtime;
-    end
-    %
-    external_wave = [];% no external structure
-    %
+    flag_external = false;
 end 
 %
-if ~isempty(external_wave),
+if flag_external,
     lukeobj.wavestruct.import.state = 'on';
 else
     lukeobj.wavestruct.import.state = 'off';
 end
 %
-% build lukeobj.wavestruct.select.string
-%
-if curtime > 0,
-    wavestructs = wavestructss{flag_shotimes};
-    nw = length(wavestructs);
-    lukeobj.wavestruct.select.string = cell(1,nw);
-    for iw = 1:nw,
-        lukeobj.wavestruct.select.string{iw} = wavestructs{iw}.id;
-    end
-else
-    lukeobj.wavestruct.select.string = {};
-    nt = length(flag_shotimes);  
-    for it = 1:nt,
-        wavestructs = wavestructss{flag_shotimes(it)};
-        for iw = 1:length(wavestructs)
-            if ~any(strcmp(wavestructs{iw}.id,lukeobj.wavestruct.select.string)),
-                lukeobj.wavestruct.select.string{end+1} = wavestructs{iw}.id;
-            end
-        end
-    end
-    nw = length(lukeobj.wavestruct.select.string);
-    %
-    clear it nt
-end
-%
-clear flag_shotimes
-%
 % display and state properties
 %
-if nw == 0,
+if isempty(wavestructids) || (curtime > 0 && all(status.wavestructs(:,curtime) <= 0)),% no wavestructs
     %
     lukeobj.wavestruct.select.visible = 'off';
     lukeobj.wavestruct.save.state = 'off';
@@ -104,7 +65,7 @@ if nw == 0,
     lukeobj.launch.text.string = '';
     lukeobj.c3poparam.text.string = '';
     %
-    if ~isempty(external_wave),
+    if flag_external,
         lukeobj.wavestruct.import.highlight = true;
         lukeobj.wavestruct.make.highlight = false;
     else
@@ -115,7 +76,29 @@ if nw == 0,
     lukeobj.runc3poall.highlight = false;    
     lukeobj.runc3pooptim.highlight = false;    
 else
-    iw = lukeobj.wavestruct.select.value;
+    %
+    % build lukeobj.wavestruct.select.string
+    %
+    if lukeobj.wavestruct.select.value > 0,
+        wavestructid = lukeobj.wavestruct.select.string{lukeobj.wavestruct.select.value};
+    else
+        wavestructid = '';
+    end
+    %
+    if curtime > 0,
+        iw_curtime = find(status.wavestructs(:,curtime) == 1);
+    else
+        iw_curtime = 1:length(wavestructids);
+    end
+    %
+    lukeobj.wavestruct.select.string = wavestructids(iw_curtime);
+    lukeobj.wavestruct.select.value = find(strcmp(lukeobj.wavestruct.select.string,wavestructid));
+    %
+    if isempty(lukeobj.wavestruct.select.value),% pre-selected wavestruct does not exist for curtime, or was cleared for all times
+        lukeobj.wavestruct.select.value = length(lukeobj.wavestruct.select.string);
+    end
+    %
+    iw = iw_curtime(lukeobj.wavestruct.select.value);% current index in wavestructss
     %
     % wavestruct
     %
@@ -138,13 +121,12 @@ else
     %
     if curtime > 0,
         %
-        wavestruct = wavestructs{iw};
+        wavestruct = wavestructss{iw,curtime};
         %
         % launch
         %
         lukeobj.launch.modify.state = 'on';
         lukeobj.launch.save.state = 'on';
-        lukeobj.launch.reset.state = 'on';
         %
         if isfield(wavestruct.launch,'orig'),
             lukeobj.launch.reset.state = 'on';
@@ -256,11 +238,66 @@ else
         lukeobj.runc3pooptim.state = 'off'; 
         lukeobj.runc3pooptim.highlight = false;
         %
+        % launch
+        %
+        lukeobj.launch.modify.state = 'off';
+        lukeobj.launch.save.state = 'on';
+        lukeobj.launch.reset.state = 'off';
+        lukeobj.launch.text.string = '< time specific >';
+        %
+        % spectrum
+        %
+        lukeobj.spectrum.modify.state = 'off';
+        lukeobj.spectrum.save.state = 'off';
+        lukeobj.spectrum.reset.state = 'off';
+        lukeobj.spectrum.text.string = '';
+        %
+        % angles
+        %
+        lukeobj.angles.modify.state = 'off';
+        lukeobj.angles.save.state = 'off';
+        lukeobj.angles.reset.state = 'off';
+        lukeobj.angles.text.string = '';
+        %
+        % c3poparam
+        %
+        itlist = find(status.wavestructs(iw,:) == 1);% list of times
+        rtparam = selectfields_jd(wavestructss{iw,itlist(1)},{'rtparam','rayparam','waveparam','fitparam','C3POparam','C3POdisplay'});
+        %
+        comptest = true;
+        %
+        for it = 2:length(itlist),
+            rtparam_comp = selectfields_jd(wavestructss{iw,itlist(it)},{'rtparam','rayparam','waveparam','fitparam','C3POparam','C3POdisplay'});
+            comptest = comptest && comp_struct_jd(rtparam,rtparam_comp,0);
+        end
+        %
+        if comptest,
+            lukeobj.c3poparam.modify.state = 'on';
+            lukeobj.c3poparam.load.state = 'on';
+            lukeobj.c3poparam.save.state = 'on';
+            lukeobj.c3poparam.text.string = rtparam.rtparam;
+            %
+            if isfield(wavestructss{iw,itlist(1)},'orig'),
+                lukeobj.c3poparam.reset.state = 'on';
+            else
+                lukeobj.c3poparam.reset.state = 'off';
+            end
+        else
+            lukeobj.c3poparam.modify.state = 'off';
+            lukeobj.c3poparam.load.state = 'off';
+            lukeobj.c3poparam.save.state = 'off';
+            lukeobj.c3poparam.reset.state = 'off';
+            lukeobj.c3poparam.text.string = '< time specific >';
+        end
+        %
+        clear itlist iwlist rtparam rtparam_comp comptest
     end
+    %
+    clear iw_curtime wavestructid
     %
 end
 %
-clear external_wave wavestructs iw nw 
+clear flag_external wavestructs iw nw 
 %
 % upgrade graph status
 %
