@@ -297,64 +297,52 @@ for iref = 1:nref + 1,% vessel reflection index
                         %
                         rayparam_guess = rayparam;
                         %
-                        rayparam_guess.tfinal = 100;%not too smal to avoid memory problem in C3PO
+                        rayparam_guess.tfinal = 300;%not too smal to avoid memory problem in C3PO
                         %
                         rayinit_guess.tau0_lin = rayinit.tau0_lin;
                         rayinit_guess.ss0 = rayinit.ss0;
                         rayinit_guess.mmode = rayinit.mmode + j;%j is for outward propagation from the considered plasma domain
                         %
-                        
-                        m_guess = rayinit_guess.ym0;
-                        
-                        %m_guess = m_guess0;
-                        %m_guess_min = m_guess;
-                        %m_guess_max = m_guess;
-                        %i_guess = 1;
-                        %for m_guess = m_guess_min:m_guess_max,
-                            
-                            %delta_guess = mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_guess,rayinit_guess,V,m_guess)
-                            %i_guess = i_guess + 1
-                        %end
-                        
-                                                keyboard
-                        delta = fminsearch(@(m_guess) mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_guess,rayinit_guess,V,m_guess),m_guess)
-
+                        m_guess = (yout(end,5) + yout1(end,5))/2;%mean value between the input and output
                         %
-                        %for ii = 1:length(yout1)
-                        %    yout1(:,5) = (yout1(ii,8) - yout1(1,8))*(yout1(ii,5) - yout1(1,8))/(yout1(ii,8) - yout1(1,8))
-                        %    y0_guess = init_RT_jd(equil_fit,...
-                        %        rayinit_guess.yrho0,rayinit_guess.ytheta0,rayinit_guess.yz0,omega_rf,...
-                        %        rayinit_guess.yNpar0,rayinit_guess.ym0,rayinit_guess.ykz0,rayinit_guess.mmode,kmode,fluct_fit).';
-                        %end
-                        
-                        
-                        
+                        %delta_guess = mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_guess,rayinit_guess,V,m_guess)
                         %
-                        tout = [tout(1:end-1,:);zeros(length(yout1),1)];
-                        yout = [yout(1:end-1,:);yout1];
-                        yproc = [yproc(1:end-1,:);zeros(length(yout1),size(yproc,2))];
+                        [m_opt,delta_opt] = fminsearch(@(m_guess) mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_guess,rayinit_guess,V,m_guess),m_guess)
+                        %
+                        % propagation inside the torus
+                        %
+                        yout1(:,5) = yout1(:,end)*(m_opt - yout(end-1,5))/max(yout1(:,end)) + yout(end-1,5);%progressive evolution of m inside the torus
+                        %
+                        yout1a = [];
+                        %
+                        for ii = 1:length(yout1)
+                            yout1a = [yout1a;[init_RT_jd(equil_fit,...
+                            yout1(ii,1),yout1(ii,2),yout1(ii,3),omega_rf,...
+                            rayinit_guess.yNpar0,yout1(ii,5),NaN,rayinit_guess.mmode,kmode,fluct_fit).',NaN]];
+                        end
+                        %
+                        tout = [tout(1:end-1,:);zeros(length(yout1a),1)];
+                        yout = [yout(1:end-1,:);yout1a];
                         %
                     else,%cylinder
                         disp('WARNING: cylindrical case not yet implemented');
                         keyboard
                     end
                     %
+                    % propagation after the torus
+                    %
                     rayinit1.tau0_lin = rayinit.tau0_lin;
                     rayinit1.ss0 = rayinit.ss0;
                     rayinit1.mmode = rayinit.mmode + j;%j is for outward propagation from the considered plasma domain
                     %
-                    
-                        
-                        
                     y1 = init_RT_jd(equil_fit,...
-                        rayinit1.yrho0,rayinit1.ytheta0,rayinit1.yz0,omega_rf,...
-                        rayinit1.yNpar0,rayinit1.ym0,rayinit1.ykz0,rayinit1.mmode,kmode,fluct_fit).';
+                        yout(end,1),yout(end,2),yout(end,3),omega_rf,...
+                        rayinit_guess.yNpar0,yout(end,5),NaN,rayinit_guess.mmode,kmode,fluct_fit).';
                     %
                     [tout1, yout1, yproc1] = raytracing_yp(rayparam,equil_fit,y1,f0struct,fluct_fit,flag);
                     %
                     tout = [tout;tout1];
                     yout = [yout;yout1];
-                    yproc = [yproc;yproc1];
                     %
                 else
                     if flag_rhomin > 0,
@@ -633,4 +621,3 @@ function delta = mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_gues
     delta = 1 - V(:)'*V_guess(:);
 end
 
-end
