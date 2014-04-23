@@ -38,9 +38,7 @@ phi_L = 0;
 P_L = 1e-6;% [MW] 
 %
 alpha_L = 165;% With respect to R axis
-beta_L = 92;%90;% With respect to Z axis
-%
-rhomin = 0.05;
+beta_L = 90;% With respect to Z axis
 %
 dNpar0 = 0.05;%spectral width
 ns = 1000;%discrtization parameter for free space propagation
@@ -90,7 +88,7 @@ fitparam.equil.ngridresample = 1001;%Number of grid points for resampling the ra
 %
 % Global parameters for the ray-tracing
 %
-rayparam.testmode = 1;
+rayparam.testmode = 0;
 rayparam.tensortype = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
 rayparam.tfinal = 100000;
@@ -105,7 +103,6 @@ rayparam.nperp = 1000;%number of points in pperp integration for damping calcula
 rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
 rayparam.kextra = 50;
-rayparam.rhomin = rhomin;
 %
 % launch structure
 %
