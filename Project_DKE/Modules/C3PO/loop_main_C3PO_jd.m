@@ -291,6 +291,8 @@ for iref = 1:nref + 1,% vessel reflection index
                         %                 
                         [rayinit_guess,yout1] = main_rayinit_launch_jd(equil,launch1,rayparam.rhomin);
                         %
+                        rayinit_guess.yNpar0 = (yproc(end-1,2) - yproc(end-2,2))/(yout(end-1,end) - yout(end-2,end))*max(yout1(:,end))+ yproc(end-1,2);%linear npar extrapolation for a continuity of Npar.
+                        %
                         yout1(:,6) = yout(1,6);%axisymmetry. kz is constant
                         %
                         % start m optimization 
