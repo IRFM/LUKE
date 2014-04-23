@@ -44,10 +44,6 @@ if dkeparam.bounce_mode > 0,
     tic
     [XXthetastar1,XXthetastar2,XXalpha] = thetastar_calc_dke_en(equilDKE,gridDKE,Zmomcoef, pnRA, dpnRA, npnRA, gammaRA);%calc the critical poloidal angle value theta_star for runaway avalanches with interp1
     toc
-    %     tic
-    %     [XXthetastar1f,XXthetastar2f,XXalphaf] =
-    %     thetastar_dke_en(dkepath,dkeparam,dkedisplay,equilDKE,gridDKE,Zmomcoef,ohm,radialDKE);%calc the critical poloidal angle value theta_star for runaway avalanches with fzero
-    %     toc
 else
     XXalpha=ones(npsi,npnRA,nmhu);
     XXthetastar1=0;
@@ -65,7 +61,7 @@ Rp=equilDKE.Rp;
 B0=equilDKE.xB0;
 Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
 %
-mhuT=sqrt(1-B0./Bmax);
+mhu0T=sqrt(1-B0./Bmax);
 %
 for ipsi=1:npsi
     pthmask = pnRA >= f_pmin; % S(p>=f_pmin)
@@ -96,7 +92,7 @@ delt = permute(repmat(delt, [1,1,npsi]),[3,1,2]);
 %[dummy,I] = min(abs(gridDKE.mhu - sqrt((gammaRA(ip)-1)/(gammaRA(ip)+1))))
 %delt(:,ip,I) = 1;
 %delt(:,ip,nmhu-I+1) = 1;
-
+%
 if dkeparam.bounce_mode > 0,
     C=NaN(npsi,npnRA,nmhu);
     %
@@ -115,7 +111,6 @@ else
     C=1*delt; %cylindrical case
     XXbouncef=C.*XXalpha;
 end
-
 %
 XXSl = XXSrp.*XXbouncef; %<S()> numerical
 %
@@ -132,7 +127,8 @@ for ia = 1:length(alpha)
     pc = sqrt(2)/sqrt((alpha(ia)-1)*betath2);
     %calculate secondary growth rate pmax<p<pext NORMALIZED to nr
     XXRintmask = XXpnRA >= pc;
-    Srp_int_norm_nr(ia) = mksa.nhu_ref*2*pi*(Zbouncecoef.xqtilde(1,1)./Zbouncecoef.xqhat(1,1)).*integral_dke_jd(gridDKE.dmhu,Zbouncecoef.Xxlambda(:,1).*integral_dke_jd(dpnRA,XXSavalanches_normtot(:,:,1).*XXRintmask.*XXpnRA2(:,:,1),1),1)'; %
+    XXmhu0mask = gridDKE.mhup >= mhu0T;
+    Srp_int_norm_nr(ia) = mksa.nhu_ref*2*pi*(Zbouncecoef.xqtilde(1,1)./Zbouncecoef.xqhat(1,1)).*integral_dke_jd(gridDKE.dmhu,XXmhu0mask'.*Zbouncecoef.Xxlambda.*integral_dke_jd(dpnRA,XXSavalanches_normtot(:,:,1).*XXRintmask.*XXpnRA2(:,:,1),1),1)'; %
 end
 %
 RR_an = RR_rosenbluth_en(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho(1)/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
