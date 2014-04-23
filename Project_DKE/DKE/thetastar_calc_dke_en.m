@@ -37,7 +37,7 @@ Bmax = max((sqrt(equilDKE.XBx.^2 + equilDKE.XBy.^2 + equilDKE.XBphi.^2)),[],2)';
 XXB0 = permute(repmat(B0',[1,npnRA,nmhu]), [2,3,1]);
 XXBmax = permute(repmat(Bmax',[1,npnRA,nmhu]), [2,3,1]);
 %
-mhu0min=repmat(sqrt(1-2./(gammaRA+1)),[3,1]);
+mhu0min=repmat(sqrt(1-2./(gammaRA+1)),[npsi,1]);
 for ipsi=1:npsi
     mhu0max(ipsi,:)=sqrt(1-2*B0(ipsi)./(gammaRA+1)./Bmax(ipsi));
 end
@@ -89,7 +89,7 @@ for ipsi=1:npsi
     dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
     Bx1,dBx1dtheta,dummy,dummy,dummy,By1,dBy1dtheta,dummy,dummy,dummy,...
     Bz1,dB1zdtheta,dummy,dummy,dummy,Bp1,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
-    dummy,dummy,dummy] = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),XXthetastar1new(ipsi,:,:));
+    dummy,dummy,dummy] = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),squeeze(XXthetastar1new(ipsi,:,:)));
     %
     B1 = sqrt(Bx1.^2 + By1.^2 + Bz1.^2);
     dB1dtheta = (Bx1.*dBx1dtheta + By1.*dBy1dtheta + Bz1.*dB1zdtheta)./B1;
@@ -99,7 +99,7 @@ for ipsi=1:npsi
     dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
     Bx2,dBx2dtheta,dummy,dummy,dummy,By2,dBy2dtheta,dummy,dummy,dummy,...
     Bz2,dB2zdtheta,dummy,dummy,dummy,Bp2,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
-    dummy,dummy,dummy] = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),XXthetastar2new(ipsi,:,:));
+    dummy,dummy,dummy] = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),squeeze(XXthetastar2new(ipsi,:,:)));
     %
     B2 = sqrt(Bx2.^2 + By2.^2 + Bz2.^2);
     dB2dtheta = (Bx2.*dBx2dtheta + By2.*dBy2dtheta + Bz2.*dB2zdtheta)./B2;
@@ -162,6 +162,8 @@ for ipsi=1:npsi
 end
 %
 figure;graph2D_jd(pnRA,gridDKE.mhu,squeeze(XXalpha(1,:,:)),'p','mhu','alpha LUKE',NaN,NaN,0,NaN,100); colorbar;
+figure;graph2D_jd(pnRA,gridDKE.mhu,squeeze(XXthetastar1(1,:,:)),'p','mhu','theta*1 LUKE',NaN,NaN,0,NaN,100); colorbar;
+figure;graph2D_jd(pnRA,gridDKE.mhu,squeeze(XXthetastar2(1,:,:)),'p','mhu','theta*2 LUKE',NaN,NaN,0,NaN,100); colorbar;
 %
 figure;
 hold on
