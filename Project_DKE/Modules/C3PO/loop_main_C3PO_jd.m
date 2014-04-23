@@ -314,13 +314,14 @@ for iref = 1:nref + 1,% vessel reflection index
                         % propagation inside the torus
                         %
                         yout1(:,5) = yout1(:,end)*(m_opt - yout(end-1,5))/max(yout1(:,end)) + yout(end-1,5);%progressive evolution of m inside the torus
+                        Npar_in = yout1(:,end)*(rayinit_guess.yNpar0 - yproc(end-1,2))/max(yout1(:,end)) + yproc(end-1,2);%progressive evolution of Npar inside the torus
                         %
                         yout1a = [];
                         %
                         for ii = 1:length(yout1)
                             yout1a = [yout1a;[init_RT_jd(equil_fit,...
                             yout1(ii,1),yout1(ii,2),yout1(ii,3),omega_rf,...
-                            rayinit_guess.yNpar0,yout1(ii,5),NaN,rayinit_guess.mmode,kmode,fluct_fit).',NaN]];
+                            Npar_in(ii),yout1(ii,5),NaN,rayinit_guess.mmode,kmode,fluct_fit).',NaN]];
                         end
                         %
                         tout = [tout(1:end-1,:);zeros(length(yout1a),1)];
