@@ -1,4 +1,4 @@
-function [] = make_wave_JETlikeECtest
+function [] = make_wave_JETlikeECtest_rhomin
 % script make_wave_test_RT
 %
 % Parameters for test mode ray-tracing calculations
@@ -8,7 +8,7 @@ function [] = make_wave_JETlikeECtest
 %
 close all
 %
-id_wave = 'JETlikeECtest';
+id_wave = 'JETlikeECtest_rhomin';
 flag_analytic = 2;
 %
 % Path parameters
