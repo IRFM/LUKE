@@ -8,7 +8,8 @@ clear mex
 clear functions
 close all
 warning('off')
-for ialpha = 10,
+tic
+for ialpha = 5,
 %
 % grid parameters
 %
@@ -31,7 +32,7 @@ betath2 = 0.01;%1e-5;%
 alpha = ialpha; %E/Ec
 epsi = alpha*betath2;
 %
-pnmin_S = NaN;%5;%1/sqrt((alpha-1)*betath2);%NaN;%
+pnmin_S =  NaN;%5;%1/sqrt((alpha-1)*betath2);%NaN;%
 %
 % ion charge (single species, cold ions)
 %
@@ -52,7 +53,7 @@ id_simul = 'Runaway';%Simulation ID
 %path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [0.3];%1%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.5];%1%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -271,7 +272,7 @@ grA = (grDA(end)-grDA(end-30))/(xnre(end-1)-xnre(end-29));
 %
 %eval(['save ','DKE_RESULTS_',id_equil,'_D_beta2_5e-3_EEc_',num2str(alpha),'.mat']);
 %info_dke_yp(2,['Data saved in ','DKE_RESULTS_',id_equil,'_DA','_rho_0',num2str(irho),'_tn_',num2str(dkeparam.tn),'_E_',num2str(alpha),'.mat']);
-eval(['save ','DKE_RESULTS_TScirc_e1_DA_rho_002_E_5_b1e-2.mat']);
+%eval(['save ','DKE_RESULTS_TScirc_e1_DA_rho_002_E_5_b1e-2.mat']);
 %save(['PROC_TScyl_D_beta2_2e-3_EEc_',num2str(alpha)],'xnre','alpha','dke_out','mksa')
 %eval(save('PROC_TScyl_DA_beta2_1e-2_EEc_10','xnre','alpha','dke_out','mksa')
 %info_dke_yp(2,['Data saved in ','DKE_RESULTS_',id_equil,'_DA_','beta2_1e-3','_EEc_',num2str(alpha),'.mat']);
@@ -279,3 +280,4 @@ eval(['save ','DKE_RESULTS_TScirc_e1_DA_rho_002_E_5_b1e-2.mat']);
 %info_dke_yp(2,['Data saved in',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'_',filename,'.mat']);
 %close all
 end
+toc
