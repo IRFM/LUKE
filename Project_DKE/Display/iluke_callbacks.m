@@ -2185,6 +2185,8 @@ switch action
             graphs(2) = iluke_graphs(lukeobj.plot2.handle,2,'toroidal angle','waves');% includes legend
             graphs(3:5) = iluke_graphs(lukeobj.plot3.handle,{[3,6],[2,5],[1,4]},{'wave power','fraction of power absorbed','linear power deposition'},'waves');% includes legend
             %
+            clear newgraph4_handle newgraph5_handle 
+            %
         end
         %   
         ngraphs = length(graphss{it_g});
@@ -2310,7 +2312,7 @@ switch action
             graphs(1) = iluke_graphs(lukeobj.plot1.handle,2,'Current','output');
             graphs(2) = iluke_graphs(lukeobj.plot2.handle,2,'Power','output');
             if nw > 0,% RF wave
-                graphs(3:4) = iluke_graphs(lukeobj.plot3.handle,{[1,4],[2,3]},{'RF power absorption','RF power deposition'},'output');
+                graphs(3:4) = iluke_graphs(lukeobj.plot3.handle,{[1,4],[2,3]},{'RF power deposition','RF power absorption'},'output');
                 delete(axs(5));
             else
                 delete(axs(3:5));
