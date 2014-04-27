@@ -81,7 +81,7 @@ if i_opt == 0,% data loaded from external database
     end
     %
     if strcmp(basestr,'EAST'),
-        vloop = external.Vloop.value;
+        vloop = external.Vloop;
     else
         vloop = external.vloop(ishot);
     end
