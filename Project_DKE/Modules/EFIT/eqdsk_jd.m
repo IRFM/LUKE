@@ -149,7 +149,7 @@ eqdsk = eqdsk(ind:end);
 %
 rF = rF.';
 rp = rp.';
-rdFdpsi = rdFdpsi.';
+rFdFdpsi = rFdFdpsi.';
 rdpdpsi = rdpdpsi.';
 %
 eqdsk = eqdsk(ind:end);
