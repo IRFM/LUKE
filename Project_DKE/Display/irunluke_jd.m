@@ -70,6 +70,7 @@ function irunluke_jd(basestr,signs,opt_gui)
     dkepath = load_structures_yp('dkepath','','');
     if isfield(dkepath,'remote'),
         remote = dkepath.remote;
+        %dkepath.debugmode = 1;%debugmode in case of problem with remote calculation
     else
         remote = '';
     end
