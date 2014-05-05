@@ -1,13 +1,14 @@
-function [MatToolspath,MatRemotepath] = LUKE_startup_jd
+function [MatToolspath,MatRemotepath,MatHelppath] = LUKE_startup_jd
     %
     % This function creates or mofifies a startup file to include LUKE paths
     %
     % By Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
     %
     MatRemotepath = '';
+    MatHelppath = '';
     %
     % -------------------------------------------------------------
-    % verify that the MatRemote and MatTools toolboxes 
+    % verify that the MatRemote, MatTools and MatHelp toolboxes 
     % are available on the local machine
     % select active directory if there is more than one
     % -------------------------------------------------------------
@@ -33,6 +34,15 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
         return
     else
         disp(['--> following toolbox selected : ',MatRemotepath])
+    end
+    %
+    MatHelppath = findandselect_jd('MatHelp','d',false,false,'',searchpath);
+    disp(' ');
+    if isempty(MatHelppath),
+        disp('Aborting startup setup.')
+        return
+    else
+        disp(['--> following toolbox selected : ',MatHelppath])
     end
     %
     % -------------------------------------------------------------
@@ -144,15 +154,18 @@ function [MatToolspath,MatRemotepath] = LUKE_startup_jd
     %
     disp('function startup_LUKE');
     disp('%');
-    disp('% Setup paths to MatRemote and MatTools toolboxes');
+    disp('% Setup paths to MatRemote, MatTools and MatHelp toolboxes');
     disp('%');
     disp(['matremote_path = ''',MatRemotepath,''';']);% change if needed');
     disp(['mattools_path = ''',MatToolspath,''';']);% change if needed');
+    disp(['mathelp_path = ''',MatHelppath,''';']);% change if needed');
     disp('%');
     disp('addpath(matremote_path);% MatRemote toolbox');
     disp('addpath([matremote_path,filesep,''Profiles'']);% remote profiles');
     disp('addpath([matremote_path,filesep,''Bridge'']);% remote profiles');
     disp('addpath(mattools_path);% MatTools toolbox');
+    disp('addpath(mathelp_path);% MatHelp toolbox');
+    disp('addpath([mathelp_path,filesep,''m2html'']);% m2html library');   
     disp('%');
     disp('lukeversions = {...');
     for ifile = 1:nLUKEpaths,
@@ -290,8 +303,12 @@ function foundpaths = findandselect_jd(pathname,pathtype,multi,optlocal,message,
             end
         elseif pathtype == 'd',% directory
             if exist(foundpaths{ifoundpath},'dir'),% to test it is a valid path (reject "Permission denied", etc)
-                flag(ifoundpath) = true;
-            end            
+                [~,rootfoundpath] = fileparts(fileparts(foundpaths{ifoundpath}));%remove Help folder if it exists
+                if ~strcmp(rootfoundpath,'Help'),
+                    flag(ifoundpath) = true;
+                end
+            end
+            %
         end
     end  
     %
