@@ -9,7 +9,7 @@ function pdfhtlatex_yp(root_path,filelist,verbose)
 
 %   - root_path: path where the help directory should be placed (string)
 %       (default: local directory)
-%   - filelist: full path to LaTeX files (celles of string)
+%   - filelist: full path to LaTeX files (cells of string)
 %       (default: local directory)
 %   - verbose: display Latex compilation echos if not empty
 %       (default: empty)
@@ -28,14 +28,18 @@ function pdfhtlatex_yp(root_path,filelist,verbose)
         filelist = {};
     end
     %
-    if unix('which htlatex') || unix('which convert'),
-        info_dke_yp(1,'The package TeX4ht is not available. LaTeX to HTML conversion is not possible.');
+    [s_htlatex,~] = unix('which htlatex');%htlatex (TeXLive distribution)
+    [s_pdflatex,~] = unix('which pdflatex');%pdflatex (TeXLive distribution)
+    [s_imagemagick,~] = unix('which convert');%imagemagick
+    %
+    if s_htlatex || s_imagemagick,
+        info_dke_yp(1,'The package tex4ht is not available: latex to html conversion is not possible.');
     end
-    if unix('which pdflatex')
-        info_dke_yp(1,'The package pdfLatex is not available. LaTeX to PDF conversion is not possible.');
+    if s_pdflatex,
+        info_dke_yp(1,'The package pdflatex is not available: lateX to pdf conversion is not possible.');
     end
     %
-    if unix('which htlatex') && unix('which pdflatex') && unix('which convert'),
+    if s_htlatex && s_pdflatex && s_imagemagick,
         return
     end
     %
