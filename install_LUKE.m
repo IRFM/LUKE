@@ -20,15 +20,17 @@ end
 % setup startup.m to add paths to LUKE as well as MatRemote and MatTools toolboxes
 %
 if strcmp(opt,'y')
-    [MatToolspath,MatRemotepath] = LUKE_startup_jd;
+    [MatToolspath,MatRemotepath,MatHelppath] = LUKE_startup_jd;
     %
     addpath(MatToolspath)
     addpath(MatRemotepath)
     addpath([MatRemotepath,filesep,'Profiles'])    
-    addpath([MatRemotepath,filesep,'Bridge'])    
+    addpath([MatRemotepath,filesep,'Bridge']) 
+    addpath(MatHelppath) 
+    addpath([MatHelppath,filesep,'m2html'])  
 end
 %
-% test access to MatRemote and MatTools toolboxes
+% test access to MatRemote, MatTools and MatHelp toolboxes
 %
 disp(' ');
 if isempty(which('select_LUKE.m')),
@@ -37,6 +39,10 @@ if isempty(which('select_LUKE.m')),
 end
 if isempty(which('load_remoteprofiles_jd.m')),
     disp('No path set to MatRemote toolbox. Please download and/or set path to toolbox.')
+    return
+end
+if isempty(which('htmldocbuilder_yp.m')),
+    disp('No path set to MatHelp toolbox. Please download and/or set path to toolbox.')
     return
 end
 %
