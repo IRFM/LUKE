@@ -63,7 +63,7 @@ end
 %
 % ----------------------------
 %
-remotefunctions = {'select_LUKE.m','load_remoteprofiles_jd.m','pdfhtlatex_yp.m','luke_root'};% update MatTools, MatRemote, and LUKE
+remotefunctions = {'select_LUKE.m','load_remoteprofiles_jd.m','make_help.m','luke_root'};% update MatTools, MatRemote, MatHelp and LUKE
 %
 display_mode = 3;% show detailed results
 %
@@ -81,7 +81,7 @@ disp('   0 : the cvs update succeeded without remote conflicts or remote modifie
 disp('   1 : the cvs update succeeded without remote conflicts and with remote modified files')
 disp('   2 : the cvs update succeeded with remote conflicts')
 disp(' ')
-disp(' Results for : MatTools / MatRemote / LUKE ')
+disp(' Results for : MatTools / MatRemote / MatHelp / LUKE ')
 disp(' ')
 disp('--------------------------------------')
 disp(' ')
@@ -91,8 +91,9 @@ disp(' ')
 flag1 = num2str(flag(:,1));
 flag2 = num2str(flag(:,2));
 flag3 = num2str(flag(:,3));
+flag4 = num2str(flag(:,4));
 %
 for irem = 1:nrem,
-    disp([flag1(irem,:),' / ',flag2(irem,:),' / ',flag3(irem,:),' : ',dkepath.profilestr{remote_index(remlist(irem))}])
+    disp([flag1(irem,:),' / ',flag2(irem,:),' / ',flag3(irem,:),' / ',flag4(irem,:),' : ',dkepath.profilestr{remote_index(remlist(irem))}])
 end
 %
