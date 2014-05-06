@@ -8,6 +8,14 @@ function [rays,rhomin] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf
 % this function is called for a single ray
 %
 if isfield(waveparam,'rhomin'),
+    %
+   if ~isfield(rayinit,'type'),
+       return
+   else
+       if ~strcmp(rayinit.type,'EC'),
+            return
+       end
+   end
    %
    [rays,rhomin] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,rmfield(waveparam,'rhomin'),C3POdisplay,f0struct,fluct_fit);
    %
@@ -246,12 +254,15 @@ for iref = 1:nref + 1,% vessel reflection index
             rayparam.tau_lim = tau_lim_init - rayinit.tau0_lin;% the absorption criterion accounts for previous steps
 			%
 			[tout,yout,yproc] = raytracing_yp(rayparam,equil_fit,y0,f0struct,fluct_fit,flag);
+            clear mex;%contribute to stabilize the ray-tracing.
             %
             flag_rhomin = 0;
             %
             while 1,
                 %
-                if yout(end,1) <= rayparam.rhomin,
+                %keyboard
+                %
+                if ~isempty(yout) && yout(end,1) <= rayparam.rhomin,
                     %
                     flag_rhomin = flag_rhomin + 1;
                     %
