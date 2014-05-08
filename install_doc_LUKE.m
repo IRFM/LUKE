@@ -47,6 +47,8 @@ texfilelist(1).file = 'Project_DKE/Doc/NoticeDKE';texfilelist(1).title = '3-D li
 texfilelist(2).file = 'Project_DKE/Modules/C3PO/Doc/raytracing';texfilelist(2).title = 'Universal multi-wave ray-tracing (C3PO)';
 texfilelist(3).file = 'Project_DKE/Modules/FEB/Doc/3Tmodel';texfilelist(3).title = 'Fast electron bremsstrahlung (R5-X2)';
 %
-make_help(luke_root,texfilelist,excludedfoldernames,helptools,verbose)
+redminepath = 'http://tolbachik.hd.free.fr:8080/redmine/';
+%
+make_help(luke_root,redminepath,texfilelist,excludedfoldernames,helptools,verbose)
 %
 cd(dirinit);
