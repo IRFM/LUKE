@@ -254,7 +254,7 @@ for iref = 1:nref + 1,% vessel reflection index
             rayparam.tau_lim = tau_lim_init - rayinit.tau0_lin;% the absorption criterion accounts for previous steps
 			%
 			[tout,yout,yproc] = raytracing_yp(rayparam,equil_fit,y0,f0struct,fluct_fit,flag);
-            clear mex;%contribute to stabilize the ray-tracing.
+            if strcmp(computer,'MACI64'),clear mex;end%contribute to stabilize the ray-tracing. At least for mac...experimental at this stage
             %
             flag_rhomin = 0;
             %
