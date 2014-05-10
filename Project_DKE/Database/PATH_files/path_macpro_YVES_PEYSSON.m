@@ -78,7 +78,7 @@ dkepath.yvespeysson(1).imagemagick.env = '/opt/local/bin/';% ImageMagick environ
 %
 dkepath.yvespeysson(1).remote(1).remoteid = 'macpro_YVES_PEYSSON';
 dkepath.yvespeysson(1).remote(1).schedulername = 'condor';
-dkepath.yvespeysson(1).remote(1).profilename = 'yves';
+dkepath.yvespeysson(1).remote(1).profilename = 'yvespeysson';
 dkepath.yvespeysson(1).remote(1).luke_root = dkepath.yvespeysson(1).luke_root;% local cluster
 dkepath.yvespeysson(1).remote(1).link_mode = [];
 dkepath.yvespeysson(1).remote(1).cvsupdate = false;% update done in 'direct' mode
@@ -93,7 +93,7 @@ dkepath.yvespeysson(1).remote(3).cvsrights = 'chmod -R a+rx ./';
 %
 dkepath.yvespeysson(1).remote(4).remoteid = 'ASIPP_SHENMA';
 dkepath.yvespeysson(1).remote(4).schedulername = 'torque';
-dkepath.yvespeysson(1).remote(4).profilename = 'yves';
+dkepath.yvespeysson(1).remote(4).profilename = 'PEYSSON';
 dkepath.yvespeysson(1).remote(4).luke_root = '/home/PEYSSON/LUKE/';
 dkepath.yvespeysson(1).remote(4).link_mode = [];
 dkepath.yvespeysson(1).remote(4).cvsupdate = false;% update done in 'direct' mode
