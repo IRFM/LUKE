@@ -7,15 +7,7 @@ function [rays,rhomin] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf
 %
 % this function is called for a single ray
 %
-if isfield(waveparam,'rhomin'),
-    %
-   if ~isfield(rayinit,'type'),
-       return
-   else
-       if ~strcmp(rayinit.type,'EC'),
-            return
-       end
-   end
+if isfield(waveparam,'rhomin') && isfield(rayinit,'type') && strcmp(rayinit.type,'EC'),
    %
    [rays,rhomin] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,rmfield(waveparam,'rhomin'),C3POdisplay,f0struct,fluct_fit);
    %
