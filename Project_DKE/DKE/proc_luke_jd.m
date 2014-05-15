@@ -1519,6 +1519,13 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
         disp(['normalized radius for distribution plots: ',num2str(xrho(ir_display))])
         %
         if isfield(data,'savefile'),% must load LUKE data
+            %
+            if ~exist(data.savefile,'file'),
+                disp(['WARNING : LUKE simulation file ',data.savefile,' cannot be found']);
+                ir_display = 0;
+                return
+            end
+            %
             lukedata = load(data.savefile);
 %             Znorm = lukedata.lukestructs.output.mksa;
 %             Zcurr = lukedata.lukestructs.output.Zcurr;
