@@ -30,6 +30,7 @@ flag_remove = status.equil == -1;
 %
 shotimes(:,flag_remove) = [];
 
+dkeparams(:,flag_remove) = [];
 equils(:,flag_remove) = [];
 ohms(:,flag_remove) = [];
 transpfastes(:,flag_remove) = [];
@@ -83,6 +84,7 @@ end
 %
 nnew = sum(flag_new);%number of new times
 
+dkeparams(:,end+1:end+nnew) = {[]};
 ohms(:,end+1:end+nnew) = {[]};
 transpfastes(:,end+1:end+nnew) = {[]};
 ripples(:,end+1:end+nnew) = {[]};
@@ -112,6 +114,7 @@ lukeobj.plot3.gindex(:,end+1:end+nnew) = 0;
 %
 % structures to be cleared
 %
+dkeparams(:,flag_clear) = {[]};
 equils(:,flag_clear) = {[]};
 ohms(:,flag_clear) = {[]};
 transpfastes(:,flag_clear) = {[]};
@@ -148,6 +151,7 @@ status.sdiag(:,flag_clear) = 0;
 
 ntimes = length(shotimes);
 
+dkeparams = dkeparams(:,mask);
 equils = equils(:,mask);
 ohms = ohms(:,mask);
 transpfastes = transpfastes(:,mask);
@@ -213,6 +217,12 @@ end
 
 [outputs,lukeobj.luke,cleartags] = iluke_status(outputs,status.output,lukeobj.luke,1,curtime,cleartags);
 [sdiags,lukeobj.sdiag,cleartags] = iluke_status(sdiags,status.sdiag,lukeobj.sdiag,2,curtime,cleartags);
+
+%
+% DKEPARAMS
+%
+
+iluke_update_dkeparam;
 
 %
 % WAVESTRUCTS

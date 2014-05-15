@@ -29,9 +29,9 @@ if strcmp(action,'lukestart'),
         end        
         %
         lukestructs.opt = opt;
-        lukestructs.dkeparam = dkeparam;
         lukestructs.dkedisplay = dkedisplay;
         %
+        lukestructs.dkeparam = dkeparams{curtime};
         lukestructs.equil = equils{curtime};
         lukestructs.ohm = ohms{curtime};
         lukestructs.transpfaste = transpfastes{curtime};
@@ -67,9 +67,9 @@ if strcmp(action,'lukestart'),
             end        
             %
             lukestructs{it}.opt = opt;
-            lukestructs{it}.dkeparam = dkeparam;
             lukestructs{it}.dkedisplay = dkedisplay;
             %
+            lukestructs{it}.dkeparam = dkeparams{job_mask(it)};
             lukestructs{it}.equil = equils{job_mask(it)};
             lukestructs{it}.ohm = ohms{job_mask(it)};
             lukestructs{it}.transpfaste = transpfastes{job_mask(it)};

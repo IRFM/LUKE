@@ -15,9 +15,24 @@ if isfield(lukeobj,'r5x2'),% before sdiag
     %
 end
 %
-if ~isfield(load([pathname,filename],'wavestructids'),'wavestructids'),% old wavestructss
+ntimes = length(shotimes);
+%
+if ~isfield(load([pathname,filename],'dkeparams'),'dkeparams'),% old wavestructss
     %
-    ntimes = length(shotimes);
+    load([pathname,filename],'dkeparam');
+    dkeparams = cell(1,ntimes);
+    %
+    for it = 1:ntimes,
+        %
+        dkeparams{it} = dkeparam;
+        %
+    end
+    %
+    clear dkeparam
+    %
+end    
+%
+if ~isfield(load([pathname,filename],'wavestructids'),'wavestructids'),% old wavestructss
     %
     newwavestructids = cell(0,1);
     newwavestructsstatus = zeros(0,ntimes);

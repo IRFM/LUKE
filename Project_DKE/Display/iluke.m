@@ -6,19 +6,9 @@ close all
 %
 [dkepath,dkedisplay] = load_structures_yp('dkepath','','','dkedisplay','NO_DISPLAY','');
 %
-if length(dkepath.hostname) >= 3 && strcmp(dkepath.hostname(1:3),'lac'),% %% TODO tmp condition, test grid effects on 18532
-    id_dkeparam = 'EC_RT';
-else
-    id_dkeparam = 'RT';
-end
-%
-dkeparam = load_structures_yp('dkeparam',id_dkeparam,'');
-%
 hxr.param = '';
 hxr.cam = {};
 hxr.exp = '';
-%
-clear id_dkeparam
 %
 workdir = pwd;
 %
@@ -364,7 +354,7 @@ lukeobj.infostr.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','Posi
 %
 % RUN LUKE PANEL
 %
-lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'param',{'title','modify','load','save','clear','','text'},'Parameters',style.infoheightcorr - style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'param',{'title','modify','load','save','reset','','text'},'Parameters',style.infoheightcorr - style.butheightcorr,style);
 % lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'display',{'title','modify','load','save','clear','','text'},'Display',style.infoheightcorr - 2*style.butheightcorr,style);
 % lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'remote',{'title','make','load','save','test','',''},'Server',style.infoheightcorr - 3*style.butheightcorr,style);
 % lukeobj.remote.select.position = [style.titlewidth + 6*style.buthsep + 4*style.butwidth,style.infoheightcorr - 3*style.butheightcorr,style.panelwidth - style.titlewidth - 7*style.buthsep - 4*style.butwidth,style.butheight];
@@ -377,9 +367,6 @@ lukeobj.remote.timeout.position = [style.buthsep,style.infoheightcorr - 4*style.
 lukeobj.timedep.callback = 'lukeobj.timedep.value = get(lukeobj.timedep.handle,''Value'');iluke_update;';
 lukeobj.remote.select.callback = 'lukeobj.remote.select.value = get(lukeobj.remote.select.handle,''Value'');iluke_update;';
 lukeobj.remote.timeout.callback = 'lukeobj.remote.timeout.value = get(lukeobj.remote.timeout.handle,''Value'');iluke_update;';
-
-lukeobj.param.text.string = dkeparam.id;
-% lukeobj.display.text.string = dkedisplay.id;
 
 lukeobj.timedep.string = ' Check box to consider all times independent when running LUKE ';
 lukeobj.remote.title.string = 'Server for LUKE calculations';
@@ -545,6 +532,7 @@ transpfastes = cell(1,0);
 ripples = cell(1,0);
 wavess = cell(1,0);
 wavestructss = cell(0,0);
+dkeparams = cell(1,0);
 
 wavestructids = cell(0,1);
 
