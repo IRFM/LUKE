@@ -19,7 +19,8 @@ switch struct
             case 'nmhu_S',expert = 0;values = 11:10:401;info = 'Number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)';
             case 'np_S',expert = 0;values = 11:10:401;info = 'Number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.';
             case 'pnmax_S',expert = 0;values = [-Inf;Inf];info = 'Maximum value of the flux momentum grid (pth_ref)';
-            case 'rho_S',expert = 0;values = 1:41;info = 'Number of points for radial grid calculation';
+            case 'rho_S',expert = 0;values = [0;Inf];info = 'Grid points or number of points for radial grid calculation (r/a on horizontal outboard midplane)';
+            case 'psin_S',expert = 0;values = [0;Inf];info = 'Grid points or number of points for radial grid calculation (normalized poloidal flux)';
             case 'sfac0',expert = 1;values = 1:10;info = 'Reduction factor for fine grid near mhu = 0';
             case 'sfac1',expert = 1;values = 1:10;info = 'Reduction factor for fine grid near abs(mhu) = 1';
             case 'sfact',expert = 1;values = 1:10;info = 'Reduction factor for fine grid near abs(mhu) = mhut';
