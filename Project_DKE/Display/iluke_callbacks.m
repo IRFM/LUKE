@@ -66,7 +66,7 @@ switch action
                 %
                 % iluke made LUKE_DATA_*.mat file
                 %
-                load([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','wavestructids','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
+                load([pathname,filename],'lukeobjmod','dkeparams','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','wavestructids','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
                 lukeobj = conc_struct_jd(lukeobj,lukeobjmod);
                 %
                 iluke_updateoldsimul;
@@ -149,7 +149,7 @@ switch action
             %
             lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotimes','data','equil','ohm','transp','ripple','wave','wavestruct','luke','sdiag','param','lukeid'});
             lukeobjmod = rmfields_jd(lukeobjmod,{'handle','position'},1);
-            save([pathname,filename],'lukeobjmod','dkeparam','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','wavestructids','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
+            save([pathname,filename],'lukeobjmod','dkeparams','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','wavestructids','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
             %
             lukeobj.simulfile.string = filename;%[pathname,filename];
             %
@@ -2334,6 +2334,118 @@ switch action
         clear it_g ngraphs axs
         %
         lukeobj = iluke_info(lukeobj,'text');% enable info display
+        %
+    case 'parammodify'
+        %
+        % modifying luke parameters
+        %
+        if curtime > 0,
+            dkeparam = dkeparams{curtime};
+        else
+            dkeparam = dkeparams{1};
+        end  
+        %
+        if isfield(dkeparam,'orig'),
+            orig = dkeparam.orig;
+        else
+            orig = dkeparam;
+        end
+        %
+        [dkeparam,mod] = imod_struct_jd(dkeparam,'dkeparam',1,true,struct,style);
+        %
+        if any(mod),
+            %
+            if curtime > 0,
+                dkeparams{curtime} = dkeparam;
+                %
+                dkeparams{curtime}.orig = orig;
+            else
+                for it = 1:ntimes,
+                    dkeparams{it} = dkeparam;
+                    %
+                    dkeparams{it}.orig = orig;
+                end
+                %
+                clear it
+            end
+            %
+            status.data = 2;
+            %
+        end
+        %
+        clear dkeparam orig mod
+        %
+    case 'paramload'
+        %
+        % loading luke parameters
+        %
+        sbase = 'DKEPARAM';
+        filestr = [sbase,'_*.mat'];
+        %
+        if curtime > 0,
+            dkeparam_id = dkeparams{curtime}.id;
+        else
+            dkeparam_id = dkeparams{1}.id;
+        end
+        pathname = fileparts(which(['DKEPARAM_',dkeparam_id,'.mat']));
+        %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],pathname,0);
+        %
+        if filename ~= 0,
+            %
+            load([pathname,filename],'dkeparam');
+            %
+            if curtime > 0,
+                dkeparams{curtime} = dkeparam;
+            else
+                for it = 1:ntimes,
+                    dkeparams{it} = dkeparam;
+                end
+                %
+                clear it
+            end
+        end  
+        %
+        clear sbase filestr filename pathname dkeparam
+        %
+    case 'paramsave'
+        %
+        % saving luke parameters
+        %
+        if curtime > 0,
+            dkeparam = dkeparams{curtime};
+        else
+            dkeparam = dkeparams{1};
+        end  
+        %
+        sbase = 'DKEPARAM';
+        filestr = [sbase,'_*.mat'];
+        filename = [sbase,'_',dkeparam.id,'.mat'];
+        %
+        [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
+        %
+        %
+        if filename ~= 0,
+            %
+            save([pathname,filename],'-struct','dkeparam');
+            %
+        end  
+        %
+        clear dkeparam sbase filestr filename pathname 
+        %
+    case 'paramreset'
+        %
+        % resetting luke parameters
+        %
+        if curtime > 0,
+            dkeparams{curtime} = dkeparams{curtime}.orig;
+        else
+            for it = 1:ntimes,
+                dkeparams{it} = dkeparams{it}.orig;
+            end
+            %
+            clear it
+        end
         %
     case 'lukestart'
         %
