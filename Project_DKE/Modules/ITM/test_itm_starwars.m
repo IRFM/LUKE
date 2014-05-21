@@ -52,7 +52,7 @@ end
 %
 [err,flag] = matremote_jd('database_recreate_ITM',{'shot','run_out'},remote,job);%remote or local database creation output (for the test only)
 %
-waves = itm_starwars(shot,run,run_out,timeslice,time_interp,CPOs,CPO_occurrences,iter,occurrence_out);
+waves = itm_starwars(shot,run,timeslice,time_interp,CPOs,CPO_occurrences,run_out,iter,occurrence_out);
 %
 output = 'ok';
 outputdata = waves.coherentwave(1).profiles_1d.powd_tot;

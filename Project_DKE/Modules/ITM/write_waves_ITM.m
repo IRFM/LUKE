@@ -1,4 +1,4 @@
-function [ITM_waves] = write_waves_ITM(numshot,numrun,LUKE_waves,iter,occurrence)
+function [ITM_waves] = write_waves_ITM(numshot,numrun,iter,occurrence,LUKE_waves)
 %LUKE - Function that writes LUKE results into the 'waves' CPO of ITM MDS+ database
 %
 %Function that writes LUKE results into the 'waves' CPO of ITM MDS+ database
