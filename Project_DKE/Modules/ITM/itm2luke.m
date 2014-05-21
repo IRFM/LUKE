@@ -5,23 +5,16 @@ if nargin < 6, error('Not enough input arguments in itm2luke.m.');end
 %
 if nargin < 7,
 	CPO_occurrences = zeros(size(CPOs));
-	remotename = '';
 	iter = 0;
 	occurrence_out = 0;
 end
 %
 if nargin < 8,
-	remotename = '';
     iter = 0;
 	occurrence_out = 0;
 end
 %
 if nargin < 9,
-    iter = 0;
-	occurrence_out = 0;
-end
-%
-if nargin < 10,
 	occurrence_out = 0;
 end
 %
