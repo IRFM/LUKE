@@ -5,6 +5,18 @@
 % 
 % by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
+opts.remnum = 0;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway)
+opts.remtimout = 60;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+opts.rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
+opts.debugmode = 0;% debug mode (0) off (1) on
+opts.clean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+opts.save;% (1): save LUKE_RESULTS or return error (0): return results or error
+opts.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
+opts.backup = 0;% (1) save fluctuation time steps (0) do not save
+opts.waves = 0;% (1) save waves at each time step (0) do not save
+%
+% Simulation parameters
+%
 shot = 2;
 run= 501;
 run_out= 502;
@@ -52,7 +64,7 @@ end
 %
 [err,flag] = matremote_jd('database_recreate_ITM',{'shot','run_out'},remote,job);%remote or local database creation output (for the test only)
 %
-waves = itm_starwars(shot,run,timeslice,time_interp,CPOs,CPO_occurrences,run_out,iter,occurrence_out);
+waves = itm_starwars(shot,run,timeslice,time_interp,CPOs,CPO_occurrences,run_out,iter,occurrence_out,opts);
 %
 output = 'ok';
 outputdata = waves.coherentwave(1).profiles_1d.powd_tot;

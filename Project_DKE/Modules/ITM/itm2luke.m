@@ -1,6 +1,8 @@
-function [waves_euitm] = itm2luke(numshot,numrun_out,iter,occurrence_out,equil_euitm,coreprof_euitm,antennas_euitm)
-
-
+function [waves_euitm] = itm2luke(numshot,numrun_out,timeslice,equil_euitm,coreprof_euitm,antennas_euitm,opts)
+%LUKE -  Interface for running C3PO/LUKE using euitm data
+% 
+% by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
+%
 if nargin < 6, error('Not enough input arguments in itm2luke.m');end
 %
 % LUKE post-processing options
@@ -75,22 +77,17 @@ id_simul = equil.id;
 %
 %--------------------------- Run C3PO/LUKE --------------------------- 
 %
-%dkepath.remnum = par.remnum;% remote profile number. Use 0 for local sequential calculations
-%dkepath.remtimout = par.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
-%dkepath.rempause = par.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
-%dkepath.debugmode = par.debugmode;% debug mode (0) off (1) on
-%dkepath.clean = par.clean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
-%
-% backup & save options
-%
-%opt.save = par.saveluke;% (1): save LUKE_RESULTS or return error (0): return results or error
-%if isinf(par.fields),
-%    opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
-%else
-%    opt.fields = par.fields;% selected fields in returned lukestructs. Use NaN for all fields
-%end
-%opt.backup = par.backup;% (1) save fluctuation time steps (0) do not save
-%opt.waves = par.waves;% (1) save waves at each time step (0) do not save
+if nargin == 7,
+    dkepath.remnum = opts.remnum;% remote profile number. Use 0 for local sequential calculations
+    dkepath.remtimout = opts.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+    dkepath.rempause = opts.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
+    dkepath.debugmode = opts.debugmode;% debug mode (0) off (1) on
+    dkepath.clean = opts.clean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+    optluke.save = opts.save;% (1): save LUKE_RESULTS or return error (0): return results or error
+    optluke.fields = opts.fields;% selected fields in returned lukestructs. Use NaN for all fields
+    optluke.backup = opts.backup;% (1) save fluctuation time steps (0) do not save
+    optluke.waves = opts.waves;% (1) save waves at each time step (0) do not save
+end
 %
 waves = '';
 ohm = '';
@@ -111,9 +108,10 @@ lukestructs.ohm = ohm;
 lukestructs.transpfaste = transpfaste;
 lukestructs.ripple = ripple;
 lukestructs.Zf0_interp = distrib;
-lukestructs.opt = opt;
+if nargin == 7,
+    lukestructs.opt = optluke;
+end
 %
-keyboard
 lukestructs = run_lukert(lukestructs,dkepath);
 %
 %--------------------------- WRITE CPO's' into ITM database ------------------%
