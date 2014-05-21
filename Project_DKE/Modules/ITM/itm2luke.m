@@ -65,7 +65,8 @@ for iw = 1:length(launchs),
     end
     %
     if 1,
-        [dkeparam] = load_structures_yp('dkeparam','EC_RT','');
+        dkepath = load(dkepath,'','');
+        dkeparam = load_structures_yp('dkeparam','EC_RT','');
     	data = load([dkepath.luke_root,'Project_DKE/Database/WAVE_files/C3POPARAM_EC.mat']);%Generic parameters for EC wave calculations
     end
     %
@@ -110,6 +111,7 @@ luke_in.ripple = '';
 %
 %--------------------------- Run C3PO/LUKE --------------------------- 
 %
+keyboard
 if isempty(remotename),
 	[luke_out.Znorm,luke_out.Zcurr,luke_out.ZP0,luke_out.dke_out,luke_out.radialDKE,luke_out.equilDKE,luke_out.momentumDKE,luke_out.gridDKE,luke_out.Zmomcoef,luke_out.Zbouncecoef,luke_out.Zmripple,luke_out.mksa,luke_out.XXsinksource] = run_lukert(luke_in.id_simul,luke_in.wavestructs,luke_in.waves,[],luke_in.dkeparam.rho_S,dkepath,luke_in.equil,luke_in.dkeparam,luke_in.dkedisplay,luke_in.ohm,luke_in.transpfaste,luke_in.ripple,[],[]);
 else
