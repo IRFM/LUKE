@@ -1,7 +1,7 @@
-function [waves] = itm2luke(equil_euitm,coreprof_euitm,antennas_euitm)
+function [waves_euitm] = itm2luke(numshot,numrun_out,iter,occurrence_out,equil_euitm,coreprof_euitm,antennas_euitm)
 
 
-if nargin < 3, error('Not enough input arguments in itm2luke.m.');end
+if nargin < 6, error('Not enough input arguments in itm2luke.m');end
 %
 % LUKE post-processing options
 %
@@ -22,7 +22,6 @@ ray_display = 0;%for display ray propagation (0,1,2)
 display_mode = 2;%display results 'equilibrium, Fokker-Planck (0,1,2)
 ir_display = -1;%proc_luke_jd display option (-1,0,1,2)
 %
-
 equil = process_euitm_dataequil(equil_euitm,coreprof_euitm,display_mode);%Data conversion between CPO and LUKE format
 launchs = CPO2LUKEstruct_yp('antennas',antennas_euitm);%Data conversion between CPO and LUKE format
 %
@@ -41,7 +40,7 @@ for iw = 1:length(launchs),
     end
     %
     if 1,
-        dkeparam = load_structures_yp('dkeparam','EC_RT','');
+        dkeparam = load_structures_yp('dkeparam','EC_RT','');%yet EC wave only
     	data = load([dkepath.luke_root,'Project_DKE/Database/WAVE_files/C3POPARAM_EC.mat']);%Generic parameters for EC wave calculations
     end
     %
@@ -72,61 +71,67 @@ for iw = 1:length(launchs),
     info_dke_yp(4,['wave : ',int2str(iw),' type :',launchs{iw}.type])
 end
 %
-id_simul = ['timeslice_',equil.id];
-%
-luke_in.id_simul = id_simul;
-luke_in.dkeparam = dkeparam;
-luke_in.equil = equil;
-luke_in.dkedisplay = dkedisplay;
-luke_in.wavestructs = wavestructs;
-luke_in.waves = '';
-luke_in.ohm = '';
-luke_in.transpfaste = '';
-luke_in.ripple = '';
+id_simul = equil.id;
 %
 %--------------------------- Run C3PO/LUKE --------------------------- 
 %
-
-if isempty(remotename),
-	[luke_out.Znorm,luke_out.Zcurr,luke_out.ZP0,luke_out.dke_out,luke_out.radialDKE,luke_out.equilDKE,luke_out.momentumDKE,luke_out.gridDKE,luke_out.Zmomcoef,luke_out.Zbouncecoef,luke_out.Zmripple,luke_out.mksa,luke_out.XXsinksource] = run_lukert(luke_in.id_simul,luke_in.wavestructs,luke_in.waves,[],luke_in.dkeparam.rho_S,dkepath,luke_in.equil,luke_in.dkeparam,luke_in.dkedisplay,luke_in.ohm,luke_in.transpfaste,luke_in.ripple,[],[]);
-else
-    [flag,remote] = check_remote_yp(dkepath,remotename);
-	%
-	if ~flag,%local calculations
-		[luke_out.Znorm,luke_out.Zcurr,luke_out.ZP0,luke_out.dke_out,luke_out.radialDKE,luke_out.equilDKE,luke_out.momentumDKE,luke_out.gridDKE,luke_out.Zmomcoef,luke_out.Zbouncecoef,luke_out.Zmripple,luke_out.mksa,luke_out.XXsinksource] = run_lukert(luke_in.id_simul,luke_in.wavestructs,luke_in.waves,[],luke_in.dkeparam.rho_S,dkepath,luke_in.equil,luke_in.dkeparam,luke_in.dkedisplay,luke_in.ohm,luke_in.transpfaste,luke_in.ripple,[],[]);
-	else
-		[tid,jid] = runluke_remote_jd(luke_in,remote);%Job submission
-		timeid = {tid};
-		jobid = {jid};
-		%
-   	 	i_simul = 1;
-    	flag = ones(length(timeslice),1);
-    	%
-    	while 1,
-        	if flag(i_simul)
-            	output = getluke_remote_jd(timeid{i_simul},jobid{i_simul},remote);
-            	if ~isempty(output)
-                	luke_out(i_simul) = output;
-                	flag(i_simul) = 0;
-            	end
-        	end
-        	%
-        	i_simul = i_simul + 1;
-        	if i_simul > length(timeslice), i_simul = 1;end
-        	%
-        	if sum(flag) == 0;break;end
-    	end
-    end
-end
+%dkepath.remnum = par.remnum;% remote profile number. Use 0 for local sequential calculations
+%dkepath.remtimout = par.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+%dkepath.rempause = par.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
+%dkepath.debugmode = par.debugmode;% debug mode (0) off (1) on
+%dkepath.clean = par.clean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+%
+% backup & save options
+%
+%opt.save = par.saveluke;% (1): save LUKE_RESULTS or return error (0): return results or error
+%if isinf(par.fields),
+%    opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
+%else
+%    opt.fields = par.fields;% selected fields in returned lukestructs. Use NaN for all fields
+%end
+%opt.backup = par.backup;% (1) save fluctuation time steps (0) do not save
+%opt.waves = par.waves;% (1) save waves at each time step (0) do not save
+%
+waves = '';
+ohm = '';
+transpfaste = '';
+ripple = '';
+distrib = '';
+%
+lukestructs = struct;
+lukestructs.simul.id_simul = id_simul;
+lukestructs.simul.path = '';
+lukestructs.dkeparam = dkeparam;
+lukestructs.dkepath = dkepath;
+lukestructs.dkedisplay = dkedisplay;
+lukestructs.equil = equil;
+lukestructs.waves = waves;
+lukestructs.wavestructs = wavestructs;
+lukestructs.ohm = ohm;
+lukestructs.transpfaste = transpfaste;
+lukestructs.ripple = ripple;
+lukestructs.Zf0_interp = distrib;
+lukestructs.opt = opt;
+%
+keyboard
+lukestructs = run_lukert(lukestructs,dkepath);
+%
 %--------------------------- WRITE CPO's' into ITM database ------------------%
-CPO_waves = [];
+waves_euitm = [];
 %
-id_simul = ['timeslice_',int2str(timeslice)];
-%
-Znorm = luke_out.Znorm;
-Zcurr = luke_out.Zcurr;
-ZP0 = luke_out.ZP0;
-dke_out = luke_out.dke_out;
+Znorm = lukestructs.output.Znorm;
+Zcurr = lukestructs.output.Zcurr;
+ZP0 = lukestructs.output.ZP0;
+dke_out = lukestructs.output.dke_out;
+radialDKE = lukestructs.output.radialDKE;
+equilDKE = lukestructs.output.equilDKE;
+momentumDKE = lukestructs.output.momentumDKE;
+gridDKE = lukestructs.output.gridDKE;
+Zmomcoef = lukestructs.output.Zmomcoef;
+Zbouncecoef = lukestructs.output.Zbouncecoef;
+Zmripple = lukestructs.output.Zmripple;
+mksa = lukestructs.output.mksa;
+XXsinksource = lukestructs.output.XXsinksource;
 %
 for iray = 1:length(dke_out.waves{1}.rays),
     if ~isfield(dke_out.waves{1}.rays{iray},'mask_p') | ~isfield(dke_out.waves{1}.rays{iray},'mask_m');
@@ -135,16 +140,6 @@ for iray = 1:length(dke_out.waves{1}.rays),
     end
 end
 %
-radialDKE = luke_out.radialDKE;
-equilDKE = luke_out.equilDKE;
-momentumDKE = luke_out.momentumDKE;
-gridDKE = luke_out.gridDKE;
-Zmomcoef = luke_out.Zmomcoef;
-Zbouncecoef = luke_out.Zbouncecoef;
-Zmripple = luke_out.Zmripple;
-mksa = luke_out.mksa;
-XXsinksource = luke_out.XXsinksource;
-%
 filename = ['EC17_benchmark_',equil.id,'_',id_simul,'.mat'];
 save(filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
 %
@@ -152,7 +147,7 @@ rawdata = load(filename);
 %
 procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
 %
-CPO_waves = LUKEstruct2CPO(numshot,numrun_out,timeslice,'waves',rawdata,procdata,CPO_waves);
+waves_euitm = LUKEstruct2CPO(numshot,numrun_out,timeslice,'waves',rawdata,procdata,waves_euitm);
 %
 delete(filename);
 
