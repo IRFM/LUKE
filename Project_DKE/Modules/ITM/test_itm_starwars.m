@@ -10,7 +10,7 @@ opts.remtimout = 60;% timeout for remote calculations, in minutes. Use (0) to re
 opts.rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
 opts.debugmode = 0;% debug mode (0) off (1) on
 opts.clean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
-opts.save;% (1): save LUKE_RESULTS or return error (0): return results or error
+opts.save = 0;% (1): save LUKE_RESULTS or return error (0): return results or error
 opts.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
 opts.backup = 0;% (1) save fluctuation time steps (0) do not save
 opts.waves = 0;% (1) save waves at each time step (0) do not save
