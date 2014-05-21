@@ -179,11 +179,7 @@ procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
 %
 CPO_waves = LUKEstruct2CPO(numshot,numrun_out,timeslice,'waves',rawdata,procdata,CPO_waves);
 %
-waves = write_waves_ITM(numshot,numrun_out,CPO_waves,iter,occurrence_out);
-%
 delete(filename);
-
-
 
 
 
