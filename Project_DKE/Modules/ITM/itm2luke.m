@@ -1,4 +1,4 @@
-function [] = itm2luke(shot,run,run_out,timeslice,time_interp,CPOs,CPO_occurrences,iter,occurrence_out)
+function [waves] = itm2luke(shot,run,run_out,timeslice,time_interp,CPOs,CPO_occurrences,iter,occurrence_out)
 
 
 if nargin < 6, error('Not enough input arguments in itm2luke.m.');end
@@ -177,7 +177,7 @@ procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
 %
 CPO_waves = LUKEstruct2CPO(numshot,numrun_out,timeslice,'waves',rawdata,procdata,CPO_waves);
 %
-varargout{1} = write_waves_ITM(numshot,numrun_out,CPO_waves,iter,occurrence_out);
+waves = write_waves_ITM(numshot,numrun_out,CPO_waves,iter,occurrence_out);
 %
 delete(filename);
 
