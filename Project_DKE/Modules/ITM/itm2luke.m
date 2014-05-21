@@ -1,32 +1,7 @@
-function [waves] = itm2luke(numshot,numrun_in,numrun_out,timeslice,time_interp,CPOs,CPO_occurrences,iter,occurrence_out)
+function [waves] = itm2luke(equil_euitm,coreprof_euitm,antennas_euitm)
 
 
-if nargin < 6, error('Not enough input arguments in itm2luke.m.');end
-%
-if nargin < 7,
-	CPO_occurrences = zeros(size(CPOs));
-	iter = 0;
-	occurrence_out = 0;
-end
-%
-if nargin < 8,
-    iter = 0;
-	occurrence_out = 0;
-end
-%
-if nargin < 9,
-	occurrence_out = 0;
-end
-%
-if isempty(time_interp) || isnan(time_interp),time_interp = 1;end
-%
-for iCPOs = 1:length(CPOs),
-	if ~isempty(CPO_occurrences),
-		if CPO_occurrences(iCPOs) ~= 0,
-			CPOs{iCPOs} = [CPOs{iCPOs},'/',num2str(CPO_occurrences(iCPOs))];
-		end
-	end
-end
+if nargin < 3, error('Not enough input arguments in itm2luke.m.');end
 %
 % LUKE post-processing options
 %
@@ -47,10 +22,11 @@ ray_display = 0;%for display ray propagation (0,1,2)
 display_mode = 2;%display results 'equilibrium, Fokker-Planck (0,1,2)
 ir_display = -1;%proc_luke_jd display option (-1,0,1,2)
 %
-[dkedisplay] = load_structures_yp('dkedisplay','NO_DISPLAY','');
+
+equil = process_euitm_dataequil(equil_euitm,coreprof_euitm,display_mode);%Data conversion between CPO and LUKE format
+launchs = CPO2LUKEstruct_yp('antennas',antennas_euitm);%Data conversion between CPO and LUKE format
 %
-equil = read_equil_ITM(numshot,numrun_in,timeslice,time_interp,CPOs);%Create magnetic equilibrium structure
-launchs = read_launchs_ITM(numshot,numrun_in,timeslice,time_interp,CPOs);%Create rf waves launchs structure
+[dkepath,dkedisplay] = load_structures_yp('dkepath','','','dkedisplay','NO_DISPLAY','');
 %
 wavestructs = cell(1,length(launchs));
 %
@@ -65,7 +41,6 @@ for iw = 1:length(launchs),
     end
     %
     if 1,
-        dkepath = load(dkepath,'','');
         dkeparam = load_structures_yp('dkeparam','EC_RT','');
     	data = load([dkepath.luke_root,'Project_DKE/Database/WAVE_files/C3POPARAM_EC.mat']);%Generic parameters for EC wave calculations
     end
@@ -97,7 +72,7 @@ for iw = 1:length(launchs),
     info_dke_yp(4,['wave : ',int2str(iw),' type :',launchs{iw}.type])
 end
 %
-id_simul = ['timeslice_',int2str(timeslice)];
+id_simul = ['timeslice_',equil.id];
 %
 luke_in.id_simul = id_simul;
 luke_in.dkeparam = dkeparam;
@@ -111,7 +86,7 @@ luke_in.ripple = '';
 %
 %--------------------------- Run C3PO/LUKE --------------------------- 
 %
-keyboard
+
 if isempty(remotename),
 	[luke_out.Znorm,luke_out.Zcurr,luke_out.ZP0,luke_out.dke_out,luke_out.radialDKE,luke_out.equilDKE,luke_out.momentumDKE,luke_out.gridDKE,luke_out.Zmomcoef,luke_out.Zbouncecoef,luke_out.Zmripple,luke_out.mksa,luke_out.XXsinksource] = run_lukert(luke_in.id_simul,luke_in.wavestructs,luke_in.waves,[],luke_in.dkeparam.rho_S,dkepath,luke_in.equil,luke_in.dkeparam,luke_in.dkedisplay,luke_in.ohm,luke_in.transpfaste,luke_in.ripple,[],[]);
 else
