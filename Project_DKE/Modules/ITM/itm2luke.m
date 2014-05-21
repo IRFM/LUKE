@@ -1,4 +1,4 @@
-function [waves] = itm2luke(shot,run,run_out,timeslice,time_interp,CPOs,CPO_occurrences,iter,occurrence_out)
+function [waves] = itm2luke(numshot,numrun_in,numrun_out,timeslice,time_interp,CPOs,CPO_occurrences,iter,occurrence_out)
 
 
 if nargin < 6, error('Not enough input arguments in itm2luke.m.');end
