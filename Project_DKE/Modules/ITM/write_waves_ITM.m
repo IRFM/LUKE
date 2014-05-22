@@ -1,20 +1,24 @@
-function [ITM_waves] = write_waves_ITM(numshot,numrun,iter,occurrence,LUKE_waves)
+function [ITM_waves] = write_waves_ITM(remote_mode,numshot,numrun,iter,occurrence,LUKE_waves)
 %LUKE - Function that writes LUKE results into the 'waves' CPO of ITM MDS+ database
 %
 %Function that writes LUKE results into the 'waves' CPO of ITM MDS+ database
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
-if nargin < 2,error('Not enough input arguments in write_waves_ITM.m');end
+if nargin < 3,error('Not enough input arguments in write_waves_ITM.m');end
 %
-if nargin == 4,
+if nargin == 5,
 	occurrence = 0;
+end
+%
+if remote_mode,
+    import_ual;%done once only (each time a new matlab is called otherwise... crash)
 end
 %
 CPO = 'waves';
 %
 try
-	if nargin < 4
+	if nargin < 5
 		expIdx  = euitm_create('euitm',numshot,numrun);%recreate the database otherwise no refreshment when writing (4.09a problem apparently)
 		euitm_close(expIdx,'euitm',numshot,numrun);
 		%
