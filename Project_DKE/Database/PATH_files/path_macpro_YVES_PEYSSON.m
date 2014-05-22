@@ -32,6 +32,7 @@ dkepath.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path adre
 %
 dkepath.yvespeysson(1).mex800 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB800','/'];
 dkepath.yvespeysson(1).mex801 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB801','/'];
+dkepath.yvespeysson(1).mex803 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB803','/'];
 %
 dkepath.yvespeysson(1).compiler_opt.copts = '';
 dkepath.yvespeysson(1).compiler_opt.helmex = NaN;%'-llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
@@ -44,11 +45,13 @@ dkepath.yvespeysson(1).compiler_opt.fopts = ' ';
 dkepath.yvespeysson(1).MUMPS.seq = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 dkepath.yvespeysson(1).MUMPS.mex800 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.yvespeysson(1).MUMPS.mex801 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).MUMPS.mex803 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB803'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % SUPERLU matrix solver (parallel, sequential)
 %
 dkepath.yvespeysson(1).SUPERLU.mex800 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB800'];%Where SUPERLU matrix solver is stored (MEX function)
 dkepath.yvespeysson(1).SUPERLU.mex801 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB801'];%Where SUPERLU matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).SUPERLU.mex803 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB803'];%Where SUPERLU matrix solver is stored (MEX function)
 %
 % PETSc matrix solver (parallel, sequential)
 %
@@ -59,6 +62,7 @@ dkepath.yvespeysson(1).SUPERLU.mex801 = [dkepath.yvespeysson(1).local_root,'Pack
 % PARDISO matrix solver (mex)
 %
 dkepath.yvespeysson(1).PARDISO.mex801 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB801'];%Where PARDISO matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).PARDISO.mex803 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB803'];%Where PARDISO matrix solver is stored (MEX function)
 %
 %--------------------------- Access to the experimental databases -----------------------------
 %
