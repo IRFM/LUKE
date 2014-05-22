@@ -21,12 +21,26 @@ opts.waves = 0;% (1) save waves at each time step (0) do not save
 opts.euitm.loadfile = 1;%(1): load euitm data in file if exists, (0) do not load
 opts.euitm.savefile = 1;%(1): save euitm data in file if exists, (0) do not save
 %
-% Simulation parameters
+% Simulation parameters (EC17 paper parameters)
+%
+%   t(s)	P_EL25(W)	P_EL40(W)	P_UL(W)
+%---------------------------------------------
+%   0       1e6         0           0
+%   1       0           1e6         0
+%   2       0           0           1e6
+%   3       1           0           0
+%   4       0           1           0
+%   5       0           0           1
+%   6       1e6         1e6         0
+%
+% The first three slices and the last one match the original data used for the benchmark 
+% (still saved as shot 2, run 551). The three additional slices are a copy of the first three, 
+% with 1W instead of 1MW at the antenna.
 %
 shot = 2;
-run= 501;
-run_out= 502;
-timeslice = 0;
+run= 601;
+run_out= 602;
+timeslice = [2];%[0,1,2,3,4,5,6,7]
 iter = 1;
 occurrence_out = 0;
 %
