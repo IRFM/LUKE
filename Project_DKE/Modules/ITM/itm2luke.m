@@ -20,7 +20,7 @@ p_opt = -1;%Printing options
 %
 % User specific C3PO/LUKEparameters
 %
-ray_display = 0;%for display ray propagation (0,1,2)
+ray_display = 1;%for display ray propagation (0,1,2)
 display_mode = 2;%display results 'equilibrium, Fokker-Planck (0,1,2)
 ir_display = -1;%proc_luke_jd display option (-1,0,1,2)
 %
@@ -33,12 +33,18 @@ wavestructs = cell(1,length(launchs));
 %
 for iw = 1:length(launchs),
     %
+    % Conversion to the generalized axial coordinate system
+    %
+    launchs{iw}.yx_L = launchs{iw}.yR_L - equil.Rp;
+    launchs{iw}.yy_L = launchs{iw}.yZ_L - equil.Zp;
+    launchs{iw}.yz_L = launchs{iw}.yphi_L*equil.Rp;    
+    %
     if ray_display,%launching direction
-    	[sysh,sysZ,syR,syZ,syphi,syalpha,sybeta,sygR,sygZ,sygphi] = raypath_prop_jd(launchs{iw}.yR_L,launchs{iw}.yZ_L,launchs{iw}.yphi_L,launchs{iw}.yalpha_L,launchs{iw}.ybeta_L,linspace(0,10,1000));
-    	%
+    	[sysh,sysy,syx,syy,syz,syalpha,sybeta,sygx,sygy,sygz] = raypath_prop_jd(equil.Rp,launchs{iw}.yx_L,launchs{iw}.yy_L,launchs{iw}.yz_L,launchs{iw}.yalpha_L,launchs{iw}.ybeta_L,linspace(0,10,1000));
+        %
     	equilibrium_jd(equil,'',3);
     	hold on
-    	graph1D_jd(syR-equil.Rp,syZ-equil.Zp,0,0,'','','',NaN,'','','-','non','k',2);%plot ray trajectory
+    	graph1D_jd(syx,syy,0,0,'','','',NaN,'','','-','non','k',2);%plot ray trajectory
     end
     %
     if 1,
@@ -48,7 +54,7 @@ for iw = 1:length(launchs),
     %
     wavestructs{iw}.id = launchs{iw}.id;
     wavestructs{iw}.launch = launchs{iw};
-    wavestructs{iw}.waveparam = conc_struct_jd(wavestructs{iw},data.waveparam),
+    wavestructs{iw}.waveparam = conc_struct_jd(wavestructs{iw},data.waveparam);
     wavestructs{iw}.fitequilparam = conc_struct_jd(wavestructs{iw},data.fitparam);
     wavestructs{iw}.rayparam = conc_struct_jd(wavestructs{iw},data.rayparam);
     wavestructs{iw}.C3POparam = conc_struct_jd(wavestructs{iw},data.C3POparam);
