@@ -8,16 +8,15 @@ clear mex
 clear functions
 close all
 warning('off')
-tic
-for ialpha = 5,
+for irho =20,
 %
 % grid parameters
 %
 f_pmin = 1; %lower limit for avalanche calculation. if avalanche_mode and not specified = 1
-pnmax_S = 28;%20;% for E/Ec = 4, Pc = 5; for E/Ec = 6, Pc = 4;
-np_S = 201;%201;%
-nmhu_S = 101;
-f_pmax = floor(100/pnmax_S); %1;% %for avalanche calculation. if avalanche_mode and not specified = 1
+pnmax_S = 87;%20;% for E/Ec = 4, Pc = 5; for E/Ec = 6, Pc = 4;
+np_S = 301;%201;%
+nmhu_S = 201;
+f_pmax = 1;%floor(100/pnmax_S); %1;% %for avalanche calculation. if avalanche_mode and not specified = 1
 %
 mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 %
@@ -27,9 +26,9 @@ mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 % temperature betath2 = Te/mc2
 % (betath2 = 10^(-6) is validated for NR limit)
 %
-betath2 = 0.01;%1e-5;%
+betath2 = 0.001;%1e-5;%
 %
-alpha = ialpha; %E/Ec
+alpha = 50; %E/Ec
 epsi = alpha*betath2;
 %
 pnmin_S =  NaN;%5;%1/sqrt((alpha-1)*betath2);%NaN;%
@@ -53,12 +52,12 @@ id_simul = 'Runaway';%Simulation ID
 %path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [0.5];%1%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = 0.05*irho;%[0.1];%1%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScirc_e1';%For plasma equilibrium
+id_equil = 'TScyl';%For plasma equilibrium
 %id_equil = 'TScirc';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
@@ -89,8 +88,8 @@ dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the firs
 dkeparam.norm_mode_f = 0;% + 1i;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.timevol = 1;
 %dkeparam.nit_ohm = 2;
-dkeparam.tn = 1000;%time for asymptotic solution with norm_mode_f = 1
-dkeparam.dtn = 5;% time steps required for accurate runaway solution - see rundke_dtn
+dkeparam.tn = 40000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.dtn = 1000;% time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
 dkeparam.bounce_mode = 1; %bounce average
 dkeparam.avalanche_mode = 1; %if 1 avalanche mode on, 0 or undefined for off
@@ -264,7 +263,7 @@ graph1D_jd((1:dkeparam.dtn:dkeparam.tn),xnre(:,1),0,0,'t_n','n_{re}/n_{tot}','',
 figure
 grDA = diff(xnre(:,1))./dkeparam.dtn./(1-xnre(1:(end-1),1));
 graph1D_jd(xnre(1:(end-1),1),grDA,0,0,'n_r','1/(1-n_r)dn_r/dt_n','',NaN,NaN,NaN,'-','none','b',2)
-grA = (grDA(end)-grDA(end-30))/(xnre(end-1)-xnre(end-29));
+grA = (grDA(end)-grDA(end-11))/(xnre(end-1)-xnre(end-10));
 %
 %************************************************************************************************************************************
 %
@@ -276,8 +275,7 @@ grA = (grDA(end)-grDA(end-30))/(xnre(end-1)-xnre(end-29));
 %save(['PROC_TScyl_D_beta2_2e-3_EEc_',num2str(alpha)],'xnre','alpha','dke_out','mksa')
 %eval(save('PROC_TScyl_DA_beta2_1e-2_EEc_10','xnre','alpha','dke_out','mksa')
 %info_dke_yp(2,['Data saved in ','DKE_RESULTS_',id_equil,'_DA_','beta2_1e-3','_EEc_',num2str(alpha),'.mat']);
-%eval(['save ','test','.mat']);
+eval(['save ','E_50_',num2str(irho),'.mat']);
 %info_dke_yp(2,['Data saved in',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'_',filename,'.mat']);
-%close all
+close all
 end
-toc

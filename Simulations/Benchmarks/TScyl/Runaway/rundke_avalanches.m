@@ -8,15 +8,15 @@ clear mex
 clear functions
 close all
 warning('off')
-for ipmax = 50
+for Zii = 1,
 %
 % grid parameters
 %
-f_pmax = floor(50/ipmax); %1;% %for avalanche calculation. if avalanche_mode and not specified = 1
-f_pmin = 1; %lower limit for avalanche calculation. if avalanche_mode and not specified = 1
-pnmax_S = ipmax;%20;% for E/Ec = 4, Pc = 5; for E/Ec = 6, Pc = 4;
+f_pmin = 20; %lower limit for avalanche calculation. if avalanche_mode and not specified = 1
+pnmax_S = 28;%20;% for E/Ec = 4, Pc = 5; for E/Ec = 6, Pc = 4;
 np_S = 201;%201;%
-nmhu_S = 51;
+nmhu_S = 101;
+f_pmax = floor(100/pnmax_S); %1;% %for avalanche calculation. if avalanche_mode and not specified = 1
 %
 mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 %
@@ -26,16 +26,16 @@ mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 % temperature betath2 = Te/mc2
 % (betath2 = 10^(-6) is validated for NR limit)
 %
-betath2 = 0.001;%1e-5;%
+betath2 = 1e-2;%1e-5;%
 %
-epsi = 0.06;
-alpha = epsi/betath2; %E/Ec
+alpha = 2; %E/Ec
+epsi = alpha*betath2;
 %
-pnmin_S = NaN;%5;%1/sqrt((alpha-1)*betath2);%NaN;%
+pnmin_S = NaN;%sqrt(2)/sqrt((alpha-1)*betath2);%5;%1/sqrt((alpha-1)*betath2);%NaN;%
 %
 % ion charge (single species, cold ions)
 %
-Zi = 1;%
+Zi = Zii;%
 %
 % collision mode : 
 % (0) : Relativistic Maxwellian background
@@ -82,15 +82,16 @@ end
 %
 dkeparam.pnmin_S = pnmin_S;
 dkeparam.f_pmax = f_pmax; % multiplication of p grid. f_pmax*p_max
-dkeparam.f_pmin = f_pmin; % multiplication of p grid. f_pmax*p_max
+dkeparam.f_pmin = f_pmin; % min for avalanche pgrid
 dkeparam.pnmax_S = pnmax_S;
 dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
 dkeparam.norm_mode_f = 0;% + 1i;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.timevol = 1;
-dkeparam.tn = 1000;%time for asymptotic solution with norm_mode_f = 1
-dkeparam.dtn = 10;% time steps required for accurate runaway solution - see rundke_dtn
+%dkeparam.nit_ohm = 2;
+dkeparam.tn = 500000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.dtn = 5000;% time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
-dkeparam.bounce_mode = 1; %bounce average
+dkeparam.bounce_mode = 0; %bounce average
 dkeparam.avalanche_mode = 1; %if 1 avalanche mode on, 0 or undefined for off
 %
 options_fzero = optimset('fzero');
@@ -100,7 +101,7 @@ dkeparam.options_fzero = options_fzero;
 %
 equil.pzTi = 1e-10*ones(size(equil.pzTi));% cold ions
 %
-[qe,me,dummy,dummy,e0,dummy,dummy,mc2,clum] = pc_dke_yp;%Universal physics constants
+[qe,me,dummy,~,e0,dummy,dummy,mc2,clum] = pc_dke_yp;%Universal physics constants
 %
 equil.pTe = betath2*mc2*ones(size(equil.pTe));
 %
@@ -132,22 +133,22 @@ equil.equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam
 %
 [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,'','','',[],[]);
 %
-%RR_an = RR_rosenbluth_en(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
+RR_an = RR_rosenbluth_en(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
 %
 %RR = dke_out.XxRR_fsav(end,:);
 Rfrac = Znorm(end).x_Rfrac_0_fsav; %runaway fraction (nr of runaways between pmin and pmax) primary + avalanche
 %
-xnre = cell2mat(dke_out.xnorm_re);
+xnre = cell2mat(dke_out.xnorm_re');
 xnre_out_norm = dke_out.xrr_out_norm; %runaway population for avalanche generation
 %
-RRAint = Znorm(1,end).xRRAint/xnre(end-1); %integral over S[pmin pmax]
-RRAinttot = Znorm(1,end).xRRAtot/xnre(end-1); %total integral S[0 pmax]
+RRAint = Znorm(1,end).xRRAint./xnre(end-1,:); %integral over S[pmin pmax]
+RRAinttot = Znorm(1,end).xRRAtot./xnre(end-1,:); %total integral S[0 pmax]
 RR = dke_out.XxRR_fsav{end}; %runaway loss rate (primary)
-RR = RR(end); %[vol-1 tau_c^-1]
+RR = RR(end,:); %[vol-1 tau_c^-1]
 %RRunnorm = RR*mksa.nhu_ref; %vol-1 s^-1
 %RRRP = RR*mksa.nhu_ref/nre(1,1);
 for it = 1:(length(xnre)-1)
-    gr(it) = (xnre(it+1) - xnre(it))/xnre(it)/dkeparam.dtn;
+    gr(it) = (xnre(it+1,1) - xnre(it,1))/xnre(it,1)/dkeparam.dtn;
 end
 figure;graph1D_jd(1:(length(xnre)-1),gr,0,0,'iteration','growth rate (s^-1)','Numerical growth rate',NaN,NaN,NaN,'-','o','b',1)
 hold on
@@ -251,26 +252,29 @@ diary off
 %figure;graph1D_jd((0:dkeparam.dtn:dkeparam.tn),xnre,0,0,'t_n','number of runaways (norm to n_e)','',NaN,NaN,NaN,'-','none','b',2)
 %figure;graph1D_jd((0:dkeparam.dtn:dkeparam.tn),xnre,0,1,'t_n','number of runaways (norm to n_e)','',NaN,NaN,NaN,'-','none','b',2)
 %
-figure;graph1D_jd((1:dkeparam.dtn:dkeparam.tn),cell2mat(dke_out.curr0(1:2:end)),0,0,'t_n','J_0','',NaN,NaN,NaN,'-','none','b',2)
+%curr0 = cell2mat(dke_out.curr0'); %*mksa.j_ref
+%figure;graph1D_jd((1:dkeparam.dtn:dkeparam.tn),curr0,0,0,'t_n','J_0','',NaN,NaN,NaN,'-','none','b',2)
+%figure;graph1D_jd((1:dkeparam.dtn:dkeparam.tn),cell2mat(dke_out.xcurr),0,0,'t_n','J_{tot}','',NaN,NaN,NaN,'-','none','b',2)
 %
 %growthrate(ia) = gr(end)*mksa.nhu_ref
 %
 figure
-graph1D_jd((1:dkeparam.dtn:dkeparam.tn),xnre,0,0,'t_n','n_{re}/n_{tot}','',NaN,NaN,NaN,'-','none','b',2)
+graph1D_jd((1:dkeparam.dtn:dkeparam.tn),xnre(:,1),0,0,'t_n','n_{re}/n_{tot}','',NaN,NaN,NaN,'-','none','b',2)
 figure
-grDA = diff(xnre)/dkeparam.dtn./(1-xnre(1:(end-1)));
-graph1D_jd(xnre(1:(end-1)),grDA,0,0,'n_r','1/(1-n_r)dn_r/dt_n','',NaN,NaN,NaN,'-','none','b',2)
-grA = (grDA(end)-grDA(end-100))/(xnre(end-1)-xnre(end-99));
+grDA = diff(xnre(:,1))./dkeparam.dtn./(1-xnre(1:(end-1),1));
+graph1D_jd(xnre(1:(end-1),1),grDA,0,0,'n_r','1/(1-n_r)dn_r/dt_n','',NaN,NaN,NaN,'-','none','b',2)
+grA = (grDA(end)-grDA(end-20))/(xnre(end)-xnre(end-20));
 %
 %************************************************************************************************************************************
 %
 % 
 %
-%eval(['save ','DKE_RESULTS_',id_equil,'_DA','_rho_',num2str(irho),'_tn_',num2str(dkeparam.tn),'_E_',num2str(alpha),'.mat']);
+%eval(['save ','DKE_RESULTS_',id_equil,'_D_beta2_5e-3_EEc_',num2str(alpha),'.mat']);
 %info_dke_yp(2,['Data saved in ','DKE_RESULTS_',id_equil,'_DA','_rho_0',num2str(irho),'_tn_',num2str(dkeparam.tn),'_E_',num2str(alpha),'.mat']);
-eval(['save ','DKE_RESULTS_',id_equil,'_pmax_',num2str(ipmax),'_DA_','beta2_1e-3','_EEc_',num2str(alpha),'.mat']);
-info_dke_yp(2,['Data saved in ','DKE_RESULTS_',id_equil,'_pmax_',num2str(ipmax),'_DA_','beta2_1e-3','_EEc_',num2str(alpha),'.mat']);
-%eval(['save ','test','.mat']);
+%eval(['save','PROC_',id_equil,'_DA_','beta2_1e-3','_EEc_',num2str(alpha),'xnre','alpha','dke_out','mksa']);
+%save(['PROC_TScyl_DA_beta2_2e-5_EEc_',num2str(alpha)],'xnre','alpha','dke_out','mksa')
+%eval(save('PROC_TScyl_DA_beta2_1e-2_EEc_10','xnre','alpha','dke_out','mksa'))
+%info_dke_yp(2,['Data saved in ','DKE_RESULTS_',id_equil,'_DA_','beta2_1e-3','_EEc_',num2str(alpha),'.mat']);
+%eval(['save ','E_50_Z',num2str(Zi),'.mat']);
 %info_dke_yp(2,['Data saved in',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'_',filename,'.mat']);
-close all
 end
