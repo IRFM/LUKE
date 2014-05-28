@@ -178,11 +178,11 @@ end
 %
 waves_euitm = [];
 %
+save(['LUKE_RESULTS_',dataname,'.mat'],'lukestructs','dkepath','profilestr');
+%
 if sum(flag_running) > 0,
-    save(['LUKE_RESULTS_',dataname,'.mat'],'lukestructs','dkepath','profilestr');
     return
 else
-    keyboard
     for it = 1:length(lukestructs),
         Znorm = lukestructs{it}.output.Znorm;
         Zcurr = lukestructs{it}.output.Zcurr;
@@ -208,18 +208,18 @@ else
         %        
         dataname_out = dataname_ITM(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp,euitmshot.numrun_out,euitmshot.occurrence_out);   
         %
-        filename = ['temp_EUITM_',dataname_out,'.mat'];
+        temp_filename = ['temp_EUITM_',dataname_out,'.mat'];
         %  
-        save(filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
+        save(temp_filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
         %
-        rawdata = load(filename);
+        rawdata = load(temp_filename);
         rawdata.dkepath.profilestr = profilestr;
         %
         procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
         %
         waves_euitm = LUKEstruct2CPO(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_out,euitmshot.timeslice,'waves',rawdata,procdata,waves_euitm);
         %
-        delete(filename);        
+        delete(temp_filename);        
         %
     end
 end
