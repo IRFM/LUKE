@@ -24,7 +24,7 @@ ray_display = 1;%for display ray propagation (0,1,2)
 display_mode = 2;%display results 'equilibrium, Fokker-Planck (0,1,2)
 ir_display = -1;%proc_luke_jd display option (-1,0,1,2)
 %
-dataname = dataname_ITM(euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp);   
+dataname = dataname_ITM(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp);   
 filename = [pwd,'/LUKE_RESULTS_',dataname,'.mat'];
 %
 if ~exist(filename,'file'),
@@ -206,7 +206,7 @@ else
             end        
         end        
         %        
-        dataname_out = dataname_ITM(euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp,euitmshot.numrun_out,euitmshot.occurrence_out);   
+        dataname_out = dataname_ITM(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp,euitmshot.numrun_out,euitmshot.occurrence_out);   
         %
         filename = ['temp_EUITM_',dataname_out,'.mat'];
         %  

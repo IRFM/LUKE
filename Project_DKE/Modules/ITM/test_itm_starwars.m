@@ -43,6 +43,7 @@ opts.euitm.savefile = 1;%(1): save euitm data in file if exists, (0) do not save
 % (still saved as shot 2, run 551). The three additional slices are a copy of the first three, 
 % with 1W instead of 1MW at the antenna.
 %
+machine = 'test'
 shot = 2;
 run= 601;
 run_out= 602;
@@ -60,10 +61,10 @@ occurrence_an = 0;%antenna CPO occurence
 %
 %----------------------------------------------------------------------------------------------
 %
-dataname = dataname_ITM(shot,run,timeslice,time_interp);
-filename = [pwd,'/LUKE_RESULTS_',dataname,'.mat'];
-%
 CPO_occurrences = [occurrence_eq,occurrence_cp,occurrence_an];
+%
+dataname = dataname_ITM(machine,shot,run,timeslice,time_interp);
+filename = [pwd,'/LUKE_RESULTS_',dataname,'.mat'];
 %
 [dkepath] = load_structures_yp('dkepath','','');
 addpath(fullfile(dkepath.local_root,'LUKE_ITM','trunk'));% LUKE <-> ITM toolbox
@@ -101,13 +102,15 @@ if ~exist(filename,'file'),% load existing simulation
             disp(['Successful SVN update of the ITM tools for LUKE calculations: ',w_svn{1},w_svn{2}]),
         end
         %
-        [err_mds,machine,username,ver] = matremote_jd('which_MDSdatabase',{},remote,job);%remote or local test of the MDS database
+        [err_mds,machine_mds,username_mds,ver_mds] = matremote_jd('which_MDSdatabase',{},remote,job);%remote or local test of the MDS database
         %
-        if isempty(machine) || isempty(username) || isempty(ver) || ~isempty(err_mds),
-            error(['ERROR: ITM database not recognized -> machine: ',machine,', user: ',user,', datastructure version: ',ver]);
+        if isempty(machine_mds) || isempty(username_mds) || isempty(ver_mds) || ~isempty(err_mds),
+            error(['ERROR: ITM database not recognized -> machine: ',machine_mds,', user: ',username_mds,', datastructure version: ',ver_mds]);
         else
-            disp(['ITM database well recognized -> machine: ',machine,', user: ',username,', datastructure version: ',ver]);
+            disp(['ITM database well recognized -> machine: ',machine_mds,', user: ',username_mds,', datastructure version: ',ver_mds]);
         end
+        %
+        if ~strcmp(machine,machine_mds),disp('WARNING: inconsistent machine name between script and MDS+ database.');end
         %
         [err_database,flag_database] = matremote_jd('database_recreate_ITM',{'shot','run_out'},remote,job);%remote or local database creation output (for the test only)
         %
