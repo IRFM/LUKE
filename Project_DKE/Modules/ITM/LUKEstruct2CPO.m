@@ -1,23 +1,26 @@
-function [CPO_struct] = LUKEstrust2CPO(numshot,numrun,timeslice,struct_name,rawdata,procdata,CPO_struct)
+function [CPO_struct] = LUKEstrust2CPO(machine,numshot,numrun,timeslice,struct_name,rawdata,procdata,CPO_struct)
 %LUKE - Function that copy LUKE structure into the corresponding CPO's in the ITM MDS+ database
 %
 %Function that copy LUKE structure into the corresponding CPO's in the ITM MDS+ database
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
-if nargin < 6,error('Not enough input arguments in LUKE2CPO_struct_yp.m');end
+if nargin < 7,error('Not enough input arguments in LUKE2CPO_struct_yp.m');end
 %
 if strcmp('waves',struct_name),
 	%
 	ibeam = 1;
 	%
-	ix = findstr(rawdata.dkepath.luke_root,'/');
-	%
 	it = length(CPO_struct) + 1;
 	%
-	CPO_struct(it).datainfo.dataprovider = rawdata.dkepath.luke_root(ix(5)+1:ix(6)-1);
+    keyboard
+    if isfield(rawdata.dkepath,'remnum') && rawdata.dkepath.remnum > 0, 
+        CPO_struct(it).datainfo.dataprovider = rawdata.dkepath.profilestr(rawdata.dkepath.remnum);
+    else
+        CPO_struct(it).datainfo.dataprovider = ['Local sequential calculations on ',rawdata.dkepath.machine];
+    end
 	CPO_struct(it).datainfo.putdate = date;
-	CPO_struct(it).datainfo.whatref.machine = which_MDSdatabase;
+	CPO_struct(it).datainfo.whatref.machine = machine;
 	CPO_struct(it).datainfo.whatref.shot = numshot;
 	CPO_struct(it).datainfo.whatref.run = numrun;
 	%
