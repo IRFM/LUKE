@@ -13,7 +13,6 @@ if strcmp('waves',struct_name),
 	%
 	it = length(CPO_struct) + 1;
 	%
-    keyboard
     if isfield(rawdata.dkepath,'remnum') && rawdata.dkepath.remnum > 0, 
         CPO_struct(it).datainfo.dataprovider = rawdata.dkepath.profilestr(rawdata.dkepath.remnum);
     else
