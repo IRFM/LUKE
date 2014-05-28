@@ -1,11 +1,16 @@
-function [ITM_waves] = write_waves_ITM(remote_mode,numshot,numrun,iter,occurrence,LUKE_waves)
-%LUKE - Function that writes LUKE results into the 'waves' CPO of ITM MDS+ database
+function [flag] = write_waves_ITM(remote_mode,numshot,numrun,LUKE_waves,iter,occurrence)
+%LUKE_ITM - Function that writes LUKE results into the 'waves' CPO of ITM MDS+ database
 %
 %Function that writes LUKE results into the 'waves' CPO of ITM MDS+ database
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
-if nargin < 3,error('Not enough input arguments in write_waves_ITM.m');end
+if nargin < 4,error('Not enough input arguments in write_waves_ITM.m');end
+%
+if nargin == 4,
+    iter = 1;
+	occurrence = 0;
+end
 %
 if nargin == 5,
 	occurrence = 0;
@@ -54,31 +59,8 @@ try
 		euitm_close(expIdx,'euitm',numshot,numrun);%Close the currently open database
 	end
 	%
-	info_dke_yp(4,'Data structures for ''waves'' CPO successfully writen from the ITM-MDS+ database.');
-	%
-	% check write
-	%
-	if 0,
-		expIdx = euitm_open('euitm',numshot,numrun);
-		waves  = euitm_get_slice(expIdx,'waves',0,1);
-		size(waves.coherentwave(1).profiles_1d.powd_tot);
-		figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
-		%
-		waves  = euitm_get_slice(expIdx,'waves',1,1);
-		size(waves.coherentwave(1).profiles_1d.powd_tot);
-		figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
-		%
-		waves  = euitm_get_slice(expIdx,'waves',2,1);
-		size(waves.coherentwave(1).profiles_1d.powd_tot);
-		figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
-		%
-		waves  = euitm_get_slice(expIdx,'waves',3,1);
-		size(waves.coherentwave(1).profiles_1d.powd_tot);
-		figure,plot(waves.coherentwave(1).grid_1d.psi,waves.coherentwave(1).profiles_1d.powd_tot)
-		%
-		euitm_close(expIdx,'euitm',numshot,numrun);
-	end
+	flag = 'Data structures for ''waves'' CPO successfully writen from the ITM-MDS+ database';
 	%
 catch
-	info_dke_yp(7,'Problem while writing into the ITM-MDS+ database.')
+	flag = 'Problem while writing into the ITM-MDS+ database';
 end
