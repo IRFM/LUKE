@@ -12,7 +12,7 @@ opts.remnum = 1;% remote profile number. Use 0 for local sequential calculations
 opts.remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 opts.rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
 opts.remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-opts.debugmode = 1;% debug mode (0) off (1) on
+opts.debugmode = 0;% debug mode (0) off (1) on
 opts.clean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 opts.save = 0;% (1): save LUKE_RESULTS or return error (0): return results or error
 opts.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
@@ -60,9 +60,8 @@ occurrence_an = 0;%antenna CPO occurence
 %
 %----------------------------------------------------------------------------------------------
 %
-path_simul = [pwd,'/'];
-dataname = dataname_ITM(shot,run,timeslice,time_interp,run_out,occurrence_out);
-filename = [path_simul,'LUKE_RESULTS_',dataname,'.mat'];
+dataname = dataname_ITM(shot,run,timeslice,time_interp);
+filename = [pwd,'/LUKE_RESULTS_',dataname,'.mat'];
 %
 CPO_occurrences = [occurrence_eq,occurrence_cp,occurrence_an];
 %
@@ -125,7 +124,7 @@ else
     shot = shot + 1i;%LUKE results not saved in the MDS database
 end
 %
-waves = itm_starwars(shot,run,timeslice,time_interp,CPOs,CPO_occurrences,run_out,iter,occurrence_out,opts);
+waves = itm_starwars(machine,shot,run,timeslice,time_interp,CPOs,CPO_occurrences,run_out,iter,occurrence_out,opts);
 %
 if isstruct(waves),
     output = 'ok';
