@@ -20,9 +20,9 @@ opts.backup = 0;% (1) save fluctuation time steps (0) do not save
 opts.waves = 0;% (1) save waves at each time step (0) do not save
 opts.opt_struct = 0;%(0) light version, compatible with fluctuations, proc_luke and runhxr, (1) : heavy version, all fields are kept except XYD_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
 %dkeparam.opt_struct
-%opt.waves = 0 : waves retournés dans dke_out (et sauvées dans LUKE_RESULTS)
-%opt.waves = 1 : waves sauvegardés dans "wave_results/" et non retournés dans dke_out
-%opt.waves = -1: waves non sauvegardés et non retournés dans dke_out. Dans ce cas, il faut faire retourner C3PO si on veux voir les rayons.
+%opt.waves = 0 : waves retournï¿½s dans dke_out (et sauvï¿½es dans LUKE_RESULTS)
+%opt.waves = 1 : waves sauvegardï¿½s dans "wave_results/" et non retournï¿½s dans dke_out
+%opt.waves = -1: waves non sauvegardï¿½s et non retournï¿½s dans dke_out. Dans ce cas, il faut faire retourner C3PO si on veux voir les rayons.
 %
 opts.euitm.loadfile = 0;%(1): load euitm data in file if exists, (0) do not load
 opts.euitm.savefile = 1;%(1): save euitm data in file if exists, (0) do not save
@@ -46,7 +46,7 @@ opts.euitm.savefile = 1;%(1): save euitm data in file if exists, (0) do not save
 shot = 2;
 run= 601;
 run_out= 602;
-timeslice = [0,1,2,3,4,5,6];
+timeslice = NaN;%[0,1,2,3,4,5,6];
 iter = 1;
 occurrence_out = 0;
 %
