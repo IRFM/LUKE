@@ -43,7 +43,7 @@ opts.euitm.savefile = 1;%(1): save euitm data in file if exists, (0) do not save
 % (still saved as shot 2, run 551). The three additional slices are a copy of the first three, 
 % with 1W instead of 1MW at the antenna.
 %
-machine = 'test'
+machine = 'test';
 shot = 2;
 run= 601;
 run_out= 602;
