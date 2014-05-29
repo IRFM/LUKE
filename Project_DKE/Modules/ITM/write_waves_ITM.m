@@ -22,12 +22,15 @@ end
 %
 CPO = 'waves';
 %
+expIdx  = euitm_create('euitm',numshot,numrun);%recreate the database otherwise no refreshment when writing (4.09a problem apparently)
+euitm_close(expIdx,'euitm',numshot,numrun);
+%
+expIdx = euitm_open('euitm',numshot,numrun);%Open the ITM MDS+ database
+%
+nslices = length(LUKE_waves);
+%
 try
-	if nargin < 5
-		expIdx  = euitm_create('euitm',numshot,numrun);%recreate the database otherwise no refreshment when writing (4.09a problem apparently)
-		euitm_close(expIdx,'euitm',numshot,numrun);
-		%
-		expIdx = euitm_open('euitm',numshot,numrun);%Open the ITM MDS+ database
+	if nslices > 1,
 		%
 		ITM_waves = CPO_gen(CPO,length(LUKE_waves));%the number of time slice
 		%
@@ -35,7 +38,6 @@ try
 		%
 		euitm_put(expIdx,CPO,ITM_waves);%write results in the 'waves' CPO
 		%
-		euitm_close(expIdx,'euitm',numshot,numrun);%Close the currently open database
 	else
 		expIdx = euitm_open('euitm',numshot,numrun);%Open the ITM MDS+ database
 		%
@@ -56,7 +58,6 @@ try
 			euitm_put_slice(expIdx,CPO,ITM_waves);%write time-dependent results in the 'waves' CPO
 		end
 		%
-		euitm_close(expIdx,'euitm',numshot,numrun);%Close the currently open database
 	end
 	%
 	flag = 'Data structures for ''waves'' CPO successfully writen from the ITM-MDS+ database';
@@ -64,3 +65,6 @@ try
 catch
 	flag = 'Problem while writing into the ITM-MDS+ database';
 end
+%
+euitm_close(expIdx,'euitm',numshot,numrun);%Close the currently open database
+
