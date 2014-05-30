@@ -35,6 +35,9 @@ if ~exist(filename,'file'),
     %
     disp('WARNING: dkeparam for EC wave only. LH case not yet implemented');
     dkeparam = load_structures_yp('dkeparam','EC_RT','');%yet EC wave only
+    %
+    if isfield(opts,'rho_S'),dkeparam.rho_S = opts.rho_S;end
+    %
     %TODO: implement dkeparam for LH or mixed EC+LH 
     %
     disp('----------------------------------------------------------');
