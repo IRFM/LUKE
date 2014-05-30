@@ -21,13 +21,14 @@ opts.backup = 0;% (1) save fluctuation time steps (0) do not save
 opts.waves = 0;% (1) save waves at each time step (0) do not save
 opts.opt_struct = 0;%(0) light version, compatible with fluctuations, proc_luke and runhxr, (1) : heavy version, all fields are kept except XYD_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
 opts.svnremoteupdate = 0;%(1) svn remote update on the ITM gateway (0) : no svn remote update on the ITM gateway_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
+opts.rho_S = 101;
 %
 %dkeparam.opt_struct
 %opt.waves = 0 : waves retourn�s dans dke_out (et sauv�es dans LUKE_RESULTS)
 %opt.waves = 1 : waves sauvegard�s dans "wave_results/" et non retourn�s dans dke_out
 %opt.waves = -1: waves non sauvegard�s et non retourn�s dans dke_out. Dans ce cas, il faut faire retourner C3PO si on veux voir les rayons.
 %
-opts.euitm.loadlocalfile = 0;%(1): load euitm data in local file if it exists (otherwise read data in MDS+ database), (0) do not load locally (in MDS+ database only)
+opts.euitm.loadlocalfile = 1;%(1): load euitm data in local file if it exists (otherwise read data in MDS+ database), (0) do not load locally (in MDS+ database only)
 opts.euitm.savelocalfile = 2;%(2): save euitm data in local file and in MDS+ database (1): save euitm data in local file but not in MDS+ database, (0) do not save locally (in MDS+ database only)
 %
 % Simulation parameters (EC17 paper parameters)
@@ -135,7 +136,7 @@ if ~exist(filename,'file'),% load existing simulation
 else
     temp_luke_results = load(['LUKE_RESULTS_',dataname,'.mat']);
     if isfield(temp_luke_results,'procdata')
-        disp(['WARNING: the file ',dataname,'.mat must be deleted first to start a new simulation.']);
+        disp(['WARNING: the file LUKE_RESULTS_',dataname,'.mat must be deleted or renamed first to start a new simulation.']);
         clear('temp_luke_results');
     end
 end
