@@ -9,7 +9,7 @@ clear all
 close all
 clc
 %
-opts.remnum = 10;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway)
+opts.remnum = 1;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway)
 opts.remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 opts.rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
 opts.remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
@@ -150,6 +150,8 @@ if isstruct(waves),
         waves_mds = '';
     end
     %
+    load(['LUKE_RESULTS_',dataname,'.mat'],'procdata');
+    %
     for it = 1:length(waves),
         figure;
         plot(waves(it).coherentwave(1).grid_1d.psi,waves(it).coherentwave(1).profiles_1d.powd_tot,'b+'),hold on
@@ -158,6 +160,7 @@ if isstruct(waves),
             plot(waves_mds(it).coherentwave(1).grid_1d.psi,waves_mds(it).coherentwave(1).profiles_1d.powd_tot,'rx'),hold on
         end
         %
+        procdata{it}.scalar.p0_rf_2piRp
         %TODO display global proc results
     end
     %
