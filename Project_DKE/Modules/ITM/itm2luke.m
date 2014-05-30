@@ -166,7 +166,9 @@ end
 %
 %--------------------------- Run C3PO/LUKE --------------------------- 
 %
-disp(['--> ',profilestr{dkepath.remnum}]);
+disp('---------------------------------------------')
+disp(['--> ',profilestr{opts.remnum}]);
+disp('---------------------------------------------')
 %
 lukestructs = run_lukert(lukestructs,dkepath);
 %
@@ -181,8 +183,14 @@ waves_euitm = [];
 save(['LUKE_RESULTS_',dataname,'.mat'],'lukestructs','dkepath','profilestr');
 %
 if sum(flag_running) > 0,
+    %
+    disp(['----> ',int2str(length(lukestructs)-sum(flag_running)),'/',int2str(length(lukestructs)),' calculations done.'])
+    %
     return
 else
+    %
+    disp('----> All calculations are done.')
+    %
     for it = 1:length(lukestructs),
         Znorm = lukestructs{it}.output.Znorm;
         Zcurr = lukestructs{it}.output.Zcurr;
@@ -215,12 +223,14 @@ else
         rawdata = load(temp_filename);
         rawdata.dkepath.profilestr = profilestr;
         %
-        procdata = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
+        procdata{it} = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
         %
-        waves_euitm = LUKEstruct2CPO(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_out,euitmshot.timeslice,'waves',rawdata,procdata,waves_euitm);
+        waves_euitm = LUKEstruct2CPO(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_out,euitmshot.timeslice,'waves',rawdata,procdata{it},waves_euitm);
         %
         delete(temp_filename);        
         %
     end
+    %
+    save(['LUKE_RESULTS_',dataname,'.mat'],'procdata','-append');
 end
 
