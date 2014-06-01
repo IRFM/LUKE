@@ -49,6 +49,6 @@ texfilelist(3).file = 'Project_DKE/Modules/FEB/Doc/3Tmodel';texfilelist(3).title
 %
 redminepath = 'http://tolbachik.hd.free.fr:8080/redmine/';
 %
-make_help(luke_root,redminepath,texfilelist,excludedfoldernames,helptools,verbose)
+make_help(verbose,luke_root,redminepath,texfilelist,excludedfoldernames,helptools)
 %
 cd(dirinit);
