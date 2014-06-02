@@ -18,7 +18,7 @@ function [varargout] = calcval_yp(fit,theta,a0,an,bn,da0drho,dandrho,dbndrho,d2a
 %    - dXdrho: value of the first order radial derivatives at position (rho,theta) [1,1]
 %    - d2Xdthetadrho: value of the second order poloidal and radial cross-derivatives at position (rho,theta) [1,1]
 %
-% By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
+% By Yves Peysson (CEA-IRFM, yves.peysson@cea.fr), Joan Decker (CEA-IRFM, joan.decker@cea.fr, Emelie Nilsson CEA-IRFM, emelie.nilsson@cea.fr)
 %
 if isfield(fit,'x_fit'), fit = fit.x_fit;end%backward compatibility with equilfit_yp
 %
