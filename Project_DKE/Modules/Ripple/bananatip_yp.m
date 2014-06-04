@@ -63,7 +63,6 @@ for ir = 1:size(XXf0,3),%radial position
     %epsif0 = (Xf0_i-Xf0_i1)./Xf0_i;epsif0(isnan(epsif0)==1)=0;
     XXf0_c(:,:,ir) = Xf0_c;        
 end
-keyboard
 %
 disp('----> Projection of the electron distribution fucntion at Bmin on the Legendre polynomial basis done.');
 %
