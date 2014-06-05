@@ -338,7 +338,8 @@ if ~exist(simul.path,'dir'),
         mkdir(simul.path);
     end
 end
-if opt.waves && ~exist([simul.path,'wave_results'],'dir'), 
+%
+if opt.waves == 1 && ~exist([simul.path,'wave_results'],'dir'), 
     mkdir([simul.path,'wave_results']);
 end
 %
