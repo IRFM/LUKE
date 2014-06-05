@@ -62,7 +62,9 @@ external.basestr = basestr;
 external.shotnum = shotnum;
 external.shotime = shotime;
 %
-shotime = num2str(round(shotime));
+if ~ischar(shotime),
+    shotime = num2str(round(shotime));
+end
 %
 shotnum = [repmat('0',[1,6-length(shotnum)]),shotnum];
 shotime = [repmat('0',[1,6-length(shotime)]),shotime];
