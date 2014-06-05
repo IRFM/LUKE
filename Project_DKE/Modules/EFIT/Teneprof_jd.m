@@ -72,6 +72,8 @@ elseif type == 1.4 ,%.mat, EAST profiles
     zmi = [1,2,3,Aimp];
     fi = [frac_H frac_D,0];
     %
+    delete(filename)
+    %
 elseif type == 1.5 ,%.mat, DEMO profile (Artaud)
     %
     load(filename,'-mat');%prof data save in equil_prof structure  
