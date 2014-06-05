@@ -1,4 +1,5 @@
-function flag = check_remote_yp(dkepath,debugmode,link_mode,remlist)
+function flag = check_remote_yp(dkepath,debugmode,link_mode,remlist,log_mode)
+% LUKE - Check if remote links are available and functionning
 %
 %	Check if remote links are available and functionning
 %
@@ -17,6 +18,8 @@ function flag = check_remote_yp(dkepath,debugmode,link_mode,remlist)
 %           o NaN : (default) test all profiles
 %           o []  : user-prompt profile list
 %           o [1,3...] : tests specified profiles
+%       - log_mode : output results in a log file
+%           o 0 : (default) yes 
 %
 %	Output:
 %
@@ -27,6 +30,12 @@ function flag = check_remote_yp(dkepath,debugmode,link_mode,remlist)
 %
 % by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
+if nargin < 5,
+    log_mode = 0;
+end
+if nargin < 4,
+    remlist = 0;
+end
 if nargin < 3,
     link_mode = NaN;
 end
@@ -43,18 +52,36 @@ else
     link_modestr = '';
 end
 %
-filename = ['res_check_remote_yp_',datestr(now,29),link_modestr,'.log'];
+filename = '';
 %
-if input_dke_yp(['Do you want to save the results in the log file ',filename,' ? (y/n)'],'y',{'y','n'}) == 'y',
+if log_mode,
     %
-    if exist(filename,'file'),
-        delete(filename);
+    filename = ['res_check_remote_yp_',datestr(now,29),link_modestr,'.log'];
+    %
+    if input_dke_yp(['Do you want to save the results in the log file ',filename,' ? (y/n)'],'y',{'y','n'}) == 'y',
+        %
+        if exist(filename,'file'),
+            delete(filename);
+        end
+        %
+        diary(filename);
+        %
     end
     %
-    diary(filename);
+end
+%
+if ~isempty(remlist) && ~isnan(sum(remlist)) && ~isempty(dkepath),%for the remlist only
     %
-else
-    filename = '';
+    dkepath_test = dkepath;
+    %
+    if isfield(dkepath,'remote'),dkepath_test.remote = dkepath.remote(remlist);end
+    if isfield(dkepath,'profilestr'),dkepath_test.profilestr = dkepath.profilestr(remlist);end
+    if isfield(dkepath,'remprofiles'),dkepath_test.remprofiles = dkepath.remprofiles(remlist+1);end
+    if isfield(dkepath,'distprofiles'),dkepath_test.distprofiles = dkepath.distprofiles(remlist+3);end
+    %
+    remlist = 1:length(remlist);
+    dkepath = dkepath_test;
+    %
 end
 %
 dkepath = setpath_luke_jd(dkepath,link_mode);
