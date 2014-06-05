@@ -9,27 +9,27 @@ clear all
 close all
 clc
 %
-opts.remnum = 1;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway)
+opts.remnum = 4;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway)
 opts.remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 opts.rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
 opts.remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-opts.debugmode = 0;% debug mode (0) off (1) on
-opts.clean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
-opts.save = 0;% (1): save LUKE_RESULTS or return error (0): return results or error
-opts.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
-opts.backup = 0;% (1) save fluctuation time steps (0) do not save
-opts.waves = 0;% (1) save waves at each time step (0) do not save
+opts.remdebugmode = 0;% debug mode (0) off (1) on
+opts.remclean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+%
 opts.opt_struct = 0;%(0) light version, compatible with fluctuations, proc_luke and runhxr, (1) : heavy version, all fields are kept except XYD_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
+%
+opts.opt.save = 0;% (1): save LUKE_RESULTS or return error (0): return results or error
+opts.opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
+opts.opt.backup = 0;% (1) save fluctuation time steps (0) do not save
+opts.opt.waves = -1;%(-1) waves are not saved in "wave_results/" and not stored in dke_out. In this case, C3PO must be rerun to see the rays (0) waves are stored in dke_out and saved in LUKE_RESULTS, (1) waves are saved in "wave_results/" but not stored in dke_out
+opts.opt.saveinputs = 0;% (1) save input structures in .mat files before starting (0) do not save
+%
 opts.svnremoteupdate = 0;%(1) svn remote update on the ITM gateway (0) : no svn remote update on the ITM gateway_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
+%
 opts.rho_S = 101;
 %
-%dkeparam.opt_struct
-%opt.waves = 0 : waves retourn�s dans dke_out (et sauv�es dans LUKE_RESULTS)
-%opt.waves = 1 : waves sauvegard�s dans "wave_results/" et non retourn�s dans dke_out
-%opt.waves = -1: waves non sauvegard�s et non retourn�s dans dke_out. Dans ce cas, il faut faire retourner C3PO si on veux voir les rayons.
-%
 opts.euitm.loadlocalfile = 1;%(1): load euitm data in local file if it exists (otherwise read data in MDS+ database), (0) do not load locally (in MDS+ database only)
-opts.euitm.savelocalfile = 2;%(2): save euitm data in local file and in MDS+ database (1): save euitm data in local file but not in MDS+ database, (0) do not save locally (in MDS+ database only)
+opts.euitm.savelocalfile = 1;%(2): save euitm data in local file and in MDS+ database (1): save euitm data in local file but not in MDS+ database, (0) do not save locally (in MDS+ database only)
 %
 % Simulation parameters (EC17 paper parameters)
 %

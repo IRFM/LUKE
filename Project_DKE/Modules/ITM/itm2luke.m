@@ -36,6 +36,10 @@ if ~exist(filename,'file'),
     disp('WARNING: dkeparam for EC wave only. LH case not yet implemented');
     dkeparam = load_structures_yp('dkeparam','EC_RT','');%yet EC wave only
     %
+    if isfield(opts,'opt_struct'),
+        dkeparam.opt_struct = opts.opt_struct;
+    end
+    %
     if isfield(opts,'rho_S'),dkeparam.rho_S = opts.rho_S;end
     %
     %TODO: implement dkeparam for LH or mixed EC+LH 
@@ -51,12 +55,14 @@ if ~exist(filename,'file'),
             dkepath.remnum = opts.remnum;% remote profile number. Use 0 for local sequential calculations
             dkepath.remtimout = opts.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
             dkepath.rempause = opts.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
-            dkepath.debugmode = opts.debugmode;% debug mode (0) off (1) on
-            dkepath.clean = opts.clean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
-            optluke.save = opts.save;% (1): save LUKE_RESULTS or return error (0): return results or error
-            optluke.fields = opts.fields;% selected fields in returned lukestructs. Use NaN for all fields
-            optluke.backup = opts.backup;% (1) save fluctuation time steps (0) do not save
-            optluke.waves = opts.waves;% (1) save waves at each time step (0) do not save
+            dkepath.debugmode = opts.remdebugmode;% debug mode (0) off (1) on
+            dkepath.clean = opts.remclean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+            %
+            optluke.save = opts.opt.save;% (1): save LUKE_RESULTS or return error (0): return results or error
+            optluke.fields = opts.opt.fields;% selected fields in returned lukestructs. Use NaN for all fields
+            optluke.backup = opts.opt.backup;% (1) save fluctuation time steps (0) do not save
+            optluke.waves = opts.opt.waves;%(-1) waves are not saved in "wave_results/" and not stored in dke_out. In this case, C3PO must be rerun to see the rays (0) waves are stored in dke_out and saved in LUKE_RESULTS, (1) waves are saved in "wave_results/" but not stored in dke_out
+            optluke.saveinputs = opts.opt.saveinputs;% (1) save input structures in .mat files before starting (0) do not save
         end
         %
         waves = '';
