@@ -771,7 +771,7 @@ for itn = itnmin:itnmax,%time evolution
             end
         end
         %
-        if opt.waves,
+        if opt.waves == 1,
             save([simul.path,'wave_results/waves_',simul.id,'_',int2str(itn),'.mat'],'wavetype','waves','wavestructs','itn');
         end
         %
@@ -792,7 +792,7 @@ for itn = itnmin:itnmax,%time evolution
         disp('--------------------------------------------------------------------------------------------------');
         clear waves
         %
-    elseif itnmax == 1 && opt.waves
+    elseif itnmax == 1 && opt.waves == 1
         %
         save([simul.path,'wave_results/waves_',simul.id,'.mat'],'waves','wavestructs');
         %
