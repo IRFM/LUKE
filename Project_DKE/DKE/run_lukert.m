@@ -94,7 +94,11 @@ if iscell(lukestructs),% remote and/or distributed calculation
                     luke_flag(ijob) = 1;% job completed.
                     continue
                 elseif isfield(lukestructs{ijob},'job'),
-                    disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is checked on remote cluster : ',remote.host])
+                    if isempty(remote.host)
+                        disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is checked on the local computer'])
+                    else
+                        disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is checked on remote cluster : ',remote.host])
+                    end
                 elseif isfield(lukestructs{ijob},'equil'),
                     disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is sent to remote cluster : ',remote.host])
                     %
