@@ -458,7 +458,7 @@ for i=1:length(a.diag)
                             startup;
                             cd(pwd_save);
                         end
-                        [err,res,text]=matremote_jd('system',{tempcommand},feval('remote_CRPP_LAC5','','local'),job);
+                        [err,~,res,text]=matremote_jd('system',{tempcommand},feval('remote_CRPP_LAC5','','local'),job);
                         % check if LIUQE ran on lac5 (warning if not)
                         if(~isempty(err))
                             warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed!');
@@ -518,7 +518,7 @@ for i=1:length(a.diag)
                         startup;
                         cd(pwd_save);
                     end
-                    [err,res,text]=matremote_jd('system',{tempcommand},feval('remote_CRPP_LAC5','','local'),job);
+                    [err,~,res,text]=matremote_jd('system',{tempcommand},feval('remote_CRPP_LAC5','','local'),job);
                     % check if LIUQE ran on lac5 (warning if not)
                     if(~isempty(err))
                         warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed!');

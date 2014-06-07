@@ -130,7 +130,7 @@ if iscell(lukestructs),% remote and/or distributed calculation
                     continue
                 end
                 %
-                [err,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
+                [err,jobparams,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
                 %
                 if isfield(remote,'cvs')
                     remote.cvs.CVSROOT = '';%such that cvs update is done once (see remoterunbatch.m)
@@ -150,6 +150,10 @@ if iscell(lukestructs),% remote and/or distributed calculation
                     luke_flag(ijob) = 1;% job completed.
                 end
             end
+            %
+            if isfield(lukestructs{ijob},'simul')
+                lukestructs{ijob}.simul.jobparams = jobparams;%transfer infos on the job that may be usefull for further simulations
+            end 
             %
             if isfield(lukestructs{ijob},'output') && isfield(lukestructs{ijob},'opt') && isfield(lukestructs{ijob}.opt,'save') && lukestructs{ijob}.opt.save == -1,
                 %

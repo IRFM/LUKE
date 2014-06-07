@@ -112,7 +112,7 @@ for irem = remlist,
     job.debugmode = debugmode; % to display info and debug
     job.funcopy = 0; % (0) to use function LUKEversion_jd on the remote host within matlab path - TEST REMOTE PATH
     %
-    [err,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem),job);
+    [err,~,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem),job);
     %
     disp(' ')
     if isempty(err),        

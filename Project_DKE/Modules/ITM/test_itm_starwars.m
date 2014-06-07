@@ -103,7 +103,7 @@ if ~exist(filename,'file'),% load existing simulation
     %
     if exist('opts') && isfield(opts,'svnremoteupdate') && opts.svnremoteupdate,
         %
-        [err_svn,c_svn,s_svn,w_svn] = matremote_jd('itmsvnupdate',{},remote,job);%svn remote or local update
+        [err_svn,~,c_svn,s_svn,w_svn] = matremote_jd('itmsvnupdate',{},remote,job);%svn remote or local update
         %
         if ~isempty(err_svn),
             disp('WARNING: SVN update of the ITM tools for LUKE calculations failed') 
@@ -114,7 +114,7 @@ if ~exist(filename,'file'),% load existing simulation
     %
     if ~exist('opts') || ~isfield(opts,'euitm') || ~isfield(opts.euitm,'savelocalfile') || opts.euitm.savelocalfile ~= 1,%LUKE results are saved in MDS+ database
         %
-        [err_mds,machine_mds,username_mds,ver_mds] = matremote_jd('which_MDSdatabase',{},remote,job);%remote or local test of the MDS database
+        [err_mds,~,machine_mds,username_mds,ver_mds] = matremote_jd('which_MDSdatabase',{},remote,job);%remote or local test of the MDS database
         %
         if isempty(machine_mds) || isempty(username_mds) || isempty(ver_mds) || ~isempty(err_mds),
             error(['ERROR: ITM database not recognized -> machine: ',machine_mds,', user: ',username_mds,', datastructure version: ',ver_mds]);
@@ -124,7 +124,7 @@ if ~exist(filename,'file'),% load existing simulation
         %
         if ~strcmp(machine,machine_mds),disp('WARNING: inconsistent machine name between script and MDS+ database.');end
         %
-        [err_database,flag_database] = matremote_jd('database_recreate_ITM',{'shot','run_out'},remote,job);%remote or local database creation output (for the test only)
+        [err_database,~,flag_database] = matremote_jd('database_recreate_ITM',{'shot','run_out'},remote,job);%remote or local database creation output (for the test only)
         %
         if ~isempty(err_database),
             disp('WARNING: output MDS database creation failed.') 
@@ -146,7 +146,7 @@ end
 if isstruct(waves),    
     %
     if ~exist('opts') || ~isfield(opts,'euitm') || ~isfield(opts.euitm,'savelocalfile') || opts.euitm.savelocalfile ~= 1,%LUKE results are saved in MDS+ database
-        [err_waves,waves_mds] = matremote_jd('check_write_waves_ITM',{length(remote),shot,run_out},remote,job);%write LUKE ouput in ITM database
+        [err_waves,~,waves_mds] = matremote_jd('check_write_waves_ITM',{length(remote),shot,run_out},remote,job);%write LUKE ouput in ITM database
     else
         waves_mds = '';
     end

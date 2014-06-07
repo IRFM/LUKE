@@ -93,7 +93,7 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
         %
         external_in = imod_struct_jd(external_in,'external',0,boolean(opt_gui),external_in,style);
         %
-        [err,external_out] = matremote_jd(fname,{external_in,opt_gui},remote);
+        [err,~,external_out] = matremote_jd(fname,{external_in,opt_gui},remote);
         %
         if isempty(err),
             external = external_out;

@@ -50,7 +50,7 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
         remote.funcopy = 0;%use file version on remote cluster
     end
     %
-    [err,dataoutput] = matremote_jd('luke_get_trdata',{datainput},remote);
+    [err,~,dataoutput] = matremote_jd('luke_get_trdata',{datainput},remote);
     if ~isempty(err),
         disperr_jd(err);
         external = '';
