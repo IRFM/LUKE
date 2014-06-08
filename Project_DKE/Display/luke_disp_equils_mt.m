@@ -31,7 +31,7 @@ if(nargin<3 || isempty(ax))
 end
 
 % init plt parameters
-ntr=[4 4 4];
+ntr=[3 4 4];
 % reference values and units
 Bphiunit='T';
 Bphiref=1;
@@ -82,11 +82,12 @@ for i=1:neq
             % data
             dat(1,i)=equils{i}.pne(1)/neref;
             dat(2,i)=equils{i}.pTe(1)/Teref;
-            dat(3,i)=equils{i}.pzTi(1)/Tiref;
+%            dat(3,i)=equils{i}.pzTi(1)/Tiref;
 %             dat(4,i)=mean(sum(equils{i}.pzni.*repmat(equils{i}.zZi'.^2,1,nrho))./equils{i}.pne);
-            dat(4,i)=sum(equils{i}.pzni(:,1).*equils{i}.zZi'.^2)./equils{i}.pne(1)/Zeffref;
+%            dat(4,i)=sum(equils{i}.pzni(:,1).*equils{i}.zZi'.^2)./equils{i}.pne(1)/Zeffref;
+            dat(3,i)=sum(equils{i}.pzni(:,1).*equils{i}.zZi'.^2)./equils{i}.pne(1)/Zeffref;
             % legend
-            legstr={sprintf('n_{e,0}/%s',sneref),sprintf('T_{e,0}/%s',sTeref),sprintf('T_{i,0}/%s',sTiref),sprintf('Z_{eff,0}/%s',sZeffref)};
+            legstr={sprintf('n_{e,0}/%s',sneref),sprintf('T_{e,0}/%s',sTeref),sprintf('Z_{eff,0}/%s',sZeffref)};%,sprintf('T_{i,0}/%s',sTiref)
         case 2
             % data
             dat(1,i)=equils{i}.ip/ipref;
@@ -104,10 +105,11 @@ for i=1:neq
             dat(1,i)=equils{i}.Zp/zref;
             [pshift,pelong,ptrian]=equilmoments_jd(equils{i}.theta,equils{i}.ptx,equils{i}.pty);
             dat(2,i)=-pshift(end)/Deltaref;
-            dat(3,i)=pelong(end)/kapparef;
+            % dat(3,i)=pelong(end)/kapparef;
+            dat(3,i)=(pelong(end) - 1)/kapparef;
             dat(4,i)=ptrian(end)/deltaref;
             % legend
-            legstr={sprintf('z_{axis}/%s',szref),sprintf('\\Delta/%s',sDeltaref),sprintf('\\kappa/%s',skapparef),sprintf('\\delta/%s',sdeltaref)};
+            legstr={sprintf('z_{axis}/%s',szref),sprintf('\\Delta/%s',sDeltaref),sprintf('(\\kappa - 1)/%s',skapparef),sprintf('\\delta/%s',sdeltaref)};
     end
 end
 
