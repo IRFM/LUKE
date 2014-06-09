@@ -130,7 +130,15 @@ if iscell(lukestructs),% remote and/or distributed calculation
                     continue
                 end
                 %
-                [err,jobparams,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
+                if isfield(lukestructs{ijob},'job'),%job suspended
+                    [err,jobparams,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
+                elseif isfield(lukestructs{ijob},'launchedjob') && lukestructs{ijob}.launchedjob,%job unsuspended
+                    [err,jobparams,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
+                elseif isfield(lukestructs{ijob},'launchedjob') && ~lukestructs{ijob}.launchedjob,%job suspended
+                    disp(['WARNING: job #',int2str(ijob),'/',int2str(length(lukestructs)),' is suspended. It won''t be launched.']);
+                else%job suspension not managed
+                    [err,jobparams,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
+                end
                 %
                 if isfield(remote,'cvs')
                     remote.cvs.CVSROOT = '';%such that cvs update is done once (see remoterunbatch.m)
