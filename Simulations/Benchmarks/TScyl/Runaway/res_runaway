@@ -1,0 +1,7 @@
+Simulation parameters : 
+coll_mode = 0 ; Te/mc2 = 0.01 ; E/Ec = 10 ; E/ED = 0.1 ; Zi = 1
+NR limit : pc/pT = 3.1623 ; pmax/pc = 15.8114
+Relativ. : pc/pT = 3.3333 ; pmax/pc = 15
+ 
+--> LUKE RR (normalized to ne and tauc) : 0.0013755
+----------------------
