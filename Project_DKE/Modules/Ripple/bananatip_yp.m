@@ -1,4 +1,4 @@
-function ripple = bananatip_yp(ntheta,psin,pn,mhu,equil,XXf0,mksa)
+function ripple = bananatip_yp(ntheta,psin,dpsin,pn,mhu,equil,XXf0,pn2dpn,mksa)
 %LUKE -  calculate the electron distribution function at the banana tip for magnetic ripple losses
 %
 % Calculation the electron distribution function at the banana tip for magnetic ripple losses. 
@@ -64,21 +64,26 @@ for ir = 1:size(XXf0,3),%radial position
     XXf0_c(:,:,ir) = Xf0_c;        
 end
 %
-disp('----> Projection of the electron distribution fucntion at Bmin on the Legendre polynomial basis done.');
+disp('----> Projection of the electron distribution function at Bmin on the Legendre polynomial basis done.');
 %
 [~,~,~,~,~,~,~,mc2,~,~] = pc_dke_yp;%Universal physics constants
 %
-ripple.psin_tip = psin;
+theta = linspace(0,2*pi,ntheta);%uniform poloidal angle grid grid
+dtheta = theta(2) - theta(1);
 %
-ripple.rho_tip = psi2rho_jd(equil,ripple.psin_tip);
-ripple.theta_tip = linspace(0,pi,ntheta);%poloidal angle value at which the banana tip is located
+ripple.psin_tip = psin;%Fokker-Planck psi grid
+%
+ripple.rho_tip = psi2rho_jd(equil,ripple.psin_tip);%Fokker-Planck rho grid
+ripple.theta_tip = theta;%poloidal angle value at which the banana tip is located
 %
 ripple.Ec_tip = mc2*(sqrt(1 + pn.*pn*mksa.betath_ref^2) - 1);%Fast electron kinetic energy in keV at the banana tip;
 ripple.pn_tip = pn;
 %
-ripple.mhu_tip = zeros(size(XXf0,1),ntheta);
+ripple.mhu_tip = zeros(size(XXf0,3),ntheta);
 %
-ripple.XXf0_tip = zeros(size(XXf0,1),ntheta,size(XXf0,3));
+ripple.XXf0_tip = zeros(size(XXf0,1),ntheta,size(XXf0,3));%at the banana tip
+%
+Xpn2dpn = pn2dpn(:)*ones(1,ntheta);
 %
 for ir = 1:length(ripple.rho_tip),
     %
@@ -97,14 +102,33 @@ for ir = 1:length(ripple.rho_tip),
     B_an = ppval(equil_fit.B_fit.pp_an,ripple.rho_tip(ir));
     B_bn = ppval(equil_fit.B_fit.pp_bn,ripple.rho_tip(ir));
     %
+    BP_a0 = ppval(equil_fit.BP_fit.pp_a0,ripple.rho_tip(ir));
+    BP_an = ppval(equil_fit.BP_fit.pp_an,ripple.rho_tip(ir));
+    BP_bn = ppval(equil_fit.BP_fit.pp_bn,ripple.rho_tip(ir));
+    %
+    r_a0 = ppval(equil_fit.r_fit.pp_a0,ripple.rho_tip(ir));
+    r_an = ppval(equil_fit.r_fit.pp_an,ripple.rho_tip(ir));
+    r_bn = ppval(equil_fit.r_fit.pp_bn,ripple.rho_tip(ir));
+    %
+    calpha_a0 = ppval(equil_fit.calpha_fit.pp_a0,ripple.rho_tip(ir));
+    calpha_an = ppval(equil_fit.calpha_fit.pp_an,ripple.rho_tip(ir));
+    calpha_bn = ppval(equil_fit.calpha_fit.pp_bn,ripple.rho_tip(ir));
+    %
     B_tip = calcval_yp(equil_fit,ripple.theta_tip,B_a0,B_an,B_bn);
     Bmin = calcval_yp(equil_fit,0,B_a0,B_an,B_bn);
+    BP_tip = calcval_yp(equil_fit,ripple.theta_tip,BP_a0,BP_an,BP_bn);
+    r_tip = calcval_yp(equil_fit,ripple.theta_tip,r_a0,r_an,r_bn);
+    calpha_tip = calcval_yp(equil_fit,ripple.theta_tip,calpha_a0,calpha_an,calpha_bn);
     %
     ripple.mhu_tip(ir,:) = sqrt(1 - Bmin./B_tip);%pitch-angle value at Bmin which corresponds to the poloidal angle value at which the banana tip is located
     %
     [Pm,cL] = leg_dke_yp(ripple.mhu_tip(ir,:),n_pol);%Value of the Legendre polynomial on the mhu_tip grid 
     %
-    ripple.XXf0_tip(:,:,ir) = (Pm'*(XXf0_c(:,:,ir).*(ones(size(XXf0,1),1)*cL'))')';
+    ripple.XXf0_tip(:,:,ir) = (Pm'*(XXf0_c(:,:,ir).*(ones(size(XXf0,1),1)*cL'))')';%the distribution of electron banana tips on the grid
+    %
+    XJ_tip = ones(size(Xpn2dpn,1),1)*abs(r_tip./BP_tip./calpha_tip)';
+    %
+    ripple.DNeDphi_tip(:,:,ir) = 4*pi*mksa.ne_ref*XJ_tip.*ripple.XXf0_tip(:,:,ir).*Xpn2dpn*dpsin(ir)*dtheta;%the incremental density of electron banana tips on the grid
     %
 end
 %
