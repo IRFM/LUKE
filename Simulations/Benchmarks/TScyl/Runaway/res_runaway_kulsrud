@@ -1,0 +1,8 @@
+Simulation parameters : 
+coll_mode = 0 ; Te/mc2 = 1e-06 ; E/Ec = 100000 ; E/ED = 0.1 ; Zi = 2
+NR limit : pc/pT = 3.1623
+Relativ. : pc/pT = 3.1623
+ 
+--> LUKE    RR : 0.00057188
+--> Kulsrud RR : 0.0005839
+----------------------

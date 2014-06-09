@@ -18,12 +18,12 @@ warning('off')
 %
 % normalized electric field (with respect to the Critical field Ec)
 %
-alpha = 1.8;%[10]*1e4;%E/Ec
+alpha = [10]*1e4;%E/Ec
 %
 % temperature betath2 = Te/mc2
 % (betath2 = 10^(-6) is validated for NR limit)
 %
-betath2 = 0.01;%1e-6;%
+betath2 = 1e-6;
 %
 % ion charge (single species, cold ions)
 %
@@ -36,7 +36,7 @@ Zi = 2;%3;%
 %
 coll_mode = 0;
 %
-p_opt = 2;
+p_opt = -1;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -87,6 +87,9 @@ dkeparam.tn = 10000;%time for asymptotic solution with norm_mode_f = 1
 dkeparam.dtn = 1000;%10 time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
 %
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
+%
 equil.pzTi = 1e-10*ones(size(equil.pzTi));% cold ions
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
@@ -98,7 +101,7 @@ equil.pzni = [0;0;0;1/Zi]*equil.pne;% single ion species
 %
 epsi = alpha*betath2;
 ohm = ohm_flat(equil,epsi);
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
 %
 RR = dke_out.XxRR_fsav(end,:);
 %
@@ -128,8 +131,6 @@ end
 %
 format
 %
-%delete res_runaway
-%
 delete res_critical
 %
 diary res_critical
@@ -149,5 +150,6 @@ diary off
 %
 %************************************************************************************************************************************
 %
-eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
-info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
+filename = [path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat'];
+save(filename);
+info_dke_yp(2,['Data saved in ',filename]);

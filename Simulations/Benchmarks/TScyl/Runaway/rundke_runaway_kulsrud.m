@@ -16,16 +16,9 @@ clear functions
 close all
 warning('off')
 %
-% grid parameters
-%
-pnmax_S = 20;
-np_S = 101;
-pn_S = linspace(0,pnmax_S,np_S);
-%
-%
 % normalized electric field (with respect to the Critical field Ec)
 %
-alpha = 1e4;%E/Ec
+alpha = 1e5;%E/Ec
 %
 % temperature betath2 = Te/mc2
 % (betath2 = 10^(-6) is validated for NR limit)
@@ -43,11 +36,11 @@ Zi = 2;%
 %
 coll_mode = 0;
 %
-id_simul = 'Runaway';%Simulation ID
+id_simul = 'Runaway_kulsrud';%Simulation ID
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-RR = frundke_runaway(id_simul,alpha,betath2,Zi,coll_mode,pn_S);
+RR = frundke_runaway(id_simul,alpha,betath2,Zi,coll_mode);
 %
 epsi_kulsrud = [0.04;0.06;0.08;0.10];
 Zi_kulsrud =[1,2,3,10];
@@ -64,7 +57,7 @@ else
     RR_k = '';
 end
 %
-% additional parameters
+% additional info
 %
 % Dreicer field ED = Ec/betath2
 % Critical momentum at mhu=1 : 
@@ -75,9 +68,9 @@ end
 %
 format
 %
-delete res_runaway
+delete res_runaway_kulsrud
 %
-diary res_runaway
+diary res_runaway_kulsrud
 %
 disp('Simulation parameters : ')
 disp(['coll_mode = ',num2str(coll_mode),' ; Te/mc2 = ',num2str(betath2),' ; E/Ec = ',num2str(alpha),' ; E/ED = ',num2str(alpha*betath2),' ; Zi = ',num2str(Zi)])
