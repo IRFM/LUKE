@@ -1,4 +1,4 @@
-function [xymaskT,xylambda_p0p0,xylambda_p2m1,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4,xylambda_b_p1m2p2]...
+function [xymaskT,xylambda_p0p0,xylambda_p2m1,xylambda_p0p3,xylambda_p2p2,xylambda_p2m2p2,xylambda_b_p1p1,xylambda_b_p1m1p2,xylambda_b_p1m1,xylambda_b_p1m2,xylambda_b_p2m2p2,xylambda_b_p3m2,xylambda_b_p2,xylambda_b_p1m3p4,xylambda_b_p1m2p2]...
 = bounce_dke_jd(equil_mode,ymhu0,equilDKE,xqtilde,xymaskT_in,sign)
 %
 % calculates bounce averaging coefficients needed for solving the electron drift-kinetic-equation. 
@@ -60,6 +60,8 @@ if equil_mode == 1
     YMPSIBM1 = 1.0./YMPSIB;
 	YMPSIBM2 = YMPSIBM1.*YMPSIBM1;
 	YMPSIBM3 = YMPSIBM1.*YMPSIBM2;
+	YMPSIBP2 = YMPSIB.*YMPSIB;
+	YMPSIBP3 = YMPSIBP2.*YMPSIB;
 %
     YMR0YMR1 = (1 + YMx0/equilDKE.Rp)./(1 + YMx/equilDKE.Rp);
     YMR0YMR2 = YMR0YMR1.*YMR0YMR1;
@@ -89,13 +91,19 @@ if equil_mode == 1
     Yweight_p2m1 = YMYM02.*YMPSIBM1;
     xylambda_p2m1 = reshape(sum(YMmaskYMdtYMF.*Yweight_p2m1)/(2*pi),[nr,nmhu])./xyqtilde;
 %
-    Yweight_p1p1 = YMYM01.*YMPSIBM1;
+    Yweight_p1p1 = YMYM01.*YMPSIB;
     xylambda_p1p1 = reshape(sum(YMmaskYMdtYMF.*Yweight_p1p1)/(2*pi),[nr,nmhu])./xyqtilde;
     xylambda_b_p1p1 = not_xymaskT.*xylambda_p1p1;
 %
     Yweight_p1m1p2 = YMYM01.*YMPSIBM1.*YMR0YMR2;
     xylambda_p1m1p2 = reshape(sum(YMmaskYMdtYMF.*Yweight_p1m1p2)/(2*pi),[nr,nmhu])./xyqtilde;
     xylambda_b_p1m1p2 = not_xymaskT.*xylambda_p1m1p2;%Equivalent form: xq.*xRmin.*xB0./xqtilde/R0./xBTmin                                              
+%
+    Yweight_p0p3 = YMPSIBP3;
+    xylambda_p0p3 = reshape(sum(YMmaskYMdtYMF.*Yweight_p0p3)/(2*pi),[nr,nmhu])./xyqtilde;
+%
+    Yweight_p2p2 = YMYM02.*YMPSIBP2;
+    xylambda_p2p2 = reshape(sum(YMmaskYMdtYMF.*Yweight_p2p2)/(2*pi),[nr,nmhu])./xyqtilde;
 %
 %Drift kinetic weights
 %
@@ -123,9 +131,10 @@ if equil_mode == 1
     if ~isempty(ymask),
     	xylambda_p0p0(:,ymask) = eps;
     	xylambda_p2m1(:,ymask) = eps;
+    	xylambda_p0p3(:,ymask) = eps;
+    	xylambda_p2p2(:,ymask) = eps;
     	xylambda_b_p1p1(:,ymask) = eps;
     	xylambda_b_p1m1p2(:,ymask) = eps;
-%
     	xylambda_b_p1m1(:,ymask) = eps;
     	xylambda_b_p1m2(:,ymask) = eps;
     	xylambda_b_p2m2p2(:,ymask) = eps;
@@ -149,6 +158,8 @@ else,%Ideal equilibrium with circular concentric flux-surfaces.
         if equilDKE.xmhu0T2(ir) == 0,
             xylambda_p0p0(ir,:) = zeros(size(ymhu0));
             xylambda_p2m1(ir,:) = zeros(size(ymhu0));
+            xylambda_p0p3(ir,:) = zeros(size(ymhu0));
+            xylambda_p2p2(ir,:) = zeros(size(ymhu0));
             xylambda_p2m2p2(ir,:) = zeros(size(ymhu0));
             xylambda_b_p1p1(ir,:) = zeros(size(ymhu0));
             xylambda_b_p1m1(ir,:) = zeros(size(ymhu0));
@@ -191,6 +202,8 @@ else,%Ideal equilibrium with circular concentric flux-surfaces.
 %
             xylambda_p0p0(ir,:) = ylambda;
             xylambda_p2m1(ir,:) = ylambda - ydeltalambda./ymhu2;
+%             xylambda_p0p3(ir,:) = zeros(size(ymhu0));%% TODO
+%             xylambda_p2p2(ir,:) = zeros(size(ymhu0));
             xylambda_p2m2p2(ir,:) = ysstar_tp;
             xylambda_b_p1p1(ir,:) = ~xymaskT(ir,:).*ysstar;
             xylambda_b_p1m1(ir,:) = ~xymaskT(ir,:)/(1 + xia(ir));
