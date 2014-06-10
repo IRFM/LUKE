@@ -11,7 +11,7 @@ function dkepath = path_laptop_JOAN_DECKER
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
 dkepath.machine = 'laptopjoan';
-dkepath.hostname = 'CADTS-0096';%WARNING: for laptop, may change with connection status.
+dkepath.hostname = 'chalmers-PC-joan';%WARNING: for laptop, may change with connection status.
 dkepath.computer = computer;%machine type and supported OS
 %
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
@@ -25,7 +25,7 @@ dkepath.joan(1).temppathroot = '/tmp/';%Absolute root directory path adress wher
 % dkepath.joan(1).mex78 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB78'];
 % dkepath.joan(1).mex710 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB710']; 
 % dkepath.joan(1).mex711 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB711']; 
-dkepath.joan(1).mex712 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB712']; 
+% dkepath.joan(1).mex712 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB712']; 
 dkepath.joan(1).mex714 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB714']; 
 dkepath.joan(1).mex801 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopjoan/MATLAB801']; 
 %
@@ -45,7 +45,8 @@ dkepath.joan(1).mex801 = [dkepath.joan(1).luke_root,'Project_DKE/MEX/Bin/laptopj
 %
 % in fedora, g95 installed but helmex did not work... try again with kubuntu?
 %
-dkepath.joan(1).compiler_opt.helmex = ['-L',dkepath.joan(1).local_root,'lapack-3.4.2 -llapack -lrefblas'];%NaN;%'-v -L/home/joan/lib -llapack_g95_32 -lblas_g95_32';%'-v -largeArrayDims -llapack -lblas -lgfortran FC=''gfortran'' FFLAGS=''-fexceptions -fPIC -fbackslash''';%  
+%dkepath.joan(1).compiler_opt.helmex = ['-L',dkepath.joan(1).local_root,'lapack-3.4.2 -llapack -lrefblas'];%NaN;%'-v -L/home/joan/lib -llapack_g95_32 -lblas_g95_32';%'-v -largeArrayDims -llapack -lblas -lgfortran FC=''gfortran'' FFLAGS=''-fexceptions -fPIC -fbackslash''';%  
+dkepath.joan(1).compiler_opt.helmex = NaN;%['-L',dkepath.joan(1).local_root,'lapack-3.4.2 -llapack -lrefblas'];%NaN;%'-v -L/home/joan/lib -llapack_g95_32 -lblas_g95_32';%'-v -largeArrayDims -llapack -lblas -lgfortran FC=''gfortran'' FFLAGS=''-fexceptions -fPIC -fbackslash''';%  
 dkepath.joan(1).compiler_opt.fopts = '-v ';%'-v FC="gfortran"';%'FFLAGS="-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132"';
 dkepath.joan(1).compiler_opt.copts = '';
 %
@@ -54,9 +55,10 @@ dkepath.joan(1).compiler_opt.copts = '';
 % dkepath.joan(1).MUMPS.mex78 = [dkepath.joan(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.3_S_ifort/MATLAB78'];%Where MUMPS matrix solver is stored (MEX function)
 % dkepath.joan(1).MUMPS.mex710 = [dkepath.joan(1).local_root,'MUMPS_4.9.2/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 % dkepath.joan(1).MUMPS.mex711 = [dkepath.joan(1).local_root,'MUMPS_4.9.2/MATLAB711'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.joan(1).MUMPS.mex712 = [dkepath.joan(1).local_root,'MUMPS_4.9.2/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+% dkepath.joan(1).MUMPS.mex712 = [dkepath.joan(1).local_root,'MUMPS_4.9.2/MATLAB712'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.joan(1).MUMPS.mex714 = [dkepath.joan(1).local_root,'MUMPS_4.10.0/MATLAB714'];%Where MUMPS matrix solver is stored (MEX function)
 % dkepath.joan(1).MUMPS.mex801 = [dkepath.joan(1).local_root,'MUMPS_4.10.0/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.joan(1).MUMPS.mex801 = [dkepath.joan(1).local_root,'MUMPS_4.10.0_ifort/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.joan(1).MUMPS.mex801 = [dkepath.joan(1).local_root,'MUMPS_4.10.0/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %--------------------------- Remote computing -----------------------------
 %
