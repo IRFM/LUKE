@@ -43,7 +43,7 @@ if ~isempty(remprofile),
         end
         %
         if isempty(remlist),
-            disp(['WARNING: no remote profile for ''',computing_opts.remprofile,'''']);
+            disp(['WARNING: no remote profile for ''',remprofile,'''']);
             disp(['---> Interactive choice enforced for choosing the remote profile']);
             remlist = [];
         end
