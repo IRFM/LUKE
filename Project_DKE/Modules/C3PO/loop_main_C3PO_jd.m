@@ -246,118 +246,114 @@ for iref = 1:nref + 1,% vessel reflection index
             rayparam.tau_lim = tau_lim_init - rayinit.tau0_lin;% the absorption criterion accounts for previous steps
 			%
 			[tout,yout,yproc] = raytracing_yp(rayparam,equil_fit,y0,f0struct,fluct_fit,flag);
-            if strcmp(computer,'MACI64'),clear mex;end%contribute to stabilize the ray-tracing. At least for mac...experimental at this stage
             %
-            flag_rhomin = 0;
+            if strcmp(computer,'MACI64'),
+                clear mex;%contribute to stabilize the ray-tracing. At least for mac...experimental at this stage
+            end
             %
-            while 1,
+            flag_rhomin = false;
+            %
+            while ~isempty(yout) && yout(end,1) <= rayparam.rhomin,
                 %
-                %keyboard
+                flag_rhomin = true;
                 %
-                if ~isempty(yout) && yout(end,1) <= rayparam.rhomin,
+                if ~isinf(equil_fit.Rp),%torus
                     %
-                    flag_rhomin = flag_rhomin + 1;
+                    X0 = (yproc(end-2,14)*equil_fit.ap + equil_fit.Rp).*cos(yout(end-2,3)/equil_fit.Rp);
+                    Y0 = - (yproc(end-2,14)*equil_fit.ap  + equil_fit.Rp).*sin(yout(end-2,3)/equil_fit.Rp);%Note : phi is clockwise from top
+                    Z0 = yproc(end-2,15)*equil_fit.ap + equil_fit.Zp;
                     %
-                    if ~isinf(equil_fit.Rp),%torus
-                        %
-                        X0 = (yproc(end-2,14)*equil_fit.ap + equil_fit.Rp).*cos(yout(end-2,3)/equil_fit.Rp);
-                        Y0 = - (yproc(end-2,14)*equil_fit.ap  + equil_fit.Rp).*sin(yout(end-2,3)/equil_fit.Rp);%Note : phi is clockwise from top
-                        Z0 = yproc(end-2,15)*equil_fit.ap + equil_fit.Zp;
-                        %
-                        X1 = (yproc(end-1,14)*equil_fit.ap + equil_fit.Rp).*cos(yout(end-1,3)/equil_fit.Rp);%input point
-                        Y1 = - (yproc(end-1,14)*equil_fit.ap  + equil_fit.Rp).*sin(yout(end-1,3)/equil_fit.Rp);%input point
-                        Z1 = yproc(end-1,15)*equil_fit.ap + equil_fit.Zp;%input point
-                        %
-                        d = sqrt((X1 - X0)^2 + (Y1 - Y0)^2 + (Z1 - Z0)^2);
-                        %
-                        Vx = (X1 - X0)/d;%local direction of the ray
-                        Vy = (Y1 - Y0)/d;%local direction of the ray
-                        Vz = (Z1 - Z0)/d;%local direction of the ray
-                        V = [Vx,Vy,Vz];
-                        %
-                        R_ref = sqrt(X1.^2 + Y1.^2);
-                        Z_ref = Z1;
-                        phi_ref = -atan(Y1./X1) + pi*(X1 < 0) - 2*pi*(X1 < 0 && Y1 > 0);% -pi < phi < pi
-                        %	
-                        NR_ref = Vx*cos(phi_ref) - Vy*sin(phi_ref);
-                        Nphi_ref = -Vx*sin(phi_ref) - Vy*cos(phi_ref);
-                        NZ_ref = Vz;
-                        %
-                        launch1 = launch0;
-                        launch1.launch0 = launch0;
-                        %
-                        launch1.yR_L = R_ref;
-                        launch1.yZ_L = Z_ref;
-                        launch1.yphi_L = phi_ref;
-                        launch1.yalpha_L = - atan(Nphi_ref/NR_ref) + pi*(NR_ref < 0) - 2*pi*(NR_ref < 0 && Nphi_ref > 0);% -pi < alpha < pi
-                        launch1.ybeta_L = acos(NZ_ref);% 0 < beta < pi
-                        %                 
-                        [rayinit_guess,yout1] = main_rayinit_launch_jd(equil,launch1,rayparam.rhomin);
-                        %
-                        rayinit_guess.yNpar0 = (yproc(end-1,2) - yproc(end-2,2))/(yout(end-1,end) - yout(end-2,end))*max(yout1(:,end))+ yproc(end-1,2);%linear npar extrapolation for a continuity of Npar.
-                        %
-                        yout1(:,6) = yout(1,6);%axisymmetry. kz is constant
-                        %
-                        % start m optimization 
-                        %
-                        rayparam_guess = rayparam;
-                        %
-                        rayparam_guess.tfinal = 300;%not too smal to avoid memory problem in C3PO
-                        %
-                        rayinit_guess.tau0_lin = rayinit.tau0_lin;
-                        rayinit_guess.ss0 = rayinit.ss0;
-                        rayinit_guess.mmode = rayinit.mmode + j;%j is for outward propagation from the considered plasma domain
-                        %
-                        m_guess = (yout(end,5) + yout1(end,5))/2;%mean value between the input and output
-                        %
-                        %delta_guess = mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_guess,rayinit_guess,V,m_guess)
-                        %
-                        [m_opt,delta_opt] = fminsearch(@(m_guess) mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_guess,rayinit_guess,V,m_guess),m_guess)
-                        %
-                        % propagation inside the torus
-                        %
-                        yout1(:,5) = yout1(:,end)*(m_opt - yout(end-1,5))/max(yout1(:,end)) + yout(end-1,5);%progressive evolution of m inside the torus
-                        Npar_in = yout1(:,end)*(rayinit_guess.yNpar0 - yproc(end-1,2))/max(yout1(:,end)) + yproc(end-1,2);%progressive evolution of Npar inside the torus
-                        %
-                        yout1a = [];
-                        %
-                        for ii = 1:length(yout1)
-                            yout1a = [yout1a;[init_RT_jd(equil_fit,...
-                            yout1(ii,1),yout1(ii,2),yout1(ii,3),omega_rf,...
-                            Npar_in(ii),yout1(ii,5),NaN,rayinit_guess.mmode,kmode,fluct_fit).',NaN]];
-                        end
-                        %
-                        tout = [tout(1:end-1,:);zeros(length(yout1a),1)];
-                        yout = [yout(1:end-1,:);yout1a];
-                        %
-                    else,%cylinder
-                        disp('WARNING: cylindrical case not yet implemented');
-                        keyboard
+                    X1 = (yproc(end-1,14)*equil_fit.ap + equil_fit.Rp).*cos(yout(end-1,3)/equil_fit.Rp);%input point
+                    Y1 = - (yproc(end-1,14)*equil_fit.ap  + equil_fit.Rp).*sin(yout(end-1,3)/equil_fit.Rp);%input point
+                    Z1 = yproc(end-1,15)*equil_fit.ap + equil_fit.Zp;%input point
+                    %
+                    d = sqrt((X1 - X0)^2 + (Y1 - Y0)^2 + (Z1 - Z0)^2);
+                    %
+                    Vx = (X1 - X0)/d;%local direction of the ray
+                    Vy = (Y1 - Y0)/d;%local direction of the ray
+                    Vz = (Z1 - Z0)/d;%local direction of the ray
+                    V = [Vx,Vy,Vz];
+                    %
+                    R_ref = sqrt(X1.^2 + Y1.^2);
+                    Z_ref = Z1;
+                    phi_ref = -atan(Y1./X1) + pi*(X1 < 0) - 2*pi*(X1 < 0 && Y1 > 0);% -pi < phi < pi
+                    %	
+                    NR_ref = Vx*cos(phi_ref) - Vy*sin(phi_ref);
+                    Nphi_ref = -Vx*sin(phi_ref) - Vy*cos(phi_ref);
+                    NZ_ref = Vz;
+                    %
+                    launch1 = launch0;
+                    launch1.launch0 = launch0;
+                    %
+                    launch1.yR_L = R_ref;
+                    launch1.yZ_L = Z_ref;
+                    launch1.yphi_L = phi_ref;
+                    launch1.yalpha_L = - atan(Nphi_ref/NR_ref) + pi*(NR_ref < 0) - 2*pi*(NR_ref < 0 && Nphi_ref > 0);% -pi < alpha < pi
+                    launch1.ybeta_L = acos(NZ_ref);% 0 < beta < pi
+                    %                 
+                    [rayinit_guess,yout1] = main_rayinit_launch_jd(equil,launch1,rayparam.rhomin);
+                    %
+                    rayinit_guess.yNpar0 = (yproc(end-1,2) - yproc(end-2,2))/(yout(end-1,end) - yout(end-2,end))*max(yout1(:,end))+ yproc(end-1,2);%linear npar extrapolation for a continuity of Npar.
+                    %
+                    yout1(:,6) = yout(1,6);%axisymmetry. kz is constant
+                    %
+                    % start m optimization 
+                    %
+                    rayparam_guess = rayparam;
+                    %
+                    rayparam_guess.tfinal = 300;%not too smal to avoid memory problem in C3PO
+                    %
+                    rayinit_guess.tau0_lin = rayinit.tau0_lin;
+                    rayinit_guess.ss0 = rayinit.ss0;
+                    rayinit_guess.mmode = rayinit.mmode + j;%j is for outward propagation from the considered plasma domain
+                    %
+                    m_guess = (yout(end,5) + yout1(end,5))/2;%mean value between the input and output
+                    %
+                    %delta_guess = mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_guess,rayinit_guess,V,m_guess)
+                    %
+                    [m_opt,delta_opt] = fminsearch(@(m_guess) mguess_yp(equil_fit,f0struct,fluct_fit,flag,kmode,rayparam_guess,rayinit_guess,V,m_guess),m_guess)
+                    %
+                    % propagation inside the torus
+                    %
+                    yout1(:,5) = yout1(:,end)*(m_opt - yout(end-1,5))/max(yout1(:,end)) + yout(end-1,5);%progressive evolution of m inside the torus
+                    Npar_in = yout1(:,end)*(rayinit_guess.yNpar0 - yproc(end-1,2))/max(yout1(:,end)) + yproc(end-1,2);%progressive evolution of Npar inside the torus
+                    %
+                    yout1a = [];
+                    %
+                    for ii = 1:length(yout1)
+                        yout1a = [yout1a;[init_RT_jd(equil_fit,...
+                        yout1(ii,1),yout1(ii,2),yout1(ii,3),omega_rf,...
+                        Npar_in(ii),yout1(ii,5),NaN,rayinit_guess.mmode,kmode,fluct_fit).',NaN]];
                     end
                     %
-                    % propagation after the torus
+                    tout = [tout(1:end-1,:);zeros(length(yout1a),1)];
+                    yout = [yout(1:end-1,:);yout1a];
                     %
-                    rayinit1.tau0_lin = rayinit.tau0_lin;
-                    rayinit1.ss0 = rayinit.ss0;
-                    rayinit1.mmode = rayinit.mmode + j;%j is for outward propagation from the considered plasma domain
+                else% cylindrical case
                     %
-                    y1 = init_RT_jd(equil_fit,...
-                        yout(end,1),yout(end,2),yout(end,3),omega_rf,...
-                        rayinit_guess.yNpar0,yout(end,5),NaN,rayinit_guess.mmode,kmode,fluct_fit).';
-                    %
-                    [tout1, yout1, yproc1] = raytracing_yp(rayparam,equil_fit,y1,f0struct,fluct_fit,flag);
-                    %
-                    tout = [tout;tout1];
-                    yout = [yout;yout1];
-                    %
-                else
-                    if flag_rhomin > 0,
-                        yproc = [];%ray properties are not calculated in the C program is rhomin is catched
-                    end
-                    %
-                    break
+                    disp('WARNING: cylindrical case not yet implemented');
+                    keyboard
                 end
                 %
+                % propagation after the torus
+                %
+                rayinit1.tau0_lin = rayinit.tau0_lin;
+                rayinit1.ss0 = rayinit.ss0;
+                rayinit1.mmode = rayinit.mmode + j;%j is for outward propagation from the considered plasma domain
+                %
+                y1 = init_RT_jd(equil_fit,...
+                    yout(end,1),yout(end,2),yout(end,3),omega_rf,...
+                    rayinit_guess.yNpar0,yout(end,5),NaN,rayinit_guess.mmode,kmode,fluct_fit).';
+                %
+                [tout1, yout1, yproc1] = raytracing_yp(rayparam,equil_fit,y1,f0struct,fluct_fit,flag);
+                %
+                tout = [tout;tout1];
+                yout = [yout;yout1];
+                %
+            end
+            %
+            if flag_rhomin,
+                yproc = [];%ray properties are not calculated in the C program is rhomin is catched
             end
 			%
 			if C3POdisplay.ray,
