@@ -15,6 +15,9 @@ clear mex
 clear functions
 close all
 warning('off')
+% 
+% *********************** This part must be specified by the user *****************************
+%
 %
 % normalized electric field (with respect to the Critical field Ec)
 %
@@ -25,6 +28,11 @@ alpha = 1e5;%E/Ec
 %
 betath2 = 1e-6;%
 %
+% the ratio of the syncrotron reaction force to the collisional drag scales as wc2/wp2
+% -> set wpr = 0 to ignore syncrotron reaction force
+%
+wpr = 0;%wc2/wp2
+%
 % ion charge (single species, cold ions)
 %
 Zi = 2;%
@@ -34,13 +42,22 @@ Zi = 2;%
 % (1) : High-velocity limit
 % (2) : Linearized Belaiev-Budker (momentum-conserving)
 %
-coll_mode = 0;
+opt.coll_mode = 0;
+opt.bounce_mode = 0;% bounce-averaged calculation
+opt.boundary_mode_f = 0;% Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
+opt.norm_mode_f = 0;%Local normalization of f0 at each iteration (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
+opt.tn = 10000;%10000 is time for asymptotic solution 
+opt.dtn = 1000;%10 time steps required for accurate runaway solution - see rundke_dtn
 %
 id_simul = 'Runaway_kulsrud';%Simulation ID
-% 
-% ***********************This part must be specified by the user, run make files if necessary) *****************************
+path_simul = '';%Simulation path
 %
-RR = frundke_runaway(id_simul,alpha,betath2,Zi,coll_mode);
+%************************************************************************************************************************************
+%
+RR = frundke_runaway(id_simul,alpha,betath2,wpr,Zi,opt);
+%
+%************************************************************************************************************************************
 %
 epsi_kulsrud = [0.04;0.06;0.08;0.10];
 Zi_kulsrud =[1,2,3,10];
@@ -51,7 +68,7 @@ RR_kulsrud = 1e-4*[ 0.01914,NaN   ,NaN  ,NaN   ;...%Kulsrud (PRL, 31,11, (1972) 
 %
 iepsi = find(abs((alpha*betath2 - epsi_kulsrud)./epsi_kulsrud) < 10*eps);
 %
-if coll_mode == 0 && abs((betath2 - 1e-6)/1e-6) < 10*eps && ~isempty(iepsi) && any(Zi == Zi_kulsrud),
+if opt.coll_mode == 0 && opt.bounce_mode == 0 && abs((betath2 - 1e-6)/1e-6) < 10*eps && ~isempty(iepsi) && any(Zi == Zi_kulsrud),
     RR_k = RR_kulsrud(iepsi,Zi == Zi_kulsrud);
 else
     RR_k = '';
@@ -73,7 +90,8 @@ delete res_runaway_kulsrud
 diary res_runaway_kulsrud
 %
 disp('Simulation parameters : ')
-disp(['coll_mode = ',num2str(coll_mode),' ; Te/mc2 = ',num2str(betath2),' ; E/Ec = ',num2str(alpha),' ; E/ED = ',num2str(alpha*betath2),' ; Zi = ',num2str(Zi)])
+disp(['coll_mode = ',num2str(opt.coll_mode),' ; bounce_mode = ',num2str(opt.bounce_mode)])
+disp(['Te/mc2 = ',num2str(betath2),' ; E/Ec = ',num2str(alpha),' ; E/ED = ',num2str(alpha*betath2),' ; Zi = ',num2str(Zi)])
 disp(['NR limit : pc/pT = ',num2str(1/sqrt(alpha*betath2))])%NR
 disp(['Relativ. : pc/pT = ',num2str(1/sqrt(alpha*betath2 - betath2))])%rel
 disp(' ')
