@@ -48,16 +48,17 @@ XXsinksource = make_struct_jd(loadstruct,display.display_mode,'sinksourcecoeffbu
 Zmripple = make_struct_jd(loadstruct,display.display_mode,'mripplecoefbuilder_dke_yp',dkeparam_out,display,equil,equilDKE,gridDKE,mksa,ripple);%Magnetic ripple matrix coefficients
 [ZXXD_a,ZXXF_a] = make_struct_jd(loadstruct,display.display_mode,'rad_dke_yp',dkeparam_out,display,equilDKE,gridDKE,mksa,Zbouncecoef,Zmomcoef,transpfaste);%Anomalous radial transport super matrix
 [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = make_struct_jd(loadstruct,display.display_mode,'coll_dke_jd',dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);%Collisions flux coefficients 
-[ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity] = make_struct_jd(loadstruct,display.display_mode,'efield_dke_jd',dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c);%Electric field flux coefficients
+[ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi_init,xEfield_validity] = make_struct_jd(loadstruct,display.display_mode,'efield_dke_jd',dkepath,dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,ZXXF_c);%Electric field flux coefficients
+[ZXXD_s,ZXXF_s,ZXXD_s_tp,ZXXF_s_tp] = make_struct_jd(loadstruct,display.display_mode,'synchrotron_dke_jd',dkeparam_out,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef);%Synchrotron reaction flux coefficients
 [waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys] = make_struct_jd(loadstruct,display.display_mode,'rfwave_dke_jd',dkeparam_out,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);%RF wave parameters preprocessing calculations
 %
-if dkeparam_out.avalanche_mode == 1 %if 1, avalanche mode on
-    [XXSavalanches_norm,xnre_init,xnre_out_norm] = make_struct_jd(loadstruct,display.display_mode,'avalanche_en',dkepath,dkeparam_out,display,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE);%the complete avalanche operator
-else %if no avalanche mode is specified, zero contribution
-    XXSavalanches_norm = zeros(gridDKE.npn,gridDKE.nmhu,gridDKE.nr);
-    xnre_init = zeros(1,gridDKE.nr); 
-    xnre_out_norm = zeros(1,gridDKE.nr); 
+if isnan(dkeparam_out.pnmin0_KO) || dkeparam_out.pnmin0_KO > max(momentumDKE.pn_S),
+    dkeparam_out.pnmin0_KO = max(momentumDKE.pn_S);%condition pnmin0_KO <= pnmax_S is enforced so that the source can be calculated
 end
+if isnan(dkeparam_out.pnmax1_KO),
+    dkeparam_out.pnmax1_KO = dkeparam_out.pnmin0_KO;%condition pnmax1_KO <= pnmin0_KO ensure the separation of primary and secondary electrons
+end
+[XXSavalanches_norm,xnrem_init,xnrep_init,xnre_out_norm] = make_struct_jd(loadstruct,display.display_mode,'avalanche_en',dkepath,dkeparam_out,display,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE);%the complete avalanche operator
 %
 if strcmp(waveparam.model,'RT'),% ray tracing simulation
     [ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf] = make_struct_jd(loadstruct,display.display_mode,'loop_rfdiff_dke_jd',dkepath,dkeparam_out,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,mksa,radialDKE,waveparam);%RF waves flux coefficients
@@ -70,10 +71,11 @@ end
 [XXfinit] = make_struct_jd(loadstruct,display.display_mode,'finit_dke_yp',dkeparam_out,display,equilDKE,gridDKE,mksa,Zmomcoef,waveparam,XXf0_in);%Initial distribution function
 %
 varargout_loc = {dkeparam_out,radialDKE,equilDKE,momentumDKE,gridDKE,mksa,Zmomcoef,Zbouncecoef,...
-                 XXsinksource,Zmripple,XXSavalanches_norm,xnre_init,xnre_out_norm,...
+                 XXsinksource,Zmripple,XXSavalanches_norm,xnrem_init,xnrep_init,xnre_out_norm,...
                  ZXXD_a,ZXXF_a,...
                  ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor,...
-                 ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi,xEfield_validity,...
+                 ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,xepsi_init,xEfield_validity,...
+                 ZXXD_s,ZXXF_s,ZXXD_s_tp,ZXXF_s_tp,...
                  waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys,...
                  ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf,...
                  XXfinit};

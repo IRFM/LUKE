@@ -1,6 +1,7 @@
 function [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam,display,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,...
                                                                        ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,...
                                                                        ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,...
+                                                                       ZXXD_s,ZXXF_s,ZXXD_s_tp,ZXXF_s_tp,...
                                                                        ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,...
                                                                        ZXXD_a,ZXXF_a)
 %
@@ -151,24 +152,24 @@ end
 %
 for ir = 1:nr,
     %
-    XDpp_ipj = ZXXD_c.pp_ipj(:,:,ir) + ZXXD_e.pp_ipj(:,:,ir) + ZXXD_rf.pp_ipj(:,:,ir) + ZXXD_a.pp_ipj(:,:,ir);
-    XDpp_imj = ZXXD_c.pp_imj(:,:,ir) + ZXXD_e.pp_imj(:,:,ir) + ZXXD_rf.pp_imj(:,:,ir) + ZXXD_a.pp_imj(:,:,ir);
-    XDpm_ipj = ZXXD_c.pm_ipj(:,:,ir) + ZXXD_e.pm_ipj(:,:,ir) + ZXXD_rf.pm_ipj(:,:,ir) + ZXXD_a.pm_ipj(:,:,ir);
-    XDpm_imj = ZXXD_c.pm_imj(:,:,ir) + ZXXD_e.pm_imj(:,:,ir) + ZXXD_rf.pm_imj(:,:,ir) + ZXXD_a.pm_imj(:,:,ir);
-    XFp_ipj = ZXXF_c.p_ipj(:,:,ir) + ZXXF_e.p_ipj(:,:,ir) + ZXXF_rf.p_ipj(:,:,ir) + ZXXF_a.p_ipj(:,:,ir);
-    XFp_imj = ZXXF_c.p_imj(:,:,ir) + ZXXF_e.p_imj(:,:,ir) + ZXXF_rf.p_imj(:,:,ir) + ZXXF_a.p_imj(:,:,ir);
+    XDpp_ipj = ZXXD_c.pp_ipj(:,:,ir) + ZXXD_e.pp_ipj(:,:,ir) + ZXXD_s.pp_ipj(:,:,ir) + ZXXD_rf.pp_ipj(:,:,ir) + ZXXD_a.pp_ipj(:,:,ir);
+    XDpp_imj = ZXXD_c.pp_imj(:,:,ir) + ZXXD_e.pp_imj(:,:,ir) + ZXXD_s.pp_imj(:,:,ir) + ZXXD_rf.pp_imj(:,:,ir) + ZXXD_a.pp_imj(:,:,ir);
+    XDpm_ipj = ZXXD_c.pm_ipj(:,:,ir) + ZXXD_e.pm_ipj(:,:,ir) + ZXXD_s.pm_ipj(:,:,ir) + ZXXD_rf.pm_ipj(:,:,ir) + ZXXD_a.pm_ipj(:,:,ir);
+    XDpm_imj = ZXXD_c.pm_imj(:,:,ir) + ZXXD_e.pm_imj(:,:,ir) + ZXXD_s.pm_imj(:,:,ir) + ZXXD_rf.pm_imj(:,:,ir) + ZXXD_a.pm_imj(:,:,ir);
+    XFp_ipj = ZXXF_c.p_ipj(:,:,ir) + ZXXF_e.p_ipj(:,:,ir) + ZXXF_s.p_ipj(:,:,ir) + ZXXF_rf.p_ipj(:,:,ir) + ZXXF_a.p_ipj(:,:,ir);
+    XFp_imj = ZXXF_c.p_imj(:,:,ir) + ZXXF_e.p_imj(:,:,ir) + ZXXF_s.p_imj(:,:,ir) + ZXXF_rf.p_imj(:,:,ir) + ZXXF_a.p_imj(:,:,ir);
     %
-    XDmm_ijp = ZXXD_c.mm_ijp(:,:,ir) + ZXXD_e.mm_ijp(:,:,ir) + ZXXD_rf.mm_ijp(:,:,ir) + ZXXD_a.mm_ijp(:,:,ir);
-    XDmm_ijm = ZXXD_c.mm_ijm(:,:,ir) + ZXXD_e.mm_ijm(:,:,ir) + ZXXD_rf.mm_ijm(:,:,ir) + ZXXD_a.mm_ijm(:,:,ir);
-    XDmp_ijp = ZXXD_c.mp_ijp(:,:,ir) + ZXXD_e.mp_ijp(:,:,ir) + ZXXD_rf.mp_ijp(:,:,ir) + ZXXD_a.mp_ijp(:,:,ir);
-    XDmp_ijm = ZXXD_c.mp_ijm(:,:,ir) + ZXXD_e.mp_ijm(:,:,ir) + ZXXD_rf.mp_ijm(:,:,ir) + ZXXD_a.mp_ijm(:,:,ir);
-    XFm_ijp = ZXXF_c.m_ijp(:,:,ir) + ZXXF_e.m_ijp(:,:,ir) + ZXXF_rf.m_ijp(:,:,ir) + ZXXF_a.m_ijp(:,:,ir);
-    XFm_ijm = ZXXF_c.m_ijm(:,:,ir) + ZXXF_e.m_ijm(:,:,ir) + ZXXF_rf.m_ijm(:,:,ir) + ZXXF_a.m_ijm(:,:,ir);
+    XDmm_ijp = ZXXD_c.mm_ijp(:,:,ir) + ZXXD_e.mm_ijp(:,:,ir) + ZXXD_s.mm_ijp(:,:,ir) + ZXXD_rf.mm_ijp(:,:,ir) + ZXXD_a.mm_ijp(:,:,ir);
+    XDmm_ijm = ZXXD_c.mm_ijm(:,:,ir) + ZXXD_e.mm_ijm(:,:,ir) + ZXXD_s.mm_ijm(:,:,ir) + ZXXD_rf.mm_ijm(:,:,ir) + ZXXD_a.mm_ijm(:,:,ir);
+    XDmp_ijp = ZXXD_c.mp_ijp(:,:,ir) + ZXXD_e.mp_ijp(:,:,ir) + ZXXD_s.mp_ijp(:,:,ir) + ZXXD_rf.mp_ijp(:,:,ir) + ZXXD_a.mp_ijp(:,:,ir);
+    XDmp_ijm = ZXXD_c.mp_ijm(:,:,ir) + ZXXD_e.mp_ijm(:,:,ir) + ZXXD_s.mp_ijm(:,:,ir) + ZXXD_rf.mp_ijm(:,:,ir) + ZXXD_a.mp_ijm(:,:,ir);
+    XFm_ijp = ZXXF_c.m_ijp(:,:,ir) + ZXXF_e.m_ijp(:,:,ir) + ZXXF_s.m_ijp(:,:,ir) + ZXXF_rf.m_ijp(:,:,ir) + ZXXF_a.m_ijp(:,:,ir);
+    XFm_ijm = ZXXF_c.m_ijm(:,:,ir) + ZXXF_e.m_ijm(:,:,ir) + ZXXF_s.m_ijm(:,:,ir) + ZXXF_rf.m_ijm(:,:,ir) + ZXXF_a.m_ijm(:,:,ir);
     %
-    XDpp_ij = ZXXD_c.pp_ij(:,:,ir) + ZXXD_e.pp_ij(:,:,ir) + ZXXD_rf.pp_ij(:,:,ir) + ZXXD_a.pp_ij(:,:,ir);
-    XDpm_ij = ZXXD_c.pm_ij(:,:,ir) + ZXXD_e.pm_ij(:,:,ir) + ZXXD_rf.pm_ij(:,:,ir) + ZXXD_a.pm_ij(:,:,ir);
-    XDmp_ij = ZXXD_c.mp_ij(:,:,ir) + ZXXD_e.mp_ij(:,:,ir) + ZXXD_rf.mp_ij(:,:,ir) + ZXXD_a.mp_ij(:,:,ir);
-    XFp_ij = ZXXF_c.p_ij(:,:,ir) + ZXXF_e.p_ij(:,:,ir) + ZXXF_rf.p_ij(:,:,ir) + ZXXF_a.p_ij(:,:,ir);
+    XDpp_ij = ZXXD_c.pp_ij(:,:,ir) + ZXXD_e.pp_ij(:,:,ir) + ZXXD_s.pp_ij(:,:,ir) + ZXXD_rf.pp_ij(:,:,ir) + ZXXD_a.pp_ij(:,:,ir);
+    XDpm_ij = ZXXD_c.pm_ij(:,:,ir) + ZXXD_e.pm_ij(:,:,ir) + ZXXD_s.pm_ij(:,:,ir) + ZXXD_rf.pm_ij(:,:,ir) + ZXXD_a.pm_ij(:,:,ir);
+    XDmp_ij = ZXXD_c.mp_ij(:,:,ir) + ZXXD_e.mp_ij(:,:,ir) + ZXXD_s.mp_ij(:,:,ir) + ZXXD_rf.mp_ij(:,:,ir) + ZXXD_a.mp_ij(:,:,ir);
+    XFp_ij = ZXXF_c.p_ij(:,:,ir) + ZXXF_e.p_ij(:,:,ir) + ZXXF_s.p_ij(:,:,ir) + ZXXF_rf.p_ij(:,:,ir) + ZXXF_a.p_ij(:,:,ir);
 %
 %Grid weights calculations (for f0 and ftp also)
 %
@@ -456,20 +457,20 @@ if ~isempty(transpfaste),%boundary conditions
 	%
     % Diagonal calculations
     %
-    XXDpr_ipj = ZXXD_c.pr_ipj + ZXXD_e.pr_ipj + ZXXD_rf.pr_ipj + ZXXD_a.pr_ipj;
-    XXDpr_imj = ZXXD_c.pr_imj + ZXXD_e.pr_imj + ZXXD_rf.pr_imj + ZXXD_a.pr_imj;
+    XXDpr_ipj = ZXXD_c.pr_ipj + ZXXD_e.pr_ipj + ZXXD_s.pr_ipj + ZXXD_rf.pr_ipj + ZXXD_a.pr_ipj;
+    XXDpr_imj = ZXXD_c.pr_imj + ZXXD_e.pr_imj + ZXXD_s.pr_imj + ZXXD_rf.pr_imj + ZXXD_a.pr_imj;
     %
-    XXDmr_ijp = ZXXD_c.mr_ijp + ZXXD_e.mr_ijp + ZXXD_rf.mr_ijp + ZXXD_a.mr_ijp;
-    XXDmr_ijm = ZXXD_c.mr_ijm + ZXXD_e.mr_ijm + ZXXD_rf.mr_ijm + ZXXD_a.mr_ijm;
+    XXDmr_ijp = ZXXD_c.mr_ijp + ZXXD_e.mr_ijp + ZXXD_s.mr_ijp + ZXXD_rf.mr_ijp + ZXXD_a.mr_ijp;
+    XXDmr_ijm = ZXXD_c.mr_ijm + ZXXD_e.mr_ijm + ZXXD_s.mr_ijm + ZXXD_rf.mr_ijm + ZXXD_a.mr_ijm;
     %
-    XXDrr_lp = ZXXD_c.rr_lp + ZXXD_e.rr_lp + ZXXD_rf.rr_lp + ZXXD_a.rr_lp;
-    XXDrr_lm = ZXXD_c.rr_lm + ZXXD_e.rr_lm + ZXXD_rf.rr_lm + ZXXD_a.rr_lm;
-    XXDrp_lp = ZXXD_c.rp_lp + ZXXD_e.rp_lp + ZXXD_rf.rp_lp + ZXXD_a.rp_lp;
-    XXDrp_lm = ZXXD_c.rp_lm + ZXXD_e.rp_lm + ZXXD_rf.rp_lm + ZXXD_a.rp_lm;
-    XXDrm_lp = ZXXD_c.rm_lp + ZXXD_e.rm_lp + ZXXD_rf.rm_lp + ZXXD_a.rm_lp;
-    XXDrm_lm = ZXXD_c.rm_lm + ZXXD_e.rm_lm + ZXXD_rf.rm_lm + ZXXD_a.rm_lm;
-    XXFr_lp = ZXXF_c.r_lp + ZXXF_e.r_lp + ZXXF_rf.r_lp + ZXXF_a.r_lp;
-    XXFr_lm = ZXXF_c.r_lm + ZXXF_e.r_lm + ZXXF_rf.r_lm + ZXXF_a.r_lm;
+    XXDrr_lp = ZXXD_c.rr_lp + ZXXD_e.rr_lp + ZXXD_s.rr_lp + ZXXD_rf.rr_lp + ZXXD_a.rr_lp;
+    XXDrr_lm = ZXXD_c.rr_lm + ZXXD_e.rr_lm + ZXXD_s.rr_lm + ZXXD_rf.rr_lm + ZXXD_a.rr_lm;
+    XXDrp_lp = ZXXD_c.rp_lp + ZXXD_e.rp_lp + ZXXD_s.rp_lp + ZXXD_rf.rp_lp + ZXXD_a.rp_lp;
+    XXDrp_lm = ZXXD_c.rp_lm + ZXXD_e.rp_lm + ZXXD_s.rp_lm + ZXXD_rf.rp_lm + ZXXD_a.rp_lm;
+    XXDrm_lp = ZXXD_c.rm_lp + ZXXD_e.rm_lp + ZXXD_s.rm_lp + ZXXD_rf.rm_lp + ZXXD_a.rm_lp;
+    XXDrm_lm = ZXXD_c.rm_lm + ZXXD_e.rm_lm + ZXXD_s.rm_lm + ZXXD_rf.rm_lm + ZXXD_a.rm_lm;
+    XXFr_lp = ZXXF_c.r_lp + ZXXF_e.r_lp + ZXXF_s.r_lp + ZXXF_rf.r_lp + ZXXF_a.r_lp;
+    XXFr_lm = ZXXF_c.r_lm + ZXXF_e.r_lm + ZXXF_s.r_lm + ZXXF_rf.r_lm + ZXXF_a.r_lm;
     %
     XXx0 = repmat(reshape(xx0',[1,1,nr]),[npn,nmhu,1]);
     XXx0mm = zeros(npn,nmhu,nr);
@@ -842,31 +843,31 @@ if dke_mode == 1,
 %   
 % D and F tensors
 % 
-        XDpp_tp_ippj = ZXXD_c_tp.pp_ippj(:,:,ir_dke) + ZXXD_e_tp.pp_ippj(:,:,ir_dke) + ZXXD_rf_tp.pp_ippj(:,:,ir_dke);
-        XDpp_tp_ipj = ZXXD_c_tp.pp_ipj(:,:,ir_dke) + ZXXD_e_tp.pp_ipj(:,:,ir_dke) + ZXXD_rf_tp.pp_ipj(:,:,ir_dke);
-        XDpp_tp_ij = ZXXD_c_tp.pp_ij(:,:,ir_dke) + ZXXD_e_tp.pp_ij(:,:,ir_dke) + ZXXD_rf_tp.pp_ij(:,:,ir_dke);
-        XDpp_tp_imj = ZXXD_c_tp.pp_imj(:,:,ir_dke) + ZXXD_e_tp.pp_imj(:,:,ir_dke) + ZXXD_rf_tp.pp_imj(:,:,ir_dke);
-        XDpp_tp_immj = ZXXD_c_tp.pp_immj(:,:,ir_dke) + ZXXD_e_tp.pp_immj(:,:,ir_dke) + ZXXD_rf_tp.pp_immj(:,:,ir_dke);
+        XDpp_tp_ippj = ZXXD_c_tp.pp_ippj(:,:,ir_dke) + ZXXD_e_tp.pp_ippj(:,:,ir_dke) + ZXXD_s_tp.pp_ippj(:,:,ir_dke) + ZXXD_rf_tp.pp_ippj(:,:,ir_dke);
+        XDpp_tp_ipj = ZXXD_c_tp.pp_ipj(:,:,ir_dke) + ZXXD_e_tp.pp_ipj(:,:,ir_dke) + ZXXD_s_tp.pp_ipj(:,:,ir_dke) + ZXXD_rf_tp.pp_ipj(:,:,ir_dke);
+        XDpp_tp_ij = ZXXD_c_tp.pp_ij(:,:,ir_dke) + ZXXD_e_tp.pp_ij(:,:,ir_dke) + ZXXD_s_tp.pp_ij(:,:,ir_dke) + ZXXD_rf_tp.pp_ij(:,:,ir_dke);
+        XDpp_tp_imj = ZXXD_c_tp.pp_imj(:,:,ir_dke) + ZXXD_e_tp.pp_imj(:,:,ir_dke) + ZXXD_s_tp.pp_imj(:,:,ir_dke) + ZXXD_rf_tp.pp_imj(:,:,ir_dke);
+        XDpp_tp_immj = ZXXD_c_tp.pp_immj(:,:,ir_dke) + ZXXD_e_tp.pp_immj(:,:,ir_dke) + ZXXD_s_tp.pp_immj(:,:,ir_dke) + ZXXD_rf_tp.pp_immj(:,:,ir_dke);
 %
-        XDpm_tp_ipj = ZXXD_c_tp.pm_ipj(:,:,ir_dke) + ZXXD_e_tp.pm_ipj(:,:,ir_dke) + ZXXD_rf_tp.pm_ipj(:,:,ir_dke);
-        XDpm_tp_ij = ZXXD_c_tp.pm_ij(:,:,ir_dke) + ZXXD_e_tp.pm_ij(:,:,ir_dke) + ZXXD_rf_tp.pm_ij(:,:,ir_dke);
-        XDpm_tp_imj = ZXXD_c_tp.pm_imj(:,:,ir_dke) + ZXXD_e_tp.pm_imj(:,:,ir_dke) + ZXXD_rf_tp.pm_imj(:,:,ir_dke);
+        XDpm_tp_ipj = ZXXD_c_tp.pm_ipj(:,:,ir_dke) + ZXXD_e_tp.pm_ipj(:,:,ir_dke) + ZXXD_s_tp.pm_ipj(:,:,ir_dke) + ZXXD_rf_tp.pm_ipj(:,:,ir_dke);
+        XDpm_tp_ij = ZXXD_c_tp.pm_ij(:,:,ir_dke) + ZXXD_e_tp.pm_ij(:,:,ir_dke) + ZXXD_s_tp.pm_ij(:,:,ir_dke) + ZXXD_rf_tp.pm_ij(:,:,ir_dke);
+        XDpm_tp_imj = ZXXD_c_tp.pm_imj(:,:,ir_dke) + ZXXD_e_tp.pm_imj(:,:,ir_dke) + ZXXD_s_tp.pm_imj(:,:,ir_dke) + ZXXD_rf_tp.pm_imj(:,:,ir_dke);
 %
-        XDmp_tp_ijp = ZXXD_c_tp.mp_ijp(:,:,ir_dke) + ZXXD_e_tp.mp_ijp(:,:,ir_dke) + ZXXD_rf_tp.mp_ijp(:,:,ir_dke);
-        XDmp_tp_ij = ZXXD_c_tp.mp_ij(:,:,ir_dke) + ZXXD_e_tp.mp_ij(:,:,ir_dke) + ZXXD_rf_tp.mp_ij(:,:,ir_dke);
-        XDmp_tp_ijm = ZXXD_c_tp.mp_ijm(:,:,ir_dke) + ZXXD_e_tp.mp_ijm(:,:,ir_dke) + ZXXD_rf_tp.mp_ijm(:,:,ir_dke);
+        XDmp_tp_ijp = ZXXD_c_tp.mp_ijp(:,:,ir_dke) + ZXXD_e_tp.mp_ijp(:,:,ir_dke) + ZXXD_s_tp.mp_ijp(:,:,ir_dke) + ZXXD_rf_tp.mp_ijp(:,:,ir_dke);
+        XDmp_tp_ij = ZXXD_c_tp.mp_ij(:,:,ir_dke) + ZXXD_e_tp.mp_ij(:,:,ir_dke) + ZXXD_s_tp.mp_ij(:,:,ir_dke) + ZXXD_rf_tp.mp_ij(:,:,ir_dke);
+        XDmp_tp_ijm = ZXXD_c_tp.mp_ijm(:,:,ir_dke) + ZXXD_e_tp.mp_ijm(:,:,ir_dke) + ZXXD_s_tp.mp_ijm(:,:,ir_dke) + ZXXD_rf_tp.mp_ijm(:,:,ir_dke);
 %
-        XDmm_tp_ijp = ZXXD_c_tp.mm_ijp(:,:,ir_dke) + ZXXD_e_tp.mm_ijp(:,:,ir_dke) + ZXXD_rf_tp.mm_ijp(:,:,ir_dke);
-        XDmm_tp_ijm = ZXXD_c_tp.mm_ijm(:,:,ir_dke) + ZXXD_e_tp.mm_ijm(:,:,ir_dke) + ZXXD_rf_tp.mm_ijm(:,:,ir_dke);
+        XDmm_tp_ijp = ZXXD_c_tp.mm_ijp(:,:,ir_dke) + ZXXD_e_tp.mm_ijp(:,:,ir_dke) + ZXXD_s_tp.mm_ijp(:,:,ir_dke) + ZXXD_rf_tp.mm_ijp(:,:,ir_dke);
+        XDmm_tp_ijm = ZXXD_c_tp.mm_ijm(:,:,ir_dke) + ZXXD_e_tp.mm_ijm(:,:,ir_dke) + ZXXD_s_tp.mm_ijm(:,:,ir_dke) + ZXXD_rf_tp.mm_ijm(:,:,ir_dke);
 %
-        XFp_tp_ippj = ZXXF_c_tp.p_ippj(:,:,ir_dke) + ZXXF_e_tp.p_ippj(:,:,ir_dke) + ZXXF_rf_tp.p_ippj(:,:,ir_dke);
-        XFp_tp_ipj = ZXXF_c_tp.p_ipj(:,:,ir_dke) + ZXXF_e_tp.p_ipj(:,:,ir_dke) + ZXXF_rf_tp.p_ipj(:,:,ir_dke);
-        XFp_tp_ij = ZXXF_c_tp.p_ij(:,:,ir_dke) + ZXXF_e_tp.p_ij(:,:,ir_dke) + ZXXF_rf_tp.p_ij(:,:,ir_dke);
-        XFp_tp_imj = ZXXF_c_tp.p_imj(:,:,ir_dke) + ZXXF_e_tp.p_imj(:,:,ir_dke) + ZXXF_rf_tp.p_imj(:,:,ir_dke);
-        XFp_tp_immj = ZXXF_c_tp.p_immj(:,:,ir_dke) + ZXXF_e_tp.p_immj(:,:,ir_dke) + ZXXF_rf_tp.p_immj(:,:,ir_dke);
+        XFp_tp_ippj = ZXXF_c_tp.p_ippj(:,:,ir_dke) + ZXXF_e_tp.p_ippj(:,:,ir_dke) + ZXXF_s_tp.p_ippj(:,:,ir_dke) + ZXXF_rf_tp.p_ippj(:,:,ir_dke);
+        XFp_tp_ipj = ZXXF_c_tp.p_ipj(:,:,ir_dke) + ZXXF_e_tp.p_ipj(:,:,ir_dke) + ZXXF_s_tp.p_ipj(:,:,ir_dke) + ZXXF_rf_tp.p_ipj(:,:,ir_dke);
+        XFp_tp_ij = ZXXF_c_tp.p_ij(:,:,ir_dke) + ZXXF_e_tp.p_ij(:,:,ir_dke) + ZXXF_s_tp.p_ij(:,:,ir_dke) + ZXXF_rf_tp.p_ij(:,:,ir_dke);
+        XFp_tp_imj = ZXXF_c_tp.p_imj(:,:,ir_dke) + ZXXF_e_tp.p_imj(:,:,ir_dke) + ZXXF_s_tp.p_imj(:,:,ir_dke) + ZXXF_rf_tp.p_imj(:,:,ir_dke);
+        XFp_tp_immj = ZXXF_c_tp.p_immj(:,:,ir_dke) + ZXXF_e_tp.p_immj(:,:,ir_dke) + ZXXF_s_tp.p_immj(:,:,ir_dke) + ZXXF_rf_tp.p_immj(:,:,ir_dke);
 %
-        XFm_tp_ijp = ZXXF_c_tp.m_ijp(:,:,ir_dke) + ZXXF_e_tp.m_ijp(:,:,ir_dke) + ZXXF_rf_tp.m_ijp(:,:,ir_dke);
-        XFm_tp_ijm = ZXXF_c_tp.m_ijm(:,:,ir_dke) + ZXXF_e_tp.m_ijm(:,:,ir_dke) + ZXXF_rf_tp.m_ijm(:,:,ir_dke);
+        XFm_tp_ijp = ZXXF_c_tp.m_ijp(:,:,ir_dke) + ZXXF_e_tp.m_ijp(:,:,ir_dke) + ZXXF_s_tp.m_ijp(:,:,ir_dke) + ZXXF_rf_tp.m_ijp(:,:,ir_dke);
+        XFm_tp_ijm = ZXXF_c_tp.m_ijm(:,:,ir_dke) + ZXXF_e_tp.m_ijm(:,:,ir_dke) + ZXXF_s_tp.m_ijm(:,:,ir_dke) + ZXXF_rf_tp.m_ijm(:,:,ir_dke);
 %
         [Xa_tp,Xb_tp,Xc_tp,Xd_tp,Xe_tp,Xf_tp,Xg_tp,Xh_tp,Xi_tp] = ...
             fpengine_dke_yp(dkeparam,1,...
@@ -1063,6 +1064,22 @@ else
     XXDmm_e_tp_ijp = zeros(npn,nmhu,nr);
     XXDmp_e_tp_ijp = zeros(npn,nmhu,nr);
     XXFm_e_tp_ijp = zeros(npn,nmhu,nr);
+%
+% For Synchrotron reaction
+%
+    XXDpp_s_tp_imj = zeros(npn,nmhu,nr);
+    XXDpm_s_tp_imj = zeros(npn,nmhu,nr);
+    XXFp_s_tp_imj = zeros(npn,nmhu,nr);
+    XXDpp_s_tp_ipj = zeros(npn,nmhu,nr);
+    XXDpm_s_tp_ipj = zeros(npn,nmhu,nr);
+    XXFp_s_tp_ipj = zeros(npn,nmhu,nr);
+%
+    XXDmm_s_tp_ijm = zeros(npn,nmhu,nr);
+    XXDmp_s_tp_ijm = zeros(npn,nmhu,nr);
+    XXFm_s_tp_ijm = zeros(npn,nmhu,nr);
+    XXDmm_s_tp_ijp = zeros(npn,nmhu,nr);
+    XXDmp_s_tp_ijp = zeros(npn,nmhu,nr);
+    XXFm_s_tp_ijp = zeros(npn,nmhu,nr);
 %
 end
 %
