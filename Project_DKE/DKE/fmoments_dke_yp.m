@@ -1,10 +1,10 @@
 function [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
-    XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRR_fsav,...
-    xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,XXRintmask,Zmom] = ...
+    XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRRm_fsav,xRRp_fsav,...
+    xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,Zmom] = ...
     fmoments_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
                     XXf0,XXf0_tp,XXf0_g,XXf0_L_tp,XXf0_L_g,XXfM,...
                     ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp,gridindex_rf,...
-                    ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXILor)
+                    ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXRintmask,XXILor)
 %
 %   Calculate moments of the electron distribution function.
 %
@@ -842,8 +842,16 @@ end
 xepsi_rdke = xepsi(rdke);
 Xxqtilde = repmat(xqtilde,npn,1);
 Xxqhat = repmat(xqtilde,npn,1);
-XxRR_fsav = 2*pi*(Xxqtilde(:,rdke)./Xxqhat(:,rdke)).*integral_dke_jd(dmhu,XXSp0_imj.*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke),2);%Primary generation run-away rate (Dreicer field effect)
-xRR_primary_fsav = XxRR_fsav(end,:);%Radial profile of primary runaway electron generation rate
+%
+XXmaskm = XXmhu < 0;
+XXmaskp = XXmhu > 0;
+%
+XxRRm_fsav = 2*pi*(Xxqtilde(:,rdke)./Xxqhat(:,rdke)).*integral_dke_jd(dmhu,XXmaskm.*XXSp0_imj.*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke),2);%Primary generation run-away rate (Dreicer field effect)
+XxRRp_fsav = 2*pi*(Xxqtilde(:,rdke)./Xxqhat(:,rdke)).*integral_dke_jd(dmhu,XXmaskp.*XXSp0_imj.*XXpn2m(:,:,rdke).*XXlambda(:,:,rdke),2);%Primary generation run-away rate (Dreicer field effect)
+XxRR_fsav = XxRRm_fsav + XxRRp_fsav;
+%
+xRRm_primary_fsav = XxRRm_fsav(end,:);%Radial profile of primary runaway electron generation rate
+xRRp_primary_fsav = XxRRp_fsav(end,:);%Radial profile of primary runaway electron generation rate
 %
 mask_xepsi = find(xepsi_rdke~=0);
 if ~isempty(mask_xepsi)
@@ -860,24 +868,10 @@ end
 %gammaminRR = sqrt(1 + zminRR2);
 %xRR_secondary_fsav = 1/(gammaminRR-1)*pi*xnloss(rdke).*xrnhuth(rdke)./xlnc_e(rdke);
 %
-xRR_fsav = xRR_primary_fsav;% + xRR_secondary_fsav;%Runaway rate profile (primary + secondary contribution)
+xRRm_fsav = xRRm_primary_fsav;% + xRRm_secondary_fsav;%Runaway rate profile (primary + secondary contribution)
+xRRp_fsav = xRRp_primary_fsav;% + xRRp_secondary_fsav;%Runaway rate profile (primary + secondary contribution)
 %
 % Runaway fraction and current through internal boundary
-%
-% TODO : - calculate the flux through the RR internal boundary
-%        - use bounce-averaged force balance
-%
-if isfield(dkeparam,'pnmin_S') && isscalar(dkeparam.pnmin_S) && ~isnan(dkeparam.pnmin_S),% Rfrac calculated from dkeparm.pnmin_S (see Adam's work)
-    %
-    % partial density above the minimum energy dkeparm.pnmin_S (typically used in runaway studies)
-    %
-    XXRintmask = XXpn > dkeparam.pnmin_S;
-else
-    %
-    % Rfrac calculated from internal RR boundary based on force balance
-    %
-    XXRintmask = ZXXF_c.p_ij + ZXXF_e.p_ij > 0;% internal runaways from force balance
-end
 %
 Znorm.x_Rfrac_0 = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0(:,:,rdke).*XXRintmask(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
 Znorm.x_Rfrac_0_fsav = 2*pi.*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda(:,:,rdke).*XXf0(:,:,rdke).*XXRintmask(:,:,rdke).*XXpn2(:,:,rdke),1),1)';
