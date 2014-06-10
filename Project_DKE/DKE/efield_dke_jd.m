@@ -37,20 +37,22 @@ else
           ohm.id = 'Iconst';
           ohm.rho = equilDKE.xrho;
           if ~isfield(ohm,'epsi') || mean(ohm.epsi) == 0,
-              ohm.epsi = -sigma*dkeparam.vloop_ohm*ones(size(ohm.rho))/(2*pi*equilDKE.Rp);%(V/m) E=-grad V
+              ohm.epsi = sigma*dkeparam.efield_ohm*ones(size(ohm.rho));
           else
               ohm.epsi = mean(ohm.epsi)*ones(size(ohm.rho));
           end
       elseif isempty(ohm) || any(ohm.epsi == 0),% a non-zero initial field is needed to calculate consistent field
           ohm.id = 'jconst';
           ohm.rho = equilDKE.xrho;
-          ohm.epsi = -sigma*dkeparam.vloop_ohm*ones(size(ohm.rho))/(2*pi*equilDKE.Rp);%(V/m) E=-grad V
+          ohm.epsi = sigma*dkeparam.efield_ohm*ones(size(ohm.rho));
       end
   end    
 %
   xepsi_fsav = zeros(size(equilDKE.xrho));
   if ~isempty(ohm) && isstruct(ohm) && ~isempty(fieldnames(ohm)),
-      if ~isfield(ohm,'rhotype') || strcmp(ohm.rhotype,'g'),%geometric rho
+      if length(ohm.rho) == 1,%local calculation or uniform field
+          xepsi_fsav = ohm.epsi*ones(size(xrho))/mksa.Edreicer_ref;%Normalized to the Dreicer value
+      elseif ~isfield(ohm,'rhotype') || strcmp(ohm.rhotype,'g'),%geometric rho
           xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrho,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
       elseif strcmp(ohm.rhotype,'p'),
           xepsi_fsav = interp1(ohm.rho,ohm.epsi,xrhoP,'spline')/mksa.Edreicer_ref;%Normalized to the Dreicer value
@@ -168,7 +170,7 @@ else
   end
 
   for ir = 1:nr,
-    if bounce_mode == 0 | xepsi_fsav(ir) == 0,
+    if bounce_mode == 0 || xepsi_fsav(ir) == 0,
         xepsi(ir) = xepsi_fsav(ir);
     elseif bounce_mode == 1,
         if isreal(xepsi_fsav),%flux surface-averaging definition of LUKE using surface densities
@@ -210,6 +212,8 @@ else
     end
 %
   end
+%
+% Test for E < ED
 %
 xEfield_validity = max(squeeze(ZXXF_e.p_ij(ip_th_ref,[1,nmhu],:)./ZXXF_c.p_ij(ip_th_ref,[1,nmhu],:)));%Comparison between electric field and collisions pinches at pth_ref (if above 1, the code validity breaks close to p = 0 leading to numerical particle leak)                 
 if display_mode >= 2,

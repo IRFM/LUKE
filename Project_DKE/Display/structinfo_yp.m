@@ -44,7 +44,7 @@ switch struct
             case 'npresmin',expert = 1;values = 0:10;info = 'Minimum number of resonant points for each ray and position';
             case 'nit_ohm',expert = 0;values = 0:40;info = 'max number of iterations to converge on the current prescription (nit_ohm > 1). If nit_ohm == 1, frozen current mode is off';
             case 'tol_ohm',expert = 1;values = [0;1];info = 'tolerance for converge on the current prescription (nit_ohm > 1)';
-            case 'vloop_ohm',expert = 1;values = [-Inf;Inf];info = '[V] initial (uniform) vloop guess for convergence (nit_ohm > 1). Used if ohm is empty or any(ohm.epsi == 0)';
+            case 'efield_ohm',expert = 1;values = [-Inf;Inf];info = '[V/m] initial (uniform) efield guess for convergence (nit_ohm > 1). Used if ohm is empty or any(ohm.epsi == 0)';
             case 'Itot_ohm',expert = 0;values = [-Inf;Inf];info = '[MA] scalar target for generated current (nit_ohm > 1). In this mode, the electric field is uniform';
             case 'Jtot_ohm',expert = 0;values = [-Inf;Inf];info = '[MA/m^2] target current profile (nit_ohm > 1).';
             case 'rho_ohm',expert = 0;values = [-Inf;Inf];info = '(LFS midplane x/a) corresponding rho grid';
