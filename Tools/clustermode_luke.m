@@ -26,7 +26,12 @@ function [dkecluster] = clustermode_luke(param,fun,dkepath,remnum)
 %
 % by J. Decker (CEA-IRFM) <joan.decker@cea.fr> and Y. Peysson (CEA-IRFM) <yves.peysson@cea.fr>
 %
-
+if nargin < 3,
+    dkepath = load_structures_yp('dkepath','','');
+end
+if nargin < 2,
+    fun = '';
+end
 %
 % manage case where param.(fun) is defined
 %
