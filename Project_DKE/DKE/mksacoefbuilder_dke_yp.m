@@ -48,6 +48,8 @@ mksa.dpdt_ref = me*clum*mksa.betath_ref*mksa.nhu_ref*mksa.ne_ref; %momentum tran
 mksa.Edreicer_ref = me*clum*mksa.betath_ref*mksa.nhu_ref/qe;%MKSA Dreicer field unit
 mksa.wpe_ref = sqrt(ne_ref*qe^2/me/e0);%MKSA plasma frequency (s-1)
 mksa.wmabs2 = me*mksa.lnc_e_ref*mksa.wpe_ref^2/(4*pi^2);%coefficient relating the squared electric field amplitude to the diffusion coefficient
+mksa.wce_ref = equilDKE.xB0(1,1)*qe/me;%MKSA cyclotron frequency (s-1)
+mksa.taur_ref = 3*mksa.lnc_e_ref*mksa.wpe_ref^2/(2*mksa.betath_ref^3*mksa.wce_ref^2);%ratio of the reference synchrotron reaction time to the collision time
 %
 mksa.vde_ref = mksa.betath_ref*mksa.betath_ref*me*clum*clum/2/pi/abs(qe)/equilDKE.xB0(1,1)/equilDKE.Rp;%Electron drift velocity (m.s-1)
 mksa.taude_ref = equilDKE.ap/mksa.vde_ref;%Electron drift time scale (s)
