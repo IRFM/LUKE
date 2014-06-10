@@ -7,11 +7,19 @@ function [dkeparam] = paramconsistency_dke_yp(dkeparam,equil)
 if isinf(equil.Rp),
     dkeparam.bounce_mode = 0;
 end
-if dkeparam.bounce_mode == 0,dkeparam.dke_mode = 0;end
-if dkeparam.dke_mode == 0, dkeparam.syn_mode =0;end
-if dkeparam.rt_mode == 0,dkeparam.nit_rf = 1;end
+if dkeparam.bounce_mode == 0,
+    dkeparam.dke_mode = 0;
+end
+if dkeparam.dke_mode == 0, 
+    dkeparam.syn_mode =0;
+end
+if dkeparam.rt_mode == 0,
+    dkeparam.nit_rf = 1;
+end
 %
-if (dkeparam.invproc == -1), dkeparam.luproc = -1;end,%MUMPS performs direct inversion only
+if dkeparam.invproc == -1, 
+    dkeparam.luproc = -1;
+end%MUMPS performs direct inversion only
 %
 if isempty(dkeparam.psin_S) && isempty(dkeparam.rho_S),%No iteration if one radial point
     error('No input radial flux grid is specified !');
@@ -39,6 +47,10 @@ if ~isfield(dkeparam,'avalanche_mode'),
     dkeparam.avalanche_mode = 0;
 end
 %
+if ~isfield(dkeparam,'synchro_mode'),
+    dkeparam.synchro_mode = 0;
+end
+%
 if ~isfield(dkeparam,'nit_ohm'),
     dkeparam.nit_ohm = 1;
 elseif dkeparam.nit_ohm > 1,
@@ -46,8 +58,8 @@ elseif dkeparam.nit_ohm > 1,
     if ~isfield(dkeparam,'tol_ohm'),
         dkeparam.tol_ohm = 1e-3;
     end
-    if ~isfield(dkeparam,'vloop_ohm'),
-        dkeparam.vloop_ohm = 1e-1;
+    if ~isfield(dkeparam,'efield_ohm'),
+        dkeparam.efield_ohm = 1e-2;
     end
     if ~isfield(dkeparam,'Itot_ohm'),
         dkeparam.Itot_ohm = NaN;
@@ -148,11 +160,14 @@ if dkeparam.avalanche_mode == 1 || dkeparam.nit_ohm > 1 || imag(dkeparam.norm_mo
     dkeparam.timevol = 1;
 end
 %
-if dkeparam.avalanche_mode == 1 && ~isfield(dkeparam,'f_pmax')
-    dkeparam.f_pmax = 1;
+if ~isfield(dkeparam,'pnmin0_KO'),
+    dkeparam.pnmin0_KO = NaN;% equal to pnmax_S
 end
-if dkeparam.avalanche_mode == 1 && ~isfield(dkeparam,'f_pmin')
-    dkeparam.f_pmin = 1;
+if ~isfield(dkeparam,'pnmin1_KO'),
+    dkeparam.pnmin1_KO = 1i;% suprathermal domain
+end
+if ~isfield(dkeparam,'pnmax1_KO'),
+    dkeparam.pnmax1_KO = NaN;% equal to pnmin0_KO
 end
 %
 if ~isfield(dkeparam,'redfac'),
