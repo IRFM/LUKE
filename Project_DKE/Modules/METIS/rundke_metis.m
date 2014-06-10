@@ -199,7 +199,8 @@ for ishot = 1:nshots
     lukestruct.simul.id = ['METIS_',make_luke_simulid_jd(lukestruct.equil,lukestruct.ohm,lukestruct.transpfaste,lukestruct.ripple,...
         '',lukestruct.wavestructs,locid_simul)];
     %
-    if ~isfield(dkepath,'remnum') || dkepath.remnum == 0 || isempty(dkepath.remote(dkepath.remnum).host),
+    if (~isfield(dkepath,'remnum') || dkepath.remnum == 0 || isempty(dkepath.remote(dkepath.remnum).host)) && ...
+       (~isfield(scheduler_run_lukert,'mode') || scheduler_run_lukert.mode >= 0),
         lukestruct.simul.path = path_sources;
     end
     %
