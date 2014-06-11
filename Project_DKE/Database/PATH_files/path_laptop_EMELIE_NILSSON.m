@@ -26,7 +26,7 @@ dkepath.emenil(1).luke_root = [pwd,filesep];
 dkepath.emenil(1).local_root = [getenv('HOME'),'/CEA/'];
 dkepath.emenil(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.emenil(1).mex801 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookemelie/MATLAB801','/'];
+dkepath.emenil(1).mex801 = [dkepath.emenil(1).luke_root,'Project_DKE/MEX/Bin/macbookemelie/MATLAB801','/'];
 %
 dkepath.emenil(1).compiler_opt.copts = '';
 dkepath.emenil(1).compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';

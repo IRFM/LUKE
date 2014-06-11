@@ -22,7 +22,7 @@ dkepath.default = 'bjding';
 %
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
 %
-dkepath.bjding(1).luke_root = [getenv('HOME'),'/',luke_ref,'/'];
+dkepath.bjding(1).luke_root = [pwd,filesep];
 dkepath.bjding(1).local_root = '/home/bjding/Packages/';
 dkepath.bjding(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
