@@ -48,7 +48,7 @@ dkepath.bjding(1).remote(1).remoteid = 'ASIPP_SHENMA';
 dkepath.bjding(1).remote(1).schedulername = 'torque';
 dkepath.bjding(1).remote(1).profilename = 'bjding';
 dkepath.bjding(1).remote(1).luke_root = '/home/PEYSSON/LUKE/';
-dkepath.bjding(1).remote(1).link_mode = [];
+dkepath.bjding(1).remote(1).link_mode = 0;
 %
 
 

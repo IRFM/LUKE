@@ -166,3 +166,9 @@ dkepath.yves(1).remote(16).schedulername = 'direct';
 dkepath.yves(1).remote(16).cvsupdate = true;% update done in 'direct' mode
 dkepath.yves(1).remote(16).cvsrights = 'chmod -R a+rx ./';
 %
+dkepath.yves(1).remote(17).remoteid = 'ASIPP_SHENMA';
+dkepath.yves(1).remote(17).schedulername = 'torque';
+dkepath.yves(1).remote(17).profilename = 'bjding';
+dkepath.yves(1).remote(17).luke_root = '/home/PEYSSON/LUKE/';
+dkepath.yves(1).remote(17).link_mode = 0;
+dkepath.yves(1).remote(17).cvsupdate = false;% update done in 'direct' mode
