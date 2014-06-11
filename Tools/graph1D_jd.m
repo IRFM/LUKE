@@ -105,7 +105,51 @@ hold(ax,'on');
     if ~all(isnan(eym(:))) || ~all(isnan(eyp(:)))
         gcl = errorbar(x,y,eym,eyp,'parent',ax);
     else        
-        gcl = plot(x,y,'parent',ax);
+        if iscell(marker),
+            if size(y,1) == length(x)
+                nplot = size(y,2);
+                y = y';
+            else
+                nplot = size(y,1);
+            end
+            for ii = 1:nplot,
+                plotmarker = marker;
+                plotcolor = color;
+                if iscell(marker),
+                    %plotmarker = marker{ceil(length(marker)*rand)};
+                    plotmarker = marker{max(1,rem(ii,length(marker)))};
+                end
+                if size(color,2) == 3,
+                    %plotcolor = color(ceil(length(color)*rand),:);
+                    plotcolor = color(max(1,rem(ii,size(color,1))),:);
+                end
+                %
+                gcl = plot(x,y(ii,:),'parent',ax);hold on
+                if iscell(marker)
+                    set(gcl,'marker',plotmarker)
+                end
+                if size(color,2) == 3,
+                    set(gcl,'color',plotcolor)
+                end
+                %
+                set(gcl,'linestyle',style);
+                if ~iscell(marker),
+                    set(gcl,'marker',marker);
+                end
+                %if ~strcmp(style,'none'),
+                    set(gcl,'linewidth',real(width));
+                %else
+                if imag(width) == 0,
+                    set(gcl,'markersize',8);
+                else
+                    set(gcl,'markersize',imag(width));
+                end
+            end
+            %
+            color = NaN;
+        else
+            gcl = plot(x,y,'parent',ax);
+        end
     end
     %
     if ~all(isnan(exm)) || ~all(isnan(exp))
@@ -130,19 +174,25 @@ else
     set(ax,'yscale','linear');
 end
 %
-set(gcl,'linestyle',style);
-set(gcl,'marker',marker);
-%if ~strcmp(style,'none'),
-    set(gcl,'linewidth',real(width));
-%else
-if imag(width) == 0,
-    set(gcl,'markersize',8);
-else
-    set(gcl,'markersize',imag(width));
-end
-%end
-if ~isnan(color)
-    set(gcl,'color',color);
+if ~iscell(marker),
+	set(gcl,'linestyle',style);
+	%
+    set(gcl,'marker',marker);
+
+	%if ~strcmp(style,'none'),
+    	set(gcl,'linewidth',real(width));
+	%else
+	if imag(width) == 0,
+    	set(gcl,'markersize',8);
+	else
+    	set(gcl,'markersize',imag(width));
+	end
+	%end
+	if ~isnan(color)
+        if size(color,2) < 3
+            set(gcl,'color',color);
+        end
+	end
 end
 %
 if ~isnan(xlim)
