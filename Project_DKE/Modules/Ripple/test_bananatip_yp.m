@@ -5,8 +5,11 @@ clear all
 close all
 clear functions
 %
-load('/Users/yves/Projets/LUKE/Simulations/Examples/EAST/EAST_040235/040235_004000_ne_av=2p5/EQUIL_EAST_040235_004000.mat');
-load('/Users/yves/Projets/LUKE/Simulations/Examples/EAST/EAST_040235/040235_004000_ne_av=2p5/LUKE_DATA_EAST_040235_004000_C3PO_antenna_2p45Ghz_VLOOP.mat','output');
+%load('/Users/yves/Projets/LUKE/Simulations/Examples/EAST/EAST_040235/040235_004000_ne_av=2p5/EQUIL_EAST_040235_004000.mat');
+%load('/Users/yves/Projets/LUKE/Simulations/Examples/EAST/EAST_040235/040235_004000_ne_av=2p5/LUKE_DATA_EAST_040235_004000_C3PO_antenna_2p45Ghz_VLOOP.mat','output');
+load('LUKE_RESULTS_WEST_149293_39.9683_ES_METIS_C3PO_C4_Npar_2.1.mat')
+output = lukestructs.output;
+equil = lukestructs.equil;
 %
 XXf0 = output.dke_out.XXf0{1};
 psin = output.radialDKE.xpsin_f;
