@@ -163,11 +163,14 @@ end
 if ~isfield(dkeparam,'pnmin0_KO'),
     dkeparam.pnmin0_KO = NaN;% equal to pnmax_S
 end
-if ~isfield(dkeparam,'pnmin1_KO'),
-    dkeparam.pnmin1_KO = 1i;% suprathermal domain
-end
 if ~isfield(dkeparam,'pnmax1_KO'),
-    dkeparam.pnmax1_KO = NaN;% equal to pnmin0_KO
+    dkeparam.pnmax1_KO = 0;% equal to pnmin2_KO
+end
+if ~isfield(dkeparam,'pnmin2_KO'),
+    dkeparam.pnmin2_KO = 1i;% suprathermal domain
+end
+if ~isfield(dkeparam,'pnmax2_KO'),
+    dkeparam.pnmax2_KO = NaN;% equal to pnmin0_KO
 end
 %
 if ~isfield(dkeparam,'redfac'),

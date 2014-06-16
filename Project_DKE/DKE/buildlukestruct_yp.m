@@ -55,8 +55,11 @@ Zmripple = make_struct_jd(loadstruct,display.display_mode,'mripplecoefbuilder_dk
 if isnan(dkeparam_out.pnmin0_KO) || dkeparam_out.pnmin0_KO > max(momentumDKE.pn_S),
     dkeparam_out.pnmin0_KO = max(momentumDKE.pn_S);%condition pnmin0_KO <= pnmax_S is enforced so that the source can be calculated
 end
+if isnan(dkeparam_out.pnmax2_KO),
+    dkeparam_out.pnmax2_KO = dkeparam_out.pnmin0_KO;%condition pnmax2_KO <= pnmin0_KO ensure the separation of primary and secondary electrons
+end
 if isnan(dkeparam_out.pnmax1_KO),
-    dkeparam_out.pnmax1_KO = dkeparam_out.pnmin0_KO;%condition pnmax1_KO <= pnmin0_KO ensure the separation of primary and secondary electrons
+    %dkeparam_out.pnmax1_KO = dkeparam_out.pnmin2_KO;%condition pnmax1_KO <= pnmin2_KO ensure secondary electrons gain energy
 end
 [XXSavalanches_norm,xnrem_init,xnrep_init,xnre_out_norm] = make_struct_jd(loadstruct,display.display_mode,'avalanche_en',dkepath,dkeparam_out,display,mksa,gridDKE,Zmomcoef,Zbouncecoef,ohm,equilDKE,radialDKE);%the complete avalanche operator
 %
