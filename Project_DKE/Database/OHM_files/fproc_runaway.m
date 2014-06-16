@@ -92,10 +92,12 @@ else% time dependent solution
     ntn = length(tn);
     %
     if opt.tnmin == 0,
-        xlim = [0,tn(end)];   
+        xlim = [0,tn(end)]; 
+        xtick = NaN;
         mask = 1:ntn;
     else
         xlim = [tn(2),tn(end)];
+        xtick = 10.^(floor(log10(tn(2))):ceil(log10(tn(end))));
         mask = 2:ntn;
     end
     %
@@ -120,6 +122,10 @@ else% time dependent solution
     graph1D_jd(tn(mask),tnorm.ri(mask),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
     graph1D_jd(tn(mask),tnorm.b(mask),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none',[0,0.5,0],2,siz,gca);
     graph1D_jd(tn(mask),tnorm.tot(mask),opt.tnmin > 0,1,xlab,ylab,tit,leg,xlim,ylim,'-','none','k',2,siz,gca,0.9,0.7,0.7);
+    %
+    if ~isnan(xtick),
+        set(gca,'xtick',xtick)
+    end
     %
     if isfield(graph,'ytick_norm'),
         set(gca,'ytick',graph.ytick_norm)
@@ -149,6 +155,10 @@ else% time dependent solution
     graph1D_jd(tn(2:ntn),tRR.re,opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none','r',2,siz,gca);
     graph1D_jd(tn(2:ntn),tRR.ri,opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
     graph1D_jd(tn(2:ntn),tRR.re + tRR.ri,opt.tnmin > 0,1,xlab,ylab,tit,leg,xlim,ylim,'-','none','k',2,siz,gca,0.9,0.7,0.7);
+    %
+    if ~isnan(xtick),
+        set(gca,'xtick',xtick)
+    end
     %
     if isfield(graph,'ytick_gamma'),
         set(gca,'ytick',graph.ytick_gamma)
