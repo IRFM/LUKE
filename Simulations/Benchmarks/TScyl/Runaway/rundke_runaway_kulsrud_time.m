@@ -24,7 +24,7 @@ opt.timevol = 1;
 %
 % normalized electric field (with respect to the Critical field Ec)
 %
-alpha = 1e5;%E/Ec
+alpha = 6e4;%1e5;%E/Ec
 %
 % temperature betath2 = Te/mc2
 % (betath2 = 10^(-6) is validated for NR limit)
@@ -40,7 +40,7 @@ opt.synchro_mode = 0;
 %
 % ion charge (single species, cold ions)
 %
-Zi = 2;
+Zi = 1;%2;%
 %
 % collision mode : 
 % (0) : Relativistic Maxwellian background
@@ -61,7 +61,7 @@ opt.norm_mode_f = 0;%Local normalization of f0 at each iteration (0) no, the def
 %
 opt.tnmin = 1;%0;% > 0 for log scale
 opt.tn = 1e4;%10000;% 10000 is time for asymptotic solution
-opt.dtn = 80;%1000;% 10 time steps required for accurate runaway solution - see rundke_dtn
+opt.dtn = 81;%1000;% 10 time steps required for accurate runaway solution - see rundke_dtn
 %
 % momentum space grid -> you can specify nmhu_S and either 
 % - the momentum grid pn_S directly
@@ -76,24 +76,35 @@ grid.pnmax_S_tail = 5i;% maximum of tail momentum (normalized to pT)
 path_simul = '';%Simulation path
 %
 id_equil = 'TScyl';% cylindrical equilibrium, rho_S has no effect
+id_wave = '';
 %
 rho_S = 0.5;
 %
-graph.itdisp = 20:20:60;%[1,5,10];% display times - only used if opt.timevol > 0 
+% graph.itdisp = 20:20:60;%[1,5,10];% display times - only used if opt.timevol > 0 
+graph.itdisp = 21:20:81;%[1,5,10];% display times - only used if opt.timevol > 0 
 %
-graph.itdisp = 20:20:80;%[1,5,10];% display times - only used if opt.timevol > 0 
-%
-graph.ylim_norm = [1e-4,2e-0];
-graph.ytick_norm = 10.^(-4:1);
-%
-graph.ylim_gamma = [5e-5,2e-3];
-graph.ytick_gamma = 10.^(-5:-2);
+if alpha == 1e5 && Zi == 2,
+    graph.ylim_norm = [1e-4,2e-0];
+    graph.ytick_norm = 10.^(-4:1);
+    %
+    graph.ylim_gamma = [5e-5,2e-3];
+    graph.ytick_gamma = 10.^(-5:-2);
+elseif alpha == 1e5 && Zi == 2,
+    graph.ylim_norm = [1e-4,2e-0];
+    graph.ytick_norm = 10.^(-4:1);
+    %
+    graph.ylim_gamma = [1e-6,1e-4];
+    graph.ytick_gamma = 10.^(-6:-4);
+else
+    graph.ylim_norm = NaN;
+    graph.ylim_gamma = NaN;
+end
 %
 %************************************************************************************************************************************
 %
 % RUN LUKE
 %
-[RR,mksa,Ec,f,tn,tRR,tnorm] = frundke_runaway(id_simul,alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S);
+[RR,mksa,Ec,f,tn,tRR,tnorm] = frundke_runaway(id_simul,alpha,betath2,wpr,Zi,opt,grid,id_equil,id_wave,rho_S);
 %
 %************************************************************************************************************************************
 %
