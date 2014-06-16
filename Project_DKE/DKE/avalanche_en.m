@@ -51,12 +51,12 @@ if dkeparam.avalanche_mode == 1, %if 1, avalanche mode on
     npn = gridDKE.npn;
     nmhu = gridDKE.nmhu;
     %
-    pnmin1_KO = dkeparam.pnmin1_KO; % low threshold on secondary electrons for the knock-on operator
-    pnmax1_KO = dkeparam.pnmax1_KO; % high threshold on secondary electrons for the knock-on operator
+    pnmin2_KO = dkeparam.pnmin2_KO; % low threshold on secondary electrons for the knock-on operator
+    pnmax2_KO = dkeparam.pnmax2_KO; % high threshold on secondary electrons for the knock-on operator
     %
-    %extending the grid so that we can count the avalanche created beyond pnmax_S, if pnmax1_KO > pnmax_S
+    %extending the grid so that we can count the avalanche created beyond pnmax_S, if pnmax2_KO > pnmax_S
     %
-    pnRA = [gridDKE.pn,gridDKE.pn(end) + gridDKE.dpn(end):gridDKE.dpn(end):pnmax1_KO];
+    pnRA = [gridDKE.pn,gridDKE.pn(end) + gridDKE.dpn(end):gridDKE.dpn(end):pnmax2_KO];
     npnRA = length(pnRA);
     dpnRA = [gridDKE.dpn,gridDKE.dpn(end)*ones(1,npnRA - npn)];
     %
@@ -91,18 +91,18 @@ if dkeparam.avalanche_mode == 1, %if 1, avalanche mode on
     %
     [~,~,~,~,~,xbetath] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
     for ipsi=1:npsi
-        if ~isnan(pnmin1_KO),% S(p>=pnmin1_KO)
-            if imag(pnmin1_KO) == 0,
-                pthmask = pnRA >= pnmin1_KO; %pmin normalized to reference thermal momentum
+        if ~isnan(pnmin2_KO),% S(p>=pnmin2_KO)
+            if imag(pnmin2_KO) == 0,
+                pthmask = pnRA >= pnmin2_KO; %pmin normalized to reference thermal momentum
             else
-                pthmask = pnRA >= imag(pnmin1_KO)*xbetath(ipsi)/mksa.betath_ref; %pmin normalized to actual thermal momentum
+                pthmask = pnRA >= imag(pnmin2_KO)*xbetath(ipsi)/mksa.betath_ref; %pmin normalized to actual thermal momentum
             end
         else
             pthmask = pnRA >= 0; % mask set in main_dke_yp using XXRintmask
         end
         %
-        if pnmax1_KO <= gridDKE.pn(end),
-            pthmask = pthmask & pnRA <= pnmax1_KO;
+        if pnmax2_KO <= gridDKE.pn(end),
+            pthmask = pthmask & pnRA <= pnmax2_KO;
         end
         %
         Srp(ipsi,:) = beta^3*beta^3*1/(4*pi)/Lambd./(beta*pnRA.*gammaRA.*(gammaRA-1).^2).*pthmask; % rosenbluth (S*), first beta3 is from the Jacobian
