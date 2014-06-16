@@ -106,6 +106,8 @@ else
     residu_f = cell(1,nit);
     XXf0 = cell(1,nit);
     zP_0_2piRp_mod_old = cell(nit_rf,nit);
+    xepsi = cell(1,nit);
+    xnorm_0 = cell(1,nit);
     xnorm_rem = cell(1,nit);
     xnorm_rep = cell(1,nit);
     xnorm_rim = cell(1,nit);
@@ -168,9 +170,25 @@ else
     %
     XXgamma = Zmomcoef.XXgamma(:,:,gridDKE.rdke);
     %
+    % Internal RE domain
+    %
+    % TODO : - calculate the flux through the RR internal boundary
+    %
+    if isfield(dkeparam_out,'pnmin_S') && isscalar(dkeparam_out.pnmin_S) && ~isnan(dkeparam_out.pnmin_S),% Rfrac calculated from dkeparm.pnmin_S (see Adam's work)
+        %
+        % partial density above the minimum energy dkeparam.pnmin_S (typically used in runaway studies)
+        %
+        XXRintmask_init = gridDKE.XXpn > dkeparam_out.pnmin_S;
+    else
+        %
+        % Rfrac calculated from internal RR boundary based on force balance
+        %
+        XXRintmask_init = ZXXF_c.p_ij + ZXXF_e_init.p_ij + ZXXF_s.p_ij > 0;% internal runaways from force balance
+    end
+    %
     % initial f0 normalized density
     %
-    xnorm_0 = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*XXfin(:,:,gridDKE.rdke).*XXpn2,1),1).';
+    xnorm_0_init = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*XXfin(:,:,gridDKE.rdke).*XXpn2,1),1).';
     %
     % initial internal source runaway normalized density
     %
@@ -229,18 +247,40 @@ for itn = itn0:nit,
     dkeparam_out.dtn = dtn_list(itn);
     %
     % The internal and external avalanche terms are proportional to both the runaway fraction and
-    % the bulk fraction
+    % the bulk fraction at time itn-1
     %
-    % Note : 
-    %  - in the Rosenbluth model, we have to neglect the effect on the incident electron
-    %  - TODO : maybe it is better to set the "bulk density" high threshold to dkeparam_out.pnmin0_KO ?
+    % Note : in the Rosenbluth model, we have to neglect the effect on the incident electron
     %
     if itn == 1,   
-        xnorm_m = (xnrem_init + xnorm_rim_init).*(xnorm_0 - xnorm_rim_init);
-        xnorm_p = (xnrep_init + xnorm_rip_init).*(xnorm_0 - xnorm_rip_init);
+        if isnan(dkeparam_out.pnmax1_KO),% count all electrons in bulk except internal runaways
+            xnorm_b = xnorm_0_init - xnorm_rim_init;
+        elseif dkeparam_out.pnmax1_KO == 0,% count using the value of f(0) - most logical given how the sink term is calculated
+            xnorm_b = reshape(XXfin(1,1,:)./XXfM(1,1),[1,gridDKE.nr]);
+        elseif imag(dkeparam_out.pnmax1_KO) == 0,% count bulk electrons up to pnmax1_KO normalized to ref temperature
+            xnorm_b = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*(XXpn < dkeparam_out.pnmax1_KO).*XXfin(:,:,gridDKE.rdke).*XXpn2,1),1).';
+        else% count bulk electrons up to pnmax1_KO normalized to ref temperature
+            [~,~,~,~,~,xbetath] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
+            xnorm_b = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*(XXpn < imag(dkeparam_out.pnmax1_KO)*repmat(reshape(xbetath,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1])/mksa.betath_ref).*XXfin(:,:,gridDKE.rdke).*XXpn2,1),1).';
+        end
     else
-        xnorm_m = (xnorm_rem{itn - 1} + xnorm_rim{itn - 1}).*(xnorm_0 - xnorm_rim{itn - 1});
-        xnorm_p = (xnorm_rep{itn - 1} + xnorm_rip{itn - 1}).*(xnorm_0 - xnorm_rip{itn - 1});
+        if isnan(dkeparam_out.pnmax1_KO),% count all electrons in bulk except internal runaways
+            xnorm_b = xnorm_0{itn - 1} - xnorm_rim{itn - 1};
+        elseif dkeparam_out.pnmax1_KO == 0,% count using the value of f(0) - most logical given how the sink term is calculated
+            xnorm_b = reshape(XXf0{itn - 1}(1,1,:)./XXfM(1,1),[1,gridDKE.nr]);
+        elseif imag(dkeparam_out.pnmax1_KO) == 0,% count bulk electrons up to pnmax1_KO normalized to ref temperature
+            xnorm_b = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*(XXpn < dkeparam_out.pnmax1_KO).*XXf0{itn-1}(:,:,gridDKE.rdke).*XXpn2,1),1).';
+        else% count bulk electrons up to pnmax1_KO normalized to ref temperature
+            [~,~,~,~,~,xbetath] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
+            xnorm_b = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*(XXpn < imag(dkeparam_out.pnmax1_KO)*repmat(reshape(xbetath,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1])/mksa.betath_ref).*XXf0{itn-1}(:,:,gridDKE.rdke).*XXpn2,1),1).';
+        end
+    end
+    %
+    if itn == 1,   
+        xnorm_m = (xnrem_init + xnorm_rim_init).*xnorm_b;
+        xnorm_p = (xnrep_init + xnorm_rip_init).*xnorm_b;
+    else
+        xnorm_m = (xnorm_rem{itn - 1} + xnorm_rim{itn - 1}).*xnorm_b;
+        xnorm_p = (xnorm_rep{itn - 1} + xnorm_rip{itn - 1}).*xnorm_b;
     end
     %
     XXSavalanches_norm_p = XXSavalanches_norm;
@@ -252,6 +292,16 @@ for itn = itn0:nit,
     xrr_out_m = xrr_out_norm.*xnorm_m;
     xrr_out_p = xrr_out_norm.*xnorm_p;
     xrr_out = xrr_out_m + xrr_out_p;
+    %
+    if isnan(dkeparam_out.pnmin2_KO),% count all internal runaways
+        if itn == 1,
+            XXSavalanches = XXSavalanches_orig.*XXRintmask_init;
+        else
+            XXSavalanches = XXSavalanches_orig.*XXRintmask{itn-1};
+        end
+    else
+        XXSavalanches = XXSavalanches_orig;
+    end
     %
     if itn == 1 && dkeparam_out.finitabs == 1,%The initial distribution is used to first estimate the ray absorption
         conv = -1;
@@ -282,11 +332,10 @@ for itn = itn0:nit,
         % Internal RE domain
         %
         % TODO : - calculate the flux through the RR internal boundary
-        %        - use bounce-averaged force balance
         %
         if isfield(dkeparam_out,'pnmin_S') && isscalar(dkeparam_out.pnmin_S) && ~isnan(dkeparam_out.pnmin_S),% Rfrac calculated from dkeparm.pnmin_S (see Adam's work)
             %
-            % partial density above the minimum energy dkeparm.pnmin_S (typically used in runaway studies)
+            % partial density above the minimum energy dkeparam.pnmin_S (typically used in runaway studies)
             %
             XXRintmask{itn} = gridDKE.XXpn > dkeparam_out.pnmin_S;
         else
@@ -294,12 +343,6 @@ for itn = itn0:nit,
             % Rfrac calculated from internal RR boundary based on force balance
             %
             XXRintmask{itn} = ZXXF_c.p_ij + ZXXF_e.p_ij + ZXXF_s.p_ij > 0;% internal runaways from force balance
-        end
-        %
-        if isnan(dkeparam_out.pnmin1_KO),
-            XXSavalanches = XXSavalanches_orig.*XXRintmask{itn};
-        else
-            XXSavalanches = XXSavalanches_orig;
         end
         %
         % Convergence on RF deposition with ray-tracing formalism
@@ -487,13 +530,13 @@ for itn = itn0:nit,
                 % for real(dkeparam_out.norm_mode_f), this should only compensate for numerical errors. 
                 % for real(dkeparam_out.norm_mode_f), this should also compensate for the flux through pmax
                 %
-                xnorm_0 = xnorm_0 - dxnorm_rem - dxnorm_rep;
+                xnorm_0{itn} = xnorm_0{itn - 1} - dxnorm_rem - dxnorm_rep;
                 %
-                XXfout = XXfout*repmat(reshape(xnorm_0./Znorm(itn).x_0_fsav,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1]);
+                XXfout = XXfout*repmat(reshape(xnorm_0{itn}./Znorm(itn).x_0_fsav,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1]);
                 %
             else
                 %
-                xnorm_0 = Znorm(itn).x_0_fsav;
+                xnorm_0{itn} = Znorm(itn).x_0_fsav;
                 %
             end
             %
@@ -543,6 +586,8 @@ for itn = itn0:nit,
                         disp(['Convergence reached after ',num2str(it_ohm),' iterations at time step ',num2str(itn)])
                     end
                     break
+                elseif it_ohm == dkeparam_out.nit_ohm,
+                    disp(['WARNING : Convergence not reached after ',num2str(it_ohm),' iterations at time step ',num2str(itn)])
                 else
                     %
                     xepsi{itn} = xepsi{itn}.*(1 - (xcurr{itn} - xcurr_init)./(xcurr{itn} - xcurr_in));
@@ -567,6 +612,8 @@ for itn = itn0:nit,
                         disp(['Convergence reached after ',num2str(it_ohm),' iterations at time step ',num2str(itn)])
                     end
                     break
+                elseif it_ohm == dkeparam_out.nit_ohm,
+                    disp(['WARNING : Convergence not reached after ',num2str(it_ohm),' iterations at time step ',num2str(itn)])
                 else
                     %
                     xepsi{itn} = xepsi{itn}*(1 - (I_tot - dkeparam_out.Itot_ohm)./(I_tot - I_tot_in));
