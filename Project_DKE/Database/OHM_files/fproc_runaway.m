@@ -46,7 +46,8 @@ disp(['Te/mc2 = ',num2str(betath2),' ; E/Ec = ',num2str(alpha),' ; E/ED = ',num2
 disp(['NR limit : pc/pT = ',num2str(1/sqrt(alpha*betath2)),' ; pmax/pc = ',num2str(pnmax_S*sqrt(alpha*betath2))])%NR
 disp(['Relativ. : pc/pT = ',num2str(1/sqrt((alpha - 1)*betath2)),' ; pmax/pc = ',num2str(pnmax_S*sqrt((alpha - 1)*betath2))])%rel
 disp(' ')
-disp(['--> LUKE RR (normalized to ne and tauc) : ',num2str(RR)])
+disp(['--> LUKE RR from bound calc. (normalized to ne and tauc) : ',num2str(RR)])
+disp(['--> LUKE RR from exact calc. (normalized to ne and tauc) : ',num2str(tRR.re(end) + tRR.ri(end))])
 if ~isempty(RR_k),
     disp(['--> Kulsrud RR : ',num2str(RR_k)])
 end

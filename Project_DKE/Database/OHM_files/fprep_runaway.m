@@ -210,7 +210,7 @@ dkeparam.pnmax2_KO = opt.pnmax2_KO;
 dkeparam.synchro_mode = opt.synchro_mode;% synchrotron reaction force option
 if wpr > 0,% adjust density to have correct wp2/wc2 - synchrotron reaction force only
     pB = sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2).';
-    equil.pne = (pB*qe/me).^2*me*e0/(qe^2*wpr);
+    equil.pne = (pB*qe/me).^2*me*e0./(qe^2*wpr);
 end
 %
 % equilibrium
