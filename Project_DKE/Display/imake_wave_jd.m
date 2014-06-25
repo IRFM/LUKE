@@ -277,31 +277,31 @@ if w_opt == 0; % C3PO Calculation
         %
         launch.ns = 1000;
         launch.method = 'cubic';
-        %
-        % BUILDING RAYINIT
-        %
-        rayinit = main_rayinit_launch_jd(equil,launch);
-        %
-        rayinit.id = ['C3PO_',launch.id];
-        rayinit.type = launch.type;
-        %
-        r_opt = iselect_jd({'No','Yes'},'Do you want to save the rayinit structure ?',opt_gui,select.style,1) - 1;
-        %
-        if r_opt == 1,
-            sd = pwd;
-            cd(workdir);
-            [rayinit_file,rayinit_path] = iputfile_jd(opt_gui,['RAYINIT_',equil.id,'*.mat'],'Please provide the RAYINIT file name',['RAYINIT_',equil.id,'_',rayinit.id,'.mat']);
-            %
-            if rayinit_file == 0,
-                disp('-----> No file name specified, rayinit structure not saved.')
-            else
-                save([rayinit_path,rayinit_file],'rayinit');
-                disp('-----> The rayinit structure is saved')
-            end
-            cd(sd);
-        end        
-        %
     end
+    %
+    % BUILDING RAYINIT
+    %
+    rayinit = main_rayinit_launch_jd(equil,launch);
+    %
+    rayinit.id = ['C3PO_',launch.id];
+    rayinit.type = launch.type;
+    %
+    r_opt = iselect_jd({'No','Yes'},'Do you want to save the rayinit structure ?',opt_gui,select.style,1) - 1;
+    %
+    if r_opt == 1,
+        sd = pwd;
+        cd(workdir);
+        [rayinit_file,rayinit_path] = iputfile_jd(opt_gui,['RAYINIT_',equil.id,'*.mat'],'Please provide the RAYINIT file name',['RAYINIT_',equil.id,'_',rayinit.id,'.mat']);
+        %
+        if rayinit_file == 0,
+            disp('-----> No file name specified, rayinit structure not saved.')
+        else
+            save([rayinit_path,rayinit_file],'rayinit');
+            disp('-----> The rayinit structure is saved')
+        end
+        cd(sd);
+    end        
+    %
     %
     % C3PO ray tracing
     %
