@@ -845,6 +845,8 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
         %
         if inter_mode == 0,
             exit_loop = 1;
+        elseif isfield(sdisplay,'exit_loop') && sdisplay.exit_loop,
+            exit_loop = sdisplay.exit_loop;
         else
             exit_loop = 2 - iselect_jd({'Accept this process','Start again'},'Do you want to :',opt_gui,style,1);
             disp(' ')      
