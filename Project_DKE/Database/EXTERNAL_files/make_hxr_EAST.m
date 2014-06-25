@@ -1,7 +1,7 @@
 %******************************************************************************************************************
 % Create the local file HXR_hxr_id.mat for EAST tokamak
 % 
-%by Y.Peysson (CEA/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/IRFM, joan.decker@cea.fr)
+%by Y.Peysson (CEA/IRFM, yves.peysson@cea.fr) and Shiyao Lin (IPP/AS, linsy@ipp.ac.cn) and . Decker (CEA/IRFM, joan.decker@cea.fr)
 %
 clc
 clear all
@@ -12,8 +12,10 @@ hxr_id = 'EAST';
 hxr.R_hxr = 3.889*ones(1,20);% reference major radius (m)
 hxr.Z_hxr = -0.32297*ones(1,20);% reference vertical position (m)
 %
+% Detector label starts from 1 at the bottom to 20 up (closer to the equatorial mid-plane of the plasma)
+%
 hxr.alpha_hxr = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];%horizontal angle (with respect to R) [-pi...pi]. The negative sign comes from the fact that kv is defined in a direct frame, while alpha_hxr corresponds to an indirect frame
-hxr.beta_hxr = [1.5090,1.5356,1.5622,1.5888,1.6154,1.6420,1.6686,1.6952,1.7218,1.7484,1.7751,1.8017,1.8283,1.8549,1.8815,1.9081,1.9347,1.9613,1.9879,2.0145];%vertical angle (with respect to Z) [0...pi]
+hxr.beta_hxr = [2.0145,1.9879,1.9613,1.9347,1.9081,1.8815,1.8549,1.8283,1.8017,1.7751,1.7484,1.7218,1.6952,1.6686,1.6420,1.6154,1.5888,1.5622,1.5356,1.5090]
 %
 hxr.EG_hxr = pi*5^2*5^2*1e-12/0.698^2/4*cos(hxr.beta_hxr - pi/2).^4;%geometrical extend (m^2) [1,nchord] (circular aperture of the pinhole camera, square detectors)
 %
@@ -26,7 +28,7 @@ hxr.res_hxr =  ones(20,1)*[6,-0.9];% fit parameters of the energy resolution of 
 hxr.ef_hxr = ones(1,20);% thickness of the vacuum window (mm) [1,m]
 hxr.tf_hxr = repmat('Al',20,1);% type of material for the vacuum window (Al ou Be) [1,m]
 %
-hxr.ea_hxr = zeros(1,20);% thickness of the absorber (mm) [1,m] (WARNING: for 2 mm Cu: 2.83= 2*(29/26)^2*(dens_Cu/dens_Fe)  dens_Cu = 63.546, dens_Fe = 55.845)
+hxr.ea_hxr = 0.5*ones(1,20);% thickness of the absorber (mm) [1,m] (WARNING: for 2 mm Cu: 2.83= 2*(29/26)^2*(dens_Cu/dens_Fe)  dens_Cu = 63.546, dens_Fe = 55.845)
 hxr.ta_hxr = repmat('Al',20,1);% type of material for the absorber (Al,Fe,Ge,Be ou Pb) [1,m]
 %
 hxr.ec_hxr = 20*ones(1,20);%thickness of the detector shield (mm) [1,m]
