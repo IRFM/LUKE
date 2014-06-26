@@ -251,42 +251,60 @@ if ~isempty(external),% import wave data from external structure
             spectrum.nz = external.antenna.nz;
             spectrum.ny = external.antenna.ny;
             %
-            opt_module = iselect_jd({'full antenna','upper module','lower module'},'This ALOHA spectrum corresponds to :',opt_gui,select.style,1);
-            %
-            if opt_module > 1,
-                pfac = 1/2;
-                pstr = ' (half antenna)';
-            else
-                pfac = 1;
-                pstr = '';
-            end                
-            %
-            val(1) = sum(external.antenna.dP_nz*external.antenna.dnz);
-            s{1} = ['Power from ALOHA spectrum',pstr,'        : PLH = ',num2str(val(1)/1e6),' MW'];
-            %
-            s{end+1} = 'Specify power manually';
-            %   
-            locstyle = select.style;
-            locstyle.textwidth = 600;
-            %
-            opt_Plhtot = iselect_jd(s,['LH power associated with this spectrum',pstr,' :'],opt_gui,locstyle,length(s)-1);
-            %
-            if opt_Plhtot < length(s),
-                spectrum.Plhtot = val(opt_Plhtot);
-            else
-                spectrum.Plhtot = 1e6*iselect_jd({},['Specify LH power',pstr,' (MW) :'],opt_gui,select.style,val(1)/1e6);
+            while 1,
+                opt_module = iselect_jd({'full antenna','upper module','lower module'},'This ALOHA spectrum corresponds to :',opt_gui,select.style,1);
+                %
+                if opt_module > 1,
+                    pfac = 1/2;
+                    pstr = ' (half antenna)';
+                else
+                    pfac = 1;
+                    pstr = '';
+                end                
+                %
+                val(1) = sum(external.antenna.dP_nz*external.antenna.dnz);
+                s{1} = ['Power from ALOHA spectrum',pstr,'        : PLH = ',num2str(val(1)/1e6),' MW'];
+                %
+                s{end+1} = 'Specify power manually';
+                %   
+                locstyle = select.style;
+                locstyle.textwidth = 600;
+                %
+                opt_Plhtot = iselect_jd(s,['LH power associated with this spectrum',pstr,' :'],opt_gui,locstyle,length(s)-1);
+                %
+                if opt_Plhtot < length(s),
+                    spectrum.Plhtot = val(opt_Plhtot);
+                else
+                    spectrum.Plhtot = 1e6*iselect_jd({},['Specify LH power',pstr,' (MW) :'],opt_gui,select.style,val(1)/1e6);
+                end
+                %
+                data = struct;
+                data.spectrum = spectrum;
+                %
+                launchs{1} = imake_launch_LH_jd(basestr,signs,data,opt_gui,select);
+                %
+                if opt_module == 2,
+                    launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 >= 0);
+                elseif opt_module == 3,
+                    launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 <= 0);
+                end 
+                %
+                disp('------------------------------------------------');
+                for ib = 1:length(launchs{1}.bNpar0),
+                    disp(['Npar0 = ',num2str(launchs{1}.bNpar0(ib)),' - Power = ',num2str(launchs{1}.bPlhtot(ib)/1e6),' (MW)']);
+                end
+                disp(' ');disp('------------------------------------------------');
+                disp(['Total LH power in the launched spectrum (',int2str(length(launchs{1}.bNpar0)),' rays) : ',num2str(sum(launchs{1}.bPlhtot)/1e6),' (MW)']);
+                disp('------------------------------------------------');disp(' ');
+                %
+                opt_OK = iselect_jd({'Yes','No'},'Confirm the LH power spectrum deduced from ALOHA:',opt_gui,select.style,1);
+                %
+                if opt_OK == 1,
+                    break
+                else
+                    clear('s');
+                end                       
             end
-            %
-            data = struct;
-            data.spectrum = spectrum;
-            %
-            launchs{1} = imake_launch_LH_jd(basestr,signs,data,opt_gui,select);
-            %
-            if opt_module == 2,
-                launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 >= 0);
-            elseif opt_module == 3,
-                launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 <= 0);
-            end    
         else
             %
             % Case of LH spectrum from file
