@@ -315,7 +315,11 @@ if strcmp(d_opt,'y'),
         bremlocaldisplay_dke_yp(dkeparam,dkedisplay,equilDKE,momentumDKE,Zmomcoef,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,r_opt,t_opt,k_opt,p_opt,equil.id)
     end
     %
-    bremdiagdisplay_dke_yp(hxrspec,Zbremchord,Zbremplasma,Zbremdiag,c_opt,k_opt,p_opt,equil.id,hxrexp(ik,1:nc))
+    if any(isnan(energy)),
+        bremdiagdisplay_dke_yp(hxrspec,Zbremchord,Zbremplasma,Zbremdiag,c_opt,k_opt,p_opt,equil.id)
+    else
+        bremdiagdisplay_dke_yp(hxrspec,Zbremchord,Zbremplasma,Zbremdiag,c_opt,k_opt,p_opt,equil.id,hxrexp(ik,1:nc))
+    end
 end
 %
 s_opt = input('Do you want to save the HXR output data? [y/n] : ','s');
