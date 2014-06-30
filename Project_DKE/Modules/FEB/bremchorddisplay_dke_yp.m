@@ -149,8 +149,16 @@ for icam = 1:ncams,
 end
 if opt_txt,
     for ichord = 1:size(sR,2),
-       sRc = sR(~isnan(sR(:,ichord)),ichord);
-       sZc = sZ(~isnan(sZ(:,ichord)),ichord);
+        if iscell(sR)
+            sRc = sR{1}(~isnan(sR{1}(:,ichord)),ichord);
+        else
+            sRc = sR(~isnan(sR(:,ichord)),ichord);
+        end
+        if iscell(sZ)
+            sZc = sZ{1}(~isnan(sZ{1}(:,ichord)),ichord);
+        else
+            sZc = sZ(~isnan(sZ(:,ichord)),ichord);
+        end
        if ~isempty(sRc) && ~isempty(sZc)
           ht = text(sRc(end),sZc(end),['  #',int2str(ichord)]);set(ht,'fontsize',10);
        end

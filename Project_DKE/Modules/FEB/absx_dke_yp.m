@@ -41,7 +41,7 @@ elseif strcmp(tf,'Be')==1,
  	attlinfen = attlin_dke_yp(5,k);
 elseif strcmp(tf,'In')==1,
  	attlinfen = attlin_dke_yp(13,k);
-elseif strcmp(tf,'**')==1,
+else
  	attlinfen = zeros(size(k));
 end
 transfen=exp(-attlinfen(1,:)*ef*0.1);
@@ -64,8 +64,8 @@ elseif strcmp(ta,'Ni')==1,
  	attlinabs = attlin_dke_yp(12,k);
 elseif strcmp(ta,'In')==1,
  	attlinabs = attlin_dke_yp(13,k);
-elseif strcmp(ta,'**')==1,
- 	attlinabs = zeros(size(k));
+else
+ 	attlinabs = zeros(4,size(k,2));
 end
 transabs = exp(-attlinabs(1,:)*ea*0.1);
 %
@@ -75,8 +75,8 @@ if strcmp(tc,'Al')==1,
  	attlincap = attlin_dke_yp(4,k);
 elseif strcmp(tc,'Be')==1,
  	attlincap = attlin_dke_yp(5,k);
-elseif strcmp(tc,'**')==1,
- 	attlincap = zeros(size(k));
+else
+ 	attlincap = zeros(4,size(k,2));
 end
 transcap = exp(-attlincap(1,:)*ec*0.1);
 %
@@ -92,8 +92,8 @@ elseif strcmp(td,'NaI') | (strcmp(td,'NaI ') == 1),
  	attlindec = attlin_dke_yp(9,k);
 elseif strcmp(td,'CdTe')==1,
  	attlindec = attlin_dke_yp(14,k);
-elseif strcmp(td,'**')==1,
- 	attlindec = zeros(size(k));	
+else
+ 	attlindec = zeros(4,size(k,2));
 end
 absdec = 1-exp(-attlindec(1,:)*ed*0.1);
 %
