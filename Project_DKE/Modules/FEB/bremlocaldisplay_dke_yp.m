@@ -39,8 +39,16 @@ bounce_mode = dkeparam.bounce_mode;
 %
 kphot = Zbremplasma.kphot;
 %
-XXfinit = dke_out.XXfinit(:,:,r_dke);
-XXf0 = dke_out.XXf0(:,:,r_dke);
+if iscell(dke_out.XXfinit)
+    XXfinit = dke_out.XXfinit{1}(:,:,r_dke);
+else
+    XXfinit = dke_out.XXfinit(:,:,r_dke);
+end
+if iscell(dke_out.XXf0)
+    XXf0 = dke_out.XXf0{1}(:,:,r_dke);
+else
+    XXf0 = dke_out.XXf0(:,:,r_dke);
+end
 %
 Rp = equilDKE.Rp;
 Zp = equilDKE.Zp;
