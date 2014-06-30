@@ -235,7 +235,7 @@ end
 %
 dkecluster = clustermode_luke(clustermode,'loop_brem_chord_yp',dkepath);
 %
-[flag,zbrem_bd_out,zlchord] = mdce_luke(@loop_brem_chord_yp,{mode,n_pol,kphot,cL,ZZIB,NaN},6,zdatahxr_in,dkecluster);
+[flag,zbrem_bd_out,zlchord] = mdce_run(@loop_brem_chord_yp,{mode,n_pol,kphot,cL,ZZIB,NaN},6,zdatahxr_in,dkecluster);
 %
 Zbremplasma.kphot = kphot;
 %
