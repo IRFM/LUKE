@@ -92,7 +92,7 @@ if ~isempty(external),% import wave data from external structure
             launchs{end+1} = launch;
         end
         %
-    elseif strcmp(basestr,'TS'),
+    elseif strcmp(basestr,'TS') || strcmp(basestr,'WEST'),
         %
         % Case of LH spectrum from ALOHA file
         %
@@ -102,91 +102,118 @@ if ~isempty(external),% import wave data from external structure
             if isfield(external,'id'),
                 spectrum.id = external.id;
             end
+            %
+            disp('********************************************************************************************')
+            disp('WARNING: check that the ALOHA power spectrum generates a co-current or a counter current. ')
+            disp('Do a flipud(antenna.dP_nz) and fliplr(antenna.dP) accordingly in the ALOHA file before ');
+            disp('using ALOHA data in irunluke_jd. Co-current: Npar0(main peak) < 0 if sign(Ip)*sign(Bt) > 0');
+            disp(' and Npar0(main peak) > 0 if sign(Ip)*sign(Bt) < 0');
+            disp('********************************************************************************************')
+            %
             spectrum.dP = external.antenna.dP;
             spectrum.dP_nz = external.antenna.dP_nz;
             spectrum.nz = external.antenna.nz;
             spectrum.ny = external.antenna.ny;
             %
-            opt_module = iselect_jd({'full antenna','upper module','lower module'},'This ALOHA spectrum corresponds to :',opt_gui,select.style,1);
-            %
-            if opt_module > 1,
-                pfac = 1/2;
-                pstr = ' (half antenna)';
-            else
-                pfac = 1;
-                pstr = '';
-            end                
-            %
-            val(1) = sum(external.antenna.dP_nz*external.antenna.dnz);
-            s{1} = ['Power from ALOHA spectrum',pstr,'        : PLH = ',num2str(val(1)/1e6),' MW'];
-            %
-            if isfield(equil,'shotnum') && ~isempty(str2double(equil.shotnum)) && isfield(equil,'shotime') && ~isempty(str2double(equil.shotime)),% shot number and time info
+            while 1,
+                opt_module = iselect_jd({'full antenna','upper module','lower module'},'This ALOHA spectrum corresponds to :',opt_gui,select.style,1);
                 %
-                filename = [workdir,'GPHYB_',equil.shotnum,'.mat'];
+                if opt_module > 1,
+                    pfac = 1/2;
+                    pstr = ' (half antenna)';
+                else
+                    pfac = 1;
+                    pstr = '';
+                end                
                 %
-                if exist(filename,'file'),%power from file
+                val(1) = sum(external.antenna.dP_nz*external.antenna.dnz);
+                s{1} = ['Power from ALOHA spectrum',pstr,'        : PLH = ',num2str(val(1)/1e6),' MW'];
+                %
+                if isfield(equil,'shotnum') && ~isempty(str2double(equil.shotnum)) && isfield(equil,'shotime') && ~isempty(str2double(equil.shotime)),% shot number and time info
                     %
-                    load(filename,'tplh','tbase')
-                    %    
-                    xplh = pfac*1e6*interp1(tbase(:,1),tplh,str2double(equil.shotime));
+                    filename = [workdir,'GPHYB_',equil.shotnum,'.mat'];
                     %
-                    xplh = xplh(xplh > 0);
+                    if exist(filename,'file'),%power from file
+                        %
+                        load(filename,'tplh','tbase')
+                        %    
+                        xplh = pfac*1e6*interp1(tbase(:,1),tplh,str2double(equil.shotime));
+                        %
+                        xplh = xplh(xplh > 0);
+                        %
+                        if length(xplh) == 1,
+                            val(end+1) = xplh;
+                            s{end+1} = ['Power from GPHYB_* file',pstr,'          : PLH = ',num2str(xplh/1e6),' MW'];
+                        elseif length(xplh) == 2,
+                            val(end+1:end+2) = xplh;
+                            s{end+1} = ['Power from GPHYB_* file, ant. #1',pstr,' : PLH = ',num2str(xplh(1)/1e6),' MW'];
+                            s{end+1} = ['Power from GPHYB_* file, ant. #2',pstr,' : PLH = ',num2str(xplh(2)/1e6),' MW'];
+                        end
+                        %
+                    end
                     %
-                    if length(xplh) == 1,
-                        val(end+1) = xplh;
-                        s{end+1} = ['Power from GPHYB_* file',pstr,'          : PLH = ',num2str(xplh/1e6),' MW'];
-                    elseif length(xplh) == 2,
-                        val(end+1:end+2) = xplh;
-                        s{end+1} = ['Power from GPHYB_* file, ant. #1',pstr,' : PLH = ',num2str(xplh(1)/1e6),' MW'];
-                        s{end+1} = ['Power from GPHYB_* file, ant. #2',pstr,' : PLH = ',num2str(xplh(2)/1e6),' MW'];
+                    if exist('tsbase','file') == 3% power from TS database
+                        %
+                        [tplh,tbase] = tsbase(str2double(equil.shotnum),'GPHYB');
+                        %
+                        xplh = pfac*1e6*interp1(tbase(:,1),tplh(:,1:2),str2double(equil.shotime));
+                        %
+                        xplh = xplh(xplh > 0);
+                        %
+                        if length(xplh) == 1,
+                            val(end+1) = xplh;
+                            s{end+1} = ['Power from TSBASE',pstr,'                : PLH = ',num2str(xplh/1e6),' MW'];
+                        elseif length(xplh) == 2,
+                            val(end+1:end+2) = xplh;
+                            s{end+1} = ['Power from TSBASE, ant. #1',pstr,'       : PLH = ',num2str(xplh(1)/1e6),' MW'];
+                            s{end+1} = ['Power from TSBASE, ant. #2',pstr,'       : PLH = ',num2str(xplh(2)/1e6),' MW'];
+                        end
+                        %
                     end
                     %
                 end
                 %
-                if exist('tsbase','file') == 3% power from TS database
-                    %
-                    [tplh,tbase] = tsbase(str2double(equil.shotnum),'GPHYB');
-                    %
-                    xplh = pfac*1e6*interp1(tbase(:,1),tplh(:,1:2),str2double(equil.shotime));
-                    %
-                    xplh = xplh(xplh > 0);
-                    %
-                    if length(xplh) == 1,
-                        val(end+1) = xplh;
-                        s{end+1} = ['Power from TSBASE',pstr,'                : PLH = ',num2str(xplh/1e6),' MW'];
-                    elseif length(xplh) == 2,
-                        val(end+1:end+2) = xplh;
-                        s{end+1} = ['Power from TSBASE, ant. #1',pstr,'       : PLH = ',num2str(xplh(1)/1e6),' MW'];
-                        s{end+1} = ['Power from TSBASE, ant. #2',pstr,'       : PLH = ',num2str(xplh(2)/1e6),' MW'];
-                    end
-                    %
+                s{end+1} = 'Specify power manually';
+                %   
+                locstyle = select.style;
+                locstyle.textwidth = 600;
+                %
+                opt_Plhtot = iselect_jd(s,['LH power associated with this spectrum',pstr,' :'],opt_gui,locstyle,length(s)-1);
+                %
+                if opt_Plhtot < length(s),
+                    spectrum.Plhtot = val(opt_Plhtot);
+                else
+                    spectrum.Plhtot = 1e6*iselect_jd({},['Specify LH power',pstr,' (MW) :'],opt_gui,select.style,val(1)/1e6);
                 end
                 %
+                data = struct;
+                data.spectrum = spectrum;
+                select.mode = 2;%display fitted ALOHA spectra
+                %
+                launchs{1} = imake_launch_LH_jd(basestr,signs,data,opt_gui,select);
+                %
+                if opt_module == 2,
+                    launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 >= 0);
+                elseif opt_module == 3,
+                    launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 <= 0);
+                end  
+                %
+                disp('------------------------------------------------');
+                for ib = 1:length(launchs{1}.bNpar0),
+                    disp(['Npar0 = ',num2str(launchs{1}.bNpar0(ib)),' - Power = ',num2str(launchs{1}.bPlhtot(ib)/1e6),' (MW)']);
+                end
+                disp(' ');disp('------------------------------------------------');
+                disp(['Total LH power in the launched spectrum (',int2str(length(launchs{1}.bNpar0)),' rays) : ',num2str(sum(launchs{1}.bPlhtot)/1e6),' (MW)']);
+                disp('------------------------------------------------');disp(' ');
+                %
+                opt_OK = iselect_jd({'Yes','No'},'Confirm the LH power spectrum deduced from ALOHA:',opt_gui,select.style,1);
+                %
+                if opt_OK == 1,
+                    break
+                else
+                    clear('s');
+                end                       
             end
-            %
-            s{end+1} = 'Specify power manually';
-            %   
-            locstyle = select.style;
-            locstyle.textwidth = 600;
-            %
-            opt_Plhtot = iselect_jd(s,['LH power associated with this spectrum',pstr,' :'],opt_gui,locstyle,length(s)-1);
-            %
-            if opt_Plhtot < length(s),
-                spectrum.Plhtot = val(opt_Plhtot);
-            else
-                spectrum.Plhtot = 1e6*iselect_jd({},['Specify LH power',pstr,' (MW) :'],opt_gui,select.style,val(1)/1e6);
-            end
-            %
-            data = struct;
-            data.spectrum = spectrum;
-            %
-            launchs{1} = imake_launch_LH_jd(basestr,signs,data,opt_gui,select);
-            %
-            if opt_module == 2,
-                launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 >= 0);
-            elseif opt_module == 3,
-                launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 <= 0);
-            end                
         %
         % Case of structure external
         %
@@ -242,12 +269,13 @@ if ~isempty(external),% import wave data from external structure
             if isfield(external,'id'),
                 spectrum.id = external.id;
             end
-            spectrum.dP = external.antenna.dP;
-            disp('****************************************************************************************')
-            disp('WARNING: flipud is applied to antenna.dP_nz, such that co-current is performed for EAST.')
-            disp('Check the signs of Npar0, Bphi0, and Ip and read ''imake_launch_jd.m'' if necessary.');
-            disp('****************************************************************************************')
-            spectrum.dP_nz = flipud(external.antenna.dP_nz);
+            disp('********************************************************************************************')
+            disp('WARNING: check that the ALOHA power spectrum generates a co-current or a counter current. ')
+            disp('Do a flipud(antenna.dP_nz) and fliplr(antenna.dP) accordingly in the ALOHA file before ');
+            disp('using ALOHA data in irunluke_jd. Co-current: Npar0(main peak) < 0 if sign(Ip)*sign(Bt) > 0');
+            disp(' and Npar0(main peak) > 0 if sign(Ip)*sign(Bt) < 0');
+            disp('********************************************************************************************')
+            spectrum.dP_nz = external.antenna.dP_nz;
             spectrum.nz = external.antenna.nz;
             spectrum.ny = external.antenna.ny;
             %
@@ -280,6 +308,7 @@ if ~isempty(external),% import wave data from external structure
                 %
                 data = struct;
                 data.spectrum = spectrum;
+                select.mode = 2;%display fitted ALOHA spectra
                 %
                 launchs{1} = imake_launch_LH_jd(basestr,signs,data,opt_gui,select);
                 %
