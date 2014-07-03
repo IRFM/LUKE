@@ -12,7 +12,7 @@ for Zii = 1,
 %
 % grid parameters
 %
-f_pmin = 20; %lower limit for avalanche calculation. if avalanche_mode and not specified = 1
+f_pmin = 1; %lower limit for avalanche calculation. if avalanche_mode and not specified = 1
 pnmax_S = 28;%20;% for E/Ec = 4, Pc = 5; for E/Ec = 6, Pc = 4;
 np_S = 201;%201;%
 nmhu_S = 101;
@@ -28,7 +28,7 @@ mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 %
 betath2 = 1e-2;%1e-5;%
 %
-alpha = 2; %E/Ec
+alpha = 8; %E/Ec
 epsi = alpha*betath2;
 %
 pnmin_S = NaN;%sqrt(2)/sqrt((alpha-1)*betath2);%5;%1/sqrt((alpha-1)*betath2);%NaN;%
@@ -88,8 +88,8 @@ dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the firs
 dkeparam.norm_mode_f = 0;% + 1i;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.timevol = 1;
 %dkeparam.nit_ohm = 2;
-dkeparam.tn = 500000;%time for asymptotic solution with norm_mode_f = 1
-dkeparam.dtn = 5000;% time steps required for accurate runaway solution - see rundke_dtn
+dkeparam.tn = 5000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.dtn = 100;% time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
 dkeparam.bounce_mode = 0; %bounce average
 dkeparam.avalanche_mode = 1; %if 1 avalanche mode on, 0 or undefined for off
