@@ -28,7 +28,7 @@ mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 %
 betath2 = 1e-2;%1e-5;%
 %
-alpha = 8; %E/Ec
+alpha = 3; %E/Ec
 epsi = alpha*betath2;
 %
 pnmin_S = NaN;%sqrt(2)/sqrt((alpha-1)*betath2);%5;%1/sqrt((alpha-1)*betath2);%NaN;%
@@ -52,7 +52,7 @@ id_simul = 'Runaway';%Simulation ID
 %path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [0.5];%1%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0];%1%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -67,11 +67,13 @@ path_dkeparam = '';%if nothing is specified, the working directory is first used
 id_display = 'PARTIAL_VISUAL';%'NO_DISPLAY''PARTIAL_VISUAL';%For output code display, files from Project_DKE/DISPLAY_FILES/
 path_display = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
+id_transpfaste = 'magneticturbulence';
+path_transpfaste = '';
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
-[dkepath,equil,dkeparam,dkedisplay] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display);
+[dkepath,equil,dkeparam,dkedisplay,dummy,dummy,transpfaste] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'','','','','','','transpfaste',id_transpfaste,path_transpfaste);
 %
 %**************************************************************************
 %**************************************************************************
@@ -88,8 +90,8 @@ dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the firs
 dkeparam.norm_mode_f = 0;% + 1i;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.timevol = 1;
 %dkeparam.nit_ohm = 2;
-dkeparam.tn = 5000;%time for asymptotic solution with norm_mode_f = 1
-dkeparam.dtn = 100;% time steps required for accurate runaway solution - see rundke_dtn
+dkeparam.tn = 200000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.dtn = 1000;% time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
 dkeparam.bounce_mode = 0; %bounce average
 dkeparam.avalanche_mode = 1; %if 1 avalanche mode on, 0 or undefined for off
@@ -98,6 +100,8 @@ options_fzero = optimset('fzero');
 options_fzero.Display = 'iter';
 options_fzero.TolX = 1e-10;%convergence tolerance
 dkeparam.options_fzero = options_fzero;
+%
+transpfaste.Dr0 = 1;
 %
 equil.pzTi = 1e-10*ones(size(equil.pzTi));% cold ions
 %
@@ -131,24 +135,23 @@ fitparam.method = 'spline';%'linear';%nearest,spline,pchip
 %
 equil.equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,'','','',[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,'',transpfaste,'',[],[]);
 %
 RR_an = RR_rosenbluth_en(alpha, Zi, mksa.ne_ref, mksa.lnc_e_ref, equilDKE.ap*equilDKE.xrho/equilDKE.Rp); %analytic AVALANCHE growth rate Rosenbluth Putvinski NF 1997
 %
 %RR = dke_out.XxRR_fsav(end,:);
 Rfrac = Znorm(end).x_Rfrac_0_fsav; %runaway fraction (nr of runaways between pmin and pmax) primary + avalanche
 %
-xnre = cell2mat(dke_out.xnorm_re');
-xnre_out_norm = dke_out.xrr_out_norm; %runaway population for avalanche generation
+xnre = cell2mat(dke_out.xnorm_rep);
 %
-RRAint = Znorm(1,end).xRRAint./xnre(end-1,:); %integral over S[pmin pmax]
-RRAinttot = Znorm(1,end).xRRAtot./xnre(end-1,:); %total integral S[0 pmax]
+RRAint = Znorm(1,end).xRRAint./xnre(end-1); %integral over S[pmin pmax]
+RRAinttot = Znorm(1,end).xRRAtot./xnre(end-1); %total integral S[0 pmax]
 RR = dke_out.XxRR_fsav{end}; %runaway loss rate (primary)
 RR = RR(end,:); %[vol-1 tau_c^-1]
 %RRunnorm = RR*mksa.nhu_ref; %vol-1 s^-1
 %RRRP = RR*mksa.nhu_ref/nre(1,1);
 for it = 1:(length(xnre)-1)
-    gr(it) = (xnre(it+1,1) - xnre(it,1))/xnre(it,1)/dkeparam.dtn;
+    gr(it) = (xnre(it+1) - xnre(it))/xnre(it)/dkeparam.dtn;
 end
 figure;graph1D_jd(1:(length(xnre)-1),gr,0,0,'iteration','growth rate (s^-1)','Numerical growth rate',NaN,NaN,NaN,'-','o','b',1)
 hold on
@@ -259,10 +262,10 @@ diary off
 %growthrate(ia) = gr(end)*mksa.nhu_ref
 %
 figure
-graph1D_jd((1:dkeparam.dtn:dkeparam.tn),xnre(:,1),0,0,'t_n','n_{re}/n_{tot}','',NaN,NaN,NaN,'-','none','b',2)
+graph1D_jd((1:dkeparam.dtn:dkeparam.tn),xnre(:),0,0,'t_n','n_{re}/n_{tot}','',NaN,NaN,NaN,'-','none','b',2)
 figure
-grDA = diff(xnre(:,1))./dkeparam.dtn./(1-xnre(1:(end-1),1));
-graph1D_jd(xnre(1:(end-1),1),grDA,0,0,'n_r','1/(1-n_r)dn_r/dt_n','',NaN,NaN,NaN,'-','none','b',2)
+grDA = diff(xnre(:))'./dkeparam.dtn./(1-xnre(1:(end-1)));
+graph1D_jd(xnre(1:(end-1)),grDA,0,0,'n_r','1/(1-n_r)dn_r/dt_n','',NaN,NaN,NaN,'-','none','b',2)
 grA = (grDA(end)-grDA(end-20))/(xnre(end)-xnre(end-20));
 %
 %************************************************************************************************************************************

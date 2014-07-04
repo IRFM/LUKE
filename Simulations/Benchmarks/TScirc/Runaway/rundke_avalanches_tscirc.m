@@ -8,7 +8,7 @@ clear mex
 clear functions
 close all
 warning('off')
-for irho =20,
+for irho =10,
 %
 % grid parameters
 %
@@ -57,7 +57,7 @@ rho_S = 0.05*irho;%[0.1];%1%Normalized radial flux grid where calculations are p
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_equil = 'TScyl';%For plasma equilibrium
+id_equil = 'TScirc';%For plasma equilibrium
 %id_equil = 'TScirc';%For plasma equilibrium
 path_equil = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
@@ -138,17 +138,16 @@ equil.equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam
 %RR = dke_out.XxRR_fsav(end,:);
 Rfrac = Znorm(end).x_Rfrac_0_fsav; %runaway fraction (nr of runaways between pmin and pmax) primary + avalanche
 %
-xnre = cell2mat(dke_out.xnorm_re');
-xnre_out_norm = dke_out.xrr_out_norm; %runaway population for avalanche generation
+xnre = cell2mat(dke_out.xnorm_rep);
 %
-RRAint = Znorm(1,end).xRRAint./xnre(end-1,:); %integral over S[pmin pmax]
-RRAinttot = Znorm(1,end).xRRAtot./xnre(end-1,:); %total integral S[0 pmax]
+RRAint = Znorm(1,end).xRRAint./xnre(end-1); %integral over S[pmin pmax]
+RRAinttot = Znorm(1,end).xRRAtot./xnre(end-1); %total integral S[0 pmax]
 RR = dke_out.XxRR_fsav{end}; %runaway loss rate (primary)
 RR = RR(end,:); %[vol-1 tau_c^-1]
 %RRunnorm = RR*mksa.nhu_ref; %vol-1 s^-1
 %RRRP = RR*mksa.nhu_ref/nre(1,1);
 for it = 1:(length(xnre)-1)
-    gr(it) = (xnre(it+1,1) - xnre(it,1))/xnre(it,1)/dkeparam.dtn;
+    gr(it) = (xnre(it+1) - xnre(it))/xnre(it)/dkeparam.dtn;
 end
 figure;graph1D_jd(1:(length(xnre)-1),gr,0,0,'iteration','growth rate (s^-1)','Numerical growth rate',NaN,NaN,NaN,'-','o','b',1)
 hold on
@@ -254,16 +253,16 @@ diary off
 %
 %curr0 = cell2mat(dke_out.curr0'); %*mksa.j_ref
 %figure;graph1D_jd((1:dkeparam.dtn:dkeparam.tn),curr0,0,0,'t_n','J_0','',NaN,NaN,NaN,'-','none','b',2)
-figure;graph1D_jd((1:dkeparam.dtn:dkeparam.tn),cell2mat(dke_out.xcurr),0,0,'t_n','J_{tot}','',NaN,NaN,NaN,'-','none','b',2)
+%figure;graph1D_jd((1:dkeparam.dtn:dkeparam.tn),cell2mat(dke_out.xcurr),0,0,'t_n','J_{tot}','',NaN,NaN,NaN,'-','none','b',2)
 %
 %growthrate(ia) = gr(end)*mksa.nhu_ref
 %
 figure
-graph1D_jd((1:dkeparam.dtn:dkeparam.tn),xnre(:,1),0,0,'t_n','n_{re}/n_{tot}','',NaN,NaN,NaN,'-','none','b',2)
+graph1D_jd((1:dkeparam.dtn:dkeparam.tn),xnre(:),0,0,'t_n','n_{re}/n_{tot}','',NaN,NaN,NaN,'-','none','b',2)
 figure
-grDA = diff(xnre(:,1))./dkeparam.dtn./(1-xnre(1:(end-1),1));
-graph1D_jd(xnre(1:(end-1),1),grDA,0,0,'n_r','1/(1-n_r)dn_r/dt_n','',NaN,NaN,NaN,'-','none','b',2)
-grA = (grDA(end)-grDA(end-11))/(xnre(end-1)-xnre(end-10));
+grDA = diff(xnre(:))'./dkeparam.dtn./(1-xnre(1:(end-1)));
+graph1D_jd(xnre(1:(end-1)),grDA,0,0,'n_r','1/(1-n_r)dn_r/dt_n','',NaN,NaN,NaN,'-','none','b',2)
+grA = (grDA(end)-grDA(end-20))/(xnre(end)-xnre(end-20));
 %
 %************************************************************************************************************************************
 %
@@ -271,11 +270,10 @@ grA = (grDA(end)-grDA(end-11))/(xnre(end-1)-xnre(end-10));
 %
 %eval(['save ','DKE_RESULTS_',id_equil,'_D_beta2_5e-3_EEc_',num2str(alpha),'.mat']);
 %info_dke_yp(2,['Data saved in ','DKE_RESULTS_',id_equil,'_DA','_rho_0',num2str(irho),'_tn_',num2str(dkeparam.tn),'_E_',num2str(alpha),'.mat']);
-%eval(['save ','DKE_RESULTS_TScirc_e1_DA_rho_002_E_5_b1e-2.mat']);
-%save(['PROC_TScyl_D_beta2_2e-3_EEc_',num2str(alpha)],'xnre','alpha','dke_out','mksa')
-%eval(save('PROC_TScyl_DA_beta2_1e-2_EEc_10','xnre','alpha','dke_out','mksa')
+%eval(['save','PROC_',id_equil,'_DA_','beta2_1e-3','_EEc_',num2str(alpha),'xnre','alpha','dke_out','mksa']);
+%save(['PROC_TScyl_DA_beta2_2e-5_EEc_',num2str(alpha)],'xnre','alpha','dke_out','mksa')
+%eval(save('PROC_TScyl_DA_beta2_1e-2_EEc_10','xnre','alpha','dke_out','mksa'))
 %info_dke_yp(2,['Data saved in ','DKE_RESULTS_',id_equil,'_DA_','beta2_1e-3','_EEc_',num2str(alpha),'.mat']);
-eval(['save ','E_50_',num2str(irho),'.mat']);
+%eval(['save ','E_50_Z',num2str(Zi),'.mat']);
 %info_dke_yp(2,['Data saved in',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'_',filename,'.mat']);
-close all
 end
