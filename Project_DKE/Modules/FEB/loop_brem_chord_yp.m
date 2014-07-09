@@ -1,4 +1,4 @@
-function [brem_bd_out,lchord] = loop_brem_chord_yp(mode,n_pol,kphot,cL,ZZIB,datahxr_in)
+function [brem_bd_out,lchord] = loop_brem_chord_yp(mode,kphot,cL,ZZIB,datahxr_in)
 %R5-X2 - Calculation of  the line-integrated plasma bremsstrahlung emission (for parallel processing or GPU)
 %
 % Calculation of  the line-integrated plasma bremsstrahlung emission (for parallel processing or GPU)
@@ -10,7 +10,10 @@ s_length = sum(s_mask);%Number of points along the chord inside the plasma
 ir_spsi = datahxr_in.vschords(8,s_mask);
 it_st = datahxr_in.vschords(9,s_mask);
 %
-IB1 = zeros(size(ZZIB,3),s_length,size(ZZIB,4));
+n_pol = size(cL,1) - 1;
+nk = length(kphot);
+%
+IB1 = zeros(n_pol + 1,s_length,nk);
 %
 nstep = 199;%In order to avoid use of too large multidimensional tables (limitation of MatLab)
 jmax = floor(s_length/nstep)+1;
@@ -43,7 +46,7 @@ end
 [Pm_bd] = leg_dke_yp(sksid,n_pol);%Legendre polynomial for the cosine of the angle between magnetic field line and line of sight (negative sign because electrons are flowing in the opposite direction to the plasma current)
 Pm_bd1 = repmat(Pm_bd,[1,1,length(kphot)]);
 %	
-cL1 = repmat(cL,[1,length(ir_spsi),length(kphot)]);
+cL1 = repmat(cL,[1,length(ir_spsi),nk]);
 %
 brem_bd = squeeze(sum(Pm_bd1.*IB1.*cL1,1));%Local bremsstrahlung emission in the direction of the detector
 %	
@@ -51,12 +54,12 @@ s = datahxr_in.vschords(1,s_mask);
 if size(s,2) > 0
    s = s - s(1);%s=0 where the chord enter the plasma towards the detector
    ds = [diff(s),0];%Elementary chord length for integration
-   ds1 = repmat(ds',[1,length(kphot)]);
+   ds1 = repmat(ds',[1,nk]);
 %
     brem_bd_out = sum(ds1.*brem_bd,1)*datahxr_in.EG_hxr;%Integration along the chord and multiplication by the geometrical factor
     lchord = sum(ds);%Chord length calculation
 else
-    brem_bd_out = 0;%Integration along the chord and multiplication by the geometrical factor
+    brem_bd_out = zeros(1,nk);%Integration along the chord and multiplication by the geometrical factor
     lchord = 0;%Chord length calculation	   	
 end
 %
