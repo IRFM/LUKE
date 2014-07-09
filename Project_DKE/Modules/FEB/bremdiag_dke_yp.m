@@ -1,5 +1,6 @@
 function  [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam,dt)
-%R5-X2 - Calculation of the bremsstrahlung emission as measured by the HXR diagnostic taking into account of the detector's response function.
+%
+% R5-X2 - Calculation of the bremsstrahlung emission as measured by the HXR diagnostic taking into account of the detector's response function.
 %
 %Calculates the bremsstrahlung emission as measured by the HXR diagnostic
 %taking into account of the detector's response function. 
@@ -43,23 +44,31 @@ brem_bd_in = Zbremplasma.brem_bd_out;
 kphotmin = min(kphot);%hxr.kdiag_hxr(1,1);
 kphotmax = max(kphot);%hxr.kdiag_hxr(2,end-1);
 %
-kfit = (hxr.kdiag_hxr(1,1:end-1) + hxr.kdiag_hxr(2,1:end-1))/2;%Measured photon energy spectrum (keV) [1,k]
-ikfitmin = find(kfit >= hxr.kdiag_hxr(1,end),1,'first');
-ikfitmax = find(kfit <= hxr.kdiag_hxr(2,end),1,'last');
+% kfit = (hxr.kdiag_hxr(1,1:end-1) + hxr.kdiag_hxr(2,1:end-1))/2;%Measured photon energy spectrum (keV) [1,k]
+% kfit_S = [3*kphot(1) - kphot(2),kphot(1:end-1) + kphot(2:end),3*kphot(end) - kphot(end-1)]/2;
+% kfit = kphot;%Measured photon energy spectrum (keV) [1,k]
+kfit = hxr.kfit;%Measured photon energy spectrum (keV) [1,k]
+kfit_S = [3*kfit(1) - kfit(2),kfit(1:end-1) + kfit(2:end),3*kfit(end) - kfit(end-1)]/2;
+% ikfitmin = find(kfit >= hxr.kdiag_hxr(1,end),1,'first');
+% ikfitmax = find(kfit <= hxr.kdiag_hxr(2,end),1,'last');
+ikfitmin = find(kfit >= hxrparam.kmin,1,'first');
+ikfitmax = find(kfit <= hxrparam.kmax,1,'last');
 %kfitmin = kfit(ikfitmin);
 %kfitmax = kfit(ikfitmax);
-dkfit = hxr.kdiag_hxr(2,1:end-1) - hxr.kdiag_hxr(1,1:end-1);%Channel width of the measured photon energy spectrum (keV) [1,k]
+% dkfit = hxr.kdiag_hxr(2,1:end-1) - hxr.kdiag_hxr(1,1:end-1);%Channel width of the measured photon energy spectrum (keV) [1,k]
+dkfit = diff(kfit_S);%Channel width of the measured photon energy spectrum (keV) [1,k]
+nkfit = length(dkfit);
 %
 kinterp = linspace(kphotmin,kphotmax,1001);%Uniform grid only 
 dkinterp = kinterp(2) - kinterp(1);
-brem_bd_interp = interp1(kphot,brem_bd_in',kinterp,method)';
+brem_bd_interp = interp1(kphot,brem_bd_in.',kinterp,method).';
 %
 if size(brem_bd_in,1) == 1,
-    brem_bd_interp = brem_bd_interp';
+    brem_bd_interp = brem_bd_interp.';
 end
 %
-for ik = 1:size(hxr.kdiag_hxr,2)-1,
-	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,find(kinterp >= hxr.kdiag_hxr(1,ik),1,'first'):find(kinterp < hxr.kdiag_hxr(2,ik),1,'last'))')'*dkinterp;%number of photons in energy channel ik per unit time
+for ik = 1:nkfit,
+	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,find(kinterp >= kfit_S(ik),1,'first'):find(kinterp < kfit_S(ik+1),1,'last')).').'*dkinterp;%number of photons in energy channel ik per unit time
 end
 brem_bd_plasma = abs(brem_bd_plasma);
 %
@@ -125,12 +134,12 @@ for ic = 1:size(brem_bd_interp,1),
 	brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))'; 
 %	brem_bd_diag_interp(ic,:) = (fix(((eye(size(gkEinterp')).*Tabsxinterp)*(brem_bd_interp(ic,:))')))';%detector response neglected
 %	
-	for ik = 1:size(hxr.kdiag_hxr,2)-1,
-		meanabsx(ic,ik) = sum(absxinterp(min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'/length(absxinterp(min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))');
+	for ik = 1:nkfit,
+		meanabsx(ic,ik) = sum(absxinterp(min(find(kinterp >= kfit_S(ik))):max(find(kinterp < kfit_S(ik+1))))')'/length(absxinterp(min(find(kinterp >= kfit_S(ik))):max(find(kinterp < kfit_S(ik+1)))).');
 	end
 %
-	for ik = 1:size(hxr.kdiag_hxr,2)-1,
-		brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= hxr.kdiag_hxr(1,ik))):max(find(kinterp < hxr.kdiag_hxr(2,ik))))')'*dkinterp;%number of pulses in energy channel ik per unit time
+	for ik = 1:nkfit,
+		brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= kfit_S(ik))):max(find(kinterp < kfit_S(ik+1)))).').'*dkinterp;%number of pulses in energy channel ik per unit time
 	end
 %	
 	brem_bd_diag = abs(brem_bd_diag);
