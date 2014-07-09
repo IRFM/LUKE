@@ -168,17 +168,49 @@ if (curtime == 0 && any(status.sdiag(1,:) >= 2)) || (curtime > 0 && status.sdiag
     %
     lukeobj.hxrbrem.clear.state = 'on';
     lukeobj.hxrbrem.disp.state = 'on';
+    lukeobj.hxrrho.state = 'on';
+    lukeobj.hxrtheta.state = 'on';
+    lukeobj.hxrdir.state = 'on';
+    lukeobj.hxrkphot.state = 'on';
+    nkphot = length(hxr.param.kphot);
+    lukeobj.hxrkphot.select.string = [lukeobj.hxrkphot.select.string{1},cell(1,nkphot)];
+    for ikphot = 1:nkphot,
+        lukeobj.hxrkphot.select.string{ikphot+1} = num2str(hxr.param.kphot(ikphot));
+    end    
+    %
+    if curtime == 0,
+        ishotime = find(status.sdiag(1,:) >= 2,1,'first');
+    else
+        ishotime = curtime;
+    end
+    %
+    nrho = length(sdiags{1,ishotime}.equilHXR.xrhoT);
+    ntheta = length(sdiags{1,ishotime}.equilHXR.mtheta);
+    lukeobj.hxrrho.select.string = [lukeobj.hxrrho.select.string{1},cell(1,nrho)];
+    lukeobj.hxrtheta.select.string = [lukeobj.hxrtheta.select.string{1},cell(1,ntheta)];
+    for irho = 1:nrho,
+        lukeobj.hxrrho.select.string{irho+1} = num2str(sdiags{1,ishotime}.equilHXR.xrhoT(irho),2);
+    end    
+    for itheta = 1:ntheta,
+        lukeobj.hxrtheta.select.string{itheta+1} = [num2str(sdiags{1,ishotime}.equilHXR.mtheta(itheta)*180/pi,3),'°'];
+    end    
     %
     if ~isempty(hxr.cam),
         lukeobj.hxrdiag.run.state = 'on';
     else
         lukeobj.hxrdiag.run.state = 'off';
     end
+    %
+    clear ikphot nkphot ishotime irho nrho itheta ntheta
 else
     lukeobj.hxrbrem.run.highlight = true;
     %
     lukeobj.hxrbrem.clear.state = 'off';
     lukeobj.hxrbrem.disp.state = 'off';
+    lukeobj.hxrrho.state = 'off';
+    lukeobj.hxrtheta.state = 'off';
+    lukeobj.hxrdir.state = 'off';
+    lukeobj.hxrkphot.state = 'off';
     %
     lukeobj.hxrdiag.run.state = 'off';
     %

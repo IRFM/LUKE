@@ -2568,12 +2568,277 @@ switch action
             hxrtimes = shotimes(curtime);
         end
         %
-        [nobj,graphids] = iluke_hxrexpdisp(hxr,hxrtimes,ic,ichord,ibin,axs,style);
+        [nobj,graphids] = iluke_hxrexpdisp(hxr,struct,hxrtimes,ic,ichord,ibin,axs,style);
         %
         for iplot = 1:3,
             if nobj(iplot) > 0,
                 plotstr = ['plot',num2str(iplot)];
                 graphss{it_g}(end+1) = iluke_graphs(lukeobj.(plotstr).handle,nobj(iplot),graphids{iplot},'hxrexp');
+                lukeobj.(plotstr).gindex(it_g) = length(graphss{it_g});
+            else
+                delete(axs(iplot));
+            end
+        end
+        %
+        clear it_g ic ichord ibin nobj graphids iplot axs
+        %
+    case 'hxrbremrun'
+        %
+        % run r5x2
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
+        select.style = style;
+        select.p_opt = -1;
+        select.d_opt = 'n';
+        select.n_opt = -1;
+        select.t_opt = 0;
+        %
+        if curtime == 0,% treat all times with LUKE distribution calculated
+            flag_shotimes = find(status.sdiag(1,:) >= 1);
+        elseif curtime > 0 && status.sdiag(1,curtime) >= 1,% select one time from external structure if available
+            flag_shotimes = curtime;
+        else
+            flag_shotimes = [];% no action
+        end
+        %
+        ncalc = length(flag_shotimes);
+        %
+        if ncalc > 1,% more than one time
+            %
+            mdce_mode = iselect_jd(dkepath.distprofiles,'Distribution of calc. : ',lukeobj.infopanel.handle,style.distselectstyle,1,'popupmenu') - 1;
+            %
+            if mdce_mode > 2,
+                mdce_mode = 2 - mdce_mode;%use of remcomputing with negative mdce_mode
+            end
+            %
+            dkecluster = clustermode_luke(mdce_mode,'',dkepath);%MatLab distributed computing environment
+            %
+            set(lukeobj.busy.handle,'Visible','on');drawnow;
+            [flag,equilHXR,radialHXR,Zbremplasma] = mdce_run('irunhxr_jd',{lukeobj.infopanel.handle,workdir,tokamak,'',hxr,'','','',dkedisplay,select},4,outputs(flag_shotimes),dkecluster);
+            set(lukeobj.busy.handle,'Visible','off');drawnow;
+            %
+            clear mdce_mode dkecluster flag 
+            %            
+        elseif ncalc == 1% treat one time 
+            %
+            [equilHXR,radialHXR,Zbremplasma] = irunhxr_jd(lukeobj.infopanel.handle,workdir,tokamak,outputs{flag_shotimes},hxr,'','','',dkedisplay,select);
+            %
+        else
+            equilHXR = [];
+            radialHXR = [];
+            Zbremplasma = [];
+        end
+        %
+        if isfield(equilHXR,'err'),
+            lukeobj.infotext.string = {'Error creating structure(s) ''hxr.brem'' : ',equilHXR.err};
+        elseif ~isempty(equilHXR),
+            %
+            if ncalc > 1,% more than one time
+                %
+                for icalc = 1:ncalc,
+                    sdiags{1,flag_shotimes(icalc)}.equilHXR = equilHXR{icalc};
+                    sdiags{1,flag_shotimes(icalc)}.radialHXR = radialHXR{icalc};
+                    sdiags{1,flag_shotimes(icalc)}.Zbremplasma = Zbremplasma{icalc};
+                end
+                %
+            elseif ncalc == 1,% replace or fill an existing time
+                %
+                sdiags{1,flag_shotimes}.equilHXR = equilHXR;
+                sdiags{1,flag_shotimes}.radialHXR = radialHXR;
+                sdiags{1,flag_shotimes}.Zbremplasma = Zbremplasma;
+                %
+            end
+            %
+            status.sdiag(1,flag_shotimes) = 2;
+            %
+            status.data = 2;
+            %
+            lukeobj.lukeid.string = '';
+            %
+            clear flag_shotimes ncalc
+            %
+        end
+        %
+        clear select equilHXR radialHXR Zbremplasma
+        %
+        lukeobj = iluke_info(lukeobj,'r5x2');% enable info display
+        %
+        %iluke_r5x2;
+        %
+    case 'hxrbremdisp'
+        %
+        % fast electron bremsstrahlung calculated data
+        %
+        it_g = 2 + curtime;%<new>,<all>,...
+        %
+        lukeobj.plot1.gindex(it_g) = 0;
+        lukeobj.plot2.gindex(it_g) = 0;
+        lukeobj.plot3.gindex(it_g) = 0;
+        %
+        cleartags{it_g} = {'hxrbrem'};
+        %
+        iluke_update;% initialize display
+        %
+        axs(1) = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
+        axs(2) = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        axs(3) = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        %
+%         ic = lukeobj.hxrcam.select.value - 1;% selected camera
+%         ichord = lukeobj.hxrchord.select.value - 1;% selected chord
+        ir = lukeobj.hxrrho.select.value - 1;% selected radial position
+        it = lukeobj.hxrtheta.select.value - 1;% selected poloidal position
+        idir = lukeobj.hxrdir.select.value - 1;% selected direction of emission
+        ikphot = lukeobj.hxrkphot.select.value - 1;% selected photon energy
+        %
+        if curtime == 0,
+            ihxrtimes = status.sdiag(1,:) >= 2;
+        else
+            ihxrtimes = curtime;
+        end
+        %
+        select.style = style;
+        select.dir = lukeobj.hxrdir.select.string;
+        %
+        [nobj,graphids] = iluke_hxrbremdisp(shotimes(ihxrtimes),sdiags(1,ihxrtimes),ikphot,ir,it,idir,axs,select);
+        %
+        for iplot = 1:3,
+            if nobj(iplot) > 0,
+                plotstr = ['plot',num2str(iplot)];
+                graphss{it_g}(end+1) = iluke_graphs(lukeobj.(plotstr).handle,nobj(iplot),graphids{iplot},'hxrbrem');
+                lukeobj.(plotstr).gindex(it_g) = length(graphss{it_g});
+            else
+                delete(axs(iplot));
+            end
+        end
+        %
+        clear it_g ic ichord ibin nobj graphids iplot axs select
+        %
+    case 'hxrdiagrun'
+        %
+        % run r5x2
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
+        select.style = style;
+        select.p_opt = -1;
+        select.d_opt = 'n';
+        select.s_opt = 'n';
+        select.n_opt = -1;
+        select.t_opt = 0;
+        %
+        if curtime == 0,% treat all times with LUKE distribution calculated
+            flag_shotimes = find(status.sdiag(1,:) >= 2);
+        elseif curtime > 0 && status.sdiag(1,curtime) >= 2,% select one time from external structure if available
+            flag_shotimes = curtime;
+        else
+            flag_shotimes = [];% no action
+        end
+        %
+        ncalc = length(flag_shotimes);
+        %
+        if ncalc > 1,% more than one time
+            %
+            mdce_mode = iselect_jd(dkepath.distprofiles,'Distribution of calc. : ',lukeobj.infopanel.handle,style.distselectstyle,1,'popupmenu') - 1;
+            %
+            if mdce_mode > 2,
+                mdce_mode = 2 - mdce_mode;%use of remcomputing with negative mdce_mode
+            end
+            %
+            dkecluster = clustermode_luke(mdce_mode,'',dkepath);%MatLab distributed computing environment
+            %
+            set(lukeobj.busy.handle,'Visible','on');drawnow;
+            [flag,Zbremchord,Zbremplasma,Zbremdiag] = mdce_run('irunhxr_jd',{lukeobj.infopanel.handle,workdir,tokamak,'',hxr,'','','',dkedisplay,select},4,sdiags(1,flag_shotimes),dkecluster);
+            set(lukeobj.busy.handle,'Visible','off');drawnow;
+            %
+            clear mdce_mode dkecluster flag 
+            %            
+        elseif ncalc == 1% treat one time 
+            %
+            [Zbremchord,Zbremplasma,Zbremdiag] = irunhxr_jd(lukeobj.infopanel.handle,workdir,tokamak,sdiags{1,flag_shotimes},hxr,'','','',dkedisplay,select);
+            %
+        else
+            Zbremchord = [];
+            Zbremplasma = [];
+            Zbremdiag = [];
+        end
+        %
+        if isfield(Zbremchord,'err'),
+            lukeobj.infotext.string = {'Error creating structure(s) ''hxr.diag'' : ',Zbremchord.err};
+        elseif ~isempty(Zbremchord),
+            %
+            if ncalc > 1,% more than one time
+                %
+                for icalc = 1:ncalc,
+                    sdiags{1,flag_shotimes(icalc)}.Zbremchord = Zbremchord{icalc};
+                    sdiags{1,flag_shotimes(icalc)}.Zbremplasma = Zbremplasma{icalc};
+                    sdiags{1,flag_shotimes(icalc)}.Zbremdiag = Zbremdiag{icalc};
+                end
+                %
+            elseif ncalc == 1,% replace or fill an existing time
+                %
+                sdiags{1,flag_shotimes}.Zbremchord = Zbremchord;
+                sdiags{1,flag_shotimes}.Zbremplasma = Zbremplasma;
+                sdiags{1,flag_shotimes}.Zbremdiag = Zbremdiag;
+                %
+            end
+            %
+            status.sdiag(1,flag_shotimes) = 3;
+            %
+            status.data = 2;
+            %
+            lukeobj.lukeid.string = '';
+            %
+            clear flag_shotimes ncalc 
+            %
+        end
+        %
+        clear select Zbremchord Zbremplasma Zbremdiag
+        %
+        lukeobj = iluke_info(lukeobj,'r5x2');% enable info display
+        %
+        %iluke_r5x2;
+        %
+    case 'hxrdiagdisp'
+        %
+        % fast electron bremsstrahlung experimental vs LUKE 
+        %
+        it_g = 2 + curtime;%<new>,<all>,...
+        %
+        lukeobj.plot1.gindex(it_g) = 0;
+        lukeobj.plot2.gindex(it_g) = 0;
+        lukeobj.plot3.gindex(it_g) = 0;
+        %
+        cleartags{it_g} = {'hxrdiag'};
+        %
+        iluke_update;% initialize display
+        %
+        axs(1) = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
+        axs(2) = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        axs(3) = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        %
+        ic = lukeobj.hxrcam.select.value - 1;% selected camera
+        ichord = lukeobj.hxrchord.select.value - 1;% selected chord
+        ibin = lukeobj.hxrbin.select.value - 1;% selected energy bin
+        %
+        if curtime == 0,
+            ihxrtimes = status.sdiag(1,:) >= 3;
+        else
+            ihxrtimes = curtime;
+        end
+        %
+        if curtime == 0,
+            hxrtimes = shotimes;
+        else
+            hxrtimes = shotimes(curtime);
+        end
+        %
+        [nobj,graphids] = iluke_hxrexpdisp(hxr,sdiags(1,ihxrtimes),shotimes(ihxrtimes),ic,ichord,ibin,axs,style);
+        %
+        for iplot = 1:3,
+            if nobj(iplot) > 0,
+                plotstr = ['plot',num2str(iplot)];
+                graphss{it_g}(end+1) = iluke_graphs(lukeobj.(plotstr).handle,nobj(iplot),graphids{iplot},'hxrdiag');
                 lukeobj.(plotstr).gindex(it_g) = length(graphss{it_g});
             else
                 delete(axs(iplot));

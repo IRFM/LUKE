@@ -114,7 +114,7 @@ lukeobj.plot3.gindex(:,end+1:end+nnew) = 0;
 %
 % structures to be cleared
 %
-dkeparams(:,flag_clear) = {[]};
+% dkeparams(:,flag_clear) = {[]};
 equils(:,flag_clear) = {[]};
 ohms(:,flag_clear) = {[]};
 transpfastes(:,flag_clear) = {[]};

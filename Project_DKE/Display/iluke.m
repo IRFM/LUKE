@@ -4,9 +4,8 @@
 clear all
 close all
 %
-[dkepath,dkedisplay] = load_structures_yp('dkepath','','','dkedisplay','NO_DISPLAY','');
+[dkepath,dkedisplay,hxr.param] = load_structures_yp('dkepath','','','dkedisplay','NO_DISPLAY','','hxrparam','STANDARD','');
 %
-hxr.param = '';
 hxr.cam = {};
 hxr.exp = '';
 %
@@ -38,10 +37,10 @@ style.titlestrheight = 50;
 style.workdirtitlecorr = 4;
 %
 style.titlewidth = 105;
-style.titlewidth2 = 110;
 style.butheight = 25;%40;% height of button
 style.butwidth = 60;%80;% width of button
 style.longbutwidth = 90;%80;% width of button
+style.shortbutwidth = 2*style.butwidth - style.longbutwidth;%80;% width of button
 style.buthsep = 10;% horizontal separation between buttons
 style.butvsep = 10;% vertical separation between buttons
 %
@@ -450,7 +449,7 @@ lukeobj.wsparam.handle = uicontrol(lukeobj.infopanel.handle,'Style','edit','Stri
 % RUN R5X2 PANEL
 %
 lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrcam',{'title','import','load','save','clear','disp',''},'HXR cameras',style.infoheightcorr - style.butheightcorr,style);
-lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrexp',{'title','import','load','save','clear','disp','text'},'HXR exp. data',style.infoheightcorr - 3*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrexp',{'title','import','load','save','clear','disp','text'},'HXR exp. data',style.infoheightcorr - 2*style.butheightcorr,style);
 lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrparam',{'title','modify','load','save','clear',''},'FEB params',style.infoheightcorr - 5*style.butheightcorr,style);
 lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrbrem',{'title','','','run','clear','disp','text'},'FEB emissivity',style.infoheightcorr - 6*style.butheightcorr,style);
 lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'hxrdiag',{'title','','','run','clear','disp','text'},'FEB diagnostic',style.infoheightcorr - 7*style.butheightcorr,style);
@@ -464,17 +463,17 @@ lukeobj.hxrcam.select.callback = 'lukeobj.hxrcam.select.value = get(lukeobj.hxrc
 lukeobj.hxrcam.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.hxrcam.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrcam.select.callback);
 
 
-lukeobj.hxrrange1.title.position = [style.panelwidth - 5*style.buthsep - 2*style.butwidth - 2*style.titlewidth2,style.infoheightcorr - 5*style.butheightcorr + style.textheightcorr,style.titlewidth2,style.textheight];
+lukeobj.hxrrange1.title.position = [style.buthsep,style.infoheightcorr - 4*style.butheightcorr + style.textheightcorr,style.shotnumtitlewidth,style.textheight];
 lukeobj.hxrrange1.title.string = 'Tph kmin (keV)';
-lukeobj.hxrrange1.edit.position = [style.panelwidth - 4*style.buthsep - 2*style.butwidth - style.titlewidth2,style.infoheightcorr - 5*style.butheightcorr,style.butwidth,style.butheight];
+lukeobj.hxrrange1.edit.position = [2*style.buthsep + style.shotnumtitlewidth,style.infoheightcorr - 4*style.butheightcorr,style.butwidth,style.butheight];
 lukeobj.hxrrange1.edit.callback = 'hxr.param.kmin = str2double(get(lukeobj.hxrrange1.edit.handle,''String''));iluke_update;';
 
 lukeobj.hxrrange1.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.hxrrange1.title.string,'Position',lukeobj.hxrrange1.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.hxrrange1.edit.handle = uicontrol(lukeobj.infopanel.handle,'Style','edit','Position',lukeobj.hxrrange1.edit.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrrange1.edit.callback);
 
-lukeobj.hxrrange2.title.position = [style.panelwidth - 2*style.buthsep - style.butwidth - style.titlewidth2,style.infoheightcorr - 5*style.butheightcorr + style.textheightcorr,style.titlewidth2,style.textheight];
+lukeobj.hxrrange2.title.position = [style.titlewidth + 5*style.buthsep + 4*style.butwidth - style.shotnumtitlewidth,style.infoheightcorr - 4*style.butheightcorr + style.textheightcorr,style.shotnumtitlewidth,style.textheight];
 lukeobj.hxrrange2.title.string = 'Tph kmax (keV)';
-lukeobj.hxrrange2.edit.position = [style.panelwidth - style.buthsep - style.butwidth,style.infoheightcorr - 5*style.butheightcorr,style.butwidth,style.butheight];
+lukeobj.hxrrange2.edit.position = [style.titlewidth + 6*style.buthsep + 4*style.butwidth,style.infoheightcorr - 4*style.butheightcorr,style.butwidth,style.butheight];
 lukeobj.hxrrange2.edit.callback = 'hxr.param.kmax = str2double(get(lukeobj.hxrrange2.edit.handle,''String''));iluke_update;';
 
 lukeobj.hxrrange2.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.hxrrange2.title.string,'Position',lukeobj.hxrrange2.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
@@ -503,6 +502,48 @@ lukeobj.hxrbin.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text',
 lukeobj.hxrbin.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.hxrbin.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrbin.select.callback);
 
 
+lukeobj.hxrrho.title.position = [style.panelwidth - 5*style.buthsep - 2*style.butwidth - style.longbutwidth - style.shortbutwidth,style.infoheightcorr - 4*style.butheightcorr + style.textheightcorr,style.shortbutwidth,style.textheight];
+lukeobj.hxrrho.title.string = 'r/a';
+lukeobj.hxrrho.select.position = [style.panelwidth - 4*style.buthsep - 2*style.butwidth - style.longbutwidth,style.infoheightcorr - 4*style.butheightcorr,style.butwidth,style.butheight];
+lukeobj.hxrrho.select.string = {'all'};
+lukeobj.hxrrho.select.value = 1;
+lukeobj.hxrrho.select.callback = 'lukeobj.hxrrho.select.value = get(lukeobj.hxrrho.select.handle,''Value'');iluke_update;';
+
+lukeobj.hxrrho.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.hxrrho.title.string,'Position',lukeobj.hxrrho.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.hxrrho.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.hxrrho.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrrho.select.callback);
+
+
+lukeobj.hxrtheta.title.position = [style.panelwidth - 2*style.buthsep - style.butwidth - style.longbutwidth,style.infoheightcorr - 4*style.butheightcorr + style.textheightcorr,style.butwidth,style.textheight];
+lukeobj.hxrtheta.title.string = 'theta';
+lukeobj.hxrtheta.select.position = [style.panelwidth - style.buthsep - style.longbutwidth,style.infoheightcorr - 4*style.butheightcorr,style.longbutwidth,style.butheight];
+lukeobj.hxrtheta.select.string = {'all'};
+lukeobj.hxrtheta.select.value = 1;
+lukeobj.hxrtheta.select.callback = 'lukeobj.hxrtheta.select.value = get(lukeobj.hxrtheta.select.handle,''Value'');iluke_update;';
+
+lukeobj.hxrtheta.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.hxrtheta.title.string,'Position',lukeobj.hxrtheta.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.hxrtheta.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.hxrtheta.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrtheta.select.callback);
+
+
+lukeobj.hxrdir.title.position = [style.panelwidth - 2*style.buthsep - 3*style.butwidth - style.longbutwidth,style.infoheightcorr - 5*style.butheightcorr + style.textheightcorr,style.longbutwidth,style.textheight];
+lukeobj.hxrdir.title.string = 'Direction';
+lukeobj.hxrdir.select.position = [style.panelwidth - style.buthsep - 3*style.butwidth,style.infoheightcorr - 5*style.butheightcorr,3*style.butwidth,style.butheight];
+lukeobj.hxrdir.select.string = {'compare directions','forward','backward','perpendicular','average'};
+lukeobj.hxrdir.select.value = 1;
+lukeobj.hxrdir.select.callback = 'lukeobj.hxrdir.select.value = get(lukeobj.hxrdir.select.handle,''Value'');iluke_update;';
+
+lukeobj.hxrdir.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.hxrdir.title.string,'Position',lukeobj.hxrdir.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.hxrdir.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.hxrdir.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrdir.select.callback);
+
+
+lukeobj.hxrkphot.title.position = [style.panelwidth - 2*style.buthsep - 3*style.butwidth - style.longbutwidth,style.infoheightcorr - 6*style.butheightcorr + style.textheightcorr,2*style.butwidth,style.textheight];
+lukeobj.hxrkphot.title.string = 'Photon energy';
+lukeobj.hxrkphot.select.position = [style.panelwidth - style.buthsep - style.butwidth - style.longbutwidth,style.infoheightcorr - 6*style.butheightcorr,style.butwidth + style.longbutwidth,style.butheight];
+lukeobj.hxrkphot.select.string = {'all energies'};
+lukeobj.hxrkphot.select.value = 1;
+lukeobj.hxrkphot.select.callback = 'lukeobj.hxrkphot.select.value = get(lukeobj.hxrkphot.select.handle,''Value'');iluke_update;';
+
+lukeobj.hxrkphot.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.hxrkphot.title.string,'Position',lukeobj.hxrkphot.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
+lukeobj.hxrkphot.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','Position',lukeobj.hxrkphot.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.hxrkphot.select.callback);
 
 %
 % INITIALIZE PARAMETERS
