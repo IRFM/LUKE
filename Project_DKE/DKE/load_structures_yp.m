@@ -28,6 +28,8 @@ id_dkeparam = '';
 path_dkeparam = '';
 id_rtparam = '';
 path_rtparam = '';
+id_hxrparam = '';
+path_hxrparam = '';
 id_display = '';
 path_display = '';
 id_ohm = '';
@@ -67,6 +69,10 @@ for i=1:3:length(varargin),
        id_rtparam = varargin{i+1};
        path_rtparam = varargin{i+2};
        flag_rtparam = j;
+    elseif strcmp(varargin{i},'hxrparam'),
+       id_hxrparam = varargin{i+1};
+       path_hxrparam = varargin{i+2};
+       flag_hxrparam = j;
     elseif strcmp(varargin{i},'dkedisplay'),
        id_display = varargin{i+1};
        path_display = varargin{i+2};
@@ -238,6 +244,17 @@ if exist('flag_rtparam','var'),%DKE simulation parameters
     varargout{flag_rtparam}.C3POparam = C3POparam;
     varargout{flag_rtparam}.C3POdisplay = C3POdisplay;
     varargout{flag_rtparam}.waveparam = waveparam;
+end
+%
+if exist('flag_hxrparam','var'),%DKE simulation parameters 
+    filename = [path_hxrparam,'HXRPARAM_',id_hxrparam,'.mat'];
+    if exist(filename) == 0,
+	    error([filename,' does not exist']);
+    else
+	    load(filename);
+	    info_dke_yp(2,['Structure ''hxrparam'': ',filename,' successfully loaded']);
+    end
+    varargout{flag_hxrparam} = hxrparam;
 end
 %
 if exist('flag_display','var'),%DKE display parameters
