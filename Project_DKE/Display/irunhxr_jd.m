@@ -1,6 +1,10 @@
-function irunhxr_jd(opt_gui,workdir,basestr,output,external,id_simul,equil,dkeparam,dkedisplay)
+function varargout = irunhxr_jd(opt_gui,workdir,basestr,output,external,id_simul,equil,dkeparam,dkedisplay,select)
 %
 % This function calculates the hard X-ray emisssion from LUKE results
+%
+if nargin < 10,
+    select = struct;
+end
 %
 quitmsg = '-----> HXR calculation aborted';
 warning off
@@ -18,13 +22,18 @@ if nargin < 9,
         disp(quitmsg)
         return
     end  
-    load([luke_path,luke_file],'id_simul','equil','dkeparam','dkedisplay','Zcurr','dke_out','equilDKE','radialDKE','momentumDKE','mksa','Zmomcoef');
+    load([luke_path,luke_file],'id_simul','equil','dkeparam','dkedisplay','dke_out','equilDKE','radialDKE','momentumDKE','mksa','Zmomcoef');
     %
-else
+elseif any(isfield(output,{'savefile','dke_out'})),
+    %
+    if isfield(output,'savefile'),% output saved in a file by run_lukert
+        lukedata = load(output.savefile);
+        output = lukedata.lukestructs.output;
+        clear lukedata
+    end        
     %
     % data from output structure
     %
-    Zcurr = output.Zcurr;
     dke_out = output.dke_out;
     equilDKE = output.equilDKE;
     radialDKE = output.radialDKE;
@@ -32,17 +41,15 @@ else
     mksa = output.mksa;
     Zmomcoef = output.Zmomcoef;
     %
+    if isempty(equil),
+        equil = dke_out.equil;
+    end        
+    %
 end
 %
-if ~isfield(Zmomcoef,'Ec_ref'),
-    if isfield(mksa,'Ec_ref'),
-        Zmomcoef.Ec_ref = mksa.Ec_ref;
-    else
-        error('Kinetic energy data missing. Please correct manually.')
-    end
-end    
-%
-if isfield(equil,'info') && isfield(equil.info,'shotnum'),
+if isfield(equil,'shotnum'),
+    shotnum = equil.shotnum;
+elseif isfield(equil,'info') && isfield(equil.info,'shotnum'),
     shotnum = equil.info.shotnum;
 elseif isfield(equil,'id'),
     idsep = find(equil.id == '_');
@@ -53,7 +60,18 @@ end
 %
 % load HXR camera spec
 %
-if strcmp(basestr,'TS') && ~isempty(shotnum) && exist('tsdate','file') && input_dke_yp('Do you want to load the HXR camera spec automatically (y/n)','y',{'y','n'}) == 'y',
+if isfield(external,'param') && ~isempty(external.param),% parameters from external - iluke and irunluke
+    hxrparam = external.param;
+    %
+    if isfield(external,'cam'),
+        cam = external.cam;
+    else
+        cam = {};
+    end
+    %
+    hxrspec = cam2hxrspec_jd(cam);
+    %
+elseif strcmp(basestr,'TS') && ~isempty(shotnum) && exist('tsdate','file') && input_dke_yp('Do you want to load the HXR camera spec automatically (y/n)','y',{'y','n'}) == 'y',
     %
     [hxrspec,hxrparam] = get_hxrspec_forLUKE_jd('TS',str2num(shotnum));
     %
@@ -74,13 +92,27 @@ else
     %
 end
 %
-nc = length(hxrspec.beta_hxr);% number of chords
+if isfield(hxrspec,'beta_hxr')
+    nc = length(hxrspec.beta_hxr);% number of chords
+else
+    nc = 0;% no camera defined
+end
 %
 % display options
 %
-p_opt = input_dke_yp('Option for output figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
+if isfield(select,'p_opt'),
+    p_opt = select.p_opt;
+else
+    p_opt = input_dke_yp('Option for output figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
+end
 %
-d_opt = input_dke_yp('Do you want to plot the chords? [y/n]','n',{'y','n'},'',[1,1]);
+if nc == 0,
+    d_opt = 'n';
+elseif isfield(select,'d_opt'),
+    d_opt = select.d_opt;
+else
+    d_opt = input_dke_yp('Do you want to plot the chords? [y/n]','n',{'y','n'},'',[1,1]);
+end
 %
 if strcmp(d_opt,'y'),
     %
@@ -92,8 +124,8 @@ if strcmp(d_opt,'y'),
     R = zeros(nc,length(L));
     Z = zeros(nc,length(L));
     for chord = 1:nc,
-           R(chord,:) = hxrspec.R_hxr(chord) + L*sin(hxrspec.beta_hxr(chord))*cos(hxrspec.alpha_hxr(chord));
-           Z(chord,:) = hxrspec.Z_hxr(chord) + L*cos(hxrspec.beta_hxr(chord));
+        R(chord,:) = hxrspec.R_hxr(chord) + L*sin(hxrspec.beta_hxr(chord))*cos(hxrspec.alpha_hxr(chord));
+        Z(chord,:) = hxrspec.Z_hxr(chord) + L*cos(hxrspec.beta_hxr(chord));
     end
     plot(R',Z'),
     plot(R(1),Z(1),'*')
@@ -105,13 +137,15 @@ end
 %
 % load and treat HXR experimental results
 %
-if isfield(external,'hxr'),
+if isfield(select,'n_opt'),% iluke
+    n_opt = select.n_opt;
+elseif isfield(external,'hxr'),
     n_opt = input_dke_yp(['Option for hxr experimental data? 0 (structure external), 1 (data file), 2 (',basestr,' database) -1 (no exp. data)'],0,-1:2,'',[1,1]);
 else
     n_opt = input_dke_yp(['Option for hxr experimental data? 1 (data file), 2 (',basestr,' database) -1 (no exp. data)'],-1,[-1,1,2],'',[1,1]);
 end
 %
-if n_opt == 0,% structure external
+if n_opt == 0,% structure external with irunluke
     %
     t = external.hxr.t;
     energy = external.hxr.energy;
@@ -122,15 +156,13 @@ if n_opt == 0,% structure external
     if isfield(external,'beta')
         beta = external.beta;
     else
-        beta = NaN(1,size(hxr,3));
+        beta = NaN;
     end
     %
     if iscell(t),%old TCV data file
         t = t{ishot};
         energy = energy{ishot};
         hxr = hxr{ishot};
-        %filter_thickness = filter_thickness{ishot};
-        %filter_material = filter_material{ishot};
     end
     %
 elseif n_opt > 0,
@@ -169,102 +201,170 @@ elseif n_opt > 0,
             t = t{ishot};
             energy = energy{ishot};
             hxr = hxr{ishot};
-            %filter_thickness = filter_thickness{ishot};
-            %filter_material = filter_material{ishot};
         end
         %
         clear ishot
         %
-    elseif n_opt == 2,% hxr experimental data fro database
+    elseif n_opt == 2,% hxr experimental data from database
         %
         opt.R = input_dke_yp('Pile-up rejection (TS only)? (0) no, (1) yes)',1,[0,1],'',[1,1]);
         opt.V = input_dke_yp('Real time diagnostic (TS only)? (0) no, (1) yes)',1,[0,1],'',[1,1]);
         %
-        [energy,hxr,t,beta] = collect_hxr_forLUKE_jd(basestr,str2num(shotnum),opt);%,'data_path','filter_thickness','filter_material'
+        [energy,hxr,t,beta] = collect_hxr_forLUKE_jd(basestr,str2num(shotnum),opt);
         %
     end
     %
-    if ~exist('beta','var') || (isscalar(beta) && isnan(beta)),
-        beta = NaN(1,size(hxr,3));
+    if ~exist('beta','var'),
+        beta = NaN;
     end
     %        
-else
-    energy = NaN;
+else% no data or external with iluke
+    %
+    if isfield(external,'exp') && ~isempty(external.exp),
+        t = external.exp.time;
+        energy = external.exp.energy;
+        hxr = external.exp.data;      
+        %
+        beta = NaN;
+    else
+        energy = NaN;
+    end
 end
 %
 if any(isnan(energy)),% no or useless exp. data
     %
-    filter_thickness = NaN;
-    filter_material = NaN;
-    %
-    %energy = [hxrspec.kdiag_hxr(1,1:end-1),hxrspec.kdiag_hxr(2,end-1)];
-    hxrexp = NaN*ones(length(energy),nc);
+    hxrexp = NaN;
     dt = 1;
+    hxrspec.kfit = hxrparam.kphot;
+    %
 else
     %
-    % test angles
+    % test angles between diagnostic prescription and database read, if applicable
     %
-    beta(beta > pi) = 2*pi - beta(beta > pi);% correct beta definition        
-    %
-    if length(beta) ~= nc,
-        error('number of chords mismatch')
-    end
-    if ~all(isnan(beta)) && any(abs(beta - hxrspec.beta_hxr) > 1e-15),
-        error('angle of chords mismatch')
+    if nc > 0,
+        beta(beta > pi) = 2*pi - beta(beta > pi);% correct beta definition        
+        %
+        if ~all(isnan(beta)),
+            if length(beta) ~= nc,
+                error('number of chords mismatch')
+            end
+            if any(abs(beta - hxrspec.beta_hxr) > 1e-15),
+                error('angle of chords mismatch')
+            end
+        end
     end
     %
     energy = energy.';
     %
     % time sample of experimental data
     %
-    if isfield(equil,'info') && isfield(equil.info,'t1') && isfield(equil.info,'t2'),
-        t1 = equil.info.t1;
-        t2 = equil.info.t2;
-    elseif isfield(external,'id') && length(find(external.id == '_')) >= 5,
-        idsep = find(external.id == '_');
-        t1 = str2num(external.id(idsep(3)+1:idsep(4)-1));
-        t2 = str2num(external.id(idsep(4)+1:idsep(5)-1));
+    if isfield(select,'t_opt'),
+        t_opt = select.t_opt;
     else
-        t1 = NaN;
-        t2 = NaN;
+        t_opt = true;
     end
     %
-    t1 = input_dke_yp('Initial time for TCV HXR data averaging',t1,[0;Inf],'',[1,1]);
-    t2 = input_dke_yp('Final time for TCV HXR data averaging',t2,[0;Inf],'',[1,1]);
+    % WARNING : For now, TCV HXRS data are count rate within energy bins, while TS HXR is
+    % integrated photon count above energy threshold. Quid of TCV HXRC?
     %
-    it1 = find(t >= t1,1,'first');
-    it2 = find(t <= t2,1,'last');
+    if t_opt,
+        if isfield(equil,'info') && isfield(equil.info,'t1') && isfield(equil.info,'t2'),
+            t1 = equil.info.t1;
+            t2 = equil.info.t2;
+        elseif isfield(external,'id') && length(find(external.id == '_')) >= 5,
+            idsep = find(external.id == '_');
+            t1 = str2num(external.id(idsep(3)+1:idsep(4)-1));
+            t2 = str2num(external.id(idsep(4)+1:idsep(5)-1));
+        else
+            t1 = NaN;
+            t2 = NaN;
+        end
+        %
+        t1 = input_dke_yp('Initial time for TCV HXR data averaging',t1,[0;Inf],'',[1,1]);
+        t2 = input_dke_yp('Final time for TCV HXR data averaging',t2,[0;Inf],'',[1,1]);
+        %
+        it1 = find(t >= t1,1,'first');
+        it2 = find(t <= t2,1,'last');
+        %
+        % time averaging
+        %
+        hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
+        dt = t(it2) - t(it1);
+        hxrexp = hxrexp/dt;%taux de comptage
+        %
+        % incremental contribution of energy canal
+        %
+        hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
+        %
+    else
+        %
+        CRmin = min(hxr(hxr(:) > 0));
+        %
+        dt = 1/CRmin;% assuming a single photon count occured somewhere... to improve from database!        
+        %
+        hxrexp = hxr;
+    end
     %
-    % time averaging
+    % redefine kdiag according to measurements
     %
-    hxrexp = squeeze(sum(hxr(it1:it2,:,:)));
-    dt = t(it2) - t(it1);
-    hxrexp = hxrexp/dt;%taux de comptage
+    hxrspec.kfit = energy.';
     %
-    % incremental contribution of energy canal
-    %
-    hxrexp = hxrexp - [hxrexp(2:end,:);zeros(1,size(hxrexp,2))];% raw data is all hits above given energy
-    %
- end        
+end        
 %
-if(n_opt~=-1) % only if measured data selected
-    %redefine kdiag according to measurements
-    hxrspec.kdiag_hxr = [energy(1:(end-1)),hxrspec.kdiag_hxr(1,end);energy(2:end),hxrspec.kdiag_hxr(2,end)];
+if all(isfield(output,{'equilHXR','radialHXR','Zbremplasma'})),% iluke - local bremsstrahlung emissivity already calculated
+    equilHXR = output.equilHXR;
+    radialHXR = output.radialHXR;
+    Zbremplasma = output.Zbremplasma;
+else
+    %
+    % refined LUKE equilibrium for FEB calculations
+    %
+    radialHXR.xpsin_S_dke = radialDKE.xpsin_S_dke;% warning : check in DKE mode
+    radialHXR.xpsin_f = radialDKE.xpsin_f_dke;% select only FP points
+    %
+    [equilHXR] = equilibrium_jd(equil,radialHXR,dkedisplay,'spline',hxrparam.mfactor);%Magnetic equilibrium for HXR at points of the distribution function
+    %
+    % FEB emissivity on LUKE equilibrium
+    %
+    if iscell(dke_out.XXf0),% select only FP points
+        XXf0 = dke_out.XXf0{end}(:,:,radialDKE.r_dke);
+    else % older LUKE versions
+        XXf0 = dke_out.XXf0(:,:,radialDKE.r_dke);
+    end    
+    %
+    [Zbremplasma] = bremsstrahlung_dke_yp(equilHXR,mksa,momentumDKE,Zmomcoef,XXf0,hxrparam,dkedisplay);
+    %
+    if all(isfield(external,{'param','cam','exp'})),% iluke - only local bremsstrahlung emissivity requested
+        varargout{1} = equilHXR;
+        varargout{2} = radialHXR;
+        varargout{3} = Zbremplasma;
+        %
+        return
+    end
+    %
 end
 %
-% HXR emission calculations
+% HXR diagnostic lines of sight
 %
-[Zbremchord,equilHXR] = bremchord_dke_yp(dkeparam,dkedisplay,equil,radialDKE,Zcurr,hxrspec,hxrparam);
+[Zbremchord] = bremchord_dke_yp(equilHXR,radialHXR,hxrspec,hxrparam);
 %
-Zbremchord.mask_hxr(:) = 1;%so that the bremmstrahlung is calculated at all positions, for display purposes
+% FEB emission along the lines of sight
 %
-[Zbremplasma] = bremsstrahlung_dke_yp(dkeparam,dkedisplay,equilHXR,radialDKE,mksa,momentumDKE,Zmomcoef,dke_out,Zbremchord,hxrspec,hxrparam);
+[Zbremplasma] = bremchordemission_dke_jd(Zbremplasma,Zbremchord,hxrspec);
+%
+% HXR synthetic diagnostic signal
 %
 [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxrspec,hxrparam,dt);
 %
 %For display HXR
 %
-d_opt = input('Do you want to plot the results? [y/n] : ','s');
+%
+if isfield(select,'d_opt'),
+    d_opt = select.d_opt;
+else
+    d_opt = input_dke_yp('Do you want to plot the results? [y/n]','n',{'y','n'},'',[1,1]);
+end
+%
 if strcmp(d_opt,'y'),
     %
     c_opt = input(['Focus on chord? (1-',num2str(nc),') [1] : ']);
@@ -322,7 +422,12 @@ if strcmp(d_opt,'y'),
     end
 end
 %
-s_opt = input('Do you want to save the HXR output data? [y/n] : ','s');
+if isfield(select,'s_opt'),
+    s_opt = select.s_opt;
+else
+    s_opt = input_dke_yp('Do you want to save the HXR output data? [y/n]','n',{'y','n'},'',[1,1]);
+end
+%
 if strcmp(s_opt,'y'),
     sd = pwd;
     cd(workdir);
@@ -337,7 +442,11 @@ if strcmp(s_opt,'y'),
     cd(sd);
 end 
 %
-
+if all(isfield(external,{'param','cam','exp'})),% iluke - only local bremsstrahlung emissivity requested
+    varargout{1} = Zbremchord;
+    varargout{2} = Zbremplasma;
+    varargout{3} = Zbremdiag;
+end
 
 
 
