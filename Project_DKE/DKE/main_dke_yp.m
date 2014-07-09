@@ -251,26 +251,26 @@ for itn = itn0:nit,
     %
     % Note : in the Rosenbluth model, we have to neglect the effect on the incident electron
     %
+    [~,xne_norm,~,~,~,xbetath] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
+    %    
     if itn == 1,   
         if isnan(dkeparam_out.pnmax1_KO),% count all electrons in bulk except internal runaways
             xnorm_b = xnorm_0_init - xnorm_rim_init;
         elseif dkeparam_out.pnmax1_KO == 0,% count using the value of f(0) - most logical given how the sink term is calculated
-            xnorm_b = reshape(XXfin(1,1,:)./XXfM(1,1),[1,gridDKE.nr]);
+            xnorm_b = xne_norm.*reshape(XXfin(1,1,:)./XXfM(1,1,:),[1,gridDKE.nr]);
         elseif imag(dkeparam_out.pnmax1_KO) == 0,% count bulk electrons up to pnmax1_KO normalized to ref temperature
             xnorm_b = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*(XXpn < dkeparam_out.pnmax1_KO).*XXfin(:,:,gridDKE.rdke).*XXpn2,1),1).';
         else% count bulk electrons up to pnmax1_KO normalized to ref temperature
-            [~,~,~,~,~,xbetath] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
             xnorm_b = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*(XXpn < imag(dkeparam_out.pnmax1_KO)*repmat(reshape(xbetath,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1])/mksa.betath_ref).*XXfin(:,:,gridDKE.rdke).*XXpn2,1),1).';
         end
     else
         if isnan(dkeparam_out.pnmax1_KO),% count all electrons in bulk except internal runaways
             xnorm_b = xnorm_0{itn - 1} - xnorm_rim{itn - 1};
         elseif dkeparam_out.pnmax1_KO == 0,% count using the value of f(0) - most logical given how the sink term is calculated
-            xnorm_b = reshape(XXf0{itn - 1}(1,1,:)./XXfM(1,1),[1,gridDKE.nr]);
+            xnorm_b = xne_norm.*reshape(XXf0{itn - 1}(1,1,:)./XXfM(1,1,:),[1,gridDKE.nr]);
         elseif imag(dkeparam_out.pnmax1_KO) == 0,% count bulk electrons up to pnmax1_KO normalized to ref temperature
             xnorm_b = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*(XXpn < dkeparam_out.pnmax1_KO).*XXf0{itn-1}(:,:,gridDKE.rdke).*XXpn2,1),1).';
         else% count bulk electrons up to pnmax1_KO normalized to ref temperature
-            [~,~,~,~,~,xbetath] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
             xnorm_b = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*(XXpn < imag(dkeparam_out.pnmax1_KO)*repmat(reshape(xbetath,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1])/mksa.betath_ref).*XXf0{itn-1}(:,:,gridDKE.rdke).*XXpn2,1),1).';
         end
     end
@@ -576,16 +576,22 @@ for itn = itn0:nit,
             %
             if isnan(dkeparam_out.Itot_ohm),% convergence on the current profile
                 %
-                if it_ohm == 1,% first iteration without electric field
-                    %
-                    xcurr_in = xcurr{itn};
-                    xepsi{itn} = xepsi_in;% previous converged field is first guess for new time
-                    %
-                elseif max(abs(xcurr{itn} - xcurr_init))/max(abs(xcurr_init)) <= dkeparam_out.tol_ohm,% *dkeparam_out.dtn,
+                if imag(dkeparam_out.tol_ohm) > 0,% absolute threshold
+                    tol_ohm = imag(dkeparam_out.tol_ohm);
+                else%relative threshold
+                    tol_ohm = dkeparam_out.tol_ohm*max(abs(xcurr_init));
+                end
+                %
+                if max(abs(xcurr{itn} - xcurr_init)) <= tol_ohm,% *dkeparam_out.dtn,
                     if dkedisplay.display_mode >= 1,
                         disp(['Convergence reached after ',num2str(it_ohm),' iterations at time step ',num2str(itn)])
                     end
                     break
+                elseif it_ohm == 1,% first iteration without electric field
+                    %
+                    xcurr_in = xcurr{itn};
+                    xepsi{itn} = xepsi_in;% previous converged field is first guess for new time
+                    %
                 elseif it_ohm == dkeparam_out.nit_ohm,
                     disp(['WARNING : Convergence not reached after ',num2str(it_ohm),' iterations at time step ',num2str(itn)])
                 else
