@@ -464,9 +464,6 @@ end
 if isnan(xpsin)
     xpsin = psin;
 end
-if isnan(xpsin_S_dke)
-    xpsin_S_dke = psin;
-end
 %
 nr = length(xpsin);
 %
