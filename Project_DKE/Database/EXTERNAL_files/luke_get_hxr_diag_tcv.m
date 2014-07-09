@@ -67,7 +67,7 @@ hxr.res_hxr = ones(ap.nc,1)*[6,-0.9]; % fit parameters of the energy resolution 
 % energy bin data
 hxr.kdiag_hxr = [15:10:195,35 ;...
                  25:10:205,135];    % Measured photon energy spectrum (keV) [kmin1,kmin2,...,kmintphot,kmax1,kmax2,...,kmaxtphot] (here photon temp is calculated between 35 and 135 keV) [1,k]
-hxr.kphot = [10:5:205];            % Photon energy in keV
+% hxr.kphot = [10:5:205];            % Photon energy in keV
 
 %--------------------------------------------------------------------------
 % hxrparam structure

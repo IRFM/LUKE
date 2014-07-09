@@ -4,7 +4,7 @@ hxr.cam = {};
 %
 if isfield(external.hxr,'ap') && isfield(external.hxr,'hxrparam'),% TCV data loaded by luke_get_hxr_diag_tcv
     %
-    hxr.param = external.hxr.hxrparam;
+%     hxr.param = external.hxr.hxrparam;
     %
     ncams = length(external.hxr.ap.cams);
     %
@@ -18,10 +18,14 @@ if isfield(external.hxr,'ap') && isfield(external.hxr,'hxrparam'),% TCV data loa
         %
     end
     %
-    hxr.param.kmin = external.hxr.hxr.kdiag_hxr(1,end);
-    hxr.param.kmax = external.hxr.hxr.kdiag_hxr(2,end);
+    kphot_diag = (external.hxr.hxr.kdiag_hxr(1,1:end-1) + external.hxr.hxr.kdiag_hxr(1,2:end))/2;
     %
-    clear ncams icam 
+    hxr.param.kphot = unique([hxr.param.kphot,kphot_diag]);
+    %
+%     hxr.param.kmin = external.hxr.hxr.kdiag_hxr(1,end);
+%     hxr.param.kmax = external.hxr.hxr.kdiag_hxr(2,end);
+    %
+    clear ncams icam kphot_diag
     %
 end
     
