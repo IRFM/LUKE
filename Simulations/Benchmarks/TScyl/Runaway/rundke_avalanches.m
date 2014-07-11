@@ -12,7 +12,6 @@ for Zii = 1,
 %
 % grid parameters
 %
-f_pmin = 1; %lower limit for avalanche calculation. if avalanche_mode and not specified = 1
 pnmax_S = 28;%20;% for E/Ec = 4, Pc = 5; for E/Ec = 6, Pc = 4;
 np_S = 201;%201;%
 nmhu_S = 101;
@@ -28,7 +27,7 @@ mfactor = 100;%Factor for super theta grid (equil -> equilDKE)
 %
 betath2 = 1e-2;%1e-5;%
 %
-alpha = 3; %E/Ec
+alpha = 4; %E/Ec
 epsi = alpha*betath2;
 %
 pnmin_S = NaN;%sqrt(2)/sqrt((alpha-1)*betath2);%5;%1/sqrt((alpha-1)*betath2);%NaN;%
@@ -52,7 +51,7 @@ id_simul = 'Runaway';%Simulation ID
 %path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
-rho_S = [0];%1%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
+rho_S = [0.1];%1%Normalized radial flux grid where calculations are performed (0 < rho_S < 1) (If one value: local calculation only, not used if empty)
 %
 id_path = '';%For all paths used by DKE solver
 path_path = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
@@ -83,14 +82,14 @@ if exist('dmumpsmex','file') == 3,
 end
 %
 dkeparam.pnmin_S = pnmin_S;
-dkeparam.f_pmax = f_pmax; % multiplication of p grid. f_pmax*p_max
-dkeparam.f_pmin = f_pmin; % min for avalanche pgrid
+dkeparam.pnmin2_KO = 1*1i; % low threshold on secondary electrons for the knock-on operator
+dkeparam.pnmax2_KO = pnmax_S*f_pmax; % high threshold on secondary electrons for the knock-on operator (>= pnmax_S)
 dkeparam.pnmax_S = pnmax_S;
 dkeparam.boundary_mode_f = 0;%Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
 dkeparam.norm_mode_f = 0;% + 1i;%Local normalization of f0 at each iteration: (0) no, the default value when the numerical conservative scheme is correct, (1) yes
 dkeparam.timevol = 1;
 %dkeparam.nit_ohm = 2;
-dkeparam.tn = 200000;%time for asymptotic solution with norm_mode_f = 1
+dkeparam.tn = 30000;%time for asymptotic solution with norm_mode_f = 1
 dkeparam.dtn = 1000;% time steps required for accurate runaway solution - see rundke_dtn
 dkeparam.coll_mode = coll_mode;% mode for the collision operator
 dkeparam.bounce_mode = 0; %bounce average
@@ -101,7 +100,8 @@ options_fzero.Display = 'iter';
 options_fzero.TolX = 1e-10;%convergence tolerance
 dkeparam.options_fzero = options_fzero;
 %
-transpfaste.Dr0 = 1;
+transpfaste.Dr0 = 0;
+%transpfaste.vparmin = 1;
 %
 equil.pzTi = 1e-10*ones(size(equil.pzTi));% cold ions
 %
