@@ -1,7 +1,6 @@
 function [x,y,xypsin,psia,rpsin,xyBPHI,xyBR,xyBZ,Rp,Zp] = accome_yp(filename,display_mode,p_opt,dispname,savename,Ns);
 %
-% This function reads the equilibrium parameters from file created
-% by ACCOME and saved in the formatted text file "filename"
+% This function reads the equilibrium parameters from file created by ACCOME and saved in the formatted text file "filename"
 %
 % by Y.PEYSSON (CEA-DRFC, yves.peysson@cea.fr)
 %
@@ -76,14 +75,8 @@ psip = psi_level(1);%poloidal flux function value at the magnetic axis
 %psia = psi_level(find(psi_status==0,1)-1);%poloidal flux function value at the last closed flux surface 
 psia = psi_level(find(psi_level>=0,1)-1);%poloidal flux function value at the last closed flux surface 
 %
-if psip < psia, %IPHI is positive, PHI clockwise from top
-    sigma = 1;
-else %IPHI is negative, PHI clockwise from top
-    sigma = -1;
-end
-%
 xypsi = xypsi - psip;%psi = 0 on the magnetic axis (arbitrary choice)
-psia = (psia - psip);
+psia = (psia - psip);%if > 0, IPHI is positive, PHI clockwise from top otherwise IPHI is negative
 %
 xypsin = xypsi/psia;
 rpsin = linspace(0,1,nx);
