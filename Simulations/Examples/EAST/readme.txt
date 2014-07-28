@@ -72,6 +72,8 @@ LUKE output            : < You can start LUKE now. >
 External database      : EAST_043326_012000
 
 
+NOTE: the whole simulations may be reloaded using irunluke_jd, from main menu 1). 
+
 ----------------------------------
 
 Simulations using scripts :
