@@ -34,11 +34,42 @@ parallel to speed-up the calculations). Once done - may take some time depending
 14) choose menu 0) to run LUKE Fokker-Planck using wave data (if any): local or distributed computing (recommended, because may be long)
 15) back to the main menu, choose menu 2) to save the simulation (updated automatic name proposed, recommended)
 16) choose menu 0) to run fast electron bremsstrahlung calculations from kinetic results: local or distributed computing (recommended, because may be long)
-17) back to the main menu, choose menu 2) to save the simulation (updated automatic name proposed, recommended)
+17) back to the main menu, choose menu 15) to save the simulation (updated automatic name proposed, recommended)
 
-All simulations are in principle done. The results may be viewed 
+All simulations are in principle done. From the main menu, options
 
+[12]  Display equilibrium data
+[13]  Display RF wave data
+[14]  Display LUKE results
+ 
+[15]  Calculate HXR emission
+[16]  Generate LUKE run script
+ 
+[17]  Go to command line
+[18]  Close all figures
+[19]  LUKE documentation
+[20]  LUKE project management (redmine): bug report, documentation, tutorial, repositories, etc
 
+can be used at any time. The status gives also details of the simulation. 
+
+ ----------- < LUKE 1.11.0 Version > ----------- 
+ 
+Machine : EAST
+ 
+************* STATUS *************
+ 
+LUKE data              : LUKE_DATA_EAST_043326_012000_C3PO_antenna_2p45Ghz.mat
+Work directory         : full simulation path
+LUKE path              : full LUKE path 
+LUKE parameters        : LH_RT
+Equilibrium            : EAST_043326_012000
+RF waves               : C3PO_antenna_2p45Ghz
+Ohmic E-field          : < The 'ohm' structure is optional >
+Fast electron transport: < The 'transpfaste' structure is optional >
+Magnetic ripple losses : < The 'ripple' structure is optional >
+ 
+LUKE output            : < You can start LUKE now. >
+External database      : EAST_043326_012000
 
 
 ----------------------------------
