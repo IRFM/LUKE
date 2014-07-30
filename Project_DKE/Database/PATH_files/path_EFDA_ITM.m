@@ -56,20 +56,17 @@ dkepath.yvesp(1).remote(2).profilename = 'yves';
 dkepath.yvesp(1).remote(2).luke_root = '/Users/yvespeysson/Projets/LUKE/';
 %
 dkepath.yvesp(1).remote(3) = dkepath.yvesp(1).remote(2);
-dkepath.yvesp(1).remote(3).schedulername = 'xgrid';
+dkepath.yvesp(1).remote(3).schedulername = 'direct';
 %
-dkepath.yvesp(1).remote(4) = dkepath.yvesp(1).remote(2);
-dkepath.yvesp(1).remote(4).schedulername = 'direct';
+dkepath.yvesp(1).remote(4).remoteid = 'CEA_ANDROMEDE';
+dkepath.yvesp(1).remote(4).schedulername = 'pbs';
+dkepath.yvesp(1).remote(4).profilename = 'YP105119';
+dkepath.yvesp(1).remote(4).luke_root = '/home/YP105119/LUKE/';
 %
-dkepath.yvesp(1).remote(5).remoteid = 'CEA_ANDROMEDE';
-dkepath.yvesp(1).remote(5).schedulername = 'pbs';
-dkepath.yvesp(1).remote(5).profilename = 'YP105119';
-dkepath.yvesp(1).remote(5).luke_root = '/home/YP105119/LUKE/';
-%
-dkepath.yvesp(1).remote(6).remoteid = 'ASIPP_SHENMA';
-dkepath.yvesp(1).remote(6).schedulername = 'torque';
-dkepath.yvesp(1).remote(6).profilename = 'yves';
-dkepath.yvesp(1).remote(6).luke_root = '/home/PEYSSON/LUKE/';
+dkepath.yvesp(1).remote(5).remoteid = 'ASIPP_SHENMA';
+dkepath.yvesp(1).remote(5).schedulername = 'torque';
+dkepath.yvesp(1).remote(5).profilename = 'yves';
+dkepath.yvesp(1).remote(5).luke_root = '/home/PEYSSON/LUKE/';
 %
 
 

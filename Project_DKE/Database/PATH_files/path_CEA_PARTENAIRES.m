@@ -91,15 +91,12 @@ dkepath.JD211098(1).remote(2).luke_root.LUKE_1_10_0 = '/Users/yvespeysson/joande
 dkepath.JD211098(1).remote(2).luke_root.LUKE_default = '/Users/yvespeysson/joandecker/Work/LUKE/';
 %
 dkepath.JD211098(1).remote(3) = dkepath.JD211098(1).remote(2);
-dkepath.JD211098(1).remote(3).schedulername = 'xgrid';
+dkepath.JD211098(1).remote(3).schedulername = 'direct';
 %
-dkepath.JD211098(1).remote(4) = dkepath.JD211098(1).remote(2);
-dkepath.JD211098(1).remote(4).schedulername = 'direct';
-%
-dkepath.JD211098(1).remote(5).remoteid = 'ASIPP_SHENMA';
-dkepath.JD211098(1).remote(5).schedulername = 'torque';
-dkepath.JD211098(1).remote(5).profilename = 'joan';
-dkepath.JD211098(1).remote(5).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
+dkepath.JD211098(1).remote(4).remoteid = 'ASIPP_SHENMA';
+dkepath.JD211098(1).remote(4).schedulername = 'torque';
+dkepath.JD211098(1).remote(4).profilename = 'joan';
+dkepath.JD211098(1).remote(4).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 %
 %------------------------------------ Profile number 1, YP105119 Peysson ------------------------------------
 %
@@ -139,17 +136,14 @@ dkepath.YP105119(1).remote(2).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.p
 dkepath.YP105119(1).remote(2).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(2).luke_root];%CVS command
 %
 dkepath.YP105119(1).remote(3) = dkepath.YP105119(1).remote(2);
-dkepath.YP105119(1).remote(3).schedulername = 'xgrid';
+dkepath.YP105119(1).remote(3).schedulername = 'direct';
 %
-dkepath.YP105119(1).remote(4) = dkepath.YP105119(1).remote(2);
-dkepath.YP105119(1).remote(4).schedulername = 'direct';
-%
-dkepath.YP105119(1).remote(5).remoteid = 'ASIPP_SHENMA';
-dkepath.YP105119(1).remote(5).schedulername = 'torque';
-dkepath.YP105119(1).remote(5).profilename = 'yves';
-dkepath.YP105119(1).remote(5).luke_root = '/home/PEYSSON/LUKE/';
-dkepath.YP105119(1).remote(5).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
-dkepath.YP105119(1).remote(5).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(5).luke_root];%CVS command
+dkepath.YP105119(1).remote(4).remoteid = 'ASIPP_SHENMA';
+dkepath.YP105119(1).remote(4).schedulername = 'torque';
+dkepath.YP105119(1).remote(4).profilename = 'yves';
+dkepath.YP105119(1).remote(4).luke_root = '/home/PEYSSON/LUKE/';
+dkepath.YP105119(1).remote(4).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
+dkepath.YP105119(1).remote(4).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(4).luke_root];%CVS command
 %
 %------------------------------------ Profile number 1, EN232106 Nilsson ------------------------------------
 %
@@ -187,10 +181,7 @@ dkepath.EN232106(1).remote(2).profilename = 'emelie';
 dkepath.EN232106(1).remote(2).luke_root = '/Users/yvespeysson/emelienilsson/LUKE/';
 %
 dkepath.EN232106(1).remote(3) = dkepath.EN232106(1).remote(2);
-dkepath.EN232106(1).remote(3).schedulername = 'xgrid';
-%
-dkepath.EN232106(1).remote(4) = dkepath.EN232106(1).remote(2);
-dkepath.EN232106(1).remote(4).schedulername = 'direct';
+dkepath.EN232106(1).remote(3).schedulername = 'direct';
 %
 
 

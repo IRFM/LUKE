@@ -132,15 +132,12 @@ dkepath.JD211098(1).remote(5).luke_root.LUKE_1_10_0 = '/Users/yvespeysson/joande
 dkepath.JD211098(1).remote(5).luke_root.LUKE_default = '/Users/yvespeysson/joandecker/Work/LUKE/';
 %
 dkepath.JD211098(1).remote(6) = dkepath.JD211098(1).remote(5);
-dkepath.JD211098(1).remote(6).schedulername = 'xgrid';
+dkepath.JD211098(1).remote(6).schedulername = 'direct';
 %
-dkepath.JD211098(1).remote(7) = dkepath.JD211098(1).remote(5);
-dkepath.JD211098(1).remote(7).schedulername = 'direct';
-%
-dkepath.JD211098(1).remote(8).remoteid = 'ASIPP_SHENMA';
-dkepath.JD211098(1).remote(8).schedulername = 'torque';
-dkepath.JD211098(1).remote(8).profilename = 'joan';
-dkepath.JD211098(1).remote(8).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
+dkepath.JD211098(1).remote(7).remoteid = 'ASIPP_SHENMA';
+dkepath.JD211098(1).remote(7).schedulername = 'torque';
+dkepath.JD211098(1).remote(7).profilename = 'joan';
+dkepath.JD211098(1).remote(7).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 %
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
@@ -209,20 +206,17 @@ dkepath.YP105119(1).remote(3).profilename = 'yves';
 dkepath.YP105119(1).remote(3).luke_root = '/Users/yvespeysson/Projets/LUKE/';
 %
 dkepath.YP105119(1).remote(4) = dkepath.YP105119(1).remote(3);
-dkepath.YP105119(1).remote(4).schedulername = 'xgrid';
+dkepath.YP105119(1).remote(4).schedulername = 'direct';
 %
-dkepath.YP105119(1).remote(5) = dkepath.YP105119(1).remote(3);
-dkepath.YP105119(1).remote(5).schedulername = 'direct';
+dkepath.YP105119(1).remote(5).remoteid = 'ASIPP_SHENMA';
+dkepath.YP105119(1).remote(5).schedulername = 'torque';
+dkepath.YP105119(1).remote(5).profilename = 'yves';
+dkepath.YP105119(1).remote(5).luke_root = '/home/PEYSSON/LUKE/';
 %
-dkepath.YP105119(1).remote(6).remoteid = 'ASIPP_SHENMA';
-dkepath.YP105119(1).remote(6).schedulername = 'torque';
-dkepath.YP105119(1).remote(6).profilename = 'yves';
-dkepath.YP105119(1).remote(6).luke_root = '/home/PEYSSON/LUKE/';
-%
-dkepath.YP105119(1).remote(7).remoteid = 'EFDA_ITM';
-dkepath.YP105119(1).remote(7).schedulername = 'sge';
-dkepath.YP105119(1).remote(7).profilename = 'yvesp';
-dkepath.YP105119(1).remote(7).luke_root = '/pfs/home/yvesp/public/LUKE/';
+dkepath.YP105119(1).remote(6).remoteid = 'EFDA_ITM';
+dkepath.YP105119(1).remote(6).schedulername = 'sge';
+dkepath.YP105119(1).remote(6).profilename = 'yvesp';
+dkepath.YP105119(1).remote(6).luke_root = '/pfs/home/yvesp/public/LUKE/';
 %
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Emelie Nilsson ------------------------------------

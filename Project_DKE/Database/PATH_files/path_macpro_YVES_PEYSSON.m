@@ -88,72 +88,69 @@ dkepath.yvespeysson(1).remote(1).link_mode = [];
 dkepath.yvespeysson(1).remote(1).cvsupdate = false;% update done in 'direct' mode
 %
 dkepath.yvespeysson(1).remote(2) = dkepath.yvespeysson(1).remote(1);
-dkepath.yvespeysson(1).remote(2).schedulername = 'xgrid';
+dkepath.yvespeysson(1).remote(2).schedulername = 'direct';
+dkepath.yvespeysson(1).remote(2).cvsupdate = true;
+dkepath.yvespeysson(1).remote(2).cvsrights = 'chmod -R a+rx ./';
 %
-dkepath.yvespeysson(1).remote(3) = dkepath.yvespeysson(1).remote(1);
-dkepath.yvespeysson(1).remote(3).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(3).cvsupdate = true;
-dkepath.yvespeysson(1).remote(3).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(3).remoteid = 'ASIPP_SHENMA';
+dkepath.yvespeysson(1).remote(3).schedulername = 'torque';
+dkepath.yvespeysson(1).remote(3).profilename = 'PEYSSON';
+dkepath.yvespeysson(1).remote(3).luke_root = '/home/PEYSSON/LUKE/';
+dkepath.yvespeysson(1).remote(3).link_mode = [];
+dkepath.yvespeysson(1).remote(3).cvsupdate = false;% update done in 'direct' mode
 %
-dkepath.yvespeysson(1).remote(4).remoteid = 'ASIPP_SHENMA';
-dkepath.yvespeysson(1).remote(4).schedulername = 'torque';
-dkepath.yvespeysson(1).remote(4).profilename = 'PEYSSON';
-dkepath.yvespeysson(1).remote(4).luke_root = '/home/PEYSSON/LUKE/';
-dkepath.yvespeysson(1).remote(4).link_mode = [];
-dkepath.yvespeysson(1).remote(4).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(4) = dkepath.yvespeysson(1).remote(3);
+dkepath.yvespeysson(1).remote(4).schedulername = 'direct';
+dkepath.yvespeysson(1).remote(4).cvsupdate = true;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(4).cvsrights = 'chmod -R a+rx ./';
 %
-dkepath.yvespeysson(1).remote(5) = dkepath.yvespeysson(1).remote(4);
-dkepath.yvespeysson(1).remote(5).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(5).cvsupdate = true;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(5).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(5).remoteid = 'CEA_ANDROMEDE';
+dkepath.yvespeysson(1).remote(5).schedulername = 'pbs';
+dkepath.yvespeysson(1).remote(5).profilename = 'YP105119';
+dkepath.yvespeysson(1).remote(5).luke_root = '/home/YP105119/LUKE/';
+dkepath.yvespeysson(1).remote(5).link_mode = [];
+dkepath.yvespeysson(1).remote(5).cvsupdate = false;% update done in 'direct' mode
 %
-dkepath.yvespeysson(1).remote(6).remoteid = 'CEA_ANDROMEDE';
-dkepath.yvespeysson(1).remote(6).schedulername = 'pbs';
-dkepath.yvespeysson(1).remote(6).profilename = 'YP105119';
-dkepath.yvespeysson(1).remote(6).luke_root = '/home/YP105119/LUKE/';
-dkepath.yvespeysson(1).remote(6).link_mode = [];
-dkepath.yvespeysson(1).remote(6).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(6) = dkepath.yvespeysson(1).remote(5);
+dkepath.yvespeysson(1).remote(6).schedulername = 'direct';
+dkepath.yvespeysson(1).remote(6).cvsupdate = true;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(6).cvsrights = 'chmod -R a+rx ./';
 %
-dkepath.yvespeysson(1).remote(7) = dkepath.yvespeysson(1).remote(6);
-dkepath.yvespeysson(1).remote(7).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(7).cvsupdate = true;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(7).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(7).remoteid = 'EFDA_ITM';
+dkepath.yvespeysson(1).remote(7).schedulername = 'sge';
+dkepath.yvespeysson(1).remote(7).profilename = 'yvesp';
+dkepath.yvespeysson(1).remote(7).luke_root = '/pfs/home/yvesp/public/LUKE/';
+dkepath.yvespeysson(1).remote(7).link_mode = [];
+dkepath.yvespeysson(1).remote(7).cvsupdate = false;% update done in 'direct' mode
 %
-dkepath.yvespeysson(1).remote(8).remoteid = 'EFDA_ITM';
-dkepath.yvespeysson(1).remote(8).schedulername = 'sge';
-dkepath.yvespeysson(1).remote(8).profilename = 'yvesp';
-dkepath.yvespeysson(1).remote(8).luke_root = '/pfs/home/yvesp/public/LUKE/';
-dkepath.yvespeysson(1).remote(8).link_mode = [];
-dkepath.yvespeysson(1).remote(8).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(8) = dkepath.yvespeysson(1).remote(7);
+dkepath.yvespeysson(1).remote(8).schedulername = 'direct';
+dkepath.yvespeysson(1).remote(8).cvsupdate = true;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(8).cvsrights = 'chmod -R a+rx ./';
 %
-dkepath.yvespeysson(1).remote(9) = dkepath.yvespeysson(1).remote(8);
-dkepath.yvespeysson(1).remote(9).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(9).cvsupdate = true;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(9).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(9).remoteid = 'SWIP_CLUSTER02';
+dkepath.yvespeysson(1).remote(9).schedulername = 'torque';
+dkepath.yvespeysson(1).remote(9).profilename = 'Yves';
+dkepath.yvespeysson(1).remote(9).luke_root = '/home/Yves/LUKE/';
+dkepath.yvespeysson(1).remote(9).link_mode = [];
+dkepath.yvespeysson(1).remote(9).cvsupdate = false;% update done in 'direct' mode
 %
-dkepath.yvespeysson(1).remote(10).remoteid = 'SWIP_CLUSTER02';
-dkepath.yvespeysson(1).remote(10).schedulername = 'torque';
-dkepath.yvespeysson(1).remote(10).profilename = 'Yves';
-dkepath.yvespeysson(1).remote(10).luke_root = '/home/Yves/LUKE/';
-dkepath.yvespeysson(1).remote(10).link_mode = [];
-dkepath.yvespeysson(1).remote(10).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(10) = dkepath.yvespeysson(1).remote(9);
+dkepath.yvespeysson(1).remote(10).schedulername = 'direct';
+dkepath.yvespeysson(1).remote(10).cvsupdate = true;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(10).cvsrights = 'chmod -R a+rx ./';
 %
-dkepath.yvespeysson(1).remote(11) = dkepath.yvespeysson(1).remote(10);
-dkepath.yvespeysson(1).remote(11).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(11).cvsupdate = true;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(11).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(11).remoteid = 'IPP_ABACUS';
+dkepath.yvespeysson(1).remote(11).schedulername = 'pbs';
+dkepath.yvespeysson(1).remote(11).profilename = 'peysson';
+dkepath.yvespeysson(1).remote(11).luke_root = '/compass/home/peysson/LUKE/';
+dkepath.yvespeysson(1).remote(11).link_mode = [];
+dkepath.yvespeysson(1).remote(11).cvsupdate = false;% update done in 'direct' mode
 %
-dkepath.yvespeysson(1).remote(12).remoteid = 'IPP_ABACUS';
-dkepath.yvespeysson(1).remote(12).schedulername = 'pbs';
-dkepath.yvespeysson(1).remote(12).profilename = 'peysson';
-dkepath.yvespeysson(1).remote(12).luke_root = '/compass/home/peysson/LUKE/';
-dkepath.yvespeysson(1).remote(12).link_mode = [];
-dkepath.yvespeysson(1).remote(12).cvsupdate = false;% update done in 'direct' mode
-%
-dkepath.yvespeysson(1).remote(13) = dkepath.yvespeysson(1).remote(12);
-dkepath.yvespeysson(1).remote(13).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(13).cvsupdate = true;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(13).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(12) = dkepath.yvespeysson(1).remote(11);
+dkepath.yvespeysson(1).remote(12).schedulername = 'direct';
+dkepath.yvespeysson(1).remote(12).cvsupdate = true;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(12).cvsrights = 'chmod -R a+rx ./';
 %
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 2, Joan Decker  ------------------------------------
@@ -163,18 +160,17 @@ dkepath.yvespeysson(2) = dkepath.yvespeysson(1);
 %
 dkepath.yvespeysson(2).remote(1).profilename = 'joan';
 dkepath.yvespeysson(2).remote(2).profilename = 'joan';
+%
 dkepath.yvespeysson(2).remote(3).profilename = 'joan';
+dkepath.yvespeysson(2).remote(3).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
 %
-dkepath.yvespeysson(2).remote(4).profilename = 'joan';
-dkepath.yvespeysson(2).remote(4).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
+dkepath.yvespeysson(2).remote(4).profilename = 'JD211098';
+dkepath.yvespeysson(2).remote(4).luke_root = '/home/JD211098/LUKE/';
 %
-dkepath.yvespeysson(2).remote(5).profilename = 'JD211098';
-dkepath.yvespeysson(2).remote(5).luke_root = '/home/JD211098/LUKE/';
+dkepath.yvespeysson(2).remote(5).remoteid = 'EFDA_ITM';
+dkepath.yvespeysson(2).remote(5).schedulername = 'sge';
+dkepath.yvespeysson(2).remote(5).profilename = 'yvesp';
+dkepath.yvespeysson(2).remote(5).luke_root = '/pfs/home/yvesp/public/LUKE/';
 %
-dkepath.yvespeysson(2).remote(6).remoteid = 'EFDA_ITM';
-dkepath.yvespeysson(2).remote(6).schedulername = 'sge';
-dkepath.yvespeysson(2).remote(6).profilename = 'yvesp';
-dkepath.yvespeysson(2).remote(6).luke_root = '/pfs/home/yvesp/public/LUKE/';
-%
-dkepath.yvespeysson(2).remote(7).profilename = 'joan';
-dkepath.yvespeysson(2).remote(7).luke_root = '/home/Yves/joandecker/LUKE/';
+dkepath.yvespeysson(2).remote(6).profilename = 'joan';
+dkepath.yvespeysson(2).remote(6).luke_root = '/home/Yves/joandecker/LUKE/';

@@ -215,11 +215,6 @@ dkepath.joan(1).remote(end).cvsupdate = true;
 dkepath.joan(1).remote(end).cvsrights = '';
 %
 dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(3);
-dkepath.joan(1).remote(end).schedulername = 'xgrid';
-dkepath.joan(1).remote(end).cvsupdate = false;% update done in 'direct' mode
-dkepath.joan(1).remote(end).cvsrights = '';
-%
-dkepath.joan(1).remote(end+1) = dkepath.joan(1).remote(3);
 dkepath.joan(1).remote(end).schedulername = 'direct';
 dkepath.joan(1).remote(end).cvsupdate = true;
 dkepath.joan(1).remote(end).cvsrights = '';
