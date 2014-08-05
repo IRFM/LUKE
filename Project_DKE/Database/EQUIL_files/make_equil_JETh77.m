@@ -92,7 +92,7 @@ subplot(2,2,4),plot(prho,ppsin),xlabel('\rho');ylabel('\psi_n')
 %
 pj_min = min(pj); 
 if pj_min < 0,pj = pj - pj_min;end,%pj must be non-negative. Only the shape is considered and Ip for the total plasma current
-[equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out] = equil_magnetic_helmex77_yp(a_sep,R_sep,Z_sep,xpoint,Bt,Ip,ppsi_apRp*R_sep/a_sep,pj,pkin,ntheta,2);
+[equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out,li_out] = equil_magnetic_helmex77_yp(a_sep,R_sep,Z_sep,xpoint,Bt,Ip,ppsi_apRp*R_sep/a_sep,pj,pkin,ntheta,2);
 %
 [qe] = pc_dke_yp;
 figure('Name','Pressure profile'),

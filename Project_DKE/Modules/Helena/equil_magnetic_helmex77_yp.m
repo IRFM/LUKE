@@ -1,4 +1,4 @@
-function [equil_magnetic,prho,pspsin,pspsinT,pp] = equil_magnetic_helmex77_yp(ap,Rp,Zp,xpoint,Bt,Ip,ppsi,pj,ptot,ntheta,display_opt,id_path,path_path)
+function [equil_magnetic,prho,pspsin,pspsinT,pp,li] = equil_magnetic_helmex77_yp(ap,Rp,Zp,xpoint,Bt,Ip,ppsi,pj,ptot,ntheta,display_opt,id_path,path_path)
 %
 %   Create a magnetic equilibrium structure for C3PO/LUKE using HELENA code
 %   (mex file version)
