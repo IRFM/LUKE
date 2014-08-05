@@ -68,19 +68,19 @@ figure(1),clf,graph1D_jd(equilDKE.xrho,Zcurr_p.x_tot_fsav,0,0,'\rho','Current de
 graph1D_jd(equilDKE.xrho,Zcurr_m.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','-','none','b',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd(equilDKE.xrho,Zcurr_p.x_tot_fsav+Zcurr_m.x_tot_fsav,0,0,'\rho','Current density','',NaN,'','','none','*','g',2,20,gca,1,0.6,0.6);
 legend('N_{||} > 0, E_{field} > 0','N_{||}< 0, E_{field} < 0','Sum')
-print_jd(p_opt,'profcurr_testzero','./figures',2)
+print_jd(p_opt,'profcurr_testzero')
 %
 figure(2),clf,graph1D_jd(equilDKE.xrho,ZP0_p.x_rf_fsav,0,0,'','','',NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd(equilDKE.xrho,ZP0_p.x_c_fsav,0,0,'','','',NaN,'','','--','none','r',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd(equilDKE.xrho,ZP0_m.x_rf_fsav,0,0,'','','',NaN,'','','none','+','b',2,20,gca,1,0.6,0.6);
 graph1D_jd(equilDKE.xrho,ZP0_m.x_c_fsav,0,0,'\rho','Power','',NaN,'','','none','*','b',2,20,gca,1,0.6,0.6);
 legend('P_{LH}: N_{||} > 0, E_{field} > 0','P_{coll}: N_{||} > 0, E_{field} > 0','P_{LH}: N_{||} < 0, E_{field} < 0','P_{coll}: N_{||} < 0, E_{field} < 0')
-print_jd(p_opt,'profP_testzero','./figures',2)
+print_jd(p_opt,'profP_testzero')
 %
 figure(3),clf,graph1D_jd(equilDKE.xrho,Znorm_p.x_0_fsav,0,0,'','','',NaN,'','','-','none','r',2,20,gca,1,0.6,0.6);hold on
 graph1D_jd(equilDKE.xrho,Znorm_m.x_0_fsav,0,0,'\rho','Density','',NaN,'','','none','*','b',2,20,gca,1,0.6,0.6);
 legend('N_{||} > 0, E_{field} > 0','N_{||} < 0, E_{field} < 0')
-print_jd(p_opt,'profne_testzero','./figures',2)
+print_jd(p_opt,'profne_testzero')
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
