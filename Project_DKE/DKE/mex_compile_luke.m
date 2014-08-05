@@ -77,6 +77,20 @@ else
     fopts = '';
 end
 %
+if isstruct(compiler_opt) && isfield(compiler_opt,'separatrice'),% Fortran mex compiling option
+	if isstruct(compiler_opt.separatrice),
+		if isfield(compiler_opt.separatrice,['mex',matver]),
+			separatrice = compiler_opt.separatrice.(['mex',matver]);
+		else
+			separatrice = '';
+		end
+	else
+    	separatrice = compiler_opt.separatrice;
+	end
+else
+    separatrice = '';
+end
+%
 if isstruct(compiler_opt) && isfield(compiler_opt,'helmex'),% Fortran mex compiling option
 	if isstruct(compiler_opt.helmex),
 		if isfield(compiler_opt.helmex,['mex',matver]),
@@ -137,7 +151,7 @@ if ~any(isnan(fopts)) && (force_compile || any(filetime.erfcc.source > filetime.
 end
 %
 if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.separatrice.source > filetime.separatrice.mex)),
-    eval(['mex ',fopts,' ',sourcepath.helmex,'separatrice.F ']);
+    eval(['mex ',separatrice,' ',sourcepath.helmex,'separatrice.F ']);
     disp(['The separatrice.',mexext,' mexfile has been compiled.'])
 end
 %
