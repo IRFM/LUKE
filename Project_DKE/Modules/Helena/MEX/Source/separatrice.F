@@ -24,13 +24,15 @@ c
 c pointeurs et tailles   
    
       mwPointer geom_pr,mode_pr,x_pr,y_pr
-      integer ifail
-      real*8 mode,geom(8),x(125*4),y(125*4)
+      integer ifail,iverbose
+      real*8 mode,geom(8),x(500),y(500)
 
-      integer mat1,mat8,mat500
-      parameter (mat1=1)
+      mwSize mat1,mat8,mat500
+      parameter (mat1=1) 
       parameter (mat8=8)
-      parameter (mat500=125*4)
+      parameter (mat500=500)
+      
+      character(len=200) msg
 
       data pi/3.141592653589793/
       data two/2./,one/1./,rho/1./ 
@@ -38,13 +40,21 @@ c      data rkappax1/1.687/,ptdeltax1/0.466/,psip1dg/0./,psim1dg/0./,
 c     & rkappax2/2.001/,ptdeltax2/0.568/,psip2dg/22.46/,psim2dg/67.92/
 **********************************************************************
 
+c verbose mode 
+
+	 iverbose = 0
+
 C---------------------------------------------------------------------
 C GESTION DES ENTREES     
 C entree
-      write(*,*) 'debut separatrice'
+       
+	  if(iverbose .eq. 1)then
+      write(msg,*) "debut separatrice\n" 
+      call mexPrintf(msg)
+      endif  
       geom_pr = mxGetPr(prhs(1))
       call mxCopyPtrToReal8(geom_pr,geom,mat8)
-
+ 
       rkappax1  = geom(1)
       ptdeltax1 = geom(2)
       psip1dg   = geom(3)
@@ -57,7 +67,6 @@ C mode de calcul
       mode_pr = mxGetPr(prhs(2))
       call mxCopyPtrToReal8(mode_pr,mode,mat1)
 
-
 c Initializing geometrical parameters
       psimoins1=psim1dg*pi/180.
       psiplus1=psip1dg*pi/180.
@@ -65,14 +74,20 @@ c Initializing geometrical parameters
       psiplus2=psip2dg*pi/180.
       tmoins1=tan(psimoins1)*(1.-ptdeltax1)/rkappax1
       tmoins2=tan(psimoins2)*(1.-ptdeltax2)/rkappax2
-c      write(*,*) 'tmoins1 = ',tmoins1,' tmoins2 =',tmoins2
+      if(iverbose .eq. 1)then
+      write(msg,*) 'tmoins1 = ',tmoins1,' tmoins2 =',tmoins2,"\n" 
+      call mexPrintf(msg)
+      endif
       tplus1=tan(psiplus1)*(1.+ptdeltax1)/rkappax1
       tplus2=tan(psiplus2)*(1.+ptdeltax2)/rkappax2
-c      write(*,*) 'tplus1 = ',tplus1,' tplus2 =',tplus2
+      if(iverbose .eq. 1)then
+      write(msg,*) "tplus1 = ",tplus1," tplus2 =",tplus2,"\n"
+      call mexPrintf(msg)
+      endif
 c      
 c Activer manuellement la bonne partie du programme suivant le cas (voir texte
 c fourni) en remplacant if(one.gt.two) par if(two.gt.one)
-c Un algorithme automatique peut aussi �re �rit
+c Un algorithme automatique peut aussi 
 c
 c plot of the plasma last closed magnetic surface
 c
@@ -120,7 +135,11 @@ c bottom minus
           x(ii)    = rho*(alpha0m2+alpham2*cos(teta))
           y(ii)    = -rho*(betam2*sin(teta))
 c          if (ii .eq. 150) then
-c            write(*,*) 'y(ii)=',y(ii),betam2,teta,sin(teta)
+           if(iverbose .eq. 1)then
+      		write(msg,*) "y(ii)=",y(ii),betam2,teta,sin(teta),"\n"
+      		call mexPrintf(msg)
+      		endif
+
 c          endif
 
           ii       = ii+1
@@ -165,7 +184,10 @@ c 1 portion of ellipse (outside)
         nbtetam1=125
         tetam1st=(tetam1fi-tetam1in)/(nbtetam1-1)
         phixm2=dasinh((2.*tmoins2-1.)**0.5/(1.-tmoins2))
-c        write(*,*) 'phixm2=',phixm2
+        if(iverbose .eq. 1)then
+        write(msg,*) "phixm2=",phixm2,"\n"
+      	call mexPrintf(msg)
+      	endif
         phim2in=0.
         phim2fi=-phixm2
         nbphim2=125
@@ -234,7 +256,10 @@ c
          nbtetam2=125
          tetam2st=(tetam2fi-tetam2in)/(nbtetam2-1) 
          phixm1=dasinh((2.*tmoins1-1.)**0.5/(1.-tmoins1))
-c         write(*,*) 'phixm1=',phixm1
+         if(iverbose .eq. 1)then
+         write(msg,*) "phixm1=",phixm1,"\n"
+      	 call mexPrintf(msg)
+      	 endif
          phim1in=0.
          phim1fi=-phixm1
          nbphim1=125
@@ -319,7 +344,10 @@ c internal part
       endif ! true/false
        sizeOUT = 125*4
 C x
-      write(*,*) 'debut ecriture de x et y'
+	  if(iverbose .eq. 1)then
+      write(msg,*) "debut ecriture de x et y\n"
+      call mexPrintf(msg)
+      endif
       plhs(1) = mxCreateDoubleMatrix(mat500,mat1,0)
       x_pr = mxGetPr(plhs(1))
       call mxCopyReal8ToPtr(x,x_pr,mat500)
@@ -328,10 +356,9 @@ C x
       y_pr = mxGetPr(plhs(2))
       call mxCopyReal8ToPtr(y,y_pr,mat500)
 
-       end
-c
-c
-c
+      end
+
+
 
 *DECK DASINH
       DOUBLE PRECISION FUNCTION DASINH (X)
@@ -422,8 +449,8 @@ C
       RETURN
 C
       END
-      
-      
+
+
             DOUBLE PRECISION FUNCTION D1MACH(I)
       integer I
 C
@@ -603,7 +630,10 @@ C     ON FIRST CALL, IF NO DATA UNCOMMENTED, TEST MACHINE TYPES.
 *    SANITY CHECK
       IF (DMACH(4) .GE. 1.0D0) STOP 778
       IF (I .LT. 1 .OR. I .GT. 5) THEN
-         WRITE(*,*) 'D1MACH(I): I =',I,' is out of bounds.'
+      if(iverbose .eq. 1)then
+      write(msg,*) "D1MACH(I): I =",I," is out of bounds.\n"
+      call mexPrintf(msg)
+      endif
          STOP
          END IF
       D1MACH = DMACH(I)
@@ -680,12 +710,12 @@ C***END PROLOGUE  DCSEVL
 C***FIRST EXECUTABLE STATEMENT  DCSEVL
       IF (FIRST) ONEPL = 1.0D0 + D1MACH(4)
       FIRST = .FALSE.
-      IF (N .LT. 1) PRINT *,'SLATEC', 'DCSEVL',
-     +   'NUMBER OF TERMS .LE. 0', 2, 2
-      IF (N .GT. 1000) PRINT *,'SLATEC', 'DCSEVL',
-     +   'NUMBER OF TERMS .GT. 1000', 3, 2
-      IF (ABS(X) .GT. ONEPL) PRINT *,'SLATEC', 'DCSEVL',
-     +   'X OUTSIDE THE INTERVAL (-1,+1)', 1, 1
+c      IF (N .LT. 1) PRINT *,'SLATEC', 'DCSEVL',
+c     +   'NUMBER OF TERMS .LE. 0', 2, 2
+c      IF (N .GT. 1000) PRINT *,'SLATEC', 'DCSEVL',
+c     +   'NUMBER OF TERMS .GT. 1000', 3, 2
+c      IF (ABS(X) .GT. ONEPL) PRINT *,'SLATEC', 'DCSEVL',
+c     +   'X OUTSIDE THE INTERVAL (-1,+1)', 1, 1
 C
       B1 = 0.0D0
       B0 = 0.0D0
@@ -741,8 +771,8 @@ C   900315  CALLs to XERROR changed to CALLs to XERMSG.  (THJ)
 C***END PROLOGUE  INITDS
       DOUBLE PRECISION OS(*)
 C***FIRST EXECUTABLE STATEMENT  INITDS
-      IF (NOS .LT. 1) PRINT *,'SLATEC', 'INITDS',
-     +   'Number of coefficients is less than 1', 2, 1
+c      IF (NOS .LT. 1) PRINT *,'SLATEC', 'INITDS',
+c     +   'Number of coefficients is less than 1', 2, 1
 C
       ERR = 0.
       DO 10 II = 1,NOS
@@ -751,12 +781,10 @@ C
         IF (ERR.GT.ETA) GO TO 20
    10 CONTINUE
 C
-   20 IF (I .EQ. NOS) PRINT *,'SLATEC', 'INITDS',
-     +   'Chebyshev series too short for specified accuracy', 1, 1
+   20  continue
+c      IF (I .EQ. NOS) PRINT *,'SLATEC', 'INITDS',
+c     +   'Chebyshev series too short for specified accuracy', 1, 1
       INITDS = I
 C
       RETURN
       END
-
-      
-

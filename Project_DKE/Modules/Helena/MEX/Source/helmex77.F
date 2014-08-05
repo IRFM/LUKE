@@ -27,8 +27,8 @@ C B0 : champ magnetique (T) [1,1]
 C Ip : courant plasma (A) [1,1], Ip < 0 -> utilisation de psip pour le calcul du courant
 C lsc : type d'input pour la derniere surface magnetique fermee [1,1]
 C        0 = plasma sym         
-C        1 = plasma asym�rique, donnee de a, elong, triangh, triangb
-C        2 = plasma asym�rique, donnee de la LSC en (R,Z)
+C        1 = plasma asymetrique, donnee de a, elong, triangh, triangb
+C        2 = plasma asymetrique, donnee de la LSC en (R,Z)
 C a  : petit rayon (m) [1,1]
 C elong : ellipticite de la derniere surface magnetique fermee (1 pour TS) (-) [1,1]
 C triangh : triangularite haute de la derniere surface magnetique fermee (0 pour TS) (-) [1,1]
@@ -143,8 +143,8 @@ C-----------------------------------------------------------------------
      >        ERRIT,ERRCUR,EPS,ALFA,B,C,XIAB,Q95,BETAP,AMIX,BMIX,
      >        ABB, BBB, AMPL, RVAC,BVAC,ZEFF,ZN0,RPE,XR1,SIG1
       integer IAS,ICUR,NRCUR,NPCUR,NMESH,INIMESH,NBB,NQB,IARC,
-     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NPMAP,NITER 
-      integer  NP,NRMAP      
+     >        MHARM,ISHAPE,ISOL,IGAM,IPAI,NR,NP,NITER 
+      integer  NPMAP,NRMAP      
 C-----------------------------------------------------------------------
       COMMON /COMMAP/CS,QS,DQS,CURJ,CHI,   
      >     GEM11,GEM12,GEM33,  
@@ -241,6 +241,8 @@ c taille des tableaux d'entree fixee a 101 elements
       real*8 R0, amin, B0, Ip, ecrit,xrsig(2)
 c taille d'autres tableaux
       real*8 TINIT(3)
+c display (if active)
+      character(len=200) msg
 C---------------------------------------------------------------------
 C GESTION DES ENTREES     
 C taille des tableaux (nb de points radiaux)
@@ -328,7 +330,7 @@ C        petit rayon (m)
         NBext = sizeR
       ENDIF
        
-      if (.false.) call mexprintf("Hello A1")
+      if (.false.) call mexprintf("Hello A1\n")
       
 C init (pour partir d'un equilibre deja specifie)
       init_pr = mxGetPr(prhs(14))
@@ -394,7 +396,7 @@ C         DF2
       ENDIF      
 
 c      write(*,*) 'Avant Helena',IEXACT
-      if (.false.) call mexprintf("Hello A3")
+      if (.false.) call mexprintf("Hello A3\n")
     
       CALL HELENA(PSIPIN,PTOT,Jin,int(sizeIN),INI,amin,R0,B0,Ip,
      >            C2,C3,R2M,RR,ZZ,RHO,VP,DRHOOR,QPSI,PSIPOUT,FTRA,FDIA,
@@ -411,201 +413,254 @@ C GESTION DES SORTIES
 C Recuperation du nombre de valeurs du flux poloidal et de l'angle poloidal
 C de la grille de sortie
 
-      if (.false.) call mexprintf("Hello A4")
+      if (.false.) call mexprintf("Hello A4\n")
       sizeOUT = NRMAP * NPMAP
+      if (.false.) THEn
+        write(msg,*) "sizeout=",sizeOUT,"\n"
+        call mexPrintf(msg)
+      endif
+      
 C C2 : Vp <gradient(rho)^2/R^2 >
       plhs(1) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       C2_pr = mxGetPr(plhs(1))
       call mxCopyReal8ToPtr(C2,C2_pr,NRMAP)
+      if (.false.) call mexprintf("output C2\n")
 C C3 : Vp < 1/R^2 >
       plhs(2) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       C3_pr = mxGetPr(plhs(2))
       call mxCopyReal8ToPtr(C3,C3_pr,NRMAP)
+      if (.false.) call mexprintf("output C3\n")
 C R2M : (rho2m) < | gradient(rho)^2 | >
       plhs(3) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       R2M_pr = mxGetPr(plhs(3))
       call mxCopyReal8ToPtr(R2M,R2M_pr,NRMAP)
+      if (.false.) call mexprintf("output R2M\n")
 C R et Z des surfaces de flux     
       plhs(4) = mxCreateDoubleMatrix(NRMAP,NPMAP,0)
       RR_pr = mxGetPr(plhs(4))
       call mxCopyReal8ToPtr(RR,RR_pr,sizeOUT)
+      if (.false.) call mexprintf("output E\n")
       plhs(5) = mxCreateDoubleMatrix(NRMAP,NPMAP,0)
       ZZ_pr = mxGetPr(plhs(5))
       call mxCopyReal8ToPtr(ZZ,ZZ_pr,sizeOUT)
+      if (.false.) call mexprintf("output Z\n")
 C RHO racine du flux toroidal (m)
       plhs(6) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       RHO_pr = mxGetPr(plhs(6))
       call mxCopyReal8ToPtr(RHO,RHO_pr,NRMAP)
+      if (.false.) call mexprintf("output RHO\n")
 C Vp : V' (dV/drho a rho(i)-m**2)
       plhs(7) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       VP_pr = mxGetPr(plhs(7))
       call mxCopyReal8ToPtr(VP,VP_pr,NRMAP)
+      if (.false.) call mexprintf("output Vp\n")
 C drhoor : <abs(grad(rho))/R>
       plhs(8) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       DRHOOR_pr = mxGetPr(plhs(8))
       call mxCopyReal8ToPtr(DRHOOR,DRHOOR_pr,NRMAP)
+      if (.false.) call mexprintf("output drhoor\n")
 C qpsi : facteur de securite
       plhs(9) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       QPSI_pr = mxGetPr(plhs(9))
       call mxCopyReal8ToPtr(QPSI,QPSI_pr,NRMAP)
+      if (.false.) call mexprintf("output qpsi\n")
 C Flux poloidal (le meme qu'en entree)
       plhs(10) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       PSIPOUT_pr = mxGetPr(plhs(10))
       call mxCopyReal8ToPtr(PSIPOUT,PSIPOUT_pr,NRMAP)
+      if (.false.) call mexprintf("output ppsi\n")
 C ftra : fraction de piegees
       plhs(11) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       FTRA_pr = mxGetPr(plhs(11))
       call mxCopyReal8ToPtr(FTRA,FTRA_pr,NRMAP)
+      if (.false.) call mexprintf("output ftra\n")
 C Fdia : fonction diamagnetique
       plhs(12) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       FDIA_pr = mxGetPr(plhs(12))
       call mxCopyReal8ToPtr(FDIA,FDIA_pr,NRMAP)
+      if (.false.) call mexprintf("output Fdia\n")
 C Flux toroidal
       plhs(13) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       PSIT_pr = mxGetPr(plhs(13))
       call mxCopyReal8ToPtr(PSIT,PSIT_pr,NRMAP)
+      if (.false.) call mexprintf("output psiT\n")
 C B2 : moyenne de B^2 sur une surface de flux
       plhs(14) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       B2_pr = mxGetPr(plhs(14))
       call mxCopyReal8ToPtr(B2,B2_pr,NRMAP)
+      if (.false.) call mexprintf("output B2\n")
 C invB2 : moyenne de l'inverse de B^2 sur une surface de flux
       plhs(15) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       INVB2_pr = mxGetPr(plhs(15))
       call mxCopyReal8ToPtr(INVB2,INVB2_pr,NRMAP)
+      if (.false.) call mexprintf("output invB2\n")
 C Sp : element de surface
       plhs(16) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       SP_pr = mxGetPr(plhs(16))
       call mxCopyReal8ToPtr(SP,SP_pr,NRMAP)
+      if (.false.) call mexprintf("output Sp\n")
 C RAV : <R>
       plhs(17) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       RAV_pr = mxGetPr(plhs(17))
       call mxCopyReal8ToPtr(RAV,RAV_pr,NRMAP)
+      if (.false.) call mexprintf("output RAV\n")
 C OOR / <1/R>
       plhs(18) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       OOR_pr = mxGetPr(plhs(18))
       call mxCopyReal8ToPtr(OOR,OOR_pr,NRMAP)
+      if (.false.) call mexprintf("output OOR\n")
 C DRHOAV : <abs(grad(rho))>
       plhs(19) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       DRHOAV_pr = mxGetPr(plhs(19))
       call mxCopyReal8ToPtr(DRHOAV,DRHOAV_pr,NRMAP)
+      if (.false.) call mexprintf("output DRHOAV\n")
 C XSHIFT : element d'ordre 0 de la serie de Fourier R(theta)
       plhs(20) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       XSHIFT_pr = mxGetPr(plhs(20))
       call mxCopyReal8ToPtr(XSHIFT,XSHIFT_pr,NRMAP)
+      if (.false.) call mexprintf("output XSHIFT\n")
 C XRAD : petit rayon geometrique
       plhs(21) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       XRAD_pr = mxGetPr(plhs(21))
       call mxCopyReal8ToPtr(XRAD,XRAD_pr,NRMAP)
+      if (.false.) call mexprintf("output XRAD\n")
 C XELL : ellipticite
       plhs(22) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       XELL_pr = mxGetPr(plhs(22))
-      call mxCopyReal8ToPtr(XELL,XELL_pr,NRMAP)      
+      call mxCopyReal8ToPtr(XELL,XELL_pr,NRMAP) 
+      if (.false.) call mexprintf("output XELL\n")     
 C XTRIAPOS : triangularite partie superieure (Z>0)
       plhs(23) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       XTRIAPOS_pr = mxGetPr(plhs(23))
       call mxCopyReal8ToPtr(XTRIAPOS,XTRIAPOS_pr,NRMAP)
+      if (.false.) call mexprintf("output XTRIAPOS\n")
 C XTRIANEG : triangularite partie inferieure (Z<0)
       plhs(24) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       XTRIANEG_pr = mxGetPr(plhs(24))
       call mxCopyReal8ToPtr(XTRIANEG,XTRIANEG_pr,NRMAP)
+      if (.false.) call mexprintf("output XTRIANEG\n")
 C Jout : densite de courant recalculee d'apres l'equilibre trouve
       plhs(25) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       Jout_pr = mxGetPr(plhs(25))
       call mxCopyReal8ToPtr(Jout,Jout_pr,NRMAP)
+      if (.false.) call mexprintf("output Jout\n")
 C Iout : courant total
       plhs(26) = mxCreateDoubleMatrix(1,mat1,0)
       XIAB_pr = mxGetPr(plhs(26))
       call mxCopyReal8ToPtr(XIAB,XIAB_pr,1)
+      if (.false.) call mexprintf("output Iout\n")
 C Pout : pression recalculee d'apres l'equilibre trouve
       plhs(27) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       Pout_pr = mxGetPr(plhs(27))
       call mxCopyReal8ToPtr(Pout,Pout_pr,NRMAP)
+      if (.false.) call mexprintf("output Pout\n")
 C R2 : <R^2>
       plhs(28) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       R2_pr = mxGetPr(plhs(28))
       call mxCopyReal8ToPtr(R2,R2_pr,NRMAP)
+      if (.false.) call mexprintf("output R2\n")
 C OOR2 : <1/R2>
       plhs(29) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       OOR2_pr = mxGetPr(plhs(29))
       call mxCopyReal8ToPtr(OOR2,OOR2_pr,NRMAP)
+      if (.false.) call mexprintf("output OOR2\n")
 C R2TAU2 : <R^2/tau^2>
       plhs(30) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       R2TAU2_pr = mxGetPr(plhs(30))
       call mxCopyReal8ToPtr(R2TAU2,R2TAU2_pr,NRMAP)
+      if (.false.) call mexprintf("output R2TAU2\n")
 C DRHO2OB2 : < |gradient(rho)|^2/B^2 >
       plhs(31) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       DRHO2OB2_pr = mxGetPr(plhs(31))
       call mxCopyReal8ToPtr(DRHO2OB2,DRHO2OB2_pr,NRMAP)
+      if (.false.) call mexprintf("output DRHO2OB2\n")
 C R3OTAU3 : <R^3/tau^3>
       plhs(32) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       R3OTAU3_pr = mxGetPr(plhs(32))
       call mxCopyReal8ToPtr(R3OTAU3,R3OTAU3_pr,NRMAP)
+      if (.false.) call mexprintf("output R3OTAU3\n")
 C R3OTAU : <R^3/tau>
       plhs(33) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       R3OTAU_pr = mxGetPr(plhs(33))
       call mxCopyReal8ToPtr(R3OTAU,R3OTAU_pr,NRMAP)
+      if (.false.) call mexprintf("output R3OTAU\n")
 C BPR : Champ magnetique
       plhs(34) = mxCreateDoubleMatrix(NRMAP,NPMAP,0)
       BPR_pr    = mxGetPr(plhs(34))
       call mxCopyReal8ToPtr(BPR,BPR_pr,sizeOUT) 
+      if (.false.) call mexprintf("output BPR\n")
 C BPZ : Champ magnetique
       plhs(35) = mxCreateDoubleMatrix(NRMAP,NPMAP,0)
       BPZ_pr    = mxGetPr(plhs(35))
       call mxCopyReal8ToPtr(BPZ,BPZ_pr,sizeout)
+       if (.false.) call mexprintf("output BPZ\n")
 C b : parametre de calcul de l'equilibre final
       plhs(36) = mxCreateDoubleMatrix(mat1,mat1,0)
       b_pr    = mxGetPr(plhs(36))
       call mxCopyReal8ToPtr(B,b_pr,1)
+       if (.false.) call mexprintf("output b\n")
 C df2 : parametre de calcul de l'equilibre final (FF')
       plhs(37) = mxCreateDoubleMatrix(mat101,mat1,0)
       df2_pr    = mxGetPr(plhs(37))
       call mxCopyReal8ToPtr(DF2,df2_pr,101)
+      if (.false.) call mexprintf("output df2\n")
 C dpr : parametre de calcul de l'equilibre final (P')
       plhs(38) = mxCreateDoubleMatrix(mat101,mat1,0)
       dpr_pr    = mxGetPr(plhs(38))
       call mxCopyReal8ToPtr(DPR,dpr_pr,101)
+      if (.false.) call mexprintf("output dpr\n")
 C kkbig : matrice des elements finis
       plhs(39) = mxCreateDoubleMatrix(KKLDA,mat4*MAXNODE,0)
       kkbig_pr    = mxGetPr(plhs(39))
-      call mxCopyReal8ToPtr(KKBIG,kkbig_pr,KKLDA*mat4*MAXNODE)             
+      call mxCopyReal8ToPtr(KKBIG,kkbig_pr,KKLDA*mat4*MAXNODE) 
+      if (.false.) call mexprintf("output kkbig\n")
 C XLI : self
       plhs(40) = mxCreateDoubleMatrix(mat1,mat1,0)
       XLI_pr = mxGetPr(plhs(40))
       call mxCopyReal8ToPtr(XLI,XLI_pr,mat1)
+      if (.false.) call mexprintf("output XLI\n")
 C DIMERC : ideal Mercier criterion
       plhs(41) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       DIMERC_pr = mxGetPr(plhs(41))
       call mxCopyReal8ToPtr(DIMERC,DIMERC_pr,NRMAP)
-C DIMERC : resistive Mercier criterion
+      if (.false.) call mexprintf("output DIMERC\n")
+C DRMERC : resistive Mercier criterion
       plhs(42) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       DRMERC_pr = mxGetPr(plhs(42))
       call mxCopyReal8ToPtr(DRMERC,DRMERC_pr,NRMAP)
+      if (.false.) call mexprintf("output DRMERC\n")
 C BALCRIT : Ballooning stability criterion
       plhs(43) = mxCreateDoubleMatrix(NRMAP,mat1,0)
       BALCRIT_pr = mxGetPr(plhs(43))
       call mxCopyReal8ToPtr(BALCRIT,BALCRIT_pr,NRMAP)
+      if (.false.) call mexprintf("output BALCRIT\n")
 C coefficient de la transformee de Fourrier de lq DSMF
       plhs(44) = mxCreateDoubleMatrix(mat2*MBMAX+mat2,mat1,0)
       FR_pr    = mxGetPr(plhs(44))
       call mxCopyReal8ToPtr(FR,FR_pr,mat2*MBMAX+mat2)
+      if (.false.) call mexprintf("output FR\n")
 C IFAIL : code d'erreur
       plhs(45) = mxCreateDoubleMatrix(mat1,mat1,0)
       IFAIL_pr = mxGetPr(plhs(45))
       RIFAIL=REAL(IFAIL)
       call mxCopyReal8ToPtr(RIFAIL,IFAIL_pr,1)
+      if (.false.) call mexprintf("output IFAIL\n")
 C nchi   : number of poloidal points (straight field line coordinates)
       plhs(46) = mxCreateDoubleMatrix(mat1,mat1,0)
       NCHI_pr = mxGetPr(plhs(46))
       RNCHI=REAL(NCHI)
       call mxCopyReal8ToPtr(RNCHI,NCHI_pr,mat1)
+      if (.false.) call mexprintf("output nchi\n")
 C cpsurf : normalised total poloidal flux
       plhs(47) = mxCreateDoubleMatrix(mat1,mat1,0)
       CPSURF_pr = mxGetPr(plhs(47))
       call mxCopyReal8ToPtr(CPSURF,CPSURF_pr,mat1)
+      if (.false.) call mexprintf("output cpsurf\n")
 c radius : normalised minor radius (R_mag=1)
       plhs(48) = mxCreateDoubleMatrix(mat1,mat1,0)
       RADIUS_pr = mxGetPr(plhs(48))
       call mxCopyReal8ToPtr(RADIUS,RADIUS_pr,mat1)
+      if (.false.) call mexprintf("output radius\n")
 c gem11  : grad(psi)**2 (normalised)
 C taille de la matrice
 c      write(*,*) 'taille'
@@ -617,39 +672,48 @@ c      write(*,*) 'N_GEM = ',N_GEM
       plhs(49) = mxCreateDoubleMatrix(N_GEM,mat1,0)
       GEM11_pr = mxGetPr(plhs(49))
       call mxCopyReal8ToPtr(GEM11,GEM11_pr,N_GEM)
+      if (.false.) call mexprintf("output GEM11\n")
 c gem12  : grad(psi).grad(theta)
 c      write(*,*) '50'
       plhs(50) = mxCreateDoubleMatrix(N_GEM,mat1,0)
       GEM12_pr = mxGetPr(plhs(50))
       call mxCopyReal8ToPtr(GEM12,GEM12_pr,N_GEM)
+      if (.false.) call mexprintf("output GEM12\n")
 c gem33  : R**2
 c      write(*,*) '51'
       plhs(51) = mxCreateDoubleMatrix(N_GEM,mat1,0)
       GEM33_pr = mxGetPr(plhs(51))
       call mxCopyReal8ToPtr(GEM33,GEM33_pr,N_GEM)
+      if (.false.) call mexprintf("output GEM33\n")
 c RSPOT  : R
 c      write(*,*) '52'
       plhs(52) = mxCreateDoubleMatrix(N_GEM,mat1,0)
       RSPOT_pr = mxGetPr(plhs(52))
       call mxCopyReal8ToPtr(RSPOT,RSPOT_pr,N_GEM)
+      if (.false.) call mexprintf("output RSPOT\n")
 c ZSPOT  : Z
 c      write(*,*) '53'
       plhs(53) = mxCreateDoubleMatrix(N_GEM,mat1,0)
       ZSPOT_pr = mxGetPr(plhs(53))
       call mxCopyReal8ToPtr(ZSPOT,ZSPOT_pr,N_GEM)
+      if (.false.) call mexprintf("output ZSPOT\n")
 c BRSPOT  : BR
 c      write(*,*) '54'
       plhs(54) = mxCreateDoubleMatrix(N_GEM,mat1,0)
       BRSPOT_pr = mxGetPr(plhs(54))
       call mxCopyReal8ToPtr(BRSPOT,BRSPOT_pr,N_GEM)
+      if (.false.) call mexprintf("output BRSPOT\n")
 c BZSPOT  : BZ
 c      write(*,*) '55'
       plhs(55) = mxCreateDoubleMatrix(N_GEM,mat1,0)
       BZSPOT_pr = mxGetPr(plhs(55))
       call mxCopyReal8ToPtr(BZSPOT,BZSPOT_pr,N_GEM)
-      !call mexprintf("Done Assignments")
+      if (.false.) call mexprintf("output BZSPOT\n")
+      
+c      call mexprintf("Done Assignments\n")
 
 c      write(*,*) 'end'
+
 
       return
       END
@@ -810,7 +874,7 @@ C-----------------------------------------------------------------------
       real*8 S1(101),S2(101),S3(101),S4(101)
       real*8 ecrit, xrsig(2)
                                                                                          
-      if (.false.) call mexprintf("Hello B1")
+      if (.false.) call mexprintf("Hello B1\n")
       CALL INIVAL
       IF ((INI.EQ.0) .AND. (IEXACT.EQ. 0)) THEN
          B = 0.002D0
@@ -826,7 +890,7 @@ C-----------------------------------------------------------------------
 	NITER = 1000
         write(*,*) 'XR1 = ',XR1,' ;SIG1 = ',SIG1
       endif
-      if (.false.) call mexprintf("Hello B2")
+      if (.false.) call mexprintf("Hello B2\n")
             
       PSI0 = PSIN(1)
       DO I=1,NPRFL
@@ -842,7 +906,7 @@ c      NBEXT = 33
 	ENDDO
       ENDIF
 
-      if (.false.) call mexprintf("Hello B2.1")
+      if (.false.) call mexprintf("Hello B2.1\n")
 c       write(*,*) 'Iexact dans helena =',IEXACT
 C le mode FR = 0 est pour le couplage avec DINA
       IF ((IEXACT .EQ. 0) .OR. (FR(1) .EQ. 0.0D0)) THEN
@@ -850,12 +914,12 @@ C le mode FR = 0 est pour le couplage avec DINA
         DO I=1,2*MBMAX+2
            FR(I)  = 0.0
         ENDDO
-      if (.false.) call mexprintf("Hello B2.11")
+      if (.false.) call mexprintf("Hello B2.11\n")
 
         IF (NBext.GT.0) THEN
           CALL FBND(Rext,Zext,NBext-1,FR,MF,AMIN,R0,1)
         ENDIF
-      if (.false.) call mexprintf("Hello B2.12")
+      if (.false.) call mexprintf("Hello B2.12\n")
       ELSE
         IF (NBext.GT.0) THEN
           CALL FBND(Rext,Zext,NBext-1,FR,MF,AMIN,R0,0)
@@ -866,7 +930,7 @@ C le mode FR = 0 est pour le couplage avec DINA
       BETAP = PIN(1) * 1.6022D-16 * 12.56637D-7 / B0**2
       XIAB = 12.56637D-7 * XI / (AMIN * B0)
       ALFA =  2.*PI* AMIN**2 * B0 / DABS(PSIN(NPRFL))
-      if (.false.) call mexprintf("Hello B2.2")
+      if (.false.) call mexprintf("Hello B2.2\n")
       
       IF (IWRT.NE.0) THEN
          WRITE(*,*) ' IAS   : ',IAS
@@ -890,7 +954,7 @@ c------------------------ quadratic extraolation to axis
 c        write(*,*) 'avant spline PIN'
         CALL SPLINE(NPRFL,PSIN,PIN,0.D0,0.D0,2,S1,S2,S3,S4)
 c        write(*,*) 'apres spline'
-      if (.false.) call mexprintf("Hello B2.2")
+      if (.false.) call mexprintf("Hello B2.2\n")
 
 	     NPTS=101
         PSIB = DABS(PSIN(NPRFL))                                           
@@ -917,7 +981,7 @@ c             DF2(I) = DPR(I)
          ICUR = 0
          NMESH = 1
       ENDIF
-      if (.false.) call mexprintf("Hello B3")
+      if (.false.) call mexprintf("Hello B3\n")
                                                                         
 C------------------------------------------ALLOCATE LARGE MATRIX        
       IF ((NR.GT.NRMAX).OR.(NP.GT.NPMAX)) THEN                          
@@ -958,7 +1022,7 @@ C------------------------------------ NORMALIZE PROFILES ---------------
       IF ((INI.EQ.0) .AND. (IEXACT .EQ. 0)) THEN
         B = - B * PSCALE/DABS(PSCALE)
       ENDIF
-      if (.false.) call mexprintf("Hello B4")
+      if (.false.) call mexprintf("Hello B4\n")
 C-------------------------------- INITIAL GUESS FOR A ------------------
       A = 4.D0 * B/DABS(B)                          
 C--------------------------------- INITIALIZE PRES AND GAM PROFILES ----
@@ -1030,7 +1094,7 @@ C------------------------------------ NORMALIZE FLUX TO ZERO ON AXIS ---
 	    WRITE(*,*) ' AXIS NOT FOUND'
 	    RETURN
 	  ENDIF
-      if (.false.) call mexprintf("Hello B5")
+      if (.false.) call mexprintf("Hello B5\n")
 	  CALL NORMAL(PSI,NR,NP,PSAXIS) 
 	  IF (AMIX.NE.0.) THEN
             DO  I=1,4*NR*NP
@@ -1074,7 +1138,7 @@ c        write(*,*) 'avant remesh'
      >              CX,CY,XAXIS,YAXIS,NAX,RAX,SAX,IGAM,IAS,
      >              XR1,SIG1,IFAIL)
 c        write(*,*) 'apres remesh'
-      if (.false.) call mexprintf("Hello B6")
+      if (.false.) call mexprintf("Hello B6\n")
 
 	IF (IFAIL.NE.0) RETURN
         DO I = 1, NPTS
@@ -1148,7 +1212,7 @@ ccc             B =  PAXIS /(BBB * BETAP) * B1
 	if (NMG .ge. (NMESH-1)) then
 	  write(*,*) 'convergence problem, NMG=',NMG
 	endif
-      if (.false.) call mexprintf("Hello B7")
+      if (.false.) call mexprintf("Hello B7\n")
 
         IF (((DIFDF2.LT.ERRCUR).AND.(DABS(PAXIS-BETAP).LT.0.001*PAXIS))
      >          .OR.(NMG.EQ.NMESH-1)) THEN
@@ -1365,7 +1429,7 @@ c      WRITE(*,*) ' HELENA ENDS OK',TAU(NR)
       REAL*8 r(*),z(*),FR(*)
       REAL*8 theta(3*MBMAX),radius(3*MBMAX)
       REAL*8 ar(3*MBMAX),br(3*MBMAX),cr(3*MBMAX),dr(3*MBMAX),dummy(3)
-      if (.false.) call mexprintf("Hello C1")
+      if (.false.) call mexprintf("Hello C1\n")
       
       rmax = -1.D10
       rmin = -rmax
@@ -1380,7 +1444,7 @@ c      WRITE(*,*) ' HELENA ENDS OK',TAU(NR)
           jmin = i
         endif
       enddo
-      if (.false.) call mexprintf("Hello C2")
+      if (.false.) call mexprintf("Hello C2\n")
       r0 = (rmin+rmax)/2.D0
 c      do i=1,ntht
 c        theta(i) = atan2(z(i)-z0,r(i)-r0)
@@ -1409,16 +1473,16 @@ c
       do i=2,ntht
         if (theta(i+1) .lt. theta(i) ) theta(i+1) = theta(i+1) + 2.*PI
       enddo
-      if (.false.) call mexprintf("Hello C3")
+      if (.false.) call mexprintf("Hello C3\n")
       
 C      write(*,*) 'avant spline r'
       call spline(ntht,theta,r,0.D0,0.D0,2,ar,br,cr,dr)
-      if (.false.) call mexprintf("Hello C3.1")
+      if (.false.) call mexprintf("Hello C3.1\n")
       rmin = spwert(ntht,PI,ar,br,cr,dr,theta,dummy)
       r0 = (rmin+rmax)/2.D0
       amin = (rmax-rmin)/2.D0
       
-      if (.false.) call mexprintf("Hello C3.2")
+      if (.false.) call mexprintf("Hello C3.2\n")
       do i=1,ntht
         theta(i) = atan2(z(i)-z0,r(i)-r0)
         if (theta(i).lt.0.D0) then
@@ -1431,12 +1495,12 @@ C      write(*,*) 'avant spline r'
          if (theta(i).eq.theta(i+1)) theta(i+1)=theta(i+1)+1.d-6
 C         write(*,*) 'theta(',i,':',i+1,')=',theta(i),theta(i+1)  
       enddo
-      if (.false.) call mexprintf("Hello C3.3")
+      if (.false.) call mexprintf("Hello C3.3\n")
       do i=1,ntht
         theta(i+ntht) = theta(i) + 2.*pi
 	radius(i+ntht) = radius(i)
       enddo
-      if (.false.) call mexprintf("Hello C3.3")
+      if (.false.) call mexprintf("Hello C3.3\n")
       do i=1,ntht
         theta(i+2*ntht)  = theta(i) + 4.*pi
 	radius(i+2*ntht) = radius(i)
@@ -1444,7 +1508,7 @@ C         write(*,*) 'theta(',i,':',i+1,')=',theta(i),theta(i+1)
 C      write(*,*) 'avant spline radius'
       call spline(3*ntht,theta,radius,0.D0,0.D0,2,ar,br,cr,dr)
 
-      if (.false.) call mexprintf("Hello C4")
+      if (.false.) call mexprintf("Hello C4\n")
       NP=MF
       NTHT3 = 3*NTHT
       DO i=1,NP
@@ -5895,7 +5959,7 @@ C
                                                                               
 C                                                                       
                                                                               
-      if (.false.) call mexprintf("Hello D1")
+      if (.false.) call mexprintf("Hello D1\n")
       NMAX = 1001                                                       
       IF((TYP.LT.0).OR.(TYP.GT.3)) THEN
          WRITE(*,*) 'FEHLER IN ROUTINE SPLINE: FALSCHER TYP'
@@ -5911,7 +5975,7 @@ C
 C     BERECHNE DIFFERENZ AUFEINENDERFOLGENDER X-WERTE UND               
 C     UNTERSUCHE MONOTONIE                                              
 C                                                                       
-      if (.false.) call mexprintf("Hello D2")
+      if (.false.) call mexprintf("Hello D2\n")
       DO 10 I = 1, N-1                                                  
          H(I) = X(I+1)- X(I)
          IF(H(I).LE.0.0D0) THEN                                           
@@ -5933,7 +5997,7 @@ C     BERUECKSICHTIGEN DER RANDBEDINGUNGEN
 C                                                                       
 C     NOT-A-KNOT                                                        
 C                
-      if (.false.) call mexprintf("Hello D3")
+      if (.false.) call mexprintf("Hello D3\n")
       IF(TYP.EQ.0) THEN
          A(1)   = A(1) * H(2) / (H(1) + H(2))                           
          A(N-2) = A(N-2) * H(N-2) / (H(N-1) + H(N-2))                   
@@ -5970,18 +6034,18 @@ C
 C                                                                       
 C     BERECHNUNG DER KOEFFIZIENTEN                                      
 C            
-      if (.false.) call mexprintf("Hello D4")
+      if (.false.) call mexprintf("Hello D4\n")
       CALL SGTSL(N-2,B,D,C,A,IERR)                                      
       IF(IERR.NE.0) THEN                                                
          WRITE(*,21)                                                    
          CALL mexErrMsgTxt('ERROR IN SGTSL: MATRIX SINGULAR')                                                           
       ENDIF                                                             
-      if (.false.) call mexprintf("Hello D4.1")
+      if (.false.) call mexprintf("Hello D4.1\n")
 C                                                                       
 C     UEBERSCHREIBEN DES LOESUNGSVEKTORS                                
 C     
       CALL DCOPY(N-2,A,1,C(2:),1)
-      if (.false.) call mexprintf("Hello D4.11")
+      if (.false.) call mexprintf("Hello D4.11\n")
 C                                                                       
 C     IN ABHAENGIGKEIT VON DEN RANDBEDINGUNGEN WIRD DER 1. UND          
 C     DER LETZTE WERT VON C KORRIGIERT                                  
@@ -5990,7 +6054,7 @@ C
          C(1) = C(2) + H(1) * (C(2)-C(3)) / H(2)                        
          C(N) = C(N-1) + H(N-1) * (C(N-1)-C(N-2)) / H(N-2)              
       ENDIF                                                             
-      if (.false.) call mexprintf("Hello D4.2")
+      if (.false.) call mexprintf("Hello D4.2\n")
 C                                                                       
       IF(TYP.EQ.1) THEN
       C(1) = 1.5D0*((Y(2)-Y(1)) / H(1) - ALFA) / H(1) - 0.5D0 * C(2)     
@@ -6001,7 +6065,7 @@ C
          C(1) = 0.5D0 * ALFA                                              
          C(N) = 0.5D0 * BETA                                              
       ENDIF                                                             
-      if (.false.) call mexprintf("Hello D5")
+      if (.false.) call mexprintf("Hello D5\n")
 C                                                                       
       IF(TYP.EQ.3) THEN                                                 
          C(1) = C(2) - 0.5D0 * ALFA * H(1)                                
@@ -6009,14 +6073,14 @@ C
       ENDIF                                                             
 C                                                                       
       CALL DCOPY(N,Y,1,A,1)                                             
-      if (.false.) call mexprintf("Hello D6")
+      if (.false.) call mexprintf("Hello D6\n")
 C                                                                       
       DO 30 I = 1, N-1                                                  
          B(I) = (A(I+1)-A(I))/H(I) - H(I) * (C(I+1)+2.0D0 * C(I))/3.0D0 
          D(I) = (C(I+1)-C(I))/(3.0D0 * H(I))                            
    30 CONTINUE                                                          
 C                                                                       
-      if (.false.) call mexprintf("Hello D7")
+      if (.false.) call mexprintf("Hello D7\n")
       B(N) = (3.0D0 * D(N-1) * H(N-1) + 2.0D0 * C(N-1)) * H(N-1) 
      >         + B(N-1)   
 C                                                                       
