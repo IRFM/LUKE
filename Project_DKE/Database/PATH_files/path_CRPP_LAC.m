@@ -10,8 +10,8 @@ function [dkepath] = path_CRPP_LAC
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'lac5','lac1','lac2','lac4'};
-dkepath.hostname = {'crpppc401.epfl.ch','crpppc172.epfl.ch','crpppc70.epfl.ch','crpppc296'};% should match the output of hostname_jd on the machine
+dkepath.machine = {'lac5','lac1','lac2','lac4','lac6'};
+dkepath.hostname = {'crpppc401.epfl.ch','crpppc172.epfl.ch','crpppc70.epfl.ch','crpppc296','crpppc94'};% should match the output of hostname_jd on the machine
 %
 dkepath.computer = computer;%machine type and supported OS
 %
@@ -31,16 +31,20 @@ dkepath.decker(1).lac5.local_root = '/home/decker/NoTivoli/Packages/lac5/';
 dkepath.decker(1).lac5.mex710 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/lac5/MATLAB710'];
 dkepath.decker(1).lac5.mex800 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/lac5/MATLAB800'];
 dkepath.decker(1).lac5.mex801 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/lac5/MATLAB801'];
+dkepath.decker(1).lac5.mex803 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/lac5/MATLAB803'];
 dkepath.decker(1).lac5.compiler_opt.helmex.mex710 = NaN;%'FLIBS=''-Wl,-rpath-link,/usr/local/matlab710/bin/glnxa64 -L/usr/local/matlab710/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
 dkepath.decker(1).lac5.compiler_opt.helmex.mex800 = NaN;%'FLIBS=''-Wl,-rpath-link,/usr/local/matlab710/bin/glnxa64 -L/usr/local/matlab710/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
 dkepath.decker(1).lac5.compiler_opt.helmex.mex801 = NaN;%'FLIBS=''-Wl,-rpath-link,/usr/local/matlab710/bin/glnxa64 -L/usr/local/matlab710/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
+dkepath.decker(1).lac5.compiler_opt.helmex.mex803 = NaN;%'FLIBS=''-Wl,-rpath-link,/usr/local/matlab710/bin/glnxa64 -L/usr/local/matlab710/bin/glnxa64 -lmx -lmex -lmat -lm -L/home/decker/NoTivoli/Packages/Bin/lapack-3.2 -llapack -lblas''';%  -ltmglib Optional argument for helmex compilation
 dkepath.decker(1).lac5.compiler_opt.fopts.mex710 = '-v FC=gfortran';%'FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''';
 dkepath.decker(1).lac5.compiler_opt.fopts.mex800 = '-v';%'FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''';
 dkepath.decker(1).lac5.compiler_opt.fopts.mex801 = '-v';%'FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''';
+dkepath.decker(1).lac5.compiler_opt.fopts.mex803 = '-v';%'FFLAGS=''-fexceptions -fPIC -fno-omit-frame-pointer -ffixed-line-length-132''';
 %
 dkepath.decker(1).lac5.MUMPS.mex710 = [dkepath.decker(1).lac5.local_root,'MUMPS_4.10.0_ifort/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.decker(1).lac5.MUMPS.mex800 = [dkepath.decker(1).lac5.local_root,'MUMPS_4.10.0_ifort/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.decker(1).lac5.MUMPS.mex801 = [dkepath.decker(1).lac5.local_root,'MUMPS_4.10.0_ifort/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.decker(1).lac5.MUMPS.mex803 = [dkepath.decker(1).lac5.local_root,'MUMPS_4.10.0_ifort/MATLAB803'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % lac1
 %
@@ -59,6 +63,10 @@ dkepath.decker(1).lac2.MUMPS.mex710 = [dkepath.decker(1).lac2.local_root,'MUMPS_
 % lac4
 %
 dkepath.decker(1).lac4 = dkepath.decker(1).lac2;% LAC4 and LAC2 have equivalent settings
+%
+% lac6
+%
+dkepath.decker(1).lac6 = dkepath.decker(1).lac5;% LAC6 and LAC5 have equivalent settings
 %
 % LUKE documentation
 %
