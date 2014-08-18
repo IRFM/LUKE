@@ -130,9 +130,7 @@ if iscell(lukestructs),% remote and/or distributed calculation
                     continue
                 end
                 %
-                if isfield(lukestructs{ijob},'job'),%job suspended
-                    [err,jobparams,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
-                elseif isfield(lukestructs{ijob},'launchedjob') && lukestructs{ijob}.launchedjob,%job unsuspended
+                if isfield(lukestructs{ijob},'launchedjob') && lukestructs{ijob}.launchedjob,%job unsuspended
                     [err,jobparams,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
                 elseif isfield(lukestructs{ijob},'launchedjob') && ~lukestructs{ijob}.launchedjob,%job suspended
                     disp(['WARNING: job #',int2str(ijob),'/',int2str(length(lukestructs)),' is suspended. It won''t be launched.']);
@@ -143,6 +141,10 @@ if iscell(lukestructs),% remote and/or distributed calculation
                 if isfield(remote,'cvs')
                     remote.cvs.CVSROOT = '';%such that cvs update is done once (see remoterunbatch.m)
                 end
+                %
+                if isfield(lukestructs{ijob},'simul')
+                    lukestructs{ijob}.simul.jobparams = jobparams;%transfer infos on the job that may be usefull for further simulations
+                end 
                 %
                 if ~isempty(err),
                     %
@@ -158,10 +160,6 @@ if iscell(lukestructs),% remote and/or distributed calculation
                     luke_flag(ijob) = 1;% job completed.
                 end
             end
-            %
-            if isfield(lukestructs{ijob},'simul')
-                lukestructs{ijob}.simul.jobparams = jobparams;%transfer infos on the job that may be usefull for further simulations
-            end 
             %
             if isfield(lukestructs{ijob},'output') && isfield(lukestructs{ijob},'opt') && isfield(lukestructs{ijob}.opt,'save') && lukestructs{ijob}.opt.save == -1,
                 %
