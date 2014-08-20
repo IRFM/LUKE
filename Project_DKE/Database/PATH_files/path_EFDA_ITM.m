@@ -28,9 +28,16 @@ dkepath.yvesp(1).speclibpath.ual = getenv('UAL');%UAL path in the ITM gateway. S
 dkepath.yvesp(1).mex800 = [dkepath.yvesp(1).luke_root,'Project_DKE/MEX/Bin/efda/MATLAB800/'];
 dkepath.yvesp(1).mex802 = [dkepath.yvesp(1).luke_root,'Project_DKE/MEX/Bin/efda/MATLAB802/'];
 %
+dkepath.yvesp(1).compiler_opt.libs.gfortran = [dkepath.yvesp(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.7.0','/',dkepath.machine,'/'];%extra libraries
 dkepath.yvesp(1).compiler_opt.copts = '';
-dkepath.yvesp(1).compiler_opt.helmex = NaN;%'  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.yvesp(1).compiler_opt.fopts = ' -largeArrayDims';
+dkepath.yvesp(1).compiler_opt.fopts.mex800 = 'FC=''ifort''';%
+dkepath.yvesp(1).compiler_opt.separatrice.mex800 = [' -largeArrayDims -L/afs/ipp-garching.mpg.de/common/soft/intel/ics/2011.0.013/composer_xe_2011_sp1.13.367/compiler/lib/intel64/ -lifcore -lirc -lsvml -L/afs/ipp/itm/switm/lib/lapack/3.4.2/lib/amd64_intel_12 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvesp(1).compiler_opt.helmex.mex800 = [' -compatibleArrayDims -L/afs/ipp-garching.mpg.de/common/soft/intel/ics/2011.0.013/composer_xe_2011_sp1.13.367/compiler/lib/intel64/ -lifcore -lirc -lsvml -L/afs/ipp/itm/switm/lib/lapack/3.4.2/lib/amd64_intel_12 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvesp(1).compiler_opt.fopts.mex800 = ' -largeArrayDims';
+dkepath.yvesp(1).compiler_opt.fopts.mex802 = 'FC=''ifort''';%
+dkepath.yvesp(1).compiler_opt.separatrice.mex802 = [' -largeArrayDims -L/afs/ipp-garching.mpg.de/common/soft/intel/ics/2011.0.013/composer_xe_2011_sp1.13.367/compiler/lib/intel64/ -lifcore -lirc -lsvml -L/afs/ipp/itm/switm/lib/lapack/3.4.2/lib/amd64_intel_12 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvesp(1).compiler_opt.helmex.mex802 = [' -compatibleArrayDims -L/afs/ipp-garching.mpg.de/common/soft/intel/ics/2011.0.013/composer_xe_2011_sp1.13.367/compiler/lib/intel64/ -lifcore -lirc -lsvml -L/afs/ipp/itm/switm/lib/lapack/3.4.2/lib/amd64_intel_12 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvesp(1).compiler_opt.fopts.mex802 = ' -largeArrayDims';
 %
 dkepath.yvesp(1).MUMPS.mex800 = '/afs/ipp/itm/switm/lib/mumps/4.10.0_serial/matlab/R2012b/amd64_intel_12/';%Where MUMPS matrix solver is stored (MEX function)
 dkepath.yvesp(1).MUMPS.mex802 = '/afs/ipp/itm/switm/lib/mumps/4.10.0_serial/matlab/R2013b/amd64_intel_12/';%Where MUMPS matrix solver is stored (MEX function)

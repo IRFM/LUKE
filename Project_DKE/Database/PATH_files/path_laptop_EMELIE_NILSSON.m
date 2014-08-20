@@ -28,9 +28,12 @@ dkepath.emenil(1).temppathroot = '/tmp/';%Absolute root directory path adress wh
 %
 dkepath.emenil(1).mex801 = [dkepath.emenil(1).luke_root,'Project_DKE/MEX/Bin/macbookemelie/MATLAB801','/'];
 %
+dkepath.emenil(1).compiler_opt.libs.gfortran = [dkepath.emenil(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.9.0','/',dkepath.machine,'/'];%extra libraries
+dkepath.emenil(1).compiler_opt.libs.ifort = [dkepath.emenil(1).luke_root,'Project_DKE/MEX/Libs/ifort/13.0.0','/',dkepath.machine,'/'];
 dkepath.emenil(1).compiler_opt.copts = '';
 dkepath.emenil(1).compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
-dkepath.emenil(1).compiler_opt.helmex.mex801 = NaN;%' -llapack -lblas';%-O2 -fdefault-real-8 -fdefault-double-8 -lgfortran';%'  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.emenil(1).compiler_opt.separatrice.mex801 = [' -largeArrayDims /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libBLAS.dylib /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libLAPACK.dylib ',dkepath.emenil(1).compiler_opt.libs.gfortran,'libgfortran.a ',dkepath.emenil(1).compiler_opt.libs.gfortran,'libgcc_s_1.dylib ',dkepath.emenil(1).compiler_opt.libs.gfortran,'libgfortranbegin.a ',dkepath.emenil(1).compiler_opt.libs.gfortran,'libquadmath.a '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.emenil(1).compiler_opt.helmex.mex801 = [' -compatibleArrayDims /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libBLAS.dylib /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libLAPACK.dylib  ',dkepath.emenil(1).compiler_opt.libs.gfortran,'libgfortran.a ',dkepath.emenil(1).compiler_opt.libs.gfortran,'libgcc_s_1.dylib ',dkepath.emenil(1).compiler_opt.libs.gfortran,'libgfortranbegin.a ',dkepath.emenil(1).compiler_opt.libs.gfortran,'libquadmath.a '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 %
 % MUMPS matrix solver (parallel, sequential, mex)
 %

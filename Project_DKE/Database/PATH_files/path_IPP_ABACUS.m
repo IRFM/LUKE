@@ -24,9 +24,12 @@ dkepath.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress w
 %
 dkepath.peysson(1).mex801 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB801/'];
 %
+dkepath.peysson(1).compiler_opt.libs.gfortran = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
 dkepath.peysson(1).compiler_opt.copts = '';
-dkepath.peysson(1).compiler_opt.fopts = '';
-dkepath.peysson(1).compiler_opt.helmex = NaN;%'  -llapack -lblas';% Optional argument for helmex compilation. WARNING: the option for 64bits integer -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.peysson(1).compiler_opt.fopts.mex801 = 'FC=''gfortran''';%
+dkepath.peysson(1).compiler_opt.separatrice.mex801 = [' -largeArrayDims -lgfortran -L',dkepath.peysson(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.peysson(1).compiler_opt.helmex.mex801 = [' -compatibleArrayDims -lgfortran -L',dkepath.peysson(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.peysson(1).compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
 %
 dkepath.peysson(1).MUMPS.mex801 = [dkepath.peysson(1).local_root,'MUMPS_4.10.0/MATLAB801'];;%Where MUMPS matrix solver is stored (MEX function)
 %
