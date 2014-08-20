@@ -19,6 +19,7 @@ function [x,y,xypsin,psia,rpsin,rF,rp,rq,Rp,Zp,Ip,Rv,Zv,Bv,rFdFdpsi,rdpdpsi] = e
 %       (default Ns = 101; 
 %
 % OUTPUT: 
+%
 %    - x: R - Rp values on the nnr * nnz equispaced grid
 %    - y: Z - Zp values on the nnr * nnz equispaced grid
 %    - xypsin: normalized psi values on the nnr * nnz equispaced grid
@@ -301,7 +302,7 @@ if display_mode >= 2,
     ylab = 'p(\psi) (hPa)';
     ylim = NaN;
     %
-    graph1D_jd(sqrt(rpsin),rp/1e5,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
+    graph1D_jd(sqrt(rpsin),rp/1e2,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,color,width,siz,gca,red,lspace,bspace);
     set(gca,'XTick',[0:0.2:1]);
     print_jd(p_opt,[savename,'_p_psi']);
     %
