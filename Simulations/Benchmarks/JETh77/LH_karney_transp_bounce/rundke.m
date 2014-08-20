@@ -117,12 +117,10 @@ iDr0_save = 8;
 nDr0 = length(Dr0_list);
 nr = length(rho_S) - 1;
 %
-mdceparam.clustersize = nDr0;
-dkecluster = clustermode_luke(mdceparam,'',dkepath);
-%
-[flag,cZcurr,cZP0,cdke_out,cequilDKE,cmksa] = mdce_run(@loop_rundke,...
-    {'',Dr0_list,iDr0_save,id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple},...
-    1,1:nDr0,dkecluster);
+for iDr0 = 1:nDr0,
+    iDr0
+    [cZcurr{iDr0},cZP0{iDr0},cdke_out{iDr0},cequilDKE{iDr0},cmksa{iDr0}] = loop_rundke(iDr0,Dr0_list,iDr0_save,id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple);
+end
 %
 j = NaN(nr,nDr0);
 P = NaN(nr,nDr0);
@@ -239,11 +237,11 @@ set(gca,'xtick',[0.01,0.1,1,10,100])
 set(gca,'XMinorGrid','off')
 set(gca,'XMinorTick','on')
 %
-print_jd(p_opt,'fig_JET_transp_nobounce_j','./figures',1)
-print_jd(p_opt,'fig_JET_transp_nobounce_cpu','./figures',2)
-print_jd(p_opt,'fig_JET_transp_nobounce_I','./figures',3)
-print_jd(p_opt,'fig_JET_transp_nobounce_P','./figures',4)
-print_jd(p_opt,'fig_JET_transp_nobounce_Eta','./figures',5)
+print_jd(p_opt,'fig_JET_transp_nobounce_j')
+print_jd(p_opt,'fig_JET_transp_nobounce_cpu')
+print_jd(p_opt,'fig_JET_transp_nobounce_I')
+print_jd(p_opt,'fig_JET_transp_nobounce_P')
+print_jd(p_opt,'fig_JET_transp_nobounce_Eta')
 %
 if opt_proc > 0, 
     %
@@ -257,7 +255,7 @@ if opt_proc > 0,
     %
     graph1D_jd(nproc_list,tCPU_nproc,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
     %
-    print_jd(p_opt,'fig_transp_nobounce_cpu_proc','./figures',6)
+    print_jd(p_opt,'fig_transp_nobounce_cpu_proc')
     %
 end
 %

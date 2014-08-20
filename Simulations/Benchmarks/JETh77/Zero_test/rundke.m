@@ -36,7 +36,7 @@ path_ohm = '';%if nothing is specified, the working directory is first used and 
 ids_wave = {'LH_karney_offaxis_2'};%For RF waves contribution (put all the type of waves needed)
 paths_wave = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
-id_transpfaste = 'magneticturbulence';%For fast electron radial transport
+id_transpfaste = 'nomagneticturbulence';%For fast electron radial transport
 path_transpfaste = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 id_ripple = '';%For fast electron magnetic ripple losses

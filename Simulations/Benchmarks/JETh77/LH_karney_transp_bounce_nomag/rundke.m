@@ -7,6 +7,8 @@ clear functions
 close all
 warning off
 global nfig
+%
+p_opt = -1;
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -86,8 +88,7 @@ graph1D_jd(equilDKE.xrho,Zcurr1.x_tot_fsav,0,0,'','','',NaN,'','','-','none','m'
 graph1D_jd(equilDKE.xrho,Zcurr10.x_tot_fsav,0,0,'\rho','J_{LH}',['v_{||min} = ',num2str(vparmin),', v_{||max} = ',num2str(vparmax),', D_{|| ||LH} = ',num2str(2)],NaN,'','','--','none','b',1,20,gca,1,0.6,0.6);hold on
 legend('D_{\psi\psi} = 0 (m^{2}/s)','D_{\psi\psi} = 0.1 (m^{2}/s)','D_{\psi\psi} = 1 (m^{2}/s)','D_{\psi\psi} = 10 (m^{2}/s)')
 %
-print_jd(p_opt,'fig_profcurr_Dpsipsi','./figures',5)
-
+print_jd(p_opt,'fig_profcurr_Dpsipsi')
 %	    
 %************************************************************************************************************************************
 eval(['save ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
