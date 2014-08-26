@@ -74,7 +74,7 @@ if opt.axenforce,
     iy = find(abs(sy) == min(abs(sy)));
     %
     if abs(sx(ix)) > 10*eps || abs(sy(iy)) > 10*eps,
-        warning('location of magnetic axis enforced')
+        disp(' ---> WARNING: location of magnetic axis enforced in rz2pt_jd.m')
     end
     sx(ix) = 0;
     sy(iy) = 0;
@@ -249,8 +249,10 @@ h2ptdpsindy = griddata(sXpsin,sXtheta,sXdpsindy,h2psin.',theta,gdmethod).';
 ipmax = max(find(sum(isnan(h2ptdpsindx.') | isnan(h2ptdpsindy.')) == 0));
 mask = 1:ipmax;
 %
-ptdpsindx = [zeros(1,nt);interp1(h2psin(mask),h2ptdpsindx(mask,:),[hpsin,1],gdmethod,'extrap')];
-ptdpsindy = [zeros(1,nt);interp1(h2psin(mask),h2ptdpsindy(mask,:),[hpsin,1],gdmethod,'extrap')];
+interp1method = 'pchip';%'cubic' method not recognized in interp1
+%
+ptdpsindx = [zeros(1,nt);interp1(h2psin(mask),h2ptdpsindx(mask,:),[hpsin,1],interp1method,'extrap')];
+ptdpsindy = [zeros(1,nt);interp1(h2psin(mask),h2ptdpsindy(mask,:),[hpsin,1],interp1method,'extrap')];
 %
 if display_mode >= 2,
     %
