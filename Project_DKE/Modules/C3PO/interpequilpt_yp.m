@@ -22,7 +22,8 @@ function [Zpp_f] = interpequilpt_yp(method,f,rho,theta,nharm)
 %
 if nargin == 3,
     %
-    Zpp_f.pp_f = interp1(rho(:),f',method,'pp');%Create piecewise polynomials
+    if isvector(f),f = f(:)';end
+    Zpp_f.pp_f = ppinterp_yp(rho(:),f',size(f'),method);%Create piecewise polynomials
     %
     if ~isfield(Zpp_f.pp_f,'orient'),
         Zpp_f.pp_f.orient = 'first';
@@ -73,9 +74,9 @@ elseif nargin >= 4,
     an = 2*real(FScoef(:,[nharm+2:end]));
     bn = -2*imag(FScoef(:,[nharm+2:end]));
     %
-    Zpp_f.pp_a0 = interp1(rho,a0,method,'pp');%Interpolation of Fourier series coefficients on a fine rho grid
-    Zpp_f.pp_an = interp1(rho,an,method,'pp');%Interpolation of Fourier series coefficients on a fine rho grid
-    Zpp_f.pp_bn = interp1(rho,bn,method,'pp');%Interpolation of Fourier series coefficients on a fine rho grid
+    Zpp_f.pp_a0 = ppinterp_yp(rho,a0,size(a0),method);%Interpolation of Fourier series coefficients on a fine rho grid
+    Zpp_f.pp_an = ppinterp_yp(rho,an,size(an),method);%Interpolation of Fourier series coefficients on a fine rho grid
+    Zpp_f.pp_bn = ppinterp_yp(rho,bn,size(bn),method);%Interpolation of Fourier series coefficients on a fine rho grid
     %   
     if ~isfield(Zpp_f.pp_a0,'orient'),
         Zpp_f.pp_a0.orient = 'first';
