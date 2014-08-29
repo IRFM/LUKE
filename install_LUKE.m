@@ -103,12 +103,10 @@ end
 %
 opt = input_dke_yp('Do you want to test MDCE capabilities','n',{'y','n'});
 %
-if opt == 'y',
-    if isfield(dkepath,'remote'),
-        test_mdce(3,1,1);
-    else
-        disp('No cluster information found.')
-    end
+if opt == 'y' && isfield(dkepath,'remote') && ~isempty(dkepath.remote),
+    test_mdce(3);
+else
+	disp('distributed calculation with remcomputing not set up')
 end
 %
 opt = input_dke_yp('Do you want to run a simple test case','y',{'y','n'});
@@ -125,15 +123,15 @@ end
 %
 opt = input_dke_yp('Do you want to run the test case with distributed calculation of collision integrals','n',{'y','n'});
 %
-if opt == 'y' && isfield(dkepath,'remote'),
+if opt == 'y' && isfield(dkepath,'remote') && ~isempty(dkepath.remote),
 	cd([dkepath.luke_root,'Simulations/Benchmarks/TScyl/LH_Karney']);
 	disp('---------------------------------------------------------------------------')
 	disp('-------------------------- DISTRIBUTED COMPUTING --------------------------')
     disp('---------------------------------------------------------------------------')
     rundke_cluster;
     cd(dkepath.luke_root);
-elseif opt == 'y' && ~isfield(dkepath,'remote'),
-	warning('The field ''remote'' must exist in the dkepath structure !')
+else
+	disp('remote calculation not set up')
 end
 %
 opt = input_dke_yp('Do you want to run all tests and examples (long process, several hours)','n',{'y','n'});
