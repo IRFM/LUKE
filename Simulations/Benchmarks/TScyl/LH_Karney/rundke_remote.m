@@ -1,5 +1,28 @@
-function [] = rundke_remote(remlist,link_mode)
+function rundke_remote(remlist,link_mode,remtimout)
 %
+% This function runs the LH Karney benchmark remotely on a selection of hosts. 
+%   - If it is called with remtimout > 0, the function waits for each calculation to be completed 
+%   - If it is called with remtimout = 0, the function saves the jobs in a LUKE_RESULTS file
+%   - If it is called without arguments, it loads the previously saved LUKE_RESULTS file if it exists, and check the results.
+%
+% INPUTS :
+%       - remlist : remote profile selection
+%           o NaN : (default) test all profiles
+%           o []  : prompt for profile selection
+%           o ex : [1:3,6,8] : profile selection
+%       - link_mode : connection mode prescription
+%           o -1  : local profiles only
+%           o NaN : (default) use value from remote.link_mode
+%           o []  : give priority to (0) ssh key pair, (1) ssh bridge, (2) url/ftp bridge
+%           o 0   : ssh key pair enforced
+%           o 1   : ssh bridge enforced
+%           o 2   : url/ftp bridge enforced
+%       - remtimout : timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+%
+if nargin < 3,
+    remtimout = 10;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+end
+%    
 if nargin < 2 || (~isempty(link_mode) && (~isnumeric(link_mode) || ~isscalar(link_mode) || ~any(link_mode == [0:2]))),
     link_mode = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
 end
@@ -8,18 +31,16 @@ if nargin < 1 || (~isempty(remlist) && ~isnumeric(remlist)),
     remlist = NaN;% test all cases
 end
 %
-remtimout = 0;%10;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
-remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remdebugmode = 0;%1;% debug mode (0) off (1) on
-remclean = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+%
+debugmode = 0;%1;% debug mode (0) off (1) on
+cleanmode = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+luke_memory = 2000;% job memory in mb
+luke_walltime = 1;% job walltime in hours
 %
 opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
 mdce_opt = 0;% option for testing distributed computing inside remote calculation
-%
-luke_memory = 2000;% job memory in mb
-luke_walltime = 1;% job walltime in hours
 %
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -48,8 +69,6 @@ path_display = '';%if nothing is specified, the working directory is first used 
 [dkepath,equil,dkeparam,dkedisplay] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display);
 %
 %************************************************************************************************************************************
-%
-[qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
 wavestruct.omega_lh = [4]*2*pi*1e9; %(GHz -> rad/s). Wave frequency [1,1] Indicative, no effect in small FLR limit opt_lh > 0
 %Option parameter for cross-comparison between old LH code: 
@@ -92,9 +111,6 @@ dkeparam.psin_S = psin_S;% radial flux grid points enforced
 dkeparam.clustermode.coll_dke_jd.scheduler.mode = mdce_opt;
 dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = mdce_opt;
 %
-dkeparam.luke_memory = luke_memory;% job memory in mb
-dkeparam.luke_walltime = luke_walltime;% job walltime in hours
-%
 % RELATIVISTIC CASE
 %
 dkeparam.pnmax_S = 30;
@@ -131,10 +147,14 @@ filename = [path_simul,'LUKE_RESULTS_',id_equil,'_',id_simul,'.mat'];
 %
 % check if current jobs exists to load possible existing jobs
 %
-if remtimout == 0 && remstart == 0 && exist(filename,'file'),% load existing simulation
-    load(filename,'lukestructs','remlist','dkepath');
+if nargin == 0 && exist(filename,'file'),% load existing simulation
     %
-    nrem = length(remlist);
+    load(filename,'lukestructs','remlist','link_mode','remtimout');
+    %
+    dkepath = setpath_luke_jd('',link_mode);
+    %
+    nrem = length(lukestructs);%remlist
+    %
 else% new simulation
     %
     % profiles in dkepath.remote tested
@@ -156,20 +176,25 @@ else% new simulation
     %
     nrem = length(remlist);
     %
-    dkepath.remtimout = remtimout;% timeout in minutes
-    dkepath.rempause = rempause;% pause between job checks (in minutes) (only for remtimout > 0)
-    dkepath.remenforce = 0;% exit if remote calculation failed 
-    dkepath.debugmode = remdebugmode;% debug mode 
-    dkepath.clean = remclean;% clean mode 
+    dkepath.clustermode.run_lukert.scheduler.mode = 0;%no distribution of LUKE on the remote machine
+    dkepath.clustermode.run_lukert.scheduler.remtimout = remtimout;
+    dkepath.clustermode.run_lukert.scheduler.rempause = rempause;
+    dkepath.clustermode.run_lukert.scheduler.memory = luke_memory;
+    dkepath.clustermode.run_lukert.scheduler.walltime = luke_walltime;
+    dkepath.clustermode.run_lukert.scheduler.debugmode = debugmode;
+    dkepath.clustermode.run_lukert.scheduler.cleanmode = cleanmode;
+    dkepath.clustermode.run_lukert.scheduler.enforce = 0;% exit if remote calculation failed 
     %
     lukestructs = repmat({lukestruct},[1,nrem]);
 end
 %
 for remnum = 1:nrem,
     %
-    dkepath.remnum = remlist(remnum);
-    %
-    disp(['--> Calculation with remote number ',num2str(dkepath.remnum)])
+    if ~isnan(remlist), % new calculation
+        dkepath.clustermode.run_lukert.scheduler.remnum = remlist(remnum);
+        %
+        disp(['--> Calculation with remote number ',num2str(remlist(remnum))])
+    end
     %
     lukestructs{remnum} = run_lukert(lukestructs{remnum},dkepath);
     %
@@ -250,10 +275,12 @@ end
 %
 %************************************************************************************************************************************
 %
-if ~any(flag_running) && input_dke_yp(['All jobs completed. Do you want to delete the file ',filename,' to avoid future conflict ? (y/n)'],'y',{'y','n'}) == 'y',
-    delete(filename);
-else
-    save(filename);
-    info_dke_yp(2,['Data saved in ',filename]);
+if remtimout == 0,
+    if ~any(flag_running),
+        delete(filename);% jobs completed, file deleted
+    else
+        save(filename);% file saved for future check
+        info_dke_yp(2,['Data saved in ',filename]);
+    end
 end
 %

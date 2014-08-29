@@ -1,35 +1,60 @@
-%Script for running the DKE solver (can be modified by the user for specific simulations)
-%by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
+function rundke_Zi_remote(remtimout,link_mode,display_mode,plot_results)
 %
-clear all
-clear mex
-clear functions
-close all
-warning off
-global nfig
+% This function is used to test the use of the MDCE toolbox within run_lukert
+% A loop is created over various collision operators and ion charges
 %
-dkepath = setpath_luke_jd('',NaN);
+%   - If it is called with remtimout > 0, the function waits for each calculation to be completed 
+%   - If it is called with remtimout = 0, the function saves the job in a LUKE_RESULTS file
+%   - If it is called without arguments, it loads the previously saved LUKE_RESULTS file if it exists, and check the results.
 %
-remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+% INPUTS :
+%       - remtimout : timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+%       - link_mode : connection mode prescription
+%           o -2  : disable remote profiles
+%           o -1  : local profiles only
+%           o NaN : (default) use value from remote.link_mode
+%           o []  : give priority to (0) ssh key pair, (1) ssh bridge, (2) url/ftp bridge
+%           o 0   : ssh key pair enforced
+%           o 1   : ssh bridge enforced
+%           o 2   : url/ftp bridge enforced
+%       - display_mode
+%           o 0   : no display
+%           o 1   : display general info and time evoution (default)
+%           o 2   : display all MDCE steps
+%       - plot_results : flag to plot results (default : false)
+%
+if nargin < 4,
+    plot_results = false;% flag to plot results
+end
+%
+if nargin < 3,
+    display_mode = 1;
+end
+%
+if nargin < 2 || (~isempty(link_mode) && (~isnumeric(link_mode) || ~isscalar(link_mode) || ~any(link_mode == [-1:2]))),
+    link_mode = NaN;% bridge mode : (NaN) follow remote, ([]) priority to ssh, (0) ssh only, (1) bridge only
+end
+%
+if nargin < 1,
+    remtimout = 10;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+end
+%
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
-remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-remnum = 13;% remote profile number. Use 0 for local sequential calculations
-remdebugmode = 1;%1;% debug mode (0) off (1) on
-remclean = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 %
-opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
-%  
-%
-mdce_opt = 0;% option for testing distributed computing inside remote calculation
-%
+debugmode = 0;%1;% debug mode (0) off (1) on
+cleanmode = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 luke_memory = 2000;% job memory in mb
 luke_walltime = 1;% job walltime in hours
 %
+opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
+%
+mdce_opt = 0;% option for testing distributed computing inside remote calculation
+%
 p_opt = -1;
-% 
+%
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-id_simul = 'LH_karney_Zi';%Simulation ID
+id_simul = 'LH_karney_Zi_remote';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
@@ -51,7 +76,7 @@ path_display = '';%if nothing is specified, the working directory is first used 
 %************************************************************************************************************************************
 %************************************************************************************************************************************
 %
-[equil,dkeparam,dkedisplay] = load_structures_yp('equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display);
+[dkepath,equil,dkeparam,dkedisplay] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display);
 %
 %************************************************************************************************************************************
 %
@@ -102,12 +127,9 @@ dkeparam.psin_S = psin_S;% radial flux grid points enforced
 dkeparam.clustermode.coll_dke_jd.scheduler.mode = mdce_opt;
 dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = mdce_opt;
 %
-dkeparam.luke_memory = luke_memory;% job memory in mb
-dkeparam.luke_walltime = luke_walltime;% job walltime in hours
-%
 betath = 0.001;
 %
-[qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
+[~,~,~,~,~,~,~,mc2] = pc_dke_yp;%Universal physics constants
 %
 equil.pTe = betath^2*mc2*ones(size(equil.pTe));
 equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
@@ -115,8 +137,8 @@ equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
 %
 opt.fields = {'Zcurr','ZP0'};% select fields to be returned from lukestructs. Use NaN to return all fields.
 %
-Zi_list = [1:20];
-coll_mode_list = [0:2];
+Zi_list = [1,20];%1:20;
+coll_mode_list = 0:2;
 %
 nZi = length(Zi_list);
 ncoll = length(coll_mode_list);
@@ -127,11 +149,50 @@ filename = [path_simul,'LUKE_RESULTS_',id_equil,'_',id_simul,'.mat'];
 %
 % check if current jobs exists to load possible existing jobs
 %
-if remtimout == 0 && remstart == 0 && exist(filename,'file'),% load existing simulation
+if nargin == 0 && exist(filename,'file'),% load existing simulation
     %
-    load(filename,'lukestructs');
+    load(filename,'lukestructs','remtimout','link_mode','plot_results','remnum','dist_mode','mdce_mode');
     %
 else% new simulation
+    %
+    % determite remote and distributed profiles
+    %
+    dkepath = setpath_luke_jd('',link_mode);
+    %
+    if ~isempty(dkepath.remote),
+        remopt = input_dke_yp(['Do you want to transfer the distributed calculation to a remote host (y/n)'],'n',{'y','n'});
+        disp(' ')
+    else
+        remopt = 'n';
+    end
+    %
+    if remopt == 'y',% use of mdce_remote
+        remnum = iselect_jd(dkepath.profilestr,'Please select the host for the distributed calculation ?',0,struct,1);
+        disp(' ')
+        dist_mode = NaN;
+        mdce_mode = input_dke_yp(['Please select a mode for the distribution on host ',dkepath.profilestr{remnum},':\n(0) sequential \n(1) jobcomputing \n(2) parcomputing \n(3) remcomputing \n'],0,0:3);
+    else% direct distribution frim localhost
+        remnum = 0;
+        dist_mode = iselect_jd(dkepath.distprofiles,'Please select a mode for the distribution from the local host ?',0,struct,1);
+        if dist_mode > 3,
+            mdce_mode = 3 - dist_mode;
+        else
+            mdce_mode = dist_mode - 1;
+        end
+    end
+    %
+    dkepath.clustermode.run_lukert.scheduler.remnum = remnum;
+    dkepath.clustermode.run_lukert.scheduler.mode = mdce_mode;
+    dkepath.clustermode.run_lukert.scheduler.remtimout = remtimout;
+    dkepath.clustermode.run_lukert.scheduler.rempause = rempause;
+    dkepath.clustermode.run_lukert.scheduler.memory = luke_memory;
+    dkepath.clustermode.run_lukert.scheduler.walltime = luke_walltime;
+    dkepath.clustermode.run_lukert.scheduler.debugmode = debugmode;
+    dkepath.clustermode.run_lukert.scheduler.display = display_mode;
+    dkepath.clustermode.run_lukert.scheduler.cleanmode = cleanmode;
+    dkepath.clustermode.run_lukert.scheduler.enforce = 0;% exit if remote calculation failed 
+    %
+    % generate luke_inputs structure
     %
     lukestructs = cell(ncoll,nZi);
     %
@@ -160,27 +221,16 @@ else% new simulation
     end
 end
 %
-dkepath.remtimout = remtimout;% timeout in minutes
-dkepath.rempause = rempause;% pause between job checks (in minutes) (only for remtimout > 0)
-dkepath.remenforce = 0;% exit if remote calculation failed 
-dkepath.remnum = remnum;% remote profile number
-dkepath.debugmode = remdebugmode;% debug mode 
-dkepath.clean = remclean;% clean mode 
-%
 lukestructs = run_lukert(lukestructs,dkepath);
 %
 j = NaN(ncoll,nZi);
 P = NaN(ncoll,nZi);
-%
-plotresults = 0;
 %
 flag_running = true(ncoll,nZi);
 %
 for iZi = 1:nZi,
     for icoll = 1:ncoll,
         if isfield(lukestructs{icoll,iZi},'output'),
-            %
-            plotresults = 1;
             %
             j(icoll,iZi) = lukestructs{icoll,iZi}.output.Zcurr.x_0;
             P(icoll,iZi) = lukestructs{icoll,iZi}.output.ZP0.x_rf_fsav;
@@ -192,20 +242,24 @@ end
 %
 eta = j./P;
 %
-j_0_nr_Karney_1 = 0.05759;
-P_0_nr_Karney_1 = 0.004012;
-eta_0_nr_Karney_1 = 14.35;
+j_nr_k = NaN(ncoll,nZi);
+P_nr_k = NaN(ncoll,nZi);
+eta_nr_k = NaN(ncoll,nZi);
 %
-j_2_nr_Karney_1 = 0.07092;
-P_2_nr_Karney_1 = 0.004294;
-eta_2_nr_Karney_1 = 16.52;
+j_nr_k(1,1) = 0.05759;
+P_nr_k(1,1) = 0.004012;
+eta_nr_k(1,1) = 14.35;
 %
-%eta_0_nr_Karney = eta_0_nr_Karney_1*6./(5 + Zi_list);
-eta_2_nr_Karney = eta_2_nr_Karney_1*6./(5 + Zi_list);
+j_nr_k(3,1) = 0.07092;
+P_nr_k(3,1) = 0.004294;
+eta_nr_k(3,1) = 16.52;
+%
+eta_0_nr_Karney = eta_nr_k(1,1)*6./(5 + Zi_list);
+eta_2_nr_Karney = eta_nr_k(3,1)*6./(5 + Zi_list);
 %
 %************************************************************************************************************************************
 %
-if plotresults,
+if ~any(flag_running(:)) && plot_results,
     %
     figure(1),clf
     %
@@ -221,8 +275,8 @@ if plotresults,
     graph1D_jd(Zi_list,j(3,:),0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
     graph1D_jd(Zi_list,j(2,:),0,0,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
     graph1D_jd(Zi_list,j(1,:),0,0,'','','',leg,xlim,ylim,'-','none','g',2,siz,gca);
-    %graph1D_jd(xlim,[j_2_nr_Karney_1,j_2_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,siz,gca);
-    %graph1D_jd(xlim,[j_0_nr_Karney_1,j_0_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,siz,gca);
+    %graph1D_jd(xlim,[j_nr_k(3,:),j_nr_k(3,:)],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,siz,gca);
+    %graph1D_jd(xlim,[j_nr_k(1,1),j_nr_k(1,1)],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,siz,gca);
     %
     set(gca,'ytick',[0:0.2:1]*ylim(2))
     set(gca,'xtick',[0:0.2:1]*xlim(2))
@@ -235,8 +289,8 @@ if plotresults,
     graph1D_jd(Zi_list,P(3,:),0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
     graph1D_jd(Zi_list,P(2,:),0,0,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
     graph1D_jd(Zi_list,P(1,:),0,0,'','','',leg,xlim,ylim,'-','none','g',2,siz,gca);
-    %graph1D_jd(xlim,[P_2_nr_Karney_1,P_2_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,siz,gca);
-    %graph1D_jd(xlim,[P_0_nr_Karney_1,P_0_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,siz,gca);
+    %graph1D_jd(xlim,[P_nr_k(3,1),P_nr_k(3,1)],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,siz,gca);
+    %graph1D_jd(xlim,[P_nr_k(1,1),P_nr_k(1,1)],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,siz,gca);
     %
     set(gca,'ytick',[0:0.2:1]*ylim(2))
     set(gca,'xtick',[0:0.2:1]*xlim(2))
@@ -249,8 +303,8 @@ if plotresults,
     graph1D_jd(Zi_list,eta(3,:),0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
     graph1D_jd(Zi_list,eta(2,:),0,0,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
     graph1D_jd(Zi_list,eta(1,:),0,0,'','','',leg,xlim,ylim,'-','none','g',2,siz,gca);
-    graph1D_jd(Zi_list,eta_2_nr_Karney,0,0,'','','',NaN,xlim,ylim,'--','none','k',0.5,siz,gca);
-    %graph1D_jd(Zi_list,eta_0_nr_Karney,0,0,'','','',NaN,xlim,ylim,'--','none','m',2,siz,gca);
+    graph1D_jd(Zi_list,eta_2_nr_Karney,0,0,'','','',NaN,xlim,ylim,'--','none','b',0.5,siz,gca);
+    graph1D_jd(Zi_list,eta_0_nr_Karney,0,0,'','','',NaN,xlim,ylim,'--','none','r',0.5,siz,gca);
     %
     set(gca,'ytick',[0:0.2:1]*ylim(2))
     set(gca,'xtick',[0:0.2:1]*xlim(2))
@@ -263,9 +317,67 @@ end
 %
 %************************************************************************************************************************************
 %
-if ~any(flag_running) & input_dke_yp(['All jobs completed. Do you want to delete the file ',filename,' to avoid future conflict ? (y/n)'],'y',{'y','n'}) == 'y',
-    delete(filename);
+format
+%
+if ~isempty(link_mode) && ~isnan(link_mode) && link_mode >= 0,
+    link_modestr = ['_link_mode_',num2str(link_mode)];
+elseif ~isempty(link_mode) && link_mode == -1,
+    link_modestr = '_noremote';
 else
-    save(filename,'-v7.3');
-    info_dke_yp(2,['Data saved in ',filename]);
+    link_modestr = '';
+end
+%
+diaryname = ['res_karney_Zi_remote_',datestr(now,29),'_remnum_',num2str(remnum),'_mdce_',num2str(mdce_mode),link_modestr,'.log'];
+%
+if input_dke_yp(['Do you want to save the results in the log file ',diaryname,' ? (y/n)'],'y',{'y','n'}) == 'y',
+    %
+    if exist(diaryname,'file'),
+        delete(diaryname);
+    end
+    %
+    diary(diaryname);
+    %
+else
+    diaryname = '';
+end
+%
+disp(' ')
+if remnum == 0,
+    disp(['Calculation distributed locally with the MDCE profile : ',dkepath.distprofiles{dist_mode}]);
+else
+    disp(['Calculation distributed on remote host : ',dkepath.profilestr{remnum},' with MDCE mode ',num2str(mdce_mode)]);
+end
+disp(' ')
+%
+
+disp('----------------------')
+disp(['Comparison LUKE/Karney - Non relativistic case (3,5,1) - with tn = ',int2str(dkeparam.tn),', dtn = ',int2str(dkeparam.dtn),' and nit_f = ',int2str(dkeparam.nit_f)])
+disp('----------------------')
+%
+for iZi = [1,nZi],
+    for icoll = 1:ncoll,
+        casestr = ['Zi = ',num2str(Zi_list(iZi)),' ; coll mode = ',num2str(coll_mode_list(icoll))];
+        if flag_running(icoll,iZi),
+            disp([casestr,' : running'])
+        elseif ~isnan(j(icoll,iZi)),
+            disp([casestr,' : j = ',num2str(j(icoll,iZi)),'/',num2str(j_nr_k(icoll,iZi)),' ; P = ',num2str(P(icoll,iZi)),'/',num2str(P_nr_k(icoll,iZi)),' ; j/P = ',num2str(eta(icoll,iZi)),'/',num2str(eta_nr_k(icoll,iZi))]) 
+        else      
+            disp([casestr,' : failed'])
+        end
+    end
+end
+%
+if ~isempty(diaryname),
+    diary off
+end
+%
+%************************************************************************************************************************************
+%
+if remtimout == 0,
+    if ~any(flag_running(:)),
+        delete(filename);% jobs completed, file deleted
+    else
+        save(filename);% file saved for future check
+        info_dke_yp(2,['Data saved in ',filename]);
+    end
 end
