@@ -9,7 +9,8 @@ function lukecvsupdate(dkepath,debugmode,link_mode)
 %           (default: if no input structure or empty, dkepath is automatically loaded from LUKE_PATH.mat
 %       - debugmode
 %       - link_mode : connection mode prescription
-%           o -1  : disable remote profiles
+%           o -2  : disable remote profiles
+%           o -1  : local profiles only
 %           o NaN : (default) use value from remote.link_mode
 %           o []  : give priority to (0) ssh key pair, (1) ssh bridge, (2) url/ftp bridge
 %           o 0   : ssh key pair enforced

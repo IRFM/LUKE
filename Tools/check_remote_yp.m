@@ -9,6 +9,7 @@ function flag = check_remote_yp(dkepath,debugmode,link_mode,remlist,log_mode)
 %           (default: if no input structure or empty, dkepath is automatically loaded from LUKE_PATH.mat
 %       - debugmode: display details   
 %       - link_mode : connection mode prescription
+%           o -1  : local profiles only
 %           o NaN : (default) use value from remote.link_mode
 %           o []  : give priority to (0) ssh key pair, (1) ssh bridge, (2) url/ftp bridge
 %           o 0   : ssh key pair enforced
@@ -19,7 +20,8 @@ function flag = check_remote_yp(dkepath,debugmode,link_mode,remlist,log_mode)
 %           o []  : user-prompt profile list
 %           o [1,3...] : tests specified profiles
 %       - log_mode : output results in a log file
-%           o 0 : (default) yes 
+%           o 0 : no (default)
+%           o 1 : yes 
 %
 %	Output:
 %
@@ -72,15 +74,12 @@ end
 %
 if ~isempty(remlist) && ~isnan(sum(remlist)) && ~isempty(dkepath),%for the remlist only
     %
-    dkepath_test = dkepath;
-    %
-    if isfield(dkepath,'remote'),dkepath_test.remote = dkepath.remote(remlist);end
-    if isfield(dkepath,'profilestr'),dkepath_test.profilestr = dkepath.profilestr(remlist);end
-    if isfield(dkepath,'remprofiles'),dkepath_test.remprofiles = dkepath.remprofiles(remlist+1);end
-    if isfield(dkepath,'distprofiles'),dkepath_test.distprofiles = dkepath.distprofiles(remlist+3);end
+    dkepath.remote = dkepath.remote(remlist);
+    dkepath.profilestr = dkepath.profilestr(remlist);
+    dkepath.remprofiles = dkepath.remprofiles([1,remlist+1]);
+    dkepath.distprofiles = dkepath.distprofiles([1:3,remlist+3]);
     %
     remlist = 1:length(remlist);
-    dkepath = dkepath_test;
     %
 end
 %
@@ -111,6 +110,7 @@ for irem = remlist,
     job = matstandardjob_jd('runmat');% standard matlab job
     job.debugmode = debugmode; % to display info and debug
     job.funcopy = 0; % (0) to use function LUKEversion_jd on the remote host within matlab path - TEST REMOTE PATH
+    job.remtimout = 5;% in minutes
     %
     [err,~,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem),job);
     %

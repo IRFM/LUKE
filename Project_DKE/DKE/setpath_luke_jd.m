@@ -17,7 +17,8 @@ function dkepath = setpath_luke_jd(dkepath,link_mode)
 %       o dkepath (struct)    : an existing dkepath structure (setpath_luke_jd then used to reset paths, recompile MEX, or test remote connections)
 %
 %   - link_mode : connection mode prescription
-%       o -1  : disable remote profiles
+%       o -2  : disable remote profiles
+%       o -1  : local profiles only
 %       o NaN : (default) use value from remote.link_mode
 %       o []  : give priority to (0) ssh key pair, (1) ssh bridge, (2) url/ftp bridge
 %       o 0   : ssh key pair enforced

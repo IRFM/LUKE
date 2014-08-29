@@ -3,7 +3,8 @@ function dkepath = update_remote_jd(dkepath,link_mode)
 % this function load remote profiles and selects accessible remote clusters with compatible LUKE version 
 %
 %   - link_mode : connection mode prescription
-%       o -1  : disable remote profiles
+%       o -2  : disable remote profiles
+%       o -1  : local profiles only
 %       o NaN : (default) use value from remote.link_mode
 %       o []  : give priority to (0) ssh key pair, (1) ssh bridge, (2) url/ftp bridge
 %       o 0   : ssh key pair enforced
@@ -20,6 +21,7 @@ lochostname = hostname_jd;
 % load remote profiles if needed
 %
 nrem = 0;
+flag_local = [];
 %
 for irem = 1:length(dkepath.remote),
     if isfield(dkepath.remote(irem),'remoteid'),% process remote profile with schedulername, profilename & luke_root
@@ -44,19 +46,29 @@ for irem = 1:length(dkepath.remote),
         end
     else
         %
-        nrem = irem;
+        nrem = nrem+1;
         remote(nrem) = dkepath.remote(nrem);
         %
     end
     %
     if any(strfind(lochostname,remote(nrem).hostname)),
         remote(nrem).host = '';
+        flag_local(nrem) = true;
+    else
+        flag_local(nrem) = false;
     end
+end
+%
+if ~isempty(link_mode) && link_mode == -1,% local profiles only
+    remote = remote(find(flag_local));
+    nrem = length(remote);
+    link_mode = [];% mode compatible with local calculations
 end
 %
 if nrem == 0,
     remote = [];
 end
+
 %
 % test compatibility of local and remote LUKE versions
 %
