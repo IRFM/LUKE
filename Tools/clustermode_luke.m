@@ -6,9 +6,11 @@ function [dkecluster] = clustermode_luke(param,fun,dkepath,remnum)
 %   - param : parameters for distributed computing
 % -> see mdce_clustermode for a detailed list of parameters
 %
-%   Note : if param contains the field 'remnum', it is equivalent to specifying the fourth argument 
+%   Notes : 
+%           o if param contains the field 'remnum', it is equivalent to specifying the fourth argument 
+%           o if param == '', the field clustermode is searched within the structure 'dkepath'
 %
-% Different modes can be used for distributed computing
+%   Different modes can be used for distributed computing
 %
 %           o (0)           : sequential
 %           o (1)           : job scheduler (Matlab MDCE required)             (+i enables GPU calculations)
@@ -18,7 +20,8 @@ function [dkecluster] = clustermode_luke(param,fun,dkepath,remnum)
 %   - fun : function name, used if (fun) is a field of param 
 %               (case when param contains distributed computing parameters for multiple functions)
 %
-%   - dkepath : LUKE path structure including remote profiles
+%   - dkepath : LUKE path structure including remote profiles, and possibly a field clustermode
+%
 %   - remnum : remote profile index for use of mdce_remote (transfer entire calculation to remote host)
 %
 % OUTPUT :
@@ -31,6 +34,16 @@ if nargin < 3,
 end
 if nargin < 2,
     fun = '';
+end
+if nargin < 1,
+    param = 0;
+end
+if isempty(param),
+    if isfield(dkepath,'clustermode')
+        param = dkepath.clustermode;
+    else
+        param = 0;
+    end
 end
 %
 % manage case where param.(fun) is defined
@@ -80,7 +93,7 @@ nrem = length(remote);
 %
 % distributed computing mode
 %
-if ~any(mode == -nrem:2),
+if ~any(mode == -nrem:3),
     disp('Warning : invalid cluster mode')
     dkecluster.scheduler.mode = 0;%dkecluster type not recognized, sequential mode enforced      
 elseif any(mode == -nrem:-1),
