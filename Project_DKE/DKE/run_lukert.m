@@ -4,200 +4,115 @@ function [lukestructs] = run_lukert(lukestructs,dkepath,timedep)
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 %
-% remote luke run possible if specified in dkepath
-%
 if nargin < 2,
     dkepath = load_structures_yp('dkepath','','');
 end
 %
 cellmode = 1;
 %
-if isfield(dkepath,'remnum') && isscalar(dkepath.remnum) && dkepath.remnum == round(dkepath.remnum) && dkepath.remnum >= 1 && dkepath.remnum <= length(dkepath.remote),
+if ~iscell(lukestructs) && (any(isfield(lukestructs,{'job','output','err'})) ... % job started already
+        || (isfield(dkepath,'clustermode') && isfield(dkepath.clustermode,'run_lukert'))), % use of MDCE
     %
-    remote = dkepath.remote(dkepath.remnum);
+    cellmode = 0;% flag to return lukestructs in the same wrapper as input
+    lukestructs = {lukestructs};% lukestructs must be in cell for distributed or remote calculation
     %
-    if isfield(dkepath,'remtimout'),%timeout
-        remote.remtimout = dkepath.remtimout;
-    else
-        remote.remtimout = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes). Enter 0 to return and check later [0]',0);
-    end
-    %
-    if isfield(dkepath,'rempause'),%timeout
-        remote.rempause = dkepath.rempause;
-    else
-        remote.rempause = 0.5;%pause between job checks (in minutes)
-    end
-    %
-    if isfield(dkepath,'debugmode'),
-        remote.debugmode = dkepath.debugmode;
-    else
-        remote.debugmode = 0;
-    end
-    %
-    if isfield(dkepath,'clean'),
-        remote.clean = dkepath.clean;
-    else
-        remote.clean = 2;
-    end
-    %
-    if ~iscell(lukestructs),
-        cellmode = 0;
-        lukestructs = {lukestructs};% lukestructs must be in cell for remote calculation
-    end
-    %
-else
-    %
-    remote = '';%local sequential calculation
-    %
-end
+end    
 %
 if iscell(lukestructs),% remote and/or distributed calculation
     %
-    lukestructsize = size(lukestructs);
+    lukestructsize = size(lukestructs);% to return lukestructs in the same arrangement as input
     %
     lukestructs = lukestructs(:);
     %
     njobs = length(lukestructs);
     %
-    luke_flag = zeros(1,njobs);% flags to control LUKE jobs status
-    luke_time = tic;
+    luke_flag = zeros(1,njobs);% flags to control LUKE jobs status : (0) not started, (1) running, (2) finished, (3) failed, (4) unknown
+    statusstr = {'Ready to start','Running','Completed','Failed','Unknown'};
     %
-    while any(luke_flag == 0) && (isempty(remote) || remote.remtimout == 0 || toc(luke_time)/60 < remote.remtimout),
+    disp(' ')
+    disp(' -------------------------------------------- ')
+    disp(' ')
+    %
+    for ijob = 1:njobs,
+        %
+        if isempty(lukestructs{ijob}) && luke_flag(1) == 1,% case of a job sent to mdce_remote via lukestructs{1}
+            luke_flag(ijob) = -1;
+        elseif isfield(lukestructs{ijob},'job'),
+            luke_flag(ijob) = 1;
+        elseif isfield(lukestructs{ijob},'output'),
+            luke_flag(ijob) = 2;
+        elseif isfield(lukestructs{ijob},'err'),
+            luke_flag(ijob) = 3;
+        elseif ~isfield(lukestructs{ijob},'equil'),
+            luke_flag(ijob) = 4;
+        end
+        %
+    end 
+    %
+    if njobs > 1 && luke_flag(1) == 1 && all(luke_flag(2:end) == -1),
+        disp(['Checking the status of ',num2str(njobs),' jobs sent to run_lukert via mdce_remote :'])
+        disp(' ')        
+    else
+        disp(['Initial status of the ',num2str(njobs),' job(s) sent to run_lukert :'])
+        disp(' ')
         %
         for ijob = 1:njobs,
             %
-            if isempty(remote),%local sequential calculation
-                %
-                disp(['----> Starting job # ',num2str(ijob),'/',num2str(njobs),' locally'])
-                %
-                lukestructs{ijob} = run_lukert(lukestructs{ijob});
-                %
-                luke_flag(ijob) = 1;% job completed.
-                %
-            else            
-                %
-                lukestandardjob = '';
-                %
-                if isfield(lukestructs{ijob},'output'),
-                    disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' already completed.'])
-                    luke_flag(ijob) = 1;% job completed.
-                    continue
-                elseif isfield(lukestructs{ijob},'err'),
-                    disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' was run already but failed due to the following error :'])
-                    if ischar(lukestructs{ijob}.err),
-                        disp(lukestructs{ijob}.err)
-                    else
-                        for ierr = 1:length(lukestructs{ijob}.err),
-                            disp(lukestructs{ijob}.err{ierr})
-                        end
-                    end
-                    luke_flag(ijob) = 1;% job completed.
-                    continue
-                elseif isfield(lukestructs{ijob},'job'),
-                    if isempty(remote.host)
-                        disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is checked on the local computer'])
-                    else
-                        disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is checked on remote cluster : ',remote.host])
-                    end
-                elseif isfield(lukestructs{ijob},'equil'),
-                    disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' is sent to remote cluster : ',remote.host])
-                    %
-                    lukestandardjob = matstandardjob_jd('runmat');
-                    %
-                    if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_memory') && ~isempty(lukestructs{ijob}.dkeparam.luke_memory),
-                        lukestandardjob.memory = lukestructs{ijob}.dkeparam.luke_memory;% requested memory specified in dkeparam
-                    elseif isfield(lukestructs{ijob},'transpfaste') && isstruct(lukestructs{ijob}.transpfaste) && ~isempty(fieldnames(lukestructs{ijob}.transpfaste)), 
-                        lukestandardjob.memory = 14000;%mb default value with transport
-                    else
-                        lukestandardjob.memory = 7000;%mb default value without transport
-                    end
-                    %
-                    if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_ppn'),
-                        lukestandardjob.nodes = 1;
-                        lukestandardjob.ppn = lukestructs{ijob}.dkeparam.luke_ppn;% number of cores specified in dkeparam
-                    end
-                    %
-                    if isfield(lukestructs{ijob},'dkeparam') && isfield(lukestructs{ijob}.dkeparam,'luke_walltime'),
-                        lukestandardjob.walltime = lukestructs{ijob}.dkeparam.luke_walltime;% walltime for remote LUKE calculation
-                    else
-                        lukestandardjob.walltime = 12;% default walltime in hours
-                    end
-                    %
-                else
-                    disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' structure is unknown. Aborted.'])
-                    lukestructs{ijob}.err = 'Job aborted for unknown reasons';
-                    luke_flag(ijob) = 1;% job completed.
-                    continue
-                end
-                %
-                if isfield(lukestructs{ijob},'launchedjob') && lukestructs{ijob}.launchedjob,%job unsuspended
-                    [err,jobparams,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
-                elseif isfield(lukestructs{ijob},'launchedjob') && ~lukestructs{ijob}.launchedjob,%job suspended
-                    disp(['WARNING: job #',int2str(ijob),'/',int2str(length(lukestructs)),' is suspended. It won''t be launched.']);
-                else%job suspension not managed
-                    [err,jobparams,lukestructs{ijob}] = matremote_jd('run_lukert',lukestructs(ijob),remote,lukestandardjob);
-                end
-                %
-                if isfield(remote,'cvs')
-                    remote.cvs.CVSROOT = '';%such that cvs update is done once (see remoterunbatch.m)
-                end
-                %
-                if isfield(lukestructs{ijob},'simul')
-                    lukestructs{ijob}.simul.jobparams = jobparams;%transfer infos on the job that may be usefull for further simulations
-                end 
-                %
-                if ~isempty(err),
-                    %
-                    if isfield(lukestructs{ijob},'equil') && isfield(dkepath,'remenforce') && dkepath.remenforce == 1,% enforce local calculation
-                        lukestructs{ijob} = run_lukert(lukestructs{ijob});% local job enforced
-                    else
-                        lukestructs{ijob}.err = err;
-                    end
-                    %
-                end
-                %
-                if remote.remtimout == 0,% return hand to caller
-                    luke_flag(ijob) = 1;% job completed.
-                end
+            if luke_flag(ijob) >= 0,
+                disp([' - Job # ',num2str(ijob),' : ',statusstr{1 + luke_flag(ijob)}])
             end
-            %
-            if isfield(lukestructs{ijob},'output') && isfield(lukestructs{ijob},'opt') && isfield(lukestructs{ijob}.opt,'save') && lukestructs{ijob}.opt.save == -1,
-                %
-                % save output on local machine and return data_proc
-                %
-                if ~isfield(lukestructs{ijob}.opt,'savepath'),
-                    lukestructs{ijob}.opt.savepath = '';
-                elseif ~isempty(lukestructs{ijob}.opt.savepath) && ~exist(lukestructs{ijob}.opt.savepath,'dir'),
-                    mkdir(lukestructs{ijob}.opt.savepath)
-                end
-                savestruct.lukestructs = lukestructs{ijob};
-                savefile = [lukestructs{ijob}.opt.savepath,'LUKE_RESULTS_',savestruct.lukestructs.simul.id,'.mat'];
-                save(savefile,'-struct','savestruct','-v7.3');
-                %
-                if ~isfield(savestruct.lukestructs.opt,'proc') || ~isstruct(savestruct.lukestructs.opt.proc),
-                    savestruct.lukestructs.opt.proc = struct;
-                end
-                %
-                lukestructs{ijob}.output = struct;
-                lukestructs{ijob}.output.data_proc = proc_luke_jd(savestruct.lukestructs.output,savestruct.lukestructs.opt.proc);
-                lukestructs{ijob}.output.savefile = savefile;
-                %
-            end
-            %
         end
+    end        
+    %
+    disp(' ')
+    disp(' -------------------------------------------- ')
+    disp(' ')
+    %
+%         [dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false,link_mode);
+%         
+%         disp(['--> Retrieving result from remote job on host ',num2str(remlist(remnum))])    
+    %
+    if any(luke_flag == 0),% there are jobs to be run
+        %
+        dkecluster = clustermode_luke('','run_lukert',dkepath);
+        %
+        [~,lukestructs(luke_flag == 0)] = mdce_run('run_lukert',{''},1,lukestructs(luke_flag == 0),dkecluster);
+        %
     end
     %
-    for ijob = find(luke_flag == 0),
+    if any(luke_flag == 1),% there are jobs to be checked
         %
-        if isfield(lukestructs{ijob},'job')
-            disp(['----> Job # ',num2str(ijob),'/',num2str(njobs),' timed out after ',num2str(remote.remtimout),' minutes.'])
-            lukestructs{ijob}.err = ['Job timed out after ',num2str(remote.remtimout),' minutes.'];
-        end
+        [~,lukestructs(abs(luke_flag) == 1)] = mdce_get(lukestructs(abs(luke_flag) == 1));
         %
     end
+    %
+%     for ijob = find(flag >= 0),
+%         if isfield(lukestructs{ijob},'output') && isfield(lukestructs{ijob},'opt') && isfield(lukestructs{ijob}.opt,'save') && lukestructs{ijob}.opt.save == -1,
+%             %
+%             % save output on local machine and return data_proc
+%             %
+%             if ~isfield(lukestructs{ijob}.opt,'savepath'),
+%                 lukestructs{ijob}.opt.savepath = '';
+%             elseif ~isempty(lukestructs{ijob}.opt.savepath) && ~exist(lukestructs{ijob}.opt.savepath,'dir'),
+%                 mkdir(lukestructs{ijob}.opt.savepath)
+%             end
+%             savestruct.lukestructs = lukestructs{ijob};
+%             savefile = [lukestructs{ijob}.opt.savepath,'LUKE_RESULTS_',savestruct.lukestructs.simul.id,'.mat'];
+%             save(savefile,'-struct','savestruct','-v7.3');
+%             %
+%             if ~isfield(savestruct.lukestructs.opt,'proc') || ~isstruct(savestruct.lukestructs.opt.proc),
+%                 savestruct.lukestructs.opt.proc = struct;
+%             end
+%             %
+%             lukestructs{ijob}.output = struct;
+%             lukestructs{ijob}.output.data_proc = proc_luke_jd(savestruct.lukestructs.output,savestruct.lukestructs.opt.proc);
+%             lukestructs{ijob}.output.savefile = savefile;
+%             %
+%         end
+%     end
     %
     if cellmode == 0;
-        lukestructs = lukestructs{1};
+        lukestructs = lukestructs{1};% return lukestructs in the same wrapper as input
     else
         lukestructs = reshape(lukestructs,lukestructsize);
     end
@@ -205,19 +120,6 @@ if iscell(lukestructs),% remote and/or distributed calculation
     return
     %
 end   
-%
-% case where the job was already run
-% 
-if isfield(lukestructs,'output'),%~isempty(remote) && 
-    disp('Job was successfully completed already.')
-    return
-elseif isfield(lukestructs,'err'),
-    disp('Job was run already but failed due to an error. See lukestructs.err. Remove field ''err'' from lukestructs to start again.')
-    return
-elseif isfield(lukestructs,'job'),
-    disp('lukestructs contains a seemingly active job. dkepath must contain the structure ''remote'' associated with the job.')
-    return
-end
 %
 % mandatory fields
 %
