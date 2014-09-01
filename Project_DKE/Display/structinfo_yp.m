@@ -312,6 +312,21 @@ switch struct
             otherwise,
         end        
 		%
+    case 'hxrparam',
+        %
+        switch field 
+            case 'id',expert = 0;values = '';info = 'Provide an id for this hxrparam structure';
+            case 'mfactor',expert = 1;values = 1:10;info = 'poloidal grid size factor for HXR equil';
+            case 'method',expert = 1;values = {'linear','nearest','spline','pchip','cubic'};info = 'Method for radial interpolation';
+            case 'ns',expert = 1;values = [0;Inf];info = 'Number of points to describe chord';
+            case 'n_gauleg',expert = 0;values = 1:100;info = 'Number of Legendre polynomials for projections of cross-section and electron velocity distribution';
+            case 'epsi_gauleg',expert = 1;values = [eps;1];info = '%Accuracy of the Legendre projection';
+            case 'kmin',expert = 0;values = [0;Inf];info = 'Standard minimum value for Tph calculation (LH : 50; EC : 35)';
+            case 'kmax',expert = 0;values = [0;Inf];info = 'Standard maximum value for Tph calculation (LH : 110; EC : 75)';
+            case 'kphot',expert = 0;values = [0;Inf];info = 'Photon energy list for FEB calculations';
+            otherwise,
+        end
+		%
         % -------------------------- AMR structures -----------------------
         %
     case 'AMRcfg',
