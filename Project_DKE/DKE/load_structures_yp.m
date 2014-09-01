@@ -424,8 +424,12 @@ if exist('flag_angles','var'),
 end
 %
 if exist('flag_transpfaste','var'),
-    filename = [path_transpfaste,'TRANSP_',id_equil,'_',id_transpfaste,'.mat'];
-	transpfaste = '';
+    if ~isempty(id_equil),
+        filename = [path_transpfaste,'TRANSP_',id_equil,'_',id_transpfaste,'.mat'];
+    else
+        filename = [path_transpfaste,'TRANSP_',id_transpfaste,'.mat'];
+    end
+    transpfaste = '';
     if isempty(id_transpfaste),
         info_dke_yp(2,['Simulations are performed without fast electron transport']);
     elseif exist(filename) == 0,
