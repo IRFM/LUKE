@@ -70,7 +70,6 @@ function irunluke_jd(basestr,signs,opt_gui)
     dkepath = load_structures_yp('dkepath','','');
     if isfield(dkepath,'remote'),
         remote = dkepath.remote;
-        %dkepath.debugmode = 1;%debugmode in case of problem with remote calculation
     else
         remote = '';
     end
@@ -1260,7 +1259,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 if status.output == 1,
                     %
                     ir_display = input(['Index of flux-surface for distribution (1-',num2str(length(output.equilDKE.xrho)),', 0 to skip) ? [0] : ']);
-                    if isempty(ir_display) | ~isnumeric(ir_display) | ir_display > length(output.equilDKE.xrho),
+                    if isempty(ir_display) || ~isnumeric(ir_display) || ir_display > length(output.equilDKE.xrho),
                         ir_display = 0;
                     end
                     %
@@ -1269,7 +1268,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         pnmax = 0;
                     end
                     %
-                    if ~isnumeric(pnmax) | (~any(pnmax == [0,-1]) & (pnmax < 0 | pnmax > dkeparam.pnmax_S)),
+                    if ~isnumeric(pnmax) || (~any(pnmax == [0,-1]) && (pnmax < 0 || pnmax > dkeparam.pnmax_S)),
                         disp('-----> Invalid choice.');
                         continue
                     end
@@ -1281,7 +1280,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     end
                     %
                     p_opt = input('Option for output figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
-                    if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
+                    if isempty(p_opt) || ~isnumeric(p_opt) || ~any(p_opt == [0,1,2]),
                         p_opt = -1;
                     end
                     %
@@ -1360,43 +1359,29 @@ function irunluke_jd(basestr,signs,opt_gui)
                 % 
             elseif isel == 0,
                 %
-                % CHECK IF THERE IS A BATCH RUN OF LUKE
-                %
                 flag_runluke = 1;
                 %
-                if isfield(luke_job,'remote'),% a remote job exists
+                if isfield(luke_job,'remote') && input_dke_yp(['-----> There is a pending remote LUKE batch run.\n',...
+                    'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
                     %
-                    remnum = 0;
-                    for irem = 1:nrem,
-                        if comp_struct_jd(luke_job.remote,remote(irem),0,{'remtimout','rempause','debugmode','clean'}),
-                            remnum = irem;
-                            break
-                        end
+                    % THERE IS A BATCH RUN OF LUKE
+                    %
+                    if ~exist(luke_job.localdatapath,'dir'),
+                        disp(['WARNING : The directory ',luke_job.localdatapath,' does not exist. Working directory used.']);
+                        %
+                        luke_job.localdatapath = workdir;
                     end
                     %
-                    if remnum > 0 && input_dke_yp(['-----> There is a pending remote LUKE batch run.\n',...
-                        'Do you want to check the run (y/n)'],'y',{'y','n'}) == 'y',
-                        %
-                        if ~exist(luke_job.localdatapath,'dir'),
-                            disp(['WARNING : The directory ',luke_job.localdatapath,' does not exist. Working directory used.']);
-                            %
-                            luke_job.localdatapath = workdir;
-                        end
-                        %
-                        flag_runluke = 0;
-                        %
-                        dkepath.remtimout = 0;
-                        %
-                        lukestructs.job = luke_job;
-                        %
-                        luke_job = '';
-                        %
-                        % RUN LUKE
-                        %
-                    end  
+                    flag_runluke = 0;
+                    %
+                    lukestructs.job = luke_job;
+                    %
+                    luke_job = '';
                 end
                 %
                 if flag_runluke == 1,
+                    %
+                    % RUN LUKE
                     %
                     if isempty(dkeparam) || isempty(equil),
                         disp('-----> the structures dkeparam and equil must exist to run LUKE.');
@@ -1414,19 +1399,16 @@ function irunluke_jd(basestr,signs,opt_gui)
                     load(dkedisplay_file,'dkedisplay');
                     %
                     display_mode = input('Option for run evolution display: 0 (none), 1 (partial), 2 (full) [0] : ');
-                    if isempty(display_mode) | ~isnumeric(display_mode) | ~any(display_mode == [0,1,2]),
+                    if isempty(display_mode) || ~isnumeric(display_mode) || ~any(display_mode == [0,1,2]),
                         display_mode = 0;
                     end
                     dkedisplay.display_mode = display_mode; 
                     %
                     dkeparam.psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
                     %
-                    p_opt = input('Option for output figures? -1 (nothing), 0 (print), 1 (print and save), 2 (save) [-1] : ');
-                    if isempty(p_opt) | ~isnumeric(p_opt) | ~any(p_opt == [0,1,2]),
-                        p_opt = -1;
-                    end
+                    % MUMPSMEX
                     %
-                    if exist('dmumpsmex');%MUMPSMEX
+                    if exist('dmumpsmex','file') == 3;
                         dkeparam.invproc = -2;
                     end
                     %
@@ -1435,11 +1417,9 @@ function irunluke_jd(basestr,signs,opt_gui)
                         id_simul = id_simul_o;
                     end
                     %
-                    remnum = iselect_jd(dkepath.remprofiles,'Where do you want to run LUKE ?',opt_gui,struct,1) - 1;
+                    % REMOTE PARAMETERS
                     %
-                    if remnum > 0,
-                        dkepath.remtimout = input_dke_yp('Waiting for remote LUKE results... enter time out (minutes). Enter 0 to return and check later [0]',0);
-                    end
+                    dkepath = lukeschedulerparam(dkepath,0,[],[],transpfaste,opt_gui);
                     %
                     disp(' ');
                     disp('************** RUN LUKE **************')
@@ -1456,8 +1436,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                 end
                 %
-                dkepath.remnum = remnum;
-                %
                 lukestructs = run_lukert(lukestructs,dkepath);
                 %
                 if isfield(lukestructs,'output'),%job was run successfully
@@ -1473,13 +1451,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     disp('Remote LUKE run failed for the following reason :');
                     %
-                    if ischar(lukestructs.err),
-                        disp(lukestructs.err)
-                    else
-                        for ierr = 1:length(lukestructs.err),
-                            disp(lukestructs.err{ierr})
-                        end
-                    end
+                    disperr_jd(lukestructs.err)
                     %
                 elseif isfield(lukestructs,'job'),%job running, to be checked later
                     %
@@ -1510,11 +1482,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                 end
             end
             %
-        catch
+        catch lsterr
             %
             disp('The action was cancelled due to the following error:')
             disp(' ');
-            lsterr = lasterror;
             disp(lsterr.message);
             for il = 1:length(lsterr.stack),
                 disp(['In ',lsterr.stack(il).file,' at line ',num2str(lsterr.stack(il).line)]);
