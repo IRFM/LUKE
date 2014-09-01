@@ -9,6 +9,8 @@ close all
 %
 id = 'JETh77';% scenario identification
 %
+nit = 0;%number of iteration for equilibrium consistency (jmoy <-> psi)
+%
 % Equilibrium parameters
 %
 % Here find the definitions for the shape of the separatrix
@@ -38,6 +40,9 @@ xpoint(5) = 2.001;%Lower altitude X point in minor radius unit (always positive)
 xpoint(6) = 0.568;%Lower triangularity in minor radius unit
 xpoint(7) = 22.46;%Lower separatrix angle (R,X)  (LFS, degrees)
 xpoint(8) = 67.92;%Lower separatrix angle (-R,X)  (HFS, degrees)
+xpoint(9) = a_sep;%Lower separatrix angle (-R,X)  (HFS, degrees)
+xpoint(10) = R_sep;%Lower separatrix angle (-R,X)  (HFS, degrees)
+xpoint(11) = Z_sep;%Lower separatrix angle (-R,X)  (HFS, degrees)
 %
 npsi = 101;%ONLY 101 radial profile grid points for HELMEX77
 ntheta = 65;%ONLY 65 poloidal grid points for HELMEX77
@@ -80,7 +85,7 @@ xZeff = 0.5;%Radial normalized position at which the derivative is maximum
 %
 % Magnetic data
 %
-[ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test] = idealequilcyl_yp(a_sep,R_sep,Z_sep,Bt,Ip,qmin*R_sep/a_sep,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
+[ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test,prho_mag,pspsin,pspsinT,ppsiT] = idealequilcyl_yp(a_sep,R_sep,Z_sep,Bt,Ip,qmin*R_sep/a_sep,eq,qopt,npsi,ntheta);%Cylindrical magnetic equilibrium
 %
 [prho,pTe,pne,pzTi,pzni,zZi,zmi,fi,pkin] = idealprof_yp(Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,npsi);%Profiles
 %
@@ -92,12 +97,12 @@ subplot(2,2,4),plot(prho,ppsin),xlabel('\rho');ylabel('\psi_n')
 %
 pj_min = min(pj); 
 if pj_min < 0,pj = pj - pj_min;end,%pj must be non-negative. Only the shape is considered and Ip for the total plasma current
-[equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out,li_out] = equil_magnetic_helmex77_yp(a_sep,R_sep,Z_sep,xpoint,Bt,Ip,ppsi_apRp*R_sep/a_sep,pj,pkin,ntheta,2);
+[equil_magnetic,prho_out,pspsin_out,pspsinT_out,pp_out,li_out] = equil_magnetic_helmex77_yp(xpoint,Bt,Ip,ppsi_apRp*R_sep/a_sep,pj,pkin,ntheta,nit,2);
 %
 [qe] = pc_dke_yp;
 figure('Name','Pressure profile'),
-subplot(121),plot(prho,pmag*qe*1000/100000),xlabel('\rho');ylabel('pressure (Bar)');title(['Guess magnetic']),axis('square')
-subplot(122),plot(prho,pkin*qe*1000/100000,'b',prho_out,pp_out*qe*1000/100000,'r--'),xlabel('\rho');ylabel('pressure (Bar)');legend('Guess kinetic','HELENA'),axis('square')
+subplot(121),plot(prho,pmag*qe*1000/100000),xlabel('\rho');ylabel('Magnetic pressure (Bar)');title(['Guess magnetic']),axis('square')
+subplot(122),plot(prho,pkin*qe*1000/100000,'b',prho_out,pp_out*qe*1000/100000,'r--'),xlabel('\rho');ylabel('Kinetic pressure (Bar)');legend('Guess kinetic','HELENA'),axis('square')
 %
 equil_prof.pTe = pTe;
 equil_prof.pne = pne;
@@ -111,7 +116,7 @@ equil.id = id;
 %
 eval(['save EQUIL_',id,'.mat equil']);
 %
-
+equilibrium_jd(equil,'',2)
 
 
 
