@@ -43,7 +43,6 @@ hxr.lpm_hxr = zeros(1,20);% Average distance between the radiation impact point 
 %
 hxr.kdiag_hxr = [20,40,60,80,100,120,140,160,50;40,60,80,100,120,140,160,180,110];% energy channels (the last one -> upper and lower bound for Tph calculation) (keV) [2,m+1]
 %
-hxr.kphot = [20:10:180];%Photon energy in keV
 %
 hxr.Gain_hxr = ones(1,20);% factor of conversion photon energy (keV) <-> channel [1,m]
 hxr.Offset_hxr = zeros(1,20);% offset of conversion photon energy <-> channel [1,m]
@@ -53,11 +52,16 @@ hxr.chordstatus_hxr = ones(1,20);% state of the line-of-sight [1,m]
 %
 % HXR parameter
 %
+hxrparam.id = 'STANDARD';
 hxrparam.mfactor = 1;%For the magnetic equilibrium
 hxrparam.method = 'spline';%For the magnetic equilibrium in the HXR calculations
 hxrparam.ns = 3000;%for chord integration
 hxrparam.n_gauleg = 35;%Number of Legendre polynomials for projections of cross-section and electron velocity distribution
 hxrparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
+%
+hxrparam.kmin = 50;% standard minimum value for Tph calculation (LH : 50; EC : 35)
+hxrparam.kmax = 110;% standard maximum value for Tph calculation (LH : 110; EC : 75)
+hxrparam.kphot = [20:10:180];%Photon energy in keV
 %
 eval(['save HXR_',hxr_id,'.mat hxr hxrparam']);
 %
