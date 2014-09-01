@@ -130,7 +130,7 @@ switch struct
             case 'nperp',expert = 1;values = 00:100:5000;info = 'number of pperp points in absorption calculation';
             case 'pperpmax',expert = 1;values = 1:20;info = 'maximum value of pperp in absorption calculation';
             case 'tau_lim',expert = 0;values = [0;Inf];info = 'value of optical depth for which absorption is considered complete';
-            case 'kextra',expert = 0;values = 0:100:10000;info = 'optional additional number of recorded steps after tau_lim is reached ';
+            case 'kextra',expert = 0;values = 0:50:10000;info = 'optional additional number of recorded steps after tau_lim is reached ';
             otherwise,
         end
 		%
