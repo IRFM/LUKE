@@ -62,7 +62,9 @@ if iscell(Zbremchord),% multiple cameras, iluke
     BX_mfl_lcs = Zbremchord{1}.BX_mfl_lcs;
     BY_mfl_lcs = Zbremchord{1}.BY_mfl_lcs;
     Ipdir_mfl_lcs = Zbremchord{1}.Ipdir_mfl_lcs;
-    Ipdkedir_mfl_lcs = Zbremchord{1}.Ipdkedir_mfl_lcs;
+    if isfield(Zbremchord{1},'Ipdkedir_mfl_lcs')
+        Ipdkedir_mfl_lcs = Zbremchord{1}.Ipdkedir_mfl_lcs;
+    end
     XX_tor_min = Zbremchord{1}.XX_tor_min;
     YY_tor_min = Zbremchord{1}.YY_tor_min;
     XX_tor = Zbremchord{1}.XX_tor;
@@ -102,7 +104,9 @@ else% unique camera, irunhxr_jd
     BX_mfl_lcs = Zbremchord.BX_mfl_lcs;
     BY_mfl_lcs = Zbremchord.BY_mfl_lcs;
     Ipdir_mfl_lcs = Zbremchord.Ipdir_mfl_lcs;
-    Ipdkedir_mfl_lcs = Zbremchord.Ipdkedir_mfl_lcs;
+    if isfield(Zbremchord,'Ipdkedir_mfl_lcs')
+        Ipdkedir_mfl_lcs = Zbremchord.Ipdkedir_mfl_lcs;
+    end
     XX_tor_min = Zbremchord.XX_tor_min;
     YY_tor_min = Zbremchord.YY_tor_min;
     XX_tor = Zbremchord.XX_tor;
@@ -202,11 +206,15 @@ if isempty(axs),
     hold on
     sssB = sign(BY_mfl_lcs(1));%sign at phi = 0. if BPHI < 0, sssB < 0, and for BPHI > 0, sssB > 0
     sssIp = sign(Ipdir_mfl_lcs(1));
-    sssIpdke = sign(Ipdkedir_mfl_lcs(1));
+    if exist('Ipdkedir_mfl_lcs','var')
+        sssIpdke = sign(Ipdkedir_mfl_lcs(1));
+    end
     h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),sssIp*sssB*BX_mfl_lcs(20:40:end),sssIp*sssB*BY_mfl_lcs(20:40:end),0.5);%Current direction on magnetic field line direction
     set(h,'Color','g');
-    h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),sssIpdke*sssB*BX_mfl_lcs(20:40:end),sssIpdke*sssB*BY_mfl_lcs(20:40:end),0.3);%Current direction on magnetic field line direction
-    set(h,'Color','m');
+    if exist('Ipdkedir_mfl_lcs','var')
+        h = quiver(X_mfl_lcs(20:40:end),Y_mfl_lcs(20:40:end),sssIpdke*sssB*BX_mfl_lcs(20:40:end),sssIpdke*sssB*BY_mfl_lcs(20:40:end),0.3);%Current direction on magnetic field line direction
+        set(h,'Color','m');
+    end
 else
     ax = axs(2);
     tit = '';
@@ -262,7 +270,8 @@ if isempty(axs),
     disp('With the definitions above, if Ip is positive, psi is turned outward, Btheta is counterclockwise poloidally, and s too. The Ampere theorem is OK !');
     disp('The HXR diagnostic arrangement is taking this frame of reference.');
     disp('-----------------------------------------------------------');
-    disp(['Sign of Bphi: ',int2str(sssB),' / Sign of Ip: ',int2str(sssIp),' / Sign of Ip_LUKE: ',int2str(sssIpdke)]);
+    disp(['Sign of Bphi: ',int2str(sssB),' / Sign of Ip: ',int2str(sssIp)]);
+    %%%%disp(['Sign of Bphi: ',int2str(sssB),' / Sign of Ip: ',int2str(sssIp),' / Sign of Ip_LUKE: ',int2str(sssIpdke)]);
     disp('***************************************************************************************************************************************************')
 end
 
