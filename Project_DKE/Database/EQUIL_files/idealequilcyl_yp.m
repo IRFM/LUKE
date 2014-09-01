@@ -1,4 +1,4 @@
-function [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test,prho,pspsin,pspsinT] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin_Rpap,eq,qopt,npsi,ntheta,lambda)
+function [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test,prho,pspsin,pspsinT,ppsiT] = idealequilcyl_yp(ap,Rp,Zp,Bt,Ip,qmin_Rpap,eq,qopt,npsi,ntheta,lambda)
 %
 % Create ideal cylindrical magnetic equilibrium with circular concentric flux surfaces from parametric description
 %
