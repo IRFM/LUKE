@@ -169,13 +169,13 @@ if isfield(equil,'eqdsk')
     xq = qfactors_dke_yp(1,equilDKE.Rp,equilDKE.ap,equilDKE.Xx,equilDKE.Xy,equilDKE.XBx,equilDKE.XBy,equilDKE.XBphi,equilDKE.xx0,equilDKE.xB0,equilDKE.xBT0,equilDKE.xBp0);
     %
     pF_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pF,rho)'*ones(1,length(theta));%
-    pFdFdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pdFdpsi,rho)'*ones(1,length(theta));%
+    pFdFdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pFdFdpsi,rho)'*ones(1,length(theta));%
     figure,plot(rho,pFdFdpsi_eqdsk,'r',rho,FdFdpsi/3.5,'b')
     %
     pp_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pp,rho)'*ones(1,length(theta));%
     pdpdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pdpdpsi,rho)'*ones(1,length(theta));%
     pdpdpsi_eqdsk1 = gradient(equil.eqdsk.pp)./gradient(equil.eqdsk.psin)*abs(equil.eqdsk.psia);%
-    figure,plot(rho,pdpdpsi_eqdsk,'r',rho,pdpdpsi_eqdsk1,'b');
+   % figure,plot(rho,pdpdpsi_eqdsk,'r',rho,pdpdpsi_eqdsk1,'b');
     %
     gradpkinsgradrho = equil.eqdsk.gradpkinsgradrho;
 
@@ -345,7 +345,7 @@ if display_mode,
         leg = {'Magnetic','EQDSK','Location','NorthEast'};
         %
         if ~isinf(equilDKE.Rp),
-            [ax] = graph1D_jd(rho,pdFdpsi_eqdsk,0,0,'\rho','q(\rho)',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
+            [ax] = graph1D_jd(rho,pFdFdpsi_eqdsk,0,0,'\rho','q(\rho)',strrep(equil.id,'_','-'),NaN,NaN,NaN,'-','none','r',2);drawnow
             [ax] = graph1D_jd(rho,dFdpsi,0,0,'\rho','F(\psi)',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','b',1);drawnow
         end
         axf = axis(ax);
