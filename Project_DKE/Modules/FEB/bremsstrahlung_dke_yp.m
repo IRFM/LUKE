@@ -156,7 +156,6 @@ for ir = 1:nr,%radial position
         elseif strcmp(fieldside,'LFS')
             PSI_hxr(ir,it) = 1;%low field side only
         end
-        %
         mhu_hxr = sign(mhu.').*sqrt(1-PSI_hxr(ir,it)*(1 - mhu.^2).');%mhu at a poloidal position that is different from Bmin
         mhu_hxr = mhu_hxr(1-PSI_hxr(ir,it)*(1 - mhu.^2) > 0);
         Zbremplasma.mhu_hxr{ir,it} = mhu_hxr;
@@ -172,15 +171,18 @@ for ir = 1:nr,%radial position
         IB_c1 = 2*pi*integral_dke_jd(dpn,dIB_c1,2);%Momentum integration 
         ZZIB(ir,it,:,:) = reshape(IB_c1,n_pol+1,nk)*ne_ref^2*betath_ref*clum/mc2;%MKSA units(s-1*m-3*kev-1*str-1)
         %
-        Xf0_i1 = (Pm.'*(Xf0_c.*(ones(np,1)*cL.')).').';%Distribution function on the Legendre polynomials pitch-angle grid back calculated
-        norm0_hxr = 2*pi*integral_dke_jd(dpn.',pn2.'.*trapz_dke_yp([mhu_hxr,Xf0_hxr.']).',1);
-        normi_hxr = 2*pi*integral_dke_jd(dpn.',pn2.'.*trapz_dke_yp([x_leg,Xf0_i.']).',1);
-        %
-        Zbremplasma.Znorm0_hxr{ir,it} = norm0_hxr;
-        Zbremplasma.Znormi_hxr{ir,it} = normi_hxr;
-        Zbremplasma.ZXf0_hxr{ir,it} = Xf0_hxr;
-        Zbremplasma.ZXf0_i{ir,it} = Xf0_i;
-        Zbremplasma.ZXf0_i1{ir,it} = Xf0_i1;
+        if ~isfield(dkedisplay,'fhxr') || dkedisplay.fhxr,% calculate and save HXR distribution
+            %
+            Xf0_i1 = (Pm.'*(Xf0_c.*(ones(np,1)*cL.')).').';%Distribution function on the Legendre polynomials pitch-angle grid back calculated
+            norm0_hxr = 2*pi*integral_dke_jd(dpn.',pn2.'.*trapz_dke_yp([mhu_hxr,Xf0_hxr.']).',1);
+            normi_hxr = 2*pi*integral_dke_jd(dpn.',pn2.'.*trapz_dke_yp([x_leg,Xf0_i.']).',1);
+            %
+            Zbremplasma.Znorm0_hxr{ir,it} = norm0_hxr;
+            Zbremplasma.Znormi_hxr{ir,it} = normi_hxr;
+            Zbremplasma.ZXf0_hxr{ir,it} = Xf0_hxr;
+            Zbremplasma.ZXf0_i{ir,it} = Xf0_i;
+            Zbremplasma.ZXf0_i1{ir,it} = Xf0_i1;
+        end
         %
         % Local bremsstrahlung properties (forward and backward with respect to B direction or p// since p// is taken positive)
         %
