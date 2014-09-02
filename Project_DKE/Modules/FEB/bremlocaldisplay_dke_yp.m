@@ -19,10 +19,6 @@ nlevel = display.nlevel;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha] = pc_dke_yp;%Physics constant
 %
-theta_hxr = Zbremchord.theta_hxr;
-PSI_hxr = Zbremchord.PSI_hxr;
-mask_hxr = Zbremchord.mask_hxr;
-%
 ne_ref = mksa.ne_ref;
 betath_ref = mksa.betath_ref;
 Ec = Zmomcoef.Ec_ref;
@@ -38,6 +34,8 @@ pnmax_S = dkeparam.pnmax_S;
 bounce_mode = dkeparam.bounce_mode;
 %
 kphot = Zbremplasma.kphot;
+theta_hxr = Zbremplasma.theta_hxr(1,:);
+mhubounce2_hxr = Zbremplasma.mhubounce2_hxr;
 %
 if iscell(dke_out.XXfinit)
     XXfinit = dke_out.XXfinit{1}(:,:,r_dke);
@@ -87,35 +85,12 @@ xrho = xrho(r_dke);
 pn2 = pn.*pn;
 gamma = sqrt(1 + pn2*betath_ref^2);
 %
-i_test = max(find(xrho <= r_display));%Normalized radius index for output and display
-j_test = max(find(theta_hxr(1,:) <= t_display*pi/180));%Poloidal angle index for output and display
+i_test = find(abs(xrho - r_display) == min(abs(xrho - r_display)),1,'first');%Normalized radius index for output and display
+j_test = find(abs(theta_hxr - t_display*pi/180) == min(abs(theta_hxr- t_display*pi/180)),1,'first');%Poloidal angle index for output and display
 k_test = find(kphot == k_display,1);%Photon energy (keV)
 %
-if isempty(j_test), j_test = size(theta_hxr,2);end;%To avoid round-off that give an empty value close to theta = 0.
-%
-for j = 0:5,%Search the closest cell where a chord is going through
-   if mask_hxr(i_test,j_test + j), 
-   	j_testref = j_test + j;break;
-   else
-   	j_testref = 1;
-   end
-end
-j_test = j_testref;
-%
-if ~mask_hxr(i_test,j_testref),
-   info_dke_yp(2,'WARNING: no chord is going through the plasma volume at the chosen radial and poloidal positions !');
-   [i_test1,j_test1]=find(mask_hxr==1);
-   disp('Choose one of these index values (i,j) for which one chord crosses the plasma volume')
-   for ii=1:length(i_test1),
-      disp([int2str(ii),' - (i,j) : ',int2str(i_test1(ii)),'/',int2str(j_test1(ii)),' - (rho,theta[deg.]) : ',num2str(xrho(i_test1(ii))),'/',num2str(180*theta_hxr(1,j_test1(ii))/pi)]);
-   end
-   ii1 = input_dke_yp(['Give the index (between 1 and ',int2str(max(ii)),')'],1);
-   i_test = i_test1(ii1);
-   j_test = j_test1(ii1);
-end
-%
 rho_out = xrho(i_test);
-theta_out = theta_hxr(1,j_test);
+theta_out = theta_hxr(j_test);
 %
 % Test of the reconstruction of the distribution function on the Legendre polynomial basis
 %
@@ -184,7 +159,7 @@ xxlimit = xlim;yylimit = ylim;
 ht = text(xxlimit(1)+1,yylimit(1),['\rho = ',num2str(rho_out),' and \theta_{pol} = 0 (Deg)']);set(ht,'fontsize',20);
 %s
 if bounce_mode >= 1,%Draw bounce domain boundaries
-   mhubounce2_0 = 1 - 1/max(PSI_hxr(i_test,:));
+   mhubounce2_0 = xmhu0T2(i_test);
    line([0,pnmax_S*sqrt(mhubounce2_0)],[0,pnmax_S*sqrt(1 - mhubounce2_0)],'color','k');
    line([0,-pnmax_S*sqrt(mhubounce2_0)],[0,pnmax_S*sqrt(1 - mhubounce2_0)],'color','k');
 end				
@@ -199,7 +174,7 @@ xxlimit = xlim;yylimit = ylim;
 ht = text(xxlimit(1)+1,yylimit(1),['\rho = ',num2str(rho_out),' and \theta_{pol} = ',num2str(theta_out*180/pi),' (Deg)']);set(ht,'fontsize',20);
 %
 if bounce_mode >= 1,%Draw bounce domain boundaries
-   mhubounce2 = 1 - PSI_hxr(i_test,j_test)/max(PSI_hxr(i_test,:));
+   mhubounce2 = mhubounce2_hxr(i_test,j_test);
    line([0,pnmax_S*sqrt(mhubounce2)],[0,pnmax_S*sqrt(1 - mhubounce2)],'color','k');
    line([0,-pnmax_S*sqrt(mhubounce2)],[0,pnmax_S*sqrt(1 - mhubounce2)],'color','k');
 end

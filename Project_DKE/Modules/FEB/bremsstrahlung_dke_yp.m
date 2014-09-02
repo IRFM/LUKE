@@ -80,11 +80,11 @@ kphot = hxrparam.kphot;
 nk = length(kphot);
 %
 theta_hxr = ones(nr,1)*(theta(1:end-1) + theta(2:end))/2;% poloidal location for bremsstrahlung calculation
-nt = length(theta_hxr);
+nt = size(theta_hxr,2);
 psin_hxr = xpsin.'*ones(1,nt);% radial location for bremsstrahlung calculation
 %
-% Xr = sqrt(equilHXR.Xx.^2 + equilHXR.Xy.^2);
-% r_hxr = interp1(theta,Xr.',theta_hxr(1,:)).';
+Xr = sqrt(equilHXR.Xx.^2 + equilHXR.Xy.^2);
+r_hxr = interp1(theta,Xr.',theta_hxr(1,:)).';
 % %
 PSI_hxr = griddata(xpsin.',theta,XB.',psin_hxr,theta_hxr)./(xB0.'*ones(1,nt));%B/Bmin
 %   
@@ -103,6 +103,7 @@ x_perp = 0;%Perpendicular emission
 [Pm_perp] = leg_dke_yp(x_perp(:).',n_pol);%Legendre polynomial for the perpendicular emission
 %
 Zbremplasma.xrho = xrho;
+Zbremplasma.r_hxr = r_hxr;
 Zbremplasma.theta_hxr = theta_hxr;
 Zbremplasma.x_leg = x_leg;
 Zbremplasma.w_leg = w_leg;
@@ -159,6 +160,7 @@ for ir = 1:nr,%radial position
         mhu_hxr = sign(mhu.').*sqrt(1-PSI_hxr(ir,it)*(1 - mhu.^2).');%mhu at a poloidal position that is different from Bmin
         mhu_hxr = mhu_hxr(1-PSI_hxr(ir,it)*(1 - mhu.^2) > 0);
         Zbremplasma.mhu_hxr{ir,it} = mhu_hxr;
+        Zbremplasma.mhubounce2_hxr(ir,it) = 1 - PSI_hxr(ir,it)/max(PSI_hxr(ir,:));
         Xf0_hxr = XXf0(:,1-PSI_hxr(ir,it)*(1 - mhu.^2) > 0,ir);%Non-thermal distribution function at poloidal location
         %
         Xf0_i = interp1(mhu_hxr,Xf0_hxr.',x_leg,method).';%Interpolation of the distribution function on the Legendre polynomial pitch-angle grid
