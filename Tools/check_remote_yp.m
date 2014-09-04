@@ -20,8 +20,8 @@ function flag = check_remote_yp(dkepath,debugmode,link_mode,remlist,log_mode)
 %           o []  : user-prompt profile list
 %           o [1,3...] : tests specified profiles
 %       - log_mode : output results in a log file
-%           o 0 : no (default)
-%           o 1 : yes 
+%           o 0 : no 
+%           o 1 : yes (default)
 %
 %	Output:
 %
@@ -33,10 +33,10 @@ function flag = check_remote_yp(dkepath,debugmode,link_mode,remlist,log_mode)
 % by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
 if nargin < 5,
-    log_mode = 0;
+    log_mode = 1;
 end
 if nargin < 4,
-    remlist = 0;
+    remlist = NaN;
 end
 if nargin < 3,
     link_mode = NaN;
