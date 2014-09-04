@@ -180,13 +180,16 @@ function [MatToolspath,MatRemotepath,MatHelppath] = LUKE_startup_jd
     disp('LUKE = getenv(''LUKE'');%prescribed by environement');
     disp('%');
     disp('link_mode = getenv(''luke_link_mode'');%prescribed by remote computing');
+    disp('%');
+    disp('remotebatch_matlabfun = getenv(''remotebatch_matlabfun'');% characterizes remote computing');
+    disp('%');
     disp('if ~isempty(link_mode),');
     disp('    if strcmp(link_mode,''[]''),');
     disp('        link_mode = [];');
     disp('    else');
     disp('        link_mode = str2double(link_mode);');
     disp('    end');
-    disp('elseif ~isempty(luke_root),');
+    disp('elseif ~isempty(remotebatch_matlabfun),');
     disp('    link_mode = -1;% local profiles only; no second level remote computing unless prescribed by luke_link_mode');
     disp('else');
     disp('    link_mode = NaN;% default value, select link_mode prescribed by remote profiles');
