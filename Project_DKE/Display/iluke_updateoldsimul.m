@@ -15,6 +15,10 @@ if isfield(lukeobj,'r5x2'),% before sdiag
     %
 end
 %
+if isempty(hxr.param),
+    hxr.param = load_structures_yp('hxrparam','STANDARD','');
+end
+%
 ntimes = length(shotimes);
 %
 if ~isfield(load([pathname,filename],'dkeparams'),'dkeparams'),% old wavestructss

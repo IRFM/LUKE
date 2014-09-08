@@ -30,10 +30,10 @@ end
 ic = lukeobj.hxrcam.select.value - 1;% selected camera
 %
 if ic == 0,% all cameras
-    lukeobj.hxrchord.select.state = 'off';
+    lukeobj.hxrchord.state = 'off';
     lukeobj.hxrchord.select.value = 1;
 else
-    lukeobj.hxrchord.select.state = 'on';
+    lukeobj.hxrchord.state = 'on';
     nchords = length(hxr.cam{ic}.chordsnum);
     lukeobj.hxrchord.select.string = [lukeobj.hxrchord.select.string{1},cell(1,nchords)];
     for ichord = 1:nchords,
@@ -109,12 +109,12 @@ end
 if ~isempty(hxr.exp) && ic > 0 && any(any(any(~isnan(hxr.exp.data(:,:,hxr.cam{ic}.chordsind))))),
     %
     lukeobj.hxrexp.disp.state = 'on';
-    lukeobj.hxrbin.select.state = 'on';
+    lukeobj.hxrbin.state = 'on';
     %
 else
     %
     lukeobj.hxrexp.disp.state = 'off';
-    lukeobj.hxrbin.select.state = 'off';
+    lukeobj.hxrbin.state = 'off';
 end
 %
 if isempty(hxr.param),
