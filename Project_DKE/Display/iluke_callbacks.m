@@ -898,73 +898,214 @@ switch action
         %
         % creating transpfaste structure
         %
+        % This section anticipates future transport modeling - disabled for now
+        % 
         lukeobj = iluke_info(lukeobj,'');% disable info display
         %
         select.style = style;
         %
-        select.table = 1;
-        %
-        if isfield(external,'transpfaste'),
-            external_transp = external.transpfaste;
+        if isfield(external,'transpfaste'),% include data from external structure if available
+            %
+            if curtime == 0,% treat all times from external structure if available
+                flag_calc = find(status.transpfaste >= 0);
+                [~,flag_calctimes,flag_external] = intersect(shotimes(flag_calc),external.times);
+                flag_shotimes = flag_calc(flag_calctimes);
+            elseif curtime > 0,% select one time from external structure if available
+                flag_external = find(external.times == shotimes(curtime));
+                flag_shotimes = curtime;
+            else
+                flag_external = [];% no action
+                flag_shotimes = [];% no action
+            end
+            %
+            external_transp = external.transpfaste(flag_external);
+            nt = length(external_transp);
+            %
+            for it = 1:nt,
+                 external_transp(it).equil = equils{flag_shotimes(it)};% for distributed computing
+            end
+            %
+            clear flag_external flag_calc flag_calctimes it nt
+            %
         else
-            external_transp = '';
+            %
+            if curtime < 1,% no action
+                flag_shotimes = [];
+            else% replace existing
+                flag_shotimes = curtime;
+            end
+            %
+            external_transp = [];% no external structure
+            %
         end
         %
-        %transpfaste = imake_transp_jd(dkepath,tokamak,equil,external_transp,workdir,lukeobj.infopanel.handle,select);
-        transpfaste = imake_transp_jd(dkepath,tokamak,equil,external_transp,workdir,true,select);
-        %
-        if isfield(transpfaste,'err'),
-            lukeobj.infotext.string = {'Error creating transpfaste structure : ',transpfaste.err};
-            transpfaste = '';
+        if length(flag_shotimes) > 1,% more than one time - case with curtime == 0 and external data with multiple times
+            %
+            mdce_mode = iselect_jd(dkepath.distprofiles,'Distribution of calc. : ',lukeobj.infopanel.handle,style.distselectstyle,1,'popupmenu') - 1;
+            %
+            if mdce_mode > 2,
+                mdce_mode = 2 - mdce_mode;%use of remcomputing with negative mdce_mode
+            end
+            %
+            dkecluster = clustermode_luke(mdce_mode,'',dkepath);%MatLab distributed computing environment
+            %
+            select.i_opt = 0;
+            %
+            set(lukeobj.busy.handle,'Visible','on');drawnow;
+%             [flag,newtranspfaste] = mdce_run('imake_transp_jd',{dkepath,tokamak,'','',workdir,lukeobj.infopanel.handle,select},4,external_transp,dkecluster);
+            [flag,newtranspfaste] = mdce_run('imake_transp_jd',{dkepath,tokamak,'','',workdir,true,select},4,external_transp,dkecluster);
+            set(lukeobj.busy.handle,'Visible','off');drawnow;
+            %
+            clear mdce_mode dkecluster flag 
+            %            
+        elseif length(flag_shotimes) == 1% treat one time 
+            %
+%             newtranspfaste = imake_transp_jd(dkepath,tokamak,equils{flag_shotimes},external_transp,workdir,lukeobj.infopanel.handle,select);
+            newtranspfaste = imake_transp_jd(dkepath,tokamak,equils{flag_shotimes},external_transp,workdir,true,select);
+            %
         else
+            newtranspfaste = [];
+        end
+        %
+        if isfield(newtranspfaste,'err'),
+            lukeobj.infotext.string = {'Error creating structure(s) ''transpfaste'' : ',newtranspfaste.err};
+        elseif ~isempty(newtranspfaste),
             %
-            lukeobj.transp.text.string = '< not saved >';
+            if length(flag_shotimes) > 1,% more than one time - case with curtime == 0 and external data with multiple times
+                %
+                transpfastes(flag_shotimes) = newtranspfaste.';
+                %
+            elseif length(flag_shotimes) == 1,% replace or fill an existing time
+                %
+                transpfastes{flag_shotimes} = newtranspfaste;
+                %
+            end
             %
-            status.transpfaste = 1;
+            status.transpfaste(flag_shotimes) = 1;
+            %
             status.data = 2;
             %
             lukeobj.lukeid.string = '';
             %
             action = 'transpdisp';iluke_callbacks;
             %
+            clear flag_shotimes
+            %
         end
+        %
+        clear select newtranspfastes external_transp
+%         %
+%         select.table = 1;
+%         %
+%         %newtranspfaste = imake_transp_jd('','','','','',lukeobj.infopanel.handle,select);
+%         newtranspfaste = imake_transp_jd('','','','','',true,select);
+%         %
+%         if isfield(transpfaste,'err'),
+%             lukeobj.infotext.string = {'Error creating transpfaste structure : ',transpfaste.err};
+%             transpfaste = '';
+%         else
+%             %
+%             lukeobj.transp.text.string = '< not saved >';
+%             %
+%             status.transpfaste = 1;
+%             status.data = 2;
+%             %
+%             lukeobj.lukeid.string = '';
+%             %
+%             action = 'transpdisp';iluke_callbacks;
+%             %
+%         end
         %
         lukeobj = iluke_info(lukeobj,'text');% enable info display
         %
+    case 'transpmodify'
+        %
+        % modifying transport parameters
+        %
+        if curtime > 0,
+            transpfaste = transpfastes{curtime};
+        else
+            transpfaste = transpfastes{1};
+        end  
+        %
+        if isfield(transpfaste,'orig'),
+            orig = transpfaste.orig;
+        else
+            orig = transpfaste;
+        end
+        %
+        [transpfaste,mod] = imod_struct_jd(transpfaste,'transpfaste',1,true,struct,style);
+        %
+        if any(mod),
+            %
+            if curtime > 0,
+                transpfastes{curtime} = transpfaste;
+                %
+                transpfastes{curtime}.orig = orig;
+            else
+                for it = 1:ntimes,
+                    transpfastes{it} = transpfaste;
+                    %
+                    transpfastes{it}.orig = orig;
+                end
+                %
+                clear it
+            end
+            %
+            status.data = 2;
+            %
+        end
+        %
+        clear transpfaste orig mod
+        %
     case 'transpload'
         %
-        % loading transpfaste data
+        % loading transport parameters
         %
         sbase = 'TRANSP';
         filestr = [sbase,'_*.mat'];
         %
-        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
+        if curtime > 0,
+            transp_id = transpfastes{curtime}.id;
+        else
+            transp_id = transpfastes{1}.id;
+        end
+        pathname = fileparts(which(['TRANSP_',transp_id,'.mat']));
         %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],pathname,0);
         %
         if filename ~= 0,
             %
             load([pathname,filename],'transpfaste');
             %
-            lukeobj.transp.text.string = filename;%[pathname,filename];
-            %
-            status.transpfaste = 1;
-            status.data = 2;
-            %
-            lukeobj.lukeid.string = '';
-            %
-            action = 'transpdisp';iluke_callbacks;
-            %
+            if curtime > 0,
+                transpfastes{curtime} = transpfaste;
+            else
+                for it = 1:ntimes,
+                    transpfastes{it} = transpfaste;
+                end
+                %
+                clear it
+            end
         end  
         %
-        clear sbase filestr filename pathname
+        action = 'transpdisp';iluke_callbacks;
+        %
+        clear sbase filestr filename pathname transpfaste transp_id
         %
     case 'transpsave'
         %
-        % saving transpfaste structure
+        % saving transport parameters
+        %
+        if curtime > 0,
+            transpfaste = transpfastes{curtime};
+        else
+            transpfaste = transpfastes{1};
+        end  
         %
         sbase = 'TRANSP';
         filestr = [sbase,'_*.mat'];
-        filename = [sbase,'_',equil.id,'_',transpfaste.id,'.mat'];
+        filename = [sbase,'_',transpfaste.id,'.mat'];
         %
         [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
         %
@@ -973,20 +1114,23 @@ switch action
             %
             save([pathname,filename],'transpfaste');
             %
-            lukeobj.transp.text.string = filename;%[pathname,filename];
         end  
         %
-    case 'transpclear'
+        clear transpfaste sbase filestr filename pathname 
         %
-        % clearing transpfaste structure
+     case 'transpreset'
         %
-        transpfaste = '';
-        status.transpfaste = 0;
-        status.data = 2;
+        % resetting transport parameters
         %
-        lukeobj.lukeid.string = '';
-        %
-        lukeobj = iluke_info(lukeobj,'output');% enable info display
+        if curtime > 0,
+            transpfastes{curtime} = transpfastes{curtime}.orig;
+        else
+            for it = 1:ntimes,
+                transpfastes{it} = transpfastes{it}.orig;
+            end
+            %
+            clear it
+        end
         %
     case 'transpdisp'
         %
@@ -2530,7 +2674,7 @@ switch action
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
         %
-        hxr.param = imod_struct_jd(hxr.param,'hxrparam',1,lukeobj.infopanel.handle,struct,style);
+        hxr.param = conc_struct_jd(imod_struct_jd(rmfield(hxr.param,{'kmin','kmax'}),'hxrparam',1,lukeobj.infopanel.handle,struct,style),selectfields_jd(hxr.param,{'kmin','kmax'}));
         %
         lukeobj = iluke_info(lukeobj,'r5x2');% disable info display
         %
@@ -2594,6 +2738,8 @@ switch action
         select.n_opt = -1;
         select.t_opt = 0;
         %
+        dkedisplay.fhxr = false;% do not save distribution in R5X2
+        %
         if curtime == 0,% treat all times with LUKE distribution calculated
             flag_shotimes = find(status.sdiag(1,:) >= 1);
         elseif curtime > 0 && status.sdiag(1,curtime) >= 1,% select one time from external structure if available
@@ -2641,6 +2787,8 @@ switch action
                     sdiags{1,flag_shotimes(icalc)}.radialHXR = radialHXR{icalc};
                     sdiags{1,flag_shotimes(icalc)}.Zbremplasma = Zbremplasma{icalc};
                 end
+                %
+                clear icalc
                 %
             elseif ncalc == 1,% replace or fill an existing time
                 %

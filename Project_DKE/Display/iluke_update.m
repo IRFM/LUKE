@@ -45,7 +45,7 @@ sdiags(:,flag_remove) = [];
 
 status.equil(:,flag_remove) = [];
 status.ohm(:,flag_remove) = [];
-status.transpfaste(:,flag_remove) = [];
+% status.transpfaste(:,flag_remove) = [];
 status.ripple(:,flag_remove) = [];
 status.waves(:,flag_remove) = [];
 status.wavestructs(:,flag_remove) = [];
@@ -97,7 +97,7 @@ outputs(:,end+1:end+nnew) = {[]};
 sdiags(:,end+1:end+nnew) = {[]};
 
 status.ohm(:,end+1:end+nnew) = 0;
-status.transpfaste(:,end+1:end+nnew) = 0;
+% status.transpfaste(:,end+1:end+nnew) = 0;
 status.ripple(:,end+1:end+nnew) = 0;
 status.waves(:,end+1:end+nnew) = 0;
 status.wavestructs(:,end+1:end+nnew) = zeros(length(wavestructids),nnew);
@@ -117,7 +117,7 @@ lukeobj.plot3.gindex(:,end+1:end+nnew) = 0;
 % dkeparams(:,flag_clear) = {[]};
 equils(:,flag_clear) = {[]};
 ohms(:,flag_clear) = {[]};
-transpfastes(:,flag_clear) = {[]};
+% transpfastes(:,flag_clear) = {[]};
 ripples(:,flag_clear) = {[]};
 wavess(:,flag_clear) = {{}};
 %
@@ -136,7 +136,7 @@ status.equil(flag_newfull) = 1;
 flag_clear = flag_clear | flag_newempty;
 
 status.ohm(:,flag_clear) = -1;
-status.transpfaste(:,flag_clear) = -1;
+% status.transpfaste(:,flag_clear) = -1;
 status.ripple(:,flag_clear) = -1;
 status.waves(:,flag_clear) = -1;
 status.wavestructs(:,flag_clear) = -1;
@@ -166,7 +166,7 @@ sdiags = sdiags(:,mask);
 
 status.equil = status.equil(:,mask);
 status.ohm = status.ohm(:,mask);
-status.transpfaste = status.transpfaste(:,mask);
+% status.transpfaste = status.transpfaste(:,mask);
 status.ripple = status.ripple(:,mask);
 status.waves = status.waves(:,mask);
 status.wavestructs = status.wavestructs(:,mask);
@@ -211,7 +211,7 @@ end
 
 [equils,lukeobj.equil,cleartags] = iluke_status(equils,status.equil,lukeobj.equil,-1,curtime,cleartags);
 [ohms,lukeobj.ohm,cleartags] = iluke_status(ohms,status.ohm,lukeobj.ohm,0,curtime,cleartags);
-[transpfastes,lukeobj.transp,cleartags] = iluke_status(transpfastes,status.transpfaste,lukeobj.transp,0,curtime,cleartags);
+% [transpfastes,lukeobj.transp,cleartags] = iluke_status(transpfastes,status.transpfaste,lukeobj.transp,0,curtime,cleartags);
 [ripples,lukeobj.ripple,cleartags] = iluke_status(ripples,status.ripple,lukeobj.ripple,0,curtime,cleartags);
 [wavess,lukeobj.wave,cleartags] = iluke_status(wavess,status.waves,lukeobj.wave,0,curtime,cleartags);
 
@@ -223,6 +223,12 @@ end
 %
 
 iluke_update_dkeparam;
+
+%
+% TRANSPS
+%
+
+iluke_update_transpfaste;
 
 %
 % WAVESTRUCTS
