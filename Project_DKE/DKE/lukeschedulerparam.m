@@ -15,7 +15,6 @@ function dkepath = lukeschedulerparam(dkepath,mdce_mode,remnum,returnmode,transp
 %           o [] (default) : prompt for choice
 %           o 0 : local calculation
 %           o 1 : calculation transfered to remote cluster dkepath.remote(remnum)
-%           o 2 : use of parcomputing (parfor)
 %
 %       - returnmode
 %           o [] (default) : prompt for choice
@@ -106,7 +105,7 @@ if isempty(returnmode) && (mdce_mode < 0 || remnum > 0),
         waitstr = 'y';
     end
     returnmode = input_dke_yp('Do you want to wait for results (y/n)',waitstr,{'y','n'}) == 'n';
-else
+elseif isempty(returnmode) || (remnum == 0 && mdce_mode >= 0),
     returnmode = false;
 end
 if ~isscalar(returnmode) || (~islogical(returnmode) && (~isnumeric(returnmode) || ~any(returnmode == 0:1))),
