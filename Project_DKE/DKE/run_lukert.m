@@ -68,10 +68,6 @@ if iscell(lukestructs),% remote and/or distributed calculation
     disp(' -------------------------------------------- ')
     disp(' ')
     %
-%         [dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false,link_mode);
-%         
-%         disp(['--> Retrieving result from remote job on host ',num2str(remlist(remnum))])    
-    %
     if any(luke_flag == 0),% there are jobs to be run
         %
         dkecluster = clustermode_luke('','run_lukert',dkepath);
@@ -85,31 +81,6 @@ if iscell(lukestructs),% remote and/or distributed calculation
         [~,lukestructs(abs(luke_flag) == 1)] = mdce_get(lukestructs(abs(luke_flag) == 1));
         %
     end
-    %
-%     for ijob = find(flag >= 0),
-%         if isfield(lukestructs{ijob},'output') && isfield(lukestructs{ijob},'opt') && isfield(lukestructs{ijob}.opt,'save') && lukestructs{ijob}.opt.save == -1,
-%             %
-%             % save output on local machine and return data_proc
-%             %
-%             if ~isfield(lukestructs{ijob}.opt,'savepath'),
-%                 lukestructs{ijob}.opt.savepath = '';
-%             elseif ~isempty(lukestructs{ijob}.opt.savepath) && ~exist(lukestructs{ijob}.opt.savepath,'dir'),
-%                 mkdir(lukestructs{ijob}.opt.savepath)
-%             end
-%             savestruct.lukestructs = lukestructs{ijob};
-%             savefile = [lukestructs{ijob}.opt.savepath,'LUKE_RESULTS_',savestruct.lukestructs.simul.id,'.mat'];
-%             save(savefile,'-struct','savestruct','-v7.3');
-%             %
-%             if ~isfield(savestruct.lukestructs.opt,'proc') || ~isstruct(savestruct.lukestructs.opt.proc),
-%                 savestruct.lukestructs.opt.proc = struct;
-%             end
-%             %
-%             lukestructs{ijob}.output = struct;
-%             lukestructs{ijob}.output.data_proc = proc_luke_jd(savestruct.lukestructs.output,savestruct.lukestructs.opt.proc);
-%             lukestructs{ijob}.output.savefile = savefile;
-%             %
-%         end
-%     end
     %
     if cellmode == 0;
         lukestructs = lukestructs{1};% return lukestructs in the same wrapper as input
@@ -763,8 +734,12 @@ end
 lukestructs.output = output;
 %
 if opt.save == 1,% save results in LUKE_RESULTS file
-    savefile = [simul.path,'LUKE_RESULTS_',simul.id,'.mat'];
-    save(savefile,'lukestructs','-v7.3');
+    if isempty(simul.path) || ~strcmp(simul.path(1),filesep),% relative path
+        simul.path = [pwd,filesep,simul.path];
+    end
+    savepath = simul.path;
+    savefile = ['LUKE_RESULTS_',simul.id,'.mat'];
+    save([savepath,savefile],'lukestructs','-v7.3');
 end
 %
 if opt.save >= 0 && isfield(opt,'proc') && isstruct(opt.proc),
@@ -777,6 +752,7 @@ if iscell(opt.fields),% select fields to return in output
 end
 %
 if opt.save == 1,% return at least savefile
+    lukestructs.output.savepath = savepath;
     lukestructs.output.savefile = savefile;
 end
 %
