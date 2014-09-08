@@ -1,20 +1,19 @@
 %
 % script iluke_run to run and check luke runs
 %
-if lukeobj.remote.timeout.value == 1,
-    dkepath.remtimout = 0;
-else
-    dkepath.remtimout = 60*24;
-end
-%
-dkepath.rempause = 1;
-dkepath.debugmode = 0;
-dkepath.clean = 2;
-%
 if strcmp(action,'lukestart'),
     %
     timedep = 1 - lukeobj.timedep.value;
-    dkepath.remnum = lukeobj.remote.select.value - 1;
+    %
+    if curtime > 0 || timedep,%single time or dependent calculation - use mdce_remote
+        dkepath = lukeschedulerparam(dkepath,0,lukeobj.remote.select.value - 1,lukeobj.remote.timeout.value,true,false);
+    else% independent multi-time calculation - use mdce direct
+        mdce_mode = lukeobj.dist.select.value - 1;
+        if mdce_mode > 2,
+            mdce_mode = 2 - mdce_mode;
+        end
+        dkepath = lukeschedulerparam(dkepath,mdce_mode,0,lukeobj.remote.timeout.value,true,false);
+    end
     %
     if curtime > 0,
         %
@@ -24,7 +23,7 @@ if strcmp(action,'lukestart'),
         lukestructs = struct;
         %
         lukestructs.simul.id = lukeobj.lukeid.string;
-        if dkepath.remnum == 0,% local calculation
+        if dkepath.clustermode.run_lukert.scheduler.remnum == 0 && dkepath.clustermode.run_lukert.scheduler.mode >= 0,% local calculation
             lukestructs.simul.path = workdir;
         end        
         %
@@ -40,15 +39,14 @@ if strcmp(action,'lukestart'),
         %
     else
         %
-        opt.save = -1;% (1): save LUKE_RESULTS or return error (0): return results or error
-        opt.savepath = [workdir,'LUKE_files',filesep];% (1): save LUKE_RESULTS or return error (0): return results or error
+        opt.save = 1;% (1): save LUKE_RESULTS or return error (0): return results or error
         opt.proc = struct;% if not empty, structure containing options for proc_luke. In that case, opt.fields = {'data_proc'}.
         %
         if any(status.output == 1),% LUKE is already run for some times
             %
             lukeobj = iluke_info(lukeobj,'');% disable info display
             %
-            job_mask = iselect_jd({},'LUKE already run for some times. Select time incides to calculate : ',lukeobj.infopanel.handle,style.editselectstyle,find(status.output == 0),'edit');
+            job_mask = iselect_jd({},'LUKE already run for some times. Select time indides to calculate : ',lukeobj.infopanel.handle,style.editselectstyle,find(status.output == 0),'edit');
             %
             lukeobj = iluke_info(lukeobj,'luke');drawnow;% disable info display
             %
@@ -62,7 +60,7 @@ if strcmp(action,'lukestart'),
         %
         for it = 1:nt,
             lukestructs{it}.simul.id = make_luke_simulid_jd(equils{job_mask(it)},ohms{job_mask(it)},transpfastes{job_mask(it)},ripples{job_mask(it)},wavess{job_mask(it)});
-            if dkepath.remnum == 0,% local calculation
+            if dkepath.clustermode.run_lukert.scheduler.remnum == 0 && dkepath.clustermode.run_lukert.scheduler.mode >= 0,% local calculation
                 lukestructs{it}.simul.path = workdir;
             end        
             %
@@ -78,7 +76,7 @@ if strcmp(action,'lukestart'),
         end
     end
     %
-    if dkepath.remnum == 0 || dkepath.remtimout > 0,
+    if (dkepath.clustermode.run_lukert.scheduler.remnum == 0 && dkepath.clustermode.run_lukert.scheduler.mode >= 0) || dkepath.clustermode.run_lukert.scheduler.remtimout > 0,
         lukeobj.lukechecktext.string = 'LUKE started. Please wait for result.';
         iluke_update_state(lukeobj);
     end
@@ -94,7 +92,7 @@ elseif strcmp(action,'runcheck'),
         lukestructs = struct;
         lukestructs.job = jobs{curtime};
         %
-        remote = jobs{curtime}.remote;
+%         remote = jobs{curtime}.remote;
         %
         jobs{curtime} = [];
         status.job(curtime) = 0;
@@ -104,13 +102,13 @@ elseif strcmp(action,'runcheck'),
         job_mask = find(status.job > 0);
         nt = length(job_mask);
         %
-        for it = 2:nt,
-            if ~comp_struct_jd(jobs{job_mask(it)}.remote,jobs{job_mask(1)}.remote,0,{},{'host','cmd'}),
-                error('Not all jobs use the same remote profile. Aborted')
-            end
-        end
-        %
-        remote = jobs{job_mask(1)}.remote;
+%         for it = 2:nt,
+%             if ~comp_struct_jd(jobs{job_mask(it)}.remote,jobs{job_mask(1)}.remote,0,{},{'host','cmd'}),
+%                 error('Not all jobs use the same remote profile. Aborted')
+%             end
+%         end
+%         %
+%         remote = jobs{job_mask(1)}.remote;
         %
         lukestructs = cell(1,nt);
         %
@@ -123,28 +121,28 @@ elseif strcmp(action,'runcheck'),
         %
     end
     %
-    nrem = length(dkepath.remote);
-    %
-    flag = false(1,nrem);
-    %
-    for irem = 1:nrem,
-        if comp_struct_jd(dkepath.remote(irem),remote,0,{},{'host','cmd'}),
-            flag(irem) = true;
-        end
-    end
-    %
-    if sum(flag) == 0,
-        error('Remote profile from job cannot be found in dkepath. aborted.')
-    elseif sum(flag) > 1,
-        disp('WARNING : more than one remote profile from dkepath found to be compatible with job.remote. First choice selected.')
-    end
+%     nrem = length(dkepath.remote);
+%     %
+%     flag = false(1,nrem);
+%     %
+%     for irem = 1:nrem,
+%         if comp_struct_jd(dkepath.remote(irem),remote,0,{},{'host','cmd'}),
+%             flag(irem) = true;
+%         end
+%     end
+%     %
+%     if sum(flag) == 0,
+%         error('Remote profile from job cannot be found in dkepath. aborted.')
+%     elseif sum(flag) > 1,
+%         disp('WARNING : more than one remote profile from dkepath found to be compatible with job.remote. First choice selected.')
+%     end
     %
     timedep = [];
-    dkepath.remnum = find(flag,1,'first');
+%     dkepath.remnum = find(flag,1,'first');
+%     %
+%     lukeobj.remote.select.value = dkepath.remnum + 1;
     %
-    lukeobj.remote.select.value = dkepath.remnum + 1;
-    %
-    clear flag irem nrem remote
+%     clear flag irem nrem remote
 end
 %    
 % run or check luke

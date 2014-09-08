@@ -1641,7 +1641,7 @@ switch action
         %
         iw = lukeobj.wavestruct.select.value;
         %        
-        [wavestructss{curtime}{iw},mod] = iluke_launchmodify(wavestructss{curtime}{iw},style);        
+        [wavestructss{iw,curtime},mod] = iluke_launchmodify(wavestructss{iw,curtime},style);        
         %
         if mod,
             status.data = 2;
@@ -1660,7 +1660,7 @@ switch action
         sbase = 'LAUNCH';
         filestr = [sbase,'_*.mat'];
         %
-        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file'],'',0);
         %
         %
         if filename ~= 0,
@@ -2364,12 +2364,12 @@ switch action
             lukeobj.lukeid.visible = 'off';
             lukeobj.lukeid.string = '';
         elseif curtime > 0,
-            if ~any(status.job > 0),
+            if status.job(curtime) == 0,
                 lukeobj.runcheck.visible = 'off';
                 lukeobj.lukechecktext.string = '';
             else
                 lukeobj.runcheck.visible = 'on';
-                lukeobj.lukechecktext.string = ['Number of LUKE jobs started under job ID ',job.id];
+                lukeobj.lukechecktext.string = 'LUKE Job in progress';
             end
             %
             lukeobj.lukeidtitle.visible = 'on';
