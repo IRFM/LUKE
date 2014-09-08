@@ -1,4 +1,4 @@
-function rundke_Zi_remote(remtimout,link_mode,display_mode,plot_results)
+function rundke_Zi_remote(remtimout,link_mode,opt_save,display_mode,plot_results)
 %
 % This function is used to test the use of the MDCE toolbox within run_lukert
 % A loop is created over various collision operators and ion charges
@@ -17,18 +17,25 @@ function rundke_Zi_remote(remtimout,link_mode,display_mode,plot_results)
 %           o 0   : ssh key pair enforced
 %           o 1   : ssh bridge enforced
 %           o 2   : url/ftp bridge enforced
+%       - opt_save
+%           o 0   : no not save LUKE_RESULTS files (default)
+%           o 1   : save LUKE_RESULTS files in folder LUKE_RESULTS_files/
 %       - display_mode
 %           o 0   : no display
 %           o 1   : display general info and time evoution (default)
 %           o 2   : display all MDCE steps
 %       - plot_results : flag to plot results (default : false)
 %
-if nargin < 4,
+if nargin < 5,
     plot_results = false;% flag to plot results
 end
 %
-if nargin < 3,
+if nargin < 4,
     display_mode = 1;
+end
+%
+if nargin < 3,
+    opt_save = 0;
 end
 %
 if nargin < 2 || (~isempty(link_mode) && (~isnumeric(link_mode) || ~isscalar(link_mode) || ~any(link_mode == [-1:2]))),
@@ -46,11 +53,13 @@ cleanmode = 2;%0;% clean job files/folders : both on remote and local (2), only 
 luke_memory = 2000;% job memory in mb
 luke_walltime = 1;% job walltime in hours
 %
-opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
+opt.save = opt_save;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
 mdce_opt = 0;% option for testing distributed computing inside remote calculation
 %
 p_opt = -1;
+%
+localdatadir = 'LUKE_RESULTS_files/';
 %
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -191,6 +200,9 @@ else% new simulation
     dkepath.clustermode.run_lukert.scheduler.display = display_mode;
     dkepath.clustermode.run_lukert.scheduler.cleanmode = cleanmode;
     dkepath.clustermode.run_lukert.scheduler.enforce = 0;% exit if remote calculation failed 
+    if opt.save,
+        dkepath.clustermode.run_lukert.scheduler.localdatadir = localdatadir;
+    end
     %
     % generate luke_inputs structure
     %
