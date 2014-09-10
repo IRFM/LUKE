@@ -42,6 +42,8 @@ opt.save = 1;% save individual results in LUKE_RESULTS files (WARNING : Use abso
 %
 mdce_opt = 0;% option for testing distributed computing inside remote calculation
 %
+localdatadir = 'LUKE_RESULTS_files_remote/';
+%
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
 id_simul = 'LH_karney_remote';%Simulation ID
@@ -183,6 +185,9 @@ else% new simulation
     dkepath.clustermode.run_lukert.scheduler.debugmode = debugmode;
     dkepath.clustermode.run_lukert.scheduler.cleanmode = cleanmode;
     dkepath.clustermode.run_lukert.scheduler.enforce = 0;% exit if remote calculation failed 
+    if opt.save,
+        dkepath.clustermode.run_lukert.scheduler.localdatadir = localdatadir;
+    end
     %
     lukestructs = repmat({lukestruct},[1,nrem]);
 end
@@ -193,7 +198,7 @@ for remnum = 1:nrem,
         %
         dkepath.clustermode.run_lukert.scheduler.remnum = remlist(remnum);
         %
-        lukestructs{remnum}.simul.locid = [id_simul,'_',num2str(remnum)];
+        lukestructs{remnum}.simul.locid = [id_simul,'_',num2str(remlist(remnum))];
         %
         disp(['--> Calculation with remote number ',num2str(remlist(remnum))])
     end

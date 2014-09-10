@@ -59,7 +59,7 @@ mdce_opt = 0;% option for testing distributed computing inside remote calculatio
 %
 p_opt = -1;
 %
-localdatadir = 'LUKE_RESULTS_files/';
+localdatadir = 'LUKE_RESULTS_files_Zi_remote/';
 %
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
