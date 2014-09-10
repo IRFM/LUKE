@@ -38,7 +38,7 @@ cleanmode = 2;%0;% clean job files/folders : both on remote and local (2), only 
 luke_memory = 2000;% job memory in mb
 luke_walltime = 1;% job walltime in hours
 %
-opt.save = 0;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
+opt.save = 1;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
 mdce_opt = 0;% option for testing distributed computing inside remote calculation
 %
@@ -124,7 +124,6 @@ opt.fields = {'Znorm','Zcurr','ZP0'};% select fields to be returned from lukestr
 %
 % generate luke_inputs structure
 %
-lukestruct.simul.locid = id_simul;
 lukestruct.equil = equil;
 lukestruct.dkeparam = dkeparam;
 lukestruct.dkedisplay = dkedisplay;
@@ -191,7 +190,10 @@ end
 for remnum = 1:nrem,
     %
     if ~isnan(remlist), % new calculation
+        %
         dkepath.clustermode.run_lukert.scheduler.remnum = remlist(remnum);
+        %
+        lukestructs{remnum}.simul.locid = [id_simul,'_',num2str(remnum)];
         %
         disp(['--> Calculation with remote number ',num2str(remlist(remnum))])
     end
