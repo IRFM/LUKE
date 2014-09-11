@@ -395,9 +395,9 @@ if curtime == 0 && lukeobj.timedep.value,% independent multi time calculation
     lukeobj.timedep.state = 'on';
     %
     if lukeobj.dist.select.value > 3,
-        lukeobj.remote.timeout.state = 'on';
+        lukeobj.timeout.state = 'on';
     else
-        lukeobj.remote.timeout.state = 'off';
+        lukeobj.timeout.state = 'off';
     end
 else% single time or dependent time calculation
     lukeobj.dist.visible = 'off';
@@ -408,9 +408,9 @@ else% single time or dependent time calculation
     end
     %
     if lukeobj.remote.select.value > 1,
-        lukeobj.remote.timeout.state = 'on';
+        lukeobj.timeout.state = 'on';
     else
-        lukeobj.remote.timeout.state = 'off';
+        lukeobj.timeout.state = 'off';
     end
 end
 
