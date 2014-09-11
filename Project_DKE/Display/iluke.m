@@ -362,26 +362,26 @@ lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'param',{'title','modi
 lukeobj.timedep.position = [style.buthsep,style.infoheightcorr - 2*style.butheightcorr,style.panelwidth - 2*style.buthsep,style.textheight];
 lukeobj.remote.title.position = [style.buthsep,style.infoheightcorr - 3*style.butheightcorr + style.textheightcorr,style.disttitlewidth,style.textheight];
 lukeobj.remote.select.position = [style.disttitlewidth + 2*style.buthsep,style.infoheightcorr - 3*style.butheightcorr,style.panelwidth - style.disttitlewidth - 3*style.buthsep,style.butheight];
-lukeobj.remote.timeout.position = [style.buthsep,style.infoheightcorr - 4*style.butheightcorr,style.panelwidth - 2*style.buthsep,style.butheight];
+lukeobj.timeout.position = [style.buthsep,style.infoheightcorr - 4*style.butheightcorr,style.panelwidth - 2*style.buthsep,style.butheight];
 lukeobj.dist.title.position = lukeobj.remote.title.position;
 lukeobj.dist.select.position = lukeobj.remote.select.position;
 
 lukeobj.timedep.callback = 'lukeobj.timedep.value = get(lukeobj.timedep.handle,''Value'');iluke_update;';
 lukeobj.remote.select.callback = 'lukeobj.remote.select.value = get(lukeobj.remote.select.handle,''Value'');iluke_update;';
-lukeobj.remote.timeout.callback = 'lukeobj.remote.timeout.value = get(lukeobj.remote.timeout.handle,''Value'');iluke_update;';
+lukeobj.timeout.callback = 'lukeobj.timeout.value = get(lukeobj.timeout.handle,''Value'');iluke_update;';
 lukeobj.dist.select.callback = 'lukeobj.dist.select.value = get(lukeobj.dist.select.handle,''Value'');iluke_update;';
 
 lukeobj.timedep.string = ' Check box to consider all times independent when running LUKE ';
 lukeobj.remote.title.string = 'Server for LUKE calculation';
 lukeobj.remote.select.string = dkepath.remprofiles;% used for single time or time dependent calculations
-lukeobj.remote.timeout.string = ' Check box to return hand to iluke after submitting job';
+lukeobj.timeout.string = ' Check box to return hand to iluke after submitting job';
 lukeobj.dist.title.string = 'Distribution of LUKE calculations';
 lukeobj.dist.select.string = dkepath.distprofiles;% used for independent multi time calculations
 
 lukeobj.timedep.handle = uicontrol(lukeobj.infopanel.handle,'Style','checkbox','Position',lukeobj.timedep.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.timedep.callback);
 lukeobj.remote.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.remote.title.string,'Position',lukeobj.remote.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.remote.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','String',lukeobj.remote.select.string,'Position',lukeobj.remote.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.remote.select.callback);
-lukeobj.remote.timeout.handle = uicontrol(lukeobj.infopanel.handle,'Style','checkbox','Position',lukeobj.remote.timeout.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.remote.timeout.callback);
+lukeobj.timeout.handle = uicontrol(lukeobj.infopanel.handle,'Style','checkbox','Position',lukeobj.timeout.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.timeout.callback);
 lukeobj.dist.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.dist.title.string,'Position',lukeobj.dist.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
 lukeobj.dist.select.handle = uicontrol(lukeobj.infopanel.handle,'Style','popupmenu','String',lukeobj.dist.select.string,'Position',lukeobj.dist.select.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.dist.select.callback);
 lukeobj.runluke.handle = uicontrol(lukeobj.infopanel.handle,'Style','pushbutton','String',lukeobj.runluke.string,'Position',lukeobj.runluke.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.titlefontsize,'Callback',lukeobj.runluke.callback);
@@ -392,7 +392,8 @@ lukeobj.lukechecktext.handle = uicontrol(lukeobj.infopanel.handle,'Style','text'
 
 lukeobj.timedep.value = 1;
 lukeobj.remote.select.value = 1;
-lukeobj.remote.timeout.value = 0;
+lukeobj.dist.select.value = 1;
+lukeobj.timeout.value = 0;
 
 %
 % RUN C3PO PANEL
