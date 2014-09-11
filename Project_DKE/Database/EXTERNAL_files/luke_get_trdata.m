@@ -37,12 +37,24 @@ function d = luke_get_trdata( a )
 % make_eqdsk.m
 
 % some constants
+if isfield(a,'flagTPG')
+    flagTPG=a.flagTPG;   % true to use TPG ox_fraction function
+else
+    flagTPG=true;   % true to use TPG ox_fraction function
+end
+if isfield(a,'flagFF')
+    flagFF=a.flagFF;    % true to use FF ox_fraction function
+else
+    flagFF=true;    % true to use FF ox_fraction function
+end
 % dtres0_pgyro=1e-4;
 try
     outputpath_default=sprintf('/tmp/LUKE_%s_%s',getenv('USER'),timeid_jd(clock));
 catch
     outputpath_default=sprintf('/tmp/LUKE_%s',getenv('USER'));
 end
+
+% keyboard;
 
 % common time base if not defined
 if(~isfield(a,'t') || ~isfield(a,'dtres'))
@@ -54,7 +66,8 @@ if(~isfield(a,'t') || ~isfield(a,'dtres'))
     mdsclose;
     itip50=find(abs(ip)>=max(abs(ip))/2);
     t_default=tip(itip50([1 end]));
-elseif(~isfield(a,'dtreslim') || isempty(a,'dtreslim'))
+    t_default=t_default(:)';    % row vector
+elseif(~isfield(a,'dtreslim') || isempty(a.dtreslim))
     mdsopen(a.shot);
     tthom=mdsvalue('\results::thomson:times');
     dtreslim_default=round(60*min(diff(tthom)))/60;
@@ -94,12 +107,12 @@ for i=1:length(a.diag)
     end
     % dtreslim
     if(isfield(a,'dtreslim') && ~isempty(a.dtreslim))
-        dtres=a.dtres;
+        dtreslim=a.dtreslim;
     else
         dtreslim=dtreslim_default;
     end
     if(isfield(diag,'dtreslim'))
-        dtres=diag.dtreslim;
+        dtreslim=diag.dtreslim;
     end
     % outputpath
     if(isfield(a,'outputpath'))
@@ -160,7 +173,30 @@ for i=1:length(a.diag)
             d.ip.rawdiag={'MagneticProbes'};
             d.ipsign.time=mean(t([1 end]));
             [Ip,tip,d.ipsign.data]=ip_trapeze_woos(shot);
-            [d.ip.time,d.ip.data]=gti_chdtres(tip,Ip',t,dtres,dtreslim);
+            if(docrca)
+                d.ip.atime=tca;
+                d.ip.otime=tip;
+                d.ip.rtime=tcr;
+                d.ip.time=d.ip.rtime;
+                d.ip.data=gti_crca(tip,Ip',tca,tcr,dtreslim);
+            else % if no coherent/conditional averaging:
+                [d.ip.time,d.ip.data]=gti_chdtres(tip,Ip',t,dtres,dtreslim);
+            end
+        case 'L7'
+            d.l7.shot=shot;
+            d.l7.rawdiag={'L7'};
+            mdsopen(shot);
+            l7raw=tdi('\base::tr2412_prefl:channel_001');
+            mdsclose;
+            if(docrca)
+                d.l7.atime=tca;
+                d.l7.otime=l7raw.dim{1};
+                d.l7.rtime=tcr;
+                d.l7.time=d.l7.rtime;
+                d.l7.data=gti_crca(l7raw.dim{1},-l7raw.data',tca,tcr,dtreslim);
+            else % if no coherent/conditional averaging:
+                [d.l7.time,d.l7.data]=gti_chdtres(l7raw.dim{1},-l7raw.data',t,dtres,dtreslim);
+            end
         case 'VLOOP'
             d.vloop.shot=shot;
             d.vloop.rawdiag={'FluxLoops'};
@@ -173,7 +209,7 @@ for i=1:length(a.diag)
                 d.vloop.rtime=tcr;
                 d.vloop.time=d.vloop.rtime;
                 d.vloop.data=gti_crca(vloop.dim{1},vloop.data',tca,tcr,dtreslim);
-            else % if no coherent/condistional averaging:
+            else % if no coherent/conditional averaging:
                 if(dtres_bt(2e-3,t,dtres,dtreslim))
                     % if requested time resolution better than 2ms filter out
                     % the strong 1.3kHz noise using a 630Hz low-pass filter
@@ -203,7 +239,7 @@ for i=1:length(a.diag)
                 d.ne.time=firout.res.time;
                 d.ne.data=firout.res.inverted;
                 d.ne.rho=firout.res.rho;
-            else % if no coherent/condistional averaging:
+            else % if no coherent/conditional averaging:
                 if(dtres_bt(0.016,t,dtres,dtreslim))
                     d.ne.rawdiag={'FIR','LIUQE'};
                     firpar=gti_gds(shot,t([1 end]),'FIR','Flux1D','MinFishReg','Unique','Unique',0);
@@ -219,14 +255,35 @@ for i=1:length(a.diag)
                     d.ne.source=neraw.source;
                     fprintf('  . Using %s profiles from %s for NE.\n',d.ne.rawdiag{1},d.ne.source);
                     jnotnan=~any(isnan(neraw.data));
-                    [d.ne.time,d.ne.data]=gti_chdtres(neraw.time(jnotnan),neraw.data(:,jnotnan),t,dtres,dtreslim);
-                    d.ne.rho=neraw.rho;
+                    if(all(~jnotnan)) % if all data contains some NaN, select those where only a few radial points are NaN
+                        nrnan=sum(isnan(neraw.data));
+                        frnan=nrnan/size(neraw.data,1);
+                        fprintf('NaN values in NE profiles at all points in time, NaN fractions: %s\n',mat2str(frnan));
+                        fprintf('Using profiles with less than 50%% NaN, removing radial points with NaN values.\n');
+                        jnotnan=(frnan<0.5); % less than 50% NaN
+                        rnotnan=~any(isnan(neraw.data(:,jnotnan)'));
+                    else % standard case, can take all radial points
+                        rnotnan=1:length(neraw.rho);
+                    end
+                    [d.ne.time,d.ne.data]=gti_chdtres(neraw.time(jnotnan),neraw.data(rnotnan,jnotnan),t,dtres,dtreslim);
+                    d.ne.rho=neraw.rho(rnotnan);
                 end
             end
         case 'TE'
             d.te.shot=shot;
             if(docrca)
-            else % if no coherent/condistional averaging:
+                d.te.rawdiag={'Thomson','LIUQE'};
+                teraw=luke_get_nete_raw(diag.name,shot);
+                d.te.source=teraw.source;
+                fprintf('  . Using %s profiles from %s for TE.\n',d.te.rawdiag{1},d.te.source);
+                jnotnan=~any(isnan(teraw.data));
+                d.te.atime=tca;
+                d.te.otime=teraw.time(jnotnan);
+                d.te.rtime=tcr;
+                d.te.time=d.te.rtime;
+                d.te.data=gti_crcs(teraw.time(jnotnan),teraw.data(:,jnotnan),tca,tcr,dtreslim);
+                d.te.rho=teraw.rho;
+            else % if no coherent/conditional averaging:
 %             if(dtres_bt(0.016,t,dtres,dtreslim))
 %                 d.te.rawdiag={'DMPX','LIUQE','Thomson'};
 %                 par=
@@ -236,8 +293,18 @@ for i=1:length(a.diag)
                 d.te.source=teraw.source;
                 fprintf('  . Using %s profiles from %s for TE.\n',d.te.rawdiag{1},d.te.source);
                 jnotnan=~any(isnan(teraw.data));
-                [d.te.time,d.te.data]=gti_chdtres(teraw.time(jnotnan),teraw.data(:,jnotnan),t,dtres,dtreslim);
-                d.te.rho=teraw.rho;
+                if(all(~jnotnan)) % if all data contains some NaN, select those where only a few radial points are NaN
+                    nrnan=sum(isnan(teraw.data));
+                    frnan=nrnan/size(teraw.data,1);
+                    fprintf('NaN values in TE profiles at all points in time, NaN fractions: %s\n',mat2str(frnan));
+                    fprintf('Using profiles with less than 50%% NaN, removing radial points with NaN values.\n');
+                    jnotnan=(frnan<0.5); % less than 50% NaN
+                    rnotnan=~any(isnan(teraw.data(:,jnotnan)'));
+                else % standard case, can take all radial points
+                    rnotnan=1:length(teraw.rho);
+                end
+                [d.te.time,d.te.data]=gti_chdtres(teraw.time(jnotnan),teraw.data(rnotnan,jnotnan),t,dtres,dtreslim);
+                d.te.rho=teraw.rho(rnotnan);
 %             end
             end
         case 'TI'
@@ -273,7 +340,7 @@ for i=1:length(a.diag)
                 d.zeff.rtime=tcr;
                 d.zeff.time=d.zeff.rtime;
                 d.zeff.data=gti_crca(zeff_tdi.dim{1},zeff_tdi.data(:,1)',tca,tcr,dtreslim);
-            else % if no coherent/condistional averaging:
+            else % if no coherent/conditional averaging:
                 [d.zeff.time,d.zeff.data]=gti_chdtres(zeff_tdi.dim{1},zeff_tdi.data(:,1)',t,dtres,dtreslim);
             end
         case 'ZAXIS'
@@ -288,7 +355,7 @@ for i=1:length(a.diag)
                 d.zaxis.rtime=tcr;
                 d.zaxis.time=d.zaxis.rtime;
                 d.zaxis.data=gti_crca(zraw.dim{1},zraw.data',tca,tcr,dtreslim);
-            else % if no coherent/condistional averaging:
+            else % if no coherent/conditional averaging:
                 [d.zaxis.time,d.zaxis.data]=gti_chdtres(zraw.dim{1},zraw.data',t,dtres,dtreslim);
             end
         case 'ECRH'
@@ -300,9 +367,33 @@ for i=1:length(a.diag)
             mdsclose;
             % get the polarisation
             if(docrca)
-            else % if no coherent/condistional averaging:
+            else % if no coherent/conditional averaging:
                 ox_t=gti_chdtres([],[],t,dtres,dtreslim);
-                [ox_xfrac,ox_times,~]=ecpol_ox_fraction(shot,0,ox_t);
+                if(flagTPG)
+                    try
+                        ecpol_addpathTPG;
+                        [ox_xfrac_TPG,ox_times_TPG,~]=ecpol_ox_fraction(shot,0,ox_t);
+                        ecpol_rmpathTPG;
+                    catch ex
+                        fprintf('Problem with ecpol_ox_fraction of TPG, writing NaN to X-mode fraction\nError message:\n%s\n',ex.message);
+                        ecpol_rmpathTPG;
+                        ox_xfrac_TPG=NaN;
+                        ox_times_TPG=NaN;
+                    end
+                end
+                if(flagFF)
+                    ox_xfrac_FF=nan(length(ox_t),length(isel));
+                    try
+                        jnotallnan=false(1,length(isel));
+                        for j=1:length(isel)
+                            jnotallnan(j)=~all(isnan(praw.data(:,isel(j))));
+                        end
+                        juse=find(jnotallnan);
+                        ox_xfrac_FF(:,juse)=ecpol_ox_fraction(shot,ox_t,isel(juse));
+                    catch ex
+                        fprintf('Problem with ecpol_ox_fraction of FF, writing NaN to X-mode fraction\nError message:\n%s\n',ex.message);
+                    end
+                end
             end
             for j=1:length(isel)    % do a loop over all selected launchers
                 k=isel(j);
@@ -318,18 +409,18 @@ for i=1:length(a.diag)
                     d.ecrh.pow{k}.rtime=tcr;
                     d.ecrh.pow{k}.time=d.ecrh.pow{k}.rtime;
                     if(~any(itknotnan))
-                        d.ecrh.pow{k}.time=gti_crca(mean(t),NaN,tca,tcr,dtreslim);
+                        d.ecrh.pow{k}.data=gti_crca(mean(t),NaN,tca,tcr,dtreslim);
                     else
-                        d.ecrh.pow{k}.time=gti_crca(praw.dim{1}(itknotnan),1e3*praw.data(itknotnan,k)',tca,tcr,dtreslim);
+                        d.ecrh.pow{k}.data=gti_crca(praw.dim{1}(itknotnan),1e3*praw.data(itknotnan,k)',tca,tcr,dtreslim);
                     end
-                else % if no coherent/condistional averaging:
+                else % if no coherent/conditional averaging:
                     if(~any(itknotnan))
                         [d.ecrh.pow{k}.time,d.ecrh.pow{k}.data]=gti_chdtres(mean(t),NaN,t,dtres,dtreslim);
                     else
                         [d.ecrh.pow{k}.time,d.ecrh.pow{k}.data]=gti_chdtres(praw.dim{1}(itknotnan),1e3*praw.data(itknotnan,k)',t,dtres,dtreslim);
                     end
                 end
-                if(k<7) % X2 launchers 1-6
+                if(k<7) % X2 launchers 1-6 ang and stray
                     % constant data (from collect_parameters_for_luke.m)
                     ang.freq=82.7e9;
                     ang.P1_R=1.3072;
@@ -351,6 +442,23 @@ for i=1:length(a.diag)
                     thetaraw=mdsvalue(sprintf('_theta=\\ecrh::launchers:theta_l:x2_%d',k))'*pi/180;
                     timeraw=mdsvalue('dim_of(_theta)');
                     phiraw=mdsvalue(sprintf('\\ecrh::launchers:phi_l:x2_%d',k))'*pi/180;
+                    if(ischar(timeraw))
+                        fprintf('Setting angles of launcher %d to NaN because there is no data\n',k);
+                        thetaraw=NaN;
+                        timeraw=NaN;
+                        phiraw=NaN;
+                    end
+                    try
+                        nodetmp=sprintf('\\ecrh::ecrh_power:stray:x2_%d',k);
+                        strayraw=tdi(nodetmp);
+                        if(mod(strayraw.status,2)==0)
+                            error('No data in %s',nodetmp);
+                        end
+                    catch ex
+                        fprintf('Setting stray signal of launcher %d to NaN because there is no data due to the error:\n%s\n',k,ex.message);
+                        strayraw.data=NaN;
+                        strayraw.dim{1}=NaN;
+                    end
                     mdsclose;
                     if(docrca)
                         ang.atime=tca;
@@ -358,8 +466,14 @@ for i=1:length(a.diag)
                         ang.rtime=tcr;
                         ang.time=ang.rtime;
                         allangdata=gti_crca(timeraw,[thetaraw;phiraw],tca,tcr,dtreslim);
-                    else % if no coherent/condistional averaging:
+                        stray.atime=tca;
+                        stray.otime=strayraw.dim{1};
+                        stray.rtime=tcr;
+                        stray.time=stray.rtime;
+                        stray.data=gti_crca(strayraw.dim{1},strayraw.data',tca,tcr,dtreslim);
+                    else % if no coherent/conditional averaging:
                         [ang.time,allangdata]=gti_chdtres(timeraw,[thetaraw;phiraw],t,dtres,dtreslim);
+                        [stray.time,stray.data]=gti_chdtres(strayraw.dim{1},strayraw.data',t,dtres,dtreslim);
                     end
                     ang.theta=allangdata(1,:);
                     ang.phi=allangdata(2,:);
@@ -370,17 +484,33 @@ for i=1:length(a.diag)
                         % assume 100% X-mode for the moment (O-mode fraction only on request since takes a long time: need to specify parameter or shot range if it should be read)
                         d.ecrh.xfrac{k}.time=tcr;
                         d.ecrh.xfrac{k}.data=ones(1,numel(tcr));
-                    else % if no coherent/condistional averaging:
+                    else % if no coherent/conditional averaging:
                         % put into d.ecrh.xfrac{k}.time and .data
-                        d.ecrh.xfrac{k}.time=ox_t;
-                        d.ecrh.xfrac{k}.data=NaN(1,numel(ox_t));
-                        for ell=1:length(ox_t)
-                            if(any(ox_times==ox_t(ell)))
-                                d.ecrh.xfrac{k}.data(1,ell)=ox_xfrac(k,ox_times==ox_t(ell));
+                        if(flagTPG)
+                            d.ecrh.xfrac_TPG{k}.time=ox_t;
+                            d.ecrh.xfrac_TPG{k}.data=NaN(1,numel(ox_t));
+                            try
+                                for ell=1:length(ox_t)
+                                    if(any(ox_times_TPG==ox_t(ell)))
+                                        d.ecrh.xfrac_TPG{k}.data(1,ell)=ox_xfrac_TPG(k,ox_times_TPG==ox_t(ell));
+                                    end
+                                end
+                            catch ex
+                                fprintf('Problem with output of ecpol_ox_fraction of TPG, writing NaN to X-mode fraction\nError message:\n%s\n',ex.message);
+                            end
+                            if(~flagFF)
+                                d.ecrh.xfrac{k}=d.ecrh.xfrac_TPG{k};
+                            end
+                        end
+                        if(flagFF)
+                            d.ecrh.xfrac_FF{k}.time=ox_t;
+                            d.ecrh.xfrac_FF{k}.data=ox_xfrac_FF(:,j)';
+                            if(~flagTPG)
+                                d.ecrh.xfrac{k}=d.ecrh.xfrac_FF{k};
                             end
                         end
                     end
-                else    % X3 launchers 7-9
+                else    % X3 launchers 7-9 ang and stray
                     % constant data (from collect_parameters_for_luke.m)
                     ang.freq=118.e9;
                     ang.P1_Z=.9885;
@@ -410,6 +540,17 @@ for i=1:length(a.diag)
                     else
                         rraw=datatemp';
                     end
+                    try
+                        nodetmp=sprintf('\\ecrh::ecrh_power:stray:x3_%d',k);
+                        strayraw=tdi(nodetmp);
+                        if(mod(strayraw.status,2)==0)
+                            error('No data in %s',nodetmp);
+                        end
+                    catch ex
+                        fprintf('Setting stray signal of launcher %d to NaN because there is no data due to the error:\n%s\n',k,ex.message);
+                        strayraw.data=NaN;
+                        strayraw.dim{1}=NaN;
+                    end
                     mdsclose;
                     if(docrca)
                         ang.atime=tca;
@@ -417,8 +558,14 @@ for i=1:length(a.diag)
                         ang.rtime=tcr;
                         ang.time=ang.rtime;
                         allangdata=gti_crca(timeraw,[thetaraw;phiraw;rraw],tca,tcr,dtreslim);
-                    else % if no coherent/condistional averaging:
+                        stray.atime=tca;
+                        stray.otime=strayraw.dim{1};
+                        stray.rtime=tcr;
+                        stray.time=stray.rtime;
+                        stray.data=gti_crca(strayraw.dim{1},strayraw.data',tca,tcr,dtreslim);
+                    else % if no coherent/conditional averaging:
                         [ang.time,allangdata]=gti_chdtres(timeraw,[thetaraw;phiraw;rraw],t,dtres,dtreslim);
+                        [stray.time,stray.data]=gti_chdtres(strayraw.dim{1},strayraw.data',t,dtres,dtreslim);
                     end
                     thetaraw=allangdata(1,:);
                     phiraw=allangdata(2,:);
@@ -431,34 +578,84 @@ for i=1:length(a.diag)
                     ang.phi_eff=atan2(tan(phiraw),abs(cos(thetaraw)));
                 end
                 d.ecrh.ang{k}=ang;
-                clear ang;
+                d.ecrh.stray{k}=stray;
+                clear ang stray;
             end
         case 'EQUIL'
             d.equil.shot=shot;
             d.equil.rawdiag={'LIUQE'};
-            % if no coherent/condistional averaging:
-            fprintf('- Checking availability of LIUQE equilibria for shot %d at requested time points\n',shot);
-            if( isempty(dtres) && (length(t)==1 || ~((max(diff(t))/min(diff(t))-1)<5*eps)) )
-                % specify times
-                d.equil.time=t;
+            if(docrca)
+                % Preliminary solution: use equilibria around the middle
+                % tca point
+                d.equil.atime=tca;
+                d.equil.otime=tca(ceil(length(tca)/2))+tcr;
+                d.equil.rtime=tcr;
+                d.equil.time=d.equil.rtime;
                 % get times where equilibria exist already
                 mdsopen(shot);
                 t_liuqe=mdsvalue('dim_of(\results::i_p)');
                 mdsclose;
-                for it=1:length(d.equil.time)
-                    if(min(d.equil.time(it)-t_liuqe)>eps(single(1)))
-                        fprintf('  . LIUQE not available in MDS tree for t=%gs.\n',d.equil.time(it));
+                if(length(d.equil.otime)==1 || ~((max(diff(d.equil.otime))/min(diff(d.equil.otime))-1)<5*eps) ) % one point or not equidistant d.equil.otime
+                    for it=1:length(d.equil.otime)
+                        if(min(d.equil.otime(it)-t_liuqe)>eps(single(1)))
+                            fprintf('  . LIUQE not available in MDS tree for t=%gs.\n',d.equil.otime(it));
+                            job = matstandardjob_jd('runmat');
+                            job.funcopy=false;
+                            tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g %d',shot,d.equil.otime(it),d.equil.otime(it),1);
+                            sprintf('  . running LIUQE on lac5 for requested time point %gs.\n',d.equil.otime(it));
+                            if(~exist('matremote_jd','file'))
+                                pwd_save=pwd;
+                                cd('/home/decker');
+                                startup;
+                                cd(pwd_save);
+                            end
+                            [err,res,text]=matremote_jd('system',{tempcommand},feval('remote_CRPP_LAC5','','local'),job);
+                            % check if LIUQE ran on lac5 (warning if not)
+                            if(~isempty(err))
+                                warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed!');
+                                disperr_jd(err);
+                            elseif(res)
+                                disp(text);
+                                warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed, see output above!');
+                            end
+                        else
+                            fprintf('  . LIUQE available in MDS tree for t=%gs.\n',d.equil.otime(it));
+                        end
+                    end
+                else % more than one point and equidistant d.equil.otime
+                    t1=d.equil.otime(1);
+                    t2=d.equil.otime(end);
+                    n12=length(d.equil.otime);
+                    % check if equilibria exist already
+                    flag_run=false(size(d.equil.otime));
+                    for it=length(d.equil.otime)
+                        if(min(d.equil.otime(it)-t_liuqe)>eps(single(1)))
+                            fprintf('  . LIUQE not available in MDS tree for t=%gs.\n',d.equil.otime(it));
+                            flag_run(it)=true;
+                        end
+                    end
+                    if(any(flag_run))
+                        % run LIUQE if not all equilibria available (using matremote_jd)
                         job = matstandardjob_jd('runmat');
                         job.funcopy=false;
-                        tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g %d',shot,d.equil.time(it),d.equil.time(it),1);
-                        sprintf('  . running LIUQE on lac5 for requested time point %gs.\n',d.equil.time(it));
+                        if(sum(flag_run)==1)
+                            tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g 1',shot,d.equil.otime(flag_run),d.equil.otime(flag_run));
+                            sprintf('  . running LIUQE on lac5 for requested time point %gs.\n',d.equil.otime(flag_run));
+                        elseif(sum(flag_run)==2)
+                            t_temp=d.equil.otime(flag_run);
+                            tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g 2',shot,t_temp(1),t_temp(2));
+                            sprintf('  . running LIUQE on lac5 for requested time points %gs and %gs.\n',t_temp(1),t_temp(2));
+                        else
+                            tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g %d',shot,t1,t2,n12);
+                            sprintf('  . running LIUQE on lac5 for all requested times linspace(%g,%g,%d)s.\n',t1,t2,n12);
+                        end
                         if(~exist('matremote_jd','file'))
                             pwd_save=pwd;
                             cd('/home/decker');
                             startup;
                             cd(pwd_save);
                         end
-                        [err,~,res,text]=matremote_jd('system',{tempcommand},feval('remote_CRPP_LAC5','','local'),job);
+                        [err,res,text]=matremote_jd('system',{tempcommand},feval('remote_CRPP_LAC5','','local'),job);
                         % check if LIUQE ran on lac5 (warning if not)
                         if(~isempty(err))
                             warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed!');
@@ -468,92 +665,140 @@ for i=1:length(a.diag)
                             warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed, see output above!');
                         end
                     else
-                        fprintf('  . LIUQE available in MDS tree for t=%gs.\n',d.equil.time(it));
+                        fprintf('  . LIUQE already available in MDS tree for all requested times: no LIUQE run.\n');
                     end
                 end
-            else
-                % specify times
-                if(isempty(dtres) || length(t)==1) % equidistant with dtres=[]
-                    d.equil.time=t;
-                    t1=d.equil.time(1);
-                    t2=d.equil.time(end);
-                    n12=length(d.equil.time);
-                else % equidistant with dtres specified
-                    z1=ceil(t(1)/dtres-5*eps);
-                    z2=floor(t(end)/dtres+5*eps);
-                    t1=z1*dtres;
-                    t2=z2*dtres;
-                    n12=z2-z1+1;
-                    d.equil.time=linspace(t1,t2,n12);
+                % create and read the equilibrium files
+                for it=1:length(d.equil.otime)
+                    % create (need to call for single times, otherwise all equils but the first are corrupted)
+                    make_eqdsk(shot,d.equil.otime(it),outputpath,'TCV');
+                    % read and put into eqdsk field
+                    eqdsk_file = [outputpath,filesep,'eqdsk.',num2str(d.equil.shot),'t',num2str(d.equil.otime(it),'%6.4f')];
+                    if exist(eqdsk_file,'file'),
+                        d.equil.eqdsk{it} = fileread(eqdsk_file);% magnetic equilibrium
+                    else
+                        warning(['File ',eqdsk_file,' could not be found.']);
+                    end
                 end
-                % check if equilibria exist already
+                %TODO: better solution using LIUQE in matlab with
+                %conditionally averaged experimental data instead
+            else % if no coherent/conditional averaging:
+                fprintf('- Checking availability of LIUQE equilibria for shot %d at requested time points\n',shot);
+                % get times where equilibria exist already
                 mdsopen(shot);
                 t_liuqe=mdsvalue('dim_of(\results::i_p)');
                 mdsclose;
-                flag_run=false(size(d.equil.time));
-                for it=length(d.equil.time)
-                    if(min(d.equil.time(it)-t_liuqe)>eps(single(1)))
-                        fprintf('  . LIUQE not available in MDS tree for t=%gs.\n',d.equil.time(it));
-                        flag_run(it)=true;
+                if( isempty(dtres) && (length(t)==1 || ~((max(diff(t))/min(diff(t))-1)<5*eps)) )
+                    % specify times
+                    d.equil.time=t;
+                    for it=1:length(d.equil.time)
+                        if(min(d.equil.time(it)-t_liuqe)>eps(single(1)))
+                            fprintf('  . LIUQE not available in MDS tree for t=%gs.\n',d.equil.time(it));
+                            job = matstandardjob_jd('runmat');
+                            job.funcopy=false;
+                            tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g %d',shot,d.equil.time(it),d.equil.time(it),1);
+                            sprintf('  . running LIUQE on lac5 for requested time point %gs.\n',d.equil.time(it));
+                            if(~exist('matremote_jd','file'))
+                                pwd_save=pwd;
+                                cd('/home/decker');
+                                startup;
+                                cd(pwd_save);
+                            end
+                            [err,res,text]=matremote_jd('system',{tempcommand},feval('remote_CRPP_LAC5','','local'),job);
+                            % check if LIUQE ran on lac5 (warning if not)
+                            if(~isempty(err))
+                                warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed!');
+                                disperr_jd(err);
+                            elseif(res)
+                                disp(text);
+                                warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed, see output above!');
+                            end
+                        else
+                            fprintf('  . LIUQE available in MDS tree for t=%gs.\n',d.equil.time(it));
+                        end
                     end
-                end
-                if(any(flag_run))
-                    % run LIUQE if not all equilibria available (using matremote_jd)
-                    job = matstandardjob_jd('runmat');
-                    job.funcopy=false;
-                    if(sum(flag_run)==1)
-                        tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g 1',shot,d.equil.time(flag_run),d.equil.time(flag_run));
-                        sprintf('  . running LIUQE on lac5 for requested time point %gs.\n',d.equil.time(flag_run));
-                    elseif(sum(flag_run)==2)
-                        t_temp=d.equil.time(flag_run);
-                        tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g 2',shot,t_temp(1),t_temp(2));
-                        sprintf('  . running LIUQE on lac5 for requested time points %gs and %gs.\n',t_temp(1),t_temp(2));
+                else
+                    % specify times
+                    if(isempty(dtres) || length(t)==1) % equidistant with dtres=[]
+                        d.equil.time=t;
+                        t1=d.equil.time(1);
+                        t2=d.equil.time(end);
+                        n12=length(d.equil.time);
+                    else % equidistant with dtres specified
+                        z1=ceil(t(1)/dtres-5*eps);
+                        z2=floor(t(end)/dtres+5*eps);
+                        t1=z1*dtres;
+                        t2=z2*dtres;
+                        n12=z2-z1+1;
+                        d.equil.time=linspace(t1,t2,n12);
+                    end
+                    % check if equilibria exist already
+                    flag_run=false(size(d.equil.time));
+                    for it=length(d.equil.time)
+                        if(min(d.equil.time(it)-t_liuqe)>eps(single(1)))
+                            fprintf('  . LIUQE not available in MDS tree for t=%gs.\n',d.equil.time(it));
+                            flag_run(it)=true;
+                        end
+                    end
+                    if(any(flag_run))
+                        % run LIUQE if not all equilibria available (using matremote_jd)
+                        job = matstandardjob_jd('runmat');
+                        job.funcopy=false;
+                        if(sum(flag_run)==1)
+                            tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g 1',shot,d.equil.time(flag_run),d.equil.time(flag_run));
+                            sprintf('  . running LIUQE on lac5 for requested time point %gs.\n',d.equil.time(flag_run));
+                        elseif(sum(flag_run)==2)
+                            t_temp=d.equil.time(flag_run);
+                            tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g 2',shot,t_temp(1),t_temp(2));
+                            sprintf('  . running LIUQE on lac5 for requested time points %gs and %gs.\n',t_temp(1),t_temp(2));
+                        else
+                            tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g %d',shot,t1,t2,n12);
+                            sprintf('  . running LIUQE on lac5 for all requested times linspace(%g,%g,%d)s.\n',t1,t2,n12);
+                        end
+                        if(~exist('matremote_jd','file'))
+                            pwd_save=pwd;
+                            cd('/home/decker');
+                            startup;
+                            cd(pwd_save);
+                        end
+                        [err,res,text]=matremote_jd('system',{tempcommand},feval('remote_CRPP_LAC5','','local'),job);
+                        % check if LIUQE ran on lac5 (warning if not)
+                        if(~isempty(err))
+                            warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed!');
+                            disperr_jd(err);
+                        elseif(res)
+                            disp(text);
+                            warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed, see output above!');
+                        end
                     else
-                        tempcommand=sprintf('/home/codes/liuqe/liuqe %d %g %g %d',shot,t1,t2,n12);
-                        sprintf('  . running LIUQE on lac5 for all requested times linspace(%g,%g,%d)s.\n',t1,t2,n12);
+                        fprintf('  . LIUQE already available in MDS tree for all requested times: no LIUQE run.\n');
                     end
-                    if(~exist('matremote_jd','file'))
-                        pwd_save=pwd;
-                        cd('/home/decker');
-                        startup;
-                        cd(pwd_save);
-                    end
-                    [err,~,res,text]=matremote_jd('system',{tempcommand},feval('remote_CRPP_LAC5','','local'),job);
-                    % check if LIUQE ran on lac5 (warning if not)
-                    if(~isempty(err))
-                        warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed!');
-                        disperr_jd(err);
-                    elseif(res)
-                        disp(text);
-                        warning('matremote_jd:LIUQE:failed','The LIUQE run on lac5 failed, see output above!');
-                    end
-                else
-                    fprintf('  . LIUQE already available in MDS tree for all requested times: no LIUQE run.\n');
                 end
-            end
-            % create the equilibrium files                
-            make_eqdsk(shot,d.equil.time,outputpath,'TCV');
-            % read the equilibrium files
-            for it=1:length(d.equil.time)
-                eqdsk_file = [outputpath,filesep,'eqdsk.',num2str(d.equil.shot),'t',num2str(d.equil.time(it),'%6.4f')];
-                if exist(eqdsk_file,'file'),
-                    d.equil.eqdsk{it} = fileread(eqdsk_file);% magnetic equilibrium
-                else
-                    warning(['File ',eqdsk_file,' could not be found.']);
+                % create and read the equilibrium files
+                for it=1:length(d.equil.time)
+                    % create (need to call for single times, otherwise all equils but the first are corrupted)
+                    make_eqdsk(shot,d.equil.time(it),outputpath,'TCV');
+                    % read and put into eqdsk field
+                    eqdsk_file = [outputpath,filesep,'eqdsk.',num2str(d.equil.shot),'t',num2str(d.equil.time(it),'%6.4f')];
+                    if exist(eqdsk_file,'file'),
+                        d.equil.eqdsk{it} = fileread(eqdsk_file);% magnetic equilibrium
+                    else
+                        warning(['File ',eqdsk_file,' could not be found.']);
+                    end
                 end
             end
         case 'HXR'
             [d.hxr.hxr,d.hxr.hxrparam,d.hxr.ap]=luke_get_hxr_diag_tcv(shot);
             Etphot=d.hxr.hxr.kdiag_hxr(:,end); % the interval for photon temperature should be kept
-            if(shot<40000) % HXRC, no conditional averaging
+            if(shot<40000) % HXRC
                 [tcbn,cbn,Ebin]=hxrc_getcbn(shot,d.hxr.ap.chords{1});
-                if(docrca)
+                if(docrca) % use gti_crca for conditional averaging. Best possible solution, but for most cases the time resolution of the underlying data is too low.
                     d.hxr.atime=tca;
                     d.hxr.otime=tcbn;
                     d.hxr.rtime=tcr;
                     d.hxr.time=d.hxr.rtime;
                     d.hxr.data=gti_crca(tcbn,cbn,tca,tcr,dtreslim);
-                else % if no coherent/condistional averaging:
+                else % if no coherent/conditional averaging:
                     [d.hxr.time,d.hxr.data]=gti_chdtres(tcbn,cbn,t,dtres,dtreslim);
                 end
             else % HXRS
@@ -563,7 +808,7 @@ for i=1:length(a.diag)
                     d.hxr.atime=tca;
                     d.hxr.rtime=tcr;
                     [d.hxr.time,d.hxr.data]=hxrs_getcbn(shot,d.hxr.ap.cams,d.hxr.ap.chords,[],Ebin,[],tca,tcr);
-                else % if no coherent/condistional averaging:
+                else % if no coherent/conditional averaging:
                     tcr=gti_chdtres([],[],t,dtres,dtreslim);
                     [d.hxr.time,d.hxr.data]=hxrs_getcbn(shot,d.hxr.ap.cams,d.hxr.ap.chords,[],Ebin,[],0,tcr);
                 end
@@ -587,6 +832,12 @@ function neteraw=luke_get_nete_raw(nete,shot)
         proffitnode='\results::proffit.avg_time:teft';
         autonode='\results::thomson.profiles.auto:te:foo';
     end
+    % special shots: no Thomson data -> take data from very similar shot
+    if(shot==49115)
+        shot=49111;
+        warning('No Thomson data for shot 49115, taking data from similar shot 49111 instead!');
+    end
+    % get proffit data
     mdsopen(shot);
     neteproffit=tdi(proffitnode);
     mdsclose;
