@@ -52,7 +52,8 @@ newversion=true;
 if(newversion)
     a.shot=shot;
     a.t=t0;
-    a.dtres=0.5*(t2-t1);
+    a.dtres=[];
+    a.dtreslim=0.5*(t2-t1);
     a.diag{1}.name='EQUIL';
     a.diag{2}.name='IP';
     a.diag{3}.name='VLOOP';
@@ -69,7 +70,7 @@ if(newversion)
     d=luke_get_trdata(a);
     
     % arrange the data for saving
-    vloop=-d.vloop.data;
+    vloop=-d.vloop.data; % vloop sign is inverse to luke_get_trdata to keep it consistent with old LUKE version (returns in LUKE sign convention directly, luke_get_trdata returns everything in TCV sign conventions)
 %     nel=nel';
     te=d.te.data';
 %     dte=dte';
