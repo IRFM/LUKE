@@ -6,13 +6,19 @@ if strcmp(action,'lukestart'),
     timedep = 1 - lukeobj.timedep.value;
     %
     if curtime > 0 || timedep,%single time or dependent calculation - use mdce_remote
-        dkepath = lukeschedulerparam(dkepath,0,lukeobj.remote.select.value - 1,lukeobj.remote.timeout.value,true,false);
+        dkepath = lukeschedulerparam(dkepath,0,lukeobj.remote.select.value - 1,lukeobj.timeout.value,transpfastes{curtime},false);
     else% independent multi-time calculation - use mdce direct
         mdce_mode = lukeobj.dist.select.value - 1;
         if mdce_mode > 2,
             mdce_mode = 2 - mdce_mode;
         end
-        dkepath = lukeschedulerparam(dkepath,mdce_mode,0,lukeobj.remote.timeout.value,true,false);
+        if strcmp(lukeobj.transp.modify.state,'on'),%all transpfastes are identical
+            transpmode = transpfastes{1};
+        else
+            transpmode = true;% enough memory by default
+        end
+        dkepath = lukeschedulerparam(dkepath,mdce_mode,0,lukeobj.timeout.value,transpmode,false);
+        clear transpmode
     end
     %
     if curtime > 0,
