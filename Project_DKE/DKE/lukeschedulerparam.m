@@ -10,6 +10,7 @@ function dkepath = lukeschedulerparam(dkepath,mdce_mode,remnum,returnmode,transp
 %           o 0 : sequential calculation
 %           o 1 : use of jobcomputing
 %           o 2 : use of parcomputing (parfor)
+%           o 3 : remcomputing on the local cluster
 %
 %       - remnum : remote calculation mode
 %           o [] (default) : prompt for choice
@@ -81,7 +82,7 @@ if isempty(mdce_mode),
     if mdce_mode > 2,
         mdce_mode = 2 - mdce_mode;%use of remcomputing with negative mdce_mode
     end
-elseif ~isscalar(mdce_mode) || ~isnumeric(mdce_mode) || ~any(mdce_mode == -nrem:2),
+elseif ~isscalar(mdce_mode) || ~isnumeric(mdce_mode) || ~any(mdce_mode == -nrem:3),
     disp('WARNING : invalid choice entered for mdce_mode. Sequential mode enforced.');
     mdce_mode = 0;
 end
@@ -143,4 +144,5 @@ else
 end
 %
 dkepath.clustermode.run_lukert.scheduler.walltime = 24;% (hours) 24 hours default limit, corresponds to remtimout for direct modes
+dkepath.clustermode.run_lukert.scheduler.enforce = 0+2i;% three MDCE attempts, no seq switch
 %
