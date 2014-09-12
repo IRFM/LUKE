@@ -5,21 +5,29 @@ if strcmp(action,'lukestart'),
     %
     timedep = 1 - lukeobj.timedep.value;
     %
-    if curtime > 0 || timedep,%single time or dependent calculation - use mdce_remote
-        dkepath = lukeschedulerparam(dkepath,0,lukeobj.remote.select.value - 1,lukeobj.timeout.value,transpfastes{curtime},false);
-    else% independent multi-time calculation - use mdce direct
+    if curtime > 0 || timedep,%single time or dependent calculation
+        mdce_mode = 0;
+    else% independent multi-time calculation
         mdce_mode = lukeobj.dist.select.value - 1;
-        if mdce_mode > 2,
-            mdce_mode = 2 - mdce_mode;
-        end
-        if strcmp(lukeobj.transp.modify.state,'on'),%all transpfastes are identical
-            transpmode = transpfastes{1};
-        else
-            transpmode = true;% enough memory by default
-        end
-        dkepath = lukeschedulerparam(dkepath,mdce_mode,0,lukeobj.timeout.value,transpmode,false);
-        clear transpmode
     end
+    %
+    remnum = lukeobj.remote.select.value - 1;
+    %
+    if remnum > 0,
+        returnmode = lukeobj.timeout.value;
+    else
+        returnmode = 0;
+    end
+    %
+    if curtime > 0
+        transpmode = transpfastes{curtime};
+    elseif strcmp(lukeobj.transp.modify.state,'on'),%all transpfastes are identical
+        transpmode = transpfastes{1};
+    else
+        transpmode = true;% ensure enough memory by default
+    end
+    %
+    dkepath = lukeschedulerparam(dkepath,mdce_mode,remnum,returnmode,transpmode,false);
     %
     if curtime > 0,
         %
@@ -29,7 +37,7 @@ if strcmp(action,'lukestart'),
         lukestructs = struct;
         %
         lukestructs.simul.id = lukeobj.lukeid.string;
-        if dkepath.clustermode.run_lukert.scheduler.remnum == 0 && dkepath.clustermode.run_lukert.scheduler.mode >= 0,% local calculation
+        if remnum == 0 && mdce_mode <= 3,% local calculation
             lukestructs.simul.path = workdir;
         end        
         %
@@ -66,7 +74,7 @@ if strcmp(action,'lukestart'),
         %
         for it = 1:nt,
             lukestructs{it}.simul.id = make_luke_simulid_jd(equils{job_mask(it)},ohms{job_mask(it)},transpfastes{job_mask(it)},ripples{job_mask(it)},wavess{job_mask(it)});
-            if dkepath.clustermode.run_lukert.scheduler.remnum == 0 && dkepath.clustermode.run_lukert.scheduler.mode >= 0,% local calculation
+            if remnum == 0 && mdce_mode <= 3,% local calculation
                 lukestructs{it}.simul.path = workdir;
             end        
             %
@@ -82,7 +90,7 @@ if strcmp(action,'lukestart'),
         end
     end
     %
-    if (dkepath.clustermode.run_lukert.scheduler.remnum == 0 && dkepath.clustermode.run_lukert.scheduler.mode >= 0) || dkepath.clustermode.run_lukert.scheduler.remtimout > 0,
+    if returnmode == 0,
         lukeobj.lukechecktext.string = 'LUKE started. Please wait for result.';
         iluke_update_state(lukeobj);
     end
@@ -118,15 +126,18 @@ elseif strcmp(action,'runcheck'),
         %
         lukestructs = cell(1,nt);
         %
-        for it = 1:nt
-            lukestructs{it}.job = jobs{job_mask(it)};
-            %
-            jobs{job_mask(it)} = [];
+        for it = 1:nt,
+            if ~isempty(jobs{job_mask(it)})
+                lukestructs{it}.job = jobs{job_mask(it)};
+                %
+                jobs{job_mask(it)} = [];
+            end
             status.job(job_mask(it)) = 0;
         end
         %
     end
     %
+    returnmode = 1;
 %     nrem = length(dkepath.remote);
 %     %
 %     flag = false(1,nrem);
@@ -208,6 +219,8 @@ else
             status.sdiag(:,job_mask(it)) = 1;% enable sdiag for times with distribution
             status.data = 2;
             %
+        elseif returnmode == 1 && isfield(lukestructs{1},'job'),% jobs transfered through mdce_remote
+            status.job(job_mask(it)) = 1;
         end
     end
     %
@@ -223,7 +236,7 @@ else
     %
 end
 %
-clear lukestructs timedep
+clear lukestructs timedep mdce_mode remnum returnmode transpmode
 %
     
     

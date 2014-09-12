@@ -390,31 +390,23 @@ end
 % REMOTE
 %
 
-if curtime == 0 && lukeobj.timedep.value,% independent multi time calculation
-    lukeobj.remote.visible = 'off';
+if curtime == 0,
     lukeobj.timedep.state = 'on';
-    %
-    if lukeobj.dist.select.value > 3,
-        lukeobj.timeout.state = 'on';
-    else
-        lukeobj.timeout.state = 'off';
-    end
-else% single time or dependent time calculation
-    lukeobj.dist.visible = 'off';
-    if curtime > 0,
-        lukeobj.timedep.state = 'off';
-    else
-        lukeobj.timedep.state = 'on';
-    end
-    %
-    if lukeobj.remote.select.value > 1,
-        lukeobj.timeout.state = 'on';
-    else
-        lukeobj.timeout.state = 'off';
-    end
+else
+    lukeobj.timedep.state = 'off';
 end
 
+if curtime == 0 && lukeobj.timedep.value,% independent multi time calculation
+    lukeobj.dist.state = 'on';
+else% single time or dependent time calculation
+    lukeobj.dist.state = 'off';
+end
 
+if lukeobj.remote.select.value > 1,% batch calculation
+    lukeobj.timeout.state = 'on';
+else
+    lukeobj.timeout.state = 'off';
+end
 
 %
 % WORKDIR

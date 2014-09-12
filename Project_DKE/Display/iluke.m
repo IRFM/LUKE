@@ -48,7 +48,7 @@ style.fontname = 'Liberation Mono';%get(0,'FixedWidthFontName');%'fixedwidth';% 
 style.fontsize = 14;% font size
 style.titlefontsize = 2*style.fontsize;
 %
-style.disttitlewidth = 350;
+style.disttitlewidth = 250;
 %
 % -------------------------------------------------------------------------
 %
@@ -359,24 +359,24 @@ lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'param',{'title','modi
 % lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'remote',{'title','make','load','save','test','',''},'Server',style.infoheightcorr - 3*style.butheightcorr,style);
 % lukeobj.remote.select.position = [style.titlewidth + 6*style.buthsep + 4*style.butwidth,style.infoheightcorr - 3*style.butheightcorr,style.panelwidth - style.titlewidth - 7*style.buthsep - 4*style.butwidth,style.butheight];
 
-lukeobj.timedep.position = [style.buthsep,style.infoheightcorr - 2*style.butheightcorr,style.panelwidth - 2*style.buthsep,style.textheight];
+lukeobj.timedep.position = [style.buthsep,style.infoheightcorr - 2*style.butheightcorr,(style.panelwidth - 4*style.buthsep)/2,style.textheight];
 lukeobj.remote.title.position = [style.buthsep,style.infoheightcorr - 3*style.butheightcorr + style.textheightcorr,style.disttitlewidth,style.textheight];
 lukeobj.remote.select.position = [style.disttitlewidth + 2*style.buthsep,style.infoheightcorr - 3*style.butheightcorr,style.panelwidth - style.disttitlewidth - 3*style.buthsep,style.butheight];
-lukeobj.timeout.position = [style.buthsep,style.infoheightcorr - 4*style.butheightcorr,style.panelwidth - 2*style.buthsep,style.butheight];
-lukeobj.dist.title.position = lukeobj.remote.title.position;
-lukeobj.dist.select.position = lukeobj.remote.select.position;
+lukeobj.timeout.position = [style.buthsep + style.panelwidth/2,style.infoheightcorr - 2*style.butheightcorr,(style.panelwidth - 4*style.buthsep)/2,style.butheight];
+lukeobj.dist.title.position = lukeobj.remote.title.position - [0,style.butheightcorr,0,0];
+lukeobj.dist.select.position = lukeobj.remote.select.position - [0,style.butheightcorr,0,0];
 
 lukeobj.timedep.callback = 'lukeobj.timedep.value = get(lukeobj.timedep.handle,''Value'');iluke_update;';
 lukeobj.remote.select.callback = 'lukeobj.remote.select.value = get(lukeobj.remote.select.handle,''Value'');iluke_update;';
 lukeobj.timeout.callback = 'lukeobj.timeout.value = get(lukeobj.timeout.handle,''Value'');iluke_update;';
 lukeobj.dist.select.callback = 'lukeobj.dist.select.value = get(lukeobj.dist.select.handle,''Value'');iluke_update;';
 
-lukeobj.timedep.string = ' Check box to consider all times independent when running LUKE ';
+lukeobj.timedep.string = ' Independent LUKE times';
 lukeobj.remote.title.string = 'Server for LUKE calculation';
 lukeobj.remote.select.string = dkepath.remprofiles;% used for single time or time dependent calculations
-lukeobj.timeout.string = ' Check box to return hand to iluke after submitting job';
+lukeobj.timeout.string = ' Submit job then return to iluke';
 lukeobj.dist.title.string = 'Distribution of LUKE calculations';
-lukeobj.dist.select.string = dkepath.distprofiles;% used for independent multi time calculations
+lukeobj.dist.select.string = {'Sequential','Matlab jobs','Matlab parfor','Batch jobs'};% used for independent multi time calculations
 
 lukeobj.timedep.handle = uicontrol(lukeobj.infopanel.handle,'Style','checkbox','Position',lukeobj.timedep.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'Callback',lukeobj.timedep.callback);
 lukeobj.remote.title.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','String',lukeobj.remote.title.string,'Position',lukeobj.remote.title.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');
