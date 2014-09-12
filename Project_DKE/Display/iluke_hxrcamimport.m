@@ -18,7 +18,7 @@ if isfield(external.hxr,'ap') && isfield(external.hxr,'hxrparam'),% TCV data loa
         %
     end
     %
-    kphot_diag = (external.hxr.hxr.kdiag_hxr(1,1:end-1) + external.hxr.hxr.kdiag_hxr(1,2:end))/2;
+    kphot_diag = (external.hxr.hxr.kdiag_hxr(1,1:(end-1)) + external.hxr.hxr.kdiag_hxr(2,1:(end-1)))/2;
     %
     hxr.param.kphot = unique([hxr.param.kphot,kphot_diag]);
     %
