@@ -187,6 +187,9 @@ else% new simulation
     dkepath.clustermode.run_lukert.scheduler.enforce = 0;% exit if remote calculation failed 
     if opt.save,
         dkepath.clustermode.run_lukert.scheduler.localdatadir = localdatadir;
+        if exist(localdatadir,'dir') && length(dir(localdatadir)) > 2,
+            delete([localdatadir,'*']);
+        end
     end
     %
     lukestructs = repmat({lukestruct},[1,nrem]);
