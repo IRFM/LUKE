@@ -13,6 +13,7 @@ function external = load_externaldata_TCV_MultiTimes(workdir,opt_gui,style,remot
     if ~isempty(shotdata.times),
         datainput.t = shotdata.times;
     end
+    datainput.dtres=[]; % always use input times vector
     if ~isempty(shotdata.dtmax),
         datainput.dtreslim = shotdata.dtmax;
     end
