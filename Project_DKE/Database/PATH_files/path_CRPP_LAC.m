@@ -106,12 +106,15 @@ dkepath.decker(1).remote(5).luke_root = '/home/decker/LUKE/';
 dkepath.decker(1).remote(end+1) = dkepath.decker(1).remote(1);
 dkepath.decker(1).remote(end).schedulername = 'direct';
 %
-dkepath.decker(1).remote(end+1) = dkepath.decker(1).remote(3);
+dkepath.decker(1).remote(end+1) = dkepath.decker(1).remote(4);
 dkepath.decker(1).remote(end).remoteid = 'CRPP_LAC1';
 %
-dkepath.decker(1).remote(end+1) = dkepath.decker(1).remote(3);
+dkepath.decker(1).remote(end+1) = dkepath.decker(1).remote(4);
 dkepath.decker(1).remote(end).remoteid = 'CRPP_LAC2';
 %
-dkepath.decker(1).remote(end+1) = dkepath.decker(1).remote(3);
+dkepath.decker(1).remote(end+1) = dkepath.decker(1).remote(4);
 dkepath.decker(1).remote(end).remoteid = 'CRPP_LAC4';
+%
+dkepath.decker(1).remote(end+1) = dkepath.decker(1).remote(4);
+dkepath.decker(1).remote(end).remoteid = 'CRPP_LAC6';
 %
