@@ -90,7 +90,7 @@ switch action
                 clear lukeobjmod
                 %
                 if any(status.job > 0),
-                    lukeobj.remote.timeout.value = 1;
+                    lukeobj.timeout.value = 1;
                     action = 'lukerun';iluke_callbacks;
                 else
                     lukeobj = iluke_info(lukeobj,'');% disable info display
@@ -147,7 +147,7 @@ switch action
             %
             % select fields to save and remote subfields handle 
             %
-            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotimes','data','equil','ohm','transp','ripple','wave','wavestruct','luke','sdiag','param','lukeid'});
+            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotimes','data','equil','ohm','transp','ripple','wave','wavestruct','luke','sdiag','param','lukeid','timedep'});
             lukeobjmod = rmfields_jd(lukeobjmod,{'handle','position'},1);
             save([pathname,filename],'lukeobjmod','dkeparams','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','wavestructids','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
             %
