@@ -101,9 +101,9 @@ end
 %
 if isempty(returnmode) && (mdce_mode < 0 || remnum > 0),
     if isfield(scheduler,'remtimout') && scheduler.remtimout == 0,
-        waitstr = 'n';
-    else
         waitstr = 'y';
+    else
+        waitstr = 'n';
     end
     returnmode = input_dke_yp('Do you want to wait for results (y/n)',waitstr,{'y','n'}) == 'n';
 elseif isempty(returnmode) || (remnum == 0 && mdce_mode >= 0),
