@@ -9,8 +9,8 @@ clear all
 close all
 clc
 %
-opts.remnum = 5;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway)
-opts.remmdce = 0;%distribution mode of LUKE on the remote machine
+opts.remnum = 5;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway). (> 0 transfer before distribution, <0 distribution before transfer)
+opts.remmdce = 3;%distribution mode of LUKE on the remote machine (0) sequential, (1) jobcomputing, (2) parcomputing, (3) remcomputing 
 opts.remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 opts.rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
 opts.remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
