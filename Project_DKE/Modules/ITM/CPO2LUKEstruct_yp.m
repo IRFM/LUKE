@@ -1,10 +1,11 @@
-function [LUKE_struct] = CPO2LUKE_struct_yp(struct_name,CPO_struct,display_mode)
+function [LUKE_struct] = CPO2LUKEstruct_yp(ver_mds,struct_name,CPO_struct,display_mode)
 %LUKE - Function that build a LUKE compliant structure from the corresponding CPO in the ITM MDS+ database
 %
 %Function that build a LUKE compliant structure from the corresponding CPO in the ITM MDS+ database
 %
 % Input:
 %
+%   - ver_mds: version of the ITM MDS+ data format (4.09a, 4.10a,...). Important for the conversion to LUKE data format
 %	- struct_name: CPO name that characterizes its type in the ITM database ('equilibrium', 'coreprof', etc)
 %	- CPO_struct: CPO data
 %	- display_mode: display results if any (0: do nothing, > 0: display results)
@@ -15,9 +16,9 @@ function [LUKE_struct] = CPO2LUKE_struct_yp(struct_name,CPO_struct,display_mode)
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
-if nargin < 2,error('Not enough input arguments in CPO2LUKE_struct_yp.m');end
+if nargin < 3,error('Not enough input arguments in CPO2LUKE_struct_yp.m');end
 %
-if nargin == 2,
+if nargin == 3,
     display_mode = 0;%display option
 end
 %
