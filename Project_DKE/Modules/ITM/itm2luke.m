@@ -1,9 +1,9 @@
-function [waves_euitm] = itm2luke(euitmshot,equil_euitm,coreprof_euitm,antennas_euitm,opts)
+function [waves_euitm] = itm2luke(euitmshot,equil_euitm,coreprof_euitm,antennas_euitm,ver_mds,opts)
 %LUKE -  Interface for running C3PO/LUKE using euitm data
 % 
 % by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-if nargin < 4, error('Not enough input arguments in itm2luke.m');end
+if nargin < 5, error('Not enough input arguments in itm2luke.m');end
 %
 % LUKE post-processing options
 %
@@ -52,17 +52,28 @@ if ~exist(filename,'file'),
         load(['LUKE_RESULTS_',dataname,'.mat'])
     else
         if nargin == 5,
-            dkepath.remnum = opts.remnum;% remote profile number. Use 0 for local sequential calculations
-            dkepath.remtimout = opts.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
-            dkepath.rempause = opts.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
-            dkepath.debugmode = opts.remdebugmode;% debug mode (0) off (1) on
-            dkepath.clean = opts.remclean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
             %
-            optluke.save = opts.opt.save;% (1): save LUKE_RESULTS or return error (0): return results or error
+            dkepath.clustermode.run_lukert.scheduler.remnum = opts.remnum;% remote profile number. Use 0 for local sequential calculations
+            dkepath.clustermode.run_lukert.scheduler.mode = opts.remmdce;%distribution mode of LUKE on the remote machine
+            dkepath.clustermode.run_lukert.scheduler.remtimout = opts.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+            dkepath.clustermode.run_lukert.scheduler.rempause = opts.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
+            dkepath.clustermode.run_lukert.scheduler.debugmode = opts.remdebugmode;% debug mode (0) off (1) on
+            dkepath.clustermode.run_lukert.scheduler.clean = opts.remclean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+            %dkepath.clustermode.run_lukert.scheduler.memory = opts.luke_memory;% job memory in mb
+            %dkepath.clustermode.run_lukert.scheduler.walltime = opts.luke_walltime;%job walltime in hours
+            dkepath.clustermode.run_lukert.scheduler.enforce = opts.enforce;% exit if remote calculation failed 
+            if opts.opt.save,% (1): save LUKE_RESULTS or return error (0): return results or error
+                dkepath.clustermode.run_lukert.scheduler.localdatadir = opts.opt.localdatadir;
+                if exist(opts.opt.localdatadir,'dir') && length(dir(opts.opt.localdatadir)) > 2,
+                    delete([opts.opt.localdatadir,'*']);
+                end
+            end
+            %
             optluke.fields = opts.opt.fields;% selected fields in returned lukestructs. Use NaN for all fields
             optluke.backup = opts.opt.backup;% (1) save fluctuation time steps (0) do not save
             optluke.waves = opts.opt.waves;%(-1) waves are not saved in "wave_results/" and not stored in dke_out. In this case, C3PO must be rerun to see the rays (0) waves are stored in dke_out and saved in LUKE_RESULTS, (1) waves are saved in "wave_results/" but not stored in dke_out
             optluke.saveinputs = opts.opt.saveinputs;% (1) save input structures in .mat files before starting (0) do not save
+            %
         end
         %
         waves = '';
@@ -74,17 +85,17 @@ if ~exist(filename,'file'),
         for it = 1:length(equil_euitm),%the number if equils is the number of timeslice
             %
             if it == 1,
-                equil = process_euitm_dataequil(equil_euitm{it},coreprof_euitm{it},display_mode);%Data conversion between CPO and LUKE format
+                equil = process_euitm_dataequil(ver_mds,equil_euitm{it},coreprof_euitm{it},display_mode);%Data conversion between CPO and LUKE format
             else
                 equil_euitm1 = rmfield(equil_euitm{it-1},'time');
                 equil_euitm2 = rmfield(equil_euitm{it},'time');
                 %
                 if comp_struct_jd(equil_euitm1,equil_euitm2,0) == 0,
-                    equil = process_euitm_dataequil(equil_euitm{it},coreprof_euitm{it},display_mode);%Data conversion between CPO and LUKE format
+                    equil = process_euitm_dataequil(ver_mds,equil_euitm{it},coreprof_euitm{it},display_mode);%Data conversion between CPO and LUKE format
                 end
             end
             %
-            launchs = CPO2LUKEstruct_yp('antennas',antennas_euitm{it});%Data conversion between CPO and LUKE format
+            launchs = CPO2LUKEstruct_yp(ver_mds,'antennas',antennas_euitm{it});%Data conversion between CPO and LUKE format
             %
             iw = 1;
             %
@@ -189,7 +200,7 @@ end
 %
 waves_euitm = [];
 %
-save(['LUKE_RESULTS_',dataname,'.mat'],'lukestructs','dkepath','profilestr');
+save(['LUKE_RESULTS_',dataname,'.mat'],'lukestructs','dkepath','profilestr','ver_mds');
 %
 if sum(flag_running) > 0,
     %

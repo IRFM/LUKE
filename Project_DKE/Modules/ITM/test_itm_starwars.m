@@ -9,22 +9,27 @@ clear all
 close all
 clc
 %
-opts.remnum = 4;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway)
+opts.remnum = 5;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway)
+opts.remmdce = 0;%distribution mode of LUKE on the remote machine
 opts.remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 opts.rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
 opts.remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
 opts.remdebugmode = 0;% debug mode (0) off (1) on
 opts.remclean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+%opts.luke_memory = 2000;% job memory in mb
+%opts.luke_walltime = 1;%job walltime in hours
+opts.enforce = 0;% exit if remote calculation failed 
 %
 opts.opt_struct = 0;%(0) light version, compatible with fluctuations, proc_luke and runhxr, (1) : heavy version, all fields are kept except XYD_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
 %
-opts.opt.save = 0;% (1): save LUKE_RESULTS or return error (0): return results or error
+opts.opt.save = 0;% (1): save LUKE_RESULTS or return error in localdatadir (0): return results or error
+opts.opt.localdatadir = '';% local directory where LUKE_RESULTS is saved
 opts.opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
 opts.opt.backup = 0;% (1) save fluctuation time steps (0) do not save
 opts.opt.waves = -1;%(-1) waves are not saved in "wave_results/" and not stored in dke_out. In this case, C3PO must be rerun to see the rays (0) waves are stored in dke_out and saved in LUKE_RESULTS, (1) waves are saved in "wave_results/" but not stored in dke_out
 opts.opt.saveinputs = 0;% (1) save input structures in .mat files before starting (0) do not save
 %
-opts.svnremoteupdate = 0;%(1) svn remote update on the ITM gateway (0) : no svn remote update on the ITM gateway_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
+opts.svnremoteupdate = 0;%(1) svn remote update on the ITM gateway (0) : no svn remote update on the ITM gateway
 %
 opts.rho_S = 101;
 %
@@ -71,15 +76,16 @@ CPO_occurrences = [occurrence_eq,occurrence_cp,occurrence_an];
 %
 disp('---------------------------------------------')
 disp(['Computer used for calculations --> ',dkepath.profilestr{opts.remnum}]);
+disp(['Distributed computing mode     --> ',int2str(opts.remmdce)]);
 disp('---------------------------------------------')
+%
+addpath(fullfile(dkepath.local_root,'LUKE_ITM','trunk'));% LUKE <-> ITM toolbox for the local path
 %
 cd([dkepath.luke_root,'Project_DKE/Modules/ITM'])
 dataname = dataname_ITM(machine,shot,run,timeslice,time_interp);
 filename = [pwd,'/LUKE_RESULTS_',dataname,'.mat'];
 %
-addpath(fullfile(dkepath.local_root,'LUKE_ITM','trunk'));% LUKE <-> ITM toolbox
-%
-[s_host,w_host] = unix('hostname -f');%identify the machine
+[s_host,w_host] = unix('hostname -f');%identify the local machine
 %
 % check if current jobs exists to load possible existing jobs
 %
@@ -91,7 +97,7 @@ duplicate = 'true';%if true, don't use the remote LUKE_ITM toolbox
 if ~length(strfind(w_host,'itm')),%remote calculations
     [remote,profilestr] = load_remoteprofiles_jd(remoteprofile,false,false,scheduler,profilename,duplicate);
     job = matstandardjob_jd('runmat');
-    if exist('opts') && isfield(opts,'debugmode') && opts.debugmode,
+    if exist('opts') && isfield(opts,'remdebugmode') && opts.remdebugmode,
         remote.debugmode = 1;
     end 
 else
