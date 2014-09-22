@@ -62,10 +62,14 @@ if ~exist(filename,'file'),
             %dkepath.clustermode.run_lukert.scheduler.memory = opts.luke_memory;% job memory in mb
             %dkepath.clustermode.run_lukert.scheduler.walltime = opts.luke_walltime;%job walltime in hours
             dkepath.clustermode.run_lukert.scheduler.enforce = opts.enforce;% exit if remote calculation failed 
-            if opts.opt.save,% (1): save LUKE_RESULTS or return error (0): return results or error
-                dkepath.clustermode.run_lukert.scheduler.localdatadir = opts.opt.localdatadir;
-                if exist(opts.opt.localdatadir,'dir') && length(dir(opts.opt.localdatadir)) > 2,
-                    delete([opts.opt.localdatadir,'*']);
+            %
+            optluke.save = opts.opt.save;% (1): save LUKE_RESULTS or return error in localdatadir (0): return results or error
+            optluke.localdatadir = opts.opt.localdatadir;% local directory where LUKE_RESULTS is saved
+            %
+            if optluke.save,% (1): save LUKE_RESULTS or return error (0): return results or error
+                dkepath.clustermode.run_lukert.scheduler.localdatadir = optluke.localdatadir;
+                if exist(optluke.localdatadir,'dir') && length(dir(optluke.localdatadir)) > 2,
+                    delete([optluke.localdatadir,'*']);
                 end
             end
             %
@@ -172,7 +176,7 @@ if ~exist(filename,'file'),
             lukestructs{it}.ripple = ripple;
             lukestructs{it}.Zf0_interp = distrib;
             %
-            if nargin == 5,
+            if nargin == 6,
                 lukestructs{it}.opt = optluke;
             end
             %
