@@ -9,7 +9,7 @@ clear all
 close all
 clc
 %
-opts.remnum = 5;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway). (> 0 transfer before distribution, <0 distribution before transfer)
+opts.remnum = 3;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway). (> 0 transfer before distribution, <0 distribution before transfer)
 opts.remmdce = 3;%distribution mode of LUKE on the remote machine (0) sequential, (1) jobcomputing, (2) parcomputing, (3) remcomputing 
 opts.remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 opts.rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
@@ -51,6 +51,8 @@ opts.euitm.savelocalfile = 1;%(2): save euitm data in local file and in MDS+ dat
 % The first three slices and the last one match the original data used for the benchmark 
 % (still saved as shot 2, run 551). The three additional slices are a copy of the first three, 
 % with 1W instead of 1MW at the antenna.
+%
+mds_ver = '4.10a';%'4.09a';%File format version in EUITM MDS+ database
 %
 machine = 'test';
 shot = 2;
@@ -147,7 +149,7 @@ else
     end
 end
 %
-[err_waves,waves] = itm_starwars(machine,shot,run,timeslice,time_interp,CPOs,CPO_occurrences,run_out,iter,occurrence_out,opts);
+[err_waves,waves] = itm_starwars(mds_ver,machine,shot,run,timeslice,time_interp,CPOs,CPO_occurrences,run_out,iter,occurrence_out,opts);
 %
 if isstruct(waves),    
     %
@@ -160,14 +162,14 @@ if isstruct(waves),
     load(['LUKE_RESULTS_',dataname,'.mat'],'procdata');
     %
     for it = 1:length(waves),
-        figure;
-        plot(waves(it).coherentwave(1).grid_1d.psi,waves(it).coherentwave(1).profiles_1d.powd_tot,'b+'),hold on
+        figure
+        graph1D_jd(waves(it).coherentwave(1).grid_1d.psi,waves(it).coherentwave(1).profiles_1d.powd_tot,0,0,'','','',NaN,NaN,NaN,'-','none','r',2);hold on
         %
         if isstruct(waves_mds), 
-            plot(waves_mds(it).coherentwave(1).grid_1d.psi,waves_mds(it).coherentwave(1).profiles_1d.powd_tot,'rx'),hold on
+            graph1D_jd(waves_mds(it).coherentwave(1).grid_1d.psi,waves_mds(it).coherentwave(1).profiles_1d.powd_tot,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);hold on
         end
         %
-        procdata{it}.scalar.p0_rf_2piRp
+        disp(['Absorbed RF power (it = ',int2str(it),') -> ',num2str(procdata{it}.scalar.p0_rf_2piRp*2*pi*procdata{1}.scalar.Rp),' (MW)']);
         %TODO display global proc results
     end
     %
