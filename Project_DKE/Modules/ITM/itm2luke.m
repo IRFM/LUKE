@@ -51,7 +51,7 @@ if ~exist(filename,'file'),
     if exist(['LUKE_RESULTS_',dataname,'.mat'],'file'),
         load(['LUKE_RESULTS_',dataname,'.mat'])
     else
-        if nargin == 5,
+        if nargin == 6,
             %
             dkepath.clustermode.run_lukert.scheduler.remnum = opts.remnum;% remote profile number. Use 0 for local sequential calculations
             dkepath.clustermode.run_lukert.scheduler.mode = opts.remmdce;%distribution mode of LUKE on the remote machine
@@ -192,10 +192,14 @@ disp('---------------------------------------------')
 %
 lukestructs = run_lukert(lukestructs,dkepath);
 %
-flag_running = false(1,length(lukestructs));
-%
 for it = 1:length(lukestructs),
-    if isfield(lukestructs{it},'job'),flag_running(it) = true;end
+    if isfield(lukestructs{it},'job'),
+        flag_running(it) = true;
+    else
+        if ~isempty(lukestructs{it}),
+            flag_running(it) = false;
+        end
+    end
 end
 %
 waves_euitm = [];
@@ -203,52 +207,54 @@ waves_euitm = [];
 save(['LUKE_RESULTS_',dataname,'.mat'],'lukestructs','dkepath','profilestr','ver_mds');
 %
 if sum(flag_running) > 0,
-    %
-    disp(['----> ',int2str(length(lukestructs)-sum(flag_running)),'/',int2str(length(lukestructs)),' calculations done.'])
-    %
     return
 else
     %
-    disp('----> All calculations are done.')
-    %
     for it = 1:length(lukestructs),
-        Znorm = lukestructs{it}.output.Znorm;
-        Zcurr = lukestructs{it}.output.Zcurr;
-        ZP0 = lukestructs{it}.output.ZP0;
-        dke_out = lukestructs{it}.output.dke_out;
-        radialDKE = lukestructs{it}.output.radialDKE;
-        equilDKE = lukestructs{it}.output.equilDKE;
-        equil = lukestructs{it}.output.dke_out.equil;
-        momentumDKE = lukestructs{it}.output.momentumDKE;
-        gridDKE = lukestructs{it}.output.gridDKE;
-        Zmomcoef = lukestructs{it}.output.Zmomcoef;
-        Zbouncecoef = lukestructs{it}.output.Zbouncecoef;
-        Zmripple = lukestructs{it}.output.Zmripple;
-        mksa = lukestructs{it}.output.mksa;
-        XXsinksource = lukestructs{it}.output.XXsinksource;
         %
-        for iray = 1:length(dke_out.waves{1}.rays),
-            if ~isfield(dke_out.waves{1}.rays{iray},'mask_p') | ~isfield(dke_out.waves{1}.rays{iray},'mask_m');
-                dke_out.waves{1}.rays{iray}.mask_p = zeros(size(dke_out.waves{1}.rays{iray}.ss));
-                dke_out.waves{1}.rays{iray}.mask_m = ones(size(dke_out.waves{1}.rays{iray}.ss));
+        if isfield(lukestructs{it},'output'),
+            Znorm = lukestructs{it}.output.Znorm;
+            Zcurr = lukestructs{it}.output.Zcurr;
+            ZP0 = lukestructs{it}.output.ZP0;
+            dke_out = lukestructs{it}.output.dke_out;
+            radialDKE = lukestructs{it}.output.radialDKE;
+            equilDKE = lukestructs{it}.output.equilDKE;
+            equil = lukestructs{it}.output.dke_out.equil;
+            momentumDKE = lukestructs{it}.output.momentumDKE;
+            gridDKE = lukestructs{it}.output.gridDKE;
+            Zmomcoef = lukestructs{it}.output.Zmomcoef;
+            Zbouncecoef = lukestructs{it}.output.Zbouncecoef;
+            Zmripple = lukestructs{it}.output.Zmripple;
+            mksa = lukestructs{it}.output.mksa;
+            XXsinksource = lukestructs{it}.output.XXsinksource;
+            %
+            for iray = 1:length(dke_out.waves{1}.rays),
+                if ~isfield(dke_out.waves{1}.rays{iray},'mask_p') | ~isfield(dke_out.waves{1}.rays{iray},'mask_m');
+                    dke_out.waves{1}.rays{iray}.mask_p = zeros(size(dke_out.waves{1}.rays{iray}.ss));
+                    dke_out.waves{1}.rays{iray}.mask_m = ones(size(dke_out.waves{1}.rays{iray}.ss));
+                end        
             end        
-        end        
-        %        
-        dataname_out = dataname_ITM(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp,euitmshot.numrun_out,euitmshot.occurrence_out);   
-        %
-        temp_filename = ['temp_EUITM_',dataname_out,'.mat'];
-        %  
-        save(temp_filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
-        %
-        rawdata = load(temp_filename);
-        rawdata.dkepath.profilestr = profilestr;
-        %
-        procdata{it} = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
-        %
-        waves_euitm = LUKEstruct2CPO(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_out,euitmshot.timeslice,'waves',rawdata,procdata{it},waves_euitm);
-        %
-        delete(temp_filename);        
-        %
+            %        
+            dataname_out = dataname_ITM(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp,euitmshot.numrun_out,euitmshot.occurrence_out);   
+            %
+            temp_filename = ['temp_EUITM_',dataname_out,'.mat'];
+            %  
+            save(temp_filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
+            %
+            rawdata = load(temp_filename);
+            rawdata.dkepath.profilestr = profilestr;
+            %
+            procdata{it} = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
+            %
+            waves_euitm = LUKEstruct2CPO(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_out,euitmshot.timeslice,'waves',rawdata,procdata{it},waves_euitm);
+            %
+            delete(temp_filename);        
+            %
+        elseif isfield(lukestructs{it},'err'),
+            disp('*************************')
+            disp(lukestructs{it}.err);
+            disp('*************************')
+        end
     end
     %
     save(['LUKE_RESULTS_',dataname,'.mat'],'procdata','-append');
