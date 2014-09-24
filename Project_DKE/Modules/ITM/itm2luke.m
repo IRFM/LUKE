@@ -73,6 +73,7 @@ if ~exist(filename,'file'),
                 end
             end
             %
+            optluke.proc = opts.opt.proc;%do postprocessing remotely
             optluke.fields = opts.opt.fields;% selected fields in returned lukestructs. Use NaN for all fields
             optluke.backup = opts.opt.backup;% (1) save fluctuation time steps (0) do not save
             optluke.waves = opts.opt.waves;%(-1) waves are not saved in "wave_results/" and not stored in dke_out. In this case, C3PO must be rerun to see the rays (0) waves are stored in dke_out and saved in LUKE_RESULTS, (1) waves are saved in "wave_results/" but not stored in dke_out
@@ -216,28 +217,99 @@ else
     %
     for it = 1:length(lukestructs),
         %
-        if isfield(lukestructs{it},'output'),
-            Znorm = lukestructs{it}.output.Znorm;
-            Zcurr = lukestructs{it}.output.Zcurr;
-            ZP0 = lukestructs{it}.output.ZP0;
-            dke_out = lukestructs{it}.output.dke_out;
-            radialDKE = lukestructs{it}.output.radialDKE;
-            equilDKE = lukestructs{it}.output.equilDKE;
-            equil = lukestructs{it}.output.dke_out.equil;
-            momentumDKE = lukestructs{it}.output.momentumDKE;
-            gridDKE = lukestructs{it}.output.gridDKE;
-            Zmomcoef = lukestructs{it}.output.Zmomcoef;
-            Zbouncecoef = lukestructs{it}.output.Zbouncecoef;
-            Zmripple = lukestructs{it}.output.Zmripple;
-            mksa = lukestructs{it}.output.mksa;
-            XXsinksource = lukestructs{it}.output.XXsinksource;
+        if isfield(lukestructs{it},'output'), 
+            if isfield(lukestructs{it}.output,'Znorm'),
+                Znorm = lukestructs{it}.output.Znorm;
+            else
+                Znorm = '';
+            end
             %
-            for iray = 1:length(dke_out.waves{1}.rays),
-                if ~isfield(dke_out.waves{1}.rays{iray},'mask_p') | ~isfield(dke_out.waves{1}.rays{iray},'mask_m');
-                    dke_out.waves{1}.rays{iray}.mask_p = zeros(size(dke_out.waves{1}.rays{iray}.ss));
-                    dke_out.waves{1}.rays{iray}.mask_m = ones(size(dke_out.waves{1}.rays{iray}.ss));
-                end        
-            end        
+            if isfield(lukestructs{it}.output,'Zcurr'),
+                Zcurr = lukestructs{it}.output.Zcurr;
+            else
+                Zcurr = '';
+            end
+            %
+            if isfield(lukestructs{it}.output,'ZP0'),
+                ZP0 = lukestructs{it}.output.ZP0;
+            else
+                ZP0 = '';
+            end
+            %
+            if isfield(lukestructs{it}.output,'dke_out'),
+                dke_out = lukestructs{it}.output.dke_out;  
+            else
+                dke_out = '';
+            end
+            %  
+            if isfield(lukestructs{it}.output,'radialDKE'),
+                radialDKE = lukestructs{it}.output.radialDKE;
+            else
+                radialDKE = '';
+            end
+            %  
+            if isfield(lukestructs{it}.output,'equilDKE'),
+                equilDKE = lukestructs{it}.output.equilDKE;
+            else
+                equilDKE = '';
+            end
+            %  
+            if isfield(lukestructs{it}.output,'equil'),
+                equil = lukestructs{it}.output.dke_out.equil;
+            else
+                equil = '';
+            end
+            %  
+            if isfield(lukestructs{it}.output,'momentumDKE'),
+                momentumDKE = lukestructs{it}.output.momentumDKE;
+            else
+                momentumDKE = '';
+            end
+            %  
+            if isfield(lukestructs{it}.output,'gridDKE'),
+                gridDKE = lukestructs{it}.output.gridDKE;
+            else
+                gridDKE = '';
+            end
+            %  
+            if isfield(lukestructs{it}.output,'Zmomcoef'),
+                Zmomcoef = lukestructs{it}.output.Zmomcoef;
+            else
+                Zmomcoef = '';
+            end
+            %  
+            if isfield(lukestructs{it}.output,'Zbouncecoef'),
+                Zbouncecoef = lukestructs{it}.output.Zbouncecoef;
+            else
+                Zbouncecoef = '';
+            end
+            %  
+            if isfield(lukestructs{it}.output,'Zmripple'),
+                Zmripple = lukestructs{it}.output.Zmripple;
+            else
+                Zmripple = '';
+            end
+            %  
+            if isfield(lukestructs{it}.output,'mksa'),
+                mksa = lukestructs{it}.output.mksa;
+            else
+                mksa = '';
+            end
+            %  
+            if isfield(lukestructs{it}.output,'XXsinksource'),
+                XXsinksource = lukestructs{it}.output.XXsinksource;
+            else
+                XXsinksource = '';
+            end
+            %  
+            if isfield(lukestructs{it}.output,'waves'),
+                for iray = 1:length(dke_out.waves{1}.rays),
+                    if ~isfield(dke_out.waves{1}.rays{iray},'mask_p') || ~isfield(dke_out.waves{1}.rays{iray},'mask_m');
+                        dke_out.waves{1}.rays{iray}.mask_p = zeros(size(dke_out.waves{1}.rays{iray}.ss));
+                        dke_out.waves{1}.rays{iray}.mask_m = ones(size(dke_out.waves{1}.rays{iray}.ss));
+                    end        
+                end
+            end
             %        
             dataname_out = dataname_ITM(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp,euitmshot.numrun_out,euitmshot.occurrence_out);   
             %
