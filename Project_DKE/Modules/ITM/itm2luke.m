@@ -281,10 +281,10 @@ else
                 rawdata.equilDKE = '';
             end
             %  
-            if isfield(lukestructs{it}.output,'equil'),
+            if isfield(lukestructs{it},'equil'),
                 rawdata.equil = lukestructs{it}.equil;
             else
-                disp(['WARNING: ''equil'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                disp(['WARNING: ''equil'' structure is missing in the lukestructs{',int2str(it),'} structure.']);
                 rawdata.equil = '';
             end
             %  
