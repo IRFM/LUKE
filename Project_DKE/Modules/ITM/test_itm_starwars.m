@@ -11,9 +11,6 @@ clc
 %
 % Computing parameters
 %
-remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
-rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
-remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
 remdebugmode = 0;% debug mode (0) off (1) on
 remclean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 %luke_memory = 2000;% job memory in mb
@@ -36,6 +33,8 @@ rho_S = 31;%101;
 %
 euitm.loadlocalfile = 1;%(1): load euitm data in local file if it exists (otherwise read data in MDS+ database), (0) do not load locally (in MDS+ database only)
 euitm.savelocalfile = 1;%(2): save euitm data in local file and in MDS+ database (1): save euitm data in local file but not in MDS+ database, (0) do not save locally (in MDS+ database only)
+%
+% remote profile for load data from EUITM MDS+ database only
 %
 remoteprofile = 'EFDA_ITM';
 scheduler = 'direct';
@@ -83,6 +82,14 @@ CPO_occurrences = [occurrence_eq,occurrence_cp,occurrence_an];
 dataname = dataname_ITM(machine,shot,run,timeslice,time_interp);
 filename = [pwd,'/LUKE_RESULTS_',dataname,'.mat'];
 %
+if exist(filename,'file'),
+	cleansim = input_dke_yp(['Do you to clean the existing simulation: ',dataname,' (y/n)'],'n',{'y','n'});
+	disp(' ')
+    if cleansim == 'y',% clean simulation
+        delete(filename)
+    end
+end
+%
 if ~exist(filename,'file'),% load existing simulation    
     %
     dkepath = setpath_luke_jd('');
@@ -99,9 +106,28 @@ if ~exist(filename,'file'),% load existing simulation
         disp(' ')
         dist_mode = NaN;
         mdce_mode = input_dke_yp(['Please select a mode for the distribution on host ',dkepath.profilestr{remnum},':\n(0) sequential \n(1) jobcomputing \n(2) parcomputing \n(3) remcomputing \n'],0,0:3);
+        disp(' ')
+        %
+        remtimout = input_dke_yp(['Timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again'],0,0:1000);
+        disp(' ')
+        %
+        if remtimout > 0,
+            rempause = input_dke_yp(['Pause between job checks (in minutes)'],5,0:30);
+        else
+            rempause = 5;
+        end
+        %
+        remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
     else% direct distribution from localhost
         remnum = 0;
+        remtimout = input_dke_yp(['Timeout for remote calculations, in minutes.'],100,1:1000);
+        disp(' ')
+        %
+        rempause = input_dke_yp(['Pause between job checks (in minutes)'],5,0:30);
+        disp(' ')
+        %
         dist_mode = iselect_jd(dkepath.distprofiles,'Please select a mode for the distribution from the local host ?',0,struct,1);
+        disp(' ')
         if dist_mode > 3,
             mdce_mode = 3 - dist_mode;
         else
