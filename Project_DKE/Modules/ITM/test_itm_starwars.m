@@ -13,8 +13,8 @@ clc
 %
 remdebugmode = 0;% debug mode (0) off (1) on
 remclean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
-%luke_memory = 2000;% job memory in mb
-%luke_walltime = 1;%job walltime in hours
+luke_memory = 16000;% job memory in mb
+luke_walltime = 1;%job walltime in hours
 enforce = 0;% exit if remote calculation failed 
 %
 opt_struct = 0;%(0) light version, compatible with fluctuations, proc_luke and runhxr, (1) : heavy version, all fields are kept except XYD_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
