@@ -24,7 +24,16 @@ end
 %
 p_opt = -1;%printing option
 %
+mds_dataversion0 = str2num(ver_mds(1:end-1));%for using numbers
+mds_dataversion1 = ver_mds(end-1:end);%for using 
+%
 if strcmp('equilibrium',struct_name),
+    %
+    if mds_dataversion0 >= 4.10,
+        cocos = CPO_struct.datainfo.cocos;
+    else
+        cocos = '';
+    end
     %
     if round(str2double(CPO_struct.profiles_2d.grid_type(1))) == 1,%rectangular grid
         xyBR = CPO_struct.profiles_2d.br;
@@ -202,7 +211,7 @@ elseif strcmp('coreprof',struct_name),
     %
 elseif strcmp('antennas',struct_name),
     %
-	if strfind(ver_mds,'4.09'),
+	if mds_dataversion0 == 4.09,
         %
         for ia = 1:length(CPO_struct.antenna_unit),
             if ~isempty(CPO_struct.antenna_unit(ia).antenna_ec.name),
@@ -238,7 +247,7 @@ elseif strcmp('antennas',struct_name),
                 disp('WARNING: LH antenna not yet considered in ITM')
             end
         end
-    elseif strfind(ver_mds,'4.10'),
+    elseif mds_dataversion0 >= 4.10,
        %
         if isfield(CPO_struct,'antenna_ec'),
             for ia = 1:length(CPO_struct.antenna_ec),
