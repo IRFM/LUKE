@@ -21,7 +21,7 @@ opt_struct = 0;%(0) light version, compatible with fluctuations, proc_luke and r
 %
 opt.save = 1;% (1): save LUKE_RESULTS or return error in localdatadir (0): return results or error
 opt.localdatadir = 'results';% local directory where LUKE_RESULTS is saved
-opt.fields = {'Zcurr','ZP0','dke_out'};% select fields to be returned from lukestructs. Use NaN to return all fields.
+opt.fields = {'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','equil','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource'};% select fields to be returned from lukestructs. Use NaN to return all fields.
 opt.proc = struct;%postprocessing done remotely
 opt.backup = 0;% (1) save fluctuation time steps (0) do not save
 opt.waves = 0;%(-1) waves are not saved in "wave_results/" and not stored in dke_out. In this case, C3PO must be rerun to see the rays (0) waves are stored in dke_out and saved in LUKE_RESULTS, (1) waves are saved in "wave_results/" but not stored in dke_out
