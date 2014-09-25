@@ -165,6 +165,15 @@ addpath([luke_root,'Project_DKE/Database/PATH_files']);
 addpath([luke_root,'Project_DKE/DKE']);
 addpath([luke_root,'Tools']);
 %
+% Path for extra libraries
+%
+if isfield(dkepath,'extrapaths'),
+    extrapathsfields = fieldnames(dkepath.extrapaths);
+    for ifield = 1:length(extrapathsfields)
+        addpath(dkepath.extrapaths.(extrapathsfields{ifield}));
+    end
+end
+%
 % Path for machine specific libraries
 %
 if isfield(dkepath,'speclibpath'),
