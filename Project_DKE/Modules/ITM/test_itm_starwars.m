@@ -9,32 +9,38 @@ clear all
 close all
 clc
 %
-opts.remnum = 3;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway). (> 0 transfer before distribution, <0 distribution before transfer)
-opts.remmdce = 3;%distribution mode of LUKE on the remote machine (0) sequential, (1) jobcomputing, (2) parcomputing, (3) remcomputing 
-opts.remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
-opts.rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
-opts.remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
-opts.remdebugmode = 0;% debug mode (0) off (1) on
-opts.remclean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
-%opts.luke_memory = 2000;% job memory in mb
-%opts.luke_walltime = 1;%job walltime in hours
-opts.enforce = 0;% exit if remote calculation failed 
+% Computing parameters
 %
-opts.opt_struct = 0;%(0) light version, compatible with fluctuations, proc_luke and runhxr, (1) : heavy version, all fields are kept except XYD_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
+remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
+remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
+remdebugmode = 0;% debug mode (0) off (1) on
+remclean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+%luke_memory = 2000;% job memory in mb
+%luke_walltime = 1;%job walltime in hours
+enforce = 0;% exit if remote calculation failed 
 %
-opts.opt.save = 0;% (1): save LUKE_RESULTS or return error in localdatadir (0): return results or error
-opts.opt.localdatadir = '';% local directory where LUKE_RESULTS is saved
-opts.opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
-opts.opt.backup = 0;% (1) save fluctuation time steps (0) do not save
-opts.opt.waves = -1;%(-1) waves are not saved in "wave_results/" and not stored in dke_out. In this case, C3PO must be rerun to see the rays (0) waves are stored in dke_out and saved in LUKE_RESULTS, (1) waves are saved in "wave_results/" but not stored in dke_out
-opts.opt.saveinputs = 0;% (1) save input structures in .mat files before starting (0) do not save
+opt_struct = 0;%(0) light version, compatible with fluctuations, proc_luke and runhxr, (1) : heavy version, all fields are kept except XYD_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
 %
-opts.svnremoteupdate = 0;%(1) svn remote update on the ITM gateway (0) : no svn remote update on the ITM gateway
+opt.save = 1;% (1): save LUKE_RESULTS or return error in localdatadir (0): return results or error
+opt.localdatadir = 'results';% local directory where LUKE_RESULTS is saved
+opt.fields = {'Zcurr','ZP0','dke_out'};% select fields to be returned from lukestructs. Use NaN to return all fields.
+opt.proc = struct;%postprocessing done remotely
+opt.backup = 0;% (1) save fluctuation time steps (0) do not save
+opt.waves = 0;%(-1) waves are not saved in "wave_results/" and not stored in dke_out. In this case, C3PO must be rerun to see the rays (0) waves are stored in dke_out and saved in LUKE_RESULTS, (1) waves are saved in "wave_results/" but not stored in dke_out
+opt.saveinputs = 0;% (1) save input structures in .mat files before starting (0) do not save
 %
-opts.rho_S = 101;
+svnremoteupdate = 0;%(1) svn remote update on the ITM gateway (0) : no svn remote update on the ITM gateway
 %
-opts.euitm.loadlocalfile = 1;%(1): load euitm data in local file if it exists (otherwise read data in MDS+ database), (0) do not load locally (in MDS+ database only)
-opts.euitm.savelocalfile = 1;%(2): save euitm data in local file and in MDS+ database (1): save euitm data in local file but not in MDS+ database, (0) do not save locally (in MDS+ database only)
+rho_S = 31;%101;
+%
+euitm.loadlocalfile = 1;%(1): load euitm data in local file if it exists (otherwise read data in MDS+ database), (0) do not load locally (in MDS+ database only)
+euitm.savelocalfile = 1;%(2): save euitm data in local file and in MDS+ database (1): save euitm data in local file but not in MDS+ database, (0) do not save locally (in MDS+ database only)
+%
+remoteprofile = 'EFDA_ITM';
+scheduler = 'direct';
+profilename = 'yvesp';
+duplicate = 'true';%if true, don't use the remote LUKE_ITM toolbox
 %
 % Simulation parameters (EC17 paper parameters)
 %
@@ -74,40 +80,62 @@ occurrence_an = 0;%antenna CPO occurence
 %
 CPO_occurrences = [occurrence_eq,occurrence_cp,occurrence_an];
 %
-[dkepath] = load_structures_yp('dkepath','','');
-%
-disp('---------------------------------------------')
-disp(['Computer used for calculations --> ',dkepath.profilestr{opts.remnum}]);
-disp(['Distributed computing mode     --> ',int2str(opts.remmdce)]);
-disp('---------------------------------------------')
-%
-addpath(fullfile(dkepath.local_root,'LUKE_ITM','trunk'));% LUKE <-> ITM toolbox for the local path
-%
-cd([dkepath.luke_root,'Project_DKE/Modules/ITM'])
 dataname = dataname_ITM(machine,shot,run,timeslice,time_interp);
 filename = [pwd,'/LUKE_RESULTS_',dataname,'.mat'];
 %
-[s_host,w_host] = unix('hostname -f');%identify the local machine
-%
-% check if current jobs exists to load possible existing jobs
-%
-remoteprofile = 'EFDA_ITM';
-scheduler = 'direct';
-profilename = 'yvesp';
-duplicate = 'true';%if true, don't use the remote LUKE_ITM toolbox
-%
-if ~length(strfind(w_host,'itm')),%remote calculations
-    [remote,profilestr] = load_remoteprofiles_jd(remoteprofile,false,false,scheduler,profilename,duplicate);
-    job = matstandardjob_jd('runmat');
-    if exist('opts') && isfield(opts,'remdebugmode') && opts.remdebugmode,
-        remote.debugmode = 1;
-    end 
-else
-    remote = [];
-    job = [];
-end
-%
-if ~exist(filename,'file'),% load existing simulation        
+if ~exist(filename,'file'),% load existing simulation    
+    %
+    dkepath = setpath_luke_jd('');
+    %
+    if ~isempty(dkepath.remote),
+        remopt = input_dke_yp(['Do you want to transfer the distributed calculation to a remote host (y/n)'],'n',{'y','n'});
+        disp(' ')
+    else
+        remopt = 'n';
+    end
+    %
+    if remopt == 'y',% use of mdce_remote
+        remnum = iselect_jd(dkepath.profilestr,'Please select the host for the distributed calculation ?',0,struct,1);
+        disp(' ')
+        dist_mode = NaN;
+        mdce_mode = input_dke_yp(['Please select a mode for the distribution on host ',dkepath.profilestr{remnum},':\n(0) sequential \n(1) jobcomputing \n(2) parcomputing \n(3) remcomputing \n'],0,0:3);
+    else% direct distribution from localhost
+        remnum = 0;
+        dist_mode = iselect_jd(dkepath.distprofiles,'Please select a mode for the distribution from the local host ?',0,struct,1);
+        if dist_mode > 3,
+            mdce_mode = 3 - dist_mode;
+        else
+            mdce_mode = dist_mode - 1;
+        end
+    end    
+    %
+    opts.remnum = remnum;%3;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway). (> 0 transfer before distribution, <0 distribution before transfer)
+    opts.remmdce = mdce_mode;%distribution mode of LUKE on the remote machine (0) sequential, (1) jobcomputing, (2) parcomputing, (3) remcomputing 
+    opts.remtimout = remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+    opts.rempause = rempause;% pause between job checks (in minutes) (only for remtimout > 0)
+    opts.remstart = remstart;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
+    opts.remdebugmode = remdebugmode;% debug mode (0) off (1) on
+    opts.remclean = remclean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+    %opts.luke_memory = luke_memory;% job memory in mb
+    %opts.luke_walltime = luke_walltime;%job walltime in hours
+    opts.enforce = enforce;% exit if remote calculation failed 
+    %
+    opts.opt_struct = opt_struct;%(0) light version, compatible with fluctuations, proc_luke and runhxr, (1) : heavy version, all fields are kept except XYD_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
+    %
+    opts.opt.save = opt.save;% (1): save LUKE_RESULTS or return error in localdatadir (0): return results or error
+    opts.opt.localdatadir = opt.localdatadir;% local directory where LUKE_RESULTS is saved
+    opts.opt.fields = opt.fields;% select fields to be returned from lukestructs. Use NaN to return all fields.
+    opts.opt.proc = opt.proc;%postprocessing done remotely
+    opts.opt.backup = opt.backup;% (1) save fluctuation time steps (0) do not save
+    opts.opt.waves = opt.waves;%(-1) waves are not saved in "wave_results/" and not stored in dke_out. In this case, C3PO must be rerun to see the rays (0) waves are stored in dke_out and saved in LUKE_RESULTS, (1) waves are saved in "wave_results/" but not stored in dke_out
+    opts.opt.saveinputs = opt.saveinputs;% (1) save input structures in .mat files before starting (0) do not save
+    %
+    opts.svnremoteupdate = svnremoteupdate;%(1) svn remote update on the ITM gateway (0) : no svn remote update on the ITM gateway
+    %
+    opts.rho_S = rho_S;
+    %
+    opts.euitm.loadlocalfile = euitm.loadlocalfile;%(1): load euitm data in local file if it exists (otherwise read data in MDS+ database), (0) do not load locally (in MDS+ database only)
+    opts.euitm.savelocalfile = euitm.savelocalfile;%(2): save euitm data in local file and in MDS+ database (1): save euitm data in local file but not in MDS+ database, (0) do not save locally (in MDS+ database only)
     %
     if exist('opts') && isfield(opts,'svnremoteupdate') && opts.svnremoteupdate,
         %
@@ -143,10 +171,38 @@ if ~exist(filename,'file'),% load existing simulation
     end
 else
     temp_luke_results = load(['LUKE_RESULTS_',dataname,'.mat']);
-    if isfield(temp_luke_results,'procdata')
+    %
+    opts = temp_luke_results.opts;
+    dkepath = temp_luke_results.dkepath;
+    %
+    if isfield(temp_luke_results,'data_proc')
         disp(['WARNING: the file LUKE_RESULTS_',dataname,'.mat must be deleted or renamed first to start a new simulation.']);
         clear('temp_luke_results');
     end
+    %
+end
+%
+disp('---------------------------------------------')
+disp(['Computer used for calculations --> ',dkepath.profilestr{opts.remnum}]);
+disp(['Distributed computing mode     --> ',int2str(opts.remmdce)]);
+disp('---------------------------------------------')
+%
+%
+cd([dkepath.luke_root,'Project_DKE/Modules/ITM'])
+%
+[s_host,w_host] = unix('hostname -f');%identify the local machine
+%
+% check if current jobs exists to load possible existing jobs
+%
+if ~length(strfind(w_host,'itm')),%remote calculations
+    [remote,profilestr] = load_remoteprofiles_jd(remoteprofile,false,false,scheduler,profilename,duplicate);
+    job = matstandardjob_jd('runmat');
+    if exist('opts') && isfield(opts,'remdebugmode') && opts.remdebugmode,
+        remote.debugmode = 1;
+    end 
+else
+    remote = [];
+    job = [];
 end
 %
 [err_waves,waves] = itm_starwars(mds_ver,machine,shot,run,timeslice,time_interp,CPOs,CPO_occurrences,run_out,iter,occurrence_out,opts);
@@ -159,7 +215,7 @@ if isstruct(waves),
         waves_mds = '';
     end
     %
-    load(['LUKE_RESULTS_',dataname,'.mat'],'procdata');
+    load(['LUKE_RESULTS_',dataname,'.mat'],'data_proc');
     %
     for it = 1:length(waves),
         figure
@@ -169,7 +225,7 @@ if isstruct(waves),
             graph1D_jd(waves_mds(it).coherentwave(1).grid_1d.psi,waves_mds(it).coherentwave(1).profiles_1d.powd_tot,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);hold on
         end
         %
-        disp(['Absorbed RF power (it = ',int2str(it),') -> ',num2str(procdata{it}.scalar.p0_rf_2piRp*2*pi*procdata{1}.scalar.Rp),' (MW)']);
+        disp(['Absorbed RF power (it = ',int2str(it),') -> ',num2str(data_proc{it}.scalar.p0_rf_2piRp*2*pi*data_proc{1}.scalar.Rp),' (MW)']);
         %TODO display global proc results
     end
     %
