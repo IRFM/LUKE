@@ -744,7 +744,11 @@ end
 %
 if opt.save >= 0 && isfield(opt,'proc') && isstruct(opt.proc),
     lukestructs.output.data_proc = proc_luke_jd(output,opt.proc);
-    opt.fields = {'data_proc'};
+    if iscell(opt.fields),%explicit data list that must be in the output. 
+        opt.fields = [opt.fields,'data_proc'];
+    else
+        opt.fields = {'data_proc'};
+    end
 end
 %
 if iscell(opt.fields),% select fields to return in output
