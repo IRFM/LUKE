@@ -349,8 +349,12 @@ else
             %
         elseif isfield(lukestructs{it},'err'),
             disp('*************************')
-            for ierr = 1:length(lukestructs{it}.err)
-                disp(lukestructs{it}.err{ierr});
+            if iscell(lukestructs{it}.err)
+                for ierr = 1:length(lukestructs{it}.err)
+                    disp(lukestructs{it}.err{ierr});
+                end
+            else
+                disp(lukestructs{it}.err);
             end
             disp('*************************')
         end
