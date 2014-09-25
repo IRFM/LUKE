@@ -69,7 +69,10 @@ if ~exist(filename,'file'),
             if optluke.save,% (1): save LUKE_RESULTS or return error (0): return results or error
                 dkepath.clustermode.run_lukert.scheduler.localdatadir = optluke.localdatadir;
                 if exist(optluke.localdatadir,'dir') && length(dir(optluke.localdatadir)) > 2,
-                    delete([optluke.localdatadir,'*']);
+                    initdir = pwd;
+                    cd(optluke.localdatadir);
+                    delete('LUKE_RESULTS_*');
+                    cd(initdir);
                 end
             end
             %
@@ -215,120 +218,131 @@ if sum(flag_running) > 0,
     return
 else
     %
+    keyboard
+    dataname_out = dataname_ITM(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp,euitmshot.numrun_out,euitmshot.occurrence_out);   
+    data_proc = '';
+    %
     for it = 1:length(lukestructs),
         %
         if isfield(lukestructs{it},'output'), 
             if isfield(lukestructs{it}.output,'Znorm'),
-                Znorm = lukestructs{it}.output.Znorm;
+                rawdata.Znorm = lukestructs{it}.output.Znorm;
             else
-                Znorm = '';
+                disp(['WARNING: ''Znorm'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.Znorm = '';
             end
             %
             if isfield(lukestructs{it}.output,'Zcurr'),
-                Zcurr = lukestructs{it}.output.Zcurr;
+                rawdata.Zcurr = lukestructs{it}.output.Zcurr;
             else
-                Zcurr = '';
+                disp(['WARNING: ''Zcurr'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.Zcurr = '';
             end
             %
             if isfield(lukestructs{it}.output,'ZP0'),
-                ZP0 = lukestructs{it}.output.ZP0;
+                rawdata.ZP0 = lukestructs{it}.output.ZP0;
             else
-                ZP0 = '';
+                disp(['WARNING: ''ZP0'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.ZP0 = '';
             end
-            %
+            %   
             if isfield(lukestructs{it}.output,'dke_out'),
-                dke_out = lukestructs{it}.output.dke_out;  
+                rawdata.dke_out = lukestructs{it}.output.dke_out;  
+                %
+                if isfield(lukestructs{it}.output,'waves'),
+                    for iray = 1:length(rawdata.dke_out.waves{1}.rays),
+                        if ~isfield(rawdata.dke_out.waves{1}.rays{iray},'mask_p') || ~isfield(rawdata.dke_out.waves{1}.rays{iray},'mask_m');
+                            rawdata.dke_out.waves{1}.rays{iray}.mask_p = zeros(size(rawdata.dke_out.waves{1}.rays{iray}.ss));
+                            rawdata.dke_out.waves{1}.rays{iray}.mask_m = ones(size(rawdata.dke_out.waves{1}.rays{iray}.ss));
+                        end        
+                    end
+                end 
+                %
             else
-                dke_out = '';
+                disp(['WARNING: ''dke_out'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.dke_out = '';
             end
             %  
             if isfield(lukestructs{it}.output,'radialDKE'),
-                radialDKE = lukestructs{it}.output.radialDKE;
+                rawdata.radialDKE = lukestructs{it}.output.radialDKE;
             else
-                radialDKE = '';
+                disp(['WARNING: ''radialDKE'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.radialDKE = '';
             end
             %  
             if isfield(lukestructs{it}.output,'equilDKE'),
-                equilDKE = lukestructs{it}.output.equilDKE;
+                rawdata.equilDKE = lukestructs{it}.output.equilDKE;
             else
-                equilDKE = '';
+                disp(['WARNING: ''equilDKE'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.equilDKE = '';
             end
             %  
             if isfield(lukestructs{it}.output,'equil'),
-                equil = lukestructs{it}.output.dke_out.equil;
+                rawdata.equil = lukestructs{it}.output.dke_out.equil;
             else
-                equil = '';
+                disp(['WARNING: ''equil'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.equil = '';
             end
             %  
             if isfield(lukestructs{it}.output,'momentumDKE'),
-                momentumDKE = lukestructs{it}.output.momentumDKE;
+                rawdata.momentumDKE = lukestructs{it}.output.momentumDKE;
             else
-                momentumDKE = '';
+                disp(['WARNING: ''momentumDKE'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.momentumDKE = '';
             end
             %  
             if isfield(lukestructs{it}.output,'gridDKE'),
-                gridDKE = lukestructs{it}.output.gridDKE;
+                rawdata.gridDKE = lukestructs{it}.output.gridDKE;
             else
-                gridDKE = '';
+                disp(['WARNING: ''gridDKE'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.gridDKE = '';
             end
             %  
             if isfield(lukestructs{it}.output,'Zmomcoef'),
-                Zmomcoef = lukestructs{it}.output.Zmomcoef;
+                rawdata.Zmomcoef = lukestructs{it}.output.Zmomcoef;
             else
-                Zmomcoef = '';
+                disp(['WARNING: ''Zmomcoef'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.Zmomcoef = '';
             end
             %  
             if isfield(lukestructs{it}.output,'Zbouncecoef'),
-                Zbouncecoef = lukestructs{it}.output.Zbouncecoef;
+                rawdata.Zbouncecoef = lukestructs{it}.output.Zbouncecoef;
             else
-                Zbouncecoef = '';
+                disp(['WARNING: ''Zbouncecoef'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.Zbouncecoef = '';
             end
             %  
             if isfield(lukestructs{it}.output,'Zmripple'),
-                Zmripple = lukestructs{it}.output.Zmripple;
+                rawdata.Zmripple = lukestructs{it}.output.Zmripple;
             else
-                Zmripple = '';
+                disp(['WARNING: ''Zmripple'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.Zmripple = '';
             end
             %  
             if isfield(lukestructs{it}.output,'mksa'),
-                mksa = lukestructs{it}.output.mksa;
+                rawdata.mksa = lukestructs{it}.output.mksa;
             else
-                mksa = '';
+                disp(['WARNING: ''mksa'' structure is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.mksa = '';
             end
             %  
             if isfield(lukestructs{it}.output,'XXsinksource'),
-                XXsinksource = lukestructs{it}.output.XXsinksource;
+                rawdata.XXsinksource = lukestructs{it}.output.XXsinksource;
             else
-                XXsinksource = '';
+                disp(['WARNING: ''XXsinksource'' array is missing in the lukestructs{',int2str(it),'}.output structure.']);
+                rawdata.XXsinksource = '';
             end
             %  
-            if isfield(lukestructs{it}.output,'waves'),
-                for iray = 1:length(dke_out.waves{1}.rays),
-                    if ~isfield(dke_out.waves{1}.rays{iray},'mask_p') || ~isfield(dke_out.waves{1}.rays{iray},'mask_m');
-                        dke_out.waves{1}.rays{iray}.mask_p = zeros(size(dke_out.waves{1}.rays{iray}.ss));
-                        dke_out.waves{1}.rays{iray}.mask_m = ones(size(dke_out.waves{1}.rays{iray}.ss));
-                    end        
-                end
-            end
-            %        
-            dataname_out = dataname_ITM(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp,euitmshot.numrun_out,euitmshot.occurrence_out);   
+            rawdata.dkepath.profilestr = profilestr;
             %
-            temp_filename = ['temp_EUITM_',dataname_out,'.mat'];
-            %  
-            save(temp_filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
-            %
-            if ~isfield(lukestructs{it}.output,'data_proc'),%postprocessing
-                %
-                rawdata = load(temp_filename);
-                rawdata.dkepath.profilestr = profilestr;
-                %
+            if ~isfield(lukestructs{it}.output,'data_proc'),%local postprocessing
                 data_proc{it} = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
-                %
-                waves_euitm = LUKEstruct2CPO(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_out,euitmshot.timeslice,'waves',rawdata,data_proc{it},waves_euitm);
-                %
-                delete(temp_filename);        
-                %
+            else
+                data_proc{it} = lukestructs{it}.output.data_proc;
             end
+            %
+            waves_euitm = LUKEstruct2CPO(ver_mds,euitmshot.machine,euitmshot.numshot,euitmshot.numrun_out,euitmshot.timeslice,'waves',rawdata,data_proc{it},waves_euitm);%convert date from LUKE format to EUITM MDS+ format
+            %
         elseif isfield(lukestructs{it},'err'),
             disp('*************************')
             disp(lukestructs{it}.err);
@@ -337,5 +351,6 @@ else
     end
     %
     save(['LUKE_RESULTS_',dataname,'.mat'],'data_proc','-append');
+    %
 end
 
