@@ -336,6 +336,6 @@ else
         end
     end
     %
-    save(['LUKE_RESULTS_',dataname,'.mat'],'procdata','-append');
+    save(['LUKE_RESULTS_',dataname,'.mat'],'data_proc','-append');
 end
 
