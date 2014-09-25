@@ -26,7 +26,7 @@ p_opt = -1;%printing option
 %
 if strcmp('equilibrium',struct_name),
 	%
-    if strcmp(ver_mds,'4.09a') || strcmp(ver_mds,'4.10a'),
+    if strcmp(ver_mds,'4.09a') || strcmp(ver_mds,'4.10a') || strcmp(ver_mds,'4.10b'),
         %
         if round(str2double(CPO_struct.profiles_2d.grid_type(1))) == 1,%rectangular grid
             xyBR = CPO_struct.profiles_2d.br;
@@ -179,7 +179,7 @@ if strcmp('equilibrium',struct_name),
 	%
 elseif strcmp('coreprof',struct_name),
     %
-	if strcmp(ver_mds,'4.09a') || strcmp(ver_mds,'4.10a'),
+	if strcmp(ver_mds,'4.09a') || strcmp(ver_mds,'4.10a') || strcmp(ver_mds,'4.10b'),
         %
         LUKE_struct.psi = CPO_struct.psi.value(:)';% Unfortunately, the poloidal psi for the 1-D profiles is not consistent with the psi defined in the equil structure (number of grid points, min and max !!!)... who named that CPO's, Consistent Physical Object....
         LUKE_struct.pTe = CPO_struct.te.value(:)'/1000;%keV units
@@ -247,7 +247,7 @@ elseif strcmp('antennas',struct_name),
                 disp('WARNING: LH antenna not yet considered in ITM')
             end
         end
-    elseif strcmp(ver_mds,'4.10a'),
+    elseif strcmp(ver_mds,'4.10a') || strcmp(ver_mds,'4.10b'),
        %
         if isfield(CPO_struct,'antenna_ec'),
             for ia = 1:length(CPO_struct.antenna_ec),
