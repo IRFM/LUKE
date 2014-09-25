@@ -117,7 +117,6 @@ if ~exist(filename,'file'),% load existing simulation
             rempause = 5;
         end
         %
-        remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
     else% direct distribution from localhost
         remnum = 0;
         remtimout = input_dke_yp(['Timeout for remote calculations, in minutes.'],100,1:1000);
@@ -133,7 +132,9 @@ if ~exist(filename,'file'),% load existing simulation
         else
             mdce_mode = dist_mode - 1;
         end
-    end    
+    end 
+    %
+    remstart = 0;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
     %
     opts.remnum = remnum;%3;% remote profile number. Use 0 for local sequential calculations (for LUKE only from ITM gateway). (> 0 transfer before distribution, <0 distribution before transfer)
     opts.remmdce = mdce_mode;%distribution mode of LUKE on the remote machine (0) sequential, (1) jobcomputing, (2) parcomputing, (3) remcomputing 
