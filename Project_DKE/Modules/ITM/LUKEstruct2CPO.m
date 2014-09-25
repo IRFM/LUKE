@@ -16,8 +16,8 @@ if strcmp('waves',struct_name),
 	%
 	it = length(CPO_struct) + 1;
 	%
-    if isfield(rawdata.dkepath,'remnum') && rawdata.dkepath.remnum > 0, 
-        CPO_struct(it).datainfo.dataprovider = rawdata.dkepath.profilestr(rawdata.dkepath.remnum);
+    if isfield(rawdata.dkepath.clustermode.run_lukert.scheduler,'remnum') && rawdata.dkepath.clustermode.run_lukert.scheduler.remnum > 0, 
+        CPO_struct(it).datainfo.dataprovider = rawdata.dkepath.profilestr(rawdata.dkepath.clustermode.run_lukert.scheduler.remnum);
     else
         CPO_struct(it).datainfo.dataprovider = ['Local sequential calculations on ',rawdata.dkepath.machine];
     end
