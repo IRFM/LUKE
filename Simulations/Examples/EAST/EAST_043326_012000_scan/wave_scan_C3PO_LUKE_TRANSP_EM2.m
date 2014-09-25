@@ -66,8 +66,8 @@ psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 <
 %
 % ------------------------ Display option  --------------------------------
 % 
-%ij_scan_display = [3,7];%list of (i,j) values at which results are displayed (separated by ;)
-%ir_display = 10;%minor radius at which local data are displayed (0): no display, or a vector of index
+ij_scan_display = [3,7];%list of (i,j) values at which results are displayed (separated by ;)
+ir_display = 10;%minor radius at which local data are displayed (0): no display, or a vector of index
 %iscan_nodisplay = NaN;% a vector of index
 p_opt = 0;%Display and printing options (-1: no display, 0: display, 1: display + save, 2: display + save + print)
 %

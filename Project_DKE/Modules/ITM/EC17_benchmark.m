@@ -79,7 +79,9 @@ if remtimout == 0 && remstart == 0 && exist(filename,'file'),% load existing sim
     %
 else% new simulation
 	%
-	delete(filename);
+    if exist(filename,'file'),
+        delete(filename);
+    end
 	%
 	% Test if a connection to the ITM MDS+ database may be established
 	%

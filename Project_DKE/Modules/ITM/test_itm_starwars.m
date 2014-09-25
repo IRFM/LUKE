@@ -210,7 +210,11 @@ else
 end
 %
 disp('---------------------------------------------')
-disp(['Computer used for calculations --> ',dkepath.profilestr{opts.remnum}]);
+if opts.remnum > 0
+    disp(['Computer used for calculations --> ',dkepath.profilestr{opts.remnum}]);
+else
+    disp(['Local computer used for calculations');
+end
 disp(['Distributed computing mode     --> ',int2str(opts.remmdce)]);
 disp('---------------------------------------------')
 %

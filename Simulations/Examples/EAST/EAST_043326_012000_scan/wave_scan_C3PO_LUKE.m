@@ -21,8 +21,29 @@ warning('off')
 %
 % ---------------------- Remote/distributed computing ---------------------
 %
+
+dkepath = lukeschedulerparam(dkepath,mdce_mode,remnum,returnmode,transpmode,opt_gui,style)
+
+
+
+    dkepath.clustermode.run_lukert.scheduler.remnum = computing_opts.remnum;% remote profile number. Use 0 for local sequential calculations
+    dkepath.clustermode.run_lukert.scheduler.mode = computing_opts.mdce_mode;
+    dkepath.clustermode.run_lukert.scheduler.remtimout = computing_opts.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+    dkepath.clustermode.run_lukert.scheduler.rempause = computing_opts.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
+    dkepath.clustermode.run_lukert.scheduler.debugmode = computing_opts.remdebugmode;% debug mode (0) off (1) on
+    dkepath.clustermode.run_lukert.scheduler.cleanmode = computing_opts.remclean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+    %dkepath.clustermode.run_lukert.scheduler.memory = computing_opts.luke_memory;
+    %dkepath.clustermode.run_lukert.scheduler.walltime = computing_opts.luke_walltime;
+    %dkepath.clustermode.run_lukert.scheduler.display = computing_opts.display_mode;
+
+
+
+
+
+
 computing_opts.remprofile = 'shenma';% remote profile name. Leave empty for an interactive choice of a remote profile or 'local' for local calculations
 computing_opts.remnum = 11;% if it is defined (not NaN or empty) it overrides 'remprofile' field. 0: local sequential calculation
+computing_opts.mdce_mode = 
 %
 computing_opts.remtimout = 0;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
 computing_opts.rempause = 5;% pause between job checks (in minutes) (only for remtimout > 0)
@@ -66,8 +87,8 @@ psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 <
 %
 % ------------------------ Display option  --------------------------------
 % 
-%ij_scan_display = [3,7];%list of (i,j) values at which results are displayed (separated by ;)
-%ir_display = 10;%minor radius at which local data are displayed (0): no display, or a vector of index
+ij_scan_display = [3,7];%list of (i,j) values at which results are displayed (separated by ;)
+ir_display = 10;%minor radius at which local data are displayed (0): no display, or a vector of index
 %iscan_nodisplay = NaN;% a vector of index
 p_opt = 0;%Display and printing options (-1: no display, 0: display, 1: display + save, 2: display + save + print)
 %
@@ -308,11 +329,15 @@ if ~exist(filesimul,'file') || redocrashedjobs,
         dkeparam.invproc = -2;
     end
     %
-    dkepath.remnum = computing_opts.remnum;% remote profile number. Use 0 for local sequential calculations
-    dkepath.remtimout = computing_opts.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
-    dkepath.rempause = computing_opts.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
-    dkepath.debugmode = computing_opts.remdebugmode;% debug mode (0) off (1) on
-    dkepath.clean = computing_opts.remclean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+    dkepath.clustermode.run_lukert.scheduler.remnum = computing_opts.remnum;% remote profile number. Use 0 for local sequential calculations
+    dkepath.clustermode.run_lukert.scheduler.mode = computing_opts.mdce_mode;
+    dkepath.clustermode.run_lukert.scheduler.remtimout = computing_opts.remtimout;% timeout for remote calculations, in minutes. Use (0) to return later and check results by running this script again
+    dkepath.clustermode.run_lukert.scheduler.rempause = computing_opts.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
+    dkepath.clustermode.run_lukert.scheduler.debugmode = computing_opts.remdebugmode;% debug mode (0) off (1) on
+    dkepath.clustermode.run_lukert.scheduler.cleanmode = computing_opts.remclean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+    %dkepath.clustermode.run_lukert.scheduler.memory = computing_opts.luke_memory;
+    %dkepath.clustermode.run_lukert.scheduler.walltime = computing_opts.luke_walltime;
+    %dkepath.clustermode.run_lukert.scheduler.display = computing_opts.display_mode;
     %
     if computing_opts.opt.waves == 1 && computing_opts.remnum > 0,
         computing_opts.opt.waves = 0;

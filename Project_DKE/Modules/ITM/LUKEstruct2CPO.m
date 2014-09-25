@@ -1,11 +1,15 @@
-function [CPO_struct] = LUKEstrust2CPO(machine,numshot,numrun,timeslice,struct_name,rawdata,procdata,CPO_struct)
+function [CPO_struct] = LUKEstrust2CPO(ver_mds,machine,numshot,numrun,timeslice,struct_name,rawdata,procdata,CPO_struct)
 %LUKE - Function that copy LUKE structure into the corresponding CPO's in the ITM MDS+ database
 %
 %Function that copy LUKE structure into the corresponding CPO's in the ITM MDS+ database
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
-if nargin < 7,error('Not enough input arguments in LUKE2CPO_struct_yp.m');end
+if nargin < 8,error('Not enough input arguments in LUKE2CPO_struct_yp.m');end
+%
+keyboard
+mds_dataversion0 = str2num(ver_mds(1:end-1));%for using numbers
+mds_dataversion1 = ver_mds(end-1:end);%for using 
 %
 if strcmp('waves',struct_name),
 	%
