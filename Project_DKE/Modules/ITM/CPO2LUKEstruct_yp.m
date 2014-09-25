@@ -25,7 +25,7 @@ end
 p_opt = -1;%printing option
 %
 mds_dataversion0 = str2num(ver_mds(1:end-1));%for using numbers
-mds_dataversion1 = ver_mds(end-1:end);%for using 
+mds_dataversion1 = ver_mds(end:end);%for using 
 %
 if strcmp('equilibrium',struct_name),
     %

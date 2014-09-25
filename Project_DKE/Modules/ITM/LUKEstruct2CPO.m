@@ -7,9 +7,8 @@ function [CPO_struct] = LUKEstrust2CPO(ver_mds,machine,numshot,numrun,timeslice,
 %
 if nargin < 8,error('Not enough input arguments in LUKE2CPO_struct_yp.m');end
 %
-keyboard
 mds_dataversion0 = str2num(ver_mds(1:end-1));%for using numbers
-mds_dataversion1 = ver_mds(end-1:end);%for using 
+mds_dataversion1 = ver_mds(end:end);%for using 
 %
 if strcmp('waves',struct_name),
 	%
