@@ -195,7 +195,12 @@ end
 %--------------------------- Run C3PO/LUKE --------------------------- 
 %
 disp('---------------------------------------------')
-disp(['--> ',profilestr{opts.remnum}]);
+if opts.remnum > 0,
+    disp(['--> ',profilestr{opts.remnum}]);
+else
+    disp('--> Local calculations');
+end
+%
 disp('---------------------------------------------')
 %
 lukestructs = run_lukert(lukestructs,dkepath);
