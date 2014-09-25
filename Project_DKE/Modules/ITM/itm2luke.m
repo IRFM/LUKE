@@ -223,7 +223,6 @@ if sum(flag_running) > 0,
     return
 else
     %
-    keyboard
     dataname_out = dataname_ITM(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp,euitmshot.numrun_out,euitmshot.occurrence_out);   
     data_proc = '';
     %
@@ -350,7 +349,9 @@ else
             %
         elseif isfield(lukestructs{it},'err'),
             disp('*************************')
-            disp(lukestructs{it}.err);
+            for ierr = 1:length(lukestructs{it}.err)
+                disp(lukestructs{it}.err{ierr});
+            end
             disp('*************************')
         end
     end
