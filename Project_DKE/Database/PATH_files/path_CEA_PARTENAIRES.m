@@ -115,6 +115,8 @@ dkepath.YP105119(1).andromede.compiler_opt = dkepath.JD211098(1).andromede.compi
 dkepath.YP105119(1).andromede.MUMPS.mex710 = [dkepath.YP105119(1).andromede.local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).andromede.MUMPS.mex800 = [dkepath.YP105119(1).andromede.local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 %
+dkepath.YP105119(1).extrapaths.LUKE_ITM = [dkepath.YP105119(1).local_root,'LUKE_ITM/trunk'];% LUKE <-> ITM toolbox 
+%
 dkepath.YP105119(1).andromede.graphviz.env = '/home/YP105119/bin/';% Graphviz environment variable
 dkepath.YP105119(1).andromede.latex.env = '/usr/bin/';% Latex environment variable
 dkepath.YP105119(1).andromede.imagemagick.env = '/usr/bin/';% ImageMagick environment variable

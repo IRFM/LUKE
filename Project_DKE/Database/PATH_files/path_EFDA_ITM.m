@@ -42,6 +42,10 @@ dkepath.yvesp(1).compiler_opt.fopts.mex802 = ' -largeArrayDims';
 dkepath.yvesp(1).MUMPS.mex800 = '/afs/ipp/itm/switm/lib/mumps/4.10.0_serial/matlab/R2012b/amd64_intel_12/';%Where MUMPS matrix solver is stored (MEX function)
 dkepath.yvesp(1).MUMPS.mex802 = '/afs/ipp/itm/switm/lib/mumps/4.10.0_serial/matlab/R2013b/amd64_intel_12/';%Where MUMPS matrix solver is stored (MEX function)
 %
+% Extra paths to add
+%
+dkepath.yvesp(1).extrapaths.LUKE_ITM = [dkepath.yvesp(1).local_root,'LUKE_ITM/trunk'];% LUKE <-> ITM toolbox 
+%
 % LUKE documentation
 %
 dkepath.yvesp(1).graphviz.env = '/afs/@cell/common/soft/doxygen/@sys/graphviz-2.28/bin/';% Graphviz environment variable

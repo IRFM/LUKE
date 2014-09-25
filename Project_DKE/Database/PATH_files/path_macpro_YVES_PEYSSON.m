@@ -77,6 +77,10 @@ dkepath.yvespeysson(1).PARDISO.mex803 = [dkepath.yvespeysson(1).local_root,'Pack
 %
 dkepath.yvespeysson(1).TSBASE.mex = [dkepath.yvespeysson(1).luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase'];%Where tsbase, tsmat and tsdernier_choc functions are stored (MEX function)
 %
+% Extra paths to add
+%
+dkepath.yvespeysson(1).extrapaths.LUKE_ITM = [dkepath.yvespeysson(1).local_root,'LUKE_ITM/trunk'];% LUKE <-> ITM toolbox 
+%
 % LUKE documentation
 %
 dkepath.yvespeysson(1).graphviz.env = '/usr/local/bin/';% Graphviz environment variable

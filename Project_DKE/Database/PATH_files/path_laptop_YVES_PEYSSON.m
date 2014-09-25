@@ -60,6 +60,10 @@ dkepath.yves(1).SUPERLU.mex803 = [dkepath.yves(1).local_root,'Packages/Bin/SUPER
 %dkepath.yves(1).PETSc.mpipath = ['/usr/local/openmpig95/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 %dkepath.yves(1).PETSc.seq = [dkepath.yves(1).local_root,'Packages/Bin/PETSC/petsc-3.1-p4_S_gfortran/DKE'];%Where PETSc matrix solver is stored (stand-alone application for sequential processing)
 %
+% Extra paths to add
+%
+dkepath.yves(1).extrapaths.LUKE_ITM = [dkepath.yves(1).local_root,'LUKE_ITM/trunk'];% LUKE <-> ITM toolbox 
+%
 %--------------------------- Access to the experimental databases -----------------------------
 %
 % Tore Supra (TSBase)
