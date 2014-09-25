@@ -209,7 +209,7 @@ end
 %
 waves_euitm = [];
 %
-save(['LUKE_RESULTS_',dataname,'.mat'],'lukestructs','dkepath','profilestr','ver_mds');
+save(['LUKE_RESULTS_',dataname,'.mat'],'lukestructs','dkepath','profilestr','ver_mds','opts');
 %
 if sum(flag_running) > 0,
     return
@@ -317,15 +317,18 @@ else
             %  
             save(temp_filename,'Znorm','Zcurr','ZP0','dke_out','radialDKE','equil','equilDKE','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource','dkepath');
             %
-            rawdata = load(temp_filename);
-            rawdata.dkepath.profilestr = profilestr;
-            %
-            procdata{it} = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
-            %
-            waves_euitm = LUKEstruct2CPO(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_out,euitmshot.timeslice,'waves',rawdata,procdata{it},waves_euitm);
-            %
-            delete(temp_filename);        
-            %
+            if ~isfield(lukestructs{it}.output,'data_proc'),%postprocessing
+                %
+                rawdata = load(temp_filename);
+                rawdata.dkepath.profilestr = profilestr;
+                %
+                data_proc{it} = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
+                %
+                waves_euitm = LUKEstruct2CPO(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_out,euitmshot.timeslice,'waves',rawdata,data_proc{it},waves_euitm);
+                %
+                delete(temp_filename);        
+                %
+            end
         elseif isfield(lukestructs{it},'err'),
             disp('*************************')
             disp(lukestructs{it}.err);
