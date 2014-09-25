@@ -79,7 +79,7 @@ dkepath.yvespeysson(1).TSBASE.mex = [dkepath.yvespeysson(1).luke_root,'Project_D
 %
 % Extra paths to add
 %
-dkepath.yvespeysson(1).extrapaths.LUKE_ITM = [dkepath.yvespeysson(1).local_root,'LUKE_ITM/trunk'];% LUKE <-> ITM toolbox 
+dkepath.yvespeysson(1).extrapaths.LUKE_ITM = '/Users/yvespeysson/Projets/LUKE_ITM/trunk';% LUKE <-> ITM toolbox 
 %
 % LUKE documentation
 %
