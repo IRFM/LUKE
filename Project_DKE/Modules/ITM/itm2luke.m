@@ -338,7 +338,7 @@ else
                 rawdata.XXsinksource = '';
             end
             %  
-            rawdata.dkepath.profilestr = profilestr;
+            rawdata.dkepath = dkepath;
             %
             if ~isfield(lukestructs{it}.output,'data_proc'),%local postprocessing
                 data_proc{it} = proc_luke_jd(rawdata,ir_display,p_opt,0.1,NaN,'',opt);
