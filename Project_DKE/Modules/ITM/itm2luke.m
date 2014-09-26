@@ -16,13 +16,7 @@ opt.blist = '';
 opt.diaryname = '';
 opt.spec = 0;
 %
-p_opt = -1;%Printing options
-%
 % User specific C3PO/LUKEparameters
-%
-ray_display = 1;%for display ray propagation (0,1,2)
-display_mode = 2;%display results 'equilibrium, Fokker-Planck (0,1,2)
-ir_display = -1;%proc_luke_jd display option (-1,0,1,2)
 %
 dataname = dataname_ITM(euitmshot.machine,euitmshot.numshot,euitmshot.numrun_in,euitmshot.timeslice,euitmshot.time_interp);   
 filename = [pwd,'/LUKE_RESULTS_',dataname,'.mat'];
@@ -59,8 +53,8 @@ if ~exist(filename,'file'),
             dkepath.clustermode.run_lukert.scheduler.rempause = opts.rempause;% pause between job checks (in minutes) (only for remtimout > 0)
             dkepath.clustermode.run_lukert.scheduler.debugmode = opts.remdebugmode;% debug mode (0) off (1) on
             dkepath.clustermode.run_lukert.scheduler.clean = opts.remclean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
-            %dkepath.clustermode.run_lukert.scheduler.memory = opts.luke_memory;% job memory in mb
-            %dkepath.clustermode.run_lukert.scheduler.walltime = opts.luke_walltime;%job walltime in hours
+            dkepath.clustermode.run_lukert.scheduler.memory = opts.luke_memory;% job memory in mb
+            dkepath.clustermode.run_lukert.scheduler.walltime = opts.luke_walltime;%job walltime in hours
             dkepath.clustermode.run_lukert.scheduler.enforce = opts.enforce;% exit if remote calculation failed 
             %
             optluke.save = opts.opt.save;% (1): save LUKE_RESULTS or return error in localdatadir (0): return results or error
@@ -81,6 +75,11 @@ if ~exist(filename,'file'),
             optluke.backup = opts.opt.backup;% (1) save fluctuation time steps (0) do not save
             optluke.waves = opts.opt.waves;%(-1) waves are not saved in "wave_results/" and not stored in dke_out. In this case, C3PO must be rerun to see the rays (0) waves are stored in dke_out and saved in LUKE_RESULTS, (1) waves are saved in "wave_results/" but not stored in dke_out
             optluke.saveinputs = opts.opt.saveinputs;% (1) save input structures in .mat files before starting (0) do not save
+            %
+            ray_display = opts.opt.ray_display;%for display ray propagation (0,1,2)
+            display_mode = opts.opt.display_mode;%display results 'equilibrium, Fokker-Planck (0,1,2)
+            ir_display = opts.opt.ir_display;%proc_luke_jd display option (-1,0,1,2)
+            p_opt = opts.opt.p_opt;%Printing options
             %
         end
         %
