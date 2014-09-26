@@ -147,12 +147,12 @@ if strcmp(launch.type,'EC'),
             %
             % interpolation for psi at ray position (along cst theta lines)
             %
-            %spsin = interp1(pstr,ppsin,sr,method);%psi(s)
+            %spsin = interp1(pstr,ppsin,sr,method1);%psi(s)
             %
             spsin = zeros(1,ns);
             %
             for is = 1:ns 
-                spsin(is) = interp1(pstr(:,is),psin,syr(is,iy),method,NaN);%psi(s)
+                spsin(is) = interp1(pstr(:,is),psin,syr(is,iy),method1,NaN);%psi(s)
             end
             %
             if nargin == 2, %ray that enters the plasma
@@ -190,7 +190,7 @@ if strcmp(launch.type,'EC'),
             mask = [find(ty(1:end - 1) < 0 & diff(ty) > 0),1 + [0,find(ty(1:end - 1) >= 0 & diff(ty) > 0)]]; 
             %
             y0 = yy_L(iy);
-            x0 = interp1(ty(mask),tx(mask),y0,method,NaN);
+            x0 = interp1(ty(mask),tx(mask),y0,method1,NaN);
             %
             if isnan(y0),
                 error('The vertical launching position in beyond the LCFS');
