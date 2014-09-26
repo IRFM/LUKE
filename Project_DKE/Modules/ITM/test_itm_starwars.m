@@ -11,7 +11,7 @@ clc
 %
 % Computing parameters
 %
-remdebugmode = 1;% debug mode (0) off (1) on
+remdebugmode = 0;% debug mode (0) off (1) on
 remclean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 luke_memory = 12000;% job memory in mb
 luke_walltime = 1;%job walltime in hours
