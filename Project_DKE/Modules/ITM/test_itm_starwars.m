@@ -29,7 +29,7 @@ opt.saveinputs = 0;% (1) save input structures in .mat files before starting (0)
 %
 svnremoteupdate = 0;%(1) svn remote update on the ITM gateway (0) : no svn remote update on the ITM gateway
 %
-rho_S = 31;%101
+rho_S = 51;
 %
 euitm.loadlocalfile = 1;%(1): load euitm data in local file if it exists (otherwise read data in MDS+ database), (0) do not load locally (in MDS+ database only)
 euitm.savelocalfile = 1;%(2): save euitm data in local file and in MDS+ database (1): save euitm data in local file but not in MDS+ database, (0) do not save locally (in MDS+ database only)
@@ -70,7 +70,7 @@ machine = 'test';
 shot = 2;
 run= 601;
 run_out= 602;
-timeslice = 3;%0,1,2,3,4,5,6];%NaN;%time slice does not work
+timeslice = NaN;%[0,1,2,3,4,5,6];%NaN;%time slice does not work
 iter = 1;
 occurrence_out = 0;
 %
@@ -175,6 +175,11 @@ if ~exist(filename,'file'),% load existing simulation
     opts.opt.display_mode = display_mode;%display results 'equilibrium, Fokker-Planck (0,1,2)
     opts.opt.ir_display = ir_display;%proc_luke_jd display option (-1,0,1,2)
     opts.opt.p_opt = p_opt;%Printing options
+    %
+    disp('*************************************')
+    disp([' ---> remunm = ',int2str(remnum)])
+    disp([' ---> mdce_mode = ',int2str(mdce_mode)])
+    disp('*************************************')
     %
     if exist('opts') && isfield(opts,'svnremoteupdate') && opts.svnremoteupdate,
         %
