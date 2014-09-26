@@ -11,9 +11,9 @@ clc
 %
 % Computing parameters
 %
-remdebugmode = 0;% debug mode (0) off (1) on
+remdebugmode = 1;% debug mode (0) off (1) on
 remclean = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
-luke_memory = 16000;% job memory in mb
+luke_memory = 12000;% job memory in mb
 luke_walltime = 1;%job walltime in hours
 enforce = 0;% exit if remote calculation failed 
 %
@@ -29,17 +29,24 @@ opt.saveinputs = 0;% (1) save input structures in .mat files before starting (0)
 %
 svnremoteupdate = 0;%(1) svn remote update on the ITM gateway (0) : no svn remote update on the ITM gateway
 %
-rho_S = 31;%101;
+rho_S = 31;%101
 %
 euitm.loadlocalfile = 1;%(1): load euitm data in local file if it exists (otherwise read data in MDS+ database), (0) do not load locally (in MDS+ database only)
 euitm.savelocalfile = 1;%(2): save euitm data in local file and in MDS+ database (1): save euitm data in local file but not in MDS+ database, (0) do not save locally (in MDS+ database only)
 %
-% remote profile for load data from EUITM MDS+ database only
+% remote profile for loading data from EUITM MDS+ database only
 %
 remoteprofile = 'EFDA_ITM';
 scheduler = 'direct';
 profilename = 'yvesp';
 duplicate = 'true';%if true, don't use the remote LUKE_ITM toolbox
+%
+% Display and printing options
+%
+ray_display = 0;%for display ray propagation (0,1,2)
+display_mode = 0;%display results 'equilibrium, Fokker-Planck (0,1,2)
+ir_display = -1;%proc_luke_jd display option (-1,0,1,2)
+p_opt = -1;%Printing options
 %
 % Simulation parameters (EC17 paper parameters)
 %
@@ -63,7 +70,7 @@ machine = 'test';
 shot = 2;
 run= 601;
 run_out= 602;
-timeslice = NaN;%[0,1,2,3,4,5,6];%time slice does not work
+timeslice = 3;%0,1,2,3,4,5,6];%NaN;%time slice does not work
 iter = 1;
 occurrence_out = 0;
 %
@@ -112,17 +119,17 @@ if ~exist(filename,'file'),% load existing simulation
         disp(' ')
         %
         if remtimout > 0,
-            rempause = input_dke_yp(['Pause between job checks (in minutes)'],5,0:30);
+            rempause = input_dke_yp(['Pause between job checks (in minutes)'],1,1:10);
         else
-            rempause = 5;
+            rempause = 1;
         end
         %
     else% direct distribution from localhost
         remnum = 0;
-        remtimout = input_dke_yp(['Timeout for remote calculations, in minutes.'],100,1:1000);
+        remtimout = input_dke_yp(['Timeout for remote calculations, in minutes.'],100,10:1000);
         disp(' ')
         %
-        rempause = input_dke_yp(['Pause between job checks (in minutes)'],5,0:30);
+        rempause = input_dke_yp(['Pause between job checks (in minutes)'],1,1:10);
         disp(' ')
         %
         dist_mode = iselect_jd(dkepath.distprofiles,'Please select a mode for the distribution from the local host ?',0,struct,1);
@@ -143,8 +150,8 @@ if ~exist(filename,'file'),% load existing simulation
     opts.remstart = remstart;% (1) start new simulation; (0) check older simulation (only for remtimout = 0)
     opts.remdebugmode = remdebugmode;% debug mode (0) off (1) on
     opts.remclean = remclean;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
-    %opts.luke_memory = luke_memory;% job memory in mb
-    %opts.luke_walltime = luke_walltime;%job walltime in hours
+    opts.luke_memory = luke_memory;% job memory in mb
+    opts.luke_walltime = luke_walltime;%job walltime in hours
     opts.enforce = enforce;% exit if remote calculation failed 
     %
     opts.opt_struct = opt_struct;%(0) light version, compatible with fluctuations, proc_luke and runhxr, (1) : heavy version, all fields are kept except XYD_rf and gridindex_rf (rarely used, except for looking for bug), (2) : full version,all fields are kept.
@@ -163,6 +170,11 @@ if ~exist(filename,'file'),% load existing simulation
     %
     opts.euitm.loadlocalfile = euitm.loadlocalfile;%(1): load euitm data in local file if it exists (otherwise read data in MDS+ database), (0) do not load locally (in MDS+ database only)
     opts.euitm.savelocalfile = euitm.savelocalfile;%(2): save euitm data in local file and in MDS+ database (1): save euitm data in local file but not in MDS+ database, (0) do not save locally (in MDS+ database only)
+    %
+    opts.opt.ray_display = ray_display;%for display ray propagation (0,1,2)
+    opts.opt.display_mode = display_mode;%display results 'equilibrium, Fokker-Planck (0,1,2)
+    opts.opt.ir_display = ir_display;%proc_luke_jd display option (-1,0,1,2)
+    opts.opt.p_opt = p_opt;%Printing options
     %
     if exist('opts') && isfield(opts,'svnremoteupdate') && opts.svnremoteupdate,
         %
