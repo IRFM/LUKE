@@ -231,7 +231,8 @@ elseif strcmp('antennas',struct_name),
                 LUKE_struct{ia}.yP_L = CPO_struct.antenna_unit(ia).antenna_ec.power.value;
                 LUKE_struct{ia}.dNpar0 = NaN;
                 LUKE_struct{ia}.ns = 1000;
-                LUKE_struct{ia}.method = 'pchip';
+                LUKE_struct{ia}.method1 = 'pchip';%1D interpolation
+                LUKE_struct{ia}.method2 = 'cubic';%2D interpolation
                 %
                 clum = 299792458;%Speed of light (m/s)
                 alpha = CPO_struct.antenna_unit(ia).antenna_ec.frequency*pi/clum;%for the Rayleigh length
@@ -268,7 +269,8 @@ elseif strcmp('antennas',struct_name),
                     LUKE_struct{ia}.yP_L = CPO_struct.antenna_ec(ia).power.value;
                     LUKE_struct{ia}.dNpar0 = NaN;
                     LUKE_struct{ia}.ns = 1000;
-                    LUKE_struct{ia}.method = 'pchip';
+                    LUKE_struct{ia}.method1 = 'pchip';%1D interpolation
+                    LUKE_struct{ia}.method2 = 'cubic';%2D interpolation
                     %
                     clum = 299792458;%Speed of light (m/s)
                     alpha = CPO_struct.antenna_ec(ia).frequency*pi/clum;%for the Rayleigh length

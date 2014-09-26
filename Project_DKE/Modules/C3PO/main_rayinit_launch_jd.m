@@ -32,7 +32,8 @@ function [rayinit,yout] = main_rayinit_launch_jd(equil,launch,rhomin)
 %       - yP_L_2piRp : lineic power density launched in the ray (W/m)
 %       - dNpar0 :  initial power spectrum width. May be NaN
 %       - ns : (1000)
-%       - method: ('cubic')
+%       - method1: 'pchip' for 1D interpolation
+%		- method2: 'cubic' for 2D interpolation
 %
 % by J. Decker (CEA-IRFM) <joan.decker@cea.fr> and Y. Peysson (IRFM/DSM/CEA) <yves.peysson@cea.fr>
 %
@@ -60,15 +61,20 @@ end
 if ~isfield(launch,'ns'),
     launch.ns = 1000;
 end
-if ~isfield(launch,'method'),
-    launch.method = 'pchip';
+if ~isfield(launch,'method1'),
+    launch.method1 = 'pchip';
+end
+%
+if ~isfield(launch,'method2'),
+    launch.method2 = 'cubic';
 end
 %
 if strcmp(launch.type,'EC'),
     %
     dNpar0 = launch.dNpar0;
     ns = launch.ns;
-    method = launch.method;
+    method1 = launch.method1;
+    method2 = launch.method2;
     %
     if isfield(launch,'yP_L') && ~isinf(equil.Rp),
         yP0_2piRp = launch.yP_L/(2*pi*equil.Rp);%initial power in the ray (W) [1,n_lobe]
@@ -137,7 +143,7 @@ if strcmp(launch.type,'EC'),
             %
             % interpolation for r at ray poloidal locations    
             %
-            pstr = interp1(equil.theta,ptr.',sytheta(:,iy),method).';%r(psi,st)
+            pstr = interp1(equil.theta,ptr.',sytheta(:,iy),method1).';%r(psi,st)
             %
             % interpolation for psi at ray position (along cst theta lines)
             %
@@ -219,9 +225,9 @@ if strcmp(launch.type,'EC'),
         %
         if ~isempty(psin0),
             %
-            Bx0 = interp2(psin,equil.theta,equil.ptBx.',psin0,theta0,method);
-            By0 = interp2(psin,equil.theta,equil.ptBy.',psin0,theta0,method);
-            Bz0 = interp2(psin,equil.theta,equil.ptBPHI.',psin0,theta0,method);    
+            Bx0 = interp2(psin,equil.theta,equil.ptBx.',psin0,theta0,method2);
+            By0 = interp2(psin,equil.theta,equil.ptBy.',psin0,theta0,method2);
+            Bz0 = interp2(psin,equil.theta,equil.ptBPHI.',psin0,theta0,method2);    
             %
             B0 = sqrt(Bx0.^2 + By0.^2 + Bz0.^2);
             Npar0 = (Nx0*Bx0 + Ny0*By0 + Nz0*Bz0)/B0;
