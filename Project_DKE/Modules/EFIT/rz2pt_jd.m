@@ -84,7 +84,7 @@ sxypsin = interp2(x,y,xypsin.',sx.',sy,method).';
 %
 if opt.axenforce,
     if abs(sxypsin(ix,iy)) > 10*eps,
-        warning('value of psi at magnetic axis enforced')
+        disp(' ---> WARNING: value of psi at magnetic axis enforced in rz2pt_jd.m')
     end
     sxypsin(ix,iy) = 0;
     %
@@ -205,6 +205,8 @@ hpsin = psin(2:np-1);
 %
 gdmethod = 'cubic';
 %
+warning off
+disp(' ---> WARNING: Duplicate x-y data points detected: using average values for duplicate points.')
 hptr = griddata(sXpsin,sXtheta,sXr,hpsin.',theta,gdmethod).';
 tra = interp1(sthetaa,sra,theta,method);
 ptr = [zeros(1,nt);hptr;tra];
@@ -230,8 +232,11 @@ pty = ptr.*sin(pttheta);
 %h2psin = [hpsin(1:end-1),linspace(hpsin(end),1,opt.sfac)];
 h2psin = hpsin;
 %
+disp(' ---> WARNING: Duplicate x-y data points detected: using average values for duplicate points.')
 h2ptdpsindx = griddata(sXpsin,sXtheta,sXdpsindx,h2psin.',theta,gdmethod).';
+disp(' ---> WARNING: Duplicate x-y data points detected: using average values for duplicate points.')
 h2ptdpsindy = griddata(sXpsin,sXtheta,sXdpsindy,h2psin.',theta,gdmethod).';
+warning on
 %
 %p2tdpsindr
 %
