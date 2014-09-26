@@ -61,7 +61,7 @@ if ~isfield(launch,'ns'),
     launch.ns = 1000;
 end
 if ~isfield(launch,'method'),
-    launch.method = 'cubic';
+    launch.method = 'pchip';
 end
 %
 if strcmp(launch.type,'EC'),
