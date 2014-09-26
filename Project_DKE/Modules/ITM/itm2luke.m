@@ -3,7 +3,7 @@ function [waves_euitm] = itm2luke(euitmshot,equil_euitm,coreprof_euitm,antennas_
 % 
 % by Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-if nargin < 5, error('Not enough input arguments in itm2luke.m');end
+if nargin < 6, error('Not enough input arguments in itm2luke.m');end
 %
 % LUKE post-processing options
 %
