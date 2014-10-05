@@ -50,15 +50,15 @@ p_opt = -1;%Printing options
 %
 % Simulation parameters (EC17 paper parameters)
 %
-%   t(s)	P_EL25(W)	P_EL40(W)	P_UL(W)
+%  slice   t(s)	P_EL25(W)	P_EL40(W)	P_UL(W)
 %---------------------------------------------
-%   0       1e6         0           0
-%   1       0           1e6         0
-%   2       0           0           1e6
-%   3       1           0           0
-%   4       0           1           0
-%   5       0           0           1
-%   6       1e6         1e6         0
+%   1       0       1e6         0           0
+%   2       1       0           1e6         0
+%   3       2       0           0           1e6
+%   4       3       1           0           0
+%   5       4       0           1           0
+%   6       5       0           0           1
+%   7       6       1e6         1e6         0
 %
 % The first three slices and the last one match the original data used for the benchmark 
 % (still saved as shot 2, run 551). The three additional slices are a copy of the first three, 
@@ -70,7 +70,7 @@ machine = 'test';
 shot = 2;
 run= 601;
 run_out= 602;
-timeslice = NaN;%[0,1,2,3,4,5,6];%NaN;%time slice does not work
+timeslice = NaN;%NaN;%[1,2,3,4,5,6,7];%NaN;
 iter = 1;
 occurrence_out = 0;
 %
@@ -266,15 +266,21 @@ if isstruct(waves),
     load(['LUKE_RESULTS_',dataname,'.mat'],'data_proc');
     %
     for it = 1:length(waves),
-        figure
+        figure;
         graph1D_jd(waves(it).coherentwave(1).grid_1d.psi,waves(it).coherentwave(1).profiles_1d.powd_tot,0,0,'','','',NaN,NaN,NaN,'-','none','r',2);hold on
         %
         if isstruct(waves_mds), 
             graph1D_jd(waves_mds(it).coherentwave(1).grid_1d.psi,waves_mds(it).coherentwave(1).profiles_1d.powd_tot,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);hold on
         end
         %
-        disp(['Absorbed RF power (it = ',int2str(it),') -> ',num2str(data_proc{it}.scalar.p0_rf_2piRp*2*pi*data_proc{1}.scalar.Rp),' (MW)']);
-        %TODO display global proc results
+        disp('--------------')
+        disp(['Line-averaged electron density (it = ',int2str(it),') -> ',num2str(data_proc{it}.scalar.jne/1e20),' (10+20 m-3)']);
+        disp(['Major radius (it = ',int2str(it),') -> ',num2str(data_proc{it}.scalar.Rp),' (m)']);
+        %
+        disp(['RF absorbed power (it = ',int2str(it),') -> ',num2str(data_proc{it}.scalar.p0_rf_2piRp*2*pi*data_proc{1}.scalar.Rp),' (MW)']);
+        disp(['RF current (it = ',int2str(it),') -> ',num2str(data_proc{it}.scalar.I_tot),' (MA)']);
+        disp(['RF current drive efficiency (it = ',int2str(it),') -> ',num2str(data_proc{it}.scalar.EtaRFRp),' (10+19 A.m.W-1)']);
+        %
     end
     %
     if ~exist('opts') || ~isfield(opts,'euitm') || ~isfield(opts.euitm,'savelocalfile') || opts.euitm.savelocalfile == 0,%LUKE results are saved in MDS+ database
