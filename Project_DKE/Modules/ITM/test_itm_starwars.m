@@ -258,9 +258,9 @@ end
 if isstruct(waves),    
     %
     if ~exist('opts') || ~isfield(opts,'euitm') || ~isfield(opts.euitm,'savelocalfile') || opts.euitm.savelocalfile ~= 1,%LUKE results are saved in MDS+ database
-        [err_waves,~,waves_mds] = matremote_jd('check_write_waves_ITM',{length(remote),shot,run_out},remote,job);%write LUKE ouput in ITM database
+        [err_waves,~,waves_euitm] = matremote_jd('check_write_waves_ITM',{length(remote),shot,run_out},remote,job);%write LUKE ouput in ITM database
     else
-        waves_mds = '';
+        waves_euitm = '';
     end
     %
     load(['LUKE_RESULTS_',dataname,'.mat'],'data_proc');
