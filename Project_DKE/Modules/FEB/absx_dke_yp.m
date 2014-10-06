@@ -71,7 +71,7 @@ transabs = exp(-attlinabs(1,:)*ea*0.1);
 %
 %detector's shield...
 %
-if strcmp(ta,'Fe')==1,
+if strcmp(tc,'Fe')==1,
  	attlincap = attlin_dke_yp(3,k);
 elseif strcmp(tc,'Al')==1,
  	attlincap = attlin_dke_yp(4,k);
