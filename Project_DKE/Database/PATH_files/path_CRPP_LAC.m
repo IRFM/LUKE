@@ -81,7 +81,7 @@ dkepath.decker(1).imagemagick.env = '';% ImageMagick environment variable
 dkepath.decker(1).remote(1).remoteid = 'CRPP_PPB110';
 dkepath.decker(1).remote(1).schedulername = 'slurm';
 dkepath.decker(1).remote(1).profilename = 'local';
-dkepath.decker(1).remote(1).luke_root = '/home/G09625/LUKE/';
+dkepath.decker(1).remote(1).luke_root = '/home/decker/LUKE/';
 %
 dkepath.decker(1).remote(2).remoteid = 'CRPP_BELLATRIX';
 dkepath.decker(1).remote(2).schedulername = 'pbs';

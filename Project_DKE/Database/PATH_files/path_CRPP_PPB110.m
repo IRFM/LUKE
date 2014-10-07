@@ -21,7 +21,7 @@ dkepath.default = 'decker';
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
 %
 dkepath.decker(1).luke_root = [pwd,filesep];
-dkepath.decker(1).local_root = '/home/G09625/Packages/';
+dkepath.decker(1).local_root = '/home/decker/Packages/';
 dkepath.decker(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.decker(1).mex801 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/mat801/'];
