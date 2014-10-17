@@ -13,7 +13,7 @@ warning('off')
 %
 % printing option
 %
-id_simul = 'Runaway_alpha5_sync';%Simulation ID
+id_simul = 'Runaway_alpha3_sync';%Simulation ID
 p_opt = -1;% printing and saving options : (-1) do nothing (0) print figures (1) print figures and save figures and results (2) save figures and results
 %
 [qe,me,~,~,e0,~,~,mc2] = pc_dke_yp;%Universal physics constants
@@ -24,7 +24,7 @@ opt.timevol = 1;
 %
 % normalized electric field (with respect to the Critical field Ec)
 %
-alpha = 2;% E/Ec
+alpha = 3;% E/Ec
 %
 % temperature betath2 = Te/mc2
 % (betath2 = 10^(-6) is validated for NR limit)
@@ -45,11 +45,9 @@ betath2 = 0.01;% Te/mc2
 %   - the link between wpr=wc2/wp2 and bhat is : 
 %       bhat^2 = wpr*(2/3)*betath^3/ln(Lambda)
 %   
-%   - the magnetic field being fixed, the density is adjusted in LUKE according to
-%   bhat
+%   - the magnetic field being fixed, the density is adjusted in LUKE according to bhat
 %
 bhat = 0.03;
-%
 %
 opt.synchro_mode = 1;
 %
@@ -68,7 +66,13 @@ Emin = NaN;%runaway energy threshold in MeV (limit where electrons are "counted"
 opt.coll_mode = 0;
 opt.bounce_mode = 0;%1;% bounce-averaged calculation
 opt.boundary_mode_f = 0;% Enforcing the Maxwellian initial value at the first "boundary_mode_f" grid points
-opt.norm_mode_f = 0;%Local normalization of f0 at each iteration (0) no, the default value when the numerical conservative scheme is correct, (1) yes    
+%
+% normalization mode : 
+% (0) : "free" mode
+% (1) : "normalization of f0 maintained to its initial (maxwellian) value". DO NOT use in the runaway problem
+% (2) : "normalization of f0 maintained to its value at the previous time". Use only in the runaway problem with (+1i)
+% (... + 1i) : compensate for numerical error after each time step, acounting for boundary losses.
+opt.norm_mode_f = 0;%+1i;   
 %
 % time grid (normalized to collision time) -> you can specify :
 % - linear arbitrary grid with tn array                 : opt.tnmin = 0 ;opt.tn = 1000:1000:10000,dtn = NaN;opt.tnmin = 0
@@ -154,10 +158,10 @@ elseif alpha == 3,
     %
     % E/Ec = 3
     %
-    graph.ylim_norm = [1e-20,1e1];
-    graph.ytick_norm = 10.^(-20:5:5);
-    graph.ylim_gamma = [1e-24,1e-12];
-    graph.ytick_gamma = 10.^(-24:4:-12);
+    graph.ylim_norm = [1e-25,1e1];
+    graph.ytick_norm = 10.^(-25:5:5);
+    graph.ylim_gamma = [1e-32,1e-8];
+    graph.ytick_gamma = 10.^(-32:4:-8);
     graph.ylim_f = [1e-35,1e5];
     graph.ytick_f = 10.^(-35:5:5);
 elseif alpha == 5,
