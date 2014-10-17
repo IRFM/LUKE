@@ -527,12 +527,17 @@ for itn = itn0:nit,
             %
             if imag(dkeparam_out.norm_mode_f) == 1,% in this case, the xnorm_0 evolution is governed by boundary losses instead of volumic losses
                 %
-                % for real(dkeparam_out.norm_mode_f), this should only compensate for numerical errors. 
-                % for real(dkeparam_out.norm_mode_f), this should also compensate for the flux through pmax
+                % with real(dkeparam_out.norm_mode_f) == 0, this should only compensate for numerical errors. 
+                % with real(dkeparam_out.norm_mode_f) == 2, this should also compensate for the flux through pmax
+                % with real(dkeparam_out.norm_mode_f) == 1, this option should not be used
                 %
-                xnorm_0{itn} = xnorm_0{itn - 1} - dxnorm_rem - dxnorm_rep;
+                if itn == 1,
+                    xnorm_0{itn} = xnorm_0_init - dxnorm_rem - dxnorm_rep;
+                else
+                    xnorm_0{itn} = xnorm_0{itn - 1} - dxnorm_rem - dxnorm_rep;
+                end
                 %
-                XXfout = XXfout*repmat(reshape(xnorm_0{itn}./Znorm(itn).x_0_fsav,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1]);
+                XXfout = XXfout.*repmat(reshape(xnorm_0{itn}./Znorm(itn).x_0_fsav,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1]);
                 %
             else
                 %
@@ -633,19 +638,23 @@ for itn = itn0:nit,
     %
     xepsi_in = xepsi{itn};
     %
-    if nit > 1 && dkedisplay.display_mode >= 1,
-        figure(Fig_TimeIter),
-        if length(equilDKE.xrho) == 1,
-            graph1D_jd(FPtime(itn),curr0{itn}(end),0,0,'FP time (\tau_c)','J (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
-        elseif dkeparam_out.timevol == 1,
-            graph1D_jd(FPtime(itn),Zcurr(itn).I_tot,0,0,'FP time (\tau_c)','I (MA)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
-        elseif dkeparam_out.timevol == 2,
-            graph1D_jd(FPtime(itn),Zcurr(it_rf,itn).I_tot,0,0,'FP time (\tau_c)','I (MA)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
+    if nit > 1,
+        if dkedisplay.display_mode >= 1,
+            figure(Fig_TimeIter),
+            if length(equilDKE.xrho) == 1,
+                graph1D_jd(FPtime(itn),curr0{itn}(end),0,0,'FP time (\tau_c)','J (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
+            elseif dkeparam_out.timevol == 1,
+                graph1D_jd(FPtime(itn),Zcurr(itn).I_tot,0,0,'FP time (\tau_c)','I (MA)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
+            elseif dkeparam_out.timevol == 2,
+                graph1D_jd(FPtime(itn),Zcurr(it_rf,itn).I_tot,0,0,'FP time (\tau_c)','I (MA)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
+            else
+                graph1D_jd(FPtime(itn),max(abs(curr0{itn}(:,end))),0,0,'FP time (\tau_c)','max(|J|) (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
+            end
+            grid on
+            drawnow;                
         else
-            graph1D_jd(FPtime(itn),max(abs(curr0{itn}(:,end))),0,0,'FP time (\tau_c)','max(|J|) (norm.)','FP Evolution',NaN,[0,max(FPtime)],NaN,'none','+','r',2);
+            disp(['time step ',num2str(itn),'/',num2str(nit),' completed.'])
         end
-        grid on
-        drawnow;                
     end
     %
     if dkeparam_in.opt_save,
