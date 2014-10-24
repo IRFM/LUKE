@@ -1,4 +1,12 @@
 
+Test outside matlab (standalone application)
+
+1) compile the program simple.c  (type 'gcc simple.c -o simple')
+2) test the program simple localy (type 'simple 4 10')
+3) test condor execution (type 'condor_submit simple.condor', and see the log, err and output files)
+
+Test inside matlab (standalone application)
+
 1) In Matlab, execute the script make_condortest.m which creates the condor script matlabtest.condor 
 for the computer on which condor batcch scheduler is running, and for the corresponding matlab version. By default, 
 the condor settings run for the logged user.
