@@ -176,7 +176,7 @@ if nargout > 1,
     XXf0_ijpp = XXf0_ij(:,indexjp,:);
     %
     XXf0_ijm = (1 - XXdeltam_ijm).*XXf0_ij + XXdeltam_ijm.*XXf0_ijmm;
-    XXf0_ijp = (1 - XXdeltam_ijp).*XXf0_ippj + XXdeltam_ijp.*XXf0_ij;
+    XXf0_ijp = (1 - XXdeltam_ijp).*XXf0_ijpp + XXdeltam_ijp.*XXf0_ij;
     %
     XXf0_immjm = XXf0_ijm(indexim,:,:);
     XXf0_ippjm = XXf0_ijm(indexip,:,:);XXf0_ippjm(npn,:,:) = 0;
