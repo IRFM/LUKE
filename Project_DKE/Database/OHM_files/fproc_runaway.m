@@ -1,4 +1,4 @@
-function fproc_runaway(RR,mksa,Ec,f,tn,tRR,tnorm,alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S,graph,p_opt,id_simul)
+function fproc_runaway(RR,mksa,Ec,f,tn,tRR,tnorm,fgrid,alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S,graph,p_opt,id_simul)
 %
 epsi_kulsrud = [0.04;0.06;0.08;0.10];
 Zi_kulsrud =[1,2,3,10];
@@ -35,9 +35,13 @@ end
 format
 %
 if p_opt > 0,
-    delete res_runaway
+    filename = ['res_',id_simul,'.log'];
     %
-    diary res_runaway
+    if exist(filename,'file')
+        delete(filename);
+    end
+    %
+    diary(filename);
 end
 %
 nr = length(RR);
@@ -46,6 +50,15 @@ np = length(Ec);
 disp('Simulation parameters : ')
 disp(['coll_mode = ',num2str(opt.coll_mode),' ; bounce_mode = ',num2str(opt.bounce_mode),' ; equil = ',id_equil])
 disp(['Te/mc2 = ',num2str(betath2),' ; E/Ec = ',num2str(alpha),' ; E/ED = ',num2str(alpha*betath2),' ; Zi = ',num2str(Zi)])
+if opt.synchro_mode == 0,
+    disp(['No synchrotron force'])
+elseif imag(wpr) == 0,
+    disp(['Synchrotron force on : wc2/wp2 = ',num2str(wpr)]);
+elseif imag(wpr) > 0,
+    disp(['Synchrotron force on : Bhat = ',num2str(imag(wpr))]);
+else
+    disp(['Synchrotron force on : 1/taur = ',num2str(-imag(wpr))]);
+end    
 disp(['NR limit : pc/pT = ',num2str(1/sqrt(alpha*betath2)),' ; pmax/pc = ',num2str(pnmax_S*sqrt(alpha*betath2))])%NR
 disp(['Relativ. : pc/pT = ',num2str(1/sqrt((alpha - 1)*betath2)),' ; pmax/pc = ',num2str(pnmax_S*sqrt((alpha - 1)*betath2))])%rel
 disp(' ')
@@ -53,6 +66,27 @@ if nr == 1,
     disp(['--> r/a = ',num2str(rho_S)])
     disp(['--> LUKE RR from bound calc. (normalized to ne and tauc) : ',num2str(RR)])
     disp(['--> LUKE RR from exact calc. (normalized to ne and tauc) : ',num2str(tRR.re(end) + tRR.ri(end))])
+	disp(['--> LUKE ext. RE fraction : ',num2str(tnorm.re(end))])
+	disp(['--> LUKE int. RE fraction : ',num2str(tnorm.ri(end))])
+	disp(['--> LUKE tot. RE fraction : ',num2str(tnorm.re(end) + tnorm.ri(end))])
+    %
+    if opt.synchro_mode,
+        fpar = f{end}(:,end).';
+        ipparnan = find(fpar < 0,1);
+        if ~isempty(ipparnan),
+            fpar(ipparnan:end) = NaN;
+        end
+        ipparmin = find(diff(fpar) > 0,1);
+        if ~isempty(ipparmin),
+            disp(['--> minimum found in f(xi=1) : p/pT = ',num2str(fgrid.pn(ipparmin)),' ; Ec = ',num2str(Ec(ipparmin)),' MeV']);
+            %
+            ipparmax = find(diff(fpar) < 0 & 1:np-1 > ipparmin,1);
+            %
+            if ~isempty(ipparmax),
+                disp(['--> maximum found in f(xi=1) : p/pT = ',num2str(fgrid.pn(ipparmax)),' ; Ec = ',num2str(Ec(ipparmax)),' MeV']);
+            end
+        end
+    end
 else
     rho = (rho_S(1:end-1) + rho_S(2:end))/2;%%%%% not exact, extract from equilDKE
     disp('--> r/a | bound. RR | exact RR')
@@ -115,7 +149,7 @@ else% time dependent solution
     siz = 20+14i;
     tit = '';
 %     colors = {'b','r',[0,0.5,0],[0.5,0,0.5],[0,0.5,0.5],[0.5,0.5,0],'k'};
-    colors = {'b','r','g','m','y','c','k'};
+    colors = {'k','b','r','g','m','b','r','g','m'};
     %
     figure(1),clf
     %
