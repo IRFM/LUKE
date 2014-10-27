@@ -1,4 +1,4 @@
-function [RR,mksa,Ec,f,tn,tRR,tnorm] = frundke_runaway(id_simul,alpha,betath2,wpr,Zi,opt,varargin)
+function [RR,mksa,Ec,f,tn,tRR,tnorm,fgrid] = frundke_runaway(id_simul,alpha,betath2,wpr,Zi,opt,varargin)
 % 
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
@@ -12,11 +12,15 @@ end
 %
 [qe,me,~,~,e0,~,~,mc2] = pc_dke_yp;%Universal physics constants
 %
-if imag(wpr) > 0,%bhat provided - ne has to be calculated iteratively because of the coulomb logarithm
+if imag(wpr) ~= 0,%bhat or taurinv provided - ne has to be calculated iteratively because of the coulomb logarithm
     %
     tol = 1e-6;
     nitmax = 20;
-    bhat = imag(wpr)^2;
+    if imag(wpr) > 0,% input wpr is bhat
+        bhat2 = imag(wpr)^2;
+    elseif imag(wpr) < 0,% wpr is taurinv
+        bhat2 = -imag(wpr)*betath2^(3/2);
+    end
     %
     [~,equil,dkeparam] = fprep_runaway(0,Zi,opt,varargin{:});% magnetic field and ne20 first guess
     pB = sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2).';
@@ -28,7 +32,7 @@ if imag(wpr) > 0,%bhat provided - ne has to be calculated iteratively because of
     %
     for it = 1:nitmax,
         lnc_e_ref = 31.3 - 0.5*log(ne20*1e20) + log(mc2*1000) + log(betath2);%Reference Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
-        wpr = bhat*(3/2)*lnc_e_ref/betath2^(3/2);
+        wpr = bhat2*(3/2)*lnc_e_ref/betath2^(3/2);
         %
         ne20_old = ne20;
         ne20 = (B*qe/me)^2*me*e0/(qe^2*wpr)/1e20;
@@ -54,9 +58,11 @@ equil.pTe = betath2*mc2*ones(size(equil.pTe));
 epsi = alpha*betath2;
 ohm = ohm_flat(equil,epsi);
 %
-[Znorm,~,~,dke_out,~,~,~,~,Zmomcoef,~,~,mksa] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,'','',[],[]);
+[Znorm,~,~,dke_out,~,~,momentumDKE,~,Zmomcoef,~,~,mksa] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,'','',[],[]);
 %
 Ec = Zmomcoef.Ec_ref/1e3;% energy in MeV
+%
+fgrid = selectfields_jd(momentumDKE,{'pn','pnp','pn_S','dpn','mhu','mhu_S','dmhu'});
 %
 if opt.timevol == 0,
     %
