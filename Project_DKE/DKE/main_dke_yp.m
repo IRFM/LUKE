@@ -499,8 +499,6 @@ for itn = itn0:nit,
             end
         end
         %
-        XXfout = XXf0{itn};
-        %
         % Moments of the distribution function
         %
         if dkeparam_out.timevol == 1,
@@ -512,6 +510,46 @@ for itn = itn0:nit,
                 ZXYD_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_old,gridindex_rf,...
                 ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,XXRintmask{itn},XXILor); %Calculate moments of the distribution function
             %
+            % normalization to compensate for numerical errors
+            %
+            % if imag(dkeparam.norm_mode_f) == 1, particle conservation is enforced but
+            % boundary losses are accounted for (including secondary electrons born
+            % outside LUKE domain, which are compensated for in solver_dke_yp).
+            %
+            % with real(dkeparam_out.norm_mode_f) == 0 , this should only compensate for numerical errors. 
+            % with real(dkeparam_out.norm_mode_f) == 2 , this should also compensate for boundary losses, which are canceled out in solver_dke_yp. 
+            % with real(dkeparam_out.norm_mode_f) == 1 , this option should not be used as the norm of f is enforced to the Maxwellian value
+            %
+            if imag(dkeparam_out.norm_mode_f) == 1,
+                %
+                if itn == 1,
+                    xnorm_0_last = xnorm_0_init;% LUKE edf normalization at previous step
+                else
+                    xnorm_0_last = xnorm_0{itn - 1};% LUKE edf normalization at previous step
+                end
+                %
+                xnorm_0_corr = xnorm_0_last - (xrr_out_m + xrr_out_p)*dtn_list(itn) + xne_norm_out{itn};% subtract avalanches RE created outside LUKE domain, plus other sources/sinks
+                dxnorm_flux = (xRRm_fsav{itn} + xRRp_fsav{itn})*dtn_list(itn);% RE leaving LUKE domain
+                %
+                % this expressions derive from the fact that xRR_fsav{itn} is itself proportional to f
+                %
+                % it brings first order corrections to the approximate expression :
+                %   Znorm(itn).xnorm_fac = Znorm(itn).x_0_fsav./(xnorm_0_corr - dxnorm_flux);
+                %
+                xnorm_fac = Znorm(itn).x_0_fsav./xnorm_0_corr.*(1 + Znorm(itn).x_0_fsav.*dxnorm_flux./xnorm_0_corr.^2);
+                %
+                % renormalize f moments accordingly
+                %
+                [XXf0{itn},ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...
+                        XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRRm_fsav{itn},xRRp_fsav{itn},xTe_norm_out{itn},Zmom(itn)] = ...
+                    renorm_fmoments_jd(xnorm_fac,equilDKE,mksa,...
+                        XXf0{itn},ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...
+                        XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRRm_fsav{itn},xRRp_fsav{itn},xTe_norm_out{itn},Zmom(itn));
+                %
+            end
+            %
+            xnorm_0{itn} = Znorm(itn).x_0_fsav;
+            %
             % the external runaway increment is the sum of :
             %   - the runaways created outside pmax
             %   - the runaways passing through pmax
@@ -522,28 +560,6 @@ for itn = itn0:nit,
 %             xnorm_ri{itn} = Znorm(itn).x_Rfrac_0_fsav;
             xnorm_rim{itn} = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*XXRmaskmin0_KOm(:,:,gridDKE.rdke).*XXf0{itn}(:,:,gridDKE.rdke).*XXpn2,1),1).';
             xnorm_rip{itn} = 2*pi*(xqtilde./xqhat).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXlambda.*XXRmaskmin0_KOp(:,:,gridDKE.rdke).*XXf0{itn}(:,:,gridDKE.rdke).*XXpn2,1),1).';
-            %
-            % adjust internal density if requested 
-            %
-            if imag(dkeparam_out.norm_mode_f) == 1,% in this case, the xnorm_0 evolution is governed by boundary losses instead of volumic losses
-                %
-                % with real(dkeparam_out.norm_mode_f) == 0, this should only compensate for numerical errors. 
-                % with real(dkeparam_out.norm_mode_f) == 2, this should also compensate for the flux through pmax
-                % with real(dkeparam_out.norm_mode_f) == 1, this option should not be used
-                %
-                if itn == 1,
-                    xnorm_0{itn} = xnorm_0_init - dxnorm_rem - dxnorm_rep;
-                else
-                    xnorm_0{itn} = xnorm_0{itn - 1} - dxnorm_rem - dxnorm_rep;
-                end
-                %
-                XXfout = XXfout.*repmat(reshape(xnorm_0{itn}./Znorm(itn).x_0_fsav,[1,1,gridDKE.nr]),[gridDKE.npn,gridDKE.nmhu,1]);
-                %
-            else
-                %
-                xnorm_0{itn} = Znorm(itn).x_0_fsav;
-                %
-            end
             %
         else
             %
@@ -571,7 +587,7 @@ for itn = itn0:nit,
         %
         % initial f0 current
         %
-        xcurr_0 = 2*pi*(xq./xqbar).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXfout(:,:,gridDKE.rdke).*XXpn2.*XXpn.*XXmhu./XXgamma,1),1).';
+        xcurr_0 = 2*pi*(xq./xqbar).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXf0{itn}(:,:,gridDKE.rdke).*XXpn2.*XXpn.*XXmhu./XXgamma,1),1).';
         %
         xcurr{itn} = xcurr_rem{itn} + xcurr_rep{itn} + xcurr_0;% total current
         %
@@ -661,7 +677,7 @@ for itn = itn0:nit,
         save(tmpfile);
     end
     %
-    XXfin = XXfout;
+    XXfin = XXf0{itn};
     %
 end
 %
