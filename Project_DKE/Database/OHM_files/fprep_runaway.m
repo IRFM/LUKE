@@ -132,8 +132,15 @@ end
 %
 % momentum space grid
 %
+dkeparam.grid_uniformity = 0;
 if isfield(grid,'nmhu_S'),
     dkeparam.nmhu_S = grid.nmhu_S;
+end
+if isfield(grid,'sfac1'),
+    dkeparam.sfac1 = grid.sfac1;
+end
+if isfield(grid,'snmhu1'),
+    dkeparam.snmhu1 = grid.snmhu1;
 end
 if isfield(grid,'pn_S'), 
     dkeparam.pn_S = grid.pn_S;
