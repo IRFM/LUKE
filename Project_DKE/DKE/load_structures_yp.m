@@ -424,19 +424,19 @@ if exist('flag_angles','var'),
 end
 %
 if exist('flag_transpfaste','var'),
-    if ~isempty(id_equil),
-        filename = [path_transpfaste,'TRANSP_',id_equil,'_',id_transpfaste,'.mat'];
-    else
-        filename = [path_transpfaste,'TRANSP_',id_transpfaste,'.mat'];
-    end
+    filename1 = [path_transpfaste,'TRANSP_',id_equil,'_',id_transpfaste,'.mat'];
+    filename2 = [path_transpfaste,'TRANSP_',id_transpfaste,'.mat'];
     transpfaste = '';
     if isempty(id_transpfaste),
         info_dke_yp(2,['Simulations are performed without fast electron transport']);
-    elseif exist(filename) == 0,
-	    info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+    elseif exist(filename1),
+	    load(filename1);
+	    info_dke_yp(2,['Structure ''transpfaste'': ',filename1,' successfully loaded']);
+    elseif exist(filename2),
+	    load(filename2);
+	    info_dke_yp(2,['Structure ''transpfaste'': ',filename2,' successfully loaded']);
     else
-	    load(filename);
-	    info_dke_yp(2,['Structure ''transpfaste'': ',filename,' successfully loaded']);
+	    info_dke_yp(2,['Warning : Structure ',filename1,' or ',filename2,' could not be loaded']);
     end
     varargout{flag_transpfaste} = transpfaste;
 end
