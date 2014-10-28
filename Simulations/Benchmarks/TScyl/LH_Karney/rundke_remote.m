@@ -28,7 +28,7 @@ if nargin < 2 || (~isempty(link_mode) && (~isnumeric(link_mode) || ~isscalar(lin
 end
 %
 if nargin < 1 || (~isempty(remlist) && ~isnumeric(remlist)),
-    remlist = NaN;% test all cases
+    remlist = [];% Interactive mode
 end
 %
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
