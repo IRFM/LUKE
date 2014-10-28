@@ -170,3 +170,11 @@ dkepath.yves(1).remote(15).profilename = 'bjding';
 dkepath.yves(1).remote(15).luke_root = '/home/PEYSSON/LUKE/';
 dkepath.yves(1).remote(15).link_mode = 0;
 dkepath.yves(1).remote(15).cvsupdate = false;% update done in 'direct' mode
+%
+dkepath.yves(1).remote(16).remoteid = 'CRPP_PPB110';
+dkepath.yves(1).remote(16).schedulername = 'slurm';
+dkepath.yves(1).remote(16).profilename = 'local';
+dkepath.yves(1).remote(16).luke_root = '/home/decker/LUKE/';
+dkepath.yves(1).remote(16).link_mode = [];% lac911 gateway
+dkepath.yves(1).remote(16).cvsupdate = false;% update done in 'direct' mode
+dkepath.yves(1).remote(16).cvsrights = '';
