@@ -163,6 +163,14 @@ dkepath.yvespeysson(1).remote(12).schedulername = 'direct';
 dkepath.yvespeysson(1).remote(12).cvsupdate = true;% update done in 'direct' mode
 dkepath.yvespeysson(1).remote(12).cvsrights = 'chmod -R a+rx ./';
 %
+dkepath.yvespeysson(1).remote(13).remoteid = 'CRPP_PPB110';
+dkepath.yvespeysson(1).remote(13).schedulername = 'slurm';
+dkepath.yvespeysson(1).remote(13).profilename = 'local';
+dkepath.yvespeysson(1).remote(13).luke_root = '/home/decker/LUKE/';
+dkepath.yvespeysson(1).remote(13).link_mode = [];% lac911 gateway
+dkepath.yvespeysson(1).remote(13).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(13).cvsrights = '';
+%
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 2, Joan Decker  ------------------------------------
 %--------------------------------------------------------------------------------------------------------
