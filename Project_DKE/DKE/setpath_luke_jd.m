@@ -88,7 +88,7 @@ while ~isempty(P),
     ilim = find(P == ':',1,'first');
     pathline = P(1:ilim-1);
     %
-    if ~isempty(strfind(pathline,'LUKE'))
+    if ~isempty(pathline(strfind(pathline,luke_root)+length(luke_root):end)),
         rmpath(pathline);
     end
     P(1:ilim) = '';
