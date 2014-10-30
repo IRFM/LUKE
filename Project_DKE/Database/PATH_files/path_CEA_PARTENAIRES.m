@@ -96,7 +96,7 @@ dkepath.JD211098(1).remote(3).schedulername = 'direct';
 dkepath.JD211098(1).remote(4).remoteid = 'ASIPP_SHENMA';
 dkepath.JD211098(1).remote(4).schedulername = 'torque';
 dkepath.JD211098(1).remote(4).profilename = 'joan';
-dkepath.JD211098(1).remote(4).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
+dkepath.JD211098(1).remote(4).luke_root = '/project/LUKE/JoanDecker/LUKE/';
 %
 %------------------------------------ Profile number 1, YP105119 Peysson ------------------------------------
 %
@@ -134,7 +134,7 @@ dkepath.YP105119(1).remote(2).remoteid = 'macpro_YVES_PEYSSON';
 dkepath.YP105119(1).remote(2).schedulername = 'condor';
 dkepath.YP105119(1).remote(2).profilename = 'yves';
 dkepath.YP105119(1).remote(2).luke_root = '/Users/yvespeysson/Projets/LUKE/';
-dkepath.YP105119(1).remote(2).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
+dkepath.YP105119(1).remote(2).cvs.CVSROOT = ':pserver:YP105119:6He3dNkHVzMoUg@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
 dkepath.YP105119(1).remote(2).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(2).luke_root];%CVS command
 %
 dkepath.YP105119(1).remote(3) = dkepath.YP105119(1).remote(2);
@@ -143,8 +143,8 @@ dkepath.YP105119(1).remote(3).schedulername = 'direct';
 dkepath.YP105119(1).remote(4).remoteid = 'ASIPP_SHENMA';
 dkepath.YP105119(1).remote(4).schedulername = 'torque';
 dkepath.YP105119(1).remote(4).profilename = 'yves';
-dkepath.YP105119(1).remote(4).luke_root = '/home/PEYSSON/LUKE/';
-dkepath.YP105119(1).remote(4).cvs.CVSROOT = ':pserver:YP105119:Peys#4Yv@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
+dkepath.YP105119(1).remote(4).luke_root = '/project/LUKE/LUKE/';
+dkepath.YP105119(1).remote(4).cvs.CVSROOT = ':pserver:YP105119:6He3dNkHVzMoUg@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
 dkepath.YP105119(1).remote(4).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(4).luke_root];%CVS command
 %
 %------------------------------------ Profile number 1, EN232106 Nilsson ------------------------------------

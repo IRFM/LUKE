@@ -77,7 +77,7 @@ dkepath.yvesp(1).remote(4).luke_root = '/home/YP105119/LUKE/';
 dkepath.yvesp(1).remote(5).remoteid = 'ASIPP_SHENMA';
 dkepath.yvesp(1).remote(5).schedulername = 'torque';
 dkepath.yvesp(1).remote(5).profilename = 'yves';
-dkepath.yvesp(1).remote(5).luke_root = '/home/PEYSSON/LUKE/';
+dkepath.yvesp(1).remote(5).luke_root = '/project/LUKE/LUKE/';
 %
 
 

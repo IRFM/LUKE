@@ -131,7 +131,7 @@ dkepath.yves(1).remote(8).cvsrights = 'chmod -R a+rx ./';
 dkepath.yves(1).remote(9).remoteid = 'ASIPP_SHENMA';
 dkepath.yves(1).remote(9).schedulername = 'torque';
 dkepath.yves(1).remote(9).profilename = 'PEYSSON';
-dkepath.yves(1).remote(9).luke_root = '/home/PEYSSON/LUKE/';
+dkepath.yves(1).remote(9).luke_root = '/project/LUKE/LUKE/';
 dkepath.yves(1).remote(9).link_mode = [];
 dkepath.yves(1).remote(9).cvsupdate = false;% update done in 'direct' mode
 %
@@ -167,7 +167,7 @@ dkepath.yves(1).remote(14).cvsrights = 'chmod -R a+rx ./';
 dkepath.yves(1).remote(15).remoteid = 'ASIPP_SHENMA';
 dkepath.yves(1).remote(15).schedulername = 'torque';
 dkepath.yves(1).remote(15).profilename = 'bjding';
-dkepath.yves(1).remote(15).luke_root = '/home/PEYSSON/LUKE/';
+dkepath.yves(1).remote(15).luke_root = '/project/LUKE/LUKE/';
 dkepath.yves(1).remote(15).link_mode = 0;
 dkepath.yves(1).remote(15).cvsupdate = false;% update done in 'direct' mode
 %

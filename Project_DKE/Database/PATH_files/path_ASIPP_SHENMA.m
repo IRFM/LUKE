@@ -23,7 +23,7 @@ dkepath.default = 'PEYSSON';
 %-------------------------------------------------------------------------------------------------------
 %
 dkepath.PEYSSON(1).luke_root = [pwd,filesep];
-dkepath.PEYSSON(1).local_root = '/home/PEYSSON/Packages/';
+dkepath.PEYSSON(1).local_root = '/project/LUKE/Packages/';
 dkepath.PEYSSON(1).temppathroot = '/scratch/PEYSSON/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.PEYSSON(1).localdatapath = dkepath.PEYSSON(1).temppathroot;

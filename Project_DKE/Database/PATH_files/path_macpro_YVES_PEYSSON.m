@@ -106,7 +106,7 @@ dkepath.yvespeysson(1).remote(2).cvsrights = 'chmod -R a+rx ./';
 dkepath.yvespeysson(1).remote(3).remoteid = 'ASIPP_SHENMA';
 dkepath.yvespeysson(1).remote(3).schedulername = 'torque';
 dkepath.yvespeysson(1).remote(3).profilename = 'PEYSSON';
-dkepath.yvespeysson(1).remote(3).luke_root = '/home/PEYSSON/LUKE/';
+dkepath.yvespeysson(1).remote(3).luke_root = '/project/LUKE/LUKE/';
 dkepath.yvespeysson(1).remote(3).link_mode = [];
 dkepath.yvespeysson(1).remote(3).cvsupdate = false;% update done in 'direct' mode
 %
@@ -184,11 +184,11 @@ dkepath.yvespeysson(2).remote(2).profilename = 'joan';%local
 dkepath.yvespeysson(2).remote(2).cvsupdate = false;% update done from joan's laptop
 %
 dkepath.yvespeysson(2).remote(3).profilename = 'joan';%shenma
-dkepath.yvespeysson(2).remote(3).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
+dkepath.yvespeysson(2).remote(3).luke_root = '/project/LUKE/JoanDecker/LUKE/';
 dkepath.yvespeysson(2).remote(3).cvsupdate = false;% update done from joan's laptop
 %
 dkepath.yvespeysson(2).remote(4).profilename = 'joan';%shenma
-dkepath.yvespeysson(2).remote(4).luke_root = '/home/PEYSSON/JoanDecker/LUKE/';
+dkepath.yvespeysson(2).remote(4).luke_root = '/project/LUKE/JoanDecker/LUKE/';
 dkepath.yvespeysson(2).remote(4).cvsupdate = false;% update done from joan's laptop
 %
 dkepath.yvespeysson(2).remote(5).profilename = 'JD211098';%andromede
