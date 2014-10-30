@@ -44,8 +44,8 @@ dkepath.PEYSSON(1).compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
 %
 %Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.PEYSSON(1).MUMPS.mex800 = [dkepath.PEYSSON(1).local_root,'MUMPS_4.10.0/MATLAB800'];
-dkepath.PEYSSON(1).MUMPS.mex801 = [dkepath.PEYSSON(1).local_root,'MUMPS_4.10.0/MATLAB801'];
+dkepath.PEYSSON(1).MUMPS.mex800 = ['/home/PEYSSON/Packages/MUMPS_4.10.0/MATLAB800'];
+dkepath.PEYSSON(1).MUMPS.mex801 = ['/home/PEYSSON/Packages/MUMPS_4.10.0/MATLAB801'];
 %
 % LUKE documentation
 %
