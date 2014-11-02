@@ -33,7 +33,7 @@ end
 %
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 %
-debugmode = 0;%1;% debug mode (0) off (1) on
+debugmode = 0;% debug mode (0) off (1) on
 cleanmode = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 luke_memory = 2000;% job memory in mb
 luke_walltime = 1;% job walltime in hours
