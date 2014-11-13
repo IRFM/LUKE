@@ -33,6 +33,7 @@ dkepath.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path adre
 dkepath.yvespeysson(1).mex800 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB800','/'];
 dkepath.yvespeysson(1).mex801 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB801','/'];
 dkepath.yvespeysson(1).mex803 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB803','/'];
+dkepath.yvespeysson(1).mex804 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB804','/'];
 %
 dkepath.yvespeysson(1).compiler_opt.libs.gfortran = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.9.0','/',dkepath.machine,'/'];%extra libraries
 dkepath.yvespeysson(1).compiler_opt.libs.ifort = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Libs/ifort/13.0.0','/',dkepath.machine,'/'];
@@ -43,22 +44,28 @@ dkepath.yvespeysson(1).compiler_opt.helmex.mex801 = [' -compatibleArrayDims /Sys
 dkepath.yvespeysson(1).compiler_opt.fopts.mex803 = ' ';%-largeArrayDims';
 dkepath.yvespeysson(1).compiler_opt.separatrice.mex803 = [' -largeArrayDims /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libBLAS.dylib /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libLAPACK.dylib  ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgfortran.a ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgcc_s_1.dylib ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgfortranbegin.a ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libquadmath.a '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.yvespeysson(1).compiler_opt.helmex.mex803 = [' -compatibleArrayDims /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libBLAS.dylib /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libLAPACK.dylib  ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgfortran.a ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgcc_s_1.dylib ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgfortranbegin.a ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libquadmath.a '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvespeysson(1).compiler_opt.fopts.mex804 = ' ';%-largeArrayDims';
+dkepath.yvespeysson(1).compiler_opt.separatrice.mex804 = [' -largeArrayDims /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libBLAS.dylib /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libLAPACK.dylib  ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgfortran.a ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgcc_s_1.dylib ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgfortranbegin.a ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libquadmath.a '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvespeysson(1).compiler_opt.helmex.mex804 = [' -compatibleArrayDims /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libBLAS.dylib /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libLAPACK.dylib  ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgfortran.a ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgcc_s_1.dylib ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libgfortranbegin.a ',dkepath.yvespeysson(1).compiler_opt.libs.gfortran,'libquadmath.a '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 %
 % MUMPS matrix solver (parallel, sequential, mex)
 %
 %dkepath.yvespeysson(1).MUMPS.par = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.7.2_P_openmpig95/dke'];%Where MUMPS matrix solver is stored (stand-alone application for parallel processing)
 %dkepath.yvespeysson(1).MUMPS.mpipath = ['/usr/local/openmpigfortran/bin/'];%Absolute path to the correct mpirun or mpiexec (may depend of the architecture and the program). Leave empty is default system path is used
 dkepath.yvespeysson(1).MUMPS.seq = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
-dkepath.yvespeysson(1).MUMPS.mex800 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.yvespeysson(1).MUMPS.mex801 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yvespeysson(1).MUMPS.mex800 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yvespeysson(1).MUMPS.mex801 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
 %dkepath.yvespeysson(1).MUMPS.mex803 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB803'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.yvespeysson(1).MUMPS.mex803 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB803'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yvespeysson(1).MUMPS.mex804 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB804'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).MUMPS.mex804 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB804'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % SUPERLU matrix solver (parallel, sequential)
 %
 dkepath.yvespeysson(1).SUPERLU.mex800 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB800'];%Where SUPERLU matrix solver is stored (MEX function)
 dkepath.yvespeysson(1).SUPERLU.mex801 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB801'];%Where SUPERLU matrix solver is stored (MEX function)
 dkepath.yvespeysson(1).SUPERLU.mex803 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB803'];%Where SUPERLU matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).SUPERLU.mex804 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/SUPERLU/SuperLU_4.3_gcc/MATLAB804'];%Where SUPERLU matrix solver is stored (MEX function)
 %
 % PETSc matrix solver (parallel, sequential)
 %
@@ -70,6 +77,7 @@ dkepath.yvespeysson(1).SUPERLU.mex803 = [dkepath.yvespeysson(1).local_root,'Pack
 %
 dkepath.yvespeysson(1).PARDISO.mex801 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB801'];%Where PARDISO matrix solver is stored (MEX function)
 dkepath.yvespeysson(1).PARDISO.mex803 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB803'];%Where PARDISO matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).PARDISO.mex804 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB804'];%Where PARDISO matrix solver is stored (MEX function)
 %
 %--------------------------- Access to the experimental databases -----------------------------
 %
