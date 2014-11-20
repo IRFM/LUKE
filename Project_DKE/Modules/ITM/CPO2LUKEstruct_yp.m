@@ -16,6 +16,8 @@ function [LUKE_struct] = CPO2LUKEstruct_yp(ver_mds,struct_name,CPO_struct,displa
 %
 %by Y.Peysson CEA-IRFM <yves.peysson@cea.fr> and Joan Decker CEA-IRFM (joan.decker@cea.fr)
 %
+[dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,clum] = pc_dke_yp;%Speed of light (m/s)
+%
 if nargin < 3,error('Not enough input arguments in CPO2LUKE_struct_yp.m');end
 %
 if nargin == 3,
@@ -35,21 +37,29 @@ if strcmp('equilibrium',struct_name),
         cocos = '';
     end
     %
-    if round(str2double(CPO_struct.profiles_2d.grid_type(1))) == 1,%rectangular grid
+    grid_type = CPO_struct.profiles_2d.grid_type;%CPO is a java structure and it must be transfered to Matlab data first before any operation
+    %
+    if round(str2double(grid_type(1))) == 1,%rectangular grid
         xyBR = CPO_struct.profiles_2d.br;
         xyBZ = CPO_struct.profiles_2d.bz;
         xyBPHI = CPO_struct.profiles_2d.bphi;	
         %
-        xypsi = CPO_struct.profiles_2d.psi/2/pi;
-        psi = CPO_struct.profiles_1d.psi/2/pi;%Poloidal flux (with 1/2/pi)
-        psia = CPO_struct.global_param.psi_bound/2/pi;
-        psi0 = CPO_struct.global_param.psi_ax/2/pi;
+        xypsi = CPO_struct.profiles_2d.psi;
+        xypsi = xypsi/2/pi;
+        psi = CPO_struct.profiles_1d.psi;
+        psi = psi/2/pi;%Poloidal flux (with 1/2/pi)
+        psia = CPO_struct.global_param.psi_bound;
+        psia = psia/2/pi;
+        psi0 = CPO_struct.global_param.psi_ax;
+        psi0 = psi0/2/pi;
         %
         Rp = CPO_struct.global_param.mag_axis.position.r;	
         Zp = CPO_struct.global_param.mag_axis.position.z;
         %
-        x = CPO_struct.profiles_2d.grid.dim1 - Rp;	
-        y = CPO_struct.profiles_2d.grid.dim2 - Zp;
+        x = CPO_struct.profiles_2d.grid.dim1;
+        x = x - Rp;
+        y = CPO_struct.profiles_2d.grid.dim2;
+        y = y - Zp;
         %
         Btor0 = CPO_struct.global_param.toroid_field.b0;%vacuum toroidal field (T) (for the sign only)
         %
@@ -183,13 +193,20 @@ if strcmp('equilibrium',struct_name),
 	%
 elseif strcmp('coreprof',struct_name),
     %
-    LUKE_struct.psi = CPO_struct.psi.value(:)';% Unfortunately, the poloidal psi for the 1-D profiles is not consistent with the psi defined in the equil structure (number of grid points, min and max !!!)... who named that CPO's, Consistent Physical Object....
-    LUKE_struct.pTe = CPO_struct.te.value(:)'/1000;%keV units
-    LUKE_struct.pne = CPO_struct.ne.value(:)';
-    LUKE_struct.pzTi = transpose(CPO_struct.ti.value)/1000;%keV units
-    LUKE_struct.pzni = transpose(CPO_struct.ni.value);
-    LUKE_struct.zZi = CPO_struct.composition.zn(:)';
-    LUKE_struct.zmi = CPO_struct.composition.amn(:)';
+    LUKE_struct.psi = CPO_struct.psi.value;% Unfortunately, the poloidal psi for the 1-D profiles is not consistent with the psi defined in the equil structure (number of grid points, min and max !!!)... who named that CPO's, Consistent Physical Object....
+    LUKE_struct.psi = LUKE_struct.psi(:)';% Unfortunately, the poloidal psi for the 1-D profiles is not consistent with the psi defined in the equil structure (number of grid points, min and max !!!)... who named that CPO's, Consistent Physical Object....
+    LUKE_struct.pTe = CPO_struct.te.value;%keV units
+    LUKE_struct.pTe = LUKE_struct.pTe(:)'/1000;%keV units
+    LUKE_struct.pne = CPO_struct.ne.value;
+    LUKE_struct.pne = LUKE_struct.pne(:)';
+    LUKE_struct.pzTi = CPO_struct.ti.value;%keV units
+    LUKE_struct.pzTi = transpose(LUKE_struct.pzTi)/1000;%keV units
+    LUKE_struct.pzni = CPO_struct.ni.value;
+    LUKE_struct.pzni = transpose(LUKE_struct.pzni);
+    LUKE_struct.zZi = CPO_struct.composition.zn;
+    LUKE_struct.zZi = LUKE_struct.zZi(:)';
+    LUKE_struct.zmi = CPO_struct.composition.amn;
+    LUKE_struct.zmi = LUKE_struct.zmi(:)';
     %
     if isempty(LUKE_struct.zZi) || isempty(LUKE_struct.zmi) || isempty(LUKE_struct.pzTi) || isempty(LUKE_struct.pzni),
         %
@@ -217,7 +234,8 @@ elseif strcmp('antennas',struct_name),
             if ~isempty(CPO_struct.antenna_unit(ia).antenna_ec.name),
                 LUKE_struct{ia}.id = CPO_struct.antenna_unit(ia).antenna_ec.name;
                 LUKE_struct{ia}.type = 'EC';
-                LUKE_struct{ia}.omega_rf = CPO_struct.antenna_unit(ia).antenna_ec.frequency*2*pi;%wave angular frequency (rad/s)
+                LUKE_struct{ia}.omega_rf = CPO_struct.antenna_unit(ia).antenna_ec.frequency;%wave angular frequency (rad/s)
+                LUKE_struct{ia}.omega_rf = LUKE_struct{ia}.omega_rf*2*pi;
                 %
                 LUKE_struct{ia}.yR_L = CPO_struct.antenna_unit(ia).antenna_ec.position.r;
                 LUKE_struct{ia}.yZ_L = CPO_struct.antenna_unit(ia).antenna_ec.position.z;
@@ -225,8 +243,10 @@ elseif strcmp('antennas',struct_name),
                 %
                 % Launch angles definitions for ITM are identical to those for Prater benchmark (see ITER simulation example in LUKE)
                 %
-                LUKE_struct{ia}.yalpha_L = sign(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.beta)*pi - atan(tan(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.beta)/cos(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.alpha));
-                LUKE_struct{ia}.ybeta_L = pi - acos(cos(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.beta)*sin(CPO_struct.antenna_unit(ia).antenna_ec.launchangles.alpha));            
+                beta = CPO_struct.antenna_unit(ia).antenna_ec.launchangles.beta;
+                alpha = CPO_struct.antenna_unit(ia).antenna_ec.launchangles.alpha;
+                LUKE_struct{ia}.yalpha_L = sign(beta)*pi - atan(tan(beta)/cos(alpha));
+                LUKE_struct{ia}.ybeta_L = pi - acos(cos(beta)*sin(alpha));            
                 %
                 LUKE_struct{ia}.yP_L = CPO_struct.antenna_unit(ia).antenna_ec.power.value;
                 LUKE_struct{ia}.dNpar0 = NaN;
@@ -234,12 +254,15 @@ elseif strcmp('antennas',struct_name),
                 LUKE_struct{ia}.method1 = 'pchip';%1D interpolation
                 LUKE_struct{ia}.method2 = 'cubic';%2D interpolation
                 %
-                clum = 299792458;%Speed of light (m/s)
-                alpha = CPO_struct.antenna_unit(ia).antenna_ec.frequency*pi/clum;%for the Rayleigh length
-                yw = alpha^2*CPO_struct.antenna_unit(ia).antenna_ec.beam.spot.waist(1)^4*CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad(1);%WARNING: circular shape only.
+                frequency = CPO_struct.antenna_unit(ia).antenna_ec.frequency;
+                alpha = frequency*pi/clum;%for the Rayleigh length
+                waist = CPO_struct.antenna_unit(ia).antenna_ec.beam.spot.waist;
+                invcurvrad = CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad;
                 %
-                LUKE_struct{ia}.w0 = CPO_struct.antenna_unit(ia).antenna_ec.beam.spot.waist(1)/sqrt(1 + yw*CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad(1));
-                LUKE_struct{ia}.z_L = -yw/(1 + yw*CPO_struct.antenna_unit(ia).antenna_ec.beam.phaseellipse.invcurvrad(1));                        
+                yw = alpha^2*waist(1)^4*invcurvrad(1);%WARNING: circular shape only.
+                %
+                LUKE_struct{ia}.w0 = waist(1)/sqrt(1 + yw*invcurvrad(1));
+                LUKE_struct{ia}.z_L = -yw/(1 + yw*invcurvrad(1));                        
                 %
                 LUKE_struct{ia}.mmode = -CPO_struct.antenna_unit(ia).antenna_ec.mode;%LUKE definitions -> O/X mode: -1/+1. ITM ones are opposite
             end
@@ -255,7 +278,8 @@ elseif strcmp('antennas',struct_name),
                 if ~isempty(CPO_struct.antenna_ec(ia).name),
                     LUKE_struct{ia}.id = CPO_struct.antenna_ec(ia).name;
                     LUKE_struct{ia}.type = 'EC';
-                    LUKE_struct{ia}.omega_rf = CPO_struct.antenna_ec(ia).frequency*2*pi;%wave angular frequency (rad/s)
+                    frequency = CPO_struct.antenna_ec(ia).frequency;
+                    LUKE_struct{ia}.omega_rf = frequency*2*pi;%wave angular frequency (rad/s)
                     %
                     LUKE_struct{ia}.yR_L = CPO_struct.antenna_ec(ia).position.r;
                     LUKE_struct{ia}.yZ_L = CPO_struct.antenna_ec(ia).position.z;
@@ -263,8 +287,11 @@ elseif strcmp('antennas',struct_name),
                     %
                     % Launch angles definitions for ITM are identical to those for Prater benchmark (see ITER simulation example in LUKE)
                     %
-                    LUKE_struct{ia}.yalpha_L = sign(CPO_struct.antenna_ec(ia).launchangles.beta)*pi - atan(tan(CPO_struct.antenna_ec(ia).launchangles.beta)/cos(CPO_struct.antenna_ec(ia).launchangles.alpha));
-                    LUKE_struct{ia}.ybeta_L = pi - acos(cos(CPO_struct.antenna_ec(ia).launchangles.beta)*sin(CPO_struct.antenna_ec(ia).launchangles.alpha));            
+                    alpha = CPO_struct.antenna_ec(ia).launchangles.alpha;
+                    beta = CPO_struct.antenna_ec(ia).launchangles.beta;
+                    %
+                    LUKE_struct{ia}.yalpha_L = sign(beta)*pi - atan(tan(beta)/cos(alpha));
+                    LUKE_struct{ia}.ybeta_L = pi - acos(cos(beta)*sin(alpha));            
                     %
                     LUKE_struct{ia}.yP_L = CPO_struct.antenna_ec(ia).power.value;
                     LUKE_struct{ia}.dNpar0 = NaN;
@@ -272,12 +299,16 @@ elseif strcmp('antennas',struct_name),
                     LUKE_struct{ia}.method1 = 'pchip';%1D interpolation
                     LUKE_struct{ia}.method2 = 'cubic';%2D interpolation
                     %
-                    clum = 299792458;%Speed of light (m/s)
-                    alpha = CPO_struct.antenna_ec(ia).frequency*pi/clum;%for the Rayleigh length
-                    yw = alpha^2*CPO_struct.antenna_ec(ia).beam.spot.size(1)^4*CPO_struct.antenna_ec(ia).beam.phaseellipse.invcurvrad(1);%WARNING: circular shape only.
+                    frequency = CPO_struct.antenna_ec(ia).frequency;
+                    alpha = frequency*pi/clum;%for the Rayleigh length
                     %
-                    LUKE_struct{ia}.w0 = CPO_struct.antenna_ec(ia).beam.spot.size(1)/sqrt(1 + yw*CPO_struct.antenna_ec(ia).beam.phaseellipse.invcurvrad(1));
-                    LUKE_struct{ia}.z_L = -yw/(1 + yw*CPO_struct.antenna_ec(ia).beam.phaseellipse.invcurvrad(1));                        
+                    size = CPO_struct.antenna_ec(ia).beam.spot.size;
+                    invcurvrad = CPO_struct.antenna_ec(ia).beam.phaseellipse.invcurvrad;
+                    %
+                    yw = alpha^2*size(1)^4*invcurvrad(1);%WARNING: circular shape only.
+                    %
+                    LUKE_struct{ia}.w0 = size(1)/sqrt(1 + yw*invcurvrad(1));
+                    LUKE_struct{ia}.z_L = -yw/(1 + yw*invcurvrad(1));                        
                     %
                     LUKE_struct{ia}.mmode = -CPO_struct.antenna_ec(ia).mode;%LUKE definitions -> O/X mode: -1/+1. ITM ones are opposite
                 else
