@@ -71,22 +71,86 @@ if isempty(equil_fit),
     end
 end
 %
-[Te,dTedrho,d2Tedrho2,...
-    ne,dnedrho,d2nedrho2,...
-    zTi,dzTidrho,d2zTidrho2,...
-    zni,dznidrho,d2znidrho2,...
-    x,dxdtheta,d2xdtheta2,dxdrho,d2xdthetadrho,...
-    y,dydtheta,d2ydtheta2,dydrho,d2ydthetadrho,...
-    r,drdtheta,drdrho,...
-    salpha,dsalphadtheta,dsalphadrho,...
-    calpha,dcalphadtheta,dcalphadrho,...
-    Bx,dBxdtheta,d2Bxdtheta2,dBxdrho,d2Bxdthetadrho,...
-    By,dBydtheta,d2Bydtheta2,dBydrho,d2Bydthetadrho,...
-    Bz,dBzdtheta,d2Bzdtheta2,dBzdrho,d2Bzdthetadrho,...
-    BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho,...
-    gradrho,dgradrhodtheta,dgradrhodrho,...
-    Upsilon,dUpsilondrho,dUpsilondtheta,...
-    psin,dpsindrho,dxstardpsin,ddxstardpsindrho] = equilval_yp(equil_fit,rho,theta,1);
+equilval = equilval_yp(equil_fit,rho,theta);
+%
+Te = equilval.Te;
+dTedrho = equilval.dTedrho;
+d2Tedrho2 = equilval.d2Tedrho2;
+%
+ne = equilval.ne;
+dnedrho = equilval.dnedrho;
+d2nedrho2 = equilval.d2nedrho2;
+%
+zTi = equilval.zTi;
+dzTidrho = equilval.dzTidrho;
+d2zTidrho2 = equilval.d2zTidrho2;
+%
+zni = equilval.zni;
+dznidrho = equilval.dznidrho;
+d2znidrho2 = equilval.d2znidrho2;
+%
+x = equilval.x;
+dxdtheta = equilval.dxdtheta;
+d2xdtheta2 = equilval.d2xdtheta2;
+dxdrho = equilval.dxdrho;
+d2xdthetadrho = equilval.d2xdthetadrho;
+%
+y = equilval.y;
+dydtheta = equilval.dydtheta;
+d2ydtheta2 = equilval.d2ydtheta2;
+dydrho = equilval.dydrho;
+d2ydthetadrho = equilval.d2ydthetadrho;
+%
+r = equilval.r;
+drdtheta = equilval.drdtheta;
+drdrho = equilval.drdrho;
+%
+salpha = equilval.salpha;
+dsalphadtheta = equilval.dsalphadtheta;
+dsalphadrho = equilval.dsalphadrho;
+%
+calpha = equilval.calpha;
+dcalphadtheta = equilval.dcalphadtheta;
+dcalphadrho = equilval.dcalphadrho;
+%
+Bx = equilval.Bx;
+dBxdtheta = equilval.dBxdtheta;
+d2Bxdtheta2 = equilval.d2Bxdtheta2;
+dBxdrho = equilval.dBxdrho;
+d2Bxdthetadrho = equilval.d2Bxdthetadrho;
+%
+By = equilval.By;
+dBydtheta = equilval.dBydtheta;
+d2Bydtheta2 = equilval.d2Bydtheta2;
+dBydrho = equilval.dBydrho;
+d2Bydthetadrho = equilval.d2Bydthetadrho;
+%
+Bz = equilval.Bz;
+dBzdtheta = equilval.dBzdtheta;
+d2Bzdtheta2 = equilval.d2Bzdtheta2;
+dBzdrho = equilval.dBzdrho;
+d2Bzdthetadrho = equilval.d2Bzdthetadrho;
+%
+BP = equilval.BP;
+dBPdtheta = equilval.dBPdtheta;
+dBPdrho = equilval.dBPdrho;
+%
+B = equilval.B;
+dBdtheta = equilval.dBdtheta;
+dBdrho = equilval.dBdrho;
+%
+gradrho = equilval.gradrho;
+dgradrhodtheta = equilval.dgradrhodtheta;
+dgradrhodrho = equilval.dgradrhodrho;
+%
+Upsilon = equilval.Upsilon;
+dUpsilondrho = equilval.dUpsilondrho;
+dUpsilondtheta = equilval.dUpsilondtheta;
+%
+psin = equilval.psin;
+dpsindrho = equilval.dpsindrho;
+dxstardpsin = equilval.dxstardpsin;
+ddxstardpsindrho = equilval.ddxstardpsindrho;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum,alpha,kB] = pc_dke_yp;
 %

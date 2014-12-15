@@ -687,50 +687,122 @@ if nargin < 3,
    axis('equal');drawnow  
    %
 else
-   [Te,dTedrho,d2Tedrho2,ne,dnedrho,d2nedrho2,zTi,dzTidrho,d2zTidrho2,zni,dznidrho,d2znidrho2,...
-        x,dxdtheta,d2xdtheta2,dxdrho,d2xdthetadrho,y,dydtheta,d2ydtheta2,dydrho,d2ydthetadrho,...
-        r,drdtheta,drdrho,salpha,dsalphadtheta,dsalphadrho,calpha,dcalphadtheta,dcalphadrho,...
-        Bx,dBxdtheta,d2Bxdtheta2,dBxdrho,d2Bxdthetadrho,...
-        By,dBydtheta,d2Bydtheta2,dBydrho,d2Bydthetadrho,...
-        Bz,dBzdtheta,d2Bzdtheta2,dBzdrho,d2Bzdthetadrho,...
-        BP,dBPdtheta,dBPdrho,B,dBdtheta,dBdrho,...
-        gradrhon,dgradrhondtheta,dgradrhondrho] = equilval_yp(equil_fit,rho,theta,1);
-   %
-   if nargout ~= 2,
-      disp('--------------');
-      if isfield(equil_fit,'Te_fit'),
-         disp(['equil_fit.Te_fit.pp_f.coefs(1) = ',num2str(equil_fit.Te_fit.pp_f.coefs(1))]);
-         disp(['equil_fit.Te_fit.pp_dfdrho.coefs(1) = ',num2str(equil_fit.Te_fit.pp_dfdrho.coefs(1))]);
-         disp(['equil_fit.Te_fit.pp_d2fdrho2.coefs(1) = ',num2str(equil_fit.Te_fit.pp_d2fdrho2.coefs(1))]);
-      end
-      disp(['equil_fit.Bz_fit.n = ',num2str(equil_fit.Bz_fit.n(end))]);
-      disp(['equil_fit.Bz_fit.bn_f.coefs(1) = ',num2str(equil_fit.Bz_fit.pp_bn.coefs(1))]);
-      disp(['equil_fit.Bz_fit.bn_f.coefs(1) = ',num2str(equil_fit.Bz_fit.pp_dbndrho.coefs(1))]);
-      disp('--------------');
-      if isfield(equil_fit,'Te_fit'),
-         disp(['Te(',num2str(rho),'),dTedrho(',num2str(rho),'),d2Tedrho2(',num2str(rho),') (keV) = ',num2str(Te),',',num2str(dTedrho),',',num2str(d2Tedrho2)]);
-      end
-      if isfield(equil_fit,'ne_fit'),
-         disp(['ne(',num2str(rho),'),dnedrho(',num2str(rho),'),d2nedrho2(',num2str(rho),') (10+19 m-3) = ',num2str(ne/1e19),',',num2str(dnedrho/1e19),',',num2str(d2nedrho2/1e19)]);
-      end
-      if isfield(equil_fit,'zTi_fit'),
-         disp(['zTi(',int2str(ns),',',num2str(rho),'),dzTidrho(',int2str(ns),',',num2str(rho),'),d2zTidrho2(',int2str(ns),' ,',num2str(rho),') (keV) = ',num2str(zTi(ns)),',',num2str(dzTidrho(ns)),',',num2str(d2zTidrho2(ns))]);
-      end
-      if isfield(equil_fit,'zni_fit'),
-         disp(['zni(',int2str(ns),',',num2str(rho),'),dznidrho(',int2str(ns),',',num2str(rho),'),d2znidrho2(',int2str(ns),' ,',num2str(rho),') (10+19 m-3) = ',num2str(zni(ns)/1e19),',',num2str(dznidrho(ns)/1e19),',',num2str(d2znidrho2(ns)/1e19)]);
-      end
-      %
-      disp(['x(',num2str(rho),',',num2str(theta),'),dxdrho(',num2str(rho),',',num2str(theta),'),dxdtheta(',num2str(rho),',',num2str(theta),'),d2xdtheta2(',num2str(rho),',',num2str(theta),'),d2xdthetadrho(',num2str(rho),',',num2str(theta),') (m) = ',num2str(x),',',num2str(dxdrho),',',num2str(dxdtheta),',',num2str(d2xdtheta2),',',num2str(d2xdthetadrho)]);
-      disp(['y(',num2str(rho),',',num2str(theta),'),dydrho(',num2str(rho),',',num2str(theta),'),dydtheta(',num2str(rho),',',num2str(theta),'),d2ydtheta2(',num2str(rho),',',num2str(theta),'),d2ydthetadrho(',num2str(rho),',',num2str(theta),') (m) = ',num2str(y),',',num2str(dydrho),',',num2str(dydtheta),',',num2str(d2ydtheta2),',',num2str(d2ydthetadrho)]);
-      disp(['r(',num2str(rho),',',num2str(theta),'),drdrho(',num2str(rho),',',num2str(theta),'),drdtheta(',num2str(rho),',',num2str(theta),') (m) = ',num2str(r),',',num2str(drdrho),',',num2str(drdtheta)]);
-      disp(['Bx(',num2str(rho),',',num2str(theta),'),dBxdrho(',num2str(rho),',',num2str(theta),'),dBxdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(Bx),',',num2str(dBxdrho),',',num2str(dBxdtheta)]);
-      disp(['By(',num2str(rho),',',num2str(theta),'),dBydrho(',num2str(rho),',',num2str(theta),'),dBydtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(By),',',num2str(dBydrho),',',num2str(dBydtheta)]);
-      disp(['Bz(',num2str(rho),',',num2str(theta),'),dBzdrho(',num2str(rho),',',num2str(theta),'),dBzdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(Bz),',',num2str(dBzdrho),',',num2str(dBzdtheta)]);
-      disp(['BP(',num2str(rho),',',num2str(theta),'),dBPdrho(',num2str(rho),',',num2str(theta),'),dBPdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(BP),',',num2str(dBPdrho),',',num2str(dBPdtheta)]);
-      disp(['B(',num2str(rho),',',num2str(theta),'),dBdrho(',num2str(rho),',',num2str(theta),'),dBdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(B),',',num2str(dBdrho),',',num2str(dBdtheta)]);
-      disp(['calpha(',num2str(rho),',',num2str(theta),'),dcalphadrho(',num2str(rho),',',num2str(theta),'),dcalphadtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(calpha),',',num2str(dcalphadrho),',',num2str(dcalphadtheta)]);
-      disp(['salpha(',num2str(rho),',',num2str(theta),'),dsalphadrho(',num2str(rho),',',num2str(theta),'),dsalphadtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(salpha),',',num2str(dsalphadrho),',',num2str(dsalphadtheta)]);
-      disp(['gradrhon(',num2str(rho),',',num2str(theta),'),dgradrhondrho(',num2str(rho),',',num2str(theta),'),dgradrhondtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(gradrhon),',',num2str(dgradrhondrho),',',num2str(dgradrhondtheta)]);
+    equilval = equilval_yp(equil_fit,rho,theta);
+    %
+    Te = equilval.Te;
+    dTedrho = equilval.dTedrho;
+    d2Tedrho2 = equilval.d2Tedrho2;
+    %
+    ne = equilval.ne;
+    dnedrho = equilval.dnedrho;
+    d2nedrho2 = equilval.d2nedrho2;
+    %
+    zTi = equilval.zTi;
+    dzTidrho = equilval.dzTidrho;
+    d2zTidrho2 = equilval.d2zTidrho2;
+    %
+    zni = equilval.zni;
+    dznidrho = equilval.dznidrho;
+    d2znidrho2 = equilval.d2znidrho2;
+    %
+    x = equilval.x;
+    dxdtheta = equilval.dxdtheta;
+    d2xdtheta2 = equilval.d2xdtheta2;
+    dxdrho = equilval.dxdrho;
+    d2xdthetadrho = equilval.d2xdthetadrho;
+    %
+    y = equilval.y;
+    dydtheta = equilval.dydtheta;
+    d2ydtheta2 = equilval.d2ydtheta2;
+    dydrho = equilval.dydrho;
+    d2ydthetadrho = equilval.d2ydthetadrho;
+    %
+    r = equilval.r;
+    drdtheta = equilval.drdtheta;
+    drdrho = equilval.drdrho;
+    %
+    salpha = equilval.salpha;
+    dsalphadtheta = equilval.dsalphadtheta;
+    dsalphadrho = equilval.dsalphadrho;
+    %
+    calpha = equilval.calpha;
+    dcalphadtheta = equilval.dcalphadtheta;
+    dcalphadrho = equilval.dcalphadrho;
+    %
+    Bx = equilval.Bx;
+    dBxdtheta = equilval.dBxdtheta;
+    d2Bxdtheta2 = equilval.d2Bxdtheta2;
+    dBxdrho = equilval.dBxdrho;
+    d2Bxdthetadrho = equilval.d2Bxdthetadrho;
+    %
+    By = equilval.By;
+    dBydtheta = equilval.dBydtheta;
+    d2Bydtheta2 = equilval.d2Bydtheta2;
+    dBydrho = equilval.dBydrho;
+    d2Bydthetadrho = equilval.d2Bydthetadrho;
+    %
+    Bz = equilval.Bz;
+    dBzdtheta = equilval.dBzdtheta;
+    d2Bzdtheta2 = equilval.d2Bzdtheta2;
+    dBzdrho = equilval.dBzdrho;
+    d2Bzdthetadrho = equilval.d2Bzdthetadrho;
+    %
+    BP = equilval.BP;
+    dBPdtheta = equilval.dBPdtheta;
+    dBPdrho = equilval.dBPdrho;
+    %
+    B = equilval.B;
+    dBdtheta = equilval.dBdtheta;
+    dBdrho = equilval.dBdrho;
+    %
+    gradrho = equilval.gradrho;
+    dgradrhodtheta = equilval.dgradrhodtheta;
+    dgradrhodrho = equilval.dgradrhodrho;
+    %
+    %Upsilon = equilval.Upsilon;
+    %dUpsilondrho = equilval.dUpsilondrho;
+    %dUpsilondtheta = equilval.dUpsilondtheta;
+    %
+    %psin = equilval.psin;
+    %dpsindrho = equilval.dpsindrho;
+    %dxstardpsin = equilval.dxstardpsin;
+    %ddxstardpsindrho = equilval.ddxstardpsindrho;    
+    %
+    if nargout ~= 2,
+        disp('--------------');
+        if isfield(equil_fit,'Te_fit'),
+            disp(['equil_fit.Te_fit.pp_f.coefs(1) = ',num2str(equil_fit.Te_fit.pp_f.coefs(1))]);
+            disp(['equil_fit.Te_fit.pp_dfdrho.coefs(1) = ',num2str(equil_fit.Te_fit.pp_dfdrho.coefs(1))]);
+            disp(['equil_fit.Te_fit.pp_d2fdrho2.coefs(1) = ',num2str(equil_fit.Te_fit.pp_d2fdrho2.coefs(1))]);
+        end
+        disp(['equil_fit.Bz_fit.n = ',num2str(equil_fit.Bz_fit.n(end))]);
+        disp(['equil_fit.Bz_fit.bn_f.coefs(1) = ',num2str(equil_fit.Bz_fit.pp_bn.coefs(1))]);
+        disp(['equil_fit.Bz_fit.bn_f.coefs(1) = ',num2str(equil_fit.Bz_fit.pp_dbndrho.coefs(1))]);
+        disp('--------------');
+        if isfield(equil_fit,'Te_fit'),
+            disp(['Te(',num2str(rho),'),dTedrho(',num2str(rho),'),d2Tedrho2(',num2str(rho),') (keV) = ',num2str(Te),',',num2str(dTedrho),',',num2str(d2Tedrho2)]);
+        end
+        if isfield(equil_fit,'ne_fit'),
+            disp(['ne(',num2str(rho),'),dnedrho(',num2str(rho),'),d2nedrho2(',num2str(rho),') (10+19 m-3) = ',num2str(ne/1e19),',',num2str(dnedrho/1e19),',',num2str(d2nedrho2/1e19)]);
+        end
+        if isfield(equil_fit,'zTi_fit'),
+            disp(['zTi(',int2str(ns),',',num2str(rho),'),dzTidrho(',int2str(ns),',',num2str(rho),'),d2zTidrho2(',int2str(ns),' ,',num2str(rho),') (keV) = ',num2str(zTi(ns)),',',num2str(dzTidrho(ns)),',',num2str(d2zTidrho2(ns))]);
+        end
+        if isfield(equil_fit,'zni_fit'),
+            disp(['zni(',int2str(ns),',',num2str(rho),'),dznidrho(',int2str(ns),',',num2str(rho),'),d2znidrho2(',int2str(ns),' ,',num2str(rho),') (10+19 m-3) = ',num2str(zni(ns)/1e19),',',num2str(dznidrho(ns)/1e19),',',num2str(d2znidrho2(ns)/1e19)]);
+        end
+        %
+        disp(['x(',num2str(rho),',',num2str(theta),'),dxdrho(',num2str(rho),',',num2str(theta),'),dxdtheta(',num2str(rho),',',num2str(theta),'),d2xdtheta2(',num2str(rho),',',num2str(theta),'),d2xdthetadrho(',num2str(rho),',',num2str(theta),') (m) = ',num2str(x),',',num2str(dxdrho),',',num2str(dxdtheta),',',num2str(d2xdtheta2),',',num2str(d2xdthetadrho)]);
+        disp(['y(',num2str(rho),',',num2str(theta),'),dydrho(',num2str(rho),',',num2str(theta),'),dydtheta(',num2str(rho),',',num2str(theta),'),d2ydtheta2(',num2str(rho),',',num2str(theta),'),d2ydthetadrho(',num2str(rho),',',num2str(theta),') (m) = ',num2str(y),',',num2str(dydrho),',',num2str(dydtheta),',',num2str(d2ydtheta2),',',num2str(d2ydthetadrho)]);
+        disp(['r(',num2str(rho),',',num2str(theta),'),drdrho(',num2str(rho),',',num2str(theta),'),drdtheta(',num2str(rho),',',num2str(theta),') (m) = ',num2str(r),',',num2str(drdrho),',',num2str(drdtheta)]);
+        disp(['Bx(',num2str(rho),',',num2str(theta),'),dBxdrho(',num2str(rho),',',num2str(theta),'),dBxdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(Bx),',',num2str(dBxdrho),',',num2str(dBxdtheta)]);
+        disp(['By(',num2str(rho),',',num2str(theta),'),dBydrho(',num2str(rho),',',num2str(theta),'),dBydtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(By),',',num2str(dBydrho),',',num2str(dBydtheta)]);
+        disp(['Bz(',num2str(rho),',',num2str(theta),'),dBzdrho(',num2str(rho),',',num2str(theta),'),dBzdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(Bz),',',num2str(dBzdrho),',',num2str(dBzdtheta)]);
+        disp(['BP(',num2str(rho),',',num2str(theta),'),dBPdrho(',num2str(rho),',',num2str(theta),'),dBPdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(BP),',',num2str(dBPdrho),',',num2str(dBPdtheta)]);
+        disp(['B(',num2str(rho),',',num2str(theta),'),dBdrho(',num2str(rho),',',num2str(theta),'),dBdtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(B),',',num2str(dBdrho),',',num2str(dBdtheta)]);
+        disp(['calpha(',num2str(rho),',',num2str(theta),'),dcalphadrho(',num2str(rho),',',num2str(theta),'),dcalphadtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(calpha),',',num2str(dcalphadrho),',',num2str(dcalphadtheta)]);
+        disp(['salpha(',num2str(rho),',',num2str(theta),'),dsalphadrho(',num2str(rho),',',num2str(theta),'),dsalphadtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(salpha),',',num2str(dsalphadrho),',',num2str(dsalphadtheta)]);
+        disp(['gradrhon(',num2str(rho),',',num2str(theta),'),dgradrhondrho(',num2str(rho),',',num2str(theta),'),dgradrhondtheta(',num2str(rho),',',num2str(theta),') (T) = ',num2str(gradrhon),',',num2str(dgradrhondrho),',',num2str(dgradrhondtheta)]);
    end
 end
 

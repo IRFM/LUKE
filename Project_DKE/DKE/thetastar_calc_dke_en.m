@@ -84,22 +84,32 @@ for ipsi=1:npsi
     XXthetastar1new(ipsi,:,:)=interp1(B(1:(ntheta+1)/2),theta(1:(ntheta+1)/2),XXBstarnew(ipsi,:,:),method);     %calc theta_k* <pi
     XXthetastar2new(ipsi,:,:)=interp1(B((ntheta+1)/2:end),theta((ntheta+1)/2:end),XXBstarnew(ipsi,:,:),method);%calc theta_k* >pi
     %
-    [dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
-    x1,dummy,dummy,dummy,dummy,y1,dummy,dummy,dummy,dummy,...
-    dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
-    Bx1,dBx1dtheta,dummy,dummy,dummy,By1,dBy1dtheta,dummy,dummy,dummy,...
-    Bz1,dB1zdtheta,dummy,dummy,dummy,Bp1,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
-    dummy,dummy,dummy] = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),squeeze(XXthetastar1new(ipsi,:,:)));
+    equilval1 = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),squeeze(XXthetastar1new(ipsi,:,:)));
+    %
+    x1 = equilval1.x;
+    y1 = equilval1.y;
+    Bx1 = equilval1.Bx;
+    dBx1dtheta = equilval1.dBxdtheta;
+    By1 = equilval1.By;
+    dBy1dtheta = equilval1.dBydtheta;
+    Bz1 = equilval1.Bz;
+    dB1zdtheta = equilval1.dBzdtheta;
+    Bp1 = equilval1.Bp;
     %
     B1 = sqrt(Bx1.^2 + By1.^2 + Bz1.^2);
     dB1dtheta = (Bx1.*dBx1dtheta + By1.*dBy1dtheta + Bz1.*dB1zdtheta)./B1;
     %
-    [dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
-    x2,dummy,dummy,dummy,dummy,y2,dummy,dummy,dummy,dummy,...
-    dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
-    Bx2,dBx2dtheta,dummy,dummy,dummy,By2,dBy2dtheta,dummy,dummy,dummy,...
-    Bz2,dB2zdtheta,dummy,dummy,dummy,Bp2,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
-    dummy,dummy,dummy] = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),squeeze(XXthetastar2new(ipsi,:,:)));
+    equilval2 = equilval_yp(equilDKE.equil_fit,equilDKE.xrho(ipsi),squeeze(XXthetastar2new(ipsi,:,:)));
+    %
+    x2 = equilval2.x;
+    y2 = equilval2.y;
+    Bx2 = equilval2.Bx;
+    dBx2dtheta = equilval2.dBxdtheta;
+    By2 = equilval2.By;
+    dBy2dtheta = equilval2.dBydtheta;
+    Bz2 = equilval2.Bz;
+    dB2zdtheta = equilval2.dBzdtheta;
+    Bp2 = equilval2.Bp;
     %
     B2 = sqrt(Bx2.^2 + By2.^2 + Bz2.^2);
     dB2dtheta = (Bx2.*dBx2dtheta + By2.*dBy2dtheta + Bz2.*dB2zdtheta)./B2;

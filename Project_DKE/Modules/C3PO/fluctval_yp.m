@@ -1,4 +1,4 @@
-function [fluctval] = fluctval_yp(equil_fit,fluct_fit,rho,theta,phi,theta0,phi0,mode)
+function [fluctval] = fluctval_yp(equil_fit,fluct_fit,rho,theta,phi,theta0,phi0)
 %
 % This function calculates the local perturbation of the magnetic equilibrium at any position in the plasma
 %
@@ -11,8 +11,6 @@ function [fluctval] = fluctval_yp(equil_fit,fluct_fit,rho,theta,phi,theta0,phi0,
 %       - phi: toroidal angle (rad) [1,1]
 %       - theta0: reference of the initial poloidal angle for some fluctuation models (rad) [1,1]
 %       - phi0: reference of the initial toroidal angle for some fluctuation models (rad) [1,1]
-%       - mode: coordinate system for the magnetic equilibrium (1) -> (rho or psi,theta), (2) -> (x,y) [1,1]
-%         (optional, default value : 1)
 %
 %   OUTPUT :
 %
@@ -27,26 +25,40 @@ end
 if nargin == 5,
     theta0 = theta;
     phi0 = phi;
-    mode = 1;
 end
 %
 if nargin == 6,
     phi0 = phi;
-    mode = 1;
 end
 %
-if nargin == 7,
-    mode = 1;
-end
+equilval = equilval_yp(equil_fit,rho,theta);%axisymmetric magnetic equilibrium
 %
-[Te,dTedrho,dummy,ne,dnedrho,dummy,zTi,dzTidrho,dummy,zni,dznidrho,dummy,...
-R,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,...
-r,dummy,dummy,salpha,dsalphadtheta,dsalphadrho,calpha,dcalphadtheta,dcalphadrho,...
-dummy,dummy,dummy,dummy,dummy,...
-dummy,dummy,dummy,dummy,dummy,...
-BPHI,dBPHIdtheta,dummy,dBPHIdrho,dummy,...
-BP,dummy,dummy,B,dBdtheta,dBdrho,...
-gradrho,dgradrhodtheta,dgradrhodrho] = equilval_yp(equil_fit,rho,theta,mode);%axisymmetric magnetic equilibrium
+Te = equilval.Te;
+dTedrho = equilval.dTedrho;
+ne = equilval.ne;
+dnedrho = equilval.dnedrho;
+zTi = equilval.zTi;
+dzTidrho = equilval.dzTidrho;
+zni = equilval.zni;
+dznidrho = equilval.dznidrho;
+R = equilval.R;
+r = equilval.r;
+salpha = equilval.salpha;
+dsalphadtheta = equilval.dsalphadtheta;
+dsalphadrho = equilval.dsalphadrho;
+calpha = equilval.calpha;
+dcalphadtheta = equilval.dcalphadtheta;
+dcalphadrho = equilval.dcalphadrho;
+BPHI = equilval.BPHI;
+dBPHIdtheta = equilval.dBPHIdtheta;
+dBPHIdrho = equilval.dBPHIdrho;
+BP = equilval.;
+B = equilval.B;
+dBdtheta = equilval.dBdtheta;
+dBdrho = equilval.dBdrho;
+gradrho = equilval.gradrho;
+dgradrhodtheta = equilval.dgradrhodtheta;
+dgradrhodrho = equilval.dgradrhodrho;
 %
 fluctval.ner = 0;
 fluctval.dnerdrho = 0;
