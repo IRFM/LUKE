@@ -7,11 +7,14 @@ if isfield(lukeobj,'r5x2'),% before sdiag
     %
     status = rmfield(status,'hxr');
     %
-    status.sdiag = zeros(2,size(status.output,2));
-    status.sdiag(:,status.output == 1) = 1;% synthetic diagnostics need distribution
-    %
+end
+%
+if ~isfield(load([pathname,filename],'sdiags'),'sdiags'),
     sdiags = cell(2,size(outputs,2));
     sdiags(:) = {{}};
+    %
+    status.sdiag = zeros(2,size(status.output,2));
+    status.sdiag(:,status.output == 1) = 1;% synthetic diagnostics need distribution
     %
 end
 %
