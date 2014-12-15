@@ -1,14 +1,13 @@
 function [Zpp_f] = interpequilpt_yp(method,f,rho,theta,nharm)
 %
-% Build vectorial tokamak magnetic equilibrium from its numerical counterpart
-% 1-D: use interp1 MatLab built-in function (Hermite polynomial (pchip) spline, bi-cubic, linear,
-% nearest,...)
-% 2-D: use Fourier series expansion for the poloidal dependence and the
-% interp1 for the Fourier series coefficients (spline, bi-cubic, linear,
-% nearest,...)
+% Build interpolated toroidal MHD magnetic equilibrium from its numerical counterpart
+% Piecewise polynomials (1D, radial) or piecewise polynomials + Fourier series (2D, radial + poloidal)
+%
+% 1-D: use interp1 MatLab built-in function (Hermite polynomial (pchip) spline, bi-cubic, linear, nearest,...)
+% 2-D: use Fourier series expansion for the poloidal dependence and the interp1 for the Fourier series coefficients (spline, bi-cubic, linear, nearest,...)
 %
 % INPUT
-%    - method: interpolation method (Hermite polynomial(pchip), spline, nearest, linear, bicubic, ...) [nchar,1]
+%    - method: interpolation method -> Hermite polynomial(pchip), spline, nearest, linear, bicubic, ...) [nchar,1]
 %    - f: 1-D (rho) or 2-D (rho,theta) function to interpolate [nrho,1] or [nrho,mtheta]
 %    - rho: normalized minor radius [nrho,1]
 %    - theta: poloidal flux grid coordinate [1,ntheta]
