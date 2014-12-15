@@ -298,7 +298,10 @@ end
 %
 dtn_phase = dkeparam_in.Nfluct*dtnmin_fluct;%time for phase renewal
 %
-if isscalar(dkeparam_in.tn) && imag(dkeparam_in.tn) > 0,% the number of fluctuation iterations is specified by imag(tn)
+if isfield(equil.fluct,'itnmax'),
+    itnmax = equil.fluct.itnmax;
+    tn_in = itnmax*dtn_phase;%final time
+elseif isscalar(dkeparam_in.tn) && imag(dkeparam_in.tn) > 0,% the number of fluctuation iterations is specified by imag(tn)
     itnmax = imag(dkeparam_in.tn);
     tn_in = itnmax*dtn_phase;%final time
 elseif isscalar(dkeparam_in.tn) && ~isnan(dkeparam_in.tn),% the number of fluctuation iterations is specified by tn and Nfluct*dtnmin_fluct
