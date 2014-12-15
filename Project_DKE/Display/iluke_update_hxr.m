@@ -104,6 +104,7 @@ else
     end    
     lukeobj.hxrbin.select.string{nbins+1} = ['k (keV) > ',num2str(hxr.exp.energy(nbins))];
     %
+    clear ibin nbins
 end
 %
 if ~isempty(hxr.exp) && ic > 0 && any(any(any(~isnan(hxr.exp.data(:,:,hxr.cam{ic}.chordsind))))),
