@@ -403,11 +403,13 @@ lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'angles',{'title','mod
 lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'spectrum',{'title','modify','load','save','reset','','text'},'LH Spectrum',style.infoheightcorr - 3*style.butheightcorr,style);
 lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'launch',{'title','modify','load','save','reset','','text'},'Launch',style.infoheightcorr - 4*style.butheightcorr,style);
 lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'c3poparam',{'title','modify','load','save','reset','','text'},'Parameters',style.infoheightcorr - 5*style.butheightcorr,style);
+lukeobj = iluke_controls(lukeobj.infopanel.handle,lukeobj,'fluct',{'title','modify','load','save','reset','','text'},'Fluctuations',style.infoheightcorr - 6*style.butheightcorr,style);
 
 set(lukeobj.angles.text.handle,'HorizontalAlignment','left');
 set(lukeobj.spectrum.text.handle,'HorizontalAlignment','left');
 set(lukeobj.launch.text.handle,'HorizontalAlignment','left');
 set(lukeobj.c3poparam.text.handle,'HorizontalAlignment','left');
+set(lukeobj.fluct.text.handle,'HorizontalAlignment','left');
 
 style.c3powidth = (style.panelwidth - 4*style.buthsep)/3;
 

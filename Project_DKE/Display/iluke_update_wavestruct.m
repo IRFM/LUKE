@@ -59,11 +59,16 @@ if isempty(wavestructids) || (curtime > 0 && all(status.wavestructs(:,curtime) <
     lukeobj.runc3pooptim.state = 'off';    
     lukeobj.wsparamtitle.state = 'off';
     lukeobj.wsparam.state = 'off';
+    lukeobj.fluct.modify.state = 'off';
+    lukeobj.fluct.load.state = 'off';
+    lukeobj.fluct.save.state = 'off';
+    lukeobj.fluct.reset.state = 'off';
     %
     lukeobj.spectrum.text.string = '';
     lukeobj.angles.text.string = '';
     lukeobj.launch.text.string = '';
     lukeobj.c3poparam.text.string = '';
+    lukeobj.fluct.text.string = '';
     %
     if flag_external,
         lukeobj.wavestruct.import.highlight = true;
@@ -151,6 +156,27 @@ else
             lukeobj.c3poparam.reset.state = 'on';
         else
             lukeobj.c3poparam.reset.state = 'off';
+        end
+        %
+        % fluct
+        %
+        lukeobj.fluct.load.state = 'on';
+        if isfield(wavestruct,'fluctparam') && ~isempty(wavestruct.fluctparam),
+            lukeobj.fluct.modify.state = 'on';
+            lukeobj.fluct.save.state = 'on';        
+            if isfield(wavestruct.fluctparam,'orig'),
+                lukeobj.fluct.reset.state = 'on';
+            else
+                lukeobj.fluct.reset.state = 'off';
+            end
+            if isfield(wavestruct.fluctparam,'id'),
+                lukeobj.fluct.text.string = wavestruct.fluctparam.id;
+            end
+        else
+            lukeobj.fluct.modify.state = 'off';
+            lukeobj.fluct.save.state = 'off';
+            lukeobj.fluct.reset.state = 'off';
+            lukeobj.fluct.text.string = '';
         end
         %
         % c3po dist computing
@@ -290,7 +316,51 @@ else
             lukeobj.c3poparam.text.string = '< time specific >';
         end
         %
-        clear itlist iwlist rtparam rtparam_comp comptest
+        % fluct
+        %
+        lukeobj.fluct.load.state = 'on';
+        %
+        comptest = true;
+        %
+        if isfield(wavestructss{iw,itlist(1)},'fluctparam'),
+            fluct_comp = wavestructss{iw,itlist(1)}.fluctparam;
+        else
+            fluct_comp = '';
+        end
+        %
+        for it = 2:length(itlist),
+            if isfield(wavestructss{iw,itlist(it)},'fluctparam'),
+                comptest = comptest && comp_struct_jd(fluct_comp,wavestructss{iw,itlist(it)}.fluctparam,0);
+            else
+                comptest = comptest && comp_struct_jd(fluct_comp,'',0);
+            end
+        end
+        %
+        if ~comptest,% different fluct structure for various times
+            lukeobj.fluct.modify.state = 'off';
+            lukeobj.fluct.save.state = 'off';
+            lukeobj.fluct.reset.state = 'off';
+            lukeobj.fluct.text.string = '< time specific >';
+        elseif ~isempty(fluct_comp),% same fluct structure for all times
+            lukeobj.fluct.modify.state = 'on';
+            lukeobj.fluct.save.state = 'on';
+            %
+            if isfield(fluct_comp,'orig'),
+                lukeobj.fluct.reset.state = 'on';
+            else
+                lukeobj.fluct.reset.state = 'off';
+            end
+            if isfield(fluct_comp,'id'),
+                lukeobj.fluct.text.string = fluct_comp.id;
+            end
+        else
+            lukeobj.fluct.modify.state = 'off';
+            lukeobj.fluct.save.state = 'off';
+            lukeobj.fluct.reset.state = 'off';
+            lukeobj.fluct.text.string = '';
+        end
+        %
+        clear itlist iwlist rtparam rtparam_comp comptest fluct_comp
     end
     %
     clear iw_curtime wavestructid

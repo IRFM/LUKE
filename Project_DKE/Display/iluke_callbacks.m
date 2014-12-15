@@ -1865,6 +1865,92 @@ switch action
         %
         clear iw
         %
+    case 'fluctload'
+        %
+        % loading fluct parameters
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
+        sbase = 'FLUCT';
+        filestr = [sbase,'_*.mat'];
+        %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
+        %
+        if filename ~= 0,
+            %
+            data = load([pathname,filename],'fluctparam');
+            %
+            loadmode = iselect_jd({'Yes','No'},'Do you want to apply this fluctuation model for all wavestructs ?',lukeobj.infopanel.handle,style,1);
+            %
+            if curtime > 0,
+                iw_curtime = find(status.wavestructs(:,curtime) == 1);
+                if loadmode == 1,
+                    iiw_select = 1:length(iw_curtime);
+                else
+                    iiw_select = lukeobj.wavestruct.select.value;
+                end
+                %
+                for iiw = iiw_select,
+                    if isfield(wavestructss{iw_curtime(iiw),curtime},'fluctparam') && ~isempty(wavestructss{iw_curtime(iiw),curtime}.fluctparam),
+                        orig = wavestructss{iw_curtime(iiw),curtime}.fluctparam;
+                    else
+                        orig = '';
+                    end
+                    %
+                    wavestructss{iw_curtime(iiw),curtime}.fluctparam = data.fluctparam;
+                    %
+                    if ~isempty(orig),
+                        wavestructss{iw_curtime(iiw),curtime}.fluctparam.orig = orig;
+                    end                    
+                end
+                %
+                clear iw_curtime
+            else
+                if loadmode == 1,
+                    iiw_select = 1:length(wavestructids);
+                else
+                    iiw_select = lukeobj.wavestruct.select.value;
+                end
+                %
+                for iiw = iiw_select,
+                    itlist = find(status.wavestructs(iiw,:) == 1);% list of times
+                    %
+                    for it = itlist,
+                        %
+                        if isfield(wavestructss{iiw,it},'fluctparam') && ~isempty(wavestructss{iiw,it}.fluctparam),
+                            orig = wavestructss{iiw,it}.fluctparam;
+                        else
+                            orig = '';
+                        end
+                        %
+                        wavestructss{iiw,it}.fluctparam = data.fluctparam;
+                        %
+                        if ~isempty(orig),
+                            wavestructss{iiw,it}.fluctparam.orig = orig;
+                        end             
+                    end
+                end
+                %
+                clear itlist
+                %                
+            end
+            %
+            if isfield(data.fluctparam,'id')
+                lukeobj.fluct.text.string = data.fluctparam.id;
+            else
+                lukeobj.fluct.text.string = filename;%[pathname,filename];
+            end
+            %
+            status.data = 2;
+            %
+            clear loadmode data iiw_select orig
+            %
+        end  
+        %
+        clear sbase filestr filename pathname
+        %
+        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
+        %
     case 'c3pooptim'
         %
         % optimize Bt, Zp & launching angles to deposit power in target area
@@ -2571,7 +2657,7 @@ switch action
         %
         if filename ~= 0,
             %
-            save([pathname,filename],'-struct','dkeparam');
+            save([pathname,filename],'dkeparam','-v7.3');
             %
         end  
         %
