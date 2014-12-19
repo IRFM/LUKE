@@ -52,8 +52,19 @@ if isfield(ripple,'id'),
     simulid = [simulid,'_',ripple.id];
 end
 %
-for iw = 1:length(waves),
-    simulid = [simulid,'_',waves{iw}.id];
+if ~isempty(waves),
+    if isstruct(waves{1}),%no fluctuations
+        for iw = 1:length(waves),
+            simulid = [simulid,'_',waves{iw}.id];
+        end
+    else %with fluctuations
+        for iw = 1:length(waves{1}),
+            is1 = max(strfind(waves{1}{iw},'C3PO_'));%wavess contains wave files 
+            is2 = strfind(waves{1}{iw},'_itn_1.mat') - 1;
+            %
+            simulid = [simulid,'_',waves{1}{iw}(is1:is2)];
+        end        
+    end
 end
 %
 for iw = 1:length(wavestructs),
