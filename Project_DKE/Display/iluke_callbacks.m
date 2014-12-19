@@ -66,7 +66,7 @@ switch action
                 %
                 % iluke made LUKE_DATA_*.mat file
                 %
-                load([pathname,filename],'lukeobjmod','dkeparams','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','wavestructids','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
+                load([pathname,filename],'lukeobjmod','dkeparams','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','fluctparams','wavestructss','wavestructids','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
                 lukeobj = conc_struct_jd(lukeobj,lukeobjmod);
                 %
                 iluke_updateoldsimul;
@@ -147,9 +147,9 @@ switch action
             %
             % select fields to save and remote subfields handle 
             %
-            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotimes','data','equil','ohm','transp','ripple','wave','wavestruct','luke','sdiag','param','lukeid','timedep'});
+            lukeobjmod = selectfields_jd(lukeobj,{'tokamak','shotnum','shotimes','data','equil','ohm','transp','ripple','wave','fluct','wavestruct','luke','sdiag','param','lukeid','timedep'});
             lukeobjmod = rmfields_jd(lukeobjmod,{'handle','position'},1);
-            save([pathname,filename],'lukeobjmod','dkeparams','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','wavestructss','wavestructids','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
+            save([pathname,filename],'lukeobjmod','dkeparams','dkedisplay','external','equils','ohms','transpfastes','ripples','wavess','fluctparams','wavestructss','wavestructids','outputs','jobs','sdiags','hxr','status','tokamak','shotnum','shotimes');
             %
             lukeobj.simulfile.string = filename;%[pathname,filename];
             %
@@ -1179,6 +1179,111 @@ switch action
         lukeobj.plot2.gindex(it_g) = ngraphs + 2;
         %
         clear it_g ngraphs newgraph1_handle newgraph2_handle 
+        %        
+    case 'fluctmodify'
+        %
+        % modify fluct parameters
+        %
+        if curtime > 0,
+            fluctparam = fluctparams{curtime};
+        else
+            fluctparam = fluctparams{1};
+        end  
+        %
+        if isfield(fluctparam,'orig'),
+            orig = fluctparam.orig;
+        else
+            orig = fluctparam;
+        end
+        %
+        [fluctparam,mod] = imod_struct_jd(fluctparam,'fluctparam',1,true,struct,style);
+        %
+        if any(mod),
+            %
+            if curtime > 0,
+                fluctparams{curtime} = fluctparam;
+                fluctparams{curtime}.orig = orig;
+                status.fluct(curtime) = 2;%recalculate equil
+                status.waves(curtime) = 0;%waves are outdated
+            else
+                for it = 1:ntimes,
+                    fluctparams{it} = fluctparam;
+                    fluctparams{it}.orig = orig;
+                    status.fluct(it) = 2;%recalculate equil
+                    status.waves(it) = 0;%waves are outdated
+                end
+                %
+                clear it
+            end
+            %
+            if isfield(fluctparam,'id')
+                lukeobj.fluct.text.string = fluctparam.id;
+            else
+                lukeobj.fluct.text.string = '< not saved >';
+            end
+            %
+            status.data = 2;
+            %
+        end
+        %
+        clear fluctparam orig mod
+        %        
+    case 'fluctload'
+        %
+        % loading fluct parameters
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
+        sbase = 'FLUCT';
+        filestr = [sbase,'_*.mat'];
+        %
+        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
+        %
+        if filename ~= 0,
+            %
+            data = load([pathname,filename],'fluctparam');
+            %
+            if ~isfield(data.fluctparam,'itnmax'),
+                itnmax = iselect_jd({},...
+                    'Number of fluctuating states',...
+                    lukeobj.infopanel.handle,style.editselectstyle,300,'edit');
+%                     'Do you want to specify the number of fluctuating states (for statistics), i.e. [300]? Enter [0] to calculate from dkeparam.tn.',...
+%                     lukeobj.infopanel.handle,style.editselectstyle,300,'edit');
+                if itnmax > 0,
+                    data.fluctparam.itnmax = itnmax;
+                end
+                clear itnmax
+            end
+            %
+            if curtime > 0,
+                fluctparams{curtime} = data.fluctparam;
+                status.fluct(curtime) = 2;%recalculate equil
+                status.waves(curtime) = 0;%waves are outdated
+            else
+                for it = 1:ntimes,
+                    fluctparams{it} = data.fluctparam;
+                    status.fluct(it) = 2;%recalculate equil
+                    status.waves(it) = 0;%waves are outdated
+                end
+                %
+                clear it
+            end
+            %
+            if isfield(data.fluctparam,'id')
+                lukeobj.fluct.text.string = data.fluctparam.id;
+            else
+                lukeobj.fluct.text.string = filename;%[pathname,filename];
+            end
+            %
+            status.data = 2;
+            %
+            clear data
+            %
+        end  
+        %
+        clear sbase filestr filename pathname
+        %
+        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
         %
     case 'wavestructimport'
         %
@@ -1865,92 +1970,6 @@ switch action
         %
         clear iw
         %
-    case 'fluctload'
-        %
-        % loading fluct parameters
-        %
-        lukeobj = iluke_info(lukeobj,'');% disable info display
-        %
-        sbase = 'FLUCT';
-        filestr = [sbase,'_*.mat'];
-        %
-        [filename,pathname] = igetfile_jd(1,filestr,['Please select the ',sbase,' file(s)'],'',0);
-        %
-        if filename ~= 0,
-            %
-            data = load([pathname,filename],'fluctparam');
-            %
-            loadmode = iselect_jd({'Yes','No'},'Do you want to apply this fluctuation model for all wavestructs ?',lukeobj.infopanel.handle,style,1);
-            %
-            if curtime > 0,
-                iw_curtime = find(status.wavestructs(:,curtime) == 1);
-                if loadmode == 1,
-                    iiw_select = 1:length(iw_curtime);
-                else
-                    iiw_select = lukeobj.wavestruct.select.value;
-                end
-                %
-                for iiw = iiw_select,
-                    if isfield(wavestructss{iw_curtime(iiw),curtime},'fluctparam') && ~isempty(wavestructss{iw_curtime(iiw),curtime}.fluctparam),
-                        orig = wavestructss{iw_curtime(iiw),curtime}.fluctparam;
-                    else
-                        orig = '';
-                    end
-                    %
-                    wavestructss{iw_curtime(iiw),curtime}.fluctparam = data.fluctparam;
-                    %
-                    if ~isempty(orig),
-                        wavestructss{iw_curtime(iiw),curtime}.fluctparam.orig = orig;
-                    end                    
-                end
-                %
-                clear iw_curtime
-            else
-                if loadmode == 1,
-                    iiw_select = 1:length(wavestructids);
-                else
-                    iiw_select = lukeobj.wavestruct.select.value;
-                end
-                %
-                for iiw = iiw_select,
-                    itlist = find(status.wavestructs(iiw,:) == 1);% list of times
-                    %
-                    for it = itlist,
-                        %
-                        if isfield(wavestructss{iiw,it},'fluctparam') && ~isempty(wavestructss{iiw,it}.fluctparam),
-                            orig = wavestructss{iiw,it}.fluctparam;
-                        else
-                            orig = '';
-                        end
-                        %
-                        wavestructss{iiw,it}.fluctparam = data.fluctparam;
-                        %
-                        if ~isempty(orig),
-                            wavestructss{iiw,it}.fluctparam.orig = orig;
-                        end             
-                    end
-                end
-                %
-                clear itlist
-                %                
-            end
-            %
-            if isfield(data.fluctparam,'id')
-                lukeobj.fluct.text.string = data.fluctparam.id;
-            else
-                lukeobj.fluct.text.string = filename;%[pathname,filename];
-            end
-            %
-            status.data = 2;
-            %
-            clear loadmode data iiw_select orig
-            %
-        end  
-        %
-        clear sbase filestr filename pathname
-        %
-        lukeobj = iluke_info(lukeobj,'c3po');% enable c3po display
-        %
     case 'c3pooptim'
         %
         % optimize Bt, Zp & launching angles to deposit power in target area
@@ -2031,52 +2050,54 @@ switch action
         %
         lukeobj = iluke_info(lukeobj,'');% disable info display
         %
+        calc_mask = zeros(size(status.wavestructs));
+        %
         if curtime > 0,
             %
             iw_curtime = find(status.wavestructs(:,curtime) == 1);
-            iw_flag = iw_curtime(iw);
+            %
+            calc_mask(iw_curtime(iw),curtime) = 1;
             %
             clear iw_curtime
-            %
-            wavestructs = wavestructss(iw_flag,curtime);
-            it_flag = curtime*ones(1,length(wavestructs));
-            %
-            mdce_mode = str2double(lukeobj.wsparam.string);
             %
         else% treat all shot times
             %
             if ~isscalar(iw),% treat all wavestructs
                 %
-                wavestructs = wavestructss(status.wavestructs == 1);
-                [iw_flag,it_flag] = find(status.wavestructs == 1);
+                calc_mask(status.wavestructs == 1) = 1;
                 %
             else% treat only wavestructs with  wavestruct.id = wavestruct.select.string{iw};
                 %
-                wavestructs = wavestructss(iw,status.wavestructs(iw,:) == 1);
-                it_flag = find(status.wavestructs(iw,:) == 1);
-                iw_flag = repmat(iw,size(it_flag));
+                calc_mask(iw,status.wavestructs(iw,:) == 1) = 1;
                 %
             end
             %
-            mdce_mode = iselect_jd(dkepath.distprofiles,'Distribution of calc. : ',lukeobj.infopanel.handle,style.distselectstyle,1,'popupmenu') - 1;
-            %
-            if mdce_mode > 2,
-                mdce_mode = 2 - mdce_mode;%use of remcomputing with negative mdce_mode
-            end
-            %
+        end
+        %
+        mdce_mode = iselect_jd(dkepath.distprofiles,'Distribution of calc. : ',lukeobj.infopanel.handle,style.distselectstyle,1,'popupmenu') - 1;
+        %
+        if mdce_mode > 2,
+            mdce_mode = 2 - mdce_mode;%use of remcomputing with negative mdce_mode
         end
         %
         wavesolverparam.clustermode.wave_solver_yp.scheduler.mode = mdce_mode;
         %
         set(lukeobj.busy.handle,'Visible','on');drawnow;
-        [newwaves] = wave_distribution_yp(dkepath,wavesolverparam,wavestructs);
+        [newwaves,it_flag,itn_flag] = iluke_wave_jd(dkepath,equils,wavestructss,calc_mask,wavesolverparam);
         set(lukeobj.busy.handle,'Visible','off');drawnow;
         %
         if ~isempty(newwaves),
             %
-            for iiw = 1:length(wavestructs),
+            for iiw = 1:length(it_flag),
                 %
-                wavess{it_flag(iiw)}{end+1} = newwaves{iiw};
+                if itn_flag(iiw) == 0,% to fluctuations for this time
+                    wavess{it_flag(iiw)}{end+1} = newwaves{iiw};
+                else
+                    if (length(wavess{it_flag(iiw)}) < itn_flag(iiw)) || ~iscell(wavess{it_flag(iiw)}{itn_flag(iiw)}),
+                        wavess{it_flag(iiw)}{itn_flag(iiw)} = {};
+                    end
+                    wavess{it_flag(iiw)}{itn_flag(iiw)}{end+1} = newwaves{iiw};
+                end
                 %
                 status.waves(it_flag(iiw)) = 1;
                 %
@@ -2365,27 +2386,78 @@ switch action
             opt.xvar = 'p';
             %
             waves = wavess{curtime};
-            if length(waves) == 1,% single wave, can be subdivided for plotting
-                wave = waves{1};
-                nrays = length(wave.rays);
-                if nrays > 1 && iselect_jd({'No','Yes'},'Do you want to subdivide the rays into groups for plotting ? ',lukeobj.infopanel.handle,style,1) == 2,
-                    %
-                    raygroups = iselect_jd({},...
-                        ['Please select groups of rays in the list 1->',num2str(nrays),'. Ex : {1:',num2str(fix(nrays/2)),',',num2str(fix(nrays/2)+1),':',num2str(nrays),'} '],...
-                        lukeobj.infopanel.handle,style.editselectstyle,{1:nrays},'edit');
-                    %
-                    nwaves = length(raygroups);
-                    waves = cell(1,nwaves);
-                    for iw = 1:nwaves,
-                        waves{iw} = wave;
-                        waves{iw}.id = [waves{iw}.id,'_',num2str(iw)];
-                        waves{iw}.rays = waves{iw}.rays(raygroups{iw});
+            %
+            if status.fluct(curtime) == 0,% no fluctuations
+                %
+                titletext = 'Select the wave structure(s) to plot :';   
+                nw = length(waves);
+                s = cell(1,nw);
+                for iw = 1:nw,
+                    s{iw} = ['Wave # ',num2str(iw),' : ',waves{iw}.id];
+                end
+                %    
+                iw = iselect_jd(s,titletext,lukeobj.infopanel.handle,style,1,'listbox');
+                %
+                clear s nw titletext
+                %
+                if length(iw) == 1,% single wave, can be subdivided for plotting
+                    wave = waves{iw};
+                    nrays = length(wave.rays);
+                    if nrays > 1 && iselect_jd({'No','Yes'},'Do you want to subdivide the rays into groups for plotting ? ',lukeobj.infopanel.handle,style,1) == 2,
+                        %
+                        raygroups = iselect_jd({},...
+                            ['Please select groups of rays in the list 1->',num2str(nrays),'. Ex : {1:',num2str(fix(nrays/2)),',',num2str(fix(nrays/2)+1),':',num2str(nrays),'} '],...
+                            lukeobj.infopanel.handle,style.editselectstyle,{1:nrays},'edit');
+                        %
+                        nwaves = length(raygroups);
+                        waves = cell(1,nwaves);
+                        for iw = 1:nwaves,
+                            waves{iw} = wave;
+                            waves{iw}.id = [waves{iw}.id,'_',num2str(iw)];
+                            waves{iw}.rays = waves{iw}.rays(raygroups{iw});
+                        end
+                        %
+                        clear nwaves iw
                     end
                     %
-                    clear nwaves iw
+                    clear wave nrays 
+                else
+                    waves = waves(iw); 
                 end
                 %
-                clear wave nrays 
+                lukeobj.wave.text.string = [num2str(length(wavess{curtime})),' wave structure(s)'];
+                lukeobj.infotext.string = iluke_waveinfo(wavess{curtime});
+                %
+            else% with fluctuations
+                %
+                titletext = 'Select the wave structure to plot :';   
+                nw = length(waves{1});
+                s = cell(1,nw);
+                for iw = 1:nw,
+                    is1 = max(strfind(waves{1}{iw},'WAVE_'));%wavess contains wave files 
+                    is2 = strfind(waves{1}{iw},'_itn_1.mat') - 1;
+                    s{iw} = ['Wave # ',num2str(iw),' : ',waves{1}{iw}(is1:is2)];
+                end
+                %    
+                iw = iselect_jd(s,titletext,lukeobj.infopanel.handle,style,1,'buttongroup');
+                %
+                clear s nw titletext
+                %
+                itn_list = iselect_jd({},'Select fluctuations states to show',...
+                    lukeobj.infopanel.handle,style.editselectstyle,[1,2,3],'edit');
+                %
+                % load selected waves
+                %
+                ntn = length(itn_list);
+                newwaves = cell(1,ntn);
+                for itn = 1:ntn,
+                    data = load(waves{itn_list(itn)}{iw},'wave');
+                    newwaves{itn} = data.wave;
+                end
+                waves = newwaves;
+                %
+                lukeobj.wave.text.string = [num2str(length(wavess{curtime}{1})),' wave structure(s)'];
+                lukeobj.infotext.string = iluke_waveinfo(wavess{curtime});
             end
             %
             graph_wave_jd(equils{curtime},waves,opt.nr_dep,opt,opt.rho_disp,opt.ymask,opt.xvar);
@@ -2396,18 +2468,16 @@ switch action
             graphs(2) = iluke_graphs(lukeobj.plot2.handle,1,'top view','waves');% includes legend
             graphs(3) = iluke_graphs(lukeobj.plot3.handle,1,'linear damping','waves');% includes legend
             %
-            lukeobj.wave.text.string = [num2str(length(wavess{curtime})),' wave structure(s)'];
-            lukeobj.infotext.string = iluke_waveinfo(wavess{curtime});
-            %
-            lukeobj = iluke_info(lukeobj,'text');% enable info display
-            %
         else
+            %
+            mask_disp = status.fluct == 0;%select times without fluctuations
+            %
             newgraph4_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
             newgraph5_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
             %
             set(lukeobj.busy.handle,'Visible','on');drawnow;
             %
-            wave_disp_outputs_mt(wavess,shotimes,style,[newgraph1_handle,newgraph2_handle,newgraph3_handle,newgraph4_handle,newgraph5_handle]);
+            wave_disp_outputs_mt(wavess(mask_disp),shotimes(mask_disp),style,[newgraph1_handle,newgraph2_handle,newgraph3_handle,newgraph4_handle,newgraph5_handle]);
             %
             set(lukeobj.busy.handle,'Visible','off');drawnow;
             %
@@ -2769,6 +2839,12 @@ switch action
         % fast electron bremsstrahlung experimental data
         %
         hxr.exp = iluke_hxrexpimport(external.hxr); 
+        %
+    case 'hxrexpclear'
+        %
+        % fast electron bremsstrahlung experimental data
+        %
+        hxr.exp = ''; 
         %
     case 'hxrexpdisp'
         %
