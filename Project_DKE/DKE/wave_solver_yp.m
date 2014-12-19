@@ -53,3 +53,15 @@ elseif strcmp(wavestruct.wavesolver,'AMR'),% AMR ray tracing
 else
     error('This wave solver is not linked to LUKE.')
 end
+%
+if isfield(wavestruct,'savedir') && ischar(wavestruct.savedir),
+    if ~isempty(wavestruct.savedir) && ~exist(wavestruct.savedir,'dir'),
+        mkdir(wavestruct.savedir)
+    end
+    filename = [wavestruct.savedir,filesep,'WAVE_',wave.equil_id,'_',wave.id,'.mat'];
+    save(filename,'wave');
+    wave = filename;
+end
+
+
+
