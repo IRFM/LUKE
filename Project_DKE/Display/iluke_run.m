@@ -29,6 +29,8 @@ if strcmp(action,'lukestart'),
     %
     dkepath = lukeschedulerparam(dkepath,mdce_mode,remnum,returnmode,transpmode,false);
     %
+    opt.backup = 1;% save intermediate results with fluctuations
+    %
     if curtime > 0,
         %
         opt.save = 0;% (1): save LUKE_RESULTS or return error (0): return results or error
@@ -39,7 +41,23 @@ if strcmp(action,'lukestart'),
         lukestructs.simul.id = lukeobj.lukeid.string;
         if remnum == 0 && mdce_mode <= 3,% local calculation
             lukestructs.simul.path = workdir;
-        end        
+        else
+            lukestructs.simul.path = './';
+        end  
+        %
+        if isfield(equils{curtime},'fluct') && exist([lukestructs.simul.path,'backup_',lukestructs.simul.id,'.mat'],'file'),
+            %
+            lukeobj = iluke_info(lukeobj,'');% disable info display
+            %
+            if iselect_jd({'No','Yes'},'Do you want to load backup file and continue simulation ? ',lukeobj.infopanel.handle,style,1) == 2,
+                %
+                opt.backup = -2;% save intermediate results with fluctuations
+                %
+            end
+            %
+            lukeobj = iluke_info(lukeobj,'luke');drawnow;% disable info display
+            %
+        end
         %
         lukestructs.opt = opt;
         lukestructs.dkedisplay = dkedisplay;
