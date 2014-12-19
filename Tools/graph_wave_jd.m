@@ -8,7 +8,7 @@ if nargin < 10
     styles = {'-','-','-','-','-','-'};
 end
 if nargin < 9
-    colors = {'b','r',[0,0.5,0],'m','c','y'};
+    colors = {'b','r','g','m','c','y'};
 end
 if nargin < 8
     yabs = NaN;
