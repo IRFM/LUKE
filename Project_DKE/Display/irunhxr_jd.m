@@ -231,11 +231,12 @@ else% no data or external with iluke
     end
 end
 %
+hxrspec.kfit = hxrparam.kphot(1:2:end);
+%
 if any(isnan(energy)),% no or useless exp. data
     %
     hxrexp = NaN;
     dt = 1;
-    hxrspec.kfit = hxrparam.kphot;
     %
 else
     %
@@ -253,8 +254,6 @@ else
             end
         end
     end
-    %
-    energy = energy.';
     %
     % time sample of experimental data
     %
@@ -304,10 +303,6 @@ else
         %
         hxrexp = hxr;
     end
-    %
-    % redefine kdiag according to measurements
-    %
-    hxrspec.kfit = energy.';
     %
 end        
 %
