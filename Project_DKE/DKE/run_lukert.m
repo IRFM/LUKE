@@ -242,11 +242,13 @@ disp(' ');
 itnmin = 1;
 wavetype = 0;
 %
-for iw = 1:length(waves),
-    if strcmp(waves{iw}.equil_id,equil.id) == 0,
-        error('The wave structure was build with an inconsistent equilibrium')
-    end
-end   
+if ~isempty(waves) && isstruct(waves{1}),% no fluctuations
+    for iw = 1:length(waves),
+        if strcmp(waves{iw}.equil_id,equil.id) == 0,
+            error('The wave structure was build with an inconsistent equilibrium')
+        end
+    end   
+end
 %
 f0struct = [];%Ray absorption in C3PO is first calculated with a thermal electron distribution function
 %
@@ -301,6 +303,7 @@ dtn_phase = dkeparam_in.Nfluct*dtnmin_fluct;%time for phase renewal
 if isfield(equil.fluct,'itnmax'),
     itnmax = equil.fluct.itnmax;
     tn_in = itnmax*dtn_phase;%final time
+    dkeparam_in.dtn = 1i;
 elseif isscalar(dkeparam_in.tn) && imag(dkeparam_in.tn) > 0,% the number of fluctuation iterations is specified by imag(tn)
     itnmax = imag(dkeparam_in.tn);
     tn_in = itnmax*dtn_phase;%final time
@@ -315,6 +318,13 @@ end
 dkeparam_in = rmfield(dkeparam_in,'tn');%tn is specified in iteration loop
 %
 byPnonabs = NaN;% leftover power in each wave
+%
+if itnmax > 1 && ~isempty(waves),% waves calculated beforehand for each fluctuation state
+    twaves = waves;
+    clear waves
+else
+    twaves = [];
+end
 %
 if opt.backup >= 0;% start simulation from beginning
     %
@@ -441,6 +451,8 @@ for itn = itnmin:itnmax,%time evolution
     %
     if ~isempty(wavestructs), 
         [waves,wavestructs,byisel] = wave_distribution_yp(dkepath,dkeparam,wavestructs,f0struct,dtnmin_fluct/mksa.nhu_ref,byPnonabs);%ray propagation in fluctuating plasma. The fluctuation phase in wavestructs is output to be later re-used by the same function taling into account of the phase evolution
+    elseif ~isempty(twaves), 
+        [waves,byisel] = wave_power_jd(dkeparam,twaves{itn},byPnonabs);%ray propagation in fluctuating plasma. The fluctuation phase in wavestructs is output to be later re-used by the same function taling into account of the phase evolution        
     end
     %
     calctime(itn).waves = toc(time_waves);
@@ -479,12 +491,12 @@ for itn = itnmin:itnmax,%time evolution
         loadstructs.coll_dke_jd.XXfM = dke_out.XXfM;
         loadstructs.coll_dke_jd.XXILor = dke_out.XXILor;
         %
-        loadstructs.efield_dke_jd.ZXXD_e = dke_out.ZXXD_e;
-        loadstructs.efield_dke_jd.ZXXF_e = dke_out.ZXXF_e;
-        loadstructs.efield_dke_jd.ZXXD_e_tp = NaN;%dke_out.ZXXD_e_tp;
-        loadstructs.efield_dke_jd.ZXXF_e_tp = NaN;%dke_out.ZXXF_e_tp;
-        loadstructs.efield_dke_jd.xepsi = dke_out.xepsi;
-        loadstructs.efield_dke_jd.xEfield_validity = dke_out.xEfield_validity;
+%         loadstructs.efield_dke_jd.ZXXD_e = dke_out.ZXXD_e;
+%         loadstructs.efield_dke_jd.ZXXF_e = dke_out.ZXXF_e;
+%         loadstructs.efield_dke_jd.ZXXD_e_tp = NaN;%dke_out.ZXXD_e_tp;
+%         loadstructs.efield_dke_jd.ZXXF_e_tp = NaN;%dke_out.ZXXF_e_tp;
+%         loadstructs.efield_dke_jd.xepsi = dke_out.xepsi;
+%         loadstructs.efield_dke_jd.xEfield_validity = dke_out.xEfield_validity;
         %
 %         loadstructs.rfwave_dke_jd.waveparam = dke_out.waveparam;
 %         loadstructs.rfwave_dke_jd.xyprop_dke = dke_out.xyprop_dke;
@@ -510,48 +522,56 @@ for itn = itnmin:itnmax,%time evolution
     Ptot_0 = 0;%injected power at t=0
     Ptot_inj = 0;%injected power at t=itn
     Pnonabs = 0;%quasilinear power not absorbed at t=itn
-    %    
-    byPnonabs = cell(size(wavestructs));
-    %
-    if ~isinf(dtn_phase),
+    %  
+    if isfield(dkeparam,'enforcepower') && dkeparam.enforcepower,
+        byPnonabs = cell(size(wavestructs));
         %
-        nit_rf = length(dke_out.residue_rf{end});%number of RF iterations in last LUKE time
-        %
-        for ifluct = 1:size(wavestructs,1),
-            for iw = 1:size(wavestructs,2),
-                %
-                % calculate power injected at t=0 et t=tin
-                %
-                if isfield(wavestructs{ifluct,iw}.launch,'bPlhtot'),
-                    yPtot_0 = wavestructs{ifluct,iw}.launch.bPlhtot_in;%LH injected power at t=0
-                    yPtot_inj = wavestructs{ifluct,iw}.launch.bPlhtot;%LH injected power at t=itn
-                elseif isfield(wavestructs{ifluct,iw}.launch,'yP_L'),
-                    yPtot_0 = wavestructs{ifluct,iw}.launch.yP_L_in;%EC injected power at t=0
-                    yPtot_inj = wavestructs{ifluct,iw}.launch.yP_L;%EC injected power at t=itn
-                end
-                %
-                Ptot_0 = Ptot_0 + sum(yPtot_0)/1e6;%LH injected power at t=0
-                Ptot_inj = Ptot_inj + sum(yPtot_inj)/1e6;%LH injected power at t=itn
-                ny = length(yPtot_0);
-                %
-                % calculate ql power not absorbed at t=tn
-                %
-                byPnonabs{ifluct,iw} = yPtot_inj;
-                for iy = 1:ny,% sum over lobes
-                    for iray = 1:length(byisel{ifluct,iw}{iy}),
-                        Pabs_loc = 2*pi*equil.Rp*(dke_out.yP0_2piRp(byisel{ifluct,iw}{iy}(iray)) - dke_out.zP_0_2piRp_mod{nit_rf,end}{byisel{ifluct,iw}{iy}(iray)}(end));
-                        byPnonabs{ifluct,iw}(iy) = byPnonabs{ifluct,iw}(iy) - Pabs_loc;
+        if ~isinf(dtn_phase),
+            %
+            nit_rf = length(dke_out.residue_rf{end});%number of RF iterations in last LUKE time
+            %
+            for ifluct = 1:size(wavestructs,1),
+                for iw = 1:size(wavestructs,2),
+                    %
+                    % calculate power injected at t=0 et t=tin
+                    %
+                    if isfield(wavestructs{ifluct,iw}.launch,'bPlhtot'),
+                        yPtot_0 = wavestructs{ifluct,iw}.launch.bPlhtot_in;%LH injected power at t=0
+                        yPtot_inj = wavestructs{ifluct,iw}.launch.bPlhtot;%LH injected power at t=itn
+                    elseif isfield(wavestructs{ifluct,iw}.launch,'yP_L'),
+                        yPtot_0 = wavestructs{ifluct,iw}.launch.yP_L_in;%EC injected power at t=0
+                        yPtot_inj = wavestructs{ifluct,iw}.launch.yP_L;%EC injected power at t=itn
                     end
+                    %
+                    Ptot_0 = Ptot_0 + sum(yPtot_0)/1e6;%LH injected power at t=0
+                    Ptot_inj = Ptot_inj + sum(yPtot_inj)/1e6;%LH injected power at t=itn
+                    ny = length(yPtot_0);
+                    %
+                    % calculate ql power not absorbed at t=tn
+                    %
+                    byPnonabs{ifluct,iw} = yPtot_inj;
+                    for iy = 1:ny,% sum over lobes
+                        for iray = 1:length(byisel{ifluct,iw}{iy}),
+                            Pabs_loc = 2*pi*equil.Rp*(dke_out.yP0_2piRp(byisel{ifluct,iw}{iy}(iray)) - dke_out.zP_0_2piRp_mod{nit_rf,end}{byisel{ifluct,iw}{iy}(iray)}(end));
+                            byPnonabs{ifluct,iw}(iy) = byPnonabs{ifluct,iw}(iy) - Pabs_loc;
+                        end
+                    end
+                    %
+                    Pnonabs = Pnonabs + sum(byPnonabs{ifluct,iw})/1e6;
+                    %
                 end
-                %
-                Pnonabs = Pnonabs + sum(byPnonabs{ifluct,iw})/1e6;
-                %
+            end
+            %
+            disp(['---> Injected rf power @ itn = 1 : ',num2str(Ptot_0),' (MW)']);
+            disp(['---> Injected rf power @ itn = ',int2str(itn),' : ',num2str(Ptot_inj),' (MW)']);
+            disp(['---> Power not absorbed @ itn = ',int2str(itn),' : ',num2str(Pnonabs),' (MW)']);
+        end
+    else
+        for iw = 1:length(waves),
+            for ib = 1:length(waves{iw}.rays),
+                Ptot_inj = Ptot_inj + 2*pi*equil.Rp*sum(waves{iw}.rays{ib}.P0_2piRp)/1e6;
             end
         end
-        %
-        disp(['---> Injected rf power @ itn = 1 : ',num2str(Ptot_0),' (MW)']);
-        disp(['---> Injected rf power @ itn = ',int2str(itn),' : ',num2str(Ptot_inj),' (MW)']);
-        disp(['---> Power not absorbed @ itn = ',int2str(itn),' : ',num2str(Pnonabs),' (MW)']);
     end
     %
     if itnmax > 1,
