@@ -137,10 +137,14 @@ if returnmode,
 else
     dkepath.clustermode.run_lukert.scheduler.remtimout = 60*24;% (minutes) 24 hours default limit
 end    
-if transpmode,
-    dkepath.clustermode.run_lukert.scheduler.memory = 14000;% (mb) 14 GB default memory with fast electron transport
+if(isfield(dkepath,'luke_memory') && ~isempty(dkepath.luke_memory))
+    dkepath.clustermode.run_lukert.scheduler.memory = dkepath.luke_memory;
 else
-    dkepath.clustermode.run_lukert.scheduler.memory = 7000;% (mb) 7 GB default memory without fast electron transport
+    if transpmode,
+        dkepath.clustermode.run_lukert.scheduler.memory = 14000;% (mb) 14 GB default memory with fast electron transport
+    else
+        dkepath.clustermode.run_lukert.scheduler.memory = 7000;% (mb) 7 GB default memory without fast electron transport
+    end
 end
 %
 dkepath.clustermode.run_lukert.scheduler.walltime = 24;% (hours) 24 hours default limit, corresponds to remtimout for direct modes
