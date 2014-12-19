@@ -10,9 +10,10 @@ chordsind = hxr.cam{ic}.chordsind;% indices for chords of camera # ic
 %
 nshotimes = length(shotimes);
 %
-lukedata = NaN(nshotimes,length(sdiags{1}.Zbremdiag.kfit),length(chordsind));
-%
-if isfield(sdiags{1},'Zbremdiag'),% HXR calculations by LUKE performed,
+if iscell(sdiags) && isfield(sdiags{1},'Zbremdiag'),% HXR calculations by LUKE performed,
+    %
+    lukedata = NaN(nshotimes,length(sdiags{1}.Zbremdiag.kfit),length(chordsind));
+    %
     for ishotime = 1:nshotimes,
         lukedata(ishotime,:,:) = reshape(sdiags{ishotime}.Zbremdiag.brem_bd_diag(chordsind,:).',[1,length(sdiags{1}.Zbremdiag.kfit),length(chordsind)]);
     end
@@ -29,6 +30,10 @@ else
     hxrdata = NaN(size(lukedata));
     flag_exp = false;
     energy = sdiags{1}.Zbremdiag.kfit;
+end
+%
+if ~flag_luke,
+    lukedata = NaN(size(hxrdata));
 end
 %
 if flag_luke && flag_exp,
@@ -170,7 +175,11 @@ else% display for one time step
     timestr = ['t = ',num2str(shotimes,'%6.4f')];
     %
     hxrdata = reshape(hxrdata(it,:,:),[nbins,nchords]);
-    lukedata = reshape(lukedata,[nbins,nchords]);
+    if flag_luke,
+        lukedata = reshape(lukedata,[nbins,nchords]);
+    else
+        lukedata = reshape(lukedata(it,:,:),[nbins,nchords]);
+    end
     %
     if flag_exp,
         CRmin = min(hxrdata(hxrdata(:) > 0));
