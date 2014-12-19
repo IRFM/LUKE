@@ -12,7 +12,7 @@ if nargin < 3,
     Zfluct_ref = '';
 end
 %
-if nargin < 2,
+if nargin < 2 || isempty(fluct_display),
     fluct_display.mode = 0;
     fluct_display.evol = 0;
     fluct_display.stat = 0;
@@ -21,44 +21,71 @@ end
 if nargin < 4,
     leg_ref = cell(1,length(Zfluct_ref));
 end
-%
-data = load(filename,'Ztime','Zitn','Zcurr','ZP0','dke_out','equil','XXf0_t','simul','loadstructs','calctime','lukestructs');
-%
-if isfield(data,'loadstructs') && isfield(data.loadstructs,'equilibrium_jd'),% new run_lukert, backup file, with fluct
-    equilDKE = data.loadstructs.equilibrium_jd.equilDKE;
-    mksa = data.loadstructs.mksacoefbuilder_dke_yp.mksa;
-    radialDKE = data.loadstructs.radialgrid_dke_jd.radialDKE;
-    momentumDKE = data.loadstructs.momentumgrid_dke_jd.momentumDKE;
-    data.XXfM = data.loadstructs.coll_dke_jd.XXfM;
-elseif isfield(data,'loadstructs'),% old run_lukert, backup file, with fluct
-    equilDKE = data.loadstructs.equilDKE;
-    mksa = data.loadstructs.mksa;
-    radialDKE = data.loadstructs.radialDKE;
-    momentumDKE = data.loadstructs.momentumDKE;
-    data.XXfM = data.loadstructs.XXfM;
-elseif isfield(data,'lukestructs'),% new run_lukert, LUKE_RESULTS, no fluct
-    data.Ztime = data.lukestructs.output.dke_out.FPtime;
+
+
+if isstruct(filename),% iluke data
+    %
+    lukedata = load(filename.filename);
+    %
+    ishot = find(lukedata.shotimes == filename.shotime);
+    output = lukedata.outputs{ishot};
+    data.equil = lukedata.equils{ishot};
+    %
+    data.Ztime = output.dke_out.FPtime;
     data.Zitn = length(data.Ztime);
-    data.Zcurr = data.lukestructs.output.Zcurr;
-    data.ZP0 = data.lukestructs.output.ZP0;
-    data.XXf0_t = data.lukestructs.output.dke_out.XXf0;
-    data.XXfM = data.lukestructs.output.dke_out.XXfM;
-    data.simul = data.lukestructs.output.dke_out.simul;
-    data.equil = data.lukestructs.output.dke_out.equil;
-    equilDKE = data.lukestructs.output.equilDKE;
-    mksa = data.lukestructs.output.mksa;
-    radialDKE = data.lukestructs.output.radialDKE;
-    momentumDKE = data.lukestructs.output.momentumDKE;
-else% old run_lukert, LUKE_RESULT, no fluct
-    data = conc_struct_jd(data,load(filename,'equilDKE','mksa','radialDKE','momentumDKE'));
-    data.XXf0_t = data.dke_out.XXf0;
-    data.XXfM = data.dke_out.XXfM;
-    data.simul = data.dke_out.simul;
-    data.equil = data.dke_out.equil;
-    equilDKE = data.equilDKE;
-    mksa = data.mksa;
-    radialDKE = data.radialDKE;
-    momentumDKE = data.momentumDKE;
+    data.Zcurr = output.Zcurr;
+    data.ZP0 = output.ZP0;
+    data.XXf0_t = output.dke_out.XXf0;
+    data.XXfM = output.dke_out.XXfM;
+    data.simul = output.dke_out.simul;
+    data.equil = output.dke_out.equil;
+    equilDKE = output.equilDKE;
+    mksa = output.mksa;
+    radialDKE = output.radialDKE;
+    momentumDKE = output.momentumDKE;
+    %
+    clear lukedata ishot output 
+    %
+else
+    %
+    data = load(filename,'Ztime','Zitn','Zcurr','ZP0','dke_out','equil','XXf0_t','simul','loadstructs','calctime','lukestructs');
+    %
+    if isfield(data,'loadstructs') && isfield(data.loadstructs,'equilibrium_jd'),% new run_lukert, backup file, with fluct
+        equilDKE = data.loadstructs.equilibrium_jd.equilDKE;
+        mksa = data.loadstructs.mksacoefbuilder_dke_yp.mksa;
+        radialDKE = data.loadstructs.radialgrid_dke_jd.radialDKE;
+        momentumDKE = data.loadstructs.momentumgrid_dke_jd.momentumDKE;
+        data.XXfM = data.loadstructs.coll_dke_jd.XXfM;
+    elseif isfield(data,'loadstructs'),% old run_lukert, backup file, with fluct
+        equilDKE = data.loadstructs.equilDKE;
+        mksa = data.loadstructs.mksa;
+        radialDKE = data.loadstructs.radialDKE;
+        momentumDKE = data.loadstructs.momentumDKE;
+        data.XXfM = data.loadstructs.XXfM;
+    elseif isfield(data,'lukestructs'),% new run_lukert, LUKE_RESULTS, no fluct
+        data.Ztime = data.lukestructs.output.dke_out.FPtime;
+        data.Zitn = length(data.Ztime);
+        data.Zcurr = data.lukestructs.output.Zcurr;
+        data.ZP0 = data.lukestructs.output.ZP0;
+        data.XXf0_t = data.lukestructs.output.dke_out.XXf0;
+        data.XXfM = data.lukestructs.output.dke_out.XXfM;
+        data.simul = data.lukestructs.output.dke_out.simul;
+        data.equil = data.lukestructs.output.dke_out.equil;
+        equilDKE = data.lukestructs.output.equilDKE;
+        mksa = data.lukestructs.output.mksa;
+        radialDKE = data.lukestructs.output.radialDKE;
+        momentumDKE = data.lukestructs.output.momentumDKE;
+    else% old run_lukert, LUKE_RESULT, no fluct
+        data = conc_struct_jd(data,load(filename,'equilDKE','mksa','radialDKE','momentumDKE'));
+        data.XXf0_t = data.dke_out.XXf0;
+        data.XXfM = data.dke_out.XXfM;
+        data.simul = data.dke_out.simul;
+        data.equil = data.dke_out.equil;
+        equilDKE = data.equilDKE;
+        mksa = data.mksa;
+        radialDKE = data.radialDKE;
+        momentumDKE = data.momentumDKE;
+    end
 end
 %
 xrho = equilDKE.xrho.';
@@ -268,7 +295,7 @@ if fluct_display.mode >= 2,
     ylim = NaN;
     ylab = 'I (MA)';
     tit = '';
-    leg = {'Fluctuations'};%{'With fluct.','Average'};
+    leg = {'With fluct.','Average'};%{'Fluctuations'};%
     %
     graph1D_jd(stn,sI_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7);
     %graph1D_jd(stn,sI_totm,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
