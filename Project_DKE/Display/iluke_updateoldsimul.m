@@ -77,4 +77,9 @@ if ~isfield(load([pathname,filename],'wavestructids'),'wavestructids'),% old wav
     %
     clear newwavestructids newwavestructsstatus newwavestructss it iw isel wavestruct
 end    
+%
+if ~isfield(status,'fluct'),
+    status.fluct = zeros(1,ntimes);
+    fluctparams = cell(1,ntimes);
+end
     

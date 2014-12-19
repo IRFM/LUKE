@@ -36,6 +36,7 @@ ohms(:,flag_remove) = [];
 transpfastes(:,flag_remove) = [];
 ripples(:,flag_remove) = [];
 wavess(:,flag_remove) = [];
+fluctparams(:,flag_remove) = [];
 %
 wavestructss(:,flag_remove) = [];
 %
@@ -48,6 +49,7 @@ status.ohm(:,flag_remove) = [];
 % status.transpfaste(:,flag_remove) = [];
 status.ripple(:,flag_remove) = [];
 status.waves(:,flag_remove) = [];
+status.fluct(:,flag_remove) = [];
 status.wavestructs(:,flag_remove) = [];
 status.job(:,flag_remove) = [];
 status.output(:,flag_remove) = [];
@@ -89,6 +91,7 @@ ohms(:,end+1:end+nnew) = {[]};
 transpfastes(:,end+1:end+nnew) = {[]};
 ripples(:,end+1:end+nnew) = {[]};
 wavess(:,end+1:end+nnew) = {{}};
+fluctparams(:,end+1:end+nnew) = {[]};
 %
 wavestructss(:,end+1:end+nnew) = cell(length(wavestructids),nnew);
 %
@@ -100,6 +103,7 @@ status.ohm(:,end+1:end+nnew) = 0;
 % status.transpfaste(:,end+1:end+nnew) = 0;
 status.ripple(:,end+1:end+nnew) = 0;
 status.waves(:,end+1:end+nnew) = 0;
+status.fluct(:,end+1:end+nnew) = 0;
 status.wavestructs(:,end+1:end+nnew) = zeros(length(wavestructids),nnew);
 status.job(:,end+1:end+nnew) = 0;
 status.output(:,end+1:end+nnew) = 0;
@@ -120,6 +124,7 @@ ohms(:,flag_clear) = {[]};
 % transpfastes(:,flag_clear) = {[]};
 ripples(:,flag_clear) = {[]};
 wavess(:,flag_clear) = {{}};
+fluctparams(:,flag_clear) = {[]};
 %
 wavestructss(:,flag_clear) = {{}};
 %
@@ -139,6 +144,7 @@ status.ohm(:,flag_clear) = -1;
 % status.transpfaste(:,flag_clear) = -1;
 status.ripple(:,flag_clear) = -1;
 status.waves(:,flag_clear) = -1;
+status.fluct(:,flag_clear) = -1;
 status.wavestructs(:,flag_clear) = -1;
 status.job(:,flag_clear) = -1;
 status.output(:,flag_clear) = -1;
@@ -157,6 +163,8 @@ ohms = ohms(:,mask);
 transpfastes = transpfastes(:,mask);
 ripples = ripples(:,mask);
 wavess = wavess(:,mask);
+fluctparams = fluctparams(:,mask);
+ripples = ripples(:,mask);
 %
 wavestructss = wavestructss(:,mask);
 %
@@ -169,6 +177,7 @@ status.ohm = status.ohm(:,mask);
 % status.transpfaste = status.transpfaste(:,mask);
 status.ripple = status.ripple(:,mask);
 status.waves = status.waves(:,mask);
+status.fluct = status.fluct(:,mask);
 status.wavestructs = status.wavestructs(:,mask);
 status.job = status.job(:,mask);
 status.output = status.output(:,mask);
@@ -214,6 +223,7 @@ end
 % [transpfastes,lukeobj.transp,cleartags] = iluke_status(transpfastes,status.transpfaste,lukeobj.transp,0,curtime,cleartags);
 [ripples,lukeobj.ripple,cleartags] = iluke_status(ripples,status.ripple,lukeobj.ripple,0,curtime,cleartags);
 [wavess,lukeobj.wave,cleartags] = iluke_status(wavess,status.waves,lukeobj.wave,0,curtime,cleartags);
+% [fluctparams,lukeobj.fluct,cleartags] = iluke_status(fluctparams,status.fluct,lukeobj.fluct,0,curtime,cleartags);
 
 [outputs,lukeobj.luke,cleartags] = iluke_status(outputs,status.output,lukeobj.luke,1,curtime,cleartags);
 [sdiags,lukeobj.sdiag,cleartags] = iluke_status(sdiags,status.sdiag,lukeobj.sdiag,2,curtime,cleartags);
@@ -229,6 +239,12 @@ iluke_update_dkeparam;
 %
 
 iluke_update_transpfaste;
+
+%
+% FLUCT
+%
+
+iluke_update_fluct;
 
 %
 % WAVESTRUCTS
