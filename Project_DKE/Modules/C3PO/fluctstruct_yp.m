@@ -87,6 +87,10 @@ fluct.Xcn = -XR.*(XP./XT).*Xcalpha./sqrt(1.0 + (XP2./XT2).*Xcalpha2)/equilDKE.ap
 fluct.Xcn(:,end) = fluct.Xcn(:,1);%for spline-Fourier series expansion in the interpolation procedure
 % 
 if isfield(fluct_in,'naequilp'), 
+    %   
+    if isfield(fluct_in.naequilp,'itnmax'),
+        fluct.itnmax = fluct_in.naequilp.itnmax;% number of iterations
+    end
     %
     inefluct_model = 1;
     iBfluct_model = 1;
