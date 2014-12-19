@@ -47,8 +47,13 @@ kphotmax = max(kphot);%hxr.kdiag_hxr(2,end-1);
 % kfit = (hxr.kdiag_hxr(1,1:end-1) + hxr.kdiag_hxr(2,1:end-1))/2;%Measured photon energy spectrum (keV) [1,k]
 % kfit_S = [3*kphot(1) - kphot(2),kphot(1:end-1) + kphot(2:end),3*kphot(end) - kphot(end-1)]/2;
 % kfit = kphot;%Measured photon energy spectrum (keV) [1,k]
-kfit = hxr.kfit;%Measured photon energy spectrum (keV) [1,k]
-kfit_S = [3*kfit(1) - kfit(2),kfit(1:end-1) + kfit(2:end),3*kfit(end) - kfit(end-1)]/2;
+%
+% kfit = hxr.kfit;%Measured photon energy spectrum (keV) [1,k]
+% kfit_S = [3*kfit(1) - kfit(2),kfit(1:end-1) + kfit(2:end),3*kfit(end) - kfit(end-1)]/2;
+%
+kfit_S = hxr.kfit;%Measured photon energy spectrum (keV) [1,k]
+kfit = (kfit_S(1:end-1) + kfit_S(2:end))/2;
+%
 % ikfitmin = find(kfit >= hxr.kdiag_hxr(1,end),1,'first');
 % ikfitmax = find(kfit <= hxr.kdiag_hxr(2,end),1,'last');
 ikfitmin = find(kfit >= hxrparam.kmin,1,'first');

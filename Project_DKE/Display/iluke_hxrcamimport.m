@@ -18,9 +18,10 @@ if isfield(external.hxr,'ap') && isfield(external.hxr,'hxrparam'),% TCV data loa
         %
     end
     %
-    kphot_diag = (external.hxr.hxr.kdiag_hxr(1,1:(end-1)) + external.hxr.hxr.kdiag_hxr(2,1:(end-1)))/2;
+    kphot_diag_S = [external.hxr.hxr.kdiag_hxr(1,1:(end-1)),external.hxr.hxr.kdiag_hxr(2,end-1)];% photon energies representing energy bin limits
+    kphot_diag = (kphot_diag_S(1:end-1) + kphot_diag_S(2:end))/2;% photon energies representing energy bin centers
     %
-    hxr.param.kphot = unique([hxr.param.kphot,kphot_diag]);
+    hxr.param.kphot = unique([hxr.param.kphot,kphot_diag,kphot_diag_S]);% energies for bremsstrahlung calculations
     %
 %     hxr.param.kmin = external.hxr.hxr.kdiag_hxr(1,end);
 %     hxr.param.kmax = external.hxr.hxr.kdiag_hxr(2,end);
