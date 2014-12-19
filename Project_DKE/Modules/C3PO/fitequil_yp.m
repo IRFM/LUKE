@@ -22,16 +22,16 @@ function [equil_out] = fitequil_yp(equil_in,mode,method,ngrid,nharm)
 if nargin == 1, 
     mode = 1;%Spline-Fourier case
     method = 'spline';
-    ngrid = 2000;
+    ngrid = 1001;
     nharm = [];
 end
 if nargin == 2, 
     method = 'spline';
-    ngrid = 2000;
+    ngrid = 1001;
     nharm = [];
 end
 if nargin == 3, 
-    ngrid = 2000;  
+    ngrid = 1001;  
     nharm = [];
 end
 if nargin == 4, 

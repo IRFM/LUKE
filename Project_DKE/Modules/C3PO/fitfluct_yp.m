@@ -20,16 +20,16 @@ function [fluct_out] = fitfluct_yp(fluct_in,mode,method,ngrid,nharm)
 if nargin == 1, 
     mode = 1;%Spline-Fourier case
     method = 'pchip';
-    ngrid = 2000;
+    ngrid = 1001;
     nharm = [];
 end
 if nargin == 2, 
     method = 'pchip';
-    ngrid = 2000;
+    ngrid = 1001;
     nharm = [];
 end
 if nargin == 3, 
-    ngrid = 2000;  
+    ngrid = 1001;  
     nharm = [];
 end
 if nargin == 4, 
