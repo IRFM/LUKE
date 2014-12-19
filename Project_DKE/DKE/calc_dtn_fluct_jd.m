@@ -3,6 +3,8 @@ function [dtnmin_fluct,dtns_fluct] = calc_dtn_fluct_jd(fluct,wavestructs,mksa)
 %
 flucttypes = fieldnames(fluct);
 %
+flucttypelist = {'ne','B'};% list of accepted fluctuation types
+%
 dtns_fluct = struct;
 dtnmin_fluct = Inf;
 %
@@ -11,6 +13,10 @@ dtnmin_fluct = Inf;
 for ifluct = 1:length(flucttypes),% for each fluctuation type (ne, Be, etc)
     %
     flucttype = flucttypes{ifluct};
+    %
+    if ~any(strcmp(flucttype,flucttypelist)),
+        continue
+    end
     %
     for imodel = 1:length(fluct.(flucttype)),% for each fluctuation model (ripple, drift, etc)
         %
