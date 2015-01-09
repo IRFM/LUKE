@@ -97,7 +97,7 @@ if exist(filename,'file'),
     end
 end
 %
-if ~exist(filename,'file'),% load existing simulation    
+if ~exist(filename,'file'),% load existing simulation if it exists
     %
     dkepath = setpath_luke_jd('');
     %
@@ -181,38 +181,6 @@ if ~exist(filename,'file'),% load existing simulation
     disp([' ---> mdce_mode = ',int2str(mdce_mode)])
     disp('*************************************')
     %
-    if exist('opts') && isfield(opts,'svnremoteupdate') && opts.svnremoteupdate,
-        %
-        [err_svn,~,c_svn,s_svn,w_svn] = matremote_jd('itmsvnupdate',{},remote,job);%svn remote or local update
-        %
-        if ~isempty(err_svn),
-            disp('WARNING: SVN update of the ITM tools for LUKE calculations failed') 
-        else
-            disp(['Successful SVN update of the ITM tools for LUKE calculations: ',w_svn{1},w_svn{2}]),
-        end
-    end
-    %
-    if ~exist('opts') || ~isfield(opts,'euitm') || ~isfield(opts.euitm,'savelocalfile') || opts.euitm.savelocalfile ~= 1,%LUKE results are saved in MDS+ database
-        %
-        [err_mds,~,machine_mds,username_mds,ver_mds] = matremote_jd('which_MDSdatabase',{},remote,job);%remote or local test of the MDS database
-        %
-        if isempty(machine_mds) || isempty(username_mds) || isempty(ver_mds) || ~isempty(err_mds),
-            error(['ERROR: ITM database not recognized -> machine: ',machine_mds,', user: ',username_mds,', datastructure version: ',ver_mds]);
-        else
-            disp(['ITM database well recognized -> machine: ',machine_mds,', user: ',username_mds,', datastructure version: ',ver_mds]);
-        end
-        %
-        if ~strcmp(machine,machine_mds),disp('WARNING: inconsistent machine name between script and MDS+ database.');end
-        %
-        [err_database,~,flag_database] = matremote_jd('database_recreate_ITM',{'shot','run_out'},remote,job);%remote or local database creation output (for the test only)
-        %
-        if ~isempty(err_database),
-            disp('WARNING: output MDS database creation failed.') 
-            opts.euitm.savelocalfile = 1;%LUKE results not saved in the MDS database
-        else
-            disp('Output MDS database creation successfuly created.') 
-        end
-    end
 else
     temp_luke_results = load(['LUKE_RESULTS_',dataname,'.mat']);
     %
@@ -235,7 +203,6 @@ end
 disp(['Distributed computing mode     --> ',int2str(opts.remmdce)]);
 disp('---------------------------------------------')
 %
-%
 cd([dkepath.luke_root,'Project_DKE/Modules/ITM'])
 %
 [s_host,w_host] = unix('hostname -f');%identify the local machine
@@ -251,6 +218,41 @@ if ~length(strfind(w_host,'itm')),%remote calculations
 else
     remote = [];
     job = [];
+end
+%
+if isfield(opts,'svnremoteupdate') && opts.svnremoteupdate,
+    %
+    [err_svn,~,c_svn,s_svn,w_svn] = matremote_jd('itmsvnupdate',{},remote,job);%svn remote or local update
+    %
+    if ~isempty(err_svn),
+        disp('WARNING: SVN update of the ITM tools for LUKE calculations failed') 
+    else
+        disp(['Successful SVN update of the ITM tools for LUKE calculations: ',w_svn{1},w_svn{2}]),
+    end
+end
+%
+if ~isfield(opts,'euitm') || ~isfield(opts.euitm,'savelocalfile') || opts.euitm.savelocalfile ~= 1,%LUKE results are saved in MDS+ database
+    %
+    if ~exist('machine_mds','var') || ~exist('username_mds','var') || ~exist('ver_mds','var'),
+        [err_mds,~,machine_mds,username_mds,ver_mds] = matremote_jd('which_MDSdatabase',{},remote,job);%remote or local test of the MDS database
+        %
+        if  ~isempty(err_mds),
+            error(['ERROR: ITM database not recognized -> machine: ',machine_mds,', user: ',username_mds,', datastructure version: ',ver_mds]);
+        else
+            disp(['ITM database well recognized -> machine: ',machine_mds,', user: ',username_mds,', datastructure version: ',ver_mds]);
+        end
+    end
+    %
+    if ~strcmp(machine,machine_mds),disp('WARNING: inconsistent machine name between script and MDS+ database.');end
+    %
+    [err_database,~,flag_database] = matremote_jd('database_recreate_ITM',{'shot','run_out'},remote,job);%remote or local database creation output (for the test only)
+    %
+    if ~isempty(err_database),
+        disp('WARNING: output MDS database creation failed. Data saved locally') 
+        opts.euitm.savelocalfile = 1;%LUKE results not saved in the MDS database
+    else
+        disp('Output MDS database creation successfuly created.') 
+    end
 end
 %
 [err_waves,waves] = itm_starwars(mds_ver,machine,shot,run,timeslice,time_interp,CPOs,CPO_occurrences,run_out,iter,occurrence_out,opts);
