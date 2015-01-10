@@ -21,7 +21,7 @@ opt_struct = 0;%(0) light version, compatible with fluctuations, proc_luke and r
 %
 opt.save = 1;% (1): save LUKE_RESULTS or return error in localdatadir (0): return results or error
 opt.localdatadir = 'results';% local directory where LUKE_RESULTS is saved
-opt.fields = {'Znorm','Zcurr','ZP0','dke_out','radialDKE','equilDKE','equil','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource'};% select fields to be returned from lukestructs. Use NaN to return all fields.
+opt.fields = {'Znorm','Zcurr','ZP0','zS','dke_out','radialDKE','equilDKE','equil','momentumDKE','gridDKE','Zmomcoef','Zbouncecoef','Zmripple','mksa','XXsinksource'};% select fields to be returned from lukestructs. Use NaN to return all fields.
 opt.proc = struct;%postprocessing done remotely
 opt.backup = 0;% (1) save fluctuation time steps (0) do not save
 opt.waves = 0;%(-1) waves are not saved in "wave_results/" and not stored in dke_out. In this case, C3PO must be rerun to see the rays (0) waves are stored in dke_out and saved in LUKE_RESULTS, (1) waves are saved in "wave_results/" but not stored in dke_out
@@ -271,8 +271,8 @@ if isstruct(waves),
         figure;
         graph1D_jd(waves(it).coherentwave(1).grid_1d.psi,waves(it).coherentwave(1).profiles_1d.powd_tot,0,0,'','','',NaN,NaN,NaN,'-','none','r',2);hold on
         %
-        if isstruct(waves_mds), 
-            graph1D_jd(waves_mds(it).coherentwave(1).grid_1d.psi,waves_mds(it).coherentwave(1).profiles_1d.powd_tot,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);hold on
+        if isstruct(waves_euitm), 
+            graph1D_jd(waves_euitm(it).coherentwave(1).grid_1d.psi,waves_euitm(it).coherentwave(1).profiles_1d.powd_tot,0,0,'','','',NaN,NaN,NaN,'-','none','b',2);hold on
         end
         %
         disp('--------------')
