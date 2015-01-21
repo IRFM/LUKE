@@ -198,14 +198,14 @@ if isfield(equil_fit.Bx_fit,'pp_a0'),% (rho,theta) coordinates
     %
     [equil_val.gradrho,equil_val.dgradrhodtheta,equil_val.d2gradrhodtheta2,equil_val.dgradrhodrho,equil_val.d2gradrhodthetadrho] = calcval_yp(equil_fit,theta,gradrho_a0,gradrho_an,gradrho_bn,gradrho_da0drho,gradrho_dandrho,gradrho_dbndrho);
     %
-    if isinf(Rp),
+    if isinf(equil_val.Rp),
         equil_val.Upsilon = 1;
         equil_val.dUpsilondrho = 0;
         equil_val.dUpsilondtheta = 0;
     else
-        equil_val.Upsilon = 1 + x/Rp;
-        equil_val.dUpsilondrho = dxdrho/Rp;
-        equil_val.dUpsilondtheta = dxdtheta/Rp;
+        equil_val.Upsilon = 1 + equil_val.x/equil_val.Rp;
+        equil_val.dUpsilondrho =  equil_val.dxdrho/equil_val.Rp;
+        equil_val.dUpsilondtheta =  equil_val.dxdtheta/equil_val.Rp;
     end
     %
 elseif isfield(equil_fit.Bx_fit,'CC'),% (x,y,phi) coordinates
@@ -213,8 +213,6 @@ elseif isfield(equil_fit.Bx_fit,'CC'),% (x,y,phi) coordinates
     rho = a;
     theta = b;
     %
-    keyboard
-      
 else
     error('ERROR: the format of the structure equil_fit is not recognized')
 end
