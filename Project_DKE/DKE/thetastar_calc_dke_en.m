@@ -94,7 +94,7 @@ for ipsi=1:npsi
     dBy1dtheta = equilval1.dBydtheta;
     Bz1 = equilval1.Bz;
     dB1zdtheta = equilval1.dBzdtheta;
-    Bp1 = equilval1.Bp;
+    Bp1 = equilval1.BP;
     %
     B1 = sqrt(Bx1.^2 + By1.^2 + Bz1.^2);
     dB1dtheta = (Bx1.*dBx1dtheta + By1.*dBy1dtheta + Bz1.*dB1zdtheta)./B1;
@@ -109,7 +109,7 @@ for ipsi=1:npsi
     dBy2dtheta = equilval2.dBydtheta;
     Bz2 = equilval2.Bz;
     dB2zdtheta = equilval2.dBzdtheta;
-    Bp2 = equilval2.Bp;
+    Bp2 = equilval2.BP;
     %
     B2 = sqrt(Bx2.^2 + By2.^2 + Bz2.^2);
     dB2dtheta = (Bx2.*dBx2dtheta + By2.*dBy2dtheta + Bz2.*dB2zdtheta)./B2;
