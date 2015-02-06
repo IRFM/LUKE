@@ -264,10 +264,10 @@ if isfield(graph,'ytick_ec'),
     set(gca,'ytick',graph.ytick_ec)
 end
 %
-print_jd(p_opt,['fig_',id_simul_scan,'_nr'],'./figures',1)
-print_jd(p_opt,['fig_',id_simul_scan,'_rr'],'./figures',2)
-print_jd(p_opt,['fig_',id_simul_scan,'_p'],'./figures',3)
-print_jd(p_opt,['fig_',id_simul_scan,'_Ec'],'./figures',4)
+print_jd(p_opt,['fig_',id_simul_scan,'_nr'],['./figures',filesep,scanstr],1)
+print_jd(p_opt,['fig_',id_simul_scan,'_rr'],['./figures',filesep,scanstr],2)
+print_jd(p_opt,['fig_',id_simul_scan,'_p'],['./figures',filesep,scanstr],3)
+print_jd(p_opt,['fig_',id_simul_scan,'_Ec'],['./figures',filesep,scanstr],4)
 %
 if isfield(graph,'iscandisp'),
     %
@@ -300,7 +300,7 @@ if isfield(graph,'iscandisp'),
     set(gca,'YMinorGrid','off')
     set(gca,'YMinorTick','on')
     %
-    print_jd(p_opt,['fig_',id_simul_scan,'_f'],'./figures',5)
+    print_jd(p_opt,['fig_',id_simul_scan,'_f'],['./figures',filesep,scanstr],5)
     %
 end
 %
