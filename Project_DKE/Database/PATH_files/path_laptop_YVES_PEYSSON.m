@@ -162,7 +162,7 @@ dkepath.yves(1).remote(12).cvsrights = 'chmod -R a+rx ./';
 dkepath.yves(1).remote(13).remoteid = 'IPP_ABACUS';
 dkepath.yves(1).remote(13).schedulername = 'pbs';
 dkepath.yves(1).remote(13).profilename = 'peysson';
-dkepath.yves(1).remote(13).luke_root = '/compass/home/peysson/LUKE/';
+dkepath.yves(1).remote(13).luke_root = '/compass/Shared/Common/IT/projects/luke/LUKE/';
 dkepath.yves(1).remote(13).link_mode = [];
 dkepath.yves(1).remote(13).cvsupdate = false;% update done in 'direct' mode
 %

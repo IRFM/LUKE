@@ -18,8 +18,8 @@ dkepath.computer = computer;%machine type and supported OS
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.peysson(1).luke_root = [pwd,filesep];
-dkepath.peysson(1).local_root = '/compass/home/peysson/Packages/';
+dkepath.peysson(1).luke_root = '/compass/Shared/Common/IT/projects/luke/';
+dkepath.peysson(1).local_root = '/compass/Shared/Common/IT/projects/luke/Packages/';
 dkepath.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.peysson(1).mex801 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB801/'];
@@ -31,7 +31,7 @@ dkepath.peysson(1).compiler_opt.separatrice.mex801 = [' -largeArrayDims -lgfortr
 dkepath.peysson(1).compiler_opt.helmex.mex801 = [' -compatibleArrayDims -lgfortran -L',dkepath.peysson(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.peysson(1).compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
 %
-dkepath.peysson(1).MUMPS.mex801 = [dkepath.peysson(1).local_root,'MUMPS_4.10.0/MATLAB801'];;%Where MUMPS matrix solver is stored (MEX function)
+dkepath.peysson(1).MUMPS.mex801 = [dkepath.peysson(1).local_root,'MUMPS_4.10.0_gf/MATLAB801'];;%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
