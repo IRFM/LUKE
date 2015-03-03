@@ -15,25 +15,21 @@ if nargin == 0,
     %
     external.shotnum = 0;
     external.shotime = 0;
-    external.dt = 0.05;
     %
     % description & user halp
     %
     external.info.shotnum = 'Shot number';
     external.info.shotime = 'Shot time (s)';
-    external.info.dt = 'time range for data averaging (s)';
     % 
     % expert mode
     %
     external.expert.shotnum = 0;
     external.expert.shotime = 0;
-    external.expert.dt = 0;
     %
     % range of values
     %
     external.values.shotnum = [0;Inf];
     external.values.shotime = [0;Inf];
-    external.values.dt1 = [0;Inf];
     %
     return
     %
@@ -45,7 +41,6 @@ end
 %
 shotnum = external_in.shotnum;
 shotime = external_in.shotime;
-dt = external_in.dt;
 %
 % ******************************************************************
 %
@@ -53,69 +48,59 @@ external = '';
 basestr = 'COMPASS';
 %
 if exist('cdb_client','file') == 2,
-    %read data from COMPASS database (local or remote)
-    %[remote,profilestr] = load_remoteprofiles_jd('IPP_ABACUS',false,true,'direct',NaN,true);
-    %job = matstandardjob_jd('runmat');
-    %remote.debugmode = 1;
-    %[err_data,~,data_out] = matremote_jd('compass2luke',{shotnum},remote,job);
+    %
     data_out = compass2luke(shotnum);
+    %
 else
     [filename,pathname] = igetfile_jd(opt_gui,'*.mat',['Please select the COMPASS data file for shot # ',shotnum],'',0);
     %
     if filename ~= 0,
         load([pathname,filename],'data_out');
     else
-        return
+        disp(' ');disp('--> Read remotely from COMPASS database');disp(' ');
+        [remote,profilestr] = load_remoteprofiles_jd('IPP_ABACUS',false,true,'direct',NaN,true);%read remotely from COMPASS database 
+        [err_data,~,data_out] = matremote_jd('compass2luke',{shotnum},remote,matstandardjob_jd('runmat'));        
+        %
+        if err_data ~= 0,
+            return
+        end
     end
+end
+%
+if shotime == 0,% EFIT time grid reference, if shotime is not specified
+    ishotime = round(length(data_out.int_inductance.time_axis.data)/2);
+    shotime = data_out.int_inductance.time_axis.data(ishotime);
+    disp(' ');disp(['WARNING: The shot time has been enforced to ',num2str(shotime),' (s)']);disp(' ');
+else,%nearest value
+    ishotime = interp1(data_out.int_inductance.time_axis.data,[1:length(data_out.int_inductance.time_axis.data)],shotime,'nearest')
+    shotime = data_out.int_inductance.time_axis.data(ishotime);
+    disp(' ');disp(['WARNING: The nearest shot time is ',num2str(shotime),' (s)']);disp(' ');
 end
 %
 % time average or selection
 %
-Vloop.t = data_out.U_loop.time_axis.data/1e3;% s
-Vloop.data = data_out.U_loop.data;% V
+Li.t = data_out.int_inductance.time_axis.data(ishotime);% s
+Li.data = data_out.int_inductance.data(ishotime);
+delta.t = data_out.triangularity.time_axis.data(ishotime)/1e3;% ms -> s
+delta.data = data_out.triangularity.data(ishotime);
+psiRZ.t = data_out.psi.time_axis.data(ishotime)/1e3;% ms -> s
+psiRZ.data = data_out.psi.data(ishotime,:,:);% Wb/rad
+psiRZ.R = data_out.psi.axis1.data(ishotime,:);% m 
+psiRZ.Z = data_out.psi.axis2.data(ishotime,:);% m
 %
-Ip.t = data_out.I_plasma.time_axis.data/1e3;% s
-Ip.data = data_out.I_plasma.data;% A
-%
-Li.t = data_out.int_inductance.time_axis.data;% s
-Li.data = data_out.int_inductance.data;
-%
-delta.t = data_out.triangularity.time_axis.data/1e3;% s
-delta.data = data_out.triangularity.data;
-%
-psiRZ.t = data_out.psi.time_axis.data/1e3;% s
-psiRZ.data = data_out.psi.data;% Wb/rad
-psiRZ.R = data_out.psi.axis1.data;% m
-psiRZ.Z = data_out.psi.axis2.data;% m
-%
-pne.t = data_out.ne.time_axis.data/1e3;% s
-pne.data = data_out.ne.data;% m^-3
+pne.t = shotime;
+pne.data = interp1(data_out.ne.time_axis.data/1e3,data_out.ne.data,shotime,'linear');% m^-3
 pne.x = data_out.ne.axis1.data;% m
-%
-pTe.t = data_out.te.time_axis.data/1e3;% s
-pTe.data = data_out.te.data/1e3;% keV
+pTe.t = shotime;
+pTe.data = interp1(data_out.te.time_axis.data/1e3,data_out.te.data/1e3,shotime,'linear');% keV
 pTe.x = data_out.te.axis1.data;% m
 %
-% time average or selection
-%
-dx = dt/(2*sqrt(log(2)));% to set gaussian smoothing of width dt at half height
-%
-Vloop = smooth_jd(Vloop.t,Vloop.data,dx,shotime);
-Ip = smooth_jd(Ip.t,Ip.data,dx,shotime);
-Li = smooth_jd(Li.t,Li.data,dx,shotime);
-delta = smooth_jd(delta.t,delta.data,dx,shotime);
-%
-xne = pne.x;
-pne = smooth_jd(pne.t,pne.data,dx,shotime);
-%
-xTe = pTe.x;
-pTe = smooth_jd(pTe.t,pTe.data,dx,shotime);
-%
-it = find(abs(psiRZ.t - shotime) == min(abs(psiRZ.t - shotime)),1,'first');
-%
-R = psiRZ.R(it,:);
-Z = psiRZ.Z(it,:);
-psiRZ = reshape(psiRZ.data(it,:,:),[length(R),length(Z)]);
+Vloop.t = shotime;
+Vloop.data = interp1(data_out.U_loop.time_axis.data/1e3,sgolayfilt(data_out.U_loop.data, 1,min(2*round(length(data_out.U_loop.time_axis.data)/400)-1,10001)),shotime,'linear');% V
+%close all,plot(data_out.U_loop.time_axis.data/1e3,data_out.U_loop.data,'b',data_out.U_loop.time_axis.data/1e3,sgolayfilt(data_out.U_loop.data, 1,min(2*round(length(data_out.U_loop.time_axis.data)/400)-1,10001)),'r')
+Ip.t = shotime;
+Ip.data = interp1(data_out.I_plasma.time_axis.data/1e3,sgolayfilt(data_out.I_plasma.data, 1,min(2*round(length(data_out.I_plasma.time_axis.data)/400)-1,10001)),shotime,'linear');% A
+%close all,plot(data_out.I_plasma.time_axis.data/1e3,data_out.I_plasma.data,'b',data_out.I_plasma.time_axis.data/1e3,sgolayfilt(data_out.I_plasma.data, 1,min(2*round(length(data_out.I_plasma.time_axis.data)/400)-1,10001)),'r')
 %
 % return structure external
 %
@@ -123,24 +108,24 @@ external.basestr = basestr;
 external.shotnum = num2str(shotnum);
 external.shotime = shotime;
 %
-external.ohm.Vloop = Vloop;
+external.ohm.Vloop = Vloop.data;
 %
 external.equil.shotnum = external.shotnum;
 external.equil.shotime = external.shotime;
 %
-external.equil.magnetic.Ip = Ip;
-external.equil.magnetic.Li = Li;
-external.equil.magnetic.delta = delta;
+external.equil.magnetic.Ip = Ip.data;
+external.equil.magnetic.efit.Li = Li.data;
+external.equil.magnetic.efit.delta = delta.data;
 %
-external.equil.magnetic.psiRZ = psiRZ;% Wb/rad
-external.equil.magnetic.R = R;% m
-external.equil.magnetic.Z = Z;% m
+external.equil.magnetic.efit.psiRZ = reshape(psiRZ.data,[length(psiRZ.R),length(psiRZ.Z)]);% Wb/rad
+external.equil.magnetic.efit.R = psiRZ.R;% m
+external.equil.magnetic.efit.Z = psiRZ.Z;% m
 %
-external.equil.prof.xne = xne;
-external.equil.prof.xTe = xTe;
+external.equil.prof.xne = pne.x;
+external.equil.prof.xTe = pTe.x;
 %
-external.equil.prof.pne = pne;
-external.equil.prof.pTe = pTe;
+external.equil.prof.pne = pne.data;
+external.equil.prof.pTe = pTe.data;
 %
 external.equil.prof.fi = [0,1,0];
 external.equil.prof.zZi = [1,1,1,6];
