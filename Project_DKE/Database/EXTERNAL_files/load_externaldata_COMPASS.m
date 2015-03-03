@@ -53,12 +53,17 @@ external = '';
 basestr = 'COMPASS';
 %
 if exist('cdb_client','file') == 2,
-    data = compass2luke(shotnum);
+    %read data from COMPASS database (local or remote)
+    %[remote,profilestr] = load_remoteprofiles_jd('IPP_ABACUS',false,true,'direct',NaN,true);
+    %job = matstandardjob_jd('runmat');
+    %remote.debugmode = 1;
+    %[err_data,~,data_out] = matremote_jd('compass2luke',{shotnum},remote,job);
+    data_out = compass2luke(shotnum);
 else
     [filename,pathname] = igetfile_jd(opt_gui,'*.mat',['Please select the COMPASS data file for shot # ',shotnum],'',0);
     %
     if filename ~= 0,
-        load([pathname,filename],'data');
+        load([pathname,filename],'data_out');
     else
         return
     end
@@ -66,30 +71,30 @@ end
 %
 % time average or selection
 %
-Vloop.t = data.U_loop.time_axis.data/1e3;% s
-Vloop.data = data.U_loop.data;% V
+Vloop.t = data_out.U_loop.time_axis.data/1e3;% s
+Vloop.data = data_out.U_loop.data;% V
 %
-Ip.t = data.I_plasma.time_axis.data/1e3;% s
-Ip.data = data.I_plasma.data;% A
+Ip.t = data_out.I_plasma.time_axis.data/1e3;% s
+Ip.data = data_out.I_plasma.data;% A
 %
-Li.t = data.int_inductance.time_axis.data;% s
-Li.data = data.int_inductance.data;
+Li.t = data_out.int_inductance.time_axis.data;% s
+Li.data = data_out.int_inductance.data;
 %
-delta.t = data.triangularity.time_axis.data/1e3;% s
-delta.data = data.triangularity.data;
+delta.t = data_out.triangularity.time_axis.data/1e3;% s
+delta.data = data_out.triangularity.data;
 %
-psiRZ.t = data.psi.time_axis.data/1e3;% s
-psiRZ.data = data.psi.data;% Wb/rad
-psiRZ.R = data.psi.axis1.data;% m
-psiRZ.Z = data.psi.axis2.data;% m
+psiRZ.t = data_out.psi.time_axis.data/1e3;% s
+psiRZ.data = data_out.psi.data;% Wb/rad
+psiRZ.R = data_out.psi.axis1.data;% m
+psiRZ.Z = data_out.psi.axis2.data;% m
 %
-pne.t = data.ne.time_axis.data/1e3;% s
-pne.data = data.ne.data;% m^-3
-pne.x = data.ne.axis1.data;% m
+pne.t = data_out.ne.time_axis.data/1e3;% s
+pne.data = data_out.ne.data;% m^-3
+pne.x = data_out.ne.axis1.data;% m
 %
-pTe.t = data.te.time_axis.data/1e3;% s
-pTe.data = data.te.data/1e3;% keV
-pTe.x = data.te.axis1.data;% m
+pTe.t = data_out.te.time_axis.data/1e3;% s
+pTe.data = data_out.te.data/1e3;% keV
+pTe.x = data_out.te.axis1.data;% m
 %
 % time average or selection
 %
