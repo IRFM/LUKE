@@ -8,14 +8,29 @@ disp('Start of reading signals from CDB')
 data_out.I_plasma = cdb.get_signal(['I_plasma:',num2str(shotnum)]);
 data_out.U_loop = cdb.get_signal(['U_loop_02:',num2str(shotnum)]);
 %
-% EFIT DATA
+% EFIT DATA (see the definitions on the COMPASS website
+% https://www.tok.ipp.cas.cz/webcdb/data_sources/EFIT)
 %
-data_out.efit.triangularity_lower_lcfs = cdb.get_signal(['triangularity_lower_lcfs:',num2str(shotnum)]);  % many of them
-data_out.efit.ii = cdb.get_signal(['ii:',num2str(shotnum)]);  % internal inductance 
-data_out.efit.psi_RZ = cdb.get_signal(['psi_RZ:',num2str(shotnum)]); 
-data_out.efit.Ip = cdb.get_signal(['Ip:',num2str(shotnum)]); 
-data_out.efit.R_mag_axis = cdb.get_signal(['R_mag_axis:',num2str(shotnum)]);
-data_out.efit.Z_mag_axis = cdb.get_signal(['Z_mag_axis:',num2str(shotnum)]); 
+data_out.efit.triangularity_lower_lcfs = cdb.get_signal(['triangularity_lower_lcfs/EFIT:',num2str(shotnum)]);
+data_out.efit.li = cdb.get_signal(['li/EFIT:',num2str(shotnum)]);% internal inductance 
+data_out.efit.Ip = cdb.get_signal(['Ip/EFIT:',num2str(shotnum)]); 
+data_out.efit.q = cdb.get_signal(['q/EFIT:',num2str(shotnum)]); 
+%
+data_out.efit.psi_RZ = cdb.get_signal(['psi_RZ/EFIT:',num2str(shotnum)]);
+data_out.efit.psi_n = cdb.get_signal(['psi_n/EFIT:',num2str(shotnum)]);
+data_out.efit.psi_mag_axis = cdb.get_signal(['psi_mag_axis/EFIT:',num2str(shotnum)]); 
+data_out.efit.psi_lcfs = cdb.get_signal(['psi_lcfs/EFIT:',num2str(shotnum)]);
+%
+data_out.efit.R_mag_axis = cdb.get_signal(['R_mag_axis/EFIT:',num2str(shotnum)]);
+data_out.efit.Z_mag_axis = cdb.get_signal(['Z_mag_axis/EFIT:',num2str(shotnum)]); 
+data_out.efit.R_geom_axis = cdb.get_signal(['R_geom_axis/EFIT:',num2str(shotnum)]); 
+data_out.efit.Z_geom_axis = cdb.get_signal(['Z_geom_axis/EFIT:',num2str(shotnum)]); 
+%
+data_out.efit.B_vac_R_geom = cdb.get_signal(['B_vac_R_geom/EFIT:',num2str(shotnum)]); 
+data_out.efit.RBphi = cdb.get_signal(['RBphi/EFIT:',num2str(shotnum)]); 
+data_out.efit.FFprime = cdb.get_signal(['FFprime/EFIT:',num2str(shotnum)]); 
+data_out.efit.pprime_static = cdb.get_signal(['pprime_static/EFIT:',num2str(shotnum)]); 
+data_out.efit.p_stat = cdb.get_signal(['p_stat/EFIT:',num2str(shotnum)]); 
 %
 % NOT MEASURED
 % signal = cdb.get_signal('ion_temperature:7529');  

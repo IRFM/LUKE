@@ -68,34 +68,59 @@ else
 end
 %
 if shotime == 0,% EFIT time grid reference, if shotime is not specified
-    ishotime = round(length(data_out.efit.ii.time_axis.data)/2);
-    shotime = data_out.efit.ii.time_axis.data(ishotime);
+    ishotime = round(length(data_out.efit.li.time_axis.data)/2);
+    shotime = data_out.efit.li.time_axis.data(ishotime)/1e3;% ms -> s
     disp(' ');disp(['WARNING: The shot time has been enforced to ',num2str(shotime),' (s)']);disp(' ');
 else,%nearest value
-    ishotime = interp1(data_out.efit.ii.time_axis.data,[1:length(data_out.efit.ii.time_axis.data)],shotime,'nearest')
-    shotime = data_out.efit.ii.time_axis.data(ishotime);
+    ishotime = interp1(data_out.efit.li.time_axis.data,[1:length(data_out.efit.li.time_axis.data)],shotime,'nearest')
+    shotime = data_out.efit.li.time_axis.data(ishotime)/1e3;% ms -> s
     disp(' ');disp(['WARNING: The nearest shot time is ',num2str(shotime),' (s)']);disp(' ');
 end
 %
 % smoothing and interpolation (reference EFIT time grid)
 %
 %
-% EFIT data
+% EFIT data (see the definitions on the COMPASS website
+% https://www.tok.ipp.cas.cz/webcdb/data_sources/EFIT)
 %
-Ip.t = data_out.efit.Ip.time_axis.data(ishotime);% s 
-Ip.data = data_out.efit.Ip.data(ishotime);% A
-ii.t = data_out.efit.ii.time_axis.data(ishotime);% s
-ii.data = data_out.efit.ii.data(ishotime);%internal inductance
 triangularity_lower_lcfs.t = data_out.efit.triangularity_lower_lcfs.time_axis.data(ishotime)/1e3;% ms -> s
 triangularity_lower_lcfs.data = data_out.efit.triangularity_lower_lcfs.data(ishotime);
+li.t = data_out.efit.li.time_axis.data(ishotime)/1e3;% ms -> s
+li.data = data_out.efit.li.data(ishotime);%internal inductance
+Ip.t = data_out.efit.Ip.time_axis.data(ishotime)/1e3;% ms -> s
+Ip.data = data_out.efit.Ip.data(ishotime);% A
+q.t = data_out.efit.q.time_axis.data(ishotime)/1e3;% ms -> s
+q.data = data_out.efit.q.data(ishotime);
+%
 psi_RZ.t = data_out.efit.psi_RZ.time_axis.data(ishotime)/1e3;% ms -> s
 psi_RZ.data = data_out.efit.psi_RZ.data(ishotime,:,:);% Wb/rad
 psi_RZ.R = data_out.efit.psi_RZ.axis1.data(ishotime,:);% m 
 psi_RZ.Z = data_out.efit.psi_RZ.axis2.data(ishotime,:);% m
-R_mag_axis.t = data_out.efit.R_mag_axis.time_axis.data(ishotime);% s
+psi_n.data = data_out.efit.psi_n.data;% Wb/rad
+psi_mag_axis.t = data_out.efit.psi_mag_axis.time_axis.data(ishotime)/1e3;% ms -> s
+psi_mag_axis.data = data_out.efit.psi_mag_axis.data(ishotime);
+psi_lcfs.t = data_out.efit.psi_lcfs.time_axis.data(ishotime)/1e3;% ms -> s
+psi_lcfs.data = data_out.efit.psi_lcfs.data(ishotime);
+%
+R_mag_axis.t = data_out.efit.R_mag_axis.time_axis.data(ishotime)/1e3;% ms -> s
 R_mag_axis.data = data_out.efit.R_mag_axis.data(ishotime,:,:);% m
-Z_mag_axis.t = data_out.efit.Z_mag_axis.time_axis.data(ishotime);% s
+Z_mag_axis.t = data_out.efit.Z_mag_axis.time_axis.data(ishotime)/1e3;% ms -> s
 Z_mag_axis.data = data_out.efit.Z_mag_axis.data(ishotime,:,:);% m
+R_geom_axis.t = data_out.efit.R_geom_axis.time_axis.data(ishotime)/1e3;% ms -> s
+R_geom_axis.data = data_out.efit.R_geom_axis.data(ishotime,:,:);% m
+Z_geom_axis.t = data_out.efit.Z_geom_axis.time_axis.data(ishotime)/1e3;% ms -> s
+Z_geom_axis.data = data_out.efit.Z_geom_axis.data(ishotime,:,:);% m
+%
+B_vac_R_geom.t = data_out.efit.B_vac_R_geom.time_axis.data(ishotime)/1e3;% ms -> s
+B_vac_R_geom.data = data_out.efit.B_vac_R_geom.data(ishotime,:,:);% m
+RBphi.t = data_out.efit.RBphi.time_axis.data(ishotime)/1e3;% ms -> s
+RBphi.data = data_out.efit.RBphi.data(ishotime,:,:);% m
+FFprime.t = data_out.efit.FFprime.time_axis.data(ishotime)/1e3;% ms -> s
+FFprime.data = data_out.efit.FFprime.data(ishotime,:,:);% m
+pprime_static.t = data_out.efit.pprime_static.time_axis.data(ishotime)/1e3;% ms -> s
+pprime_static.data = data_out.efit.pprime_static.data(ishotime,:,:);% m
+p_stat.t = data_out.efit.p_stat.time_axis.data(ishotime)/1e3;% ms -> s
+p_stat.data = data_out.efit.p_stat.data(ishotime,:,:);% m
 %
 if isfield(data_out,'ne') && isfield(data_out,'te'),%Thomson scaterring
     pne.t = shotime;
@@ -133,12 +158,28 @@ external.equil.shotime = external.shotime;
 %
 external.equil.magnetic.I_plasma = I_plasma.data;
 %
-external.equil.magnetic.efit.Ip = Ip.data;
-external.equil.magnetic.efit.ii = ii.data;
 external.equil.magnetic.efit.triangularity_lower_lcfs = triangularity_lower_lcfs.data;
+external.equil.magnetic.efit.li = li.data;
+external.equil.magnetic.efit.Ip = Ip.data;
+external.equil.magnetic.efit.q = q.data;
+%
 external.equil.magnetic.efit.psi_RZ = reshape(psi_RZ.data,[length(psi_RZ.R),length(psi_RZ.Z)]);% Wb/rad
+external.equil.magnetic.efit.psi_n = psi_n.data;
+external.equil.magnetic.efit.psi_mag_axis = psi_mag_axis.data;
+external.equil.magnetic.efit.psi_lcfs = psi_lcfs.data;
+%
 external.equil.magnetic.efit.R = psi_RZ.R;% m
 external.equil.magnetic.efit.Z = psi_RZ.Z;% m
+external.equil.magnetic.efit.R_mag_axis = R_mag_axis.data;% m
+external.equil.magnetic.efit.Z_mag_axis = Z_mag_axis.data;% m
+external.equil.magnetic.efit.R_geom_axis = R_geom_axis.data;% m
+external.equil.magnetic.efit.Z_geom_axis = Z_geom_axis.data;% m
+%
+external.equil.magnetic.efit.B_vac_R_geom = B_vac_R_geom.data;% m
+external.equil.magnetic.efit.RBphi = RBphi.data;% m
+external.equil.magnetic.efit.FFprime = FFprime.data;% m
+external.equil.magnetic.efit.pprime_static = pprime_static.data;% m
+external.equil.magnetic.efit.p_stat = p_stat.data;% m
 %
 external.equil.prof.xne = pne.x;
 external.equil.prof.xTe = pTe.x;
