@@ -47,7 +47,7 @@ shotime = external_in.shotime;
 external = '';
 basestr = 'COMPASS';
 %
-if exist('cdb_client','file') == 2,
+if exist('cdb_client','file') == 2,%when we are on Abacus
     %
     data_out = compass2luke(shotnum);
     %
@@ -79,7 +79,10 @@ end
 %
 % smoothing and interpolation (reference EFIT time grid)
 %
-Ip.t = data_out.efit.Ip.time_axis.data(ishotime);% s
+%
+% EFIT data
+%
+Ip.t = data_out.efit.Ip.time_axis.data(ishotime);% s 
 Ip.data = data_out.efit.Ip.data(ishotime);% A
 ii.t = data_out.efit.ii.time_axis.data(ishotime);% s
 ii.data = data_out.efit.ii.data(ishotime);%internal inductance
@@ -94,12 +97,21 @@ R_mag_axis.data = data_out.efit.R_mag_axis.data(ishotime,:,:);% m
 Z_mag_axis.t = data_out.efit.Z_mag_axis.time_axis.data(ishotime);% s
 Z_mag_axis.data = data_out.efit.Z_mag_axis.data(ishotime,:,:);% m
 %
-pne.t = shotime;
-pne.data = interp1(data_out.ne.time_axis.data/1e3,data_out.ne.data,shotime,'linear');% m^-3
-pne.x = data_out.ne.axis1.data;% m
-pTe.t = shotime;
-pTe.data = interp1(data_out.te.time_axis.data/1e3,data_out.te.data/1e3,shotime,'linear');% keV
-pTe.x = data_out.te.axis1.data;% m
+if isfield(data_out,'ne') && isfield(data_out,'te'),%Thomson scaterring
+    pne.t = shotime;
+    pne.data = interp1(data_out.ne.time_axis.data/1e3,data_out.ne.data,shotime,'linear');% m^-3
+    pne.x = data_out.ne.axis1.data;% m
+    pTe.t = shotime;
+    pTe.data = interp1(data_out.te.time_axis.data/1e3,data_out.te.data/1e3,shotime,'linear');% keV
+    pTe.x = data_out.te.axis1.data;% m
+else
+    pne.x = [];
+    pne.data = [];
+    pTe.x = [];
+    pTe.data = [];
+end
+%
+% Magnetic data
 %
 U_loop.t = shotime;
 U_loop.data = interp1(data_out.U_loop.time_axis.data/1e3,sgolayfilt(data_out.U_loop.data, 1,min(2*round(length(data_out.U_loop.time_axis.data)/400)-1,10001)),shotime,'linear');% V
