@@ -48,7 +48,7 @@ try
         indnan=isnan(data_out.ne.data(it,:));
 
         data_out.ne.data(it, indnan) = interp1 ( data_out.ne.axis1.data (~indnan), data_out.ne.data(it,~indnan),  ...
-          data_out.ne.axis1.data(indnan)  );
+        data_out.ne.axis1.data(indnan)  );
 
         data_out.te.data(it, indnan) = interp1 ( data_out.te.axis1.data (~indnan), data_out.te.data(it,~indnan), ...
             data_out.te.axis1.data(indnan)  );                                        
@@ -61,6 +61,10 @@ try
 %         disp(num2str(size(data_out.ne.data)))  
 %         disp(num2str(data_out.ne.data));
     disp(['Number of NaNs in THOMSON data: ',num2str([length( find(isnan(data_out.ne.data))), length( find(isnan(data_out.te.data)))])]);
+
+    %[data_out.ne] = compass_ts_profile_fit(data_out.ne,data_out.efit.psiRZ,data_out.efit.psi_lcfs,data_out.efit.psi_mag_axis);
+    %[data_out.te] = compass_ts_profile_fit(data_out.te,data_out.efit.psiRZ,data_out.efit.psi_lcfs,data_out.efit.psi_mag_axis);
+
 catch 
     disp('THOMSON data not available')
 end     
@@ -72,3 +76,14 @@ disp('End of reading signals from CDB')
 %     contour(signal.axis1.data(ti,:),signal.axis2.data(ti,:), reshape(signal.data(ti,:,:), [33 33] ),50 );
 %     xlabel('R [m]')
 %     ylabel('Z [m]')
+%
+end
+
+
+function [data_out] = compass_ts_profile_fit(ts,psiRZ,psi1,psi0)
+%
+% Thomson scaterring profile smoothing (remove spurious points)
+%
+ 
+     
+end
