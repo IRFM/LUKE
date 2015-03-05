@@ -105,6 +105,39 @@ if i_opt == 0, % use data from from external database
         %
         equil_magnetic_data = external.magnetic;
         %
+    elseif strcmp(basestr,'COMPASS'),
+        %
+        equil_magnetic_data = external.magnetic;
+        %
+        eqdsk.nnx = length(external.magnetic.efit.R);
+        eqdsk.nny = length(external.magnetic.efit.Z);
+        eqdsk.nnr = length(external.magnetic.efit.psi_n);
+        
+        eqdsk.xbox = external.magnetic.efit.R(end) - external.magnetic.efit.R(1);% horizontal full-width of the rectangle on which poloidal flux values are given
+        eqdsk.ybox = abs(external.magnetic.efit.Z(end) - external.magnetic.efit.Z(1));% vertical full-width of the rectangle on which poloidal flux values are given
+        eqdsk.Rv = external.magnetic.efit.R_geom_axis;% nominal major radius of the torus
+        eqdsk.Rmin = external.magnetic.efit.R(1);% major radius of the inner edge of the box of rectangular grid
+        eqdsk.Zv = 0;% vertical shift of the rectangular box midplane
+        %
+        eqdsk.Rp = external.magnetic.efit.R_mag_axis;% major radius of magnetic axis
+        eqdsk.Zp = external.magnetic.efit.Z_mag_axis;% vertical height of magnetic axis
+        eqdsk.psip = external.magnetic.efit.psi_mag_axis;% poloidal flux function value at the magnetic axis 
+        eqdsk.psia = external.magnetic.efit.psi_lcfs;% poloidal flux function value at the last closed flux surface (touching the limiter or the separatrix)
+        eqdsk.Bv = external.magnetic.efit.B_vac_R_geom*external.magnetic.efit.R_geom_axis/external.magnetic.efit.R_mag_axis;% vacuum toroidal magnetic field at radmaj
+        %
+        eqdsk.Ip = external.magnetic.efit.Ip;% toroidal current
+        %
+        eqdsk.rF = external.magnetic.efit.RBphi.';% R*BPHI  at nnr equispaced points in psi from psimag to psilim.
+        eqdsk.rp = external.magnetic.efit.p_stat;% pressure values at the same points
+        eqdsk.rFdFdpsi = external.magnetic.efit.FFprime;% ffpsiar_prime, [i.e., d f/d (psi)] at the same points
+        eqdsk.rdpdpsi = external.magnetic.efit.pprime_static;% p_prime [i.e., d prar/d (psi)] at the same points
+        %
+        eqdsk.xypsi = external.magnetic.efit.psi_RZ;% psi values on the nnr * nnz equispaced grid
+        %
+        eqdsk.rq = external.magnetic.efit.q.'; % safety factor q on the equispaced psi grid
+        %
+        e_opt = -1;% efit equilibrium
+        %
     elseif strcmp(basestr,'JET'),
         %
         equil_magnetic_data = external.magnetic;
@@ -283,6 +316,11 @@ if e_opt ~= -2,
             type = 1.4;%EAST data format
             n_opt = 0;
             %
+        elseif strcmp(basestr,'COMPASS'),
+            %
+            type = 1.6;%COMPASS data format
+            n_opt = 0;
+            %
         else
             %
             disp('-----> function not yet implemented for this machine.')
@@ -326,6 +364,10 @@ if e_opt ~= -2,
                 %
                 type = 1.4;
                 %
+            elseif strcmp(basestr,'COMPASS'),% COMPASS profile data
+                %
+                type = 1.6;
+                %
             else
                 disp(['-----> profiles data files not treated yet for :',basestr]);
                 return 
@@ -367,7 +409,7 @@ if e_opt ~= -2,
     end
 end
 %
-% ************** BUILT EQUILLIBRIUM *****************
+% ************** BUILT EQUILIBRIUM *****************
 %
 shotid = [basestr,'_',shotnum,'_',shotimestr];
 %
@@ -523,6 +565,21 @@ elseif type == 1.4 && n_opt == 0,%EAST
             end
         end
     end
+    %
+elseif type == 1.6 && n_opt == 0,%COMPASS
+    %
+    profname = [id_equil,'.prof'];
+    %
+    pspsin = equil_prof_data.ppsin;
+    pne = equil_prof_data.ne;
+    pTe = equil_prof_data.Te;
+    pTi = equil_prof_data.Ti;
+    Zeff = equil_prof_data.species.Zeff;
+    zZi = equil_prof_data.zZi;
+    zmi = equil_prof_data.zmi;
+    fi = equil_prof_data.fi;
+    %
+    save(profname,'pspsin','pne','pTe','pTi','Zeff','zZi','zmi','fi','-mat');
     %
 end
 %
