@@ -62,9 +62,6 @@ try
 %         disp(num2str(data_out.ne.data));
     disp(['Number of NaNs in THOMSON data: ',num2str([length( find(isnan(data_out.ne.data))), length( find(isnan(data_out.te.data)))])]);
 
-    %[data_out.ne] = compass_ts_profile_fit(data_out.ne,data_out.efit.psiRZ,data_out.efit.psi_lcfs,data_out.efit.psi_mag_axis);
-    %[data_out.te] = compass_ts_profile_fit(data_out.te,data_out.efit.psiRZ,data_out.efit.psi_lcfs,data_out.efit.psi_mag_axis);
-
 catch 
     disp('THOMSON data not available')
 end     
@@ -79,11 +76,3 @@ disp('End of reading signals from CDB')
 %
 end
 
-
-function [data_out] = compass_ts_profile_fit(ts,psiRZ,psi1,psi0)
-%
-% Thomson scaterring profile smoothing (remove spurious points)
-%
- 
-     
-end
