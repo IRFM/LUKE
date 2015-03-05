@@ -125,11 +125,11 @@ function external = load_externaldata_COMPASS(external_in,opt_gui)
     if isfield(data_out,'ne') && isfield(data_out,'te'),%Thomson scattering
         pne.t = shotime;
         pne.x = data_out.ne.axis1.data;%Vertical TS measuring points (m)
-        pne.data = interp1(data_out.ne.time_axis.data,data_out.ne.data,shotime,'linear');% m^-3
+        pne.data = interp1(data_out.ne.time_axis.data/1e3,data_out.ne.data,shotime,'linear');% m^-3
         pne.data = compass_ts_profile_fit(pne,psi_RZ,psi_n.data,psi_lcfs.data,psi_mag_axis.data);% m^-3
         %
         pTe.t = shotime;
-        pTe.x = data_out.Te.axis1.data;%Vertical TS measuring points (m)
+        pTe.x = data_out.te.axis1.data;%Vertical TS measuring points (m)
         pTe.data = interp1(data_out.te.time_axis.data/1e3,data_out.te.data/1e3,shotime,'linear');% keV
         pTe.data = compass_ts_profile_fit(pTe,psi_RZ,psi_n.data,psi_lcfs.data,psi_mag_axis.data);% keV
     else
@@ -142,10 +142,13 @@ function external = load_externaldata_COMPASS(external_in,opt_gui)
     % Magnetic data
     %
     U_loop.t = shotime;
-    U_loop.data = interp1(data_out.U_loop.time_axis.data/1e3,sgolayfilt(data_out.U_loop.data, 1,min(2*round(length(data_out.U_loop.time_axis.data)/400)-1,10001)),shotime,'linear');% V
+    %U_loop.data = interp1(data_out.U_loop.time_axis.data/1e3,sgolayfilt(data_out.U_loop.data, 1,min(2*round(length(data_out.U_loop.time_axis.data)/400)-1,10001)),shotime,'linear');% V
+    t_resample = 100;
+    U_loop.data = interp1(data_out.U_loop.time_axis.data(t_resample/2:t_resample:end-t_resample/2)/1e3,compass_resample_data(data_out.U_loop.data,t_resample),shotime,'linear');% V
     %close all,plot(data_out.U_loop.time_axis.data/1e3,data_out.U_loop.data,'b',data_out.U_loop.time_axis.data/1e3,sgolayfilt(data_out.U_loop.data, 1,min(2*round(length(data_out.U_loop.time_axis.data)/400)-1,10001)),'r')
     I_plasma.t = shotime;
-    I_plasma.data = interp1(data_out.I_plasma.time_axis.data/1e3,sgolayfilt(data_out.I_plasma.data, 1,min(2*round(length(data_out.I_plasma.time_axis.data)/400)-1,10001)),shotime,'linear');% A
+    %I_plasma.data = interp1(data_out.I_plasma.time_axis.data/1e3,sgolayfilt(data_out.I_plasma.data, 1,min(2*round(length(data_out.I_plasma.time_axis.data)/400)-1,10001)),shotime,'linear');% A
+    I_plasma.data = interp1(data_out.I_plasma.time_axis.data(t_resample/2:t_resample:end-t_resample/2)/1e3,compass_resample_data(data_out.I_plasma.data,t_resample),shotime,'linear');% A
     %close all,plot(data_out.I_plasma.time_axis.data/1e3,data_out.I_plasma.data,'b',data_out.I_plasma.time_axis.data/1e3,sgolayfilt(data_out.I_plasma.data, 1,min(2*round(length(data_out.I_plasma.time_axis.data)/400)-1,10001)),'r')
     %
     % return structure external
@@ -217,7 +220,7 @@ function [data_out] = compass_ts_profile_fit(data_in,psi_RZ,psi_n,psi_lcfs,psi_m
     psi_ts = interp2(psi_RZ.R,psi_RZ.Z,squeeze(psi_RZ.data).',0.56,x,'spline');%psi value where TS measures
     psin_ts = (psi_ts - psi_mag_axis)/(psi_lcfs - psi_mag_axis);%normalized psi where TS measures
     %
-    ipoints = find(x < 0.33);
+    ipoints = find(x < 0.18);%0.33
     %
     ts_ptot = ts(ipoints);
     %
