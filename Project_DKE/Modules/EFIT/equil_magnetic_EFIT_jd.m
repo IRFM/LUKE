@@ -6,7 +6,8 @@ function [equil_magnetic,prho,pspsin,pspsinT,pp] = equil_magnetic_EFIT_jd(eqdsk,
 %
 %	INPUTS:
 %
-%		- filename: equilibrium data and save name
+%		- eqdsk: equilibrium data and save name (if savename not
+%		specified). If eqdsk is a structure, no need of file in eqdsk_jd
 %		- display_mode: option for figure display
 %		- p_opt: option for printing
 %

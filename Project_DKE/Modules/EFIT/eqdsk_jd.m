@@ -68,103 +68,138 @@ if nargin < 2
     display_mode = 0;
 end
 %
-if exist(eqdsk,'file'),
-    eqdsk = fileread(eqdsk);
-end
-%
-istr = find(double(eqdsk) == 10,1,'first');
-str_intro = eqdsk(1:istr-1);
-eqdsk = eqdsk(istr+1 : end);
-sc = 0;
-nn = [];
-while length(str_intro) > 0 & length(nn) < 3,
-    if str_intro(end) ~= ' ' 
-        if sc == 0,
-            sc = 1;
-            str = str_intro(end);
+if ~isstruct(eqdsk),
+    %
+    if exist(eqdsk,'file'),
+        eqdsk = fileread(eqdsk);
+    end
+    %
+    istr = find(double(eqdsk) == 10,1,'first');
+    str_intro = eqdsk(1:istr-1);
+    eqdsk = eqdsk(istr+1 : end);
+    sc = 0;
+    nn = [];
+    while length(str_intro) > 0 & length(nn) < 3,
+        if str_intro(end) ~= ' ' 
+            if sc == 0,
+                sc = 1;
+                str = str_intro(end);
+            else
+                str = [str_intro(end),str];
+            end
         else
-            str = [str_intro(end),str];
+            if sc == 1,
+                nn = [nn,str2num(str)];
+                sc = 0;
+            end           
         end
-    else
-        if sc == 1,
-            nn = [nn,str2num(str)];
-            sc = 0;
-        end           
+        str_intro(end) = '';
     end
-    str_intro(end) = '';
-end
-%
-if nn(3) < 10,
-    nnx = nn(2);
-    nny = nn(1);
-    nnr = nn(2);
+    %
+    if nn(3) < 10,
+        nnx = nn(2);
+        nny = nn(1);
+        nnr = nn(2);
+    else
+        nnx = nn(3);
+        nny = nn(2);
+        if nn(1) == 0,
+            nnr = nn(2);%CQL3D (COMPASS)
+        else
+            nnr = nn(1);
+        end
+    end
+    %
+    [data,~,~,ind] = sscanf(eqdsk,'%e',5);
+    xbox = data(1);% horizontal full-width of the rectangle on which poloidal flux values are given
+    ybox = data(2);% vertical full-width of the rectangle on which poloidal flux values are given
+    Rv = data(3);% nominal major radius of the torus
+    Rmin = data(4);% major radius of the inner edge of the box of rectangular grid
+    Zv = data(5);% vertical shift of the rectangular box midplane
+    %
+    eqdsk = eqdsk(ind:end);
+    [data,~,~,ind] = sscanf(eqdsk,'%e',5);
+    Rp = data(1);% major radius of magnetic axis
+    Zp = data(2);% vertical height of magnetic axis
+    psip = data(3);% poloidal flux function value at the magnetic axis 
+    psia = data(4);% poloidal flux function value at the last closed flux surface (touching the limiter or the separatrix)
+    Bv = data(5);% vacuum toroidal magnetic field at radmaj
+    %
+    eqdsk = eqdsk(ind:end);
+    [data,~,~,ind] = sscanf(eqdsk,'%e',5);
+    Ip = data(1);% toroidal current
+    psimx1 = data(2);% not used
+    psimx2 = data(3);% not used
+    xax1 = data(4);% not used
+    xax2 = data(5);% not used
+    %
+    eqdsk = eqdsk(ind:end);
+    [data,~,~,ind] = sscanf(eqdsk,'%e',5);
+    zax1 = data(1);% not used
+    zax2 = data(2);% not used
+    psisep = data(3);% not used
+    xsep = data(4);% not used
+    zsep = data(5);% not used
+    %
+    eqdsk = eqdsk(ind:end);
+    [rF,~,~,ind] = sscanf(eqdsk,'%e',nnr);% R*BPHI  at nnr equispaced points in psi from psimag to psilim.
+    eqdsk = eqdsk(ind:end);
+    [rp,~,~,ind] = sscanf(eqdsk,'%e',nnr);% pressure values at the same points
+    eqdsk = eqdsk(ind:end);
+    [rFdFdpsi,~,~,ind] = sscanf(eqdsk,'%e',nnr);% ffpsiar_prime, [i.e., d f/d (psi)] at the same points
+    eqdsk = eqdsk(ind:end);
+    [rdpdpsi,~,~,ind] = sscanf(eqdsk,'%e',nnr);% p_prime [i.e., d prar/d (psi)] at the same points
+    %
+    rF = rF.';
+    rp = rp.';
+    rFdFdpsi = rFdFdpsi.';
+    rdpdpsi = rdpdpsi.';
+    %
+    eqdsk = eqdsk(ind:end);
+    [xypsi,~,~,ind] = sscanf(eqdsk,'%e',[nnx,nny]);% psi values on the nnr * nnz equispaced grid
+    %
+    eqdsk = eqdsk(ind:end);
+    [rq,~,~,ind] = sscanf(eqdsk,'%e',nnr); % safety factor q on the equispaced psi grid
+    rq = rq.';
+    %
+    eqdsk = eqdsk(ind:end);
+    [ncoil,~,~,ind] = sscanf(eqdsk,'%d',5);
+    ncoil = ncoil(ncoil>0).';% not used
+    eqdsk = eqdsk(ind:end);
+    [ccoil,~,~,ind] = sscanf(eqdsk,'%e',[ncoil(1),length(ncoil)]);% not used
 else
-    nnx = nn(3);
-    nny = nn(2);
-    if nn(1) == 0,
-        nnr = nn(2);%CQL3D (COMPASS)
-    else
-        nnr = nn(1);
-    end
+    nnx = eqdsk.nnx;
+    nny = eqdsk.nny;
+    nnr = eqdsk.nnr;
+    xbox = eqdsk.xbox;% horizontal full-width of the rectangle on which poloidal flux values are given
+    ybox = eqdsk.ybox;% vertical full-width of the rectangle on which poloidal flux values are given
+    Rv = eqdsk.Rv;% nominal major radius of the torus
+    Rmin = eqdsk.Rmin;% major radius of the inner edge of the box of rectangular grid
+    Zv = eqdsk.Zv;% vertical shift of the rectangular box midplane
+    %
+    Rp = eqdsk.Rp;% major radius of magnetic axis
+    Zp = eqdsk.Zp;% vertical height of magnetic axis
+    psip = eqdsk.psip;% poloidal flux function value at the magnetic axis 
+    psia = eqdsk.psia;% poloidal flux function value at the last closed flux surface (touching the limiter or the separatrix)
+    Bv = eqdsk.Bv;% vacuum toroidal magnetic field at radmaj
+    %
+    Ip = eqdsk.Ip;% toroidal current
+    %
+    rF = eqdsk.rF;% R*BPHI  at nnr equispaced points in psi from psimag to psilim.
+    rp = eqdsk.rp;% pressure values at the same points
+    rFdFdpsi = eqdsk.rFdFdpsi;% ffpsiar_prime, [i.e., d f/d (psi)] at the same points
+    rdpdpsi = eqdsk.rdpdpsi;% p_prime [i.e., d prar/d (psi)] at the same points
+    %
+    rF = rF.';
+    rp = rp.';
+    rFdFdpsi = rFdFdpsi.';
+    rdpdpsi = rdpdpsi.';
+    %
+    xypsi = eqdsk.xypsi;% psi values on the nnr * nnz equispaced grid
+    %
+    rq = eqdsk.rq; % safety factor q on the equispaced psi grid
+    rq = rq.';
 end
-%
-[data,~,~,ind] = sscanf(eqdsk,'%e',5);
-xbox = data(1);% horizontal full-width of the rectangle on which poloidal flux values are given
-ybox = data(2);% vertical full-width of the rectangle on which poloidal flux values are given
-Rv = data(3);% nominal major radius of the torus
-Rmin = data(4);% major radius of the inner edge of the box of rectangular grid
-Zv = data(5);% vertical shift of the rectangular box midplane
-%
-eqdsk = eqdsk(ind:end);
-[data,~,~,ind] = sscanf(eqdsk,'%e',5);
-Rp = data(1);% major radius of magnetic axis
-Zp = data(2);% vertical height of magnetic axis
-psip = data(3);% poloidal flux function value at the magnetic axis 
-psia = data(4);% poloidal flux function value at the last closed flux surface (touching the limiter or the separatrix)
-Bv = data(5);% vacuum toroidal magnetic field at radmaj
-%
-eqdsk = eqdsk(ind:end);
-[data,~,~,ind] = sscanf(eqdsk,'%e',5);
-Ip = data(1);% toroidal current
-psimx1 = data(2);% not used
-psimx2 = data(3);% not used
-xax1 = data(4);% not used
-xax2 = data(5);% not used
-%
-eqdsk = eqdsk(ind:end);
-[data,~,~,ind] = sscanf(eqdsk,'%e',5);
-zax1 = data(1);% not used
-zax2 = data(2);% not used
-psisep = data(3);% not used
-xsep = data(4);% not used
-zsep = data(5);% not used
-%
-eqdsk = eqdsk(ind:end);
-[rF,~,~,ind] = sscanf(eqdsk,'%e',nnr);% R*BPHI  at nnr equispaced points in psi from psimag to psilim.
-eqdsk = eqdsk(ind:end);
-[rp,~,~,ind] = sscanf(eqdsk,'%e',nnr);% pressure values at the same points
-eqdsk = eqdsk(ind:end);
-[rFdFdpsi,~,~,ind] = sscanf(eqdsk,'%e',nnr);% ffpsiar_prime, [i.e., d f/d (psi)] at the same points
-eqdsk = eqdsk(ind:end);
-[rdpdpsi,~,~,ind] = sscanf(eqdsk,'%e',nnr);% p_prime [i.e., d prar/d (psi)] at the same points
-%
-rF = rF.';
-rp = rp.';
-rFdFdpsi = rFdFdpsi.';
-rdpdpsi = rdpdpsi.';
-%
-eqdsk = eqdsk(ind:end);
-[xypsi,~,~,ind] = sscanf(eqdsk,'%e',[nnx,nny]);% psi values on the nnr * nnz equispaced grid
-%
-eqdsk = eqdsk(ind:end);
-[rq,~,~,ind] = sscanf(eqdsk,'%e',nnr); % safety factor q on the equispaced psi grid
-rq = rq.';
-%
-eqdsk = eqdsk(ind:end);
-[ncoil,~,~,ind] = sscanf(eqdsk,'%d',5);
-ncoil = ncoil(ncoil>0).';% not used
-eqdsk = eqdsk(ind:end);
-[ccoil,~,~,ind] = sscanf(eqdsk,'%e',[ncoil(1),length(ncoil)]);% not used
 %
 R = Rmin + linspace(0,xbox,nnx);
 Z = Zv + linspace(-ybox/2,ybox/2,nny);
