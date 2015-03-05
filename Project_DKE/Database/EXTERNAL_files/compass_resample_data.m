@@ -1,4 +1,4 @@
-function res = resample_data(data, ww)
+function res = compass_resample_data(data, ww)
 
 % fast resample data using a running average filter
 %
