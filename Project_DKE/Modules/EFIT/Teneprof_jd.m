@@ -86,6 +86,12 @@ elseif type == 1.5 ,%.mat, DEMO profile (Artaud)
     zZi = equil_prof.zZi;
     zmi = equil_prof.zmi;
     %
+elseif type == 1.6 ,%.mat, COMPASS
+    %
+    eval(['load -mat ',filename,' pspsin pne pTe pTi Zeff zZi zmi fi']);
+    %
+    delete(filename)
+    
 elseif type == 2,%ascii - 203040
     [prho,pTi,pTe,pni,pne] = textread(filename,'%n%n%n%n%n');
 elseif type == 3,%ascii formatted (CMOD)
@@ -395,7 +401,7 @@ elseif type == -2 || type == 1,%TCV
     pzni = [fi.'*pnH;pnZ];
     pzTi = ones(nz,1)*pTi;
 end
-if type == 1.1 || type == 1.2 || type == 1.4 || type>= 3 && type ~=5 && type ~=6 && type ~=7,
+if type == 1.1 || type == 1.2 || type == 1.4 || type == 1.6 || type>= 3 && type ~=5 && type ~=6 && type ~=7,
     %
     pnH = pne*(zZi(4) - Zeff)/(zZi(4) - 1);
     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
