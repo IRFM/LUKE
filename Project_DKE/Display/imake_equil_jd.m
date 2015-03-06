@@ -570,11 +570,11 @@ elseif type == 1.6 && n_opt == 0,%COMPASS
     %
     profname = [id_equil,'.prof'];
     %
-    pspsin = equil_prof_data.ppsin;
-    pne = equil_prof_data.ne;
-    pTe = equil_prof_data.Te;
-    pTi = equil_prof_data.Ti;
-    Zeff = equil_prof_data.species.Zeff;
+    pspsin = equil_prof_data.pspsin;
+    pne = equil_prof_data.pne.';
+    pTe = equil_prof_data.pTe.';
+    pTi = equil_prof_data.pTi.';
+    Zeff = equil_prof_data.Zeff;
     zZi = equil_prof_data.zZi;
     zmi = equil_prof_data.zmi;
     fi = equil_prof_data.fi;
