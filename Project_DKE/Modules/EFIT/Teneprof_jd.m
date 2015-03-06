@@ -316,7 +316,7 @@ elseif type == 7,%ascii formatted (ASCOT)
     nion = length(zZi);
 end
 %
-if type == -2 || (type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4 && type ~= 1.5),
+if type == -2 || (type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4 && type ~= 1.5 && type ~= 1.6),
     %
     zZi = [1,1,1,6];
     zmi = [1,2,3,12];
