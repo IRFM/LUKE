@@ -157,7 +157,7 @@ function external = load_externaldata_COMPASS(external_in,opt_gui)
     external.shotnum = num2str(shotnum);
     external.shotime = shotime;
     %
-    external.ohm.Vloop = U_loop.data;
+    external.ohm.vloop = U_loop.data;
     %
     external.equil.shotnum = external.shotnum;
     external.equil.shotime = external.shotime;
