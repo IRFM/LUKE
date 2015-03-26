@@ -1,11 +1,12 @@
-function [na] = LH_acces_yp(equil,wave,iray) 
+function [na] = LH_acces_yp(equil,ray,mask,iray) 
 %
 %    Calculation of the Stix-Golant LH ray accessibility and plot of a ray in the contour plot
 %    
 %    Input:
 %
 %	  - equil: equilibrium structure
-%	  - wave: wave structure
+%	  - ray: ray structure
+%     - mask: mask for linear absorption
 %     - iray: ray index
 %
 %    Output:
@@ -15,6 +16,10 @@ function [na] = LH_acces_yp(equil,wave,iray)
 %by Y.PEYSSON (yves.peysson@cea.fr) and J. Decker (joan.decker@epfl.ch)
 %
 if nargin < 2, error('Not enough input arguments in LH_acces_yp');end
+if nargin < 3,
+    mask = ones(size(ray.sx));
+    iray = NaN;  
+end
 %
 [qe,me,mp,~,e0] = pc_dke_yp;%Universal physics constant
 %
@@ -25,7 +30,7 @@ psin = equil.psi_apRp(:)*ones(1,length(equil.theta))/equil.psi_apRp(end);%normal
 %
 %Calculation of epsiperp
 %
-omega_lh = wave.omega_rf;%rad/s
+omega_lh = ray.omega_rf;%rad/s
 omega_cen = (qe/me).*B/omega_lh;
 omega_pen = qe*sqrt(equil.pne(:)*ones(1,length(equil.theta))/e0/me)/omega_lh;
 omega_cin = shiftdim(repmat((qe*equil.zZi./mp./equil.zmi)',1,length(equil.psi_apRp),length(equil.theta)),1).*repmat(B,1,1,length(equil.zZi))/omega_lh;
@@ -61,11 +66,10 @@ axis('equal')
 set(gca, 'CLim', [1, max(max(na))]);
 c = colorbar;
 c.Label.String = 'N_{||acc.}';
-if ~isnan(iray),
-	hold on;
-    graph1D_jd(wave.rays{iray}.sx+equil.Rp,wave.rays{iray}.sy+equil.Zp,0,0,'','','',NaN,NaN,NaN,'-','none','r',2);
-    hold off
-end
+hold on;
+graph1D_jd(ray.sx(mask)+equil.Rp,ray.sy(mask)+equil.Zp,0,0,'','','',NaN,NaN,NaN,'-','none','r',2);
+hold off
+
 %
 figure('Name','Energy of Resonant Electrons');
 subplot(121),graph1D_jd([flipud(R(:,(length(equil.theta)+1)/2));R(:,1)],[flipud(E(:,(length(equil.theta)+1)/2));E(:,1)],0,0,'R (m)','Resonant fast electrons, E_{c} (keV)','Z = Z_{p}',NaN,NaN,NaN,'-','none','r',2);
@@ -75,9 +79,7 @@ subplot(122),graph2D_jd(R,Z,psin','R (m)','Z (m)',[strrep(equil.id,'_','-'),', r
 c = colorbar;
 c.Label.String = 'Resonant electrons, E_{c} (keV)';
 axis('equal')
-if ~isnan(iray),
-	hold on;
-    graph1D_jd(wave.rays{iray}.sx+equil.Rp,wave.rays{iray}.sy+equil.Zp,0,0,'','','',NaN,NaN,NaN,'-','none','r',2);
-    hold off
-end
+hold on;
+graph1D_jd(ray.sx(mask)+equil.Rp,ray.sy(mask)+equil.Zp,0,0,'','','',NaN,NaN,NaN,'-','none','r',2);
+hold off
 %
