@@ -6,11 +6,11 @@ type  = 'LH';
 %
 % ------- LH antenna #1 (3.70 GHz - PAM) -------
 %
-launchs{1}.id = 'antenna_3p70GHz';
+launchs{1}.id = 'antenna_3p70Ghz';
 launchs{1}.type = type;
 %
 launchs{1}.omega_rf = 3.70*2*pi*1e9;%wave angular frequency (rad/s) [1,1]
-launchs{1}.rZ0 = [0.1202 0.0421 -0.0421 -0.1202];%vertical launching positions (m) [1,m_pol]
+launchs{1}.rZ0 = [-0.12021    -0.04207     0.04207     0.12021];%vertical launching positions (m) [1,m_pol]
 %
 launchs{1}.phi0 = 0;%toroidal angle position [1,1]
 launchs{1}.LFS = 1;% (-1) high field side launching, (1) low field side launching [1,1]
@@ -29,5 +29,4 @@ ids = cell(1,nlaunchs);
 for ilaunch = 1:nlaunchs,
     ids{ilaunch} = launchs{ilaunch}.id;
 end
-
 
