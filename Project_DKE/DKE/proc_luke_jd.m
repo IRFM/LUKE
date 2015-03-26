@@ -1877,8 +1877,8 @@ function [rho,drho] = calc_peak_jd(xrho,xdrho,xQ,xdV,opt_dens,opt_peak)
         ixm = 1 + find(diff(xprof(xmaskm))*peaksign <= 0,1,'last');
         xmaskm = xmaskm(max([1,ixm]):end);% last point for the current lobe containing peak
         %
-        rho = xrho(ipeak);
-        drho = interp1([peaksign*xprof(xmaskp),0],[xrho(xmaskp),1],profmax/2) - interp1([0,peaksign*xprof(xmaskm)],[0,xrho(xmaskm)],profmax/2);% FWHM
+        rho = xrho(ipeak);        
+        drho = interp1([peaksign*xprof(xmaskp),eps],[xrho(xmaskp),1],profmax/2) - interp1([0,peaksign*xprof(xmaskm)],[eps,xrho(xmaskm)],profmax/2);% FWHM
     else
         %
         ixp = find(xint(xmaskp)*peaksign <= 0,1,'first') - 1;
