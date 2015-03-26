@@ -76,7 +76,7 @@ if i_opt == 0, % use data from from external database
         shotimestr = num2str(shotime,'%6.4f');
     end
     %
-    if strcmp(basestr,'TCV') || strcmp(basestr,'EAST'),
+    if strcmp(basestr,'TCV') || strcmp(basestr,'EAST') || strcmp(basestr,'HL2A'),
         %
         if isfield(external.magnetic,'eqdsk'),
             %
@@ -311,9 +311,9 @@ if e_opt ~= -2,
                 n_opt = 0;
                 %
             end
-        elseif strcmp(basestr,'EAST'),
+        elseif strcmp(basestr,'EAST') || strcmp(basestr,'HL2A'),
             %
-            type = 1.4;%EAST data format
+            type = 1.4;%EAST or HL2A data format
             n_opt = 0;
             %
         elseif strcmp(basestr,'COMPASS'),
@@ -360,7 +360,7 @@ if e_opt ~= -2,
                 %
                 type = 0.2;
                 %
-            elseif strcmp(basestr,'EAST'),% EAST profile data
+            elseif strcmp(basestr,'EAST') || strcmp(basestr,'HL2A'),% EAST or HL2A profile data
                 %
                 type = 1.4;
                 %
@@ -532,7 +532,7 @@ elseif type == 1.2 && n_opt == 0,
     %
     save(profname,'pspsin','pne','pTe','pTi','Zeff','-mat');          
     %
-elseif type == 1.4 && n_opt == 0,%EAST
+elseif type == 1.4 && n_opt == 0,%EAST or HL2A
     %
     profname = [id_equil,'.prof'];
     %

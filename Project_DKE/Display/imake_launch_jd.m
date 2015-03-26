@@ -259,7 +259,7 @@ if ~isempty(external),% import wave data from external structure
             end
         end
         %
-    elseif strcmp(basestr,'EAST'),
+    elseif strcmp(basestr,'EAST') || strcmp(basestr,'HL2A'),
         %
         % Case of LH spectrum from ALOHA file
         %

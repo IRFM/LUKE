@@ -80,7 +80,7 @@ if i_opt == 0,% data loaded from external database
         ishot = 1;
     end
     %
-    if strcmp(basestr,'EAST'),
+    if strcmp(basestr,'EAST') || strcmp(basestr,'HL2A'),
         vloop = external.Vloop;
     else
         vloop = external.vloop(ishot);

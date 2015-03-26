@@ -261,7 +261,7 @@ if ~isempty(external),
             lob = 'No';
         end
         %
-    elseif strcmp(basestr,'EAST'),
+    elseif strcmp(basestr,'EAST') || strcmp(basestr,'HL2A'),
         %
         fexternal = fieldnames(external);
         %
@@ -369,7 +369,7 @@ end
 %     %
 %     launch = launchs{a_opt};
 %     %
-% elseif strcmp(basestr,'EAST'),
+% elseif strcmp(basestr,'EAST') || strcmp(basestr,'HL2A'),
 %     
 % else % default values
 %     %
