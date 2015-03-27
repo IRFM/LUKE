@@ -1266,6 +1266,10 @@ while iw ~= 0 && any(ibb ~= 0)
         %
     	print_jd(opt.print,[figname,'Wave_',num2str(iw),'_Ray_',num2str(ibb)],'figures_WAVE');	
     end
+    %
+    if strcmp(waves{iw}.rayinit.type,'LH')
+        LH_acces_yp(equil,ray,mask_max,iy);
+    end
 end
 %
 end
