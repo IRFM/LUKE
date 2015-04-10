@@ -328,22 +328,34 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
         [jrhoT,jdrhoT] = calc_peak_jd(xrhoT,xdrhoT,J_tot,equilDKE.xdA_dke,opt.jpeak,opt.peakmode);
         [jrhoV,jdrhoV] = calc_peak_jd(xrhoV,xdrhoV,J_tot,equilDKE.xdA_dke,opt.jpeak,opt.peakmode);
         %
-        [P_rf_rhoG,P_rf_drhoG] = calc_peak_jd(xrhoG,xdrhoG,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
-        [P_rf_rhoP,P_rf_drhoP] = calc_peak_jd(xrhoP,xdrhoP,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
-        [P_rf_rhoT,P_rf_drhoT] = calc_peak_jd(xrhoT,xdrhoT,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
-        [P_rf_rhoV,P_rf_drhoV] = calc_peak_jd(xrhoV,xdrhoV,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+        if sum(P_rf) ~= 0
+            [P_rf_rhoG,P_rf_drhoG] = calc_peak_jd(xrhoG,xdrhoG,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoP,P_rf_drhoP] = calc_peak_jd(xrhoP,xdrhoP,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoT,P_rf_drhoT] = calc_peak_jd(xrhoT,xdrhoT,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoV,P_rf_drhoV] = calc_peak_jd(xrhoV,xdrhoV,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+        else
+            P_rf_rhoG = NaN;P_rf_drhoG = NaN;
+            P_rf_rhoP = NaN;P_rf_drhoP = NaN;
+            P_rf_rhoT = NaN;P_rf_drhoT = NaN;
+            P_rf_rhoV = NaN;P_rf_drhoV = NaN;
+        end
         %
         jTe = interp1(xrhoG,xTe,jrhoG);
         jne = interp1(xrhoG,xne,jrhoG);
         %
-        P_rf_Te = interp1(xrhoG,xTe,P_rf_rhoG);
-        P_rf_ne = interp1(xrhoG,xne,P_rf_rhoG);
+        if ~isnan(P_rf_rhoG)
+            P_rf_Te = interp1(xrhoG,xTe,P_rf_rhoG);
+            P_rf_ne = interp1(xrhoG,xne,P_rf_rhoG);
+        else
+            P_rf_Te = NaN;
+            P_rf_ne = NaN;
+        end
         %
-        if isempty(opt.peak),
+        if isempty(opt.peak) && sum(P_rf) ~= 0,
             opt.peak = input_dke_yp('Do you want to display specific information for each absorption peak? (y/n)','n',{'n','y'},'',[1,1]);
         end
         %
-        if isempty(opt.wave),
+        if isempty(opt.wave) && sum(P_rf) ~= 0,
             opt.wave = input_dke_yp('Do you want to display specific information for each wave? (y/n)','n',{'n','y'},'',[1,1]);
         end
         %
@@ -960,12 +972,14 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             end
             disp(['Location of current peak (rho',opt.rho,'): ',num2str(jrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
             disp(['Current FWHM (drho',opt.rho,'): ',num2str(jdrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
-            disp(['RF efficiency (n_19*I*Rp/P): ',num2str(data_proc.scalar.EtaRFRp),' 10^19 A/(W.m^2)'])
-            disp(['Location of RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
-            disp(['RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
-            disp(['Number of RF ray fragments: ',num2str(data_proc.scalar.nfrags)])
+            if sum(P_rf) ~= 0,
+                disp(['RF efficiency (n_19*I*Rp/P): ',num2str(data_proc.scalar.EtaRFRp),' 10^19 A/(W.m^2)'])
+                disp(['Location of RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
+                disp(['RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
+                disp(['Number of RF ray fragments: ',num2str(data_proc.scalar.nfrags)])
+            end
             %
-            if isinf(data_proc.scalar.Rp),
+            if isinf(data_proc.scalar.Rp) & sum(P_rf) ~= 0,
                 disp(['Launched RF power (P/2piRp): ',num2str(data_proc.scalar.p0_rf_2piRp),' MW/m'])
                 disp(['RF power absorbed (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
                 for in_rf = 1:nn_rf,
@@ -1025,11 +1039,13 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 %
             else
                 disp(['Launched RF power (P): ',num2str(data_proc.scalar.p0_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
-                disp(['RF power absorbed (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
-                for in_rf = 1:nn_rf,
-                    disp(['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'])
+                if sum(P_rf) ~= 0,
+                    disp(['RF power absorbed (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
+                    for in_rf = 1:nn_rf,
+                        disp(['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'])
+                    end
+                    disp(['Linear RF power absorbed (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'])
                 end
-                disp(['Linear RF power absorbed (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'])
                 disp(['Ohmic power deposited (P): ',num2str(data_proc.scalar.p_e_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
                 disp(['Total power deposited (P): ',num2str(data_proc.scalar.p_tot_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
                 disp(['CD efficiency (I/P): ',num2str(data_proc.scalar.EtaRp/data_proc.scalar.Rp),' A/W'])
@@ -1140,7 +1156,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             %
             % power dPdrho profiles - by wave number
             %
-            if ~isfield(opt,'axs') && opt.wave == 'y' && nw > 1,
+            if ~isfield(opt,'axs') & opt.wave == 'y' & nw > 1,
                 %
                 figure(101),clf,set(101,'Name',['RF power deposition profile per wave # - ',data_proc.simul.id])
                 %
@@ -1317,20 +1333,36 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             %
             % combined current and power density profiles
             %
-            if ~isfield(opt,'axs'),
-                %
-                figure(6),clf,set(6,'Name',['Current and RF power density profiles - ',data_proc.simul.id])
-                %    
-                ylab1 = 'J (MA/m^2)';
-                ylab2 = 'P_{RF} (MW/m^3)';
-                ylim1 = NaN;
-                ylim2 = NaN;
-                %
-                graph1D2jd(xrho,data_proc.radial.J_tot,xrho,data_proc.radial.P_rf,xlab_rho,ylab1,ylab2,tit,xlim_rho,ylim1,ylim2,...
-                style,marker1,color2,width2,style,marker1,color3,width2,opt.font,red,lspace2,bspace);
-                %
-                print_jd(p_opt,[data_proc.simul.id,'_J_Prf_profile'],'figures_LUKE');
-                %
+            if ~isfield(opt,'axs')
+                if sum(P_rf) ~= 0,
+                    %
+                    figure(6),clf,set(6,'Name',['Current and RF power density profiles - ',data_proc.simul.id])
+                    %    
+                    ylab1 = 'J (MA/m^2)';
+                    ylab2 = 'P_{RF} (MW/m^3)';
+                    ylim1 = NaN;
+                    ylim2 = NaN;
+                    %
+                    graph1D2jd(xrho,data_proc.radial.J_tot,xrho,data_proc.radial.P_rf,xlab_rho,ylab1,ylab2,tit,xlim_rho,ylim1,ylim2,...
+                    style,marker1,color2,width2,style,marker1,color3,width2,opt.font,red,lspace2,bspace);
+                    %
+                    print_jd(p_opt,[data_proc.simul.id,'_J_Prf_profile'],'figures_LUKE');
+                    %
+                else
+                                        %
+                    figure(6),clf,set(6,'Name',['Current and Ohmic power density profiles - ',data_proc.simul.id])
+                    %    
+                    ylab1 = 'J (MA/m^2)';
+                    ylab2 = 'P_{Ohm} (MW/m^3)';
+                    ylim1 = NaN;
+                    ylim2 = NaN;
+                    %
+                    graph1D2jd(xrho,data_proc.radial.J_tot,xrho,data_proc.radial.P_tot,xlab_rho,ylab1,ylab2,tit,xlim_rho,ylim1,ylim2,...
+                    style,marker1,color2,width2,style,marker1,color3,width2,opt.font,red,lspace2,bspace);
+                    %
+                    print_jd(p_opt,[data_proc.simul.id,'_J_Pohm_profile'],'figures_LUKE');
+                    %
+                end
             end
             %
             % magnetic ripple losses
@@ -1411,7 +1443,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 %
             end
             %
-            if opt.spec == 1
+            if opt.spec == 1 & sum(P_rf) ~= 0,
                 disp('******** power absorption along specific rays ********');
                 %
                 iw = NaN;
