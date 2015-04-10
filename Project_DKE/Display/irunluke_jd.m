@@ -1008,6 +1008,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                 [equil,paths.equil,fileids.equil,newstruct] = ...
                     imake_struct_jd(dkepath,equil,'equil',paths.equil,fileids.equil,signs,basestr,smakecmd,external,status.equil,'EQUIL',workdir,'',opt_gui,0,0,1,0);
                 %
+                if input_dke_yp('Do you want to check the toroidal MHD equilibrium consistency (y/n)','y',{'y','n'}) == 'y',
+                    equil = equilconsistency_yp(equil);
+                end
+                %
                 if isempty(equil)
                     signs = [];
                 elseif isfield(equil,'signs'),
