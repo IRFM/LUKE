@@ -114,6 +114,12 @@ elseif i_opt == 2,% build the wave data locally
         %
         type = launch.type;
         %
+        if isfield(launch,'tail')
+            if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
+                launch.id = [launch.id,'_TAIL_',make_tail_simulid_jd(launch.tail)];
+            end
+        end
+        %
     elseif d_opt == 2,%initial conditions from an existing RAYINIT file 
         %
         rayinit = iload_struct_jd('rayinit','RAYINIT',workdir,opt_gui);
