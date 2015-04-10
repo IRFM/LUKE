@@ -80,6 +80,12 @@ if i_opt == 0,% use data from external database
     %
     type = launch.type;
     %
+    if isfield(launch,'tail')
+        if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
+            launch.id = [launch.id,'_TAIL_',make_tail_simulid_jd(launch.tail)];
+        end
+    end
+    %
 elseif i_opt == 1,% use data from an existing file
     %
     w_opt = input_dke_yp('Code used to generate data : 1 (TORAY), 2 (ART), 3 (AMR), 4 (EVE)',1,1:4,'',[1,1]);
@@ -105,6 +111,12 @@ elseif i_opt == 2,% build the wave data locally
         launch = imod_struct_jd(launchs{1},'launch',1,opt_gui);
         %
         type = launch.type;
+        %
+        if isfield(launch,'tail')
+            if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
+                launch.id = [launch.id,'_TAIL_',make_tail_simulid_jd(launch.tail)];
+            end
+        end
         %
     elseif d_opt == 1,%initial conditions from an existing LAUNCH file 
         %
@@ -138,6 +150,11 @@ elseif i_opt == 2,% build the wave data locally
             %
             launch = imod_struct_jd(launchs{1},'launch',1,opt_gui);
             %
+            if isfield(launch,'tail')
+                if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
+                    launch.id = [launch.id,'_TAIL_',make_tail_simulid_jd(launch.tail)];
+                end
+            end
         else
             disp('No file selected, aborted.')
             return
