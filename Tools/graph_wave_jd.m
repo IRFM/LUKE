@@ -915,6 +915,14 @@ while iw ~= 0 && any(ibb ~= 0)
         continue
     end
     %
+    if strcmp(waves{iw}.rayinit.type,'LH')
+    	waves{iw}.rayinit.Rp = Rp;
+    	plot_spectrum_from_launch_jd(waves{iw}.rayinit,NaN,-1,[])
+		%	
+    	plot_spectrum_from_launch_jd(waves{iw}.rayinit.launch,NaN,-1,[])
+    	%
+    end
+    %
     ibb = input_dke_yp('ray indices (0 to return)',1,0:nymask(iw));
     %
     if ibb == 0,
