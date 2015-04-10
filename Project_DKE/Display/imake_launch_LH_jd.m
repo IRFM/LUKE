@@ -225,10 +225,16 @@ if select.tail,
 else
     tail.bn_tail = 0;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen) 
 end
-tail.bP_tail = NaN;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (no used if linear_tail is chosen) 
+tail.bP_tail = 0.5;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (no used if linear_tail is chosen) 
 tail.bopt_tail = 0 + 1i;%Final power fraction of the tail @ Nparmax_tail (+1i) Adjust initial dNpar0 such that initial and tail lobes have the same width
 %
 launch.tail = tail;
+%
+if isfield(launch,'tail')
+    if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
+        launch.id = [launch.id,'_TAIL_',make_tail_simulid_jd(launch.tail)];
+    end
+end
 %
 return
 %
