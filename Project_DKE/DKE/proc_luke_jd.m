@@ -397,7 +397,11 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 %
             elseif isfield(dke_out.equil,'iohm')
                 %
-                I_exp = (dke_out.equil.icd + dke_out.equil.iohm)/1e6;
+                if sum(P_rf) == 0,
+                    I_exp = dke_out.equil.iohm/1e6;
+                else
+                    I_exp = (dke_out.equil.icd + dke_out.equil.iohm)/1e6;
+                end
                 %
             else
                 %
@@ -764,6 +768,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             data_proc.scalar.ksirf = ksirf;
             data_proc.scalar.nfrags = nfrags;
             data_proc.scalar.Rp = equilDKE.Rp;
+            data_proc.scalar.V_loop_init = 2*pi*equilDKE.Rp*mksa.Edreicer_ref*dke_out.xepsi_init(end);
             %
             data_proc.scalar.jrhoG = jrhoG;
             data_proc.scalar.jrhoP = jrhoP;
@@ -1049,6 +1054,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 disp(['Ohmic power deposited (P): ',num2str(data_proc.scalar.p_e_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
                 disp(['Total power deposited (P): ',num2str(data_proc.scalar.p_tot_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
                 disp(['CD efficiency (I/P): ',num2str(data_proc.scalar.EtaRp/data_proc.scalar.Rp),' A/W'])
+                disp(['Initial loop voltage (V): ',num2str(data_proc.scalar.V_loop_init),' V'])
                 %
                 if opt.peak == 'y',
                     %
