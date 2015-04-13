@@ -90,6 +90,11 @@ switch action
                 clear lukeobjmod
                 %
                 if any(status.job > 0),
+                    if sum(status.job > 0) == 1,% job started for one time only
+                        curtime = find(status.job > 0);
+                        iluke_update;
+                    end
+                    %
                     lukeobj.timeout.value = 1;
                     action = 'lukerun';iluke_callbacks;
                 else
@@ -2630,6 +2635,68 @@ switch action
         if length(graphs) > 2,
             lukeobj.plot3.gindex(it_g) = ngraphs + 3;
         end
+        %
+        clear it_g ngraphs axs
+        %
+        lukeobj = iluke_info(lukeobj,'text');% enable info display
+        %
+    case 'lukefluct'
+        %
+        % displaying luke fluct data
+        %
+        lukeobj = iluke_info(lukeobj,'');% disable info display
+        %
+        it_g = 2 + curtime;%<new>,<all>,...
+        %
+        lukeobj.plot1.gindex(it_g) = 0;
+        lukeobj.plot2.gindex(it_g) = 0;
+        lukeobj.plot3.gindex(it_g) = 0;
+        %
+        cleartags{it_g} = {'fluct'};
+        %
+        iluke_update;% initialize display
+        %
+        axs(1) = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
+        axs(2) = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        axs(3) = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        axs(4) = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        axs(5) = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
+        %
+        opt.style = style;
+        opt.axs = axs;
+        opt.font = style;
+        %
+        fluct_display.mode = 2;
+        fluct_display.evol = 0;
+        fluct_display.stat = 0;
+        %
+        backup_file = [workdir,filesep,'backup_',make_luke_simulid_jd(equils{curtime},ohms{curtime},transpfastes{curtime},ripples{curtime},wavess{curtime}),'.mat'];
+        %
+        set(lukeobj.busy.handle,'Visible','on');drawnow;
+        %
+        fproc_fluctn_jd(backup_file,fluct_display,'',NaN,opt);%Zfluct_out = %outputs{curtime}.data_proc
+        %
+        set(lukeobj.busy.handle,'Visible','off');drawnow;
+        %
+        clear opt fluct_display backup_file
+        %
+        graphs(1) = iluke_graphs(lukeobj.plot1.handle,2,'current evolution','fluct');
+        graphs(2) = iluke_graphs(lukeobj.plot2.handle,2,'current location','fluct');
+        graphs(3:5) = iluke_graphs(lukeobj.plot3.handle,{[3,6],[1,4],[2,5]},{'power location','current profile','power profile'},'fluct');
+        %
+%         if isfield(outputs{curtime},'info') && isfield(outputs{curtime}.info,'txt'),
+%             lukeobj.infotext.string = outputs{curtime}.info.txt;
+%         else
+            lukeobj.infotext.string = '';
+%         end
+        %
+        ngraphs = length(graphss{it_g});
+        %
+        graphss{it_g}(end+1:end+length(graphs)) = graphs;
+        %
+        lukeobj.plot1.gindex(it_g) = ngraphs + 1;
+        lukeobj.plot2.gindex(it_g) = ngraphs + 2;
+        lukeobj.plot3.gindex(it_g) = ngraphs + 3;
         %
         clear it_g ngraphs axs
         %

@@ -27,6 +27,9 @@ if curtime > 0,
         lukeobj.fluct.clear.state = 'off';
         %
         lukeobj.fluct.text.string = '< empty >';
+        %
+        lukeobj.luke.fluct.state = 'off';
+        lukeobj.luke.fluct.highlight = false;
     else
         lukeobj.fluct.modify.state = 'on';
         lukeobj.fluct.save.state = 'on';
@@ -38,9 +41,28 @@ if curtime > 0,
         lukeobj.fluct.clear.state = 'on';
         %
         lukeobj.fluct.text.string = fluctparams{curtime}.id;
+        %
+        backup_file = [workdir,filesep,'backup_',make_luke_simulid_jd(equils{curtime},ohms{curtime},transpfastes{curtime},ripples{curtime},wavess{curtime}),'.mat'];
+        %
+        if exist(backup_file,'file')
+            lukeobj.luke.fluct.state = 'on';
+            lukeobj.luke.fluct.highlight = true;
+            if status.output(curtime) == 0,                
+                lukeobj.luke.text.string = 'backup file exists';
+            end
+        else
+            lukeobj.luke.fluct.state = 'off';
+            lukeobj.luke.fluct.highlight = false;
+        end
+        %
+        clear backup_file
+        %
     end
     %
 else
+    %
+    lukeobj.luke.fluct.state = 'off';
+    lukeobj.luke.fluct.highlight = false;
     %
     if all(status.fluct < 0),% no equil, fluct params cannot be loaded
         lukeobj.fluct.load.state = 'off';
