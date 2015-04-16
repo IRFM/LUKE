@@ -40,9 +40,11 @@ end
 %
 % 3-D relativistic bounce averaged quasilinear kinetic calculations (LUKE)
 %
-if dkeparam.rt_mode == 1,
+if dkeparam.rt_mode == 0 || dkeparam.rt_mode == 1,
 %
-% Case with sdNpar given by the waves structure (usualy constant along ray propagation)
+% Case with sdNpar given by the waves structure (usualy constant along ray
+% propagation) if the waves structure is filled, or case without RF power
+% if waves is empty
 %
     [Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in,loadstruct);
 %
@@ -355,7 +357,7 @@ else
     mksa = [];
     XXsinksource = [];  
     dke_warnings = [];
-    warning('rt mode not recongized in loop_run_lukert.m');
+    warning('rt mode not recognized in loop_run_lukert.m');
 end
 %
 
