@@ -83,7 +83,7 @@ if ~isnan(maxw)
     end
     Z = Z + eps*(Z==0);
     lnZ = log(Z/Z_0);
-    Z = sqrt(maxw^2*lnZ.^2 - 2*lnZ);
+    Z = real(sqrt(maxw^2*lnZ.^2 - 2*lnZ));
 end
 %
 %hold on
