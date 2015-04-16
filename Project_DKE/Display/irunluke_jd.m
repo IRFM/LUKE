@@ -1476,7 +1476,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 clear lukestructs
                 %	    
-                if status.output == 1 && status.data == 2 && input_dke_yp('--> Do you want to update the waves structures with LUKE absorption (y/n)','y',{'y','n'}) == 'y',
+                if status.output == 1 && status.data == 2 && status.waves ~= 0 && input_dke_yp('--> Do you want to update the waves structures with LUKE absorption (y/n)','y',{'y','n'}) == 'y',
                     waves = output.dke_out.waves;
                 end
                 %
