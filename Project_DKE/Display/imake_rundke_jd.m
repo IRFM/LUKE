@@ -9,10 +9,13 @@ end
 %
 % This function automatically generates a rundke script to run LUKE
 %
-if ~isfield(fileids,'dkepath') || ~isfield(fileids,'dkeparam') || ~isfield(fileids,'equil'),
-    disp('-----> the structures dkepath, dkeparam and equil must exist in a fileids to run LUKE.');
+if ~isfield(fileids,'dkeparam') || ~isfield(fileids,'equil'),
+    disp('-----> the structures dkeparam and equil must exist in a fileids to run LUKE.');
     return
-end  
+end
+%
+fileids.dkepath = '';%defined by select_LUKE.m 
+paths.dkepath = '';%defined by select_LUKE.m
 %
 id_simul = input(['Please provide an id for the run [',id_simul_o,'] : '],'s');
 if isempty(id_simul),
