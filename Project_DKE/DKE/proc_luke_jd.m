@@ -768,7 +768,11 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             data_proc.scalar.ksirf = ksirf;
             data_proc.scalar.nfrags = nfrags;
             data_proc.scalar.Rp = equilDKE.Rp;
-            data_proc.scalar.V_loop_init = 2*pi*equilDKE.Rp*mksa.Edreicer_ref*dke_out.xepsi_init(end);
+            if isfield(dke_out,'xepsi_init'),
+                data_proc.scalar.V_loop_init = 2*pi*equilDKE.Rp*mksa.Edreicer_ref*dke_out.xepsi_init(end);
+            else
+                data_proc.scalar.V_loop_init = NaN;
+            end
             %
             data_proc.scalar.jrhoG = jrhoG;
             data_proc.scalar.jrhoP = jrhoP;
@@ -1916,7 +1920,7 @@ function [rho,drho] = calc_peak_jd(xrho,xdrho,xQ,xdV,opt_dens,opt_peak)
         xmaskm = xmaskm(max([1,ixm]):end);% last point for the current lobe containing peak
         %
         rho = xrho(ipeak);        
-        drho = interp1([peaksign*xprof(xmaskp),eps],[xrho(xmaskp),1],profmax/2) - interp1([0,peaksign*xprof(xmaskm)],[eps,xrho(xmaskm)],profmax/2);% FWHM
+        drho = interp1([peaksign*xprof(xmaskp),eps],[xrho(xmaskp),1],profmax/2) - interp1([eps,peaksign*xprof(xmaskm)],[eps,xrho(xmaskm)],profmax/2);% FWHM
     else
         %
         ixp = find(xint(xmaskp)*peaksign <= 0,1,'first') - 1;
