@@ -1,20 +1,17 @@
 function data_out_netcdf = load_netcdf_jd(filename,listofvariables);
 %
-% This function loads netcdf data  from the file 'filename' and returns a 
-% structure containing the variables from 'listofvariables'
+% This function loads netcdf data from the file 'filename' and returns a structure containing the variables from 'listofvariables'
 %
-% by J. Decker 13/06/06 (joan.decker@cea.fr)
+% by J. Decker (joan.decker@cea.fr) and Y. Peysson (yves.peysson@cea.fr)
 %
 if nargin < 2,
-    listofvariables = ncload(filename);
-    % if computer == 'UNIX'
-    %   !ncdump -h filename.nc 
-    % ... make script to load the list of variables
-    % else
-    % end
+    info_filename = ncinfo(filename);
+    for ivar = 1:length(info_filename.Variables)
+        listofvariables{ivar} = info_filename.Variables(ivar).Name;
+    end
 end
-%
-if ischar(listofvariables) & strcmp(listofvariables,'toric'),%toric data
+%****** OBSOLETE NETCDF INTERNAL MATLAB LIBRARY MIUST BE USED *************
+if ischar(listofvariables) & strcmp(listofvariables,'toric'),%TORIC code data
     listofvariables = { 'Rtor',...
                         'Psi',...
                         'Den',...
@@ -35,10 +32,8 @@ end
 %
 % include test for matlab path of necessary functions
 %
-nc = netcdf(filename,'nowrite');
-%
 for iv = 1:length(listofvariables),
-    eval(['data_out_netcdf.',listofvariables{iv},' = nc{listofvariables{iv}}(:,:,:,:);'])
+    eval(['data_out_netcdf.',listofvariables{iv},' = ncread(filename,listofvariables{iv});']);
 end
     
      
