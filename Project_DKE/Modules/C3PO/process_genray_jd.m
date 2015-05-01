@@ -15,47 +15,47 @@ function [id_equil,omega_rf,ays,aypsin,ayR,ayZ,ayphi,...
 %
 % by J. Decker 04/10/06 (joan.decker@cea.fr)
 %
-id_equil = data_out_netcdf.eqdskin;
+id_equil = data_out_netcdf.eqdskin(:)';
 %
 omega_rf = 2*pi*data_out_netcdf.freqcy;
 %
 nray = data_out_netcdf.nray;
 %
-ays = data_out_netcdf.ws.'/100;
-aypsin = data_out_netcdf.spsi.';
+ays = data_out_netcdf.ws/100;
+aypsin = data_out_netcdf.spsi;
 %
 nx = size(ays,1);
 %
-ayR = data_out_netcdf.wr.'/100;
-ayZ = data_out_netcdf.wz.'/100;
+ayR = data_out_netcdf.wr/100;
+ayZ = data_out_netcdf.wz/100;
 %
 % warning : phi in DKE is opposite from genray standards
 %
-ayphi =  - data_out_netcdf.wphi.';
+ayphi =  - data_out_netcdf.wphi;
 %
-ayNpar = data_out_netcdf.wnpar.';
-aydNpar = data_out_netcdf.wdnpar.';
-ayNperp = data_out_netcdf.wnper.';
-
-ayepol_x = reshape(data_out_netcdf.cwexde(1,:,:),nray,nx).' + i*reshape(data_out_netcdf.cwexde(2,:,:),nray,nx).';
-ayepol_y = reshape(data_out_netcdf.cweyde(1,:,:),nray,nx).' + i*reshape(data_out_netcdf.cweyde(2,:,:),nray,nx).';
-ayepol_z = reshape(data_out_netcdf.cwezde(1,:,:),nray,nx).' + i*reshape(data_out_netcdf.cwezde(2,:,:),nray,nx).';
-
-ayphi_x = data_out_netcdf.fluxn.';
-
-yP0 = data_out_netcdf.delpwr(:,1).'/1e7;
-ayalpha = data_out_netcdf.salphal.';
-
-ayB = abs(data_out_netcdf.sbtot).';
-ayne = 1e6*data_out_netcdf.sene.';
-ayTe = data_out_netcdf.ste.';
-
-yr_in = data_out_netcdf.r_starting.';
-yz_in = data_out_netcdf.z_starting.';
+ayNpar = data_out_netcdf.wnpar;
+aydNpar = data_out_netcdf.wdnpar;
+ayNperp = data_out_netcdf.wnper;
+%
+ayepol_x = data_out_netcdf.cwexde(:,:,1) + i*data_out_netcdf.cwexde(:,:,2);
+ayepol_y = data_out_netcdf.cweyde(:,:,1) + i*data_out_netcdf.cweyde(:,:,2);
+ayepol_z = data_out_netcdf.cwezde(:,:,1) + i*data_out_netcdf.cwezde(:,:,2);
+%
+ayphi_x = data_out_netcdf.fluxn;
+%
+yP0 = data_out_netcdf.delpwr(1,:)/1e7;
+ayalpha = data_out_netcdf.salphal;
+%
+ayB = abs(data_out_netcdf.sbtot);
+ayne = 1e6*data_out_netcdf.sene;
+ayTe = data_out_netcdf.ste;
+%
+yr_in = data_out_netcdf.r_starting;
+yz_in = data_out_netcdf.z_starting;
 %
 % warning : phi in DKE is opposite from genray standards
 %
-yphi_in = - data_out_netcdf.phi_starting.';
-yNtor_in =  - data_out_netcdf.N_toroidal_starting.';
+yphi_in = - data_out_netcdf.phi_starting;
+yNtor_in =  - data_out_netcdf.N_toroidal_starting;
 %
-yNpol_in = data_out_netcdf.N_poloidal_starting.';
+yNpol_in = data_out_netcdf.N_poloidal_starting;
