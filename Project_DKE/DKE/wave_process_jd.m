@@ -1,10 +1,8 @@
 function wave = wave_process_jd(equil,wave,n_rf_list,method)
 %
-% This function completes the missing wave characteristics. In particular, it calculates the wave
-% absorption coefficient and the wave lilnear damping.
+% This function completes the missing wave characteristics. In particular, it calculates the wave absorption coefficient and the wave linear damping.
 %
-% by 	J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
-% and   Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
+% by J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> and Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr>
 %
 if ~isfield(wave,'rays'),% Not a RT code (FW, etc)
     return
