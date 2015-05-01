@@ -50,12 +50,13 @@ ayB = abs(data_out_netcdf.sbtot);
 ayne = 1e6*data_out_netcdf.sene;
 ayTe = data_out_netcdf.ste;
 %
-yr_in = data_out_netcdf.r_starting;
-yz_in = data_out_netcdf.z_starting;
+yr_in = data_out_netcdf.r_starting(:)';
+yz_in = data_out_netcdf.z_starting(:)';
 %
 % warning : phi in DKE is opposite from genray standards
 %
-yphi_in = - data_out_netcdf.phi_starting;
-yNtor_in =  - data_out_netcdf.N_toroidal_starting;
+yphi_in = - data_out_netcdf.phi_starting(:)';
+yNtor_in =  - data_out_netcdf.N_toroidal_starting(:)';
 %
-yNpol_in = data_out_netcdf.N_poloidal_starting;
+yNpol_in = data_out_netcdf.N_poloidal_starting(:)';
+
