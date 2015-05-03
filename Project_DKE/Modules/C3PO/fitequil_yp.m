@@ -151,7 +151,7 @@ elseif mode == 2,%Spline-Spline description for (x,y) magnetic equilibrium
     equil_out.method = method;
     %
     sxyx = linspace(min(equil_in.xyx),max(equil_in.xyx),ngrid);sxydx = sxyx(2) - sxyx(1);
-    sxyy = linspace(min(equil_in.xyy),max(equil_in.xyy),ngrid);sxydy = sxyy(2) - sxyy(1);
+    sxyy = linspace(max(equil_in.xyy),min(equil_in.xyy),ngrid);sxydy = sxyy(2) - sxyy(1);
     %
     [X,Y] = meshgrid(equil_in.xyx,equil_in.xyy);
     [sX,sY] = meshgrid(sxyx,sxyy);
