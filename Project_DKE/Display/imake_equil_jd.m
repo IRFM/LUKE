@@ -76,7 +76,7 @@ if i_opt == 0, % use data from from external database
         shotimestr = num2str(shotime,'%6.4f');
     end
     %
-    if strcmp(basestr,'TCV') || strcmp(basestr,'EAST') || strcmp(basestr,'HL2A'),
+    if strcmp(basestr,'TCV') || strcmp(basestr,'EAST') || strcmp(basestr,'HL2A') || strcmp(basestr,'CMOD'),
         %
         if isfield(external.magnetic,'eqdsk'),
             %
