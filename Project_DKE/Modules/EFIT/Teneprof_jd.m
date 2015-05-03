@@ -169,6 +169,67 @@ elseif type == 3.1,%ascii formatted (CMOD)
     pTi = pTe*2/3;
     pspsinT = linspace(0,1,length(pne));
     %
+elseif type == 3.2,%ascii formatted (CMOD)
+    pne = [];
+    pTe = [];
+    pTi = [];
+    fid = fopen(filename);
+    s = 0;
+    while isempty(s) | s ~= -1,
+        s = fgetl(fid);
+        if isempty(findstr(s,'Density')),
+            continue
+        else
+            s = fgetl(fid);
+            s = fgetl(fid);
+            while ~isempty(s),
+                d = sscanf(s,'%f').';
+                pne = [pne,d];
+                s = fgetl(fid);
+            end
+            break
+        end
+    end
+    while isempty(s) | s ~= -1,
+        s = fgetl(fid);
+        if isempty(findstr(s,'Electron')),
+            continue
+        else
+            s = fgetl(fid);
+            s = fgetl(fid);
+            while ~isempty(s),
+                d = sscanf(s,'%f').';
+                pTe = [pTe,d];
+                s = fgetl(fid);
+            end
+            break
+        end
+    end
+     while isempty(s) | s ~= -1,
+        s = fgetl(fid);
+        if isempty(findstr(s,'Ion')),
+            continue
+        else
+            s = fgetl(fid);
+            s = fgetl(fid);
+            while ~isempty(s),
+                d = sscanf(s,'%f').';
+                pTi = [pTi,d];
+                s = fgetl(fid);
+            end
+            break
+        end
+    end   
+    fclose(fid);
+    clear fid s d
+    %
+    pne = pne*1e6;%m-3
+    pspsinT = linspace(0,1,length(pne));
+    %    
+    zZi = [1,1,1,4];
+    zmi = [1,2,3,9];
+    fi = [0,1,0];
+    %
 elseif type == 4,%ascii formatted (ITER)
     pspsinT = [];
     pne = [];
@@ -316,7 +377,7 @@ elseif type == 7,%ascii formatted (ASCOT)
     nion = length(zZi);
 end
 %
-if type == -2 || (type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4 && type ~= 1.5 && type ~= 1.6),
+if type == -2 || (type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4 && type ~= 1.5 && type ~= 1.6 && type ~= 3.2) ,
     %
     zZi = [1,1,1,6];
     zmi = [1,2,3,12];
