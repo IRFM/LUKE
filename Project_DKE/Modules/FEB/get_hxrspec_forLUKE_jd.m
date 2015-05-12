@@ -25,6 +25,8 @@ hxrparam.ns = 3000;%for chord integration
 hxrparam.n_gauleg = 35;%Number of Legendre polynomials for projections of cross-section and electron velocity distribution
 hxrparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
 %
+hxrparam.kphot = hxrspec.kphot;
+%
 if nargout == 0,
     %
     if nargin < 3,
