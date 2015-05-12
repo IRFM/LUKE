@@ -43,7 +43,6 @@ hxr.lpm_hxr = zeros(1,20);% Average distance between the radiation impact point 
 %
 hxr.kdiag_hxr = [20,40,60,80,100,120,140,160,50;40,60,80,100,120,140,160,180,110];% energy channels (the last one -> upper and lower bound for Tph calculation) (keV) [2,m+1]
 %
-%
 hxr.Gain_hxr = ones(1,20);% factor of conversion photon energy (keV) <-> channel [1,m]
 hxr.Offset_hxr = zeros(1,20);% offset of conversion photon energy <-> channel [1,m]
 hxr.pur_hxr = zeros(1,20);% pile-up rejection (0: off, 1:on) [1,m]
