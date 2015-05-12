@@ -1,9 +1,9 @@
 function [] = compile_tsbase(fname)
 %
-%   Compilation of mexfile for loading experimental data of Tore Supra tokamak (tsbase, tsmat, tsdernier_choc)
+%   Compilation of mexfile for loading experimental data of Tore Supra tokamak (tsdate, tsbase, tsmat, tsdernier_choc)
 %
 %	Input: 
-%       - fname: function name -> 'tsbase', 'tsmat' or 'tsdernier_choc' [1,n]
+%       - fname: function name -> 'tsdate', 'tsbase', 'tsmat' or 'tsdernier_choc' [1,n]
 %           (default = empty or none, all are build)
 %
 %	Output: None
@@ -26,6 +26,7 @@ cd ..
 %
 cd TSBase
 if isempty(fname),
+    mex -v tsdate.c tsignit.c tsparse.c -L../TSLib/ -lTS
     mex -v tsbase.c tsignit.c tsparse.c -L../TSLib/ -lTS
     mex -v tsmat.c tsignit.c tsparse.c -L../TSLib/ -lTS
     mex -v tsdernier_choc.c tsignit.c tsparse.c -L../TSLib/ -lTS
