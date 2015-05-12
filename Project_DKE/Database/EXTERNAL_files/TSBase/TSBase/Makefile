@@ -4,10 +4,10 @@ ALL= tsbase tsmat tsrqt tsdate tsoccur tsdernier_choc \
 #     tsample tstablet tsplinet tswcert bin2 tswfile 
 
 OPTIONS = -DUSE_FUNCTION_PROTOTYPES  -g# -DDEBUG
-INCLUDES = -I$./ -I/Applications/Sciences/MatLab_R2007b/extern/include
+INCLUDES = -I$./ -I/Applications/MatLab_R2014b/extern/include
 COPTS = -c 
-FOPTS = -g -c 
-CMEX = /Applications/Sciences/MatLab_R2007b/bin/mex -I/usr/include -I./
+FOPTS = -g -c
+CMEX = /Applications/MatLab_R2014b/bin/mex -I/usr/include -I./
 LIB =  /Users/Yves/CEA/Projets/Project_TSBaseOSX/TSLib/libTS.a
 AR = ar
 DLLMEX = 
