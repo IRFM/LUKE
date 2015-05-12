@@ -26,6 +26,8 @@ hxrparam.n_gauleg = 35;%Number of Legendre polynomials for projections of cross-
 hxrparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
 %
 hxrparam.kphot = hxrspec.kphot;
+hxrparam.kmin = hxrspec.kmin;
+hxrparam.kmax = hxrspec.kmax;
 %
 if nargout == 0,
     %

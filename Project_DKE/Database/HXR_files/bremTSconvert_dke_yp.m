@@ -83,7 +83,10 @@ hxr.td_hxr = td;%type of material for the detector (BGO,CsI,NaI,Ge or CdTe) [1,m
 hxr.kdiag_hxr = kdiag;%Measured photon energy spectrum (keV) [1,k]
 %
 hxr.kphot = [20:10:240];%Photon energy in keV
-
+%
+hxr.kmin = 50;% standard minimum value for Tph calculation (LH : 50; EC : 35)
+%
+hxr.kmax = 110;% standard maximum value for Tph calculation (LH : 110; EC : 75)
 
 
 function [xx,yy] = circle(x,y,radius,arg4)
