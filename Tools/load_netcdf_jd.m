@@ -5,6 +5,7 @@ function data_out_netcdf = load_netcdf_jd(filename,listofvariables);
 % by J. Decker (joan.decker@cea.fr) and Y. Peysson (yves.peysson@cea.fr)
 %
 if nargin < 2,
+    %ncdisp(filename);%for details in the file (units,names,...)
     info_filename = ncinfo(filename);
     for ivar = 1:length(info_filename.Variables)
         listofvariables{ivar} = info_filename.Variables(ivar).Name;
