@@ -23,9 +23,15 @@ if isfield(launch,'yrho0'),%
     ydN = launch.ydNpar0;
     yP = launch.yP0_2piRp*2*pi*launch.Rp/1e6;
     %
-    yN0 = launch.launch.bNpar0;
-    ydN0 = launch.launch.bdNpar0;
-    yP0 = launch.launch.bPlhtot/1e6;
+    if isfield(launch,'launch'),%
+        yN0 = launch.launch.bNpar0;
+        ydN0 = launch.launch.bdNpar0;
+        yP0 = launch.launch.bPlhtot/1e6;
+    else
+        yN0 = NaN;
+        ydN0 = NaN;
+        yP0 = NaN;
+    end
     %
 else
     yN = launch.bNpar0;
