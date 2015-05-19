@@ -1,4 +1,4 @@
-function ray = rayprocess_jd(ray,equilDKE_Fourier,opt_disp,omega_rf,n_rf_list,method);
+function ray = rayprocess_jd(ray,equilDKE_Fourier,opt_disp,omega_rf,n_rf_list,method,colldamp);
 %
 % This function calculates missing ray info if needed. 
 % Also calculates the correct Nperp, polarization and power flow if required 
@@ -10,6 +10,10 @@ function ray = rayprocess_jd(ray,equilDKE_Fourier,opt_disp,omega_rf,n_rf_list,me
 %
 % equilibrium data with Fourier-enhanced poloidal precision and original radial grid
 %
+%
+if nargin < 7,
+    colldamp = 0;%no collisional damping
+end
 %
 theta = equilDKE_Fourier.mtheta;
 ppsin = equilDKE_Fourier.xpsin;
@@ -205,6 +209,12 @@ if isfield(ray,'salphaphi_lin'),
 else
     salphaphi_lin = NaN*ones(1,ns);
     %opt_disp = opt_disp + i;
+end
+%
+if isfield(ray,'salphaphi_coll'),
+    salphaphi_coll = ray.salphaphi_coll;
+else
+    salphaphi_coll = NaN*ones(1,ns);
 end
 % %
 % % remove unwanted ray parts
@@ -510,8 +520,7 @@ else
         error('model not yet implemented');
     elseif real(opt_disp) == 5, % electrostatic approximation for EBW calculations
         %
-        [sNperp,sepol_pmz,sphi_xyz,salphaphi_lin_nr,salphaphi_lin_wr,salphaphi_lin_fr]...
-        = ES_ebw_disp_jd(real(sNpar),omega_rf,sTe,sne,sB,sNperp);%,0,imag(opt_disp)
+        [sNperp,sepol_pmz,sphi_xyz,salphaphi_lin_nr,salphaphi_lin_wr,salphaphi_lin_fr] = ES_ebw_disp_jd(real(sNpar),omega_rf,sTe,sne,sB,sNperp);%,0,imag(opt_disp)
         %
         salphaphi_lin = real(salphaphi_lin_fr)*omega_rf/clum;
         opt_disp = real(opt_disp);
@@ -589,7 +598,7 @@ if isempty(sdNpar) || any(isnan(sdNpar)),
     end
 end
 %
-if abs(imag(opt_disp)) >= 1,%calculation of the absorption coefficient
+if abs(imag(opt_disp)) >= 1,%calculation of the linear absorption coefficient
     %
     rel_opt = imag(opt_disp) > 0;
     %
@@ -597,6 +606,7 @@ if abs(imag(opt_disp)) >= 1,%calculation of the absorption coefficient
     sb = sB*qe/me/omega_rf;
 	sbeta = sqrt(sTe/mc2);
     salphaphi_lin = zeros(1,ns);
+    salphaphi_coll = zeros(1,ns);
     for n = n_rf_list,
         if abs(imag(opt_disp)) == 1,
             salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,real(sNpar),real(sNperp),sepol_pmz,n,rel_opt);
@@ -604,6 +614,12 @@ if abs(imag(opt_disp)) >= 1,%calculation of the absorption coefficient
             salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,real(sNpar) + sign(real(sNpar)).*ss*abs(imag(opt_disp) - 1)/2,real(sNperp),sepol_pmz,n,rel_opt);
         end
     end
+    % 
+   
+end
+%
+if colldamp == 1,%calculation of the collisional damping absorption coefficient
+    salphaphi_coll = salphaphi_coll + omega_rf/clum*alphaphi_cd_yp(ray,equilDKE_Fourier,omega_rf);%calculation of the non-resonant collisional absorption coefficient
 end
 %
 ray.sx = sx;% Ray location (major radius) along the propagation [1,ns]
@@ -655,6 +671,11 @@ ray.szTi = szTi;
 ray.srho = srho;
 %
 ray.salphaphi_lin = salphaphi_lin;
+%
+if colldamp == 1,
+    ray.salphaphi_coll = salphaphi_coll;
+end
+%
 %
 ray.swidth = swidth;
 %

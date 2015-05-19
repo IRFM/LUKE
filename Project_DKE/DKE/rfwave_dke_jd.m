@@ -1,4 +1,4 @@
-function [waveparam,xyprop_dke_rf,xyP0_2piRp_in_rf,yb_rf,yP0_2piRp,xys_rf] = rfwave_dke_jd(dkeparam,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);
+function [waveparam,xyprop_dke_rf,xyP0_2piRp_in_rf,xyP0_2piRp_in_rf_coll,yb_rf,yP0_2piRp,xys_rf] = rfwave_dke_jd(dkeparam,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);
 % 
 %	RF input parameters for the Drift Kinetic equation solver (dke_4_1yp.m). 
 %
@@ -183,7 +183,13 @@ for iw = 1:length(waves),%
         % - sNpar -> sdNpar
         % - opt_disp, sNpar, omega_rf, equil -> sepol_pmz, sNperp, sphi_xyz
         %
-        ray = rayprocess_jd(ray,equilDKE_Fourier,opt_disp,omega_rf,n_rf_list,method);
+        if isfield(wave.rayparam,'colldamp'),%backward compatibility
+            colldamp = wave.rayparam.colldamp;
+        else
+            colldamp = 0;%no collisional damping 
+        end
+        %
+        ray = rayprocess_jd(ray,equilDKE_Fourier,opt_disp,omega_rf,n_rf_list,method,colldamp);
         %
 %         P0_2piRp = ray.P0_2piRp;% Power launched in the ray (W) [1,1]
 %         %
@@ -275,7 +281,7 @@ end
 %           Discretization of the rays on the flux-surfaces
 % ======================================================================
 %
-[waveparam,xyprop_dke_rf,xys_rf,xyP0_2piRp_in_rf,yb,yP0_2piRp] = propagation_jd(rays,xpsin_S_dke,xpsin_dke,method,display_mode);
+[waveparam,xyprop_dke_rf,xys_rf,xyP0_2piRp_in_rf,xyP0_2piRp_in_rf_coll,yb,yP0_2piRp] = propagation_jd(rays,xpsin_S_dke,xpsin_dke,method,display_mode);
 %disp('-------------------------------------------------------------------------------------------------------------------');
 %
 if isfield(dkeparam,'n_rf_list'),% in this case the LUKE n_rf_list is imposed by dkeparam

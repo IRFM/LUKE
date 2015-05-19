@@ -991,6 +991,16 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             if isinf(data_proc.scalar.Rp) & sum(P_rf) ~= 0,
                 disp(['Launched RF power (P/2piRp): ',num2str(data_proc.scalar.p0_rf_2piRp),' MW/m'])
                 disp(['RF power absorbed (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
+                if isfield(dke_out.waves{1}.rayparam,'colldamp')
+                    if dke_out.waves{1}.rayparam.colldamp == 1,
+                        disp(['RF power lost by collisional damping (P): ',num2str(data_proc.scalar.p0_rf_2piRp - data_proc.scalar.p_rf_2piRp),' MW ---> ',num2str(100*(1-data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp)),' %.'])
+                    else
+                        disp('Collisional damping of RF waves is not considered.')
+                    end
+                else
+                    disp('Collisional damping of RF waves is not considered.')
+                end
+                %
                 for in_rf = 1:nn_rf,
                     disp(['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P/2piRp): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)),' MW/m ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'])
                 end
@@ -1050,6 +1060,16 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 disp(['Launched RF power (P): ',num2str(data_proc.scalar.p0_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
                 if sum(P_rf) ~= 0,
                     disp(['RF power absorbed (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
+                    if isfield(dke_out.waves{1}.rayparam,'colldamp')
+                        if dke_out.waves{1}.rayparam.colldamp == 1,
+                            disp(['RF power lost by collisional damping (P): ',num2str(data_proc.scalar.p0_rf_2piRp*(2*pi*data_proc.scalar.Rp) - data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*(1-data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp)),' %.'])
+                        else
+                            disp('Collisional damping of RF waves is not considered.')
+                        end
+                    else
+                        disp('Collisional damping of RF waves is not considered.')
+                    end
+                    %
                     for in_rf = 1:nn_rf,
                         disp(['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'])
                     end

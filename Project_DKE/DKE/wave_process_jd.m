@@ -40,7 +40,14 @@ end
 % Ray processing
 %
 for ib = 1:length(wave.rays),
-    ray = rayprocess_jd(wave.rays{ib},equilDKE_Fourier,wave.opt_disp,wave.omega_rf,n_rf_list,method);
+    %
+    if isfield(wave.rayparam,'colldamp'),%backward compatibility
+        colldamp = wave.rayparam.colldamp;
+    else
+        colldamp = 0;%no collisional damping 
+    end
+    %
+    ray = rayprocess_jd(wave.rays{ib},equilDKE_Fourier,wave.opt_disp,wave.omega_rf,n_rf_list,method,colldamp);
     %
     % Ray linear damping
     %
@@ -79,11 +86,58 @@ for ib = 1:length(wave.rays),
         ray.sdP_2piRp_ds_lin = salpha_lin.*ray.sP_2piRp_lin;
     end
     %
+    % Collisional ray damping
+    %
+    if isfield(ray,'salphaphi_coll'),
+        %
+        salphaphi_coll = ray.salphaphi_coll;
+        %
+        if any(~isnan(salphaphi_coll)),%collisional damping
+            %
+            sphi_norm = sqrt(abs(ray.sphi_xyz(1,:)).^2 + abs(ray.sphi_xyz(2,:)).^2 + abs(ray.sphi_xyz(3,:)).^2);
+            salpha_coll = salphaphi_coll./sphi_norm;
+            salpha_coll(isnan(salpha_coll)) = 0;
+            %
+            if ~isfield(ray,'stau_coll') || all(isnan(ray.stau_coll)) || abs(imag(wave.opt_disp)) >= 1,
+                %
+                salpha_coll_h = (salpha_coll(1:end-1) + salpha_coll(2:end))/2;
+                sds = diff(ray.ss);
+                ray.stau_coll = [0,cumsum(salpha_coll_h.*sds)];
+                %
+            end
+            %
+            ray.sP_2piRp_coll = ray.P0_2piRp*exp(-ray.stau_coll);%Power lost for collisional damping alone
+            ray.sdP_2piRp_ds_coll = salpha_coll.*ray.sP_2piRp_coll;%Power lost for collisional damping alone        
+            %
+        end
+    end
+    %
+    if isfield(ray,'stau_lin'),
+        %
+        if isfield(ray,'stau_coll')
+            ray.sP_2piRp_lin_coll = ray.P0_2piRp*exp(-ray.stau_lin-ray.stau_coll);%Combined linear + collisional damping
+            ray.sdP_2piRp_ds_lin_coll = (salpha_lin + salpha_coll).*ray.sP_2piRp_lin_coll;%Combined linear + collisional damping
+        else
+            ray.sP_2piRp_lin_coll = ray.P0_2piRp*exp(-ray.stau_lin);%linear damping
+            ray.sdP_2piRp_ds_lin_coll = salpha_lin.*ray.sP_2piRp_lin;%linear damping
+        end
+        %
+    end
+    %
     if isfield(ray,'stau_lin') && isfield(wave,'cut_fac'),
+        %
         ns = length(ray.ss);
-        is_max = min([ns,wave.kextra+find(ray.stau_lin > 10*wave.cut_fac)]);
-        if ray.stau_lin(end) < 10*wave.cut_fac && ~isinf(wave.cut_fac),
-            disp('WARNING: The ray might be too short. Increase tfinal')
+        %
+        if isfield(ray,'stau_coll'),
+            is_max = min([ns,wave.kextra+find(ray.stau_lin + ray.stau_coll > 10*wave.cut_fac)]);
+            if ray.stau_lin(end) + ray.stau_coll(end)  < 10*wave.cut_fac && ~isinf(wave.cut_fac),
+                disp('WARNING: The ray might be too short. Increase tfinal')
+            end
+        else
+            is_max = min([ns,wave.kextra+find(ray.stau_lin > 10*wave.cut_fac)]);
+            if ray.stau_lin(end) < 10*wave.cut_fac && ~isinf(wave.cut_fac),
+                disp('WARNING: The ray might be too short. Increase tfinal')
+            end            
         end
         %
         frays = fieldnames(ray);

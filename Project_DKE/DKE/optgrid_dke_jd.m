@@ -43,7 +43,11 @@ for iw = w_mask;
             ray = waves{iw}.rays{iray};
             %
             if isfield(ray,'sP_2piRp_lin')  && isfield(ray,'srho'),
-                dP = dP + drho_dep*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin,nr_dep);
+                if isfield(ray,'sP_2piRp_coll')
+                    dP = dP + drho_dep*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin_coll,nr_dep);
+                else
+                    dP = dP + drho_dep*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin,nr_dep);
+                end
             end
             %
         end

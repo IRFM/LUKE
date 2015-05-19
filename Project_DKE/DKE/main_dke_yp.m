@@ -64,7 +64,7 @@ else
         ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor,...
         ZXXD_e_init,ZXXF_e_init,ZXXD_e_tp,ZXXF_e_tp,xepsi_init,xEfield_validity,...
         ZXXD_s,ZXXF_s,ZXXD_s_tp,ZXXF_s_tp,...
-        waveparam,xyprop_dke,xyP0_2piRp_mod,yb,yP0_2piRp,xys,...
+        waveparam,xyprop_dke,xyP0_2piRp_mod,xyP0_2piRp_mod_coll,yb,yP0_2piRp,xys,...
         ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf,...
         XXfinit]...
          = buildlukestruct_yp(loadstruct,equil,dkeparam_in,dkedisplay,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
@@ -348,6 +348,7 @@ for itn = itn0:nit,
         % Convergence on RF deposition with ray-tracing formalism
         %
         for it_rf = 1:nit_rf,
+            %
             if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf),%in the case of RF waves only
                 %
                 if it_rf > 1 && conv <= 0,
@@ -397,12 +398,13 @@ for itn = itn0:nit,
                         xyPabs_rf_dke_fsav_out = ZP0_rf.xy_rf_fsav + ZP0_rf.xy_rf_tp_fsav + ZP0_rf.xy_rf_g_fsav; % flux-surface averaged density of absorbed power.
                     else
                         xyPabs_rf_dke_fsav_out = ZP0_rf.xy_rf_fsav; % flux-surface averaged density of absorbed power.
-                    end	    
+                    end	 
+                    %
                     xyPabs_rf_dke_fsav_mksa = xyPabs_rf_dke_fsav_out*mksa.P_ref*1e6;%RF power (W)
                     %
                     % Calculation of the power flow along the rays from DKE calculations
                     %
-                    [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke,xyP0_2piRp_mod_old,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
+                    [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke,xyP0_2piRp_mod_old,xyP0_2piRp_mod_coll,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
                     %
                     zP_0_2piRp_mod_old{it_rf,itn} = raypath_jd(xyP0_2piRp_mod_old,xyprop_dke,yb,radialDKE.r_dke);
                     zP_0_2piRp_mod = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
@@ -410,6 +412,7 @@ for itn = itn0:nit,
                     %
                     P_0_2piRp_in = sum(yP0_2piRp);
                     P_0_2piRp_out = 0;
+                    %
                     for iray = 1:length(yb),
                          P_0_2piRp_out = P_0_2piRp_out + zP_0_2piRp_mod_old{it_rf,itn}{iray}(end);
                     end
