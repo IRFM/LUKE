@@ -1,6 +1,6 @@
 function [na] = LH_acces_yp(equil,ray,mask,iray) 
 %
-%    Calculation of the Stix-Golant LH ray accessibility and plot of a ray in the contour plot
+%   Plot of a ray in the contour plot of the n Stix-Golant criterion
 %    
 %    Input:
 %
@@ -21,39 +21,58 @@ if nargin < 3,
     iray = NaN;  
 end
 %
-[qe,me,mp,~,e0] = pc_dke_yp;%Universal physics constant
+[na,E] = stixgolant_yp(equil);
 %
-R = equil.Rp + equil.ptx;
-Z = equil.Zp + equil.pty;
-B = sqrt(equil.ptBPHI.^2 + equil.ptBx.^2 + equil.ptBy.^2);%magnetic field
-psin = equil.psi_apRp(:)*ones(1,length(equil.theta))/equil.psi_apRp(end);%normal poloidal mahnetic flux
-%
-%Calculation of epsiperp
-%
-omega_lh = ray.omega_rf;%rad/s
-omega_cen = (qe/me).*B/omega_lh;
-omega_pen = qe*sqrt(equil.pne(:)*ones(1,length(equil.theta))/e0/me)/omega_lh;
-omega_cin = shiftdim(repmat((qe*equil.zZi./mp./equil.zmi)',1,length(equil.psi_apRp),length(equil.theta)),1).*repmat(B,1,1,length(equil.zZi))/omega_lh;
-omega_pin = shiftdim(repmat((qe*equil.zZi./sqrt(e0.*mp.*equil.zmi))',1,length(equil.psi_apRp),length(equil.theta)),1).*shiftdim(repmat(sqrt(equil.pzni),1,1,length(equil.theta)),1)/omega_lh;
-%
-Xperp = -omega_pen.^2./(1.0 - omega_cen.^2) - sum(omega_pin.^2./(1.0 - omega_cin.^2),3);
-Xpar = -omega_pen.^2 - sum(omega_pin.^2,3);
-Xx = omega_pen.^2.*omega_cen./(1.0 - omega_cen.^2) + sum(omega_pin.^2.*omega_cin./(1.0 - omega_cin.^2),3);
-%
-Kperp = 1 + Xperp;
-Kpar = 1 + Xpar;
-Kx = Xx;
-%
-% Cold fast-slow wave conversion when P2^2 - 4P0P4 = 0 sets the Stix-Golant LH ray accessibility condition
-%
-a = (Kpar + Kperp).^2 - 4*Kpar.*Kperp;
-b = 8*Kpar.*Kperp.^2 - 2*Kperp.*(Kpar + Kperp).^2 + 2*(Kpar + Kperp).*Kx.^2; 
-c = -4*Kpar.*Kperp.^3 + Kperp.^2.*(Kpar + Kperp).^2 + 4*Kpar.*Kperp.*Kx.^2 - 2*Kperp.*(Kpar + Kperp).*Kx.^2 + Kx.^4;
-delta = b.^2 - 4*a.*c;
-%
-na = sqrt((-b + sqrt(delta))./2./a);%N||acc
-%
-E = 511*(1.0./sqrt(1-1.0./na.^2)-1);%Energy of the resonant electrons
+keyboard
+if 0,
+    %epsipar = 1-wpe.*wpe-wpi.*wpi;
+    %epsiperp = 1+(wpe./wce).^2-wpi.*wpi;
+    %epsixy = (wpe.*wpe)./wce;
+    
+    ntheta = size(Kpar,2);
+    x = equil.ptx(:,1)/equil.ptx(end,1);
+    
+    epsipar = [flipud(Kpar(:,(ntheta-1)/2));Kpar(:,1)]';%[HFS:LFS]
+    epsiperp = [flipud(Kperp(:,(ntheta-1)/2));Kperp(:,1)]';%[HFS:LFS]
+    epsixy = [flipud(Kx(:,(ntheta-1)/2));Kx(:,1)]';%[HFS:LFS]
+    xna = [flipud(na(:,(ntheta-1)/2));na(:,1)]';%[HFS:LFS]
+    
+    xR = [flipud(equil.ptx(:,(ntheta-1)/2));equil.ptx(:,1)]'+equil.Rp;%[HFS:LFS]
+    
+    
+    
+    npar0 = abs(real(ray.sNpar(1)));%launched N||0
+    %
+    nnpar = 1000;
+    nparmax = 10;%max N|| is 10
+    M = linspace(1,nparmax,nnpar);
+    x = equil.ptx(:,1)/equil.ptx(end,1);
+    [MM,xx] = meshgrid(M,x);
+    MM = MM';
+    xx = xx';
+    qq = ones(nnpar,1)*q;
+    %
+    P4 = ones(nnpar,1)*epsiperp;
+    P2 = (ones(nnpar,1)*(epsipar + epsiperp)).*(MM.*MM - (ones(nnpar,1)*epsiperp)) + (ones(nnpar,1)*epsixy).^2;
+    P0 = (ones(nnpar,1)*epsipar).*((MM.*MM - P4).^2 - (ones(nnpar,1)*epsixy).^2);
+    K2 = (-P2 + sqrt(P2.*P2 - 4*P0.*P4))./P4/2 - (MM-npar0).*(MM-npar0).*qq.*qq*(Rp/ap)*(Rp/ap)./xx./xx;%electromagnetic limit
+    %
+    MMM = zeros(size(K2));
+    MMM(K2>0) = MM(K2>0);
+    clear MM K2 P0 P2 P4 xx qq
+    xna = ones(nnpar,1)*na;
+    mask = MMM>xna;% accessibility condition
+    MMMM = MMM.*mask;
+    maxMMM = max(MMM);
+    MMM(MMM==0) = MMM(MMM==0) + Inf;
+    minMMM = min(MMM);
+    maxMMM(maxMMM == 0) = maxMMM(maxMMM == 0)*NaN;
+    minMMM(minMMM == 0) = minMMM(minMMM == 0)*NaN;
+    maxMMMM = max(MMMM);
+    MMMM(MMMM==0) = MMMM(MMMM==0) + Inf;
+    minMMMM = min(MMMM);
+    maxMMMM(maxMMMM == 0) = maxMMMM(maxMMMM == 0)*NaN;
+end
 %
 %Display mode
 %
