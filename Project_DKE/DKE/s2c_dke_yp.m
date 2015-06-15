@@ -42,11 +42,12 @@ pmax = max(p) + max(diff(p));
 % to ensure 0 is a ppar grid point
 np = ceil(pmax/dp);
 ppar = linspace(-pmax,pmax,2*np + 1);
+% pperp = [0:0.05:9.95,linspace(10,pmax,np + 1)];
 pperp = linspace(0,pmax,np + 1);
 dp = pperp(2) - pperp(1);
 %
 [ppar1,pperp1] = meshgrid(ppar,pperp);
-f1 = griddata(ppar00,pperp00,f00,ppar1,pperp1,'linear');
+f1 = griddata(ppar00,pperp00,f00,ppar1,pperp1,'cubic');
 %
 dppar = dp*ones(size(ppar));
 dpperp = dp*ones(size(pperp));
