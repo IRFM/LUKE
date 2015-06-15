@@ -16,29 +16,23 @@ scanstrs = {'alpha','sfac1','pnmax_S','np_tail','dtn','taurinv','betath2','zi'};
 % warning : 
 % - do not vary np_tail with opt_grid = 1
 % - use taurinv, sfac1, pnmax_S, np_tail, dtn as scanstr1 only
-% - use betath2 as scanstr1 only is Emin is not NaN
+% - use betath2 as scanstr1 only if Emin is not NaN
 %
-% scanstr1 = 'taurinv';
-% scanstr2 = 'alpha';
-% nan_enforce = [8,1;10,1];% artefacts in search for bumb (linked to discretization)
-%
-scanstr1 = 'zi';
+scanstr1 = 'taurinv';
 scanstr2 = 'alpha';
-nan_enforce = [11,2];%NaN(0,2);% artefacts in search for bumb (linked to discretization)
+nan_enforce = [8,1;10,1];% artefacts in search for bump (linked to discretization)
 %
-mdce_mode = -1;%3,%
+% scanstr1 = 'zi';
+% scanstr2 = 'alpha';
+% nan_enforce = [11,2];%NaN(0,2);% artefacts in search for bumb (linked to discretization)
+%
+% MDCE
+%
+mdce_mode = -1;%0;%3,%
 remnum = 0;
 returnmode = 0;
 transpmode = true;
 nproc_enforce = 4;
-% 
-% grid contruction option :
-%   (0) do not adjust number of fine and coarse grid points
-%   (1) keep fine grid step constant (typically, 0.2)
-%       if isreal(np_tail) : keep coarse grid steps constant (typically, 1). Note : do not enforce np_S and np_tail variations 
-%       if isimag(np_tail), enforce continuity of grid step size at pnmax_S. Note : do not enforce np_S and np_tail variations
-%
-opt_grid = 1;
 %
 % scan parameters
 %
@@ -112,7 +106,7 @@ graph.cont_gamma_lab = 10.^(-30:5:0);
 % printing option
 %
 id_simul0 = 'Runaway_scan';%Simulation ID
-p_opt = 2;% printing and saving options : (-1) do nothing (0) print figures (1) print figures and save figures and results (2) save figures and results
+p_opt = -1;%2;% printing and saving options : (-1) do nothing (0) print figures (1) print figures and save figures and results (2) save figures and results
 %
 [qe,me,~,~,e0,~,~,mc2] = pc_dke_yp;%Universal physics constants
 %
@@ -146,7 +140,7 @@ betath2 = 0.01;% Te/mc2
 %   
 %   - the magnetic field being fixed, the density is adjusted in LUKE according to bhat
 %
-taurinv = 0.9;%0.1;%
+taurinv = 0.6;%0.1;%
 %
 opt.synchro_mode = 1;
 %
@@ -189,8 +183,12 @@ opt.norm_mode_f = +1i;
 % opt.dtn = 51;% 10 time steps required for accurate runaway solution - see rundke_dtn
 %
 opt.tnmin = 1;% > 0 for log scale
-opt.tn = 1e8;%1e10;% 10000 is time for asymptotic solution
-opt.dtn = 17;%161;%201;% 10 time steps required for accurate runaway solution - see rundke_dtn
+opt.tn = [1e7,1e8];%1e10;% 10000 is time for asymptotic solution
+opt.dtn = [141,90];%161;%21;%201;% 10 time steps required for accurate runaway solution - see rundke_dtn
+%
+% opt.tnmin = 0;% > 0 for log scale
+% opt.tn = 1e8;%1e10;% 10000 is time for asymptotic solution
+% opt.dtn = 10*1i;%161;%21;%201;% 10 time steps required for accurate runaway solution - see rundke_dtn
 %
 % momentum space grid -> you can specify nmhu_S and either 
 % - the momentum grid pn_S directly
@@ -199,6 +197,14 @@ opt.dtn = 17;%161;%201;% 10 time steps required for accurate runaway solution - 
 grid.nmhu_S = 141;% number of pitch angle grid points
 grid.sfac1 = 80;%40; % reduction factor for fine grid near abs(mhu) = 1
 grid.snmhu1 = 5; % number of fine grid points near abs(mhu) = 1
+%
+% momentum grid contruction option :
+%   (0) do not adjust number of fine and coarse grid points
+%   (1) keep fine grid step constant (typically, 0.2)
+%       if isreal(np_tail) : keep coarse grid steps constant (typically, 1). Note : do not enforce np_S and np_tail variations 
+%       if isimag(np_tail), enforce continuity of grid step size at pnmax_S. Note : do not enforce np_S and np_tail variations
+%
+grid.opt = 1;
 %
 grid.np_S = 141;% number of bulk momentum grid points
 grid.pnmax_S = 28;%28;%sqrt(((1 + Emax*1e3/mc2)^2 - 1)/betath2);% maximum of bulk momentum (normalized to pT) [pn = 28 corresponds to 1 MeV electrons for betath = 0.1]
@@ -243,6 +249,9 @@ id_wave = '';
 %
 rho_S = 0.5;
 %
+opt.heavyions = true;
+opt.adjustB = true;
+%
 %************************************************************************************************************************************
 %
 nscan1 = length(scanval.(scanstr1));
@@ -267,12 +276,13 @@ for iscan1 = 1:nscan1,
     disp(['Scan ',num2str(iscan1),'/',num2str(nscan1),' : ',evalstr])
     eval(evalstr);
     %
-    if opt_grid == 1,
+    if grid.opt == 1,
         grid.np_S = 1 + round(grid.pnmax_S/dp_bulk);
         if pfac == 0,
             grid.np_tail = round((grid.pnmax_S_tail - grid.pnmax_S)/dp_fine);
         else
             grid.np_tail = round((grid.np_S - 1)*pfac*((grid.pnmax_S_tail/grid.pnmax_S)^(1/pfac) - 1));
+            grid.opt = pfac;
         end
     end
     %
@@ -287,7 +297,7 @@ for iscan1 = 1:nscan1,
     %
     if ~isnan(nproc_enforce),
         for irem = 1:length(dkepath.remote),
-            dkepath.remote.nproc = nproc_enforce;
+            dkepath.remote(irem).nproc = nproc_enforce;
         end
     end
     %

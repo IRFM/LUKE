@@ -8,18 +8,30 @@ clear mex
 clear functions
 close all
 warning('off')
+%
+[qe,me,~,~,e0,~,~,mc2] = pc_dke_yp;%Universal physics constants
 % 
 % *********************** This part must be specified by the user *****************************
 %
-scanstr = 'taurinv';%'betath2';%'alpha';%'sfac1';%'pnmax_S';%'np_tail';%'dtn';%
+scanstr = 'zi';%'betath2';%'taurinv';%'alpha';%'sfac1';%'pnmax_S';%'np_tail';%'dtn';%
 % 
-% grid contruction option :
+% momentum grid contruction option :
 %   (0) do not adjust number of fine and coarse grid points
 %   (1) keep fine grid step constant (typically, 0.2)
 %       if isreal(np_tail) : keep coarse grid steps constant (typically, 1). Note : do not enforce np_S and np_tail variations 
 %       if isimag(np_tail), enforce continuity of grid step size at pnmax_S. Note : do not enforce np_S and np_tail variations
+% warning : 
+% - do not vary np_tail with opt_grid = 1
 %
-opt_grid = 1;
+grid.opt = 1;
+%
+% MDCE
+%
+mdce_mode = -1;%0;%
+remnum = 0;
+returnmode = 0;
+transpmode = true;
+nproc_enforce = 4;
 %
 % scan parameters
 %
@@ -84,54 +96,82 @@ switch scanstr,
         %    
         scanvar = 'alpha';
         scanval = (1.5:0.25:4);%(1.5:0.5:6);%
-        scanlab = 'E/E_c';
-        graph.xlim = [1.25,4.25];%[1,7];%
+        scanlab = 'E_{||}';%'E/E_c';
+        scanind = 2;
+        graph.xmask = 1:8;
+        graph.xlim = [1.25,3.5];%[1.25,4.25];%[1,7];%
         graph.xlog = 0;
         graph.xtick = scanval(1:2:11);
-        graph.ylim_norm = 10.^[-15,0];
-        graph.ytick_norm = 10.^(-15:5:0);
+        graph.ylim_norm = 10.^[-11,1];%10.^[-15,0];
+        graph.ytick_norm = 10.^(-10:2:0);%10.^(-15:5:0);
         graph.ylim_gamma = 10.^[-30,0];
         graph.ytick_gamma = 10.^(-30:5:0);
-        graph.iscandisp = [1:2:11];%[2:2:10];%
+        graph.iscandisp = [1:2:7,8];%[1:2:11];%[2:2:10];%
         %
     case 'betath2'
         %    
         scanvar = 'betath2';
         scanval = 10.^(-3:0.25:-1);
-        scanlab = 'E/E_c';
-        graph.xlim = 10.^[-3.25,-0.75];
+        scanlab = 'T_e';%'T_e/mc^2';
+        scanind = 3;
+        graph.scanformat = '%10.1f';
+        graph.scanunits = 'keV';
+        graph.xmask = 3:7;
+        graph.x = mc2*scanval;
+        graph.xlim = [1,30];%[0.3,30];%10.^[-3.25,-0.75];
         graph.xlog = 1;
-        graph.xtick = scanval(1:2:9);
-        graph.ylim_norm = 10.^[-60,0];
-        graph.ytick_norm = 10.^(-60:10:0);
+        graph.xtick = [1,3,10,30];%[0.3,1,3,10,30];%scanval(1:2:9);
+        graph.ylim_norm = 10.^[-11,1];%10.^[-30,1];%10.^[-60,0];
+        graph.ytick_norm = 10.^(-10:2:0);%10.^(-30:5:1);%10.^(-60:10:0);
         graph.ylim_gamma = 10.^[-70,0];
         graph.ytick_gamma = 10.^(-60:20:0);
-        graph.iscandisp = [1:2:9];
+        graph.iscandisp = [3:7];%[1:2:9];
         %
     case 'taurinv'
         %    
         scanvar = 'taurinv';
-        scanval = 0.3:0.1:1.5;
-        scanlab = '\tau_r^{-1}';
-        graph.xlim = [0.2,1.6];
+        scanval = 0.3:0.1:1.6;%0.3:0.1:1.5;
+        scanlab = '\sigma_r';%'\tau_r^{-1}';
+        graph.xmask = 2:14;
+        graph.xlim = [0,1.8];%[0.2,1.6];
         graph.xlog = 0;
-        graph.xtick = scanval(1:3:13);
-        graph.ylim_norm = 10.^[-15,0];
-        graph.ytick_norm = 10.^(-15:5:0);
+        graph.xtick = 0:0.3:1.8;%scanval(1:3:13);
+        graph.ylim_norm = 10.^[-11,1];%10.^[-15,0];
+        graph.ytick_norm = 10.^(-10:2:0);%10.^(-15:5:0);
         graph.ylim_gamma = 10.^[-30,0];
         graph.ytick_gamma = 10.^(-30:5:0);
-        graph.iscandisp = [1:3:13];
+        graph.iscandisp = [2,4,6:4:14];% [1:3:13];
+        %
+    case 'zi'
+        %    
+        scanvar = 'Zi';
+        scanval = 1:0.25:4;%1:10;%
+        scanlab = 'Z_{eff}';'Z_i';
+        scanind = 5;
+        graph.xlim = [0.5,4.5];%[0,11];%
+        graph.xlog = 0;
+        graph.xtick = 0.5:0.5:4.5;
+        graph.ylim_norm = 10.^[-11,1];%10.^[-15,0];
+        graph.ytick_norm = 10.^(-10:2:0);%10.^(-15:5:0);
+        graph.ylim_gamma = 10.^[-30,0];
+        graph.ytick_gamma = 10.^(-30:5:0);
+        graph.iscandisp = [1:4:13];%[1:2:9];%
         %
     otherwise
         error('Scan variable not implemented')
 end
 %
+graph.re = false;
+graph.xlog_f = 1;
+graph.xlim_f = [1e-3,1e2];
+graph.xtick_f = 10.^(-3:2);
+graph.ylim_f = [1e-20,1e0];%[1e-35,1e5];
+graph.ytick_f = 10.^(-20:4:0);%10.^(-35:5:5);
+%
 % printing option
 %
 id_simul0 = 'Runaway_scan';%Simulation ID
-p_opt = -1;% printing and saving options : (-1) do nothing (0) print figures (1) print figures and save figures and results (2) save figures and results
-%
-[qe,me,~,~,e0,~,~,mc2] = pc_dke_yp;%Universal physics constants
+p_opt = -1;%2;% printing and saving options : (-1) do nothing (0) print figures (1) print figures and save figures and results (2) save figures and results
 %
 % calculation mode : (0) quasi steady state (1) time evolution
 %
@@ -163,7 +203,7 @@ betath2 = 0.01;% Te/mc2
 %   
 %   - the magnetic field being fixed, the density is adjusted in LUKE according to bhat
 %
-taurinv = 0.9;%0.1;%
+taurinv = 0.6;%0.9;%0.1;%
 %
 opt.synchro_mode = 1;
 %
@@ -206,8 +246,8 @@ opt.norm_mode_f = +1i;
 % opt.dtn = 51;% 10 time steps required for accurate runaway solution - see rundke_dtn
 %
 opt.tnmin = 1;% > 0 for log scale
-opt.tn = 1e8;%1e10;% 10000 is time for asymptotic solution
-opt.dtn = 17;%161;%201;% 10 time steps required for accurate runaway solution - see rundke_dtn
+opt.tn = [1e7,1e8];%1e8;%1e10;% 10000 is time for asymptotic solution
+opt.dtn = [141,90];%17;%161;%201;% 10 time steps required for accurate runaway solution - see rundke_dtn
 %
 % momentum space grid -> you can specify nmhu_S and either 
 % - the momentum grid pn_S directly
@@ -260,6 +300,9 @@ id_wave = '';
 %
 rho_S = 0.5;
 %
+opt.heavyions = true;
+opt.adjustB = true;
+%
 %************************************************************************************************************************************
 %
 nscan = length(scanval);
@@ -278,29 +321,66 @@ dp_bulk = grid.pnmax_S/(grid.np_S - 1);
 dp_fine = (grid.pnmax_S_tail - grid.pnmax_S)/grid.np_tail;
 pfac = imag(grid.np_tail);
 %
-for iscan = 1:nscan,
-    evalstr = [scanvar,' = ',num2str(scanval(iscan)),';'];
-    disp(['Scan ',num2str(iscan),'/',num2str(nscan),' : ',evalstr])
-    eval(evalstr);
+% - use taurinv, , , ,  as scanstr1 only
+% - use  as scanstr1 only if Emin is not NaN
+%
+if any(strcmp(scanstr,{'taurinv','sfac1','pnmax_S','np_tail','dtn'}))...
+    || (strcmp(scanstr,'betath2') && ~isnan(Emin)),% cannot use MDCE
     %
-    if opt_grid == 1,
+    for iscan = 1:nscan,
+        evalstr = [scanvar,' = ',num2str(scanval(iscan)),';'];
+        disp(['Scan ',num2str(iscan),'/',num2str(nscan),' : ',evalstr])
+        eval(evalstr);
+        %
+        if grid.opt == 1,
+            grid.np_S = 1 + round(grid.pnmax_S/dp_bulk);
+            if pfac == 0,
+                grid.np_tail = round((grid.pnmax_S_tail - grid.pnmax_S)/dp_fine);
+            else
+                grid.np_tail = round((grid.np_S - 1)*pfac*((grid.pnmax_S_tail/grid.pnmax_S)^(1/pfac) - 1));
+                grid.opt = pfac;
+            end
+        end
+        %
+        id_simul = [id_simul_scan,'_',num2str(scanval(iscan))];
+        %
+        opt.pnmin_S = sqrt(((1 + Emin*1e3/mc2)^2 - 1)/betath2);
+        wpr = -taurinv*1i;% real wpr : wpr, positive imaginary part : bhat, negative imaginary part : taurinv.
+        %
+        % RUN LUKE
+        %
+        [RR{iscan},mksa{iscan},Ec{iscan},f{iscan},tn{iscan},tRR{iscan},tnorm{iscan},fgrid{iscan}] = frundke_runaway(id_simul,alpha,betath2,wpr,Zi,opt,grid,id_equil,id_wave,rho_S);
+        %
+    end
+else
+    %
+    if grid.opt == 1,
         grid.np_S = 1 + round(grid.pnmax_S/dp_bulk);
         if pfac == 0,
             grid.np_tail = round((grid.pnmax_S_tail - grid.pnmax_S)/dp_fine);
         else
             grid.np_tail = round((grid.np_S - 1)*pfac*((grid.pnmax_S_tail/grid.pnmax_S)^(1/pfac) - 1));
+            grid.opt = pfac;
         end
     end
-    %
-    id_simul = [id_simul_scan,'_',num2str(scanval(iscan))];
     %
     opt.pnmin_S = sqrt(((1 + Emin*1e3/mc2)^2 - 1)/betath2);
     wpr = -taurinv*1i;% real wpr : wpr, positive imaginary part : bhat, negative imaginary part : taurinv.
     %
     % RUN LUKE
     %
-    [RR{iscan},mksa{iscan},Ec{iscan},f{iscan},tn{iscan},tRR{iscan},tnorm{iscan},fgrid{iscan}] = frundke_runaway(id_simul,alpha,betath2,wpr,Zi,opt,grid,id_equil,id_wave,rho_S);
+    dkepath = lukeschedulerparam('',mdce_mode,remnum,returnmode,transpmode);
     %
+    if ~isnan(nproc_enforce),
+        for irem = 1:length(dkepath.remote),
+            dkepath.remote(irem).nproc = nproc_enforce;
+        end
+    end
+    %
+    dkecluster = clustermode_luke('','run_lukert',dkepath);
+    %
+    [flag,RR(:),mksa(:),Ec(:),f(:),tn(:),tRR(:),tnorm(:),fgrid(:)] = ...
+        mdce_run('frundke_runaway',{id_simul_scan,alpha,betath2,wpr,Zi,opt,grid,id_equil,id_wave,rho_S},scanind,scanval,dkecluster);
 end
 %
 %************************************************************************************************************************************
