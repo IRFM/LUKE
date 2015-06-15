@@ -1,4 +1,4 @@
-function fproc_runaway(RR,mksa,Ec,f,tn,tRR,tnorm,fgrid,alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S,graph,p_opt,id_simul)
+function fproc_runaway(RR,mksa,Ec,f,tn,tRR,tnorm,fgrid,tacc,pmhucrit,ZXXS,alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S,graph,p_opt,id_simul)
 %
 epsi_kulsrud = [0.04;0.06;0.08;0.10];
 Zi_kulsrud =[1,2,3,10];
@@ -136,20 +136,37 @@ else% time dependent solution
     %
     ntn = length(tn);
     %
+    if isfield(graph,'tnc') && graph.tnc, 
+        tn = tn*betath2^(3/2);
+        RRfac = betath2^(-3/2);
+    else
+        RRfac = 1;
+    end
+    %
     if opt.tnmin == 0,
         xlim = [0,tn(end)]; 
         xtick = NaN;
         mask = 1:ntn;
     else
         xlim = [tn(2),tn(end)];
-        xtick = 10.^(floor(log10(tn(2))):ceil(log10(tn(end))));
+        xtick = 10.^(floor(log10(tn(2))):2:ceil(log10(tn(end))));
         mask = 2:ntn;
     end
     %
     siz = 20+14i;
     tit = '';
-%     colors = {'b','r',[0,0.5,0],[0.5,0,0.5],[0,0.5,0.5],[0.5,0.5,0],'k'};
-    colors = {'k','b','r','g','m','b','r','g','m'};
+    if ~isfield(opt,'color') || opt.color,
+        colors = {'b','r',[0,0.75,0],[0.75,0,0.75],[0,0.75,0.75],[0.75,0.75,0],'k'};
+        %colors = {'k','b','r','g','m','c','y'};
+        styles = {'-','-','-','-','--','-','-'};
+        sizes = [2,0.5,0.5,0.5,2];%,0.5
+        colstr = '_col';
+    else
+        colors = {'k','k','k','k','k','k','k','k','k'};
+        styles = {'-','--','-.','-','--','-.'};
+        colstr = '';
+        sizes = [2,0.5,0.5,0.5,2];%,0.5
+    end
     %
     figure(1),clf
     %
@@ -164,11 +181,11 @@ else% time dependent solution
     %
     leg = {'ext. RE','int. RE','bulk','total'};
     %
-    graph1D_jd(tn(mask),tnorm.re(1,mask),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none','r',2,siz,gca);
-    graph1D_jd(tn(mask),tnorm.ri(1,mask),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
+    graph1D_jd(tn(mask),tnorm.re(1,mask),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,styles{3},'none',colors{3},sizes(3),siz,gca);
+    graph1D_jd(tn(mask),tnorm.ri(1,mask),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,styles{2},'none',colors{2},sizes(2),siz,gca);
 %    graph1D_jd(tn(mask),tnorm.b(1,mask),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none',[0,0.5,0],2,siz,gca);
-    graph1D_jd(tn(mask),tnorm.b(1,mask),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none','g',2,siz,gca);
-    graph1D_jd(tn(mask),tnorm.tot(1,mask),opt.tnmin > 0,1,xlab,ylab,tit,leg,xlim,ylim,'--','none','k',2,siz,gca,0.9,0.7,0.7);
+    graph1D_jd(tn(mask),tnorm.b(1,mask),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,styles{4},'none',colors{4},sizes(4),siz,gca);
+    graph1D_jd(tn(mask),tnorm.tot(1,mask),opt.tnmin > 0,1,xlab,ylab,tit,leg,xlim,ylim,styles{5},'none',colors{1},sizes(1),siz,gca,0.9,0.7,0.7);
     %
     if nr > 1,
         graph1D_jd(tn(mask),tnorm.re(end,mask),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'--','none','r',0.5,siz,gca);
@@ -187,6 +204,8 @@ else% time dependent solution
     end
     set(gca,'YMinorGrid','off')
     set(gca,'YMinorTick','on')
+    set(gca,'XMinorGrid','off')
+    set(gca,'XMinorTick','on')
     %
     figure(2),clf
     %
@@ -206,16 +225,16 @@ else% time dependent solution
     %
     if ~isempty(RR_k),
 %         graph1D_jd(xlim,[RR_k,RR_k],opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none',[0,0.5,0],2,siz,gca);
-        graph1D_jd(xlim,[RR_k,RR_k],opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none','g',2,siz,gca);
+        graph1D_jd(xlim,[RR_k,RR_k]*RRfac,opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none','g',2,siz,gca);
     end
-    graph1D_jd(tn(2:ntn),tRR.re(1,:),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none','r',2,siz,gca);
-    graph1D_jd(tn(2:ntn),tRR.ri(1,:),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
-    graph1D_jd(tn(2:ntn),tRR.re(1,:) + tRR.ri(1,:),opt.tnmin > 0,1,xlab,ylab,tit,leg,xlim,ylim,'--','none','k',2,siz,gca,0.9,0.7,0.7);
+    graph1D_jd(tn(2:ntn),tRR.re(1,:)*RRfac,opt.tnmin > 0,1,'','','',NaN,xlim,ylim,styles{3},'none',colors{3},sizes(3),siz,gca);
+    graph1D_jd(tn(2:ntn),tRR.ri(1,:)*RRfac,opt.tnmin > 0,1,'','','',NaN,xlim,ylim,styles{4},'none',colors{4},sizes(4),siz,gca);
+    graph1D_jd(tn(2:ntn),tRR.re(1,:)*RRfac + tRR.ri(1,:)*RRfac,opt.tnmin > 0,1,xlab,ylab,tit,leg,xlim,ylim,styles{5},'none',colors{1},sizes(1),siz,gca,0.9,0.7,0.7);
     %
     if nr > 1,
-        graph1D_jd(tn(2:ntn),tRR.re(end,:),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'--','none','r',0.5,siz,gca);
-        graph1D_jd(tn(2:ntn),tRR.ri(end,:),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'--','none','b',0.5,siz,gca);
-        graph1D_jd(tn(2:ntn),tRR.re(end,:) + tRR.ri(end,:),opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'--','none','k',0.5,siz,gca);
+        graph1D_jd(tn(2:ntn),tRR.re(end,:)*RRfac,opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'--','none','r',0.5,siz,gca);
+        graph1D_jd(tn(2:ntn),tRR.ri(end,:)*RRfac,opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'--','none','b',0.5,siz,gca);
+        graph1D_jd(tn(2:ntn),tRR.re(end,:)*RRfac + tRR.ri(end,:)*RRfac,opt.tnmin > 0,1,'','','',NaN,xlim,ylim,'--','none','k',0.5,siz,gca);
     end
     %
     if ~isnan(xtick),
@@ -227,14 +246,37 @@ else% time dependent solution
     end
     set(gca,'YMinorGrid','off')
     set(gca,'YMinorTick','on')
+    set(gca,'XMinorGrid','off')
+    set(gca,'XMinorTick','on')
     %
     figure(3),clf
     %
+    if ~isfield(graph,'xlog'),
+        graph.xlog = 0;
+    end
+    %
     fM = reshape(f{1}(:,end,:),[np,nr]);
     %
-    xlab = 'E_c (MeV)';
-    ylab = 'f(E_c,\xi = 1)';
-    xlim = [0,max(Ec)];    
+    if ~isfield(graph,'xec') || graph.xec,
+        xlab = '$\mathcal{E}_k$ (MeV)';
+        ylab = '$f(\mathcal{E}_k,\xi = 1)$';
+        %
+        x = Ec;
+    else
+        xlab = '$p/(mc)$';
+        ylab = '$f(p,\xi = 1)$';
+        %
+        x = fgrid.pn*sqrt(betath2);
+    end
+    %
+    if ~isfield(graph,'xlim'),
+        if graph.xlog,
+            graph.xlim = [min(x),max(x)];                
+        else
+            graph.xlim = [0,max(x)];                
+        end
+    end
+    %
     if isfield(graph,'ylim_f'),
         ylim = graph.ylim_f;
     else
@@ -245,30 +287,37 @@ else% time dependent solution
     ntdisp = length(graph.itdisp);
     leg = cell(1,ntdisp+1);
     leg{1} = ['t/\tau_c = 0'];
-    graph1D_jd(Ec,fM(:,1),0,1,'','','',NaN,xlim,ylim,'-','none',colors{1},0.5,siz,gca);
+    graph1D_jd(x,fM(:,1),graph.xlog,1,'','','',NaN,graph.xlim,ylim,styles{1},'none',colors{1},sizes(1),siz,gca);
     for iit = 1:ntdisp-1,
         leg{1+iit} = ['t/\tau_c = ',num2str(tn(1+graph.itdisp(iit)))];
-        graph1D_jd(Ec,f{1+graph.itdisp(iit)}(:,end,1),0,1,'','','',NaN,xlim,ylim,'-','none',colors{1+iit},2,siz);
+        graph1D_jd(x,f{1+graph.itdisp(iit)}(:,end,1),graph.xlog,1,'','','',NaN,graph.xlim,ylim,styles{1+iit},'none',colors{1+iit},sizes(1+iit),siz);
     end
     leg{1+ntdisp} = ['t/\tau_c = ',num2str(tn(1+graph.itdisp(ntdisp)))];
-    graph1D_jd(Ec,f{1+graph.itdisp(ntdisp)}(:,end,1),0,1,xlab,ylab,tit,leg,xlim,ylim,'-','none',colors{1+ntdisp},2,siz,gca,0.9,0.7,0.7);
+    graph1D_jd(x,f{1+graph.itdisp(ntdisp)}(:,end,1),graph.xlog,1,xlab,ylab,tit,leg,graph.xlim,ylim,styles{1+ntdisp},'none',colors{1+ntdisp},sizes(1+ntdisp),siz,gca,0.9,0.7,0.7);
     %
     if nr > 1,
-        graph1D_jd(Ec,fM(:,end),0,1,'','','',NaN,xlim,ylim,'--','none',colors{1},0.5,siz,gca);
+        graph1D_jd(x,fM(:,end),graph.xlog,1,'','','',NaN,graph.xlim,ylim,'--','none',colors{1},0.5,siz,gca);
         for iit = 1:ntdisp,
-            graph1D_jd(Ec,f{1+graph.itdisp(iit)}(:,end,end),0,1,'','','',NaN,xlim,ylim,'--','none',colors{1+iit},0.5,siz);
+            graph1D_jd(x,f{1+graph.itdisp(iit)}(:,end,end),graph.xlog,1,'','','',NaN,graph.xlim,ylim,'--','none',colors{1+iit},0.5,siz);
         end
     end
     %
+    if isfield(graph,'xtick'),
+        set(gca,'xtick',graph.xtick)
+    end
     if isfield(graph,'ytick_f'),
         set(gca,'ytick',graph.ytick_f)
     end
+    set(gca,'XMinorGrid','off')
+    set(gca,'XMinorTick','on')
     set(gca,'YMinorGrid','off')
     set(gca,'YMinorTick','on')
+    set(get(gca,'xlabel'),'interpreter','latex')
+    set(get(gca,'ylabel'),'interpreter','latex')
     %
-    print_jd(p_opt,['fig_',id_simul,'_nr'],'./figures',1)
-    print_jd(p_opt,['fig_',id_simul,'_rr'],'./figures',2)
-    print_jd(p_opt,['fig_',id_simul,'_f1'],'./figures',3)
+    print_jd(p_opt,['fig_',id_simul,'_nr',colstr],'./figures',1)
+    print_jd(p_opt,['fig_',id_simul,'_rr',colstr],'./figures',2)
+    print_jd(p_opt,['fig_',id_simul,'_f1',colstr],'./figures',3)
     %
     if nr > 1,
         %
@@ -313,6 +362,47 @@ else% time dependent solution
         %
         set(gca,'xtick',0:0.2:1)
 %         set(gca,'ytick',0:0.2:1)
+        %
+    elseif isfield(graph,'dp_cyl') && graph.dp_cyl > 0,
+        %
+        if ~isfield(graph,'pnmax_disp'),
+            graph.pnmax_disp = pnmax_S;
+        end
+        %
+        f02D = f{end};
+        fM2D = f{1};
+        %
+        calc_fcyl_jd(f02D,sqrt(betath2),fgrid.pn,fgrid.mhu,graph.dp_cyl,1,1,graph.pnmax_disp,tacc{end},pmhucrit,[6,0,0]);       
+        set(gca,'xlim',graph.xlim_disp);
+        set(gca,'xtick',graph.xtick_disp);
+        set(gca,'ylim',graph.ylim_disp);
+        set(gca,'ytick',graph.ytick_disp);
+        %
+        figpos = get(gcf,'position');
+%         newfigpos = [figpos(1),figpos(2),figpos(3),figpos(3)*diff(graph.ylim_disp)/diff(graph.xlim_disp)];
+        newfigpos = [figpos(1),figpos(2),figpos(3),figpos(3)*1/2];
+        set(gcf,'position',newfigpos)
+        %
+        % stream function
+        %
+        dke_out.ZXXS = ZXXS;
+        dke_out.xRR_fsav = RR;
+        dke_out.betath_ref = sqrt(betath2);
+        %
+        gridDKE.xmhubounce2 = 0;
+        %
+        stream_dke_jd(dke_out,opt,fgrid,gridDKE,1,graph.dp_cyl,graph,tacc{end},pmhucrit,7);
+        %
+%         ch = get(gca,'children');% case where both are on same fig.
+%         set(gca,'children',ch([3,4,2,1]));
+        set(gca,'xlim',graph.xlim_disp);
+        set(gca,'xtick',graph.xtick_disp);
+        set(gca,'ylim',graph.ylim_disp);
+        set(gca,'ytick',graph.ytick_disp);
+        set(gcf,'position',newfigpos)
+        %
+        print_jd(p_opt,['fig_',id_simul,'_f2',colstr],'./figures',6)
+        print_jd(p_opt,['fig_',id_simul,'_stream',colstr],'./figures',7)
         %
     end
     %
