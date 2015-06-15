@@ -98,6 +98,8 @@ path_wave = '';%if nothing is specified, the working directory is first used and
 %
 [dkepath,equil,dkeparam,dkedisplay,waves] = load_structures_yp('dkepath',id_path,path_path,'equil',id_equil,path_equil,'dkeparam',id_dkeparam,path_dkeparam,'dkedisplay',id_display,path_display,'waves',{id_wave},path_wave);
 %
+equil.pne = equil.pne/2;
+%
 %**************************************************************************
 %**************************************************************************
 %
@@ -126,7 +128,11 @@ if opt.tnmin == 0,%linear time grid
     dkeparam.dtn = opt.dtn;% time grid (if array) or time step
 end
 if opt.tnmin > 0,%log time grid
-    dkeparam.tn = logspace(log10(opt.tnmin),log10(opt.tn),opt.dtn);
+    dkeparam.tn = logspace(log10(opt.tnmin),log10(opt.tn(1)),opt.dtn(1));
+    if length(opt.tn) > 1,%log + lin
+        tnlin = linspace(opt.tn(1),opt.tn(2),1+opt.dtn(2));        
+        dkeparam.tn = [dkeparam.tn,tnlin(2:end)];
+    end
     dkeparam.dtn = NaN;
 end
 %
@@ -177,7 +183,11 @@ else
         if imag(grid.pnmax_S_tail) > 0,
             grid.pnmax_S_tail = imag(grid.pnmax_S_tail)*grid.pnmax_S;
         end
-        pn_S_tail = linspace(grid.pnmax_S,grid.pnmax_S_tail,grid.np_tail + 1);
+        if isfield(grid,'opt') && grid.opt > 0,
+            pn_S_tail = (linspace(grid.pnmax_S^(1/grid.opt),grid.pnmax_S_tail^(1/grid.opt),grid.np_tail + 1)).^grid.opt;
+        else
+            pn_S_tail = linspace(grid.pnmax_S,grid.pnmax_S_tail,grid.np_tail + 1);
+        end
     end
     dkeparam.pn_S = [pn_S_bulk,pn_S,pn_S_tail];
     dkeparam.pnmax_S = grid.pnmax_S;%used for dNparmin, etc
@@ -215,9 +225,18 @@ dkeparam.pnmax2_KO = opt.pnmax2_KO;
 % synchrotron reaction force
 %
 dkeparam.synchro_mode = opt.synchro_mode;% synchrotron reaction force option
-if wpr > 0,% adjust density to have correct wp2/wc2 - synchrotron reaction force only
-    pB = sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2).';
-    equil.pne = (pB*qe/me).^2*me*e0./(qe^2*wpr);
+if wpr > 0,
+    if isfield(opt,'adjustB') && opt.adjustB, % adjust magnetic field amplitude  to have correct wp2/wc2 - synchrotron reaction force only
+        pB = sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2).';
+        pBfac = sqrt(equil.pne*qe^2*wpr/(me*e0))*me/qe./pB;
+        ptBfac = repmat(pBfac.',[1,length(equil.theta)]);
+        equil.ptBx = equil.ptBx.*ptBfac;
+        equil.ptBy = equil.ptBy.*ptBfac;
+        equil.ptBPHI = equil.ptBPHI.*ptBfac;
+    else% adjust density to have correct wp2/wc2 - synchrotron reaction force only
+        pB = sqrt(equil.ptBx(:,1).^2 + equil.ptBy(:,1).^2 + equil.ptBPHI(:,1).^2).';
+        equil.pne = (pB*qe/me).^2*me*e0./(qe^2*wpr);
+    end
 end
 %
 % equilibrium
@@ -227,3 +246,6 @@ equil.pzTi = 1e-10*ones(size(equil.pzTi));% cold ions
 equil.zZi = [1,1,1,Zi];
 equil.pzni = [0;0;0;1/Zi]*equil.pne;% single ion species
 %
+if isfield(opt,'heavyions') && opt.heavyions,
+    equil.zmi = 1e10*[1,1,1,1];
+end
