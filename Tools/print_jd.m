@@ -60,7 +60,7 @@ if opt >= 1,
 %     wd = pwd;
 %     cd(savedir)
     %
-    print(fignum,'-depsc','-loose',['-r',num2str(res)],[savedir,savename,'.eps']);
+    print(fignum,'-depsc2','-loose',['-r',num2str(res)],[savedir,savename,'.eps']);
 %     eval(['print -depsc -loose -r',num2str(res),' ',savename,'.eps']); 
     saveas(fignum,[savedir,savename,'.fig'],'fig')
     if strcmp(computer,'PCWIN'),
