@@ -104,13 +104,13 @@ end
 %
 % RUN LUKE
 %
-[RR,mksa,Ec,f,tn,tRR,tnorm] = frundke_runaway(id_simul,alpha,betath2,wpr,Zi,opt,grid,id_equil,id_wave,rho_S);
+[RR,mksa,Ec,f,tn,tRR,tnorm,fgrid,tacc,ZXXS] = frundke_runaway(id_simul,alpha,betath2,wpr,Zi,opt,grid,id_equil,id_wave,rho_S);
 %
 %************************************************************************************************************************************
 %
 % PROCESS DATA
 %
-fproc_runaway(RR,mksa,Ec,f,tn,tRR,tnorm,alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S,graph,p_opt,id_simul);
+fproc_runaway(RR,mksa,Ec,f,tn,tRR,tnorm,fgrid,tacc,ZXXS,alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S,graph,p_opt,id_simul);
 %
 %************************************************************************************************************************************
 %
