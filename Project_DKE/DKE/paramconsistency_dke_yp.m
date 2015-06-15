@@ -157,7 +157,7 @@ if ~isfield(dkeparam,'timevol'),
 end
 %
 if dkeparam.avalanche_mode == 1 || dkeparam.nit_ohm > 1 || imag(dkeparam.norm_mode_f) > 0
-    dkeparam.timevol = 1;
+    dkeparam.timevol = max([dkeparam.timevol,1]);
 end
 %
 if ~isfield(dkeparam,'pnmin0_KO'),
@@ -171,6 +171,23 @@ if ~isfield(dkeparam,'pnmin2_KO'),
 end
 if ~isfield(dkeparam,'pnmax2_KO'),
     dkeparam.pnmax2_KO = NaN;% equal to pnmin0_KO
+end
+%
+if real(dkeparam.norm_mode_f) == 3,%compensate for boundary losses with p=0 source term
+    dkeparam.timevol = max([dkeparam.timevol,1]);
+    if ~isfield(dkeparam,'nit_norm'),
+        dkeparam.nit_norm = 10;
+    end
+    if ~isfield(dkeparam,'tol_norm'),
+        dkeparam.tol_norm = 1e-3;
+    end
+    if ~isfield(dkeparam,'thres_norm'),
+        dkeparam.thres_norm = eps;
+    end
+else
+    dkeparam.nit_norm = 1;
+    dkeparam.tol_norm = Inf;    
+    dkeparam.thres_norm = Inf;
 end
 %
 if ~isfield(dkeparam,'redfac'),
