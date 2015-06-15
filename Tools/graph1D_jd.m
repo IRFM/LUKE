@@ -147,6 +147,12 @@ hold(ax,'on');
             end
             %
             color = NaN;
+            %
+            if length(marker) >= 3,
+                for im = 1:(length(marker)-1)/2,
+                    set(gcl,marker{2*im},marker{2*im+1});
+                end
+            end
         else
             gcl = plot(x,y,'parent',ax);
         end
