@@ -48,7 +48,7 @@ betath2 = 0.01;% Te/mc2
 %   
 %   - the magnetic field being fixed, the density is adjusted in LUKE according to bhat
 %
-taurinv = 0.9;%0.1;%
+taurinv = 0.6;
 %
 opt.synchro_mode = 1;
 %
@@ -70,10 +70,11 @@ opt.boundary_mode_f = 0;% Enforcing the Maxwellian initial value at the first "b
 %
 % normalization mode : 
 % (0) : "free" mode
-% (1) : "normalization of f0 maintained to its initial (maxwellian) value". DO NOT use in the runaway problem
-% (2) : "normalization of f0 maintained to its value at the previous time". Use only in the runaway problem with (+1i)
+% (1) : normalization of f0 maintained to its initial (maxwellian) value. DO NOT use in the runaway problem
+% (2) : normalization of f0 maintained to its value at the previous time. Use only in the runaway problem with (+1i)
+% (3) : injection at center of particles lost at boundary (use only for stream function)
 % (... + 1i) : compensate for numerical error after each time step, acounting for boundary losses.
-opt.norm_mode_f = +1i;   
+opt.norm_mode_f = 1i;
 %
 % time grid (normalized to collision time) -> you can specify :
 % - linear arbitrary grid with tn array                 : opt.tnmin = 0 ;opt.tn = 1000:1000:10000,dtn = NaN;opt.tnmin = 0
@@ -92,10 +93,20 @@ opt.norm_mode_f = +1i;
 % opt.dtn = 51;% 10 time steps required for accurate runaway solution - see rundke_dtn
 % graph.itdisp = 11:10:51;% display times - only used if opt.timevol > 0 
 %
-opt.tnmin = 1;% > 0 for log scale
-opt.tn = 1e8;%1e10;% 10000 is time for asymptotic solution
-opt.dtn = 17;%21;%161;%201;% 10 time steps required for accurate runaway solution - see rundke_dtn
-graph.itdisp = 1:4:17;%1:4:21;%41:40:161;%41:40:201;% display times - only used if opt.timevol > 0 
+opt.tnmin = 1e0;% > 0 for log scale
+%
+opt.tn = [1e8,1e9];%[1e7,1e8];%1e10;% 10000 is time for asymptotic solution
+opt.dtn = [161,90];%[141,90];%161;%21;%201;% 10 time steps required for accurate runaway solution - see rundke_dtn
+graph.itdisp = [61:40:141,251];%[61:40:141,231];%41:40:161;%5:4:17;%5:4:21;%81:40:201;%1:4:17;% display times - only used if opt.timevol > 0 
+%
+% opt.tn = [1e7,1e8];%1e10;% 10000 is time for asymptotic solution
+% opt.dtn = [141,90];%161;%21;%201;% 10 time steps required for accurate runaway solution - see rundke_dtn
+% graph.itdisp = [61:40:141,231];%41:40:161;%5:4:17;%5:4:21;%81:40:201;%1:4:17;% display times - only used if opt.timevol > 0 
+%
+% opt.tnmin = 1;%0;% > 0 for log scale
+% opt.tn = 1e8;%1e9;%1e10;% 10000 is time for asymptotic solution
+% opt.dtn = 17;%10*1i;%100*1i;%161;%21;%201;% 10 time steps required for accurate runaway solution - see rundke_dtn
+% graph.itdisp = [1,10];%[1,10,100];%41:40:161;%5:4:17;%5:4:21;%81:40:201;%1:4:17;% display times - only used if opt.timevol > 0 
 %
 % momentum space grid -> you can specify nmhu_S and either 
 % - the momentum grid pn_S directly
@@ -111,7 +122,7 @@ grid.snmhu1 = 5; % number of fine grid points near abs(mhu) = 1
 %       if isreal(np_tail) : keep coarse grid steps constant (typically, 1). Note : do not enforce np_S and np_tail variations 
 %       if isimag(np_tail), enforce continuity of grid step size at pnmax_S. Note : do not enforce np_S and np_tail variations
 %
-opt_grid = 1;
+grid.opt = 1;
 %
 grid.np_S = 141;% number of bulk momentum grid points
 grid.pnmax_S = 28;%sqrt(((1 + Emax*1e3/mc2)^2 - 1)/betath2);% maximum of bulk momentum (normalized to pT) [pn = 28 corresponds to 1 MeV electrons for betath = 0.1]
@@ -156,6 +167,18 @@ id_wave = '';
 %
 rho_S = 0.5;
 %
+opt.heavyions = true;
+opt.adjustB = true;
+%
+opt.keyboard = true;
+opt.color = true;
+%
+graph.tnc = true;
+graph.xec = true;
+graph.xlog = 1;
+graph.xlim = [1e-3,1e2];
+graph.xtick = 10.^(-3:2);
+%
 if alpha == 2,
     %
     % E/Ec = 2
@@ -164,8 +187,8 @@ if alpha == 2,
     graph.ytick_norm = 10.^(-25:5:5);
     graph.ylim_gamma = [1e-26,1e-12];
     graph.ytick_gamma = 10.^(-26:4:-12);
-    graph.ylim_f = [1e-45,1e5];
-    graph.ytick_f = 10.^(-45:5:5);
+    graph.ylim_f = [1e-20,1e0];%[1e-45,1e5];
+    graph.ytick_f = 10.^(-20:4:0);%10.^(-45:5:5);
 elseif alpha == 2.5,
     %
     % E/Ec = 2.5
@@ -180,12 +203,22 @@ elseif alpha == 3,
     %
     % E/Ec = 3
     %
-    graph.ylim_norm = [1e-25,1e1];
-    graph.ytick_norm = 10.^(-25:5:5);
-    graph.ylim_gamma = [1e-32,1e-8];
-    graph.ytick_gamma = 10.^(-32:4:-8);
-    graph.ylim_f = [1e-35,1e5];
-    graph.ytick_f = 10.^(-35:5:5);
+    graph.ylim_norm = [1e-11,1e1];%[1e-25,1e1];
+    graph.ytick_norm = 10.^(-10:2:0);%10.^(-25:5:5);
+    graph.ylim_gamma = [1e-12,1e-2];
+    graph.ytick_gamma = 10.^(-12:2:-2);
+    graph.ylim_f = [1e-20,1e0];%[1e-35,1e5];
+    graph.ytick_f = 10.^(-20:4:0);%10.^(-35:5:5);
+    %
+    graph.dp_cyl = 0;%0.2;
+    graph.cont = (0:3:100)*1e-11;
+%     graph.cont = 1e-7*(-31:2:15)/8;%-3.875e-7:0.25e-7:1.875e-7;%-4e-7:0.25e-7:2e-7;
+    graph.pnmax_disp = 300;
+    graph.xlim_disp = [-5,20];
+    graph.ylim_disp = [0,10];
+    graph.xtick_disp = -5:5:20;
+    graph.ytick_disp = 0:5:10;
+    %
 elseif alpha == 5,
     %
     % E/Ec = 5
@@ -204,12 +237,13 @@ end
 dp_bulk = grid.pnmax_S/(grid.np_S - 1);
 dp_fine = (grid.pnmax_S_tail - grid.pnmax_S)/grid.np_tail;
 pfac = imag(grid.np_tail);
-if opt_grid == 1,
+if grid.opt == 1,
     grid.np_S = 1 + round(grid.pnmax_S/dp_bulk);
     if pfac == 0,
         grid.np_tail = round((grid.pnmax_S_tail - grid.pnmax_S)/dp_fine);
     else
         grid.np_tail = round((grid.np_S - 1)*pfac*((grid.pnmax_S_tail/grid.pnmax_S)^(1/pfac) - 1));
+        grid.opt = pfac;
     end
 end
 %
@@ -218,13 +252,13 @@ wpr = -taurinv*1i;% real wpr : wpr, positive imaginary part : bhat, negative ima
 %
 % RUN LUKE
 %
-[RR,mksa,Ec,f,tn,tRR,tnorm,fgrid] = frundke_runaway(id_simul,alpha,betath2,wpr,Zi,opt,grid,id_equil,id_wave,rho_S);
+[RR,mksa,Ec,f,tn,tRR,tnorm,fgrid,tacc,pmhucrit,ZXXS] = frundke_runaway(id_simul,alpha,betath2,wpr,Zi,opt,grid,id_equil,id_wave,rho_S);
 %
 %************************************************************************************************************************************
 %
 % PROCESS DATA
 %
-fproc_runaway(RR,mksa,Ec,f,tn,tRR,tnorm,fgrid,alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S,graph,p_opt,id_simul);
+fproc_runaway(RR,mksa,Ec,f,tn,tRR,tnorm,fgrid,tacc,pmhucrit,ZXXS,alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S,graph,p_opt,id_simul);
 %
 %************************************************************************************************************************************
 %
