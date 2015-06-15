@@ -96,14 +96,87 @@ ptBx_ext = interp1(psin,equil.ptBx,psin_ext,'linear','extrap');
 ptBy_ext = interp1(psin,equil.ptBy,psin_ext,'linear','extrap');
 ptBPHI_ext = interp1(psin,equil.ptBPHI,psin_ext,'linear','extrap');
 %
+if isfield(equil,'ptr')
+    ptr_ext = interp1(psin,equil.ptr,psin_ext,'linear','extrap');
+end
+%
+if isfield(equil,'ptB')
+    ptB_ext = interp1(psin,equil.ptB,psin_ext,'linear','extrap');
+end
+%
+if isfield(equil,'ptdBdtheta')
+    ptdBdtheta_ext = interp1(psin,equil.ptdBdtheta,psin_ext,'linear','extrap');
+end
+%
+if isfield(equil,'ptBP')
+    ptBP_ext = interp1(psin,equil.ptBP,psin_ext,'linear','extrap');
+end
+%
+if isfield(equil,'ptdBPdtheta')
+    ptdBPdtheta_ext = interp1(psin,equil.ptdBPdtheta,psin_ext,'linear','extrap');
+end
+
+%
+if isfield(equil,'ptcalpha')
+    ptcalpha_ext = interp1(psin,equil.ptcalpha,psin_ext,'linear','extrap');
+end
+%
+if isfield(equil,'ptsalpha')
+    ptsalpha_ext = interp1(psin,equil.ptsalpha,psin_ext,'linear','extrap');
+end
+%
+if isfield(equil,'ptgradrho')
+    ptgradrho_ext = interp1(psin,equil.ptgradrho,psin_ext,'linear','extrap');
+end
+%
+if isfield(equil,'ptUpsilon')
+    ptUpsilon_ext = interp1(psin,equil.ptUpsilon,psin_ext,'linear','extrap');
+end
+%
 psi_apRp_ext =  psia_apRp*repmat(psin_ext.',[1,nt]);
 %
 warning('off')
 %
-%equil_RZ.xyBx = griddata(ptx_ext,pty_ext,ptBx_ext,equil_RZ.x,equil_RZ.y.',method).';
-%equil_RZ.xyBy = griddata(ptx_ext,pty_ext,ptBy_ext,equil_RZ.x,equil_RZ.y.',method).';
-%equil_RZ.xyBPHI = griddata(ptx_ext,pty_ext,ptBPHI_ext,equil_RZ.x,equil_RZ.y.',method).';
+equil_RZ.Bx = griddata(ptx_ext,pty_ext,ptBx_ext,equil_RZ.x,equil_RZ.y.',method).';
+equil_RZ.By = griddata(ptx_ext,pty_ext,ptBy_ext,equil_RZ.x,equil_RZ.y.',method).';
+equil_RZ.BPHI = griddata(ptx_ext,pty_ext,ptBPHI_ext,equil_RZ.x,equil_RZ.y.',method).';
 equil_RZ.xypsi_apRp = griddata(ptx_ext,pty_ext,psi_apRp_ext,equil_RZ.x,equil_RZ.y.',method).';
+%
+if isfield(equil,'ptr')
+    equil_RZ.r = griddata(ptx_ext,pty_ext,ptr_ext,equil_RZ.x,equil_RZ.y.',method).';
+end
+%
+if isfield(equil,'ptB')
+    equil_RZ.B = griddata(ptx_ext,pty_ext,ptB_ext,equil_RZ.x,equil_RZ.y.',method).';
+end
+%
+if isfield(equil,'ptdBdtheta')
+    equil_RZ.dBdtheta = griddata(ptx_ext,pty_ext,ptdBdtheta_ext,equil_RZ.x,equil_RZ.y.',method).';
+end
+%
+if isfield(equil,'ptBP')
+    equil_RZ.BP = griddata(ptx_ext,pty_ext,ptBP_ext,equil_RZ.x,equil_RZ.y.',method).';
+end
+%
+if isfield(equil,'ptdBPdtheta')
+    equil_RZ.dBPdtheta = griddata(ptx_ext,pty_ext,ptdBPdtheta_ext,equil_RZ.x,equil_RZ.y.',method).';
+end
+%
+if isfield(equil,'ptcalpha')
+    equil_RZ.calpha = griddata(ptx_ext,pty_ext,ptcalpha_ext,equil_RZ.x,equil_RZ.y.',method).';
+end
+%
+if isfield(equil,'ptsalpha')
+    equil_RZ.salpha = griddata(ptx_ext,pty_ext,ptsalpha_ext,equil_RZ.x,equil_RZ.y.',method).';
+end
+%
+if isfield(equil,'ptgradrho')
+    equil_RZ.gradrho = griddata(ptx_ext,pty_ext,ptgradrho_ext,equil_RZ.x,equil_RZ.y.',method).';
+end
+%
+if isfield(equil,'ptUpsilon')
+    equil_RZ.Upsilon = griddata(ptx_ext,pty_ext,ptUpsilon_ext,equil_RZ.x,equil_RZ.y.',method).';
+end
 %
 warning('on')
 %
