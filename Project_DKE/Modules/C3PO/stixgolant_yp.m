@@ -1,4 +1,4 @@
-function [na,E] = stixgolant_yp(equil,omega_lh)
+function [na,E,R,Z,psin,B] = stixgolant_yp(equil,omega_lh)
 %
 %    Calculation of the Stix-Golant LH ray accessibility
 %    
@@ -11,6 +11,10 @@ function [na,E] = stixgolant_yp(equil,omega_lh)
 %
 %         - na: accessible refractive index on the (psi,theta) grid [npsi,mtheta]
 %         - E: resonant electron energies at na (psi,theta) grid [npsi,mtheta]
+%         - R: Major radius (psi,theta) grid [npsi,mtheta]
+%         - Z: Vertical position (psi,theta) grid [npsi,mtheta]
+%         - psin: %-normalized poloidal magnetic flux (psi,theta) grid [npsi,mtheta]
+%         - B: magnetic field (psi,theta) grid [npsi,mtheta]
 %
 %
 %by Y.PEYSSON (yves.peysson@cea.fr) and J. Decker (joan.decker@epfl.ch)
@@ -21,7 +25,7 @@ function [na,E] = stixgolant_yp(equil,omega_lh)
 R = equil.Rp + equil.ptx;
 Z = equil.Zp + equil.pty;
 B = sqrt(equil.ptBPHI.^2 + equil.ptBx.^2 + equil.ptBy.^2);%magnetic field
-psin = equil.psi_apRp(:)*ones(1,length(equil.theta))/equil.psi_apRp(end);%normal poloidal magnetic flux
+psin = equil.psi_apRp(:)*ones(1,length(equil.theta))/equil.psi_apRp(end);%normalized poloidal magnetic flux
 %
 %Calculation of epsiperp
 %

@@ -21,9 +21,9 @@ if nargin < 3,
     iray = NaN;  
 end
 %
-[na,E] = stixgolant_yp(equil);
+[na,E,R,Z,psin,B] = stixgolant_yp(equil,ray.omega_rf);
 %
-keyboard
+%keyboard
 if 0,
     %epsipar = 1-wpe.*wpe-wpi.*wpi;
     %epsiperp = 1+(wpe./wce).^2-wpi.*wpi;
@@ -33,7 +33,7 @@ if 0,
     x = equil.ptx(:,1)/equil.ptx(end,1);
     
     epsipar = [flipud(Kpar(:,(ntheta-1)/2));Kpar(:,1)]';%[HFS:LFS]
-    epsiperp = [flipud(Kperp(:,(ntheta-1)/2));Kperp(:,1)]';%[HFS:LFS]
+    epsiperp = [flipud(Kperp(:,(ntheta-1)/2));Kperp(:,1)]';%[HFS:LFS]ray
     epsixy = [flipud(Kx(:,(ntheta-1)/2));Kx(:,1)]';%[HFS:LFS]
     xna = [flipud(na(:,(ntheta-1)/2));na(:,1)]';%[HFS:LFS]
     
