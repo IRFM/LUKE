@@ -183,7 +183,7 @@ for iw = 1:length(waves),%
         % - sNpar -> sdNpar
         % - opt_disp, sNpar, omega_rf, equil -> sepol_pmz, sNperp, sphi_xyz
         %
-        if isfield(wave.rayparam,'colldamp'),%backward compatibility
+        if isfield(wave,'rayparam') && isfield(wave.rayparam,'colldamp'),%backward compatibility
             colldamp = wave.rayparam.colldamp;
         else
             colldamp = 0;%no collisional damping 
