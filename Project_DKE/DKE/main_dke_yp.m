@@ -527,9 +527,10 @@ for itn = itn0:nit,
             %
             % compensation term for boundary losses
             %
-            xRR_fsav = xRRm_fsav{itn} + xRRp_fsav{itn};
-            %
             if dkeparam_out.nit_norm > 1,
+                %
+                xRR_fsav = xRRm_fsav{itn} + xRRp_fsav{itn};
+                %
                 if all(abs(xRR_fsav) <= abs(dkeparam_out.thres_norm)),% negligible boundary losses
                     if dkedisplay.display_mode >= 1, 
                         disp(['Boundary losses negligible, no p=0 source term is needed at time step ',num2str(itn)])
