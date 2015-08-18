@@ -1,4 +1,4 @@
-function [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
+function [ZP0,Zcurr,Znorm,ZXXS,...
     XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRRm_fsav,xRRp_fsav,...
     xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,Zmom] = ...
     fmoments_dke_yp(dkepath,dkeparam,display,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi,waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
@@ -987,20 +987,6 @@ Znorm.xRRAint = 2*pi*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXSavalanches(:,:,
 %
 Znorm.xRRAtot_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke),1),1)';
 Znorm.xRRAint_fsav = 2*pi*(xqtilde(rdke)./xqhat(rdke)).*integral_dke_jd(dmhu,integral_dke_jd(dpn,XXSavalanches(:,:,rdke).*XXpn2(:,:,rdke).*XXlambda(:,:,rdke).*XXRintmask(:,:,rdke),1),1)';
-%
-% Projection of the distribution function on the Legendre polynomial basis
-%
-n_pol = dkeparam.n_gauleg;%Necessary for accurate reconstruction at ksi = -1
-[x_leg,w_leg] = gauleg_dke_yp(dkeparam.n_gauleg,dkeparam.epsi_gauleg);%Gauss-Legendre abscissa and weigth calculations between -1 and + 1
-[Pm,cL] = leg_dke_yp(x_leg(:)',n_pol);%Legendre polynomial calculation
-%
-Zf0_interp.XXf0_leg = zeros(size(XXf0,1),length(cL),size(XXf0,3));
-%
-for ir = 1:size(XXf0,3),%radial position
-    Zf0_interp.XXf0_leg(:,:,ir) = (interp1(gridDKE.Xmhu(1,:)',XXf0(:,:,ir)',x_leg(:),dkeparam.method)'.*(w_leg*ones(1,size(XXf0,1)))')*Pm';%Calculation of the Legendre coefficients for local values of the distribution function
-end
-%
-Zf0_interp.mksa = mksa;%Normalization is fixed
 %
 % 0-D moments of the distribution
 %

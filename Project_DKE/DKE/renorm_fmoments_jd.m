@@ -1,6 +1,6 @@
-function [XXf0,ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRRm_fsav,xRRp_fsav,xTe_norm_out,Zmom] = ...
+function [XXf0,ZP0,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRRm_fsav,xRRp_fsav,xTe_norm_out,Zmom] = ...
     renorm_fmoments_jd(xnorm_fac,equilDKE,mksa,...
-          XXf0,ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRRm_fsav,xRRp_fsav,xTe_norm_out,Zmom)
+          XXf0,ZP0,Zcurr,Znorm,ZXXS,XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRRm_fsav,xRRp_fsav,xTe_norm_out,Zmom)
 %
 [npn,nmhu,nr] = size(XXf0);
 %
@@ -23,13 +23,6 @@ ZP0.x_e_fsav = ZP0.x_e_fsav./xnorm_fac.';
 %
 ZP0.P_rf_2piRp = sum(ZP0.x_rf_fsav.'.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
 ZP0.P_ohm_2piRp = sum(ZP0.x_e_fsav.*equilDKE.xdV_2piRp_dke*mksa.P_ref);
-%
-% Legendre projection
-%
-nc = size(Zf0_interp.XXf0_leg,2);
-Znorm_fac = repmat(reshape(xnorm_fac,[1,1,nr]),[npn,nc,1]);
-%
-Zf0_interp.XXf0_leg = Zf0_interp.XXf0_leg./Znorm_fac;
 %
 % Current
 %

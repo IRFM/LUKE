@@ -440,7 +440,7 @@ for itn = itn0:nit,
                         % Moments of the distribution function
                         %
                         if dkeparam_out.timevol == 2,
-                            [ZP0(it_rf,itn),Zf0_interp(it_rf,itn),Zcurr(it_rf,itn),Znorm(it_rf,itn),ZXXS,...(itn)
+                            [ZP0(it_rf,itn),Zcurr(it_rf,itn),Znorm(it_rf,itn),ZXXS,...(itn)
                                 XxRR_fsav{it_rf,itn},xMRR_flux{it_rf,itn},xMRR_tau{it_rf,itn},xMRR_power_flux{it_rf,itn},xMRR_power_tau{it_rf,itn},xRRm_fsav{it_rf,itn},xRRp_fsav{it_rf,itn},...
                                 xne_norm_out{it_rf,itn},xTe_norm_out{it_rf,itn},xft_fsav{it_rf,itn},xfteff_fsav{it_rf,itn},Zmom(it_rf,itn)] = ...
                                 fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi{itn},waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
@@ -515,7 +515,7 @@ for itn = itn0:nit,
             % Moments of the distribution function
             %
             if dkeparam_out.timevol == 1,
-                [ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...(itn)
+                [ZP0(itn),Zcurr(itn),Znorm(itn),ZXXS,...(itn)
                     XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRRm_fsav{itn},xRRp_fsav{itn},...
                     xne_norm_out{itn},xTe_norm_out{itn},xft_fsav{itn},xfteff_fsav{itn},Zmom(itn)] = ...
                     fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi{itn},waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
@@ -592,10 +592,10 @@ for itn = itn0:nit,
                 %
                 % renormalize f moments accordingly
                 %
-                [XXf0{itn},ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...
+                [XXf0{itn},ZP0(itn),Zcurr(itn),Znorm(itn),ZXXS,...
                         XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRRm_fsav{itn},xRRp_fsav{itn},xTe_norm_out{itn},Zmom(itn)] = ...
                     renorm_fmoments_jd(xnorm_fac,equilDKE,mksa,...
-                        XXf0{itn},ZP0(itn),Zf0_interp(itn),Zcurr(itn),Znorm(itn),ZXXS,...
+                        XXf0{itn},ZP0(itn),Zcurr(itn),Znorm(itn),ZXXS,...
                         XxRR_fsav{itn},xMRR_flux{itn},xMRR_tau{itn},xMRR_power_flux{itn},xMRR_power_tau{itn},xRRm_fsav{itn},xRRp_fsav{itn},xTe_norm_out{itn},Zmom(itn));
                 %
             end
@@ -753,7 +753,7 @@ if dkeparam_out.timevol == 0,
     residue_rf = residue_rf(nit);
     xepsi = xepsi(nit);
     %
-    [ZP0,Zf0_interp,Zcurr,Znorm,ZXXS,...
+    [ZP0,Zcurr,Znorm,ZXXS,...
         XxRR_fsav,xMRR_flux,xMRR_tau,xMRR_power_flux,xMRR_power_tau,xRRm_fsav,xRRp_fsav,...
         xne_norm_out,xTe_norm_out,xft_fsav,xfteff_fsav,Zmom] = ...
         fmoments_dke_yp(dkepath,dkeparam_out,dkedisplay,equilDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,xepsi{1},waveparam,radial_mode,Zdelta,XXsinksource,XXSavalanches,...
@@ -831,10 +831,15 @@ end
 %
 % DKE data output structure
 %
-dke_out.XXfinit = XXfinit;
-dke_out.XXf0 = XXf0;
-dke_out.XXfM = XXfM;
-dke_out.Zf0_interp = Zf0_interp;
+if dkeparam_out.opt_flegendre == 1,%distribution compressed on Legendre polynomials basis
+    [dke_out.XXf0_interp,testf0] = interp_legendre_yp(dkeparam_out,gridDKE,XXf0,test_legendre);
+    [dke_out.XXfM_interp,testfM] = interp_legendre_yp(dkeparam_out,gridDKE,XXfM,test_legendre);
+    [dke_out.XXfinit_interp,testfinit] = interp_legendre_yp(dkeparam_out,gridDKE,XXfinit,test_legendre);
+else
+    dke_out.XXfinit = XXfinit;
+    dke_out.XXf0 = XXf0;
+    dke_out.XXfM = XXfM;
+end
 dke_out.FPtime = FPtime;
 dke_out.normf0 = normf0;
 dke_out.curr0 = curr0;
