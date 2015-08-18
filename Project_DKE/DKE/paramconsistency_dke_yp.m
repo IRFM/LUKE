@@ -206,4 +206,8 @@ end
 if ~isfield(dkeparam,'opt_struct'),
     dkeparam.opt_struct = 0;
 end
+%
+if ~isfield(dkeparam,'opt_flegendre'),
+    dkeparam.opt_flegendre = 0;
+end
 % 
