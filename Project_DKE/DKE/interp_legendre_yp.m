@@ -20,6 +20,8 @@ if nargin < 4,
     test = 0;
 end
 %
+normfinterp = [];
+%
 n_pol = dkeparam.n_gauleg;%Necessary for accurate reconstruction at ksi = -1
 [x_leg,w_leg] = gauleg_dke_yp(dkeparam.n_gauleg,dkeparam.epsi_gauleg);%Gauss-Legendre abscissa and weigth calculations between -1 and + 1
 [Pm,cL] = leg_dke_yp(x_leg(:)',n_pol);%Legendre polynomial calculation
