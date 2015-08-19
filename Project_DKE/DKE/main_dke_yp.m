@@ -831,15 +831,9 @@ end
 %
 % DKE data output structure
 %
-if dkeparam_out.opt_flegendre == 1,%distribution compressed on Legendre polynomials basis
-    [dke_out.XXf0_interp,testf0] = interp_legendre_yp(dkeparam_out,gridDKE,XXf0,test_legendre);
-    [dke_out.XXfM_interp,testfM] = interp_legendre_yp(dkeparam_out,gridDKE,XXfM,test_legendre);
-    [dke_out.XXfinit_interp,testfinit] = interp_legendre_yp(dkeparam_out,gridDKE,XXfinit,test_legendre);
-else
-    dke_out.XXfinit = XXfinit;
-    dke_out.XXf0 = XXf0;
-    dke_out.XXfM = XXfM;
-end
+dke_out.XXfinit = XXfinit;
+dke_out.XXf0 = XXf0;
+dke_out.XXfM = XXfM;
 dke_out.FPtime = FPtime;
 dke_out.normf0 = normf0;
 dke_out.curr0 = curr0;
