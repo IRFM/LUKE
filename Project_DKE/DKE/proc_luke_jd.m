@@ -208,18 +208,30 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
         Zmripple = data.Zmripple;
         mksa = data.mksa;
         %
-        if isfield(dke_out,'waves'),
-            waves = proc_wave_alphaphi_luke_jd(data,dke_out.waves,1);
-        else
-            waves = {};
-        end
-        %
         if isfield(dke_out,'dkeparam')
             dkeparam = dke_out.dkeparam;
         elseif isfield(data,'dkeparam')
             dkeparam = data.dkeparam;
         else
             dkeparam = struct;
+        end
+        %
+        if ~isfield(dke_out,'XXf0'),
+            dke_out.XXf0 = legendre2f_yp(dkeparam,momentumDKE,dke_out.XXf0_interp);%restore the distribution from its projection on the Legendre polynomial basis
+        end
+        %
+        if ~isfield(dke_out,'XXfM'),
+            dke_out.XXfM = legendre2f_yp(dkeparam,momentumDKE,dke_out.XXfM_interp);%restore the distribution from its projection on the Legendre polynomial basis
+        end
+        %        
+        if ~isfield(dke_out,'XXfinit'),
+            dke_out.XXfinit = legendre2f_yp(dkeparam,momentumDKE,dke_out.XXfinit_interp);%restore the distribution from its projection on the Legendre polynomial basis
+        end
+        %
+        if isfield(dke_out,'waves'),
+            waves = proc_wave_alphaphi_luke_jd(data,dke_out.waves,1);
+        else
+            waves = {};
         end
         %
         xrhoG = equilDKE.xrho; 
