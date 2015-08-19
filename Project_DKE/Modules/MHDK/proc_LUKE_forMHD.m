@@ -6,14 +6,28 @@ if exist(filename,'file'),
     load(filename,'output');
 else
     filename = ['LUKE_RESULTS_',filestr,'.mat'];
-    output = load(filename,'dke_out','equilDKE','momentumDKE','Zbouncecoef','mksa');
+    output = load(filename,'dke_out','equilDKE','momentumDKE','Zbouncecoef','mksa','dkeparam');
 end
 %
 [qe,me] = pc_dke_yp;
 %
+if isfield(dke_out,'dkeparam')
+	dkeparam = dke_out.dkeparam;
+end
+%
 mhd.luke_simul = output.dke_out.simul;
-mhd.XF0 = output.dke_out.XXf0;
-mhd.XFM = output.dke_out.XXfinit;
+%
+if ~isfield(dke_out,'XXf0'),
+    mhd.Xf0 = legendre2f_yp(dkeparam,momentumDKE,dke_out.XXf0_interp);%restore the distribution from its projection on the Legendre polynomial basis
+else
+    mhd.XF0 = output.dke_out.XXf0;
+end
+%
+if ~isfield(dke_out,'XXfM'),
+    mhd.XfM = legendre2f_yp(dkeparam,momentumDKE,dke_out.XXfM_interp);%restore the distribution from its projection on the Legendre polynomial basis
+else
+    mhd.XFM = output.dke_out.XXfM;
+end
 %
 mhd.equil.Rp = output.equilDKE.Rp;
 mhd.equil.ap = output.equilDKE.ap;
