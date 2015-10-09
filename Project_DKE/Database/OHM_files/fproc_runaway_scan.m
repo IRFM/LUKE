@@ -154,7 +154,7 @@ if ~isfield(opt,'color') || opt.color,
     colors = {'b','r',[0,0.75,0],[0.75,0,0.75],[0,0.75,0.75],[0.75,0.75,0],'k'};
     %colors = {'k','b','r','g','m','c','y'};
     styles = {'-','-','-','-','-','-','-'};
-    sizes = [2,2,2,2,2];
+    sizes = [2,2,2,2,2,2,2];
     colstr = '_col';
 else
     colors = {'k','k','k','k','k','k','k','k','k'};
@@ -417,6 +417,58 @@ if isfield(graph,'iscandisp'),
     set(get(gca,'ylabel'),'interpreter','latex')
     %
     print_jd(p_opt,['fig_',id_simul_scan,'_f',colstr],['./figures',filesep,scanstr],6)
+    %
+    figure(7),clf
+    %
+    xlab = 't/\tau_c';
+    ylab = 'n/n_e';
+    if isfield(graph,'xlim_tn'),
+        xlim = graph.xlim_tn;
+    else
+        xlim = NaN;
+    end
+    if isfield(graph,'ylim_norm'),
+        ylim = graph.ylim_norm;
+    else
+        ylim = 10.^[-9,1];
+        graph.ytick_norm = 10.^(-8:2:0);
+    end
+    %
+    nscandisp = length(graph.iscandisp);
+    %
+    leg = cell(1,nscandisp);
+    %
+    for iiscan = 1:nscandisp-1,
+        if isfield(graph,'scanformat'),
+            legstr = num2str(graph.x(graph.iscandisp(iiscan)),graph.scanformat);
+        else
+            legstr = num2str(graph.x(graph.iscandisp(iiscan)));
+        end
+        leg{iiscan} = [scanlab,' = ',legstr,unitstr2];
+        graph1D_jd(tn{graph.iscandisp(iiscan)},tnorm{graph.iscandisp(iiscan)}.ri + tnorm{graph.iscandisp(iiscan)}.re,1,1,'','','',NaN,xlim,ylim,styles{iiscan},'none',colors{iiscan},sizes(iiscan),siz);
+    end
+    if isfield(graph,'scanformat'),
+        legstr = num2str(graph.x(graph.iscandisp(nscandisp)),graph.scanformat);
+    else
+        legstr = num2str(graph.x(graph.iscandisp(nscandisp)));
+    end
+    leg{nscandisp} = [scanlab,' = ',legstr,unitstr2];
+    graph1D_jd(tn{graph.iscandisp(nscandisp)},tnorm{graph.iscandisp(nscandisp)}.ri + tnorm{graph.iscandisp(nscandisp)}.re,1,1,xlab,ylab,tit,leg,xlim,ylim,styles{nscandisp},'none',colors{nscandisp},sizes(nscandisp),siz,gca,0.9,0.7,0.7);
+    %
+    if isfield(graph,'xtick_tn'),
+        set(gca,'xtick',graph.xtick_tn)
+    end
+    if isfield(graph,'ytick_norm'),
+        set(gca,'ytick',graph.ytick_norm)
+    end
+    set(gca,'XMinorGrid','off')
+    set(gca,'XMinorTick','on')
+    set(gca,'YMinorGrid','off')
+    set(gca,'YMinorTick','on')
+%    set(get(gca,'xlabel'),'interpreter','latex')
+%    set(get(gca,'ylabel'),'interpreter','latex')
+    %
+    print_jd(p_opt,['fig_',id_simul_scan,'_tn',colstr],['./figures',filesep,scanstr],7)
     %
 end
 %
