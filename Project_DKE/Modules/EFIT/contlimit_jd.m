@@ -1,4 +1,4 @@
-function [x1c,x2c,col] = contlimit_jd(x1d,x2d,fd,cont,cond,sfac);
+function [x1c,x2c,col,lev] = contlimit_jd(x1d,x2d,fd,cont,cond,sfac)
 %
 % This function gives the contour parametrization (x1c,x2c) calculated from
 % the 2D data (x1d,x2d,fd) and contour number (or levels) cont, plotting
@@ -14,7 +14,7 @@ end
 if nargin < 5
     cond = NaN;
 end
-if nargin < 4 | isempty(cont) | isnan(cont)
+if nargin < 4 || isempty(cont) || any(isnan(cont)),
     cont = 10;
 end
 %
@@ -23,15 +23,8 @@ cont = cont(:);
 fmin = min(min(fd));
 fmax = max(max(fd));
 %
-if length(cont) < 2 & cont ~= 0 & cont == round(cont),%number of contour is given
-    df = (fmax - fmin)/(abs(cont) + 1);
-    if fmin*fmax >= 0
-        cont = fmin:df:fmax;
-    elseif cont < 0 
-        cont = sort([-df/2:-df:fmin,df/2:df:fmax]);
-    else
-        cont = sort([0:-df:fmin,df:df:fmax]);
-    end
+if length(cont) < 2 && cont ~= 0 && cont == round(cont),%number of contour is given
+    cont = linspace(fmin,fmax,cont);
 else
     fmin = min(cont);
     fmax = max(cont);
@@ -51,15 +44,17 @@ x2c = {};
 while ~isempty(C)
     lnum = lnum + 1;
     tlen = size(C,2);
-    lev = C(1,1);
+    lev(lnum) = C(1,1);
     len = C(2,1);
     line_1 = C(1,2:1+len);
     line_2 = C(2,2:1+len);
     %
-    igrid = linspace(0,1,len);
-    sgrid = linspace(0,1,(len-1)*sfac+1);
-    line_1 = interp1(igrid,line_1,sgrid,'spline');
-    line_2 = interp1(igrid,line_2,sgrid,'spline');
+    if len > 1,
+        igrid = linspace(0,1,len);
+        sgrid = linspace(0,1,(len-1)*sfac+1);
+        line_1 = interp1(igrid,line_1,sgrid,'spline');
+        line_2 = interp1(igrid,line_2,sgrid,'spline');
+    end
     %
     if ischar(cond)
         eval(['mask = ',cond,'(line_1,line_2);']);
@@ -69,7 +64,7 @@ while ~isempty(C)
         mask = 1:len;
     end
     if nargout > 2,
-        col{lnum} = cmap(1+round(((lev-fmin)/(fmax-fmin))*(clen-1)),:);
+        col{lnum} = cmap(1+round(((lev(lnum)-fmin)/(fmax-fmin))*(clen-1)),:);
     end
     x1c{lnum} = line_1(mask);
     x2c{lnum} = line_2(mask);
