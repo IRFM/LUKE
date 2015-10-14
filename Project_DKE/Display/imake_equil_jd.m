@@ -144,6 +144,12 @@ if i_opt == 0, % use data from from external database
         %
         e_opt = -3;% standard rz -> pt transformation needed
         %
+    elseif strcmp(basestr,'AUG'),
+        %
+        equil_magnetic_data = external.magnetic;
+        %
+        e_opt = -4;% standard rz -> pt transformation needed
+        %
     else
         %
         disp('-----> function not yet implemented for this machine.')
@@ -321,6 +327,13 @@ if e_opt ~= -2,
             type = 1.6;%COMPASS data format
             n_opt = 0;
             %
+        elseif strcmp(basestr,'AUG'),
+            %
+            type = -2;
+            profname = equil_prof_data;
+            n_opt = 0;
+            %
+            signs = struct;
         else
             %
             disp('-----> function not yet implemented for this machine.')
@@ -583,7 +596,7 @@ elseif type == 1.6 && n_opt == 0,%COMPASS
     %
 end
 %
-if e_opt >= 0 || e_opt <= -2,
+if e_opt >= 0 || (e_opt <= -2 && e_opt >= -3),
     %
     np = input_dke_yp('Number of equilibrium radial points',101,1:2:1001,'np must be an odd number',[1,1]);
     %
@@ -633,6 +646,11 @@ elseif e_opt == -2,% AMR equilibrium
 elseif e_opt == -3,% standard rz -> pt transformation needed
     %
     [equil_magnetic,mrho,mspsin,mspsinT] = equil_magnetic_rz2pt_jd(equil_magnetic_data,display_mode,p_opt,dispname,savename,np,nt);
+    %
+elseif e_opt == -4,% standard rz -> pt transformation needed
+    %
+    [equil_magnetic,mrho,mspsin] = equil_magnetic_AUG_jd(equil_magnetic_data);
+    mspsinT = [];
     %
 end
 %
@@ -697,11 +715,16 @@ if ~isstruct(signs),
         signs.Bt = input_dke_yp('Signs of Bt (positive if clockwise from top)',sign(equil_magnetic.ptBPHI(1,1)),{-1,1});
         signs.Ip = input_dke_yp('Signs of Ip (positive if clockwise from top)',sign(equil_magnetic.psi_apRp(end)),{-1,1});
     else
-        signs.Ip = sign(equil_magnetic.psi_apRp(end));
-        signs.Bt = sign(equil_magnetic.ptBPHI(1,1));
+        signs = struct;
     end
-    %
 end
+if ~isfield(signs,'Ip'),
+    signs.Ip = sign(equil_magnetic.psi_apRp(end));
+end
+if ~isfield(signs,'Bt'),
+    signs.Bt = sign(equil_magnetic.ptBPHI(1,1));
+end
+%
 if signs.Ip*equil_magnetic.psi_apRp(end) < 0,
     equil_magnetic.psi_apRp = -equil_magnetic.psi_apRp;
     equil_magnetic.ptBx = -equil_magnetic.ptBx;
