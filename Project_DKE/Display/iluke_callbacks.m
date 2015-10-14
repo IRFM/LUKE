@@ -2392,7 +2392,7 @@ switch action
             %
             waves = wavess{curtime};
             %
-            if status.fluct(curtime) == 0,% no fluctuations
+            if status.fluct(curtime) <= 0,% no fluctuations
                 %
                 titletext = 'Select the wave structure(s) to plot :';   
                 nw = length(waves);
