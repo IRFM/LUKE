@@ -993,14 +993,14 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             end
             disp(['Location of current peak (rho',opt.rho,'): ',num2str(jrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
             disp(['Current FWHM (drho',opt.rho,'): ',num2str(jdrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
-            if sum(P_rf) ~= 0,
+            if sum(data_proc.radial.P_rf) ~= 0,
                 disp(['RF efficiency (n_19*I*Rp/P): ',num2str(data_proc.scalar.EtaRFRp),' 10^19 A/(W.m^2)'])
                 disp(['Location of RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
                 disp(['RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
                 disp(['Number of RF ray fragments: ',num2str(data_proc.scalar.nfrags)])
             end
             %
-            if isinf(data_proc.scalar.Rp) & sum(P_rf) ~= 0,
+            if isinf(data_proc.scalar.Rp) && sum(data_proc.radial.P_rf) ~= 0,
                 disp(['Launched RF power (P/2piRp): ',num2str(data_proc.scalar.p0_rf_2piRp),' MW/m'])
                 disp(['RF power absorbed (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
                 if isfield(dke_out.waves{1}.rayparam,'colldamp')
@@ -1070,7 +1070,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 %
             else
                 disp(['Launched RF power (P): ',num2str(data_proc.scalar.p0_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
-                if sum(P_rf) ~= 0,
+                if sum(data_proc.radial.P_rf) ~= 0,
                     disp(['RF power absorbed (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
                     if isfield(dke_out.waves{1}.rayparam,'colldamp')
                         if dke_out.waves{1}.rayparam.colldamp == 1,
@@ -1376,7 +1376,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             % combined current and power density profiles
             %
             if ~isfield(opt,'axs')
-                if sum(P_rf) ~= 0,
+                if sum(data_proc.radial.P_rf) ~= 0,
                     %
                     figure(6),clf,set(6,'Name',['Current and RF power density profiles - ',data_proc.simul.id])
                     %    
@@ -1485,7 +1485,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 %
             end
             %
-            if opt.spec == 1 & sum(P_rf) ~= 0,
+            if opt.spec == 1 && sum(data_proc.radial.P_rf) ~= 0,
                 disp('******** power absorption along specific rays ********');
                 %
                 iw = NaN;
@@ -1601,11 +1601,8 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             end
             %
             lukedata = load(data.savefile);
-%             Znorm = lukedata.lukestructs.output.mksa;
-%             Zcurr = lukedata.lukestructs.output.Zcurr;
-%             ZP0 = lukedata.lukestructs.output.ZP0;
+            %
             dke_out = lukedata.lukestructs.output.dke_out;
-            radialDKE = lukedata.lukestructs.output.radialDKE;
             equilDKE = lukedata.lukestructs.output.equilDKE;
             momentumDKE = lukedata.lukestructs.output.momentumDKE;
             gridDKE = lukedata.lukestructs.output.gridDKE;
@@ -1613,6 +1610,17 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             Zbouncecoef = lukedata.lukestructs.output.Zbouncecoef;
             Zmripple = lukedata.lukestructs.output.Zmripple;
             mksa = lukedata.lukestructs.output.mksa;
+            %
+            scocurr = sign(equilDKE.psia_apRp)*sign(equilDKE.XBphi(1,1));
+        elseif isfield(data,'data_proc'),
+            dke_out = data.dke_out;
+            equilDKE = data.equilDKE;
+            momentumDKE = data.momentumDKE;
+            gridDKE = data.gridDKE;
+            Zmomcoef = data.Zmomcoef;
+            Zbouncecoef = data.Zbouncecoef;
+            Zmripple = data.Zmripple;
+            mksa = data.mksa;
             %
             scocurr = sign(equilDKE.psia_apRp)*sign(equilDKE.XBphi(1,1));
         end
