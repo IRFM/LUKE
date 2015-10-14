@@ -34,7 +34,12 @@ function external = iload_externaldata_jd(dkepath,basestr,workdir,opt_gui,style)
     %
     % select remote profile for calculation
     %
-    remnum = iselect_jd(dkepath.remprofiles,'Select local or remote location for database quest',opt_gui,style.distselectstyle,1,'popupmenu') - 1;
+    LUKE_REMNUM = getenv('LUKE_REMNUM');
+    if isempty(LUKE_REMNUM),
+        remnum = iselect_jd(dkepath.remprofiles,'Select local or remote location for database quest',opt_gui,style.distselectstyle,1,'popupmenu') - 1;
+    else
+        remnum = str2double(LUKE_REMNUM); 
+    end
     %
     if remnum == 0,
         remote = [];
