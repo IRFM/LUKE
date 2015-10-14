@@ -440,7 +440,36 @@ if ~isempty(external),% import wave data from external structure
                 %
             end
         end
-    else
+    elseif strcmp(basestr,'AUG'),% AUG launching data
+        %
+        % BUILDING LAUNCH
+        %
+        type = 'EC';
+        %
+        fnames = fieldnames(rmfield(external,'equil'));
+        for ilaun = 1:length(fnames), 
+            launch.id = fnames{ilaun};
+            launch.type = type;
+            launch.mmode = external.(launch.id).mmode;
+            launch.omega_rf = external.(launch.id).f_GHz*2*pi*1e9;
+            launch.yR_L = external.(launch.id).R_L;
+            launch.yZ_L = external.(launch.id).Z_L;
+            launch.yphi_L = 0;
+            launch.yalpha_L = external.(launch.id).alpha_L;
+            launch.ybeta_L = external.(launch.id).beta_L;
+            launch.yP_L = external.(launch.id).P_MW*1e6;
+            %
+            launch.w0 = 0.02;% test values
+            launch.z_L = 0.4;% test values
+            %
+            launch.dNpar0 = NaN;%Calculated from waist and focal point
+            %
+            launch.external = external.(launch.id);
+            %
+            launchs{end+1} = launch;
+        end
+        %
+    else            
         %
         disp(['-----> wave data not yet implemented for :',basestr]);
         return      
