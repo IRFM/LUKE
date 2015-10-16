@@ -27,7 +27,7 @@ rayparam.nperp = 1000;%number of points in pperp integration for damping calcula
 rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = Inf;%value of optical depth beyond which the wave is considered absorbed
 rayparam.kextra = 1000;%extra points if QL absorption is delayed
-rayparam.colldamp = 1;%non-resonant collisional damping -> (1) actived (default), (0) not activated
+rayparam.colldamp = 0;%non-resonant collisional damping -> (1) actived (default), (0) not activated
 %
 % C3PO computing parameters
 %
