@@ -15,6 +15,9 @@ if nargin == 0,
     %
     [pathname] = igetdir_jd(1,'Please select the directory containing torbeam data',pwd);
     %
+	external.shotnum = 0;
+	external.shotime = 0;
+    %
     if pathname ~= 0,
         %
         external.workdir = pathname;
@@ -34,15 +37,24 @@ if nargin == 0,
             end
         end
         if flag == 1,
-            external.shotnum = 0;
-            external.shotime = 0;
+            %
+            filename = [external.workdir,'topfile'];
+            %
+            if exist(filename,'file'),
+                fid = fopen(filename);
+                data = textscan(fid,'Number of radial and vertical grid points in AUGD:EQH:%d:%f:%f %f %f',1);
+                if ~isempty(data{1}),
+                    external.shotnum = data{1};
+                end
+                if ~isempty(data{5}),
+                    external.shotime = data{5};
+                end
+            end
         end
         %
     else
         %
         external.workdir = pwd;
-        external.shotnum = 0;
-        external.shotime = 0;
         %
     end  
     %
