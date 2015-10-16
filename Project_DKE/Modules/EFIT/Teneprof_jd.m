@@ -1,4 +1,4 @@
-function [prho,pspsin,pspsinT,pTe,pne,pzTi,pzni,zZi,zmi] = Teneprof_jd(filename,type,display_mode,p_opt,Zeff,dispname,savename);
+function [prho,pspsin,pspsinT,pTe,pne,pzTi,pzni,zZi,zmi] = Teneprof_jd(filename,type,display_mode,p_opt,Zeff,dispname,savename)
 %
 % This function reads the temperature and density parameters from text or
 % binary files in which the columns are respectively the radial position r/a, Te,
@@ -17,7 +17,7 @@ prho = [];
 pspsin = [];
 pspsinT = [];
 %
-if type == -2,% filename is a structure - TCV
+if type == -2,% filename is a structure - TCV,AUG
     pTe = filename.te.data.';
     prho.pTe = filename.te.rho.';
     pne = filename.ne.data.';
@@ -26,7 +26,11 @@ if type == -2,% filename is a structure - TCV
         pTi = filename.ti.data.';
         prho.pzTi = filename.ti.rho.';
     else
-        pTi = pTe/6;%%%% default for TCV
+        if isscalar(filename.ti),%AUG
+            pTi = pTe*filename.ti;
+        else
+            pTi = pTe/6;%%%% default for TCV
+        end
         prho.pzTi = prho.pTe;
     end
     if isfield(filename.zeff,'data'),
@@ -91,7 +95,7 @@ elseif type == 1.6 ,%.mat, COMPASS
     eval(['load -mat ',filename,' pspsin pne pTe pTi Zeff zZi zmi fi']);
     %
     delete(filename)
-    
+    %
 elseif type == 2,%ascii - 203040
     [prho,pTi,pTe,pni,pne] = textread(filename,'%n%n%n%n%n');
 elseif type == 3,%ascii formatted (CMOD)
