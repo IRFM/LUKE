@@ -105,12 +105,18 @@ if mode <= 1,
         end
         sobj.clear.state = 'off';
         sobj.disp.state = 'off';
+        sobj.export.state = 'off';
     else% s exists
         if mode <= 0,
             sobj.save.state = 'on';
         end
         sobj.clear.state = 'on';
-        sobj.disp.state = 'on';    
+        sobj.disp.state = 'on'; 
+        if curtime > 0,
+            sobj.export.state = 'on';
+        else
+            sobj.export.state = 'off';
+        end
     end
     %
     if status == 0,% s does not exist

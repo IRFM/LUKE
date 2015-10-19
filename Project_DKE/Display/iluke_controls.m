@@ -1,8 +1,8 @@
 function s = iluke_controls(h,s,sname,list,titlestring,vertpos,style)
 
-fieldnames = {'title','import','make','modify','load','save','run','clear','reset','test','disp','text'};
-strings = {titlestring,'Import','New','Modify','Load','Save','Run','Clear','Reset','Test','Disp',''};
-styles = {'Text','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','Text'};
+fieldnames = {'title','import','make','modify','load','save','run','clear','reset','test','disp','export','text'};
+strings = {titlestring,'Import','New','Modify','Load','Save','Run','Clear','Reset','Test','Disp','Export',''};
+styles = {'Text','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','pushbutton','Text'};
 %
 butwidthcorr = style.butwidth + style.buthsep;
 titlewidthcorr = style.buthsep + (style.titlewidth + style.buthsep);

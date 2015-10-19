@@ -348,7 +348,7 @@ lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'transp',{'title','
 lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'ripple',{'title','make','load','save','clear','disp','text'},'Mag. Ripple',style.controlheightcorr - 5*style.butheightcorr + style.controlheightadapt,style);
 lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'wave',{'title','make','load','save','clear','disp','text'},'RF Waves',style.controlheightcorr - 6*style.butheightcorr + style.controlheightadapt,style);
 lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'fluct',{'title','modify','load','save','reset','clear','text'},'Fluctuations',style.controlheightcorr - 7*style.butheightcorr + style.controlheightadapt,style);
-lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'luke',{'title','','','run','clear','disp','text'},'Fokker-Planck Equation',style.controlheightcorr - 8*style.butheightcorr + style.controlheightadapt,style);
+lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'luke',{'title','','run','export','clear','disp','text'},'Kinetic Solver',style.controlheightcorr - 8*style.butheightcorr + style.controlheightadapt,style);
 lukeobj = iluke_controls(lukeobj.controlpanel.handle,lukeobj,'sdiag',{'title','','','FEB','ECE'},'Synthetic Diagnostics',style.controlheightcorr - 9*style.butheightcorr + style.controlheightadapt,style);
 
 lukeobj.infotext.handle = uicontrol(lukeobj.infopanel.handle,'Style','text','Position',lukeobj.infotext.position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize,'HorizontalAlignment','left');

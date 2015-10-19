@@ -2538,6 +2538,51 @@ switch action
             lukeobj.lukeid.string = make_luke_simulid_jd(equils{curtime},ohms{curtime},transpfastes{curtime},ripples{curtime},wavess{curtime});
         end
         %
+    case 'lukeexport'
+        %
+        % exporting LUKE output
+        %
+        sbase = 'LUKE_OUTPUT';
+        filestr = [sbase,'_*.mat'];
+        filename = [sbase,'_',outputs{curtime}.data_proc.simul.id,'.mat'];
+        %
+        [filename,pathname] = iputfile_jd(1,filestr,['Please provide the ',sbase,' file name'],filename);
+        %
+        if filename ~= 0,
+            %
+            soutput.data_proc = outputs{curtime}.data_proc;
+            %
+            if isfield(outputs{curtime},'dke_out'),
+                soutput.f = outputs{curtime}.dke_out.XXf0{end};
+                soutput.pn = outputs{curtime}.momentumDKE.pn;
+                soutput.mhu = outputs{curtime}.momentumDKE.mhu;
+                soutput.xrhoG = outputs{curtime}.data_proc.radial.xrhoG;
+                soutput.xrhoP = outputs{curtime}.data_proc.radial.xrhoP;
+                soutput.xrhoT = outputs{curtime}.data_proc.radial.xrhoT;
+                soutput.xrhoV = outputs{curtime}.data_proc.radial.xrhoV;
+                soutput.betath_ref = outputs{curtime}.mksa.betath_ref;
+                soutput.ne_ref = outputs{curtime}.mksa.ne_ref;
+                soutput.xmhuT = sqrt(outputs{curtime}.gridDKE.xmhubounce2);
+                %
+                soutput.info.data_proc = 'structure summarizing results with simulation parameters, scalar outputs, radial profiles, etc';
+                soutput.info.f = '3D distribution function f(pn,mhu,xrho)';
+                soutput.info.pn = 'momentum grid normalized to pT = betath_ref*mc';
+                soutput.info.mhu = 'pitch angle grid';
+                soutput.info.xrhoG = 'radial grid, rho=r(:,theta=0)/r(lcfs,theta=0)';
+                soutput.info.xrhoP = 'radial grid, rho=sqrt(normalized poloidal flux)';
+                soutput.info.xrhoT = 'radial grid, rho=sqrt(normalized toroidal flux)';
+                soutput.info.xrhoV = 'radial grid, rho=sqrt(normalized volume)';
+                soutput.info.betath_ref = 'sqrt(Te/mc2)';
+                soutput.info.ne_ref = 'n(r) = <f>*ne_ref';
+                soutput.info.xmhuT = 'trapped-passing boundary';
+            end
+            %
+            save([pathname,filename],'-struct','soutput');
+            %
+        end  
+        %
+        clear sbase filestr filename pathname soutput
+        %
     case 'lukeclear'
         %
         % clearing output structure
