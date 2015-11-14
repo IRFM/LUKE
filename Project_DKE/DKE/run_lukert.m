@@ -717,7 +717,7 @@ output.Zcurr = Zcurr;
 output.ZP0 = ZP0;
 %
 test_legendre = 0;
-if dkeparam.opt_flegendre == 1,%distribution compressed on Legendre polynomials basis
+if isfield(dkeparam,'opt_flegendre') && dkeparam.opt_flegendre == 1,%distribution compressed on Legendre polynomials basis
     [dke_out.XXf0_interp,testf0] = interp_legendre_yp(dkeparam,gridDKE,dke_out.XXf0,test_legendre);
     [dke_out.XXfM_interp,testfM] = interp_legendre_yp(dkeparam,gridDKE,dke_out.XXfM,test_legendre);
     [dke_out.XXfinit_interp,testfinit] = interp_legendre_yp(dkeparam,gridDKE,dke_out.XXfinit,test_legendre);
