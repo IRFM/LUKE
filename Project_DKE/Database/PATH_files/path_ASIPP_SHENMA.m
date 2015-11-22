@@ -11,7 +11,7 @@ function dkepath = path_ASIPP_SHENMA
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
 dkepath.machine = 'shenma';
-dkepath.hostname = 'shenma';
+dkepath.hostname = 'login113';
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -22,8 +22,8 @@ dkepath.default = 'PEYSSON';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %-------------------------------------------------------------------------------------------------------
 %
-dkepath.PEYSSON(1).luke_root = '/scratch/project/LUKE/LUKE/';
-dkepath.PEYSSON(1).local_root = '/scratch/project/LUKE/Packages/';
+dkepath.PEYSSON(1).luke_root = '/project/LUKE/LUKE/';
+dkepath.PEYSSON(1).local_root = '/home/users/PEYSSON/Packages/';
 dkepath.PEYSSON(1).temppathroot = '/scratch/PEYSSON/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.PEYSSON(1).localdatapath = dkepath.PEYSSON(1).temppathroot;
@@ -44,8 +44,8 @@ dkepath.PEYSSON(1).compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
 %
 %Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.PEYSSON(1).MUMPS.mex800 = ['/scratch/home/PEYSSON/Packages/MUMPS_4.10.0/MATLAB800'];
-dkepath.PEYSSON(1).MUMPS.mex801 = ['/scratch/home/PEYSSON/Packages/MUMPS_4.10.0/MATLAB801'];
+dkepath.PEYSSON(1).MUMPS.mex800 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB800'];
+dkepath.PEYSSON(1).MUMPS.mex801 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB801'];
 %
 % LUKE documentation
 %
