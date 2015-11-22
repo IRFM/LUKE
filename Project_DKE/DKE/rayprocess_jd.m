@@ -619,6 +619,43 @@ if abs(imag(opt_disp)) >= 1,%calculation of the linear absorption coefficient
 end
 %
 if colldamp == 1,%calculation of the collisional damping absorption coefficient
+    if ~isfield(ray,'sTe')
+        if exist('sTe'),
+            ray.sTe = sTe;
+        else 
+            colldamp = 0;
+            disp('WARNING: Collisional damping is turned-off because ray.sTe missing.')
+        end
+    end
+    %
+    if ~isfield(ray,'sne')
+        if exist('sne'),
+            ray.sne = sne;
+        else
+            colldamp = 0;
+            disp('WARNING: Collisional damping is turned-off because ray.sne missing.')
+        end
+    end
+    %
+    if ~isfield(ray,'szni')
+        if exist('szni'),
+            ray.szni = szni;
+        else
+            colldamp = 0;
+            disp('WARNING: Collisional damping is turned-off because ray.szni missing.')
+        end
+    end
+    %
+    if ~isfield(ray,'swpe2') 
+        colldamp = 0;
+        disp('WARNING: Collisional damping is turned-off because ray.swpe2 missing.')
+    end
+    %
+    if ~isfield(ray,'swce2') 
+        colldamp = 0;
+        disp('WARNING: Collisional damping is turned-off because ray.swce2 missing.')
+    end
+    %
     salphaphi_coll = salphaphi_coll + omega_rf/clum*alphaphi_cd_yp(ray,equilDKE_Fourier,omega_rf);%calculation of the non-resonant collisional absorption coefficient
 end
 %

@@ -156,6 +156,15 @@ for iray = 1:Nrays,
                 rays{ir}.swidth = swidth;
             end
             %
+            % for non-resonant collisional damping
+            %
+            rays{ir}.sTe = ray.sTe;
+            rays{ir}.sne = ray.sne;
+            rays{ir}.szTi = ray.szTi;
+            rays{ir}.szni = ray.szni;
+            rays{ir}.swpe2 = ray.swpe2;
+            rays{ir}.swce2 = ray.swce2;
+            %
             rays{ir}.rayinits = ray.rayinits;
             %
         end
