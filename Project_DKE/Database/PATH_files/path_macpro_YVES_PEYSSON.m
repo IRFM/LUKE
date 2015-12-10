@@ -70,6 +70,8 @@ dkepath.yvespeysson(1).MUMPS.mex804 = [dkepath.yvespeysson(1).local_root,'Packag
 %dkepath.yvespeysson(1).MUMPS.mex805 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB805'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.yvespeysson(1).MUMPS.mex805 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB805'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.yvespeysson(1).MUMPS.mex806 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yvespeysson(1).MUMPS.mex806 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.1_S_gfortran/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
+%
 %
 % SUPERLU matrix solver (parallel, sequential)
 %
@@ -92,7 +94,6 @@ dkepath.yvespeysson(1).PARDISO.mex801 = [dkepath.yvespeysson(1).local_root,'Pack
 dkepath.yvespeysson(1).PARDISO.mex803 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB803'];%Where PARDISO matrix solver is stored (MEX function)
 dkepath.yvespeysson(1).PARDISO.mex804 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB804'];%Where PARDISO matrix solver is stored (MEX function)
 dkepath.yvespeysson(1).PARDISO.mex805 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB805'];%Where PARDISO matrix solver is stored (MEX function)
-dkepath.yvespeysson(1).PARDISO.mex806 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/PARDISO/MATLAB806'];%Where PARDISO matrix solver is stored (MEX function)
 %
 %--------------------------- Access to the experimental databases -----------------------------
 %
