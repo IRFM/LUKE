@@ -39,7 +39,7 @@ dkepath.peyssony(1).compiler_opt.fopts.mex804 = ' ';%-largeArrayDims';
 %
 %Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.peyssony(1).MUMPS.mex804 = ['/u/peyssony/Packages/Packages/MUMPS_4.10.0/MATLAB804'];
+dkepath.peyssony(1).MUMPS.mex804 = ['/u/peyssony/Packages/MUMPS_4.10.0/MATLAB804'];
 %
 % LUKE documentation
 %
