@@ -216,6 +216,12 @@ if isfield(ray,'salphaphi_coll'),
 else
     salphaphi_coll = NaN*ones(1,ns);
 end
+%
+if isfield(ray,'snhui'),
+    snhui = ray.snhui;
+else
+    snhui = NaN*ones(1,ns);
+end
 % %
 % % remove unwanted ray parts
 % %
@@ -656,7 +662,8 @@ if colldamp == 1,%calculation of the collisional damping absorption coefficient
         disp('WARNING: Collisional damping is turned-off because ray.swce2 missing.')
     end
     %
-    salphaphi_coll = salphaphi_coll + omega_rf/clum*alphaphi_cd_yp(ray,equilDKE_Fourier,omega_rf);%calculation of the non-resonant collisional absorption coefficient
+    [xalphaphi,snhui] = alphaphi_cd_yp(ray,equilDKE_Fourier,omega_rf);
+    salphaphi_coll = salphaphi_coll + omega_rf/clum*xalphaphi;%calculation of the non-resonant collisional absorption coefficient
 end
 %
 ray.sx = sx;% Ray location (major radius) along the propagation [1,ns]
@@ -711,8 +718,8 @@ ray.salphaphi_lin = salphaphi_lin;
 %
 if colldamp == 1,
     ray.salphaphi_coll = salphaphi_coll;
+    ray.snhui = snhui;
 end
-%
 %
 ray.swidth = swidth;
 %
