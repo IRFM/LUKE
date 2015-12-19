@@ -1,11 +1,11 @@
-function xalphaphi = alphaphi_cd_yp(ray,equilDKE_Fourier,omega_rf)
+function [xalphaphi,snui] = alphaphi_cd_yp(ray,equilDKE_Fourier,omega_rf)
 %
 %   ALPHAPHI_CD_YP 
 %
 %   This function calculates the collisional damping absorption coefficient,
 %   normalized to omega_rf/clum/phi, where omega_rf is the wave angular frequency
 %   (in rad/s), clum is the speed of light (in m/s) and phi is the normalized
-%   energy flow density. The result is an adimentional quantity.
+%   energy flow density. The result is an adimensional quantity.
 %
 %   INPUTS : 
 %
@@ -15,6 +15,7 @@ function xalphaphi = alphaphi_cd_yp(ray,equilDKE_Fourier,omega_rf)
 %
 %   OUTPUTS :
 %           - xalphaphi: alpha/(omega_rf/clum/phi) [1,nx]
+%           - snui: electron-ion collision frequencies normalized to omega_rf [ns,nx]
 %
 %   by Y. Peysson CEA-IRFM (yves.peysson@cea.fr)
 %
@@ -45,5 +46,5 @@ for iz = 1:length(zZi),
     iz = iz + 1;
 end
 %
-xalphaphi = sum(swpi2.*snui.*((1./((1+swci).^2 + snui.^2).*(ones(length(zZi),1)*ray.sepol_pmz(1,:).^2) + (1./((1-swci).^2 + snui.^2)).*(ones(length(zZi),1)*ray.sepol_pmz(2,:).^2) + (1./(1+snui.^2)).*(ones(length(zZi),1)*ray.sepol_pmz(3,:).^2))),1);
+xalphaphi = sum(swpi2.*snui.*((1./((1-swci).^2 + snui.^2).*(ones(length(zZi),1)*ray.sepol_pmz(1,:).^2) + (1./((1+swci).^2 + snui.^2)).*(ones(length(zZi),1)*ray.sepol_pmz(2,:).^2) + (1./(1+snui.^2)).*(ones(length(zZi),1)*ray.sepol_pmz(3,:).^2))),1);
     
