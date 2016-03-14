@@ -111,7 +111,7 @@ function [MatToolspath,MatRemotepath,MatHelppath] = LUKE_startup_jd
         end
         %
         if ~strcmp(pathforstartup,startup_LUKEpath),
-            disp('Please ensure manually that the file ',startup_LUKEfile,' will be in the matlab path upon startup.')
+            disp(['Please ensure manually that the file ',startup_LUKEfile,' will be in the matlab path upon startup.'])
         end
         %
         if nfiles > 1,% other startup_LUKE.m found on the matlab path
