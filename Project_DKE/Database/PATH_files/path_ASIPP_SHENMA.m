@@ -28,7 +28,7 @@ dkepath.PEYSSON(1).temppathroot = '/scratch/PEYSSON/';%Absolute root directory p
 %
 dkepath.PEYSSON(1).localdatapath = dkepath.PEYSSON(1).temppathroot;
 %
-dkepath.PEYSSON(1).mex800 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB714/'];
+dkepath.PEYSSON(1).mex714 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB714/'];
 dkepath.PEYSSON(1).mex801 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB801/'];
 dkepath.PEYSSON(1).mex804 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB804/'];
 %
