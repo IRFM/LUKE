@@ -5,7 +5,7 @@ function install_doc_LUKE(verbose)
 %
 % INPUT:
 %
-%	- verbose: display the output of the documentation build-up is not empty
+%	- verbose: display the output of the documentation build-up (on/off). Empty is off.
 %
 % OUTPUT: none
 %
@@ -15,7 +15,7 @@ if nargin == 0,
     verbose = 'off';
 end
 %
-excludedfoldernames = {'EAST','HL2A','AMR'};%update if necessary
+excludedfoldernames = {'EAST','HL2A','AMR'};%list of excluded folders. Update if necessary 
 %
 disp('************************* EXCLUDED FOLDER NAMES **************************')
 for ie = 1:length(excludedfoldernames),
@@ -43,13 +43,21 @@ if isfield(dkepath,'graphviz') && isfield(dkepath.graphviz,'env') && ~isempty(dk
     helptools.graphviz = dkepath.graphviz.env;
 end
 %
+% List of pdf text files that can be viewed from the web browser. 
+%
+% Format: 
+%       texfilelist(i).file = path to the file without extension;
+%       texfilelist(i).title = name of the link in the webpage;
+%
 texfilelist(1).file = 'Project_DKE/Doc/NoticeDKE';texfilelist(1).title = '3-D linearized relativistic bounce-averaged electron drift kinetic solver (LUKE)';
 texfilelist(2).file = 'Project_DKE/Modules/C3PO/Doc/raytracing';texfilelist(2).title = 'Universal multi-wave ray-tracing (C3PO)';
 texfilelist(3).file = 'Project_DKE/Modules/FEB/Doc/3Tmodel';texfilelist(3).title = 'Fast electron bremsstrahlung (R5-X2)';
 %
-redminepath = getenv('redmine_path');
-if isempty(redminepath),disp('WARNING: the path of redmine has not been found. Set the environment variable ''redmine_path''');end
+outputpath = getenv('output_path');%where the help website is created
+if isempty(outputpath),disp('WARNING: the output path has not been found. Set the environment variable ''output_path'' for a specific path. Otherwise, the help website is created locally.');
+    outputpath = [pwd,'/Help'];
+end
 %
-make_help(verbose,luke_root,redminepath,texfilelist,excludedfoldernames,helptools)
+make_help(verbose,luke_root,outputpath,texfilelist,excludedfoldernames,helptools)
 %
 cd(dirinit);
