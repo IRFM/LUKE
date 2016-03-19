@@ -26,7 +26,7 @@ norm_ref = 1;%Normalization procedure for the ohmic electric field: (0) from loc
 %
 if exist([path_equil,'EQUIL_',id_equil,'.mat']) == 0,%Magnetic equilibrium
 	info_dke_yp(2,[path_equil,'EQUIL_',id_equil,'.mat does not exist']);
-	break
+	return
 else
 	eval(['load ',path_equil,'EQUIL_',id_equil,'.mat']);
 	info_dke_yp(2,'Structure ''equil'' successfully loaded');
