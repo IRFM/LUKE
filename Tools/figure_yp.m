@@ -20,7 +20,7 @@ if nargin == 0,
     if isempty(fh),
         h = figure(1);
     else
-        h = figure(max(fh)+1);
+        h = figure(max(length(fh))+1);
     end
 else
     if number > 0 & ~isempty(number) & ~isnan(number),
@@ -29,7 +29,7 @@ else
         if isempty(fh),
             h = figure(1);
         else
-            h = figure(max(fh)+1);
+            h = figure(max(length(fh))+1);
         end
     end
     %
