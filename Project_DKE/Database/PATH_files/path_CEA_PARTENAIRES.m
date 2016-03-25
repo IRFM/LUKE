@@ -10,13 +10,13 @@ function dkepath = path_CEA_ANDROMEDE
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'andromede','saturne','altair'};
-dkepath.hostname = {'andromede','saturne','altair'};
+dkepath.machine = {'andromede','saturne','altair','cephee'};
+dkepath.hostname = {'andromede','saturne','altair','cephee'};
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
 %
-dkepath.default = 'JD211098';
+dkepath.default = 'YP105119';
 %
 %------------------------------------ Profile number 1, JD211098 Decker ------------------------------------
 %
@@ -104,16 +104,32 @@ dkepath.YP105119(1).luke_root = [pwd,filesep];
 %
 % ---------------------------- andromede -------------------------------
 %
-dkepath.YP105119(1).andromede.local_root = '/home/JD211098/Packages/andromede/';
+dkepath.YP105119(1).andromede.local_root = '/home/YP105119/Packages/andromede/';
 dkepath.YP105119(1).andromede.temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.YP105119(1).andromede.mex710 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB710/'];
 dkepath.YP105119(1).andromede.mex800 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB800/'];
+dkepath.YP105119(1).andromede.mex801 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB801/'];
+dkepath.YP105119(1).andromede.mex805 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB805/'];
+dkepath.YP105119(1).andromede.mex806 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB806/'];
 %
-dkepath.YP105119(1).andromede.compiler_opt = dkepath.JD211098(1).andromede.compiler_opt;
+dkepath.YP105119(1).andromede.compiler_opt.copts = '';
+dkepath.YP105119(1).andromede.compiler_opt.fopts.mex710 = 'FC=''gfortran''';
+dkepath.YP105119(1).andromede.compiler_opt.fopts.mex800 = '';
+dkepath.YP105119(1).andromede.compiler_opt.fopts.mex801 = '';
+dkepath.YP105119(1).andromede.compiler_opt.fopts.mex805 = '';
+dkepath.YP105119(1).andromede.compiler_opt.fopts.mex806 = '';
+dkepath.YP105119(1).andromede.compiler_opt.helmex.mex710 = NaN;%['-L',dkepath.YP105119(1).andromede.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).andromede.compiler_opt.helmex.mex800 = ['-L',dkepath.YP105119(1).andromede.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).andromede.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).andromede.compiler_opt.helmex.mex801 = ['-L',dkepath.YP105119(1).andromede.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).andromede.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).andromede.compiler_opt.helmex.mex805 = ['-L',dkepath.YP105119(1).andromede.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).andromede.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).andromede.compiler_opt.helmex.mex806 = ['-L',dkepath.YP105119(1).andromede.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).andromede.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
 dkepath.YP105119(1).andromede.MUMPS.mex710 = [dkepath.YP105119(1).andromede.local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).andromede.MUMPS.mex800 = [dkepath.YP105119(1).andromede.local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).andromede.MUMPS.mex801 = [dkepath.YP105119(1).andromede.local_root,'MUMPS_4.10.0/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).andromede.MUMPS.mex805 = [dkepath.YP105119(1).andromede.local_root,'MUMPS_4.10.0/MATLAB805'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).andromede.MUMPS.mex806 = [dkepath.YP105119(1).andromede.local_root,'MUMPS_4.10.0/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
 %
 dkepath.YP105119(1).extrapaths.LUKE_ITM = [dkepath.YP105119(1).local_root,'LUKE_ITM/trunk'];% LUKE <-> ITM toolbox 
 %
@@ -136,6 +152,7 @@ dkepath.YP105119(1).remote(2).profilename = 'yves';
 dkepath.YP105119(1).remote(2).luke_root = '/Users/yvespeysson/Projets/LUKE/';
 dkepath.YP105119(1).remote(2).cvs.CVSROOT = ':pserver:YP105119:6He3dNkHVzMoUg@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
 dkepath.YP105119(1).remote(2).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(2).luke_root];%CVS command
+dkepath.YP105119(1).remote(2).gitupdate = true;
 %
 dkepath.YP105119(1).remote(3) = dkepath.YP105119(1).remote(2);
 dkepath.YP105119(1).remote(3).schedulername = 'direct';
@@ -146,44 +163,5 @@ dkepath.YP105119(1).remote(4).profilename = 'yves';
 dkepath.YP105119(1).remote(4).luke_root = '/project/LUKE/LUKE/';
 dkepath.YP105119(1).remote(4).cvs.CVSROOT = ':pserver:YP105119:6He3dNkHVzMoUg@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
 dkepath.YP105119(1).remote(4).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(4).luke_root];%CVS command
+dkepath.YP105119(1).remote(4).gitupdate = true;
 %
-%------------------------------------ Profile number 1, EN232106 Nilsson ------------------------------------
-%
-dkepath.EN232106(1).luke_root = [pwd,filesep];
-%
-% ---------------------------- andromede -------------------------------
-%
-dkepath.EN232106(1).andromede.local_root = '/home/JD211098/Packages/andromede/';
-dkepath.EN232106(1).andromede.temppathroot = '/data/tmp/';%'/scratch/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-%
-dkepath.EN232106(1).andromede.mex710 = [dkepath.EN232106(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB710/'];
-dkepath.EN232106(1).andromede.mex800 = [dkepath.EN232106(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB800/'];
-%
-dkepath.EN232106(1).andromede.compiler_opt = dkepath.JD211098(1).andromede.compiler_opt;
-%
-dkepath.EN232106(1).andromede.MUMPS.mex710 = [dkepath.EN232106(1).andromede.local_root,'MUMPS_4.10.0/MATLAB710'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.EN232106(1).andromede.MUMPS.mex800 = [dkepath.EN232106(1).andromede.local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
-%
-dkepath.EN232106(1).andromede.graphviz.env = '/home/YP105119/bin/';% Graphviz environment variable
-dkepath.EN232106(1).andromede.latex.env = '/usr/bin/';% Latex environment variable
-dkepath.EN232106(1).andromede.imagemagick.env = '/usr/bin/';% ImageMagick environment variable
-%
-%--------------------------- Remote computing -----------------------------
-%
-% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
-%
-dkepath.EN232106(1).remote(1).remoteid = 'CEA_ANDROMEDE';
-dkepath.EN232106(1).remote(1).schedulername = 'pbs';
-dkepath.EN232106(1).remote(1).profilename = 'EN232106';
-dkepath.EN232106(1).remote(1).luke_root = dkepath.EN232106(1).luke_root;% local cluster
-%
-dkepath.EN232106(1).remote(2).remoteid = 'macpro_YVES_PEYSSON';
-dkepath.EN232106(1).remote(2).schedulername = 'condor';
-dkepath.EN232106(1).remote(2).profilename = 'emelie';
-dkepath.EN232106(1).remote(2).luke_root = '/Users/yvespeysson/emelienilsson/LUKE/';
-%
-dkepath.EN232106(1).remote(3) = dkepath.EN232106(1).remote(2);
-dkepath.EN232106(1).remote(3).schedulername = 'direct';
-%
-
-
