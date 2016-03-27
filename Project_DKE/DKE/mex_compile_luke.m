@@ -63,6 +63,20 @@ else
     copts = '';
 end
 %
+if isstruct(compiler_opt) && isfield(compiler_opt,'copts') && isfield(compiler_opt.copts,'cpp'),% C++ mex compiling options
+    if isstruct(compiler_opt.copts.cpp),
+        if isfield(compiler_opt.copts.cpp,['mex',matver]),
+            cppopts = compiler_opt.copts.cpp.(['mex',matver]);
+        else
+            cppopts = '';
+        end
+    else
+        cppopts = compiler_opt.copts.cpp;
+    end
+else
+    cppopts = '';
+end
+%
 if isstruct(compiler_opt) && isfield(compiler_opt,'fopts'),% Fortran mex compiling option
 	if isstruct(compiler_opt.fopts),
 		if isfield(compiler_opt.fopts,['mex',matver]),
@@ -122,8 +136,8 @@ if ~any(isnan(copts)) && (force_compile || any(filetime.trapz_dke_yp.source > fi
     disp(['The trapz_dke_yp.',mexext,' mexfile has been compiled.'])
 end
 %
-if ~any(isnan(copts)) && (force_compile || any(filetime.twister.source > filetime.twister.mex)),
-    eval(['mex ',copts,' ',sourcepath.DKE,'twister.cpp']);
+if ~any(isnan(cppopts)) && (force_compile || any(filetime.twister.source > filetime.twister.mex)),
+    eval(['mex ',cppopts,' ',sourcepath.DKE,'twister.cpp']);
     disp(['The twister.',mexext,' mexfile has been compiled.'])
 end
 %
