@@ -52,7 +52,7 @@ dkepath.YP105119(1).andromede.MUMPS.mex801 = [dkepath.YP105119(1).andromede.loca
 dkepath.YP105119(1).andromede.MUMPS.mex805 = [dkepath.YP105119(1).andromede.local_root,'MUMPS_4.10.0/MATLAB805'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).andromede.MUMPS.mex806 = [dkepath.YP105119(1).andromede.local_root,'MUMPS_4.10.0/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.YP105119(1).extrapaths.LUKE_ITM = [dkepath.YP105119(1).andromede.local_root,'LUKE_ITM/trunk'];% LUKE <-> ITM toolbox 
+dkepath.YP105119(1).andromede.extrapaths.LUKE_ITM = '/home/YP105119/LUKE_ITM/trunk';% LUKE <-> ITM toolbox 
 %
 % LUKE documentation
 %
@@ -80,7 +80,7 @@ dkepath.YP105119(1).cephee.MUMPS.mex710 = [dkepath.YP105119(1).cephee.local_root
 dkepath.YP105119(1).cephee.MUMPS.mex800 = [dkepath.YP105119(1).cephee.local_root,'MUMPS_4.10.0/MATLAB800'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).cephee.MUMPS.mex801 = [dkepath.YP105119(1).cephee.local_root,'MUMPS_4.10.0/MATLAB801'];%Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.YP105119(1).extrapaths.LUKE_ITM = [dkepath.YP105119(1).cephee.local_root,'LUKE_ITM/trunk'];% LUKE <-> ITM toolbox 
+dkepath.YP105119(1).cephee.extrapaths.LUKE_ITM = '/home/YP105119/LUKE_ITM/trunk';% LUKE <-> ITM toolbox 
 %
 % LUKE documentation
 %
