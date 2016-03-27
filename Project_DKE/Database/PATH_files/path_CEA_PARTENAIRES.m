@@ -97,22 +97,3 @@ dkepath.YP105119(1).remote(1).schedulername = 'pbs';
 dkepath.YP105119(1).remote(1).profilename = 'YP105119';
 dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;% local cluster
 %
-dkepath.YP105119(1).remote(2).remoteid = 'macpro_YVES_PEYSSON';
-dkepath.YP105119(1).remote(2).schedulername = 'condor';
-dkepath.YP105119(1).remote(2).profilename = 'yves';
-dkepath.YP105119(1).remote(2).luke_root = '/Users/yvespeysson/Projets/LUKE/';
-dkepath.YP105119(1).remote(2).cvs.CVSROOT = ':pserver:YP105119:6He3dNkHVzMoUg@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
-dkepath.YP105119(1).remote(2).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(2).luke_root];%CVS command
-dkepath.YP105119(1).remote(2).gitupdate = true;
-%
-dkepath.YP105119(1).remote(3) = dkepath.YP105119(1).remote(2);
-dkepath.YP105119(1).remote(3).schedulername = 'direct';
-%
-dkepath.YP105119(1).remote(4).remoteid = 'ASIPP_SHENMA';
-dkepath.YP105119(1).remote(4).schedulername = 'torque';
-dkepath.YP105119(1).remote(4).profilename = 'yves';
-dkepath.YP105119(1).remote(4).luke_root = '/project/LUKE/LUKE/';
-dkepath.YP105119(1).remote(4).cvs.CVSROOT = ':pserver:YP105119:6He3dNkHVzMoUg@altair.partenaires.cea.fr:/usr/local/cvs/gcgc';%CVS root for LUKE
-dkepath.YP105119(1).remote(4).cvs.cmd = ['update -d ',dkepath.YP105119(1).remote(4).luke_root];%CVS command
-dkepath.YP105119(1).remote(4).gitupdate = true;
-%
