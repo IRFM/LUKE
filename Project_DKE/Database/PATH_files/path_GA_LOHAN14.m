@@ -22,10 +22,9 @@ dkepath.default = 'peyssony';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %-------------------------------------------------------------------------------------------------------
 %
-dkepath.peyssony(1).luke_root = '/u/peyssony/LUKE/';
-dkepath.peyssony(1).local_root = '/u/peyssony/Packages/';
-dkepath.peyssony(1).temppathroot = '/scratch/peyssony/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-%
+dkepath.peyssony(1).luke_root = '/usc-data/d/luke/LUKE/';
+dkepath.peyssony(1).local_root = '/usc-data/d/luke/Packages/';
+dkepath.peyssony(1).temppathroot = '/scratch/luke/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)%
 dkepath.peyssony(1).localdatapath = dkepath.peyssony(1).temppathroot;
 %
 dkepath.peyssony(1).mex804 = [dkepath.peyssony(1).luke_root,'Project_DKE/MEX/Bin/lohan14/MATLAB804/'];
