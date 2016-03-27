@@ -240,9 +240,9 @@ if nargin <= 2,
     clc
     %
     if strcmp(lukebranch,'LUKE')
-        disp(['>> ',lukeversion,' is now in operation (CVS: main trunk)']);
+        disp(['>> ',lukeversion,' is now in operation (Git: main trunk)']);
     else
-        disp(['>> ',lukeversion,' is now in operation (CVS: ',lukebranch,')']);
+        disp(['>> ',lukeversion,' is now in operation (Git: ',lukebranch,')']);
     end
     %
     if flag,
