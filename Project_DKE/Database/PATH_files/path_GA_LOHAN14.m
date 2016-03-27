@@ -24,7 +24,8 @@ dkepath.default = 'peyssony';
 %
 dkepath.peyssony(1).luke_root = '/usc-data/d/luke/LUKE/';
 dkepath.peyssony(1).local_root = '/usc-data/d/luke/Packages/';
-dkepath.peyssony(1).temppathroot = '/scratch/luke/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)%
+dkepath.peyssony(1).temppathroot = '/scratch/luke/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
 dkepath.peyssony(1).localdatapath = dkepath.peyssony(1).temppathroot;
 %
 dkepath.peyssony(1).mex804 = [dkepath.peyssony(1).luke_root,'Project_DKE/MEX/Bin/lohan14/MATLAB804/'];
@@ -38,7 +39,7 @@ dkepath.peyssony(1).compiler_opt.fopts.mex804 = ' ';%-largeArrayDims';
 %
 %Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.peyssony(1).MUMPS.mex804 = ['/u/peyssony/Packages/MUMPS_4.10.0/MATLAB804'];
+dkepath.peyssony(1).MUMPS.mex804 = ['/usc-data/d/luke/Packages/MUMPS_4.10.0/MATLAB804'];
 %
 % LUKE documentation
 %
