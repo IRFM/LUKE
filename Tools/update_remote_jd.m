@@ -40,6 +40,13 @@ for irem = 1:length(dkepath.remote),
             if isfield(dkepath.remote(nrem),'cvsrights'),
                 remote(nrem).cvsrights = dkepath.remote(irem).cvsrights;
             end
+            if isfield(dkepath.remote(nrem),'gitupdate'),
+                remote(nrem).gitupdate = dkepath.remote(irem).gitupdate;
+            end
+            if isfield(dkepath.remote(nrem),'gitmode'),
+                remote(nrem).gitmode = dkepath.remote(irem).gitmode;
+            end
+
             %
         else
             continue
