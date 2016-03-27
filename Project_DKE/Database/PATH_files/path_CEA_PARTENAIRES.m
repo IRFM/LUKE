@@ -35,6 +35,8 @@ dkepath.YP105119(1).andromede.mex805 = [dkepath.YP105119(1).luke_root,'Project_D
 dkepath.YP105119(1).andromede.mex806 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB806/'];
 %
 dkepath.YP105119(1).andromede.compiler_opt.copts = '';
+dkepath.YP105119(1).andromede.compiler_opt.copts.cpp.mex805 = '-f /home/YP105119/LUKE/Project_DKE/MEX/Bin/andromede/MATLAB805/g++_glnxa64.xml';
+dkepath.YP105119(1).andromede.compiler_opt.copts.cpp.mex806 = '-f /home/YP105119/LUKE/Project_DKE/MEX/Bin/andromede/MATLAB806/g++_glnxa64.xml';
 dkepath.YP105119(1).andromede.compiler_opt.fopts.mex710 = 'FC=''gfortran''';
 dkepath.YP105119(1).andromede.compiler_opt.fopts.mex800 = '';
 dkepath.YP105119(1).andromede.compiler_opt.fopts.mex801 = '';
