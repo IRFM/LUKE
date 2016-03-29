@@ -14,6 +14,8 @@ dkepath.machine = 'loki';
 dkepath.hostname = 'head';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
 dkepath.computer = computer;%machine type and supported OS
 %
+dkepath.default = 'ypeysson';
+%
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
@@ -46,7 +48,7 @@ dkepath.ypeysson(1).imagemagick.env = '/usr/bin/';% ImageMagick environment vari
 dkepath.ypeysson(1).remote(1).remoteid = 'PSFC_LOKI';
 dkepath.ypeysson(1).remote(1).schedulername = 'pbs';
 dkepath.ypeysson(1).remote(1).profilename = 'local';
-dkepath.ypeysson(1).remote(1).luke_root = dkepath.peysson(1).luke_root;% local cluster
+dkepath.ypeysson(1).remote(1).luke_root = dkepath.ypeysson(1).luke_root;% local cluster
 %
 
 
