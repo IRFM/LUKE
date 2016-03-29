@@ -24,10 +24,13 @@ dkepath.ypeysson(1).luke_root = '/home/ypeysson/luke/LUKE/';
 dkepath.ypeysson(1).local_root = '/home/ypeysson/luke/Packages/';
 dkepath.ypeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.ypeysson(1).mex712 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/head/MATLAB806/'];%R2011a
+dkepath.ypeysson(1).mex806 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/cmodws85/MATLAB806/'];%R2015b
 %
 dkepath.ypeysson(1).compiler_opt.libs.gfortran = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
+%
 dkepath.ypeysson(1).compiler_opt.copts = '';
+dkepath.ypeysson(1).compiler_opt.copts.cpp.mex806 = '-f /home/ypeysson/luke/LUKE/Project_DKE/MEX/Bin/cmodws85/MATLAB806/g++_glnxa64.xml';
+%
 dkepath.ypeysson(1).compiler_opt.fopts.mex806 = 'FC=''gfortran''';%
 dkepath.ypeysson(1).compiler_opt.separatrice.mex806 = [' -largeArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.ypeysson(1).compiler_opt.helmex.mex806 = [' -compatibleArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
