@@ -226,5 +226,15 @@ dkepath.yves(1).remote(18).gitupdate = false;
 %
 dkepath.yves(1).remote(19) = dkepath.yves(1).remote(18);
 dkepath.yves(1).remote(19).schedulername = 'direct';
-dkepath.yves(1).remote(19).gitupdate = false;
+dkepath.yves(1).remote(19).gitupdate = true;
 dkepath.yves(1).remote(19).gitmode = 'fetch -q';
+%
+dkepath.yves(1).remote(20).remoteid = 'PSFC_CMODWS85';
+dkepath.yves(1).remote(20).schedulername = 'direct';
+dkepath.yves(1).remote(20).profilename = 'ypeysson';
+dkepath.yves(1).remote(20).luke_root = '/home/ypeysson/LUKE/';
+dkepath.yves(1).remote(20).link_mode = [];
+dkepath.yves(1).remote(20).cvsupdate = false;% update done in 'direct' mode
+dkepath.yves(1).remote(20).gitupdate = true;
+dkepath.yves(1).remote(20).gitmode = 'fetch -q';
+%
