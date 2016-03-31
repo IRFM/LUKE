@@ -22,7 +22,7 @@ dkepath.default = 'ypeysson';
 %
 dkepath.ypeysson(1).luke_root = '/home/ypeysson/luke/LUKE/';
 dkepath.ypeysson(1).local_root = '/home/ypeysson/luke/Packages/';
-dkepath.ypeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.ypeysson(1).temppathroot = '/home/ypeysson/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.ypeysson(1).mex806 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/cmodws85/MATLAB806/'];%R2015b
 %
