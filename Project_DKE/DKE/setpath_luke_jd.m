@@ -1,4 +1,4 @@
-function dkepath = setpath_luke_jd(dkepath,link_mode)
+function dkepath = setpath_luke_jd(dkepath,link_mode,test_mode)
 %
 % LUKE - This function sets the path such that the simulations run on the specified LUKE version.
 %
@@ -24,6 +24,8 @@ function dkepath = setpath_luke_jd(dkepath,link_mode)
 %       o 0   : ssh key pair enforced
 %       o 1   : ssh bridge enforced
 %       o 2   : url/ftp bridge enforced
+%
+%   - test_mode : test the connections
 %
 % OUTPUTS : 
 %
@@ -77,6 +79,10 @@ luke_root = dkepath.luke_root;
 %
 if nargin < 2,
     link_mode = NaN;
+end
+%
+if nargin < 3,
+    test_mode = 0;
 end
 %
 %remove old DKE and packages path
@@ -227,7 +233,7 @@ end
 %
 % update and verify remote profiles
 %
-dkepath = update_remote_jd(dkepath,link_mode);
+dkepath = update_remote_jd(dkepath,link_mode,test_mode);
 %
 if nargout == 0,
     setappdata(0,'dkepath',dkepath');
