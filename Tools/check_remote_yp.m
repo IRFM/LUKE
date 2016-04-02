@@ -81,9 +81,11 @@ if ~isempty(remlist) && ~isnan(sum(remlist)) && ~isempty(dkepath),%for the remli
     %
     remlist = 1:length(remlist);
     %
+    dkepath = setpath_luke_jd(dkepath,link_mode);
+    %
+else
+    dkepath = setpath_luke_jd(dkepath,link_mode,0);
 end
-%
-dkepath = setpath_luke_jd(dkepath,link_mode);
 %
 % test connection and identify local profiles
 %
@@ -92,7 +94,7 @@ info_dke_yp(2,'Testing remote connection for dkepath.remote profiles using LUKE 
 %
 nrem = length(dkepath.remote);
 %
-flag = false(1,nrem);
+flag = zeros(1,nrem);
 %  
 if nargin < 4 || isempty(remlist),
     remlist = input_dke_yp('Please identify profiles to be tested.',1:nrem,[1;nrem]);
@@ -109,15 +111,30 @@ for irem = remlist,
     %
     job = matstandardjob_jd('runmat');% standard matlab job
     job.debugmode = debugmode; % to display info and debug
-    job.funcopy = 1; % (0) to use function LUKEversion_jd on the remote host within matlab path - TEST REMOTE PATH
     job.remtimout = 5;% in minutes
     %
+    job.funcopy = 0; % (0) to use function LUKEversion_jd on the remote host within matlab path - TEST REMOTE PATH
+    %
+    flag_remote_path = 0;
+    disp(' - LUKEversion_jd.m on the remote machine is used');
     [err,~,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem),job);
+    %
+    if ~isempty(err),
+        disp('----------------------------')
+        disperr_jd(err);
+        disp('----------------------------')
+        %
+        disp(' - LUKEversion_jd.m send from the local machine to the remote one is used.');
+        job.funcopy = 1; % (0) to use function LUKEversion_jd on the remote host within matlab path - TEST REMOTE PATH
+        [err,~,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem),job);
+        flag_remote_path = 1;
+    end
     %
     disp(' ')
     if isempty(err),        
         info_dke_yp(4,['Version ',remotelukever,' with Matlab ',remotematrel,' working.'])
-        flag(irem) = true;
+        flag(irem) = 1;
+        if flag_remote_path, flag(irem) = -1; end 
     else
         disperr_jd(err);
     end
