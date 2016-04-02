@@ -1,4 +1,4 @@
-function flag = check_remote_yp(dkepath,debugmode,link_mode,remlist,log_mode)
+function flag = check_remote_yp(dkepath,remlist,debugmode,link_mode,log_mode)
 % LUKE - Check if remote links are available and functionning
 %
 %	Check if remote links are available and functionning
@@ -7,6 +7,10 @@ function flag = check_remote_yp(dkepath,debugmode,link_mode,remlist,log_mode)
 %
 %       - dkepath: path structure with remote profiles
 %           (default: if no input structure or empty, dkepath is automatically loaded from LUKE_PATH.mat
+%       - remlist : list of profiles indices to be tested
+%           o NaN : (default) test all profiles
+%           o []  : user-prompt profile list
+%           o [1,3...] : tests specified profiles
 %       - debugmode: display details   
 %       - link_mode : connection mode prescription
 %           o -1  : local profiles only
@@ -15,10 +19,6 @@ function flag = check_remote_yp(dkepath,debugmode,link_mode,remlist,log_mode)
 %           o 0   : ssh key pair enforced
 %           o 1   : ssh bridge enforced
 %           o 2   : url/ftp bridge enforced
-%       - remlist : list of profiles indices to be tested
-%           o NaN : (default) test all profiles
-%           o []  : user-prompt profile list
-%           o [1,3...] : tests specified profiles
 %       - log_mode : output results in a log file
 %           o 0 : no 
 %           o 1 : yes (default)
@@ -36,13 +36,13 @@ if nargin < 5,
     log_mode = 1;
 end
 if nargin < 4,
-    remlist = NaN;
-end
-if nargin < 3,
     link_mode = NaN;
 end
-if nargin < 2,
+if nargin < 3,
     debugmode = 0;
+end
+if nargin < 2,
+    remlist = NaN;
 end
 if nargin < 1,
     dkepath = '';
@@ -88,7 +88,7 @@ dkepath = setpath_luke_jd(dkepath,link_mode);
 % test connection and identify local profiles
 %
 disp(' ')
-info_dke_yp(2,'Testing remote connection for dkepath.remote profiles');
+info_dke_yp(2,'Testing remote connection for dkepath.remote profiles using LUKE code.');
 %
 nrem = length(dkepath.remote);
 %
@@ -109,7 +109,7 @@ for irem = remlist,
     %
     job = matstandardjob_jd('runmat');% standard matlab job
     job.debugmode = debugmode; % to display info and debug
-    job.funcopy = 0; % (0) to use function LUKEversion_jd on the remote host within matlab path - TEST REMOTE PATH
+    job.funcopy = 1; % (0) to use function LUKEversion_jd on the remote host within matlab path - TEST REMOTE PATH
     job.remtimout = 5;% in minutes
     %
     [err,~,remotelukever,~,remotematrel] = matremote_jd('LUKEversion_jd',{},dkepath.remote(irem),job);
@@ -119,7 +119,7 @@ for irem = remlist,
         info_dke_yp(4,['Version ',remotelukever,' with Matlab ',remotematrel,' working.'])
         flag(irem) = true;
     else
-        disperr_jd(err)
+        disperr_jd(err);
     end
     %
 end
