@@ -58,8 +58,8 @@ dkepath.YP105119(1).andromede1.extrapaths.LUKE_ITM = '/home/YP105119/LUKE_ITM/tr
 %
 % LUKE documentation
 %
-dkepath.YP105119(1).andromede1.graphviz.env = '/home/YP105119/bin/';% Graphviz environment variable ('which dot' and 'dot -v')
-dkepath.YP105119(1).andromede1.latex.env = '/usr/bin/';% Latex environment variable  ('which latex' and 'latex -v')
+dkepath.YP105119(1).andromede1.graphviz.env = '/usr/bin/';% Graphviz environment variable ('which dot' and 'dot -v')
+dkepath.YP105119(1).andromede1.latex.env = '/usr/bin';% Latex environment variable  ('which latex' and 'latex -v')
 dkepath.YP105119(1).andromede1.imagemagick.env = '/usr/bin/';% ImageMagick environment variable ('which convert' and 'convert -v')
 %
 % ---------------------------- andromede 2-5 -------------------------------
