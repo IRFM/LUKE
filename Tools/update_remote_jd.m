@@ -109,15 +109,17 @@ end
 %
 if isempty(link_mode) || isnan(link_mode) || link_mode >= 0,% remote profiles enabled : test connections and display output following link_mode
     %
-    disp (' ')
-    info_dke_yp(3,'Testing remote profile connections ')
+    if test_mode,
+        disp (' ')
+        info_dke_yp(3,'Testing remote profile connections ')
+    end
     %
     [dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),test_mode,false,NaN,NaN,false,false,link_mode);
     %
     nrem = length(dkepath.remote);
     %
     disp (' ')
-    info_dke_yp(2,'List of compatible remote profiles available :')
+    info_dke_yp(2,'List of compatible remote profiles available from this computer :')
     disp(' ')
     %
     for irem = 1:nrem,
