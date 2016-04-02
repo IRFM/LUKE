@@ -1,4 +1,4 @@
-function dkepath = update_remote_jd(dkepath,link_mode)
+function dkepath = update_remote_jd(dkepath,link_mode,test_mode)
 %
 % this function load remote profiles and selects accessible remote clusters with compatible LUKE version 
 %
@@ -10,6 +10,8 @@ function dkepath = update_remote_jd(dkepath,link_mode)
 %       o 0   : ssh key pair enforced
 %       o 1   : ssh bridge enforced
 %       o 2   : url/ftp bridge enforced
+%
+%   - test_mode : test the connections
 %
 lukever = LUKEversion_jd;% local LUKE version
 lukever(lukever == ' ' | lukever == '.') = '_';% syntax for comparison
@@ -110,7 +112,7 @@ if isempty(link_mode) || isnan(link_mode) || link_mode >= 0,% remote profiles en
     disp (' ')
     info_dke_yp(3,'Testing remote profile connections ')
     %
-    [dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),true,false,NaN,NaN,false,false,link_mode);
+    [dkepath.remote,dkepath.profilestr] = load_remoteprofiles_jd(remote(flag),test_mode,false,NaN,NaN,false,false,link_mode);
     %
     nrem = length(dkepath.remote);
     %
