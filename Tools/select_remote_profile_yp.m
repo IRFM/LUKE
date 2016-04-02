@@ -55,7 +55,7 @@ end
 %
 if exist('remlist','var')
     %
-    flag_remote = check_remote_yp(dkepath,0,'',remlist);
+    flag_remote = check_remote_yp(dkepath,remlist,0,'');
     %
     if ~isempty(find([1:length(flag_remote)].*flag_remote > 0)),
         if isempty(remlist), remlist = 1:length(flag_remote);end
