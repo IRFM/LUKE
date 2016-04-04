@@ -60,6 +60,12 @@ dkepath.PEYSSON(1).shenma113.graphviz.env = '/usr/bin/';% Graphviz environment v
 dkepath.PEYSSON(1).shenma113.latex.env = '/usr/bin/';% Latex environment variable
 dkepath.PEYSSON(1).shenma113.imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
+% ---------------------------- shenma110-112 -------------------------------
+%
+dkepath.PEYSSON(1).shenma110 = dkepath.PEYSSON(1).shenma113;
+dkepath.PEYSSON(1).shenma111 = dkepath.PEYSSON(1).shenma113;
+dkepath.PEYSSON(1).shenma112 = dkepath.PEYSSON(1).shenma113;
+%
 %--------------------------- Remote computing -----------------------------
 %
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
@@ -68,12 +74,6 @@ dkepath.PEYSSON(1).remote(1).remoteid = 'ASIPP_SHENMA';
 dkepath.PEYSSON(1).remote(1).schedulername = 'torque';
 dkepath.PEYSSON(1).remote(1).profilename = 'local';
 dkepath.PEYSSON(1).remote(1).luke_root = dkepath.PEYSSON(1).luke_root;% local cluster
-%
-% ---------------------------- shenma110-112 -------------------------------
-%
-dkepath.PEYSSON(1).shenma110 = dkepath.PEYSSON(1).shenma113;
-dkepath.PEYSSON(1).shenma111 = dkepath.PEYSSON(1).shenma113;
-dkepath.PEYSSON(1).shenma112 = dkepath.PEYSSON(1).shenma113;
 %
 %-------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 2, Joan Decker  ------------------------------------
