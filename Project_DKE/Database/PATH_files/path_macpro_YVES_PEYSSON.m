@@ -121,11 +121,12 @@ dkepath.yvespeysson(1).remote(1).profilename = 'yvespeysson';
 dkepath.yvespeysson(1).remote(1).luke_root = dkepath.yvespeysson(1).luke_root;% local cluster
 dkepath.yvespeysson(1).remote(1).link_mode = [];
 dkepath.yvespeysson(1).remote(1).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(1).gitupdate = false;% update done in 'direct' mode
 %
 dkepath.yvespeysson(1).remote(2) = dkepath.yvespeysson(1).remote(1);
 dkepath.yvespeysson(1).remote(2).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(2).cvsupdate = true;
-dkepath.yvespeysson(1).remote(2).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(2).gitupdate = true;
+dkepath.yvespeysson(1).remote(2).gitmode = 'pull';
 %
 dkepath.yvespeysson(1).remote(3).remoteid = 'ASIPP_SHENMA';
 dkepath.yvespeysson(1).remote(3).schedulername = 'torque';
@@ -133,11 +134,12 @@ dkepath.yvespeysson(1).remote(3).profilename = 'PEYSSON';
 dkepath.yvespeysson(1).remote(3).luke_root = '/project/LUKE/LUKE/';
 dkepath.yvespeysson(1).remote(3).link_mode = [];
 dkepath.yvespeysson(1).remote(3).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(3).gitupdate = false;% update done in 'direct' mode
 %
 dkepath.yvespeysson(1).remote(4) = dkepath.yvespeysson(1).remote(3);
 dkepath.yvespeysson(1).remote(4).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(4).cvsupdate = true;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(4).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(4).gitupdate = true;
+dkepath.yvespeysson(1).remote(4).gitmode = 'fetch -q';
 %
 dkepath.yvespeysson(1).remote(5).remoteid = 'CEA_ANDROMEDE';
 dkepath.yvespeysson(1).remote(5).schedulername = 'pbs';
@@ -145,11 +147,12 @@ dkepath.yvespeysson(1).remote(5).profilename = 'YP105119';
 dkepath.yvespeysson(1).remote(5).luke_root = '/home/YP105119/LUKE/';
 dkepath.yvespeysson(1).remote(5).link_mode = [];
 dkepath.yvespeysson(1).remote(5).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(5).gitupdate = false;% update done in 'direct' mode
 %
 dkepath.yvespeysson(1).remote(6) = dkepath.yvespeysson(1).remote(5);
 dkepath.yvespeysson(1).remote(6).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(6).cvsupdate = true;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(6).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(6).gitupdate = true;
+dkepath.yvespeysson(1).remote(6).gitmode = 'fetch -q';
 %
 dkepath.yvespeysson(1).remote(7).remoteid = 'EFDA_ITM';
 dkepath.yvespeysson(1).remote(7).schedulername = 'sge';
@@ -157,11 +160,12 @@ dkepath.yvespeysson(1).remote(7).profilename = 'yvesp';
 dkepath.yvespeysson(1).remote(7).luke_root = '/pfs/home/yvesp/public/LUKE/';
 dkepath.yvespeysson(1).remote(7).link_mode = [];
 dkepath.yvespeysson(1).remote(7).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(7).gitupdate = false;% update done in 'direct' mode
 %
 dkepath.yvespeysson(1).remote(8) = dkepath.yvespeysson(1).remote(7);
 dkepath.yvespeysson(1).remote(8).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(8).cvsupdate = true;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(8).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(8).gitupdate = true;
+dkepath.yvespeysson(1).remote(8).gitmode = 'fetch -q';
 %
 dkepath.yvespeysson(1).remote(9).remoteid = 'SWIP_CLUSTER02';
 dkepath.yvespeysson(1).remote(9).schedulername = 'torque';
@@ -169,11 +173,12 @@ dkepath.yvespeysson(1).remote(9).profilename = 'Yves';
 dkepath.yvespeysson(1).remote(9).luke_root = '/home/Yves/LUKE/';
 dkepath.yvespeysson(1).remote(9).link_mode = [];
 dkepath.yvespeysson(1).remote(9).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(9).gitupdate = false;% update done in 'direct' mode
 %
 dkepath.yvespeysson(1).remote(10) = dkepath.yvespeysson(1).remote(9);
 dkepath.yvespeysson(1).remote(10).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(10).cvsupdate = true;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(10).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(10).gitupdate = true;
+dkepath.yvespeysson(1).remote(10).gitmode = 'fetch -q';
 %
 dkepath.yvespeysson(1).remote(11).remoteid = 'IPP_ABACUS';
 dkepath.yvespeysson(1).remote(11).schedulername = 'pbs';
@@ -181,11 +186,12 @@ dkepath.yvespeysson(1).remote(11).profilename = 'peysson';
 dkepath.yvespeysson(1).remote(11).luke_root = '/compass/home/peysson/LUKE/';
 dkepath.yvespeysson(1).remote(11).link_mode = [];
 dkepath.yvespeysson(1).remote(11).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(11).gitupdate = false;% update done in 'direct' mode
 %
 dkepath.yvespeysson(1).remote(12) = dkepath.yvespeysson(1).remote(11);
 dkepath.yvespeysson(1).remote(12).schedulername = 'direct';
-dkepath.yvespeysson(1).remote(12).cvsupdate = true;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(12).cvsrights = 'chmod -R a+rx ./';
+dkepath.yvespeysson(1).remote(12).gitupdate = true;
+dkepath.yvespeysson(1).remote(12).gitmode = 'fetch -q';
 %
 dkepath.yvespeysson(1).remote(13).remoteid = 'CRPP_PPB110';
 dkepath.yvespeysson(1).remote(13).schedulername = 'slurm';
@@ -193,7 +199,38 @@ dkepath.yvespeysson(1).remote(13).profilename = 'local';
 dkepath.yvespeysson(1).remote(13).luke_root = '/home/decker/LUKE/';
 dkepath.yvespeysson(1).remote(13).link_mode = [];% lac911 gateway
 dkepath.yvespeysson(1).remote(13).cvsupdate = false;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(13).cvsrights = '';
+dkepath.yvespeysson(1).remote(13).gitupdate = false;% update done in 'direct' mode
+%
+dkepath.yvespeysson(1).remote(14).remoteid = 'GA_LOHAN14';
+dkepath.yvespeysson(1).remote(14).schedulername = 'direct';
+dkepath.yvespeysson(1).remote(14).profilename = 'peyssony';
+dkepath.yvespeysson(1).remote(14).luke_root = '/usc-data/d/luke/LUKE/';
+dkepath.yvespeysson(1).remote(14).link_mode = [];
+dkepath.yvespeysson(1).remote(14).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(14).gitupdate = true;
+dkepath.yvespeysson(1).remote(14).gitmode = 'fetch -q';
+%
+dkepath.yvespeysson(1).remote(15).remoteid = 'PSFC_LOKI';
+dkepath.yvespeysson(1).remote(15).schedulername = 'pbs';
+dkepath.yvespeysson(1).remote(15).profilename = 'ypeysson';
+dkepath.yvespeysson(1).remote(15).luke_root = '/home/ypeysson/LUKE/';
+dkepath.yvespeysson(1).remote(15).link_mode = [];
+dkepath.yvespeysson(1).remote(15).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(15).gitupdate = false;
+%
+dkepath.yvespeysson(1).remote(16) = dkepath.yves(1).remote(15);
+dkepath.yvespeysson(1).remote(16).schedulername = 'direct';
+dkepath.yvespeysson(1).remote(16).gitupdate = true;
+dkepath.yvespeysson(1).remote(16).gitmode = 'fetch -q';
+%
+dkepath.yvespeysson(1).remote(17).remoteid = 'PSFC_CMODWS85';
+dkepath.yvespeysson(1).remote(17).schedulername = 'direct';
+dkepath.yvespeysson(1).remote(17).profilename = 'ypeysson';
+dkepath.yvespeysson(1).remote(17).luke_root = '/home/ypeysson/LUKE/';
+dkepath.yvespeysson(1).remote(17).link_mode = [];
+dkepath.yvespeysson(1).remote(17).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(17).gitupdate = true;
+dkepath.yvespeysson(1).remote(17).gitmode = 'fetch -q';
 %
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 2, Joan Decker  ------------------------------------
