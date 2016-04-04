@@ -51,12 +51,12 @@ dkepath.ypeysson(1).imagemagick.env = '/usr/bin/';% ImageMagick environment vari
 dkepath.ypeysson(1).remote(1).remoteid = 'PSFC_CMODWS85';
 dkepath.ypeysson(1).remote(1).schedulername = 'direct';
 dkepath.ypeysson(1).remote(1).profilename = 'local';
-dkepath.ypeysson(1).remote(1).luke_root = dkepath.ypeysson(1).luke_root;% local cluster
+dkepath.ypeysson(1).remote(1).luke_root = '/home/ypeysson/LUKE/';% local cluster
 %
 dkepath.ypeysson(1).remote(2).remoteid = 'PSFC_LOKI';
 dkepath.ypeysson(1).remote(2).schedulername = 'pbs';
 dkepath.ypeysson(1).remote(2).profilename = 'ypeysson';
-dkepath.ypeysson(1).remote(2).luke_root = dkepath.ypeysson(1).luke_root;% local cluster
+dkepath.ypeysson(1).remote(2).luke_root = '/home/ypeysson/LUKE/';% local cluster
 %
 dkepath.ypeysson(1).remote(3) = dkepath.ypeysson(1).remote(2);
 dkepath.ypeysson(1).remote(3).schedulername = 'direct';
