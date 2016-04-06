@@ -166,7 +166,11 @@ else% new simulation
     %
     % determite remote and distributed profiles
     %
-    dkepath = setpath_luke_jd('',link_mode);
+   % if ~exist('dkepath','var'),
+   %     dkepath = setpath_luke_jd('',link_mode,0);
+   % else
+   %     dkepath = setpath_luke_jd(dkepath,link_mode,0);
+   % end
     %
     if ~isempty(dkepath.remote),
         remopt = input_dke_yp(['Do you want to transfer the distributed calculation to a remote host (y/n)'],'n',{'y','n'});
