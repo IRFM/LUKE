@@ -34,7 +34,7 @@ end
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 %
 debugmode = 0;% debug mode (0) off (1) on
-cleanmode = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
+cleanmode = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 luke_memory = 2000;% job memory in mb
 luke_walltime = 1;% job walltime in hours
 %
@@ -160,7 +160,11 @@ else% new simulation
     %
     % profiles in dkepath.remote tested
     %
-    dkepath = setpath_luke_jd('',link_mode);
+    if ~exist('dkepath','var'),
+        dkepath = setpath_luke_jd('',link_mode,0);
+    else
+        dkepath = setpath_luke_jd(dkepath,link_mode,0);
+    end
     %
     if isfield(dkepath,'remote'),
         nrem = length(dkepath.remote);
@@ -203,7 +207,7 @@ for remnum = 1:nrem,
         %
         lukestructs{remnum}.simul.locid = [id_simul,'_',num2str(remlist(remnum))];
         %
-        disp(['--> Calculation with remote number ',num2str(remlist(remnum))])
+        disp(['--> Calculation with remote number ',num2str(remlist(remnum)),', host: ',dkepath.remote(remlist(remnum)).host])
     end
     %
     lukestructs{remnum} = run_lukert(lukestructs{remnum},dkepath);
