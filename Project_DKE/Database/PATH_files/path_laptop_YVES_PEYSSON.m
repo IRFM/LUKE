@@ -111,7 +111,7 @@ dkepath.yves(1).remote(1).gitupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(2) = dkepath.yves(1).remote(1);
 dkepath.yves(1).remote(2).schedulername = 'direct';
 dkepath.yves(1).remote(2).gitupdate = true;
-dkepath.yves(1).remote(2).gitmode{1} = 'git pull';%
+dkepath.yves(1).remote(2).gitmode{1} = 'git pull;echo "* secondary repository synchronization done";';%
 %
 dkepath.yves(1).remote(3).remoteid = 'macpro_YVES_PEYSSON';
 dkepath.yves(1).remote(3).schedulername = 'condor';
@@ -124,7 +124,7 @@ dkepath.yves(1).remote(3).gitupdate = false;
 dkepath.yves(1).remote(4) = dkepath.yves(1).remote(3);
 dkepath.yves(1).remote(4).schedulername = 'direct';
 dkepath.yves(1).remote(4).gitupdate = true;
-dkepath.yves(1).remote(4).gitmode{1} = 'git pull';%
+dkepath.yves(1).remote(4).gitmode{1} = 'git pull;echo "* secondary repository synchronization done";';%
 %
 dkepath.yves(1).remote(5).remoteid = 'CEA_ANDROMEDE';
 dkepath.yves(1).remote(5).schedulername = 'pbs';
@@ -137,7 +137,7 @@ dkepath.yves(1).remote(5).gitupdate = false;
 dkepath.yves(1).remote(6) = dkepath.yves(1).remote(5);
 dkepath.yves(1).remote(6).schedulername = 'direct';
 dkepath.yves(1).remote(6).gitupdate = true;
-dkepath.yves(1).remote(6).gitmode{1} = 'ssh YP105119@altair "cd /usr/local/git/*.git;git fetch -q;cd ..;"';%for syncronizing first secondary repository from the main one. '*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
+dkepath.yves(1).remote(6).gitmode{1} = 'ssh YP105119@altair "cd /usr/local/git/*.git;git fetch -q;cd ..;";echo "* secondary repository synchronization done";';%for syncronizing first secondary repository from the main one. '*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 dkepath.yves(1).remote(6).gitmode{2} = 'git archive --format tar --remote ssh://YP105119@altair/usr/local/git/*.git HEAD > *.tgz;mkdir -p *;tar -xf *.tgz --overwrite -C *;rm -f *.tgz;chmod -R 777 *;echo "* update done";';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
 dkepath.yves(1).remote(7).remoteid = 'EFDA_ITM';
