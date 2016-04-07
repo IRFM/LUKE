@@ -126,7 +126,8 @@ dkepath.yvespeysson(1).remote(1).gitupdate = false;% update done in 'direct' mod
 dkepath.yvespeysson(1).remote(2) = dkepath.yvespeysson(1).remote(1);
 dkepath.yvespeysson(1).remote(2).schedulername = 'direct';
 dkepath.yvespeysson(1).remote(2).gitupdate = true;
-dkepath.yvespeysson(1).remote(2).gitmode = 'pull';
+dkepath.yvespeysson(1).remote(2).gitmode{1} = 'git pull;echo "* secondary repository synchronization done";';%
+
 %
 dkepath.yvespeysson(1).remote(3).remoteid = 'ASIPP_SHENMA';
 dkepath.yvespeysson(1).remote(3).schedulername = 'torque';
@@ -139,7 +140,7 @@ dkepath.yvespeysson(1).remote(3).gitupdate = false;% update done in 'direct' mod
 dkepath.yvespeysson(1).remote(4) = dkepath.yvespeysson(1).remote(3);
 dkepath.yvespeysson(1).remote(4).schedulername = 'direct';
 dkepath.yvespeysson(1).remote(4).gitupdate = true;
-dkepath.yvespeysson(1).remote(4).gitmode = 'fetch -q';
+dkepath.yvespeysson(1).remote(4).gitmode{1} = 'git archive --format tar --remote ssh://git@tolbachik.hd.free.fr:2222/home/git/*.git HEAD > *.tgz;mkdir -p *;tar -xf *.tgz --overwrite -C *;rm -f *.tgz;chmod -R 777 *;echo "* update done";';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
 dkepath.yvespeysson(1).remote(5).remoteid = 'CEA_ANDROMEDE';
 dkepath.yvespeysson(1).remote(5).schedulername = 'pbs';
@@ -152,7 +153,7 @@ dkepath.yvespeysson(1).remote(5).gitupdate = false;% update done in 'direct' mod
 dkepath.yvespeysson(1).remote(6) = dkepath.yvespeysson(1).remote(5);
 dkepath.yvespeysson(1).remote(6).schedulername = 'direct';
 dkepath.yvespeysson(1).remote(6).gitupdate = true;
-dkepath.yvespeysson(1).remote(6).gitmode = 'fetch -q';
+dkepath.yvespeysson(1).remote(6).gitmode{1} = 'git archive --format tar --remote ssh://git@tolbachik.hd.free.fr:2222/home/git/*.git HEAD > *.tgz;mkdir -p *;tar -xf *.tgz --overwrite -C *;rm -f *.tgz;chmod -R 777 *;echo "* update done";';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
 dkepath.yvespeysson(1).remote(7).remoteid = 'EFDA_ITM';
 dkepath.yvespeysson(1).remote(7).schedulername = 'sge';
@@ -165,7 +166,7 @@ dkepath.yvespeysson(1).remote(7).gitupdate = false;% update done in 'direct' mod
 dkepath.yvespeysson(1).remote(8) = dkepath.yvespeysson(1).remote(7);
 dkepath.yvespeysson(1).remote(8).schedulername = 'direct';
 dkepath.yvespeysson(1).remote(8).gitupdate = true;
-dkepath.yvespeysson(1).remote(8).gitmode = 'fetch -q';
+dkepath.yvespeysson(1).remote(8).gitmode{1} = 'git archive --format tar --remote ssh://git@tolbachik.hd.free.fr:2222/home/git/*.git HEAD > *.tgz;mkdir -p *;tar -xf *.tgz --overwrite -C *;rm -f *.tgz;chmod -R 777 *;echo "* update done";';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
 dkepath.yvespeysson(1).remote(9).remoteid = 'SWIP_CLUSTER02';
 dkepath.yvespeysson(1).remote(9).schedulername = 'torque';
@@ -178,7 +179,7 @@ dkepath.yvespeysson(1).remote(9).gitupdate = false;% update done in 'direct' mod
 dkepath.yvespeysson(1).remote(10) = dkepath.yvespeysson(1).remote(9);
 dkepath.yvespeysson(1).remote(10).schedulername = 'direct';
 dkepath.yvespeysson(1).remote(10).gitupdate = true;
-dkepath.yvespeysson(1).remote(10).gitmode = 'fetch -q';
+dkepath.yvespeysson(1).remote(10).gitmode{1} = 'git archive --format tar --remote ssh://git@tolbachik.hd.free.fr:2222/home/git/*.git HEAD > *.tgz;mkdir -p *;tar -xf *.tgz --overwrite -C *;rm -f *.tgz;chmod -R 777 *;echo "* update done";';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
 dkepath.yvespeysson(1).remote(11).remoteid = 'IPP_ABACUS';
 dkepath.yvespeysson(1).remote(11).schedulername = 'pbs';
@@ -191,7 +192,7 @@ dkepath.yvespeysson(1).remote(11).gitupdate = false;% update done in 'direct' mo
 dkepath.yvespeysson(1).remote(12) = dkepath.yvespeysson(1).remote(11);
 dkepath.yvespeysson(1).remote(12).schedulername = 'direct';
 dkepath.yvespeysson(1).remote(12).gitupdate = true;
-dkepath.yvespeysson(1).remote(12).gitmode = 'fetch -q';
+dkepath.yvespeysson(1).remote(12).gitmode{1} = 'git archive --format tar --remote ssh://git@tolbachik.hd.free.fr:2222/home/git/*.git HEAD > *.tgz;mkdir -p *;tar -xf *.tgz --overwrite -C *;rm -f *.tgz;chmod -R 777 *;echo "* update done";';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
 dkepath.yvespeysson(1).remote(13).remoteid = 'CRPP_PPB110';
 dkepath.yvespeysson(1).remote(13).schedulername = 'slurm';
@@ -208,7 +209,7 @@ dkepath.yvespeysson(1).remote(14).luke_root = '/usc-data/d/luke/LUKE/';
 dkepath.yvespeysson(1).remote(14).link_mode = [];
 dkepath.yvespeysson(1).remote(14).cvsupdate = false;% update done in 'direct' mode
 dkepath.yvespeysson(1).remote(14).gitupdate = true;
-dkepath.yvespeysson(1).remote(14).gitmode = 'fetch -q';
+dkepath.yvespeysson(1).remote(14).gitmode{1} = 'git archive --format tar --remote ssh://git@tolbachik.hd.free.fr:2222/home/git/*.git HEAD > *.tgz;mkdir -p *;tar -xf *.tgz --overwrite -C *;rm -f *.tgz;chmod -R 777 *;echo "* update done";';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
 dkepath.yvespeysson(1).remote(15).remoteid = 'PSFC_LOKI';
 dkepath.yvespeysson(1).remote(15).schedulername = 'pbs';
@@ -221,7 +222,7 @@ dkepath.yvespeysson(1).remote(15).gitupdate = false;
 dkepath.yvespeysson(1).remote(16) = dkepath.yves(1).remote(15);
 dkepath.yvespeysson(1).remote(16).schedulername = 'direct';
 dkepath.yvespeysson(1).remote(16).gitupdate = true;
-dkepath.yvespeysson(1).remote(16).gitmode = 'fetch -q';
+dkepath.yvespeysson(1).remote(16).gitmode{1} = 'git archive --format tar --remote ssh://git@tolbachik.hd.free.fr:2222/home/git/*.git HEAD > *.tgz;mkdir -p *;tar -xf *.tgz --overwrite -C *;rm -f *.tgz;chmod -R 777 *;echo "* update done";';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
 dkepath.yvespeysson(1).remote(17).remoteid = 'PSFC_CMODWS85';
 dkepath.yvespeysson(1).remote(17).schedulername = 'direct';
@@ -230,7 +231,7 @@ dkepath.yvespeysson(1).remote(17).luke_root = '/home/ypeysson/luke/LUKE/';
 dkepath.yvespeysson(1).remote(17).link_mode = [];
 dkepath.yvespeysson(1).remote(17).cvsupdate = false;% update done in 'direct' mode
 dkepath.yvespeysson(1).remote(17).gitupdate = true;
-dkepath.yvespeysson(1).remote(17).gitmode = 'fetch -q';
+dkepath.yvespeysson(1).remote(17).gitmode{1} = 'git archive --format tar --remote ssh://git@tolbachik.hd.free.fr:2222/home/git/*.git HEAD > *.tgz;mkdir -p *;tar -xf *.tgz --overwrite -C *;rm -f *.tgz;chmod -R 777 *;echo "* update done";';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 2, Joan Decker  ------------------------------------
