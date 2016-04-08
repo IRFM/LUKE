@@ -69,13 +69,13 @@ end
 %
 % ----------------------------
 %
-remotefunctions = {'select_LUKE.m','load_remoteprofiles_jd.m','make_help.m','luke_root'};% update MatTools, MatRemote, MatHelp and LUKE
+remotefunctions = {'select_LUKE.m','load_remoteprofiles_jd.m','make_help.m','lukegitupdate.m'};% update MatTools, MatRemote, MatHelp and LUKE
 %
 display_mode = 3;% show detailed results
 %
 exclude = {'.git','.mat','~','.mexa64','.mexglx','.mexmaci64','.o','.DS_Store'};
 %
-flag = remotegitupdate(remote,remotefunctions,display_mode,exclude);
+flag = remotegitupdate(remote,remotefunctions,display_mode,exclude,debugmode);
 %
 disp('--------------------------------------')
 disp('           GLOBAL RESULTS             ')
