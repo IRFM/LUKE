@@ -71,6 +71,38 @@ elseif ~isfield(dkepath,'luke_root'),
     %
 end
 %
+% check if dkepath structure has changed in the local path file and may be inconsistent with
+% data in LUKE_PATH.mat. In that case, LUKE_PATH.mat is rebuild
+% dynamically. 
+%
+[dkepath_test,SelectedPathFileName] = load_dkepath_yp(1);
+%
+if comp_struct_yp('dkepath',dkepath,dkepath_test,0) == 0,
+	disp(' ')
+	disp(['---> The ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is consistent'])
+	disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m'])
+else
+    disp(' ')
+    disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is not consistent'])
+    disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m.'])
+    disp(['     The file ',luke_root,'LUKE_PATH.mat will be rebuild.'])
+    disp(' ')
+    %
+    disp(' ');
+    disp('---------------------');
+    disp(' ');
+    comp_struct_yp('dkepath',dkepath,dkepath_test,1);
+    disp(' ');
+    disp('---------------------');
+    disp(' ');
+    %
+    dirinit = pwd;
+    cd(luke_root);
+    make_path_LOCAL;
+    cd(dirinit);
+    select_LUKE;% necesary because of use of getappdata    
+end
+%
 if ~strcmp(dkepath.luke_root(end),filesep),
     dkepath.luke_root = [dkepath.luke_root,filesep];
 end
