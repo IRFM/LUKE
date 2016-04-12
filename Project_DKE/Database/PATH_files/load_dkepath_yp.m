@@ -1,16 +1,25 @@
-function dkepath = load_dkepath_yp
+function [dkepath,SelectedPathFileName] = load_dkepath_yp(display_mode)
 %
 %	Load LUKE paths & profile of the local machine
 %
 %	Output:
 %
-%       - dkepath: local path structure
+%       - display_mode: display the main characteristics of the selected path file name (0): no, (1) yes
+%           (default = 1)
 %
+%	Output:
+%
+%       - dkepath: local path structure
+%       - SelectedPathFileName: Selected path file name (string)
+%
+%LUKE
 %   Warning: none
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-
+if nargin == 0,
+    display_mode = 1;
+end
 %
 % List all path files from PATH_files directory
 %
@@ -146,8 +155,12 @@ else
         machinestr = dkepath.machine;
     end
     %
-    disp(' ');
-    disp(['PATH Profile #',num2str(isel),' for user ',username,' from file ',PathFileNames{ifiles(iflag)},'.m selected for machine(s) : ',machinestr]);
+    SelectedPathFileName = PathFileNames{ifiles(iflag)};
+    %
+    if display_mode,
+        disp(' ');
+        disp(['PATH Profile #',num2str(isel),' for user ',username,' from file ',SelectedPathFileName,'.m selected for machine(s) : ',machinestr]);
+    end
     %
 end
 
