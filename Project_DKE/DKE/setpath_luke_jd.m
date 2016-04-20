@@ -184,31 +184,31 @@ addpath([luke_root,'Tools']);
 % data in LUKE_PATH.mat. In that case, LUKE_PATH.mat is rebuild
 % dynamically. 
 %
-[dkepath_from_script,SelectedPathFileName] = load_dkepath_yp(1);
-eval(['dkepath_from_',SelectedPathFileName,' = dkepath_from_script']);
-dkepath_from_LUKE_PATH = dkepath;
-%
-eval(['res = comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',0);'])
-%
-if res,
-	disp(' ')
-	disp(['---> The ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is consistent'])
-	disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m'])
-else
-    disp(' ')
-    disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is NOT consistent'])
-    disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m.'])
-    disp(' ')
+if inter_mode,
     %
-    disp(' ');
-    disp('---------------------');
-    disp(' ');
-    eval(['comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',1);'])
-    disp(' ');
-    disp('---------------------');
-    disp(' ');
+    [dkepath_from_script,SelectedPathFileName] = load_dkepath_yp(1);
+    eval(['dkepath_from_',SelectedPathFileName,' = dkepath_from_script']);
+    dkepath_from_LUKE_PATH = dkepath;
     %
-    if inter_mode,
+    eval(['res = comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',0,{''profilestr'','''',''''});'])
+    %
+    if res,
+        disp(' ')
+        disp(['---> The ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is consistent'])
+        disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m'])
+    else
+        disp(' ')
+        disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is NOT consistent'])
+        disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m.'])
+        disp(' ')
+        %
+        disp(' ');
+        disp('---------------------');
+        disp(' ');
+        eval(['comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',1);'])
+        disp(' ');
+        disp('---------------------');
+        disp(' ');
         %
         update_LUKE_PATH = input_dke_yp('Update LUKE_PATH.mat ? (0) no, (1) yes',0,0:1);
         %
@@ -224,10 +224,6 @@ else
             disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat has not been updated'])
             disp(' ') 
         end
-    else
-        disp(' ')
-        disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat has not been updated'])
-        disp(' ') 
     end
 end
 %
