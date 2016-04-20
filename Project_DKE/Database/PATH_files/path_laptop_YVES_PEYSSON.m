@@ -22,7 +22,7 @@ dkepath.default = 'yves';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.yves(1).luke_root = [pwd,filesep];
+dkepath.yves(1).luke_root = '/Users/yves/Projets/LUKE/';
 dkepath.yves(1).local_root = [getenv('HOME'),'/Projets/'];
 dkepath.yves(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -31,6 +31,7 @@ dkepath.yves(1).mex803 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbook
 dkepath.yves(1).mex804 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB804','/'];
 dkepath.yves(1).mex805 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB805','/'];
 dkepath.yves(1).mex806 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB806','/'];
+%dkepath.yves(1).mex900 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB900','/'];
 %
 dkepath.yves(1).compiler_opt.libs.gfortran = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.9.0','/',dkepath.machine,'/'];%extra libraries
 dkepath.yves(1).compiler_opt.libs.ifort = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Libs/ifort/13.0.0','/',dkepath.machine,'/'];
