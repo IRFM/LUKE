@@ -22,7 +22,7 @@ dkepath.default = 'Yves';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %-------------------------------------------------------------------------------------------------------
 %
-dkepath.Yves(1).luke_root = [pwd,filesep];
+dkepath.Yves(1).luke_root = '/home/Yves/LUKE/';
 dkepath.Yves(1).local_root = '/home/Yves/Packages/';
 dkepath.Yves(1).temppathroot = '/home/Yves/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
