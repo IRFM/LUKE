@@ -22,7 +22,7 @@ dkepath.default = 'yvespeysson';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.yvespeysson(1).luke_root = [pwd,filesep];% local path necessary to handle several LUKE versions 
+dkepath.yvespeysson(1).luke_root = '/Users/yvespeysson/Projets/LUKE/';% local path necessary to handle several LUKE versions 
 %
 % NOTE : It is better to use path_profile than pwd to separate between LUKE
 % versions, but this is not yet fully supported by load_strutctures_yp
