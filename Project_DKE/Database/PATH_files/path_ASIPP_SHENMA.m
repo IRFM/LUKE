@@ -10,8 +10,8 @@ function dkepath = path_ASIPP_SHENMA
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'shenma110','shenma111','shenma112','shenma113'};%shenma113 is called by default from CEA intranet
-dkepath.hostname = {'login110','login111','login112','login113'};
+dkepath.machine = {'shenma107','shenma110','shenma111','shenma112','shenma113'};%shenma113 is called by default from CEA intranet
+dkepath.hostname = {'shenma107','login110','login111','login112','login113'};
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -62,6 +62,7 @@ dkepath.PEYSSON(1).shenma113.imagemagick.env = '/usr/bin/';% ImageMagick environ
 %
 % ---------------------------- shenma110-112 -------------------------------
 %
+dkepath.PEYSSON(1).shenma107 = dkepath.PEYSSON(1).shenma113;
 dkepath.PEYSSON(1).shenma110 = dkepath.PEYSSON(1).shenma113;
 dkepath.PEYSSON(1).shenma111 = dkepath.PEYSSON(1).shenma113;
 dkepath.PEYSSON(1).shenma112 = dkepath.PEYSSON(1).shenma113;
