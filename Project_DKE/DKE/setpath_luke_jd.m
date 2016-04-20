@@ -1,10 +1,10 @@
-function dkepath = setpath_luke_jd(dkepath,link_mode,test_mode,display_mode)
+function dkepath = setpath_luke_jd(dkepath,link_mode,test_mode,display_mode,inter_mode)
 %
 % LUKE - This function sets the path such that the simulations run on the specified LUKE version.
 %
 % Actions :
 %   - remove exisiting LUKE paths
-%   - load LUKE_PATH.mat and process for hostname and username
+%   - load LUKE_PATH.mat and process for hostname and username and test the consistency with the local script in interactive mode
 %   - test remote connections
 %   - compile MEX files if needed
 %   - setup new LUKE paths, including MEX files and matrix inverters
@@ -71,38 +71,6 @@ elseif ~isfield(dkepath,'luke_root'),
     %
 end
 %
-% check if dkepath structure has changed in the local path file and may be inconsistent with
-% data in LUKE_PATH.mat. In that case, LUKE_PATH.mat is rebuild
-% dynamically. 
-%
-[dkepath_test,SelectedPathFileName] = load_dkepath_yp(1);
-%
-if comp_struct_yp('dkepath',dkepath,dkepath_test,0) == 0,
-	disp(' ')
-	disp(['---> The ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is consistent'])
-	disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m'])
-else
-    disp(' ')
-    disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is not consistent'])
-    disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m.'])
-    disp(['     The file ',luke_root,'LUKE_PATH.mat will be rebuild.'])
-    disp(' ')
-    %
-    disp(' ');
-    disp('---------------------');
-    disp(' ');
-    comp_struct_yp('dkepath',dkepath,dkepath_test,1);
-    disp(' ');
-    disp('---------------------');
-    disp(' ');
-    %
-    dirinit = pwd;
-    cd(luke_root);
-    make_path_LOCAL;
-    cd(dirinit);
-    select_LUKE;% necesary because of use of getappdata    
-end
-%
 if ~strcmp(dkepath.luke_root(end),filesep),
     dkepath.luke_root = [dkepath.luke_root,filesep];
 end
@@ -119,6 +87,10 @@ end
 %
 if nargin < 4,
     display_mode = 1;%display the available remote profiles
+end
+%
+if nargin < 5,
+    inter_mode = 0;%interactive mode disabled
 end
 %
 %remove old DKE and packages path
@@ -207,6 +179,57 @@ addpath([luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase/TSBase']);
 addpath([luke_root,'Project_DKE/Database/PATH_files']);
 addpath([luke_root,'Project_DKE/DKE']);
 addpath([luke_root,'Tools']);
+%
+% check if dkepath structure has changed in the local path file and may be inconsistent with
+% data in LUKE_PATH.mat. In that case, LUKE_PATH.mat is rebuild
+% dynamically. 
+%
+[dkepath_from_script,SelectedPathFileName] = load_dkepath_yp(1);
+eval(['dkepath_from_',SelectedPathFileName,' = dkepath_from_script']);
+dkepath_from_LUKE_PATH = dkepath;
+%
+eval(['res = comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',0);'])
+%
+if res,
+	disp(' ')
+	disp(['---> The ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is consistent'])
+	disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m'])
+else
+    disp(' ')
+    disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is NOT consistent'])
+    disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m.'])
+    disp(' ')
+    %
+    disp(' ');
+    disp('---------------------');
+    disp(' ');
+    eval(['comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',1);'])
+    disp(' ');
+    disp('---------------------');
+    disp(' ');
+    %
+    if inter_mode,
+        %
+        update_LUKE_PATH = input_dke_yp('Update LUKE_PATH.mat ? (0) no, (1) yes',0,0:1);
+        %
+        if update_LUKE_PATH,
+            dirinit = pwd;
+            cd(luke_root);
+            make_path_LOCAL;
+            cd(dirinit);
+            select_LUKE('select',link_mode,display_mode,0);% relaunch select_LUKE is necessary because of use of getappdata
+            %
+        else
+            disp(' ')
+            disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat has not been updated'])
+            disp(' ') 
+        end
+    else
+        disp(' ')
+        disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat has not been updated'])
+        disp(' ') 
+    end
+end
 %
 % Path for extra libraries
 %
