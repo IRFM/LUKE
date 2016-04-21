@@ -113,7 +113,7 @@ dkepath.yves(1).remote(1).gitmode.cmd1 = '';
 dkepath.yves(1).remote(2) = dkepath.yves(1).remote(1);
 dkepath.yves(1).remote(2).schedulername = 'direct';
 dkepath.yves(1).remote(2).gitupdate = true;
-dkepath.yves(1).remote(2).gitmode.cmd1 = 'git pull;echo "* secondary repository synchronization done";';%
+dkepath.yves(1).remote(2).gitmode.cmd1 = 'cd /Users/Yves/Projets/*;git pull;echo "* secondary repository synchronization done";';%
 %
 dkepath.yves(1).remote(3).remoteid = 'macpro_YVES_PEYSSON';
 dkepath.yves(1).remote(3).schedulername = 'condor';
@@ -127,7 +127,7 @@ dkepath.yves(1).remote(3).gitmode.cmd1 = '';
 dkepath.yves(1).remote(4) = dkepath.yves(1).remote(3);
 dkepath.yves(1).remote(4).schedulername = 'direct';
 dkepath.yves(1).remote(4).gitupdate = true;
-dkepath.yves(1).remote(4).gitmode.cmd1 = 'git pull;echo "* secondary repository synchronization done";';%
+dkepath.yves(1).remote(4).gitmode.cmd1 = 'ssh -Y yvespeysson@tolbachik.hd.free.fr "cd /Users/yvespeysson/Projets/*;git pull;";echo "* secondary repository synchronization done";';%
 %
 dkepath.yves(1).remote(5).remoteid = 'CEA_ANDROMEDE';
 dkepath.yves(1).remote(5).schedulername = 'pbs';
