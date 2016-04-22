@@ -187,10 +187,10 @@ addpath([luke_root,'Tools']);
 if inter_mode,
     %
     [dkepath_from_script,SelectedPathFileName] = load_dkepath_yp(1);
-    eval(['dkepath_from_',SelectedPathFileName,' = dkepath_from_script']);
+    eval(['dkepath_from_',SelectedPathFileName,' = dkepath_from_script;']);
     dkepath_from_LUKE_PATH = dkepath;
     %
-    eval(['res = comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',0,{''profilestr'','''',''''});'])
+    eval(['res = comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',0,{''profilestr'','''',''''});']);
     %
     if res,
         disp(' ')
@@ -205,7 +205,7 @@ if inter_mode,
         disp(' ');
         disp('---------------------');
         disp(' ');
-        eval(['comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',1);'])
+        eval(['comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',1);']);
         disp(' ');
         disp('---------------------');
         disp(' ');
