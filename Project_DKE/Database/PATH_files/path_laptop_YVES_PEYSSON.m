@@ -241,7 +241,7 @@ dkepath.yves(1).remote(19).schedulername = 'direct';
 dkepath.yves(1).remote(19).gitupdate = true;
 dkepath.yves(1).remote(19).gitmode.cmd1 = 'git archive --format tar --remote ssh://git@tolbachik.hd.free.fr:2222/home/git/*.git HEAD > *.tgz;mkdir -p *;tar -xf *.tgz --overwrite -C *;rm -f *.tgz;chmod -R 777 *;echo "* update done";';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
-dkepath.yves(1).remote(20).remoteid = 'PSFC_CMODlukWS85';
+dkepath.yves(1).remote(20).remoteid = 'PSFC_CMODWS85';
 dkepath.yves(1).remote(20).schedulername = 'direct';
 dkepath.yves(1).remote(20).profilename = 'ypeysson';
 dkepath.yves(1).remote(20).luke_root = '/home/ypeysson/luke/LUKE/';
