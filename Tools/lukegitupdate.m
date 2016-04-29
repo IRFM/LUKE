@@ -92,10 +92,26 @@ disp(' ')
 disp(' ')
 disp(' ')
 %
-flag1 = num2str(flag(:,1));
-flag2 = num2str(flag(:,2));
-flag3 = num2str(flag(:,3));
-flag4 = num2str(flag(:,4));
+if length(remotefunctions) >= 1,
+    flag1 = num2str(flag(:,1));
+else
+    flag1 = 'NaN';
+end
+if length(remotefunctions) >= 2,
+    flag2 = num2str(flag(:,2));
+else
+    flag2 = 'NaN';
+end
+if length(remotefunctions) >= 3,
+    flag3 = num2str(flag(:,3));
+else
+    flag3 = 'NaN';
+end
+if length(remotefunctions) >= 4,
+    flag4 = num2str(flag(:,4));
+else
+    flag4 = 'NaN';
+end
 %
 for irem = 1:nrem,
     disp([flag1(irem,:),' / ',flag2(irem,:),' / ',flag3(irem,:),' / ',flag4(irem,:),' : ',dkepath.profilestr{remote_index(remlist(irem))}])
