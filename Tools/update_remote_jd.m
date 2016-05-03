@@ -123,14 +123,10 @@ if isempty(link_mode) || isnan(link_mode) || link_mode >= 0,% remote profiles en
     nrem = length(dkepath.remote);
     %
     if display_mode == 1,
+        dispremoteprofiles(dkepath);
+    else
         disp (' ')
-        info_dke_yp(2,'List of compatible remote profiles available from this computer :')
-        disp(' ')
-        %
-        for irem = 1:nrem,
-            info_dke_yp(4,['#',num2str(irem),' : ',dkepath.profilestr{irem}]);
-        end
-        disp(' ')
+        info_dke_yp(2,'To list available remote profiles type ''dispremoteprofiles;''')        
     end
     %
 else% remote profiles disabled
