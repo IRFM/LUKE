@@ -28,8 +28,17 @@ cd ../..
 %
 forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
 cd(['ITER',filesep,'Scen2']);
+if exist('LAUNCH_NTM_32.mat','file') == 0 || forcerun,
+    make_launch_ITER_Scen2_C3PO_EC
+else
+    info_dke_yp(2,'Launch structure calculations for ITER/Scen2 skipped because already done !')      
+end
+cd ../..
+%
+forcerun = 0;%(1) Force all simulations even if they have already been done and overwrite existing results
+cd(['ITER',filesep,'Scen2']);
 if exist('LUKE_RESULTS_ITER_Scen2_200103121816_430_129_C3PO_NTM_32.mat','file') == 0 || forcerun,
-    rundke_ITER_Scen4_C3PO_EC
+    rundke_ITER_Scen2_C3PO_EC
 else
     info_dke_yp(2,'LUKE calculations for ITER/Scen2 skipped because already done !')      
 end
