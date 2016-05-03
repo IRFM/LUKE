@@ -185,17 +185,16 @@ addpath([luke_root,'Tools']);
 % dynamically. 
 %
 if inter_mode,
-    %
+    %    
     [dkepath_from_script,SelectedPathFileName] = load_dkepath_yp(1);
-    eval(['dkepath_from_',SelectedPathFileName,' = dkepath_from_script;']);
-    dkepath_from_LUKE_PATH = dkepath;
-    %
-    eval(['res = comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',0,{''profilestr'','''',''''});']);
+    res = comp_struct_jd(dkepath,dkepath_from_script,0,'profilestr','','dkepath_from_LUKE_PATH',['dkepath_from_',SelectedPathFileName]);
     %
     if res,
-        disp(' ')
-        disp(['---> The ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is consistent'])
-        disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m'])
+        if display_mode,
+            disp(' ')
+            disp(['---> The ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is consistent'])
+            disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m'])
+        end
     else
         disp(' ')
         disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is NOT consistent'])
@@ -205,7 +204,7 @@ if inter_mode,
         disp(' ');
         disp('---------------------');
         disp(' ');
-        eval(['comp_struct_jd(dkepath_from_LUKE_PATH,dkepath_from_',SelectedPathFileName,',1);']);
+        comp_struct_jd(dkepath,dkepath_from_script,1,'profilestr','','dkepath_from_LUKE_PATH',['dkepath_from_',SelectedPathFileName]);
         disp(' ');
         disp('---------------------');
         disp(' ');
@@ -295,7 +294,7 @@ if nargout == 0,
 end
 %
 if ~isempty(dkepath.remote),
-    info_dke_yp(0,'To check if the remote profiles are currently functionning within LUKE environment, please run ''check_remote_yp;'':')
+    info_dke_yp(2,'To check if the remote profiles are currently functionning within LUKE environment, run ''check_remote_yp;''')
     disp (' ');
 end
 %
