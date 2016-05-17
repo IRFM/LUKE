@@ -69,7 +69,7 @@ P_L = 1e-3;% [MW] linear limit
 %
 %   C3PO Equilibrium parameters
 %
-fitparam = struct;
+fitparam.nharm = 32;%default value has since been changed to 64
 %
 % 	C3PO ray-tracing parameters
 %
@@ -168,6 +168,14 @@ info_dke_yp(2,['LUKE Results saved in ',filename]);
 % process results if available
 %
 if isfield(lukestructs,'output'),
-    proc_luke_jd(lukestructs.output);
+    opt.ir_display = 0;
+    opt.rho = 'g';
+    opt.peakmode = 0;
+    opt.peak = 'n';
+    opt.wave = 'n';
+    opt.spec = 0;
+    opt.diaryname = ['res_',lukestructs.simul.id,'.log'];
+    %
+    proc_luke_jd(lukestructs.output,opt);
 end
 %

@@ -46,16 +46,17 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
         %
         opt = ir_display;
         %
-        ir_display = -1;% no display
+        if isfield(opt,'ir_display'),
+            ir_display = opt.ir_display;
+        else
+            ir_display = -1;% no display
+        end
         %
         if isfield(opt,'p_opt'),
             p_opt = opt.p_opt;
         end
         if isfield(opt,'pnmax'),
             pnmax = opt.pnmax;
-        end
-        if isfield(opt,'p_opt'),
-            p_opt = opt.p_opt;
         end
         if ~isfield(opt,'peak'),
             opt.peak = 'y';
@@ -112,6 +113,12 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
     %
     if ~isfield(opt,'style'),
         opt.style = struct;
+    end
+    if ~isfield(opt.style,'distselectstyle'),
+        opt.style.distselectstyle = struct;
+    end
+    if ~isfield(opt.style,'editselectstyle'),
+        opt.style.editselectstyle = struct;
     end
     %
     style0 = 'none';
