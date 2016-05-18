@@ -75,10 +75,11 @@ launch.LFS = 1;
 %   C3PO Equilibrium parameters
 %
 fitparam.method = 'spline';%nearest,spline,pchip,cubic
+fitparam.nharm = 32;%default value has since been changed to 64
 %
 % 	C3PO ray-tracing parameters
 %
-rayparam = struct;
+rayparam.colldamp = 0;%non-resonant collisional damping -> (1) actived (default), (0) not activated
 %
 %   C3PO Wave parameters
 %
@@ -163,6 +164,14 @@ end
 % process results if available
 %
 if remnum == 0 || remtimout > 0,% results are returned
-    proc_luke_jd(lukestructs{1}.output);
+    opt.ir_display = 0;
+    opt.rho = 'g';
+    opt.peakmode = 0;
+    opt.peak = 'n';
+    opt.wave = 'n';
+    opt.spec = 0;
+    opt.diaryname = ['res_',lukestructs{1}.simul.id,'.log'];
+    %
+    proc_luke_jd(lukestructs{1}.output,opt);
 end
 
