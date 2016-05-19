@@ -108,38 +108,6 @@ while ~isempty(P),
     P(1:ilim) = '';
 end
 %
-% identify local hostname if multiple profiles on the same filesystem
-%
-% Load all path files and select local path profile according to hostname
-%
-if isfield(dkepath,'hostname') && iscell(dkepath.hostname),
-    %
-    lochostname = hostname_jd;
-    nhosts = length(dkepath.hostname);
-    flag = false(1,nhosts);
-    for ihost = 1:nhosts,
-        if any(strfind(lochostname,dkepath.hostname{ihost})),% local cluster,
-            flag(ihost) = true;
-        end
-    end
-    isel = find(flag);
-    %
-    if isempty(isel),
-        error('The local hostname could not be identified in dkepath')
-    elseif length(isel) > 1,
-        disp('WARNING : more than one positive identification for local hostname in dkepath. First match enforced.')
-        isel = isel(1);
-    end
-    %
-    dkepath = conc_struct_jd(dkepath,dkepath.(dkepath.machine{isel}));% add fields specific to local profile
-    %
-    dkepath = rmfield(dkepath,dkepath.machine);% remove profile-specific fields 
-    %
-    dkepath.hostname = dkepath.hostname{isel};
-    dkepath.machine = dkepath.machine{isel};
-    %
-end
-%
 % Path for LUKE and Modules
 %
 addpath([luke_root,'Project_DKE/Modules/MHDK']);
@@ -216,7 +184,7 @@ if inter_mode,
             cd(luke_root);
             make_path_LOCAL;
             cd(dirinit);
-            select_LUKE('select',link_mode,display_mode,0);% relaunch select_LUKE is necessary because of use of getappdata
+            dkepath = dkepath_from_script;
             %
         else
             disp(' ')
@@ -224,6 +192,38 @@ if inter_mode,
             disp(' ') 
         end
     end
+end
+%
+% identify local hostname if multiple profiles on the same filesystem
+%
+% Load all path files and select local path profile according to hostname
+%
+if isfield(dkepath,'hostname') && iscell(dkepath.hostname),
+    %
+    lochostname = hostname_jd;
+    nhosts = length(dkepath.hostname);
+    flag = false(1,nhosts);
+    for ihost = 1:nhosts,
+        if any(strfind(lochostname,dkepath.hostname{ihost})),% local cluster,
+            flag(ihost) = true;
+        end
+    end
+    isel = find(flag);
+    %
+    if isempty(isel),
+        error('The local hostname could not be identified in dkepath')
+    elseif length(isel) > 1,
+        disp('WARNING : more than one positive identification for local hostname in dkepath. First match enforced.')
+        isel = isel(1);
+    end
+    %
+    dkepath = conc_struct_jd(dkepath,dkepath.(dkepath.machine{isel}));% add fields specific to local profile
+    %
+    dkepath = rmfield(dkepath,dkepath.machine);% remove profile-specific fields 
+    %
+    dkepath.hostname = dkepath.hostname{isel};
+    dkepath.machine = dkepath.machine{isel};
+    %
 end
 %
 % Path for extra libraries
