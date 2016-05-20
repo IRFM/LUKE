@@ -15,11 +15,9 @@ pause(1)
 tn = [94.9783];% Final simulation time (normalized to the central thermal collision time) 
 dtn = [100i];% internal LUKE time step. As an imaginary number, dkeparam.dtn prescribes the number of internal time steps
 %
-p_opt = -1;
-%
 % *********************** Specify LUKE structures *****************************
 %
-id_simul = '';%Simulation ID
+locid_simul = '';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
@@ -58,16 +56,42 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
+simul.id = make_luke_simulid_jd(equil,ohm,transpfaste,ripple,'',wavestructs,locid_simul);
+simul.path = path_simul;
+%
 dkeparam.timevol = 1;%to calculate time evolution of moments
 dkeparam.tn = tn;% as an imaginary number, dkeparam.tn prescribes the number of fluctuation iterations
 dkeparam.dtn = dtn;% internal LUKE time step. As an imaginary number, dkeparam.dtn prescribes the number of internal time steps
+dkeparam.psin_S = psin_S;
+dkeparam.rho_S = rho_S;
 %
-[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource] = ...
-    run_lukert(id_simul,wavestructs,'',psin_S,rho_S,dkepath,equil,dkeparam,dkedisplay,ohm,transpfaste,ripple,[],[],0);
+lukestructs.simul = simul;
+lukestructs.equil = equil;
+lukestructs.dkeparam = dkeparam;
+lukestructs.dkedisplay = dkedisplay;
+lukestructs.ohm = ohm;
+lukestructs.wavestructs = wavestructs;
+lukestructs.transpfaste = transpfaste;
+lukestructs.ripple = ripple;
+%
+lukestructs = run_lukert(lukestructs);
 %
 % ---------------------------------------------- Save results ----------------------------------------------
 %
-filename = [path_simul,'LUKE_RESULTS_',dke_out.simul.id,'.mat'];
+filename = [path_simul,'LUKE_RESULTS_',simul.id,'.mat'];
 save(filename);
 info_dke_yp(2,['LUKE Results saved in ',filename]);
 %
+opt.ir_display = 0;
+opt.rho = 'g';
+opt.peakmode = 0;
+opt.peak = 'n';
+opt.wave = 'n';
+opt.spec = 0;
+opt.diaryname = ['res_',lukestructs.simul.id,'.log'];
+%
+proc_luke_jd(lukestructs.output,opt);
+%
+
+
+

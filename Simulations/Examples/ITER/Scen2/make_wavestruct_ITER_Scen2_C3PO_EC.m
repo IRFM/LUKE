@@ -18,6 +18,9 @@ path_dkepath = '';%if nothing is specified, the working directory is first used 
 id_equil = 'ITER_Scen2_200103121816_430_129';%For plasma equilibrium
 path_equil = 'EQUIL/';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
+id_rtparam = 'EC';%For C3PO code parameters
+path_rtparam = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
+%
 ids_launch = {'NTM_32'};%For plasma equilibrium
 paths_launch = {''};%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
@@ -39,7 +42,7 @@ waveparam.nchi = 6;%Number of angular positions for beamlets
 %
 % Equilibrium parameters C3PO
 %
-fitparam = struct;
+fitparam.nharm = 32;%default value has since been changed to 64
 %
 % Global parameters for C3PO
 %
@@ -47,15 +50,13 @@ rayparam = struct;
 %
 %************************************************************************************************************************************
 %
-[dkepath,equil,launchs] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'launchs',ids_launch,paths_launch);
+[dkepath,equil,rtparam,launchs] = load_structures_yp('dkepath',id_dkepath,path_dkepath,'equil',id_equil,path_equil,'rtparam',id_rtparam,path_rtparam,'launchs',ids_launch,paths_launch);
 %
-C3POPARAM = load('C3POPARAM_EC.mat','fitparam','rayparam','C3POparam','C3POdisplay','waveparam');
-%
-fitparam = conc_struct_jd(C3POPARAM.fitparam,fitparam);
-rayparam = conc_struct_jd(C3POPARAM.rayparam,rayparam);
-C3POparam = conc_struct_jd(C3POPARAM.C3POparam,C3POparam);
-C3POdisplay = conc_struct_jd(C3POPARAM.C3POdisplay,C3POdisplay);
-waveparam = conc_struct_jd(C3POPARAM.waveparam,waveparam);
+fitparam = conc_struct_jd(rtparam.fitparam,fitparam);
+rayparam = conc_struct_jd(rtparam.rayparam,rayparam);
+C3POparam = conc_struct_jd(rtparam.C3POparam,C3POparam);
+C3POdisplay = conc_struct_jd(rtparam.C3POdisplay,C3POdisplay);
+waveparam = conc_struct_jd(rtparam.waveparam,waveparam);
 %
 % wavestruct
 %
