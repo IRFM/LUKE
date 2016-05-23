@@ -48,9 +48,9 @@ Zn = permute(repmat(n(:),[1,size(a0(:),1),size(theta,1),size(theta,2)]),[2,1,3,4
 %
 Ztheta = permute(repmat(theta,[1,1,size(a0(:),1),size(n(:),1)]),[3,4,1,2]);
 %
-X = squeeze(Xa0) + squeeze(sum(Zan.*cos(Zn.*Ztheta) + Zbn.*sin(Zn.*Ztheta),2));
-dXdtheta = squeeze(sum(-Zan.*(Zn.*sin(Zn.*Ztheta)) + Zbn.*(Zn.*cos(Zn.*Ztheta)),2));
-d2Xdtheta2 = squeeze(sum(-Zan.*(Zn.^2.*cos(Zn.*Ztheta)) - Zbn.*(Zn.^2.*sin(Zn.*Ztheta)),2));
+X = squeeze(Xa0) + squeeze(sum(Zan.*cos(Zn.*Ztheta),2)) + squeeze(sum(Zbn.*sin(Zn.*Ztheta),2));
+dXdtheta = -squeeze(sum(Zan.*(Zn.*sin(Zn.*Ztheta)),2)) + squeeze(sum(Zbn.*(Zn.*cos(Zn.*Ztheta)),2));
+d2Xdtheta2 = -squeeze(sum(Zan.*(Zn.^2.*cos(Zn.*Ztheta)),2)) - squeeze(sum(Zbn.*(Zn.^2.*sin(Zn.*Ztheta)),2));
 %
 if nargin >= 8,
     if ~isempty(da0drho) & ~isempty(dandrho) & ~isempty(dbndrho),
@@ -59,8 +59,8 @@ if nargin >= 8,
         Zdandrho = repmat(dandrho,[1,1,size(theta,1),size(theta,2)]);
         Zdbndrho = repmat(dbndrho,[1,1,size(theta,1),size(theta,2)]);
         %
-        dXdrho = squeeze(Xda0drho) + squeeze(sum(Zdandrho.*cos(Zn.*Ztheta) + Zdbndrho.*sin(Zn.*Ztheta),2));
-        d2Xdthetadrho = squeeze(sum(-Zdandrho.*(Zn.*sin(Zn.*Ztheta)) + Zdbndrho.*(Zn.*cos(Zn.*Ztheta)),2));
+        dXdrho = squeeze(Xda0drho) + squeeze(sum(Zdandrho.*cos(Zn.*Ztheta),2)) + squeeze(sum(Zdbndrho.*sin(Zn.*Ztheta),2));
+        d2Xdthetadrho = squeeze(sum(-Zdandrho.*(Zn.*sin(Zn.*Ztheta)),2)) + squeeze(sum(Zdbndrho.*(Zn.*cos(Zn.*Ztheta)),2));
     else
         dXdrho = [];
         d2Xdthetadrho = [];
@@ -73,7 +73,7 @@ if nargin == 11,
         Zd2andrho2 = repmat(d2andrho2,[1,1,size(theta,1),size(theta,2)]);
         Zd2bndrho2 = repmat(d2bndrho2,[1,1,size(theta,1),size(theta,2)]);
         %
-        d2Xdrho2 = squeeze(Xd2a0drho2) + squeeze(sum(Zd2andrho2.*cos(Zn.*Ztheta) + Zd2bndrho2.*sin(Zn.*Ztheta),2));
+        d2Xdrho2 = squeeze(Xd2a0drho2) + squeeze(sum(Zd2andrho2.*cos(Zn.*Ztheta),2)) + squeeze(sum(Zd2bndrho2.*sin(Zn.*Ztheta),2));
     else
         d2Xdrho2 = [];
     end
