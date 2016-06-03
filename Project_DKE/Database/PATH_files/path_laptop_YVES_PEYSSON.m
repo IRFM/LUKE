@@ -64,7 +64,8 @@ dkepath.yves(1).MUMPS.seq = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMP
 dkepath.yves(1).MUMPS.mex803 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB803'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.yves(1).MUMPS.mex804 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB804'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.yves(1).MUMPS.mex805 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB805'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.yves(1).MUMPS.mex806 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yves(1).MUMPS.mex806 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yves(1).MUMPS.mex806 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
 %dkepath.yves(1).MUMPS.mex806 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.1_S_gfortran/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % SUPERLU matrix solver (parallel, sequential)
@@ -84,6 +85,7 @@ dkepath.yves(1).SUPERLU.mex806 = [dkepath.yves(1).local_root,'Packages/Bin/SUPER
 % Extra paths to add
 %
 dkepath.yves(1).extrapaths.LUKE_ITM = [dkepath.yves(1).local_root,'LUKE_ITM/trunk'];% LUKE <-> ITM toolbox 
+dkepath.yves(1).MDSPLUS = [dkepath.yves(1).local_root,'Packages/Bin/MDSPLUS/mdsplus_bd'];%MDS+ toolbox for mac compiled by Basil Duval (EPFL, Suisse)
 %
 %--------------------------- Access to the experimental databases -----------------------------
 %
