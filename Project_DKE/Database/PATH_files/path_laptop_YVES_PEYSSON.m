@@ -85,7 +85,7 @@ dkepath.yves(1).SUPERLU.mex806 = [dkepath.yves(1).local_root,'Packages/Bin/SUPER
 % Extra paths to add
 %
 dkepath.yves(1).extrapaths.LUKE_ITM = [dkepath.yves(1).local_root,'LUKE_ITM/trunk'];% LUKE <-> ITM toolbox 
-dkepath.yves(1).MDSPLUS = [dkepath.yves(1).local_root,'Packages/Bin/MDSPLUS/mdsplus_bd'];%MDS+ toolbox for mac compiled by Basil Duval (EPFL, Suisse)
+dkepath.yves(1).extrapaths.MDSPLUS = [dkepath.yves(1).local_root,'Packages/Bin/MDSPLUS/mdsplus_bd'];%MDS+ toolbox for mac compiled by Basil Duval (EPFL, Suisse)
 %
 %--------------------------- Access to the experimental databases -----------------------------
 %
