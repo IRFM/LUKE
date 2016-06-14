@@ -22,9 +22,6 @@ if force_compile == 0,
     filetime.trapz_dke_yp.mex = gettime_jd(['trapz_dke_yp.',mexext],mexpath,0); 
     filetime.trapz_dke_yp.source = gettime_jd('trapz_dke_yp.c',sourcepath.DKE,1);     
     %
-    filetime.twister.mex = gettime_jd(['twister.',mexext],mexpath,0); 
-    filetime.twister.source = gettime_jd('twister.cpp',sourcepath.DKE,1);
-    %
     filetime.alphaphimex_jd.mex = gettime_jd(['alphaphimex_jd.',mexext],mexpath,0); 
     filetime.alphaphimex_jd.source(1) = gettime_jd('alphaphimex_jd.c',sourcepath.DKE,1); 
     filetime.alphaphimex_jd.source(2) = gettime_jd('alphaphi_jd.c',sourcepath.DKE,1); 
