@@ -133,11 +133,6 @@ if ~any(isnan(copts)) && (force_compile || any(filetime.trapz_dke_yp.source > fi
     disp(['The trapz_dke_yp.',mexext,' mexfile has been compiled.'])
 end
 %
-if ~any(isnan(cppopts)) && (force_compile || any(filetime.twister.source > filetime.twister.mex)),
-    eval(['mex ',cppopts,' ',sourcepath.DKE,'twister.cpp']);
-    disp(['The twister.',mexext,' mexfile has been compiled.'])
-end
-%
 if ~any(isnan(copts)) && (force_compile || any(filetime.alphaphimex_jd.source > filetime.alphaphimex_jd.mex)),
     eval(['mex -c ',copts,' -I',sourcepath.DKE,' ',sourcepath.DKE,'alphaphi_jd.c']);
     eval(['mex ',copts,' ',sourcepath.DKE,'alphaphimex_jd.c alphaphi_jd.',objext]);
