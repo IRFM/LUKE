@@ -286,6 +286,24 @@ Ip_contour = LB/mu0;
 VB2 = sum(sum(r.*Upsilon.*drho.*dtheta.*BP.*BP./gradrho./calpha));
 V = sum(sum(r.*Upsilon.*drho.*dtheta./gradrho./calpha));
 %
+Te = equil.pTe(:)*ones(1,mtheta);
+VTe = sum(sum(r.*Upsilon.*drho.*dtheta.*Te./gradrho./calpha));
+Te_vol = VTe/V;%Te volumic
+%
+ne = equil.pne(:)*ones(1,mtheta);
+Vne = sum(sum(r.*Upsilon.*drho.*dtheta.*ne./gradrho./calpha));
+ne_vol = Vne/V;%Te volumic
+%
+for iz = 1:length(equil.zZi)
+    Ti = equil.pzTi(iz,:)'*ones(1,mtheta);
+    VTi = sum(sum(r.*Upsilon.*drho.*dtheta.*Ti./gradrho./calpha));
+    zTi_vol(iz) = VTi/V;%Ti volumic
+    %
+    ni = equil.pzni(iz,:)'*ones(1,mtheta);
+    Vni = sum(sum(r.*Upsilon.*drho.*dtheta.*ni./gradrho./calpha));
+    zni_vol(iz) = Vni/V;%ni volumic
+end
+%
 li = L*L*VB2/LB/LB/V;
 %
 [pshift,pelong,ptrian,pli] = equilmoments_jd(equil.theta,equil.ptx,equil.pty,mtheta);
@@ -449,3 +467,10 @@ end
 %
 equil.ip = Ip;
 equil.li = li;
+equil.Te_vol = Te_vol;
+equil.ne_vol = ne_vol;
+equil.zTi_vol = zTi_vol;
+equil.zni_vol = zni_vol;
+
+
+
