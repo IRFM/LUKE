@@ -2843,7 +2843,7 @@ TSrqEtat ( char *machine,
       if ((Resultat = Debut_Communication (&NumSocket, 0)) != ok)
          return Resultat;
    }
-   else if( (!strcmp(machine,"rigel")) || (!strcmp(machine,"rigel.cad.cea.fr")) ) {
+   else if( (!strcmp(machine,"deneb")) || (!strcmp(machine,"deneb.intra.cea.fr")) ) {
       if ((Resultat = Debut_Communication (&NumSocket, 1)) != ok)
         return Resultat;
    }
