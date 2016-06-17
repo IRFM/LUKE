@@ -36,7 +36,7 @@ dkepath.yvespeysson(1).mex803 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/M
 dkepath.yvespeysson(1).mex804 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB804','/'];
 dkepath.yvespeysson(1).mex805 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB805','/'];
 dkepath.yvespeysson(1).mex806 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB806','/'];
-dkepath.yvespeysson(1).mex806 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB900','/'];
+dkepath.yvespeysson(1).mex900 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/macproyves/MATLAB900','/'];
 %
 dkepath.yvespeysson(1).compiler_opt.libs.gfortran = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.9.0','/',dkepath.machine,'/'];%extra libraries
 dkepath.yvespeysson(1).compiler_opt.libs.ifort = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Libs/ifort/13.0.0','/',dkepath.machine,'/'];
