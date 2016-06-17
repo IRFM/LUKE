@@ -468,7 +468,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
             } else {
                 flag = *(mxGetPr(FLAG_IN));/* Numerical toroidal MHD equilibrium or analytical tests */
             }
-            if (abs(flag) > 0) {
+            if (fabs(flag) > 0) {
                 mexPrintf("WARNING: Plasma fluctuations are incompatible with the analytical toroidal MHD magnetic equilibrium option.\n");
                 flag_f0 = 0;
                 flag_fluct = 0;
@@ -2529,7 +2529,7 @@ double complex *eikval;
         divN2 = (divN21 + divN22 + divN23 + divN24 + divN25)*raymagnetic.Bsn[0]*raymagnetic.B[0]*raymagnetic.calpha[0]/raymagnetic.rn[0];
         divN3 = (divN31 + divN32)/raymagnetic.Upsilonn[0];
                         
-        eikval[0] = cnorm*fabs(divN1 + divN2 + divN3)/N2[0];        
+        eikval[0] = cnorm*cabs(divN1 + divN2 + divN3)/N2[0];        
         
     } else {
         
@@ -3895,7 +3895,7 @@ double flag;
         */
     
 
-        if ((abs(flag) == 1) || (abs(flag) == 2) || (abs(flag) == 5) || (abs(flag) == 6))  {/*Jetlike, RTtest, TORLH, RFP Madison*/
+        if ((fabs(flag) == 1) || (fabs(flag) == 2) || (fabs(flag) == 5) || (fabs(flag) == 6))  {/*Jetlike, RTtest, TORLH, RFP Madison*/
 
            rayprofiles.Te[0] = Tea + (Te0 - Tea)*pow(1 - rho*rho,eTe);
            rayprofiles.dTedY[0] = -2*rho*eTe*(Te0 - Tea)*pow(1 - rho*rho,eTe - 1); 
@@ -3916,7 +3916,7 @@ double flag;
            }
          
            
-        } else if ((abs(flag) == 3) || (abs(flag) == 4)) {/*VERSATOR2 and PLT */        
+        } else if ((fabs(flag) == 3) || (fabs(flag) == 4)) {/*VERSATOR2 and PLT */        
 
            rayprofiles.Te[0] = Tea + (Te0 - Tea)*(exp(-eTe*Y[0]*Y[0]) - exp(-eTe))/(1 - exp(-eTe));
            rayprofiles.dTedY[0] = -2*eTe*Y[0]*(Te0 - Tea)*exp(-eTe*Y[0]*Y[0])/(1 - exp(-eTe));  
@@ -3999,14 +3999,14 @@ double flag;
     BPa = 0.2*fabs(Ip)/ap;/* MA */
     qmax_Rpap = fabs(Bz0)/BPa;/* cylindrical limit -> qmax*(Rp/ap)*/
          
-    if ((abs(flag) == 1) || (abs(flag) == 3) ||(abs(flag) == 4) || (abs(flag) == 5))  {/*RTtest, VERSATOR2, PLT and TORLH */
+    if ((fabs(flag) == 1) || (fabs(flag) == 3) ||(fabs(flag) == 4) || (fabs(flag) == 5))  {/*RTtest, VERSATOR2, PLT and TORLH */
        
        q_Rpap = (qmax_Rpap - qmin_Rpap)*pow(Y[0],eq) + qmin_Rpap;
        dqdrho_Rpap = eq*(qmax_Rpap - qmin_Rpap)*pow(Y[0],eq - 1.0);
        
        equilparam.psia_apRp[0] = ap*ap*fabs(Bz0)*log(qmax_Rpap/qmin_Rpap)/(qmax_Rpap - qmin_Rpap)/2;
         
-    } else if (abs(flag) == 2) {/*JETlike */
+    } else if (fabs(flag) == 2) {/*JETlike */
         
        if (Y[0] == 0.0) {
           q_Rpap = qmax_Rpap/(1+eq);
@@ -4018,7 +4018,7 @@ double flag;
         
        equilparam.psia_apRp[0] = ap*ap*BPa*3/4;  
        
-    } else if (abs(flag) == 6) {/*RFP Madison */
+    } else if (fabs(flag) == 6) {/*RFP Madison */
         
         q_Rpap = Y[0]*j0(lambda*Y[0])/j1(lambda*Y[0]);
         dqdrho_Rpap = j0(lambda*Y[0])/j1(lambda*Y[0]) - lambda*Y[0] - j0(lambda*Y[0])*(j0(lambda*Y[0]) - lambda*Y[0]*jn(2,lambda*Y[0]))/j1(lambda*Y[0])/j1(lambda*Y[0]);  
