@@ -81,5 +81,7 @@ filename = ['EQUIL_',equil.id,'.mat'];
 eval(['save ',filename,' equil']);
 %
 [equil_fit] = fitequil_yp(equil,2,'spline');
+%
+[equil_val] = equilval_yp(equil_fit,[-0.015,0.12,0.027;0.18,-0.02,0.0],[0.017,0.19,-0.03;-0.15,0.1,0.03]);
 
 

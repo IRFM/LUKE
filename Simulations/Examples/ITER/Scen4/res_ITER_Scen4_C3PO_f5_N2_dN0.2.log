@@ -1,19 +1,25 @@
 Simulation id: ITER_Scen4_C3PO_f5_N2_dN0.2
-Simulation date: 07/25/2013  23:17:50
-User id: JD211098
+Simulation date: 05/28/2015  09:15:25
+User id: yves
 LUKE Version: LUKE 1.11.0
-MATLAB Version: 800
-MACHINE: andromede1
-Final RF convergence parameter: 3.2295e-06
+MATLAB Version: 804
+MACHINE: macbookyves
+Final RF convergence parameter: 0.0006856
  
-Total current (I): 0.66124 MA (positive for co-current)
-Location of current peak (rhog): 0.71473 (peak mode = 0; jpeak = 0)
-Current FWHM (drhog): 0.04615 (peak mode = 0; jpeak = 0)
-RF efficiency (n_19*I*Rp/P): 1.5495 10^19 A/(W.m^2)
+Total current (I): 0.67854 MA (positive for co-current)
+Exp. current  (I): NaN MA (positive for co-current)
+Location of current peak (rhog): 0.72579 (peak mode = 0; jpeak = 0)
+Current FWHM (drhog): 0.051633 (peak mode = 0; jpeak = 0)
+RF efficiency (n_19*I*Rp/P): 1.5857 10^19 A/(W.m^2)
+Location of RF power deposition peak (rhog): 0.72579 (peak mode = 0; jpeak = 0)
+RF power deposition FWHM (drhog): 0.051873 (peak mode = 0; jpeak = 0)
+Number of RF ray fragments: 7027
 Launched RF power (P): 20 MW
-RF power (P): 20.0001 MW ---> 100.0005 %.
-RF power on harm. 0 (P): 20.0001 MW ---> 100.0005 %.
-Linear RF power (P): 20 MW ---> 100 %.
-Ohmic power (P): 0 MW
-Total power (P): 20.0001 MW
-CD efficiency (I/P): 0.033062 A/W
+RF power absorbed (P): 19.9781 MW ---> 99.8905 %.
+Collisional damping of RF waves is not considered.
+RF power absorbed on harm. 0 (P): 19.9781 MW ---> 99.8905 %.
+Linear RF power absorbed (P): NaN MW ---> NaN %.
+Ohmic power deposited (P): 0 MW
+Total power deposited (P): 19.9781 MW
+CD efficiency (I/P): 0.033964 A/W
+Initial loop voltage (V): 0 V

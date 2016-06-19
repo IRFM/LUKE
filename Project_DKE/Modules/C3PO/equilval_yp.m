@@ -203,16 +203,44 @@ if isfield(equil_fit.Bx_fit,'pp_a0'),% (rho,theta) coordinates
         equil_val.dUpsilondrho = 0;
         equil_val.dUpsilondtheta = 0;
     else
+
         equil_val.Upsilon = 1 + equil_val.x/equil_val.Rp;
-        equil_val.dUpsilondrho =  equil_val.dxdrho/equil_val.Rp;
-        equil_val.dUpsilondtheta =  equil_val.dxdtheta/equil_val.Rp;
+        equil_val.dUpsilondrho = equil_val.dxdrho/equil_val.Rp;
+        equil_val.dUpsilondtheta = equil_val.dxdtheta/equil_val.Rp;
+
     end
     %
 elseif isfield(equil_fit.Bx_fit,'CC'),% (x,y,phi) coordinates
     %
-    rho = a;
-    theta = b;
+    if size(a) == size(b),
+        x = a(:).';
+        y = b(:).';
+    else
+        error('ERROR: input coordinates must have the same number of dimensions');
+    end
     %
+
+    keyboard
+    [k,l] = find((equil_fit.XX(:,1)*ones(1,length(x)) < ones(length(equil_fit.XX(:,1)),1)*x) & (ones(length(equil_fit.XX(:,1)),1)*x < equil_fit.XX(:,2)*ones(1,length(x))) & (equil_fit.YY(:,1)*ones(1,length(y)) < ones(length(equil_fit.YY(:,1)),1)*y) & (ones(length(equil_fit.YY(:,4)),1)*y < equil_fit.YY(:,4)*ones(1,length(y))));
+    %
+    t = ((x.' - equil_fit.XX(k,1))./(equil_fit.XX(k,2) - equil_fit.XX(k,1))).';
+    u = ((y.' - equil_fit.YY(k,1))./(equil_fit.YY(k,4) - equil_fit.YY(k,1))).';
+    %
+    l = 1;
+    for ii = 0:3,
+        for jj = 0:3,
+            ut(l,:) = t.^ii.*u.^jj;
+            dutdt(l,:) = ii*t.^(ii-1).*u.^jj;
+            dutdu(l,:) = jj*t.^ii.*u.^(jj-1);
+            l = l+1;
+        end
+    end
+    %
+    equil_val.ne = equil_fit.ne_fit.CC(k,:)*ut(:);
+    equil_val.dnedx = equil_fit.ne_fit.CC(k,:)*dutdt(:);
+    equil_val.dnedy = equil_fit.ne_fit.CC(k,:)*dutdu(:);
+    %
+
 else
     error('ERROR: the format of the structure equil_fit is not recognized')
 end

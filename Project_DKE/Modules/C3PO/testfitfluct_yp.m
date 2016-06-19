@@ -16,8 +16,8 @@ function testfitfluct_yp(equil_fit,fluct,fluct_fit,rho,theta,mode)
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
 if nargin < 4,
-    rho = fluct.prho;
-    dprho = gradient(fluct.prho(:));
+    rho = fluct.rho;
+    dprho = gradient(fluct.rho(:));
     theta = fluct.theta;
     dtheta = gradient(fluct.theta);
 end
