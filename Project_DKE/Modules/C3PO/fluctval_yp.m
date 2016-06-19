@@ -41,7 +41,7 @@ zTi = equilval.zTi;
 dzTidrho = equilval.dzTidrho;
 zni = equilval.zni;
 dznidrho = equilval.dznidrho;
-R = equilval.R;
+R = equilval.Rp + equilval.x;
 r = equilval.r;
 salpha = equilval.salpha;
 dsalphadtheta = equilval.dsalphadtheta;
@@ -49,10 +49,10 @@ dsalphadrho = equilval.dsalphadrho;
 calpha = equilval.calpha;
 dcalphadtheta = equilval.dcalphadtheta;
 dcalphadrho = equilval.dcalphadrho;
-BPHI = equilval.BPHI;
-dBPHIdtheta = equilval.dBPHIdtheta;
-dBPHIdrho = equilval.dBPHIdrho;
-BP = equilval.;
+BPHI = equilval.Bz;
+dBPHIdtheta = equilval.dBzdtheta;
+dBPHIdrho = equilval.dBzdrho;
+BP = equilval.BP;
 B = equilval.B;
 dBdtheta = equilval.dBdtheta;
 dBdrho = equilval.dBdrho;
@@ -176,28 +176,24 @@ for i = 1:length(field_name),
                 %
                 j = 1;
                 for isubfield = 1:length(subfield_name),
-                    if mode == 1,
+                    %
+                    % calculation at all radial positions of all coefficients for the Fourier series
+                    %
+                    if strfind(char(subfield_name(isubfield)),'_fit');
+                        a0_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_a0,rho);
+                        an_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_an,rho);
+                        bn_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_bn,rho);
+                        da0drho_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_da0drho,rho);
+                        dandrho_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_dandrho,rho);
+                        dbndrho_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_dbndrho,rho);
                         %
-                        % calculation at all radial positions of all coefficients for the Fourier series
+                        % calculation of the value at all poloidal angles
                         %
-                        if strfind(char(subfield_name(isubfield)),'_fit');
-                            a0_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_a0,rho);
-                            an_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_an,rho);
-                            bn_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_bn,rho);
-                            da0drho_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_da0drho,rho);
-                            dandrho_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_dandrho,rho);
-                            dbndrho_fit = ppval(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]).pp_dbndrho,rho);
-                            %
-                            % calculation of the value at all poloidal angles
-                            %
-                            for ii = 1:length(theta),
-                                [w_fit{j}(:,ii),dwdtheta_fit{j}(:,ii),d2wdtheta2_fit{j}(:,ii),dwdrho_fit{j}(:,ii),d2wdthetadrho_fit{j}(:,ii)] = calcval_yp(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]),theta(ii),a0_fit(:),an_fit,bn_fit,da0drho_fit(:),dandrho_fit,dbndrho_fit);
-                            end
-                            %
-                            j = j + 1;
+                        for ii = 1:length(theta),
+                            [w_fit{j}(:,ii),dwdtheta_fit{j}(:,ii),d2wdtheta2_fit{j}(:,ii),dwdrho_fit{j}(:,ii),d2wdthetadrho_fit{j}(:,ii)] = calcval_yp(fluct_fit.(char(field_name(i)))(ifield).([char(subfield_name(isubfield))]),theta(ii),a0_fit(:),an_fit,bn_fit,da0drho_fit(:),dandrho_fit,dbndrho_fit);
                         end
-                    else
-                        error('Mode 2 (x,y) not yet implemented in fitfluct_yp.m');
+                        %
+                        j = j + 1;
                     end
                 end
                 %
