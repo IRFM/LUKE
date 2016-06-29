@@ -613,10 +613,13 @@ if real(display_mode) >= 2,
     if isfield(equil,'pzni') && isfield(equil,'pzTi') && isfield(equil,'zZi') && isfield(equil,'pne') && isfield(equil,'pTe') 
         if flag_id,
             figure('Name','Electron Temperature and Density Profiles'),clf
-            [ax] = graph1D2jd(prho,xTe,prho,xne/1e19,'\rho','T_e (keV)','n_e (10^{19} m^{-3})','',...
+            titlefig = '';
+            if isfield(equil,'Te_vol'), titlefig = ['<T_e>=',num2str(round(equil.Te_vol*100)/100),'keV'];end
+            if isfield(equil,'ne_vol'), titlefig = [titlefig,', <n_e>=',num2str(round(100*equil.ne_vol/1e19)/100),'x10^{+19} m^{-3}'];end
+            [ax] = graph1D2jd(prho,xTe,prho,xne/1e19,'\rho','T_e (keV)','n_e (10^{19} m^{-3})',titlefig,...
                 [0,1],NaN,NaN,'-','none','r',2,'--','none','b',2,20,0.9,0.5,0.7);
             set(ax(1),'xtick',[0:0.2:1]);set(ax(2),'xtick',[0:0.2:1])
-            %    
+            %
             print_jd(p_opt,['Fig_EQUIL_',equil.id,'_tene'])
         elseif length(axs) >= 2,
             if imag(display_mode) == 0,
