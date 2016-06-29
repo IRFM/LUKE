@@ -1423,7 +1423,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     % REMOTE PARAMETERS
                     %
-                    dkepath = lukeschedulerparam(dkepath,0,[],[],transpfaste,opt_gui);
+                    returnmode = input_dke_yp('Do you want to wait for results (y/n)','n',{'y','n'}) == 'n';
+                    dkepath = lukeschedulerparam(dkepath,0,[],returnmode,transpfaste,opt_gui);
                     %
                     disp(' ');
                     disp('************** RUN LUKE **************')
