@@ -211,7 +211,7 @@ else
     %opt_disp = opt_disp + i;
 end
 %
-if isfield(ray,'salphaphi_coll'),
+if isfield(ray,'salphaphi_coll') && colldamp == 1,
     salphaphi_coll = ray.salphaphi_coll;
 else
     salphaphi_coll = NaN*ones(1,ns);
@@ -612,7 +612,9 @@ if abs(imag(opt_disp)) >= 1,%calculation of the linear absorption coefficient
     sb = sB*qe/me/omega_rf;
 	sbeta = sqrt(sTe/mc2);
     salphaphi_lin = zeros(1,ns);
-    salphaphi_coll = zeros(1,ns);
+    if colldamp == 1
+        salphaphi_coll = zeros(1,ns);
+    end
     for n = n_rf_list,
         if abs(imag(opt_disp)) == 1,
             salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,real(sNpar),real(sNperp),sepol_pmz,n,rel_opt);
