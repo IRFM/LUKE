@@ -217,7 +217,20 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %                
             elseif ~isempty(dkeparam) && ~isempty(equil),
                 %
-                statstr.output = ['<',ostr,' You can start LUKE now. >'];
+                flag_wave = 0;
+                if exist('waves')
+                    for iw = 1:length(waves),
+                        if isfield(waves{iw},'job')
+                            flag_wave = flag_wave + 1;
+                        end
+                    end
+                end
+                %
+                if flag_wave == 0,
+                    statstr.output = ['<',ostr,' You can start LUKE now. >'];
+                else
+                    statstr.output = ['<',ostr,' You cannot start LUKE now until batch ray-tracing is not completed. >'];
+                end
                 %
             else
                 %
@@ -1051,8 +1064,44 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 smakecmd = 'imake_wave_jd';
                 %
-                [waves,paths.waves,fileids.waves,newstruct] = ...
-                    imake_struct_jd(dkepath,waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,external,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
+                %%irmwave = 0;
+                %
+                for iw = 1:length(waves)
+                    if isfield(waves{iw},'job')
+                        %
+                        if isempty(waves{iw}.job.remote.host)
+                            disp(['Ray-tracing calculations have been send on the local host for wave # ',int2str(iw)]);
+                        else
+                            disp(['Ray-tracing calculations have been send on the remote host: ',waves{iw}.job.remote.host,' for wave # ',int2str(iw)])
+                        end
+                        disp('The job status is checked ...')
+                        %
+                        [err,job,wave_tmp] = matremote_jd(waves{iw}.job);
+                        %
+                        if isempty(err) && isempty(wave_tmp),
+                            disp(['The job is still running. Check again !'])
+                        elseif isempty(err) && ~isempty(wave_tmp),
+                            disp(['The job is done !'])
+                            n_rf_list = waves{iw}.n_rf_list;
+                            %wave_tmp.info = waves{iw}.info;
+                            %
+                            % Wave processing and relativistic linear damping
+                            %
+                            waves{iw} = wave_process_jd(equil,wave_tmp,n_rf_list);
+                            %
+                        elseif ~isempty(err)
+                            disperr_jd(err);
+                            disp(['The ''waves'' #',int2str(iw),' must be cleared.'])
+                            irmwave = iw;
+                        end            
+                    end 
+                end
+                %
+                if isempty(waves),
+                    status.waves = 0;
+                end
+                %
+                [waves,paths.waves,fileids.waves,newstruct] = imake_struct_jd(dkepath,waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,external,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
                 %
                 % structure interdependences
                 %
@@ -1390,7 +1439,21 @@ function irunluke_jd(basestr,signs,opt_gui)
                     if isempty(dkeparam) || isempty(equil),
                         disp('-----> the structures dkeparam and equil must exist to run LUKE.');
                         continue
-                    end       
+                    end  
+                    %
+                    flag_wave = 0;
+                    if exist('waves')
+                        for iw = 1:length(waves),
+                            if isfield(waves{iw},'job')
+                                flag_wave = flag_wave + 1;
+                            end
+                        end
+                    end
+                    %
+                    if flag_wave > 0,
+                        disp('-----> All batch ray-tracing must be completed to run LUKE.');
+                        continue
+                    end  
                     %
                     % DISPLAY
                     %
