@@ -80,10 +80,14 @@ if i_opt == 0,% use data from external database
     %
     type = launch.type;
     %
-    if isfield(launch,'tail')
+    if isfield(launch,'tail') && strcmp(type,'LH'),
         if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
             launch.id = [launch.id,'_TAIL_',make_tail_simulid_jd(launch.tail)];
         end
+    else
+        if input_dke_yp(['','Do you want to activate the tail LH model (y/n)'],'n',{'y','n'}) == 'y',
+            launch = imake_tail_yp(launch);
+        end        
     end
     %
 elseif i_opt == 1,% use data from an existing file
@@ -112,9 +116,13 @@ elseif i_opt == 2,% build the wave data locally
         %
         type = launch.type;
         %
-        if isfield(launch,'tail')
+        if isfield(launch,'tail') && strcmp(type,'LH'),
             if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
                 launch.id = [launch.id,'_TAIL_',make_tail_simulid_jd(launch.tail)];
+            end
+        else
+            if input_dke_yp(['','Do you want to activate the tail LH model (y/n)'],'n',{'y','n'}) == 'y',
+                launch = imake_tail_yp(launch);
             end
         end
         %
@@ -126,9 +134,14 @@ elseif i_opt == 2,% build the wave data locally
         %
         type = launch.type;
         %
-        if isfield(launch,'tail')
+        if isfield(launch,'tail') && strcmp(type,'LH'),
             if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
                 launch.id = [launch.id,'_TAIL_',make_tail_simulid_jd(launch.tail)];
+            end
+        else
+            if input_dke_yp(['','Do you want to activate the tail LH model (y/n)'],'n',{'y','n'}) == 'y',
+                launch = imake_tail_yp(launch);
+                launch = imod_struct_jd(launch,'launch',1,opt_gui);
             end
         end
         %
@@ -153,6 +166,11 @@ elseif i_opt == 2,% build the wave data locally
             if isfield(launch,'tail')
                 if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
                     launch.id = [launch.id,'_TAIL_',make_tail_simulid_jd(launch.tail)];
+                end
+            else
+                if input_dke_yp(['','Do you want to activate the tail LH model (y/n)'],'n',{'y','n'}) == 'y',
+                    launch = imake_tail_yp(launch);
+                    launch = imod_struct_jd(launch,'launch',1,opt_gui);
                 end
             end
         else
