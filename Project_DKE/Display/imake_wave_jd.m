@@ -349,11 +349,9 @@ if w_opt == 0; % C3PO Calculation
     sd = pwd;
     cd(workdir);
     %
-    if length(rayinit.yrho0) > 1,      
+    if length(rayinit.yrho0) < 2,      
         disp(['-----> There are ',int2str(length(rayinit.yrho0)),' rays to calculate.']);
-        %
-        wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.remnum = ...
-            iselect_jd(dkepath.remprofiles,'Remote calculation mode (mdce_remote): ',opt_gui,select.style,1) - 1;
+        wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.remnum = iselect_jd(dkepath.remprofiles,'Remote calculation mode (mdce_remote): ',opt_gui,select.style,1) - 1;
         %
         if wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.remnum == 0,%local distribution
             flag_mdce = 1:length(dkepath.distprofiles);% all mdce modes
@@ -361,22 +359,66 @@ if w_opt == 0; % C3PO Calculation
             flag_mdce = 1:3;% remcomputing within mdce_remote disabled
         end        
         %
-        wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = ...
-            iselect_jd(dkepath.distprofiles(flag_mdce),'Distributed computing mode : ',opt_gui,select.style,1) - 1;
+        wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = iselect_jd(dkepath.distprofiles(flag_mdce),'Distributed computing mode : ',opt_gui,select.style,1) - 1;
         %
         if wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode > 2,
             wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = 2 - wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode;
         end
         %
+        tstart = tic;
+        wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam);
+        telapsed = toc(tstart); 
+        %
+        disp(' ');
+        disp(['The calculation of ',int2str(length(rayinit.yrho0)),' rays has been done in ',num2str(telapsed),' (s).']);
+        disp(' ');
+        %
+    else
+        %
+        flag_mdce = 1:3;% remcomputing within mdce_remote disabled
+        %
+        wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.remnum = 0;%always local for the ray-tracing
+        %
+        wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = iselect_jd(dkepath.distprofiles(flag_mdce),'Distributed computing mode : ',opt_gui,select.style,1) - 1;
+        %
+        remote = dkepath.remote(iselect_jd(dkepath.remprofiles,'Remote calculation mode : ',opt_gui,select.style,1) - 1);
+        remote.timeout = 0;
+        %
+        job = matstandardjob_jd('runmat');
+        job.remtimout = 0;
+        %
+        [err,job,wave] = matremote_jd('main_C3PO_jd',{dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam},remote,job);
+        %
+        if isempty(err) 
+            if isempty(job.remote.host)
+                 disp(['The ray-tracing C3PO has been launched on the local host'])
+            else
+                disp(['The ray-tracing C3PO has been launched on host : ',job.remote.host])
+            end
+            %
+            wave.job = job;
+            wave.id = rayinit.id;
+            %
+            cd(sd);
+            %
+            wave.info.type = 'RT';
+            wave.info.RT = 'C3PO';
+            wave.info.ftype = ftype;
+            %
+            s_opt = iselect_jd({'No','Yes'},'Do you want to generate an equivalent make_wave script ?',opt_gui,select.style,1) - 1;
+            %
+            if s_opt == 1,
+                % 
+                imake_makewave_jd(workdir,wave,opt_gui);
+                %
+            end
+            %
+            wave.n_rf_list = wavestruct.waveparam.n_rf_list;
+            return
+        else
+            return
+        end
     end
-    %   
-    tstart = tic;
-    wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam);
-    telapsed = toc(tstart);    
-    %
-    disp(' ');
-    disp(['The calculation of ',int2str(length(rayinit.yrho0)),' rays has been done in ',num2str(telapsed),' (s).']);
-    disp(' ');
     %
     cd(sd);
     %
