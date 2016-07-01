@@ -278,6 +278,29 @@ function irunluke_jd(basestr,signs,opt_gui)
         disp(' ');
         disp(['LUKE output            : ',statstr.output]);
         disp(['External database      : ',statstr.external]);
+        %
+        if exist('tprintf.m','file'),%second window display
+            tprintf('LUKE simulation status');%clear window
+            tprintf('LUKE simulation status',[' ----------- < ',LUKEversion_jd,' Version > ----------- ']);
+            tprintf('LUKE simulation status',' ');
+            tprintf('LUKE simulation status',['Machine : ',basestr]);
+            tprintf('LUKE simulation status',' ');
+            tprintf('LUKE simulation status','************* STATUS *************');
+            tprintf('LUKE simulation status',' ');
+            tprintf('LUKE simulation status',['LUKE data              : ',statstr.data]);
+            tprintf('LUKE simulation status',['Work directory         : ',statstr.workdir]);
+            tprintf('LUKE simulation status',['LUKE path              : ',statstr.dkepath]);
+            tprintf('LUKE simulation status',['LUKE parameters        : ',statstr.dkeparam]);
+            tprintf('LUKE simulation status',['Equilibrium            : ',statstr.equil]);
+            tprintf('LUKE simulation status',['RF waves               : ',statstr.waves]);
+            tprintf('LUKE simulation status',['Ohmic E-field          : ',statstr.ohm]);
+            tprintf('LUKE simulation status',['Fast electron transport: ',statstr.transpfaste]);
+            tprintf('LUKE simulation status',['Magnetic ripple losses : ',statstr.ripple]);
+            tprintf('LUKE simulation status',' ');
+            tprintf('LUKE simulation status',['LUKE output            : ',statstr.output]);
+            tprintf('LUKE simulation status',['External database      : ',statstr.external]);
+        end
+        %
         disp(' ');
         disp('************** MENU **************')
         disp(' ');
@@ -1083,7 +1106,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                         elseif isempty(err) && ~isempty(wave_tmp),
                             disp(['The job is done !'])
                             n_rf_list = waves{iw}.n_rf_list;
-                            %wave_tmp.info = waves{iw}.info;
                             %
                             % Wave processing and relativistic linear damping
                             %
@@ -1101,7 +1123,56 @@ function irunluke_jd(basestr,signs,opt_gui)
                     status.waves = 0;
                 end
                 %
+                for iw = 1:length(waves),
+                    if ~isfield(waves{iw},'colldamp'),%backward compatibility
+                        waves{iw}.colldamp = waves{iw}.rayparam.colldamp;
+                    end
+                end
+                %
+                waves0 = waves;
+                %
                 [waves,paths.waves,fileids.waves,newstruct] = imake_struct_jd(dkepath,waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,external,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
+                %
+                flag_colldamp = 0;
+                for iw = 1:length(waves),
+                    if waves{iw}.colldamp ~= waves0{iw}.colldamp,
+                        flag_colldamp = 1 + i*waves{iw}.colldamp;
+                    end
+                end
+                %
+                if real(flag_colldamp) == 1,
+                    if imag(flag_colldamp) == 0,
+                        disp(['WARNING: The non-resonant collisional absorption is disabled for all waves.'])
+                    else 
+                        disp(['WARNING: The non-resonant collisional absorption is enabled for all waves.'])
+                    end
+                    %
+                    figure,plot(waves{1}.rays{1}.ss,waves{1}.rays{1}.sP_2piRp_lin_coll,'r-');drawnow
+                    %
+                    for iw = 1:length(waves),
+                        waves{iw}.rayparam.colldamp = imag(flag_colldamp);
+                        %
+                        for ir = 1:length(waves{iw}.rays)
+                            waves{iw}.rays{ir} = rmfield(waves{iw}.rays{ir},{'stau_coll','sP_2piRp_coll','sdP_2piRp_ds_coll','sP_2piRp_lin_coll','sdP_2piRp_ds_lin_coll','salphaphi_coll'});
+                        end
+                        %
+                        waves{iw} = wave_process_jd(equil,waves{iw},waves{iw}.n_rf_list);
+                    end
+                    %
+                    hold on,plot(waves{1}.rays{1}.ss,waves{1}.rays{1}.sP_2piRp_lin_coll,'b--');drawnow;hold off
+                    %
+                    for iw = 1:length(waves),
+                        if imag(flag_colldamp) == 0,
+                            waves{iw}.id =  [waves{iw}.id,'_nocoll'];
+                        elseif imag(flag_colldamp) == 1,
+                            if strfind(waves{iw}.id,'_nocoll');
+                                waves{iw}.id = waves{iw}.id(1:strfind(waves{iw}.id,'_nocoll')-1);
+                            end
+                        end
+                    end
+                end
+                %
+                clear waves0
                 %
                 % structure interdependences
                 %
