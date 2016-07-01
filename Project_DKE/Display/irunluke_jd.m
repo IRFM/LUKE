@@ -1124,8 +1124,10 @@ function irunluke_jd(basestr,signs,opt_gui)
                 end
                 %
                 for iw = 1:length(waves),
-                    if ~isfield(waves{iw},'colldamp'),%backward compatibility
-                        waves{iw}.colldamp = waves{iw}.rayparam.colldamp;
+                    if ~isfield(waves{iw},'job'),%batch ray tracing calculations
+                        if ~isfield(waves{iw},'colldamp'),%backward compatibility
+                            waves{iw}.colldamp = waves{iw}.rayparam.colldamp;
+                        end
                     end
                 end
                 %
@@ -1133,40 +1135,59 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 [waves,paths.waves,fileids.waves,newstruct] = imake_struct_jd(dkepath,waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,external,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
                 %
-                flag_colldamp = 0;
-                for iw = 1:length(waves),
-                    if waves{iw}.colldamp ~= waves0{iw}.colldamp,
-                        flag_colldamp = 1 + i*waves{iw}.colldamp;
-                    end
-                end
+                flag_wave = 1;
                 %
-                if real(flag_colldamp) == 1,
-                    if imag(flag_colldamp) == 0,
-                        disp(['WARNING: The non-resonant collisional absorption is disabled for all waves.'])
-                    else 
-                        disp(['WARNING: The non-resonant collisional absorption is enabled for all waves.'])
+                if ~isempty(waves),
+                    for iw = 1:length(waves),
+                        if isfield(waves{iw},'job'),%batch ray tracing calculations
+                            flag_wave = 0;
+                            break;
+                        end
                     end
                     %
-                    figure,plot(waves{1}.rays{1}.ss,waves{1}.rays{1}.sP_2piRp_lin_coll,'r-');drawnow
-                    %
-                    for iw = 1:length(waves),
-                        waves{iw}.rayparam.colldamp = imag(flag_colldamp);
-                        %
-                        for ir = 1:length(waves{iw}.rays)
-                            waves{iw}.rays{ir} = rmfield(waves{iw}.rays{ir},{'stau_coll','sP_2piRp_coll','sdP_2piRp_ds_coll','sP_2piRp_lin_coll','sdP_2piRp_ds_lin_coll','salphaphi_coll'});
+                    if flag_wave == 1,
+                        for iw = 1:length(waves),
+                            if ~isfield(waves{iw},'colldamp'),%backward compatibility
+                                waves{iw}.colldamp = waves{iw}.rayparam.colldamp;
+                            end
                         end
                         %
-                        waves{iw} = wave_process_jd(equil,waves{iw},waves{iw}.n_rf_list);
-                    end
-                    %
-                    hold on,plot(waves{1}.rays{1}.ss,waves{1}.rays{1}.sP_2piRp_lin_coll,'b--');drawnow;hold off
-                    %
-                    for iw = 1:length(waves),
-                        if imag(flag_colldamp) == 0,
-                            waves{iw}.id =  [waves{iw}.id,'_nocoll'];
-                        elseif imag(flag_colldamp) == 1,
-                            if strfind(waves{iw}.id,'_nocoll');
-                                waves{iw}.id = waves{iw}.id(1:strfind(waves{iw}.id,'_nocoll')-1);
+                        flag_colldamp = 0;
+                        for iw = 1:length(waves),
+                            if waves{iw}.colldamp ~= waves0{iw}.colldamp,
+                                flag_colldamp = 1 + i*waves{iw}.colldamp;
+                            end
+                        end
+                        %
+                        if real(flag_colldamp) == 1,
+                            if imag(flag_colldamp) == 0,
+                                disp(['WARNING: The non-resonant collisional absorption is disabled for all waves.'])
+                            else 
+                                disp(['WARNING: The non-resonant collisional absorption is enabled for all waves.'])
+                            end
+                            %
+                            figure,plot(waves{1}.rays{1}.ss,waves{1}.rays{1}.sP_2piRp_lin_coll,'r-');drawnow
+                            %
+                            for iw = 1:length(waves),
+                                waves{iw}.rayparam.colldamp = imag(flag_colldamp);
+                                %
+                                for ir = 1:length(waves{iw}.rays)
+                                    waves{iw}.rays{ir} = rmfield(waves{iw}.rays{ir},{'stau_coll','sP_2piRp_coll','sdP_2piRp_ds_coll','sP_2piRp_lin_coll','sdP_2piRp_ds_lin_coll','salphaphi_coll'});
+                                end
+                                %
+                                waves{iw} = wave_process_jd(equil,waves{iw},waves{iw}.n_rf_list);
+                            end
+                            %
+                            hold on,plot(waves{1}.rays{1}.ss,waves{1}.rays{1}.sP_2piRp_lin_coll,'b--');drawnow;hold off
+                            %
+                            for iw = 1:length(waves),
+                                if imag(flag_colldamp) == 0,
+                                    waves{iw}.id =  [waves{iw}.id,'_nocoll'];
+                                elseif imag(flag_colldamp) == 1,
+                                    if strfind(waves{iw}.id,'_nocoll');
+                                        waves{iw}.id = waves{iw}.id(1:strfind(waves{iw}.id,'_nocoll')-1);
+                                    end
+                                end
                             end
                         end
                     end
