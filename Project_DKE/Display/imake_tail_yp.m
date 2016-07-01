@@ -10,7 +10,7 @@ if ~isfield(launch,'tail')
         tail.bNparmax_tail = input_dke_yp('Nparmax_tail: npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is 0, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)',0);
         tail.bn_tail = input_dke_yp('n_tail: number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen)',5);
         tail.bP_tail = input_dke_yp('P_tail: power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (no used if linear_tail is chosen))',0.5);
-        tail.bopt_tail = input_dke_yp('opt_tail: final power fraction of the tail @ Nparmax_tail (+1i) Adjust initial dNpar0 such that initial and tail lobes have the same width',0 + 1i);
+        tail.bopt_tail = input_dke_yp('opt_tail: final power fraction of the tail @ Nparmax_tail (+1i) Adjust initial dNpar0 such that initial and tail lobes have the same width',1 + 1i);
         %
         launch.tail = tail;
         %
