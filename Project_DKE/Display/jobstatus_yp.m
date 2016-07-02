@@ -45,7 +45,7 @@ max_waves = 0;
 %
 for ii = 1:length(filename),
     if strfind(filename{ii},'LUKE_DATA_')> 0 & strcmp(filename{ii}(1),'L') == 1,
-        filedata = load(filename{ii},'id_simul','id_simul_o','output','waves','job');
+        filedata = load(filename{ii},'id_simul','id_simul_o','output','waves','luke_job');
         joblist(jj).filename = filename{ii};
         joblist(jj).id_simul = filedata.id_simul_o;
         %
@@ -63,23 +63,25 @@ for ii = 1:length(filename),
                     joblist(jj).C3PO(iw).status = 'C3PO ray tracing calculations not done';
                     joblist(jj).C3PO(iw).host = '';
                     joblist(jj).C3PO(iw).jobid = NaN;
+                    joblist(jj).C3PO(iw).batch_dir = '';
                     status(jj).C3PO(iw).notdone = 1;
                 elseif isfield(filedata.waves{iw},'rays')
                     joblist(jj).C3PO(iw).status = 'C3PO ray tracing calculations completed';
                     joblist(jj).C3PO(iw).host = '';
                     joblist(jj).C3PO(iw).jobid = NaN;
+                    joblist(jj).C3PO(iw).batch_dir = '';
                     status(jj).C3PO(iw).completed = 1;
                 elseif isfield(filedata.waves{iw},'job')
                     joblist(jj).C3PO(iw).status = 'C3PO ray tracing calculations running';
                     if isempty(filedata.waves{iw}.job.remote.host),
                         joblist(jj).C3PO(iw).host = 'local';
-                        joblist(jj).C3PO(iw).jobid = filedata.waves{iw}.job.id;
-                        status(jj).C3PO(iw).running = 1;
                     else
                         joblist(jj).C3PO(iw).host = filedata.waves{iw}.job.remote.host;
-                        joblist(jj).C3PO(iw).jobid = filedata.waves{iw}.job.id;
-                        status(jj).C3PO(iw).running = 1;
                     end
+                    %
+                    joblist(jj).C3PO(iw).jobid = filedata.waves{iw}.job.id;
+                    joblist(jj).C3PO(iw).batch_dir = filedata.waves{iw}.job.batch_dir;
+                    status(jj).C3PO(iw).running = 1;
                 end
             end
         end
@@ -89,27 +91,29 @@ for ii = 1:length(filename),
         status(jj).LUKE.running = 0;
         %
         if isempty(filedata.output)
-            if isfield(filedata,'job'),
+            if isfield(filedata,'luke_job') & ~isempty(filedata.luke_job),
                 joblist(jj).LUKE.status = 'LUKE Fokker-Planck calculations running';
-                if isempty(filedata.job.remote.host),
+                if isempty(filedata.luke_job.remote.host),
                     joblist(jj).LUKE.host = 'local';
-                    joblist(jj).LUKE.jobid = filedata.job.id;
-                    status(jj).LUKE.running = 1;
                 else
-                    joblist(jj).LUKE.host = filedata.job.remote.host;
-                    joblist(jj).LUKE.jobid = filedata.job.id;
-                    status(jj).LUKE.running = 1;
+                    joblist(jj).LUKE.host = filedata.luke_job.remote.host;
                 end
+                %
+                joblist(jj).LUKE.jobid = filedata.luke_job.id;
+                joblist(jj).LUKE.batch_dir = filedata.luke_job.batch_dir;
+                status(jj).LUKE.running = 1;
             else
                 joblist(jj).LUKE.status = 'LUKE Fokker-Planck calculations not done';
                 joblist(jj).LUKE.host = '';
                 joblist(jj).LUKE.jobid = NaN;
+                joblist(jj).LUKE.batch_dir = '';
                 status(jj).LUKE.notdone = 1;
             end
         elseif isfield(filedata.output,'Znorm'),
             joblist(jj).LUKE.status = 'LUKE Fokker-Planck calculations completed';
              joblist(jj).LUKE.host = '';
             joblist(jj).LUKE.jobid = NaN;
+            joblist(jj).LUKE.batch_dir = '';
             status(jj).LUKE.completed = 1;
         end
         %  
@@ -142,9 +146,7 @@ end
 if displaymode,
     disp(['-------------------------------------------------------------------------------------'])
     disp(['-------------------------------------------------------------------------------------'])
-    disp(['-------------------------------------------------------------------------------------'])
     disp(['Simulations status in folder : ',dirsearch]);
-    disp(['-------------------------------------------------------------------------------------'])
     disp(['-------------------------------------------------------------------------------------'])
     disp(['-------------------------------------------------------------------------------------'])
     disp(['Total number of simulations : ',int2str(length(joblist))]);
@@ -156,7 +158,6 @@ if displaymode,
     disp(['Total number of simulations not done (LUKE): ',int2str(LUKE_status.notdone)]);
     disp(['Total number of simulations completed (LUKE): ',int2str(LUKE_status.completed)]);
     disp(['Total number of simulations running (LUKE) : ',int2str(LUKE_status.running)]);
-    disp(['-------------------------------------------------------------------------------------'])
     disp(['-------------------------------------------------------------------------------------'])
     disp(['-------------------------------------------------------------------------------------'])
     %
@@ -172,6 +173,7 @@ if displaymode,
             if strcmp(joblist(ii).C3PO(iw).status,'C3PO ray tracing calculations running'),
                 disp([' - C3PO (wave #',int2str(iw),') remote host address : ',joblist(ii).C3PO(iw).host]);
                 disp([' - C3PO (wave #',int2str(iw),') remote jobid : ',joblist(ii).C3PO(iw).jobid]);
+                disp([' - C3PO (wave #',int2str(iw),') batch directory : ',joblist(ii).C3PO(iw).batch_dir]);
             end
         end
         %
@@ -183,6 +185,7 @@ if displaymode,
         if strcmp(joblist(ii).LUKE.status,'LUKE Fokker-Planck calculations running'),
             disp([' - LUKE remote host address : ',joblist(ii).LUKE.host]);
             disp([' - LUKE remote jobid : ',joblist(ii).LUKE.jobid]);
+            disp([' - LUKE batch directory : ',joblist(ii).LUKE.batch_dir]);
         end
         %
         disp(['-------------------------------------------------------------------------------------'])
