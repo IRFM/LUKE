@@ -1,7 +1,7 @@
 function irunluke_jd(basestr,signs,opt_gui)
     %
     % This script interactively loads the equilibrium, profiles and launching data, and runs LUKE with
-    % either C3PO, TORAY or ART ray-tracing data.
+    % either C3PO, TORAY or ART ray-tracing data
     %
     if nargin < 3,
         opt_gui = input_dke_yp('Graphical User Interface mode (yes:1,no:0)',0,[0,1]) == 1;
@@ -19,6 +19,11 @@ function irunluke_jd(basestr,signs,opt_gui)
     end
     %
     clc
+    %
+    tprintf('Working LUKE simulation status','');
+    tprintf('Working LUKE simulation status');
+    tprintf('LUKE simulations status','');
+    tprintf('LUKE simulations status');
     %
     quitmsg = '-----> Run aborted';
     warning off
@@ -280,25 +285,26 @@ function irunluke_jd(basestr,signs,opt_gui)
         disp(['External database      : ',statstr.external]);
         %
         if exist('tprintf.m','file'),%second window display
-            tprintf('LUKE simulation status');%clear window
-            tprintf('LUKE simulation status',[' ----------- < ',LUKEversion_jd,' Version > ----------- ']);
-            tprintf('LUKE simulation status',' ');
-            tprintf('LUKE simulation status',['Machine : ',basestr]);
-            tprintf('LUKE simulation status',' ');
-            tprintf('LUKE simulation status','************* STATUS *************');
-            tprintf('LUKE simulation status',' ');
-            tprintf('LUKE simulation status',['LUKE data              : ',statstr.data]);
-            tprintf('LUKE simulation status',['Work directory         : ',statstr.workdir]);
-            tprintf('LUKE simulation status',['LUKE path              : ',statstr.dkepath]);
-            tprintf('LUKE simulation status',['LUKE parameters        : ',statstr.dkeparam]);
-            tprintf('LUKE simulation status',['Equilibrium            : ',statstr.equil]);
-            tprintf('LUKE simulation status',['RF waves               : ',statstr.waves]);
-            tprintf('LUKE simulation status',['Ohmic E-field          : ',statstr.ohm]);
-            tprintf('LUKE simulation status',['Fast electron transport: ',statstr.transpfaste]);
-            tprintf('LUKE simulation status',['Magnetic ripple losses : ',statstr.ripple]);
-            tprintf('LUKE simulation status',' ');
-            tprintf('LUKE simulation status',['LUKE output            : ',statstr.output]);
-            tprintf('LUKE simulation status',['External database      : ',statstr.external]);
+            tprintf('Working LUKE simulation status');%clear window
+            tprintf('Working LUKE simulation status',[' ----------- < ',LUKEversion_jd,' Version > ----------- ']);
+            tprintf('Working LUKE simulation status',' ');
+            tprintf('Working LUKE simulation status',['Machine : ',basestr]);
+            tprintf('Working LUKE simulation status',' ');
+            tprintf('Working LUKE simulation status','************* STATUS *************');
+            tprintf('Working LUKE simulation status',' ');
+            tprintf('Working LUKE simulation status',['LUKE data              : ',statstr.data]);
+            tprintf('Working LUKE simulation status',['Work directory         : ',statstr.workdir]);
+            tprintf('Working LUKE simulation status',['LUKE path              : ',statstr.dkepath]);
+            tprintf('Working LUKE simulation status',['LUKE parameters        : ',statstr.dkeparam]);
+            tprintf('Working LUKE simulation status',['Equilibrium            : ',statstr.equil]);
+            tprintf('Working LUKE simulation status',['RF waves               : ',statstr.waves]);
+            tprintf('Working LUKE simulation status',['Ohmic E-field          : ',statstr.ohm]);
+            tprintf('Working LUKE simulation status',['Fast electron transport: ',statstr.transpfaste]);
+            tprintf('Working LUKE simulation status',['Magnetic ripple losses : ',statstr.ripple]);
+            tprintf('Working LUKE simulation status',' ');
+            tprintf('Working LUKE simulation status',['LUKE output            : ',statstr.output]);
+            tprintf('Working LUKE simulation status',['External database      : ',statstr.external]);
+            %
         end
         %
         disp(' ');
@@ -329,6 +335,7 @@ function irunluke_jd(basestr,signs,opt_gui)
         disp('[18]  Close all figures')
         disp('[19]  LUKE documentation')
         disp('[20]  LUKE project management (redmine): bug report, documentation, tutorial, repositories, etc')
+        disp('[21]  Check job status of all simulations in the local folder')        
         disp(' ');
         disp('[0]   Run LUKE or load BATCH LUKE results');
         disp('[-1]  Exit LUKE');
@@ -339,7 +346,7 @@ function irunluke_jd(basestr,signs,opt_gui)
         %
         clc
         %
-        if isempty(isel) || ~isnumeric(isel) || ~any(isel == [-2:4,6:20]),
+        if isempty(isel) || ~isnumeric(isel) || ~any(isel == [-2:4,6:21]),
             isel = -1;
         end
         %
@@ -1502,6 +1509,63 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                 end
                 % 
+             elseif isel == 21,
+                %
+                [joblist,C3PO_status,LUKE_status,dirsearch] = jobstatus_yp(pwd);
+                % 
+                if exist('joblist'),
+                    tprintf('LUKE simulations status',' ');
+                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                    tprintf('LUKE simulations status',['Simulations status in folder : ',dirsearch]);
+                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                    tprintf('LUKE simulations status',['Total number of simulations : ',int2str(length(joblist))]);
+                    for iw = 1:length(C3PO_status)
+                        tprintf('LUKE simulations status',['Total number of simulations for wave #',int2str(iw),' not done (C3PO): ',int2str(C3PO_status(iw).notdone)]);
+                        tprintf('LUKE simulations status',['Total number of simulations for wave #',int2str(iw),' completed (C3PO): ',int2str(C3PO_status(iw).completed)]);
+                        tprintf('LUKE simulations status',['Total number of simulations for wave #',int2str(iw),' running (C3PO) : ',int2str(C3PO_status(iw).running)]);
+                    end
+                    tprintf('LUKE simulations status',['Total number of simulations not done (LUKE): ',int2str(LUKE_status.notdone)]);
+                    tprintf('LUKE simulations status',['Total number of simulations completed (LUKE): ',int2str(LUKE_status.completed)]);
+                    tprintf('LUKE simulations status',['Total number of simulations running (LUKE) : ',int2str(LUKE_status.running)]);
+                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                    %
+                    for ii = 1:length(joblist),
+                        tprintf('LUKE simulations status',[' - id_simul : ',joblist(ii).id_simul]);
+                        %
+                        for iw = 1:length(joblist(ii).C3PO)
+                            if strcmp(joblist(ii).C3PO(iw).status,'C3PO ray tracing calculations not done'),
+                                tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') status: **** ',joblist(ii).C3PO(iw).status,' ****']);
+                            else
+                                tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') status: ',joblist(ii).C3PO(iw).status]);
+                            end
+                            if strcmp(joblist(ii).C3PO(iw).status,'C3PO ray tracing calculations running'),
+                                tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') remote host address : ',joblist(ii).C3PO(iw).host]);
+                                tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') remote jobid : ',joblist(ii).C3PO(iw).jobid]);
+                                tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') batch directory : ',joblist(ii).C3PO(iw).batch_dir]);
+                            end
+                        end
+                        %
+                        if strcmp(joblist(ii).LUKE.status,'LUKE Fokker-Planck calculations not done'),
+                            tprintf('LUKE simulations status',[' - LUKE status: **** ',joblist(ii).LUKE.status, ' ****']);
+                        else
+                            tprintf('LUKE simulations status',[' - LUKE status: ',joblist(ii).LUKE.status]);
+                        end
+                        if strcmp(joblist(ii).LUKE.status,'LUKE Fokker-Planck calculations running'),
+                            tprintf('LUKE simulations status',[' - LUKE remote host address : ',joblist(ii).LUKE.host]);
+                            tprintf('LUKE simulations status',[' - LUKE remote jobid : ',joblist(ii).LUKE.jobid]);
+                            tprintf('LUKE simulations status',[' - LUKE batch directory : ',joblist(ii).LUKE.batch_dir]);
+                        end
+                        %
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                    end
+                end                
             elseif isel == 0,
                 %
                 flag_runluke = 1;
