@@ -33,6 +33,9 @@ if isempty(dirsearch) | isnan(dirsearch),
     dirsearch = pwd;
 end
 %
+C3PO_status = '';
+LUKE_status ='';
+%
 dirinit = pwd;
 cd(dirsearch);
 %
@@ -206,10 +209,19 @@ orphan_batch_dir = '';
 for ii = 1:length(allfileslist),
     if allfileslist(ii).isdir & strfind(allfileslist(ii).name,'batch_'),
         %
+        cd(allfileslist(ii).name),
+        datain_matrun = load(['MAT_RUN_',allfileslist(ii).name(7:end),'.mat'],'arg_range','dkecluster');
+        cd('..');
+        datain_lukedata = load(['LUKE_DATA_',datain_matrun.arg_range{:}.simul_in,'.mat'],'dkepath');  
+        %
         orphan_batch_dir(io).name = allfileslist(ii).name;
-        orphan_batch_dir(io).simul = '';
+        orphan_batch_dir(io).simul = datain_matrun.arg_range{:}.simul_in;
         orphan_batch_dir(io).code = '';
+        orphan_batch_dir(io).remote = datain_lukedata.dkepath.profilestr(datain_matrun.dkecluster.scheduler.remnum);
         orphan_batch_dir(io).status = 1;
+        %
+        clear datain_matrun datain_lukedata
+        %
         %
         for jj = 1:length(joblist),
             %   
@@ -217,6 +229,7 @@ for ii = 1:length(allfileslist),
                 if strcmp(allfileslist(ii).name,joblist(jj).LUKE.batch_dir(1:end-1)),
                     orphan_batch_dir(io).simul = joblist(jj).id_simul;
                     orphan_batch_dir(io).code = 'LUKE';
+                    orphan_batch_dir(io).remote = joblist(jj).LUKE.host;
                     orphan_batch_dir(io).status = 0;
                 end
             end
@@ -226,6 +239,7 @@ for ii = 1:length(allfileslist),
                     if strcmp(allfileslist(ii).name,joblist(jj).C3PO(iw).batch_dir),
                         orphan_batch_dir(io).simul = joblist(jj).id_simul;
                         orphan_batch_dir(io).code = ['C3PO, wave #',int2str(iw)];
+                        orphan_batch_dir(io).host = joblist(jj).C3PO(iw).host;
                         orphan_batch_dir(io).status = 0;
                         %
                     end
