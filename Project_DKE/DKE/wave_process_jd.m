@@ -41,10 +41,16 @@ end
 %
 for ib = 1:length(wave.rays),
     %
-    if isfield(wave.rayparam,'colldamp'),%backward compatibility
-        colldamp = wave.rayparam.colldamp;
+    if isfield(wave,'colldamp'),
+        colldamp = wave.colldamp ;
     else
-        colldamp = 0;%no collisional damping 
+        if isfield(wave.rayparam,'colldamp'),%backward compatibility
+            colldamp = wave.rayparam.colldamp;
+        else
+            colldamp = 0;%no collisional damping 
+        end
+        %
+        wave.colldamp = colldamp;
     end
     %
     ray = rayprocess_jd(wave.rays{ib},equilDKE_Fourier,wave.opt_disp,wave.omega_rf,n_rf_list,method,colldamp);
