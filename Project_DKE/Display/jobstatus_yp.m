@@ -1,4 +1,4 @@
-function [joblist,C3PO_status,LUKE_status,dirsearch] = jobstatus_yp(dirsearch,displaymode)
+function [joblist,C3PO_status,LUKE_status,orphan_batch_dir,dirsearch] = jobstatus_yp(dirsearch,displaymode)
 %LUKE -  Function which scan the simulations in a given folder and analyze their status
 %
 % Function which scan the simulations in a given folder and analyze their status
@@ -190,6 +190,56 @@ if displaymode,
         %
         disp(['-------------------------------------------------------------------------------------'])
         disp(['-------------------------------------------------------------------------------------'])
+    end
+end
+%
+if displaymode
+    disp(['Orphan batch directories']);
+    disp(['-------------------------------------------------------------------------------------'])
+    disp(['-------------------------------------------------------------------------------------'])
+end
+%
+allfileslist = dir;
+io = 1;
+orphan_batch_dir = '';
+%
+for ii = 1:length(allfileslist),
+    if allfileslist(ii).isdir & strfind(allfileslist(ii).name,'batch_'),
+        %
+        orphan_batch_dir(io).name = allfileslist(ii).name;
+        orphan_batch_dir(io).simul = '';
+        orphan_batch_dir(io).code = '';
+        orphan_batch_dir(io).status = 1;
+        %
+        for jj = 1:length(joblist),
+            %   
+            if strcmp(joblist(jj).LUKE.status,'LUKE Fokker-Planck calculations running'),%LUKE job
+                if strcmp(allfileslist(ii).name,joblist(jj).LUKE.batch_dir(1:end-1)),
+                    orphan_batch_dir(io).simul = joblist(jj).id_simul;
+                    orphan_batch_dir(io).code = 'LUKE';
+                    orphan_batch_dir(io).status = 0;
+                end
+            end
+            %
+            for iw = 1:length(joblist(jj).C3PO),
+                if strcmp(joblist(jj).C3PO(iw).status,'C3PO ray tracing calculations running'),%C3PO job
+                    if strcmp(allfileslist(ii).name,joblist(jj).C3PO(iw).batch_dir),
+                        orphan_batch_dir(io).simul = joblist(jj).id_simul;
+                        orphan_batch_dir(io).code = ['C3PO, wave #',int2str(iw)];
+                        orphan_batch_dir(io).status = 0;
+                        %
+                    end
+                end            
+            end  
+        end
+        %
+        if displaymode,
+            if orphan_batch_dir(io).status == 1,
+                disp([' - batch directory : ',orphan_batch_dir(io).name,' is orphan. You can delete it.']);
+            end
+        end
+        %
+        io = io + 1;
     end
 end
 %

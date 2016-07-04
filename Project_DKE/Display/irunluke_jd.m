@@ -11,11 +11,13 @@ function irunluke_jd(basestr,signs,opt_gui)
             opt_gui = opt_gui == 1;
     end
     %
+    opt_status_windows = input_dke_yp('Independent simulations status windows (yes:1,no:0)',1,[0,1]) == 1;
+    %
     if nargin < 2,
         signs = '';
     end
     if nargin < 1,
-        basestr = input_dke_yp('Enter the machine name \n(such as ''ITER'', ''TCV'', ''TS'', ''JET'', ''COMPASS'', ''SST1'', ''EAST'', ''HL2A'', ''CMOD'', ''WEST'',...)',' ');
+        basestr = input_dke_yp('Enter the machine name (such as ''ITER'', ''TCV'', ''TS'', ''JET'', ''COMPASS'', ''SST1'', ''EAST'', ''HL2A'', ''CMOD'', ''WEST'',...)',' ');
     end
     %
     clc
@@ -284,7 +286,7 @@ function irunluke_jd(basestr,signs,opt_gui)
         disp(['LUKE output            : ',statstr.output]);
         disp(['External database      : ',statstr.external]);
         %
-        if exist('tprintf.m','file'),%second window display
+        if exist('tprintf.m','file') & opt_status_windows == 1,%second window display
             tprintf('Working LUKE simulation status');%clear window
             tprintf('Working LUKE simulation status',[' ----------- < ',LUKEversion_jd,' Version > ----------- ']);
             tprintf('Working LUKE simulation status',' ');
@@ -304,7 +306,7 @@ function irunluke_jd(basestr,signs,opt_gui)
             tprintf('Working LUKE simulation status',' ');
             tprintf('Working LUKE simulation status',['LUKE output            : ',statstr.output]);
             tprintf('Working LUKE simulation status',['External database      : ',statstr.external]);
-            %
+            %    
         end
         %
         disp(' ');
@@ -1511,61 +1513,142 @@ function irunluke_jd(basestr,signs,opt_gui)
                 % 
              elseif isel == 21,
                 %
-                [joblist,C3PO_status,LUKE_status,dirsearch] = jobstatus_yp(pwd);
+                [joblist,C3PO_status,LUKE_status,orphan_batch_dir,dirsearch] = jobstatus_yp(pwd);
                 % 
                 if exist('joblist'),
-                    tprintf('LUKE simulations status',' ');
-                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
-                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
-                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
-                    tprintf('LUKE simulations status',['Simulations status in folder : ',dirsearch]);
-                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
-                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
-                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
-                    tprintf('LUKE simulations status',['Total number of simulations : ',int2str(length(joblist))]);
-                    for iw = 1:length(C3PO_status)
-                        tprintf('LUKE simulations status',['Total number of simulations for wave #',int2str(iw),' not done (C3PO): ',int2str(C3PO_status(iw).notdone)]);
-                        tprintf('LUKE simulations status',['Total number of simulations for wave #',int2str(iw),' completed (C3PO): ',int2str(C3PO_status(iw).completed)]);
-                        tprintf('LUKE simulations status',['Total number of simulations for wave #',int2str(iw),' running (C3PO) : ',int2str(C3PO_status(iw).running)]);
-                    end
-                    tprintf('LUKE simulations status',['Total number of simulations not done (LUKE): ',int2str(LUKE_status.notdone)]);
-                    tprintf('LUKE simulations status',['Total number of simulations completed (LUKE): ',int2str(LUKE_status.completed)]);
-                    tprintf('LUKE simulations status',['Total number of simulations running (LUKE) : ',int2str(LUKE_status.running)]);
-                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
-                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
-                    tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
-                    %
-                    for ii = 1:length(joblist),
-                        tprintf('LUKE simulations status',[' - id_simul : ',joblist(ii).id_simul]);
+                    if opt_status_windows == 1 & exist('tprintf.m','file'),
+                        tprintf('LUKE simulations status',' ');
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        tprintf('LUKE simulations status',['Simulations status in folder : ',dirsearch]);
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        tprintf('LUKE simulations status',['Total number of simulations : ',int2str(length(joblist))]);
+                        for iw = 1:length(C3PO_status)
+                            tprintf('LUKE simulations status',['Total number of simulations for wave #',int2str(iw),' not done (C3PO): ',int2str(C3PO_status(iw).notdone)]);
+                            tprintf('LUKE simulations status',['Total number of simulations for wave #',int2str(iw),' completed (C3PO): ',int2str(C3PO_status(iw).completed)]);
+                            tprintf('LUKE simulations status',['Total number of simulations for wave #',int2str(iw),' running (C3PO) : ',int2str(C3PO_status(iw).running)]);
+                        end
+                        tprintf('LUKE simulations status',['Total number of simulations not done (LUKE): ',int2str(LUKE_status.notdone)]);
+                        tprintf('LUKE simulations status',['Total number of simulations completed (LUKE): ',int2str(LUKE_status.completed)]);
+                        tprintf('LUKE simulations status',['Total number of simulations running (LUKE) : ',int2str(LUKE_status.running)]);
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
                         %
-                        for iw = 1:length(joblist(ii).C3PO)
-                            if strcmp(joblist(ii).C3PO(iw).status,'C3PO ray tracing calculations not done'),
-                                tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') status: **** ',joblist(ii).C3PO(iw).status,' ****']);
+                        for ii = 1:length(joblist),
+                            tprintf('LUKE simulations status',[' - id_simul : ',joblist(ii).id_simul]);
+                            %
+                            for iw = 1:length(joblist(ii).C3PO)
+                                if strcmp(joblist(ii).C3PO(iw).status,'C3PO ray tracing calculations not done'),
+                                    tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') status: **** ',joblist(ii).C3PO(iw).status,' ****']);
+                                else
+                                    tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') status: ',joblist(ii).C3PO(iw).status]);
+                                end
+                                if strcmp(joblist(ii).C3PO(iw).status,'C3PO ray tracing calculations running'),
+                                    tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') remote host address : ',joblist(ii).C3PO(iw).host]);
+                                    tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') remote jobid : ',joblist(ii).C3PO(iw).jobid]);
+                                    tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') batch directory : ',joblist(ii).C3PO(iw).batch_dir]);
+                                end
+                            end
+                            %
+                            if strcmp(joblist(ii).LUKE.status,'LUKE Fokker-Planck calculations not done'),
+                                tprintf('LUKE simulations status',[' - LUKE status: **** ',joblist(ii).LUKE.status, ' ****']);
                             else
-                                tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') status: ',joblist(ii).C3PO(iw).status]);
+                                tprintf('LUKE simulations status',[' - LUKE status: ',joblist(ii).LUKE.status]);
                             end
-                            if strcmp(joblist(ii).C3PO(iw).status,'C3PO ray tracing calculations running'),
-                                tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') remote host address : ',joblist(ii).C3PO(iw).host]);
-                                tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') remote jobid : ',joblist(ii).C3PO(iw).jobid]);
-                                tprintf('LUKE simulations status',[' - C3PO (wave #',int2str(iw),') batch directory : ',joblist(ii).C3PO(iw).batch_dir]);
+                            if strcmp(joblist(ii).LUKE.status,'LUKE Fokker-Planck calculations running'),
+                                tprintf('LUKE simulations status',[' - LUKE remote host address : ',joblist(ii).LUKE.host]);
+                                tprintf('LUKE simulations status',[' - LUKE remote jobid : ',joblist(ii).LUKE.jobid]);
+                                tprintf('LUKE simulations status',[' - LUKE batch directory : ',joblist(ii).LUKE.batch_dir]);
                             end
+                            %
+                            tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                            tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
                         end
                         %
-                        if strcmp(joblist(ii).LUKE.status,'LUKE Fokker-Planck calculations not done'),
-                            tprintf('LUKE simulations status',[' - LUKE status: **** ',joblist(ii).LUKE.status, ' ****']);
-                        else
-                            tprintf('LUKE simulations status',[' - LUKE status: ',joblist(ii).LUKE.status]);
-                        end
-                        if strcmp(joblist(ii).LUKE.status,'LUKE Fokker-Planck calculations running'),
-                            tprintf('LUKE simulations status',[' - LUKE remote host address : ',joblist(ii).LUKE.host]);
-                            tprintf('LUKE simulations status',[' - LUKE remote jobid : ',joblist(ii).LUKE.jobid]);
-                            tprintf('LUKE simulations status',[' - LUKE batch directory : ',joblist(ii).LUKE.batch_dir]);
+                        tprintf('LUKE simulations status',['List of orphan batch directories ']);
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        %
+                        for io = 1:length(orphan_batch_dir)
+                        	if orphan_batch_dir(io).status == 1,
+                                tprintf('LUKE simulations status',[' - batch directory : ',orphan_batch_dir(io).name,' is orphan. You can delete it.']);
+                            end
                         end
                         %
                         tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
                         tprintf('LUKE simulations status',['-------------------------------------------------------------------------------------']);
+                        %
+                    else
+                        disp(' ');
+                        disp(['-------------------------------------------------------------------------------------']);
+                        disp(['-------------------------------------------------------------------------------------']);
+                        disp(['-------------------------------------------------------------------------------------']);
+                        disp(['Simulations status in folder : ',dirsearch]);
+                        disp(['-------------------------------------------------------------------------------------']);
+                        disp(['-------------------------------------------------------------------------------------']);
+                        disp(['-------------------------------------------------------------------------------------']);
+                        disp(['Total number of simulations : ',int2str(length(joblist))]);
+                        for iw = 1:length(C3PO_status)
+                            disp(['Total number of simulations for wave #',int2str(iw),' not done (C3PO): ',int2str(C3PO_status(iw).notdone)]);
+                            disp(['Total number of simulations for wave #',int2str(iw),' completed (C3PO): ',int2str(C3PO_status(iw).completed)]);
+                            disp(['Total number of simulations for wave #',int2str(iw),' running (C3PO) : ',int2str(C3PO_status(iw).running)]);
+                        end
+                        disp(['Total number of simulations not done (LUKE): ',int2str(LUKE_status.notdone)]);
+                        disp(['Total number of simulations completed (LUKE): ',int2str(LUKE_status.completed)]);
+                        disp(['Total number of simulations running (LUKE) : ',int2str(LUKE_status.running)]);
+                        disp(['-------------------------------------------------------------------------------------']);
+                        disp(['-------------------------------------------------------------------------------------']);
+                        disp(['-------------------------------------------------------------------------------------']);
+                        %
+                        for ii = 1:length(joblist),
+                            disp([' - id_simul : ',joblist(ii).id_simul]);
+                            %
+                            for iw = 1:length(joblist(ii).C3PO)
+                                if strcmp(joblist(ii).C3PO(iw).status,'C3PO ray tracing calculations not done'),
+                                    disp([' - C3PO (wave #',int2str(iw),') status: **** ',joblist(ii).C3PO(iw).status,' ****']);
+                                else
+                                    disp([' - C3PO (wave #',int2str(iw),') status: ',joblist(ii).C3PO(iw).status]);
+                                end
+                                if strcmp(joblist(ii).C3PO(iw).status,'C3PO ray tracing calculations running'),
+                                    disp([' - C3PO (wave #',int2str(iw),') remote host address : ',joblist(ii).C3PO(iw).host]);
+                                    disp([' - C3PO (wave #',int2str(iw),') remote jobid : ',joblist(ii).C3PO(iw).jobid]);
+                                    disp([' - C3PO (wave #',int2str(iw),') batch directory : ',joblist(ii).C3PO(iw).batch_dir]);
+                                end
+                            end
+                            %
+                            if strcmp(joblist(ii).LUKE.status,'LUKE Fokker-Planck calculations not done'),
+                                disp([' - LUKE status: **** ',joblist(ii).LUKE.status, ' ****']);
+                            else
+                                disp([' - LUKE status: ',joblist(ii).LUKE.status]);
+                            end
+                            if strcmp(joblist(ii).LUKE.status,'LUKE Fokker-Planck calculations running'),
+                                disp([' - LUKE remote host address : ',joblist(ii).LUKE.host]);
+                                disp([' - LUKE remote jobid : ',joblist(ii).LUKE.jobid]);
+                                disp([' - LUKE batch directory : ',joblist(ii).LUKE.batch_dir]);
+                            end
+                            %
+                            disp(['-------------------------------------------------------------------------------------']);
+                            disp(['-------------------------------------------------------------------------------------']);
+                        end
+                        %
+                        disp(['List of orphan batch directories ']);
+                        disp(['-------------------------------------------------------------------------------------']);
+                        disp(['-------------------------------------------------------------------------------------']);
+                        %
+                        for io = 1:length(orphan_batch_dir)
+                        	if orphan_batch_dir(io).status == 1,
+                                disp([' - batch directory : ',orphan_batch_dir(io).name,' is orphan. You can delete it.']);
+                            end
+                        end
+                        %
+                        disp(['-------------------------------------------------------------------------------------']);
+                        disp(['-------------------------------------------------------------------------------------']);
                     end
-                end                
+                end
             elseif isel == 0,
                 %
                 flag_runluke = 1;
