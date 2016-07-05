@@ -150,3 +150,16 @@ end
 dkepath.clustermode.run_lukert.scheduler.walltime = 24;% (hours) 24 hours default limit, corresponds to remtimout for direct modes
 dkepath.clustermode.run_lukert.scheduler.enforce = 0+2i;% three MDCE attempts, no seq switch
 %
+if strcmp(dkepath.remote(dkepath.clustermode.run_lukert.scheduler.remnum).scheduler,'torque') | strcmp(dkepath.remote(dkepath.clustermode.run_lukert.scheduler.remnum).scheduler,'pbs'),
+    queuemode = input_dke_yp('Do you want to see queuing parameters for ''torque'' or ''pbs'' schedulers (y/n)','n',{'y','n'}) == 'y';
+    if queuemode,
+        %
+        disp('----------------------------- default queue parameters ----------------------------')
+        disp(' ')
+        disp(dkepath.remote(dkepath.clustermode.run_lukert.scheduler.remnum).queue);
+        disp('-----------------------------------------------------------------------------------');
+        disp('WARNING: the queue parameters may be changed in remote profiles (MatRemote toolbox)');
+        disp('-----------------------------------------------------------------------------------');
+    end
+end    
+end
