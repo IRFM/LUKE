@@ -1,0 +1,54 @@
+function dkepath = path_laptop_GUILLAUME_BROCHARD
+%
+% path definitions for laptop of Shaodong Song
+%
+%	Output:
+%
+%       - dkepath: path structure
+%
+%   Warning: none
+%
+% By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
+%
+dkepath.machine = 'sd';
+dkepath.hostname = 'sd';
+dkepath.computer = computer;%machine type and supported OS
+%
+% Selected user profile for unlisted users
+%
+dkepath.default = 'sd';
+%
+%--------------------------------------------------------------------------------------------------------
+%------------------------------------ Profile number 1, Guillaume Brochard ------------------------------------
+%--------------------------------------------------------------------------------------------------------
+%
+dkepath.sd(1).luke_root = '/home/songshd/luke/LUKE/';
+dkepath.sd(1).local_root = '/home/songshd/packages/';
+dkepath.sd(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+dkepath.sd(1).compiler_opt.libs.gfortran = [dkepath.sd(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.8.4','/',dkepath.machine,'/'];%extra libraries
+dkepath.sd(1).compiler_opt.copts = '';
+dkepath.sd(1).compiler_opt.fopts.mex801 = 'FC=''gfortran''';%
+dkepath.sd(1).compiler_opt.separatrice.mex801 = [' -largeArrayDims -lgfortran -L',dkepath.sd(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.sd(1).compiler_opt.helmex.mex801 = [' -compatibleArrayDims -lgfortran -L',dkepath.sd(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.sd(1).compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
+%
+dkepath.sd(1).MUMPS.mex801 = [dkepath.sd(1).local_root,'MUMPS_4.10.0/MATLAB'];;%Where MUMPS matrix solver is stored (MEX function)
+%
+% LUKE documentation
+%
+dkepath.sd(1).graphviz.env = '/usr/bin/';% Graphviz environment variable
+dkepath.sd(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.sd(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+%
+%--------------------------- Remote computing -----------------------------
+%
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
+%
+%dkepath.sd(1).remote(1).remoteid = 'IPP_ABACUS';
+%dkepath.sd(1).remote(1).schedulername = 'pbs';
+%dkepath.sd(1).remote(1).profilename = 'local';
+%dkepath.sd(1).remote(1).luke_root = dkepath.sd(1).luke_root;% local cluster
+%
+
+
