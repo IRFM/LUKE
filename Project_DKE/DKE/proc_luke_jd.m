@@ -779,6 +779,15 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             data_proc.scalar.np_rf_2piRp = np_rf_2piRp;
             data_proc.scalar.n_rf_list = n_rf_list;
             %
+            if isfield(dke_out.waves{1}.rayparam,'colldamp')
+                data_proc.scalar.p_coll_2piRp = data_proc.scalar.p0_rf_2piRp - data_proc.scalar.p_rf_2piRp;
+                data_proc.scalar.frac_coll = 1-data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp;
+            else
+                data_proc.scalar.p_coll_2piRp = 0;
+                data_proc.scalar.frac_coll = 0;
+            end
+            
+            %
             data_proc.scalar.p_e_2piRp = p_e_2piRp;
             data_proc.scalar.I_tot = I_tot;
             data_proc.scalar.I_exp = I_exp;

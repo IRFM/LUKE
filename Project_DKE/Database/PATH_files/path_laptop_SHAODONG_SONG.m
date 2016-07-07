@@ -45,18 +45,12 @@ dkepath.sd(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-%dkepath.sd(1).remote(1).remoteid = 'IPP_ABACUS';
-%dkepath.sd(1).remote(1).schedulername = 'pbs';
-%dkepath.sd(1).remote(1).profilename = 'local';
-%dkepath.sd(1).remote(1).luke_root = dkepath.sd(1).luke_root;% local cluster
-%
 dkepath.sd(1).remote(1).remoteid = 'SWIP_CLUSTER02';
 dkepath.sd(1).remote(1).schedulername = 'torque';
 dkepath.sd(1).remote(1).profilename = 'sd';
-dkepath.sd(1).remote(1).luke_root = '/home/Yves/LUKE/';%-----------------Put the LUKE path or symbolic link from your session
+dkepath.sd(1).remote(1).luke_root = '/home/sd/LUKE/';%-----------------Put the LUKE path or symbolic link from your session
 dkepath.sd(1).remote(1).link_mode = '';
 dkepath.sd(1).remote(1).cvsupdate = false;% update done in 'direct' mode
 dkepath.sd(1).remote(1).gitupdate = false;
 %
-dk
 

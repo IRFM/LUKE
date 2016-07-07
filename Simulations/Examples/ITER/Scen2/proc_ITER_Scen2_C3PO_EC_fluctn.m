@@ -21,7 +21,7 @@ dtn = 1i;%1;% internal LUKE time step. As an imaginary number, dkeparam.dtn pres
 %
 % *************************************************************************
 %
-id_simul0 = [id_equil,'_',id_wave,'_',id_fluct,locid_simul];
+id_simul0 = [id_equil,'_',id_wave,locid_simul,'_',id_fluct];
 %
 id_simul = [id_simul0,'_sigma',num2str(sigmar_max),'_delta',num2str(sigmar_hwhm),'_dtn',num2str(dtn),'_Nfluct',num2str(Nfluct)];
 id_simul(id_simul == '.') = 'p';

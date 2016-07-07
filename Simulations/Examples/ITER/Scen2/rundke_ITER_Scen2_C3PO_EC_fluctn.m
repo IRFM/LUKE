@@ -91,6 +91,5 @@ luke_input.transpfaste = transpfaste;
 luke_input.ripple = ripple;
 luke_input.Zf0_interp = '';
 %
-frundke_fluctn(luke_input,dkepath,opt_save,p_opt,path_simul,...
-    dtn,tn,Nfluct,sigmar_max,sigmar_hwhm)
+frundke_fluctn(luke_input,dkepath,opt_save,p_opt,path_simul,dtn,tn,Nfluct,sigmar_max,sigmar_hwhm);
 %
