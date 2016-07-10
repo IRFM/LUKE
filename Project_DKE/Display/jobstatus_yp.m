@@ -210,7 +210,26 @@ for ii = 1:length(allfileslist),
     if allfileslist(ii).isdir & strfind(allfileslist(ii).name,'batch_'),
         %
         cd(allfileslist(ii).name),
-        datain_matrun = load(['MAT_RUN_',allfileslist(ii).name(7:end),'.mat'],'arg_range','dkecluster');
+        %
+        datain_matrun = load(['MAT_RUN_',allfileslist(ii).name(7:end),'.mat']);
+        %
+        if ~isfield(datain_matrun,'arg_range');
+            orphan_batch_dir(io).name = allfileslist(ii).name;
+            orphan_batch_dir(io).simul = '';
+            orphan_batch_dir(io).code = '';
+            orphan_batch_dir(io).remote = '';
+            orphan_batch_dir(io).status = 1;    
+            %
+            disp([' - batch directory : ',orphan_batch_dir(io).name,' is orphan. You can delete it.']);
+            %
+            io = io + 1;
+            cd('..');
+            %
+            clear datain_matrun
+            %
+            break;
+        end
+        %
         cd('..');
         datain_lukedata = load(['LUKE_DATA_',datain_matrun.arg_range{:}.simul_in,'.mat'],'dkepath');  
         %
