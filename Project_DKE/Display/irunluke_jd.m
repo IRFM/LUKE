@@ -1135,7 +1135,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                 for iw = 1:length(waves),
                     if ~isfield(waves{iw},'job'),%batch ray tracing calculations
                         if ~isfield(waves{iw},'colldamp'),%backward compatibility
-                            waves{iw}.colldamp = waves{iw}.rayparam.colldamp;
+                            if ~isfield(waves{iw}.rayparam,'colldamp'),%backward compatibility
+                                waves{iw}.colldamp = 0;
+                            else
+                                waves{iw}.colldamp = waves{iw}.rayparam.colldamp;
+                            end
                         end
                     end
                 end
