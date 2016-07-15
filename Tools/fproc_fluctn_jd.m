@@ -4,10 +4,6 @@ if nargin < 5,
     opt = struct;
 end
 %
-if nargin < 4,
-    leg_ref = NaN;
-end
-%
 if nargin < 3,
     Zfluct_ref = '';
 end
@@ -19,7 +15,15 @@ if nargin < 2 || isempty(fluct_display),
 end
 %
 if nargin < 4,
-    leg_ref = cell(1,length(Zfluct_ref));
+    nref = length(Zfluct_ref);
+    if nref == 1,
+        leg_ref = {'ref.'};
+    else
+        leg_ref = cell(1,nref);
+        for iref=1:nref,
+            leg_ref{iref} = ['ref. ',num2str(iref)];
+        end
+    end
 end
 
 

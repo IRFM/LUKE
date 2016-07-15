@@ -4,13 +4,16 @@ clear
 close all
 %
 p_opt = -1;
-display_mode = 2;
+%
+fluct_display.mode = 2;
+fluct_display.evol = 0;
+fluct_display.stat = 0;
 %
 id_equil = 'ITER_Scen2_200103121816_430_129';% For plasma equilibrium
 id_fluct = 'fluctn';% Fluctuation model
 id_wave = 'C3PO_NTM_32';
 locid_simul = '_24rays';%Simulation ID
-locid_wave_ref = NaN;%'_20MW_24rays';%'_20MW_1ray';%
+locid_wave_ref = '_24rays';%NaN;%'_20MW_24rays';%'_20MW_1ray';%
 %
 sigmar_max = [0.7];%[0.5];% Maximum value of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
 sigmar_hwhm = [0.02];% Radial half width at half maximum of the relative fluctuations variance at the poloidal angle theta = 0 [1,nfluct_types]
@@ -33,10 +36,8 @@ if ~isnan(locid_wave_ref),
     %    
     id_simul_ref = [id_equil,'_',id_wave,locid_wave_ref];
     %
-    filename_ref = ['ZFLUCT_',id_simul_ref,'.mat'];
-    %
-    data_ref = load(filename_ref,'Zfluct');
-    Zfluct_ref = data_ref.Zfluct;
+    filename_ref = ['LUKE_RESULTS_',id_simul_ref,'.mat'];
+    Zfluct_ref = fproc_fluctn_jd(filename_ref);
     %
 else
     %
@@ -44,7 +45,7 @@ else
     %
 end
 %
-Zfluct = fproc_fluctn_jd(filename,display_mode,Zfluct_ref);
+Zfluct = fproc_fluctn_jd(filename,fluct_display,Zfluct_ref);
 %
     
     
