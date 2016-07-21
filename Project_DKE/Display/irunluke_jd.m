@@ -17,7 +17,7 @@ function irunluke_jd(basestr,signs,opt_gui)
         signs = '';
     end
     if nargin < 1,
-        basestr = input_dke_yp('Enter the machine name (such as ''ITER'', ''TCV'', ''TS'', ''JET'', ''COMPASS'', ''SST1'', ''EAST'', ''HL2A'', ''CMOD'', ''WEST'',...)',' ');
+        basestr = input_dke_yp('Enter the machine name (such as ''ITER'', ''TCV'', ''TS'', ''JET'', ''COMPASS'', ''SST1'', ''EAST'', ''HL2A'', ''CMOD'', ''WEST'', ''D3D'',...)',' ');
     end
     %
     clc
