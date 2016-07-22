@@ -2,18 +2,18 @@ c     Simulation par la methode de Monte Carlo de la reponse d'un
 c     scintillateur au rayonnement incident en fonction de sa
 c     taille et de la position et de l'extension de la zone eclairee.
 c
-      real*8 hnu0,alpha0,ctheta,stheta,cphi,sphi,hnu
-      real*8 tableau(30000,8),x,y,z,r1,xmax,ymax,zmax,mhu
-      real*8 salpha0,calpha0,mhuph,mhuco,omegax,omegay,omegaz
-      real*8 dze,dzet,hnu1,cosdev,sindev,qui,omegax1,omegay1,omegaz1
-      real*8 mhuph1,mhuco1,mhu1,dze1,x1,y1,z1,ctheta1,stheta1
-      real*8 cphi1,sphi1,mec2,prof,nbtotcoll,nbmoycoll,distri(2,100)
-      real*8 nbtotlt,nbtotzm
-      real*8 nbmoylt,nbmoyzm
-      real*8 a,x0,y0,xr,yr,atom,xmhuph,xmhuco
+      real hnu0,alpha0,ctheta,stheta,cphi,sphi,hnu
+      real tableau(10000000,8),x,y,z,r1,xmax,ymax,zmax,mhu
+      real salpha0,calpha0,mhuph,mhuco,omegax,omegay,omegaz
+      real dze,dzet,hnu1,cosdev,sindev,qui,omegax1,omegay1,omegaz1
+      real mhuph1,mhuco1,mhu1,dze1,x1,y1,z1,ctheta1,stheta1
+      real cphi1,sphi1,mec2,prof,nbtotcoll,nbmoycoll,distri(2,100)
+      real nbtotlt,nbtotzm
+      real nbmoylt,nbmoyzm
+      real a,x0,y0,xr,yr,atom,xmhuph,xmhuco
 c
-      integer*4 n,i,nphot,nbdet,w,reset0,reset,nbcoll,incidence
-      integer*4 nv,nbabs,choixdistri,iv,nbdiff,type
+      integer n,i,nphot,nbdet,w,reset0,reset,nbcoll,incidence
+      integer nv,nbabs,choixdistri,iv,nbdiff,type
 c
       common/etiq1/reset
 c
@@ -42,7 +42,7 @@ c
       data mec2,pi,rad /511.0,3.1415926535,360/ 
 c
       open(3,FILE='dmcdet.data',STATUS='UNKNOWN')
-      open(2,FILE='rmcdet.data',STATUS='UNKNOWN')
+
 c
 c     ************* entree donnees et ecriture ****************
 c          
@@ -78,6 +78,8 @@ c
       mhu=mhuph+mhuco
 c
 c     ----------------------ECRITURE DES PARAMETRES---------------------
+c
+      open(2,FILE='rmcdet.data',STATUS='UNKNOWN')
 c
       write(2,*) '----------------------------------------------------'
       write(2,*) 'Code MCdet : Interaction rayonnement-detecteur :'
@@ -457,7 +459,7 @@ c
 c
 c     -----------------------------FORMATS-----------------------------
 c
-    1 format(a51,f6.2)
+    1 format(a51,f10.2)
   100 format(i6,1x,f5.1,1x,f6.2,1x,f6.2,1x,f6.2,1x,f6.2,1x,f6.2,1x,f6.
      *2,1x,f6.2,1x,f6.2)
   110 format(a30,i7)
@@ -475,9 +477,9 @@ c
 
 
       subroutine histo(nv,iv,nt,tab,distri)
-      real*8 vmin,vmax,vmin1,vmax1,tab(30000,8)
-      real*8 dv,distri(2,100),cn,ntt
-      integer*4 nv,i,iv,ivm
+      real vmin,vmax,vmin1,vmax1,tab(10000000,8)
+      real dv,distri(2,100),cn,ntt
+      integer nv,i,iv,ivm
 c
 c         Cette routine determine le spectre
 c
@@ -503,7 +505,7 @@ c
       if ((iv.eq.1).or.(iv.eq.7)) vmax=vmax+(vmax-vmin)/nv
 c
       dv=(vmax-vmin)/nv
-      cn=1.0/(dv*nt)
+c      cn=1.0/(dv*nt)
       ntt=0.0
       do 20 j=0,nv-1
          distri(2,j+1)=0.0
@@ -517,7 +519,8 @@ c
          do 10 i=1,nt
            if (tab(i,2).eq.0.0) then
              if ((tab(i,iv).ge.vmin1).and.(tab(i,iv).lt.vmax1)) then
-                distri(2,j+1)=distri(2,j+1)+1.0*cn
+c                distri(2,j+1)=distri(2,j+1)+1.0*cn
+                distri(2,j+1)=distri(2,j+1)+1.0
                 tab(i,2)=1.0
                 ntt=ntt+1.0
                 goto 10
@@ -530,16 +533,16 @@ c
    10    continue
    20 continue 
 c
-      do 30 i=1,nv
-   30 distri(2,i)=distri(2,i)*nt/ntt
-      return
+c      do 30 i=1,nv
+c   30 distri(2,i)=distri(2,i)*nt/ntt
+c      return
       end
 
 
 
       function ran2(idum)
-      integer*4 m,ia,ic,ir(97),iy,idum,j,iff
-      real*8 rm 
+      integer m,ia,ic,ir(97),iy,idum,j,iff
+      real rm 
 c
 c     Variable aleatoire uniforme comprise entre 0 et 1
 c     ATTENTION : periodicite m=714025 -> ne pas tirer plus de m fois
@@ -575,7 +578,7 @@ c
 
 
       function tirazi(idum)
-      integer*4 m,ia,ic,ir(97),iy,idum,j,iff
+      integer m,ia,ic,ir(97),iy,idum,j,iff
       real*4 rm,pi
       data pi/3.1415926535/
 c
@@ -613,17 +616,17 @@ c
 
 
       subroutine tirpos(mhut,var)
-      real*8 var,mhut,aleat
-      integer*4 reset
+      real var,mhut,aleat
+      integer reset
 c
       common/etiq1/reset
 c
       aleat=ran2(reset)
       if (aleat.ne.0.0) then
-         var=-dlog(aleat)/mhut
+         var=-log(aleat)/mhut
       else
          write(2,*) 'Erreur tirpos'
-         pause
+c         pause
       endif
       return
       end
@@ -631,37 +634,37 @@ c
 
 
       subroutine ener(hnu10,hnu0,hnu)
-      real*8 hnu10,hnu0,hnu,aleat
-      integer*4 reset
+      real hnu10,hnu0,hnu,aleat
+      integer reset
 c
       common/etiq1/reset
 c
       aleat=ran2(reset)
       if (aleat.ne.0.0) then
-         hnu=hnu10-hnu0*dlog(1.0-aleat)
+         hnu=hnu10-hnu0*log(1.0-aleat)
       else
          write(2,*) 'Erreur tirener'
-         pause
+c         pause
       endif
       return
       end
 
 
       subroutine posi(a,x)
-      real*8 a,x,aleat
-      integer*4 reset
+      real a,x,aleat
+      integer reset
 c
       common/etiq1/reset
 c
       aleat=ran2(reset)
-      x=a*dsqrt(aleat)
+      x=a*sqrt(aleat)
       return
       end
 
 
       subroutine tirsur(survie,mhuph,mhuco)
-      real*8 mhuco,mhuph,r,va
-      integer*4 reset,survie
+      real mhuco,mhuph,r,va
+      integer reset,survie
 c
       common/etiq1/reset
 c
@@ -679,9 +682,9 @@ c      write(1,*) va
 
 
       function tircom(hnu0)
-      real*8 q1,q2,q3,lambda,r,hnu0
-      real*8 test1,test2a,test2b
-      integer*4 reset
+      real q1,q2,q3,lambda,r,hnu0
+      real test1,test2a,test2b
+      integer reset
 c
       common/etiq1/reset
 c
@@ -718,9 +721,9 @@ c
 
 
       subroutine xCdTe(Eph,mhuph,mhuco)
-      real*8 Eph,mhuph,mhuco
-      real*8 mhuphCd,mhuphTe
-      real*8 mhucoCd,mhucoTe
+      real Eph,mhuph,mhuco
+      real mhuphCd,mhuphTe
+      real mhucoCd,mhucoTe
       data dens,densCd,densTe/5.856,8.65,6.24/
       data pCd,pTe/0.468,0.532/
       if ((Eph.ge.3.99).and.(Eph.le.1000.0)) then
@@ -738,8 +741,8 @@ c
       
       
       subroutine xCd(Eph,mhup,mhuc)
-      real*8 Eph
-      real*8 mhu0,mhup,mhuc
+      real Eph
+      real mhu0,mhup,mhuc
       data dens,pa,avo,barn/8.65,112.41,6.023e+23,1.0e-24/
       data ap10,ap11,ap12,ap13/15.9668,-2.38363,-0.0801104,0.0/
       data ap20,ap21,ap22,ap23/11.5254,1.07714,-0.831424,0.0579120/
@@ -757,8 +760,8 @@ c
       end
       
       subroutine xTe(Eph,mhup,mhuc)
-      real*8 Eph
-      real*8 mhu0,mhup,mhuc
+      real Eph
+      real mhu0,mhup,mhuc
       data dens,pa,avo,barn/6.24,127.6,6.023e+23,1.0e-24/
       data ap10,ap11,ap12,ap13/16.1087,-2.27876,-0.0929405,0.0/
       data ap20,ap21,ap22,ap23/11.6656,1.71052,-0.948281,0.0653213/
@@ -776,12 +779,13 @@ c
       end
 
       subroutine xBGO(Eph,mhuph,mhuco)
-      real*8 Eph,mhuph,mhuco
-      real*8 mhuphbismu,mhuphgerma,mhuphoxy
-      real*8 mhucobismu,mhucogerma,mhucooxy
+      real Eph,mhuph,mhuco
+      real mhuphbismu,mhuphgerma,mhuphoxy
+      real mhucobismu,mhucogerma,mhucooxy
       data dens,densbismu,densgerma,densoxy/7.13,9.8,5.32,1.43e-3/
       data pbismu,pgerma,poxy/0.671,0.175,0.154/
-      if ((Eph.ge.3.99).and.(Eph.le.1000.0)) then
+c     if ((Eph.ge.3.99).and.(Eph.le.1000.0)) then
+      if (Eph.ge.3.99) then
         call xbismu(Eph,mhuphbismu,mhucobismu)
         call xgerma(Eph,mhuphgerma,mhucogerma)
         call xoxy(Eph,mhuphoxy,mhucooxy)
@@ -799,8 +803,8 @@ c
 
 
       subroutine xoxy(Eph,mhup,mhuc)
-      real*8 Eph
-      real*8 mhu0,mhup,mhuc
+      real Eph
+      real mhu0,mhup,mhuc
       data dens,pa,avo,barn/1.43e-3,16.00,6.023e+23,1.0e-24/
       data ap0,ap1,ap2,ap3/11.7130,-2.57229,-0.205893,0.0199244/
       data ac0,ac1,ac2,ac3/-1.73679,2.17686,-0.449050,0.0264733/
@@ -814,8 +818,8 @@ c
 
 
       subroutine xbismu(Eph,mhup,mhuc)
-      real*8 Eph
-      real*8 mhu0,mhup,mhuc
+      real Eph
+      real mhu0,mhup,mhuc
       data dens,pa,avo,barn/9.8,209.00,6.023e+23,1.0e-24/
       data ap10,ap11,ap12,ap13/16.7078,-2.58648,0.0,0.0/
       data ap20,ap21,ap22,ap23/17.5348,-2.23353,-0.0596161,0.0/
@@ -838,8 +842,8 @@ c
 
 
       subroutine xgerma(Eph,mhup,mhuc)
-      real*8 Eph
-      real*8 mhu0,mhup,mhuc
+      real Eph
+      real mhu0,mhup,mhuc
       data dens,pa,avo,barn/5.32,72.6,6.023e+23,1.0e-24/
       data ap10,ap11,ap12,ap13/14.6813,-2.59285,-0.0208355,0.0/
       data ap20,ap21,ap22,ap23/13.9288,-0.479613,-0.572897,0.0431277/
@@ -857,8 +861,8 @@ c
       end
 
       function gasdev(type,k)
-      real*8 sigma,k
-      integer*4 reset,type
+      real sigma,k
+      integer reset,type
 c
       common/etiq1/reset
 c
@@ -885,8 +889,8 @@ c
 
 
       subroutine xNaI(Eph,mhuph,mhuco)
-      real*8 Eph,mhuph,mhuco
-      real*8 mhucoNa,mhuphNa,mhucoI,mhuphI
+      real Eph,mhuph,mhuco
+      real mhucoNa,mhuphNa,mhucoI,mhuphI
       data dens,densNa,densI/3.67,0.97,4.94/
       data pNa,pI/0.1534,0.8466/
       if ((Eph.ge.5.198).and.(Eph.le.1000.0)) then
@@ -903,8 +907,8 @@ c
       end
 
       subroutine xCsI(Eph,mhuph,mhuco)
-      real*8 Eph,mhuph,mhuco
-      real*8 mhuphCs,mhucoCs,mhuphI,mhucoI
+      real Eph,mhuph,mhuco
+      real mhuphCs,mhucoCs,mhuphI,mhucoI
       data dens,densCs,densI/4.51,1.873,4.94/
       data pCs,pI/0.5115,0.4885/
       if ((Eph.ge.5.713).and.(Eph.le.1000.0)) then
@@ -923,8 +927,8 @@ c
 
 
       subroutine xCs(Eph,mhup,mhuc)
-      real*8 Eph
-      real*8 mhu0,mhup,mhuc
+      real Eph
+      real mhu0,mhup,mhuc
       data dens,pa,avo,barn/1.873,132.91,6.023e+23,1.0e-24/
       data ap10,ap11,ap12,ap13/16.5418,-2.46363,-0.0542849,0.0/
       data ap20,ap21,ap22,ap23/11.3757,1.94161,-0.983232,0.0671986/
@@ -943,8 +947,8 @@ c
 
 
       subroutine xNa(Eph,mhup,mhuc)
-      real*8 Eph
-      real*8 mhu0,mhup,mhuc
+      real Eph
+      real mhu0,mhup,mhuc
       data dens,pa,avo,barn/0.97,22.997,6.023e+23,1.0e-24/
       data ap10,ap11,ap12,ap13/12.6777,-2.24521,-0.274873,0.02507/
       data ac0,ac1,ac2,ac3/-0.967717,1.61794,-0.287191,0.0131526/
@@ -959,8 +963,8 @@ c
 
 
       subroutine xI(Eph,mhup,mhuc)
-      real*8 Eph
-      real*8 mhu0,mhup,mhuc
+      real Eph
+      real mhu0,mhup,mhuc
       data dens,pa,avo,barn/4.94,126.91,6.023e+23,1.0e-24/
       data ap10,ap11,ap12,ap13/16.4086,-2.48214,-0.0507179,0.0/
       data ap20,ap21,ap22,ap23/12.1075,1.43635,-0.882038,0.0603575/
