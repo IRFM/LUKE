@@ -103,7 +103,7 @@ hold(ax,'on');
 %     gcl = loglog(x,y,'parent',ax);
 % else
     if ~all(isnan(eym(:))) || ~all(isnan(eyp(:)))
-        gcl = errorbar(x,y,eym,eyp,'parent',ax);
+        gcl = errorbar(real(x),real(y),real(eym),real(eyp),'parent',ax);
     else        
         if iscell(marker),
             if size(y,1) == length(x)
