@@ -3,33 +3,9 @@ function soutputs = remotemdsplus(sinputs)
 %
 % Remote mdsplus database access 
 %
-% INPUTS : 
+% INPUTS : (see testremotebach.m for the remote parameters in the spinputs structure)
 %
 %   - sinputs : structure for remote access and mds+ database
-%
-
-%   - mode : can be
-%       o a number : (0) use remoterunbatch and wait for result with remotegetbatch
-%                    (1) use matremote_jd and wait for result 
-%       o a cell array containing the job(s) started earlier with option (job = 2), or the results of completed jobs
-%
-%   - remote : only if isnumeric(sinputs)
-%           o (NaN)     : load all profiles and ask for user selection 
-%           o (struct)  : profile contained in structure 'remote' 
-%           o (string)  : identification of profile to be selected as remote_(string).m 
-%           o ('')      : load & return all profiles 
-%           o ('local') : idendify and return local cluster
-%
-%   - link_mode : connection mode prescription
-%           o NaN : (default) use value from remote.link_mode
-%           o []  : give priority to (0) ssh key pair, (1) ssh bridge, (2) url/ftp bridge
-%           o 0   : ssh key pair enforced
-%           o 1   : ssh bridge enforced
-%           o 2   : url/ftp bridge enforced
-
-
-
-
 %
 % OUTPUTS : 
 %
