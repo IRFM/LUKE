@@ -60,6 +60,7 @@ xlabel('time (s)');ylabel('|I_p| (MA)')
 % t = mdsvalue(dim_of(\nameofdata,xx)') wiith xx= 1 or 2, or for the time. 
 %
 sinputs.remote.profile = 'PSFC_CMODWS85';% 
+sinputs.remote.profilename = NaN;%may be yves, joan, ypeysson or NaN
 sinputs.remote.link_mode = NaN;% use value from remote.link_mode
 sinputs.mdsplus.ipserver = 'alcdata.psfc.mit.edu';
 sinputs.mdsplus.shotnumber = '1160727001';
