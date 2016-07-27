@@ -465,12 +465,15 @@ if display_mode,
     %
 end
 %
-equil.ip = Ip;
+equil.ip = Ip_z/1e6;
 equil.li = li;
+equil.shafranov_shift = pshift(end);
+equil.elongation = pelong(end);
+equil.triangularity = ptrian(end);
 equil.Te_vol = Te_vol;
 equil.ne_vol = ne_vol;
 equil.zTi_vol = zTi_vol;
 equil.zni_vol = zni_vol;
-
-
-
+equil.consistency.rho = rho;
+equil.consistency.jparz_fsav = jparz_fsav;
+equil.consistency.jparz_fsav_cyl = jparz_fsav_cyl;
