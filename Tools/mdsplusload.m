@@ -24,20 +24,25 @@ try
             %
             dataout.mdsplus.tree(itree).values(ivalue).name = datain.tree(itree).values(ivalue);
             dataout.mdsplus.tree(itree).values(ivalue).units = datain.tree(itree).units(ivalue);
+            %
             dataout.mdsplus.tree(itree).values(ivalue).data = data;
             dataout.mdsplus.tree(itree).values(ivalue).status_data = status_data;
+            %
             dataout.mdsplus.tree(itree).values(ivalue).time = time;
             dataout.mdsplus.tree(itree).values(ivalue).status_time = status_time;
+            %
+            clear data status_data time status_time
             %
         end
         %
         mdsclose;
+        %
     end
     %
     mdsdisconnect;
     %
 catch
-    dataout.mdsplus.err = ['Error: cannot connect to MDS+ database at ip address ',datain.ipserver];
+    dataout.mdsplus.err = ['Error reading MDS+ database at ip address ',datain.ipserver,' ',getReport(MException.last)];
 end
 %
 
