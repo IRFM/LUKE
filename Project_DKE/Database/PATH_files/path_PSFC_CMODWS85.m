@@ -65,7 +65,7 @@ dkepath.ypeysson(1).remote(3).schedulername = 'direct';
 %------------------------------------ Profile number 2, Alex Tinguely ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.tinguely(1).luke_root = '/home/tinguely/luke/LUKE/';
+dkepath.tinguely(1).luke_root = '/home/tinguely/LUKE/';
 dkepath.tinguely(1).local_root = '/home/ypeysson/luke/Packages/';
 dkepath.tinguely(1).temppathroot = '/home/tinguely/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
