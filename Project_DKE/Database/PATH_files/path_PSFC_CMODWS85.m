@@ -60,6 +60,50 @@ dkepath.ypeysson(1).remote(2).luke_root = '/home/ypeysson/LUKE/';% local cluster
 %
 dkepath.ypeysson(1).remote(3) = dkepath.ypeysson(1).remote(2);
 dkepath.ypeysson(1).remote(3).schedulername = 'direct';
-
+%
+%--------------------------------------------------------------------------------------------------------
+%------------------------------------ Profile number 2, Alex Tinguely ------------------------------------
+%--------------------------------------------------------------------------------------------------------
+%
+dkepath.tinguely(1).luke_root = '/home/tinguely/luke/LUKE/';
+dkepath.tinguely(1).local_root = '/home/ypeysson/luke/Packages/';
+dkepath.tinguely(1).temppathroot = '/home/tinguely/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+dkepath.tinguely(1).mex806 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/cmodws85/MATLAB806/'];%R2015b
+%
+dkepath.tinguely(1).compiler_opt.libs.gfortran = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
+%
+dkepath.tinguely(1).compiler_opt.copts = '';
+dkepath.tinguely(1).compiler_opt.copts.cpp.mex806 = '-f /home/tinguely/luke/LUKE/Project_DKE/MEX/Bin/cmodws85/MATLAB806/g++_glnxa64.xml';
+%
+dkepath.tinguely(1).compiler_opt.fopts.mex806 = 'FC=''gfortran''';%
+dkepath.tinguely(1).compiler_opt.separatrice.mex806 = [' -largeArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.tinguely(1).compiler_opt.helmex.mex806 = [' -compatibleArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.tinguely(1).compiler_opt.fopts.mex806 = ' ';%-largeArrayDims';
+%
+dkepath.tinguely(1).MUMPS.mex806 = [dkepath.ypeysson(1).local_root,'MUMPS_4.10.0/MATLAB806'];;%Where MUMPS matrix solver is stored (MEX function)
+%
+% LUKE documentation
+%
+dkepath.tinguely(1).graphviz.env = '';% Graphviz environment variable
+dkepath.tinguely(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.tinguely(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+%
+%--------------------------- Remote computing -----------------------------
+%
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
+%
+dkepath.tinguely(1).remote(1).remoteid = 'PSFC_CMODWS85';
+dkepath.tinguely(1).remote(1).schedulername = 'direct';
+dkepath.tinguely(1).remote(1).profilename = 'local';
+dkepath.tinguely(1).remote(1).luke_root = '/home/tinguely/LUKE/';% local cluster
+%
+dkepath.tinguely(1).remote(2).remoteid = 'PSFC_LOKI';
+dkepath.tinguely(1).remote(2).schedulername = 'pbs';
+dkepath.tinguely(1).remote(2).profilename = 'tinguely';
+dkepath.tinguely(1).remote(2).luke_root = '/home/tinguely/LUKE/';% local cluster
+%
+dkepath.tinguely(1).remote(3) = dkepath.tinguely(1).remote(2);
+dkepath.tinguely(1).remote(3).schedulername = 'direct';
 
 
