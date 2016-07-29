@@ -854,6 +854,8 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             data_proc.radial.xp_rf_2piRp = xp_rf_2piRp;
             data_proc.radial.xp_rf_2piRp_lin = xp_rf_2piRp_lin;
             %
+            data_proc.scalar.li = internal_inductance_yp(data_proc.radial.xrhoG,data_proc.radial.J_tot);
+            %
             % TIME EVOLUTION
             %
             if timevol >= 1,
@@ -925,7 +927,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             data_proc = struct;
             %
         end
-    end
+    end    
     %
     if opt.rho == 'g',
         xrho = data_proc.radial.xrhoG;
@@ -1014,6 +1016,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 disp(['Location of RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
                 disp(['RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
                 disp(['Number of RF ray fragments: ',num2str(data_proc.scalar.nfrags)])
+                disp(['Internal inductance : ',num2str(data_proc.scalar.li)])
             end
             %
             if isinf(data_proc.scalar.Rp) && sum(data_proc.radial.P_rf) ~= 0,
