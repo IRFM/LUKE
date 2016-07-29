@@ -83,7 +83,7 @@ sinputs.mdsplus.tree(4).units = {'V'};
 % \electrons::top.tci.results.inversion.nebar_efit -> line averaged electron density calculated from EFIT (m^-3) 
 % \gpc2_te0 -> electron temperature on axis (keV) from ECE
 % \thom_midpln:te_t -> electron T on axis (keV) from Thomson scattering
-% '\top.mflux:v0') -> loop voltage on axis (V)
+% \top.mflux:v0 -> loop voltage on axis (V)
 %
 soutputs = remotemdsplus(sinputs);
 %
