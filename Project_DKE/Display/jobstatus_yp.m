@@ -96,14 +96,23 @@ for ii = 1:length(filename),
         if isempty(filedata.output)
             if isfield(filedata,'luke_job') & ~isempty(filedata.luke_job),
                 joblist(jj).LUKE.status = 'LUKE Fokker-Planck calculations running';
-                if isempty(filedata.luke_job.remote.host),
-                    joblist(jj).LUKE.host = 'local';
+                if isfield(filedata.luke_job,'remote')
+                    if isempty(filedata.luke_job.remote.host),
+                        joblist(jj).LUKE.host = 'local';
+                    else
+                        joblist(jj).LUKE.host = filedata.luke_job.remote.host;
+                    end
                 else
-                    joblist(jj).LUKE.host = filedata.luke_job.remote.host;
+                    joblist(jj).LUKE.host = 'local';
                 end
                 %
                 joblist(jj).LUKE.jobid = filedata.luke_job.id;
-                joblist(jj).LUKE.batch_dir = filedata.luke_job.batch_dir;
+                if isfield(filedata.luke_job,'batch_dir')
+                    joblist(jj).LUKE.batch_dir = filedata.luke_job.batch_dir;
+                else
+                    joblist(jj).LUKE.batch_dir = '';
+                end
+                %
                 status(jj).LUKE.running = 1;
             else
                 joblist(jj).LUKE.status = 'LUKE Fokker-Planck calculations not done';
