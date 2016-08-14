@@ -30,7 +30,7 @@ zmi = equilDKE_Fourier.zmi;
 %
 sbetath = sqrt(ray.sTe./mc2);%Normalized pth_ref/mc as prescribed by Karney
 slnc_e = 31.3 - 0.5*log(ray.sne) + log(ray.sTe*1000);%Reference Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
-nhu_e = qe^4*ray.sne.*slnc_e./(4.*pi.*e0.^2.*me.^2.*(clum.*sbetath).^3);%Reference electron-eelctron collision frequency (s-1)
+nhu_e = qe^4*ray.sne.*slnc_e./(4.*pi.*e0.^2.*me.^2.*(clum.*sbetath).^3);%Reference relativistic electron-electron collision frequency (s-1)
 %
 swpi2 = zeros(size(ray.szni));%normalized ion plasma frequency to rf frequency
 swci = zeros(size(ray.szni));%normalized ion gyrofrequency to rf frequency
@@ -41,7 +41,7 @@ for iz = 1:length(zZi),
     swpi2(iz,:) = ray.swpe2.*ray.szni(iz,:)*zZi(iz)*zZi(iz)/zmi(iz)./ray.sne;
     swci(iz,:) =  sqrt(ray.swce2)*zZi(iz)/zmi(iz);
     %
-    snui(iz,:) = nhu_e.*(sqrt(2*pi)/3).*ray.szni(iz,:).*zZi(iz).*zZi(iz)./ray.sne/omega_rf;
+    snui(iz,:) = nhu_e.*(sqrt(2/pi)/3).*ray.szni(iz,:).*zZi(iz).*zZi(iz)./ray.sne/omega_rf;
     %
     iz = iz + 1;
 end
