@@ -44,7 +44,7 @@ dkepath.peysson(1).imagemagick.env = '/usr/bin/';% ImageMagick environment varia
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
 dkepath.peysson(1).remote(1).remoteid = 'IPR_VIRTUALBOX';
-dkepath.peysson(1).remote(1).schedulername = 'condor';
+dkepath.peysson(1).remote(1).schedulername = 'torque';
 dkepath.peysson(1).remote(1).profilename = 'peysson';
 dkepath.peysson(1).remote(1).luke_root = dkepath.peysson(1).luke_root;% local cluster
 %
