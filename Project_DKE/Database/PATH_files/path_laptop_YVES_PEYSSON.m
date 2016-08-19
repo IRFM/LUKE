@@ -249,7 +249,7 @@ dkepath.yves(1).remote(20).gitupdate = true;
 dkepath.yves(1).remote(20).gitmode.cmd = 'cd /home/ypeysson/luke/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
 dkepath.yves(1).remote(21).remoteid = 'IPR_VIRTUALBOX';
-dkepath.yves(1).remote(21).schedulername = 'condor';
+dkepath.yves(1).remote(21).schedulername = 'torque';
 dkepath.yves(1).remote(21).profilename = 'peysson';
 dkepath.yves(1).remote(21).luke_root = '/home/peysson/luke/LUKE/';
 dkepath.yves(1).remote(21).link_mode = '';
