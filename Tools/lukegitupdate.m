@@ -113,7 +113,15 @@ else
     flag4 = 'NaN';
 end
 %
-for irem = 1:nrem,
+for irem = 1:size(flag1,1),
     disp([flag1(irem,:),' / ',flag2(irem,:),' / ',flag3(irem,:),' / ',flag4(irem,:),' : ',dkepath.profilestr{remote_index(remlist(irem))}])
+end
+%
+disp(' ');disp('----------------------------');disp(' ')
+%
+if size(flag1,1) < nrem,
+    for ii = 1:nrem-size(flag1,1)
+        disp(['WARNING: Git update missing for ',dkepath.profilestr{remote_index(remlist(size(flag1,1)+ii))}])
+    end
 end
 %
