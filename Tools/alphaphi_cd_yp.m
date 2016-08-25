@@ -35,6 +35,5 @@ for iz = 1:length(zZi),
     snui(iz,:) = nhu_e.*(sqrt(2/pi)/3).*ray.szni(iz,:).*zZi(iz).*zZi(iz)./ray.sne/omega_rf;
 end
 %
-%xalphaphi = sum(swpi2.*snui.*((1./((1-swci).^2 + snui.^2).*(ones(length(zZi),1)*ray.sepol_pmz(1,:).^2) + (1./((1+swci).^2 + snui.^2)).*(ones(length(zZi),1)*ray.sepol_pmz(2,:).^2) + (1./(1+snui.^2)).*(ones(length(zZi),1)*ray.sepol_pmz(3,:).^2))),1);
 xalphaphi = ray.swpe2.*sum(snui.*((1./((1-sqrt(ones(length(zZi),1)*ray.swce2)).^2 + snui.^2).*(ones(length(zZi),1)*ray.sepol_pmz(1,:).^2) + (1./((1+sqrt(ones(length(zZi),1)*ray.swce2)).^2 + snui.^2)).*(ones(length(zZi),1)*ray.sepol_pmz(2,:).^2) + (1./(1+snui.^2)).*(ones(length(zZi),1)*ray.sepol_pmz(3,:).^2))),1);
     
