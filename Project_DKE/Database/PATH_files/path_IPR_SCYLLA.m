@@ -22,7 +22,7 @@ dkepath.peysson(1).luke_root = '/home/peysson/luke/LUKE/';
 dkepath.peysson(1).local_root = '/home/peysson/luke/Packages/';
 dkepath.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.peysson(1).mex805 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB805/'];%r2015a
+dkepath.peysson(1).mex805 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/scylla/MATLAB805/'];%r2015a
 %
 dkepath.peysson(1).compiler_opt.libs.gfortran = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
 dkepath.peysson(1).compiler_opt.copts = '';
@@ -50,7 +50,7 @@ dkepath.peysson(1).remote(1).luke_root = dkepath.peysson(1).luke_root;% local cl
 %
 %------------------------------------ Profile number 1, Harshita Raj ------------------------------------
 %
-dkepath.ipr(1) = dkepath.peysson(1);
+dkepath.harshita(1) = dkepath.peysson(1);
 %
 
 
