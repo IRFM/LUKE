@@ -60,7 +60,7 @@ if log_mode,
     %
     filename = ['res_check_remote_yp_',datestr(now,29),link_modestr,'.log'];
     %
-    if input_dke_yp(['Do you want to save the results in the log file ',filename,' ? (y/n)'],'y',{'y','n'}) == 'y',
+    if input_dke_yp(['Do you want to save the results in the log file ',filename,' ? (y/n)'],'n',{'y','n'}) == 'y',
         %
         if exist(filename,'file'),
             delete(filename);
