@@ -240,6 +240,19 @@ dkepath.yvespeysson(1).remote(17).cvsupdate = false;% update done in 'direct' mo
 dkepath.yvespeysson(1).remote(17).gitupdate = true;
 dkepath.yvespeysson(1).remote(17).gitmode.cmd1 = 'cd /home/ypeysson/luke;git archive --format tar --remote ssh://git@tolbachik.hd.free.fr:2222/home/git/*.git HEAD > *.tgz;mkdir -p *;tar -xf *.tgz --overwrite -C *;rm -f *.tgz;chmod -R 777 *;echo "* update done";';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
+dkepath.yvespeysson(1).remote(18).remoteid = 'IPR_SCYLLA';
+dkepath.yvespeysson(1).remote(18).schedulername = 'torque';
+dkepath.yvespeysson(1).remote(18).profilename = 'peysson';
+dkepath.yvespeysson(1).remote(18).luke_root = '/home/peysson/luke/LUKE/';
+dkepath.yvespeysson(1).remote(18).link_mode = '';
+dkepath.yvespeysson(1).remote(18).cvsupdate = false;% update done in 'direct' mode
+dkepath.yvespeysson(1).remote(18).gitupdate = false;
+dkepath.yvespeysson(1).remote(18).gitmode.cmd = 'cd /home/peysson/luke/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
+%
+dkepath.yvespeysson(1).remote(19) = dkepath.yves(1).remote(18);
+dkepath.yvespeysson(1).remote(19).schedulername = 'direct';
+dkepath.yvespeysson(1).remote(19).gitupdate = true;
+%
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 2, Joan Decker  ------------------------------------
 %--------------------------------------------------------------------------------------------------------
