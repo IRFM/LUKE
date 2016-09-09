@@ -915,7 +915,7 @@ while iw ~= 0 && any(ibb ~= 0)
         continue
     end
     %
-    if strcmp(waves{iw}.rayinit.type,'LH')
+    if (isfield(waves{iw}.rayinit,'type') && strcmp(waves{iw}.rayinit.type,'LH')) || (isfield(waves{iw}.rayinit.launch,'type') && strcmp(waves{iw}.rayinit.launch.type,'LH'))
     	waves{iw}.rayinit.Rp = Rp;
     	plot_spectrum_from_launch_jd(waves{iw}.rayinit,NaN,-1,[])
 		%	
