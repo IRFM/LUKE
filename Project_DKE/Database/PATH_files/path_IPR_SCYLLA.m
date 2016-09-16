@@ -15,42 +15,48 @@ dkepath.hostname = 'scylla';%here its a pattern since the hostname may fluctuate
 dkepath.computer = computer;%machine type and supported OS
 %
 %--------------------------------------------------------------------------------------------------------
-%------------------------------------ Profile number 1, Yves Peysson ------------------------------------
+%------------------------------------ Profile number 1, code user ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.peysson(1).luke_root = '/home/code/luke/LUKE/';
-dkepath.peysson(1).local_root = '/home/code/luke/Packages/';
-dkepath.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.code(1).luke_root = '/home/code/luke/LUKE/';
+dkepath.code(1).local_root = '/home/code/luke/Packages/';
+dkepath.code(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.peysson(1).mex805 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/scylla/MATLAB805/'];%r2015a
+dkepath.code(1).mex805 = [dkepath.code(1).luke_root,'Project_DKE/MEX/Bin/scylla/MATLAB805/'];%r2015a
 %
-dkepath.peysson(1).compiler_opt.libs.gfortran = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
-dkepath.peysson(1).compiler_opt.copts = '';
-dkepath.peysson(1).compiler_opt.fopts.mex805 = 'FC=''gfortran''';%
-dkepath.peysson(1).compiler_opt.separatrice.mex805 = [' -largeArrayDims -lgfortran -L',dkepath.peysson(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.peysson(1).compiler_opt.helmex.mex805 = [' -compatibleArrayDims -lgfortran -L',dkepath.peysson(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.peysson(1).compiler_opt.fopts.mex805 = ' ';%-largeArrayDims';
+dkepath.code(1).compiler_opt.libs.gfortran = [dkepath.code(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
+dkepath.code(1).compiler_opt.copts = '';
+dkepath.code(1).compiler_opt.fopts.mex805 = 'FC=''gfortran''';%
+dkepath.code(1).compiler_opt.separatrice.mex805 = [' -largeArrayDims -lgfortran -L',dkepath.code(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.code(1).compiler_opt.helmex.mex805 = [' -compatibleArrayDims -lgfortran -L',dkepath.code(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.code(1).compiler_opt.fopts.mex805 = ' ';%-largeArrayDims';
 %
-dkepath.peysson(1).MUMPS.mex805 = [dkepath.peysson(1).local_root,'MUMPS_4.10.0/MATLAB805'];;%Where MUMPS matrix solver is stored (MEX function)
+dkepath.code(1).MUMPS.mex805 = [dkepath.code(1).local_root,'MUMPS_4.10.0/MATLAB805'];;%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
-dkepath.peysson(1).graphviz.env = '/usr/bin/';% Graphviz environment variable
-dkepath.peysson(1).latex.env = '/usr/bin/';% Latex environment variable
-dkepath.peysson(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+dkepath.code(1).graphviz.env = '/usr/bin/';% Graphviz environment variable
+dkepath.code(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.code(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-dkepath.peysson(1).remote(1).remoteid = 'IPR_SCYLLA';
-dkepath.peysson(1).remote(1).schedulername = 'torque';
-dkepath.peysson(1).remote(1).profilename = 'peysson';
-dkepath.peysson(1).remote(1).luke_root = dkepath.peysson(1).luke_root;% local cluster
+dkepath.code(1).remote(1).remoteid = 'IPR_SCYLLA';
+dkepath.code(1).remote(1).schedulername = 'torque';
+dkepath.code(1).remote(1).profilename = 'code';
+dkepath.code(1).remote(1).luke_root = dkepath.code(1).luke_root;% local cluster
+%
+%--------------------------------------------------------------------------------------------------------
+%------------------------------------ Profile number 1, Yves Peysson ------------------------------------
+%--------------------------------------------------------------------------------------------------------
+%
+dkepath.peysson(1) = dkepath.code(1);
 %
 %------------------------------------ Profile number 1, Harshita Raj ------------------------------------
 %
-dkepath.harshita(1) = dkepath.peysson(1);
+dkepath.harshita(1) = dkepath.code(1);
 %
 
 
