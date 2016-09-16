@@ -18,8 +18,8 @@ dkepath.computer = computer;%machine type and supported OS
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.peysson(1).luke_root = '/home/peysson/luke/LUKE/';
-dkepath.peysson(1).local_root = '/home/peysson/luke/Packages/';
+dkepath.peysson(1).luke_root = '/home/code/luke/LUKE/';
+dkepath.peysson(1).local_root = '/home/code/luke/Packages/';
 dkepath.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.peysson(1).mex805 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/scylla/MATLAB805/'];%r2015a
