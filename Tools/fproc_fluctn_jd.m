@@ -25,8 +25,7 @@ if nargin < 4,
         end
     end
 end
-
-
+%
 if isstruct(filename),% iluke data
     %
     lukedata = load(filename.filename);
@@ -92,11 +91,19 @@ else
     end
 end
 %
-xrho = equilDKE.xrho.';
+xrho = equilDKE.xrho.';%geometrical rho (xrhoG in proc_luke_jd.m)
 xdrho = diff(radialDKE.xrho_S_dke).';
+%
+xrhoT = equilDKE.xrhoT.'; 
+xrhoT_S = [0,interp1(xrho,xrhoT,radialDKE.xrho_S_dke(2:end-1),'spline'),1];
+xdrhoT = diff(xrhoT_S.');
+%
+fitrhoT = fit(xrho,xrhoT,'cubicinterp');
+%
 xdA = equilDKE.xdA_dke.';
+%
 if isfield(equilDKE,'xdV_dke'),
-    xdV = equilDKE.xdV_dke.';  
+    xdV = equilDKE.xdV_dke.'; 
 else
     xdV = equilDKE.xdV_2piRp_dke.'*2*pi*equilDKE.Rp;
 end
@@ -155,8 +162,6 @@ end
 I_tot = J*xdA;
 P_rf = P*xdV;
 %
-%
-%
 if nitn > 1 && fluct_display.evol,
     plot_fluct_jd(Zitn,xrho,momentumDKE.pn,J,P,data.XXfM,data.XXf0_t,data.simul,data.equil.pTe(1),opt)
 end
@@ -198,12 +203,22 @@ sP_rf = P_rf(Zmask(sitn));% time-dependent powert
 srhoJ = sJ*(xrho.*xdA)./sI_tot;% time-dependent current peak location
 srhoP = sP*(xrho.*xdV)./sP_rf;% time-dependent power peak location
 %
+srhoJT = sJ*(xrhoT.*xdA)./sI_tot;% time-dependent current peak location rhoT grid
+srhoPT = sP*(xrhoT.*xdV)./sP_rf;% time-dependent power peak location rhoT grid
+%
 srho = repmat(xrho.',[ntn,1]);
+srhoT = repmat(xrhoT.',[ntn,1]);%rhoT grid
 sxrhoJ = repmat(srhoJ,[1,nr]);
+sxrhoJT = repmat(srhoJT,[1,nr]);%rhoT grid
 sxrhoP = repmat(srhoP,[1,nr]);
+sxrhoPT = repmat(srhoPT,[1,nr]);%rhoT grid
+%
 %
 sdrhoJ = fwhm*sqrt((sJ.*((srho-sxrhoJ).^2)*xdA)./sI_tot);%time-dependent current FWHM
 sdrhoP = fwhm*sqrt((sP.*((srho-sxrhoP).^2)*xdV)./sP_rf);%time-dependent power FWHM
+%
+sdrhoJT = fwhm*sqrt((sJ.*((srhoT-sxrhoJT).^2)*xdA)./sI_tot);%time-dependent current FWHM rhoT grid
+sdrhoPT = fwhm*sqrt((sP.*((srhoT-sxrhoPT).^2)*xdV)./sP_rf);%time-dependent power FWHM rhoT grid
 %
 sI_totm = NaN(1,ntn);
 ssI_tot =  NaN(1,ntn);
@@ -217,17 +232,33 @@ srhoJm =  NaN(1,ntn);
 ssrhoJ =  NaN(1,ntn);
 srrhoJm =  NaN(1,ntn);
 %
+srhoJmT =  NaN(1,ntn);
+ssrhoJT =  NaN(1,ntn);
+srrhoJmT =  NaN(1,ntn);
+%
 srhoPm =  NaN(1,ntn);
 ssrhoP =  NaN(1,ntn);
 srrhoPm =  NaN(1,ntn);
+%
+srhoPmT =  NaN(1,ntn);
+ssrhoPT =  NaN(1,ntn);
+srrhoPmT =  NaN(1,ntn);
 %
 sdrhoJm =  NaN(1,ntn);
 ssdrhoJ =  NaN(1,ntn);
 srdrhoJm =  NaN(1,ntn);
 %
+sdrhoJmT =  NaN(1,ntn);
+ssdrhoJT =  NaN(1,ntn);
+srdrhoJmT =  NaN(1,ntn);
+%
 sdrhoPm =  NaN(1,ntn);
 ssdrhoP =  NaN(1,ntn);
 srdrhoPm =  NaN(1,ntn);
+%
+sdrhoPmT =  NaN(1,ntn);
+ssdrhoPT =  NaN(1,ntn);
+srdrhoPmT =  NaN(1,ntn);
 %
 sJm =  NaN(ntn,nr);
 ssJ =  NaN(ntn,nr);
@@ -250,17 +281,33 @@ for itn = 1:ntn,
     ssrhoJ(itn) = std(srhoJ(1:itn));% time-integrated current peak location STD
     srrhoJm(itn) = ssrhoJ(itn)/srhoJm(itn)/sqrt(itn);%relative statistical accuracy of current peak location average
     %
+    srhoJmT(itn) = mean(srhoJT(1:itn));% time-integrated current peak location average
+    ssrhoJT(itn) = std(srhoJT(1:itn));% time-integrated current peak location STD
+    srrhoJmT(itn) = ssrhoJT(itn)/srhoJmT(itn)/sqrt(itn);%relative statistical accuracy of current peak location average
+    %
     srhoPm(itn) = mean(srhoP(1:itn));% time-integrated power peak location average
     ssrhoP(itn) = std(srhoP(1:itn));% time-integrated power peak location STD
     srrhoPm(itn) = ssrhoP(itn)/srhoPm(itn)/sqrt(itn);%relative statistical accuracy of power peak location average
+    %
+    srhoPmT(itn) = mean(srhoPT(1:itn));% time-integrated power peak location average
+    ssrhoPT(itn) = std(srhoPT(1:itn));% time-integrated power peak location STD
+    srrhoPmT(itn) = ssrhoPT(itn)/srhoPmT(itn)/sqrt(itn);%relative statistical accuracy of power peak location average
     %
     sdrhoJm(itn) = mean(sdrhoJ(1:itn));% time-integrated current FWHM average
     ssdrhoJ(itn) = std(sdrhoJ(1:itn));% time-integrated current FWHM STD
     srdrhoJm(itn) = ssdrhoJ(itn)/sdrhoJm(itn)/sqrt(itn);%relative statistical accuracy of current FWHM average
     %
+    sdrhoJmT(itn) = mean(sdrhoJT(1:itn));% time-integrated current FWHM average
+    ssdrhoJT(itn) = std(sdrhoJT(1:itn));% time-integrated current FWHM STD
+    srdrhoJmT(itn) = ssdrhoJT(itn)/sdrhoJmT(itn)/sqrt(itn);%relative statistical accuracy of current FWHM average
+    %
     sdrhoPm(itn) = mean(sdrhoP(1:itn));% time-integrated power FWHM average
     ssdrhoP(itn) = std(sdrhoP(1:itn));% time-integrated power FWHM STD
     srdrhoPm(itn) = ssdrhoP(itn)/sdrhoPm(itn)/sqrt(itn);%relative statistical accuracy of power FWHM average
+    %
+    sdrhoPmT(itn) = mean(sdrhoPT(1:itn));% time-integrated power FWHM average
+    ssdrhoPT(itn) = std(sdrhoPT(1:itn));% time-integrated power FWHM STD
+    srdrhoPmT(itn) = ssdrhoPT(itn)/sdrhoPmT(itn)/sqrt(itn);%relative statistical accuracy of power FWHM average
     %
     sJm(itn,:) = mean(sJ(1:itn,:),1);% time-dependent average current profile
     ssJ(itn,:) = std(sJ(1:itn,:),0,1);% time-dependent average current STD
@@ -278,11 +325,20 @@ sPm_rf = sPm*xdV;% time-dependent average power - should be the same as sP_rfm
 smrhoJ = sJm*(xrho.*xdA)./sIm_tot;% time-dependent peak location of averaged current
 smrhoP = sPm*(xrho.*xdV)./sPm_rf;% time-dependent  peak location of averaged power
 %
+smrhoJT = sJm*(xrhoT.*xdA)./sIm_tot;% time-dependent peak location of averaged current
+smrhoPT = sPm*(xrhoT.*xdV)./sPm_rf;% time-dependent  peak location of averaged power
+%
 smxrhoJ = repmat(smrhoJ,[1,nr]);
 smxrhoP = repmat(smrhoP,[1,nr]);
 %
+smxrhoJT = repmat(smrhoJT,[1,nr]);
+smxrhoPT = repmat(smrhoPT,[1,nr]);
+%
 smdrhoJ = fwhm*sqrt((sJm.*((srho-smxrhoJ).^2)*xdA)./sIm_tot);%time-dependent FWHM of averaged current
 smdrhoP = fwhm*sqrt((sPm.*((srho-smxrhoP).^2)*xdV)./sPm_rf);%time-dependent FWHM of averaged power
+%
+smdrhoJT = fwhm*sqrt((sJm.*((srhoT-smxrhoJT).^2)*xdA)./sIm_tot);%time-dependent FWHM of averaged current
+smdrhoPT = fwhm*sqrt((sPm.*((srhoT-smxrhoPT).^2)*xdV)./sPm_rf);%time-dependent FWHM of averaged power
 %
 colors = {'k',[0,0.5,0]};
 %
@@ -292,7 +348,7 @@ if fluct_display.mode >= 2,
     %
     stnmask = 1:fix(ntn/10):ntn;
     %
-    figure(11),clf
+    figure(110),clf
     %
     xlim = [0,ceil(max(stn))];
     xlab = 't/\tau_c';
@@ -301,13 +357,15 @@ if fluct_display.mode >= 2,
     tit = '';
     leg = {'With fluct.','Average'};%{'Fluctuations'};%
     %
+    leg_loc = leg;
     graph1D_jd(stn,sI_tot,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7);
     %graph1D_jd(stn,sI_totm,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
     %graph1D_jd(xlim,sI_totm(end)*[1,1],0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
+    graph1D_jd(stn(stnmask),sI_totm(stnmask),0,0,'','','',leg_loc,xlim,ylim,'--','none','b',2,20+14i,gca,1,0.7,0.7,srI_totm(stnmask).*sI_totm(stnmask));
     if ~isempty(Zfluct_ref),
         leg_loc = [leg,leg_ref];
         for iref = 1:length(Zfluct_ref),
-            graph1D_jd(xlim,Zfluct_ref(iref).J.sI_tot*[1,1],0,0,'','','',NaN,xlim,ylim,'-','none',colors{iref},2,20+14i);
+            graph1D_jd(xlim,Zfluct_ref(iref).J.sI_tot*[1,1],0,0,'','','',leg_loc,xlim,ylim,'-','none',colors{iref},2,20+14i);
         end
     else
         leg_loc = leg;
@@ -316,13 +374,12 @@ if fluct_display.mode >= 2,
         leg_loc = [leg_loc,'From av. profile']; 
         graph1D_jd(stn,sIm_tot,0,0,'','','',NaN,xlim,ylim,'--','none','m',0.5,20+14i);
     end
-    graph1D_jd(stn(stnmask),sI_totm(stnmask),0,0,'','','',leg_loc,xlim,ylim,'none','none','b',2,20+14i,gca,1,0.7,0.7,srI_totm(stnmask).*sI_totm(stnmask));
-    graph1D_jd(Ztime(Zmask(sitnPr)),I_tot(Zmask(sitnPr)),0,0,'','','',NaN,xlim,ylim,'none','o','m',2,20+14i);
-    graph1D_jd(Ztime(Zmask(sitnIr)),I_tot(Zmask(sitnIr)),0,0,'','','',NaN,xlim,ylim,'none','*','r',2,20+14i);
+    %graph1D_jd(Ztime(Zmask(sitnPr)),I_tot(Zmask(sitnPr)),0,0,'','','',NaN,xlim,ylim,'none','o','m',2,20+14i);
+    %graph1D_jd(Ztime(Zmask(sitnIr)),I_tot(Zmask(sitnIr)),0,0,'','','',NaN,xlim,ylim,'none','*','r',2,20+14i);
     %
     % --------- current radial location ---------
     %
-    figure(12),clf
+    figure(120),clf
     %
     ylim = NaN;
     ylab = 'r/a';
@@ -345,12 +402,30 @@ if fluct_display.mode >= 2,
     end
     graph1D_jd(stn(stnmask),srhoJm(stnmask),0,0,'','','',leg_loc,xlim,ylim,'none','none','b',2,20+14i,gca,1,0.7,0.7,srrhoJm(stnmask).*srhoJm(stnmask));
     %
-    % --------- current radial width ---------
-    %
-    figure(13),clf
+    figure(121),clf
     %
     ylim = NaN;
-    ylab = 'FWHM';
+    ylab = '\rho_{T}';
+    tit = 'current deposition';
+    %
+    graph1D_jd(stn,srhoJT,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7);
+    graph1D_jd(stn,srhoJmT,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
+    leg_loc = leg;
+    %graph1D_jd(stn(stnmask),srhoJmT(stnmask),0,0,'','','',leg_loc,xlim,ylim,'none','o','b',2,20+14i,gca,1,0.7,0.7,srrhoJmT(stnmask).*srhoJmT(stnmask));
+    if ~isempty(Zfluct_ref),
+        leg_loc = [leg,leg_ref];
+        for iref = 1:length(Zfluct_ref),
+            Zfluct_ref(iref).J.srhoT = ppval(Zfluct_ref(iref).J.srho,fitrhoT.p);
+            graph1D_jd(xlim,Zfluct_ref(iref).J.srhoT*[1,1],0,0,'','','',leg_loc,xlim,ylim,'-','none',colors{iref},2,20+14i);
+        end        
+    end
+    %
+    % --------- current radial width ---------
+    %
+    figure(130),clf
+    %
+    ylim = NaN;
+    ylab = 'FWHM (r/a)';
     %
     graph1D_jd(stn,sdrhoJ,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7);
     graph1D_jd(stn,sdrhoJm,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
@@ -363,6 +438,7 @@ if fluct_display.mode >= 2,
     else
         leg_loc = leg;
     end
+    %
     if fluct_display.stat,
         leg_loc = [leg_loc,'\sigma_{\rho}','(\sigma_{\rho}^2 + FWHM^2)^{(1/2)}','From av. profile']; 
         graph1D_jd(stn,fwhm*ssrhoJ,0,0,'','','',NaN,xlim,ylim,'--','none','m',0.5,20+14i);
@@ -371,9 +447,30 @@ if fluct_display.mode >= 2,
     end
     graph1D_jd(stn(stnmask),sdrhoJm(stnmask),0,0,'','','',leg_loc,xlim,ylim,'none','none','b',2,20+14i,gca,1,0.7,0.7,srdrhoJm(stnmask).*sdrhoJm(stnmask));
     %
+    figure(131),clf
+    %
+    ylim = NaN;
+    ylab = 'FWHM (\rho_{T})';
+    %
+    graph1D_jd(stn,sdrhoJT,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7);
+    graph1D_jd(stn,sdrhoJmT,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
+    leg_loc = leg;
+    %
+    graph1D_jd(stn(stnmask),sdrhoJmT(stnmask),0,0,'','','',leg_loc,xlim,ylim,'none','none','b',2,20+14i,gca,1,0.7,0.7,srdrhoJmT(stnmask).*sdrhoJmT(stnmask));
+    if ~isempty(Zfluct_ref),
+        leg_loc = [leg,leg_ref];
+        for iref = 1:length(Zfluct_ref),
+            Zfluct_ref(iref).J.srhoJT = Zfluct_ref(iref).J.sJ*(Zfluct_ref(iref).rhoT'.*Zfluct_ref(iref).dA)./Zfluct_ref(iref).J.sI_tot;
+            Zfluct_ref(iref).J.sdrhoT = fwhm*sqrt((Zfluct_ref(iref).J.sJ.*((Zfluct_ref(iref).rhoT-Zfluct_ref(iref).J.srhoJT).^2)*Zfluct_ref(iref).dA)./Zfluct_ref(iref).J.sI_tot);%time-dependent current FWHM rhoT grid
+            graph1D_jd(xlim,Zfluct_ref(iref).J.sdrhoT*[1,1],0,0,'','','',NaN,xlim,ylim,'-','none',colors{iref},2,20+14i);
+        end             
+    else
+        leg_loc = leg;
+    end
+    %
     % --------- power ---------
     %
-    figure(14),clf
+    figure(140),clf
     %
     ylim = NaN;
     ylab = 'P_{RF} (MW)';
@@ -395,12 +492,12 @@ if fluct_display.mode >= 2,
         graph1D_jd(stn,sPm_rf,0,0,'','','',NaN,xlim,ylim,'--','none','m',0.5,20+14i);
     end
     graph1D_jd(stn(stnmask),sP_rfm(stnmask),0,0,'','','',leg_loc,xlim,ylim,'none','none','b',2,20+14i,gca,1,0.7,0.7,srP_rfm(stnmask).*sP_rfm(stnmask));
-    graph1D_jd(Ztime(Zmask(sitnPr)),P_rf(Zmask(sitnPr)),0,0,'','','',NaN,xlim,ylim,'none','o','r',2,20+14i);
-    graph1D_jd(Ztime(Zmask(sitnIr)),P_rf(Zmask(sitnIr)),0,0,'','','',NaN,xlim,ylim,'none','*','m',2,20+14i);
+    %graph1D_jd(Ztime(Zmask(sitnPr)),P_rf(Zmask(sitnPr)),0,0,'','','',NaN,xlim,ylim,'none','o','r',2,20+14i);
+    %graph1D_jd(Ztime(Zmask(sitnIr)),P_rf(Zmask(sitnIr)),0,0,'','','',NaN,xlim,ylim,'none','*','m',2,20+14i);
     %
     % --------- power radial location ---------
     %
-    figure(15),clf
+    figure(150),clf
     %
     ylim = NaN;
     ylab = 'r/a';
@@ -417,18 +514,42 @@ if fluct_display.mode >= 2,
     else
         leg_loc = leg;
     end
+    %
     if fluct_display.stat,% should be slightly different from srhoPm
         leg_loc = [leg_loc,'From av. profile']; 
         graph1D_jd(stn,smrhoP,0,0,'','','',NaN,xlim,ylim,'--','none','m',0.5,20+14i);
     end
+    %
     graph1D_jd(stn(stnmask),srhoPm(stnmask),0,0,'','','',leg_loc,xlim,ylim,'none','none','b',2,20+14i,gca,1,0.7,0.7,srrhoPm(stnmask).*srhoPm(stnmask));
+    %
+    figure(151),clf
+    %
+    ylim = NaN;
+    ylab = '\rho_{T}';
+    tit = 'power deposition';
+    %
+    graph1D_jd(stn,srhoPT,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7);
+    graph1D_jd(stn,srhoPmT,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
+    leg_loc = leg;
+    %
+    if ~isempty(Zfluct_ref),
+        leg_loc = [leg,leg_ref];
+        for iref = 1:length(Zfluct_ref),
+            Zfluct_ref(iref).P.srhoT = ppval(Zfluct_ref(iref).P.srho,fitrhoT.p);
+            graph1D_jd(xlim,Zfluct_ref(iref).P.srhoT*[1,1],0,0,'','','',leg_loc,xlim,ylim,'-','none',colors{iref},2,20+14i);
+        end             
+    else
+        leg_loc = leg;
+    end
+    graph1D_jd(stn(stnmask),srhoPmT(stnmask),0,0,'','','',leg_loc,xlim,ylim,'none','none','b',2,20+14i,gca,1,0.7,0.7,srrhoPmT(stnmask).*srhoPmT(stnmask));
+
     %
     % --------- power radial width ---------
     %
-    figure(16),clf
+    figure(160),clf
     %
     ylim = NaN;
-    ylab = 'FWHM';
+    ylab = 'FWHM (r/a)';
     %
     graph1D_jd(stn,sdrhoP,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7);
     graph1D_jd(stn,sdrhoPm,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
@@ -449,9 +570,30 @@ if fluct_display.mode >= 2,
     end
     graph1D_jd(stn(stnmask),sdrhoPm(stnmask),0,0,'','','',leg_loc,xlim,ylim,'none','none','b',2,20+14i,gca,1,0.7,0.7,srdrhoPm(stnmask).*sdrhoPm(stnmask));
     %
+    figure(161),clf
+    %
+    ylim = NaN;
+    ylab = 'FWHM (\rho_{T})';
+    %
+    graph1D_jd(stn,sdrhoPT,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7);
+    graph1D_jd(stn,sdrhoPmT,0,0,'','','',NaN,xlim,ylim,'--','none','b',2,20+14i);
+    leg_loc = leg;
+    %
+    if ~isempty(Zfluct_ref),
+        leg_loc = [leg,leg_ref];
+        for iref = 1:length(Zfluct_ref),
+            srhoP = sP*(xrho.*xdV)./sP_rf;% time-dependent power peak location
+            Zfluct_ref(iref).P.srhoPT = Zfluct_ref(iref).P.sP*(Zfluct_ref(iref).rhoT'.*Zfluct_ref(iref).dV)./Zfluct_ref(iref).P.sP_rf;
+            Zfluct_ref(iref).P.sdrhoT = fwhm*sqrt((Zfluct_ref(iref).P.sP.*((Zfluct_ref(iref).rhoT-Zfluct_ref(iref).P.srhoPT).^2)*Zfluct_ref(iref).dV)./Zfluct_ref(iref).P.sP_rf);%time-dependent power FWHM rhoT grid
+            graph1D_jd(xlim,Zfluct_ref(iref).P.sdrhoT*[1,1],0,0,'','','',leg_loc,xlim,ylim,'-','none',colors{iref},2,20+14i);
+        end             
+    else
+        leg_loc = leg;
+    end
+    %
     % --------- current profile ---------
     %
-    figure(17),clf
+    figure(170),clf
     %
     xlim = [0,1];
     xlab = 'r/a';
@@ -486,9 +628,39 @@ if fluct_display.mode >= 2,
         graph1D_jd(NaN,NaN,0,0,'','','',leg_loc,xlim,ylim,'--','none','b',2,20+14i);
     end
     %
+    figure(171),clf
+    %
+    xlab = '\rho_{T}';
+    ylab = 'dJ/d\rho_{T} (MA)';
+    %
+    sxdAdrhoT = repmat((xdA./xdrhoT).',[ntn,1]);
+    sxdIdrhomT = sJm.*sxdAdrhoT;
+    %
+    smxdrhoJT = repmat(smdrhoJT,[1,nr]);
+    sxIm_tot = repmat(sIm_tot,[1,nr]);
+    %
+    sxdIdrhom_fitT = sxIm_tot.*exp(-(srhoT - smxrhoJT).^2./(smxdrhoJT*sqrt(2)/fwhm).^2)./(sqrt(pi)*smxdrhoJT*sqrt(2)/fwhm);
+    %
+    graph1D_jd(xrhoT,sxdIdrhomT(end,:),0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7,sxdIdrhomT(end,:).*srJm(end,:));
+    leg_loc = leg;  
+    %
+    if ~isempty(Zfluct_ref),
+        leg_loc = [leg,leg_ref];
+        for iref = 1:length(Zfluct_ref),
+            Zfluct_ref(iref).rhoT_S = [0,interp1(xrhoT',xrhoT_S(2:end),Zfluct_ref(iref).rhoT,'spline')];
+            Zfluct_ref(iref).drhoT = diff(Zfluct_ref(iref).rhoT_S.');       
+            xdIdrhom_refT = Zfluct_ref(iref).J.sJm.*(Zfluct_ref(iref).dA./Zfluct_ref(iref).drhoT).';
+            graph1D_jd(Zfluct_ref(iref).rhoT,xdIdrhom_refT,0,0,'','','',leg_loc,xlim,ylim,'-','none',colors{iref},2,20+14i);
+        end             
+    else
+        leg_loc = leg;
+    end
+    graph1D_jd(NaN,NaN,0,0,'','','',leg_loc,xlim,ylim,'--','none','b',2,20+14i);
+
+    %
     % --------- power profile ---------
     %
-    figure(18),clf
+    figure(180),clf
     %
     xlim = [0,1];
     xlab = 'r/a';
@@ -523,9 +695,34 @@ if fluct_display.mode >= 2,
         graph1D_jd(NaN,NaN,0,0,'','','',leg_loc,xlim,ylim,'--','none','b',2,20+14i);
     end
     %
+    figure(181),clf
+    %
+    xlab = '\rho_{T}';
+    ylab = 'dP_{RF}/d\rho_{T} (MW)';
+    %
+    sxdVdrhoT = repmat((xdV./xdrhoT).',[ntn,1]);
+    sxdPdrhomT = sPm.*sxdVdrhoT;
+    %
+    smxdrhoPT = repmat(smdrhoPT,[1,nr]);
+    sxPm_rf = repmat(sPm_rf,[1,nr]);
+    %
+    sxdPdrhom_fitT = sxPm_rf.*exp(-(srhoT - smxrhoPT).^2./(smxdrhoPT*sqrt(2)/fwhm).^2)./(sqrt(pi)*smxdrhoPT*sqrt(2)/fwhm);
+    %
+    graph1D_jd(xrhoT,sxdPdrhomT(end,:),0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7,sxdPdrhomT(end,:).*srPm(end,:));
+    if ~isempty(Zfluct_ref),
+        leg_loc = [leg,leg_ref];
+        for iref = 1:length(Zfluct_ref),
+            xdPdrhom_refT = Zfluct_ref(iref).P.sPm.*(Zfluct_ref(iref).dV./Zfluct_ref(iref).drhoT).';
+            graph1D_jd(Zfluct_ref(iref).rhoT,xdPdrhom_refT,0,0,'','','',leg_loc,xlim,ylim,'-','none',colors{iref},2,20+14i);
+        end             
+    else
+        leg_loc = leg;
+    end
+    %
+    %
     % --------- power density profile ---------
     %
-    figure(19),clf
+    figure(190),clf
     %
     xlim = [0,1];
     xlab = 'r/a';
@@ -559,11 +756,32 @@ if fluct_display.mode >= 2,
     leg = [leg_loc,'With fluct.'];
     graph1D_jd(xrho,sPm(end,:),0,0,xlab,ylab,tit,leg,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7,sxdPdrhom(end,:).*srPm(end,:));
     %
+    figure(191),clf
+    %
+    xlab = '\rho_{T}';
+    ylab = 'P_{RF} (MW/m^3)';
+    tit = '';
+    %
+    leg_loc = {};
+    %     
+    if ~isempty(Zfluct_ref),
+        leg_loc = [leg_loc,leg_ref];
+        for iref = 1:length(Zfluct_ref),
+            graph1D_jd(Zfluct_ref(iref).rhoT,Zfluct_ref(iref).P.sPm,0,0,'','','',NaN,xlim,ylim,'-','none',colors{iref},2,20+14i);
+        end             
+    end
+    %
+    leg = [leg_loc,'With fluct.'];
+    graph1D_jd(xrhoT,sPm(end,:),0,0,xlab,ylab,tit,leg,xlim,ylim,'-','+','r',2,20+14i,gca,0.9,0.7,0.7,sxdPdrhom(end,:).*srPm(end,:));
+    %
 end
 %
 Zfluct_out.stn = stn;
 Zfluct_out.rho = xrho;
 Zfluct_out.drho = xdrho;
+if isfield(equilDKE,'xrhoT')
+    Zfluct_out.rhoT = equilDKE.xrhoT;
+end
 Zfluct_out.dA = xdA;
 Zfluct_out.dV = xdV;
 Zfluct_out.calctime = calctime;
