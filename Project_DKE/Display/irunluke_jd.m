@@ -22,10 +22,12 @@ function irunluke_jd(basestr,signs,opt_gui)
     %
     clc
     %
-    tprintf('Working LUKE simulation status','');
-    tprintf('Working LUKE simulation status');
-    tprintf('LUKE simulations status','');
-    tprintf('LUKE simulations status');
+    if  usejava('awt'),
+        tprintf('Working LUKE simulation status','');
+        tprintf('Working LUKE simulation status');
+        tprintf('LUKE simulations status','');
+        tprintf('LUKE simulations status');
+    end
     %
     quitmsg = '-----> Run aborted';
     warning off
@@ -215,7 +217,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 else
                     idstr = ['timeid ',luke_job.timeid];
                 end
-                if ~isempty(luke_job.remote.host),
+                if isfield(luke_job,'remote') && ~isempty(luke_job.remote.host),
                     hoststr = ['on host ',luke_job.remote.host];
                 else
                     hoststr = 'on localhost';
@@ -286,7 +288,7 @@ function irunluke_jd(basestr,signs,opt_gui)
         disp(['LUKE output            : ',statstr.output]);
         disp(['External database      : ',statstr.external]);
         %
-        if exist('tprintf.m','file') & opt_status_windows == 1,%second window display
+        if usejava('awt') & exist('tprintf.m','file') & opt_status_windows == 1,%second window display
             tprintf('Working LUKE simulation status');%clear window
             tprintf('Working LUKE simulation status',[' ----------- < ',LUKEversion_jd,' Version > ----------- ']);
             tprintf('Working LUKE simulation status',' ');
