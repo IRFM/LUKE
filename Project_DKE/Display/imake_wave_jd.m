@@ -10,7 +10,8 @@ if nargin < 6,
 	opt_gui = true;
 end
 %
-if nargin < 5,
+if nargin < 5,2
+    
 	workdir = pwd;
 end
 %
@@ -322,6 +323,9 @@ if w_opt == 0; % C3PO Calculation
     %
     % BUILDING RAYINIT
     %
+    if exist('rayinit') && ~exist('launch'),
+        launch = rayinit.launch;
+    end
     rayinit = main_rayinit_launch_jd(equil,launch);
     %
     rayinit.id = ['C3PO_',launch.id];
@@ -381,42 +385,53 @@ if w_opt == 0; % C3PO Calculation
         %
         wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = iselect_jd(dkepath.distprofiles(flag_mdce),'Distributed computing mode : ',opt_gui,select.style,1) - 1;
         %
-        remote = dkepath.remote(iselect_jd(dkepath.remprofiles,'Remote calculation mode : ',opt_gui,select.style,1) - 1);
-        remote.timeout = 0;
-        %
-        job = matstandardjob_jd('runmat');
-        job.remtimout = 0;
-        %
-        [err,job,wave] = matremote_jd('main_C3PO_jd',{dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam},remote,job);
-        %
-        if isempty(err) 
-            if isempty(job.remote.host)
-                 disp(['The ray-tracing C3PO has been launched on the local host'])
-            else
-                disp(['The ray-tracing C3PO has been launched on host : ',job.remote.host])
-            end
+        iremote = iselect_jd(dkepath.remprofiles,'Remote calculation mode : ',opt_gui,select.style,1) - 1;
+        if iremote == 0,
+            tstart = tic;
+            wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam);
+            telapsed = toc(tstart); 
             %
-            wave.job = job;
-            wave.id = rayinit.id;
-            %
-            cd(sd);
-            %
-            wave.info.type = 'RT';
-            wave.info.RT = 'C3PO';
-            wave.info.ftype = ftype;
-            %
-            s_opt = iselect_jd({'No','Yes'},'Do you want to generate an equivalent make_wave script ?',opt_gui,select.style,1) - 1;
-            %
-            if s_opt == 1,
-                % 
-                imake_makewave_jd(workdir,wave,opt_gui);
-                %
-            end
-            %
-            wave.n_rf_list = wavestruct.waveparam.n_rf_list;
-            return
+            disp(' ');
+            disp(['The calculation of ',int2str(length(rayinit.yrho0)),' rays has been done in ',num2str(telapsed),' (s).']);
+            disp(' ');
         else
-            return
+            remote = dkepath.remote(iremote);
+            remote.timeout = 0;
+            %
+            job = matstandardjob_jd('runmat');
+            job.remtimout = 0;
+            %
+            [err,job,wave] = matremote_jd('main_C3PO_jd',{dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam},remote,job);
+            %
+            if isempty(err) 
+                if isempty(job.remote.host)
+                     disp(['The ray-tracing C3PO has been launched on the local host'])
+                else
+                    disp(['The ray-tracing C3PO has been launched on host : ',job.remote.host])
+                end
+                %
+                wave.job = job;
+                wave.id = rayinit.id;
+                %
+                cd(sd);
+                %
+                wave.info.type = 'RT';
+                wave.info.RT = 'C3PO';
+                wave.info.ftype = ftype;
+                %
+                s_opt = iselect_jd({'No','Yes'},'Do you want to generate an equivalent make_wave script ?',opt_gui,select.style,1) - 1;
+                %
+                if s_opt == 1,
+                    % 
+                    imake_makewave_jd(workdir,wave,opt_gui);
+                    %
+                end
+                %
+                wave.n_rf_list = wavestruct.waveparam.n_rf_list;
+                return
+            else
+                return
+            end
         end
     end
     %
