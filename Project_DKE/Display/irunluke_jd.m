@@ -1176,9 +1176,9 @@ function irunluke_jd(basestr,signs,opt_gui)
                                     flag_colldamp = 1 + i*waves{iw}.colldamp;
                                 end
                             else
-                                if waves{iw}.colldamp,
+                                if isfield(waves{iw},'colldamp'),
                                     flag_colldamp = 1 + i*waves{iw}.colldamp;
-                                end
+                                    end2
                             end
                         end
                         %
