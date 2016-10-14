@@ -1146,7 +1146,9 @@ function irunluke_jd(basestr,signs,opt_gui)
                     end
                 end
                 %
-                waves0 = waves;
+                if ~isempty(waves)
+                    waves0 = waves;
+                end
                 %
                 [waves,paths.waves,fileids.waves,newstruct] = imake_struct_jd(dkepath,waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,external,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
                 %
@@ -1169,7 +1171,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                         flag_colldamp = 0;
                         for iw = 1:length(waves),
-                            if waves{iw}.colldamp ~= waves0{iw}.colldamp,
+                            if exist('waves0'),
+                                if waves{iw}.colldamp ~= waves0{iw}.colldamp,
+                                    flag_colldamp = 1 + i*waves{iw}.colldamp;
+                                end
+                            else
                                 flag_colldamp = 1 + i*waves{iw}.colldamp;
                             end
                         end
