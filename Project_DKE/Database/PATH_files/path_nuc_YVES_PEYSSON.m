@@ -48,7 +48,7 @@ dkepath.yvespeysson(1).imagemagick.env = '/usr/bin/';% ImageMagick environment v
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
 dkepath.yvespeysson(1).remote(1).remoteid = 'nuc_YVES_PEYSSON';
-dkepath.yvespeysson(1).remote(1).schedulername = 'slurm';
+dkepath.yvespeysson(1).remote(1).schedulername = 'condor';
 dkepath.yvespeysson(1).remote(1).profilename = 'yvespeysson';
 dkepath.yvespeysson(1).remote(1).luke_root = dkepath.yvespeysson(1).luke_root;% local cluster
 dkepath.yvespeysson(1).remote(1).link_mode = '';
@@ -60,4 +60,3 @@ dkepath.yvespeysson(1).remote(2) = dkepath.yvespeysson(1).remote(1);
 dkepath.yvespeysson(1).remote(2).schedulername = 'direct';
 dkepath.yvespeysson(1).remote(2).gitupdate = true;
 %
-
