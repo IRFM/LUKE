@@ -205,9 +205,11 @@ function [MatToolspath,MatRemotepath,MatHelppath] = LUKE_startup_jd
     disp('    %');
     disp('else');
     disp('    %');
-    disp('    disp('' '');');
-    disp('    disp(''To set LUKE paths type "select_LUKE;"'')');
-    disp('    disp('' '');');
+    %disp('    disp('' '');');
+    disp('    disp(''-------------------------------------------------------------------------------------------'');');
+    disp('    disp(''>>>>>>>>>>>>>>> To set LUKE paths and start using LUKE, type "select_LUKE;" <<<<<<<<<<<<<<<'');');
+    disp('    disp(''-------------------------------------------------------------------------------------------'');');
+    %disp('    disp('' '');');
     disp('    %');
     disp('end');
     disp('%');

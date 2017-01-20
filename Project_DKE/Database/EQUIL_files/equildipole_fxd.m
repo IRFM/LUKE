@@ -6,6 +6,10 @@ function equil_magnetic = equildipole_fxd(ap,RT,M,prho,ntheta,test_mode,method)
 %    J. Decker (CEA/DSM/IRFM, joan.decker@cea.fr) and
 %    Y. Peysson (CEA/DSM/IRFM, yves.paysson@cea.fr)
 %
+equil_magnetic = [];
+return
+%TODO : fix error that block LUKE install YP 20/01/17
+%
 if nargin < 7,
     method = 1;
 end

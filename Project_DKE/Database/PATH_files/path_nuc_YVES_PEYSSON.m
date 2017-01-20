@@ -24,9 +24,8 @@ dkepath.default = 'yvespeysson';
 %
 dkepath.yvespeysson(1).luke_root = '/home/yvespeysson/luke/LUKE/';
 dkepath.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-%
 dkepath.yvespeysson(1).local_root = '/home/yvespeysson/';
-
+%
 dkepath.yvespeysson(1).mex901 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/nucyves/MATLAB901/'];%r2016b
 %
 dkepath.yvespeysson(1).compiler_opt.libs.gfortran = '';
