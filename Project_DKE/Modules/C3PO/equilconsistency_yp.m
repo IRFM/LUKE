@@ -230,7 +230,14 @@ FdFdpsi = F.*dFdpsi;
 if isfield(equil,'eqdsk')
     %
     equilDKE = equilibrium_jd(equil,equil.eqdsk.psin,0,'spline');
+    %
+    rhoP = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoP,1],rho);
+    rhoT = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoT,1],rho);
+    rhoV = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoV,1],rho);
+    %
     xq = qfactors_dke_yp(1,equilDKE.Rp,equilDKE.ap,equilDKE.Xx,equilDKE.Xy,equilDKE.XBx,equilDKE.XBy,equilDKE.XBphi,equilDKE.xx0,equilDKE.xB0,equilDKE.xBT0,equilDKE.xBp0);
+    %
+    q = equilDKE.ap/equilDKE.Rp*interp1(equilDKE.xrho,xq,rho);
     %
     pF_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pF,rho)'*ones(1,length(theta));%
     pFdFdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pFdFdpsi,rho)'*ones(1,length(theta));%
@@ -245,7 +252,7 @@ if isfield(equil,'eqdsk')
 
     
     
-    keyboard
+%%%keyboard
     jz_eqdsk = Upsilon.*pdpdpsi_eqdsk*equilDKE.Rp + pFdFdpsi_eqdsk./Upsilon/equilDKE.Rp;%
     %jpar_eqdsk = pdFdpsi_eqdsk.*B - mu0.*pF_eqdsk.*pdpdpsi_eqdsk.*B;%
     %
@@ -286,21 +293,21 @@ Ip_contour = LB/mu0;
 VB2 = sum(sum(r.*Upsilon.*drho.*dtheta.*BP.*BP./gradrho./calpha));
 V = sum(sum(r.*Upsilon.*drho.*dtheta./gradrho./calpha));
 %
-Te = equil.pTe(:)*ones(1,mtheta);
-VTe = sum(sum(r.*Upsilon.*drho.*dtheta.*Te./gradrho./calpha));
+XTe = Te(:)*ones(1,mtheta);
+VTe = sum(sum(r.*Upsilon.*drho.*dtheta.*XTe./gradrho./calpha));
 Te_vol = VTe/V;%Te volumic
 %
-ne = equil.pne(:)*ones(1,mtheta);
-Vne = sum(sum(r.*Upsilon.*drho.*dtheta.*ne./gradrho./calpha));
+Xne = ne(:)*ones(1,mtheta);
+Vne = sum(sum(r.*Upsilon.*drho.*dtheta.*Xne./gradrho./calpha));
 ne_vol = Vne/V;%Te volumic
 %
 for iz = 1:length(equil.zZi)
-    Ti = equil.pzTi(iz,:)'*ones(1,mtheta);
-    VTi = sum(sum(r.*Upsilon.*drho.*dtheta.*Ti./gradrho./calpha));
+    XTi = zTi(:,iz)*ones(1,mtheta);
+    VTi = sum(sum(r.*Upsilon.*drho.*dtheta.*XTi./gradrho./calpha));
     zTi_vol(iz) = VTi/V;%Ti volumic
     %
-    ni = equil.pzni(iz,:)'*ones(1,mtheta);
-    Vni = sum(sum(r.*Upsilon.*drho.*dtheta.*ni./gradrho./calpha));
+    Xni = zni(:,iz)*ones(1,mtheta);
+    Vni = sum(sum(r.*Upsilon.*drho.*dtheta.*Xni./gradrho./calpha));
     zni_vol(iz) = Vni/V;%ni volumic
 end
 %
@@ -474,6 +481,18 @@ equil.Te_vol = Te_vol;
 equil.ne_vol = ne_vol;
 equil.zTi_vol = zTi_vol;
 equil.zni_vol = zni_vol;
+%
 equil.consistency.rho = rho;
 equil.consistency.jparz_fsav = jparz_fsav;
 equil.consistency.jparz_fsav_cyl = jparz_fsav_cyl;
+equil.consistency.Te = Te;
+equil.consistency.ne = ne;
+%
+if isfield(equil,'eqdsk')
+    equil.consistency.rhoP = rhoP;
+    equil.consistency.rhoT = rhoT;
+    equil.consistency.rhoV = rhoV;
+    %
+    equil.consistency.q = q;
+end
+    

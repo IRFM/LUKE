@@ -35,5 +35,12 @@ lukestructs.opt.save = 1;% to save result in file
 lukestructs.opt.backup = opt_save;% backup option with fluctuations
 lukestructs.opt.waves = 1;% save wave results with fluctuations
 %
+dkepath = setpath_luke_jd(dkepath,NaN,0);1
+nrem = length(dkepath.remote);
+remlist = input_dke_yp('Please identify profiles to be used.',1:nrem,[1;nrem]);
+remnum = 1;
+dkepath.clustermode.run_lukert.scheduler.remnum = remlist(remnum);
+
+
 run_lukert(lukestructs,dkepath);
 %

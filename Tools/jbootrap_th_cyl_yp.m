@@ -2,8 +2,7 @@ function [prho,pcurr_hir_ref_fsav,pcurr_sau_ref_fsav,pcurr_hin_ref_fsav,pcurr_i_
 % 
 % Calculates the bootstrap current from neoclassical models by Hinton & Hazeltine, Hirshman and Sauter 
 % in the limit of large aspect ratio ia << 1.  
-% Note: The calculation is based on the model of circular concentric
-% flux-surface, with parameters derived from the magnetic geometry.
+% Note: The calculation is based on the model of circular concentric flux-surface, with parameters derived from the magnetic geometry.
 %
 %   INPUTS: 
 %
@@ -155,19 +154,23 @@ alpha = -1.172./(1 + 0.462*Zi);
 %X = pft./(1 + (1-0.1*pft).*sqrt(pnhu_e_s) + 0.5*(1-0.5*pft).*pnhu_e_s/Zi);
 %L34_s = (1 + 1.4/(Zi+1))*X - 1.9/(Zi+1)*X.^2 + 0.3/(Zi+1)*X.^3 + 0.2/(Zi+1)*X.^4;
 %
-% Sauter Correction for L32 in case of large aspect ratio limit (S.Schultz thesis p 92)
+% Sauter Correction for L32 in case of large aspect ratio limit (S.Schultz thesis p 91-92)
 %
 px_s = 1 - (1 - pia).^2./sqrt(1-pia.^2)./(1 + 1.46*sqrt(pia));
+
+%L31_s = 
+
 L32_s = -(0.51 + 1.31*Zi)/Zi/(1 + 0.44*Zi)*(px_s - px_s.^4)...
         +(5.95 + 3.57*Zi)/(1 + 2.70*Zi + 0.546*Zi^2)*(px_s.^2 - px_s.^4)...
         -(3.92 + 3.57*Zi)/(1 + 2.70*Zi + 0.546*Zi^2)*(px_s.^3 - px_s.^4);
+%L34_s = L31_s;
 %
 A1 = dlnpedr + pTi./(Zi*pTe).*dlnpidr;
 A2 = dlnTedr;
 A4 = alpha.*pTi./(Zi*pTe).*dlnTidr;
 %
 Jbavnorm = -ppe.*pBT0./pBp0.*(L31.*A1 + L32.*A2 + L34.*A4);%WARNING: pBT0./pBp0 not equal to pq./pia when pia becomes large (i.e. > 0.2)
-Jbavnorm_s = -ppe.*pBT0./pBp0.*(L31.*A1 + L32_s.*A2 + L34.*A4); 
+Jbavnorm_s = -ppe.*pBT0./pBp0.*(L31_s.*A1 + L32_s.*A2 + L34_s.*A4); 
 Jbavnorm_hh = -ppe.*pBT0./pBp0.*(0.69*dlnTedr + 2.44*dlnnedr); 
 %
 pcurr_hir_ref_fsav = Jbavnorm/Bt*qe*1e-6*1e3; 

@@ -159,7 +159,8 @@ end
 %
 % PROCESS DATA
 %
-fproc_runaway(RR,mksa,Ec,f,tn,tRR,tnorm,alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S,graph,p_opt,id_simul);
+%fproc_runaway(RR,mksa,Ec,f,tn,tRR,tnorm,alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S,graph,p_opt,id_simul);
+fproc_runaway(RR,mksa,Ec,f,tn,tRR,tnorm,'','','','',alpha,betath2,wpr,Zi,opt,grid,id_equil,rho_S,graph,p_opt,id_simul)
 %
 %************************************************************************************************************************************
 %
