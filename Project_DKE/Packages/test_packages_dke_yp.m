@@ -41,7 +41,10 @@ disp('---------------------------------------------------------------')
 if GPUstatus.DeviceSupported,
     mode = input_dke_yp('2-D (0), 2-D for GPU (1) or 3-D (2) input matrix',0);
 else
-    mode = input_dke_yp('2-D (0) or 3-D (2) input matrix',0);
+    mode = input_dke_yp('2-D (0) or 3-D (1) input matrix',0);
+    if mode == 1,
+        mode = 2;
+    end
 end
 %
 npass = input_dke_yp('Number of passes',1);
@@ -387,7 +390,7 @@ end
 for iisim = 1:isim,
     if ~isempty(ZMMXS_t{iisim})
         figure('Name',Zname{iisim}),graph1D_jd([1:length(ZMMXS_t{iisim})],ZMMXS_t{iisim},0,0,'Vector index','Vector coefficient',[strrep(Zname{iisim},'_','-'),' on ',computer],NaN,'','','-','non','r',1,20,gca,0.85,0.7,0.5);hold on    
-        savefig_dke_yp(Zname{iisim},dirfig);
+        savefig_dke_yp(strrep(Zname{iisim},'.','_'),dirfig);
     end
 end
 %
