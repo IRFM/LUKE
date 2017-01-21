@@ -18,7 +18,7 @@ dkepath.computer = computer;%machine type and supported OS
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.yvesp(1).luke_root = [pwd,filesep];
+dkepath.yvesp(1).luke_root = '/pfs/home/yvesp/public/LUKE/';
 dkepath.yvesp(1).local_root = '/pfs/home/yvesp/public/';
 dkepath.yvesp(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
