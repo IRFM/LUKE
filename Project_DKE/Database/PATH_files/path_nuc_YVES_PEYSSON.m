@@ -36,6 +36,7 @@ dkepath.yvespeysson(1).compiler_opt.helmex.mex901 = [' -compatibleArrayDims -lgf
 dkepath.yvespeysson(1).compiler_opt.fopts.mex901 = ' ';%-largeArrayDims
 %
 dkepath.yvespeysson(1).MUMPS.mex901 = [dkepath.yvespeysson(1).local_root,'MUMPS_4.10.0/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).MUMPS.mex901 = [dkepath.yvespeysson(1).local_root,'MUMPS_5.0.2/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
