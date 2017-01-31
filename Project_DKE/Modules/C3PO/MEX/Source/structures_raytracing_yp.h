@@ -1,0 +1,309 @@
+struct polynomial_piecewise_0D {
+    double  *data;
+};
+
+struct polynomial_piecewise_1D {
+    mxChar  *form_f;
+    double  *breaks_f;
+    double  *coefs_f;
+    double  *pieces_f;
+    double  *order_f;
+    double  *dim_f;
+    mxChar  *orient_f;
+    mxChar  *form_dfdrho;
+    double  *breaks_dfdrho;
+    double  *coefs_dfdrho;
+    double  *pieces_dfdrho;
+    double  *order_dfdrho;
+    double  *dim_dfdrho;
+    mxChar  *orient_dfdrho;
+    mxChar  *form_d2fdrho2;
+    double  *breaks_d2fdrho2;
+    double  *coefs_d2fdrho2;
+    double  *pieces_d2fdrho2;
+    double  *order_d2fdrho2;
+    double  *dim_d2fdrho2;
+    mxChar  *orient_d2fdrho2;
+};
+
+struct polynomial_piecewise_2D {
+    double  *n;
+    mxChar  *form_a0;
+    double  *breaks_a0;
+    double  *coefs_a0;
+    double  *pieces_a0;
+    double  *order_a0;
+    double  *dim_a0;
+    mxChar  *orient_a0;
+    mxChar  *form_da0drho;
+    double  *breaks_da0drho;
+    double  *coefs_da0drho;
+    double  *pieces_da0drho;
+    double  *order_da0drho;
+    double  *dim_da0drho;
+    mxChar  *orient_da0drho;
+    mxChar  *form_an;
+    double  *breaks_an;
+    double  *coefs_an;
+    double  *pieces_an;
+    double  *order_an;
+    double  *dim_an;
+    mxChar  *orient_an;
+    mxChar  *form_dandrho;
+    double  *breaks_dandrho;
+    double  *coefs_dandrho;
+    double  *pieces_dandrho;
+    double  *order_dandrho;
+    double  *dim_dandrho;
+    mxChar  *orient_dandrho;
+    mxChar  *form_bn;
+    double  *breaks_bn;
+    double  *coefs_bn;
+    double  *pieces_bn;
+    double  *order_bn;
+    double  *dim_bn;
+    mxChar  *orient_bn;
+    mxChar  *form_dbndrho;
+    double  *breaks_dbndrho;
+    double  *coefs_dbndrho;
+    double  *pieces_dbndrho;
+    double  *order_dbndrho;
+    double  *dim_dbndrho;
+    mxChar  *orient_dbndrho;
+};
+
+typedef struct polynomial_piecewise_0D pp_0D_format;
+typedef struct polynomial_piecewise_1D pp_1D_format;
+typedef struct polynomial_piecewise_2D pp_2D_format;
+
+struct rayprofiles {
+    double *Te;
+    double *ne;
+    double *zTi;
+    double *zni;
+    double *dTedY;
+    double *dnedY;
+    double **dzTidY;
+    double **dznidY;
+    double *d2TedY2;
+    double *d2nedY2;
+    double **d2zTidY2;
+    double **d2znidY2;
+};
+
+struct rayparam {
+    double *testmode;
+    double *tensortype;
+    double *t0;
+    double *tfinal;
+    double *dt0;
+    double *dS;
+    double *tol;
+    double *kmax;
+    double *ncyclharm;
+    double *reflection;
+    double *rel_opt;
+    double *nperp;
+    double *pperpmax;
+    double *tau_lim;
+    double *kextra;
+    double *rhomin;
+};
+
+struct equilparam {
+    double *zZi;
+    double *zmi;
+    int *ns;
+    double *Rp;
+    double *ap;
+    double *Zp;
+    double *psia_apRp;
+};
+
+struct distriparam {
+    double *pn;
+    int *npn;
+    double *mhu;
+    int *nmhu;
+    double *ne_ref;
+    double *betath_ref;
+};
+
+struct fluctparam {
+    int *ne_nmodel;
+    double **ne_model;
+    double **ne_sigmar_max;
+    double **ne_sigmar_hwhm;
+    double **ne_sigmar_rho;
+    double **ne_polmode;
+    double **ne_epsi_rho;
+    double **ne_epsi_theta;
+    double **ne_epsi_phi;
+    double **ne_lmin;
+    double **ne_mmin;
+    double **ne_nmin;
+    double **ne_lmax;
+    double **ne_mmax;
+    double **ne_nmax;
+    int **ne_nphase;
+    double **ne_phase;
+    int *B_nmodel;
+    double **B_model;
+    double **B_sigmar_max;
+    double **B_sigmar_hwhm;
+    double **B_sigmar_rho;
+    double **B_polmode;
+    double **B_epsi_rho;
+    double **B_epsi_theta;
+    double **B_epsi_phi;
+    double **B_lmin;
+    double **B_mmin;
+    double **B_nmin;
+    double **B_lmax;
+    double **B_mmax;
+    double **B_nmax;
+    int **B_nphase;
+    double **B_phase;
+};
+
+struct raymagnetic {
+    double *rn;
+    double *drndY;
+    double *xn;
+    double *dxndY;
+    double *yn;
+    double *dyndY;
+    double *Brhon;
+    double *dBrhondY;
+    double *Bsn;
+    double *dBsndY;
+    double *Bzn;
+    double *dBzndY;
+    double *B;
+    double *dBdY;
+    double *salpha;
+    double *dsalphadY;
+    double *calpha;
+    double *dcalphadY;
+    double *gradrhon;
+    double *dgradrhondY;
+    double *rhorip;
+    double *drhoripdY;
+    double *Upsilonn;
+    double *dUpsilonndY;
+};
+
+struct susceptibilitytensor {
+    double complex *Xxx;
+    double complex *Xxy;
+    double complex *Xxz;
+    double complex *Xyy;
+    double complex *Xyz;
+    double complex *Xzz;
+    double complex *dXxxdNperp;
+    double complex *dXxydNperp;
+    double complex *dXxzdNperp;
+    double complex *dXyydNperp;
+    double complex *dXyzdNperp;
+    double complex *dXzzdNperp;
+    double complex *dXxxdNpar;
+    double complex *dXxydNpar;
+    double complex *dXxzdNpar;
+    double complex *dXyydNpar;
+    double complex *dXyzdNpar;
+    double complex *dXzzdNpar;
+    double complex *dXxxdY;
+    double complex *dXxydY;
+    double complex *dXxzdY;
+    double complex *dXyydY;
+    double complex *dXyzdY;
+    double complex *dXzzdY;
+};
+
+struct raydistri {
+    pp_1D_format f0_fit;
+    pp_2D_format PSI_fit;
+};
+
+struct rayfluctuations {
+    pp_0D_format L_rho;
+    pp_1D_format xq_fit,xL_theta_fit,xL_perp_fit;
+    pp_2D_format XL_phi_fit;
+    pp_2D_format *B_sfx_fit,*B_sfy_fit,*B_sfz_fit;
+    pp_2D_format Xcm_fit,Xcn_fit;
+};
+
+struct rayequil {
+    pp_1D_format Te_fit,ne_fit,zTi_fit,zni_fit;
+    pp_2D_format x_fit,y_fit,r_fit;
+    pp_2D_format calpha_fit,salpha_fit;
+    pp_2D_format gradrho_fit;
+    pp_2D_format Bx_fit,By_fit,Bz_fit,BP_fit,B_fit;
+};
+
+typedef struct susceptibilitytensor susceptibilitytensor_format;
+typedef struct rayparam rayparam_format;
+typedef struct equilparam equilparam_format;
+typedef struct fluctparam fluctparam_format;
+typedef struct refractiveindex refractiveindex_format;
+typedef struct raymagnetic raymagnetic_format;
+typedef struct rayprofiles rayprofiles_format;
+typedef struct rayfluctuations rayfluctuations_format;
+typedef struct rayequil rayequil_format;
+typedef struct distriparam distriparam_format;
+typedef struct raydistri raydistri_format;
+
+/* subroutines list */
+
+void ppvald_0D();
+void ppvald_1D();
+void ppvald_2D();
+void ppvali_2D();
+void ray();
+void rayindex();
+void susceptibility();
+void rayprocess();
+void metrictensor();
+double alphaphi_jd();
+void coldtensor();
+void dsolve();
+void testparam();
+void disprel();
+void interpequil();
+void interpequil_test();
+void load_idealequil_test();
+equilparam_format load_equil_param();
+fluctparam_format load_fluct_param();
+rayparam_format load_ray_param();
+pp_0D_format load_value_0D();
+pp_1D_format load_profile_1D();
+pp_2D_format load_grid_2D();
+distriparam_format load_distri_param();
+double inf_norm();
+double sgn();
+void halftanh();
+void buildXstruc();
+void calcY();
+void Zdisp();
+void ZFriedConte();
+void hottensor();
+void Gamma();
+void modBessel();
+void imagBessel();
+void dawson();
+void smith();
+void vacuumtensor();
+int reflection();
+void polarization();
+void build_raymagnetic();
+void weakrelativistictensor();
+void Shka();
+void ImShka();
+void Fdnest();
+void ImFdnest();
+void kperproots();
+double complex matdot();
+void substitution();
+void xy2rhotheta();
+void rhotheta2xy();
+void rho1D();
