@@ -103,8 +103,9 @@ rayparam.nperp = 1000;%number of points in pperp integration for damping calcula
 rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
 rayparam.kextra = 50;
-rayparam.metricmode = 1;% 1 : Only curvilinear metric; 2 : Both curvilinear and cartesian metric
+rayparam.metricmode = 2;% 1 : Only curvilinear metric; 2 : Both curvilinear and cartesian metric
 rayparam.rhoswitch = 0.3;% Radial position at which the switch occurs when metricmode = 2
+rayparam.deltaswitch = 0.01;
 %
 % launch structure
 %
