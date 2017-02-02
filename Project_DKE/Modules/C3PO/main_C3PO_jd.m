@@ -158,6 +158,10 @@ if ~isfield(rayparam,'rhoswitch'),% Radial position at which the switch occurs w
     rayparam.rhoswitch = 0.1;
 end
 %
+if ~isfield(rayparam,'deltaswitch'),% Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes	
+    rayparam.deltaswitch = 0.01;
+end
+%
 %if ~isfield(rayinit,'yn0'),% !!!! old rayparam, modify calling function
 %    rayinit.yn0 = NaN*rayinit.ym0;
 %end
