@@ -111,6 +111,7 @@ struct rayparam {
     double *rhomin;
     double *metricmode;
     double *rhoswitch;
+    double *deltaswitch;
 };
 
 struct equilparam {
@@ -221,6 +222,7 @@ mxArray *structure_name;
     data.rhomin = mxGetData(mxGetField(structure_name, 0, "rhomin"));
     data.metricmode = mxGetData(mxGetField(structure_name, 0, "metricmode"));
     data.rhoswitch = mxGetData(mxGetField(structure_name, 0, "rhoswitch"));
+    data.deltaswitch = mxGetData(mxGetField(structure_name, 0, "deltaswitch"));
     
     return(data);
 }

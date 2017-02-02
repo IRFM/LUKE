@@ -110,6 +110,7 @@ struct rayparam {
     double *rhomin;
     double *metricmode;
     double *rhoswitch;
+    double *deltaswitch;
 };
 
 struct equilparam {

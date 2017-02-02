@@ -540,9 +540,9 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
          */
 
         //------------------------- Switching condition set around rho = 0.1 -----------------------------------
-        if(rayparam.metricmode[0] == 2)
+        if((int)rayparam.metricmode[0] == 2)
         {
-            if (flag_metric == 1 && rho1<0.99*rayparam.rhoswitch[0])//rayparam.rhoswitch[0])
+            if (flag_metric == 1 && rho1<rayparam.rhoswitch[0]*(1 - rayparam.deltaswitch[0]))
             {
                 mexPrintf("%s \n","Switching on cartesian system");
                 rhotheta2xy(rayparam,rayequil,equilparam,&rho1,&theta1,&krho1,&m1);
@@ -557,7 +557,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
                 t[0]=rho1;
                 t[1]=theta1;
                 substitution(rayequil,rayparam,equilparam,&rho,&theta,&t);
-                if(rho>1.01*rayparam.rhoswitch[0])//rayparam.rhoswitch[0])
+                if(rho>1.01*rayparam.rhoswitch[0]*(1 + rayparam.deltaswitch[0]))
                 {
                     mexPrintf("%s \n","Switching off cartesian system");
                     xy2rhotheta(rayparam,rayequil,equilparam,&rho1,&theta1,&krho1,&m1);
