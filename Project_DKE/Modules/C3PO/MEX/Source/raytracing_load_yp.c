@@ -109,6 +109,8 @@ struct rayparam {
     double *tau_lim;
     double *kextra;
     double *rhomin;
+    double *metricmode;
+    double *rhoswitch;
 };
 
 struct equilparam {
@@ -217,6 +219,8 @@ mxArray *structure_name;
     data.tau_lim = mxGetData(mxGetField(structure_name, 0, "tau_lim")); 
     data.kextra = mxGetData(mxGetField(structure_name, 0, "kextra"));
     data.rhomin = mxGetData(mxGetField(structure_name, 0, "rhomin"));
+    data.metricmode = mxGetData(mxGetField(structure_name, 0, "metricmode"));
+    data.rhoswitch = mxGetData(mxGetField(structure_name, 0, "rhoswitch"));
     
     return(data);
 }
