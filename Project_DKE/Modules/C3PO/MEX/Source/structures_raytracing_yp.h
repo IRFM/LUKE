@@ -108,6 +108,8 @@ struct rayparam {
     double *tau_lim;
     double *kextra;
     double *rhomin;
+    double *metricmode;
+    double *rhoswitch;
 };
 
 struct equilparam {
