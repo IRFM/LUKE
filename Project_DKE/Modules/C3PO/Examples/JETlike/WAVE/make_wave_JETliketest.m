@@ -101,6 +101,8 @@ rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calcul
 rayparam.nperp = 1000;%number of points in pperp integration for damping calculations
 rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
+rayparam.metricmode = 2;% 1 : Only curvilinear metric; 2 : Both curvilinear and cartesian metric
+rayparam.rhoswitch = 0.1;% Radial position at which the switch occurs when metricmode = 2
 %
 % =========================================================================
 %
