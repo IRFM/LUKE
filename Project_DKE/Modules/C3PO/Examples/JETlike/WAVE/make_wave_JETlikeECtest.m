@@ -105,7 +105,7 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 rayparam.kextra = 50;
 rayparam.metricmode = 2;% 1 : Only curvilinear metric; 2 : Both curvilinear and cartesian metric
 rayparam.rhoswitch = 0.3;% Radial position at which the switch occurs when metricmode = 2
-rayparam.deltaswitch = 0.01;
+rayparam.deltaswitch = 0.01;% Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes
 %
 % launch structure
 %
