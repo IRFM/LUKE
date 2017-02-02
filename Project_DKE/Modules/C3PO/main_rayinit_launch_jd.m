@@ -66,7 +66,7 @@ if ~isfield(launch,'method1'),
 end
 %
 if ~isfield(launch,'method2'),
-    launch.method2 = 'cubic';
+    launch.method2 = 'spline';
 end
 %
 if strcmp(launch.type,'EC'),
