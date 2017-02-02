@@ -150,6 +150,14 @@ if ~isfield(rayparam,'rhomin'),% minimum distance of the ray to the magnetic axi
     rayparam.rhomin = 0;
 end
 %
+if ~isfield(rayparam,'metricmode'),% 1 : Only curvilinear metric; 2 : Both curvilinear and cartesian metric
+    rayparam.metricmode = 1;
+end
+%
+if ~isfield(rayparam,'rhoswitch'),% Radial position at which the switch occurs when metricmode = 2
+    rayparam.rhoswitch = 0.1;
+end
+%
 %if ~isfield(rayinit,'yn0'),% !!!! old rayparam, modify calling function
 %    rayinit.yn0 = NaN*rayinit.ym0;
 %end
