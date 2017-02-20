@@ -10,7 +10,8 @@ mex -c -I../../../../MEX/Source ../../../../MEX/Source/alphaphi_jd.c
 
 et enfin
 
-mex ../Source/xy2rhotheta.c raytracing_interp_yp.o raytracing_load_yp.o
-mex ../Source/rhotheta2xy.c raytracing_interp_yp.o raytracing_load_yp.o
+mex ../Source/xy2rhotheta_gb.c raytracing_interp_yp.o raytracing_load_yp.o
+mex ../Source/rhotheta2xy_gb.c raytracing_interp_yp.o raytracing_load_yp.o
+mex ../Source/test_grid_substitution.c raytracing_interp_yp.o raytracing_load_yp.o
 
 mex ../Source/raytracing_yp.c raytracing_dieltensor_yp.o raytracing_interp_yp.o raytracing_load_yp.o alphaphi_jd.o
