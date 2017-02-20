@@ -91,19 +91,31 @@ elseif nargin >= 4,
         Zpp_f.pp_da0drho.coefs = [Zpp_f.pp_a0.coefs(:,1)];%1st order partial derivative along rho
         Zpp_f.pp_dandrho.coefs = [Zpp_f.pp_an.coefs(:,1)];%1st order partial derivative along rho
         Zpp_f.pp_dbndrho.coefs = [Zpp_f.pp_bn.coefs(:,1)];%1st order partial derivative along rho
-    elseif Zpp_f.pp_a0.order == 3,
+        Zpp_f.pp_d2a0drho2.coefs = zeros(size([Zpp_f.pp_a0.coefs(:,1)]));%2nd order partial derivative along rho
+        Zpp_f.pp_d2andrho2.coefs = zeros(size([Zpp_f.pp_an.coefs(:,1)]));%2nd order partial derivative along rho
+        Zpp_f.pp_d2bndrho2.coefs = zeros(size([Zpp_f.pp_bn.coefs(:,1)]));%2nd order partial derivative along rho
+    elseif Zpp_f.pp_a0.order == 3,%Quadratic
         Zpp_f.pp_da0drho.coefs = [2*Zpp_f.pp_a0.coefs(:,1),Zpp_f.pp_a0.coefs(:,2)];%1st order partial derivative along rho
         Zpp_f.pp_dandrho.coefs = [2*Zpp_f.pp_an.coefs(:,1),Zpp_f.pp_an.coefs(:,2)];%1st order partial derivative along rho
-        Zpp_f.pp_dbndrho.coefs = [2*Zpp_f.pp_bn.coefs(:,1),Zpp_f.pp_bn.coefs(:,2)];%1st order partial derivative along rho             
+        Zpp_f.pp_dbndrho.coefs = [2*Zpp_f.pp_bn.coefs(:,1),Zpp_f.pp_bn.coefs(:,2)];%1st order partial derivative along rho     
+        Zpp_f.pp_d2a0drho2.coefs = [2*Zpp_f.pp_a0.coefs(:,1)];%2nd order partial derivative along rho
+        Zpp_f.pp_d2andrho2.coefs = [2*Zpp_f.pp_an.coefs(:,1)];%2nd order partial derivative along rho
+        Zpp_f.pp_d2bndrho2.coefs = [2*Zpp_f.pp_bn.coefs(:,1)];%2nd order partial derivative along rho 
     elseif Zpp_f.pp_a0.order == 4,%cubic spline or Hermite polynomials (option pchip)
         Zpp_f.pp_da0drho.coefs = [3*Zpp_f.pp_a0.coefs(:,1),2*Zpp_f.pp_a0.coefs(:,2),Zpp_f.pp_a0.coefs(:,3)];%1st order partial derivative along rho
         Zpp_f.pp_dandrho.coefs = [3*Zpp_f.pp_an.coefs(:,1),2*Zpp_f.pp_an.coefs(:,2),Zpp_f.pp_an.coefs(:,3)];%1st order partial derivative along rho
         Zpp_f.pp_dbndrho.coefs = [3*Zpp_f.pp_bn.coefs(:,1),2*Zpp_f.pp_bn.coefs(:,2),Zpp_f.pp_bn.coefs(:,3)];%1st order partial derivative along rho
+        Zpp_f.pp_d2a0drho2.coefs = [6*Zpp_f.pp_a0.coefs(:,1),2*Zpp_f.pp_a0.coefs(:,2)];%2nd order partial derivative along rho
+        Zpp_f.pp_d2andrho2.coefs = [6*Zpp_f.pp_an.coefs(:,1),2*Zpp_f.pp_an.coefs(:,2)];%2nd order partial derivative along rho
+        Zpp_f.pp_d2bndrho2.coefs = [6*Zpp_f.pp_bn.coefs(:,1),2*Zpp_f.pp_bn.coefs(:,2)];%2nd order partial derivative along rho
     end
     %
     Zpp_f.pp_da0drho.order = Zpp_f.pp_a0.order - 1;%1st order partial derivative along rho
     Zpp_f.pp_dandrho.order = Zpp_f.pp_an.order - 1;%1st order partial derivative along rho
     Zpp_f.pp_dbndrho.order = Zpp_f.pp_bn.order - 1;%1st order partial derivative along rho  
+    Zpp_f.pp_d2a0drho2.order = Zpp_f.pp_a0.order - 2;%2nd order partial derivative along rho
+    Zpp_f.pp_d2andrho2.order = Zpp_f.pp_an.order - 2;%2nd order partial derivative along rho
+    Zpp_f.pp_d2bndrho2.order = Zpp_f.pp_bn.order - 2;%2nd order partial derivative along rho  
 else
     error('Coordinates are missing !');
 end
