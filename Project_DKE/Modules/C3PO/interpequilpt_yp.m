@@ -86,6 +86,9 @@ elseif nargin >= 4,
     Zpp_f.pp_da0drho = Zpp_f.pp_a0;
     Zpp_f.pp_dandrho = Zpp_f.pp_an;
     Zpp_f.pp_dbndrho = Zpp_f.pp_bn;
+    Zpp_f.pp_d2a0drho2 = Zpp_f.pp_a0;
+    Zpp_f.pp_d2andrho2 = Zpp_f.pp_an;
+    Zpp_f.pp_d2bndrho2 = Zpp_f.pp_bn;
     %
     if Zpp_f.pp_a0.order == 2,%Linear
         Zpp_f.pp_da0drho.coefs = [Zpp_f.pp_a0.coefs(:,1)];%1st order partial derivative along rho
