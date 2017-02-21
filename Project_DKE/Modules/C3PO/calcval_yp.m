@@ -1,8 +1,6 @@
 function [varargout] = calcval_yp(fit,theta,a0,an,bn,da0drho,dandrho,dbndrho,d2a0drho2,d2andrho2,d2bndrho2)
 %
-% Calculate the local interpolated value at any poloidal angle position,
-% modified 29/11/2013 by E. Nilsson to take vectorial form of
-% theta* as input
+% Calculate the local interpolated value at any poloidal angle position
 %
 % INPUT
 %    - fit: interpolated structure
@@ -17,8 +15,9 @@ function [varargout] = calcval_yp(fit,theta,a0,an,bn,da0drho,dandrho,dbndrho,d2a
 %    - d2Xdtheta2: value of the second order poloidal derivatives at position (rho,theta) [1,1]
 %    - dXdrho: value of the first order radial derivatives at position (rho,theta) [1,1]
 %    - d2Xdthetadrho: value of the second order poloidal and radial cross-derivatives at position (rho,theta) [1,1]
+%    - d2Xdrho2: value of the second order poloidal and radial cross-derivatives at position (rho,theta) [1,1]
 %
-% By Yves Peysson (CEA-IRFM, yves.peysson@cea.fr), Joan Decker (CEA-IRFM, joan.decker@cea.fr, Emelie Nilsson CEA-IRFM, emelie.nilsson@cea.fr)
+% By Yves Peysson (CEA-IRFM, yves.peysson@cea.fr), Joan Decker (CEA-IRFM, joan.decker@cea.fr), Emelie Nilsson (CEA-IRFM, emelie.nilsson@cea.fr)
 %
 if isfield(fit,'x_fit'), fit = fit.x_fit;end%backward compatibility with equilfit_yp
 %
@@ -60,16 +59,20 @@ if nargin >= 8,
         Zdbndrho = repmat(dbndrho,[1,1,size(theta,1),size(theta,2)]);
         %
         dXdrho = squeeze(Xda0drho) + squeeze(sum(Zdandrho.*cos(Zn.*Ztheta),2)) + squeeze(sum(Zdbndrho.*sin(Zn.*Ztheta),2));
-        d2Xdthetadrho = squeeze(sum(-Zdandrho.*(Zn.*sin(Zn.*Ztheta)),2)) + squeeze(sum(Zdbndrho.*(Zn.*cos(Zn.*Ztheta)),2));
+        d2Xdthetadrho = squeeze(sum(-Zdandrho.*(Zn.*sin(Zn.*Ztheta)),2)) + squeeze(sum(Zdbndrho.*(Zn.*cos(Zn.*Ztheta)),2));%
+        %
     else
+        %
         dXdrho = [];
         d2Xdthetadrho = [];
+        %
     end
 end
 %
 if nargin == 11,
     if ~isempty(d2a0drho2) & ~isempty(d2andrho2) & ~isempty(d2bndrho2),
         %
+        Xd2a0drho2 = repmat(d2a0drho2(:),[1,size(theta,1),size(theta,2)]);
         Zd2andrho2 = repmat(d2andrho2,[1,1,size(theta,1),size(theta,2)]);
         Zd2bndrho2 = repmat(d2bndrho2,[1,1,size(theta,1),size(theta,2)]);
         %
