@@ -48,6 +48,13 @@ struct polynomial_piecewise_2D {
     double  *order_da0drho;
     double  *dim_da0drho;
     mxChar  *orient_da0drho;
+    mxChar  *form_d2a0drho2;
+    double  *breaks_d2a0drho2;
+    double  *coefs_d2a0drho2;
+    double  *pieces_d2a0drho2;
+    double  *order_d2a0drho2;
+    double  *dim_d2a0drho2;
+    mxChar  *orient_d2a0drho2;
     mxChar  *form_an;
     double  *breaks_an;
     double  *coefs_an;
@@ -62,6 +69,13 @@ struct polynomial_piecewise_2D {
     double  *order_dandrho;
     double  *dim_dandrho;
     mxChar  *orient_dandrho;
+    mxChar  *form_d2andrho2;
+    double  *breaks_d2andrho2;
+    double  *coefs_d2andrho2;
+    double  *pieces_d2andrho2;
+    double  *order_d2andrho2;
+    double  *dim_d2andrho2;
+    mxChar  *orient_d2andrho2;
     mxChar  *form_bn;
     double  *breaks_bn;
     double  *coefs_bn;
@@ -76,6 +90,13 @@ struct polynomial_piecewise_2D {
     double  *order_dbndrho;
     double  *dim_dbndrho;
     mxChar  *orient_dbndrho;
+    mxChar  *form_d2bndrho2;
+    double  *breaks_d2bndrho2;
+    double  *coefs_d2bndrho2;
+    double  *pieces_d2bndrho2;
+    double  *order_d2bndrho2;
+    double  *dim_d2bndrho2;
+    mxChar  *orient_d2bndrho2;
 };
 
 typedef struct polynomial_piecewise_0D pp_0D_format;
@@ -173,20 +194,24 @@ void ppvald_1D(pp_1D_format in,double drho_lim,double x,double y[],double dydY[]
 
 
 
-void ppvald_2D(pp_2D_format in,double drho_lim, double x, double t, double* y, double* dydY, double* dydt, double* d2ydt2, double* d2ydtdY)
+void ppvald_2D(pp_2D_format in,double drho_lim, double x, double t, double* y, double* dydY, double* dydt, double* d2ydt2, double* d2ydtdY, double* d2ydY2)
 {
     register int j,k;
     int i0,i1,i2,i3;
-    double *a0,*an,*bn,*da0dY,*dandY,*dbndY;
+    double *a0,*an,*bn,*da0dY,*dandY,*dbndY,*d2a0dY2,*d2andY2,*d2bndY2;
     
     if (x>1.0) {x = 1.0 - drho_lim/2.0;}/* Avoid points outside the separatrix */
 
     a0 = mxCalloc((int)in.dim_a0[0],sizeof(double));
     da0dY = mxCalloc((int)in.dim_da0drho[0],sizeof(double));
+    d2a0dY2 = mxCalloc((int)in.dim_d2a0drho2[0],sizeof(double));
     an = mxCalloc((int)in.dim_an[0],sizeof(double));
     dandY = mxCalloc((int)in.dim_dandrho[0],sizeof(double));
+    d2andY2 = mxCalloc((int)in.dim_d2andrho2[0],sizeof(double));
     bn = mxCalloc((int)in.dim_bn[0],sizeof(double));
     dbndY = mxCalloc((int)in.dim_dbndrho[0],sizeof(double));
+    d2bndY2 = mxCalloc((int)in.dim_d2bndrho2[0],sizeof(double));
+
 
     for (j = 0;j < (int)in.pieces_a0[0];j++) {
         if ((x>=in.breaks_a0[j]) && (x<=in.breaks_a0[j+1])) {
@@ -233,6 +258,31 @@ void ppvald_2D(pp_2D_format in,double drho_lim, double x, double t, double* y, d
             }
         }
     }   
+    
+    
+     for (j = 0;j < (int)in.pieces_d2a0drho2[0];j++) {
+        if ((x>=in.breaks_d2a0drho2[j]) && (x<=in.breaks_d2a0drho2[j+1])) {
+            for (k = 1;k <= (int)in.dim_d2a0drho2[0]; k++) {
+                if ((int)in.order_d2a0drho2[0] == 2) {
+                    i0 = k-1+j*(int)in.dim_d2a0drho2[0] + 0*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i1 = k-1+j*(int)in.dim_d2a0drho2[0] + 1*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    d2a0dY2[k-1] = in.coefs_d2a0drho2[i0]*(x - in.breaks_d2a0drho2[j]) + in.coefs_d2a0drho2[i1];
+                } else if ((int)in.order_d2a0drho2[0] == 3) {
+                    i0 = k-1+j*(int)in.dim_d2a0drho2[0] + 0*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i1 = k-1+j*(int)in.dim_d2a0drho2[0] + 1*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i2 = k-1+j*(int)in.dim_d2a0drho2[0] + 2*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];                    
+                    d2a0dY2[k-1] = in.coefs_d2a0drho2[i0]*pow((x - in.breaks_d2a0drho2[j]),2) + in.coefs_d2a0drho2[i1]*(x - in.breaks_d2a0drho2[j]) + in.coefs_d2a0drho2[i2];
+                } else if ((int)in.order_d2a0drho2[0] == 4) {
+                    i0 = k-1+j*(int)in.dim_d2a0drho2[0] + 0*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i1 = k-1+j*(int)in.dim_d2a0drho2[0] + 1*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i2 = k-1+j*(int)in.dim_d2a0drho2[0] + 2*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i3 = k-1+j*(int)in.dim_d2a0drho2[0] + 3*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    d2a0dY2[k-1] = in.coefs_d2a0drho2[i0]*pow((x - in.breaks_d2a0drho2[j]),3) + in.coefs_d2a0drho2[i1]*pow((x - in.breaks_d2a0drho2[j]),2) + in.coefs_d2a0drho2[i2]*(x - in.breaks_d2a0drho2[j]) + in.coefs_d2a0drho2[i3];
+                }
+            }
+        }
+    }   
+    
 
     for (j = 0;j < (int)in.pieces_an[0];j++) {
         if ((x>=in.breaks_an[j]) && (x<=in.breaks_an[j+1])) {
@@ -280,7 +330,30 @@ void ppvald_2D(pp_2D_format in,double drho_lim, double x, double t, double* y, d
         }
     }   
 
-
+    for (j = 0;j < (int)in.pieces_d2andrho2[0];j++) {
+        if ((x>=in.breaks_d2andrho2[j]) && (x<=in.breaks_d2andrho2[j+1])) {
+            for (k = 1;k <= (int)in.dim_d2andrho2[0]; k++) {
+                if ((int)in.order_d2andrho2[0] == 2) {
+                    i0 = k-1+j*(int)in.dim_d2andrho2[0] + 0*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2andrho2[0] + 1*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    d2andY2[k-1] = in.coefs_d2andrho2[i0]*(x - in.breaks_d2andrho2[j]) + in.coefs_d2andrho2[i1];
+                } else if ((int)in.order_d2andrho2[0] == 3) {
+                    i0 = k-1+j*(int)in.dim_d2andrho2[0] + 0*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2andrho2[0] + 1*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i2 = k-1+j*(int)in.dim_d2andrho2[0] + 2*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];                    
+                    d2andY2[k-1] = in.coefs_d2andrho2[i0]*pow((x - in.breaks_d2andrho2[j]),2) + in.coefs_d2andrho2[i1]*(x - in.breaks_d2andrho2[j]) + in.coefs_d2andrho2[i2];
+                } else if ((int)in.order_d2andrho2[0] == 4) {
+                    i0 = k-1+j*(int)in.dim_d2andrho2[0] + 0*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2andrho2[0] + 1*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i2 = k-1+j*(int)in.dim_d2andrho2[0] + 2*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i3 = k-1+j*(int)in.dim_d2andrho2[0] + 3*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    d2andY2[k-1] = in.coefs_d2andrho2[i0]*pow((x - in.breaks_d2andrho2[j]),3) + in.coefs_d2andrho2[i1]*pow((x - in.breaks_d2andrho2[j]),2) + in.coefs_d2andrho2[i2]*(x - in.breaks_d2andrho2[j]) + in.coefs_d2andrho2[i3];
+                }
+            }
+        }
+    }  
+    
+    
     for (j = 0;j < (int)in.pieces_bn[0];j++) {
         if ((x>=in.breaks_bn[j]) && (x<=in.breaks_bn[j+1])) {
             for (k = 1;k <= (int)in.dim_bn[0]; k++) {
@@ -327,11 +400,39 @@ void ppvald_2D(pp_2D_format in,double drho_lim, double x, double t, double* y, d
         }
     }   
     
+    
+    for (j = 0;j < (int)in.pieces_d2bndrho2[0];j++) {
+        if ((x>=in.breaks_d2bndrho2[j]) && (x<=in.breaks_d2bndrho2[j+1])) {
+            for (k = 1;k <= (int)in.dim_d2bndrho2[0]; k++) {
+                if ((int)in.order_d2bndrho2[0] == 2) {
+                    i0 = k-1+j*(int)in.dim_d2bndrho2[0] + 0*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2bndrho2[0] + 1*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    d2bndY2[k-1] = in.coefs_d2bndrho2[i0]*(x - in.breaks_d2bndrho2[j]) + in.coefs_d2bndrho2[i1];
+                } else if ((int)in.order_d2bndrho2[0] == 3) {
+                    i0 = k-1+j*(int)in.dim_d2bndrho2[0] + 0*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2bndrho2[0] + 1*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i2 = k-1+j*(int)in.dim_d2bndrho2[0] + 2*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];                    
+                    d2bndY2[k-1] = in.coefs_d2bndrho2[i0]*pow((x - in.breaks_d2bndrho2[j]),2) + in.coefs_d2bndrho2[i1]*(x - in.breaks_d2bndrho2[j]) + in.coefs_d2bndrho2[i2];
+                } else if ((int)in.order_d2bndrho2[0] == 4) {
+                    i0 = k-1+j*(int)in.dim_d2bndrho2[0] + 0*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2bndrho2[0] + 1*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i2 = k-1+j*(int)in.dim_d2bndrho2[0] + 2*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i3 = k-1+j*(int)in.dim_d2bndrho2[0] + 3*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    d2bndY2[k-1] = in.coefs_d2bndrho2[i0]*pow((x - in.breaks_d2bndrho2[j]),3) + in.coefs_d2bndrho2[i1]*pow((x - in.breaks_d2bndrho2[j]),2) + in.coefs_d2bndrho2[i2]*(x - in.breaks_d2bndrho2[j]) + in.coefs_d2bndrho2[i3];
+                }
+            }
+        }
+    }    
+    
+    
+    
+    
     y[0] = 0.0;
     dydY[0] = 0.0;
     dydt[0] = 0.0;
     d2ydt2[0] = 0.0;
     d2ydtdY[0] = 0.0;
+    d2ydY2[0] = 0.0;
     
     for (k = 1;k <= (int)in.dim_dbndrho[0]; k++) {
         y[0] = y[0] + an[k-1]*cos(k*t) + bn[k-1]*sin(k*t);
@@ -339,35 +440,43 @@ void ppvald_2D(pp_2D_format in,double drho_lim, double x, double t, double* y, d
         dydt[0] = dydt[0] - k*an[k-1]*sin(k*t) + k*bn[k-1]*cos(k*t);
         d2ydt2[0] = d2ydt2[0] - k*k*an[k-1]*cos(k*t) - k*k*bn[k-1]*sin(k*t);
         d2ydtdY[0] = d2ydtdY[0] - k*dandY[k-1]*sin(k*t) + k*dbndY[k-1]*cos(k*t);
+        d2ydY2[0] = d2ydY2[0] + d2andY2[k-1]*cos(k*t) + d2bndY2[k-1]*sin(k*t);
     }
     
     y[0] = y[0] + a0[0];
     dydY[0] = dydY[0] + da0dY[0];
+    d2ydY2[0] = d2ydY2[0] + d2a0dY2[0];
     
     mxFree(a0);
     mxFree(da0dY);
+    mxFree(d2a0dY2);
     mxFree(an);
     mxFree(dandY);
+    mxFree(d2andY2);
     mxFree(bn);
     mxFree(dbndY);
+    mxFree(d2bndY2);
 
 }
 
 
-void ppvali_2D(pp_2D_format in,double drho_lim, double x, double t0, double t, double* iy, double* idydY)
+void ppvali_2D(pp_2D_format in,double drho_lim, double x, double t0, double t, double* iy, double* idydY, double* id2ydY2)
 {
     register int j,k;
     int i0,i1,i2,i3;
-    double *a0,*an,*bn,*da0dY,*dandY,*dbndY;
+    double *a0,*an,*bn,*da0dY,*dandY,*dbndY,*d2a0dY2,*d2andY2,*d2bndY2;
     
     if (x>1.0) {x = 1.0 - drho_lim/2.0;}/* Avoid points outside the separatrix */
 
     a0 = mxCalloc((int)in.dim_a0[0],sizeof(double));
     da0dY = mxCalloc((int)in.dim_da0drho[0],sizeof(double));
+    d2a0dY2 = mxCalloc((int)in.dim_d2a0drho2[0],sizeof(double));
     an = mxCalloc((int)in.dim_an[0],sizeof(double));
     dandY = mxCalloc((int)in.dim_dandrho[0],sizeof(double));
+    d2andY2 = mxCalloc((int)in.dim_d2andrho2[0],sizeof(double));
     bn = mxCalloc((int)in.dim_bn[0],sizeof(double));
     dbndY = mxCalloc((int)in.dim_dbndrho[0],sizeof(double));
+    d2bndY2 = mxCalloc((int)in.dim_d2bndrho2[0],sizeof(double));
 
     for (j = 0;j < (int)in.pieces_a0[0];j++) {
         if ((x>=in.breaks_a0[j]) && (x<=in.breaks_a0[j+1])) {
@@ -414,6 +523,33 @@ void ppvali_2D(pp_2D_format in,double drho_lim, double x, double t0, double t, d
             }
         }
     }   
+    
+    
+    
+    for (j = 0;j < (int)in.pieces_d2a0drho2[0];j++) {
+        if ((x>=in.breaks_d2a0drho2[j]) && (x<=in.breaks_d2a0drho2[j+1])) {
+            for (k = 1;k <= (int)in.dim_d2a0drho2[0]; k++) {
+                if ((int)in.order_d2a0drho2[0] == 2) {
+                    i0 = k-1+j*(int)in.dim_d2a0drho2[0] + 0*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i1 = k-1+j*(int)in.dim_d2a0drho2[0] + 1*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    d2a0dY2[k-1] = in.coefs_d2a0drho2[i0]*(x - in.breaks_d2a0drho2[j]) + in.coefs_d2a0drho2[i1];
+                } else if ((int)in.order_d2a0drho2[0] == 3) {
+                    i0 = k-1+j*(int)in.dim_d2a0drho2[0] + 0*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i1 = k-1+j*(int)in.dim_d2a0drho2[0] + 1*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i2 = k-1+j*(int)in.dim_d2a0drho2[0] + 2*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];                    
+                    d2a0dY2[k-1] = in.coefs_d2a0drho2[i0]*pow((x - in.breaks_d2a0drho2[j]),2) + in.coefs_d2a0drho2[i1]*(x - in.breaks_d2a0drho2[j]) + in.coefs_d2a0drho2[i2];
+                } else if ((int)in.order_d2a0drho2[0] == 4) {
+                    i0 = k-1+j*(int)in.dim_d2a0drho2[0] + 0*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i1 = k-1+j*(int)in.dim_d2a0drho2[0] + 1*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i2 = k-1+j*(int)in.dim_d2a0drho2[0] + 2*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    i3 = k-1+j*(int)in.dim_d2a0drho2[0] + 3*(int)in.pieces_d2a0drho2[0]*(int)in.dim_d2a0drho2[0];
+                    d2a0dY2[k-1] = in.coefs_d2a0drho2[i0]*pow((x - in.breaks_d2a0drho2[j]),3) + in.coefs_d2a0drho2[i1]*pow((x - in.breaks_d2a0drho2[j]),2) + in.coefs_d2a0drho2[i2]*(x - in.breaks_d2a0drho2[j]) + in.coefs_d2a0drho2[i3];
+                }
+            }
+        }
+    }   
+    
+
 
     for (j = 0;j < (int)in.pieces_an[0];j++) {
         if ((x>=in.breaks_an[j]) && (x<=in.breaks_an[j+1])) {
@@ -460,6 +596,31 @@ void ppvali_2D(pp_2D_format in,double drho_lim, double x, double t0, double t, d
             }
         }
     }   
+    
+    
+    for (j = 0;j < (int)in.pieces_d2andrho2[0];j++) {
+        if ((x>=in.breaks_d2andrho2[j]) && (x<=in.breaks_d2andrho2[j+1])) {
+            for (k = 1;k <= (int)in.dim_d2andrho2[0]; k++) {
+                if ((int)in.order_d2andrho2[0] == 2) {
+                    i0 = k-1+j*(int)in.dim_d2andrho2[0] + 0*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2andrho2[0] + 1*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    d2andY2[k-1] = in.coefs_d2andrho2[i0]*(x - in.breaks_d2andrho2[j]) + in.coefs_d2andrho2[i1];
+                } else if ((int)in.order_d2andrho2[0] == 3) {
+                    i0 = k-1+j*(int)in.dim_d2andrho2[0] + 0*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2andrho2[0] + 1*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i2 = k-1+j*(int)in.dim_d2andrho2[0] + 2*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];                    
+                    d2andY2[k-1] = in.coefs_d2andrho2[i0]*pow((x - in.breaks_d2andrho2[j]),2) + in.coefs_d2andrho2[i1]*(x - in.breaks_d2andrho2[j]) + in.coefs_d2andrho2[i2];
+                } else if ((int)in.order_d2andrho2[0] == 4) {
+                    i0 = k-1+j*(int)in.dim_d2andrho2[0] + 0*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2andrho2[0] + 1*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i2 = k-1+j*(int)in.dim_d2andrho2[0] + 2*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    i3 = k-1+j*(int)in.dim_d2andrho2[0] + 3*(int)in.pieces_d2andrho2[0]*(int)in.dim_d2andrho2[0];
+                    d2andY2[k-1] = in.coefs_d2andrho2[i0]*pow((x - in.breaks_d2andrho2[j]),3) + in.coefs_d2andrho2[i1]*pow((x - in.breaks_d2andrho2[j]),2) + in.coefs_d2andrho2[i2]*(x - in.breaks_d2andrho2[j]) + in.coefs_d2andrho2[i3];
+                }
+            }
+        }
+    }   
+    
 
 
     for (j = 0;j < (int)in.pieces_bn[0];j++) {
@@ -508,23 +669,55 @@ void ppvali_2D(pp_2D_format in,double drho_lim, double x, double t0, double t, d
         }
     }   
     
+    
+    for (j = 0;j < (int)in.pieces_d2bndrho2[0];j++) {
+        if ((x>=in.breaks_d2bndrho2[j]) && (x<=in.breaks_d2bndrho2[j+1])) {
+            for (k = 1;k <= (int)in.dim_d2bndrho2[0]; k++) {
+                if ((int)in.order_d2bndrho2[0] == 2) {
+                    i0 = k-1+j*(int)in.dim_d2bndrho2[0] + 0*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2bndrho2[0] + 1*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    d2bndY2[k-1] = in.coefs_d2bndrho2[i0]*(x - in.breaks_d2bndrho2[j]) + in.coefs_d2bndrho2[i1];
+                } else if ((int)in.order_d2bndrho2[0] == 3) {
+                    i0 = k-1+j*(int)in.dim_d2bndrho2[0] + 0*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2bndrho2[0] + 1*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i2 = k-1+j*(int)in.dim_d2bndrho2[0] + 2*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];                    
+                    d2bndY2[k-1] = in.coefs_d2bndrho2[i0]*pow((x - in.breaks_d2bndrho2[j]),2) + in.coefs_d2bndrho2[i1]*(x - in.breaks_d2bndrho2[j]) + in.coefs_d2bndrho2[i2];
+                } else if ((int)in.order_d2bndrho2[0] == 4) {
+                    i0 = k-1+j*(int)in.dim_d2bndrho2[0] + 0*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i1 = k-1+j*(int)in.dim_d2bndrho2[0] + 1*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i2 = k-1+j*(int)in.dim_d2bndrho2[0] + 2*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    i3 = k-1+j*(int)in.dim_d2bndrho2[0] + 3*(int)in.pieces_d2bndrho2[0]*(int)in.dim_d2bndrho2[0];
+                    d2bndY2[k-1] = in.coefs_d2bndrho2[i0]*pow((x - in.breaks_d2bndrho2[j]),3) + in.coefs_d2bndrho2[i1]*pow((x - in.breaks_d2bndrho2[j]),2) + in.coefs_d2bndrho2[i2]*(x - in.breaks_d2bndrho2[j]) + in.coefs_d2bndrho2[i3];
+                }
+            }
+        }
+    }   
+
+    
+    
+    
     iy[0] = 0.0;
     idydY[0] = 0.0;
+    id2ydY2[0] = 0.0;
     
     for (k = 1;k <= (int)in.dim_dbndrho[0]; k++) {
         iy[0] = iy[0] + an[k-1]*(sin(k*t) - sin(k*t0))/k + bn[k-1]*(cos(k*t0) - cos(k*t))/k;
         idydY[0] = idydY[0] + dandY[k-1]*(sin(k*t) - sin(k*t0))/k + dbndY[k-1]*(cos(k*t0) - cos(k*t))/k;
+        id2ydY2[0] = id2ydY2[0] + d2andY2[k-1]*(sin(k*t) - sin(k*t0))/k + d2bndY2[k-1]*(cos(k*t0) - cos(k*t))/k;
     }
     
     iy[0] = iy[0] + a0[0]*(t - t0);
     idydY[0] = idydY[0] + da0dY[0]*(t - t0);
+    id2ydY2[0] = id2ydY2[0] + d2a0dY2[0]*(t - t0);
     
     mxFree(a0);
     mxFree(da0dY);
+    mxFree(d2a0dY2);
     mxFree(an);
     mxFree(dandY);
+    mxFree(d2andY2);
     mxFree(bn);
     mxFree(dbndY);
-
+    mxFree(d2bndY2);
 }
 

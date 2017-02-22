@@ -53,7 +53,7 @@ end
 %     equil_fit = equil;
 % elseif ~isempty(fitparam),
 % ----
-if isempty(equil_fit),
+if isempty(equil_fit) | length(fieldnames(equil_fit.Bx_fit)) == 7,%no second derivatives for coordinate changes in the plasma core
     info_dke_yp(2,['Vectorized form of the magnetic equilibrium ',equil.id,' is being calculated...'],C3POdisplay.equilibrium);
     equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);
     info_dke_yp(2,'    ...done',C3POdisplay.equilibrium);
@@ -61,7 +61,7 @@ if isempty(equil_fit),
 % else
 %     error('When fitparam structure is empty, the ''equil'' argument in main_C3PO_jd.m must be a structure that corresponds to the interpolated magnetic equilibrium.')
 end
-%    
+%
 fluct_fit = [];
 if isempty(fluct),
     info_dke_yp(2,'No equilibrium fluctuation effects included.',C3POdisplay.fluctuations);
