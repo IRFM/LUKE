@@ -114,7 +114,7 @@ if mode == 1,%Spline-Fourier case: (psi,theta) magnetic equilibrium
     equil_out.psin_fit = interpequilpt_yp(method,spsin,srho);
     %
     sxstar_psin_fit = interpequilpt_yp(method,sx(:,1),spsin);%xstar = x(:,theta=0)
-    sdxstardpsin_psin = ppval(sxstar_psin_fit.pp_dfdrho,spsin);
+    sdxstardpsin_psin = ppval_yp(sxstar_psin_fit.pp_dfdrho,spsin);
     equil_out.dxstardpsin_fit = interpequilpt_yp(method,sdxstardpsin_psin,srho);
     %
     if isfield(equil_in,'pzni') && isfield(equil_in,'pzTi') && isfield(equil_in,'zZi') && isfield(equil_in,'pne') && isfield(equil_in,'pTe') 
