@@ -144,7 +144,7 @@ if ~any(isnan(copts)) && (force_compile || any(filetime.raytracing_yp.source > f
     eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_dieltensor_yp.c']);
     eval(['mex -c ',copts,' ',sourcepath.C3PO,'raytracing_load_yp.c']);
     eval(['mex -c ',copts,' -I',sourcepath.DKE,' ',sourcepath.DKE,'alphaphi_jd.c']);
-    eval(['mex ',copts,' ',sourcepath.C3PO,'raytracing_yp.c raytracing_dieltensor_yp.',objext,' raytracing_interp_yp.',objext,' raytracing_load_yp.',objext,' alphaphi_jd.',objext]);
+    eval(['mex ',copts,' -I',sourcepath.C3PO,' ',sourcepath.C3PO,'raytracing_yp.c raytracing_dieltensor_yp.',objext,' raytracing_interp_yp.',objext,' raytracing_load_yp.',objext,' alphaphi_jd.',objext]);
     disp(['The raytracing_yp.',mexext,' mexfile has been compiled.'])
 end
 %
