@@ -1,7 +1,7 @@
 For compiling the raytracing code C3PO, type the following commands in the directory ~/Modules/C3PO/MEX/Bin/<machine_<type>
-
 where <machine_<type> may be GLNXA64 or MACI64 or any other type of computer
 
+WARNING: use this compiling procedure for tests only. Otherwise, type setpath_luke_jd to perform the compilation for LUKE.
 
 mex -c ../Source/raytracing_interp_yp.c 
 mex -c ../Source/raytracing_dieltensor_yp.c 
@@ -10,8 +10,8 @@ mex -c -I../../../../MEX/Source ../../../../MEX/Source/alphaphi_jd.c
 
 et enfin
 
-mex ../Source/xy2rhotheta_gb.c raytracing_interp_yp.o raytracing_load_yp.o
-mex ../Source/rhotheta2xy_gb.c raytracing_interp_yp.o raytracing_load_yp.o
-mex ../Source/test_grid_substitution.c raytracing_interp_yp.o raytracing_load_yp.o
+mex -I../../../../MEX/Source ../Source/xy2rhotheta_gb.c raytracing_interp_yp.o raytracing_load_yp.o
+mex -I../../../../MEX/Source ../Source/rhotheta2xy_gb.c raytracing_interp_yp.o raytracing_load_yp.o
+mex -I../../../../MEX/Source ../Source/test_grid_substitution.c raytracing_interp_yp.o raytracing_load_yp.o
 
-mex ../Source/raytracing_yp.c raytracing_dieltensor_yp.o raytracing_interp_yp.o raytracing_load_yp.o alphaphi_jd.o
+mex -I../../../../MEX/Source ../Source/raytracing_yp.c raytracing_dieltensor_yp.o raytracing_interp_yp.o raytracing_load_yp.o alphaphi_jd.o
