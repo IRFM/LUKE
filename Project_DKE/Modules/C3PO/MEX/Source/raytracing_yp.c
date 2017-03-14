@@ -312,19 +312,6 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
     raymagnetic.drhoripdY = mxCalloc(MC,sizeof(double));
     raymagnetic.dUpsilonndY = mxCalloc(MC,sizeof(double));
     
-    raymagnetic.d2rndY2 = mxCalloc(MC,sizeof(double));
-    raymagnetic.d2xndY2 = mxCalloc(MC,sizeof(double));
-    raymagnetic.d2yndY2 = mxCalloc(MC,sizeof(double));
-    raymagnetic.d2BrhondY2 = mxCalloc(MC,sizeof(double));
-    raymagnetic.d2BsndY2 = mxCalloc(MC,sizeof(double));
-    raymagnetic.d2BzndY2 = mxCalloc(MC,sizeof(double));
-    raymagnetic.d2BdY2 = mxCalloc(MC,sizeof(double));
-    raymagnetic.d2salphadY2 = mxCalloc(MC,sizeof(double));
-    raymagnetic.d2calphadY2 = mxCalloc(MC,sizeof(double));
-    raymagnetic.d2gradrhondY2 = mxCalloc(MC,sizeof(double));
-    raymagnetic.d2rhoripdY2 = mxCalloc(MC,sizeof(double));
-    raymagnetic.d2UpsilonndY2 = mxCalloc(MC,sizeof(double));
-    
     for (i = 0;i < MC; i++) {/*initialisation */
         raymagnetic.drndY[i] = 0.0;
         raymagnetic.dxndY[i] = 0.0;
@@ -338,19 +325,6 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
         raymagnetic.dBdY[i] = 0.0;
         raymagnetic.drhoripdY[i] = 0.0;
         raymagnetic.dUpsilonndY[i] = 0.0;
-        
-        raymagnetic.d2rndY2[i] = 0.0;
-        raymagnetic.d2xndY2[i] = 0.0;
-        raymagnetic.d2yndY2[i] = 0.0;
-        raymagnetic.d2salphadY2[i] = 0.0;
-        raymagnetic.d2calphadY2[i] = 0.0;
-        raymagnetic.d2gradrhondY2[i] = 0.0;
-        raymagnetic.d2BrhondY2[i] = 0.0;
-        raymagnetic.d2BsndY2[i] = 0.0;
-        raymagnetic.d2BzndY2[i] = 0.0;
-        raymagnetic.d2BdY2[i] = 0.0;
-        raymagnetic.d2rhoripdY2[i] = 0.0;
-        raymagnetic.d2UpsilonndY2[i] = 0.0;
     }
     
     rayprofiles.Te = mxCalloc(1,sizeof(double));
@@ -968,20 +942,6 @@ Endloop:
     mxFree(raymagnetic.drhoripdY);
     mxFree(raymagnetic.dUpsilonndY);
     
-    mxFree(raymagnetic.d2rndY2);
-    mxFree(raymagnetic.d2xndY2);
-    mxFree(raymagnetic.d2yndY2);
-    mxFree(raymagnetic.d2BrhondY2);
-    mxFree(raymagnetic.d2BsndY2);
-    mxFree(raymagnetic.d2BzndY2);
-    mxFree(raymagnetic.d2BdY2);
-    mxFree(raymagnetic.d2salphadY2);
-    mxFree(raymagnetic.d2calphadY2);
-    mxFree(raymagnetic.d2gradrhondY2);
-    mxFree(raymagnetic.d2rhoripdY2);
-    mxFree(raymagnetic.d2UpsilonndY2);
-
-    
     mxFree(rayprofiles.Te);
     mxFree(rayprofiles.ne);
     mxFree(rayprofiles.zTi);
@@ -1507,14 +1467,14 @@ int flag_metric;
         if (flag_metric == 1)
         {
             ppvald_1D(raydistri.f0_fit,rayparam.dS[0],Y[0],Xf0,dXf0drho,d2Xf0drho2);
-            ppvald_2D(raydistri.PSI_fit,rayparam.dS[0],Y[0],Y[1],PSI,&dummy1,&dummy1,&dummy1,&dummy1,&dummy1);
+            ppvald_2D(raydistri.PSI_fit,rayparam.dS[0],Y[0],Y[1],PSI,&dummy1,&dummy1,&dummy1,&dummy1);
         }
         else
         {
             double rho,theta;
             substitution(rayequil,rayparam,equilparam,&rho,&theta,Y);
             ppvald_1D(raydistri.f0_fit,rayparam.dS[0],rho,Xf0,dXf0drho,d2Xf0drho2);
-            ppvald_2D(raydistri.PSI_fit,rayparam.dS[0],rho,theta,PSI,&dummy1,&dummy1,&dummy1,&dummy1,&dummy1);
+            ppvald_2D(raydistri.PSI_fit,rayparam.dS[0],rho,theta,PSI,&dummy1,&dummy1,&dummy1,&dummy1);
         }
         
         pn = distriparam.pn;
@@ -2572,17 +2532,17 @@ int flag_metric;
     
     double dTidY[equilparam.ns[0]],dnidY[equilparam.ns[0]];
     double d2TidY2[equilparam.ns[0]],d2nidY2[equilparam.ns[0]];
-    double x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,d2xdrho2;
-    double y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,d2ydrho2;
-    double r=0,drdrho=0,drdtheta=0,d2rdtheta2=0,d2rdthetadrho=0,d2rdrho2=0;
-    double calpha=0,dcalphadrho=0,dcalphadtheta=0,d2calphadtheta2=0,d2calphadthetadrho=0,d2calphadrho2=0;
-    double salpha=0,dsalphadrho=0,dsalphadtheta=0,d2salphadtheta2=0,d2salphadthetadrho=0,d2salphadrho2=0;
-    double gradrho=0,dgradrhodrho=0,dgradrhodtheta=0,d2gradrhodtheta2=0,d2gradrhodthetadrho=0,d2gradrhodrho2=0;
-    double Bx=0,dBxdrho=0,dBxdtheta=0,d2Bxdtheta2=0,d2Bxdthetadrho=0,d2Bxdrho2=0,dBxdz=0;
-    double By=0,dBydrho=0,dBydtheta=0,d2Bydtheta2=0,d2Bydthetadrho=0,d2Bydrho2=0,dBydz=0;
-    double Bz=0,dBzdrho=0,dBzdtheta=0,d2Bzdtheta2=0,d2Bzdthetadrho=0,d2Bzdrho2=0,dBzdz=0;
-    double BP=0,dBPdrho=0,dBPdtheta=0,d2BPdtheta2=0,d2BPdthetadrho=0,d2BPdrho2=0,dBPdz=0;
-    double BB=0,dBBdrho=0,dBBdtheta=0,d2BBdtheta2=0,d2BBdthetadrho=0,d2BBdrho2=0,dBBdz=0;
+    double x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho;
+    double y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho;
+    double r=0,drdrho=0,drdtheta=0,d2rdtheta2=0,d2rdthetadrho=0;
+    double calpha=0,dcalphadrho=0,dcalphadtheta=0,d2calphadtheta2=0,d2calphadthetadrho=0;
+    double salpha=0,dsalphadrho=0,dsalphadtheta=0,d2salphadtheta2=0,d2salphadthetadrho=0;
+    double gradrho=0,dgradrhodrho=0,dgradrhodtheta=0,d2gradrhodtheta2=0,d2gradrhodthetadrho=0;
+    double Bx=0,dBxdrho=0,dBxdtheta=0,dBxdz=0;
+    double By=0,dBydrho=0,dBydtheta=0,dBydz=0;
+    double Bz=0,dBzdrho=0,dBzdtheta=0,dBzdz=0;
+    double BP=0,dBPdrho=0,dBPdtheta=0,dBPdz=0;
+    double BB=0,dBBdrho=0,dBBdtheta=0,dBBdz=0;
     
     double icm,idcmdrho,cm,cn0,dcn0drho;
     
@@ -2672,7 +2632,7 @@ int flag_metric;
     double ht=0,dht=0,d2ht=0;
     double xx=0,dxxdrho=0,dxxdtheta=0,dxxdphi=0;
     
-    double dummy,dummy1,dummy2,dummy3;
+    double dummy,dummy1,dummy2;
     
     int i,j,is,imodel;
     
@@ -2683,60 +2643,40 @@ int flag_metric;
     
     if (flag_metric == 1)//Curvilinear case
     {
-        ppvald_2D(rayequil.x_fit,rayparam.dS[0],Y[0],Y[1],&x,&dxdrho,&dxdtheta,&d2xdtheta2,&d2xdthetadrho,&dummy1);
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],Y[0],Y[1],&x,&dxdrho,&dxdtheta,&d2xdtheta2,&d2xdthetadrho);
         
-        ppvald_2D(rayequil.y_fit,rayparam.dS[0],Y[0],Y[1],&y,&dydrho,&dydtheta,&d2ydtheta2,&d2ydthetadrho,&dummy1);
-        ppvald_2D(rayequil.r_fit,rayparam.dS[0],Y[0],Y[1],&r,&drdrho,&drdtheta,&d2rdtheta2,&d2rdthetadrho,&dummy1);
-        ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],Y[0],Y[1],&calpha,&dcalphadrho,&dcalphadtheta,&d2calphadtheta2,&d2calphadthetadrho,&dummy1);
-        ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],Y[0],Y[1],&salpha,&dsalphadrho,&dsalphadtheta,&d2salphadtheta2,&d2salphadthetadrho,&dummy1);
-        ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],Y[0],Y[1],&gradrho,&dgradrhodrho,&dgradrhodtheta,&d2gradrhodtheta2,&d2gradrhodthetadrho,&dummy1);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],Y[0],Y[1],&y,&dydrho,&dydtheta,&d2ydtheta2,&d2ydthetadrho);
+        ppvald_2D(rayequil.r_fit,rayparam.dS[0],Y[0],Y[1],&r,&drdrho,&drdtheta,&d2rdtheta2,&d2rdthetadrho);
+        ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],Y[0],Y[1],&calpha,&dcalphadrho,&dcalphadtheta,&d2calphadtheta2,&d2calphadthetadrho);
+        ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],Y[0],Y[1],&salpha,&dsalphadrho,&dsalphadtheta,&d2salphadtheta2,&d2salphadthetadrho);
+        ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],Y[0],Y[1],&gradrho,&dgradrhodrho,&dgradrhodtheta,&d2gradrhodtheta2,&d2gradrhodthetadrho);
         
-        ppvald_2D(rayequil.Bx_fit,rayparam.dS[0],Y[0],Y[1],&Bx,&dBxdrho,&dBxdtheta,&dummy1,&dummy2,&dummy3);
-        ppvald_2D(rayequil.By_fit,rayparam.dS[0],Y[0],Y[1],&By,&dBydrho,&dBydtheta,&dummy1,&dummy2,&dummy3);
-        ppvald_2D(rayequil.Bz_fit,rayparam.dS[0],Y[0],Y[1],&Bz,&dBzdrho,&dBzdtheta,&dummy1,&dummy2,&dummy3);
-        ppvald_2D(rayequil.BP_fit,rayparam.dS[0],Y[0],Y[1],&BP,&dBPdrho,&dBPdtheta,&dummy1,&dummy2,&dummy3);
-        ppvald_2D(rayequil.B_fit,rayparam.dS[0],Y[0],Y[1],&BB,&dBBdrho,&dBBdtheta,&dummy1,&dummy2,&dummy3);
+        ppvald_2D(rayequil.Bx_fit,rayparam.dS[0],Y[0],Y[1],&Bx,&dBxdrho,&dBxdtheta,&dummy1,&dummy2);
+        ppvald_2D(rayequil.By_fit,rayparam.dS[0],Y[0],Y[1],&By,&dBydrho,&dBydtheta,&dummy1,&dummy2);
+        ppvald_2D(rayequil.Bz_fit,rayparam.dS[0],Y[0],Y[1],&Bz,&dBzdrho,&dBzdtheta,&dummy1,&dummy2);
+        ppvald_2D(rayequil.BP_fit,rayparam.dS[0],Y[0],Y[1],&BP,&dBPdrho,&dBPdtheta,&dummy1,&dummy2);
+        ppvald_2D(rayequil.B_fit,rayparam.dS[0],Y[0],Y[1],&BB,&dBBdrho,&dBBdtheta,&dummy1,&dummy2);
         
-        build_raymagnetic(Y[1],raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,d2xdrho2,
-                y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,d2ydrho2,
-                r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho,d2rdrho2,
-                calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho,d2calphadrho2,
-                salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho,d2salphadrho2,
-                gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho,d2gradrhodrho2,
-                Bx,dBxdrho,dBxdtheta,d2Bxdtheta2,d2Bxdthetadrho,d2Bxdrho2,dBxdz,
-                By,dBydrho,dBydtheta,d2Bydtheta2,d2Bydthetadrho,d2Bydrho2,dBydz,
-                Bz,dBzdrho,dBzdtheta,d2Bzdtheta2,d2Bzdthetadrho,d2Bzdrho2,dBzdz,
-                BP,dBPdrho,dBPdtheta,d2BPdtheta2,d2BPdthetadrho,d2BPdrho2,dBPdz,
-                BB,dBBdrho,dBBdtheta,dBBdz,d2BBdtheta2,d2BBdthetadrho,d2BBdrho2,flag_metric);
+        build_raymagnetic(Y[1],raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho,calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho,salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho,gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho,Bx,dBxdrho,dBxdtheta,dBxdz,By,dBydrho,dBydtheta,dBydz,Bz,dBzdrho,dBzdtheta,dBzdz,BP,dBPdrho,dBPdtheta,dBPdz,BB,dBBdrho,dBBdtheta,dBBdz,flag_metric);
     }
     else//Cartesian case
     {
         substitution(rayequil,rayparam,equilparam,&rho,&theta,Y);//Retrieve (rho,theta) from (x,y) or (Y[0],Y[1]) here
         
-        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho,theta,&x,&dxdrho,&dxdtheta,&d2xdtheta2,&d2xdthetadrho,&d2xdrho2);
-        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho,theta,&y,&dydrho,&dydtheta,&d2ydtheta2,&d2ydthetadrho,&d2ydrho2);
-        ppvald_2D(rayequil.r_fit,rayparam.dS[0],rho,theta,&r,&drdrho,&drdtheta,&d2rdtheta2,&d2rdthetadrho,&d2rdrho2);
-        ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],rho,theta,&calpha,&dcalphadrho,&dcalphadtheta,&d2calphadtheta2,&d2calphadthetadrho,&d2calphadrho2);
-        ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],rho,theta,&salpha,&dsalphadrho,&dsalphadtheta,&d2salphadtheta2,&d2salphadthetadrho,&d2salphadrho2);
-        ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],rho,theta,&gradrho,&dgradrhodrho,&dgradrhodtheta,&d2gradrhodtheta2,&d2gradrhodthetadrho,&d2gradrhodrho2);
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho,theta,&x,&dxdrho,&dxdtheta,&d2xdtheta2,&d2xdthetadrho);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho,theta,&y,&dydrho,&dydtheta,&d2ydtheta2,&d2ydthetadrho);
+        ppvald_2D(rayequil.r_fit,rayparam.dS[0],rho,theta,&r,&drdrho,&drdtheta,&d2rdtheta2,&d2rdthetadrho);
+        ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],rho,theta,&calpha,&dcalphadrho,&dcalphadtheta,&d2calphadtheta2,&d2calphadthetadrho);
+        ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],rho,theta,&salpha,&dsalphadrho,&dsalphadtheta,&d2salphadtheta2,&d2salphadthetadrho);
+        ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],rho,theta,&gradrho,&dgradrhodrho,&dgradrhodtheta,&d2gradrhodtheta2,&d2gradrhodthetadrho);
         
-        ppvald_2D(rayequil.Bx_fit,rayparam.dS[0],rho,theta,&Bx,&dBxdrho,&dBxdtheta,&d2Bxdtheta2,&d2Bxdthetadrho,&d2Bxdrho2);
-        ppvald_2D(rayequil.By_fit,rayparam.dS[0],rho,theta,&By,&dBydrho,&dBydtheta,&d2Bydtheta2,&d2Bydthetadrho,&d2Bydrho2);
-        ppvald_2D(rayequil.Bz_fit,rayparam.dS[0],rho,theta,&Bz,&dBzdrho,&dBzdtheta,&d2Bzdtheta2,&d2Bzdthetadrho,&d2Bzdrho2);
-        ppvald_2D(rayequil.BP_fit,rayparam.dS[0],rho,theta,&BP,&dBPdrho,&dBPdtheta,&d2BPdtheta2,&d2BPdthetadrho,&d2BPdrho2);
-        ppvald_2D(rayequil.B_fit,rayparam.dS[0],rho,theta,&BB,&dBBdrho,&dBBdtheta,&d2BBdtheta2,&d2BBdthetadrho,&d2BBdrho2);
+        ppvald_2D(rayequil.Bx_fit,rayparam.dS[0],rho,theta,&Bx,&dBxdrho,&dBxdtheta,&dummy1,&dummy2);
+        ppvald_2D(rayequil.By_fit,rayparam.dS[0],rho,theta,&By,&dBydrho,&dBydtheta,&dummy1,&dummy2);
+        ppvald_2D(rayequil.Bz_fit,rayparam.dS[0],rho,theta,&Bz,&dBzdrho,&dBzdtheta,&dummy1,&dummy2);
+        ppvald_2D(rayequil.BP_fit,rayparam.dS[0],rho,theta,&BP,&dBPdrho,&dBPdtheta,&dummy1,&dummy2);
+        ppvald_2D(rayequil.B_fit,rayparam.dS[0],rho,theta,&BB,&dBBdrho,&dBBdtheta,&dummy1,&dummy2);
         
-        build_raymagnetic(theta,raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,
-                y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,
-                r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho,
-                calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho,
-                salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho,
-                gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho,
-                Bx,dBxdrho,dBxdtheta,d2Bxdtheta2,d2Bxdthetadrho,d2Bxdrho2,dBxdz,
-                By,dBydrho,dBydtheta,d2Bydtheta2,d2Bydthetadrho,d2Bydrho2,dBydz,
-                Bz,dBzdrho,dBzdtheta,d2Bzdtheta2,d2Bzdthetadrho,d2Bzdrho2,dBzdz,
-                BP,dBPdrho,dBPdtheta,d2BPdtheta2,d2BPdthetadrho,d2BPdrho2,dBPdz,
-                BB,dBBdrho,dBBdtheta,d2BBdtheta2,d2BBdthetadrho,d2BBdrho2,dBBdz,flag_metric);
+        build_raymagnetic(theta,raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho,calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho,salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho,gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho,Bx,dBxdrho,dBxdtheta,dBxdz,By,dBydrho,dBydtheta,dBydz,Bz,dBzdrho,dBzdtheta,dBzdz,BP,dBPdrho,dBPdtheta,dBPdz,BB,dBBdrho,dBBdtheta,dBBdz,flag_metric);
     }
     
     // Definition of the derivatives used to defined the cartesian derivatives
@@ -3871,34 +3811,24 @@ int flag_metric;
     }
 }
 
-void build_raymagnetic(theta,raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,d2xdrho2,
-        y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,d2ydrho2,
-        r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho,d2rdrho2,
-        calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho,d2calphadrho2,
-        salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho,d2salphadrho2,
-        gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho,d2gradrhodrho2,
-        Bx,dBxdrho,dBxdtheta,d2Bxdtheta2,d2Bxdthetadrho,d2Bxdrho2,dBxdz,
-        By,dBydrho,dBydtheta,d2Bydtheta2,d2Bydthetadrho,d2Bydrho2,dBydz,
-        Bz,dBzdrho,dBzdtheta,d2Bzdtheta2,d2Bzdthetadrho,d2Bzdrho2,dBzdz,
-        BP,dBPdrho,dBPdtheta,d2BPdtheta2,d2BPdthetadrho,d2BPdrho2,dBPdz,
-        B,dBdrho,dBdtheta,d2Bdtheta2,d2Bdthetadrho,d2Bdrho2,dBdz,flag_metric)//Has to be modified under a change of metric
+void build_raymagnetic(theta,raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho,calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho,salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho,gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho,Bx,dBxdrho,dBxdtheta,dBxdz,By,dBydrho,dBydtheta,dBydz,Bz,dBzdrho,dBzdtheta,dBzdz,BP,dBPdrho,dBPdtheta,dBPdz,B,dBdrho,dBdtheta,dBdz,flag_metric)//Has to be modified under a change of metric
 raymagnetic_format raymagnetic;
 equilparam_format equilparam;
 double theta;
-double x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,d2xdrho2;
-double y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,d2ydrho2;
-double r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho,d2rdrho2;
-double calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho,d2calphadrho2;
-double salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho,d2salphadrho2;
-double gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho,d2gradrhodrho2;
-double Bx,dBxdrho,dBxdtheta,d2Bxdtheta2,d2Bxdthetadrho,d2Bxdrho2,dBxdz;
-double By,dBydrho,dBydtheta,d2Bydtheta2,d2Bydthetadrho,d2Bydrho2,dBydz;
-double Bz,dBzdrho,dBzdtheta,d2Bzdtheta2,d2Bzdthetadrho,d2Bzdrho2,dBzdz;
-double BP,dBPdrho,dBPdtheta,d2BPdtheta2,d2BPdthetadrho,d2BPdrho2,dBPdz;
-double B,dBdrho,dBdtheta,d2Bdtheta2,d2Bdthetadrho,d2Bdrho2,dBdz;
+double x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho;
+double y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho;
+double r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho;
+double calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho;
+double salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho;
+double gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho;
+double Bx,dBxdrho,dBxdtheta,dBxdz;
+double By,dBydrho,dBydtheta,dBydz;
+double Bz,dBzdrho,dBzdtheta,dBzdz;
+double BP,dBPdrho,dBPdtheta,dBPdz;
+double B,dBdrho,dBdtheta,dBdz;
 int flag_metric;
 {
-    double Upsilon,dUpsilondrho,dUpsilondtheta,d2Upsilondtheta2,d2Upsilondthetadrho,d2Upsilondrho2;
+    double Upsilon,dUpsilondrho,dUpsilondtheta;
     
     
     /*    WARNING: the definitions used in the DKE code, and here crucial for HXR calculations are the following
@@ -4676,12 +4606,12 @@ double y0_in[MC];
     double *dTedrho,*dnedrho,*dzTidrho,*dznidrho;
     double *d2Tedrho2,*d2nedrho2,*d2zTidrho2,*d2znidrho2;
     
-    double *Bx,*dBxdrho,*dBxdtheta,*d2Bxdtheta2,*d2Bxdthetadrho,*d2Bxdrho2;
-    double *By,*dBydrho,*dBydtheta,*d2Bydtheta2,*d2Bydthetadrho,*d2Bydrho2;
-    double *Bz,*dBzdrho,*dBzdtheta,*d2Bzdtheta2,*d2Bzdthetadrho,*d2Bzdrho2;
+    double *Bx,*dBxdrho,*dBxdtheta;
+    double *By,*dBydrho,*dBydtheta;
+    double *Bz,*dBzdrho,*dBzdtheta;
     
-    double *x,*dxdrho,*dxdtheta,*d2xdtheta2,*d2xdthetadrho,*d2xdrho2;
-    double *y,*dydrho,*dydtheta,*d2ydtheta2,*d2ydthetadrho,*d2ydrho2;
+    double *x,*dxdrho,*dxdtheta,*d2xdtheta2,*d2xdthetadrho;
+    double *y,*dydrho,*dydtheta,*d2ydtheta2,*d2ydthetadrho;
     
     double *L_rho;
     double *xq,*dxqdrho;
@@ -4698,7 +4628,7 @@ double y0_in[MC];
     double *PSI_fit;
     int ip_ref,jm_ref;
     
-    double dummy1,dummy2,dummy3;
+    double dummy1,dummy2;
     
     int jf,ip,jm;
     
@@ -4765,80 +4695,53 @@ double y0_in[MC];
         dxdtheta = mxCalloc(1,sizeof(double));
         d2xdtheta2 = mxCalloc(1,sizeof(double));
         d2xdthetadrho = mxCalloc(1,sizeof(double));
-        d2xdrho2 = mxCalloc(1,sizeof(double));
-        ppvald_2D(rayequil.x_fit,rayparam.dS[0],0.25,0.2,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,d2xdrho2);
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],0.25,0.2,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho);
         mexPrintf("x(0.25,0.2),dxdrho(0.25,0.2),dxdtheta(0.25,0.2) (m): %g,%g,%g\n",x[0],dxdrho[0],dxdtheta[0],d2xdtheta2[0],d2xdthetadrho[0]);
-        mexPrintf("d2xdthetadrho(0.25,0.2),d2xdtheta2(0.25,0.2),d2xdrho2(0.25,0.2) (m): %g,%g,%g\n",d2xdthetadrho[0],d2xdtheta2[0],d2xdrho2[0]);
         mxFree(x);
         mxFree(dxdrho);
         mxFree(dxdtheta);
         mxFree(d2xdtheta2);
         mxFree(d2xdthetadrho);
-        mxFree(d2xdrho2);
         
         y = mxCalloc(1,sizeof(double));
         dydrho = mxCalloc(1,sizeof(double));
         dydtheta = mxCalloc(1,sizeof(double));
         d2ydtheta2 = mxCalloc(1,sizeof(double));
         d2ydthetadrho = mxCalloc(1,sizeof(double));
-        d2ydrho2 = mxCalloc(1,sizeof(double));
-        ppvald_2D(rayequil.y_fit,rayparam.dS[0],0.25,0.2,y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,d2ydrho2);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],0.25,0.2,y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho);
         mexPrintf("y(0.25,0.2),dydrho(0.25,0.2),dydtheta(0.25,0.2) (m): %g,%g,%g\n",y[0],dydrho[0],dydtheta[0],d2ydtheta2[0],d2ydthetadrho[0]);
-        mexPrintf("d2ydthetadrho(0.25,0.2),d2ydtheta2(0.25,0.2),d2ydrho2(0.25,0.2) (m): %g,%g,%g\n",d2ydthetadrho[0],d2ydtheta2[0],d2ydrho2[0]);
         mxFree(y);
         mxFree(dydrho);
         mxFree(dydtheta);
         mxFree(d2ydtheta2);
         mxFree(d2ydthetadrho);
-        mxFree(d2ydrho2);
         
         Bx = mxCalloc(1,sizeof(double));
         dBxdrho = mxCalloc(1,sizeof(double));
         dBxdtheta = mxCalloc(1,sizeof(double));
-        d2Bxdtheta2 = mxCalloc(1,sizeof(double));
-        d2Bxdthetadrho = mxCalloc(1,sizeof(double));
-        d2Bxdrho2 = mxCalloc(1,sizeof(double));
-        ppvald_2D(rayequil.Bx_fit,rayparam.dS[0],0.25,0.2,Bx,dBxdrho,dBxdtheta,d2Bxdtheta2,d2Bxdthetadrho,d2Bxdrho2);
+        ppvald_2D(rayequil.Bx_fit,rayparam.dS[0],0.25,0.2,Bx,dBxdrho,dBxdtheta,&dummy1,&dummy2);
         mexPrintf("Bx(0.25,0.2),dBxdrho(0.25,0.2),dBxdtheta(0.25,0.2) (T): %g,%g,%g\n",Bx[0],dBxdrho[0],dBxdtheta[0]);
-        mexPrintf("d2Bxdthetadrho(0.25,0.2),d2Bxdtheta2(0.25,0.2),d2Bxdrho2(0.25,0.2) (m): %g,%g,%g\n",d2Bxdthetadrho[0],d2Bxdtheta2[0],d2Bxdrho2[0]);
         mxFree(Bx);
         mxFree(dBxdrho);
         mxFree(dBxdtheta);
-        mxFree(d2Bxdtheta2);
-        mxFree(d2Bxdthetadrho);
-        mxFree(d2Bxdrho2);
         
         By = mxCalloc(1,sizeof(double));
         dBydrho = mxCalloc(1,sizeof(double));
         dBydtheta = mxCalloc(1,sizeof(double));
-        d2Bydtheta2 = mxCalloc(1,sizeof(double));
-        d2Bydthetadrho = mxCalloc(1,sizeof(double));
-        d2Bydrho2 = mxCalloc(1,sizeof(double));
-        ppvald_2D(rayequil.By_fit,rayparam.dS[0],0.25,0.2,By,dBydrho,dBydtheta,d2Bydtheta2,d2Bydthetadrho,d2Bydrho2);
+        ppvald_2D(rayequil.By_fit,rayparam.dS[0],0.25,0.2,By,dBydrho,dBydtheta,&dummy1,&dummy2);
         mexPrintf("By(0.25,0.2),dBydrho(0.25,0.2),dBydtheta(0.25,0.2) (T): %g,%g,%g\n",By[0],dBydrho[0],dBydtheta[0]);
-        mexPrintf("d2Bydthetadrho(0.25,0.2),d2Bydtheta2(0.25,0.2),d2Bydrho2(0.25,0.2) (m): %g,%g,%g\n",d2Bydthetadrho[0],d2Bydtheta2[0],d2Bydrho2[0]);
         mxFree(By);
         mxFree(dBydrho);
         mxFree(dBydtheta);
-        mxFree(d2Bydtheta2);
-        mxFree(d2Bydthetadrho);
-        mxFree(d2Bydrho2);
         
         Bz = mxCalloc(1,sizeof(double));
         dBzdrho = mxCalloc(1,sizeof(double));
         dBzdtheta = mxCalloc(1,sizeof(double));
-        d2Bzdtheta2 = mxCalloc(1,sizeof(double));
-        d2Bzdthetadrho = mxCalloc(1,sizeof(double));
-        d2Bzdrho2 = mxCalloc(1,sizeof(double));
-        ppvald_2D(rayequil.Bz_fit,rayparam.dS[0],0.25,0.2,Bz,dBzdrho,dBzdtheta,d2Bzdtheta2,d2Bzdthetadrho,d2Bzdrho2);
+        ppvald_2D(rayequil.Bz_fit,rayparam.dS[0],0.25,0.2,Bz,dBzdrho,dBzdtheta,&dummy1,&dummy2);
         mexPrintf("Bz(0.25,0.2),dBzdrho(0.25,0.2),dBzdtheta(0.25,0.2) (T): %g,%g,%g\n",Bz[0],dBzdrho[0],dBzdtheta[0]);
-        mexPrintf("d2Bzdthetadrho(0.25,0.2),d2Bzdtheta2(0.25,0.2),d2Bzdrho2(0.25,0.2) (m): %g,%g,%g\n",d2Bzdthetadrho[0],d2Bzdtheta2[0],d2Bzdrho2[0]);
         mxFree(Bz);
         mxFree(dBzdrho);
         mxFree(dBzdtheta);
-        mxFree(d2Bzdtheta2);
-        mxFree(d2Bzdthetadrho);
-        mxFree(d2Bzdrho2);
         
         
         if (flag_f0 == 1) {/*Wave aborption is calculated with a non-Maxwellian distribution function */
@@ -4987,7 +4890,7 @@ double y0_in[MC];
                         sfx = mxCalloc(1,sizeof(double));
                         dsfxdrho = mxCalloc(1,sizeof(double));
                         dsfxdtheta = mxCalloc(1,sizeof(double));
-                        ppvald_2D(rayfluctuations.B_sfx_fit[jf],rayparam.dS[0],0.25,0.2,sfx,dsfxdrho,dsfxdtheta,&dummy1,&dummy2,&dummy3);
+                        ppvald_2D(rayfluctuations.B_sfx_fit[jf],rayparam.dS[0],0.25,0.2,sfx,dsfxdrho,dsfxdtheta,&dummy1,&dummy2);
                         mexPrintf("B -> Xfx(0.25,0.2),dXfxdrho(0.25,0.2),dXfxdtheta(0.25,0.2): %g,%g,%g\n",sfx[0],dsfxdrho[0],dsfxdtheta[0]);
                         mxFree(sfx);
                         mxFree(dsfxdrho);
@@ -4998,7 +4901,7 @@ double y0_in[MC];
                         sfy = mxCalloc(1,sizeof(double));
                         dsfydrho = mxCalloc(1,sizeof(double));
                         dsfydtheta = mxCalloc(1,sizeof(double));
-                        ppvald_2D(rayfluctuations.B_sfy_fit[jf],rayparam.dS[0],0.25,0.2,sfy,dsfydrho,dsfydtheta,&dummy1,&dummy2,&dummy3);
+                        ppvald_2D(rayfluctuations.B_sfy_fit[jf],rayparam.dS[0],0.25,0.2,sfy,dsfydrho,dsfydtheta,&dummy1,&dummy2);
                         mexPrintf("B -> Xfy(0.25,0.2),dXfydrho(0.25,0.2),dXfydtheta(0.25,0.2): %g,%g,%g\n",sfy[0],dsfydrho[0],dsfydtheta[0]);
                         mxFree(sfy);
                         mxFree(dsfydrho);
@@ -5009,7 +4912,7 @@ double y0_in[MC];
                         sfz = mxCalloc(1,sizeof(double));
                         dsfzdrho = mxCalloc(1,sizeof(double));
                         dsfzdtheta = mxCalloc(1,sizeof(double));
-                        ppvald_2D(rayfluctuations.B_sfz_fit[jf],rayparam.dS[0],0.25,0.2,sfz,dsfzdrho,dsfzdtheta,&dummy1,&dummy2,&dummy3);
+                        ppvald_2D(rayfluctuations.B_sfz_fit[jf],rayparam.dS[0],0.25,0.2,sfz,dsfzdrho,dsfzdtheta,&dummy1,&dummy2);
                         mexPrintf("B -> Xfz(0.25,0.2),dXfzdrho(0.25,0.2),dXfzdtheta(0.25,0.2): %g,%g,%g\n",sfz[0],dsfzdrho[0],dsfzdtheta[0]);
                         mxFree(sfz);
                         mxFree(dsfzdrho);
@@ -5100,16 +5003,16 @@ void rho1D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format 
         
         res[0] = (down[0] + up[0])/2;
         
-        ppvald_2D(rayequil.x_fit,rayparam.dS[0],down[0],theta[0],&x,&dxdrho,&dummy,&dummy,&dummy,&dummy);
-        ppvald_2D(rayequil.y_fit,rayparam.dS[0],down[0],theta[0],&y,&dydrho,&dummy,&dummy,&dummy,&dummy);
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],down[0],theta[0],&x,&dxdrho,&dummy,&dummy,&dummy);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],down[0],theta[0],&y,&dydrho,&dummy,&dummy,&dummy);
         x=x/equilparam.ap[0];//Mandatory normalization
         y=y/equilparam.ap[0];//Mandatory normalization
         dxdrho=dxdrho/equilparam.ap[0];//Mandatory normalization
         dydrho=dydrho/equilparam.ap[0];//Mandatory normalization
         down[1] = dxdrho*(x-Y[0]) + dydrho*(y - Y[1]);
         
-        ppvald_2D(rayequil.x_fit,rayparam.dS[0],res[0],theta[0],&x,&dxdrho,&dummy,&dummy,&dummy,&dummy);
-        ppvald_2D(rayequil.y_fit,rayparam.dS[0],res[0],theta[0],&y,&dydrho,&dummy,&dummy,&dummy,&dummy);
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],res[0],theta[0],&x,&dxdrho,&dummy,&dummy,&dummy);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],res[0],theta[0],&y,&dydrho,&dummy,&dummy,&dummy);
         x=x/equilparam.ap[0];//Mandatory normalization
         y=y/equilparam.ap[0];//Mandatory normalization
         dxdrho=dxdrho/equilparam.ap[0];//Mandatory normalization
@@ -5149,16 +5052,16 @@ void substitution(rayequil_format rayequil,rayparam_format rayparam, equilparam_
         rho1D(rayequil,rayparam,equilparam,&rho_d,&down_t[0],Y);
         rho1D(rayequil,rayparam,equilparam,&rho_m,&res_t[0],Y);
         
-        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_d,down_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy);
-        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_d,down_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy);
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_d,down_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_d,down_t[0],&y,&dummy,&dydtheta,&dummy,&dummy);
         x=x/equilparam.ap[0];//Mandatory normalization
         y=y/equilparam.ap[0];//Mandatory normalization
         dxdtheta=dxdtheta/equilparam.ap[0];//Mandatory normalization
         dydtheta=dydtheta/equilparam.ap[0];//Mandatory normalization
         down_t[1] = dxdtheta*(x-Y[0]) + dydtheta*(y-Y[1]);
         
-        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_m,res_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy);
-        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_m,res_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy);
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_m,res_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_m,res_t[0],&y,&dummy,&dydtheta,&dummy,&dummy);
         x=x/equilparam.ap[0];//Mandatory normalization
         y=y/equilparam.ap[0];//Mandatory normalization
         dxdtheta=dxdtheta/equilparam.ap[0];//Mandatory normalization
@@ -5187,19 +5090,19 @@ void rhotheta2xy(rayparam_format rayparam, rayequil_format rayequil, equilparam_
     save[2] = krho[0];
     save[3] = m[0];
     
-    double dfdrho,dfdtheta,d2fdtheta2,d2fdthetadrho,d2fdrho2;
+    double dfdrho,dfdtheta,d2fdtheta2,d2fdthetadrho;
     double gradrho,r,calpha,salpha;
     
-    ppvald_2D(rayequil.x_fit,rayparam.dS[0],save[0],save[1],rho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Input x into the variable rho
-    ppvald_2D(rayequil.y_fit,rayparam.dS[0],save[0],save[1],theta,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Input y into the variable theta
+    ppvald_2D(rayequil.x_fit,rayparam.dS[0],save[0],save[1],rho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho);//Input x into the variable rho
+    ppvald_2D(rayequil.y_fit,rayparam.dS[0],save[0],save[1],theta,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho);//Input y into the variable theta
     
     rho[0]=rho[0]/equilparam.ap[0];//Normalization, rho stands for x
     theta[0]=theta[0]/equilparam.ap[0];//Normalization, theta stands for y
     
-    ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],save[0],save[1],&gradrho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out gradrho
-    ppvald_2D(rayequil.r_fit,rayparam.dS[0],save[0],save[1],&r,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out r
-    ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],save[0],save[1],&calpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out cos alpha
-    ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],save[0],save[1],&salpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out sin alpha
+    ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],save[0],save[1],&gradrho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho);//Gives out gradrho
+    ppvald_2D(rayequil.r_fit,rayparam.dS[0],save[0],save[1],&r,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho);//Gives out r
+    ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],save[0],save[1],&calpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho);//Gives out cos alpha
+    ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],save[0],save[1],&salpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho);//Gives out sin alpha
     
     r=r/equilparam.ap[0];//Normalization
     gradrho=gradrho*equilparam.ap[0];//Normalization
@@ -5224,13 +5127,13 @@ void xy2rhotheta(rayparam_format rayparam, rayequil_format rayequil, equilparam_
     
     substitution(rayequil,rayparam,equilparam,x,y,save);//Input rho and theta respectively in the variables x and y
     
-    double dfdrho,dfdtheta,d2fdtheta2,d2fdthetadrho,d2fdrho2;
+    double dfdrho,dfdtheta,d2fdtheta2,d2fdthetadrho;
     double gradrho,r,calpha,salpha;
     
-    ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],x[0],y[0],&gradrho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out gradrho
-    ppvald_2D(rayequil.r_fit,rayparam.dS[0],x[0],y[0],&r,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out r
-    ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],x[0],y[0],&calpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out cos alpha
-    ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],x[0],y[0],&salpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out sin alpha
+    ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],x[0],y[0],&gradrho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho);//Gives out gradrho
+    ppvald_2D(rayequil.r_fit,rayparam.dS[0],x[0],y[0],&r,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho);//Gives out r
+    ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],x[0],y[0],&calpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho);//Gives out cos alpha
+    ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],x[0],y[0],&salpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho);//Gives out sin alpha
     
     r=r/equilparam.ap[0];//Normalization
     gradrho=gradrho*equilparam.ap[0];//Normalization

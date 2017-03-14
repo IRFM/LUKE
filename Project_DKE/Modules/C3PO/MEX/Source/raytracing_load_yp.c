@@ -46,13 +46,6 @@ struct polynomial_piecewise_2D {
     double  *order_da0drho;
     double  *dim_da0drho;
     mxChar  *orient_da0drho;
-    mxChar  *form_d2a0drho2;
-    double  *breaks_d2a0drho2;
-    double  *coefs_d2a0drho2;
-    double  *pieces_d2a0drho2;
-    double  *order_d2a0drho2;
-    double  *dim_d2a0drho2;
-    mxChar  *orient_d2a0drho2;
     mxChar  *form_an;
     double  *breaks_an;
     double  *coefs_an;
@@ -67,13 +60,6 @@ struct polynomial_piecewise_2D {
     double  *order_dandrho;
     double  *dim_dandrho;
     mxChar  *orient_dandrho;
-    mxChar  *form_d2andrho2;
-    double  *breaks_d2andrho2;
-    double  *coefs_d2andrho2;
-    double  *pieces_d2andrho2;
-    double  *order_d2andrho2;
-    double  *dim_d2andrho2;
-    mxChar  *orient_d2andrho2;
     mxChar  *form_bn;
     double  *breaks_bn;
     double  *coefs_bn;
@@ -88,13 +74,6 @@ struct polynomial_piecewise_2D {
     double  *order_dbndrho;
     double  *dim_dbndrho;
     mxChar  *orient_dbndrho;
-    mxChar  *form_d2bndrho2;
-    double  *breaks_d2bndrho2;
-    double  *coefs_d2bndrho2;
-    double  *pieces_d2bndrho2;
-    double  *order_d2bndrho2;
-    double  *dim_d2bndrho2;
-    mxChar  *orient_d2bndrho2;
 };
 
 struct rayprofiles {
@@ -529,17 +508,6 @@ int is;
         fit.orient_da0drho = mxGetChars(mxGetField(sub_tmp, 0, "orient"));
     }
     
-    sub_tmp = mxGetField(tmp, 0, mxGetFieldNameByNumber(tmp,7));
-    if (mxIsStruct(sub_tmp)) {
-        fit.form_d2a0drho2 = mxGetChars(mxGetField(sub_tmp, 0, "form"));  
-        fit.breaks_d2a0drho2 = mxGetData(mxGetField(sub_tmp, 0, "breaks"));
-        fit.coefs_d2a0drho2 = mxGetData(mxGetField(sub_tmp, 0, "coefs"));
-        fit.pieces_d2a0drho2 = mxGetData(mxGetField(sub_tmp, 0, "pieces"));
-        fit.order_d2a0drho2 = mxGetData(mxGetField(sub_tmp, 0, "order"));
-        fit.dim_d2a0drho2 = mxGetData(mxGetField(sub_tmp, 0, "dim"));
-        fit.orient_d2a0drho2 = mxGetChars(mxGetField(sub_tmp, 0, "orient"));
-    }
-
     sub_tmp = mxGetField(tmp, 0, mxGetFieldNameByNumber(tmp,2));
     if (mxIsStruct(sub_tmp)) {
         fit.form_an = mxGetChars(mxGetField(sub_tmp, 0, "form"));  
@@ -560,17 +528,6 @@ int is;
         fit.order_dandrho = mxGetData(mxGetField(sub_tmp, 0, "order"));
         fit.dim_dandrho = mxGetData(mxGetField(sub_tmp, 0, "dim"));
         fit.orient_dandrho = mxGetChars(mxGetField(sub_tmp, 0, "orient"));
-    }
-    
-    sub_tmp = mxGetField(tmp, 0, mxGetFieldNameByNumber(tmp,8));
-    if (mxIsStruct(sub_tmp)) {
-        fit.form_d2andrho2 = mxGetChars(mxGetField(sub_tmp, 0, "form"));  
-        fit.breaks_d2andrho2 = mxGetData(mxGetField(sub_tmp, 0, "breaks"));
-        fit.coefs_d2andrho2 = mxGetData(mxGetField(sub_tmp, 0, "coefs"));
-        fit.pieces_d2andrho2 = mxGetData(mxGetField(sub_tmp, 0, "pieces"));
-        fit.order_d2andrho2 = mxGetData(mxGetField(sub_tmp, 0, "order"));
-        fit.dim_d2andrho2 = mxGetData(mxGetField(sub_tmp, 0, "dim"));
-        fit.orient_d2andrho2 = mxGetChars(mxGetField(sub_tmp, 0, "orient"));
     }
     
     sub_tmp = mxGetField(tmp, 0, mxGetFieldNameByNumber(tmp,3));
@@ -594,18 +551,6 @@ int is;
         fit.dim_dbndrho = mxGetData(mxGetField(sub_tmp, 0, "dim"));
         fit.orient_dbndrho = mxGetChars(mxGetField(sub_tmp, 0, "orient"));
     }
-    
-    sub_tmp = mxGetField(tmp, 0, mxGetFieldNameByNumber(tmp,9));
-    if (mxIsStruct(sub_tmp)) {
-        fit.form_d2bndrho2 = mxGetChars(mxGetField(sub_tmp, 0, "form"));  
-        fit.breaks_d2bndrho2 = mxGetData(mxGetField(sub_tmp, 0, "breaks"));
-        fit.coefs_d2bndrho2 = mxGetData(mxGetField(sub_tmp, 0, "coefs"));
-        fit.pieces_d2bndrho2 = mxGetData(mxGetField(sub_tmp, 0, "pieces"));
-        fit.order_d2bndrho2 = mxGetData(mxGetField(sub_tmp, 0, "order"));
-        fit.dim_d2bndrho2 = mxGetData(mxGetField(sub_tmp, 0, "dim"));
-        fit.orient_d2bndrho2 = mxGetChars(mxGetField(sub_tmp, 0, "orient"));
-    }
-
     
     return(fit);  
 }
