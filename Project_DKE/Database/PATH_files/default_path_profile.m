@@ -10,6 +10,18 @@ function dkepath = default_path_profile
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
+if ~exist('LUKEversion_jd'),
+    dir_LUKE = pwd;
+    if isempty(strfind(dir_LUKE,'/Project_DKE')),
+        dir_LUKE = [dir_LUKE,'/Project_DKE'];
+    else
+        dir_LUKE = [dir_LUKE(1:strfind(dir_LUKE,'/Project_DKE')-1),'/Project_DKE'];
+    end
+    %
+    addpath(genpath(dir_LUKE),'-BEGIN');
+    %
+end
+%
 [~,matver] = LUKEversion_jd;
 %
 dkepath.machine = 'default';
