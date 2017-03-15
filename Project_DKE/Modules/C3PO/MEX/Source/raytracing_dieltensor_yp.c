@@ -9,28 +9,40 @@
 struct raymagnetic {
     double *rn;
     double *drndY;
+    double *d2rndY2;
     double *xn;
     double *dxndY;
+    double *d2xndY2;
     double *yn;
     double *dyndY;
+    double *d2yndY2;
     double *Brhon;
     double *dBrhondY;
+    double *d2BrhondY2;
     double *Bsn;
     double *dBsndY;
-    double *BPHIn;
-    double *dBPHIndY;
+    double *d2BsndY2;
+    double *Bzn;
+    double *dBzndY;
+    double *d2BzndY2;
     double *B;
     double *dBdY;
+    double *d2BdY2;
     double *salpha;
     double *dsalphadY;
+    double *d2salphadY2;
     double *calpha;
     double *dcalphadY;
+    double *d2calphadY2;
     double *gradrhon;
     double *dgradrhondY;
+    double *d2gradrhondY2;
     double *rhorip;
     double *drhoripdY;
+    double *d2rhoripdY2;
     double *Upsilonn;
     double *dUpsilonndY;
+    double *d2UpsilonndY2;
 };
 
 
