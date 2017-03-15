@@ -1047,10 +1047,14 @@ else
             disp(['ne(',num2str(rho),'),dnedrho(',num2str(rho),'),d2nedrho2(',num2str(rho),') (10+19 m-3) = ',num2str(ne/1e19),',',num2str(dnedrho/1e19),',',num2str(d2nedrho2/1e19)]);
         end
         if isfield(equil_fit,'zTi_fit'),
-            disp(['zTi(',int2str(ns),',',num2str(rho),'),dzTidrho(',int2str(ns),',',num2str(rho),'),d2zTidrho2(',int2str(ns),' ,',num2str(rho),') (keV) = ',num2str(zTi(ns)),',',num2str(dzTidrho(ns)),',',num2str(d2zTidrho2(ns))]);
+            for is = 1:ns,
+                disp(['zTi(',int2str(is),',',num2str(rho),'),dzTidrho(',int2str(is),',',num2str(rho),'),d2zTidrho2(',int2str(is),' ,',num2str(rho),') (keV) = ',num2str(zTi(is)),',',num2str(dzTidrho(is)),',',num2str(d2zTidrho2(is))]);
+            end
         end
         if isfield(equil_fit,'zni_fit'),
-            disp(['zni(',int2str(ns),',',num2str(rho),'),dznidrho(',int2str(ns),',',num2str(rho),'),d2znidrho2(',int2str(ns),' ,',num2str(rho),') (10+19 m-3) = ',num2str(zni(ns)/1e19),',',num2str(dznidrho(ns)/1e19),',',num2str(d2znidrho2(ns)/1e19)]);
+            for is = 1:ns,
+                disp(['zni(',int2str(is),',',num2str(rho),'),dznidrho(',int2str(is),',',num2str(rho),'),d2znidrho2(',int2str(is),' ,',num2str(rho),') (10+19 m-3) = ',num2str(zni(is)/1e19),',',num2str(dznidrho(is)/1e19),',',num2str(d2znidrho2(is)/1e19)]);
+            end
         end
         %
         disp('----------------------------');
