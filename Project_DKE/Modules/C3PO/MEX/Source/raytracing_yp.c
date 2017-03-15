@@ -562,7 +562,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
 
         /*------------------------- Switching condition set around rho = 0.1 -----------------------------------*/
         
-        /*if(rayparam.metricmode[0] == 2.0)
+        if(rayparam.metricmode[0] == 2.0)
         {
             if (flag_metric == 1 && rho1<rayparam.rhoswitch[0]*(1 - rayparam.deltaswitch[0]))
             {
@@ -589,7 +589,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
                 }
             }
         }
-         */
+         
 
         /*------------------------------------------------------------------------------------------------------*/
 
@@ -598,11 +598,11 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
             
             k++;
             
-          /*  if(flag_metric == 2)Reset to flux coordinates for saveguard purposes if in cartesian coordinates*/
-           /* {
+            if(flag_metric == 2)/*Reset to flux coordinates for saveguard purposes if in cartesian coordinates*/
+            {
                 xy2rhotheta(rayparam,rayequil,equilparam,&rho1,&theta1,&krho1,&m1);
             }
-            */
+            
             
             tempt[k] = t1;
             temp0[k] = rho1;
@@ -614,10 +614,10 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
             temp6[k] = omega1;
             temp7[k] = S1;
             
-           /* if(flag_metric == 2)Reset to cartesian coordinates for raytracing calculations if initially in cartesian coordinates*/
-           /* {
+            if(flag_metric == 2) /*Reset to cartesian coordinates for raytracing calculations if initially in cartesian coordinates*/
+            {
                 rhotheta2xy(rayparam,rayequil,equilparam,&rho1,&theta1,&krho1,&m1);
-            }*/
+            }
             
             if (flag_proc == 1) { /* calculate additional ray parameters if required */
                 
@@ -1277,8 +1277,8 @@ double Gcov[3][3];
 raymagnetic_format raymagnetic;
 int flag_metric;
 {
-   /* if (flag_metric == 1)Flux case*/
-     /*{*/
+    if (flag_metric == 1)/*Flux case*/
+     {
         Gcov[0][0] = 1/raymagnetic.gradrhon[0]/raymagnetic.gradrhon[0]/raymagnetic.calpha[0]/raymagnetic.calpha[0];
         Gcov[0][1] = raymagnetic.rn[0]*raymagnetic.salpha[0]/raymagnetic.gradrhon[0]/raymagnetic.calpha[0]/raymagnetic.calpha[0];
         Gcov[0][2] = 0;
@@ -1289,9 +1289,9 @@ int flag_metric;
         Gcov[2][1] = Gcov[1][2];
         Gcov[2][2] = raymagnetic.Upsilonn[0]*raymagnetic.Upsilonn[0];
         
-/*    }*/
- /*   elseCartesian case*/
-  /*  {
+    }
+    else /*Cartesian case*/
+    {
         Gcov[0][0]=1;
         Gcov[0][1]=0;
         Gcov[0][2]=0;
@@ -1301,7 +1301,7 @@ int flag_metric;
         Gcov[2][0]=0;
         Gcov[2][1]=0;
         Gcov[2][2]=raymagnetic.Upsilonn[0]*raymagnetic.Upsilonn[0];
-    }*/
+    }
 }
 
 
