@@ -242,3 +242,22 @@ dkepath.yves(1).remote(24) = dkepath.yves(1).remote(23);
 dkepath.yves(1).remote(24).schedulername = 'direct';
 dkepath.yves(1).remote(24).gitupdate = true;
 %
+dkepath.yves(1).remote(25).remoteid = 'SPCPC483';
+dkepath.yves(1).remote(25).schedulername = 'slurm';
+dkepath.yves(1).remote(25).profilename = 'peysson';
+dkepath.yves(1).remote(25).luke_root = '/home/peysson/luke/LUKE/';
+dkepath.yves(1).remote(25).link_mode = '';
+dkepath.yves(1).remote(25).cvsupdate = false;% update done in 'direct' mode
+dkepath.yves(1).remote(25).gitupdate = false;
+dkepath.yves(1).remote(25).gitmode.cmd = 'cd /home/peysson/luke/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
+%
+dkepath.yves(1).remote(26) = dkepath.yves(1).remote(25);
+dkepath.yves(1).remote(26).schedulername = 'direct';
+dkepath.yves(1).remote(26).gitupdate = true;
+%
+
+
+
+
+
+
