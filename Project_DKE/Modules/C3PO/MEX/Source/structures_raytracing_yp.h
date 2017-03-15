@@ -42,6 +42,13 @@ struct polynomial_piecewise_2D {
     double  *order_da0drho;
     double  *dim_da0drho;
     mxChar  *orient_da0drho;
+    mxChar  *form_d2a0drho2;
+    double  *breaks_d2a0drho2;
+    double  *coefs_d2a0drho2;
+    double  *pieces_d2a0drho2;
+    double  *order_d2a0drho2;
+    double  *dim_d2a0drho2;
+    mxChar  *orient_d2a0drho2;
     mxChar  *form_an;
     double  *breaks_an;
     double  *coefs_an;
@@ -56,6 +63,13 @@ struct polynomial_piecewise_2D {
     double  *order_dandrho;
     double  *dim_dandrho;
     mxChar  *orient_dandrho;
+    mxChar  *form_d2andrho2;
+    double  *breaks_d2andrho2;
+    double  *coefs_d2andrho2;
+    double  *pieces_d2andrho2;
+    double  *order_d2andrho2;
+    double  *dim_d2andrho2;
+    mxChar  *orient_d2andrho2;
     mxChar  *form_bn;
     double  *breaks_bn;
     double  *coefs_bn;
@@ -70,6 +84,13 @@ struct polynomial_piecewise_2D {
     double  *order_dbndrho;
     double  *dim_dbndrho;
     mxChar  *orient_dbndrho;
+    mxChar  *form_d2bndrho2;
+    double  *breaks_d2bndrho2;
+    double  *coefs_d2bndrho2;
+    double  *pieces_d2bndrho2;
+    double  *order_d2bndrho2;
+    double  *dim_d2bndrho2;
+    mxChar  *orient_d2bndrho2;
 };
 
 typedef struct polynomial_piecewise_0D pp_0D_format;
@@ -172,28 +193,40 @@ struct fluctparam {
 struct raymagnetic {
     double *rn;
     double *drndY;
+    double *d2rndY2;
     double *xn;
     double *dxndY;
+    double *d2xndY2;
     double *yn;
     double *dyndY;
+    double *d2yndY2;
     double *Brhon;
     double *dBrhondY;
+    double *d2BrhondY2;
     double *Bsn;
     double *dBsndY;
+    double *d2BsndY2;
     double *Bzn;
     double *dBzndY;
+    double *d2BzndY2;
     double *B;
     double *dBdY;
+    double *d2BdY2;
     double *salpha;
     double *dsalphadY;
+    double *d2salphadY2;
     double *calpha;
     double *dcalphadY;
+    double *d2calphadY2;
     double *gradrhon;
     double *dgradrhondY;
+    double *d2gradrhondY2;
     double *rhorip;
     double *drhoripdY;
+    double *d2rhoripdY2;
     double *Upsilonn;
     double *dUpsilonndY;
+    double *d2UpsilonndY2;
 };
 
 struct susceptibilitytensor {
