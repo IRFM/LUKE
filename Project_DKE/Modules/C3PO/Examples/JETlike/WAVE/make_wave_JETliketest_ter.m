@@ -90,11 +90,11 @@ fitparam.ngridresample = 1001;%Number of grid points for resampling the radial p
 rayparam.testmode = 0;
 rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 5000;
+rayparam.tfinal = 10000;
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 20000;
+rayparam.kmax = 25000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
@@ -112,7 +112,7 @@ equil_fit_pchip = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam
 telapsed_equil_pchip = toc(tstart);
 %
 info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is calculated with pchip method.']);
-if C3POdisplay_pchip.equilibrium,testfitequil_yp(equil,equil_fit_pchip);end
+if C3POdisplay_pchip_rt.equilibrium,testfitequil_yp(equil,equil_fit_pchip);end
 %
 % Calculation of Npar0 using Nphi0
 %
@@ -180,7 +180,7 @@ rayparam.rhoswitch = 0.1;% Radial position at which the switch occurs when metri
 rayparam.deltaswitch = 0.01;%Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes
 %
 tstart = tic;
-%wave_numeric_pchip_rtxy = main_C3PO_jd(dkepath,[id_wave,'_numeric_pchip_rtxy'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip_rtxy,C3POparam,[],[],0);clear mex;clear functions
+wave_numeric_pchip_rtxy = main_C3PO_jd(dkepath,[id_wave,'_numeric_pchip_rtxy'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip_rtxy,C3POparam,[],[],0);clear mex;clear functions
 telapsed_ray_numeric_pchip_rtxy = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with pchip method with (rho,theta) <-> (X,Y) conversion in the plasma core)');
