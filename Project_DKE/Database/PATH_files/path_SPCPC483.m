@@ -55,3 +55,42 @@ remote(1).gitmode.cmd1 = '';
 remote_selection = [1];
 dkepath.decker(1).remote = remote(remote_selection);
 %
+%
+%------------------------------------ Profile number 2, Yves Peysson ------------------------------------
+%
+dkepath.peysson(1).luke_root = luke_root;
+dkepath.peysson(1).local_root = '/opt/';
+dkepath.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+dkepath.peysson(1).mex803 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB803']; 
+dkepath.peysson(1).mex804 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB804']; 
+dkepath.peysson(1).mex900 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB900']; 
+dkepath.peysson(1).mex901 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB901']; 
+%
+dkepath.peysson(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.7.0 -lrefblas'];%NaN;
+dkepath.peysson(1).compiler_opt.fopts = '';
+dkepath.peysson(1).compiler_opt.copts = '';
+%
+dkepath.peysson(1).MUMPS.mex803 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB803'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.peysson(1).MUMPS.mex804 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB804'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.peysson(1).MUMPS.mex900 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB900'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.peysson(1).MUMPS.mex901 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
+%
+%--------------------------- Remote computing -----------------------------
+%
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
+%
+%
+remote(1).remoteid = 'SPCPC483';
+remote(1).schedulername = 'direct';
+remote(1).profilename = 'peysson';
+remote(1).luke_root = dkepath.peysson(1).luke_root;% local cluster
+remote(1).link_mode = [];
+remote(1).gitupdate = false;
+remote(1).gitmode.cmd1 = '';
+%
+% -------------- profiles selection, Yves Peysson ------------
+%
+remote_selection = [1];
+dkepath.peysson(1).remote = remote(remote_selection);
+%
