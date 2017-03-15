@@ -343,3 +343,5 @@ void substitution();
 void xy2rhotheta();
 void rhotheta2xy();
 void rho1D();
+void rho1D_newton();
+void substitution_newton();
