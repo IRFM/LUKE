@@ -167,23 +167,18 @@ dkepath.yves(1).remote(14) = dkepath.yves(1).remote(13);
 dkepath.yves(1).remote(14).schedulername = 'direct';
 dkepath.yves(1).remote(14).gitupdate = true;
 %
-dkepath.yves(1).remote(15).remoteid = 'ASIPP_SHENMA';
-dkepath.yves(1).remote(15).schedulername = 'torque';
-dkepath.yves(1).remote(15).profilename = 'bjding';
-dkepath.yves(1).remote(15).luke_root = '/project/LUKE/LUKE/';
-dkepath.yves(1).remote(15).link_mode = 0;
+dkepath.yves(1).remote(15).remoteid = 'CRPP_LAC5';
+dkepath.yves(1).remote(15).schedulername = 'slurm';
+dkepath.yves(1).remote(15).profilename = 'local';
+dkepath.yves(1).remote(15).luke_root = '/home/decker/LUKE/';
+dkepath.yves(1).remote(15).link_mode = '';% lac911 gateway
 dkepath.yves(1).remote(15).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(15).gitupdate = false;
 dkepath.yves(1).remote(15).gitmode.cmd = '';
 %
-dkepath.yves(1).remote(16).remoteid = 'CRPP_PPB110';
-dkepath.yves(1).remote(16).schedulername = 'slurm';
-dkepath.yves(1).remote(16).profilename = 'local';
-dkepath.yves(1).remote(16).luke_root = '/home/decker/LUKE/';
-dkepath.yves(1).remote(16).link_mode = '';% lac911 gateway
-dkepath.yves(1).remote(16).cvsupdate = false;% update done in 'direct' mode
-dkepath.yves(1).remote(16).gitupdate = false;
-dkepath.yves(1).remote(16).gitmode.cmd = '';
+dkepath.yves(1).remote(16) = dkepath.yves(1).remote(15);
+dkepath.yves(1).remote(16).schedulername = 'direct';
+dkepath.yves(1).remote(16).gitupdate = true;
 %
 dkepath.yves(1).remote(17).remoteid = 'GA_LOHAN14';
 dkepath.yves(1).remote(17).schedulername = 'direct';
@@ -244,7 +239,7 @@ dkepath.yves(1).remote(24).gitupdate = true;
 %
 dkepath.yves(1).remote(25).remoteid = 'SPCPC483';
 dkepath.yves(1).remote(25).schedulername = 'slurm';
-dkepath.yves(1).remote(25).profilename = 'peysson';
+dkepath.yves(1).remote(25).profilename = 'yves';
 dkepath.yves(1).remote(25).luke_root = '/home/peysson/luke/LUKE/';
 dkepath.yves(1).remote(25).link_mode = '';
 dkepath.yves(1).remote(25).cvsupdate = false;% update done in 'direct' mode
@@ -255,7 +250,16 @@ dkepath.yves(1).remote(26) = dkepath.yves(1).remote(25);
 dkepath.yves(1).remote(26).schedulername = 'direct';
 dkepath.yves(1).remote(26).gitupdate = true;
 %
-
+%
+dkepath.yves(1).remote(27).remoteid = 'CRPP_LAC1';
+dkepath.yves(1).remote(27).schedulername = 'direct';
+dkepath.yves(1).remote(27).profilename = 'local';
+dkepath.yves(1).remote(27).luke_root = '/home/decker/LUKE/';
+dkepath.yves(1).remote(27).link_mode = '';% lac911 gateway
+dkepath.yves(1).remote(27).cvsupdate = false;% update done in 'direct' mode
+dkepath.yves(1).remote(27).gitupdate = false;
+dkepath.yves(1).remote(27).gitmode.cmd = '';
+%
 
 
 
