@@ -89,14 +89,14 @@ dkepath.yves(1).remote(2) = dkepath.yves(1).remote(1);
 dkepath.yves(1).remote(2).schedulername = 'direct';
 dkepath.yves(1).remote(2).gitupdate = true;
 %
-dkepath.yves(1).remote(3).remoteid = 'macpro_YVES_PEYSSON';
+dkepath.yves(1).remote(3).remoteid = 'x58ud7_YVES_PEYSSON';
 dkepath.yves(1).remote(3).schedulername = 'condor';
-dkepath.yves(1).remote(3).profilename = 'yvespeysson';
-dkepath.yves(1).remote(3).luke_root = '/Users/yvespeysson/Projets/LUKE/';
+dkepath.yves(1).remote(3).profilename = 'ypeysson';
+dkepath.yves(1).remote(3).luke_root = '/home/ypeysson/luke/LUKE/';
 dkepath.yves(1).remote(3).link_mode = '';
 dkepath.yves(1).remote(3).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(3).gitupdate = false;
-dkepath.yves(1).remote(3).gitmode.cmd = 'cd /Users/yvespeysson/Projets/*;git pull;';%
+dkepath.yves(1).remote(3).gitmode.cmd = 'cd /home/ypeysson/luke/*;git pull;';%
 %
 dkepath.yves(1).remote(4) = dkepath.yves(1).remote(3);
 dkepath.yves(1).remote(4).schedulername = 'direct';
