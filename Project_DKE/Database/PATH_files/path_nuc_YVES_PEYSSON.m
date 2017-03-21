@@ -55,7 +55,7 @@ dkepath.yvespeysson(1).remote(1).luke_root = dkepath.yvespeysson(1).luke_root;% 
 dkepath.yvespeysson(1).remote(1).link_mode = '';
 dkepath.yvespeysson(1).remote(1).cvsupdate = false;% update done in 'direct' mode
 dkepath.yvespeysson(1).remote(1).gitupdate = false;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(1).gitmode.cmd = 'cd /home/Yves/Projets/*;git pull;echo "* update done";';
+dkepath.yvespeysson(1).remote(1).gitmode.cmd = 'cd home/yvespeysson/luke/*;git pull;echo "* update done";';
 %
 dkepath.yvespeysson(1).remote(2) = dkepath.yvespeysson(1).remote(1);
 dkepath.yvespeysson(1).remote(2).schedulername = 'direct';
