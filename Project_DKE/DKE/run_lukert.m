@@ -70,7 +70,11 @@ if iscell(lukestructs),% remote and/or distributed calculation
     %
     if any(luke_flag == 0),% there are jobs to be run
         %
-        dkecluster = clustermode_luke('','run_lukert',dkepath);
+        if isfield(dkepath,'remnum'),
+            dkecluster = clustermode_luke('','run_lukert',dkepath,dkepath.remnum);
+        else
+            dkecluster = clustermode_luke('','run_lukert',dkepath);
+        end
         %
         [~,lukestructs(luke_flag == 0)] = mdce_run('run_lukert',{''},1,lukestructs(luke_flag == 0),dkecluster);
         %
