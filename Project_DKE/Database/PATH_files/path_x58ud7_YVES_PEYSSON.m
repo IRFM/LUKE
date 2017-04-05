@@ -48,7 +48,7 @@ dkepath.ypeysson(1).imagemagick.env = '/usr/bin/';% ImageMagick environment vari
 %
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-dkepath.ypeysson(1).remote(1).remoteid = 'X58A-UD7_YVES_PEYSSON';
+dkepath.ypeysson(1).remote(1).remoteid = 'x58ud7_YVES_PEYSSON';
 dkepath.ypeysson(1).remote(1).schedulername = 'condor';
 dkepath.ypeysson(1).remote(1).profilename = 'ypeysson';
 dkepath.ypeysson(1).remote(1).luke_root = dkepath.ypeysson(1).luke_root;% local cluster
