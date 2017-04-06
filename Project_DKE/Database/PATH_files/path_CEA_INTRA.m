@@ -106,7 +106,7 @@ dkepath.YP105119(1).MUMPS.mex805 = [dkepath.YP105119(1).local_root,'Packages/Bin
 %
 % ---------------------------- pleione -------------------------------
 %
-dkepath.JD211098(1).pleione = dkepath.JD211098(1).nunki;% both machines have identical configurations
+%dkepath.JD211098(1).pleione = dkepath.JD211098(1).nunki;% both machines have identical configurations
 %
 % ---------------------------- spica -------------------------------
 %
