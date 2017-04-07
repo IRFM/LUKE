@@ -469,11 +469,14 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
         }
         
     }
+    
     /* Test Input Arguments */
+    
     if (rayparam.testmode[0] > 0) testparam(rayparam,equilparam,fluctparam,raymagnetic,rayprofiles,rayequil,rayfluctuations,distriparam,raydistri,flag_fluct,flag_f0,flag,y0_in);
     /***************************************************************************/
     /******************************* Runge-Kutta  ******************************/
     /***************************************************************************/
+    
     
     /* Create and Initialize Return Arguments */
     
@@ -510,11 +513,13 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
     
     /* Solves the dispersion relation internally to remove numerical errors from initial conditions */
     
+    
     if (flag == 0) {
         interpequil(rayparam,raymagnetic,rayprofiles,equilparam,fluctparam,yinit,y0,rayequil,rayfluctuations,flag_fluct,flag_metric);
     } else {
         interpequil_test(raymagnetic,rayprofiles,equilparam,yinit,flag);
-    } 
+    }
+    
     
     alpha_rho = raymagnetic.gradrhon[0]*raymagnetic.drhoripdY[0];
     alpha_theta = raymagnetic.drhoripdY[1]/raymagnetic.rn[0];
@@ -526,7 +531,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
     
     if ((fabs(flag) > 0) || (acc != 0)){
         /* mexPrintf("krho1:%g\n",krho1); */
-
+        
         dsolve(1,ns,&krho1_dsolve,yinit,y0,raymagnetic,rayprofiles,X,rayparam,equilparam,fluctparam,rayequil,rayfluctuations,flag,flag_fluct);
         
         if (acc != 0) mexPrintf("The dispersion relation is first solved internally to remove numerical errors from initial conditions.\n");
@@ -561,48 +566,48 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
          */
 
         /*------------------------- Switching condition set around rho = 0.1 -----------------------------------*/
-        
-        if(rayparam.metricmode[0] == 2.0)
+        if((int)rayparam.metricmode[0] == 2)
         {
-            if (flag_metric == 1 && rho1<rayparam.rhoswitch[0]*(1 - rayparam.deltaswitch[0]))
+        
+        if (flag_metric == 1 && rho1 < rayparam.rhoswitch[0]*(1 - rayparam.deltaswitch[0]))
             {
                 mexPrintf("%s \n","Switching on cartesian system");
+                DUMP(rho1);
                 rhotheta2xy(rayparam,rayequil,equilparam,&rho1,&theta1,&krho1,&m1);
                 mexPrintf("%s = %d\n", "Total number of saved iterations", k);
                 mexPrintf("%s = %d\n", "Total number of iterations", ii);
                 flag_metric = 2;
             }
-        
+
             if (flag_metric == 2)
             {
                 double rho,theta,t[2];
                 t[0]=rho1;
                 t[1]=theta1;
-                substitution_newton(rayequil,rayparam,equilparam,&rho,&theta,&t);
-                if(rho>1.01*rayparam.rhoswitch[0]*(1 + rayparam.deltaswitch[0]))
+                substitution_newton_2D(rayequil,rayparam,equilparam,&rho,&theta,&t);
+                if(rho > rayparam.rhoswitch[0]*(1 + rayparam.deltaswitch[0]))
                 {
                     mexPrintf("%s \n","Switching off cartesian system");
                     xy2rhotheta(rayparam,rayequil,equilparam,&rho1,&theta1,&krho1,&m1);
+                    DUMP(rho1);
                     mexPrintf("%s = %d\n", "Total number of saved iterations", k);
                     mexPrintf("%s = %d\n", "Total number of iterations", ii);
                     flag_metric = 1;
                 }
             }
+
         }
-         
 
         /*------------------------------------------------------------------------------------------------------*/
-
 
         if (k == -1 || fabs(S1 - S_step) >= rayparam.dS[0]){/*step stored in Matlab memory */
             
             k++;
             
-            if(flag_metric == 2)/*Reset to flux coordinates for saveguard purposes if in cartesian coordinates*/
+            if(flag_metric == 2)//Reset to flux coordinates for saveguard purposes if in cartesian coordinates
             {
                 xy2rhotheta(rayparam,rayequil,equilparam,&rho1,&theta1,&krho1,&m1);
             }
-            
             
             tempt[k] = t1;
             temp0[k] = rho1;
@@ -614,7 +619,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
             temp6[k] = omega1;
             temp7[k] = S1;
             
-            if(flag_metric == 2) /*Reset to cartesian coordinates for raytracing calculations if initially in cartesian coordinates*/
+            if(flag_metric == 2)//Reset to cartesian coordinates for raytracing calculations if initially in cartesian coordinates
             {
                 rhotheta2xy(rayparam,rayequil,equilparam,&rho1,&theta1,&krho1,&m1);
             }
@@ -622,7 +627,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
             if (flag_proc == 1) { /* calculate additional ray parameters if required */
                 
                 dS = S1 - S_step; /* ray path from k-1 to k position */
-                /*y0 needs to be expressed in the current metric system*/
+                //y0 needs to be expressed in the current metric system
                 y0[0] = rho1;
                 y0[1] = theta1;
                 y0[2] = temp2[k];
@@ -635,7 +640,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
                     
                     rayprocess(ns,rayproc,rayparam,raymagnetic,rayprofiles,X,equilparam,fluctparam,yinit,y0,rayequil,rayfluctuations,distriparam,raydistri,flag_f0,flag,flag_fluct,flag_metric);
                     /* mexPrintf("y[0],y[1],y[2],y[3],y[4],y[5],y[6]:%g,%g,%g,%g,%g,%g,%g\n",yinit[0],yinit[1],yinit[2],yinit[3],yinit[4],yinit[5],yinit[6]);*/
-                    /* mexPrintf("y[0],y[1],y[2],y[3],y[4],y[5],y[6]:%g,%g,%g,%g,%g,%g,%g\n",yinit[0],yinit[1],yinit[2],yinit[3],yinit[4],yinit[5],yinit[6]);*/
+                    /* mexPrintf("y[0],y[1],y[2],y[3],y[4],y[5],y[6]:%g,%g,%g,%g,%g,%g,%g\n",yinit[0],yinit[1],yinit[2],yinit[3],yinit[4],yinit[5],yinit[6]); */
                     /*return;*/
                     /* Stop here for debug and uncomment the calculation of Dtot which should be very close to zero*/
                     
@@ -684,6 +689,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
         
         /* ts = t  and  s0 = y */
         
+        
         s0[0] = rho1;
         s0[1] = theta1;
         s0[2] = z1;
@@ -697,8 +703,6 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
         }
         
         ray(ns,X,s1,&Sdot1,yinit,y1,raymagnetic,rayprofiles,rayparam,equilparam,fluctparam,rayequil,rayfluctuations,flag,flag_fluct,flag_metric);
-        
-
         /* s2 = feval(F, t+h*alpha(1), y1+h*s1*beta(1,1), param); */
         
         
@@ -730,6 +734,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
             y1[m] = s0[m]+h*(s1[m]*beta[0][3] + s2[m]*beta[1][3] + s3[m]*beta[2][3] + s4[m]*beta[3][3]);
         }
         
+        
         ray(ns,X,s5,&Sdot5,yinit,y1,raymagnetic,rayprofiles,rayparam,equilparam,fluctparam,rayequil,rayfluctuations,flag,flag_fluct,flag_metric);
         
         /* s6 = feval(F, t+h*alpha(5), y1+h*[s1*beta(5,1)+s2*beta(5,2)+...], param); */
@@ -754,13 +759,13 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
             ys[5] = s5[m];
             ys[6] = s6[m];
             
-             /* mexPrintf("m,s0[m],s1[m],s2[m],s3[m],s4[m],s5[m],s6[m]:%d,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g\n",m,s0[m],s1[m],s2[m],s3[m],s4[m],s5[m],s6[m]); */
+            /*  mexPrintf("m,s0[m],s1[m],s2[m],s3[m],s4[m],s5[m],s6[m]:%d,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g\n",m,s0[m],s1[m],s2[m],s3[m],s4[m],s5[m],s6[m]); */
             
             
             ymax = inf_norm(ys,MC);
             ydel[m] = ydel[m]/ymax;
             
-             /*mexPrintf("ys[0],ys[1],ys[2],ys[3],ys[4],ys[5],ys[6],ymax,ydel[m]:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",ys[0],ys[1],ys[2],ys[3],ys[4],ys[5],ys[6],ymax,ydel[m]); */
+            /* mexPrintf("ys[0],ys[1],ys[2],ys[3],ys[4],ys[5],ys[6],ymax,ydel[m]:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",ys[0],ys[1],ys[2],ys[3],ys[4],ys[5],ys[6],ymax,ydel[m]); */
             
         }
         
@@ -801,7 +806,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
 
             /* mexPrintf("t2,rho2,theta2,z2,krho2,m2,kz2:%g,%g,%g,%g,%g,%g,%g\n",t2,rho2,theta2,z2,krho2,m2,kz2);*/
             
-            if(flag_metric==1)/*In order that the condition rho2 > 1.0 is always false in cartesian metric*/
+            if(flag_metric==1)//In order that the condition rho2 > 1.0 is always false in cartesian metric
             {
                 if (rho2 > 1.0) {/* Wave reflexion at rho = 1  */
                     if (rayparam.reflection[0] >=1.0) {/* The reflection is always enforced */
@@ -863,6 +868,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
                 h = SAFETY*h*pow(tau/delta,PSHRINK);
             }
             
+            
             /* mexPrintf("k,delta,tau,rho1,krho1,S1,h:%d,%g,%g,%g,%g,%g,%g\n",k,delta,tau,rho1,krho1,S1,h); */
             
         } else {
@@ -890,8 +896,8 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
     
 Endloop:
     
-    /*mexPrintf("%d \n",k);
-    mexPrintf("%d \n",ii);*/
+    mexPrintf("%d \n",k);
+    mexPrintf("%d \n",ii);
     
     /* Create final matrix for transferring data to MatLab */
     
@@ -1129,7 +1135,7 @@ unsigned int N;
 /* General coordinate time evolution dY/dt with Y=[rho,theta,phi,krho,m,n,omega/c] */
 
 
-void ray(ns,X,Ydot,Sdot,Y0,Y,raymagnetic,rayprofiles,rayparam,equilparam,fluctparam,rayequil,rayfluctuations,flag,flag_fluct,flag_metric)/*Doesn't have to be modified under a change of metric*/
+void ray(ns,X,Ydot,Sdot,Y0,Y,raymagnetic,rayprofiles,rayparam,equilparam,fluctparam,rayequil,rayfluctuations,flag,flag_fluct,flag_metric)//Doesn't have to be modified under a change of metric
 int ns;
 susceptibilitytensor_format X;
 double Y0[],Y[],Ydot[],*Sdot;
@@ -1164,20 +1170,21 @@ int flag_metric;
     }
     
     /* Refractive index calculation */
-    
     rayindex(&Nperp,dNperpdY,&N2,dN2dY,flag_metric,Y,raymagnetic,equilparam,&Npar,dNpardY,&eikval);
-
-    /*mexPrintf("rn,xn,yn,Brhon,Bsn,krho,sina,cosa,B,Bzn:%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g\n",raymagnetic.rn[0],raymagnetic.xn[0],raymagnetic.yn[0],raymagnetic.Brhon[0],raymagnetic.Bsn[0],Y[3],raymagnetic.salpha[0],raymagnetic.calpha[0],raymagnetic.B[0],raymagnetic.Bzn[0]);*/
-    /*mexPrintf("Npar,w*dNpardw,Nperpr,Nperpi,w*dNperpdwr,w*dNperpdwi:%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g\n",Npar,dNpardY[6],Nperp,dNperpdY[6]);*/
-     
+    
+    /*
+     mexPrintf("rn,xn,yn,Brhon,Bsn,krho,sina,cosa,B,Bzn:%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g\n",raymagnetic.rn[0],raymagnetic.xn[0],raymagnetic.yn[0],raymagnetic.Brhon[0],raymagnetic.Bsn[0],Y[3],raymagnetic.salpha[0],raymagnetic.calpha[0],raymagnetic.B[0],raymagnetic.Bzn[0]);
+     mexPrintf("Npar,w*dNpardw,Nperpr,Nperpi,w*dNperpdwr,w*dNperpdwi:%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g\n",Npar,dNpardY[6],Nperp,dNperpdY[6]);
+     */
+    
     /*mexPrintf("Eikonal validity (<< 1):%g,%g\n",eikval);*/
     
     
     /* Susceptibility tensor  */
     
     susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,rayparam.tensortype[0],(int)rayparam.ncyclharm[0],equilparam,raymagnetic,rayprofiles,Npar,dNpardY,Y[6]);
-
-    /*mexPrintf("X.Xxx[0],X.Xxy[0],X.Xxz[0],X.Xyy[0],X.Xyz[0],X.Xzz[0],%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g\n",X.Xxx[0],X.Xxy[0],X.Xxz[0],X.Xyy[0],X.Xyz[0],X.Xzz[0]);*/
+    
+    /* mexPrintf("X.Xxx[0],X.Xxy[0],X.Xxz[0],X.Xyy[0],X.Xyz[0],X.Xzz[0],%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g\n",X.Xxx[0],X.Xxy[0],X.Xxz[0],X.Xyy[0],X.Xyz[0],X.Xzz[0]); */
     
     if (flag < 0) {/* dispersion relation */
         disprel(dDtotdY,&Dtot,X,dNperpdY,Nperp,dN2dY,N2,dNpardY,Npar,3);
@@ -1265,13 +1272,13 @@ int flag_metric;
     
 }
 
-void metrictensor(Gcov,raymagnetic,flag_metric)/*Has to be modified under a change of metric*/
+void metrictensor(Gcov,raymagnetic,flag_metric)//Has to be modified under a change of metric
 double Gcov[3][3];
 raymagnetic_format raymagnetic;
 int flag_metric;
 {
-    if (flag_metric == 1)/*Flux case*/
-     {
+    if (flag_metric == 1)//Flux case
+    {
         Gcov[0][0] = 1/raymagnetic.gradrhon[0]/raymagnetic.gradrhon[0]/raymagnetic.calpha[0]/raymagnetic.calpha[0];
         Gcov[0][1] = raymagnetic.rn[0]*raymagnetic.salpha[0]/raymagnetic.gradrhon[0]/raymagnetic.calpha[0]/raymagnetic.calpha[0];
         Gcov[0][2] = 0;
@@ -1282,7 +1289,7 @@ int flag_metric;
         Gcov[2][1] = Gcov[1][2];
         Gcov[2][2] = raymagnetic.Upsilonn[0]*raymagnetic.Upsilonn[0];
     }
-    else /*Cartesian case*/
+    else//Cartesian case
     {
         Gcov[0][0]=1;
         Gcov[0][1]=0;
@@ -1297,7 +1304,7 @@ int flag_metric;
 }
 
 
-void polarization(X,Npar,Nperp,epolx,epoly,epolz,epolp,epolm)/*Doesn't have to be modified under a change of metric*/
+void polarization(X,Npar,Nperp,epolx,epoly,epolz,epolp,epolm)//Doesn't have to be modified under a change of metric
 susceptibilitytensor_format X;
 double Npar;
 double complex Nperp,*epolx,*epoly,*epolz,*epolp,*epolm;
@@ -1330,7 +1337,7 @@ double complex Nperp,*epolx,*epoly,*epolz,*epolp,*epolm;
 }
 
 
-void rayprocess(ns,rayproc,rayparam,raymagnetic,rayprofiles,X,equilparam,fluctparam,Y0,Y,rayequil,rayfluctuations,distriparam,raydistri,flag_f0,flag,flag_fluct,flag_metric)/* Has to be modified under a change of metric*/
+void rayprocess(ns,rayproc,rayparam,raymagnetic,rayprofiles,X,equilparam,fluctparam,Y0,Y,rayequil,rayfluctuations,distriparam,raydistri,flag_f0,flag,flag_fluct,flag_metric)// Has to be modified under a change of metric
 int ns;
 double rayproc[];
 rayparam_format rayparam;
@@ -1504,14 +1511,14 @@ int flag_metric;
         if (flag_metric == 1)
         {
             ppvald_1D(raydistri.f0_fit,rayparam.dS[0],Y[0],Xf0,dXf0drho,d2Xf0drho2);
-            ppvald_2D(raydistri.PSI_fit,rayparam.dS[0],Y[0],Y[1],PSI,&dummy1,&dummy1,&dummy1,&dummy1);
+            ppvald_2D(raydistri.PSI_fit,rayparam.dS[0],Y[0],Y[1],PSI,&dummy1,&dummy1,&dummy1,&dummy1,&dummy1);
         }
         else
         {
             double rho,theta;
-            substitution(rayequil,rayparam,equilparam,&rho,&theta,Y);
+            substitution_newton_2D(rayequil,rayparam,equilparam,&rho,&theta,Y);
             ppvald_1D(raydistri.f0_fit,rayparam.dS[0],rho,Xf0,dXf0drho,d2Xf0drho2);
-            ppvald_2D(raydistri.PSI_fit,rayparam.dS[0],rho,theta,PSI,&dummy1,&dummy1,&dummy1,&dummy1);
+            ppvald_2D(raydistri.PSI_fit,rayparam.dS[0],rho,theta,PSI,&dummy1,&dummy1,&dummy1,&dummy1,&dummy1);
         }
         
         pn = distriparam.pn;
@@ -1598,7 +1605,7 @@ int flag_metric;
 
 
 
-int reflection(flag,X,rayparam,equilparam,fluctparam,raymagnetic,rayprofiles,krho2,m2,kz2,Y0,Y,rayequil,rayfluctuations,flag_fluct)/*Doesn't have to be modified under a change of metric that only applies to the center of the grid*/
+int reflection(flag,X,rayparam,equilparam,fluctparam,raymagnetic,rayprofiles,krho2,m2,kz2,Y0,Y,rayequil,rayfluctuations,flag_fluct)//Doesn't have to be modified under a change of metric that only applies to the center of the grid
 double flag;
 susceptibilitytensor_format X;
 rayparam_format rayparam;
@@ -1721,7 +1728,7 @@ int flag_fluct;
 }
 
 
-void dsolve(mode,ns,krho,Y0,Y,raymagnetic,rayprofiles,X,rayparam,equilparam,fluctparam,rayequil,rayfluctuations,flag,flag_fluct)/*Doesn't have to be modified under a change of metric that only applies to the grid's center*/
+void dsolve(mode,ns,krho,Y0,Y,raymagnetic,rayprofiles,X,rayparam,equilparam,fluctparam,rayequil,rayfluctuations,flag,flag_fluct)//Doesn't have to be modified under a change of metric that only applies to the grid's center
 int mode,ns;
 double *krho;
 double Y0[],Y[];
@@ -1862,7 +1869,7 @@ int flag_fluct;
 }
 
 
-void disprel(dDtotdY,Dtot,X,dNperpdY,Nperp,dN2dY,N2,dNpardY,Npar,flag)/*Doesn't have to be modified under a change of metric*/
+void disprel(dDtotdY,Dtot,X,dNperpdY,Nperp,dN2dY,N2,dNpardY,Npar,flag)//Doesn't have to be modified under a change of metric
 double complex dDtotdY[],*Dtot;
 susceptibilitytensor_format X;
 double complex dNperpdY[],Nperp,dN2dY[],N2;
@@ -1890,7 +1897,7 @@ int flag;
     N6 = N2*N2*N2;
     
     
-    /*mexPrintf("N2,dN2dY[i],%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g\n",N2,dN2dY[0],dN2dY[1],dN2dY[2],dN2dY[3],dN2dY[4],dN2dY[5],dN2dY[6],dN2dY[7]);*/
+    /* mexPrintf("N2,dN2dY[i],%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g\n",N2,dN2dY[0],dN2dY[1],dN2dY[2],dN2dY[3],dN2dY[4],dN2dY[5],dN2dY[6],dN2dY[7]); */
     
     
     Xxx = X.Xxx[0];
@@ -1916,12 +1923,11 @@ int flag;
      mexPrintf("Xyyr,XXyyi:%g,%g\n",creal(Xyy),cimag(Xyy));
      mexPrintf("Xyzr,XXyzi:%g,%g\n",creal(Xyz),cimag(Xyz));
      mexPrintf("Xzzr,XXzzi:%g,%g\n",creal(Xzz),cimag(Xzz));
-     */
-    
+     
      double complex Dtot1;
      Dtot1 = (Xxx+1)*Nperp4/N6+2*Npar1*Xxz*Nperp3/N6-(-2*Npar2+Xyy-Npar2*Xzz+Xxy2+Xzz-Xxz2+Xxx*Xzz+Xxx*Xyy+2+2*Xxx-Xxx*Npar2)*Nperp2/N6-(2*Npar1*Xxz+2*Npar1*Xyy*Xxz-2*Xxy*Xyz*Npar-2*Npar3*Xxz)*Nperp1/N6-(-1-Xxx*Xyz2-Xxy2*Xzz+Xyy*Xxz2-2*Xxy*Xyz*Xxz-Xxx*Xyy*Xzz-Xzz+2*Npar2-Xyy-Xyz2-Npar4-Xxx-Xxy2+Xxz2+2*Npar2*Xzz-Xyy*Xzz+Npar2*Xyy-Xxx*Xzz+Xxx*Npar2-Xxx*Xyy-Npar4*Xzz+Npar2*Xyz2-Npar2*Xxz2+Npar2*Xyy*Xzz+Xxx*Npar2*Xzz)/N6;
-     /*mexPrintf("Dtot1:%g\n",Dtot1);*/
-     
+     mexPrintf("Dtot1:%g\n",Dtot1);
+     */
     if ((flag == 1) || (flag == 3)) {
         
         for (i = 0;i<MC;i++) {
@@ -2044,7 +2050,7 @@ int flag;
     
 }
 
-void susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,tensortype,ncyclharm,equilparam,raymagnetic,rayprofiles,Npar,dNpardY,omega)/*Doesn't have to be modified under a change of metric*/
+void susceptibility(X,Nperp,dNperpdY,wcn,wpn2,betath,tensortype,ncyclharm,equilparam,raymagnetic,rayprofiles,Npar,dNpardY,omega)//Doesn't have to be modified under a change of metric
 susceptibilitytensor_format X;
 double complex Nperp,dNperpdY[];
 double wcn[],wpn2[],betath[];
@@ -2148,7 +2154,7 @@ equilparam_format equilparam;
 }
 
 
-void rayindex(Nperp,dNperpdY,N2,dN2dY,flag_metric,Y,raymagnetic,equilparam,Npar,dNpardY,eikval)/*Has to be modified under a change of metric*/
+void rayindex(Nperp,dNperpdY,N2,dN2dY,flag_metric,Y,raymagnetic,equilparam,Npar,dNpardY,eikval)//Has to be modified under a change of metric
 double complex *Nperp,*dNperpdY;
 double complex *N2,*dN2dY;
 int flag_metric;
@@ -2248,8 +2254,8 @@ double complex *eikval;
             dNpardY[i] = cnorm*(dNpar0dY + dNpar1dY + dNpar2dY);
             
             
-            /*   mexPrintf("i,dNpardY[i]:%d,%g\n",i,dNpardY[i]);*/
-            /*   mexPrintf("i,dYdY[3][i],dYdY[4][i],dYdY[5][i]:%d,%g,%g,%g\n",i,dYdY[3][i],dYdY[4][i],dYdY[4][i]);*/
+            //   mexPrintf("i,dNpardY[i]:%d,%g\n",i,dNpardY[i]);
+            //   mexPrintf("i,dYdY[3][i],dYdY[4][i],dYdY[5][i]:%d,%g,%g,%g\n",i,dYdY[3][i],dYdY[4][i],dYdY[4][i]);
         }
         N21 = raymagnetic.gradrhon[0]*raymagnetic.gradrhon[0]*Y[3]*Y[3];
         N22 = -2.0*raymagnetic.gradrhon[0]*raymagnetic.salpha[0]*Y[4]*Y[3]/raymagnetic.rn[0];
@@ -2324,7 +2330,7 @@ double complex *eikval;
         eikval[0] = cnorm*cabs(divN1 + divN2 + divN3)/N2[0];
         
     }
-    else/*Cartesian ray index declaration, 06/06/16 update*/
+    else//Cartesian ray index declaration, 06/06/16 update
     /* In this section the array Y stands for Y=[x,y,phi,kx,kz,n,omega/c]*/
     {
         
@@ -2382,7 +2388,7 @@ double complex *eikval;
         
         Npar[0] = cnorm*(Npar0 + Npar1 + Npar2);
         
-        /* Declaration of the parallel ray index first order derivatives*/
+        // Declaration of the parallel ray index first order derivatives
         
         for(i=0;i<MC;i++)
         {
@@ -2441,7 +2447,7 @@ double complex *eikval;
         
         /* Declaration of the perpendicular ray index and its first order derivatives */
         
-        Nperp[0] = sqrt(N2[0]-pow(Npar[0],2));/*Perpendicular ray index*/
+        Nperp[0] = sqrt(N2[0]-pow(Npar[0],2));//Perpendicular ray index
         
         for(i=0;i<MC;i++)
         {
@@ -2450,12 +2456,12 @@ double complex *eikval;
         
         /* WKB approximation */
         
-        eikval[0]=0.0;/* We will turn on this paramater later*/
+        eikval[0]=0.0;// We will turn on this paramater later
     }
 }
 
 
-void buildXstruc(X,dNperpdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,ns,dNpardY,dwcndY,dwpn2dY,dbetathdY)/*Doesn't have to be modified under a change of metric*/
+void buildXstruc(X,dNperpdY,Xxx,Xxy,Xxz,Xyy,Xyz,Xzz,dXxxdNperp,dXxydNperp,dXxzdNperp,dXyydNperp,dXyzdNperp,dXzzdNperp,dXxxdNpar,dXxydNpar,dXxzdNpar,dXyydNpar,dXyzdNpar,dXzzdNpar,dXxxdbetath,dXxydbetath,dXxzdbetath,dXyydbetath,dXyzdbetath,dXzzdbetath,dXxxdwcn,dXxydwcn,dXxzdwcn,dXyydwcn,dXyzdwcn,dXzzdwcn,dXxxdwpn2,dXxydwpn2,dXxzdwpn2,dXyydwpn2,dXyzdwpn2,dXzzdwpn2,ns,dNpardY,dwcndY,dwpn2dY,dbetathdY)//Doesn't have to be modified under a change of metric
 susceptibilitytensor_format X;
 double complex dNperpdY[];
 double complex Xxx[],Xxy[],Xxz[],Xyy[],Xyz[],Xzz[];
@@ -2554,7 +2560,7 @@ double dwcndY[][MC],dwpn2dY[][MC],dbetathdY[][MC],dNpardY[];
 
 
 
-void interpequil(rayparam,raymagnetic,rayprofiles,equilparam,fluctparam,Y0,Y,rayequil,rayfluctuations,flag_fluct,flag_metric)/*Has to be modified under a change of metric*/
+void interpequil(rayparam,raymagnetic,rayprofiles,equilparam,fluctparam,Y0,Y,rayequil,rayfluctuations,flag_fluct,flag_metric)//Has to be modified under a change of metric
 rayparam_format rayparam;
 raymagnetic_format raymagnetic;
 rayprofiles_format rayprofiles;
@@ -2677,11 +2683,10 @@ int flag_metric;
     double save;
     double rho,theta,xbis,ybis;
     
-    /* Axisymmetric magnetic field equilibrium interpolation*/
+    // Axisymmetric magnetic field equilibrium interpolation
     
-    if (flag_metric == 1)/*Curvilinear case*/
+    if (flag_metric == 1)//Curvilinear case
     {
-        
         ppvald_2D(rayequil.x_fit,rayparam.dS[0],Y[0],Y[1],&x,&dxdrho,&dxdtheta,&d2xdtheta2,&d2xdthetadrho,&dummy1);
         
         ppvald_2D(rayequil.y_fit,rayparam.dS[0],Y[0],Y[1],&y,&dydrho,&dydtheta,&d2ydtheta2,&d2ydthetadrho,&dummy1);
@@ -2708,9 +2713,9 @@ int flag_metric;
                 BP,dBPdrho,dBPdtheta,d2BPdtheta2,d2BPdthetadrho,d2BPdrho2,dBPdz,
                 BB,dBBdrho,dBBdtheta,dBBdz,d2BBdtheta2,d2BBdthetadrho,d2BBdrho2,flag_metric);
     }
-    else/*Cartesian case*/
+    else//Cartesian case
     {
-        substitution_newton(rayequil,rayparam,equilparam,&rho,&theta,Y);/*Retrieve (rho,theta) from (x,y) or (Y[0],Y[1]) here*/
+        substitution_newton_2D(rayequil,rayparam,equilparam,&rho,&theta,Y);//Retrieve (rho,theta) from (x,y) or (Y[0],Y[1]) here
         
         ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho,theta,&x,&dxdrho,&dxdtheta,&d2xdtheta2,&d2xdthetadrho,&d2xdrho2);
         ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho,theta,&y,&dydrho,&dydtheta,&d2ydtheta2,&d2ydthetadrho,&d2ydrho2);
@@ -2725,12 +2730,12 @@ int flag_metric;
         ppvald_2D(rayequil.BP_fit,rayparam.dS[0],rho,theta,&BP,&dBPdrho,&dBPdtheta,&d2BPdtheta2,&d2BPdthetadrho,&d2BPdrho2);
         ppvald_2D(rayequil.B_fit,rayparam.dS[0],rho,theta,&BB,&dBBdrho,&dBBdtheta,&d2BBdtheta2,&d2BBdthetadrho,&d2BBdrho2);
         
-        build_raymagnetic(theta,raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,
-                y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,
-                r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho,
-                calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho,
-                salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho,
-                gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho,
+        build_raymagnetic(theta,raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2,d2xdthetadrho,d2xdrho2,
+                y,dydrho,dydtheta,d2ydtheta2,d2ydthetadrho,d2ydrho2,
+                r,drdrho,drdtheta,d2rdtheta2,d2rdthetadrho,d2rdrho2,
+                calpha,dcalphadrho,dcalphadtheta,d2calphadtheta2,d2calphadthetadrho,d2calphadrho2,
+                salpha,dsalphadrho,dsalphadtheta,d2salphadtheta2,d2salphadthetadrho,d2salphadrho2,
+                gradrho,dgradrhodrho,dgradrhodtheta,d2gradrhodtheta2,d2gradrhodthetadrho,d2gradrhodrho2,
                 Bx,dBxdrho,dBxdtheta,d2Bxdtheta2,d2Bxdthetadrho,d2Bxdrho2,dBxdz,
                 By,dBydrho,dBydtheta,d2Bydtheta2,d2Bydthetadrho,d2Bydrho2,dBydz,
                 Bz,dBzdrho,dBzdtheta,d2Bzdtheta2,d2Bzdthetadrho,d2Bzdrho2,dBzdz,
@@ -2738,36 +2743,36 @@ int flag_metric;
                 BB,dBBdrho,dBBdtheta,d2BBdtheta2,d2BBdthetadrho,d2BBdrho2,dBBdz,flag_metric);
     }
     
-    /* Definition of the derivatives used to defined the cartesian derivatives*/
+    // Definition of the derivatives used to defined the cartesian derivatives
     
-    double calpha_theta = calpha*cos(theta) + salpha*sin(theta);/*cos(alpha-theta)*/
-    double salpha_theta = salpha*cos(theta) - calpha*sin(theta);/*sin(alpha-theta)*/
+    double calpha_theta = calpha*cos(theta) + salpha*sin(theta);//cos(alpha-theta)
+    double salpha_theta = salpha*cos(theta) - calpha*sin(theta);//sin(alpha-theta)
     
-    double drhodx = gradrho*equilparam.ap[0]*calpha_theta;/*drhodx for the change of variable (rho,theta)->(x,y)*/
-    double drhody = -gradrho*equilparam.ap[0]*salpha_theta;/*drhody for the change of variable (rho,theta)->(x,y)*/
-    double dthetadx = -sin(theta)*equilparam.ap[0]/r;/*dthetadx for the change of variable (rho,theta)->(x,y)*/
-    double dthetady = cos(theta)*equilparam.ap[0]/r;/*dthetady for the change of variable (rho,theta)->(x,y)*/
+    double drhodx = gradrho*equilparam.ap[0]*calpha_theta;//drhodx for the change of variable (rho,theta)->(x,y)
+    double drhody = -gradrho*equilparam.ap[0]*salpha_theta;//drhody for the change of variable (rho,theta)->(x,y)
+    double dthetadx = -sin(theta)*equilparam.ap[0]/r;//dthetadx for the change of variable (rho,theta)->(x,y)
+    double dthetady = cos(theta)*equilparam.ap[0]/r;//dthetady for the change of variable (rho,theta)->(x,y)
     
-    double dxdrhobis = cos(theta)/(calpha*raymagnetic.gradrhon[0]);/*dxdrho for the change of variable (x,y)->(rho,theta)*/
-    double dydrhobis = sin(theta)/(calpha*raymagnetic.gradrhon[0]);/*dydrho for the change of variable (x,y)->(rho,theta)*/
-    double dxdthetabis = raymagnetic.rn[0]*salpha_theta/calpha;/*dxdtheta for the change of variable (x,y)->(rho,theta)*/
-    double dydthetabis = raymagnetic.rn[0]*calpha_theta/calpha;/*dydtheta for the change of variable (x,y)->(rho,theta)*/
+    double dxdrhobis = cos(theta)/(calpha*raymagnetic.gradrhon[0]);//dxdrho for the change of variable (x,y)->(rho,theta)
+    double dydrhobis = sin(theta)/(calpha*raymagnetic.gradrhon[0]);//dydrho for the change of variable (x,y)->(rho,theta)
+    double dxdthetabis = raymagnetic.rn[0]*salpha_theta/calpha;//dxdtheta for the change of variable (x,y)->(rho,theta)
+    double dydthetabis = raymagnetic.rn[0]*calpha_theta/calpha;//dydtheta for the change of variable (x,y)->(rho,theta)
     
-    if (equilparam.zZi[0] > 0) { /* Plasma case, otherwise vacuum*/
+    if (equilparam.zZi[0] > 0) { // Plasma case, otherwise vacuum
         
         if (flag_metric == 1)
         {
             
             ppvald_1D(rayequil.Te_fit,rayparam.dS[0],Y[0],&rayprofiles.Te[0],&rayprofiles.dTedY[0],&rayprofiles.d2TedY2[0]);
             
-            rayprofiles.dTedY[1] = 0;/*Te is taken constant on a magnetic flux surface*/
-            rayprofiles.dTedY[2] = 0;/*Te is taken constant on a magnetic flux surface*/
+            rayprofiles.dTedY[1] = 0;//Te is taken constant on a magnetic flux surface
+            rayprofiles.dTedY[2] = 0;//Te is taken constant on a magnetic flux surface
             
             ppvald_1D(rayequil.ne_fit,rayparam.dS[0],Y[0],&rayprofiles.ne[0],&rayprofiles.dnedY[0],&rayprofiles.d2nedY2[0]);
-            rayprofiles.dnedY[1] = 0;/*ne is taken constant on a magnetic flux surface*/
-            rayprofiles.dnedY[2] = 0;/*ne is taken constant on a magnetic flux surface*/
+            rayprofiles.dnedY[1] = 0;//ne is taken constant on a magnetic flux surface
+            rayprofiles.dnedY[2] = 0;//ne is taken constant on a magnetic flux surface
             
-            /* mexPrintf("Y[0],Y[1],Y[2],ne[0]:%g,%g,%g,%g\n",Y[0],Y[1],Y[2],rayprofiles.ne[0]);*/
+            // mexPrintf("Y[0],Y[1],Y[2],ne[0]:%g,%g,%g,%g\n",Y[0],Y[1],Y[2],rayprofiles.ne[0]);
             
             ppvald_1D(rayequil.zTi_fit,rayparam.dS[0],Y[0],rayprofiles.zTi,dTidY,d2TidY2);
             ppvald_1D(rayequil.zni_fit,rayparam.dS[0],Y[0],rayprofiles.zni,dnidY,d2nidY2);
@@ -2775,18 +2780,18 @@ int flag_metric;
             for (is=0;is<equilparam.ns[0];is++) {
                 
                 rayprofiles.dzTidY[is][0] = dTidY[is];
-                rayprofiles.dzTidY[is][1] = 0.0;/*ni is taken constant on a magnetic flux surface*/
-                rayprofiles.dzTidY[is][2] = 0.0;/*ni is taken constant on a magnetic flux surface*/
+                rayprofiles.dzTidY[is][1] = 0.0;//ni is taken constant on a magnetic flux surface
+                rayprofiles.dzTidY[is][2] = 0.0;//ni is taken constant on a magnetic flux surface
                 rayprofiles.d2zTidY2[is][0] = d2TidY2[is];
-                rayprofiles.d2zTidY2[is][1] = 0.0;/*ni is taken constant on a magnetic flux surface*/
-                rayprofiles.d2zTidY2[is][2] = 0.0;/*ni is taken constant on a magnetic flux surface*/
+                rayprofiles.d2zTidY2[is][1] = 0.0;//ni is taken constant on a magnetic flux surface
+                rayprofiles.d2zTidY2[is][2] = 0.0;//ni is taken constant on a magnetic flux surface
                 
                 rayprofiles.dznidY[is][0] = dnidY[is];
-                rayprofiles.dznidY[is][1] = 0.0;/*ni is taken constant on a magnetic flux surface*/
-                rayprofiles.dznidY[is][2] = 0.0;/*ni is taken constant on a magnetic flux surface*/
+                rayprofiles.dznidY[is][1] = 0.0;//ni is taken constant on a magnetic flux surface
+                rayprofiles.dznidY[is][2] = 0.0;//ni is taken constant on a magnetic flux surface
                 rayprofiles.d2znidY2[is][0] = d2nidY2[is];
-                rayprofiles.d2znidY2[is][1] = 0.0;/*ni is taken constant on a magnetic flux surface*/
-                rayprofiles.d2znidY2[is][2] = 0.0;/*ni is taken constant on a magnetic flux surface*/
+                rayprofiles.d2znidY2[is][1] = 0.0;//ni is taken constant on a magnetic flux surface
+                rayprofiles.d2znidY2[is][2] = 0.0;//ni is taken constant on a magnetic flux surface
             }
         }
         else
@@ -2795,15 +2800,15 @@ int flag_metric;
             save = rayprofiles.dTedY[0];
             rayprofiles.dTedY[0] = save*drhodx;
             rayprofiles.dTedY[1] = save*drhody;
-            rayprofiles.dTedY[2] = 0;/*Te is taken constant on a magnetic flux surface*/
+            rayprofiles.dTedY[2] = 0;//Te is taken constant on a magnetic flux surface
             
             ppvald_1D(rayequil.ne_fit,rayparam.dS[0],rho,&rayprofiles.ne[0],&rayprofiles.dnedY[0],&rayprofiles.d2nedY2[0]);
             save = rayprofiles.dnedY[0];
             rayprofiles.dnedY[0] = save*drhodx;
             rayprofiles.dnedY[1] = save*drhody;
-            rayprofiles.dnedY[2] = 0;/*Te is taken constant on a magnetic flux surface*/
+            rayprofiles.dnedY[2] = 0;//Te is taken constant on a magnetic flux surface
             
-            /* mexPrintf("Y[0],Y[1],Y[2],ne[0]:%g,%g,%g,%g\n",Y[0],Y[1],Y[2],rayprofiles.ne[0]);*/
+            // mexPrintf("Y[0],Y[1],Y[2],ne[0]:%g,%g,%g,%g\n",Y[0],Y[1],Y[2],rayprofiles.ne[0]);
             
             ppvald_1D(rayequil.zTi_fit,rayparam.dS[0],rho,rayprofiles.zTi,dTidY,d2TidY2);
             ppvald_1D(rayequil.zni_fit,rayparam.dS[0],rho,rayprofiles.zni,dnidY,d2nidY2);
@@ -2813,18 +2818,18 @@ int flag_metric;
                 save = dTidY[is];
                 rayprofiles.dzTidY[is][0] = save*drhodx;
                 rayprofiles.dzTidY[is][1] = save*drhody;
-                rayprofiles.dzTidY[is][2] = 0.0;/*ni is taken constant on a magnetic flux surface*/
+                rayprofiles.dzTidY[is][2] = 0.0;//ni is taken constant on a magnetic flux surface
                 rayprofiles.d2zTidY2[is][0] = d2TidY2[is];
-                rayprofiles.d2zTidY2[is][1] = 0.0;/*ni is taken constant on a magnetic flux surface*/
-                rayprofiles.d2zTidY2[is][2] = 0.0;/*ni is taken constant on a magnetic flux surface*/
+                rayprofiles.d2zTidY2[is][1] = 0.0;//ni is taken constant on a magnetic flux surface
+                rayprofiles.d2zTidY2[is][2] = 0.0;//ni is taken constant on a magnetic flux surface
                 
                 save = dnidY[is];
                 rayprofiles.dznidY[is][0] = save*drhodx;
                 rayprofiles.dznidY[is][1] = save*drhody;
-                rayprofiles.dznidY[is][2] = 0.0;/*ni is taken constant on a magnetic flux surface*/
+                rayprofiles.dznidY[is][2] = 0.0;//ni is taken constant on a magnetic flux surface
                 rayprofiles.d2znidY2[is][0] = d2nidY2[is];
-                rayprofiles.d2znidY2[is][1] = 0.0;/*ni is taken constant on a magnetic flux surface*/
-                rayprofiles.d2znidY2[is][2] = 0.0;/*ni is taken constant on a magnetic flux surface*/
+                rayprofiles.d2znidY2[is][1] = 0.0;//ni is taken constant on a magnetic flux surface
+                rayprofiles.d2znidY2[is][2] = 0.0;//ni is taken constant on a magnetic flux surface
             }
         }
         
@@ -2836,7 +2841,7 @@ int flag_metric;
             
             /*Initialisation of the perturbations */
             
-            if(flag_metric == 2)/*All fluctuations calculations will be done in flux coordinates to avoid having to drastically modify this part of the code, the final values will be translated in cartesian coordinates at the end*/
+            if(flag_metric == 2)//All fluctuations calculations will be done in flux coordinates to avoid having to drastically modify this part of the code, the final values will be translated in cartesian coordinates at the end
             {
                 xbis = Y[0];
                 ybis = Y[1];
@@ -3794,7 +3799,7 @@ int flag_metric;
                 
             }
             
-            if(flag_metric == 2)/*Reset the equilibrium to the cartesian metric*/
+            if(flag_metric == 2)//Reset the equilibrium to the cartesian metric
             {
                 Y[0] = xbis;
                 Y[1] = ybis;
@@ -3880,7 +3885,7 @@ void build_raymagnetic(theta,raymagnetic,equilparam,x,dxdrho,dxdtheta,d2xdtheta2
         By,dBydrho,dBydtheta,d2Bydtheta2,d2Bydthetadrho,d2Bydrho2,dBydz,
         Bz,dBzdrho,dBzdtheta,d2Bzdtheta2,d2Bzdthetadrho,d2Bzdrho2,dBzdz,
         BP,dBPdrho,dBPdtheta,d2BPdtheta2,d2BPdthetadrho,d2BPdrho2,dBPdz,
-        B,dBdrho,dBdtheta,d2Bdtheta2,d2Bdthetadrho,d2Bdrho2,dBdz,flag_metric)/*Has to be modified under a change of */
+        B,dBdrho,dBdtheta,d2Bdtheta2,d2Bdthetadrho,d2Bdrho2,dBdz,flag_metric)//Has to be modified under a change of metric
 raymagnetic_format raymagnetic;
 equilparam_format equilparam;
 double theta;
@@ -3919,7 +3924,7 @@ int flag_metric;
         dUpsilondrho = dxdrho/equilparam.Rp[0];
         dUpsilondtheta = dxdtheta/equilparam.Rp[0];
     }
-    if (flag_metric == 1)/*Curvilinear case*/
+    if (flag_metric == 1)//Curvilinear case
     {
         raymagnetic.Brhon[0] = 0.0;/* Normalized radial magnetic field */
         raymagnetic.dBrhondY[0] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
@@ -3981,19 +3986,19 @@ int flag_metric;
         raymagnetic.drhoripdY[1] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
         raymagnetic.drhoripdY[2] = 0.0;/* the unperturbed magnetic equilibrium is axisymmetric */
     }
-    else/*Cartesian case*/
+    else//Cartesian case
     {
         /*-----Declaration of the derivatives needed for the chain rule operation----*/
         
-        double theta = atan2(y,x);/*Analytical expression of theta(x,y)*/
+        double theta = atan2(y,x);//Analytical expression of theta(x,y)
         
-        double calpha_theta = calpha*cos(theta) + salpha*sin(theta);/*cos(alpha-theta)*/
-        double salpha_theta = salpha*cos(theta) - calpha*sin(theta);/*sin(alpha-theta)*/
+        double calpha_theta = calpha*cos(theta) + salpha*sin(theta);//cos(alpha-theta)
+        double salpha_theta = salpha*cos(theta) - calpha*sin(theta);//sin(alpha-theta)
         
-        double drhodx = gradrho*equilparam.ap[0]*calpha_theta;/*drhodx for the change of variable (rho,theta)->(x,y)*/
-        double drhody = -gradrho*equilparam.ap[0]*salpha_theta;/*drhody for the change of variable (rho,theta)->(x,y)*/
-        double dthetadx = -sin(theta)*equilparam.ap[0]/r;/*dthetadx for the change of variable (rho,theta)->(x,y)*/
-        double dthetady = cos(theta)*equilparam.ap[0]/r;/*dthetady for the change of variable (rho,theta)->(x,y)*/
+        double drhodx = gradrho*equilparam.ap[0]*calpha_theta;//drhodx for the change of variable (rho,theta)->(x,y)
+        double drhody = -gradrho*equilparam.ap[0]*salpha_theta;//drhody for the change of variable (rho,theta)->(x,y)
+        double dthetadx = -sin(theta)*equilparam.ap[0]/r;//dthetadx for the change of variable (rho,theta)->(x,y)
+        double dthetady = cos(theta)*equilparam.ap[0]/r;//dthetady for the change of variable (rho,theta)->(x,y)
         
         /*-Declaration of the cartesian equilibrium function and their derivatives-*/
         
@@ -4071,7 +4076,7 @@ int flag_metric;
      */
 }
 
-void interpequil_test(raymagnetic,rayprofiles,equilparam,Y,flag)/*Doesn't have to be modified under a change of metric*/
+void interpequil_test(raymagnetic,rayprofiles,equilparam,Y,flag)//Doesn't have to be modified under a change of metric
 raymagnetic_format raymagnetic;
 rayprofiles_format rayprofiles;
 equilparam_format equilparam;/* is an output in this case, since nothing is used from MatLab */
@@ -5081,9 +5086,9 @@ double x,*f,*df,*d2f;
     }
 }
 
-/*Minizimation scheme giving out rho from (x0,y0) */
+/*Minizimation schemes giving out rho from (x0,y0) */
 
-void rho1D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+void rho1D_dichotomy(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
 {
     double down[2],up[2],res[2];
     down[0]=0;
@@ -5101,18 +5106,18 @@ void rho1D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format 
         
         ppvald_2D(rayequil.x_fit,rayparam.dS[0],down[0],theta[0],&x,&dxdrho,&dummy,&dummy,&dummy,&dummy);
         ppvald_2D(rayequil.y_fit,rayparam.dS[0],down[0],theta[0],&y,&dydrho,&dummy,&dummy,&dummy,&dummy);
-        x=x/equilparam.ap[0];/*Mandatory normalization*/
-        y=y/equilparam.ap[0];/*Mandatory normalization*/
-        dxdrho=dxdrho/equilparam.ap[0];/*Mandatory normalization*/
-        dydrho=dydrho/equilparam.ap[0];/*Mandatory normalization*/
+        x=x/equilparam.ap[0];//Mandatory normalization
+        y=y/equilparam.ap[0];//Mandatory normalization
+        dxdrho=dxdrho/equilparam.ap[0];//Mandatory normalization
+        dydrho=dydrho/equilparam.ap[0];//Mandatory normalization
         down[1] = dxdrho*(x-Y[0]) + dydrho*(y - Y[1]);
         
         ppvald_2D(rayequil.x_fit,rayparam.dS[0],res[0],theta[0],&x,&dxdrho,&dummy,&dummy,&dummy,&dummy);
         ppvald_2D(rayequil.y_fit,rayparam.dS[0],res[0],theta[0],&y,&dydrho,&dummy,&dummy,&dummy,&dummy);
-        x=x/equilparam.ap[0];/*Mandatory normalization*/
-        y=y/equilparam.ap[0];/*Mandatory normalization*/
-        dxdrho=dxdrho/equilparam.ap[0];/*Mandatory normalization*/
-        dydrho=dydrho/equilparam.ap[0];/*Mandatory normalization*/
+        x=x/equilparam.ap[0];//Mandatory normalization
+        y=y/equilparam.ap[0];//Mandatory normalization
+        dxdrho=dxdrho/equilparam.ap[0];//Mandatory normalization
+        dydrho=dydrho/equilparam.ap[0];//Mandatory normalization
         res[1] = dxdrho*(x-Y[0]) + dydrho*(y - Y[1]);
         
         if(down[1]*res[1]>0)
@@ -5127,61 +5132,11 @@ void rho1D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format 
     rho[0]=res[0];
 }
 
-/*Minizimation scheme giving out rho and precise theta from (x0,y0) */
-
-void substitution(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
-{
-    theta[0] = atan2(Y[1],Y[0]);
-    double down_t[2],up_t[2],res_t[2];
-    res_t[0] = theta[0];
-    down_t[0] = theta[0]*0.9;
-    up_t[0] = theta[0]*1.1;
-    double dummy,x,y,dxdtheta,dydtheta,rho_d,rho_m;
-    int k=0;
-    int kmax = 60;
-    double prec = 1e-11;
-    res_t[1] = 1;
-    while(k < kmax && fabs(res_t[1]) > prec)
-    {
-        k = k + 1;
-        res_t[0] = (down_t[0] + up_t[0])/2;
-        rho1D(rayequil,rayparam,equilparam,&rho_d,&down_t[0],Y);
-        rho1D(rayequil,rayparam,equilparam,&rho_m,&res_t[0],Y);
-        
-        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_d,down_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy);
-        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_d,down_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy);
-        x=x/equilparam.ap[0];/*Mandatory normalization*/
-        y=y/equilparam.ap[0];/*Mandatory normalization*/
-        dxdtheta=dxdtheta/equilparam.ap[0];/*Mandatory normalization*/
-        dydtheta=dydtheta/equilparam.ap[0];/*Mandatory normalization*/
-        down_t[1] = dxdtheta*(x-Y[0]) + dydtheta*(y-Y[1]);
-        
-        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_m,res_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy);
-        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_m,res_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy);
-        x=x/equilparam.ap[0];/*Mandatory normalization*/
-        y=y/equilparam.ap[0];/*Mandatory normalization*/
-        dxdtheta=dxdtheta/equilparam.ap[0];/*Mandatory normalization*/
-        dydtheta=dydtheta/equilparam.ap[0];/*Mandatory normalization*/
-        res_t[1] = dxdtheta*(x-Y[0]) + dydtheta*(y-Y[1]);
-        
-        if(down_t[1]*res_t[1]>0)
-        {
-            down_t[0] = res_t[0];
-        }
-        else
-        {
-            up_t[0] = res_t[0];
-        }
-    }
-    theta[0] = res_t[0];
-    rho1D(rayequil,rayparam,equilparam,rho,theta,Y);
-}
-
 void rho1D_newton(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
 {
     double down[2],res[2];
-    down[0]=0;
-    res[0]=0.01;
+    down[0]=0.01;
+    res[0]=0.01000000000001;
     double dummy,x,y,dxdrho,dydrho;
     int k = 0;
     res[1]=1;
@@ -5193,20 +5148,20 @@ void rho1D_newton(rayequil_format rayequil,rayparam_format rayparam, equilparam_
         ppvald_2D(rayequil.x_fit,rayparam.dS[0],down[0],theta[0],&x,&dxdrho,&dummy,&dummy,&dummy,&dummy,&dummy);
         ppvald_2D(rayequil.y_fit,rayparam.dS[0],down[0],theta[0],&y,&dydrho,&dummy,&dummy,&dummy,&dummy,&dummy);
         
-        x=x/equilparam.ap[0];/*Mandatory normalization*/
-        y=y/equilparam.ap[0];/*Mandatory normalization*/
-        dxdrho=dxdrho/equilparam.ap[0];/*Mandatory normalization*/
-        dydrho=dydrho/equilparam.ap[0];/*Mandatory normalization*/
+        x=x/equilparam.ap[0];//Mandatory normalization
+        y=y/equilparam.ap[0];//Mandatory normalization
+        dxdrho=dxdrho/equilparam.ap[0];//Mandatory normalization
+        dydrho=dydrho/equilparam.ap[0];//Mandatory normalization
         
         down[1] = dxdrho*(x-Y[0]) + dydrho*(y - Y[1]);
         
         ppvald_2D(rayequil.x_fit,rayparam.dS[0],res[0],theta[0],&x,&dxdrho,&dummy,&dummy,&dummy,&dummy,&dummy);
         ppvald_2D(rayequil.y_fit,rayparam.dS[0],res[0],theta[0],&y,&dydrho,&dummy,&dummy,&dummy,&dummy,&dummy);
         
-        x=x/equilparam.ap[0];/*Mandatory normalization*/
-        y=y/equilparam.ap[0];/*Mandatory normalization*/
-        dxdrho=dxdrho/equilparam.ap[0];/*Mandatory normalization*/
-        dydrho=dydrho/equilparam.ap[0];/*Mandatory normalization*/
+        x=x/equilparam.ap[0];//Mandatory normalization
+        y=y/equilparam.ap[0];//Mandatory normalization
+        dxdrho=dxdrho/equilparam.ap[0];//Mandatory normalization
+        dydrho=dydrho/equilparam.ap[0];//Mandatory normalization
         
         res[1] = dxdrho*(x-Y[0]) + dydrho*(y - Y[1]);
         
@@ -5222,23 +5177,86 @@ void rho1D_newton(rayequil_format rayequil,rayparam_format rayparam, equilparam_
     rho[0]=res[0];
 }
 
-void substitution_newton(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+/*Minizimation schemes giving out rho and precise theta from (x0,y0) */
+
+void substitution_dichotomy_1D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+{
+    theta[0] = atan2(Y[1],Y[0]);
+    rho1D_dichotomy(rayequil,rayparam,equilparam,rho,theta,Y);
+}
+
+void substitution_dichotomy_2D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+{
+    theta[0] = atan2(Y[1],Y[0]);
+    double down_t[2],up_t[2],res_t[2];
+    res_t[0] = theta[0];
+    down_t[0] = theta[0]*0.9;
+    up_t[0] = theta[0]*1.1;
+    double dummy,x,y,dxdtheta,dydtheta,rho_d,rho_m;
+    int k=0;
+    int kmax = 60;
+    double prec = 1e-11;
+    res_t[1] = 1;
+    while(k < kmax && fabs(res_t[1]) > prec)
+    {
+        k = k + 1;
+        res_t[0] = (down_t[0] + up_t[0])/2;
+        rho1D_dichotomy(rayequil,rayparam,equilparam,&rho_d,&down_t[0],Y);
+        rho1D_dichotomy(rayequil,rayparam,equilparam,&rho_m,&res_t[0],Y);
+        
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_d,down_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_d,down_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy);
+        x=x/equilparam.ap[0];//Mandatory normalization
+        y=y/equilparam.ap[0];//Mandatory normalization
+        dxdtheta=dxdtheta/equilparam.ap[0];//Mandatory normalization
+        dydtheta=dydtheta/equilparam.ap[0];//Mandatory normalization
+        down_t[1] = dxdtheta*(x-Y[0]) + dydtheta*(y-Y[1]);
+        
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_m,res_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_m,res_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy);
+        x=x/equilparam.ap[0];//Mandatory normalization
+        y=y/equilparam.ap[0];//Mandatory normalization
+        dxdtheta=dxdtheta/equilparam.ap[0];//Mandatory normalization
+        dydtheta=dydtheta/equilparam.ap[0];//Mandatory normalization
+        res_t[1] = dxdtheta*(x-Y[0]) + dydtheta*(y-Y[1]);
+        
+        if(down_t[1]*res_t[1]>0)
+        {
+            down_t[0] = res_t[0];
+        }
+        else
+        {
+            up_t[0] = res_t[0];
+        }
+    }
+    theta[0] = res_t[0];
+    rho1D_dichotomy(rayequil,rayparam,equilparam,rho,theta,Y);
+}
+
+void substitution_newton_1D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+{
+    theta[0] = atan2(Y[1],Y[0]);
+    rho1D_newton(rayequil,rayparam,equilparam,rho,theta,Y);
+
+}
+
+void substitution_newton_2D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
 {
     theta[0] = atan2(Y[1],Y[0]);
     double down_t[2],res_t[2];
     double dummy,x,y,dxdtheta,dydtheta,rho_d,rho_m;
-    down_t[0] = theta[0]*0.9;
+    down_t[0] = theta[0];
     
     rho1D_newton(rayequil,rayparam,equilparam,&rho_d,&down_t[0],Y);
     ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_d,down_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy,&dummy);
     ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_d,down_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy,&dummy);
-    x=x/equilparam.ap[0];/*Mandatory normalization*/
-    y=y/equilparam.ap[0];/*Mandatory normalization*/
-    dxdtheta=dxdtheta/equilparam.ap[0];/*Mandatory normalization*/
-    dydtheta=dydtheta/equilparam.ap[0];/*Mandatory normalization*/
+    x=x/equilparam.ap[0];//Mandatory normalization
+    y=y/equilparam.ap[0];//Mandatory normalization
+    dxdtheta=dxdtheta/equilparam.ap[0];//Mandatory normalization
+    dydtheta=dydtheta/equilparam.ap[0];//Mandatory normalization
     down_t[1] = dxdtheta*(x-Y[0]) + dydtheta*(y-Y[1]);
     
-    res_t[0] = 1.01*down_t[0];
+    res_t[0] = 1.0000000000001*down_t[0];
     int kt=0;
     int ktmax = 10;
     double prec = 1e-11;
@@ -5249,10 +5267,10 @@ void substitution_newton(rayequil_format rayequil,rayparam_format rayparam, equi
         rho1D_newton(rayequil,rayparam,equilparam,&rho_m,&res_t[0],Y);
         ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_m,res_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy,&dummy);
         ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_m,res_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy,&dummy);
-        x=x/equilparam.ap[0];/*Mandatory normalization*/
-        y=y/equilparam.ap[0];/*Mandatory normalization*/
-        dxdtheta=dxdtheta/equilparam.ap[0];/*Mandatory normalization*/
-        dydtheta=dydtheta/equilparam.ap[0];/*Mandatory normalization*/
+        x=x/equilparam.ap[0];//Mandatory normalization
+        y=y/equilparam.ap[0];//Mandatory normalization
+        dxdtheta=dxdtheta/equilparam.ap[0];//Mandatory normalization
+        dydtheta=dydtheta/equilparam.ap[0];//Mandatory normalization
         res_t[1] = dxdtheta*(x-Y[0]) + dydtheta*(y-Y[1]);
         
         save1 = res_t[0];
@@ -5268,10 +5286,10 @@ void substitution_newton(rayequil_format rayequil,rayparam_format rayparam, equi
     rho1D_newton(rayequil,rayparam,equilparam,rho,theta,Y);
 }
 
-void rhotheta2xy(rayparam_format rayparam, rayequil_format rayequil, equilparam_format equilparam, double *rho, double *theta, double *krho, double *m)/*Subfunction giving the cartesian from the curvilinear generalized vector, need to give each relevant components separately*/
+void rhotheta2xy(rayparam_format rayparam, rayequil_format rayequil, equilparam_format equilparam, double *rho, double *theta, double *krho, double *m)//Subfunction giving the cartesian from the curvilinear generalized vector, need to give each relevant components separately
 {
     double *save;
-    save = mxCalloc(4,sizeof(double));/*Saveguard of the relevant coordinates*/
+    save = mxCalloc(4,sizeof(double));//Saveguard of the relevant coordinates
     save[0] = rho[0];
     save[1] = theta[0];
     save[2] = krho[0];
@@ -5280,60 +5298,57 @@ void rhotheta2xy(rayparam_format rayparam, rayequil_format rayequil, equilparam_
     double dfdrho,dfdtheta,d2fdtheta2,d2fdthetadrho,d2fdrho2;
     double gradrho,r,calpha,salpha;
     
-    ppvald_2D(rayequil.x_fit,rayparam.dS[0],save[0],save[1],rho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);/*Input x into the variable rho*/
-    ppvald_2D(rayequil.y_fit,rayparam.dS[0],save[0],save[1],theta,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);/*Input y into the variable theta*/
+    ppvald_2D(rayequil.x_fit,rayparam.dS[0],save[0],save[1],rho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Input x into the variable rho
+    ppvald_2D(rayequil.y_fit,rayparam.dS[0],save[0],save[1],theta,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Input y into the variable theta
     
-    rho[0]=rho[0]/equilparam.ap[0];/*Normalization, rho stands for x*/
-    theta[0]=theta[0]/equilparam.ap[0];/*Normalization, theta stands for y*/
+    rho[0]=rho[0]/equilparam.ap[0];//Normalization, rho stands for x
+    theta[0]=theta[0]/equilparam.ap[0];//Normalization, theta stands for y
     
-    ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],save[0],save[1],&gradrho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);/*Gives out gradrho*/
-    ppvald_2D(rayequil.r_fit,rayparam.dS[0],save[0],save[1],&r,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);/*Gives out r*/
-    ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],save[0],save[1],&calpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);/*Gives out cos alpha*/
-    ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],save[0],save[1],&salpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);/*Gives out sin alpha*/
+    ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],save[0],save[1],&gradrho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out gradrho
+    ppvald_2D(rayequil.r_fit,rayparam.dS[0],save[0],save[1],&r,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out r
+    ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],save[0],save[1],&calpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out cos alpha
+    ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],save[0],save[1],&salpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out sin alpha
     
-    r=r/equilparam.ap[0];/*Normalization*/
-    gradrho=gradrho*equilparam.ap[0];/*Normalization*/
+    r=r/equilparam.ap[0];//Normalization
+    gradrho=gradrho*equilparam.ap[0];//Normalization
     
-    double cat = calpha*cos(save[1]) + salpha*sin(save[1]);/*Gives out cos(alpha - theta)*/
-    double sat = salpha*cos(save[1]) - sin(save[1])*calpha;/*Gives out sin(alpha - theta)*/
+    double cat = calpha*cos(save[1]) + salpha*sin(save[1]);//Gives out cos(alpha - theta)
+    double sat = salpha*cos(save[1]) - sin(save[1])*calpha;//Gives out sin(alpha - theta)
     
-    krho[0] = gradrho*cat*save[2] -(sin(save[1])/r)*save[3];/*Input kx into the variable krho*/
-    m[0] = -gradrho*sat*save[2] + (cos(save[1])/r)*save[3];/*Input ky into the variable m*/
+    krho[0] = gradrho*cat*save[2] -(sin(save[1])/r)*save[3];//Input kx into the variable krho
+    m[0] = -gradrho*sat*save[2] + (cos(save[1])/r)*save[3];//Input ky into the variable m
     
     mxFree(save);
 }
 
-void xy2rhotheta(rayparam_format rayparam, rayequil_format rayequil, equilparam_format equilparam, double *x, double *y, double *kx, double *ky)/*Subfunction giving the curvilinear from the cartesian generalized vector, need to give each relevant components separately, here rho stand for x, theta for y, krho for kx and m for ky.*/
+void xy2rhotheta(rayparam_format rayparam, rayequil_format rayequil, equilparam_format equilparam, double *x, double *y, double *kx, double *ky)//Subfunction giving the curvilinear from the cartesian generalized vector, need to give each relevant components separately, here rho stand for x, theta for y, krho for kx and m for ky.
 {
-    double *save;/*Saveguard of the relevant coordinates*/
+    double *save;//Saveguard of the relevant coordinates
     save = mxCalloc(4,sizeof(double));
     save[0] = x[0];
     save[1] = y[0];
     save[2] = kx[0];
     save[3] = ky[0];
     
-    substitution_newton(rayequil,rayparam,equilparam,x,y,save);/*Input rho and theta respectively in the variables x and y*/
+    substitution_newton_2D(rayequil,rayparam,equilparam,x,y,save);//Input rho and theta respectively in the variables x and y
     
     double dfdrho,dfdtheta,d2fdtheta2,d2fdthetadrho,d2fdrho2;
     double gradrho,r,calpha,salpha;
     
-    ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],x[0],y[0],&gradrho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);/*Gives out gradrho*/
-    ppvald_2D(rayequil.r_fit,rayparam.dS[0],x[0],y[0],&r,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);/*Gives out r*/
-    ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],x[0],y[0],&calpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);/*Gives out cos alpha*/
-    ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],x[0],y[0],&salpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);/*Gives out sin alpha*/
+    ppvald_2D(rayequil.gradrho_fit,rayparam.dS[0],x[0],y[0],&gradrho,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out gradrho
+    ppvald_2D(rayequil.r_fit,rayparam.dS[0],x[0],y[0],&r,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out r
+    ppvald_2D(rayequil.calpha_fit,rayparam.dS[0],x[0],y[0],&calpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out cos alpha
+    ppvald_2D(rayequil.salpha_fit,rayparam.dS[0],x[0],y[0],&salpha,&dfdrho,&dfdtheta,&d2fdtheta2,&d2fdthetadrho,&d2fdrho2);//Gives out sin alpha
     
-    r=r/equilparam.ap[0];/*Normalization*/
-    gradrho=gradrho*equilparam.ap[0];/*Normalization*/
+    r=r/equilparam.ap[0];//Normalization
+    gradrho=gradrho*equilparam.ap[0];//Normalization
     
     double theta = y[0];
-    double cat = calpha*cos(theta) + salpha*sin(theta);/*Gives out cos(alpha - theta)*/
-    double sat = salpha*cos(theta) - sin(theta)*calpha;/*Gives out sin(alpha - theta)*/
+    double cat = calpha*cos(theta) + salpha*sin(theta);//Gives out cos(alpha - theta)
+    double sat = salpha*cos(theta) - sin(theta)*calpha;//Gives out sin(alpha - theta)
     
-    kx[0] = (1/(gradrho*calpha))*(cos(theta)*save[2] + sin(theta)*save[3]);/*Input krho into the variable kx*/
-    ky[0] = (r/calpha)*(sat*save[2] + cat*save[3]);/*Input m into the variable ky*/
+    kx[0] = (1/(gradrho*calpha))*(cos(theta)*save[2] + sin(theta)*save[3]);//Input krho into the variable kx
+    ky[0] = (r/calpha)*(sat*save[2] + cat*save[3]);//Input m into the variable ky
     
     mxFree(save);
 }
-
-
-
