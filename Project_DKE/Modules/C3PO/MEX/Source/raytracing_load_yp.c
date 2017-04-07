@@ -133,6 +133,7 @@ struct rayparam {
     double *metricmode;
     double *rhoswitch;
     double *deltaswitch;
+    double *substitution_method;
 };
 
 struct equilparam {
@@ -244,6 +245,7 @@ mxArray *structure_name;
     data.metricmode = mxGetData(mxGetField(structure_name, 0, "metricmode"));
     data.rhoswitch = mxGetData(mxGetField(structure_name, 0, "rhoswitch"));
     data.deltaswitch = mxGetData(mxGetField(structure_name, 0, "deltaswitch"));
+    data.substitution_method = mxGetData(mxGetField(structure_name, 0, "substitution_method"));
     
     return(data);
 }

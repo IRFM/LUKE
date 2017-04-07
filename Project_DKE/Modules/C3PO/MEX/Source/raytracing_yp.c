@@ -583,7 +583,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
                 double rho,theta,t[2];
                 t[0]=rho1;
                 t[1]=theta1;
-                substitution_newton_2D(rayequil,rayparam,equilparam,&rho,&theta,&t);
+                substitution(rayequil,rayparam,equilparam,&rho,&theta,&t);
                 if(rho > rayparam.rhoswitch[0]*(1 + rayparam.deltaswitch[0]))
                 {
                     mexPrintf("%s \n","Switching off cartesian system");
@@ -1514,7 +1514,7 @@ int flag_metric;
         else
         {
             double rho,theta;
-            substitution_newton_2D(rayequil,rayparam,equilparam,&rho,&theta,Y);
+            substitution(rayequil,rayparam,equilparam,&rho,&theta,Y);
             ppvald_1D(raydistri.f0_fit,rayparam.dS[0],rho,Xf0,dXf0drho,d2Xf0drho2);
             ppvald_2D(raydistri.PSI_fit,rayparam.dS[0],rho,theta,PSI,&dummy1,&dummy1,&dummy1,&dummy1,&dummy1);
         }
@@ -2713,7 +2713,7 @@ int flag_metric;
     }
     else/*Cartesian case*/
     {
-        substitution_newton_2D(rayequil,rayparam,equilparam,&rho,&theta,Y);/*Retrieve (rho,theta) from (x,y) or (Y[0],Y[1]) here*/
+        substitution(rayequil,rayparam,equilparam,&rho,&theta,Y);/*Retrieve (rho,theta) from (x,y) or (Y[0],Y[1]) here*/
         
         ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho,theta,&x,&dxdrho,&dxdtheta,&d2xdtheta2,&d2xdthetadrho,&d2xdrho2);
         ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho,theta,&y,&dydrho,&dydtheta,&d2ydtheta2,&d2ydthetadrho,&d2ydrho2);
@@ -5130,11 +5130,11 @@ void rho1D_dichotomy(rayequil_format rayequil,rayparam_format rayparam, equilpar
     rho[0]=res[0];
 }
 
-void rho1D_newton(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+void rho1D_newton_numeric(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
 {
     double down[2],res[2];
-    down[0]=0.01;
-    res[0]=0.01000000000001;
+    down[0]=0.05;
+    res[0]=0.05000000000001;
     double dummy,x,y,dxdrho,dydrho;
     int k = 0;
     res[1]=1;
@@ -5171,6 +5171,39 @@ void rho1D_newton(rayequil_format rayequil,rayparam_format rayparam, equilparam_
         
         k = k +1;
         
+    }
+    rho[0]=res[0];
+}
+
+void rho1D_newton_analytic(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+{
+    double res[3];
+    
+    res[0]=0.05;/*res[0]=rho, res[1] = d(distance^2/2)/drho, res[2]= d2(distance^2/2)drho2*/
+    double dummy,x,y,dxdrho,dydrho,d2xdrho2,d2ydrho2;
+    int k = 0;
+    res[1]=1;
+    int kmax = 10;
+    double prec = 1e-9;
+    while(k < kmax && fabs(res[1]) > prec)
+    {
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],res[0],theta[0],&x,&dxdrho,&dummy,&dummy,&dummy,&d2xdrho2);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],res[0],theta[0],&y,&dydrho,&dummy,&dummy,&dummy,&d2ydrho2);
+        
+        x=x/equilparam.ap[0];//Mandatory normalization
+        y=y/equilparam.ap[0];//Mandatory normalization
+        dxdrho=dxdrho/equilparam.ap[0];//Mandatory normalization
+        dydrho=dydrho/equilparam.ap[0];//Mandatory normalization
+        d2xdrho2=d2xdrho2/equilparam.ap[0];//Mandatory normalization
+        d2ydrho2=d2ydrho2/equilparam.ap[0];//Mandatory normalization
+        
+        res[1] = dxdrho*(x-Y[0]) + dydrho*(y - Y[1]);
+        
+        res[2] = d2xdrho2*(x-Y[0]) + d2ydrho2*(y - Y[1]) + pow(dxdrho,2) + pow(dydrho,2);
+        
+        res[0] = res[0] - res[1]/res[2];
+        
+        k = k + 1;
     }
     rho[0]=res[0];
 }
@@ -5231,21 +5264,21 @@ void substitution_dichotomy_2D(rayequil_format rayequil,rayparam_format rayparam
     rho1D_dichotomy(rayequil,rayparam,equilparam,rho,theta,Y);
 }
 
-void substitution_newton_1D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+void substitution_newton_numeric_1D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
 {
     theta[0] = atan2(Y[1],Y[0]);
-    rho1D_newton(rayequil,rayparam,equilparam,rho,theta,Y);
+    rho1D_newton_numeric(rayequil,rayparam,equilparam,rho,theta,Y);
 
 }
 
-void substitution_newton_2D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+void substitution_newton_numeric_2D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
 {
     theta[0] = atan2(Y[1],Y[0]);
     double down_t[2],res_t[2];
     double dummy,x,y,dxdtheta,dydtheta,rho_d,rho_m;
     down_t[0] = theta[0];
     
-    rho1D_newton(rayequil,rayparam,equilparam,&rho_d,&down_t[0],Y);
+    rho1D_newton_numeric(rayequil,rayparam,equilparam,&rho_d,&down_t[0],Y);
     ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_d,down_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy,&dummy);
     ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_d,down_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy,&dummy);
     x=x/equilparam.ap[0];/*Mandatory normalization*/
@@ -5262,7 +5295,7 @@ void substitution_newton_2D(rayequil_format rayequil,rayparam_format rayparam, e
     double save1,save2;
     while(kt < ktmax && fabs(res_t[1]) > prec)
     {
-        rho1D_newton(rayequil,rayparam,equilparam,&rho_m,&res_t[0],Y);
+        rho1D_newton_numeric(rayequil,rayparam,equilparam,&rho_m,&res_t[0],Y);
         ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_m,res_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy,&dummy);
         ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_m,res_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy,&dummy);
         x=x/equilparam.ap[0];/*Mandatory normalization*/
@@ -5281,7 +5314,155 @@ void substitution_newton_2D(rayequil_format rayequil,rayparam_format rayparam, e
         
     }
     theta[0] = res_t[0];
-    rho1D_newton(rayequil,rayparam,equilparam,rho,theta,Y);
+    rho1D_newton_numeric(rayequil,rayparam,equilparam,rho,theta,Y);
+}
+
+void substitution_newton_analytic_1D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+{
+    theta[0] = atan2(Y[1],Y[0]);
+    rho1D_newton_analytic(rayequil,rayparam,equilparam,rho,theta,Y);
+}
+
+void substitution_newton_analytic_2D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+{
+    theta[0] = atan2(Y[1],Y[0]);
+    double res_t[3];//res_t[0]=theta, res_t[1]=d(distance^2/2)dtheta, res_t[2]=d2(distance^2/2)dtheta2
+    res_t[0] = theta[0];
+    double dummy,x,y,dxdtheta,dydtheta,d2xdtheta2,d2ydtheta2,rho_s;
+    int kt=0;
+    int ktmax = 15;
+    double prec = 1e-9;
+    res_t[1] = 1;
+    while(kt < ktmax && fabs(res_t[1]) > prec)
+    {
+        rho1D_newton_analytic(rayequil,rayparam,equilparam,&rho_s,&res_t[0],Y);
+        
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_s,res_t[0],&x,&dummy,&dxdtheta,&d2xdtheta2,&dummy,&dummy);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_s,res_t[0],&y,&dummy,&dydtheta,&d2ydtheta2,&dummy,&dummy);
+        
+        x=x/equilparam.ap[0];//Mandatory normalization
+        y=y/equilparam.ap[0];//Mandatory normalization
+        dxdtheta=dxdtheta/equilparam.ap[0];//Mandatory normalization
+        dydtheta=dydtheta/equilparam.ap[0];//Mandatory normalization
+        d2xdtheta2=d2xdtheta2/equilparam.ap[0];//Mandatory normalization
+        d2ydtheta2=d2ydtheta2/equilparam.ap[0];//Mandatory normalization
+        
+        res_t[1] = dxdtheta*(x-Y[0]) + dydtheta*(y-Y[1]);
+        
+        res_t[2] = d2xdtheta2*(x-Y[0]) + d2ydtheta2*(y-Y[1]) + pow(dxdtheta,2) + pow(dydtheta,2);
+        
+        res_t[0] = res_t[0] - res_t[1]/res_t[2];
+        
+        DUMP(res_t[0]);
+        
+        kt = kt + 1;
+        
+    }
+    theta[0] = res_t[0];
+    rho1D_newton_analytic(rayequil,rayparam,equilparam,rho,theta,Y);
+}
+
+void substitution_newton_mix_2D(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+{
+    theta[0] = atan2(Y[1],Y[0]);
+    double down_t[2],res_t[2];
+    down_t[0] = theta[0];
+    res_t[0] = 1.00000001*down_t[0];
+    double dummy,x,y,dxdtheta,dydtheta,rho_d,rho_m;
+    int kt=0;
+    int ktmax = 15;
+    double prec = 1e-9;
+    res_t[1] = 1;
+    double save;
+    
+    rho1D_newton_analytic(rayequil,rayparam,equilparam,&rho_d,&down_t[0],Y);
+    
+    ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_d,down_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy);
+    ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_d,down_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy);
+    
+    x=x/equilparam.ap[0];//Mandatory normalization
+    y=y/equilparam.ap[0];//Mandatory normalization
+    dxdtheta=dxdtheta/equilparam.ap[0];//Mandatory normalization
+    dydtheta=dydtheta/equilparam.ap[0];//Mandatory normalization
+    down_t[1] = dxdtheta*(x-Y[0]) + dydtheta*(y-Y[1]);
+    
+    while(kt < ktmax && fabs(res_t[1]) > prec)
+    {
+        rho1D_newton_analytic(rayequil,rayparam,equilparam,&rho_m,&res_t[0],Y);
+        
+        ppvald_2D(rayequil.x_fit,rayparam.dS[0],rho_m,res_t[0],&x,&dummy,&dxdtheta,&dummy,&dummy,&dummy);
+        ppvald_2D(rayequil.y_fit,rayparam.dS[0],rho_m,res_t[0],&y,&dummy,&dydtheta,&dummy,&dummy,&dummy);
+        x=x/equilparam.ap[0];//Mandatory normalization
+        y=y/equilparam.ap[0];//Mandatory normalization
+        dxdtheta=dxdtheta/equilparam.ap[0];//Mandatory normalization
+        dydtheta=dydtheta/equilparam.ap[0];//Mandatory normalization
+        
+        res_t[1] = dxdtheta*(x-Y[0]) + dydtheta*(y-Y[1]);
+        
+        save = res_t[0];
+        res_t[0] = res_t[0] - res_t[1]*((res_t[0] - down_t[0])/(res_t[1] - down_t[1]));
+        down_t[0] = save;
+        down_t[1] = res_t[1];
+        
+        kt = kt + 1;
+        
+    }
+    theta[0] = res_t[0];
+    rho1D_newton_analytic(rayequil,rayparam,equilparam,rho,theta,Y);
+}
+
+void substitution(rayequil_format rayequil,rayparam_format rayparam, equilparam_format equilparam, double *rho,double *theta,double *Y)
+{
+    if((int)rayparam.substitution_method[0] == 1)
+    {
+        substitution_dichotomy_1D(rayequil,rayparam,equilparam,rho,theta,Y);
+    }
+    else
+    {
+        if((int)rayparam.substitution_method[0] == 2)
+        {
+            substitution_dichotomy_2D(rayequil,rayparam,equilparam,rho,theta,Y);
+        }
+        else
+        {
+            if((int)rayparam.substitution_method[0] == 3)
+            {
+                substitution_newton_numeric_1D(rayequil,rayparam,equilparam,rho,theta,Y);
+            }
+            else
+            {
+                if((int)rayparam.substitution_method[0] == 4)
+                {
+                    substitution_newton_numeric_2D(rayequil,rayparam,equilparam,rho,theta,Y);
+                }
+                else
+                {
+                    if((int)rayparam.substitution_method[0] == 4)
+                    {
+                        substitution_newton_numeric_2D(rayequil,rayparam,equilparam,rho,theta,Y);
+                    }
+                    else
+                    {
+                        if((int)rayparam.substitution_method[0] == 5)
+                        {
+                            substitution_newton_analytic_1D(rayequil,rayparam,equilparam,rho,theta,Y);
+                        }
+                        else
+                        {
+                            if((int)rayparam.substitution_method[0] == 6)
+                            {
+                                substitution_newton_analytic_2D(rayequil,rayparam,equilparam,rho,theta,Y);
+                            }
+                            else
+                            {
+                                substitution_newton_mix_2D(rayequil,rayparam,equilparam,rho,theta,Y);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 void rhotheta2xy(rayparam_format rayparam, rayequil_format rayequil, equilparam_format equilparam, double *rho, double *theta, double *krho, double *m)/*Subfunction giving the cartesian from the curvilinear generalized vector, need to give each relevant components separately*/
@@ -5328,7 +5509,7 @@ void xy2rhotheta(rayparam_format rayparam, rayequil_format rayequil, equilparam_
     save[2] = kx[0];
     save[3] = ky[0];
     
-    substitution_newton_2D(rayequil,rayparam,equilparam,x,y,save);/*Input rho and theta respectively in the variables x and y*/
+    substitution(rayequil,rayparam,equilparam,x,y,save);/*Input rho and theta respectively in the variables x and y*/
     
     double dfdrho,dfdtheta,d2fdtheta2,d2fdthetadrho,d2fdrho2;
     double gradrho,r,calpha,salpha;

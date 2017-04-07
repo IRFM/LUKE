@@ -11,7 +11,7 @@ equil_fit = fitequil_yp(equil,1,'spline',1001,nharm);%Fit vectorial equilibrium
 rayparam.dS = 1.e-4;
 equilparam.ap = 0.95;
 
-N=100;%Set the wanted number of change of variable
+N=1;%Set the wanted number of change of variable
 for i=0:N
 t=cputime;%
 [rho,theta] = xy2rhotheta_gb(equil_fit,rayparam,equilparam,x1,y1);
@@ -24,13 +24,13 @@ disp(e);
 disp('Precision for the chosen cartesian couple');
 disp(error);
 
-ngrid = 30;%Grid points number on a side of the square grid
-length = 0.02;%Grid's length
+%ngrid = 30;%Grid points number on a side of the square grid
+%length = 0.02;%Grid's length
 
-data = test_grid_substitution(equil_fit,rayparam,equilparam,ngrid,length);%Output matrix
-disp('Mean precision for the chosen grid');
-disp(data(1));
-disp('Mean deviation for the chosen grid');
-disp(data(2));
-disp('Mean execution time for the chosen grid');
-disp(data(3));
+%data = test_grid_substitution(equil_fit,rayparam,equilparam,ngrid,length);%Output matrix
+%disp('Mean precision for the chosen grid');
+%disp(data(1));
+%disp('Mean deviation for the chosen grid');
+%disp(data(2));
+%disp('Mean execution time for the chosen grid');
+%disp(data(3));

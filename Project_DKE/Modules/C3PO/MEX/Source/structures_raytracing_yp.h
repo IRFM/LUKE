@@ -132,6 +132,7 @@ struct rayparam {
     double *metricmode;
     double *rhoswitch;
     double *deltaswitch;
+    double *substitution_method;
 };
 
 struct equilparam {
@@ -343,8 +344,13 @@ void substitution();
 void xy2rhotheta();
 void rhotheta2xy();
 void rho1D_dichotomy();
-void rho1D_newton();
+void rho1D_newton_numeric();
+void rho1D_newton_analytic();
+void substitution();
 void substitution_dichotomy_1D();
 void substitution_dichotomy_2D();
-void substitution_newton_1D();
-void substitution_newton_2D();
+void substitution_newton_numeric_1D();
+void substitution_newton_numeric_2D();
+void substitution_newton_analytic_1D();
+void substitution_newton_analytic_2D();
+void substitution_newton_mix_2D();
