@@ -186,7 +186,7 @@ telapsed_ray_numeric_pchip_rtxy = toc(tstart);
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with pchip method with (rho,theta) <-> (X,Y) conversion in the plasma core)');
 %
 tstart = tic;
-wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit_spline,rayinit,waveparam,[],rayparam,C3POdisplay_analytic,C3POparam,[],[],flag_analytic);
+wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_analytic,C3POparam,[],[],flag_analytic);
 telapsed_ray_analytic = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
