@@ -32,7 +32,7 @@ path_equil = '../EQUIL/';%if nothing is specified, the working directory is firs
 omega_rf = [3.7]*2*pi*1e9;
 % 
 rho0 = 0.968;
-theta0 = 0.0;
+theta0 = 0;
 phi0 = 0;
 %
 m0 = 0;
@@ -103,7 +103,7 @@ rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
 rayparam.metricmode = 1;% 1 : Only curvilinear metric; 2 : Both curvilinear and cartesian metric
 rayparam.rhoswitch = 0.1;% Radial position at which the switch occurs when metricmode = 2
-rayparam.deltaswitch = 0.01;%Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes
+rayparam.substitution_method = 7;%Method of substitution : 1->dichotomy1D, 2->dichotomy2D, 3->newton_numeric1D, 4->newton_numeric2D, 5->newton_analytic1D, 6->newton_analytic2D, 7->newton_mix2D
 %
 % =========================================================================
 %
@@ -178,7 +178,7 @@ tstart = tic;
 wave_numeric_pchip = main_C3PO_jd(dkepath,[id_wave,'_numeric_pchip'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip,C3POparam,[],[],0);clear mex;clear functions
 telapsed_ray_numeric_pchip = toc(tstart);
 %
-info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with pchip method)');
+%info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with pchip method)');
 %
 % Calculation of Npar0 using Nphi0
 %
@@ -227,39 +227,39 @@ C3POparam.clustermode.main_C3PO_jd.scheduler.mode = mdce_mode_main_C3PO_jd;%MatL
 %
 % ray-tracing calculations
 %
-tstart = tic;
-wave_numeric_spline = main_C3PO_jd(dkepath,[id_wave,'_numeric_spline'],equil,equil_fit_spline,rayinit,waveparam,[],rayparam,C3POdisplay_spline,C3POparam,[],[],0);clear mex;clear functions
-telapsed_ray_numeric_spline = toc(tstart);
+%tstart = tic;
+%wave_numeric_spline = main_C3PO_jd(dkepath,[id_wave,'_numeric_spline'],equil,equil_fit_spline,rayinit,waveparam,[],rayparam,C3POdisplay_spline,C3POparam,[],[],0);clear mex;clear functions
+%telapsed_ray_numeric_spline = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with spline method)');
 %
-tstart = tic;
-wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_analytic,C3POparam,[],[],flag_analytic);
-telapsed_ray_analytic = toc(tstart);
+%tstart = tic;
+%wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_analytic,C3POparam,[],[],flag_analytic);
+%telapsed_ray_analytic = toc(tstart);
 %
-info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
+%info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
 save_str = ['WAVE_',id_wave,'.mat'];
-save(save_str,'id_wave','wave_numeric_pchip','wave_numeric_spline','wave_analytic','equil_fit_pchip','equil_fit_spline');
+save(save_str,'id_wave','wave_numeric_pchip','equil_fit_pchip');
 %
-info_dke_yp(2,'Wave parameters saved');
+%info_dke_yp(2,'Wave parameters saved');
 %
 disp(['Elapsed time (s):',num2str(telapsed_equil_pchip),' for interpolating MHD equilibrium (PCHIP interp. technique)']);
-disp(['Elapsed time (s):',num2str(telapsed_equil_spline),' for interpolating MHD equilibrium (SPLINE interp. technique)']);
+%disp(['Elapsed time (s):',num2str(telapsed_equil_spline),' for interpolating MHD equilibrium (SPLINE interp. technique)']);
 %
 disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_pchip),' for ray calculations with numerical MHD equilibrium (PCHIP interp. technique)']);
-disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_spline),' for ray calculations with numerical MHD equilibrium (SPLINE interp. technique)']);
-disp(['Elapsed time (s):',num2str(telapsed_ray_analytic),' for ray calculations with analytical MHD equilibrium']);
+%disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_spline),' for ray calculations with numerical MHD equilibrium (SPLINE interp. technique)']);
+%disp(['Elapsed time (s):',num2str(telapsed_ray_analytic),' for ray calculations with analytical MHD equilibrium']);
 %
 % --- display results ---
 %
-waves = {wave_numeric_pchip,wave_numeric_spline,wave_analytic};
-rays = {wave_numeric_pchip.rays{1},wave_numeric_spline.rays{1},wave_analytic.rays{1}};
+waves = {wave_numeric_pchip};
+rays = {wave_numeric_pchip.rays{1}};
 %
-legs = {'Numeric - pchip','Numeric - spline','Analytic';...
-        'Numeric_pchip','Numeric_spline','Analytic'};
+legs = {'Numeric - pchip';...
+       'Numeric_pchip'};
 %
-equil_fit = [equil_fit_pchip,equil_fit_spline,equil_fit_pchip];
+equil_fit = [equil_fit_pchip];
 %
 filename = ['Fig_',id_wave];
 %
