@@ -48,15 +48,15 @@ mdce_mode_main_C3PO_jd = 0;%MatLab distributed computing environment disabled (0
 %
 % Display parameters
 %
-C3POdisplay_pchip_rt.ray = 1;
-C3POdisplay_pchip_rt.equilibrium = 0;
-C3POdisplay_pchip_rt.p_opt = 2;%Printing or saving option of the figures
-C3POdisplay_pchip_rt.mdce = 0;%for distributed computing
+C3POdisplay_rt.ray = 1;
+C3POdisplay_rt.equilibrium = 0;
+C3POdisplay_rt.p_opt = 2;%Printing or saving option of the figures
+C3POdisplay_rt.mdce = 0;%for distributed computing
 %
-C3POdisplay_pchip_rtxy.ray = 0;
-C3POdisplay_pchip_rtxy.equilibrium = 0;
-C3POdisplay_pchip_rtxy.p_opt = 0;%Printing or saving option of the figures
-C3POdisplay_pchip_rtxy.mdce = 0;%for distributed computing
+C3POdisplay_rtxy.ray = 1;
+C3POdisplay_rtxy.equilibrium = 0;
+C3POdisplay_rtxy.p_opt = 2;%Printing or saving option of the figures
+C3POdisplay_rtxy.mdce = 0;%for distributed computing
 %
 C3POdisplay_analytic.ray = 0;
 C3POdisplay_analytic.equilibrium = 0;
@@ -108,38 +108,38 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 %
 fitparam.method = 'pchip';%nearest,spline,pchip
 tstart = tic;
-equil_fit_pchip = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
-telapsed_equil_pchip = toc(tstart);
+equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
+telapsed_equil = toc(tstart);
 %
 info_dke_yp(2,['Vectorial form of the magnetic equilibrium ',equil.id,' is calculated with pchip method.']);
-if C3POdisplay_pchip_rt.equilibrium,testfitequil_yp(equil,equil_fit_pchip);end
+if C3POdisplay_rt.equilibrium,testfitequil_yp(equil,equil_fit);end
 %
 % Calculation of Npar0 using Nphi0
 %
 % warning : this is valid only for m=0 cases
 %
-Bx_a0_fit = ppval(equil_fit_pchip.Bx_fit.pp_a0,rho0);
-Bx_an_fit = ppval(equil_fit_pchip.Bx_fit.pp_an,rho0);
-Bx_bn_fit = ppval(equil_fit_pchip.Bx_fit.pp_bn,rho0);
+Bx_a0_fit = ppval(equil_fit.Bx_fit.pp_a0,rho0);
+Bx_an_fit = ppval(equil_fit.Bx_fit.pp_an,rho0);
+Bx_bn_fit = ppval(equil_fit.Bx_fit.pp_bn,rho0);
 %
-By_a0_fit = ppval(equil_fit_pchip.By_fit.pp_a0,rho0);
-By_an_fit = ppval(equil_fit_pchip.By_fit.pp_an,rho0);
-By_bn_fit = ppval(equil_fit_pchip.By_fit.pp_bn,rho0);
+By_a0_fit = ppval(equil_fit.By_fit.pp_a0,rho0);
+By_an_fit = ppval(equil_fit.By_fit.pp_an,rho0);
+By_bn_fit = ppval(equil_fit.By_fit.pp_bn,rho0);
 %
-Bz_a0_fit = ppval(equil_fit_pchip.Bz_fit.pp_a0,rho0);
-Bz_an_fit = ppval(equil_fit_pchip.Bz_fit.pp_an,rho0);
-Bz_bn_fit = ppval(equil_fit_pchip.Bz_fit.pp_bn,rho0);
+Bz_a0_fit = ppval(equil_fit.Bz_fit.pp_a0,rho0);
+Bz_an_fit = ppval(equil_fit.Bz_fit.pp_an,rho0);
+Bz_bn_fit = ppval(equil_fit.Bz_fit.pp_bn,rho0);
 %
-B_a0_fit = ppval(equil_fit_pchip.B_fit.pp_a0,rho0);
-B_an_fit = ppval(equil_fit_pchip.B_fit.pp_an,rho0);
-B_bn_fit = ppval(equil_fit_pchip.B_fit.pp_bn,rho0);
+B_a0_fit = ppval(equil_fit.B_fit.pp_a0,rho0);
+B_an_fit = ppval(equil_fit.B_fit.pp_an,rho0);
+B_bn_fit = ppval(equil_fit.B_fit.pp_bn,rho0);
 %
 % Build interpolated magnetic fields
 %	
-[xBx] = calcval_yp(equil_fit_pchip,theta0,Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
-[xBy] = calcval_yp(equil_fit_pchip,theta0,By_a0_fit,By_an_fit,By_bn_fit);
-[xBz] = calcval_yp(equil_fit_pchip,theta0,Bz_a0_fit,Bz_an_fit,Bz_bn_fit);
-[xB] = calcval_yp(equil_fit_pchip,theta0,B_a0_fit,B_an_fit,B_bn_fit);
+[xBx] = calcval_yp(equil_fit,theta0,Bx_a0_fit,Bx_an_fit,Bx_bn_fit);
+[xBy] = calcval_yp(equil_fit,theta0,By_a0_fit,By_an_fit,By_bn_fit);
+[xBz] = calcval_yp(equil_fit,theta0,Bz_a0_fit,Bz_an_fit,Bz_bn_fit);
+[xB] = calcval_yp(equil_fit,theta0,B_a0_fit,B_an_fit,B_bn_fit);
 %
 xBzn = xBz./xB;
 %
@@ -169,8 +169,8 @@ rayparam.deltaswitch = 0.001;% Delta  switch between (rho,theta) <-> (X,Y) to av
 rayparam.substitution_method = 7;%Method of substitution : 1->dichotomy1D, 2->dichotomy2D, 3->newton_numeric1D, 4->newton_numeric2D, 5->newton_analytic1D, 6->newton_analytic2D, 7->newton_mix2D (default value)
 %
 tstart = tic;
-wave_numeric_pchip_rt = main_C3PO_jd(dkepath,[id_wave,'_numeric_pchip_rt'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip_rt,C3POparam,[],[],0);clear mex;clear functions
-telapsed_ray_numeric_pchip_rt = toc(tstart);
+wave_numeric_rt = main_C3PO_jd(dkepath,[id_wave,'_numeric_rt'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay_rt,C3POparam,[],[],0);clear mex;clear functions
+telapsed_ray_numeric_rt = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with pchip method and (rho,theta) coordinates only)');
 %
@@ -179,8 +179,8 @@ info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium wi
 rayparam.metricmode = 2;% 1 : Only curvilinear metric; 2 : Both curvilinear and cartesian metric
 %
 tstart = tic;
-wave_numeric_pchip_rtxy = main_C3PO_jd(dkepath,[id_wave,'_numeric_pchip_rtxy'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip_rtxy,C3POparam,[],[],0);clear mex;clear functions
-telapsed_ray_numeric_pchip_rtxy = toc(tstart);
+wave_numeric_rtxy = main_C3PO_jd(dkepath,[id_wave,'_numeric_rtxy'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay_rtxy,C3POparam,[],[],0);clear mex;clear functions
+telapsed_ray_numeric_rtxy = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with pchip method with (rho,theta) <-> (X,Y) conversion in the plasma core)');
 %
@@ -188,35 +188,35 @@ tstart = tic;
 %
 %rayparam.metricmode = 1;% 1 : Only curvilinear metric (analytic or numeric); 2 : Both curvilinear and cartesian metric
 %
-wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_analytic,C3POparam,[],[],flag_analytic);
+wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit,rayinit,waveparam,[],rayparam,C3POdisplay_analytic,C3POparam,[],[],flag_analytic);
 telapsed_ray_analytic = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
 save_str = ['WAVE_',id_wave,'.mat'];
-save(save_str,'id_wave','wave_numeric_pchip_rt','wave_numeric_pchip_rtxy','wave_analytic','equil_fit_pchip');
+save(save_str,'id_wave','wave_numeric_rt','wave_numeric_rtxy','wave_analytic','equil_fit');
 %
 info_dke_yp(2,'Wave parameters saved');
 %
-disp(['Elapsed time (s):',num2str(telapsed_equil_pchip),' for interpolating MHD equilibrium (PCHIP interp. technique ']);
+disp(['Elapsed time (s):',num2str(telapsed_equil),' for interpolating MHD equilibrium (PCHIP interp. technique ']);
 %
-disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_pchip_rt),' for ray calculations with numerical MHD equilibrium (PCHIP interp. technique, (rho,theta) coordinate only))']);
-disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_pchip_rtxy),' for ray calculations with numerical MHD equilibrium (PCHIP interp. technique (rho,theta) <-> (X,Y) conversion in the plasma core))']);
+disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_rt),' for ray calculations with numerical MHD equilibrium (PCHIP interp. technique, (rho,theta) coordinate only))']);
+disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_rtxy),' for ray calculations with numerical MHD equilibrium (PCHIP interp. technique (rho,theta) <-> (X,Y) conversion in the plasma core))']);
 disp(['Elapsed time (s):',num2str(telapsed_ray_analytic),' for ray calculations with analytical MHD equilibrium']);
 %
 % --- display results ---
 %
-waves = {wave_numeric_pchip_rt,wave_numeric_pchip_rtxy,wave_analytic};
-rays = {wave_numeric_pchip_rt.rays{1},wave_numeric_pchip_rtxy.rays{1},wave_analytic.rays{1}};
+waves = {wave_numeric_rt,wave_numeric_rtxy,wave_analytic};
+rays = {wave_numeric_rt.rays{1},wave_numeric_rtxy.rays{1},wave_analytic.rays{1}};
 %
-legs = {'Numeric - pchip_rt','Numeric - pchip_rtxy','Analytic';...
-       'Numeric_pchip_rt','Numeric_pchip_rtxy','Analytic'};
+legs = {['Numeric - ',fitparam.method,'_{rt}'],['Numeric - ',fitparam.method,'_{rt-xy}'],'Analytic_{rt}';...
+       'Numeric_{rt}','Numeric_{rt-xy}','Analytic_{rt}'};
 %
-equil_fit = [equil_fit_pchip];
+equil_fit = [equil_fit];
 %
 filename = ['Fig_',id_wave];
 %
-opt.p_opt = C3POdisplay_pchip_rt.p_opt;
+opt.p_opt = C3POdisplay_rt.p_opt;
 opt.ntheta_fit = 65;
 opt.nrho_fit = 15;
 opt.propvar = 1;   
