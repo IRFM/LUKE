@@ -162,6 +162,16 @@ if ~isfield(rayparam,'deltaswitch'),% Delta  switch between (rho,theta) <-> (X,Y
     rayparam.deltaswitch = 0.01;
 end
 %
+if ~isfield(rayparam,'substitution_method'),% %Method of substitution : 1->dichotomy1D, 2->dichotomy2D, 3->newton_numeric1D, 4->newton_numeric2D, 5->newton_analytic1D, 6->newton_analytic2D, 7->newton_mix2D	
+    rayparam.substitution_method =7;
+end
+%
+if flag == 2 && rayparam.metricmode == 2;
+    flag = 2;
+    rayparam.metricmode = 1;
+    disp('WARNING: analytic tests must use (rho,theta) metric: rayparam.metricmode = 1 enforced.');
+end
+%
 %if ~isfield(rayinit,'yn0'),% !!!! old rayparam, modify calling function
 %    rayinit.yn0 = NaN*rayinit.ym0;
 %end
