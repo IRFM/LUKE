@@ -41,7 +41,7 @@ alpha_L = 165;% With respect to R axis
 beta_L = 90;% With respect to Z axis
 %
 dNpar0 = 0.05;%spectral width
-ns = 1000;%discrtization parameter for free space propagation
+ns = 1000;%discretization parameter for free space propagation
 method = 'linear';%interpolation method for ray separatrix crossing
 %
 % C3PO computing parameters
@@ -82,7 +82,7 @@ waveparam.dsmin = NaN;%minimum size for ray fragments
 % Global parameters for the vectorial magnetic equilibrium
 %
 fitparam.equil.mode_equil = 1;%Magnetic equilibrium grid type: (1): (psi-theta), (2): (x-y)
-fitparam.equil.method = 'spline';%nearest,spline,pchip
+fitparam.equil.method = 'pchip';%nearest,spline,pchip
 fitparam.equil.nharm = NaN;%Number of harmonics in the magnetic equilibrium interpolation (NaN, Inf or empty, nharm = ntheta-1)
 fitparam.equil.ngridresample = 1001;%Number of grid points for resampling the radial profile of magnetic equilibrium parameters
 %
@@ -93,7 +93,7 @@ rayparam.tensortype = 0;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativ
 rayparam.t0 = 0;
 rayparam.tfinal = 3000;
 rayparam.dt0 = 1.e-4;
-rayparam.dS = 1.e-4;
+rayparam.dS = 1.e-12;
 rayparam.tol = 1e-9;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
 rayparam.kmax = 3000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
@@ -104,8 +104,8 @@ rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
 rayparam.kextra = 50;
 rayparam.metricmode = 2;% 1 : Only curvilinear metric; 2 : Both curvilinear and cartesian metric
-rayparam.rhoswitch = 0.1;% Radial position at which the switch occurs when metricmode = 2
-rayparam.deltaswitch = 0.001;% Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes
+rayparam.rhoswitch = 0.05;% Radial position at which the switch occurs when metricmode = 2
+rayparam.deltaswitch = 0.01;% Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes
 rayparam.substitution_method = 7;%Method of substitution : 1->dichotomy1D, 2->dichotomy2D, 3->newton_numeric1D, 4->newton_numeric2D, 5->newton_analytic1D, 6->newton_analytic2D, 7->newton_mix2D
 %
 % launch structure
