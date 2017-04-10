@@ -94,7 +94,7 @@ rayparam.tfinal = 10000;
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 25000;
+rayparam.kmax = 60000;
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
@@ -163,9 +163,10 @@ C3POparam.clustermode.main_C3PO_jd.scheduler.mode = mdce_mode_main_C3PO_jd;%MatL
 %
 % ray-tracing calculations (rho,theta) coordinates only
 %
-rayparam.metricmode = 1;% 1 : Only curvilinear metric; 2 : Both curvilinear and cartesian metric
-rayparam.rhoswitch = 0.1;% Radial position at which the switch occurs when metricmode = 2
-rayparam.deltaswitch = 0.01;%Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes
+rayparam.metricmode = 1;% 1 : Only curvilinear metric (analytic or numeric); 2 : Both curvilinear and cartesian metric
+rayparam.rhoswitch = 0.1;% Radial position at which the switch occurs when metricmode = 2 (default value)
+rayparam.deltaswitch = 0.001;% Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes (default value)
+rayparam.substitution_method = 7;%Method of substitution : 1->dichotomy1D, 2->dichotomy2D, 3->newton_numeric1D, 4->newton_numeric2D, 5->newton_analytic1D, 6->newton_analytic2D, 7->newton_mix2D (default value)
 %
 tstart = tic;
 wave_numeric_pchip_rt = main_C3PO_jd(dkepath,[id_wave,'_numeric_pchip_rt'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip_rt,C3POparam,[],[],0);clear mex;clear functions
@@ -176,8 +177,6 @@ info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium wi
 % ray-tracing calculations (rho,theta) <-> (X,Y) conversion in the plasma core
 %
 rayparam.metricmode = 2;% 1 : Only curvilinear metric; 2 : Both curvilinear and cartesian metric
-rayparam.rhoswitch = 0.1;% Radial position at which the switch occurs when metricmode = 2
-rayparam.deltaswitch = 0.01;%Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes
 %
 tstart = tic;
 wave_numeric_pchip_rtxy = main_C3PO_jd(dkepath,[id_wave,'_numeric_pchip_rtxy'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_pchip_rtxy,C3POparam,[],[],0);clear mex;clear functions
@@ -186,6 +185,9 @@ telapsed_ray_numeric_pchip_rtxy = toc(tstart);
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium with pchip method with (rho,theta) <-> (X,Y) conversion in the plasma core)');
 %
 tstart = tic;
+%
+%rayparam.metricmode = 1;% 1 : Only curvilinear metric (analytic or numeric); 2 : Both curvilinear and cartesian metric
+%
 wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,equil_fit_pchip,rayinit,waveparam,[],rayparam,C3POdisplay_analytic,C3POparam,[],[],flag_analytic);
 telapsed_ray_analytic = toc(tstart);
 %
@@ -210,7 +212,7 @@ rays = {wave_numeric_pchip_rt.rays{1},wave_numeric_pchip_rtxy.rays{1},wave_analy
 legs = {'Numeric - pchip_rt','Numeric - pchip_rtxy','Analytic';...
        'Numeric_pchip_rt','Numeric_pchip_rtxy','Analytic'};
 %
-equil_fit = [equil_fit_pchip,equil_fit_spline];
+equil_fit = [equil_fit_pchip];
 %
 filename = ['Fig_',id_wave];
 %
