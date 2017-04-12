@@ -22,25 +22,17 @@ dkepath.default = 'YP105119';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %-------------------------------------------------------------------------------------------------------
 %
-dkepath.YP105119(1).sirrah.luke_root = '/home/YP105119/luke/LUKE/';
-dkepath.YP105119(1).sirrah.local_root = '/Home/YP105119/';
-dkepath.YP105119(1).sirrah.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.YP105119(1).luke_root = '/home/YP105119/luke/LUKE/';
+dkepath.YP105119(1).local_root = '/Home/YP105119/';
+dkepath.YP105119(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.YP105119(1).sirrah.mex805 = [dkepath.YP105119(1).sirrah.luke_root,'Project_DKE/MEX/Bin/sirrah/MATLAB805/'];
+dkepath.YP105119(1).mex805 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB805/'];
 %
-dkepath.YP105119(1).sirrah.graphviz.env = '';% Graphviz environment variable (dot)
-dkepath.YP105119(1).sirrah.latex.env = '/usr/bin/latex';% Latex environment variable (latex)
-dkepath.YP105119(1).sirrah.imagemagick.env = '';% ImageMagick environment variable (convert)
+dkepath.YP105119(1).graphviz.env = '';% Graphviz environment variable (dot)
+dkepath.YP105119(1).latex.env = '/usr/bin/latex';% Latex environment variable (latex)
+dkepath.YP105119(1).imagemagick.env = '';% ImageMagick environment variable (convert)
 %
-dkepath.YP105119(1).sirrah.MUMPS.mex805 = [dkepath.YP105119(1).sirrah.local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2/MATLAB805'];%MUMPS_5.0.2
-%
-dkepath.YP105119(1).naos = dkepath.YP105119(1).sirrah;
-dkepath.YP105119(1).pleione = dkepath.YP105119(1).sirrah;
-
-
-
-
-
+dkepath.YP105119(1).MUMPS.mex805 = [dkepath.YP105119(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2/MATLAB805'];%MUMPS_5.0.2
 %
 % ---------------------------- cephee -------------------------------
 %
