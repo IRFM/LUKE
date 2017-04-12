@@ -53,6 +53,13 @@ dkepath.YP105119(1).pleione = dkepath.YP105119(1).sirrah;
 %
 dkepath.YP105119(1).remote(1).remoteid = 'CEA_SIRRAH';
 dkepath.YP105119(1).remote(1).schedulername = 'pbs';
-dkepath.YP105119(1).remote(1).profilename = 'yves';
-dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;% local filesystem
+dkepath.YP105119(1).remote(1).profilename = 'YP105119';
+dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;% local cluster
+dkepath.YP105119(1).remote(1).link_mode = '';
+dkepath.YP105119(1).remote(1).cvsupdate = false;% update done in 'direct' mode
+dkepath.YP105119(1).remote(1).gitupdate = false;% update done in 'direct' mode
+dkepath.YP105119(1).remote(1).gitmode.cmd = 'cd /Home/YP105119/luke/*;git pull;echo "* update done";';
 %
+dkepath.YP105119(1).remote(2) = dkepath.YP105119(1).remote(1);
+dkepath.YP105119(1).remote(2).schedulername = 'direct';
+dkepath.YP105119(1).remote(2).gitupdate = true;
