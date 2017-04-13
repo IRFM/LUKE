@@ -184,7 +184,7 @@ else% new simulation
         disp(' ')
         dist_mode = NaN;
         mdce_mode = input_dke_yp(['Please select a mode for the distribution on host ',dkepath.profilestr{remnum},':\n(0) sequential \n(1) jobcomputing \n(2) parcomputing \n(3) remcomputing \n'],0,0:3);
-    else% direct distribution frim localhost
+    else% direct distribution from localhost
         remnum = 0;
         dist_mode = iselect_jd(dkepath.distprofiles,'Please select a mode for the distribution from the local host ?',0,struct,1);
         if dist_mode > 3,
