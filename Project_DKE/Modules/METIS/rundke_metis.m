@@ -25,7 +25,7 @@ function rundke_metis(path_sources,locid_simul,basestr,shotnum,shotimes,opt,dkep
 %
 % NOTE: the optional structures wavestructs ... ripple do not need to contain all fields. They are concatenated with METIS parameters.
 %
-% by J. Decker (joan.decker@cea.fr) and E. Nilsson (emelie.nilsson@cea.fr)
+% by J. Decker (joan.decker@cea.fr), E. Nilsson (emelie.nilsson@cea.fr) and Y. Peysson (yves.peysson@cea.fr)
 %
 maxnargin = 16;
 %
@@ -70,10 +70,12 @@ if nargin < maxnargin-12,
     error('shot number must be specified');
 end
 %
+dkepath.clustermode.run_lukert.scheduler = scheduler_run_lukert;
+%
 if metisevol == 0,
-    dkepath.remtimout = 0;% do not return results, as it could be too heavy in terms of memory
+    dkepath.clustermode.run_lukert.scheduler.remtimout = 0;% do not return results, as it could be too heavy in terms of memory
 else    
-    dkepath.remtimout = Inf;% return result needed for next step
+    dkepath.clustermode.run_lukert.scheduler.remtimout = Inf;% return result needed for next step
     opt.save = 1;% save each time step for later processing
     opt.fields = NaN;% selected fields in returned lukestructs. Use NaN for all fields
     dkeparam.tn_mode = 1;% time given in seconds
@@ -218,18 +220,7 @@ end
 %
 if metisevol == 0,
     %
-    if isfield(dkepath,'remnum') && dkepath.remnum > 0,% calculations distributed within run_lukert
-        %
-        lukestructs = run_lukert(lukestructs,dkepath);
-        %
-    else % calculations distributed using mdce_run
-        %
-        clustermode.run_lukert.scheduler = scheduler_run_lukert;
-        dkecluster = clustermode_luke(clustermode,'run_lukert',dkepath);
-        %
-        [dummy,lukestructs] = mdce_run(@run_lukert,{''},1,lukestructs,dkecluster);
-        %
-    end
+    lukestructs = run_lukert(lukestructs,dkepath);
     %
 else
     %
