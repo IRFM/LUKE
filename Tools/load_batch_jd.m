@@ -1,6 +1,36 @@
 function completed_jobs = load_batch_jd(filename,completed_jobs,savepath)
 %
-data = load(filename,'lukestructs','dkepath');
+% Check the job status send by run_lukert with distributed calculations (local or remote)
+%
+% INPUTS :
+%
+%   - filename : file that contain lukestructs
+%   - completed_jobs : status of the running jobs (vector)
+%   - savepath : specfici path to save results when job is done (default active folder)
+%   
+% OUTPUTS :
+%
+%   - completed_jobs : status of the running jobs (vector)
+%
+% by J. Decker (joan.decker@cea.fr), E. Nilsson (emelie.nilsson@cea.fr) and Y. Peysson (yves.peysson@cea.fr)
+%
+%
+if nargin == 0, 
+    filename = '';
+end
+%
+if ~isempty(filename)
+    data = load(filename,'lukestructs','dkepath');
+else
+    try 
+        filename = ls('LUKE_BATCH*');
+        data = load(filename(1:end-1),'lukestructs','dkepath');
+    catch
+        disp(['WARNING: ',filename,' does not exist in the active folder. Please move to the correct one or give the full file path.'])
+        completed_jobs = [];
+        return;
+    end
+end
 %
 lukestructs_in = data.lukestructs(:);
 %
