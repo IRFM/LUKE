@@ -15,6 +15,14 @@ if nargin == 0,
     verbose = 'off';
 end
 %
+pathmetis0 = which('metis4itm');%remove metis4itm in the Matlab search because it uses also m2html nut in a different way
+if length(pathmetis0) > 0,
+	imetis4itm = strfind(pathmetis0,'metis4itm');
+    warning off
+	rmpath(genpath([pathmetis0(1:imetis4itm(1)-1),'metis4itm']));
+	warning on
+end
+%
 excludedfoldernames = {'EAST','HL2A','AMR'};%list of excluded folders. Update if necessary 
 %
 disp('************************* EXCLUDED FOLDER NAMES **************************')
