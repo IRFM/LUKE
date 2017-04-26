@@ -1,4 +1,4 @@
-function [waveparam,xyprop,xys,xyPinc_2piRp_lin,xyPinc_2piRp_coll,yb,yP0_2piRp] = propagation_jd(rays,xpsin_S,xpsin,method,display_mode)
+function [waveparam,xyprop,xys,xyPinc_2piRp_lin,xyPinc_2piRp_coll,xyPinc_2piRp_noabs,yb,yP0_2piRp] = propagation_jd(rays,xpsin_S,xpsin,method,display_mode)
 %
 % This function couples the DKE code with a ray-tracing code.
 % RF rays are distributed onto the DKE flux surfaces.
@@ -309,11 +309,13 @@ for ib = 1:nb
             else
                 xyPinc_2piRp_coll(xmask,iy) = ray.P0_2piRp*ones(size(xyPinc_2piRp_lin(xmask,iy)));%no collisional damping. P along ray is P0
             end
+            %
         else
             xyPinc_2piRp_lin(xmask,iy) = ray.P0_2piRp;%no linear damping. P along ray is P0
             xyPinc_2piRp_coll(xmask,iy) = ray.P0_2piRp;%no collisional damping. P along ray is P0
         end
         %
+        xyPinc_2piRp_noabs(xmask,iy) = ray.P0_2piRp;%P along ray is P0
     end
     if display_mode >= 1,info_dke_yp(2,['Preprocessing of launched ray #',int2str(ib),'/',int2str(nb),' done. Elapsed time : ',num2str(etime(clock,time0)),' (s)']);time0 = clock;end
 end
