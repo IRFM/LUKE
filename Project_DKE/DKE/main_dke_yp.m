@@ -860,7 +860,7 @@ dke_out.xEfield_validity = xEfield_validity;
 dke_out.waveparam = waveparam;
 dke_out.xyprop_dke = xyprop_dke;
 dke_out.xyP0_2piRp_mod = xyP0_2piRp_mod_old;
-if exist(xyP0_2piRp_mod_coll1)
+if exist('xyP0_2piRp_mod_coll1')
     dke_out.xyP0_2piRp_mod_coll = xyP0_2piRp_mod_coll1;
 end
 dke_out.yb = yb;
@@ -904,7 +904,7 @@ if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf) && nit_rf > 1,
     dke_out.residue_rf = residue_rf;
     dke_out.zS = zS;
     dke_out.zP_0_2piRp_mod = zP_0_2piRp_mod_old;
-    if exist(zP_0_2piRp_mod_coll1)
+    if exist('zP_0_2piRp_mod_coll1'),
         dke_out.zP_0_2piRp_mod_coll = zP_0_2piRp_mod_coll1;
     end
     %
