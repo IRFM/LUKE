@@ -64,7 +64,7 @@ else
         ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor,...
         ZXXD_e_init,ZXXF_e_init,ZXXD_e_tp,ZXXF_e_tp,xepsi_init,xEfield_validity,...
         ZXXD_s,ZXXF_s,ZXXD_s_tp,ZXXF_s_tp,...
-        waveparam,xyprop_dke,xyP0_2piRp_mod,xyP0_2piRp_mod_coll,yb,yP0_2piRp,xys,...
+        waveparam,xyprop_dke,xyP0_2piRp_mod,xyP0_2piRp_mod_coll,xyP0_2piRp_mod_noabs,yb,yP0_2piRp,xys,...
         ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,gridindex_rf,...
         XXfinit]...
          = buildlukestruct_yp(loadstruct,equil,dkeparam_in,dkedisplay,dkepath,ohm,waves,transpfaste,ripple,XXf0_in,XXsinksource_in);
@@ -380,7 +380,10 @@ for itn = itn0:nit,
                     end
                 end
                 %
-                [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd(dkeparam_out,ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod/redfac,gridindex_rf);
+                xyP0_2piRp_mod_coll1 = xyP0_2piRp_mod_coll.*xyP0_2piRp_mod./xyP0_2piRp_mod_noabs;%adjust power remaining in fragments including NRCA and RLA
+                xyP0_2piRp_mod_coll1(isnan(xyP0_2piRp_mod_coll1)) = 0;
+                %
+                [ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp] = raysum_rf_jd(dkeparam_out,ZXYD_rf,ZXYF_rf,ZXYD_rf_tp,ZXYF_rf_tp,xyP0_2piRp_mod_coll1/redfac,gridindex_rf);
                 [Zdelta,MMXT_f_t,MMXP_f_t,MMXR_f_t,Xmask_r_edge,MMXP_tp,MMXP_g_t,MMH_tp,Zpn2_t,sm_f,sm_g,sm_tp] = matrixcalc_dke_yp(dkeparam_out,dkedisplay,gridDKE,equilDKE,Zbouncecoef,mksa,Zmripple,Zmomcoef,transpfaste,ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXILor,ZXXD_e,ZXXF_e,ZXXD_e_tp,ZXXF_e_tp,ZXXD_s,ZXXF_s,ZXXD_s_tp,ZXXF_s_tp,ZXXD_rf,ZXXF_rf,ZXXD_rf_tp,ZXXF_rf_tp,ZXXD_a,ZXXF_a);%Build the 3D DKE matrix
                 %
                 if conv >= 0,
@@ -414,11 +417,12 @@ for itn = itn0:nit,
                         %
                         % Calculation of the power flow along the rays from DKE calculations
                         %
-                    	[xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke,xyP0_2piRp_mod_old,xyP0_2piRp_mod_coll,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
+                    	[xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke,xyP0_2piRp_mod_old,xyPabs_rf_dke_fsav_mksa,equilDKE.xdV_2piRp_dke,gridDKE.xpsin,gridDKE.xpsin_dke,gridDKE.rdke,dkeparam_out.dke_mode);
                         %
                         zP_0_2piRp_mod_old{it_rf,itn} = raypath_jd(xyP0_2piRp_mod_old,xyprop_dke,yb,radialDKE.r_dke);
                         zP_0_2piRp_mod = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
                         zP_0_2piRp_out = raypath_jd(xyP0_2piRp_out,xyprop_dke,yb,radialDKE.r_dke);
+                        zP_0_2piRp_mod_coll1 = raypath_jd(xyP0_2piRp_mod_coll1,xyprop_dke,yb,radialDKE.r_dke);
                         %
                         P_0_2piRp_in = sum(yP0_2piRp);
                         P_0_2piRp_out = 0;
@@ -856,6 +860,9 @@ dke_out.xEfield_validity = xEfield_validity;
 dke_out.waveparam = waveparam;
 dke_out.xyprop_dke = xyprop_dke;
 dke_out.xyP0_2piRp_mod = xyP0_2piRp_mod_old;
+if exist(xyP0_2piRp_mod_coll1)
+    dke_out.xyP0_2piRp_mod_coll1 = xyP0_2piRp_mod_coll1;
+end
 dke_out.yb = yb;
 dke_out.yP0_2piRp = yP0_2piRp;
 dke_out.xys = xys;
@@ -897,6 +904,9 @@ if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf) && nit_rf > 1,
     dke_out.residue_rf = residue_rf;
     dke_out.zS = zS;
     dke_out.zP_0_2piRp_mod = zP_0_2piRp_mod_old;
+    if exist(xyP0_2piRp_mod_coll1)
+        dke_out.xyP0_2piRp_mod_coll1 = xyP0_2piRp_mod_coll1;
+    end
     %
     %waves = alphaphi_luke_jd(waves,dke_out,equilDKE);% calculates the QL ray absorption
     %
