@@ -422,7 +422,7 @@ for itn = itn0:nit,
                         zP_0_2piRp_mod_old{it_rf,itn} = raypath_jd(xyP0_2piRp_mod_old,xyprop_dke,yb,radialDKE.r_dke);
                         zP_0_2piRp_mod = raypath_jd(xyP0_2piRp_mod,xyprop_dke,yb,radialDKE.r_dke);
                         zP_0_2piRp_out = raypath_jd(xyP0_2piRp_out,xyprop_dke,yb,radialDKE.r_dke);
-                        zP_0_2piRp_mod_coll1 = raypath_jd(xyP0_2piRp_mod_coll1,xyprop_dke,yb,radialDKE.r_dke);
+                        zP_0_2piRp_mod_coll1{it_rf,itn} = raypath_jd(xyP0_2piRp_mod_coll1,xyprop_dke,yb,radialDKE.r_dke);
                         %
                         P_0_2piRp_in = sum(yP0_2piRp);
                         P_0_2piRp_out = 0;
@@ -861,7 +861,7 @@ dke_out.waveparam = waveparam;
 dke_out.xyprop_dke = xyprop_dke;
 dke_out.xyP0_2piRp_mod = xyP0_2piRp_mod_old;
 if exist(xyP0_2piRp_mod_coll1)
-    dke_out.xyP0_2piRp_mod_coll1 = xyP0_2piRp_mod_coll1;
+    dke_out.xyP0_2piRp_mod_coll = xyP0_2piRp_mod_coll1;
 end
 dke_out.yb = yb;
 dke_out.yP0_2piRp = yP0_2piRp;
@@ -904,8 +904,8 @@ if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf) && nit_rf > 1,
     dke_out.residue_rf = residue_rf;
     dke_out.zS = zS;
     dke_out.zP_0_2piRp_mod = zP_0_2piRp_mod_old;
-    if exist(xyP0_2piRp_mod_coll1)
-        dke_out.xyP0_2piRp_mod_coll1 = xyP0_2piRp_mod_coll1;
+    if exist(zP_0_2piRp_mod_coll1)
+        dke_out.zP_0_2piRp_mod_coll = zP_0_2piRp_mod_coll1;
     end
     %
     %waves = alphaphi_luke_jd(waves,dke_out,equilDKE);% calculates the QL ray absorption
