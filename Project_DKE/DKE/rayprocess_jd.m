@@ -611,10 +611,9 @@ if abs(imag(opt_disp)) >= 1,%calculation of the linear absorption coefficient
     sa = sne*qe^2/e0/me/omega_rf^2;
     sb = sB*qe/me/omega_rf;
 	sbeta = sqrt(sTe/mc2);
+    %
     salphaphi_lin = zeros(1,ns);
-    if colldamp == 1
-        salphaphi_coll = zeros(1,ns);
-    end
+    %
     for n = n_rf_list,
         if abs(imag(opt_disp)) == 1,
             salphaphi_lin = salphaphi_lin + omega_rf/clum*alphaphi_fr_jd(sa,sb,sbeta,real(sNpar),real(sNperp),sepol_pmz,n,rel_opt);
@@ -627,6 +626,7 @@ if abs(imag(opt_disp)) >= 1,%calculation of the linear absorption coefficient
 end
 %
 if colldamp == 1,%calculation of the collisional damping absorption coefficient
+    %
     if ~isfield(ray,'sTe')
         if exist('sTe'),
             ray.sTe = sTe;
@@ -664,8 +664,10 @@ if colldamp == 1,%calculation of the collisional damping absorption coefficient
         disp('WARNING: Collisional damping is turned-off because ray.swce2 missing.')
     end
     %
-    [xalphaphi,snhui] = alphaphi_cd_yp(ray,equilDKE_Fourier,omega_rf);
-    salphaphi_coll = salphaphi_coll + omega_rf/clum*xalphaphi;%calculation of the non-resonant collisional absorption coefficient
+    salphaphi_coll = zeros(1,ns);
+    %
+    [xalphaphi_coll,snhui] = alphaphi_cd_yp(ray,equilDKE_Fourier,omega_rf);
+    salphaphi_coll = salphaphi_coll + omega_rf/clum*xalphaphi_coll;%calculation of the non-resonant collisional absorption coefficient
 end
 %
 ray.sx = sx;% Ray location (major radius) along the propagation [1,ns]
