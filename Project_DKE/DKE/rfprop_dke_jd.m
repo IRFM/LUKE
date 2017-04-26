@@ -1,4 +1,4 @@
-function [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke,xyP0_2piRp_in,xyP0_2piRp_coll,xyPabs_dke,xdV_2piRp_dke,xpsin,xpsin_dke,r_dke,dke_mode);
+function [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke,xyP0_2piRp_in,xyPabs_dke,xdV_2piRp_dke,xpsin,xpsin_dke,r_dke,dke_mode);
 %
 % This function ensures consistency between the power travelling with RF
 % rays and the power absorbed by the plasma. Iterations between
@@ -9,7 +9,6 @@ function [xyP0_2piRp_out,xyP0_2piRp_mod] = rfprop_dke_jd(yb,yP0_2piRp,xyprop_dke
 %       - yb: list of ray starts
 %       - xyprop_dke: propagation factors at DKE FS
 %       - xyP0_2piRp_in: input incident power at each FP position
-%       - xyP0_2piRp_coll: input incident power with non-resonant collisional damping at each FP position
 %       - xyPabs: absorbed power density in the DKE FS
 %       - xydV_dke: incremental volume in the DKE FS
 %
@@ -54,15 +53,9 @@ for iy = 1:ny
     while ir_dke <= nr_dke & ir_dke >= 1 & xyprop_dke(ir_dke,iy) ~= 0 % stay on current ray 
         ir = r_dke(ir_dke);
         %
-        Pcoll =  bPrf - xyP0_2piRp_coll(ir_dke,iy);
-        %
-        if Pcoll < 0,
-            Pcoll = 0;
-        end
-        %
-        Pabs = xyPrf_dke(ir_dke,iy) + Pcoll;% absorbed power by resonant and non resonant interaction in this step
+        Pabs = xyPrf_dke(ir_dke,iy);% absorbed power by resonant and non resonant interaction in this step
         if Pabs < 0, 
-            disp(['Warning Pabs < 0, Prf = ',num2str(xyPrf_dke(ir_dke,iy)),', Pcoll = ',num2str(Pcoll)]);
+            disp(['Warning Pabs < 0, Prf = ',num2str(xyPrf_dke(ir_dke,iy))]);
         end
         %
         if Pabs <= bPrf % absorbed power cannot be more than incident power
@@ -85,9 +78,9 @@ for iy = 1:ny
         % assumes linear power absorbed vs incident power dependence.
         %
         if xyP0_2piRp_in(ir,iy) > 0
-            Pabs_mod = (xyPrf_dke(ir_dke,iy) + Pcoll)*bPrf_mod/(xyP0_2piRp_in(ir,iy) + (xyPrf_dke(ir_dke,iy) + Pcoll)/2);% absorbed power in this step
+            Pabs_mod = xyPrf_dke(ir_dke,iy)*bPrf_mod/(xyP0_2piRp_in(ir,iy) + xyPrf_dke(ir_dke,iy)/2);% absorbed power in this step
         else
-            Pabs_mod = xyPrf_dke(ir_dke,iy) - Pcoll;% absorbed power in this step
+            Pabs_mod = xyPrf_dke(ir_dke,iy);% absorbed power in this step
         end
         %
         if Pabs_mod <= bPrf_mod % absorbed power cannot be more than incident power
@@ -96,7 +89,7 @@ for iy = 1:ny
             %
         else
             %
-            xyP0_2piRp_mod(ir,iy) = xyP0_2piRp_in(ir,iy)*bPrf_mod/(xyPrf_dke(ir_dke,iy) + Pcoll); %linear anticipation
+            xyP0_2piRp_mod(ir,iy) = xyP0_2piRp_in(ir,iy)*bPrf_mod/xyPrf_dke(ir_dke,iy); %linear anticipation
             %
             Pabs_mod = bPrf_mod;
             %
