@@ -45,6 +45,12 @@ if ~isfield(opt,'print'),
     opt.print = input_dke_yp('Option for output figures : -1 (nothing), 0 (print), 1 (print and save), 2 (save)',-1,-1:2,'',[1,1]);
 end
 %
+if ~isfield(waves{1},'colldamp'),
+    if isfield(waves{1}.rayparam,'colldamp'),
+        waves{1}.colldamp = waves{1}.rayparam.colldamp;%for display options
+    end
+end
+%
 nw = length(waves);
 %
 if ~iscell(ymask),
