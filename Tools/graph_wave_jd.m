@@ -250,21 +250,64 @@ yrho_abs_lin = NaN(1,ny);
 yPtot_abs_lin = NaN(1,ny);
 yNpar_abs_lin = NaN(1,ny);
 %
+yrho_abs_lin_coll = NaN(1,ny);
+yPtot_abs_lin_coll = NaN(1,ny);
+yNpar_abs_lin_coll = NaN(1,ny);
+%
+yrho_abs_coll_luke = NaN(1,ny);
+yPtot_abs_coll_luke = NaN(1,ny);
+yNpar_abs_coll_luke = NaN(1,ny);
+%
 yrho_abs = NaN(1,ny);
 yPtot_abs = NaN(1,ny);
 yNpar_abs = NaN(1,ny);
 %
 dPdrho_lin = 0;
+dPdrho_lin_coll = 0;
+dPdrho_coll_luke = 0;
 dPdrho = 0;
 %
 if opt.abs_max == 1,
     opt.abs_max = 1e-3;% default value
 end
 %
+if ~isfield(opt,'disp_rays'),
+    opt.disp_rays = input_dke_yp('Option for showing ray absorption (n/y)','n',{'n','y'});
+end
+%
 for iy = 1:ny,
+    %
     ns = length(rays{iy}.ss);
     %
-    if isfield(rays{iy},'sP_2piRp_lin'),
+    rays{iy}.is_abs_max_lin = ns;
+    rays{iy}.is_abs_max_lin_coll = ns;
+    rays{iy}.is_abs_max_coll_luke = ns;
+    rays{iy}.is_abs_lin = NaN;
+    rays{iy}.dP_lin_normdrho = NaN;
+    rays{iy}.dP_lin_coll_normdrho = NaN;
+    rays{iy}.dP_coll_luke_normdrho = NaN;
+    yrho_abs_lin(iy) = NaN;
+    yNpar_abs_lin(iy) = NaN;
+    yPtot_abs_lin(iy) = NaN;
+    yrho_abs_lin_coll(iy) = NaN;
+    yNpar_abs_lin_coll(iy) = NaN;
+    yPtot_abs_lin_coll(iy) = NaN;
+    yrho_abs_coll_luke(iy) = NaN;
+    yNpar_abs_coll_luke(iy) = NaN;
+    yPtot_abs_coll_luke(iy) = NaN;
+    %
+    rhog_dep = NaN;
+    %
+    if opt.disp_rays == 'y',
+        figure(1000+iy),clf;%ray figures
+    else
+        if ishandle(figure(1000+iy)),
+            close(figure(1000+iy));
+        end
+    end
+    %
+    if isfield(rays{iy},'sP_2piRp_lin'),%linear resonant Landau absorption (RLA)
+        %
         sP_2piRp_lin_norm = rays{iy}.sP_2piRp_lin/rays{iy}.sP_2piRp_lin(1);
         sdP_2piRp_ds_lin_norm = rays{iy}.sdP_2piRp_ds_lin/max(rays{iy}.sdP_2piRp_ds_lin+eps).*(1 - sP_2piRp_lin_norm(end)/sP_2piRp_lin_norm(1));
         if ~iscell(yabs),
@@ -326,97 +369,275 @@ for iy = 1:ny,
         %
         dPdrho_lin = dPdrho_lin + rays{iy}.dP_lin_normdrho*rays{iy}.P0_2piRp*2*pi*Rp;
         %
-        if opt.luke && isfield(rays{iy},'sP_2piRp'),%LUKE absorption
-            sP_2piRp_norm = rays{iy}.sP_2piRp{end}/rays{iy}.sP_2piRp{end}(1);
-            sdP_2piRp_ds_norm = rays{iy}.sdP_2piRp_ds{end}/max(rays{iy}.sdP_2piRp_ds{end}+eps).*(1 - sP_2piRp_norm(end)/sP_2piRp_norm(1));
-            if ~iscell(yabs),
-                rays{iy}.mask_abs = sdP_2piRp_ds_norm > 0.01;
-            end
-            if opt.abs_max > 0,
-                rays{iy}.is_abs_max = min([ns,find(sP_2piRp_norm < opt.abs_max)]);        
+        if opt.disp_rays == 'y',
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                graph1D_jd(rays{iy}.ss,rays{iy}.sP_2piRp_lin*2*pi*equil.Rp,0,0,'ray length (m)','Power (W)',['ray #',int2str(iy),', N_{||0} = ',num2str(real(rays{iy}.sNpar(1)))],NaN,'','','--','none','r',2);
             else
-                rays{iy}.is_abs_max = ns;
+                graph1D_jd(rays{iy}.ss,rays{iy}.sP_2piRp_lin*2*pi*equil.Rp,0,0,'ray length (m)','Power (W)',['ray #',int2str(iy),', N_{||0} = ',num2str(real(rays{iy}.sNpar(1)))],NaN,'','','-','none','r',2);
             end
             %
-            if isfield(opt,'mode') && opt.mode == 'y',
-    %             rays{iy}.mask_p = rays{iy}.spmode == 1;
-    %             rays{iy}.mask_m = rays{iy}.spmode == 0;
-    %             %
-    %             rays{iy}.mask_p(rays{iy}.is_abs_max+1:ns) = false;
-    %             rays{iy}.mask_m(rays{iy}.is_abs_max+1:ns) = false;
-    %             %
-    %             rays{iy}.mask_p(1) = true;%to avoid legend problems
-    %             rays{iy}.mask_m(1) = true;
-                %
-                spmode = rays{iy}.spmode(1:rays{iy}.is_abs_max);
-                %
-                rays{iy}.mask_p{1} = 1;%to avoid legend problems
-                rays{iy}.mask_m{1} = 1;%to avoid legend problems
-                %
-                imc_list = 1+[0,find(spmode(2:end) ~= spmode(1:end-1)),rays{iy}.is_abs_max];
-                %
-                pmode = spmode(1);
-                %
-                for imc = 1:length(imc_list)-1,
-                    %
-                    mask_mc = imc_list(imc):(imc_list(imc+1) - 1);
-                    %
-                    if pmode == 1,
-                        rays{iy}.mask_p = [rays{iy}.mask_p,mask_mc];
-                    else
-                        rays{iy}.mask_m = [rays{iy}.mask_m,mask_mc];
-                    end
-                    %
-                    pmode = ~pmode;
-                    %
-                end
-                %
-            else
-                %
-                rays{iy}.mask_p = NaN;
-                rays{iy}.mask_m = NaN;               
-                %
-            end
-            %
-            rays{iy}.is_abs = min(find(sdP_2piRp_ds_norm == max(sdP_2piRp_ds_norm))); 
-            %
-            yrho_abs(iy) = rays{iy}.srho(rays{iy}.is_abs);
-            yNpar_abs(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs));
-            yPtot_abs(iy) = 1 - sP_2piRp_norm(end);
-            %
-            rays{iy}.dP_normdrho = radialdampingprofile_jd(rays{iy}.srho,rays{iy}.sP_2piRp{end}/rays{iy}.sP_2piRp{end}(1),nr_dep);
-            %
-            dPdrho = dPdrho + rays{iy}.dP_normdrho*rays{iy}.P0_2piRp*2*pi*Rp;
-            %
-        else
-            %
-            rays{iy}.is_abs_max = ns;
-            rays{iy}.is_abs = NaN;
-            rays{iy}.dP_normdrho = NaN;
-            yrho_abs(iy) = NaN;
-            yNpar_abs(iy) = NaN;
-            yPtot_abs(iy) = NaN;
-            %            
+            legend('Linear absorption (RLA)','Location','SouthWest')
         end
-        %
-    else
-        rays{iy}.is_abs_max_lin = ns;
-        rays{iy}.is_abs_lin = NaN;
-        rays{iy}.dP_lin_normdrho = NaN;
-        yrho_abs_lin(iy) = NaN;
-        yNpar_abs_lin(iy) = NaN;
-        yPtot_abs_lin(iy) = NaN;
-        %
-        rhog_dep = NaN;
         %
     end
     %
-    if opt.luke,
-        disp(['Ray # ',num2str(iy),': fraction of power absorbed: (linear) ',num2str(round(yPtot_abs_lin(iy)*100)),' %; (luke) ',num2str(round(yPtot_abs(iy)*100)),' %'])  
+    if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,%linear non-resonant collisional absorption (NRCA) + linear resonant Landau absorption (RLA)
+        %
+        sP_2piRp_lin_coll_norm = rays{iy}.sP_2piRp_lin_coll/rays{iy}.sP_2piRp_lin_coll(1);
+        sdP_2piRp_ds_lin_coll_norm = rays{iy}.sdP_2piRp_ds_lin_coll/max(rays{iy}.sdP_2piRp_ds_lin_coll+eps).*(1 - sP_2piRp_lin_coll_norm(end)/sP_2piRp_lin_coll_norm(1));
+        if ~iscell(yabs),
+            rays{iy}.mask_abs_lin_coll = sdP_2piRp_ds_lin_coll_norm > 0.01;
+        end
+        if opt.abs_max > 0,
+            rays{iy}.is_abs_max_lin_coll = min([ns,find(sP_2piRp_lin_coll_norm < opt.abs_max)]);        
+        else
+            rays{iy}.is_abs_max_lin_coll = ns;
+        end
+        %
+        if isfield(opt,'mode') && opt.mode == 'y',
+%             rays{iy}.mask_p = rays{iy}.spmode == 1;
+%             rays{iy}.mask_m = rays{iy}.spmode == 0;
+%             %
+%             rays{iy}.mask_p(rays{iy}.is_abs_max+1:ns) = false;
+%             rays{iy}.mask_m(rays{iy}.is_abs_max+1:ns) = false;
+%             %
+%             rays{iy}.mask_p(1) = true;%to avoid legend problems
+%             rays{iy}.mask_m(1) = true;
+            %
+            spmode = rays{iy}.spmode(1:rays{iy}.is_abs_max_lin_coll);
+            %
+            rays{iy}.mask_p_lin_coll{1} = 1;%to avoid legend problems
+            rays{iy}.mask_m_lin_coll{1} = 1;%to avoid legend problems
+            %
+            imc_list = 1+[0,find(spmode(2:end) ~= spmode(1:end-1)),rays{iy}.is_abs_max_lin_coll];
+            %
+            pmode = spmode(1);
+            %
+            for imc = 1:length(imc_list)-1,
+                %
+                mask_mc = imc_list(imc):(imc_list(imc+1) - 1);
+                %
+                if pmode == 1,
+                    rays{iy}.mask_p_lin_coll = [rays{iy}.mask_p_lin_coll,mask_mc];
+                else
+                    rays{iy}.mask_m_lin_coll = [rays{iy}.mask_m_lin_coll,mask_mc];
+                end
+                %
+                pmode = ~pmode;
+                %
+            end
+            %
+        else
+            %
+            rays{iy}.mask_p_lin_coll = NaN;
+            rays{iy}.mask_m_lin_coll = NaN;               
+            %
+        end
+        %
+        rays{iy}.is_abs_lin_coll = min(find(sdP_2piRp_ds_lin_coll_norm == max(sdP_2piRp_ds_lin_coll_norm))); 
+        %
+        yrho_abs_lin_coll(iy) = rays{iy}.srho(rays{iy}.is_abs_lin_coll);
+        yNpar_abs_lin_coll(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs_lin_coll));
+        yPtot_abs_lin_coll(iy) = 1 - sP_2piRp_lin_coll_norm(end);
+        %
+        [rays{iy}.dP_lin_coll_normdrho,rhog_dep] = radialdampingprofile_jd(rays{iy}.srho,rays{iy}.sP_2piRp_lin_coll/rays{iy}.sP_2piRp_lin_coll(1),nr_dep);
+        %
+        dPdrho_lin_coll = dPdrho_lin_coll + rays{iy}.dP_lin_coll_normdrho*rays{iy}.P0_2piRp*2*pi*Rp;
+        %
+        if opt.disp_rays == 'y',
+            hold on,graph1D_jd(rays{iy}.ss,rays{iy}.sP_2piRp_lin_coll*2*pi*equil.Rp,0,0,'ray length (m)','Power (W)',['ray #',int2str(iy),', N_{||0} = ',num2str(real(rays{iy}.sNpar(1)))],NaN,'','','-','none','r',2);
+            %
+            legend('Linear absorption (RLA)','Linear absorption (RLA + NRCA)','Location','SouthWest');
+        end
+        %
     else
-        disp(['Ray # ',num2str(iy),': fraction of power absorbed: (linear) ',num2str(round(yPtot_abs_lin(iy)*100)),' %'])  
-    end        
-    % 
+        %
+        rays{iy}.is_abs_max_lin_coll = ns;
+        rays{iy}.is_abs_lin_coll = NaN;
+        rays{iy}.dP_normdrho_lin_coll = NaN;
+        yrho_abs_lin_coll(iy) = NaN;
+        yNpar_abs_lin_coll(iy) = NaN;
+        yPtot_abs_lin_coll(iy) = NaN;
+        %            
+    end    
+    %
+    if opt.luke && isfield(rays{iy},'sP_2piRp'),%LUKE absorption (with non-resonant collisional absorption if any)
+        sP_2piRp_norm = rays{iy}.sP_2piRp{end}/rays{iy}.sP_2piRp{end}(1);
+        sdP_2piRp_ds_norm = rays{iy}.sdP_2piRp_ds{end}/max(rays{iy}.sdP_2piRp_ds{end}+eps).*(1 - sP_2piRp_norm(end)/sP_2piRp_norm(1));
+        if ~iscell(yabs),
+            rays{iy}.mask_abs = sdP_2piRp_ds_norm > 0.01;
+        end
+        if opt.abs_max > 0,
+            rays{iy}.is_abs_max = min([ns,find(sP_2piRp_norm < opt.abs_max)]);        
+        else
+            rays{iy}.is_abs_max = ns;
+        end
+        %
+        if isfield(opt,'mode') && opt.mode == 'y',
+%             rays{iy}.mask_p = rays{iy}.spmode == 1;
+%             rays{iy}.mask_m = rays{iy}.spmode == 0;
+%             %
+%             rays{iy}.mask_p(rays{iy}.is_abs_max+1:ns) = false;
+%             rays{iy}.mask_m(rays{iy}.is_abs_max+1:ns) = false;
+%             %
+%             rays{iy}.mask_p(1) = true;%to avoid legend problems
+%             rays{iy}.mask_m(1) = true;
+            %
+            spmode = rays{iy}.spmode(1:rays{iy}.is_abs_max);
+            %
+            rays{iy}.mask_p{1} = 1;%to avoid legend problems
+            rays{iy}.mask_m{1} = 1;%to avoid legend problems
+            %
+            imc_list = 1+[0,find(spmode(2:end) ~= spmode(1:end-1)),rays{iy}.is_abs_max];
+            %
+            pmode = spmode(1);
+            %
+            for imc = 1:length(imc_list)-1,
+                %
+                mask_mc = imc_list(imc):(imc_list(imc+1) - 1);
+                %
+                if pmode == 1,
+                    rays{iy}.mask_p = [rays{iy}.mask_p,mask_mc];
+                else
+                    rays{iy}.mask_m = [rays{iy}.mask_m,mask_mc];
+                end
+                %
+                pmode = ~pmode;
+                %
+            end
+            %
+        else
+            %
+            rays{iy}.mask_p = NaN;
+            rays{iy}.mask_m = NaN;               
+            %
+        end
+        %
+        rays{iy}.is_abs = min(find(sdP_2piRp_ds_norm == max(sdP_2piRp_ds_norm))); 
+        %
+        yrho_abs(iy) = rays{iy}.srho(rays{iy}.is_abs);
+        yNpar_abs(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs));
+        yPtot_abs(iy) = 1 - sP_2piRp_norm(end);
+        %
+        rays{iy}.dP_normdrho = radialdampingprofile_jd(rays{iy}.srho,rays{iy}.sP_2piRp{end}/rays{iy}.sP_2piRp{end}(1),nr_dep);
+        %
+        dPdrho = dPdrho + rays{iy}.dP_normdrho*rays{iy}.P0_2piRp*2*pi*Rp;
+        %
+        if opt.disp_rays == 'y',
+            if ~(isfield(waves{1},'colldamp') && waves{1}.colldamp == 1),
+                hold on,graph1D_jd(rays{iy}.ss,rays{iy}.sP_2piRp{1}*2*pi*equil.Rp,0,0,'ray length (m)','Power (W)',['ray #',int2str(iy),', N_{||0} = ',num2str(real(rays{iy}.sNpar(1)))],NaN,'','','--','none','k',2);
+                legend('Linear absorption (RLA)','LUKE quasilinear absorption (RLA)','Location','SouthWest');
+            end
+        end
+        %
+    else
+        %
+        rays{iy}.is_abs_max = ns;
+        rays{iy}.is_abs = NaN;
+        rays{iy}.dP_normdrho = NaN;
+        yrho_abs(iy) = NaN;
+        yNpar_abs(iy) = NaN;
+        yPtot_abs(iy) = NaN;
+        %            
+    end    
+    
+    if opt.luke && isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,,%LUKE absorption (with non-resonant collisional absorption if any)
+        sP_2piRp_coll_luke_norm = rays{iy}.sP_2piRp_coll_luke{end}/rays{iy}.sP_2piRp_coll_luke{end}(1);
+        sdP_2piRp_coll_luke_ds_norm = rays{iy}.sdP_2piRp_coll_luke_ds{end}/max(rays{iy}.sdP_2piRp_coll_luke_ds{end}+eps).*(1 - sP_2piRp_coll_luke_norm(end)/sP_2piRp_coll_luke_norm(1));
+        if ~iscell(yabs),
+            rays{iy}.mask_abs_coll_luke = sdP_2piRp_coll_luke_ds_norm > 0.01;
+        end
+        if opt.abs_max > 0,
+            rays{iy}.is_abs_max_coll_luke = min([ns,find(sP_2piRp_coll_luke_norm < opt.abs_max)]);        
+        else
+            rays{iy}.is_abs_max_coll_luke = ns;
+        end
+        %
+        if isfield(opt,'mode') && opt.mode == 'y',
+%             rays{iy}.mask_p = rays{iy}.spmode == 1;
+%             rays{iy}.mask_m = rays{iy}.spmode == 0;
+%             %
+%             rays{iy}.mask_p(rays{iy}.is_abs_max+1:ns) = false;
+%             rays{iy}.mask_m(rays{iy}.is_abs_max+1:ns) = false;
+%             %
+%             rays{iy}.mask_p(1) = true;%to avoid legend problems
+%             rays{iy}.mask_m(1) = true;
+            %
+            spmode = rays{iy}.spmode(1:rays{iy}.is_abs_max_coll_luke);
+            %
+            rays{iy}.mask_p_coll_luke{1} = 1;%to avoid legend problems
+            rays{iy}.mask_m_coll_luke{1} = 1;%to avoid legend problems
+            %
+            imc_list = 1+[0,find(spmode(2:end) ~= spmode(1:end-1)),rays{iy}.is_abs_max_coll_luke];
+            %
+            pmode = spmode(1);
+            %
+            for imc = 1:length(imc_list)-1,
+                %
+                mask_mc = imc_list(imc):(imc_list(imc+1) - 1);
+                %
+                if pmode == 1,
+                    rays{iy}.mask_p_coll_luke = [rays{iy}.mask_p_coll_luke,mask_mc];
+                else
+                    rays{iy}.mask_m_coll_luke = [rays{iy}.mask_m_coll_luke,mask_mc];
+                end
+                %
+                pmode = ~pmode;
+                %
+            end
+            %
+        else
+            %
+            rays{iy}.mask_p_coll_luke = NaN;
+            rays{iy}.mask_m_coll_luke = NaN;               
+            %
+        end
+        %
+        rays{iy}.is_abs_coll_luke = min(find(sdP_2piRp_coll_luke_ds_norm == max(sdP_2piRp_coll_luke_ds_norm))); 
+        %
+        yrho_abs_coll_luke(iy) = rays{iy}.srho(rays{iy}.is_abs_coll_luke);
+        yNpar_abs_coll_luke(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs_coll_luke));
+        yPtot_abs_coll_luke(iy) = 1 - sP_2piRp_coll_luke_norm(end);
+        %
+        [rays{iy}.dP_coll_luke_normdrho,rhog_dep] = radialdampingprofile_jd(rays{iy}.srho,rays{iy}.sP_2piRp_coll_luke{end}/rays{iy}.sP_2piRp_coll_luke{end}(1),nr_dep);
+        %
+        rays{iy}.dP_coll_luke_normdrho = radialdampingprofile_jd(rays{iy}.srho,rays{iy}.sP_2piRp_coll_luke{end}/rays{iy}.sP_2piRp_coll_luke{end}(1),nr_dep);
+        %
+        dPdrho_coll_luke = dPdrho_coll_luke + rays{iy}.dP_coll_luke_normdrho*rays{iy}.P0_2piRp*2*pi*Rp;
+        %
+        if opt.disp_rays == 'y',
+            hold on,graph1D_jd(rays{iy}.ss,rays{iy}.sP_2piRp_coll_luke{1}*2*pi*equil.Rp,0,0,'ray length (m)','Power (W)',['ray #',int2str(iy),', N_{||0} = ',num2str(real(rays{iy}.sNpar(1)))],NaN,'','','-','none','k',2);
+            %
+            legend('Linear absorption (RLA)','Linear absorption (RLA + NRCA)','LUKE quasilinear absorption (RLA + NRCA)','Location','SouthWest');
+        end
+        %
+    else
+        %
+        rays{iy}.is_abs_max_coll_luke = ns;
+        rays{iy}.is_abs_coll_luke = NaN;
+        rays{iy}.dP_normdrho_coll_luke = NaN;
+        yrho_abs_coll_luke(iy) = NaN;
+        yNpar_abs_coll_luke(iy) = NaN;
+        yPtot_abs_coll_luke(iy) = NaN;
+        %            
+    end    
+    %
+    if opt.disp_rays == 'y',
+        if opt.luke,
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                disp(['Ray # ',num2str(iy),': fraction of power absorbed (LUKE: quasilinear, RLA + NRCA): ',num2str(round(yPtot_abs_coll_luke(iy)*100)),' %'])
+            else     
+                disp(['Ray # ',num2str(iy),': fraction of power absorbed (LUKE: quasilinear, RLA): ',num2str(round(yPtot_abs(iy)*100)),' %']) 
+            end
+        end
+        %
+        if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+            disp(['Ray # ',num2str(iy),': fraction of power absorbed (C3PO: linear, RLA + NRCA): ',num2str(round(yPtot_abs_lin_coll(iy)*100)),' %'])  
+        else
+            disp(['Ray # ',num2str(iy),': fraction of power absorbed (C3PO: linear, RLA): ',num2str(round(yPtot_abs_lin(iy)*100)),' %'])  
+        end
+    end
+    %
 end
 %
 if sum(dPdrho) == 0,
@@ -428,8 +649,17 @@ rho_dep = interp1(prho_g,prho,rhog_dep);
 drhog_dep = diff([0,(rhog_dep(1:end-1) + rhog_dep(2:end))/2,1]);
 drho_dep = diff([0,(rho_dep(1:end-1) + rho_dep(2:end))/2,1]);
 %
-dPdrho_lin = dPdrho_lin.*drhog_dep./drho_dep;
-dPdrho = dPdrho.*drhog_dep./drho_dep;
+if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+    dPdrho_lin = dPdrho_lin.*drhog_dep./drho_dep;
+    dPdrho_lin_coll = dPdrho_lin_coll.*drhog_dep./drho_dep;
+    dPdrho_coll_luke = dPdrho_coll_luke.*drhog_dep./drho_dep;
+else
+    dPdrho_lin = dPdrho_lin.*drhog_dep./drho_dep;
+    dPdrho_lin_coll = zeros(size(dPdrho_lin));
+    dPdrho_coll_luke = zeros(size(dPdrho_lin));
+end
+%
+dPdrho = dPdrho.*drhog_dep./drho_dep;    
 %
 % %
 % % Resonance
@@ -704,22 +934,46 @@ tit = '';
 for iy = 1:ny,
     %
     if opt.luke,
+        %
         mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
     	mask_abs =rays{iy}.mask_abs;
+        %
+        if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_coll_luke;%1:rays{iy}.is_abs_max;
+            mask_abs =rays{iy}.mask_abs_coll_luke;
+        end
+        %
     else
         mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
     	mask_abs = rays{iy}.mask_abs_lin;
+        %
+        if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin_coll;%1:rays{iy}.is_abs_max;
+            mask_abs =rays{iy}.mask_abs_lin_coll;            
+        end
+        %
     end
     %
     for ipass = 1:length(rays{iy}.mask_pass),
+        %
         if isfield(opt,'mode') && opt.mode == 'y',
             %
             if opt.luke,
                 mask_p = rays{iy}.mask_p;
                 mask_m = rays{iy}.mask_m;
+                %
+                if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                     mask_p = rays{iy}.mask_p_coll_luke;
+                     mask_m = rays{iy}.mask_m_coll_luke;
+                end
             else
                 mask_p = rays{iy}.mask_p_lin;
                 mask_m = rays{iy}.mask_m_lin;
+                %
+                if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                    mask_p = rays{iy}.mask_p_lin_coll;
+                    mask_m = rays{iy}.mask_m_lin_coll;
+                end
             end
             %
             graph1D_jd(rays{iy}.sx(mask_p{1} & rays{iy}.mask_pass{ipass}) + Rpdisp,rays{iy}.sy(mask_p{1} & rays{iy}.mask_pass{ipass}) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,opt.font,ax);
@@ -736,6 +990,7 @@ for iy = 1:ny,
     end
     %
     graph1D_jd(rays{iy}.sx(mask_max & mask_abs) + Rpdisp,rays{iy}.sy(mask_max & mask_abs) + Zpdisp,0,0,'','','',NaN,xlim,ylim,style2,marker2,color5,width2,opt.font,ax);
+    %
     if ~isempty(rays{iy}.refs),
         for iref = 1:length(rays{iy}.refs),
             graph1D_jd(rays{iy}.refs{iref}.x + Rpdisp,rays{iy}.refs{iref}.y + Zpdisp,0,0,'','','',NaN,xlim,ylim,style,marker3,rays{iy}.color,width2,opt.font,ax);
@@ -777,13 +1032,26 @@ ylab = 'Y (m)';
 tit = '';
 %
 for iy = 1:ny,
-    %
+    %    
     if opt.luke,
+        %
         mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
     	mask_abs =rays{iy}.mask_abs;
+        %
+        if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_coll_luke;%1:rays{iy}.is_abs_max;
+            mask_abs =rays{iy}.mask_abs_coll_luke;
+        end
+        %
     else
         mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
     	mask_abs = rays{iy}.mask_abs_lin;
+        %
+        if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin_coll;%1:rays{iy}.is_abs_max;
+            mask_abs =rays{iy}.mask_abs_lin_coll;            
+        end
+        %
     end
     %
     if isfield(opt,'mode') && opt.mode == 'y',
@@ -791,9 +1059,19 @@ for iy = 1:ny,
         if opt.luke,
             mask_p = rays{iy}.mask_p;
             mask_m = rays{iy}.mask_m;
+            %
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                 mask_p = rays{iy}.mask_p_coll_luke;
+                 mask_m = rays{iy}.mask_m_coll_luke;
+            end
         else
             mask_p = rays{iy}.mask_p_lin;
             mask_m = rays{iy}.mask_m_lin;
+            %
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                mask_p = rays{iy}.mask_p_lin_coll;
+                mask_m = rays{iy}.mask_m_lin_coll;
+            end
         end
         %
         graph1D_jd(rays{iy}.sX(mask_p{1}),rays{iy}.sY(mask_p{1}),0,0,'','','',NaN,xlim,ylim,style,marker,rays{iy}.color,width1,opt.font,ax);
@@ -839,12 +1117,26 @@ if ~isfield(opt,'axs'),
     tit = '';
     %
     if opt.luke,
-        graph1D_jd(1:ny,yrho_abs,0,0,'','','',NaN,xlim,ylim,style2,marker3,color1,width1);
-        leg = {'LUKE','C3PO'};
+        if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+            graph1D_jd(1:ny,yrho_abs_coll_luke,0,0,'','','',NaN,xlim,ylim,style2,marker3,color1,width1);
+            leg = {'LUKE (RLA + NRCA)','C3PO (RLA + NRCA)'};
+        else
+            graph1D_jd(1:ny,yrho_abs,0,0,'','','',NaN,xlim,ylim,style2,marker3,color1,width1);
+            leg = {'LUKE (RLA)','C3PO (RLA)'};
+        end
     else
-        leg = NaN;
+        if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,         
+            leg = {'C3PO (RLA + NRCA)'};
+        else
+            leg = {'C3PO (RLA)'};
+        end
     end
-    graph1D_jd(1:ny,yrho_abs_lin,0,0,xlab,ylab,tit,leg,xlim,ylim,style2,marker1,color2,width1,opt.font,gca,red,lspace,bspace);
+    %
+    if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+        graph1D_jd(1:ny,yrho_abs_lin_coll,0,0,xlab,ylab,tit,leg,xlim,ylim,style2,marker1,color2,width1,opt.font,gca,red,lspace,bspace);
+    else        
+        graph1D_jd(1:ny,yrho_abs_lin,0,0,xlab,ylab,tit,leg,xlim,ylim,style2,marker1,color2,width1,opt.font,gca,red,lspace,bspace);
+    end
     %
     print_jd(opt.print,[figname,'Rad_dep_peak'],'figures_WAVE');
     %
@@ -856,9 +1148,18 @@ if ~isfield(opt,'axs'),
     tit = '';
     %
     if opt.luke,
-        graph1D_jd(1:ny,real(yNpar_abs),0,0,'','','',NaN,xlim,ylim,style2,marker3,color1,width1);
+        if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+            graph1D_jd(1:ny,real(yNpar_abs_coll_luke),0,0,'','','',NaN,xlim,ylim,style2,marker3,color1,width1);
+        else
+            graph1D_jd(1:ny,real(yNpar_abs),0,0,'','','',NaN,xlim,ylim,style2,marker3,color1,width1);
+        end
     end
-    graph1D_jd(1:ny,real(yNpar_abs_lin),0,0,xlab,ylab,tit,leg,xlim,ylim,style2,marker1,color2,width1,opt.font,gca,red,lspace,bspace);
+    %
+    if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+        graph1D_jd(1:ny,real(yNpar_abs_lin_coll),0,0,xlab,ylab,tit,leg,xlim,ylim,style2,marker1,color2,width1,opt.font,gca,red,lspace,bspace);
+    else
+        graph1D_jd(1:ny,real(yNpar_abs_lin),0,0,xlab,ylab,tit,leg,xlim,ylim,style2,marker1,color2,width1,opt.font,gca,red,lspace,bspace);
+    end
     %
     print_jd(opt.print,[figname,'Npar_dep_peak'],'figures_WAVE');
 end
@@ -870,7 +1171,11 @@ if ~isfield(opt,'axs'),
 else
     ax = opt.axs(3);
     leg = NaN;
-    ylim = [0,max(dPdrho_lin/1e6)]*1.2;
+    if sum(dPdrho_lin_coll) ~= 0,
+        ylim = [0,max(dPdrho_lin_coll/1e6)]*1.2;
+    else
+        ylim = [0,max(dPdrho_lin/1e6)]*1.2;
+    end
 end   
 %
 xlim = [0,1];
@@ -879,9 +1184,74 @@ ylab = 'dPd\rho (MW)';
 tit = '';
 %
 if opt.luke,
-    graph1D_jd(rho_dep,dPdrho/1e6,0,0,'','','',NaN,xlim,ylim,style,marker3,color1,width1,opt.font,ax);
+    if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+        graph1D_jd(rho_dep,dPdrho_coll_luke/1e6,0,0,'','','',NaN,xlim,ylim,style,marker3,color1,width1,opt.font,ax);
+    else
+        graph1D_jd(rho_dep,dPdrho/1e6,0,0,'','','',NaN,xlim,ylim,style,marker3,color1,width1,opt.font,ax);
+    end
 end
-graph1D_jd(rho_dep,dPdrho_lin/1e6,0,0,xlab,ylab,tit,leg,xlim,ylim,style3,marker1,color2,width1,opt.font,ax,red,lspace,bspace);
+%
+if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+    graph1D_jd(rho_dep,dPdrho_lin_coll/1e6,0,0,xlab,ylab,tit,leg,xlim,ylim,style3,marker1,color2,width1,opt.font,ax,red,lspace,bspace); 
+else
+    graph1D_jd(rho_dep,dPdrho_lin/1e6,0,0,xlab,ylab,tit,leg,xlim,ylim,style3,marker1,color2,width1,opt.font,ax,red,lspace,bspace);
+end
+%
+if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1 && opt.luke,
+    if ~isfield(opt,'axs'),
+        figure(6),clf,set(6,'name','Total deposition profile (quasilinear, LUKE)')
+        ax = gca;
+        ylim = NaN;
+    else
+        ax = opt.axs(3);
+        leg = NaN;
+        if sum(dPdrho_coll_luke) ~= 0,
+            ylim = [0,max(dPdrho_coll_luke/1e6)]*1.2;
+        end
+    end   
+    %
+    xlim = [0,1];
+    xlab = plab;
+    ylab = 'dPd\rho (MW)';
+    tit = '';
+    leg = {'LUKE (RLA + NRCA)','LUKE (RLA)'};
+    %
+    graph1D_jd(rho_dep,dPdrho_coll_luke/1e6,0,0,'','','',NaN,xlim,ylim,style,marker3,color1,width1,opt.font,ax);
+    graph1D_jd(rho_dep,dPdrho/1e6,0,0,xlab,ylab,tit,leg,xlim,ylim,style3,marker3,color2,width1,opt.font,ax,red,lspace,bspace);
+    %
+else
+    if ishandle(figure(6))
+        close(figure(6))
+    end
+end
+%
+if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+    if ~isfield(opt,'axs'),
+        figure(7),clf,set(7,'name','Total deposition profile (linear, C3PO)')
+        ax = gca;
+        ylim = NaN;
+    else
+        ax = opt.axs(3);
+        leg = NaN;
+        if sum(dPdrho_lin_coll) ~= 0,
+            ylim = [0,max(dPdrho_lin_coll/1e6)]*1.2;
+        end
+    end   
+    %
+    xlim = [0,1];
+    xlab = plab;
+    ylab = 'dPd\rho (MW)';
+    tit = '';
+    leg = {'C3PO (RLA + NRCA)','C3PO (RLA)'};
+    %
+    graph1D_jd(rho_dep,dPdrho_lin_coll/1e6,0,0,'','','',NaN,xlim,ylim,style,marker3,color1,width1,opt.font,ax);
+    graph1D_jd(rho_dep,dPdrho_lin/1e6,0,0,xlab,ylab,tit,leg,xlim,ylim,style3,marker3,color2,width1,opt.font,ax,red,lspace,bspace);
+    %
+else
+    if ishandle(figure(7))
+        close(figure(7))
+    end
+end
 %
 set(ax,'xtickmode','auto');drawnow;
 set(ax,'ytickmode','auto');drawnow;
@@ -966,15 +1336,29 @@ while iw ~= 0 && any(ibb ~= 0)
         ray = rays_disp{iray};
         %
         if opt.luke,
-            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
-            mask_abs = ray.mask_abs;
-            mask_p = ray.mask_p;
-            mask_m = ray.mask_m;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_coll_luke;%1:rays{iy}.is_abs_max;
+                mask_abs = ray.mask_abs_coll_luke;
+                mask_p = ray.mask_p_coll_luke;
+                mask_m = ray.mask_m_coll_luke;
+            else
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
+                mask_abs = ray.mask_abs;
+                mask_p = ray.mask_p;
+                mask_m = ray.mask_m;
+            end
         else
-            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
-            mask_abs = ray.mask_abs_lin;
-            mask_p = ray.mask_p_lin;
-            mask_m = ray.mask_m_lin;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin_coll;%1:rays{iy}.is_abs_max_lin;
+                mask_abs = ray.mask_abs_lin_coll;
+                mask_p = ray.mask_p_lin_coll;
+                mask_m = ray.mask_m_lin_coll;
+            else
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
+                mask_abs = ray.mask_abs_lin;
+                mask_p = ray.mask_p_lin;
+                mask_m = ray.mask_m_lin;
+            end
         end
         %
         if isfield(opt,'mode') && opt.mode == 'y',
@@ -1021,16 +1405,30 @@ while iw ~= 0 && any(ibb ~= 0)
         ray = rays_disp{iray};
         %
         if opt.luke,
-            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
-            mask_abs = ray.mask_abs;
-            mask_p = ray.mask_p;
-            mask_m = ray.mask_m;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_coll_luke;%1:rays{iy}.is_abs_max;
+                mask_abs = ray.mask_abs_coll_luke;
+                mask_p = ray.mask_p_coll_luke;
+                mask_m = ray.mask_m_coll_luke;
+            else
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
+                mask_abs = ray.mask_abs;
+                mask_p = ray.mask_p;
+                mask_m = ray.mask_m;
+            end
         else
-            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
-            mask_abs = ray.mask_abs_lin;
-            mask_p = ray.mask_p_lin;
-            mask_m = ray.mask_m_lin;
-        end
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin_coll;%1:rays{iy}.is_abs_max_lin;
+                mask_abs = ray.mask_abs_lin_coll;
+                mask_p = ray.mask_p_lin_coll;
+                mask_m = ray.mask_m_lin_coll;
+            else
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
+                mask_abs = ray.mask_abs_lin;
+                mask_p = ray.mask_p_lin;
+                mask_m = ray.mask_m_lin;
+            end
+                end
         %
         if isfield(opt,'mode') && opt.mode == 'y',
             graph1D_jd(ray.sX(mask_p{1}),ray.sY(mask_p{1}),0,0,'','','',NaN,xlim,ylim,style,marker,colors{rem(iray,ncols+1)},width1,opt.font);
@@ -1075,15 +1473,29 @@ while iw ~= 0 && any(ibb ~= 0)
         ray = rays_disp{iray};
         %
         if opt.luke,
-            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
-            mask_abs = ray.mask_abs;
-            mask_p = ray.mask_p;
-            mask_m = ray.mask_m;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_coll_luke;%1:rays{iy}.is_abs_max;
+                mask_abs = ray.mask_abs_coll_luke;
+                mask_p = ray.mask_p_coll_luke;
+                mask_m = ray.mask_m_coll_luke;
+            else
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
+                mask_abs = ray.mask_abs;
+                mask_p = ray.mask_p;
+                mask_m = ray.mask_m;
+            end
         else
-            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
-            mask_abs = ray.mask_abs_lin;
-            mask_p = ray.mask_p_lin;
-            mask_m = ray.mask_m_lin;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin_coll;%1:rays{iy}.is_abs_max_lin;
+                mask_abs = ray.mask_abs_lin_coll;
+                mask_p = ray.mask_p_lin_coll;
+                mask_m = ray.mask_m_lin_coll;
+            else
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
+                mask_abs = ray.mask_abs_lin;
+                mask_p = ray.mask_p_lin;
+                mask_m = ray.mask_m_lin;
+            end
         end
         %
         if isfield(opt,'mode') && opt.mode == 'y',
@@ -1137,15 +1549,29 @@ while iw ~= 0 && any(ibb ~= 0)
         ray = rays_disp{iray};
         %
         if opt.luke,
-            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
-            mask_abs = ray.mask_abs;
-            mask_p = ray.mask_p;
-            mask_m = ray.mask_m;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_coll_luke;%1:rays{iy}.is_abs_max;
+                mask_abs = ray.mask_abs_coll_luke;
+                mask_p = ray.mask_p_coll_luke;
+                mask_m = ray.mask_m_coll_luke;
+            else
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
+                mask_abs = ray.mask_abs;
+                mask_p = ray.mask_p;
+                mask_m = ray.mask_m;
+            end
         else
-            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
-            mask_abs = ray.mask_abs_lin;
-            mask_p = ray.mask_p_lin;
-            mask_m = ray.mask_m_lin;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin_coll;%1:rays{iy}.is_abs_max_lin;
+                mask_abs = ray.mask_abs_lin_coll;
+                mask_p = ray.mask_p_lin_coll;
+                mask_m = ray.mask_m_lin_coll;
+            else
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
+                mask_abs = ray.mask_abs_lin;
+                mask_p = ray.mask_p_lin;
+                mask_m = ray.mask_m_lin;
+            end
         end
         %
         graph1D_jd(ray.ss,real(ray.sNperp),0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,colors{rem(iray,ncols+1)},width1,opt.font);
@@ -1164,15 +1590,29 @@ while iw ~= 0 && any(ibb ~= 0)
         ray = rays_disp{iray};
         %
         if opt.luke,
-            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
-            mask_abs = ray.mask_abs;
-            mask_p = ray.mask_p;
-            mask_m = ray.mask_m;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_coll_luke;%1:rays{iy}.is_abs_max;
+                mask_abs = ray.mask_abs_coll_luke;
+                mask_p = ray.mask_p_coll_luke;
+                mask_m = ray.mask_m_coll_luke;
+            else
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max;%1:rays{iy}.is_abs_max;
+                mask_abs = ray.mask_abs;
+                mask_p = ray.mask_p;
+                mask_m = ray.mask_m;
+            end
         else
-            mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
-            mask_abs = ray.mask_abs_lin;
-            mask_p = ray.mask_p_lin;
-            mask_m = ray.mask_m_lin;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin_coll;%1:rays{iy}.is_abs_max_lin;
+                mask_abs = ray.mask_abs_lin_coll;
+                mask_p = ray.mask_p_lin_coll;
+                mask_m = ray.mask_m_lin_coll;
+            else
+                mask_max = 1:rays{iy}.ns <= rays{iy}.is_abs_max_lin;%1:rays{iy}.is_abs_max_lin;
+                mask_abs = ray.mask_abs_lin;
+                mask_p = ray.mask_p_lin;
+                mask_m = ray.mask_m_lin;
+            end
         end
         %
         %sphi_abs = sqrt(abs(ray.sphi_xyz(1,:)).^2 + abs(ray.sphi_xyz(2,:)).^2 + abs(ray.sphi_xyz(3,:)).^2);
@@ -1185,7 +1625,7 @@ while iw ~= 0 && any(ibb ~= 0)
     %    
     % power deposition
     %
-    setfig(f_opt,ib,6,figlab)
+    setfig(f_opt,ib,6,figlab);
     %
     xlim = [0,1];
     xlab = plab;
@@ -1200,20 +1640,46 @@ while iw ~= 0 && any(ibb ~= 0)
         ray = rays_disp{iray};
         %
         if pow_opt == 0,
-            dP_drho_disp = ray.dP_normdrho.*drhog_dep./drho_dep;
-            dP_lin_drho_disp = ray.dP_lin_normdrho.*drhog_dep./drho_dep;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                dP_drho_disp = ray.dP_coll_luke_normdrho.*drhog_dep./drho_dep;
+            else
+                dP_drho_disp = ray.dP_normdrho.*drhog_dep./drho_dep;
+            end
+            %
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                dP_lin_drho_disp = ray.dP_lin_coll_normdrho.*drhog_dep./drho_dep;
+            else
+                dP_lin_drho_disp = ray.dP_lin_normdrho.*drhog_dep./drho_dep;
+            end
         else
-            dP_drho_disp = ray.dP_normdrho*ray.P0_2piRp*2*pi*Rp.*drhog_dep./drho_dep/1e6;
-            dP_lin_drho_disp = ray.dP_lin_normdrho*ray.P0_2piRp*2*pi*Rp.*drhog_dep./drho_dep/1e6;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                dP_drho_disp = ray.dP_coll_luke_normdrho*ray.P0_2piRp*2*pi*Rp.*drhog_dep./drho_dep/1e6;
+            else
+                dP_drho_disp = ray.dP_normdrho*ray.P0_2piRp*2*pi*Rp.*drhog_dep./drho_dep/1e6;
+            end
+            %
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                dP_lin_drho_disp = ray.dP_lin_coll_normdrho*ray.P0_2piRp*2*pi*Rp.*drhog_dep./drho_dep/1e6;
+            else  
+                dP_lin_drho_disp = ray.dP_lin_normdrho*ray.P0_2piRp*2*pi*Rp.*drhog_dep./drho_dep/1e6;
+            end
         end        
         %
         if opt.luke,
             graph1D_jd(rho_dep,dP_drho_disp,0,0,xlab,ylab,tit,NaN,xlim,ylim,style,marker,colors{rem(iray,ncols+1)},width1,opt.font);
             if c_opt == 1,
-                leg = {'LUKE','C3PO'};
+                if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+                    leg = {'LUKE (RLA + NRCA)','C3PO (RLA + NRCA)'};
+                else
+                    leg = {'LUKE (RLA)','C3PO (RLA)'};
+                end
             end
         else
-            leg = NaN;
+            if isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,
+            	leg = {'C3PO (RLA + NRCA)'};
+            else
+            	leg = {'C3PO (RLA)'};
+            end
         end
         if opt.luke == 0 || c_opt == 1,
             graph1D_jd(rho_dep,dP_lin_drho_disp,0,0,xlab,ylab,tit,leg,xlim,ylim,style3,marker,colors{rem(iray,ncols+1)},width1,opt.font);
