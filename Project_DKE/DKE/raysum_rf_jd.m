@@ -87,7 +87,11 @@ else
 	Dparparmax = Inf;
 end
 %
-XXredfac = ZXXD_rf.parpar_ij/Dparparmax;
+if imag(Dparparmax) == 0,
+    XXredfac = ZXXD_rf.parpar_ij/Dparparmax;
+else
+    XXredfac = ZXXD_rf.ij/imag(Dparparmax);
+end
 XXredfac(XXredfac < 1) = 1;
 %
 ZXXD_rf.pp_ipj = ZXXD_rf.pp_ipj./XXredfac;
