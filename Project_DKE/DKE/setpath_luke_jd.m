@@ -202,27 +202,39 @@ if isfield(dkepath,'hostname') && iscell(dkepath.hostname),
     %
     lochostname = hostname_jd;
     nhosts = length(dkepath.hostname);
-    flag = false(1,nhosts);
+    flag = zeros(1,nhosts);
+    mflags = cell(1,nhosts);
     for ihost = 1:nhosts,
-        if any(strfind(lochostname,dkepath.hostname{ihost})),% local cluster,
-            flag(ihost) = true;
+        if iscell(dkepath.hostname{ihost}),
+            mflags{ihost} = false(1,length(dkepath.hostname{ihost}));
+            for imhost = 1:length(dkepath.hostname{ihost}),
+                mflags{ihost}(imhost) = any(strfind(lochostname,dkepath.hostname{ihost}{imhost}));
+            end
+        else
+            mflags{ihost} = any(strfind(lochostname,dkepath.hostname{ihost}));
         end
+        flag(ihost) = sum(mflags{ihost});
     end
-    isel = find(flag);
+    flagsum = sum(flag);
     %
-    if isempty(isel),
+    if flagsum == 0,
         error('The local hostname could not be identified in dkepath')
-    elseif length(isel) > 1,
+    elseif flagsum > 1,
         disp('WARNING : more than one positive identification for local hostname in dkepath. First match enforced.')
-        isel = isel(1);
     end
+    ihost = find(flag > 0,1,'first');
+    imhost = find(mflags{ihost},1,'first');
     %
-    dkepath = conc_struct_jd(dkepath,dkepath.(dkepath.machine{isel}));% add fields specific to local profile
+    dkepath = conc_struct_jd(dkepath,dkepath.(dkepath.machine{ihost}));% add fields specific to local profile
     %
     dkepath = rmfield(dkepath,dkepath.machine);% remove profile-specific fields 
     %
-    dkepath.hostname = dkepath.hostname{isel};
-    dkepath.machine = dkepath.machine{isel};
+    if iscell(dkepath.hostname{ihost}),
+        dkepath.hostname = dkepath.hostname{ihost}{imhost};
+    else
+        dkepath.hostname = dkepath.hostname{ihost};
+    end
+    dkepath.machine = dkepath.machine{ihost};
     %
 end
 %

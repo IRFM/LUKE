@@ -55,11 +55,19 @@ for ifile = 1:npathfiles,
     end
     %
     for ihost = 1:length(hostnames),
-        if any(strfind(lochostname,hostnames{ihost})),% local cluster,
-            %
-            flag(ifile) = true;
-            break
-            %
+        if ~iscell(hostnames{ihost}),% case of single hostname in machine profile
+            mhostnames = hostnames(ihost);
+        else% multiple hostnames on the same machine profile
+            mhostnames = hostnames{ihost};
+        end
+        %
+        for imhost = 1:length(mhostnames)
+            if any(strfind(lochostname,mhostnames{imhost})),% local cluster,
+                %
+                flag(ifile) = true;
+                break
+                %
+            end
         end
     end
     %
@@ -126,7 +134,7 @@ else
     %
     dkepath = conc_struct_jd(selectfields_jd(dkepath,{'hostname','machine','computer'}),dkepath.(username));
     %
-    if iscell(dkepath.machine),%case of multiple machines on the same filesystem
+    if iscell(dkepath.machine),%case of multiple machine profiles on the same filesystem
         nhost = length(dkepath.machine);
         flag = false(1,nhost);
         for ihost = 1:nhost,
