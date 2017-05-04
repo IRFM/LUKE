@@ -280,17 +280,233 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
         %
         scocurr = sign(equilDKE.psia_apRp)*sign(equilDKE.XBphi(1,1));
         %
+        % Power calculations linear RLA, linear RLA + NRCA  and quasilinear RLA + NRCA, if NRCA considered
+        %
+        if ~isempty(waves),
+            %
+            wxP_rf_lin = zeros(nw,nr);% calculate linear deposition (RLA)
+            wxP_rf_lin_coll = zeros(nw,nr);% calculate linear deposition (RLA + NRCA)
+            wxP_rf_coll_luke = zeros(nw,nr);% calculate quasilinear deposition (RLA + NRCA)
+            %
+            wP_rf_rhoG_lin = zeros(1,nw);
+            wP_rf_rhoP_lin = zeros(1,nw);
+            wP_rf_rhoT_lin = zeros(1,nw);
+            wP_rf_rhoV_lin = zeros(1,nw);
+            %
+            wP_rf_rhoG_lin_coll = zeros(1,nw);
+            wP_rf_rhoP_lin_coll = zeros(1,nw);
+            wP_rf_rhoT_lin_coll = zeros(1,nw);
+            wP_rf_rhoV_lin_coll = zeros(1,nw);
+            %
+            wP_rf_rhoG_coll_luke = zeros(1,nw);
+            wP_rf_rhoP_coll_luke = zeros(1,nw);
+            wP_rf_rhoT_coll_luke = zeros(1,nw);
+            wP_rf_rhoV_coll_luke = zeros(1,nw);
+            %
+            for iw = 1:nw,
+                %
+                if ~isfield(waves{iw},'model') || strcmp(waves{iw}.model,'RT'),
+                    %
+                    nb(iw) = length(waves{iw}.rays);
+                    %
+                    for iray = 1:nb(iw),
+                        %
+                        ray = waves{iw}.rays{iray};
+                        %
+                        if isfield(ray,'sP_2piRp_lin')  && isfield(ray,'srho'),
+                            wxP_rf_lin(iw,:) = wxP_rf_lin(iw,:) + 1e-6*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin,xrhoG_S).*xdrhoG./equilDKE.xdV_2piRp_dke;
+                        else
+                            wxP_rf_lin(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
+                        end
+                        %
+                        if isfield(waves{1}.rayparam,'colldamp') && waves{1}.rayparam.colldamp == 1,
+                            %
+                            if isfield(ray,'sP_2piRp_lin_coll')  && isfield(ray,'srho'),%linear + no-resonant collisional absorption
+                                wxP_rf_lin_coll(iw,:) = wxP_rf_lin_coll(iw,:) + 1e-6*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin_coll,xrhoG_S).*xdrhoG./equilDKE.xdV_2piRp_dke;
+                            else
+                                wxP_rf_lin_coll(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
+                            end
+                            %
+                            if isfield(ray,'sP_2piRp_coll_luke')  && isfield(ray,'srho'),%linear + no-resonant collisional absorption
+                                wxP_rf_coll_luke(iw,:) = wxP_rf_coll_luke(iw,:) + 1e-6*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_coll_luke{1},xrhoG_S).*xdrhoG./equilDKE.xdV_2piRp_dke;
+                            else
+                                wxP_rf_coll_luke(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
+                            end
+                            %
+                        end
+                        %
+                    end
+                    %
+                elseif strcmp(waves{iw}.model,'FW'),
+                    %
+                    nr_fw = length(waves{iw}.rho);
+                    xwmask = zeros(nr,nr_fw);%matrix of individual contributions from each EVE FS
+                    %
+                    for ir_fw = 1:nr_fw,
+                        if waves{iw}.rhotype == 'g',
+                            xwmask(:,ir_fw) = max([zeros(1,nr);(min([repmat(waves{iw}.rho_S(ir_fw + 1),[1,nr]);xrhoG_S(2:end)]) - max([repmat(waves{iw}.rho_S(ir_fw),[1,nr]);xrhoG_S(1:end-1)]))]).'./xdrhoG.';
+                        elseif waves{iw}.rhotype == 'p',
+                            xwmask(:,ir_fw) = max([zeros(1,nr);(min([repmat(waves{iw}.rho_S(ir_fw + 1),[1,nr]);xrhoP_S(2:end)]) - max([repmat(waves{iw}.rho_S(ir_fw),[1,nr]);xrhoP_S(1:end-1)]))]).'./xdrhoP.';
+                        elseif waves{iw}.rhotype == 't',
+                            xwmask(:,ir_fw) = max([zeros(1,nr);(min([repmat(waves{iw}.rho_S(ir_fw + 1),[1,nr]);xrhoT_S(2:end)]) - max([repmat(waves{iw}.rho_S(ir_fw),[1,nr]);xrhoT_S(1:end-1)]))]).'./xdrhoT.';
+                        elseif waves{iw}.rhotype == 'v',
+                            xwmask(:,ir_fw) = max([zeros(1,nr);(min([repmat(waves{iw}.rho_S(ir_fw + 1),[1,nr]);xrhoV_S(2:end)]) - max([repmat(waves{iw}.rho_S(ir_fw),[1,nr]);xrhoV_S(1:end-1)]))]).'./xdrhoV.';
+                        else
+                            error('rho type not recognized')
+                        end
+                    end
+                    %
+                    wpe_eve = 1e-6*(waves{iw}.pe_eve(1:end - 1) + waves{iw}.pe_eve(2:end))/2;% EVE linear power density (in MW/m3?)
+                    %
+                    wxP_rf_lin(iw,:) = (xwmask*wpe_eve).';
+                    %
+                else
+                    error('Wave type not recognized.')
+                end
+                %    
+                [wP_rf_rhoG_lin(iw)] = calc_peak_jd(xrhoG,xdrhoG,wxP_rf_lin(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                [wP_rf_rhoP_lin(iw)] = calc_peak_jd(xrhoP,xdrhoP,wxP_rf_lin(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                [wP_rf_rhoT_lin(iw)] = calc_peak_jd(xrhoT,xdrhoT,wxP_rf_lin(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                [wP_rf_rhoV_lin(iw)] = calc_peak_jd(xrhoV,xdrhoV,wxP_rf_lin(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                %
+                [wP_rf_rhoG_lin_coll(iw)] = calc_peak_jd(xrhoG,xdrhoG,wxP_rf_lin_coll(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                [wP_rf_rhoP_lin_coll(iw)] = calc_peak_jd(xrhoP,xdrhoP,wxP_rf_lin_coll(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                [wP_rf_rhoT_lin_coll(iw)] = calc_peak_jd(xrhoT,xdrhoT,wxP_rf_lin_coll(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                [wP_rf_rhoV_lin_coll(iw)] = calc_peak_jd(xrhoV,xdrhoV,wxP_rf_lin_coll(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                %
+                [wP_rf_rhoG_coll_luke(iw)] = calc_peak_jd(xrhoG,xdrhoG,wxP_rf_coll_luke(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                [wP_rf_rhoP_coll_luke(iw)] = calc_peak_jd(xrhoP,xdrhoP,wxP_rf_coll_luke(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                [wP_rf_rhoT_coll_luke(iw)] = calc_peak_jd(xrhoT,xdrhoT,wxP_rf_coll_luke(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                [wP_rf_rhoV_coll_luke(iw)] = calc_peak_jd(xrhoV,xdrhoV,wxP_rf_coll_luke(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                %
+            end
+            %
+            wxp_rf_2piRp_lin = wxP_rf_lin.*repmat(equilDKE.xdV_2piRp_dke,[nw,1]);
+            wp_rf_2piRp_lin = sum(wxp_rf_2piRp_lin,2);
+            xp_rf_2piRp_lin = sum(wxp_rf_2piRp_lin,1);
+            p_rf_2piRp_lin = sum(wp_rf_2piRp_lin);
+            %
+            wxp_rf_2piRp_lin_coll = wxP_rf_lin_coll.*repmat(equilDKE.xdV_2piRp_dke,[nw,1]);
+            wp_rf_2piRp_lin_coll = sum(wxp_rf_2piRp_lin_coll,2);
+            xp_rf_2piRp_lin_coll = sum(wxp_rf_2piRp_lin_coll,1);
+            p_rf_2piRp_lin_coll = sum(wp_rf_2piRp_lin_coll);
+            %
+            wxp_rf_2piRp_coll_luke = wxP_rf_coll_luke.*repmat(equilDKE.xdV_2piRp_dke,[nw,1]);
+            wp_rf_2piRp_coll_luke = sum(wxp_rf_2piRp_coll_luke,2);
+            xp_rf_2piRp_coll_luke = sum(wxp_rf_2piRp_coll_luke,1);
+            p_rf_2piRp_coll_luke = sum(wp_rf_2piRp_coll_luke);
+            %
+            if ~all(isnan(wP_rf_rhoG_lin)),
+                wTe_lin = interp1(xrhoG,xTe,wP_rf_rhoG_lin);
+                wne_lin = interp1(xrhoG,xne,wP_rf_rhoG_lin);
+            else
+                wTe_lin = NaN(1,nw);
+                wne_lin = NaN(1,nw);
+            end
+            %
+            if ~all(isnan(wP_rf_rhoG_lin_coll)),
+                wTe_lin_coll = interp1(xrhoG,xTe,wP_rf_rhoG_lin_coll);
+                wne_lin_coll = interp1(xrhoG,xne,wP_rf_rhoG_lin_coll);
+            else
+                wTe_lin_coll = NaN(1,nw);
+                wne_lin_coll = NaN(1,nw);
+            end
+            %                
+            if ~all(isnan(wP_rf_rhoG_coll_luke)),
+                wTe_coll_luke = interp1(xrhoG,xTe,wP_rf_rhoG_coll_luke);
+                wne_coll_luke = interp1(xrhoG,xne,wP_rf_rhoG_coll_luke);
+            else
+                wTe_coll_luke = NaN(1,nw);
+                wne_coll_luke = NaN(1,nw);
+            end
+            %
+            [P_rf_rhoG_lin,P_rf_drhoG_lin] = calc_peak_jd(xrhoG,xdrhoG,xp_rf_2piRp_lin./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoP_lin,P_rf_drhoP_lin] = calc_peak_jd(xrhoP,xdrhoP,xp_rf_2piRp_lin./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoT_lin,P_rf_drhoT_lin] = calc_peak_jd(xrhoT,xdrhoT,xp_rf_2piRp_lin./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoV_lin,P_rf_drhoV_lin] = calc_peak_jd(xrhoV,xdrhoV,xp_rf_2piRp_lin./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            %
+            [P_rf_rhoG_lin_coll,P_rf_drhoG_lin_coll] = calc_peak_jd(xrhoG,xdrhoG,xp_rf_2piRp_lin_coll./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoP_lin_coll,P_rf_drhoP_lin_coll] = calc_peak_jd(xrhoP,xdrhoP,xp_rf_2piRp_lin_coll./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoT_lin_coll,P_rf_drhoT_lin_coll] = calc_peak_jd(xrhoT,xdrhoT,xp_rf_2piRp_lin_coll./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoV_lin_coll,P_rf_drhoV_lin_coll] = calc_peak_jd(xrhoV,xdrhoV,xp_rf_2piRp_lin_coll./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            %
+            [P_rf_rhoG_coll_luke,P_rf_drhoG_coll_luke] = calc_peak_jd(xrhoG,xdrhoG,xp_rf_2piRp_coll_luke./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoP_coll_luke,P_rf_drhoP_coll_luke] = calc_peak_jd(xrhoP,xdrhoP,xp_rf_2piRp_coll_luke./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoT_coll_luke,P_rf_drhoT_coll_luke] = calc_peak_jd(xrhoT,xdrhoT,xp_rf_2piRp_coll_luke./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            [P_rf_rhoV_coll_luke,P_rf_drhoV_coll_luke] = calc_peak_jd(xrhoV,xdrhoV,xp_rf_2piRp_coll_luke./equilDKE.xdV_2piRp_dke,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            %
+            if ~isnan(P_rf_rhoG_lin)
+                P_rf_Te_lin = interp1(xrhoG,xTe,P_rf_rhoG_lin);
+                P_rf_ne_lin = interp1(xrhoG,xne,P_rf_rhoG_lin);
+            else
+                P_rf_Te_lin = NaN;
+                P_rf_ne_lin = NaN;
+            end
+            %
+            if ~isnan(P_rf_rhoG_lin_coll)
+                P_rf_Te_lin_coll = interp1(xrhoG,xTe,P_rf_rhoG_lin_coll);
+                P_rf_ne_lin_coll = interp1(xrhoG,xne,P_rf_rhoG_lin_coll);
+            else
+                P_rf_Te_lin_coll = NaN;
+                P_rf_ne_lin_coll = NaN;
+            end
+            %
+            if ~isnan(P_rf_rhoG_coll_luke)
+                P_rf_Te_coll_luke = interp1(xrhoG,xTe,P_rf_rhoG_coll_luke);
+                P_rf_ne_coll_luke = interp1(xrhoG,xne,P_rf_rhoG_coll_luke);
+            else
+                P_rf_Te_coll_luke = NaN;
+                P_rf_ne_coll_luke = NaN;
+            end
+            %
+        else
+            %
+            xp_rf_2piRp_lin = NaN;
+            p_rf_2piRp_lin = NaN;
+            %
+            xp_rf_2piRp_lin_coll = NaN;
+            p_rf_2piRp_lin_coll = NaN;
+            %
+            xp_rf_2piRp_coll_luke = NaN;
+            p_rf_2piRp_coll_luke = NaN;
+            %
+            P_rf_rhoG_lin = NaN;P_rf_drhoG_lin = NaN;
+            P_rf_rhoP_lin = NaN;P_rf_drhoP_lin = NaN;
+            P_rf_rhoT_lin = NaN;P_rf_drhoT_lin = NaN;
+            P_rf_rhoV_lin = NaN;P_rf_drhoV_lin = NaN;
+            %
+            P_rf_rhoG_lin_coll = NaN;P_rf_drhoG_lin_coll = NaN;
+            P_rf_rhoP_lin_coll = NaN;P_rf_drhoP_lin_coll = NaN;
+            P_rf_rhoT_lin_coll = NaN;P_rf_drhoT_lin_coll = NaN;
+            P_rf_rhoV_lin_coll = NaN;P_rf_drhoV_lin_coll = NaN;
+            %
+            P_rf_rhoG_coll_luke = NaN;P_rf_drhoG_coll_luke = NaN;
+            P_rf_rhoP_coll_luke = NaN;P_rf_drhoP_coll_luke = NaN;
+            P_rf_rhoT_coll_luke = NaN;P_rf_drhoT_coll_luke = NaN;
+            P_rf_rhoV_coll_luke = NaN;P_rf_drhoV_coll_luke = NaN;
+            %
+        end                
+        %
         % current
         %
         J_tot = Zcurr(end).x_0_fsav*mksa.j_ref*scocurr;
         %
-        % power deposition
+        % RF power deposition
         %
         P_rf = ZP0(end).x_rf_fsav.'*mksa.P_ref;
         yP_rf = ZP0(end).xy_rf_fsav.'*mksa.P_ref;
         ynP_rf = ZP0(end).xyn_rf_fsav*mksa.P_ref;
         P_e = ZP0(end).x_e_fsav*mksa.P_ref;
-        P_tot = P_rf + P_e;
+        %
+        if ~isempty(waves)
+            if isfield(waves{1}.rayparam,'colldamp') && waves{1}.rayparam.colldamp == 1,
+                P_tot = xp_rf_2piRp_coll_luke./equilDKE.xdV_2piRp_dke + P_e; %the RF power is impacted and lowered by NRCA, as part of the power is lossed in NRCA
+            else
+                P_tot = P_rf + P_e;
+            end
+        else
+            P_tot = P_e;
+        end
         %
         % parallel momentum transfer rate
         %
@@ -317,6 +533,9 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             %
             if size(dke_out.zP_0_2piRp_mod,1) >= nit_rf,
                 zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod(1:nit_rf,end);% new main_dke_yp - all RF states kept
+                if isfield(dke_out,'zP_0_2piRp_mod_coll')
+                    zP_0_2piRp_mod_coll = dke_out.zP_0_2piRp_mod_coll(1:nit_rf,end);% new main_dke_yp - all RF states kept   
+                end
             else
                 zP_0_2piRp_mod = dke_out.zP_0_2piRp_mod(1,end);% old main_dke_yp - only last RF state kept
             end
@@ -352,6 +571,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             [P_rf_rhoP,P_rf_drhoP] = calc_peak_jd(xrhoP,xdrhoP,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
             [P_rf_rhoT,P_rf_drhoT] = calc_peak_jd(xrhoT,xdrhoT,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
             [P_rf_rhoV,P_rf_drhoV] = calc_peak_jd(xrhoV,xdrhoV,P_rf,equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+            %
         else
             P_rf_rhoG = NaN;P_rf_drhoG = NaN;
             P_rf_rhoP = NaN;P_rf_drhoP = NaN;
@@ -461,7 +681,16 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 %
             end
             %
-            tP_tot = tP_rf + tP_e;
+            if ~isempty(waves)
+                if isfield(waves{1}.rayparam,'colldamp') && waves{1}.rayparam.colldamp == 1,
+                    tP_tot = tP_coll_luke + tP_e;
+                else
+                    tP_tot = tP_rf + P_e;
+                end
+            else
+                tP_tot = tP_e;
+            end            
+            %
             tI_tot = sum(tJ_tot.*repmat(equilDKE.xdA_dke.',[1,nit]));
             %
             xtdV_2piRp_dke = repmat(equilDKE.xdV_2piRp_dke.',[1,nit]);
@@ -561,19 +790,30 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             p0_rf_2piRp = sum(wp0_rf_2piRp);
         end
         %
-        %
         if nr > 1,
             %
             if opt.wave == 'y',
                 %
                 % calculate linear deposition
                 %
-                wxP_rf_lin = zeros(nw,nr);
+                wxP_rf_lin = zeros(nw,nr);% calculate linear deposition (RLA)
+                wxP_rf_lin_coll = zeros(nw,nr);% calculate linear deposition (RLA + NRCA)
+                wxP_rf_coll_luke = zeros(nw,nr);% calculate quasilinear deposition (RLA + NRCA)
                 %
                 wP_rf_rhoG_lin = zeros(1,nw);
                 wP_rf_rhoP_lin = zeros(1,nw);
                 wP_rf_rhoT_lin = zeros(1,nw);
                 wP_rf_rhoV_lin = zeros(1,nw);
+                %
+                wP_rf_rhoG_lin_coll = zeros(1,nw);
+                wP_rf_rhoP_lin_coll = zeros(1,nw);
+                wP_rf_rhoT_lin_coll = zeros(1,nw);
+                wP_rf_rhoV_lin_coll = zeros(1,nw);
+                %
+                wP_rf_rhoG_coll_luke = zeros(1,nw);
+                wP_rf_rhoP_coll_luke = zeros(1,nw);
+                wP_rf_rhoT_coll_luke = zeros(1,nw);
+                wP_rf_rhoV_coll_luke = zeros(1,nw);
                 %
                 for iw = 1:nw,
                     %
@@ -587,6 +827,18 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                                 wxP_rf_lin(iw,:) = wxP_rf_lin(iw,:) + 1e-6*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin,xrhoG_S).*xdrhoG./equilDKE.xdV_2piRp_dke;
                             else
                                 wxP_rf_lin(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
+                            end
+                            %
+                            if isfield(ray,'sP_2piRp_lin_coll')  && isfield(ray,'srho'),%linear + no-resonant collisional absorption
+                                wxP_rf_lin_coll(iw,:) = wxP_rf_lin_coll(iw,:) + 1e-6*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_lin_coll,xrhoG_S).*xdrhoG./equilDKE.xdV_2piRp_dke;
+                            else
+                                wxP_rf_lin_coll(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
+                            end
+                            %
+                            if isfield(ray,'sP_2piRp_coll_luke')  && isfield(ray,'srho'),%linear + no-resonant collisional absorption
+                                wxP_rf_coll_luke(iw,:) = wxP_rf_coll_luke(iw,:) + 1e-6*radialdampingprofile_jd(ray.srho,ray.sP_2piRp_coll_luke{1},xrhoG_S).*xdrhoG./equilDKE.xdV_2piRp_dke;
+                            else
+                                wxP_rf_coll_luke(iw,:) = NaN;% if some rays are not accounted for, the comparison is misleading and thus stopped
                             end
                             %
                         end
@@ -622,6 +874,16 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                     [wP_rf_rhoP_lin(iw)] = calc_peak_jd(xrhoP,xdrhoP,wxP_rf_lin(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
                     [wP_rf_rhoT_lin(iw)] = calc_peak_jd(xrhoT,xdrhoT,wxP_rf_lin(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
                     [wP_rf_rhoV_lin(iw)] = calc_peak_jd(xrhoV,xdrhoV,wxP_rf_lin(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    %
+                    [wP_rf_rhoG_lin_coll(iw)] = calc_peak_jd(xrhoG,xdrhoG,wxP_rf_lin_coll(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoP_lin_coll(iw)] = calc_peak_jd(xrhoP,xdrhoP,wxP_rf_lin_coll(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoT_lin_coll(iw)] = calc_peak_jd(xrhoT,xdrhoT,wxP_rf_lin_coll(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoV_lin_coll(iw)] = calc_peak_jd(xrhoV,xdrhoV,wxP_rf_lin_coll(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    %
+                    [wP_rf_rhoG_coll_luke(iw)] = calc_peak_jd(xrhoG,xdrhoG,wxP_rf_coll_luke(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoP_coll_luke(iw)] = calc_peak_jd(xrhoP,xdrhoP,wxP_rf_coll_luke(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoT_coll_luke(iw)] = calc_peak_jd(xrhoT,xdrhoT,wxP_rf_coll_luke(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
+                    [wP_rf_rhoV_coll_luke(iw)] = calc_peak_jd(xrhoV,xdrhoV,wxP_rf_coll_luke(iw,:),equilDKE.xdV_2piRp_dke,opt.jpeak,opt.peakmode);
                 end
                 %
                 wxp_rf_2piRp_lin = wxP_rf_lin.*repmat(equilDKE.xdV_2piRp_dke,[nw,1]);
@@ -629,13 +891,39 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 xp_rf_2piRp_lin = sum(wxp_rf_2piRp_lin,1);
                 p_rf_2piRp_lin = sum(wp_rf_2piRp_lin);
                 %
+                wxp_rf_2piRp_lin_coll = wxP_rf_lin_coll.*repmat(equilDKE.xdV_2piRp_dke,[nw,1]);
+                wp_rf_2piRp_lin_coll = sum(wxp_rf_2piRp_lin_coll,2);
+                xp_rf_2piRp_lin_coll = sum(wxp_rf_2piRp_lin_coll,1);
+                p_rf_2piRp_lin_coll = sum(wp_rf_2piRp_lin_coll);
+                %
+                wxp_rf_2piRp_coll_luke = wxP_rf_coll_luke.*repmat(equilDKE.xdV_2piRp_dke,[nw,1]);
+                wp_rf_2piRp_coll_luke = sum(wxp_rf_2piRp_coll_luke,2);
+                xp_rf_2piRp_coll_luke = sum(wxp_rf_2piRp_coll_luke,1);
+                p_rf_2piRp_coll_luke = sum(wp_rf_2piRp_coll_luke);
+                %
                 if ~all(isnan(wP_rf_rhoG_lin)),
                     wTe_lin = interp1(xrhoG,xTe,wP_rf_rhoG_lin);
                     wne_lin = interp1(xrhoG,xne,wP_rf_rhoG_lin);
                 else
                     wTe_lin = NaN(1,nw);
                     wne_lin = NaN(1,nw);
-                end           
+                end
+                %
+                if ~all(isnan(wP_rf_rhoG_lin_coll)),
+                    wTe_lin_coll = interp1(xrhoG,xTe,wP_rf_rhoG_lin_coll);
+                    wne_lin_coll = interp1(xrhoG,xne,wP_rf_rhoG_lin_coll);
+                else
+                    wTe_lin_coll = NaN(1,nw);
+                    wne_lin_coll = NaN(1,nw);
+                end
+                %                
+                if ~all(isnan(wP_rf_rhoG_coll_luke)),
+                    wTe_coll_luke = interp1(xrhoG,xTe,wP_rf_rhoG_coll_luke);
+                    wne_coll_luke = interp1(xrhoG,xne,wP_rf_rhoG_coll_luke);
+                else
+                    wTe_coll_luke = NaN(1,nw);
+                    wne_coll_luke = NaN(1,nw);
+                end
                 %
                 % calculate quasilinear deposition
                 %
@@ -693,11 +981,6 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 end           
                 %
                 wp_rf_2piRp = sum(wxp_rf_2piRp,2);
-                %
-            else
-                %
-                xp_rf_2piRp_lin = NaN;
-                p_rf_2piRp_lin = NaN;
                 %
             end
             %
@@ -775,18 +1058,11 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             data_proc.scalar.p0_rf_2piRp = p0_rf_2piRp;
             data_proc.scalar.p_rf_2piRp = p_rf_2piRp;
             data_proc.scalar.p_rf_2piRp_lin = p_rf_2piRp_lin;
+            data_proc.scalar.p_rf_2piRp_lin_coll = p_rf_2piRp_lin_coll;
+            data_proc.scalar.p_rf_2piRp_coll_luke = p_rf_2piRp_coll_luke;
             %
             data_proc.scalar.np_rf_2piRp = np_rf_2piRp;
             data_proc.scalar.n_rf_list = n_rf_list;
-            %
-            if isfield(dke_out.waves{1}.rayparam,'colldamp')
-                data_proc.scalar.p_coll_2piRp = data_proc.scalar.p0_rf_2piRp - data_proc.scalar.p_rf_2piRp;
-                data_proc.scalar.frac_coll = 1-data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp;
-            else
-                data_proc.scalar.p_coll_2piRp = 0;
-                data_proc.scalar.frac_coll = 0;
-            end
-            
             %
             data_proc.scalar.p_e_2piRp = p_e_2piRp;
             data_proc.scalar.I_tot = I_tot;
@@ -824,6 +1100,39 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             data_proc.scalar.P_rf_Te = P_rf_Te;
             data_proc.scalar.P_rf_ne = P_rf_ne;
             %
+            data_proc.scalar.P_rf_rhoG_lin = P_rf_rhoG_lin;
+            data_proc.scalar.P_rf_rhoP_lin = P_rf_rhoP_lin;
+            data_proc.scalar.P_rf_rhoT_lin = P_rf_rhoT_lin;
+            data_proc.scalar.P_rf_rhoV_lin = P_rf_rhoV_lin;
+            data_proc.scalar.P_rf_drhoG_lin = P_rf_drhoG_lin;
+            data_proc.scalar.P_rf_drhoP_lin = P_rf_drhoP_lin;
+            data_proc.scalar.P_rf_drhoT_lin = P_rf_drhoT_lin;
+            data_proc.scalar.P_rf_drhoV_lin = P_rf_drhoV_lin;
+            data_proc.scalar.P_rf_Te_lin = P_rf_Te_lin;
+            data_proc.scalar.P_rf_ne_lin = P_rf_ne_lin;
+            %
+            data_proc.scalar.P_rf_rhoG_lin_coll = P_rf_rhoG_lin_coll;
+            data_proc.scalar.P_rf_rhoP_lin_coll = P_rf_rhoP_lin_coll;
+            data_proc.scalar.P_rf_rhoT_lin_coll = P_rf_rhoT_lin_coll;
+            data_proc.scalar.P_rf_rhoV_lin_coll = P_rf_rhoV_lin_coll;
+            data_proc.scalar.P_rf_drhoG_lin_coll = P_rf_drhoG_lin_coll;
+            data_proc.scalar.P_rf_drhoP_lin_coll = P_rf_drhoP_lin_coll;
+            data_proc.scalar.P_rf_drhoT_lin_coll = P_rf_drhoT_lin_coll;
+            data_proc.scalar.P_rf_drhoV_lin_coll = P_rf_drhoV_lin_coll;
+            data_proc.scalar.P_rf_Te_lin_coll = P_rf_Te_lin_coll;
+            data_proc.scalar.P_rf_ne_lin_coll = P_rf_ne_lin_coll;
+            %
+            data_proc.scalar.P_rf_rhoG_coll_luke = P_rf_rhoG_coll_luke;
+            data_proc.scalar.P_rf_rhoP_coll_luke = P_rf_rhoP_coll_luke;
+            data_proc.scalar.P_rf_rhoT_coll_luke = P_rf_rhoT_coll_luke;
+            data_proc.scalar.P_rf_rhoV_coll_luke = P_rf_rhoV_coll_luke;
+            data_proc.scalar.P_rf_drhoG_coll_luke = P_rf_drhoG_coll_luke;
+            data_proc.scalar.P_rf_drhoP_coll_luke = P_rf_drhoP_coll_luke;
+            data_proc.scalar.P_rf_drhoT_coll_luke = P_rf_drhoT_coll_luke;
+            data_proc.scalar.P_rf_drhoV_coll_luke = P_rf_drhoV_coll_luke;
+            data_proc.scalar.P_rf_Te_coll_luke = P_rf_Te_coll_luke;
+            data_proc.scalar.P_rf_ne_coll_luke = P_rf_ne_coll_luke;
+            %
             % RADIAL
             %
             data_proc.radial.xrhoG = xrhoG;
@@ -853,6 +1162,8 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             % 
             data_proc.radial.xp_rf_2piRp = xp_rf_2piRp;
             data_proc.radial.xp_rf_2piRp_lin = xp_rf_2piRp_lin;
+            data_proc.radial.xp_rf_2piRp_lin_coll = xp_rf_2piRp_lin_coll;
+            data_proc.radial.xp_rf_2piRp_coll_luke = xp_rf_2piRp_coll_luke;
             %
             data_proc.scalar.li = internal_inductance_yp(data_proc.radial.xrhoG,data_proc.radial.J_tot);
             %
@@ -910,6 +1221,33 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 %
                 data_proc.wave.wTe_lin = wTe_lin;
                 data_proc.wave.wne_lin = wne_lin;
+                %
+                % WAVE with NRCA
+                %
+                data_proc.wave.wxP_rf_lin_coll = wxP_rf_lin_coll;
+                data_proc.wave.wp_rf_2piRp_lin_coll = wp_rf_2piRp_lin_coll;
+                data_proc.wave.wxp_rf_2piRp_lin_coll = wxp_rf_2piRp_lin_coll;
+                %
+                data_proc.wave.wP_rf_rhoG_lin_coll = wP_rf_rhoG_lin_coll;
+                data_proc.wave.wP_rf_rhoP_lin_coll = wP_rf_rhoP_lin_coll;
+                data_proc.wave.wP_rf_rhoT_lin_coll = wP_rf_rhoT_lin_coll;
+                data_proc.wave.wP_rf_rhoV_lin_coll = wP_rf_rhoV_lin_coll;
+                %
+                data_proc.wave.wTe_lin_coll = wTe_lin_coll;
+                data_proc.wave.wne_lin_coll = wne_lin_coll;
+                %
+                data_proc.wave.wxP_rf_coll_luke = wxP_rf_coll_luke;
+                data_proc.wave.wp_rf_2piRp_coll_luke = wp_rf_2piRp_coll_luke;
+                data_proc.wave.wxp_rf_2piRp_coll_luke = wxp_rf_2piRp_coll_luke;
+                %
+                data_proc.wave.wP_rf_rhoG_coll_luke = wP_rf_rhoG_coll_luke;
+                data_proc.wave.wP_rf_rhoP_coll_luke = wP_rf_rhoP_coll_luke;
+                data_proc.wave.wP_rf_rhoT_coll_luke = wP_rf_rhoT_coll_luke;
+                data_proc.wave.wP_rf_rhoV_coll_luke = wP_rf_rhoV_coll_luke;
+                %
+                data_proc.wave.wTe_coll_luke = wTe_coll_luke;
+                data_proc.wave.wne_coll_luke = wne_coll_luke;
+                %
             else
                 data_proc.wave = '';
             end
@@ -988,26 +1326,66 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 jrho = data_proc.scalar.jrhoG;
                 jdrho = data_proc.scalar.jdrhoG;
                 %
-                P_rf_rho = data_proc.scalar.P_rf_rhoG;
-                P_rf_drho = data_proc.scalar.P_rf_drhoG;
+                if isfield(waves{1}.rayparam,'colldamp') && waves{1}.rayparam.colldamp == 1,
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoG_lin_coll;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoG_lin_coll;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoG_coll_luke;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoG_coll_luke;
+                else
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoG_lin;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoG_lin;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoG;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoG;
+                end
+                %
             elseif opt.rho == 'p',
                 jrho = data_proc.scalar.jrhoP;
                 jdrho = data_proc.scalar.jdrhoP;
                 %
-                P_rf_rho = data_proc.scalar.P_rf_rhoP;
-                P_rf_drho = data_proc.scalar.P_rf_drhoP;
+                if isfield(waves{1}.rayparam,'colldamp') && waves{1}.rayparam.colldamp == 1,
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoP_lin_coll;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoP_lin_coll;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoP_coll_luke;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoP_coll_luke;
+                else
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoP_lin;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoP_lin;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoP;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoP;
+                end
+                %
             elseif  opt.rho == 't',
                 jrho = data_proc.scalar.jrhoT;
                 jdrho = data_proc.scalar.jdrhoT;
                 %
-                P_rf_rho = data_proc.scalar.P_rf_rhoT;
-                P_rf_drho = data_proc.scalar.P_rf_drhoT;
+                if isfield(waves{1}.rayparam,'colldamp') && waves{1}.rayparam.colldamp == 1,
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoT_lin_coll;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoT_lin_coll;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoT_coll_luke;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoT_coll_luke;
+                else
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoT_lin;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoT_lin;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoT;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoT;
+                end
+                %
             elseif  opt.rho == 'v',
                 jrho = data_proc.scalar.jrhoV;
                 jdrho = data_proc.scalar.jdrhoV;
                 %
-                P_rf_rho = data_proc.scalar.P_rf_rhoV;
-                P_rf_drho = data_proc.scalar.P_rf_drhoV;
+                if isfield(waves{1}.rayparam,'colldamp') && waves{1}.rayparam.colldamp == 1,
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoV_lin_coll;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoV_lin_coll;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoV_coll_luke;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoV_coll_luke;
+                else
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoV_lin;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoV_lin;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoV;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoV;
+                end
+                %
             end
             disp(['Location of current peak (rho',opt.rho,'): ',num2str(jrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
             disp(['Current FWHM (drho',opt.rho,'): ',num2str(jdrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
@@ -1015,6 +1393,8 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 disp(['RF efficiency (n_19*I*Rp/P): ',num2str(data_proc.scalar.EtaRFRp),' 10^19 A/(W.m^2)'])
                 disp(['Location of RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
                 disp(['RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
+                disp(['Location of linear RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho_lin),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
+                disp(['Linear RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho_lin),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
                 disp(['Number of RF ray fragments: ',num2str(data_proc.scalar.nfrags)])
                 disp(['Internal inductance : ',num2str(data_proc.scalar.li)])
             end
@@ -1024,12 +1404,12 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 disp(['RF power absorbed (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
                 if isfield(dke_out.waves{1}.rayparam,'colldamp')
                     if dke_out.waves{1}.rayparam.colldamp == 1,
-                        disp(['RF power lost by collisional damping (P): ',num2str(data_proc.scalar.p0_rf_2piRp - data_proc.scalar.p_rf_2piRp),' MW ---> ',num2str(100*(1-data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp)),' %.'])
+                        disp(['RF power absorbed with NRCA (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_coll_luke),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_coll_luke/data_proc.scalar.p0_rf_2piRp),' %.'])
                     else
-                        disp('Collisional damping of RF waves is not considered.')
+                        disp('Non-resonant collisional absorption (NRCA) of RF waves is not considered.')
                     end
                 else
-                    disp('Collisional damping of RF waves is not considered.')
+                    disp('Non-resonant collisional absorption (NRCA) of RF waves is not considered.')
                 end
                 %
                 for in_rf = 1:nn_rf,
@@ -1037,6 +1417,11 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 end
                 if opt.wave == 'y',
                     disp(['Linear RF power absorbed (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_lin),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'])
+                    if isfield(dke_out.waves{1}.rayparam,'colldamp')
+                         if dke_out.waves{1}.rayparam.colldamp == 1,
+                            disp(['Linear RF power absorbed with NRCA (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_lin_coll),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin_coll/data_proc.scalar.p0_rf_2piRp),' %.'])
+                         end               
+                    end       
                 end
                 disp(['Ohmic power deposited (P/2piRp): ',num2str(data_proc.scalar.p_e_2piRp),' MW/m'])
                 disp(['Total power deposited (P/2piRp): ',num2str(data_proc.scalar.p_tot_2piRp),' MW/m'])
@@ -1090,21 +1475,23 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             else
                 disp(['Launched RF power (P): ',num2str(data_proc.scalar.p0_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
                 if sum(data_proc.radial.P_rf) ~= 0,
-                    disp(['RF power absorbed (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
                     if isfield(dke_out.waves{1}.rayparam,'colldamp')
                         if dke_out.waves{1}.rayparam.colldamp == 1,
-                            disp(['RF power lost by collisional damping (P): ',num2str(data_proc.scalar.p0_rf_2piRp*(2*pi*data_proc.scalar.Rp) - data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*(1-data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp)),' %.'])
+                            disp(['RF absorbed power (RLA + NRCA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_coll_luke*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_coll_luke/data_proc.scalar.p0_rf_2piRp),' %.'])
+                            disp(['Linear RF absorbed power (RLA + NRCA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.']);
                         else
-                            disp('Collisional damping of RF waves is not considered.')
+                            disp(['RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
+                            disp(['Linear RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.']);
                         end
                     else
-                        disp('Collisional damping of RF waves is not considered.')
+                        disp(['RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
+                        disp(['Linear RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.']);
                     end
                     %
                     for in_rf = 1:nn_rf,
                         disp(['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'])
                     end
-                    disp(['Linear RF power absorbed (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'])
+                    %
                 end
                 disp(['Ohmic power deposited (P): ',num2str(data_proc.scalar.p_e_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
                 disp(['Total power deposited (P): ',num2str(data_proc.scalar.p_tot_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
@@ -1148,10 +1535,12 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                         disp(' ');
                         disp(['Launched RF power (P): ',num2str(data_proc.wave.wp0_rf_2piRp(iw)*(2*pi*data_proc.scalar.Rp)),'MW'])
                         disp(['RF power absorbed (P): ',num2str(data_proc.wave.wp_rf_2piRp(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
+                        disp(['RF power absorbed with NRCA (P): ',num2str(data_proc.wave.wp_rf_2piRp_coll_luke(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_coll_luke(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
                         for in_rf = 1:nn_rf,
                             disp(['RF power absorbed on harm. ',num2str(data_proc.wave.wn_rf_list(in_rf)),' (P): ',num2str(data_proc.wave.wnp_rf_2piRp(iw,in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wnp_rf_2piRp(iw,in_rf)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
                         end
                         disp(['Linear RF power absorbed (P): ',num2str(data_proc.wave.wp_rf_2piRp_lin(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
+                        disp(['Linear RF power absorbed with NRCA (P): ',num2str(data_proc.wave.wp_rf_2piRp_lin_coll(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin_coll(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
                     end
                 end
             end
@@ -1176,7 +1565,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 %
             end   
             %
-            tit = '';
+            tit = ['Launched RF power (P): ',num2str(data_proc.scalar.p0_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'];
             %
             xlim_rho = [0,1];
             xtick_rho = 0:0.2:1;
@@ -1187,7 +1576,21 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 %
                 ylab = 'P_{RF} (MW/m^3)';
                 %
-                graph1D_jd(xrho,data_proc.radial.P_rf,0,0,xlab_rho,ylab,tit,NaN,xlim_rho,NaN,style,marker1,color2,width2,opt.font,gca,red,lspace,bspace);
+                if isfield(dke_out.waves{1}.rayparam,'colldamp')
+                    if dke_out.waves{1}.rayparam.colldamp == 1, 
+                        if isnan(data_proc.radial.xp_rf_2piRp_coll_luke)
+                            graph1D_jd(xrho,data_proc.radial.P_rf,0,0,xlab_rho,ylab,tit,NaN,xlim_rho,NaN,'-',marker1,color2,width2,opt.font,gca,red,lspace,bspace);
+                        else 
+                            graph1D_jd(xrho,data_proc.radial.P_rf,0,0,xlab_rho,ylab,tit,NaN,xlim_rho,NaN,'--',marker1,color2,width2,opt.font,gca,red,lspace,bspace);
+                            graph1D_jd(xrho,data_proc.radial.xp_rf_2piRp_coll_luke./equilDKE.xdV_2piRp_dke,0,0,xlab_rho,ylab,tit,NaN,xlim_rho,NaN,'-',marker1,color2,width2,opt.font,gca,red,lspace,bspace);
+                            legend('LUKE RF absorbed power (RLA)','LUKE RF absorbed power (RLA + NRCA)')
+                        end
+                    else
+                        graph1D_jd(xrho,data_proc.radial.P_rf,0,0,xlab_rho,ylab,tit,NaN,xlim_rho,NaN,'-',marker1,color2,width2,opt.font,gca,red,lspace,bspace);
+                    end
+                else
+                    graph1D_jd(xrho,data_proc.radial.P_rf,0,0,xlab_rho,ylab,tit,NaN,xlim_rho,NaN,'-',marker1,color2,width2,opt.font,gca,red,lspace,bspace);
+                end
                 %
                 set(gca,'xtick',xtick_rho);
                 %
@@ -1195,10 +1598,18 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 %
             end
             %
-            % power dPdrho profile - comparison with linear profile
+            % power dPdrho profile - comparison with linear profile with or without NRCA for RF waves
             %
             if ~isfield(opt,'axs'),
-                figure(101),clf,set(101,'Name',['Ohmic power density profile - ',data_proc.simul.id])
+                if isfield(dke_out.waves{1}.rayparam,'colldamp')
+                    if dke_out.waves{1}.rayparam.colldamp == 1,
+                        figure(101),clf,set(101,'Name',['RF power deposition profile (RLA + NRCA, LUKE and linear)  - ',data_proc.simul.id]);
+                    else
+                        figure(101),clf,set(101,'Name',['RF power deposition profile (RLA, LUKE and linear)  - ',data_proc.simul.id]);
+                    end
+                else
+                    figure(101),clf,set(101,'Name',['RF power deposition profile (RLA, LUKE and linear)  - ',data_proc.simul.id]);
+                end
                 ax = gca;
             else
                 ax = opt.axs(1);
@@ -1206,10 +1617,30 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             %
             ylab = 'P_{RF}/d\rho/(2\piR_p) (MW/m)';
             %
-            leg = {'linear','LUKE'};
-            %
-            graph1D_jd(xrho,data_proc.radial.xp_rf_2piRp_lin./dxrho,0,0,'','','',NaN,xlim_rho,NaN,style,marker,color3,width,opt.font,ax);
-            graph1D_jd(xrho,data_proc.radial.xp_rf_2piRp./dxrho,0,0,xlab_rho,ylab,tit,leg,xlim_rho,NaN,style,marker1,color2,width2,opt.font,ax,red,lspace,bspace);
+            if isfield(dke_out.waves{1}.rayparam,'colldamp')
+                if dke_out.waves{1}.rayparam.colldamp == 1,
+                     leg = {'C3PO (RLA + NRCA)','LUKE (RLA + NRCA)','C3PO (RLA)','LUKE (RLA)'};
+                else
+                    leg = {'C3PO (RLA)','LUKE (RLA)'};
+                end
+            else
+                leg = {'C3PO (RLA)','LUKE (RLA)'};
+            end
+            %      
+            if isfield(dke_out.waves{1}.rayparam,'colldamp')
+               if dke_out.waves{1}.rayparam.colldamp == 1, 
+                   graph1D_jd(xrho,data_proc.radial.xp_rf_2piRp_lin_coll./dxrho,0,0,'','','',NaN,xlim_rho,NaN,'-','+','b',width2,opt.font,ax);
+                   graph1D_jd(xrho,data_proc.radial.xp_rf_2piRp_coll_luke./dxrho,0,0,xlab_rho,ylab,tit,leg,xlim_rho,NaN,'-','o','r',width2,opt.font,ax);
+                   graph1D_jd(xrho,data_proc.radial.xp_rf_2piRp_lin./dxrho,0,0,'','','',NaN,xlim_rho,NaN,'--','+','b',width2,opt.font,ax);
+                   graph1D_jd(xrho,data_proc.radial.xp_rf_2piRp./dxrho,0,0,xlab_rho,ylab,tit,leg,xlim_rho,NaN,'--','o','r',width2,opt.font,ax,red,lspace,bspace);
+               else
+                   graph1D_jd(xrho,data_proc.radial.xp_rf_2piRp_lin./dxrho,0,0,'','','',NaN,xlim_rho,NaN,'--','+','b',width2,opt.font,ax);
+                   graph1D_jd(xrho,data_proc.radial.xp_rf_2piRp./dxrho,0,0,xlab_rho,ylab,tit,leg,xlim_rho,NaN,'-','o','r',width2,opt.font,ax,red,lspace,bspace);
+               end
+            else
+               graph1D_jd(xrho,data_proc.radial.xp_rf_2piRp_lin./dxrho,0,0,'','','',NaN,xlim_rho,NaN,'--','+','b',width2,opt.font,ax);
+               graph1D_jd(xrho,data_proc.radial.xp_rf_2piRp./dxrho,0,0,xlab_rho,ylab,tit,leg,xlim_rho,NaN,'-','o','r',width2,opt.font,ax,red,lspace,bspace);
+            end
             %
             set(ax,'xtick',xtick_rho);
             %
@@ -1219,7 +1650,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             %
             if ~isfield(opt,'axs') & opt.wave == 'y' & nw > 1,
                 %
-                figure(101),clf,set(101,'Name',['RF power deposition profile per wave # - ',data_proc.simul.id])
+                figure(102),clf,set(102,'Name',['RF power deposition profile per wave # - ',data_proc.simul.id])
                 %
                 leg = cell(1,2*nw);
                 %
@@ -1252,7 +1683,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             %
             if ~isfield(opt,'axs') && nn_rf > 1,
                 %
-                figure(102),clf,set(102,'Name',['RF power deposition profile per harmonic # - ',data_proc.simul.id])
+                figure(103),clf,set(103,'Name',['RF power deposition profile per harmonic # - ',data_proc.simul.id])
                 %
                 leg = cell(1,nn_rf);
                 %
@@ -1323,7 +1754,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             %
             if ~isfield(opt,'axs'),
                 %
-                figure(401),clf,set(3,'Name',['Parallel Momentum transfer rate density profile - ',data_proc.simul.id])
+                figure(401),clf,set(401,'Name',['Parallel Momentum transfer rate density profile - ',data_proc.simul.id])
                 %
                 ylab = 'dp_{RF}/dt (N/m^3)';
                 %
@@ -1383,7 +1814,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 else
                     eta_peak = max(abs(data_proc.radial.eta));
                 end
-                ylim = 2*[min([0,eta_peak]),max([0,eta_peak])];
+                ylim = 3*[min([0,eta_peak]),max([0,eta_peak])];
                 %
                 graph1D_jd(xrho,data_proc.radial.eta,0,0,xlab_rho,ylab,tit,NaN,xlim_rho,ylim,style,marker1,color2,width2,opt.font,gca,red,lspace,bspace);
                 set(gca,'xtick',xtick_rho);
@@ -1404,13 +1835,24 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                     ylim1 = NaN;
                     ylim2 = NaN;
                     %
-                    graph1D2jd(xrho,data_proc.radial.J_tot,xrho,data_proc.radial.P_rf,xlab_rho,ylab1,ylab2,tit,xlim_rho,ylim1,ylim2,...
-                    style,marker1,color2,width2,style,marker1,color3,width2,opt.font,red,lspace2,bspace);
+                    if isfield(dke_out.waves{1}.rayparam,'colldamp')
+                        if dke_out.waves{1}.rayparam.colldamp == 1, 
+                            if isnan(data_proc.radial.xp_rf_2piRp_coll_luke)
+                                graph1D2jd(xrho,data_proc.radial.J_tot,xrho,data_proc.radial.P_rf,xlab_rho,ylab1,ylab2,tit,xlim_rho,ylim1,ylim2,style,marker1,color2,width2,style,marker1,color3,width2,opt.font,red,lspace2,bspace);
+                            else 
+                                graph1D2jd(xrho,data_proc.radial.J_tot,xrho,data_proc.radial.xp_rf_2piRp_coll_luke./equilDKE.xdV_2piRp_dke,xlab_rho,ylab1,ylab2,tit,xlim_rho,ylim1,ylim2,style,marker1,color2,width2,style,marker1,color3,width2,opt.font,red,lspace2,bspace);
+                            end
+                        else
+                            graph1D2jd(xrho,data_proc.radial.J_tot,xrho,data_proc.radial.P_rf,xlab_rho,ylab1,ylab2,tit,xlim_rho,ylim1,ylim2,style,marker1,color2,width2,style,marker1,color3,width2,opt.font,red,lspace2,bspace);
+                        end
+                    else
+                        graph1D2jd(xrho,data_proc.radial.J_tot,xrho,data_proc.radial.P_rf,xlab_rho,ylab1,ylab2,tit,xlim_rho,ylim1,ylim2,style,marker1,color2,width2,style,marker1,color3,width2,opt.font,red,lspace2,bspace);
+                    end         
                     %
                     print_jd(p_opt,[data_proc.simul.id,'_J_Prf_profile'],'figures_LUKE');
                     %
                 else
-                                        %
+                    %
                     figure(6),clf,set(6,'Name',['Current and Ohmic power density profiles - ',data_proc.simul.id])
                     %    
                     ylab1 = 'J (MA/m^2)';
@@ -1535,12 +1977,24 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                     ray = waves{iw}.rays{ibb};
                     %
                     sS_c3po = ray.ss;
-                    sP_c3po = ray.sP_2piRp_lin*2*pi*data_proc.scalar.Rp;
+                    if isfield(waves{iw}.rayparam,'colldamp') && waves{iw}.rayparam.colldamp == 1,
+                        sP_c3po = ray.sP_2piRp_lin_coll*2*pi*data_proc.scalar.Rp;
+                    else
+                        sP_c3po = ray.sP_2piRp_lin*2*pi*data_proc.scalar.Rp;
+                    end
                     %
                     sS_luke = zS{iy};
-                    sP_luke = zP_0_2piRp_mod{end}{iy}*2*pi*data_proc.scalar.Rp;
+                    if isfield(waves{iw}.rayparam,'colldamp') && waves{iw}.rayparam.colldamp == 1,
+                        sP_luke = zP_0_2piRp_mod_coll{end}{iy}*2*pi*data_proc.scalar.Rp;
+                    else       
+                        sP_luke = zP_0_2piRp_mod{end}{iy}*2*pi*data_proc.scalar.Rp;
+                    end
                     %
-                    leg = {'Ray-Tracing','Fokker-Planck'};
+                    if isfield(waves{iw}.rayparam,'colldamp') && waves{iw}.rayparam.colldamp == 1,
+                        leg = {'Ray-Tracing (NRCA + RLA)','Fokker-Planck (NRCA + RLA)'};
+                    else
+                        leg = {'Ray-Tracing (RLA)','Fokker-Planck (RLA)'};
+                    end
                     %    
                     % power deposition
                     %
