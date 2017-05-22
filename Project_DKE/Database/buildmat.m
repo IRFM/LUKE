@@ -1,4 +1,4 @@
-function [] = buildmat(build_mode,dirname)
+function [] = buildmat(build_mode,dirname,str)
 %LUKE - Create binary file (*.mat) from script or mexfile
 %
 %This script build all *.mat file from an existing script (*.m or mexfile)
@@ -8,7 +8,11 @@ function [] = buildmat(build_mode,dirname)
 cd(dirname)
 delete('*.mat')
 pause(2)
-filelist = dir(['make_',lower(dirname(1:strfind(dirname,'_'))),'*.m']);
+if nargin < 3,
+    filelist = dir(['make_',lower(dirname(1:strfind(dirname,'_'))),'*.m']);
+else
+    filelist = dir(['make_',str,'*.m']);
+end    
 save temp.mat filelist dirname build_mode
 %
 for i = 1:length(filelist),
