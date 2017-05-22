@@ -81,7 +81,7 @@ if nargin < 6,% individual figures are created
     flag_consistency = true;
 else% graphs added to current object
     flag_consistency = false;
-    if isnan(axs)
+    if ~isobject(axs)
         flag_id = true;
         clear axs
     else

@@ -27,7 +27,7 @@ elseif isempty(savedir),
 elseif ~strcmp(savedir(end),filesep),
     savedir = [savedir,filesep];
 end
-if ~isnan(fignum),
+if ishandle(fignum),
 %     figure(fignum)
 else
     fignum = get(0,'currentfigure');

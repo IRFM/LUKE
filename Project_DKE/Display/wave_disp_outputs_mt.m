@@ -32,7 +32,7 @@ for it = 1:nt,
             launch = wave.rayinit.launch;
             %
             launchid = launch.id;
-            launchid = launchid(1:min([end,strfind(launchid,'_')-1]));
+            %launchid = launchid(1:min([end,strfind(launchid,'_')-1]));
             %
             iw = find(strcmp(launchids,launchid));
             %
@@ -48,6 +48,8 @@ for it = 1:nt,
                 %
                 iw = length(launchids);
                 %
+            elseif P0(it,iw) > 0
+                error('problem identifying launchers')
             end
             %
             alpha_L(it,iw) = launch.yalpha_L;
@@ -57,26 +59,32 @@ for it = 1:nt,
             P0(it,iw) = 0;
             Pleft = 0;
             %
-            Rp2pi = launch.yP_L/wave.rayinit.yP0_2piRp;
-            %
-            for iy = 1:length(wave.rays),
-                P0(it,iw) = P0(it,iw) + Rp2pi*wave.rays{iy}.P0_2piRp;
-                srho_P = sqrt(wave.rays{iy}.spsin);
-                sP_norm = wave.rays{iy}.sP_2piRp_lin/wave.rays{iy}.sP_2piRp_lin(1);
-                dP_drho_lin = dP_drho_lin + Rp2pi*wave.rays{iy}.P0_2piRp*radialdampingprofile_jd(srho_P,sP_norm,rho_dep_S);
-                Pleft = Pleft + Rp2pi*wave.rays{iy}.sP_2piRp_lin(end);
-            end
-            %
-            Pabs(it,iw) = sum(dP_drho_lin.*drho_dep);
-            if abs(P0(it,iw) - Pabs(it,iw) - Pleft)/(P0(it,iw) + eps) > 1e-6,%to check consistency
-                disp('WARNING : consistency pb in power deposition')
-                keyboard
-            end
-            %
-            if opt_peak == 0,%max position
-                rhoabs(it,iw) = rho_dep(find(dP_drho_lin == max(dP_drho_lin),1,'first'));
+            if wave.rayinit.yP0_2piRp > 0
+                Rp2pi = launch.yP_L/wave.rayinit.yP0_2piRp;
+                %
+                for iy = 1:length(wave.rays),
+                    P0(it,iw) = P0(it,iw) + Rp2pi*wave.rays{iy}.P0_2piRp;
+                    srho_P = sqrt(wave.rays{iy}.spsin);
+                    sP_norm = wave.rays{iy}.sP_2piRp_lin/wave.rays{iy}.sP_2piRp_lin(1);
+                    dP_drho_lin = dP_drho_lin + Rp2pi*wave.rays{iy}.P0_2piRp*radialdampingprofile_jd(srho_P,sP_norm,rho_dep_S);
+                    Pleft = Pleft + Rp2pi*wave.rays{iy}.sP_2piRp_lin(end);
+                end
+                %
+                Pabs(it,iw) = sum(dP_drho_lin.*drho_dep);
+                if abs(P0(it,iw) - Pabs(it,iw) - Pleft)/(P0(it,iw) + eps) > 1e-6,%to check consistency
+                    disp('WARNING : consistency pb in power deposition')
+                    keyboard
+                end
+                %
+                if all(isnan(dP_drho_lin)),
+                    rhoabs(it,iw) = NaN;
+                elseif opt_peak == 0,%max position
+                    rhoabs(it,iw) = rho_dep(find(dP_drho_lin == max(dP_drho_lin),1,'first'));
+                else
+                    rhoabs(it,iw) = sum(dP_drho_lin.*rho_dep.*drho_dep)/Pabs(it,iw);
+                end
             else
-                rhoabs(it,iw) = sum(dP_drho_lin.*rho_dep.*drho_dep)/Pabs(it,iw);
+                rhoabs(it,iw) = NaN;
             end
         end
     end

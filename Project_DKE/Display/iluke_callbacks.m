@@ -862,18 +862,21 @@ switch action
         it_g = 2 + curtime;%<new>,<all>,...
         %
         lukeobj.plot1.gindex(it_g) = 0;
+        lukeobj.plot2.gindex(it_g) = 0;
         %
         cleartags{it_g} = {'ohm'};
         %
         iluke_update;% initialize display
         %
         newgraph1_handle = axes('Parent',lukeobj.plot1.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);% create new graphic objects with requested characteristics
+        newgraph2_handle = axes('Parent',lukeobj.plot2.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize);
         %
-        if curtime > 1,
+        if curtime > 1
             %
-            graph_ohm_jd(equils{curtime},ohms{curtime},newgraph1_handle,style);
+            graph_ohm_jd(equils{curtime},ohms{curtime},[newgraph1_handle,newgraph2_handle],style);
             %
-            graphs = iluke_graphs(lukeobj.plot1.handle,1,'loop voltage','ohm');
+            graphs(1) = iluke_graphs(lukeobj.plot1.handle,1,'loop voltage','ohm');
+            graphs(2) = iluke_graphs(lukeobj.plot2.handle,1,'critical field','ohm');
             %
             if isfield(ohms{curtime},'info') && isfield(ohms{curtime}.info,'txt'),
                 lukeobj.infotext.string = ohms{curtime}.info.txt;
@@ -885,17 +888,19 @@ switch action
             %
         else
             %
-            luke_disp_ohms_mt(equils(status.ohm == 1),ohms(status.ohm == 1),newgraph1_handle,style)
+            luke_disp_ohms_mt(equils(status.ohm == 1),ohms(status.ohm == 1),[newgraph1_handle,newgraph2_handle],style)
             %
-            graphs = iluke_graphs(lukeobj.plot1.handle,2,'center and edge loop voltage','ohm');
+            graphs(1) = iluke_graphs(lukeobj.plot1.handle,2,'center and edge loop voltage','ohm');
+            graphs(2) = iluke_graphs(lukeobj.plot2.handle,2,'center and edge critical field','ohm');
             %
         end
         %   
         ngraphs = length(graphss{it_g});
         %
-        graphss{it_g}(end+1) = graphs;
+        graphss{it_g}(end+1:end+2) = graphs;
         %
         lukeobj.plot1.gindex(it_g) = ngraphs + 1;
+        lukeobj.plot2.gindex(it_g) = ngraphs + 2;
         %
         clear it_g ngraphs newgraph1_handle
         %
@@ -2475,7 +2480,7 @@ switch action
             %
         else
             %
-            mask_disp = status.fluct == 0;%select times without fluctuations
+            mask_disp = status.fluct <= 0;%select times without fluctuations
             %
             newgraph4_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 
             newgraph5_handle = axes('Parent',lukeobj.plot3.handle,'units','pixels','Position',style.graph_position,'FontName',style.fontname,'FontUnits','pixels','FontSize',style.fontsize); 

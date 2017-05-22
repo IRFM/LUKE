@@ -160,12 +160,12 @@ if inter_mode,
     if res,
         if display_mode,
             disp(' ')
-            disp(['---> The ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is consistent'])
+            disp(['---> The ''dkepath'' structure in ',luke_root,'Project_DKE/Database/PATH_files/LUKE_PATH.mat is consistent'])
             disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m'])
         end
     else
         disp(' ')
-        disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'LUKE_PATH.mat is NOT consistent'])
+        disp(['---> WARNING: the ''dkepath'' structure in ',luke_root,'Project_DKE/Database/PATH_files/LUKE_PATH.mat is NOT consistent'])
         disp(['     with the script ',luke_root,'Project_DKE/Database/PATH_files/',SelectedPathFileName,'.m.'])
         disp(' ')
         %

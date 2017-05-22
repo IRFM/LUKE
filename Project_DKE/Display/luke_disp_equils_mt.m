@@ -131,6 +131,12 @@ if(any(plt==[1 2 3]))
             ylim([YL(1) 0]);
         end
     else
+        for j=1:ntr(plt),
+            if min(dat(j,:)) + max(dat(j,:)) < 0,
+                dat(j,:) = -dat(j,:);
+                legstr{j} = ['-',legstr{j}];
+            end
+        end
         colors = {'r','b',[0,0.5,0],'k'};
         markers = {'s','d','+','o'};
         for j=1:ntr(plt)-1
