@@ -4,97 +4,146 @@ function [lukestructs] = run_lukert(lukestructs,dkepath,timedep)
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 %
-if nargin < 2,
+if nargin < 2
     dkepath = load_structures_yp('dkepath','','');
 end
 %
-cellmode = 1;
-%
-if ~iscell(lukestructs) && (any(isfield(lukestructs,{'job','output','err'})) ... % job started already
-        || (isfield(dkepath,'clustermode') && isfield(dkepath.clustermode,'run_lukert'))), % use of MDCE
+if nargin > 2 && timedep && iscell(lukestructs),% time-dependent calculations
     %
-    cellmode = 0;% flag to return lukestructs in the same wrapper as input
-    lukestructs = {lukestructs};% lukestructs must be in cell for distributed or remote calculation
+    nt = length(lukestructs);
     %
-end    
-%
-if iscell(lukestructs),% remote and/or distributed calculation
-    %
-    lukestructsize = size(lukestructs);% to return lukestructs in the same arrangement as input
-    %
-    lukestructs = lukestructs(:);
-    %
-    njobs = length(lukestructs);
-    %
-    luke_flag = zeros(1,njobs);% flags to control LUKE jobs status : (0) not started, (1) running, (2) finished, (3) failed, (4) unknown
-    statusstr = {'Ready to start','Running','Completed','Failed','Unknown'};
-    %
-    disp(' ')
-    disp(' -------------------------------------------- ')
-    disp(' ')
-    %
-    for ijob = 1:njobs,
+    for it = 1:nt,
         %
-        if isempty(lukestructs{ijob}) && luke_flag(1) == 1,% case of a job sent to mdce_remote via lukestructs{1}
-            luke_flag(ijob) = -1;
-        elseif isfield(lukestructs{ijob},'job'),
-            luke_flag(ijob) = 1;
-        elseif isfield(lukestructs{ijob},'output'),
-            luke_flag(ijob) = 2;
-        elseif isfield(lukestructs{ijob},'err'),
-            luke_flag(ijob) = 3;
-        elseif ~isfield(lukestructs{ijob},'equil'),
-            luke_flag(ijob) = 4;
+        if ~isfield(lukestructs{it}.dkeparam,'opt_flegendre') || lukestructs{it}.dkeparam.opt_flegendre == 0,
+            disp('Note : option flegendre must be activated for time-dependent LUKE calculations. Enforcing.')
+            lukestructs{it}.dkeparam.opt_flegendre = 1;
         end
         %
-    end 
+        if ~isfield(lukestructs{it}.opt,'fields')
+            lukestructs{it}.opt.fields = {};
+        end
+        %
+        selectedfields = {'dke_out.XXf0_interp','mksa.Te_ref','mksa.ne_ref','mksa.nhu_ref','radialDKE.xrho_S_dke'};
+        %
+        for ifield = 1:length(selectedfields)
+            if ~any(strcmp(lukestructs{it}.opt.fields,selectedfields{ifield}))
+                lukestructs{it}.opt.fields{end+1} = selectedfields{ifield};
+            end
+        end
+        %
+        lukestructs{it} = run_lukert(lukestructs{it},dkepath);
+        %
+        if it == nt,
+            return
+        end
+        %
+        % distribution from previous time as initial state for new period
+        %
+        lukestructs{it+1}.XXf0 = lukestructs{it}.output.dke_out.XXf0_interp{end};
+        %
+        % mksa
+        %
+        % Note : the reference temperature, reference density, and radial
+        % grid can be prescribed in dkeparam before the first iteration
+        %
+        lukestructs{it+1}.dkeparam.Te_ref = lukestructs{it}.output.mksa.Te_ref;
+        lukestructs{it+1}.dkeparam.ne_ref = lukestructs{it}.output.mksa.ne_ref;
+        lukestructs{it+1}.dkeparam.rho_S = lukestructs{it}.output.radialDKE.xrho_S_dke;
+        lukestructs{it+1}.dkeparam.tn    = (lukestructs{it+1}.equil.shotime - lukestructs{it}.equil.shotime)*lukestructs{it}.output.mksa.nhu_ref;% LUKE time step
+        lukestructs{it+1}.dkeparam.dtn = 1i;% only one iteration to the next time
+        %
+    end
     %
-    if njobs > 1 && luke_flag(1) == 1 && all(luke_flag(2:end) == -1),
-        disp(['Checking the status of ',num2str(njobs),' jobs sent to run_lukert via mdce_remote :'])
-        disp(' ')        
-    else
-        disp(['Initial status of the ',num2str(njobs),' job(s) sent to run_lukert :'])
+else
+    %
+    cellmode = 1;
+    %
+    if ~iscell(lukestructs) && (any(isfield(lukestructs,{'job','output','err'})) ... % job started already
+            || (isfield(dkepath,'clustermode') && isfield(dkepath.clustermode,'run_lukert'))), % use of MDCE
+        %
+        cellmode = 0;% flag to return lukestructs in the same wrapper as input
+        lukestructs = {lukestructs};% lukestructs must be in cell for distributed or remote calculation
+        %
+    end    
+    %
+    if iscell(lukestructs),% remote and/or distributed calculation
+        %
+        lukestructsize = size(lukestructs);% to return lukestructs in the same arrangement as input
+        %
+        lukestructs = lukestructs(:);
+        %
+        njobs = length(lukestructs);
+        %
+        luke_flag = zeros(1,njobs);% flags to control LUKE jobs status : (0) not started, (1) running, (2) finished, (3) failed, (4) unknown
+        statusstr = {'Ready to start','Running','Completed','Failed','Unknown'};
+        %
+        disp(' ')
+        disp(' -------------------------------------------- ')
         disp(' ')
         %
         for ijob = 1:njobs,
             %
-            if luke_flag(ijob) >= 0,
-                disp([' - Job # ',num2str(ijob),' : ',statusstr{1 + luke_flag(ijob)}])
+            if isempty(lukestructs{ijob}) && luke_flag(1) == 1,% case of a job sent to mdce_remote via lukestructs{1}
+                luke_flag(ijob) = -1;
+            elseif isfield(lukestructs{ijob},'job'),
+                luke_flag(ijob) = 1;
+            elseif isfield(lukestructs{ijob},'output'),
+                luke_flag(ijob) = 2;
+            elseif isfield(lukestructs{ijob},'err'),
+                luke_flag(ijob) = 3;
+            elseif ~isfield(lukestructs{ijob},'equil'),
+                luke_flag(ijob) = 4;
             end
-        end
-    end        
-    %
-    disp(' ')
-    disp(' -------------------------------------------- ')
-    disp(' ')
-    %
-    if any(luke_flag == 0),% there are jobs to be run
+            %
+        end 
         %
-        if isfield(dkepath,'remnum'),
-            dkecluster = clustermode_luke('','run_lukert',dkepath,dkepath.remnum);
+        if njobs > 1 && luke_flag(1) == 1 && all(luke_flag(2:end) == -1),
+            disp(['Checking the status of ',num2str(njobs),' jobs sent to run_lukert via mdce_remote :'])
+            disp(' ')        
         else
-            dkecluster = clustermode_luke('','run_lukert',dkepath);
+            disp(['Initial status of the ',num2str(njobs),' job(s) sent to run_lukert :'])
+            disp(' ')
+            %
+            for ijob = 1:njobs,
+                %
+                if luke_flag(ijob) >= 0,
+                    disp([' - Job # ',num2str(ijob),' : ',statusstr{1 + luke_flag(ijob)}])
+                end
+            end
+        end        
+        %
+        disp(' ')
+        disp(' -------------------------------------------- ')
+        disp(' ')
+        %
+        if any(luke_flag == 0),% there are jobs to be run
+            %
+            if isfield(dkepath,'remnum'),
+                dkecluster = clustermode_luke('','run_lukert',dkepath,dkepath.remnum);
+            else
+                dkecluster = clustermode_luke('','run_lukert',dkepath);
+            end
+            %
+            [~,lukestructs(luke_flag == 0)] = mdce_run('run_lukert',{''},1,lukestructs(luke_flag == 0),dkecluster);
+            %
         end
         %
-        [~,lukestructs(luke_flag == 0)] = mdce_run('run_lukert',{''},1,lukestructs(luke_flag == 0),dkecluster);
+        if any(luke_flag == 1),% there are jobs to be checked
+            %
+            [~,lukestructs(abs(luke_flag) == 1)] = mdce_get(lukestructs(abs(luke_flag) == 1));
+            %
+        end
+        %
+        if cellmode == 0;
+            lukestructs = lukestructs{1};% return lukestructs in the same wrapper as input
+        else
+            lukestructs = reshape(lukestructs,lukestructsize);
+        end
+        %
+        return
         %
     end
-    %
-    if any(luke_flag == 1),% there are jobs to be checked
-        %
-        [~,lukestructs(abs(luke_flag) == 1)] = mdce_get(lukestructs(abs(luke_flag) == 1));
-        %
-    end
-    %
-    if cellmode == 0;
-        lukestructs = lukestructs{1};% return lukestructs in the same wrapper as input
-    else
-        lukestructs = reshape(lukestructs,lukestructsize);
-    end
-    %
-    return
-    %
-end   
+end
 %
 % mandatory fields
 %
@@ -725,9 +774,9 @@ if isfield(dkeparam,'opt_flegendre') && dkeparam.opt_flegendre == 1,%distributio
     [dke_out.XXf0_interp,testf0] = interp_legendre_yp(dkeparam,gridDKE,dke_out.XXf0,test_legendre);
     [dke_out.XXfM_interp,testfM] = interp_legendre_yp(dkeparam,gridDKE,dke_out.XXfM,test_legendre);
     [dke_out.XXfinit_interp,testfinit] = interp_legendre_yp(dkeparam,gridDKE,dke_out.XXfinit,test_legendre);
-    dke_out = rmfield(dke_out,'XXf0');
-    dke_out = rmfield(dke_out,'XXfM');
-    dke_out = rmfield(dke_out,'XXfinit');
+%     dke_out = rmfield(dke_out,'XXf0');
+%     dke_out = rmfield(dke_out,'XXfM');
+%     dke_out = rmfield(dke_out,'XXfinit');
 end
 %
 output.dke_out = dke_out;
