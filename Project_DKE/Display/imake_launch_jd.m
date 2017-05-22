@@ -446,25 +446,49 @@ if ~isempty(external),% import wave data from external structure
         %
         type = 'EC';
         %
-        fnames = fieldnames(rmfield(external,'equil'));
-        for ilaun = 1:length(fnames), 
-            launch.id = fnames{ilaun};
+        if isfield(external,'mmode'),% array of wave structure for each gyrotron
+            nw = size(external,1);% number of gyrotrons
+            gyrotrons = cell(1,nw);
+            for iw=1:nw
+                gyrotrons{iw} = external(iw,:);
+                gyrotrons{iw}.id = ['EC_gy',num2str(iw)];
+            end
+        else % each gyrotron is represented by a field in wave structure
+            fnames = fieldnames(rmfield(external,'equil'));
+            nw = length(fnames);
+            gyrotrons = cell(1,nw);
+            for iw=1:nw
+                gyrotrons{iw} = external.(fnames{iw});
+                gyrotrons{iw}.id = fnames{iw};
+            end
+        end
+        %
+        for iw = 1:nw 
+            launch.id = gyrotrons{iw}.id;
             launch.type = type;
-            launch.mmode = external.(launch.id).mmode;
-            launch.omega_rf = external.(launch.id).f_GHz*2*pi*1e9;
-            launch.yR_L = external.(launch.id).R_L;
-            launch.yZ_L = external.(launch.id).Z_L;
+            launch.mmode = gyrotrons{iw}.mmode;
+            launch.omega_rf = gyrotrons{iw}.f_GHz*2*pi*1e9;
+            launch.yR_L = gyrotrons{iw}.R_L;
+            launch.yZ_L = gyrotrons{iw}.Z_L;
             launch.yphi_L = 0;
-            launch.yalpha_L = external.(launch.id).alpha_L;
-            launch.ybeta_L = external.(launch.id).beta_L;
-            launch.yP_L = external.(launch.id).P_MW*1e6;
+            launch.yalpha_L = gyrotrons{iw}.alpha_L;
+            launch.ybeta_L = gyrotrons{iw}.beta_L;
+            launch.yP_L = gyrotrons{iw}.P_MW*1e6;
             %
-            launch.w0 = 0.02;% test values
-            launch.z_L = 0.4;% test values
+            if isfield(gyrotrons{iw},'w0')
+                launch.w0 = gyrotrons{iw}.w0;
+            else
+                launch.w0 = 0.02;% test values
+            end
+            if isfield(gyrotrons{iw},'z0')
+                launch.z_L = gyrotrons{iw}.z0;
+            else
+                launch.z_L = 0.4;% test values
+            end
             %
             launch.dNpar0 = NaN;%Calculated from waist and focal point
             %
-            launch.external = external.(launch.id);
+            launch.external = gyrotrons{iw};
             %
             launchs{end+1} = launch;
         end

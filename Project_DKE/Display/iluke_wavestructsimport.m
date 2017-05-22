@@ -17,11 +17,13 @@ else% select one time
     flag_shotimes = curtime;
 end
 %
-external_wave = external.wave(flag_external);
-nt = length(external_wave);
+external_wave = external.wave(:,flag_external);
+nt = size(external_wave,2);
 %
 for it = 1:nt,
-     external_wave(it).equil = equils{flag_shotimes(it)};% for distributed computing
+    for iw = 1:size(external_wave,1),
+        external_wave(iw,it).equil = equils{flag_shotimes(it)};% for distributed computing
+    end
 end
 %
 clear flag_calc flag_calctimes it nt
