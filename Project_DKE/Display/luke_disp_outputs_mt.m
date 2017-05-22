@@ -129,6 +129,11 @@ else
     leg = {'I_p','I_{luke}'};
 end
 %
+if min(Ip) + max(Ip) < 0,
+    Ip = -Ip;
+    leg{1} = ['-',leg{1}];
+end
+%
 [ax] = graph1D_jd(t,Ip,0,0,'','','',NaN,NaN,NaN,'-',markers{1},colors{1},2,style,ax);
 [ax] = graph1D_jd(t,I_tot,0,0,xlab,ylab,'',leg,xlim,ylim,'-',markers{2},colors{2},2,style,ax);
 %

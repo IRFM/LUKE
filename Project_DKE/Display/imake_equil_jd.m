@@ -333,6 +333,10 @@ if e_opt ~= -2,
             profname = equil_prof_data;
             n_opt = 0;
             %
+            if isfield(equil_prof_data,'Ip')
+                Ip = equil_prof_data.Ip;
+            end
+            %
             signs = struct;
         else
             %
