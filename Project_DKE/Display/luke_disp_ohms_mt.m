@@ -1,4 +1,4 @@
-function [ output_args ] = luke_disp_ohms_mt( equils, ohms, ax, style )
+function [ output_args ] = luke_disp_ohms_mt( equils, ohms, axs, style )
 %LUKE_DISP_OHMS_MT [ output_args ] = luke_disp_ohms_mt( equils, ohms, ax )
 %   plots the ohms information for multi times
 %
@@ -21,9 +21,11 @@ function [ output_args ] = luke_disp_ohms_mt( equils, ohms, ax, style )
 % dependencies:
 % gti_plot_symcol.m
 
-if(nargin<3 || isempty(ax))
+if nargin < 3 || ~ishandle(axs(1))
     figure;
     ax=gca();
+else
+    ax = axs(1);
 end
 
 % init plt parameters
@@ -45,7 +47,7 @@ for i=1:nohm
     dat(:,i)=ohms{i}.epsi([1 end])*2*pi*equils{i}.Rp/Vloopref;
 end
 % legend
-legstr={sprintf('V_{loop,0}/%s',sVloopref),sprintf('V_{loop,edge}/%s',sVloopref)};
+legstr={'core','edge'};
 
 % do the plotting
 if nargin < 4 || isempty(style),
@@ -69,8 +71,34 @@ else
     for j=1:ntr-1
         [ax] = graph1D_jd(time,dat(j,:),0,0,'','','',NaN,NaN,NaN,'-',markers{j},colors{j},2,style,ax);
     end
-    [ax] = graph1D_jd(time,dat(ntr,:),0,0,'t (s)','','',legstr,0,NaN,'-',markers{ntr},colors{ntr},2,style,ax);   
+    [ax] = graph1D_jd(time,dat(ntr,:),0,0,'t (s)',sprintf('V_{loop}/%s',sVloopref),'',legstr,0,NaN,'-',markers{ntr},colors{ntr},2,style,ax);   
 end
+
+
+if nargin < 3 || ~ishandle(axs(2))
+    figure;
+    ax=gca();
+else
+    ax = axs(2);
+end
+
+EoEc_0 = NaN(nohm,2);
+for i=1:nohm
+    E_c = Ecritical_jd(equils{i},[0,1]);
+    EoEc_0(1,i) = abs(ohms{i}.epsi(1))/E_c(1);
+    EoEc_0(2,i) = abs(ohms{i}.epsi(end))/E_c(end);
+end
+% 
+if nargin > 3 || ~isempty(style)
+    colors = {'r','b',[0,0.5,0],'k'};
+    markers = {'s','d','+','o'};
+    for j=1:ntr-1
+        [ax] = graph1D_jd(time,EoEc_0(j,:),0,0,'','','',NaN,NaN,NaN,'-',markers{j},colors{j},2,style,ax);
+    end
+    [ax] = graph1D_jd(time,EoEc_0(ntr,:),0,0,'t (s)','|E|/E_c','',legstr,0,NaN,'-',markers{ntr},colors{ntr},2,style,ax);   
+end
+
+
 
 % end of function
 
