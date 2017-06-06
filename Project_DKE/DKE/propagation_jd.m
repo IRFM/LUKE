@@ -37,6 +37,7 @@ nr = length(xpsin_S) - 1;
 xyprop = zeros(nr,0); %propagation factor (NaN is ray start, +1 is increasing psi, -1 is decreasing psi, 0 is non-applicable)
 xyPinc_2piRp_lin = zeros(nr,0);% power flow in the ray based on linear absorption calculation at center of flux-surface
 xyPinc_2piRp_coll = zeros(nr,0);% power flow in the ray based on non resonant collisional absorption calculation at center of flux-surface
+xyPinc_2piRp_noabs = zeros(nr,0);
 xys = zeros(nr,0);% ray path length at center of flux-surface
 yb = []; %list of ray starts
 yP0_2piRp = []; %list of initial powers 
