@@ -11,6 +11,14 @@ function [equil_magnetic,prho,pspsin,pspsinT,pp] = equil_magnetic_EFIT_jd(eqdsk,
 %		- display_mode: option for figure display
 %		- p_opt: option for printing
 %
+%    OUTPUTS:
+%
+%       - equil_magnetic: LUKE magnetic equilibrium structure
+%       - prho: normalized radial coordinate (geometrical as defined in LUKE at theta_pol = 0)
+%       - pspsin: normalized radial coordinate, sqrt(normalized poloidal flux)
+%       - pspsinT: normalized radial coordinate,  sqrt(normalized toroidal flux)
+%       - pp: pressure values at nnr equispaced points in psi from psimag to psilim (see eqdsk_jd.m)
+%
 % by J. Decker (joan.decker@cea.fr) 11/01/04
 %
 if nargin < 6,
