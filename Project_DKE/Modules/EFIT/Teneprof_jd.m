@@ -78,6 +78,16 @@ elseif type == 1.4 ,%.mat, EAST profiles
     %
     delete(filename)
     %
+elseif type == 1.45 ,%.mat, DIII-D profiles
+    %
+    eval(['load -mat ',filename,' prho pne pTe pTi frac_H frac_D Zimp Aimp pZeff']);
+    %
+    zZi = [1,1,1,Zimp];
+    zmi = [1,2,3,Aimp];
+    fi = [frac_H frac_D,0];
+    %
+    delete(filename)
+    %    
 elseif type == 1.5 ,%.mat, DEMO profile (Artaud)
     %
     load(filename,'-mat');%prof data save in equil_prof structure  
@@ -381,7 +391,7 @@ elseif type == 7,%ascii formatted (ASCOT)
     nion = length(zZi);
 end
 %
-if type == -2 || (type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4 && type ~= 1.5 && type ~= 1.6 && type ~= 3.2) ,
+if type == -2 || (type < 4 && type >= 0 && type ~= 1.3 && type ~= 1.4 && type ~= 1.45 && type ~= 1.5 && type ~= 1.6 && type ~= 3.2) ,
     %
     zZi = [1,1,1,6];
     zmi = [1,2,3,12];
@@ -472,6 +482,11 @@ if type == 1.1 || type == 1.2 || type == 1.4 || type == 1.6 || type>= 3 && type 
     pnZ = pne*(Zeff - 1)/zZi(4)/(zZi(4) - 1);
     pzni = [fi.'*pnH;pnZ];
     pzTi = ones(nz,1)*pTi;
+elseif type == 1.45,
+    pnH = pne.*(zZi(4) - pZeff)/(zZi(4) - 1);
+    pnZ = pne.*(pZeff - 1)/zZi(4)/(zZi(4) - 1);
+    pzni = [fi.'*pnH;pnZ];
+    pzTi = ones(nz,1)*pTi;
 elseif type == 0 || type == 2,
     pnH = pne;
     pzni = [fi.'*pnH];
@@ -501,7 +516,7 @@ if display_mode >= 2,
         pdisp = pspsinT;
     end        
     %
-    figure(8),clf
+    figure,clf
     %
     ylab = 'T_e (keV)';
     xlim = [0,1];
@@ -512,7 +527,7 @@ if display_mode >= 2,
     set(gca,'ylim',[0,max(get(gca,'ylim'))])
     print_jd(p_opt,[savename,'_Te_rho']);
     %
-    figure(9),clf
+    figure,clf
     %
     ylab = 'n_e (\times 10^{19} m^{-3})';
     %
@@ -521,7 +536,7 @@ if display_mode >= 2,
     set(gca,'ylim',[0,max(get(gca,'ylim'))])
     print_jd(p_opt,[savename,'_ne_rho']);
     %
-    figure(10),clf
+    figure,clf
     %
     ylab = 'T_i (keV)';
     %
@@ -530,7 +545,7 @@ if display_mode >= 2,
     set(gca,'ylim',[0,max(get(gca,'ylim'))])
     print_jd(p_opt,[savename,'_Ti_rho']);
     %
-    figure(11),clf
+    figure,clf
     %
     ylab = 'n_i (\times 10^{19} m^{-3})';
     %
