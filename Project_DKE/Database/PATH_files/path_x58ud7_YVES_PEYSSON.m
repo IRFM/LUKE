@@ -41,9 +41,11 @@ dkepath.ypeysson(1).compiler_opt.helmex.mex902 = [' -compatibleArrayDims -lgfort
 dkepath.ypeysson(1).compiler_opt.fopts.mex902 = ' ';%-largeArrayDims
 %
 %dkepath.ypeysson(1).MUMPS.mex901 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.ypeysson(1).MUMPS.mex901 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.ypeysson(1).MUMPS.mex901 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.ypeysson(1).MUMPS.mex901 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.1_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
 %dkepath.ypeysson(1).MUMPS.mex902 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.ypeysson(1).MUMPS.mex902 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.ypeysson(1).MUMPS.mex902 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.ypeysson(1).MUMPS.mex902 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.1_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %

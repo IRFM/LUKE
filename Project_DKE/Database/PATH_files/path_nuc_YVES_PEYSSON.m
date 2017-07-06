@@ -40,10 +40,12 @@ dkepath.yvespeysson(1).compiler_opt.separatrice.mex902 = [' -largeArrayDims -lgf
 dkepath.yvespeysson(1).compiler_opt.helmex.mex902 = [' -compatibleArrayDims -lgfortran -L',dkepath.yvespeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.7.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.yvespeysson(1).compiler_opt.fopts.mex902 = ' ';%-largeArrayDims
 %
-dkepath.yvespeysson(1).MUMPS.mex901 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.yvespeysson(1).MUMPS.mex901 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.yvespeysson(1).MUMPS.mex902 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.yvespeysson(1).MUMPS.mex902 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yvespeysson(1).MUMPS.mex901 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yvespeysson(1).MUMPS.mex901 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).MUMPS.mex901 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.1_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yvespeysson(1).MUMPS.mex902 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yvespeysson(1).MUMPS.mex902 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).MUMPS.mex902 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.1_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
