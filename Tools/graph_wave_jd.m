@@ -4,6 +4,8 @@ function graph_wave_jd(equil,waves,nr_dep,opt,rho_disp,ymask,xvar,yabs,colors,st
 %
 % by J. Decker 02/04/03
 %
+opt.abs_step = 0.01;
+%
 if nargin < 10
     styles = {'-','-','-','-','-','-'};
 end
@@ -317,7 +319,7 @@ for iy = 1:ny,
         sP_2piRp_lin_norm = rays{iy}.sP_2piRp_lin/rays{iy}.sP_2piRp_lin(1);
         sdP_2piRp_ds_lin_norm = rays{iy}.sdP_2piRp_ds_lin/max(rays{iy}.sdP_2piRp_ds_lin+eps).*(1 - sP_2piRp_lin_norm(end)/sP_2piRp_lin_norm(1));
         if ~iscell(yabs),
-            rays{iy}.mask_abs_lin = sdP_2piRp_ds_lin_norm > 0.01;
+            rays{iy}.mask_abs_lin = sdP_2piRp_ds_lin_norm > opt.abs_step;
         end
         if opt.abs_max > 0,
             rays{iy}.is_abs_max_lin = min([ns,find(sP_2piRp_lin_norm < opt.abs_max)]);        
@@ -392,7 +394,7 @@ for iy = 1:ny,
         sP_2piRp_lin_coll_norm = rays{iy}.sP_2piRp_lin_coll/rays{iy}.sP_2piRp_lin_coll(1);
         sdP_2piRp_ds_lin_coll_norm = rays{iy}.sdP_2piRp_ds_lin_coll/max(rays{iy}.sdP_2piRp_ds_lin_coll+eps).*(1 - sP_2piRp_lin_coll_norm(end)/sP_2piRp_lin_coll_norm(1));
         if ~iscell(yabs),
-            rays{iy}.mask_abs_lin_coll = sdP_2piRp_ds_lin_coll_norm > 0.01;
+            rays{iy}.mask_abs_lin_coll = sdP_2piRp_ds_lin_coll_norm > opt.abs_step;
         end
         if opt.abs_max > 0,
             rays{iy}.is_abs_max_lin_coll = min([ns,find(sP_2piRp_lin_coll_norm < opt.abs_max)]);        
@@ -471,7 +473,7 @@ for iy = 1:ny,
         sP_2piRp_norm = rays{iy}.sP_2piRp{end}/rays{iy}.sP_2piRp{end}(1);
         sdP_2piRp_ds_norm = rays{iy}.sdP_2piRp_ds{end}/max(rays{iy}.sdP_2piRp_ds{end}+eps).*(1 - sP_2piRp_norm(end)/sP_2piRp_norm(1));
         if ~iscell(yabs),
-            rays{iy}.mask_abs = sdP_2piRp_ds_norm > 0.01;
+            rays{iy}.mask_abs = sdP_2piRp_ds_norm > opt.abs_step;
         end
         if opt.abs_max > 0,
             rays{iy}.is_abs_max = min([ns,find(sP_2piRp_norm < opt.abs_max)]);        
@@ -551,7 +553,7 @@ for iy = 1:ny,
         sP_2piRp_coll_luke_norm = rays{iy}.sP_2piRp_coll_luke{end}/rays{iy}.sP_2piRp_coll_luke{end}(1);
         sdP_2piRp_coll_luke_ds_norm = rays{iy}.sdP_2piRp_coll_luke_ds{end}/max(rays{iy}.sdP_2piRp_coll_luke_ds{end}+eps).*(1 - sP_2piRp_coll_luke_norm(end)/sP_2piRp_coll_luke_norm(1));
         if ~iscell(yabs),
-            rays{iy}.mask_abs_coll_luke = sdP_2piRp_coll_luke_ds_norm > 0.01;
+            rays{iy}.mask_abs_coll_luke = sdP_2piRp_coll_luke_ds_norm > opt.abs_step;
         end
         if opt.abs_max > 0,
             rays{iy}.is_abs_max_coll_luke = min([ns,find(sP_2piRp_coll_luke_norm < opt.abs_max)]);        

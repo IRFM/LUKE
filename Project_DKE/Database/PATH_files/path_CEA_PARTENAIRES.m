@@ -1,6 +1,6 @@
-function dkepath = path_CEA_ANDROMEDE
+function dkepath = path_CEA_PARTENAIRES
 %
-% path definitions for the andromede and cephee computers
+% path definitions for the andromede and cephee computers (CEA Partenaires Zone)
 %
 %	Output:
 %
@@ -10,8 +10,8 @@ function dkepath = path_CEA_ANDROMEDE
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'andromede1','andromede2','andromede01','andromede02','andromede03','andromede04','andromede05','andromede06','cephee'};%andromede5 is called by default from CEA intranet
-dkepath.hostname = {'andromede1.partenaires.cea.fr','p-andromede01','p-andromede02','p-andromede03','p-andromede04','p-andromede05','p-andromede06','cephee.partenaires.cea.fr'};% should match the output of hostname_jd on the machine
+dkepath.machine = {'andromede1','andromede2','andromede3','andromede4','andromede5','andromede6','cephee'};%andromede5 is called by default from CEA intranet
+dkepath.hostname = {'andromede1.partenaires.cea.fr','andromede2','p-andromede03','p-andromede04','p-andromede05','p-andromede06','cephee'};% should match the output of hostname_jd on the machine
 %
 dkepath.computer = computer;%machine type and supported OS
 %
@@ -21,7 +21,7 @@ dkepath.default = 'YP105119';
 %
 %------------------------------------ Profile number 1, YP105119 Peysson ------------------------------------
 %
-dkepath.YP105119(1).luke_root = '/home/YP105119/LUKE/';
+dkepath.YP105119(1).luke_root = '/Applications/LUKE/LUKE/';
 dkepath.YP105119(1).temppathroot = '/data/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 % ---------------------------- andromede 1 -------------------------------
@@ -66,12 +66,12 @@ dkepath.YP105119(1).andromede1.imagemagick.env = '/usr/bin/';% ImageMagick envir
 %
 % ---------------------------- andromede 2-5 -------------------------------
 %
-dkepath.YP105119(1).andromede01 = dkepath.YP105119(1).andromede1;
-dkepath.YP105119(1).andromede02 = dkepath.YP105119(1).andromede1;
-dkepath.YP105119(1).andromede03 = dkepath.YP105119(1).andromede1;
-dkepath.YP105119(1).andromede04 = dkepath.YP105119(1).andromede1;
-dkepath.YP105119(1).andromede05 = dkepath.YP105119(1).andromede1;
-dkepath.YP105119(1).andromede06 = dkepath.YP105119(1).andromede1;
+dkepath.YP105119(1).andromede1 = dkepath.YP105119(1).andromede1;
+dkepath.YP105119(1).andromede2 = dkepath.YP105119(1).andromede1;
+dkepath.YP105119(1).andromede3 = dkepath.YP105119(1).andromede1;
+dkepath.YP105119(1).andromede4 = dkepath.YP105119(1).andromede1;
+dkepath.YP105119(1).andromede5 = dkepath.YP105119(1).andromede1;
+dkepath.YP105119(1).andromede6 = dkepath.YP105119(1).andromede1;
 %
 % ---------------------------- cephee -------------------------------
 %

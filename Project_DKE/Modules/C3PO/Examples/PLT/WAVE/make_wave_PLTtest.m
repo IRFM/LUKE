@@ -14,7 +14,7 @@ p_opt = -1;
 %
 % Path parameters
 %
-id_dkepath = 'LOCAL';%For all paths used by DKE solver
+id_dkepath = '';%For all paths used by DKE solver
 path_dkepath = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 % Equilibrium parameters
@@ -92,6 +92,11 @@ rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calcul
 rayparam.nperp = 1000;%number of points in pperp integration for damping calculations
 rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
+%
+rayparam.metricmode = 2;% 1 : Only curvilinear metric (analytic or numeric); 2 : Both curvilinear and cartesian metric
+rayparam.rhoswitch = 0.1;% Radial position at which the switch occurs when metricmode = 2 (default value)
+rayparam.deltaswitch = 0.001;% Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes (default value)
+rayparam.substitution_method = 7;%Method of substitution : 1->dichotomy1D, 2->dichotomy2D, 3->newton_numeric1D, 4->newton_numeric2D, 5->newton_analytic1D, 6->newton_analytic2D, 7->newton_mix2D (default value)
 %
 % =========================================================================
 %
