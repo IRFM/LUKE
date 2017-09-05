@@ -760,7 +760,7 @@ void mexFunction(   int     nlhs, mxArray *plhs[], int     nrhs, const mxArray  
             /*  mexPrintf("m,s0[m],s1[m],s2[m],s3[m],s4[m],s5[m],s6[m]:%d,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g,%5.100g\n",m,s0[m],s1[m],s2[m],s3[m],s4[m],s5[m],s6[m]); */
             
             
-            ymax = inf_norm(ys,MC);
+            ymax = inf_norm(ys,MC-1);
             ydel[m] = ydel[m]/ymax;
             
             /* mexPrintf("ys[0],ys[1],ys[2],ys[3],ys[4],ys[5],ys[6],ymax,ydel[m]:%g,%g,%g,%g,%g,%g,%g,%g,%g\n",ys[0],ys[1],ys[2],ys[3],ys[4],ys[5],ys[6],ymax,ydel[m]); */
