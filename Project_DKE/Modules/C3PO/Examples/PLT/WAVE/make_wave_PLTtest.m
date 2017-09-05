@@ -1,4 +1,4 @@
-function [] = make_wave_PLTtest
+%function [] = make_wave_PLTtest
 % script make_wave_test_RT
 %
 % Parameters for test mode ray-tracing calculations
@@ -93,7 +93,7 @@ rayparam.nperp = 1000;%number of points in pperp integration for damping calcula
 rayparam.pperpmax = 10;%maximum value of pperp in damping calculations
 rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considered absorbed
 %
-rayparam.metricmode = 2;% 1 : Only curvilinear metric (analytic or numeric); 2 : Both curvilinear and cartesian metric
+rayparam.metricmode = 1;% 1 : Only curvilinear metric (analytic or numeric); 2 : Both curvilinear and cartesian metric
 rayparam.rhoswitch = 0.1;% Radial position at which the switch occurs when metricmode = 2 (default value)
 rayparam.deltaswitch = 0.001;% Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes (default value)
 rayparam.substitution_method = 7;%Method of substitution : 1->dichotomy1D, 2->dichotomy2D, 3->newton_numeric1D, 4->newton_numeric2D, 5->newton_analytic1D, 6->newton_analytic2D, 7->newton_mix2D (default value)
@@ -120,36 +120,68 @@ C3POparam.clustermode.main_C3PO_jd.scheduler.mode = mdce_mode_main_C3PO_jd;%MatL
 %
 % ray-tracing calculations
 %
-wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],0);
+equil_fit = fitequil_yp(equil,fitparam.mode_equil,fitparam.method,fitparam.ngridresample,fitparam.nharm);%Build vectorized magnetic equilibrium structure
+%
+wave_numeric = main_C3PO_jd(dkepath,[id_wave,'_numeric'],equil,equil_fit,rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],0);
 %
 info_dke_yp(2,'Ray trajectories calculated (interpolated magnetic equilibrium)');
 %
-rayparam.tfinal = 6000;
-rayparam.kmax = 6000;
-%
-wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],flag_analytic);
-%
-info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
-%
-save_str = ['WAVE_',id_wave,'.mat'];
-save(save_str,'id_wave','wave_numeric','wave_analytic');
-%
-info_dke_yp(2,'Wave parameters saved');
-%
-% --- display results ---
-%
-waves = {wave_numeric,wave_analytic};
-rays = {wave_numeric.rays{1},wave_analytic.rays{1}};
-%
-legs = {'Numeric','Analytic'};
-%
-filename = ['Fig_',id_wave];
-%
-opt.p_opt = C3POdisplay.p_opt;
-opt.ntheta_fit = 65;
-opt.nrho_fit = 15;
-opt.propvar = 1;   
-%
-graph_comp_RT_jd(rays,legs,'',filename,opt)
-%
-diary4cvs_C3PO_yp(id_wave,dkepath,waves);% diary some results for CVS validation
+if rayparam.metricmode == 1,
+    %
+    rayparam.tfinal = 6000;
+    rayparam.kmax = 6000;
+    %
+    wave_analytic = main_C3PO_jd(dkepath,[id_wave,'_analytic'],equil,'',rayinit,waveparam,fitparam,rayparam,C3POdisplay,C3POparam,[],[],flag_analytic);
+    %
+    info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
+    %
+    save_str = ['WAVE_',id_wave,'.mat'];
+    save(save_str,'id_wave','wave_numeric','wave_analytic');
+    %
+    info_dke_yp(2,'Wave parameters saved');
+    %
+    % --- display results ---
+    %
+    waves = {wave_numeric,wave_analytic};
+    rays = {wave_numeric.rays{1},wave_analytic.rays{1}};
+    %
+    legs = {'Numeric','Analytic'};
+    %
+    filename = ['Fig_',id_wave];
+    %
+    opt.p_opt = C3POdisplay.p_opt;
+    opt.ntheta_fit = 65;
+    opt.nrho_fit = 15;
+    opt.propvar = 1;   
+    %
+    graph_comp_RT_jd(rays,legs,'',filename,opt)
+    %
+    diary4cvs_C3PO_yp(id_wave,dkepath,waves);% diary some results for Git validation
+    %
+else
+    %
+    save_str = ['WAVE_',id_wave,'.mat'];
+    save(save_str,'id_wave','wave_numeric');
+    %
+    %
+    info_dke_yp(2,'Wave parameters saved');
+    %
+    % --- display results ---
+    %
+    waves = {wave_numeric};
+    rays = {wave_numeric.rays{1}};
+    %
+    legs = {'Numeric'};
+    %
+    filename = ['Fig_',id_wave];
+    %
+    opt.p_opt = C3POdisplay.p_opt;
+    opt.ntheta_fit = 65;
+    opt.nrho_fit = 15;
+    opt.propvar = 1;   
+    %
+    graph_comp_RT_jd(rays,legs,'',filename,opt)
+    %
+    diary4cvs_C3PO_yp(id_wave,dkepath,waves);% diary some results for Git validation
+    %
+end
