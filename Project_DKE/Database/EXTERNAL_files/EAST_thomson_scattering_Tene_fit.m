@@ -42,9 +42,9 @@ equil_RZ = pt2rz_jd(equil);
 %
 T = @(x,a,b)a*exp(-x.^2/b^2);%Gaussian curve fit 
 %
-if nefit_mode == 1,       
+if nefit_mode == 1    
     N = @(x,a,b)a*(1-x.*x).^b;%Bell shaped curvefit 
-elseif nefit_mode == 2,     
+elseif nefit_mode == 2    
     N = @(x,a,b,c)a./(1+exp((x-b)/c));%Fermi function curve fit 
 end
 %
@@ -69,17 +69,17 @@ opts.RobustWgtFun = 'talwar';
 %
 nonLinMdl_T_ts_sr = fitnlm(rho_LUKE_ts_sr,T_ts_sr,@(p,x)T(x,p(1),p(2)),[max(T_ts_sr),1],'Options',opts);
 %
-if nefit_mode == 1,         
+if nefit_mode == 1       
     nonLinMdl_N_ts_sr = fitnlm(rho_LUKE_ts_sr,N_ts_sr,@(p,x)N(x,p(1),p(2)),[max(N_ts_sr),0.5],'Options',opts);
-elseif nefit_mode == 2,
+elseif nefit_mode == 2
     nonLinMdl_N_ts_sr = fitnlm(rho_LUKE_ts_sr,N_ts_sr,@(p,x)N(x,p(1),p(2),p(3)),[max(N_ts_sr),0.5,0.5],'Options',opts);
 end
 %
 T_ts_fit = T(rho_LUKE,nonLinMdl_T_ts_sr.Coefficients.Estimate('p1'),nonLinMdl_T_ts_sr.Coefficients.Estimate('p2'));
 %
-if nefit_mode == 1, 
+if nefit_mode == 1
     N_ts_fit = N(rho_LUKE,nonLinMdl_N_ts_sr.Coefficients.Estimate('p1'),nonLinMdl_N_ts_sr.Coefficients.Estimate('p2'));
-elseif nefit_mode == 2, 
+elseif nefit_mode == 2
     N_ts_fit = N(rho_LUKE,nonLinMdl_N_ts_sr.Coefficients.Estimate('p1'),nonLinMdl_N_ts_sr.Coefficients.Estimate('p2'),nonLinMdl_N_ts_sr.Coefficients.Estimate('p3'));
 end    
 %    
