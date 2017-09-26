@@ -42,21 +42,41 @@ end
 %
 % profiles and species
 %
-equil_magnetic_nete = EAST_thomson_scattering_Tene_fit(equil_magnetic,external.thomson.R_ts,external.thomson.Z_ts,external.thomson.Te_ts,external.thomson.ne_ts,0);%Add Te and ne profiles from Thomson scattering
-%
 Zeff = external.equil.prof.species.Zeff;
-pTi = pTe/external.equil.prof.TeTi;
+TeTi = external.equil.prof.TeTi;
 frac_H = external.equil.prof.species.frac_H;
 frac_D = external.equil.prof.species.frac_D;
 Zimp = external.equil.prof.species.Zimp;
 Aimp = external.equil.prof.species.Aimp;
 %
-prho = prho1;
-pTe = equil_magnetic_nete.pTe;
-pne = equil_magnetic_nete.pne;
+if isfield(external.equil,'thomson') == 1 & isfield('external.equil.prof','rho') == 1,
+    thomson_mode = input_dke_yp('Do you want to calculate Te and ne profiles from raw Thomson scattering measurements','n',{'y','n'},'',[1,1]),'y');
+elseif isfield(external.equil,'thomson') == 1 & isfield('external.equil.prof','rho') == 0,
+    thomson_mode = 1;
+elseif isfield(external.equil,'thomson') == 0 & isfield('external.equil.prof','rho') == 1,
+    thomson_mode = 0;
+end
+%
+if thomson_mode == 1
+    %
+    equil_magnetic_nete = EAST_thomson_scattering_Tene_fit(equil_magnetic,external.equil.thomson.R_ts,external.equil.thomson.Z_ts,external.equil.thomson.Te_ts,external.equil.thomson.dTe_ts,external.equil.thomson.ne_ts,external.equil.thomson.dne_ts,0);%Add Te and ne profiles from Thomson scattering
+    %  
+    prho = prho1;
+    pTe = equil_magnetic_nete.pTe;
+    pne = equil_magnetic_nete.pne;
+    %
+else
+    prho = external.equil.prof.rho;
+    pne = external.equil.prof.ne;
+    pTe = external.equil.prof.Te;
+end
+%
+pTi = pTe/TeTi;
 %
 save([savename,'.prof'],'prho','pne','pTe','pTi','frac_H','frac_D','Zimp','Aimp','Zeff','-mat');
+%
 equil_prof = equil_prof_jd([savename,'.prof'],1.4,prho1,pspsin1,pspsinT1,display_mode,p_opt,dispname,savename,Zeff);
+%
 delete([savename,'.prof']);
 %
 equil = conc_struct_jd(equil_magnetic,equil_prof);
