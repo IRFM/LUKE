@@ -1,13 +1,39 @@
-function [equil_new] = EAST_thomson_scattering_Tene_fit(equil,R_ts,Z_ts,T_ts,N_ts,display_mode,nefit_mode)
+function [equil_new,rho_LUKE_ts_sr,rho_psi_ts_sr,T_ts_fit,N_ts_fit,T_ts_sr,N_ts_sr] = EAST_thomson_scattering_Tene_fit(equil,R_ts,Z_ts,T_ts,N_ts,display_mode,nefit_mode)
 %
-% 
-
-
-
-
-
-
-
+% Calculates Te and ne profiles for C3PO/LUKE from Thomson scattering for EAST from raw data, using EQDSK equilibrium 
+%
+%   INPUTS: 
+%
+%       - equil: LUKE format magnetic equilibrium (struct)
+%       - R_ts: Major radius of the vertical chord of the diagnostic (m)
+%       - Z_ts: Vertical positions of the (ne,Te) raw measurements (m)
+%       - T_ts: Raw Te measurements (eV)
+%       - N_ts: Raw ne measurements (m-3)
+%       - display_mode: display data and fits (1: yes, 0: no)
+%           (default: 0)
+%       - nefit_mode: (1) bell-shaped curve guess function for the fit, (2) Fermi-like curve guess function for the fit
+%           (default: 2)
+%
+%   OUTPUTS:
+%
+%       - equil_new: LUKE magnetic equilibrium with new (ne,Te) profiles from Thomson scattering
+%       - rho_LUKE_ts_sr: LUKE normalized radial coordinates (WARNING : not sqrt(poloidal_psin)) (a.u.)
+%       - rho_psi_ts_sr: rho as square root of normalized poloidal psi (a.u.)
+%       - T_ts_fit: Electron temperature profile from fit (keV)
+%       - N_ts_fit: Electron density profile from fit (m-3)
+%       - T_ts_sr: Electron temperature profile from Thomson scattering (keV)
+%       - N_ts_sr: Electron density profile from Thomson scattering (m-3)
+%
+%   by Y. Peysson <yves.peysson@cea.fr> (CEA/IRFM)
+%
+if nargin == 5,
+    display_mode = 0;
+    nefit_mode = 2;
+end
+%
+if nargin == 6,
+    nefit_mode = 2;
+end
 %
 rho_LUKE = equil.ptx(:,1)./equil.ptx(end,1);
 psin_LUKE = equil.psi_apRp./equil.psi_apRp(end);
@@ -49,7 +75,6 @@ elseif nefit_mode == 2,
     nonLinMdl_N_ts_sr = fitnlm(rho_LUKE_ts_sr,N_ts_sr,@(p,x)N(x,p(1),p(2),p(3)),[max(N_ts_sr),0.5,0.5],'Options',opts);
 end
 %
-
 T_ts_fit = T(rho_LUKE,nonLinMdl_T_ts_sr.Coefficients.Estimate('p1'),nonLinMdl_T_ts_sr.Coefficients.Estimate('p2'));
 %
 if nefit_mode == 1, 
@@ -84,9 +109,20 @@ if display_mode == 1
     %   
 end
 %
-equil_new.pTe = T_ts_fit/1000;%keV
-equil_new.pne = N_ts_fit*1e19;%m-3
+rho_psi_ts_sr = sqrt(rho2psi_jd(equil,rho_LUKE_ts_sr));%rho as square root of normalized poloidal psi
 %
+T_ts_sr = T_ts_sr/1000;%keV
+N_ts_sr = N_ts_sr*1e19;%m-3
+T_ts_fit = T_ts_fit/1000;%keV
+N_ts_fit = N_ts_fit*1e19;%m-3
+%
+equil_new = equil;
+%
+equil_new.pTe = T_ts_fit;
+equil_new.pne = N_ts_fit;
+%
+
+
 
 
 

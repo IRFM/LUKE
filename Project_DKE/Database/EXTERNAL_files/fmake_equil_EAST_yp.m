@@ -16,18 +16,6 @@ savename = equil_id;
 %
 [equil_magnetic,prho1,pspsin1,pspsinT1] = equil_magnetic_EFIT_jd(external.equil.magnetic.eqdsk,display_mode,p_opt,dispname,savename);
 %
-% profiles
-%
-Zeff = external.equil.prof.species.Zeff;
-prho = external.equil.prof.rho;
-pne = external.equil.prof.ne;
-pTe = external.equil.prof.Te;
-pTi = pTe/external.equil.prof.TeTi;
-frac_H = external.equil.prof.species.frac_H;
-frac_D = external.equil.prof.species.frac_D;
-Zimp = external.equil.prof.species.Zimp;
-Aimp = external.equil.prof.species.Aimp;
-%
 % sign management as most equilibrium codes do not account for these.
 %
 if strcmp(external.equil.jbdirections.Ip,'clockwise')
@@ -51,6 +39,47 @@ end
 if signs.Bt*equil_magnetic.ptBPHI(1,1) < 0,
     equil_magnetic.ptBPHI = -equil_magnetic.ptBPHI;
 end
+%
+% profiles and species
+%
+[equil_415,rho_415,pTe_415,pne_415] = EAST_thomson_scattering_Tene_fit(equil_415_init,external.thomson.R_ts,external.thomson.Z_ts,external.thomson.Te_ts,external.thomson.ne_ts,0);
+
+
+
+
+
+
+
+
+%
+Zeff = external.equil.prof.species.Zeff;
+pTi = pTe/external.equil.prof.TeTi;
+frac_H = external.equil.prof.species.frac_H;
+frac_D = external.equil.prof.species.frac_D;
+Zimp = external.equil.prof.species.Zimp;
+Aimp = external.equil.prof.species.Aimp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+prho = external.equil.prof.rho;
+pne = external.equil.prof.ne;
+pTe = external.equil.prof.Te;
+
+
+
+
 %
 save([savename,'.prof'],'prho','pne','pTe','pTi','frac_H','frac_D','Zimp','Aimp','Zeff','-mat');
 equil_prof = equil_prof_jd([savename,'.prof'],1.4,prho1,pspsin1,pspsinT1,display_mode,p_opt,dispname,savename,Zeff);
