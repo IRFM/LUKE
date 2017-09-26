@@ -560,11 +560,11 @@ elseif type == 1.4 && n_opt == 0,%EAST or HL2A
     Zimp = equil_prof_data.species.Zimp;
     Aimp = equil_prof_data.species.Aimp;
     %
-    if isfield(external,'thomson') == 1 & isfield('equil_prof_data.','rho') == 1,
-        thomson_mode = input_dke_yp('Do you want to calculate Te and ne profiles from raw Thomson scattering measurements','n',{'y','n'},'',[1,1]),'y');
-    elseif isfield(external,'thomson') == 1 & isfield('equil_prof_data.','rho') == 0,
+    if isfield(external,'thomson') == 1 & isfield(equil_prof_data,'rho') == 1,
+        thomson_mode = input_dke_yp('Do you want to calculate Te and ne profiles from raw Thomson scattering measurements','n',{'y','n'},'',[1,1],'y');
+    elseif isfield(external,'thomson') == 1 & isfield(equil_prof_data,'rho') == 0,
         thomson_mode = 1;
-    elseif isfield(external.equil,'thomson') == 0 & isfield('equil_prof_data.','rho') == 1,
+    elseif isfield(external,'thomson') == 0 & isfield(equil_prof_data,'rho') == 1,
         thomson_mode = 0;
     end
     %
