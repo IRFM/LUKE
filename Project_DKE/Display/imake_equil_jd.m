@@ -554,16 +554,31 @@ elseif type == 1.4 && n_opt == 0,%EAST or HL2A
     profname = [id_equil,'.prof'];
     %
     Zeff = equil_prof_data.species.Zeff;
-    prho = equil_prof_data.rho;
-    pne = equil_prof_data.ne;
-    pTe = equil_prof_data.Te;
-    pTi = pTe/equil_prof_data.TeTi;
+    TeTi = equil_prof_data.TeTi;
     frac_H = equil_prof_data.species.frac_H;
     frac_D = equil_prof_data.species.frac_D;
     Zimp = equil_prof_data.species.Zimp;
     Aimp = equil_prof_data.species.Aimp;
     %
-    save(profname,'prho','pne','pTe','pTi','frac_H','frac_D','Zimp','Aimp','Zeff','-mat');
+    if isfield(external,'thomson') == 1 & isfield('equil_prof_data.','rho') == 1,
+        thomson_mode = input_dke_yp('Do you want to calculate Te and ne profiles from raw Thomson scattering measurements','n',{'y','n'},'',[1,1]),'y');
+    elseif isfield(external,'thomson') == 1 & isfield('equil_prof_data.','rho') == 0,
+        thomson_mode = 1;
+    elseif isfield(external.equil,'thomson') == 0 & isfield('equil_prof_data.','rho') == 1,
+        thomson_mode = 0;
+    end
+    %
+    if thomson_mode == 1
+        save(profname,'frac_H','frac_D','Zimp','Aimp','Zeff','-mat');
+    else
+        prho = equil_prof_data.rho;
+        pne = equil_prof_data.ne;
+        pTe = equil_prof_data.Te;
+        pTi = pTe/TeTi;
+        %
+        save(profname,'prho','pne','pTe','pTi','frac_H','frac_D','Zimp','Aimp','Zeff','-mat');
+        %
+    end
     %
     % sign management as most equilibrium codes do not account for these.
     %
@@ -624,6 +639,7 @@ elseif e_opt == -1,% (R,Z) to (psi,theta) conversion specific to eqdsk
         set(select.busyhandle,'Visible','on');drawnow;
     end
     [equil_magnetic,mrho,mspsin,mspsinT,mp_magnetic] = equil_magnetic_EFIT_jd(eqdsk,display_mode,p_opt,dispname,savename);
+    %
     if isfield(select,'busyhandle'),
         set(select.busyhandle,'Visible','off');drawnow;
     end
@@ -685,6 +701,20 @@ if e_opt == 1,
 end
 %
 if n_opt >= 0 &&  e_opt ~= -2,
+    %
+    if strcmp(basestr,'EAST') & thomson_mode == 1
+        %
+        equil_magnetic_nete = EAST_thomson_scattering_Tene_fit(equil_magnetic,external.thomson.prof.R_ts,external.thomson.prof.Z_ts,external.thomson.prof.Te_ts,external.thomson.prof.dTe_ts,external.thomson.prof.ne_ts,external.thomson.prof.dne_ts,display_mode-1);%Add Te and ne profiles from Thomson scattering
+        %
+        prho = mrho;
+        pTe = equil_magnetic_nete.pTe';
+        pne = equil_magnetic_nete.pne';
+        %
+        pTi = pTe/TeTi;
+        %
+        save([savename,'.prof'],'prho','pne','pTe','pTi','-append');
+        %
+    end
     %
     equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
     %
