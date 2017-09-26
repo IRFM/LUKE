@@ -42,15 +42,7 @@ end
 %
 % profiles and species
 %
-[equil_415,rho_415,pTe_415,pne_415] = EAST_thomson_scattering_Tene_fit(equil_415_init,external.thomson.R_ts,external.thomson.Z_ts,external.thomson.Te_ts,external.thomson.ne_ts,0);
-
-
-
-
-
-
-
-
+equil_magnetic_nete = EAST_thomson_scattering_Tene_fit(equil_magnetic,external.thomson.R_ts,external.thomson.Z_ts,external.thomson.Te_ts,external.thomson.ne_ts,0);%Add Te and ne profiles from Thomson scattering
 %
 Zeff = external.equil.prof.species.Zeff;
 pTi = pTe/external.equil.prof.TeTi;
@@ -58,28 +50,10 @@ frac_H = external.equil.prof.species.frac_H;
 frac_D = external.equil.prof.species.frac_D;
 Zimp = external.equil.prof.species.Zimp;
 Aimp = external.equil.prof.species.Aimp;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-prho = external.equil.prof.rho;
-pne = external.equil.prof.ne;
-pTe = external.equil.prof.Te;
-
-
-
-
+%
+prho = prho1;
+pTe = equil_magnetic_nete.pTe;
+pne = equil_magnetic_nete.pne;
 %
 save([savename,'.prof'],'prho','pne','pTe','pTi','frac_H','frac_D','Zimp','Aimp','Zeff','-mat');
 equil_prof = equil_prof_jd([savename,'.prof'],1.4,prho1,pspsin1,pspsinT1,display_mode,p_opt,dispname,savename,Zeff);
