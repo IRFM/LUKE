@@ -49,11 +49,11 @@ frac_D = external.equil.prof.species.frac_D;
 Zimp = external.equil.prof.species.Zimp;
 Aimp = external.equil.prof.species.Aimp;
 %
-if isfield(external.equil,'thomson') == 1 & isfield('external.equil.prof','rho') == 1,
-    thomson_mode = input_dke_yp('Do you want to calculate Te and ne profiles from raw Thomson scattering measurements','n',{'y','n'},'',[1,1]),'y');
-elseif isfield(external.equil,'thomson') == 1 & isfield('external.equil.prof','rho') == 0,
+if isfield(external.equil,'thomson') == 1 & isfield(external.equil.prof,'rho') == 1,
+    thomson_mode = input_dke_yp('Do you want to calculate Te and ne profiles from raw Thomson scattering measurements','n',{'y','n'},'',[1,1],'y');
+elseif isfield(external.equil,'thomson') == 1 & isfield(external.equil.prof,'rho') == 0,
     thomson_mode = 1;
-elseif isfield(external.equil,'thomson') == 0 & isfield('external.equil.prof','rho') == 1,
+elseif isfield(external.equil,'thomson') == 0 & isfield(external.equil.prof,'rho') == 1,
     thomson_mode = 0;
 end
 %
