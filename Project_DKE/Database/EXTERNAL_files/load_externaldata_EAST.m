@@ -92,7 +92,7 @@ end
 filename = [workdir,'thomson_',shotnum,'_',shotime,'.mat'];
 %
 if exist(filename,'file'),
-    external.thomson.prof = load([workdir,'thomson_',shotnum,'_',shotime,'.mat']);
+    external.equil.thomson.prof = load([workdir,'thomson_',shotnum,'_',shotime,'.mat']);
 else
     error(['The file thomson_',shotnum,'_',shotime,'.mat is missing in the directory ',workdir]);
 end
