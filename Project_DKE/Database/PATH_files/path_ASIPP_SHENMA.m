@@ -10,8 +10,9 @@ function dkepath = path_ASIPP_SHENMA
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'shenma107','shenma110','shenma111','shenma112','shenma113'};%shenma113 is called by default from CEA intranet
-dkepath.hostname = {'shenma107','login110','login111','login112','login113'};
+dkepath.machine = 'shenma';%
+dkepath.hostname = 'login';
+%
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -27,45 +28,38 @@ dkepath.PEYSSON(1).local_root = '/home/users/PEYSSON/Packages/';
 dkepath.PEYSSON(1).temppathroot = '/scratch/PEYSSON/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.PEYSSON(1).localdatapath = dkepath.PEYSSON(1).temppathroot;
 %
-% ---------------------------- shenma113 -------------------------------
+% ---------------------------- shenma -------------------------------
 %
-dkepath.PEYSSON(1).shenma113.mex714 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB714/'];
-dkepath.PEYSSON(1).shenma113.mex801 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB801/'];
-dkepath.PEYSSON(1).shenma113.mex900 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB900/'];
+dkepath.PEYSSON(1).mex714 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB714/'];
+dkepath.PEYSSON(1).mex801 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB801/'];
+dkepath.PEYSSON(1).mex900 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB900/'];
 %
-dkepath.PEYSSON(1).shenma113.compiler_opt.libs.gfortran = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.7','/',dkepath.machine,'/'];%extra libraries
-dkepath.PEYSSON(1).shenma113.compiler_opt.copts = '';
-dkepath.PEYSSON(1).shenma113.compiler_opt.fopts.mex714 = 'FC=''gfortran''';%
-dkepath.PEYSSON(1).shenma113.compiler_opt.separatrice.mex714 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).shenma113.compiler_opt.helmex.mex714 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).shenma113.compiler_opt.fopts.mex714 = ' ';%-largeArrayDims';
-dkepath.PEYSSON(1).shenma113.compiler_opt.fopts.mex801 = 'FC=''gfortran''';%
-dkepath.PEYSSON(1).shenma113.compiler_opt.separatrice.mex801 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).shenma113.compiler_opt.helmex.mex801 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).shenma113.compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
-dkepath.PEYSSON(1).shenma113.compiler_opt.fopts.mex900 = 'FC=''gfortran''';%
-dkepath.PEYSSON(1).shenma113.compiler_opt.separatrice.mex900 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).shenma113.compiler_opt.helmex.mex900 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).shenma113.compiler_opt.fopts.mex900 = ' ';%-largeArrayDims;
+dkepath.PEYSSON(1).compiler_opt.libs.gfortran = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.7','/',dkepath.machine,'/'];%extra libraries
+dkepath.PEYSSON(1).compiler_opt.copts = '';
+dkepath.PEYSSON(1).compiler_opt.fopts.mex714 = 'FC=''gfortran''';%
+dkepath.PEYSSON(1).compiler_opt.separatrice.mex714 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).compiler_opt.helmex.mex714 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).compiler_opt.fopts.mex714 = ' ';%-largeArrayDims';
+dkepath.PEYSSON(1).compiler_opt.fopts.mex801 = 'FC=''gfortran''';%
+dkepath.PEYSSON(1).compiler_opt.separatrice.mex801 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).compiler_opt.helmex.mex801 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
+dkepath.PEYSSON(1).compiler_opt.fopts.mex900 = 'FC=''gfortran''';%
+dkepath.PEYSSON(1).compiler_opt.separatrice.mex900 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).compiler_opt.helmex.mex900 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).compiler_opt.fopts.mex900 = ' ';%-largeArrayDims;
 %
 %Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.PEYSSON(1).shenma113.MUMPS.mex714 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB714'];
-dkepath.PEYSSON(1).shenma113.MUMPS.mex801 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB801'];
-dkepath.PEYSSON(1).shenma113.MUMPS.mex900 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB900'];
+dkepath.PEYSSON(1).MUMPS.mex714 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB714'];
+dkepath.PEYSSON(1).MUMPS.mex801 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB801'];
+dkepath.PEYSSON(1).MUMPS.mex900 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB900'];
 %
 % LUKE documentation
 %
-dkepath.PEYSSON(1).shenma113.graphviz.env = '/usr/bin/';% Graphviz environment variable
-dkepath.PEYSSON(1).shenma113.latex.env = '/usr/bin/';% Latex environment variable
-dkepath.PEYSSON(1).shenma113.imagemagick.env = '/usr/bin/';% ImageMagick environment variable
-%
-% ---------------------------- shenma110-112 -------------------------------
-%
-dkepath.PEYSSON(1).shenma107 = dkepath.PEYSSON(1).shenma113;
-dkepath.PEYSSON(1).shenma110 = dkepath.PEYSSON(1).shenma113;
-dkepath.PEYSSON(1).shenma111 = dkepath.PEYSSON(1).shenma113;
-dkepath.PEYSSON(1).shenma112 = dkepath.PEYSSON(1).shenma113;
+dkepath.PEYSSON(1).graphviz.env = '/usr/bin/';% Graphviz environment variable
+dkepath.PEYSSON(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.PEYSSON(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
 %
