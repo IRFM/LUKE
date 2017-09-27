@@ -14,9 +14,18 @@ equil_RZ.psi_apRp = equil.psi_apRp;
 equil_RZ.ap = equil.ptx(end,1);
 equil_RZ.Rp = equil.Rp;
 equil_RZ.Zp = equil.Zp;
-equil_RZ.zZi = equil.zZi;
-equil_RZ.zmi = equil.zmi;
-equil_RZ.id = equil.id;
+if isfield(equil,'zZi')
+    equil_RZ.zZi = equil.zZi;
+end
+if isfield(equil,'zmi')
+    equil_RZ.zmi = equil.zmi;
+end
+if isfield(equil,'id')
+    equil_RZ.id = equil.id;
+else
+    equil.id = '';
+    equil_RZ.id = '';
+end
 %
 ptx = equil.ptx;
 pty = equil.pty;
@@ -180,23 +189,49 @@ end
 %
 warning('on')
 %
-equil_RZ.pTe = interp1(psin,equil.pTe,psin_ext,'linear','extrap');
-equil_RZ.pne = interp1(psin,equil.pne,psin_ext,'linear','extrap');
-equil_RZ.pzTi = interp1(psin,equil.pzTi.',psin_ext,'linear','extrap').';
-equil_RZ.pzni = interp1(psin,equil.pzni.',psin_ext,'linear','extrap').';
+if isfield(equil,'pTe')
+    equil_RZ.pTe = interp1(psin,equil.pTe,psin_ext,'linear','extrap');
+end
+if isfield(equil,'pne')
+    equil_RZ.pne = interp1(psin,equil.pne,psin_ext,'linear','extrap');
+end
+if isfield(equil,'pzTi')
+    equil_RZ.pzTi = interp1(psin,equil.pzTi.',psin_ext,'linear','extrap').';
+end
+if isfield(equil,'pzni')
+    equil_RZ.pzni = interp1(psin,equil.pzni.',psin_ext,'linear','extrap').';
+end
 %
-equil_RZ.pTe(equil_RZ.pTe < 0) = 0;
-equil_RZ.pne(equil_RZ.pne < 0) = 0;
-equil_RZ.pzTi(equil_RZ.pzTi < 0) = 0;
-equil_RZ.pzni(equil_RZ.pzni < 0) = 0;
+if isfield(equil,'pTe')
+    equil_RZ.pTe(equil_RZ.pTe < 0) = 0;
+end
+if isfield(equil,'pne')
+    equil_RZ.pne(equil_RZ.pne < 0) = 0;
+end
+if isfield(equil,'pzTi')
+    equil_RZ.pzTi(equil_RZ.pzTi < 0) = 0;
+end
+if isfield(equil,'pzni')
+    equil_RZ.pzni(equil_RZ.pzni < 0) = 0;
+end
 %
-mask = equil_RZ.pTe == 0 & equil_RZ.pne == 0 & sum(equil_RZ.pzTi,1) == 0 & sum(equil_RZ.pzni,1) == 0;
+if isfield(equil,'pTe') & isfield(equil,'pne') & isfield(equil,'pzTi') & isfield(equil,'pzni'),
+    mask = equil_RZ.pTe == 0 & equil_RZ.pne == 0 & sum(equil_RZ.pzTi,1) == 0 & sum(equil_RZ.pzni,1) == 0;
+    psin_ext(mask) = [];
+end
 %
-psin_ext(mask) = [];
-equil_RZ.pTe(mask) = [];
-equil_RZ.pne(mask) = [];
-equil_RZ.pzTi(:,mask) = [];
-equil_RZ.pzni(:,mask) = [];
+if isfield(equil,'pTe')
+    equil_RZ.pTe(mask) = [];
+end
+if isfield(equil,'pne')
+    equil_RZ.pne(mask) = [];
+end
+if isfield(equil,'pzTi')
+    equil_RZ.pzTi(:,mask) = [];
+end
+if isfield(equil,'pzni')
+    equil_RZ.pzni(:,mask) = [];
+end
 equil_RZ.psi_apRp = psin_ext*psia_apRp;
 %
 
