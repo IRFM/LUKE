@@ -43,7 +43,7 @@ dkepath.PEYSSON(1).shenma113.compiler_opt.fopts.mex801 = 'FC=''gfortran''';%
 dkepath.PEYSSON(1).shenma113.compiler_opt.separatrice.mex801 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.PEYSSON(1).shenma113.compiler_opt.helmex.mex801 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.PEYSSON(1).shenma113.compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
-dkepath.PEYSSON(1).shenma113.compiler_opt.fopts.mex804 = 'FC=''gfortran''';%
+dkepath.PEYSSON(1).shenma113.compiler_opt.fopts.mex901 = 'FC=''gfortran''';%
 dkepath.PEYSSON(1).shenma113.compiler_opt.separatrice.mex901 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.PEYSSON(1).shenma113.compiler_opt.helmex.mex901 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.PEYSSON(1).shenma113.compiler_opt.fopts.mex901 = ' ';%-largeArrayDims;
