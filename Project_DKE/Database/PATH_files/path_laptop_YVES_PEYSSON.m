@@ -22,8 +22,8 @@ dkepath.default = 'yves';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.yves(1).luke_root = '/Users/yves/Projets/LUKE/';
-dkepath.yves(1).local_root = [getenv('HOME'),'/Projets/'];
+dkepath.yves(1).luke_root = [getenv('HOME'),'/Travail/Projets/LUKE/'];
+dkepath.yves(1).local_root = [getenv('HOME'),'/Travail/Projets/'];
 dkepath.yves(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.yves(1).mex900 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB900','/'];
