@@ -94,7 +94,7 @@ dkepath.yves(1).remote(1).luke_root = dkepath.yves(1).luke_root;% local cluster
 dkepath.yves(1).remote(1).link_mode = '';
 dkepath.yves(1).remote(1).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(1).gitupdate = false;% update done in 'direct' mode
-dkepath.yves(1).remote(1).gitmode.cmd = 'cd /Users/Yves/Projets/*;git pull;echo "* update done";';
+dkepath.yves(1).remote(1).gitmode.cmd = 'cd /Users/Yves/Travail/Projets/*;git pull;echo "* update done";';
 %
 dkepath.yves(1).remote(2) = dkepath.yves(1).remote(1);
 dkepath.yves(1).remote(2).schedulername = 'direct';
