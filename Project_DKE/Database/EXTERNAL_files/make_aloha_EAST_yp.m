@@ -1,0 +1,63 @@
+function [antenna] = make_aloha_EAST_yp(aloha,antenna_measured,ptot)
+%
+if length(aloha.power_in_modules) == 4, % 2.45 GHZ antenna
+    sc = EAST_ALOHA_scenario_2dot45GHz;    
+elseif length(aloha.power_in_modules) == 6, % 4.60 GHZ antenna
+    sc = EAST_ALOHA_scenario_4dot60GHz;
+else
+    error('Wrong definition of EAST LH antenna')
+end
+%
+sc.antenna.a_ampl = sqrt(aloha.power_in_modules(:));
+sc.antenna.a_phase = pi*aloha.module_phasing(:)/180;
+%
+if isfield(antenna_measured,'edge_ne') & isfield(antenna_measured,'rc')
+    calcspectrum_opt = input_dke_yp('Calculation of the ALOHA power spectrum from edge density [0] or reflection coefficient [1] in external structure or from manual data input [2] ? ',0,0:2,'',[1,1]);
+elseif isfield(antenna_measured,'edge_ne') & ~isfield(antenna_measured,'rc')
+    calcspectrum_opt = input_dke_yp('Calculation of the ALOHA power spectrum from edge density [0] in external structure or from manual data input [1] ? ',0,0:1,'',[1,1]);
+    if calcspectrum_opt == 1,
+        calcspectrum_opt = 2;
+    end
+elseif ~isfield(antenna_measured,'edge_ne') & isfield(antenna_measured,'rc')
+    calcspectrum_opt = input_dke_yp('Calculation of the ALOHA power spectrum from reflection coefficient [0] in external structure or from manual data input [1] ? ',0,0:1,'',[1,1]);
+    if calcspectrum_opt == 1,
+        calcspectrum_opt = 2;
+    end
+elseif ~isfield(antenna_measured,'edge_ne') & ~isfield(antenna_measured,'rc')
+    calcspectrum_opt = 2;
+end
+%
+if calcspectrum_opt == 0,
+    edge_ne = antenna_measured.edge_ne;
+    rc = '';
+elseif calcspectrum_opt == 1,
+    edge_ne = '';
+    rc = antenna_measured.rc;
+    eps_rc = 0.001;%precision to recover the measured RC from ALOHA by adjusting edge_ne
+elseif calcspectrum_opt == 2,
+    edge_ne = input_dke_yp('Edge density in front of the antenna ? ',1e17,'','',[1,1]);
+    rc = '';
+end
+%
+opt_gui = false;
+select.style = struct;
+%
+dkepath = load_structures_yp('dkepath','','');
+%
+scheduler.remnum = iselect_jd(dkepath.remprofiles,'Remote calculation mode (mdce_remote): ',opt_gui,select.style,1)-1;
+if scheduler.remnum == 0,%local distribution
+    flag_mdce = 1:length(dkepath.distprofiles);% all mdce modes
+else
+    flag_mdce = 1:3;% remcomputing within mdce_remote disabled
+end        
+%
+scheduler.mode = iselect_jd(dkepath.distprofiles(flag_mdce),'Distributed computing mode : ',opt_gui,select.style,1) - 1;
+%
+if scheduler.mode > 2,
+   scheduler.mode = 2 - scheduler.mode;
+end
+%
+antenna = build_aloha_power_spectrum_yp(sc,ptot,edge_ne,rc,eps_rc,dkepath,scheduler);
+%
+
+
