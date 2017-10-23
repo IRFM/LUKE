@@ -1,4 +1,4 @@
-function [equil_new,rho_LUKE_ts_sr,rho_psi_ts_sr,T_ts_fit,N_ts_fit,T_ts_sr,dT_ts_sr,N_ts_sr,dN_ts_sr,T_rmse,N_rmse] = EAST_thomson_scattering_Tene_fit(equil,R_ts,Z_ts,T_ts,dT_ts,N_ts,dN_ts,display_mode,nefit_mode)
+function [equil_new,N_lav,rho_LUKE_ts_sr,rho_psi_ts_sr,T_ts_fit,N_ts_fit,T_ts_sr,dT_ts_sr,N_ts_sr,dN_ts_sr,T_rmse,N_rmse] = EAST_thomson_scattering_Tene_fit(equil,R_ts,Z_ts,T_ts,dT_ts,N_ts,dN_ts,R_hcn,display_mode,nefit_mode)
 %
 % Calculates Te and ne profiles for C3PO/LUKE from Thomson scattering for EAST from raw data, using EQDSK equilibrium 
 %
@@ -11,6 +11,7 @@ function [equil_new,rho_LUKE_ts_sr,rho_psi_ts_sr,T_ts_fit,N_ts_fit,T_ts_sr,dT_ts
 %       - dT_ts: Standard deviation of raw Te measurements (eV)
 %       - N_ts: Raw ne measurements (m-3)
 %       - dN_ts: Standard deviation of raw ne measurements (m-3)
+%       - R_hcn: Major radius of the vertical chord of the HCN diagnostic that measures the line-averaged density (m)
 %       - display_mode: display data and fits (1: yes, 0: no)
 %           (default: 0)
 %       - nefit_mode: (1) bell-shaped curve guess function for the fit, (2) Fermi-like curve guess function for the fit
@@ -19,6 +20,7 @@ function [equil_new,rho_LUKE_ts_sr,rho_psi_ts_sr,T_ts_fit,N_ts_fit,T_ts_sr,dT_ts
 %   OUTPUTS:
 %
 %       - equil_new: LUKE magnetic equilibrium with new (ne,Te) profiles from Thomson scattering
+%       - N_lav: Line-averaged density (to be compared to HCN measurements) (m-3)
 %       - rho_LUKE_ts_sr: LUKE normalized radial coordinates (WARNING : not sqrt(poloidal_psin)) (a.u.)
 %       - rho_psi_ts_sr: rho as square root of normalized poloidal psi (a.u.)
 %       - T_ts_fit: Electron temperature profile from fit (keV)
@@ -32,12 +34,12 @@ function [equil_new,rho_LUKE_ts_sr,rho_psi_ts_sr,T_ts_fit,N_ts_fit,T_ts_sr,dT_ts
 %
 %   by Y. Peysson <yves.peysson@cea.fr> (CEA/IRFM)
 %
-if nargin == 7,
+if nargin == 8,
     display_mode = 0;
     nefit_mode = 2;
 end
 %
-if nargin == 8,
+if nargin == 9,
     nefit_mode = 2;
 end
 %
@@ -58,11 +60,20 @@ elseif nefit_mode == 2
     N = @(x,a,b,c)a./(1+exp((x-b)/c));%Fermi function curve fit 
 end
 %
+%
 % Sort data
 %
 [Z_ts_s,is] = sort(Z_ts,'descend');%Reorder vertical position
 T_ts_s = T_ts(is);
 dT_ts_s = dT_ts(is);
+%
+nonLinMdl_T_ts_s = fitnlm(Z_ts_s,T_ts_s,@(p,x)T(x,p(1),p(2)),[max(T_ts_s),1],'Weights',dT_ts_s);%fit raw Te data to cross-check the consistency between position of the magnetic axis from EFIT and raw Te-data
+Z_ts_s_ss = linspace(min(Z_ts_s),max(Z_ts_s),1000);%supergrid
+T_ts_s_ss_fit = T(Z_ts_s_ss,nonLinMdl_T_ts_s.Coefficients.Estimate('p1'),nonLinMdl_T_ts_s.Coefficients.Estimate('p2'));
+Zp_T_ts_s_ss_fit = Z_ts_s_ss(find(T_ts_s_ss_fit==max(T_ts_s_ss_fit)));
+%
+disp(['Zp (EFIT) = ',num2str(round(100*equil.Zp*100)/100),' (cm), Zp (Thomson Scattering) = ',num2str(round(100*Zp_T_ts_s_ss_fit*100)/100),' (cm)']);
+%
 N_ts_s = N_ts(is)/1e19;
 dN_ts_s = dN_ts(is)/1e19;
 N_ts_s(find(N_ts_s>100)) = NaN;% remove possible wrong points
@@ -72,6 +83,12 @@ X_ts_s = (R_ts - equil.Rp)*ones(size(Z_ts_s));
 Y_ts_s = Z_ts_s - equil.Zp;
 %
 rho_LUKE_ts_s = psi2rho_jd(equil,interp2(equil_RZ.x,equil_RZ.y,equil_RZ.xypsi_apRp'/equil.psi_apRp(end),X_ts_s,Y_ts_s));
+%
+Y_hcn = linspace(min(equil.pty(end,:)),max(equil.pty(end,:)),1000);
+grad_Y_hcn = gradient(Y_hcn);
+X_hcn = (R_hcn - equil.Rp)*ones(size(Y_hcn));
+%
+rho_hcn = psi2rho_jd(equil,interp2(equil_RZ.x,equil_RZ.y,equil_RZ.xypsi_apRp'/equil.psi_apRp(end),X_hcn,Y_hcn));
 %
 [rho_LUKE_ts_sr,isr] = sort(rho_LUKE_ts_s,'descend');
 T_ts_sr = T_ts_s(isr);
@@ -91,16 +108,22 @@ T_ts_fit = T(rho_LUKE,nonLinMdl_T_ts_sr.Coefficients.Estimate('p1'),nonLinMdl_T_
 %
 if nefit_mode == 1
     N_ts_fit = N(rho_LUKE,nonLinMdl_N_ts_sr.Coefficients.Estimate('p1'),nonLinMdl_N_ts_sr.Coefficients.Estimate('p2'));
+    N_hcn_fit = N(rho_hcn,nonLinMdl_N_ts_sr.Coefficients.Estimate('p1'),nonLinMdl_N_ts_sr.Coefficients.Estimate('p2'));
 elseif nefit_mode == 2
     N_ts_fit = N(rho_LUKE,nonLinMdl_N_ts_sr.Coefficients.Estimate('p1'),nonLinMdl_N_ts_sr.Coefficients.Estimate('p2'),nonLinMdl_N_ts_sr.Coefficients.Estimate('p3'));
+    N_hcn_fit = N(rho_hcn,nonLinMdl_N_ts_sr.Coefficients.Estimate('p1'),nonLinMdl_N_ts_sr.Coefficients.Estimate('p2'),nonLinMdl_N_ts_sr.Coefficients.Estimate('p3'));
 end    
-%    
+%
+N_hcn_fit(isnan(N_hcn_fit)) = 0;%remove point outside the separatrix
+N_lav = sum(N_hcn_fit.*grad_Y_hcn)./sum(grad_Y_hcn);%line-averaged density to be compared to HCN measurements
+%
 if display_mode == 1  
     %
-    figure,plot(Z_ts_s,T_ts_s,'ro');grid on
+    figure,plot(Z_ts_s,T_ts_s,'ro',Z_ts_s_ss,T_ts_s_ss_fit,equil.Zp,T_ts_s_ss_fit(find(T_ts_s_ss_fit==max(T_ts_s_ss_fit))),'kx',Zp_T_ts_s_ss_fit,T_ts_s_ss_fit(find(T_ts_s_ss_fit==max(T_ts_s_ss_fit))),'k+');grid on
     hold on,errorbar(Z_ts_s,T_ts_s,dT_ts_s,'ro');
     axis([min(Z_ts) max(Z_ts) 0 max(T_ts_s)]);
     title([strrep(equil.id,'_','-'),', raw Te profile (Thomson scattering)']),xlabel(['Z@R=',num2str(R_ts),' (m)']),ylabel('T_e (eV)')
+    legend('Exp.','Fit',['Z_p(EFIT) = ',num2str(round(100*equil.Zp*100)/100),' (cm)'],['Z_p(Fit) = ',num2str(round(100*Zp_T_ts_s_ss_fit*100)/100),' (cm)'])
     %
     figure,plot(Z_ts_s,N_ts_sr,'ro');grid on
     hold on,errorbar(Z_ts_s,N_ts_sr,dN_ts_sr,'ro');
@@ -117,7 +140,7 @@ if display_mode == 1
     hold on,errorbar(rho_LUKE_ts_sr,N_ts_sr,dN_ts_sr,'ro');
     axis([0 1 0 max(N_ts_sr)]);
     title([strrep(equil.id,'_','-'),', Ne profile for LUKE']),xlabel('\rho_{LUKE}'),ylabel('N_e (10^{+19} m^{-3})')
-    legend('Exp.','Fit')
+    legend('Exp.',['Fit, <n_e> = ',num2str(round(N_lav*1000)/1000),' 10^{+19} m^{-3}'],'Location','SouthWest')
     %
     figure,plot(sqrt(rho2psi_jd(equil,rho_LUKE_ts_sr)),T_ts_sr,'ro',sqrt(psin_LUKE),T_ts_fit);grid on
     hold on,errorbar(sqrt(rho2psi_jd(equil,rho_LUKE_ts_sr)),T_ts_sr,dT_ts_sr,'ro');
@@ -129,7 +152,7 @@ if display_mode == 1
     hold on,errorbar(sqrt(rho2psi_jd(equil,rho_LUKE_ts_sr)),N_ts_sr,dN_ts_sr,'ro');
     axis([0 1 0 max(N_ts_sr)]);
     title([strrep(equil.id,'_','-'),', Ne profile for LUKE']),xlabel('\rho = sqrt(\psi_{n})'),ylabel('N_e (10^{+19} m^{-3})')
-    legend('Exp.','Fit')
+    legend('Exp.',['Fit, <n_e> = ',num2str(round(N_lav*1000)/1000),' 10^{+19} m^{-3}'],'Location','SouthWest')
     %   
     % for visual cross-check that 2-D interpolation works
     %
