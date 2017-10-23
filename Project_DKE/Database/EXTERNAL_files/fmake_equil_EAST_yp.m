@@ -59,13 +59,15 @@ end
 %
 if thomson_mode == 1
     %
-    equil_magnetic_nete = EAST_thomson_scattering_Tene_fit(equil_magnetic,external.equil.thomson.R_ts,external.equil.thomson.Z_ts,external.equil.thomson.Te_ts,external.equil.thomson.dTe_ts,external.equil.thomson.ne_ts,external.equil.thomson.dne_ts,0);%Add Te and ne profiles from Thomson scattering
+    R_hcn = 1.9;%Major radius of the HCN diagnostic for line-averaged density
+    [equil_magnetic_nete,ne_lav] = EAST_thomson_scattering_Tene_fit(equil_magnetic,external.equil.thomson.R_ts,external.equil.thomson.Z_ts,external.equil.thomson.Te_ts,external.equil.thomson.dTe_ts,external.equil.thomson.ne_ts,external.equil.thomson.dne_ts,R_hcn,0);%Add Te and ne profiles from Thomson scattering
     %  
     prho = prho1;
     pTe = equil_magnetic_nete.pTe;
     pne = equil_magnetic_nete.pne;
     %
 else
+    ne_lav = '';
     prho = external.equil.prof.rho;
     pne = external.equil.prof.ne;
     pTe = external.equil.prof.Te;
@@ -73,9 +75,10 @@ end
 %
 pTi = pTe/TeTi;
 %
-save([savename,'.prof'],'prho','pne','pTe','pTi','frac_H','frac_D','Zimp','Aimp','Zeff','-mat');
+save([savename,'.prof'],'prho','pne','pTe','pTi','frac_H','frac_D','Zimp','Aimp','Zeff','ne_lav','-mat');
 %
 equil_prof = equil_prof_jd([savename,'.prof'],1.4,prho1,pspsin1,pspsinT1,display_mode,p_opt,dispname,savename,Zeff);
+equil_prof.ne_lav = ne_lav;
 %
 delete([savename,'.prof']);
 %
