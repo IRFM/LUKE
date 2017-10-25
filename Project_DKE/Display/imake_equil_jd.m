@@ -561,7 +561,7 @@ elseif type == 1.4 && n_opt == 0,%EAST or HL2A
     Aimp = equil_prof_data.species.Aimp;
     %
     if isfield(external,'thomson') == 1 & isfield(equil_prof_data,'rho') == 1,
-        thomson_mode = input_dke_yp('Do you want to calculate Te and ne profiles from raw Thomson scattering measurements','n',{'y','n'},'',[1,1],'y');
+        thomson_mode = input_dke_yp('Do you want to calculate Te and ne profiles from raw Thomson scattering measurements','n',{'y','n'},'',[1,1]);
     elseif isfield(external,'thomson') == 1 & isfield(equil_prof_data,'rho') == 0,
         thomson_mode = 1;
     elseif isfield(external,'thomson') == 0 & isfield(equil_prof_data,'rho') == 1,
@@ -702,9 +702,12 @@ end
 %
 if n_opt >= 0 &&  e_opt ~= -2,
     %
-    if strcmp(basestr,'EAST') & thomson_mode == 1
+    if strcmp(basestr,'EAST') & (thomson_mode == 1 | thomson_mode == 'y')
         %
-        equil_magnetic_nete = EAST_thomson_scattering_Tene_fit(equil_magnetic,external.thomson.prof.R_ts,external.thomson.prof.Z_ts,external.thomson.prof.Te_ts,external.thomson.prof.dTe_ts,external.thomson.prof.ne_ts,external.thomson.prof.dne_ts,display_mode-1);%Add Te and ne profiles from Thomson scattering
+        R_hcn = 1.9;%Major radius of the HCN diagnostic for line-averaged density measurements;
+        [equil_magnetic_nete,ne_lav] = EAST_thomson_scattering_Tene_fit(equil_magnetic,external.thomson.prof.R_ts,external.thomson.prof.Z_ts,external.thomson.prof.Te_ts,external.thomson.prof.dTe_ts,external.thomson.prof.ne_ts,external.thomson.prof.dne_ts,R_hcn,display_mode-1);%Add Te and ne profiles from Thomson scattering
+        %
+        disp('--> Te and ne profiles determined from raw Thomson scattering measurements.');
         %
         prho = mrho;
         pTe = equil_magnetic_nete.pTe';
@@ -712,11 +715,17 @@ if n_opt >= 0 &&  e_opt ~= -2,
         %
         pTi = pTe/TeTi;
         %
-        save([savename,'.prof'],'prho','pne','pTe','pTi','-append');
+        save([savename,'.prof'],'prho','pne','pTe','pTi','ne_lav','-append');
         %
     end
     %
     equil_prof = equil_prof_jd(profname,type,mrho,mspsin,mspsinT,display_mode,p_opt,dispname,savename,Zeff);
+    %
+    if exist('ne_lav')
+        equil_prof.ne_lav = ne_lav;
+    else
+        equil_prof.ne_lav = '';
+    end
     %
 end
 %
