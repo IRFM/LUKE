@@ -1,4 +1,8 @@
-function [antenna] = make_aloha_EAST_yp(aloha,antenna_measured,ptot)
+function [antenna] = make_aloha_EAST_yp(aloha,antenna_measured)
+%
+optim.tolfun = 1e-2;% tolerance on targets
+optim.tolx = 1e-2;% tolerance on inputs
+optim.nitmax = 20;%
 %
 if length(aloha.power_in_modules) == 4, % 2.45 GHZ antenna
     sc = EAST_ALOHA_scenario_2dot45GHz;    
@@ -33,7 +37,11 @@ if calcspectrum_opt == 0,
 elseif calcspectrum_opt == 1,
     edge_ne = '';
     rc = antenna_measured.rc;
-    eps_rc = 0.001;%precision to recover the measured RC from ALOHA by adjusting edge_ne
+    %
+    optim.tolfun = input_dke_yp('Termination tolerance on the function value ? ',optim.tolfun,'','',[1,1]);
+    optim.tolx = input_dke_yp('Termination tolerance on x ? ',optim.tolx,'','',[1,1]);
+    optim.nitmax = input_dke_yp('Maximum number of iterations allowed ? ',optim.nitmax,'','',[1,1]);
+    %
 elseif calcspectrum_opt == 2,
     edge_ne = input_dke_yp('Edge density in front of the antenna ? ',1e17,'','',[1,1]);
     rc = '';
@@ -57,7 +65,7 @@ if scheduler.mode > 2,
    scheduler.mode = 2 - scheduler.mode;
 end
 %
-antenna = build_aloha_power_spectrum_yp(sc,ptot,edge_ne,rc,eps_rc,dkepath,scheduler);
+antenna = build_aloha_power_spectrum_yp(sc,edge_ne,rc,optim,dkepath,scheduler);
 %
 
 
