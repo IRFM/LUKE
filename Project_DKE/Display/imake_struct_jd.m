@@ -55,7 +55,6 @@ else
     sbase_eq = sbase;
 end
 %
-%
 % Case of a single structure
 %
 if opt_multi == 0,
@@ -271,7 +270,11 @@ if real(m_opt) == 0,
         end
         %
         if e_opt && isfield(equil,'id'),
-            id_s = [equil.id,'_',s{is}.id];
+            if isfield(s{is},'id')
+                id_s = [equil.id,'_',s{is}.id];
+            else
+                id_s = equil.id;
+            end
         else
             id_s = s.id;
         end
