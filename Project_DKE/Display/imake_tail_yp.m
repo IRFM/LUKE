@@ -3,7 +3,7 @@ function launch = imake_tail_yp(launch)
 % This function interactively builds the tail structure
 %
 if ~isfield(launch,'tail')
-    if length(launch.bNpar0) <= 2,
+    if length(launch.bNpar0) <= 10,
         tail = struct;
         tail.dtn = input_dke_yp('Tail dtn ',Inf);
         tail.mode = input_dke_yp('Tail mode spectrum: (0) no tail model, (1)  Gaussian, (2) Linear, (3) calc_tail_jd ',3,0:3,'',[1,1]);
@@ -20,7 +20,7 @@ if ~isfield(launch,'tail')
             end
         end
     else
-        disp('WARNING: the launch structure has more than two lobes')
+        disp('WARNING: the launch structure has more than ten lobes')
     end
 else
     disp('WARNING: a structure for the tail LH model already exists')
