@@ -216,19 +216,24 @@ if ~isfield(select,'tail'),
     end
 end
 %
-tail = struct;
-tail.dtn = Inf;
-tail.mode = 3;% mode for tail spectrum : (0) no tail model, (1)  Gaussian, (2) Linear, (3) calc_tail_jd
-tail.bNparmax_tail = 0;%npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is NaN or empty, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)
-if select.tail,
-    tail.bn_tail = 5;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen) 
+if ~isfield(select,'tail_struct)'),
+    tail_struct = struct;
+    tail_struct.dtn = Inf;
+    tail_struct.mode = 3;% mode for tail spectrum : (0) no tail model, (1)  Gaussian, (2) Linear, (3) calc_tail_jd
+    tail_struct.bNparmax_tail = 0;%npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is NaN or empty, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)
+    if select.tail,
+        tail_struct.bn_tail = 5;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen) 
+    else
+        tail_struct.bn_tail = 0;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen) 
+    end
+    tail_struct.bP_tail = 0.5;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (no used if linear_tail is chosen) 
+    tail_struct.bopt_tail = 0 + 1i;%Final power fraction of the tail @ Nparmax_tail (+1i) Adjust initial dNpar0 such that initial and tail lobes have the same width
+    %
 else
-    tail.bn_tail = 0;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen) 
+    tail_struct = select.tail_struct;
 end
-tail.bP_tail = 0.5;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (no used if linear_tail is chosen) 
-tail.bopt_tail = 0 + 1i;%Final power fraction of the tail @ Nparmax_tail (+1i) Adjust initial dNpar0 such that initial and tail lobes have the same width
 %
-launch.tail = tail;
+launch.tail = tail_struct;
 %
 if isfield(launch,'tail')
     if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
@@ -407,14 +412,17 @@ end
 % dtn_fluct_correlation_npar0_lh < Inf).
 %
 if isfield(select,'tail') && select.tail,% add default tail model
-    tail.dtn = Inf;
-    tail.mode = 3;% mode for tail spectrum : (0) no tail model, (1)  Gaussian, (2) Linear, (3) calc_tail_jd
-    tail.bNparmax_tail = 0;%npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is NaN or empty, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)
-    tail.bn_tail = 0;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen) 
-    tail.bP_tail = 0.5;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (no used if linear_tail is chosen) 
-    tail.bopt_tail = 1 + 1i;%Final power fraction of the tail @ Nparmax_tail (+1i) Adjust initial dNpar0 such that initial and tail lobes have the same width
-    %
-    launch.tail = tail;
+    if ~isfield(select,'tail_struct)'),
+        tail_struct.dtn = Inf;
+        tail_struct.mode = 3;% mode for tail spectrum : (0) no tail model, (1)  Gaussian, (2) Linear, (3) calc_tail_jd
+        tail_struct.bNparmax_tail = 0;%npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is NaN or empty, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)
+        tail_struct.bn_tail = 0;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen) 
+        tail_struct.bP_tail = 0.5;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (no used if linear_tail is chosen) 
+        tail_struct.bopt_tail = 1 + 1i;%Final power fraction of the tail @ Nparmax_tail (+1i) Adjust initial dNpar0 such that initial and tail lobes have the same width
+    else
+        tail_struct = select.tail_struct;
+    end
+    launch.tail = tail_struct;
     %
 elseif length(launch.bNpar0) <= 2,%only if one may main lobe in one or two directions
     %
@@ -422,31 +430,35 @@ elseif length(launch.bNpar0) <= 2,%only if one may main lobe in one or two direc
     %
     if strcmp(tail_opt,'y'),
     
+        if ~isfield(select,'tail_struct)'),
+            dtn_fluct_correlation_npar0_lh = Inf;
+            tail_mode = 3;% mode for tail spectrum : (0) no tail model, (1)  Gaussian, (2) Linear, (3) calc_tail_jd
+            Nparmax_tail = 0;%npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is 0, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)
+            opt_tail_0 = 0;%Final power fraction of the tail @ Nparmax_tail.
+            n_tail = 5;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (tail_mode = 3 only). 
+            P_tail = 0.5;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (tail_mode = 3 only). 
+            dnpar0_tail = 1;% Adjust (1) or not (0) the initial dNpar0 such that intial and tail lobes have the same width (tail_mode = 3 only).
+            %
 
-        dtn_fluct_correlation_npar0_lh = Inf;
-        tail_mode = 3;% mode for tail spectrum : (0) no tail model, (1)  Gaussian, (2) Linear, (3) calc_tail_jd
-        Nparmax_tail = 0;%npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is 0, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)
-        opt_tail_0 = 0;%Final power fraction of the tail @ Nparmax_tail.
-        n_tail = 5;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (tail_mode = 3 only). 
-        P_tail = 0.5;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (tail_mode = 3 only). 
-        dnpar0_tail = 1;% Adjust (1) or not (0) the initial dNpar0 such that intial and tail lobes have the same width (tail_mode = 3 only).
-        %
 
-
-        tail.dtn = dtn_fluct_correlation_npar0_lh;
-        tail.mode = tail_mode;% mode for tail spectrum : (0)  Gaussian, (1) Linear, (2) calc_tail_jd
-        tail.bNparmax_tail = Nparmax_tail;%npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is NaN or empty, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)
-        tail.bn_tail = n_tail;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen) 
-        tail.bP_tail = P_tail;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (no used if linear_tail is chosen) 
-        tail.bopt_tail = opt_tail_0 + dnpar0_tail*1i;%Final power fraction of the tail @ Nparmax_tail (+1i) Adjust initial dNpar0 such that initial and tail lobes have the same width
+            tail_struct.dtn = dtn_fluct_correlation_npar0_lh;
+            tail_struct.mode = tail_mode;% mode for tail spectrum : (0)  Gaussian, (1) Linear, (2) calc_tail_jd
+            tail_struct.bNparmax_tail = Nparmax_tail;%npar0 extend from npar_antenna to Nparmax_tail. If Nparmax_tail is NaN or empty, it is calculated by the code in main_rayinit_launch_jd.m -> 6.5/sqrt(Te0)
+            tail_struct.bn_tail = n_tail;%number of lobes to describe the tail. If n_tail = 0, no tail up to Nparmax_tail (no used if linear_tail is chosen) 
+            tail_struct.bP_tail = P_tail;%Power fraction in the tail. If NaN, it is calculated from n_tail and opt_tail (no used if linear_tail is chosen) 
+            tail_struct.bopt_tail = opt_tail_0 + dnpar0_tail*1i;%Final power fraction of the tail @ Nparmax_tail (+1i) Adjust initial dNpar0 such that initial and tail lobes have the same width
+            %
+        else
+            tail_struct = select.tail_struct;
+        end
         %
         if tail_mode > 0,
-            locid_tail = make_tail_simulid_jd(tail);
+            locid_tail = make_tail_simulid_jd(tail_struct);
         else
             locid_tail = '';
         end    
         %
-        launch.tail = tail;
+        launch.tail = tail_struct;
         %
     end   
 end
