@@ -10,8 +10,7 @@ if nargin < 6,
 	opt_gui = true;
 end
 %
-if nargin < 5,2
-    
+if nargin < 5,
 	workdir = pwd;
 end
 %
@@ -23,72 +22,96 @@ if ~isfield(select,'style'),
     select.style = struct;
 end
 %
-wave = '';
-wavestruct = struct;
-type = '';
-%
-if ~isempty(external) && ~isfield(external,'wavestructs'),% wave data from external database
-    %
-    titletext = 'For the wave structure :';      
-    s = {'Use data loaded from the external database',...
-         'Use data from an existing file',...
-         'Build the wave data locally'};
-    %    
-    i_opt = iselect_jd(s,titletext,opt_gui,select.style,1) - 1;
-    %
-elseif ~isempty(external) && isfield(external,'wavestructs'),% wave data from wavestructs
-    %
-    titletext = 'For the wave structure :';      
-    s = {'Use data from an existing file',...
-         'Build the wave data locally',...
-         'Use data from wavestructs'};
-    %    
-    i_opt = iselect_jd(s,titletext,opt_gui,select.style,1);
-    %
+if isfield(external,'bNpar0') & isfield(external,'antenna')
+    if isfield(external.antenna,'aloha')
+        flag_aloha = 1;%ALOHA was running remotely outside imake_wave_jd.m
+        launch = external;
+        i_opt = 0;
+        wavestruct = struct;
+    end
 else
-    %
-    titletext = 'For the wave structure :';      
-    s = {'Use data from an existing file',...
-         'Build the wave data locally'};
-    %    
-    i_opt = iselect_jd(s,titletext,opt_gui,select.style,1);
-    %
+    wave = '';
+    wavestruct = struct;
+    type = '';
+    flag_aloha = 0;
+end
+%
+if ~flag_aloha,
+    if ~isempty(external) && ~isfield(external,'wavestructs'),% wave data from external database
+        %
+        titletext = 'For the wave structure :';      
+        s = {'Use data loaded from the external database',...
+             'Use data from an existing file',...
+             'Build the wave data locally'};
+        %    
+        i_opt = iselect_jd(s,titletext,opt_gui,select.style,1) - 1;
+        %
+    elseif ~isempty(external) && isfield(external,'wavestructs'),% wave data from wavestructs
+        %
+        titletext = 'For the wave structure :';      
+        s = {'Use data from an existing file',...
+             'Build the wave data locally',...
+             'Use data from wavestructs'};
+        %    
+        i_opt = iselect_jd(s,titletext,opt_gui,select.style,1);
+        %
+    else
+        %
+        titletext = 'For the wave structure :';      
+        s = {'Use data from an existing file',...
+             'Build the wave data locally'};
+        %    
+        i_opt = iselect_jd(s,titletext,opt_gui,select.style,1);
+        %
+    end
 end
 % 
 if i_opt == 0,% use data from external database
     %
     d_opt = 0;% rayinit built from launching conditions
     %
-    launchs = imake_launch_jd(dkepath,basestr,equil,external,workdir,opt_gui,select);
-    %
-    nlaun = length(launchs);
-    %
-    if nlaun == 0,
-        return
-    elseif nlaun == 1,
-        launch = launchs{1};
-    else
-        titletext = 'Please select a launch structure from external data :';      
-        s = cell(1,nlaun);
-        for ilaun = 1:nlaun,
-            s{ilaun} = launchs{ilaun}.id;
+    if ~flag_aloha,
+        %
+        launchs = imake_launch_jd(dkepath,basestr,equil,external,workdir,opt_gui,select);
+        %
+        nlaun = length(launchs);
+        %
+        if nlaun == 0,
+            return
+        elseif nlaun == 1,
+            launch = launchs{1};
+        else
+            titletext = 'Please select a launch structure from external data :';      
+            s = cell(1,nlaun);
+            for ilaun = 1:nlaun,
+                s{ilaun} = launchs{ilaun}.id;
+            end
+            %    
+            launch = launchs{iselect_jd(s,titletext,opt_gui,select.style,1)};
         end
-        %    
-        launch = launchs{iselect_jd(s,titletext,opt_gui,select.style,1)};
+        %
+        if isfield(launch,'job'),
+            wave.launchs = launchs;
+            wave.id = wave.launchs{1}.id;
+            return
+        end
+        %
+        launch = imod_struct_jd(launch,'launch',1,opt_gui);
+        %
     end
-    %
-    launch = imod_struct_jd(launch,'launch',1,opt_gui);
     %
     type = launch.type;
     %
-    if isfield(launch,'tail') && strcmp(type,'LH'),
-        if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
-            launch.id = [launch.id,'_TAIL_',make_tail_simulid_jd(launch.tail)];
+    if ~isfield(launch,'job')
+        if isfield(launch,'tail') && strcmp(type,'LH'),
+            if launch.tail.bn_tail > 0 && (launch.tail.bP_tail > 0 || isnan(launch.tail.bP_tail)),
+                launch.id = [launch.id,'_TAIL_',make_tail_simulid_jd(launch.tail)];
+            end
+        else
+            if input_dke_yp(['','Do you want to activate the tail LH model (y/n)'],'n',{'y','n'}) == 'y',
+                launch = imake_tail_yp(launch);
+            end        
         end
-    else
-        if input_dke_yp(['','Do you want to activate the tail LH model (y/n)'],'n',{'y','n'}) == 'y',
-            launch = imake_tail_yp(launch);
-        end        
     end
     %
 elseif i_opt == 1,% use data from an existing file
@@ -323,9 +346,6 @@ if w_opt == 0; % C3PO Calculation
     %
     % BUILDING RAYINIT
     %
-    if exist('rayinit') && ~exist('launch'),
-        launch = rayinit.launch;
-    end
     rayinit = main_rayinit_launch_jd(equil,launch);
     %
     rayinit.id = ['C3PO_',launch.id];
@@ -385,53 +405,42 @@ if w_opt == 0; % C3PO Calculation
         %
         wavestruct.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = iselect_jd(dkepath.distprofiles(flag_mdce),'Distributed computing mode : ',opt_gui,select.style,1) - 1;
         %
-        iremote = iselect_jd(dkepath.remprofiles,'Remote calculation mode : ',opt_gui,select.style,1) - 1;
-        if iremote == 0,
-            tstart = tic;
-            wave = main_C3PO_jd(dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam);
-            telapsed = toc(tstart); 
-            %
-            disp(' ');
-            disp(['The calculation of ',int2str(length(rayinit.yrho0)),' rays has been done in ',num2str(telapsed),' (s).']);
-            disp(' ');
-        else
-            remote = dkepath.remote(iremote);
-            remote.timeout = 0;
-            %
-            job = matstandardjob_jd('runmat');
-            job.remtimout = 0;
-            %
-            [err,job,wave] = matremote_jd('main_C3PO_jd',{dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam},remote,job);
-            %
-            if isempty(err) 
-                if isempty(job.remote.host)
-                     disp(['The ray-tracing C3PO has been launched on the local host'])
-                else
-                    disp(['The ray-tracing C3PO has been launched on host : ',job.remote.host])
-                end
-                %
-                wave.job = job;
-                wave.id = rayinit.id;
-                %
-                cd(sd);
-                %
-                wave.info.type = 'RT';
-                wave.info.RT = 'C3PO';
-                wave.info.ftype = ftype;
-                %
-                s_opt = iselect_jd({'No','Yes'},'Do you want to generate an equivalent make_wave script ?',opt_gui,select.style,1) - 1;
-                %
-                if s_opt == 1,
-                    % 
-                    imake_makewave_jd(workdir,wave,opt_gui);
-                    %
-                end
-                %
-                wave.n_rf_list = wavestruct.waveparam.n_rf_list;
-                return
+        remote = dkepath.remote(iselect_jd(dkepath.remprofiles,'Remote calculation mode : ',opt_gui,select.style,1) - 1);
+        remote.timeout = 0;
+        %
+        job = matstandardjob_jd('runmat');
+        job.remtimout = 0;
+        %
+        [err,job,wave] = matremote_jd('main_C3PO_jd',{dkepath,rayinit.id,equil,[],rayinit,wavestruct.waveparam,wavestruct.fitparam,wavestruct.rayparam,wavestruct.C3POdisplay,wavestruct.C3POparam},remote,job);
+        %
+        if isempty(err) 
+            if isempty(job.remote.host)
+                 disp(['The ray-tracing C3PO has been launched on the local host'])
             else
-                return
+                disp(['The ray-tracing C3PO has been launched on host : ',job.remote.host])
             end
+            %
+            wave.job = job;
+            wave.id = rayinit.id;
+            %
+            cd(sd);
+            %
+            wave.info.type = 'RT';
+            wave.info.RT = 'C3PO';
+            wave.info.ftype = ftype;
+            %
+            s_opt = iselect_jd({'No','Yes'},'Do you want to generate an equivalent make_wave script ?',opt_gui,select.style,1) - 1;
+            %
+            if s_opt == 1,
+                % 
+                imake_makewave_jd(workdir,wave,opt_gui);
+                %
+            end
+            %
+            wave.n_rf_list = wavestruct.waveparam.n_rf_list;
+            return
+        else
+            return
         end
     end
     %
