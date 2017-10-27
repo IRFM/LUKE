@@ -2,6 +2,10 @@ function launch = build_spectrum_from_aloha(external,basestr,signs,opt_gui,selec
 %
 if nargin < 5,
 	select = struct;
+    %
+    if ~isfield(select,'style'),
+        select.style = struct;
+    end
 end
 %
 if nargin < 4,
@@ -9,6 +13,10 @@ if nargin < 4,
 end
 %
 spectrum = struct;
+%
+if ~isfield(select,'style'),
+    select.style = struct;
+end
 %
 if isfield(external.antenna,'id'),
     spectrum.id = external.antenna.id;
@@ -81,3 +89,5 @@ while 1,
     end                       
 end
 %
+launch.antenna = external.antenna;
+launch.id = [launch.id,'_',make_aloha_simulid_yp(external.antenna.aloha)];
