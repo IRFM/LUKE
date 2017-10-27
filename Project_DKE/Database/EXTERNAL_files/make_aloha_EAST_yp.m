@@ -12,7 +12,7 @@ else
     error('Wrong definition of EAST LH antenna')
 end
 %
-sc.antenna.a_ampl = sqrt(aloha.power_in_modules(:));
+sc.antenna.a_ampl = sqrt(aloha.power_in_modules(:)*1000);%power is given in kW form external
 sc.antenna.a_phase = pi*aloha.module_phasing(:)/180;
 %
 if isfield(antenna_measured,'edge_ne') & isfield(antenna_measured,'rc')
