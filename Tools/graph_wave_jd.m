@@ -469,7 +469,7 @@ for iy = 1:ny,
         %            
     end    
     %
-    if opt.luke && isfield(rays{iy},'sP_2piRp'),%LUKE absorption (with non-resonant collisional absorption if any)
+    if opt.luke && isfield(rays{iy},'sP_2piRp'),%LUKE absorption (without non-resonant collisional absorption if any)
         sP_2piRp_norm = rays{iy}.sP_2piRp{end}/rays{iy}.sP_2piRp{end}(1);
         sdP_2piRp_ds_norm = rays{iy}.sdP_2piRp_ds{end}/max(rays{iy}.sdP_2piRp_ds{end}+eps).*(1 - sP_2piRp_norm(end)/sP_2piRp_norm(1));
         if ~iscell(yabs),
@@ -548,8 +548,8 @@ for iy = 1:ny,
         yPtot_abs(iy) = NaN;
         %            
     end    
-    
-    if opt.luke && isfield(waves{1},'colldamp') && waves{1}.colldamp == 1,,%LUKE absorption (with non-resonant collisional absorption if any)
+    %
+    if opt.luke && isfield(waves{1},'colldamp') && waves{1}.colldamp == 1 && isfield(rays{iy},'sP_2piRp_coll_luke'),%LUKE absorption (with non-resonant collisional absorption if any)
         sP_2piRp_coll_luke_norm = rays{iy}.sP_2piRp_coll_luke{end}/rays{iy}.sP_2piRp_coll_luke{end}(1);
         sdP_2piRp_coll_luke_ds_norm = rays{iy}.sdP_2piRp_coll_luke_ds{end}/max(rays{iy}.sdP_2piRp_coll_luke_ds{end}+eps).*(1 - sP_2piRp_coll_luke_norm(end)/sP_2piRp_coll_luke_norm(1));
         if ~iscell(yabs),
@@ -621,12 +621,15 @@ for iy = 1:ny,
         %
     else
         %
+        rays{iy}.sP_2piRp_coll_luke = NaN;
         rays{iy}.is_abs_max_coll_luke = ns;
         rays{iy}.is_abs_coll_luke = NaN;
         rays{iy}.dP_normdrho_coll_luke = NaN;
+        rays{iy}.mask_abs_coll_luke = NaN;
         yrho_abs_coll_luke(iy) = NaN;
         yNpar_abs_coll_luke(iy) = NaN;
         yPtot_abs_coll_luke(iy) = NaN;
+        
         %            
     end    
     %
