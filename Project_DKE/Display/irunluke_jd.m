@@ -1,3 +1,4 @@
+
 function irunluke_jd(basestr,signs,opt_gui)
     %
     % This script interactively loads the equilibrium, profiles and launching data, and runs LUKE with
@@ -20,14 +21,16 @@ function irunluke_jd(basestr,signs,opt_gui)
         basestr = input_dke_yp('Enter the machine name (such as ''ITER'', ''TCV'', ''TS'', ''JET'', ''COMPASS'', ''SST1'', ''EAST'', ''HL2A'', ''CMOD'', ''WEST'', ''D3D'',...)',' ');
     end
     %
+    if input_dke_yp('Clear all figures (yes:1,no:0)',0,[0,1]) == 1,
+        close all;
+    end
+    %
     clc
     %
-    if  usejava('awt'),
-        tprintf('Working LUKE simulation status','');
-        tprintf('Working LUKE simulation status');
-        tprintf('LUKE simulations status','');
-        tprintf('LUKE simulations status');
-    end
+    tprintf('Working LUKE simulation status','');
+    tprintf('Working LUKE simulation status');
+    tprintf('LUKE simulations status','');
+    tprintf('LUKE simulations status');
     %
     quitmsg = '-----> Run aborted';
     warning off
@@ -217,7 +220,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 else
                     idstr = ['timeid ',luke_job.timeid];
                 end
-                if isfield(luke_job,'remote') && ~isempty(luke_job.remote.host),
+                if ~isempty(luke_job.remote.host),
                     hoststr = ['on host ',luke_job.remote.host];
                 else
                     hoststr = 'on localhost';
@@ -227,10 +230,21 @@ function irunluke_jd(basestr,signs,opt_gui)
             elseif ~isempty(dkeparam) && ~isempty(equil),
                 %
                 flag_wave = 0;
+                flag_launch = 0;
+                %
                 if exist('waves')
                     for iw = 1:length(waves),
                         if isfield(waves{iw},'job')
                             flag_wave = flag_wave + 1;
+                        end
+                        %
+                        if isfield(waves{iw},'launchs')
+                            for il = 1:length(waves{iw}.launchs),
+                                if  isfield(waves{iw}.launchs{il},'job')
+                                    flag_wave = flag_wave + 1;
+                                    flag_launch = flag_launch + 1;
+                                end
+                            end  
                         end
                     end
                 end
@@ -238,7 +252,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                 if flag_wave == 0,
                     statstr.output = ['<',ostr,' You can start LUKE now. >'];
                 else
-                    statstr.output = ['<',ostr,' You cannot start LUKE now until batch ray-tracing is not completed. >'];
+                    if flag_launch == 0,
+                        statstr.output = ['<',ostr,' You cannot start LUKE now until batch ray-tracing calculations are not completed. >'];
+                    else
+                        statstr.output = ['<',ostr,' You cannot start LUKE now until batch coupling and ray-tracing calculations are not completed. >'];
+                    end
                 end
                 %
             else
@@ -288,7 +306,7 @@ function irunluke_jd(basestr,signs,opt_gui)
         disp(['LUKE output            : ',statstr.output]);
         disp(['External database      : ',statstr.external]);
         %
-        if usejava('awt') & exist('tprintf.m','file') & opt_status_windows == 1,%second window display
+        if exist('tprintf.m','file') & opt_status_windows == 1,%second window display
             tprintf('Working LUKE simulation status');%clear window
             tprintf('Working LUKE simulation status',[' ----------- < ',LUKEversion_jd,' Version > ----------- ']);
             tprintf('Working LUKE simulation status',' ');
@@ -874,6 +892,14 @@ function irunluke_jd(basestr,signs,opt_gui)
                 disp('************** SAVE DATA FILE **************')
                 disp(' ');
                 %
+                if ~isempty(output) && isstruct(output),
+                    if isfield(output.dke_out,'waves') && iscell(output.dke_out.waves) && ~isempty(output.dke_out.waves),
+                        if isfield(output.dke_out.waves{1}.rayparam,'colldamp') && output.dke_out.waves{1}.rayparam.colldamp == 1,
+                            output.dke_out.waves = proc_wave_alphaphi_luke_jd(output,output.dke_out.waves,1);%update rays with LUKE absorption (RLA + NRCA absorption)
+                        end
+                    end
+                end
+                %
                 sd = pwd;
                 cd(workdir);
                 %
@@ -1100,65 +1126,120 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 %%irmwave = 0;
                 %
-                for iw = 1:length(waves)
-                    if isfield(waves{iw},'job')
-                        %
-                        if isempty(waves{iw}.job.remote.host)
-                            disp(['Ray-tracing calculations have been send on the local host for wave # ',int2str(iw)]);
-                        else
-                            disp(['Ray-tracing calculations have been send on the remote host: ',waves{iw}.job.remote.host,' for wave # ',int2str(iw)])
-                        end
-                        disp('The job status is checked ...')
-                        %
-                        [err,job,wave_tmp] = matremote_jd(waves{iw}.job);
-                        %
-                        if isempty(err) && isempty(wave_tmp),
-                            disp(['The job is still running. Check again !'])
-                        elseif isempty(err) && ~isempty(wave_tmp),
-                            disp(['The job is done !'])
-                            n_rf_list = waves{iw}.n_rf_list;
-                            %
-                            % Wave processing and relativistic linear damping
-                            %
-                            waves{iw} = wave_process_jd(equil,wave_tmp,n_rf_list);
-                            %
-                        elseif ~isempty(err)
-                            disperr_jd(err);
-                            disp(['The ''waves'' #',int2str(iw),' must be cleared.'])
-                            irmwave = iw;
-                        end            
-                    end 
-                end
+                flag_launch = 1;
                 %
-                if isempty(waves),
-                    status.waves = 0;
-                end
-                %
-                for iw = 1:length(waves),
-                    if ~isfield(waves{iw},'job'),%batch ray tracing calculations
-                        if ~isfield(waves{iw},'colldamp'),%backward compatibility
-                            if ~isfield(waves{iw}.rayparam,'colldamp'),%backward compatibility
-                                waves{iw}.colldamp = 0;
-                            else
-                                waves{iw}.colldamp = waves{iw}.rayparam.colldamp;
+                for iw = 1:length(waves)     
+                    if isfield(waves{iw},'launchs'),
+                        for iw = 1:length(waves{iw}.launchs)   
+                            if isfield(waves{iw}.launchs{il},'job'),%check running ALOHA job
+                                %
+                                [err,job,sc] = matremote_jd(waves{iw}.launchs{il}.job);%check if job is done 
+                                %
+                                if isempty(err) 
+                                    if ~isempty(sc) 
+                                        %
+                                        disp([waves{iw}.launchs{il}.id,' : ALOHA job is done.']);
+                                        %
+                                        antenna.aloha = sc;
+                                        %
+                                        clear err job sc
+                                        %
+                                        waves{iw}.launchs{il} = rmfield(waves{iw}.launchs{il},'job');
+                                        waves{iw}.launchs{il}.antenna.aloha = antenna.aloha;
+                                        waves{iw}.launchs{il}.antenna.id = waves{iw}.launchs{il}.id;
+                                        %
+                                        waves{iw}.launchs{il} = rmfield(build_spectrum_from_aloha(waves{iw}.launchs{il},basestr,signs,false),'tail');%build launch structure for C3PO/LUKE
+                                        %
+                                        waves{iw} = imake_wave_jd(dkepath,basestr,equil,waves{iw}.launchs{il},workdir);
+                                        %
+                                    else
+                                        %
+                                        if isempty(job.remote.host)
+                                            disp([waves{iw}.launchs{il}.id,' : ALOHA is still running on the local host to find density in front of the grill consistent with RC'])
+                                        else
+                                            disp([waves{iw}.launchs{il}.id,' : ALOHA is still running on host : ',job.remote.host,' to find density in front of the grill consistent with RC'])
+                                        end
+                                        %
+                                        clear err job sc
+                                        %
+                                        flag_launch = 0;
+                                    end
+                                else
+                                    return
+                                end
                             end
                         end
                     end
                 end
                 %
-                if ~isempty(waves)
-                    waves0 = waves;
+                if flag_launch,
+                    for iw = 1:length(waves)
+                        if isfield(waves{iw},'job')
+                            %
+                            if isempty(waves{iw}.job.remote.host)
+                                disp(['Ray-tracing calculations have been send on the local host for wave # ',int2str(iw)]);
+                            else
+                                disp(['Ray-tracing calculations have been send on the remote host: ',waves{iw}.job.remote.host,' for wave # ',int2str(iw)])
+                            end
+                            disp('The job status is checked ...')
+                            %
+                            [err,job,wave_tmp] = matremote_jd(waves{iw}.job);
+                            %
+                            if isempty(err) && isempty(wave_tmp),
+                                disp(['The job is still running. Check again !'])
+                            elseif isempty(err) && ~isempty(wave_tmp),
+                                disp(['The job is done !'])
+                                n_rf_list = waves{iw}.n_rf_list;
+                                %
+                                % Wave processing and relativistic linear damping
+                                %
+                                waves{iw} = wave_process_jd(equil,wave_tmp,n_rf_list);
+                                %
+                            elseif ~isempty(err)
+                                disperr_jd(err);
+                                disp(['The ''waves'' #',int2str(iw),' must be cleared.'])
+                                irmwave = iw;
+                            end            
+                        end 
+                    end
+                    %
+                    if isempty(waves),
+                        status.waves = 0;
+                    end
+                    %
+                    for iw = 1:length(waves),
+                        if ~isfield(waves{iw},'job'),%batch ray tracing calculations
+                            if ~isfield(waves{iw},'colldamp'),%backward compatibility
+                                if ~isfield(waves{iw}.rayparam,'colldamp'),%backward compatibility
+                                    waves{iw}.colldamp = 0;
+                                else
+                                    waves{iw}.colldamp = waves{iw}.rayparam.colldamp;
+                                end
+                            end
+                        end
+                    end
                 end
+                %
+                waves0 = waves;
                 %
                 [waves,paths.waves,fileids.waves,newstruct] = imake_struct_jd(dkepath,waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,external,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
                 %
                 flag_wave = 1;
+                flag_launch = 1;
                 %
                 if ~isempty(waves),
                     for iw = 1:length(waves),
                         if isfield(waves{iw},'job'),%batch ray tracing calculations
                             flag_wave = 0;
                             break;
+                        else
+                            for il = 1:length(waves{iw}.launchs),
+                                if isfield(waves{iw}.launchs{il},'job'),%batch ALOHA calculations
+                                    flag_wave = 0;
+                                    flag_launch = 0;
+                                    break;
+                                end
+                            end
                         end
                     end
                     %
@@ -1171,14 +1252,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                         flag_colldamp = 0;
                         for iw = 1:length(waves),
-                            if exist('waves0'),
-                                if waves{iw}.colldamp ~= waves0{iw}.colldamp,
-                                    flag_colldamp = 1 + i*waves{iw}.colldamp;
-                                end
-                            else
-                                if isfield(waves{iw},'colldamp'),
-                                    flag_colldamp = 1 + i*waves{iw}.colldamp;
-                                end
+                            if waves{iw}.colldamp ~= waves0{iw}.colldamp,
+                                flag_colldamp = 1 + i*waves{iw}.colldamp;
                             end
                         end
                         %
@@ -1195,7 +1270,24 @@ function irunluke_jd(basestr,signs,opt_gui)
                                 waves{iw}.rayparam.colldamp = imag(flag_colldamp);
                                 %
                                 for ir = 1:length(waves{iw}.rays)
-                                    waves{iw}.rays{ir} = rmfield(waves{iw}.rays{ir},{'stau_coll','sP_2piRp_coll','sdP_2piRp_ds_coll','sP_2piRp_lin_coll','sdP_2piRp_ds_lin_coll','salphaphi_coll'});
+                                    if isfield(waves{iw}.rays{ir},'stau_coll')
+                                        waves{iw}.rays{ir} = rmfield(waves{iw}.rays{ir},'stau_coll');
+                                    end    
+                                    if isfield(waves{iw}.rays{ir},'sP_2piRp_coll')
+                                        waves{iw}.rays{ir} = rmfield(waves{iw}.rays{ir},'sP_2piRp_coll');
+                                    end    
+                                    if isfield(waves{iw}.rays{ir},'sdP_2piRp_ds_coll')
+                                        waves{iw}.rays{ir} = rmfield(waves{iw}.rays{ir},'sdP_2piRp_ds_coll');
+                                    end    
+                                    if isfield(waves{iw}.rays{ir},'sP_2piRp_lin_coll')
+                                        waves{iw}.rays{ir} = rmfield(waves{iw}.rays{ir},'sP_2piRp_lin_coll');
+                                    end    
+                                    if isfield(waves{iw}.rays{ir},'sdP_2piRp_ds_lin_coll')
+                                        waves{iw}.rays{ir} = rmfield(waves{iw}.rays{ir},'sdP_2piRp_ds_lin_coll');
+                                    end    
+                                    if isfield(waves{iw}.rays{ir},'salphaphi_coll')
+                                        waves{iw}.rays{ir} = rmfield(waves{iw}.rays{ir},'salphaphi_coll');
+                                    end    
                                 end
                                 %
                                 waves{iw} = wave_process_jd(equil,waves{iw},waves{iw}.n_rf_list);
@@ -1362,11 +1454,14 @@ function irunluke_jd(basestr,signs,opt_gui)
                                         disp(['WARNING : LUKE data in wave # ',num2str(iw),' missing, calculating now...'])
                                     end
                                     %
-                                    waves(iw) = proc_wave_alphaphi_luke_jd(output,waves(iw),1);%tmp version to deal with old waves
-                                    %waves(iw) = alphaphi_luke_jd(waves(iw),output.dke_out,output.ZP0,output.equilDKE,output.mksa);
+                                    %waves(iw) = proc_wave_alphaphi_luke_jd(output,waves(iw),1);%tmp version to deal with old waves
+                                    %waves(iw) = alphaphi_luke_jd(waves(iw),output.dke_out,output.ZP0,output.equilDKE,output.mksa);                              
                                     %
                                 end
                             end
+                            %
+                            waves = proc_wave_alphaphi_luke_jd(output,waves,1);
+                            %
                         end
                         %
                     else
