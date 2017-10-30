@@ -306,7 +306,6 @@ if ~isempty(external),% import wave data from external structure
                 if aloha_opt == 0,% calculate power spectrum with ALOHA
                     %
                     external.antenna = make_aloha_EAST_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured);
-                    external.antenna.id = [fname,'_',make_aloha_simulid_yp(external.antenna.aloha)];
                     %
                     if isfield(external.antenna,'job')
                         launch.job = external.antenna.job;%remote ALOHA calculation
