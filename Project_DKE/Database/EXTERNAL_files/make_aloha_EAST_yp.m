@@ -2,7 +2,7 @@ function [antenna] = make_aloha_EAST_yp(aloha,antenna_measured)
 %
 optim.tolfun = 1e-2;% tolerance on targets
 optim.tolx = 1e-2;% tolerance on inputs
-optim.nitmax = 20;%
+optim.nitmax = 30;%
 %
 if length(aloha.power_in_modules) == 4, % 2.45 GHZ antenna
     sc = EAST_ALOHA_scenario_2dot45GHz;    
@@ -41,9 +41,12 @@ elseif calcspectrum_opt == 1,
     optim.tolfun = input_dke_yp('Termination tolerance on the function value ? ',optim.tolfun,'','',[1,1]);
     optim.tolx = input_dke_yp('Termination tolerance on x ? ',optim.tolx,'','',[1,1]);
     optim.nitmax = input_dke_yp('Maximum number of iterations allowed ? ',optim.nitmax,'','',[1,1]);
+    init_ne = input_dke_yp('Initial density ? ',5e18,'','',[1,1]);%to be far from a possible minimum in RC as finction of ne
+    %
+    sc.plasma.ne0 = init_ne;
     %
 elseif calcspectrum_opt == 2,
-    edge_ne = input_dke_yp('Edge density in front of the antenna ? ',1e17,'','',[1,1]);
+    edge_ne = input_dke_yp('Edge density in front of the antenna ? ',1e18,'','',[1,1]);
     rc = '';
 end
 %
