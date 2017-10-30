@@ -1235,11 +1235,13 @@ function irunluke_jd(basestr,signs,opt_gui)
                             flag_wave = 0;
                             break;
                         else
-                            for il = 1:length(waves{iw}.launchs),
-                                if isfield(waves{iw}.launchs{il},'job'),%batch ALOHA calculations
-                                    flag_wave = 0;
-                                    flag_launch = 0;
-                                    break;
+                            if isfield(waves{iw},'launchs'),%batch ray tracing calculations
+                                for il = 1:length(waves{iw}.launchs),
+                                    if isfield(waves{iw}.launchs{il},'job'),%batch ALOHA calculations
+                                        flag_wave = 0;
+                                        flag_launch = 0;
+                                        break;
+                                    end
                                 end
                             end
                         end
