@@ -1150,7 +1150,9 @@ function irunluke_jd(basestr,signs,opt_gui)
                                         %
                                         waves{iw}.launchs{il} = rmfield(build_spectrum_from_aloha(waves{iw}.launchs{il},basestr,signs,false),'tail');%build launch structure for C3PO/LUKE
                                         %
-                                        waves{iw} = imake_wave_jd(dkepath,basestr,equil,waves{iw}.launchs{il},workdir);
+                                        waves{iw}.launchs{il}.id = waves{iw}.launchs{il}.antenna.id;
+                                        %
+                                        waves{iw} = imake_wave_jd(dkepath,basestr,equil,waves{iw}.launchs{il},workdir,false);
                                         %
                                     else
                                         %
