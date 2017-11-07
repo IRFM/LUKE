@@ -116,11 +116,11 @@ dkepath.yves(1).remote(4).gitupdate = true;
 dkepath.yves(1).remote(5).remoteid = 'CEA_ANDROMEDE';
 dkepath.yves(1).remote(5).schedulername = 'pbs';
 dkepath.yves(1).remote(5).profilename = 'YP105119';
-dkepath.yves(1).remote(5).luke_root = '/home/YP105119/LUKE/';
+dkepath.yves(1).remote(5).luke_root = '/Applications/LUKE/LUKE/';
 dkepath.yves(1).remote(5).link_mode = '';
 dkepath.yves(1).remote(5).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(5).gitupdate = false;
-dkepath.yves(1).remote(5).gitmode.cmd = 'cd /home/YP105119/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
+dkepath.yves(1).remote(5).gitmode.cmd = 'cd /Applications/LUKE/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
 dkepath.yves(1).remote(6) = dkepath.yves(1).remote(5);
 dkepath.yves(1).remote(6).schedulername = 'direct';
