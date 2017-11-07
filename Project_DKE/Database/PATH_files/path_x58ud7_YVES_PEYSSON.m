@@ -79,7 +79,7 @@ dkepath.ypeysson(1).remote(3).cvsupdate = false;% update done in 'direct' mode
 dkepath.ypeysson(1).remote(3).gitupdate = false;
 dkepath.ypeysson(1).remote(3).gitmode.cmd = 'cd /Applications/LUKE/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
-dkepath.ypeysson(1).remote(4) = dkepath.yves(1).remote(3);
+dkepath.ypeysson(1).remote(4) = dkepath.ypeysson(1).remote(3);
 dkepath.ypeysson(1).remote(4).schedulername = 'direct';
 dkepath.ypeysson(1).remote(4).gitupdate = true;
 %
