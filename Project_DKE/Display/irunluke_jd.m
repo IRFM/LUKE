@@ -1124,8 +1124,6 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 smakecmd = 'imake_wave_jd';
                 %
-                %%irmwave = 0;
-                %
                 flag_launch = 1;
                 %
                 for iw = 1:length(waves)     
@@ -1133,46 +1131,82 @@ function irunluke_jd(basestr,signs,opt_gui)
                         for iw = 1:length(waves{iw}.launchs)   
                             if isfield(waves{iw}.launchs{il},'job'),%check running ALOHA job
                                 %
-                                [err,job,sc] = matremote_jd(waves{iw}.launchs{il}.job);%check if job is done 
-                                %
-                                if isempty(err) 
-                                    if ~isempty(sc) 
+                                for ij = 1:length(waves{iw}.launchs{il}.job)
+                                    %
+                                    if ~isempty(waves{iw}.launchs{il}.job{ij})
                                         %
-                                        disp([waves{iw}.launchs{il}.id,' : ALOHA job is done.']);
+                                        [err,job,sc] = matremote_jd(waves{iw}.launchs{il}.job{ij});%check if each job is done 
                                         %
-                                        antenna.aloha = sc;
-                                        %
-                                        clear err job sc
-                                        %
-                                        waves{iw}.launchs{il} = rmfield(waves{iw}.launchs{il},'job');
-                                        waves{iw}.launchs{il}.antenna.aloha = antenna.aloha;
-                                        waves{iw}.launchs{il}.antenna.id = waves{iw}.launchs{il}.id;
-                                        %
-                                        waves{iw}.launchs{il} = rmfield(build_spectrum_from_aloha(waves{iw}.launchs{il},waves{iw}.launchs{il}.basestr,waves{iw}.launchs{il}.signs,false),'tail');%build launch structure for C3PO/LUKE
-                                        %
-                                        waves{iw}.launchs{il}.id = waves{iw}.launchs{il}.antenna.id;
-                                        %
-                                        waves{iw} = imake_wave_jd(dkepath,basestr,equil,waves{iw}.launchs{il},workdir,false);
-                                        %
-                                    else
-                                        %
-                                        if isempty(job.remote.host)
-                                            disp([waves{iw}.launchs{il}.id,' : ALOHA is still running on the local host to find density in front of the grill consistent with RC'])
+                                        if isempty(err) 
+                                            if ~isempty(sc) 
+                                                %
+                                                disp([waves{iw}.launchs{il}.id,' : ALOHA job ',int2str(ij),'/',int2str(length(waves{iw}.launchs{il}.job)),' is done.']);
+                                                %
+                                                waves{iw}.launchs{il}.job{ij} = '';
+                                                waves{iw}.launchs{il}.temp{ij} = sc;
+                                                %
+                                                clear err job sc
+                                            else
+                                                if isempty(job.remote.host)
+                                                    disp([waves{iw}.launchs{il}.id,' : ALOHA job ',int2str(ij),'/',int2str(length(waves{iw}.launchs{il}.job)),'  is still running on the local host to find density in front of the grill consistent with RC'])
+                                                else
+                                                    disp([waves{iw}.launchs{il}.id,' : ALOHA job ',int2str(ij),'/',int2str(length(waves{iw}.launchs{il}.job)),'  is still running on host : ',job.remote.host,' to find density in front of the grill consistent with RC'])
+                                                end
+                                                %
+                                                waves{iw}.launchs{il}.temp{ij} = '';
+                                                %
+                                                clear err job sc
+                                            end
                                         else
-                                            disp([waves{iw}.launchs{il}.id,' : ALOHA is still running on host : ',job.remote.host,' to find density in front of the grill consistent with RC'])
+                                            disp(['WARNING: ',waves{iw}.launchs{il}.id,' : ALOHA job ',int2str(ij),'/',int2str(length(waves{iw}.launchs{il}.job)),'failed. ALOHA calculation must be redone.']);
+                                            waves{iw}.launchs{il}.job{ij} = '';
+                                            waves{iw}.launchs{il}.temp{ij} = '';
+                                        end
+                                    end
+                                end
+                                %
+                                flag_job = length(waves{iw}.launchs{il}.job);
+                                for ij = 1:length(waves{iw}.launchs{il}.job)%test if all jobs are done
+                                    if isempty(waves{iw}.launchs{il}.job{ij})
+                                        flag_job = flag_job - 1;
+                                    end
+                                end
+                                %
+                                if flag_job == 0, % all jobs done
+                                    %
+                                    antenna.aloha = waves{iw}.launchs{il}.temp{1};
+                                    %
+                                    if length(waves{iw}.launchs{il}.job) > 1
+                                        for ij=1:length(waves{iw}.launchs{il}.job)
+                                            RC{ij} = waves{iw}.launchs{il}.temp{ij}.results.RC;
+                                            dP_nz{ij} = waves{iw}.launchs{il}.temp{ij}.results.dP_nz;
+                                            ne0{ij} = waves{iw}.launchs{il}.temp{ij}.plasma.ne0;
                                         end
                                         %
-                                        clear err job sc
-                                        %
-                                        flag_launch = 0;
-                                    end
+                                        antenna.aloha.results.RC = RC;
+                                        antenna.aloha.results.dP_nz = dP_nz;
+                                        antenna.aloha.plasma.ne0 = ne0;
+                                    end 
+                                    %
+                                    waves{iw}.launchs{il} = rmfield(waves{iw}.launchs{il},'job');
+                                    waves{iw}.launchs{il}.antenna.aloha = antenna.aloha;
+                                    waves{iw}.launchs{il}.antenna.id = waves{iw}.launchs{il}.id;
+                                    %
+                                    waves{iw}.launchs{il} = rmfield(build_spectrum_from_aloha(waves{iw}.launchs{il},waves{iw}.launchs{il}.basestr,waves{iw}.launchs{il}.signs,false),'tail');%build launch structure for C3PO/LUKE
+                                    %
+                                    waves{iw}.launchs{il}.id = waves{iw}.launchs{il}.antenna.id;
+                                    %
+                                    waves{iw} = imake_wave_jd(dkepath,basestr,equil,waves{iw}.launchs{il},workdir,false);
                                 else
-                                    return
+                                    flag_launch = 0;
                                 end
+                                %
                             end
                         end
                     end
                 end
+                %
+                status.data = 2;%data must be saved
                 %
                 if flag_launch,
                     for iw = 1:length(waves)
@@ -1226,6 +1260,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 [waves,paths.waves,fileids.waves,newstruct] = imake_struct_jd(dkepath,waves,'wave',paths.waves,fileids.waves,equil,basestr,smakecmd,external,status.waves,'WAVE',workdir,'',opt_gui,1,1,0);
                 %
+                
+                %
                 flag_wave = 1;
                 flag_launch = 1;
                 %
@@ -1245,6 +1281,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                                 end
                             end
                         end
+                        %
                     end
                     %
                     if flag_wave == 1,
@@ -1255,9 +1292,12 @@ function irunluke_jd(basestr,signs,opt_gui)
                         end
                         %
                         flag_colldamp = 0;
-                        for iw = 1:length(waves),
-                            if waves{iw}.colldamp ~= waves0{iw}.colldamp,
-                                flag_colldamp = 1 + i*waves{iw}.colldamp;
+                        %
+                        if ~isempty(waves0),
+                            for iw = 1:length(waves),
+                                if waves{iw}.colldamp ~= waves0{iw}.colldamp,
+                                    flag_colldamp = 1 + i*waves{iw}.colldamp;
+                                end
                             end
                         end
                         %
