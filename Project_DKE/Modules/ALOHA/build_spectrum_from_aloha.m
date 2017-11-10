@@ -29,7 +29,14 @@ disp('using ALOHA data in irunluke_jd. Co-current: Npar0(main peak) < 0 if sign(
 disp(' and Npar0(main peak) > 0 if sign(Ip)*sign(Bt) < 0');
 disp('********************************************************************************************')
 %
-spectrum.dP_nz = real(external.antenna.aloha.results.dP_nz);
+spectrum.dP_nz = real(external.antenna.aloha.results.dP_nz{1});
+%
+if length(external.antenna.aloha.results.dP_nz) > 1
+    for ii=2:length(external.antenna.aloha.results.dP_nz)
+        spectrum.dP_nz = spectrum.dP_nz + real(external.antenna.aloha.results.dP_nz{ii});
+    end
+end
+%
 spectrum.nz = external.antenna.aloha.results.nz;
 spectrum.ny = external.antenna.aloha.results.ny;
 %
@@ -44,7 +51,7 @@ while 1,
         pstr = '';
     end                
     %
-    val(1) = sum(external.antenna.aloha.results.dP_nz*external.antenna.aloha.results.dnz);
+    val(1) = sum(spectrum.dP_nz*external.antenna.aloha.results.dnz);
     s{1} = ['Power from ALOHA spectrum',pstr,'        : PLH = ',num2str(val(1)/1e6),' MW'];
     %
     s{end+1} = 'Specify power manually';
