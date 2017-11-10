@@ -4,7 +4,15 @@ function locid_simul = make_aloha_simulid_yp(aloha)
 %
 if isstruct(aloha)
     %
-    ne0 = aloha.plasma.ne0/1e17;
+    if iscell(aloha.plasma.ne0)
+        ne0 = 0;
+        for ij = 1:length(aloha.plasma.ne0)
+            ne0 = ne0 + aloha.plasma.ne0{ij}/1e17;
+        end
+        ne0 = ne0/length(aloha.plasma.ne0);%mean value considered
+    else
+        ne0 = aloha.plasma.ne0/1e17;
+    end
     %
     ne0_str = strrep(num2str(ne0),'.','p');
     %
