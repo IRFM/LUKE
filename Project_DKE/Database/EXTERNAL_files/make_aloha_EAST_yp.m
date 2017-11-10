@@ -4,16 +4,20 @@ optim.tolfun = 1e-2;% tolerance on targets
 optim.tolx = 1e-2;% tolerance on inputs
 optim.nitmax = 30;%
 %
-if length(aloha.power_in_modules) == 4, % 2.45 GHZ antenna
+if size(aloha.power_in_modules,2) == 4, % 2.45 GHZ antenna
     sc = EAST_ALOHA_scenario_2dot45GHz;    
-elseif length(aloha.power_in_modules) == 6, % 4.60 GHZ antenna
+elseif size(aloha.power_in_modules,2) == 6, % 4.60 GHZ antenna
     sc = EAST_ALOHA_scenario_4dot60GHz;
 else
     error('Wrong definition of EAST LH antenna')
 end
 %
-sc.antenna.a_ampl = sqrt(aloha.power_in_modules(:)*1000);%power is given in kW form external
-sc.antenna.a_phase = pi*aloha.module_phasing(:)/180;
+%
+% Calculate the coupling (ie the plasma impedance). Once the plasma impedance is calculated, because of the underlying linearity,
+% we can change the antenna excitation (power, phasing) to determine RC and power spectrum for a specific excitation. (J. Hillairet)
+%
+sc.antenna.a_ampl = sqrt(aloha.power_in_modules*1000);%power is given in kW form external (first row is considered for coupling calculations)
+sc.antenna.a_phase = pi*aloha.module_phasing/180;
 %
 if isfield(antenna_measured,'edge_ne') & isfield(antenna_measured,'rc')
     calcspectrum_opt = input_dke_yp('Calculation of the ALOHA power spectrum from edge density [0] or reflection coefficient [1] in external structure or from manual data input [2] ? ',0,0:2,'',[1,1]);
@@ -36,12 +40,28 @@ if calcspectrum_opt == 0,
     rc = '';
 elseif calcspectrum_opt == 1,
     edge_ne = '';
-    rc = antenna_measured.rc;
+    %
+    if size(aloha.power_in_modules,1) > 1,% all rows are considered
+        if size(aloha.power_in_modules) == size(antenna_measured.rc)
+            rc = antenna_measured.rc;
+        else
+            if size(antenna_measured.rc,1) == 1 || size(antenna_measured.rc,2) == 1
+                rc = ones(size(aloha.power_in_modules,1),1)*antenna_measured.rc(:)';
+                if size(aloha.power_in_modules) ~= size(rc)
+                    error('Measured RC coefficients data for EAST LH antenna are inconsistent');
+                end
+            else
+                error('Measured RC coefficients data for EAST LH antenna are inconsistent');
+            end
+        end
+    else
+        rc = antenna_measured.rc;            
+    end
     %
     optim.tolfun = input_dke_yp('Termination tolerance on the function value ? ',optim.tolfun,'','',[1,1]);
     optim.tolx = input_dke_yp('Termination tolerance on x ? ',optim.tolx,'','',[1,1]);
     optim.nitmax = input_dke_yp('Maximum number of iterations allowed ? ',optim.nitmax,'','',[1,1]);
-    init_ne = input_dke_yp('Initial density ? ',5e18,'','',[1,1]);%to be far from a possible minimum in RC as finction of ne
+    init_ne = input_dke_yp('Initial density (low density side (1e17 m-3) or high density side (5e18 m-3) ? ',1e17,'','',[1,1]);%to be far from a possible minimum in RC as finction of ne
     %
     sc.plasma.ne0 = init_ne;
     %
@@ -70,5 +90,32 @@ end
 %
 antenna = build_aloha_power_spectrum_yp(sc,edge_ne,rc,optim,dkepath,scheduler);
 %
+if ~isfield(antenna,'job')
+    %
+    if size(aloha.power_in_modules,1) > 1
+        %
+        RC{1} = antenna.aloha.results.RC;
+        dP_nz{1} = antenna.aloha.results.dP_nz;
+        %
+        for ii=2:size(aloha.power_in_modules,1)
+            %
+            antenna.aloha.antenna.a_ampl = sqrt(aloha.power_in_modules(ii,:)*1000)';%power is given in kW form external (first row is considered for coupling calculations)
+            antenna.aloha.antenna.a_phase = pi*aloha.module_phasing(ii,:)'/180;
+            %
+            antenna.aloha = aloha_compute_RC(antenna.aloha); % update RC coefficients
+            antenna.aloha = aloha_compute_spectrum(antenna.aloha);% update power spectrum coefficients
+            %
+            RC{ii} = antenna.aloha.results.RC;
+            dP_nz{ii} = antenna.aloha.results.dP_nz;
+            %
+        end
+    end 
+    %
+    antenna.aloha.results.RC = RC;
+    antenna.aloha.results.dP_nz = dP_nz;
+    %
+end
+
+
 
 
