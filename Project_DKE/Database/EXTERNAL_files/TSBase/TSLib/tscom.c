@@ -86,10 +86,8 @@
 #endif
 
 #include "tshote.h"
-/*#include "tshote_mizar.h" */
 #include "tsmes.h"		/* liste des erreurs              */
 #include "tstype.h"		/* liste des types de donnees     */
-/* #include "tslib.h"            liste des variables globales   */
 #include "functs.h"		/* prototypes fcts TSLib */
 
 void *Memset (void *, int, Longint);
@@ -480,7 +478,7 @@ Reception (
 Longint FAR_PASCAL
 Debut_Communication (int *NumSocket, int ind_serv)
 				 /*  NumSocket: descripteur de socket */
-       /* ind_base : indice serveur a connecter 1 = rigel
+       /* ind_base : indice serveur a connecter 1 = deneb
           0 = rhea (IR) */
 {
   int LongAdr;			/* longueur de l'adresse de la socket */
@@ -514,7 +512,7 @@ Debut_Communication (int *NumSocket, int ind_serv)
 	}
       else
 	{
-	  strcpy (hostpart, hote2);  /* rigel */
+	  strcpy (hostpart, hote2);  /* default data server */
 	  strcpy (portpart, "5880");
 	}
     }

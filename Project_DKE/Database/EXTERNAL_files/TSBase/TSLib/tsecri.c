@@ -464,11 +464,12 @@ Longint Resultat;		/* compte-rendu d'execution du client        */
 	code_param = p_nomtrait;
     if (code_param != ok)
 	return (Gestion_Erreur (erreur_chaine_vide, code_param));
+/* JS ne le veut plus... 13/10/11
     if (Status == 0)
     	code_param = p_status;
     if (code_param != ok)
     	return (Gestion_Erreur (erreur_tableau_vide, code_param));
-
+*/
     /* debut de communication */
     if ((Resultat = Debut_Communication (&NumSocket, 1)) != ok)
 	return Resultat;

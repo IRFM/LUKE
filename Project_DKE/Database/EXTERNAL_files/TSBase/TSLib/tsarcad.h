@@ -815,6 +815,7 @@ typedef struct zs_cwm_valeur_ {
         int     id_param;
         short   rang;
         char    code[2];
+        char    type[2];
         char    declenche[13];
         float   decalage;
         float   duree;

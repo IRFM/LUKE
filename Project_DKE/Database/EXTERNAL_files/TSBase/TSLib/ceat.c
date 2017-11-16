@@ -35,12 +35,6 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-
-#include <sys/types.h>
-#include <unistd.h>
-
-
-
 #include "tsdef.h"              /* liste des constantes utilisees */
 #include "tsconf.h"             /* configuration du client        */
 #if (client == INTEL)
@@ -68,7 +62,7 @@
 #define PREPASIZE       	8
 #define TAILLE_TYPE_OBJET	17
 #define TAILLE_NOM_FICHIER	256
-#define TO_COMMON  		28
+#define TO_COMMON  		29   /* 2015-- 28 => 29 */
 #define MTU_SPECIAL		1460
 #define TAILLE_DATE_DC          11
 
@@ -187,11 +181,12 @@ TSLDiag (	Longint numchoc,
           (ListeDiag)[i] = (char *) malloc(L_NOM_PRODUCTEUR);
 #endif
           strcpy((ListeDiag)[i],p_tmp->nom_objet);
-          free (pt_cmt[i]);
+          free (pt_cmt[i]); 
           p_tmp++;
         }
         free (p_ts_obj);
         free(pt_cmt);
+
      }
 
    }
@@ -277,7 +272,10 @@ TSLSig (	Longint numchoc,
  	  (ListeSig)[i] = (char *) GlobalLock(GlobalAlloc(GMEM_MOVEABLE,
 				PREPASIZE + 1));
 #else
-	  (ListeSig)[i] = (char *) malloc(PREPASIZE + 1);
+	  /**YYBB (ListeSig)[i] = (char *) malloc(PREPASIZE + 1); YYBB**/
+          if((ListeSig)[i])
+                free ((ListeSig)[i]);
+	  (ListeSig)[i] = (char *) calloc(1,PREPASIZE + 1);
 #endif
 	  ptd = ListeSig[i];
 	  for (j = 0; j < PREPASIZE; j++)
@@ -305,7 +303,10 @@ TSLSig (	Longint numchoc,
           (ListeSig)[i] = (char *) GlobalLock(GlobalAlloc(GMEM_MOVEABLE,
                                TAILLE_NOM_DONNEE ));
 #else
-          (ListeSig)[i] = (char *) malloc(TAILLE_NOM_DONNEE);
+        /**YYBB  (ListeSig)[i] = (char *) malloc(TAILLE_NOM_DONNEE); 
+            if((ListeSig)[i]) 
+                    free ((ListeSig)[i]); YYBB*/
+          (ListeSig)[i] = (char *) calloc(1,TAILLE_NOM_DONNEE + 1);
 #endif
           strcpy((ListeSig)[i],p_tmp->nom_objet);
           free (pt_cmt[i]);
@@ -2146,6 +2147,8 @@ TSRqParm (Longint numchoc,char * nomdiag,...)
                    for (i = 0 ; i < nb_val; i++) {
                       memcpy(pt_buff, pt->code, (2 * sizeof(char)));
                       pt_buff += 2 * sizeof(char);
+                      memcpy(pt_buff, pt->type, (2 * sizeof(char)));
+                      pt_buff += 2 * sizeof(char);
                       memcpy(pt_buff, pt->declenche, (13 * sizeof(char)));
                       pt_buff += 13 * sizeof(char);
                       memcpy(pt_buff, &(pt->decalage), sizeof(float));
@@ -2839,11 +2842,11 @@ TSrqEtat ( char *machine,
     return nom_diagnostic_invalide;
   /* debut de communication */
 
-   if (!strcmp(machine,"rhea")) {
-      if ((Resultat = Debut_Communication (&NumSocket, 0)) != ok)
+   if (!strcmp(machine,"deneb")) {
+      if ((Resultat = Debut_Communication (&NumSocket, 1)) != ok)
          return Resultat;
    }
-   else if( (!strcmp(machine,"deneb")) || (!strcmp(machine,"deneb.intra.cea.fr")) ) {
+   else if(!strcmp(machine,"rigel")) {
       if ((Resultat = Debut_Communication (&NumSocket, 1)) != ok)
         return Resultat;
    }

@@ -23,10 +23,8 @@
 #else
 
 
-#define hote1           "10.8.86.1"  /* adresse de deneb */
-#define hote2           "10.8.86.1"  /* adresse de deneb   */
-/* #define hote2           "132.169.8.253"  adresse de sturne18  */
-#define hote3           "132.169.60.1"  /* adresse du firewall */
+#define hote1           "132.169.8.128" /* adresse de rhea */
+#define hote2           "10.8.86.1"     /* adresse de deneb   */
 #define nom_service     "tslib"         /* nom du service      */
 #define protocole       "tcp"           /* nom du protocole    */
 

@@ -13,7 +13,7 @@
 
 #define NB_MESURES      2
 
-static char     rcsid[] = "$Id$";
+static char     rcsid[] = "$Id: tsignitron.c,v 1.1 1993/04/15 10:25:38 buravand Exp buravand $";
 
 
 Longint
