@@ -23,15 +23,16 @@ dkepath.default = 'g2yvesp';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.g2yvesp(1).luke_root = '/gh/g2yvesp/public/LUKE/';
+dkepath.g2yvesp(1).luke_root = '/afs/eufus.eu/g2itmdev/user/g2yvesp/public/LUKE/';
 %
-dkepath.g2yvesp(1).itm.local_root = '/gh/g2yvesp/public/';
+dkepath.g2yvesp(1).itm.local_root = '/afs/eufus.eu/g2itmdev/user/g2yvesp/public/';
 dkepath.g2yvesp(1).itm.temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 %dkepath.g2yvesp(1).itm.speclibpath.xml_io_tools = [dkepath.g2yvesp(1).luke_root,'Project_DKE/Modules/ITM/xml_io_tools/'];%Other machine specific libraries (XML I/O)
 dkepath.g2yvesp(1).itm.speclibpath.ual = getenv('UAL');%UAL path in the ITM gateway. See the .bashrc file on the gateway to have the correct UAL version (must be consistent)
 %
 dkepath.g2yvesp(1).itm.mex713 = [dkepath.g2yvesp(1).luke_root,'Project_DKE/MEX/Bin/eurofusion/MATLAB713/'];
+dkepath.g2yvesp(1).itm.mex902 = [dkepath.g2yvesp(1).luke_root,'Project_DKE/MEX/Bin/eurofusion/MATLAB902/'];
 %
 dkepath.g2yvesp(1).itm.compiler_opt.libs.gfortran = [dkepath.g2yvesp(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.7.0','/',dkepath.machine,'/'];%extra libraries
 dkepath.g2yvesp(1).itm.compiler_opt.copts = '';
@@ -39,8 +40,12 @@ dkepath.g2yvesp(1).itm.compiler_opt.fopts.mex713 = 'FC=''ifort''';%
 dkepath.g2yvesp(1).itm.compiler_opt.separatrice.mex713 = [' -largeArrayDims -L/afs/ipp-garching.mpg.de/common/soft/intel/ics/2011.0.013/composer_xe_2011_sp1.13.367/compiler/lib/intel64/ -lifcore -lirc -lsvml -L/afs/ipp/itm/switm/lib/lapack/3.4.2/lib/amd64_intel_12 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.g2yvesp(1).itm.compiler_opt.helmex.mex713 = [' -compatibleArrayDims -L/afs/ipp-garching.mpg.de/common/soft/intel/ics/2011.0.013/composer_xe_2011_sp1.13.367/compiler/lib/intel64/ -lifcore -lirc -lsvml -L/afs/ipp/itm/switm/lib/lapack/3.4.2/lib/amd64_intel_12 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.g2yvesp(1).itm.compiler_opt.fopts.mex713 = ' -largeArrayDims';
+dkepath.g2yvesp(1).itm.compiler_opt.fopts.mex902 = 'FC=''ifort''';%
+dkepath.g2yvesp(1).itm.compiler_opt.separatrice.mex902 = [' -largeArrayDims -L/afs/ipp-garching.mpg.de/common/soft/intel/ics/2011.0.013/composer_xe_2011_sp1.13.367/compiler/lib/intel64/ -lifcore -lirc -lsvml -L/afs/ipp/itm/switm/lib/lapack/3.4.2/lib/amd64_intel_12 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.g2yvesp(1).itm.compiler_opt.helmex.mex902 = [' -compatibleArrayDims -L/afs/ipp-garching.mpg.de/common/soft/intel/ics/2011.0.013/composer_xe_2011_sp1.13.367/compiler/lib/intel64/ -lifcore -lirc -lsvml -L/afs/ipp/itm/switm/lib/lapack/3.4.2/lib/amd64_intel_12 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.g2yvesp(1).itm.compiler_opt.fopts.mex902 = ' -largeArrayDims';
 %
-%dkepath.g2yvesp(1).itm.MUMPS.mex800 = '/afs/ipp/itm/switm/lib/mumps/4.10.0_serial/matlab/R2012b/amd64_intel_12/';%Where MUMPS matrix solver is stored (MEX function)
+dkepath.g2yvesp(1).itm.MUMPS.mex902 = '/afs/eufus.eu/g2itmdev/user/g2yvesp/public/Packages/Bin/MUMPS/MUMPS_5.1.2/MATLAB902';%Where MUMPS matrix solver is stored (MEX function)
 %
 % Extra paths to add
 %
