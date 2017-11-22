@@ -54,10 +54,12 @@ dkepath.yves(1).MUMPS.seq = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMP
 %dkepath.yves(1).MUMPS.mex901 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
 %dkepath.yves(1).MUMPS.mex901 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2_S_ifort/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
 %dkepath.yves(1).MUMPS.mex901 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.yves(1).MUMPS.mex901 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.1_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yves(1).MUMPS.mex901 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.1_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
 %dkepath.yves(1).MUMPS.mex902 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.0.2_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.yves(1).MUMPS.mex902 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.1_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.yves(1).MUMPS.mex903 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.1_S_gfortran/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yves(1).MUMPS.mex902 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.1_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yves(1).MUMPS.mex902 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.2_S_gfortran/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.yves(1).MUMPS.mex903 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.1_S_gfortran/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yves(1).MUMPS.mex903 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.2_S_gfortran/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % SUPERLU matrix solver (parallel, sequential)
 %
