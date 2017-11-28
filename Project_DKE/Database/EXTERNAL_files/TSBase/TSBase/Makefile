@@ -4,11 +4,11 @@ ALL= tsbase tsmat tsrqt tsdate tsoccur tsdernier_choc \
 #     tsample tstablet tsplinet tswcert bin2 tswfile 
 
 OPTIONS = -DUSE_FUNCTION_PROTOTYPES  -g# -DDEBUG
-INCLUDES = -I$./ -I/Applications/MatLab_R2015b/extern/include
+INCLUDES = -I$./ -I/Applications/MatLab_R2017a/extern/include
 COPTS = -c 
 FOPTS = -g -c
-CMEX = /Applications/MatLab_R2015b/bin/mex -I/usr/include -I./
-LIB =  /Users/Yves/CEA/Projets/Project_TSBaseOSX/TSLib/libTS.a
+CMEX = /Applications/MatLab_R2017b/bin/mex -I/usr/include -I./
+LIB =  /Users/Yves/Travail/Projets/Project_TSBaseOSX/TSLib/libTS.a
 AR = ar
 DLLMEX = 
 
@@ -108,4 +108,4 @@ print :
 	pr -l87 < tsbamat.h | lpr
 	pr -l87 < tsmat.h | lpr
 clean:
-	rm -f *.o *.BAK *.sav *.old a.out core  *~ *.mexaxp *.mexmac *mexmaci
+	rm -f *.o *.BAK *.sav *.old a.out core  *~ *.mexaxp *.mexmac* 
