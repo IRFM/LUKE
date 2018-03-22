@@ -44,9 +44,9 @@ if ~isempty(ripple) && (isstruct(ripple) && isfield(ripple,'mode') && ripple.mod
     xnhuloss = ones(size(xrho))*1000;%Normalized to the reference frequency(forced to very large loss frequency, otherwise no physical meaning)
     %
     for ir = 1:nr,
-		if isnan(xnhuloss(ir)) == 0 && bounce_mode == 1 && ~isempty(findstr(tokname,'TS')) == 1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
+		if isnan(xnhuloss(ir)) == 0 && bounce_mode == 1 && ~(isempty(findstr(tokname,'TS')) && isempty(findstr(tokname,'WEST'))) == 1,%WARNING: only valid for the TORE SUPRA tokamak with large magnetic ripple
 			if ir == 1, 
-				info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak, see main_dke_1yp.m for BeLi, Ip and Ncoils values');
+				info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra and WEST tokamak, see main_dke_yp.m for BeLi, Ip and Ncoils values');
 				disp('-------------------------------------------------------------------------------------------------------------------');
 				Ip = 0.61;%MA (For magnetic equilibrium in the magnetic ripple routine)
 				BeLi = 1.0;%For magnetic equilibrium in the magnetic ripple routine
@@ -60,12 +60,12 @@ if ~isempty(ripple) && (isstruct(ripple) && isfield(ripple,'mode') && ripple.mod
 			Xmaskrip = (Xpn > xpndetrap(ir)).*(abs(Xmhu) < xmhusupertrap(ir));
 			Xnhuloss = Xmaskrip*xnhuloss(ir);
 		else
-			if isnan(xnhuloss(ir)) == 0 & bounce_mode == 1 & isempty(findstr(tokname,'TS')) == 1
+			if isnan(xnhuloss(ir)) == 0 & bounce_mode == 1 & (isempty(findstr(tokname,'TS')) || isempty(findstr(tokname,'WEST'))) == 1
 				if ir == 1, 
-					info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra tokamak. Wrong tokamak name');
+					info_dke_yp(2,'WARNING: Ripple losses calculations only valid for Tore Supra or WEST tokamak. Wrong tokamak name');
 					disp('-------------------------------------------------------------------------------------------------------------------');
 				end
-			elseif isnan(xnhuloss(ir)) == 0 & bounce_mode == 0 & isempty(findstr(tokname,'TS')) == 0
+			elseif isnan(xnhuloss(ir)) == 0 & bounce_mode == 0 & (isempty(findstr(tokname,'TS')) || isempty(findstr(tokname,'WEST'))) == 0
 				if ir == 1, 
 					info_dke_yp(2,'WARNING: Ripple losses calculations only valid for bounce averaged calculations');
 					disp('-------------------------------------------------------------------------------------------------------------------');
