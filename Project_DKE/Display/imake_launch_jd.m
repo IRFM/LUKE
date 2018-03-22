@@ -68,7 +68,7 @@ if ~isempty(external),% import wave data from external structure
         if length(istru) >= 2 && strcmp(equil.id(1:istru(1)-1),basestr),
             shotnum = equil.id(istru(1)+1:istru(2)-1);
         else           
-            disp('-----> Shot number information missing');
+            disp('-----> Shot number information missing. Abort imake_launch_jd.m');
             return
         end
     end
