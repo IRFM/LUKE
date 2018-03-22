@@ -75,6 +75,9 @@ elseif strcmp(basestr,'TS') && ~isempty(shotnum) && exist('tsdate','file') && in
     %
     [hxrspec,hxrparam] = get_hxrspec_forLUKE_jd('TS',str2num(shotnum));
     %
+elseif strcmp(basestr,'WEST') && ~isempty(shotnum) && exist('tsdate','file') && input_dke_yp('Do you want to load the HXR camera spec automatically (y/n)','y',{'y','n'}) == 'y',
+    %
+    [hxrspec,hxrparam] = get_hxrspec_forLUKE_jd('WEST',str2num(shotnum));
 else
     %
     hxr_file = which(['HXR_',basestr,'.mat']);
