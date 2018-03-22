@@ -1,7 +1,7 @@
 function [hxrspec,hxrparam] = get_hxrspec_forLUKE_jd(basestr,shot,data_path)
 %
-if ~strcmp(basestr,'TS'),
-    error('Function valid for TS only for now')
+if ~(strcmp(basestr,'TS') || strcmp(basestr,'WEST')),
+    error('Function valid for TS or WEST for now')
 end
 %
 shotdate = tsdate(shot);
@@ -15,7 +15,7 @@ hxrspec.beta_hxr(hxrspec.beta_hxr > pi) = 2*pi - hxrspec.beta_hxr(hxrspec.beta_h
 %
 hxrspec.alpha_hxr(hxrspec.beta_hxr < 0) = hxrspec.alpha_hxr(hxrspec.beta_hxr < 0) + pi;
 hxrspec.beta_hxr(hxrspec.beta_hxr < 0) = - hxrspec.beta_hxr(hxrspec.beta_hxr < 0);
-%
+
 hxrspec.alpha_hxr(hxrspec.alpha_hxr < 0) = hxrspec.alpha_hxr(hxrspec.alpha_hxr < 0) + 2*pi;
 hxrspec.alpha_hxr(hxrspec.alpha_hxr > 2*pi) = hxrspec.alpha_hxr(hxrspec.alpha_hxr > 2*pi) - 2*pi;
 %
