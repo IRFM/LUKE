@@ -945,11 +945,11 @@ elseif bounce_mode == 1,
     xfteff_fsav = xfteff_fsav - 1.5*(xBT0(rdke)./xB0(rdke)).*((xq(rdke)./xqbar(rdke)).*(1 + xx0(rdke)/Rp).*integral_dke_jd(dmhu,abs(XXmhu(1,:,rdke)).*XXheaviside(1,:,rdke).*abs(XXILor(1,:,rdke)),2));
 end
 %
-%   Magnetic ripple loss rate calculation (for Tore Supra tokamak only)
+%   Magnetic ripple loss rate calculation (for Tore Supra or WEST tokamak only)
 %   Volume or surface loss calculations must match if no additional source term 
 %   is added (XXlossripple = XXsource). Otherwise, only the surface loss must be considered
 %
-if sum(sum(sum(XXlossripple))) ~= 0 & isempty(findstr(equilDKE.tokname,'TS')) == 0,
+if sum(sum(sum(XXlossripple))) ~= 0 & (~isempty(findstr(equilDKE.tokname,'TS')) || ~isempty(findstr(equilDKE.tokname,'WEST'))),
     %
     XXEc = sqrt(XXpn2*mksa.betath_ref^2 + 1) - 1;
     XXEcm = sqrt(XXpn2m*mksa.betath_ref^2 + 1) - 1;
