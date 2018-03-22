@@ -183,9 +183,9 @@ while ipass < npass,
                 MUMPSMATLAB =[MUMPSDIR,list_of_packages(ifile).name,filesep,'MATLAB',matver,filesep];
                 if exist(MUMPSMATLAB,'dir') && exist([MUMPSMATLAB,'dmumpsmex.',mexext],'file'),
                     addpath(MUMPSMATLAB)
-                    isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-ILU (MEX) by CPU with sparse matrix']),tic,job_MUMPSMEX = 1;MUMPSMEX_dke_yp;job_MUMPSMEX = 2;MUMPSMEX_dke_yp;t(isim) = toc;
-                    Zname{isim} = ['MEX_',list_of_packages(ifile).name,'_LU_FACTORISATION by CPU with sparse matrix'];
-                    isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-SOLVE (MEX) by CPU with sparse matrix']),tic,job_MUMPSMEX = 3;MUMPSMEX_dke_yp;t(isim) = toc;MMXS_t_MUMPS = id_MUMPSMEX.SOL;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds.']);job_MUMPSMEX = -2;MUMPSMEX_dke_yp;
+                    isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-ILU (MEX)']),tic,job_MUMPSMEX = 1;MUMPSMEX_dke_yp;job_MUMPSMEX = 2;MUMPSMEX_dke_yp;t(isim) = toc;
+                    Zname{isim} = ['MEX_',list_of_packages(ifile).name,'_LU_FACTORISATION'];
+                    isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-SOLVE (MEX)']),tic,job_MUMPSMEX = 3;MUMPSMEX_dke_yp;t(isim) = toc;MMXS_t_MUMPS = id_MUMPSMEX.SOL;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds.']);job_MUMPSMEX = -2;MUMPSMEX_dke_yp;
                     ZMMXS_t{isim} = MMXS_t_MUMPS;
                     Zname{isim} = ['MEX_',list_of_packages(ifile).name];
                     rmpath(MUMPSMATLAB)  
