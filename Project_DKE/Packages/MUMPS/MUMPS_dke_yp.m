@@ -1,8 +1,8 @@
 function [X,flag,text] = MUMPS_dke_yp(MUMPSparam,A,B,display_mode,dkepath)
 %
-%Link with the parallel matrix solver package MUMPS written in FORTAN 95. This is a modified package wich is able to 
+%Link with the parallel matrix solver package MUMPS written in FORTRAN. This is a modified package wich is able to 
 %read binary files written by MatLab, which needs to be compiled first. 
-%Tested on LINUX clusters (parallel) and MAC OS X (sequential)
+%Tested on LINUX clusters (parallel or sequential)
 %
 %Solve the linear system of equation AX=B
 %
@@ -20,7 +20,7 @@ function [X,flag,text] = MUMPS_dke_yp(MUMPSparam,A,B,display_mode,dkepath)
 %   - flag: execution flag (see the MUMPS documentation) [1,1]
 %   - text: execution documentation (see the HYPRE documentation)
 %
-%By Joan Decker (CEA-DRFC, joan.decker@cea.fr) and Yves Peysson (CEA-DRFC, yves.peysson@cea.fr)
+%by Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr) 
 %
 %Write matrix A and vector B in MUMPS_in binary file
 %
