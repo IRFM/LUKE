@@ -7,9 +7,11 @@ clear functions
 %
 %load('/Users/yves/Projets/LUKE/Simulations/Examples/EAST/EAST_040235/040235_004000_ne_av=2p5/EQUIL_EAST_040235_004000.mat');
 %load('/Users/yves/Projets/LUKE/Simulations/Examples/EAST/EAST_040235/040235_004000_ne_av=2p5/LUKE_DATA_EAST_040235_004000_C3PO_antenna_2p45Ghz_VLOOP.mat','output');
-load('LUKE_RESULTS_WEST_149293_39.9683_ES_METIS_C3PO_C4_Npar_2.1.mat')
-output = lukestructs.output;
-equil = lukestructs.equil;
+%load('LUKE_RESULTS_WEST_149293_39.9683_ES_METIS_C3PO_C4_Npar_2.1.mat')
+%output = lukestructs.output;
+%equil = lukestructs.equil;
+%
+load('/Volumes/Triolet/WEST/WEST_52702/LUKE_DATA_WEST_52702_5.0442_C3PO_C3_C3PO_C4.mat')
 %
 XXf0 = output.dke_out.XXf0{1};
 psin = output.radialDKE.xpsin_f;
@@ -39,7 +41,7 @@ maxDNeDphi_tip = max(max(max(ripple.DNeDphi_tip)));
 %
 for iEc = 1:length(Ec),
     XDNeDphi_tip = griddata(ripple.R_tip,ripple.Z_tip,squeeze(ripple.DNeDphi_tip(sum(ripple.Ec_tip < Ec(iEc)),:,:)),XR_tip,XZ_tip)';
-    subplot(2,2,iEc),ax = graph2D_jd(XR_tip,XZ_tip,XDNeDphi_tip,'R (m)','Z(m)',['Number of electron banana tips @ ',num2str(ripple.Ec_tip(sum(ripple.Ec_tip < Ec(iEc)))),' (keV)'],NaN,NaN,1,NaN,nlevel);colorbar
+    subplot(2,2,iEc),ax = graph2D_jd(XR_tip,XZ_tip,real(XDNeDphi_tip),'R (m)','Z(m)',['Number of electron banana tips @ ',num2str(ripple.Ec_tip(sum(ripple.Ec_tip < Ec(iEc)))),' (keV)'],NaN,NaN,1,NaN,nlevel);colorbar
 end
 %
 disp(['Max number of electron banana tips (electron/rd) : ',num2str(maxDNeDphi_tip)])
