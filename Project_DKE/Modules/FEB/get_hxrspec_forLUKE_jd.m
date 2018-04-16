@@ -4,7 +4,19 @@ if ~(strcmp(basestr,'TS') || strcmp(basestr,'WEST')),
     error('Function valid for TS or WEST for now')
 end
 %
-shotdate = tsdate(shot);
+dkepath = load_structures_yp('dkepath','','');
+opt_gui = false;
+select.style = struct;
+scheduler.remnum = iselect_jd(dkepath.remprofiles,'Remote calculation mode (mdce_remote): ',opt_gui,select.style,1)-1;
+if scheduler.remnum > 1,
+    remote = dkepath.remote(scheduler.remnum);
+    %remote.link_mode=1;%ssh bridge otherwise 0 (direct ssh)
+    job = matstandardjob_jd('runmat');
+    [err,job,shotdate] = matremote_jd('tsdate',{shot},remote,job);%find remotely the shot date
+else
+    disp('WARNING: direct connexion to the CEA network is necessary');
+    [shotdate] = tsdate(shot);
+end
 %
 hxrspec = bremTSconvert_dke_yp(str2num(shotdate(1:2)),str2num(shotdate(4:5)),str2num(shotdate(7:10)));
 %
