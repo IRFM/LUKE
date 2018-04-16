@@ -402,6 +402,9 @@ function irunluke_jd(basestr,signs,opt_gui)
                         %
                         if exist('equil','var') && isfield(equil,'tokamak'),
                             basestr = equil.tokamak;
+                        else
+                            basestr = data_file(11:9 + find(data_file(11:end) == '_',1,'first'));
+                            %basestr = input_dke_yp('Please enter the tokamak name',basestr);
                         end
                         %
                         fileids.data = data_file;
@@ -1434,8 +1437,8 @@ function irunluke_jd(basestr,signs,opt_gui)
                 disp('************** MAGNETIC RIPPLE LOSSES **************')
                 disp(' ');
                 %
-                if ~strcmp(basestr,'TS');
-                    disp('-----> The magnetic ripple calculations is implemented for Tore Supra tokamak only.');
+                if ~(strcmp(basestr,'TS') || strcmp(basestr,'WEST'))  ;
+                    disp('-----> The magnetic ripple calculations is implemented for Tore Supra or WEST tokamak only.');
                     continue
                 end
                 %
