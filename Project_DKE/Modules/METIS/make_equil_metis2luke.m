@@ -144,15 +144,15 @@ else
 end
 %
 if equil.psi_apRp(end)*equil.ptBy(end,1) < 0,
-    disp('Warning : equilibrium signs not self-consistent')
+    disp('-------> WARNING : equilibrium signs not self-consistent')
 end
 %
 if equil.psi_apRp(end)*equil.ptBPHI(1,1)*option.signe < 0,
-    disp('Warning : equilibrium signs not consistent with option.signe')
+    disp('-------> WARNING : equilibrium signs not consistent with option.signe')
 end
 %
 if equil.ptBPHI(1,1)*option.bsigne < 0,
-    disp('Warning : equilibrium signs not consistent with option.bsigne')
+    disp('-------> WARNING : equilibrium signs not consistent with option.bsigne')
 end
 %
 % EQUILIBRIUM PROFILES
@@ -226,6 +226,8 @@ if equilparam.comp,
 end
 %
 equil.id = equil_id;
+%
+equil = equilconsistency_yp(equil);
 %
 
 
