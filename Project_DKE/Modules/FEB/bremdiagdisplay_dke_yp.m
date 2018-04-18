@@ -66,8 +66,12 @@ figure('Name',['Plasma 4pi bremsstrahlung at energy ',num2str(kphot_display)]);
 graph2D_jd(Zbremplasma.r_hxr.*cos(Zbremplasma.theta_hxr),Zbremplasma.r_hxr.*sin(Zbremplasma.theta_hxr),brem_4pi(:,:,ikphot_display_2).','x','y',['Plasma 4pi bremsstrahlung at energy ',num2str(kphot_display)],NaN,NaN,1);
 print_jd(p_opt,[filename,'_PlasmaHXRbrem_4pi']);axis('equal')
 %
+hxr.chordstatus_hxr(hxr.chordstatus_hxr==0) = NaN;
+%
 figure('Name','Pulse bremsstrahlung profile');
-graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.brem_bd_diag(:,ikphot_display),0,0,'Chord number','dN_{pulse}/dt [s^{-1}]',['Pulse count rate, E=',num2str(Zbremdiag.kfit(ikphot_display)),'�',num2str(dkphot_display/2),'keV'],NaN,'','','-','non','b',2);
+graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.brem_bd_diag(:,ikphot_display),0,0,'Chord number','dN_{pulse}/dt [s^{-1}]',['Pulse count rate, E=',num2str(Zbremdiag.kfit(ikphot_display)),'keV +/- ',num2str(dkphot_display/2),'keV'],NaN,'','','-','*','r',2);
+graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.brem_bd_diag(:,ikphot_display).*hxr.chordstatus_hxr',0,0,'Chord number','dN_{pulse}/dt [s^{-1}]',['Pulse count rate, E=',num2str(Zbremdiag.kfit(ikphot_display)),'keV +/- ',num2str(dkphot_display/2),'keV'],NaN,'','',':','*','b',2);
+legend('all chords','active chords');
 if exist('hxrexp'),
     leg = {'simulations','experimental'};
     graph1D_jd([1:length(Zbremdiag.tphot_plasma)],hxrexp,0,0,'','','',leg,'','','-','non','r',2);
@@ -75,7 +79,9 @@ end
 print_jd(p_opt,[filename,'_PulseHXRProfile']);
 %
 figure('Name','Measured plasma bremsstrahlung profile');
-graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.brem_bd_diag(:,ikphot_display)./Zbremdiag.meanabsx(:,ikphot_display),0,0,'Chord number','dN_{pulse}/meanabs(E).dt [s^{-1}]',['Measured plasma count rate, E=',num2str(Zbremdiag.kfit(ikphot_display)),'�',num2str(dkphot_display/2),'keV'],NaN,'','','-','non','b',2);
+graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.brem_bd_diag(:,ikphot_display)./Zbremdiag.meanabsx(:,ikphot_display),0,0,'Chord number','dN_{pulse}/meanabs(E).dt [s^{-1}]',['Measured plasma count rate, E=',num2str(Zbremdiag.kfit(ikphot_display)),'keV +/- ',num2str(dkphot_display/2),'keV'],NaN,'','','-','*','r',2);
+graph1D_jd([1:length(Zbremdiag.tphot_plasma)],Zbremdiag.brem_bd_diag(:,ikphot_display)./Zbremdiag.meanabsx(:,ikphot_display).*hxr.chordstatus_hxr',0,0,'Chord number','dN_{pulse}/meanabs(E).dt [s^{-1}]',['Measured plasma count rate, E=',num2str(Zbremdiag.kfit(ikphot_display)),'keV +/- ',num2str(dkphot_display/2),'keV'],NaN,'','','-','*','b',2);
+legend('all chords','active chords');
 print_jd(p_opt,[filename,'_MeasuredPlasmaHXRProfile']);
 %
 figure('Name','Plasma photon temperature');
