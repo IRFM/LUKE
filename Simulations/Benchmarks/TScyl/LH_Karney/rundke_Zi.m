@@ -101,7 +101,7 @@ equil.pTe = betath^2*mc2*ones(size(equil.pTe));
 equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
 %equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
-Zi_list = [1:20];
+Zi_list = [1:100];%Z = 74 is tungsten fully stripped ion
 %
 nZi = length(Zi_list);
 %
