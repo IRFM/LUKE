@@ -20,10 +20,13 @@ function [x,y] = testfitequil_yp(equil_in,equil_fit,rho,theta,ns)
 %
 close all
 %
+flagcalc = 0;
+%
 if nargin < 3,% Output for comparison with C raytracing_yp.c
    rho = 0.25;
    theta = 0.2;
    ns = 2;
+   flagcalc = 1;
 end
 if nargin < 4,% Output for comparison with C raytracing_yp.c
    theta = 0.2;
@@ -203,7 +206,9 @@ d2gradrhodrho2 = d2gradrhodrho2./(dprho(:)*ones(1,length(dtheta)));%2nd order de
 %
 % Calculation of derivatives with Matlab build-in interpolation using polynomials (spline...)
 %
-if nargin < 3, 
+flagcalc = 0
+if flagcalc == 0
+    %
    close all;
 %
    nrho_fit = 500;
