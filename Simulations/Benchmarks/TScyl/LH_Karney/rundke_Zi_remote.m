@@ -146,7 +146,7 @@ equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
 %
 opt.fields = {'Zcurr','ZP0'};% select fields to be returned from lukestructs. Use NaN to return all fields.
 %
-Zi_list = [1,20];%1:20;
+Zi_list = [1,100];%Z = 74 is tungsten fully stripped ion
 coll_mode_list = 0:2;
 %
 nZi = length(Zi_list);
