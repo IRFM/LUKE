@@ -1,12 +1,28 @@
-function [] = make_wave_JETliketest_bis
+function [diaryname,waves,rays,equils_fit] = make_wave_JETliketest_bis(mode)
 % script make_wave_test_RT
 %
 % Parameters for test mode ray-tracing calculations
-% This function has a benchmarking purpose only
+% This function is intended fr benchmarking purpose or regression tests
 %
+%   Inputs :
+%   
+%      - mode: purpose of the script, (0) full benchmark, (>0) regression tests [1,1]
+%
+%   Outputs : 
+%
+%      - waves: wave structures
+%      - rays: rays structures
+%      - equils_fit: fitted equilibria structures
+%     
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
+if nargin == 0,
+    mode = 0;
+end
+%
 close all
+%
+diaryname = '';
 %
 id_wave = 'JETliketest_bis';
 flag_analytic = 2;
@@ -48,7 +64,12 @@ mdce_mode_main_C3PO_jd = 0;%MatLab distributed computing environment disabled (0
 %
 % Display parameters
 %
-C3POdisplay_pchip.ray = 1;
+if mode == 0,
+    C3POdisplay_pchip.ray = 1;
+else
+    C3POdisplay_pchip.ray = 0;
+end
+%
 C3POdisplay_pchip.equilibrium = 0;
 C3POdisplay_pchip.p_opt = 2;%Printing or saving option of the figures
 C3POdisplay_pchip.mdce = 0;%for distributed computing
@@ -90,11 +111,20 @@ fitparam.ngridresample = 1001;%Number of grid points for resampling the radial p
 rayparam.testmode = 0;
 rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 10000;
+if mode == 0,
+    rayparam.tfinal = 10000;
+else
+    rayparam.tfinal = mode;
+end
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
-rayparam.kmax = 60000;
+if mode == 0,
+    rayparam.kmax = 60000;
+else
+    rayparam.kmax = 6*mode;
+end
+%
 rayparam.ncyclharm = 3;%number of cyclotron harmonics (just for hot and relativistic dielectric tensors)
 rayparam.reflection = 0;%1:Enforce wave reflection at plasma boundary, 0: the code calculates itself if the ray must leave of not the plasma
 rayparam.rel_opt = 1;%option for (1) relativistic or (0) non-relativistic calculations
@@ -104,7 +134,6 @@ rayparam.tau_lim = 20;%value of optical depth beyond which the wave is considere
 rayparam.metricmode = 1;% 1 : Only curvilinear metric; 2 : Both curvilinear and cartesian metric
 rayparam.rhoswitch = 0.1;% Radial position at which the switch occurs when metricmode = 2
 rayparam.deltaswitch = 0.01;%Delta  switch between (rho,theta) <-> (X,Y) to avoid oscillations between modes
-
 %
 % =========================================================================
 %
@@ -240,38 +269,41 @@ telapsed_ray_analytic = toc(tstart);
 %
 info_dke_yp(2,'Ray trajectories calculated (analytic magnetic equilibrium)');
 %
-save_str = ['WAVE_',id_wave,'.mat'];
-save(save_str,'id_wave','wave_numeric_pchip','wave_numeric_spline','wave_analytic','equil_fit_pchip','equil_fit_spline');
-%
-info_dke_yp(2,'Wave parameters saved');
-%
-disp(['Elapsed time (s):',num2str(telapsed_equil_pchip),' for interpolating MHD equilibrium (PCHIP interp. technique)']);
-disp(['Elapsed time (s):',num2str(telapsed_equil_spline),' for interpolating MHD equilibrium (SPLINE interp. technique)']);
-%
-disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_pchip),' for ray calculations with numerical MHD equilibrium (PCHIP interp. technique)']);
-disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_spline),' for ray calculations with numerical MHD equilibrium (SPLINE interp. technique)']);
-disp(['Elapsed time (s):',num2str(telapsed_ray_analytic),' for ray calculations with analytical MHD equilibrium']);
-%
-% --- display results ---
-%
 waves = {wave_numeric_pchip,wave_numeric_spline,wave_analytic};
 rays = {wave_numeric_pchip.rays{1},wave_numeric_spline.rays{1},wave_analytic.rays{1}};
+equils_fit = [equil_fit_pchip,equil_fit_spline,equil_fit_spline];
 %
-legs = {'Numeric - pchip','Numeric - spline','Analytic';...
-       'Numeric_pchip','Numeric_spline','Analytic'};
+if mode == 0,%full tests
+    save_str = ['WAVE_',id_wave,'.mat'];
+    save(save_str,'id_wave','wave_numeric_pchip','wave_numeric_spline','wave_analytic','equil_fit_pchip','equil_fit_spline');
+elseif mode > 0,%regression tests
+    diaryname = diary4cvs_C3PO_yp(id_wave,dkepath,waves);% diary some results for Git validation
+end
 %
-equil_fit = [equil_fit_pchip,equil_fit_spline,equil_fit_spline];
-%
-filename = ['Fig_',id_wave];
-%
-opt.p_opt = C3POdisplay_pchip.p_opt;
-opt.ntheta_fit = 65;
-opt.nrho_fit = 15;
-opt.propvar = 1;   
-%
-graph_comp_RT_jd(rays,legs,equil_fit,filename,opt)
-%
-diary4cvs_C3PO_yp(id_wave,dkepath,waves);% diary some results for CVS validation
-
+if mode == 0,
+    info_dke_yp(2,'Wave parameters saved');
+    %
+    disp(['Elapsed time (s):',num2str(telapsed_equil_pchip),' for interpolating MHD equilibrium (PCHIP interp. technique)']);
+    disp(['Elapsed time (s):',num2str(telapsed_equil_spline),' for interpolating MHD equilibrium (SPLINE interp. technique)']);
+    %
+    disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_pchip),' for ray calculations with numerical MHD equilibrium (PCHIP interp. technique)']);
+    disp(['Elapsed time (s):',num2str(telapsed_ray_numeric_spline),' for ray calculations with numerical MHD equilibrium (SPLINE interp. technique)']);
+    disp(['Elapsed time (s):',num2str(telapsed_ray_analytic),' for ray calculations with analytical MHD equilibrium']);
+    %
+    % --- display results ---
+    %
+    legs = {'Numeric - pchip','Numeric - spline','Analytic';...
+           'Numeric_pchip','Numeric_spline','Analytic'};
+    %
+    filename = ['Fig_',id_wave];
+    %
+    opt.p_opt = C3POdisplay_pchip.p_opt;
+    opt.ntheta_fit = 65;
+    opt.nrho_fit = 15;
+    opt.propvar = 1;   
+    %
+    graph_comp_RT_jd(rays,legs,equils_fit,filename,opt)
+    %
+end
 
 
