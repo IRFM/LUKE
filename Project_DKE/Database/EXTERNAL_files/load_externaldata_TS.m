@@ -2,10 +2,24 @@ function external = load_externaldata_TS(workdir,shotnum,shotime,t1,t2,opt_gui)
 %
 % This function loads data from TS database
 %
+if nargin <= 1,
+    shotnum = input_dke_yp(['shotnumber'],'');
+end
+%
+if nargin <= 2,
+    shotime = input_dke_yp(['shotime'],'');
+end
+%
+if nargin <= 3,
+    t1 = input_dke_yp(['t1 (s)'],[]);
+end
+%
+if nargin <= 4,
+    t2 = input_dke_yp(['t2 (s)'],[]);
+end
+%
 external = '';
 basestr = 'TS';
-%
-addpath('/usr/local/sources_lib/matlab6');
 %
 if exist('tsbase','file') ~= 3,
     disp('-----> Access to the TS database is not granted.')
@@ -29,11 +43,11 @@ while 1,
     if certif_tprof == -1,
         return
     end
-    %
+    %    
     [flag,ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,ene1,ene2,Ti0,Tia,eTi1,eTi2,Zeff0,Zeffa,eZeff,xZeff,vloop] = load_tprof_tsbase_yp(shotnum,certif_tprof,str2num(shotime),t1,t2,basestr);
     if isempty(ap),%tprof data are not documented for this shot and this certification
         disp(['WARNING: ''tprof'' data do not exist for shot #',shotnum,' and certification ',int2str(certif_tprof),'. Please try another certification or exit.']);
-        disp('WARNING: Contact T. Aniel or the CDIV for creating missing tprof data');
+        disp('WARNING: Missing tprof data must be created.');
     else
         break
     end
