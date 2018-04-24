@@ -7,6 +7,11 @@ if isempty(waves),
     return
 end
 % 
+if ~isfield(dke_out,'zS'),
+    waves = {};;
+    return;
+end
+%
 zS = dke_out.zS;
 residue_rf = dke_out.residue_rf;
 xyprop_dke = dke_out.xyprop_dke;
@@ -14,6 +19,7 @@ yb = dke_out.yb;
 nit = size(dke_out.zP_0_2piRp_mod,2);
 ny = size(xyprop_dke,2);
 nb = length(yb);
+
 %
 xydV_2piRp_dke = equilDKE.xdV_2piRp_dke.'*ones(1,ny);
 %
