@@ -100,6 +100,7 @@ wavestruct.yvparmax_lh = [7];%LH wave square N// Spectrum: Upper limit of the pl
 waves{1} = make_idealLHwave_jd(equil,wavestruct);
 %
 [Znorm_rel,Zcurr_rel,ZP0_rel] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+[Znorm,Zcurr,ZP0,dke_out,radialDKE,equilDKE,momentumDKE,gridDKE,Zmomcoef,Zbouncecoef,Zmripple,mksa,XXsinksource,dke_warnings] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);% for display with proc_luke_jd
 %
 % NON-RELATIVISTIC CASE
 %
@@ -168,5 +169,8 @@ diary off
 %
 %************************************************************************************************************************************
 %
-eval(['save ',path_simul,'LUKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
+str = [path_simul,'LUKE_RESULTS_',id_equil,'_',id_simul,'.mat']; 
+eval(['save ',str]);
 info_dke_yp(2,['Data saved in ',path_simul,'DKE_RESULTS_',id_equil,'_',id_simul,'.mat']);
+%
+proc_luke_jd(load(str),1,2,0.1,20);% for the relativist case only
