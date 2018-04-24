@@ -12,7 +12,7 @@ function irunluke_jd(basestr,signs,opt_gui)
             opt_gui = opt_gui == 1;
     end
     %
-    opt_status_windows = input_dke_yp('Independent simulations status windows (yes:1,no:0)',1,[0,1]) == 1;
+    opt_status_windows = input_dke_yp('Independent simulations status windows (yes:1,no:0)',0,[0,1]) == 1;
     %
     if nargin < 2,
         signs = '';
@@ -27,10 +27,10 @@ function irunluke_jd(basestr,signs,opt_gui)
     %
     clc
     %
-    tprintf('Working LUKE simulation status','');
-    tprintf('Working LUKE simulation status');
-    tprintf('LUKE simulations status','');
-    tprintf('LUKE simulations status');
+    if opt_status_windows,
+        tprintf('Working LUKE simulation status','');
+        tprintf('LUKE simulations status','');
+    end
     %
     quitmsg = '-----> Run aborted';
     warning off
