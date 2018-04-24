@@ -29,12 +29,16 @@ disp('using ALOHA data in irunluke_jd. Co-current: Npar0(main peak) < 0 if sign(
 disp(' and Npar0(main peak) > 0 if sign(Ip)*sign(Bt) < 0');
 disp('********************************************************************************************')
 %
-spectrum.dP_nz = real(external.antenna.aloha.results.dP_nz{1});
-%
-if length(external.antenna.aloha.results.dP_nz) > 1
+if iscell(external.antenna.aloha.results.dP_nz)
+    spectrum.dP_nz = real(external.antenna.aloha.results.dP_nz{1});
+    %
+    if length(external.antenna.aloha.results.dP_nz) > 1
     for ii=2:length(external.antenna.aloha.results.dP_nz)
         spectrum.dP_nz = spectrum.dP_nz + real(external.antenna.aloha.results.dP_nz{ii});
     end
+end
+else
+    spectrum.dP_nz = real(external.antenna.aloha.results.dP_nz);
 end
 %
 spectrum.nz = external.antenna.aloha.results.nz;
