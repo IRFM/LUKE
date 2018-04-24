@@ -113,6 +113,16 @@ else
     disp(['--> WARNING: The file LH_antenna_3p70Ghz_',shotnum,'.',shotime,'.mat does not exist in the directory ',workdir]);
 end
 %
+filename = [workdir,'aloha_',shotnum,'.',shotime,'.mat'];
+if exist(filename,'file'),
+    aloha = load([workdir,'aloha_',shotnum,'.',shotime,'.mat']);
+    external.wave.antenna.aloha.results = aloha.scenario.results;
+    external.wave.antenna.aloha.plasma = aloha.scenario.plasma;
+    external.wave.antenna.aloha.options = aloha.scenario.options;
+else
+    disp(['--> WARNING: The file aloha_',shotnum,'.',shotime,'.mat does not exist in the directory ',workdir]);
+end
+%
 filename = [workdir,'EC_mirror_68Ghz_',shotnum,'.',shotime,'.mat'];
 %
 if exist(filename,'file'),
