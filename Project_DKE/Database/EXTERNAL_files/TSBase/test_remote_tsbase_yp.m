@@ -10,9 +10,11 @@ if scheduler.remnum > 1,
     %remote.link_mode=1;%ssh bridge otherwise 0 (direct ssh)
     job = matstandardjob_jd('runmat');
     [err,job,phyb,tlh] = matremote_jd('tsbase',{45525,'gphyb'},remote,job);%find remotely the optimum density in front of the grill consistent with RC measurements
+    [err,job,shotdate] = matremote_jd('tsdate',{45525},remote,job);%find remotely the optimum density in front of the grill consistent with RC measurements
 else
     disp('WARNING: direct connexion to the CEA network is necessary');
     [phyb,tlh] = tsbase(45525,'gphyb');%
+    [shotdate] = tsdate(45525);%
 end
 %
 plot(tlh,phyb);title('Tore Supra, #45525'),xlabel('Time (s)');ylabel('Lower Hybrid power (MW)');
