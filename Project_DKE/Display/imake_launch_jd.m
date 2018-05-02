@@ -305,7 +305,13 @@ if ~isempty(external),% import wave data from external structure
                 %
                 if aloha_opt == 0,% calculate power spectrum with ALOHA
                     %
-                    external.antenna = make_aloha_EAST_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured);
+                    if strcmp(basestr,'EAST')
+                        external.antenna = make_aloha_EAST_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured);
+                    elseif strcmp(basestr,'HL2A')
+                        external.antenna = make_aloha_HL2A_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured);
+                    else
+                        error(['Wrong basestr = ''',basestr,''' in imake_launch_jd.m'])
+                    end
                     %
                     if isfield(external.antenna,'job')
                         launch.job = external.antenna.job;%remote ALOHA calculation
