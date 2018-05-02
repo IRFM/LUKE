@@ -22,13 +22,6 @@ if isfield(external.antenna,'id'),
     spectrum.id = external.antenna.id;
 end
 %
-disp('********************************************************************************************')
-disp('WARNING: check that the ALOHA power spectrum generates a co-current or a counter current. ')
-disp('Do a flipud(antenna.dP_nz) and fliplr(antenna.dP) accordingly in the ALOHA file before ');
-disp('using ALOHA data in irunluke_jd. Co-current: Npar0(main peak) < 0 if sign(Ip)*sign(Bt) > 0');
-disp(' and Npar0(main peak) > 0 if sign(Ip)*sign(Bt) < 0');
-disp('********************************************************************************************')
-%
 if iscell(external.antenna.aloha.results.dP_nz)
     spectrum.dP_nz = real(external.antenna.aloha.results.dP_nz{1});
     %
@@ -43,6 +36,32 @@ end
 %
 spectrum.nz = external.antenna.aloha.results.nz;
 spectrum.ny = external.antenna.aloha.results.ny;
+%
+disp('********************************************************************************************')
+disp('WARNING: check that the ALOHA power spectrum generates a co-current or a counter current. ')
+disp('Co-current:      Npar0(main peak) < 0 if sign(Ip)*sign(Bt) > 0');
+disp('Counter-current: Npar0(main peak) > 0 if sign(Ip)*sign(Bt) < 0');
+disp(['Ip sign: ',num2str(signs.ip),', Bt0 sign: ',num2str(signs.b0),' (see LUKE signe conventions in documentation)']);
+disp('********************************************************************************************')
+%
+if signs.ip*signs.b0 > 0
+    if spectrum.nz(find(spectrum.dP_nz==max(spectrum.dP_nz))) < 0
+        opt_spectrum = input_dke_yp('Main lobe of the power spectrum generates co-current.  Would you like to change the power spectrum for generating counter-current (yes:1,no:0)',0,[0,1]) == 1;
+    else 
+        opt_spectrum = input_dke_yp('Main lobe of the power spectrum generates counter-current.  Would you like to change the power spectrum for generating co-current (yes:1,no:0)',0,[0,1]) == 1;
+    end
+else
+    if spectrum.nz(find(spectrum.dP_nz==max(spectrum.dP_nz))) > 0
+        opt_spectrum = input_dke_yp('Main lobe of the power spectrum generates co-current. Would you like to change the power spectrum for generating counter-current (yes:1,no:0)',0,[0,1]) == 1;
+    else 
+        opt_spectrum = input_dke_yp('Main lobe of the power spectrum generates counter-current. Would you like to change the power spectrum for generating co-current (yes:1,no:0)',0,[0,1]) == 1;
+        
+    end
+end
+%
+if opt_spectrum == 1, 
+    spectrum.dP_nz = fliplr(spectrum.dP_nz);%for co- or counter- current generation depending upon reltive signs of ip and bt0
+end
 %
 while 1,
     opt_module = iselect_jd({'full antenna','upper module','lower module'},'This ALOHA spectrum corresponds to :',opt_gui,select.style,1);
