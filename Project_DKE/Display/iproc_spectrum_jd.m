@@ -49,7 +49,7 @@ bPlhtot = NaN(1,nlobes_tor*nlobes_pol);
 % assumed to be for co-current
 %
 for iy = 1:nlobes_tor,
-    bNpar0((iy - 1)*nlobes_pol + (1:nlobes_pol)) = i*bNtor0(iy)*signs.ip*signs.b0 + bNpol0;
+    bNpar0((iy - 1)*nlobes_pol + (1:nlobes_pol)) = -i*bNtor0(iy)*signs.ip*signs.b0 + bNpol0;
     %
     % the combined spectral width effect is not yet implemented
     % (TODO) see how to include it, maybe in init_RT_jd
