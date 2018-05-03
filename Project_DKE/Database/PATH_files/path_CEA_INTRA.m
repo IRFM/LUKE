@@ -10,8 +10,8 @@ function dkepath = path_CEA_INTRA
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'sirrah','naos','pleione'};
-dkepath.hostname = {'sirrah','naos','pleione'};
+dkepath.machine = {'sirrah','naos','pleione','spica'};
+dkepath.hostname = {'sirrah','naos','pleione','spica'};
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
