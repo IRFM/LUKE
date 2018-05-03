@@ -10,8 +10,9 @@ function dkepath = path_IPP_ABACUS
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = 'abacus';
-dkepath.hostname = 'abacus';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
+dkepath.machine = {'abacus','abacus01','abacus02','abacus03'};%andromede5 is called by default from CEA intranet
+dkepath.hostname = {'abacus','abacus01','abacus02','abacus03'};% should match the output of hostname_jd on the machine
+%
 dkepath.computer = computer;%machine type and supported OS
 %
 %--------------------------------------------------------------------------------------------------------
