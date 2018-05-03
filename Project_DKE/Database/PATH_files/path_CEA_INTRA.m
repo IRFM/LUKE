@@ -51,6 +51,7 @@ dkepath.YP105119(1).sirrah.MUMPS.mex902 = [dkepath.YP105119(1).sirrah.local_root
 %
 dkepath.YP105119(1).naos = dkepath.YP105119(1).sirrah;
 dkepath.YP105119(1).pleione = dkepath.YP105119(1).sirrah;
+dkepath.YP105119(1).spica = dkepath.YP105119(1).sirrah;
 %
 %--------------------------- Remote computing -----------------------------
 %
