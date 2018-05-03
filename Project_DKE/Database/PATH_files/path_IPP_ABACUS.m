@@ -30,7 +30,7 @@ dkepath.peysson(1).abacus.mex803 = [dkepath.peysson(1).luke_root,'Project_DKE/ME
 dkepath.peysson(1).abacus.mex804 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB804/'];%r2014b
 dkepath.peysson(1).abacus.mex902 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB902/'];%r2017a
 %
-dkepath.peysson(1).abacus.compiler_opt.libs.gfortran = [dkepath.peysson(1).abacus.luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
+dkepath.peysson(1).abacus.compiler_opt.libs.gfortran = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
 dkepath.peysson(1).abacus.compiler_opt.copts = '';
 dkepath.peysson(1).abacus.compiler_opt.fopts.mex800 = 'FC=''gfortran''';%
 dkepath.peysson(1).abacus.compiler_opt.separatrice.mex800 = [' -largeArrayDims -lgfortran -L',dkepath.peysson(1).abacus.local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
