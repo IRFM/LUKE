@@ -20,14 +20,15 @@ dkepath.computer = computer;%machine type and supported OS
 %--------------------------------------------------------------------------------------------------------
 %
 dkepath.peysson(1).luke_root = '/compass/Shared/Common/IT/projects/luke/LUKE/';
-dkepath.peysson(1).local_root = '/compass/Shared/Common/IT/projects/luke/Packages/';
 dkepath.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.peysson(1).abacus.mex800 = [dkepath.peysson(1).abacus.luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB800/'];%r2012b
-dkepath.peysson(1).abacus.mex801 = [dkepath.peysson(1).abacus.luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB801/'];%r2013a
-dkepath.peysson(1).abacus.mex803 = [dkepath.peysson(1).abacus.luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB803/'];%r2014a
-dkepath.peysson(1).abacus.mex804 = [dkepath.peysson(1).abacus.luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB804/'];%r2014b
-dkepath.peysson(1).abacus.mex902 = [dkepath.peysson(1).abacus.luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB902/'];%r2017a
+dkepath.peysson(1).abacus.local_root = '/compass/Shared/Common/IT/projects/luke/Packages/';
+%
+dkepath.peysson(1).abacus.mex800 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB800/'];%r2012b
+dkepath.peysson(1).abacus.mex801 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB801/'];%r2013a
+dkepath.peysson(1).abacus.mex803 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB803/'];%r2014a
+dkepath.peysson(1).abacus.mex804 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB804/'];%r2014b
+dkepath.peysson(1).abacus.mex902 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/abacus/MATLAB902/'];%r2017a
 %
 dkepath.peysson(1).abacus.compiler_opt.libs.gfortran = [dkepath.peysson(1).abacus.luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
 dkepath.peysson(1).abacus.compiler_opt.copts = '';
