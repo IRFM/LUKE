@@ -78,8 +78,11 @@ dkepath.PEYSSON(1).shenma110 = dkepath.PEYSSON(1).login110;
 %
 dkepath.PEYSSON(1).remote(1).remoteid = 'ASIPP_SHENMA';
 dkepath.PEYSSON(1).remote(1).schedulername = 'torque';
-dkepath.PEYSSON(1).remote(1).profilename = 'local';
+dkepath.PEYSSON(1).remote(1).profilename = 'PEYSSON';
 dkepath.PEYSSON(1).remote(1).luke_root = dkepath.PEYSSON(1).luke_root;% local cluster
+%
+dkepath.PEYSSON(1).remote(2) = dkepath.PEYSSON(1).remote(1);
+dkepath.PEYSSON(1).remote(2).schedulername = 'direct';
 %
 %-------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 2, Joan Decker  ------------------------------------
