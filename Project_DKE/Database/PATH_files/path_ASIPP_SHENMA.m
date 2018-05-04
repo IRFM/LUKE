@@ -31,30 +31,24 @@ dkepath.PEYSSON(1).localdatapath = dkepath.PEYSSON(1).temppathroot;
 %
 dkepath.PEYSSON(1).login110.local_root = '/home/users/PEYSSON/Packages/';
 %
-dkepath.PEYSSON(1).login110.mex714 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB714/'];
-dkepath.PEYSSON(1).login110.mex801 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB801/'];
 dkepath.PEYSSON(1).login110.mex900 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB900/'];
+dkepath.PEYSSON(1).login110.mex902 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB902/'];
 %
 dkepath.PEYSSON(1).login110.compiler_opt.libs.gfortran = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.7','/',dkepath.machine,'/'];%extra libraries
 dkepath.PEYSSON(1).login110.compiler_opt.copts = '';
-dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex714 = 'FC=''gfortran''';%
-dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex714 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex714 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex714 = ' ';%-largeArrayDims';
-dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex801 = 'FC=''gfortran''';%
-dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex801 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex801 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex801 = ' ';%-largeArrayDims';
 dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex900 = 'FC=''gfortran''';%
 dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex900 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex900 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex900 = ' ';%-largeArrayDims;
+dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex902 = 'FC=''gfortran''';%
+dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex902 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex902 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex902 = ' ';%-largeArrayDims;
 %
 %Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.PEYSSON(1).login110.MUMPS.mex714 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB714'];
-dkepath.PEYSSON(1).login110.MUMPS.mex801 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB801'];
 dkepath.PEYSSON(1).login110.MUMPS.mex900 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB900'];
+dkepath.PEYSSON(1).login110.MUMPS.mex902 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB902'];
 %
 % LUKE documentation
 %
