@@ -190,10 +190,10 @@ dkepath.yves(1).remote(17).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(17).gitupdate = true;
 dkepath.yves(1).remote(17).gitmode.cmd = 'cd /usc-data/d/luke/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
 %
-dkepath.yves(1).remote(18).remoteid = 'PSFC_LOKI';
-dkepath.yves(1).remote(18).schedulername = 'pbs';
+dkepath.yves(1).remote(18).remoteid = 'PSFC_EOFE7';
+dkepath.yves(1).remote(18).schedulername = 'slurm';
 dkepath.yves(1).remote(18).profilename = 'ypeysson';
-dkepath.yves(1).remote(18).luke_root = '/home/ypeysson/LUKE/';
+dkepath.yves(1).remote(18).luke_root = '/home/ypeysson/luke/LUKE/';
 dkepath.yves(1).remote(18).link_mode = '';
 dkepath.yves(1).remote(18).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(18).gitupdate = false;
