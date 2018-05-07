@@ -23,7 +23,7 @@ dkepath.default = 'PEYSSON';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %-------------------------------------------------------------------------------------------------------
 %
-dkepath.PEYSSON(1).luke_root = '/project/LUKE/LUKE/';
+dkepath.PEYSSON(1).luke_root = '/nfs_share/project/LUKE/LUKE/';
 dkepath.PEYSSON(1).temppathroot = '/scratch/PEYSSON/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.PEYSSON(1).localdatapath = dkepath.PEYSSON(1).temppathroot;
 %
