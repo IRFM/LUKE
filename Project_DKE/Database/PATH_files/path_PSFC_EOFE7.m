@@ -48,15 +48,6 @@ dkepath.ypeysson(1).eofe7.imagemagick.env = '/bin/';% ImageMagick environment va
 %
 %--------------------------- Remote computing -----------------------------
 %
-%
-% -------------------------- abacus 01-02-03 -----------------------------
-%
-%dkepath.peysson(1).abacus01 = dkepath.peysson(1).abacus;
-%dkepath.peysson(1).abacus02 = dkepath.peysson(1).abacus;
-%dkepath.peysson(1).abacus03 = dkepath.peysson(1).abacus;
-%
-%--------------------------- Remote computing -----------------------------
-%
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
 dkepath.ypeysson(1).remote(1).remoteid = 'eofe7';
