@@ -10,8 +10,8 @@ function dkepath = path_ASIPP_SHENMA
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'login110','login111','login112','login113','shenma101','shenma102','shenma103','shenma104','shenma105','shenma106','shenma107','shenma108','shenma109','shenma110'};%
-dkepath.hostname = {'login110','login111','login112','login113','shenma101','shenma102','shenma103','shenma104','shenma105','shenma106','shenma107','shenma108','shenma109','shenma110'};% should match the output of hostname_jd on the machine
+dkepath.machine = {'login110','login111','login112','login113','shenma101','shenma102','shenma103','shenma104','shenma105','shenma106','shenma107','shenma108','shenma109','shenma110','shenma161'};%
+dkepath.hostname = {'login110','login111','login112','login113','shenma101','shenma102','shenma103','shenma104','shenma105','shenma106','shenma107','shenma108','shenma109','shenma110','shenma161'};% should match the output of hostname_jd on the machine
 %
 dkepath.computer = computer;%machine type and supported OS
 %
