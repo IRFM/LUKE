@@ -801,7 +801,13 @@ if ~isfield(dkeparam,'opt_struct') || dkeparam.opt_struct == 0,
     savefields_momentumDKE = {'pn','pnp','pn_S','dpn','mhu','mhu_S','dmhu'};
     savefields_gridDKE = {'X1mmhu2','xmhubounce2'};
     savefields_Zmomcoef = {'gamma','v','Ec_ref','dEc_ref'};
-    savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda'};
+    if isfield(output.dke_out,'xepsi')
+        if mean(output.dke_out.xepsi{1}) > 0,%non-zero electric field
+            savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda','XXlambda_b_p1m2p2'};
+        else       
+            savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda'};
+        end
+    end
     savefields_Zmripple = {'XXlossripple','xdeltaripple','xNq','Xnhuloss','xthetabanana','xthetaloss','xpndetrap','xpnth','xEseuil'};
     %
     savefields_ZXXD_rf = {'parpar_ij','pp_ij'};
