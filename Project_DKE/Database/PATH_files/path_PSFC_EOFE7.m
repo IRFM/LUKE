@@ -55,5 +55,6 @@ dkepath.ypeysson(1).remote(1).schedulername = 'slurm';
 dkepath.ypeysson(1).remote(1).profilename = 'local';
 dkepath.ypeysson(1).remote(1).luke_root = dkepath.ypeysson(1).luke_root;% local cluster
 %
-
+dkepath.ypeysson(1).remote(2) = dkepath.ypeysson(1).remote(1);
+dkepath.ypeysson(1).remote(2).schedulername = 'direct';
 
