@@ -184,7 +184,7 @@ dkepath.yves(1).remote(ir).gitupdate = true;
 %
 ir = ir + 1;
 dkepath.yves(1).remote(ir).remoteid = 'GA_IRIS';
-dkepath.yves(1).remote(ir).schedulername = 'direct';
+dkepath.yves(1).remote(ir).schedulername = 'slurm';
 dkepath.yves(1).remote(ir).profilename = 'peyssony';
 dkepath.yves(1).remote(ir).luke_root = '/home/peyssony/luke/LUKE/';
 dkepath.yves(1).remote(ir).link_mode = '';
