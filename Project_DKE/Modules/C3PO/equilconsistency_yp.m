@@ -330,7 +330,53 @@ disp(['Shafranov shift = ',num2str(pshift(end))]);
 disp(['Plasma elongation = ',num2str(pelong(end))]);
 disp(['Plasma triangularity = ',num2str(ptrian(end))]);
 %
-if display_mode,
+if equil.psi_apRp(end)*equil.ptBy(end,1) < 0,
+    disp('******** WARNING : equilibrium signs not self-consistent ********')
+    if equil.psi_apRp(end) > 0,
+        disp('******** Poloidal magnetic flux corresponds to positive plasma current (clockwise when tokamak viewed from the top) ********')
+        disp('******** Poloidal magnetic field direction is clockwise corresponding to a negative plasma current (counter-clockwise when tokamak viewed from the top) ********')
+    else 
+        disp('******** Poloidal magnetic flux corresponds to negative plasma current (counter-clockwise when tokamak viewed from the top) ********')
+        disp('******** Poloidal magnetic field direction is counter-clockwise corresponding to a positive plasma current (clockwise when tokamak viewed from the top) ********')
+    end
+    %
+    disp('******** The problem must be fixed before any C3PO/LUKE simulation ********')
+    disp('')
+    opt_gui = input_dke_yp('Do you want to fix the problem ? (yes:1,no:0)',0,[0,1]) == 1;
+    if opt_gui == 1,
+        opt_gui1 = input_dke_yp('Is the plasma current clockwise (1) or anticlockwise (-1) when tokamak viewed from the top ?',1,[-1,1]) == 1;
+        if opt_gui1 == 1,% Ip > 0
+            if equil.psi_apRp(end) > 0
+                equil.ptBx = - equil.ptBx;
+                equil.ptBy = - equil.ptBy;
+            else
+                equil.psi_apRp = -1*equil.psi_apRp;
+            end
+        elseif opt_gui1 == -1,% Ip < 0
+             if equil.psi_apRp(end) > 0
+                 equil.psi_apRp = -1*equil.psi_apRp;
+            else
+                equil.ptBx = - equil.ptBx;
+                equil.ptBy = - equil.ptBy;
+             end
+        end
+        %
+    end
+end
+%
+if equil.psi_apRp(end) > 0,% Ip > 0
+    disp('-------> Poloidal magnetic field is self-consistent with Ip positive (clockwise when tokamak viewed from the top)')
+elseif equil.psi_apRp(end) < 0% Ip < 0
+    disp('-------> Poloidal magnetic field is self-consistent with Ip negative (counter-clockwise when tokamak viewed from the top)')
+end
+%
+if equil.ptBPHI(1,1) > 0
+    disp('-------> Toroidal magnetic field is positive (clockwise when tokamak viewed from the top)')
+else
+    disp('-------> Toroidal magnetic field is negative (counter-clockwise when tokamak viewed from the top)')
+    end
+%
+if display_mode == 2,
     %
     figure('Name','Pressure gradient'),clf
     if isfield(equil,'eqdsk')
@@ -495,4 +541,5 @@ if isfield(equil,'eqdsk')
     %
     equil.consistency.q = q;
 end
+%
     
