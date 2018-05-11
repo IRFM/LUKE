@@ -116,7 +116,7 @@ equil.id = id;
 %
 eval(['save EQUIL_',id,'.mat equil']);
 %
-equilibrium_jd(equil,'',2)
+equilibrium_jd(equil,'',1)
 
 
 
