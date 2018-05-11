@@ -721,7 +721,7 @@ if real(display_mode) >=1,
 	disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
-if flag_consistency && real(display_mode) >= 2,
+if flag_consistency && real(display_mode) >= 1,
 	disp('Calculation of the equilibrium consistency (wait few seconds).');
     equil = equilconsistency_yp(equil,'',real(display_mode));
 end
