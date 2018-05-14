@@ -33,7 +33,7 @@ hxr.tf_hxr = repmat('Al',21,1);% type of material for the vacuum window (Al ou B
 hxr.ea_hxr = 0.5*ones(1,21);% thickness of the absorber (mm) [1,m] (WARNING: for 2 mm Cu: 2.83= 2*(29/26)^2*(dens_Cu/dens_Fe)  dens_Cu = 63.546, dens_Fe = 55.845)
 hxr.ta_hxr = repmat('Al',21,1);% type of material for the absorber (Al,Fe,Ge,Be ou Pb) [1,m]
 %
-hxr.ec_hxr = 20*ones(1,21);%thickness of the detector shield (mm) [1,m]
+hxr.ec_hxr = 0.5*ones(1,21);%thickness of the detector shield (mm) [1,m]
 hxr.tc_hxr = repmat('Fe',21,1);% type of material for the absorber (Al,Fe,Ge,Be ou Pb) [1,m] (20 mm of Mo. Fe put instead)
 %
 hxr.ed_hxr = 2*ones(1,21);% thickness of the detector (mm) [1,m]
@@ -65,5 +65,6 @@ hxrparam.kmax = 110;% standard maximum value for Tph calculation (LH : 110; EC :
 hxrparam.kphot = [20:10:180];%Photon energy in keV
 %
 eval(['save HXR_',hxr_id,'.mat hxr hxrparam']);
+disp(['save HXR_',hxr_id,'.mat saved']);
 %
 %graph1D_jd([1:20],hxr.EG_hxr,0,0,'chord index','geometrical factor (m-2)','EAST FEB camera',NaN,[0,20],NaN,'-','o','r',2)
