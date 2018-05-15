@@ -21,10 +21,11 @@ dkepath.default = 'peyssony';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.peyssony(1).luke_root = '/home/peyssony/luke/LUKE/';
+dkepath.peyssony(1).luke_root = '/fusion/projects/codes/c3po-luke/LUKE/';
+
 dkepath.peyssony(1).temppathroot = '/cscratch/peyssony/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.peyssony(1).iris.local_root = '/home/peyssony/luke/Packages/';
+dkepath.peyssony(1).iris.local_root = '/fusion/projects/codes/c3po-luke/Packages/';
 %
 dkepath.peyssony(1).iris.mex903 = [dkepath.peyssony(1).luke_root,'Project_DKE/MEX/Bin/iris/MATLAB903/'];%R2017b
 %
@@ -50,7 +51,7 @@ dkepath.peyssony(1).iris.imagemagick.env = '/usr/bin/';% ImageMagick environment
 %
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-dkepath.peyssony(1).remote(1).remoteid = 'iris';
+dkepath.peyssony(1).remote(1).remoteid = 'GA_IRIS';
 dkepath.peyssony(1).remote(1).schedulername = 'slurm';
 dkepath.peyssony(1).remote(1).profilename = 'local';
 dkepath.peyssony(1).remote(1).luke_root = dkepath.peyssony(1).luke_root;% local cluster
