@@ -10,8 +10,8 @@ function dkepath = path_PSFC_EOFE7
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'eofe7'};
-dkepath.hostname = {'eofe7'};%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
+dkepath.machine = {'eofe7','node'};
+dkepath.hostname = {'eofe7','node'};%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
 %
 dkepath.computer = computer;%machine type and supported OS
 %
@@ -45,6 +45,10 @@ dkepath.ypeysson(1).MUMPS.mex903 = [dkepath.ypeysson(1).eofe7.local_root,'MUMPS/
 dkepath.ypeysson(1).eofe7.graphviz.env = 'bin/';% Graphviz environment variable
 dkepath.ypeysson(1).eofe7.latex.env = '/bin/';% Latex environment variable
 dkepath.ypeysson(1).eofe7.imagemagick.env = '/bin/';% ImageMagick environment variable
+%
+% ---------------------------- login other node -------------------------------
+%
+dkepath.ypeysson(1).node = dkepath.ypeysson(1).eofe7;
 %
 %--------------------------- Remote computing -----------------------------
 %
