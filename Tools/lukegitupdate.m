@@ -75,7 +75,7 @@ display_mode = 3;% show detailed results
 %
 exclude = {'.git','.mat','~','.mexa64','.mexglx','.mexmaci64','.o','.DS_Store'};
 %
-flag = remotegitupdate(remote,remotefunctions,display_mode,exclude,debugmode);
+[profilestr,flag] = remotegitupdate(remote,remotefunctions,display_mode,exclude,debugmode);
 %
 disp('--------------------------------------')
 disp('           GLOBAL RESULTS             ')
