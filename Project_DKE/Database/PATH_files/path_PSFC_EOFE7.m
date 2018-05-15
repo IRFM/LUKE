@@ -54,7 +54,7 @@ dkepath.ypeysson(1).node = dkepath.ypeysson(1).eofe7;
 %
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-dkepath.ypeysson(1).remote(1).remoteid = 'eofe7';
+dkepath.ypeysson(1).remote(1).remoteid = 'PSFC_EOFE7';
 dkepath.ypeysson(1).remote(1).schedulername = 'slurm';
 dkepath.ypeysson(1).remote(1).profilename = 'local';
 dkepath.ypeysson(1).remote(1).luke_root = dkepath.ypeysson(1).luke_root;% local cluster
