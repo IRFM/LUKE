@@ -36,7 +36,7 @@ rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 debugmode = 0;% debug mode (0) off (1) on
 cleanmode = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 luke_memory = 2000;% job memory in mb
-luke_walltime = 1;% job walltime in hours
+luke_walltime = '01:00';% job walltime in hours (number or full description '00:00' for hours and minutes
 %
 opt.save = 1;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
