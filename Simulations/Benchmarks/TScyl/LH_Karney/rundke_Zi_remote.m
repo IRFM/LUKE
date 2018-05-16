@@ -52,6 +52,7 @@ debugmode = 0;%1;% debug mode (0) off (1) on
 cleanmode = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 luke_memory = 2000;% job memory in mb
 luke_walltime = 1;% job walltime in hours
+enforce = 0;% (0) : exit if remote calculation failed, (1): if remote calculation failed, it is done locally
 %
 opt.save = opt_save;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
@@ -203,7 +204,7 @@ else% new simulation
     dkepath.clustermode.run_lukert.scheduler.debugmode = debugmode;
     dkepath.clustermode.run_lukert.scheduler.display = display_mode;
     dkepath.clustermode.run_lukert.scheduler.cleanmode = cleanmode;
-    dkepath.clustermode.run_lukert.scheduler.enforce = 0;% exit if remote calculation failed 
+    dkepath.clustermode.run_lukert.scheduler.enforce = enforce;% exit if remote calculation failed 
     if opt.save,
         dkepath.clustermode.run_lukert.scheduler.localdatadir = localdatadir;
         if exist(localdatadir,'dir') && length(dir(localdatadir)) > 2,

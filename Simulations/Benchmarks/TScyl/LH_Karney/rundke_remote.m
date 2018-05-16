@@ -37,6 +37,7 @@ debugmode = 0;% debug mode (0) off (1) on
 cleanmode = 2;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 luke_memory = 2000;% job memory in mb
 luke_walltime = '01:00';% job walltime in hours (number or full description '00:00' for hours and minutes
+enforce = 1;% (0) : exit if remote calculation failed, (1): if remote calculation failed, it is done locally
 %
 opt.save = 1;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
@@ -188,7 +189,7 @@ else% new simulation
     dkepath.clustermode.run_lukert.scheduler.walltime = luke_walltime;
     dkepath.clustermode.run_lukert.scheduler.debugmode = debugmode;
     dkepath.clustermode.run_lukert.scheduler.cleanmode = cleanmode;
-    dkepath.clustermode.run_lukert.scheduler.enforce = 0;% exit if remote calculation failed 
+    dkepath.clustermode.run_lukert.scheduler.enforce = enforce;% exit if remote calculation failed 
     if opt.save,
         dkepath.clustermode.run_lukert.scheduler.localdatadir = localdatadir;
         if exist(localdatadir,'dir') && length(dir(localdatadir)) > 2,
@@ -219,9 +220,13 @@ Zcurr = cell(1,nrem);
 ZP0 = cell(1,nrem);
 %
 flag_running = false(1,nrem);
+luke_warning = cell(1,nrem);
 %
 for remnum = 1:nrem,
     if isfield(lukestructs{remnum},'output'),
+        if isfield(lukestructs{remnum},'warning')
+            luke_warning{remnum} = [' **** WARNING : ',lukestructs{remnum}.warning];
+        end
         Znorm{remnum} = lukestructs{remnum}.output.Znorm;
         Zcurr{remnum} = lukestructs{remnum}.output.Zcurr;
         ZP0{remnum} = lukestructs{remnum}.output.ZP0;
@@ -275,7 +280,7 @@ disp(['Local calculation : j = ',num2str(Zcurr_0.x_0),'/',j_r_k,' ; P = ',num2st
 %
 for remnum = 1:nrem,
     if ~isempty(Zcurr{remnum}),
-        disp(['Remote calc. # ',num2str(remnum),' : j = ',num2str(Zcurr{remnum}.x_0),'/',j_r_k,' ; P = ',num2str(ZP0{remnum}.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr{remnum}.x_0./ZP0{remnum}.x_rf_fsav),'/',eta_r_k]) 
+        disp(['Remote calc. # ',num2str(remnum),' : j = ',num2str(Zcurr{remnum}.x_0),'/',j_r_k,' ; P = ',num2str(ZP0{remnum}.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr{remnum}.x_0./ZP0{remnum}.x_rf_fsav),'/',eta_r_k,luke_warning{remnum}]) 
     elseif flag_running(remnum),
         disp(['Remote calc. # ',num2str(remnum),' : running'])
     else
