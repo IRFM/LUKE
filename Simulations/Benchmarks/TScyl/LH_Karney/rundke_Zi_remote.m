@@ -52,7 +52,7 @@ debugmode = 0;%1;% debug mode (0) off (1) on
 cleanmode = 2;%0;% clean job files/folders : both on remote and local (2), only on remote (1) or not at all (0)
 luke_memory = 2000;% job memory in mb
 luke_walltime = 1;% job walltime in hours
-enforce = 0;% (0) : exit if remote calculation failed, (1): if remote calculation failed, it is done locally
+enforce = 1;% (0) : exit if remote calculation failed, (1): if remote calculation failed, it is done locally
 %
 opt.save = opt_save;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
@@ -247,6 +247,8 @@ j = NaN(ncoll,nZi);
 P = NaN(ncoll,nZi);
 %
 flag_running = true(ncoll,nZi);
+flag_error = true(ncoll,nZi);;
+luke_warning = cell(ncoll,nZi);
 %
 for iZi = 1:nZi,
     for icoll = 1:ncoll,
@@ -256,6 +258,14 @@ for iZi = 1:nZi,
             P(icoll,iZi) = lukestructs{icoll,iZi}.output.ZP0.x_rf_fsav;
             %
             flag_running(icoll,iZi) = false;
+            flag_error(icoll,iZi) = false;
+            %
+            if isfield(lukestructs{icoll,iZi},'warning')
+                luke_warning{icoll,iZi} = [' **** WARNING : ',lukestructs{icoll,iZi}.warning];
+            end
+        elseif isfield(lukestructs{icoll,iZi},'err'),
+            flag_running(icoll,iZi) = false;
+            flag_error(icoll,iZi) = true;
         end
     end
 end
@@ -380,7 +390,7 @@ for iZi = [1,nZi],
         if flag_running(icoll,iZi),
             disp([casestr,' : running'])
         elseif ~isnan(j(icoll,iZi)),
-            disp([casestr,' : j = ',num2str(j(icoll,iZi)),'/',num2str(j_nr_k(icoll,iZi)),' ; P = ',num2str(P(icoll,iZi)),'/',num2str(P_nr_k(icoll,iZi)),' ; j/P = ',num2str(eta(icoll,iZi)),'/',num2str(eta_nr_k(icoll,iZi))]) 
+            disp([casestr,' : j = ',num2str(j(icoll,iZi)),'/',num2str(j_nr_k(icoll,iZi)),' ; P = ',num2str(P(icoll,iZi)),'/',num2str(P_nr_k(icoll,iZi)),' ; j/P = ',num2str(eta(icoll,iZi)),'/',num2str(eta_nr_k(icoll,iZi)),luke_warning{icoll,iZi}]) 
         else      
             disp([casestr,' : failed'])
         end
@@ -394,10 +404,14 @@ end
 %************************************************************************************************************************************
 %
 if remtimout == 0,
-    if ~any(flag_running(:)),
-        delete(filename);% jobs completed, file deleted
+    if ~any(flag_running(:)) && ~any(flag_error(:)),
+        if exist(filename)
+            delete(filename);% jobs completed, file deleted
+        end
     else
-        save(filename);% file saved for future check
-        info_dke_yp(2,['Data saved in ',filename]);
+        if any(flag_error(:)),
+            save(filename);% file saved for future check
+            info_dke_yp(2,['Data saved in ',filename]);
+        end
     end
 end
