@@ -103,6 +103,7 @@ elseif any(mode == -nrem:-1),
         dkecluster.scheduler.mode = 0;%sequential mode enforced     
     else
         dkecluster.scheduler.mode = remote(-mode);
+        dkecluster.scheduler.remnum = -mode*i;
     end
 end
 %
