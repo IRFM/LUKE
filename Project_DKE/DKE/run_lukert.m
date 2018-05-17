@@ -125,7 +125,6 @@ else
             end
             %
             [~,lukestructs(luke_flag == 0)] = mdce_run('run_lukert',{''},1,lukestructs(luke_flag == 0),dkecluster);
-            %
         end
         %
         if any(luke_flag == 1),% there are jobs to be checked
@@ -135,8 +134,18 @@ else
         end
         %
         if cellmode == 0;
+            if ~isreal(dkecluster.scheduler.enforce)
+                lukestructs{1}.warning = ['Remote calculation failed with remote computer number #',int2str(imag(dkecluster.scheduler.enforce)),', local calculation performed'];
+            end
+            %
             lukestructs = lukestructs{1};% return lukestructs in the same wrapper as input
         else
+            if ~isreal(dkecluster.scheduler.enforce)
+                for ii = 1:length(lukestructs)
+                    lukestructs{ii}.warning = ['Remote calculation failed with remote computer number #',int2str(imag(dkecluster.scheduler.enforce)),', local calculation performed'];
+                end
+            end
+            %
             lukestructs = reshape(lukestructs,lukestructsize);
         end
         %
