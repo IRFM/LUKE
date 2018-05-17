@@ -32,7 +32,7 @@ dkepath.peyssony(1).iris.mex903 = [dkepath.peyssony(1).luke_root,'Project_DKE/ME
 %dkepath.peyssony(1).iris.compiler_opt.libs.gfortran = [dkepath.peyssony(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
 %
 dkepath.peyssony(1).iris.compiler_opt.copts = '';
-dkepath.peyssony(1).iris.compiler_opt.copts.cpp.mex903 = '-f /home/ypeysson/luke/LUKE/Project_DKE/MEX/Bin/iris/MATLAB903/g++_glnxa64.xml';
+%dkepath.peyssony(1).iris.compiler_opt.copts.cpp.mex903 = '-f /home/ypeysson/luke/LUKE/Project_DKE/MEX/Bin/iris/MATLAB903/g++_glnxa64.xml';
 %
 dkepath.peyssony(1).iris.compiler_opt.fopts.mex903 = 'FC=''gfortran''';%
 dkepath.peyssony(1).iris.compiler_opt.separatrice.mex903 = [' -largeArrayDims -lgfortran -L',dkepath.peyssony(1).iris.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
@@ -58,5 +58,12 @@ dkepath.peyssony(1).remote(1).luke_root = dkepath.peyssony(1).luke_root;% local 
 %
 dkepath.peyssony(1).remote(2) = dkepath.peyssony(1).remote(1);
 dkepath.peyssony(1).remote(2).schedulername = 'direct';
+%
+%
+%------------------------------------ Profile number 2, Michael Brookman ------------------------------------
+%
+dkepath.brookmanmw(1) = dkepath.peyssony(1);
+dkepath.brookmanmw(1).temppathroot = '/cscratch/brookmanmw/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+
 
 
