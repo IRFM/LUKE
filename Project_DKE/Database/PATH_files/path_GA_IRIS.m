@@ -53,7 +53,7 @@ dkepath.peyssony(1).iris.imagemagick.env = '/usr/bin/';% ImageMagick environment
 %
 dkepath.peyssony(1).remote(1).remoteid = 'GA_IRIS';
 dkepath.peyssony(1).remote(1).schedulername = 'slurm';
-dkepath.peyssony(1).remote(1).profilename = 'local';
+dkepath.peyssony(1).remote(1).profilename = 'peyssony';
 dkepath.peyssony(1).remote(1).luke_root = dkepath.peyssony(1).luke_root;% local cluster
 %
 dkepath.peyssony(1).remote(2) = dkepath.peyssony(1).remote(1);
@@ -63,6 +63,7 @@ dkepath.peyssony(1).remote(2).schedulername = 'direct';
 %------------------------------------ Profile number 2, Michael Brookman ------------------------------------
 %
 dkepath.brookmanmw(1) = dkepath.peyssony(1);
+dkepath.brookmanmw(1).remote(1).profilename = 'brookmanmw';
 dkepath.brookmanmw(1).temppathroot = '/cscratch/brookmanmw/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 
 
