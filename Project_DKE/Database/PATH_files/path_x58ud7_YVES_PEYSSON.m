@@ -48,7 +48,7 @@ dkepath.ypeysson(1).MUMPS.mex904 = [dkepath.ypeysson(1).local_root,'Packages/Bin
 % LUKE documentation
 %
 dkepath.ypeysson(1).graphviz.env = '/usr/bin/';% Graphviz environment variable
-dkepath.ypeysson(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.ypeysson(1).latex.env = '/usr/local/texlive/2018/bin/x86_64-linux/';% Latex environment variable
 dkepath.ypeysson(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
 %
 %--------------------------- Remote computing -----------------------------
