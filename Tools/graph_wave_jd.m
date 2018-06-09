@@ -1304,6 +1304,30 @@ while iw ~= 0 && any(ibb ~= 0)
     	%
     end
     %
+    disp(['-----------------------------------------------------------'])
+    disp(['Initial Z (m) : ',num2str(waves{iw}.rayinit.launch.rZ0)])
+    disp(['Initial N_par0 : ',num2str(waves{iw}.rayinit.launch.bNpar0)])
+    disp(['-----------------------------------------------------------'])
+    disp(['-----------------------------------------------------------'])
+    %
+    disp(['Index table for each ray. Missing rays have not propagated in the plasma. '])
+    disp(['-----------------------------------------------------------'])
+    for iray = 1:length(waves{iw}.rayinit.launch.bNpar0)
+        disp_ray_launch = ['Npar0 = ',num2str(waves{iw}.rayinit.launch.bNpar0(iray))];
+        for iz = 1:length(waves{iw}.rayinit.launch.rZ0)
+            for ibb0 = 1:nymask(iw),
+                iy0 = sum(nymask(1:iw - 1)) + ibb0;
+                if abs(waves{iw}.rayinit.launch.bNpar0(iray) - real(rays{iy0}.sNpar(1))) < 0.01,
+                    if abs(waves{iw}.rayinit.launch.rZ0(iz) - rays{iy0}.sy(1)) < 0.01, 
+                        disp_ray_launch = [disp_ray_launch,', (#',int2str(ibb0),') ZO = ',num2str(waves{iw}.rayinit.launch.rZ0(iz))];
+                    end
+                end
+            end
+        end
+        disp(disp_ray_launch);
+    end
+    disp(['-----------------------------------------------------------'])
+    %
     ibb = input_dke_yp('ray indices (0 to return)',1,0:nymask(iw));
     %
     if ibb == 0,
