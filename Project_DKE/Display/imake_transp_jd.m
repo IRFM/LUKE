@@ -44,16 +44,26 @@ if ~isfield(select,'table') || ~select.table,
         return
     end
     %
-    Dr0 = input('Core radial diffusion coefficient (m^2/s) [1.0]');
+    disp('--------------------------')
+    disp('Dr = Dr_center + i*Dr_edge ')
+    disp('--------------------------')
+    %
+    Dr0 = input('Diffusion coefficient (m^2/s) [1.0]');
     if isempty(Dr0),
         Dr0 = 1.0;
     end
     if ~isnumeric(Dr0),
-        disp('-----> Invalid Dr0');
+        disp('-----> Invalid Dr');
         return
     end
     %
-    pDr = input('Coefficient for the radial profile of the diffusion coefficient [0]');
+    disp('--------------------------')
+    disp('pDr = pDr0 + i*pDr1');
+    disp('if pDr is real (flat or parabolic increase from center to the edge): Dr(rho) = Dr_center*(1+pDr0*rho^2)')
+    disp('if pDr is imaginary (step size from center to the edge): Dr(rho) = (Dr_center-Dr_edge)/(1+exp((rho-pDr0)/pDr1))+Dr_edge')  
+    disp('--------------------------')
+    %
+    pDr = input('Radial profile of the diffusion coefficient [0]');
     if isempty(pDr),
         pDr = 0;
     end
@@ -62,14 +72,23 @@ if ~isfield(select,'table') || ~select.table,
         return
     end
     %
-    Vr0 = input('Core radial pinch coefficient (m/s) [0.0]');
+    disp('--------------------------')
+    disp('Vr = Vr_center + i*Vr_edge')
+    disp('--------------------------')
+    Vr0 = input('Radial pinch coefficient (m/s) [0.0]');
     if isempty(Vr0),
         Vr0 = 0.0;
     end
     if ~isnumeric(Vr0),
-        disp('-----> Invalid Dr0');
+        disp('-----> Invalid Vr');
         return
     end
+    %
+    disp('--------------------------')
+    disp('pVr = pVr0 + i*pVr1');
+    disp('if pVr is real (flat or parabolic increase from center to the edge): Vr(rho) = Vr_center*(1+pVr0*rho^2)')
+    disp('if pVr is imaginary (step size from center to the edge): Vr(rho) = (Vr_center-Vr_edge)/(1+exp((rho-pVr0)/pVr1))+Vr_edge')  
+    disp('--------------------------')
     %
     pVr = input('Coefficient for the radial profile of the pinch coefficient [0]');
     if isempty(pVr),
