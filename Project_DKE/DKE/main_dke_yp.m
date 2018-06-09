@@ -903,9 +903,17 @@ if strcmp(waveparam.model,'RT') && ~isempty(waveparam.bomega_rf) && nit_rf > 1,
     dke_out.yresidue_rf_out = yresidue_rf_out;
     dke_out.residue_rf = residue_rf;
     dke_out.zS = zS;
-    dke_out.zP_0_2piRp_mod = zP_0_2piRp_mod_old;
+    if dkeparam_in.timevol == 0,
+        dke_out.zP_0_2piRp_mod = zP_0_2piRp_mod_old(:,end);%last time only
+    else
+        dke_out.zP_0_2piRp_mod = zP_0_2piRp_mod_old;
+    end
     if exist('zP_0_2piRp_mod_coll1'),
-        dke_out.zP_0_2piRp_mod_coll = zP_0_2piRp_mod_coll1;
+        if dkeparam_in.timevol == 0,
+            dke_out.zP_0_2piRp_mod_coll = zP_0_2piRp_mod_coll1(:,end);%last time only
+        else   
+            dke_out.zP_0_2piRp_mod_coll = zP_0_2piRp_mod_coll1;
+        end
     end
     %
     %waves = alphaphi_luke_jd(waves,dke_out,equilDKE);% calculates the QL ray absorption
