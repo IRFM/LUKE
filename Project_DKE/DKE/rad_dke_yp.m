@@ -111,8 +111,19 @@ if ~isempty(transpfaste) && isstruct(transpfaste) && ~isempty(fieldnames(transpf
     xvparmin_r = real(xvparmin_c);
     xvparmin_i = imag(xvparmin_c);
     %
-    xDr = transpfaste.Dr0*(1 + transpfaste.pDr*xrho.^2);
-    xVr = transpfaste.Vr0*(1 + transpfaste.pVr*xrho.^2);
+    % Various profile types
+    %
+    if isreal(transpfaste.pDr),
+        xDr = real(transpfaste.Dr0)*(1 + transpfaste.pDr*xrho.^2);%flat or parabolic profile
+    else
+        xDr = (real(transpfaste.Dr0) - imag(transpfaste.Dr0))./(1+exp((xrho-real(transpfaste.pDr))/imag(transpfaste.pDr)))+imag(transpfaste.Dr0);%step profile
+    end
+    %
+    if isreal(transpfaste.pVr),
+        xVr = real(transpfaste.Vr0)*(1 + transpfaste.pVr*xrho.^2);%flat or parabolic profile
+    else
+        xVr = (real(transpfaste.Vr0) - imag(transpfaste.Vr0))./(1+exp((xrho-real(transpfaste.pVr))/imag(transpfaste.pVr)))+imag(transpfaste.Vr0);%step profile
+    end
     %
     xmaxDpsi = zeros(1,nr);
     xmaxVpsi = zeros(1,nr);
