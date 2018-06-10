@@ -141,13 +141,16 @@ if ~isempty(transpfaste) && isstruct(transpfaste) && ~isempty(fieldnames(transpf
             XDpsiv = xDr(ir)*(abs(Xvpar) >= xvparmin_r(ir))/(ap*ap*nhu_ref);%Normalized to the central collision frequency
         elseif real(transpfaste.Dr_model)==1,%Magnetic turbulence model: Dr(r)*vpar_ref/vth_ref
             XDpsiv = xDr(ir)*(abs(Xvpar) - xvparmin_r(ir)).*(abs(Xvpar) >= xvparmin_r(ir))/xvparmin_r(ir)/(ap*ap*nhu_ref);%Normalized to the central collision frequency
+        elseif real(transpfaste.Dr_model)==-1,%Dr(r)*vth_ref/vpar_ref
+            XDpsiv = xDr(ir)*(xvparmin_r(ir)*(abs(Xvpar) >= xvparmin_r(ir))./abs(Xvpar))/(ap*ap*nhu_ref);%Normalized to the central collision frequency
         elseif real(transpfaste.Dr_model)==2,
             if imag(transpfaste.vparmin) == 0,%No energy dependence
                 XDpsiv = xDr(ir)*(Xv >= xvparmin_r(ir))/(ap*ap*nhu_ref);%Normalized to the central collision frequency
             else
-                XDpsiv = xDr(ir)*(Xv >= (xvparmin_r(ir) - 2*xvparmin_i(ir))).*(Xv <= (xvparmin_r(ir) + 2*xvparmin_i(ir))).*exp(-(Xv - xvparmin_r(ir)).^2/xvparmin_i(ir).^2)/(ap*ap*nhu_ref);
+                XDpsiv = xDr(ir)*(Xv >= (xvparmin_r(ir) - 2*xvparmin_i(ir))).*(Xv <= (xvparmin_r(ir) + 2*xvparmin_i(ir))).*exp(-(Xv - xvparmin_r(ir)).^2/xvparmin_i(ir).^2)/(ap*ap*nhu_ref);%Gaussian velocity dependence
             end
         end
+        %
         XXDpsi(:,:,ir) = XDpsiv;%3-D radial diffusion matrix (radial profile dependence) (psi coordinate)
         xmaxDpsi(ir) = max(max(XXDpsi(:,:,ir)));%Maximum value of the radial diffusion coefficient (psi coordinate)
         %
@@ -155,6 +158,8 @@ if ~isempty(transpfaste) && isstruct(transpfaste) && ~isempty(fieldnames(transpf
             XVpsiv = xVr(ir)*(abs(Xvpar) >= xvparmin_r(ir))/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
         elseif real(transpfaste.Vr_model)==1,%Magnetic turbulence model: Vr(r) = Vr0(r)*vpar_ref/vth_ref
             XVpsiv = xVr(ir)*(abs(Xvpar) - xvparmin_r(ir)).*(abs(Xvpar) >= xvparmin_r(ir))/xvparmin_r(ir)/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
+        elseif real(transpfaste.Vr_model)==-1,%Vr(r) = Vr0(r)*vth_ref/vpar_ref
+            XVpsiv = xVr(ir)*(xvparmin_r(ir)*(abs(Xvpar) >= xvparmin_r(ir))./abs(Xvpar))/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
         elseif real(transpfaste.Vr_model)==2,
             if imag(transpfaste.vparmin) == 0,%No energy dependence
                 XVpsiv = xVr(ir)*(Xv >= xvparmin_r(ir))/(ap*nhu_ref);%Normalized to the central collision frequency (psi coordinate)
@@ -162,8 +167,10 @@ if ~isempty(transpfaste) && isstruct(transpfaste) && ~isempty(fieldnames(transpf
                 XVpsiv = xVr(ir)*exp(-(Xv - xvparmin_r(ir)).^2/xvparmin_i(ir).^2)/(ap*nhu_ref);
             end
         end
+        %
         XXVpsi(:,:,ir) = XVpsiv;%3-D radial pinch matrix (radial profile dependence) (psi coordinate)
         xmaxVpsi(ir) = max(max(XXVpsi(:,:,ir)));%Maximum value of the radial convection coefficient (psi coordinate)
+        %
     end
 %
     if display_mode == 2,
