@@ -8,20 +8,20 @@ if nargin < 7,select = struct;end
 %
 if ~isfield(select,'table') || ~select.table,
     %
-    Dr_model = input('Radial diffusion type: \n0 electrostatic (no v|| dependence), \n1 electromagnetic (linear increase with v||) \n[0] : ');
+    Dr_model = input('Radial diffusion type: \n0 electrostatic (no v|| dependence), \n1 electromagnetic (+1: v|| dependence, -1: 1/v|| dependence) \n[0] : ');
     if isempty(Dr_model),
         Dr_model = 0;
     end
-    if ~isnumeric(Dr_model) | ~any(Dr_model == [0,1]),
+    if ~isnumeric(Dr_model) | ~any(Dr_model == [-1,0,1]),
         disp('-----> Invalid Radial diffusion type');
         return
     end
     %
-    Vr_model = input('Radial pinch type: \n0 electrostatic (no v|| dependence), \n1 electromagnetic (linear increase with v||) \n[0] : ');
+    Vr_model = input('Radial pinch type: \n0 electrostatic (no v|| dependence), \n1 electromagnetic (+1: v|| dependence, -1: 1/v|| dependence) \n[0] : ');
     if isempty(Vr_model),
         Vr_model = 0;
     end
-    if ~isnumeric(Vr_model) | ~any(Vr_model == [0,1]),
+    if ~isnumeric(Vr_model) | ~any(Vr_model == [-1,0,1]),
         disp('-----> Invalid Radial pinch type');
         return
     end
