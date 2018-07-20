@@ -29,26 +29,28 @@ dkepath.PEYSSON(1).localdatapath = dkepath.PEYSSON(1).temppathroot;
 %
 % ---------------------------- shenma -------------------------------
 %
-dkepath.PEYSSON(1).login110.local_root = '/home/users/PEYSSON/Packages/';
+dkepath.PEYSSON(1).login110.local_root = '/nfs_share/project/LUKE/Packages/';
 %
-dkepath.PEYSSON(1).login110.mex900 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB900/'];
+%dkepath.PEYSSON(1).login110.mex900 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB900/'];
 dkepath.PEYSSON(1).login110.mex902 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB902/'];
 %
-dkepath.PEYSSON(1).login110.compiler_opt.libs.gfortran = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.7','/',dkepath.machine,'/'];%extra libraries
+%dkepath.PEYSSON(1).login110.compiler_opt.libs.gfortran = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.7','/',dkepath.machine,'/'];%extra libraries
 dkepath.PEYSSON(1).login110.compiler_opt.copts = '';
-dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex900 = 'FC=''gfortran''';%
-dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex900 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex900 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex900 = ' ';%-largeArrayDims;
+%dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex900 = 'FC=''gfortran''';%
+%dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex900 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+%dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex900 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+%dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex900 = ' ';%-largeArrayDims;
 dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex902 = 'FC=''gfortran''';%
-dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex902 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex902 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex902 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex902 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex902 = ' ';%-largeArrayDims;
 %
 %Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.PEYSSON(1).login110.MUMPS.mex900 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB900'];
-dkepath.PEYSSON(1).login110.MUMPS.mex902 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB902'];
+%dkepath.PEYSSON(1).login110.MUMPS.mex900 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB900'];
+%dkepath.PEYSSON(1).login110.MUMPS.mex902 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB902'];
+dkepath.PEYSSON(1).login110.MUMPS.mex902 = ['/nfs_share/project/LUKE/Packages/MUMPS/MUMPS_5.1.2/MATLAB902'];;%Where MUMPS matrix solver is stored (MEX function)
+
 %
 % LUKE documentation
 %
@@ -79,17 +81,16 @@ dkepath.PEYSSON(1).shenma161 = dkepath.PEYSSON(1).login110;
 %
 dkepath.PEYSSON(1).remote(1).remoteid = 'ASIPP_SHENMA';
 dkepath.PEYSSON(1).remote(1).schedulername = 'torque';
-dkepath.PEYSSON(1).remote(1).profilename = 'PEYSSON';
+%dkepath.PEYSSON(1).remote(1).profilename = 'PEYSSON';
+dkepath.PEYSSON(1).remote(1).profilename = 'local';
 dkepath.PEYSSON(1).remote(1).luke_root = dkepath.PEYSSON(1).luke_root;% local cluster
 %
 dkepath.PEYSSON(1).remote(2) = dkepath.PEYSSON(1).remote(1);
 dkepath.PEYSSON(1).remote(2).schedulername = 'direct';
 %
 %-------------------------------------------------------------------------------------------------------
-%------------------------------------ Profile number 2, Joan Decker  ------------------------------------
+%------------------------------------ Profile number 2, Miaohui Li  ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.PEYSSON(2) = dkepath.PEYSSON(1);
-%
-dkepath.PEYSSON(2).remote(1).profilename = 'joan';
+dkepath.limiaohui(1) = dkepath.PEYSSON(1);
 %
