@@ -42,7 +42,7 @@ dkepath.ypeysson(1).MUMPS.mex903 = [dkepath.ypeysson(1).eofe7.local_root,'MUMPS/
 %
 % LUKE documentation
 %
-dkepath.ypeysson(1).eofe7.graphviz.env = 'bin/';% Graphviz environment variable
+dkepath.ypeysson(1).eofe7.graphviz.env = '/bin/';% Graphviz environment variable
 dkepath.ypeysson(1).eofe7.latex.env = '/bin/';% Latex environment variable
 dkepath.ypeysson(1).eofe7.imagemagick.env = '/bin/';% ImageMagick environment variable
 %
