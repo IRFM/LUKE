@@ -10,8 +10,8 @@ function dkepath = path_CYFRONET_PROMETHEUS
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'cyfronet'};
-dkepath.hostname = {'cyfronet'};%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
+dkepath.machine = 'cyfronet';
+dkepath.hostname = 'cyfronet';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
 %
 dkepath.computer = computer;%machine type and supported OS
 %
