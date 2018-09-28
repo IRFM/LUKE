@@ -53,8 +53,8 @@ dkepath.ypeysson(1).remote(1).schedulername = 'direct';
 dkepath.ypeysson(1).remote(1).profilename = 'local';
 dkepath.ypeysson(1).remote(1).luke_root = '/home/ypeysson/LUKE/';% local cluster
 %
-dkepath.ypeysson(1).remote(3) = dkepath.ypeysson(1).remote(2);
-dkepath.ypeysson(1).remote(3).schedulername = 'direct';
+dkepath.ypeysson(1).remote(2) = dkepath.ypeysson(1).remote(1);
+dkepath.ypeysson(1).remote(2).schedulername = 'direct';
 %
 
 
