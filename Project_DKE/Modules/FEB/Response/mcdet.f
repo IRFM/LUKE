@@ -74,6 +74,8 @@ c
          call xgerma(hnu0,mhuph,mhuco)
       elseif (type.eq.5) then
          call xCdTe(hnu0,mhuph,mhuco)
+      elseif (type.eq.6) then
+         call xLYSO(hnu0,mhuph,mhuco)
       endif
       mhu=mhuph+mhuco
 c
@@ -82,34 +84,34 @@ c
       open(2,FILE='rmcdet.data',STATUS='UNKNOWN')
 c
       write(2,*) '----------------------------------------------------'
-      write(2,*) 'Code MCdet : Interaction rayonnement-detecteur :'
+      write(2,*) 'Code MCdet : Interaction radiation-detector :'
       write(2,*) '----------------------------------------------------'
       write(2,*) ' ' 
-      write(2,*) 'Direction du rayonnement (1:perp et 0: isotrope)-->',
+      write(2,*) 'Photon direction (1:perp et 0: isotropic)--------->',
      *incidence
-      write(2,*) '(1):BGO (2):NaI[Tl] (3):CsI (4):Ge (5):CdTe------->',
+      write(2,*) '(1):BGO (2):NaI (3):CsI (4):Ge (5):CdTe (6):LYSO-->',
      *type
-      write(2,1) 'Rayon du collimateur N1 (cote detecteur) (cm)----->',
+      write(2,1) 'Collimateur radius N1 (detector side) (cm)-------->',
      *r1
-      write(2,1) 'Lieu d impact sur le detecteur suivant Ox (cm)---->',
+      write(2,1) 'Impact location on the detector along Ox (cm)----->',
      *xr
-      write(2,1) 'Lieu d impact sur le detecteur suivant Oy (cm)---->',
+      write(2,1) 'Impact location on the detector along Oy (cm)----->',
      *yr
-      write(2,1) 'Demi-hauteur du detecteur (cm)-------------------->',
+      write(2,1) 'Half-height of the detector (cm)------------------>',
      *xmax
-      write(2,1) 'Demi-largeur du detecteur (cm)-------------------->',
+      write(2,1) 'Half-width of the detector (cm)------------------->',
      *ymax
-      write(2,1) 'Epaisseur du detecteur (cm)----------------------->',
+      write(2,1) 'Thickness of the detector (cm)-------------------->',
      *zmax
-      write(2,1) 'Energie du rayonnement incident (keV)------------->',
+      write(2,1) 'Energy of the incident photon (keV)--------------->',
      *hnu0
-      write(2,1) 'Attenuation lineique (cm-1)----------------------->',
+      write(2,1) 'Lineic attenuation  (cm-1)------------------------>',
      *mhu
-      write(2,*) 'Nombre de photons incidents----------------------->',
+      write(2,*) 'Number of incoming photons ----------------------->',
      *n
-      write(2,*) 'Initialisation generateur variable aleatoire (>0)->',
+      write(2,*) 'Initialisation random variable generator (>0)----->',
      *reset0
-      write(2,*) 'Nombre de pas histogramme en energie (<100)------->',
+      write(2,*) 'Number of histogram steps in energy (<100)------->',
      *nv
       write(2,*) ' ' 
       write(2,*) '----------------------------------------------------'
@@ -165,7 +167,9 @@ c
       elseif (type.eq.4) then
          call xgerma(hnu,mhuph,mhuco)
       elseif (type.eq.5) then
-         call xCdTe(hnu,mhuph,mhuco)   
+         call xCdTe(hnu,mhuph,mhuco) 
+      elseif (type.eq.6) then
+         call xLYSO(hnu,mhuph,mhuco)      
       endif
       mhu=mhuph+mhuco
       call tirpos(mhu,dze)
@@ -225,6 +229,19 @@ c
          if ((atom.gt.0.5).and.(atom.le.1.0)) then
             call xTe(hnu,xmhuph,xmhuco)
          endif
+      elseif (type.eq.6) then
+         if ((atom.ge.0.0).and.(atom.le.(1.8/8.0))) then
+            call xlu(hnu,xmhuph,xmhuco)
+         endif
+         if ((atom.gt.(1.8/8.0)).and.(atom.le.(2.0/8.0))) then
+            call xyt(hnu,xmhuph,xmhuco)
+         endif
+         if ((atom.gt.(2.0/8.0)).and.(atom.le.(3.0/8.0))) then
+            call xsi(hnu,xmhuph,xmhuco)
+         endif
+         if ((atom.gt.(3.0/8.0)).and.(atom.le.1.0)) then
+            call xoxy(hnu,xmhuph,xmhuco)
+         endif
       endif
       call tirsur(w,xmhuph,xmhuco)
       if (w.eq.0)  then
@@ -266,6 +283,8 @@ c
             call xgerma(hnu1,mhuph1,mhuco1)
          elseif (type.eq.5) then
             call xCdTe(hnu1,mhuph1,mhuco1)
+         elseif (type.eq.6) then
+           call xLYSO(hnu1,mhuph1,mhuco1)
          endif
          mhu1=mhuph1+mhuco1
          call tirpos(mhu1,dze1)
@@ -371,15 +390,15 @@ c
 c
 c     ----------------------AFFICHAGE DES RESULTATS--------------------
 c
-      write(2,110) 'Nombre de photons recus     = ',nphot
-      write(2,110) 'Nombre de photons detectes  = ',nbdet
-      write(2,110) 'Nombre de photons absorbes  = ',nbabs
-      write(2,110) 'Nombre de photons diffuses  = ',nbdiff
-      write(2,120) 'Nombre moyen de collisions par photon detecte  =',
+      write(2,110) 'Number of incoming photons   = ',nphot
+      write(2,110) 'Number of detected photons   = ',nbdet
+      write(2,110) 'Number of absorbed photons   = ',nbabs
+      write(2,110) 'Number of scattered photons  = ',nbdiff
+      write(2,120) 'Mean number of collisions per detected photon  =',
      *nbmoycoll
-      write(2,120) 'Dist. moy. parcourue par photon detecte (cm)   =',
+      write(2,120) 'Mean free path per detected photon (cm)        =',
      *nbmoylt
-      write(2,120) 'Prof. moy. atteinte par photon detecte (cm)    =',
+      write(2,120) 'Mean depth reached per detected photon (cm)    =',
      *nbmoyzm
       write(2,*) '-----------------------------------------------------'
 c
@@ -396,7 +415,7 @@ c
       if (nbdet.ne.0) then
          iv=1
       write(2,*) '-----------------------------------------------------'
-         write(2,*) 'Distribution energie photons absorbes : k,f(k)'
+         write(2,*) 'Energy distribution of absorbed photons : k,f(k)'
       write(2,*) '-----------------------------------------------------'
          call histo(nv,iv,nbdet,tableau,distri)
          do 71 i=1,nv
@@ -404,7 +423,7 @@ c
    71    continue
          iv=7
       write(2,*) '-----------------------------------------------------'
-         write(2,*) 'Distribution energie scintillation : E,f(E)'
+         write(2,*) 'Scintillation energy distribution : E,f(E)'
       write(2,*) '-----------------------------------------------------'
          call histo(nv,iv,nbdet,tableau,distri)
          do 78 i=1,nv
@@ -412,7 +431,7 @@ c
    78    continue
          iv=6
       write(2,*) '-----------------------------------------------------'
-         write(2,*) 'Distribution des impacts : x0,f(x0)'
+         write(2,*) 'Impact distribution : x0,f(x0)'
       write(2,*) '-----------------------------------------------------'
          call histo(nv,iv,nbdet,tableau,distri)
          do 73 i=1,nv
@@ -420,7 +439,7 @@ c
    73    continue
          iv=8
       write(2,*) '-----------------------------------------------------'
-         write(2,*) 'Distribution des impacts : y0,f(y0)'
+         write(2,*) 'Impact distribution : y0,f(y0)'
       write(2,*) '-----------------------------------------------------'
          call histo(nv,iv,nbdet,tableau,distri)
          do 79 i=1,nv
@@ -428,7 +447,7 @@ c
    79    continue
          iv=3
       write(2,*) '-----------------------------------------------------'
-         write(2,*) 'Distribution du nombre de collisions : nc,f(nc)'
+         write(2,*) 'Number of collisions distribution : nc,f(nc)'
       write(2,*) '-----------------------------------------------------'
          call histo(nv,iv,nbdet,tableau,distri)
          do 75 i=1,nv
@@ -436,7 +455,7 @@ c
    75    continue
          iv=4
       write(2,*) '-----------------------------------------------------'
-         write(2,*) 'Distribution du chemin total parcouru : lt,f(lt)'
+         write(2,*) 'Mean path distribution : lt,f(lt)'
       write(2,*) '-----------------------------------------------------'
          call histo(nv,iv,nbdet,tableau,distri)
          do 76 i=1,nv
@@ -444,7 +463,7 @@ c
    76    continue
          iv=5
       write(2,*) '-----------------------------------------------------'
-         write(2,*) 'Distribution de la penetration max : zm,f(zm)'
+         write(2,*) 'Depth distribution max : zm,f(zm)'
       write(2,*) '-----------------------------------------------------'
          call histo(nv,iv,nbdet,tableau,distri)
          do 77 i=1,nv
@@ -453,7 +472,7 @@ c
          write(2,*) '--------------------------------------------------'
          write(2,*) '--------------------------------------------------'
       else
-         write(2,*) 'Aucun photon detecte'
+         write(2,*) 'Ni photon detected'
       endif
       close(2)
 c
@@ -718,7 +737,93 @@ c
       return
       end
 
+      subroutine xLYSO(Eph,mhuph,mhuco)
+      real Eph,mhuph,mhuco
+      real mhuphlu,mhuphyt,mhuphsi,mhuphoxy
+      real mhucolu,mhucoyt,mhucosi,mhucooxy
+      data dens,denslu,densyt/7.1,9.842,4.405/
+      data denssi,densoxy/2.33,1.43e-3/
+      data plu,pyt,psi,poxy/0.71,0.0403,0.0637,0.1815/
+c      if ((Eph.ge.3.99).and.(Eph.le.1000.0)) then
+      if (Eph.ge.3.99) then
+        call xlu(Eph,mhuphlu,mhucolu)
+        call xyt(Eph,mhuphyt,mhucoyt)
+        call xsi(Eph,mhuphsi,mhucosi)
+        call xoxy(Eph,mhuphoxy,mhucooxy)
+        mhuph=mhuphlu*plu*dens/denslu
+        mhuph=mhuph+mhuphyt*pyt*dens/densyt
+        mhuph=mhuph+mhuphsi*psi*dens/denssi
+        mhuph=mhuph+mhuphoxy*poxy*dens/densoxy
+        mhuco=mhucolu*plu*dens/denslu
+        mhuco=mhuco+mhucoyt*pyt*dens/densyt
+        mhuco=mhuco+mhucosi*psi*dens/denssi
+        mhuco=mhuco+mhucooxy*poxy*dens/densoxy
+      else
+        write(2,*) 'LYSO (Lu2(1-x)Y2xSiO5,x = 0.1): k<3.99 ou k>1000'
+      endif
+      return
+      end      
 
+      subroutine xlu(Eph,mhup,mhuc)
+      real Eph
+      real mhu0,mhup,mhuc
+      data dens,pa,avo,barn/9.842,174.99,6.023e+23,1.0e-24/
+      data ap10,ap11,ap12,ap13/12.6387,1.55476,-0.881094,0.0602036/
+      data ap20,ap21,ap22,ap23/17.2638,-2.37189,-0.0495994,0.0/
+      data ap30,ap31,ap32,ap33/16.2289,-2.67128,0.0,0.0/
+      data ap40,ap41,ap42,ap43/13.9813,-2.40841,0.0,0.0/
+      data ac0,ac1,ac2,ac3/0.197176,0.150264,-0.192474,0.00385751/
+      mhu0=dens*avo*barn/pa
+      if (Eph.lt.63.314) then
+        mhup=exp(ap10+ap11*log(Eph)+ap12*log(Eph)**2+ap13*log(Eph)**3)
+      elseif (Eph.lt.10.8700) then
+        mhup=exp(ap20+ap21*log(Eph)+ap22*log(Eph)**2+ap23*log(Eph)**3)
+      elseif (Eph.lt.2.4920) then
+        mhup=exp(ap30+ap31*log(Eph)+ap32*log(Eph)**2+ap33*log(Eph)**3)
+      else
+        mhup=exp(ap40+ap41*log(Eph)+ap42*log(Eph)**2+ap43*log(Eph)**3)
+      endif
+      mhuc=exp(ac0+ac1*log(Eph)+ac2*log(Eph)**2+ac3*log(Eph)**3)
+      mhup=mhup*mhu0
+      mhuc=mhuc*mhu0
+      return
+      end
+
+      subroutine xyt(Eph,mhup,mhuc)
+      real Eph
+      real mhu0,mhup,mhuc
+      data dens,pa,avo,barn/4.405,88.9050,6.023e+23,1.0e-24/
+      data ap10,ap11,ap12,ap13/13.4674,0.191023,-0.686616,0.0497356/
+      data ap20,ap21,ap22,ap23/15.1822,-2.38946,-0.0881174,0.0/
+      data ap30,ap31,ap32,ap33/13.2775,-2.43174,0.0,0.0/
+      data ac0,ac1,ac2,ac3/0.0629057,  1.41577, -0.199713,  0.00533312/
+      mhu0=dens*avo*barn/pa
+      if (Eph.lt.17.08) then
+        mhup=exp(ap10+ap11*log(Eph)+ap12*log(Eph)**2+ap13*log(Eph)**3)
+      elseif (Eph.lt.2.373) then
+        mhup=exp(ap20+ap21*log(Eph)+ap22*log(Eph)**2+ap23*log(Eph)**3)
+      else
+        mhup=exp(ap30+ap31*log(Eph)+ap32*log(Eph)**2+ap33*log(Eph)**3)
+      endif
+      mhuc=exp(ac0+ac1*log(Eph)+ac2*log(Eph)**2+ac3*log(Eph)**3)
+      mhup=mhup*mhu0
+      mhuc=mhuc*mhu0
+      return
+      end
+
+      subroutine xsi(Eph,mhup,mhuc)
+      real Eph
+      real mhu0,mhup,mhuc
+      data dens,pa,avo,barn/2.33,28.086,6.023e+23,1.0e-24/
+      data ap10,ap11,ap12,ap13/13.2682,-1.98174,-0.31695,0.0273928/
+      data ac0,ac1,ac2,ac3/-0.414971,1.34868,-0.222315,0.00841959/
+      mhu0=dens*avo*barn/pa
+      mhup=exp(ap10+ap11*log(Eph)+ap12*log(Eph)**2+ap13*log(Eph)**3)
+      mhuc=exp(ac0+ac1*log(Eph)+ac2*log(Eph)**2+ac3*log(Eph)**3)
+      mhup=mhup*mhu0
+      mhuc=mhuc*mhu0
+      return
+      end
 
       subroutine xCdTe(Eph,mhuph,mhuco)
       real Eph,mhuph,mhuco
@@ -726,7 +831,8 @@ c
       real mhucoCd,mhucoTe
       data dens,densCd,densTe/5.856,8.65,6.24/
       data pCd,pTe/0.468,0.532/
-      if ((Eph.ge.3.99).and.(Eph.le.1000.0)) then
+c      if ((Eph.ge.3.99).and.(Eph.le.1000.0)) then
+      if (Eph.ge.3.99) then
         call xCd(Eph,mhuphCd,mhucoCd)
         call xTe(Eph,mhuphTe,mhucoTe)
         mhuph=mhuphCd*pCd*dens/densCd
@@ -876,6 +982,8 @@ c
          sigma=0
       elseif (type.eq.5) then
          sigma = 0
+      elseif (type.eq.6) then
+         sigma = 0
       endif
 c
     1 v1=2.0*ran2(reset)-1
@@ -893,7 +1001,8 @@ c
       real mhucoNa,mhuphNa,mhucoI,mhuphI
       data dens,densNa,densI/3.67,0.97,4.94/
       data pNa,pI/0.1534,0.8466/
-      if ((Eph.ge.5.198).and.(Eph.le.1000.0)) then
+c      if ((Eph.ge.5.198).and.(Eph.le.1000.0)) then
+      if (Eph.ge.5.198) then
          call xNa(Eph,mhuphNa,mhucoNa)
          call xI(Eph,mhuphI,mhucoI)
          mhuph=mhuphNa*pNa*dens/densNa
@@ -911,7 +1020,8 @@ c
       real mhuphCs,mhucoCs,mhuphI,mhucoI
       data dens,densCs,densI/4.51,1.873,4.94/
       data pCs,pI/0.5115,0.4885/
-      if ((Eph.ge.5.713).and.(Eph.le.1000.0)) then
+c      if ((Eph.ge.5.713).and.(Eph.le.1000.0)) then
+      if (Eph.ge.5.713) then
          call xCs(Eph,mhuphCs,mhucoCs)
          call xI(Eph,mhuphI,mhucoI)
          mhuph=mhuphCs*pCs*dens/densCs
