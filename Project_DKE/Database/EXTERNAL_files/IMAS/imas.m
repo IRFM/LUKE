@@ -17,10 +17,10 @@ if nargin < 2,
     error('Not enough input arguments in imas.m');
 end
 %
-idx = imas_open_env('ids', imas.shot, imas.run, imas.user, imas.machine, imas.version);
+idx = imas_open_env('ids', imas_param.shot, imas_param.run, imas_param.user, imas_param.machine, imas_param.version);
 %
-if strcmp(imas.command,'ids_get_slice'),
-    imas_output  = ids_get_slice(idx, data_type, imas.time_requested, 1);
+if strcmp(imas_param.command,'ids_get_slice'),
+    imas_output  = ids_get_slice(idx, data_type, imas_param.time_requested, 1);
 else
     error('Unrecognized IMAS command in imas.m');
 end
