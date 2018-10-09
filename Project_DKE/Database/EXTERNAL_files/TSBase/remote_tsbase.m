@@ -35,8 +35,8 @@ end
 remote_profile_ANDROMEDE = remote_CEA_ANDROMEDE;
 remote_profile_SIRRAH = remote_CEA_SIRRAH;
 %
-[err_ANDROMEDE,txt_ANDROMEDE] = unix(['ssh -Y ',remote_profile_ANDROMEDE.remoteuser,'@',remote_profile_ANDROMEDE.host,' "whoami"']);%Zone partenaire
-[err_SIRRAH,txt_SIRRAH] = unix(['ssh -Y ',remote_profile_SIRRAH.remoteuser,'@',remote_profile_SIRRAH.host,' "whoami"']);%Zone intra
+[err_ANDROMEDE,txt_ANDROMEDE] = unix(['ssh -Y ',remote_profile_ANDROMEDE.remoteuser,'@',remote_profile_ANDROMEDE.host,' "hostname"']);%Zone partenaire
+[err_SIRRAH,txt_SIRRAH] = unix(['ssh -Y ',remote_profile_SIRRAH.remoteuser,'@',remote_profile_SIRRAH.host,' "hostname"']);%Zone intra
 err = err_ANDROMEDE + err_SIRRAH;
 if err == 0, 
     txt = txt_SIRRAH;%the client is connected to CEA intranet
