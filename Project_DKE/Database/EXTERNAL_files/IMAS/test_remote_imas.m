@@ -8,6 +8,8 @@ imas.run = 0;
 imas.time_requested = 37;%absolute time at which data are read (s)
 imas.command = 'ids_get_slice';%IMAS command
 imas.matlabpath = '/Applications/Matlab_2013B/bin/matlab';%Matlab version used by IMAS
+imas.remote_profile = 'CEA_SIRRAH';%Remote profile for reading data (SIRRAH or ANDROMEDE for WEST/TORE SUPRA)
+imas.remote_enforce = 1;%Enforce remote connection (1) or not (0)
 %
 % Other parameters
 %
@@ -22,18 +24,13 @@ fprintf('user     = %s \n', imas.user);
 fprintf('machine  = %s \n', imas.machine);
 fprintf('time_req = %f \n', imas.time_requested);
 %
-% Access parameters
-%
-remote_enforce = 1;%Let the program decide (0) or not (1)
-cluster = 'SIRRAH';%'ANDROMEDE'
-%
 % read data in IMAS database
 %
-equi  = remote_imas(imas,'equilibrium',remote_enforce,cluster);
+equi  = remote_imas(imas,'equilibrium');
 if isempty(equi),
     error('Problem reading equilibrium structure in IMAS database');
 else
-    corep  = remote_imas(imas,'core_profiles',remote_enforce,cluster);
+    corep  = remote_imas(imas,'core_profiles');
     if isempty(corep),
         error('Problem reading core_profiles structure in IMAS database');
     end
