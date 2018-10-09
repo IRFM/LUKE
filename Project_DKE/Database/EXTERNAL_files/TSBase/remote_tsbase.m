@@ -1,6 +1,6 @@
 function [ydate,yout1,yout2,yout3,yout4,yout5]= remote_tsbase(shotnumber,signal,remote_enforce,cluster)
 %
-%LUKE -  Function which load signals from Tore Supra database (work for WEST shot date only). May be used within CEA network or outside by bridge
+%LUKE -  Function which load signals from Tore Supra database (work for WEST shot date only). May be used within CEA network or outside by SSH bridge
 %
 %   Input:
 %
@@ -82,9 +82,9 @@ if err==0,
         remote.link_mode='';
         job = matstandardjob_jd('runmat');
         if nargin > 1,
-            [err,job,yout1,yout2,yout3,yout4,yout5] = matremote_jd('tsbase',{shotnumber,signal},remote,job);%find remotely the optimum density in front of the grill consistent with RC measurements
+            [err,job,yout1,yout2,yout3,yout4,yout5] = matremote_jd('tsbase',{shotnumber,signal},remote,job);
         else
-            [err,job,ydate] = matremote_jd('tsdate',{shotnumber},remote,job);%find remotely the optimum density in front of the grill consistent with RC measurements
+            [err,job,ydate] = matremote_jd('tsdate',{shotnumber},remote,job);
         end
         %
     end    
