@@ -2,15 +2,16 @@
 
 % IMAS parameters
 % For METIS example run:
-shot    = 2001;
-run     = 4;
+%shot    = 53259;
+shot    = 53223;
+run     = 0;
 % For EQUINOX example run:
 %shot    = 52705;
 %run     = 0;
 
 user    = 'imas_public';
 machine = 'west';
-time_requested = 0;
+time_requested = 37;%absolute time
 
 % Other parameters
 Z_for_R_plot     = 50; %Percentage for plot in cartesian grid
@@ -31,10 +32,16 @@ idx = imas_open_env('ids', shot, run, user, machine, '3');
 equi  = ids_get_slice(idx, 'equilibrium', time_requested, 1);
 corep = ids_get_slice(idx, 'core_profiles', time_requested, 1);
 
+
+
 % For METIS run:
 nbr_points = length(equi.time_slice{1,1}.ggd{1,1}.r{1,1}.values);
-% For EQUINOX run:
-%nbr_points = length(equi.time_slice{1,1}.ggd{1,1}.grid.space{1,1}.objects_per_dimension{1,1}.object);
+flag_equinox = 0;
+if nbr_points==0
+  % For EQUINOX run:
+  nbr_points = length(equi.time_slice{1,1}.ggd{1,1}.grid.space{1,1}.objects_per_dimension{1,1}.object);%inside and outside separatrix
+  flag_equinox = 1;
+end
 
 R_nodes = zeros(1, nbr_points);
 Z_nodes = zeros(1, nbr_points);
@@ -43,12 +50,16 @@ B_R     = zeros(1, nbr_points);
 B_Z     = zeros(1, nbr_points);
 B_tor   = zeros(1, nbr_points);
 for i=1:nbr_points
-    % For METIS run:
-    R_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.r{1,1}.values(i);
-    Z_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.z{1,1}.values(i);
+ 
     % For EQUINOX run:
-    %R_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.grid.space{1,1}.objects_per_dimension{1,1}.object{1,i}.geometry(1);
-    %Z_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.grid.space{1,1}.objects_per_dimension{1,1}.object{1,i}.geometry(2);
+    if flag_equinox,
+      R_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.grid.space{1,1}.objects_per_dimension{1,1}.object{1,i}.geometry(1);
+      Z_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.grid.space{1,1}.objects_per_dimension{1,1}.object{1,i}.geometry(2);
+    else
+      % For METIS run:
+      R_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.r{1,1}.values(i);
+      Z_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.z{1,1}.values(i);
+    end
 
     Psi_val(i) = equi.time_slice{1,1}.ggd{1,1}.psi{1,1}.values(i);
     B_R(i)     = equi.time_slice{1,1}.ggd{1,1}.b_field_r{1,1}.values(i);
@@ -91,16 +102,17 @@ xlabel('R [m]', 'FontSize', Font_size_graphs);
 ylabel('Z [m]', 'FontSize', Font_size_graphs);
 title('Psi', 'FontSize', Font_size_graphs);
 
-subplot(2, 3, 4); surf(Rq, Zq, B_NORM_interp);
-axis equal;
-shading interp;
-view(0, 90);
-grid on;
-set(gca, 'FontSize', Font_size_graphs);
-xlabel('R [m]', 'FontSize', Font_size_graphs);
-ylabel('Z [m]', 'FontSize', Font_size_graphs);
-title('B NORM [T]', 'FontSize', Font_size_graphs);
-colorbar;
+
+%subplot(2, 3, 4); surf(Rq, Zq, B_NORM_interp);
+%axis equal;
+%shading interp;
+%view(0, 90);
+%grid on;
+%set(gca, 'FontSize', Font_size_graphs);
+%xlabel('R [m]', 'FontSize', Font_size_graphs);
+%ylabel('Z [m]', 'FontSize', Font_size_graphs);
+%title('B NORM [T]', 'FontSize', Font_size_graphs);
+%colorbar;
 
 subplot(2, 3, 5); plot(corep.profiles_1d{1,1}.grid.rho_tor_norm, ...
                        corep.profiles_1d{1,1}.electrons.density, ...
@@ -111,7 +123,7 @@ xlabel('Rho_{tor norm}', 'FontSize', Font_size_graphs);
 ylabel('n_{e} [m^{-3}]', 'FontSize', Font_size_graphs);
 
 subplot(2, 3, 6); plot(corep.profiles_1d{1,1}.grid.rho_tor_norm, ...
-                       corep.profiles_1d{1,1}.ion{1}.temperature, ...
+                       corep.profiles_1d{1,1}.electrons.temperature, ...
                        '-sk', 'LineWidth', 1.5);
 grid on;
 set(gca, 'FontSize', Font_size_graphs);
