@@ -35,7 +35,6 @@ end
 remote_profile_ANDROMEDE = remote_CEA_ANDROMEDE;
 remote_profile_SIRRAH = remote_CEA_SIRRAH;
 %
-
 [err_ANDROMEDE,txt_ANDROMEDE] = unix(['ssh -Y ',remote_profile_ANDROMEDE.remoteuser,'@',remote_profile_ANDROMEDE.host,' "whoami"']);%Zone partenaire
 [err_SIRRAH,txt_SIRRAH] = unix(['ssh -Y ',remote_profile_SIRRAH.remoteuser,'@',remote_profile_SIRRAH.host,' "whoami"']);%Zone intra
 err = err_ANDROMEDE + err_SIRRAH;
@@ -55,6 +54,12 @@ yout2 = [];
 yout3 = [];
 yout4 = [];
 yout5 = [];
+%
+[err_local,txt_local] = unix('hostname');%local client machine
+%
+if strcmp(txt_local,txt),%client on the server machine. Direct connection possible
+    remote_enforce = 0;
+end
 %
 if err==0,
     %
