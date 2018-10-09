@@ -2,6 +2,8 @@ close all
 clear all
 clc
 %
-[shotdate,phyb,tlh] = remote_tsbase(45525,'gphyb');
+remote_enforce = 1;%Let the program decide (0) or not (1)
+cluster = 'ANDROMEDE';%'SIRRAH'
+[shotdate,phyb,tlh] = remote_tsbase(45525,'gphyb',remote_enforce,cluster);
 %
 plot(tlh,phyb);title(['Tore Supra, #45525, shot date: ',shotdate]),xlabel('Time (s)');ylabel('Lower Hybrid power (MW)');
