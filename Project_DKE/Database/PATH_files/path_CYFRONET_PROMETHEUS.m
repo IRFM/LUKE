@@ -1,6 +1,7 @@
 function dkepath = path_CYFRONET_PROMETHEUS
 %
 % path definitions for Cyfronet Prometheus cluster in Poland
+%srun -p plgrid -A poloniumwest -n 1 --pty /bin/bash -l
 %
 %	Output:
 %
@@ -10,7 +11,7 @@ function dkepath = path_CYFRONET_PROMETHEUS
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = 'login01';
+dkepath.machine = 'p';
 dkepath.hostname = 'login01';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
 %
 dkepath.computer = computer;%machine type and supported OS
@@ -67,9 +68,6 @@ dkepath.plgypeysson(1).remote(1).schedulername = 'slurm';
 dkepath.plgypeysson(1).remote(1).profilename = 'local';
 dkepath.plgypeysson(1).remote(1).luke_root = dkepath.plgypeysson(1).luke_root;% local cluster
 %
-dkepath.plgypeysson(1).remote(2) = dkepath.plgypeysson(1).remote(1);
-dkepath.plgypeysson(1).remote(2).schedulername = 'direct';
-%
 %--------------------------------------------------------------------------------------------------------
 %------------------------------------ Profile number 2, KRZYSZTOF KROL-----------------------------------
 %--------------------------------------------------------------------------------------------------------
@@ -119,6 +117,4 @@ dkepath.plgzgoryk(1).remote(1).remoteid = 'CYFRONET_PROMETHEUS';
 dkepath.plgzgoryk(1).remote(1).schedulername = 'slurm';
 dkepath.plgzgoryk(1).remote(1).profilename = 'local';
 dkepath.plgzgoryk(1).remote(1).luke_root = dkepath.plgzgoryk(1).luke_root;% local cluster
-%
-dkepath.plgzgoryk(1).remote(2) = dkepath.plgzgoryk(1).remote(1);
-dkepath.plgzgoryk(1).remote(2).schedulername = 'direct';
+
