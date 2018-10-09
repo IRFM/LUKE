@@ -1,5 +1,9 @@
+close all
+clear all
+clc
+%
 % IMAS read WEST equilibrium
-
+%
 imas.version = '3';
 imas.user = 'imas_public';%database
 imas.machine = 'west';%machine name
