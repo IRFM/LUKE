@@ -1,11 +1,10 @@
-function [imas_output]= remote_imas(imas_param,data_type)
+function [imas_output]= remote_imas(imas_param)
 %
 %LUKE -  Function which load signals from WEST/TORE SUPRA IMAS database. Can be used only within CEA network
 %
 %   Input:
 %
 %		imas_param: imas structure for parameters 
-%		data_type : type of signal (ex: 'equilibrium' or 'core_profiles')
 %
 %   Output:
 %
@@ -36,7 +35,7 @@ end
 if err_remote==0,
     %
     if imas_param.local_access && imas_param.remote_enforce == 0,%when connected directly from the CEA network
-            [imas_output] = imas(imas_param,data_type);%
+            [imas_output] = imas(imas_param);%
     else
         dkepath = load_structures_yp('dkepath','','');
         %
@@ -53,7 +52,7 @@ if err_remote==0,
         remote.matver.matdef = imas_param.matlabpath;
         job = matstandardjob_jd('runmat');
         if nargin > 1,
-            [err,job,imas_output] = matremote_jd('imas',{imas_param,data_type},remote,job);%
+            [err,job,imas_output] = matremote_jd('imas',{imas_param},remote,job);%
         end
         %
     end    

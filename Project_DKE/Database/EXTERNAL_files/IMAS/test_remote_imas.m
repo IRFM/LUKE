@@ -30,11 +30,17 @@ fprintf('time_req = %f \n', imas.time_requested);
 %
 % read data in IMAS database
 %
-equi  = remote_imas(imas,'equilibrium');
+imas.data.type = 'equilibrium';%data type 
+imas.data.value = '';%leave empty if read (not used when reading database)
+%
+equi  = remote_imas(imas);
 if isempty(equi),
     error('Problem reading equilibrium structure in IMAS database');
 else
-    corep  = remote_imas(imas,'core_profiles');
+    imas.data.type = 'core_profiles';%data type 
+    imas.data.value = '';%leave empty if read (not used when reading database)
+    %
+    corep  = remote_imas(imas);
     if isempty(corep),
         error('Problem reading core_profiles structure in IMAS database');
     end
