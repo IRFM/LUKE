@@ -10,8 +10,8 @@ function dkepath = path_CEA_PARTENAIRES
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'andromede1','andromede2','andromede3','andromede4','andromede5','andromede6','cephee'};%andromede5 is called by default from CEA intranet
-dkepath.hostname = {'andromede1.partenaires.cea.fr','andromede2','p-andromede03','p-andromede04','p-andromede05','p-andromede06','cephee'};% should match the output of hostname_jd on the machine
+dkepath.machine =  {'andromede1','andromede2','andromede3','andromede4','andromede5','andromede6'};%andromede5 is called by default from CEA intranet
+dkepath.hostname = {'andromede1','andromede2','andromede3','andromede4','andromede5','andromede6'};% should match the output of hostname_jd on the machine
 %
 dkepath.computer = computer;%machine type and supported OS
 %
