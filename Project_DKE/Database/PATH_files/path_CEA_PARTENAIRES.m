@@ -21,7 +21,8 @@ dkepath.default = 'YP105119';
 %
 %------------------------------------ Profile number 1, YP105119 Peysson ------------------------------------
 %
-dkepath.YP105119(1).luke_root = '/Applications/LUKE/LUKE/';
+%dkepath.YP105119(1).luke_root = '/Applications/LUKE/LUKE/';
+dkepath.YP105119(1).luke_root = '/home/YP105119/LUKE/';
 dkepath.YP105119(1).temppathroot = '/data/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 % ---------------------------- andromede 1 -------------------------------
