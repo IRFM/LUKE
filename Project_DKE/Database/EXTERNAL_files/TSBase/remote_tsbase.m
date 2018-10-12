@@ -84,7 +84,11 @@ if err==0,
         scheduler.remnum = iprof;
         %
         remote = dkepath.remote(scheduler.remnum);
-        remote.link_mode='';
+        if remote_enforce == 0
+            remote.link_mode='';
+        else
+            remote.link_mode=1;
+        end
         job = matstandardjob_jd('runmat');
         if nargin > 1,
             [err,job,yout1,yout2,yout3,yout4,yout5] = matremote_jd('tsbase',{shotnumber,signal},remote,job);
