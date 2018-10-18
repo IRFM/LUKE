@@ -12,7 +12,7 @@ function [imas_output] = imas(imas_param)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
-if nargin < 2,
+if nargin < 1,
     error('Not enough input arguments in imas.m');
 end
 %
