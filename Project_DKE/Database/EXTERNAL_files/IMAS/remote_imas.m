@@ -67,7 +67,7 @@ if err_remote==0,
         remote.link_mode='';
         remote.matver.matdef = imas_param.matlabpath;
         job = matstandardjob_jd('runmat');
-        if nargin > 1,
+        if nargin == 1,
             [err,job,imas_output] = matremote_jd('imas',{imas_param},remote,job);%
         end
         %
