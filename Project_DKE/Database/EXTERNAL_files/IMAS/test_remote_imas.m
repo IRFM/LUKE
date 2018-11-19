@@ -12,8 +12,8 @@ imas.run = 0;
 imas.time_requested = 37;%absolute time at which data are read (s)
 imas.command = 'ids_get_slice';%IMAS command
 imas.matlabpath = '/Applications/Matlab_2013B/bin/matlab';%Matlab version used by IMAS
-imas.remote_profile = 'CEA_SIRRAH';%Remote profile for reading data (SIRRAH or ANDROMEDE for WEST/TORE SUPRA)
-imas.remote_enforce = 0;%Enforce remote connection (1) or not (0)
+imas.remote_profile = 'CEA_ANDROMEDE';%Remote profile for reading data (CEA_SIRRAH or CEA_ANDROMEDE for WEST/TORE SUPRA)
+imas.remote_enforce = 1;%Enforce remote connection (1) or not (0)
 %
 % Other parameters
 %
