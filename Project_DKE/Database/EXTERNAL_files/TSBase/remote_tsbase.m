@@ -76,6 +76,8 @@ if err==0,
     if ~isempty(txt) && remote_enforce == 0,%when connected directly from the CEA network
             [yout1,yout2,yout3,yout4,yout5] = tsbase(shotnumber,signal);%
             [ydate] = tsdate(shotnumber);%
+            err = '';
+            job = '';
     else
         dkepath = load_structures_yp('dkepath','','');
         %
