@@ -51,6 +51,8 @@ if err_remote==0,
     %
     if imas_param.local_access && imas_param.remote_enforce == 0,%when connected directly from the CEA network
             [imas_output] = imas(imas_param);%
+            err = '';
+            job = '';
     else
         dkepath = load_structures_yp('dkepath','','');
         %
@@ -64,8 +66,12 @@ if err_remote==0,
         %
         remote = dkepath.remote(scheduler.remnum);
         %
-        remote.link_mode='';
-        remote.matver.matdef = imas_param.matlabpath;
+        if imas_param.remote_enforce == 0,
+            remote.link_mode='';
+        else
+            remote.link_mode=1;
+        end
+        remote.matver.matdef = imas_param.matlabpath;%IMAS is using specific Matlab version
         job = matstandardjob_jd('runmat');
         if nargin == 1,
             [err,job,imas_output] = matremote_jd('imas',{imas_param},remote,job);%
