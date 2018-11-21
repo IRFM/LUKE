@@ -11,7 +11,7 @@ function dkepath = path_SWIP_CLUSTER02
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
 dkepath.machine = 'cluster02';
-dkepath.hostname = 'mgmt';
+dkepath.hostname = 'mgmt.chess';
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -71,7 +71,7 @@ dkepath.Yves(1).remote(1).luke_root = dkepath.Yves(1).luke_root;% local cluster
 %---------------------------------------- Profile number 2, Pony Ma  ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.mazy(1).luke_root = '/home/mazy/LUKE/';
+dkepath.mazy(1).luke_root = '/home/mazy/';
 dkepath.mazy(1).local_root = '/home/Yves/Packages/';
 dkepath.mazy(1).temppathroot = '/home/mazy/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
