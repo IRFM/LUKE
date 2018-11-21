@@ -65,11 +65,11 @@ dkepath.yves(1).extrapaths.MDSPLUS = [dkepath.yves(1).local_root,'Packages/Bin/M
 %
 % Tore Supra (TSBase)
 %
-dkepath.yves(1).TSBASE = [dkepath.yves(1).luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase'];%remote_tsbase.m script
+dkepath.yves(1).extrapaths.TSBASE = [dkepath.yves(1).luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase'];%remote_tsbase.m script
 %
 % IMAS database (WEST and other machines, like ITER)
 %
-dkepath.yves(1).IMAS = [dkepath.yves(1).luke_root,'Project_DKE/Database/EXTERNAL_files/IMAS'];%remote_imas.m script
+dkepath.yves(1).extrapaths.IMAS = [dkepath.yves(1).luke_root,'Project_DKE/Database/EXTERNAL_files/IMAS'];%remote_imas.m script
 %
 
 % LUKE documentation
