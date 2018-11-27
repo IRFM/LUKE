@@ -11,8 +11,8 @@ function dkepath = path_CYFRONET_PROMETHEUS
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = 'p';
-dkepath.hostname = 'login01';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
+dkepath.machine = 'login01';
+dkepath.hostname = 'prometheus';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
 %
 dkepath.computer = computer;%machine type and supported OS
 %
@@ -25,7 +25,8 @@ dkepath.default = 'plgypeysson';
 dkepath.plgypeysson(1).luke_root = '/net/people/plgypeysson/luke/LUKE/';
 dkepath.plgypeysson(1).temppathroot = '/net/scratch/people/plgypeysson/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.plgypeysson(1).local_root = '/net/archive/groups/plggfusion/packages/';
+%dkepath.plgypeysson(1).local_root = '/net/archive/groups/plggfusion/packages/';%DOES NOT WORK (RIGHT ACCESS ISSUE ?)
+dkepath.plgypeysson(1).local_root = '/net/people/plgypeysson/luke/Packages/';%WORKS FINE
 %
 dkepath.plgypeysson(1).mex904 = [dkepath.plgypeysson(1).luke_root,'Project_DKE/MEX/Bin/cyfronet/MATLAB904/'];%R2018a
 dkepath.plgypeysson(1).mex905 = [dkepath.plgypeysson(1).luke_root,'Project_DKE/MEX/Bin/cyfronet/MATLAB905/'];%R2018b
@@ -75,7 +76,8 @@ dkepath.plgypeysson(1).remote(1).luke_root = dkepath.plgypeysson(1).luke_root;% 
 dkepath.plgzgoryk(1).luke_root = '/net/people/plgzgoryk/luke/LUKE/';
 dkepath.plgzgoryk(1).temppathroot = '/net/scratch/people/plgzgoryk/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.plgzgoryk(1).local_root = '/net/archive/groups/plggfusion/packages/';
+%dkepath.plgzgoryk(1).local_root = '/net/archive/groups/plggfusion/packages/';%DOES NOT WORK (RIGHT ACCESS ISSUE ?)
+dkepath.plgzgoryk(1).local_root = '/net/people/plgypeysson/luke/Packages/';%WORKS FINE
 %
 dkepath.plgzgoryk(1).mex904 = [dkepath.plgzgoryk(1).luke_root,'Project_DKE/MEX/Bin/cyfronet/MATLAB904/'];%R2018a
 dkepath.plgzgoryk(1).mex905 = [dkepath.plgzgoryk(1).luke_root,'Project_DKE/MEX/Bin/cyfronet/MATLAB905/'];%R2018b
