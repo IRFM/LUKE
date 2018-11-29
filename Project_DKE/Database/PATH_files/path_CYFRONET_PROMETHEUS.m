@@ -47,8 +47,8 @@ dkepath.plgypeysson(1).compiler_opt.separatrice.mex905 = [' -largeArrayDims -lgf
 dkepath.plgypeysson(1).compiler_opt.helmex.mex905 = [' -compatibleArrayDims -lgfortran -L',dkepath.plgypeysson(1).local_root,'lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.plgypeysson(1).compiler_opt.fopts.mex905 = ' ';%-largeArrayDims';
 %
-dkepath.plgypeysson(1).MUMPS.mex904 = [dkepath.plgypeysson(1).local_root,'MUMPS_5.1.2/MATLAB904'];;%Where MUMPS matrix solver is stored (MEX function)
-dkepath.plgypeysson(1).MUMPS.mex905 = [dkepath.plgypeysson(1).local_root,'MUMPS_5.1.2/MATLAB905'];;%Where MUMPS matrix solver is stored (MEX function)
+dkepath.plgypeysson(1).MUMPS.mex904 = [dkepath.plgypeysson(1).local_root,'MUMPS_5.1.2/MATLAB904'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.plgypeysson(1).MUMPS.mex905 = [dkepath.plgypeysson(1).local_root,'MUMPS_5.1.2/MATLAB905'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
@@ -77,7 +77,7 @@ dkepath.plgzgoryk(1).luke_root = '/net/people/plgzgoryk/luke/LUKE/';
 dkepath.plgzgoryk(1).temppathroot = '/net/scratch/people/plgzgoryk/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 %dkepath.plgzgoryk(1).local_root = '/net/archive/groups/plggfusion/packages/';%DOES NOT WORK (RIGHT ACCESS ISSUE ?)
-dkepath.plgzgoryk(1).local_root = '/net/people/plgypeysson/luke/Packages/';%WORKS FINE
+dkepath.plgzgoryk(1).local_root = '/net/people/plgzgoryk/luke/Packages/';%WORKS FINE
 %
 dkepath.plgzgoryk(1).mex904 = [dkepath.plgzgoryk(1).luke_root,'Project_DKE/MEX/Bin/cyfronet/MATLAB904/'];%R2018a
 dkepath.plgzgoryk(1).mex905 = [dkepath.plgzgoryk(1).luke_root,'Project_DKE/MEX/Bin/cyfronet/MATLAB905/'];%R2018b
@@ -98,8 +98,8 @@ dkepath.plgzgoryk(1).compiler_opt.separatrice.mex905 = [' -largeArrayDims -lgfor
 dkepath.plgzgoryk(1).compiler_opt.helmex.mex905 = [' -compatibleArrayDims -lgfortran -L',dkepath.plgzgoryk(1).local_root,'lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.plgzgoryk(1).compiler_opt.fopts.mex905 = ' ';%-largeArrayDims';
 %
-dkepath.plgzgoryk(1).MUMPS.mex904 = [dkepath.plgzgoryk(1).local_root,'MUMPS_5.1.2/MATLAB904'];;%Where MUMPS matrix solver is stored (MEX function)
-dkepath.plgzgoryk(1).MUMPS.mex905 = [dkepath.plgzgoryk(1).local_root,'MUMPS_5.1.2/MATLAB905'];;%Where MUMPS matrix solver is stored (MEX function)
+dkepath.plgzgoryk(1).MUMPS.mex904 = [dkepath.plgzgoryk(1).local_root,'MUMPS_5.1.2/MATLAB904'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.plgzgoryk(1).MUMPS.mex905 = [dkepath.plgzgoryk(1).local_root,'MUMPS_5.1.2/MATLAB905'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
@@ -119,4 +119,56 @@ dkepath.plgzgoryk(1).remote(1).remoteid = 'CYFRONET_PROMETHEUS';
 dkepath.plgzgoryk(1).remote(1).schedulername = 'slurm';
 dkepath.plgzgoryk(1).remote(1).profilename = 'local';
 dkepath.plgzgoryk(1).remote(1).luke_root = dkepath.plgzgoryk(1).luke_root;% local cluster
+%
+%--------------------------------------------------------------------------------------------------------
+%------------------------------------ Profile number 3, DOMINIK DWORAK ----------------------------------
+%--------------------------------------------------------------------------------------------------------
+%
+dkepath.plgddworak(1).luke_root = '/net/people/plgddworak/luke/LUKE/';
+dkepath.plgddworak(1).temppathroot = '/net/scratch/people/plgddworak/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+%dkepath.plgddworak(1).local_root = '/net/archive/groups/plggfusion/packages/';%DOES NOT WORK (RIGHT ACCESS ISSUE ?)
+dkepath.plgddworak(1).local_root = '/net/people/plgddworak/luke/Packages/';%WORKS FINE
+%
+dkepath.plgddworak(1).mex904 = [dkepath.plgddworak(1).luke_root,'Project_DKE/MEX/Bin/cyfronet/MATLAB904/'];%R2018a
+dkepath.plgddworak(1).mex905 = [dkepath.plgddworak(1).luke_root,'Project_DKE/MEX/Bin/cyfronet/MATLAB905/'];%R2018b
+%
+%dkepath.plgddworak(1).compiler_opt.libs.gfortran = [dkepath.plgddworak(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
+%
+dkepath.plgddworak(1).compiler_opt.copts = '';
+dkepath.plgddworak(1).compiler_opt.copts.cpp.mex904 = '-f /net/people/plgddworak/luke/LUKE/Project_DKE/MEX/Bin/cyfronet/MATLAB904/g++_glnxa64.xml';
+dkepath.plgddworak(1).compiler_opt.copts.cpp.mex905 = '-f /net/people/plgddworak/luke/LUKE/Project_DKE/MEX/Bin/cyfronet/MATLAB905/g++_glnxa64.xml';
+%
+dkepath.plgddworak(1).compiler_opt.fopts.mex904 = 'FC=''gfortran''';%
+dkepath.plgddworak(1).compiler_opt.separatrice.mex904 = [' -largeArrayDims -lgfortran -L',dkepath.plgddworak(1).local_root,'lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.plgddworak(1).compiler_opt.helmex.mex904 = [' -compatibleArrayDims -lgfortran -L',dkepath.plgddworak(1).local_root,'lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.plgddworak(1).compiler_opt.fopts.mex904 = ' ';%-largeArrayDims';
+%
+dkepath.plgddworak(1).compiler_opt.fopts.mex905 = 'FC=''gfortran''';%
+dkepath.plgddworak(1).compiler_opt.separatrice.mex905 = [' -largeArrayDims -lgfortran -L',dkepath.plgddworak(1).local_root,'lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.plgddworak(1).compiler_opt.helmex.mex905 = [' -compatibleArrayDims -lgfortran -L',dkepath.plgddworak(1).local_root,'lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.plgddworak(1).compiler_opt.fopts.mex905 = ' ';%-largeArrayDims';
+%
+dkepath.plgddworak(1).MUMPS.mex904 = [dkepath.plgddworak(1).local_root,'MUMPS_5.1.2/MATLAB904'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.plgddworak(1).MUMPS.mex905 = [dkepath.plgddworak(1).local_root,'MUMPS_5.1.2/MATLAB905'];%Where MUMPS matrix solver is stored (MEX function)
+%
+% LUKE documentation
+%
+dkepath.plgddworak(1).graphviz.env = '/bin/';% Graphviz environment variable
+dkepath.plgddworak(1).latex.env = '/bin/';% Latex environment variable
+dkepath.plgddworak(1).imagemagick.env = '/bin/';% ImageMagick environment variable
+%
+% ---------------------------- login other node -------------------------------
+%
+%dkepath.plgddworak(1).node = dkepath.plgddworak(1).cyfronet;
+%
+%--------------------------- Remote computing -----------------------------
+%
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
+%
+dkepath.plgddworak(1).remote(1).remoteid = 'CYFRONET_PROMETHEUS';
+dkepath.plgddworak(1).remote(1).schedulername = 'slurm';
+dkepath.plgddworak(1).remote(1).profilename = 'local';
+dkepath.plgddworak(1).remote(1).luke_root = dkepath.plgddworak(1).luke_root;% local cluster
+
 
