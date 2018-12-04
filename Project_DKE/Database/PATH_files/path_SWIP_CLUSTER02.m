@@ -116,4 +116,51 @@ dkepath.mazy(1).remote(1).schedulername = 'torque';
 dkepath.mazy(1).remote(1).profilename = 'local';
 dkepath.mazy(1).remote(1).luke_root = dkepath.mazy(1).luke_root;% local cluster
 %
+%--------------------------------------------------------------------------------------------------------
+%---------------------------------------- Profile number 3, Xue Lei  ------------------------------------
+%--------------------------------------------------------------------------------------------------------
 %
+dkepath.xuelei(1).luke_root = '/home/xuelei/';
+dkepath.xuelei(1).local_root = '/home/Yves/Packages/';
+dkepath.xuelei(1).temppathroot = '/home/xuelei/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+dkepath.xuelei(1).localdatapath = dkepath.xuelei(1).temppathroot;
+%
+dkepath.xuelei(1).mex714 = [dkepath.xuelei(1).luke_root,'Project_DKE/MEX/Bin/cluster02/MATLAB714/'];
+dkepath.xuelei(1).mex801 = [dkepath.xuelei(1).luke_root,'Project_DKE/MEX/Bin/cluster02/MATLAB801/'];
+dkepath.xuelei(1).mex802 = [dkepath.xuelei(1).luke_root,'Project_DKE/MEX/Bin/cluster02/MATLAB802/'];
+%
+dkepath.xuelei(1).compiler_opt.libs.gfortran = [dkepath.xuelei(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.6','/',dkepath.machine,'/'];%extra libraries
+dkepath.xuelei(1).compiler_opt.copts = '';
+dkepath.xuelei(1).compiler_opt.fopts.mex714 = 'FC=''gfortran''';%
+%dkepath.xuelei(1).compiler_opt.separatrice.mex714 = [' -largeArrayDims -lgfortran -L',dkepath.xuelei(1).local_root,'lapack-3.4.2-gfortran -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+%dkepath.xuelei(1).compiler_opt.helmex.mex714 = [' -compatibleArrayDims -lgfortran -L',dkepath.xuelei(1).local_root,'lapack-3.4.2-gfortran -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.xuelei(1).compiler_opt.separatrice.mex714 = NaN;%[' -largeArrayDims -lgfortran -L',dkepath.xuelei(1).local_root,'lapack-3.4.2-gfortran -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.xuelei(1).compiler_opt.helmex.mex714 = NaN;%[' -compatibleArrayDims -lgfortran -L',dkepath.xuelei(1).local_root,'lapack-3.4.2-gfortran -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.xuelei(1).compiler_opt.fopts.mex801 = 'FC=''gfortran''';%
+dkepath.xuelei(1).compiler_opt.separatrice.mex801 = NaN;%[' -largeArrayDims -lgfortran -L',dkepath.xuelei(1).local_root,'lapack-3.4.2-gfortran -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.xuelei(1).compiler_opt.helmex.mex801 = NaN;%[' -compatibleArrayDims -lgfortran -L',dkepath.xuelei(1).local_root,'lapack-3.4.2-gfortran -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.xuelei(1).compiler_opt.fopts.mex802 = 'FC=''gfortran''';%
+dkepath.xuelei(1).compiler_opt.separatrice.mex802 = NaN;%[' -largeArrayDims -lgfortran -L',dkepath.xuelei(1).local_root,'lapack-3.4.2-gfortran -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.xuelei(1).compiler_opt.helmex.mex802 = NaN;%[' -compatibleArrayDims -lgfortran -L',dkepath.xuelei(1).local_root,'lapack-3.4.2-gfortran -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+%
+%Where MUMPS matrix solver is stored (MEX function)
+%
+dkepath.xuelei(1).MUMPS.mex714 = [dkepath.xuelei(1).local_root,'MUMPS_4.10.0/MATLAB714'];
+dkepath.xuelei(1).MUMPS.mex801 = [dkepath.xuelei(1).local_root,'MUMPS_4.10.0/MATLAB801'];
+dkepath.xuelei(1).MUMPS.mex802 = [dkepath.xuelei(1).local_root,'MUMPS_4.10.0/MATLAB802'];
+%
+% LUKE documentation
+%
+dkepath.xuelei(1).graphviz.env = '/usr/bin/';%Graphviz environment variable
+dkepath.xuelei(1).latex.env = '/usr/bin/';% Latex environment variable
+dkepath.xuelei(1).imagemagick.env = '/usr/bin/';% ImageMagick environment variable
+%
+%--------------------------- Remote computing -----------------------------
+%
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
+%
+dkepath.xuelei(1).remote(1).remoteid = 'SWIP_CLUSTER02';
+dkepath.xuelei(1).remote(1).schedulername = 'torque';
+dkepath.xuelei(1).remote(1).profilename = 'local';
+dkepath.xuelei(1).remote(1).luke_root = dkepath.xuelei(1).luke_root;% local cluster
