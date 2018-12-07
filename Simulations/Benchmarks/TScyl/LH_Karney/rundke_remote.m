@@ -31,7 +31,6 @@ if nargin < 1 || (~isempty(remlist) && ~isnumeric(remlist)),
     remlist = [];% Interactive mode
 end
 %
-%
 permission = test_permissions_yp;
 %
 if ~permission 
