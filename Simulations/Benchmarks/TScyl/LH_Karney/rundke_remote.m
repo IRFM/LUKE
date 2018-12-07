@@ -31,6 +31,14 @@ if nargin < 1 || (~isempty(remlist) && ~isnumeric(remlist)),
     remlist = [];% Interactive mode
 end
 %
+%
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 rempause = 1/60;%pause between job checks (in minutes) (only for remtimout > 0)
 %
 debugmode = 0;% debug mode (0) off (1) on
