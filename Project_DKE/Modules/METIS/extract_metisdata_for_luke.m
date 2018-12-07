@@ -56,7 +56,7 @@ end
 %
 itsel = unique([find(itsel),itsel2]);
 %
-post.z0dinput.option.luke_mode = 2;%save before LUKE calculation
+post.z0dinput.option.luke_mode = 2;%save without launching LUKE calculation
 %
 post.z0dinput.option.luke_helena = input_dke_yp('You you want to \n (0) use metis equilibrium\n (1) use helena to recalculate the equilibrium\n (2) load an existing equilibrium\n ?',0,0:2);
 post.z0dinput.option.bsigne = input_dke_yp('Direction of the toroidal magnetic field viewed from top\n (1) clockwise\n (-1) anti-clockwise\n ',1,[-1,1]);
