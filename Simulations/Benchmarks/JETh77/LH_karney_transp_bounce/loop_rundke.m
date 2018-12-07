@@ -1,6 +1,12 @@
 function [Zcurr,ZP0,dke_out,equilDKE,mksa] = loop_rundke(iDr0,Dr0_list,iDr0_save,...
     id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple)
 %
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
 %
 transpfaste.Dr0 = Dr0_list(iDr0);
 %

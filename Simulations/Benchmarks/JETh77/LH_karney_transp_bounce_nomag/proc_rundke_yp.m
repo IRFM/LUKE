@@ -1,5 +1,12 @@
 function [] = proc_rundke_yp(nfig0,filename,ir_display,save_mode)
 %
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 syn_mode = 0;
 print_mode = -1;
 %

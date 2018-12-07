@@ -8,6 +8,13 @@ close all
 warning off
 global nfig
 %
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 opt_proc = 1;%test of numerical performances with number of processors at fixed Dpsipsi = 10 m2/s.
 nproc_max = 10;%max number of processors
 %
