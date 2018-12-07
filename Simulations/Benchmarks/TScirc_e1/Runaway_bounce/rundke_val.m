@@ -8,7 +8,13 @@ close all
 warning off
 global nfig
 %
-% 
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
 id_simul = 'Runaway_bounce_val';%Simulation ID
