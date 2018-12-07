@@ -1,3 +1,11 @@
+%
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 id_simul = 'LH_karney_transp_nobounce';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
