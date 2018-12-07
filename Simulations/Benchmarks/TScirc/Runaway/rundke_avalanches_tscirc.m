@@ -10,6 +10,13 @@ close all
 warning('off')
 for irho =10,
 %
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 % grid parameters
 %
 f_pmin = 1; %lower limit for avalanche calculation. if avalanche_mode and not specified = 1
