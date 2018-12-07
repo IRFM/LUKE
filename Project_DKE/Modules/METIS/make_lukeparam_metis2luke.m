@@ -68,7 +68,7 @@ ecparam.dnpar0 = 0.05;%initial spectral width [1,1]
 ecparam.phi0 = 0;%toroidal angle launching position [1,1]
 ecparam.mmode = -1;% (-1) for O mode (1) for X mode
 ecparam.ns = 1000;
-ecparam.method = 'cubic';
+ecparam.method = 'spline';
 %
 % LUKE radial transport parameters
 %
@@ -88,7 +88,7 @@ if isfield(option,'luke_mode'),
 else  
     lukeparam.luke_mode = 0;% (0) run LUKE, (1) run LUKE then save output (2) save input then exit
 end
-lukeparam.batch_mode = 1;% (0) rum LUKE in interactive mode, (1) run LUKE in batch mode
+lukeparam.batch_mode = 1;% (0) run LUKE in interactive mode, (1) run LUKE in batch mode
 %
 lukeparam.display_mode = 0;
 lukeparam.rho_display = 0.5;
@@ -100,7 +100,7 @@ lukeparam.ecparam = ecparam;
 lukeparam.transpfaste = transpfaste;
 %
 if ~auto_mode,
-    lukeparam = imod_struct_jd(lukeparam,'lukeparam',1,1);
+%    lukeparam = imod_struct_jd(lukeparam,'lukeparam',1,1);
 end
 %
 

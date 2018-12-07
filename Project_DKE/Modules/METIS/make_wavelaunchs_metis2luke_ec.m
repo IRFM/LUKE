@@ -52,6 +52,9 @@ if ecparam.mode == 1,
     beta_L = pi/2;%horizontal propagation
     phi_L = ecparam.phi0;
     %
+    yx_L = R_L - equil.Rp;
+    xz_L = phi_L*equil.Rp;
+    %
     % straight line to reach virtual launching point (on a vertical line
     % located at R = 1.1 Rmax where Rmax is the maximum R in the plasma)
     %
@@ -77,6 +80,10 @@ if ecparam.mode == 1,
             Z_L = Z_L + offset*max(equil.pty(:));
         end
         %
+        yx_abs = R_abs - equil.Rp;
+        yy_abs = Z_abs - equil.Zp;
+        yy_L = Z_L - equil.Zp;
+        %
         if omega_rf > 0,%alpha from Doppler shift
             %
             B1_res = omega_rf*me/qe; 
@@ -96,7 +103,7 @@ if ecparam.mode == 1,
             %
             alpha_abs = option.signe*option.sens*asin(sinalpha_abs);
             %
-            [void,void,syR,void,void,syalpha] = raypath_prop_jd(R_abs,Z_abs,phi_L,alpha_abs,beta_L,s);
+            [void,void,syR,void,void,syalpha] = raypath_prop_jd(equil.Rp,yx_abs,yy_abs,xz_L,alpha_abs,beta_L,s);
             %
             alpha_L = pi + interp1(syR,syalpha,R_L,'linear');
             %
@@ -106,7 +113,7 @@ if ecparam.mode == 1,
             %
             if ~isnan(alpha_L),
                 %
-                [void,void,syR,void,void,syalpha] = raypath_prop_jd(R_L,Z_L,phi_L,alpha_L,beta_L,s);
+                [void,void,syR,void,void,syalpha] = raypath_prop_jd(equil.Rp,yx_L,yy_L,xz_L,alpha_L,beta_L,s);
                 %
                 alpha_abs = interp1(syR,syalpha,R_abs,'linear');
                 %
@@ -127,7 +134,7 @@ if ecparam.mode == 1,
                     %
                 end                    
                 %
-                [void,void,syR,void,void,syalpha] = raypath_prop_jd(R_abs,Z_abs,phi_L,alpha_abs,beta_L,s);
+                [void,void,syR,void,void,syalpha] = raypath_prop_jd(equil.Rp,yx_abs,yy_abs,xz_L,alpha_abs,beta_L,s);   
                 %
                 alpha_L = pi + interp1(syR,syalpha,R_L,'linear');                    
                 %
@@ -151,7 +158,7 @@ if ecparam.mode == 1,
         tBy_abs = interp1(px,equil.ptBx,xec,ecparam.method);
         tBPHI_abs = interp1(px,equil.ptBPHI,xec,ecparam.method);
         %
-        [void,void,syR,void,void,syalpha] = raypath_prop_jd(R_L,0,phi_L,alpha_L,beta_L,s);
+        [void,void,syR,void,void,syalpha] = raypath_prop_jd(equil.Rp,yx_L,0,xz_L,alpha_L,beta_L,s);
         %
         talpha_abs = interp1(syR,syalpha,tR_abs,'linear');
         %
