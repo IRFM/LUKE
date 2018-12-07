@@ -13,6 +13,13 @@ warning('off')
 %
 % printing option
 %
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 id_simul = 'Runaway_alpha3_nosync';%_coll2%Simulation ID
 % id_simul = 'Runaway_alpha3_sync_0p6';%_coll2_norm1_Zi4%Simulation ID
 p_opt = -1;% printing and saving options : (-1) do nothing (0) print figures (1) print figures and save figures and results (2) save figures and results

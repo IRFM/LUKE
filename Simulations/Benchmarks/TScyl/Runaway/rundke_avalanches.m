@@ -10,6 +10,13 @@ close all
 warning('off')
 for Zii = 1,
 %
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 % grid parameters
 %
 pnmax_S = 28;%20;% for E/Ec = 4, Pc = 5; for E/Ec = 6, Pc = 4;

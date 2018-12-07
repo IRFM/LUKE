@@ -11,6 +11,13 @@ warning('off')
 %
 [qe,me,~,~,e0,~,~,mc2] = pc_dke_yp;%Universal physics constants
 % 
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 % *********************** This part must be specified by the user *****************************
 %
 scanstr = 'zi';%'betath2';%'taurinv';%'alpha';%'sfac1';%'pnmax_S';%'np_tail';%'dtn';%

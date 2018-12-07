@@ -16,6 +16,13 @@ clear functions
 close all
 warning('off')
 %
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 % normalized electric field (with respect to the Critical field Ec)
 %
 alpha = [10]*1e4;%E/Ec

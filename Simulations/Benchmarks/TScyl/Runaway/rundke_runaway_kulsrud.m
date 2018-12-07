@@ -16,6 +16,13 @@ clear functions
 close all
 warning('off')
 % 
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 % *********************** This part must be specified by the user *****************************
 %
 %

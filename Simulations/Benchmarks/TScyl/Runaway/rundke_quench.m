@@ -8,6 +8,13 @@ close all
 warning off
 global nfig
 % 
+permission = test_permissions_yp;
+%
+if ~permission 
+    disp('Please move the script to a local folder where you have write permission before to run it')
+    return;
+end
+%
 % *********************** This part must be specified by the user *****************************
 %
 [qe,me,~,~,e0,~,~,mc2] = pc_dke_yp;%Universal physics constants
