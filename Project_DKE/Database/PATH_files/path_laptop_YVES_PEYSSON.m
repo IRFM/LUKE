@@ -173,6 +173,21 @@ dkepath.yves(1).remote(ir).schedulername = 'direct';
 dkepath.yves(1).remote(ir).gitupdate = true;
 %
 ir = ir + 1;
+dkepath.yves(1).remote(ir).remoteid = 'IPP_SOROBAN';
+dkepath.yves(1).remote(ir).schedulername = 'pbs';
+dkepath.yves(1).remote(ir).profilename = 'peysson';
+dkepath.yves(1).remote(ir).luke_root = '/compass/Shared/Common/IT/projects/luke/LUKE/';
+dkepath.yves(1).remote(ir).link_mode = '';
+dkepath.yves(1).remote(ir).cvsupdate = false;% update done in 'direct' mode
+dkepath.yves(1).remote(ir).gitupdate = false;
+dkepath.yves(1).remote(ir).gitmode.cmd = 'cd /compass/Shared/Common/IT/projects/luke/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
+%
+ir = ir + 1;
+dkepath.yves(1).remote(ir) = dkepath.yves(1).remote(ir-1);
+dkepath.yves(1).remote(ir).schedulername = 'direct';
+dkepath.yves(1).remote(ir).gitupdate = true;
+%
+ir = ir + 1;
 dkepath.yves(1).remote(ir).remoteid = 'IFJ_KLASTER';
 dkepath.yves(1).remote(ir).schedulername = 'torque';
 dkepath.yves(1).remote(ir).profilename = 'yves';
@@ -275,46 +290,6 @@ dkepath.yves(1).remote(ir).link_mode = '';
 dkepath.yves(1).remote(ir).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(ir).gitupdate = false;
 dkepath.yves(1).remote(ir).gitmode.cmd = 'cd /home/Yves/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
-%
-ir = ir + 1;
-dkepath.yves(1).remote(ir) = dkepath.yves(1).remote(ir-1);
-dkepath.yves(1).remote(ir).schedulername = 'direct';
-dkepath.yves(1).remote(ir).gitupdate = true;
-%
-ir = ir + 1;
-dkepath.yves(1).remote(ir).remoteid = 'IPR_SCYLLA';
-dkepath.yves(1).remote(ir).schedulername = 'torque';
-dkepath.yves(1).remote(ir).profilename = 'peysson';
-dkepath.yves(1).remote(ir).luke_root = '/home/code/luke/LUKE/';
-dkepath.yves(1).remote(ir).link_mode = '';
-dkepath.yves(1).remote(ir).cvsupdate = false;% update done in 'direct' mode
-dkepath.yves(1).remote(ir).gitupdate = false;
-dkepath.yves(1).remote(ir).gitmode.cmd = 'cd /home/code/luke/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
-%
-ir = ir + 1;
-dkepath.yves(1).remote(ir) = dkepath.yves(1).remote(ir-1);
-dkepath.yves(1).remote(ir).schedulername = 'direct';
-dkepath.yves(1).remote(ir).gitupdate = true;
-%
-ir = ir + 1;
-dkepath.yves(1).remote(ir).remoteid = 'CRPP_LAC1';
-dkepath.yves(1).remote(ir).schedulername = 'direct';
-dkepath.yves(1).remote(ir).profilename = 'local';
-dkepath.yves(1).remote(ir).luke_root = '/home/decker/LUKE/';
-dkepath.yves(1).remote(ir).link_mode = '';% lac911 gateway
-dkepath.yves(1).remote(ir).cvsupdate = false;% update done in 'direct' mode
-dkepath.yves(1).remote(ir).gitupdate = false;
-dkepath.yves(1).remote(ir).gitmode.cmd = '';
-%
-ir = ir + 1;
-dkepath.yves(1).remote(ir).remoteid = 'CRPP_LAC5';
-dkepath.yves(1).remote(ir).schedulername = 'slurm';
-dkepath.yves(1).remote(ir).profilename = 'local';
-dkepath.yves(1).remote(ir).luke_root = '/home/decker/LUKE/';
-dkepath.yves(1).remote(ir).link_mode = '';% lac911 gateway
-dkepath.yves(1).remote(ir).cvsupdate = false;% update done in 'direct' mode
-dkepath.yves(1).remote(ir).gitupdate = false;
-dkepath.yves(1).remote(ir).gitmode.cmd = '';
 %
 ir = ir + 1;
 dkepath.yves(1).remote(ir) = dkepath.yves(1).remote(ir-1);
