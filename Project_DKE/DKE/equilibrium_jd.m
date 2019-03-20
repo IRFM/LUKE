@@ -127,6 +127,10 @@ else
     xpsin = NaN;%the radial grid is the equilibrium grid
 end
 %
+% Ionization model
+%
+equil = ionization_model_yp(equil);
+%
 % CASE OF LOCAL CALCULATION INDEPENDENT OF ANY ACTUAL TOKAMAK GENOMETRY
 %
 [npsi,ntheta] = size(equil.ptx);
@@ -201,6 +205,14 @@ if strcmp(equil.id,'LOCAL'),
     equilDKE.xmhu0T2 = xmhu0T2;
     equilDKE.xdV_2piRp_dke = xdV_2piRp_dke;
     equilDKE.xdA_dke = xdA_dke;
+    %
+    if isfield(equil,'ADAS')
+        equilDKE.ADAS = equil.ADAS;
+    end
+    %
+    if isfield(equil,'elements_ADAS')
+        equilDKE.elements_ADAS = equil.elements_ADAS;
+    end
     %
     return
 end
@@ -761,6 +773,14 @@ equilDKE.ap = ap;
 equilDKE.xmhu0T2 = xmhu0T2;
 equilDKE.xdV_2piRp_dke = xdV_2piRp_dke;
 equilDKE.xdA_dke = xdA_dke;
+%
+if isfield(equil,'ADAS')
+    equilDKE.ADAS = equil.ADAS;
+end
+%
+if isfield(equil,'elements_ADAS')
+    equilDKE.elements_ADAS = equil.elements_ADAS;
+end
 %
 if isfield(equil,'equil_fit'),
     equilDKE.equil_fit = equil.equil_fit;
