@@ -1,10 +1,7 @@
 function [Fee,Aee,Btee] = eecoll_dke_yp(dkepath,v,z,gamma,sigma,pn,pn2,dpn,J1,J2,spfac,betath_ref,xne_norm,xTe_norm,ir,coll_mode,clustermode)
 %LUKE - Electron-electron collision operator
 %
-%Electron-electron collision operator (1: high velocity limit, 2:
-%linearized Belaiev-Budker, 3: Lorentz model, 4: non-relativistic
-%Maxwellian background, 5: Ultrarelativistic Moller model (for runaways
-%only)
+%Electron-electron collision operator (1 or 3: high velocity limit, 0 or 2: Belaiev-Budker collision operator, 4: non-relativistic Maxwellian background, 5: Ultrarelativistic high velocity limit (for runaways only)
 %
 %by Yves Peysson (CEA-IRFM,yves.peysson@cea.fr) and Joan Decker (CEA-IRFM,joan.decker@cea.fr) and 
 %	
@@ -15,11 +12,11 @@ function [Fee,Aee,Btee] = eecoll_dke_yp(dkepath,v,z,gamma,sigma,pn,pn2,dpn,J1,J2
     v2 = v.*v;
     npn = length(pn);
     %
-    if coll_mode == 1,%High-velocity limit
+    if coll_mode == 1 | coll_mode == 3,%High-velocity limit
         Fee = xne_norm(ir)'./v2;
         Aee = xne_norm(ir)'.*xTe_norm(ir)'./v./v2;
         Btee = xne_norm(ir)'./v/2 - xne_norm(ir)'.*xTe_norm(ir)'./v./v2/2;
-    elseif coll_mode == 0 | coll_mode == 2,%Linearized Belaiev-Budker
+    elseif coll_mode == 0 | coll_mode == 2,%Belaiev-Budker collision model
     %
     %Super momentum grid definitions for collision integrals
     %
@@ -30,10 +27,10 @@ function [Fee,Aee,Btee] = eecoll_dke_yp(dkepath,v,z,gamma,sigma,pn,pn2,dpn,J1,J2
     %
 
         spn = linspace(pn(1)/spfac,pn(1),spfac);
-    %  spnp = linspace(pn(1)/spfac,pnp(1),spfac);
+    %   spnp = linspace(pn(1)/spfac,pnp(1),spfac);
         for ip=2:npn,
             spn = [spn(1:length(spn)-1),linspace(pn(ip-1),pn(ip),spfac)];   
-    %    spnp = [spnp(1:length(spnp)-1),linspace(pnp(ip-1),pnp(ip),spfac)];  
+    %       spnp = [spnp(1:length(spnp)-1),linspace(pnp(ip-1),pnp(ip),spfac)];  
         end
     %
         spn = spn(:);%for numerical integration by trapz_dke_yp subroutine
@@ -76,7 +73,7 @@ function [Fee,Aee,Btee] = eecoll_dke_yp(dkepath,v,z,gamma,sigma,pn,pn2,dpn,J1,J2
                 [F1_1(1,ip),F1_2(1,ip),F2_1(1,ip),B1_1(1,ip),B1_2(1,ip),B1_3(1,ip),B1_4(1,ip),B1_5(1,ip),B2_1(1,ip),B2_2(1,ip),B2_3(1,ip)] = loop_eecoll_dke_yp(ip,pn,sfM,spn,spn2,sv,sgamma,sgamma2,ssigma,sz,sJ1,sJ2);
             end
         end
-    %
+        %
         F1 = F1_1./v2 + F1_2./pn2;
         F2 = (1 - sigma./z./gamma).*F2_1./v;
         Fee = 4*pi*(F1 + F2);
@@ -84,16 +81,12 @@ function [Fee,Aee,Btee] = eecoll_dke_yp(dkepath,v,z,gamma,sigma,pn,pn2,dpn,J1,J2
         B1 = B1_1./v/2 - B1_2./v./pn2/6 + B1_3./v./gamma./gamma./z./z/8 - B1_4./v./z./z/4 - B1_5./v./gamma./gamma/4;
         B2 = B2_1/2 + B2_2.*(-gamma.*gamma/6 + J1./z./z./gamma/8 - gamma.*J2./z./z/4) - B2_3.*(gamma - sigma./z)./pn2./gamma/4;   
         Btee = 4*pi*(B1 + B2);
-    elseif coll_mode == 3,%Lorentz model
-        Fee = zeros(1,npn);
-        Aee = zeros(1,npn);
-        Btee = zeros(1,npn);
-    elseif coll_mode == 4,%Maxwellian background
+    elseif coll_mode == 4,%Non-relativistic Maxwellian background
         u = v/sqrt(2)/xTe_norm(ir)';
         Fee = xne_norm(ir)'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./v2;
         Aee = xne_norm(ir)'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/2;
         Btee = xne_norm(ir)'.*((2*u.^2-1).*erf(u)+2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/4;
-    elseif coll_mode == 5,%Ultrarelativistic Moller model
+    elseif coll_mode == 5,%Ultrarelativistic high-velocity-limit model
         Aee = xne_norm(ir)'.*xTe_norm(ir)'./v./v2;
         Fee = xne_norm(ir)'./v2;
         Btee = xne_norm(ir)'./v/2;
@@ -101,5 +94,6 @@ function [Fee,Aee,Btee] = eecoll_dke_yp(dkepath,v,z,gamma,sigma,pn,pn2,dpn,J1,J2
 %
 end
 
-
+      
+       
 

@@ -270,7 +270,8 @@ if display_mode >=1,
     elseif (dkeparam.coll_mode == 1), disp(['   - Collisions: High velocity limit']);    
     elseif (dkeparam.coll_mode == 2), disp(['   - Collisions: Linearized relativistic Belaiev-Budker']);
     elseif (dkeparam.coll_mode == 3), disp(['   - Collisions: Non-relativistic Lorentz model']);
-    elseif (dkeparam.coll_mode == 4), disp(['   - Collisions: Non-relativistic Maxwellian background']);end
+    elseif (dkeparam.coll_mode == 4), disp(['   - Collisions: Non-relativistic Maxwellian background']);
+    elseif (dkeparam.coll_mode == 5), disp(['   - Collisions: Ultra-relativistic Moller model']);end
     if (bounce_mode == 0),      disp(['   - No bounce averaging']);
     elseif (bounce_mode == 1),  disp(['   - Bounce averaging + implicit symmetrization in the bounce domain (15 diagonals operator) for f0']);end
     if (dke_mode == 0),       disp(['   - Resolution of the electron Fokker-Planck Equation']);

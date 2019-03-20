@@ -1,7 +1,6 @@
 function [I1,I2] = firstordercollop_dke_yp(f1,betath_ref,masku,maskl,dpn,xpn,xpn2,xpn3,xsigma,xgamma,xz,xz2,pn,pn2,pn3,sigma,gamma,z,z2,xJ1,xJ2,xJ3,xJ4,J1,J2,J3,J4,xTe_norm);
 %
-%First order correction of the Beliaev-Budker collision operator for accurate current drive calculations C(fM,fe). Describe the
-%dampin of thermal electrons on the fast tail.
+%First order correction of the Beliaev-Budker collision operator for accurate current drive calculations C(fM,fe). Describe the damping of thermal electrons on the fast tail.
 %
 %by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker MIT-RLE (jodecker@mit.edu)
 %

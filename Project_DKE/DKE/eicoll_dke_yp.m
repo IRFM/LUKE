@@ -1,6 +1,6 @@
 function [Fei,Aei,Btei] = eicoll_dke_yp(v,zZi,zmi,xzni_norm,xzTi_norm,ir,coll_mode)
 %
-%Electron-ion collision operator (non-relativistic limit)
+%Electron-ion collision operator (1: high velocity limit, 3 or 5 : Lorentz collision model (large zZi, zmi -> Inf, zxTi_norm = 0), all others collisions mode : non-relativistic Maxwellian background
 %
 %By Joan Decker (MIT-RLE) and Yves Peysson (CEA-DRFC,yves.peysson@cea.fr)
 %	
@@ -15,15 +15,11 @@ if coll_mode == 1,%High-velocity limit
 	Fei = sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)')./v2;
 	Aei = sum(zZi.^2.*(me./zmi).*xzni_norm(:,ir)'.*xzTi_norm(:,ir)')./v./v2;
 	Btei = sum(zZi.^2.*xzni_norm(:,ir)')./v/2 - sum(zZi.^2.*xzni_norm(:,ir)'.*(me./zmi).*xzTi_norm(:,ir)')./v./v2/2;
-elseif coll_mode == 3,%Lorentz model 
-	Fei = zeros(size(v));
-	Aei = zeros(size(v));
-	Btei = ones(size(v))/2;
-elseif coll_mode == 5,%Ultrarelativistic Moller model
+elseif coll_mode == 3 | coll_mode == 5,%Lorentz collision model (large zZi, zmi -> Inf, zxTi_norm = 0)
    Fei = zeros(size(v));
    Aei = zeros(size(v));
    Btei = sum(((zZi'.^2.*xzni_norm(:,ir))*ones(1,length(v))))./v/2;
-else,%Maxwellian background (non-relativistic limit)
+else,%Non-relativistic Maxwellian background
     xzTi_norm(find(xzTi_norm(:,ir)==0),ir) = eps;%To remove singularities when Ti = 0 exactly
 	u = (ones(size(xzTi_norm(:,ir)))*v)./(sqrt(xzTi_norm(:,ir).*(me./zmi'))*ones(1,length(v)))./sqrt(2);
 %
