@@ -21,7 +21,7 @@ end
 if length(pZeff) == 1, pZeff = pZeff*ones(size(pne));end
 %
 if sum(zZi>1) > 1%More than one impurity species
-	 error('need each species density from impurity transport code')
+    error('ERROR: for more than one fully stripped impurity species, an impurity transport code or a radiative equilibrium model (ADAS) must be used.');
 elseif sum(zZi>1) == 1%One impurity species
 	 Zimp = max(zZi);
 	 pnhyd = pne.*(Zimp - pZeff)/(Zimp - 1);  
