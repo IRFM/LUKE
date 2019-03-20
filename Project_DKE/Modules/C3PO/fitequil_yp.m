@@ -38,17 +38,21 @@ if nargin == 4,
     nharm = [];%For Spline-Fourier case only
 end
 %
+if isfield(equil_in,'pzni') && isfield(equil_in,'pzTi') && isfield(equil_in,'zZi') && isfield(equil_in,'pne') && isfield(equil_in,'pTe')
+    %
+    equil_in = ionization_model_yp(equil_in);%impurity ionization model
+    %
+    if ~isempty(equil_in.zZi),equil_out.zZi = equil_in.zZi;else equil_out.zZi = [0,0,0];end
+    if ~isempty(equil_in.zmi),equil_out.zmi = equil_in.zmi;else equil_out.zmi = [1,1,1];end
+end
+%
 equil_out.id = equil_in.id;
 equil_out.method = method;
 %
 equil_out.Rp = equil_in.Rp;
 equil_out.Zp = equil_in.Zp;
 %
-if mode == 1,%Spline-Fourier case: (psi,theta) magnetic equilibrium  
-    if isfield(equil_in,'pzni') && isfield(equil_in,'pzTi') && isfield(equil_in,'zZi') && isfield(equil_in,'pne') && isfield(equil_in,'pTe') 
-        if ~isempty(equil_in.zZi),equil_out.zZi = equil_in.zZi;else equil_out.zZi = [0,0,0];end
-        if ~isempty(equil_in.zmi),equil_out.zmi = equil_in.zmi;else equil_out.zmi = [1,1,1];end
-    end
+if mode == 1,%Spline-Fourier case: (psi,theta) magnetic equilibrium   
     %
     ap = equil_in.ptx(end,1);
     psi_apRp = equil_in.psi_apRp;
