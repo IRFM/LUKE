@@ -1,8 +1,8 @@
-function output = metis2luke(post,it,auto_mode)
+function [output,lukestructs] = metis2luke(post,it,auto_mode)
 %
 % function for running LUKE at a given time in the METIS profil0d time grid
 %
-% by J. Decker et J.-F. Artaud, 02/01/2011
+% by J. Decker, J.-F. Artaud and Y. Peysson
 %
 output = '';
 %
@@ -86,12 +86,27 @@ equil_id = [tokamak,'_',shotnum,'_',shotime];
 %
 [equil,profil0d_out] = make_equil_metis2luke(equil_id,profil0d,zerod,exp0d,cons,geo,option,lukeparam.equilparam);
 %
+if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma  (0) no, (1) yes',1,[0,1])  
+    %
+    [dkepath] = load_structures_yp('dkepath','','');
+    %
+    if exist([dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat'])
+        equil.ADAS = [dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat'];
+        equil.id = [equil.id,'_ADAS'];
+        equil_id = [equil_id,'_ADAS'];
+    else
+        disp(['WARNING: ADAS.mat file has not been found in folder ''',dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat''. Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
+    end
+    %
+end
+%
 prho = equil.ptx(:,1).'/equil.ptx(end,1);%rho grid in LUKE definition
 %
 % LUKE wavestructs structure
 %
 launchs_lh = make_wavelaunchs_metis2luke_lh(option,lukeparam.lhparam);
 launchs_ec = make_wavelaunchs_metis2luke_ec(option,lukeparam.ecparam,equil);
+launchs_ec = [];
 %    
 launchs = [launchs_lh,launchs_ec];
 %
@@ -157,6 +172,15 @@ if lukeparam.luke_mode == 2,% save input then exit
     end
     %
     save([workdir,'/before_luke@',equil_id,'.mat']);
+    %
+    lukestructs = struct;
+    lukestructs.dkeparam = dkeparam;
+    lukestructs.dkedisplay = dkedisplay;
+    lukestructs.equil = equil;
+    lukestructs.wavestructs = wavestructs;
+    lukestructs.ohm = ohm;
+    lukestructs.transpfaste = transpfaste;
+    lukestructs.ripple = ripple;
     %
     return
     %
