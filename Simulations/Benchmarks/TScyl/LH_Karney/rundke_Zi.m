@@ -108,56 +108,72 @@ equil.pTe = betath^2*mc2*ones(size(equil.pTe));
 equil.pzTi = betath^2*mc2*ones(size(equil.pzTi));
 %equil.pzTi = 1e-10*ones(size(equil.pzTi));
 %
-Zi_list = [1:100];%Z = 74 is tungsten fully stripped ion
+Zi_list = [1:8];%Atomic number
 %
 nZi = length(Zi_list);
 %
 j_0 = NaN(1,nZi);
 j_1 = NaN(1,nZi);
 j_2 = NaN(1,nZi);
-%j_4 = NaN(1,nZi);
+j_4 = NaN(1,nZi);
+j_5 = NaN(1,nZi);
 %
 P_0 = NaN(1,nZi);
 P_1 = NaN(1,nZi);
 P_2 = NaN(1,nZi);
-%P_4 = NaN(1,nZi);
+P_5 = NaN(1,nZi);
 %
 for iZi = 1:nZi,
     %
     Zi = Zi_list(iZi);
+    %
     equil.zZi = [1,1,1,Zi];
     equil.pzni = [0;0;0;1/Zi]*equil.pne;
     %
     waves{1} = make_idealLHwave_jd(equil,wavestruct);
     %
-    dkeparam.coll_mode = 0;% Relativistic Maxwellian background
+    dkeparam.coll_mode = 0;% Linearized Belaiev-Budker collision operator for ee without first order Legendre correction for momentum conservation, non relativistic Maxwellian background for ei
     [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     j_0(iZi) = Zcurr.x_0;
     P_0(iZi) = ZP0.x_rf_fsav;
     %
-    dkeparam.coll_mode = 1;% High-velocity limit
+    dkeparam.coll_mode = 1;% High-velocity limit for ee and ei
     [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     j_1(iZi) = Zcurr.x_0;
     P_1(iZi) = ZP0.x_rf_fsav;
     %
-    dkeparam.coll_mode = 2;% Linearized Belaiev-Budker
+    dkeparam.coll_mode = 2;% Linearized Belaiev-Budker collision operator for ee with first order Legendre correction for momentum conservation, non-relativistic Maxwellian background for ei
     [dummy,Zcurr,ZP0,dke_out] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_2(iZi) = Zcurr.x_0;
         P_2(iZi) = ZP0.x_rf_fsav;
     end
     %
-%    dkeparam.coll_mode = 4;% Linearized Belaiev-Budker
-%    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
-%    j_4(iZi) = Zcurr.x_0;
-%    P_4(iZi) = ZP0.x_rf_fsav;
+    dkeparam.coll_mode = 3;% Lorentz collision model for ei, high-velocity limit for ee
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    j_3(iZi) = Zcurr.x_0;
+    P_3(iZi) = ZP0.x_rf_fsav;
+    %
+    dkeparam.coll_mode = 4;% Non relativistic Maxwellian background for ee and ei
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    j_4(iZi) = Zcurr.x_0;
+    P_4(iZi) = ZP0.x_rf_fsav;
+    %
+    dkeparam.coll_mode = 5;% Lorentz collision model for ei, relativistic energy limit for ee (for runaway electrons)
+    [dummy,Zcurr,ZP0] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
+    j_5(iZi) = Zcurr.x_0;
+    P_5(iZi) = ZP0.x_rf_fsav;
+    %
+    disp(['----> Calculations for Zi = ',int2str(Zi),' done.']);
     %
 end
 %
 eta_0 = j_0./P_0;
 eta_1 = j_1./P_1;
 eta_2 = j_2./P_2;
-%eta_4 = j_4./P_4;
+eta_3 = j_3./P_3;
+eta_4 = j_4./P_4;
+eta_5 = j_5./P_5;
 %
 j_0_nr_Karney_1 = 0.05759;
 P_0_nr_Karney_1 = 0.004012;
@@ -167,61 +183,77 @@ j_2_nr_Karney_1 = 0.07092;
 P_2_nr_Karney_1 = 0.004294;
 eta_2_nr_Karney_1 = 16.52;
 %
-%eta_0_nr_Karney = eta_0_nr_Karney_1*6./(5 + Zi_list);
+eta_0_nr_Karney = eta_0_nr_Karney_1*6./(5 + Zi_list);
 eta_2_nr_Karney = eta_2_nr_Karney_1*6./(5 + Zi_list);
 %
 %************************************************************************************************************************************
 %
 figure(1),clf
 %
-%leg = {'Linearized','High v limit','Maxwellian NR','Maxwellian'};
-leg = {'Linearized','High v limit','Maxwellian'};
+leg = {'collmode = 2 [ee: Belaiev-Budker model + 1st Legendre, ei: nr Maxw. background]',...
+       'collmode = 1 [ee: high v limit, ei: high v limit]',...
+       'collmode = 4 [ee: nr Maxw. background, ei: nr Maxw. background]',...
+       'collmode = 0 [ee: Belaiev-Budker model, ei: nr Maxw. background]',...
+       'collmode = 3 [ee: high v limit, ei: Lorentz model]',...
+       'collmode = 5 [ee: very high v limit (runaway electrons), ei: Lorentz model]',...
+       'collmode = 2 [Karney'' model, D_{LH} = (3,5,1), p_{max} = 20]',...
+       'collmode = 0 [Karney'' model, D_{LH} = (3,5,1), p_{max} = 20]'};
+%
 xlim = [0,max(Zi_list)];
 ylim = [0,0.1];
 xlab = 'Z_i';
 ylab = 'j';
-tit = '';
+tit = 'Non relativistic (nr), T_{e} = 0.511 eV';
 siz = 20+14i;
 %
-graph1D_jd(Zi_list,j_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
-graph1D_jd(Zi_list,j_1,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
-%graph1D_jd(Zi_list,j_4,0,0,'','','',NaN,xlim,ylim,'-','none','m',2,siz,gca);
-graph1D_jd(Zi_list,j_0,0,0,'','','',leg,xlim,ylim,'-','none','g',2,siz,gca);
-%graph1D_jd(xlim,[j_2_nr_Karney_1,j_2_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,siz,gca);
-%graph1D_jd(xlim,[j_0_nr_Karney_1,j_0_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,siz,gca);
+graph1D_jd(Zi_list,j_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(Zi_list,j_1,0,0,'','','',leg,xlim,ylim,'-','none','b',2,siz,gca);
+graph1D_jd(Zi_list,j_4,0,0,'','','',leg,xlim,ylim,'-','none','m',2,siz,gca);
+graph1D_jd(Zi_list,j_0,0,0,'','','',leg,xlim,ylim,'-','none','c',2,siz,gca);
+graph1D_jd(Zi_list,j_3,0,0,'','','',leg,xlim,ylim,'-','none','g',2,siz,gca);
+graph1D_jd(Zi_list,j_5,0,0,'','','',leg,xlim,ylim,'-','none','k',2,siz,gca);
 %
-set(gca,'ytick',[0:0.2:1]*ylim(2))
-set(gca,'xtick',[0:0.2:1]*xlim(2))
+graph1D_jd(1,j_2_nr_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','r',2,siz,gca);
+graph1D_jd(1,j_0_nr_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','c',2,siz,gca);
+%
+set(gca,'ytick',[0:0.1:1]*ylim(2))
+set(gca,'xtick',[1:5:xlim(2)])
 %
 figure(2),clf
 %
-ylim = [0,0.02];
+ylim = [0,0.03];
 ylab = 'P';
 %
-graph1D_jd(Zi_list,P_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
-graph1D_jd(Zi_list,P_1,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
-%graph1D_jd(Zi_list,P_4,0,0,'','','',NaN,xlim,ylim,'-','none','m',2,siz,gca);
-graph1D_jd(Zi_list,P_0,0,0,'','','',leg,xlim,ylim,'-','none','g',2,siz,gca);
-%graph1D_jd(xlim,[P_2_nr_Karney_1,P_2_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','r',2,siz,gca);
-%graph1D_jd(xlim,[P_0_nr_Karney_1,P_0_nr_Karney_1],0,0,'','','',NaN,xlim,ylim,'--','none','m',2,siz,gca);
+graph1D_jd(Zi_list,P_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(Zi_list,P_1,0,0,'','','',leg,xlim,ylim,'-','none','b',2,siz,gca);
+graph1D_jd(Zi_list,P_4,0,0,'','','',leg,xlim,ylim,'-','none','m',2,siz,gca);
+graph1D_jd(Zi_list,P_0,0,0,'','','',leg,xlim,ylim,'-','none','c',2,siz,gca);
+graph1D_jd(Zi_list,P_3,0,0,'','','',leg,xlim,ylim,'-','none','g',2,siz,gca);
+graph1D_jd(Zi_list,P_5,0,0,'','','',leg,xlim,ylim,'-','none','k',2,siz,gca);
 %
-set(gca,'ytick',[0:0.2:1]*ylim(2))
-set(gca,'xtick',[0:0.2:1]*xlim(2))
+graph1D_jd(1,P_2_nr_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','r',2,siz,gca);
+graph1D_jd(1,P_0_nr_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','c',2,siz,gca);
+%
+set(gca,'ytick',[0:0.1:1]*ylim(2))
+set(gca,'xtick',[1:5:xlim(2)])
 %
 figure(3),clf
 %
 ylim = [0,20];
 ylab = 'j/P';
 %
-graph1D_jd(Zi_list,eta_2,0,0,xlab,ylab,tit,NaN,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
-graph1D_jd(Zi_list,eta_1,0,0,'','','',NaN,xlim,ylim,'-','none','b',2,siz,gca);
-%graph1D_jd(Zi_list,eta_4,0,0,'','','',NaN,xlim,ylim,'-','none','m',2,siz,gca);
-graph1D_jd(Zi_list,eta_0,0,0,'','','',leg,xlim,ylim,'-','none','g',2,siz,gca);
-graph1D_jd(Zi_list,eta_2_nr_Karney,0,0,'','','',NaN,xlim,ylim,'--','none','k',0.5,siz,gca);
-%graph1D_jd(Zi_list,eta_0_nr_Karney,0,0,'','','',NaN,xlim,ylim,'--','none','m',2,siz,gca);
+graph1D_jd(Zi_list,eta_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(Zi_list,eta_1,0,0,'','','',leg,xlim,ylim,'-','none','b',2,siz,gca);
+graph1D_jd(Zi_list,eta_4,0,0,'','','',leg,xlim,ylim,'-','none','m',2,siz,gca);
+graph1D_jd(Zi_list,eta_0,0,0,'','','',leg,xlim,ylim,'-','none','c',2,siz,gca);
+graph1D_jd(Zi_list,eta_3,0,0,'','','',leg,xlim,ylim,'-','none','g',2,siz,gca);
+graph1D_jd(Zi_list,eta_5,0,0,'','','',leg,xlim,ylim,'-','none','k',2,siz,gca);
 %
-set(gca,'ytick',[0:0.2:1]*ylim(2))
-set(gca,'xtick',[0:0.2:1]*xlim(2))
+graph1D_jd(Zi_list,eta_2_nr_Karney,0,0,'','','',leg,xlim,ylim,':','none','r',2,siz,gca);
+graph1D_jd(Zi_list,eta_0_nr_Karney,0,0,'','','',leg,xlim,ylim,'--','none','c',2,siz,gca);
+%
+set(gca,'ytick',[0:0.1:1]*ylim(2))
+set(gca,'xtick',[1:5:xlim(2)])
 %
 print_jd(p_opt,'fig_j_Zi','./figures',1)
 print_jd(p_opt,'fig_P_Zi','./figures',2)
