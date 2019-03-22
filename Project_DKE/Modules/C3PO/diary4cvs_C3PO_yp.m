@@ -1,7 +1,7 @@
-function [] = diary4cvs_C3PO_yp(id_wave,dkepath,waves)
+function [diaryname] = diary4cvs_C3PO_yp(id_wave,dkepath,waves)
 % C3PO - diary output for CVS error tracking in C3PO examples 
 %
-% Diary output for CVS error tracking in C3PO examples
+% Diary output for Git error tracking in C3PO examples and regression tests
 %
 % INPUT:
 %
@@ -13,17 +13,14 @@ function [] = diary4cvs_C3PO_yp(id_wave,dkepath,waves)
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
-diaryname = ['res_',id_wave,'.log'];
+timeref = timeid_jd(clock);
+diaryname = ['res_',id_wave,'_',timeref,'.log'];
 [LUKEversion,matver] = LUKEversion_jd;
-%
-if exist(diaryname,'file'),
-    delete(diaryname)
-end
 %
 diary(diaryname)
 %
 disp(['Simulation id: ',id_wave]);
-disp(['Simulation date: ',timeid_jd(timeid_jd(clock))]);
+disp(['Simulation date: ',timeref]);
 disp(['User id: ',userid_jd]);
 disp(['LUKE Version: ',LUKEversion]);
 disp(['MATLAB Version: ',matver]);
