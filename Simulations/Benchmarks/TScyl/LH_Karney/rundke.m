@@ -166,8 +166,10 @@ diary res_karney
 %
 disp(['Comparison LUKE/Karney with tn = ',int2str(dkeparam.tn),', dtn = ',int2str(dkeparam.dtn),' and nit_f = ',int2str(dkeparam.nit_f)])
 disp(['----------------------'])
-%
-disp(['Relativistic case (4,7,1) : j = ',num2str(Zcurr_rel.x_0),'/',j_r_k,' ; P = ',num2str(ZP0_rel.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr_rel.x_0./ZP0_rel.x_rf_fsav),'/',eta_r_k]) 
+disp('collmode = 2 -> [ee: Belaiev-Budker model + 1st Legendre polynomial correction, ei: non relativistic Maxwellian background]');
+disp('collmode = 0 -> [ee: Belaiev-Budker model, ei: non relativistic Maxwellian background]');
+disp(['----------------------'])
+disp(['Relativistic case (4,7,1), coll_mode = 2 : j = ',num2str(Zcurr_rel.x_0),'/',j_r_k,' ; P = ',num2str(ZP0_rel.x_rf_fsav),'/',p_r_k,' ; j/P = ',num2str(Zcurr_rel.x_0./ZP0_rel.x_rf_fsav),'/',eta_r_k]) 
 disp(['Non Relativistic case (3,5,1) pmax = 10, coll_mode = 0 : j = ',num2str(Zcurr_0_10.x_0),'/',j_nr_0_10_k,' ; P = ',num2str(ZP0_0_10.x_rf_fsav),'/',p_nr_0_10_k,' ; j/P = ',num2str(Zcurr_0_10.x_0./ZP0_0_10.x_rf_fsav),'/',eta_nr_0_10_k]) 
 disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 0 : j = ',num2str(Zcurr_0_20.x_0),'/',j_nr_0_20_k,' ; P = ',num2str(ZP0_0_20.x_rf_fsav),'/',p_nr_0_20_k,' ; j/P = ',num2str(Zcurr_0_20.x_0./ZP0_0_20.x_rf_fsav),'/',eta_nr_0_20_k]) 
 disp(['Non Relativistic case (3,5,1) pmax = 20, coll_mode = 2 : j = ',num2str(Zcurr_2_20.x_0),'/',j_nr_2_20_k,' ; P = ',num2str(ZP0_2_20.x_rf_fsav),'/',p_nr_2_20_k,' ; j/P = ',num2str(Zcurr_2_20.x_0./ZP0_2_20.x_rf_fsav),'/',eta_nr_2_20_k]) 
