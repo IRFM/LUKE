@@ -23,6 +23,8 @@ dkepath.default = 'YP105119';
 %
 path_root = fileparts(which(mfilename));
 luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
+dkepath.YP105119(1).luke_root = luke_root;
+%
 dkepath.YP105119(1).temppathroot = '/data/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 % ---------------------------- andromede 1 -------------------------------
@@ -137,11 +139,28 @@ dkepath.YP105119(1).remote(1).schedulername = 'pbs';
 dkepath.YP105119(1).remote(1).profilename = 'YP105119';
 dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;% local cluster
 %
-%------------------------------------ Profile number 2, JA132999 Jean-François Artaud ------------------------------
+%------------------------------------ Other LUKE users ------------------------------
 %
-dkepath.JA132999(1) = dkepath.YP105119(1);
+dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-François Artaud
 %
-%------------------------------------ Profile number 3, PH214199 Philippe Huynh ------------------------------------
+dkepath.PH214199(1) = dkepath.YP105119(1);%Philippe Huynh
 %
-dkepath.PH214199(1) = dkepath.YP105119(1);
+dkepath.AE165440(1) = dkepath.YP105119(1);% Annika Ekedahl
 %
+dkepath.DM088721(1) = dkepath.YP105119(1);%Didier Moreau
+%
+dkepath.CB165101(1) = dkepath.YP105119(1);%Clarisse Bourdelle
+%
+dkepath.LD142631(1) = dkepath.YP105119(1);%Lena Delpech
+%
+dkepath.MG100063(1) = dkepath.YP105119(1);%Marc Goniche
+%
+
+
+
+
+
+
+
+
+
