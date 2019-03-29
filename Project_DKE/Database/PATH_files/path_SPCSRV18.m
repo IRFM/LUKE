@@ -1,6 +1,6 @@
-function dkepath = path_SPCPC483
+function dkepath = path_SPCSRV18
 %
-% path definitions for spcpc483
+% path definitions for spcsrv18 server
 %
 %	Output:
 %
@@ -10,8 +10,8 @@ function dkepath = path_SPCPC483
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = 'spcpc483';
-dkepath.hostname = 'spcpc483.epfl.ch';%WARNING: for laptop, may change with connection status.
+dkepath.machine = 'spcsrv18';
+dkepath.hostname = 'spcsrv18.epfl.ch';%WARNING: for laptop, may change with connection status.
 dkepath.computer = computer;%machine type and supported OS
 %
 path_root = fileparts(which(mfilename));
@@ -46,7 +46,7 @@ dkepath.decker(1).MUMPS.mex901 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATL
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
 %
-remote(1).remoteid = 'SPCPC483';
+remote(1).remoteid = 'SPCSRV18';
 remote(1).schedulername = 'direct';
 remote(1).profilename = 'decker';
 remote(1).luke_root = dkepath.decker(1).luke_root;% local cluster
@@ -85,7 +85,7 @@ dkepath.peysson(1).MUMPS.mex901 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MAT
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
 %
-remote(1).remoteid = 'SPCPC483';
+remote(1).remoteid = 'SPCSRV18';
 remote(1).schedulername = 'direct';
 remote(1).profilename = 'peysson';
 remote(1).luke_root = dkepath.peysson(1).luke_root;% local cluster
