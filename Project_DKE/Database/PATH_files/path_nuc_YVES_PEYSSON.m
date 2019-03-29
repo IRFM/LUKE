@@ -29,7 +29,7 @@ dkepath.yvespeysson(1).luke_root = luke_root;
 sep = strfind(luke_root,'/');
 dkepath.yvespeysson(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
 %
-dkdkepath.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.yvespeysson(1).local_root = '/home/yvespeysson/';
 %
 dkepath.yvespeysson(1).mex904 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/nucyves/MATLAB904/'];%r2018a
