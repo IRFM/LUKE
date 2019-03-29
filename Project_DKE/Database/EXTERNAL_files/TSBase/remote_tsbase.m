@@ -79,6 +79,9 @@ if err==0,
             err = '';
             job = '';
     else
+        %
+        disp('WARNING: data load may be long');
+        %
         dkepath = load_structures_yp('dkepath','','');
         %
         for iprof = 1: length(dkepath.profilestr)
