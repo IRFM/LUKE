@@ -24,28 +24,31 @@ dkepath.default = 'ypeysson';
 %
 path_root = fileparts(which(mfilename));
 luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
-%
 dkepath.ypeysson(1).luke_root = luke_root;
-dkdkepath.ypeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+sep = strfind(luke_root,'/');
+dkepath.ypeysson(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
+%
+dkepath.ypeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.ypeysson(1).local_root = '/home/ypeysson/';
 %
 dkepath.ypeysson(1).mex903 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/ypeysson-X58A-UD7/MATLAB903/'];%r2017b
 dkepath.ypeysson(1).mex904 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/ypeysson-X58A-UD7/MATLAB904/'];%r2018a
+dkepath.ypeysson(1).mex905 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/ypeysson-X58A-UD7/MATLAB905/'];%r2018b
 %
 dkepath.ypeysson(1).compiler_opt.libs.gfortran = '';
 dkepath.ypeysson(1).compiler_opt.copts = '';
-dkepath.ypeysson(1).compiler_opt.fopts.mex903 = 'FC=''gfortran''';%
-dkepath.ypeysson(1).compiler_opt.separatrice.mex903 = [' -largeArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.ypeysson(1).compiler_opt.helmex.mex903 = [' -compatibleArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.ypeysson(1).compiler_opt.fopts.mex903 = ' ';%-largeArrayDims
 dkepath.ypeysson(1).compiler_opt.fopts.mex904 = 'FC=''gfortran''';%
 dkepath.ypeysson(1).compiler_opt.separatrice.mex904 = [' -largeArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.ypeysson(1).compiler_opt.helmex.mex904 = [' -compatibleArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.ypeysson(1).compiler_opt.fopts.mex904 = ' ';%-largeArrayDims
+dkepath.ypeysson(1).compiler_opt.fopts.mex905 = 'FC=''gfortran''';%
+dkepath.ypeysson(1).compiler_opt.separatrice.mex905 = [' -largeArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.ypeysson(1).compiler_opt.helmex.mex905 = [' -compatibleArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.ypeysson(1).compiler_opt.fopts.mex905 = ' ';%-largeArrayDims
 %
-%dkepath.ypeysson(1).MUMPS.mex901 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_gfortran/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.ypeysson(1).MUMPS.mex903 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.2_S_gfortran/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.ypeysson(1).MUMPS.mex904 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.2_S_gfortran/MATLAB904'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.ypeysson(1).MUMPS.mex905 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.2_S_gfortran/MATLAB905'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %
 % LUKE documentation
@@ -74,7 +77,7 @@ dkepath.ypeysson(1).remote(2).gitupdate = true;
 dkepath.ypeysson(1).remote(3).remoteid = 'CEA_ANDROMEDE';
 dkepath.ypeysson(1).remote(3).schedulername = 'pbs';
 dkepath.ypeysson(1).remote(3).profilename = 'YP105119';
-dkepath.ypeysson(1).remote(3).luke_root = '/Applications/LUKE/LUKE/';
+dkepath.ypeysson(1).remote(3).luke_root = ['/Applications/LUKE/',dkepath.ypeysson(1).luke_branch,'/'];
 dkepath.ypeysson(1).remote(3).link_mode = '';
 dkepath.ypeysson(1).remote(3).cvsupdate = false;% update done in 'direct' mode
 dkepath.ypeysson(1).remote(3).gitupdate = false;
