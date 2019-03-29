@@ -22,7 +22,13 @@ dkepath.default = 'YP105119';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %-------------------------------------------------------------------------------------------------------
 %
-dkepath.YP105119(1).luke_root = '/Home/YP105119/luke/LUKE/';
+path_root = fileparts(which(mfilename));
+luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
+dkepath.YP105119(1).luke_root = luke_root;
+%
+sep = strfind(luke_root,'/');
+dkepath.YP105119(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
+%
 dkepath.YP105119(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 % ---------------------------- sirrah -------------------------------
@@ -79,3 +85,28 @@ dkepath.YP105119(1).remote(1).gitmode.cmd = 'cd /Home/YP105119/luke/*;git pull;e
 dkepath.YP105119(1).remote(2) = dkepath.YP105119(1).remote(1);
 dkepath.YP105119(1).remote(2).schedulername = 'direct';
 dkepath.YP105119(1).remote(2).gitupdate = true;
+%
+%
+%------------------------------------ Other LUKE users ------------------------------
+%
+dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-François Artaud
+dkepath.JA132999(1).remote(1).profilename = 'JA132999';
+%
+dkepath.PH214199(1) = dkepath.YP105119(1);%Philippe Huynh
+dkepath.PH214199(1).remote(1).profilename = 'PH214199';
+%
+dkepath.AE165440(1) = dkepath.YP105119(1);% Annika Ekedahl
+dkepath.AE165440(1).remote(1).profilename = 'AE165440';
+%
+dkepath.DM088721(1) = dkepath.YP105119(1);%Didier Moreau
+dkepath.DM088721(1).remote(1).profilename = 'DM088721';
+%
+dkepath.CB165101(1) = dkepath.YP105119(1);%Clarisse Bourdelle
+dkepath.CB165101(1).remote(1).profilename = 'CB165101';
+%
+dkepath.LD142631(1) = dkepath.YP105119(1);%Lena Delpech
+dkepath.LD142631(1).remote(1).profilename = 'LD142631';
+%
+dkepath.MG100063(1) = dkepath.YP105119(1);%Marc Goniche
+dkepath.MG100063(1).remote(1).profilename = 'MG100063';
+%

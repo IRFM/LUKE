@@ -17,9 +17,13 @@ dkepath.computer = computer;%machine type and supported OS
 path_root = fileparts(which(mfilename));
 luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
 %
+sep = strfind(luke_root,'/');
+luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
+%
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
 %
 dkepath.decker(1).luke_root = luke_root;
+dkepath.decker(1).luke_branch = luke_branch;
 dkepath.decker(1).local_root = '/opt/';
 dkepath.decker(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -55,10 +59,10 @@ remote(1).gitmode.cmd1 = '';
 remote_selection = [1];
 dkepath.decker(1).remote = remote(remote_selection);
 %
-%
 %------------------------------------ Profile number 2, Yves Peysson ------------------------------------
 %
 dkepath.peysson(1).luke_root = luke_root;
+dkepath.peysson(1).luke_branch = luke_branch;
 dkepath.peysson(1).local_root = '/opt/';
 dkepath.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %

@@ -18,7 +18,13 @@ dkepath.computer = computer;%machine type and supported OS
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.yvesp(1).luke_root = '/pfs/home/yvesp/public/LUKE/';
+path_root = fileparts(which(mfilename));
+luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
+dkepath.yvesp(1).luke_root = luke_root;
+%
+sep = strfind(luke_root,'/');
+dkepath.yvesp(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
+%
 dkepath.yvesp(1).local_root = '/pfs/home/yvesp/public/';
 dkepath.yvesp(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -61,10 +67,10 @@ dkepath.yvesp(1).remote(1).schedulername = 'sge';
 dkepath.yvesp(1).remote(1).profilename = 'yves';
 dkepath.yvesp(1).remote(1).luke_root = dkepath.yvesp(1).luke_root;
 %
-dkepath.yvesp(1).remote(2).remoteid = 'macpro_YVES_PEYSSON';
+dkepath.yvesp(1).remote(2).remoteid = 'x58ud7_YVES_PEYSSON';
 dkepath.yvesp(1).remote(2).schedulername = 'condor';
 dkepath.yvesp(1).remote(2).profilename = 'yves';
-dkepath.yvesp(1).remote(2).luke_root = '/Users/yvespeysson/Projets/LUKE/';
+dkepath.yvesp(1).remote(2).luke_root = ['/Users/yvespeysson/Projets/',dkepath.yvesp(1).luke_branch,'/'];
 %
 dkepath.yvesp(1).remote(3) = dkepath.yvesp(1).remote(2);
 dkepath.yvesp(1).remote(3).schedulername = 'direct';
@@ -72,7 +78,7 @@ dkepath.yvesp(1).remote(3).schedulername = 'direct';
 dkepath.yvesp(1).remote(4).remoteid = 'CEA_ANDROMEDE';
 dkepath.yvesp(1).remote(4).schedulername = 'pbs';
 dkepath.yvesp(1).remote(4).profilename = 'YP105119';
-dkepath.yvesp(1).remote(4).luke_root = '/home/YP105119/LUKE/';
+dkepath.yvesp(1).remote(4).luke_root = ['/Applications/LUKE/',dkepath.yvesp(1).luke_branch,'/'];];
 %
 
 

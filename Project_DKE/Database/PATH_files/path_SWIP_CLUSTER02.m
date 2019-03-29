@@ -22,7 +22,13 @@ dkepath.default = 'Yves';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %-------------------------------------------------------------------------------------------------------
 %
-dkepath.Yves(1).luke_root = '/opt/TOKAMAK_CODE/luke/LUKE/';
+path_root = fileparts(which(mfilename));
+luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
+dkepath.Yves(1).luke_root = luke_root;
+%
+sep = strfind(luke_root,'/');
+dkepath.Yves(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
+%
 dkepath.Yves(1).local_root = '/opt/TOKAMAK_CODE/luke/Packages/';
 
 dkepath.Yves(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
@@ -61,28 +67,33 @@ dkepath.Yves(1).remote(1).luke_root = dkepath.Yves(1).luke_root;% local cluster
 %--------------------------------------------------------------------------------------------------------
 %
 dkepath.mazy(1) = dkepath.Yves(1);
+dkepath.mazy(1).remote(1).profilename = 'mazy';
 %
 %--------------------------------------------------------------------------------------------------------
 %---------------------------------------- Profile number 3, Lei Xue ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
 dkepath.xuelei(1) = dkepath.Yves(1);
+dkepath.xuelei(1).remote(1).profilename = 'xuelei';
 %
 %--------------------------------------------------------------------------------------------------------
 %---------------------------------------- Profile number 4, Yipo Zhang  ---------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
 dkepath.zhangyp(1) = dkepath.Yves(1);
+dkepath.zhangyp(1).remote(1).profilename = 'zhangyp';
 %
 %--------------------------------------------------------------------------------------------------------
 %---------------------------------------- Profile number 5, Jie Zhang  ----------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
 dkepath.zhangjie(1) = dkepath.Yves(1);
+dkepath.zhangjie(1).remote(1).profilename = 'zhangjie';
 %
 %--------------------------------------------------------------------------------------------------------
 %---------------------------------------- Profile number 6, Xingyu Bai ----------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
 dkepath.baixy(1) = dkepath.Yves(1);
+dkepath.baixy(1).remote(1).profilename = 'baixy';
 

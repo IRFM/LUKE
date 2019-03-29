@@ -21,8 +21,13 @@ dkepath.default = 'peyssony';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.peyssony(1).luke_root = '/fusion/projects/codes/c3po-luke/LUKE/';
-
+path_root = fileparts(which(mfilename));
+luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
+dkepath.peyssony(1).luke_root = luke_root;
+%
+sep = strfind(luke_root,'/');
+dkepath.peyssony(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
+%
 dkepath.peyssony(1).temppathroot = '/cscratch/peyssony/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.peyssony(1).iris.local_root = '/fusion/projects/codes/c3po-luke/Packages/';
