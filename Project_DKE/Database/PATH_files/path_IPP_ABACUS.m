@@ -86,12 +86,3 @@ dkepath.peysson(1).remote(1).schedulername = 'pbs';
 dkepath.peysson(1).remote(1).profilename = 'local';
 dkepath.peysson(1).remote(1).luke_root = dkepath.peysson(1).luke_root;% local cluster
 %
-%------------------------------------ Profile number 1, Jakub Urban ------------------------------------
-%
-dkepath.urban(1) = dkepath.peysson(1);
-%
-%------------------------------------ Profile number 1, Richard Paprok ------------------------------------
-%
-dkepath.paprok(1) = dkepath.peysson(1);
-
-
