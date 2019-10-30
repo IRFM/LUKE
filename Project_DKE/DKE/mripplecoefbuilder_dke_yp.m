@@ -12,7 +12,7 @@ xrho = gridDKE.xrho;
 %
 display_mode = display.display_mode;
 %
-[xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
+[xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,dkeparam,equilDKE,gridDKE);
 %
 XXlossripple = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid)
 xdeltaripple = zeros(size(xrho));
