@@ -755,7 +755,7 @@ xZeff = equilDKE.xZeff;
 %
 betath_ref = mksa.betath_ref;
 %
-[xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,equilDKE,gridDKE);   
+[xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,dkeparam,equilDKE,gridDKE);   
 %
 %   Density
 %
