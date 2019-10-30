@@ -369,8 +369,14 @@ for iy = 1:ny,
         %
         rays{iy}.is_abs_lin = min(find(sdP_2piRp_ds_lin_norm == max(sdP_2piRp_ds_lin_norm))); 
         %
-        yrho_abs_lin(iy) = rays{iy}.srho(rays{iy}.is_abs_lin);
-        yNpar_abs_lin(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs_lin));
+        if isempty(rays{iy}.is_abs_lin),
+            yrho_abs_lin(iy) = NaN;
+            yNpar_abs_lin(iy) = NaN;
+        else
+            yrho_abs_lin(iy) = rays{iy}.srho(rays{iy}.is_abs_lin);
+            yNpar_abs_lin(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs_lin));
+        end
+        %
         yPtot_abs_lin(iy) = 1 - sP_2piRp_lin_norm(end);
         %
         [rays{iy}.dP_lin_normdrho,rhog_dep] = radialdampingprofile_jd(rays{iy}.srho,rays{iy}.sP_2piRp_lin/rays{iy}.sP_2piRp_lin(1),nr_dep);
@@ -444,8 +450,14 @@ for iy = 1:ny,
         %
         rays{iy}.is_abs_lin_coll = min(find(sdP_2piRp_ds_lin_coll_norm == max(sdP_2piRp_ds_lin_coll_norm))); 
         %
-        yrho_abs_lin_coll(iy) = rays{iy}.srho(rays{iy}.is_abs_lin_coll);
-        yNpar_abs_lin_coll(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs_lin_coll));
+        if isempty(rays{iy}.is_abs_lin_coll)
+            yrho_abs_lin_coll(iy) = NaN;
+            yNpar_abs_lin_coll(iy) = NaN;
+        else
+            yrho_abs_lin_coll(iy) = rays{iy}.srho(rays{iy}.is_abs_lin_coll);
+            yNpar_abs_lin_coll(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs_lin_coll));
+        end
+        %
         yPtot_abs_lin_coll(iy) = 1 - sP_2piRp_lin_coll_norm(end);
         %
         [rays{iy}.dP_lin_coll_normdrho,rhog_dep] = radialdampingprofile_jd(rays{iy}.srho,rays{iy}.sP_2piRp_lin_coll/rays{iy}.sP_2piRp_lin_coll(1),nr_dep);
@@ -523,8 +535,14 @@ for iy = 1:ny,
         %
         rays{iy}.is_abs = min(find(sdP_2piRp_ds_norm == max(sdP_2piRp_ds_norm))); 
         %
-        yrho_abs(iy) = rays{iy}.srho(rays{iy}.is_abs);
-        yNpar_abs(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs));
+        if isempty(rays{iy}.is_abs)
+            yrho_abs(iy) = NaN;
+            yNpar_abs(iy) = NaN;
+        else
+            yrho_abs(iy) = rays{iy}.srho(rays{iy}.is_abs);
+            yNpar_abs(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs));
+        end
+        %
         yPtot_abs(iy) = 1 - sP_2piRp_norm(end);
         %
         rays{iy}.dP_normdrho = radialdampingprofile_jd(rays{iy}.srho,rays{iy}.sP_2piRp{end}/rays{iy}.sP_2piRp{end}(1),nr_dep);
@@ -603,8 +621,14 @@ for iy = 1:ny,
         %
         rays{iy}.is_abs_coll_luke = min(find(sdP_2piRp_coll_luke_ds_norm == max(sdP_2piRp_coll_luke_ds_norm))); 
         %
-        yrho_abs_coll_luke(iy) = rays{iy}.srho(rays{iy}.is_abs_coll_luke);
-        yNpar_abs_coll_luke(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs_coll_luke));
+        if isempty(rays{iy}.is_abs_coll_luke)
+            yrho_abs_coll_luke(iy) = NaN;
+            yNpar_abs_coll_luke(iy) = NaN;
+        else
+            yrho_abs_coll_luke(iy) = rays{iy}.srho(rays{iy}.is_abs_coll_luke);
+            yNpar_abs_coll_luke(iy) = real(rays{iy}.sNpar(rays{iy}.is_abs_coll_luke));
+        end
+        %
         yPtot_abs_coll_luke(iy) = 1 - sP_2piRp_coll_luke_norm(end);
         %
         [rays{iy}.dP_coll_luke_normdrho,rhog_dep] = radialdampingprofile_jd(rays{iy}.srho,rays{iy}.sP_2piRp_coll_luke{end}/rays{iy}.sP_2piRp_coll_luke{end}(1),nr_dep);
