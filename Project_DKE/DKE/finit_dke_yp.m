@@ -34,7 +34,7 @@ nlevel = display.nlevel;
 %
 dke_mode = dkeparam.dke_mode;
 %
-[xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
+[xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,dkeparam,equilDKE,gridDKE);
 %
 XXfinit = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid)
 %
