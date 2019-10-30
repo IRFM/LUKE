@@ -89,7 +89,7 @@ if dkeparam.avalanche_mode == 1, %if 1, avalanche mode on
     %
     mhu0T=sqrt(1-B0./Bmax);
     %
-    [~,~,~,~,~,xbetath] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
+    [~,~,~,~,~,xbetath] = normcoef_dke_yp(mksa,dkeparam,equilDKE,gridDKE);
     for ipsi=1:npsi
         if ~isnan(pnmin2_KO),% S(p>=pnmin2_KO)
             if imag(pnmin2_KO) == 0,
