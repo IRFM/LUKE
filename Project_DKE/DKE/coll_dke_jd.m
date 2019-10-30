@@ -17,7 +17,7 @@ function [ZXXD_c,ZXXF_c,ZXXD_c_tp,ZXXF_c_tp,XXfM,XXILor] = coll_dke_jd(dkepath,d
 		if dkedisplay.display_mode >= 1,info_dke_yp(2,['Collision flux coefficients retrieved.']);end	
 		%
 	else
-		[xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
+		[xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,dkeparam,equilDKE,gridDKE);
 		%
 		% Output files initialization
 		%

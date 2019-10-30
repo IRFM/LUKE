@@ -775,7 +775,23 @@ equilDKE.xdV_2piRp_dke = xdV_2piRp_dke;
 equilDKE.xdA_dke = xdA_dke;
 %
 if isfield(equil,'ADAS')
+    %
     equilDKE.ADAS = equil.ADAS;
+    equilDKE.zNbound = equil.zNbound;
+    %
+    if isfield(equil,'screening')
+        equilDKE.screening = equil.screening;
+        equilDKE.Znucleus = equil.Znucleus;
+    end
+    %
+    if isfield(equil,'coulog_model')
+        equilDKE.coulog_model = equil.coulog_model;
+    end
+    %
+    if isfield(equil,'Znucleus')
+        equilDKE.Znucleus = equil.Znucleus;
+    end
+    %
 end
 %
 if isfield(equil,'elements_ADAS')
