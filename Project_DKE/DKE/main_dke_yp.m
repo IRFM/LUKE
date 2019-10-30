@@ -253,7 +253,7 @@ for itn = itn0:nit,
     %
     % Note : in the Rosenbluth model, we have to neglect the effect on the incident electron
     %
-    [~,xne_norm,~,~,~,xbetath] = normcoef_dke_yp(mksa,equilDKE,gridDKE);
+    [~,xne_norm,~,~,~,xbetath] = normcoef_dke_yp(mksa,dkeparam_in,equilDKE,gridDKE);
     %    
     if itn == 1,   
         if isnan(dkeparam_out.pnmax1_KO),% count all electrons in bulk except internal runaways
