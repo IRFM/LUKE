@@ -39,7 +39,15 @@ end
 mksa.betath_ref = sqrt(Te_ref/mc2);%Normalized pth_ref/mc as prescribed by Karney
 mksa.Te_ref = Te_ref;%Temperature (keV)
 mksa.ne_ref = ne_ref;%Density (m-3)
-mksa.lnc_e_ref = 31.3 - 0.5*log(ne_ref) + log(Te_ref*1000);%Reference Coulomb logarithm (Sauter et al. Phys. Plasmas, 6 (1999) 2834)
+%
+mksa.lnc_e_ref = coulomb_logarithm_yp(1,ne_ref,Te_ref);%LUKE backward compatibility (O. Sauter model)
+%
+if isfield(equilDKE,'screening') && isfield(equilDKE.screening,'elastic') && ~isempty(equilDKE.screening.elastic)
+    if isfield(equilDKE.screening,'coulog_model') && ~isempty(equilDKE.screening.coulog_model)
+        mksa.lnc_e_ref = coulomb_logarithm_yp(equilDKE.screening.coulog_model,ne_ref,Te_ref);
+    end
+end
+%
 mksa.nhu_ref = qe^4*ne_ref*mksa.lnc_e_ref/(4*pi*e0^2*me^2*(clum*mksa.betath_ref)^3);%Reference electron collision frequency (s-1)
 mksa.xftp_norm_ref = me*clum*mksa.betath_ref*equilDKE.ap*(1 + equilDKE.xx0/equilDKE.Rp).*equilDKE.xBT0./equilDKE.xB0/qe/equilDKE.psia_apRp;%Normalization factor for drift kinetic equation (ftilde)
 mksa.j_ref = -qe*clum*mksa.betath_ref*mksa.ne_ref/1e6;%MKSA current unit (MA)  (with respect to the parallel direction fo B, the negative charge of the electron is fully considered)
