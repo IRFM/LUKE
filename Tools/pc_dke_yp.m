@@ -19,6 +19,9 @@ function [varargout] = pc_dke_yp(gauss)
 %   - clum : Speed of light (m/s)
 %   - alpha : Fine structure constant
 %   - kB : Boltzmann's constant (J/K-1)
+%   - amu : Atomic mass unit (Kg)
+%   - a0 : Bohr radius (m)
+%   - lambdaC : Compton length (m)
 %
 % by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
@@ -33,6 +36,8 @@ mc2 = 510.998902;%Electron energy rest mass (keV)
 clum = 299792458;%Speed of light (m/s)
 alpha = 7.297352533e-3;%Fine structure constant (~1/137)
 kB = 1.3806504e-23;%Boltzmann's constant (J/K-1)
+amu = 1.66053906660e-27;%Atomic mass unit (Kg)
+h =  6.62607015e-34;% J.s
 %
 if nargin > 0,%CGS units
     qe = qe*clum*1e1;% statcoul
@@ -46,7 +51,13 @@ if nargin > 0,%CGS units
     mc2 = mc2*qe*1e11/clum;% erg
     alpha = alpha;
     kB = kB*1e7; % erg/K
-end    
+    amu = amu*1e3;% g
+    h =  6.62607015e-27;% erg.s
+end
+%
+hbar = h/2/pi;%(J.s or Erg.s)
+lambdaC = h/me/clum;%Compton wavelength (m or cm)
+a0 = lambdaC/2/pi/alpha;%Bohr radius (m or cm)
 %
 if nargout >= 1, varargout{1} = qe;end
 if nargout >= 2, varargout{2} = me;end
@@ -59,5 +70,13 @@ if nargout >= 8, varargout{8} = mc2;end
 if nargout >= 9, varargout{9} = clum;end
 if nargout >= 10, varargout{10} = alpha;end
 if nargout >= 11, varargout{11} = kB;end
+if nargout >= 12, varargout{12} = amu;end
+if nargout >= 13, varargout{13} = h;end
+if nargout >= 14, varargout{14} = hbar;end
+if nargout >= 15, varargout{15} = lambdaC;end
+if nargout >= 16, varargout{16} = a0;end
+
+
+
 
    
