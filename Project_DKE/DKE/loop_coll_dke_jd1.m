@@ -13,10 +13,10 @@ function [XXfM,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_mm_ijp,ZXXD_c_mm_
 	%
 	%Electron-ion collision term (non-relativistic limit)
 	%
-    [Fei,Aei,Btei] = eicoll_dke_yp(Zmomcoef.v,equilDKE.zZi,equilDKE.zmi,xzni_norm,xzTi_norm,ir,dkeparam.coll_mode);
-    [Feim,Aeim] = eicoll_dke_yp(Zmomcoef.vm,equilDKE.zZi,equilDKE.zmi,xzni_norm,xzTi_norm,ir,dkeparam.coll_mode);
-    [Feip,Aeip] = eicoll_dke_yp(Zmomcoef.vp,equilDKE.zZi,equilDKE.zmi,xzni_norm,xzTi_norm,ir,dkeparam.coll_mode);
-	%   
+    [Fei,Aei,Btei] = eicoll_dke_yp(mksa,dkeparam,Zmomcoef,gridDKE,equilDKE,ir,'+');
+    [Feim,Aeim] = eicoll_dke_yp(mksa,dkeparam,Zmomcoef,gridDKE,equilDKE,ir,'m');
+    [Feip,Aeip] = eicoll_dke_yp(mksa,dkeparam,Zmomcoef,gridDKE,equilDKE,ir,'p');
+    % 
     Feim(1) = 1;%Avoid singularity at p = 0, but the value is not used  
 	%       
     XFeim = Feim'*ones(1,gridDKE.nmhu);
@@ -33,9 +33,33 @@ function [XXfM,ZXXD_c_pp_ipj,ZXXD_c_pp_ij,ZXXD_c_pp_imj,ZXXD_c_mm_ijp,ZXXD_c_mm_
 	%
 	%Fast electron-thermal electron collision term
 	%
-    [Fee,Aee,Btee] = eecoll_dke_yp(dkepath,Zmomcoef.v,Zmomcoef.z,Zmomcoef.gamma,Zmomcoef.sigma,gridDKE.pn,gridDKE.pn2,gridDKE.dpn,Zmomcoef.J1,Zmomcoef.J2,dkeparam.spfac,mksa.betath_ref,xne_norm,xTe_norm,ir,dkeparam.coll_mode,dkeparam.clustermode);
-    [Feem,Aeem] = eecoll_dke_yp(dkepath,Zmomcoef.vm,Zmomcoef.zm,Zmomcoef.gammam,Zmomcoef.sigmam,gridDKE.pnm,gridDKE.pn2m,gridDKE.dpnm,Zmomcoef.J1,Zmomcoef.J2,dkeparam.spfac,mksa.betath_ref,xne_norm,xTe_norm,ir,dkeparam.coll_mode,dkeparam.clustermode);
-    [Feep,Aeep] = eecoll_dke_yp(dkepath,Zmomcoef.vp,Zmomcoef.zp,Zmomcoef.gammap,Zmomcoef.sigmap,gridDKE.pnp,gridDKE.pn2p,gridDKE.dpnp,Zmomcoef.J1,Zmomcoef.J2,dkeparam.spfac,mksa.betath_ref,xne_norm,xTe_norm,ir,dkeparam.coll_mode,dkeparam.clustermode);
+    if isfield(equilDKE,'screening') && ~isempty(equilDKE.screening)
+        %
+        if isfield(equilDKE.screening,'inelastic') && ~isempty(equilDKE.screening.inelastic)
+            %
+            inelastic_factor = inelastic_yp(equilDKE,mksa,xzni_norm,xbetath,Zmomcoef.gamma,gridDKE.pn);%enhanced electron slowing-down by excitation of ions
+            inelastic_factor_m = inelastic_yp(equilDKE,mksa,xzni_norm,xbetath,Zmomcoef.gammam,gridDKE.pnm);%enhanced electron slowing-down by excitation of ions
+            inelastic_factor_p = inelastic_yp(equilDKE,mksa,xzni_norm,xbetath,Zmomcoef.gammap,gridDKE.pnp);%enhanced electron slowing-down by excitation of ions
+            %
+        else
+            %
+            inelastic_factor = 0;%ion excitation is not considered
+            inelastic_factor_m = 0;%ion excitation is not considered
+            inelastic_factor_p = 0;%ion excitation is not considered
+            %
+        end
+        %
+    else
+        %
+        inelastic_factor = 0;%ion excitation is not considered
+        inelastic_factor_m = 0;%ion excitation is not considered
+        inelastic_factor_p = 0;%ion excitation is not considered
+        %
+    end
+    %
+    [Fee,Aee,Btee] = eecoll_dke_yp(dkepath,Zmomcoef.v,Zmomcoef.z,Zmomcoef.gamma,Zmomcoef.sigma,gridDKE.pn,gridDKE.pn2,gridDKE.dpn,Zmomcoef.J1,Zmomcoef.J2,dkeparam.spfac,mksa.betath_ref,xne_norm,xTe_norm,ir,dkeparam.coll_mode,mksa,dkeparam,equilDKE,gridDKE,inelastic_factor,dkeparam.clustermode);
+    [Feem,Aeem] = eecoll_dke_yp(dkepath,Zmomcoef.vm,Zmomcoef.zm,Zmomcoef.gammam,Zmomcoef.sigmam,gridDKE.pnm,gridDKE.pn2m,gridDKE.dpnm,Zmomcoef.J1,Zmomcoef.J2,dkeparam.spfac,mksa.betath_ref,xne_norm,xTe_norm,ir,dkeparam.coll_mode,mksa,dkeparam,equilDKE,gridDKE,inelastic_factor_m,dkeparam.clustermode);
+    [Feep,Aeep] = eecoll_dke_yp(dkepath,Zmomcoef.vp,Zmomcoef.zp,Zmomcoef.gammap,Zmomcoef.sigmap,gridDKE.pnp,gridDKE.pn2p,gridDKE.dpnp,Zmomcoef.J1,Zmomcoef.J2,dkeparam.spfac,mksa.betath_ref,xne_norm,xTe_norm,ir,dkeparam.coll_mode,mksa,dkeparam,equilDKE,gridDKE,inelastic_factor_p,dkeparam.clustermode);
 	%
     Feem(1) = 1;%Avoid singularity at p = 0, but the value is not used
 	%       
