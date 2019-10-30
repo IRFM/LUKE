@@ -97,7 +97,7 @@ if ~isempty(transpfaste) && isstruct(transpfaste) && ~isempty(fieldnames(transpf
     %
     time0 = clock;
     %
-    [xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath] = normcoef_dke_yp(mksa,equilDKE,gridDKE);   
+    [xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath] = normcoef_dke_yp(mksa,dkeparam,equilDKE,gridDKE);   
     %
     XXDpsi = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid) (psi coordinate)
     XXVpsi = zeros(npn,nmhu,nr);%Defined on the distribution function grid (half grid) (psi coordinate)
