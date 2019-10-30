@@ -1,4 +1,4 @@
-function [zZi_out,zmi_out,pzni_out,pzTi_out] = ionisation_adas_yp(adas,zZi_in,zmi_in,pzni_in,pzTi_in,pne,pTe)
+function [zZi_out,zNbound_out,zmi_out,pzni_out,pzTi_out] = ionisation_adas_yp(adas,zZi_in,zmi_in,pzni_in,pzTi_in,pne,pTe)
 %elements,frac,pTe,pne,fi)
 %
 %   Calculation of the relative fraction of ionisation states Zij from Te profile for a given set of elements and their relative
@@ -17,6 +17,7 @@ function [zZi_out,zmi_out,pzni_out,pzTi_out] = ionisation_adas_yp(adas,zZi_in,zm
 %   OUTPUTS:
 %
 %       - zZi_out : vector of all ions atomic numbers [1,k]
+%       - zNbound_out : vector of the number of bound electrons for all ions [1,k]
 %       - zmi_out : vector of all ions atomic weights [1,k]
 %       - pzni_out : matrix of ion density profiles, Zij (m-3) [k,nr]
 %       - pzTi_out : matrix of ion temperature profiles Zij (keV) [k,nr]
@@ -76,16 +77,21 @@ if zZi_in(1) == 1 && sum(zZi_in(1:3)) == 3 && length(zZi_in) > 3
     end
     %
     zZimp_out = [];
+    zNbound_out = [];
     zmimp_out = [];
     pznimp_out = [];
     pzTimp_out = [];
     %
     for i = 1:length(elements)
         %
+        Zelement = size(adas.(elements{i}).rep,2)-1;
+        %
         for j = 1:size(adas.(elements{i}).rep,2)
+            %
             frac_ij = interp1(adas.(elements{i}).Te,adas.(elements{i}).rep(:,j),pTe(:)');%keV
             %
             zZimp_out = [zZimp_out,j - 1];
+            zNbound_out = [zNbound_out,Zelement - j + 1];%number of bound electrons
             zmimp_out = [zmimp_out,adas.(elements{i}).A];
             pznimp_out = [pznimp_out;frac_ij.*pznimp_in(i,:)];
             pzTimp_out = [pzTimp_out;pzTimp_in(i,:)];
@@ -95,12 +101,14 @@ if zZi_in(1) == 1 && sum(zZi_in(1:3)) == 3 && length(zZi_in) > 3
     end
     %
     zZi_out = [zZi_in(1:3),zZimp_out];
+    zNbound_out = [zeros(1,3),zNbound_out];%Number of bound electrons
     zmi_out = [zmi_in(1:3),zmimp_out];
     pzni_out = [pzni_in(1:3,:);pznimp_out];
     pzTi_out = [pzTi_in(1:3,:);pzTimp_out];
     %
 else
     zZi_out = zZi_in;
+    zNbound_out = zZi_in*0;%all impurities are fully stripped.
     zmi_out = zmi_in;
     pzni_out = pzni_in;
     pzTi_out = pzTi_in;
