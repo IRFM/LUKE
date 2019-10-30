@@ -113,9 +113,50 @@ Zbremplasma.cL = cL;
 %Bremsstrahlung cross-section calculations
 %
 seBHE = zeros(n_gauleg,np,nk,nZ);
-for iZ = 1:nZ,
-	seBHE(:,:,:,iZ) = bhe_dke_yp(Ec,kphot,x_leg,zZi(iZ));%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert) (mec2 -> keV units)
+%
+if isfield(equilHXR,'screening') && ~isempty(equilHXR.screening)
+    %
+    if isfield(equilHXR.screening,'hxr_params') && ~isempty(equilHXR.screening.hxr_params)
+        screening_hxr_params = equilHXR.screening.hxr_params;
+    else
+        screening_hxr_params = '';
+    end
+    %
+    if isfield(equilHXR.screening,'elastic') && ~isempty(equilHXR.screening.elastic)
+        screening_model = equilHXR.screening.elastic;
+    else
+        screening_model = '';
+    end    
+else
+    %
+    screening_hxr_params = '';    
+    screening_model = ''; 
+    %
 end
+%
+seBHE(:,:,:,1) = bhe_dke_yp(Ec,kphot,x_leg,zZi(1),screening_hxr_params,screening_model);%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert) with screening effect (mec2 -> keV units)
+%
+seBHE(:,:,:,2) = seBHE(:,:,:,1);% Deuterium
+seBHE(:,:,:,3) = seBHE(:,:,:,1);% Tritium
+%
+if exist(equilHXR,'Znucleus') %ADAS
+    %
+    for iZ = 1:length(equilHXR.Znucleus)-3
+        %
+        iZ0 = [0:1:equilHXR.Znucleus(iZ)];%all ionization states
+        seBHE(:,:,:,iZ0) = bhe_dke_yp(Ec,kphot,x_leg,zZi(iZ),screening_hxr_params,screening_model);%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert) with screening effect (mec2 -> keV units)
+        %
+    end
+else
+    %
+    if nZ > 3
+        for iZ = 4:nZ
+            seBHE(:,:,:,iZ) = bhe_dke_yp(Ec,kphot,x_leg,zZi(iZ),screening_hxr_params,screening_model);%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert) with screening effect (mec2 -> keV units)
+        end
+    end
+    %
+end
+%
 seHC = haug_dke_yp(Ec,kphot,x_leg);%Electron-electron bremsstrahlung (Haug-Coulomb) (mec2 -> keV units)
 %
 Zbremplasma.seBHE = seBHE;
@@ -142,7 +183,25 @@ ni_c1 = shiftdim(repmat(xzni_norm,[1,1,n_pol+1,np,nk]),2);
 BHE_c1 = permute(sum(seBHE_c1.*ni_c1,4),[1,2,3,5,4]);%Sum over different species
 %
 seHC_c1 = repmat(reshape(seHC_c.',n_pol+1,np,nk),[1,1,1,nr]);
-ne_c1 = shiftdim(repmat(xne_norm',[1,n_pol+1,np,nk]),1);
+%
+if exist('screening_hxr_params') && exist('screening_model')
+    %
+    if ~isempty(screening_hxr_params) && ~isempty(screening_model)
+        %
+        xne_norm_mod = xne_norm' + sum(xzni_norm'.*(ones(length(pne),1)*zNbound),2);%bound electrons are considered as free for e-e bremstrahlung
+        %
+    else
+        %
+        xne_norm_mod = xne_norm';
+        %
+    end
+    %
+else
+    %
+    ne_c1 = shiftdim(repmat(xne_norm_mod,[1,n_pol+1,np,nk]),1); 
+    %
+end
+%
 HC_c1 = seHC_c1.*ne_c1;
 %
 BREM_c1 = BHE_c1 + HC_c1;
