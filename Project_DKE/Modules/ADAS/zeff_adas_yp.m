@@ -19,7 +19,7 @@ function [Zeff] = zeff_adas_yp(adas,zZi,zmi,pzni,pzTi,pne,pTe)
 %
 %   By Y. Peysson CEA-IRFM <yves.peysson@cea.fr>
 %
-[zZi,zmi,pzni,pzTi] = ionisation_adas_yp(adas,zZi,zmi,pzni,pzTi,pne,pTe);
+[zZi,~,zmi,pzni,pzTi] = ionisation_adas_yp(adas,zZi,zmi,pzni,pzTi,pne,pTe);
 %
 pzZi = zZi(:)*ones(1,length(pne));
 Zeff = sum(pzni.*pzZi.*pzZi)./pne;
