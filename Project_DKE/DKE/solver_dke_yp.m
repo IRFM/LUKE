@@ -208,7 +208,7 @@ xB0 = equilDKE.xB0;
 betath_ref = mksa.betath_ref;
 xftp_norm = mksa.xftp_norm_ref;
 %
-[xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,equilDKE,gridDKE);   
+[xTe_norm,xne_norm,xzni_norm,xzTi_norm,xnloss_norm,xbetath,xlnc_e,xnhu,xrnhuth] = normcoef_dke_yp(mksa,dkeparam,equilDKE,gridDKE);   
 %
 if dtn > 0,
     time_scheme = 1;%Implicit differencing scheme
