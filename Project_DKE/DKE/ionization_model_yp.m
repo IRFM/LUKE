@@ -37,7 +37,21 @@ else
                 end
             end
             %
-            [equil_out.zZi,equil_out.zmi,equil_out.pzni,equil_out.pzTi] = ionisation_adas_yp(tabmat,equil_in.zZi,equil_in.zmi,equil_in.pzni,equil_in.pzTi,equil_in.pne,equil_in.pTe);
+            [equil_out.zZi,equil_out.zNbound,equil_out.zmi,equil_out.pzni,equil_out.pzTi] = ionisation_adas_yp(tabmat,equil_in.zZi,equil_in.zmi,equil_in.pzni,equil_in.pzTi,equil_in.pne,equil_in.pTe);
+            %
+            iZneutral = find(equil_out.zZi==0);
+            %
+            if isempty(iZneutral)
+                equil_out.Znucleus = equil_out.zZi;
+            else
+                equil_out.Znucleus = [1,1,equil_out.zZi(iZneutral-1),equil_out.zZi(end)];
+            end
+            %
+            if isfield(equil_in,'screening') && ~isempty(equil_in.screening)
+                %
+                equil_out.screening = equil_in.screening;
+                %
+            end
             %
         else
             equil_out = equil_in;
@@ -46,4 +60,4 @@ else
         equil_out = equil_in;
     end
 end
-
+%
