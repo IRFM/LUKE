@@ -31,6 +31,7 @@ dkepath.decker(1).mex803 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spc
 dkepath.decker(1).mex804 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB804']; 
 dkepath.decker(1).mex900 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB900']; 
 dkepath.decker(1).mex901 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
+dkepath.decker(1).mex905 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB905']; 
 %
 dkepath.decker(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.8.0 -lrefblas'];%NaN;
 dkepath.decker(1).compiler_opt.fopts = '';
@@ -40,6 +41,7 @@ dkepath.decker(1).MUMPS.mex803 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATL
 dkepath.decker(1).MUMPS.mex804 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB804'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.decker(1).MUMPS.mex900 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB900'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.decker(1).MUMPS.mex901 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.decker(1).MUMPS.mex905 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB905'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %--------------------------- Remote computing -----------------------------
 %
@@ -70,8 +72,9 @@ dkepath.peysson(1).mex803 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/s
 dkepath.peysson(1).mex804 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB804']; 
 dkepath.peysson(1).mex900 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB900']; 
 dkepath.peysson(1).mex901 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
+dkepath.peysson(1).mex905 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB905']; 
 %
-dkepath.peysson(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.7.0 -lrefblas'];%NaN;
+dkepath.peysson(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.8.0 -lrefblas'];%NaN;
 dkepath.peysson(1).compiler_opt.fopts = '';
 dkepath.peysson(1).compiler_opt.copts = '';
 %
@@ -79,6 +82,7 @@ dkepath.peysson(1).MUMPS.mex803 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MAT
 dkepath.peysson(1).MUMPS.mex804 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB804'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.peysson(1).MUMPS.mex900 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB900'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.peysson(1).MUMPS.mex901 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.peysson(1).MUMPS.mex905 = [dkepath.decker(1).local_root,'MUMPS_5.0.2/MATLAB905'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %--------------------------- Remote computing -----------------------------
 %
