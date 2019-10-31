@@ -27,10 +27,10 @@ dkepath.decker(1).luke_branch = luke_branch;
 dkepath.decker(1).local_root = '/opt/';
 dkepath.decker(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.decker(1).mex803 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB803']; 
-dkepath.decker(1).mex804 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB804']; 
-dkepath.decker(1).mex900 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB900']; 
-dkepath.decker(1).mex901 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB901']; 
+dkepath.decker(1).mex803 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB803']; 
+dkepath.decker(1).mex804 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB804']; 
+dkepath.decker(1).mex900 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB900']; 
+dkepath.decker(1).mex901 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
 %
 dkepath.decker(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.7.0 -lrefblas'];%NaN;
 dkepath.decker(1).compiler_opt.fopts = '';
@@ -66,10 +66,10 @@ dkepath.peysson(1).luke_branch = luke_branch;
 dkepath.peysson(1).local_root = '/opt/';
 dkepath.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.peysson(1).mex803 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB803']; 
-dkepath.peysson(1).mex804 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB804']; 
-dkepath.peysson(1).mex900 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB900']; 
-dkepath.peysson(1).mex901 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcpc483/MATLAB901']; 
+dkepath.peysson(1).mex803 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB803']; 
+dkepath.peysson(1).mex804 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB804']; 
+dkepath.peysson(1).mex900 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB900']; 
+dkepath.peysson(1).mex901 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
 %
 dkepath.peysson(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.7.0 -lrefblas'];%NaN;
 dkepath.peysson(1).compiler_opt.fopts = '';
