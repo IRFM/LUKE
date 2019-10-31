@@ -6,7 +6,7 @@ close all
 clc
 %
 [dkepath] = load_structures_yp('dkepath','','');
-adasfile = [dkepath.luke_root,'project_DKE/Modules/ADAS/ADAS.mat'];%Atomic Data and Analysis Structure (ADAS). 
+adasfile = [dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat'];%Atomic Data and Analysis Structure (ADAS). 
 %
 load(adasfile);%structure is named tabmat
 %
