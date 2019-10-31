@@ -2,7 +2,7 @@ function dkepath = path_x58ud7_YVES_PEYSSON
 %
 % path definitions for X58-UD7 linux server (core i7 Intel) of Yves Peysson
 %
-%	Output:
+%    Output:
 %
 %       - dkepath: path structure
 %
@@ -10,8 +10,8 @@ function dkepath = path_x58ud7_YVES_PEYSSON
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@epfl.ch)
 %
-dkepath.machine = 'ypeysson-X58A-UD7';
-dkepath.hostname = 'ypeysson-X58A-UD7';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
+dkepath.machine = 'home-lyon';%ypeysson-X58A-UD7';
+dkepath.hostname = 'home-lyon';%'ypeysson-X58A-UD7';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -32,21 +32,17 @@ dkepath.ypeysson(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
 dkepath.ypeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.ypeysson(1).local_root = '/home/ypeysson/';
 %
-dkepath.ypeysson(1).mex904 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/ypeysson-X58A-UD7/MATLAB904/'];%r2018a
 dkepath.ypeysson(1).mex907 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/ypeysson-X58A-UD7/MATLAB907/'];%r2019b
 %
 dkepath.ypeysson(1).compiler_opt.libs.gfortran = '';
 dkepath.ypeysson(1).compiler_opt.copts = '';
-dkepath.ypeysson(1).compiler_opt.fopts.mex904 = 'FC=''gfortran''';%
-dkepath.ypeysson(1).compiler_opt.separatrice.mex904 = [' -largeArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.ypeysson(1).compiler_opt.helmex.mex904 = [' -compatibleArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.ypeysson(1).compiler_opt.fopts.mex904 = ' ';%-largeArrayDims
 dkepath.ypeysson(1).compiler_opt.fopts.mex907 = 'FC=''gfortran''';%
-dkepath.ypeysson(1).compiler_opt.separatrice.mex907 = [' -largeArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.ypeysson(1).compiler_opt.helmex.mex907 = [' -compatibleArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.ypeysson(1).compiler_opt.separatrice.mex907 = [' -largeArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not wo
+rk for helmex77.F but OK for separatrice.F
+dkepath.ypeysson(1).compiler_opt.helmex.mex907 = [' -compatibleArrayDims -lgfortran -L',dkepath.ypeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not w
+ork for helmex77.F but OK for separatrice.F
 dkepath.ypeysson(1).compiler_opt.fopts.mex907 = ' ';%-largeArrayDims
 %
-dkepath.ypeysson(1).MUMPS.mex904 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.2_S_gfortran/MATLAB904'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.ypeysson(1).MUMPS.mex907 = [dkepath.ypeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.2.1_S_gfortran/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %
@@ -72,17 +68,4 @@ dkepath.ypeysson(1).remote(1).gitmode.cmd = 'cd /home/ypeysson/luke/*;git pull;e
 dkepath.ypeysson(1).remote(2) = dkepath.ypeysson(1).remote(1);
 dkepath.ypeysson(1).remote(2).schedulername = 'direct';
 dkepath.ypeysson(1).remote(2).gitupdate = true;
-%
-dkepath.ypeysson(1).remote(3).remoteid = 'CEA_ANDROMEDE';
-dkepath.ypeysson(1).remote(3).schedulername = 'pbs';
-dkepath.ypeysson(1).remote(3).profilename = 'YP105119';
-dkepath.ypeysson(1).remote(3).luke_root = ['/Applications/LUKE/',dkepath.ypeysson(1).luke_branch,'/'];
-dkepath.ypeysson(1).remote(3).link_mode = '';
-dkepath.ypeysson(1).remote(3).cvsupdate = false;% update done in 'direct' mode
-dkepath.ypeysson(1).remote(3).gitupdate = false;
-dkepath.ypeysson(1).remote(3).gitmode.cmd = 'cd /Applications/LUKE/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
-%
-dkepath.ypeysson(1).remote(4) = dkepath.ypeysson(1).remote(3);
-dkepath.ypeysson(1).remote(4).schedulername = 'direct';
-dkepath.ypeysson(1).remote(4).gitupdate = true;
 %
