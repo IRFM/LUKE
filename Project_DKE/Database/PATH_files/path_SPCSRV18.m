@@ -32,7 +32,7 @@ dkepath.decker(1).mex804 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spc
 dkepath.decker(1).mex900 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB900']; 
 dkepath.decker(1).mex901 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
 %
-dkepath.decker(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.7.0 -lrefblas'];%NaN;
+dkepath.decker(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.8.0 -lrefblas'];%NaN;
 dkepath.decker(1).compiler_opt.fopts = '';
 dkepath.decker(1).compiler_opt.copts = '';
 %
