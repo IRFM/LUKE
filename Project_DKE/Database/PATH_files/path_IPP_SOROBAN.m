@@ -49,9 +49,11 @@ dkepath.peysson(1).abacus.imagemagick.env = '/usr/bin/';% ImageMagick environmen
 %
 % -------------------------- abacus 01-02-03 -----------------------------
 %
-dkepath.peysson(1).soroban-node-01 = dkepath.peysson(1).soroban-front-01;
-dkepath.peysson(1).soroban-node-02 = dkepath.peysson(1).soroban-front-01;
-dkepath.peysson(1).soroban-node-03 = dkepath.peysson(1).soroban-front-01;
+
+%TODO: fix node name issue
+%dkepath.peysson(1).soroban-node-01 = dkepath.peysson(1).soroban-front-01;
+%dkepath.peysson(1).soroban-node-02 = dkepath.peysson(1).soroban-front-01;
+%dkepath.peysson(1).soroban-node-03 = dkepath.peysson(1).soroban-front-01;
 %
 %--------------------------- Remote computing -----------------------------
 %
