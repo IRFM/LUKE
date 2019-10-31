@@ -11,7 +11,7 @@ function dkepath = path_x58ud7_YVES_PEYSSON
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@epfl.ch)
 %
 dkepath.machine = 'home-lyon';%ypeysson-X58A-UD7';
-dkepath.hostname = 'home-lyon';%'ypeysson-X58A-UD7';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
+dkepath.hostname = 'home-lyon.yvespeysson.fr';%'ypeysson-X58A-UD7';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -30,7 +30,7 @@ sep = strfind(luke_root,'/');
 dkepath.ypeysson(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
 %
 dkepath.ypeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-dkepath.ypeysson(1).local_root = '/home/ypeysson/';
+dkepath.ypeysson(1).local_root = '/home/ypeysson/luke/';
 %
 dkepath.ypeysson(1).mex907 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/ypeysson-X58A-UD7/MATLAB907/'];%r2019b
 %
