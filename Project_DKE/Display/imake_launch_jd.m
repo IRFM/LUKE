@@ -92,174 +92,7 @@ if ~isempty(external),% import wave data from external structure
             launchs{end+1} = launch;
         end
         %
-    elseif strcmp(basestr,'TS') || strcmp(basestr,'WEST'),
-        %
-        % Case of LH spectrum from ALOHA file
-        %
-        if isfield(external,'antenna'),
-            %
-            spectrum = struct;
-            if isfield(external,'id'),
-                spectrum.id = external.id;
-            end
-            %
-            disp('********************************************************************************************')
-            disp('WARNING: check that the ALOHA power spectrum generates a co-current or a counter current. ')
-            disp('Do a flipud(antenna.dP_nz) and fliplr(antenna.dP) accordingly in the ALOHA file before ');
-            disp('using ALOHA data in irunluke_jd. Co-current: Npar0(main peak) < 0 if sign(Ip)*sign(Bt) > 0');
-            disp(' and Npar0(main peak) > 0 if sign(Ip)*sign(Bt) < 0');
-            disp('********************************************************************************************')
-            %
-            spectrum.dP = external.antenna.dP;
-            spectrum.dP_nz = external.antenna.dP_nz;
-            spectrum.nz = external.antenna.nz;
-            spectrum.ny = external.antenna.ny;
-            %
-            while 1,
-                opt_module = iselect_jd({'full antenna','upper module','lower module'},'This ALOHA spectrum corresponds to :',opt_gui,select.style,1);
-                %
-                if opt_module > 1,
-                    pfac = 1/2;
-                    pstr = ' (half antenna)';
-                else
-                    pfac = 1;
-                    pstr = '';
-                end                
-                %
-                val(1) = sum(external.antenna.dP_nz*external.antenna.dnz);
-                s{1} = ['Power from ALOHA spectrum',pstr,'        : PLH = ',num2str(val(1)/1e6),' MW'];
-                %
-                if isfield(equil,'shotnum') && ~isempty(str2double(equil.shotnum)) && isfield(equil,'shotime') && ~isempty(str2double(equil.shotime)),% shot number and time info
-                    %
-                    filename = [workdir,'GPHYB_',equil.shotnum,'.mat'];
-                    %
-                    if exist(filename,'file'),%power from file
-                        %
-                        load(filename,'tplh','tbase')
-                        %    
-                        xplh = pfac*1e6*interp1(tbase(:,1),tplh,str2double(equil.shotime));
-                        %
-                        xplh = xplh(xplh > 0);
-                        %
-                        if length(xplh) == 1,
-                            val(end+1) = xplh;
-                            s{end+1} = ['Power from GPHYB_* file',pstr,'          : PLH = ',num2str(xplh/1e6),' MW'];
-                        elseif length(xplh) == 2,
-                            val(end+1:end+2) = xplh;
-                            s{end+1} = ['Power from GPHYB_* file, ant. #1',pstr,' : PLH = ',num2str(xplh(1)/1e6),' MW'];
-                            s{end+1} = ['Power from GPHYB_* file, ant. #2',pstr,' : PLH = ',num2str(xplh(2)/1e6),' MW'];
-                        end
-                        %
-                    end
-                    %
-                    if exist('tsbase','file') == 3% power from TS database
-                        %
-                        [tplh,tbase] = tsbase(str2double(equil.shotnum),'GPHYB');
-                        %
-                        xplh = pfac*1e6*interp1(tbase(:,1),tplh(:,1:2),str2double(equil.shotime));
-                        %
-                        xplh = xplh(xplh > 0);
-                        %
-                        if length(xplh) == 1,
-                            val(end+1) = xplh;
-                            s{end+1} = ['Power from TSBASE',pstr,'                : PLH = ',num2str(xplh/1e6),' MW'];
-                        elseif length(xplh) == 2,
-                            val(end+1:end+2) = xplh;
-                            s{end+1} = ['Power from TSBASE, ant. #1',pstr,'       : PLH = ',num2str(xplh(1)/1e6),' MW'];
-                            s{end+1} = ['Power from TSBASE, ant. #2',pstr,'       : PLH = ',num2str(xplh(2)/1e6),' MW'];
-                        end
-                        %
-                    end
-                    %
-                end
-                %
-                s{end+1} = 'Specify power manually';
-                %   
-                locstyle = select.style;
-                locstyle.textwidth = 600;
-                %
-                opt_Plhtot = iselect_jd(s,['LH power associated with this spectrum',pstr,' :'],opt_gui,locstyle,length(s)-1);
-                %
-                if opt_Plhtot < length(s),
-                    spectrum.Plhtot = val(opt_Plhtot);
-                else
-                    spectrum.Plhtot = 1e6*iselect_jd({},['Specify LH power',pstr,' (MW) :'],opt_gui,select.style,val(1)/1e6);
-                end
-                %
-                data = struct;
-                data.spectrum = spectrum;
-                select.mode = 2;%display fitted ALOHA spectra
-                %
-                launchs{1} = imake_launch_LH_jd(basestr,signs,data,opt_gui,select);
-                %
-                if opt_module == 2,
-                    launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 >= 0);
-                elseif opt_module == 3,
-                    launchs{1}.rZ0 = launchs{1}.rZ0(launchs{1}.rZ0 <= 0);
-                end  
-                %
-                disp('------------------------------------------------');
-                for ib = 1:length(launchs{1}.bNpar0),
-                    disp(['Npar0 = ',num2str(launchs{1}.bNpar0(ib)),' - Power = ',num2str(launchs{1}.bPlhtot(ib)/1e6),' (MW)']);
-                end
-                disp(' ');disp('------------------------------------------------');
-                disp(['Total LH power in the launched spectrum (',int2str(length(launchs{1}.bNpar0)),' rays) : ',num2str(sum(launchs{1}.bPlhtot)/1e6),' (MW)']);
-                disp('------------------------------------------------');disp(' ');
-                %
-                opt_OK = iselect_jd({'Yes','No'},'Confirm the LH power spectrum deduced from ALOHA:',opt_gui,select.style,1);
-                %
-                if opt_OK == 1,
-                    break
-                else
-                    clear('s');
-                end                       
-            end
-        %
-        % Case of structure external
-        %
-        else
-            %
-            % WAVE TYPE
-            %
-            if isfield(external,'LH') && isfield(external,'EC')
-                %
-                t_opt = input_dke_yp('Option for wave type : 0 (LH), 1 (EC)',0,0:1,'',[1,1]);
-                %
-                if t_opt == 0,
-                    %
-                    type = 'LH';
-                else
-                    %
-                    type = 'EC';
-                end
-                %
-            elseif isfield(external,'LH'),
-                %
-                type = 'LH';
-                %
-            elseif isfield(external,'EC'),
-                %
-                type = 'EC';
-                %
-            else
-                disp('WAVE type not recognized in external structure. Aborted')
-                return
-            end
-            %
-            % BUILDING LAUNCH
-            %
-            if strcmp(type,'LH'),
-                %
-                launch = imake_launch_LH_jd(basestr,equil,external.LH);
-                %
-            elseif strcmp(type,'EC'),
-                %
-                launch = imake_launch_TS_jd(external.EC); 
-                %
-            end
-        end
-        %
-    elseif strcmp(basestr,'EAST') || strcmp(basestr,'HL2A'),
+    elseif strcmp(basestr,'TS') || strcmp(basestr,'WEST') || strcmp(basestr,'EAST') || strcmp(basestr,'HL2A')
         %
         % Case of LH spectrum from ALOHA file
         %
@@ -267,13 +100,19 @@ if ~isempty(external),% import wave data from external structure
             %
             select.position_rZ0_opt = 'y';
             %
+            if strcmp(basestr,'TS') || strcmp(basestr,'WEST')
+                external.LH = order_antenna_TS_WEST(external);
+            end
+            %
             fnames = fieldnames(external.LH);
             %
             for a_opt = 1:length(fnames),
                 %
                 fname = fnames{a_opt};
                 %
-                if isfield(external.LH.(fname),'aloha') && isfield(external.LH.(fname),'power_spectrum') && isfield(external,'antenna')
+                if isfield(external.LH.(fname),'aloha') && ~isfield(external.LH.(fname),'power_spectrum') && ~isfield(external,'antenna')
+                    aloha_opt = 0;
+                elseif isfield(external.LH.(fname),'aloha') && isfield(external.LH.(fname),'power_spectrum') && isfield(external,'antenna')
                     aloha_opt = input_dke_yp([fname,' : Calculation of the power spectrum using ALOHA [0] or consider an external power spectrum [1] or an already calculated ALOHA spectrum [2] ? '],0,0:2,'',[1,1]);
                 elseif isfield(external.LH.(fname),'aloha') && isfield(external.LH.(fname),'power_spectrum') && ~isfield(external,'antenna')
                      aloha_opt = input_dke_yp([fname,' : Calculation of the power spectrum using ALOHA [0] or consider an external power spectrum [1] ? '],0,0:1,'',[1,1]);
@@ -303,12 +142,16 @@ if ~isempty(external),% import wave data from external structure
                     error('ERROR: no data for the LH power spectrum in the external structure.')
                 end
                 %
-                if aloha_opt == 0,% calculate power spectrum with ALOHA
+                if aloha_opt == 0,% calculate power spectrum with ALOHA remotely
                     %
                     if strcmp(basestr,'EAST')
                         external.antenna = make_aloha_EAST_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured);
                     elseif strcmp(basestr,'HL2A')
                         external.antenna = make_aloha_HL2A_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured);
+                    elseif strcmp(basestr,'TS')
+                        external.antenna = make_aloha_TS_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured);
+                    elseif strcmp(basestr,'WEST')
+                        external.antenna = make_aloha_WEST_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured);
                     else
                         error(['Wrong basestr = ''',basestr,''' in imake_launch_jd.m'])
                     end
@@ -413,9 +256,7 @@ if ~isempty(external),% import wave data from external structure
                     end
                 end
             end
-        end
-        %
-        if isfield(external,'EC'),
+        elseif isfield(external,'EC'),
             %
             fnames = fieldnames(external.EC);
             %
@@ -431,6 +272,46 @@ if ~isempty(external),% import wave data from external structure
                 %
             end
             %
+        else
+            %
+            % WAVE TYPE
+            %
+            if isfield(external,'LH') && isfield(external,'EC')
+                %
+                t_opt = input_dke_yp('Option for wave type : 0 (LH), 1 (EC)',0,0:1,'',[1,1]);
+                %
+                if t_opt == 0,
+                    %
+                    type = 'LH';
+                else
+                    %
+                    type = 'EC';
+                end
+                %
+            elseif isfield(external,'LH'),
+                %
+                type = 'LH';
+                %
+            elseif isfield(external,'EC'),
+                %
+                type = 'EC';
+                %
+            else
+                disp('WAVE type not recognized in external structure. Aborted')
+                return
+            end
+            %
+            % BUILDING LAUNCH
+            %
+            if strcmp(type,'LH'),
+                %
+                launch = imake_launch_LH_jd(basestr,equil,external.LH);
+                %
+            elseif strcmp(type,'EC'),
+                %
+                launch = imake_launch_TS_jd(external.EC); 
+                %
+            end
         end
     elseif strcmp(basestr,'AUG'),% AUG launching data
         %

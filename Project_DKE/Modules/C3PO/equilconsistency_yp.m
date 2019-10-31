@@ -474,7 +474,7 @@ if display_mode == 2,
         axf = axis(ax);
         text(0.1,axf(3)+9*(axf(4)-axf(3))/10, ['I_p = ',num2str(Ip_z/1e6),' (MA)'], 'Color', 'b','FontSize',18);
         text(0.1,axf(3)+8*(axf(4)-axf(3))/10, ['l_i = ',num2str(li),], 'Color', 'b','FontSize',18);  
-        print_jd(2,['Current_flux_function_',equil.id]);
+   %     print_jd(2,['Current_flux_function_',equil.id]);
         %
         figure('Name','Flux derivative of the current flux function'),clf
         leg = {'Magnetic','EQDSK','Location','NorthEast'};

@@ -2,7 +2,11 @@ function equil = fmake_equil_EAST_yp(workdir,shotnum,shotime)
 %
 if nargin < 3,error('Not enough input arguments in fmake_equil_EAST_yp.m');end
 %
-external = load_externaldata_EAST(workdir,shotnum,shotime,'','',0,'');
+external_in.workdir = workdir;
+external_in.shotnum = shotnum;
+external_in.shotime = shotime;
+%    
+external = load_externaldata_EAST(external_in);
 %
 display_mode = 0;
 p_opt = -1;
@@ -79,8 +83,6 @@ save([savename,'.prof'],'prho','pne','pTe','pTi','frac_H','frac_D','Zimp','Aimp'
 %
 equil_prof = equil_prof_jd([savename,'.prof'],1.4,prho1,pspsin1,pspsinT1,display_mode,p_opt,dispname,savename,Zeff);
 equil_prof.ne_lav = ne_lav;
-%
-delete([savename,'.prof']);
 %
 equil = conc_struct_jd(equil_magnetic,equil_prof);
 %

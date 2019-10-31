@@ -297,11 +297,11 @@ double *z,*t1,*pen,*theta1,*sec;
     pi = (double)3.14159265352;
     xbarn = (double)1.0e-24;
     arc = pi/(double)180.0;
-    nte = 100;
-    gnte = (double)100.0;
+    nte = 1000;
+    gnte = (double)1000.0;
     dte = pi/gnte;
-    np = 20;
-    gnp = (double)20;
+    np = 200;
+    gnp = (double)200;
     dph = pi/gnp;   
         
     

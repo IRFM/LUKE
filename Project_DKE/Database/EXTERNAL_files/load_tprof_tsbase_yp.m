@@ -7,30 +7,30 @@ function  [flag,ap,Rp,Zp,Bt,Ip,qmin,eq,qopt,Zi,mi,fi,Te0,Tea,eTe1,eTe2,ne0,nea,e
 method = 'spline';
 flag = 1;
 %
-if strcmp(basestr,'TS'),
+if strcmp(basestr,'TS') || strcmp(basestr,'WEST')
 	%
 	shotnum = str2num(shotnum) + certif/10;  
 	%
-	[tprof.ap,tprof.t] = tsbase(shotnum,'SPROFAMIN');%Plasma minor radius (m)
-	[tprof.Rp,tprof.t] = tsbase(shotnum,'SPROFRMAJ');%Plasma major radius (m)
-	[tprof.Zp,tprof.t] = tsbase(shotnum,'SPROFZPOS');%Plasma vertical position (m)
+    [shotdate,tprof.ap,tprof.t] = remote_tsbase(shotnum,'samin');%Plasma minor radius (m)
+	[shotdate,tprof.Rp,tprof.t] = remote_tsbase(shotnum,'srmaj');%Plasma major radius (m)
+	[shotdate,tprof.Zp,tprof.t] = remote_tsbase(shotnum,'szpos');%Plasma vertical position (m)
 	%
-	[tprof.Bt,tprof.t] = tsbase(shotnum,'SPROFBTOR');%Toroidal magnetic field (T)
-	[tprof.Ip,tprof.t] = tsbase(shotnum,'SPROFIP');%Plasma current (MA)
-	[tprof.qpsi,tprof.t] = tsbase(shotnum,'GPROFQ');%safety factor qpsi profile
+	[shotdate,tprof.Bt,tprof.t] = remote_tsbase(shotnum,'SPROFBTOR');%Toroidal magnetic field (T)
+	[shotdate,tprof.Ip,tprof.t] = remote_tsbase(shotnum,'SPROFIP');%Plasma current (MA)
+	[shotdate,tprof.qpsi,tprof.t] = remote_tsbase(shotnum,'GPROFQ');%safety factor qpsi profile
 	%
-	[tprof.vloop,tprof.t] = tsbase(shotnum,'SPROFVS');%Loop voltage (V)
-	[tprof.Zeff,tprof.t] = tsbase(shotnum,'SPROFZEFF');%Effective charge
-	[tprof.Zmain] = tsbase(shotnum,'SPROFZMAIN');%Charges of the main ions
-	[tprof.Mmain] = tsbase(shotnum,'SPROFMMAIN');%Atomic masses of the main ions (uma)
-	[tprof.Cmain] = tsbase(shotnum,'SPROFCMAIN');%Concentrations of the main ions
-	[tprof.Zimp] = tsbase(shotnum,'SPROFZIMP');%Charges of the impurities
-	[tprof.Mimp] = tsbase(shotnum,'SPROFMIMP');%Atomic masses of impurities (uma)
+	[shotdate,tprof.vloop,tprof.t] = remote_tsbase(shotnum,'SPROFVS');%Loop voltage (V)
+	[shotdate,tprof.Zeff,tprof.t] = remote_tsbase(shotnum,'SPROFZEFF');%Effective charge
+	[shotdate,tprof.Zmain] = remote_tsbase(shotnum,'SPROFZMAIN');%Charges of the main ions
+	[shotdate,tprof.Mmain] = remote_tsbase(shotnum,'SPROFMMAIN');%Atomic masses of the main ions (uma)
+	[shotdate,tprof.Cmain] = remote_tsbase(shotnum,'SPROFCMAIN');%Concentrations of the main ions
+	[shotdate,tprof.Zimp] = remote_tsbase(shotnum,'SPROFZIMP');%Charges of the impurities
+	[shotdate,tprof.Mimp] = remote_tsbase(shotnum,'SPROFMIMP');%Atomic masses of impurities (uma)
 	%
-	[tprof.Te,tprof.t,tprof.rho] = tsbase(shotnum,'GPROFTEFIT');%ELectron temperature (keV)
-	[tprof.ne,tprof.t,tprof.rho] = tsbase(shotnum,'GPROFNEFIT');%ELectron density profile (m-3)
-	[tprof.Ti,tprof.t,tprof.rho] = tsbase(shotnum,'GPROFTIFIT_');%Ion temperature profile (keV)
-	[tprof.ni,tprof.t,tprof.rho] = tsbase(shotnum,'GPROFNIFIT');%Ion density profile (m-3)
+	[shotdate,tprof.Te,tprof.t,tprof.rho] = remote_tsbase(shotnum,'GPROFTEFIT');%ELectron temperature (keV)
+	[shotdate,tprof.ne,tprof.t,tprof.rho] = remote_tsbase(shotnum,'GPROFNEFIT');%ELectron density profile (m-3)
+	[shotdate,tprof.Ti,tprof.t,tprof.rho] = remote_tsbase(shotnum,'GPROFTIFIT');%Ion temperature profile (keV)
+	[shotdate,tprof.ni,tprof.t,tprof.rho] = remote_tsbase(shotnum,'GPROFNIFIT');%Ion density profile (m-3)
 	%
 	if isempty(tprof.ap) | isempty(tprof.Rp) |isempty(tprof.Zp) |isempty(tprof.Bt) |isempty(tprof.Ip) |isempty(tprof.qpsi) |isempty(tprof.vloop) | isempty(tprof.Zeff) | isempty(tprof.Zmain) | isempty(tprof.Mmain) | isempty(tprof.Cmain) | isempty(tprof.Zimp) | isempty(tprof.Mimp) | isempty(tprof.Te) | isempty(tprof.ne) | isempty(tprof.ni),
 		ap = [];

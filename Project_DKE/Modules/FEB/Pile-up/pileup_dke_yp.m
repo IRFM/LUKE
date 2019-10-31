@@ -56,7 +56,7 @@ legend('Pile-up + ADC','Pile-up only','Ideal','Location','South');
 [ax] = graph1D_jd([1,max(Ni)],[Ncc(max(index)),Ncc(max(index))],0,0,'Input count rate (pulse/s)','Output count rate (cps/s)',['Pile-up effect ',tok,' ',namediag],NaN,[0,max(Ni)*1.01],[0,max(Nc)*1.5],'--','none','b',1);
 ht = text(0,1.05*Ncc(max(index)),['  ',int2str(pileupsim.seuil*100),'% pile-up']);set(ht,'fontsize',20);
 axis('square');
-print_jd(p_opt,[filename,'_CountRate']);
+%print_jd(p_opt,[filename,'_CountRate']);
 %
 disp('----------------------------------------------------------------------');
 info_dke_yp(1,'Pile-up at high count rate');
@@ -84,7 +84,7 @@ a = k0/((tp^(alpha+beta))*((beta/alpha)^beta));
 t = [0:tl/100:tl];y = a*(t.^alpha).*((tl-t).^beta);
 figure('Name','Amplifier pulse shape'),
 [ax] = graph1D_jd(t,y,0,0,'Time (microsecond)','E (keV)',['Amplifier pulse shape ',tok,' ',namediag],NaN,'','','-','none','r',2);
-print_jd(p_opt,[filename,'_PulseModel']);
+%print_jd(p_opt,[filename,'_PulseModel']);
 %
 % Monte-Carlo calculation
 %
@@ -109,7 +109,7 @@ if typspec==2,
    hold off;
    legend('Monte-Carlo','Fit')
 end
-print_jd(p_opt,[filename,'_IN_PulseSpectrum']);
+%print_jd(p_opt,[filename,'_IN_PulseSpectrum']);
 %
 %	Display detected spectrum 
 %
@@ -124,7 +124,7 @@ if typspec==2,
    hold off;
    legend('Monte-Carlo','Fit')
 end
-print_jd(p_opt,[filename,'_OUT_PulseSpectrum']);
+%print_jd(p_opt,[filename,'_OUT_PulseSpectrum']);
 %
 %	Display dead time spectrum
 %
@@ -139,7 +139,7 @@ if typspec==2,
    hold off;
    legend('Monte-Carlo','Fit')
 end
-print_jd(p_opt,[filename,'_OUTWithDeadTime_PulseSpectrum']);
+%print_jd(p_opt,[filename,'_OUTWithDeadTime_PulseSpectrum']);
 %
 %	Display measured spectrum
 %
@@ -160,7 +160,7 @@ if typspec==2,
    hold off;
    legend('Monte-Carlo','Fit')
 end
-print_jd(p_opt,[filename,'_MeasuredSpectrum']);
+%print_jd(p_opt,[filename,'_MeasuredSpectrum']);
 %
 %	Summary
 %

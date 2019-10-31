@@ -1,4 +1,4 @@
-function [hxr] = bremTSconvert_dke_yp(day,month,year);
+function [hxr] = bremTSconvert_dke_yp(day,month,year,tokname);
 %
 % Convert old coordinate system used for DPSX (in partokyp.m for displaytt.m) in the new one used by DKE. Only useful for Tore Supra HXR diagnostic
 % For other tokamak, use directly the correct system of coordinate. For
@@ -9,6 +9,8 @@ function [hxr] = bremTSconvert_dke_yp(day,month,year);
 %       - day: calibration day (1-31) [1,1]
 %       - month: calibration month (1-12) [1,1]
 %       - year: calibration year (19** or 20**) [1,1]
+%       - tokname = 'TS' or 'WEST'
+%           default = 'TS'
 %
 % OUTPUTS
 %
@@ -19,8 +21,11 @@ function [hxr] = bremTSconvert_dke_yp(day,month,year);
 if nargin < 3,
     error('Not enough arguments in bremTSconvert_dke_yp')
 end	
+if nargin == 3,
+    tokname = 'TS';
+end
 %	
-[tok,Rp,ap,epsip,hp,Rm,Ri,ai,fi,nv,nv0,tv,kv,mv,sd,r1,r2,lc,lf,lfp,EG,kdiag,ef,tf,ea,ta,ec,tc,td,res,lod,lad,ed,lpm,phf,kd,Gain,Offset,pur,chordstatus] = partok_dke_yp('TS',day,month,year);
+[tok,Rp,ap,epsip,hp,Rm,Ri,ai,fi,nv,nv0,tv,kv,mv,sd,r1,r2,lc,lf,lfp,EG,kdiag,ef,tf,ea,ta,ec,tc,td,res,lod,lad,ed,lpm,phf,kd,Gain,Offset,pur,chordstatus] = partok_dke_yp(tokname,day,month,year);
 %
 R_TS = (Ri + ai*cos(tv*pi/180))/1000;% reference major radius (m)
 Z_TS = ai*sin(tv*pi/180)/1000;% reference vertical position (m)
@@ -87,7 +92,8 @@ hxr.kphot = [20:10:240];%Photon energy in keV
 hxr.kmin = 50;% standard minimum value for Tph calculation (LH : 50; EC : 35)
 %
 hxr.kmax = 110;% standard maximum value for Tph calculation (LH : 110; EC : 75)
-
+%
+hxr.chordstatus_hxr = chordstatus;%signal availability
 
 function [xx,yy] = circle(x,y,radius,arg4)
 % CIRCLE : Plot a circle.

@@ -8,21 +8,21 @@ function  [flag,EC_out] = load_EC_tsbase_yp(shotnum,certif,shotime,tmin,tmax,bas
 method = 'spline';
 flag = 1;
 %
-if strcmp(basestr,'TS'),
+if strcmp(basestr,'TS') | strcmp(basestr,'WEST'),
 	%
 	shotnum = str2num(shotnum) + certif/10;  
 	%
 	% Load EC parameters from diagnostic directly (from J. F. Artaud for METIS)
 	%
-    [xika1,tbad] = tsbase(shotnum,'sika1');% gyrotron A1 cathode current
-	[xHAUTTOR,tHAUTTOR] = tsbase(shotnum,'SHAUTTOR');% Toroidal injection angle top mirror (A1) hysteresis corrected
+    [shotdate,xika1,tbad] = remote_tsbase(shotnum,'sika1');% gyrotron A1 cathode current
+	[shotdate,xHAUTTOR,tHAUTTOR] = remote_tsbase(shotnum,'SHAUTTOR');% Toroidal injection angle top mirror (A1) hysteresis corrected
 	if ~isempty(xika1) & ~isempty(xHAUTTOR)
-        [prxA1,tA1] = tsbase(shotnum,'spia1');% gyrotron A1 power (anode current)
-        [prxA2,tA2] = tsbase(shotnum,'spia2');% gyrotron A2 power (anode current)
-        [sonde,tsonde] = tsbase(shotnum,'sonderf');% RF probe on reflectometer
-        [xHAUTPOL,tHAUTPOL] = tsbase(shotnum,'SHAUTPOL');% Poloidal injection angle top mirror (A1) hysteresis corrected
-        [xMILTOR,tMILTOR] = tsbase(shotnum,'SMILTOR');% Toroidal injection angle central mirror (A2) hysteresis corrected
-        [xMILPOL,tMILPOL] = tsbase(shotnum,'SMILPOL');% Poloidal injection angle central mirror (A2) hysteresis corrected
+        [shotdate,prxA1,tA1] = remote_tsbase(shotnum,'spia1');% gyrotron A1 power (anode current)
+        [shotdate,prxA2,tA2] = remote_tsbase(shotnum,'spia2');% gyrotron A2 power (anode current)
+        [shotdate,sonde,tsonde] = remote_tsbase(shotnum,'sonderf');% RF probe on reflectometer
+        [shotdate,xHAUTPOL,tHAUTPOL] = remote_tsbase(shotnum,'SHAUTPOL');% Poloidal injection angle top mirror (A1) hysteresis corrected
+        [shotdate,xMILTOR,tMILTOR] = remote_tsbase(shotnum,'SMILTOR');% Toroidal injection angle central mirror (A2) hysteresis corrected
+        [shotdate,xMILPOL,tMILPOL] = remote_tsbase(shotnum,'SMILPOL');% Poloidal injection angle central mirror (A2) hysteresis corrected
         %
         % Powers in W (from M. Lennholm)
         %

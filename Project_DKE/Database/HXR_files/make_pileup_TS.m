@@ -28,12 +28,12 @@ diag.khistotphmax = 110;%Maximum photon energy of the interval for calculating t
 pileupsim.pur = 1;%Pile-up rejection system On (1) or OFF (0)
 pileupsim.nreset = 3;%Random number generator reset number
 pileupsim.typspec = 2;%Line photon energy spectrum (1) or exponential (2)
-pileupsim.Ni0 = 50000;%Plasma photon count rate (photon/s)
+pileupsim.Ni0 = 100000;%Plasma photon count rate (photon/s)
 pileupsim.ech = 1;%Scaling for the Monte-Carlo calculations (for reducing the computational effort, increasing ech)
 pileupsim.k0 = 30;%Characteristic decay energy of the photon spectrum for exponential case or line energy for the line case  (keV) 
 pileupsim.modeMC = 1;%(1) number of input photon for the Monte-Carlo is the pile-up level from theoretical calculations, (0) Monte-Carlo use NiMC
-pileupsim.NiMC = 100000;%Plasma photon count rate for the Monte-Carlo (photon/s)
-pileupsim.seuil = 0.6;%Fraction of pile-up
+pileupsim.NiMC = 1000000;%Plasma photon count rate for the Monte-Carlo (photon/s)
+pileupsim.seuil = 0.5;%Fraction of pile-up
 pileupsim.p_opt = 2;%Figure printing options
 pileupsim.filename = pileup_id ;%Figure printing options
 %

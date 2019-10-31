@@ -100,6 +100,7 @@ for irun = 1:nruns,% load runs in a loop to avoid memory excess
     end
 end
 %
+keyboard
 if ~any(completed_jobs == 0),
     delete(filename)
 end

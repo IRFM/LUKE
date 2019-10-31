@@ -31,9 +31,9 @@ end
 [dkepath] = load_structures_yp('dkepath','','');
 %
 if ~exist('dkepath','var'),
-    dkepath = setpath_luke_jd('',link_mode,0,0,0);
+    dkepath = setpath_luke_jd('',link_mode,1,0,0);
 else
-    dkepath = setpath_luke_jd(dkepath,link_mode,0,0,0);                         
+    dkepath = setpath_luke_jd(dkepath,link_mode,1,0,0);                         
 end
 %
 nrem = length(dkepath.remote);

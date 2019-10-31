@@ -1,4 +1,4 @@
-function y = interp_tprof_time_fxdrg(t,x,t_ref,method)
+function y = interp_tprof_time_fxdrg(t,x,t_ref,t1,t2,method)
 %
 % Time interpolation
 %
@@ -8,4 +8,12 @@ if nargin < 4,
     method = 'spline';
 end
 %
-y = interp1(t,x,t_ref,method);
+if t1 == t2
+    y = interp1(t,x,t_ref,method);
+elseif t1 ~= t2
+    dt = t2-t1;
+    for it = 1:length(t_ref)
+        y(it,:) = mean(interp1(t(:,1),x,t(t(:,1)>t_ref-dt/2 & t(:,1)<t_ref+dt/2)',method),1);
+    end
+end
+    

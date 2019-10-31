@@ -70,7 +70,7 @@ pzTi = ones(size(frac(:)))*pTe/2;
 gfp = [];
 %
 for ii = 1:length(Znucleus)
-    gfp = [gfp, gfp_yp(prel,Znucleus(ii),'Tseng-Pratt-Botto','/Users/yves/Travail/Projets/LUKE_LHCD/Project_DKE/Modules/ADAS')]; 
+    gfp = [gfp, gfp_yp(prel,Znucleus(ii),'Tseng-Pratt-Botto',[dkepath.luke_root,'Project_DKE/Modules/ADAS'])]; 
 end
 %
 gfp = [zeros(length(prel),3),gfp];%add three hydrogen isotope fully ionized

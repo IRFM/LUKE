@@ -37,7 +37,7 @@ else
 end
 %
 if ~flag_aloha,
-    if ~isempty(external) && ~isfield(external,'wavestructs'),% wave data from external database
+    if ~isempty(external) && (~isfield(external,'wavestructs') || isfield(external,'LH')),% wave data from external database
         %
         titletext = 'For the wave structure :';      
         s = {'Use data loaded from the external database',...

@@ -8,7 +8,7 @@ close all
 warning off
 global nfig
 %
-p_opt = 2;
+p_opt = -1;
 % 
 permission = test_permissions_yp;
 %
@@ -19,7 +19,7 @@ end
 %
 % ***********************This part must be specified by the user, run make files if necessary) *****************************
 %
-id_simul = 'LH_Zi_ADAS';%Simulation ID
+id_simul = 'LH_Zi_screening';%Simulation ID
 path_simul = '';%if nothing is specified, the working directory is first used and then MatLab is looking in all the path
 %
 psin_S = [];%Normalized poloidal flux grid where calculations are performed (0 < psin_S < 1) (If one value: local calculation only, not used if empty)
@@ -103,10 +103,29 @@ dkeparam.rho_S = rho_S;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
+Tref = 1;%keV
+%
+equil.pTe = ones(size(equil.pTe))*Tref;
+equil.pzTi = ones(size(equil.pzTi))*Tref;
+%
 pzni = equil.pzni;
 pzTi = equil.pzTi;
 %
-Zi_list = [1:8,10,13,14,17,18,24,26,28,29,32,36,42,54,74];
+ADAS = [dkepath.luke_root,'project_DKE/Modules/ADAS/ADAS.mat'];%Atomic Data and Analysis Structure (ADAS). 
+%
+load(ADAS);
+tabmatfnames = fieldnames(tabmat);
+%
+for itab = 1:length(fieldnames(tabmat))
+    Zi_list(itab) = tabmat.(tabmatfnames{itab}).Z;
+    mi_list(itab) = tabmat.(tabmatfnames{itab}).A;
+end
+%
+[Zi_list,iZi_list] = sort(Zi_list);
+mi_list = mi_list(iZi_list);
+%
+%Zi_list = Zi_list(end);%last element only
+%mi_list = mi_list(end);%last element only
 %
 nZi = length(Zi_list);
 %
@@ -117,15 +136,33 @@ P_2 = NaN(1,nZi);
 for iZi = 1:nZi,
     %
     Zi = Zi_list(iZi);
+    mi = mi_list(iZi);
     %
     if Zi == 1,
         equil.zZi = [1,1,1];
         equil.zmi = [1,2,3];
-        equil.pzni = pzni(1:3,:);
+        %
+        pni =  sum(pzni(1:3,:));
+        %
+        if mi_list == 1
+            equil.pzni(1,:) = pni;%Hydrogen
+            equil.pzni(2,:) = 0*pni;
+            equil.pzni(3,:) = 0*pni;
+        elseif mi_list == 2
+            equil.pzni(1,:) = 0*pni;%Deuterium
+            equil.pzni(2,:) = pni;
+            equil.pzni(3,:) = 0*pni;
+        elseif mi_list == 3
+            equil.pzni(1,:) = 0*pni;%Tritium
+            equil.pzni(2,:) = 0*pni;
+            equil.pzni(3,:) = pni;
+        end
+        %
+        equil.pzni = equil.pzni(1:3,:);
         equil.pzTi = pzTi(1:3,:);
     else
         equil.zZi = [1,1,1,Zi];
-        equil.zmi = [1,2,3,12];
+        equil.zmi = [1,2,3,mi];
         equil.pzni = [0;0;0;1/Zi]*equil.pne;
         equil.pzTi = [equil.pzTi(1:3,:);equil.pzTi(1,:)];
     end
@@ -140,7 +177,7 @@ for iZi = 1:nZi,
         Zeff_2(iZi) = equilDKE_2.xZeff;
     end
     %
-    disp(['----> Calculations for Zi = ',int2str(Zi),' done. Fully stripped ion']);
+    disp(['----> Calculations for Zi = ',int2str(Zi),' done. Fully stripped atom']);
     %
 end
 %
@@ -151,94 +188,116 @@ P_2_rel_Karney_1 = 0.0001256;
 eta_2_rel_Karney_1 = 29.72;
 %
 eta_2_rel_Karney = eta_2_rel_Karney_1*6./(5 + Zi_list);
+eta_2_rel_Karney_mod = eta_2_rel_Karney_1*9./(8 + Zi_list);
 %
 %************************************************************************************************************************************
 %
-figure,clf
+%figure
 %
 leg = {'collmode = 2 [ee: Belaiev-Budker model + 1st Legendre, ei: nr Maxw. background]',...
-       'collmode = 2 [Karney'' model, D_{LH} = (4,7,1), p_{max} = 30, 6/(5+Zi)]'};
+       'collmode = 2 [Karney'' model, D_{LH} = (4,7,1), p_{max} = 30, \eta = 6\eta_{(Z=1)}/(5+Z_i)]',...
+       'collmode = 2 [Karney'' model, D_{LH} = (4,7,1), p_{max} = 30,  \eta = 9\eta_{(Z=1)}/(8+Z_i)]'};
 %
 xlim = [0,max(Zi_list)];
 ylim = [0,0.1];
 xlab = 'Z_i';
 ylab = 'j';
-tit = ['Relativistice case, T_{e} = ',num2str(round(equil.pTe(1)*100)/100),' keV, ion fully stripped'];
+tit = ['Relativistice case, T_{e} = ',num2str(round(equil.pTe(1)*100)/100),' keV, fully stripped atom'];
 siz = 20+14i;
 %
-graph1D_jd(Zi_list,j_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
-graph1D_jd(1,j_2_rel_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','r',2,siz,gca);
+%graph1D_jd(Zi_list,j_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+%graph1D_jd(1,j_2_rel_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','r',2,siz,gca);
 %
 set(gca,'ytick',[0:0.1:1]*ylim(2))
 set(gca,'xtick',[1:5:xlim(2)])
 %
-figure,clf
+%figure
 %
 ylim = [0,0.03];
 ylab = 'P';
 %
-graph1D_jd(Zi_list,P_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
-graph1D_jd(1,P_2_rel_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','r',2,siz,gca);
+%graph1D_jd(Zi_list,P_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+%graph1D_jd(1,P_2_rel_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','r',2,siz,gca);
 %
 set(gca,'ytick',[0:0.1:1]*ylim(2))
 set(gca,'xtick',[1:5:xlim(2)])
 %
-figure,clf
+%figure
 %
 ylim = [0,30];
 ylab = 'j/P';
 %
+figure('Name',tit);
 graph1D_jd(Zi_list,eta_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
-graph1D_jd(Zi_list,eta_2_rel_Karney,0,0,'','','',leg,xlim,ylim,':','none','r',2,siz,gca);
+graph1D_jd(Zi_list,eta_2_rel_Karney,0,0,'','','',leg,xlim,ylim,'none','o','b',2,siz,gca);
+graph1D_jd(Zi_list,eta_2_rel_Karney_mod,0,0,'','','',leg,xlim,ylim,'none','x','g',2,siz,gca);
 %
 set(gca,'ytick',[0:0.1:1]*ylim(2))
 set(gca,'xtick',[1:5:xlim(2)])
 %
-print_jd(p_opt,'fig_j_Zi','./figures',1)
-print_jd(p_opt,'fig_P_Zi','./figures',2)
+%print_jd(p_opt,'fig_j_Zi','./figures',1)
+%print_jd(p_opt,'fig_P_Zi','./figures',2)
 print_jd(p_opt,'fig_eta_Zi','./figures',3)
 %
-equil.ADAS = [dkepath.luke_root,'project_DKE/Modules/ADAS/ADAS.mat'];%Atomic Data and Analysis Structure (ADAS). 
+equil.ADAS = ADAS;%Atomic Data and Analysis Structure (ADAS). 
 %
 j_2_ADAS = NaN(1,nZi);
 %
 P_2_ADAS = NaN(1,nZi);
 %
-for iZi = 1:nZi,
+for iZi = 1:nZi
     %
     Zi = Zi_list(iZi);
+    mi = mi_list(iZi);
     %
-    if Zi == 1,
+    if Zi == 1
         equil.zZi = [1,1,1];
         equil.zmi = [1,2,3];
+        %
+        pni =  sum(pzni(1:3,:));
+        %
+        if mi_list == 1
+            equil.pzni(1,:) = pni;%Hydrogen
+            equil.pzni(2,:) = 0*pni;
+            equil.pzni(3,:) = 0*pni;
+        elseif mi_list == 2
+            equil.pzni(1,:) = 0*pni;%Deuterium
+            equil.pzni(2,:) = pni;
+            equil.pzni(3,:) = 0*pni;
+        elseif mi_list == 3
+            equil.pzni(1,:) = 0*pni;%Tritium
+            equil.pzni(2,:) = 0*pni;
+            equil.pzni(3,:) = pni;
+        end
+        %
         equil.pzni = pzni(1:3,:);
         equil.pzTi = pzTi(1:3,:);
     else
         equil.zZi = [1,1,1,Zi];
-        equil.zmi = [1,2,3,12];
+        equil.zmi = [1,2,3,mi];
         equil.pzni = [0;0;0;1/Zi]*equil.pne;
-        equil.pzTi = [pzTi(1:3,:);pzTi(1,:)];
+        equil.pzTi = [equil.pzTi(1:3,:);equil.pzTi(1,:)];
     end
     %
     waves{1} = make_idealLHwave_jd(equil,wavestruct);
-    %
+    %   
     dkeparam.coll_mode = 2;% Linearized Belaiev-Budker collision operator for ee with first order Legendre correction for momentum conservation, non-relativistic Maxwellian background for ei
     [dummy,Zcurr,ZP0,dke_out,~,equilDKE_2_ADAS] = main_dke_yp(id_simul,dkepath,equil,dkeparam,dkedisplay,ohm,waves,transpfaste,ripple,[],[]);
     if dke_out.residu_f{end}(end) <= dkeparam.prec0_f,
         j_2_ADAS(iZi) = Zcurr.x_0;
         P_2_ADAS(iZi) = ZP0.x_rf_fsav;
         Zeff_2_ADAS(iZi) = equilDKE_2_ADAS.xZeff;
+        zZi_2_ADAS{iZi} = equilDKE_2_ADAS.zZi';
+        zni_2_ADAS{iZi} = equilDKE_2_ADAS.xzni;
     end
     %
-    disp(['----> Calculations for Zi = ',int2str(Zi),' done. Ionization state from ADAS']);
+    disp(['----> Calculations for Zi = ',int2str(Zi),' done. All ionization states from ADAS (fully screening)']);
     %
 end
 %
 eta_2_ADAS = j_2_ADAS./P_2_ADAS;
 %
 %************************************************************************************************************************************
-%
-figure,clf
 %
 leg = {'collmode = 2 [ee: Belaiev-Budker model + 1st Legendre, ei: nr Maxw. background]',...
        'collmode = 2 [Karney'' model, D_{LH} = (4,7,1), p_{max} = 30, 6/(5+Zi)]'};
@@ -248,62 +307,69 @@ ylim = [0,0.1];
 xlab = 'Z_i';
 ylab = 'j';
 tit = ['Relativistic case, T_{e} = ',num2str(round(equil.pTe(1)*100)/100),' keV, ADAS'];
+%figure('Name',tit)
 siz = 20+14i;
 %
-graph1D_jd(Zi_list,j_2_ADAS,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
-graph1D_jd(1,j_2_rel_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','r',2,siz,gca);
+%graph1D_jd(Zi_list,j_2_ADAS,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+%graph1D_jd(1,j_2_rel_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','r',2,siz,gca);
 %
 set(gca,'ytick',[0:0.1:1]*ylim(2))
 set(gca,'xtick',[1:5:xlim(2)])
 %
-figure,clf
+%figure
 %
 ylim = [0,0.03];
 ylab = 'P';
 %
-graph1D_jd(Zi_list,P_2_ADAS,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
-graph1D_jd(1,P_2_rel_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','r',2,siz,gca);
+%graph1D_jd(Zi_list,P_2_ADAS,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+%graph1D_jd(1,P_2_rel_Karney_1,0,0,'','','',leg,xlim,ylim,'none','o','r',2,siz,gca);
 %
 set(gca,'ytick',[0:0.1:1]*ylim(2))
 set(gca,'xtick',[1:5:xlim(2)])
 %
-figure,clf
+%figure
 %
 ylim = [0,30];
 ylab = 'j/P';
 %
-graph1D_jd(Zi_list,eta_2_ADAS,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
-graph1D_jd(Zi_list,eta_2_rel_Karney,0,0,'','','',leg,xlim,ylim,':','none','r',2,siz,gca);
+%graph1D_jd(Zi_list,eta_2_ADAS,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
+%graph1D_jd(Zi_list,eta_2_rel_Karney,0,0,'','','',leg,xlim,ylim,':','none','r',2,siz,gca);
 %
 set(gca,'ytick',[0:0.1:1]*ylim(2))
 set(gca,'xtick',[1:5:xlim(2)])
 %
-print_jd(p_opt,'fig_j_Zi_ADAS','./figures',4)
-print_jd(p_opt,'fig_P_Zi_ADAS','./figures',5)
-print_jd(p_opt,'fig_eta_Zi_ADAS','./figures',6)
-%
-figure,clf
+%print_jd(p_opt,'fig_j_Zi_ADAS','./figures',4)
+%print_jd(p_opt,'fig_P_Zi_ADAS','./figures',5)
+%print_jd(p_opt,'fig_eta_Zi_ADAS','./figures',6)
 %
 ylim = [0,30];
-ylab = 'j/P';
+xlab = 'Atomic number Z';
+ylab = '\eta = j/P';
 %
-tit = ['Relativistic case, T_{e} = ',num2str(round(equil.pTe(1)*100)/100),' keV, collmode = 2'];
-leg = {'Fully stripped ion',...
-       'Partially ionised ion (ADAS)'};
+tit = ['Relativistic case, T_{e} = ',num2str(round(equil.pTe(1)*100)/100),' keV, ionization states from ADAS'];
+figure('Name',tit)
+leg = {'LUKE, fully stripped atom',...
+       'LUKE, fully screened atom (ADAS)',...
+       '\eta = 6\eta_{(Z=1)}/(5+Z_{eff})',...
+       '\eta = 9\eta_{(Z=1)}/(8+Z_{eff})'};
 %
 graph1D_jd(Zi_list,eta_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 graph1D_jd(Zi_list,eta_2_ADAS,0,0,xlab,ylab,tit,leg,xlim,ylim,'none','+','r',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(Zi_list,6*eta_2_ADAS(1)./(5+Zeff_2_ADAS),0,0,xlab,ylab,tit,leg,xlim,ylim,'none','o','b',2,siz,gca,0.9,0.7,0.7);
+graph1D_jd(Zi_list,9*eta_2_ADAS(1)./(8+Zeff_2_ADAS),0,0,xlab,ylab,tit,leg,xlim,ylim,'none','x','g',2,siz,gca,0.9,0.7,0.7);
 %
 set(gca,'ytick',[0:0.1:1]*ylim(2))
 set(gca,'xtick',[1:5:xlim(2)])
 %
 print_jd(p_opt,'fig_eta_Zi_Zi_ADAS','./figures',7)
 %
-figure,clf
-%
 ylim = [0,max(Zi_list)];
 ylab = 'Z_{eff}';
 tit = ['Relativistic case, T_{e} = ',num2str(round(equil.pTe(1)*100)/100),' keV'];
+figure('Name',tit)
+%
+leg = {'LUKE, fully stripped atom',...
+       'LUKE, fully screened atom (ADAS)'};
 %
 graph1D_jd(Zi_list,Zeff_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 graph1D_jd(Zi_list,Zeff_2_ADAS,0,0,xlab,ylab,tit,leg,xlim,ylim,'none','+','r',2,siz,gca,0.9,0.7,0.7);
@@ -312,6 +378,25 @@ set(gca,'ytick',[0:5:xlim(2)])
 set(gca,'xtick',[0:5:xlim(2)])
 %
 print_jd(p_opt,'fig_Zeff_Zi_Zi_ADAS','./figures',8)
+%
+for iZi = 1:nZi
+    xlim = [0,max(zZi_2_ADAS{iZi})];
+    ylim = [0,100];
+    %
+    xlab = 'Ionization state, Z_0';
+    ylab = 'Fraction (%)';
+    leg = '';
+    element = elements('atomic_number', max(zZi_2_ADAS{iZi}), 'name');
+    %
+    tit = ['Ionization of ',[upper(element(1)),element(2:end)],', T_{e} = ',num2str(round(equil.pTe(1)*100)/100),' keV, ADAS'];
+    figure('Name',tit)
+    %
+    graph1D_jd(zZi_2_ADAS{iZi},zni_2_ADAS{iZi}/sum(zni_2_ADAS{iZi})*100,0,0,xlab,ylab,tit,NaN,xlim,ylim,'--','o','r',2,siz,gca,0.9,0.7,0.7);
+    %
+    drawnow;
+    %
+    %print_jd(p_opt,'fig_eta_Zi_Zi_ADAS','./figures',7)
+end
 %
 %************************************************************************************************************************************
 %

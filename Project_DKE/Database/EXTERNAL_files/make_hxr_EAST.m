@@ -64,4 +64,4 @@ hxrparam.kphot = [20:10:180];%Photon energy in keV
 %
 eval(['save HXR_',hxr_id,'.mat hxr hxrparam']);
 %
-%graph1D_jd([1:20],hxr.EG_hxr,0,0,'chord index','geometrical factor (m-2)','EAST FEB camera',NaN,[0,20],NaN,'-','o','r',2)
+graph1D_jd([1:20],hxr.EG_hxr,0,0,'chord index','geometrical factor (m-2)','EAST FEB camera',NaN,[0,20],NaN,'-','o','r',2)
