@@ -33,18 +33,24 @@ dkepath.ypeysson(1).temppathroot = '/home/ypeysson/tmp/';%Absolute root director
 dkepath.ypeysson(1).eofe7.local_root = '/home/ypeysson/luke/Packages/';
 %
 dkepath.ypeysson(1).eofe7.mex903 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/eofe7/MATLAB903/'];%R2017b
+dkepath.ypeysson(1).eofe7.mex905 = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Bin/eofe7/MATLAB905/'];%R2018b
 %
 %dkepath.ypeysson(1).eofe7.compiler_opt.libs.gfortran = [dkepath.ypeysson(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
 %
 dkepath.ypeysson(1).eofe7.compiler_opt.copts = '';
 dkepath.ypeysson(1).eofe7.compiler_opt.copts.cpp.mex903 = '-f /home/ypeysson/luke/LUKE/Project_DKE/MEX/Bin/eofe7/MATLAB903/g++_glnxa64.xml';
-%
 dkepath.ypeysson(1).eofe7.compiler_opt.fopts.mex903 = 'FC=''gfortran''';%
 dkepath.ypeysson(1).eofe7.compiler_opt.separatrice.mex903 = [' -largeArrayDims -lgfortran -L',dkepath.ypeysson(1).eofe7.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.ypeysson(1).eofe7.compiler_opt.helmex.mex903 = [' -compatibleArrayDims -lgfortran -L',dkepath.ypeysson(1).eofe7.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.ypeysson(1).eofe7.compiler_opt.fopts.mex903 = ' ';%-largeArrayDims';
+dkepath.ypeysson(1).eofe7.compiler_opt.copts.cpp.mex905 = '-f /home/ypeysson/luke/LUKE/Project_DKE/MEX/Bin/eofe7/MATLAB903/g++_glnxa64.xml';
+dkepath.ypeysson(1).eofe7.compiler_opt.fopts.mex905 = 'FC=''gfortran''';%
+dkepath.ypeysson(1).eofe7.compiler_opt.separatrice.mex905 = [' -largeArrayDims -lgfortran -L',dkepath.ypeysson(1).eofe7.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.ypeysson(1).eofe7.compiler_opt.helmex.mex905 = [' -compatibleArrayDims -lgfortran -L',dkepath.ypeysson(1).eofe7.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.ypeysson(1).eofe7.compiler_opt.fopts.mex905 = ' ';%-largeArrayDims';
 %
 dkepath.ypeysson(1).MUMPS.mex903 = [dkepath.ypeysson(1).eofe7.local_root,'MUMPS/MUMPS_5.1.2/MATLAB903'];;%Where MUMPS matrix solver is stored (MEX function)
+dkepath.ypeysson(1).MUMPS.mex905 = [dkepath.ypeysson(1).eofe7.local_root,'MUMPS/MUMPS_5.1.2/MATLAB905'];;%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
