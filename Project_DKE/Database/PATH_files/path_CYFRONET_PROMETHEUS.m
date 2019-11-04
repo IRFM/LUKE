@@ -22,8 +22,9 @@ dkepath.default = 'plgypeysson';
 %------------------------------------ Profile number 1, Yves Peysson ------------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-path_root = fileparts(which(mfilename));
-luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
+path_root = fileparts(which(mfilename))
+luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'))
+luke_root = '/net/scratch/people/plgypeysson/'
 dkepath.plgypeysson(1).luke_root = luke_root;
 %
 sep = strfind(luke_root,'/');
