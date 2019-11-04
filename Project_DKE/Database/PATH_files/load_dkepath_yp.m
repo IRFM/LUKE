@@ -17,7 +17,7 @@ function [dkepath,SelectedPathFileName] = load_dkepath_yp(display_mode)
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-if nargin == 0,
+if nargin == 0
     display_mode = 1;
 end
 %
@@ -28,7 +28,7 @@ PathsDir = fileparts(which(mfilename));
 PathsDirContents = dir([PathsDir,filesep,'path_*m']);
 npathfiles = length(PathsDirContents);
 PathFileNames = cell(1,npathfiles);
-for ifile = 1:npathfiles,
+for ifile = 1:npathfiles
     PathFileNames{ifile} = PathsDirContents(ifile).name(1:end-2);
 end
 %
@@ -39,7 +39,7 @@ lochostname = hostname_jd;
 dkepaths = cell(1,npathfiles);
 flag = false(1,npathfiles);
 %
-for ifile = 1:npathfiles,
+for ifile = 1:npathfiles
     %
     try
         dkepaths{ifile} = feval(PathFileNames{ifile});
@@ -48,21 +48,21 @@ for ifile = 1:npathfiles,
         continue
     end
     %
-    if ~iscell(dkepaths{ifile}.hostname),% case of single hostname in path profile
+    if ~iscell(dkepaths{ifile}.hostname) % case of single hostname in path profile
         hostnames = {dkepaths{ifile}.hostname};
     else% multiple profiles on the same filesystem
         hostnames = dkepaths{ifile}.hostname;
     end
     %
-    for ihost = 1:length(hostnames),
-        if ~iscell(hostnames{ihost}),% case of single hostname in machine profile
+    for ihost = 1:length(hostnames)
+        if ~iscell(hostnames{ihost}) % case of single hostname in machine profile
             mhostnames = hostnames(ihost);
         else% multiple hostnames on the same machine profile
             mhostnames = hostnames{ihost};
         end
         %
         for imhost = 1:length(mhostnames)
-            if any(strfind(lochostname,mhostnames{imhost})),% local cluster,
+            if any(strfind(lochostname,mhostnames{imhost})) % local cluster,
                 %
                 %TODO : more strict test in case of very simple mhostnames like for EUROfusion, otherwise the machine identification may fail
                 %
@@ -75,14 +75,14 @@ for ifile = 1:npathfiles,
     %
 end
 %
-if ~any(flag),
+if ~any(flag)
     %
     disp(' ');
     disp('Warning : no local path profile found. Here is the list of tested profiles :')
     disp(' ');
     %
-    for ifile = 1:npathfiles,
-        if isstruct(dkepaths{ifile}),
+    for ifile = 1:npathfiles
+        if isstruct(dkepaths{ifile})
             disp(['Profile from ',PathFileNames{ifile},'.m successfully loaded.'])
         else
             disp(['Error loading profile from ',PathFileNames{ifile},'.m : ',dkepaths{ifile}])
@@ -98,7 +98,7 @@ else
     %
     ifiles = find(flag);
     %
-    if sum(flag) > 1,
+    if sum(flag) > 1
         disp(' ');
         iflag = iselect_jd(PathFileNames(flag),'Warning : more than one local path profile found. Please select one of the following profiles :',false);
     else
@@ -111,8 +111,8 @@ else
     %
     username = getenv('USER');
     %
-    if ~isfield(dkepath,username),%user not listed in local profile
-        if isfield(dkepath,'default'),
+    if ~isfield(dkepath,username) %user not listed in local profile
+        if isfield(dkepath,'default')
             disp(['Warning : user ',username,' not found in file ',PathFileNames{ifiles(iflag)},'.m; selecting profile from default user ',dkepath.default])
             username = dkepath.default;
         else
@@ -123,7 +123,7 @@ else
     % select user profile number if applicable
     %
     nusers = length(dkepath.(username));
-    if nusers > 1,
+    if nusers > 1
         disp(' ');
         disp(['A total of ',num2str(nusers),' profiles are defined for user ',username,' in file ',PathFileNames{ifiles(iflag)},'.m']);
         disp(' ');
@@ -136,11 +136,11 @@ else
     %
     dkepath = conc_struct_jd(selectfields_jd(dkepath,{'hostname','machine','computer'}),dkepath.(username));
     %
-    if iscell(dkepath.machine),%case of multiple machine profiles on the same filesystem
+    if iscell(dkepath.machine) %case of multiple machine profiles on the same filesystem
         nhost = length(dkepath.machine);
         flag = false(1,nhost);
-        for ihost = 1:nhost,
-            if isfield(dkepath,dkepath.machine{ihost}),% meaning the machine 'dkepath.machine{ihost}' is referenced for user 'username'
+        for ihost = 1:nhost
+            if isfield(dkepath,dkepath.machine{ihost}) % meaning the machine 'dkepath.machine{ihost}' is referenced for user 'username'
                 flag(ihost) = true;
             end
         end
@@ -152,13 +152,13 @@ else
     %
     % if no remote profile
     %
-    if ~isfield(dkepath,'remote'),
+    if ~isfield(dkepath,'remote')
         dkepath.remote = [];
     end
     %
-    if iscell(dkepath.machine),
+    if iscell(dkepath.machine) 
         machinestr = dkepath.machine{1};
-        for ihost = 2:length(dkepath.machine),
+        for ihost = 2:length(dkepath.machine)
             machinestr = [machinestr,', ',dkepath.machine{ihost}];
         end
     else
@@ -167,7 +167,7 @@ else
     %
     SelectedPathFileName = PathFileNames{ifiles(iflag)};
     %
-    if display_mode,
+    if display_mode
         disp(' ');
         disp(['PATH Profile #',num2str(isel),' for user ',username,' from file ',SelectedPathFileName,'.m selected for machine(s) : ',machinestr]);
     end
