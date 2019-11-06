@@ -23,7 +23,7 @@ dkepath.default = 'peyssoy';
 %
 path_root = fileparts(which(mfilename));
 luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
-dkepath.ypeysson(1).luke_root = luke_root;
+dkepath.peyssoy(1).luke_root = luke_root;
 %
 sep = strfind(luke_root,'/');
 dkepath.peyssoy(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
