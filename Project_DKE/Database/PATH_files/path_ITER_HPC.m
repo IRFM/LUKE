@@ -34,7 +34,7 @@ dkepath.peyssoy(1).hpc.local_root = '/home/ITER/ypeyssoy/packages/';
 %
 dkepath.peyssoy(1).hpc.mex904 = [dkepath.peyssoy(1).luke_root,'Project_DKE/MEX/Bin/hpc/MATLAB904/'];%R2018a
 %
-%dkepath.peyssoy(1).hpc.compiler_opt.libs.gfortran = [dkepath.peyssoy(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
+dkepath.peyssoy(1).hpc.compiler_opt.libs.gfortran = [dkepath.peyssoy(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
 %
 dkepath.peyssoy(1).hpc.compiler_opt.copts = '';
 dkepath.peyssoy(1).hpc.compiler_opt.copts.cpp.mex904 = '';
