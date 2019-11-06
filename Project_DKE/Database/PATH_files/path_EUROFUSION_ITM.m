@@ -8,7 +8,7 @@ function dkepath = path_EUROFUSION_ITM
 %
 %   Warning: none
 %
-% By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@epfl.ch)
+% By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr)
 %
 dkepath.machine = 'r';%itm : ITM marconi servers; tok : AUG servers
 dkepath.hostname = 'r';%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
