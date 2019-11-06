@@ -8,7 +8,7 @@ function dkepath = path_PSFC_EOFE7
 %
 %   Warning: none
 %
-% By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
+% By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) 
 %
 dkepath.machine = {'eofe7','node'};
 dkepath.hostname = {'eofe7','node'};%here its a pattern since the hostname may fluctuate from time to time when login to the gateway
