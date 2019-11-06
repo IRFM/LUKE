@@ -37,7 +37,7 @@ dkepath.peyssoy(1).hpc.mex904 = [dkepath.peyssoy(1).luke_root,'Project_DKE/MEX/B
 %dkepath.peyssoy(1).hpc.compiler_opt.libs.gfortran = [dkepath.peyssoy(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
 %
 dkepath.peyssoy(1).hpc.compiler_opt.copts = '';
-%dkepath.peyssoy(1).hpc.compiler_opt.copts.cpp.mex904 = '-f /home/ypeysson/luke/LUKE/Project_DKE/MEX/Bin/hpc/MATLAB903/g++_glnxa64.xml';
+dkepath.peyssoy(1).hpc.compiler_opt.copts.cpp.mex904 = '';
 dkepath.peyssoy(1).hpc.compiler_opt.fopts.mex904 = 'FC=''gfortran''';%
 dkepath.peyssoy(1).hpc.compiler_opt.separatrice.mex904 = [' -largeArrayDims -lgfortran -L',dkepath.peyssoy(1).hpc.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.peyssoy(1).hpc.compiler_opt.helmex.mex904 = [' -compatibleArrayDims -lgfortran -L',dkepath.peyssoy(1).hpc.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
