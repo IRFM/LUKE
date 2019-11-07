@@ -28,9 +28,9 @@ dkepath.peyssoy(1).luke_root = luke_root;
 sep = strfind(luke_root,'/');
 dkepath.peyssoy(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
 %
-dkepath.peyssoy(1).temppathroot = '/home/ITER/ypeyssoy/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.peyssoy(1).temppathroot = '/home/ITER/peyssoy/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.peyssoy(1).local_root = '/home/ITER/ypeyssoy/packages/';
+dkepath.peyssoy(1).local_root = '/home/ITER/peyssoy/packages/';
 %
 dkepath.peyssoy(1).mex904 = [dkepath.peyssoy(1).luke_root,'Project_DKE/MEX/Bin/hpc/MATLAB904/'];%R2018a
 %
