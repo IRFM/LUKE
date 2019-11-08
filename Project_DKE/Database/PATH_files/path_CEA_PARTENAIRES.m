@@ -34,17 +34,22 @@ dkepath.YP105119(1).temppathroot = '/data/tmp/';%Absolute root directory path ad
 %
 dkepath.YP105119(1).andromede1.local_root = '/home/YP105119/Packages/andromede/';
 %
+dkepath.YP105119(1).andromede1.mex802 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB802/'];
 dkepath.YP105119(1).andromede1.mex806 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB806/'];
 dkepath.YP105119(1).andromede1.mex902 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB902/'];
 %
 dkepath.YP105119(1).andromede1.compiler_opt.copts = '';
+dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex802 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex806 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex902 = '';
+dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex802 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex806 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex902 = '';
+dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex806 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex902 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
+dkepath.YP105119(1).andromede1.MUMPS.mex802 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).andromede1.MUMPS.mex806 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).andromede1.MUMPS.mex902 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
 %
