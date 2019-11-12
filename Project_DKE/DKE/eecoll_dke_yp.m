@@ -1,4 +1,4 @@
-function [Fee,Aee,Btee] = eecoll_dke_yp(dkepath,v,z,gamma,sigma,pn,pn2,dpn,J1,J2,spfac,betath_ref,xne_norm,xTe_norm,ir,coll_mode,mksa,dkeparam,equilDKE,gridDKE,inelastic_factor,clustermode)
+function [Fee,Aee,Btee] = eecoll_dke_yp(dkepath,v,z,gamma,sigma,pn,pn2,dpn,J1,J2,spfac,betath_ref,xne_norm,xTe_norm,ir,coll_mode,mksa,dkeparam,equilDKE,gridDKE,xpinelastic_factor,clustermode)
 %LUKE - Electron-electron collision operator
 %
 %Electron-electron collision operator (1 or 3: high velocity limit, 0 or 2: Belaiev-Budker collision operator, 4: non-relativistic Maxwellian background, 5: Ultrarelativistic high velocity limit (for runaways only)
@@ -26,8 +26,8 @@ else
     %
 end
 %
-inelastic_factor = inelastic_factor./(xlnc_e*ones(1,length(prel)));
-%inelastic_factor = 0;
+xpinelastic_factor = xpinelastic_factor./(xlnc_e*ones(1,length(prel)));
+%xpinelastic_factor = 0;
 %
 v2 = v.*v;
 npn = length(pn);
@@ -98,19 +98,19 @@ elseif coll_mode == 0 | coll_mode == 2,%Belaiev-Budker collision model
     %
     F1 = F1_1./v2 + F1_2./pn2;
     F2 = (1 - sigma./z./gamma).*F2_1./v;
-    Fee = 4*pi*(F1 + F2).*(xpcleereln(ir,:) + inelastic_factor);
+    Fee = 4*pi*(F1 + F2).*(xpcleereln(ir,:) + xpinelastic_factor(ir,:));
     Aee = 4*pi*xTe_norm(ir)*(F1 + F2)./v.*xpcleereln(ir,:);
     B1 = B1_1./v/2 - B1_2./v./pn2/6 + B1_3./v./gamma./gamma./z./z/8 - B1_4./v./z./z/4 - B1_5./v./gamma./gamma/4;
     B2 = B2_1/2 + B2_2.*(-gamma.*gamma/6 + J1./z./z./gamma/8 - gamma.*J2./z./z/4) - B2_3.*(gamma - sigma./z)./pn2./gamma/4;   
     Btee = 4*pi*(B1 + B2).*xpcleereln(ir,:);
 elseif coll_mode == 4,%Non-relativistic Maxwellian background
     u = v/sqrt(2)/xTe_norm(ir)';
-    Fee = xne_norm(ir)'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./v2.*(xpcleereln(ir,:) + inelastic_factor);
+    Fee = xne_norm(ir)'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./v2.*(xpcleereln(ir,:) + xpinelastic_factor(ir,:));
     Aee = xne_norm(ir)'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/2.*xpcleereln(ir,:);
     Btee = xne_norm(ir)'.*((2*u.^2-1).*erf(u)+2*u.*exp(-u.^2)/sqrt(pi))./v./u./u/4.*xpcleereln(ir,:);
 elseif coll_mode == 5,%Ultrarelativistic high-velocity-limit model
     Aee = xne_norm(ir)'.*xTe_norm(ir)'./v./v2.*xpcleereln(ir,:);
-    Fee = xne_norm(ir)'./v2.*(xpcleereln(ir,:) + inelastic_factor);
+    Fee = xne_norm(ir)'./v2.*(xpcleereln(ir,:) + xpinelastic_factor(ir,:));
     Btee = xne_norm(ir)'./v/2.*xpcleereln(ir,:);
 end
 %
