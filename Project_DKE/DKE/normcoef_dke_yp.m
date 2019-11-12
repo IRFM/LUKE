@@ -28,5 +28,5 @@ else
     xlnc_e = coulomb_logarithm_yp(1,equilDKE.xne,equilDKE.xTe);%LUKE backward compatibility (O. Sauter et al.)
 end
 %
-xnhu = qe^4*equilDKE.xne.*xlnc_e./(4*pi*e0^2*me^2.*(clum*xbetath).^3);%Electron collision frequency (s-1)
+xnhu = qe^4*equilDKE.xne.*xlnc_e'./(4*pi*e0^2*me^2.*(clum*xbetath).^3);%Electron collision frequency (s-1)
 xrnhuth = xnhu./mksa.nhu_ref;
