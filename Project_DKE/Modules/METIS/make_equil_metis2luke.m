@@ -2,6 +2,9 @@ function [equil,profil0d] = make_equil_metis2luke(equil_id,profil0d_in,zerod,exp
 %
 % creates LUKE equilibrium structure from METIS output
 %
+
+% tungsten flag
+W_flag = false;
 % MAGNETIC EQUILIBRIUM
 %
 if equilparam.helena >= 1,
@@ -51,6 +54,10 @@ if equilparam.helena >= 1,
     profil0d.n1p = interp1(profil0d_in.xli,profil0d_in.n1p,profil0d.xli,'pchip','extrap');
     profil0d.nhep = interp1(profil0d_in.xli,profil0d_in.nhep,profil0d.xli,'pchip','extrap');
     profil0d.nzp = interp1(profil0d_in.xli,profil0d_in.nzp,profil0d.xli,'pchip','extrap');
+    if isfield(profil0d_in,'nwp') && any(profil0d_in.nwp(:) > 1)
+	W_flag = true;
+	profil0d.nwp = interp1(profil0d_in.xli,profil0d_in.nwp,profil0d.xli,'pchip','extrap');	
+    end
     %
     profil0d.epar = interp1(profil0d_in.xli,profil0d_in.epar,profil0d.xli,'pchip','extrap');
     %
@@ -100,6 +107,10 @@ else
     else
         profil0d = profil0d_in;
     end
+    if isfield(profil0d_in,'nwp') && any(profil0d_in.nwp(:) > 1)
+	W_flag = true;
+    end
+
     %
     prof.x    = profil0d.xli;
     prof.kx   = profil0d.kx;     
@@ -173,8 +184,14 @@ else
     ahe = 4;
 end
 %
-equil.zZi = [1,1,1,2,zimp,zmax];
-equil.zmi = [1,2,3,ahe,aimp,amax];
+if W_flag
+  warning('W detected in the plasma: full stripped W ion charge put in equi structure');
+  equil.zZi = [1,1,1,2,zimp,zmax,74];
+  equil.zmi = [1,2,3,ahe,aimp,amax,183.84];
+else
+  equil.zZi = [1,1,1,2,zimp,zmax];
+  equil.zmi = [1,2,3,ahe,aimp,amax];
+end
 %
 fD = zerod.nDm/zerod.n1m;
 fT = zerod.nTm/zerod.n1m;
@@ -187,7 +204,12 @@ pnhe = profil0d.nhep;
 pnimp = profil0d.nzp;
 pnmax = profil0d.nzp*option.rimp;
 %
-equil.pzni = [pzni1;pnhe;pnimp;pnmax];
+if W_flag
+  pnw = profil0d.nwp;
+  equil.pzni = [pzni1;pnhe;pnimp;pnmax;pnw];
+else
+  equil.pzni = [pzni1;pnhe;pnimp;pnmax];
+end
 %
 equil.pzTi = ones(length(equil.zZi),1)*profil0d.tip/1e3;
 %
@@ -202,6 +224,10 @@ equil.iboot = zerod.iboot;% bootstrap current in A
 % modify after error correction in METIS
 %
 equil.icd = zerod.ipar - zerod.iohm - equil.iboot;% zerod.icd;% zerod.ini - equil.iboot;
+%
+if isfield(equil,'ADAS')
+    equil.ADAS = 'ADAS.mat';%this mat file must be in the LUKE path (Module ADAS). 
+end
 %
 if equilparam.comp,
     %
