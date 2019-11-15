@@ -426,7 +426,7 @@ if e_opt ~= -2,
     end
 end
 %
-% ************** BUILT EQUILIBRIUM *****************
+% ************** BUILD EQUILIBRIUM *****************
 %
 shotid = [basestr,'_',shotnum,'_',shotimestr];
 %
@@ -798,19 +798,6 @@ if e_opt == -1 && exist('eqdsk_file','var'),
     equil.info.eqdsk = [eqdsk_path,eqdsk_file];
 elseif e_opt == -2,
     equil.info.datapath = amr_psi_path;
-end
-%
-if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma (0) no, (1) yes',1,[0,1])  
-    %
-    [dkepath] = load_structures_yp('dkepath','','');
-    %
-    if exist([dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat'])
-        equil.ADAS = [dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat'];
-        equil.id = [equil.id,'_ADAS'];
-    else
-        disp(['WARNING: ADAS.mat file has not been found in folder ''',dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat''. Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
-    end
-    %
 end
 %
 if (~isfield(select,'consist') || ~select.consist) && strcmp(input_dke_yp('Do you want to check the equilibrium consistency','n',{'y','n'},'',[1,1]),'y'),
