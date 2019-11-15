@@ -1084,9 +1084,108 @@ function irunluke_jd(basestr,signs,opt_gui)
                 [equil,paths.equil,fileids.equil,newstruct] = ...
                     imake_struct_jd(dkepath,equil,'equil',paths.equil,fileids.equil,signs,basestr,smakecmd,external,status.equil,'EQUIL',workdir,'',opt_gui,0,0,1,0);
                 %
-                if input_dke_yp('Do you want to check the toroidal MHD equilibrium consistency (y/n)','y',{'y','n'}) == 'y',
-                    equil = equilconsistency_yp(equil);
+                i_adas = strfind(equil.id,'_ADAS');
+                %
+                if isempty(i_adas)
+                    %
+                    if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma (0) no, (1) yes',1,[0,1])  
+                        %
+                        if exist('ADAS.mat')
+                            equil.ADAS = 'ADAS.mat';
+                            equil.id = [equil.id,'_ADAS'];
+                        else
+                            disp(['WARNING: ADAS.mat file has not been found in folder ''',dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat''. Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
+                        end
+                        %
+                    end
+                else
+                    %
+                    if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma (0) no, (1) yes',1,[0,1]) 
+                        %
+                    else
+                        equil.id = [equil.id(1:i_adas-1),equil.id(i_adas+5:end)];
+                        equil = rmfield(equil,'ADAS'); 
+                        disp(['Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
+                    end
+                    %
                 end
+                %
+                i_coulog = strfind(equil.id,'_CLXP');
+                %
+                if isempty(i_coulog)
+                    %
+                    if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','y',{'y','n'}) == 'y'
+                        %
+                        equil.coulog = 1;
+                        equil.id = [equil.id,'_CLXP'];
+                        %
+                    end
+                    %
+                else
+                    %
+                    if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','y',{'y','n'}) == 'y'
+                        %
+                    else
+                        equil.id = [equil.id(1:i_coulog-1),equil.id(i_coulog+5:end)];
+                        equil = rmfield(equil,'coulog'); 
+                        disp(['WARNING: Thermal Coulomb logarithm at plasma center is used.'])
+                    end
+                    %
+                end
+                %    
+                i_screening = strfind(equil.id,'_SCRE');    
+                %
+                if isempty(i_screening)
+                    %
+                    if input_dke_yp('Do you want to consider screening effects partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'y'
+                        %
+                        equil.screening.elastic = input_dke_yp('Atomic model for partially ionized high-Z atoms (''Tseng-Pratt-Botto'',''Thomas-Fermi'',''Thomas-Fermi-Kirillov'',''Tseng-Pratt-Botto'',''Full-screening'') : ','Tseng-Pratt-Botto',{'Tseng-Pratt-Botto','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Botto','Full-screening'});
+                        %
+                        if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'y'
+                            %
+                            equil.screening.inelastic = 1;
+                            %
+                        else
+                            %
+                            equil.screening.inelastic = 0;
+                            %
+                        end
+                        %
+                        equil.screening.dftpath = input_dke_yp('DFT files path : ','');
+                        %  
+                        equil.id = [equil.id,'_SCRE'];
+                    end
+                    %
+                else
+                    %
+                    if input_dke_yp('Do you want to consider screening effects partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'y'
+                        %
+                        equil.screening.elastic = input_dke_yp('Atomic model for partially ionized high-Z atoms (''Tseng-Pratt-Botto'',''Thomas-Fermi'',''Thomas-Fermi-Kirillov'',''Tseng-Pratt-Botto'',''Full-screening'') : ','Tseng-Pratt-Botto',{'Tseng-Pratt-Botto','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Botto','Full-screening'});
+                        %
+                        if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'y'
+                            %
+                            equil.screening.inelastic = 1;
+                            %
+                        else
+                            %
+                            equil.screening.inelastic = 0;
+                            %
+                        end
+                        %
+                        equil.screening.dftpath = input_dke_yp('DFT files path : ','');
+                        %
+                    else
+                        %
+                        equil.id = [equil.id(1:i_screening-1),equil.id(i_screening+5:end)];
+                        equil = rmfield(equil,'screening'); 
+                        %
+                    end
+                    %  
+                end
+                %
+                %if input_dke_yp('Do you want to check the toroidal MHD equilibrium consistency (y/n)','y',{'y','n'}) == 'y',
+                %    equil = equilconsistency_yp(equil);
+                %end
                 %
                 if isempty(equil)
                     signs = [];
@@ -1957,7 +2056,7 @@ function irunluke_jd(basestr,signs,opt_gui)
         end
     end
     %
-    if isel == -2,
+    if isel == -2
         close all
         clear all    
     end
