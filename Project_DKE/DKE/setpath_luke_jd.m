@@ -128,6 +128,7 @@ addpath([luke_root,'Project_DKE/Modules/Cronos']);
 addpath([luke_root,'Project_DKE/Modules/ITM']);
 addpath([luke_root,'Project_DKE/Modules/METIS']);
 addpath([luke_root,'Project_DKE/Modules/ADAS']);
+addpath([luke_root,'Project_DKE/Modules/ADAS/DFT']);
 addpath([luke_root,'Project_DKE/SLUKE']);
 addpath([luke_root,'Project_DKE/SLUKE/sluke_machines']);
 addpath([luke_root,'Project_DKE/Display']);
