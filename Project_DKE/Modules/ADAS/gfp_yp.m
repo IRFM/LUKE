@@ -23,7 +23,7 @@ end
 symbol = elements('atomic_number', Z, 'symbol');
 name = elements('atomic_number', Z, 'name');
 %
-load([dftpath,'/DFT/dft_',int2str(Z),'_',symbol,'_',name,'.mat'],'dft');
+load([dftpath,'dft_',int2str(Z),'_',symbol,'_',name,'.mat'],'dft');
 %
 Z0 = ones(length(p(:)),1)*dft.Z0;
 N = Z - ones(length(p(:)),1)*dft.Z0;

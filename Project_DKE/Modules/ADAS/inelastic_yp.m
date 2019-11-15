@@ -22,7 +22,7 @@ for ir = 1:length(xbetath)
         symbol = elements('atomic_number', Z, 'symbol');
         name = elements('atomic_number', Z, 'name');
         %
-        load([equilDKE.screening.dftpath,'/DFT/dft_',int2str(Z),'_',symbol,'_',name,'.mat'],'dft');
+        load([equilDKE.screening.dftpath,'dft_',int2str(Z),'_',symbol,'_',name,'.mat'],'dft');
         %
         ni_norm = ones(length(pn(:)),1)*xzni_norm(izero(iZimp):izero(iZimp)+length(dft.Z0)-1,ir)';% all states without fully stripped atom
         %
