@@ -19,7 +19,7 @@ A = [];
 k = 1;
 %
 fields = fieldnames(adas);
-for j = 1:length(Z),
+for j = 1:length(Z)
     for i = 1:length(fieldnames(adas))
         if adas.(fields{i}).Z == Z(j)
             %
