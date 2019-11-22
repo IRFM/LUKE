@@ -48,7 +48,14 @@ end
 %
 [~,~,~,~,~,~,re,mc2,~,alpha] = pc_dke_yp;%Physics constant
 %
-if isempty(fieldnames(smodel)) && isempty(fieldnames(params))
+if isempty(smodel) && isempty(params)
+    params = struct;
+	smodel =  struct;%no screening
+end
+%
+
+%
+if length(fields(smodel)) == 0 || length(fields(params)) == 0
     %
     % Calculation of 2BN formula in H.W.Koch and J.W.Motz, Rev. Mod. Phys. 31, 4 (1959) 920
     %
