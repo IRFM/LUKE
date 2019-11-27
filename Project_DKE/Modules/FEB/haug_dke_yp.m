@@ -25,8 +25,7 @@ function [seHC,seH,fee,ec,k,c] = haug_dke_yp(ec_in,k_in,t_in)
 %			 cross-sections in standard m^2/keV units, seH or seHC must be divided 
 %			 by 511 keV.
 %
-
-%by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and J. Decker MIT-RLE <jodecker@mit.edu>
+% by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and J. Decker MIT-RLE <jodecker@mit.edu>
 %
 if nargin < 3,
 	infoyp(2,'Wrong number of input arguments for haug_dke_yp');
