@@ -70,7 +70,7 @@ pzTi = ones(size(frac(:)))*pTe/2;
 gfp = [];
 %
 for ii = 1:length(Znucleus)
-    gfp = [gfp, gfp_yp(prel,Znucleus(ii),'Tseng-Pratt-Botto',[dkepath.luke_root,'Project_DKE/Modules/ADAS'])]; 
+    gfp = [gfp, gfp_yp(prel,Znucleus(ii),'Tseng-Pratt-Botto',[dkepath.luke_root,'Project_DKE/Modules/ADAS/DFT/'])]; 
 end
 %
 gfp = [zeros(length(prel),3),gfp];%add three hydrogen isotope fully ionized
@@ -213,42 +213,41 @@ pzZi = zZi(:)*ones(size(prel));
 z2coulog = pcleerel'.*pzZi'.*pzZi';
 z2couloggfp = pcleerel'.*pzZi'.*pzZi' + gfp;
 %
-iiz = 20;
+iiz = 62+8;
 %
-figure('Name',['Z_i = ',int2str(iiz)])
+figure('Name',['Z_i = ',int2str(zZi(iiz))])
 %
 xlab = 'Kinetic energy E_c (keV)';
 ylab = 'log(\Lambda_{rel})Z_i^2';
 leg = '';
-tit =  ['T_{e0} = ',num2str(Te0*0.9),' keV, H (9.8%), D (88.2%), C (1%), O (1%), Cu (0.01%), W (0.001%)'];
+%tit =  ['T_{e0} = ',num2str(Te0*0.9),' keV, H (9.8%), D (88.2%), C (1%), O (1%), Cu (0.01%), W (0.001%)'];
+tit =  'Tungsten W (Z = 74)';
 %
-leg = {['Z_i = ',int2str(iiz),', log(\Lambda_{rel})Z_i^2'],['Z_i = ',int2str(iiz),', screening factor']};
+leg = {['Z_i = ',int2str(zZi(iiz)),', log(\Lambda_{rel})Z_i^2'],['Z_i = ',int2str(zZi(iiz)),', screening factor']};
 graph1D_jd(Ec,z2coulog(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{1},'none',linecolor{1},2,siz,gca);
 graph1D_jd(Ec,gfp(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca);
 %
-iiz = 30;
+iiz = 62+18;
 %
-figure('Name',['Z_i = ',int2str(iiz)])
+figure('Name',['Z_i = ',int2str(zZi(iiz))])
 %
 xlab = 'Kinetic energy E_c (keV)';
 ylab = 'log(\Lambda_{rel})Z_i^2';
 leg = '';
-tit =  ['T_{e0} = ',num2str(Te0*0.9),' keV, H (9.8%), D (88.2%), C (1%), O (1%), Cu (0.01%), W (0.001%)'];
 %
-leg = {['Z_i = ',int2str(iiz),', log(\Lambda_{rel})Z_i^2'],['Z_i = ',int2str(iiz),', screening factor']};
+leg = {['Z_i = ',int2str(zZi(iiz)),', log(\Lambda_{rel})Z_i^2'],['Z_i = ',int2str(zZi(iiz)),', screening factor']};
 graph1D_jd(Ec,z2coulog(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{1},'none',linecolor{1},2,siz,gca);
 graph1D_jd(Ec,gfp(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca);
 %
-iiz = 40;
+iiz = 62+28;
 %
-figure('Name',['Z_i = ',int2str(iiz)])
+figure('Name',['Z_i = ',int2str(zZi(iiz))])
 %
 xlab = 'Kinetic energy E_c (keV)';
 ylab = 'log(\Lambda_{rel})Z_i^2';
 leg = '';
-tit =  ['T_{e0} = ',num2str(Te0*0.9),' keV, H (9.8%), D (88.2%), C (1%), O (1%), Cu (0.01%), W (0.001%)'];
 %
-leg = {['Z_i = ',int2str(iiz),', log(\Lambda_{rel})Z_i^2'],['Z_i = ',int2str(iiz),', screening factor']};
+leg = {['Z_i = ',int2str(zZi(iiz)),', log(\Lambda_{rel})Z_i^2'],['Z_i = ',int2str(zZi(iiz)),', screening factor']};
 graph1D_jd(Ec,z2coulog(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{1},'none',linecolor{1},2,siz,gca);
 graph1D_jd(Ec,gfp(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca);
 %
