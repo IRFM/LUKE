@@ -42,8 +42,8 @@ I0_ref{1} = [13.6];
 I0_ref{2} = [42.68,59.88];%S. Sauer, J. Oddershede and J. Sabin, "The mean Excitation Energy of Atomic Ions, Advances in quantum chemistry, 71, (2015) 29  
 I0_ref{3} = [33.1,108.1,134.1];%S. Sauer, J. Oddershede and J. Sabin, "The mean Excitation Energy of Atomic Ions, Advances in quantum chemistry, 71, (2015) 29  
 I0_ref{6} = [65.9,92.6,134.8,214.2,486.2,539.5];%S. Sauer, J. Oddershede and J. Sabin, "The mean Excitation Energy of Atomic Ions, Advances in quantum chemistry, 71, (2015) 29  
-I0_ref{10} = [92.5,95.3,98.9,103.7,110.6,120.9,138.1,211.8,497.8,497.8];%S. Sauer, J. Oddershede and J. Sabin, "The mean Excitation Energy of Atomic Ions, Advances in quantum chemistry, 71, (2015) 29  
-I0_ref{13} = [122.8,160.0,223.7,310.9,325.5,390.4,457.5,530.8,643.0,817.9,1236.0,2372.0,2372.0];%S. Sauer, J. Oddershede and J. Sabin, "The mean Excitation Energy of Atomic Ions, Advances in quantum chemistry, 71, (2015) 29  
+I0_ref{10} = [137.2,165.2,196.0,235.2,282.8,352.6,475,696.8,1409.2,1498.4];%S. Sauer, J. Oddershede and J. Sabin, "The mean Excitation Energy of Atomic Ions, Advances in quantum chemistry, 71, (2015) 29  
+I0_ref{13} = [132,172.4,225.4,310.4,350.5,398.1,458.4,536.3,654.8,867.1,1238.3,2406.9,2523.2];%S. Sauer, J. Oddershede and J. Sabin, "The mean Excitation Energy of Atomic Ions, Advances in quantum chemistry, 71, (2015) 29  
 I0_ref{18} = [188.5,219.4,253.8,293.4,339.1,394.5,463.4,568.0,728.0,795.9,879.8,989.9,1138.1,1369.5,1791.2,2497.0,4677.2,4838.2];%S. Sauer, J. Oddershede and J. Sabin, "The mean Excitation Energy of Atomic Ions, Advances in quantum chemistry, 71, (2015) 29  
 %
 symbol = elements.symbol{Z};
@@ -69,8 +69,39 @@ end
 if Z == 1
     I0_s = I0; % specific case of Hydrogen
 end
-    
+%
+display = 0;
+%
+if display
+    %
+    linestyle(1) = {'-'};
+    linestyle(2) = {'--'};
+    linestyle(3) = {'-.'};
+    linestyle(4) = {':'};
+    linestyle(5) = {'-'};
+    linestyle(6) = {'--'};
 
+    %
+    linecolor(1) = {'r'};
+    linecolor(2) = {'b'};
+    linecolor(3) = {'g'};
+    linecolor(4) = {'m'};
+    linecolor(5) = {'c'};
+    linecolor(6) = {'k'};
+    %
+    figure('Name',['Mean excitation energy of ',symbol])
+    %
+    xlab = 'Z_0';
+    ylab = 'Mean excitation energy [eV]';
+    siz = 20+14i;
+    %
+    tit = ['Mean excitation energy of ',symbol];
+    %
+    graph1D_jd(Z0,I0,0,1,xlab,ylab,tit,NaN,NaN,NaN,'none','o',linecolor{1},2,siz,gca); 
+    graph1D_jd(Z0,I0_s,0,1,xlab,ylab,tit,NaN,NaN,NaN,linestyle{1},'none',linecolor{2},2,siz,gca); 
+    %
+    legend('Quantum calculations','Interpolation')
+end
     
     
     
