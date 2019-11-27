@@ -58,6 +58,18 @@ else
     shotnum = '';
 end
 %
+if isfield(equil,'screening')
+    %
+    equil.screening.smodel.screening_model = equil.screening.elastic;%Screening models : '' or full-screening, 'No-screening','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Avdonina-Lamoureux','Tseng-Pratt-Botto','Tseng-Pratt-Thomas-Fermi'
+    disp(['---> Screening model : ',equil.screening.smodel.screening_model])
+    %
+    equil.screening.params.nphi = NaN;%for numerical integration 1BS -> 2BN. If nphi = NaN, formula deduced from analytical integration in phi is used (4-D). Otherwise (5-D)
+    equil.screening.params.flag_mem = NaN;%Memory management enforcement : 0 -> 5-D block numerical calculations, 1 -> 4-D block numerical calculations
+    equil.screening.params.ntheta = NaN;%for numerical integration 1BS -> 2BN
+    equil.screening.params.integral = NaN;%Numerical integration : trapz (trapeze) or simps (Simpson)
+    %
+end
+%
 % load HXR camera spec
 %
 if isfield(external,'param') && ~isempty(external.param),% parameters from external - iluke and irunluke
