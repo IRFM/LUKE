@@ -3,7 +3,7 @@
 % IMAS parameters
 % For METIS example run:
 %shot    = 53259;
-shot    = 53223;
+shot    = 55539;
 run     = 0;
 % For EQUINOX example run:
 %shot    = 52705;
@@ -11,7 +11,9 @@ run     = 0;
 
 user    = 'imas_public';
 machine = 'west';
-time_requested = 37;%absolute time
+t_ignitron = tsbase(shot, 'RIGNITRON');
+time_requested_rel = 10;%relative time
+time_requested = time_requested_rel + t_ignitron;%absolute time
 
 % Other parameters
 Z_for_R_plot     = 50; %Percentage for plot in cartesian grid
@@ -29,36 +31,38 @@ idx = imas_open_env('ids', shot, run, user, machine, '3');
 
 % Function ids_get_slice(id_from_imas_open, IDS_name, time_requested, interpolation_method)
 % -interpolation_method: 1 = closest time, 2 = previous time, 3 = linear interpolation
-equi  = ids_get_slice(idx, 'equilibrium', time_requested, 1);
+equi  = ids_get(idx, 'equilibrium');
 corep = ids_get_slice(idx, 'core_profiles', time_requested, 1);
-
-
-
+%
+mask_eq = equi.code.output_flag >= 0;%
+[~, ind_time] = min(abs(equi.time(mask_eq) - time_requested));
+%
 % For METIS run:
 nbr_points = length(equi.time_slice{1,1}.ggd{1,1}.r{1,1}.values);
 flag_equinox = 0;
 if nbr_points==0
   % For EQUINOX run:
-  nbr_points = length(equi.time_slice{1,1}.ggd{1,1}.grid.space{1,1}.objects_per_dimension{1,1}.object);%inside and outside separatrix
+  nbr_points = length(equi.grids_ggd{1,1}.grid{1}.space{1,1}.objects_per_dimension{1,1}.object);%inside and outside separatrix
   flag_equinox = 1;
 end
-
+%
 R_nodes = zeros(1, nbr_points);
 Z_nodes = zeros(1, nbr_points);
 Psi_val = zeros(1, nbr_points);
 B_R     = zeros(1, nbr_points);
 B_Z     = zeros(1, nbr_points);
 B_tor   = zeros(1, nbr_points);
+%
 for i=1:nbr_points
  
     % For EQUINOX run:
-    if flag_equinox,
-      R_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.grid.space{1,1}.objects_per_dimension{1,1}.object{1,i}.geometry(1);
-      Z_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.grid.space{1,1}.objects_per_dimension{1,1}.object{1,i}.geometry(2);
+    if flag_equinox
+      R_nodes(i) = equi.grids_ggd{1,1}.grid{1}.space{1,1}.objects_per_dimension{1,1}.object{1,i}.geometry(1);
+      Z_nodes(i) = equi.grids_ggd{1,1}.grid{1}.space{1,1}.objects_per_dimension{1,1}.object{1,i}.geometry(2);
     else
       % For METIS run:
-      R_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.r{1,1}.values(i);
-      Z_nodes(i) = equi.time_slice{1,1}.ggd{1,1}.z{1,1}.values(i);
+      R_nodes(i) = equi.grids_ggd{1,1}.ggd{1,1}.r{1,1}.values(i);
+      Z_nodes(i) = equi.grids_ggd{1,1}.ggd{1,1}.z{1,1}.values(i);
     end
 
     Psi_val(i) = equi.time_slice{1,1}.ggd{1,1}.psi{1,1}.values(i);
