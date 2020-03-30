@@ -231,14 +231,6 @@ if isfield(equil,'eqdsk')
     %
     equilDKE = equilibrium_jd(equil,equil.eqdsk.psin,0,'spline');
     %
-    rhoP = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoP,1],rho);
-    rhoT = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoT,1],rho);
-    rhoV = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoV,1],rho);
-    %
-    xq = qfactors_dke_yp(1,equilDKE.Rp,equilDKE.ap,equilDKE.Xx,equilDKE.Xy,equilDKE.XBx,equilDKE.XBy,equilDKE.XBphi,equilDKE.xx0,equilDKE.xB0,equilDKE.xBT0,equilDKE.xBp0);
-    %
-    q = equilDKE.ap/equilDKE.Rp*interp1(equilDKE.xrho,xq,rho);
-    %
     pF_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pF,rho)'*ones(1,length(theta));%
     pFdFdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pFdFdpsi,rho)'*ones(1,length(theta));%
     figure,plot(rho,pFdFdpsi_eqdsk,'r',rho,FdFdpsi/3.5,'b')
@@ -246,7 +238,7 @@ if isfield(equil,'eqdsk')
     pp_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pp,rho)'*ones(1,length(theta));%
     pdpdpsi_eqdsk = spline(equil.eqdsk.prho,equil.eqdsk.pdpdpsi,rho)'*ones(1,length(theta));%
     pdpdpsi_eqdsk1 = gradient(equil.eqdsk.pp)./gradient(equil.eqdsk.psin)*abs(equil.eqdsk.psia);%
-   % figure,plot(rho,pdpdpsi_eqdsk,'r',rho,pdpdpsi_eqdsk1,'b');
+    % figure,plot(rho,pdpdpsi_eqdsk,'r',rho,pdpdpsi_eqdsk1,'b');
     %
     gradpkinsgradrho = equil.eqdsk.gradpkinsgradrho;
 
@@ -260,10 +252,22 @@ if isfield(equil,'eqdsk')
         Ip_eqdsk = equil.eqdsk.Ip;
     end
 else
+    %
+    equilDKE = equilibrium_jd(equil,equil.psi_apRp/equil.psi_apRp(end),0,'spline');
+    %
     gradpkinsgradrho = [];
     jphi_eqdsk = [];
     Ip_eqdsk = [];
+    %
 end
+%
+rhoP = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoP,1],rho);
+rhoT = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoT,1],rho);
+rhoV = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoV,1],rho);
+%
+xq = qfactors_dke_yp(1,equilDKE.Rp,equilDKE.ap,equilDKE.Xx,equilDKE.Xy,equilDKE.XBx,equilDKE.XBy,equilDKE.XBphi,equilDKE.xx0,equilDKE.xB0,equilDKE.xBT0,equilDKE.xBp0);
+%
+q = equilDKE.ap/equilDKE.Rp*interp1(equilDKE.xrho,xq,rho);%safety factor
 %
 for j = 1:6,
     jparz_fsav_cyl(:,j) = j*abs(Ip_z)*(1 - rho(:).^2).^(j-1)/pi/equil_fit.ap/equil_fit.ap/1e6;
@@ -315,6 +319,16 @@ li = L*L*VB2/LB/LB/V;
 %
 [pshift,pelong,ptrian,pli] = equilmoments_jd(equil.theta,equil.ptx,equil.pty,mtheta);
 %
+inan_q =find(isnan(q(1:round(length(q)/2))));
+q(inan_q) = q(max(inan_q) + 1);%remove lower NaN values
+inan_q =find(isnan(q));
+q(inan_q) = q(min(inan_q) - 1);%remove upper NaN values
+%
+q95 = interp1(rho,q,0.95);%q @ rho = 0.95
+q0 = q(1);
+aspectratio = equil.Rp/equil.equil_fit.ap;
+ne_lineaveraged = trapz(equil.pne.*gradient(equil.ptx(:,1))')./trapz(gradient(equil.ptx(:,1))');
+%
 disp(['Plasma current, Ip(from j_z) = ',num2str(Ip_z/1e6),' (MA)']);
 disp(['Plasma current, Ip(from j_z_fsav) = ',num2str(Ip_z_fsav/1e6),' (MA)']);
 disp(['Plasma current, Ip(from j_par_z + j_perp_z) = ',num2str(Ip_parperpz/1e6),' (MA)']);
@@ -325,10 +339,14 @@ if ~isempty(Ip_eqdsk),
 end
 disp('-------------------------------------------------------------')
 disp(['Normalized internal inductance, li = ',num2str(li)]);
+disp(['Central safety factor, q(0) = ',num2str(q0)]);
+disp(['Edge safety factor, q95 = ',num2str(q95)]);
+disp(['Line averaged electron density, nl[1e19 m-3] = ',num2str(ne_lineaveraged/1e19)]);
 disp('-------------------------------------------------------------')
 disp(['Shafranov shift = ',num2str(pshift(end))]);
 disp(['Plasma elongation = ',num2str(pelong(end))]);
 disp(['Plasma triangularity = ',num2str(ptrian(end))]);
+disp(['Aspect ratio = ',num2str(aspectratio)]);
 %
 if equil.psi_apRp(end)*equil.ptBy(end,1) < 0,
     disp('******** WARNING : equilibrium signs not self-consistent ********')
@@ -488,6 +506,21 @@ if display_mode == 2,
         text(0.1,axf(3)+8*(axf(4)-axf(3))/10, ['l_i = ',num2str(li),], 'Color', 'b','FontSize',18);  
         print_jd(2,['Flux_derivative _urrent_flux_function_',equil.id]);
         %
+    else
+        %
+        figure('Name','Safety factor'),clf
+        leg = {'Magnetic','q_{95}','Location','NorthEast'};
+        if isinf(equilDKE.Rp),
+            [ax] = graph1D_jd(rho(1:end-1),xq,0,0,'\rho','q(\rho)*R_p/a_p',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','b',1);drawnow
+        else
+            [ax] = graph1D_jd(rho(1:end-1),xq*equilDKE.ap/equilDKE.Rp,0,0,'\rho','q(\rho)',strrep(equil.id,'_','-'),leg,NaN,NaN,'-','none','b',1);drawnow
+            graph1D_jd(0.95,q95,0,0,'\rho','q(\rho)',strrep(equil.id,'_','-'),leg,NaN,NaN,'none','o','r',2);drawnow
+        end
+        axf = axis(ax);
+        text(0.1,axf(3)+9*(axf(4)-axf(3))/10, ['I_p = ',num2str(Ip_z/1e6),' (MA)'], 'Color', 'b','FontSize',18);
+        text(0.1,axf(3)+8*(axf(4)-axf(3))/10, ['l_i = ',num2str(li),], 'Color', 'b','FontSize',18);  
+        text(0.1,axf(3)+7*(axf(4)-axf(3))/10, ['q_{95} = ',num2str(q95),], 'Color', 'b','FontSize',18);  
+        print_jd(2,['Safety_factor_',equil.id]);
 
     end
     %
@@ -527,6 +560,10 @@ equil.Te_vol = Te_vol;
 equil.ne_vol = ne_vol;
 equil.zTi_vol = zTi_vol;
 equil.zni_vol = zni_vol;
+equil.q95 = q95;
+equil.q0 = q0;
+equil.aspectratio = aspectratio;
+equil.ne_lineaveraged = ne_lineaveraged;
 %
 equil.consistency.rho = rho;
 equil.consistency.jparz_fsav = jparz_fsav;
@@ -534,12 +571,12 @@ equil.consistency.jparz_fsav_cyl = jparz_fsav_cyl;
 equil.consistency.Te = Te;
 equil.consistency.ne = ne;
 %
-if isfield(equil,'eqdsk')
-    equil.consistency.rhoP = rhoP;
-    equil.consistency.rhoT = rhoT;
-    equil.consistency.rhoV = rhoV;
-    %
-    equil.consistency.q = q;
+equil.consistency.rhoP = rhoP;
+equil.consistency.rhoT = rhoT;
+equil.consistency.rhoV = rhoV;
+%
+equil.consistency.q = q;
+%
 end
 %
     
