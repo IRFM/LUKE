@@ -49,6 +49,11 @@ end
 equil_val.Rp = equil_fit.Rp;
 equil_val.Zp = equil_fit.Zp;
 %
+equil_val.zZi = equil_fit.zZi;
+equil_val.zmi = equil_fit.zmi;
+equil_val.id = equil_fit.id;
+equil_val.method = equil_fit.method;
+%
 if isfield(equil_fit.Bx_fit,'pp_a0'),% (rho,theta) coordinates
     %
     rho = a;
