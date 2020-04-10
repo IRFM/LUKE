@@ -21,7 +21,7 @@ if nargin < 1
 end
 %
 if isnan(savedir),
-    savedir = 'figures/';
+    savedir = 'Figures/';
 elseif isempty(savedir),
     savedir = './';
 elseif ~strcmp(savedir(end),filesep),
@@ -54,7 +54,7 @@ if opt >= 1,
     if opt == -1,
         return
     end
-    if exist(savedir,'dir') ~= 7
+    if ~exist(savedir,'dir')
         mkdir(savedir)
     end
 %     wd = pwd;
