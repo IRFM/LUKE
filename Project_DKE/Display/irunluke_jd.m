@@ -1088,7 +1088,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 if isempty(i_adas)
                     %
-                    if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma (0) no, (1) yes',1,[0,1])  
+                    if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma [y/n]','y',{'y','n'}) == 'n'
                         %
                         if exist('ADAS.mat')
                             equil.ADAS = 'ADAS.mat';
@@ -1100,7 +1100,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     end
                 else
                     %
-                    if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma (0) no, (1) yes',1,[0,1]) 
+                    if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma [y/n]','y',{'y','n'}) == 'n'
                         %
                     else
                         equil.id = [equil.id(1:i_adas-1),equil.id(i_adas+5:end)];
@@ -1114,7 +1114,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 if isempty(i_coulog)
                     %
-                    if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','y',{'y','n'}) == 'y'
+                    if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','y',{'y','n'}) == 'n'
                         %
                         equil.coulog = 1;
                         equil.id = [equil.id,'_CLXP'];
@@ -1123,7 +1123,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                 else
                     %
-                    if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','y',{'y','n'}) == 'y'
+                    if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','y',{'y','n'}) == 'n'
                         %
                     else
                         equil.id = [equil.id(1:i_coulog-1),equil.id(i_coulog+5:end)];
@@ -1137,11 +1137,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                 %
                 if isempty(i_screening)
                     %
-                    if input_dke_yp('Do you want to consider screening effects partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'y'
+                    if input_dke_yp('Do you want to consider screening effects partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'n'
                         %
                         equil.screening.elastic = input_dke_yp('Atomic model for partially ionized high-Z atoms (''Tseng-Pratt-Botto'',''Thomas-Fermi'',''Thomas-Fermi-Kirillov'',''Tseng-Pratt-Botto'',''Full-screening'') : ','Tseng-Pratt-Botto',{'Tseng-Pratt-Botto','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Botto','Full-screening'});
                         %
-                        if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'y'
+                        if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'n'
                             %
                             equil.screening.inelastic = 1;
                             %
@@ -1158,11 +1158,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                 else
                     %
-                    if input_dke_yp('Do you want to consider screening effects partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'y'
+                    if input_dke_yp('Do you want to consider screening effects partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'n'
                         %
                         equil.screening.elastic = input_dke_yp('Atomic model for partially ionized high-Z atoms (''Tseng-Pratt-Botto'',''Thomas-Fermi'',''Thomas-Fermi-Kirillov'',''Tseng-Pratt-Botto'',''Full-screening'') : ','Tseng-Pratt-Botto',{'Tseng-Pratt-Botto','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Botto','Full-screening'});
                         %
-                        if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'y'
+                        if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'n'
                             %
                             equil.screening.inelastic = 1;
                             %
@@ -1183,7 +1183,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %  
                 end
                 %
-                %if input_dke_yp('Do you want to check the toroidal MHD equilibrium consistency (y/n)','y',{'y','n'}) == 'y',
+                %if input_dke_yp('Do you want to check the toroidal MHD equilibrium consistency (y/n)','y',{'y','n'}) == 'n',
                 %    equil = equilconsistency_yp(equil);
                 %end
                 %
