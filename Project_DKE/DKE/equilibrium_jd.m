@@ -127,6 +127,17 @@ else
     xpsin = NaN;%the radial grid is the equilibrium grid
 end
 %
+% Test equilibrium compatibility with LUKE%
+%
+[equil,flag] = equilcompatibility_yp(equil, display);% Test the compatibility of the quilibrium with LUKE
+%
+if flag == -1
+    equilDKE.equil = equil;
+    equilDKE.lukecompatibility = 'Not compatible';
+    varargout{1} = equilDKE;
+    return
+end
+%
 % Ionization model
 %
 equil = ionization_model_yp(equil);
