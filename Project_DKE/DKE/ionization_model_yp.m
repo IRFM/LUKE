@@ -23,7 +23,16 @@ else
             %
             equil_out = equil_in;
             %
-            load(equil_in.ADAS);
+            if exist(equil_in.ADAS)
+                load(equil_in.ADAS);
+            else
+                equil_out = equil_in;
+                disp('*****************')
+                disp(['WARNING: file : ',equil_in.ADAS,' does not exist. ADAS data are not considered.'])
+                disp('*****************')
+                equil_out = rmfield(equil_in,'ADAS');
+                return
+            end
             %
             if isempty(find(equil_in.zZi == 1))
                 equil_out.impurities_ADAS = Z2element_yp(tabmat,equil_in.zZi);%only impurities
