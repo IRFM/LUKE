@@ -800,6 +800,12 @@ elseif e_opt == -2,
     equil.info.datapath = amr_psi_path;
 end
 %
+[equil,flag] = equilcompatibility_yp(equil);
+%
+if flag == -1
+    return
+end
+%
 if (~isfield(select,'consist') || ~select.consist) && strcmp(input_dke_yp('Do you want to check the equilibrium consistency','n',{'y','n'},'',[1,1]),'y'),
     equil = equilconsistency_yp(equil,'',1);
 end
