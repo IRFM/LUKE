@@ -34,6 +34,7 @@ dkepath.yves(1).temppathroot = '/tmp/';%Absolute root directory path adress wher
 %
 dkepath.yves(1).mex904 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB904','/'];%R2018a
 dkepath.yves(1).mex907 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB907','/'];%R2019b
+dkepath.yves(1).mex908 = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Bin/macbookyves/MATLAB908','/'];%R2020a
 %
 dkepath.yves(1).compiler_opt.libs.gfortran = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.9.0','/',dkepath.machine,'/'];%extra libraries
 dkepath.yves(1).compiler_opt.libs.ifort = [dkepath.yves(1).luke_root,'Project_DKE/MEX/Libs/ifort/19.0.4','/',dkepath.machine,'/'];
@@ -44,13 +45,16 @@ dkepath.yves(1).compiler_opt.helmex.mex904 = [' -compatibleArrayDims /System/Lib
 dkepath.yves(1).compiler_opt.fopts.mex907 = ' ';%-largeArrayDims';
 dkepath.yves(1).compiler_opt.separatrice.mex907 = [' -largeArrayDims  /Users/yves/Travail/Projets/Packages/Bin/LAPACK/lapack-3.8.0_gfortran/librefblas.a    /Users/yves/Travail/Projets/Packages/Bin/LAPACK/lapack-3.8.0_gfortran/liblapack.a  ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgfortran.a ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgcc_s_1.dylib ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgfortranbegin.a ',dkepath.yves(1).compiler_opt.libs.gfortran,'libquadmath.a '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.yves(1).compiler_opt.helmex.mex907 = [' -compatibleArrayDims  /Users/yves/Travail/Projets/Packages/Bin/LAPACK/lapack-3.8.0_gfortran/librefblas.a    /Users/yves/Travail/Projets/Packages/Bin/LAPACK/lapack-3.8.0_gfortran/liblapack.a ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgfortran.a ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgcc_s_1.dylib ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgfortranbegin.a ',dkepath.yves(1).compiler_opt.libs.gfortran,'libquadmath.a '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yves(1).compiler_opt.fopts.mex908 = ' ';%-largeArrayDims';
+dkepath.yves(1).compiler_opt.separatrice.mex908 = [' -largeArrayDims  /Users/yves/Travail/Projets/Packages/Bin/LAPACK/lapack-3.8.0_gfortran/librefblas.a    /Users/yves/Travail/Projets/Packages/Bin/LAPACK/lapack-3.8.0_gfortran/liblapack.a  ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgfortran.a ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgcc_s_1.dylib ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgfortranbegin.a ',dkepath.yves(1).compiler_opt.libs.gfortran,'libquadmath.a '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yves(1).compiler_opt.helmex.mex908 = [' -compatibleArrayDims  /Users/yves/Travail/Projets/Packages/Bin/LAPACK/lapack-3.8.0_gfortran/librefblas.a    /Users/yves/Travail/Projets/Packages/Bin/LAPACK/lapack-3.8.0_gfortran/liblapack.a ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgfortran.a ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgcc_s_1.dylib ',dkepath.yves(1).compiler_opt.libs.gfortran,'libgfortranbegin.a ',dkepath.yves(1).compiler_opt.libs.gfortran,'libquadmath.a '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 %
 % MUMPS matrix solver (parallel, sequential, mex)
 %
 dkepath.yves(1).MUMPS.seq = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_4.10.0_S_ifort/dke'];%Where MUMPS matrix solver is stored  (stand-alone application for sequential processing)
 dkepath.yves(1).MUMPS.mex904 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.2_S_gfortran/MATLAB904'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.yves(1).MUMPS.mex907 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.2.1_S_gfortran/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
-%dkepath.yves(1).MUMPS.mex907 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.2_S_ifort/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yves(1).MUMPS.mex908 = [dkepath.yves(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.2.1_S_gfortran/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % PETSc matrix solver (parallel, sequential)
 %
@@ -108,6 +112,21 @@ dkepath.yves(1).remote(ir).link_mode = '';
 dkepath.yves(1).remote(ir).cvsupdate = false;% update done in 'direct' mode
 dkepath.yves(1).remote(ir).gitupdate = false;
 dkepath.yves(1).remote(ir).gitmode.cmd = 'cd /home/ypeysson/luke/*;git pull;';%
+%
+ir = ir + 1;
+dkepath.yves(1).remote(ir) = dkepath.yves(1).remote(ir-1);
+dkepath.yves(1).remote(ir).schedulername = 'direct';
+dkepath.yves(1).remote(ir).gitupdate = true;
+%
+ir = ir + 1;
+dkepath.yves(1).remote(ir).remoteid = 'NUC_YVES_PEYSSON';
+dkepath.yves(1).remote(ir).schedulername = 'condor';
+dkepath.yves(1).remote(ir).profilename = 'yvespeysson';
+dkepath.yves(1).remote(ir).luke_root = ['/home/yvespeysson/',dkepath.yves(1).luke_branch,'/'];
+dkepath.yves(1).remote(ir).link_mode = '';
+dkepath.yves(1).remote(ir).cvsupdate = false;% update done in 'direct' mode
+dkepath.yves(1).remote(ir).gitupdate = false;
+dkepath.yves(1).remote(ir).gitmode.cmd = 'cd /home/yvespeysson/*;git pull;';%
 %
 ir = ir + 1;
 dkepath.yves(1).remote(ir) = dkepath.yves(1).remote(ir-1);
