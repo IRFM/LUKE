@@ -104,7 +104,7 @@ dkeparam.rho_S = rho_S;
 %
 [qe,me,mp,mn,e0,mu0,re,mc2] = pc_dke_yp;%Universal physics constants
 %
-Tref = 1;%keV
+Tref = 5.11;%keV
 %
 equil.pTe = ones(size(equil.pTe))*Tref;
 equil.pzTi = ones(size(equil.pzTi))*Tref;

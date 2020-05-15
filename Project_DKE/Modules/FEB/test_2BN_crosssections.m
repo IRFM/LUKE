@@ -178,6 +178,7 @@ end
 %
 xlab = 'Photon energy k (keV)';
 ylab = 'Screening reduction factor';
+tit = '';
 %
 for im = 1:length(BH2)%Screening model
     for it = 1:length(theta_display)%theta0 photon angle
@@ -185,10 +186,10 @@ for im = 1:length(BH2)%Screening model
         for iE = 1:nEc
             %
             figure('Name',['Electron energy = ',num2str(Ec0(iE)),' (keV), photon angle ',num2str(theta(theta_display(it))),' (deg.), Z = ',int2str(Z),', ',BH2(im).legend])
-            tit = ['Electron energy = ',num2str(Ec0(iE)),' (keV), photon angle ',num2str(theta(theta_display(it))),' (deg.), Z = ',int2str(Z),', ',BH2(im).legend];
+          %  tit = ['Electron energy = ',num2str(Ec0(iE)),' (keV), photon angle ',num2str(theta(theta_display(it))),' (deg.), Z = ',int2str(Z),', ',BH2(im).legend];
             %
             xlim = [0,Ec0(iE)];%normalized transfered momentum q/(mec)
-            ylim = [0,2.5];
+            ylim = [1,2];
             %
             leg = {};
             %

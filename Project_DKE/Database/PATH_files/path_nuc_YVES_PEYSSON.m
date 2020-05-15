@@ -37,8 +37,8 @@ dkepath.yvespeysson(1).mex908 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/M
 dkepath.yvespeysson(1).compiler_opt.libs.gfortran = '';
 dkepath.yvespeysson(1).compiler_opt.copts = '';
 dkepath.yvespeysson(1).compiler_opt.fopts.mex908 = 'FC=''gfortran''';%
-dkepath.yvespeysson(1).compiler_opt.separatrice.mex908 = [' -largeArrayDims -lgfortran -L',dkepath.yvespeysson(1).local_root,'PackagesLAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.yvespeysson(1).compiler_opt.helmex.mex908 = [' -compatibleArrayDims -lgfortran -L',dkepath.yvespeysson(1).local_root,'PackagesLAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvespeysson(1).compiler_opt.separatrice.mex908 = [' -largeArrayDims -lgfortran -L',dkepath.yvespeysson(1).local_root,'Packages/LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvespeysson(1).compiler_opt.helmex.mex908 = [' -compatibleArrayDims -lgfortran -L',dkepath.yvespeysson(1).local_root,'Packages/LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.yvespeysson(1).compiler_opt.fopts.mex908 = ' ';%-largeArrayDims
 %
 dkepath.yvespeysson(1).MUMPS.mex908 = [dkepath.yvespeysson(1).local_root,'Packages/MUMPS/MUMPS_5.1.2/MATLAB908'];%Where MUMPS matrix solver is stored (MEX function)

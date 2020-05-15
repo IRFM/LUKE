@@ -4,23 +4,23 @@ function [ppsin,ppsi_apRp,theta,x,y,Bx,By,BPHI,pBpp,pq_Rpap,pj,pmag,Ip_test,prho
 %
 % by Y.Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-if nargin < 11,
+if nargin < 11
     lambda = NaN;% 65 poloidal grid points by default
 end
 %
-if nargin < 10,
+if nargin < 10
     ntheta = 65;% 65 poloidal grid points by default
 end
 %
-if nargin < 9,
+if nargin < 9
     npsi = 101;% 101 radial profile grid points by default
 end
 %
-if nargin < 8,
+if nargin < 8
     qopt = 0;% 101 radial profile grid points by default
 end
 %
-[qe,me,mp,mn,e0,mu0] = pc_dke_yp;
+[qe,~,~,~,~,mu0] = pc_dke_yp;
 %
 Bpa = mu0*Ip*1e6/(2*pi*ap);% Poloidal Field at the edge, Ampere's theorem (circular plasma cross-section). Moreover, in the following expressions, term of order (ap/Rp)^2 or higher are neglected.	
 qmax_Rpap = abs(Bt/Bpa);%Normalized cylindrical safety factor at the plasma edge
@@ -34,20 +34,17 @@ Xtheta = repmat(theta,[npsi,1]);
 x = ap*Xrho.*cos(Xtheta);
 y = ap*Xrho.*sin(Xtheta);
 %
-if isempty(lambda) || isnan(lambda),
-    if qopt == 2,
-        if eq >= 1,
-            pq_Rpap = qmax_Rpap*prho.^2./(1.0 - (1.0 - prho.^2).^(1.0 + eq));%Safety factor profile deduced from a current profile proportional to (1-rho^2)^eq
-            pq_Rpap(1) = qmax_Rpap/(1.0 + eq);
-            pdq_Rpap = 2*pq_Rpap.*(1.0 - pq_Rpap*(eq + 1.0).*(1.0 - prho.^2)/qmax_Rpap)./prho;
-            pdq_Rpap(1) = 0;
-        else
-            error('Error: eq >= 1.0 for qopt = 2 !');
-        end
-    elseif qopt == 1,
+if isempty(lambda) || isnan(lambda)
+    if qopt == 2
+        ej = (2*pi*ap*Bt)/(mu0*Ip*1e6*qmin_Rpap) - 1;%here j = j0*(1-rho^2)^ej is used
+        pq_Rpap = qmax_Rpap*prho.^2./(1.0 - (1.0 - prho.^2).^(1.0 + ej));%Safety factor profile deduced from a current profile proportional to (1-rho^2)^eq
+        pq_Rpap(1) = qmax_Rpap/(1.0 + ej);
+        pdq_Rpap = 2*pq_Rpap.*(1.0 - pq_Rpap*(ej + 1.0).*(1.0 - prho.^2)/qmax_Rpap)./prho;
+        pdq_Rpap(1) = 0;
+    elseif qopt == 1
          pq_Rpap = (qmax_Rpap - qmin_Rpap)*prho.^eq + qmin_Rpap;%Current profile defined by qmin and eq
          pdq_Rpap = eq*(qmax_Rpap - qmin_Rpap)*prho.^(eq-1);
-    elseif qopt == 0,
+    elseif qopt == 0
          pq_Rpap = qmax_Rpap*ones(1,npsi);%Current profile defined with constant q (uniform current density)
          pdq_Rpap = zeros(1,npsi);
     else

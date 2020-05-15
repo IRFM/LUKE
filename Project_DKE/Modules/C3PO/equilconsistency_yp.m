@@ -25,13 +25,14 @@ function [equil,gradpthermalsgradrho,gradpmagsgradrho,gradpkinsgradrho,jparz_fsa
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
-if nargin == 1,
+if nargin == 1
     if isfield(equil,'equil_fit'),
         equil_fit = equil.equil_fit;
     else
         info_dke_yp(2,['Vectorized form of the magnetic equilibrium ',equil.id,' is being calculated...'],0);
         equil_fit = fitequil_yp(equil);
         info_dke_yp(2,'    ...done',0);
+        equil.equil_fit = equil_fit;
     end
     %
     display_mode = 0;%no display
@@ -227,7 +228,7 @@ F = Bz.*(x + equil.Rp);%RBz
 dFdpsi = (dBzdrho.*(x + equil.Rp) + Bz.*dxdrho).*(dxstardpsin(:)*ones(1,mtheta))/equil.psi_apRp(end)*equil.Rp;
 FdFdpsi = F.*dFdpsi;
 %
-if isfield(equil,'eqdsk')
+if isfield(equil,'eqdsk') && flag_compatibility >=0
     %
     equilDKE = equilibrium_jd(equil,equil.eqdsk.psin,0,'spline');
     %

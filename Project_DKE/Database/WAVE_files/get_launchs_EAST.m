@@ -1,4 +1,4 @@
-function [launchs,ids] = get_launchs_EAST
+function [launchs,ids] = get_launchs_EAST(n)
 %
 % This function contains the characteristics of the LH antennas of the EAST Chinese tokamak
 %
@@ -44,8 +44,14 @@ launchs{2}.default.mmode = -1;% (-1) for slow wave, (1) for fast wave
 %
 nlaunchs = length(launchs);
 ids = cell(1,nlaunchs);
-for ilaunch = 1:nlaunchs,
+for ilaunch = 1:nlaunchs
     ids{ilaunch} = launchs{ilaunch}.id;
 end
-
+%
+if nargin == 1
+    launchs = launchs(n);
+    ids = ids{n};
+end
+    
+    
 

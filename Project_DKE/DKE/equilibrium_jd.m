@@ -129,15 +129,6 @@ end
 %
 % Test equilibrium compatibility with LUKE%
 %
-[equil,flag] = equilcompatibility_yp(equil, display);% Test the compatibility of the quilibrium with LUKE
-%
-if flag == -1
-    equilDKE.equil = equil;
-    equilDKE.lukecompatibility = 'Not compatible';
-    varargout{1} = equilDKE;
-    return
-end
-%
 % Ionization model
 %
 equil = ionization_model_yp(equil);
@@ -242,11 +233,12 @@ if Rp < Inf,
     %
     nc = (ntheta-1)/2 + 1;%central fft point
     %
-    tol = 0.1;% tolerance on magnetic field variations
+    tol = 0.05;% tolerance on magnetic field variations
     %
     tpB0 = sqrt(tpBx.^2 + tpBy.^2 + tpBPHI.^2);% total magnetic field
     %
     opt_extr = 3;%1+1i;%
+    %opt_extr = 1;%1+1i;%
     %
     if real(opt_extr) == 1,
         %
@@ -744,9 +736,36 @@ if real(display_mode) >=1,
 	disp('-------------------------------------------------------------------------------------------------------------------');
 end
 %
-if flag_consistency && real(display_mode) >= 1,
+if flag_consistency && real(display_mode) >= 1
+    %
 	disp('Calculation of the equilibrium consistency (wait few seconds).');
+    %
     equil = equilconsistency_yp(equil,'',real(display_mode));
+    %
+    equil_test.id = equil.id;
+    equil_test.ptx = Xx;
+    equil_test.pty = Xy;
+    equil_test.Rp = Rp;
+    equil_test.Zp = Zp;
+    equil_test.ptx = Xx;
+    equil_test.pty = Xy;
+    equil_test.ptBx = XBx;
+    equil_test.ptBy = XBy;
+    equil_test.ptBPHI = XBphi;
+    equil_test.psi_apRp = xpsin*psia_apRp;
+    equil_test.theta = mtheta;
+    %
+    if isfield(equil,'pzni') && isfield(equil,'pzTi') && isfield(equil,'zZi') && isfield(equil,'pne') && isfield(equil,'pTe') 
+        equil_test.pTe = xTe;
+        equil_test.pne = xne;
+        equil_test.zZi = zZi;
+        equil_test.zmi = zmi;
+        equil_test.fi = [0 1 0];
+        equil_test.pzTi = xzTi;
+        equil_test.pzni = xzni;
+    end
+   %
+    equil_test = equilconsistency_yp(equil_test,'',real(display_mode));
 end
 %
 equilDKE.tokname = equil.id;

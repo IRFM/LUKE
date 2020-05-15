@@ -268,7 +268,7 @@ for imodel = 1:length(models)
         ionradius_hesslow{imodel,iatom}.nff = nff_hesslow{iatom};
         %
         [gfp_model{imodel,iatom},gfpn_model{imodel,iatom}] = gfp_yp(p,ionradius_model{imodel,iatom});
-        [gfp_optim{imodel,iatom},gfpn_optim{imodel,iatom}] = gfp_yp(p,ionradius_optim{imodel,iatom});
+        [gfp_optim{imodel,iatom},gfpn_optim{imodel,iatom}] = gfp_yp(p,ionradius_optim{imodel,iatom});%p,Z,model,dftpath
         [gfp_hesslow{imodel,iatom},gfpn_hesslow{imodel,iatom}] = gfp_yp(p,ionradius_hesslow{imodel,iatom});
         %
     end

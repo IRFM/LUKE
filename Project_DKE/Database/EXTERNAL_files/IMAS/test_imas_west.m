@@ -31,7 +31,7 @@ idx = imas_open_env('ids', shot, run, user, machine, '3');
 
 % Function ids_get_slice(id_from_imas_open, IDS_name, time_requested, interpolation_method)
 % -interpolation_method: 1 = closest time, 2 = previous time, 3 = linear interpolation
-equi  = ids_get(idx, 'equilibrium');
+equi  = ids_west_get(idx, 'equilibrium',0,1);
 corep = ids_get_slice(idx, 'core_profiles', time_requested, 1);
 %
 mask_eq = equi.code.output_flag >= 0;%
