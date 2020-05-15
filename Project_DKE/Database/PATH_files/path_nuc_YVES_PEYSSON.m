@@ -29,19 +29,19 @@ dkepath.yvespeysson(1).luke_root = luke_root;
 sep = strfind(luke_root,'/');
 dkepath.yvespeysson(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
 %
-dkepath.yvespeysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.yvespeysson(1).temppathroot = '/media/yvespeysson/Pollux/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 dkepath.yvespeysson(1).local_root = '/home/yvespeysson/';
 %
-dkepath.yvespeysson(1).mex905 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/nucyves/MATLAB905/'];%r2018b
+dkepath.yvespeysson(1).mex908 = [dkepath.yvespeysson(1).luke_root,'Project_DKE/MEX/Bin/nucyves/MATLAB908/'];%r2020a
 %
 dkepath.yvespeysson(1).compiler_opt.libs.gfortran = '';
 dkepath.yvespeysson(1).compiler_opt.copts = '';
-dkepath.yvespeysson(1).compiler_opt.fopts.mex905 = 'FC=''gfortran''';%
-dkepath.yvespeysson(1).compiler_opt.separatrice.mex905 = [' -largeArrayDims -lgfortran -L',dkepath.yvespeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.yvespeysson(1).compiler_opt.helmex.mex905 = [' -compatibleArrayDims -lgfortran -L',dkepath.yvespeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.yvespeysson(1).compiler_opt.fopts.mex905 = ' ';%-largeArrayDims
+dkepath.yvespeysson(1).compiler_opt.fopts.mex908 = 'FC=''gfortran''';%
+dkepath.yvespeysson(1).compiler_opt.separatrice.mex908 = [' -largeArrayDims -lgfortran -L',dkepath.yvespeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvespeysson(1).compiler_opt.helmex.mex908 = [' -compatibleArrayDims -lgfortran -L',dkepath.yvespeysson(1).local_root,'Packages/Bin/LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.yvespeysson(1).compiler_opt.fopts.mex908 = ' ';%-largeArrayDims
 %
-dkepath.yvespeysson(1).MUMPS.mex905 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.2_S_gfortran/MATLAB905'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.yvespeysson(1).MUMPS.mex908 = [dkepath.yvespeysson(1).local_root,'Packages/Bin/MUMPS/MUMPS_5.1.2/MATLAB908'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
@@ -53,14 +53,14 @@ dkepath.yvespeysson(1).imagemagick.env = '/usr/bin/';% ImageMagick environment v
 %
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
-dkepath.yvespeysson(1).remote(1).remoteid = 'nuc_YVES_PEYSSON';
+dkepath.yvespeysson(1).remote(1).remoteid = 'NUC_YVES_PEYSSON';
 dkepath.yvespeysson(1).remote(1).schedulername = 'condor';
 dkepath.yvespeysson(1).remote(1).profilename = 'yvespeysson';
 dkepath.yvespeysson(1).remote(1).luke_root = dkepath.yvespeysson(1).luke_root;% local cluster
 dkepath.yvespeysson(1).remote(1).link_mode = '';
 dkepath.yvespeysson(1).remote(1).cvsupdate = false;% update done in 'direct' mode
 dkepath.yvespeysson(1).remote(1).gitupdate = false;% update done in 'direct' mode
-dkepath.yvespeysson(1).remote(1).gitmode.cmd = 'cd home/yvespeysson/luke/*;git pull;echo "* update done";';
+dkepath.yvespeysson(1).remote(1).gitmode.cmd = 'cd home/yvespeysson/*;git pull;echo "* update done";';
 %
 dkepath.yvespeysson(1).remote(2) = dkepath.yvespeysson(1).remote(1);
 dkepath.yvespeysson(1).remote(2).schedulername = 'direct';
