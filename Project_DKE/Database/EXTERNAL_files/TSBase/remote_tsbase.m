@@ -104,7 +104,10 @@ if err==0,
         else
             remote.link_mode=1;
         end
+        %
         job = matstandardjob_jd('runmat');
+        job.funcopy = false;%since binary is machine specific only local version is used
+        %
         if nargin > 1,
             [err,job,yout1,yout2,yout3,yout4,yout5] = matremote_jd('tsbase',{shotnumber,signal},remote,job);
         else
