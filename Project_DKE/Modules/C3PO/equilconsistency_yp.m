@@ -228,7 +228,7 @@ F = Bz.*(x + equil.Rp);%RBz
 dFdpsi = (dBzdrho.*(x + equil.Rp) + Bz.*dxdrho).*(dxstardpsin(:)*ones(1,mtheta))/equil.psi_apRp(end)*equil.Rp;
 FdFdpsi = F.*dFdpsi;
 %
-if isfield(equil,'eqdsk') && flag_compatibility >=0
+if isfield(equil,'eqdsk')
     %
     equilDKE = equilibrium_jd(equil,equil.eqdsk.psin,0,'spline');
     %
@@ -262,9 +262,9 @@ else
     %
 end
 %
-rhoP = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoP,1],rho);
-rhoT = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoT,1],rho);
-rhoV = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoV,1],rho);
+rhoP = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoP(:)',1],rho);
+rhoT = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoT(:)',1],rho);
+rhoV = interp1([0,equilDKE.xrho,1],[0,equilDKE.xrhoV(:)',1],rho);
 %
 xq = qfactors_dke_yp(1,equilDKE.Rp,equilDKE.ap,equilDKE.Xx,equilDKE.Xy,equilDKE.XBx,equilDKE.XBy,equilDKE.XBphi,equilDKE.xx0,equilDKE.xB0,equilDKE.xBT0,equilDKE.xBp0);
 %
@@ -328,7 +328,10 @@ q(inan_q) = q(min(inan_q) - 1);%remove upper NaN values
 q95 = interp1(rho,q,0.95);%q @ rho = 0.95
 q0 = q(1);
 aspectratio = equil.Rp/equil.equil_fit.ap;
-ne_lineaveraged = trapz(equil.pne.*gradient(equil.ptx(:,1))')./trapz(gradient(equil.ptx(:,1))');
+ne_lineaveraged = trapz(equil.pne.*gradient(equil.ptx(:,1)))./trapz(gradient(equil.ptx(:,1)));
+if length(ne_lineaveraged) > 1 %pb dim definition when size rho = size theta
+    ne_lineaveraged = trapz(equil.pne(:).*gradient(equil.ptx(:,1)))./trapz(gradient(equil.ptx(:,1)));
+end
 %
 disp(['Plasma current, Ip(from j_z) = ',num2str(Ip_z/1e6),' (MA)']);
 disp(['Plasma current, Ip(from j_z_fsav) = ',num2str(Ip_z_fsav/1e6),' (MA)']);
@@ -577,6 +580,7 @@ equil.consistency.rhoT = rhoT;
 equil.consistency.rhoV = rhoV;
 %
 equil.consistency.q = q;
+equil.consistency.pkin =  pthermal/qe/1000;%for HELENA equilibrium code (keV.m-3)
 %
 end
 %
