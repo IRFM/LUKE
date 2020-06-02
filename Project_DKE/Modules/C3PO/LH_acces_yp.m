@@ -48,6 +48,8 @@ if ~isfield(equil,'consistency') || ~isfield(equil,'equil_fit')
     equil = equilconsistency_yp(equil,'',0);
 end
 %
+displeg = 0;
+%
 [qe,me,mp,~,e0] = pc_dke_yp;
 %
 if isstruct(ray)
@@ -205,7 +207,9 @@ bbnpar_mask_max_f = bnpar_mask_max_f(ibnpar_mask_max_f);
 bk_max_f = boundary(bbR_max_f,bbnpar_mask_max_f);
 graph1D_jd(bbR_max_f(bk_max_f),bbnpar_mask_max_f(bk_max_f),0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'--','none','k',2);
 %
-legend('N_{||Landau} = 6.5*{T_e[keV]}^{-1/2}','N_{||acc.} (Stix-Golant)','Slow wave @ Z = Z_{p}','Fast wave @ Z = Z_{p}')
+if displeg == 1
+    legend('N_{||Landau} = 6.5*{T_e[keV]}^{-1/2}','N_{||acc.} (Stix-Golant)','Slow wave @ Z = Z_{p}','Fast wave @ Z = Z_{p}')
+end
 %
 bnpar_mask_s = Xnpar_mask_s(:);
 bR = XR(:);
@@ -246,6 +250,10 @@ if sum(sum(intersect))
 else
     intersection = 0;
     %
+    inpar_kinetic = find(diff(npar_kinetic) == 0);
+    R_kinetic(inpar_kinetic) = [];
+    npar_kinetic(inpar_kinetic) = [];
+    %
     npar_kinetic_ref = interp1(R_kinetic,npar_kinetic,R_kinematic);
     distance = abs(npar_kinetic_ref-npar_kinematic);
     iR_min = find(distance == min(distance));
@@ -273,11 +281,13 @@ end
 if intersection == 0 & ~isempty(iR_min)
     plot([R_kinematic_gap_min,R_kinematic_gap_min],[npar_kinematic_gap_min,npar_kinetic_gap_min],'bo:');
 end
-%  
-legend('N_{||Landau} = 6.5*{T_e[keV]}^{-1/2}','Projection of (N_{||},R,Z) space on (N_{||},Z_{p})',['C3PO ray-tracing N_{||0} = ',num2str(npar0)])
+% 
+if displeg == 1
+    legend('N_{||Landau} = 6.5*{T_e[keV]}^{-1/2}','Projection of (N_{||},R,Z) space on (N_{||},Z_{p})',['C3PO ray-tracing N_{||0} = ',num2str(npar0)])
+end
 %
 figure('Name','Stix-Golant accessibility');
-graph2D_jd(R,Z,na','R (m)','Z (m)',strrep(equil.id,'_','-'),NaN,NaN,1,NaN,NaN,0);colorbar;hold on;
+graph2D_jd(R,Z,real(na'),'R (m)','Z (m)',strrep(equil.id,'_','-'),NaN,NaN,1,NaN,NaN,0);colorbar;hold on;
 graph2D_jd(R,Z,psin','R (m)','Z (m)','',NaN,NaN,0,NaN,NaN,0,'--','k');
 axis('equal')
 set(gca, 'CLim', [1, max(max(na))]);
