@@ -36,11 +36,22 @@ y = ap*Xrho.*sin(Xtheta);
 %
 if isempty(lambda) || isnan(lambda)
     if qopt == 2
-        ej = (2*pi*ap*Bt)/(mu0*Ip*1e6*qmin_Rpap) - 1;%here j = j0*(1-rho^2)^ej is used
-        pq_Rpap = qmax_Rpap*prho.^2./(1.0 - (1.0 - prho.^2).^(1.0 + ej));%Safety factor profile deduced from a current profile proportional to (1-rho^2)^eq
-        pq_Rpap(1) = qmax_Rpap/(1.0 + ej);
-        pdq_Rpap = 2*pq_Rpap.*(1.0 - pq_Rpap*(ej + 1.0).*(1.0 - prho.^2)/qmax_Rpap)./prho;
-        pdq_Rpap(1) = 0;
+         if eq >= 1,
+            pq_Rpap = qmax_Rpap*prho.^2./(1.0 - (1.0 - prho.^2).^(1.0 + eq));%Safety factor profile deduced from a current profile proportional to (1-rho^2)^eq
+            pq_Rpap(1) = qmax_Rpap/(1.0 + eq);
+            pdq_Rpap = 2*pq_Rpap.*(1.0 - pq_Rpap*(eq + 1.0).*(1.0 - prho.^2)/qmax_Rpap)./prho;
+            pdq_Rpap(1) = 0;
+         else
+             if ~isnan(qmin_Rpap)
+                ej = (2*pi*ap*Bt)/(mu0*Ip*1e6*qmin_Rpap) - 1;%here j = j0*(1-rho^2)^ej is used
+                pq_Rpap = qmax_Rpap*prho.^2./(1.0 - (1.0 - prho.^2).^(1.0 + ej));%Safety factor profile deduced from a current profile proportional to (1-rho^2)^eq
+                pq_Rpap(1) = qmax_Rpap/(1.0 + ej);
+                pdq_Rpap = 2*pq_Rpap.*(1.0 - pq_Rpap*(ej + 1.0).*(1.0 - prho.^2)/qmax_Rpap)./prho;
+                pdq_Rpap(1) = 0;
+             else
+                error('Error: eq >= 1.0 for qopt = 2 !');
+             end
+         end
     elseif qopt == 1
          pq_Rpap = (qmax_Rpap - qmin_Rpap)*prho.^eq + qmin_Rpap;%Current profile defined by qmin and eq
          pdq_Rpap = eq*(qmax_Rpap - qmin_Rpap)*prho.^(eq-1);
