@@ -17,7 +17,7 @@ if nargin == 0,
     external.shotnum = 0;
     external.shotime = 0;
     %
-    % description & user halp
+    % description & user help
     %
     external.info.workdir = 'directory for source files';
     external.info.shotnum = 'Shot number';
