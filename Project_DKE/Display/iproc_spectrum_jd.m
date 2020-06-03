@@ -48,8 +48,16 @@ bPlhtot = NaN(1,nlobes_tor*nlobes_pol);
 % The number of rays is nlobes_tor x nlobes_pol. The toroidal sign is
 % assumed to be for co-current
 %
-for iy = 1:nlobes_tor,
-    bNpar0((iy - 1)*nlobes_pol + (1:nlobes_pol)) = -i*bNtor0(iy)*signs.ip*signs.b0 + bNpol0;
+sign_npar_mainlobe = sign(bNtor0(find(bPlhtor==max(bPlhtor))));
+disp('Co-current is enforced')
+%
+for iy = 1:nlobes_tor
+    %
+    if signs.ip*signs.b0*sign_npar_mainlobe > 0
+        bNpar0((iy - 1)*nlobes_pol + (1:nlobes_pol)) = -i*bNtor0(iy)*signs.ip*signs.b0 + bNpol0;
+    else
+        bNpar0((iy - 1)*nlobes_pol + (1:nlobes_pol)) = i*bNtor0(iy)*signs.ip*signs.b0 + bNpol0;
+    end
     %
     % the combined spectral width effect is not yet implemented
     % (TODO) see how to include it, maybe in init_RT_jd
