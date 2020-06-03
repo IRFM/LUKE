@@ -1100,87 +1100,116 @@ function irunluke_jd(basestr,signs,opt_gui)
                     end
                 else
                     %
-                    if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma [y/n]','y',{'y','n'}) == 'n'
+                    if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma [y/n]','n',{'y','n'}) == 'n'
                         %
-                    else
                         equil.id = [equil.id(1:i_adas-1),equil.id(i_adas+5:end)];
-                        equil = rmfield(equil,'ADAS'); 
+                        if isfield(equil,'ADAS'); 
+                            equil = rmfield(equil,'ADAS'); 
+                        end
                         disp(['Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
-                    end
-                    %
-                end
-                %
-                i_coulog = strfind(equil.id,'_CLXP');
-                %
-                if isempty(i_coulog)
-                    %
-                    if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','y',{'y','n'}) == 'n'
-                        %
-                        equil.coulog = 1;
-                        equil.id = [equil.id,'_CLXP'];
-                        %
-                    end
-                    %
-                else
-                    %
-                    if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','y',{'y','n'}) == 'n'
                         %
                     else
-                        equil.id = [equil.id(1:i_coulog-1),equil.id(i_coulog+5:end)];
-                        equil = rmfield(equil,'coulog'); 
-                        disp(['WARNING: Thermal Coulomb logarithm at plasma center is used.'])
+                        if exist('ADAS.mat')
+                            equil.ADAS = 'ADAS.mat';
+                            equil.id = [equil.id,'_ADAS'];
+                        else
+                            disp(['WARNING: ADAS.mat file has not been found in folder ''',dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat''. Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
+                        end
+                        
                     end
                     %
                 end
-                %    
-                i_screening = strfind(equil.id,'_SCRE');    
                 %
-                if isempty(i_screening)
+                if isfield(equil,'ADAS'); 
                     %
-                    if input_dke_yp('Do you want to consider screening effects partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'n'
+                    i_coulog = strfind(equil.id,'_CLXP');
+                    %
+                    if isempty(i_coulog)
                         %
-                        equil.screening.elastic = input_dke_yp('Atomic model for partially ionized high-Z atoms (''Tseng-Pratt-Botto'',''Thomas-Fermi'',''Thomas-Fermi-Kirillov'',''Tseng-Pratt-Botto'',''Full-screening'') : ','Tseng-Pratt-Botto',{'Tseng-Pratt-Botto','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Botto','Full-screening'});
-                        %
-                        if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'n'
-                            %
-                            equil.screening.inelastic = 1;
-                            %
+                        if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','n',{'y','n'}) == 'n'
                         else
                             %
-                            equil.screening.inelastic = 0;
+                            equil.coulog_model = 1;
+                            equil.id = [equil.id,'_CLXP'];
                             %
                         end
                         %
-                        equil.screening.dftpath = input_dke_yp('DFT files path : ','');
+                    else
+                        %
+                        if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','n',{'y','n'}) == 'n'
+                            disp(['WARNING: Momentum and radially dependent Coulomb logarithm is used.'])
+                        else
+                            equil.id = [equil.id(1:i_coulog-1),equil.id(i_coulog+5:end)];
+                            if isfield(equil,'coulog_model')
+                                equil = rmfield(equil,'coulog_model'); 
+                            end
+                            disp(['WARNING: Thermal Coulomb logarithm at plasma center is used.'])
+                        end
+                        %
+                    end
+                    %    
+                    i_screening = strfind(equil.id,'_SCRE');    
+                    %
+                    if isempty(i_screening)
+                        %
+                        if input_dke_yp('Do you want to consider screening effects of partially ionized high-Z atoms [y/n]','n',{'y','n'}) == 'n'
+                            if isfield(equil,'screening')
+                                equil = rmfield(equil,'screening');
+                                disp(['WARNING: No screening effects of partially ionized high-Z atoms is considered.'])
+                            end
+                        else
+                            %
+                            equil.screening.elastic = input_dke_yp('Atomic model for partially ionized high-Z atoms (''Tseng-Pratt-Botto'',''Thomas-Fermi'',''Thomas-Fermi-Kirillov'',''Tseng-Pratt-Botto'',''Full-screening'') : ','Tseng-Pratt-Botto',{'Tseng-Pratt-Botto','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Botto','Full-screening'});
+                            %
+                            if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','n',{'y','n'}) == 'n'
+                                %
+                                equil.screening.inelastic = 0;
+                                disp(['WARNING: No inelastic scattering on partially ionized high-Z atoms is considered.'])
+                                %
+                            else
+                                %
+                                equil.screening.inelastic = 1;
+                                disp(['Inelastic scattering on partially ionized high-Z atoms is considered.'])
+                                %
+                            end
+                            %
+                            equil.screening.dftpath = input_dke_yp('DFT files path (if specific, otherwise in LUKE) : ','');
+                            %  
+                            equil.id = [equil.id,'_SCRE'];
+                        end
+                        %
+                    else
+                        %
+                        if input_dke_yp('Do you want to consider screening effects partially ionized high-Z atoms [y/n]','n',{'y','n'}) == 'n'
+                            %
+                            equil.id = [equil.id(1:i_screening-1),equil.id(i_screening+5:end)];
+                            if isfield(equil,'screening')
+                                equil = rmfield(equil,'screening'); 
+                            end
+                            %
+                            disp(['WARNING: No screening effects of partially ionized high-Z atoms is considered.'])
+                            %
+                        else
+                            %
+                            equil.screening.elastic = input_dke_yp('Atomic model for partially ionized high-Z atoms (''Tseng-Pratt-Botto'',''Thomas-Fermi'',''Thomas-Fermi-Kirillov'',''Tseng-Pratt-Botto'',''Full-screening'') : ','Tseng-Pratt-Botto',{'Tseng-Pratt-Botto','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Botto','Full-screening'});
+                            %
+                            if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','n',{'y','n'}) == 'n'
+                                %
+                                equil.screening.inelastic = 0;
+                                disp(['WARNING: No inelastic scattering on partially ionized high-Z atoms is considered.'])
+                                %
+                            else
+                                %
+                                equil.screening.inelastic = 1;
+                                disp(['Inelastic scattering on partially ionized high-Z atoms is considered.'])
+                                %
+                            end
+                            %
+                            equil.screening.dftpath = input_dke_yp('DFT files path (if specific, otherwise in LUKE) : ','');
+                            %
+                        end
                         %  
-                        equil.id = [equil.id,'_SCRE'];
                     end
-                    %
-                else
-                    %
-                    if input_dke_yp('Do you want to consider screening effects partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'n'
-                        %
-                        equil.screening.elastic = input_dke_yp('Atomic model for partially ionized high-Z atoms (''Tseng-Pratt-Botto'',''Thomas-Fermi'',''Thomas-Fermi-Kirillov'',''Tseng-Pratt-Botto'',''Full-screening'') : ','Tseng-Pratt-Botto',{'Tseng-Pratt-Botto','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Botto','Full-screening'});
-                        %
-                        if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','y',{'y','n'}) == 'n'
-                            %
-                            equil.screening.inelastic = 1;
-                            %
-                        else
-                            %
-                            equil.screening.inelastic = 0;
-                            %
-                        end
-                        %
-                        equil.screening.dftpath = input_dke_yp('DFT files path : ','');
-                        %
-                    else
-                        %
-                        equil.id = [equil.id(1:i_screening-1),equil.id(i_screening+5:end)];
-                        equil = rmfield(equil,'screening'); 
-                        %
-                    end
-                    %  
                 end
                 %
                 %if input_dke_yp('Do you want to check the toroidal MHD equilibrium consistency (y/n)','y',{'y','n'}) == 'n',
@@ -1661,11 +1690,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                     disp('-----> The equilibrium structure does not exist.');
                 end
                 %
-            elseif isel == 14,
+            elseif isel == 14
                 %
                 % DISPLAY LUKE RESULTS
                 %
-                if status.output == 1,
+                if status.output == 1
                     %
                     ir_display = input(['Index of flux-surface for distribution (1-',num2str(length(output.equilDKE.xrho)),', 0 to skip) ? [0] : ']);
                     if isempty(ir_display) || ~isnumeric(ir_display) || ir_display > length(output.equilDKE.xrho),
@@ -1673,7 +1702,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     end
                     %
                     pnmax = input(['Maximum value of p/pT for display: (-1) auto, (0) grid, or specify (0-',num2str(dkeparam.pnmax_S),')? [0] : ']);
-                    if isempty(pnmax),
+                    if isempty(pnmax)
                         pnmax = 0;
                     end
                     %
@@ -1682,9 +1711,9 @@ function irunluke_jd(basestr,signs,opt_gui)
                         continue
                     end
                     %
-                    if pnmax == -1,
+                    if pnmax == -1
                         pnmax = NaN;
-                    elseif pnmax == 0,
+                    elseif pnmax == 0
                         pnmax = dkeparam.pnmax_S;
                     end
                     %
@@ -1701,11 +1730,11 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     opt.procsave = input_dke_yp('Do you want to save the processed data','y',{'y','n'},'',[1,1]);
                     %
-                    if opt.procsave == 'y',
+                    if opt.procsave == 'y'
                         %
                         [proc_file,proc_path] = iputfile_jd(opt_gui,'PROC_LUKE_DATA_*.mat','Please provide a LUKE PROC data file name',[workdir,'PROC_LUKE_DATA_',id_simul_o,'.mat']);
                         %
-                        if proc_file == 0,
+                        if proc_file == 0
                             disp('-----> No PROC_LUKE data file specified.');
                         else
                             %
@@ -1720,43 +1749,43 @@ function irunluke_jd(basestr,signs,opt_gui)
                     disp('-----> The output structure does not exist.');
                 end
                 %
-            elseif isel == 15,
+            elseif isel == 15
                 %
                 % CALCULATE HXR EMISSION
                 %
-                if status.output == 0;
+                if status.output == 0
                     disp('-----> First run LUKE!');
                     continue
                 end
                 %
                 irunhxr_jd(opt_gui,workdir,basestr,output,external,id_simul,equil,dkeparam,dkedisplay);
                 %
-            elseif isel == 16,
+            elseif isel == 16
                 %
                 % GENERATE LUKE RUN SCRIPT
                 %
                 imake_rundke_jd(paths,fileids,status,workdir,id_simul_o,opt_gui);
                 %
-            elseif isel == 17,
+            elseif isel == 17
                 %
-                disp('-----> Type ''return'' to return to menu');    
+                disp('-----> Type ''dbcont'' to return to menu');    
                 disp('-----> Type ''dbquit'' to abort run and leave workspace.');
                 disp(' ');
                 keyboard
                 % 
-            elseif isel == 18,
+            elseif isel == 18
                 %
                 close all;    
                 %
-            elseif isel == 19,
+            elseif isel == 19
                 %
                 doc_LUKE(dkepath);
                 %
-            elseif isel == 20,
+            elseif isel == 20
                 %
                 redmine_opt = input_dke_yp('Do you want to access REDMINE for LUKE in the Matlab browser (y/n)? [y] : ','y',{'y','n'},'',[1,1]);
                 %
-                if strcmp(redmine_opt,'y'),
+                if strcmp(redmine_opt,'y')
                     %
                     redmine_LUKE;
                     %
@@ -1766,7 +1795,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                 end
                 % 
-             elseif isel == 21,
+             elseif isel == 21
                 %
                 [joblist,C3PO_status,LUKE_status,orphan_batch_dir,dirsearch] = jobstatus_yp(pwd);
                 % 
@@ -1904,7 +1933,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                         disp(['-------------------------------------------------------------------------------------']);
                     end
                 end
-            elseif isel == 0,
+            elseif isel == 0
                 %
                 flag_runluke = 1;
                 %
@@ -1926,7 +1955,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     luke_job = '';
                 end
                 %
-                if flag_runluke == 1,
+                if flag_runluke == 1
                     %
                     % RUN LUKE
                     %
@@ -1969,12 +1998,12 @@ function irunluke_jd(basestr,signs,opt_gui)
                     %
                     % MUMPSMEX
                     %
-                    if exist('dmumpsmex','file') == 3;
+                    if exist('dmumpsmex','file') == 3
                         dkeparam.invproc = -2;
                     end
                     %
                     id_simul = input(['Please provide a name for the run [',id_simul_o,'] : '],'s');
-                    if isempty(id_simul),
+                    if isempty(id_simul)
                         id_simul = id_simul_o;
                     end
                     %
@@ -2009,13 +2038,13 @@ function irunluke_jd(basestr,signs,opt_gui)
                     status.output = 1;
                     status.data = 2;
                     %
-                elseif isfield(lukestructs,'err'),%job failed
+                elseif isfield(lukestructs,'err') %job failed
                     %
                     disp('Remote LUKE run failed for the following reason :');
                     %
                     disperr_jd(lukestructs.err)
                     %
-                elseif isfield(lukestructs,'job'),%job running, to be checked later
+                elseif isfield(lukestructs,'job') %job running, to be checked later
                     %
                     disp('LUKE run running.');
                     %
@@ -2038,7 +2067,7 @@ function irunluke_jd(basestr,signs,opt_gui)
                     waves = output.dke_out.waves;
                 end
                 %
-            elseif isel < 0 && status.data == 2,
+            elseif isel < 0 && status.data == 2 
                 if input_dke_yp('--> Data is not saved. Are you sure you want to quit LUKE (y/n)','n',{'y','n'}) == 'n',
                     isel = 1;
                 end
@@ -2049,7 +2078,7 @@ function irunluke_jd(basestr,signs,opt_gui)
             disp('The action was cancelled due to the following error:')
             disp(' ');
             disp(lsterr.message);
-            for il = 1:length(lsterr.stack),
+            for il = 1:length(lsterr.stack) 
                 disp(['In ',lsterr.stack(il).file,' at line ',num2str(lsterr.stack(il).line)]);
             end
             %
