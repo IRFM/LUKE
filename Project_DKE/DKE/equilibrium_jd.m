@@ -470,7 +470,7 @@ psia_apRp = psi_apRp(npsi);%Poloidal flux at the edge
 psin = psi_apRp/psia_apRp;%Normalized poloidal flux
 %
 if isfield(equil,'pzni') && isfield(equil,'pzTi') && isfield(equil,'zZi') && isfield(equil,'pne') && isfield(equil,'pTe') 
-    pZeff = sum(equil.pzni.*repmat((equil.zZi.^2)',[1,npsi]))./equil.pne;%Effective charge (a.u.)
+    pZeff = sum(equil.pzni.*repmat((equil.zZi.^2)',[1,npsi]),1)'./equil.pne(:);%Effective charge (a.u.)
 end
 %
 if isnan(xpsin)
@@ -800,6 +800,10 @@ end
 %
 if isfield(equil,'equil_fit'),
     equilDKE.equil_fit = equil.equil_fit;
+end
+%
+if isfield(equil,'consistency'),
+    equilDKE.consistency = equil.consistency;
 end
 %
 if isfield(equil,'ip'),
