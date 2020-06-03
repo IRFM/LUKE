@@ -60,7 +60,7 @@ else
 end
 %
 if opt_spectrum == 1, 
-    spectrum.dP_nz = fliplr(spectrum.dP_nz);%for co- or counter- current generation depending upon reltive signs of ip and bt0
+    spectrum.dP_nz = fliplr(spectrum.dP_nz);%for co- or counter- current generation depending upon relative signs of ip and bt0
 end
 %
 while 1,
