@@ -99,6 +99,10 @@ if err==0,
         scheduler.remnum = iprof;
         %
         remote = dkepath.remote(scheduler.remnum);
+        %
+        remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
+        remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
+        %
         if remote_enforce == 0
             remote.link_mode='';
         else
