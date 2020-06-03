@@ -101,7 +101,9 @@ if ~isempty(external),% import wave data from external structure
             select.position_rZ0_opt = 'y';
             %
             if strcmp(basestr,'TS') || strcmp(basestr,'WEST')
-                external.LH = order_antenna_TS_WEST(external);
+%                external.LH = order_antenna_TS_WEST(external);%****TODO:
+%                to be defined correctly. See ALOHA for downloading data
+%                ******
             end
             %
             fnames = fieldnames(external.LH);
@@ -151,23 +153,32 @@ if ~isempty(external),% import wave data from external structure
                     elseif strcmp(basestr,'TS')
                         external.antenna = make_aloha_TS_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured);
                     elseif strcmp(basestr,'WEST')
-                        external.antenna = make_aloha_WEST_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured);
+                        if isfield(external.LH.(fname),'optim')
+                            external.antenna = make_aloha_WEST_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured,external.LH.(fname).optim);
+                        else
+                            external.antenna = make_aloha_WEST_yp(external.LH.(fname).aloha,external.LH.(fname).antenna_measured);
+                        end
                     else
                         error(['Wrong basestr = ''',basestr,''' in imake_launch_jd.m'])
                     end
                     %
                     if isfield(external.antenna,'job')
+                        %
                         launch.job = external.antenna.job;%remote ALOHA calculation
                         launch.id = [fname,'_ALOHA_nlh_optim_rc'];
                         launch.basestr = basestr;
                         launch.signs = signs;
                         launchs = [launchs,launch];
+                        %
                     else
+                        %
                         aloha_opt = 2;% for post-processing analysis when ALOHA is results are obtained
+                        %
                     end
                 end
                 %
                 if aloha_opt == 2
+                    %
                     launch = build_spectrum_from_aloha(external,basestr,signs,opt_gui,select);
                     %
                     if isfield(external.antenna,'id')
