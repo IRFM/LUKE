@@ -1,6 +1,6 @@
 function dkepath = path_CEA_PARTENAIRES
 %
-% path definitions for the andromede and cephee computers (CEA Partenaires Zone)
+% path definitions for the altair, andromede and cephee computers (CEA Partenaires Zone)
 %
 %	Output:
 %
@@ -10,8 +10,8 @@ function dkepath = path_CEA_PARTENAIRES
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine =  {'andromede1','andromede2','andromede3','andromede4','andromede5','andromede6'};%andromede5 is called by default from CEA intranet
-dkepath.hostname = {'andromede1','andromede2','andromede3','andromede4','andromede5','andromede6'};% should match the output of hostname_jd on the machine
+dkepath.machine =  {'altair','andromede1','andromede2','andromede3','andromede4','andromede5','andromede6'};%andromede5 is called by default from CEA intranet
+dkepath.hostname = {'altair','andromede1','andromede2','andromede3','andromede4','andromede5','andromede6'};% should match the output of hostname_jd on the machine
 %
 dkepath.computer = computer;%machine type and supported OS
 %
@@ -32,38 +32,38 @@ dkepath.YP105119(1).temppathroot = '/data/tmp/';%Absolute root directory path ad
 %
 % ---------------------------- andromede 1 -------------------------------
 %
-dkepath.YP105119(1).andromede1.local_root = '/home/YP105119/Packages/andromede/';
+dkepath.YP105119(1).altair.local_root = '/home/YP105119/Packages/andromede/';
 %
-dkepath.YP105119(1).andromede1.mex802 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB802/'];
-dkepath.YP105119(1).andromede1.mex806 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB806/'];
-dkepath.YP105119(1).andromede1.mex902 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB902/'];
+dkepath.YP105119(1).altair.mex802 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB802/'];
+dkepath.YP105119(1).altair.mex806 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB806/'];
+dkepath.YP105119(1).altair.mex902 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB902/'];
 %
-dkepath.YP105119(1).andromede1.compiler_opt.copts = '';
-dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex802 = '';
-dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex806 = '';
-dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex902 = '';
-dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex802 = '';
-dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex806 = '';
-dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex902 = '';
-dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex806 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex902 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).altair.compiler_opt.copts = '';
+dkepath.YP105119(1).altair.compiler_opt.copts.cpp.mex802 = '';
+dkepath.YP105119(1).altair.compiler_opt.copts.cpp.mex806 = '';
+dkepath.YP105119(1).altair.compiler_opt.copts.cpp.mex902 = '';
+dkepath.YP105119(1).altair.compiler_opt.fopts.mex802 = '';
+dkepath.YP105119(1).altair.compiler_opt.fopts.mex806 = '';
+dkepath.YP105119(1).altair.compiler_opt.fopts.mex902 = '';
+dkepath.YP105119(1).altair.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).altair.compiler_opt.helmex.mex806 = ['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).altair.compiler_opt.helmex.mex902 = ['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
-dkepath.YP105119(1).andromede1.MUMPS.mex802 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).andromede1.MUMPS.mex806 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).andromede1.MUMPS.mex902 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).altair.MUMPS.mex802 = [dkepath.YP105119(1).altair.local_root,'MUMPS_4.10.0/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).altair.MUMPS.mex806 = [dkepath.YP105119(1).altair.local_root,'MUMPS_4.10.0/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).altair.MUMPS.mex902 = [dkepath.YP105119(1).altair.local_root,'MUMPS_4.10.0/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
 %
-dkepath.YP105119(1).andromede1.extrapaths.LUKE_ITM = '/home/YP105119/LUKE_ITM/trunk';% LUKE <-> ITM toolbox 
+dkepath.YP105119(1).altair.extrapaths.LUKE_ITM = '/home/YP105119/LUKE_ITM/trunk';% LUKE <-> ITM toolbox 
 %
 % LUKE documentation
 %
-dkepath.YP105119(1).andromede1.graphviz.env = '/usr/bin/';% Graphviz environment variable ('which dot' and 'dot -v')
-dkepath.YP105119(1).andromede1.latex.env = '/usr/bin';% Latex environment variable  ('which latex' and 'latex -v')
-dkepath.YP105119(1).andromede1.imagemagick.env = '/usr/bin/';% ImageMagick environment variable ('which convert' and 'convert -v')
+dkepath.YP105119(1).altair.graphviz.env = '/usr/bin/';% Graphviz environment variable ('which dot' and 'dot -v')
+dkepath.YP105119(1).altair.latex.env = '/usr/bin';% Latex environment variable  ('which latex' and 'latex -v')
+dkepath.YP105119(1).altair.imagemagick.env = '/usr/bin/';% ImageMagick environment variable ('which convert' and 'convert -v')
 %
 % ---------------------------- andromede 2-5 -------------------------------
 %
-dkepath.YP105119(1).andromede1 = dkepath.YP105119(1).andromede1;
+dkepath.YP105119(1).andromede1 = dkepath.YP105119(1).altair;
 dkepath.YP105119(1).andromede2 = dkepath.YP105119(1).andromede1;
 dkepath.YP105119(1).andromede3 = dkepath.YP105119(1).andromede1;
 dkepath.YP105119(1).andromede4 = dkepath.YP105119(1).andromede1;
