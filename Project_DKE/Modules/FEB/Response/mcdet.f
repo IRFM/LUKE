@@ -76,6 +76,8 @@ c
          call xCdTe(hnu0,mhuph,mhuco)
       elseif (type.eq.6) then
          call xLYSO(hnu0,mhuph,mhuco)
+      elseif (type.eq.7) then
+         call xYAP_Ce(hnu0,mhuph,mhuco)
       endif
       mhu=mhuph+mhuco
 c
@@ -89,7 +91,8 @@ c
       write(2,*) ' ' 
       write(2,*) 'Photon direction (1:perp et 0: isotropic)--------->',
      *incidence
-      write(2,*) '(1):BGO (2):NaI (3):CsI (4):Ge (5):CdTe (6):LYSO-->',
+      write(2,*) '(1):BGO (2):NaI (3):CsI (4):Ge (5):CdTe (6):LYSO-->'
+      write(2,*) '(7):YAP(Ce)--------------------------------------->',
      *type
       write(2,1) 'Collimateur radius N1 (detector side) (cm)-------->',
      *r1
@@ -169,7 +172,9 @@ c
       elseif (type.eq.5) then
          call xCdTe(hnu,mhuph,mhuco) 
       elseif (type.eq.6) then
-         call xLYSO(hnu,mhuph,mhuco)      
+         call xLYSO(hnu,mhuph,mhuco)
+      elseif (type.eq.7) then
+         call xYAP_Ce(hnu,mhuph,mhuco)      
       endif
       mhu=mhuph+mhuco
       call tirpos(mhu,dze)
@@ -242,6 +247,19 @@ c
          if ((atom.gt.(3.0/8.0)).and.(atom.le.1.0)) then
             call xoxy(hnu,xmhuph,xmhuco)
          endif
+       elseif (type.eq.7) then
+         if ((atom.ge.0.0).and.(atom.le.(0.198))) then
+            call xyt(hnu,xmhuph,xmhuco)
+         endif
+         if ((atom.gt.(0.198)).and.(atom.le.(0.398))) then
+            call xal(hnu,xmhuph,xmhuco)
+         endif
+         if ((atom.gt.(0.398)).and.(atom.le.(0.998))) then
+            call xoxy(hnu,xmhuph,xmhuco)
+         endif
+         if ((atom.gt.(0.998)).and.(atom.le.1.0)) then
+            call xce(hnu,xmhuph,xmhuco)
+         endif
       endif
       call tirsur(w,xmhuph,xmhuco)
       if (w.eq.0)  then
@@ -285,6 +303,8 @@ c
             call xCdTe(hnu1,mhuph1,mhuco1)
          elseif (type.eq.6) then
            call xLYSO(hnu1,mhuph1,mhuco1)
+         elseif (type.eq.7) then
+           call xYAP_Ce(hnu1,mhuph1,mhuco1)
          endif
          mhu1=mhuph1+mhuco1
          call tirpos(mhu1,dze1)
@@ -737,6 +757,33 @@ c
       return
       end
 
+      subroutine xYAP_Ce(Eph,mhuph,mhuco)
+      real Eph,mhuph,mhuco
+      real mhuphyt,mhuphal,mhuphoxy,mhuphce
+      real mhucoyt,mhucoal,mhucooxy,mhucoce
+      data dens,densyt,densal/5.37,4.405,2.702/
+      data densoxy,densce/1.429e-3,6.670/
+      data pyt,pal,poxy,pce/0.71,0.0403,0.0637,0.1815/
+c      if ((Eph.ge.3.99).and.(Eph.le.1000.0)) then
+      if (Eph.ge.3.99) then
+        call xyt(Eph,mhuphyt,mhucoyt)
+        call xal(Eph,mhuphal,mhucoal)
+        call xoxy(Eph,mhuphoxy,mhucooxy)
+        call xce(Eph,mhuphce,mhucoce)
+        mhuph=mhuphyt*pyt*dens/densyt
+        mhuph=mhuph+mhuphal*pal*dens/densal
+        mhuph=mhuph+mhuphoxy*poxy*dens/densoxy
+        mhuph=mhuph+mhuphce*pce*dens/densce
+        mhuco=mhucoyt*pyt*dens/densyt
+        mhuco=mhuco+mhucoal*pal*dens/densal
+        mhuco=mhuco+mhucooxy*poxy*dens/densoxy
+        mhuco=mhuco+mhucoce*pce*dens/densce
+      else
+        write(2,*) 'YAP:Ce (YAlO3:Ce): k<3.99 ou k>1000'
+      endif
+      return
+      end      
+
       subroutine xLYSO(Eph,mhuph,mhuco)
       real Eph,mhuph,mhuco
       real mhuphlu,mhuphyt,mhuphsi,mhuphoxy
@@ -768,10 +815,10 @@ c      if ((Eph.ge.3.99).and.(Eph.le.1000.0)) then
       real Eph
       real mhu0,mhup,mhuc
       data dens,pa,avo,barn/9.842,174.99,6.023e+23,1.0e-24/
-      data ap10,ap11,ap12,ap13/12.6387,1.55476,-0.881094,0.0602036/
-      data ap20,ap21,ap22,ap23/17.2638,-2.37189,-0.0495994,0.0/
-      data ap30,ap31,ap32,ap33/16.2289,-2.67128,0.0,0.0/
-      data ap40,ap41,ap42,ap43/13.9813,-2.40841,0.0,0.0/
+      data ap10,ap11,ap12,ap13/17.2638,-2.37189,-0.0495994,0.0/ 
+      data ap20,ap21,ap22,ap23/16.2289,-2.67128,0.0,0.0/
+      data ap30,ap31,ap32,ap33/13.9813,-2.40841,0.0,0.0/
+      data ap40,ap41,ap42,ap43/12.6387,1.55476,-0.881094,0.0602036/
       data ac0,ac1,ac2,ac3/0.197176,0.150264,-0.192474,0.00385751/
       mhu0=dens*avo*barn/pa
       if (Eph.lt.63.314) then
@@ -793,17 +840,34 @@ c      if ((Eph.ge.3.99).and.(Eph.le.1000.0)) then
       real Eph
       real mhu0,mhup,mhuc
       data dens,pa,avo,barn/4.405,88.9050,6.023e+23,1.0e-24/
-      data ap10,ap11,ap12,ap13/13.4674,0.191023,-0.686616,0.0497356/
-      data ap20,ap21,ap22,ap23/15.1822,-2.38946,-0.0881174,0.0/
-      data ap30,ap31,ap32,ap33/13.2775,-2.43174,0.0,0.0/
+      data ap10,ap11,ap12,ap13/15.1822,-2.38946,-0.0881174,0.0/
+      data ap20,ap21,ap22,ap23/13.4674,0.191023,-0.686616,0.0497356/
       data ac0,ac1,ac2,ac3/0.0629057,  1.41577, -0.199713,  0.00533312/
       mhu0=dens*avo*barn/pa
       if (Eph.lt.17.08) then
         mhup=exp(ap10+ap11*log(Eph)+ap12*log(Eph)**2+ap13*log(Eph)**3)
-      elseif (Eph.lt.2.373) then
-        mhup=exp(ap20+ap21*log(Eph)+ap22*log(Eph)**2+ap23*log(Eph)**3)
       else
-        mhup=exp(ap30+ap31*log(Eph)+ap32*log(Eph)**2+ap33*log(Eph)**3)
+        mhup=exp(ap20+ap21*log(Eph)+ap22*log(Eph)**2+ap23*log(Eph)**3)
+      endif
+      mhuc=exp(ac0+ac1*log(Eph)+ac2*log(Eph)**2+ac3*log(Eph)**3)
+      mhup=mhup*mhu0
+      mhuc=mhuc*mhu0
+      return
+      end
+
+
+      subroutine xce(Eph,mhup,mhuc)
+      real Eph
+      real mhu0,mhup,mhuc
+      data dens,pa,avo,barn/6.670,140.130,6.023e+23,1.0e-24/
+      data ap10,ap11,ap12,ap13/16.5852,-2.36288,-6.54708,0 /
+      data ap20,ap21,ap22,ap23/10.2725,2.74562,-1.14174,0.0774162/
+      data ac0,ac1,ac2,ac3/0.439881, 1.30925, -0.164548, 0.00252641/
+      mhu0=dens*avo*barn/pa
+      if (Eph.lt.40.444) then
+        mhup=exp(ap10+ap11*log(Eph)+ap12*log(Eph)**2+ap13*log(Eph)**3)
+      else
+        mhup=exp(ap20+ap21*log(Eph)+ap22*log(Eph)**2+ap23*log(Eph)**3)
       endif
       mhuc=exp(ac0+ac1*log(Eph)+ac2*log(Eph)**2+ac3*log(Eph)**3)
       mhup=mhup*mhu0
@@ -817,6 +881,20 @@ c      if ((Eph.ge.3.99).and.(Eph.le.1000.0)) then
       data dens,pa,avo,barn/2.33,28.086,6.023e+23,1.0e-24/
       data ap10,ap11,ap12,ap13/13.2682,-1.98174,-0.31695,0.0273928/
       data ac0,ac1,ac2,ac3/-0.414971,1.34868,-0.222315,0.00841959/
+      mhu0=dens*avo*barn/pa
+      mhup=exp(ap10+ap11*log(Eph)+ap12*log(Eph)**2+ap13*log(Eph)**3)
+      mhuc=exp(ac0+ac1*log(Eph)+ac2*log(Eph)**2+ac3*log(Eph)**3)
+      mhup=mhup*mhu0
+      mhuc=mhuc*mhu0
+      return
+      end
+
+      subroutine xal(Eph,mhup,mhuc)
+      real Eph
+      real mhu0,mhup,mhuc
+      data dens,pa,avo,barn/2.702,26.97,6.023e+23,1.0e-24/
+      data ap10,ap11,ap12,ap13/13.1738,-2.18203,-0.25895,0.02284/
+      data ac0,ac1,ac2,ac3/-0.439322,1.30867,-0.211648,0.0075421/
       mhu0=dens*avo*barn/pa
       mhup=exp(ap10+ap11*log(Eph)+ap12*log(Eph)**2+ap13*log(Eph)**3)
       mhuc=exp(ac0+ac1*log(Eph)+ac2*log(Eph)**2+ac3*log(Eph)**3)
@@ -911,7 +989,7 @@ c     if ((Eph.ge.3.99).and.(Eph.le.1000.0)) then
       subroutine xoxy(Eph,mhup,mhuc)
       real Eph
       real mhu0,mhup,mhuc
-      data dens,pa,avo,barn/1.43e-3,16.00,6.023e+23,1.0e-24/
+      data dens,pa,avo,barn/1.429e-3,16.00,6.023e+23,1.0e-24/
       data ap0,ap1,ap2,ap3/11.7130,-2.57229,-0.205893,0.0199244/
       data ac0,ac1,ac2,ac3/-1.73679,2.17686,-0.449050,0.0264733/
       mhu0=dens*avo*barn/pa

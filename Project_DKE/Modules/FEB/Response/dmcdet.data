@@ -1,13 +1,13 @@
 1 /Photon direction 1:perp to the detector surface or 0 isotropic
-1 /detector type (1):BGO (2):NaI[Tl] (3):CsI (4):Ge (5):CdTe (6):LYSO (x=0.1)
-0.2 /collimator radius (cm)
+3 /detector type (1):BGO (2):NaI[Tl] (3):CsI (4):Ge (5):CdTe (6):LYSO (x=0.1) (7): YAP:Ce 
+0.5 /collimator radius (cm)
 0 /collimator position with respect to the detector surface / axe Ox (0 = center)
 0 /collimator position with respect to the detector surface / axe Oy (0 = center)
 0.5 / half-size (Ox) (cm)
 0.5 / half-size (Oy) (cm)
-5 / detector thickness (Oz) (cm)
+1 / detector thickness (Oz) (cm)
 2000 / energy of incident photons (keV)
-50000 / number of photons (< 10000000)
+500000 / number of photons (< 10000000)
 17 / initialization of random variate ran2
 0 / full output (1) or distributions only (0)
 100 /number of bin in output histogram (<100)
