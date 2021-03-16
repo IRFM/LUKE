@@ -800,14 +800,143 @@ elseif e_opt == -2,
     equil.info.datapath = amr_psi_path;
 end
 %
-[equil,flag] = equilcompatibility_yp(equil);
-%
-if flag == -1
-    return
+if ~isempty(equil)
+    i_adas = strfind(equil.id,'_ADAS');
+    %
+    if isempty(i_adas)
+        %
+        if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma [y/n]','n',{'y','n'}) == 'y'
+            %
+            if exist('ADAS.mat')
+                equil.ADAS = 'ADAS.mat';
+                equil.id = [equil.id,'_ADAS'];
+            else
+                disp(['WARNING: ADAS.mat file has not been found in folder ''',dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat''. Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
+            end
+            %
+        end
+    else
+        %
+        if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma [y/n]','n',{'y','n'}) == 'n'
+            %
+            equil.id = [equil.id(1:i_adas-1),equil.id(i_adas+5:end)];
+            if isfield(equil,'ADAS'); 
+                equil = rmfield(equil,'ADAS'); 
+            end
+            disp(['Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
+            %
+        else
+            if exist('ADAS.mat')
+                equil.ADAS = 'ADAS.mat';
+                equil.id = [equil.id,'_ADAS'];
+            else
+                disp(['WARNING: ADAS.mat file has not been found in folder ''',dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat''. Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
+            end
+
+        end
+        %
+    end
+    %
+    if isfield(equil,'ADAS'); 
+        %
+        i_coulog = strfind(equil.id,'_CLXP');
+        %
+        if isempty(i_coulog)
+            %
+            if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','n',{'y','n'}) == 'y'
+                %
+                equil.coulog_model = 1;
+                equil.id = [equil.id,'_CLXP'];
+                %
+            end
+            %
+        else
+            %
+            if input_dke_yp('Do you want using a Coulomb logarithm radially and momentum dependent [y/n]','n',{'y','n'}) == 'y'
+                disp(['WARNING: Momentum and radially dependent Coulomb logarithm is used.'])
+            else
+                equil.id = [equil.id(1:i_coulog-1),equil.id(i_coulog+5:end)];
+                if isfield(equil,'coulog_model')
+                    equil = rmfield(equil,'coulog_model'); 
+                end
+                disp(['WARNING: Thermal Coulomb logarithm at plasma center is used.'])
+            end
+            %
+        end
+        %    
+        i_screening = strfind(equil.id,'_SCRE');    
+        %
+        if isempty(i_screening)
+            %
+            if input_dke_yp('Do you want to consider screening effects of partially ionized high-Z atoms [y/n]','n',{'y','n'}) == 'n'
+                if isfield(equil,'screening')
+                    equil = rmfield(equil,'screening');
+                    disp(['WARNING: No screening effects of partially ionized high-Z atoms is considered.'])
+                end
+            else
+                %
+                equil.screening.elastic = input_dke_yp('Atomic model for partially ionized high-Z atoms (''Tseng-Pratt-Botto'',''Thomas-Fermi'',''Thomas-Fermi-Kirillov'',''Tseng-Pratt-Botto'',''Full-screening'') : ','Tseng-Pratt-Botto',{'Tseng-Pratt-Botto','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Botto','Full-screening'});
+                %
+                if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','n',{'y','n'}) == 'n'
+                    %
+                    equil.screening.inelastic = 0;
+                    disp(['WARNING: Inelastic scattering on partially ionized high-Z atoms is not considered.'])
+                    %
+                else
+                    %
+                    equil.screening.inelastic = 1;
+                    disp(['Inelastic scattering on partially ionized high-Z atoms is considered.'])
+                    %
+                end
+                %
+                equil.screening.dftpath = input_dke_yp('DFT files path (if specific, otherwise in LUKE) : ','');
+                %  
+                equil.id = [equil.id,'_SCRE'];
+            end
+            %
+        else
+            %
+            if input_dke_yp('Do you want to consider screening effects partially ionized high-Z atoms [y/n]','n',{'y','n'}) == 'n'
+                %
+                equil.id = [equil.id(1:i_screening-1),equil.id(i_screening+5:end)];
+                if isfield(equil,'screening')
+                    equil = rmfield(equil,'screening'); 
+                end
+                %
+                disp(['WARNING: No screening effects of partially ionized high-Z atoms is considered.'])
+                %
+            else
+                %
+                equil.screening.elastic = input_dke_yp('Atomic model for partially ionized high-Z atoms (''Tseng-Pratt-Botto'',''Thomas-Fermi'',''Thomas-Fermi-Kirillov'',''Tseng-Pratt-Botto'',''Full-screening'') : ','Tseng-Pratt-Botto',{'Tseng-Pratt-Botto','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Botto','Full-screening'});
+                %
+                if input_dke_yp('Do you want to consider inelastic scattering on partially ionized high-Z atoms [y/n]','n',{'y','n'}) == 'n'
+                    %
+                    equil.screening.inelastic = 0;
+                    disp(['WARNING: No inelastic scattering on partially ionized high-Z atoms is considered.'])
+                    %
+                else
+                    %
+                    equil.screening.inelastic = 1;
+                    disp(['Inelastic scattering on partially ionized high-Z atoms is considered.'])
+                    %
+                end
+                %
+                equil.screening.dftpath = input_dke_yp('DFT files path (if specific, otherwise in LUKE) : ','');
+                %
+            end
+            %  
+        end
+    end
 end
 %
 if (~isfield(select,'consist') || ~select.consist) && strcmp(input_dke_yp('Do you want to check the equilibrium consistency','n',{'y','n'},'',[1,1]),'y'),
     equil = equilconsistency_yp(equil,'',1);
+end
+%
+[equil,flag] = equilcompatibility_yp(equil);
+%
+if flag == -1
+    return
 end
 %
 equil.info.txt = {...
@@ -819,6 +948,8 @@ equil.info.txt = {...
     ['Plasma current (MA)                   : ',num2str(equil.ip/1e6)],...
     ['Central electron temperature (keV)    : ',num2str(equil.pTe(1))],...
     ['Central electron density (10^19 m^-3) : ',num2str(equil.pne(1)/1e19)]};
+%
+%
 %
 
 
