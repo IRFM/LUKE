@@ -117,7 +117,7 @@ ir = ir + 1;
 dkepath.yves(1).remote(ir) = dkepath.yves(1).remote(ir-1);
 dkepath.yves(1).remote(ir).schedulername = 'direct';
 dkepath.yves(1).remote(ir).gitupdate = true;
-%
+%{
 ir = ir + 1;
 dkepath.yves(1).remote(ir).remoteid = 'NUC_YVES_PEYSSON';
 dkepath.yves(1).remote(ir).schedulername = 'condor';
@@ -132,9 +132,24 @@ ir = ir + 1;
 dkepath.yves(1).remote(ir) = dkepath.yves(1).remote(ir-1);
 dkepath.yves(1).remote(ir).schedulername = 'direct';
 dkepath.yves(1).remote(ir).gitupdate = true;
-%
+%}
 ir = ir + 1;
 dkepath.yves(1).remote(ir).remoteid = 'CEA_ANDROMEDE';
+dkepath.yves(1).remote(ir).schedulername = 'pbs';
+dkepath.yves(1).remote(ir).profilename = 'YP105119';
+dkepath.yves(1).remote(ir).luke_root = ['/Applications/LUKE/',dkepath.yves(1).luke_branch,'/'];
+dkepath.yves(1).remote(ir).link_mode = '';
+dkepath.yves(1).remote(ir).cvsupdate = false;% update done in 'direct' mode
+dkepath.yves(1).remote(ir).gitupdate = false;
+dkepath.yves(1).remote(ir).gitmode.cmd = 'cd /Applications/LUKE/*;git pull;';%'*' will be replaced dynamically by MatTools, MatRemote, MatHelp and LUKE
+%
+ir = ir + 1;
+dkepath.yves(1).remote(ir) = dkepath.yves(1).remote(ir-1);
+dkepath.yves(1).remote(ir).schedulername = 'direct';
+dkepath.yves(1).remote(ir).gitupdate = true;
+%
+ir = ir + 1;
+dkepath.yves(1).remote(ir).remoteid = 'CEA_ALTAIR';
 dkepath.yves(1).remote(ir).schedulername = 'pbs';
 dkepath.yves(1).remote(ir).profilename = 'YP105119';
 dkepath.yves(1).remote(ir).luke_root = ['/Applications/LUKE/',dkepath.yves(1).luke_branch,'/'];
