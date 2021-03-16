@@ -8,7 +8,7 @@ function [ydate,yout1,yout2,yout3,yout4,yout5]= remote_tsbase(shotnumber,signal,
 %		signal : type of signal (ex: 'gphyb')
 %		remote_enforce : enforce remote calculation
 %           (default = 0)
-%       cluster : CEA cluster (SIRRAH) or CEA cluster (ANDROMEDE)
+%       cluster : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
 %
 %   Output:
 %
@@ -26,37 +26,42 @@ if nargin < 2,
 end
 if nargin < 3
     remote_enforce = 0;
-    cluster = 'ANDROMEDE';
+    cluster = 'ALTAIR';
 end
 if nargin < 4
-    cluster = 'ANDROMEDE';
+    cluster = 'ALTAIR';
 end
 %
+remote_profile_ALTAIR = remote_CEA_ALTAIR;
 remote_profile_ANDROMEDE = remote_CEA_ANDROMEDE;
 remote_profile_SIRRAH = remote_CEA_SIRRAH;
 %
 if remote_enforce == 0,
+    [err_ALTAIR,txt_ALTAIR] = unix(['ssh -Y ',remote_profile_ALTAIR.remoteuser,'@',remote_profile_ALTAIR.host,' "hostname"']);%Zone partenaire
     [err_ANDROMEDE,txt_ANDROMEDE] = unix(['ssh -Y ',remote_profile_ANDROMEDE.remoteuser,'@',remote_profile_ANDROMEDE.host,' "hostname"']);%Zone partenaire
     [err_SIRRAH,txt_SIRRAH] = unix(['ssh -Y ',remote_profile_SIRRAH.remoteuser,'@',remote_profile_SIRRAH.host,' "hostname"']);%Zone intra
-    err = err_ANDROMEDE + err_SIRRAH;
+    err = err_ALTAIR + err_SIRRAH + err_ANDROMEDE;
     %
     if err == 0, 
         txt = txt_SIRRAH;%the client is connected to CEA intranet
     else
-        if err_ANDROMEDE == 0,
-            txt = txt_ANDROMEDE;%the client computer can connected directly to CEA extranet.
+        if err_ALTAIR == 0,
+            txt = txt_ALTAIR;%the client computer can connected directly to CEA extranet.
+        elseif err_ANDROMEDE == 0,
+            txt = txt_ANDROMEDE;%the client computer can connected directly to CEA extranet.          
         else
             txt = '';%the client computer cannot connected directly to CEA extranet. May be by a SSH bridge.
+            err = 0;
         end
     end
 else
     err = 0;
+    err_ALTAIR = '';
     err_ANDROMEDE = '';
     err_SIRRAH = '';
     txt = '';
+    err = 0;
 end
-%
-
 %
 ydate = [];
 yout1 = [];
@@ -85,8 +90,8 @@ if err==0,
         dkepath = load_structures_yp('dkepath','','');
         %
         for iprof = 1: length(dkepath.profilestr)
-            if strcmp(cluster,'ANDROMEDE'),
-                if strfind(dkepath.profilestr{iprof},'CEA_ANDROMEDE : direct'),%connect to ANDROMEDE
+            if strcmp(cluster,'ALTAIR'),
+                if strfind(dkepath.profilestr{iprof},'CEA_ALTAIR : direct'),%connect to ALTAIR
                     break
                 end
             elseif strcmp(cluster,'SIRRAH'),
