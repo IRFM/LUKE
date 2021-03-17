@@ -31,6 +31,8 @@ if nargin < 4
     cluster = 'ALTAIR';
 end
 %
+disp('Call of tsmat remotely');
+%
 remote_profile_ALTAIR = remote_CEA_ALTAIR;
 remote_profile_ANDROMEDE = remote_CEA_ANDROMEDE;
 remote_profile_SIRRAH = remote_CEA_SIRRAH;
@@ -82,7 +84,7 @@ if err==0,
             job = '';
     else
         %
-        disp('WARNING: data load may be long');
+        disp('WARNING: data load may be long if ethernet connection is poor');
         %
         dkepath = load_structures_yp('dkepath','','');
         %
