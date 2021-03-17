@@ -1,4 +1,4 @@
-function [ydate,yout1,yout2,yout3,yout4,yout5]= remote_tsbase(shotnumber,signal,remote_enforce,cluster)
+function [yout1,yout2,yout3,yout4,yout5]= remote_tsbase(shotnumber,signal,remote_enforce,cluster)
 %
 %LUKE -  Function which load signals from Tore Supra database (work for WEST shot date only). May be used within CEA network or outside by SSH bridge
 %
@@ -12,7 +12,6 @@ function [ydate,yout1,yout2,yout3,yout4,yout5]= remote_tsbase(shotnumber,signal,
 %
 %   Output:
 %
-%		ydate: shot date (if only shot number is given, it answers the shot date)
 %       yout1: signal vector 1 
 %       yout2: signal vector 2 (may be time vector)
 %       yout3: signal vector 3 (may be time vector or empty)
@@ -62,7 +61,6 @@ else
     txt = '';
 end
 %
-ydate = [];
 yout1 = [];
 yout2 = [];
 yout3 = [];
@@ -79,7 +77,6 @@ if err==0,
     %
     if ~isempty(txt) && remote_enforce == 0,%when connected directly from the CEA network
             [yout1,yout2,yout3,yout4,yout5] = tsbase(shotnumber,signal);%
-            [ydate] = tsdate(shotnumber);%
             err = '';
             job = '';
     else
@@ -116,11 +113,7 @@ if err==0,
         job = matstandardjob_jd('runmat');
         job.funcopy = false;%since binary is machine specific only local version is used
         %
-        if nargin > 1,
-            [err,job,yout1,yout2,yout3,yout4,yout5] = matremote_jd('tsbase',{shotnumber,signal},remote,job);
-        else
-            [err,job,ydate] = matremote_jd('tsdate',{shotnumber},remote,job);
-        end
+        [err,job,yout1,yout2,yout3,yout4,yout5] = matremote_jd('tsbase',{shotnumber,signal},remote,job);
         %
     end    
 end
