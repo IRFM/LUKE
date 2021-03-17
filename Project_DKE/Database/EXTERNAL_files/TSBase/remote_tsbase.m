@@ -21,11 +21,11 @@ function [ydate,yout1,yout2,yout3,yout4,yout5]= remote_tsbase(shotnumber,signal,
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
-if nargin < 2,
+if nargin < 1,
      error('Not enough input argument in remote_tsbase.m');
 end
 if nargin < 3
-    remote_enforce = 0;
+    remote_enforce = 1;
     cluster = 'ALTAIR';
 end
 if nargin < 4
@@ -60,7 +60,6 @@ else
     err_ANDROMEDE = '';
     err_SIRRAH = '';
     txt = '';
-    err = 0;
 end
 %
 ydate = [];
