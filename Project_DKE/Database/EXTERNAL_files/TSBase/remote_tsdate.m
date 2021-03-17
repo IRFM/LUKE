@@ -57,7 +57,6 @@ else
 end
 %
 ydate = [];
-
 %
 [err_local,txt_local] = unix('hostname');%local client machine
 %

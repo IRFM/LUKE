@@ -63,7 +63,6 @@ else
     txt = '';
 end
 %
-ydate = [];
 yout1 = [];
 yout2 = [];
 yout3 = [];

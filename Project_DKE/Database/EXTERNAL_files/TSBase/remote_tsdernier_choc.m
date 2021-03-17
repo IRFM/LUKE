@@ -55,8 +55,7 @@ else
     txt = '';
 end
 %
-ydate = [];
-
+shotnum = [];
 %
 [err_local,txt_local] = unix('hostname');%local client machine
 %
