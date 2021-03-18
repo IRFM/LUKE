@@ -25,7 +25,7 @@ for ii = 1:length(signals) % load all signals
     yout4 = [];
     yout5 = [];
     %
-    [yout1,yout2.yout3,yout4,yout5] = tsbase(shotnumber,signals{ii});%
+    [yout1,yout2,yout3,yout4,yout5] = tsbase(shotnumber,signals{ii});%
     %
     youts(ii).yout1	= yout1;
     youts(ii).yout2	= yout2;
