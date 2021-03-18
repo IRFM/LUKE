@@ -23,6 +23,6 @@ for ii = 1:length(signals) % load all signals
     %
     [yout] = tsmat(shotnumber,signals{ii});%
     %
-    youts(ii) = yout;
+    youts{ii} = yout;
     %
 end
