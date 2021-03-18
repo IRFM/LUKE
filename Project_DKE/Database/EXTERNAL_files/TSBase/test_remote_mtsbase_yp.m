@@ -16,6 +16,6 @@ tsipmes = data(2).yout2;
 svsur = data(3).yout1;
 tsvsur = data(3).yout2;
 %
-subplot(3,1,1),plot(tlh,phyb);title(['Tore Supra, #45525, shot date: ',shotdate]),xlabel('Time (s)');ylabel('Lower Hybrid power (MW)');
-subplot(3,1,2),plot(tsipmes,sipmes);title(['Tore Supra, #45525, shot date: ',shotdate]),xlabel('Time (s)');ylabel('Plasma current (MA)');
-subplot(3,1,3),plot(tsvsur,svsur);title(['Tore Supra, #45525, shot date: ',shotdate]),xlabel('Time (s)');ylabel('Surface voltage (V)');
+subplot(3,1,1),plot(tlh,phyb);title(['Tore Supra, shot #45525']),xlabel('Time (s)');ylabel('Lower Hybrid power (MW)');
+subplot(3,1,2),plot(tsipmes,sipmes);title(['Tore Supra, shot #45525']),xlabel('Time (s)');ylabel('Plasma current (MA)');
+subplot(3,1,3),plot(tsvsur,svsur);title(['Tore Supra, shot #45525']),xlabel('Time (s)');ylabel('Surface voltage (V)');

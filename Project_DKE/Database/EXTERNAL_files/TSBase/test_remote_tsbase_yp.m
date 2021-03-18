@@ -7,4 +7,4 @@ remote_cluster = 'ALTAIR';%'SIRRAH','ANDROMEDE;
 %
 [phyb,tlh] = remote_tsbase(45525,'gphyb',remote_enforce,remote_cluster);
 %
-plot(tlh,phyb);title(['Tore Supra, shot #45525]),xlabel('Time (s)');ylabel('Lower Hybrid power (MW)');
+plot(tlh,phyb);title(['Tore Supra, shot #45525']),xlabel('Time (s)');ylabel('Lower Hybrid power (MW)');
