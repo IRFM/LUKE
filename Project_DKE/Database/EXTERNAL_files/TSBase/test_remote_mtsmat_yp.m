@@ -11,15 +11,15 @@ disp('Multiple remote data load using tsmat function')
 disp('---------------------------------------------------------------')
 disp('List of available diagnostic for TORE SUPRA discharge #45525')
 disp('---------------------------------------------------------------')
-disp(data(1))
+disp(data{1})
 %
 disp('---------------------------------------------------------------')
 disp('Itor for TORE SUPRA discharge #45525')
 disp('---------------------------------------------------------------')
-disp(data(2))
+disp(data{2})
 %
 disp('---------------------------------------------------------------')
 disp('Lower Hybrid antenna position for TORE SUPRA discharge #45525')
 disp('---------------------------------------------------------------')
-disp(data(3))
+disp(data{3})
 %
