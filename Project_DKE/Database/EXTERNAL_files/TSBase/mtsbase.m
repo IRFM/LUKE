@@ -1,11 +1,11 @@
-function youts = mtsbase(shotnumber,signals);%
+function youts = mtsbase(shotnumber,signals)
 %
 %LUKE : multple load of signals from Tore Supra database
 %
 %   Input:
 %
 %		shotnumber: shot number (ex: 45525)
-%		signals : structure of signal types (ex: {'gphyb','gphase'})
+%		signals : structure of signal types (ex: {'gphyb','gphase',...})
 %
 %   Output:
 %
