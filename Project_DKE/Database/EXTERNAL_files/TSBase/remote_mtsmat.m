@@ -1,22 +1,18 @@
-function [yout1,yout2,yout3,yout4,yout5]= remote_tsmat(shotnumber,signal,remote_enforce,cluster)
+function [youts]= remote_tsmat(shotnumber,signals,remote_enforce,cluster)
 %
 %LUKE -  Function which load signals from Tore Supra database (work for WEST shot date only). May be used within CEA network or outside by SSH bridge
 %
 %   Input:
 %
 %		shotnumber: shot number (ex: 45525)
-%		signal : type of signal (ex: 'gphyb')
+%		signals : structure of signal types (ex: {'EXP=T=S;TORE_SUPRA;LISTDIAG','EXP=T=S;General;Itor',...})
 %		remote_enforce : enforce remote calculation
 %           (default = 0)
 %       cluster : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
 %
 %   Output:
 %
-%       yout1: signal vector 1 
-%       yout2: signal vector 2 (may be time vector)
-%       yout3: signal vector 3 (may be time vector or empty)
-%       yout4: signal vector 4 (may be time vector or empty)
-%       yout5: signal vector 5 (may be time vector or empty)
+%       youts : signals structure
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
@@ -78,7 +74,7 @@ end
 if err==0,
     %
     if ~isempty(txt) && remote_enforce == 0,%when connected directly from the CEA network
-            [yout1,yout2,yout3,yout4,yout5] = tsmat(shotnumber,signal);%
+            youts = mtsmat(shotnumber,signals);%
             err = '';
             job = '';
     else
@@ -115,7 +111,7 @@ if err==0,
         job = matstandardjob_jd('runmat');
         job.funcopy = false;%since binary is machine specific only local version is used
         %
-        [err,job,yout1,yout2,yout3,yout4,yout5] = matremote_jd('tsmat',{shotnumber,signal},remote,job);
+        [err,job,youts] = matremote_jd('mtsmat',{shotnumber,signals},remote,job);
         %
     end    
 end
