@@ -17,12 +17,10 @@ if nargin < 2
     error('');
 end
 %
+youts = [];
+%
 for ii = 1:length(signals) % load all signals
     %
-    yout = [];
-    %
-    [yout] = tsmat(shotnumber,signals{ii});%
-    %
-    youts{ii} = yout;
+    youts{ii} = tsmat(shotnumber,signals{ii});%
     %
 end
