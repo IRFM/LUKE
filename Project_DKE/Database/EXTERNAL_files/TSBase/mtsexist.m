@@ -28,7 +28,7 @@ end
 %
 youts = [];
 %
-for ii = 1:length(shotnumbers(ii)) % load all shot numbers
+for ii = 1:length(shotnumbers) % load all shot numbers
     %
     youts{ii} = tsexist(shotnumber(ii),signal);%
     %
