@@ -4,9 +4,10 @@ function [shotnum]= remote_tsdernier_choc(remote_enforce,cluster)
 %
 %   Input:
 %
-%		remote_enforce : enforce remote calculation
+%		remote_enforce (optional) : enforce remote calculation
 %           (default = 0)
-%       cluster : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
+%       cluster (optional)  : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
+%           (default = 'ALTAIR')
 %
 %   Output:
 %

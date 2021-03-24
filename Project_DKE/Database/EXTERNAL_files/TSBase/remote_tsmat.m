@@ -6,9 +6,10 @@ function [yout1,yout2,yout3,yout4,yout5]= remote_tsmat(shotnumber,signal,remote_
 %
 %		shotnumber: shot number (ex: 45525)
 %		signal : type of signal (ex: 'gphyb')
-%		remote_enforce : enforce remote calculation
+%		remote_enforce (optional) : enforce remote calculation
 %           (default = 0)
-%       cluster : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
+%       cluster (optional)  : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
+%           (default = 'ALTAIR')
 %
 %   Output:
 %

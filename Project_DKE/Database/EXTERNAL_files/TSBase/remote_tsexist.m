@@ -1,11 +1,15 @@
 function [cr,nb_mesures,num_version,certif,date,heure]= remote_tsexist(num_choc,nom_donnee,remote_enforce,cluster)
 %
-%LUKE -  Function used to retrieve informations on a signal contained in the database without having to access the data. It interfaces the TSExist function of TsLib to Matlab
+%LUKE -  Function used to retrieve informations on a TPROF signal contained in the database without having to access the data. It interfaces the TSExist function of TsLib to Matlab
 %
 %   Input:
 %
 %       num_choc : shot number
 %       nom_donnee : data name
+%		remote_enforce (optional) : enforce remote calculation
+%           (default = 0)
+%       cluster (optional)  : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
+%           (default = 'ALTAIR')
 %
 %   Output:
 %

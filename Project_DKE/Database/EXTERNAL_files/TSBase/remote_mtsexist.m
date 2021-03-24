@@ -6,6 +6,10 @@ function [youts]= remote_mtsexist(num_chocs,nom_donnee,remote_enforce,cluster)
 %
 %       num_chocs : array shot numbers [num1,num2,num3]
 %       nom_donnee : data name ('GPROFTEFIT' for tprof data available)
+%		remote_enforce (optional) : enforce remote calculation
+%           (default = 0)
+%       cluster (optional)  : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
+%           (default = 'ALTAIR')
 %
 %   Output:
 %

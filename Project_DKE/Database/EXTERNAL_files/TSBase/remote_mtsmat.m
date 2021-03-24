@@ -1,4 +1,4 @@
-function [youts]= remote_tsmat(shotnumber,signals,remote_enforce,cluster)
+function [youts]= remote_mtsmat(shotnumber,signals,remote_enforce,cluster)
 %
 %LUKE -  Function which load signals from Tore Supra database (work for WEST shot date only). May be used within CEA network or outside by SSH bridge
 %
@@ -6,9 +6,10 @@ function [youts]= remote_tsmat(shotnumber,signals,remote_enforce,cluster)
 %
 %		shotnumber: shot number (ex: 45525)
 %		signals : structure of signal types (ex: {'EXP=T=S;TORE_SUPRA;LISTDIAG','EXP=T=S;General;Itor',...})
-%		remote_enforce : enforce remote calculation
+%		remote_enforce (optional) : enforce remote calculation
 %           (default = 0)
-%       cluster : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
+%       cluster (optional)  : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
+%           (default = 'ALTAIR')
 %
 %   Output:
 %
@@ -59,11 +60,7 @@ else
     txt = '';
 end
 %
-yout1 = [];
-yout2 = [];
-yout3 = [];
-yout4 = [];
-yout5 = [];
+youts = [];
 %
 [err_local,txt_local] = unix('hostname');%local client machine
 %
