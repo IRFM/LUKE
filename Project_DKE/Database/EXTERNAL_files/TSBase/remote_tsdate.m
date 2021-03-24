@@ -82,6 +82,10 @@ if err==0,
                 if strfind(dkepath.profilestr{iprof},'CEA_ALTAIR : direct'),%connect to ALTAIR
                     break
                 end
+            elseif strcmp(cluster,'ANDROMEDE'),
+                if strfind(dkepath.profilestr{iprof},'CEA_ANDROMEDE : direct'),%connect to ANDROMEDE
+                    break
+                end
             elseif strcmp(cluster,'SIRRAH'),
                 if strfind(dkepath.profilestr{iprof},'CEA_SIRRAH : direct'),%connect to SIRRAH
                     break

@@ -18,6 +18,6 @@ end
 %
 for ii = 1:length(shotnumbers) % load all signals
     %
-    ydates{ii} = tsdate(shotnumber(ii);%
+    ydates{ii} = tsdate(shotnumbers(ii));
     %
 end
