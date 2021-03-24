@@ -1,4 +1,4 @@
-function [ydates]= remote_mtsdate(shotnumber,remote_enforce,cluster)
+function [ydates]= remote_mtsdate(shotnumbers,remote_enforce,cluster)
 %
 %LUKE -  Function which load multipes shot dates from Tore Supra database (work for WEST shot date only). May be used within CEA network or outside by SSH bridge
 %
@@ -66,7 +66,7 @@ end
 if err==0,
     %
     if ~isempty(txt) && remote_enforce == 0,%when connected directly from the CEA network
-            [ydates] = mtsdate(shotnumber);%
+            [ydates] = mtsdate(shotnumbers);%
             err = '';
             job = '';
     else
