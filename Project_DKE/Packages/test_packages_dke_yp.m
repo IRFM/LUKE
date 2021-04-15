@@ -42,10 +42,12 @@ if GPUstatus.DeviceSupported,
     mode = input_dke_yp('2-D (0), 2-D for GPU (1) or 3-D (2) input matrix',0);
 else
     mode = input_dke_yp('2-D (0) or 3-D (1) input matrix',0);
-    if mode == 1,
+    if mode == 1
         mode = 2;
     end
 end
+%
+display_mode = input_dke_yp('Display (1) or no display (0)',0);
 %
 npass = input_dke_yp('Number of passes',1);
 %
@@ -374,23 +376,33 @@ while ipass < npass,
     end
 end
 %
-if mode==0, dirfig = 'figures/2D/';end
-if mode>=1, dirfig = 'figures/3D/';end
+if display_mode 
+    if mode==0, dirfig = 'figures/2D/';end
+    if mode>=1, dirfig = 'figures/3D/';end
+end
 %
-if npass > 1,
+if npass > 1
     meantt = mean(tt);%Mean value on several runs
     stdtt = std(tt);%Standard deviation on several runs
 %
     for iisim = 1:isim,
-        figure('Name',Zname{iisim}),graph1D_jd([1:npass],tt(:,iisim),0,0,'Number of passes','Computing time (s)',[strrep(Zname{iisim},'_','-'),' on ',computer],[num2str(meantt(iisim)),'(s) +/- ',num2str(stdtt(iisim))],[1,npass],[0,2*max(tt(:,iisim))],'-','non','r',2,20,gca,0.85,0.7,0.5);hold on    
-        savefig_dke_yp(Zname{iisim},dirfig);
+        if display_mode
+            figure('Name',Zname{iisim}),graph1D_jd([1:npass],tt(:,iisim),0,0,'Number of passes','Computing time (s)',[strrep(Zname{iisim},'_','-'),' on ',computer],[num2str(meantt(iisim)),'(s) +/- ',num2str(stdtt(iisim))],[1,npass],[0,2*max(tt(:,iisim))],'-','non','r',2,20,gca,0.85,0.7,0.5);hold on    
+            savefig_dke_yp(Zname{iisim},dirfig);
+        else
+            disp(['datahash (',int2str(isim),') : ',datahash(ZMMXS_t{isim})])
+        end
     end
 end
 %
 for iisim = 1:isim,
     if ~isempty(ZMMXS_t{iisim})
-        figure('Name',Zname{iisim}),graph1D_jd([1:length(ZMMXS_t{iisim})],ZMMXS_t{iisim},0,0,'Vector index','Vector coefficient',[strrep(Zname{iisim},'_','-'),' on ',computer],NaN,'','','-','non','r',1,20,gca,0.85,0.7,0.5);hold on    
-        savefig_dke_yp(strrep(Zname{iisim},'.','_'),dirfig);
+        if display_mode
+            figure('Name',Zname{iisim}),graph1D_jd([1:length(ZMMXS_t{iisim})],ZMMXS_t{iisim},0,0,'Vector index','Vector coefficient',[strrep(Zname{iisim},'_','-'),' on ',computer],NaN,'','','-','non','r',1,20,gca,0.85,0.7,0.5);hold on    
+            savefig_dke_yp(strrep(Zname{iisim},'.','_'),dirfig);
+        else
+            disp(['datahash (',int2str(iisim),') : ',datahash(ZMMXS_t{iisim})])
+        end
     end
 end
 %
