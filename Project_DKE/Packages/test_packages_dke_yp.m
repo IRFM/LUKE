@@ -235,7 +235,7 @@ while ipass < npass,
                     dkepath.MUMPS.par = [local_root,'Packages/Bin/MUMPS/',list_of_packages(ifile).name,'/dke'];
                     if isfield(dkepath.MUMPS,'seq'),rmfield(dkepath.MUMPS,'seq');end
                     if exist(dkepath.MUMPS.par),                                   
-                        dkeparam.MUMPSparam.nproc = 4;%case with 4 processors
+                        dkeparam.MUMPSparam.nproc = nlogicalcores;
                         try
                             isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 4 (parallel processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_full))),')']);
                         catch 
@@ -244,7 +244,7 @@ while ipass < npass,
                         ZMMXS_t{isim} = MMXS_t_MUMPS;
                         Zname{isim} = [list_of_packages(ifile).name,'_np_4'];
                     %
-                        dkeparam.MUMPSparam.nproc = 1;%case with 1 processor
+                        dkeparam.MUMPSparam.nproc = 1;%case with 1 core enforce
                         isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 1 (parallel processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_full))),')']);
                         ZMMXS_t{isim} = MMXS_t_MUMPS;
                         Zname{isim} = [list_of_packages(ifile).name,'_np_1'];
@@ -273,7 +273,7 @@ while ipass < npass,
                     dkepath.PETSc.seq = [local_root,'Packages/Bin/PETSC/',list_of_packages(ifile).name,'/DKE'];
                     if isfield(dkepath.PETSc,'par'),rmfield(dkepath.PETSc,'par');end
                     if exist(dkepath.PETSc.seq),
-                        dkeparam.PETScparam.nproc = 1;%case with 1 processor
+                        dkeparam.PETScparam.nproc = 1;%case with 1 core enforced
                         dkeparam.PETScparam.matrixtype = '';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
                         dkeparam.PETScparam.kspmethod = '-ksp_type bcgs';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
                         dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation                
@@ -292,7 +292,7 @@ while ipass < npass,
                     dkepath.PETSc.par = [local_root,'Packages/Bin/PETSC/',list_of_packages(ifile).name,'/DKE'];
                     if isfield(dkepath.PETSc,'seq'),rmfield(dkepath.PETSc,'seq');end
                     if exist(dkepath.PETSc.par),
-                        dkeparam.PETScparam.nproc = 4;%case with 4 processors
+                        dkeparam.PETScparam.nproc = nlogicalcores;
                         dkeparam.PETScparam.matrixtype = '';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
                         dkeparam.PETScparam.kspmethod = '-ksp_type bcgs';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
                         dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation                
@@ -321,7 +321,7 @@ while ipass < npass,
                             ZMMXS_t{isim} = MMXS_t_PETSc;
                             Zname{isim} = [list_of_packages(ifile).name,'_np_1_superludist_Mloop'];
 %
-                            dkeparam.PETScparam.nproc = 4;%case with 1 processor
+                            dkeparam.PETScparam.nproc = nlogicalcores;
                             dkeparam.PETScparam.matrixtype = '-matload_type superlu_dist';%Matrix type used by PETSc. For SUPERLU use '-matload_type superlu_dist' otherwise ' '. See PETSc documentation
                             dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
                             dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation                
