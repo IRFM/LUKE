@@ -50,7 +50,8 @@ fid = fopen('MUMPS_B_in.bin','wb');fwrite(fid,B,'double');if (fclose(fid)~=0), e
 %
 % Computer management
 %
-nproc = nproc_dke_yp(display_mode,MUMPSparam,dkepath);
+%nproc = nproc_dke_yp(display_mode,MUMPSparam,dkepath);
+nproc = nlogicalcores;
 %
 if nproc > 1,%Parallel processing is invoked
 	if isfield(dkepath.MUMPS,'par'),
