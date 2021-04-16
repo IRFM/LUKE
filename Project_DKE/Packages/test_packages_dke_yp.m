@@ -141,7 +141,7 @@ while ipass < npass,
             isim = isim + 1;tic,dummy = gather(invmatGPU(gpuArray(rand(2,2,'single')),gpuArray(rand(2,1,'single'))));t(isim) = toc;%GPU initialisation
             Zname{isim} = ['MATLAB_GPU_INITIALISATION'];
             disp('- MATLAB-Direct inversion (\) by GPU with full matrix'),
-            isim = isim + 1;tic,MMXS_t_full_GPU = gather(invmatGPU(gpuArray(MMXPC_f_t_full),gpuArray(MMXR_t_full)));t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + GPU initialisation (once): ',num2str(t(isim-1)),' seconds (',num2str(sum(abs(MMXS_t_full))),')']);
+            isim = isim + 1;tic,MMXS_t_full_GPU = gather(invmatGPU(gpuArray(MMXPC_f_t_full),gpuArray(MMXR_t_full)));t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + GPU initialisation (once): ',num2str(t(isim-1)),' seconds (',num2str(sum(abs(MMXS_t_full_GPU))),')']);
             Zname{isim} = ['MATLAB_DIRECT_GPU_INVERSION_FULL_MATRIX_SINGLE'];
             %
             rmpath([dkepath.luke_root,'/Project_DKE/Packages/MDCE/GPU']);
@@ -154,13 +154,13 @@ while ipass < npass,
     %
     isim = isim + 1;disp('- MATLAB-ILU by CPU with sparse matrix (drop_tol = 1e-6)'),tic,[MMXL_f_t,MMXU_f_t] = ilu(MMXPC_f_t,ilu_param);t(isim) = toc;
     Zname{isim} = ['MATLAB_LU_FACTORISATION'];
-    isim = isim + 1;disp('- MATLAB-CGS by CPU with sparse matrix'),tic,[MMXS_t_cgs,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds (',num2str(sum(abs(MMXS_t_full))),')']);
+    isim = isim + 1;disp('- MATLAB-CGS by CPU with sparse matrix'),tic,[MMXS_t_cgs,flaginv_f] = cgs(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds (',num2str(sum(abs(MMXS_t_cgs))),')']);
     ZMMXS_t{isim} = MMXS_t_cgs;
     Zname{isim} = ['MATLAB_GCS'];
-    isim = isim + 1;disp('- MATLAB-BICG by CPU with sparse matrix'),tic,[MMXS_t_bicg,flaginv_f] = bicg(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-2)),' seconds (',num2str(sum(abs(MMXS_t_full))),')']);
+    isim = isim + 1;disp('- MATLAB-BICG by CPU with sparse matrix'),tic,[MMXS_t_bicg,flaginv_f] = bicg(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-2)),' seconds (',num2str(sum(abs(MMXS_t_bicg))),')']);
     ZMMXS_t{isim} = MMXS_t_bicg;
     Zname{isim} = ['MATLAB_BICG'];
-    isim = isim + 1;disp('- MATLAB-QMR by CPU with sparse matrix'),tic,[MMXS_t_qmr,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-3)),' seconds (',num2str(sum(abs(MMXS_t_full))),')']);
+    isim = isim + 1;disp('- MATLAB-QMR by CPU with sparse matrix'),tic,[MMXS_t_qmr,flaginv_f] = qmr(MMXPC_f_t,MMXR_t,dkeparam.mlprecinv,dkeparam.mlmaxitinv,MMXL_f_t,MMXU_f_t);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-3)),' seconds (',num2str(sum(abs(MMXS_t_qmr))),')']);
     ZMMXS_t{isim} = MMXS_t_qmr;
     Zname{isim} = ['MATLAB_QMR'];    
     disp('---------------------------------------------------------------')
@@ -187,7 +187,7 @@ while ipass < npass,
                     addpath(MUMPSMATLAB)
                     isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-ILU (MEX)']),tic,job_MUMPSMEX = 1;MUMPSMEX_dke_yp;job_MUMPSMEX = 2;MUMPSMEX_dke_yp;t(isim) = toc;
                     Zname{isim} = ['MEX_',list_of_packages(ifile).name,'_LU_FACTORISATION'];
-                    isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-SOLVE (MEX)']),tic,job_MUMPSMEX = 3;MUMPSMEX_dke_yp;t(isim) = toc;MMXS_t_MUMPS = id_MUMPSMEX.SOL;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds (',num2str(sum(abs(MMXS_t_full))),')']);job_MUMPSMEX = -2;MUMPSMEX_dke_yp;
+                    isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-SOLVE (MEX)']),tic,job_MUMPSMEX = 3;MUMPSMEX_dke_yp;t(isim) = toc;MMXS_t_MUMPS = id_MUMPSMEX.SOL;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds (',num2str(sum(abs(MMXS_t_MUMPS))),')']);job_MUMPSMEX = -2;MUMPSMEX_dke_yp;
                     ZMMXS_t{isim} = MMXS_t_MUMPS;
                     Zname{isim} = ['MEX_',list_of_packages(ifile).name];
                     rmpath(MUMPSMATLAB)  
@@ -215,7 +215,7 @@ while ipass < npass,
                     if exist(dkepath.MUMPS.seq)  
                         try
                             isim = isim + 1;disp(['- ',list_of_packages(ifile).name,' by CPU with sparse matrix (sequential processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;
-                            disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_full))),')']);  
+                            disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_MUMPS))),')']);  
                         catch
                             MMXS_t_MUMPS = [];
                         end
@@ -237,7 +237,7 @@ while ipass < npass,
                     if exist(dkepath.MUMPS.par),                                   
                         dkeparam.MUMPSparam.nproc = nlogicalcores;
                         try
-                            isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 4 (parallel processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_full))),')']);
+                            isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 4 (parallel processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_MUMPS))),')']);
                         catch 
                             MMXS_t_MUMPS = [];
                         end
@@ -245,7 +245,7 @@ while ipass < npass,
                         Zname{isim} = [list_of_packages(ifile).name,'_np_4'];
                     %
                         dkeparam.MUMPSparam.nproc = 1;%case with 1 core enforce
-                        isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 1 (parallel processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_full))),')']);
+                        isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 1 (parallel processing, stand-alone application)']),tic,[MMXS_t_MUMPS,flaginv_f] = MUMPS_dke_yp(dkeparam.MUMPSparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_MUMPS))),')']);
                         ZMMXS_t{isim} = MMXS_t_MUMPS;
                         Zname{isim} = [list_of_packages(ifile).name,'_np_1'];
                     else
@@ -297,7 +297,7 @@ while ipass < npass,
                         dkeparam.PETScparam.kspmethod = '-ksp_type bcgs';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
                         dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation                
                         dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)                                       
-                        isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 4 bcgs (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);
+                        isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 4 bcgs (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_PETSc))),')']);
                         ZMMXS_t{isim} = MMXS_t_PETSc;
                         Zname{isim} = [list_of_packages(ifile).name,'_np_4_bgcs_Mloop'];
                     %
@@ -306,7 +306,7 @@ while ipass < npass,
                         dkeparam.PETScparam.kspmethod = '-ksp_type bcgs';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
                         dkeparam.PETScparam.pcmethod = '';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation                
                         dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)                   
-                        isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 1 bcgs (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);
+                        isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 1 bcgs (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_PETSc))),')']);
                         ZMMXS_t{isim} = MMXS_t_PETSc;
                         Zname{isim} = [list_of_packages(ifile).name,'_np_1_bgcs_Mloop'];
 %
@@ -317,7 +317,7 @@ while ipass < npass,
                             dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
                             dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation                
                             dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)                   
-                            isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 1 superlu_dist (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);
+                            isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 1 superlu_dist (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_PETSc))),')']);
                             ZMMXS_t{isim} = MMXS_t_PETSc;
                             Zname{isim} = [list_of_packages(ifile).name,'_np_1_superludist_Mloop'];
 %
@@ -326,7 +326,7 @@ while ipass < npass,
                             dkeparam.PETScparam.kspmethod = '-ksp_type preonly';%KSP method used by PETSc. '-ksp_type preonly': no iteration, direct matrix solve. Otherwise '-ksp_type bicg' or '-ksp_type bcgs'  for example. See PETSc documentation
                             dkeparam.PETScparam.pcmethod = '-pc_type lu';%Preconditioning method used by PETSc. '-pc_type lu' for SUPERLU or '-pc-type hypre' for HYPRE.  See PETSc documentation                
                             dkeparam.PETScparam.cloop = 0;%First order collision selfconsistency is done internaly in C (1) or in MatLab (0)                   
-                            isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 4 superlu_dist (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);
+                            isim = isim + 1;disp(['- ',list_of_packages(ifile).name,', np = 4 superlu_dist (parallel processing, stand-alone application)']),tic,[MMXS_t_PETSc,flaginv_f] = PETSc_dke_ft(dkeparam.PETScparam,MMXPC_f_t,full(MMXR_t),0,dkepath);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_PETSc))),')']);
                             ZMMXS_t{isim} = MMXS_t_PETSc;
                             Zname{isim} = [list_of_packages(ifile).name,'_np_4_superludist_Mloop'];
                         end
@@ -353,7 +353,7 @@ while ipass < npass,
                     dkepath.SUPERLU.mex = [local_root,'Packages/Bin/SUPERLU/',list_of_packages(ifile).name,'/MATLAB',matver];
                     if exist(dkepath.SUPERLU.mex),
                         addpath(dkepath.SUPERLU.mex)
-                        if exist('mexlusolve');isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-SOLVE (MEX)']),tic,[MMXS_t_SUPERLU] = lusolve(MMXPC_f_t,MMXR_t);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds.']);end
+                        if exist('mexlusolve');isim = isim + 1;disp(['- ',list_of_packages(ifile).name,'-SOLVE (MEX)']),tic,[MMXS_t_SUPERLU] = lusolve(MMXPC_f_t,MMXR_t);t(isim) = toc;disp(['Elapsed time is ',num2str(t(isim)),' seconds (',num2str(sum(abs(MMXS_t_SUPERLU))),')']);end
                         ZMMXS_t{isim} = MMXS_t_SUPERLU;
                         Zname{isim} = [list_of_packages(ifile).name,'_np_1_SUPERLUMEX'];  
                         rmpath(dkepath.SUPERLU.mex)   
@@ -380,7 +380,7 @@ while ipass < npass,
                     cd([local_root,'Packages/Bin/PARDISO']);
                     isim = isim + 1;disp(['- PARDISO-ILU (MEX) by CPU with sparse matrix']),tic,job_PARDISOMEX = 1;PARDISOMEX_dke_yp;job_PARDISOMEX = 2;PARDISOMEX_dke_yp;t(isim) = toc;
                     Zname{isim} = ['MEX_PARDISO_',list_of_packages(ifile).name,'_LU_FACTORISATION by CPU with sparse matrix'];
-                    isim = isim + 1;disp(['- PARDISO-SOLVE (MEX) by CPU with sparse matrix']),tic,job_PARDISOMEX = 3;PARDISOMEX_dke_yp;t(isim) = toc;MMXS_t_PARDISO = X_PARDISOMEX;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds.']);job_PARDISOMEX = -2;PARDISOMEX_dke_yp;
+                    isim = isim + 1;disp(['- PARDISO-SOLVE (MEX) by CPU with sparse matrix']),tic,job_PARDISOMEX = 3;PARDISOMEX_dke_yp;t(isim) = toc;MMXS_t_PARDISO = X_PARDISOMEX;disp(['Elapsed time is ',num2str(t(isim)),' seconds per inversion + ILU time (once): ',num2str(t(isim-1)),' seconds (',num2str(sum(abs(MMXS_t_PARDISO))),')']);job_PARDISOMEX = -2;PARDISOMEX_dke_yp;
                     ZMMXS_t{isim} = MMXS_t_PARDISO;
                     Zname{isim} = ['MEX_PARDISO_',list_of_packages(ifile).name];  
                 end 
