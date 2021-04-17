@@ -2,11 +2,24 @@
 % Build atomic electron density from DFT calculations and test form factor
 % and g screening function with simple models 
 %
+% WARNING : the csh shell environment must be installed for Gaussian code
+%
 %close all
 clear all
 clc
 %
-code.rootpath = '/home/ypeysson/GAUSSIAN/';%aboslute path
+% ---------------------- INPUT PARAMETERS ---------------------
+%
+[ip,id] = connections_params;%Create a file in the LUKE path (or local) : id -> hostname, ip: ethernet address
+%
+Z = [2,3];%Helium (2),Lithium (3),Copper (29)
+Z0 = [];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
+%
+mode = 0;%(0): the script wait until all calculations are done, (1): the script is terminated while calculations are still running on the remote machine. It must be launched again to check if calculations are terminated. 
+cancel = 0;%enforce cancel calculations
+%
+% ----------------------- CODE SETTINGS ----------------------
+%
 code.codepath = 'g09';%relative path
 %
 code.codetype = 'gaussian';
@@ -27,15 +40,31 @@ code.postprocpath = 'Multiwfn';%Post-processing path, absolute or relative path 
 code.postproccode = 'Multiwfn';%Post-processing tool
 code.postprocgrid = 3000;%Post-processing grid size (default = 800)
 %
-remote.id = 'ypeysson';
-remote.ip = 'home-lyon.yvespeysson.fr';
-remote.remotedir = ['/home/ypeysson/dft_shell_scripts_',code.codetype];
-remote.mode = 0;%(0): the script wait until all calculations are done, (1): the script is terminated while calculations are still running on the remote machine. It must be launched again to check if calculations are terminated. 
+% ----------------------- REMOTE SETUP ----------------------
 %
-Z = 29;
-Z0 = [];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]
+if length(Z) > 1
+    Z0 = [];%all ionization states are calculated
+end
 %
-cancel = 0;
+ik = 1;%computer index
 %
-dft = dft_electron_density_yp(Z,Z0,code,remote,cancel);%remote calculation
+for iZ = 1:length(Z)
+    %
+    code.rootpath = ['/home/',id{ik},'/GAUSSIAN/'];%absolute path of DFT code on remote machine
+    %
+    remote.id = id{ik};
+    remote.ip = ip{ik};
+    remote.remotedir = ['/home/',id{ik},'/dft_shell_scripts_',code.codetype,'_',int2str(Z(iZ))];
+    remote.mode = mode;
+    %
+    dft(iZ) = dft_electron_density_yp(Z(iZ),Z0,code,remote,cancel);%remote calculation
+    %
+    if ik == length(id)
+        ik = 1;
+    else
+        ik = ik + 1;
+    end
+end
+%
+disp('Relaunch test_dft.m script to get back dft results if calculations are done.')
 %
