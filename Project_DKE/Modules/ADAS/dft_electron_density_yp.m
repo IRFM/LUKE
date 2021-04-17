@@ -38,7 +38,7 @@ function dft = dft_electron_density_yp(Z_in,Z0_in,code,remote,cancel)
 %
 if nargin < 3
     %
-    if ~exist('dft_run.mat','file') %jobs are running
+    if ~exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
         %
         error(~'Error: not enough input arguments in dft_electron_density_yp.m.');
         %
@@ -48,7 +48,7 @@ end
 %
 if nargin == 3
     %
-    if ~exist('dft_run.mat','file') %jobs are running
+    if ~exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
         %
         remote = [];% local calculation. DFT code is supposed to be on the same computer on which this Matlab script is launched
         %
@@ -65,7 +65,7 @@ end
 %
 if cancel
     %
-    localdir = [pwd,'/dft_shell_scripts_',code.codetype];
+    localdir = [pwd,'/dft_shell_scripts_',code.codetype,'_',int2str(Z_in)];
     %
     [s,m] = unix(['rm -rf ',localdir]);
     %
@@ -83,7 +83,7 @@ if cancel
         %
     end
     %
-    delete('dft_run.mat'); %close simulation
+    delete(['dft_run_Zi_',int2str(Z_in),'.mat']); %close simulation
     %
     dft = [];
     %
@@ -91,9 +91,9 @@ if cancel
     %
 end
 %
-if exist('dft_run.mat','file') %jobs are running
+if exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
     %
-    load dft_run.mat
+    load(['dft_run_Zi_',int2str(Z_in),'.mat'])
     %
     symbol = dft.symbol;
     Z_in = dft.Z;
@@ -161,7 +161,7 @@ if exist('dft_run.mat','file') %jobs are running
             %
         end
         %
-        delete('dft_run.mat'); %close simulation
+        delete(['dft_run_Zi_',int2str(Z_in),'.mat']); %close simulation
         %
         datesave = datestr(now,'dd-mm-yyyy_HH:MM:SS');
         save(['dft_',int2str(Z_in),'_',elements('atomic_number', Z_in, 'symbol'),'_',elements('atomic_number', Z_in, 'name'),'_',code.codetype,'_',datesave,'.mat'],'dft');
@@ -169,17 +169,17 @@ if exist('dft_run.mat','file') %jobs are running
         %
     else
         %
-        save dft_run.mat dft remote localdir
+        save(['dft_run_Zi_',int2str(Z_in),'.mat'],'dft','remote','localdir')
         %
     end
     %    
 else
     %
-    if ~exist([pwd,'/dft_shell_scripts_',code.codetype],'dir')
-        mkdir([pwd,'/dft_shell_scripts_',code.codetype]);
+    if ~exist([pwd,'/dft_shell_scripts_',code.codetype,'_',int2str(Z_in)],'dir')
+        mkdir([pwd,'/dft_shell_scripts_',code.codetype,'_',int2str(Z_in)]);
     end
     %
-    localdir = [pwd,'/dft_shell_scripts_',code.codetype];
+    localdir = [pwd,'/dft_shell_scripts_',code.codetype,'_',int2str(Z_in)];
     %
     [MM_in,ZZ0_in,symbol] = spinmultiplicity_yp(Z_in);%all ionization states
     %
@@ -278,7 +278,7 @@ else
         %
     end
     %
-    save dft_run.mat dft remote localdir
+    save(['dft_run_Zi_',int2str(Z_in),'.mat'],'dft','remote','localdir')
     %
     return;
     %
