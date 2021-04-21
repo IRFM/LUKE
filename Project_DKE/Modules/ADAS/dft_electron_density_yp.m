@@ -118,7 +118,8 @@ if exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
     end
     %
     if ss == 0
-        disp(['All results have been well transfered back to the local computer.']);
+        disp(['All results have been well transfered back to the local computer for Z = ',int2str(Z_in),'.']);
+        disp('-------------------')
     end
     %
     cd(localdir);
@@ -164,8 +165,13 @@ if exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
         delete(['dft_run_Zi_',int2str(Z_in),'.mat']); %close simulation
         %
         datesave = datestr(now,'dd-mm-yyyy_HH:MM:SS');
+        dft.datesave = datesave;
+        %
         save(['dft_',int2str(Z_in),'_',elements('atomic_number', Z_in, 'symbol'),'_',elements('atomic_number', Z_in, 'name'),'_',code.codetype,'_',datesave,'.mat'],'dft');
         disp(['DFT calculations with ',code.codetype,' code successfully saved in dft_',int2str(Z_in),'_',elements('atomic_number', Z_in, 'name'),'_',code.codetype,'_',datesave,'.mat']);
+        %
+        disp('-------------------')
+        disp('-------------------')
         %
     else
         %
@@ -252,6 +258,7 @@ else
         %
         if ss == 0
             disp(['Scripts have been well launched on the remote computer.']);
+            disp('-------------------')
         end   
         %
     else local calculations
