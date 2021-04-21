@@ -10,7 +10,7 @@ clc
 %
 % ---------------------- INPUT PARAMETERS ---------------------
 %
-[ip,id] = connections_params;%Create a file in the LUKE path (or local) : id -> hostname, ip: ethernet address
+[ip,id] = connections_params;%Create a file in the LUKE path (or local) : id -> hostname, ip: ethernet address. Must be customized according to the machine where calculations are done.
 %
 Z = [2,3];%Helium (2),Lithium (3),Copper (29)
 Z0 = [];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
@@ -46,25 +46,51 @@ if length(Z) > 1
     Z0 = [];%all ionization states are calculated
 end
 %
+job_status = ones(1,length(Z));
+%
+if ~exist('dft_job_status.mat')
+    save dft_job_status.mat job_status
+else
+    load dft_job_status.mat job_status
+end
+%
 ik = 1;%computer index
 %
 for iZ = 1:length(Z)
     %
-    code.rootpath = ['/home/',id{ik},'/GAUSSIAN/'];%absolute path of DFT code on remote machine
-    %
-    remote.id = id{ik};
-    remote.ip = ip{ik};
-    remote.remotedir = ['/home/',id{ik},'/dft_shell_scripts_',code.codetype,'_',int2str(Z(iZ))];
-    remote.mode = mode;
-    %
-    dft(iZ) = dft_electron_density_yp(Z(iZ),Z0,code,remote,cancel);%remote calculation
+    if job_status(iZ) == 1
+        %
+        code.rootpath = ['/home/',id{ik},'/GAUSSIAN/'];%absolute path of DFT code on remote machine
+        %
+        remote.id = id{ik};
+        remote.ip = ip{ik};
+        remote.remotedir = ['/home/',id{ik},'/dft_shell_scripts_',code.codetype,'_',int2str(Z(iZ))];
+        remote.mode = mode;
+        %
+        dft = dft_electron_density_yp(Z(iZ),Z0,code,remote,cancel);%remote calculation
+        %
+        if isfield(dft,'datesave')
+            %
+            job_status(iZ) = 0;%job done
+            %
+        end
+    end
     %
     if ik == length(id)
         ik = 1;
     else
         ik = ik + 1;
     end
+    %
 end
 %
-disp('Relaunch test_dft.m script to get back dft results if calculations are done.')
+if sum(job_status) == 0
+    disp('---> All jobs are done and results are saved in corresponding files')
+    delete dft_job_status.mat
+else
+    save dft_job_status.mat job_status
+    disp(['---> ',int2str(sum(job_status)),'/',int2str(length(job_status)),' jobs are active.'])
+    disp('-----------')
+    disp('Relaunch test_dft.m script to get back all dft results.')
+end
 %
