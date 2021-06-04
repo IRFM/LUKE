@@ -34,7 +34,7 @@ npn = length(pn);
 %
 if coll_mode == 1 | coll_mode == 3,%High-velocity limit
     %
-    Fee = (xpcleereln(ir,:) + inelastic_factor).*xne_norm(ir)'./v2;
+    Fee = (xpcleereln(ir,:) + xpinelastic_factor).*xne_norm(ir)'./v2;
     Aee = xpcleereln(ir,:).*xne_norm(ir)'.*xTe_norm(ir)'./v./v2;% (inelastic factor)
     Btee = xpcleereln(ir,:).*xne_norm(ir)'./v/2 - xne_norm(ir)'.*xTe_norm(ir)'./v./v2/2;
     %
