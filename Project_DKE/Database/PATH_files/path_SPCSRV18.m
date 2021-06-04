@@ -97,8 +97,8 @@ dkepath.kkrol(1).luke_branch = luke_branch;
 dkepath.kkrol(1).local_root = '/opt/';
 dkepath.kkrol(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
-dkepath.kkrol(1).mex901 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
-dkepath.kkrol(1).mex905 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB905']; 
+dkepath.kkrol(1).mex901 = [dkepath.kkrol(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
+dkepath.kkrol(1).mex905 = [dkepath.kkrol(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB905']; 
 %
 dkepath.kkrol(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.8.0 -lrefblas'];%NaN;
 dkepath.kkrol(1).compiler_opt.fopts = '';
@@ -125,4 +125,45 @@ remote(1).gitmode.cmd1 = '';
 remote_selection = [1];
 dkepath.kkrol(1).remote = remote(remote_selection);
 %
+%------------------------------------ Profile number 3, Mario Gervais ------------------------------------
+%
+dkepath.gervais(1).luke_root = luke_root;
+dkepath.gervais(1).luke_branch = luke_branch;
+dkepath.gervais(1).local_root = '/opt/';
+dkepath.gervais(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+dkepath.gervais(1).mex901 = [dkepath.gervais(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
+dkepath.gervais(1).mex905 = [dkepath.gervais(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB905']; 
+%
+dkepath.gervais(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.8.0 -lrefblas'];%NaN;
+dkepath.gervais(1).compiler_opt.fopts = '';
+dkepath.gervais(1).compiler_opt.copts = '';
+%
+dkepath.gervais(1).MUMPS.mex901 = [dkepath.decker(1).local_root,'MUMPS_5.1.2/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.gervais(1).MUMPS.mex905 = [dkepath.decker(1).local_root,'MUMPS_5.1.2/MATLAB905'];%Where MUMPS matrix solver is stored (MEX function)
+%
+%--------------------------- Remote computing -----------------------------
+%
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
+%
+%
+remote(1).remoteid = 'SPCSRV18';
+remote(1).schedulername = 'direct';
+remote(1).profilename = 'gervais';
+remote(1).luke_root = dkepath.gervais(1).luke_root;% local cluster
+remote(1).link_mode = [];
+remote(1).gitupdate = false;
+remote(1).gitmode.cmd1 = '';
+%
+% -------------- profiles selection, Mario Gervais ------------
+%
+remote_selection = [1];
+dkepath.gervais(1).remote = remote(remote_selection);
+%
+
+
+
+
+
+
 
