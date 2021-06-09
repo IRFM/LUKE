@@ -14,6 +14,10 @@ end
 %
 spectrum = struct;
 %
+if isfield(external,'LH')  
+    external = external.LH;
+end
+%
 if ~isfield(select,'style'),
     select.style = struct;
 end
@@ -22,20 +26,34 @@ if isfield(external.antenna,'id'),
     spectrum.id = external.antenna.id;
 end
 %
-if iscell(external.antenna.aloha.results.dP_nz)
+if isfield(external,'antenna') && isfield(external.antenna,'dP_nz')
+    spectrum.dP_nz = real(external.antenna.dP_nz);
+    spectrum.nz = external.antenna.nz;
+    spectrum.ny = external.antenna.ny;
+    dnz = external.antenna.dnz;
+    %
+    external.antenna.aloha.results = external.antenna;
+    external.antenna.aloha.plasma = external.plasma;
+    %
+elseif iscell(external.antenna.aloha.results.dP_nz)
+    %
     spectrum.dP_nz = real(external.antenna.aloha.results.dP_nz{1});
     %
     if length(external.antenna.aloha.results.dP_nz) > 1
-    for ii=2:length(external.antenna.aloha.results.dP_nz)
-        spectrum.dP_nz = spectrum.dP_nz + real(external.antenna.aloha.results.dP_nz{ii});
+        for ii=2:length(external.antenna.aloha.results.dP_nz)
+            spectrum.dP_nz = spectrum.dP_nz + real(external.antenna.aloha.results.dP_nz{ii});
+        end        
     end
-end
+    %
+    spectrum.nz = external.antenna.aloha.results.nz;
+    spectrum.ny = external.antenna.aloha.results.ny;
+    dnz = external.antenna.aloha.results.dnz;
 else
     spectrum.dP_nz = real(external.antenna.aloha.results.dP_nz);
+    spectrum.nz = external.antenna.aloha.results.nz;
+    spectrum.ny = external.antenna.aloha.results.ny;
+    dnz = external.antenna.aloha.results.dnz;
 end
-%
-spectrum.nz = external.antenna.aloha.results.nz;
-spectrum.ny = external.antenna.aloha.results.ny;
 %
 disp('********************************************************************************************')
 disp('WARNING: check that the ALOHA power spectrum generates a co-current or a counter current. ')
@@ -74,7 +92,7 @@ while 1,
         pstr = '';
     end                
     %
-    val(1) = sum(spectrum.dP_nz*external.antenna.aloha.results.dnz);
+    val(1) = sum(spectrum.dP_nz*dnz);
     s{1} = ['Power from ALOHA spectrum',pstr,'        : PLH = ',num2str(val(1)/1e6),' MW'];
     %
     s{end+1} = 'Specify power manually';

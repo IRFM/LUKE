@@ -12,11 +12,13 @@ function [data_lh] = remote_mlhdata_tsbase(port,shot,tmin,tmax,disp_mode)
 %
 %   Output:
 %
-%       data_lh : all LH data in the structure (raw and averaged
-%       quantities between tmin,tmax
+%       data_lh : all LH data in the structure (raw and averaged quantities between tmin,tmax)
 %
 %   Note: if shot number is less than 43540 antennas denominations are (C2,C3) otherwise (C3,C4) for Tore Supra or (LH1,LH2) for WEST (shot number larger than 50000 for WEST)
 %   Warning : very old LH discharges with (C1,C2) antennas are not considered here.
+%
+% Example #1 : data_lh = remote_mlhdata_tsbase('Q6A',27503,4.5,5.0,1);
+% Example #2 : data_lh = remote_mlhdata_tsbase('Q6A+Q6B',28014,5.5,6.5,1);
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
@@ -34,19 +36,20 @@ if strcmp(port,'Q6A')
         antenna_names = {'C2'};
         aloha_architectures = {'antenne_C2'};
         machine_name = 'Tore Supra';
+        probes_name = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4'};
     elseif shot > 43540 && shot < 50000
         antenna_names = {'C3'};
         aloha_architectures = {'antenne_C3'};
         machine_name = 'Tore Supra';
+        probes_name = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4'};
     else
         antenna_names = {'LH1'};
         aloha_architectures = {'antenne_C3'};
         machine_name = 'WEST';
+        probes_name = {'GISLH%1','GISLH%2','GISLH%3','GISLH%4'};
     end
     %
     type_signals = {'gpinjc1','gphic1','gcrefc1','gphrc1'};
-    %
-    data = remote_mtsbase(shot,type_signals);
     %
 end
 %
@@ -58,19 +61,20 @@ if strcmp(port,'Q6B')
         antenna_names = {'C3'};
         aloha_architectures = {'antenne_C3'};
         machine_name = 'Tore Supra';
+        probes_name = {'GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'};
     elseif shot > 43540 && shot < 50000
         antenna_names = {'C4'};
         aloha_architectures = {'antenne_C4'};
         machine_name = 'Tore Supra';
+        probes_name = {'GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'};
     else
         antenna_names = {'LH2'};
         aloha_architectures = {'antenne_C4'};
         machine_name = 'WEST';
+        probes_name = {'GISLH%5','GISLH%6','GISLH%7','GISLH%8'};
     end
     %
     type_signals = {'gpinjc2','gphic2','gcrefc2','gphrc2'};
-    %
-    data = remote_mtsbase(shot,type_signals);
     %
 end
 %
@@ -82,23 +86,34 @@ if strcmp(port,'Q6A+Q6B')
         antenna_names = {'C2','C3'};
         aloha_architectures = {'antenne_C2','antenne_C3'};
         machine_name = 'Tore Supra';
+        probes_name = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4','GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'};
     elseif shot > 43540 && shot < 50000
         antenna_names = {'C3','C4'};
         aloha_architectures = {'antenne_C3','antenne_C4'};
         machine_name = 'Tore Supra';
+        probes_name = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4','GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'};
     else
         antenna_names = {'LH1','LH2'};
         aloha_architectures = {'antenne_C3','antenne_C4'};
         machine_name = 'WEST';
+        probes_name = {'GISLH%1','GISLH%2','GISLH%3','GISLH%4','GISLH%5','GISLH%6','GISLH%7','GISLH%8'};
     end
     %
     type_signals = {'gpinjc1','gphic1','gcrefc1','gphrc1','gpinjc2','gphic2','gcrefc2','gphrc2'};
     %
-    data = remote_mtsbase(shot,type_signals);
-    %
 end
 %
-if isfield(data,'err')
+alldata = remote_mtsbase(shot,[type_signals,probes_name]);
+%
+data = alldata(1:length(type_signals));
+probes = alldata(length(type_signals)+1:end);
+%
+if ~exist('ports','var')
+    disp(['ERROR : port definition is wrong. Should be Q6A, Q6B or Q6A+Q6B. It is ',port,'.'])
+    return;
+end
+%
+if exist('data','var') && isfield(data,'err')
     disp(data.err);
     data_lh.err = data.err;
     return;
@@ -123,11 +138,40 @@ end
 % module #7 : [7H,7L] -> ALOHA : [3,4]
 % module #7 : [8H,8L] -> ALOHA : [1,2]
 %
+mask_raw = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
 mask_modules = [1,3,5,7,9,11,13,15,2,4,6,8,10,12,14,16];
 mask_aloha = [15 13 11 9 7 5 3 1 16 14 12 10 8 6 4 2];%module reordering (see ALOHA documentation)
 %
 mask_upper = [1:8];%upper row 
 mask_lower = [9:16];%lower row 
+%
+% Density probes in front of the antenna
+%
+% Tore Supra ne (m-3) (for shot < 43540, only three probes per antenna and shot > 43540, 4 probes per antenna
+%
+% - GNLG1%1 : top left (C2) C3 (view from inside)
+% - GNLG1%2 : top right (C2) C3 (view from inside)
+% - GNLG1%3 : bottom left (C2) C3 (view from inside)
+% - GNLG1%4 : bottom right (C2) C3 (view from inside)
+%
+% - GNLG2%1 : top left (C3) C4 (view from inside)
+% - GNLG2%2 : top right (C3) C4 (view from inside)
+% - GNLG2%3 : bottom left (C3) C4 (view from inside)
+% - GNLG2%4 : bottom right (C3) C4 (view from inside)
+%
+% WEST (saturation current -> density : ne (m-3) = 1.29*10^18*GISLH%x/sqrt(Te)/A, where A(mm2) = probe surface = 19.6 and Te(eV) = 9eV by default
+%
+% - GISLH%1 : top left LH1 (view from inside)
+% - GISLH%2 : top right LH1 (view from inside)
+% - GISLH%3 : bottom left LH1 (view from inside)
+% - GISLH%4 : bottom right LH1 (view from inside)
+%
+% - GISLH%5 : top left LH2 (view from inside)
+% - GISLH%6 : top right LH2 (view from inside)
+% - GISLH%7 : bottom left LH2 (view from inside)
+% - GISLH%8 : bottom right LH2 (view from inside)
+%
+facprobe = 1.29e18/sqrt(9)/19.6;%ne (m-3) = 1.29*10^18*GISLH%x/sqrt(Te)/A, where A(mm2) = probe surface = 19.6 and Te(eV) = 9eV
 %
 for ii = 1:length(ports)
     %
@@ -158,10 +202,30 @@ for ii = 1:length(ports)
         data_lh(ii).signal(jj).modules = data(kk).yout1(data(kk).yout2(:,1) > 0,data_lh(ii).mask.modules);
         data_lh(ii).signal(jj).aloha = data(kk).yout1(data(kk).yout2(:,1) > 0,data_lh(ii).mask.aloha);
         %
+        if ~isempty(probes(kk).yout2)
+            %
+            data_lh(ii).probe(jj).time = probes(kk).yout2(probes(kk).yout2(:,1) > 0,1);%keep only positive time
+            %
+            if strcmp(machine_name,'Tore Supra')
+                %
+                data_lh(ii).probe(jj).ne = probes(kk).yout1(probes(kk).yout2(:,1) > 0,1);
+                %
+            else
+                %
+                data_lh(ii).probe(jj).raw = probes(kk).yout1(probes(kk).yout2(:,1) > 0,1);
+                data_lh(ii).probe(jj).ne = data_lh(ii).probe(jj).raw*facprobe;%saturation current to density
+                %
+            end
+        end
+        %
         data_lh(ii).mean.tmin = tmin;%time interval for mean calculations
         data_lh(ii).mean.tmax = tmax;%time interval for mean calculations
         %
-        mean_signal_aloha = mean(data_lh(ii).signal(jj).aloha(data_lh(ii).signal(jj).time > data_lh(ii).mean.tmin & data_lh(ii).signal(jj).time < data_lh(ii).mean.tmax,data_lh(ii).mask.aloha));
+        mean_signal_aloha = mean(data_lh(ii).signal(jj).aloha(data_lh(ii).signal(jj).time > data_lh(ii).mean.tmin & data_lh(ii).signal(jj).time < data_lh(ii).mean.tmax,:),1);        
+        %
+        if ~isempty(probes(kk).yout2)
+            mean_probe = mean(data_lh(ii).probe(jj).ne(data_lh(ii).probe(jj).time > data_lh(ii).mean.tmin & data_lh(ii).probe(jj).time < data_lh(ii).mean.tmax));
+        end
         %
         if strfind(type_signals{kk},'gpinjc')
             %
@@ -193,11 +257,15 @@ for ii = 1:length(ports)
             data_lh(ii).mean.phase_rc_mean_aloha_lower = mean_signal_aloha(data_lh(ii).mask.lower)'; 
             %
         end
+        %
+        if exist('mean_probe','var')
+            data_lh(ii).mean.probe(jj) = mean_probe;
+        end
+        %
     end
 end
 %
-if disp_mode
-    display_lhdata(data_lh,[]);
-end
+display_lhdata(data_lh,disp_mode);
+
 
 

@@ -8,6 +8,9 @@ if ~isstruct(sinputs)% new job
     job = matstandardjob_jd('runmat');%new job
     job.remtimout = 0;%Don't wait until ALOHA job is done
     %
+    %sc = aloha_ondemand_scenario(shotnum, tmin, tmax, ne0,[gradne1,gradne2],port);%for a direct test of ALOHA
+    %sc = aloha_scenario(sc);
+    %
     if isempty(rc)
         %
         [err,job,soutputs] = matremote_jd('aloha_scenario',{sc},remote,job);%fixed density in front of the grill
