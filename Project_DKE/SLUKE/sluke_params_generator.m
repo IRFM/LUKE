@@ -165,7 +165,8 @@ if nargin == 0
                     %
                 elseif strcmp(sparams.equil.source.method{ii},'file')
                     %
-                    sparams.equil.source.file{ii} = input_dke_yp('   - full path of the file that contains the toroidal MHD equilibrium : ',sparams.equil.source.file{ii-1});%full path of the file that contains the power spectrum (used if source.method is 'file')
+                    sparams.equil.source.file{ii} = input_dke_yp('   - name of the file that contains the toroidal MHD equilibrium : ',sparams.equil.source.file{ii-1});%full path of the file that contains the power spectrum (used if source.method is 'file')
+                    sparams.equil.source.path{ii} = input_dke_yp('   - full or loacal (.) path of the file that contains the toroidal MHD equilibrium : ',sparams.equil.source.file{ii-1});%full path of the file that contains the power spectrum (used if source.method is 'file')
                     %
                 elseif strcmp(sparams.equil.source.method{ii},'value')
                     %
@@ -185,7 +186,8 @@ if nargin == 0
                     %
                 elseif strcmp(sparams.equil.source.method{ii},'file')
                     %
-                    sparams.equil.source.file{ii} = input_dke_yp('   - full path of the file that contains the toroidal MHD equilibrium : ','');%full path of the file that contains the power spectrum (used if source.method is 'file')
+                    sparams.equil.source.file{ii} = input_dke_yp('   - name of the of the file that contains the toroidal MHD equilibrium : ','');%full path of the file that contains the power spectrum (used if source.method is 'file')
+                    sparams.equil.source.path{ii} = input_dke_yp('   - full or loacal (.) path of the file that contains the toroidal MHD equilibrium : ','.');%full path of the file that contains the power spectrum (used if source.method is 'file')
                     %
                 elseif strcmp(sparams.equil.source.method{ii},'value')
                     %
