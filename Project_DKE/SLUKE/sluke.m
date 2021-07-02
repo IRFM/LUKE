@@ -9,10 +9,8 @@ sparams = sluke_params_time(sparams_in);%Expand all time steps if any
 [success,messages] = sluke_create_folders;
 %
 if ~success
-    %
     disp('ERROR : cannot create sluke folders in the local directory')
     return;
-    %
 end
 %
 % run sluke locally or remotely
@@ -22,6 +20,12 @@ for ii = 1:length(sparams.machine)
     if sparams.simul.enable{ii} == 1
         %
         simul_id = sluke_id(sparams,ii,'simul');
+        %
+        if sparams.simul.enforce{ii} == 1;
+            %
+            sluke_clear_folders(sparams,ii);
+            %
+        end
         %
         if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'])
             %
@@ -61,7 +65,7 @@ for ii = 1:length(sparams.machine)
         %
         if isfield(lukestructs,'output'),%job was run successfully
             %
-            disp(['LUKE simulation #',int2str(ii),' is completed.']);
+            disp(['LUKE simulation #',int2str(ii),' is completed. You can use irunluke_jd to display results or perform specific calculations.']);
             %
             sluke_save(sparams,simul_id,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
             %

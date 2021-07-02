@@ -1,6 +1,17 @@
 function [id] = sluke_id(sparams,ii,type)
 %
-
+if strcmp(type,'ohm')
+    %
+    if isempty(sparams.ohm.id{ii})
+        %
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
+        %
+    else
+        %
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.ohm.id{ii},'_',int2str(ii)];
+        %
+    end
+end
 
 
 
