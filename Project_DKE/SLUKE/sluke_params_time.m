@@ -57,6 +57,10 @@ if err == 0
         %
         dt = diff(linspace(tmin,tmax,nt+1));
         %
+        if nt > 1
+            simul_id = sparams_tmp.simul.id{1};
+            sparams_tmp.simul.id = {[simul_id,'_1']};
+        end
         sparams_tmp.discharge.tmin = {tmin};
         sparams_tmp.discharge.tmax = {tmin + dt(1)};
         sparams_tmp.discharge.nt = {1};
@@ -64,6 +68,8 @@ if err == 0
         for jj = 2:nt
             %
             sparams_tmp = sluke_params_clone(sparams_tmp,1);
+            %
+            sparams_tmp.simul.id(jj) = {[simul_id,'_',int2str(jj)]};
             %
             sparams_tmp.discharge.tmin(jj) = {sparams_tmp.discharge.tmax{jj-1}};
             sparams_tmp.discharge.tmax(jj) = {sparams_tmp.discharge.tmax{jj-1} + dt(1)};

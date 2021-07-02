@@ -1,89 +1,100 @@
 function [varargout] = sluke(varargin)
 %
-
-
-
-%{
-if length(sdata.inputs.simulation.shotnumbers) == length(sdata.inputs.simulation.times)
+varargout{1} = '';
+%
+sparams_in = varargin{1};
+%
+sparams = sluke_params_time(sparams_in);%Expand all time steps if any
+%
+[success,messages] = sluke_create_folders;
+%
+if ~success
     %
-    for ii = 1:length(sdata.inputs.simulation.shotnumbers)
-        %
-        sdata.outputs(ii).shotnumber = sdata.inputs.simulation.shotnumbers(ii);
-        sdata.outputs(ii).times = sdata.inputs.simulation.times(ii);
-
-    end 
+    disp('ERROR : cannot create sluke folders in the local directory')
+    return;
     %
-else
-    if length(sdata.inputs.simulation.shotnumbers) >= 1 && length(sdata.inputs.simulation.times) == 1
-        for ii = 1:length(sdata.inputs.simulation.shotnumbers)
-
-        end
-    elseif length(sdata.inputs.simulation.times) >= 1 && length(sdata.inputs.simulation.shotnumbers) == 1
-                for ii = 1:length(sdata.inputs.simulation.times)
-
-        end
-        
-    else
-        %
-        sdata.output.err = 'Inconsistent input data');
-        %
-    end
-    % 
 end
 %
-
-
-
-
-
-
-
-
-if ~isfield(sdata,'job')
-
+% run sluke locally or remotely
 %
-if ~isstruct(sdata.sinputs)% new job
+for ii = 1:length(sparams.machine)
     %
-    remote = dkepath.remote(scheduler.remnum);
-    remote.timeout = 0;%Don't wait until ALOHA job is done
-    %
-    job = matstandardjob_jd('runmat');%new job
-    job.remtimout = 0;%Don't wait until ALOHA job is done
-    %
-    machine = sinputs;
-    %
-    tmin = real(t);
-    tmax = image(t);
-    %
-    [err,job,soutputs] = matremote_jd('sluke_remote',{machine,shotnumber,tmin,tmax,sparams},remote,job);%fixed density in front of the grill
-    %
-    if ~isempty(err)
-        soutputs(ii).err = err;
-    elseif ~isempty(soutputs) % job completed
-        soutputs = soutputs;
-    else
-        soutputs.job = job;
-    end
-    %    
-else %previously running job
-    %
-    if isfield(sinputs,'job') 
+    if sparams.simul.enable{ii} == 1
         %
-        [err,job,soutputs] = matremote_jd(sinputs.job);
+        simul_id = sluke_id(sparams,ii,'simul');
         %
-        if ~isempty(err) 
-            soutputs.err = err;
-        elseif ~isempty(soutputs) % job completed
-            soutputs = soutputs;
+        if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'])
+            %
+            load(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'])
+            %
+            dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
+            %
+            lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
+            %
         else
-            soutputs.job = job;
+            %
+            lukestructs.simul_in = simul_id;
+            lukestructs.equil = sluke_equil(sparams,ii);
+            %
+            load('INPUTS/before_luke@WEST_54802_3.7000_ADAS.mat','dkeparam');
+            load('INPUTS/before_luke@WEST_54802_3.7000_ADAS.mat','dkedisplay');
+            load('INPUTS/before_luke@WEST_54802_3.7000_ADAS.mat','ohm');
+            %
+            lukestructs.dkeparam = dkeparam;
+            lukestructs.dkedisplay = dkedisplay;
+            lukestructs.ohm = ohm;
+            
+            %{
+            %lukestructs.dkeparam = sluke_dkeparam(sparams,ii);
+            %lukestructs.dkedisplay = sluke_dkedisplay(sparams,ii);
+            %lukestructs.ohm = '';% sluke_ohm(sparams,ii);
+            %}
+            lukestructs.wavestructs = '';%waves{ii};sluke_launch(sparams)
+            lukestructs.transpfaste = '';% sluke_transp(sparams,ii);
+            lukestructs.ripple = '';% sluke_ripple(sparams,ii);
+            %
+            dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
+            %
+            lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
+            %
         end
         %
-   else% previously completed jobs
+        if isfield(lukestructs,'output'),%job was run successfully
+            %
+            disp(['LUKE simulation #',int2str(ii),' is completed.']);
+            %
+            sluke_save(sparams,simul_id,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
+            %
+        elseif isfield(lukestructs,'err') %job failed
+            %
+            disp(['LUKE simulation #',int2str(ii),' has failed for the following reasons :' ]);
+            %
+            disperr_jd(lukestructs.err)
+            %
+            disp(['Simulation #',int2str(ii),' is cancelled.'])
+            %
+            delete(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
+            %
+        elseif isfield(lukestructs,'job') %job running, to be checked later
+            %
+            disp(['LUKE simulation #',int2str(ii),' is running.']);
+            %
+            sluke_save(sparams.machine{ii},simul_id,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
+            %
+            %luke_job = lukestructs.job;
+            %
+        else
+            %
+            disp(['LUKE output for simulation #',int2str(ii),' is not recognized. Simulation is cancelled.'])
+            %
+            delete(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
+            %
+        end
         %
-        soutputs = sinputs;
+        clear lukestructs dkepath
         %
+    else
+        disp(['WARNING : simulation #',int2str(ii),' is not enabled. Modify the sparams file to enable it.'])
     end
     %
 end
-%}

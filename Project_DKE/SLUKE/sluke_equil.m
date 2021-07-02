@@ -1,6 +1,16 @@
-function equils = sluke_equil(sparams)
+function equil = sluke_equil(sparams,ii)
 %
-for ii = 1:length(sparams.machine)
+
+
+
+%
+equil_id = sluke_id(sparams,ii,'equil');
+%
+if exist(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'])
+    %
+    load(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat']);
+    %
+else
     %
     if strcmp(sparams.equil.source.method{ii},'code')
         %
@@ -24,8 +34,27 @@ for ii = 1:length(sparams.machine)
         %
         if isfield(data,'post') % equilibrium from metis simulations
             %
-            [~,~,equils{ii},~,~,~,~] = auto_extract_metisdata_for_luke(data.post,sparams.discharge.tmin{ii});
+            [~,~,equil,~,~,~,~] = auto_extract_metisdata_for_luke(data.post,sparams.discharge.tmin{ii});
             %
+            movefile('before_luke@*','./INPUTS/','f');% move all before_luke* files created by auto_extract_metisdata_for_luke. Files may be overwritten
+            %
+            fns = fieldnames(sparams.equil.source);
+            %
+            for jj = 1:length(fns)
+                %
+                eval(['source.',fns{jj},' = sparams.equil.source.',fns{jj},'{',int2str(ii),'};']);
+                %
+            end
+            %
+            source.comment = sparams.equil.comment{ii};
+            %
+            equil.source = source;
+            clear source
+            %
+            save(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'],'equil');
+            %
+        else
+            error([]);
         end
         %
     elseif strcmp(sparams.equil.source.method{ii},'value')
@@ -33,6 +62,7 @@ for ii = 1:length(sparams.machine)
         %
     end
 end
+
     
     
     

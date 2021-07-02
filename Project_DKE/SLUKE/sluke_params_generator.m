@@ -68,6 +68,12 @@ if nargin == 0
             end
             %
             enable(itok,jdischarge) = input_dke_yp('   - enable simulation [0 or 1]',1,[0,1]);
+            enforce(itok,jdischarge) = input_dke_yp('   - enforce simulation if enabled [0 or 1]',1,[0,1]);
+            %
+            dispremoteprofiles % list of available remote profile numbers
+            %
+            remote_profile(itok,jdischarge) = input_dke_yp('   - remote profile number where LUKE will run (use those corresponding to a scheduler : condor, slurm, pbs, torque, ...)');%remote profile number (list available by typing 'dispremoteprofiles' in command window) 
+            wait4results(itok,jdischarge) = input_dke_yp('   - wait for results (y/n)','n',{'y','n'});%
             %
             disp('------------------------------------------------------------------');
         end
@@ -129,12 +135,18 @@ if nargin == 0
             if itok == 1 && jdischarge == 1
                 %
                 sparams.simul.id{1} = id{1,1};
-                sparams.simul.enable{1} = enable(1,1);  
+                sparams.simul.enable{1} = enable(1,1);
+                sparams.simul.enforce{1} = enforce(1,1);
+                sparams.simul.remote_profile{1} = remote_profile(1,1);
+                sparams.simul.wait4results{1} = wait4results(1,1);
                 %
             else
                 %
-                sparams.simul.id  = [sparams.simul.id ,{id{itok,jdischarge}}];
-                sparams.simul.enable  = [sparams.simul.enable ,{enable(itok,jdischarge)}];
+                sparams.simul.id  = [sparams.simul.id,{id{itok,jdischarge}}];
+                sparams.simul.enable  = [sparams.simul.enable,{enable(itok,jdischarge)}];
+                sparams.simul.enforce  = [sparams.simul.enforce,{enforce(itok,jdischarge)}];
+                sparams.simul.remote_profile = [sparams.simul.remote_profile,{remote_profile(itok,jdischarge)}];
+                sparams.simul.wait4results = [sparams.simul.remote_profile,{wait4results(itok,jdischarge)}];
                 %
             end
         end
@@ -150,48 +162,48 @@ if nargin == 0
             ii = (itok-1)*ndischarges(itok)+jdischarge;
             %
             disp('------------------------------------------------------------------');
-            disp([' - Equilibrium ',int2str(jdischarge),'/',int2str(ndischarges(itok)),' for tokamak ',tokname{itok}]);
+            disp([' - Equilibrium parameters ',int2str(jdischarge),'/',int2str(ndischarges(itok)),' for tokamak ',tokname{itok}]);
             %
             if ii > 1
                 %
-                sparams.equil.id{ii} = input_dke_yp('   - id for the toroidal MHD equilibrium : ',sparams.equil.id{ii-1});%id for the toroial MHD equilibrium
-                sparams.equil.comment{ii} = input_dke_yp('   - comment for the toroidal MHD equilibrium : ',sparams.equil.comment{ii-1});%comments on the toroidal MHD equilibrium 
+                sparams.equil.id{ii} = input_dke_yp('   - id for the toroidal MHD equilibrium parameters : ',sparams.equil.id{ii-1});%id for the toroial MHD equilibrium parameters
+                sparams.equil.comment{ii} = input_dke_yp('   - comment for the toroidal MHD equilibrium parameters : ',sparams.equil.comment{ii-1});%comments on the toroidal MHD equilibrium parameters
                 %  
-                sparams.equil.source.method{ii} = input_dke_yp('   - source of the toroidal MHD equilibrium [code, file or value]',sparams.equil.source.method{ii-1},{'code','file','value'});%source of the toroidal MHD equilibrium : 'code', 'file', 'value'
+                sparams.equil.source.method{ii} = input_dke_yp('   - source of the toroidal MHD equilibrium parameters [code, file or value]',sparams.equil.source.method{ii-1},{'code','file','value'});%source of the toroidal MHD equilibrium parameters : 'code', 'file', 'value'
                 %
                 if strcmp(sparams.equil.source.method{ii},'code')
                     %
-                    sparams.equil.source.code{ii} = input_dke_yp('   - name of the code for calculating the toroidal MHD equilibrium [metis,helena,chease]',sparams.equil.source.code{ii-1},{'metis','helena','chease'});%code name for determining the excited power spectrum : 'aloha',... (used if source.method is 'code')
+                    sparams.equil.source.code{ii} = input_dke_yp('   - name of the code for calculating the toroidal MHD equilibrium parameters [metis,helena,chease]',sparams.equil.source.code{ii-1},{'metis','helena','chease'});%code name for determining the toroidal MHD equilibrium parameters : 'metis',... (used if source.method is 'code')
                     %
                 elseif strcmp(sparams.equil.source.method{ii},'file')
                     %
-                    sparams.equil.source.file{ii} = input_dke_yp('   - name of the file that contains the toroidal MHD equilibrium : ',sparams.equil.source.file{ii-1});%full path of the file that contains the power spectrum (used if source.method is 'file')
-                    sparams.equil.source.path{ii} = input_dke_yp('   - full or loacal (.) path of the file that contains the toroidal MHD equilibrium : ',sparams.equil.source.file{ii-1});%full path of the file that contains the power spectrum (used if source.method is 'file')
+                    sparams.equil.source.file{ii} = input_dke_yp('   - name of the file that contains the toroidal MHD equilibrium parameters : ',sparams.equil.source.file{ii-1});%full path of the file that contains the toroidal MHD equilibrium parameters (used if source.method is 'file')
+                    sparams.equil.source.path{ii} = input_dke_yp('   - full or loacal (.) path of the file that contains the toroidal MHD equilibrium parameters : ',sparams.equil.source.file{ii-1});%full path of the file that contains the toroidal MHD equilibrium parameters (used if source.method is 'file')
                     %
                 elseif strcmp(sparams.equil.source.method{ii},'value')
                     %
-                    %TODO : implement manual equilibrium construction
+                    %TODO : implement manually the toroidal MHD equilibrium parameters
                     %
                 end
             else
                 %
-                sparams.equil.id{ii} = input_dke_yp('   - id for the toroidal MHD equilibrium : ','');%id for the toroial MHD equilibrium
-                sparams.equil.comment{ii} = input_dke_yp('   - comment for the toroidal MHD equilibrium : ','');%comments on the toroidal MHD equilibrium 
+                sparams.equil.id{ii} = input_dke_yp('   - id for the toroidal MHD equilibrium parameters : ','');%id for the toroial MHD equilibrium parameters
+                sparams.equil.comment{ii} = input_dke_yp('   - comment for the toroidal MHD equilibrium parameters : ','');%comments on the toroidal MHD equilibrium parameters
                 %  
-                sparams.equil.source.method{ii} = input_dke_yp('   - source of the toroidal MHD equilibrium [code, file or value]','code',{'code','file','value'});%source of the toroidal MHD equilibrium : 'code', 'file', 'value'
+                sparams.equil.source.method{ii} = input_dke_yp('   - source of the toroidal MHD equilibrium parameters [code, file or value]','code',{'code','file','value'});%source of the toroidal MHD equilibrium parameters : 'code', 'file', 'value'
                 %
                 if strcmp(sparams.equil.source.method{ii},'code')
                     %
-                    sparams.equil.source.code{ii} = input_dke_yp('   - name of the code for calculating the toroidal MHD equilibrium [metis,helena,chease]','metis',{'metis','helena','chease'});%code name for determining the excited power spectrum : 'aloha',... (used if source.method is 'code')
+                    sparams.equil.source.code{ii} = input_dke_yp('   - name of the code for calculating the toroidal MHD equilibrium parameters [metis,helena,chease]','metis',{'metis','helena','chease'});%code name for determining the toroidal MHD equilibrium parameters : 'metis',... (used if source.method is 'code')
                     %
                 elseif strcmp(sparams.equil.source.method{ii},'file')
                     %
-                    sparams.equil.source.file{ii} = input_dke_yp('   - name of the of the file that contains the toroidal MHD equilibrium : ','');%full path of the file that contains the power spectrum (used if source.method is 'file')
-                    sparams.equil.source.path{ii} = input_dke_yp('   - full or loacal (.) path of the file that contains the toroidal MHD equilibrium : ','.');%full path of the file that contains the power spectrum (used if source.method is 'file')
+                    sparams.equil.source.file{ii} = input_dke_yp('   - name of the of the file that contains the toroidal MHD equilibrium parameters : ','');%full path of the file that contains the toroidal MHD equilibrium parameters (used if source.method is 'file')
+                    sparams.equil.source.path{ii} = input_dke_yp('   - full or loacal (.) path of the file that contains the toroidal MHD equilibrium parameters : ','.');%full path of the file that contains the toroidal MHD equilibrium parameters (used if source.method is 'file')
                     %
                 elseif strcmp(sparams.equil.source.method{ii},'value')
                     %
-                    %TODO : implement manual equilibrium construction
+                    %TODO : implement manually the toroidal MHD equilibrium parameters
                     %
                 end                
             end
@@ -204,6 +216,60 @@ if nargin == 0
     %
     if ohmic_option == 1
         %
+        for itok = 1:ntoks
+            %
+            for jdischarge = 1:ndischarges(itok)
+                %
+                ii = (itok-1)*ndischarges(itok)+jdischarge;
+                %
+                disp('------------------------------------------------------------------');
+                disp([' - Ohmic field parameters ',int2str(jdischarge),'/',int2str(ndischarges(itok)),' for tokamak ',tokname{itok}]);
+                %
+                if ii > 1
+                    %
+                    sparams.ohm.id{ii} = input_dke_yp('   - id for the Ohmic field parameters : ',sparams.equil.id{ii-1});%id for the Ohmic field parameters
+                    sparams.ohm.comment{ii} = input_dke_yp('   - comment for the Ohmic field parameters : ',sparams.equil.comment{ii-1});%comments on the Ohmic field parameters
+                    %  
+                    sparams.ohm.source.method{ii} = input_dke_yp('   - source of the Ohmic field parameters [code, file or value]',sparams.ohm.source.method{ii-1},{'code','file','value'});%source of the Ohmic field parameters : 'code', 'file', 'value'
+                    %
+                    if strcmp(sparams.ohm.source.method{ii},'code')
+                        %
+                        sparams.ohm.source.code{ii} = input_dke_yp('   - name of the code for calculating the Ohmic field parameters [metis]',sparams.ohm.source.code{ii-1},{'metis'});%code name for determining the Ohmic field parameters : 'metis',... (used if source.method is 'code')
+                        %
+                    elseif strcmp(sparams.ohm.source.method{ii},'file')
+                        %
+                        sparams.ohm.source.file{ii} = input_dke_yp('   - name of the file that contains the Ohmic field parameters : ',sparams.ohm.source.file{ii-1});%full path of the file that contains the Ohmic field parameters (used if source.method is 'file')
+                        sparams.ohm.source.path{ii} = input_dke_yp('   - full or local (.) path of the file that contains the Ohmic field parameters : ',sparams.ohm.source.file{ii-1});%full path of the file that contains the Ohmic field parameters (used if source.method is 'file')
+                        %
+                    elseif strcmp(sparams.ohm.source.method{ii},'value')
+                        %
+                        %TODO : implement manually the Ohmic field parameters
+                        %
+                    end
+                else
+                    %
+                    sparams.ohm.id{ii} = input_dke_yp('   - id for the Ohmic field parameters : ','');%id for the Ohmic field parameters
+                    sparams.ohm.comment{ii} = input_dke_yp('   - comment for the Ohmic field parameters: ','');%comments on the Ohmic field parameters 
+                    %  
+                    sparams.ohm.source.method{ii} = input_dke_yp('   - source of the toroidal MHD equilibrium [code, file or value]','code',{'code','file','value'});%source of the Ohmic field parameters : 'code', 'file', 'value'
+                    %
+                    if strcmp(sparams.ohm.source.method{ii},'code')
+                        %
+                        sparams.ohm.source.code{ii} = input_dke_yp('   - name of the code for calculating the Ohmic field parameters [metis]','metis',{'metis'});%code name for determining the Ohmic field parameters : 'metis',... (used if source.method is 'code')
+                        %
+                    elseif strcmp(sparams.ohm.source.method{ii},'file')
+                        %
+                        sparams.ohm.source.file{ii} = input_dke_yp('   - name of the of the file that contains the Ohmic field parameters : ','');%full path of the file that contains the Ohmic field parameters (used if source.method is 'file')
+                        sparams.ohm.source.path{ii} = input_dke_yp('   - full or loacal (.) path of the file that contains the Ohmic field parameters : ','.');%full path of the file that contains the Ohmic field parameters (used if source.method is 'file')
+                        %
+                    elseif strcmp(sparams.ohm.source.method{ii},'value')
+                        %
+                        %TODO : implement manually the Ohmic field parameters
+                        %
+                    end                
+                end
+            end
+        end
         %
     end
     %
