@@ -85,10 +85,18 @@ remote(1).link_mode = [];
 remote(1).gitupdate = false;
 remote(1).gitmode.cmd1 = '';
 %
+remote(2).remoteid = 'SPCSRV18';
+remote(2).schedulername = 'condor';
+remote(2).profilename = 'peysson';
+remote(2).luke_root = dkepath.peysson(1).luke_root;% local cluster
+remote(2).link_mode = [];
+remote(2).gitupdate = false;
+remote(2).gitmode.cmd1 = '';
+%
 % -------------- profiles selection, Krzysztof Krol ------------
 %
-remote_selection = [1];
-dkepath.peysson(1).remote = remote(remote_selection);
+dkepath.peysson(1).remote(1) = remote(1);
+dkepath.peysson(1).remote(2) = remote(2);
 %
 %------------------------------------ Profile number 3, Krzysztof Krol ------------------------------------
 %
@@ -155,10 +163,18 @@ remote(1).link_mode = [];
 remote(1).gitupdate = false;
 remote(1).gitmode.cmd1 = '';
 %
+remote(2).remoteid = 'SPCSRV18';
+remote(2).schedulername = 'condor';
+remote(2).profilename = 'gervais';
+remote(2).luke_root = dkepath.gervais(1).luke_root;% local cluster
+remote(2).link_mode = [];
+remote(2).gitupdate = false;
+remote(2).gitmode.cmd1 = '';
+%
 % -------------- profiles selection, Mario Gervais ------------
 %
-remote_selection = [1];
-dkepath.gervais(1).remote = remote(remote_selection);
+dkepath.gervais(1).remote(1) = remote(1);
+dkepath.gervais(1).remote(2) = remote(2);
 %
 
 
