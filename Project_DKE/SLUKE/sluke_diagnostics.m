@@ -20,9 +20,10 @@ else
             %
         else
             %
-            disp('WARNING : HXR calculations from LUKE results failed !')
+            disp('WARNING : HXR calculations from LUKE results failed.')
             %
         end
+        %
     end
     %
 end

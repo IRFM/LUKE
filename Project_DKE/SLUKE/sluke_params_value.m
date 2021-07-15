@@ -20,6 +20,11 @@ if nargin == 2
     sparams_in = varargin{1};
     jextract = varargin{2};
     %
+elseif nargin == 1
+    %
+    sparams_in = varargin{1};
+    jextract = 1;
+    %
 else
     %
     error('Wrong number of input arguments in sluke_params_value function');

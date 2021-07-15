@@ -95,6 +95,19 @@ else
     success(12) = 1;
     messages.results = '';
 end
+if ~exist('SLUKE_HXRPARAMS')
+	[success(13),messages.results] = mkdir('SLUKE_HXRPARAMS');
+else
+    success(13) = 1;
+    messages.results = '';
+end
+if ~exist('SLUKE_HXRSPECS')
+	[success(14),messages.results] = mkdir('SLUKE_HXRSPECS');
+else
+    success(14) = 1;
+    messages.results = '';
+end
+
 %
 if sum(success) == length(success)
     %
