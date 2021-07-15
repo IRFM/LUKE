@@ -4,11 +4,12 @@ function sparams_out = sluke_params_extract(varargin)
 % 
 % INPUT :
 %
-%   - varargin : initial 'sparams' structure for modifications
+%   - varargin{1} : initial 'sparams' structure for modifications
+%   - varargin{2} : index of sparams to extract
 %
 % OUTPUT :
 %
-%   - sparams : extracted structure of parameters for sluke calculations.
+%   - sparams_out : extracted structure of parameters for sluke calculations.
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %

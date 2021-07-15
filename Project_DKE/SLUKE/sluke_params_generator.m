@@ -14,264 +14,33 @@ function sparams = sluke_params_generator(varargin)
 %
 clc
 %
-sparams = struct;
-%
 if nargin == 0
     %
-    % Interactive mode for buiding sparams
+    sparams = struct;
     %
-    disp('------------------------------------------------------------------');
-    disp('------------------------------------------------------------------');
-    disp('Interactive input of simulation parameters for sluke calculations');
-    disp('------------------------------------------------------------------');
-    disp('------------------------------------------------------------------');
-    disp('WARNING : this procedure may be long if many inputs are considered');
-    disp('------------------------------------------------------------------');
-    ntoks = input_dke_yp('Number of tokamaks',1);
-    disp('------------------------------------------------------------------');
+    sparams = sluke_params_generator_discharge(sparams);% Interactive mode : general parameters for machines and discharges
     %
-    for itok = 1:ntoks
-        %
-        tokname{itok} = input_dke_yp(['Name of tokamak #',int2str(itok),'/#',int2str(ntoks),' (TS,WEST,EAST,CMOD,ITER,HL2A,TOK)'],'WEST',{'TS','WEST','EAST','CMOD','ITER','TOK'});
-        %
-        ndischarges(itok) = input_dke_yp(['Number of discharges (as many as time intervals) for tokamak ',tokname{itok}],1);
-        disp('------------------------------------------------------------------');
-        %
-        for jdischarge = 1:ndischarges(itok)
-            %
-            disp([' - Discharge ',int2str(jdischarge),'/',int2str(ndischarges(itok)),' for tokamak ',tokname{itok}]);
-            %
-            if jdischarge > 1
-                discharge{itok,jdischarge} = input_dke_yp('   - shot number',discharge{itok,jdischarge-1});
-            else
-                discharge{itok,jdischarge} = input_dke_yp('   - shot number','');
-            end
-            %
-            if jdischarge > 1
-                tmin(itok,jdischarge) = input_dke_yp('   - tmin (s)',tmin(itok,jdischarge-1));
-            else
-                tmin(itok,jdischarge) = input_dke_yp('   - tmin (s)',0);
-            end
-            %
-            if jdischarge > 1
-                tmax(itok,jdischarge) = input_dke_yp('   - tmax (s)',tmax(itok,jdischarge-1));
-            else
-                tmax(itok,jdischarge) = input_dke_yp('   - tmax (s)',0);
-            end
-            %
-            nt(itok,jdischarge) = input_dke_yp('  - Number of time subintervals between tmin and tmax (max = 100)',1,[1:100]);
-            %
-            if jdischarge > 1
-                id{itok,jdischarge} = input_dke_yp('   - simulation id',id{itok,jdischarge-1});
-            else
-                id{itok,jdischarge} = input_dke_yp('   - simulation id','');
-            end
-            %
-            enable(itok,jdischarge) = input_dke_yp('   - enable simulation [0 or 1]',1,[0,1]);
-            enforce(itok,jdischarge) = input_dke_yp('   - enforce simulation if enabled [0 or 1]',1,[0,1]);
-            %
-            dispremoteprofiles % list of available remote profile numbers
-            %
-            remote_profile(itok,jdischarge) = input_dke_yp('   - remote profile number where LUKE will run (use those corresponding to a scheduler : condor, slurm, pbs, torque, ...)');%remote profile number (list available by typing 'dispremoteprofiles' in command window) 
-            wait4results(itok,jdischarge) = input_dke_yp('   - wait for results (y/n)','n',{'y','n'});%
-            %
-            disp('------------------------------------------------------------------');
-        end
-        %
-        disp('------------------------------------------------------------------');
-        %
-    end
+    sparams = sluke_params_generator_simulation(sparams);% Interactive mode : general parameters for simulations
     %
-    % MACHINES (TOKAMAK)
+    sparams = sluke_params_generator_equilibrium(sparams);% Interactive mode : parameters for the toroidal MHD equilibrium
+     %
+    sparams = sluke_params_generator_ohmic(sparams);% Interactive mode : parameters for the Ohmic field
     %
-    for itok = 1:ntoks
-        %
-        for jdischarge = 1:ndischarges(itok)
-            %
-            if itok == 1 && jdischarge == 1
-                %
-                sparams.machine{1} = tokname{1};
-                %
-            else
-                %
-                sparams.machine = [sparams.machine,{tokname{itok}}];
-                %
-            end
-        end
-        %
-    end
+    sparams = sluke_params_generator_dkeparam(sparams);% Interactive mode : parameters for LUKE code calculations
     %
-    % DISCHARGES
+    sparams = sluke_params_generator_dkedisplay(sparams);% Interactive mode : display options for LUKE code
     %
-    for itok = 1:ntoks
-        %
-        for jdischarge = 1:ndischarges(itok)
-            %
-            if itok == 1 && jdischarge == 1
-                %
-                sparams.discharge.shot{1} = discharge{1,1};%shot number
-                sparams.discharge.tmin{1} = tmin(1,1);
-                sparams.discharge.tmax{1} = tmax(1,1);
-                sparams.discharge.nt{1} = nt(1,1);
-                %
-            else
-                %
-                sparams.discharge.shot = [sparams.discharge.shot,{discharge{itok,jdischarge}}];
-                sparams.discharge.tmin = [sparams.discharge.tmin,{tmin(itok,jdischarge)}];
-                sparams.discharge.tmax = [sparams.discharge.tmax,{tmax(itok,jdischarge)}];
-                sparams.discharge.nt = [sparams.discharge.nt,{nt(itok,jdischarge)}];
-                %
-            end
-        end
-        %
-    end
+    sparams = sluke_params_generator_rayparam(sparams);% Interactive mode : parameters for C3PO ray-tracing
     %
-    % SIMULATIONS
+    sparams = sluke_params_generator_raydisplay(sparams);% Interactive mode : display options for C3PO ray-tracing
     %
-    for itok = 1:ntoks
-        %
-        for jdischarge = 1:ndischarges(itok)
-            %
-            if itok == 1 && jdischarge == 1
-                %
-                sparams.simul.id{1} = id{1,1};
-                sparams.simul.enable{1} = enable(1,1);
-                sparams.simul.enforce{1} = enforce(1,1);
-                sparams.simul.remote_profile{1} = remote_profile(1,1);
-                sparams.simul.wait4results{1} = wait4results(1,1);
-                %
-            else
-                %
-                sparams.simul.id  = [sparams.simul.id,{id{itok,jdischarge}}];
-                sparams.simul.enable  = [sparams.simul.enable,{enable(itok,jdischarge)}];
-                sparams.simul.enforce  = [sparams.simul.enforce,{enforce(itok,jdischarge)}];
-                sparams.simul.remote_profile = [sparams.simul.remote_profile,{remote_profile(itok,jdischarge)}];
-                sparams.simul.wait4results = [sparams.simul.remote_profile,{wait4results(itok,jdischarge)}];
-                %
-            end
-        end
-        %
-    end
+    %{
+    sparams = sluke_params_generator_launch(sparams);% Interactive mode : parameters for C3PO ray-tracing
     %
-    % TOROIDAL MHD EQUILIBRIUM
-    %
-    for itok = 1:ntoks
-        %
-        for jdischarge = 1:ndischarges(itok)
-            %
-            ii = (itok-1)*ndischarges(itok)+jdischarge;
-            %
-            disp('------------------------------------------------------------------');
-            disp([' - Equilibrium parameters ',int2str(jdischarge),'/',int2str(ndischarges(itok)),' for tokamak ',tokname{itok}]);
-            %
-            if ii > 1
-                %
-                sparams.equil.id{ii} = input_dke_yp('   - id for the toroidal MHD equilibrium parameters : ',sparams.equil.id{ii-1});%id for the toroial MHD equilibrium parameters
-                sparams.equil.comment{ii} = input_dke_yp('   - comment for the toroidal MHD equilibrium parameters : ',sparams.equil.comment{ii-1});%comments on the toroidal MHD equilibrium parameters
-                %  
-                sparams.equil.source.method{ii} = input_dke_yp('   - source of the toroidal MHD equilibrium parameters [code, file or value]',sparams.equil.source.method{ii-1},{'code','file','value'});%source of the toroidal MHD equilibrium parameters : 'code', 'file', 'value'
-                %
-                if strcmp(sparams.equil.source.method{ii},'code')
-                    %
-                    sparams.equil.source.code{ii} = input_dke_yp('   - name of the code for calculating the toroidal MHD equilibrium parameters [metis,helena,chease]',sparams.equil.source.code{ii-1},{'metis','helena','chease'});%code name for determining the toroidal MHD equilibrium parameters : 'metis',... (used if source.method is 'code')
-                    %
-                elseif strcmp(sparams.equil.source.method{ii},'file')
-                    %
-                    sparams.equil.source.file{ii} = input_dke_yp('   - name of the file that contains the toroidal MHD equilibrium parameters : ',sparams.equil.source.file{ii-1});%full path of the file that contains the toroidal MHD equilibrium parameters (used if source.method is 'file')
-                    sparams.equil.source.path{ii} = input_dke_yp('   - full or loacal (.) path of the file that contains the toroidal MHD equilibrium parameters : ',sparams.equil.source.file{ii-1});%full path of the file that contains the toroidal MHD equilibrium parameters (used if source.method is 'file')
-                    %
-                elseif strcmp(sparams.equil.source.method{ii},'value')
-                    %
-                    %TODO : implement manually the toroidal MHD equilibrium parameters
-                    %
-                end
-            else
-                %
-                sparams.equil.id{ii} = input_dke_yp('   - id for the toroidal MHD equilibrium parameters : ','');%id for the toroial MHD equilibrium parameters
-                sparams.equil.comment{ii} = input_dke_yp('   - comment for the toroidal MHD equilibrium parameters : ','');%comments on the toroidal MHD equilibrium parameters
-                %  
-                sparams.equil.source.method{ii} = input_dke_yp('   - source of the toroidal MHD equilibrium parameters [code, file or value]','code',{'code','file','value'});%source of the toroidal MHD equilibrium parameters : 'code', 'file', 'value'
-                %
-                if strcmp(sparams.equil.source.method{ii},'code')
-                    %
-                    sparams.equil.source.code{ii} = input_dke_yp('   - name of the code for calculating the toroidal MHD equilibrium parameters [metis,helena,chease]','metis',{'metis','helena','chease'});%code name for determining the toroidal MHD equilibrium parameters : 'metis',... (used if source.method is 'code')
-                    %
-                elseif strcmp(sparams.equil.source.method{ii},'file')
-                    %
-                    sparams.equil.source.file{ii} = input_dke_yp('   - name of the of the file that contains the toroidal MHD equilibrium parameters : ','');%full path of the file that contains the toroidal MHD equilibrium parameters (used if source.method is 'file')
-                    sparams.equil.source.path{ii} = input_dke_yp('   - full or loacal (.) path of the file that contains the toroidal MHD equilibrium parameters : ','.');%full path of the file that contains the toroidal MHD equilibrium parameters (used if source.method is 'file')
-                    %
-                elseif strcmp(sparams.equil.source.method{ii},'value')
-                    %
-                    %TODO : implement manually the toroidal MHD equilibrium parameters
-                    %
-                end                
-            end
-        end
-    end
-    %
-    % OHMIC FIELD
-    %
-    ohmic_option = input_dke_yp('Do you want to consider Ohmic electric field ?',0,[0,1]);
-    %
-    if ohmic_option == 1
-        %
-        for itok = 1:ntoks
-            %
-            for jdischarge = 1:ndischarges(itok)
-                %
-                ii = (itok-1)*ndischarges(itok)+jdischarge;
-                %
-                disp('------------------------------------------------------------------');
-                disp([' - Ohmic field parameters ',int2str(jdischarge),'/',int2str(ndischarges(itok)),' for tokamak ',tokname{itok}]);
-                %
-                if ii > 1
-                    %
-                    sparams.ohm.id{ii} = input_dke_yp('   - id for the Ohmic field parameters : ',sparams.equil.id{ii-1});%id for the Ohmic field parameters
-                    sparams.ohm.comment{ii} = input_dke_yp('   - comment for the Ohmic field parameters : ',sparams.equil.comment{ii-1});%comments on the Ohmic field parameters
-                    %  
-                    sparams.ohm.source.method{ii} = input_dke_yp('   - source of the Ohmic field parameters [code, file or value]',sparams.ohm.source.method{ii-1},{'code','file','value'});%source of the Ohmic field parameters : 'code', 'file', 'value'
-                    %
-                    if strcmp(sparams.ohm.source.method{ii},'code')
-                        %
-                        sparams.ohm.source.code{ii} = input_dke_yp('   - name of the code for calculating the Ohmic field parameters [metis]',sparams.ohm.source.code{ii-1},{'metis'});%code name for determining the Ohmic field parameters : 'metis',... (used if source.method is 'code')
-                        %
-                    elseif strcmp(sparams.ohm.source.method{ii},'file')
-                        %
-                        sparams.ohm.source.file{ii} = input_dke_yp('   - name of the file that contains the Ohmic field parameters : ',sparams.ohm.source.file{ii-1});%full path of the file that contains the Ohmic field parameters (used if source.method is 'file')
-                        sparams.ohm.source.path{ii} = input_dke_yp('   - full or local (.) path of the file that contains the Ohmic field parameters : ',sparams.ohm.source.file{ii-1});%full path of the file that contains the Ohmic field parameters (used if source.method is 'file')
-                        %
-                    elseif strcmp(sparams.ohm.source.method{ii},'value')
-                        %
-                        %TODO : implement manually the Ohmic field parameters
-                        %
-                    end
-                else
-                    %
-                    sparams.ohm.id{ii} = input_dke_yp('   - id for the Ohmic field parameters : ','');%id for the Ohmic field parameters
-                    sparams.ohm.comment{ii} = input_dke_yp('   - comment for the Ohmic field parameters: ','');%comments on the Ohmic field parameters 
-                    %  
-                    sparams.ohm.source.method{ii} = input_dke_yp('   - source of the toroidal MHD equilibrium [code, file or value]','code',{'code','file','value'});%source of the Ohmic field parameters : 'code', 'file', 'value'
-                    %
-                    if strcmp(sparams.ohm.source.method{ii},'code')
-                        %
-                        sparams.ohm.source.code{ii} = input_dke_yp('   - name of the code for calculating the Ohmic field parameters [metis]','metis',{'metis'});%code name for determining the Ohmic field parameters : 'metis',... (used if source.method is 'code')
-                        %
-                    elseif strcmp(sparams.ohm.source.method{ii},'file')
-                        %
-                        sparams.ohm.source.file{ii} = input_dke_yp('   - name of the of the file that contains the Ohmic field parameters : ','');%full path of the file that contains the Ohmic field parameters (used if source.method is 'file')
-                        sparams.ohm.source.path{ii} = input_dke_yp('   - full or loacal (.) path of the file that contains the Ohmic field parameters : ','.');%full path of the file that contains the Ohmic field parameters (used if source.method is 'file')
-                        %
-                    elseif strcmp(sparams.ohm.source.method{ii},'value')
-                        %
-                        %TODO : implement manually the Ohmic field parameters
-                        %
-                    end                
-                end
-            end
-        end
-        %
-    end
+    sparams = sluke_params_generator_waveparam(sparams);% Interactive mode : parameters for C3PO ray-tracing
+    %}
+   
+   
     %
     % RF WAVES
     %
@@ -319,7 +88,7 @@ if nargin == 0
                         %
                         dispremoteprofiles % list of available remote profile numbers
                         %
-                        sparams.launch.antenna.lh.spectrum.aloha.remote_profile{ii} = input_dke_yp('   - remote profile number (use those corresponding to a scheduler : condor, slurm, pbs, torque, ...)');%remote profile number (list available by typing 'dispremoteprofiles' in command window) 
+                        sparams.launch.antenna.lh.spectrum.aloha.remote_profile{ii} = input_dke_yp('   - remote profile number (use those corresponding to a scheduler : condor, slurm, pbs, torque, ...). Option (0) corresponds to local interactive run.');%remote profile number (list available by typing 'dispremoteprofiles' in command window) 
                         sparams.launch.antenna.lh.spectrum.aloha.display.data{ii} = input_dke_yp('   - display and save experimental data figures (2), display and do not save figures (1), do not display but save figures (0), do nothing (-1))',2,[-1,0,1,2]);%display and save experimental data figures (2), display and do not save figures (1), do not display but save figures (0), do nothing (-1) if exist
                         %
                         if strcmp(sparams.machine{itok},'TS') || strcmp(sparams.machine{itok},'WEST')

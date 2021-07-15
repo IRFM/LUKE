@@ -38,7 +38,19 @@ if err == 0
     %
     for ii = 1:nf0
         %
-        sparams_tmp = rmfield(sluke_params_extract(sparams_in,ii),{'help','format'});
+        sparams_tmp = sluke_params_extract(sparams_in,ii);
+        %
+        if isfield(sparams_tmp,'help')
+            %
+            sparams_tmp = rmfield(sparams_tmp,'help');
+            %
+        end
+        %
+        if isfield(sparams_tmp,'format')
+            %
+            sparams_tmp = rmfield(sparams_tmp,'format');
+            %
+        end
         %
         if ~isfield(sparams_tmp.discharge,'nt')
             %
@@ -67,7 +79,7 @@ if err == 0
         %
         for jj = 2:nt
             %
-            sparams_tmp = sluke_params_clone(sparams_tmp,1);
+            sparams_tmp = sluke_params_clone(sparams_tmp,1,1);
             %
             sparams_tmp.simul.id(jj) = {[simul_id,'_',int2str(jj)]};
             %

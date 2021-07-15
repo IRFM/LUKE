@@ -19,6 +19,41 @@ else
     messages.results = '';
 end
 %
+if ~exist('SLUKE_DKEPARAMS')
+	[success(1),messages.results] = mkdir('SLUKE_DKEPARAMS');
+else
+    success(1) = 1;
+    messages.results = '';
+end
+%
+if ~exist('SLUKE_RAYPARAMS')
+	[success(1),messages.results] = mkdir('SLUKE_RAYPARAMS');
+else
+    success(1) = 1;
+    messages.results = '';
+end
+%
+if ~exist('SLUKE_DKEDISPLAYS')
+	[success(1),messages.results] = mkdir('SLUKE_DKEDISPLAYS');
+else
+    success(1) = 1;
+    messages.results = '';
+end
+%
+if ~exist('SLUKE_FITEQUILS')
+	[success(1),messages.results] = mkdir('SLUKE_FITEQUILS');
+else
+    success(1) = 1;
+    messages.results = '';
+end
+%
+if ~exist('SLUKE_EQUILCONSISTENCIES')
+	[success(1),messages.results] = mkdir('SLUKE_EQUILCONSISTENCIES');
+else
+    success(1) = 1;
+    messages.results = '';
+end
+%
 if ~exist('SLUKE_EQUILS')
 	[success(1),messages.equils] = mkdir('SLUKE_EQUILS');
 else

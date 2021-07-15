@@ -12,9 +12,7 @@ if strcmp(type,'ohm')
         %
     end
 end
-
-
-
+%
 if strcmp(type,'equil')
     %
     if isempty(sparams.equil.id{ii})
@@ -41,82 +39,150 @@ if strcmp(type,'simul')
     end
 end
 %
-
-
-
-
-
-
-
-%{
-    try
-        data = sluke_id_add(data,'',data.input.simulation.machine);
-        data = sluke_id_add(data,'',data.input.simulation.name);
-        data = sluke_id_add(data,'',data.input.simulation.shotnumber);
-        data = sluke_id_add(data,'',data.input.simulation.timegrid);
-        data = sluke_id_add(data,'',data.input.simulation.datasource.mode);
-        %data = sluke_id_add(data,'',data.input.models.equilibrium.code);
-        data = sluke_id_add(data,'SELF',data.input.models.equilibrium.consistency);
-        data = sluke_id_add(data,'',data.input.remote.computer.name);
-    catch
-        
-    end
+if strcmp(type,'dkeparam')
     %
-    function [data] = sluke_id_add(data,label,x)
+    if isempty(sparams.dkeparam.id{ii})
         %
-        if ~isempty(x),
-            %
-            if ~isfield(data.input.simulation,'id'),
-                data.input.simulation.id = '';
-            end
-            %
-            if ~isempty(label)
-               label = [label,'_'];
-            end
-            %
-            if ischar(x)
-                %
-                if isempty(data.input.simulation.id)
-                    data.input.simulation.id = [data.input.simulation.id,x];
-                else
-                    data.input.simulation.id = [data.input.simulation.id,'_',x];
-                end
-                %
-            else
-                if length(x) > 1
-                    %
-                    y = mat2str(x);
-                    iy  = strfind(y,' ')
-                    %
-                    if length(iy) ==  1
-                        y = y(2:end-1);
-                        z = [y(1:iy(1)-2),'-',y(iy(end):end)];
-                        z = strrep(z,'.','p');
-                        data.input.simulation.id = [data.input.simulation.id,'_',label,z]
-                    elseif length(iy) > 1
-                        y = y(2:end-1);
-                        z = [y(1:iy(1)-2),':',y(iy(end):end)];
-                        z = strrep(z,'.','p');
-                        data.input.simulation.id = [data.input.simulation.id,'_',label,z];
-                    elseif length(iy) ==  0
-                        data.input.simulation.id = [data.input.simulation.id,'_',label,int2str(x)];
-                    end
-                    %
-                else
-                    %
-                    if isempty(data.input.simulation.id)
-                        data.input.simulation.id = [data.input.simulation.id,num2str(x)];
-                    else
-                        data.input.simulation.id = [data.input.simulation.id,'_',num2str(x)];
-                    end
-                    %
-                end
-            end
-            %
-            data.input.simulation.id = strrep(data.input.simulation.id,'.','p');
-            %
-            return
-        end
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
+        %
+    else
+        %
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.dkeparam.id{ii},'_',int2str(ii)];
+        %
     end
 end
-%}
+%
+if strcmp(type,'dkedisplay')
+    %
+    if isempty(sparams.dkedisplay.id{ii})
+        %
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
+        %
+    else
+        %
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.dkedisplay.id{ii},'_',int2str(ii)];
+        %
+    end
+end
+%
+if strcmp(type,'fit')
+    %
+    if isempty(sparams.equil.fit.id{ii})
+        %
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
+        %
+    else
+        %
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.equil.fit.id{ii},'_',int2str(ii)];
+        %
+    end
+end
+%
+if strcmp(type,'equilconsistency')
+    %
+    if isempty(sparams.equil.equilconsistency.id{ii})
+        %
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
+        %
+    else
+        %
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.equil.equilconsistency.id{ii},'_',int2str(ii)];
+        %
+    end
+end
+%
+if strcmp(type,'launch')
+    %
+    if isfield(sparams,'rf')
+        %
+        if isempty(sparams.launch.id{ii})
+            %
+            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
+            %
+        else
+            %
+            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.rf.launch.id{ii},'_',int2str(ii)];
+            %
+        end
+        %
+    else
+        %
+        id = '';
+        disp('WARNING : the ''rf'' sub-structure is not available -> launch id is empty.')
+        %
+    end
+end
+%
+if strcmp(type,'rayparam')
+    %
+    if isfield(sparams,'rf')
+        %
+        if isempty(sparams.rf.rayparam.id{ii})
+            %
+            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
+            %
+        else
+            %
+            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.rf.rayparam.id{ii},'_',int2str(ii)];
+            %
+        end
+        %
+    else
+        %
+        id = '';
+        disp('WARNING : the ''rf'' sub-structure is not available -> rayparam id is empty.')
+        %
+    end
+end
+%
+if strcmp(type,'raydisplay')
+    %
+    if isfield(sparams,'rf')
+        %
+        if isempty(sparams.rf.raydisplay.id{ii})
+            %
+            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
+            %
+        else
+            %
+            id = '';
+            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.rf.raydisplay.id{ii},'_',int2str(ii)];
+            %
+        end
+    else
+        %
+        id = '';
+        disp('WARNING : the ''rf'' sub-structure is not available -> raydisplay id is empty.')
+        %         
+    end
+end
+%
+if strcmp(type,'waveparam')
+    %
+    if isfield(sparams,'rf')
+        %
+        if isempty(sparams.rf.waveparam.id{ii})
+            %
+            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
+            %
+        else
+            %
+            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.rf.waveparam.id{ii},'_',int2str(ii)];
+            %
+        end
+        %
+    else
+        %
+        id = '';
+        disp('WARNING : the ''rf'' sub-structure is not available -> waveparam id is empty.')
+        %
+    end
+end
+%
+id = strrep(id,' ','_');%
+id = strrep(id,',','_');%
+id = strrep(id,';','_');%
+%
+
+
+%

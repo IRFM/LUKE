@@ -12,9 +12,24 @@ function sluke_clear_folders(sparams,ii)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
+warning off
+%
 delete(['SLUKE_RESULTS/LUKE_DATA_',sluke_id(sparams,ii,'simul'),'.mat']);
+delete(['SLUKE_RESULTS/PROC_LUKE_DATA_',sluke_id(sparams,ii,'simul'),'.mat']);
 %
 delete(['SLUKE_EQUILS/EQUIL_',sluke_id(sparams,ii,'equil'),'.mat']);
 %
 delete(['SLUKE_OHMS/OHM_',sluke_id(sparams,ii,'ohm'),'.mat']);
+%
+delete(['SLUKE_DKEPARAMS/DKEPARAM_',sluke_id(sparams,ii,'dkeparam'),'.mat']);
+%
+delete(['SLUKE_RAYPARAMS/RAYPARAM_',sluke_id(sparams,ii,'rayparam'),'.mat']);
+%
+delete(['SLUKE_DKEDISPLAYS/DKEDISPLAY_',sluke_id(sparams,ii,'dkedisplay'),'.mat']);
+%
+delete(['SLUKE_FITEQUILS/FITEQUIL_',sluke_id(sparams,ii,'fit'),'.mat']);
+%
+delete(['SLUKE_EQUILCONSISTENCIES/EQUILCONSISTENCY_',sluke_id(sparams,ii,'equilconsistency'),'.mat']);
+%
+warning on
 %

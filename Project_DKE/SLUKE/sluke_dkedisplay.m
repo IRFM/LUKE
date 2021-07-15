@@ -12,9 +12,10 @@ if exist(['SLUKE_DKEDISPLAYS/DKEDISPLAY_',dkedisplay_id,'.mat'])
     %
 else
     %
-    if strcmp(sparams.dkedisplay.source{ii},'code')
+    if strcmp(sparams.dkedisplay.source{ii},'preset')
         %
-        %
+        load(which(['DISPLAY_',sparams.dkedisplay.preset{ii},'.mat']));
+       %
     elseif strcmp(sparams.dkedisplay.source{ii},'file')
         %
         dkedisplay_file = sparams.dkedisplay.file{ii};

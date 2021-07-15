@@ -33,6 +33,12 @@ elseif nargin == 1
                     sparams.simul.id{ii} = input_dke_yp('   - simulation id','');
                 end
                 %
+                if ii > 1
+                    sparams.simul.comment{ii} = input_dke_yp('   - comment on simulation',sparams.simul.comment{ii-1});
+                else
+                    sparams.simul.comment{ii} = input_dke_yp('   - comment on simulation','');
+                end
+                %
                 sparams.simul.enable{ii} = input_dke_yp('   - enable simulation [0 or 1]',1,[0,1]);
                 %
                 sparams.simul.enforce{ii} = input_dke_yp('   - enforce simulation if enabled [0 or 1]',1,[0,1]);

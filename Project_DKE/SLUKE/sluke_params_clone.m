@@ -14,10 +14,16 @@ function sparams_out = sluke_params_clone(varargin)
 %
 sparams_out = {};
 %
-if nargin == 2
+if nargin == 3
     %
     sparams_in = varargin{1};
-    jclone = varargin{2};
+    jclone = varargin{2};%index of the structure to clone
+    kclone = varargin{3};%number of clones
+    %
+elseif nargin == 2
+    %
+    sparams_in = varargin{1};
+    jclone = varargin{2};%index of the structure to clone
     %
 elseif nargin == 1
     %
@@ -43,9 +49,15 @@ if err == 0
     %
     nf0 = length(sparams_in.machine);
     %
-    if nargin == 1
+    if nargin < 2
         %
         jclone = input_dke_yp(['Which indexes to clone (index max = ',int2str(nf0),')'],1,[1:nf0]);
+        %
+    end
+    %
+    if nargin < 3
+        %
+        kclone = input_dke_yp(['How many clones'],1);
         %
     end
     %
@@ -59,13 +71,18 @@ if err == 0
         %
     end
     %
-    for jj = 1:length(jclone)
+    for kk = 1:kclone
         %
-        for ii = 1:length(fns)
+        for jj = 1:length(jclone)
             %
-            eval(['sparams_out.',fns{ii},'{',int2str(nf0+jj),'} = sparams_in.',fns{ii},'{',int2str(jclone(jj)),'};']);
+            for ii = 1:length(fns)
+                %
+                eval(['sparams_out.',fns{ii},'{',int2str(nf0+jj+kk-1),'} = sparams_in.',fns{ii},'{',int2str(jclone(jj)),'};']);
+                %
+            end
             %
         end
+        %
     end
     %
 end

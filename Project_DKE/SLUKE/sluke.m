@@ -1,5 +1,17 @@
 function [varargout] = sluke(varargin)
 %
+% LUKE - Full calculations of LUKE with sub-time intervals (option). All parameters are in a structure of cell arrays of the SAME SIZE. 
+% 
+% INPUT :
+%
+%   - varargin : initial 'sparams' structure
+%
+% OUTPUT :
+%
+%   - output : results structure
+%
+% by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
+%
 varargout{1} = '';
 %
 sparams_in = varargin{1};
@@ -21,7 +33,7 @@ for ii = 1:length(sparams.machine)
         %
         simul_id = sluke_id(sparams,ii,'simul');
         %
-        if sparams.simul.enforce{ii} == 1;
+        if sparams.simul.enforce{ii} == 1
             %
             sluke_clear_folders(sparams,ii);
             %
@@ -38,36 +50,48 @@ for ii = 1:length(sparams.machine)
         else
             %
             lukestructs.simul_in = simul_id;
+            lukestructs.dkeparam = sluke_dkeparam(sparams,ii);
+            lukestructs.dkedisplay = sluke_dkedisplay(sparams,ii);
             lukestructs.equil = sluke_equil(sparams,ii);
-            %
-            load('INPUTS/before_luke@WEST_54802_3.7000_ADAS.mat','dkeparam');
-            load('INPUTS/before_luke@WEST_54802_3.7000_ADAS.mat','dkedisplay');
-            load('INPUTS/before_luke@WEST_54802_3.7000_ADAS.mat','ohm');
-            %
-            lukestructs.dkeparam = dkeparam;
-            lukestructs.dkedisplay = dkedisplay;
-            lukestructs.ohm = ohm;
-            
+            lukestructs.ohm = sluke_ohm(sparams,ii);
             %{
-            %lukestructs.dkeparam = sluke_dkeparam(sparams,ii);
-            %lukestructs.dkedisplay = sluke_dkedisplay(sparams,ii);
-            %lukestructs.ohm = '';% sluke_ohm(sparams,ii);
-            %}
             lukestructs.wavestructs = '';%waves{ii};sluke_launch(sparams)
             lukestructs.transpfaste = '';% sluke_transp(sparams,ii);
             lukestructs.ripple = '';% sluke_ripple(sparams,ii);
-            %
+            %}
             dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
-            %
+            % 
             lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
             %
         end
         %
         if isfield(lukestructs,'output'),%job was run successfully
             %
-            disp(['LUKE simulation #',int2str(ii),' is completed. You can use irunluke_jd to display results or perform specific calculations.']);
+            disp(['LUKE simulation #',int2str(ii),' is completed. You can use irunluke_jd to display results, load processed data or perform specific calculations.']);
             %
             sluke_save(sparams,simul_id,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
+            %
+            if ~isfield(sparams,'')
+                %
+                data_proc = proc_luke_jd(lukestructs.output);
+                %
+            else
+                %
+                data_proc = proc_luke_jd(lukestructs.output,sparams.postprocessing.ir_display{ii},sparams.postprocessing.p_opt{ii},sparams.postprocessing.dp_cyl{ii},sparams.postprocessing.pnmax{ii},sparams.postprocessing.subtitle{ii},sparams.postprocessing.opt{ii});
+                %
+            end
+            %
+            if ~isempty(data_proc)
+                %
+                save(['SLUKE_RESULTS/PROC_LUKE_DATA_',id_simul,'.mat'],'data_proc');
+                %
+            else
+                %
+                disp('WARNING : Post-processing of LUKE results failed !')
+                %
+            end
+            %
+            
             %
         elseif isfield(lukestructs,'err') %job failed
             %
@@ -83,6 +107,14 @@ for ii = 1:length(sparams.machine)
             %
             disp(['LUKE simulation #',int2str(ii),' is running.']);
             %
+            if sparams.simul.enforce{ii} == 1
+                %
+                disp('-------------------------------------------------------------------------------------------')
+                disp('WARNING: the simulation is enforced. Disable this option in the sparams file to get results')
+                disp('-------------------------------------------------------------------------------------------')
+                %
+            end
+            %
             sluke_save(sparams.machine{ii},simul_id,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
             %
             %luke_job = lukestructs.job;
@@ -95,6 +127,7 @@ for ii = 1:length(sparams.machine)
             %
         end
         %
+
         clear lukestructs dkepath
         %
     else

@@ -12,8 +12,9 @@ if exist(['SLUKE_DKEPARAMS/DKEPARAM_',dkeparam_id,'.mat'])
     %
 else
     %
-    if strcmp(sparams.dkeparam.source{ii},'code')
+    if strcmp(sparams.dkeparam.source{ii},'preset')
         %
+        load(which(['DKEPARAM_',sparams.dkeparam.preset{ii},'.mat']));
         %
     elseif strcmp(sparams.dkeparam.source{ii},'file')
         %

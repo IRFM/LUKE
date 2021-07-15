@@ -60,7 +60,7 @@ elseif nargin == 1
                     sparams.equil.fit.id{ii} = input_dke_yp('   - id for the fit of the toroidal MHD equilibrium parameters : ','');%id for the toroial MHD equilibrium parameters
                     sparams.equil.fit.comment{ii} = input_dke_yp('   - comment for the fit of the toroidal MHD equilibrium parameters : ','');%comments on the toroidal MHD equilibrium parameters
                     %  
-                    sparams.equil.fit.source{ii} = input_dke_yp('   - source for the fit of of the toroidal MHD equilibrium parameters [code, file or value]','value',{'file','value'});%source of the toroidal MHD equilibrium parameters : 'code', 'file', 'value'
+                    sparams.equil.fit.source{ii} = input_dke_yp('   - source for the fit of of the toroidal MHD equilibrium parameters [file or value]','value',{'file','value'});%source of the toroidal MHD equilibrium parameters : 'code', 'file', 'value'
                     %
                     if strcmp(sparams.equil.fit.source{ii},'file')
                         %
