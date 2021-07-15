@@ -21,8 +21,10 @@ sparams = sluke_params_time(sparams_in);%Expand all time steps if any
 [success,messages] = sluke_create_folders;
 %
 if ~success
+    %
     disp('ERROR : cannot create sluke folders in the local directory')
     return;
+    %
 end
 %
 % run sluke locally or remotely
@@ -65,33 +67,19 @@ for ii = 1:length(sparams.machine)
             %
         end
         %
-        if isfield(lukestructs,'output'),%job was run successfully
+        if isfield(lukestructs,'output'),%job done
             %
             disp(['LUKE simulation #',int2str(ii),' is completed. You can use irunluke_jd to display results, load processed data or perform specific calculations.']);
             %
             sluke_save(sparams,simul_id,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
             %
-            if ~isfield(sparams,'')
-                %
-                data_proc = proc_luke_jd(lukestructs.output);
-                %
-            else
-                %
-                data_proc = proc_luke_jd(lukestructs.output,sparams.postprocessing.ir_display{ii},sparams.postprocessing.p_opt{ii},sparams.postprocessing.dp_cyl{ii},sparams.postprocessing.pnmax{ii},sparams.postprocessing.subtitle{ii},sparams.postprocessing.opt{ii});
-                %
-            end
+            % Data postprocessing
             %
-            if ~isempty(data_proc)
-                %
-                save(['SLUKE_RESULTS/PROC_LUKE_DATA_',id_simul,'.mat'],'data_proc');
-                %
-            else
-                %
-                disp('WARNING : Post-processing of LUKE results failed !')
-                %
-            end
+            sluke_postprocessing(sparams,lukestructs,ii);
             %
-            
+            % Synthetic diagnostic calculations
+            %
+            sluke_diagnostics(sparams,lukestructs,ii);
             %
         elseif isfield(lukestructs,'err') %job failed
             %
@@ -103,7 +91,7 @@ for ii = 1:length(sparams.machine)
             %
             delete(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
             %
-        elseif isfield(lukestructs,'job') %job running, to be checked later
+        elseif isfield(lukestructs,'job') %job run
             %
             disp(['LUKE simulation #',int2str(ii),' is running.']);
             %
@@ -116,8 +104,6 @@ for ii = 1:length(sparams.machine)
             end
             %
             sluke_save(sparams.machine{ii},simul_id,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
-            %
-            %luke_job = lukestructs.job;
             %
         else
             %

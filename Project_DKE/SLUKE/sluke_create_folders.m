@@ -20,73 +20,80 @@ else
 end
 %
 if ~exist('SLUKE_DKEPARAMS')
-	[success(1),messages.results] = mkdir('SLUKE_DKEPARAMS');
+	[success(2),messages.results] = mkdir('SLUKE_DKEPARAMS');
 else
-    success(1) = 1;
+    success(2) = 1;
     messages.results = '';
 end
 %
 if ~exist('SLUKE_RAYPARAMS')
-	[success(1),messages.results] = mkdir('SLUKE_RAYPARAMS');
+	[success(3),messages.results] = mkdir('SLUKE_RAYPARAMS');
 else
-    success(1) = 1;
+    success(3) = 1;
     messages.results = '';
 end
 %
 if ~exist('SLUKE_DKEDISPLAYS')
-	[success(1),messages.results] = mkdir('SLUKE_DKEDISPLAYS');
+	[success(4),messages.results] = mkdir('SLUKE_DKEDISPLAYS');
 else
-    success(1) = 1;
+    success(4) = 1;
     messages.results = '';
 end
 %
 if ~exist('SLUKE_FITEQUILS')
-	[success(1),messages.results] = mkdir('SLUKE_FITEQUILS');
+	[success(5),messages.results] = mkdir('SLUKE_FITEQUILS');
 else
-    success(1) = 1;
+    success(5) = 1;
     messages.results = '';
 end
 %
 if ~exist('SLUKE_EQUILCONSISTENCIES')
-	[success(1),messages.results] = mkdir('SLUKE_EQUILCONSISTENCIES');
+	[success(6),messages.results] = mkdir('SLUKE_EQUILCONSISTENCIES');
 else
-    success(1) = 1;
+    success(6) = 1;
     messages.results = '';
 end
 %
 if ~exist('SLUKE_EQUILS')
-	[success(1),messages.equils] = mkdir('SLUKE_EQUILS');
+	[success(7),messages.equils] = mkdir('SLUKE_EQUILS');
 else
-    success(1) = 1;
+    success(7) = 1;
     messages.equils = '';
 end
 %
 if ~exist('SLUKE_OHMS')
-    [success(2),messages.ohms] = mkdir('SLUKE_OHMS');
+    [success(8),messages.ohms] = mkdir('SLUKE_OHMS');
 else
-    success(2) = 1;
+    success(8) = 1;
     messages.ohms = '';
 end
 %
 if ~exist('SLUKE_WAVES')
-     [success(3),messages.waves] = mkdir('SLUKE_WAVES');
+     [success(9),messages.waves] = mkdir('SLUKE_WAVES');
 else
-    success(3) = 1;
+    success(9) = 1;
     messages.waves = '';
 end
 %
 if ~exist('SLUKE_TRANSPS')
-     [success(4),messages.transps] = mkdir('SLUKE_TRANSPS');
+     [success(10),messages.transps] = mkdir('SLUKE_TRANSPS');
 else
-    success(4) = 1;
+    success(10) = 1;
     messages.transps = '';
 end
 %
 if ~exist('SLUKE_RIPPLE')
-     [success(5),messages.ripple] = mkdir('SLUKE_RIPPLE');
+     [success(11),messages.ripple] = mkdir('SLUKE_RIPPLE');
 else
-    success(5) = 1;
+    success(11) = 1;
     messages.ripple = '';
+end
+%
+if ~exist('SLUKE_FIGURES')
+	[success(12),messages.results] = mkdir('SLUKE_FIGURES');
+else
+    success(12) = 1;
+    messages.results = '';
 end
 %
 if sum(success) == length(success)
