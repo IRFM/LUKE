@@ -1,4 +1,4 @@
-function [equil,gradpthermalsgradrho,gradpmagsgradrho,gradpkinsgradrho,jparz_fsav,jparz_ohm_fsav] = equilconsistency_yp(equil,equil_fit,display_mode,prho,mtheta)
+function [equil,gradpthermalsgradrho,gradpmagsgradrho,gradpkinsgradrho,jparz_fsav,jparz_ohm_fsav] = equilconsistency_yp(equil,equil_fit,auto_mode,display_mode,prho,mtheta,fitequilparam)
 % LUKE - Test the consistency of the interpolated magnetic equilibrium
 %
 % Test the consistency of the interpolated magnetic equilibrium
@@ -7,12 +7,16 @@ function [equil,gradpthermalsgradrho,gradpmagsgradrho,gradpkinsgradrho,jparz_fsa
 %
 %    - equil_in: numerical magnetic equilibrium structure
 %    - equil_fit: interpolated magnetic equilibrium structure
+%    - auto_mode: 0 for not interactive
+%       (default auto_mode = 0)
 %    - display_mode: display the results
 %       (default display_mode = 0)
-%    - prho: number of radial points
+%    - prho: number of radial points (for equil_fit only)
 %       (default prho = max(101,length(equil.psi_apRp)))
-%    - mtheta: number of poloidal points
+%    - mtheta: number of poloidal points (for equil_fit only)
 %       (default mtheta = max(105,length(equil.theta)))
+%    - fitequilparam : structure for the for of the toroidal equilibrium parameter 
+%       (default fitequilparam = '')
 %
 % OUTPUT: 
 %
@@ -25,6 +29,12 @@ function [equil,gradpthermalsgradrho,gradpmagsgradrho,gradpkinsgradrho,jparz_fsa
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
+if ~ismember('mute_equilconsistency_yp', who('global'))
+    mute_equilconsistency_yp = 0;
+else
+    global mute_equilconsistency_yp
+end
+%
 if nargin == 1
     if isfield(equil,'equil_fit'),
         equil_fit = equil.equil_fit;
@@ -35,24 +45,50 @@ if nargin == 1
         equil.equil_fit = equil_fit;
     end
     %
+    auto_mode = 0;%interactive mode
     display_mode = 0;%no display
     prho = max(101,length(equil.psi_apRp));
     mtheta = max(105,length(equil.theta));
+    fitequilparam = '';
 end
 %
-if nargin == 2,
+if nargin == 2
+    auto_mode = 0;%interactive mode
     display_mode = 0;%no display
     prho = max(101,length(equil.psi_apRp));
     mtheta = max(105,length(equil.theta));
+    fitequilparam = '';
 end
 %
-if nargin == 3,
+if nargin == 3
+    display_mode = 0;%no display
     prho = max(101,length(equil.psi_apRp));
     mtheta = max(105,length(equil.theta));
+    fitequilparam = '';
 end
 %
-if nargin == 4,
+if nargin == 4
+    prho = max(101,length(equil.psi_apRp));
     mtheta = max(105,length(equil.theta));
+    fitequilparam = '';
+end
+%
+if nargin == 5
+    mtheta = max(105,length(equil.theta));
+    fitequilparam = '';
+end
+%
+if isnan(prho)
+    prho = max(101,length(equil.psi_apRp));
+end
+if isempty(prho)
+    prho = max(101,length(equil.psi_apRp));
+end
+if isnan(mtheta)
+    mtheta = max(105,length(equil.psi_apRp));
+end
+if isempty(mtheta)
+    mtheta = max(105,length(equil.psi_apRp));
 end
 %
 rho = linspace(0.01,1,prho);
@@ -65,9 +101,18 @@ if isempty(equil_fit),
     if isfield(equil,'equil_fit'),
         equil_fit = equil.equil_fit;
     else
-        info_dke_yp(2,['Vectorized form of the magnetic equilibrium ',equil.id,' is being calculated...'],0);
-        equil_fit = fitequil_yp(equil);
-        info_dke_yp(2,'    ...done',0);
+        if mute_equilconsistency_yp == 0
+            info_dke_yp(2,['Vectorized form of the magnetic equilibrium ',equil.id,' is being calculated...'],0);
+        end
+        %
+        if isstruct(fitequilparam)
+            equil_fit = fitequil_yp(equil,fitequilparam.mode_equil{1},fitequilparam.method{1},fitequilparam.ngridresample{1},fitequilparam.nharm{1});
+        else
+            equil_fit = fitequil_yp(equil);
+        end
+        if mute_equilconsistency_yp == 0
+            info_dke_yp(2,'    ...done',0);
+        end
         equil.equil_fit = equil_fit;
     end
 end
@@ -333,26 +378,28 @@ if length(ne_lineaveraged) > 1 %pb dim definition when size rho = size theta
     ne_lineaveraged = trapz(equil.pne(:).*gradient(equil.ptx(:,1)))./trapz(gradient(equil.ptx(:,1)));
 end
 %
-disp(['Plasma current, Ip(from j_z) = ',num2str(Ip_z/1e6),' (MA)']);
-disp(['Plasma current, Ip(from j_z_fsav) = ',num2str(Ip_z_fsav/1e6),' (MA)']);
-disp(['Plasma current, Ip(from j_par_z + j_perp_z) = ',num2str(Ip_parperpz/1e6),' (MA)']);
-disp(['Plasma current, Ip(from j_par_z_fsav + j_perp_z_fsav) = ',num2str(Ip_parperpz_fsav/1e6),' (MA)']);
-disp(['Plasma current, Ip(from contour) = ',num2str(Ip_contour/1e6),' (MA)']);
-if ~isempty(Ip_eqdsk),
-    disp(['Plasma current, Ip(eqdsk) = ',num2str(Ip_eqdsk/1e6),' (MA)']);
+if mute_equilconsistency_yp == 0
+    disp(['Plasma current, Ip(from j_z) = ',num2str(Ip_z/1e6),' (MA)']);
+    disp(['Plasma current, Ip(from j_z_fsav) = ',num2str(Ip_z_fsav/1e6),' (MA)']);
+    disp(['Plasma current, Ip(from j_par_z + j_perp_z) = ',num2str(Ip_parperpz/1e6),' (MA)']);
+    disp(['Plasma current, Ip(from j_par_z_fsav + j_perp_z_fsav) = ',num2str(Ip_parperpz_fsav/1e6),' (MA)']);
+    disp(['Plasma current, Ip(from contour) = ',num2str(Ip_contour/1e6),' (MA)']);
+    if ~isempty(Ip_eqdsk),
+        disp(['Plasma current, Ip(eqdsk) = ',num2str(Ip_eqdsk/1e6),' (MA)']);
+    end
+    disp('-------------------------------------------------------------')
+    disp(['Normalized internal inductance, li = ',num2str(li)]);
+    disp(['Central safety factor, q(0) = ',num2str(q0)]);
+    disp(['Edge safety factor, q95 = ',num2str(q95)]);
+    disp(['Line averaged electron density, nl[1e19 m-3] = ',num2str(ne_lineaveraged/1e19)]);
+    disp('-------------------------------------------------------------')
+    disp(['Shafranov shift = ',num2str(pshift(end))]);
+    disp(['Plasma elongation = ',num2str(pelong(end))]);
+    disp(['Plasma triangularity = ',num2str(ptrian(end))]);
+    disp(['Aspect ratio = ',num2str(aspectratio)]);
 end
-disp('-------------------------------------------------------------')
-disp(['Normalized internal inductance, li = ',num2str(li)]);
-disp(['Central safety factor, q(0) = ',num2str(q0)]);
-disp(['Edge safety factor, q95 = ',num2str(q95)]);
-disp(['Line averaged electron density, nl[1e19 m-3] = ',num2str(ne_lineaveraged/1e19)]);
-disp('-------------------------------------------------------------')
-disp(['Shafranov shift = ',num2str(pshift(end))]);
-disp(['Plasma elongation = ',num2str(pelong(end))]);
-disp(['Plasma triangularity = ',num2str(ptrian(end))]);
-disp(['Aspect ratio = ',num2str(aspectratio)]);
 %
-if equil.psi_apRp(end)*equil.ptBy(end,1) < 0,
+if equil.psi_apRp(end)*equil.ptBy(end,1) < 0
     disp('******** WARNING : equilibrium signs not self-consistent ********')
     if equil.psi_apRp(end) > 0,
         disp('******** Poloidal magnetic flux corresponds to positive plasma current (clockwise when tokamak viewed from the top) ********')
@@ -364,24 +411,56 @@ if equil.psi_apRp(end)*equil.ptBy(end,1) < 0,
     %
     disp('******** The problem must be fixed before any C3PO/LUKE simulation ********')
     disp('')
-    opt_gui = input_dke_yp('Do you want to fix the problem ? (yes:1,no:0)',0,[0,1]) == 1;
-    if opt_gui == 1,
-        opt_gui1 = input_dke_yp('Is the plasma current clockwise (1) or anticlockwise (-1) when tokamak viewed from the top ?',1,[-1,1]) == 1;
-        if opt_gui1 == 1,% Ip > 0
-            if equil.psi_apRp(end) > 0
-                equil.ptBx = - equil.ptBx;
-                equil.ptBy = - equil.ptBy;
-            else
-                equil.psi_apRp = -1*equil.psi_apRp;
+    %
+    if auto_mode == 0
+        opt_gui = input_dke_yp('Do you want to fix the problem ? (yes:1,no:0)',0,[0,1]) == 1;
+        if opt_gui == 1,
+            opt_gui1 = input_dke_yp('Is the plasma current clockwise (1) or anticlockwise (-1) when tokamak viewed from the top ?',1,[-1,1]) == 1;
+            if opt_gui1 == 1,% Ip > 0
+                if equil.psi_apRp(end) > 0
+                    equil.ptBx = - equil.ptBx;
+                    equil.ptBy = - equil.ptBy;
+                else
+                    equil.psi_apRp = -1*equil.psi_apRp;
+                end
+            elseif opt_gui1 == -1,% Ip < 0
+                 if equil.psi_apRp(end) > 0
+                     equil.psi_apRp = -1*equil.psi_apRp;
+                else
+                    equil.ptBx = - equil.ptBx;
+                    equil.ptBy = - equil.ptBy;
+                 end
             end
-        elseif opt_gui1 == -1,% Ip < 0
-             if equil.psi_apRp(end) > 0
-                 equil.psi_apRp = -1*equil.psi_apRp;
-            else
-                equil.ptBx = - equil.ptBx;
-                equil.ptBy = - equil.ptBy;
-             end
+            %
         end
+    else
+        %
+        ii = strfind(equil.id,'_');
+        %
+        
+        if length(ii) >= 2
+            %
+            tok =  equil.id(1:ii(1)-1);
+            shotnum = str2num(equil.id(ii(1)+1:ii(2)-1));
+            %
+            if strcmp(tok,'TS')
+                %
+                if shotnum < 28423 % Before CIEL phase 
+                    
+                else % CIEL phase
+                    
+                end
+                %
+            elseif strcmp(tok,'WEST')
+                
+            else
+                error(['The tokamak ',tok,' is not recognized yet for the automatic mode. Upgrade the program first.']);
+            end
+            
+        else
+            error('Unable to parse equil.id and extract tokamak name and shot number. Standard equil.id name is machinename_shotnumber_...');
+        end
+        
         %
     end
 end

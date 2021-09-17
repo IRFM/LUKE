@@ -231,6 +231,13 @@ bbmp = boundary(R_mp(:),Npar_mp(:));
 %
 figure('Name','Projected Npar propagation domain');
 graph1D_jd(xR,6.5./sqrt(xTe),0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'-.','none','g',2);
+if strfind(equil.id,'WEST')
+    %graph1D_jd(xR,6.5./sqrt(xTe*1.3),0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'--','none','g',2);
+    %graph1D_jd(xR,6.5./sqrt(xTe*1.7),0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],':','none','g',2);
+    disp('*******************************************')
+    disp('WARNING: WEST campaign C4 corrections of Te')
+    disp('*******************************************')
+end
 graph1D_jd(bbR_mask_s(bk_min_s),bbnpar_mask_s(bk_min_s),0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'-','none','r',2);hold on
 %
 open_upperboundaries_propagationdomain = ~isempty(find(gamma1>1));

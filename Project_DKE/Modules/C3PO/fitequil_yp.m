@@ -19,22 +19,22 @@ function [equil_out] = fitequil_yp(equil_in,mode,method,ngrid,nharm)
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
-if nargin == 1, 
+if nargin == 1
     mode = 1;%Spline-Fourier case
     method = 'spline';
     ngrid = 1001;
     nharm = [];
 end
-if nargin == 2, 
+if nargin == 2
     method = 'spline';
     ngrid = 1001;
     nharm = [];
 end
-if nargin == 3, 
+if nargin == 3
     ngrid = 1001;  
     nharm = [];
 end
-if nargin == 4, 
+if nargin == 4
     nharm = [];%For Spline-Fourier case only
 end
 %
@@ -52,7 +52,7 @@ equil_out.method = method;
 equil_out.Rp = equil_in.Rp;
 equil_out.Zp = equil_in.Zp;
 %
-if mode == 1,%Spline-Fourier case: (psi,theta) magnetic equilibrium   
+if mode == 1 %Spline-Fourier case: (psi,theta) magnetic equilibrium   
     %
     ap = equil_in.ptx(end,1);
     psi_apRp = equil_in.psi_apRp;
@@ -149,7 +149,7 @@ if mode == 1,%Spline-Fourier case: (psi,theta) magnetic equilibrium
         error('equil_out.psi_apRp(1) must be equal to zero !');
     end
     %
-elseif mode == 2,%Spline-Spline description for (x,y) magnetic equilibrium
+elseif mode == 2 %Spline-Spline description for (x,y) magnetic equilibrium
     %
     method = 'cubic';
     equil_out.method = method;
