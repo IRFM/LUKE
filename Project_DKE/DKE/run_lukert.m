@@ -4,6 +4,12 @@ function [lukestructs] = run_lukert(lukestructs,dkepath,timedep)
 %
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr> 
 %
+if ~ismember('mute_run_lukert', who('global'))
+    mute_run_lukert = 0;
+else
+    global mute_run_lukert
+end
+%
 if nargin < 2
     dkepath = load_structures_yp('dkepath','','');
 end
@@ -12,7 +18,7 @@ if nargin > 2 && timedep && iscell(lukestructs),% time-dependent calculations
     %
     nt = length(lukestructs);
     %
-    for it = 1:nt,
+    for it = 1:nt
         %
         if ~isfield(lukestructs{it}.dkeparam,'opt_flegendre') || lukestructs{it}.dkeparam.opt_flegendre == 0,
             disp('Note : option flegendre must be activated for time-dependent LUKE calculations. Enforcing.')
@@ -77,9 +83,11 @@ else
         luke_flag = zeros(1,njobs);% flags to control LUKE jobs status : (0) not started, (1) running, (2) finished, (3) failed, (4) unknown
         statusstr = {'Ready to start','Running','Completed','Failed','Unknown'};
         %
-        disp(' ')
-        disp(' -------------------------------------------- ')
-        disp(' ')
+        if mute_run_lukert == 0
+            disp(' ')
+            disp(' -------------------------------------------- ')
+            disp(' ')
+        end
         %
         for ijob = 1:njobs,
             %
@@ -97,24 +105,22 @@ else
             %
         end 
         %
-        if njobs > 1 && luke_flag(1) == 1 && all(luke_flag(2:end) == -1),
-            disp(['Checking the status of ',num2str(njobs),' jobs sent to run_lukert via mdce_remote :'])
-            disp(' ')        
-        else
-            disp(['Initial status of the ',num2str(njobs),' job(s) sent to run_lukert :'])
-            disp(' ')
-            %
-            for ijob = 1:njobs,
+        if mute_run_lukert == 0
+            if njobs > 1 && luke_flag(1) == 1 && all(luke_flag(2:end) == -1),
+                disp(['Checking the status of ',num2str(njobs),' jobs sent to run_lukert via mdce_remote :'])
+                disp(' ')        
+            else
+                disp(['Initial status of the ',num2str(njobs),' job(s) sent to run_lukert :'])
                 %
-                if luke_flag(ijob) >= 0,
-                    disp([' - Job # ',num2str(ijob),' : ',statusstr{1 + luke_flag(ijob)}])
+                for ijob = 1:njobs,
+                    %
+                    if luke_flag(ijob) >= 0,
+                        disp([' - Job # ',num2str(ijob),' : ',statusstr{1 + luke_flag(ijob)}])
+                    end
                 end
-            end
-        end        
-        %
-        disp(' ')
-        disp(' -------------------------------------------- ')
-        disp(' ')
+            end        
+            disp(' -------------------------------------------- ')
+        end
         %
         if any(luke_flag == 0),% there are jobs to be run
             %
