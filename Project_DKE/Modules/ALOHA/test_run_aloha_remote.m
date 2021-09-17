@@ -1,191 +1,215 @@
-% test script for remote ALOHA calculations
+%
+% test script for building LAUNCHS structure
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
 close all
 clear all
 clc
-%{
-shot = 27503;%shot number (Tore Supra or WEST)
-port = 'Q6A';%antenna ports : Q6A, or Q6B or Q6A+Q6B -> (C2,C3) or (C3,C4) or (LH1,LH2) for Tore Supra or WEST
-tmin = 4.5;%time interval for data averaging (s)
-tmax = 5.0;%time interval for data averaging (s)
 %
-shot = 55539;%shot number (Tore Supra or WEST)
-port = 'Q6A';%antenna ports : Q6A, or Q6B or Q6A+Q6B -> (C2,C3) or (C3,C4) or (LH1,LH2) for Tore Supra or WEST
-tmin = 4.3;%time interval for data averaging (s)
-tmax = 4.4;%time interval for data averaging (s)
-%}
-shot = 28014;%55539;28014;27503;%shot number (Tore Supra or WEST)
-port = 'Q6A+Q6B';%'Q6A';'Q6A+Q6B';'Q6A';%antenna ports : Q6A, or Q6B or Q6A+Q6B -> (C2,C3) or (C3,C4) or (LH1,LH2) for Tore Supra or WEST
-tmin = 5.5;%4.3;5.5;4.5;%time interval for data averaging (s)
-tmax = 6.5;%4.4;6.5;5.0;%time interval for data averaging (s)
+disp('-------------------------------')
+disp('Test ALOHA calculation remotely')
+disp('-------------------------------')
 %
-display_mode = 1;%display and save figures (2), display and do not save figures (1), do not display but save figures (0), do nothing (-1)
+sparams = sluke_params_preset('TEST_ALOHA');%simulation parameters
 %
-% ALOHA simulations
+[err,status] = sluke_params_consistency(sparams);
 %
-ii = 0;
-%{
-iimax = 40;%for density scan
-%
-ne = linspace(1,2,iimax);%1e17 density units
-%
-for ii = 1:40
+if ~err
     %
-    simul_params(ii).id = ['ne_enforced_',num2str(ne(ii))];
-    simul_params(ii).remote.profile = 5;%remote profile number (list available by typing dispremoteprofiles in command window. Choose a profile with a scheduler) 
+    if strcmp(input_dke_yp('Change remote profile of the computer on which ALOHA calculations will be perfomed (y/n)','n',{'y','n'}),'y')
+        %
+        dispremoteprofiles;
+        sparams = sluke_params_modify(sparams);
+        %
+    end
     %
-    simul_params(ii).optim.method = 0;%(1) Edge density in front of the grill is calculated such that simulated RC coefficients are the clostest to observations (0) Edge density in front of the grill is given by the guess
-    simul_params(ii).optim.ne_guess = ne(ii)*1e17;%Edge density in front of the grill (initial guess or enforced value) (m-3)
-    simul_params(ii).optim.tolfun = 1e-2;%Relative tolerance on targets (if optim.method = 1)
-    simul_params(ii).optim.tolx = 1e-2;%Relative tolerance on inputs (if optim.method = 1)
-    simul_params(ii).optim.nitmax = 2;%Maximum number of iterations (if optim.method = 1)
+    for ii = 1:length(sparams.machine)
+        %
+        launchs{ii} = sluke_build_launchs(sparams,ii);
+        %
+    end
     %
 end
 %
-ii = ii + 1;
-%
-simul_params(ii).id = 'ne_optimized';
-simul_params(ii).remote.profile = 5;%remote profile number (list available by typing 'dispremoteprofiles' in command window) 
-%
-simul_params(ii).optim.method = 1;%(1) Edge density in front of the grill is calculated such that simulated RC coefficients are the clostest to observations (0) Edge density in front of the grill is given by the guess
-simul_params(ii).optim.ne_guess = [1.0,10.0]*1e17;%Edge density in front of the grill (initial guess or enforced value) (m-3)
-simul_params(ii).optim.tolfun = 1e-2;%Relative tolerance on targets (if optim.method = 1)
-simul_params(ii).optim.tolx = 1e-2;%Relative tolerance on inputs (if optim.method = 1)
-simul_params(ii).optim.nitmax = 10;%Maximum number of iterations (if optim.method = 1)
-%}
-ii = ii + 1;
-%
-simul_params(ii).id = 'ne_2';
-simul_params(ii).remote.profile = 17;%5;%remote profile number (list available by typing 'dispremoteprofiles' in command window) 
-%
-simul_params(ii).optim.method = 1;%(1) Edge density in front of the grill is calculated such that simulated RC coefficients are the clostest to observations (0) Edge density in front of the grill is given by the guess
-simul_params(ii).optim.ne_guess = [2.0]*1e17;%Edge density in front of the grill (initial guess or enforced value) (m-3)
-simul_params(ii).optim.tolfun = 1e-1;%Relative tolerance on targets (if optim.method = 1)
-simul_params(ii).optim.tolx = 1e-2;%Relative tolerance on inputs (if optim.method = 1)
-simul_params(ii).optim.nitmax = 5;%Maximum number of iterations (if optim.method = 1)
-%
+
+
+%{
 if ~exist('ALOHA/Simulations/')
     mkdir('ALOHA/Simulations/')
 end
-%   
-for ii = 1:length(simul_params)
+%
+for ii = 1:length(sparams.machine)
     %
-    if ~exist(['ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id,'.mat'])
+    flag_display_powerspectrum = 1;
+    %
+    if sparams.simul.enable{ii}
         %
-        antennas = run_aloha_remote(port,shot,tmin,tmax,display_mode,simul_params(ii));
-        %
-        for jj = 1:length(antennas)
+        if strcmp(sparams.wavetype{ii},'lh')
             %
-            flag_job(ii,jj) = 1;
+            if strcmp(sparams.antenna.spectrum{ii},'aloha')
+                %
+                id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',num2str(sparams.discharge.tmin{ii}),'_',num2str(sparams.discharge.tmax{ii}),'_ALOHA_',sparams.antenna.aloha.port{ii},'_',sparams.simul.id{ii},'_',num2str(sparams.antenna.aloha.optim.ne_guess{ii}/1e17)];
+                id_data = [sparams.machine{ii},'_data_lh_',sparams.discharge.shot{ii},'_',num2str(sparams.discharge.tmin{ii}),'_',num2str(sparams.discharge.tmax{ii}),'_',sparams.antenna.aloha.port{ii}];
+                %
+            elseif strcmp(sparams.antenna.spectrum{ii},'custom')
+                %
+                id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',num2str(sparams.discharge.tmin{ii}),'_',num2str(sparams.discharge.tmax{ii}),'_CUSTOM_',sparams.simul.id{ii}];
+                %
+            end
             %
         end
-        %
-        save(['ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id,'.mat'],'antennas')
-        %
-        disp(['---> simulation (',int2str(ii),'): is running.'])
-        %
-    else
-        %
-        disp(['---> ALOHA simulation #',int2str(ii),' status :'])
-        %
-        load(['ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id,'.mat'],'antennas')
-        %
-        antennas = run_aloha_remote(antennas);
-        %
-        save(['ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id,'.mat'],'antennas')
-        %
-        for jj = 1:length(antennas)
+        %         
+        if strcmp(sparams.antenna.spectrum{ii},'aloha')
             %
-            if isfield(antennas(jj).aloha,'job')
-                disp([' - job #',int2str(jj),' is still running.'])
-                flag_job(ii,jj) = 1;
-            elseif isfield(antennas(jj).aloha,'err')
-                 disp([' - job #',int2str(jj),' failed. Load ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id,'.mat file and type antennas{',int2str(ii),'}.aloha.err(:) in the command to see the error log.'])
-                 flag_job(ii,jj) = -1;
+            if ~exist(['ALOHA/Simulations/',id,'.mat'])
+                %
+                aloha.machine = sparams.machine{ii};
+                aloha.shot = sparams.discharge.shot{ii};
+                aloha.tmin = sparams.discharge.tmin{ii};
+                aloha.tmax = sparams.discharge.tmax{ii};
+                aloha.display = sparams.antenna.aloha.display{ii};
+                aloha.port = sparams.antenna.aloha.port{ii};
+                %
+                aloha.optim.id = id;
+                aloha.optim.method = sparams.antenna.aloha.optim.method{ii};
+                aloha.optim.remote.profile = sparams.antenna.aloha.remote_profile{ii};
+                aloha.optim.ne_guess = sparams.antenna.aloha.optim.ne_guess{ii};
+                %
+                if aloha.optim.method == 1
+                    %
+                    aloha.optim.tolfun = sparams.antenna.aloha.optim.tolfun{ii};
+                    aloha.optim.tolx = sparams.antenna.aloha.optim.tolx{ii};
+                    aloha.optim.nitmax = sparams.antenna.aloha.optim.nitmax{ii};
+                end
+                %
+                antennas = run_aloha_remote(aloha.machine,aloha.port,aloha.shot,aloha.tmin,aloha.tmax,aloha.display,aloha.optim);
+                %
+                save(['ALOHA/Simulations/',id,'.mat'],'antennas')
+                %
+                disp(['---> simulation (',int2str(ii),'): is running.'])
+                %
+                for jj = 1:length(antennas)
+                    %
+                    flag_job(ii,jj) = 1;
+                    %
+                end
+                %
             else
-                disp([' - job #',int2str(jj),' is completed.'])
-                flag_job(ii,jj) = 0;
-            end
-            %
-        end
-        %
-        if ii == 1 && sum(flag_job(ii,:)) == 0 % power spectra are independent of the density in front of the grill. Just the first is plotted
-            %
-            load(['ALOHA/Data/data_lh_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'.mat'],'data_lh') 
-            %
-            if length(data_lh) >= 1
                 %
-                h1 = figure;
+                disp(['---> ALOHA simulation status (ID:',id,') :'])
                 %
-                h1.Name = ['Spectrum - ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',data_lh(1).port,'_',simul_params(ii).id];
+                load(['ALOHA/Simulations/',id,'.mat'],'antennas')
                 %
-                tt = strrep(['Spectrum - ALOHA : #',int2str(shot),', dt = [',num2str(tmin),':',num2str(tmax),'], ',data_lh(1).port,', ',simul_params(ii).id],'_','-');
+                antennas = run_aloha_remote(antennas);
                 %
-                plot(antennas(1).aloha.results.nz,real(antennas(1).aloha.results.dP_nz)/max(real(antennas(1).aloha.results.dP_nz)),'b-','LineWidth',2),hold on
-                plot(antennas(2).aloha.results.nz,real(antennas(2).aloha.results.dP_nz)/max(real(antennas(2).aloha.results.dP_nz)),'r-','LineWidth',2),hold on
+                save(['ALOHA/Simulations/',id,'.mat'],'antennas')
                 %
-                xlim([-8,8]);ylim([0,1])
+                for jj = 1:length(antennas)
+                    %
+                    if isfield(antennas(jj).aloha,'job')
+                        disp([' - job #',int2str(jj),' is still running.'])
+                        flag_job(ii,jj) = 1;
+                    elseif isfield(antennas(jj).aloha,'err')
+                         disp([' - job #',int2str(jj),' failed. Load ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id,'.mat file and type antennas(',int2str(ii),').aloha.err(:) in the command to see the error log.'])
+                         flag_job(ii,jj) = -1;
+                    else
+                        disp([' - job #',int2str(jj),' is completed.'])
+                        flag_job(ii,jj) = 0;
+                    end
+                    %
+                end
                 %
-                title(tt);
-                xlabel('n_z')
-                ylabel('dP_{LH}/n_z/max(dP_{LH}/n_z)')
-                %
-                grid minor
-                %
-                nz_max1 = antennas(1).aloha.results.nz(find(real(antennas(1).aloha.results.dP_nz) == max(real(antennas(1).aloha.results.dP_nz))));
-                nz_max2 = antennas(2).aloha.results.nz(find(real(antennas(2).aloha.results.dP_nz) == max(real(antennas(2).aloha.results.dP_nz))));
-                %
-                legend(['Upper modules (',data_lh(1).port,'), n_{z0} = ',num2str(nz_max1)],['Lower modules (',data_lh(1).port,'), n_{z0} = ',num2str(nz_max2)],'Location','NorthWest');
-                %
-                drawnow;
-                %
-            end
-            %
-            if length(data_lh) == 2
-                %
-                h1 = figure;
-                %
-                h1.Name = ['Spectrum - ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',data_lh(2).port,'_',simul_params(ii).id];
-                %
-                tt = strrep(['Spectrum - ALOHA : #',int2str(shot),', dt = [',num2str(tmin),':',num2str(tmax),'], ',data_lh(2).port,', ',simul_params(ii).id],'_','-');
-                %
-                plot(antennas(3).aloha.results.nz,real(antennas(3).aloha.results.dP_nz)/max(real(antennas(3).aloha.results.dP_nz)),'b-','LineWidth',2),hold on
-                plot(antennas(4).aloha.results.nz,real(antennas(4).aloha.results.dP_nz)/max(real(antennas(4).aloha.results.dP_nz)),'r-','LineWidth',2),hold on
-                %
-                xlim([-8,8]);ylim([0,1])
-                %
-                title(tt);
-                xlabel('n_z')
-                ylabel('(dP_{LH}/n_z)/max(dP_{LH}/n_z)')
-                %
-                grid minor
-                %
-                nz_max3 = antennas(3).aloha.results.nz(find(real(antennas(3).aloha.results.dP_nz) == max(real(antennas(3).aloha.results.dP_nz))));
-                nz_max4 = antennas(4).aloha.results.nz(find(real(antennas(4).aloha.results.dP_nz) == max(real(antennas(4).aloha.results.dP_nz))));
-                %
-                legend(['Upper modules (',data_lh(2).port,') , n_{z0} = ',num2str(nz_max3)],['Lower modules (',data_lh(2).port,'), n_{z0} = ',num2str(nz_max4)],'Location','NorthWest');
-                %
-                drawnow;
-                %
+                if flag_display_powerspectrum == 1 && sum(flag_job(ii,:)) == 0 % power spectra are independent of the density in front of the grill. Just the first is plotted
+                    %
+                    load(['ALOHA/Data/',id_data,'.mat'],'data_lh') 
+                    %
+                    display_lhdata(data_lh,sparams.antenna.aloha.display.data{ii});
+                    %
+                    if length(data_lh) >= 1
+                        %
+                        h1 = figure;
+                        %
+                        h1.Name = ['Spectrum - ALOHA/Simulations/sim_aloha_',id];
+                        %
+                        tt = strrep(['Spectrum (',id,')'],'_','-');
+                        %
+                        plot(antennas(1).aloha.results.nz,real(antennas(1).aloha.results.dP_nz)/max(real(antennas(1).aloha.results.dP_nz)),'b-','LineWidth',2),hold on
+                        plot(antennas(2).aloha.results.nz,real(antennas(2).aloha.results.dP_nz)/max(real(antennas(2).aloha.results.dP_nz)),'r-','LineWidth',2),hold on
+                        %
+                        xlim([-8,8]);ylim([0,1])
+                        %
+                        title(tt);
+                        xlabel('n_z')
+                        ylabel('dP_{LH}/n_z/max(dP_{LH}/n_z)')
+                        %
+                        grid minor
+                        %
+                        nz_max1 = antennas(1).aloha.results.nz(find(real(antennas(1).aloha.results.dP_nz) == max(real(antennas(1).aloha.results.dP_nz))));
+                        nz_max2 = antennas(2).aloha.results.nz(find(real(antennas(2).aloha.results.dP_nz) == max(real(antennas(2).aloha.results.dP_nz))));
+                        %
+                        legend(['Upper modules (',data_lh(1).port,'), n_{z0} = ',num2str(nz_max1)],['Lower modules (',data_lh(1).port,'), n_{z0} = ',num2str(nz_max2)],'Location','NorthWest');
+                        %
+                        drawnow;
+                        %
+                    end
+                    %
+                    if length(data_lh) == 2
+                        %
+                        h1 = figure;
+                        %
+                        h1.Name = ['Spectrum - ALOHA/Simulations/sim_aloha_',id];
+                        %
+                        tt = strrep(['Spectrum (',id,')'],'_','-');                         
+                        %
+                        plot(antennas(3).aloha.results.nz,real(data_lh,antennas(3).aloha.results.dP_nz)/max(real(antennas(3).aloha.results.dP_nz)),'b-','LineWidth',2),hold on
+                        plot(antennas(4).aloha.results.nz,real(data_lh,antennas(4).aloha.results.dP_nz)/max(real(antennas(4).aloha.results.dP_nz)),'r-','LineWidth',2),hold on
+                        %
+                        xlim([-8,8]);ylim([0,1])
+                        %
+                        title(tt);
+                        xlabel('n_z')
+                        ylabel('(dP_{LH}/n_z)/max(dP_{LH}/n_z)')
+                        %
+                        grid minor
+                        %
+                        nz_max3 = antennas(3).aloha.results.nz(find(real(antennas(3).aloha.results.dP_nz) == max(real(antennas(3).aloha.results.dP_nz))));
+                        nz_max4 = antennas(4).aloha.results.nz(find(real(antennas(4).aloha.results.dP_nz) == max(real(antennas(4).aloha.results.dP_nz))));
+                        %
+                        legend(['Upper modules (',data_lh(2).port,') , n_{z0} = ',num2str(nz_max3)],['Lower modules (',data_lh(3).port,'), n_{z0} = ',num2str(nz_max4)],'Location','NorthWest');
+                        %
+                        drawnow;
+                        %
+                    end
+                    %
+                    flag_display_powerspectrum = 0;
+                    %
+                end
             end
         end
     end
 end
 %
+launchs = sluke_build_launchs(data_lh,antennas,sparams);%ALOHA -> C3PO (build launch structures)
+%
+
+return
+
+%
 for ii = 1:length(simul_params)
+    %
+    id = [int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id];
     %
     if sum(flag_job(ii,:)) == 0
         %
-        if exist(['ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id,'.mat'])
+        if exist(['ALOHA/Simulations/sim_aloha_',id,'.mat'])
             %
-            load(['ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id,'.mat'],'antennas')
+            load(['ALOHA/Simulations/sim_aloha_',id,'.mat'],'antennas')
             load(['ALOHA/Data/data_lh_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'.mat'],'data_lh') 
             %
             h1 = figure;
             %
-            h1.Name = ['RC - ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id];
+            h1.Name = ['RC - ALOHA/Simulations/sim_aloha_',id];
             %
             tt = strrep(['RC - ALOHA : #',int2str(shot),', dt = [',num2str(tmin),':',num2str(tmax),'], ',port,', ',simul_params(ii).id],'_','-');
             %
@@ -294,6 +318,8 @@ kk = 1;
 %
 for ii = 1:length(simul_params)
     %
+    id = [int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id];
+    %
     if simul_params(ii).optim.method == 0
         mask_optim(ii) = 0;
     else
@@ -302,7 +328,7 @@ for ii = 1:length(simul_params)
     %
     if sum(flag_job(ii,:)) == 0
         %
-        load(['ALOHA/Simulations/sim_aloha_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'_',simul_params(ii).id,'.mat'],'antennas')
+        load(['ALOHA/Simulations/sim_aloha_',id,'.mat'],'antennas')
         %
         if length(antennas) == 2 
             %
@@ -435,3 +461,4 @@ if length(mask_optim) > 1 && sum(mask_optim)> 1
         end
     end
 end
+%}

@@ -27,38 +27,52 @@ if nargin == 1
         %
     end
     %
-elseif nargin == 6
+elseif nargin == 7
     %
     dkepath = load_structures_yp('dkepath','','');%for remote simulation profiles
     %
-    if ~exist('ALOHA/Data/')
-        mkdir('ALOHA/Data/')
+    if exist('SLUKE_RFWAVES')
+        %
+        rfwaves_folder = 'SLUKE_RFWAVES/';
+        %
+    else
+        %
+        rfwaves_folder = '';
+        %
+    end
+                        
+    if ~exist([rfwaves_folder,'ALOHA/Data/'])
+        mkdir([rfwaves_folder,'ALOHA/Data/'])
     end
     %
-    port = varargin{1};
-    shot = varargin{2};
-    tmin = varargin{3};
-    tmax = varargin{4};
-    display_mode = varargin{5};
+    machine = varargin{1};
+    port = varargin{2};
+    shot = varargin{3};
+    tmin = varargin{4};
+    tmax = varargin{5};
+    display_mode = varargin{6};
     %
-    if ~exist(['ALOHA/Data/data_lh_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'.mat'])
+    if ischar(shot)
+        shot = str2num(shot);
+    end
+    %
+    if ~exist([rfwaves_folder,'ALOHA/Data/',machine,'_data_lh_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'.mat'])
         %
-        data_lh = remote_mlhdata_tsbase(port,shot,tmin,tmax,display_mode);
+        data_lh = remote_mlhdata_tsbase(machine,port,shot,tmin,tmax,display_mode);
         %
         if ~isfield(data_lh,'err')
-            save(['ALOHA/Data/data_lh_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'.mat'],'data_lh')
+            save([rfwaves_folder,'ALOHA/Data/',machine,'_data_lh_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'.mat'],'data_lh')
         else
-            antennas.err = data_lh.err
+            antennas.err = data_lh.err;
             return;
         end
     else
         %
-        load(['ALOHA/Data/data_lh_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'.mat'],'data_lh');
+        load([rfwaves_folder,'ALOHA/Data/',machine,'_data_lh_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'.mat'],'data_lh');
         %
     end
     %
-    %
-    simul_params = varargin{6};
+    simul_params = varargin{7};
     %
     n_antennas = length(data_lh);
     %
@@ -80,31 +94,33 @@ elseif nargin == 6
     end
     %
     if ~isfield(simul_params,'optim')
+        %
         disp(['WARNING : ''optim'' field missing in simul_params --> default values are enforced']) 
         simul_params.optim.method = 0;%(1) Edge density in front of the grill is calculated such that simulated RC coefficients are the clostest to observations (0) Edge density in front of the grill is given by the guess
         simul_params.optim.ne_guess = 1.0e17;%Edge density in front of the grill (initial guess or enforced value) (m-3)
         simul_params.optim.tolfun = 1e-2;%Relative tolerance on targets (if optim.method = 1)
         simul_params.optim.tolx = 1e-2;%Relative tolerance on inputs (if optim.method = 1)
         simul_params.optim.nitmax = 2;%Maximum number of iterations (if optim.method = 1)
+        %
     else
         %
         if ~isfield(simul_params.optim,'method')
             disp(['WARNING : ''method'' field missing in simul_params.optim --> default value is enforced']) 
             simul_params.optim.method = 0;%(1) Edge density in front of the grill is calculated such that simulated RC coefficients are the clostest to observations (0) Edge density in front of the grill is given by the guess
         end
-        if ~isfield(simul_params.optim,'ne_guess')
+        if simul_params.optim.method == 0 && ~isfield(simul_params.optim,'ne_guess')
             disp(['WARNING : ''ne_guess'' field missing in simul_params.optim --> default value is enforced']) 
             simul_params.optim.ne_guess = 1.0e17;%Edge density in front of the grill (initial guess or enforced value) (m-3)
         end
-        if ~isfield(simul_params.optim,'tolfun')
+        if simul_params.optim.method == 1 && ~isfield(simul_params.optim,'tolfun')
         	disp(['WARNING : ''tolfun'' field missing in simul_params.optim --> default value is enforced']) 
             simul_params.optim.tolfun = 1e-2;%Relative tolerance on targets (if optim.method = 1)
         end
-        if ~isfield(simul_params.optim,'tolx')
+        if simul_params.optim.method == 1 && ~isfield(simul_params.optim,'tolx')
             disp(['WARNING : ''tolx'' field missing in simul_params.optim --> default value is enforced']) 
             simul_params.optim.tolx = 1e-2;%Relative tolerance on inputs (if optim.method = 1)
         end
-        if ~isfield(simul_params.optim,'nitmax')
+        if simul_params.optim.method == 1 && ~isfield(simul_params.optim,'nitmax')
             disp(['WARNING : ''nitmax'' field missing in simul_params.optim --> default value is enforced']) 
             simul_params.optim.nitmax = 2;%Maximum number of iterations (if optim.method = 1)
         end
@@ -132,7 +148,7 @@ elseif nargin == 6
             %
             sc.options.bool_mesure = true; % activate also the phase correction
             %
-            sc.antenna.architecture = data_lh(jj).aloha_architectures;
+            sc.antenna.architecture = data_lh(jj).aloha_architecture;
             %
             sc.plasma.ne0 = simul_params.optim.ne_guess(1);%initial guess (method 1) or fixed value (method 0)
             %

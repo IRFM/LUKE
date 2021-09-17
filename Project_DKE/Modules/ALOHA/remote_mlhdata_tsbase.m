@@ -1,9 +1,10 @@
-function [data_lh] = remote_mlhdata_tsbase(port,shot,tmin,tmax,disp_mode)
+function [data_lh] = remote_mlhdata_tsbase(machine,port,shot,tmin,tmax,disp_mode)
 %
 %LUKE -  Function which load multiple LH signals from Tore Supra (or WEST) database for ALOHA power spectra calculations (output for upper and lower modules)
 %        Output are averaged over time
 %   Input:
 %
+%       machine : tokamak name
 %		port : Q6A, Q6B for single LH antenna or Q6A+Q6B for both  LH
 %		shot : shot number
 %       tmin : tmin (s) for signals averaging
@@ -22,88 +23,145 @@ function [data_lh] = remote_mlhdata_tsbase(port,shot,tmin,tmax,disp_mode)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
-if nargin < 5
+if nargin < 6
     disp_mode = 0;
 end
 %
 data_lh = []; 
 %
+data_lh.type = 'LH';%type of wave : Lower Hybrid
+%
+if shot < 27395 % (TS), Ip anti-clockwise, Bt clock-wise
+    %
+    antenna_names_Q6A = {'C1'};
+    antenna_frequencies_Q6A = 3.7e9;%Hz
+    row_z_positions_Q6A = [-0.152,-0.072,0.072,0.152];
+    aloha_architectures_Q6A = {'antenne_C1'};%for ALOHA
+    machine_name_Q6A = 'TS';
+    probes_name_Q6A = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4'};
+    %
+    antenna_names_Q6B = {'C2'};
+    antenna_frequencies_Q6B = 3.7e9;%Hz
+    row_z_positions_Q6B = [-0.152,-0.072,0.072,0.152];
+    aloha_architectures_Q6B = {'antenne_C2'};%for ALOHA
+    machine_name_Q6B = 'TS';
+    probes_name_Q6B = {'GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'}; 
+    %
+elseif shot >= 27395 && shot < 29000 % start date 08/09/1999 (TS), Ip anti-clockwise, Bt clock-wise
+    %
+    antenna_names_Q6A = {'C2'};
+    antenna_frequencies_Q6A = 3.7e9;%Hz
+    row_z_positions_Q6A = [-0.152,-0.072,0.072,0.152];
+    aloha_architectures_Q6A = {'antenne_C2'};%for ALOHA
+    machine_name_Q6A = 'TS';
+    probes_name_Q6A = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4'}; 
+    %
+    antenna_names_Q6B = {'C3'};
+    antenna_frequencies_Q6B = 3.7e9;%Hz
+    row_z_positions_Q6B = [-0.24,-0.16,-0.08,0.08,0.16,0.24];
+    aloha_architectures_Q6B = {'antenne_C3'};%for ALOHA
+    machine_name_Q6B = 'TS';
+    probes_name_Q6B = {'GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'};
+    %
+elseif shot >= 29000 && shot < 43540 % start date 27/11/2001 (TS CIEL), Ip clockwise, Bt clock-wise (coupler turned around for co-current drive)
+    %
+    antenna_names_Q6A = {'C2'};
+    antenna_frequencies_Q6A = 3.7e9;%Hz
+    row_z_positions_Q6A = [-0.152,-0.072,0.072,0.152];
+    aloha_architectures_Q6A = {'antenne_C2'};
+    machine_name_Q6A = 'TS';
+    probes_name_Q6A = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4'}; 
+    %
+    antenna_names_Q6B = {'C3'};
+    antenna_frequencies_Q6B = 3.7e9;%Hz
+    row_z_positions_Q6B = [-0.24,-0.16,-0.08,0.08,0.16,0.24];
+    aloha_architectures_Q6B = {'antenne_C3'};%for ALOHA
+    machine_name_Q6B = 'TS';
+    probes_name_Q6B = {'GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'};
+    %
+elseif shot >= 43540 && shot < 50000 % start date 29/09/2009 (TS CIEL), Ip clockwise, Bt clock-wise
+    %
+    antenna_names_Q6A = {'C3'};
+    antenna_frequencies_Q6A = 3.7e9;%Hz
+    row_z_positions_Q6A = [-0.24,-0.16,-0.08,0.08,0.16,0.24];
+    aloha_architectures_Q6A = {'antenne_C3'};%for ALOHA
+    machine_name_Q6A = 'TS';
+    probes_name_Q6A = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4'};
+    %
+    antenna_names_Q6B = {'C4'};
+    antenna_frequencies_Q6B = 3.7e9;%Hz
+    row_z_positions_Q6B = [-0.2480,-0.160,-0.0720,0.0720,0.160,0.2480];
+    aloha_architectures_Q6B = {'antenne_C4'};%for ALOHA
+    machine_name_Q6B = 'TS';
+    probes_name_Q6B = {'GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'};
+    %
+elseif shot >= 50000 % start date 12/12/2016 (WEST), Ip clockwise, Bt clock-wise
+    %
+    antenna_names_Q6A = {'LH1'};
+    antenna_frequencies_Q6A = 3.7e9;%Hz
+    row_z_positions_Q6A = [-0.24,-0.16,-0.08,0.08,0.16,0.24];
+    aloha_architectures_Q6A = {'antenne_C3'};%for ALOHA
+    machine_name_Q6A = 'WEST';
+    probes_name_Q6A = {'GISLH%1','GISLH%2','GISLH%3','GISLH%4'};
+    %
+    antenna_names_Q6B = {'LH2'};
+    antenna_frequencies_Q6B = 3.7e9;%Hz
+    row_z_positions_Q6B = [-0.2480,-0.160,-0.0720,0.0720,0.160,0.2480];
+    aloha_architectures_Q6B = {'antenne_C4'};%for ALOHA
+    machine_name_Q6B = 'WEST';
+    probes_name_Q6B = {'GISLH%5','GISLH%6','GISLH%7','GISLH%8'};
+    %
+end
+%
+type_signals_Q6A = {'gpinjc1','gphic1','gcrefc1','gphrc1'};
+type_signals_Q6B = {'gpinjc2','gphic2','gcrefc2','gphrc2'};
+%
 if strcmp(port,'Q6A')
     %
     ports = {port};
     %
-    if shot < 43540
-        antenna_names = {'C2'};
-        aloha_architectures = {'antenne_C2'};
-        machine_name = 'Tore Supra';
-        probes_name = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4'};
-    elseif shot > 43540 && shot < 50000
-        antenna_names = {'C3'};
-        aloha_architectures = {'antenne_C3'};
-        machine_name = 'Tore Supra';
-        probes_name = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4'};
-    else
-        antenna_names = {'LH1'};
-        aloha_architectures = {'antenne_C3'};
-        machine_name = 'WEST';
-        probes_name = {'GISLH%1','GISLH%2','GISLH%3','GISLH%4'};
-    end
+    antenna_names = antenna_names_Q6A;
+    antenna_frequencies = antenna_frequencies_Q6A;
+    row_z_positions = {row_z_positions_Q6A};
+    aloha_architectures = aloha_architectures_Q6A;
+    machine_name = machine_name_Q6A;
+    probes_name = probes_name_Q6A;
+    type_signals = type_signals_Q6A;
     %
-    type_signals = {'gpinjc1','gphic1','gcrefc1','gphrc1'};
-    %
-end
-%
-if strcmp(port,'Q6B')
+elseif strcmp(port,'Q6B')
     %
     ports = {port};
     %
-    if shot < 43540
-        antenna_names = {'C3'};
-        aloha_architectures = {'antenne_C3'};
-        machine_name = 'Tore Supra';
-        probes_name = {'GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'};
-    elseif shot > 43540 && shot < 50000
-        antenna_names = {'C4'};
-        aloha_architectures = {'antenne_C4'};
-        machine_name = 'Tore Supra';
-        probes_name = {'GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'};
-    else
-        antenna_names = {'LH2'};
-        aloha_architectures = {'antenne_C4'};
-        machine_name = 'WEST';
-        probes_name = {'GISLH%5','GISLH%6','GISLH%7','GISLH%8'};
-    end
-    %
-    type_signals = {'gpinjc2','gphic2','gcrefc2','gphrc2'};
-    %
-end
-%
-if strcmp(port,'Q6A+Q6B')
+    antenna_names = antenna_names_Q6B;
+    antenna_frequencies = antenna_frequencies_Q6B;
+    row_z_positions = {row_z_positions_Q6B};
+    aloha_architectures = aloha_architectures_Q6B;
+    machine_name = machine_name_Q6B;
+    probes_name = probes_name_Q6B;
+    type_signals = type_signals_Q6B;
+    %    
+elseif strcmp(port,'Q6A+Q6B')
     %
     ports = {'Q6A','Q6B'};
     %
-    if shot < 43540
-        antenna_names = {'C2','C3'};
-        aloha_architectures = {'antenne_C2','antenne_C3'};
-        machine_name = 'Tore Supra';
-        probes_name = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4','GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'};
-    elseif shot > 43540 && shot < 50000
-        antenna_names = {'C3','C4'};
-        aloha_architectures = {'antenne_C3','antenne_C4'};
-        machine_name = 'Tore Supra';
-        probes_name = {'GNLG1%1','GNLG1%2','GNLG1%3','GNLG1%4','GNLG2%1','GNLG2%2','GNLG2%3','GNLG2%4'};
-    else
-        antenna_names = {'LH1','LH2'};
-        aloha_architectures = {'antenne_C3','antenne_C4'};
-        machine_name = 'WEST';
-        probes_name = {'GISLH%1','GISLH%2','GISLH%3','GISLH%4','GISLH%5','GISLH%6','GISLH%7','GISLH%8'};
-    end
-    %
-    type_signals = {'gpinjc1','gphic1','gcrefc1','gphrc1','gpinjc2','gphic2','gcrefc2','gphrc2'};
+    antenna_names = [antenna_names_Q6A,antenna_names_Q6B];
+    antenna_frequencies = [antenna_frequencies_Q6A,antenna_frequencies_Q6B];
+    row_z_positions = {row_z_positions_Q6A,row_z_positions_Q6B};
+    aloha_architectures = [aloha_architectures_Q6A,aloha_architectures_Q6B];
+    machine_name = machine_name_Q6A;
+    probes_name = [probes_name_Q6A,probes_name_Q6B];
+    type_signals = [type_signals_Q6A,type_signals_Q6B];
     %
 end
 %
-alldata = remote_mtsbase(shot,[type_signals,probes_name]);
+if ~strcmp(machine_name,machine)
+    disp('ERROR : machine and shot number are inconsistent.')
+    disp('Tore Supra : shot number < 50000')
+    disp('WEST : shot number >= 50000')
+    return
+end
+%
+alldata = remote_mtsbase(shot,[type_signals,probes_name]);%get all TS or WEST experiental data
 %
 data = alldata(1:length(type_signals));
 probes = alldata(length(type_signals)+1:end);
@@ -181,8 +239,10 @@ for ii = 1:length(ports)
     data_lh(ii).shot = shot;
     %
     data_lh(ii).port = ports{ii};
-    data_lh(ii).antennas = antenna_names{ii};
-    data_lh(ii).aloha_architectures = aloha_architectures{ii};
+    data_lh(ii).antenna = antenna_names{ii};
+    data_lh(ii).antenna_frequency = antenna_frequencies(ii);
+    data_lh(ii).rows_z_positions = row_z_positions{ii};
+    data_lh(ii).aloha_architecture = aloha_architectures{ii};
     %
     data_lh(ii).mask.modules = mask_modules;
     data_lh(ii).mask.aloha = mask_aloha;

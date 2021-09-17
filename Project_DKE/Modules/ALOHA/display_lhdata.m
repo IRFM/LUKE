@@ -45,7 +45,7 @@ for ii = 1:length(data)
         %
         h1 = figure;
         %
-        h1.Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antennas,'(port : ',data(ii).port,'), ',data(ii).type_signal{jj}];
+        h1.Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antenna,'(port : ',data(ii).port,'), ',data(ii).type_signal{jj}];
         h1.Position = xpos;
         h1.Visible = visible_mode;
         %
@@ -87,7 +87,7 @@ for ii = 1:length(data)
             mkdir('ALOHA/Figures/')
         end
         %
-        filename = [data(ii).machine,'_',int2str(data(ii).shot),'_',data(ii).antennas,'_',data(ii).port,'_',data(ii).type_signal{jj}];
+        filename = [data(ii).machine,'_',int2str(data(ii).shot),'_',data(ii).antenna,'_',data(ii).port,'_',data(ii).type_signal{jj}];
         %
         if save_mode == 1
             print(h1,'-depsc2','-loose','-r600',['ALOHA/Figures/fig_',filename,'.eps']);
@@ -98,7 +98,7 @@ for ii = 1:length(data)
     %
     h2 = figure;
     %
-    h2.Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antennas,'(port : ',data(ii).port,'), density probes'];
+    h2.Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antenna,'(port : ',data(ii).port,'), density probes'];
     h2.Position = xpos;
     h2.Visible = visible_mode;
     %
@@ -134,7 +134,7 @@ for ii = 1:length(data)
         mkdir('ALOHA/Figures/')
     end
     %
-    filename = [data(ii).machine,'_',int2str(data(ii).shot),'_',data(ii).antennas,'_',data(ii).port,'_density_probes'];
+    filename = [data(ii).machine,'_',int2str(data(ii).shot),'_',data(ii).antenna,'_',data(ii).port,'_density_probes'];
     %
     if isfield(data(ii),'probe') 
         %

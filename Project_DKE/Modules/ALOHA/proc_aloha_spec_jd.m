@@ -66,19 +66,19 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
     %
     % by J. Decker and Y. Peysson
     %
-	if nargin < 7,
+	if nargin < 7
     	sdisplay = struct;
 	end
 	%
-	if nargin < 6,
+	if nargin < 6
     	opt_optim = 0;
     end
     %
-	if nargin < 5,
-    	param_in = NaN;
+	if nargin < 5
+    	param_in = [];
     end
     %
-	if nargin < 4,
+	if nargin < 4
     	Pin_in = NaN;
     end
     %
@@ -88,7 +88,7 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
         opt_optim = 0;
     end
     %
-    if ~isstruct(param_in) && isnan(param_in),% default values
+    if ~isstruct(param_in) && isempty(param_in),% default values
         param_in.dir = 1;
         param_in.mode = 0;
         param_in.nlobes = 2;
@@ -200,7 +200,17 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
         %       
         zN = zN_in;
         zdN = zdN_in;
+        %
         zdP = zdP_in;
+        %
+        if isnan(zdP)
+            %
+            zdP(isnan(zdP)) = 0;
+            %
+            disp(['WARNING : input LH power in ',mfilename,'.m contains NaN. All NaN values are enforced to zero. See ALOHA calculations to identify the problem.'])
+            %
+        end
+        %
         Pin = Pin_in;
         param = param_in;
         %
