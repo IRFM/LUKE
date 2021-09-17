@@ -1,4 +1,4 @@
-function lukeparam = make_lukeparam_metis2luke(cons,option,auto_mode)
+function lukeparam = make_lukeparam_metis2luke(cons,option)
 %
 % This function sets - and possibly modifies - LUKE parameters when called
 % from METIS
@@ -99,9 +99,9 @@ lukeparam.lhparam = lhparam;
 lukeparam.ecparam = ecparam;
 lukeparam.transpfaste = transpfaste;
 %
-if ~auto_mode,
+%if ~auto_mode,
 %    lukeparam = imod_struct_jd(lukeparam,'lukeparam',1,1);
-end
+%end
 %
 
 

@@ -1,8 +1,14 @@
-function [output,lukestructs] = metis2luke(post,it,auto_mode)
+function [output,lukestructs] = metis2luke(post,it,auto_mode,equilconsistency)
 %
 % function for running LUKE at a given time in the METIS profil0d time grid
 %
 % by J. Decker, J.-F. Artaud and Y. Peysson
+%
+if ~ismember('mute_metis2luke', who('global'))
+    mute_metis2luke = 0;
+else
+    global mute_metis2luke
+end
 %
 output = '';
 %
@@ -19,24 +25,33 @@ shotnum = num2str(fix(abs(post.z0dinput.shot)));
 %
 % test inputs and set calculation time
 %
-if nargin < 3,
-    auto_mode = 0;
+if nargin < 4
+    equilconsistency = '';
 end
 %
-if nargin < 2,
+if nargin < 3
+    auto_mode = 0;
+    equilconsistency = '';
+end
+%
+if nargin < 2
     trange = [min(profil0d.temps);max(profil0d.temps)];
     t = input_dke_yp(['Please enter the discharge time at which LUKE is to be called (s) [',num2str(trange.'),']'],mean(trange),trange);
     it = find(abs(t - profil0d.temps) == min(abs(t - profil0d.temps)),1,'first');
     if profil0d.temps(it) ~= t,
         t = profil0d.temps(it);
-        disp(['Closest METIS profiles time selected : t = ',num2str(t),' s.']);
+        if mute_metis2luke == 0
+            disp(['Closest METIS profiles time selected : t = ',num2str(t),' s.']);
+        end
     end
 else
     if ~isscalar(it) || it ~= round(it) || it < 1 || it > length(profil0d.temps),
         error('Invalid METIS profiles time index selected')
     else
         t = profil0d.temps(it);
-        disp(['METIS profiles time selected : t = ',num2str(t),' s.']);
+        if mute_metis2luke == 0
+            disp(['METIS profiles time selected : t = ',num2str(t),' s.']);
+        end
     end
 end
 %
@@ -71,7 +86,7 @@ end
 %
 % LUKE parameters structure
 %
-lukeparam = make_lukeparam_metis2luke(cons,option,auto_mode);
+lukeparam = make_lukeparam_metis2luke(cons,option);
 dkeparam = lukeparam.dkeparam;
 %
 % LUKE display structure
@@ -84,18 +99,24 @@ dkedisplay.display_mode = lukeparam.display_mode;%Display mode: (0): no, (1): pa
 %
 equil_id = [tokamak,'_',shotnum,'_',shotime];
 %
-[equil,profil0d_out] = make_equil_metis2luke(equil_id,profil0d,zerod,exp0d,cons,geo,option,lukeparam.equilparam);
+[equil,profil0d_out] = make_equil_metis2luke(equil_id,profil0d,zerod,exp0d,cons,geo,option,lukeparam.equilparam,equilconsistency);
 %
-if input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma  (0) no, (1) yes',1,[0,1])  
+equil_id = equil.id;%ADAS may be added
+%
+if auto_mode == 0 && ~isfield(equil,'ADAS')
+    %
+    use_ADAS = input_dke_yp('Use ADAS model for considering all ionization states for all ions in the plasma  (0) no, (1) yes',1,[0,1]);
     %
     [dkepath] = load_structures_yp('dkepath','','');
     %
     if exist([dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat'])
         equil.ADAS = [dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat'];
         equil.id = [equil.id,'_ADAS'];
-        equil_id = [equil_id,'_ADAS'];
+        equil_id = equil.id;%ADAS may be added
     else
-        disp(['WARNING: ADAS.mat file has not been found in folder ''',dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat''. Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
+        if mute_metis2luke == 0
+            disp(['WARNING: ADAS.mat file has not been found in folder ''',dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat''. Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
+        end
     end
     %
 end
@@ -126,11 +147,14 @@ for iw = 1:nw,
     if strcmp(launchs{iw}.type,'EC')
         %
         dkeparam.w_mask = [dkeparam.w_mask,iw];
-        disp(['wave :',int2str(iw),' type :',launchs{iw}.type])
+        if mute_metis2luke == 0
+            disp(['wave :',int2str(iw),' type :',launchs{iw}.type])
+        end
         %
     else
-        disp(['wave :',int2str(iw),' type :',launchs{iw}.type,'; n// = ',num2str(wavestructs{iw}.launch.bNpar0,4),...
-            '; Plh = ',num2str(wavestructs{iw}.launch.bPlhtot/1e6,4),' MW'])
+        if mute_metis2luke == 0
+            disp(['wave :',int2str(iw),' type :',launchs{iw}.type,'; n// = ',num2str(wavestructs{iw}.launch.bNpar0,4),'; Plh = ',num2str(wavestructs{iw}.launch.bPlhtot/1e6,4),' MW'])
+        end
     end
     %
     simul_wid = [simul_wid,'_',wavestructs{iw}.id];
@@ -171,7 +195,9 @@ if lukeparam.luke_mode == 2,% save input then exit
         workdir = pwd;
     end
     %
-    save([workdir,'/before_luke@',equil_id,'.mat']);
+    filename = ['before_luke@',equil_id,'.mat'];
+    equil.filename = filename;
+    save([workdir,'/',filename]);
     %
     lukestructs = struct;
     lukestructs.dkeparam = dkeparam;
@@ -212,7 +238,7 @@ lukestructs.Zf0_interp = [];
 %
 lukestructs = run_lukert(lukestructs,dkepath);
 %
-if isfield(lukestructs,'err'),
+if isfield(lukestructs,'err')
     disp('LUKE run failed for the following reason :')
     disperr_jd(lukestructs.err);
     error('LUKE run failed')
@@ -258,7 +284,7 @@ if sum(abs(ohm.epsi)) ~= 0,%Calculate the Ohmic electric field contribution to t
     %
     lukestructs = run_lukert(lukestructs,dkepath);
     %
-    if isfield(lukestructs,'err'),
+    if isfield(lukestructs,'err')
         disp('LUKE run failed for the following reason :')
         disperr_jd(lukestructs.err);
         error('LUKE run failed')

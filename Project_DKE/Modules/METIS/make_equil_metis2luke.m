@@ -1,8 +1,12 @@
-function [equil,profil0d] = make_equil_metis2luke(equil_id,profil0d_in,zerod,exp0d,cons,geo,option,equilparam)
+function [equil,profil0d] = make_equil_metis2luke(equil_id,profil0d_in,zerod,exp0d,cons,geo,option,equilparam,equilconsistency)
 %
 % creates LUKE equilibrium structure from METIS output
 %
-
+if ~ismember('mute_make_equil_metis2luke', who('global'))
+    mute_make_equil_metis2luke = 0;
+else
+    global mute_make_equil_metis2luke
+end
 % tungsten flag
 W_flag = false;
 % MAGNETIC EQUILIBRIUM
@@ -35,7 +39,7 @@ if equilparam.helena >= 1,
         load([pathname,filename],'equil');
         %
         if ~isfield(equil,'pli'),
-            disp('warning : pli data not available, using circular low beta approximation')
+            disp('WARNING : pli data not available, using circular low beta approximation')
             xli = (equil.ptx(:,1) - equil.ptx(:,(end+1)/2))/(equil.ptx(end,1) - equil.ptx(end,(end+1)/2));
         else
             xli = equil.pli/equil.pli(end);
@@ -55,8 +59,8 @@ if equilparam.helena >= 1,
     profil0d.nhep = interp1(profil0d_in.xli,profil0d_in.nhep,profil0d.xli,'pchip','extrap');
     profil0d.nzp = interp1(profil0d_in.xli,profil0d_in.nzp,profil0d.xli,'pchip','extrap');
     if isfield(profil0d_in,'nwp') && any(profil0d_in.nwp(:) > 1)
-	W_flag = true;
-	profil0d.nwp = interp1(profil0d_in.xli,profil0d_in.nwp,profil0d.xli,'pchip','extrap');	
+        W_flag = true;
+        profil0d.nwp = interp1(profil0d_in.xli,profil0d_in.nwp,profil0d.xli,'pchip','extrap');	
     end
     %
     profil0d.epar = interp1(profil0d_in.xli,profil0d_in.epar,profil0d.xli,'pchip','extrap');
@@ -108,9 +112,15 @@ else
         profil0d = profil0d_in;
     end
     if isfield(profil0d_in,'nwp') && any(profil0d_in.nwp(:) > 1)
-	W_flag = true;
+        W_flag = true;
     end
-
+    %
+    if strfind(equil_id,'TS')
+        W_flag = false;
+        if mute_make_equil_metis2luke == 0
+            disp('Tore Supra : no tungsten enforced')
+        end
+    end
     %
     prof.x    = profil0d.xli;
     prof.kx   = profil0d.kx;     
@@ -155,15 +165,15 @@ else
 end
 %
 if equil.psi_apRp(end)*equil.ptBy(end,1) < 0,
-    disp('-------> WARNING : equilibrium signs not self-consistent')
+    disp('WARNING : equilibrium signs not self-consistent')
 end
 %
 if equil.psi_apRp(end)*equil.ptBPHI(1,1)*option.signe < 0,
-    disp('-------> WARNING : equilibrium signs not consistent with option.signe')
+    disp('WARNING : equilibrium signs not consistent with option.signe')
 end
 %
 if equil.ptBPHI(1,1)*option.bsigne < 0,
-    disp('-------> WARNING : equilibrium signs not consistent with option.bsigne')
+    disp('WARNING : equilibrium signs not consistent with option.bsigne')
 end
 %
 % EQUILIBRIUM PROFILES
@@ -185,12 +195,25 @@ else
 end
 %
 if W_flag
-  warning('W detected in the plasma: full stripped W ion charge put in equi structure');
+  %
+  if exist('ADAS.mat')
+	if mute_make_equil_metis2luke == 0
+        disp('W detected in the plasma: ADAS file found for partially ionized high-Z impurities')
+    end
+  else
+      if mute_make_equil_metis2luke == 0
+        disp('W detected in the plasma: full stripped W ion charge put in equi structure');
+      end
+  end
+  %
   equil.zZi = [1,1,1,2,zimp,zmax,74];
   equil.zmi = [1,2,3,ahe,aimp,amax,183.84];
+  %
 else
+  %
   equil.zZi = [1,1,1,2,zimp,zmax];
   equil.zmi = [1,2,3,ahe,aimp,amax];
+  %
 end
 %
 fD = zerod.nDm/zerod.n1m;
@@ -207,6 +230,13 @@ pnmax = profil0d.nzp*option.rimp;
 if W_flag
   pnw = profil0d.nwp;
   equil.pzni = [pzni1;pnhe;pnimp;pnmax;pnw];
+  if ~isempty(which('ADAS.mat'))
+    equil.ADAS = which('ADAS.mat');
+    equil_id = [equil_id,'_ADAS'];
+  else
+      disp('WARNING : ADAS.mat file no found for partially ionized high-Z ipurities. High Z impurities are not considered.')
+      equil.pzni = [pzni1;pnhe;pnimp;pnmax];
+  end
 else
   equil.pzni = [pzni1;pnhe;pnimp;pnmax];
 end
@@ -224,10 +254,6 @@ equil.iboot = zerod.iboot;% bootstrap current in A
 % modify after error correction in METIS
 %
 equil.icd = zerod.ipar - zerod.iohm - equil.iboot;% zerod.icd;% zerod.ini - equil.iboot;
-%
-if isfield(equil,'ADAS')
-    equil.ADAS = 'ADAS.mat';%this mat file must be in the LUKE path (Module ADAS). 
-end
 %
 if equilparam.comp,
     %
@@ -253,14 +279,14 @@ end
 %
 equil.id = equil_id;
 %
-equil = equilconsistency_yp(equil);
-%
-
-
-
-
-
-
+if nargin == 9 
+    if isstruct(equilconsistency) && ~isempty(equilconsistency) && isfield(equilconsistency,'run') && equilconsistency.run{1} == 1
+        equil = equilconsistency_yp(equil,'',equilconsistency.auto_mode{1},equilconsistency.display_mode{1},equilconsistency.prho{1},equilconsistency.mtheta{1},equilconsistency.fit{1});
+    end
+else
+    equil = equilconsistency_yp(equil,'');
+end
+    %
 
 
 
