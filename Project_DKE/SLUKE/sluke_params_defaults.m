@@ -14,18 +14,18 @@ function [sparams,err,status] = sluke_params_defaults
 %
 sparams = {};
 %
-sparams.machine = {'TOKAMAK NAME'};%Machine name
+sparams.machine = {'WEST'};%Machine name
 %
-sparams.discharge.shot = {'SHOT NUMBER'};%shot number
-sparams.discharge.tmin = {0};%minimum time in seconds
-sparams.discharge.tmax = {1};%maximum time in seconds
+sparams.discharge.shot = {'55025'};%shot number
+sparams.discharge.tmin = {8};%minimum time in seconds
+sparams.discharge.tmax = {8.1};%maximum time in seconds
 sparams.discharge.nt = {1};%number of subtimes
 %
-sparams.simul.id = {'SIMULATION ID'};%general simulation id
-sparams.simul.comment = {'COMMENTS ON SIMULATION'};% comments on the simulations (context, author)
+sparams.simul.id = {'LHCD'};%general simulation id
+sparams.simul.comment = {'LH current drive before collapse'};% comments on the simulations (context, author)
 sparams.simul.enable = {1};%simulation enabled
 sparams.simul.enforce = {0};%no enforce
-sparams.simul.remote_profile = {0};%Local calculations
+sparams.simul.remote_profile = {1};%Local calculations
 sparams.simul.wait4results = {0};%Do not wait
 %
 sparams.dkeparam.id = {'LH_RT'};%kinetic simulation parameters id
@@ -73,25 +73,25 @@ sparams.ohm.code = {''};%code name. if source is 'code'
 sparams.ohm.file = {''};%filename. Used if source is 'file'
 sparams.ohm.path = {''};%absolute path to the file. Used if source is 'file'
 %
-sparams.rf.rayparam.id = {'C3PO_LH'};
-sparams.rf.rayparam.comment = {''};
-sparams.rf.rayparam.source = {''};
-sparams.rf.rayparam.test_mode = {0};
-sparams.rf.rayparam.tensortype = {0};
-sparams.rf.rayparam.t0 = {0};
-sparams.rf.rayparam.dt0 = {1e-4};
-sparams.rf.rayparam.dS = {1e-4};
-sparams.rf.rayparam.tol = {1e-12};
-sparams.rf.rayparam.kmax = {30000};
-sparams.rf.rayparam.ncyclharm = {0};
-sparams.rf.rayparam.reflection = {1};
-sparams.rf.rayparam.rel_opt = {1};
-sparams.rf.rayparam.nperp = {1000};
-sparams.rf.rayparam.pperpmax = {10};
-sparams.rf.rayparam.tau_lim = {20};
-sparams.rf.rayparam.metricmode = {1};
-sparams.rf.rayparam.rhoswitch = {0.1};
-sparams.rf.rayparam.substitution_method = {7};
+sparams.rfwaves.rayparam.id = {{'C3PO_LH'}};
+sparams.rfwaves.rayparam.comment = {''};
+sparams.rfwaves.rayparam.source = {''};
+sparams.rfwaves.rayparam.test_mode = {0};
+sparams.rfwaves.rayparam.tensortype = {0};
+sparams.rfwaves.rayparam.t0 = {0};
+sparams.rfwaves.rayparam.dt0 = {1e-4};
+sparams.rfwaves.rayparam.dS = {1e-4};
+sparams.rfwaves.rayparam.tol = {1e-12};
+sparams.rfwaves.rayparam.kmax = {30000};
+sparams.rfwaves.rayparam.ncyclharm = {0};
+sparams.rfwaves.rayparam.reflection = {1};
+sparams.rfwaves.rayparam.rel_opt = {1};
+sparams.rfwaves.rayparam.nperp = {1000};
+sparams.rfwaves.rayparam.pperpmax = {10};
+sparams.rfwaves.rayparam.tau_lim = {20};
+sparams.rfwaves.rayparam.metricmode = {1};
+sparams.rfwaves.rayparam.rhoswitch = {0.1};
+sparams.rfwaves.rayparam.substitution_method = {7};
 %
 sparams.rf.raydisplay.id = {'NO_DISPLAY'};
 sparams.rf.raydisplay.comment = {''};

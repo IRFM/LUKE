@@ -1,90 +1,126 @@
-function launchs = sluke_build_launchs(sparams)
+function [launchs,remote_status] = sluke_build_launchs(sparams,ii,kk)
 %
-% LUKE - Build launchs array of cells for C3PO ray-tracing calculations (remote and distributed)
+% LUKE - Build antenna array of cells for C3PO ray-tracing calculations (remote and distributed)
 %
 % INPUT :
 %
 %   - sparams : sluke parameters structure (reference : sparams.machine)
+%   - ii : index in the structure
+%   - kk : index in the substructure
 %
 % OUTPUT :
 %
-%   - launchs : structure of parameters for sluke calculations.
+%   - antennas : structure for antennas.
+%   - remote_status : status of remote calculations
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
+if ~ismember('mute_sluke_build_launchs', who('global'))
+    mute_sluke_build_launchs = 0;
+else
+    global mute_sluke_build_launchs
+end
+%
+if nargin == 2
+    %
+    kk = 1;
+    %
+end
+%
 launchs = {};
+remote_status = 0;
 %
 [err,status] = sluke_params_consistency(sparams);
 %
 if err == 0
     %
-    for ii = 1:length(sparams.machine)
+    % Lower hybrid wave
+    %
+    if sparams.simul.enable{ii} && isfield(sparams,'rfwaves')
         %
-        % Lower hybrid wave
-        %
-        if sparams.simul.enable{ii} && isfield(sparams,'launch')
+       % for kk = 1:length(sparams.waves.antenna.type{ii})
             %
-            if strcmp(sparams.launch.antenna.type{ii},'lh') || strcmp(sparams.launch.antenna.type{ii},'lh+ec')
+            if strfind(sparams.rfwaves.antenna.type{ii}{kk},'LH')
                 %
-                if strcmp(sparams.launch.antenna.lh.spectrum.source.method{ii},'code')
+                if strcmp(sparams.rfwaves.antenna.source{ii}{kk},'code')
                     %
-                    if strcmp(sparams.launch.antenna.lh.spectrum.source.code{ii},'aloha')
+                    if strcmp(sparams.rfwaves.antenna.code{ii}{kk},'ALOHA')
                         %
                         flag_display_powerspectrum = 1;
                         %
-                        if ~exist('ALOHA/Simulations/')
-                            mkdir('ALOHA/Simulations/')
+                        if exist('SLUKE_RFWAVES')
+                            %
+                            rfwaves_folder = 'SLUKE_RFWAVES/';
+                            %
+                        else
+                            %
+                            rfwaves_folder = '';
+                            %
+                        end
+                        %
+                        if ~exist([rfwaves_folder,'ALOHA/Simulations/'])
+                        	mkdir([rfwaves_folder,'ALOHA/Simulations/'])
                         end
                         %
                         id_data = [sparams.machine{ii},'_data_lh_',sparams.discharge.shot{ii},'_',num2str(sparams.discharge.tmin{ii}),...
-                            '_',num2str(sparams.discharge.tmax{ii}),'_',sparams.launch.antenna.lh.spectrum.aloha.port{ii}];
+                            '_',num2str(sparams.discharge.tmax{ii}),'_',sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk}];
                         %
-                        if sparams.launch.antenna.lh.spectrum.aloha.optim.method{ii} == 0
+                        if sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.method{ii}{kk} == 0
                             id_aloha = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',num2str(sparams.discharge.tmin{ii}),...
-                                '_',num2str(sparams.discharge.tmax{ii}),'_ALOHA_',sparams.launch.antenna.lh.spectrum.aloha.port{ii},...
-                                '_ne_',num2str(sparams.launch.antenna.lh.spectrum.aloha.optim.ne_guess{ii}/1e17)];
+                                '_',num2str(sparams.discharge.tmax{ii}),'_ALOHA_',sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},...
+                                '_ne_',num2str(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.ne_guess{ii}{kk}/1e17)];
                         else
                             id_aloha = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',num2str(sparams.discharge.tmin{ii}),...
-                                '_',num2str(sparams.discharge.tmax{ii}),'_ALOHA_',sparams.launch.antenna.lh.spectrum.aloha.port{ii},'_ne_optim'];
+                                '_',num2str(sparams.discharge.tmax{ii}),'_ALOHA_',sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},'_ne_optim'];
                         end
                         %
-                        if ~exist(['ALOHA/Simulations/',id_aloha,'.mat'])
+                        if ~exist([rfwaves_folder,'ALOHA/Simulations/',id_aloha,'.mat'])
                             %
+                            aloha.remote.profile = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).remote_profile{ii}{kk};
+                            aloha.id = id_aloha;
                             aloha.optim.id = id_aloha;
-                            aloha.optim.method = sparams.launch.antenna.lh.spectrum.aloha.optim.method{ii};
-                            aloha.optim.remote.profile = sparams.launch.antenna.lh.spectrum.aloha.remote_profile{ii};
-                            aloha.optim.ne_guess = sparams.launch.antenna.lh.spectrum.aloha.optim.ne_guess{ii};
+                            aloha.optim.id_data = id_data;
+                            aloha.optim.method = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.method{ii}{kk};
+                            aloha.optim.ne_guess = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.ne_guess{ii}{kk};
                             %
-                            if sparams.launch.antenna.lh.spectrum.aloha.optim.method{ii} == 1
+                            if sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.method{ii}{kk} == 1
                                 %
-                                aloha.optim.tolfun = sparams.launch.antenna.lh.spectrum.aloha.optim.tolfun{ii};
-                                aloha.optim.tolx = sparams.launch.antenna.lh.spectrum.aloha.optim.tolx{ii};
-                                aloha.optim.nitmax = sparams.launch.antenna.lh.spectrum.aloha.optim.nitmax{ii};
+                                aloha.optim.tolfun = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.tolfun{ii}{kk};
+                                aloha.optim.tolx = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.tolx{ii}{kk};
+                                aloha.optim.nitmax = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.nitmax{ii}{kk};
                             end
                             %
-                            antennas = run_aloha_remote(sparams.machine{ii},sparams.launch.antenna.lh.spectrum.aloha.port{ii},...
-                                sparams.discharge.shot{ii},sparams.discharge.tmin{ii},sparams.discharge.tmax{ii},...
-                                sparams.launch.antenna.lh.spectrum.aloha.display.results{ii},aloha.optim);
+                            antennas = run_aloha_remote(sparams.machine{ii},sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},...
+                                sparams.discharge.shot{ii},sparams.discharge.tmin{ii},...
+                                sparams.discharge.tmax{ii},...
+                                sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.results{ii}{kk},...
+                                aloha);
                             %
                             for jj = 1:length(antennas)
                                 antennas(jj).aloha.optim = aloha.optim;
                             end
                             %
-                            save(['ALOHA/Simulations/',id_aloha,'.mat'],'antennas')
+                            save([rfwaves_folder,'ALOHA/Simulations/',id_aloha,'.mat'],'antennas')
                             %
                             disp(['---> Simulation (',int2str(ii),',',id_aloha,'): started.'])
                             %
-                            for jj = 1:length(antennas)
+                            for jj = 1:length(antennas) %full or half antenna
                                 %
                                 flag_job(ii,jj) = 1;
+                                %
+                                launchs{jj}.remote_status = flag_job(ii,jj);
+                                %
+                                launchs{jj}.antennas = antennas(jj);
                                 %
                             end
                             %
                         else
-                            %                %
-                            disp(['---> ALOHA simulation status (ID:',id_aloha,') :'])
                             %
-                            load(['ALOHA/Simulations/',id_aloha,'.mat'],'antennas');%load results or job
+                            if mute_sluke_build_launchs == 0
+                                disp(['---> ALOHA simulation status (ID:',id_aloha,') :'])
+                            end
+                            %
+                            load([rfwaves_folder,'ALOHA/Simulations/',id_aloha,'.mat'],'antennas');%load results or job
                             %
                             if isfield(antennas(1).aloha,'optim')
                                 %
@@ -97,101 +133,100 @@ if err == 0
                             if ~isfield(antennas(1).aloha,'optim') &&  ~isfield(antennas(1).aloha,'err')
                                 %
                                 for jj = 1:length(antennas)
+                                    %
                                     antennas(jj).aloha.optim = optim;
+                                    %
                                 end
                                 %
                             end
                             %
-                            save(['ALOHA/Simulations/',id_aloha,'.mat'],'antennas');%save results or job
+                            save([rfwaves_folder,'ALOHA/Simulations/',id_aloha,'.mat'],'antennas');%save results or job
                             %
                             for jj = 1:length(antennas)
                                 %
                                 if isfield(antennas(jj).aloha,'job')
+                                    %
                                     disp([' - job #',int2str(jj),' for ',id_aloha,' is still running.'])
                                     flag_job(ii,jj) = 1;
+                                    %
                                 elseif isfield(antennas(jj).aloha,'err')
-                                     disp([' - job #',int2str(jj),' for ',id_aloha,' failed. Load ALOHA/Simulations/',id_aloha,'.mat' file and type antennas(',int2str(ii),').aloha.err(:) in the command to see the error log.'])
-                                     flag_job(ii,jj) = -1;
+                                	%
+                                    disp([' - job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE/RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.'])
+                                    flag_job(ii,jj) = -1;
+                                    %
                                 else
+                                    %
                                     disp([' - job #',int2str(jj),' for ',id_aloha,' is completed.'])
                                     flag_job(ii,jj) = 0;
+                                    %
                                 end
                                 %
                             end
                             %
-                            if flag_display_powerspectrum == 1 && sum(flag_job(ii,:)) == 0 % power spectra are independent of the density in front of the grill. Just the first is plotted
+                            if sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.comparison{ii}{kk} == 1 && sum(abs(flag_job(ii,:))) == 0 % power spectra are independent of the density in front of the grill. Just the first is plotted
                                 %
-                                load(['ALOHA/Data/',id_data,'.mat'],'data_lh') 
+                                load([rfwaves_folder,'ALOHA/Data/',id_data,'.mat'],'data_lh') 
                                 %
-                                display_lhdata(data_lh,sparams.launch.antenna.lh.spectrum.aloha.display.data{ii});
+                                display_lhdata(data_lh,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data{ii}{kk});
                                 %
-                                flag_display_powerspectrum = display_aloha_powerspectrum(flag_display_powerspectrum,data_lh,antennas,sparams.launch.antenna.lh.spectrum.aloha.display.results{ii})
+                                flag_display_powerspectrum = display_aloha_powerspectrum(flag_display_powerspectrum,data_lh,antennas,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.results{ii}{kk});
                                 %
                             end
                             %
-                            %launchs = {launchs,sluke_aloha2launch(data_lh,antennas,sparams,ii)};%ALOHA -> C3PO (build launch structures)
+                        end
+                        %
+                        for jj = 1:length(antennas)  %full or half antenna
+                            %
+                            launchs{jj}.flag_job = flag_job(ii,jj);
+                            %
+                            launchs{jj}.antennas = antennas(jj);
                             %
                         end
                         %
-
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
+                        for jj = 1:length(antennas)  %full or half antenna
+                            %
+                            if abs(flag_job(ii,jj)) == 1
+                                %
+                                remote_status = flag_job(ii,jj);
+                                break
+                                %
+                            end
+                            %
+                        end
+                        %
                     else
                         %
                         disp('WARNING : unkown antenna coupling code for the Lower Hybrid wave');
+                        return;
                         %
                     end
                     %
-                elseif strcmp(sparams.launch.antenna.lh.spectrum.source{ii},'file')
+                elseif strcmp(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).source{ii},'file')
                     %
                     %TODO file option
                     %
-                elseif strcmp(sparams.launch.antenna.lh.spectrum.source{ii},'value')
+                elseif strcmp(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).source{ii},'value')
                     %
                     %TODO value option
                     %
                 end
-                    
-
-            end
-            %
-            % Electron cyclotron wave
-            %
-            if strcmp(sparams.launch.antenna.type{ii},'ec') || strcmp(sparams.launch.antenna.type{ii},'lh+ec')
+                %
+            elseif strcmp(sparams.rfwaves.antenna.type{ii}{kk},'EC')
                 %
                 % TODO : implement EC wave
                 %
                 disp('EC wave not yet available')
+                return;
                 %
             end
             %
-        else
-            %
-            launchs = {};%no rf waves
-            %
-        end
+        %end
+        %
     end
+    %
+else
+    %
+    disp('WARNING : inconsistencies in sparams structure.')
     %
 end
 

@@ -21,13 +21,13 @@ delete(['SLUKE_EQUILS/EQUIL_',sluke_id(sparams,ii,'equil'),'.mat']);
 %
 delete(['SLUKE_OHMS/OHM_',sluke_id(sparams,ii,'ohm'),'.mat']);
 %
-delete(['SLUKE_DKEPARAMS/DKEPARAM_',sluke_id(sparams,ii,'dkeparam'),'.mat']);
+delete(['SLUKE_KINETICS/DKEPARAM_',sluke_id(sparams,ii,'dkeparam'),'.mat']);
 %
-delete(['SLUKE_RAYPARAMS/RAYPARAM_',sluke_id(sparams,ii,'rayparam'),'.mat']);
+%delete(['SLUKE_RFWAVES/RAYPARAM_',sluke_id(sparams,ii,'rayparam'),'.mat']);
 %
-delete(['SLUKE_DKEDISPLAYS/DKEDISPLAY_',sluke_id(sparams,ii,'dkedisplay'),'.mat']);
+delete(['SLUKE_KINETICS/DKEDISPLAY_',sluke_id(sparams,ii,'dkedisplay'),'.mat']);
 %
-delete(['SLUKE_FITEQUILS/FITEQUIL_',sluke_id(sparams,ii,'fit'),'.mat']);
+delete(['SLUKE_EQUILS/FITEQUIL_',sluke_id(sparams,ii,'fit'),'.mat']);
 %
 delete(['SLUKE_EQUILCONSISTENCIES/EQUILCONSISTENCY_',sluke_id(sparams,ii,'equilconsistency'),'.mat']);
 %

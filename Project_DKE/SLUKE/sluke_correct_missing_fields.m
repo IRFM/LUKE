@@ -1,12 +1,13 @@
-function sluke_correct_missing_fields
-
-
-
-
-
-
-
+function hxrparam_out = sluke_correct_missing_fields(sparams,ii,hxrparam_in)
 %
+
+
+
+hxrparam_out = hxrparam_in;
+
+
+
+%{
     sparams_tmp = sluke_params_defaults;
     %
     hxrparam_tmp = sluke_params_value(sparams_tmp.diags.hxr.hxrparam);
@@ -20,3 +21,4 @@ function sluke_correct_missing_fields
         
         end
     end
+%}

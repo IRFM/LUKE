@@ -71,12 +71,13 @@ else
         if isfield(data,'post') % equilibrium from metis simulations
             %
             [dkeparam,dkedisplay,equil,ohm,transpfaste,ripple,wavestructs] = sluke_metis2luke(sparams,ii,data.post);
+            equil.id = equil_id;
             %
         else
             error([]);
         end
         %
-    elseif strcmp(sparams.equil.source{ii},'value')
+    else
         %
         %TODO for simple models
         %
@@ -87,7 +88,7 @@ else
     if isfield(sparams.equil,'fit')
         %
         fit_id = sluke_id(sparams,ii,'fit');
-        equil.source.fit = ['SLUKE_FITEQUILS/FITEQUIL_',fit_id,'.mat'];
+        equil.source.fit = ['SLUKE_EQUILS/FITEQUIL_',fit_id,'.mat'];
         equil.equil_fit = fitequil_yp(equil,sparams.equil.fit.mode_equil{ii},sparams.equil.fit.method{ii},sparams.equil.fit.ngridresample{ii},sparams.equil.fit.nharm{ii});
         %
     else

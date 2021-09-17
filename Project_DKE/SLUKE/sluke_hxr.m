@@ -4,7 +4,9 @@ Zbremchord = '';
 Zbremdiag = '';
 Zbremplasma = '';
 equilHXR = '';
-hxrexp = '';
+hxrexp = struct;
+%
+simul_id = sluke_id(sparams,ii,'simul');
 %
 % HXR diagnostic technical specifications
 %
@@ -24,7 +26,7 @@ if strcmp(sparams.diags.hxr.hxrspec.source{ii},'code')
                     %
                 end
                 %
-                save(['SLUKE_HXRSPECS/HXRSPEC_',simul_id,'.mat'],'hxrspec');
+                save(['SLUKE_DIAGNOSTICS/HXRSPEC_',simul_id,'.mat'],'hxrspec');
                 %
             else
                 %
@@ -61,7 +63,7 @@ elseif strcmp(sparams.diags.hxr.hxrspec.source{ii},'file')
             %
             disp(['--> hxrspec file : ',hxrhxrspec_file,' found.'])
             %
-            load(hxrparam_file);
+            load(hxrspec_file);
             %
             if exist('hxr','var')
                 %
@@ -76,9 +78,9 @@ elseif strcmp(sparams.diags.hxr.hxrspec.source{ii},'file')
                 %
                 disp(['--> number of chords : ',int2str(nc),'.'])
                 %
-                if ~strcmp(['SLUKE_HXRSPECS/HXRSPEC_',simul_id,'.mat'],hxrspec_file)
+                if ~strcmp(['SLUKE_DIAGNOSTICS/HXRSPEC_',simul_id,'.mat'],hxrspec_file)
                     %
-                    save(['SLUKE_HXRSPECS/HXRSPEC_',simul_id,'.mat'],'hxrspec');
+                    save(['SLUKE_DIAGNOSTICS/HXRSPEC_',simul_id,'.mat'],'hxrspec');
                     %
                 end
                 %
@@ -89,9 +91,20 @@ elseif strcmp(sparams.diags.hxr.hxrspec.source{ii},'file')
                 disp(['--> no camera defined (zero chords). HXR synthetic diagnostic calculations are cancelled.'])
                 %
             end
-
             %
         end
+    else
+        %
+        load([sparams.diags.hxr.hxrspec.path{ii},sparams.diags.hxr.hxrspec.file{ii}]);
+        %
+        if exist('hxr','var')
+            %
+            hxrspec = hxr;%backward compatibility
+            clear hxr
+            %
+        end
+        %
+    end
     %
 elseif strcmp(sparams.diags.hxr.hxrspec.source{ii},'value')
     %
@@ -99,10 +112,12 @@ elseif strcmp(sparams.diags.hxr.hxrspec.source{ii},'value')
         %
         hxrspec = sluke_correct_missing_fields(sluke_params_value(sparams.diags.hxr.hxrspec,ii));
         %
-        save(['SLUKE_HXRSPECS/HXRSPEC_',simul_id,'.mat'],'hxrspec');
+        save(['SLUKE_DIAGNOSTICS/HXRSPEC_',simul_id,'.mat'],'hxrspec');
     end
     %
 end
+%
+hxrspec.kfit = hxrspec.kphot(1:2:end);
 %
 % HXR simulations parameters
 %
@@ -110,7 +125,7 @@ if strcmp(sparams.diags.hxr.hxrparam.source{ii},'file')
     %
     if isfield(sparams.diags.hxr.hxrparam,'file') && isfield(sparams.diags.hxr.hxrparam,'path')
         %
-        load([sparams.diags.hxr.hxrparam.path{ii},sparams.diags.hxr.hxrparam.file{ii},'.mat']))
+        load([sparams.diags.hxr.hxrparam.path{ii},sparams.diags.hxr.hxrparam.file{ii},'.mat'])
         %
         if exist('hxrparam','var') && ~isempty(hxrparam)
             %
@@ -134,13 +149,17 @@ elseif strcmp(sparams.diags.hxr.hxrparam.source{ii},'value')
     %
     hxrparam = sluke_params_value(sparams.diags.hxr.hxrparam,ii);
     %
-    hxrparam = sluke_correct_missing_fields(hxrparam);
+    hxrparam.kphot = hxrspec.kphot;
+    hxrparam.kmin = hxrspec.kmin;
+    hxrparam.kmax = hxrspec.kmax;
+    %
+%    hxrparam = sluke_correct_missing_fields(sparams,ii,hxrparam);
     %
 end
 %
 if ~isempty(hxrparam)
     %
-    save(['SLUKE_HXRPARAMS/HXRPARAM_',simul_id,'.mat'],'hxrparam');
+    save(['SLUKE_DIAGNOSTICS/HXRPARAM_',simul_id,'.mat'],'hxrparam');
     %
 else
     %
@@ -151,8 +170,10 @@ end
 %
 % HXR calculations
 %
-dkedisplay = 0
-dt = 1
+dkedisplay.display_mode = 0;
+dkedisplay.fhxr = 0;
+dt = 1;
+disp('**********TODO : sluke_hxr l.176 *****************')
     
 %
 if exist('hxrspec','var') && exist('hxrparam','var') && ~isempty(hxrspec) && ~isempty(hxrparam) 
@@ -163,7 +184,7 @@ if exist('hxrspec','var') && exist('hxrparam','var') && ~isempty(hxrspec) && ~is
     momentumDKE = lukestructs.output.momentumDKE;
     mksa = lukestructs.output.mksa;
     Zmomcoef = lukestructs.output.Zmomcoef;
-    equil = lukestructs.dke_out.equil;
+    equil = lukestructs.equil;
     %
     radialHXR.xpsin_S_dke = radialDKE.xpsin_S_dke;% warning : check in DKE mode
     radialHXR.xpsin_f = radialDKE.xpsin_f_dke;% select only FP points
@@ -185,5 +206,7 @@ if exist('hxrspec','var') && exist('hxrparam','var') && ~isempty(hxrspec) && ~is
     [Zbremplasma] = bremchordemission_dke_jd(Zbremplasma,Zbremchord,hxrspec);% FEB emission along the lines of sight
     %
     [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxrspec,hxrparam,dt);% HXR synthetic diagnostic signal
+    %
+    [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii});
     %
 end

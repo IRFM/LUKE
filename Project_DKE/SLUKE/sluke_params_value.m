@@ -6,6 +6,7 @@ function sparams_out = sluke_params_value(varargin)
 %
 %   - varargin{1} : initial 'sparams' substructure
 %   - varargin{2} : index of sparams substructure to extract
+%   - varargin{3} : index of sparams subsubstructure to extract (for rf waves)
 %
 % OUTPUT :
 %
@@ -15,7 +16,13 @@ function sparams_out = sluke_params_value(varargin)
 %
 sparams_out = {};
 %
-if nargin == 2
+if nargin == 3
+    %
+    sparams_in = varargin{1};
+    jextract = varargin{2};
+    kextract = varargin{3};
+    %
+elseif nargin == 2
     %
     sparams_in = varargin{1};
     jextract = varargin{2};
@@ -35,7 +42,23 @@ fns_in = fieldnamesr(sparams_in);
 %
 for ii = 1:length(fns_in)
     %
-    eval(['sparams_out.',fns_in{ii},' = sparams_in.',fns_in{ii},'{',int2str(jextract),'};']);
+    if nargin <3
+        %
+        try
+            eval(['sparams_out.',fns_in{ii},' = sparams_in.',fns_in{ii},'{',int2str(jextract),'};']);
+        catch
+            error(['ERROR: value of sluke_params_value.m for sparams_in.',fns_in{ii},' cannot be read'])
+        end
+        %
+    else
+        %
+        try
+            eval(['sparams_out.',fns_in{ii},' = sparams_in.',fns_in{ii},'{',int2str(jextract),'}{',int2str(kextract),'};']);
+        catch
+             error(['ERROR: value of sluke_params_value.m for sparams_in.',fns_in{ii},' cannot be read'])
+        end
+        %
+    end
     %
 end
 

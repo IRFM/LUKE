@@ -41,26 +41,26 @@ end
 %
 if strcmp(type,'dkeparam')
     %
-    if isempty(sparams.dkeparam.id{ii})
+    if isempty(sparams.kinetics.dkeparam.id{ii})
         %
         id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
         %
     else
         %
-        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.dkeparam.id{ii},'_',int2str(ii)];
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.kinetics.dkeparam.id{ii},'_',int2str(ii)];
         %
     end
 end
 %
 if strcmp(type,'dkedisplay')
     %
-    if isempty(sparams.dkedisplay.id{ii})
+    if isempty(sparams.kinetics.dkedisplay.id{ii})
         %
         id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
         %
     else
         %
-        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.dkedisplay.id{ii},'_',int2str(ii)];
+        id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.kinetics.dkedisplay.id{ii},'_',int2str(ii)];
         %
     end
 end
@@ -91,98 +91,56 @@ if strcmp(type,'equilconsistency')
     end
 end
 %
-if strcmp(type,'launch')
+if strcmp(type,'wavestructs')
     %
-    if isfield(sparams,'rf')
+    if isfield(sparams,'rfwaves')
         %
-        if isempty(sparams.launch.id{ii})
+        if isempty(sparams.rfwaves.id{ii})
             %
             id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
             %
         else
             %
-            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.rf.launch.id{ii},'_',int2str(ii)];
+            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii}];
+            %
+            id = [id,'_',sparams.rfwaves.id{ii}];
+            %
+            if isfield(sparams.rfwaves,'solver') && ~isempty(sparams.rfwaves.antenna.type{ii})
+                %
+                for jj = 1:length(sparams.rfwaves.antenna.type{ii})
+                    %
+                    if isfield(sparams.rfwaves,'antenna') && ~isempty(sparams.rfwaves.antenna.id{ii})
+                        %
+                        id = [id,'_',sparams.rfwaves.antenna.id{ii}{jj}];
+                        %
+                    end
+                    %
+                    if isfield(sparams.rfwaves,'antenna') && ~isempty(sparams.rfwaves.antenna.code{ii})
+                        %
+                        if ~isempty(sparams.rfwaves.antenna.code{ii}{jj})
+                            %
+                            id = [id,'_',sparams.rfwaves.antenna.code{ii}{jj}];
+                            %
+                        end
+                        %
+                    end
+                    %
+                    if isfield(sparams.rfwaves,'solver') && isfield(sparams.rfwaves.solver,'code') && ~isempty(sparams.rfwaves.solver.code{ii})
+                        %
+                        id = [id,'_',sparams.rfwaves.solver.code{ii}{jj}];
+                        %
+                    end
+                    %
+                end
+                %
+            end
+            %
+            id = [id,'_',int2str(ii)];
             %
         end
-        %
-    else
-        %
-        id = '';
-        disp('WARNING : the ''rf'' sub-structure is not available -> launch id is empty.')
-        %
     end
 end
 %
-if strcmp(type,'rayparam')
-    %
-    if isfield(sparams,'rf')
-        %
-        if isempty(sparams.rf.rayparam.id{ii})
-            %
-            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
-            %
-        else
-            %
-            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.rf.rayparam.id{ii},'_',int2str(ii)];
-            %
-        end
-        %
-    else
-        %
-        id = '';
-        disp('WARNING : the ''rf'' sub-structure is not available -> rayparam id is empty.')
-        %
-    end
-end
-%
-if strcmp(type,'raydisplay')
-    %
-    if isfield(sparams,'rf')
-        %
-        if isempty(sparams.rf.raydisplay.id{ii})
-            %
-            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
-            %
-        else
-            %
-            id = '';
-            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.rf.raydisplay.id{ii},'_',int2str(ii)];
-            %
-        end
-    else
-        %
-        id = '';
-        disp('WARNING : the ''rf'' sub-structure is not available -> raydisplay id is empty.')
-        %         
-    end
-end
-%
-if strcmp(type,'waveparam')
-    %
-    if isfield(sparams,'rf')
-        %
-        if isempty(sparams.rf.waveparam.id{ii})
-            %
-            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',int2str(ii)];
-            %
-        else
-            %
-            id = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',sparams.simul.id{ii},'_',sparams.rf.waveparam.id{ii},'_',int2str(ii)];
-            %
-        end
-        %
-    else
-        %
-        id = '';
-        disp('WARNING : the ''rf'' sub-structure is not available -> waveparam id is empty.')
-        %
-    end
-end
-%
-id = strrep(id,' ','_');%
-id = strrep(id,',','_');%
-id = strrep(id,';','_');%
-%
-
-
-%
+id = strrep(id,' ','_');
+id = strrep(id,',','_');
+id = strrep(id,';','_');

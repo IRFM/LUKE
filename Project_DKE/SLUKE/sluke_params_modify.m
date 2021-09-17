@@ -12,8 +12,6 @@ function sparams_out = sluke_params_modify(varargin)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
-clc
-%
 if nargin == 1
     %
     sparams_in = varargin{1};
@@ -100,7 +98,17 @@ if err == 0
                     %
                 else
                     %
-                    dd = input_dke_yp('Change the value #',int2str(jj),aa{jj});
+                    if iscell(aa{jj})
+                        if length(aa{jj}) == 0
+                             dd = input_dke_yp(['Change the cell value #',int2str(jj),'/',int2str(nf0),' (field #',int2str(iiref),')'],'');
+                        else
+                            for kk = 1:length(aa{jj})
+                                dd{kk} = input_dke_yp(['Change the subcell value #',int2str(kk),'/',int2str(length(aa{jj})),' (cell #',int2str(jj),'/',int2str(nf0),' , field #',int2str(iiref),')'],aa{jj}{kk});
+                            end
+                        end
+                    else
+                        dd = input_dke_yp(['Change the cell value #',int2str(jj),'/',int2str(nf0),' (field #',int2str(iiref),')'],aa{jj});
+                    end
                     %
                 end
                 %
@@ -137,11 +145,86 @@ function display_fields(sparams_in,sparams_out,fns,nf0)
                 else
                     bb = [bb,'''',aa{jj},''' '];
                 end
+            elseif iscell(aa{jj})
+                 if jj == nf0
+                     %
+                 	if length(aa{jj}) == 1
+                        %
+                        kk = 1;
+                        %
+                        if ischar(aa{jj}{kk})
+                            bb = [bb,'{''',aa{jj}{kk},'''} '];
+                        else
+                            bb = [bb,'{[',regexprep(num2str(aa{jj}{kk}), '\s+', ' '),']} '];
+                        end 
+                    else
+                        for kk = 1:length(aa{jj})
+                            %
+                            if ischar(aa{jj}{kk})
+                                if kk == 1
+                                    bb = [bb,'{''',aa{jj}{kk},''' '];
+                                elseif kk > 1 && kk < length(aa{jj})
+                                    bb = [bb,'''',aa{jj}{kk},''''];
+                                elseif kk == length(aa{jj})
+                                    bb = [bb,'''',aa{jj}{kk},'''}'];
+                                end
+                            else
+                                if kk == 1
+                                    bb = [bb,'{[',regexprep(num2str(aa{jj}{kk}), '\s+', ' '),'] '];
+                                elseif kk > 1 && kk < length(aa{jj})
+                                    bb = [bb,'[',regexprep(num2str(aa{jj}{kk}), '\s+', ' '),']'];
+                                elseif kk == length(aa{jj})
+                                    bb = [bb,'[',regexprep(num2str(aa{jj}{kk}), '\s+', ' '),']}'];
+                                end 
+                            end 
+                        end  
+                        %
+                    end
+                    %
+                 else
+                    if length(aa{jj}) == 1
+                        %
+                        kk = 1;
+                        %
+                        if ischar(aa{jj}{kk})
+                            bb = [bb,'{''',aa{jj}{kk},'''} '];
+                        else
+                            bb = [bb,'{[',regexprep(num2str(aa{jj}{kk}), '\s+', ' '),']} '];
+                        end 
+                    else
+                        for kk = 1:length(aa{jj})
+                            %
+                            if ischar(aa{jj}{kk})
+                                if kk == 1
+                                    bb = [bb,'{''',aa{jj}{kk},''' '];
+                                elseif kk > 1 && kk < length(aa{jj})
+                                    bb = [bb,'''',aa{jj}{kk},''''];
+                                elseif kk == length(aa{jj})
+                                    bb = [bb,'''',aa{jj}{kk},'''}'];
+                                end
+                            else
+                                if kk == 1
+                                    bb = [bb,'{[',regexprep(num2str(aa{jj}{kk}), '\s+', ' '),'] '];
+                                elseif kk > 1 && kk < length(aa{jj})
+                                    bb = [bb,'[',regexprep(num2str(aa{jj}{kk}), '\s+', ' '),']'];
+                                elseif kk == length(aa{jj})
+                                    bb = [bb,'[',regexprep(num2str(aa{jj}{kk}), '\s+', ' '),']}'];
+                                end 
+                            end 
+                        end  
+                        %
+                    end
+                    
+                    
+                 end
+                    
+        
+                %
             else
                 if jj == nf0
-                    bb = [bb,'[',num2str(aa{jj}),']'];
+                    bb = [bb,'[',regexprep(num2str(aa{jj}), '\s+', ' '),']'];
                 else
-                    bb = [bb,'[',num2str(aa{jj}),'] '];
+                    bb = [bb,'[',regexprep(num2str(aa{jj}), '\s+', ' '),'] '];
                 end
             end
         end

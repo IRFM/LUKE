@@ -69,14 +69,14 @@ end
 %
 if isfield(sparams.equil,'equilconsistency')
     equilconsistency_id = sluke_id(sparams,ii,'equilconsistency');
-    equil.source.equilconsistency = ['SLUKE_EQUILCONSISTENCIES/EQUILCONSISTENCY_',equilconsistency_id,'.mat'];
-    save(['SLUKE_EQUILCONSISTENCIES/EQUILCONSISTENCY_',equilconsistency_id,'.mat'],'equilconsistency');
+    equil.source.equilconsistency = ['SLUKE_EQUILS/EQUILCONSISTENCY_',equilconsistency_id,'.mat'];
+    save(['SLUKE_EQUILS/EQUILCONSISTENCY_',equilconsistency_id,'.mat'],'equilconsistency');
 end
 %
 if isfield(sparams.equil,'fit')
    fit_id = sluke_id(sparams,ii,'fit');
     equil.source.fit = ['SLUKE_FITEQUILS/FITEQUIL_',fit_id,'.mat'];
-    save(['SLUKE_FITEQUILS/FITEQUIL_',fit_id,'.mat'],'fit');
+    save(['SLUKE_EQUILS/FITEQUIL_',fit_id,'.mat'],'fit');
 end
 %
 

@@ -19,95 +19,61 @@ else
     messages.results = '';
 end
 %
-if ~exist('SLUKE_DKEPARAMS')
-	[success(2),messages.results] = mkdir('SLUKE_DKEPARAMS');
+if ~exist('SLUKE_KINETICS')
+	[success(2),messages.results] = mkdir('SLUKE_KINETICS');
 else
     success(2) = 1;
     messages.results = '';
 end
 %
-if ~exist('SLUKE_RAYPARAMS')
-	[success(3),messages.results] = mkdir('SLUKE_RAYPARAMS');
+if ~exist('SLUKE_EQUILS')
+	[success(3),messages.equils] = mkdir('SLUKE_EQUILS');
 else
     success(3) = 1;
-    messages.results = '';
-end
-%
-if ~exist('SLUKE_DKEDISPLAYS')
-	[success(4),messages.results] = mkdir('SLUKE_DKEDISPLAYS');
-else
-    success(4) = 1;
-    messages.results = '';
-end
-%
-if ~exist('SLUKE_FITEQUILS')
-	[success(5),messages.results] = mkdir('SLUKE_FITEQUILS');
-else
-    success(5) = 1;
-    messages.results = '';
-end
-%
-if ~exist('SLUKE_EQUILCONSISTENCIES')
-	[success(6),messages.results] = mkdir('SLUKE_EQUILCONSISTENCIES');
-else
-    success(6) = 1;
-    messages.results = '';
-end
-%
-if ~exist('SLUKE_EQUILS')
-	[success(7),messages.equils] = mkdir('SLUKE_EQUILS');
-else
-    success(7) = 1;
     messages.equils = '';
 end
 %
 if ~exist('SLUKE_OHMS')
-    [success(8),messages.ohms] = mkdir('SLUKE_OHMS');
+    [success(4),messages.ohms] = mkdir('SLUKE_OHMS');
 else
-    success(8) = 1;
+    success(4) = 1;
     messages.ohms = '';
 end
 %
-if ~exist('SLUKE_WAVES')
-     [success(9),messages.waves] = mkdir('SLUKE_WAVES');
+if ~exist('SLUKE_RFWAVES')
+     [success(5),messages.waves] = mkdir('SLUKE_RFWAVES');
 else
-    success(9) = 1;
+    success(5) = 1;
     messages.waves = '';
 end
 %
 if ~exist('SLUKE_TRANSPS')
-     [success(10),messages.transps] = mkdir('SLUKE_TRANSPS');
+     [success(6),messages.transps] = mkdir('SLUKE_TRANSPS');
 else
-    success(10) = 1;
+    success(6) = 1;
     messages.transps = '';
 end
 %
-if ~exist('SLUKE_RIPPLE')
-     [success(11),messages.ripple] = mkdir('SLUKE_RIPPLE');
+if ~exist('SLUKE_RIPPLES')
+     [success(7),messages.ripple] = mkdir('SLUKE_RIPPLES');
 else
-    success(11) = 1;
+    success(7) = 1;
     messages.ripple = '';
 end
 %
 if ~exist('SLUKE_FIGURES')
-	[success(12),messages.results] = mkdir('SLUKE_FIGURES');
+	[success(8),messages.results] = mkdir('SLUKE_FIGURES');
 else
-    success(12) = 1;
+    success(8) = 1;
     messages.results = '';
 end
-if ~exist('SLUKE_HXRPARAMS')
-	[success(13),messages.results] = mkdir('SLUKE_HXRPARAMS');
+%
+if ~exist('SLUKE_DIAGNOSTICS')
+	[success(9),messages.results] = mkdir('SLUKE_DIAGNOSTICS');
 else
-    success(13) = 1;
+    success(9) = 1;
     messages.results = '';
 end
-if ~exist('SLUKE_HXRSPECS')
-	[success(14),messages.results] = mkdir('SLUKE_HXRSPECS');
-else
-    success(14) = 1;
-    messages.results = '';
-end
-
 %
 if sum(success) == length(success)
     %

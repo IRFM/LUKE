@@ -101,6 +101,12 @@ if err == 0
         %
     end
     %
+else
+    %
+    disp('*********************')
+    disp(['WARNING : ',status{1}])
+    disp('*********************')
+    %
 end
 %
 if isfield(sparams_in,'help') && isfield(sparams_in,'format')

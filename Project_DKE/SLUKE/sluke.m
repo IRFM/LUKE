@@ -1,4 +1,4 @@
-function [varargout] = sluke(varargin)
+function sluke(varargin)
 %
 % LUKE - Full calculations of LUKE with sub-time intervals (option). All parameters are in a structure of cell arrays of the SAME SIZE. 
 % 
@@ -6,17 +6,36 @@ function [varargout] = sluke(varargin)
 %
 %   - varargin : initial 'sparams' structure
 %
-% OUTPUT :
-%
-%   - output : results structure
+% OUTPUT : none
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
-varargout{1} = '';
+if nargin == 2
+    %
+   diary(['log_sluke_',varargin{2},'_',strrep(datestr(now),' ','_')]);
+    %
+else
+    %
+    diary(['log_sluke_',strrep(datestr(now),' ','_')]);
+    %
+end
 %
 sparams_in = varargin{1};
 %
 sparams = sluke_params_time(sparams_in);%Expand all time steps if any
+%
+disp(' ')
+disp('---------------------------------------------')
+disp(['SLUKE simulation environment'])
+%
+if nargin == 2
+    %
+    disp(['Script source : ',varargin{2},'.m']);
+    %
+end
+disp([int2str(length(sparams.machine)),' simulations are considered'])
+%
+disp('---------------------------------------------')
 %
 [success,messages] = sluke_create_folders;
 %
@@ -31,6 +50,11 @@ end
 %
 for ii = 1:length(sparams.machine)
     %
+    antenna_remote_status = 0;
+    %
+    disp(' ')
+    disp(['Simulation #',int2str(ii),' [machine : ',sparams.machine{ii},', shot : #',sparams.discharge.shot{ii},', tmin : ',num2str(sparams.discharge.tmin{ii}),' (s), tmax : ',num2str(sparams.discharge.tmax{ii}),'(s), ID : ',sparams.simul.id{ii},'] ...']);
+    %
     if sparams.simul.enable{ii} == 1
         %
         simul_id = sluke_id(sparams,ii,'simul');
@@ -41,83 +65,131 @@ for ii = 1:length(sparams.machine)
             %
         end
         %
-        if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'])
+        mute = sluke_params_value(sparams.simul.mute,ii);
+        mute_fns = fieldnames(mute);
+        %
+        for jj = 1:length(mute_fns)
             %
-            load(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'])
-            %
-            dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
-            %
-            lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
-            %
-        else
-            %
-            lukestructs.simul_in = simul_id;
-            lukestructs.dkeparam = sluke_dkeparam(sparams,ii);
-            lukestructs.dkedisplay = sluke_dkedisplay(sparams,ii);
-            lukestructs.equil = sluke_equil(sparams,ii);
-            lukestructs.ohm = sluke_ohm(sparams,ii);
-            %{
-            lukestructs.wavestructs = '';%waves{ii};sluke_launch(sparams)
-            lukestructs.transpfaste = '';% sluke_transp(sparams,ii);
-            lukestructs.ripple = '';% sluke_ripple(sparams,ii);
-            %}
-            dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
-            % 
-            lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
+            eval(['global mute_',mute_fns{jj},'; mute_',mute_fns{jj},' = ',int2str(mute.(mute_fns{jj})),';']);
             %
         end
         %
-        if isfield(lukestructs,'output'),%job done
+        if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']) && ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
+            %~
+            load(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'],'lukestructs')
             %
-            disp(['LUKE simulation #',int2str(ii),' is completed. You can use irunluke_jd to display results, load processed data or perform specific calculations.']);
-            %
-            sluke_save(sparams,simul_id,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
-            %
-            % Data postprocessing
-            %
-            sluke_postprocessing(sparams,lukestructs,ii);
-            %
-            % Synthetic diagnostic calculations
-            %
-            sluke_diagnostics(sparams,lukestructs,ii);
-            %
-        elseif isfield(lukestructs,'err') %job failed
-            %
-            disp(['LUKE simulation #',int2str(ii),' has failed for the following reasons :' ]);
-            %
-            disperr_jd(lukestructs.err)
-            %
-            disp(['Simulation #',int2str(ii),' is cancelled.'])
-            %
-            delete(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
-            %
-        elseif isfield(lukestructs,'job') %job run
-            %
-            disp(['LUKE simulation #',int2str(ii),' is running.']);
-            %
-            if sparams.simul.enforce{ii} == 1
+            if ~isfield(lukestructs,'output')
                 %
-                disp('-------------------------------------------------------------------------------------------')
-                disp('WARNING: the simulation is enforced. Disable this option in the sparams file to get results')
-                disp('-------------------------------------------------------------------------------------------')
+                dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
+                %
+                lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
                 %
             end
             %
-            sluke_save(sparams.machine{ii},simul_id,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
+        elseif ~exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']) && ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             %
-        else
+            lukestructs.simul.id = simul_id;
+            %lukestructs.simul.locid = '';
+            %lukestructs.simul.path = 'SLUKE_RESULTS/';
             %
-            disp(['LUKE output for simulation #',int2str(ii),' is not recognized. Simulation is cancelled.'])
+            if isfield(sparams.kinetics,'opt')
+                %
+                lukestructs.opt = sparams.kinetics.opt;
+                %
+            end
             %
-            delete(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
+            lukestructs.dkeparam = sluke_dkeparam(sparams,ii);
+            %
+            lukestructs.dkedisplay = sluke_dkedisplay(sparams,ii);
+            %
+            lukestructs.equil = sluke_equil(sparams,ii);
+            %
+            lukestructs.ohm = sluke_ohm(sparams,ii);
+            %
+            [lukestructs.wavestructs,antenna_remote_status] = sluke_wavestructs(sparams,ii);
+            %
+            lukestructs.transpfaste = '';% sluke_transp(sparams,ii);
+            %
+            lukestructs.ripple = '';% sluke_ripple(sparams,ii);
+            %
+            if isempty(antenna_remote_status) || antenna_remote_status == 0  %antenna calculations are done or no antenna calculations
+                %
+                dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
+                lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
+                %
+            elseif antenna_remote_status == 1
+                %
+                disp(['Antenna calculations are running for simulation ',int2str(ii),'. Restart the simulation script to get back antenna results and run LUKE calculations.'])
+                %
+            elseif antenna_remote_status == -1
+                %
+                disp(['WARNING : Antenna calculations failed for simulation ',int2str(ii),'. Check files before restarting the simulation script to run LUKE calculations.'])
+                %
+            end
+            %
+        elseif exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
+            %
+            lukestructs = [];
+            %
+            disp(['---> is completed but full simulation is not saved, just processed results.']);
             %
         end
         %
-
+        if ~isempty(lukestructs) && exist('antenna_remote_status','var') && (isempty(antenna_remote_status) || antenna_remote_status == 0)
+            %
+            if isfield(lukestructs,'output') %job done
+                %
+                try
+                    %
+                    sluke_postprocessing(sparams,lukestructs,ii);% Data postprocessing
+                    sluke_diagnostics(sparams,lukestructs,ii);% Synthetic diagnostic calculations
+                    sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd for display or specific interactive run
+                    %
+                catch
+                    %
+                     sparams.simul.save{ii} = 1;%Full simulaton backup is enforced 
+                     sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd for display or specific interactive run
+                    %
+                end
+                %
+            elseif isfield(lukestructs,'err') %job failed
+                %
+                disp(['---> has failed for the following reasons :' ]);
+                %
+                disperr_jd(lukestructs.err)
+                %
+                disp(['---> is cancelled.'])
+                %
+                delete(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
+                %
+            elseif isfield(lukestructs,'job') %job run
+                %
+                disp(['---> is running on host : ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);
+                %
+                sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
+                %
+            else
+                %
+                disp(['---> has a problem (output not recognized. Check if this not a just a connection problem before cancelling the simulation by deleting the LUKE_DATA file).'])
+                %
+            end
+            %
+            if sparams.simul.enforce{ii} == 1
+                %
+                disp(['---> has been enforced. Set sparams.simul.enforce{',int2str(ii),'} to zero in the script file to avoid infinite calculation loop.'])
+                %
+            end
+            %
+        end
+        %
         clear lukestructs dkepath
         %
     else
-        disp(['WARNING : simulation #',int2str(ii),' is not enabled. Modify the sparams file to enable it.'])
+        disp(['---> is not enabled.'])
     end
     %
 end
+%
+diary off
+%
+
