@@ -1,6 +1,8 @@
-function [energy,hxr,t,beta,filter_thickness,filter_material] = collect_hxr_forLUKE_jd(basestr,shot,opt,data_path)
+function [energy,hxr,t,beta,filter_thickness,filter_material,all_hxr_data] = collect_hxr_forLUKE_jd(basestr,shot,opt,data_path)
 %
 % This function collects HXR experimental data from database
+%
+all_hxr_data = '';
 %
 if nargin < 2,
     error('Not enough arguments');
@@ -21,11 +23,11 @@ if strcmp(basestr,'TCV'),
     filter_thickness = filter_thickness{1};
     filter_material = filter_material{1};
     %
-elseif strcmp(basestr,'TS') && exist('tsbase','file'),
+elseif strcmp(basestr,'TS')
     %
     nk = 8;%number of energy chanels in TS
     energy = (20:20:160).';%energy channels in TS
-    nc = 59;%numver of chords in TS
+    nc = 59;%number of chords in TS
     %
     if opt.R == 1,
         pilerej = 'R';
@@ -39,19 +41,6 @@ elseif strcmp(basestr,'TS') && exist('tsbase','file'),
         treel = '';
     end
     %
-    [hxr01,t] = tsbase(shot,['G',treel,pilerej,'X01']);
-    %
-    if isempty(hxr01),
-        disp(['-----> hxr data not found for shot :',num2str(shot)]);
-        return            
-    end                
-    %
-    nt = size(t,1);
-    %
-    t = t(:,1);
-    %
-    hxr = zeros(nt,nk,nc);            
-    %
     icstr = cell(1,nc);
     for ic = 1:min([nc,9]),
         icstr{ic} = ['0',num2str(ic)];
@@ -60,9 +49,49 @@ elseif strcmp(basestr,'TS') && exist('tsbase','file'),
         icstr{ic} = num2str(ic);
     end
     %
+    for ic = 1:nc
+        %
+        if ~isempty(icstr{ic})
+            %
+            hxr_signals(ic) = {['G',treel,pilerej,'X',icstr{ic}]};
+            %
+        end
+        %
+    end
+    %
+    if ischar(shot)
+        shot1 = str2num(shot);
+    else
+        shot1 = shot;
+    end
+    %
+    all_hxr_data = remote_mtsbase(shot1,hxr_signals);
+    %
+    if isfield(all_hxr_data,'err')
+        %
+        disp(['WARNING : data not found for shot :',num2str(shot1),', error : ',all_hxr_data.err{3}]);
+        %
+        energy = [];
+        hxr = [];
+        t = [];
+        beta = [];
+        filter_thickness = [];
+        filter_material = [];
+        %
+        return            
+    end                
+    %
+    t = all_hxr_data(1).yout2(:,1);
+    %
+    nt = size(t,1);
+    %
+    hxr = zeros(nt,nk,nc);            
+    %
     for ic = 1:nc,
         try 
-            [hxrloc,tloc] = tsbase(shot,['G',treel,pilerej,'X',icstr{ic}]);
+            %
+            hxrloc = all_hxr_data(ic).yout1;
+            tloc = all_hxr_data(ic).yout2;
             %
             nkloc = size(tloc,2);
             %
@@ -87,6 +116,78 @@ elseif strcmp(basestr,'TS') && exist('tsbase','file'),
     if opt.V == 1,
         hxr = flipdim(cumsum(flipdim(hxr,2),2),2);%TS data is per channel (it is not monotonically decreasing)
     end
+    %
+    filter_thickness = NaN;
+    filter_material = NaN;
+    beta = NaN;
+    %
+elseif strcmp(basestr,'WEST')
+    %
+    nk = 8;%number of energy chanels in WEST
+    energy = (20:20:160).';%energy channels in WEST
+    nc = 38;%number of chords in WEST (22-> 59)
+    %
+    for ic = 1:nc
+       %
+       hxr_signals(ic) = {['GVX',int2str(ic+21)]};%22->59
+       %    
+    end
+    %
+    if ischar(shot)
+        shot1 = str2num(shot);
+    else
+        shot1 = shot;
+    end
+    %
+    all_hxr_data = remote_mtsbase(shot1,hxr_signals);
+    %
+    if isfield(all_hxr_data,'err')
+        %
+        disp(['WARNING : data not found for shot :',num2str(shot1),', error : ',all_hxr_data.err{3}]);
+        %
+        energy = [];
+        hxr = [];
+        t = [];
+        beta = [];
+        filter_thickness = [];
+        filter_material = [];
+        %
+        return            
+    end                
+    %
+    t = all_hxr_data(1).yout2(:,1);
+    %
+    nt = size(t,1);
+    %
+    hxr = zeros(nt,nk,nc);            
+    %
+    for ic = 1:nc
+        try 
+            %
+            hxrloc = all_hxr_data(ic).yout1;
+            tloc = all_hxr_data(ic).yout2;
+            %
+            nkloc = size(tloc,2);
+            %
+            if nkloc < nk,
+                disp('WARNING : number of channels read from TS database is less than 8');
+            elseif nkloc > nk,
+                error('Number of channels read from TS database is more than 8');
+            end
+            %
+            if size(tloc,1) ~= nt || any(tloc(:,1) ~= t),
+                for ik = 1:nkloc,
+                    hxr(:,ik,ic) = interp1(tloc(:,1),hxrloc(:,ik),t);
+                end
+            else
+                hxr(:,1:nkloc,ic) = hxrloc;
+            end                     
+        catch
+            continue
+        end
+    end
+    %
+    hxr = flipdim(cumsum(flipdim(hxr,2),2),2);%TS data is per channel (it is not monotonically decreasing)
     %
     filter_thickness = NaN;
     filter_material = NaN;

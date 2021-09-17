@@ -24,6 +24,12 @@ function  [Zbremplasma] = bremsstrahlung_dke_yp(equilHXR,mksa,momentumDKE,Zmomco
 %
 % by Joan Decker (CEA/IRFM,joan.decker@cea.fr) and Yves Peysson(CEA/IRFM,yves.peysson@cea.fr)
 %
+if ~ismember('mute_bremsstrahlung_dke_yp', who('global'))
+    mute_bremsstrahlung_dke_yp = 0;
+else
+    global mute_bremsstrahlung_dke_yp
+end
+%
 if nargin < 8,
     fieldside = '';
 end
@@ -165,7 +171,9 @@ if isfield(equilHXR,'Znucleus') %ADAS
             %
             jZ = jZ+length(Z0);
             %
-            disp(['Bremsstrahlung for Z = ',int2str(equilHXR.Znucleus(iZ)),' with partial screening is calculated.']);
+            if mute_bremsstrahlung_dke_yp == 0
+                disp(['Bremsstrahlung for Z = ',int2str(equilHXR.Znucleus(iZ)),' with partial screening is calculated.']);
+            end
             %
         else
             %
@@ -176,7 +184,9 @@ if isfield(equilHXR,'Znucleus') %ADAS
                 %
             end
             %
-            disp(['Bremsstrahlung for Z = ',int2str(equilHXR.Znucleus(iZ)),' with full screening is calculated.']);
+            if mute_bremsstrahlung_dke_yp == 0
+                disp(['Bremsstrahlung for Z = ',int2str(equilHXR.Znucleus(iZ)),' with full screening is calculated.']);
+            end
             %
         end
         %
@@ -281,7 +291,9 @@ for ir = 1:nr,%radial position
         Zbremplasma.brem_4pi{ir,it} = permute(reshape(squeeze(ZZIB(ir,it,1,:))/2,1,nk),[2,3,1]);%Mean 4pi emission per steradian				
         %
 		if dkedisplay.display_mode,
-            info_dke_yp(2,['Bremsstrahlung integral #',int2str((ir-1)*nt + it),'/',int2str(nr*nt),' done']);
+            if mute_bremsstrahlung_dke_yp == 0
+                info_dke_yp(2,['Bremsstrahlung integral #',int2str((ir-1)*nt + it),'/',int2str(nr*nt),' done']);
+            end
         end
 	end
 end

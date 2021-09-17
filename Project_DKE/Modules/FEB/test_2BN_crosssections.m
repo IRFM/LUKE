@@ -14,7 +14,7 @@ energy_display = [1];%display index for electron energy
 kmin = 10;%Photon energy min keV
 nk = 100;%number of photon energies
 %
-theta_display = [1,2];%display index for photon angle
+theta_display = [1,2,3];%display index for photon angle
 %
 % Screening effect
 %
@@ -26,7 +26,7 @@ flag_mem = 1;%Memory management enforcement : 0 -> 5-D block numerical calculati
 %
 Ec0 = linspace(Ecmin,Ecmax,nEc);%Incoming electron kinetic energy (keV)
 k = linspace(kmin,Ecmax,nk);%photon energy (keV)
-theta = [0,30];%[0,30,60,90,120,150,180]%Photon observation angle (deg)
+theta = [0,30,60];%[0,30,60,90,120,150,180]%Photon observation angle (deg)
 %
 factor = 10000/511/1e-27;%relativistic to mb/MeV/str units
 %
@@ -155,15 +155,15 @@ for it = 1:length(theta_display)%theta0 photon angle
                 xlim = [0,Ec0(iE)];%normalized transfered momentum q/(mec)
                 ylim = [1e-4,1e5];
                 %
-                graph1D_jd(k,squeeze(BH2(im).seBH2(theta_display(it),iE,:,iZ)),0,1,xlab,ylab,tit,leg,xlim,ylim,linestyle{im},'none',linecolor{im},2,siz,gca);
-                graph1D_jd(k,squeeze(BH1(1).seBH1(theta_display(it),iE,:,iZ)),0,1,xlab,ylab,tit,leg,NaN,NaN,linestyle{im+1},'none',linecolor{im+1},2,siz,gca);
+                graph1D_jd(k,squeeze(BH2(im).seBH2(theta_display(it),iE,:,iZ)),0,1,xlab,ylab,tit,leg,xlim,ylim,linestyle{im},'none',linecolor{im},4,siz,gca);
+                graph1D_jd(k,squeeze(BH1(1).seBH1(theta_display(it),iE,:,iZ)),0,1,xlab,ylab,tit,leg,NaN,NaN,linestyle{im+1},'none',linecolor{im+1},4,siz,gca);
                 %
                 drawnow
                 %
             end
             %
             leg = {BH2(1:im).legend,BH1(1).legend,'2BN - fully-stripped atom'};
-            graph1D_jd(k,squeeze(BH1(1).seBH1(theta_display(it),iE,:,end)),0,1,xlab,ylab,tit,leg,NaN,NaN,linestyle{length(BH2)+2},'none',linecolor{length(BH2)+2},2,siz,gca);
+            graph1D_jd(k,squeeze(BH1(1).seBH1(theta_display(it),iE,:,end)),0,1,xlab,ylab,tit,leg,NaN,NaN,linestyle{length(BH2)+2},'none',linecolor{length(BH2)+2},4,siz,gca);
             %
             %leg = {BH2(1:im).legend,'2BN - full-screening','Elwert-Haug - full-screening'
             %graph1D_jd(k,squeeze(EH(iZ).seEH(theta_display(it),end,:)),0,1,xlab,ylab,tit,leg,NaN,NaN,linestyle{length(BH2)+2},'none',linecolor{length(BH2)+2},2,siz,gca);
@@ -202,7 +202,7 @@ for im = 1:length(BH2)%Screening model
                 %
                 if ~isempty(screening_models{im})
                     sf = squeeze(BH1(1).seBH1(theta_display(it),iE,:,end))./squeeze(BH2(im).seBH2(theta_display(it),iE,:,iZ));
-                    graph1D_jd(k,sf,0,0,xlab,ylab,tit,leg,xlim,ylim,linestyle{ii},'none',linecolor{jj},2,siz,gca);     
+                    graph1D_jd(k,sf,0,0,xlab,ylab,tit,leg,xlim,ylim,linestyle{ii},'none',linecolor{jj},4,siz,gca);     
                 end
                 %
                 if jj == length(linecolor)

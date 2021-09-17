@@ -1,21 +1,63 @@
-function [hxrspec,hxrparam] = get_hxrspec_forLUKE_jd(basestr,shot,data_path)
+function [hxrspec,hxrparam] = get_hxrspec_forLUKE_jd(basestr,shot,data_path,scheduler,hxrparam)
 %
-if ~(strcmp(basestr,'TS') || strcmp(basestr,'WEST')),
-    error('Function valid for TS or WEST for now')
+if nargin < 5
+    %
+    if isempty(hxrparam)
+        %
+        hxrparam.mfactor = 1;%For the magnetic equilibrium
+        hxrparam.method = 'spline';%For the magnetic equilibrium in the HXR calculations
+        hxrparam.ns = 3000;%for chord integration
+        hxrparam.n_gauleg = 35;%Number of Legendre polynomials for projections of cross-section and electron velocity distribution
+        hxrparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
+        %
+    end
+    %
 end
 %
-dkepath = load_structures_yp('dkepath','','');
-opt_gui = false;
-select.style = struct;
-scheduler.remnum = iselect_jd(dkepath.remprofiles,'Remote calculation mode (mdce_remote): ',opt_gui,select.style,1)-1;
-if scheduler.remnum > 1,
-    remote = dkepath.remote(scheduler.remnum);
-    %remote.link_mode=1;%ssh bridge otherwise 0 (direct ssh)
-    job = matstandardjob_jd('runmat');
-    [err,job,shotdate] = matremote_jd('tsdate',{shot},remote,job);%find remotely the shot date
+if nargin < 4
+    scheduler = '';
+end
+%
+if nargin < 3
+    data_path = './';%local path
+end
+%
+if nargin == 4
+    %
+    if ~(strcmp(basestr,'TS') || strcmp(basestr,'WEST'))
+        %
+        error('The function get_hxrspec_forLUKE_jd.m is valid for TS or WEST.')
+        %
+    end
+    %
+    opt_gui = false;
+    select.style = struct;
+    %
+    dkepath = load_structures_yp('dkepath','','');
+    %
+    scheduler.remnum = iselect_jd(dkepath.remprofiles,'Remote calculation mode (mdce_remote): ',opt_gui,select.style,1)-1;
+    %
+    if scheduler.remnum > 1
+        remote = dkepath.remote(scheduler.remnum);
+        job = matstandardjob_jd('runmat');
+        [err,job,shotdate] = matremote_jd('tsdate',{shot},remote,job);%find remotely the shot date
+    else
+        disp('WARNING: direct connexion to the CEA network is necessary');
+        [shotdate] = tsdate(shot);
+    end
 else
-    disp('WARNING: direct connexion to the CEA network is necessary');
-    [shotdate] = tsdate(shot);
+    %
+    if ~(strcmp(basestr,'TS') || strcmp(basestr,'WEST'))
+        %
+        disp('WARNING : The function get_hxrspec_forLUKE_jd.m is valid for TS or WEST. Empty structures are returned.')
+        hxrspec = '';
+        hxrparam = '';
+        return;
+        %
+    end
+    %
+    [shotdate] = remote_tsdate(shot);%date of the discharge (not network dependent)
+    %
 end
 %
 hxrspec = bremTSconvert_dke_yp(str2num(shotdate(1:2)),str2num(shotdate(4:5)),str2num(shotdate(7:10)));
@@ -27,23 +69,17 @@ hxrspec.beta_hxr(hxrspec.beta_hxr > pi) = 2*pi - hxrspec.beta_hxr(hxrspec.beta_h
 %
 hxrspec.alpha_hxr(hxrspec.beta_hxr < 0) = hxrspec.alpha_hxr(hxrspec.beta_hxr < 0) + pi;
 hxrspec.beta_hxr(hxrspec.beta_hxr < 0) = - hxrspec.beta_hxr(hxrspec.beta_hxr < 0);
-
+%
 hxrspec.alpha_hxr(hxrspec.alpha_hxr < 0) = hxrspec.alpha_hxr(hxrspec.alpha_hxr < 0) + 2*pi;
 hxrspec.alpha_hxr(hxrspec.alpha_hxr > 2*pi) = hxrspec.alpha_hxr(hxrspec.alpha_hxr > 2*pi) - 2*pi;
-%
-hxrparam.mfactor = 1;%For the magnetic equilibrium
-hxrparam.method = 'spline';%For the magnetic equilibrium in the HXR calculations
-hxrparam.ns = 3000;%for chord integration
-hxrparam.n_gauleg = 35;%Number of Legendre polynomials for projections of cross-section and electron velocity distribution
-hxrparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
 %
 hxrparam.kphot = hxrspec.kphot;
 hxrparam.kmin = hxrspec.kmin;
 hxrparam.kmax = hxrspec.kmax;
 %
-if nargout == 0,
+if nargout == 0
     %
-    if nargin < 3,
+    if nargin < 3
         data_path = './';
     end  
     %

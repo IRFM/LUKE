@@ -32,11 +32,17 @@ function  [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam,dt)
 %      
 % by Joan Decker (CEA/IRFM,joan.decker@cea.fr) and Yves Peysson(CEA/IRFM,yves.peysson@cea.fr)
 %
+if ~ismember('mute_bremdiag_dke_yp', who('global'))
+    mute_bremdiag_dke_yp = 0;
+else
+    global mute_bremdiag_dke_yp
+end
+%
 if nargin < 4,
 	error('Not enough arguments in bremshtrahlung_dke_yp')
 end
 %
-method = 'cubic';
+method = 'pchip';
 %
 kphot = Zbremplasma.kphot;
 brem_bd_in = Zbremplasma.brem_bd_out;
@@ -173,7 +179,9 @@ for ic = 1:size(brem_bd_interp,1),
 %		afit_plasma_exp(ic) = NaN;
 %	end
 %
-	info_dke_yp(2,['Convolution with detector''s response function for chord #',int2str(ic),'/',int2str(size(brem_bd_interp,1)),' done']);		
+    if mute_bremdiag_dke_yp == 0
+        info_dke_yp(2,['Convolution with detector''s response function for chord #',int2str(ic),'/',int2str(size(brem_bd_interp,1)),' done']);		
+    end
 end
 %
 Zbremdiag.kinterp = kinterp;
