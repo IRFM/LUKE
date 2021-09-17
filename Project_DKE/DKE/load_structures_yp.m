@@ -18,7 +18,15 @@ function [varargout] = load_structures_yp(varargin)
 %
 % by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> and Joan Decker CEA-DRFC (joan.decker@cea.fr)
 %
-if rem(nargin,3) > 0 | nargin == 0, error('Wrong number of input arguments in load_structures_yp !');end
+if nargin == 0 || rem(nargin,3) > 0
+    error('Wrong number of input arguments in load_structures_yp !');
+end
+%
+if ~ismember('mute_load_structures_yp', who('global'))
+    mute_load_structures_yp = 0;
+else
+    global mute_load_structures_yp
+end
 %
 id_path = '';
 path_path = '';
@@ -56,74 +64,74 @@ id_external = '';
 path_external = '';
 %
 j = 1;
-for i=1:3:length(varargin),
-    if strcmp(varargin{i},'dkepath'),
+for i=1:3:length(varargin)
+    if strcmp(varargin{i},'dkepath')
        id_path = varargin{i+1};
        path_path = varargin{i+2};
        flag_path = j;
-    elseif strcmp(varargin{i},'dkeparam'),
+    elseif strcmp(varargin{i},'dkeparam')
        id_dkeparam = varargin{i+1};
        path_dkeparam = varargin{i+2};
        flag_dkeparam = j;
-    elseif strcmp(varargin{i},'rtparam'),
+    elseif strcmp(varargin{i},'rtparam')
        id_rtparam = varargin{i+1};
        path_rtparam = varargin{i+2};
        flag_rtparam = j;
-    elseif strcmp(varargin{i},'hxrparam'),
+    elseif strcmp(varargin{i},'hxrparam')
        id_hxrparam = varargin{i+1};
        path_hxrparam = varargin{i+2};
        flag_hxrparam = j;
-    elseif strcmp(varargin{i},'dkedisplay'),
+    elseif strcmp(varargin{i},'dkedisplay')
        id_display = varargin{i+1};
        path_display = varargin{i+2};
        flag_display = j;
-    elseif strcmp(varargin{i},'equil'),
+    elseif strcmp(varargin{i},'equil')
        id_equil = varargin{i+1};
        path_equil = varargin{i+2};
        flag_equil = j;
-    elseif strcmp(varargin{i},'ohm'),
+    elseif strcmp(varargin{i},'ohm')
        id_ohm = varargin{i+1};
        path_ohm = varargin{i+2};
        flag_ohm = j;
-    elseif strcmp(varargin{i},'waves'),
+    elseif strcmp(varargin{i},'waves')
        ids_wave = varargin{i+1};
        paths_wave = varargin{i+2};
        flag_wave = j;
-    elseif strcmp(varargin{i},'wavestructs'),
+    elseif strcmp(varargin{i},'wavestructs')
        ids_wavestruct = varargin{i+1};
        paths_wavestruct = varargin{i+2};
        flag_wavestruct = j;
-    elseif strcmp(varargin{i},'rayinits'),
+    elseif strcmp(varargin{i},'rayinits')
        ids_rayinit = varargin{i+1};
        paths_rayinit = varargin{i+2};
        flag_rayinit = j;
-    elseif strcmp(varargin{i},'launchs'),
+    elseif strcmp(varargin{i},'launchs')
        ids_launch = varargin{i+1};
        paths_launch = varargin{i+2};
        flag_launch = j;
-    elseif strcmp(varargin{i},'angles'),
+    elseif strcmp(varargin{i},'angles')
        ids_angles = varargin{i+1};
        paths_angles = varargin{i+2};
        flag_angles = j;
-    elseif strcmp(varargin{i},'transpfaste'),
+    elseif strcmp(varargin{i},'transpfaste')
        id_transpfaste = varargin{i+1};
        path_transpfaste = varargin{i+2};
        flag_transpfaste = j;
-    elseif strcmp(varargin{i},'ripple'),
+    elseif strcmp(varargin{i},'ripple')
        id_ripple = varargin{i+1};
        path_ripple = varargin{i+2};
        flag_ripple = j;
-    elseif strcmp(varargin{i},'fluct'),
+    elseif strcmp(varargin{i},'fluct')
        id_fluct = varargin{i+1};
        path_fluct = varargin{i+2};
        flag_fluct = j;
-    elseif strcmp(varargin{i},'hxr'),
+    elseif strcmp(varargin{i},'hxr')
        id_hxr = varargin{i+1};
        path_hxr = varargin{i+2};
        flag_hxr = j;
        j = j+1;
        flag_hxrparam = j;
-    elseif strcmp(varargin{i},'external'),
+    elseif strcmp(varargin{i},'external')
        id_external = varargin{i+1};
        path_external = varargin{i+2};
        flag_external = j;
@@ -131,21 +139,23 @@ for i=1:3:length(varargin),
     j = j + 1;
 end
 %
-if exist('flag_path','var'),%Paths
+if exist('flag_path','var') %Paths
     %
-    if isempty(id_path),% load dkepath from getappdata(0,'dkepath') or find LUKE_PATH.mat in current path
+    if isempty(id_path) % load dkepath from getappdata(0,'dkepath') or find LUKE_PATH.mat in current path
         %
-        if isappdata(0,'dkepath'),
+        if isappdata(0,'dkepath')
             dkepath = getappdata(0,'dkepath');
             filename = '';
-            info_dke_yp(2,'Structure ''dkepath'' successfully loaded from getappdata(0,''dkepath'')');
+            if mute_load_structures_yp == 0
+                info_dke_yp(2,'Structure ''dkepath'' successfully loaded from getappdata(0,''dkepath'')');
+            end
         else
             %
             filenames = which('LUKE_PATH.mat','-all');
             %
-            if length(filenames) > 1,
+            if length(filenames) > 1
                 ifile = iselect_jd(filenames,'Warning : more than one LUKE_PATH.mat file found. Please select one of the following :',false);
-            elseif isempty(filenames),
+            elseif isempty(filenames)
                 error('No LUKE_PATH.mat found on the matlab path')
             else
                 ifile = 1;
@@ -159,16 +169,18 @@ if exist('flag_path','var'),%Paths
         %
         filename = [path_path,id_path,'.mat'];
         %
-        if ~exist(filename,'file'),
+        if ~exist(filename,'file')
             error(['The file ',filename,' does not exist'])
         end
     end
     %
-    if ~isempty(filename),
+    if ~isempty(filename)
         %
         load(filename,'dkepath');
         %
-        info_dke_yp(2,['Structure ''dkepath'' successfully loaded from ',filename]);
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Structure ''dkepath'' successfully loaded from ',filename]);
+        end
         %
         % Set path for LUKE including mex files and matrix inverters
         %
@@ -176,18 +188,18 @@ if exist('flag_path','var'),%Paths
         %
     end
     %
-    if ~strcmp(dkepath.computer,computer),
+    if ~strcmp(dkepath.computer,computer)
         error('The path structure is not consistent with the computer !'),
     end
     %
     varargout{flag_path} = dkepath;
 end
 %
-if exist('flag_equil','var'),%Magnetic equilibrium
+if exist('flag_equil','var') %Magnetic equilibrium
     if strfind(path_equil,'database')
-		if strfind(path_equil,'ITM'),
+		if strfind(path_equil,'ITM')
 			[machine,user,ver] = which_MDSdatabase(dkepath);%Check access to database (Environment variable must be set-up before launching MatLab)
-			if isempty(machine) | isempty(user) | isempty(ver),
+			if isempty(machine) | isempty(user) | isempty(ver)
 				error(['WARNING: Unsuccessful connexion to ITM MDS+ database, user: ',user,', database version: ',ver,', machine: ',machine]);
 			else
 				disp(['Successful connexion to ITM MDS+ database, user: ',user,', database version: ',ver,', machine: ',machine]);
@@ -198,8 +210,10 @@ if exist('flag_equil','var'),%Magnetic equilibrium
 				end
 				%
 				[equil,status,result] = read_equil_ITM(numshot,1,NaN,1);
-				if ~status,
-					disp(['LUKE magnetic equilibrium ',id_equil,' successfully read from the ITM-MDS+ database']);
+				if ~status
+                    if mute_load_structures_yp == 0
+                        disp(['LUKE magnetic equilibrium ',id_equil,' successfully read from the ITM-MDS+ database']);
+                    end
 					varargout{flag_equil} = equil;
 				else
 					error(result);
@@ -210,30 +224,34 @@ if exist('flag_equil','var'),%Magnetic equilibrium
 		end
 	else
     	filename = [path_equil,'EQUIL_',id_equil,'.mat'];
-    	if exist(filename) == 0,
+    	if exist(filename) == 0
 	    	error([filename,' does not exist']);
     	else
 	    	load(filename);
-	    	info_dke_yp(2,['Structure ''equil'': ',filename,' successfully loaded']);
+            if mute_load_structures_yp == 0
+                info_dke_yp(2,['Structure ''equil'': ',filename,' successfully loaded']);
+            end
     	end
     	varargout{flag_equil} = equil;	
     end
 end
 %
-if exist('flag_dkeparam','var'),%DKE simulation parameters 
+if exist('flag_dkeparam','var') %DKE simulation parameters 
     filename = [path_dkeparam,'DKEPARAM_',id_dkeparam,'.mat'];
-    if exist(filename) == 0,
+    if exist(filename) == 0
 	    error([filename,' does not exist']);
     else
 	    load(filename);
-	    info_dke_yp(2,['Structure ''dkeparam'': ',filename,' successfully loaded']);
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Structure ''dkeparam'': ',filename,' successfully loaded']);
+        end
     end
     varargout{flag_dkeparam} = dkeparam;
 end
 %
-if exist('flag_rtparam','var'),%DKE simulation parameters 
+if exist('flag_rtparam','var') %DKE simulation parameters 
     filename = [path_rtparam,'C3POPARAM_',id_rtparam,'.mat'];
-    if exist(filename) == 0,
+    if exist(filename) == 0
 	    error([filename,' does not exist']);
     else
 	    load(filename);
@@ -246,13 +264,15 @@ if exist('flag_rtparam','var'),%DKE simulation parameters
     varargout{flag_rtparam}.waveparam = waveparam;
 end
 %
-if exist('flag_hxrparam','var'),%DKE simulation parameters 
+if exist('flag_hxrparam','var') %DKE simulation parameters 
     filename = [path_hxrparam,'HXRPARAM_',id_hxrparam,'.mat'];
-    if exist(filename) == 0,
+    if exist(filename) == 0
 	    error([filename,' does not exist']);
     else
 	    load(filename);
-	    info_dke_yp(2,['Structure ''hxrparam'': ',filename,' successfully loaded']);
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Structure ''hxrparam'': ',filename,' successfully loaded']);
+        end
     end
     varargout{flag_hxrparam} = hxrparam;
 end
@@ -263,53 +283,67 @@ if exist('flag_display','var'),%DKE display parameters
 	    error([filename,' does not exist']);
     else
 	    load(filename);
-	    info_dke_yp(2,['Structure ''dkedisplay'': ',filename,' successfully loaded']);
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Structure ''dkedisplay'': ',filename,' successfully loaded']);
+        end
     end
     varargout{flag_display} = dkedisplay;
 end
 %
-if exist('flag_ohm','var'),%Ohmic electric field 
+if exist('flag_ohm','var') %Ohmic electric field 
     filename = [path_ohm,'OHM_',id_equil,'_',id_ohm,'.mat'];
 	ohm = '';
-    if isempty(id_ohm),
-        info_dke_yp(2,['Simulations are performed without Ohmic E-field']);
-    elseif exist(filename) == 0,
-	    info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+    if isempty(id_ohm)
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Simulations are performed without Ohmic E-field']);
+        end
+    elseif exist(filename) == 0
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+        end
     else
 	    load(filename);
-	    info_dke_yp(2,['Structure ''ohm'': ',filename,' successfully loaded']);
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Structure ''ohm'': ',filename,' successfully loaded']);
+        end
     end
     varargout{flag_ohm} = ohm;
 end
 %
-if exist('flag_wave','var'),
+if exist('flag_wave','var')
     ii = 0;
     waves = '';%List of structures for multiple RF waves
     %
-    if ~iscell(ids_wave),
+    if ~iscell(ids_wave)
         ids_wave={ids_wave};
     end
-    if ~iscell(paths_wave),
+    if ~iscell(paths_wave)
         paths_wave=repmat({paths_wave},[1,length(ids_wave)]);
     end
     %
-    if isempty(ids_wave{1}),
-        info_dke_yp(2,['Simulations are performed without RF Waves']);
+    if isempty(ids_wave{1})
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Simulations are performed without RF Waves']);
+        end
     else
-        for iw = 1:length(ids_wave),
-            if isempty(id_equil) && strfind(ids_wave{iw},'WAVE_'),
+        for iw = 1:length(ids_wave)
+            if isempty(id_equil) && strfind(ids_wave{iw},'WAVE_')
                 filename = [ids_wave{iw}];
             else
                 filename = ['WAVE_',id_equil,'_',ids_wave{iw},'.mat'];
             end
             filenames = getlist_jd(paths_wave{iw},filename);
-            if isempty(filenames),
-                info_dke_yp(2,['Warning : Structure ',filename,' could not be found in the directory ',paths_wave{iw},'.']);
+            if isempty(filenames)
+                if mute_load_structures_yp == 0
+                    info_dke_yp(2,['Warning : Structure ',filename,' could not be found in the directory ',paths_wave{iw},'.']);
+                end
             else
-                for ifile = 1:length(filenames),
+                for ifile = 1:length(filenames)
                     filename = [paths_wave{iw},filenames{ifile}];
                     data = load(filename);
-                    info_dke_yp(2,['Structure ''wave'': ',filename,' successfully loaded']);
+                    if mute_load_structures_yp == 0
+                        info_dke_yp(2,['Structure ''wave'': ',filename,' successfully loaded']);
+                    end
                     ii = ii + 1;
                     waves{ii} = data.wave;
                 end
@@ -319,30 +353,38 @@ if exist('flag_wave','var'),
     varargout{flag_wave} = waves;
 end
 %
-if exist('flag_wavestruct','var'),
+if exist('flag_wavestruct','var')
     ii = 0;
     wavestructs = '';%List of structures for multiple RF waves
     %
-    if ~iscell(ids_wavestruct),
+    if ~iscell(ids_wavestruct)
         ids_wavestruct={ids_wavestruct};
     end
-    if ~iscell(paths_wavestruct),
+    if ~iscell(paths_wavestruct)
         paths_wavestruct=repmat({paths_wavestruct},[1,length(ids_wavestruct)]);
     end
     %
-    if isempty(ids_wavestruct{1}),
-        info_dke_yp(2,['Simulations are performed without RF Wavestructs']);
+    if isempty(ids_wavestruct{1})
+        if mute_load_structures_yp == 0
+            if mute_load_structures_yp == 0
+                info_dke_yp(2,['Simulations are performed without RF Wavestructs']);
+            end
+        end
     else
-        for iw = 1:length(ids_wavestruct),
+        for iw = 1:length(ids_wavestruct)
             filename = ['WAVESTRUCT_',id_equil,'_',ids_wavestruct{iw},'.mat'];
             filenames = getlist_jd(paths_wavestruct{iw},filename);
-            if isempty(filenames),
-                info_dke_yp(2,['Warning : Structure ',filename,' could not be found in directory',paths_wavestruct{iw},'.']);
+            if isempty(filenames)
+                if mute_load_structures_yp == 0
+                    info_dke_yp(2,['Warning : Structure ',filename,' could not be found in directory',paths_wavestruct{iw},'.']);
+                end
             else
-                for ifile = 1:length(filenames),
+                for ifile = 1:length(filenames)
                     filename = [paths_wavestruct{iw},filenames{ifile}];
                     load(filename);
-                    info_dke_yp(2,['Structure ''wavestruct'': ',filename,' successfully loaded']);
+                    if mute_load_structures_yp == 0
+                        info_dke_yp(2,['Structure ''wavestruct'': ',filename,' successfully loaded']);
+                    end
                     ii = ii + 1;
                     wavestructs{ii} = wavestruct;
                 end
@@ -352,19 +394,23 @@ if exist('flag_wavestruct','var'),
     varargout{flag_wavestruct} = wavestructs;
 end
 %
-if exist('flag_rayinit','var'),
+if exist('flag_rayinit','var')
     ii = 0;
     rayinits = '';%List of structures for multiple RF waves
-    if isempty(ids_rayinit{1}),
+    if isempty(ids_rayinit{1})
         info_dke_yp(2,['No initial conditions requested']);
     else
-        for iw = 1:length(ids_rayinit),
+        for iw = 1:length(ids_rayinit)
             filename = [paths_rayinit{iw},'RAYINIT_',id_equil,'_',ids_rayinit{iw},'.mat'];
-            if exist(filename) == 0,
-                info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+            if exist(filename) == 0
+                if mute_load_structures_yp == 0
+                    info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+                end
             else
                 load(filename);
-                info_dke_yp(2,['Structure ''rayinit'': ',filename,' successfully loaded']);
+                if mute_load_structures_yp == 0
+                    info_dke_yp(2,['Structure ''rayinit'': ',filename,' successfully loaded']);
+                end
                 ii = ii + 1;
                 rayinits{ii} = rayinit;
             end
@@ -373,27 +419,33 @@ if exist('flag_rayinit','var'),
     varargout{flag_rayinit} = rayinits;
 end
 %
-if exist('flag_launch','var'),
+if exist('flag_launch','var')
     ii = 0;
     launchs = '';%List of structures for multiple RF waves
     %
-    if ~iscell(ids_launch),
+    if ~iscell(ids_launch)
         ids_launch={ids_launch};
     end
-    if ~iscell(paths_launch),
+    if ~iscell(paths_launch)
         paths_launch=repmat({paths_launch},[1,length(ids_launch)]);
     end
     %
-    if isempty(ids_launch{1}),
-        info_dke_yp(2,['No launching conditions requested']);
+    if isempty(ids_launch{1})
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['No launching conditions requested']);
+        end
     else
-        for iw = 1:length(ids_launch),
+        for iw = 1:length(ids_launch)
             filename = [paths_launch{iw},'LAUNCH_',ids_launch{iw},'.mat'];
-            if exist(filename) == 0,
-                info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+            if exist(filename) == 0
+                if mute_load_structures_yp == 0
+                    info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+                end
             else
                 load(filename);
-                info_dke_yp(2,['Structure ''launch'': ',filename,' successfully loaded']);
+                if mute_load_structures_yp == 0
+                    info_dke_yp(2,['Structure ''launch'': ',filename,' successfully loaded']);
+                end
                 ii = ii + 1;
                 launchs{ii} = launch;
             end
@@ -402,19 +454,25 @@ if exist('flag_launch','var'),
     varargout{flag_launch} = launchs;
 end
 %
-if exist('flag_angles','var'),
+if exist('flag_angles','var')
     ii = 0;
     angless = '';%List of structures for multiple RF waves
-    if isempty(ids_angles{1}),
-        info_dke_yp(2,['No angles conditions requested']);
+    if isempty(ids_angles{1})
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['No angles conditions requested']);
+        end
     else
-        for iw = 1:length(ids_angles),
+        for iw = 1:length(ids_angles)
             filename = [paths_angles{iw},'ANGLES_',ids_angles{iw},'.mat'];
-            if exist(filename) == 0,
-                info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+            if exist(filename) == 0
+                if mute_load_structures_yp == 0
+                    info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+                end
             else
                 load(filename);
-                info_dke_yp(2,['Structure ''angles'': ',filename,' successfully loaded']);
+                if mute_load_structures_yp == 0
+                    info_dke_yp(2,['Structure ''angles'': ',filename,' successfully loaded']);
+                end
                 ii = ii + 1;
                 angless{ii} = angles;
             end
@@ -423,73 +481,99 @@ if exist('flag_angles','var'),
     varargout{flag_angles} = angless;
 end
 %
-if exist('flag_transpfaste','var'),
+if exist('flag_transpfaste','var')
     filename1 = [path_transpfaste,'TRANSP_',id_equil,'_',id_transpfaste,'.mat'];
     filename2 = [path_transpfaste,'TRANSP_',id_transpfaste,'.mat'];
     transpfaste = '';
-    if isempty(id_transpfaste),
-        info_dke_yp(2,['Simulations are performed without fast electron transport']);
-    elseif exist(filename1),
+    if isempty(id_transpfaste)
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Simulations are performed without fast electron transport']);
+        end
+    elseif exist(filename1)
 	    load(filename1);
-	    info_dke_yp(2,['Structure ''transpfaste'': ',filename1,' successfully loaded']);
-    elseif exist(filename2),
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Structure ''transpfaste'': ',filename1,' successfully loaded']);
+        end
+    elseif exist(filename2)
 	    load(filename2);
-	    info_dke_yp(2,['Structure ''transpfaste'': ',filename2,' successfully loaded']);
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Structure ''transpfaste'': ',filename2,' successfully loaded']);
+        end
     else
-	    info_dke_yp(2,['Warning : Structure ',filename1,' or ',filename2,' could not be loaded']);
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Warning : Structure ',filename1,' or ',filename2,' could not be loaded']);
+        end
     end
     varargout{flag_transpfaste} = transpfaste;
 end
 %
-if exist('flag_ripple','var'),
+if exist('flag_ripple','var')
     filename = [path_ripple,'RIPPLE_',id_equil,'_',id_ripple,'.mat'];
 	ripple = '';
-    if isempty(id_ripple),
-        info_dke_yp(2,['Simulations are performed without magnetic ripple effects']);
-    elseif exist(filename) == 0,
-	    info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+    if isempty(id_ripple)
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Simulations are performed without magnetic ripple effects']);
+        end
+    elseif exist(filename) == 0
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+        end
     else
 	    load(filename);
-	    info_dke_yp(2,['Structure ''ripple'': ',filename,' successfully loaded']);
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Structure ''ripple'': ',filename,' successfully loaded']);
+        end
     end
     varargout{flag_ripple} = ripple;
 end
 %
-if exist('flag_fluct','var'),
+if exist('flag_fluct','var')
     filename = [path_fluct,'FLUCT_',id_equil,'_',id_fluct,'.mat'];
 	fluct = '';
-    if isempty(id_fluct),
-        info_dke_yp(2,['Simulations are performed without density or magnetic field fluctuations']);
-    elseif exist(filename) == 0,
-	    info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+    if isempty(id_fluct)
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Simulations are performed without density or magnetic field fluctuations']);
+        end
+    elseif exist(filename) == 0
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+        end
     else
 	    load(filename);
-	    info_dke_yp(2,['Structure ''fluct'': ',filename,' successfully loaded']);
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Structure ''fluct'': ',filename,' successfully loaded']);
+        end
     end
     varargout{flag_fluct} = fluct;
 end
 %
-if exist('flag_hxr','var'),%HXR
+if exist('flag_hxr','var') %HXR
     filename = [path_hxr,'HXR_',id_hxr,'.mat'];
 	hxr = '';
     hxrparam = '';
-    if exist(filename) == 0,
-	    info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+    if exist(filename) == 0
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Warning : Structure ',filename,' could not be loaded']);
+        end
     else
 	    load(filename);
-	    info_dke_yp(2,['Structure ''hxr'': ',filename,' successfully loaded']);
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Structure ''hxr'': ',filename,' successfully loaded']);
+        end
     end
     varargout{flag_hxr} = hxr;
     varargout{flag_hxrparam} = hxrparam;
 end
 %
-if exist('flag_external','var'),%DKE external parameters
+if exist('flag_external','var') %DKE external parameters
     filename = [path_external,'EXTERNAL_',id_external,'.mat'];
-    if exist(filename) == 0,
+    if exist(filename) == 0
 	    error([filename,' does not exist']);
     else
 	    load(filename);
-	    info_dke_yp(2,['Structure ''external'': ',filename,' successfully loaded']);
+        if mute_load_structures_yp == 0
+            info_dke_yp(2,['Structure ''external'': ',filename,' successfully loaded']);
+        end
     end
     varargout{flag_external} = external;
 end
