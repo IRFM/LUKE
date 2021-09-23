@@ -222,7 +222,9 @@ if ~isnan(ylim)
             set(ax,'ylim',[ylim_old(1),ylim]);
         end            
     else
-        set(ax,'ylim',ylim);
+        if ylim(1) ~= ylim(2)
+            set(ax,'ylim',ylim);
+        end
     end
 end
 %
