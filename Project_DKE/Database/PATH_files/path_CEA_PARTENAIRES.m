@@ -134,9 +134,6 @@ dkepath.PH214199(1).remote(1).profilename = 'PH214199';
 dkepath.AE165440(1) = dkepath.YP105119(1);% Annika Ekedahl
 dkepath.AE165440(1).remote(1).profilename = 'AE165440';
 %
-dkepath.DM088721(1) = dkepath.YP105119(1);%Didier Moreau
-dkepath.DM088721(1).remote(1).profilename = 'DM088721';
-%
 dkepath.CB165101(1) = dkepath.YP105119(1);%Clarisse Bourdelle
 dkepath.CB165101(1).remote(1).profilename = 'CB165101';
 %
@@ -149,6 +146,11 @@ dkepath.MG100063(1).remote(1).profilename = 'MG100063';
 dkepath.KK019865(1) = dkepath.YP105119(1);%Krzysztof Krol
 dkepath.KK019865(1).remote(1).profilename = 'KK019865';
 %
+dkepath.VO259454(1) = dkepath.YP105119(1);%Valeria Ostuni
+dkepath.VO259454(1).remote(1).profilename = 'VO259454';
+%
+dkepath.JM240179(1) = dkepath.YP105119(1);%Jorge Morales
+dkepath.JM240179(1).remote(1).profilename = 'JM240179';
 
 
 
