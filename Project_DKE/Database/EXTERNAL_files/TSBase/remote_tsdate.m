@@ -16,6 +16,12 @@ function [ydate]= remote_tsdate(shotnumber,remote_enforce,cluster)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
+if ~ismember('mute_remote_tsdate', who('global'))
+    mute_remote_tsdate = 0;
+else
+    global mute_remote_tsdate
+end
+%
 if nargin < 1,
      error('Not enough input argument in remote_tsdate.m');
 end
@@ -73,7 +79,9 @@ if err==0,
             job = '';
     else
         %
-        disp('WARNING: data load may be long if ethernet connection is poor');
+        if mute_remote_tsdate == 0
+            disp('WARNING: remote access -> data load may be long if ethernet connection is poor');
+        end
         %
         dkepath = load_structures_yp('dkepath','','');
         %

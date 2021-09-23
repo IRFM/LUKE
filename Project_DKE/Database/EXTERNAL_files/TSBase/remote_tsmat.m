@@ -84,7 +84,7 @@ if err==0,
             job = '';
     else
         %
-        disp('WARNING: data load may be long if ethernet connection is poor');
+        disp('WARNING: remote access -> data load may be long if ethernet connection is poor');
         %
         dkepath = load_structures_yp('dkepath','','');
         %

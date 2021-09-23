@@ -77,27 +77,21 @@ if ~isstruct(sinputs)% new job
                 job = '';
         else
             %
-            disp('WARNING: data load may be long if ethernet connection is poor');
+            disp('WARNING: remote access -> data load may be long if ethernet connection is poor');
             %
             dkepath = load_structures_yp('dkepath','','');
             %
-            if isreal(sinputs)
-                remote_mode = 'direct';%
-            else
-                remote_mode = 'pbs';
-            end
-            %
             for iprof = 1: length(dkepath.profilestr)
                 if strcmp(cluster,'ALTAIR'),
-                    if strfind(dkepath.profilestr{iprof},['CEA_ALTAIR : ',remote_mode]),%connect to ALTAIR
+                    if strfind(dkepath.profilestr{iprof},'CEA_ALTAIR : direct'),%connect to ALTAIR
                         break
                     end
                 elseif strcmp(cluster,'ANDROMEDE'),
-                    if strfind(dkepath.profilestr{iprof},['CEA_ANDROMEDE : ',remote_mode]),%connect to ANDROMEDE
+                    if strfind(dkepath.profilestr{iprof},'CEA_ANDROMEDE : direct'),%connect to ANDROMEDE
                         break
                     end
                 elseif strcmp(cluster,'SIRRAH'),
-                    if strfind(dkepath.profilestr{iprof},['CEA_SIRRAH : ',remote_mode]),%connect to SIRRAH
+                    if strfind(dkepath.profilestr{iprof},'CEA_SIRRAH : direct'),%connect to SIRRAH
                         break
                     end
                 end
@@ -131,14 +125,16 @@ if ~isstruct(sinputs)% new job
             job.memory = 2000;% memory required (in mb) - leave empty if no requirement
             job.walltime = 5;%[];% time required (integers - in hours) - leave empty if no requirement
             job.rempause = 1/60;% in minutes
-            job.remtimout = 0;% in minutes
             %
             if ~isreal(sinputs)
                 shotnumber = imag(sinputs);
                 job.wait = 0;% (0) return hand (1) wait for result
+                job.remtimout = 0;% in minutes
+                remote.timeout = 0;%Don't wait until ALOHA job is done
             else
                 shotnumber = sinputs;
                 job.wait = 1;%1;% (0) return hand (1) wait for result
+                job.remtimout = 10;% in minutes
             end    
             %
             [err,job,soutputs] = matremote_jd('mtsbase',{shotnumber,signals},remote,job);
