@@ -1,4 +1,4 @@
-function [hxr] = bremTSconvert_dke_yp(day,month,year,tokname);
+function [hxr] = bremTSconvert_dke_yp(day,month,year,tokname,display)
 %
 % Convert old coordinate system used for DPSX (in partokyp.m for displaytt.m) in the new one used by DKE. Only useful for Tore Supra HXR diagnostic
 % For other tokamak, use directly the correct system of coordinate. For
@@ -9,8 +9,9 @@ function [hxr] = bremTSconvert_dke_yp(day,month,year,tokname);
 %       - day: calibration day (1-31) [1,1]
 %       - month: calibration month (1-12) [1,1]
 %       - year: calibration year (19** or 20**) [1,1]
-%       - tokname = 'TS' or 'WEST'
-%           default = 'TS'
+%       - tokname: 'TS' or 'WEST'
+%           default: 'TS'
+%       - display: (1) yes (0) non
 %
 % OUTPUTS
 %
@@ -18,12 +19,15 @@ function [hxr] = bremTSconvert_dke_yp(day,month,year,tokname);
 %      
 % by J. Decker (jodecker@alum.mit.edu) and Y. Peysson (yves.peysson@cea.fr)
 %
-if nargin < 3,
-    error('Not enough arguments in bremTSconvert_dke_yp')
-end	
-if nargin == 3,
+if nargin < 5
+    display = 0;
+end
+if nargin < 4
     tokname = 'TS';
 end
+if nargin < 3
+    error('Not enough arguments in bremTSconvert_dke_yp')
+end	
 %	
 [tok,Rp,ap,epsip,hp,Rm,Ri,ai,fi,nv,nv0,tv,kv,mv,sd,r1,r2,lc,lf,lfp,EG,kdiag,ef,tf,ea,ta,ec,tc,td,res,lod,lad,ed,lpm,phf,kd,Gain,Offset,pur,chordstatus] = partok_dke_yp(tokname,day,month,year);
 %
@@ -36,22 +40,24 @@ Z = zeros(length(mv),length(L));
 %
 % Display Tore Supra chamber for chord arrangement
 %
-npoints = 1000;
-theta = [0:(npoints-1) 0] * 2 * pi / npoints;
-Rc = Ri/1000;
-Zc = 0;
-radius = ai/1000;
-RR = (radius * cos(theta) + Rc * ones(1,npoints+1));
-ZZ = (radius * sin(theta) + Zc * ones(1,npoints+1));
-figure(1), plot(RR,ZZ,'r-');hold on
-for chord = 1:length(mv),
-	   R(chord,:) = R_TS(chord) + L*cos(mv(chord)*pi/180);
-	   Z(chord,:) = Z_TS(chord) + L*sin(mv(chord)*pi/180);
+if display
+    npoints = 1000;
+    theta = [0:(npoints-1) 0] * 2 * pi / npoints;
+    Rc = Ri/1000;
+    Zc = 0;
+    radius = ai/1000;
+    RR = (radius * cos(theta) + Rc * ones(1,npoints+1));
+    ZZ = (radius * sin(theta) + Zc * ones(1,npoints+1));
+    figure(1), plot(RR,ZZ,'r-');hold on
+    for chord = 1:length(mv),
+           R(chord,:) = R_TS(chord) + L*cos(mv(chord)*pi/180);
+           Z(chord,:) = Z_TS(chord) + L*sin(mv(chord)*pi/180);
+    end
+    plot(R',Z'),
+    hold off
+    axis('equal')
+    xlabel('R(m)');ylabel('Z(m)')
 end
-plot(R',Z'),
-hold off
-axis('equal')
-xlabel('R(m)');ylabel('Z(m)')
 %
 % Build 
 %
