@@ -51,6 +51,8 @@ xpiEi2 = sum(pi.*Ei.*Ei);
 %
 %	Determination of the least square fit for each energy spectrum
 %
+warning off
+%
 for i =1:length(xpi),
 	S = [xpi(i),xpiEi(i);xpiEi(i),xpiEi2(i)];
     Y = [xpiyi(i);xpiEiyi(i)];
@@ -73,6 +75,8 @@ for i =1:length(xpi),
 %
 	clear X Y S
 end
+%
+warning on
 
 
 
