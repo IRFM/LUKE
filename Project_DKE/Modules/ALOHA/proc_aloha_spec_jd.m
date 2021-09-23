@@ -207,7 +207,16 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
             %
             zdP(isnan(zdP)) = 0;
             %
-            disp(['WARNING : input LH power in ',mfilename,'.m contains NaN. All NaN values are enforced to zero. See ALOHA calculations to identify the problem.'])
+            cprintf([1,0.5,0],['WARNING : input LH power in ',mfilename,'.m contains NaN. All NaN values are enforced to zero. See ALOHA calculations to identify the problem.'])
+            %
+            yN = [];
+            ydN = [];
+            yP = [];
+            param_out = [];
+            Pin = [];
+            zyfac = [];
+            %
+            return
             %
         end
         %
@@ -244,7 +253,7 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
         zN = zN(:).';
         %
         if min(zdP) < 0,% correct case of negative power from aloha
-            disp('warning: min(zdP) < 0, correcting')
+            cprintf([1,0.5,0],'WARNING : min(zdP) < 0, correcting')
             disp(' ')      
             zdP = zdP - min(zdP);
         end
@@ -259,9 +268,12 @@ function [yN,ydN,yP,param_out,Pin,zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_i
         % remove edge points with zdP = 0
         %
         mask = find(zdP > 0,1,'first'):find(zdP > 0,1,'last');
-        zdP = zdP(mask);
-        zdN = zdN(mask);
-        zN = zN(mask);
+        %
+        if length(mask) > 0
+            zdP = zdP(mask);
+            zdN = zdN(mask);
+            zN = zN(mask);
+        end
         %
         % manages case of successive points with equal power density
         %
