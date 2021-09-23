@@ -79,12 +79,39 @@ if err == 0
                 else
                     bb = [bb,'''',aa{jj},''' '];
                 end
-            else
+            elseif isnumeric(aa{jj})
                 if jj == nf0
                     bb = [bb,'[',num2str(aa{jj}),']'];
                 else
                     bb = [bb,'[',num2str(aa{jj}),'] '];
                 end
+            elseif iscell(aa{jj})
+                %
+                cc = '';
+                %
+                for kk = 1:length(aa{jj})
+                    %
+                    if ischar(aa{jj}{kk})
+                        if kk == length(aa{jj})
+                            cc = [cc,'''',aa{jj}{kk},''''];
+                        else
+                            cc = [cc,'''',aa{jj}{kk},''' '];
+                        end
+                    elseif isnumeric(aa{jj}{kk})
+                        if kk == length(aa{jj})
+                            cc = [cc,'[',num2str(aa{jj}{kk}),']'];
+                        else
+                            cc = [cc,'[',num2str(aa{jj}{kk}),'] '];
+                        end
+                    end
+                end
+                %
+                if jj == nf0
+                    bb = ['{',cc,'}'];
+                else
+                    bb = ['{',cc,'} '];
+                end
+                %
             end
         end
         %

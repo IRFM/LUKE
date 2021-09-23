@@ -48,11 +48,16 @@ else
             %
             save(['SLUKE_OHMS/OHM_',ohm_id,'.mat'],'ohm');
             %
+        elseif isfield(data,'ohm') %existing ohm at LUKE format complatible with equil
+            %
+            ohm = data.ohm;
+            save(['SLUKE_OHMS/OHM_',ohm_id,'.mat'],'ohm');
+            %
         else
             error([]);
         end
         %
-    else
+    else 
         %
         %
     end

@@ -141,6 +141,22 @@ else
                                     %
                                     [wavestructs{kk1}.launch.aloha(mm).C3PO.yN,wavestructs{kk1}.launch.aloha(mm).C3PO.ydN,wavestructs{kk1}.launch.aloha(mm).C3PO.yP,wavestructs{kk1}.launch.aloha(mm).C3PO.param_out,wavestructs{kk1}.launch.aloha(mm).C3PO.Pin,wavestructs{kk1}.launch.aloha(mm).C3PO.zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pin_in,param_in,opt_optim,sdisplay);
                                     %
+                                    isempty_yN = isempty(wavestructs{kk1}.launch.aloha(mm).C3PO.yN);
+                                    isempty_ydN = isempty(wavestructs{kk1}.launch.aloha(mm).C3PO.ydN);
+                                    isempty_yP = isempty(wavestructs{kk1}.launch.aloha(mm).C3PO.yP);
+                                    isempty_yparam_out = isempty(wavestructs{kk1}.launch.aloha(mm).C3PO.param_out);
+                                    isempty_yPin = isempty(wavestructs{kk1}.launch.aloha(mm).C3PO.Pin);
+                                    isempty_zyfac = isempty(wavestructs{kk1}.launch.aloha(mm).C3PO.zyfac);
+                                    %
+                                    flag_LH_problem = 0;
+                                    %
+                                    if isempty_yN + isempty_ydN + isempty_yP + isempty_yparam_out + isempty_yPin + isempty_zyfac == 6
+                                        %
+                                        cprintf([1,0.5,0],['WARNING : experimental LH power has a problem. Power is enforced to zero.'])
+                                        flag_LH_problem = 1;
+                                        %
+                                    end
+                                    %
                                     if -1*sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent{ii}{kk}*sign(wavestructs{kk1}.launch.aloha(mm).C3PO.yN(find(wavestructs{kk1}.launch.aloha(mm).C3PO.yP == max(wavestructs{kk1}.launch.aloha(mm).C3PO.yP))))*sign_Ip*sign_Bt < 0
                                         %
                                         %
@@ -148,13 +164,28 @@ else
                                             %
                                             %wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot + fliplr(wavestructs{kk1}.launch.aloha(mm).C3PO.yP);%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
                                             %
-                                            wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot*(1+sum(fliplr(wavestructs{kk1}.launch.aloha(mm).C3PO.yP))/sum(wavestructs{kk1}.launch.bPlhtot));
+                                            if flag_LH_problem == 1
+                                                %
+                                                wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot*0;
+                                                %
+                                            else
+                                                %
+                                                wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot*(1+sum(fliplr(wavestructs{kk1}.launch.aloha(mm).C3PO.yP))/sum(wavestructs{kk1}.launch.bPlhtot));
+                                            end
                                             %
                                         else
                                             %
-                                            wavestructs{kk1}.launch.bNpar0 = -fliplr(wavestructs{kk1}.launch.aloha(mm).C3PO.yN);%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
-                                            wavestructs{kk1}.launch.bdNpar0 = fliplr(wavestructs{kk1}.launch.aloha(mm).C3PO.ydN);%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
-                                            wavestructs{kk1}.launch.bPlhtot = fliplr(wavestructs{kk1}.launch.aloha(mm).C3PO.yP);%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
+                                            if flag_LH_problem == 1
+                                                %
+                                                wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot*0;
+                                                %
+                                            else
+                                                %
+                                                wavestructs{kk1}.launch.bNpar0 = -fliplr(wavestructs{kk1}.launch.aloha(mm).C3PO.yN);%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
+                                                wavestructs{kk1}.launch.bdNpar0 = fliplr(wavestructs{kk1}.launch.aloha(mm).C3PO.ydN);%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
+                                                wavestructs{kk1}.launch.bPlhtot = fliplr(wavestructs{kk1}.launch.aloha(mm).C3PO.yP);%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
+                                                %
+                                            end
                                             %
                                         end  
                                         %
@@ -169,11 +200,17 @@ else
                                             wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot*(1+sum(wavestructs{kk1}.launch.aloha(mm).C3PO.yP)/sum(wavestructs{kk1}.launch.bPlhtot));
                                              %
                                         else
-                                            %
-                                            wavestructs{kk1}.launch.bNpar0 = wavestructs{kk1}.launch.aloha(mm).C3PO.yN;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
-                                            wavestructs{kk1}.launch.bdNpar0 = wavestructs{kk1}.launch.aloha(mm).C3PO.ydN;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
-                                            wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.aloha(mm).C3PO.yP;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
-                                            %
+                                            if flag_LH_problem == 1
+                                                %
+                                                wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot*0;
+                                                %
+                                            else
+                                                %
+                                                wavestructs{kk1}.launch.bNpar0 = wavestructs{kk1}.launch.aloha(mm).C3PO.yN;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
+                                                wavestructs{kk1}.launch.bdNpar0 = wavestructs{kk1}.launch.aloha(mm).C3PO.ydN;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
+                                                wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.aloha(mm).C3PO.yP;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
+                                                
+                                            end
                                         end  
                                         %
 
@@ -231,14 +268,14 @@ else
                     %
                 else
                     %
-                    disp(['WARNING: The type of wave ',sparams.rfwaves.antenna.type{ii}{kk},' is not yet implemented'])
+                    cprintf([1,0.5,0],['WARNING: The type of wave ',sparams.rfwaves.antenna.type{ii}{kk},' is not yet implemented'])
                     break
                     %
                 end
                 %
             else
                 %
-                disp(['WARNING: This wavesolver ',sparams.rfwaves.solver.code{ii}{kk},' is not yet implemented'])
+                cprintf([1,0.5,0],['WARNING: This wavesolver ',sparams.rfwaves.solver.code{ii}{kk},' is not yet implemented'])
                 break
                 %
             end

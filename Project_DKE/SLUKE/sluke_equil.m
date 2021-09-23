@@ -73,7 +73,12 @@ else
             [dkeparam,dkedisplay,equil,ohm,transpfaste,ripple,wavestructs] = sluke_metis2luke(sparams,ii,data.post);
             equil.id = equil_id;
             %
-        else
+        elseif isfield(data,'equil') % LUKE equilibrium format
+            %
+            equil = data.equil;
+            equil.id = data.equil.id;
+            %
+        else    
             error([]);
         end
         %
