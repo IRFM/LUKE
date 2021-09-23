@@ -171,6 +171,26 @@ dkepath.YP105119(1).remote(1).schedulername = 'pbs';
 dkepath.YP105119(1).remote(1).profilename = 'YP105119';
 dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;% local cluster
 %
+dkepath.YP105119(1).remote(1).remoteid = 'CEA_ALTAIR';
+dkepath.YP105119(1).remote(1).schedulername = 'pbs';
+dkepath.YP105119(1).remote(1).profilename = 'YP105119';
+dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;% local cluster
+%
+dkepath.YP105119(1).remote(1).remoteid = 'CEA_CEPHEE';
+dkepath.YP105119(1).remote(1).schedulername = 'pbs';
+dkepath.YP105119(1).remote(1).profilename = 'YP105119';
+dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;% local cluster
+%
+dkepath.YP105119(1).remote(1).remoteid = 'CEA_PERSEE';
+dkepath.YP105119(1).remote(1).schedulername = 'pbs';
+dkepath.YP105119(1).remote(1).profilename = 'YP105119';
+dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;% local cluster
+%
+dkepath.YP105119(1).remote(1).remoteid = 'CEA_RANA';
+dkepath.YP105119(1).remote(1).schedulername = 'pbs';
+dkepath.YP105119(1).remote(1).profilename = 'YP105119';
+dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;% local cluster
+%
 %------------------------------------ Other LUKE users ------------------------------
 %
 dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-François Artaud
