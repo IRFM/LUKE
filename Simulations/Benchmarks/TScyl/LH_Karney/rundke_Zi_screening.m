@@ -414,8 +414,8 @@ ylab = 'j/P';
 %
 tit = ['Relativistic case, T_{e} = ',num2str(round(equil.pTe(1)*100)/100),' keV, collmode = 2'];
 leg = {'Fully stripped ion',...
-       'fully screened ion (ADAS)',...
-       'partiallt screened ion (ADAS)'};
+       'Fully screened ion (ADAS)',...
+       'Partially screened ion (ADAS)'};
 %
 graph1D_jd(Zi_list,eta_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
 graph1D_jd(Zi_list,eta_2_ADAS,0,0,xlab,ylab,tit,leg,xlim,ylim,'none','+','r',2,siz,gca,0.9,0.7,0.7);
