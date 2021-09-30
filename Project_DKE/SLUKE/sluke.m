@@ -33,7 +33,15 @@ if nargin == 2
     disp(['Script source : ',varargin{2},'.m']);
     %
 end
-disp([int2str(length(sparams.machine)),' simulations are considered'])
+if length(sparams.machine) > 1
+    %
+    disp([int2str(length(sparams.machine)),' simulations are considered'])
+    %
+else
+    %
+    disp([int2str(length(sparams.machine)),' simulation is considered'])
+    %    
+end
 %
 disp('---------------------------------------------')
 %
