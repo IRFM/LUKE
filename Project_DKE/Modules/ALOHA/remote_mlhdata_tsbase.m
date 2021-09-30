@@ -1,4 +1,4 @@
-function [data_lh] = remote_mlhdata_tsbase(machine,port,shot,tmin,tmax,disp_mode)
+function [data_lh] = remote_mlhdata_tsbase(machine,port,shot,tmin,tmax,disp_mode,disp_save,disp_path)
 %
 %LUKE -  Function which load multiple LH signals from Tore Supra (or WEST) database for ALOHA power spectra calculations (output for upper and lower modules)
 %        Output are averaged over time
@@ -9,7 +9,9 @@ function [data_lh] = remote_mlhdata_tsbase(machine,port,shot,tmin,tmax,disp_mode
 %		shot : shot number
 %       tmin : tmin (s) for signals averaging
 %       tmax : tmax (s) for signals averaging
-%       disp_mode : 1 -> display all signals, 0 -> no display
+%       disp_mode : 1 -> display and save all signal's figures, 0 -> no display, -1 -> no display but save all signal's figures in hidden mode
+%       disp_save : 
+%       disp_path : 
 %
 %   Output:
 %
@@ -25,6 +27,11 @@ function [data_lh] = remote_mlhdata_tsbase(machine,port,shot,tmin,tmax,disp_mode
 %
 if nargin < 6
     disp_mode = 0;
+    disp_path = '';
+end
+%
+if nargin < 7
+    disp_path = '';
 end
 %
 data_lh = []; 
@@ -325,7 +332,7 @@ for ii = 1:length(ports)
     end
 end
 %
-display_lhdata(data_lh,disp_mode);
+display_lhdata(data_lh,disp_mode,disp_save,disp_path);
 
 
 
