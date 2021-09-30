@@ -90,11 +90,26 @@ if err == 0
                                 aloha.optim.nitmax = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.nitmax{ii}{kk};
                             end
                             %
-                            antennas = run_aloha_remote(sparams.machine{ii},sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},...
+                            if abs(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.mode{ii}{kk})
+                                %
+                                display_data.display_mode = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.mode{ii}{kk};
+                                display_data.display_save = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.save{ii}{kk};
+                                display_data.display_path = [rfwaves_folder,'ALOHA/'];
+                                %
+                            else
+                                %
+                                display_data.display_mode = 0;%no display
+                                display_data.display_save = 0;%no display
+                                display_data.display_path = '';
+                                %
+                            end
+                            %
+                            antennas = run_aloha_remote(sparams.machine{ii},...
+                                sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},...
                                 sparams.discharge.shot{ii},sparams.discharge.tmin{ii},...
                                 sparams.discharge.tmax{ii},...
                                 sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.results{ii}{kk},...
-                                aloha);
+                                aloha,display_data);
                             %
                             for jj = 1:length(antennas)
                                 antennas(jj).aloha.optim = aloha.optim;
