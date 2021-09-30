@@ -192,6 +192,12 @@ end
 %
 diary off
 %
-cprintf('black',' ');%return to default color black
+cprintf('black','');%return to default color black
+%
+if exist('matlab_diary.*','file')
+    %
+    movefile matlab_diary.* SLUKE_LOGS/ %move all diary done remotely in folder that contains logs
+    %
+end
 %
 
