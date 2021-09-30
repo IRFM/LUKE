@@ -166,7 +166,7 @@ if err == 0
                                     %
                                 elseif isfield(antennas(jj).aloha,'err')
                                 	%
-                                    disp([' - job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE/RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.'])
+                                    disp([' - job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE_RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.'])
                                     flag_job(ii,jj) = -1;
                                     %
                                 else
