@@ -1,53 +1,66 @@
-function display_lhdata(data,display_mode)
+function display_lhdata(data,display_mode,save_mode,display_path)
 %
 %LUKE -  Function which display multiple LH signals from Tore Supra (or WEST) database for ALOHA power spectra calculations (output for upper and lower modules)
 % 
 %   Input:
 %
 %		data : LH data structure from Tore Supra or WEST
-%		signal_lim : Vertical axis limits to plot curves with the same scale (optional) [1,2]
+%       display_mode : 
+%       display_path :
 %
 %   Output: none
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
 if nargin < 2
+    %
     visible_mode = 'On';
     save_mode = 1;
+    display_path = '';%local save
+    %
 else
-    if display_mode == 2
+    %
+    if display_mode == 1
         %
         visible_mode = 'On';
-        save_mode = 1;
         %
-    elseif display_mode == 1
+    elseif display_mode == -1
         %
-        visible_mode = 'On';
-        save_mode = 0;     
-        %
-    elseif display_mode == 0
-        %
-        visible_mode = 'Off';
-        save_mode = 1;   
+        visible_mode = 'Off';   
         %
     else
+        %
         return;
+        %
     end
- 
+    %
+    if nargin == 2
+        %
+        save_mode = 0;
+        display_path = '';%local save
+        %
+    elseif nargin == 3
+        %
+        display_path = '';%local save
+        %
+    end
+    %
 end
 %
 %
-xpos = [1 200 1900 1000];%window position for large output
+%xpos = [1 200 1900 1000];%window position for large output
+xpos = '';%window position for large output
 %
 for ii = 1:length(data)
     %
     for jj = 1:length(data(ii).type_signal)
         %
-        h1 = figure;
+        h1 = figure('Visible',visible_mode);
         %
         h1.Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antenna,'(port : ',data(ii).port,'), ',data(ii).type_signal{jj}];
-        h1.Position = xpos;
-        h1.Visible = visible_mode;
+        if ~isempty(xpos)
+            h1.Position = xpos;
+        end
         %
         sgtitle(sprintf([h1.Name,'\nURx: upper row index, LRx: lower row index, Mx: module numbering, Ax: ALOHA numbering']),'Color','Red');
         %
@@ -81,26 +94,30 @@ for ii = 1:length(data)
             %
         end
         %
-        drawnow
-        %
-        if ~exist('ALOHA/Figures/')
-            mkdir('ALOHA/Figures/')
+        if strcmp(visible_mode,'On')
+            drawnow
         end
         %
-        filename = [data(ii).machine,'_',int2str(data(ii).shot),'_',data(ii).antenna,'_',data(ii).port,'_',data(ii).type_signal{jj}];
-        %
         if save_mode == 1
-            print(h1,'-depsc2','-loose','-r600',['ALOHA/Figures/fig_',filename,'.eps']);
-            print(h1,'-dpng','-r72',['ALOHA/Figures/fig_',filename,'.png']);
+            %
+            if ~exist([display_path,'Data/Figures/'])
+                mkdir([display_path,'Data/Figures/'])
+            end
+            %
+            filename = [data(ii).machine,'_',int2str(data(ii).shot),'_',data(ii).antenna,'_',data(ii).port,'_',data(ii).type_signal{jj}];
+            %
+            print(h1,'-depsc2','-loose','-r600',[display_path,'Data/Figures/fig_',filename,'.eps']);
+            print(h1,'-dpng','-r72',[display_path,'Data/Figures/fig_',filename,'.png']);
         end
         %
     end
     %
-    h2 = figure;
+    h2 = figure('Visible',visible_mode);
     %
     h2.Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antenna,'(port : ',data(ii).port,'), density probes'];
-    h2.Position = xpos;
-    h2.Visible = visible_mode;
+    if ~isempty(xpos)
+        h2.Position = xpos;
+    end
     %
     sgtitle(sprintf([h2.Name,'\nDensity probes in front of the LH antennas (view from inside)']),'Color','Red');
     %
@@ -128,21 +145,24 @@ for ii = 1:length(data)
     ylim([0,10]);
     grid minor
     %
-    drawnow
-    % 
-    if ~exist('ALOHA/Figures/')
-        mkdir('ALOHA/Figures/')
+    if strcmp(visible_mode,'On')
+        drawnow
     end
-    %
-    filename = [data(ii).machine,'_',int2str(data(ii).shot),'_',data(ii).antenna,'_',data(ii).port,'_density_probes'];
     %
     if isfield(data(ii),'probe') 
         %
         if isfield(data(ii).probe(1),'time') || isfield(data(ii).probe(2),'time') || isfield(data(ii).probe(3),'time') || isfield(data(ii).probe(4),'time')
             %
             if save_mode == 1
-                print(h2,'-depsc2','-loose','-r600',['ALOHA/Figures/fig_',filename,'.eps']);
-                print(h2,'-dpng','-r72',['ALOHA/Figures/fig_',filename,'.png']);
+                %
+                if ~exist([display_path,'Data/Figures/'])
+                    mkdir([display_path,'Data/Figures/'])
+                end
+                %
+                filename = [data(ii).machine,'_',int2str(data(ii).shot),'_',data(ii).antenna,'_',data(ii).port,'_density_probes'];
+                %
+                print(h2,'-depsc2','-loose','-r600',[display_path,'Data/Figures/fig_',filename,'.eps']);
+                print(h2,'-dpng','-r72',[display_path,'Data/Figures/fig_',filename,'.png']);
             end
             %
         end
