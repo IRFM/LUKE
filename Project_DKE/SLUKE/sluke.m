@@ -127,7 +127,7 @@ for ii = 1:length(sparams.machine)
                 %
             elseif antenna_remote_status == 1
                 %
-                cprintf('*green',['Antenna calculations are running for simulation ',int2str(ii),'. Restart the simulation script to get back antenna results and run LUKE calculations.'])
+                cprintf('*green',['Antenna calculations are running for simulation ',int2str(ii),'. Restart the simulation script to get back antenna results and run LUKE calculations automatically.'])
                 %
             elseif antenna_remote_status == -1
                 %
