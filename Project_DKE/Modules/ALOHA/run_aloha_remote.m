@@ -27,7 +27,7 @@ if nargin == 1
         %
     end
     %
-elseif nargin == 7
+elseif nargin == 8
     %
     dkepath = load_structures_yp('dkepath','','');%for remote simulation profiles
     %
@@ -50,7 +50,9 @@ elseif nargin == 7
     shot = varargin{3};
     tmin = varargin{4};
     tmax = varargin{5};
-    display_mode = varargin{6};
+    display_results = varargin{6};
+    simul_params = varargin{7};
+    display_data = varargin{8};
     %
     if ischar(shot)
         shot = str2num(shot);
@@ -58,7 +60,7 @@ elseif nargin == 7
     %
     if ~exist([rfwaves_folder,'ALOHA/Data/',machine,'_data_lh_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'.mat'])
         %
-        data_lh = remote_mlhdata_tsbase(machine,port,shot,tmin,tmax,display_mode);
+        data_lh = remote_mlhdata_tsbase(machine,port,shot,tmin,tmax,display_data.display_mode,display_data.display_save,display_data.display_path);
         %
         if ~isfield(data_lh,'err')
             save([rfwaves_folder,'ALOHA/Data/',machine,'_data_lh_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'.mat'],'data_lh')
@@ -71,8 +73,6 @@ elseif nargin == 7
         load([rfwaves_folder,'ALOHA/Data/',machine,'_data_lh_',int2str(shot),'_',num2str(tmin),'_',num2str(tmax),'_',port,'.mat'],'data_lh');
         %
     end
-    %
-    simul_params = varargin{7};
     %
     n_antennas = length(data_lh);
     %
