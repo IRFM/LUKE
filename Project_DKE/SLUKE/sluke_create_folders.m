@@ -19,6 +19,13 @@ else
     messages.results = '';
 end
 %
+if ~exist('SLUKE_LOGS')
+	[success(1),messages.results] = mkdir('SLUKE_LOGS');
+else
+    success(1) = 1;
+    messages.results = '';
+end
+%
 if ~exist('SLUKE_KINETICS')
 	[success(2),messages.results] = mkdir('SLUKE_KINETICS');
 else
