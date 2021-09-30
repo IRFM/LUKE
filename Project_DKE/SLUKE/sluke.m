@@ -12,11 +12,11 @@ function sluke(varargin)
 %
 if nargin == 2
     %
-   diary(['log_sluke_',varargin{2},'_',strrep(datestr(now),' ','_')]);
+   diary(['SLUKE_LOGS/log_sluke_',varargin{2},'_',strrep(datestr(now),' ','_')]);
     %
 else
     %
-    diary(['log_sluke_',strrep(datestr(now),' ','_')]);
+    diary(['SLUKE_LOGS/log_sluke_',strrep(datestr(now),' ','_')]);
     %
 end
 %
