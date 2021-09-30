@@ -201,6 +201,7 @@ end
 diary off
 %
 cprintf('black','');%return to default color black
+disp(' ')
 %
 if exist('matlab_diary.*','file')
     %
