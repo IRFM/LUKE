@@ -137,9 +137,17 @@ for ii = 1:length(sparams.machine)
             %
         elseif exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             %
-            lukestructs = [];
-            %
             cprintf('*green',['---> is completed but full simulation is not saved, just processed results.']);
+            %
+            if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'])
+                %
+                load(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'],'lukestructs');
+                %
+            else
+                %
+                lukestructs = [];
+                %
+            end
             %
         end
         %
