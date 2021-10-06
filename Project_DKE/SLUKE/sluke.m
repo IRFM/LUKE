@@ -208,13 +208,21 @@ end
 %
 diary off
 %
-cprintf('black','');%return to default color black
-disp(' ')
-%
-if exist('matlab_diary.*','file')
+if exist('SLUKE_LOGS','dir')
     %
-    movefile matlab_diary.* SLUKE_LOGS/ %move all diary done remotely in folder that contains logs
+    filelist = dir;%local scan
+    %
+    for jj = 1:length(filelist)
+        %
+        if strfind(filelist(jj).name,'matlab_diary.')
+            %
+            movefile(filelist(jj).name,'SLUKE_LOGS/'); %move all diary done remotely in folder that contains logs
+            %
+        end
+    end
     %
 end
 %
-
+cprintf('black','');%return to default color black
+%
+disp(' ')

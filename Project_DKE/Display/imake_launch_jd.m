@@ -112,35 +112,35 @@ if ~isempty(external),% import wave data from external structure
                 %
                 fname = fnames{a_opt};
                 %
-                if isfield(external.LH.(fname),'aloha') && ~isfield(external.LH.(fname),'power_spectrum') && ~isfield(external,'antenna')
+                if isfield(external.LH.(fname),'aloha') && ~isfield(external.LH.(fname),'power_spectrum') && ~isfield(external.LH,'antenna')
                     aloha_opt = 0;
-                elseif isfield(external.LH.(fname),'aloha') && isfield(external.LH.(fname),'power_spectrum') && isfield(external,'antenna')
+                elseif isfield(external.LH.(fname),'aloha') && isfield(external.LH.(fname),'power_spectrum') && isfield(external.LH,'antenna')
                     aloha_opt = input_dke_yp([fname,' : Calculation of the power spectrum using ALOHA [0] or consider an external power spectrum [1] or an already calculated ALOHA spectrum [2] ? '],0,0:2,'',[1,1]);
-                elseif isfield(external.LH.(fname),'aloha') && isfield(external.LH.(fname),'power_spectrum') && ~isfield(external,'antenna')
+                elseif isfield(external.LH.(fname),'aloha') && isfield(external.LH.(fname),'power_spectrum') && ~isfield(external.LH,'antenna')
                      aloha_opt = input_dke_yp([fname,' : Calculation of the power spectrum using ALOHA [0] or consider an external power spectrum [1] ? '],0,0:1,'',[1,1]);
-                elseif isfield(external.LH.(fname),'aloha') && ~isfield(external.LH.(fname),'power_spectrum') && isfield(external,'antenna')
+                elseif isfield(external.LH.(fname),'aloha') && ~isfield(external.LH.(fname),'power_spectrum') && isfield(external.LH,'antenna')
                       aloha_opt = input_dke_yp([fname,' : Calculation of the power spectrum using ALOHA [0] or consider an already calculated ALOHA spectrum [1] ? '],0,0:1,'',[1,1]);
                       if aloha_opt == 1,
                           aloha_opt = 2;
                       end
-                elseif ~isfield(external.LH.(fname),'aloha') && isfield(external.LH.(fname),'power_spectrum') && isfield(external,'antenna')
+                elseif ~isfield(external.LH.(fname),'aloha') && isfield(external.LH.(fname),'power_spectrum') && isfield(external.LH,'antenna')
                       aloha_opt = input_dke_yp('Consider an external power spectrum [0] or an already calculated ALOHA spectrum [1] ? ',0,0:1,'',[1,1]);
                       aloha_opt = aloha_opt + 1;
                 end
-                %
-                if isfield(external.LH.(fname),'aloha') && ~isfield(external.LH.(fname),'power_spectrum') && ~isfield(external,'antenna')
+                %extern
+                if isfield(external.LH.(fname),'aloha') && ~isfield(external.LH.(fname),'power_spectrum') && ~isfield(external.LH,'antenna')
                     aloha_opt = 0;
                 end
                 %
-                if ~isfield(external.LH.(fname),'aloha') && isfield(external.LH.(fname),'power_spectrum') && ~isfield(external,'antenna')
+                if ~isfield(external.LH.(fname),'aloha') && isfield(external.LH.(fname),'power_spectrum') && ~isfield(external.LH,'antenna')
                     aloha_opt = 1;
                 end
                 %
-                if ~isfield(external.LH.(fname),'aloha') && ~isfield(external.LH.(fname),'power_spectrum') && isfield(external,'antenna')
+                if ~isfield(external.LH.(fname),'aloha') && ~isfield(external.LH.(fname),'power_spectrum') && isfield(external.LH,'antenna')
                     aloha_opt = 2;
                 end
                 %
-                if ~isfield(external.LH.(fname),'aloha') && ~isfield(external.LH.(fname),'power_spectrum') && ~isfield(external,'antenna')
+                if ~isfield(external.LH.(fname),'aloha') && ~isfield(external.LH.(fname),'power_spectrum') && ~isfield(external.LH,'antenna')
                     error('ERROR: no data for the LH power spectrum in the external structure.')
                 end
                 %
@@ -181,8 +181,8 @@ if ~isempty(external),% import wave data from external structure
                     %
                     launch = build_spectrum_from_aloha(external,basestr,signs,opt_gui,select);
                     %
-                    if isfield(external.antenna,'id')
-                        launch.id = external.antenna.id;
+                    if isfield(external.LH.antenna,'id')
+                        launch.id = external.LH.antenna.id;
                     end
                     %
                     if ~isempty(launch)

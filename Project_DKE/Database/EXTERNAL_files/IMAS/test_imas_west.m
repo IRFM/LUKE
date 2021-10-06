@@ -28,7 +28,6 @@ fprintf('time_req = %f \n', time_requested);
 
 % Open IMAS file: function imas_open_env('ids', shot, run, user, machine, imas_version_number);
 idx = imas_open_env('ids', shot, run, user, machine, '3');
-
 % Function ids_get_slice(id_from_imas_open, IDS_name, time_requested, interpolation_method)
 % -interpolation_method: 1 = closest time, 2 = previous time, 3 = linear interpolation
 equi  = ids_west_get(idx, 'equilibrium',0,1);

@@ -29,16 +29,22 @@ function [dkecluster] = clustermode_luke(param,fun,dkepath,remnum)
 %
 % by J. Decker (CEA-IRFM) <joan.decker@cea.fr> and Y. Peysson (CEA-IRFM) <yves.peysson@cea.fr>
 %
-if nargin < 3,
+if ~ismember('mute_clustermode_luke', who('global'))
+    mute_clustermode_luke = 0;
+else
+    global mute_clustermode_luke
+end
+%
+if nargin < 3
     dkepath = load_structures_yp('dkepath','','');
 end
-if nargin < 2,
+if nargin < 2
     fun = '';
 end
-if nargin < 1,
+if nargin < 1
     param = 0;
 end
-if isempty(param),
+if isempty(param)
     if isfield(dkepath,'clustermode')
         param = dkepath.clustermode;
     else
@@ -50,31 +56,37 @@ end
 %
 if ~isempty(fun)% when function-specific DC parameters are present 
     %
-    if isfield(param,fun),% DC parameters found for the specific function
+    if isfield(param,fun) % DC parameters found for the specific function
         if isfield(param.(fun),'scheduler') && isfield(param.(fun).scheduler,'mode'),
             dkecluster.scheduler = param.(fun).scheduler;
-        elseif isfield(param.(fun),'batch'),
+        elseif isfield(param.(fun),'batch')
             %not yet implemented
-            disp('Warning : batch structure not yet implemented')
+            if mute_clustermode_luke == 0
+                disp('Warning : batch structure not yet implemented')
+            end
             dkecluster.scheduler.mode = 0;%dkecluster type not recognized, sequential mode enforced
         else
-            disp('Warning : dkecluster type not recognized')
+            if mute_clustermode_luke == 0
+                disp('Warning : dkecluster type not recognized')
+            end
             dkecluster.scheduler.mode = 0;%dkecluster type not recognized, sequential mode enforced
         end        
     else
         dkecluster.scheduler.mode = 0;%function not referenced in param, sequential mode enforced
     end
-elseif ~isstruct(param),
-    if isscalar(param),
+elseif ~isstruct(param)
+    if isscalar(param)
         dkecluster.scheduler.mode = param;
     else
         dkecluster.scheduler.mode = 0;%param type not recognized, sequential mode enforced
     end
 else
-    if isfield(param,'mode'),
+    if isfield(param,'mode')
         dkecluster.scheduler = param;
     else
-        disp('Warning : dkecluster type not recognized')
+        if mute_clustermode_luke == 0
+            disp('Warning : dkecluster type not recognized')
+        end
         dkecluster.scheduler.mode = 0;%dkecluster type not recognized, sequential mode enforced      
     end
 end
@@ -93,13 +105,17 @@ nrem = length(remote);
 %
 % distributed computing mode
 %
-if ~any(mode == -nrem:3),
-    disp('Warning : invalid cluster mode')
+if ~any(mode == -nrem:3)
+    if mute_clustermode_luke == 0
+        disp('Warning : invalid cluster mode')
+    end
     dkecluster.scheduler.mode = 0;%dkecluster type not recognized, sequential mode enforced      
 elseif any(mode == -nrem:-1),
     %
-    if ~isfield(remote(-mode),'env') || ~isfield(remote(-mode).env,'luke_root'),
-        disp(['Warning : luke_root not specified in dkepath.remote(',num2str(-mode),'). Switching to sequential mode'])
+    if ~isfield(remote(-mode),'env') || ~isfield(remote(-mode).env,'luke_root')
+        if mute_clustermode_luke == 0
+            disp(['Warning : luke_root not specified in dkepath.remote(',num2str(-mode),'). Switching to sequential mode'])
+        end
         dkecluster.scheduler.mode = 0;%sequential mode enforced     
     else
         dkecluster.scheduler.mode = remote(-mode);
@@ -109,29 +125,33 @@ end
 %
 % possible use of mdce_remote
 %
-if nargin < 4,
+if nargin < 4
     if isfield(dkecluster.scheduler,'remnum'),
         remnum = dkecluster.scheduler.remnum;
     else
         remnum = 0;
     end
 end
-if ~iscell(remnum),
+if ~iscell(remnum)
     remnum = {remnum};
 end
-if remnum{1} > 0,
-    for irem = 1:length(remnum),
-        if any(remnum{irem} == 1:nrem),
+if remnum{1} > 0
+    for irem = 1:length(remnum)
+        if any(remnum{irem} == 1:nrem)
             dkecluster.scheduler.remote{irem} = remote(remnum{irem});
-            if irem == length(remnum) && mode >= 0,% in this case remote{irem} must have LUKE paths
-                if ~isfield(remote(remnum{irem}),'env') || ~isfield(remote(remnum{irem}).env,'luke_root'),
-                    disp(['Warning : luke_root not specified in dkepath.remote(',remnum{irem},'). Switching to sequential mode'])
+            if irem == length(remnum) && mode >= 0 % in this case remote{irem} must have LUKE paths
+                if ~isfield(remote(remnum{irem}),'env') || ~isfield(remote(remnum{irem}).env,'luke_root')
+                    if mute_clustermode_luke == 0
+                        disp(['Warning : luke_root not specified in dkepath.remote(',remnum{irem},'). Switching to sequential mode'])
+                    end
                     dkecluster.scheduler.mode = 0;%sequential mode enforced  
                     dkecluster.scheduler.remote = [];                    
                 end
             end
         else
-            disp('Warning : invalid mdce_remote mode')
+            if mute_clustermode_luke == 0
+                disp('Warning : invalid mdce_remote mode')
+            end
             dkecluster.scheduler.remote = [];
             break
         end

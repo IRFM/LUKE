@@ -1,4 +1,4 @@
-function dispremoteprofiles(dkepath)
+function [indexlist,profile_list] = dispremoteprofiles(dkepath,type)
 %
 % displays remote profiles 
 %
@@ -23,13 +23,40 @@ else
     return
 end
 %
-nrem = length(dkepath.profilestr);
+if nargin == 2 && strcmp(type,'scheduler')
+    %
+    jj = 1;
+    %
+    for ii = 1:length(dkepath.profilestr)
+        %
+        if isempty(strfind(dkepath.profilestr{ii},'direct'))
+            %
+            profile_list{jj} = dkepath.profilestr{ii};
+            indexlist(jj) = ii;
+            jj = jj + 1;
+            %
+        end
+        %
+    end
+    %
+    nrem = jj - 1;
+else
+    nrem = length(dkepath.profilestr);
+    profile_list = dkepath.profilestr;
+    indexlist = [1:nrem];
+end
 %
 disp (' ')
 info_dke_yp(2,['List of compatible remote profiles available from this computer',sourcestr])
 disp(' ')
 %
-for irem = 1:nrem,
-    info_dke_yp(4,['#',num2str(irem),' : ',dkepath.profilestr{irem}]);
+indexlist = [0,indexlist];
+profile_list = [{'local calculations'},profile_list];
+%
+disp('------------------------------------')
+info_dke_yp(4,'#0 : local calculations');
+disp('------------------------------------')
+for irem = 2:nrem,
+    info_dke_yp(4,['#',num2str(indexlist(irem)),' : ',profile_list{irem}]);
 end
 disp(' ')

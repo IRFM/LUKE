@@ -69,7 +69,7 @@ if exist(['helmex77.',mexext]) == 3,
             %
             delta(it) = sum(abs(jout - pj_in))/max(abs(jout));%current convergence criterion
             %
-            graph1D_jd([1:it],delta,0,1,'Iteration','Current convergence','HELENA',NaN,'','','-','none','b',2);hold on       
+            graph1D_jd([1:it],delta,0,1,'Iteration','Current convergence','HELENA',NaN,'','','none','+','b',2);hold on;drawnow      
             %
             pj_in = 0.7*jout + 0.3*pj_in;%weighting for better stability of the convergence
             ppsi_in = ppsi;

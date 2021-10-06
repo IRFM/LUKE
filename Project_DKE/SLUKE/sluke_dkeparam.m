@@ -1,8 +1,6 @@
 function dkeparam = sluke_dkeparam(sparams,ii)
 %
 
-
-
 %
 dkeparam_id = sluke_id(sparams,ii,'dkeparam');
 %
@@ -61,7 +59,28 @@ else
         %
     end
 end
-
-    
-    
+%
+if isfield(sparams.kinetics.dkeparam,'nmhu_S')
+    %
+    dkeparam.nmhu_S = sparams.kinetics.dkeparam.nmhu_S{ii};%enforced value
+    %
+end
+%
+if isfield(sparams.kinetics.dkeparam,'np_S')
+    %
+    dkeparam.np_S = sparams.kinetics.dkeparam.np_S{ii};%enforced value
+    %
+end
+%
+if isfield(sparams.kinetics.dkeparam,'pnmax_S')
+    %
+    dkeparam.pnmax_S = sparams.kinetics.dkeparam.pnmax_S{ii};%enforced value
+    %
+end   
+%
+if isfield(sparams.kinetics.dkeparam,'rho_S')
+    %
+    dkeparam.rho_S = sparams.kinetics.dkeparam.rho_S{ii};%enforced value
+    %
+end   
     

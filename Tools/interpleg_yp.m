@@ -28,7 +28,10 @@ XXf0 = zeros(size(XXf0_leg,1),length(mhu),size(XXf0_leg,3));
 %
 %
 for ir = 1:size(XXf0_leg,3),%radial position
-    XXf0(:,:,ir) = (Pm'*(XXf0_leg(:,:,ir).*(ones(size(XXf0_leg,1),1)*cL'))')';%Distribution function on the Legendre polynomials pitch-angle grid back calculated
+    %
+    %*** TODO ****
+    %
+    XXf0(:,:,ir) = (Pm'*(XXf0_leg{1}(:,:,ir).*(ones(size(XXf0_leg{1},1),1)*cL'))')';%Distribution function on the Legendre polynomials pitch-angle grid back calculated
     %
     if exist('momentumDKE'),
     	x_0(ir) = 2*pi*integral_dke_jd(momentumDKE.dpn',momentumDKE.pn'.*momentumDKE.pn'.*trapz_dke_yp([mhu(:),XXf0(:,:,ir)'])',1);

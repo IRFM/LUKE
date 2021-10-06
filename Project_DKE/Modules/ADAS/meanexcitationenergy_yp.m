@@ -70,7 +70,7 @@ if Z == 1
     I0_s = I0; % specific case of Hydrogen
 end
 %
-display = 0;
+display = 1;
 %
 if display
     %

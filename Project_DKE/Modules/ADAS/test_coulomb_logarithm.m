@@ -224,8 +224,8 @@ leg = '';
 tit =  'Tungsten W (Z = 74)';
 %
 leg = {['Z_i = ',int2str(zZi(iiz)),', log(\Lambda_{rel})Z_i^2'],['Z_i = ',int2str(zZi(iiz)),', screening factor']};
-graph1D_jd(Ec,z2coulog(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{1},'none',linecolor{1},2,siz,gca);
-graph1D_jd(Ec,gfp(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca);
+graph1D_jd(Ec,z2coulog(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{1},'none',linecolor{1},4,siz,gca);
+graph1D_jd(Ec,gfp(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{2},'none',linecolor{2},4,siz,gca);
 %
 iiz = 62+18;
 %
@@ -236,8 +236,8 @@ ylab = 'log(\Lambda_{rel})Z_i^2';
 leg = '';
 %
 leg = {['Z_i = ',int2str(zZi(iiz)),', log(\Lambda_{rel})Z_i^2'],['Z_i = ',int2str(zZi(iiz)),', screening factor']};
-graph1D_jd(Ec,z2coulog(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{1},'none',linecolor{1},2,siz,gca);
-graph1D_jd(Ec,gfp(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca);
+graph1D_jd(Ec,z2coulog(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{1},'none',linecolor{1},4,siz,gca);
+graph1D_jd(Ec,gfp(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{2},'none',linecolor{2},4,siz,gca);
 %
 iiz = 62+28;
 %
@@ -248,6 +248,6 @@ ylab = 'log(\Lambda_{rel})Z_i^2';
 leg = '';
 %
 leg = {['Z_i = ',int2str(zZi(iiz)),', log(\Lambda_{rel})Z_i^2'],['Z_i = ',int2str(zZi(iiz)),', screening factor']};
-graph1D_jd(Ec,z2coulog(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{1},'none',linecolor{1},2,siz,gca);
-graph1D_jd(Ec,gfp(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca);
+graph1D_jd(Ec,z2coulog(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{1},'none',linecolor{1},4,siz,gca);
+graph1D_jd(Ec,gfp(:,iiz),1,0,xlab,ylab,tit,leg,'','',linestyle{2},'none',linecolor{2},4,siz,gca);
 %

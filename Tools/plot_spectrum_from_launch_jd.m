@@ -87,6 +87,24 @@ else
     bspace = 0.5;
 end
 %
+if isfield(launch,'launch') && isfield(launch.launch,'aloha')
+    %
+    if isfield(launch.launch.aloha,'optim')
+        %
+        launch.id = launch.launch.aloha(1).optim.id;
+        %
+    else
+        %
+        launch.id = [launch.launch.aloha(1).options.TSport,'_',launch.launch.aloha(1).antenna.architecture];
+        %
+    end
+    %
+else
+    %
+    launch.id = 'Launching power spectrum';
+    %
+end    
+%
 if isfield(launch,'yrho0'),%
     graph1D_jd(x0,xf0,0,0,'n_{||}','dP/dn_{||} (MW)',strrep(launch.id,'_','-'),NaN,xlim,NaN,'-','none','b',2,style,ax,red,lspace,bspace);
 	graph1D_jd(x,xf,0,0,'n_{||}','dP/dn_{||} (MW)',strrep(launch.id,'_','-'),NaN,xlim,NaN,'-','none','r',2,style,ax,red,lspace,bspace);

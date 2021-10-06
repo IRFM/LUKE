@@ -6,8 +6,7 @@ function [success_out,messages] = sluke_create_folders
 %
 %   Output: 
 %
-%       success_out : success if (1) or failure is (0). In the latter, have
-%       a look to messages
+%       success_out : success if (1) or failure is (0). In the latter, have a look to messages
 %       messages : structure of folder creation messages
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
@@ -62,24 +61,24 @@ else
 end
 %
 if ~exist('SLUKE_FIGURES','dir')
-	[success(8),messages.results] = mkdir('SLUKE_FIGURES');
+	[success(8),messages.figures] = mkdir('SLUKE_FIGURES');
 else
     success(8) = 1;
-    messages.results = '';
+    messages.figures = '';
 end
 %
 if ~exist('SLUKE_DIAGNOSTICS','dir')
-	[success(9),messages.results] = mkdir('SLUKE_DIAGNOSTICS');
+	[success(9),messages.diagnostics] = mkdir('SLUKE_DIAGNOSTICS');
 else
     success(9) = 1;
-    messages.results = '';
+    messages.diagnostics = '';
 end
 %
 if ~exist('SLUKE_LOGS','dir')
-	[success(10),messages.results] = mkdir('SLUKE_LOGS');
+	[success(10),messages.logs] = mkdir('SLUKE_LOGS');
 else
     success(10) = 1;
-    messages.results = '';
+    messages.logs = '';
 end
 %
 if sum(success) == length(success)

@@ -10,9 +10,9 @@ clc
 %
 % ---------------------- INPUT PARAMETERS ---------------------
 %
-[ip,id] = connections_params;%Create a file in the LUKE path (or local) : id -> hostname, ip: ethernet address. Must be customized according to the machine where calculations are done.
+[ip,id] = connections_params('yves');%Create a file in the LUKE path (or local) : id -> hostname, ip: ethernet address. Must be customized according to the machine where calculations are done.
 %
-Z = [2,3];%Helium (2),Lithium (3),Copper (29)
+Z = [2];%,3];%Helium (2),Lithium (3),Copper (29)
 Z0 = [];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
 %
 mode = 0;%(0): the script wait until all calculations are done, (1): the script is terminated while calculations are still running on the remote machine. It must be launched again to check if calculations are terminated. 
