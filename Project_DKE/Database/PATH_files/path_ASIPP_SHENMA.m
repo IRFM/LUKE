@@ -25,20 +25,23 @@ dkepath.default = 'PEYSSON';
 %
 path_root = fileparts(which(mfilename));
 luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
-dkepath.PEYSSON(1).luke_root = luke_root;
+luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
 %
 sep = strfind(luke_root,'/');
-dkepath.PEYSSON(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
-%
+
+dkepath.PEYSSON(1).luke_root = luke_root;
+dkepath.PEYSSON(1).luke_branch = luke_branch;
+dkepath.PEYSSON(1).local_root = '/gpfs-home/';
 dkepath.PEYSSON(1).temppathroot = '/scratch/PEYSSON/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-dkepath.PEYSSON(1).localdatapath = dkepath.PEYSSON(1).temppathroot;
+%dkepath.PEYSSON(1).localdatapath = dkepath.PEYSSON(1).temppathroot;
 %
 % ---------------------------- shenma -------------------------------
 %
-dkepath.PEYSSON(1).login110.local_root = '/nfs_share/project/LUKE/Packages/';
+dkepath.PEYSSON(1).login110.local_root = [dkepath.PEYSSON(1).local_root,'/project/LUKE/Packages/'];
 %
 %dkepath.PEYSSON(1).login110.mex900 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB900/'];
 dkepath.PEYSSON(1).login110.mex902 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB902/'];
+dkepath.PEYSSON(1).login110.mex903 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB903/'];
 %
 %dkepath.PEYSSON(1).login110.compiler_opt.libs.gfortran = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.7','/',dkepath.machine,'/'];%extra libraries
 dkepath.PEYSSON(1).login110.compiler_opt.copts = '';
@@ -46,17 +49,23 @@ dkepath.PEYSSON(1).login110.compiler_opt.copts = '';
 %dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex900 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 %dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex900 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'lapack-3.4.2 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 %dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex900 = ' ';%-largeArrayDims;
+%
 dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex902 = 'FC=''gfortran''';%
 dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex902 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex902 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex902 = ' ';%-largeArrayDims;
 %
+dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex903 = 'FC=''gfortran''';%
+dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex903 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex903 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex903 = ' ';%-largeArrayDims;
+%
 %Where MUMPS matrix solver is stored (MEX function)
 %
 %dkepath.PEYSSON(1).login110.MUMPS.mex900 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB900'];
 %dkepath.PEYSSON(1).login110.MUMPS.mex902 = ['/home/users/PEYSSON/Packages/MUMPS_4.10.0/MATLAB902'];
-dkepath.PEYSSON(1).login110.MUMPS.mex902 = ['/nfs_share/project/LUKE/Packages/MUMPS/MUMPS_5.1.2/MATLAB902'];;%Where MUMPS matrix solver is stored (MEX function)
-
+dkepath.PEYSSON(1).login110.MUMPS.mex902 = [dkepath.PEYSSON(1).local_root,'project/LUKE/Packages/MUMPS/MUMPS_5.1.2/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.PEYSSON(1).login110.MUMPS.mex903 = [dkepath.PEYSSON(1).local_root,'project/LUKE/Packages/MUMPS/MUMPS_5.1.2/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
