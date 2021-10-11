@@ -25,10 +25,9 @@ dkepath.default = 'PEYSSON';
 %
 path_root = fileparts(which(mfilename));
 luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
+sep = strfind(luke_root,'/');
 luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
 %
-sep = strfind(luke_root,'/');
-
 dkepath.PEYSSON(1).luke_root = luke_root;
 dkepath.PEYSSON(1).luke_branch = luke_branch;
 dkepath.PEYSSON(1).local_root = '/gpfs-home/';
