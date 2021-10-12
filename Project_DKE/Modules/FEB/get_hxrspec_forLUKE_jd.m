@@ -1,5 +1,7 @@
 function [hxrspec,hxrparam] = get_hxrspec_forLUKE_jd(basestr,shot,data_path,scheduler,hxrparam)
 %
+% Parameters for DSPX diagnostic
+%
 if nargin < 5
     %
     if isempty(hxrparam)
@@ -60,6 +62,15 @@ else
     %
 end
 %
+if isempty(shotdate)
+    %
+    cprintf('red','ERROR : shot date is empty. Problem of connection with remote_tsdate.m.')
+    hxrspec = [];
+    hxrparam = [];
+    return
+    %
+end
+%
 hxrspec = bremTSconvert_dke_yp(str2num(shotdate(1:2)),str2num(shotdate(4:5)),str2num(shotdate(7:10)));
 %
 % according to the correct definitions of alpha (-pi -> pi) and beta (0 -> pi)
@@ -83,7 +94,7 @@ if nargout == 0
         data_path = './';
     end  
     %
-    data_file = ['HXR_',basestr,'_',num2str(shot),'.mat'];
+    data_file = ['DSPX_',basestr,'_',num2str(shot),'.mat'];
     %
     save([data_path,data_file],'hxrspec','hxrparam');
     %
