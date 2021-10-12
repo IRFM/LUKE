@@ -6,17 +6,31 @@ simul_id = sluke_id(sparams,ii,'simul');
 %
 if ~exist(['SLUKE_DIAGNOSTICS/HXR_RESULTS_',simul_id,'.mat'])
     %
-    if isfield(sparams,'diags') && isfield(sparams.diags,'hxr')
+    if isfield(sparams,'diags') && isfield(sparams.diags,'DSPX')
         %
-        [Zbremchord,Zbremdiag,Zbremplasma,equilHXR,hxrexp] = sluke_hxr(sparams,lukestructs,ii);
+        [DSPX.Zbremchord,DSPX.Zbremdiag,DSPX.Zbremplasma,DSPX.equilHXR,DSPX.hxrexp] = sluke_dspx(sparams,lukestructs,ii);
         %
-        if ~isempty(Zbremchord) && ~isempty(Zbremdiag) && ~isempty(Zbremplasma) && ~isempty(equilHXR)
+        if ~isempty(DSPX.Zbremchord) && ~isempty(DSPX.Zbremdiag) && ~isempty(DSPX.Zbremplasma) && ~isempty(DSPX.equilHXR)
             %
-            save(['SLUKE_DIAGNOSTICS/HXR_RESULTS_',simul_id,'.mat'],'Zbremchord','Zbremdiag','Zbremplasma','equilHXR','hxrexp');%backward compatibility with irunluke_jd
+            save(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'],'DSPX');
             %
         else
             %
-            disp('WARNING : HXR calculations from LUKE results failed.')
+            disp('WARNING : DSPX calculations from LUKE results failed.')
+            %
+        end
+        %
+    elseif isfield(sparams,'diags') && isfield(sparams.diags,'MEHXR')
+        %
+        [MEHXR.Zbremchord,MEHXR.Zbremdiag,MEHXR.Zbremplasma,MEHXR.equilHXR,MEHXR.hxrexp] = sluke_mehxr(sparams,lukestructs,ii);
+        %
+        if ~isempty(MEHXR.Zbremchord) && ~isempty(MEHXR.Zbremdiag) && ~isempty(MEHXR.Zbremplasma) && ~isempty(MEHXR.equilHXR)
+            %
+            save(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'],'MEHXR');
+            %
+        else
+            %
+            disp('WARNING : MEHXR calculations from LUKE results failed.')
             %
         end
         %
