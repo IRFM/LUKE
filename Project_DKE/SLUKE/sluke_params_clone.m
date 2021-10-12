@@ -17,13 +17,13 @@ sparams_out = {};
 if nargin == 3
     %
     sparams_in = varargin{1};
-    jclone = varargin{2};%index of the structure to clone
-    kclone = varargin{3};%number of clones
+    jclone = varargin{2};%indexes of the structure to be cloned
+    kclone = varargin{3};%number of clone series
     %
 elseif nargin == 2
     %
     sparams_in = varargin{1};
-    jclone = varargin{2};%index of the structure to clone
+    jclone = varargin{2};%index of the structure to be cloned
     %
 elseif nargin == 1
     %
@@ -51,13 +51,13 @@ if err == 0
     %
     if nargin < 2
         %
-        jclone = input_dke_yp(['Which indexes to clone (index max = ',int2str(nf0),')'],1,[1:nf0]);
+        jclone = input_dke_yp(['Which indexes to be cloned (index max = ',int2str(nf0),')'],1,[1:nf0]);
         %
     end
     %
     if nargin < 3
         %
-        kclone = input_dke_yp(['How many clones'],1);
+        kclone = input_dke_yp(['Number of clone series'],1);
         %
     end
     %
@@ -71,18 +71,27 @@ if err == 0
         %
     end
     %
+    mm = 1;
+    %
     for kk = 1:kclone
         %
         for jj = 1:length(jclone)
             %
+            %disp([mm,kk,jj,jclone(jj)])
+            %disp(['sparams_out.',fns{1},'{',int2str(nf0+mm),'} = sparams_in.',fns{1},'{',int2str(jclone(jj)),'};'])
+            %
             for ii = 1:length(fns)
                 %
-                eval(['sparams_out.',fns{ii},'{',int2str(nf0+jj+kk-1),'} = sparams_in.',fns{ii},'{',int2str(jclone(jj)),'};']);
+               % eval(['sparams_out.',fns{ii},'{',int2str(nf0+jj+kk-1),'} = sparams_in.',fns{ii},'{',int2str(jclone(jj)),'};']);
+                eval(['sparams_out.',fns{ii},'{',int2str(nf0+mm),'} = sparams_in.',fns{ii},'{',int2str(jclone(jj)),'};']);
                 %
             end
             %
+            mm = mm + 1;
+            %
         end
         %
+ 
     end
     %
 end
