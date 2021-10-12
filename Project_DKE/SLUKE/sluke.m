@@ -127,17 +127,17 @@ for ii = 1:length(sparams.machine)
                 %
             elseif antenna_remote_status == 1
                 %
-                cprintf('*green',['Antenna calculations are running for simulation ',int2str(ii),'. Restart the simulation script to get back antenna results and run LUKE calculations automatically.'])
+                cprintf('*green',['Antenna calculations are running for simulation ',int2str(ii),'. Restart the simulation script to get back antenna results and run LUKE calculations automatically.']);disp(' ')
                 %
             elseif antenna_remote_status == -1
                 %
-                cprintf('*red',['WARNING : Antenna calculations failed for simulation ',int2str(ii),'. Check files before restarting the simulation script to run LUKE calculations.'])
+                cprintf('*red',['WARNING : Antenna calculations failed for simulation ',int2str(ii),'. Check files before restarting the simulation script to run LUKE calculations.']);disp(' ')
                 %
             end
             %
         elseif exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             %
-            cprintf('*green',['---> is completed but full simulation is not saved, just processed results.']);
+            cprintf('*green',['---> is completed but full simulation is not saved, just processed results.']);disp(' ')
             %
             if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'])
                 %
@@ -155,44 +155,35 @@ for ii = 1:length(sparams.machine)
             %
             if isfield(lukestructs,'output') %job done
                 %
-                try
-                    %
-                    sluke_postprocessing(sparams,lukestructs,ii);% Data postprocessing
-                    sluke_diagnostics(sparams,lukestructs,ii);% Synthetic diagnostic calculations
-                    sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd for display or specific interactive run
-                    %
-                catch
-                    %
-                     sparams.simul.save{ii} = 1;%Full simulaton backup is enforced 
-                     sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd for display or specific interactive run
-                    %
-                end
+                sluke_postprocessing(sparams,lukestructs,ii);% Data postprocessing
+                sluke_diagnostics(sparams,lukestructs,ii);% Synthetic diagnostic calculations
+                sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd for display or specific interactive run
                 %
             elseif isfield(lukestructs,'err') %job failed
                 %
-                cprintf('*red',['---> has failed for the following reasons :' ]);
+                cprintf('*red',['---> has failed for the following reasons :' ]);disp(' ')
                 %
                 disperr_jd(lukestructs.err)
                 %
-                cprintf('*red',['---> is cancelled.'])
+                cprintf('*red',['---> is cancelled.']);disp(' ')
                 %
                 delete(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
                 %
             elseif isfield(lukestructs,'job') %job run
                 %
-                cprintf('*blue',['---> is running on host : ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);
+                cprintf('*blue',['---> is running on host : ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);disp(' ')
                 %
                 sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
                 %
             else
                 %
-                cprintf('*red',['---> has a problem (output not recognized. Check if this not a just a connection problem before cancelling the simulation by deleting the LUKE_DATA file).'])
+                cprintf('*red',['---> has a problem (output not recognized. Check if this not a just a connection problem before cancelling the simulation by deleting the LUKE_DATA file).']);disp(' ')
                 %
             end
             %
             if sparams.simul.enforce{ii} == 1
                 %
-                cprintf([1,0.5,0],['---> has been enforced. Set sparams.simul.enforce{',int2str(ii),'} to zero in the script file to avoid infinite calculation loop.'])
+                cprintf([1,0.5,0],['---> has been enforced. Set sparams.simul.enforce{',int2str(ii),'} to zero in the script file to avoid infinite calculation loop.']);disp(' ')
                 %
             end
             %
@@ -201,7 +192,7 @@ for ii = 1:length(sparams.machine)
         clear lukestructs dkepath
         %
     else
-        cprintf('*blue',['---> is not enabled.'])
+        cprintf('*blue',['---> is not enabled.']);disp(' ')
     end
     %
 end
@@ -223,6 +214,5 @@ if exist('SLUKE_LOGS','dir')
     %
 end
 %
-cprintf('black','');%return to default color black
-%
-disp(' ')
+cprintf('black','');disp(' ');%return to default color black
+
