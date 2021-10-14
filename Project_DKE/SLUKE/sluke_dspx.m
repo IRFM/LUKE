@@ -62,7 +62,7 @@ if isfield(sparams.diags,'DSPX') && isfield(sparams.diags.DSPX,'hxrspec') && isf
     %
 elseif isfield(sparams.diags,'DSPX') && isfield(sparams.diags.DSPX,'hxrspec') && isfield(sparams.diags.DSPX.hxrspec,'source') && strcmp(sparams.diags.DSPX.hxrspec.source,'file')
     %
-    if exist([sparams.diags.DSPX.hxrspec.path{ii},'/'sparams.diags.DSPX.hxrspec.file{ii}],'file')
+    if exist([sparams.diags.DSPX.hxrspec.path{ii},'/',sparams.diags.DSPX.hxrspec.file{ii}],'file')
         %
         load([sparams.diags.DSPX.hxrspec.path{ii},'/',sparams.diags.DSPX.hxrspec.file{ii}],'hxrspec');
         %
@@ -212,7 +212,7 @@ if strcmp(sparams.diags.DSPX.code{ii},'R5X2')
         %
         [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxrspec,hxrparam,dt);% HXR synthetic diagnostic signal
         %
-        if exist(hxrexp,'var') && ~isempty(hxrexp.t) 
+        if exist('hxrexp','var') && ~isempty(hxrexp.t) 
             %
             irefs = find((hxrexp.t > sparams.discharge.tmin{ii}) & (hxrexp.t < sparams.discharge.tmax{ii}));%time interval
             %

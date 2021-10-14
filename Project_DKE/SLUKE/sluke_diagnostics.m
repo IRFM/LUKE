@@ -18,7 +18,7 @@ if ~exist(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'])
                 %
             else
                 %
-                cprintf('red','WARNING : DSPX calculations from LUKE results failed.')disp(' ');
+                cprintf('red','WARNING : DSPX calculations from LUKE results failed.');disp(' ');
                 %
             end
         else
@@ -51,7 +51,7 @@ if ~exist(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'])
                 %
             else
                 %
-                cprintf('red','WARNING : MEHXR calculations from LUKE results failed.')disp(' ');
+                cprintf('red','WARNING : MEHXR calculations from LUKE results failed.');disp(' ');
                 %
             end
             %
