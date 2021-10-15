@@ -120,6 +120,8 @@ for ii = 1:length(sparams.machine)
             %
             lukestructs.ripple = '';% sluke_ripple(sparams,ii);
             %
+           % lukestructs.diags =  sluke_diagnostics(sparams,ii);
+            %
             if isempty(antenna_remote_status) || antenna_remote_status == 0  %antenna calculations are done or no antenna calculations
                 %
                 dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
@@ -155,9 +157,19 @@ for ii = 1:length(sparams.machine)
             %
             if isfield(lukestructs,'output') %job done
                 %
-                sluke_postprocessing(sparams,lukestructs,ii);% Data postprocessing
-                sluke_diagnostics(sparams,lukestructs,ii);% Synthetic diagnostic calculations
-                sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd for display or specific interactive run
+                try
+                    %
+                    sluke_postprocessing(sparams,ii,lukestructs);% Data postprocessing
+                    sluke_diagnostics(sparams,ii,lukestructs);% Synthetic diagnostic calculations
+                    sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd for display or specific interactive run
+                    %
+                catch
+                    %
+                    cprintf('*red',['---> error in postprocessing or synthetic diagnostics calculations. Full LUKE results are temporarily backed-up.' ]);disp(' ')
+                    %
+                    save (['SLUKE_RESULTS/BACKUP_LUKE_DATA_',simul_id,'.mat'],'sparams','lukestructs','ii');
+                    %
+                end
                 %
             elseif isfield(lukestructs,'err') %job failed
                 %
@@ -171,10 +183,18 @@ for ii = 1:length(sparams.machine)
                 %
             elseif isfield(lukestructs,'job') %job run
                 %
-                cprintf('*blue',['---> is running on host : ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);disp(' ')
-                %
-                sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
-                %
+                if exist(['batch_',lukestructs.job.timeid],'dir')
+                    %
+                    cprintf('*blue',['---> is running on host : ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);disp(' ')
+                    %
+                    sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
+                    %
+                else
+                    %
+                    cprintf('*red',['---> is orphan. No more folder batch_',lukestructs.job.timeid,'. It is therefore canceled']);disp(' ')
+                    %delete results
+                    %
+                end
             else
                 %
                 cprintf('*red',['---> has a problem (output not recognized. Check if this not a just a connection problem before cancelling the simulation by deleting the LUKE_DATA file).']);disp(' ')
