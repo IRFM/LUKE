@@ -1,4 +1,10 @@
-function sluke_diagnostics(sparams,lukestructs,ii)
+function diags = sluke_diagnostics(sparams,ii,lukestructs)
+%
+if nargin == 2
+    %
+    lukestructs = '';
+    %
+end
 %
 simul_id = sluke_id(sparams,ii,'simul');
 %
@@ -10,11 +16,12 @@ if ~exist(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'])
         %
         if ~isfield(sparams.diags.DSPX,'enable') || (isfield(sparams.diags.DSPX,'enable') && sparams.diags.DSPX.enable == 1)
             %
-            [DSPX.Zbremchord,DSPX.Zbremdiag,DSPX.Zbremplasma,DSPX.equilHXR,DSPX.hxrexp_averaged] = sluke_dspx(sparams,lukestructs,ii);
+            DSPX = sluke_dspx(sparams,lukestructs,ii);
             %
-            if ~isempty(DSPX.Zbremchord) && ~isempty(DSPX.Zbremdiag) && ~isempty(DSPX.Zbremplasma) && ~isempty(DSPX.equilHXR)
+            if ~isempty(DSPX)
                 %
                 save(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'],'DSPX');
+                diags.DSPX = DSPX;
                 %
             else
                 %
@@ -43,11 +50,12 @@ if ~exist(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'])
         %
         if ~isfield(sparams.diags.MEHXR,'enable') || (isfield(sparams.diags.MEHXR,'enable') && sparams.diags.MEHXR.enable == 1)
             %
-            [MEHXR.Zbremchord,MEHXR.Zbremdiag,MEHXR.Zbremplasma,MEHXR.equilHXR,MEHXR.hxrexp_averaged] = sluke_mehxr(sparams,lukestructs,ii);
+            MEHXR = sluke_mehxr(sparams,lukestructs,ii);
             %
-            if ~isempty(MEHXR.Zbremchord) && ~isempty(MEHXR.Zbremdiag) && ~isempty(MEHXR.Zbremplasma) && ~isempty(MEHXR.equilHXR)
+            if ~isempty(MEHXR)
                 %
                 save(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'],'MEHXR');
+                diags.MEHXR = MEHXR;
                 %
             else
                 %
