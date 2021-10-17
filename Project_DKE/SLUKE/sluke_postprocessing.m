@@ -1,4 +1,4 @@
-function sluke_postprocessing(sparams,lukestructs,ii)
+function sluke_postprocessing(sparams,ii,lukestructs)
 %
 simul_id = sluke_id(sparams,ii,'simul');
 %
