@@ -6,12 +6,21 @@ if ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
     %
     if ~isfield(sparams,'postprocessing')
         %
-        data_proc = proc_luke_jd(lukestructs.output);
+        data_proc = proc_luke_jd(lukestructs.output);%default value
         %
     else
         %
-        data_proc = proc_luke_jd(lukestructs.output,sluke_params_value(sparams.postprocessing.ir_display,ii),sparams.postprocessing.ir_display.p_opt{ii},sparams.postprocessing.dp_cyl{ii});
-        %
+        if isfield(lukestructs.output,'data_proc')
+            %
+            data_proc = lukestructs.output.data_proc;%Processed data calculated remotely
+            %
+        else
+            %
+            opt = sluke_params_value(sparams.postprocessing,ii);
+            %
+            data_proc = proc_luke_jd(lukestructs.output,opt);
+            %
+        end
     end
     %
     if ~isempty(data_proc)
