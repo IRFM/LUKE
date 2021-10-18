@@ -111,7 +111,12 @@ else
     else
         %
         disp(['---> is completed but full simulation is not saved, just processed results.']);
-        delete(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
+        %
+        if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'],'file')
+            %
+            delete(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
+            %
+        end
         %
     end
     %
