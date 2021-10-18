@@ -12,150 +12,6 @@ end
 %
 id_data = [sparams.machine{ii},'_data_mehxr_',sparams.discharge.shot{ii}];
 %
-% MEHXR diagnostic technical specifications (hxrspec).
-%
-if isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && isempty(sparams.diags.MEHXR.hxrspec.source{ii})
-    %
-    if exist(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'file')
-        %
-        load(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrspec');
-        %
-    else
-        %
-        if strcmp(sparams.machine{ii},'WEST')
-            %   
-            [hxrspec,~] = get_mehxrspec_forLUKE_yp('WEST',str2num(sparams.discharge.shot{ii}),'','','');
-            % 
-        else
-            %
-            hxrspec = '';
-            %
-        end
-        %
-    end
-    %
-elseif isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && strcmp(sparams.diags.MEHXR.hxrspec.source,'file')
-    %
-    if exist([sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii}],'file')
-        %
-        load([sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii}],'hxrspec');
-        %
-    else
-        %
-        cprintf([1,0.5,0],['WARNING : file ',sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
-        hxrspec = '';
-        %
-    end
-    %
-elseif isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && strcmp(sparams.diags.MEHXR.hxrspec.source,'value')
-    %
-    hxrspec = sluke_params_value(sparams.diags.MEHXR.hxrspec,ii);
-    %
-else
-    %
-    hxrspec = '';
-    %
-end
-%
-if ~isempty(hxrspec)
-    %
-    hxrspec.kfit = hxrspec.kphot(1:2:end);
-    %
-    if isfield(sparams.diags.MEHXR.hxrspec,'chordstatus_hxr')
-        %
-        hxrspec.chordstatus_hxr = sparams.diags.MEHXR.hxrspec.chordstatus_hxr{ii};
-        %
-    end
-    %
-    if isfield(hxrspec,'beta_hxr')
-        %
-        nc = length(hxrspec.beta_hxr);% number of chords
-        %
-        disp(['--> Number of chords in MEHXR : ',int2str(nc),'.'])
-        %
-    end         
-    %
-    save(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrspec');
-    %
-else
-    %
-    cprintf([1,0.5,0],'WARNING : ''hxrspec'' structure for MEHXR calculations is not defined.');disp(' ')
-    hxrspec = '';
-    %
-end
-%
-% DPSX simulations parameters
-%
-if strcmp(sparams.diags.MEHXR.code{ii},'R5X2')
-    %
-    if isfield(sparams.diags.MEHXR.R5X2,'hxrparam') && isfield(sparams.diags.MEHXR.R5X2.hxrparam,'source') && isempty(sparams.diags.MEHXR.R5X2.hxrparam.source{ii})
-        %
-        if exist(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'file')
-            %
-            load(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrparam');
-            %
-        else
-            %
-            cprintf([1,0.5,0],['WARNING : file SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat that contains R5X2 simulations parameters is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
-            hxrparam = '';
-            %
-        end
-        % 
-    elseif isfield(sparams.diags.MEHXR.R5X2,'hxrparam') && isfield(sparams.diags.MEHXR.R5X2.hxrparam,'source') && strcmp(sparams.diags.MEHXR.R5X2.hxrparam.source{ii},'file')
-        %
-        if isfield(sparams.diags.MEHXR.R5X2.hxrparam,'file') && isfield(sparams.diags.MEHXR.R5X2.hxrparam,'path')
-            %
-            if exist([sparams.diags.MEHXR.R5X2.hxrparam.path{ii},'/',sparams.diags.MEHXR.R5X2.hxrparam.file{ii}],'file')
-                %
-                load([sparams.diags.MEHXR.R5X2.hxrparam.path{ii},'/',sparams.diags.MEHXR.R5X2.hxrparam.file{ii},'.mat'])
-                %
-            else
-                %
-                cprintf([1,0.5,0],['WARNING : file ',sparams.diags.MEHXR.R5X2.hxrparam.path{ii},'/',sparams.diags.MEHXR.R5X2.hxrparam.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
-
-                hxrparam = '';
-                %
-            end
-            %
-        else
-            %
-            hxrparam = '';
-            %
-        end
-        %
-    elseif strcmp(sparams.diags.MEHXR.R5X2.hxrparam.source{ii},'value')
-        %
-        hxrparam = sluke_params_value(sparams.diags.MEHXR.R5X2.hxrparam,ii);
-        %
-        hxrparam.kphot = hxrspec.kphot;
-        hxrparam.kmin = hxrspec.kmin;
-        hxrparam.kmax = hxrspec.kmax;
-        %
-    else
-        %
-        hxrparam = '';
-        %
-    end
-    %
-    if ~isempty(hxrparam)
-        %
-        save(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrparam');
-        %
-    else
-        %
-        cprintf([1,0.5,0],'WARNING : ''hxrparam'' structure for MEHXR calculations is not defined.');disp(' ')
-        hxrparam = '';
-        %
-    end
-    %
-else
-    %
-    cprintf('red',['WARNING : the code ',sparams.diags.MEHXR.code{ii},' is not implemented. Synthetic diagnostic calculations are cancelled.']);disp(' ')
-    MEHXR = '';
-    return
-    %
-end
-%
 if ~isempty(lukestructs)
     %
     if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'])
@@ -170,7 +26,7 @@ if ~isempty(lukestructs)
         else
             %
             hxrexp = '';
-            cprintf([1,0.5,0],'WARNING : no access to DSPX data from remote access. Check the remote connection.');disp(' ')
+            cprintf([1,0.5,0],['WARNING : no access to MEHXR data for machine ',sparams.machine{ii},' from remote access. Check the remote connection.']);disp(' ')
             %
         end
         %
@@ -202,13 +58,11 @@ if ~isempty(lukestructs)
         %
     end
     %
-    MEHXR.hxrexp_averaged = hxrexp_averaged;
-    %
     if strcmp(sparams.diags.MEHXR.code{ii},'R5X2')
         %
         if isfield(lukestructs,'diags') && isfield(lukestructs.diags,'MEHXR') && isfield(lukestructs.diags.MEHXR,'R5X2') && ~isempty(lukestructs.diags.MEHXR.R5X2)
             %
-            MEHXR.R5X2 = lukestructs.diags.MEHXR.R5X2;% remote calculations in run_lukert done
+            MEHXR.R5X2 = lukestructs.diags.MEHXR.R5X2;% remote calculations in run_lukert done locally
             %
         else
             %
@@ -237,19 +91,168 @@ if ~isempty(lukestructs)
         %
     end
     %
-    if ~isempty(MEHXRX.R5X2)
+else
+    %
+    % MEHXR diagnostic technical specifications (hxrspec).
+    %
+    if isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && isempty(sparams.diags.MEHXR.hxrspec.source{ii})
         %
-        MEHXR.hxrexp_averaged = hxrexp_averaged;
+        if exist(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'file')
+            %
+            load(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrspec');
+            %
+        else
+            %
+            if strcmp(sparams.machine{ii},'WEST')
+                %   
+                [hxrspec,~] = get_mehxrspec_forLUKE_yp('WEST',str2num(sparams.discharge.shot{ii}),'','','');
+                % 
+            else
+                %
+                hxrspec = '';
+                %
+            end
+            %
+        end
+        %
+    elseif isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && strcmp(sparams.diags.MEHXR.hxrspec.source,'file')
+        %
+        if exist([sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii}],'file')
+            %
+            load([sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii}],'hxrspec');
+            %
+        else
+            %
+            cprintf([1,0.5,0],['WARNING : file ',sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
+            hxrspec = '';
+            %
+        end
+        %
+    elseif isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && strcmp(sparams.diags.MEHXR.hxrspec.source,'value')
+        %
+        hxrspec = sluke_params_value(sparams.diags.MEHXR.hxrspec,ii);
+        %
+    else
+        %
+        hxrspec = '';
         %
     end
     %
-else
+    if ~isempty(hxrspec)
+        %
+        hxrspec.kfit = hxrspec.kphot(1:2:end);
+        %
+        if isfield(sparams.diags.MEHXR.hxrspec,'chordstatus_hxr')
+            %
+            hxrspec.chordstatus_hxr = sparams.diags.MEHXR.hxrspec.chordstatus_hxr{ii};
+            %
+        end
+        %
+        if isfield(hxrspec,'beta_hxr')
+            %
+            nc = length(hxrspec.beta_hxr);% number of chords
+            %
+            disp(['--> Number of chords in MEHXR : ',int2str(nc),'.'])
+            %
+        end         
+        %
+        save(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrspec');
+        %
+    else
+        %
+        cprintf([1,0.5,0],'WARNING : ''hxrspec'' structure for MEHXR calculations is not defined.');disp(' ')
+        hxrspec = '';
+        %
+    end
+    %
+    % MEHXR simulations parameters
+    %
+    if strcmp(sparams.diags.MEHXR.code{ii},'R5X2')
+        %
+        if isfield(sparams.diags.MEHXR.R5X2,'hxrparam') && isfield(sparams.diags.MEHXR.R5X2.hxrparam,'source') && isempty(sparams.diags.MEHXR.R5X2.hxrparam.source{ii})
+            %
+            if exist(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'file')
+                %
+                load(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrparam');
+                %
+            else
+                %
+                cprintf([1,0.5,0],['WARNING : file SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat that contains R5X2 simulations parameters is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
+                hxrparam = '';
+                %
+            end
+            % 
+        elseif isfield(sparams.diags.MEHXR.R5X2,'hxrparam') && isfield(sparams.diags.MEHXR.R5X2.hxrparam,'source') && strcmp(sparams.diags.MEHXR.R5X2.hxrparam.source{ii},'file')
+            %
+            if isfield(sparams.diags.MEHXR.R5X2.hxrparam,'file') && isfield(sparams.diags.MEHXR.R5X2.hxrparam,'path')
+                %
+                if exist([sparams.diags.MEHXR.R5X2.hxrparam.path{ii},'/',sparams.diags.MEHXR.R5X2.hxrparam.file{ii}],'file')
+                    %
+                    load([sparams.diags.MEHXR.R5X2.hxrparam.path{ii},'/',sparams.diags.MEHXR.R5X2.hxrparam.file{ii},'.mat'])
+                    %
+                else
+                    %
+                    cprintf([1,0.5,0],['WARNING : file ',sparams.diags.MEHXR.R5X2.hxrparam.path{ii},'/',sparams.diags.MEHXR.R5X2.hxrparam.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
+
+                    hxrparam = '';
+                    %
+                end
+                %
+            else
+                %
+                hxrparam = '';
+                %
+            end
+            %
+        elseif strcmp(sparams.diags.MEHXR.R5X2.hxrparam.source{ii},'value')
+            %
+            hxrparam = sluke_params_value(sparams.diags.MEHXR.R5X2.hxrparam,ii);
+            %
+            hxrparam.kphot = hxrspec.kphot;
+            hxrparam.kmin = hxrspec.kmin;
+            hxrparam.kmax = hxrspec.kmax;
+            %
+        else
+            %
+            hxrparam = '';
+            %
+        end
+        %
+        if ~isempty(hxrparam)
+            %
+            save(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrparam');
+            %
+        else
+            %
+            cprintf([1,0.5,0],'WARNING : ''hxrparam'' structure for MEHXR calculations is not defined.');disp(' ')
+            hxrparam = '';
+            %
+        end
+        %
+    else
+        %
+        cprintf('red',['WARNING : the code ',sparams.diags.MEHXR.code{ii},' is not implemented. Synthetic diagnostic calculations are cancelled.']);disp(' ')
+        MEHXR = '';
+        return
+        %
+    end    
     %
     if ~isempty(hxrspec) && ~isempty(hxrparam)
         %
         MEHXR.code = sparams.diags.MEHXR.code{ii};
         MEHXR.hxrspec = hxrspec;
         MEHXR.hxrparam = hxrparam;
+        %
+        %
+        if isfield(sparams.diags.MEHXR,'remote_calculations')
+            %
+            MEHXR.remote_calculations = sparams.diags.MEHXR.remote_calculations{ii};%local calculations
+            %
+        else
+            %
+            MEHXR.remote_calculations = 0;%local calculations
+            %
+        end
         %
     end
     %
