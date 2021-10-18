@@ -813,7 +813,7 @@ lukestructs.output = output;
 %
 diags = '';
 %
-if isfield(lukestructs,'diags') 
+if isfield(lukestructs,'diags')
     %
     name_diags = fieldnames(lukestructs.diags);
     %
@@ -821,7 +821,7 @@ if isfield(lukestructs,'diags')
         %
         diag = lukestructs.diags.(name_diags{ii});
         %
-        if diag.remote_calculations == 1
+        if diag.remote_calculations == 1 && ~isempty(diag)
             %
             data_in.lukestructs = rmfield(lukestructs,'diags');
             data_in.hxrspec = diag.hxrspec;
