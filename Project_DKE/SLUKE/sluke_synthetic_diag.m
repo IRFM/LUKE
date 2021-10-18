@@ -42,10 +42,18 @@ if strcmp(code,'R5X2')
         %
         [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxrspec,hxrparam,dt);% HXR synthetic diagnostic signal
         %
-        diag.Zbremplasma = Zbremplasma;
-        diag.Zbremchord = Zbremchord;
-        diag.Zbremdiag = Zbremdiag;
-        diag.equilHXR = equilHXR;
+        if ~isfield(hxrparam,'full_results') || (isfield(hxrparam,'full_results') && hxrparam.full_results == 0)
+            %
+            diag.Zbremdiag = Zbremdiag;%results that can be compared to experimental measurements
+            %
+        else
+            %
+            diag.Zbremplasma = Zbremplasma;
+            diag.Zbremchord = Zbremchord;
+            diag.Zbremdiag = Zbremdiag;
+            diag.equilHXR = equilHXR;
+            %
+        end  
         %
     else
         %
