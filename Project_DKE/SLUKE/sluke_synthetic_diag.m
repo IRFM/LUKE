@@ -44,7 +44,8 @@ if strcmp(code,'R5X2')
         %
         if ~isfield(hxrparam,'full_results') || (isfield(hxrparam,'full_results') && hxrparam.full_results == 0)
             %
-            Zbremdiag = rmfield(Zbremdiag,'gkEinterp_out');%largest memory size
+            Zbremdiag = rmfield(Zbremdiag,'gkEinterp_out');%large memory size
+            Zbremdiag = rmfield(Zbremdiag,'kinterp');%large memory size
             diag.Zbremdiag = Zbremdiag;%results that can be compared to experimental measurements
             %
         else
