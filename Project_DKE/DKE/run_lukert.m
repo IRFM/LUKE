@@ -139,7 +139,7 @@ else
             %
         end
         %
-        if cellmode == 0;
+        if cellmode == 0
 %            if ~isreal(dkecluster.scheduler.enforce)
 %                lukestructs{1}.warning = ['Remote calculation failed with remote computer number #',int2str(imag(dkecluster.scheduler.enforce)),', local calculation performed'];
 %            end
@@ -821,7 +821,7 @@ if isfield(lukestructs,'diags')
         %
         diag = lukestructs.diags.(name_diags{ii});
         %
-        if diag.remote_calculations == 1 && ~isempty(diag)
+        if isfield(diag,'remote_calculations') && diag.remote_calculations == 1
             %
             data_in.lukestructs = rmfield(lukestructs,'diags');
             data_in.hxrspec = diag.hxrspec;
