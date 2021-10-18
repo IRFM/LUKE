@@ -20,7 +20,12 @@ if ~exist(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'])
             %
             if ~isempty(DSPX)
                 %
-                save(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'],'DSPX');
+                if ~isempty(lukestructs)
+                    %
+                    save(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'],'DSPX');
+                    %
+                end
+                %
                 diags.DSPX = DSPX;
                 %
             else
@@ -54,7 +59,12 @@ if ~exist(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'])
             %
             if ~isempty(MEHXR)
                 %
-                save(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'],'MEHXR');
+                if ~isempty(lukestructs)
+                    %
+                    save(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'],'MEHXR');
+                    %
+                end
+                %
                 diags.MEHXR = MEHXR;
                 %
             else
