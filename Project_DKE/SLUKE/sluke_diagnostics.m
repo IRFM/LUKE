@@ -14,7 +14,7 @@ if ~exist(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'])
     %
     if isfield(sparams,'diags') && isfield(sparams.diags,'DSPX')
         %
-        if ~isfield(sparams.diags.DSPX,'enable') || (isfield(sparams.diags.DSPX,'enable') && sparams.diags.DSPX.enable == 1)
+        if ~isfield(sparams.diags.DSPX,'enable') || (isfield(sparams.diags.DSPX,'enable') && sparams.diags.DSPX.enable{ii} == 1)
             %
             DSPX = sluke_dspx(sparams,lukestructs,ii);
             %
@@ -44,6 +44,7 @@ if ~exist(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'])
 else
     %
     cprintf('green','DSPX calculations are already done');disp(' ');
+    diags.DSPX = [];
     %
 end
 %
@@ -53,7 +54,7 @@ if ~exist(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'])
     %
     if isfield(sparams,'diags') && isfield(sparams.diags,'MEHXR')
         %
-        if ~isfield(sparams.diags.MEHXR,'enable') || (isfield(sparams.diags.MEHXR,'enable') && sparams.diags.MEHXR.enable == 1)
+        if ~isfield(sparams.diags.MEHXR,'enable') || (isfield(sparams.diags.MEHXR,'enable') && sparams.diags.MEHXR.enable{ii} == 1)
             %
             MEHXR = sluke_mehxr(sparams,lukestructs,ii);
             %
@@ -84,6 +85,7 @@ if ~exist(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'])
 else
     %
     cprintf('green','MEHXR calculations are already done');disp(' ');
+    diags.MEHXR = [];
     %
 end
 %
