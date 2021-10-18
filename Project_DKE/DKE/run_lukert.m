@@ -821,17 +821,24 @@ if isfield(lukestructs,'diags')
         %
         diag = lukestructs.diags.(name_diags{ii});
         %
-        if isfield(diag,'remote_calculations') && diag.remote_calculations == 1
+        if ~isempty(diag)
             %
-            data_in.lukestructs = rmfield(lukestructs,'diags');
-            data_in.hxrspec = diag.hxrspec;
-            data_in.hxrparam = diag.hxrparam;
-            %
-            lukestructs.diags.(name_diags{ii}).(diag.code) = sluke_synthetic_diag(diag.code,data_in);
-            %
+            if isfield(diag,'remote_calculations') && diag.remote_calculations == 1
+                %
+                data_in.lukestructs = rmfield(lukestructs,'diags');
+                data_in.hxrspec = diag.hxrspec;
+                data_in.hxrparam = diag.hxrparam;
+                %
+                lukestructs.diags.(name_diags{ii}).(diag.code) = sluke_synthetic_diag(diag.code,data_in);
+                %
+            else
+                %
+                lukestructs.diags.(name_diags{ii}).(diag.code) = '';
+                %
+            end
         else
             %
-            lukestructs.diags.(name_diags{ii}).(diag.code) = '';
+            lukestructs.diags.(name_diags{ii}) = '';
             %
         end
         %
