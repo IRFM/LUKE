@@ -809,6 +809,36 @@ if abs(opt.waves),
     output.dke_out = rmfield(output.dke_out,'waves');
 end
 %
+lukestructs.output = output;
+%
+diags = '';
+%
+if isfield(lukestructs,'diags') 
+    %
+    name_diags = fieldnames(lukestructs.diags);
+    %
+    for ii = 1:length(name_diags)
+        %
+        diag = lukestructs.diags.(name_diags{ii});
+        %
+        if diag.remote_calculations == 1
+            %
+            data_in.lukestructs = rmfield(lukestructs,'diags');
+            data_in.hxrspec = diag.hxrspec;
+            data_in.hxrparam = diag.hxrparam;
+            %
+            lukestructs.diags.(name_diags{ii}).(diag.code) = sluke_synthetic_diag(diag.code,data_in);
+            %
+        else
+            %
+            lukestructs.diags.(name_diags{ii}).(diag.code) = '';
+            %
+        end
+        %
+    end
+    %
+end
+%
 % Reduced output
 %
 if ~isfield(dkeparam,'opt_struct') || dkeparam.opt_struct == 0,
@@ -837,9 +867,10 @@ if ~isfield(dkeparam,'opt_struct') || dkeparam.opt_struct == 0,
     %
     output.dke_out.ZXXD_rf = selectfields_jd(output.dke_out.ZXXD_rf,savefields_ZXXD_rf);
     output.dke_out = rmfield(output.dke_out,rmfields_dke_out);
+    %
+    lukestructs.output = output;
+    %
 end
-%
-lukestructs.output = output;
 %
 if opt.save == 1,% save results in LUKE_RESULTS file
     if isempty(simul.path) || ~strcmp(simul.path(1),filesep),% relative path
@@ -868,5 +899,8 @@ if opt.save == 1,% return at least savefile
     lukestructs.output.savefile = savefile;
 end
 %
+
+%
+
 
     
