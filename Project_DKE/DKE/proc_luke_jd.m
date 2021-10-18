@@ -52,6 +52,12 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             ir_display = -1;% no display
         end
         %
+        if isfield(opt,'dp_cyl'),
+            dp_cyl = opt.dp_cyl;
+        else
+            dp_cyl = 0.1;
+        end
+        %
         if isfield(opt,'p_opt'),
             p_opt = opt.p_opt;
         end
