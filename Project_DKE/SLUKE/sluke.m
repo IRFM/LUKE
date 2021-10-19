@@ -116,7 +116,7 @@ for ii = 1:length(sparams.machine)
             %
         elseif ~exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']) && ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             %
-            if kk(sparams.simul.remote_profile{ii}+1) <= kkmax(sparams.simul.remote_profile{ii}+1)
+            if kk(sparams.simul.remote_profile{ii}+1) < kkmax(sparams.simul.remote_profile{ii}+1)
                 %
                 lukestructs.simul.id = simul_id;
                 %lukestructs.simul.locid = '';
@@ -158,13 +158,15 @@ for ii = 1:length(sparams.machine)
                 %
             else
                 %
-                cprintf('*blue',['---> is queing (max number of running simulations : ',int2str(max_number_running_simulations),')']);disp(' ')
+                cprintf('*blue',['---> is queing (max number of running simulations : ',int2str(kkmax(sparams.simul.remote_profile{ii}+1)),')']);disp(' ')
+                %
+                lukestructs = [];
                 %
             end
             %
         elseif exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             %
-            cprintf('*green',['---> is completed but full simulation is not saved, just processed results.']);disp(' ')
+            cprintf('*green',['---> is completed and processed results only are saved.']);disp(' ')
             %
             if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'])
                 %
