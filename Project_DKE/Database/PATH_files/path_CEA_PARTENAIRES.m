@@ -35,23 +35,28 @@ dkepath.YP105119(1).temppathroot = '/data/tmp/';%Absolute root directory path ad
 dkepath.YP105119(1).persee.local_root = '/home/YP105119/Packages/andromede/';
 %
 dkepath.YP105119(1).persee.mex802 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/persee/MATLAB802/'];
-dkepath.YP105119(1).persee.mex902 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/persee/MATLAB902/'];
 dkepath.YP105119(1).persee.mex903 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/persee/MATLAB903/'];
+dkepath.YP105119(1).persee.mex907 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/persee/MATLAB907/'];
+dkepath.YP105119(1).persee.mex909 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/persee/MATLAB909/'];
 %
 dkepath.YP105119(1).persee.compiler_opt.copts = '';
 dkepath.YP105119(1).persee.compiler_opt.copts.cpp.mex802 = '';
-dkepath.YP105119(1).persee.compiler_opt.copts.cpp.mex902 = '';
 dkepath.YP105119(1).persee.compiler_opt.copts.cpp.mex903 = '';
+dkepath.YP105119(1).persee.compiler_opt.copts.cpp.mex907 = '';
+dkepath.YP105119(1).persee.compiler_opt.copts.cpp.mex909 = '';
 dkepath.YP105119(1).persee.compiler_opt.fopts.mex802 = '';
-dkepath.YP105119(1).persee.compiler_opt.fopts.mex902 = '';
 dkepath.YP105119(1).persee.compiler_opt.fopts.mex903 = '';
+dkepath.YP105119(1).persee.compiler_opt.fopts.mex907 = '';
+dkepath.YP105119(1).persee.compiler_opt.fopts.mex909 = '';
 dkepath.YP105119(1).persee.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).persee.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.YP105119(1).persee.compiler_opt.helmex.mex902 = ['-L',dkepath.YP105119(1).persee.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).persee.compiler_opt.helmex.mex903 = ['-L',dkepath.YP105119(1).persee.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).persee.compiler_opt.helmex.mex907 = ['-L',dkepath.YP105119(1).persee.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).persee.compiler_opt.helmex.mex909 = ['-L',dkepath.YP105119(1).persee.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
 dkepath.YP105119(1).persee.MUMPS.mex802 = [dkepath.YP105119(1).persee.local_root,'MUMPS_4.10.0/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).persee.MUMPS.mex902 = [dkepath.YP105119(1).persee.local_root,'MUMPS_4.10.0/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).persee.MUMPS.mex903 = [dkepath.YP105119(1).persee.local_root,'MUMPS_4.10.0/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).persee.MUMPS.mex907 = [dkepath.YP105119(1).persee.local_root,'MUMPS_4.10.0/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).persee.MUMPS.mex909 = [dkepath.YP105119(1).persee.local_root,'MUMPS_4.10.0/MATLAB909'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
@@ -64,18 +69,28 @@ dkepath.YP105119(1).persee.imagemagick.env = '/usr/bin/';% ImageMagick environme
 dkepath.YP105119(1).altair.local_root = '/home/YP105119/Packages/andromede/';
 %
 dkepath.YP105119(1).altair.mex802 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/altair/MATLAB802/'];
-dkepath.YP105119(1).altair.mex902 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/altair/MATLAB902/'];
+dkepath.YP105119(1).altair.mex903 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/altair/MATLAB903/'];
+dkepath.YP105119(1).altair.mex907 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/altair/MATLAB907/'];
+dkepath.YP105119(1).altair.mex909 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/altair/MATLAB909/'];
 %
 dkepath.YP105119(1).altair.compiler_opt.copts = '';
 dkepath.YP105119(1).altair.compiler_opt.copts.cpp.mex802 = '';
-dkepath.YP105119(1).altair.compiler_opt.copts.cpp.mex902 = '';
+dkepath.YP105119(1).altair.compiler_opt.copts.cpp.mex903 = '';
+dkepath.YP105119(1).altair.compiler_opt.copts.cpp.mex907 = '';
+dkepath.YP105119(1).altair.compiler_opt.copts.cpp.mex909 = '';
 dkepath.YP105119(1).altair.compiler_opt.fopts.mex802 = '';
-dkepath.YP105119(1).altair.compiler_opt.fopts.mex902 = '';
+dkepath.YP105119(1).altair.compiler_opt.fopts.mex903 = '';
+dkepath.YP105119(1).altair.compiler_opt.fopts.mex907 = '';
+dkepath.YP105119(1).altair.compiler_opt.fopts.mex909 = '';
 dkepath.YP105119(1).altair.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.YP105119(1).altair.compiler_opt.helmex.mex902 = ['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).altair.compiler_opt.helmex.mex903 = ['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).altair.compiler_opt.helmex.mex907 = ['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).altair.compiler_opt.helmex.mex909 = ['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
 dkepath.YP105119(1).altair.MUMPS.mex802 = [dkepath.YP105119(1).altair.local_root,'MUMPS_4.10.0/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).altair.MUMPS.mex902 = [dkepath.YP105119(1).altair.local_root,'MUMPS_4.10.0/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).altair.MUMPS.mex903 = [dkepath.YP105119(1).altair.local_root,'MUMPS_4.10.0/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).altair.MUMPS.mex907 = [dkepath.YP105119(1).altair.local_root,'MUMPS_4.10.0/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).altair.MUMPS.mex909 = [dkepath.YP105119(1).altair.local_root,'MUMPS_4.10.0/MATLAB909'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %dkepath.YP105119(1).altair.extrapaths.LUKE_ITM = '/home/YP105119/LUKE_ITM/trunk';% LUKE <-> ITM toolbox 
 %
@@ -95,13 +110,21 @@ dkepath.YP105119(1).andromede1.mex903 = [dkepath.YP105119(1).luke_root,'Project_
 dkepath.YP105119(1).andromede1.compiler_opt.copts = '';
 dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex802 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex903 = '';
+dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex907 = '';
+dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex909 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex802 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex903 = '';
+dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex907 = '';
+dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex909 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex903 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex907 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex909 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
 dkepath.YP105119(1).andromede1.MUMPS.mex802 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).andromede1.MUMPS.mex903 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).andromede1.MUMPS.mex907 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).andromede1.MUMPS.mex909 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB909'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
@@ -121,17 +144,27 @@ dkepath.YP105119(1).cephee.local_root = '/home/YP105119/Packages/andromede/';
 %
 dkepath.YP105119(1).cephee.mex802 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB802/'];
 dkepath.YP105119(1).cephee.mex903 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB903/'];
+dkepath.YP105119(1).cephee.mex907 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB907/'];
+dkepath.YP105119(1).cephee.mex909 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/cephee/MATLAB909/'];
 %
 dkepath.YP105119(1).cephee.compiler_opt.copts = '';
 dkepath.YP105119(1).cephee.compiler_opt.copts.cpp.mex802 = '';
-dkepath.YP105119(1).cephee.compiler_opt.copts.cpp.mex902 = '';
+dkepath.YP105119(1).cephee.compiler_opt.copts.cpp.mex903 = '';
+dkepath.YP105119(1).cephee.compiler_opt.copts.cpp.mex907 = '';
+dkepath.YP105119(1).cephee.compiler_opt.copts.cpp.mex909 = '';
 dkepath.YP105119(1).cephee.compiler_opt.fopts.mex802 = '';
-dkepath.YP105119(1).cephee.compiler_opt.fopts.mex902 = '';
+dkepath.YP105119(1).cephee.compiler_opt.fopts.mex903 = '';
+dkepath.YP105119(1).cephee.compiler_opt.fopts.mex907 = '';
+dkepath.YP105119(1).cephee.compiler_opt.fopts.mex909 = '';
 dkepath.YP105119(1).cephee.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).cephee.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.YP105119(1).cephee.compiler_opt.helmex.mex902 = ['-L',dkepath.YP105119(1).cephee.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).cephee.compiler_opt.helmex.mex903 = ['-L',dkepath.YP105119(1).cephee.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).cephee.compiler_opt.helmex.mex907 = ['-L',dkepath.YP105119(1).cephee.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).cephee.compiler_opt.helmex.mex909 = ['-L',dkepath.YP105119(1).cephee.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
 dkepath.YP105119(1).cephee.MUMPS.mex802 = [dkepath.YP105119(1).cephee.local_root,'MUMPS_4.10.0/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).cephee.MUMPS.mex902 = [dkepath.YP105119(1).cephee.local_root,'MUMPS_4.10.0/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).cephee.MUMPS.mex903 = [dkepath.YP105119(1).cephee.local_root,'MUMPS_4.10.0/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).cephee.MUMPS.mex907 = [dkepath.YP105119(1).cephee.local_root,'MUMPS_4.10.0/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).cephee.MUMPS.mex909 = [dkepath.YP105119(1).cephee.local_root,'MUMPS_4.10.0/MATLAB909'];%Where MUMPS matrix solver is stored (MEX function)
 %
 %dkepath.YP105119(1).cephee.extrapaths.LUKE_ITM = '/home/YP105119/LUKE_ITM/trunk';% LUKE <-> ITM toolbox 
 %
@@ -147,14 +180,22 @@ dkepath.YP105119(1).rana.local_root = '/home/YP105119/Packages/andromede/';
 %
 dkepath.YP105119(1).rana.compiler_opt.copts = '';
 dkepath.YP105119(1).rana.compiler_opt.copts.cpp.mex802 = '';
-dkepath.YP105119(1).rana.compiler_opt.copts.cpp.mex902 = '';
+dkepath.YP105119(1).rana.compiler_opt.copts.cpp.mex903 = '';
+dkepath.YP105119(1).rana.compiler_opt.copts.cpp.mex907 = '';
+dkepath.YP105119(1).rana.compiler_opt.copts.cpp.mex909 = '';
 dkepath.YP105119(1).rana.compiler_opt.fopts.mex802 = '';
-dkepath.YP105119(1).rana.compiler_opt.fopts.mex902 = '';
+dkepath.YP105119(1).rana.compiler_opt.fopts.mex903 = '';
+dkepath.YP105119(1).rana.compiler_opt.fopts.mex907 = '';
+dkepath.YP105119(1).rana.compiler_opt.fopts.mex909 = '';
 dkepath.YP105119(1).rana.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).rana.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.YP105119(1).rana.compiler_opt.helmex.mex902 = ['-L',dkepath.YP105119(1).rana.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).rana.compiler_opt.helmex.mex903 = ['-L',dkepath.YP105119(1).rana.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).rana.compiler_opt.helmex.mex907 = ['-L',dkepath.YP105119(1).rana.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).rana.compiler_opt.helmex.mex909 = ['-L',dkepath.YP105119(1).rana.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
 dkepath.YP105119(1).rana.MUMPS.mex802 = [dkepath.YP105119(1).rana.local_root,'MUMPS_4.10.0/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).rana.MUMPS.mex902 = [dkepath.YP105119(1).rana.local_root,'MUMPS_4.10.0/MATLAB902'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).rana.MUMPS.mex903 = [dkepath.YP105119(1).rana.local_root,'MUMPS_4.10.0/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).rana.MUMPS.mex907 = [dkepath.YP105119(1).rana.local_root,'MUMPS_4.10.0/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).rana.MUMPS.mex909 = [dkepath.YP105119(1).rana.local_root,'MUMPS_4.10.0/MATLAB909'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
@@ -196,23 +237,11 @@ dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;% local 
 dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-François Artaud
 dkepath.JA132999(1).remote(1).profilename = 'JA132999';
 %
-dkepath.PH214199(1) = dkepath.YP105119(1);%Philippe Huynh
-dkepath.PH214199(1).remote(1).profilename = 'PH214199';
-%
-dkepath.AE165440(1) = dkepath.YP105119(1);% Annika Ekedahl
-dkepath.AE165440(1).remote(1).profilename = 'AE165440';
-%
 dkepath.CB165101(1) = dkepath.YP105119(1);%Clarisse Bourdelle
 dkepath.CB165101(1).remote(1).profilename = 'CB165101';
 %
-dkepath.LD142631(1) = dkepath.YP105119(1);%Lena Delpech
-dkepath.LD142631(1).remote(1).profilename = 'LD142631';
-%
 dkepath.MG100063(1) = dkepath.YP105119(1);%Marc Goniche
 dkepath.MG100063(1).remote(1).profilename = 'MG100063';
-%
-dkepath.KK019865(1) = dkepath.YP105119(1);%Krzysztof Krol
-dkepath.KK019865(1).remote(1).profilename = 'KK019865';
 %
 dkepath.VO259454(1) = dkepath.YP105119(1);%Valeria Ostuni
 dkepath.VO259454(1).remote(1).profilename = 'VO259454';

@@ -106,17 +106,8 @@ dkepath.YP105119(1).remote(2).gitupdate = true;
 dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-François Artaud
 dkepath.JA132999(1).remote(1).profilename = 'JA132999';
 %
-dkepath.PH214199(1) = dkepath.YP105119(1);%Philippe Huynh
-dkepath.PH214199(1).remote(1).profilename = 'PH214199';
-%
-dkepath.AE165440(1) = dkepath.YP105119(1);% Annika Ekedahl
-dkepath.AE165440(1).remote(1).profilename = 'AE165440';
-%
 dkepath.CB165101(1) = dkepath.YP105119(1);%Clarisse Bourdelle
 dkepath.CB165101(1).remote(1).profilename = 'CB165101';
-%
-dkepath.LD142631(1) = dkepath.YP105119(1);%Lena Delpech
-dkepath.LD142631(1).remote(1).profilename = 'LD142631';
 %
 dkepath.MG100063(1) = dkepath.YP105119(1);%Marc Goniche
 dkepath.MG100063(1).remote(1).profilename = 'MG100063';
