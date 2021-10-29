@@ -40,18 +40,6 @@ if err == 0
         %
         sparams_tmp = sluke_params_extract(sparams_in,ii);
         %
-        if isfield(sparams_tmp,'help')
-            %
-            sparams_tmp = rmfield(sparams_tmp,'help');
-            %
-        end
-        %
-        if isfield(sparams_tmp,'format')
-            %
-            sparams_tmp = rmfield(sparams_tmp,'format');
-            %
-        end
-        %
         if ~isfield(sparams_tmp.discharge,'nt')
             %
             disp('WARNING : initial sparams.discharge sub-structure has no ''nt'' field. nt = 1 enforced ')
@@ -87,6 +75,10 @@ if err == 0
             sparams_tmp.discharge.tmax(jj) = {sparams_tmp.discharge.tmax{jj-1} + dt(1)};
             sparams_tmp.discharge.nt(jj) = {1};
             %
+        end
+        %
+        if sparams_tmp.simul.initial_distribution{1} == -1
+            sparams_tmp.simul.initial_distribution(1) = {0};
         end
         %
         if ii == 1
