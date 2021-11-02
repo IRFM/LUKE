@@ -23,15 +23,19 @@ else
             %
             equil_out = equil_in;
             %
-            if exist(equil_in.ADAS)
+            if exist(equil_in.ADAS,'file')
+                %
                 load(equil_in.ADAS);
+                %
             else
+                %
                 equil_out = equil_in;
                 disp('*****************')
-                disp(['WARNING: file : ',equil_in.ADAS,' does not exist. ADAS data are not considered.'])
+                disp(['WARNING: file : ',equil_in.ADAS,' is not found. Screening effects are not considered in calculations.'])
                 disp('*****************')
                 equil_out = rmfield(equil_in,'ADAS');
                 return
+                %
             end
             %
             if isempty(find(equil_in.zZi == 1))
