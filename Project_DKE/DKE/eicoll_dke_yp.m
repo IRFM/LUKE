@@ -40,8 +40,16 @@ if isfield(equilDKE,'screening') && ~isempty(equilDKE.screening)
                 %
             end
             %
-            gfp = [zeros(length(prel),3),gfp];%add three hydrogen isotope fully ionized
-            %
+            if ~isempty(gfp)
+                %
+                gfp = [zeros(length(prel),3),gfp];%add three hydrogen isotope fully ionized
+                %
+            else
+                %
+                gfp = 0;
+                %
+            end
+            %    
         else
             gfpn = 0;%hydrogen alone which is fully ionized
         end
@@ -51,8 +59,6 @@ if isfield(equilDKE,'screening') && ~isempty(equilDKE.screening)
     else
         gfpn = 0;%screening is not considered
     end
-    %
-    
     %
 else
     %
