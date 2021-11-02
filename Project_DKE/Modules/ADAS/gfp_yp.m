@@ -7,7 +7,7 @@ function [g,gn] = gfp_yp(p,Z,model,dftpath)
 %		- p: electron momentum in relativistic units [1,m] 
 %		- Z : atomic number [1,1]
 %       - model : atomic model [1,1]
-%       - ADASpath : absolute path to ADAS module
+%       - ADASpath : absolute path to ADAS module if out from LUKE path
 %
 %	Output: 
 %
@@ -23,7 +23,18 @@ end
 symbol = elements('atomic_number', Z, 'symbol');
 name = elements('atomic_number', Z, 'name');
 %
-load([dftpath,'dft_',int2str(Z),'_',symbol,'_',name,'.mat'],'dft');
+if exist([dftpath,'dft_',int2str(Z),'_',symbol,'_',name,'.mat'],'file')
+    %
+    load([dftpath,'dft_',int2str(Z),'_',symbol,'_',name,'.mat'],'dft');
+    %
+else
+    %
+    g = [zeros(length(p(:)),1)];% + fully stripped atom
+    gn = [zeros(length(p(:)),1)];% + fully stripped atom
+    %
+    return
+    %
+end
 %
 Z0 = ones(length(p(:)),1)*dft.Z0;
 N = Z - ones(length(p(:)),1)*dft.Z0;
