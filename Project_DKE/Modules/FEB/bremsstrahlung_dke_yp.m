@@ -129,7 +129,7 @@ if isfield(equilHXR,'screening') && ~isempty(equilHXR.screening)
     end
     %
     if isfield(equilHXR.screening,'elastic') && ~isempty(equilHXR.screening.elastic)
-        screening_model = equilHXR.screening.smodel;
+        screening_model = equilHXR.screening.elastic;
     else
         screening_model = '';
     end  
