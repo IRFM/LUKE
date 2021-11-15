@@ -231,7 +231,7 @@ if W_flag
   pnw = profil0d.nwp;
   equil.pzni = [pzni1;pnhe;pnimp;pnmax;pnw];
   if ~isempty(which('ADAS.mat'))
-    equil.ADAS = which('ADAS.mat');
+    equil.ADAS = 'ADAS.mat';%must be in the LUKE path
     equil_id = [equil_id,'_ADAS'];
   else
       disp('WARNING : ADAS.mat file no found for partially ionized high-Z ipurities. High Z impurities are not considered.')
