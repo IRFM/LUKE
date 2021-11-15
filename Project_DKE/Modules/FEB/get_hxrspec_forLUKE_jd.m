@@ -28,7 +28,10 @@ if nargin == 4
     %
     if ~(strcmp(basestr,'TS') || strcmp(basestr,'WEST'))
         %
-        error('The function get_hxrspec_forLUKE_jd.m is valid for TS or WEST.')
+        cprintf('red',('The function get_hxrspec_forLUKE_jd.m is valid for TS or WEST.');disp(' ')
+        hxrspec = '';
+        hxrparam = '';
+        return;
         %
     end
     %
@@ -44,14 +47,14 @@ if nargin == 4
         job = matstandardjob_jd('runmat');
         [err,job,shotdate] = matremote_jd('tsdate',{shot},remote,job);%find remotely the shot date
     else
-        disp('WARNING: direct connexion to the CEA network is necessary');
+        cprintf([1,0.5,0],'WARNING: direct connexion to the CEA network is necessary');disp(' ')
         [shotdate] = tsdate(shot);
     end
 else
     %
     if ~(strcmp(basestr,'TS') || strcmp(basestr,'WEST'))
         %
-        disp('WARNING : The function get_hxrspec_forLUKE_jd.m is valid for TS or WEST. Empty structures are returned.')
+        cprintf([1,0.5,0],'WARNING : The function get_hxrspec_forLUKE_jd.m is valid for TS or WEST only. Empty structures will be returned.');disp(' ')
         hxrspec = '';
         hxrparam = '';
         return;
@@ -64,7 +67,7 @@ end
 %
 if isempty(shotdate)
     %
-    cprintf('red','ERROR : shot date is empty. Problem of connection with remote_tsdate.m.')
+    cprintf('red','ERROR : shot date is empty. Problem of connection with remote_tsdate.m. Empty structures will be returned.');disp(' ')
     hxrspec = [];
     hxrparam = [];
     return
@@ -88,7 +91,7 @@ hxrparam.kphot = hxrspec.kphot;
 hxrparam.kmin = hxrspec.kmin;
 hxrparam.kmax = hxrspec.kmax;
 %
-if nargout == 0
+if nargout == 0 %backward compatibility for irunluke_jd
     %
     if nargin < 3
         data_path = './';
