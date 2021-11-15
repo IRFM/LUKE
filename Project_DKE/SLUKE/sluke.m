@@ -214,9 +214,16 @@ for ii = 1:length(sparams.machine)
                 %
             elseif isfield(lukestructs,'job') %job run
                 %
-                if exist(['batch_',lukestructs.job.timeid],'dir')
+                if exist(['batch_',lukestructs.job.timeid],'dir') || strcmp(lukestructs.job.remotedatapath,lukestructs.job.localdatapath)
                     %
-                    cprintf('*blue',['---> is running on host : ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);disp(' ')
+                    if isempty(lukestructs.job.remote.host)
+                        %
+                        cprintf('*blue',['---> is running locally with job id : ',lukestructs.job.timeid]);disp(' ')
+                        %
+                    else
+                        %
+                        cprintf('*blue',['---> is running on host : ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);disp(' ')
+                    end
                     %
                     sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
                     %
