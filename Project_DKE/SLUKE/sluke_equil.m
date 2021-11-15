@@ -287,7 +287,9 @@ if exist('ohm','var') == 1
     end
     %
 end
-
+%
+delete(['INPUTS/before_luke@*.mat']);%delete all before_luke@ files to avoid wrong files if they come from different METIS simulations
+%
 
     
     
