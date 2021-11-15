@@ -166,7 +166,7 @@ for ii = 1:length(sparams.machine)
             %
         elseif exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             %
-            cprintf('*green',['---> is completed and processed results only are saved.']);disp(' ')
+            cprintf('*green',['---> has been completed and processed results are saved.']);disp(' ')
             %
             if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'])
                 %
@@ -216,13 +216,17 @@ for ii = 1:length(sparams.machine)
                 %
                 if exist(['batch_',lukestructs.job.timeid],'dir') || strcmp(lukestructs.job.remotedatapath,lukestructs.job.localdatapath)
                     %
+                    t1 = datetime(lukestructs.job.time.started);
+                    t2 = datetime('now');
+                    duration_job = t2 - t1;
+                    %
                     if isempty(lukestructs.job.remote.host)
                         %
-                        cprintf('*blue',['---> is running locally with job id : ',lukestructs.job.timeid]);disp(' ')
+                        cprintf('*blue',['---> is running locally since ',char(duration_job),' with job id : ',lukestructs.job.timeid]);disp(' ')
                         %
                     else
                         %
-                        cprintf('*blue',['---> is running on host : ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);disp(' ')
+                        cprintf('*blue',['---> is running since ',char(duration_job),' on host : ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);disp(' ')
                     end
                     %
                     sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
