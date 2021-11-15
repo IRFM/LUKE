@@ -216,7 +216,7 @@ if isfield(sparams,'impurities') %full or partial screening effect
     if ~isfield(sparams.equil,'coulog') && isfield(equil,'screening')
         %
         equil.coulog = 1;%Coulomb logarithm model (Sauter)
-        cprintf([1,0.5,0],['---> Default Coulomb logarithm value (Sauter) with p-dependence is enforced for screening.']);disp(' ')
+        cprintf([1,0.5,0],['---> Default Coulomb logarithm value (Sauter) with p-dependence is enforced for partial screening.']);disp(' ')
         %
     end
     %
