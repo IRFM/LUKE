@@ -78,7 +78,7 @@ if err == 0
         end
         %
         if sparams_tmp.simul.initial_distribution{1} == -1
-            sparams_tmp.simul.initial_distribution(1) = {0};
+            sparams_tmp.simul.initial_distribution(1) = {1};%write LUKE results (for the first time)
         end
         %
         if ii == 1
