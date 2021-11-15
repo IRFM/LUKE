@@ -813,7 +813,7 @@ lukestructs.output = output;
 %
 diags = '';
 %
-if isfield(lukestructs,'diags')
+if isfield(lukestructs,'diags') && ~isempty(lukestructs.diags)
     %
     name_diags = fieldnames(lukestructs.diags);
     %
