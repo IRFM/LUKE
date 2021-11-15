@@ -216,9 +216,9 @@ for ii = 1:length(sparams.machine)
                 %
                 if exist(['batch_',lukestructs.job.timeid],'dir') || strcmp(lukestructs.job.remotedatapath,lukestructs.job.localdatapath)
                     %
-                    t1 = datetime(lukestructs.job.time.started);
-                    t2 = datetime('now','TimeZone','UTC');%GMT time
-                    duration_job = t2 - t1;
+                    t1 = char(datetime(lukestructs.job.time.started));%GMT time
+                    t2 = char(datetime('now','TimeZone','UTC'));%GMT time
+                    duration_job = datetime(t2) - datetime(t1);
                     %
                     if isempty(lukestructs.job.remote.host)
                         %
