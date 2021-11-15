@@ -226,7 +226,7 @@ for ii = 1:length(sparams.machine)
                         %
                     else
                         %
-                        cprintf('*blue',['---> is running since ',char(duration_job),' on host : ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);disp(' ')
+                        cprintf('*blue',['---> is running since ',char(duration_job),' on host ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);disp(' ')
                     end
                     %
                     sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
