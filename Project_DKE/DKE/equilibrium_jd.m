@@ -784,18 +784,18 @@ if isfield(equil,'ADAS')
         equilDKE.Znucleus = equil.Znucleus;
     end
     %
-    if isfield(equil,'coulog_model')
-        equilDKE.coulog_model = equil.coulog_model;
-    end
-    %
     if isfield(equil,'Znucleus')
         equilDKE.Znucleus = equil.Znucleus;
     end
     %
 end
 %
-if isfield(equil,'elements_ADAS')
-    equilDKE.elements_ADAS = equil.elements_ADAS;
+if isfield(equil,'coulog_model')
+        equilDKE.coulog_model = equil.coulog_model;
+end
+%
+if isfield(equil,'impurities_ADAS')
+    equilDKE.impurities_ADAS = equil.impurities_ADAS;
 end
 %
 if isfield(equil,'equil_fit'),
