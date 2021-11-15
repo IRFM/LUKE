@@ -189,20 +189,20 @@ elseif strcmp(basestr,'WEST')
     %
     hxr = flipdim(cumsum(flipdim(hxr,2),2),2);%TS data is per channel (it is not monotonically decreasing)
     %
-    filter_thickness = NaN;
-    filter_material = NaN;
-    beta = NaN;
+    filter_thickness = [];
+    filter_material = [];
+    beta = [];
     %
 else
     %
-    t = NaN;
-    energy = NaN;
-    hxr = NaN;
-    filter_thickness = NaN;
-    filter_material = NaN;
-    beta = NaN;
+    t = [];
+    energy = [];
+    hxr = [];
+    filter_thickness = [];
+    filter_material = [];
+    beta = [];
     %
-    disp(['-----> no access to the ',basestr,' database found.']);
+    disp(['-----> no access to the ',basestr,' database found. Check remote connexion if any.']);
     %
 end
 %
@@ -212,7 +212,7 @@ if nargout == 0,
         data_path = './';
     end  
     %
-    data_file = ['HXREXP_',basestr,'_',num2str(shot),'.mat'];
+    data_file = ['DSPX_',basestr,'_',num2str(shot),'.mat'];
     %
     save([data_path,data_file],'shot','energy','hxr','t','beta','filter_thickness','filter_material');
     %
