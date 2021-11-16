@@ -114,6 +114,7 @@ addpath([luke_root,'Project_DKE/Modules/MHDK']);
 addpath([luke_root,'Project_DKE/Modules/FEB/Response']);
 addpath([luke_root,'Project_DKE/Modules/FEB/Pile-up']);
 addpath([luke_root,'Project_DKE/Modules/FEB']);
+addpath([luke_root,'Project_DKE/Modules/FEB/Tables']);
 addpath([luke_root,'Project_DKE/Modules/ALOHA']);
 addpath([luke_root,'Project_DKE/Modules/AMR']);
 addpath([luke_root,'Project_DKE/Modules/ACCOME']);
