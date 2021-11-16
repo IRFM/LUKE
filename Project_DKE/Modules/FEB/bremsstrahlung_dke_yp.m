@@ -22,7 +22,7 @@ function  [Zbremplasma] = bremsstrahlung_dke_yp(equilHXR,mksa,momentumDKE,Zmomco
 %         * Zbremplasma.brem_bd_out : photon number per unit energy (keV) and time (s) for each chord [nchord,nk]
 %         * Zbremplasma.lchord : chord length (m) [1,nchord]
 %
-% by Joan Decker (CEA/IRFM,joan.decker@cea.fr) and Yves Peysson(CEA/IRFM,yves.peysson@cea.fr)
+% by Yves Peysson(CEA/IRFM,yves.peysson@cea.fr) and Joan Decker (CEA/IRFM,joan.decker@cea.fr)
 %
 if ~ismember('mute_bremsstrahlung_dke_yp', who('global'))
     mute_bremsstrahlung_dke_yp = 0;
@@ -162,14 +162,20 @@ if isfield(equilHXR,'Znucleus') %ADAS
             if isequal(seBHE_table.kphot,kphot) && isequal(seBHE_table.x_leg,x_leg) && isequal(seBHE_table.Z0,Z0) && isequal(seBHE_table.screening_model.screening_model,screening_model.screening_model)
                 %
                 seBHE(:,:,:,jZ:jZ+length(Z0)-1) = interp_seBHE_yp(seBHE_table,Ec);
+                jZ = jZ+length(Z0);
                 %
             else
                 %
-                error('seBHE table is inconsistent with required calculations by R5-X2. Check kphot, x_leg and screening model.');
+                warning(['seBHE table is inconsistent with required calculations by R5X2. Check kphot, x_leg and screening model and rebuilt table in file seBHE_',int2str(equilHXR.Znucleus(iZ)),'_',screening_model.screening_model,'.mat --> No partial screening is considered']);
+                %
+                for iZ0 = 1:length(Z0)
+                    %
+                    seBHE(:,:,:,jZ) = bhe_dke_yp(Ec,kphot,x_leg,Z0(iZ0));%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert) with without partial screening effect (mec2 -> keV units) because of table inconsistency
+                    jZ = jZ + 1;
+                    %
+                end
                 %
             end
-            %
-            jZ = jZ+length(Z0);
             %
             if mute_bremsstrahlung_dke_yp == 0
                 disp(['Bremsstrahlung for Z = ',int2str(equilHXR.Znucleus(iZ)),' with partial screening is calculated.']);
@@ -179,7 +185,7 @@ if isfield(equilHXR,'Znucleus') %ADAS
             %
             for iZ0 = 1:length(Z0)
                 %
-                seBHE(:,:,:,jZ) = bhe_dke_yp(Ec,kphot,x_leg,Z0(iZ0),screening_hxr_params,screening_model);%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert) with screening effect (mec2 -> keV units)
+                seBHE(:,:,:,jZ) = bhe_dke_yp(Ec,kphot,x_leg,Z0(iZ0),screening_hxr_params,screening_model);%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert) with full screening effect (mec2 -> keV units)
                 jZ = jZ + 1;
                 %
             end
@@ -195,7 +201,7 @@ else
     %
     if nZ > 3
         for iZ = 4:nZ
-            seBHE(:,:,:,iZ) = bhe_dke_yp(Ec,kphot,x_leg,zZi(iZ),screening_hxr_params,screening_model);%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert) with screening effect (mec2 -> keV units)
+            seBHE(:,:,:,iZ) = bhe_dke_yp(Ec,kphot,x_leg,zZi(iZ),screening_hxr_params,screening_model);%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert) without screening effect (mec2 -> keV units)
         end
     end
     %
