@@ -1,8 +1,21 @@
 function seBHE_table = BHE_screening_table(zZi,kphot,n_gauleg,epsi_gauleg,atomic_model,screening_hxr_params)
 %
-% Build BHE bremmsstrahlung cross-section tables for calculations with partial screening
+% Build BHE bremmsstrahlung cross-section table for calculations with partial screening
 %
-%by Y.Peysson CEA-DRFC <yves.peysson@cea.fr> a
+%	Input:
+%
+%		- zZi: kinetic energy of the incoming electron (keV) [1,m] 
+%		- kphot: photon energy (keV)  [1,n] 
+%		- n_gauleg : number of Gauss-legendre polynomials
+%       - epsi_gauleg : accuracy of the Gauss-Legendre polynomials calculations
+%       - atomic_model : may be 'Tseng-Pratt-Botto' or other DFT models (see the .m files)
+%       - screening_hxr_params : structure of parameters for partial screening
+%
+%	Output: 
+%
+%		- seBHE_table: Bethe-Heitler + Elwert factor bremstrahlung cross-section (m^2) [p,m,n] in a table form
+%
+%by Y.Peysson CEA-DRFC <yves.peysson@cea.fr>
 %
 screening_model.screening_model = atomic_model;
 Ec = linspace(0,screening_hxr_params.Ecmax,screening_hxr_params.nEc);
