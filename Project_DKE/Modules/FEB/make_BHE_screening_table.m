@@ -11,9 +11,17 @@ Ecmax = 1000;%keV
 kphot_min = 20;%keV
 kphot_max = 240;%keV
 dkphot = 10;%keV
+%nkphot = 23;%number of photon energies
 %
 Ec = linspace(0,Ecmax,nEc);
-kphot = [kphot_min:dkphot:kphot_max];
+if exist('dkphot','var')
+    kphot = [kphot_min:dkphot:kphot_max];
+    nkphot = length(kphot);
+elseif exist('nkphot','var')
+    kphot = linspace([kphot_min,dkphot,nkphot];
+else
+    error('dkphot or nkphot must be defined')
+end
 %
 n_gauleg = 35;
 epsi_gauleg = 1e-14;
@@ -25,11 +33,18 @@ screening_hxr_params.integral = 'simps';
 %
 screening_model.screening_model = 'Tseng-Pratt-Botto';
 %
+disp('------------------------------------------------------------------------------')
+disp('Build table for fast bremsstrahlung calculations with partial screening effect')
+disp('------------------------------------------------------------------------------')
+%
 [x_leg,w_leg] = gauleg_dke_yp(n_gauleg,epsi_gauleg);%Gauss-Legendre abscissa and weigth calculations between -1 and + 1
+%
+disp('Gauss Legendre calculation done.')
 %
 for iZ = 1:length(zZi)
     %
     element = elements('atomic_number', zZi(iZ), 'name');
+    disp(['Element = ',element])
     %
     Z0 = [0:1:zZi(iZ)];%all ionization states
     %    
@@ -60,6 +75,6 @@ for iZ = 1:length(zZi)
     %
     disp(['Z = ',int2str(zZi(iZ)),' done in ',num2str(elapsed_time),' (s)']);
     %
-    save(['seBHE_',int2str(zZi(iZ)),'_',screening_model.screening_model,'.mat'],'seBHE_table');
+    save(['Tables/seBHE_',int2str(zZi(iZ)),'_',screening_model.screening_model,'_',int2str(nEc),'_',int2str(Ecmax),'_',int2str(kphot_min),'_',int2str(kphot_max),'_',int2str(nkphot),'_',int2str(n_gauleg),'.mat'],'seBHE_table');
     %
 end
