@@ -109,13 +109,13 @@ if auto_mode == 0 && ~isfield(equil,'ADAS')
     %
     [dkepath] = load_structures_yp('dkepath','','');
     %
-    if exist([dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat'])
-        equil.ADAS = [dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat'];
+    if exist('ADAS.mat','file')
+        equil.ADAS = 'ADAS.mat';
         equil.id = [equil.id,'_ADAS'];
         equil_id = equil.id;%ADAS may be added
     else
         if mute_metis2luke == 0
-            disp(['WARNING: ADAS.mat file has not been found in folder ''',dkepath.luke_root,'Project_DKE/Modules/ADAS/ADAS.mat''. Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
+            disp(['WARNING: ADAS.mat file has not been found. Default METIS ionization with a single ionisation state (fully stripped ion) is used.'])
         end
     end
     %
