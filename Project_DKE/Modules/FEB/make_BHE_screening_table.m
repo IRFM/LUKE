@@ -43,7 +43,7 @@ for iZ = 1:length(zZi)
     %
     elapsed_time = toc(tstart);
     %
-    seBHE_table.comment = 'Bethe-Heitler-Elwert bremsstrahlung cross-section with screeing effects';
+    seBHE_table.comment = 'Bethe-Heitler-Elwert bremsstrahlung cross-section with screening effects';
     seBHE_table.element = element;
     seBHE_table.Z0 = Z0;
     seBHE_table.screening_hxr_params = screening_hxr_params;
