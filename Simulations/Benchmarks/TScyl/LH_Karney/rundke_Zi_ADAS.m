@@ -111,7 +111,7 @@ equil.pzTi = ones(size(equil.pzTi))*Tref;
 pzni = equil.pzni;
 pzTi = equil.pzTi;
 %
-ADAS = [dkepath.luke_root,'project_DKE/Modules/ADAS/ADAS.mat'];%Atomic Data and Analysis Structure (ADAS). 
+ADAS = ['ADAS.mat'];%Atomic Data and Analysis Structure (ADAS). 
 %
 load(ADAS);
 tabmatfnames = fieldnames(tabmat);
