@@ -121,7 +121,7 @@ if isfield(sparams,'impurities') %full or partial screening effect
             if isfield(equil,'screening') && isfield(equil.screening,'elastic')
                 %
                 equil.screening = rmfield(equil.screening,'elastic');
-                cprintf([1,0.5,0],['---> Elastic scattering is not considered in partial screening calculations.']);disp(' ')
+                cprintf([1,0.5,0],['---> Elastic scattering is not considered for partial screening calculations.']);disp(' ')
                 %
             end
             %
@@ -136,7 +136,7 @@ if isfield(sparams,'impurities') %full or partial screening effect
             if isfield(equil,'screening') && isfield(equil.screening,'inelastic')
                 %
                 equil.screening = rmfield(equil.screening,'inelastic');
-                cprintf([1,0.5,0],['---> Inelastic scattering is not considered in partial screening calculations.']);disp(' ')
+                cprintf([1,0.5,0],['---> Inelastic scattering is not considered for partial screening calculations.']);disp(' ')
                 %
             end
             %
@@ -151,13 +151,15 @@ if isfield(sparams,'impurities') %full or partial screening effect
             if isfield(equil,'screening') && isfield(equil.screening,'dftpath')
                 %
                 equil.screening = rmfield(equil.screening,'dftpath');
+                cprintf([1,0.5,0],['---> Specific DFT file is not considered for partial screening calculations.']);disp(' ')
                 %
             end
             %
         end
         %
-        if isfield(sparams.impurities.screening,'partial') && isfield(sparams.impurities.screening.partial,'bremsstrahlung') && isfield(sparams.impurities.screening.partial.bremsstrahlung,'params')
+        if isfield(sparams.impurities.screening,'partial') && isfield(sparams.impurities.screening.partial,'bremsstrahlung') && isfield(sparams.impurities.screening.partial.bremsstrahlung,'params') && isfield(sparams.impurities.screening.partial.bremsstrahlung,'screening_model')
             %
+            equil.screening.smodel.screening_model = sluke_params_value(sparams.impurities.screening.partial.bremsstrahlung.screening_model,ii);%partial screening model for bremsstrahlung (see bremsstrahlung_dke_yp.m)
             equil.screening.params = sluke_params_value(sparams.impurities.screening.partial.bremsstrahlung.params,ii);%params for bremsstrahlung calculations with partial screening (see bremsstrahlung_dke_yp.m)
             %
         else
@@ -167,6 +169,14 @@ if isfield(sparams,'impurities') %full or partial screening effect
                 equil.screening = rmfield(equil.screening,'params');
                 %
             end
+            %
+            if isfield(equil,'screening') && isfield(equil.screening,'smodel')
+                %
+                equil.screening = rmfield(equil.screening,'smodel');
+                %
+            end
+            %
+            cprintf([1,0.5,0],['---> Partial screening is not considered for bremsstrahlung calculations.']);disp(' ')
             %
         end
         %
