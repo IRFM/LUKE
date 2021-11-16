@@ -98,6 +98,7 @@ Elwert = (ksi1./ksi0).*((1-exp(-2*pi*ksi0))./(1-exp(-2*pi*ksi1)));%Elwert factor
 smodel.Z0 = [0:1:Z];
 %
 for iZ = 1:Z+1 %all ionized states  
+    %
     [smodel.Z0(iZ),smodel.N(iZ),smodel.qZ(iZ),smodel.a_Z0(iZ),smodel.nff(iZ)] = fionradius_yp(Z,smodel.Z0(iZ),smodel.screening_model);
     %
     F0(iZ) = Z - smodel.Z0(iZ);
