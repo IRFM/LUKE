@@ -120,17 +120,19 @@ Zbremplasma.cL = cL;
 %
 seBHE = zeros(n_gauleg,np,nk,nZ);
 %
-if isfield(equilHXR,'screening') && ~isempty(equilHXR.screening)
+if isfield(equilHXR,'ADAS') && ~isempty(equilHXR.ADAS) && isfield(equilHXR,'screening') && ~isempty(equilHXR.screening)  && isfield(hxrparam,'screening') && ~isempty(hxrparam.screening) && isfield(hxrparam.screening,'partial') && ~isempty(hxrparam.screening.partial)
     %
-    if isfield(equilHXR.screening,'params') && ~isempty(equilHXR.screening.params)
-        screening_hxr_params = equilHXR.screening.params;
+    if isfield(hxrparam.screening.partial,'params') && ~isempty(hxrparam.screening.partial.params)
+        screening_hxr_params = hxrparam.screening.partial.params.tables;
     else
         screening_hxr_params = '';
+        screening_model = '';
     end
     %
-    if isfield(equilHXR.screening,'smodel') && ~isempty(equilHXR.screening.smodel)
-        screening_model = equilHXR.screening.smodel;
+    if isfield(hxrparam.screening.partial,'screening_model') && ~isempty(hxrparam.screening.partial.screening_model)
+        screening_model.screening_model = hxrparam.screening.partial.screening_model;
     else
+        screening_hxr_params = '';  
         screening_model = '';
     end  
     %
@@ -141,6 +143,40 @@ else
     %
 end
 %
+flag_seBHE_table = 0;
+%
+if isstruct(screening_hxr_params) && isstruct(screening_model) % screening effect
+    %
+    if isfield(equilHXR,'Znucleus')
+        %
+        jZ = 4;
+        %
+        for iZ = length(equilHXR.Znucleus)-3:length(equilHXR.Znucleus)
+            %
+            Z0 = [0:1:equilHXR.Znucleus(iZ)];%all ionization states
+            %
+            seBHE_table_id = [int2str(screening_hxr_params.nEc),'_',int2str(screening_hxr_params.Ecmax),'_',int2str(min(hxrparam.kphot)),'_',int2str(max(hxrparam.kphot)),'_',int2str(length(hxrparam.kphot)),'_',int2str(hxrparam.n_gauleg)];
+            %
+            if ~exist(['seBHE_',int2str(equilHXR.Znucleus(iZ)),'_',screening_model.screening_model,'_',seBHE_table_id,'.mat'],'file')
+                %
+                flag_seBHE_table = flag_seBHE_table + 1;
+            end
+            %  
+        end
+        %
+    end
+    %
+end
+%
+if flag_seBHE_table > 0
+    %
+    cprintf('*red',['---> file seBHE_',int2str(equilHXR.Znucleus(iZ)),'_',screening_model.screening_model,'_',seBHE_table_id,'.mat does not exist. Bremsstrahlung calculations are cancelled']);disp(' ')
+    %
+    Zbremplasma = [];
+    %
+    return;
+    %
+end
 %
 seBHE(:,:,:,1) = bhe_dke_yp(Ec,kphot,x_leg,zZi(1));%Electron-ion bremsstrahlung (Bethe-Heitler-Elwert) with screening effect (mec2 -> keV units). No screening effect considered for hydrogen
 %
@@ -157,7 +193,9 @@ if isfield(equilHXR,'Znucleus') %ADAS
         %
         if isstruct(screening_hxr_params) && isstruct(screening_model) % screening effect
             %
-            eval(['load seBHE_',int2str(equilHXR.Znucleus(iZ)),'_',screening_model.screening_model,'.mat']);%load table of precalculated cross-sections
+            seBHE_table_id = [int2str(screening_hxr_params.nEc),'_',int2str(screening_hxr_params.Ecmax),'_',int2str(min(hxrparam.kphot)),'_',int2str(max(hxrparam.kphot)),'_',int2str(length(hxrparam.kphot)),'_',int2str(hxrparam.n_gauleg)];
+            %
+            eval(['load seBHE_',int2str(equilHXR.Znucleus(iZ)),'_',screening_model.screening_model,'_',seBHE_table_id,'.mat']);%load table of precalculated cross-sections
             %
             if isequal(seBHE_table.kphot,kphot) && isequal(seBHE_table.x_leg,x_leg) && isequal(seBHE_table.Z0,Z0) && isequal(seBHE_table.screening_model.screening_model,screening_model.screening_model)
                 %
