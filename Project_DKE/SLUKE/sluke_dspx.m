@@ -94,9 +94,9 @@ else
     %
     if isfield(sparams.diags,'DSPX') && isfield(sparams.diags.DSPX,'hxrspec') && isfield(sparams.diags.DSPX.hxrspec,'source') && isempty(sparams.diags.DSPX.hxrspec.source{ii})
         %
-        if exist(['SLUKE_DIAGNOSTICS/DSPX_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'file')
+        if exist(['SLUKE_DIAGNOSTICS/DSPX_HXRSPEC_',simul_id,'.mat'],'file')
             %
-            load(['SLUKE_DIAGNOSTICS/DSPX_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrspec');
+            load(['SLUKE_DIAGNOSTICS/DSPX_HXRSPEC_',simul_id,'.mat'],'hxrspec');
             %
         else
             %
@@ -153,7 +153,7 @@ else
             %
         end         
         %
-        save(['SLUKE_DIAGNOSTICS/DSPX_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrspec');
+        save(['SLUKE_DIAGNOSTICS/DSPX_HXRSPEC_',simul_id,'.mat'],'hxrspec');
         %
     else
         %
@@ -168,13 +168,13 @@ else
         %
         if isfield(sparams.diags.DSPX.R5X2,'hxrparam') && isfield(sparams.diags.DSPX.R5X2.hxrparam,'source') && isempty(sparams.diags.DSPX.R5X2.hxrparam.source{ii})
             %
-            if exist(['SLUKE_DIAGNOSTICS/DSPX_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'file')
+            if exist(['SLUKE_DIAGNOSTICS/DSPX_HXRPARAM_',simul_id,'.mat'],'file')
                 %
-                load(['SLUKE_DIAGNOSTICS/DSPX_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrparam');
+                load(['SLUKE_DIAGNOSTICS/DSPX_HXRPARAM_',simul_id,'.mat'],'hxrparam');
                 %
             else
                 %
-                cprintf([1,0.5,0],['WARNING : file SLUKE_DIAGNOSTICS/DSPX_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat that contains R5X2 simulations parameters is not found. Synthetic diagnostic calculations for DSPX are cancelled.']);disp(' ')
+                cprintf([1,0.5,0],['WARNING : file SLUKE_DIAGNOSTICS/DSPX_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',simul_id,'.mat that contains R5X2 simulations parameters is not found. Synthetic diagnostic calculations for DSPX are cancelled.']);disp(' ')
                 hxrparam = '';
                 %
             end
@@ -190,7 +190,6 @@ else
                 else
                     %
                     cprintf([1,0.5,0],['WARNING : file ',sparams.diags.DSPX.R5X2.hxrparam.path{ii},'/',sparams.diags.DSPX.R5X2.hxrparam.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for DSPX are cancelled.']);disp(' ')
-
                     hxrparam = '';
                     %
                 end
@@ -201,13 +200,13 @@ else
                 %
             end
             %
-        elseif strcmp(sparams.diags.DSPX.R5X2.hxrparam.source{ii},'value')
+        elseif isfield(sparams.diags.DSPX.R5X2,'hxrparam') && isfield(sparams.diags.DSPX.R5X2.hxrparam,'source') && strcmp(sparams.diags.DSPX.R5X2.hxrparam.source{ii},'value')
             %
             hxrparam = sluke_params_value(sparams.diags.DSPX.R5X2.hxrparam,ii);
             %
-            hxrparam.kphot = hxrspec.kphot;
-            hxrparam.kmin = hxrspec.kmin;
-            hxrparam.kmax = hxrspec.kmax;
+            %hxrparam.kphot = hxrspec.kphot;
+            %hxrparam.kmin = hxrspec.kmin;
+            %hxrparam.kmax = hxrspec.kmax;
             %
         else
             %
@@ -217,7 +216,7 @@ else
         %
         if ~isempty(hxrparam)
             %
-            save(['SLUKE_DIAGNOSTICS/DSPX_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrparam');
+            save(['SLUKE_DIAGNOSTICS/DSPX_HXRPARAM_',simul_id,'.mat'],'hxrparam');
             %
         else
             %
