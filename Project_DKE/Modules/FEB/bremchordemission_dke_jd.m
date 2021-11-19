@@ -31,7 +31,13 @@ end
 if nargin < 3,
     error('Not enough input arguments in bremchordemission_dke_jd')
 end
-%	
+%
+if isempty(Zbremplasma)
+    %
+    return;
+    %
+end
+%
 vschords = Zbremchord.vschords;
 %
 nc = size(vschords,3);
