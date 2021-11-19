@@ -4,6 +4,15 @@ wavestructs = {};
 %
 remote_status = 0;
 %
+if ~isfield(sparams,'rfwaves')
+    %
+    cprintf([1,0.5,0],'No rf waves are defined in sparams');disp(' ');
+    wavestructs = [];
+    remote_status = [];
+    return
+    %
+end
+%
 wavestructs_id = sluke_id(sparams,ii,'wavestructs');
 %
 if exist(['SLUKE_RFWAVES/WAVESTRUCTS_',wavestructs_id,'.mat'])
