@@ -90,11 +90,11 @@ else
     %
 end
 %
-if isfield(sparams,'impurities') %full or partial screening effect
+if isfield(sparams,'kinetics') && isfield(sparams.kinetics,'elements') %for full or partial screening effects
     %
-    if isfield(sparams.impurities,'coulog_model')
+    if isfield(sparams.kinetics.elements,'coulog_model')
         %
-        equil.coulog_model = sparams.impurities.coulog_model{ii};%Coulomb logarithm model
+        equil.coulog_model = sparams.kinetics.elements.coulog_model{ii};%Coulomb logarithm model
     %
     else
         %
@@ -108,13 +108,13 @@ if isfield(sparams,'impurities') %full or partial screening effect
         %
     end
     %
-    if isfield(sparams.impurities,'screening') && isfield(sparams.impurities.screening,'ADAS') && ~isempty(sparams.impurities.screening.ADAS{ii})
+    if isfield(sparams.kinetics.elements,'screening') && isfield(sparams.kinetics.elements.screening,'ADAS') && ~isempty(sparams.kinetics.elements.screening.ADAS{ii})
         %
-        equil.ADAS = sparams.impurities.screening.ADAS{ii};% ADAS.mat for default LUKE or full path for ADAS file outside the LUKE path
+        equil.ADAS = sparams.kinetics.elements.screening.ADAS{ii};% ADAS.mat for default LUKE or full path for ADAS file outside the LUKE path
         %
-        if isfield(sparams.impurities.screening,'partial') && isfield(sparams.impurities.screening.partial,'elastic') && ~isempty(sparams.impurities.screening.partial.elastic{ii})
+        if isfield(sparams.kinetics.elements.screening,'partial') && isfield(sparams.kinetics.elements.screening.partial,'elastic') && ~isempty(sparams.kinetics.elements.screening.partial.elastic{ii})
             %
-            equil.screening.elastic = sparams.impurities.screening.partial.elastic{ii};
+            equil.screening.elastic = sparams.kinetics.elements.screening.partial.elastic{ii};
             %
         else
             %
@@ -127,9 +127,9 @@ if isfield(sparams,'impurities') %full or partial screening effect
             %
         end
         %
-        if isfield(sparams.impurities.screening,'partial') && isfield(sparams.impurities.screening.partial,'inelastic') && ~isempty(sparams.impurities.screening.partial.inelastic{ii})
+        if isfield(sparams.kinetics.elements.screening,'partial') && isfield(sparams.kinetics.elements.screening.partial,'inelastic') && ~isempty(sparams.kinetics.elements.screening.partial.inelastic{ii})
             %
-            equil.screening.inelastic = sparams.impurities.screening.partial.inelastic{ii};
+            equil.screening.inelastic = sparams.kinetics.elements.screening.partial.inelastic{ii};
             %
         else
             %
@@ -142,9 +142,9 @@ if isfield(sparams,'impurities') %full or partial screening effect
             %
         end
         %
-        if isfield(sparams.impurities.screening,'partial') && isfield(sparams.impurities.screening.partial,'dftpath')
+        if isfield(sparams.kinetics.elements.screening,'partial') && isfield(sparams.kinetics.elements.screening.partial,'dftpath')
             %
-            equil.screening.dftpath = sparams.impurities.screening.partial.dftpath{ii};%path for DFT files outside the LUKE path if not empty. Should be accessible on a remote machine
+            equil.screening.dftpath = sparams.kinetics.elements.screening.partial.dftpath{ii};%path for DFT files outside the LUKE path if not empty. Should be accessible on a remote machine
             %
         else
             %
@@ -154,29 +154,6 @@ if isfield(sparams,'impurities') %full or partial screening effect
                 cprintf([1,0.5,0],['---> Specific DFT file is not considered for partial screening calculations.']);disp(' ')
                 %
             end
-            %
-        end
-        %
-        if isfield(sparams.impurities.screening,'partial') && isfield(sparams.impurities.screening.partial,'bremsstrahlung') && isfield(sparams.impurities.screening.partial.bremsstrahlung,'params') && isfield(sparams.impurities.screening.partial.bremsstrahlung,'screening_model')
-            %
-            equil.screening.smodel.screening_model = sluke_params_value(sparams.impurities.screening.partial.bremsstrahlung.screening_model,ii);%partial screening model for bremsstrahlung (see bremsstrahlung_dke_yp.m)
-            equil.screening.params = sluke_params_value(sparams.impurities.screening.partial.bremsstrahlung.params,ii);%params for bremsstrahlung calculations with partial screening (see bremsstrahlung_dke_yp.m)
-            %
-        else
-            %
-            if isfield(equil,'screening') && isfield(equil.screening,'params')
-                %
-                equil.screening = rmfield(equil.screening,'params');
-                %
-            end
-            %
-            if isfield(equil,'screening') && isfield(equil.screening,'smodel')
-                %
-                equil.screening = rmfield(equil.screening,'smodel');
-                %
-            end
-            %
-            cprintf([1,0.5,0],['---> Partial screening is not considered for bremsstrahlung calculations.']);disp(' ')
             %
         end
         %
@@ -200,15 +177,15 @@ if isfield(sparams,'impurities') %full or partial screening effect
     %
     % Remove impurity selection (Zi > 1)
     %
-    if isfield(sparams.impurities,'removed_Zi') && ~isempty(sparams.impurities.removed_Zi{ii})
+    if isfield(sparams.kinetics.elements,'removed_Zi') && ~isempty(sparams.kinetics.elements.removed_Zi{ii})
         %
         for mm = 4:length(equil.zZi) % the three first elements are hydrogen isotops
             %
-            if ~isnan(sparams.impurities.removed_Zi{ii})
+            if ~isnan(sparams.kinetics.elements.removed_Zi{ii})
                 %
-                for nn = 1:length(sparams.impurities.removed_Zi{ii})
+                for nn = 1:length(sparams.kinetics.elements.removed_Zi{ii})
                     %
-                    if equil.zZi(mm) == sparams.impurities.removed_Zi{ii}(nn)
+                    if equil.zZi(mm) == sparams.kinetics.elements.removed_Zi{ii}(nn)
                         %
                         equil.pzni(mm,:) = equil.pzni(mm,:)*0;%no impurity for this Zi value
                         break
