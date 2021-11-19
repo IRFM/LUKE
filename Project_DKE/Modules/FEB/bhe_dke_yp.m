@@ -53,8 +53,6 @@ if isempty(smodel) && isempty(params)
 	smodel =  struct;%no screening
 end
 %
-
-%
 if length(fields(smodel)) == 0 || length(fields(params)) == 0
     %
     % Calculation of 2BN formula in H.W.Koch and J.W.Motz, Rev. Mod. Phys. 31, 4 (1959) 920
