@@ -6,8 +6,6 @@ if nargin == 2
     %
 end
 %
-simul_id = sluke_id(sparams,ii,'simul');
-%
 if ~isfield(sparams,'diags')
     %
     cprintf([1,0.5,0],'No diagnostic is defined in sparams');disp(' ');
@@ -15,6 +13,8 @@ if ~isfield(sparams,'diags')
     return
     %
 end
+%
+simul_id = sluke_id(sparams,ii,'simul');
 %
 % Synthetic diagnostic : fast electron bremsstrahlung in the hard x-ray photon energy range DSPX
 %
