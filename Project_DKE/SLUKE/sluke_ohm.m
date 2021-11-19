@@ -1,5 +1,14 @@
 function ohm = sluke_ohm(sparams,ii)
 
+%
+if ~isfield(sparams,'ohm')
+    %
+    cprintf([1,0.5,0],'No ohmic electric field is defined in sparams');disp(' ');
+    ohm = [];
+    return
+    %
+end
+%
 ohm_id = sluke_id(sparams,ii,'ohm');
 %
 if exist(['SLUKE_OHMS/OHM_',ohm_id,'.mat'])
