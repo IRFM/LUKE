@@ -28,7 +28,7 @@ if nargin == 4
     %
     if ~(strcmp(basestr,'TS') || strcmp(basestr,'WEST'))
         %
-        cprintf('red',('The function get_hxrspec_forLUKE_jd.m is valid for TS or WEST.');disp(' ')
+        cprintf('red','The function get_hxrspec_forLUKE_jd.m is valid for TS or WEST.');disp(' ')
         hxrspec = '';
         hxrparam = '';
         return;
