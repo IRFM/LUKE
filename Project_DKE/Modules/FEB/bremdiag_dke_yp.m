@@ -42,6 +42,13 @@ if nargin < 4,
 	error('Not enough arguments in bremshtrahlung_dke_yp')
 end
 %
+if isempty(Zbremplasma)
+    %
+    Zbremdiag = [];
+    return
+    %
+end
+%
 method = 'pchip';
 %
 kphot = Zbremplasma.kphot;
@@ -119,7 +126,7 @@ brem_bd_diag = zeros(size(brem_bd_plasma));
 %
 for ic = 1:size(brem_bd_interp,1),
 	if ic == 1,
-		gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);		
+        gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
 		normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
 		gkEinterp = gkEinterp1;%(gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
 %		plot(kinterp,trapz(kinterp,gkEinterp1') + gkEinterp1(:,1)'*kinterp(1));%test of the norm
