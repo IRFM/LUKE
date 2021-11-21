@@ -2,7 +2,7 @@ function dkeparam = sluke_dkeparam(sparams,ii)
 %
 
 %
-dkeparam_id = sluke_id(sparams,ii,'dkeparam');
+dkeparam_id = sluke_id(sparams,ii);
 %
 if exist(['SLUKE_KINETICS/DKEPARAM_',dkeparam_id,'.mat'])
     %

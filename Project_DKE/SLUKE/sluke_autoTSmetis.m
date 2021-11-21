@@ -29,7 +29,7 @@ wavestructs = '';
 %
 if strcmp(sparams.machine{ii},'TS')
     %
-    equil_id = sluke_id(sparams,ii,'equil');
+    equil_id = sluke_id(sparams,ii);
     %
     data = remote_autoTSmetis(str2num(sparams.discharge.shot{ii}),sparams.discharge.gas{ii});
     %

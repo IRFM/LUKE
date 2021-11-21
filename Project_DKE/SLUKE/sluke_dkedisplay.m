@@ -4,7 +4,7 @@ function dkedisplay = sluke_dkedisplay(sparams,ii)
 
 
 %
-dkedisplay_id = sluke_id(sparams,ii,'dkedisplay');
+dkedisplay_id = sluke_id(sparams,ii);
 %
 if exist(['SLUKE_KINETICS/DKEDISPLAY_',dkedisplay_id,'.mat'])
     %

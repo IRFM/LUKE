@@ -14,7 +14,7 @@ if ~isfield(sparams,'diags')
     %
 end
 %
-simul_id = sluke_id(sparams,ii,'simul');
+simul_id = sluke_id(sparams,ii);
 %
 % Synthetic diagnostic : fast electron bremsstrahlung in the hard x-ray photon energy range DSPX
 %

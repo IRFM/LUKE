@@ -12,24 +12,57 @@ function sluke_clear_folders(sparams,ii)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
-warning off
+id = sluke_id(sparams,ii);
 %
-delete(['SLUKE_RESULTS/LUKE_DATA_',sluke_id(sparams,ii,'simul'),'.mat']);
-delete(['SLUKE_RESULTS/PROC_LUKE_DATA_',sluke_id(sparams,ii,'simul'),'.mat']);
+if exist(['SLUKE_RESULTS/LUKE_DATA_',id,'.mat'])
+    delete(['SLUKE_RESULTS/LUKE_DATA_',id,'.mat']);
+end
 %
-delete(['SLUKE_EQUILS/EQUIL_',sluke_id(sparams,ii,'equil'),'.mat']);
+if exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',id,'.mat'])
+    delete(['SLUKE_RESULTS/PROC_LUKE_DATA_',id,'.mat']);
+end
 %
-delete(['SLUKE_OHMS/OHM_',sluke_id(sparams,ii,'ohm'),'.mat']);
+if exist(['SLUKE_EQUILS/EQUIL_',id,'.mat'])
+	delete(['SLUKE_EQUILS/EQUIL_',id,'.mat']);
+end
+if exist(['SLUKE_EQUILS/FITEQUIL_',id,'.mat'])
+    delete(['SLUKE_EQUILS/FITEQUIL_',id,'.mat']);
+end
+if exist(['SLUKE_EQUILS/EQUILCONSISTENCY_',id,'.mat'])
+    delete(['SLUKE_EQUILS/EQUILCONSISTENCY_',id,'.mat']);
+end
 %
-delete(['SLUKE_KINETICS/DKEPARAM_',sluke_id(sparams,ii,'dkeparam'),'.mat']);
+if exist(['SLUKE_OHMS/OHM_',id,'.mat'])
+    delete(['SLUKE_OHMS/OHM_',id,'.mat']);
+end
 %
-%delete(['SLUKE_RFWAVES/RAYPARAM_',sluke_id(sparams,ii,'rayparam'),'.mat']);
+if exist(['SLUKE_KINETICS/DKEPARAM_',id,'.mat'])
+    delete(['SLUKE_KINETICS/DKEPARAM_',id,'.mat']);
+end
 %
-delete(['SLUKE_KINETICS/DKEDISPLAY_',sluke_id(sparams,ii,'dkedisplay'),'.mat']);
+if exist(['SLUKE_KINETICS/DKEDISPLAY_',id,'.mat'])
+    delete(['SLUKE_KINETICS/DKEDISPLAY_',id,'.mat']);
+end
 %
-delete(['SLUKE_EQUILS/FITEQUIL_',sluke_id(sparams,ii,'fit'),'.mat']);
-%
-delete(['SLUKE_EQUILCONSISTENCIES/EQUILCONSISTENCY_',sluke_id(sparams,ii,'equilconsistency'),'.mat']);
-%
-warning on
+if isfield(sparams,'diags')
+    %
+    fn = fieldnames(sparams.diags);
+    %
+    for jj = 1:length(fn)
+        %
+        if exist(['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRPARAM_',id,'.mat'])
+            delete(['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRPARAM_',id,'.mat']);
+        end
+        %
+        if exist(['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRSPEC_',id,'.mat'])
+            delete(['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRSPEC_',id,'.mat']);
+        end
+        %
+        if exist(['SLUKE_DIAGNOSTICS/',fn{jj},'_RESULTS_',id,'.mat'])
+            delete(['SLUKE_DIAGNOSTICS/',fn{jj},'_RESULTS_',id,'.mat']);
+        end
+        %
+    end
+    %
+end
 %
