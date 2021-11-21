@@ -13,7 +13,7 @@ if ~isfield(sparams,'rfwaves')
     %
 end
 %
-wavestructs_id = sluke_id(sparams,ii,'wavestructs');
+wavestructs_id = sluke_id(sparams,ii);
 %
 if exist(['SLUKE_RFWAVES/WAVESTRUCTS_',wavestructs_id,'.mat'])
     %
@@ -80,7 +80,7 @@ else
         for kk = 1:length(sparams.rfwaves.solver.type{ii})
         	%
             wavestructs{kk1}.id = wavestructs_id;
-            wavestructs{kk1}.equil_id = sluke_id(sparams,ii,'equil');
+            wavestructs{kk1}.equil_id = sluke_id(sparams,ii);
             wavestructs{kk1}.wavesolver = sparams.rfwaves.solver.code{ii}{kk};
             %
             if strcmp(sparams.rfwaves.solver.code{ii}{kk},'C3PO')
