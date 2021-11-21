@@ -120,7 +120,7 @@ Zbremplasma.cL = cL;
 %
 seBHE = zeros(n_gauleg,np,nk,nZ);
 %
-if isfield(equilHXR,'ADAS') && ~isempty(equilHXR.ADAS) && isfield(equilHXR,'screening') && ~isempty(equilHXR.screening)  && isfield(hxrparam,'screening') && ~isempty(hxrparam.screening) && isfield(hxrparam.screening,'partial') && ~isempty(hxrparam.screening.partial)
+if isfield(equilHXR,'ADAS') && ~isempty(equilHXR.ADAS) && isfield(equilHXR,'screening') && ~isempty(equilHXR.screening)  && isfield(hxrparam,'screening') && ~isempty(hxrparam.screening) && isfield(hxrparam.screening,'partial') && isfield(hxrparam.screening.partial,'screening_model') && ~isempty(hxrparam.screening.partial.screening_model)
     %
     if isfield(hxrparam.screening.partial,'params') && ~isempty(hxrparam.screening.partial.params)
         screening_hxr_params = hxrparam.screening.partial.params.tables;
