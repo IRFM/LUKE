@@ -18,10 +18,6 @@ if isfield(sparams.kinetics,'opt')
             %
             opt.proc = sluke_params_value(sparams.postprocessing,ii);
             %
-        else
-            %
-            opt.proc = [];
-            %
         end
         %
         opt = rmfield(opt,'proc_remote');%just post-processing
