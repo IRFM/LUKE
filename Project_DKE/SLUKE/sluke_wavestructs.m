@@ -94,7 +94,7 @@ else
                 if strcmp(sparams.rfwaves.antenna.type{ii}{kk},'LH')
                     %
                     wavestructs{kk1}.launch = sluke_params_value(sparams.rfwaves.antenna.LH.C3PO.launch,ii,kk);
-                    wavestructs{kk1}.launch.id = sparams.rfwaves.antenna.id{ii}{kk};
+                    wavestructs{kk1}.launch.id = sluke_id(sparams,ii);
                     wavestructs{kk1}.launch.type = sparams.rfwaves.antenna.type{ii}{kk};
                     %
                     if strcmp(sparams.rfwaves.antenna.source{ii}{kk},'code')
