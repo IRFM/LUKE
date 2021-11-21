@@ -13,7 +13,7 @@ function equil = sluke_equil(sparams,ii)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
-equil_id = sluke_id(sparams,ii,'equil');
+equil_id = sluke_id(sparams,ii);
 %
 if exist(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'])
     %
@@ -213,7 +213,7 @@ end
 %
 if isfield(sparams.equil,'fit')
     %
-    fit_id = sluke_id(sparams,ii,'fit');
+    fit_id = sluke_id(sparams,ii);
     equil.source.fit = ['SLUKE_EQUILS/FITEQUIL_',fit_id,'.mat'];
     equil.equil_fit = fitequil_yp(equil,sparams.equil.fit.mode_equil{ii},sparams.equil.fit.method{ii},sparams.equil.fit.ngridresample{ii},sparams.equil.fit.nharm{ii});
     %
@@ -253,7 +253,7 @@ save(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'],'equil');
 %
 if exist('ohm','var') == 1
     %
-    ohm_id = sluke_id(sparams,ii,'ohm');
+    ohm_id = sluke_id(sparams,ii);
     %
     if strcmp(sparams.equil.source{ii},sparams.ohm.source{ii})
         %

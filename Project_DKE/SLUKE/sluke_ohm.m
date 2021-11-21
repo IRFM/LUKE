@@ -9,7 +9,7 @@ if ~isfield(sparams,'ohm')
     %
 end
 %
-ohm_id = sluke_id(sparams,ii,'ohm');
+ohm_id = sluke_id(sparams,ii);
 %
 if exist(['SLUKE_OHMS/OHM_',ohm_id,'.mat'])
     %
