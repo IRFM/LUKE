@@ -846,6 +846,10 @@ if isfield(lukestructs,'diags') && ~isempty(lukestructs.diags)
     %
 end
 %
+if isfield(opt,'proc') && ~isempty(opt.proc)
+    lukestructs.data_proc = proc_luke_jd(output,opt.proc);
+end
+%
 % Reduced output
 %
 if ~isfield(dkeparam,'opt_struct') || dkeparam.opt_struct == 0,
@@ -887,16 +891,15 @@ if opt.save == 1,% save results in LUKE_RESULTS file
     savefile = ['LUKE_RESULTS_',simul.id,'.mat'];
     save([savepath,savefile],'lukestructs','-v7.3');
 end
-%
-if opt.save >= 0 && isfield(opt,'proc') && isstruct(opt.proc),
-    lukestructs.output.data_proc = proc_luke_jd(output,opt.proc);
+%{
+if opt.save > 1 && isfield(opt,'proc') && isstruct(opt.proc),
     if iscell(opt.fields),%explicit data list that must be in the output. 
         opt.fields = [opt.fields,'data_proc'];
     else
         opt.fields = {'data_proc'};
     end
 end
-%
+%}
 if iscell(opt.fields),% select fields to return in output
     lukestructs.output = selectfields_jd(lukestructs.output,opt.fields);
 end
