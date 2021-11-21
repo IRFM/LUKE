@@ -1,6 +1,6 @@
 function [DSPX] = sluke_dspx(sparams,lukestructs,ii)
 %
-simul_id = sluke_id(sparams,ii,'simul');
+simul_id = sluke_id(sparams,ii);
 %
 if ~exist('SLUKE_DIAGNOSTICS/Data/')
     %
@@ -10,51 +10,52 @@ end
 %
 id_data = [sparams.machine{ii},'_data_dspx_',sparams.discharge.shot{ii}];
 %
+if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'])
+    %
+    [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii});
+    %
+    if ~isempty(hxrexp.t)
+        %
+        save(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp')
+        %
+    else
+        %
+        hxrexp = '';
+        cprintf([1,0.5,0],'WARNING : no access to DSPX data from remote access. Check the remote connection.');disp(' ')
+        %
+    end
+    %
+else
+    %
+    load(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp');
+    %
+end
+%
+if ~isempty(hxrexp) && isfield(hxrexp,'t')
+    %
+    irefs = find((hxrexp.t > sparams.discharge.tmin{ii}) & (hxrexp.t < sparams.discharge.tmax{ii}));%time interval
+    %
+    hxrexp_averaged.hxr_dt = hxrexp.t(2)-hxrexp.t(1);%experimental sampling time (s). 
+    %
+    for jj = 1:length(hxrexp.energy)
+        %
+        hxrexp_averaged.profile(jj,:) = sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs)/hxrexp_averaged.hxr_dt;%time averaging of the HXR signal (counts/s)
+        %
+        hxrexp_averaged.errorbars(jj,:) = sqrt(sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs))/hxrexp_averaged.hxr_dt;%error bars (Poisson's statistics)
+        %
+    end
+    %
+    hxrexp_averaged.energy = hxrexp.energy;
+    %
+else
+    %
+    hxrexp_averaged = '';
+    %
+end
+%
 if ~isempty(lukestructs)
     %
-    if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'])
-        %
-        [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii});
-        %
-        if ~isempty(hxrexp.t)
-            %
-            save(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp')
-            %
-        else
-            %
-            hxrexp = '';
-            cprintf([1,0.5,0],'WARNING : no access to DSPX data from remote access. Check the remote connection.');disp(' ')
-            %
-        end
-        %
-    else
-        %
-        load(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp');
-        %
-    end
-    %
-    if ~isempty(hxrexp) && isfield(hxrexp,'t')
-        %
-        irefs = find((hxrexp.t > sparams.discharge.tmin{ii}) & (hxrexp.t < sparams.discharge.tmax{ii}));%time interval
-        %
-        hxrexp_averaged.hxr_dt = hxrexp.t(2)-hxrexp.t(1);%experimental sampling time (s). 
-        %
-        for jj = 1:length(hxrexp.energy)
-            %
-            hxrexp_averaged.profile(jj,:) = sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs)/hxrexp_averaged.hxr_dt;%time averaging of the HXR signal (counts/s)
-            %
-            hxrexp_averaged.errorbars(jj,:) = sqrt(sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs))/hxrexp_averaged.hxr_dt;%error bars (Poisson's statistics)
-            %
-        end
-        %
-        hxrexp_averaged.energy = hxrexp.energy;
-        %
-    else
-        %
-        hxrexp_averaged = '';
-        %
-    end
-    %
+
     if strcmp(sparams.diags.DSPX.code{ii},'R5X2')  
         %
         if isfield(lukestructs,'diags') && isfield(lukestructs.diags,'DSPX') && isfield(lukestructs.diags.DSPX,'R5X2') && ~isempty(lukestructs.diags.DSPX.R5X2)
@@ -70,8 +71,8 @@ if ~isempty(lukestructs)
         if isempty(DSPX.R5X2)   
             %
             data_in.lukestructs = lukestructs;
-            data_in.hxrspec = hxrspec;
-            data_in.hxrparam = hxrparam;
+            data_in.hxrspec = sluke_DSPX_hxrspec(sparams,simul_id,ii);
+            data_in.hxrparam = sluke_DSPX_hxrparam(sparams,simul_id,ii);
             %
             data_in.dkedisplay.display_mode = 0;
             data_in.dkedisplay.fhxr = 0;
@@ -89,6 +90,34 @@ if ~isempty(lukestructs)
     end
     %
 else
+    %
+    hxrspec = sluke_DSPX_hxrspec(sparams,simul_id,ii);
+    hxrparam = sluke_DSPX_hxrparam(sparams,simul_id,ii);
+    %
+    if ~isempty(hxrspec) && ~isempty(hxrparam)
+        %
+        DSPX.code = sparams.diags.DSPX.code{ii};
+        DSPX.hxrspec = hxrspec;
+        DSPX.hxrparam = hxrparam;
+        %
+        if isfield(sparams.diags.DSPX,'remote_calculations')
+            %
+            DSPX.remote_calculations = sparams.diags.DSPX.remote_calculations{ii};%local calculations
+            %
+        else
+            %
+            DSPX.remote_calculations = 0;%local calculations
+            %
+        end
+        %
+    end
+    %
+end
+%
+end
+
+function [hxrspec] = sluke_DSPX_hxrspec(sparams,simul_id,ii)
+%
     %
     % DSPX diagnostic technical specifications (hxrspec).
     %
@@ -162,6 +191,11 @@ else
         %
     end
     %
+end
+
+function [hxrparam] = sluke_DSPX_hxrparam(sparams,simul_id,ii)
+%
+%
     % DPSX simulations parameters
     %
     if strcmp(sparams.diags.DSPX.code{ii},'R5X2')
@@ -232,27 +266,6 @@ else
         return
         %
     end
-    %
-    if ~isempty(hxrspec) && ~isempty(hxrparam)
-        %
-        DSPX.code = sparams.diags.DSPX.code{ii};
-        DSPX.hxrspec = hxrspec;
-        DSPX.hxrparam = hxrparam;
-        %
-        if isfield(sparams.diags.DSPX,'remote_calculations')
-            %
-            DSPX.remote_calculations = sparams.diags.DSPX.remote_calculations{ii};%local calculations
-            %
-        else
-            %
-            DSPX.remote_calculations = 0;%local calculations
-            %
-        end
-        %
-    end
-    %
-end
 %
-
-
+end
 

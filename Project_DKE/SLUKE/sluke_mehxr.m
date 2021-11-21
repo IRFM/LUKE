@@ -1,8 +1,6 @@
 function [MEHXR] = sluke_mehxr(sparams,lukestructs,ii)
 %
-simul_id = sluke_id(sparams,ii,'simul');
-%
-% Get experimental data
+simul_id = sluke_id(sparams,ii);
 %
 if ~exist('SLUKE_DIAGNOSTICS/Data/')
     %
@@ -12,53 +10,53 @@ end
 %
 id_data = [sparams.machine{ii},'_data_mehxr_',sparams.discharge.shot{ii}];
 %
+if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'])
+    %
+    [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii});
+    %
+    if ~isempty(hxrexp.t)
+        %
+        save(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp')
+        %
+    else
+        %
+        hxrexp = '';
+        cprintf([1,0.5,0],'WARNING : no access to MEHXR data from remote access. Check the remote connection.');disp(' ')
+        %
+    end
+    %
+else
+    %
+    load(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp');
+    %
+end
+%
+if ~isempty(hxrexp) && isfield(hxrexp,'t')
+    %
+    irefs = find((hxrexp.t > sparams.discharge.tmin{ii}) & (hxrexp.t < sparams.discharge.tmax{ii}));%time interval
+    %
+    hxrexp_averaged.hxr_dt = hxrexp.t(2)-hxrexp.t(1);%experimental sampling time (s). 
+    %
+    for jj = 1:length(hxrexp.energy)
+        %
+        hxrexp_averaged.profile(jj,:) = sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs)/hxrexp_averaged.hxr_dt;%time averaging of the HXR signal (counts/s)
+        %
+        hxrexp_averaged.errorbars(jj,:) = sqrt(sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs))/hxrexp_averaged.hxr_dt;%error bars (Poisson's statistics)
+        %
+    end
+    %
+    hxrexp_averaged.energy = hxrexp.energy;
+    %
+else
+    %
+    hxrexp_averaged = '';
+    %
+end
+%
 if ~isempty(lukestructs)
     %
-    if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'])
-        %
-        % [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii});
-        hxrexp.t = '';
-        %
-        if ~isempty(hxrexp.t)
-            %
-            save(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp')
-            %
-        else
-            %
-            hxrexp = '';
-            cprintf([1,0.5,0],['WARNING : no access to MEHXR data for machine ',sparams.machine{ii},' from remote access. Check the remote connection.']);disp(' ')
-            %
-        end
-        %
-    else
-        %
-        load(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp');
-        %
-    end
-    %
-    if ~isempty(hxrexp) && isfield(hxrexp,'t')
-        %
-        irefs = find((hxrexp.t > sparams.discharge.tmin{ii}) & (hxrexp.t < sparams.discharge.tmax{ii}));%time interval
-        %
-        hxrexp_averaged.hxr_dt = hxrexp.t(2)-hxrexp.t(1);%experimental sampling time (s). 
-        %
-        for jj = 1:length(hxrexp.energy)
-            %
-            hxrexp_averaged.profile(jj,:) = sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs)/hxrexp_averaged.hxr_dt;%time averaging of the HXR signal (counts/s)
-            %
-            hxrexp_averaged.errorbars(jj,:) = sqrt(sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs))/hxrexp_averaged.hxr_dt;%error bars (Poisson's statistics)
-            %
-        end
-        %
-        hxrexp_averaged.energy = hxrexp.energy;
-        %
-    else
-        %
-        hxrexp_averaged = '';
-        %
-    end
-    %
-    if strcmp(sparams.diags.MEHXR.code{ii},'R5X2')
+
+    if strcmp(sparams.diags.MEHXR.code{ii},'R5X2')  
         %
         if isfield(lukestructs,'diags') && isfield(lukestructs.diags,'MEHXR') && isfield(lukestructs.diags.MEHXR,'R5X2') && ~isempty(lukestructs.diags.MEHXR.R5X2)
             %
@@ -70,11 +68,11 @@ if ~isempty(lukestructs)
             %
         end
         %
-        if isempty(MEHXR.R5X2)      
+        if isempty(MEHXR.R5X2)   
             %
             data_in.lukestructs = lukestructs;
-            data_in.hxrspec = hxrspec;
-            data_in.hxrparam = hxrparam;
+            data_in.hxrspec = sluke_MEHXR_hxrspec(sparams,simul_id,ii);
+            data_in.hxrparam = sluke_MEHXR_hxrparam(sparams,simul_id,ii);
             %
             data_in.dkedisplay.display_mode = 0;
             data_in.dkedisplay.fhxr = 0;
@@ -93,19 +91,47 @@ if ~isempty(lukestructs)
     %
 else
     %
+    hxrspec = sluke_MEHXR_hxrspec(sparams,simul_id,ii);
+    hxrparam = sluke_MEHXR_hxrparam(sparams,simul_id,ii);
+    %
+    if ~isempty(hxrspec) && ~isempty(hxrparam)
+        %
+        MEHXR.code = sparams.diags.MEHXR.code{ii};
+        MEHXR.hxrspec = hxrspec;
+        MEHXR.hxrparam = hxrparam;
+        %
+        if isfield(sparams.diags.MEHXR,'remote_calculations')
+            %
+            MEHXR.remote_calculations = sparams.diags.MEHXR.remote_calculations{ii};%local calculations
+            %
+        else
+            %
+            MEHXR.remote_calculations = 0;%local calculations
+            %
+        end
+        %
+    end
+    %
+end
+%
+end
+
+function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
+%
+    %
     % MEHXR diagnostic technical specifications (hxrspec).
     %
     if isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && isempty(sparams.diags.MEHXR.hxrspec.source{ii})
         %
-        if exist(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'file')
+        if exist(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',simul_id,'.mat'],'file')
             %
-            load(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrspec');
+            load(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',simul_id,'.mat'],'hxrspec');
             %
         else
             %
-            if strcmp(sparams.machine{ii},'WEST')
+            if strcmp(sparams.machine{ii},'TS') ||  strcmp(sparams.machine{ii},'WEST')
                 %   
-                [hxrspec,~] = get_mehxrspec_forLUKE_yp('WEST',str2num(sparams.discharge.shot{ii}),'','','');
+                [hxrspec,~] = get_hxrspec_forLUKE_jd('TS',str2num(sparams.discharge.shot{ii}),'','','');
                 % 
             else
                 %
@@ -156,7 +182,7 @@ else
             %
         end         
         %
-        save(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrspec');
+        save(['SLUKE_DIAGNOSTICS/MEHXR_HXRSPEC_',simul_id,'.mat'],'hxrspec');
         %
     else
         %
@@ -165,19 +191,24 @@ else
         %
     end
     %
-    % MEHXR simulations parameters
+end
+
+function [hxrparam] = sluke_MEHXR_hxrparam(sparams,simul_id,ii)
+%
+%
+    % DPSX simulations parameters
     %
     if strcmp(sparams.diags.MEHXR.code{ii},'R5X2')
         %
         if isfield(sparams.diags.MEHXR.R5X2,'hxrparam') && isfield(sparams.diags.MEHXR.R5X2.hxrparam,'source') && isempty(sparams.diags.MEHXR.R5X2.hxrparam.source{ii})
             %
-            if exist(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'file')
+            if exist(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',simul_id,'.mat'],'file')
                 %
-                load(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrparam');
+                load(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',simul_id,'.mat'],'hxrparam');
                 %
             else
                 %
-                cprintf([1,0.5,0],['WARNING : file SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat that contains R5X2 simulations parameters is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
+                cprintf([1,0.5,0],['WARNING : file SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',simul_id,'.mat that contains R5X2 simulations parameters is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
                 hxrparam = '';
                 %
             end
@@ -193,7 +224,6 @@ else
                 else
                     %
                     cprintf([1,0.5,0],['WARNING : file ',sparams.diags.MEHXR.R5X2.hxrparam.path{ii},'/',sparams.diags.MEHXR.R5X2.hxrparam.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
-
                     hxrparam = '';
                     %
                 end
@@ -204,13 +234,13 @@ else
                 %
             end
             %
-        elseif strcmp(sparams.diags.MEHXR.R5X2.hxrparam.source{ii},'value')
+        elseif isfield(sparams.diags.MEHXR.R5X2,'hxrparam') && isfield(sparams.diags.MEHXR.R5X2.hxrparam,'source') && strcmp(sparams.diags.MEHXR.R5X2.hxrparam.source{ii},'value')
             %
             hxrparam = sluke_params_value(sparams.diags.MEHXR.R5X2.hxrparam,ii);
             %
-            hxrparam.kphot = hxrspec.kphot;
-            hxrparam.kmin = hxrspec.kmin;
-            hxrparam.kmax = hxrspec.kmax;
+            %hxrparam.kphot = hxrspec.kphot;
+            %hxrparam.kmin = hxrspec.kmin;
+            %hxrparam.kmax = hxrspec.kmax;
             %
         else
             %
@@ -220,7 +250,7 @@ else
         %
         if ~isempty(hxrparam)
             %
-            save(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'.mat'],'hxrparam');
+            save(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',simul_id,'.mat'],'hxrparam');
             %
         else
             %
@@ -235,61 +265,7 @@ else
         MEHXR = '';
         return
         %
-    end    
-    %
-    if ~isempty(hxrspec) && ~isempty(hxrparam)
-        %
-        MEHXR.code = sparams.diags.MEHXR.code{ii};
-        MEHXR.hxrspec = hxrspec;
-        MEHXR.hxrparam = hxrparam;
-        %
-        %
-        if isfield(sparams.diags.MEHXR,'remote_calculations')
-            %
-            MEHXR.remote_calculations = sparams.diags.MEHXR.remote_calculations{ii};%local calculations
-            %
-        else
-            %
-            MEHXR.remote_calculations = 0;%local calculations
-            %
-        end
-        %
     end
-    %
-end
 %
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+end
 
