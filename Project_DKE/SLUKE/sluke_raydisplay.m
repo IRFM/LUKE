@@ -4,7 +4,7 @@ function raydisplay = sluke_raydisplay(sparams,ii)
 
 
 %
-raydisplay_id = sluke_id(sparams,ii,'raydisplay');
+raydisplay_id = sluke_id(sparams,ii);
 %
 if exist(['SLUKE_RAYDISPLAYS/RAYDISPLAY_',raydisplay_id,'.mat'])
     %

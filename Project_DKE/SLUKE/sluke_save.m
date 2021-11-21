@@ -1,6 +1,6 @@
 function sluke_save(sparams,ii,lukestructs)
 %
-simul_id = sluke_id(sparams,ii,'simul');
+simul_id = sluke_id(sparams,ii);
 %
 if isfield(lukestructs,'job')
     %

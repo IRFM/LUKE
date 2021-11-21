@@ -4,7 +4,7 @@ function dkeparam = sluke_rayparam(sparams,ii)
 
 
 %
-rayparam_id = sluke_id(sparams,ii,'rayparam');
+rayparam_id = sluke_id(sparams,ii);
 %
 if exist(['SLUKE_RAYPARAMS/RAYPARAM_',rayparam_id,'.mat'])
     %

@@ -1,6 +1,6 @@
 function sluke_postprocessing(sparams,ii,lukestructs)
 %
-simul_id = sluke_id(sparams,ii,'simul');
+simul_id = sluke_id(sparams,ii);
 %
 if ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
     %
