@@ -85,7 +85,7 @@ for ii = 1:length(sparams.machine)
     %
     if sparams.simul.enable{ii} == 1
         %
-        simul_id = sluke_id(sparams,ii,'simul');
+        simul_id = sluke_id(sparams,ii);
         %
         if sparams.simul.enforce{ii} == 1
             %
@@ -220,13 +220,22 @@ for ii = 1:length(sparams.machine)
                     t2 = char(datetime('now','TimeZone','UTC'));%GMT time
                     duration_job = datetime(t2) - datetime(t1);
                     %
+                    if ~isnan(duration_job)
+                        elapsed_time_sluke = [' since ',char(duration_job),' '];
+                        action_sluke = 'is running';
+                    else
+                        elapsed_time_sluke = ' ';
+                        action_sluke = 'has started';
+                    end
+                    %    
                     if isempty(lukestructs.job.remote.host)
                         %
-                        cprintf('*blue',['---> is running locally since ',char(duration_job),' with job id : ',lukestructs.job.timeid]);disp(' ')
+                        cprintf('*blue',['---> ',action_sluke,' locally',elapsed_time_sluke,'with job id : ',lukestructs.job.timeid]);disp(' ')
                         %
                     else
                         %
-                        cprintf('*blue',['---> is running since ',char(duration_job),' on host ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);disp(' ')
+                        cprintf('*blue',['---> ',action_sluke,elapsed_time_sluke,'on host ',lukestructs.job.remote.host,' with job id : ',lukestructs.job.timeid]);disp(' ')
+                        %
                     end
                     %
                     sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
