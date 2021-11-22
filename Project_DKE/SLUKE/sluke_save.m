@@ -110,7 +110,7 @@ else
         %
     else
         %
-        disp(['---> is completed but full simulation is not saved, just processed results.']);
+        disp(['---> is completed and processed results are saved.']);
         %
         if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'],'file')
             %
