@@ -10,9 +10,9 @@ if ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
         %
     else
         %
-        if isfield(lukestructs.output,'data_proc')
+        if isfield(lukestructs,'data_proc')
             %
-            data_proc = lukestructs.output.data_proc;%Processed data calculated remotely
+            data_proc = lukestructs.data_proc;%Processed data calculated remotely
             %
         else
             %
