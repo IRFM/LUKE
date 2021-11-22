@@ -110,6 +110,22 @@ else
             %
         end
         %
+    else
+        %
+        DSPX = [];
+        %
+        if isempty(hxrspec)
+            %
+            cprintf([1,0.5,0],'WARNING : hxrspec is empty. No calculations for DSPX.');disp(' ')
+            %
+        end
+        %
+        if isempty(hxrparam)
+            %
+            cprintf([1,0.5,0],'WARNING : hxrparam is empty. No calculations for DSPX.');disp(' ')
+            %
+        end
+        %
     end
     %
 end
