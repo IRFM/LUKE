@@ -79,7 +79,7 @@ dkepath.plgypeysson(1).remote(1).luke_root = dkepath.plgypeysson(1).luke_root;% 
 %------------------------------------ Profile number 2, KRZYSZTOF KROL-----------------------------------
 %--------------------------------------------------------------------------------------------------------
 %
-dkepath.plgzgoryk(1).luke_root = '/net/people/plgzgoryk/luke/LUKE/';
+dkepath.plgzgoryk(1).luke_root = '/net/people/plgzgoryk/luke/LUKE_LHCD/';
 dkepath.plgzgoryk(1).temppathroot = '/net/scratch/people/plgzgoryk/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 %dkepath.plgzgoryk(1).local_root = '/net/archive/groups/plggfusion/packages/';%DOES NOT WORK (RIGHT ACCESS ISSUE ?)
@@ -91,8 +91,8 @@ dkepath.plgzgoryk(1).mex905 = [dkepath.plgzgoryk(1).luke_root,'Project_DKE/MEX/B
 %dkepath.plgzgoryk(1).compiler_opt.libs.gfortran = [dkepath.plgzgoryk(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
 %
 dkepath.plgzgoryk(1).compiler_opt.copts = '';
-dkepath.plgzgoryk(1).compiler_opt.copts.cpp.mex904 = '-f /net/people/plgzgoryk/luke/LUKE/Project_DKE/MEX/Bin/cyfronet/MATLAB904/g++_glnxa64.xml';
-dkepath.plgzgoryk(1).compiler_opt.copts.cpp.mex905 = '-f /net/people/plgzgoryk/luke/LUKE/Project_DKE/MEX/Bin/cyfronet/MATLAB905/g++_glnxa64.xml';
+dkepath.plgzgoryk(1).compiler_opt.copts.cpp.mex904 = '-f /net/people/plgzgoryk/luke/LUKE_LHCD/Project_DKE/MEX/Bin/cyfronet/MATLAB904/g++_glnxa64.xml';
+dkepath.plgzgoryk(1).compiler_opt.copts.cpp.mex905 = '-f /net/people/plgzgoryk/luke/LUKE_LHCD/Project_DKE/MEX/Bin/cyfronet/MATLAB905/g++_glnxa64.xml';
 %
 dkepath.plgzgoryk(1).compiler_opt.fopts.mex904 = 'FC=''gfortran''';%
 dkepath.plgzgoryk(1).compiler_opt.separatrice.mex904 = [' -largeArrayDims -lgfortran -L',dkepath.plgzgoryk(1).local_root,'lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
@@ -125,3 +125,55 @@ dkepath.plgzgoryk(1).remote(1).remoteid = 'CYFRONET_PROMETHEUS';
 dkepath.plgzgoryk(1).remote(1).schedulername = 'slurm';
 dkepath.plgzgoryk(1).remote(1).profilename = 'local';
 dkepath.plgzgoryk(1).remote(1).luke_root = dkepath.plgzgoryk(1).luke_root;% local cluster
+%
+%
+%--------------------------------------------------------------------------------------------------------
+%------------------------------------ Profile number 3, JEDZREJ WALKOWIAK-----------------------------------
+%--------------------------------------------------------------------------------------------------------
+%
+dkepath.plgjwalkowiak(1).luke_root = '/net/people/plgjwalkowiak/luke/LUKE_LHCD/';
+dkepath.plgjwalkowiak(1).temppathroot = '/net/scratch/people/plgjwalkowiak/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+%
+%dkepath.plgjwalkowiak(1).local_root = '/net/archive/groups/plggfusion/packages/';%DOES NOT WORK (RIGHT ACCESS ISSUE ?)
+dkepath.plgjwalkowiak(1).local_root = '/net/people/plgjwalkowiak/luke/Packages/';%WORKS FINE
+%
+dkepath.plgjwalkowiak(1).mex904 = [dkepath.plgjwalkowiak(1).luke_root,'Project_DKE/MEX/Bin/cyfronet/MATLAB904/'];%R2018a
+dkepath.plgjwalkowiak(1).mex905 = [dkepath.plgjwalkowiak(1).luke_root,'Project_DKE/MEX/Bin/cyfronet/MATLAB905/'];%R2018b
+%
+%dkepath.plgjwalkowiak(1).compiler_opt.libs.gfortran = [dkepath.plgjwalkowiak(1).luke_root,'Project_DKE/MEX/Libs/gfortran/4.4.3','/',dkepath.machine,'/'];%extra libraries
+%
+dkepath.plgjwalkowiak(1).compiler_opt.copts = '';
+dkepath.plgjwalkowiak(1).compiler_opt.copts.cpp.mex904 = '-f /net/people/plgjwalkowiak/luke/LUKE_LHCD/Project_DKE/MEX/Bin/cyfronet/MATLAB904/g++_glnxa64.xml';
+dkepath.plgjwalkowiak(1).compiler_opt.copts.cpp.mex905 = '-f /net/people/plgjwalkowiak/luke/LUKE_LHCD/Project_DKE/MEX/Bin/cyfronet/MATLAB905/g++_glnxa64.xml';
+%
+dkepath.plgjwalkowiak(1).compiler_opt.fopts.mex904 = 'FC=''gfortran''';%
+dkepath.plgjwalkowiak(1).compiler_opt.separatrice.mex904 = [' -largeArrayDims -lgfortran -L',dkepath.plgjwalkowiak(1).local_root,'lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.plgjwalkowiak(1).compiler_opt.helmex.mex904 = [' -compatibleArrayDims -lgfortran -L',dkepath.plgjwalkowiak(1).local_root,'lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.plgjwalkowiak(1).compiler_opt.fopts.mex904 = ' ';%-largeArrayDims';
+%
+dkepath.plgjwalkowiak(1).compiler_opt.fopts.mex905 = 'FC=''gfortran''';%
+dkepath.plgjwalkowiak(1).compiler_opt.separatrice.mex905 = [' -largeArrayDims -lgfortran -L',dkepath.plgjwalkowiak(1).local_root,'lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.plgjwalkowiak(1).compiler_opt.helmex.mex905 = [' -compatibleArrayDims -lgfortran -L',dkepath.plgjwalkowiak(1).local_root,'lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
+dkepath.plgjwalkowiak(1).compiler_opt.fopts.mex905 = ' ';%-largeArrayDims';
+%
+dkepath.plgjwalkowiak(1).MUMPS.mex904 = [dkepath.plgjwalkowiak(1).local_root,'MUMPS_5.1.2/MATLAB904'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.plgjwalkowiak(1).MUMPS.mex905 = [dkepath.plgjwalkowiak(1).local_root,'MUMPS_5.1.2/MATLAB905'];%Where MUMPS matrix solver is stored (MEX function)
+%
+% LUKE documentation
+%
+dkepath.plgjwalkowiak(1).graphviz.env = '/bin/';% Graphviz environment variable
+dkepath.plgjwalkowiak(1).latex.env = '/bin/';% Latex environment variable
+dkepath.plgjwalkowiak(1).imagemagick.env = '/bin/';% ImageMagick environment variable
+%
+% ---------------------------- login other node -------------------------------
+%
+%dkepath.plgjwalkowiak(1).node = dkepath.plgjwalkowiak(1).cyfronet;
+%
+%--------------------------- Remote computing -----------------------------
+%
+% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
+%
+dkepath.plgjwalkowiak(1).remote(1).remoteid = 'CYFRONET_PROMETHEUS';
+dkepath.plgjwalkowiak(1).remote(1).schedulername = 'slurm';
+dkepath.plgjwalkowiak(1).remote(1).profilename = 'local';
+dkepath.plgjwalkowiak(1).remote(1).luke_root = dkepath.plgjwalkowiak(1).luke_root;% local cluster
