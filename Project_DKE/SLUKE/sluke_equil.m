@@ -90,18 +90,20 @@ else
     %
 end
 %
+% Full or partial screening for Coulomb collisions
+%
 if isfield(sparams,'kinetics') && isfield(sparams.kinetics,'elements') %for full or partial screening effects
     %
     if isfield(sparams.kinetics.elements,'coulog_model')
         %
-        equil.coulog_model = sparams.kinetics.elements.coulog_model{ii};%Coulomb logarithm model
+        equil.coulog = sparams.kinetics.elements.coulog_model{ii};%Coulomb logarithm model
     %
     else
         %
-        if isfield(equil,'coulog_model')
+        if isfield(equil,'coulog')
             %
-            equil = rmfield(equil,'coulog_model');
-            equil.coulog_model = 0;
+            equil = rmfield(equil,'coulog');
+            equil.coulog = 0;
             cprintf([1,0.5,0],['---> Default Coulomb logarithm without p-dependence is considered.']);disp(' ')
             %
         end
@@ -151,7 +153,7 @@ if isfield(sparams,'kinetics') && isfield(sparams.kinetics,'elements') %for full
             if isfield(equil,'screening') && isfield(equil.screening,'dftpath')
                 %
                 equil.screening = rmfield(equil.screening,'dftpath');
-                cprintf([1,0.5,0],['---> Specific DFT file is not considered for partial screening calculations.']);disp(' ')
+                cprintf([1,0.5,0],['---> Specific DFT file external to LUKE is not considered for partial screening calculations.']);disp(' ')
                 %
             end
             %
@@ -188,6 +190,7 @@ if isfield(sparams,'kinetics') && isfield(sparams.kinetics,'elements') %for full
                     if equil.zZi(mm) == sparams.kinetics.elements.removed_Zi{ii}(nn)
                         %
                         equil.pzni(mm,:) = equil.pzni(mm,:)*0;%no impurity for this Zi value
+                        cprintf([1,0.5,0],['---> Density of impurity with atomic number ',int2str(equil.zZi(mm)),' is enforced to zero (for tests).']);disp(' ')
                         break
                         %
                     end
@@ -200,7 +203,7 @@ if isfield(sparams,'kinetics') && isfield(sparams.kinetics,'elements') %for full
         %
     end
     %
-    if ~isfield(sparams.equil,'coulog') && isfield(equil,'screening')
+    if ~isfield(sparams.kinetics.elements,'coulog_model') && isfield(sparams.kinetics.elements,'screening') && isfield(sparams.kinetics.elements.screening,'elastic') && ~isempty(sparams.kinetics.elements.screening.elastic{ii})
         %
         equil.coulog = 1;%Coulomb logarithm model (Sauter)
         cprintf([1,0.5,0],['---> Default Coulomb logarithm value (Sauter) with p-dependence is enforced for partial screening.']);disp(' ')
