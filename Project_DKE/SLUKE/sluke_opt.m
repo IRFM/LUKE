@@ -12,7 +12,7 @@ if isfield(sparams.kinetics,'opt')
             %
             if opt.save == 0
                 %
-                opt.save = 2;%just post-processing
+                opt.save = 2;%just post-processing (remove output substructure)
                 %
             end
             %
