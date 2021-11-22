@@ -6,19 +6,25 @@ if ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
     %
     if ~isfield(sparams,'postprocessing')
         %
-        data_proc = proc_luke_jd(lukestructs.output);%default value
+        if isfield(lukestructs,'output') && ~isempty(lukestructs.output)
+            %
+            data_proc = proc_luke_jd(lukestructs.output);%default value
+            %
+        else
+            %
+            cprintf('*red',['---> error in local LUKE postprocessing.' ]);disp(' ')    
+            %
+        end
         %
     else
         %
-        if isfield(lukestructs,'data_proc')
+        if isfield(lukestructs,'data_proc') && sparams.kinetics.opt.proc_remote{ii}
             %
             data_proc = lukestructs.data_proc;%Processed data calculated remotely
             %
         else
             %
-            opt = sluke_params_value(sparams.postprocessing,ii);
-            %
-            data_proc = proc_luke_jd(lukestructs.output,opt);
+            data_proc = proc_luke_jd(lukestructs.output,sluke_params_value(sparams.postprocessing,ii));
             %
         end
     end
