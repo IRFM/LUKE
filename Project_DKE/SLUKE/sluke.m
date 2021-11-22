@@ -182,7 +182,7 @@ for ii = 1:length(sparams.machine)
         %
         if ~isempty(lukestructs) && exist('antenna_remote_status','var') && (isempty(antenna_remote_status) || antenna_remote_status == 0)
             %
-            if isfield(lukestructs,'output') %job done
+            if isfield(lukestructs,'data_proc') %job done
                 %
                % try
                     %
