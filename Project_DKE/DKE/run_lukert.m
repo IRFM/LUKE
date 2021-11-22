@@ -903,7 +903,6 @@ end
 %
 if opt.save == 2
     lukestructs = selectfields_jd(lukestructs,{'diags','data_proc'});
-    %lukestructs = rmfield(lukestructs,'output');%just diags and data_proc
 end
 %
 
