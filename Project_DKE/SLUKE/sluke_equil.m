@@ -96,14 +96,14 @@ if isfield(sparams,'kinetics') && isfield(sparams.kinetics,'elements') %for full
     %
     if isfield(sparams.kinetics.elements,'coulog_model')
         %
-        equil.coulog = sparams.kinetics.elements.coulog_model{ii};%Coulomb logarithm model
+        equil.coulog_model = sparams.kinetics.elements.coulog_model{ii};%Coulomb logarithm model
     %
     else
         %
-        if isfield(equil,'coulog')
+        if isfield(equil,'coulog_model')
             %
-            equil = rmfield(equil,'coulog');
-            equil.coulog = 0;
+            equil = rmfield(equil,'coulog_model');
+            equil.coulog_model = 0;
             cprintf([1,0.5,0],['---> Default Coulomb logarithm without p-dependence is considered.']);disp(' ')
             %
         end
@@ -205,7 +205,7 @@ if isfield(sparams,'kinetics') && isfield(sparams.kinetics,'elements') %for full
     %
     if ~isfield(sparams.kinetics.elements,'coulog_model') && isfield(sparams.kinetics.elements,'screening') && isfield(sparams.kinetics.elements.screening,'elastic') && ~isempty(sparams.kinetics.elements.screening.elastic{ii})
         %
-        equil.coulog = 1;%Coulomb logarithm model (Sauter)
+        equil.coulog_model = 1;%Coulomb logarithm model (Sauter)
         cprintf([1,0.5,0],['---> Default Coulomb logarithm value (Sauter) with p-dependence is enforced for partial screening.']);disp(' ')
         %
     end
