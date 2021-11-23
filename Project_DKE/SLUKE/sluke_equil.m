@@ -177,21 +177,29 @@ if isfield(sparams,'kinetics') && isfield(sparams.kinetics,'elements') %for full
         %
     end
     %
-    % Remove impurity selection (Zi > 1)
+    % Modify density of the impurity selection (Zi > 1)
     %
-    if isfield(sparams.kinetics.elements,'removed_Zi') && ~isempty(sparams.kinetics.elements.removed_Zi{ii})
+    if ~isfield(equil,'flag_Zi')   
         %
-        for mm = 4:length(equil.zZi) % the three first elements are hydrogen isotops
+        if isfield(sparams.kinetics.elements,'Zi_ref') && ~isempty(sparams.kinetics.elements.Zi_ref{ii})
             %
-            if ~isnan(sparams.kinetics.elements.removed_Zi{ii})
+            for mm = 4:length(equil.zZi) % the three first elements are hydrogen isotops
                 %
-                for nn = 1:length(sparams.kinetics.elements.removed_Zi{ii})
+                if ~isnan(sparams.kinetics.elements.Zi_ref{ii})
                     %
-                    if equil.zZi(mm) == sparams.kinetics.elements.removed_Zi{ii}(nn)
+                    for nn = 1:length(sparams.kinetics.elements.Zi_ref{ii})
                         %
-                        equil.pzni(mm,:) = equil.pzni(mm,:)*0;%no impurity for this Zi value
-                        cprintf([1,0.5,0],['---> Density of impurity with atomic number ',int2str(equil.zZi(mm)),' is enforced to zero (for tests).']);disp(' ')
-                        break
+                        if equil.zZi(mm) == sparams.kinetics.elements.Zi_ref{ii}(nn)
+                            %
+                            if isfield(sparams.kinetics.elements,'Zi_density_factor') && ~isempty(sparams.kinetics.elements.Zi_density_factor{ii}) && ~isnan(sparams.kinetics.elements.Zi_density_factor{ii})
+                                %
+                                equil.pzni(mm,:) = equil.pzni(mm,:)*sparams.kinetics.elements.Zi_density_factor{ii};%no impurity for this Zi value
+                                cprintf([1,0.5,0],['---> Density of impurity with atomic number ',int2str(equil.zZi(mm)),' has been mutiplied by factor x',num2str(sparams.kinetics.elements.Zi_density_factor{ii}),' (for tests).']);disp(' ')
+                                break
+                                %
+                            end
+                            %
+                        end
                         %
                     end
                     %
@@ -199,8 +207,9 @@ if isfield(sparams,'kinetics') && isfield(sparams.kinetics,'elements') %for full
                 %
             end
             %
+            equil.flag_Zi = 1;%to avoid this loop in other call of sluke_equil.m when file EQUIL_*;m file is loaded
+            %
         end
-        %
     end
     %
     if ~isfield(sparams.kinetics.elements,'coulog_model') && isfield(sparams.kinetics.elements,'screening') && isfield(sparams.kinetics.elements.screening,'elastic') && ~isempty(sparams.kinetics.elements.screening.elastic{ii})
