@@ -56,6 +56,7 @@ profile_list = [{'local calculations'},profile_list];
 disp('------------------------------------')
 info_dke_yp(4,'#0 : local calculations');
 disp('------------------------------------')
+nrem = nrem + 1;
 for irem = 2:nrem,
     info_dke_yp(4,['#',num2str(indexlist(irem)),' : ',profile_list{irem}]);
 end
