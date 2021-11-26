@@ -144,6 +144,7 @@ for ii = 1:length(sparams.machine)
                     %
                     dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
                     %
+                    cprintf('*blue',['---> is being transferred to the remote computer']);disp(' ')
                     lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
                     %
                 elseif antenna_remote_status == 1
