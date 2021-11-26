@@ -42,14 +42,9 @@ if nargin < 4,
 	error('Not enough arguments in bremshtrahlung_dke_yp')
 end
 %
-if isempty(Zbremplasma)
-    %
-    Zbremdiag = [];
-    return
-    %
-end
-%
 method = 'pchip';
+%
+id = hxrparam.id;%diagnostic id
 %
 kphot = Zbremplasma.kphot;
 brem_bd_in = Zbremplasma.brem_bd_out;
@@ -123,11 +118,15 @@ td = hxr.td_hxr;%type of material for the detector (BGO,CsI,NaI,Ge or CdTe) [1,m
 meanabsx = zeros(size(brem_bd_plasma));%Mean attenuation per channel
 brem_bd_diag_interp = zeros(size(brem_bd_interp));
 brem_bd_diag = zeros(size(brem_bd_plasma));
-%
+%    
 for ic = 1:size(brem_bd_interp,1),
 	if ic == 1,
-        gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
-		normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
+        if ~strcmp(id,'ME-HXR') 
+            gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
+        else
+            gkEinterp1 = dresp_dke_mehxr(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
+        end
+        normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
 		gkEinterp = gkEinterp1;%(gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
 %		plot(kinterp,trapz(kinterp,gkEinterp1') + gkEinterp1(:,1)'*kinterp(1));%test of the norm
 %       plot(kinterp,trapz(kinterp,gkEinterp'));%test of the norm
@@ -136,9 +135,13 @@ for ic = 1:size(brem_bd_interp,1),
 		Tabsxinterp = repmat(absxinterp(:),[1,size(brem_bd_interp,2)]);
 	else
 		if (kd(ic-1) ~= kd(ic)) | (res(ic-1) ~= res(ic)) | (phf(ic-1) ~= phf(ic))
-			gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),ic,kinterp);%Recalculated only when detector type has changed concerning the response function
+            if ~strcmp(id,'ME-HXR') 
+                gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
+            else
+                gkEinterp1 = dresp_dke_mehxr(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
+            end
             normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
-            gkEinterp = (gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
+            gkEinterp = gkEinterp1;%(gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
         end
 %
 		if (ef(ic-1) ~= ef(ic)) | (tf(ic-1) ~= tf(ic)) | (ea(ic-1) ~= ea(ic)) | (ta(ic-1) ~= ta(ic)) | (ec(ic-1) ~= ec(ic)) | (tc(ic-1) ~= tc(ic)) | (ed(ic-1) ~= ed(ic)) | (td(ic-1) ~= td(ic))
@@ -147,18 +150,28 @@ for ic = 1:size(brem_bd_interp,1),
         end		
     end
 %
-	gkEinterp_out{ic} = gkEinterp;%For display of the response function
+    gkEinterp_out{ic} = gkEinterp;%For display of the response function
 %
-	brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))'; 
+    if ~strcmp(id,'ME-HXR') 
+        brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))';
+    else
+        brem_bd_diag_interp(ic,:) = (((gkEinterp.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))';
+    end
 %	brem_bd_diag_interp(ic,:) = (fix(((eye(size(gkEinterp')).*Tabsxinterp)*(brem_bd_interp(ic,:))')))';%detector response neglected
 %	
 	for ik = 1:nkfit,
 		meanabsx(ic,ik) = sum(absxinterp(min(find(kinterp >= kfit_S(ik))):max(find(kinterp < kfit_S(ik+1))))')'/length(absxinterp(min(find(kinterp >= kfit_S(ik))):max(find(kinterp < kfit_S(ik+1)))).');
 	end
 %
-	for ik = 1:nkfit,
-		brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= kfit_S(ik))):max(find(kinterp < kfit_S(ik+1)))).').'*dkinterp;%number of pulses in energy channel ik per unit time
-	end
+    if ~strcmp(id,'ME-HXR')
+        for ik = 1:nkfit,
+            brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= kfit_S(ik))):max(find(kinterp < kfit_S(ik+1)))).').'*dkinterp;%number of pulses in energy channel ik per unit time
+        end
+    else
+        for ik = 1:nkfit
+            brem_bd_diag(ic,ik) = brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik),1,'first')) - brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik+1),1,'first'));%number of pulses in energy channel ik per unit time
+        end
+    end
 %	
 	brem_bd_diag = abs(brem_bd_diag);
 %
