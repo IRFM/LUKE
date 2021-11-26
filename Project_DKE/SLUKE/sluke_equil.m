@@ -221,45 +221,68 @@ if isfield(sparams,'kinetics') && isfield(sparams.kinetics,'elements') %for full
     %
 end
 %
+flag_equil_fit = 0;
+%
 % fitequil (for C3PO and equil consistency calculations
 %
-if isfield(sparams.equil,'fit')
+if ~isfield(equil,'equil_fit')
     %
-    fit_id = sluke_id(sparams,ii);
-    equil.source.fit = ['SLUKE_EQUILS/FITEQUIL_',fit_id,'.mat'];
-    equil.equil_fit = fitequil_yp(equil,sparams.equil.fit.mode_equil{ii},sparams.equil.fit.method{ii},sparams.equil.fit.ngridresample{ii},sparams.equil.fit.nharm{ii});
-    %
-else
-    %
-    if ~isfield(equil,'equil_fit')
+    if isfield(sparams.equil,'fit')
+        %
+        equil.equil_fit = fitequil_yp(equil,sparams.equil.fit.mode_equil{ii},sparams.equil.fit.method{ii},sparams.equil.fit.ngridresample{ii},sparams.equil.fit.nharm{ii});
+        %
+    else
         %
         equil.equil_fit = fitequil_yp(equil);%default values
         %
     end
     %
+    flag_equil_fit = 1;
 end
 %
 % equilibrium consistency calculations
 %
-if isfield(sparams.equil,'equilconsistency')
+flag_equil_consistency = 0;
+%
+if ~isfield(equil,'consistency')
     %
-    if isfield(equil,'equil_fit')
+    if isfield(sparams.equil,'equilconsistency')
         %
-        equil = equilconsistency_yp(equil,equil.equil_fit,sparams.equil.equilconsistency.auto_mode{ii},sparams.equil.equilconsistency.display_mode{ii},sparams.equil.equilconsistency.prho{ii},sparams.equil.equilconsistency.mtheta{ii},sparams.equil.fit);
+        if isfield(equil,'equil_fit')
+            %
+            equil = equilconsistency_yp(equil,equil.equil_fit,sparams.equil.equilconsistency.auto_mode{ii},sparams.equil.equilconsistency.display_mode{ii},sparams.equil.equilconsistency.prho{ii},sparams.equil.equilconsistency.mtheta{ii},sparams.equil.fit);
+            %
+        else
+            %
+             equil = equilconsistency_yp(equil,'',sparams.equil.equilconsistency.auto_mode{ii},sparams.equil.equilconsistency.display_mode,sparams.equil.equilconsistency.prho{ii},sparams.equil.equilconsistency.mtheta{ii},sparams.equil.fit);
+            %
+        end
+        %
+        flag_equil_consistency = 1;
         %
     else
         %
-         equil = equilconsistency_yp(equil,'',sparams.equil.equilconsistency.auto_mode{ii},sparams.equil.equilconsistency.display_mode,sparams.equil.equilconsistency.prho{ii},sparams.equil.equilconsistency.mtheta{ii},sparams.equil.fit);
+        cprintf([1,0.5,0],['---> Consistency of the toroidal MHD equilibrium cannot be calculated.']);disp(' ')
+        %equil = equilconsistency_yp(equil,'',real(sparams.equil.equilconsistency.display_mode));
         %
     end
     %
-else
-    %
-    equil = equilconsistency_yp(equil,'',real(sparams.equil.equilconsistency.display_mode));
-    %
+   
 end
 %
-save(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'],'equil');
+if ~exist(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'])
+    %
+    save(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'],'equil');
+    %
+else
+    %
+    if flag_equil_consistency == 1 || flag_equil_fit == 1
+        %
+        save(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'],'equil');
+        %
+    end
+    %
+end  
 %
 % Save Ohmic field structure when it is created by the same code
 %
@@ -287,8 +310,13 @@ if exist('ohm','var') == 1
     %
 end
 %
-delete(['INPUTS/before_luke@*.mat']);%delete all before_luke@ files to avoid wrong files if they come from different METIS simulations
+dd = dir(['INPUTS/before_luke@*.mat']);
 %
+if ~isempty(dd)
+    %
+    delete(['INPUTS/before_luke@*.mat']);%delete all before_luke@ files to avoid wrong files if they come from different METIS simulations
+    %
+end
 
     
     
