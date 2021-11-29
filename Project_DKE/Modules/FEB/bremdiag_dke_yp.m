@@ -44,7 +44,11 @@ end
 %
 method = 'pchip';
 %
-id = hxrparam.id;%diagnostic id
+if ~isfield(hxrparam,'id')
+    id = '';%default id
+else
+    id = hxrparam.id;%diagnostic id
+end
 %
 kphot = Zbremplasma.kphot;
 brem_bd_in = Zbremplasma.brem_bd_out;
