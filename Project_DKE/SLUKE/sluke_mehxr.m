@@ -266,6 +266,7 @@ function [hxrparam] = sluke_MEHXR_hxrparam(sparams,simul_id,ii)
         %
         if ~isempty(hxrparam)
             %
+            hxrparam.id = 'ME-HXR';
             save(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',simul_id,'.mat'],'hxrparam');
             %
         else

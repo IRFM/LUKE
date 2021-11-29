@@ -266,6 +266,7 @@ function [hxrparam] = sluke_DSPX_hxrparam(sparams,simul_id,ii)
         %
         if ~isempty(hxrparam)
             %
+            hxrparam.id = 'DSPX';
             save(['SLUKE_DIAGNOSTICS/DSPX_HXRPARAM_',simul_id,'.mat'],'hxrparam');
             %
         else
