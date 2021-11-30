@@ -69,6 +69,9 @@ if ~isempty(equil)
         end
         %
     end
+end
+%
+if ~isempty(lukestructs)
     %
     if strcmp(sparams.diags.DSPX.code{ii},'R5X2')  
         %

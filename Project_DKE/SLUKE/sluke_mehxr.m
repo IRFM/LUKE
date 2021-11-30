@@ -70,6 +70,10 @@ if ~isempty(equil)
         %
     end
     %
+end
+%
+if ~isempty(lukestructs)
+    %
     if strcmp(sparams.diags.MEHXR.code{ii},'R5X2')  
         %
         if isfield(lukestructs,'diags') && isfield(lukestructs.diags,'MEHXR') && isfield(lukestructs.diags.MEHXR,'R5X2') && ~isempty(lukestructs.diags.MEHXR.R5X2)
