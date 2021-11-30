@@ -1,11 +1,12 @@
-function equil = sluke_equil(sparams,ii)
+function equil = sluke_equil(sparams,ii,jit)
 %
 % LUKE - Calculations of the toroidal MHD equilibrium for sluke. All parameters are in a structure of cell arrays of the SAME SIZE. 
 % 
 % INPUT :
 %
-%   - varargin{1} : initial 'sparams' structure
-%   - varargin{2} : simulation index in the sparams structure
+%   - sparams : initial 'sparams' structure
+%   - ii : simulation index in the sparams structure
+%   - jit : j selfconsistency interation index
 %
 % OUTPUT :
 %
@@ -18,6 +19,26 @@ equil_id = sluke_id(sparams,ii);
 if exist(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'])
     %
     load(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat']);
+    %
+    equil0 = equil;
+    %
+    if iscell(equil0)
+        %
+        if nargin < 3
+            %
+            equil = equil0{end};%last equil for j consistency loop
+            %
+        else
+            %
+            equil = equil0{jit};%last equil for j consistency loop 
+            %
+        end
+        %
+    else
+        %
+        equil = equil0;
+        %
+    end
     %
 else
     %
@@ -85,6 +106,15 @@ else
     else
         %
         %TODO for simple models
+        %
+    end
+    %
+    equil.jnit = 1;%current index j consistency loop
+    equil.jnitmax = 1;%max index j consistency loop
+    %
+    if isfield(sparams.simul,'jprofileconsistency') && isfield(sparams.simul.jprofileconsistency,'nit') && ~isempty(sparams.simul.jprofileconsistency.nit{ii}) && sparams.simul.jprofileconsistency.nit{ii} >= 1
+        %
+        equil.jnitmax = sparams.simul.jprofileconsistency.nit{ii};   
         %
     end
     %
@@ -272,13 +302,39 @@ end
 %
 if ~exist(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'])
     %
+    equil = {equil};
+    %
     save(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'],'equil');
+    %
+    equil = equil{1};
     %
 else
     %
     if flag_equil_consistency == 1 || flag_equil_fit == 1
         %
+        if nargin < 3
+            %
+            equil0(end) = {equil};
+            %
+        else
+            %
+            equil0(jit) = {equil};
+            %
+        end
+        %
+        equil = equil0;
+        %
         save(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'],'equil');
+        %
+        if nargin < 3
+            %
+            equil = equil0{end};
+            %
+        else
+            %
+            equil = equil0{jit};
+            %
+        end
         %
     end
     %
