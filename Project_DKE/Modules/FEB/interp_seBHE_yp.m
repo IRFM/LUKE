@@ -24,6 +24,12 @@ end
 %
 seBHE = zeros(seBHE_table.n_gauleg,length(Ec),length(seBHE_table.kphot),length(seBHE_table.Z0));
 %
+if max(seBHE_table.Ec) < max(Ec)
+    %
+    error('Maximum kinetic energy exceeds the value in the BHE cross-section table. Either rebuilt the tables with extended Ec values or reduced pmax in the Fokker-Planck calculations.');
+    %
+end
+%
 for i = 1:seBHE_table.n_gauleg
     for j = 1:length(seBHE_table.kphot)
         for k = 1:length(seBHE_table.Z0)
