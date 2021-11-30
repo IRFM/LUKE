@@ -300,6 +300,13 @@ if ~isfield(equil,'consistency')
    
 end
 %
+% Determination of the upper kinetic energy limit
+%
+radialDKE.r_dke = equil.ptx(:,1);
+mksa = mksacoefbuilder_dke_yp(sluke_dkeparam(sparams,ii),'',equilibrium_jd(equil,radialDKE.r_dke),radialDKE);
+equil.Ecmax_ref = mksa.Ecmax_ref;%keV
+clear mksa radialDKE
+%
 if ~exist(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'])
     %
     equil = {equil};
