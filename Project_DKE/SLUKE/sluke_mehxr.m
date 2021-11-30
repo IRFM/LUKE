@@ -1,4 +1,8 @@
-function [MEHXR] = sluke_mehxr(sparams,lukestructs,ii)
+function [MEHXR] = sluke_mehxr(sparams,lukestructs,ii,equil)
+%
+if nargin < 4
+    equil = '';
+end
 %
 simul_id = sluke_id(sparams,ii);
 %
@@ -53,9 +57,19 @@ else
     %
 end
 %
-if ~isempty(lukestructs)
+if ~isempty(equil)
     %
-
+    if isfield(sparams,'diags') && isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'R5X2') && isfield(sparams.diags.MEHXR.R5X2,'hxrparam') && isfield(sparams.diags.MEHXR.R5X2.hxrparam,'screening') && isfield(sparams.diags.MEHXR.R5X2.hxrparam.screening,'partial') && isfield(sparams.diags.MEHXR.R5X2.hxrparam.screening.partial,'params') && isfield(sparams.diags.MEHXR.R5X2.hxrparam.screening.partial.params,'tables') && isfield(sparams.diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables,'Ecmax') && ~isempty(sparams.diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.Ecmax{ii})
+        %
+        if sparams.diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.Ecmax{ii} < equil.Ecmax_ref
+            %
+            cprintf('*red','ERROR: partial screening effect in MEHXR : max kinetic energy in Fokker-Planck exceeds max kinetic in bremsstrahlung tables. Reduce sparams.kinetics.dkeparam.pnmax_S or rebuild the tables (long).');disp(' ')
+            error ('Calculation terminated.')
+            %
+        end
+        %
+    end
+    %
     if strcmp(sparams.diags.MEHXR.code{ii},'R5X2')  
         %
         if isfield(lukestructs,'diags') && isfield(lukestructs.diags,'MEHXR') && isfield(lukestructs.diags.MEHXR,'R5X2') && ~isempty(lukestructs.diags.MEHXR.R5X2)
@@ -112,7 +126,7 @@ else
         %
     else
         %
-        DSPX = [];
+        MEHXR = [];
         %
         if isempty(hxrspec)
             %

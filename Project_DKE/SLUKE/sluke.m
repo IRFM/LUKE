@@ -164,7 +164,7 @@ for ii = 1:length(sparams.machine)
                 %
                 lukestructs.ripple = '';% sluke_ripple(sparams,ii);
                 %
-                lukestructs.diags =  sluke_diagnostics(sparams,ii);
+                lukestructs.diags =  sluke_diagnostics(sparams,ii,lukestructs,lukestructs.equil);
                 %
                 if isempty(antenna_remote_status) || antenna_remote_status == 0  %antenna calculations are done or no antenna calculations
                     %

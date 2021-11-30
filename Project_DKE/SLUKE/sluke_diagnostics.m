@@ -1,8 +1,15 @@
-function diags = sluke_diagnostics(sparams,ii,lukestructs)
+function diags = sluke_diagnostics(sparams,ii,lukestructs,equil)
 %
-if nargin == 2
+if nargin < 3
     %
     lukestructs = '';
+    equil = '';
+    %
+end
+%
+if nargin < 4
+    %
+    equil = '';
     %
 end
 %
@@ -24,7 +31,7 @@ if ~exist(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'])
         %
         if ~isfield(sparams.diags.DSPX,'enable') || (isfield(sparams.diags.DSPX,'enable') && sparams.diags.DSPX.enable{ii} == 1)
             %
-            DSPX = sluke_dspx(sparams,lukestructs,ii);
+            DSPX = sluke_dspx(sparams,lukestructs,ii,equil);
             %
             if ~isempty(DSPX)
                 %
@@ -64,7 +71,7 @@ if ~exist(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'])
         %
         if ~isfield(sparams.diags.MEHXR,'enable') || (isfield(sparams.diags.MEHXR,'enable') && sparams.diags.MEHXR.enable{ii} == 1)
             %
-            MEHXR = sluke_mehxr(sparams,lukestructs,ii);
+            MEHXR = sluke_mehxr(sparams,lukestructs,ii,equil);
             %
             if ~isempty(MEHXR)
                 %
