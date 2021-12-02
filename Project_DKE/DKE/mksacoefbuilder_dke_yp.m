@@ -14,7 +14,7 @@ if isfield(dkeparam,'Te_ref') && isfield(dkeparam,'ne_ref'),
 elseif length(radialDKE.r_dke) > 1 || dkeparam.ref_mode == 0,
     Te_ref = max(equilDKE.xTe);%Core temperature
     ne_ref = max(equilDKE.xne);%Core density
-    if display.display_mode >= 1
+    if isstruct(display) && display.display_mode >= 1
         info_dke_yp(2,'Core reference temperature and density');
         disp('-------------------------------------------------------------------------------------------------------------------');
     end 
@@ -43,11 +43,12 @@ mksa.ne_ref = ne_ref;%Density (m-3)
 mksa.lnc_e_ref = coulomb_logarithm_yp(1,ne_ref,Te_ref);%LUKE backward compatibility (O. Sauter model)
 %
 if isfield(equilDKE,'screening') && isfield(equilDKE.screening,'elastic') && ~isempty(equilDKE.screening.elastic)
-    if isfield(equilDKE.screening,'coulog_model') && ~isempty(equilDKE.screening.coulog_model)
-        mksa.lnc_e_ref = coulomb_logarithm_yp(equilDKE.screening.coulog_model,ne_ref,Te_ref);
+    if isfield(equilDKE,'coulog_model') && ~isempty(equilDKE.coulog_model)
+        mksa.lnc_e_ref = coulomb_logarithm_yp(equilDKE.coulog_model,ne_ref,Te_ref);
     end
 end
 %
+mksa.Ecmax_ref = mc2*(sqrt((mksa.betath_ref*dkeparam.pnmax_S)^2  + 1) - 1);%keV
 mksa.nhu_ref = qe^4*ne_ref*mksa.lnc_e_ref/(4*pi*e0^2*me^2*(clum*mksa.betath_ref)^3);%Reference electron collision frequency (s-1)
 mksa.xftp_norm_ref = me*clum*mksa.betath_ref*equilDKE.ap*(1 + equilDKE.xx0/equilDKE.Rp).*equilDKE.xBT0./equilDKE.xB0/qe/equilDKE.psia_apRp;%Normalization factor for drift kinetic equation (ftilde)
 mksa.j_ref = -qe*clum*mksa.betath_ref*mksa.ne_ref/1e6;%MKSA current unit (MA)  (with respect to the parallel direction fo B, the negative charge of the electron is fully considered)
