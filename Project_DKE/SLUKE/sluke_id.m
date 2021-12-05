@@ -16,6 +16,21 @@ id = strrep(id,' ','_');
 id = strrep(id,',','_');
 id = strrep(id,';','_');
 %
+if isfield(sparams.simul,'signature') && ~isempty(sparams.simul.signature{ii})
+    %
+    signature = lower(cellfun(@(c) c(1),strsplit(sparams.simul.signature{ii})));
+    %
+    if strcmp(id(end),'_')
+        %
+        id = [id,signature];
+        %
+    else
+        %
+        id = [id,'_',signature];
+        %
+    end
+end
+%
 if strcmp(id(end),'_')
     %
     id = [id,'#',int2str(ii)];
