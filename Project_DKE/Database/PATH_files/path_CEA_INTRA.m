@@ -105,16 +105,21 @@ dkepath.YP105119(1).remote(2).gitupdate = true;
 %
 dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-François Artaud
 dkepath.JA132999(1).remote(1).profilename = 'JA132999';
+dkepath.JA132999(1).remote(2).profilename = 'JA132999';
 %
 dkepath.CB165101(1) = dkepath.YP105119(1);%Clarisse Bourdelle
 dkepath.CB165101(1).remote(1).profilename = 'CB165101';
+dkepath.CB165101(2).remote(2).profilename = 'CB165101';
 %
 dkepath.MG100063(1) = dkepath.YP105119(1);%Marc Goniche
 dkepath.MG100063(1).remote(1).profilename = 'MG100063';
+dkepath.MG100063(2).remote(2).profilename = 'MG100063';
 %
 dkepath.VO259454(1) = dkepath.YP105119(1);%Valeria Ostuni
 dkepath.VO259454(1).remote(1).profilename = 'VO259454';
+dkepath.VO259454(1).remote(2).profilename = 'VO259454';
 %
 dkepath.JM240179(1) = dkepath.YP105119(1);%Jorge Morales
 dkepath.JM240179(1).remote(1).profilename = 'JM240179';
+dkepath.JM240179(1).remote(2).profilename = 'JM240179';
 %
