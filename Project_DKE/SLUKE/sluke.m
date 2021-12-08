@@ -12,9 +12,17 @@ function sluke(varargin)
 %
 if nargin == 2
     %
-   diary(['SLUKE_LOGS/log_sluke_',varargin{2},'_',strrep(datestr(now),' ','_')]);
+    if ~exist('SLUKE_LOGS','dir')
+    	mkdir('SLUKE_LOGS')
+    end
+    %
+    diary(['SLUKE_LOGS/log_sluke_',varargin{2},'_',strrep(datestr(now),' ','_')]);  
     %
 else
+    %
+    if ~exist('SLUKE_LOGS','dir')
+    	mkdir('SLUKE_LOGS')
+    end
     %
     diary(['SLUKE_LOGS/log_sluke_',strrep(datestr(now),' ','_')]);
     %
