@@ -63,15 +63,15 @@ end
 %
 if remote_enforce == 0,
     if ~isempty(remote_profile_ALTAIR)
-        [err_ALTAIR,txt_ALTAIR] = unix(['ssh -Y ',remote_profile_ALTAIR.remoteuser,'@',remote_profile_ALTAIR.host,' "hostname"']);%Zone partenaire
+        [err_ALTAIR,txt_ALTAIR] = unix(['ssh -Y ',remote_profile_ALTAIR.remoteuser,'@',remote_profile_ALTAIR.hostname,' "hostname"']);%Zone partenaire
     end
     %
     if ~isempty(remote_profile_ANDROMEDE)
-        [err_ANDROMEDE,txt_ANDROMEDE] = unix(['ssh -Y ',remote_profile_ANDROMEDE.remoteuser,'@',remote_profile_ANDROMEDE.host,' "hostname"']);%Zone partenaire
+        [err_ANDROMEDE,txt_ANDROMEDE] = unix(['ssh -Y ',remote_profile_ANDROMEDE.remoteuser,'@',remote_profile_ANDROMEDE.hostname,' "hostname"']);%Zone partenaire
     end
     %
     if ~isempty(remote_profile_SIRRAH)
-        [err_SIRRAH,txt_SIRRAH] = unix(['ssh -Y ',remote_profile_SIRRAH.remoteuser,'@',remote_profile_SIRRAH.host,' "hostname"']);%Zone intra
+        [err_SIRRAH,txt_SIRRAH] = unix(['ssh -Y ',remote_profile_SIRRAH.remoteuser,'@',remote_profile_SIRRAH.hostname,' "hostname"']);%Zone intra
     end
     %
     err = err_ALTAIR + err_SIRRAH + err_ANDROMEDE;
