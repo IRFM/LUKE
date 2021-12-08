@@ -34,9 +34,7 @@ dkepath.YP105119(1).temppathroot = '/tmp/';%Absolute root directory path adress 
 % ---------------------------- sirrah -------------------------------
 %
 dkepath.YP105119(1).sirrah.local_root = '/Home/YP105119/Packages/Bin/';
-
-
-
+%
 remote.pbs.YP105119.matver.mat802 = '/usr/local/matlab/R2013b/bin/matlab';
 remote.pbs.YP105119.matver.mat903 = '/usr/local/matlab/R2017b/bin/matlab';
 remote.pbs.YP105119.matver.mat905 = '/usr/local/matlab/R2018b/bin/matlab';
@@ -109,11 +107,11 @@ dkepath.JA132999(1).remote(2).profilename = 'JA132999';
 %
 dkepath.CB165101(1) = dkepath.YP105119(1);%Clarisse Bourdelle
 dkepath.CB165101(1).remote(1).profilename = 'CB165101';
-dkepath.CB165101(2).remote(2).profilename = 'CB165101';
+dkepath.CB165101(1).remote(2).profilename = 'CB165101';
 %
 dkepath.MG100063(1) = dkepath.YP105119(1);%Marc Goniche
 dkepath.MG100063(1).remote(1).profilename = 'MG100063';
-dkepath.MG100063(2).remote(2).profilename = 'MG100063';
+dkepath.MG100063(1).remote(2).profilename = 'MG100063';
 %
 dkepath.VO259454(1) = dkepath.YP105119(1);%Valeria Ostuni
 dkepath.VO259454(1).remote(1).profilename = 'VO259454';
