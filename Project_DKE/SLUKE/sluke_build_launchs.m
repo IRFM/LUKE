@@ -104,12 +104,22 @@ if err == 0
                                 %
                             end
                             %
+                            if isfield(sparams.simul,'dataload') && isfield(sparams.simul.dataload,'remote_enforce') && ~isempty(sparams.simul.dataload.remote_enforce{ii})
+                                %
+                                dataload_remote_enforce = sparams.simul.dataload.remote_enforce{ii};
+                                %
+                            else
+                                %
+                                dataload_remote_enforce = 0;
+                                %
+                            end
+                            %
                             antennas = run_aloha_remote(sparams.machine{ii},...
                                 sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},...
                                 sparams.discharge.shot{ii},sparams.discharge.tmin{ii},...
                                 sparams.discharge.tmax{ii},...
                                 sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.results{ii}{kk},...
-                                aloha,display_data);
+                                aloha,display_data,dataload_remote_enforce);
                             %
                             for jj = 1:length(antennas)
                                 antennas(jj).aloha.optim = aloha.optim;
