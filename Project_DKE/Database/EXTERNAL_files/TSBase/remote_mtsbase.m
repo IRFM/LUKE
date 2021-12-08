@@ -31,6 +31,8 @@ if ~isstruct(sinputs)% new job
         cluster = 'ALTAIR';
     end
     %
+    dkepath = load_structures_yp('dkepath','','');
+    %
     remote_profile_ALTAIR = '';
     remote_profile_ANDROMEDE = '';
     remote_profile_SIRRAH = '';
