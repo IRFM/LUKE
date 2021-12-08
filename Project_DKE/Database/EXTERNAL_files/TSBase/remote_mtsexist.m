@@ -38,9 +38,31 @@ end
 %
 disp('Call of tsexist remotely');
 %
-remote_profile_ALTAIR = remote_CEA_ALTAIR;
-remote_profile_ANDROMEDE = remote_CEA_ANDROMEDE;
-remote_profile_SIRRAH = remote_CEA_SIRRAH;
+dkepath = load_structures_yp('dkepath','','');
+%
+for ii = 1:length(dkepath.remote)
+    %
+    if strfind(dkepath.remote(ii).hostname,'altair') & strcmp(dkepath.remote(ii).scheduler,'direct')
+        %
+        remote_profile_ALTAIR = dkepath.remote(ii);
+        %
+    elseif strfind(dkepath.remote(ii).hostname,'andromede') & strcmp(dkepath.remote(ii).scheduler,'direct')
+        %
+        remote_profile_ANDROMEDE = dkepath.remote(ii);
+        %
+    elseif strfind(dkepath.remote(ii).hostname,'sirrah') & strcmp(dkepath.remote(ii).scheduler,'direct')
+        %
+        remote_profile_SIRRAH = dkepath.remote(ii);
+        %
+    end
+    %
+end
+%
+if isempty(remote_profile_ALTAIR) && isempty(remote_profile_ANDROMEDE) && isempty(remote_profile_SIRRAH)
+    %
+    error('No remote profile for remote_tsbase.m')
+    %
+end
 %
 if remote_enforce == 0,
     [err_ALTAIR,txt_ALTAIR] = unix(['ssh -Y ',remote_profile_ALTAIR.remoteuser,'@',remote_profile_ALTAIR.host,' "hostname"']);%Zone partenaire
