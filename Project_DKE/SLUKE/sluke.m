@@ -79,6 +79,7 @@ end
 for ii = 1:length(sparams.machine)
     %
     antenna_remote_status = 0;
+    flag_queing = 0;
     %
     disp(' ')
     %
@@ -195,6 +196,8 @@ for ii = 1:length(sparams.machine)
                 %
                 cprintf('*blue',['---> is queing (max number of running simulations : ',int2str(kkmax(sparams.simul.remote_profile{ii}+1)),')']);disp(' ')
                 %
+                flag_queing = 1;
+                %
                 lukestructs = [];
                 %
             end
@@ -269,8 +272,17 @@ for ii = 1:length(sparams.machine)
                         elapsed_time_sluke = [' since ',char(duration_job),' '];
                         action_sluke = 'is running';
                     else
-                        elapsed_time_sluke = ' ';
-                        action_sluke = 'has started';
+                        if isempty(lukestructs.job.time.started)
+                            %
+                            elapsed_time_sluke = ' ';
+                            action_sluke = 'is idle';
+                            %
+                        else
+                            %
+                            elapsed_time_sluke = ' ';
+                            action_sluke = 'has started';
+                            %
+                        end
                     end
                     %    
                     if isempty(lukestructs.job.remote.host)
@@ -367,7 +379,7 @@ for ii = 1:length(sparams.machine)
             %
         else
             %
-            if isempty(lukestructs) && ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
+            if isempty(lukestructs) && ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat']) && flag_queing == 0
                 %
                 cprintf('*red',['---> failed likely because of a Matlab error. Please run the simulation locally.']);disp(' ')
                 %
