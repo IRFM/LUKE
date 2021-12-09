@@ -16,7 +16,7 @@ id_data = [sparams.machine{ii},'_data_mehxr_',sparams.discharge.shot{ii}];
 %
 if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'])
     %
-    [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii},sparams.simul.dataload.remote_enforce{ii});
+    [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii});
     %
     if ~isempty(hxrexp.t)
         %
