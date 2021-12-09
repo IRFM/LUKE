@@ -1,5 +1,9 @@
 function [remote,err] = remote_cea
 %
+    
+    err = 0;
+    remote = [];
+    %
     dkepath = load_structures_yp('dkepath','','');
     %
     remote_profile_ALTAIR = '';
