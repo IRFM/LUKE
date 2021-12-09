@@ -28,6 +28,17 @@ if ~isstruct(sinputs)% new job
     %
     flag_remote = 0;
     %
+    [err_local,txt_local] = unix('hostname');%local client machine
+    %
+    txt_local = deblank(txt_local);
+    %
+    if remote_enforce == 0 && isempty(strfind(txt_local,'altair')) && isempty(strfind(txt_local,'andromede')) && isempty(strfind(txt_local,'sirrah'))
+        %
+        cprintf([1,0.5,0],['---> Direct access to mtsdate is forbidden outside internal CEA network. Remote access is enforced']);disp(' ')
+        remote_enforce = 1;
+        %
+    end
+    %
     if remote_enforce == 0 %try first direct access
         %
         if ~isempty(which('tsdate'))
@@ -69,7 +80,7 @@ if ~isstruct(sinputs)% new job
         %
         [remote,err] = remote_cea;
         %
-        if err == 0
+        if err == 0 && isstruct(remote)
             %
             cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
             %
@@ -120,7 +131,7 @@ if ~isstruct(sinputs)% new job
             %
         else
             %
-            cprintf('red*','---> ALTAIR, ANDROMEDE and SIRRAH are all unreachable for remote_mtsdate.m. Check the connection parameters (ssh and bridge.ssh).');disp(' ')
+            cprintf('red*','---> ALTAIR, ANDROMEDE and SIRRAH are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
             %
         end 
         %
