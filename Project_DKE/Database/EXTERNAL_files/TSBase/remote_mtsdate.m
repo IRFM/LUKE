@@ -1,4 +1,4 @@
-function [ydates]= remote_mtsdate(shotnumbers,remote_enforce,cluster)
+function [ydates]= remote_mtsdate(sinputs,remote_enforce)
 %
 %LUKE -  Function which load multipes shot dates from Tore Supra database (work for WEST shot date only). May be used within CEA network or outside by SSH bridge
 %
@@ -7,8 +7,6 @@ function [ydates]= remote_mtsdate(shotnumbers,remote_enforce,cluster)
 %		shotnumbers: list shot number (ex: [32299,45525])
 %		remote_enforce (optional) : enforce remote calculation
 %           (default = 0)
-%       cluster (optional)  : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
-%           (default = 'ALTAIR')
 %
 %   Output:
 %
@@ -16,133 +14,137 @@ function [ydates]= remote_mtsdate(shotnumbers,remote_enforce,cluster)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
-if nargin < 1,
-     error('Not enough input argument in remote_tsdate.m');
-end
-if nargin < 2
-    remote_enforce = 1;
-    cluster = 'ALTAIR';
-end
-if nargin < 3
-    cluster = 'ALTAIR';
+ydates = [];
+%
+if nargin < 1
+     error('Not enough input argument in remote_mtsdate.m');
 end
 %
-dkepath = load_structures_yp('dkepath','','');
-%
-remote_profile_ALTAIR = '';
-remote_profile_ANDROMEDE = '';
-remote_profile_SIRRAH = '';
-%
-for ii = 1:length(dkepath.remote)
+if ~isstruct(sinputs)% new job
     %
-    if strfind(dkepath.remote(ii).hostname,'altair') & strcmp(dkepath.remote(ii).scheduler,'direct')
-        %
-        remote_profile_ALTAIR = dkepath.remote(ii);
-        %
-    elseif strfind(dkepath.remote(ii).hostname,'andromede') & strcmp(dkepath.remote(ii).scheduler,'direct')
-        %
-        remote_profile_ANDROMEDE = dkepath.remote(ii);
-        %
-    elseif strfind(dkepath.remote(ii).hostname,'sirrah') & strcmp(dkepath.remote(ii).scheduler,'direct')
-        %
-        remote_profile_SIRRAH = dkepath.remote(ii);
-        %
+    if nargin < 2
+        remote_enforce = 0;
     end
     %
-end
-%
-if isempty(remote_profile_ALTAIR) && isempty(remote_profile_ANDROMEDE) && isempty(remote_profile_SIRRAH)
+    flag_remote = 0;
     %
-    error('No remote profile for remote_tsbase.m')
-    %
-end
-%
-if remote_enforce == 0,
-    if ~isempty(remote_profile_ALTAIR)
-        [err_ALTAIR,txt_ALTAIR] = unix(['ssh -Y ',remote_profile_ALTAIR.remoteuser,'@',remote_profile_ALTAIR.hostname,' "hostname"']);%Zone partenaire
-    end
-    %
-    if ~isempty(remote_profile_ANDROMEDE)
-        [err_ANDROMEDE,txt_ANDROMEDE] = unix(['ssh -Y ',remote_profile_ANDROMEDE.remoteuser,'@',remote_profile_ANDROMEDE.hostname,' "hostname"']);%Zone partenaire
-    end
-    %
-    if ~isempty(remote_profile_SIRRAH)
-        [err_SIRRAH,txt_SIRRAH] = unix(['ssh -Y ',remote_profile_SIRRAH.remoteuser,'@',remote_profile_SIRRAH.hostname,' "hostname"']);%Zone intra
-    end
-    %
-    err = err_ALTAIR + err_SIRRAH + err_ANDROMEDE;
-    %
-    if err == 0, 
-        txt = txt_SIRRAH;%the client is connected to CEA intranet
-    else
-        if err_ALTAIR == 0,
-            txt = txt_ALTAIR;%the client computer can connected directly to CEA extranet.
-        elseif err_ANDROMEDE == 0,
-            txt = txt_ANDROMEDE;%the client computer can connected directly to CEA extranet.          
-        else
-            txt = '';%the client computer cannot connected directly to CEA extranet. May be by a SSH bridge.
-            err = 0;
-        end
-    end
-else
-    err = 0;
-    err_ALTAIR = '';
-    err_ANDROMEDE = '';
-    err_SIRRAH = '';
-    txt = '';
-end
-%
-[err_local,txt_local] = unix('hostname');%local client machine
-%
-if strcmp(txt_local,txt),%client on the server machine. Direct connection possible
-    remote_enforce = 0;
-end
-%
-if err==0,
-    %
-    if ~isempty(txt) && remote_enforce == 0,%when connected directly from the CEA network
+    if remote_enforce == 0 %try first direct access
+        %
+        if ~isempty(which('tsdate'))
+            %
+            if ~isreal(sinputs)
+                %
+                shotnumbers = imag(sinputs);
+                %
+            else
+                %
+                shotnumbers = sinputs;
+                %
+            end    
+            %
             [ydates] = mtsdate(shotnumbers);%
-            err = '';
-            job = '';
+            %
+            if isempty(ydates)
+                %
+                cprintf([1,0.5,0],['---> Direct access to mtsdate failed. Remote access to mtsdate is performed.']);disp(' ')
+                flag_remote = 1;
+                %
+            end
+            %
+        else
+            %
+            flag_remote = 1;
+            cprintf([1,0.5,0],['---> The mex function of mtsdate does not exist. Compile it first in ~/Project_DKE/Database/EXTERNAL_files/TSBase/TSBase/ folder. Remote access to mtsdate is performed.']);disp(' ')
+            %
+        end
+        %
     else
         %
-        disp('WARNING: remote access -> data load may be long if ethernet connection is poor');
+        flag_remote = 1;
+        cprintf([1,0.5,0],['---> Remote access to mtsdate is enforced.']);disp(' ')
         %
-        dkepath = load_structures_yp('dkepath','','');
+    end
+    %
+    if flag_remote == 1
         %
-        for iprof = 1: length(dkepath.profilestr)
-            if strcmp(cluster,'ALTAIR'),
-                if strfind(dkepath.profilestr{iprof},'CEA_ALTAIR : direct'),%connect to ALTAIR
-                    break
-                end
-            elseif strcmp(cluster,'ANDROMEDE'),
-                if strfind(dkepath.profilestr{iprof},'CEA_ANDROMEDE : direct'),%connect to ANDROMEDE
-                    break
-                end
-            elseif strcmp(cluster,'SIRRAH'),
-                if strfind(dkepath.profilestr{iprof},'CEA_SIRRAH : direct'),%connect to SIRRAH
-                    break
-                end
+        [remote,err] = remote_cea;
+        %
+        if err == 0
+            %
+            cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
+            %
+            remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
+            remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
+            %
+            if remote_enforce == 0
+                remote.link_mode='';
+            else
+                remote.link_mode=1;
             end
-        end
-        %
-        scheduler.remnum = iprof;
-        %
-        remote = dkepath.remote(scheduler.remnum);
-        %
-        remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
-        remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
-        %
-        if remote_enforce == 0
-            remote.link_mode='';
+            %                      
+            job = matstandardjob_jd;
+            job.env.remotematfnc = 'runmat';
+            %
+            job.funcopy = true;
+            job.localdatapath = [pwd,filesep];
+            %
+            job.displaymode = 0;
+            job.debugmode = 1;
+            %
+            job.nodes = 1;%number of nodes required
+            job.ppn = 1;%number of cores required
+            job.memory = 2000;% memory required (in mb) - leave empty if no requirement
+            job.walltime = 5;%[];% time required (integers - in hours) - leave empty if no requirement
+            job.rempause = 1/60;% in minutes
+            %
+            if ~isreal(sinputs)
+                shotnumbers = imag(sinputs);
+                job.wait = 0;% (0) return hand (1) wait for result
+                job.remtimout = 0;% in minutes
+                remote.timeout = 0;%Don't wait until ALOHA job is done
+            else
+                shotnumbers = sinputs;
+                job.wait = 1;%1;% (0) return hand (1) wait for result
+                job.remtimout = 10;% in minutes
+            end    
+            %
+            [err,job,ydates] = matremote_jd('mtsdate',{shotnumbers},remote,job);
+            %
+            if ~isempty(err)
+                ydates.err = err;
+            elseif ~isempty(ydates) % job completed
+                ydates = ydates;
+            else
+                ydates.job = job;
+            end
+            %
         else
-            remote.link_mode=1;
+            %
+            cprintf('red*','---> ALTAIR, ANDROMEDE and SIRRAH are all unreachable for remote_mtsdate.m. Check the connection parameters (ssh and bridge.ssh).');disp(' ')
+            %
+        end 
+        %
+    end
+    %
+else %previously running job
+    %
+    if isfield(sinputs,'job') 
+        %
+        [err,job,ydates] = matremote_jd(sinputs.job);
+        %
+        if ~isempty(err) 
+            ydates.err = err;
+        elseif ~isempty(ydates) % job completed
+            ydates = ydates;
+        else
+            ydates.job = job;
         end
         %
-        job = matstandardjob_jd('runmat');
-        job.funcopy = false;%since binary is machine specific only local version is used
+   else% previously completed jobs
         %
-        [err,job,ydates] = matremote_jd('mtsdate',{shotnumbers},remote,job);
+        ydates = sinputs;
         %
-    end    
+    end
+    %
 end
+%

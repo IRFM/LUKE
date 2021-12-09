@@ -1,4 +1,4 @@
-function [soutputs]= remote_mtsbase(sinputs,signals,remote_enforce,cluster)
+function [soutputs]= remote_mtsbase(sinputs,signals,remote_enforce)
 %
 %LUKE -  Function which load multiple signals from Tore Supra database (work for WEST shot date only). May be used within CEA network or outside by SSH bridge
 %
@@ -6,10 +6,8 @@ function [soutputs]= remote_mtsbase(sinputs,signals,remote_enforce,cluster)
 %
 %		sinputs : shot number (real number for waiting results or imaginary number for giving hand after launching function and getting back data later) or data structure (with or without job for remote calculations)
 %		signals : structure of signal types (ex: {'gphyb','gphase'})
-%		remote_enforce (optional) : enforce remote calculation
+%		remote_enforce (optional) : enforce remote connection
 %           (default = 0)
-%       cluster (optional)  : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
-%           (default = 'ALTAIR')
 %
 %   Output:
 %
@@ -17,124 +15,64 @@ function [soutputs]= remote_mtsbase(sinputs,signals,remote_enforce,cluster)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
-if nargin < 1
+soutputs = [];
+%
+if nargin < 2
      error('Not enough input argument in remote_mtsbase.m');
 end
 %
 if ~isstruct(sinputs)% new job
     %
     if nargin < 3
-        remote_enforce = 1;
-        cluster = 'ALTAIR';
-    end
-    if nargin < 4
-        cluster = 'ALTAIR';
-    end
-    %
-    dkepath = load_structures_yp('dkepath','','');
-    %
-    remote_profile_ALTAIR = '';
-    remote_profile_ANDROMEDE = '';
-    remote_profile_SIRRAH = '';
-    %
-    for ii = 1:length(dkepath.remote)
-        %
-        if strfind(dkepath.remote(ii).hostname,'altair') & strcmp(dkepath.remote(ii).scheduler,'direct')
-            %
-            remote_profile_ALTAIR = dkepath.remote(ii);
-            %
-        elseif strfind(dkepath.remote(ii).hostname,'andromede') & strcmp(dkepath.remote(ii).scheduler,'direct')
-            %
-            remote_profile_ANDROMEDE = dkepath.remote(ii);
-            %
-        elseif strfind(dkepath.remote(ii).hostname,'sirrah') & strcmp(dkepath.remote(ii).scheduler,'direct')
-            %
-            remote_profile_SIRRAH = dkepath.remote(ii);
-            %
-        end
-        %
-    end
-    %
-    if isempty(remote_profile_ALTAIR) && isempty(remote_profile_ANDROMEDE) && isempty(remote_profile_SIRRAH)
-        %
-        error('No remote profile for remote_tsbase.m')
-        %
-    end
-    %
-    if remote_enforce == 0,
-        if ~isempty(remote_profile_ALTAIR)
-            [err_ALTAIR,txt_ALTAIR] = unix(['ssh -Y ',remote_profile_ALTAIR.remoteuser,'@',remote_profile_ALTAIR.hostname,' "hostname"']);%Zone partenaire
-        end
-        %
-        if ~isempty(remote_profile_ANDROMEDE)
-            [err_ANDROMEDE,txt_ANDROMEDE] = unix(['ssh -Y ',remote_profile_ANDROMEDE.remoteuser,'@',remote_profile_ANDROMEDE.hostname,' "hostname"']);%Zone partenaire
-        end
-        %
-        if ~isempty(remote_profile_SIRRAH)
-            [err_SIRRAH,txt_SIRRAH] = unix(['ssh -Y ',remote_profile_SIRRAH.remoteuser,'@',remote_profile_SIRRAH.hostname,' "hostname"']);%Zone intra
-        end
-        %
-        err = err_ALTAIR + err_SIRRAH + err_ANDROMEDE;
-        %
-        if err == 0, 
-            txt = txt_SIRRAH;%the client is connected to CEA intranet
-        else
-            if err_ALTAIR == 0,
-                txt = txt_ALTAIR;%the client computer can connected directly to CEA extranet.
-            elseif err_ANDROMEDE == 0,
-                txt = txt_ANDROMEDE;%the client computer can connected directly to CEA extranet.          
-            else
-                txt = '';%the client computer cannot connected directly to CEA extranet. May be by a SSH bridge.
-                err = 0;
-            end
-        end
-    else
-        err = 0;
-        err_ALTAIR = '';
-        err_ANDROMEDE = '';
-        err_SIRRAH = '';
-        txt = '';
-    end
-    %
-    soutputs = [];
-    %
-    [err_local,txt_local] = unix('hostname');%local client machine
-    %
-    if strcmp(txt_local,txt),%client on the server machine. Direct connection possible
         remote_enforce = 0;
     end
     %
-    if err==0,
+    flag_remote = 0;
+    %
+    if remote_enforce == 0 %try first direct access
         %
-        if ~isempty(txt) && remote_enforce == 0,%when connected directly from the CEA network
-                [soutputs] = mtsbase(real(shotnumber),signals);%
-                err = '';
-                job = '';
-        else
+        if ~isempty(which('tsbase'))
             %
-            disp('WARNING: remote access -> data load may be long if ethernet connection is poor');
+            if ~isreal(sinputs)
+                %
+                shotnumber = imag(sinputs);
+                %
+            else
+                %
+                shotnumber = sinputs;
+                %
+            end    
             %
-            dkepath = load_structures_yp('dkepath','','');
+            [soutputs] = mtsbase(real(shotnumber),signals);%
             %
-            for iprof = 1: length(dkepath.profilestr)
-                if strcmp(cluster,'ALTAIR'),
-                    if strfind(dkepath.profilestr{iprof},'CEA_ALTAIR : direct'),%connect to ALTAIR
-                        break
-                    end
-                elseif strcmp(cluster,'ANDROMEDE'),
-                    if strfind(dkepath.profilestr{iprof},'CEA_ANDROMEDE : direct'),%connect to ANDROMEDE
-                        break
-                    end
-                elseif strcmp(cluster,'SIRRAH'),
-                    if strfind(dkepath.profilestr{iprof},'CEA_SIRRAH : direct'),%connect to SIRRAH
-                        break
-                    end
-                end
+            if isempty(soutputs)
+                %
+                cprintf([1,0.5,0],['---> Direct access to mtsbase failed. Remote access to mtsbase is performed.']);disp(' ')
+                flag_remote = 1;
+                %
             end
             %
-            scheduler.remnum = iprof;
+        else
             %
-            remote = dkepath.remote(scheduler.remnum);
+            flag_remote = 1;
+            cprintf([1,0.5,0],['---> The mex function of mtsbase does not exist. Compile it first in ~/Project_DKE/Database/EXTERNAL_files/TSBase/TSBase/ folder. Remote access to mtsbase is performed.']);disp(' ')
+            %
+        end
+        %
+    else
+        %
+        flag_remote = 1;
+        cprintf([1,0.5,0],['---> Remote access to mtsbase is enforced.']);disp(' ')
+        %
+    end
+    %
+    if flag_remote == 1
+        %
+        [remote,err] = remote_cea;
+        %
+        if err == 0
+            %
+            cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
             %
             remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
             remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
@@ -144,12 +82,11 @@ if ~isstruct(sinputs)% new job
             else
                 remote.link_mode=1;
             end
-            %
-            %job = matstandardjob_jd('runmat');
+            %                      
             job = matstandardjob_jd;
             job.env.remotematfnc = 'runmat';
             %
-            job.funcopy = false;%since binary is machine specific only local version is used
+            job.funcopy = true;
             job.localdatapath = [pwd,filesep];
             %
             job.displaymode = 0;
@@ -182,7 +119,12 @@ if ~isstruct(sinputs)% new job
                 soutputs.job = job;
             end
             %
-        end    
+        else
+            %
+            cprintf('red*','---> ALTAIR, ANDROMEDE and SIRRAH are all unreachable for remote_mtsbase.m. Check the connection parameters (ssh and bridge.ssh).');disp(' ')
+            %
+        end 
+        %
     end
     %
 else %previously running job
@@ -206,4 +148,31 @@ else %previously running job
     end
     %
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -28,8 +28,12 @@ end
 %
 youts = [];
 %
-for ii = 1:length(shotnumbers) % load all shot numbers
+if ~isempty(which('tsexist'))
     %
-    [youts{ii}.cr,youts{ii}.nb_mesures,youts{ii}.num_version,youts{ii}.certif,youts{ii}.date,youts{ii}.heure] = tsexist(shotnumbers(ii),signal);%
+    for ii = 1:length(shotnumbers) % load all shot numbers
+        %
+        [youts{ii}.cr,youts{ii}.nb_mesures,youts{ii}.num_version,youts{ii}.certif,youts{ii}.date,youts{ii}.heure] = tsexist(shotnumbers(ii),signal);%
+        %
+    end
     %
 end

@@ -1,4 +1,4 @@
-function [shotnum]= remote_tsdernier_choc(remote_enforce,cluster)
+function [shotnum]= remote_tsdernier_choc(remote_enforce)
 %
 %LUKE -  Function which gives the last shot number Tore Supra database. Includes WEST too. May be used within CEA network or outside by SSH bridge
 %
@@ -6,8 +6,6 @@ function [shotnum]= remote_tsdernier_choc(remote_enforce,cluster)
 %
 %		remote_enforce (optional) : enforce remote calculation
 %           (default = 0)
-%       cluster (optional)  : CEA cluster (SIRRAH), CEA cluster (ANDROMEDE), CEA cluster (ALTAIR)
-%           (default = 'ALTAIR')
 %
 %   Output:
 %
@@ -15,124 +13,51 @@ function [shotnum]= remote_tsdernier_choc(remote_enforce,cluster)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
-if nargin < 1,
-     error('Not enough input argument in remote_tsdernier_choc.m');
-end
-if nargin < 1
-    remote_enforce = 1;
-    cluster = 'ALTAIR';
-end
-if nargin < 2
-    cluster = 'ALTAIR';
-end
-%
-dkepath = load_structures_yp('dkepath','','');
-%
-remote_profile_ALTAIR = '';
-remote_profile_ANDROMEDE = '';
-remote_profile_SIRRAH = '';
-%
-for ii = 1:length(dkepath.remote)
-    %
-    if strfind(dkepath.remote(ii).hostname,'altair') & strcmp(dkepath.remote(ii).scheduler,'direct')
-        %
-        remote_profile_ALTAIR = dkepath.remote(ii);
-        %
-    elseif strfind(dkepath.remote(ii).hostname,'andromede') & strcmp(dkepath.remote(ii).scheduler,'direct')
-        %
-        remote_profile_ANDROMEDE = dkepath.remote(ii);
-        %
-    elseif strfind(dkepath.remote(ii).hostname,'sirrah') & strcmp(dkepath.remote(ii).scheduler,'direct')
-        %
-        remote_profile_SIRRAH = dkepath.remote(ii);
-        %
-    end
-    %
-end
-%
-if isempty(remote_profile_ALTAIR) && isempty(remote_profile_ANDROMEDE) && isempty(remote_profile_SIRRAH)
-    %
-    error('No remote profile for remote_tsbase.m')
-    %
-end
-%
-if remote_enforce == 0,
-    if ~isempty(remote_profile_ALTAIR)
-        [err_ALTAIR,txt_ALTAIR] = unix(['ssh -Y ',remote_profile_ALTAIR.remoteuser,'@',remote_profile_ALTAIR.hostname,' "hostname"']);%Zone partenaire
-    end
-    %
-    if ~isempty(remote_profile_ANDROMEDE)
-        [err_ANDROMEDE,txt_ANDROMEDE] = unix(['ssh -Y ',remote_profile_ANDROMEDE.remoteuser,'@',remote_profile_ANDROMEDE.hostname,' "hostname"']);%Zone partenaire
-    end
-    %
-    if ~isempty(remote_profile_SIRRAH)
-        [err_SIRRAH,txt_SIRRAH] = unix(['ssh -Y ',remote_profile_SIRRAH.remoteuser,'@',remote_profile_SIRRAH.hostname,' "hostname"']);%Zone intra
-    end
-    %
-    err = err_ALTAIR + err_SIRRAH + err_ANDROMEDE;
-    %
-    if err == 0, 
-        txt = txt_SIRRAH;%the client is connected to CEA intranet
-    else
-        if err_ALTAIR == 0,
-            txt = txt_ALTAIR;%the client computer can connected directly to CEA extranet.
-        elseif err_ANDROMEDE == 0,
-            txt = txt_ANDROMEDE;%the client computer can connected directly to CEA extranet.          
-        else
-            txt = '';%the client computer cannot connected directly to CEA extranet. May be by a SSH bridge.
-            err = 0;
-        end
-    end
-else
-    err = 0;
-    err_ALTAIR = '';
-    err_ANDROMEDE = '';
-    err_SIRRAH = '';
-    txt = '';
-end
-%
 shotnum = [];
 %
-[err_local,txt_local] = unix('hostname');%local client machine
-%
-if strcmp(txt_local,txt),%client on the server machine. Direct connection possible
+if nargin < 1
     remote_enforce = 0;
 end
 %
-if err==0,
+flag_remote = 0;
+%
+if remote_enforce == 0 %try first direct access
     %
-    if ~isempty(txt) && remote_enforce == 0,%when connected directly from the CEA network
-            [shotnum] = tsdernier_choc;%
-            err = '';
-            job = '';
-    else
+    if ~isempty(which('tsdernier_choc'))
         %
-        disp('WARNING: remote access -> data load may be long if ethernet connection is poor');
+        shotnum = tsdernier_choc;
         %
-        dkepath = load_structures_yp('dkepath','','');
-        %
-        for iprof = 1: length(dkepath.profilestr)
-            if strcmp(cluster,'ALTAIR'),
-                if strfind(dkepath.profilestr{iprof},'CEA_ALTAIR : direct'),%connect to ALTAIR
-                    break
-                end
-            elseif strcmp(cluster,'ANDROMEDE'),
-                if strfind(dkepath.profilestr{iprof},'CEA_ANDROMEDE : direct'),%connect to ANDROMEDE
-                    break
-                end
-            elseif strcmp(cluster,'SIRRAH'),
-                if strfind(dkepath.profilestr{iprof},'CEA_SIRRAH : direct'),%connect to SIRRAH
-                    break
-                end
-            end
+        if isempty(shotnum)
+            %
+            cprintf([1,0.5,0],['---> Direct access to tsdernier_choc failed. Remote access to tsdernier_choc is performed.']);disp(' ')
+            flag_remote = 1;
+            %
         end
         %
-        scheduler.remnum = iprof;
+    else
         %
-        remote = dkepath.remote(scheduler.remnum);
+        flag_remote = 1;
+        cprintf([1,0.5,0],['---> The mex function of tsdernier_choc does not exist. Compile it first in ~/Project_DKE/Database/EXTERNAL_files/TSBase/TSBase/ folder. Remote access to tsdernier_choc is performed.']);disp(' ')
         %
-        remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsdernier_choc only
-        remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsdernier_choc only
+    end
+    %
+else
+    %
+    flag_remote = 1;
+    cprintf([1,0.5,0],['---> Remote access to tsdernier_choc is enforced.']);disp(' ')
+    %
+end
+%
+if flag_remote == 1
+    %
+    [remote,err] = remote_cea;
+    %
+    if err == 0
+        %
+        cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');
+        %
+        remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
+        remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
         %
         if remote_enforce == 0
             remote.link_mode='';
@@ -145,5 +70,11 @@ if err==0,
         %
         [err,job,shotnum] = matremote_jd('tsdernier_choc',{''},remote,job);
         %
-    end    
+    else
+        %
+        cprintf('red*','---> ALTAIR, ANDROMEDE and SIRRAH are unreachable for remote_tsdernier_choc.m. Check the connection parameters (ssh).');disp(' ')
+        %
+    end 
+    %
 end
+%
