@@ -12,7 +12,7 @@ else
     %
     if sparams.simul.save{ii} == 1
         %
-        disp(['---> is completed. Full simulation backup will require ',num2str(round(lukestructs_properties.bytes/1e9*100)/100),' GBytes of storage']);
+        cprintf('*green',['---> is completed. Full simulation backup will take ',num2str(round(lukestructs_properties.bytes/1e9*100)/100),' GBytes on the storage disk.']);disp(' ')
         %
         if isfield(lukestructs,'output') && ~isempty(lukestructs.output)
             status.output = 1;
@@ -110,7 +110,7 @@ else
         %
     else
         %
-        disp(['---> is completed and processed results are saved.']);
+        cprintf('*green',['---> is completed and processed results are saved.']);disp(' ')
         %
         if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'],'file')
             %
