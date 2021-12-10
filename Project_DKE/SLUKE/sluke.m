@@ -36,7 +36,7 @@ if isfield(sparams.simul,'max_simulations')
     %
     for ii = 1:length(sparams.machine)
         %
-        kkmax(sparams.simul.remote_profile{ii}+1) = sparams.simul.max_simulations{ii};%case 1 is local
+        kkmax(sluke_remote_profile(sparams,ii)+1) = sluke_remote_profile(sparams,ii);%case 1 is local
         %
     end
     %
@@ -44,7 +44,7 @@ else
     %
     for ii = 1:length(sparams.machine)
         %
-        kkmax(sparams.simul.remote_profile{ii}+1) = Inf;%No limit
+        kkmax(sluke_remote_profile(sparams,ii)+1) = Inf;%No limit
         %
     end
     %
@@ -143,7 +143,7 @@ for ii = 1:length(sparams.machine)
             %
             if ~isfield(lukestructs,'output')
                 %
-                dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
+                dkepath = lukeschedulerparam('',0,sluke_remote_profile(sparams,ii),~sparams.simul.wait4results{ii});
                 %
                 lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
                 %
@@ -151,7 +151,7 @@ for ii = 1:length(sparams.machine)
             %
         elseif ~exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']) && ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             %
-            if kk(sparams.simul.remote_profile{ii}+1) < kkmax(sparams.simul.remote_profile{ii}+1)
+            if kk(sluke_remote_profile(sparams,ii)+1) < kkmax(sluke_remote_profile(sparams,ii)+1)
                 %
                 lukestructs.simul.id = simul_id;
                 %lukestructs.simul.locid = '';
@@ -177,9 +177,9 @@ for ii = 1:length(sparams.machine)
                 %
                 if isempty(antenna_remote_status) || antenna_remote_status == 0  %antenna calculations are done or no antenna calculations
                     %
-                    dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
+                    dkepath = lukeschedulerparam('',0,sluke_remote_profile(sparams,ii),~sparams.simul.wait4results{ii});
                     %
-                    if sparams.simul.remote_profile{ii} > 0
+                    if sluke_remote_profile(sparams,ii) > 0
                         %
                         cprintf('*blue',['---> is being transferred to the remote computer']);disp(' ')
                         %
@@ -202,7 +202,7 @@ for ii = 1:length(sparams.machine)
                 %
             else
                 %
-                cprintf('*blue',['---> is queing (max number of running simulations : ',int2str(kkmax(sparams.simul.remote_profile{ii}+1)),')']);disp(' ')
+                cprintf('*blue',['---> is queing (max number of running simulations : ',int2str(kkmax(sluke_remote_profile(sparams,ii)+1)),')']);disp(' ')
                 %
                 flag_queing = 1;
                 %
@@ -254,7 +254,7 @@ for ii = 1:length(sparams.machine)
                     %
                 %end
                 %
-                kk(sparams.simul.remote_profile{ii}+1) = kk(sparams.simul.remote_profile{ii}+1) - 1;
+                kk(sluke_remote_profile(sparams,ii)+1) = kk(sluke_remote_profile(sparams,ii)+1) - 1;
                 %
             elseif isfield(lukestructs,'err') %job failed
                 %
@@ -266,7 +266,7 @@ for ii = 1:length(sparams.machine)
                 %
                 delete(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
                 %
-                kk(sparams.simul.remote_profile{ii}+1) = kk(sparams.simul.remote_profile{ii}+1) - 1;
+                kk(sluke_remote_profile(sparams,ii)+1) = kk(sluke_remote_profile(sparams,ii)+1) - 1;
                 %
             elseif isfield(lukestructs,'job') %job run
                 %
@@ -305,7 +305,7 @@ for ii = 1:length(sparams.machine)
                     %
                     sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
                     %
-                    kk(sparams.simul.remote_profile{ii}+1) = kk(sparams.simul.remote_profile{ii}+1) + 1;
+                    kk(sluke_remote_profile(sparams,ii)+1) = kk(sluke_remote_profile(sparams,ii)+1) + 1;
                     %
                 else
                     %
@@ -330,6 +330,7 @@ for ii = 1:length(sparams.machine)
         if jit < jitmax
             %
             lukestructs.simul.id = simul_id;
+            %
             %lukestructs.simul.locid = '';
             %lukestructs.simul.path = 'SLUKE_RESULTS/';
             %
@@ -351,7 +352,7 @@ for ii = 1:length(sparams.machine)
             %
             lukestructs.diags =  sluke_diagnostics(sparams,ii);
             %
-            dkepath = lukeschedulerparam('',0,sparams.simul.remote_profile{ii},~sparams.simul.wait4results{ii});
+            dkepath = lukeschedulerparam('',0,sluke_remote_profile(sparams,ii),~sparams.simul.wait4results{ii});
             %
             cprintf('*blue',['---> is being transferred to the remote computer']);disp(' ')
             lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
@@ -382,7 +383,7 @@ for ii = 1:length(sparams.machine)
                     %
                     sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd is calculations are done
                     %
-                    kk(sparams.simul.remote_profile{ii}+1) = kk(sparams.simul.remote_profile{ii}+1) + 1;
+                    kk(sluke_remote_profile(sparams,ii)+1) = kk(sluke_remote_profile(sparams,ii)+1) + 1;
             end
             %
         else

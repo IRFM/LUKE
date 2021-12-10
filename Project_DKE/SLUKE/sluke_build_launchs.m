@@ -76,7 +76,7 @@ if err == 0
                         %
                         if ~exist([rfwaves_folder,'ALOHA/Simulations/',id_aloha,'.mat'])
                             %
-                            aloha.remote.profile = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).remote_profile{ii}{kk};
+                            aloha.remote.profile = sluke_remote_profile(sparams,ii,kk);
                             aloha.id = id_aloha;
                             aloha.optim.id = id_aloha;
                             aloha.optim.id_data = id_data;

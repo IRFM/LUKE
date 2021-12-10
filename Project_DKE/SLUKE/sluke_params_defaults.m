@@ -25,7 +25,7 @@ sparams.simul.id = {'LHCD'};%general simulation id
 sparams.simul.comment = {'LH current drive before collapse'};% comments on the simulations (context, author)
 sparams.simul.enable = {1};%simulation enabled
 sparams.simul.enforce = {0};%no enforce
-sparams.simul.remote_profile = {1};%Local calculations
+sparams.simul.remote_profile = {'local'};%Local calculations
 sparams.simul.wait4results = {0};%Do not wait
 %
 sparams.dkeparam.id = {'LH_RT'};%kinetic simulation parameters id
