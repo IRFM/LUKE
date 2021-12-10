@@ -45,18 +45,49 @@ if isempty(remote_profile_ALTAIR) && isempty(remote_profile_ANDROMEDE) && isempt
 end
 %
 if ~isempty(remote_profile_ALTAIR)
-    %
-    [txt,err] = matremotessh(remote_profile_ALTAIR,'hostname');
-    %
+    %    
     remote = remote_profile_ALTAIR;
+    %
+    [txt,err] = matremotessh(remote,'hostname');
+    %
+    if err > 0
+        %
+        [err,txt] = matremotecmd(remote,'','hostname');
+        %
+        if err == 0
+            %
+            remote.bridge = [];
+            %
+        else
+            %
+            remote = [];
+            %
+        end
+    end
     %
 end
 %
 if ~isempty(remote_profile_ANDROMEDE) && err > 0
     %
-    [txt,err] = matremotessh(remote_profile_ANDROMEDE,'hostname');
-    %
     remote = remote_profile_ANDROMEDE;
+    %
+    [txt,err] = matremotessh(remote,'hostname');
+    %
+    if err > 0
+        %
+        [err,txt] = matremotecmd(remote,'','hostname');
+        %
+        if err == 0
+            %
+            remote.bridge = [];
+            %
+        else
+            %
+            remote = [];
+            %
+        end
+        %
+    end
     %
 end
 %
@@ -64,7 +95,15 @@ if ~isempty(remote_profile_SIRRAH) && err > 0
     %
     [txt,err] = matremotessh(remote_profile_SIRRAH,'hostname');
     %
-    remote = remote_profile_SIRRAH;
+    if err == 0
+        %
+        remote = remote_profile_SIRRAH;
+        %
+    else
+        %
+        remote = [];
+        %
+    end
     %
 end
 %
