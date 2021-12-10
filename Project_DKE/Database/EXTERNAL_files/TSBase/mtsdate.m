@@ -1,6 +1,6 @@
 function ydates = mtsdate(shotnumbers)
 %
-%LUKE : multiple load of shot dates from Tore Supra database
+%LUKE : multiple load of shot dates from Tore Supra database 
 %
 %   Input:
 %

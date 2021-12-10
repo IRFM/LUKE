@@ -1,6 +1,6 @@
 function youts = mtsbase(shotnumber,signals)
 %
-%LUKE : multple load of signals from Tore Supra database
+%LUKE : multple load of signals from Tore Supra database 
 %
 %   Input:
 %
