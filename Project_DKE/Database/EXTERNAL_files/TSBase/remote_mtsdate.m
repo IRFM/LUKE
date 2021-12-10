@@ -159,3 +159,11 @@ else %previously running job
     %
 end
 %
+for jj = 1:length(ydates)
+    %
+    if length(ydates{jj}) > 10
+        %
+        ydates{jj} = ydates{jj}(1:10);%remove possible spurious ending char
+        %
+    end
+end

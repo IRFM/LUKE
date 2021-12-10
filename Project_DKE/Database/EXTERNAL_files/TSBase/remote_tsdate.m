@@ -100,4 +100,7 @@ if flag_remote == 1
     end 
     %
 end
-
+%
+if length(ydate) > 10
+    ydate = ydate(1:10);%remove possible spurious ending char
+end
