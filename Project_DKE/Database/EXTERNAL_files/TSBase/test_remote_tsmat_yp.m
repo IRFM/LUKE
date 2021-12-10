@@ -8,7 +8,7 @@ remote_enforce = 0;%Let the program decide (0) or not (1). If (1), use the remot
 [poshyb] = remote_tsmat(45525,'EXP=T=S;ANTENNES;POSHYB',remote_enforce);
 %[ITOR] = remote_tsmat(45525,'EXP=T=S;General;Itor',remote_enforce,remote_cluster);%shot number may be 0
 %
-disp('Remote data load using tsmat function')
+disp('Remote data load using tsmat function') 
 disp('-----------------------------------------------------------')
 disp('List of available diagnostic for TORE SUPRA discharge #45525')
 disp('-----------------------------------------------------------')
