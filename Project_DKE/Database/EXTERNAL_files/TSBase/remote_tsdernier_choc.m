@@ -71,12 +71,6 @@ if flag_remote == 1
         remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
         remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
         %
-        if remote_enforce == 0
-            remote.link_mode='';
-        else
-            remote.link_mode=1;
-        end
-        %
         job = matstandardjob_jd('runmat');
         job.funcopy = false;%since binary is machine specific only local version is used
         %
