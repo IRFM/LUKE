@@ -1,4 +1,4 @@
-function [indexlist,profile_list] = dispremoteprofiles(dkepath,type)
+function [indexlist,profile_list] = dispremoteprofiles(dkepath,type,display_mode)
 %
 % displays remote profiles 
 %
@@ -8,6 +8,7 @@ function [indexlist,profile_list] = dispremoteprofiles(dkepath,type)
 %       o structure with field profilestr : read profiles from field
 %       o 'script' : read profiles from path script corresponding to local profile
 %       o otherwise : load dkepath from getappdata(0) (same as LUKE_PATH.mat)
+%       o display_mode : display results or not in command window
 %
 if nargin >= 1 && isfield(dkepath,'profilestr');
     sourcestr = ' (from structure ''dkepath'')';
@@ -23,7 +24,7 @@ else
     return
 end
 %
-if nargin == 2 && strcmp(type,'scheduler')
+if nargin <= 3 && strcmp(type,'scheduler')
     %
     jj = 1;
     %
@@ -46,18 +47,32 @@ else
     indexlist = [1:nrem];
 end
 %
-disp (' ')
-info_dke_yp(2,['List of compatible remote profiles available from this computer',sourcestr])
-disp(' ')
+if nargin < 3
+    %
+    display_mode = 1;
+    %
+end
+%
+if display_mode
+    disp (' ')
+    info_dke_yp(2,['List of compatible remote profiles available from this computer',sourcestr])
+    disp(' ')
+end
 %
 indexlist = [0,indexlist];
 profile_list = [{'local calculations'},profile_list];
 %
-disp('------------------------------------')
-info_dke_yp(4,'#0 : local calculations');
-disp('------------------------------------')
+if display_mode
+    disp('------------------------------------')
+    info_dke_yp(4,'#0 : local calculations');
+    disp('------------------------------------')
+end
+%
 nrem = nrem + 1;
-for irem = 2:nrem,
-    info_dke_yp(4,['#',num2str(indexlist(irem)),' : ',profile_list{irem}]);
+if display_mode
+    for irem = 2:nrem,
+        info_dke_yp(4,['#',num2str(indexlist(irem)),' : ',profile_list{irem}]);
+    end
 end
 disp(' ')
+
