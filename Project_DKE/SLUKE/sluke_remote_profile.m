@@ -6,7 +6,7 @@ if nargin == 2 %for LUKE
     %
     if ischar(sparams.simul.remote_profile{ii})
         %
-        [indexlist,profile_list] = dispremoteprofiles('','scheduler',0);%scheduler only
+        [indexlist,profile_list] = dispremoteprofiles('','scheduler');%scheduler only
         %
         for jj = 1:length(indexlist)
             %
@@ -29,7 +29,7 @@ elseif nargin == 3 %for antenna code (ALOHA,...)
     %
     if ischar(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).remote_profile{ii}{kk})
         %
-        [indexlist,profile_list] = dispremoteprofiles('','scheduler',0);%scheduler only
+        [indexlist,profile_list] = dispremoteprofiles('','scheduler');%scheduler only
         %
         for jj = 1:length(indexlist)
             %
