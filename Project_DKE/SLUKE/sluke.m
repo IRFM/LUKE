@@ -36,7 +36,7 @@ if isfield(sparams.simul,'max_simulations')
     %
     for ii = 1:length(sparams.machine)
         %
-        kkmax(sluke_remote_profile(sparams,ii)+1) = sluke_remote_profile(sparams,ii);%case 1 is local
+        kkmax(sluke_remote_profile(sparams,ii)+1) = sparams.simul.max_simulations{ii};
         %
     end
     %
