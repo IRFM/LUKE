@@ -48,17 +48,21 @@ if exist(['SLUKE_RFWAVES/WAVESTRUCTS_',id,'.mat'])
     delete(['SLUKE_RFWAVES/WAVESTRUCTS_',id,'.mat']);
 end
 %
-if sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.method{ii}{kk} == 0
-    filename_aloha = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',num2str(sparams.discharge.tmin{ii}),...
-        '_',num2str(sparams.discharge.tmax{ii}),'_ALOHA_',sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},...
-        '_ne_',num2str(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.ne_guess{ii}{kk}/1e17)];
-else
-    filename_aloha = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',num2str(sparams.discharge.tmin{ii}),...
-        '_',num2str(sparams.discharge.tmax{ii}),'_ALOHA_',sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},'_ne_optim'];
-end
-%
-if exist(['SLUKE_RFWAVES/ALOHA/Simulations/',filename_aloha,'.mat'])
-    delete(['SLUKE_RFWAVES/ALOHA/Simulations/',filename_aloha,'.mat']);
+if isfield(sparams,'rfwaves') && isfield(sparams.rfwaves,'antenna') && isfield(sparams.rfwaves.antenna,'type') && ~isempty(sparams.rfwaves.antenna.type)
+    for kk = 1:length(sparams.rfwaves.antenna.type{ii})
+        if sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.method{ii}{kk} == 0
+            filename_aloha = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',num2str(sparams.discharge.tmin{ii}),...
+                '_',num2str(sparams.discharge.tmax{ii}),'_ALOHA_',sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},...
+                '_ne_',num2str(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).optim.ne_guess{ii}{kk}/1e17)];
+        else
+            filename_aloha = [sparams.machine{ii},'_',sparams.discharge.shot{ii},'_',num2str(sparams.discharge.tmin{ii}),...
+                '_',num2str(sparams.discharge.tmax{ii}),'_ALOHA_',sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},'_ne_optim'];
+        end
+        %
+        if exist(['SLUKE_RFWAVES/ALOHA/Simulations/',filename_aloha,'.mat'])
+            delete(['SLUKE_RFWAVES/ALOHA/Simulations/',filename_aloha,'.mat']);
+        end
+    end
 end
 %
 if isfield(sparams,'diags')
