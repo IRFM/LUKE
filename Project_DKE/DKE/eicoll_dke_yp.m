@@ -121,7 +121,7 @@ else %Non-relativistic Maxwellian background
     %
     xx0 = xpcleireln(ir,:)'*equilDKE.zZi.^2 + gfpn;
     xx1 = ones(length(v),1)*xzni_norm(:,ir)';
-    xx2 = ones(length(v),1)*(me./equilDKE.zmi).*xzni_norm(:,ir)';
+    xx2 = ones(length(v),1)*((me./equilDKE.zmi).*xzni_norm(:,ir)');
     %
     Fei = sum(xx0'.*xx2'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi)),1)./v2;
     Aei = sum(xx0'.*xx1'.*(erf(u)-2*u.*exp(-u.^2)/sqrt(pi))./u./u,1)./v/2;
