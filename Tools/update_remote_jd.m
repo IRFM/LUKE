@@ -123,7 +123,7 @@ if isempty(link_mode) || isnan(link_mode) || link_mode >= 0,% remote profiles en
     nrem = length(dkepath.remote);
     %
     if display_mode == 1,
-        dispremoteprofiles(dkepath);
+        dispremoteprofiles(dkepath,'');
     else
         disp (' ')
         info_dke_yp(2,'To list available remote profiles type ''dispremoteprofiles;''')        
