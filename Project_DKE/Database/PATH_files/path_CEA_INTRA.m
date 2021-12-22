@@ -36,24 +36,12 @@ dkepath.YP105119(1).temppathroot = '/tmp/';%Absolute root directory path adress 
 dkepath.YP105119(1).sirrah.local_root = '/Home/YP105119/Packages/Bin/';
 %
 dkepath.YP105119(1).sirrah.mex802 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/sirrah/MATLAB802/'];
-dkepath.YP105119(1).sirrah.mex903 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/sirrah/MATLAB903/'];%R2017B
-dkepath.YP105119(1).sirrah.mex905 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/sirrah/MATLAB905/'];%R2018B
-dkepath.YP105119(1).sirrah.mex907 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/sirrah/MATLAB907/'];%R2019B
 dkepath.YP105119(1).sirrah.mex909 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/sirrah/MATLAB909/'];%R2020B
 %
 dkepath.YP105119(1).sirrah.compiler_opt.copts = '';
 dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex802 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex802 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex903 = '';
-dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex903 = '';
-dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex903 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex905 = '';
-dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex905 = '';
-dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex905 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex907 = '';
-dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex907 = '';
-dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex907 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex909 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex909 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex909 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
@@ -63,9 +51,6 @@ dkepath.YP105119(1).sirrah.latex.env = '/usr/bin/latex';% Latex environment vari
 dkepath.YP105119(1).sirrah.imagemagick.env = '';% ImageMagick environment variable (convert)
 %
 dkepath.YP105119(1).sirrah.MUMPS.mex802 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB802'];%MUMPS_5.0.2
-dkepath.YP105119(1).sirrah.MUMPS.mex903 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB903'];%MUMPS_5.0.2
-dkepath.YP105119(1).sirrah.MUMPS.mex905 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB905'];%MUMPS_5.0.2
-dkepath.YP105119(1).sirrah.MUMPS.mex907 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB907'];%MUMPS_5.0.2
 dkepath.YP105119(1).sirrah.MUMPS.mex909 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB909'];%MUMPS_5.0.2
 %
 % ----------------------- naos and pleione ---------------------------
