@@ -289,7 +289,7 @@ if ~exist(simul.path,'dir'),
 end
 %
 if opt.waves == 1 && ~exist([simul.path,'wave_results'],'dir'), 
-    mkdir([simul.path,'wave_results']);
+    %mkdir([simul.path,'wave_results']);
 end
 %
 if opt.backup < 0 && ~exist([simul.path,'backup_',simul.id,'.mat'],'file'),% pas de reload if backup file not found - start again and save
@@ -744,7 +744,8 @@ for itn = itnmin:itnmax,%time evolution
         end
         %
         if opt.waves == 1,
-            save([simul.path,'wave_results/waves_',simul.id,'_',int2str(itn),'.mat'],'wavetype','waves','wavestructs','itn');
+            %save([simul.path,'wave_results/waves_',simul.id,'_',int2str(itn),'.mat'],'wavetype','waves','wavestructs','itn');
+            save([simul.path,'waves_',simul.id,'_',int2str(itn),'.mat'],'wavetype','waves','wavestructs','itn');
         end
         %
         wavetype = 0;
@@ -766,7 +767,8 @@ for itn = itnmin:itnmax,%time evolution
         %
     elseif itnmax == 1 && opt.waves == 1
         %
-        save([simul.path,'wave_results/waves_',simul.id,'.mat'],'waves','wavestructs');
+       % save([simul.path,'wave_results/waves_',simul.id,'.mat'],'waves','wavestructs');
+        save([simul.path,'waves_',simul.id,'.mat'],'waves','wavestructs');
         %
     end
 end
