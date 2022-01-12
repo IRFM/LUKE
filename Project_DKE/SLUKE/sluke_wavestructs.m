@@ -73,7 +73,7 @@ else
         %
     else
         %
-        remote_status = 0;
+        %remote_status = 0;
         %
         kk1 = 1;
         %

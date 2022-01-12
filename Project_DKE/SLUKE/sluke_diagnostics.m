@@ -39,6 +39,8 @@ if ~exist(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'])
                     %
                     save(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'],'DSPX');
                     %
+                    cprintf('*green',['---> DSPX synthetic diagnostic calculations has been completed : results are saved.']);disp(' ')
+                    %
                 end
                 %
                 diags.DSPX = DSPX;
@@ -78,6 +80,8 @@ if ~exist(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'])
                 if ~isempty(lukestructs)
                     %
                     save(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'],'MEHXR');
+                    %
+                    cprintf('*green',['---> MEHXR synthetic diagnostic calculations has been completed : results are saved.']);disp(' ')
                     %
                 end
                 %

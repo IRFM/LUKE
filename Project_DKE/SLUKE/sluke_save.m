@@ -10,16 +10,14 @@ else
     %
     lukestructs_properties = whos('lukestructs');
     %
-    if sparams.simul.save{ii} == 1
-        %
-        cprintf('*green',['---> is completed. Full simulation backup will take ',num2str(round(lukestructs_properties.bytes/1e9*100)/100),' GBytes on the storage disk.']);disp(' ')
+    if isfield(sparams.simul,'output') && (sparams.simul.output{ii} == 0 || sparams.simul.output{ii} == 3)
         %
         if isfield(lukestructs,'output') && ~isempty(lukestructs.output)
             status.output = 1;
             output = lukestructs.output;
             %
             if ~exist('waves','var') || isempty(waves)
-                %
+                3
                 if isfield(lukestructs.output,'dke_out') && isfield(lukestructs.output.dke_out,'waves') && ~isempty(lukestructs.output.dke_out.waves)
                     %
                     status.waves = 1;
@@ -97,7 +95,15 @@ else
             ripple = '';
         end
         %
-        dkedisplay = lukestructs.dkedisplay;
+        if isfield(lukestructs,'dkedisplay') && ~isempty(lukestructs.dkedisplay)
+            status.dkedisplay = 1;
+            fileids.dkedisplay = '';
+            dkedisplay = lukestructs.dkedisplay;
+        else
+            status.dkedisplay = 0;
+            fileids.dkedisplay = '';
+            dkedisplay = '';
+        end
         %
         status.external = 0;
         fileids.external = '';
@@ -107,6 +113,8 @@ else
         basestr = sparams.machine{ii};
         %
         save(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'],'basestr','simul_id','sparams','status','fileids','output','dkeparam','dkedisplay','equil','ohm','waves','transpfaste','ripple');
+        %
+        cprintf('*green',['---> is completed. Full simulation data are saved (',num2str(round(lukestructs_properties.bytes/1e9*100)/100),' GBytes)']);disp(' ')
         %
     else
         %

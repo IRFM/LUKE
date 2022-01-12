@@ -81,6 +81,13 @@ else
     messages.logs = '';
 end
 %
+if ~exist('SLUKE_TEMP','dir')
+	[success(11),messages.results] = mkdir('SLUKE_TEMP');
+else
+    success(11) = 1;
+    messages.results = '';
+end
+%
 if sum(success) == length(success)
     %
     success_out = 1;

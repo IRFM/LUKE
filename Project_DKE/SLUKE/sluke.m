@@ -155,7 +155,7 @@ for ii = 1:length(sparams.machine)
                 %
                 lukestructs.simul.id = simul_id;
                 %lukestructs.simul.locid = '';
-                %lukestructs.simul.path = 'SLUKE_RESULTS/';
+                lukestructs.simul.path = 'SLUKE_TEMP/';%for specific LUKE output
                 %
                 lukestructs.opt = sluke_opt(sparams,ii);
                 %
@@ -174,6 +174,22 @@ for ii = 1:length(sparams.machine)
                 lukestructs.ripple = '';% sluke_ripple(sparams,ii);
                 %
                 lukestructs.diags =  sluke_diagnostics(sparams,ii,'',lukestructs.equil);
+                %
+                if sparams.simul.initial_distribution{ii} == -1
+                    %
+                    if exist(['SLUKE_RESULTS/PROC_LUKE_LUKE_DATA_',sluke_id(sparams,ii-1),'.mat'])
+                        %
+                        load(['SLUKE_RESULTS/LUKE_LUKE_DATA_',sluke_id(sparams,ii-1),'.mat'])
+                        %
+                        %TODO :calculate interpolated previous distribution on the new grid
+                        %
+                    else
+                        %
+                        break;%wait for previous time 
+                        %
+                    end
+                    %
+                end
                 %
                 if isempty(antenna_remote_status) || antenna_remote_status == 0  %antenna calculations are done or no antenna calculations
                     %
@@ -212,23 +228,35 @@ for ii = 1:length(sparams.machine)
             %
         elseif exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             %
-            cprintf('*green',['---> has been completed and processed results are saved.']);disp(' ')
+            
             %
             if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'])
                 %
-                load(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'],'lukestructs');
+                luke_data = load(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
+                %
+                if exist('luke_data','var') && ~isempty(luke_data) && isfield(luke_data,'output') && ~isempty(luke_data.output)
+                    %
+                    cprintf('*green',['---> has been completed : detailed and processed results are saved.']);disp(' ')
+                    %
+                else
+                    %
+                    cprintf('*green',['---> has been completed : only processed results are saved.']);disp(' ')
+                    %
+                end
                 %
             else
                 %
-                lukestructs = [];
+                luke_data = [];
+                %
+                cprintf('*green',['---> has been completed : only processed results are saved.']);disp(' ')
                 %
             end
             %
         end
         %
-        if ~isempty(lukestructs) && exist('antenna_remote_status','var') && (isempty(antenna_remote_status) || antenna_remote_status == 0)
+        if exist('lukestructs','var') && ~isempty(lukestructs) && exist('antenna_remote_status','var') && (isempty(antenna_remote_status) || antenna_remote_status == 0)
             %
-            if isfield(lukestructs,'data_proc') && ~isempty(lukestructs.data_proc) %job done
+            if (isfield(lukestructs,'data_proc') && ~isempty(lukestructs.data_proc)) || (isfield(lukestructs,'output') && ~isempty(lukestructs.output)) %job done
                 %
                 if jitmax > 1 %current density profile self-consistency
                     %
@@ -243,7 +271,9 @@ for ii = 1:length(sparams.machine)
                % try
                     %
                     sluke_postprocessing(sparams,ii,lukestructs);% Data postprocessing
+                    %
                     sluke_diagnostics(sparams,ii,lukestructs);% Synthetic diagnostic calculations
+                    %
                     sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd for display or specific interactive run
                     %
              %   catch
@@ -388,7 +418,7 @@ for ii = 1:length(sparams.machine)
             %
         else
             %
-            if isempty(lukestructs) && ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat']) && flag_queing == 0
+            if exist('lukestructs','var') && isempty(lukestructs) && ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat']) && flag_queing == 0
                 %
                 cprintf('*red',['---> failed likely because of a Matlab error. Please run the simulation locally.']);disp(' ')
                 %

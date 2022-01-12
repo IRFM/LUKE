@@ -18,7 +18,7 @@ if ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
         %
     else
         %
-        if isfield(lukestructs,'data_proc') && sparams.kinetics.opt.proc_remote{ii}
+        if isfield(lukestructs,'data_proc')
             %
             data_proc = lukestructs.data_proc;%Processed data calculated remotely
             %
@@ -33,9 +33,11 @@ if ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
         %
         save(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'],'data_proc');
         %
+        cprintf('*green',['---> has been completed : processed results are saved.']);disp(' ')
+        %
     else
         %
-        disp('WARNING : Post-processing of LUKE results failed !')
+        cprinf('*red','WARNING : Post-processing of LUKE results failed !');disp(' ')
         %
     end
     %

@@ -38,7 +38,7 @@ if err == 0
     %
     if sparams.simul.enable{ii} && isfield(sparams,'rfwaves')
         %
-       % for kk = 1:length(sparams.waves.antenna.type{ii})
+        for kk = 1:length(sparams.rfwaves.antenna.type{ii})
             %
             if strfind(sparams.rfwaves.antenna.type{ii}{kk},'LH')
                 %
@@ -114,6 +114,12 @@ if err == 0
                                 %
                             end
                             %
+                            if sparams.simul.remote_profile{ii} == 0 || strcmp(sparams.simul.remote_profile{ii},'local') %local sluke calculations done. Wait for results
+                                %
+                                aloha.remote.timeout = 30;%
+                                %
+                            end
+                            %
                             antennas = run_aloha_remote(sparams.machine{ii},...
                                 sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},...
                                 sparams.discharge.shot{ii},sparams.discharge.tmin{ii},...
@@ -121,17 +127,41 @@ if err == 0
                                 sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.results{ii}{kk},...
                                 aloha,display_data);
                             %
+                            flag_run = 0;
+                            %
                             for jj = 1:length(antennas)
                                 antennas(jj).aloha.optim = aloha.optim;
+                                %
+                                if isfield(antennas(jj).aloha,'job')
+                                    %
+                                    flag_run = flag_run + 1;
+                                    %
+                                end
                             end
                             %
                             save([rfwaves_folder,'ALOHA/Simulations/',id_aloha,'.mat'],'antennas')
-                            %
-                            disp(['---> Simulation (',int2str(ii),',',id_aloha,'): started.'])
+                            % 
+                            if flag_run > 0
+                                %
+                                cprintf('*blue',['---> ALOHA antenna calculations (',id_aloha,') are in progress.']);disp(' ');
+                                %
+                            else
+                                %
+                                cprintf('*blue',['---> ALOHA antenna calculations (',id_aloha,') are done.']);disp(' ');
+                                %
+                            end
                             %
                             for jj = 1:length(antennas) %full or half antenna
                                 %
-                                flag_job(ii,jj) = 1;
+                                if isfield(aloha.remote,'timeout') &&  aloha.remote.timeout > 0
+                                    %
+                                    flag_job(ii,jj) = 0;%results are obtained. 
+                                    %
+                                else
+                                    %
+                                    flag_job(ii,jj) = 1;
+                                    %
+                                end
                                 %
                                 launchs{jj}.remote_status = flag_job(ii,jj);
                                 %
@@ -171,17 +201,17 @@ if err == 0
                                 %
                                 if isfield(antennas(jj).aloha,'job')
                                     %
-                                    disp([' - job #',int2str(jj),' for ',id_aloha,' is still running.'])
+                                    cprintf('*blue',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' are still in progress.']);disp(' ');
                                     flag_job(ii,jj) = 1;
                                     %
                                 elseif isfield(antennas(jj).aloha,'err')
                                 	%
-                                    disp([' - job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE_RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.'])
+                                    cprintf('*red',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE_RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.']);disp(' ');
                                     flag_job(ii,jj) = -1;
                                     %
                                 else
                                     %
-                                    disp([' - job #',int2str(jj),' for ',id_aloha,' is completed.'])
+                                    cprintf('*green',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' are done.']);disp(' ');
                                     flag_job(ii,jj) = 0;
                                     %
                                 end
@@ -245,7 +275,7 @@ if err == 0
                 %
             end
             %
-        %end
+        end
         %
     end
     %
