@@ -3,10 +3,29 @@ function [soutputs] = build_aloha_power_spectrum_yp(sinputs,sc,rc,optim,dkepath,
 if ~isstruct(sinputs)% new job
     %
     remote = dkepath.remote(scheduler.remnum);
-    remote.timeout = 0;%Don't wait until ALOHA job is done
+    %
+    if isfield(scheduler,'timeout') && scheduler.timeout > 0
+        %
+        remote.timeout = scheduler.timeout;%Wait until ALOHA job is done
+        cprintf('*blue',['---> Waiting for ALOHA results is enforced. Calculations may take several minutes. ']);disp(' ')
+        %
+    else
+        %
+        remote.timeout = 0;%Don't wait until ALOHA job is done
+        %
+    end
     %
     job = matstandardjob_jd('runmat');%new job
-    job.remtimout = 0;%Don't wait until ALOHA job is done
+    %
+    if isfield(scheduler,'timeout') && scheduler.timeout > 0
+        %
+        job.timeout = scheduler.timeout;%Wait until ALOHA job is done
+        %
+    else
+        %
+        job.remtimout = 0;%Don't wait until ALOHA job is done
+        %
+    end
     %
     %sc = aloha_ondemand_scenario(shotnum, tmin, tmax, ne0,[gradne1,gradne2],port);%for a direct test of ALOHA
     %sc = aloha_scenario(sc);

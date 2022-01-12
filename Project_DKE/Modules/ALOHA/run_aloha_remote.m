@@ -133,6 +133,12 @@ elseif nargin == 8
     %
     scheduler.remnum = simul_params.remote.profile;%choice of the remote machine
     %
+    if isfield(simul_params.remote,'timeout') && simul_params.remote.timeout > 0
+        %
+        scheduler.timeout = simul_params.remote.timeout;%timeout is enforced. Waiting for results
+        %
+    end
+    %
     for jj = 1:n_antennas
         %
         for kk = 1:m_raws
