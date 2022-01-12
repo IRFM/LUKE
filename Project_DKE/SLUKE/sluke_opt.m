@@ -19,11 +19,11 @@ end
 %
 if isfield(sparams.simul,'save') && isfield(sparams.simul.save,'waves') && sparams.simul.save.waves{ii} == 1
     %
-    opt.waves = 0;%save waves structre in outputs (in runlukert.m)
+    opt.waves = 1;%save waves structre in outputs (in runlukert.m)
     %
 else
     %
-    opt.waves = 1;%remove  waves structre in output
+    opt.waves = 0;%remove  waves structre in output
     %
 end
 %

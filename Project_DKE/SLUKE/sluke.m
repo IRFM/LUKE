@@ -204,15 +204,16 @@ for ii = 1:length(sparams.machine)
                         cprintf('*blue',['---> has started on the local computer']);disp(' ')
                         %
                     end
+                    %
                     lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
                     %
                 elseif antenna_remote_status == 1
                     %
-                    cprintf('*green',['Antenna calculations are running for simulation ',int2str(ii),'. Restart the simulation script to get back antenna results and run LUKE calculations automatically.']);disp(' ')
+                    cprintf('*green',['Antenna calculations are running for simulation #',int2str(ii),'. Restart the simulation script to get back antenna results and run LUKE calculations automatically.']);disp(' ')
                     %
                 elseif antenna_remote_status == -1
                     %
-                    cprintf('*red',['WARNING : Antenna calculations failed for simulation ',int2str(ii),'. Check files before restarting the simulation script to run LUKE calculations.']);disp(' ')
+                    cprintf('*red',['WARNING : Antenna calculations failed for simulation #',int2str(ii),'. Check files before restarting the simulation script to run LUKE calculations.']);disp(' ')
                     %
                 end
                 %
@@ -236,7 +237,7 @@ for ii = 1:length(sparams.machine)
                 %
                 if exist('luke_data','var') && ~isempty(luke_data) && isfield(luke_data,'output') && ~isempty(luke_data.output)
                     %
-                    cprintf('*green',['---> has been completed : detailed and processed results are saved.']);disp(' ')
+                    cprintf('*green',['---> has been completed : full and processed results are saved.']);disp(' ')
                     %
                 else
                     %
@@ -268,22 +269,36 @@ for ii = 1:length(sparams.machine)
                     %
                 end
                 %
-               % try
+                try
                     %
                     sluke_postprocessing(sparams,ii,lukestructs);% Data postprocessing
                     %
+                catch
+                    %
+                    cprintf('*red',['---> error in postprocessing calculations.' ]);disp(' ')
+                    %  
+                end
+                %
+                try
+                    %
                     sluke_diagnostics(sparams,ii,lukestructs);% Synthetic diagnostic calculations
                     %
-                    sluke_save(sparams,ii,lukestructs);%save results and make them comptible with irunluke_jd for display or specific interactive run
+                catch
                     %
-             %   catch
+                    cprintf('*red',['---> error in synthetic diagnostics calculations.' ]);disp(' ')
+                    %  
+                end
+                %                
+                try
                     %
-                  %  cprintf('*red',['---> error in postprocessing or synthetic diagnostics calculations. Full LUKE results are temporarily backed-up.' ]);disp(' ')
+                    sluke_save(sparams,ii,lukestructs);%save results and make them compatible with irunluke_jd for display or specific interactive run
                     %
-                 %   save (['SLUKE_RESULTS/BACKUP_LUKE_DATA_',simul_id,'.mat'],'sparams','lukestructs','ii');
+                catch
                     %
-                %end
-                %
+                    cprintf('*red',['---> error in savings simulation results.' ]);disp(' ')
+                    %  
+                end
+                %                
                 kk(sluke_remote_profile(sparams,ii)+1) = kk(sluke_remote_profile(sparams,ii)+1) - 1;
                 %
             elseif isfield(lukestructs,'err') %job failed
@@ -340,12 +355,11 @@ for ii = 1:length(sparams.machine)
                 else
                     %
                     cprintf('*red',['---> is orphan. No more folder batch_',lukestructs.job.timeid,'. It is therefore canceled']);disp(' ')
-                    %delete results
                     %
                 end
             else
                 %
-                cprintf('*red',['---> has a problem (output not recognized. Check if this not a just a connection problem before cancelling the simulation by deleting the LUKE_DATA file).']);disp(' ')
+                cprintf('*red',['---> has a problem (output not recognized. Check if this not a just a connection problem before cancelling the simulation by deleting the results of the simulation).']);disp(' ')
                 %
             end
             %

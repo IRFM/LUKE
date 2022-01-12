@@ -17,7 +17,7 @@ else
             output = lukestructs.output;
             %
             if ~exist('waves','var') || isempty(waves)
-                3
+                %
                 if isfield(lukestructs.output,'dke_out') && isfield(lukestructs.output.dke_out,'waves') && ~isempty(lukestructs.output.dke_out.waves)
                     %
                     status.waves = 1;
