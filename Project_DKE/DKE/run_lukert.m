@@ -233,17 +233,11 @@ else
     if ~isfield(opt,'save'),
         opt.save = 0;
     end
-    if ~isfield(opt,'fields'),
-        opt.fields = NaN;
-    end
     if ~isfield(opt,'backup'),
         opt.backup = 0;
     end
     if ~isfield(opt,'waves'),    
         opt.waves = 0;
-    end
-    if ~isfield(opt,'proc'),    
-        opt.proc = [];
     end
 end
 %
@@ -785,6 +779,7 @@ output.Zcurr = Zcurr;
 output.ZP0 = ZP0;
 %
 test_legendre = 0;
+%
 if isfield(dkeparam,'opt_flegendre') && dkeparam.opt_flegendre == 1,%distribution compressed on Legendre polynomials basis
     [dke_out.XXf0_interp,testf0] = interp_legendre_yp(dkeparam,gridDKE,dke_out.XXf0,test_legendre);
     [dke_out.XXfM_interp,testfM] = interp_legendre_yp(dkeparam,gridDKE,dke_out.XXfM,test_legendre);
@@ -792,6 +787,7 @@ if isfield(dkeparam,'opt_flegendre') && dkeparam.opt_flegendre == 1,%distributio
 %     dke_out = rmfield(dke_out,'XXf0');
 %     dke_out = rmfield(dke_out,'XXfM');
 %     dke_out = rmfield(dke_out,'XXfinit');
+%
 end
 %
 output.dke_out = dke_out;
@@ -811,62 +807,70 @@ end
 %
 lukestructs.output = output;
 %
-diags = '';
-%
-if isfield(lukestructs,'diags') && ~isempty(lukestructs.diags)
+if isfield(opt,'save') && opt.save >= 1
     %
-    name_diags = fieldnames(lukestructs.diags);
+    lukestructs.data_proc = proc_luke_jd(output,opt.proc);
     %
-    for ii = 1:length(name_diags)
+    diags = '';
+    %
+    if isfield(lukestructs,'diags') && ~isempty(lukestructs.diags)
         %
-        diag = lukestructs.diags.(name_diags{ii});
+        name_diags = fieldnames(lukestructs.diags);
         %
-        if ~isempty(diag)
+        for ii = 1:length(name_diags)
             %
-            if isfield(diag,'remote_calculations') && diag.remote_calculations == 1
+            diag = lukestructs.diags.(name_diags{ii});
+            %
+            if ~isempty(diag)
                 %
-                data_in.lukestructs = rmfield(lukestructs,'diags');
-                data_in.hxrspec = diag.hxrspec;
-                data_in.hxrparam = diag.hxrparam;
-                %
-                lukestructs.diags.(name_diags{ii}).(diag.code) = sluke_synthetic_diag(diag.code,data_in);
-                %
+                if isfield(diag,'remote_calculations') && diag.remote_calculations == 1
+                    %
+                    data_in.lukestructs = rmfield(lukestructs,'diags');
+                    data_in.hxrspec = diag.hxrspec;
+                    data_in.hxrparam = diag.hxrparam;
+                    %
+                    lukestructs.diags.(name_diags{ii}).(diag.code) = sluke_synthetic_diag(diag.code,data_in);
+                    %
+                else
+                    %
+                    lukestructs.diags.(name_diags{ii}).(diag.code) = '';
+                    %
+                end
             else
                 %
-                lukestructs.diags.(name_diags{ii}).(diag.code) = '';
+                lukestructs.diags.(name_diags{ii}) = '';
                 %
             end
-        else
-            %
-            lukestructs.diags.(name_diags{ii}) = '';
             %
         end
         %
     end
     %
-end
-%
-if isfield(opt,'proc') && ~isempty(opt.proc)
-    lukestructs.data_proc = proc_luke_jd(output,opt.proc);
 end
 %
 % Reduced output
 %
-if ~isfield(dkeparam,'opt_struct') || dkeparam.opt_struct == 0,
+if ~isfield(dkeparam,'opt_struct') || dkeparam.opt_struct == 0
+    %
     savefields_radialDKE = {'xrho_S_dke','xpsin_f','xpsin_f_dke','xdpsin_f_dke','xpsin_S_dke','r_dke'};
     savefields_momentumDKE = {'pn','pnp','pn_S','dpn','mhu','mhu_S','dmhu'};
     savefields_gridDKE = {'X1mmhu2','xmhubounce2'};
     savefields_Zmomcoef = {'gamma','v','Ec_ref','dEc_ref'};
+    %
     if isfield(output.dke_out,'xepsi')
-        if mean(output.dke_out.xepsi{1}) > 0,%non-zero electric field
+        %
+        if mean(output.dke_out.xepsi{1}) > 0 %non-zero electric field
             savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda','XXlambda_b_p1m2p2'};
         else       
             savefields_Zbouncecoef = {'xq','xqtilde','xqbar','xqhat','XXheaviside','Xxlambda'};
         end
+        %
     end
+    %
     savefields_Zmripple = {'XXlossripple','xdeltaripple','xNq','Xnhuloss','xthetabanana','xthetaloss','xpndetrap','xpnth','xEseuil'};
     %
     savefields_ZXXD_rf = {'parpar_ij','pp_ij'};
+    %
     rmfields_dke_out = {'ZXXS','ZXXF_rf','ZXXD_c','ZXXF_c','ZXXD_e','ZXXF_e','ZXXD_a','ZXXF_a','XXILor'};
     %
     output.radialDKE = selectfields_jd(output.radialDKE,savefields_radialDKE);
@@ -877,34 +881,48 @@ if ~isfield(dkeparam,'opt_struct') || dkeparam.opt_struct == 0,
     output.Zmripple = selectfields_jd(output.Zmripple,savefields_Zmripple);
     %
     output.dke_out.ZXXD_rf = selectfields_jd(output.dke_out.ZXXD_rf,savefields_ZXXD_rf);
+    %
     output.dke_out = rmfield(output.dke_out,rmfields_dke_out);
     %
     lukestructs.output = output;
     %
 end
 %
-if opt.save == 1,% save results in LUKE_RESULTS file
-    if isempty(simul.path) || ~strcmp(simul.path(1),filesep),% relative path
-        simul.path = [pwd,filesep,simul.path];
+if ~isfield(opt,'save') || opt.save == 0 %save only full data (may be reduced form -> dkeparam.opt_struct)
+    %
+    lukestructs = selectfields_jd(lukestructs,{'output','equil','simul',opt',});
+    %
+elseif isfield(opt,'save') && opt.save == 1 %save processed data and synthetic diagnostics if any
+    %
+    lukestructs = selectfields_jd(lukestructs,{'data_proc','diags'});
+    %
+elseif isfield(opt,'save') && opt.save == 2 %save full and processed data + synthetic diagnostics 
+    %
+    lukestructs = selectfields_jd(lukestructs,{'output','equil','data_proc','diags'});
+    %
+elseif isfield(opt,'save') && opt.save == 3 %save all results in LUKE_RESULTS fileif path is in simul struct or all results
+    %
+    if exist('simul','var')
+        %
+        if isempty(simul.path) || ~strcmp(simul.path(1),filesep) % relative path
+            %
+            simul.path = [pwd,filesep,simul.path];
+            %
+        end
+        %
+        savepath = simul.path;
+        savefile = ['LUKE_RESULTS_',simul.id,'.mat'];
+        save([savepath,savefile],'lukestructs','-v7.3');
+        %
+        lukestructs.output.savepath = savepath;
+        lukestructs.output.savefile = savefile;
+        %
     end
-    savepath = simul.path;
-    savefile = ['LUKE_RESULTS_',simul.id,'.mat'];
-    save([savepath,savefile],'lukestructs','-v7.3');
+    %
 end
-%
-if iscell(opt.fields),% select fields to return in output
-    lukestructs.output = selectfields_jd(lukestructs.output,opt.fields);
-end
-%
-if opt.save == 1,% return at least savefile
-    lukestructs.output.savepath = savepath;
-    lukestructs.output.savefile = savefile;
-end
-%
-if opt.save == 2
-    lukestructs = selectfields_jd(lukestructs,{'diags','data_proc'});
-end
-%
+
+
+
 
 
     
