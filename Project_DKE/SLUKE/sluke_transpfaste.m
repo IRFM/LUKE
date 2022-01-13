@@ -39,7 +39,7 @@ else
         %
     else
         % 
-        transpfaste = sluke_params_value(sparams.kinetics.fast_electron_anomalous_transport,ii)
+        transpfaste = sluke_params_value(sparams.kinetics.fast_electron_anomalous_transport,ii);
         %
     end
 end
