@@ -85,7 +85,7 @@ dkepath.YP105119(1).altair.imagemagick.env = '/usr/bin/';% ImageMagick environme
 dkepath.YP105119(1).andromede1.local_root = '/home/YP105119/Packages/andromede/';
 %
 dkepath.YP105119(1).andromede1.mex802 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB802/'];
-dkepath.YP105119(1).andromede1.mex903 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB903/'];
+dkepath.YP105119(1).andromede1.mex909 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/andromede/MATLAB909/'];
 %
 dkepath.YP105119(1).andromede1.compiler_opt.copts = '';
 dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex802 = '';
@@ -190,7 +190,7 @@ dkepath.YP105119(1).remote(5).luke_root = dkepath.YP105119(1).luke_root;% local 
 %}
 %------------------------------------ Other LUKE users ------------------------------
 %
-dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-François Artaud
+dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-Fran\E7ois Artaud
 dkepath.JA132999(1).luke_root = '/home/JA132999/luke/LUKE_LHCD/';
 dkepath.JA132999(1).remote(1).luke_root = dkepath.JA132999(1).luke_root;
 dkepath.JA132999(1).remote(1).profilename = 'JA132999';
@@ -216,7 +216,7 @@ dkepath.JM240179(1).remote(1).luke_root = dkepath.JM240179(1).luke_root;
 dkepath.JM240179(1).remote(1).profilename = 'JM240179';
 %
 dkepath.TB263881(1) = dkepath.YP105119(1);%Tullio Barbui
-dkepath.TB263881(1).luke_root = '/home/TB263881/luke/LUKE_LHCD/';
+dkepath.TB263881(1).luke_root = '/home/TB263881/Documents/LUKE/LUKE/LUKE_LHCD_git/';
 dkepath.TB263881(1).remote(1).luke_root = dkepath.TB263881(1).luke_root;
 dkepath.TB263881(1).remote(1).profilename = 'TB263881';
 
