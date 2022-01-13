@@ -35,7 +35,7 @@ else
         %
         transpfaste = load([transpfaste_path,transpfaste_file]);
         %
-        save(['SLUKE_TRANSPS/TRANSPFASTE_',transpfste_id,'.mat'],'transpfaste');
+        save(['SLUKE_TRANSPS/TRANSPFASTE_',transpfaste_id,'.mat'],'transpfaste');
         %
     else
         % 
