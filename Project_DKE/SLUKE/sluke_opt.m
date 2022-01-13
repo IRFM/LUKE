@@ -11,12 +11,6 @@ else
     %
 end
 %
-if isfield(sparams.simul,'save') && isfield(sparams.simul.save,'kinetics') && sparams.simul.save.kinetics{ii} == 1
-    %
-    opt.save = 3;%save LUKE in LUKE_RESULTS file (see run_lukert.m)
-    %
-end
-%
 if isfield(sparams.simul,'save') && isfield(sparams.simul.save,'waves') && sparams.simul.save.waves{ii} == 1
     %
     opt.waves = 1;%save waves structre in outputs (in runlukert.m)
