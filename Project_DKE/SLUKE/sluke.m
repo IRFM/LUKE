@@ -171,7 +171,7 @@ for ii = 1:length(sparams.machine)
                 %
                 lukestructs.transpfaste = sluke_transpfaste(sparams,ii);
                 %
-                lukestructs.ripple = '';% sluke_ripple(sparams,ii);
+                lukestructs.ripple = sluke_ripple(sparams,ii);
                 %
                 lukestructs.diags =  sluke_diagnostics(sparams,ii,'',lukestructs.equil);
                 %
@@ -392,7 +392,7 @@ for ii = 1:length(sparams.machine)
             %
             lukestructs.transpfaste = sluke_transpfaste(sparams,ii);
             %
-            lukestructs.ripple = '';% sluke_ripple(sparams,ii);
+            lukestructs.ripple = sluke_ripple(sparams,ii);
             %
             lukestructs.diags =  sluke_diagnostics(sparams,ii);
             %
