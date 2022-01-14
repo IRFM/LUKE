@@ -10,6 +10,8 @@ if ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             %
             data_proc = proc_luke_jd(lukestructs.output);%default value
             %
+            cprintf([1,0.5,0],['---> Defaults options for LUKE postprocessing since they are not defined in sparams.' ]);disp(' ')    
+            %
         else
             %
             cprintf('*red',['---> error in local LUKE postprocessing.' ]);disp(' ')    
