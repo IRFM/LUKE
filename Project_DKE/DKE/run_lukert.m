@@ -239,6 +239,12 @@ else
     if ~isfield(opt,'waves'),    
         opt.waves = 0;
     end
+    if ~isfield(opt,'proc'),    
+        opt.proc = [];
+    end
+    if ~isfield(opt,'fields'),    
+        opt.fields = NaN;
+    end
 end
 %
 [dummy,matlabversion,matlabrelease] = LUKEversion_jd;
@@ -811,7 +817,11 @@ lukestructs.output = output;
 %
 if isfield(opt,'save') && opt.save >= 1
     %
-    lukestructs.data_proc = proc_luke_jd(output,opt.proc);
+    if ~isempty(opt.proc)
+        %
+        lukestructs.data_proc = proc_luke_jd(output,opt.proc);
+        %
+    end
     %
     diags = '';
     %
@@ -890,6 +900,10 @@ if ~isfield(dkeparam,'opt_struct') || dkeparam.opt_struct == 0
     %
 end
 %
+if iscell(opt.fields),% select fields to return in output
+	lukestructs.output = selectfields_jd(lukestructs.output,opt.fields);
+end
+%
 if ~isfield(opt,'save') || opt.save == 0 %save only full data (may be reduced form -> dkeparam.opt_struct)
     %
     lukestructs = selectfields_jd(lukestructs,{'output','equil','simul',opt',});
@@ -922,9 +936,5 @@ elseif isfield(opt,'save') && opt.save == 3 %save all results in LUKE_RESULTS fi
     end
     %
 end
+%
 
-
-
-
-
-    
