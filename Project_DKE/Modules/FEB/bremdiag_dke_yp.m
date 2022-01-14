@@ -125,7 +125,7 @@ brem_bd_diag = zeros(size(brem_bd_plasma));
 %    
 for ic = 1:size(brem_bd_interp,1),
 	if ic == 1,
-        if ~strcmp(id,'ME-HXR') 
+        if ~strcmp(id,'MEHXR') 
             gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
         else
             gkEinterp1 = dresp_dke_mehxr(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
@@ -139,7 +139,7 @@ for ic = 1:size(brem_bd_interp,1),
 		Tabsxinterp = repmat(absxinterp(:),[1,size(brem_bd_interp,2)]);
 	else
 		if (kd(ic-1) ~= kd(ic)) | (res(ic-1) ~= res(ic)) | (phf(ic-1) ~= phf(ic))
-            if ~strcmp(id,'ME-HXR') 
+            if ~strcmp(id,'MEHXR') 
                 gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
             else
                 gkEinterp1 = dresp_dke_mehxr(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
@@ -156,7 +156,7 @@ for ic = 1:size(brem_bd_interp,1),
 %
     gkEinterp_out{ic} = gkEinterp;%For display of the response function
 %
-    if ~strcmp(id,'ME-HXR') 
+    if ~strcmp(id,'MEHXR') 
         brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))';
     else
         brem_bd_diag_interp(ic,:) = (((gkEinterp.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))';
@@ -167,7 +167,7 @@ for ic = 1:size(brem_bd_interp,1),
 		meanabsx(ic,ik) = sum(absxinterp(min(find(kinterp >= kfit_S(ik))):max(find(kinterp < kfit_S(ik+1))))')'/length(absxinterp(min(find(kinterp >= kfit_S(ik))):max(find(kinterp < kfit_S(ik+1)))).');
 	end
 %
-    if ~strcmp(id,'ME-HXR')
+    if ~strcmp(id,'MEHXR')
         for ik = 1:nkfit,
             brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= kfit_S(ik))):max(find(kinterp < kfit_S(ik+1)))).').'*dkinterp;%number of pulses in energy channel ik per unit time
         end

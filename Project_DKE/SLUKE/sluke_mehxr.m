@@ -165,7 +165,7 @@ function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
             %
             if strcmp(sparams.machine{ii},'TS') ||  strcmp(sparams.machine{ii},'WEST')
                 %   
-                [hxrspec,~] = get_hxrspec_forLUKE_jd('TS',str2num(sparams.discharge.shot{ii}),'','','');
+                [hxrspec,~] = get_mehxrspec_forLUKE_yp('WEST',str2num(sparams.discharge.shot{ii}),'','','');
                 % 
             else
                 %
@@ -175,7 +175,7 @@ function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
             %
         end
         %
-    elseif isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && strcmp(sparams.diags.MEHXR.hxrspec.source,'file')
+    elseif isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && strcmp(sparams.diags.MEHXR.hxrspec.source{ii},'file')
         %
         if exist([sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii}],'file')
             %
@@ -188,7 +188,7 @@ function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
             %
         end
         %
-    elseif isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && strcmp(sparams.diags.MEHXR.hxrspec.source,'value')
+    elseif isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && strcmp(sparams.diags.MEHXR.hxrspec.source{ii},'value')
         %
         hxrspec = sluke_params_value(sparams.diags.MEHXR.hxrspec,ii);
         %
@@ -284,7 +284,7 @@ function [hxrparam] = sluke_MEHXR_hxrparam(sparams,simul_id,ii)
         %
         if ~isempty(hxrparam)
             %
-            hxrparam.id = 'ME-HXR';
+            hxrparam.id = 'MEHXR';
             save(['SLUKE_DIAGNOSTICS/MEHXR_HXRPARAM_',simul_id,'.mat'],'hxrparam');
             %
         else
