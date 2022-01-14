@@ -41,6 +41,18 @@ else
         % 
         transpfaste = sluke_params_value(sparams.kinetics.fast_electron_anomalous_transport,ii);
         %
+        if strcmp(transpfaste.Dr_type,'EM')
+            transpfaste.Dr_model = 1;
+        elseif strcmp(transpfaste.Dr_type,'ES')
+            transpfaste.Dr_model = 0;
+        end
+        %
+        if strcmp(transpfaste.Vr_type,'EM')
+            transpfaste.Vr_model = 1;
+        elseif strcmp(transpfaste.Vr_type,'ES')
+            transpfaste.Vr_model = 0;
+        end
+        %
     end
 end
     
