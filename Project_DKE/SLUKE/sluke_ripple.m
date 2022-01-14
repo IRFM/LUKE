@@ -48,7 +48,7 @@ if strcmp(sparams.machine{ii},'TS') || strcmp(sparams.machine{ii},'WEST')
     %
 else
     %
-    cprintf(*[1,0.5,0],['No toroidal magnetic ripple is implemented yet for the machine : ',sparams.machine{ii}]);disp(' ');
+    cprintf([1,0.5,0],['No toroidal magnetic ripple is implemented yet for the machine : ',sparams.machine{ii}]);disp(' ');
     %
 end
     
