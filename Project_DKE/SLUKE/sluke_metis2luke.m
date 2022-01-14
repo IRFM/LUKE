@@ -41,10 +41,20 @@ else
     %
 end
 %
-if isfield(equil1,'fit')
+if isfield(equil1,'fit') || isfield(equil1,'ripple')
     %
-    equil2 = rmfield(equil1,'fit');
-    fit = sluke_params_value(sparams.equil.fit,ii);
+    if isfield(equil1,'fit')
+        equil2 = rmfield(equil1,'fit');
+        fit = sluke_params_value(sparams.equil.fit,ii);
+    else
+        equil2 = equil1;
+        fit = '';
+    end
+    %
+    if isfield(equil2,'ripple')
+        equil2 = rmfield(equil2,'ripple');
+        ripple = sluke_params_value(sparams.equil.ripple,ii);
+    end
     %
 else
     equil2 = equil1;
