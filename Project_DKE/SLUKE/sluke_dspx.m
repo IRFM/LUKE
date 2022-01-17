@@ -119,7 +119,17 @@ else
         %
         if isfield(sparams.diags.DSPX,'remote_calculations')
             %
-            DSPX.remote_calculations = sparams.diags.DSPX.remote_calculations{ii};%local calculations
+            if sparams.simul.output{ii} == 0
+                %
+                DSPX.remote_calculations = 0;%local calculationsin this case
+                %
+                cprintf([1,0.5,0],['---> DSPX calculations are enforced locally since sparams.simul.output = 0.']);disp(' ')
+                %
+            else
+                %
+                DSPX.remote_calculations = sparams.diags.DSPX.remote_calculations{ii};%local calculations
+                %
+            end
             %
         else
             %

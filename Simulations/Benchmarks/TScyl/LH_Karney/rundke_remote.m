@@ -46,9 +46,9 @@ luke_memory = 2000;% job memory in mb
 luke_walltime = '01:00';% job walltime in hours (number or full description '00:00' for hours and minutes
 enforce = 0;% (0) : exit if remote calculation failed, (1): if remote calculation failed, it is done locally
 %
-opt.save = 1;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
+opt.save = 3;%1;% save individual results in LUKE_RESULTS files (WARNING : Use absolute simul.path to save locally with local cluster)
 %
-mdce_opt = 0;% option for testing distributed computing inside remote calculation
+mdce_opt = 1;% option for testing distributed computing inside remote calculation
 %
 localdatadir = 'LUKE_RESULTS_files_remote/';
 %

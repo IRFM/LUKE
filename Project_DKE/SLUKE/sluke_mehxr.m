@@ -120,7 +120,17 @@ else
         %
         if isfield(sparams.diags.MEHXR,'remote_calculations')
             %
-            MEHXR.remote_calculations = sparams.diags.MEHXR.remote_calculations{ii};%local calculations
+            if sparams.simul.output{ii} == 0
+                %
+                MEHXR.remote_calculations = 0;%local calculationsin this case
+                %
+                cprintf([1,0.5,0],['---> MEHXR calculations are enforced locally since sparams.simul.output = 0.']);disp(' ')
+                %
+            else
+                %
+                MEHXR.remote_calculations = sparams.diags.MEHXR.remote_calculations{ii};%local calculations
+                %
+            end
             %
         else
             %
