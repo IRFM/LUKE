@@ -112,7 +112,7 @@ if err == 0
                             %
                         end
                         %
-                        if (isnumeric(sparams.simul.remote_profile{ii}) && sparams.simul.remote_profile{ii} == 0) || (ischar(sparams.simul.remote_profile{ii}) && strcmp(sparams.simul.remote_profile{ii},'local') == 1) %local sluke calculations done. Wait for results
+                        if (isnumeric(sparams.simul.remote.profile{ii}) && sparams.simul.remote.profile{ii} == 0) || (ischar(sparams.simul.remote.profile{ii}) && strcmp(sparams.simul.remote.profile{ii},'local') == 1) %local sluke calculations done. Wait for results
                             %
                             aloha.remote.timeout = 30;%
                             %
