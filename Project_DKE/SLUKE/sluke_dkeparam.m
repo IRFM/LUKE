@@ -80,7 +80,23 @@ end
 %
 if isfield(sparams.kinetics.dkeparam,'rho_S')
     %
-    dkeparam.rho_S = sparams.kinetics.dkeparam.rho_S{ii};%enforced value
+    if isreal(sparams.kinetics.dkeparam.rho_S{ii})
+        %
+        dkeparam.rho_S = sparams.kinetics.dkeparam.rho_S{ii};%enforced value
+        %
+    else
+        %
+        dkeparam.rho_S = linspace(0,imag(sparams.kinetics.dkeparam.rho_S{ii}(1)),real(sparams.kinetics.dkeparam.rho_S{ii}(1)));
+        %
+        for jj = 2:length(sparams.kinetics.dkeparam.rho_S{ii})
+            %
+            dkeparam.rho_S = [dkeparam.rho_S,linspace(imag(sparams.kinetics.dkeparam.rho_S{ii}(jj-1)),imag(sparams.kinetics.dkeparam.rho_S{ii}(jj)),real(sparams.kinetics.dkeparam.rho_S{ii}(jj)))];
+            %
+        end
+        %
+        dkeparam.rho_S = unique(dkeparam.rho_S.','rows').';%remove duplicate values
+        %
+    end
     %
 end   
     
