@@ -143,7 +143,7 @@ for ii = 1:length(sparams.machine)
             %
             if ~isfield(lukestructs,'output')
                 %
-                dkepath = lukeschedulerparam('',0,sluke_remote_profile(sparams,ii),~sparams.simul.wait4results{ii});
+                dkepath = sluke_dkepath(sparams,ii);
                 %
                 lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
                 %
@@ -193,7 +193,7 @@ for ii = 1:length(sparams.machine)
                 %
                 if isempty(antenna_remote_status) || antenna_remote_status == 0  %antenna calculations are done or no antenna calculations
                     %
-                    dkepath = lukeschedulerparam('',0,sluke_remote_profile(sparams,ii),~sparams.simul.wait4results{ii});
+                    dkepath = sluke_dkepath(sparams,ii);
                     %
                     if sluke_remote_profile(sparams,ii) > 0
                         %
@@ -396,9 +396,10 @@ for ii = 1:length(sparams.machine)
             %
             lukestructs.diags =  sluke_diagnostics(sparams,ii);
             %
-            dkepath = lukeschedulerparam('',0,sluke_remote_profile(sparams,ii),~sparams.simul.wait4results{ii});
+            dkepath = sluke_dkepath(sparams,ii);
             %
             cprintf('*blue',['---> is being transferred to the remote computer']);disp(' ')
+            %
             lukestructs = run_lukert(lukestructs,dkepath);%run C3PO/LUKE locally or remotely
             %
             if exist(['batch_',lukestructs.job.timeid],'dir') || strcmp(lukestructs.job.remotedatapath,lukestructs.job.localdatapath)
