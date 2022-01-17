@@ -4,13 +4,13 @@ remote_profile = [];
 %
 [indexlist,profile_list] = dispremoteprofiles('','scheduler',0);%scheduler only
 %
-if isfield(sparams.simul,'remote_profile')
+if isfield(sparams.simul.remote,'profile')
     %
-    if ischar(sparams.simul.remote_profile{ii})
+    if ischar(sparams.simul.remote.profile{ii})
         %
         for jj = 1:length(indexlist)
             %
-            if ~isempty(strfind(profile_list{jj},sparams.simul.remote_profile{ii}))
+            if ~isempty(strfind(profile_list{jj},sparams.simul.remote.profile{ii}))
                 %
                 remote_profile = indexlist(jj);
                 break;
@@ -23,7 +23,7 @@ if isfield(sparams.simul,'remote_profile')
         %
         for jj = 1:length(indexlist)
             %
-            if indexlist(jj) == sparams.simul.remote_profile{ii}
+            if indexlist(jj) == sparams.simul.remote.profile{ii}
                 %
                 remote_profile = indexlist(jj);
                 break;
@@ -36,7 +36,7 @@ if isfield(sparams.simul,'remote_profile')
     %
 else
     %
-    cprintf([1,0.5,0],['---> WARNING : no remote profile has been defined in sparams structure for the simulations. Local simulations are enforced. Set sparams.simul.remote_profile subfield to perform calculations on another machine. Type dispremoteprofiles('''',''scheduler'') to get available machines.']);disp(' ')
+    cprintf([1,0.5,0],['---> WARNING : no remote profile has been defined in sparams structure for the simulations. Local simulations are enforced. Set sparams.simul.remote.profile subfield to perform calculations on another machine. Type dispremoteprofiles('''',''scheduler'') to get available machines.']);disp(' ')
     remote_profile = 0;%local calculations enforced
     %
 end
@@ -85,7 +85,7 @@ if nargin == 3 %for antenna code (ALOHA,...)
     else
         %
         cprintf([1,0.5,0],['---> WARNING : no remote profile has been defined in sparams structure for antenna calculations. Set sparams.rfwaves.antenna.',sparams.rfwaves.antenna.type{ii}{kk},'.',sparams.rfwaves.antenna.code{ii}{kk},'.remote_profile to perform calculations on another machine. Type dispremoteprofiles('''',''scheduler'') to get available machines.']);disp(' ')
-        cprintf([1,0.5,0],['---> WARNING : Antenna calculations are enforced on the same machine defined in the subfield sparams.simul.remote_profile ']);disp(' ')
+        cprintf([1,0.5,0],['---> WARNING : Antenna calculations are enforced on the same machine defined in the subfield sparams.simul.remote.profile ']);disp(' ')
         %
     end
     %
