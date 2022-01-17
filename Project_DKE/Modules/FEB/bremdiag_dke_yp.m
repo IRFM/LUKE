@@ -173,7 +173,7 @@ for ic = 1:size(brem_bd_interp,1),
         end
     else
         for ik = 1:nkfit
-            brem_bd_diag(ic,ik) = brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik),1,'first')) - brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik+1),1,'first'));%number of pulses in energy channel ik per unit time
+            brem_bd_diag(ic,ik) = brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik),1,'first')) - brem_bd_diag_interp(ic,find(kinterp < kfit_S(ik+1),1,'last'));%number of pulses in energy channel ik per unit time
         end
     end
 %	
