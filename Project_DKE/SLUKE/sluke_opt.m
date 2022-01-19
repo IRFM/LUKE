@@ -11,6 +11,26 @@ else
     %
 end
 %
+if isfield(sparams,'diags')
+    %
+    diags_fieldnames = fieldnames(sparams.diags);
+    %
+    for kk = 1:length(diags_fieldnames)
+        %
+        if isfield(sparams.diags.(diags_fieldnames{kk}),'remote_calculations') && sparams.diags.(diags_fieldnames{kk}).remote_calculations{ii} == 0
+            %
+            if opt.save == 1
+                %
+                opt.save = 0;
+                cprintf('*[1,0.5,0]',['WARNING : opt.save = 0 enforced for local diagnostics calculations']);disp(' ')
+                %
+            end
+        end
+        %
+    end
+    %
+end      
+%
 if isfield(sparams.simul,'save') && isfield(sparams.simul.save,'waves') && sparams.simul.save.waves{ii} == 1
     %
     opt.waves = 1;%save waves structre in outputs (in runlukert.m)
