@@ -5,9 +5,9 @@ clc
 %
 zZi = [2,3,4,5,6,7,8,26,29,74];
 %
-kphot_min = 20;%keV
-kphot_max = 240;%keV
-dkphot = 10;%keV
+kphot_min = 10;%keV
+kphot_max = 200;%keV
+dkphot = 5;%keV
 %nkphot = 23;%number of photon energies
 %
 if exist('dkphot','var')
