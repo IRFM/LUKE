@@ -47,13 +47,21 @@ else
     %
 end
 %
-%
 %xpos = [1 200 1900 1000];%window position for large output
 xpos = '';%window position for large output
 %
 for ii = 1:length(data)
     %
     for jj = 1:length(data(ii).type_signal)
+        %
+        filename = [data(ii).machine,'_',int2str(data(ii).shot),'_',data(ii).antenna,'_',data(ii).port,'_',data(ii).type_signal{jj}];
+        %
+        if exist([display_path,'Data/Figures/fig_',filename,'.eps'])
+            %
+            cprintf([1,0.5,0],[' --> Figure ',filename,'.eps already exists in folder ',display_path,'SLUKE_RFWAVES/ALOHA/Data/Figures/']);disp(' ')
+            return
+            %
+        end
         %
         h1 = figure('Visible',visible_mode);
         %
@@ -103,8 +111,6 @@ for ii = 1:length(data)
             if ~exist([display_path,'Data/Figures/'])
                 mkdir([display_path,'Data/Figures/'])
             end
-            %
-            filename = [data(ii).machine,'_',int2str(data(ii).shot),'_',data(ii).antenna,'_',data(ii).port,'_',data(ii).type_signal{jj}];
             %
             print(h1,'-depsc2','-loose','-r600',[display_path,'Data/Figures/fig_',filename,'.eps']);
             print(h1,'-dpng','-r72',[display_path,'Data/Figures/fig_',filename,'.png']);

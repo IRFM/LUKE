@@ -1,13 +1,45 @@
-function flag_display = display_aloha_powerspectrum(flag_display,data,antennas,display_mode)
+function flag_display = display_aloha_powerspectrum(flag_display,data,antennas,display_mode,rfwaves_folder)
 %
-
-
-%                        
-if flag_display == 1 && display_mode == 1% power spectra are independent of the density in front of the grill. Just the first is plotted
+visiblemode = 'Off';%default value
+savemode = 0;%default value
+%
+%TODO: update this functions correctly
+%
+if ~exist([rfwaves_folder,'ALOHA/Simulations/Figures'])
+    %
+    mkdir([rfwaves_folder,'ALOHA/Simulations/Figures'])
+    %
+end
+%
+if exist([rfwaves_folder,'ALOHA/Simulations/Figures/LH_spectrum_',antennas(1).aloha.optim.id,'_a.eps'])
+    %
+    cprintf([1,0.5,0],[' --> Figures LH_spectrum_',antennas(1).aloha.optim.id,' and LH_RC_',antennas(1).aloha.optim.id,' already exists in folder ',rfwaves_folder,'ALOHA/Simulations/Figures/']);disp(' ')
+    return
+    %
+end
+%
+if flag_display == 1 && display_mode >= 0% power spectra are independent of the density in front of the grill. Just the first is plotted
+    %
+    if display_mode == 0
+        %
+        visiblemode = 'Off';
+        savemode = 1;
+        %
+    elseif display_mode == 1
+        %
+        visiblemode = 'On';
+        savemode = 0;
+        %
+    else
+        %
+        visiblemode = 'On';
+        savemode = 1;
+        %
+    end
     %
     if length(data) >= 1
         %
-        h1 = figure;
+        h1 = figure('Visible',visiblemode);
         %
         h1.Name = ['Spectrum - ALOHA/Simulations/sim_aloha_simul_params(ii).',antennas(1).aloha.optim.id];
         %
@@ -31,11 +63,18 @@ if flag_display == 1 && display_mode == 1% power spectra are independent of the 
         %
         drawnow;
         %
+        if savemode == 1
+            %
+            print(h1,'-depsc2','-loose','-r600',[rfwaves_folder,'ALOHA/Simulations/Figures/LH_spectrum_',antennas(1).aloha.optim.id,'_a.eps']);
+            print(h1,'-dpng','-r72',[rfwaves_folder,'ALOHA/Simulations/Figures/LH_spectrum_',antennas(1).aloha.optim.id,'_a.png']);
+            %
+        end
+        %
     end
     %
     if length(data) == 2
         %
-        h2 = figure;
+        h2 = figure('Visible',visiblemode);
         %
         h2.Name = ['Spectrum - ALOHA/Simulations/sim_aloha_',antennas(1).aloha.optim.id];
         %
@@ -59,6 +98,12 @@ if flag_display == 1 && display_mode == 1% power spectra are independent of the 
         %
         drawnow;
         %
+        if savemode == 1
+            %
+            print(h2,'-depsc2','-loose','-r600',[rfwaves_folder,'ALOHA/Simulations/Figures/LH_spectrum_',antennas(1).aloha.optim.id,'_b.eps']);
+            print(h2,'-dpng','-r72',[rfwaves_folder,'ALOHA/Simulations/Figures/LH_spectrum_',antennas(1).aloha.optim.id,'_b.png']);
+            %
+        end
     end
     %
     flag_display = 0; 
@@ -67,10 +112,7 @@ end
 %
 
 
-
-
-
-h3 = figure;
+h3 = figure('Visible',visiblemode);
 %
 h3.Name = ['RC - ALOHA/Simulations/sim_aloha_',antennas(1).aloha.optim.id];
 %
@@ -172,7 +214,13 @@ elseif length(antennas) == 4
         end
     end
 end
-
+%
+if savemode == 1
+    %
+    print(h3,'-depsc2','-loose','-r600',[rfwaves_folder,'ALOHA/Simulations/Figures/LH_RC_',antennas(1).aloha.optim.id,'.eps']);
+    print(h3,'-dpng','-r72',[rfwaves_folder,'ALOHA/Simulations/Figures/LH_RC_',antennas(1).aloha.optim.id,'.png']);
+    %
+end
 
 
 
