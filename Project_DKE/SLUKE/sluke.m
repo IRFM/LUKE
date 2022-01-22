@@ -10,23 +10,9 @@ function sluke(varargin)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
-if nargin == 2
-    %
-    if ~exist('SLUKE_LOGS','dir')
-    	mkdir('SLUKE_LOGS')
-    end
-    %
-    diary(['SLUKE_LOGS/log_sluke_',varargin{2},'_',strrep(datestr(now),' ','_')]);  
-    %
-else
-    %
-    if ~exist('SLUKE_LOGS','dir')
-    	mkdir('SLUKE_LOGS')
-    end
-    %
-    diary(['SLUKE_LOGS/log_sluke_',strrep(datestr(now),' ','_')]);
-    %
-end
+if ~exist('SLUKE_LOGS','dir')
+    mkdir('SLUKE_LOGS')
+end   
 %
 sparams_in = varargin{1};
 %
@@ -85,6 +71,12 @@ end
 % run sluke locally or remotely
 %
 for ii = 1:length(sparams.machine)
+    %
+    if sparams.simul.log{ii} == 1
+        %
+        diary(['SLUKE_LOGS/log_sluke_',sparams.machine{ii},'_',sparams.discharge.shot{ii},'_simulation_',int2str(ii),'_',strrep(datestr(now),' ','_')]);
+        %
+    end
     %
     antenna_remote_status = 0;
     flag_queing = 0;
@@ -449,24 +441,30 @@ for ii = 1:length(sparams.machine)
         %
     end
     %
+    if exist('SLUKE_LOGS','dir')
+        %
+        filelist = dir;%local scan
+        %
+        for jj = 1:length(filelist)
+            %
+            if strfind(filelist(jj).name,'matlab_diary.')
+                %
+                if sparams.simul.log{ii} == 1
+                    %
+                    movefile(filelist(jj).name,'SLUKE_LOGS/'); %move all diary done remotely in folder that contains logs
+                    %
+                else
+                    %
+                    delete(filelist(jj).name); %delete file
+                    %
+                end
+            end
+        end
+        %
+    end
 end
 %
 diary off
-%
-if exist('SLUKE_LOGS','dir')
-    %
-    filelist = dir;%local scan
-    %
-    for jj = 1:length(filelist)
-        %
-        if strfind(filelist(jj).name,'matlab_diary.')
-            %
-            movefile(filelist(jj).name,'SLUKE_LOGS/'); %move all diary done remotely in folder that contains logs
-            %
-        end
-    end
-    %
-end
 %
 cprintf('black','');disp(' ');%return to default color black
 
