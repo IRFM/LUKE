@@ -222,7 +222,7 @@ if err == 0
                             %
                             display_lhdata(data_lh,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.mode{ii}{kk},sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.save{ii}{kk});
                             %
-                            flag_display_powerspectrum = display_aloha_powerspectrum(flag_display_powerspectrum,data_lh,antennas,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.results{ii}{kk});
+                            flag_display_powerspectrum = display_aloha_powerspectrum(flag_display_powerspectrum,data_lh,antennas,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.results{ii}{kk},rfwaves_folder);
                             %
                         end
                         %
