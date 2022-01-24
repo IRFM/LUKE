@@ -37,7 +37,7 @@ flag_remote = 0;
 %
 txt_local = deblank(txt_local);
 %
-if remote_enforce == 0 && isempty(strfind(txt_local,'altair')) && isempty(strfind(txt_local,'andromede')) && isempty(strfind(txt_local,'sirrah'))
+if remote_enforce == 0 && isempty(strfind(txt_local,'partenaires.cea.fr')) && isempty(strfind(txt_local,'intra.cea.fr'))
     %
     cprintf([1,0.5,0],['---> Direct access to tsdate is forbidden outside internal CEA network. Remote access is enforced']);disp(' ')
     remote_enforce = 1;
