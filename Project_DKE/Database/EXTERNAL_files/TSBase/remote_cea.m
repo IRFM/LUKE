@@ -18,7 +18,9 @@ dkepath = load_structures_yp('dkepath','','');
 %
 remote_profile_ALTAIR = '';
 remote_profile_ANDROMEDE = '';
+remote_profile_PERSEE = '';
 remote_profile_SIRRAH = '';
+remote_profile_TALITHA = '';
 %
 for ii = 1:length(dkepath.remote)
     %1
@@ -30,11 +32,20 @@ for ii = 1:length(dkepath.remote)
         %
         remote_profile_ANDROMEDE = dkepath.remote(ii);
         %
+    elseif strfind(dkepath.remote(ii).hostname,'persee') & strcmp(dkepath.remote(ii).scheduler,'direct')
+        %
+        remote_profile_PERSEE = dkepath.remote(ii);
+        %
     elseif strfind(dkepath.remote(ii).hostname,'sirrah') & strcmp(dkepath.remote(ii).scheduler,'direct')
         %
         remote_profile_SIRRAH = dkepath.remote(ii);
         %
+    elseif strfind(dkepath.remote(ii).hostname,'talitha') & strcmp(dkepath.remote(ii).scheduler,'direct')
+        %
+        remote_profile_TALITHA = dkepath.remote(ii);
+        %
     end
+
     %
 end
 %
@@ -91,6 +102,30 @@ if ~isempty(remote_profile_ANDROMEDE) && err > 0
     %
 end
 %
+if ~isempty(remote_profile_PERSEE) && err > 0
+    %
+    remote = remote_profile_PERSEE;
+    %
+    [txt,err] = matremotessh(remote,'hostname');
+    %
+    if err > 0
+        %
+        [err,txt] = matremotecmd(remote,'','hostname');
+        %
+        if err == 0
+            %
+            remote.bridge = [];
+            %
+        else
+            %
+            remote = [];
+            %
+        end
+        %
+    end
+    %
+end
+%
 if ~isempty(remote_profile_SIRRAH) && err > 0
     %
     [txt,err] = matremotessh(remote_profile_SIRRAH,'hostname');
@@ -98,6 +133,22 @@ if ~isempty(remote_profile_SIRRAH) && err > 0
     if err == 0
         %
         remote = remote_profile_SIRRAH;
+        %
+    else
+        %
+        remote = [];
+        %
+    end
+    %
+end
+%
+if ~isempty(remote_profile_TALITHA) && err > 0
+    %
+    [txt,err] = matremotessh(remote_profile_TALITHA,'hostname');
+    %
+    if err == 0
+        %
+        remote = remote_profile_TALITHA;
         %
     else
         %
