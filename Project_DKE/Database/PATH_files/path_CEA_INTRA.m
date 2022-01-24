@@ -10,8 +10,8 @@ function dkepath = path_CEA_INTRA
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'sirrah','naos','pleione','spica'};
-dkepath.hostname = {'sirrah','naos','pleione','spica'};
+dkepath.machine = {'sirrah','thalita','naos','pleione','spica'};
+dkepath.hostname = {'sirrah','thalita','naos','pleione','spica'};
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -58,6 +58,7 @@ dkepath.YP105119(1).sirrah.MUMPS.mex909 = [dkepath.YP105119(1).sirrah.local_root
 dkepath.YP105119(1).naos = dkepath.YP105119(1).sirrah;
 dkepath.YP105119(1).pleione = dkepath.YP105119(1).sirrah;
 dkepath.YP105119(1).spica = dkepath.YP105119(1).sirrah;
+dkepath.YP105119(1).thalita = dkepath.YP105119(1).thalita;
 %
 %--------------------------- Remote computing -----------------------------
 %
@@ -80,10 +81,12 @@ dkepath.YP105119(1).remote(2).gitupdate = true;
 %
 dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-François Artaud
 dkepath.JA132999(1).luke_root = '/Home/JA132999/luke/LUKE_LHCD/';
-dkepath.JA132999(1).remote(1).luke_root = dkepath.JA132999(1).luke_root;
-dkepath.JA132999(1).remote(2).luke_root = dkepath.JA132999(1).luke_root;
 dkepath.JA132999(1).remote(1).profilename = 'JA132999';
+dkepath.JA132999(1).remote(1).luke_root = dkepath.JA132999(1).luke_root;
 dkepath.JA132999(1).remote(2).profilename = 'JA132999';
+dkepath.JA132999(1).remote(2).luke_root = dkepath.JA132999(1).luke_root;
+
+
 %
 dkepath.CB165101(1) = dkepath.YP105119(1);%Clarisse Bourdelle
 dkepath.CB165101(1).luke_root = '/Home/CB165101/luke/LUKE_LHCD/';
