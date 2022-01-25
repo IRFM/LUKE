@@ -129,12 +129,23 @@ for ii = 1:length(data)
     %
     h2 = figure('Visible',visible_mode);
     %
-    h2.Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antenna,'(port : ',data(ii).port,'), density probes'];
-    if ~isempty(xpos)
-        h2.Position = xpos;
+    if isobject(h2)
+        h2.Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antenna,'(port : ',data(ii).port,'), density probes'];
+        if ~isempty(xpos)
+            h2.Position = xpos;
+        end
+    else
+        Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antenna,'(port : ',data(ii).port,'), density probes'];
+        if ~isempty(xpos)
+            Position = xpos;
+        end
     end
     %
-    sgtitle(sprintf([h2.Name,'\nDensity probes in front of the LH antennas (view from inside)']),'Color','Red');
+    if isobject(h2)
+        supertitle(sprintf([h2.Name,'\nDensity probes in front of the LH antennas (view from inside)']),'Color','Red');
+    else
+        supertitle(sprintf([Name,'\nDensity probes in front of the LH antennas (view from inside)']),'Color','Red');
+    end
     %
     if isfield(data(ii),'probe') && length(data(ii).probe) >= 1 && isfield(data(ii).probe(1),'time')
         plot(data(ii).probe(1).time,smooth(data(ii).probe(1).ne/1e17,5),'r','LineWidth',2),hold on
