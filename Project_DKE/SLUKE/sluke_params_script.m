@@ -57,8 +57,8 @@ if isstruct(sparams_in)
         fprintf(fid,'%s\n','%');
         %
         fns_in = fieldnamesr(sparams_in);
-        ihelp = find(contains(fns_in,'help'));
-        iformat = find(contains(fns_in,'format'));
+        ihelp = find(contains_yp(fns_in,'help'));
+        iformat = find(contains_yp(fns_in,'format'));
         %
         if ~isempty(ihelp)
             fns = fns_in(1:ihelp(1)-1);
