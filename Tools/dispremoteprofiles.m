@@ -24,6 +24,10 @@ else
     return
 end
 %
+if nargin == 0
+    type = '';
+end
+%
 if nargin <= 3 && strcmp(type,'scheduler')
     %
     jj = 1;
