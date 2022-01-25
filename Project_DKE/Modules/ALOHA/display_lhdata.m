@@ -65,9 +65,14 @@ for ii = 1:length(data)
         %
         h1 = figure('Visible',visible_mode);
         %
-        h1.Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antenna,'(port : ',data(ii).port,'), ',data(ii).type_signal{jj}];
-        if ~isempty(xpos)
-            h1.Position = xpos;
+        if isobject(h1)
+            h1.Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antenna,'(port : ',data(ii).port,'), ',data(ii).type_signal{jj}];
+            if ~isempty(xpos)
+                h1.Position = xpos;
+            end
+        else
+            Name = [data(ii).machine,', #',int2str(data(ii).shot),', antenna : ',data(ii).antenna,'(port : ',data(ii).port,'), ',data(ii).type_signal{jj}];
+            Position = xpos;
         end
         %
         for j = 1:4
@@ -100,7 +105,11 @@ for ii = 1:length(data)
             %
         end
         %
-        supertitle(sprintf([h1.Name,'\nURx: upper row index, LRx: lower row index, Mx: module numbering, Ax: ALOHA numbering']),'Color','Red');
+        if isobject(h1)
+            supertitle(sprintf([h1.Name,'\nURx: upper row index, LRx: lower row index, Mx: module numbering, Ax: ALOHA numbering']),'Color','Red');
+        else
+            supertitle(sprintf([Name,'\nURx: upper row index, LRx: lower row index, Mx: module numbering, Ax: ALOHA numbering']),'Color','Red');
+        end
         %
         if strcmp(visible_mode,'On')
             drawnow
