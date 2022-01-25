@@ -14,6 +14,10 @@ function sluke_clear_folders(sparams,ii)
 %
 id = sluke_id(sparams,ii);
 %
+if exist(['SLUKE_STAMPS/LUKE_STAMP_',id,'.mat'])
+    delete(['SLUKE_STAMPS/LUKE_STAMP_',id,'.mat']);
+end
+%
 if exist(['SLUKE_TEMP/LUKE_RESULTS_',id,'.mat'])
     delete(['SLUKE_TEMP/LUKE_RESULTS_',id,'.mat']);
 end
