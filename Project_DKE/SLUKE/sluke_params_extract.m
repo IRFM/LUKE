@@ -35,7 +35,7 @@ end
 if err == 0
     %
     fns_in = fieldnamesr(sparams_in);
-    ihelp = find(contains(fns_in,'help'));
+    ihelp = find(contains_yp(fns_in,'help'));
     if ~isempty(ihelp)
         fns = fns_in(1:ihelp(1)-1);
     else
