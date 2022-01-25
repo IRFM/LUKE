@@ -70,8 +70,6 @@ for ii = 1:length(data)
             h1.Position = xpos;
         end
         %
-        sgtitle(sprintf([h1.Name,'\nURx: upper row index, LRx: lower row index, Mx: module numbering, Ax: ALOHA numbering']),'Color','Red');
-        %
         for j = 1:4
             %
             i = 2*j-1;
@@ -101,6 +99,8 @@ for ii = 1:length(data)
             grid minor
             %
         end
+        %
+        supertitle(sprintf([h1.Name,'\nURx: upper row index, LRx: lower row index, Mx: module numbering, Ax: ALOHA numbering']),'Color','Red');
         %
         if strcmp(visible_mode,'On')
             drawnow
