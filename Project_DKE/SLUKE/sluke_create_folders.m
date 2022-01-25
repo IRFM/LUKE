@@ -11,80 +11,107 @@ function [success_out,messages] = sluke_create_folders
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
+ii = 1;
+%
 if ~exist('SLUKE_RESULTS','dir')
-	[success(1),messages.results] = mkdir('SLUKE_RESULTS');
+	[success(ii),messages.results] = mkdir('SLUKE_RESULTS');
 else
-    success(1) = 1;
+    success(ii) = 1;
     messages.results = '';
 end
+%
+ii = ii + 1;
 %
 if ~exist('SLUKE_KINETICS','dir')
-	[success(2),messages.results] = mkdir('SLUKE_KINETICS');
+	[success(ii),messages.results] = mkdir('SLUKE_KINETICS');
 else
-    success(2) = 1;
+    success(ii) = 1;
     messages.results = '';
 end
 %
+ii = ii + 1;
+%
 if ~exist('SLUKE_EQUILS','dir')
-	[success(3),messages.equils] = mkdir('SLUKE_EQUILS');
+	[success(ii),messages.equils] = mkdir('SLUKE_EQUILS');
 else
-    success(3) = 1;
+    success(ii) = 1;
     messages.equils = '';
 end
 %
+ii = ii + 1;
+%
 if ~exist('SLUKE_OHMS','dir')
-    [success(4),messages.ohms] = mkdir('SLUKE_OHMS');
+    [success(ii),messages.ohms] = mkdir('SLUKE_OHMS');
 else
-    success(4) = 1;
+    success(ii) = 1;
     messages.ohms = '';
 end
 %
+ii = ii + 1;
+%
 if ~exist('SLUKE_RFWAVES','dir')
-     [success(5),messages.waves] = mkdir('SLUKE_RFWAVES');
+     [success(ii),messages.waves] = mkdir('SLUKE_RFWAVES');
 else
-    success(5) = 1;
+    success(ii) = 1;
     messages.waves = '';
 end
 %
+ii = ii + 1;
+%
 if ~exist('SLUKE_TRANSPS','dir')
-     [success(6),messages.transps] = mkdir('SLUKE_TRANSPS');
+     [success(ii),messages.transps] = mkdir('SLUKE_TRANSPS');
 else
-    success(6) = 1;
+    success(ii) = 1;
     messages.transps = '';
 end
 %
 if ~exist('SLUKE_RIPPLES','dir')
-     [success(7),messages.ripple] = mkdir('SLUKE_RIPPLES');
+     [success(ii),messages.ripple] = mkdir('SLUKE_RIPPLES');
 else
-    success(7) = 1;
+    success(ii) = 1;
     messages.ripple = '';
 end
 %
+ii = ii + 1;
+%
 if ~exist('SLUKE_FIGURES','dir')
-	[success(8),messages.figures] = mkdir('SLUKE_FIGURES');
+	[success(ii),messages.figures] = mkdir('SLUKE_FIGURES');
 else
-    success(8) = 1;
+    success(ii) = 1;
     messages.figures = '';
 end
 %
+ii = ii + 1;
+%
 if ~exist('SLUKE_DIAGNOSTICS','dir')
-	[success(9),messages.diagnostics] = mkdir('SLUKE_DIAGNOSTICS');
+	[success(ii),messages.diagnostics] = mkdir('SLUKE_DIAGNOSTICS');
 else
-    success(9) = 1;
+    success(ii) = 1;
     messages.diagnostics = '';
 end
 %
 if ~exist('SLUKE_LOGS','dir')
-	[success(10),messages.logs] = mkdir('SLUKE_LOGS');
+	[success(ii),messages.logs] = mkdir('SLUKE_LOGS');
 else
-    success(10) = 1;
+    success(ii) = 1;
     messages.logs = '';
 end
 %
+ii = ii + 1;
+%
 if ~exist('SLUKE_TEMP','dir')
-	[success(11),messages.results] = mkdir('SLUKE_TEMP');
+	[success(ii),messages.results] = mkdir('SLUKE_TEMP');
 else
-    success(11) = 1;
+    success(ii) = 1;
+    messages.results = '';
+end
+%
+ii = ii + 1;
+%
+if ~exist('SLUKE_STAMPS','dir')
+	[success(ii),messages.results] = mkdir('SLUKE_STAMPS');
+else
+    success(ii) = 1;
     messages.results = '';
 end
 %
