@@ -213,8 +213,6 @@ for ii = 1:length(simul_params)
             %
             tt = strrep(['RC - ALOHA : #',int2str(shot),', dt = [',num2str(tmin),':',num2str(tmax),'], ',port,', ',simul_params(ii).id],'_','-');
             %
-            sgtitle(tt,'Color','Red');
-            %
             if length(antennas) == 2
                 %
                 if isfield(antennas(1).aloha,'results')
@@ -314,6 +312,9 @@ for ii = 1:length(simul_params)
     end
 end
 % 
+            supertitle(tt,'Color','Red');
+            %
+
 kk = 1;
 %
 for ii = 1:length(simul_params)
