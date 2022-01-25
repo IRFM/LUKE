@@ -373,10 +373,7 @@ q(inan_q) = q(min(inan_q) - 1);%remove upper NaN values
 q95 = interp1(rho,q,0.95);%q @ rho = 0.95
 q0 = q(1);
 aspectratio = equil.Rp/equil.equil_fit.ap;
-ne_lineaveraged = trapz(equil.pne.*gradient(equil.ptx(:,1)))./trapz(gradient(equil.ptx(:,1)));
-if length(ne_lineaveraged) > 1 %pb dim definition when size rho = size theta
-    ne_lineaveraged = trapz(equil.pne(:).*gradient(equil.ptx(:,1)))./trapz(gradient(equil.ptx(:,1)));
-end
+ne_lineaveraged = trapz(equil.pne.*gradient(equil.ptx(:,1))')./trapz(gradient(equil.ptx(:,1)));
 %
 if mute_equilconsistency_yp == 0
     disp(['Plasma current, Ip(from j_z) = ',num2str(Ip_z/1e6),' (MA)']);
