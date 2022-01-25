@@ -118,8 +118,6 @@ h3.Name = ['RC - ALOHA/Simulations/sim_aloha_',antennas(1).aloha.optim.id];
 %
 tt = strrep(['RC - ALOHA (',antennas(1).aloha.optim.id,')'],'_','-');   
 %
-sgtitle(tt,'Color','Red');
-%
 if length(antennas) == 2
     %
     if isfield(antennas(1).aloha,'results')
@@ -214,6 +212,8 @@ elseif length(antennas) == 4
         end
     end
 end
+%
+supertitle(tt,'Color','Red');
 %
 if savemode == 1
     %
