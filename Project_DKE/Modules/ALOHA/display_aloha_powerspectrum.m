@@ -41,7 +41,11 @@ if flag_display == 1 && display_mode >= 0% power spectra are independent of the 
         %
         h1 = figure('Visible',visiblemode);
         %
-        h1.Name = ['Spectrum - ALOHA/Simulations/sim_aloha_simul_params(ii).',antennas(1).aloha.optim.id];
+        if isobject(h1)
+            h1.Name = ['Spectrum - ALOHA/Simulations/sim_aloha_simul_params(ii).',antennas(1).aloha.optim.id];
+        else
+            Name = ['Spectrum - ALOHA/Simulations/sim_aloha_simul_params(ii).',antennas(1).aloha.optim.id];
+        end
         %
         tt = strrep(['Spectrum (',antennas(1).aloha.optim.id,')'],'_','-');
         %
@@ -76,7 +80,11 @@ if flag_display == 1 && display_mode >= 0% power spectra are independent of the 
         %
         h2 = figure('Visible',visiblemode);
         %
-        h2.Name = ['Spectrum - ALOHA/Simulations/sim_aloha_',antennas(1).aloha.optim.id];
+        if isobject(h2)
+            h2.Name = ['Spectrum - ALOHA/Simulations/sim_aloha_',antennas(1).aloha.optim.id];
+        else
+            Name = ['Spectrum - ALOHA/Simulations/sim_aloha_',antennas(1).aloha.optim.id];
+        end
         %
         tt = strrep(['Spectrum (',antennas(1).aloha.optim.id,')'],'_','-');                         
         %
@@ -114,7 +122,11 @@ end
 
 h3 = figure('Visible',visiblemode);
 %
-h3.Name = ['RC - ALOHA/Simulations/sim_aloha_',antennas(1).aloha.optim.id];
+if isobject(h3)
+    h3.Name = ['RC - ALOHA/Simulations/sim_aloha_',antennas(1).aloha.optim.id];
+else
+    Name = ['RC - ALOHA/Simulations/sim_aloha_',antennas(1).aloha.optim.id];
+end
 %
 tt = strrep(['RC - ALOHA (',antennas(1).aloha.optim.id,')'],'_','-');   
 %
