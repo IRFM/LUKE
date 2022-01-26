@@ -93,8 +93,7 @@ if ~isstruct(sinputs)% new job
             %
             cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ')
             %
-            remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
-            remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
+            remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only
             %                    
             job = matstandardjob_jd;
             job.env.remotematfnc = 'runmat';
@@ -134,7 +133,7 @@ if ~isstruct(sinputs)% new job
             %
         else
             %
-            cprintf('red*','---> ALTAIR, ANDROMEDE and SIRRAH are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+            cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
             %
         end 
         %

@@ -68,8 +68,7 @@ if flag_remote == 1
         %
         cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');
         %
-        remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
-        remote.matver.matdef = remote.matver.mat802;%enforce Matlab R2013b for tsbase only
+        remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only
         %
         job = matstandardjob_jd('runmat');
         job.funcopy = false;%since binary is machine specific only local version is used
@@ -78,7 +77,7 @@ if flag_remote == 1
         %
     else
         %
-        cprintf('red*','---> ALTAIR, ANDROMEDE and SIRRAH are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+        cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
         %
     end 
     %
