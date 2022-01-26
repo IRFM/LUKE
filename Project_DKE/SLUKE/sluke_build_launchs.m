@@ -220,13 +220,13 @@ if err == 0
                             %
                             load([rfwaves_folder,'ALOHA/Data/',id_data,'.mat'],'data_lh') 
                             %
-                            if ~isempty(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.path{ii}{kk})
+                            if isfield(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data,'path') && ~isempty(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.path{ii}{kk})
                                 %
                                 display_path = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.path{ii}{kk};
                                 %
                             else
                                 %
-                                display_path = ''; 
+                                display_path = [pwd,'/']; 
                                 %
                             end
                             %
