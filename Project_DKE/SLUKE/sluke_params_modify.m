@@ -250,10 +250,10 @@ function tf = issubfield(s,field)
 %   issubfield(A,"b")           % TRUE
 %   issubfield(A,"b.c.d.e")     % FALSE
 %   issubfield(A,"f")           % FALSE
-arguments
-    s (1,1) struct
-    field (1,1) string
-end
+%arguments
+%    s (1,1) struct
+%    field (1,1) string
+%end
 subfield = strsplit(field,'.');
 if numel(subfield) == 1
     tf = isfield(s,field);
