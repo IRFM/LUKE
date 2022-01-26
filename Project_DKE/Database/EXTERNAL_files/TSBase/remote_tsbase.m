@@ -1,4 +1,4 @@
-function [yout1,yout2,yout3,yout4,yout5]= remote_tsbase(shotnumber,signal,remote_enforce)
+function [yout1,yout2,yout3,yout4,yout5]= remote_tsbase(shotnumber,signal)
 %
 %LUKE -  Function which load signals from Tore Supra database (work for WEST shot date only). May be used within CEA network or outside by SSH bridge
 %
@@ -6,8 +6,6 @@ function [yout1,yout2,yout3,yout4,yout5]= remote_tsbase(shotnumber,signal,remote
 %
 %		shotnumber: shot number (ex: 45525)
 %		signal : type of signal (ex: 'gphyb')
-%		remote_enforce : enforce remote connection
-%           (default = 0)
 %
 %   Output:
 %
@@ -28,69 +26,22 @@ yout5 = [];
 if nargin < 2,
      error('Not enough input argument in remote_tsbase.m');
 end
-if nargin < 3
-    remote_enforce = 0;
-end
 %
-flag_remote = 0;
+[remote,err] = remote_cea;
 %
-[err_local,txt_local] = unix('hostname');%local client machine
-%
-txt_local = deblank(txt_local);
-%
-if remote_enforce == 0 && isempty(strfind(txt_local,'partenaires.cea.fr')) && isempty(strfind(txt_local,'intra.cea.fr'))
+if err == 0 && isstruct(remote)
     %
-    cprintf([1,0.5,0],['---> Direct access to tsbase is forbidden outside internal CEA network. Remote access is enforced']);disp(' ')
-    remote_enforce = 1;
+    cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
     %
-end
-%
-if remote_enforce == 0 %try first direct access
+    remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only
     %
-    if ~isempty(which('tsbase'))
-        %
-        [yout1,yout2,yout3,yout4,yout5] = tsbase(shotnumber,signal);%
-        %
-        if isempty(yout1) && isempty(yout2) && isempty(yout3) && isempty(yout4) && ~isempty(yout5)
-            %
-            cprintf([1,0.5,0],['---> Direct access to tsbase failed. Remote access to tsbase is performed.']);disp(' ')
-            flag_remote = 1;
-            %
-        end
-        %
-    else
-        %
-        flag_remote = 1;
-        cprintf([1,0.5,0],['---> The mex function of tsbase does not exist. Compile it first in ~/Project_DKE/Database/EXTERNAL_files/TSBase/TSBase/ folder. Remote access to tsbase is performed.']);disp(' ')
-        %
-    end
+    job = matstandardjob_jd('runmat');
+    job.funcopy = false;%since binary is machine specific only local version is used
+    %
+    [err,job,yout1,yout2,yout3,yout4,yout5] = matremote_jd('tsbase',{shotnumber,signal},remote,job);
     %
 else
     %
-    flag_remote = 1;
-    cprintf([1,0.5,0],['---> Remote access to tsbase is enforced.']);disp(' ')
+    cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
     %
-end
-%
-if flag_remote == 1
-    %
-    [remote,err] = remote_cea;
-    %
-    if err == 0 && isstruct(remote)
-        %
-        cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
-        %
-        remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only
-        %
-        job = matstandardjob_jd('runmat');
-        job.funcopy = false;%since binary is machine specific only local version is used
-        %
-        [err,job,yout1,yout2,yout3,yout4,yout5] = matremote_jd('tsbase',{shotnumber,signal},remote,job);
-        %
-    else
-        %
-        cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
-        %
-    end 
-    %
-end
+end 

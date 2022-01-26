@@ -2,9 +2,7 @@ close all
 clear all
 clc
 %
-remote_enforce = 0;%Let the program decide (0) or not (1). If (1), use the remote profile remote_CEA_ALTAIR.m or remote_CEA_ANDROMEDE.m 
-%
-[data] = remote_mtsmat(45525,{'EXP=T=S;TORE_SUPRA;LISTDIAG','EXP=T=S;General;Itor','EXP=T=S;ANTENNES;POSHYB'},remote_enforce);
+[data] = remote_mtsmat(45525,{'EXP=T=S;TORE_SUPRA;LISTDIAG','EXP=T=S;General;Itor','EXP=T=S;ANTENNES;POSHYB'});
 %
 disp('Multiple remote data load using tsmat function') 
 disp('---------------------------------------------------------------')

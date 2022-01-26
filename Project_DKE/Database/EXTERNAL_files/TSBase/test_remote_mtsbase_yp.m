@@ -2,16 +2,14 @@ close all
 clear all
 clc
 %
-remote_enforce = 0;%Let the program decide (0) or not (1). If (1), use the remote profile remote_CEA_ALTAIR.m or remote_CEA_ANDROMEDE.m 
-%
 shotnumber = 45525;%45525*1i;%shot number (real number for waiting results or imaginary number for giving hand after launching function and getting back data later) or data structure (with or without job for remote calculations)
 %
 if isreal(shotnumber) 
     disp('Mode : waiting for results.')
-    data = remote_mtsbase(shotnumber,{'gphyb','sipmes','svsur'},remote_enforce);%
+    data = remote_mtsbase(shotnumber,{'gphyb','sipmes','svsur'});%
 else
     disp('Mode : give hand back.')
-    data = remote_mtsbase(shotnumber,{'gphyb','sipmes','svsur'},remote_enforce);%
+    data = remote_mtsbase(shotnumber,{'gphyb','sipmes','svsur'});%
     %
     while 1
         %
