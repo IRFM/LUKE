@@ -220,7 +220,17 @@ if err == 0
                             %
                             load([rfwaves_folder,'ALOHA/Data/',id_data,'.mat'],'data_lh') 
                             %
-                            display_lhdata(data_lh,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.mode{ii}{kk},sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.save{ii}{kk});
+                            if ~isempty(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.path{ii}{kk})
+                                %
+                                display_path = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.path{ii}{kk};
+                                %
+                            else
+                                %
+                                display_path = ''; 
+                                %
+                            end
+                            %
+                            display_lhdata(data_lh,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.mode{ii}{kk},sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.save{ii}{kk},display_path);
                             %
                             flag_display_powerspectrum = display_aloha_powerspectrum(flag_display_powerspectrum,data_lh,antennas,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.results{ii}{kk},rfwaves_folder);
                             %
