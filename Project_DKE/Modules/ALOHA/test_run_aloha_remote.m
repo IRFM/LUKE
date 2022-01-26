@@ -19,14 +19,22 @@ if ~err
     %
     if strcmp(input_dke_yp('Change remote profile of the computer on which ALOHA calculations will be perfomed (y/n)','n',{'y','n'}),'y')
         %
-        dispremoteprofiles;
+        dispremoteprofiles('','scheduler');
+        %
+        disp('---------------------------------------------')
+        disp(' ')
+        %
         sparams = sluke_params_modify(sparams);
         %
     end
     %
     for ii = 1:length(sparams.machine)
         %
-        launchs{ii} = sluke_build_launchs(sparams,ii);
+        for kk = 1:length(sparams.rfwaves.antenna.type{ii})
+            %
+            launchs{ii}{kk} = sluke_build_launchs(sparams,ii,kk);
+            %
+        end
         %
     end
     %
