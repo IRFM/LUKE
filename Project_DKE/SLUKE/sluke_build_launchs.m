@@ -52,7 +52,7 @@ if err == 0
                         %
                     else
                         %
-                        rfwaves_folder = '';
+                        rfwaves_folder = [pwd,'/'];
                         %
                     end
                     %
