@@ -16,7 +16,7 @@ remote = [];
 %
 dkepath = load_structures_yp('dkepath','','');
 %
-remote_profile_ALTAIR = '';
+remote_profile_ALTAIR = ''; 
 remote_profile_SIRRAH = '';
 remote_profile_TALITHA = '';
 %
