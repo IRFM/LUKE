@@ -3,18 +3,18 @@ clear all
 close all
 clc
 %
-zZi = [2,3,4,5,6,7,8,26,29,74];
+zZi = [29];
 %
-kphot_min = 10;%keV
-kphot_max = 200;%keV
-dkphot = 5;%keV
-%nkphot = 23;%number of photon energies
+kphot_min = 20;%keV
+kphot_max = 240;%keV
+%dkphot = 5;%keV
+nkphot = 23;%number of photon energies
 %
 if exist('dkphot','var')
     kphot = [kphot_min:dkphot:kphot_max];
     nkphot = length(kphot);
 elseif exist('nkphot','var')
-    kphot = linspace([kphot_min,dkphot,nkphot]);
+    kphot = linspace(kphot_min,kphot_max,nkphot);
 else
     error('dkphot or nkphot must be defined')
 end
@@ -29,7 +29,7 @@ screening_hxr_params.flag_mem = 1;
 screening_hxr_params.ntheta = 2006;
 screening_hxr_params.integral = 'simps';
 screening_hxr_params.nEc = 300;
-screening_hxr_params.Ecmax = 1000;%keV;
+screening_hxr_params.Ecmax = 1300;%keV;
 %
 disp('------------------------------------------------------------------------------')
 disp('Build tables for fast bremsstrahlung calculations with partial screening effect')
