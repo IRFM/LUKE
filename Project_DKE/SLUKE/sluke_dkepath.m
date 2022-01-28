@@ -26,3 +26,13 @@ if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'cleanmode')
     %
 end
 %
+if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'matver')
+    %
+    if sluke_remote_matver(sparams,ii)
+        %
+        dkepath.clustermode.run_lukert.scheduler.matver.matdef = sparams.simul.remote.matver{ii};
+        %
+    end
+    %
+end
+%
