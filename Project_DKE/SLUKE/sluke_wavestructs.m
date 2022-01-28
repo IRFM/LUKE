@@ -78,7 +78,14 @@ else
         kk1 = 1;
         %
         for kk = 1:length(sparams.rfwaves.solver.type{ii})
-        	%
+            %
+            if isempty(sparams.rfwaves.antenna.type{ii}{kk})
+                %
+                cprintf([1,0.5,0],['---> WARNING : the antenna #',int2str(kk),' in simulation #',int2str(ii),' is not considered in the calculations.']);disp(' ')
+                break % this antenna is removed from calculations
+                %
+            end
+            %
             wavestructs{kk1}.id = wavestructs_id;
             wavestructs{kk1}.equil_id = sluke_id(sparams,ii);
             wavestructs{kk1}.wavesolver = sparams.rfwaves.solver.code{ii}{kk};
@@ -277,7 +284,7 @@ else
                     %
                 else
                     %
-                    cprintf([1,0.5,0],['WARNING: The type of wave ',sparams.rfwaves.antenna.type{ii}{kk},' is not yet implemented'])
+                 %%%%%   cprintf([1,0.5,0],['WARNING: The type of wave ',sparams.rfwaves.antenna.type{ii}{kk},' is not yet implemented'])
                     break
                     %
                 end
