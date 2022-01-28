@@ -1073,7 +1073,12 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             %
             % SIMUL
             %
+            %
+            [~, hostname] = system('hostname');
+            %
             data_proc.simul = dke_out.simul;
+            data_proc.simul.matver = version;
+            data_proc.simul.hostname = deblank(hostname);
             data_proc.simul.residue_rf = residue_rf;
             %
             % SCALAR
