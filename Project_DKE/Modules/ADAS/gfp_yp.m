@@ -61,7 +61,8 @@ else %approximate calculation of g (Thomas-Fermi-Kirillov or Tseng-Pratt + diffe
     %
     a = ones(length(p(:)),1)*ionradius.a(1:end-1);% no fully stripped atom
     %
-    x = p(:).*a;
+    x = (p(:)*ones(1,size(a,2))).*a;
+    %
     n = ones(length(p(:)),1)*ionradius.nff(1:end-1);% no fully stripped atom
     %
     y = x.^n;
