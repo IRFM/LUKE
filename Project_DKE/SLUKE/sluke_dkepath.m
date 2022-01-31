@@ -2,6 +2,12 @@ function [dkepath] = sluke_dkepath(sparams,ii)
 %
 dkepath = lukeschedulerparam('',sparams.simul.remote.mode{ii},sluke_remote_profile(sparams,ii),sparams.simul.remote.remtimout{ii});
 %
+if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'ncpus')
+    %
+    dkepath.clustermode.run_lukert.scheduler.ncpus = sparams.simul.remote.ncpus{ii};
+    %
+end
+%
 if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'memory')
     %
     dkepath.clustermode.run_lukert.scheduler.memory = sparams.simul.remote.memory{ii};
@@ -30,7 +36,7 @@ if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'matver')
     %
     if sluke_remote_matver(sparams,ii)
         %
-        dkepath.clustermode.run_lukert.scheduler.matver.matdef = sparams.simul.remote.matver{ii};
+        dkepath.clustermode.run_lukert.scheduler.matdef = sparams.simul.remote.matver{ii};
         %
     end
     %
