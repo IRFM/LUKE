@@ -63,10 +63,16 @@ for ii = 1:length(fns)
     if length(eval(['sparams_in.',fns{ii}])) ~= nmachine
         %
         err = 1;
-        status{kk} = ['Inconsistency --> length(sparams.',fns{ii},') not equal to ',int2str(nmachine)];
+        status{kk} = ['--> syntax inconsistency : length(sparams.',fns{ii},') not equal to ',int2str(nmachine)];
+        cprintf('*red',status{kk});disp(' ')
         kk = kk + 1;
         %
     end
     %
 end
 %
+if err == 1
+    %
+    return;
+    %
+end
