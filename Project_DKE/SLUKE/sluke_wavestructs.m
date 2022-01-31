@@ -155,7 +155,7 @@ else
                                     %
                                     % ALOHOA to C3PO power spectrum
                                     %
-                                    [wavestructs{kk1}.launch.aloha(mm).C3PO.yN,wavestructs{kk1}.launch.aloha(mm).C3PO.ydN,wavestructs{kk1}.launch.aloha(mm).C3PO.yP,wavestructs{kk1}.launch.aloha(mm).C3PO.param_out,wavestructs{kk1}.launch.aloha(mm).C3PO.Pin,wavestructs{kk1}.launch.aloha(mm).C3PO.zyfac] = proc_aloha_spec_jd(zN_in,zdN_in,zdP_in,Pin_in,param_in,opt_optim,sdisplay);
+                                    [wavestructs{kk1}.launch.aloha(mm).C3PO.yN,wavestructs{kk1}.launch.aloha(mm).C3PO.ydN,wavestructs{kk1}.launch.aloha(mm).C3PO.yP,wavestructs{kk1}.launch.aloha(mm).C3PO.param_out,wavestructs{kk1}.launch.aloha(mm).C3PO.Pin,wavestructs{kk1}.launch.aloha(mm).C3PO.zyfac] = proc_aloha_spec_jd(zN_in,NaN,zdP_in,Pin_in,param_in,opt_optim,sdisplay);%zdN_in not used -> NaN, automatic grid step calculated
                                     %
                                     isempty_yN = isempty(wavestructs{kk1}.launch.aloha(mm).C3PO.yN);
                                     isempty_ydN = isempty(wavestructs{kk1}.launch.aloha(mm).C3PO.ydN);
