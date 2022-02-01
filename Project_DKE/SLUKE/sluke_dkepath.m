@@ -2,21 +2,17 @@ function [dkepath] = sluke_dkepath(sparams,ii)
 %
 dkepath = lukeschedulerparam('',sparams.simul.remote.mode{ii},sluke_remote_profile(sparams,ii),sparams.simul.remote.remtimout{ii});
 %
-if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'ncpus')
+if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'scheduler') 
     %
-    dkepath.clustermode.run_lukert.scheduler.ncpus = sparams.simul.remote.ncpus{ii};
+    if ~isempty(sluke_remote_scheduler(sparams,ii))
+        %
+        dkepath.clustermode.run_lukert.scheduler = sluke_remote_scheduler(sparams,ii);
+        %
+    end
     %
-end
-%
-if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'memory')
+else
     %
-    dkepath.clustermode.run_lukert.scheduler.memory = sparams.simul.remote.memory{ii};
-    %
-end
-%
-if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'walltime')
-    %
-    dkepath.clustermode.run_lukert.scheduler.walltime = sparams.simul.remote.walltime{ii};
+    cprintf('*[1,0.5,0]',['No scheduler is defined. Default option for the remote profile ',sparams.simul.remote.profile{ii},' is considered.']);disp(' ')
     %
 end
 %
