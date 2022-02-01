@@ -6,7 +6,8 @@ if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'scheduler')
     %
     if ~isempty(sluke_remote_scheduler(sparams,ii))
         %
-        dkepath.clustermode.run_lukert.scheduler = sluke_remote_scheduler(sparams,ii);
+        dkepath.clustermode.run_lukert.scheduler = conc_struct_jd(dkepath.clustermode.run_lukert.scheduler,sluke_remote_scheduler(sparams,ii));
+
         %
     end
     %
@@ -35,6 +36,12 @@ if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'matver')
         dkepath.clustermode.run_lukert.scheduler.matdef = sparams.simul.remote.matver{ii};
         %
     end
+    %
+end
+%
+if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'mode')
+    %
+    dkepath.clustermode.run_lukert.scheduler.mode = sparams.simul.remote.mode{ii};
     %
 end
 %
