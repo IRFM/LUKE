@@ -43,10 +43,12 @@ sparams.simul.remote.cleanmode = {2};% clean job files/folders : both on remote 
 sparams.simul.remote.matver = {'mat907'};%Matlab version used on the remote machine (if not exist, the defaut value in remote profile is used). By definition, it should be of the form matxxx, where xxx for the matlab version : type version in matlab, and 9.3 -> xxx = 903 or 9.11 -> xxx = 911
 sparams.simul.remote.scheduler = {'pbs'};%type of scheduler : pbs, slurm, htcondor,...
 %
-sparams.simul.remote.pbs.ncpus = {2};% for pbs, torque and slurm schedulers only : number of cpus (for pbs scheduler only) 
-sparams.simul.remote.pbs.memory = {15000};% for pbs, torque and slurm schedulers only : job memory in Mbytes (should be increased for large calculation grids). See the cluster limitations (for slurm, pbs, torque only)
-sparams.simul.remote.pbs.walltime = {24};% for pbs, torque and slurm schedulers only :  job walltime in hours (for slurm, pbs, torque only)
-sparams.simul.remote.pbs.node = {''},%if empty or NaN, no specific node is called. For pbs, type 'pbsnodes -a' to get the list of nodes
+sparams.simul.remote.pbs.nodes = {'cephe16'};%number of nodes requested or node names (see PBS syntax). If empty or NaN, default value. For pbs, type 'pbsnodes -a' to get the list of node names
+sparams.simul.remote.pbs.ppn = {''};%number of processors requested on the same node. if empty or NaN, default value requested.
+sparams.simul.remote.pbs.select = {''};%Number of separate nodes. If empty or NaN, default value. Type 'pbsnodes -a' to get the list of nodesand their charatéristics
+sparams.simul.remote.pbs.ncpus = {2};% number of cpus per node (must be even number). If empty or NaN, default value. 
+sparams.simul.remote.pbs.memory = {15000};% job memory in Mbytes (should be increased for large calculation grids). See the cluster limitations
+sparams.simul.remote.pbs.walltime = {24};% job walltime in hours
 %
 sparams.simul.mute.load_structures_yp = {1};  
 sparams.simul.mute.run_lukert = {1};
