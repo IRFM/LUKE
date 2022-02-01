@@ -4,7 +4,6 @@
 %by T.Barbui (PPPL, tbarbui@pppl.gov)
 %
 clearvars
-close all
 %
 hxr_id = 'MEHXR';
 %
@@ -65,6 +64,4 @@ hxrparam.kmax = 110;% standard maximum value for Tph calculation (LH : 110; EC :
 hxrspec.kphot = [10:5:200];%Photon energy in keV
 %
 eval(['save HXR_',hxr_id,'.mat hxrspec hxrparam']);
-disp(['save HXR_',hxr_id,'.mat saved']);
 %
-%graph1D_jd([1:20],hxrspec.EG_hxr,0,0,'chord index','geometrical factor (m-2)','EAST FEB camera',NaN,[0,20],NaN,'-','o','r',2)
