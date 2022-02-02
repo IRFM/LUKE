@@ -17,10 +17,10 @@ if exist(['SLUKE_OHMS/OHM_',ohm_id,'.mat'])
     %
 else
     %
-    if strcmp(sparams.ohm.source{ii},'code')
+    if isfield(sparams.ohm,'code') && strcmp(sparams.ohm.code{ii},'code')
         %
         %
-    elseif strcmp(sparams.ohm.source{ii},'file')
+    elseif isfield(sparams.ohm,'source') && strcmp(sparams.ohm.source{ii},'file') && isfield(sparams.ohm,'file') && ~isempty(sparams.ohm.file{ii})
         %
         ohm_file = sparams.ohm.file{ii};
         ohm_path = sparams.ohm.path{ii};
@@ -68,6 +68,8 @@ else
         %
     else 
         %
+        cprintf([1,0.5,0],'No ohmic electric field is considered in sparams');disp(' ');
+        ohm = [];
         %
     end
 end
