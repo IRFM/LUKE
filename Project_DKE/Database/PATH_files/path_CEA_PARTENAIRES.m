@@ -110,7 +110,7 @@ dkepath.YP105119(1).remote(6).remoteid = 'CEA_RANA';
 dkepath.YP105119(1).remote(6).schedulername = 'pbs';
 dkepath.YP105119(1).remote(6).profilename = 'YP105119';
 dkepath.YP105119(1).remote(6).luke_root = dkepath.YP105119(1).luke_root;% local cluster
-%}
+%
 %------------------------------------ Other LUKE users ------------------------------
 %
 dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-Francois Artaud
