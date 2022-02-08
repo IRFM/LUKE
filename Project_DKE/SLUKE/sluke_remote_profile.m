@@ -1,6 +1,7 @@
-function remote_profile = sluke_remote_profile(sparams,ii,kk)
+function [remote_profile_num,remote_profile_char] = sluke_remote_profile(sparams,ii,kk)
 %
-remote_profile = [];
+remote_profile_num = [];
+remote_profile_char = '';
 %
 [indexlist,profile_list] = dispremoteprofiles('','scheduler',0);%scheduler only
 %
@@ -12,9 +13,16 @@ if isfield(sparams.simul.remote,'profile')
             %
             if ~isempty(strfind(profile_list{jj},sparams.simul.remote.profile{ii}))
                 %
-                remote_profile = indexlist(jj);
-                break;
+                remote_profile_num = indexlist(jj);
                 %
+                if remote_profile_num == 0
+                    remote_profile_char = 'local';
+                else
+                    remote_profile_char = profile_list{jj}(1:strfind(profile_list{jj},':')-2);
+                end
+                %
+                break;
+                %            
             end
             %
         end
@@ -25,7 +33,14 @@ if isfield(sparams.simul.remote,'profile')
             %
             if indexlist(jj) == sparams.simul.remote.profile{ii}
                 %
-                remote_profile = indexlist(jj);
+                remote_profile_num = indexlist(jj);
+                %
+                if remote_profile_num == 0
+                    remote_profile_char = 'local';
+                else
+                    remote_profile_char = profile_list{jj}(1:strfind(profile_list{jj},':')-2);
+                end
+                %
                 break;
                 %
             end
@@ -37,14 +52,16 @@ if isfield(sparams.simul.remote,'profile')
 else
     %
     cprintf([1,0.5,0],['---> WARNING : no remote profile has been defined in sparams structure for the simulations. Local simulations are enforced. Set sparams.simul.remote.profile subfield to perform calculations on another machine. Type dispremoteprofiles('''',''scheduler'') to get available machines.']);disp(' ')
-    remote_profile = 0;%local calculations enforced
+    remote_profile_num = 0;%local calculations enforced
+    remote_profile_char = 'local';%local calculations enforced
     %
 end
 %
-if isempty(remote_profile)
+if isempty(remote_profile_num)
     %
     cprintf('*[1,0.5,0]',['---> No compatible remote profile has been found. Check LUKE path. Local calculations are enforced.']);disp(' ')
-    remote_profile = 0;%local calculations 
+    remote_profile_num = 0;%local calculations enforced
+    remote_profile_char = 'local';%local calculations enforced
     %
 end
 %
@@ -60,7 +77,14 @@ if nargin == 3 %for antenna code (ALOHA,...)
                 %
                 if ~isempty(strfind(profile_list{jj},sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).remote_profile{ii}{kk}))
                     %
-                    remote_profile = indexlist(jj);
+                    remote_profile_num = indexlist(jj);
+                    %
+                    if remote_profile_num == 0
+                        remote_profile_char = 'local';
+                    else
+                        remote_profile_char = profile_list{jj}(1:strfind(profile_list{jj},':')-2);
+                    end
+                    %
                     break;
                     %
                 end
@@ -73,7 +97,14 @@ if nargin == 3 %for antenna code (ALOHA,...)
                 %
                 if indexlist(jj) == sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).remote_profile{ii}{kk}
                     %
-                    remote_profile = indexlist(jj);
+                    remote_profile_num = indexlist(jj);
+                    %
+                    if remote_profile_num == 0
+                        remote_profile_char = 'local';
+                    else
+                        remote_profile_char = profile_list{jj}(1:strfind(profile_list{jj},':')-2);
+                    end
+                    %
                     break;
                     %
                 end
