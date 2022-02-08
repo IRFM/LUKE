@@ -10,8 +10,8 @@ function dkepath = path_CEA_INTRA
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'sirrah','talitha','naos','pleione','spica'};
-dkepath.hostname = {'sirrah','talitha','naos','pleione','spica'};
+dkepath.machine = {'sirrah','talitha','gemma','naos','spica'};%'pleione' 'nashira'
+dkepath.hostname = {'sirrah','talitha','gemma','naos','spica'};%'pleione' 'nashira'
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -35,28 +35,51 @@ dkepath.YP105119(1).temppathroot = '/tmp/';%Absolute root directory path adress 
 %
 dkepath.YP105119(1).sirrah.local_root = '/Home/YP105119/Packages/Bin/';
 %
-dkepath.YP105119(1).sirrah.mex802 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/sirrah/MATLAB802/'];
-dkepath.YP105119(1).sirrah.mex909 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/sirrah/MATLAB909/'];%R2020B
+dkepath.YP105119(1).sirrah.mex802 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB802/'];
+dkepath.YP105119(1).sirrah.mex806 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB806/'];
+dkepath.YP105119(1).sirrah.mex903 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB903/'];
+dkepath.YP105119(1).sirrah.mex907 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB907/'];
+dkepath.YP105119(1).sirrah.mex909 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB909/'];
 %
 dkepath.YP105119(1).sirrah.compiler_opt.copts = '';
 dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex802 = '';
-dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex802 = '';
-dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex806 = '';
+dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex903 = '';
+dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex907 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex909 = '';
+dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex802 = '';
+dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex806 = '';
+dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex903 = '';
+dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex907 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex909 = '';
+dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex806 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex903 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex907 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex909 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
-dkepath.YP105119(1).sirrah.graphviz.env = '';% Graphviz environment variable (dot)
-dkepath.YP105119(1).sirrah.latex.env = '/usr/bin/latex';% Latex environment variable (latex)
-dkepath.YP105119(1).sirrah.imagemagick.env = '';% ImageMagick environment variable (convert)
+dkepath.YP105119(1).sirrah.MUMPS.mex802 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS_4.10.0/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).sirrah.MUMPS.mex806 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS_4.10.0/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).sirrah.MUMPS.mex903 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS_4.10.0/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).sirrah.MUMPS.mex907 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS_4.10.0/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).sirrah.MUMPS.mex909 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS_4.10.0/MATLAB909'];%Where MUMPS matrix solver is stored (MEX function)
+%
+% LUKE documentation
+%
+dkepath.YP105119(1).sirrah.graphviz.env = '/usr/bin/';% Graphviz environment variable ('which dot' and 'dot -v')
+dkepath.YP105119(1).sirrah.latex.env = '/usr/bin';% Latex environment variable  ('which latex' and 'latex -v')
+dkepath.YP105119(1).sirrah.imagemagick.env = '/usr/bin/';% ImageMagick environment variable ('which convert' and 'convert -v')
 %
 dkepath.YP105119(1).sirrah.MUMPS.mex802 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB802'];%MUMPS_5.0.2
+dkepath.YP105119(1).sirrah.MUMPS.mex806 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB806'];%MUMPS_5.0.2
+dkepath.YP105119(1).sirrah.MUMPS.mex903 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB903'];%MUMPS_5.0.2
+dkepath.YP105119(1).sirrah.MUMPS.mex907 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB907'];%MUMPS_5.0.2
 dkepath.YP105119(1).sirrah.MUMPS.mex909 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB909'];%MUMPS_5.0.2
 %
-% ----------------------- naos and pleione ---------------------------
+% ---------------------------- other machine of zone intra -------------------------------
 %
+dkepath.YP105119(1).gemma = dkepath.YP105119(1).sirrah;
 dkepath.YP105119(1).naos = dkepath.YP105119(1).sirrah;
-dkepath.YP105119(1).pleione = dkepath.YP105119(1).sirrah;
 dkepath.YP105119(1).spica = dkepath.YP105119(1).sirrah;
 dkepath.YP105119(1).talitha = dkepath.YP105119(1).sirrah;
 %
@@ -68,77 +91,104 @@ dkepath.YP105119(1).remote(1).remoteid = 'CEA_SIRRAH';
 dkepath.YP105119(1).remote(1).schedulername = 'pbs';
 dkepath.YP105119(1).remote(1).profilename = 'YP105119';
 dkepath.YP105119(1).remote(1).luke_root = dkepath.YP105119(1).luke_root;% local cluster
-dkepath.YP105119(1).remote(1).link_mode = '';
-dkepath.YP105119(1).remote(1).cvsupdate = false;% update done in 'direct' mode
-dkepath.YP105119(1).remote(1).gitupdate = false;% update done in 'direct' mode
-dkepath.YP105119(1).remote(1).gitmode.cmd = 'cd /Home/YP105119/luke/*;git pull;echo "* update done";';
 %
-dkepath.YP105119(1).remote(2) = dkepath.YP105119(1).remote(1);
-dkepath.YP105119(1).remote(2).schedulername = 'direct';
-dkepath.YP105119(1).remote(2).gitupdate = true;
+dkepath.YP105119(1).remote(2).remoteid = 'CEA_TALITHA';
+dkepath.YP105119(1).remote(2).schedulername = 'pbs';
+dkepath.YP105119(1).remote(2).profilename = 'YP105119';
+dkepath.YP105119(1).remote(2).luke_root = dkepath.YP105119(1).luke_root;% local cluster
 %
-dkepath.YP105119(1).remote(3).remoteid = 'CEA_THALITA';
-dkepath.YP105119(1).remote(3).schedulername = 'pbs';
+dkepath.YP105119(1).remote(3).remoteid = 'CEA_NAOS';
+dkepath.YP105119(1).remote(3).schedulername = 'direct';
 dkepath.YP105119(1).remote(3).profilename = 'YP105119';
 dkepath.YP105119(1).remote(3).luke_root = dkepath.YP105119(1).luke_root;% local cluster
-dkepath.YP105119(1).remote(3).link_mode = '';
-dkepath.YP105119(1).remote(3).cvsupdate = false;% update done in 'direct' mode
-dkepath.YP105119(1).remote(3).gitupdate = false;% update done in 'direct' mode
-dkepath.YP105119(1).remote(3).gitmode.cmd = 'cd /Home/YP105119/luke/*;git pull;echo "* update done";';
 %
-dkepath.YP105119(1).remote(4) = dkepath.YP105119(1).remote(3);
-dkepath.YP105119(1).remote(4).schedulername = 'direct';
-dkepath.YP105119(1).remote(4).gitupdate = true;
+dkepath.YP105119(1).remote(4).remoteid = 'CEA_GEMMA';
+dkepath.YP105119(1).remote(4).schedulername = 'pbs';
+dkepath.YP105119(1).remote(4).profilename = 'YP105119';
+dkepath.YP105119(1).remote(4).luke_root = dkepath.YP105119(1).luke_root;% local cluster
+%
+dkepath.YP105119(1).remote(5).remoteid = 'CEA_SPICA';
+dkepath.YP105119(1).remote(5).schedulername = 'pbs';
+dkepath.YP105119(1).remote(5).profilename = 'YP105119';
+dkepath.YP105119(1).remote(5).luke_root = dkepath.YP105119(1).luke_root;% local cluster
 %
 %------------------------------------ Other LUKE users ------------------------------
 %
-dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-François Artaud
+dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-Francois Artaud
 dkepath.JA132999(1).luke_root = '/Home/JA132999/luke/LUKE_LHCD/';
-dkepath.JA132999(1).remote(1).profilename = 'JA132999';
 dkepath.JA132999(1).remote(1).luke_root = dkepath.JA132999(1).luke_root;
-dkepath.JA132999(1).remote(2).profilename = 'JA132999';
+dkepath.JA132999(1).remote(1).profilename = 'JA132999';
 dkepath.JA132999(1).remote(2).luke_root = dkepath.JA132999(1).luke_root;
-dkepath.JA132999(1).remote(3).profilename = 'JA132999';
+dkepath.JA132999(1).remote(2).profilename = 'JA132999';
 dkepath.JA132999(1).remote(3).luke_root = dkepath.JA132999(1).luke_root;
-dkepath.JA132999(1).remote(4).profilename = 'JA132999';
+dkepath.JA132999(1).remote(3).profilename = 'JA132999';
 dkepath.JA132999(1).remote(4).luke_root = dkepath.JA132999(1).luke_root;
+dkepath.JA132999(1).remote(4).profilename = 'JA132999';
+dkepath.JA132999(1).remote(5).luke_root = dkepath.JA132999(1).luke_root;
+dkepath.JA132999(1).remote(5).profilename = 'JA132999';
 %
 dkepath.CB165101(1) = dkepath.YP105119(1);%Clarisse Bourdelle
 dkepath.CB165101(1).luke_root = '/Home/CB165101/luke/LUKE_LHCD/';
 dkepath.CB165101(1).remote(1).luke_root = dkepath.CB165101(1).luke_root;
-dkepath.CB165101(1).remote(2).luke_root = dkepath.CB165101(1).luke_root;
 dkepath.CB165101(1).remote(1).profilename = 'CB165101';
+dkepath.CB165101(1).remote(2).luke_root = dkepath.CB165101(1).luke_root;
 dkepath.CB165101(1).remote(2).profilename = 'CB165101';
+dkepath.CB165101(1).remote(3).luke_root = dkepath.CB165101(1).luke_root;
+dkepath.CB165101(1).remote(3).profilename = 'CB165101';
+dkepath.CB165101(1).remote(4).luke_root = dkepath.CB165101(1).luke_root;
+dkepath.CB165101(1).remote(4).profilename = 'CB165101';
+dkepath.CB165101(1).remote(5).luke_root = dkepath.CB165101(1).luke_root;
+dkepath.CB165101(1).remote(5).profilename = 'CB165101';
 %
 dkepath.MG100063(1) = dkepath.YP105119(1);%Marc Goniche
 dkepath.MG100063(1).luke_root = '/Home/MG100063/luke/LUKE_LHCD/';
 dkepath.MG100063(1).remote(1).luke_root = dkepath.MG100063(1).luke_root;
-dkepath.MG100063(1).remote(2).luke_root = dkepath.MG100063(1).luke_root;
 dkepath.MG100063(1).remote(1).profilename = 'MG100063';
+dkepath.MG100063(1).remote(2).luke_root = dkepath.MG100063(1).luke_root;
 dkepath.MG100063(1).remote(2).profilename = 'MG100063';
+dkepath.MG100063(1).remote(3).luke_root = dkepath.MG100063(1).luke_root;
+dkepath.MG100063(1).remote(3).profilename = 'MG100063';
+dkepath.MG100063(1).remote(4).luke_root = dkepath.MG100063(1).luke_root;
+dkepath.MG100063(1).remote(4).profilename = 'MG100063';
+dkepath.MG100063(1).remote(5).luke_root = dkepath.MG100063(1).luke_root;
+dkepath.MG100063(1).remote(5).profilename = 'MG100063';
 %
 dkepath.VO259454(1) = dkepath.YP105119(1);%Valeria Ostuni
 dkepath.VO259454(1).luke_root = '/Home/VO259454/luke/LUKE_LHCD/';
 dkepath.VO259454(1).remote(1).luke_root = dkepath.VO259454(1).luke_root;
-dkepath.VO259454(1).remote(2).luke_root = dkepath.VO259454(1).luke_root;
 dkepath.VO259454(1).remote(1).profilename = 'VO259454';
+dkepath.VO259454(1).remote(2).luke_root = dkepath.VO259454(1).luke_root;
 dkepath.VO259454(1).remote(2).profilename = 'VO259454';
+dkepath.VO259454(1).remote(3).luke_root = dkepath.VO259454(1).luke_root;
+dkepath.VO259454(1).remote(3).profilename = 'VO259454';
+dkepath.VO259454(1).remote(4).luke_root = dkepath.VO259454(1).luke_root;
+dkepath.VO259454(1).remote(4).profilename = 'VO259454';
+dkepath.VO259454(1).remote(5).luke_root = dkepath.VO259454(1).luke_root;
+dkepath.VO259454(1).remote(5).profilename = 'VO259454';
 %
 dkepath.JM240179(1) = dkepath.YP105119(1);%Jorge Morales
 dkepath.JM240179(1).luke_root = '/Home/JM240179/luke/LUKE_LHCD/';
 dkepath.JM240179(1).remote(1).luke_root = dkepath.JM240179(1).luke_root;
-dkepath.JM240179(1).remote(2).luke_root = dkepath.JM240179(1).luke_root;
 dkepath.JM240179(1).remote(1).profilename = 'JM240179';
+dkepath.JM240179(1).remote(2).luke_root = dkepath.JM240179(1).luke_root;
 dkepath.JM240179(1).remote(2).profilename = 'JM240179';
+dkepath.JM240179(1).remote(3).luke_root = dkepath.JM240179(1).luke_root;
+dkepath.JM240179(1).remote(3).profilename = 'JM240179';
+dkepath.JM240179(1).remote(4).luke_root = dkepath.JM240179(1).luke_root;
+dkepath.JM240179(1).remote(4).profilename = 'JM240179';
+dkepath.JM240179(1).remote(5).luke_root = dkepath.JM240179(1).luke_root;
+dkepath.JM240179(1).remote(5).profilename = 'JM240179';
 %
 dkepath.TB263881(1) = dkepath.YP105119(1);%Tullio Barbui
 dkepath.TB263881(1).luke_root = '/Home/TB263881/luke/LUKE_LHCD/';
 dkepath.TB263881(1).remote(1).luke_root = dkepath.TB263881(1).luke_root;
-dkepath.TB263881(1).remote(2).luke_root = dkepath.TB263881(1).luke_root;
-dkepath.TB263881(1).remote(3).luke_root = dkepath.TB263881(1).luke_root;
-dkepath.TB263881(1).remote(4).luke_root = dkepath.TB263881(1).luke_root;
 dkepath.TB263881(1).remote(1).profilename = 'TB263881';
+dkepath.TB263881(1).remote(2).luke_root = dkepath.TB263881(1).luke_root;
 dkepath.TB263881(1).remote(2).profilename = 'TB263881';
+dkepath.TB263881(1).remote(3).luke_root = dkepath.TB263881(1).luke_root;
 dkepath.TB263881(1).remote(3).profilename = 'TB263881';
+dkepath.TB263881(1).remote(4).luke_root = dkepath.TB263881(1).luke_root;
 dkepath.TB263881(1).remote(4).profilename = 'TB263881';
+dkepath.TB263881(1).remote(5).luke_root = dkepath.TB263881(1).luke_root;
+dkepath.TB263881(1).remote(5).profilename = 'TB263881';
 %
