@@ -58,23 +58,17 @@ dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex903 = ['-L',dkepath.YP105119(1
 dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex907 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex909 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
-dkepath.YP105119(1).sirrah.MUMPS.mex802 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS_4.10.0/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).sirrah.MUMPS.mex806 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS_4.10.0/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).sirrah.MUMPS.mex903 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS_4.10.0/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).sirrah.MUMPS.mex907 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS_4.10.0/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).sirrah.MUMPS.mex909 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS_4.10.0/MATLAB909'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).sirrah.MUMPS.mex802 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB802'];%MUMPS_5.0.2
+dkepath.YP105119(1).sirrah.MUMPS.mex806 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB806'];%MUMPS_5.0.2
+dkepath.YP105119(1).sirrah.MUMPS.mex903 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB903'];%MUMPS_5.0.2
+dkepath.YP105119(1).sirrah.MUMPS.mex907 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB907'];%MUMPS_5.0.2
+dkepath.YP105119(1).sirrah.MUMPS.mex909 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB909'];%MUMPS_5.0.2
 %
 % LUKE documentation
 %
 dkepath.YP105119(1).sirrah.graphviz.env = '/usr/bin/';% Graphviz environment variable ('which dot' and 'dot -v')
 dkepath.YP105119(1).sirrah.latex.env = '/usr/bin';% Latex environment variable  ('which latex' and 'latex -v')
 dkepath.YP105119(1).sirrah.imagemagick.env = '/usr/bin/';% ImageMagick environment variable ('which convert' and 'convert -v')
-%
-dkepath.YP105119(1).sirrah.MUMPS.mex802 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB802'];%MUMPS_5.0.2
-dkepath.YP105119(1).sirrah.MUMPS.mex806 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB806'];%MUMPS_5.0.2
-dkepath.YP105119(1).sirrah.MUMPS.mex903 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB903'];%MUMPS_5.0.2
-dkepath.YP105119(1).sirrah.MUMPS.mex907 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB907'];%MUMPS_5.0.2
-dkepath.YP105119(1).sirrah.MUMPS.mex909 = [dkepath.YP105119(1).sirrah.local_root,'MUMPS/MUMPS_5.0.2/MATLAB909'];%MUMPS_5.0.2
 %
 % ---------------------------- other machine of zone intra -------------------------------
 %
