@@ -10,11 +10,33 @@ function sluke(varargin)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
+if nargin == 0
+   % 
+   sluke_params_help;
+   %
+   return
+   %
+end
+%
+if nargin == 1 && ischar(varargin{1})
+    % 
+    if strcmp(varargin{1},'help')
+        %
+        sluke_params_help;
+        %
+    end
+    %
+    return
+   %
+end
+%
 if ~exist('SLUKE_LOGS','dir')
     mkdir('SLUKE_LOGS')
 end   
 %
 sparams_in = varargin{1};
+%
+[err,status] = sluke_params_consistency(sparams_in);
 %
 sparams = sluke_params_time(sparams_in);%Expand all time steps if any
 %
@@ -89,9 +111,10 @@ for ii = 1:length(sparams.machine)
         %
         simul_id = sluke_id(sparams,ii);
         %
-        if sparams.simul.enforce{ii} == 1
+        if sluke_sparams_stamp(sparams,ii) == -1 %check consistency of previous simulations with the same id. Remove files to restart simulation at the correct level
             %
-            sluke_clear_folders(sparams,ii);
+            cprintf('*red',['The simulation ',simul_id,' is skipped.']);disp(' ')  
+            break %abort simulations ii 
             %
         end
         %
@@ -106,9 +129,9 @@ for ii = 1:length(sparams.machine)
         %
         if isfield(sparams.simul,'jprofileconsistency') && isfield(sparams.simul.jprofileconsistency,'nit') && sparams.simul.jprofileconsistency.nit{ii} >= 1
             %
-            if exist(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat'])
+            if exist(['SLUKE_EQUILS/EQUIL_',simul_id,'.mat'])
                 %
-                load(['SLUKE_EQUILS/EQUIL_',equil_id,'.mat']);
+                load(['SLUKE_EQUILS/EQUIL_',simul_id,'.mat']);
                 %
                 if iscell(equil)
                     %
@@ -355,9 +378,9 @@ for ii = 1:length(sparams.machine)
                 %
             end
             %
-            if sparams.simul.enforce{ii} == 1
+            if sparams.simul.enforce{ii} == 2
                 %
-                cprintf([1,0.5,0],['---> has been enforced. Set sparams.simul.enforce{',int2str(ii),'} to zero in the script file to avoid infinite calculation loop.']);disp(' ')
+                cprintf([1,0.5,0],['---> has been enforced. Set sparams.simul.enforce{',int2str(ii),'} to zero or one in the script file to avoid infinite calculation loop.']);disp(' ')
                 %
             end
             %
@@ -462,6 +485,7 @@ for ii = 1:length(sparams.machine)
         end
         %
     end
+    %
 end
 %
 diary off
