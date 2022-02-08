@@ -1,4 +1,4 @@
-function sluke_clear_folders(sparams,ii)
+function sluke_clear_folders(sparams,ii,filename)
 %
 %LUKE - Clear folders locally for a reset of sluke simulations
 %
@@ -12,52 +12,70 @@ function sluke_clear_folders(sparams,ii)
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
+if nargin < 3
+    %
+    filename = '';
+    %
+end
+%
 id = sluke_id(sparams,ii);
 %
-if exist(['SLUKE_STAMPS/LUKE_STAMP_',id,'.mat'])
+if (strcmp(filename,'LUKE_STAMP') || isempty(filename)) && exist(['SLUKE_STAMPS/LUKE_STAMP_',id,'.mat'])
     delete(['SLUKE_STAMPS/LUKE_STAMP_',id,'.mat']);
+    cprintf('*black',['SLUKE_STAMPS/LUKE_STAMP_',id,'.mat is deleted']);disp(' ')
 end
 %
-if exist(['SLUKE_TEMP/LUKE_RESULTS_',id,'.mat'])
+if (strcmp(filename,'LUKE_RESULTS') || isempty(filename)) && exist(['SLUKE_TEMP/LUKE_RESULTS_',id,'.mat'])
     delete(['SLUKE_TEMP/LUKE_RESULTS_',id,'.mat']);
+    cprintf('*black',['SLUKE_TEMP/LUKE_RESULTS_',id,'.mat is deleted']);disp(' ')
 end
 %
-if exist(['SLUKE_TEMP/waves_',id,'.mat'])
+if (strcmp(filename,'waves') || isempty(filename)) && exist(['SLUKE_TEMP/waves_',id,'.mat'])
     delete(['SLUKE_TEMP/waves_',id,'.mat']);
+    cprintf('*black',['SLUKE_TEMP/waves_',id,'.mat is deleted']);disp(' ')
 end
 %
-if exist(['SLUKE_RESULTS/LUKE_DATA_',id,'.mat'])
+if (strcmp(filename,'LUKE_DATA') || isempty(filename)) && exist(['SLUKE_RESULTS/LUKE_DATA_',id,'.mat'])
     delete(['SLUKE_RESULTS/LUKE_DATA_',id,'.mat']);
+    cprintf('*black',['SLUKE_RESULTS/LUKE_DATA_',id,'.mat is deleted']);disp(' ')
 end
 %
-if exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',id,'.mat'])
+if (strcmp(filename,'PROC_LUKE_DATA') || isempty(filename)) && exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',id,'.mat'])
     delete(['SLUKE_RESULTS/PROC_LUKE_DATA_',id,'.mat']);
+    cprintf('*black',['SLUKE_RESULTS/PROC_LUKE_DATA_',id,'.mat is deleted']);disp(' ')
 end
 %
-if exist(['SLUKE_EQUILS/EQUIL_',id,'.mat'])
+if (strcmp(filename,'EQUIL') || isempty(filename)) && exist(['SLUKE_EQUILS/EQUIL_',id,'.mat'])
 	delete(['SLUKE_EQUILS/EQUIL_',id,'.mat']);
+    cprintf('*black',['SLUKE_EQUILS/EQUIL_',id,'.mat is deleted']);disp(' ')
 end
-if exist(['SLUKE_EQUILS/FITEQUIL_',id,'.mat'])
+if (strcmp(filename,'EQUIL') || isempty(filename)) && exist(['SLUKE_EQUILS/FITEQUIL_',id,'.mat'])
     delete(['SLUKE_EQUILS/FITEQUIL_',id,'.mat']);
+    cprintf('*black',['SLUKE_EQUILS/FITEQUIL_',id,'.mat is deleted']);disp(' ')
 end
-if exist(['SLUKE_EQUILS/EQUILCONSISTENCY_',id,'.mat'])
+if (strcmp(filename,'EQUIL') || isempty(filename)) && exist(['SLUKE_EQUILS/EQUILCONSISTENCY_',id,'.mat'])
     delete(['SLUKE_EQUILS/EQUILCONSISTENCY_',id,'.mat']);
+    cprintf('*black',['SLUKE_EQUILS/EQUILCONSISTENCY_',id,'.mat is deleted']);disp(' ')
 end
 %
-if exist(['SLUKE_OHMS/OHM_',id,'.mat'])
+if (strcmp(filename,'OHM') || isempty(filename)) &&  exist(['SLUKE_OHMS/OHM_',id,'.mat'])
     delete(['SLUKE_OHMS/OHM_',id,'.mat']);
+    cprintf('*black',['SLUKE_OHMS/OHM_',id,'.mat is deleted']);disp(' ')
 end
 %
-if exist(['SLUKE_KINETICS/DKEPARAM_',id,'.mat'])
+if (strcmp(filename,'DKEPARAM') || isempty(filename)) && exist(['SLUKE_KINETICS/DKEPARAM_',id,'.mat'])
     delete(['SLUKE_KINETICS/DKEPARAM_',id,'.mat']);
+    cprintf('*black',['SLUKE_KINETICS/DKEPARAM_',id,'.mat is deleted']);disp(' ')
 end
 %
-if exist(['SLUKE_KINETICS/DKEDISPLAY_',id,'.mat'])
+if (strcmp(filename,'DKEDISPLAY') || isempty(filename)) && exist(['SLUKE_KINETICS/DKEDISPLAY_',id,'.mat'])
     delete(['SLUKE_KINETICS/DKEDISPLAY_',id,'.mat']);
+    cprintf('*black',['SLUKE_KINETICS/DKEDISPLAY_',id,'.mat is deleted']);disp(' ')
 end
 %
-if exist(['SLUKE_RFWAVES/WAVESTRUCTS_',id,'.mat'])
+if (strcmp(filename,'WAVESTRUCTS') || isempty(filename)) && exist(['SLUKE_RFWAVES/WAVESTRUCTS_',id,'.mat'])
     delete(['SLUKE_RFWAVES/WAVESTRUCTS_',id,'.mat']);
+    cprintf('*black',['SLUKE_RFWAVES/WAVESTRUCTS_',id,'.mat is deleted']);disp(' ')
 end
 %
 if isfield(sparams,'rfwaves') && isfield(sparams.rfwaves,'antenna') && isfield(sparams.rfwaves.antenna,'type') && ~isempty(sparams.rfwaves.antenna.type)
@@ -71,8 +89,9 @@ if isfield(sparams,'rfwaves') && isfield(sparams.rfwaves,'antenna') && isfield(s
                 '_',num2str(sparams.discharge.tmax{ii}),'_ALOHA_',sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).port{ii}{kk},'_ne_optim'];
         end
         %
-        if exist(['SLUKE_RFWAVES/ALOHA/Simulations/',filename_aloha,'.mat'])
+        if (strcmp(filename,'ANTENNA') || isempty(filename)) && exist(['SLUKE_RFWAVES/ALOHA/Simulations/',filename_aloha,'.mat'])
             delete(['SLUKE_RFWAVES/ALOHA/Simulations/',filename_aloha,'.mat']);
+            cprintf('*black',['SLUKE_RFWAVES/ALOHA/Simulations/',filename_aloha,'.mat is deleted']);disp(' ')
         end
     end
 end
@@ -83,16 +102,19 @@ if isfield(sparams,'diags')
     %
     for jj = 1:length(fn)
         %
-        if exist(['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRPARAM_',id,'.mat'])
+        if (strcmp(filename,'HXRPARAM') || isempty(filename)) && exist(['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRPARAM_',id,'.mat'])
             delete(['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRPARAM_',id,'.mat']);
+            cprintf('*black',['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRPARAM_',id,'.mat is deleted']);disp(' ')
         end
         %
-        if exist(['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRSPEC_',id,'.mat'])
+        if (strcmp(filename,'HXRSPEC') || isempty(filename)) && exist(['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRSPEC_',id,'.mat'])
             delete(['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRSPEC_',id,'.mat']);
+            cprintf('*black',['SLUKE_DIAGNOSTICS/',fn{jj},'_HXRSPEC_',id,'.mat is deleted']);disp(' ')
         end
         %
-        if exist(['SLUKE_DIAGNOSTICS/',fn{jj},'_RESULTS_',id,'.mat'])
+        if (strcmp(filename,'DIAG_RESULTS') || isempty(filename)) && exist(['SLUKE_DIAGNOSTICS/',fn{jj},'_RESULTS_',id,'.mat'])
             delete(['SLUKE_DIAGNOSTICS/',fn{jj},'_RESULTS_',id,'.mat']);
+            cprintf('*black',['SLUKE_DIAGNOSTICS/',fn{jj},'_RESULTS_',id,'.mat is deleted']);disp(' ')
         end
         %
     end
