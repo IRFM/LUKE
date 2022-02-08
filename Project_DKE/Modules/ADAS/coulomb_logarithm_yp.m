@@ -32,10 +32,10 @@ if nargin > 3 && ~isempty(prel)
     prel = prel(:)';
 end
 %
-if abs(model) == 1
-    xcleeth = 31.3 - 0.5*log(xne) + log(xTe*1000);%from O. Sauter et al., Phys. Plasmas, 1999, 6, 7, pp. 2834-2839 (default LUKE)
-elseif abs(model) == 2
+if abs(model) == 2
     xcleeth = 14.9 - 0.5*log(xne/1e20) + log(xTe);%from J. Wesson, Tokamaks, Clarendon Press, 2004  
+else
+    xcleeth = 31.3 - 0.5*log(xne) + log(xTe*1000);%from O. Sauter et al., Phys. Plasmas, 1999, 6, 7, pp. 2834-2839 (default LUKE)
 end
 %
 xcleith = xcleeth; % identical for the moment
