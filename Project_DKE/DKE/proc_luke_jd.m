@@ -1343,7 +1343,281 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             xlab_rho = '\rho_V';
         end
     end
-        
+    %
+    data_proc.summary = '';
+    %
+    if isfield(data_proc,'simul'),
+        txt = ['Simulation id: ',data_proc.simul.id];data_proc.summary = [data_proc.summary,txt,char(13)];
+        txt = ['Simulation date: ',timeid_jd(data_proc.simul.timeid)];data_proc.summary = [data_proc.summary,txt,char(13)];
+        txt = ['User id: ',data_proc.simul.userid];data_proc.summary = [data_proc.summary,txt,char(13)];
+        txt = ['LUKE Version: ',data_proc.simul.LUKEversion];data_proc.summary = [data_proc.summary,txt,char(13)];
+        if all(isfield(data_proc.simul,{'matver','hostname'}))
+            txt = ['MATLAB Version: ',data_proc.simul.matver];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['MACHINE: ',data_proc.simul.hostname];data_proc.summary = [data_proc.summary,txt,char(13)];
+        end
+        txt = ['Final RF convergence parameter: ',num2str(data_proc.simul.residue_rf(end))];data_proc.summary = [data_proc.summary,txt,char(13)];
+        disp(' ');
+    else
+        data_proc.simul.id = '';
+        data_proc.simul.timeid = '';
+        data_proc.simul.userid = '';
+        data_proc.simul.LUKEversion = '';
+        data_proc.simul.matver = '';
+        data_proc.simul.hostname = '';
+        data_proc.simul.residue_rf = '';
+        %
+         red = 1;
+            lspace = NaN;
+            lspace2 = NaN;
+            bspace = NaN;
+            bspace2 = NaN;
+    end
+    %
+    if nr > 1,
+        %
+        txt = ['Total current (I): ',num2str(data_proc.scalar.I_tot),' MA (positive for co-current)'];data_proc.summary = [data_proc.summary,txt,char(13)];
+        txt = ['Exp. current  (I): ',num2str(data_proc.scalar.I_exp),' MA (positive for co-current)'];data_proc.summary = [data_proc.summary,txt,char(13)];
+        %
+        if opt.rho == 'g',
+            jrho = data_proc.scalar.jrhoG;
+            jdrho = data_proc.scalar.jdrhoG;
+            %
+            if ~isempty(waves),
+                if isfield(waves{1}.rayparam,'colldamp') && waves{1}.rayparam.colldamp == 1,
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoG_lin_coll;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoG_lin_coll;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoG_coll_luke;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoG_coll_luke;
+                else
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoG_lin;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoG_lin;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoG;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoG;
+                end
+            end
+            %
+        elseif opt.rho == 'p',
+            jrho = data_proc.scalar.jrhoP;
+            jdrho = data_proc.scalar.jdrhoP;
+            %
+            if ~isempty(waves),
+                if isfield(waves{1}.rayparam,'colldamp') && waves{1}.rayparam.colldamp == 1,
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoP_lin_coll;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoP_lin_coll;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoP_coll_luke;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoP_coll_luke;
+                else
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoP_lin;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoP_lin;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoP;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoP;
+                end
+            end
+            %
+        elseif  opt.rho == 't',
+            jrho = data_proc.scalar.jrhoT;
+            jdrho = data_proc.scalar.jdrhoT;
+            %
+            if ~isempty(waves),
+                if isfield(waves{1}.rayparam,'colldamp') && waves{1}.rayparam.colldamp == 1,
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoT_lin_coll;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoT_lin_coll;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoT_coll_luke;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoT_coll_luke;
+                else
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoT_lin;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoT_lin;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoT;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoT;
+                end
+            end
+            %
+        elseif  opt.rho == 'v',
+            jrho = data_proc.scalar.jrhoV;
+            jdrho = data_proc.scalar.jdrhoV;
+            %
+            if ~isempty(waves),
+                if isfield(waves{1}.rayparam,'colldamp') && waves{1}.rayparam.colldamp == 1,
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoV_lin_coll;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoV_lin_coll;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoV_coll_luke;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoV_coll_luke;
+                else
+                    P_rf_rho_lin = data_proc.scalar.P_rf_rhoV_lin;
+                    P_rf_drho_lin = data_proc.scalar.P_rf_drhoV_lin;
+                    P_rf_rho = data_proc.scalar.P_rf_rhoV;
+                    P_rf_drho = data_proc.scalar.P_rf_drhoV;
+                end
+            end   
+            %
+        end
+        txt = ['Location of current peak (rho',opt.rho,'): ',num2str(jrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];data_proc.summary = [data_proc.summary,txt,char(13)];
+        txt = ['Current FWHM (drho',opt.rho,'): ',num2str(jdrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];data_proc.summary = [data_proc.summary,txt,char(13)];
+        if sum(data_proc.radial.P_rf) ~= 0,
+            txt = ['RF efficiency (ne@jpeak*I*Rp/P): ',num2str(data_proc.scalar.EtaRFRp),' 10^19 A/(W.m^2)'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['RF efficiency (ne_bar*I*Rp/P): ',num2str(data_proc.scalar.EtaRFRp_nebar0),' 10^19 A/(W.m^2)'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['Location of RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['Location of linear RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho_lin),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['Linear RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho_lin),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['Number of RF ray fragments: ',num2str(data_proc.scalar.nfrags)];data_proc.summary = [data_proc.summary,txt,char(13)];
+
+        end
+        %
+        txt = ['Internal inductance : ',num2str(data_proc.scalar.li)];data_proc.summary = [data_proc.summary,txt,char(13)];
+        if isfield(dke_out.equil,'Te_vol')
+            txt = ['Volume averaged <Te>: ',num2str(dke_out.equil.Te_vol),' (keV)'];data_proc.summary = [data_proc.summary,txt,char(13)];
+        end            
+        txt = ['Line-averaged density (Bmin) ne_bar: ',num2str(ne_bar0),' (10^19 m-3)'];data_proc.summary = [data_proc.summary,txt,char(13)];
+        %
+        if isinf(data_proc.scalar.Rp) && sum(data_proc.radial.P_rf) ~= 0,
+            txt = ['Launched RF power (P/2piRp): ',num2str(data_proc.scalar.p0_rf_2piRp),' MW/m'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['RF power absorbed (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            if isfield(dke_out.waves{1}.rayparam,'colldamp')
+                if dke_out.waves{1}.rayparam.colldamp == 1,
+                    txt = ['RF power absorbed with NRCA (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_coll_luke),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_coll_luke/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                else
+                    txt = 'Non-resonant collisional absorption (NRCA) of RF waves is not considered.';data_proc.summary = [data_proc.summary,txt,char(13)];
+                end
+            else
+                txt = 'Non-resonant collisional absorption (NRCA) of RF waves is not considered.';data_proc.summary = [data_proc.summary,txt,char(13)];
+            end
+            %
+            for in_rf = 1:nn_rf,
+                txt = ['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P/2piRp): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)),' MW/m ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            end
+            if opt.wave == 'y',
+                txt = ['Linear RF power absorbed (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_lin),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                if isfield(dke_out.waves{1}.rayparam,'colldamp')
+                     if dke_out.waves{1}.rayparam.colldamp == 1,
+                        txt = ['Linear RF power absorbed with NRCA (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_lin_coll),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin_coll/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                     end               
+                end       
+            end
+            txt = ['Ohmic power deposited (P/2piRp): ',num2str(data_proc.scalar.p_e_2piRp),' MW/m'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['Total power deposited (P/2piRp): ',num2str(data_proc.scalar.p_tot_2piRp),' MW/m'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['CD efficiency (I*Rp/P): ',num2str(data_proc.scalar.EtaRp),' A.m/W'];data_proc.summary = [data_proc.summary,txt,char(13)];
+
+            txt = ['Normalized CD efficiency xi: ',num2str(data_proc.scalar.ksirf)];data_proc.summary = [data_proc.summary,txt,char(13)];
+            %
+            if opt.peak == 'y',
+                %
+                for ipeak = 1:length(data_proc.peaks.ir),
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = '----------------------------------------';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['RF Peak # ',num2str(ipeak)];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho G: ',num2str(data_proc.peaks.rhoG(ipeak))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho P: ',num2str(data_proc.peaks.rhoP(ipeak))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho T: ',num2str(data_proc.peaks.rhoT(ipeak))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho V: ',num2str(data_proc.peaks.rhoV(ipeak))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Temperature Te: ',num2str(data_proc.peaks.Te(ipeak)),' keV'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Density ne: ',num2str(data_proc.peaks.ne(ipeak)/1e20),' *10^20 m^-3'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['RF power (P/2piRp): ',num2str(data_proc.peaks.p_rf_2piRp(ipeak)),' MW/m'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Total current (I): ',num2str(data_proc.peaks.I_tot(ipeak)),' MA'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['CD efficiency (I*Rp/P): ',num2str(data_proc.peaks.EtaRp(ipeak)),' A.m/W'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Normalized CD efficiency xi: ',num2str(data_proc.peaks.ksirf(ipeak))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                end
+            end
+            %
+            if opt.wave == 'y',
+                %
+                for iw = 1:nw,
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = '----------------------------------------';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['RF Wave # ',num2str(iw)];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho G: ',num2str(data_proc.wave.wP_rf_rhoG(iw))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho P: ',num2str(data_proc.wave.wP_rf_rhoP(iw))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho T: ',num2str(data_proc.wave.wP_rf_rhoT(iw))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho V: ',num2str(data_proc.wave.wP_rf_rhoV(iw))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Temperature Te: ',num2str(data_proc.wave.wTe(iw)),' keV'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Density ne: ',num2str(data_proc.wave.wne(iw)/1e20),' *10^20 m^-3'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Launched RF power (P/2piRp): ',num2str(data_proc.wave.wp0_rf_2piRp(iw)),'MW/m'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['RF power absorbed (P/2piRp): ',num2str(data_proc.wave.wp_rf_2piRp(iw)),' MW/m ---> ',num2str(100*data_proc.wave.wp_rf_2piRp(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    for in_rf = 1:nn_rf,
+                        txt = ['RF power absorbed on harm. ',num2str(data_proc.wave.wn_rf_list(in_rf)),' (P/2piRp): ',num2strdata_proc.wave.(wnp_rf_2piRp(iw,in_rf)),' MW/m ---> ',num2str(100*data_proc.wave.wnp_rf_2piRp(iw,in_rf)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    end
+                    txt = ['Linear RF power absorbed (P/2piRp): ',num2str(data_proc.wave.wp_rf_2piRp_lin(iw)),' MW/m ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                end
+            end
+            %
+        else
+            txt = ['Launched RF power (P): ',num2str(data_proc.scalar.p0_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            if sum(data_proc.radial.P_rf) ~= 0,
+                if isfield(dke_out.waves{1}.rayparam,'colldamp')
+                    if dke_out.waves{1}.rayparam.colldamp == 1,
+                        txt = ['RF absorbed power (RLA + NRCA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_coll_luke*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_coll_luke/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                        txt = ['Linear RF absorbed power (RLA + NRCA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    else
+                        txt = ['RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                        txt = ['Linear RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    end
+                else
+                    txt = ['RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Linear RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                end
+                %
+                for in_rf = 1:nn_rf,
+                    txt = ['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                end
+                %
+            end
+            txt = ['Ohmic power deposited (P): ',num2str(data_proc.scalar.p_e_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['Total power deposited (P): ',num2str(data_proc.scalar.p_tot_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['CD efficiency (I/P): ',num2str(data_proc.scalar.EtaRp/data_proc.scalar.Rp),' A/W'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['Initial loop voltage (V) @ Bmin: ',num2str(data_proc.scalar.V_loop_init),' V'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            txt = ['Initial flux-surface averaged loop voltage (V): ',num2str(data_proc.scalar.V_loop_init_fsav),' V'];data_proc.summary = [data_proc.summary,txt,char(13)];
+            %
+            if opt.peak == 'y',
+                %
+                for ipeak = 1:length(data_proc.peaks.ir),
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = '----------------------------------------';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['RF Peak # ',num2str(ipeak)];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho G: ',num2str(data_proc.peaks.rhoG(ipeak))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho P: ',num2str(data_proc.peaks.rhoP(ipeak))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho T: ',num2str(data_proc.peaks.rhoT(ipeak))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho V: ',num2str(data_proc.peaks.rhoV(ipeak))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Temperature Te: ',num2str(data_proc.peaks.Te(ipeak)),' keV'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Density ne: ',num2str(data_proc.peaks.ne(ipeak)/1e20),' *10^20 m^-3'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['RF power (P): ',num2str(data_proc.peaks.p_rf_2piRp(ipeak)*(2*pi*data_proc.scalar.Rp)),' MW'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Total current (I): ',num2str(data_proc.peaks.I_tot(ipeak)),' MA'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['CD efficiency (I/P): ',num2str(data_proc.peaks.EtaRp(ipeak)/data_proc.scalar.Rp),' A/W'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Normalized CD efficiency xi: ',num2str(data_proc.peaks.ksirf(ipeak))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                end
+            end
+            %
+            if opt.wave == 'y',
+                %
+                for iw = 1:nw,
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = '----------------------------------------';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['RF Wave # ',num2str(iw),' : ',data_proc.wave.wids{iw}];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho G: ',num2str(data_proc.wave.wP_rf_rhoG(iw))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho P: ',num2str(data_proc.wave.wP_rf_rhoP(iw))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho T: ',num2str(data_proc.wave.wP_rf_rhoT(iw))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Position rho V: ',num2str(data_proc.wave.wP_rf_rhoV(iw))];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Temperature Te: ',num2str(data_proc.wave.wTe(iw)),' keV'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Density ne: ',num2str(data_proc.wave.wne(iw)/1e20),' *10^20 m^-3'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ' ';data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Launched RF power (P): ',num2str(data_proc.wave.wp0_rf_2piRp(iw)*(2*pi*data_proc.scalar.Rp)),'MW'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['RF power absorbed (P): ',num2str(data_proc.wave.wp_rf_2piRp(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['RF power absorbed with NRCA (P): ',num2str(data_proc.wave.wp_rf_2piRp_coll_luke(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_coll_luke(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    for in_rf = 1:nn_rf,
+                        txt = ['RF power absorbed on harm. ',num2str(data_proc.wave.wn_rf_list(in_rf)),' (P): ',num2str(data_proc.wave.wnp_rf_2piRp(iw,in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wnp_rf_2piRp(iw,in_rf)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    end
+                    txt = ['Linear RF power absorbed (P): ',num2str(data_proc.wave.wp_rf_2piRp_lin(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                    txt = ['Linear RF power absorbed with NRCA (P): ',num2str(data_proc.wave.wp_rf_2piRp_lin_coll(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin_coll(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];data_proc.summary = [data_proc.summary,txt,char(13)];
+                end
+            end
+        end 
+    end
     %
     if isnan(ir_display) || ir_display >= 0,
         %
@@ -1370,16 +1644,18 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             diary(diaryname)
         end
         %
+        data_proc.summary = '';
+        %
         if isfield(data_proc,'simul'),
-            disp(['Simulation id: ',data_proc.simul.id]);
-            disp(['Simulation date: ',timeid_jd(data_proc.simul.timeid)]);
-            disp(['User id: ',data_proc.simul.userid]);
-            disp(['LUKE Version: ',data_proc.simul.LUKEversion]);
-            if all(isfield(data_proc.simul,{'matver','hostname'})),
-                disp(['MATLAB Version: ',data_proc.simul.matver]);
-                disp(['MACHINE: ',data_proc.simul.hostname]);
+            txt = ['Simulation id: ',data_proc.simul.id];disp(txt);
+            txt = ['Simulation date: ',timeid_jd(data_proc.simul.timeid)];disp(txt);
+            txt = ['User id: ',data_proc.simul.userid];disp(txt);
+            txt = ['LUKE Version: ',data_proc.simul.LUKEversion];disp(txt);
+            if all(isfield(data_proc.simul,{'matver','hostname'}))
+                txt = ['MATLAB Version: ',data_proc.simul.matver];disp(txt);
+                txt = ['MACHINE: ',data_proc.simul.hostname];disp(txt);
             end
-            disp(['Final RF convergence parameter: ',num2str(data_proc.simul.residue_rf(end))]);
+            txt = ['Final RF convergence parameter: ',num2str(data_proc.simul.residue_rf(end))];disp(txt);
             disp(' ');
         else
             data_proc.simul.id = '';
@@ -1399,8 +1675,8 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
         %
         if nr > 1,
             %
-            disp(['Total current (I): ',num2str(data_proc.scalar.I_tot),' MA (positive for co-current)'])
-            disp(['Exp. current  (I): ',num2str(data_proc.scalar.I_exp),' MA (positive for co-current)'])
+            txt = ['Total current (I): ',num2str(data_proc.scalar.I_tot),' MA (positive for co-current)'];disp(txt);
+            txt = ['Exp. current  (I): ',num2str(data_proc.scalar.I_exp),' MA (positive for co-current)'];disp(txt);
             %
             if opt.rho == 'g',
                 jrho = data_proc.scalar.jrhoG;
@@ -1475,169 +1751,169 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 end   
                 %
             end
-            disp(['Location of current peak (rho',opt.rho,'): ',num2str(jrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
-            disp(['Current FWHM (drho',opt.rho,'): ',num2str(jdrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
+            txt = ['Location of current peak (rho',opt.rho,'): ',num2str(jrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];disp(txt);
+            txt = ['Current FWHM (drho',opt.rho,'): ',num2str(jdrho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];disp(txt);
             if sum(data_proc.radial.P_rf) ~= 0,
-                disp(['RF efficiency (ne@jpeak*I*Rp/P): ',num2str(data_proc.scalar.EtaRFRp),' 10^19 A/(W.m^2)'])
-                disp(['RF efficiency (ne_bar*I*Rp/P): ',num2str(data_proc.scalar.EtaRFRp_nebar0),' 10^19 A/(W.m^2)'])
-                disp(['Location of RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
-                disp(['RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
-                disp(['Location of linear RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho_lin),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
-                disp(['Linear RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho_lin),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'])
-                disp(['Number of RF ray fragments: ',num2str(data_proc.scalar.nfrags)])
+                txt = ['RF efficiency (ne@jpeak*I*Rp/P): ',num2str(data_proc.scalar.EtaRFRp),' 10^19 A/(W.m^2)'];disp(txt);
+                txt = ['RF efficiency (ne_bar*I*Rp/P): ',num2str(data_proc.scalar.EtaRFRp_nebar0),' 10^19 A/(W.m^2)'];disp(txt);
+                txt = ['Location of RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];disp(txt);
+                txt = ['RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];disp(txt);
+                txt = ['Location of linear RF power deposition peak (rho',opt.rho,'): ',num2str(P_rf_rho_lin),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];disp(txt);
+                txt = ['Linear RF power deposition FWHM (drho',opt.rho,'): ',num2str(P_rf_drho_lin),' (peak mode = ',num2str(opt.peakmode),'; jpeak = ',num2str(opt.jpeak),')'];disp(txt);
+                txt = ['Number of RF ray fragments: ',num2str(data_proc.scalar.nfrags)];disp(txt);
                 
             end
             %
-            disp(['Internal inductance : ',num2str(data_proc.scalar.li)])
+            txt = ['Internal inductance : ',num2str(data_proc.scalar.li)];disp(txt);
             if isfield(dke_out.equil,'Te_vol')
-                disp(['Volume averaged <Te>: ',num2str(dke_out.equil.Te_vol),' (keV)'])
+                txt = ['Volume averaged <Te>: ',num2str(dke_out.equil.Te_vol),' (keV)'];disp(txt);
             end            
-            disp(['Line-averaged density (Bmin) ne_bar: ',num2str(ne_bar0),' (10^19 m-3)'])
+            txt = ['Line-averaged density (Bmin) ne_bar: ',num2str(ne_bar0),' (10^19 m-3)'];disp(txt);
             %
             if isinf(data_proc.scalar.Rp) && sum(data_proc.radial.P_rf) ~= 0,
-                disp(['Launched RF power (P/2piRp): ',num2str(data_proc.scalar.p0_rf_2piRp),' MW/m'])
-                disp(['RF power absorbed (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
+                txt = ['Launched RF power (P/2piRp): ',num2str(data_proc.scalar.p0_rf_2piRp),' MW/m'];disp(txt);
+                txt = ['RF power absorbed (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
                 if isfield(dke_out.waves{1}.rayparam,'colldamp')
                     if dke_out.waves{1}.rayparam.colldamp == 1,
-                        disp(['RF power absorbed with NRCA (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_coll_luke),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_coll_luke/data_proc.scalar.p0_rf_2piRp),' %.'])
+                        txt = ['RF power absorbed with NRCA (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_coll_luke),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_coll_luke/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
                     else
-                        disp('Non-resonant collisional absorption (NRCA) of RF waves is not considered.')
+                        txt = 'Non-resonant collisional absorption (NRCA) of RF waves is not considered.';disp(txt);
                     end
                 else
-                    disp('Non-resonant collisional absorption (NRCA) of RF waves is not considered.')
+                    txt = 'Non-resonant collisional absorption (NRCA) of RF waves is not considered.';disp(txt);
                 end
                 %
                 for in_rf = 1:nn_rf,
-                    disp(['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P/2piRp): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)),' MW/m ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'])
+                    txt = ['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P/2piRp): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)),' MW/m ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
                 end
                 if opt.wave == 'y',
-                    disp(['Linear RF power absorbed (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_lin),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'])
+                    txt = ['Linear RF power absorbed (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_lin),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
                     if isfield(dke_out.waves{1}.rayparam,'colldamp')
                          if dke_out.waves{1}.rayparam.colldamp == 1,
-                            disp(['Linear RF power absorbed with NRCA (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_lin_coll),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin_coll/data_proc.scalar.p0_rf_2piRp),' %.'])
+                            txt = ['Linear RF power absorbed with NRCA (P/2piRp): ',num2str(data_proc.scalar.p_rf_2piRp_lin_coll),' MW/m ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin_coll/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
                          end               
                     end       
                 end
-                disp(['Ohmic power deposited (P/2piRp): ',num2str(data_proc.scalar.p_e_2piRp),' MW/m'])
-                disp(['Total power deposited (P/2piRp): ',num2str(data_proc.scalar.p_tot_2piRp),' MW/m'])
-                disp(['CD efficiency (I*Rp/P): ',num2str(data_proc.scalar.EtaRp),' A.m/W'])
+                txt = ['Ohmic power deposited (P/2piRp): ',num2str(data_proc.scalar.p_e_2piRp),' MW/m'];disp(txt);
+                txt = ['Total power deposited (P/2piRp): ',num2str(data_proc.scalar.p_tot_2piRp),' MW/m'];disp(txt);
+                txt = ['CD efficiency (I*Rp/P): ',num2str(data_proc.scalar.EtaRp),' A.m/W'];disp(txt);
 
-                disp(['Normalized CD efficiency xi: ',num2str(data_proc.scalar.ksirf)])
+                txt = ['Normalized CD efficiency xi: ',num2str(data_proc.scalar.ksirf)];disp(txt);
                 %
                 if opt.peak == 'y',
                     %
                     for ipeak = 1:length(data_proc.peaks.ir),
-                        disp(' ');
-                        disp('----------------------------------------');
-                        disp(' ');
-                        disp(['RF Peak # ',num2str(ipeak)])
-                        disp(['Position rho G: ',num2str(data_proc.peaks.rhoG(ipeak))])
-                        disp(['Position rho P: ',num2str(data_proc.peaks.rhoP(ipeak))])
-                        disp(['Position rho T: ',num2str(data_proc.peaks.rhoT(ipeak))])
-                        disp(['Position rho V: ',num2str(data_proc.peaks.rhoV(ipeak))])
-                        disp(['Temperature Te: ',num2str(data_proc.peaks.Te(ipeak)),' keV'])
-                        disp(['Density ne: ',num2str(data_proc.peaks.ne(ipeak)/1e20),' *10^20 m^-3'])
-                        disp(' ');
-                        disp(['RF power (P/2piRp): ',num2str(data_proc.peaks.p_rf_2piRp(ipeak)),' MW/m'])
-                        disp(['Total current (I): ',num2str(data_proc.peaks.I_tot(ipeak)),' MA'])
-                        disp(['CD efficiency (I*Rp/P): ',num2str(data_proc.peaks.EtaRp(ipeak)),' A.m/W'])
-                        disp(['Normalized CD efficiency xi: ',num2str(data_proc.peaks.ksirf(ipeak))])
+                        txt = ' ';disp(txt);
+                        txt = '----------------------------------------';disp(txt);
+                        txt = ' ';disp(txt);
+                        txt = ['RF Peak # ',num2str(ipeak)];disp(txt);
+                        txt = ['Position rho G: ',num2str(data_proc.peaks.rhoG(ipeak))];disp(txt);
+                        txt = ['Position rho P: ',num2str(data_proc.peaks.rhoP(ipeak))];disp(txt);
+                        txt = ['Position rho T: ',num2str(data_proc.peaks.rhoT(ipeak))];disp(txt);
+                        txt = ['Position rho V: ',num2str(data_proc.peaks.rhoV(ipeak))];disp(txt);
+                        txt = ['Temperature Te: ',num2str(data_proc.peaks.Te(ipeak)),' keV'];disp(txt);
+                        txt = ['Density ne: ',num2str(data_proc.peaks.ne(ipeak)/1e20),' *10^20 m^-3'];disp(txt);
+                        txt = ' ';disp(txt);
+                        txt = ['RF power (P/2piRp): ',num2str(data_proc.peaks.p_rf_2piRp(ipeak)),' MW/m'];disp(txt);
+                        txt = ['Total current (I): ',num2str(data_proc.peaks.I_tot(ipeak)),' MA'];disp(txt);
+                        txt = ['CD efficiency (I*Rp/P): ',num2str(data_proc.peaks.EtaRp(ipeak)),' A.m/W'];disp(txt);
+                        txt = ['Normalized CD efficiency xi: ',num2str(data_proc.peaks.ksirf(ipeak))];disp(txt);
                     end
                 end
                 %
                 if opt.wave == 'y',
                     %
                     for iw = 1:nw,
-                        disp(' ');
-                        disp('----------------------------------------');
-                        disp(' ');
-                        disp(['RF Wave # ',num2str(iw)])
-                        disp(['Position rho G: ',num2str(data_proc.wave.wP_rf_rhoG(iw))])
-                        disp(['Position rho P: ',num2str(data_proc.wave.wP_rf_rhoP(iw))])
-                        disp(['Position rho T: ',num2str(data_proc.wave.wP_rf_rhoT(iw))])
-                        disp(['Position rho V: ',num2str(data_proc.wave.wP_rf_rhoV(iw))])
-                        disp(['Temperature Te: ',num2str(data_proc.wave.wTe(iw)),' keV'])
-                        disp(['Density ne: ',num2str(data_proc.wave.wne(iw)/1e20),' *10^20 m^-3'])
-                        disp(' ');
-                        disp(['Launched RF power (P/2piRp): ',num2str(data_proc.wave.wp0_rf_2piRp(iw)),'MW/m'])
-                        disp(['RF power absorbed (P/2piRp): ',num2str(data_proc.wave.wp_rf_2piRp(iw)),' MW/m ---> ',num2str(100*data_proc.wave.wp_rf_2piRp(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
+                        txt = ' ';disp(txt);
+                        txt = '----------------------------------------';disp(txt);
+                        txt = ' ';disp(txt);
+                        txt = ['RF Wave # ',num2str(iw)];disp(txt);
+                        txt = ['Position rho G: ',num2str(data_proc.wave.wP_rf_rhoG(iw))];disp(txt);
+                        txt = ['Position rho P: ',num2str(data_proc.wave.wP_rf_rhoP(iw))];disp(txt);
+                        txt = ['Position rho T: ',num2str(data_proc.wave.wP_rf_rhoT(iw))];disp(txt);
+                        txt = ['Position rho V: ',num2str(data_proc.wave.wP_rf_rhoV(iw))];disp(txt);
+                        txt = ['Temperature Te: ',num2str(data_proc.wave.wTe(iw)),' keV'];disp(txt);
+                        txt = ['Density ne: ',num2str(data_proc.wave.wne(iw)/1e20),' *10^20 m^-3'];disp(txt);
+                        txt = ' ';disp(txt);
+                        txt = ['Launched RF power (P/2piRp): ',num2str(data_proc.wave.wp0_rf_2piRp(iw)),'MW/m'];disp(txt);
+                        txt = ['RF power absorbed (P/2piRp): ',num2str(data_proc.wave.wp_rf_2piRp(iw)),' MW/m ---> ',num2str(100*data_proc.wave.wp_rf_2piRp(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];disp(txt);
                         for in_rf = 1:nn_rf,
-                            disp(['RF power absorbed on harm. ',num2str(data_proc.wave.wn_rf_list(in_rf)),' (P/2piRp): ',num2strdata_proc.wave.(wnp_rf_2piRp(iw,in_rf)),' MW/m ---> ',num2str(100*data_proc.wave.wnp_rf_2piRp(iw,in_rf)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
+                            txt = ['RF power absorbed on harm. ',num2str(data_proc.wave.wn_rf_list(in_rf)),' (P/2piRp): ',num2strdata_proc.wave.(wnp_rf_2piRp(iw,in_rf)),' MW/m ---> ',num2str(100*data_proc.wave.wnp_rf_2piRp(iw,in_rf)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];disp(txt);
                         end
-                        disp(['Linear RF power absorbed (P/2piRp): ',num2str(data_proc.wave.wp_rf_2piRp_lin(iw)),' MW/m ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
+                        txt = ['Linear RF power absorbed (P/2piRp): ',num2str(data_proc.wave.wp_rf_2piRp_lin(iw)),' MW/m ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];disp(txt);
                     end
                 end
                 %
             else
-                disp(['Launched RF power (P): ',num2str(data_proc.scalar.p0_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
+                txt = ['Launched RF power (P): ',num2str(data_proc.scalar.p0_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'];disp(txt);
                 if sum(data_proc.radial.P_rf) ~= 0,
                     if isfield(dke_out.waves{1}.rayparam,'colldamp')
                         if dke_out.waves{1}.rayparam.colldamp == 1,
-                            disp(['RF absorbed power (RLA + NRCA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_coll_luke*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_coll_luke/data_proc.scalar.p0_rf_2piRp),' %.'])
-                            disp(['Linear RF absorbed power (RLA + NRCA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.']);
+                            txt = ['RF absorbed power (RLA + NRCA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_coll_luke*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_coll_luke/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
+                            txt = ['Linear RF absorbed power (RLA + NRCA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
                         else
-                            disp(['RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
-                            disp(['Linear RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.']);
+                            txt = ['RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
+                            txt = ['Linear RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
                         end
                     else
-                        disp(['RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'])
-                        disp(['Linear RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.']);
+                        txt = ['RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
+                        txt = ['Linear RF absorbed power (RLA) (P): ',num2str(data_proc.scalar.p_rf_2piRp_lin*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.p_rf_2piRp_lin/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
                     end
                     %
                     for in_rf = 1:nn_rf,
-                        disp(['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'])
+                        txt = ['RF power absorbed on harm. ',num2str(data_proc.scalar.n_rf_list(in_rf)),' (P): ',num2str(data_proc.scalar.np_rf_2piRp(in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.scalar.np_rf_2piRp(in_rf)/data_proc.scalar.p0_rf_2piRp),' %.'];disp(txt);
                     end
                     %
                 end
-                disp(['Ohmic power deposited (P): ',num2str(data_proc.scalar.p_e_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
-                disp(['Total power deposited (P): ',num2str(data_proc.scalar.p_tot_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'])
-                disp(['CD efficiency (I/P): ',num2str(data_proc.scalar.EtaRp/data_proc.scalar.Rp),' A/W'])
-                disp(['Initial loop voltage (V) @ Bmin: ',num2str(data_proc.scalar.V_loop_init),' V'])
-                disp(['Initial flux-surface averaged loop voltage (V): ',num2str(data_proc.scalar.V_loop_init_fsav),' V'])
+                txt = ['Ohmic power deposited (P): ',num2str(data_proc.scalar.p_e_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'];disp(txt);
+                txt = ['Total power deposited (P): ',num2str(data_proc.scalar.p_tot_2piRp*(2*pi*data_proc.scalar.Rp)),' MW'];disp(txt);
+                txt = ['CD efficiency (I/P): ',num2str(data_proc.scalar.EtaRp/data_proc.scalar.Rp),' A/W'];disp(txt);
+                txt = ['Initial loop voltage (V) @ Bmin: ',num2str(data_proc.scalar.V_loop_init),' V'];disp(txt);
+                txt = ['Initial flux-surface averaged loop voltage (V): ',num2str(data_proc.scalar.V_loop_init_fsav),' V'];disp(txt);
                 %
                 if opt.peak == 'y',
                     %
                     for ipeak = 1:length(data_proc.peaks.ir),
-                        disp(' ');
-                        disp('----------------------------------------');
-                        disp(' ');
-                        disp(['RF Peak # ',num2str(ipeak)])
-                        disp(['Position rho G: ',num2str(data_proc.peaks.rhoG(ipeak))])
-                        disp(['Position rho P: ',num2str(data_proc.peaks.rhoP(ipeak))])
-                        disp(['Position rho T: ',num2str(data_proc.peaks.rhoT(ipeak))])
-                        disp(['Position rho V: ',num2str(data_proc.peaks.rhoV(ipeak))])
-                        disp(['Temperature Te: ',num2str(data_proc.peaks.Te(ipeak)),' keV'])
-                        disp(['Density ne: ',num2str(data_proc.peaks.ne(ipeak)/1e20),' *10^20 m^-3'])
-                        disp(' ');
-                        disp(['RF power (P): ',num2str(data_proc.peaks.p_rf_2piRp(ipeak)*(2*pi*data_proc.scalar.Rp)),' MW'])
-                        disp(['Total current (I): ',num2str(data_proc.peaks.I_tot(ipeak)),' MA'])
-                        disp(['CD efficiency (I/P): ',num2str(data_proc.peaks.EtaRp(ipeak)/data_proc.scalar.Rp),' A/W'])
-                        disp(['Normalized CD efficiency xi: ',num2str(data_proc.peaks.ksirf(ipeak))])
+                        txt = ' ';disp(txt);
+                        txt = '----------------------------------------';disp(txt);
+                        txt = ' ';disp(txt);
+                        txt = ['RF Peak # ',num2str(ipeak)];disp(txt);
+                        txt = ['Position rho G: ',num2str(data_proc.peaks.rhoG(ipeak))];disp(txt);
+                        txt = ['Position rho P: ',num2str(data_proc.peaks.rhoP(ipeak))];disp(txt);
+                        txt = ['Position rho T: ',num2str(data_proc.peaks.rhoT(ipeak))];disp(txt);
+                        txt = ['Position rho V: ',num2str(data_proc.peaks.rhoV(ipeak))];disp(txt);
+                        txt = ['Temperature Te: ',num2str(data_proc.peaks.Te(ipeak)),' keV'];disp(txt);
+                        txt = ['Density ne: ',num2str(data_proc.peaks.ne(ipeak)/1e20),' *10^20 m^-3'];disp(txt);
+                        txt = ' ';disp(txt);
+                        txt = ['RF power (P): ',num2str(data_proc.peaks.p_rf_2piRp(ipeak)*(2*pi*data_proc.scalar.Rp)),' MW'];disp(txt);
+                        txt = ['Total current (I): ',num2str(data_proc.peaks.I_tot(ipeak)),' MA'];disp(txt);
+                        txt = ['CD efficiency (I/P): ',num2str(data_proc.peaks.EtaRp(ipeak)/data_proc.scalar.Rp),' A/W'];disp(txt);
+                        txt = ['Normalized CD efficiency xi: ',num2str(data_proc.peaks.ksirf(ipeak))];disp(txt);
                     end
                 end
                 %
                 if opt.wave == 'y',
                     %
                     for iw = 1:nw,
-                        disp(' ');
-                        disp('----------------------------------------');
-                        disp(' ');
-                        disp(['RF Wave # ',num2str(iw),' : ',data_proc.wave.wids{iw}])
-                        disp(['Position rho G: ',num2str(data_proc.wave.wP_rf_rhoG(iw))])
-                        disp(['Position rho P: ',num2str(data_proc.wave.wP_rf_rhoP(iw))])
-                        disp(['Position rho T: ',num2str(data_proc.wave.wP_rf_rhoT(iw))])
-                        disp(['Position rho V: ',num2str(data_proc.wave.wP_rf_rhoV(iw))])
-                        disp(['Temperature Te: ',num2str(data_proc.wave.wTe(iw)),' keV'])
-                        disp(['Density ne: ',num2str(data_proc.wave.wne(iw)/1e20),' *10^20 m^-3'])
-                        disp(' ');
-                        disp(['Launched RF power (P): ',num2str(data_proc.wave.wp0_rf_2piRp(iw)*(2*pi*data_proc.scalar.Rp)),'MW'])
-                        disp(['RF power absorbed (P): ',num2str(data_proc.wave.wp_rf_2piRp(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
-                        disp(['RF power absorbed with NRCA (P): ',num2str(data_proc.wave.wp_rf_2piRp_coll_luke(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_coll_luke(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
+                        txt = ' ';disp(txt);
+                        txt = '----------------------------------------';disp(txt);
+                        txt = ' ';disp(txt);
+                        txt = ['RF Wave # ',num2str(iw),' : ',data_proc.wave.wids{iw}];disp(txt);
+                        txt = ['Position rho G: ',num2str(data_proc.wave.wP_rf_rhoG(iw))];disp(txt);
+                        txt = ['Position rho P: ',num2str(data_proc.wave.wP_rf_rhoP(iw))];disp(txt);
+                        txt = ['Position rho T: ',num2str(data_proc.wave.wP_rf_rhoT(iw))];disp(txt);
+                        txt = ['Position rho V: ',num2str(data_proc.wave.wP_rf_rhoV(iw))];disp(txt);
+                        txt = ['Temperature Te: ',num2str(data_proc.wave.wTe(iw)),' keV'];disp(txt);
+                        txt = ['Density ne: ',num2str(data_proc.wave.wne(iw)/1e20),' *10^20 m^-3'];disp(txt);
+                        txt = ' ';disp(txt);
+                        txt = ['Launched RF power (P): ',num2str(data_proc.wave.wp0_rf_2piRp(iw)*(2*pi*data_proc.scalar.Rp)),'MW'];disp(txt);
+                        txt = ['RF power absorbed (P): ',num2str(data_proc.wave.wp_rf_2piRp(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];disp(txt);
+                        txt = ['RF power absorbed with NRCA (P): ',num2str(data_proc.wave.wp_rf_2piRp_coll_luke(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_coll_luke(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];disp(txt);
                         for in_rf = 1:nn_rf,
-                            disp(['RF power absorbed on harm. ',num2str(data_proc.wave.wn_rf_list(in_rf)),' (P): ',num2str(data_proc.wave.wnp_rf_2piRp(iw,in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wnp_rf_2piRp(iw,in_rf)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
+                            txt = ['RF power absorbed on harm. ',num2str(data_proc.wave.wn_rf_list(in_rf)),' (P): ',num2str(data_proc.wave.wnp_rf_2piRp(iw,in_rf)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wnp_rf_2piRp(iw,in_rf)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];disp(txt);
                         end
-                        disp(['Linear RF power absorbed (P): ',num2str(data_proc.wave.wp_rf_2piRp_lin(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
-                        disp(['Linear RF power absorbed with NRCA (P): ',num2str(data_proc.wave.wp_rf_2piRp_lin_coll(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin_coll(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'])
+                        txt = ['Linear RF power absorbed (P): ',num2str(data_proc.wave.wp_rf_2piRp_lin(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];disp(txt);
+                        txt = ['Linear RF power absorbed with NRCA (P): ',num2str(data_proc.wave.wp_rf_2piRp_lin_coll(iw)*(2*pi*data_proc.scalar.Rp)),' MW ---> ',num2str(100*data_proc.wave.wp_rf_2piRp_lin_coll(iw)/data_proc.wave.wp0_rf_2piRp(iw)),' %.'];disp(txt);
                     end
                 end
             end
