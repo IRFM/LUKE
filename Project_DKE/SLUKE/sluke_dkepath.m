@@ -24,7 +24,7 @@ if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'debugmode') 
     %
 else
     %
-    dkepath.debugmode = sparams.simul.remote.debugmode{ii};;
+    dkepath.debugmode = sparams.simul.remote.debugmode{ii};
     %
 end
 %
@@ -65,5 +65,4 @@ if remote_profile_num == 0
     end
     %
 end
-
            
