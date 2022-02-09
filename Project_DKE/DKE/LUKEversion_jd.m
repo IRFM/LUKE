@@ -15,9 +15,10 @@ function [lukeversion,matlabversion,matlabrelease] = LUKEversion_jd
 %
 %by Y.Peysson CEA/DSM/IRFM <yves.peysson@cea.fr> and Joan Decker CEA/DSM/IRFM (joan.decker@cea.fr)
 %
-dkepath = load_structures_yp('dkepath','','');
+luke_root = which('LUKEversion_jd.m');
+luke_root = luke_root(1:strfind(luke_root,'Project_DKE')-1)
 %
-[a,b] = system(['TERM=ansi;git --git-dir ',dkepath.luke_root,'.git log -n 1']);
+[a,b] = system(['TERM=ansi;git --git-dir ',luke_root,'.git log -n 1']);
 b = deblank(strrep(strrep(strrep(b,'[33m',''),'[m',''),'[K',''));
 list_returns = strfind(b,char(13));
 hash_commit = ['Last git commit: ',strtrim(deblank(b(strfind(b,'commit')+7:strfind(b,'(')-3)))];
