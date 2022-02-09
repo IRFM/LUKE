@@ -98,11 +98,11 @@ else
                 wavestructs{kk1}.C3POparam = sluke_params_value(sparams.rfwaves.solver.C3PO.C3POparam,ii,kk);
                 wavestructs{kk1}.fitequilparam = sluke_params_value(sparams.equil.fit,ii); 
                 %
+                wavestructs{kk1}.launch = sluke_params_value(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).C3PO.launch,ii,kk);
+                wavestructs{kk1}.launch.id = sluke_id(sparams,ii);
+                wavestructs{kk1}.launch.type = sparams.rfwaves.antenna.type{ii}{kk};
+                %
                 if strcmp(sparams.rfwaves.antenna.type{ii}{kk},'LH')
-                    %
-                    wavestructs{kk1}.launch = sluke_params_value(sparams.rfwaves.antenna.LH.C3PO.launch,ii,kk);
-                    wavestructs{kk1}.launch.id = sluke_id(sparams,ii);
-                    wavestructs{kk1}.launch.type = sparams.rfwaves.antenna.type{ii}{kk};
                     %
                     if strcmp(sparams.rfwaves.antenna.source{ii}{kk},'code')
                         %
@@ -284,7 +284,7 @@ else
                     %
                 else
                     %
-                 %%%%%   cprintf([1,0.5,0],['WARNING: The type of wave ',sparams.rfwaves.antenna.type{ii}{kk},' is not yet implemented'])
+                    cprintf([1,0.5,0],['WARNING: The type of wave ',sparams.rfwaves.antenna.type{ii}{kk},' is not yet implemented.'])
                     break
                     %
                 end
