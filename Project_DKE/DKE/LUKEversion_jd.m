@@ -1,14 +1,13 @@
 function [lukeversion,matlabversion,matlabrelease] = LUKEversion_jd
-%LUKE - This function specifies the tag of the current LUKE version and the corresponding supported MatLab version
+%LUKE - This function specifies the last Git commit of the current LUKE version
 %
-% This function specifies the tag of the current LUKE version and the
-% corresponding supported MatLab version and release
+% This function specifies the last git commit date of the current LUKE version
 %
 % Input: none
 %
 % Output:
 %
-%   - lukeversion: CVS version on LUKE [1,p]
+%   - lukeversion: git last commit date LUKE [1,p]
 %   - matlabversion: Matlab version of LUKE (must be greater or equal to 705) [1,p]
 %   - matlabrelease: Matlab release (Ryyyya or Ryyyyb, where yyyy is the year) [1,p]
 %
@@ -16,7 +15,16 @@ function [lukeversion,matlabversion,matlabrelease] = LUKEversion_jd
 %
 %by Y.Peysson CEA/DSM/IRFM <yves.peysson@cea.fr> and Joan Decker CEA/DSM/IRFM (joan.decker@cea.fr)
 %
-lukeversion = 'LUKE 1.11.0';
+dkepath = load_structures_yp('dkepath','','');
+%
+[a,b] = system(['TERM=ansi;git --git-dir ',dkepath.luke_root,'.git log -n 1']);
+b = deblank(strrep(strrep(strrep(b,'[33m',''),'[m',''),'[K',''));
+list_returns = strfind(b,char(13));
+hash_commit = ['Last git commit: ',strtrim(deblank(b(strfind(b,'commit')+7:strfind(b,'(')-3)))];
+author_commit = strtrim(deblank(b(list_returns(2):list_returns(3))));
+date_commit = strtrim(deblank(b(list_returns(3):list_returns(4))));
+%
+lukeversion = [hash_commit,', ',author_commit,', ',date_commit];
 %
 [matlabversion,matlabrelease] = matversion_yp;
 %
