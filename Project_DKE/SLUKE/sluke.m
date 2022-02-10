@@ -244,8 +244,6 @@ for ii = 1:length(sparams.machine)
             %
         elseif exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             %
-            
-            %
             if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'])
                 %
                 luke_data = load(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']);
