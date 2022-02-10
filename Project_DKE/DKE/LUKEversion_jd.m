@@ -17,7 +17,7 @@ function [lukeversion,matlabversion,matlabrelease] = LUKEversion_jd
 %
 luke_root = which('LUKEversion_jd.m');
 luke_root = luke_root(1:strfind(luke_root,'Project_DKE')-1);
-%
+%{
 [~,b] = system(['TERM=ansi;git --git-dir ',luke_root,'.git log -n 1']);
 b = deblank(strrep(strrep(strrep(b,'[33m',''),'[m',''),'[K',''));
 list_returns = strfind(b,char(13));
@@ -26,6 +26,8 @@ author_commit = strtrim(deblank(b(list_returns(2):list_returns(3))));
 date_commit = strtrim(deblank(b(list_returns(3):list_returns(4))));
 %
 lukeversion = [hash_commit,', ',author_commit,', ',date_commit];
+%}
+lukeversion = '';
 %
 [matlabversion,matlabrelease] = matversion_yp;
 %
