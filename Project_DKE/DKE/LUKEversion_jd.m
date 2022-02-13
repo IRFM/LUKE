@@ -18,11 +18,18 @@ function [lukeversion,matlabversion,matlabrelease] = LUKEversion_jd
 luke_root = which('LUKEversion_jd.m');
 luke_root = luke_root(1:strfind(luke_root,'Project_DKE')-1);
 %
-fileID = fopen([luke_root,'lastgithash.txt'],'r');
-fprintf(fileID,'%s',lukeversion);
-fclose(fileID);
-%
-lukeversion = deblank(strrep(strrep(strrep(lukeversion,'[33m',''),'[m',''),'[K',''));
+fileID = fopen([luke_root,'lastgithash.txt']);
+if fileID > 0
+    lukeversion = fscanf(fileID,'%s');
+    fclose(fileID);
+    %
+    lukeversion = deblank(strrep(strrep(strrep(lukeversion,'[33m',''),'[m',''),'[K',''));
+else
+    %
+    fclose(fileID);
+    lukeversion = 'Error reading lastgithash.txt';
+    %
+end
 %
 [matlabversion,matlabrelease] = matversion_yp;
 %
