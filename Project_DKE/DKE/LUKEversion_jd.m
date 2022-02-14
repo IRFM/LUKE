@@ -18,7 +18,7 @@ function [lukeversion,matlabversion,matlabrelease] = LUKEversion_jd
 luke_root = which('LUKEversion_jd.m');
 luke_root = luke_root(1:strfind(luke_root,'Project_DKE')-1);
 %
-fileID = fopen([luke_root,'lastgithash.txt']);
+fileID = fopen([luke_root,'lastgithash.txt']);%see sluke_git.m for the corresponding command to recover with the corresponding hash
 if fileID > 0
     lukeversion = fscanf(fileID,'%s');
     fclose(fileID);
