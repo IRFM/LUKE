@@ -168,8 +168,10 @@ for ii = 1:length(sparams.machine)
             %
             if kk(sluke_remote_profile(sparams,ii)+1) < kkmax(sluke_remote_profile(sparams,ii)+1)
                 %
-                lukestructs.simul.id = simul_id;
-                %lukestructs.simul.locid = '';
+                sluke_git(sparams,ii);%generate the last git hash of luke in a file and perform on request a git pull prior to calculations 
+                %
+                times lukestructs.simul.id = simul_id;
+                %
                 lukestructs.simul.path = 'SLUKE_TEMP/';%for specific LUKE output
                 %
                 lukestructs.opt = sluke_opt(sparams,ii);
