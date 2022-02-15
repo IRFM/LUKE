@@ -36,7 +36,8 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                 %
                 if err(kk) > 0
                     %
-                    cprintf([1,0.5,0],['---> Last ''git pull'' of the remote project MatRemote failed : ',txt{kk}]);disp(' ')
+                    cprintf('*red',['---> WARNING : Last ''git pull'' of the remote project MatRemote failed because like of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')
+                    disp(txt{kk});
                     %
                 else
                     %
@@ -57,7 +58,8 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                 %
                 if err(kk) > 0
                     %
-                    cprintf([1,0.5,0],['---> Last ''git pull'' of the remote project MatTools failed : ',txt{kk}]);disp(' ')
+                    cprintf('*red',['---> WARNING : Last ''git pull'' of the remote project MatTools failed because like of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')
+                    disp(txt{kk});
                     %
                 else
                     %
@@ -79,7 +81,8 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                 %
                 if err(kk) > 0
                     %
-                    cprintf([1,0.5,0],['---> Last ''git pull'' of the remote project MatHelp failed : ',txt{kk}]);disp(' ')
+                    cprintf('*red',['---> WARNING : Last ''git pull'' of the remote project MatHelp failed because like of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')
+                    disp(txt{kk});
                     %
                 else
                     %
@@ -101,7 +104,8 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                 %
                 if err(kk) > 0
                     %
-                    cprintf([1,0.5,0],['---> Last ''git pull'' of the remote project ',remotelukebranch,' failed : ',txt{kk}]);disp(' ')
+                    cprintf('*red',['---> WARNING : Last ''git pull'' of the remote project ',remotelukebranch,' failed because like of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')
+                    disp(txt{kk});
                     %
                 else
                     %
