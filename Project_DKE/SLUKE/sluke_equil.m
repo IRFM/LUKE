@@ -96,8 +96,15 @@ else
             %
         elseif isfield(data,'equil') % LUKE equilibrium format
             %
-            equil = data.equil;
-            equil.id = data.equil.id;
+            if iscell(data.equil)
+                %
+                equil = data.equil{end};
+                %
+            else
+                %
+                equil = data.equil;
+                %
+            end
             %
         else    
             error([]);
