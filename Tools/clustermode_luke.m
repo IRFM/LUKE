@@ -158,5 +158,17 @@ if remnum{1} > 0
     end
 end
 %
+if exist('private_bridge_parameters.m','file')
+    %
+    if ~isempty(dkecluster.scheduler.remote{1}.bridge) && isfield(dkecluster.scheduler.remote{1}.bridge.ssh,'remotepassword') && ~isempty(dkecluster.scheduler.remote{1}.bridge.ssh.remotepassword) && isfield(dkecluster.scheduler.remote{1},'hosts') && ~isempty(dkecluster.scheduler.remote{1}.hosts) && length(dkecluster.scheduler.remote{1}.hosts) > 1
+        %
+        dkecluster.scheduler.remote{1}.ssh.sshcmd = strrep(dkecluster.scheduler.remote{1}.ssh.sshcmd,[dkecluster.scheduler.remote{1}.remoteuser,'@',dkecluster.scheduler.remote{1}.hosts{1}],[dkecluster.scheduler.remote{1}.remoteuser,'@',dkecluster.scheduler.remote{1}.hosts{2}]);% choose the external IP since connected from outside
+        dkecluster.scheduler.remote{1}.ssh.scpcmd = strrep(dkecluster.scheduler.remote{1}.ssh.scpcmd,[dkecluster.scheduler.remote{1}.remoteuser,'@',dkecluster.scheduler.remote{1}.hosts{1}],[dkecluster.scheduler.remote{1}.remoteuser,'@',dkecluster.scheduler.remote{1}.hosts{2}]);% choose the external IP since connected from outside
+        dkecluster.scheduler.remote{1}.host = dkecluster.scheduler.remote{1}.hosts{2};% choose the external IP since connected from outside
+        % 
+    end
+    %
+end
+%
 [dkecluster] = mdce_clustermode(dkecluster.scheduler);
 %
