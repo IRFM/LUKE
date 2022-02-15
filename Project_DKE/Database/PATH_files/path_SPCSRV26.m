@@ -45,8 +45,6 @@ remote(1).schedulername = 'direct';
 remote(1).profilename = 'decker';
 remote(1).luke_root = dkepath.decker(1).luke_root;% local cluster
 remote(1).link_mode = [];
-remote(1).gitupdate = false;
-remote(1).gitmode.cmd1 = '';
 %
 % -------------- profiles selection, Yves Peysson ------------
 %
@@ -78,19 +76,7 @@ remote(1).schedulername = 'direct';
 remote(1).profilename = 'peysson';
 remote(1).luke_root = dkepath.peysson(1).luke_root;% local cluster
 remote(1).link_mode = [];
-remote(1).gitupdate = false;
-remote(1).gitmode.cmd1 = '';
-%{
-remote(2).remoteid = 'SPCSRV26';
-remote(2).schedulername = 'condor';
-remote(2).profilename = 'peysson';
-remote(2).luke_root = dkepath.peysson(1).luke_root;% local cluster
-remote(2).link_mode = [];
-remote(2).gitupdate = false;
-remote(2).gitmode.cmd1 = '';
-%}
-
-
+%
 
 
 
