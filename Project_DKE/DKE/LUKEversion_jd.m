@@ -20,10 +20,12 @@ luke_root = luke_root(1:strfind(luke_root,'Project_DKE')-1);
 %
 fileID = fopen([luke_root,'lastgithash.txt']);%see sluke_git.m for the corresponding command to recover with the corresponding hash
 if fileID > 0
+    %
+    file = dir([luke_root,'lastgithash.txt']);
     lukeversion = fscanf(fileID,'%s');
     fclose(fileID);
     %
-    lukeversion = deblank(strrep(strrep(strrep(lukeversion,'[33m',''),'[m',''),'[K',''));
+    lukeversion = [deblank(strrep(strrep(strrep(lukeversion,'[33m',''),'[m',''),'[K','')),' (date : ',file.date,')'];
 else
     %
     fclose(fileID);
