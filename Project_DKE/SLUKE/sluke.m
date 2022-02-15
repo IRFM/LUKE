@@ -170,7 +170,7 @@ for ii = 1:length(sparams.machine)
                 %
                 sluke_git(sparams,ii);%generate the last git hash of luke in a file and perform on request a git pull prior to calculations 
                 %
-                times lukestructs.simul.id = simul_id;
+                lukestructs.simul.id = simul_id;
                 %
                 lukestructs.simul.path = 'SLUKE_TEMP/';%for specific LUKE output
                 %
