@@ -32,7 +32,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
             %
             if strcmp(sparams.simul.remote.git.projects{ii}{jj},'MatRemote')
                 %
-                [txt{kk},err(kk)] = matremotessh(remote,['cd ',remotelukerootfolder,'MatRemote;git pull']);
+                [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatRemote;git pull']);
                 %
                 if err(kk) > 0
                     %
@@ -54,7 +54,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
             %
             if strcmp(sparams.simul.remote.git.projects{ii}{jj},'MatTools')
                 %
-                [txt{kk},err(kk)] = matremotessh(remote,['cd ',remotelukerootfolder,'MatTools;git pull']);
+                [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatTools;git pull']);
                 %
                 if err(kk) > 0
                     %
@@ -77,7 +77,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
             %
             if strcmp(sparams.simul.remote.git.projects{ii}{jj},'MatHelp')
                 %
-                [txt{kk},err(kk)] = matremotessh(remote,['cd ',remotelukerootfolder,'MatHelp;git pull']);
+                [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatHelp;git pull']);
                 %
                 if err(kk) > 0
                     %
@@ -100,7 +100,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
             %
             if strcmp(sparams.simul.remote.git.projects{ii}{jj},'LUKE') == 1
                 %
-                [txt{kk},err(kk)] = matremotessh(remote,['cd ',remotelukerootfolder,remotelukebranch,';git pull']);
+                [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootfolder,remotelukebranch,';git pull']);
                 %
                 if err(kk) > 0
                     %
@@ -136,7 +136,7 @@ end
 %
 if isfield(remote,'env') && isfield(remote.env,'luke_root') && ~isempty(remote.env.luke_root) %active LUKE 
     %
-    [txt,err] = matremotessh(remote,['cd ',remote.env.luke_root,';git rev-parse --verify HEAD > lastgithash.txt']);
+    [err,txt] = matremotecmd(remote,'',['cd ',remote.env.luke_root,';git rev-parse --verify HEAD > lastgithash.txt']);
     %
     if err == 0
         %
@@ -154,9 +154,9 @@ else
     %
 end
 %
-[txt1,err1] = matremotessh(remote,['cd ',remotelukerootfolder,'MatRemote/;git rev-parse --verify HEAD > lastgithash.txt']);
-[txt2,err2] = matremotessh(remote,['cd ',remotelukerootfolder,'MatTools/;git rev-parse --verify HEAD > lastgithash.txt']);
-[txt3,err3] = matremotessh(remote,['cd ',remotelukerootfolder,'MatHelp/;git rev-parse --verify HEAD > lastgithash.txt']);
+[err1,txt1] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatRemote/;git rev-parse --verify HEAD > lastgithash.txt']);
+[err2,txt2] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatTools/;git rev-parse --verify HEAD > lastgithash.txt']);
+[err3,txt3] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatHelp/;git rev-parse --verify HEAD > lastgithash.txt']);
 %
 if err1 ~= 0
     %
