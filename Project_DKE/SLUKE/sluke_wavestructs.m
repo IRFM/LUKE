@@ -67,8 +67,18 @@ else
             %
             save(['SLUKE_RFWAVES/WAVESTRUCTS_',wavestructs_id,'.mat'],'wavestructs');
             %
+        elseif isfield(data,'wavestructs') % ohmic field from metis simulations
+            %
+            wavestructs = data.wavestructs;
+            save(['SLUKE_RFWAVES/WAVESTRUCTS_',wavestructs_id,'.mat'],'wavestructs');
+            %
+            return
+            %
         else
-            error([]);
+            %
+            cprintf([1,0.5,0],['---> WARNING : data format is not recognized for wavestructs from file.']);disp(' ')
+            return
+            %
         end
         %
     else
