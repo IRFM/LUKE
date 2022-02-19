@@ -6,42 +6,42 @@ if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'scheduler')
     %
     if isfield(sparams.simul.remote.scheduler,scheduler_type) %pbs scheduler options (see pbs documentation)
         %
-        if strcmp(scheduler_type,'pbs')
+        if strcmp(scheduler_type,'pbs') || strcmp(scheduler_type,'torque')
             %
-            if isfield(sparams.simul.remote.scheduler.pbs,'nodes') & ~isempty(sparams.simul.remote.scheduler.pbs.nodes{ii}) & ~isnan(sparams.simul.remote.scheduler.pbs.nodes{ii})
+            if isfield(sparams.simul.remote.scheduler.(scheduler_type),'nodes') & ~isempty(sparams.simul.remote.scheduler.(scheduler_type).nodes{ii}) & ~isnan(sparams.simul.remote.scheduler.(scheduler_type).nodes{ii})
                 %
-                scheduler.nodes = sparams.simul.remote.scheduler.pbs.nodes{ii};
+                scheduler.nodes = sparams.simul.remote.scheduler.(scheduler_type).nodes{ii};
                 %   
             end
             %     
-            if isfield(sparams.simul.remote.scheduler.pbs,'ppn') & ~isempty(sparams.simul.remote.scheduler.pbs.ppn{ii}) & ~isnan(sparams.simul.remote.scheduler.pbs.ppn{ii})
+            if isfield(sparams.simul.remote.scheduler.(scheduler_type),'ppn') & ~isempty(sparams.simul.remote.scheduler.(scheduler_type).ppn{ii}) & ~isnan(sparams.simul.remote.scheduler.(scheduler_type).ppn{ii})
                 %
-                scheduler.ppn = sparams.simul.remote.scheduler.pbs.ppn{ii};
+                scheduler.ppn = sparams.simul.remote.scheduler.(scheduler_type).ppn{ii};
                 %   
             end
             %
 
-            if isfield(sparams.simul.remote.scheduler.pbs,'select') & ~isempty(sparams.simul.remote.scheduler.pbs.select{ii}) & ~isnan(sparams.simul.remote.scheduler.pbs.select{ii})
+            if isfield(sparams.simul.remote.scheduler.(scheduler_type),'select') & ~isempty(sparams.simul.remote.scheduler.(scheduler_type).select{ii}) & ~isnan(sparams.simul.remote.scheduler.(scheduler_type).select{ii})
                 %
-                scheduler.select = sparams.simul.remote.scheduler.pbs.select{ii};
+                scheduler.select = sparams.simul.remote.scheduler.(scheduler_type).select{ii};
                 %   
             end 
             %
-            if isfield(sparams.simul.remote.scheduler.pbs,'ncpus') & ~isempty(sparams.simul.remote.scheduler.pbs.ncpus{ii}) & ~isnan(sparams.simul.remote.scheduler.pbs.ncpus{ii})
+            if isfield(sparams.simul.remote.scheduler.(scheduler_type),'ncpus') & ~isempty(sparams.simul.remote.scheduler.(scheduler_type).ncpus{ii}) & ~isnan(sparams.simul.remote.scheduler.(scheduler_type).ncpus{ii})
                 %
-                scheduler.ncpus = sparams.simul.remote.scheduler.pbs.ncpus{ii};
+                scheduler.ncpus = sparams.simul.remote.scheduler.(scheduler_type).ncpus{ii};
                 %   
             end
             %
-            if isfield(sparams.simul.remote.scheduler.pbs,'memory') & ~isempty(sparams.simul.remote.scheduler.pbs.memory{ii}) & ~isnan(sparams.simul.remote.scheduler.pbs.memory{ii})
+            if isfield(sparams.simul.remote.scheduler.(scheduler_type),'memory') & ~isempty(sparams.simul.remote.scheduler.(scheduler_type).memory{ii}) & ~isnan(sparams.simul.remote.scheduler.(scheduler_type).memory{ii})
                 %
-                scheduler.memory = sparams.simul.remote.scheduler.pbs.memory{ii};
+                scheduler.memory = sparams.simul.remote.scheduler.(scheduler_type).memory{ii};
                 %   
             end
             %
-            if isfield(sparams.simul.remote.scheduler.pbs,'walltime') & ~isempty(sparams.simul.remote.scheduler.pbs.walltime{ii}) & ~isnan(sparams.simul.remote.scheduler.pbs.walltime{ii})
+            if isfield(sparams.simul.remote.scheduler.(scheduler_type),'walltime') & ~isempty(sparams.simul.remote.scheduler.(scheduler_type).walltime{ii}) & ~isnan(sparams.simul.remote.scheduler.(scheduler_type).walltime{ii})
                 %
-                scheduler.walltime = sparams.simul.remote.scheduler.pbs.walltime{ii};
+                scheduler.walltime = sparams.simul.remote.scheduler.(scheduler_type).walltime{ii};
                 %   
             end
             %
