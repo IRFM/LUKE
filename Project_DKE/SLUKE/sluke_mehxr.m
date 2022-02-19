@@ -12,26 +12,35 @@ if ~exist('SLUKE_DIAGNOSTICS/Data/')
     %
 end
 %
-id_data = [sparams.machine{ii},'_data_mehxr_',sparams.discharge.shot{ii}];
-%
-if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'])
+if isfield(sparams.diags.MEHXR,'exp') && sparams.diags.MEHXR.exp{ii} == 1
     %
-    [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii});
+    id_data = [sparams.machine{ii},'_data_mehxr_',sparams.discharge.shot{ii}];
     %
-    if ~isempty(hxrexp.t)
+    if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'])
         %
-        save(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp')
+        [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii});
+        %
+        if ~isempty(hxrexp.t)
+            %
+            save(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp')
+            %
+        else
+            %
+            hxrexp = '';
+            cprintf([1,0.5,0],'WARNING : no access to MEHXR data from remote access. Check the remote connection.');disp(' ')
+            %
+        end
         %
     else
         %
-        hxrexp = '';
-        cprintf([1,0.5,0],'WARNING : no access to MEHXR data from remote access. Check the remote connection.');disp(' ')
+        load(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp');
         %
     end
     %
 else
     %
-    load(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp');
+    hxrexp = '';
+    cprintf([1,0.5,0],'WARNING : no experimental MEHXR data required.');disp(' ')
     %
 end
 %
@@ -187,9 +196,9 @@ function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
         %
     elseif isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && strcmp(sparams.diags.MEHXR.hxrspec.source{ii},'file')
         %
-        if exist([sparams.diags.MEHXR.hxrspec.path{ii},sparams.diags.MEHXR.hxrspec.file{ii}],'file')
+        if exist([sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii}],'file')
             %
-            load([sparams.diags.MEHXR.hxrspec.path{ii},sparams.diags.MEHXR.hxrspec.file{ii}],'hxrspec');
+            load([sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii}],'hxrspec');
             %
         else
             %
@@ -261,9 +270,9 @@ function [hxrparam] = sluke_MEHXR_hxrparam(sparams,simul_id,ii)
             %
             if isfield(sparams.diags.MEHXR.R5X2.hxrparam,'file') && isfield(sparams.diags.MEHXR.R5X2.hxrparam,'path')
                 %
-                if exist([sparams.diags.MEHXR.R5X2.hxrparam.path{ii},sparams.diags.MEHXR.R5X2.hxrparam.file{ii}],'file')
+                if exist([sparams.diags.MEHXR.R5X2.hxrparam.path{ii},'/',sparams.diags.MEHXR.R5X2.hxrparam.file{ii}],'file')
                     %
-                    load([sparams.diags.MEHXR.R5X2.hxrparam.path{ii},sparams.diags.MEHXR.R5X2.hxrparam.file{ii},'.mat'])
+                    load([sparams.diags.MEHXR.R5X2.hxrparam.path{ii},'/',sparams.diags.MEHXR.R5X2.hxrparam.file{ii}])
                     %
                 else
                     %

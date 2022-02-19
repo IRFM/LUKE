@@ -12,26 +12,35 @@ if ~exist('SLUKE_DIAGNOSTICS/Data/')
     %
 end
 %
-id_data = [sparams.machine{ii},'_data_dspx_',sparams.discharge.shot{ii}];
-%
-if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'])
+if isfield(sparams.diags.DSPX,'exp') && sparams.diags.DSPX.exp{ii} == 1
     %
-    [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii});
+    id_data = [sparams.machine{ii},'_data_dspx_',sparams.discharge.shot{ii}];
     %
-    if ~isempty(hxrexp.t)
+    if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat']) 
         %
-        save(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp')
+        [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii});
+        %
+        if ~isempty(hxrexp.t)
+            %
+            save(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp')
+            %
+        else
+            %
+            hxrexp = '';
+            cprintf([1,0.5,0],'WARNING : no access to experimental DSPX data from remote access. Check the remote connection.');disp(' ')
+            %
+        end
         %
     else
         %
-        hxrexp = '';
-        cprintf([1,0.5,0],'WARNING : no access to DSPX data from remote access. Check the remote connection.');disp(' ')
+        load(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp');
         %
     end
     %
 else
     %
-    load(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'],'hxrexp');
+    hxrexp = '';
+    cprintf([1,0.5,0],'WARNING : no experimental DSPX data required.');disp(' ')
     %
 end
 %
@@ -160,7 +169,6 @@ end
 end
 
 function [hxrspec] = sluke_DSPX_hxrspec(sparams,simul_id,ii)
-%
     %
     % DSPX diagnostic technical specifications (hxrspec).
     %
@@ -186,9 +194,9 @@ function [hxrspec] = sluke_DSPX_hxrspec(sparams,simul_id,ii)
         %
     elseif isfield(sparams.diags,'DSPX') && isfield(sparams.diags.DSPX,'hxrspec') && isfield(sparams.diags.DSPX.hxrspec,'source') && strcmp(sparams.diags.DSPX.hxrspec.source{ii},'file')
         %
-        if exist([sparams.diags.DSPX.hxrspec.path{ii},sparams.diags.DSPX.hxrspec.file{ii}],'file')
+        if exist([sparams.diags.DSPX.hxrspec.path{ii},'/',sparams.diags.DSPX.hxrspec.file{ii}],'file')
             %
-            load([sparams.diags.DSPX.hxrspec.path{ii},sparams.diags.DSPX.hxrspec.file{ii}],'hxrspec');
+            load([sparams.diags.DSPX.hxrspec.path{ii},'/',sparams.diags.DSPX.hxrspec.file{ii}],'hxrspec');
             %
         else
             %
@@ -260,9 +268,9 @@ function [hxrparam] = sluke_DSPX_hxrparam(sparams,simul_id,ii)
             %
             if isfield(sparams.diags.DSPX.R5X2.hxrparam,'file') && isfield(sparams.diags.DSPX.R5X2.hxrparam,'path')
                 %
-                if exist([sparams.diags.DSPX.R5X2.hxrparam.path{ii},sparams.diags.DSPX.R5X2.hxrparam.file{ii}],'file')
+                if exist([sparams.diags.DSPX.R5X2.hxrparam.path{ii},'/',sparams.diags.DSPX.R5X2.hxrparam.file{ii}],'file')
                     %
-                    load([sparams.diags.DSPX.R5X2.hxrparam.path{ii},sparams.diags.DSPX.R5X2.hxrparam.file{ii},'.mat'])
+                    load([sparams.diags.DSPX.R5X2.hxrparam.path{ii},'/',sparams.diags.DSPX.R5X2.hxrparam.file{ii}])
                     %
                 else
                     %
