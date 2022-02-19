@@ -158,7 +158,7 @@ if remnum{1} > 0
     end
 end
 %
-if exist('private_bridge_parameters.m','file')
+if exist('private_bridge_parameters.m','file') && remnum{1} > 0
     %
     if ~isempty(dkecluster.scheduler.remote{1}.bridge) && isfield(dkecluster.scheduler.remote{1}.bridge.ssh,'remotepassword') && ~isempty(dkecluster.scheduler.remote{1}.bridge.ssh.remotepassword) && isfield(dkecluster.scheduler.remote{1},'hosts') && ~isempty(dkecluster.scheduler.remote{1}.hosts) && length(dkecluster.scheduler.remote{1}.hosts) > 1
         %
