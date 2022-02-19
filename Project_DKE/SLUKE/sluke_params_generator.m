@@ -30,13 +30,7 @@ if nargin == 0
     %
     sparams = sluke_params_generator_waves(sparams);% Interactive mode : parameters for waves calculations
     %
-    %sparams = sluke_params_generator_transpfaste(sparams);% Interactive mode : parameters for anomalous fast electron transport
-    %
-    %sparams = sluke_params_generator_ripple(sparams);% Interactive mode : parameters for magnetic ripple losses
-    %
-    %sparams = sluke_params_help(sparams);% help 
-    %
-    %sparams = sluke_params_format(sparams);% help 
+    sparams = sluke_params_generator_transpfaste(sparams);% Interactive mode : parameters for anomalous fast electron transport
     %
 else
     %
