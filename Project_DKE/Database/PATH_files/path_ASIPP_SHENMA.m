@@ -10,8 +10,8 @@ function dkepath = path_ASIPP_SHENMA
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'login110','login111','login112','login113'};%
-dkepath.hostname = {'login110','login111','login112','login113'};% should match the output of hostname_jd on the machine
+dkepath.machine = {'login110','login111','login112','login113','shenma059','shenma060','shenma061','shenma062','shenma063','shenma064','shenma065','shenma066','shenma067','shenma068'};%
+dkepath.hostname = {'login110','login111','login112','login113','shenma059','shenma060','shenma061','shenma062','shenma063','shenma064','shenma065','shenma066','shenma067','shenma068'};% should match the output of hostname_jd on the machine
 %
 dkepath.computer = computer;%machine type and supported OS
 %
@@ -61,6 +61,16 @@ dkepath.PEYSSON(1).login110.imagemagick.env = '/usr/bin/';% ImageMagick environm
 dkepath.PEYSSON(1).login111 = dkepath.PEYSSON(1).login110;
 dkepath.PEYSSON(1).login112 = dkepath.PEYSSON(1).login110;
 dkepath.PEYSSON(1).login113 = dkepath.PEYSSON(1).login110;
+dkepath.PEYSSON(1).shenma059 = dkepath.PEYSSON(1).login110;
+dkepath.PEYSSON(1).shenma060 = dkepath.PEYSSON(1).login110;
+dkepath.PEYSSON(1).shenma061 = dkepath.PEYSSON(1).login110;
+dkepath.PEYSSON(1).shenma062 = dkepath.PEYSSON(1).login110;
+dkepath.PEYSSON(1).shenma063 = dkepath.PEYSSON(1).login110;
+dkepath.PEYSSON(1).shenma064 = dkepath.PEYSSON(1).login110;
+dkepath.PEYSSON(1).shenma065 = dkepath.PEYSSON(1).login110;
+dkepath.PEYSSON(1).shenma066 = dkepath.PEYSSON(1).login110;
+dkepath.PEYSSON(1).shenma067 = dkepath.PEYSSON(1).login110;
+dkepath.PEYSSON(1).shenma068 = dkepath.PEYSSON(1).login110;
 %
 %--------------------------- Remote computing -----------------------------
 %
