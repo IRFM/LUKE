@@ -15,7 +15,7 @@ if remote_profile_num > 0
 else
     %
     locallukebranch = dkepath.luke_branch;
-    locallukerootfolder = dkepath.local_root;
+    locallukerootfolder = strrep(dkepath.luke_root,[locallukebranch,'/'],'');
     %
 end
 %
