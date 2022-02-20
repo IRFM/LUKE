@@ -115,6 +115,15 @@ else
     messages.results = '';
 end
 %
+ii = ii + 1;
+%
+if ~exist('SLUKE_FLUCTS','dir')
+	[success(ii),messages.results] = mkdir('SLUKE_FLUCTS');
+else
+    success(ii) = 1;
+    messages.results = '';
+end
+%
 if sum(success) == length(success)
     %
     success_out = 1;
