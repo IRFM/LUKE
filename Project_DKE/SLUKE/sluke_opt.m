@@ -22,7 +22,7 @@ if isfield(sparams,'diags')
             if opt.save == 1
                 %
                 opt.save = 0;
-                cprintf('*[1,0.5,0]',['WARNING : opt.save = 0 enforced for local diagnostics calculations']);disp(' ')
+                cprintf('*[1,0.5,0]',['WARNING : opt.save = 0 enforced for local diagnostic calculations (',diags_fieldnames{kk},')']);disp(' ')
                 %
             end
         end
