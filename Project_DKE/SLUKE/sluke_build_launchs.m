@@ -215,8 +215,8 @@ if err == 0
                             end
                             %
                         end
-                        %
-                        if sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.comparison{ii}{kk} == 1 && sum(abs(flag_job(ii,:))) == 0 % power spectra are independent of the density in front of the grill. Just the first is plotted
+                        %                                    
+                        if isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum,'sdisplay') && isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay,'comparison') && sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.comparison{ii}{kk} == 1 && sum(abs(flag_job(ii,:))) == 0 % power spectra are independent of the density in front of the grill. Just the first is plotted
                             %
                             load([rfwaves_folder,'ALOHA/Data/',id_data,'.mat'],'data_lh') 
                             %
