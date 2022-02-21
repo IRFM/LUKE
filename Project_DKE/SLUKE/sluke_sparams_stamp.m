@@ -26,9 +26,11 @@ elseif isfield(sparams.simul,'enforce') && sparams.simul.enforce{ii} <= 1
         %
         load(['SLUKE_STAMPS/STAMP_',simul_id,'.mat']);
         %
+        sparams_e = sluke_params_extract(sparams,ii);
+        %
         flag = 0;
         %
-        if sparams.simul.enforce{ii} == 1 && isfield(sparams_stamp,'equil') && isfield(sparams,'equil') && ~comp_struct_jd(sparams_stamp.equil,sparams.equil,display_mode)
+        if sparams.simul.enforce{ii} == 1 && isfield(sparams_stamp,'equil') && isfield(sparams,'equil') && ~comp_struct_jd(sparams_stamp.equil,sparams_e.equil,display_mode)
             %
             cprintf('*red',['---> The ''equil'' structure has been changed in sparams while keeping the same simulation ID.']);disp(' ')
             cprintf('*red',['EQUIL_',simul_id,'.mat']);disp(' ')
@@ -48,7 +50,7 @@ elseif isfield(sparams.simul,'enforce') && sparams.simul.enforce{ii} <= 1
             %
         end
         %
-        if sparams.simul.enforce{ii} == 1 && isfield(sparams_stamp,'ohm') && isfield(sparams,'ohm') && ~comp_struct_jd(sparams_stamp.ohm,sparams.ohm,display_mode)
+        if sparams.simul.enforce{ii} == 1 && isfield(sparams_stamp,'ohm') && isfield(sparams,'ohm') && ~comp_struct_jd(sparams_stamp.ohm,sparams_e.ohm,display_mode)
             %
             cprintf('*red',['---> The ''ohm'' structure has been changed in sparams while keeping the same simulation ID.']);disp(' ')
             cprintf('*red',['OHM_',simul_id,'.mat']);disp(' ')
@@ -64,7 +66,7 @@ elseif isfield(sparams.simul,'enforce') && sparams.simul.enforce{ii} <= 1
             %
         end
         %      
-        if sparams.simul.enforce{ii} == 1 && isfield(sparams_stamp,'rfwaves') && isfield(sparams,'rfwaves') && ~comp_struct_jd(sparams_stamp.rfwaves,sparams.rfwaves,display_mode)
+        if sparams.simul.enforce{ii} == 1 && isfield(sparams_stamp,'rfwaves') && isfield(sparams,'rfwaves') && ~comp_struct_jd(sparams_stamp.rfwaves,sparams_e.rfwaves,display_mode)
             %
             cprintf('*red',['---> The ''rfwaves'' structure has been changed in sparams while keeping the same simulation ID. ']);disp(' ')
             cprintf('*red',['WAVESTRUCTS_',simul_id,'.mat']);disp(' ')
@@ -80,7 +82,7 @@ elseif isfield(sparams.simul,'enforce') && sparams.simul.enforce{ii} <= 1
             %
         end 
         %
-        if isfield(sparams_stamp,'rfwaves') && isfield(sparams,'rfwaves') && isfield(sparams_stamp.rfwaves,'antenna') && isfield(sparams.rfwaves,'antenna')  && isfield(sparams_stamp.rfwaves.antenna,'LH') && isfield(sparams.rfwaves.antenna,'LH') && isfield(sparams_stamp.rfwaves.antenna.LH,'ALOHA') && isfield(sparams.rfwaves.antenna.LH,'ALOHA') && ~comp_struct_jd(sparams_stamp.rfwaves.antenna.LH.ALOHA,sparams.rfwaves.antenna.LH.ALOHA,display_mode)
+        if isfield(sparams_stamp,'rfwaves') && isfield(sparams,'rfwaves') && isfield(sparams_stamp.rfwaves,'antenna') && isfield(sparams.rfwaves,'antenna')  && isfield(sparams_stamp.rfwaves.antenna,'LH') && isfield(sparams.rfwaves.antenna,'LH') && isfield(sparams_stamp.rfwaves.antenna.LH,'ALOHA') && isfield(sparams.rfwaves.antenna.LH,'ALOHA') && ~comp_struct_jd(sparams_stamp.rfwaves.antenna.LH.ALOHA,sparams_e.rfwaves.antenna.LH.ALOHA,display_mode)
             %
             cprintf('*red',['---> The ''rfwaves'' structure has been changed in sparams while keeping the same simulation ID.']);disp(' ')
             %
@@ -98,7 +100,7 @@ elseif isfield(sparams.simul,'enforce') && sparams.simul.enforce{ii} <= 1
             %
         end   
         %
-        if isfield(sparams_stamp,'kinetics') && isfield(sparams,'kinetics') && ~comp_struct_jd(sparams_stamp.kinetics,sparams.kinetics,display_mode)
+        if isfield(sparams_stamp,'kinetics') && isfield(sparams,'kinetics') && ~comp_struct_jd(sparams_stamp.kinetics,sparams_e.kinetics,display_mode)
             %
             cprintf('*red',['---> The ''kinetics'' structure has been changed in sparams while keeping the same simulation ID.']);disp(' ')
             %
@@ -115,7 +117,7 @@ elseif isfield(sparams.simul,'enforce') && sparams.simul.enforce{ii} <= 1
             %
         end
         %
-        if isfield(sparams_stamp,'postprocessing') && isfield(sparams,'postprocessing') && ~comp_struct_jd(sparams_stamp.postprocessing,sparams.postprocessing,display_mode)
+        if isfield(sparams_stamp,'postprocessing') && isfield(sparams,'postprocessing') && ~comp_struct_jd(sparams_stamp.postprocessing,sparams_e.postprocessing,display_mode)
             %
             flag = flag + 1;
             %
@@ -149,7 +151,7 @@ elseif isfield(sparams.simul,'enforce') && sparams.simul.enforce{ii} <= 1
             %
         end
         %        
-        if isfield(sparams_stamp,'diags') && isfield(sparams,'diags') && ~comp_struct_jd(sparams_stamp.diags,sparams.diags,display_mode)
+        if isfield(sparams_stamp,'diags') && isfield(sparams,'diags') && ~comp_struct_jd(sparams_stamp.diags,sparams_e.diags,display_mode)
             %
             flag = flag + 1;
             %
@@ -187,7 +189,7 @@ elseif isfield(sparams.simul,'enforce') && sparams.simul.enforce{ii} <= 1
             %
             if flag > 0
                 %
-                sparams_stamp = sluke_params_extract(sparams,ii);
+                sparams_stamp = sparams_e;
                 %
                 save(['SLUKE_STAMPS/STAMP_',simul_id,'.mat'],'sparams_stamp');
                 %
@@ -214,7 +216,7 @@ elseif isfield(sparams.simul,'enforce') && sparams.simul.enforce{ii} <= 1
             %
             cprintf([1,0.5,0],['---> No stamp file of the simulation : ',simul_id,' exists. A new one is created from sparams and the simulation is relaunched.']);disp(' ')
             %
-            sparams_stamp = sluke_params_extract(sparams,ii);
+            sparams_stamp = sparams_e;
             %
             save(['SLUKE_STAMPS/STAMP_',simul_id,'.mat'],'sparams_stamp');
             %
