@@ -160,8 +160,26 @@ else
                                     Pin_in = sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.param_pol.Pin_in{ii}{kk};
                                     %param_in.ny = sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.param_pol.ny{ii}{kk};
                                     opt_optim = sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.opt_optim{ii}{kk};
-                                    sdisplay.inter = sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.inter{ii}{kk};
-                                    sdisplay.mode = sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.mode{ii}{kk};
+                                    %
+                                    if isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum,'sdisplay') && isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay,'inter') && ~isempty(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.inter{ii}{kk})
+                                        %
+                                        sdisplay.inter = sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.inter{ii}{kk};
+                                        %
+                                    else
+                                        %
+                                        sdisplay.inter = 0;
+                                        %
+                                    end
+                                    %
+                                    if isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum,'sdisplay') && isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay,'mode') && ~isempty(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.mode{ii}{kk})
+                                        %
+                                        sdisplay.inter = sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.mode{ii}{kk};
+                                        %
+                                    else
+                                        %
+                                        sdisplay.mode = 0;
+                                        %
+                                    end  
                                     %
                                     % ALOHOA to C3PO power spectrum
                                     %
