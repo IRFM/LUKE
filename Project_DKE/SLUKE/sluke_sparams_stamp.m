@@ -26,8 +26,6 @@ elseif isfield(sparams.simul,'enforce') && sparams.simul.enforce{ii} <= 1
         %
         load(['SLUKE_STAMPS/STAMP_',simul_id,'.mat']);
         %
-        sparams = sluke_params_extract(sparams,ii);
-        %
         flag = 0;
         %
         if sparams.simul.enforce{ii} == 1 && isfield(sparams_stamp,'equil') && isfield(sparams,'equil') && ~comp_struct_jd(sparams_stamp.equil,sparams.equil,display_mode)
