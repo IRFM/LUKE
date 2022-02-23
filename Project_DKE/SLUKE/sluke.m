@@ -153,7 +153,7 @@ for ii = 1:length(sparams.machine)
         end
         %
         if exist(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat']) && ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
-            %~
+            %
             load(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'],'lukestructs')
             %
             if ~isfield(lukestructs,'output')
@@ -265,6 +265,8 @@ for ii = 1:length(sparams.machine)
                 luke_data = [];
                 %
                 cprintf('*green',['---> has been completed : only processed results are saved.']);disp(' ')
+                %
+                sluke_diagnostics(sparams,ii,'');% Synthetic diagnostic calculations
                 %
             end
             %
