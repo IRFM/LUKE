@@ -21,8 +21,9 @@ if isfield(sparams,'diags')
             %
             if opt.save == 1
                 %
+                cprintf('*[1,0.5,0]',['WARNING : conflict between sparams.simul.output = 1 and calculations for ',diags_fieldnames{kk},' diagnostics which is set local -> sparams.simul.output = 0 is therefore enforced.']);disp(' ')
+                %
                 opt.save = 0;
-                cprintf('*[1,0.5,0]',['WARNING : opt.save = 0 enforced for local diagnostic calculations (',diags_fieldnames{kk},')']);disp(' ')
                 %
             end
         end
