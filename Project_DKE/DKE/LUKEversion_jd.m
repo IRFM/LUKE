@@ -28,7 +28,6 @@ if fileID > 0
     lukeversion = [deblank(strrep(strrep(strrep(lukeversion,'[33m',''),'[m',''),'[K','')),' (date : ',file.date,')'];
 else
     %
-    fclose(fileID);
     lukeversion = 'Error reading lastgithash.txt';
     %
 end
