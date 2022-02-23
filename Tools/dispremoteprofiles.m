@@ -78,5 +78,5 @@ if display_mode
         info_dke_yp(4,['#',num2str(indexlist(irem)),' : ',profile_list{irem}]);
     end
 end
-disp(' ')
+
 
