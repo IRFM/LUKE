@@ -196,14 +196,31 @@ function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
         %
     elseif isfield(sparams.diags,'MEHXR') && isfield(sparams.diags.MEHXR,'hxrspec') && isfield(sparams.diags.MEHXR.hxrspec,'source') && strcmp(sparams.diags.MEHXR.hxrspec.source{ii},'file')
         %
-        if exist([sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii}],'file')
+        if isempty(sparams.diags.MEHXR.hxrspec.path{ii})
             %
-            load([sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii}],'hxrspec');
+            if exist(sparams.diags.MEHXR.hxrspec.file{ii},'file')
+                %
+                load(sparams.diags.MEHXR.hxrspec.file{ii},'hxrspec');
+                %
+            else
+                %
+                cprintf([1,0.5,0],['WARNING : file ',sparams.diags.MEHXR.hxrspec.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
+                hxrspec = '';
+                %
+            end
             %
         else
             %
-            cprintf([1,0.5,0],['WARNING : file ',sparams.diags.MEHXR.hxrspec.path{ii},sparams.diags.MEHXR.hxrspec.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
-            hxrspec = '';
+            if exist([sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii}],'file')
+                %
+                load([sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii}],'hxrspec');
+                %
+            else
+                %
+                cprintf([1,0.5,0],['WARNING : file ',sparams.diags.MEHXR.hxrspec.path{ii},'/',sparams.diags.MEHXR.hxrspec.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
+                hxrspec = '';
+                %                
+            end
             %
         end
         %

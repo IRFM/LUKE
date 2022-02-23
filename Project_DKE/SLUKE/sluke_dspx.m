@@ -194,16 +194,33 @@ function [hxrspec] = sluke_DSPX_hxrspec(sparams,simul_id,ii)
         %
     elseif isfield(sparams.diags,'DSPX') && isfield(sparams.diags.DSPX,'hxrspec') && isfield(sparams.diags.DSPX.hxrspec,'source') && strcmp(sparams.diags.DSPX.hxrspec.source{ii},'file')
         %
-        if exist([sparams.diags.DSPX.hxrspec.path{ii},'/',sparams.diags.DSPX.hxrspec.file{ii}],'file')
+        if isempty(sparams.diags.DSPX.hxrspec.path{ii})
             %
-            load([sparams.diags.DSPX.hxrspec.path{ii},'/',sparams.diags.DSPX.hxrspec.file{ii}],'hxrspec');
+            if exist(sparams.diags.DSPX.hxrspec.file{ii},'file')
+                %
+                load(sparams.diags.DSPX.hxrspec.file{ii},'hxrspec');
+                %
+            else
+                %
+                cprintf([1,0.5,0],['WARNING : file ',sparams.diags.DSPX.hxrspec.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for DSPX are cancelled.']);disp(' ')
+                hxrspec = '';
+                %
+            end
             %
         else
             %
-            cprintf([1,0.5,0],['WARNING : file ',sparams.diags.DSPX.hxrspec.path{ii},sparams.diags.DSPX.hxrspec.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for DSPX are cancelled.']);disp(' ')
-            hxrspec = '';
+            if exist([sparams.diags.DSPX.hxrspec.path{ii},'/',sparams.diags.DSPX.hxrspec.file{ii}],'file')
+                %
+                load([sparams.diags.DSPX.hxrspec.path{ii},'/',sparams.diags.DSPX.hxrspec.file{ii}],'hxrspec');
+                %
+            else
+                %
+                cprintf([1,0.5,0],['WARNING : file ',sparams.diags.DSPX.hxrspec.path{ii},'/',sparams.diags.DSPX.hxrspec.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for DSPX are cancelled.']);disp(' ')
+                hxrspec = '';
+                %                
+            end
             %
-        end
+        end        
         %
     elseif isfield(sparams.diags,'DSPX') && isfield(sparams.diags.DSPX,'hxrspec') && isfield(sparams.diags.DSPX.hxrspec,'source') && strcmp(sparams.diags.DSPX.hxrspec.source{ii},'value')
         %
