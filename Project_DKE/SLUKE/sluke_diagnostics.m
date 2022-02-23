@@ -1,5 +1,7 @@
 function diags = sluke_diagnostics(sparams,ii,lukestructs,equil)
 %
+diags = [];
+%
 if nargin < 3
     %
     lukestructs = '';
@@ -16,7 +18,6 @@ end
 if ~isfield(sparams,'diags')
     %
     cprintf([1,0.5,0],'No diagnostic is defined in sparams');disp(' ');
-    diags = [];
     return
     %
 end
@@ -53,6 +54,7 @@ if ~exist(['SLUKE_DIAGNOSTICS/DSPX_RESULTS_',simul_id,'.mat'])
         else
             %
             cprintf([1,0.5,0],'DSPX calculations are not enabled in sparams');disp(' ');
+            diags.DSPX = [];
             %
         end
         %
@@ -62,6 +64,12 @@ else
     %
     cprintf('green','DSPX calculations are already done');disp(' ');
     diags.DSPX = [];
+    %
+end
+%
+if isfield(diags,'DSPX') && isempty(diags.DSPX)
+    %
+    diags = rmfield(diags,'DSPX');%remove DSPX diag is not enabled or empty structure
     %
 end
 %
@@ -96,6 +104,7 @@ if ~exist(['SLUKE_DIAGNOSTICS/MEHXR_RESULTS_',simul_id,'.mat'])
         else
             %
             cprintf([1,0.5,0],'MEHXR calculations are not enabled in sparams');disp(' ');
+            diags.MEHXR = [];
             %
         end
         %
@@ -108,4 +117,8 @@ else
     %
 end
 %
-
+if isfield(diags,'MEHXR') && isempty(diags.MEHXR)
+    %
+    diags = rmfield(diags,'MEHXR');%remove MEHXR diag is not enabled or empty structure
+    %
+end
