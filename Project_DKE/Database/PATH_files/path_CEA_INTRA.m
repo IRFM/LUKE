@@ -10,8 +10,8 @@ function dkepath = path_CEA_INTRA
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %
-dkepath.machine = {'sirrah','talitha','gemma','naos','spica'};%'pleione' 'nashira'
-dkepath.hostname = {'sirrah','talitha','gemma','naos','spica'};%'pleione' 'nashira'
+dkepath.machine = {'sirrah','talitha','gemma','naos','spica','pollux'};%'pleione' 'nashira'
+dkepath.hostname = {'sirrah','talitha','gemma','naos','spica','pollux'};%'pleione' 'nashira'
 dkepath.computer = computer;%machine type and supported OS
 %
 % Selected user profile for unlisted users
@@ -76,6 +76,7 @@ dkepath.YP105119(1).gemma = dkepath.YP105119(1).sirrah;
 dkepath.YP105119(1).naos = dkepath.YP105119(1).sirrah;
 dkepath.YP105119(1).spica = dkepath.YP105119(1).sirrah;
 dkepath.YP105119(1).talitha = dkepath.YP105119(1).sirrah;
+dkepath.YP105119(1).pollux = dkepath.YP105119(1).sirrah;
 %
 %--------------------------- Remote computing -----------------------------
 %
@@ -106,6 +107,11 @@ dkepath.YP105119(1).remote(5).schedulername = 'pbs';
 dkepath.YP105119(1).remote(5).profilename = 'YP105119';
 dkepath.YP105119(1).remote(5).luke_root = dkepath.YP105119(1).luke_root;% local cluster
 %
+dkepath.YP105119(1).remote(6).remoteid = 'CEA_POLLUX';
+dkepath.YP105119(1).remote(6).schedulername = 'pbs';
+dkepath.YP105119(1).remote(6).profilename = 'YP105119';
+dkepath.YP105119(1).remote(6).luke_root = dkepath.YP105119(1).luke_root;% local cluster
+%
 %------------------------------------ Other LUKE users ------------------------------
 %
 dkepath.JA132999(1) = dkepath.YP105119(1);% Jean-Francois Artaud
@@ -120,6 +126,8 @@ dkepath.JA132999(1).remote(4).luke_root = dkepath.JA132999(1).luke_root;
 dkepath.JA132999(1).remote(4).profilename = 'JA132999';
 dkepath.JA132999(1).remote(5).luke_root = dkepath.JA132999(1).luke_root;
 dkepath.JA132999(1).remote(5).profilename = 'JA132999';
+dkepath.JA132999(1).remote(6).luke_root = dkepath.JA132999(1).luke_root;
+dkepath.JA132999(1).remote(6).profilename = 'JA132999';
 %
 dkepath.CB165101(1) = dkepath.YP105119(1);%Clarisse Bourdelle
 dkepath.CB165101(1).luke_root = '/Home/CB165101/luke/LUKE_LHCD/';
@@ -133,6 +141,8 @@ dkepath.CB165101(1).remote(4).luke_root = dkepath.CB165101(1).luke_root;
 dkepath.CB165101(1).remote(4).profilename = 'CB165101';
 dkepath.CB165101(1).remote(5).luke_root = dkepath.CB165101(1).luke_root;
 dkepath.CB165101(1).remote(5).profilename = 'CB165101';
+dkepath.CB165101(1).remote(6).luke_root = dkepath.CB165101(1).luke_root;
+dkepath.CB165101(1).remote(6).profilename = 'CB165101';
 %
 dkepath.MG100063(1) = dkepath.YP105119(1);%Marc Goniche
 dkepath.MG100063(1).luke_root = '/Home/MG100063/luke/LUKE_LHCD/';
@@ -146,6 +156,8 @@ dkepath.MG100063(1).remote(4).luke_root = dkepath.MG100063(1).luke_root;
 dkepath.MG100063(1).remote(4).profilename = 'MG100063';
 dkepath.MG100063(1).remote(5).luke_root = dkepath.MG100063(1).luke_root;
 dkepath.MG100063(1).remote(5).profilename = 'MG100063';
+dkepath.MG100063(1).remote(6).luke_root = dkepath.MG100063(1).luke_root;
+dkepath.MG100063(1).remote(6).profilename = 'MG100063';
 %
 dkepath.VO259454(1) = dkepath.YP105119(1);%Valeria Ostuni
 dkepath.VO259454(1).luke_root = '/Home/VO259454/luke/LUKE_LHCD/';
@@ -172,6 +184,8 @@ dkepath.JM240179(1).remote(4).luke_root = dkepath.JM240179(1).luke_root;
 dkepath.JM240179(1).remote(4).profilename = 'JM240179';
 dkepath.JM240179(1).remote(5).luke_root = dkepath.JM240179(1).luke_root;
 dkepath.JM240179(1).remote(5).profilename = 'JM240179';
+dkepath.JM240179(1).remote(6).luke_root = dkepath.JM240179(1).luke_root;
+dkepath.JM240179(1).remote(6).profilename = 'JM240179';
 %
 dkepath.TB263881(1) = dkepath.YP105119(1);%Tullio Barbui
 dkepath.TB263881(1).luke_root = '/Home/TB263881/luke/LUKE_LHCD/';
@@ -185,4 +199,6 @@ dkepath.TB263881(1).remote(4).luke_root = dkepath.TB263881(1).luke_root;
 dkepath.TB263881(1).remote(4).profilename = 'TB263881';
 dkepath.TB263881(1).remote(5).luke_root = dkepath.TB263881(1).luke_root;
 dkepath.TB263881(1).remote(5).profilename = 'TB263881';
+dkepath.TB263881(1).remote(6).luke_root = dkepath.TB263881(1).luke_root;
+dkepath.TB263881(1).remote(6).profilename = 'TB263881';
 %
