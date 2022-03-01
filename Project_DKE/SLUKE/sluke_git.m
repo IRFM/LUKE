@@ -55,7 +55,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                     %
                 end
                 %
-                if err(kk) > 0
+                if err(kk) > 0 && ~isempty(txt{kk})
                     %
                     if remote_profile_num > 0
                         %
@@ -105,7 +105,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                     %
                 end
                 %
-                if err(kk) > 0
+                if err(kk) > 0 && ~isempty(txt{kk})
                     %
                     if remote_profile_num > 0
                         %
@@ -155,7 +155,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                     %
                 end
                 %
-                if err(kk) > 0
+                if err(kk) > 0 && ~isempty(txt{kk})
                     %
                     if remote_profile_num > 0
                         %
@@ -206,7 +206,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                     %
                 end
                 %
-                if err(kk) > 0
+                if err(kk) > 0 && ~isempty(txt{kk})
                     %
                     if remote_profile_num > 0
                         %
@@ -258,7 +258,7 @@ if remote_profile_num > 0
         %
         [err,txt] = matremotecmd(remote,'',['cd ',remote.env.luke_root,';git rev-parse --verify HEAD > lastgithash.txt']);
         %
-        if err == 0
+        if isempty(txt) || err == 0
             %
             cprintf('*green',['---> Last git hash of the remote project ',remotelukebranch,' (',remote_profile_char,') has been successfully generated.']);disp(' ')
             %
@@ -277,25 +277,25 @@ if remote_profile_num > 0
     [err2,txt2] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatTools/;git rev-parse --verify HEAD > lastgithash.txt']);
     [err3,txt3] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatHelp/;git rev-parse --verify HEAD > lastgithash.txt']);
     %
-    if err1 ~= 0
+    if ~isempty(txt1) && err1 > 0
         %
         cprintf([1,0.5,0],['---> Last git hash of the remote project MatRemote (',remote_profile_char,') failed : ',txt1]);disp(' ')
         %
     end
     %
-    if err2 ~= 0
+    if ~isempty(txt2) && err2 > 0
         %
         cprintf([1,0.5,0],['---> Last git hash of the remote project MatTools (',remote_profile_char,') failed : ',txt2]);disp(' ')
         %
     end
     %
-    if err3 ~= 0
+    if ~isempty(txt3) && err3 > 0
         %
         cprintf([1,0.5,0],['---> Last git hash of the remote project MatHelp (',remote_profile_char,') failed : ',txt3]);disp(' ')
         %
     end
     %
-    if err1 + err2 + err3 == 0
+    if (isempty(txt1) && isempty(txt2) && isempty(txt3)) || (err1 + err2 + err3 == 0)
         %
         cprintf('*green',['---> Last git hash of the remote projects MatRemote, MatTools and MatHelp (',remote_profile_char,') have all been successfully generated.']);disp(' ')        
         %
