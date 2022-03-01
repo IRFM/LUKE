@@ -24,9 +24,9 @@ if nargin < 1,
      error('Not enough input argument in remote_tsdate.m');
 end
 %
-[remote,err] = remote_cea;
+remote = remote_cea;
 %
-if err == 0 && isstruct(remote)
+if isstruct(remote)
     %
     cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ')
     %
