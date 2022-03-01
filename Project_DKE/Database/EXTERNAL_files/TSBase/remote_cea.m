@@ -18,7 +18,6 @@ dkepath = load_structures_yp('dkepath','','');
 %
 remote_profile_ALTAIR = ''; 
 remote_profile_SIRRAH = '';
-remote_profile_TALITHA = '';
 %
 for ii = 1:length(dkepath.remote)
     %
@@ -45,11 +44,11 @@ if ~isempty(remote_profile_ALTAIR)
     %
     [txt,err] = matremotessh(remote,'hostname');
     %
-    if err > 0
+    if err > 0 && ~isempty(txt)
         %
         [err,txt] = matremotecmd(remote,'','hostname');
         %
-        if err == 0
+        if err == 0 || isempty(txt)
             %
             remote.bridge = [];
             %
@@ -66,7 +65,7 @@ if ~isempty(remote_profile_SIRRAH) && err > 0
     %
     [txt,err] = matremotessh(remote_profile_SIRRAH,'hostname');
     %
-    if err == 0
+    if err == 0 || isempty(txt)
         %
         remote = remote_profile_SIRRAH;
         %
