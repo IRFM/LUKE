@@ -29,16 +29,11 @@ for ii = 1:length(dkepath.remote)
     elseif strfind(dkepath.remote(ii).hostname,'sirrah') & strcmp(dkepath.remote(ii).scheduler,'direct')
         %
         remote_profile_SIRRAH = dkepath.remote(ii);
-        %
-    elseif strfind(dkepath.remote(ii).hostname,'talitha') & strcmp(dkepath.remote(ii).scheduler,'direct')
-        %
-        remote_profile_TALITHA = dkepath.remote(ii);
-        %
     end
     %
 end
 %
-if isempty(remote_profile_ALTAIR) && isempty(remote_profile_ANDROMEDE) && isempty(remote_profile_CEPHEE) && isempty(remote_profile_PERSEE) && isempty(remote_profile_RANA) && isempty(remote_profile_SIRRAH) && isempty(remote_profile_TALITHA)
+if isempty(remote_profile_ALTAIR) && isempty(remote_profile_SIRRAH)
     %
     cprintf('red*','---> No remote profile is available for remote access to TSBase');disp(' ')
     %
@@ -67,9 +62,6 @@ if ~isempty(remote_profile_ALTAIR)
     %
 end
 %
-
-
-%
 if ~isempty(remote_profile_SIRRAH) && err > 0
     %
     [txt,err] = matremotessh(remote_profile_SIRRAH,'hostname');
@@ -85,20 +77,3 @@ if ~isempty(remote_profile_SIRRAH) && err > 0
     end
     %
 end
-%
-if ~isempty(remote_profile_TALITHA) && err > 0
-    %
-    [txt,err] = matremotessh(remote_profile_TALITHA,'hostname');
-    %
-    if err == 0
-        %
-        remote = remote_profile_TALITHA;
-        %
-    else
-        %
-        remote = [];
-        %
-    end
-    %
-end
-%
