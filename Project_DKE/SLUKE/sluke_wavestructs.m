@@ -173,7 +173,7 @@ else
                                     %
                                     if isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum,'sdisplay') && isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay,'mode') && ~isempty(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.mode{ii}{kk})
                                         %
-                                        sdisplay.inter = sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.mode{ii}{kk};
+                                        sdisplay.mode = sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.mode{ii}{kk};
                                         %
                                     else
                                         %
