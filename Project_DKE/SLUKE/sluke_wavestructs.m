@@ -196,7 +196,7 @@ else
                                     %
                                     if isempty_yN + isempty_ydN + isempty_yP + isempty_yparam_out + isempty_yPin + isempty_zyfac == 6
                                         %
-                                        cprintf('*red',['WARNING : experimental LH power has a problem. ALOHA calculations are corrupted -> LH power is enforced to zero i'])
+                                        cprintf('*red',['WARNING : experimental LH power has a problem. ALOHA calculations are corrupted -> LH power is enforced to zero i']);disp(' ')
                                         flag_LH_problem = 1;
                                         %
                                     end
@@ -210,7 +210,8 @@ else
                                             %
                                             if flag_LH_problem == 1
                                                 %
-                                                wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot*0;
+                                                wavestructs{kk1}.launch.bPlhtot = zeros(size(wavestructs{kk1}.launch.bPlhtot));%zero LH power enforced because of antenna problem
+                                                wavestructs{kk1}.launch.bNpar0 = zeros(size(wavestructs{kk1}.launch.bNpar0)) + 10/sqrt(equil.pTe(1));%zero LH power power because of antenna problem
                                                 %
                                             else
                                                 %
@@ -221,7 +222,8 @@ else
                                             %
                                             if flag_LH_problem == 1
                                                 %
-                                                wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot*0;
+                                                wavestructs{kk1}.launch.bPlhtot = zeros(size(wavestructs{kk1}.launch.bPlhtot));%zero LH power enforced because of antenna problem
+                                                wavestructs{kk1}.launch.bNpar0 = zeros(size(wavestructs{kk1}.launch.bNpar0)) + 10/sqrt(equil.pTe(1));%zero LH power power because of antenna problem
                                                 %
                                             else
                                                 %
@@ -235,10 +237,10 @@ else
                                         %
                                     else
                                         %
-                                        if flag_LH_problem
+                                        if flag_LH_problem == 1
                                             %
-                                            wavestructs{kk1}.launch.bPlhtot = 0*wavestructs{kk1}.launch.bPlhtot;%zero LH power enforced because of antenna problem
-                                            wavestructs{kk1}.launch.bNpar0 = 0*wavestructs{kk1}.launch.bNpar0 + 10/sqrt(equil.pTe(1));%zero LH power power because of antenna problem
+                                            wavestructs{kk1}.launch.bPlhtot = zeros(size(wavestructs{kk1}.launch.bPlhtot));%zero LH power enforced because of antenna problem
+                                            wavestructs{kk1}.launch.bNpar0 = zeros(size(wavestructs{kk1}.launch.bNpar0)) + 10/sqrt(equil.pTe(1));%zero LH power power because of antenna problem
                                             %
                                         else
                                             %
@@ -249,12 +251,22 @@ else
                                             %
                                             %wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot + wavestructs{kk1}.launch.aloha(mm).C3PO.yP;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
                                             %
-                                            wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot*(1+sum(wavestructs{kk1}.launch.aloha(mm).C3PO.yP)/sum(wavestructs{kk1}.launch.bPlhtot));
-                                             %
+                                            if flag_LH_problem == 1
+                                                %
+                                                wavestructs{kk1}.launch.bPlhtot = zeros(size(wavestructs{kk1}.launch.bPlhtot));%zero LH power enforced because of antenna problem
+                                                wavestructs{kk1}.launch.bNpar0 = zeros(size(wavestructs{kk1}.launch.bNpar0)) + 10/sqrt(equil.pTe(1));%zero LH power power because of antenna problem
+                                                %
+                                            else
+                                                %
+                                                wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot*(1+sum(wavestructs{kk1}.launch.aloha(mm).C3PO.yP)/sum(wavestructs{kk1}.launch.bPlhtot));
+                                                %
+                                            end
+                                            %
                                         else
                                             if flag_LH_problem == 1
                                                 %
-                                                wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot*0;
+                                                wavestructs{kk1}.launch.bPlhtot = zeros(size(wavestructs{kk1}.launch.bPlhtot));%zero LH power enforced because of antenna problem
+                                                wavestructs{kk1}.launch.bNpar0 = zeros(size(wavestructs{kk1}.launch.bNpar0)) + 10/sqrt(equil.pTe(1));%zero LH power power because of antenna problem
                                                 %
                                             else
                                                 %
@@ -290,7 +302,7 @@ else
                                 %
                             end
                             %
-                            if isfield(sparams.rfwaves.antenna.LH.C3PO.launch,'mainlobeshift')
+                            if isfield(sparams.rfwaves.antenna.LH.C3PO.launch,'mainlobeshift') && flag_LH_problem == 0
                                 %
                                 mainlobeshift = sparams.rfwaves.antenna.LH.C3PO.launch.mainlobeshift{ii}{kk}; 
                                 %
