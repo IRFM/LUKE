@@ -181,7 +181,7 @@ else
                                         %
                                     end  
                                     %
-                                    % ALOHOA to C3PO power spectrum
+                                    % ALOHA to C3PO power spectrum
                                     %
                                     [wavestructs{kk1}.launch.aloha(mm).C3PO.yN,wavestructs{kk1}.launch.aloha(mm).C3PO.ydN,wavestructs{kk1}.launch.aloha(mm).C3PO.yP,wavestructs{kk1}.launch.aloha(mm).C3PO.param_out,wavestructs{kk1}.launch.aloha(mm).C3PO.Pin,wavestructs{kk1}.launch.aloha(mm).C3PO.zyfac] = proc_aloha_spec_jd(zN_in,NaN,zdP_in,Pin_in,param_in,opt_optim,sdisplay);%zdN_in not used -> NaN, automatic grid step calculated
                                     %
@@ -196,7 +196,7 @@ else
                                     %
                                     if isempty_yN + isempty_ydN + isempty_yP + isempty_yparam_out + isempty_yPin + isempty_zyfac == 6
                                         %
-                                        cprintf([1,0.5,0],['WARNING : experimental LH power has a problem. Power is enforced to zero.'])
+                                        cprintf('*red',['WARNING : experimental LH power has a problem. ALOHA calculations are corrupted -> LH power is enforced to zero i'])
                                         flag_LH_problem = 1;
                                         %
                                     end
@@ -235,8 +235,16 @@ else
                                         %
                                     else
                                         %
-                                        wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.aloha(mm).C3PO.yP;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
-                                        %
+                                        if flag_LH_problem
+                                            %
+                                            wavestructs{kk1}.launch.bPlhtot = 0*wavestructs{kk1}.launch.bPlhtot;%zero LH power enforced because of antenna problem
+                                            wavestructs{kk1}.launch.bNpar0 = 0*wavestructs{kk1}.launch.bNpar0 + 10/sqrt(equil.pTe(1));%zero LH power power because of antenna problem
+                                            %
+                                        else
+                                            %
+                                            wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.aloha(mm).C3PO.yP;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
+                                            %
+                                        end
                                         if globalspectrum == 1 && mm > 1%upper half is considered for global spectrum
                                             %
                                             %wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.bPlhtot + wavestructs{kk1}.launch.aloha(mm).C3PO.yP;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
