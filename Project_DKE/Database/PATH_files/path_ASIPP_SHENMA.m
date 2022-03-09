@@ -111,3 +111,8 @@ dkepath.ycunli(1).remote(1).profilename = 'ycunli';
 dkepath.ycunli(1).remote(2).profilename = 'ycunli';
 dkepath.ycunli(1).temppathroot = '/scratch/ycunli/';
 %
+dkepath.ylli(1) = dkepath.PEYSSON(1);
+dkepath.ylli(1).remote(1).profilename = 'ylli';
+dkepath.ylli(1).remote(2).profilename = 'ylli';
+dkepath.ylli(1).temppathroot = '/scratch/ylli/';
+%
