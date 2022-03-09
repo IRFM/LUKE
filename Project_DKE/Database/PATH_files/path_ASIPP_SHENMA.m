@@ -35,7 +35,7 @@ dkepath.PEYSSON(1).temppathroot = '/scratch/PEYSSON/';%Absolute root directory p
 %
 % ---------------------------- shenma -------------------------------
 %
-dkepath.PEYSSON(1).login110.local_root = [dkepath.PEYSSON(1).local_root,'/project/LUKE/Packages/'];
+dkepath.PEYSSON(1).login110.local_root = [dkepath.PEYSSON(1).local_root,'project/LUKE/Packages/'];
 %
 dkepath.PEYSSON(1).login110.mex903 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/MEX/Bin/shenma/MATLAB903/'];
 %
@@ -87,7 +87,27 @@ dkepath.PEYSSON(1).remote(2).schedulername = 'direct';
 %------------------------------------ Other LUKE users ------------------------------
 %
 dkepath.limiaohui(1) = dkepath.PEYSSON(1);
-dkepath.JA132999(1).luke_root = '/home/users/limiaohui/luke/LUKE_LHCD';
 dkepath.limiaohui(1).remote(1).profilename = 'limiaohui';
-dkepath.JA132999(1).remote(1).luke_root = dkepath.JA132999(1).luke_root;
+dkepath.limiaohui(1).remote(2).profilename = 'limiaohui';
+dkepath.limiaohui(1).temppathroot = '/scratch/limiaohui/';
+%
+dkepath.bjding(1) = dkepath.PEYSSON(1);
+dkepath.bjding(1).remote(1).profilename = 'bjding';
+dkepath.bjding(1).remote(2).profilename = 'bjding';
+dkepath.bjding(1).temppathroot = '/scratch/bjding/';
+%
+dkepath.chbwu(1) = dkepath.PEYSSON(1);
+dkepath.chbwu(1).remote(1).profilename = 'chbwu';
+dkepath.chbwu(1).remote(2).profilename = 'chbwu';
+dkepath.chbwu(1).temppathroot = '/scratch/chbwu/';
+%
+dkepath.ghyan(1) = dkepath.PEYSSON(1);
+dkepath.ghyan(1).remote(1).profilename = 'ghyan';
+dkepath.ghyan(1).remote(2).profilename = 'ghyan';
+dkepath.ghyan(1).temppathroot = '/scratch/ghyan/';
+%
+dkepath.ycunli(1) = dkepath.PEYSSON(1);
+dkepath.ycunli(1).remote(1).profilename = 'ycunli';
+dkepath.ycunli(1).remote(2).profilename = 'ycunli';
+dkepath.ycunli(1).temppathroot = '/scratch/ycunli/';
 %
