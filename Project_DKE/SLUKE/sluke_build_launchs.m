@@ -209,8 +209,25 @@ if err == 0
                                 %
                             else
                                 %
-                                cprintf('*green',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' are done.']);disp(' ');
                                 flag_job(ii,jj) = 0;
+                                %
+                                if isfield(antennas(jj).aloha,'results') 
+                                    %
+                                    if sum(isnan(antennas(jj).aloha.results.dP_nz)) || isempty(antennas(jj).aloha.results.dP_nz)
+                                        %
+                                        cprintf('*red',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE_RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.']);disp(' ');
+                                        %
+                                    else
+                                        %
+                                        cprintf('*green',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' are done.']);disp(' ');
+                                        %
+                                    end
+                                    %
+                                else
+                                    %
+                                    cprintf('*red',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE_RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.']);disp(' ');
+                                    %
+                                end
                                 %
                             end
                             %
