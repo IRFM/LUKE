@@ -31,7 +31,7 @@ luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
 dkepath.PEYSSON(1).luke_root = luke_root;
 dkepath.PEYSSON(1).luke_branch = luke_branch;
 dkepath.PEYSSON(1).local_root = '/gpfs-home/';
-dkepath.PEYSSON(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
+dkepath.PEYSSON(1).temppathroot = '/scratch/PEYSSON/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 % ---------------------------- shenma -------------------------------
 %
@@ -89,24 +89,30 @@ dkepath.PEYSSON(1).remote(2).schedulername = 'direct';
 dkepath.limiaohui(1) = dkepath.PEYSSON(1);
 dkepath.limiaohui(1).remote(1).profilename = 'limiaohui';
 dkepath.limiaohui(1).remote(2).profilename = 'limiaohui';
+dkepath.limiaohui(1).temppathroot = '/scratch/limiaohui/';
 %
 dkepath.bjding(1) = dkepath.PEYSSON(1);
 dkepath.bjding(1).remote(1).profilename = 'bjding';
 dkepath.bjding(1).remote(2).profilename = 'bjding';
+dkepath.bjding(1).temppathroot = '/scratch/bjding/';
 %
 dkepath.chbwu(1) = dkepath.PEYSSON(1);
 dkepath.chbwu(1).remote(1).profilename = 'chbwu';
 dkepath.chbwu(1).remote(2).profilename = 'chbwu';
+dkepath.chbwu(1).temppathroot = '/scratch/chbwu/';
 %
 dkepath.ghyan(1) = dkepath.PEYSSON(1);
 dkepath.ghyan(1).remote(1).profilename = 'ghyan';
 dkepath.ghyan(1).remote(2).profilename = 'ghyan';
+dkepath.ghyan(1).temppathroot = '/scratch/ghyan/';
 %
 dkepath.ycunli(1) = dkepath.PEYSSON(1);
 dkepath.ycunli(1).remote(1).profilename = 'ycunli';
 dkepath.ycunli(1).remote(2).profilename = 'ycunli';
+dkepath.ycunli(1).temppathroot = '/scratch/ycunli/';
 %
 dkepath.ylli(1) = dkepath.PEYSSON(1);
 dkepath.ylli(1).remote(1).profilename = 'ylli';
 dkepath.ylli(1).remote(2).profilename = 'ylli';
+dkepath.ylli(1).temppathroot = '/scratch/ylli/';
 %
