@@ -302,7 +302,7 @@ else
                                 %
                             end
                             %
-                            if isfield(sparams.rfwaves.antenna.LH.C3PO.launch,'mainlobeshift') && flag_LH_problem == 0
+                            if isfield(sparams.rfwaves.antenna.LH.C3PO.launch,'mainlobeshift') && exist('flag_LH_problem','var') && flag_LH_problem == 0
                                 %
                                 mainlobeshift = sparams.rfwaves.antenna.LH.C3PO.launch.mainlobeshift{ii}{kk}; 
                                 %
