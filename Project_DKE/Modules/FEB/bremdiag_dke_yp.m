@@ -22,8 +22,8 @@ function  [Zbremdiag] = bremdiag_dke_yp(Zbremplasma,hxr,hxrparam,dt)
 %          * Zbremdiag.gkEinterp_out: Detector x-ray response function {nchord}
 %          * Zbremdiag.kfit: Discrete pulse energy spectrum (keV) [1,nkfit]
 %          * Zbremdiag.dkfit: Discrete pulse energy spectrum step width (keV) [1,nkfit]
-%          * Zbremdiag.brem_bd_plasma: Plasma photon number per unit energy (keV) and time (s) for each chord [nchord,nkfit]
-%          * Zbremdiag.brem_bd_diag: Pulse number per unit energy (keV) and time (s) for each chord [nchord,nkfit]
+%          * Zbremdiag.brem_bd_plasma: Number of photons in energy channel per unit time (s) for each chord [nchord,nkfit]
+%          * Zbremdiag.brem_bd_diag: Number of pulses in energy channel per unit time (s) for each chord convoluted with detector response [nchord,nkfit]
 %          * Zbremdiag.tphot_plasma: Plasma photon temperature (keV) [1,nchord]
 %          * Zbremdiag.afit_plasma: A(k=0) [s^-1]','k.dN_phot/dk.dt = A.exp(-k/T_phot)@k=0 [50-110 keV] [1,nchord]
 %          * Zbremdiag.tphot_plasma_exp: Pulse photon temperature (keV) [1,nchord]
