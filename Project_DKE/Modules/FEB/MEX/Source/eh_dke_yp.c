@@ -16,7 +16,7 @@
 
     OUTPUT: 
 
-        - seEH: Elwert-Haug bremstrahlung cross-section (cm^2) [n,m]
+        - seEH: Elwert-Haug bremstrahlung cross-section (m^2) [n,m]
         - ec: kinetic energy of the incoming electron (mec2) [n,m] 
         - e: photon energy (mec2)  [n,m] 
         - t: angle between the direction of displacement of the incoming 
@@ -573,7 +573,7 @@ unsigned int m,n,mode;
                     seEHout[k] = 0;
                 else {
                     sigma(Z,&ee,&ephot,&ang,&sec); 
-                    seEHout[k] = sec;
+                    seEHout[k] = sec*1.0e-4;
                 }
             }
         }
@@ -594,7 +594,7 @@ unsigned int m,n,mode;
                     seEHout[k] = 0;
                 else {
                     sigma(Z,&ee,&ephot,&ang,&sec); 
-                    seEHout[k] = sec;
+                    seEHout[k] = sec*1.0e-4;
                 }
             
             }
@@ -616,7 +616,7 @@ unsigned int m,n,mode;
                     seEHout[k] = 0;
                 else {
                     sigma(Z,&ee,&ephot,&ang,&sec); 
-                    seEHout[k] = sec;
+                    seEHout[k] = sec*1.0e-4;
                 }
             }
         }   
