@@ -56,23 +56,18 @@ brem_bd_in = Zbremplasma.brem_bd_out;
 kphotmin = min(kphot);%hxr.kdiag_hxr(1,1);
 kphotmax = max(kphot);%hxr.kdiag_hxr(2,end-1);
 %
-% kfit = (hxr.kdiag_hxr(1,1:end-1) + hxr.kdiag_hxr(2,1:end-1))/2;%Measured photon energy spectrum (keV) [1,k]
-% kfit_S = [3*kphot(1) - kphot(2),kphot(1:end-1) + kphot(2:end),3*kphot(end) - kphot(end-1)]/2;
-% kfit = kphot;%Measured photon energy spectrum (keV) [1,k]
+kfit = hxr.kfit;%Measured photon energy spectrum (keV) [1,k]
 %
-% kfit = hxr.kfit;%Measured photon energy spectrum (keV) [1,k]
-% kfit_S = [3*kfit(1) - kfit(2),kfit(1:end-1) + kfit(2:end),3*kfit(end) - kfit(end-1)]/2;
+if ~strcmp(id,'MEHXR')
+    kfit_S = kfit;
+    kfit = (kfit_S(1:end-1) + kfit_S(2:end))/2;
+else
+    kfit_S = [kfit,kfit(end)+kfit(2)-kfit(1)];
+end
 %
-kfit_S = hxr.kfit;%Measured photon energy spectrum (keV) [1,k]
-kfit = (kfit_S(1:end-1) + kfit_S(2:end))/2;
-%
-% ikfitmin = find(kfit >= hxr.kdiag_hxr(1,end),1,'first');
-% ikfitmax = find(kfit <= hxr.kdiag_hxr(2,end),1,'last');
 ikfitmin = find(kfit >= hxrparam.kmin,1,'first');
 ikfitmax = find(kfit <= hxrparam.kmax,1,'last');
-%kfitmin = kfit(ikfitmin);
-%kfitmax = kfit(ikfitmax);
-% dkfit = hxr.kdiag_hxr(2,1:end-1) - hxr.kdiag_hxr(1,1:end-1);%Channel width of the measured photon energy spectrum (keV) [1,k]
+%
 dkfit = diff(kfit_S);%Channel width of the measured photon energy spectrum (keV) [1,k]
 nkfit = length(dkfit);
 %
@@ -157,7 +152,7 @@ for ic = 1:size(brem_bd_interp,1),
     gkEinterp_out{ic} = gkEinterp;%For display of the response function
 %
     if ~strcmp(id,'MEHXR') 
-        brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))';
+        brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp')*(brem_bd_interp(ic,:))'))';
     else
         brem_bd_diag_interp(ic,:) = (((gkEinterp.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))';
     end
@@ -173,7 +168,7 @@ for ic = 1:size(brem_bd_interp,1),
         end
     else
         for ik = 1:nkfit
-            brem_bd_diag(ic,ik) = brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik),1,'first')) - brem_bd_diag_interp(ic,find(kinterp < kfit_S(ik+1),1,'last'));%number of pulses in energy channel ik per unit time
+            brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik),1,'first'):end),2)*dkinterp;%number of pulses for cutoff energy ik per unit time
         end
     end
 %	

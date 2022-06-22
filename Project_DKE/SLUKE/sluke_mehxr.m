@@ -99,7 +99,7 @@ if ~isempty(lukestructs)
             %
             data_in.lukestructs = lukestructs;
             data_in.hxrspec = sluke_MEHXR_hxrspec(sparams,simul_id,ii);
-            data_in.hxrparam = sluke_MEHXR_hxrparam(sparams,simul_id,ii);
+            data_in.hxrparam = sluke_MEHXR_hxrparam(sparams,simul_id,ii,data_in.hxrspec);
             %
             data_in.dkedisplay.display_mode = 0;
             data_in.dkedisplay.fhxr = 0;
@@ -119,7 +119,7 @@ if ~isempty(lukestructs)
 else
     %
     hxrspec = sluke_MEHXR_hxrspec(sparams,simul_id,ii);
-    hxrparam = sluke_MEHXR_hxrparam(sparams,simul_id,ii);
+    hxrparam = sluke_MEHXR_hxrparam(sparams,simul_id,ii,hxrspec);
     %
     if ~isempty(hxrspec) && ~isempty(hxrparam)
         %
@@ -236,8 +236,6 @@ function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
     %
     if ~isempty(hxrspec)
         %
-        hxrspec.kfit = hxrspec.kphot(1:2:end);
-        %
         if isfield(sparams.diags.MEHXR.hxrspec,'chordstatus_hxr')
             %
             hxrspec.chordstatus_hxr = sparams.diags.MEHXR.hxrspec.chordstatus_hxr{ii};
@@ -263,7 +261,7 @@ function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
     %
 end
 
-function [hxrparam] = sluke_MEHXR_hxrparam(sparams,simul_id,ii)
+function [hxrparam] = sluke_MEHXR_hxrparam(sparams,simul_id,ii,hxrspec)
 %
 %
     % DPSX simulations parameters
@@ -308,9 +306,9 @@ function [hxrparam] = sluke_MEHXR_hxrparam(sparams,simul_id,ii)
             %
             hxrparam = sluke_params_value(sparams.diags.MEHXR.R5X2.hxrparam,ii);
             %
-            %hxrparam.kphot = hxrspec.kphot;
-            %hxrparam.kmin = hxrspec.kmin;
-            %hxrparam.kmax = hxrspec.kmax;
+            hxrparam.kphot = hxrspec.kphot;
+            hxrparam.kmin = hxrspec.kmin;
+            hxrparam.kmax = hxrspec.kmax;
             %
         else
             %

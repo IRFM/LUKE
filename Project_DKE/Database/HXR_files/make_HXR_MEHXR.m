@@ -50,18 +50,10 @@ hxrspec.pur_hxr = zeros(1,nv);% pile-up rejection (0: off, 1:on) [1,m]
 %
 hxrspec.chordstatus_hxr = ones(1,nv);% state of the line-of-sight [1,m]
 %
-% HXR parameter
-%
-hxrparam.id = hxr_id;
-hxrparam.mfactor = 1;%For the magnetic equilibrium
-hxrparam.method = 'spline';%For the magnetic equilibrium in the HXR calculations
-hxrparam.ns = 3000;%for chord integration
-hxrparam.n_gauleg = 35;%Number of Legendre polynomials for projections of cross-section and electron velocity distribution
-hxrparam.epsi_gauleg = 1e-14;%Accuracy of the Legendre projection
-%
-hxrparam.kmin = 50;% standard minimum value for Tph calculation (LH : 50; EC : 35)
-hxrparam.kmax = 110;% standard maximum value for Tph calculation (LH : 110; EC : 75)
+hxrspec.kmin = 20;% standard minimum value for Tph calculation (LH : 50; EC : 35)
+hxrspec.kmax = 30;% standard maximum value for Tph calculation (LH : 110; EC : 75)
 hxrspec.kphot = [10:5:200];%Photon energy in keV
+hxrspec.kfit = [12:1:30];%Lower cutoff energy in keV
 %
-eval(['save HXR_',hxr_id,'.mat hxrspec hxrparam']);
+eval(['save HXR_',hxr_id,'.mat hxrspec']);
 %
