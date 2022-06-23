@@ -79,8 +79,14 @@ if size(brem_bd_in,1) == 1,
     brem_bd_interp = brem_bd_interp.';
 end
 %
-for ik = 1:nkfit,
-	brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,find(kinterp >= kfit_S(ik),1,'first'):find(kinterp < kfit_S(ik+1),1,'last')).').'*dkinterp;%number of photons in energy channel ik per unit time
+if ~strcmp(id,'MEHXR')
+    for ik = 1:nkfit,
+        brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,find(kinterp >= kfit_S(ik),1,'first'):find(kinterp < kfit_S(ik+1),1,'last')).').'*dkinterp;%number of photons in energy channel ik per unit time
+    end
+else
+    for ik = 1:nkfit,
+        brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,find(kinterp >= kfit_S(ik),1,'first'):end),2)*dkinterp;%number of photons in energy channel ik per unit time
+    end
 end
 brem_bd_plasma = abs(brem_bd_plasma);
 %
@@ -152,9 +158,9 @@ for ic = 1:size(brem_bd_interp,1),
     gkEinterp_out{ic} = gkEinterp;%For display of the response function
 %
     if ~strcmp(id,'MEHXR') 
-        brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp')*(brem_bd_interp(ic,:))'))';
+        brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))';
     else
-        brem_bd_diag_interp(ic,:) = (((gkEinterp.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))';
+        brem_bd_diag_interp(ic,:) = (((gkEinterp.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))'; %matrix multiplication C=A*B C(i,j) is the inner product of the ith row of A with the jth column of B.
     end
 %	brem_bd_diag_interp(ic,:) = (fix(((eye(size(gkEinterp')).*Tabsxinterp)*(brem_bd_interp(ic,:))')))';%detector response neglected
 %	
@@ -168,7 +174,7 @@ for ic = 1:size(brem_bd_interp,1),
         end
     else
         for ik = 1:nkfit
-            brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik),1,'first'):end),2)*dkinterp;%number of pulses for cutoff energy ik per unit time
+            brem_bd_diag(ic,ik) = brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik),1,'first'));%number of pulses for cutoff energy ik per unit time
         end
     end
 %	
