@@ -79,14 +79,8 @@ if size(brem_bd_in,1) == 1,
     brem_bd_interp = brem_bd_interp.';
 end
 %
-if ~strcmp(id,'MEHXR')
-    for ik = 1:nkfit,
-        brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,find(kinterp >= kfit_S(ik),1,'first'):find(kinterp < kfit_S(ik+1),1,'last')).').'*dkinterp;%number of photons in energy channel ik per unit time
-    end
-else
-    for ik = 1:nkfit,
-        brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,find(kinterp >= kfit_S(ik),1,'first'):end),2)*dkinterp;%number of photons in energy channel ik per unit time
-    end
+for ik = 1:nkfit,
+    brem_bd_plasma(:,ik) = sum(brem_bd_interp(:,find(kinterp >= kfit_S(ik),1,'first'):find(kinterp < kfit_S(ik+1),1,'last')).').'*dkinterp;%number of photons in energy channel ik per unit time
 end
 brem_bd_plasma = abs(brem_bd_plasma);
 %
