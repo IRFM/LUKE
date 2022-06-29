@@ -3,7 +3,7 @@ function [seBHE,seBH,Elwert,ec,k,c] = bhe_dke_yp(ec_in,k_in,t0_in,Z,params,smode
 %	Differential electron-ion bremstrahlung cross-section (dsigma/dk.domegak)
 %	Bethe-Heitler model (1BS, 2BN formulas in H.W.Koch and J.W.Motz, Rev. Mod. Phys. 31, 4 (1959) 920) 
 %   including Elwert factor, and screening factor F(q) with numerical
-%   integration of 1BS formula.
+%   integration of 1BS formula (two methods)
 %
 %	Input:
 %
@@ -108,6 +108,15 @@ if length(fields(smodel)) == 0 || length(fields(params)) == 0
     seBHE(~isreal(seBHE)) = 0;
 else
     %
-    [seBHE,seBH,Elwert,ec,k,c] = bhe_dke_kk(ec_in,k_in,t0_in,Z,params,smodel);%When atomic screening effects are considered
+    %Atomic screening effects are considered in cross-section calculations
     %
+    if strcmp(smodel,'moliere')
+        %
+        [seBHE,seBH,Elwert,ec,k,c] = bhe_moliere(ec_in,k_in,t0_in,Z);%Moliere's screening model (fully analytical)
+        %
+    else
+        %
+        [seBHE,seBH,Elwert,ec,k,c] = bhe_dke_kk(ec_in,k_in,t0_in,Z,params,smodel);%All screening models except Moliere's one (fully or partially numerical)
+        %
+    end
 end

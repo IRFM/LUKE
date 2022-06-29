@@ -10,10 +10,14 @@ function [seRDP,seRDP_1,seRDP_2,ec,k,c] = rdp_dke_yp(ec_in,k_in,t0_in,Z,n2f1,nph
 %		- kc_in: photon energy (keV)  [1,n] 
 %		- t0_in: cosine of the angle between the direction of displacement of the incoming  electron and the photon emitted by bremsstrahlung (radian) [1,p] (default = 0)
 %		- Z: target ion charge (default = 1) [1,1]
-%       - n2f1: 
-%       - nphi: 
-%       - ntheta:
-%       - integral_mode:
+%       - n2f1: number of terms in the series for the calculation o the Gaussian hypergeometric function [1,1]
+%         (default : 100)
+%       - nphi: number of azimuthal angles for the scattered electron [1,1]
+%         (default : 101)
+%       - ntheta: number of theta angles for the scattered electron [1,1]
+%         (default : 151)
+%       - integral_mode: mode of integration over phi and theta of the scatteredd electron ('simps' for Simpson method or 'trapz' or trapeze method)
+%         (default : 'simps')
 %
 %	Output: 
 %
@@ -63,8 +67,9 @@ function [seRDP,seRDP_1,seRDP_2,ec,k,c] = rdp_dke_yp(ec_in,k_in,t0_in,Z,n2f1,nph
     phi = linspace(0,2*pi,nphi);
     dphi = phi(2) - phi(1);
     %
-    theta = linspace(0,pi,ntheta);
-    dtheta = theta(2) - theta(1);
+    [theta] = relativistic_thetagrid_yp(max(ec_in),ntheta);
+    %theta = linspace(0,pi,ntheta);
+    %dtheta = theta(2) - theta(1);
     c = cos(theta);
     %
     ec_out = repmat(ones(length(t0_in),1)*ec_in(:)'/mc2,[1,1,length(k_in)]);%Relativistic units
