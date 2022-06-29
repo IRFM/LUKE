@@ -227,9 +227,6 @@ for ii = 1:length(theta)
     %
 end
 %
-grid minor
-drawnow
-%
 axis([0,Ec,0,7]);
 %
 for jj = 1:length(theta)
@@ -243,6 +240,9 @@ legend('Bethe-Heitler+Elwert','Elwert-Haug','Roche-Ducos-Proriol','Exp. (Z = 79,
 title('Ec = 180 keV, theta = [17.5,37.5,57.5,77.5,115] deg, Z = 79 (Au)')
 xlabel('Photon energy (keV)')
 ylabel('(k/Z^2)*d\sigma/dk/d\Omega_k [mb/sterad]')
+%
+grid minor
+drawnow
 %
 Ec = 9660;%Incoming electron kinetic energy (keV)
 k = linspace(Ec*18/100,Ec*99/100,20);%Emitted photon energy (keV)
@@ -284,8 +284,6 @@ for ii = 1:length(theta)
     semilogy(exp(:,1),exp(:,2),'ko','MarkerSize',markersize)
     %
 end
-%
-grid minor
 %
 axis([0,10,0,5000]);
 %
