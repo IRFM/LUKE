@@ -25,12 +25,11 @@ for iZ = 1:length(Z)
         %
         load(filename);
         %
-        if isfield(dft,'moliere')
+        if isfield(dft,'salvat')
             %
             disp(['WARNING : a salvat substructure already exists in the dft structure for ',elements('atomic_number', Z(iZ), 'name'),', ',elements('atomic_number', Z(iZ), 'symbol'),' (Z = ',int2str(Z(iZ)),').'])
-            dft = rmfield(dft,'moliere');
             flag_salvat = 1;
-            %dft = rmfield(dft,'salvat');
+            dft = rmfield(dft,'salvat');
             %
         else
             %
