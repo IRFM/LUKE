@@ -1,8 +1,8 @@
-function y = root_moliere(R)
+function y = root_salvat(R)
 %
-% Determine the solution of the Moliere's equation for one to three Yukawa potentials
+% Determine the solution of the Salvat's equations for one to three Yukawa potentials
 % 
-% various atomic models. Data are saved in a substructure dft.moliere.
+% Various atomic models. Data are saved in a substructure dft.salvat.
 %
 %	Input:
 %

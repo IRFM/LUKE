@@ -1,19 +1,20 @@
-function [dft] = moliere(dft,model,maxnumexp)
+function [dft] = salvat(dft,model)
 %
-% Calculate the Moliere's coefficients (up to three Yukawa potentials) from
-% various atomic models. Data are saved in a substructure dft.moliere.
+% Calculate the Salvat's coefficients (up to three Yukawa potentials) from
+% various atomic models using the density averaged constraint. 
+% Data are saved in a substructure dft.salvat.model{i} where i is ranging
+% from 1 to 3 epending of the number of exponentials used for the
+% calculations
 %
 %	Input:
 %
 %		- dft: initial dft structure
 %		- model: atomic model (see available atomic models in the dft structure)
 %         (default: gaussian)
-%		- maxnumexp: maximum number of exponential (Yukawa potentials)  [1,n] 
-%         (default = 3)
 %
 %	Output: 
 %
-%		- dft: final dft structure with moliere substructure [p,m,n]
+%		- dft: final dft structure with salvat substructure [p,m,n]
 %
 % by Y.Peysson CEA-DRFC <yves.peysson@cea.fr>
 %
@@ -24,11 +25,6 @@ if nargin == 0
 elseif nargin == 1
     %
     model = 0;%Gaussian
-    maxnumexp = 3;
-    %
-elseif nargin == 2
-    %
-    maxnumexp = 3;
     %
 end
 %
@@ -67,137 +63,133 @@ for jj = 1:length(model)
         ne = dft.ne;
         %
     end
-    %{
-    for jj = 1:size(ne,2)
-        ine(jj) = min(find(ne(:,jj)/ne(1,jj) < 1e-8));
-    end
     %
-    ineref = max(ine);
-    %
-    r = r(1:ineref);
-    ne = ne(1:ineref,:);
-    %}
-    for i = 1:dft.Z
+    for kk = 1:3
         %
-        for j = 1:maxnumexp*2
+        for i = 1:dft.Z
             %
-            n = j - 2;
-            R(i,j) = 4*pi*simps(r,r.^(n+2).*ne(:,i))/(dft.Z - dft.Z0(i))/factorial(n+1);%
-            %
-        end
-        %
-    end
-    %
-    if imodel == 0
-        %
-        dft.moliere.(lower(dft.code.codetype)).r = r;%radius
-        %
-    else
-        %
-        dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).r = r;%radius (Thomas-Fermi model)
-        %
-    end
-    %    
-    for i = 1:dft.Z
-        %
-        x = root_moliere(R(i,:));
-        %
-        maxnumexp = length(x)/2;
-        %
-        if imodel == 0
-            %
-            dft.moliere.(lower(dft.code.codetype)).maxnum_exp = maxnumexp;
-            %
-        else
-            %
-            dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).maxnum_exp = maxnumexp;
-            %
-        end
-        %
-        if imodel == 0
-            %
-            dft.moliere.(lower(dft.code.codetype)).checksum(i) = sum(x(1:maxnumexp));
-            %
-        else
-            %
-            dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).checksum(i) = sum(x(1:maxnumexp));
-            %
-        end
-        %
-        for j = 1:maxnumexp
-            %
-            if imodel == 0
+            for j = 1:kk*2
                 %
-                dft.moliere.(lower(dft.code.codetype)).A(i,j) = x(j);
-                %
-            else
-                %
-                dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).A(i,j) = x(j);
-                %
-            end   
-            %
-        end
-        %
-        for j = maxnumexp+1:2*maxnumexp
-            %
-            if imodel == 0
-                %
-                dft.moliere.(lower(dft.code.codetype)).alpha(i,j-maxnumexp) = x(j);
-                %
-            else
-                %
-                dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).alpha(i,j-maxnumexp) = x(j);
+                n = j - 2;
+                R(i,j) = 4*pi*simps(r,r.^(n+2).*ne(:,i))/(dft.Z - dft.Z0(i))/factorial(n+1);%
                 %
             end
             %
         end
         %
-        xdens = 0;
-        %
-        for j = 1:maxnumexp
+        if imodel == 0
+            %
+            dft.salvat.(lower(dft.code.codetype)){kk}.r = r;%radius
+            %
+        else
+            %
+            dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.r = r;%radius (Thomas-Fermi model)
+            %
+        end
+        %    
+        for i = 1:dft.Z
+            %
+            x = root_salvat(R(i,:));
+            %
+            maxnumexp = min(length(x)/2,kk);
             %
             if imodel == 0
                 %
-                xdens = xdens + dft.moliere.(lower(dft.code.codetype)).A(i,j)*dft.moliere.(lower(dft.code.codetype)).alpha(i,j)*dft.moliere.(lower(dft.code.codetype)).alpha(i,j)*exp(-dft.moliere.(lower(dft.code.codetype)).alpha(i,j).*r);
+                dft.salvat.(lower(dft.code.codetype)){kk}.maxnum_exp = maxnumexp;
+                %
+            else
+                %   
+                dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.maxnum_exp = maxnumexp;
+                %
+            end
+            %
+            if imodel == 0
+                %
+                dft.salvat.(lower(dft.code.codetype)){kk}.checksum(i) = sum(x(1:maxnumexp));
                 %
             else
                 %
-                xdens = xdens + dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).A(i,j)*dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).alpha(i,j)*dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).alpha(i,j)*exp(-dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).alpha(i,j).*r);
+                dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.checksum(i) = sum(x(1:maxnumexp));
                 %
             end
-        end
-        %
-        if imodel == 0
             %
-            dens = (dft.Z - dft.Z0(i))*xdens/4/pi./r;
+            for j = 1:maxnumexp
+                %
+                if imodel == 0
+                    %
+                    dft.salvat.(lower(dft.code.codetype)){kk}.A(i,j) = x(j);
+                    %
+                else
+                    %
+                    dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.A(i,j) = x(j);
+                    %
+                end   
+                %
+            end
             %
-        else
+            for j = maxnumexp+1:2*maxnumexp
+                %
+                if imodel == 0
+                    %
+                    dft.salvat.(lower(dft.code.codetype)){kk}.alpha(i,j-maxnumexp) = x(j);
+                    %
+                else
+                    %
+                    dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.alpha(i,j-maxnumexp) = x(j);
+                    %
+                end
+                %
+            end
             %
-            dens = (dft.Z - dft.Z0(i))*xdens/4/pi./r;
+            xdens = 0;
             %
-        end
-        %
-        dens(1) = ne(1,i)*dens(2)/ne(2,i);%avoid sigularity at r = 0
-        %
-        if imodel == 0
+            for j = 1:maxnumexp
+                %
+                if imodel == 0
+                    %
+                    xdens = xdens + dft.salvat.(lower(dft.code.codetype)){kk}.A(i,j)*dft.salvat.(lower(dft.code.codetype)){kk}.alpha(i,j)*dft.salvat.(lower(dft.code.codetype)){kk}.alpha(i,j)*exp(-dft.salvat.(lower(dft.code.codetype)){kk}.alpha(i,j).*r);
+                    %
+                else
+                    %
+                    xdens = xdens + dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.A(i,j)*dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.alpha(i,j)*dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.alpha(i,j)*exp(-dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.alpha(i,j).*r);
+                    %
+                end
+            end
             %
-            dft.moliere.(lower(dft.code.codetype)).ne(:,i) = dens;
-            dft.moliere.(lower(dft.code.codetype)).neR2(:,i) = sum((dft.moliere.(lower(dft.code.codetype)).ne(:,i) - ne(:,i)).^2)/length(ne(:,i))^2;
+            if imodel == 0
+                %
+                dens = (dft.Z - dft.Z0(i))*xdens/4/pi./r;
+                %
+            else
+                %
+                dens = (dft.Z - dft.Z0(i))*xdens/4/pi./r;
+                %
+            end
             %
-            dft.moliere.(lower(dft.code.codetype)).Ndft(i) = 4*pi*simps(r,r.*r.*ne(:,i));
-            dft.moliere.(lower(dft.code.codetype)).Nfit(i) = 4*pi*simps(r,r.*r.*dft.moliere.(lower(dft.code.codetype)).ne(:,i));
+            dens(1) = ne(1,i)*dens(2)/ne(2,i);%avoid sigularity at r = 0
             %
-        else
-            %
-            dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).ne(:,i) = dens;
-            dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).neR2(:,i) = sum((dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).ne(:,i) - ne(:,i)).^2)/length(ne(:,i))^2;
-            %
-            dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).Ndft(i) = 4*pi*simps(r,r.*r.*ne(:,i));
-            dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).Nfit(i) = 4*pi*simps(r,r.*r.*dft.moliere.(lower(strrep(dft.models{imodel},'-','_'))).ne(:,i));
+            if imodel == 0
+                %
+                dft.salvat.(lower(dft.code.codetype)){kk}.ne(:,i) = dens;
+                dft.salvat.(lower(dft.code.codetype)){kk}.neR2(:,i) = sum((dft.salvat.(lower(dft.code.codetype)){kk}.ne(:,i) - ne(:,i)).^2)/length(ne(:,i));
+                %
+                dft.salvat.(lower(dft.code.codetype)){kk}.Ndft(i) = 4*pi*simps(r,r.*r.*ne(:,i));
+                dft.salvat.(lower(dft.code.codetype)){kk}.Nfit(i) = 4*pi*simps(r,r.*r.*dft.salvat.(lower(dft.code.codetype)){kk}.ne(:,i));
+                %
+            else
+                %
+                dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.ne(:,i) = dens;
+                dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.neR2(:,i) = sum((dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.ne(:,i) - ne(:,i)).^2)/length(ne(:,i))^2;
+                %
+                dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.Ndft(i) = 4*pi*simps(r,r.*r.*ne(:,i));
+                dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.Nfit(i) = 4*pi*simps(r,r.*r.*dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.ne(:,i));
+                %
+            end
             %
         end
         %
         clear dens xdens
+        %
     end
     %
 end
