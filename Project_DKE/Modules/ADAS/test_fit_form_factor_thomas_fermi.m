@@ -1,60 +1,106 @@
 close all
 clear all 
 %
-print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
+print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
 flag_calcul = 1;%1: calculation is done (even data have been saved), 0: data are reload if they have been saved
 %
-models = {'Thomas-Fermi','Thomas-Fermi-Kirillov'};%'Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Avdonina-Lamoureux','Tseng-Pratt-Botto','Tseng-Pratt-Thomas-Fermi'
-%atoms = {'Tungsten','Xenon','Copper','Iron','Argon','Neon','Oxygen','Nitrogen','Carbon','Beryllium','Helium'};
-atoms = {'Tungsten','Argon'};
+models = {'Thomas-Fermi','Thomas-Fermi-Kirillov'};%'Tseng-Pratt-Botto','Tseng-Pratt-Thomas-Fermi'};%,'Tseng-Pratt-Avdonina-Lamoureux'
+atoms = {'Nickel'};%'Xenon','Copper','Iron','Argon','Neon','Oxygen','Nitrogen','Carbon','Beryllium','Helium'};
+units = 'MeV/c';%'mec' or 'MeV/c'
+%
+[~,~,~,~,~,~,~,~,~,alpha,~,~,~,~,~,a0] = pc_dke_yp;
 %
 if exist('data_ionradius.mat') && ~flag_calcul
-    load data_ionradius.mat;
+    %
+    load data_ionradius.mat;%load data
+    %
 else
     %
     for iatom = 1:length(atoms)
         %
         for imodel = 1:length(models)
+            %
             ionradius(iatom,imodel) = ionradius_yp(atoms{iatom},models{imodel});
+            %
         end
         %
     end
     %
     save data_screening.mat ionradius
+    %
 end
 %
 linestyle(1) = {'-'};
 linestyle(2) = {'--'};
 linestyle(3) = {'-.'};
 linestyle(4) = {':'};
+linestyle(5) = {'-'};
 %
 linecolor(1) = {'r'};
 linecolor(2) = {'b'};
 linecolor(3) = {'g'};
 linecolor(4) = {'m'};
+linecolor(5) = {'c'};
 %
-for iatom = 1:length(atoms)
-%    
-    imodel = 1;%Thomas-Fermi model
+for iatom = 1:length(atoms) 
+    %    
+    if exist('Z_hesslow')
+        %
+        clear 'Z_hesslow' 'a_hesslow'
+        %
+    end
     %
-    xlab = 'q/(m_{e}c)';
-    ylab = 'Thomas-Fermi form factor';
-    tit = ['Thomas-Fermi form factor for ',atoms{iatom},' (Z = ',int2str(ionradius(iatom,imodel).Z),')'];
+    imodel = find(ismember(models,'Thomas-Fermi'));%Thomas-Fermi model
+    %
+    if strcmp(units,'mec')
+        %
+        xlab = 'q/(m_{e}c)';
+        %
+    elseif strcmp(units,'MeV/c')
+        %
+        xlab = 'q/(MeV/c)';
+        %
+    end
+    %
+    ylab = 'Atomic form factor';
+    tit = ['Thomas-Fermi form factor for neutral ',atoms{iatom},' (Z = ',int2str(ionradius(iatom,imodel).Z),')'];
     siz = 20+14i;
-    figure('Name',['Atomic form factor ',atoms{iatom}])
+    figure('Name',['Thomas-Fermi atomic form factor for neutral ',atoms{iatom}])
     %
-    [q,ff,ff_tf] = form_factor_yp(ionradius(iatom,imodel).rn,ionradius(iatom,imodel).dens,ionradius(iatom,imodel).Z,ionradius(iatom,imodel).N);
+    [q,ff_tf,ff_tfk,ff_mol] = tf_form_factor_yp(ionradius(iatom,imodel).rn,ionradius(iatom,imodel).dens,ionradius(iatom,imodel).Z,ionradius(iatom,imodel).N);
     %
-    xlim = [0.01,10000];%normalized transfered momentum q/(mec)
+    if exist(['DFT/dft_',int2str(ionradius(iatom,imodel).Z),'_',elements('atomic_number', ionradius(iatom,imodel).Z, 'symbol'),'_',elements('atomic_number', ionradius(iatom,imodel).Z, 'name'),'.mat'])
+        %
+        load(['DFT/dft_',int2str(ionradius(iatom,imodel).Z),'_',elements('atomic_number', ionradius(iatom,imodel).Z, 'symbol'),'_',elements('atomic_number', ionradius(iatom,imodel).Z, 'name'),'.mat'])
+        %
+    end
+    %
+    xlim = [0.0001,10];%normalized transfered momentum q/(mec)
     ylim = [0,ionradius(iatom,imodel).Z];
     %
-    iZ0 = 1;
+    iZ0 = 1;%neutral atom
     %
-    graph1D_jd(q,ff(iZ0,:),1,0,xlab,ylab,tit,'',xlim,ylim,linestyle{imodel},'none',linecolor{imodel},2,siz,gca);
-    graph1D_jd(q,ff_tf(iZ0,:),1,0,xlab,ylab,tit,'',xlim,ylim,'--','none','b',2,siz,gca); 
-    legend(['Exact caculation (Z_0=',int2str(ionradius(iatom,imodel).Z0(iZ0)),')'],'Approximate calculation [Kirillov et al. (1975)]');
+    if strcmp(units,'mec')
+        %
+        unitfactor = 1;
+        %
+    elseif strcmp(units,'MeV/c')
+        %
+        unitfactor = 1.627;
+        %
+    end
+    %
+    graph1D_jd(q/unitfactor,ff_tf(iZ0,:),1,0,xlab,ylab,tit,'',xlim,ylim,linestyle{imodel},'none',linecolor{imodel},2,siz,gca);
+    graph1D_jd(q/unitfactor,ff_tfk(iZ0,:),1,0,xlab,ylab,tit,'',xlim,ylim,'--','none','b',2,siz,gca); 
+    %
+    if iZ0 == 1
+        %
+        graph1D_jd(q/unitfactor,ff_mol(iZ0,:),1,0,xlab,ylab,tit,'',xlim,ylim,':','none','g',2,siz,gca); 
+        %
+    end
     %
     a_tf_kirillov = (3*sqrt(pi))^(2/3)*ionradius(iatom,imodel).N(iZ0).^(2/3)/ionradius(iatom,imodel).Z/4;
+    a_tf_kirillov_n = 2*a_tf_kirillov/alpha;
     %ffk_out1 = ffk(a_tf,q,ionradius(iatom,imodel).N(iZ0));
     %graph1D_jd(q(1:10:end),ffk_out1(1:10:end),1,0,xlab,ylab,tit,'',xlim,ylim,'none','+','k',2,siz,gca); 
     %
@@ -62,50 +108,61 @@ for iatom = 1:length(atoms)
     %ffk_out2 = fun_ff(a_tf,q);
     %graph1D_jd(q(1:10:end),ff_out2(1:10:end),1,0,xlab,ylab,tit,'',xlim,ylim,'none','x','g',2,siz,gca);
     %
-    norm_ff = @(a) norm(ff(iZ0,:) - fun_ff(a,q)); 
+    norm_ff = @(a) norm(ff_tf(iZ0,:) - fun_ff(a,q)); 
     %options = optimset('TolFun',1e-8);
-    [a_optim] = fminsearch(norm_ff, a_tf_kirillov); 
+    [a_optim] = fminsearch(norm_ff, a_tf_kirillov_n); 
     ffk_out3 = fun_ff(a_optim,q);
     %
-    graph1D_jd(q(1:10:end),ffk_out3(1:10:end),1,0,xlab,ylab,tit,'',xlim,ylim,'-.','none','g',2,siz,gca);
-    legend('Exact Thomas-Fermi model','Approximate Kirillov expression','Best fit of the exact form factor');
+    graph1D_jd(q(1:10:end)/unitfactor,ffk_out3(1:10:end),1,0,xlab,ylab,tit,'',xlim,ylim,'-.','none','c',2,siz,gca);
+    %
+    if iZ0 == 1
+        %
+        legend('Exact (Numerical)','Analytical (Kirillov model)','Moliere model','Best fit (using Kirillov function)');
+        %
+    else
+        %
+        legend('Exact (Numerical)','Analytical (Kirillov model)','Best fit (using Kirillov function)');
+        %
+    end
+    %
     drawnow;
     %
-    print_jd(print_opt,['Form_factor_best_fit_',atoms{iatom}],'./Figs',get(gcf,'Number'))
+    print_jd(print_opt,['Thomas_Fermi_form_factor_best_fit_',atoms{iatom}],'./Figs',get(gcf,'Number'))
     %
     clear a_tf_kirillov_bar a_tf_optim_bar a_optim resnorm
     %
     for iZ0 = 1:ionradius(iatom,imodel).Z
         a_tf_kirillov = (3*sqrt(pi))^(2/3)*ionradius(iatom,imodel).N(iZ0).^(2/3)/ionradius(iatom,imodel).Z/4;
+        a_tf_kirillov_n = 2*a_tf_kirillov/alpha;
         fun_ffk = @(a,q) formfactor_yp(a,q,ionradius(iatom,imodel).N(iZ0),ionradius(iatom,imodel).nff(iZ0));%a is the free parameter
-        norm_ffk = @(a) norm(ff(iZ0,:) - fun_ffk(a,q)); 
-        [a_optim] = fminsearch(norm_ffk, a_tf_kirillov);
-        a_tf_kirillov_bar(iZ0) = 2*137*a_tf_kirillov;
-        a_tf_optim_bar(iZ0) = 2*137*a_optim;
+        norm_ffk = @(a) norm(ff_tf(iZ0,:) - fun_ffk(a,q)); 
+        [a_optim_n] = fminsearch(norm_ffk, a_tf_kirillov_n);
+        a_tf_kirillov_bar(iZ0) = a_tf_kirillov_n;
+        a_tf_optim_bar(iZ0) = a_optim_n;
     end
     %
-    if iatom == 1
+    if strcmp(atoms{iatom},'Tungsten')
         Z_hesslow = [0,30,40,50,60];%tungsten
         a_hesslow = [59,33,25,18,13];
-    elseif iatom == 2
+    elseif strcmp(atoms{iatom},'Argon')
         Z_hesslow = [0:1:17];%Argon
         a_hesslow = [96,90,84,78,72,65,59,53,47,44,41,38,35,32,27,21,13,13];
-    elseif iatom == 5
+    elseif strcmp(atoms{iatom},'Xenon')
         Z_hesslow = [1,2,3];%xenon
         a_hesslow = [65,63,61];
-    elseif iatom == 6
+    elseif strcmp(atoms{iatom},'Neon')
         Z_hesslow = [0:1:9];%Neon
         a_hesslow = [111,100,90,80,71,62,52,50,24,23];
-    elseif iatom == 8
+    elseif strcmp(atoms{iatom},'Nitrogen')
         Z_hesslow = [0:1:6];%Nitrogen
         a_hesslow = [135,115,97,79,59,35,33];
-    elseif iatom == 9
+    elseif strcmp(atoms{iatom},'Carbon')
         Z_hesslow = [0:1:5];%Carbon
         a_hesslow = [144,118,95,70,42,39];
-    elseif iatom == 10    
+    elseif strcmp(atoms{iatom},'Beryllium')
         Z_hesslow = [0,1,2,3];%beryllium
         a_hesslow = [159,114,67,59];
-    elseif iatom == 11
+    elseif strcmp(atoms{iatom},'Helium')
         Z_hesslow = [0,1];%Helium
         a_hesslow = [173,123];
     end
@@ -126,16 +183,21 @@ for iatom = 1:length(atoms)
     end
     %
     for imodel = 1:length(models)
-         if imodel == 1,
+         if imodel == 1
+             %
              leg = {[models{imodel}, ' model']};
+             %
          else
-              leg = [leg,{[models{imodel}, ' model']}];
+             %
+             leg = [leg,{[models{imodel}, ' model']}];
+             %
          end
          %
          maxionradius = [maxionradius,ionradius(iatom,imodel).a];
          ylim = [0,max(maxionradius)];
          %
          graph1D_jd(ionradius(iatom,imodel).Z0,ionradius(iatom,imodel).a,0,0,xlab,ylab,tit,leg,xlim,ylim,linestyle{imodel},'none',linecolor{imodel},2,siz,gca); 
+         %
     end
     %
     if exist('Z_hesslow')
@@ -146,8 +208,7 @@ for iatom = 1:length(atoms)
     set(gca,'ytick',[1:10:ylim(2)]);
     %
     leg = [leg,{'From exact fit using the approximate Kirillov form factor'}];
-    %graph1D_jd(ionradius(iatom,imodel).Z0,a_tf_kirillov_bar,0,0,xlab,ylab,tit,leg,xlim,ylim,'-.','none','g',2,siz,gca);
-    graph1D_jd(ionradius(iatom,imodel).Z0(1:end-1),a_tf_optim_bar,0,0,xlab,ylab,tit,leg,xlim,ylim,'-.','none','g',2,siz,gca);
+    graph1D_jd(ionradius(iatom,imodel).Z0(1:end-1),a_tf_optim_bar,0,0,xlab,ylab,tit,leg,xlim,ylim,'-.','none','c',2,siz,gca);
     %
     drawnow;
     print_jd(print_opt,['Ion_radius_from_form_factor_fit_',atoms{iatom}],'./Figs',get(gcf,'Number'))
