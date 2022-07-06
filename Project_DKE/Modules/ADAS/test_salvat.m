@@ -11,11 +11,22 @@ clc
 print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
 %
 Z = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%Atomic number (If multiple Z values, dft change only, no display)
-Z = [79];%change dft subfield salvat, and display results
+Z = [4];%change dft subfield salvat, and display results
 %
 atomic_models = [0];%[0 -> Gaussian DFT,1 -> Thomas-Fermi]
+units = 'MeV/c';%'mec' or 'MeV/c' for the form factor
 %
-Zindex = [1:10:Z];%Zs for a global display (< Z)
+if strcmp(units,'mec')
+    %
+    unitfactor = 1;
+    xlabff = 'q/(m_{e}c)';
+    %
+elseif strcmp(units,'MeV/c')
+    %
+    unitfactor = 1.627;
+    xlabff = 'q/(MeV/c)';
+    %
+end
 %
 for iZ = 1:length(Z)
     %
@@ -44,6 +55,8 @@ for iZ = 1:length(Z)
             save(filename,'dft');
             %
         else
+            %
+            [q,ff_dhfs,ff_sal] = form_factor_salvat(dft);%form factor calculations
             %
             models = fieldnames(dft.salvat);
             %
@@ -128,6 +141,23 @@ for iZ = 1:length(Z)
             drawnow
             print_jd(print_opt,['Lineicdensity_MoliereSalvatGaussian_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
             %
+            tit3 = ['Atomic form factor, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
+            figure('Name',tit3);
+            ylab = 'Atomic form factor';
+            siz = 20+14i;
+            %
+            leg = {'DHFS (Gaussian code)',['Salvat et al. (1 exp)'],['Salvat et al. (2 exp)'],['Salvat et al. (3 exp)']};
+            %
+            graph1D_jd(q/unitfactor,ff_dhfs(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);
+            graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
+            graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+            graph1D_jd(q/unitfactor,ff_sal{3}(i,:),1,0,xlabff,ylab,tit3,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca);
+            xlim([1e-4,10])
+            ylim([0,dft.N(i)])
+            %
+            drawnow
+            print_jd(print_opt,['Atomicformfactor_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
+            %
             i = dft.Z;%partially ionized atom 
             %
             imodel = 1;%Gaussian
@@ -190,6 +220,23 @@ for iZ = 1:length(Z)
             %
             drawnow
             print_jd(print_opt,['Salvat - models for ions ',[upper(dft.name(1)), lower(dft.name(2:end))]],'./Figs',get(gcf,'Number'))
+            %
+            tit3 = ['Atomic form factor, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
+            figure('Name',tit3);
+            ylab = 'Atomic form factor';
+            siz = 20+14i;
+            %
+            leg = {'DHFS (Gaussian code)',['Salvat et al. (1 exp)'],['Salvat et al. (2 exp)'],['Salvat et al. (3 exp)']};
+            %
+            graph1D_jd(q/unitfactor,ff_dhfs(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);
+            graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
+            graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+            graph1D_jd(q/unitfactor,ff_sal{3}(i,:),1,0,xlabff,ylab,tit3,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca);
+            xlim([1e-4,10])
+            ylim([0,dft.N(i)])
+            %
+            drawnow
+            print_jd(print_opt,['Atomicformfactor_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
             %
             disp('-----------------------------------------------------------------------------------')
             disp('-----------------------------------------------------------------------------------')
