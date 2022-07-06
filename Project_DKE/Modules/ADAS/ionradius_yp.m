@@ -18,20 +18,30 @@ function [ionradius] = ionradius_yp(element,model)
 %   By Y. Peysson CEA-IRFM <yves.peysson@cea.fr>, A. Jardin IJF/PAN <axel.jardin@ifj.edu.pl>, K. Krol IFJ/PAN <krzysztof.krol@ifj.edu.pl>
 %
 if nargin == 0
+    %
     element = 'Tungsten';
     model = 'Thomas-Fermi';
+    %
 end
 %
 if nargin == 1
+    %
     model = 'Thomas-Fermi';
+    %
 end
 %
 if ischar(element) && length(element) > 3
+    %
     Z = elements('name', element, 'atomic_number');
+    %
 elseif ischar(element) && length(element) < 3
+    %
     Z = elements('symbol', element, 'atomic_number');
+    %
 elseif ~ischar(element)
+    %
     Z = element;
+    %
 end
 %
 Z = double(Z);
