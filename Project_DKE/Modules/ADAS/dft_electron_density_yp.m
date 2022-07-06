@@ -1,6 +1,5 @@
 function dft = dft_electron_density_yp(Z_in,Z0_in,code,remote,cancel)
 %
-%
 %   Calculation script of the atomic electron density for all ionization states of an
 %   atom with atomic number Z. To be used with DFT programs to calculate the
 %   atomic electron density like GAUSSIAN, EXCITING or GAMESS. Matlab is
@@ -10,13 +9,13 @@ function dft = dft_electron_density_yp(Z_in,Z0_in,code,remote,cancel)
 %   INPUTS:
 %
 %       - Z_in : atomic number vector [1,1]
-%       - Z0_in : iionization states (Z0 < Z) [1,p]
+%       - Z0_in : ionization states (Z0 < Z) [1,p]
 %       - code : code structure [1,1]
 %       - remote : remote structure [1,1]
 %
 % An example for Gaussian DFT code
 %
-%   code.rootpath = '/home/ypeysson/GAUSSIAN/';%aboslute path
+%   code.rootpath = '/home/u01/GAUSSIAN/';%absolute path
 %   code.codepath = 'g09';%relative path
 %   code.codetype = 'gaussian';
 %   code.functional = 'PBE1PBE';%?hybrid-exchange correlation functional
@@ -40,7 +39,7 @@ if nargin < 3
     %
     if ~exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
         %
-        error(~'Error: not enough input arguments in dft_electron_density_yp.m.');
+        error('Error: not enough input arguments in dft_electron_density_yp.m.');
         %
     end
     %
@@ -103,23 +102,68 @@ if exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
     %
     if ~isempty(remote) %remote calculations
         %
+        disp('-------------------')
+        disp(['GAUSSIAN simulations status for Z = ',int2str(Z_in),'.']);
+        disp('-------------------')
+        %
         ss = 0;
         for iZ0 = 1:length(ZZ0)
             %
-            [s,m] = unix(['scp -r -p ',remote.id,'@',remote.ip,':',remote.remotedir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.output ',localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.output']); %get results on local computer
-            [s,m] = unix(['scp -r -p ',remote.id,'@',remote.ip,':',remote.remotedir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.log ',localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.log']); %get logs on local computer
-            %
-            if s ~= 0
-                disp(['WARNING file ',symbol,'_',int2str(ZZ0(iZ0)),'.output missing : ',m]);
-               ss = ss + s;
+            if exist([localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.output'],'file') && exist([localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.log'],'file')
+                %
+                disp([' - Calculations for ',symbol,'_',int2str(ZZ0(iZ0)),' are done and saved locally.']);
+                %
+            else
+                %
+                [s0,m0] = unix(['scp -r -p ',remote.id,'@',remote.ip,':',remote.remotedir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.output ',localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.output']); %get results on local computer
+                [s1,m1] = unix(['scp -r -p ',remote.id,'@',remote.ip,':',remote.remotedir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.log ',localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.log']); %get logs on local computer
+                %
+                if s0 == 0 && s1 == 0
+                    %
+                    s = 0;
+                    %
+                else
+                    %
+                    s = 1;
+                    %
+                end
+                %
+                if s ~= 0
+                    %
+                    if s0 ~= 0 && s1 ~= 0
+                        %
+                        disp([' - WARNING file ',symbol,'_',int2str(ZZ0(iZ0)),'.output and ',symbol,'_',int2str(ZZ0(iZ0)),'.log are missing.']);
+                        %
+                    elseif s0 ~= 0 && s1 == 0
+                        %
+                        disp([' - WARNING file ',symbol,'_',int2str(ZZ0(iZ0)),'.output is missing. Check the ',symbol,'_',int2str(ZZ0(iZ0)),'.log file.']);
+                        %
+                    end
+                    ss = ss + s;
+                    %
+                else
+                    %
+                    disp([' - Calculations for ',symbol,'_',int2str(ZZ0(iZ0)),' are done and transfered locally.']);
+                    %
+                end
+                %
             end
             %
         end
     end
     %
     if ss == 0
+        %
+        disp('-------------------')
         disp(['All results have been well transfered back to the local computer for Z = ',int2str(Z_in),'.']);
         disp('-------------------')
+        %
+    else
+        %
+        disp('-------------------')
+        disp([' ---> ',int2str(ss),' calculations remain to be done for Z = ',int2str(Z_in),'.']);
+        disp('-------------------')
+        %
     end
     %
     cd(localdir);
