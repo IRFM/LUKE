@@ -50,6 +50,7 @@ if strcmp(model,'No-screening') %fully stripped ion
 end
 %
 if q < 1
+    %
     if strcmp(model,'Thomas-Fermi')
         %
         tstart = tic;
@@ -123,6 +124,7 @@ if q < 1
         else
             rn = 4*lambdaz*fliplr(1.0 - x)';%in a0 units
         end
+        %
         dens = lambdaz2.*(Z-Z0).*exp(-lambdaz.*rn)./(4*pi*rn);
         test_dens = 4*pi*trapz_dke_yp([rn,dens.*rn.^2]);
         %
@@ -241,7 +243,7 @@ if q < 1
         symbol = elements('atomic_number', Z, 'symbol');
         name = elements('atomic_number', Z, 'name');
         %
-        load(['/Users/yves/Travail/Projets/LUKE_LHCD/Project_DKE/Modules/ADAS/DFT/dft_',int2str(Z),'_',symbol,'_',name,'.mat'],'dft');
+        load(['DFT/dft_',int2str(Z),'_',symbol,'_',name,'.mat'],'dft');
         %
         if isfield(dft,'I1')
             %
