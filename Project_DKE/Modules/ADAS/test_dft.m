@@ -12,11 +12,25 @@ clc
 %
 [ip,id] = connections_params('yves');%Create a file in the LUKE path (or local) : id -> hostname, ip: ethernet address. Must be customized according to the machine where calculations are done.
 %
-Z = [2];%,3];%Helium (2),Lithium (3),Copper (29)
+Z = 78;%Helium (2), Lithium (3), Argon (18), Copper (29), Xenon (54), Tungsten (74), Gold (79)
 Z0 = [];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
 %
 mode = 0;%(0): the script wait until all calculations are done, (1): the script is terminated while calculations are still running on the remote machine. It must be launched again to check if calculations are terminated. 
 cancel = 0;%enforce cancel calculations
+%
+disp('-------------------')
+disp(['GAUSSIAN atomic code remote calculations : ',elements('atomic_number', Z, 'name'),' (',int2str(Z),')'])
+%
+if isempty(Z0)
+    %
+    disp('All ionization states are calculated.')
+    %
+else
+    %
+    disp(['Ionization states that are calculated : ',inst2str(Z0),'.'])
+    %
+end
+disp('-------------------')
 %
 % ----------------------- CODE SETTINGS ----------------------
 %
@@ -49,9 +63,13 @@ end
 job_status = ones(1,length(Z));
 %
 if ~exist('dft_job_status.mat')
+    %
     save dft_job_status.mat job_status
+    %
 else
+    %
     load dft_job_status.mat job_status
+    %
 end
 %
 ik = 1;%computer index
