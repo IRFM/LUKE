@@ -1,14 +1,15 @@
-function [s0,B,err,s,y,exitflag] = tf_potential_yp(q)
+function [s0,B,err,s,y,exitflag] = tf_potential_yp(q,smax)
     %
     %   Calculation of the solution of the dimensionless Thomas-Fermi equation for any screening factor q, by solving two coupled ordinary differential equations. 
     %
     %   INPUTS:
     %
     %       - q : screening factor (1 - N/Z) [1,1]
+    %       - smax : upper limit of the radial grid (normalized to Thomas-Fermi length) [1,1]
     %
     %   OUTPUTS:
     %
-    %       - s = normalized mofified radial coordinate up to value where dimensionless potential vanishes (positive ion only), x = sqrt(s). 
+    %       - s = normalized modified radial coordinate up to value where dimensionless potential vanishes (positive ion only), x = sqrt(s). 
     %       - y = [w(s) = phi(x),u(s) = w'(s)/s] dimensionless Thomas-Fermi equation
     %       - B = derivative at the origin
     %       - err = qnum - qref for determining b_qref consistently
@@ -17,12 +18,18 @@ function [s0,B,err,s,y,exitflag] = tf_potential_yp(q)
     %   By Y. Peysson CEA-IRFM <yves.peysson@cea.fr>, A. Jardin IJF/PAN <axel.jardin@ifj.edu.pl>, Krzysztof Krol IFJ/PAN <krzysztof.krol@ifj.edu.pl>
     %
     if nargin == 0 
+        %
         q = 0.5;%weakly ionized atom
+        %
     end
     %
     [B_init,x0] = tf_init(q);
     %
-    smax = sqrt(x0)*1.05;%5% margin in the search domain
+    if nargin < 2
+        %
+        smax = sqrt(x0)*1.05;%5% margin in the search domain
+        %
+    end
     %
     fun_tf = @(B) tf_root(B,q,smax);
     %
