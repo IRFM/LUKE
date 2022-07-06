@@ -16,20 +16,28 @@ function dft = make_dft_yp(Z_in,display,print_opt)
 %   By Y. Peysson CEA-IRFM <yves.peysson@cea.fr>, A. Jardin IJF/PAN <axel.jardin@ifj.edu.pl>, Krzysztof Krol IFJ/PAN <krzysztof.krol@ifj.edu.pl>
 %
 if nargin < 1
+    %
     error('Error : wrong number of input arguments in make_dft_yp.m');
+    %
 end
 %
 if nargin < 2
+    %
     display = 0; %no display
     print_opt = 2; %no saving/printing
+    %
 end
 %
 if nargin < 3
-    print_opt = 2; %no saving/printing
+    %
+    print_opt = 2; %no saving but printing
+    %
 end
 %
 if display > 0
+    %
     close all
+    %
 end
 %
 symbol = elements('atomic_number',Z_in, 'symbol');
