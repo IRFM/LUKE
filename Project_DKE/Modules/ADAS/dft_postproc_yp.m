@@ -43,13 +43,23 @@ symbol = elements('atomic_number',Z_in, 'symbol');
 name = elements('atomic_number',Z_in, 'name');
 %
 filename = ['DFT/dft_',int2str(Z_in),'_',symbol,'_',name];
+filename1 = ['dft_',int2str(Z_in),'_',symbol,'_',name,'_*'];
 %
-if exist([filename,'.mat'],'file')
+if exist([filename,'.mat'],'file') % already processed data
+    %
     load([filename,'.mat'],'dft');
-end
-%
-if exist('dft','var')
-    unix(['cp ',filename,'.mat ' filename,'_old.mat ']);
+    %
+    if exist('dft','var')
+        %
+        unix(['cp ',filename,'.mat ' filename,'_old.mat ']);
+        %
+    end
+    %
+elseif isstruct(dir(fullfile('', filename1))) % for raw Gaussian data
+    %
+    temp = dir(fullfile('', filename1));
+    load([temp.folder,filesep,temp.name],'dft');
+    %
 end
 %
 if ~isfield(dft,'name')
@@ -157,7 +167,6 @@ if ~isfield(dft,'models') || enforce == 1
         %
     end
 end
-
 %
 save(['DFT/dft_',int2str(dft.Z),'_',dft.symbol,'_',dft.name,'.mat'],'dft');
 disp(['Updated dft structure saved in ','DFT/dft_',int2str(dft.Z),'_',dft.symbol,'_',dft.name,'.mat'])
@@ -190,7 +199,7 @@ ylab = '\chi^2/N_q/N_Z^2';
 tit = ['Fit accuracy of the exact DFT form factor for Z = ',int2str(dft.Z)];
 leg = {};
 %
-figure('Name',['\chi2, Z = ',int2str(dft.Z)]);
+figure('Name',['chi2, Z = ',int2str(dft.Z)]);
 %
 leg = [leg,'Thomas-Fermi'];
 graph1D_jd(dft.Z0,dft.chi2_optim_TF,0,1,xlab,ylab,tit,leg,'','','none',marker{1},linecolor{1},2,siz,gca); 
