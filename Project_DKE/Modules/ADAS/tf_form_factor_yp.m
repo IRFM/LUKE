@@ -64,9 +64,7 @@ function [q,ff_tfn,ff_tfk,ff_mol] = tf_form_factor_yp(rn,dens,Z,N)
         %
         for i = 1:Z
             %
-            for iq = 1:nq
-                ff_tfn(i,iq) = 4*pi*alpha*trapz_dke_yp([rn{i}(:),dens{i}(:).*rn{i}(:).*sin(q(iq)*rn{i}(:)/alpha)/q(iq)]);%Exact calculation
-            end
+            ff_tfn(i,:) = formfactornum_yp(rn{i},dens{i},q);%exact calculation
             %
             ff_tfk(i,:) = formfactor_yp(a_tfk_bar(i),q,N(i),3/2);%Approximate Thomas-Fermi model
             %ff_tpb(i,:) = formfactor_yp(a_tpb_bar(i),q,N(i),2);%Tseng-Pratt-Botto
@@ -89,11 +87,7 @@ function [q,ff_tfn,ff_tfk,ff_mol] = tf_form_factor_yp(rn,dens,Z,N)
             ff_tfk(i,:) = formfactor_yp(a_tfk_bar(i),q,N(i),3/2);%Approximate Thomas-Fermi model
            % ff_tpb(i,:) = formfactor_yp(a_tpb_bar(i),q,N(i),2);%Tseng-Pratt-Botto
             %
-            for iq = 1:nq
-                %
-                ff_tfn(i,iq) = 4*pi*alpha*trapz_dke_yp([rn(:),dens(:,i).*rn(:).*sin(q(iq)*rn(:)/alpha)/q(iq)]);%Exact calculation
-                %
-            end
+            ff_tfn(i,:) = formfactornum_yp(rn{i},dens{i},q);%exact calculation
             %
             if N(i) == Z %neutral atom
                 %
