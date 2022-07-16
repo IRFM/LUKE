@@ -1,4 +1,4 @@
-function [ff] = formfactornum_yp(rn,dens,q);
+function [q,ff] = formfactornum_yp(rn,dens,q);
 %
 % Numerical calculation of the atomic form factor
 %
@@ -13,6 +13,13 @@ function [ff] = formfactornum_yp(rn,dens,q);
 %       - ff : atomic form factor [1,p]
 %
 %   By Y. Peysson CEA-IRFM <yves.peysson@cea.fr>
+%
+if nargin < 3
+    %
+    nq = 1000;
+    q = logspace(-4,1,nq);%normalized recoil momentum normalized to mec 
+    %
+end
 %
 [~,~,~,~,~,~,re,mc2,~,alpha] = pc_dke_yp;%Physics constant
 %
