@@ -39,7 +39,7 @@ if isfield(dft,'salvat')
         %
         for iZ = 1:length(dft.Z0)
             %
-            ff_dhfs(iZ,:) = formfactornum_yp(dft.r,dft.ne(:,iZ),q);
+            [~,ff_dhfs(iZ,:)] = formfactornum_yp(dft.r,dft.ne(:,iZ),q);
             %
             for ii = 1:length(dft.salvat.(code))
                 %
