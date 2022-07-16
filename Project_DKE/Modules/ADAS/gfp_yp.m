@@ -7,17 +7,23 @@ function [g,gn] = gfp_yp(p,Z,model,dftpath)
 %		- p: electron momentum in relativistic units [1,m] 
 %		- Z : atomic number [1,1]
 %       - model : atomic model [1,1]
-%       - ADASpath : absolute path to ADAS module if out from LUKE path
+%       - dftpath : absolute path to ADAS module if out from LUKE path
 %
 %	Output: 
 %
 %		- g: screening function for pitch-angle scattering by ion type of atomique number Z (all ioniztion states are considered simultaneously) [m,Z+1]
-%		- gn: normalized to (Z^2-Z0^2) screening function for pitch-angle scattering by ion type of atomique number Z (all ioniztion states are considered simultaneously) [m,Z+1]
+%		- gn: normalized to (Z^2-Z0^2) screening function for pitch-angle scattering by ion type of atomique number Z (all ionization states are considered simultaneously) [m,Z+1]
 %
 % by Y.Peysson CEA-DRFC <yves.peysson@cea.fr>, K.Krol PAN-IFJ <krzysztof.krol@ifj.edu.pl> and  A.Jardin PAN-IFJ <axel.jardin@ifj.edu.pl>
 %
 if nargin < 3
+    %
     error('Wrong number of input arguments in gfp_yp');
+    %
+elseif nargin < 4
+    %
+    dftpath = 'DFT/';
+    %
 end
 %
 symbol = elements('atomic_number', Z, 'symbol');
@@ -40,11 +46,12 @@ Z0 = ones(length(p(:)),1)*dft.Z0;
 N = Z - ones(length(p(:)),1)*dft.Z0;
 Z2mZ02 = (Z^2 - Z0.^2);
 %
+[~,~,~,~,~,~,~,~,~,alpha,~,~,~,~,~,a0] = pc_dke_yp;
+%
 if strcmp(model,'DFT') %exact calculation of g from DFT results
     %
     gammaE = 0.5772156649;%Euler-Mascheroni constant
     %
-    [~,~,~,~,~,~,~,~,~,alpha,~,~,~,~,~,a0] = pc_dke_yp;
     %
     I1 = ones(length(p(:)),1)*dft.I1;
     I2 = ones(length(p(:)),1)*dft.I2;
@@ -52,6 +59,62 @@ if strcmp(model,'DFT') %exact calculation of g from DFT results
     pp = p(:)*ones(size(dft.I1));
     %
     g = Z2mZ02.*(log(2*pp/alpha) - 1 + gammaE) + 2*Z.*N.*I1 + N.^2.*(0.5 - I2);
+    %
+elseif strfind(model,'salvat')
+    %
+    if isfield(dft,'salvat') & isfield(dft.salvat,'gaussian') % Salvat up to 3 exponentials modeling
+        %
+        if str2num(model(end)) >= 1 && str2num(model(end)) <= 3 
+            %
+            salvat = dft.salvat.gaussian{str2num(model(end))};
+            %
+        else
+            %
+            error('Wrong type of model. For ''salvat model'', it should be ''salvat1'', ''salvat2'', ''salvat2''')
+            %
+        end
+        %
+        a = 2./salvat.alpha/alpha;
+        a(isinf(a)) = 0;
+        %
+        for ii = 1:size(a,2)
+            %
+            y{ii} = ((p(:)*ones(1,size(a,1))).*(ones(length(p(:)),1)*a(:,ii)')).^2;
+            A{ii} = ones(length(p),size(salvat.A,1)).*(ones(length(p(:)),1)*salvat.A(:,ii)');
+            %
+        end
+        %
+        g = zeros(length(p),size(a,1));
+        %
+        for ii = 1:size(a,2)
+            %
+            g = g + Z*(Z - Z0).*A{ii}.*log(1 + y{ii}) - (Z - Z0).^2.*A{ii}.^2.*(y{ii}./(1 + y{ii}) + log(1 + y{ii}))./2;
+            %
+            for jj = ii+1:size(a,2)
+                %
+                gtilde1 = (y{ii} + y{jj})./(y{jj} - y{ii}).*log(abs((1 + y{jj})./(1 + y{ii})))/2;
+                gtilde2 = log(abs(1 + y{ii} + y{jj} + y{ii}.*y{jj}))/4;
+                gtilde3 = (y{ii} + y{jj})./(abs(y{ii} - y{jj})).*log(abs((2*y{ii}.*y{jj} + (y{ii} + y{jj}) - abs(y{ii} - y{jj}))./(2*y{ii}.*y{jj} + (y{ii} + y{jj}) + abs(y{ii} - y{jj}))))/4;
+                gtilde4 = (y{ii} + y{jj})./(abs(y{ii} - y{jj})).*log(abs(((y{ii} + y{jj}) - abs(y{ii} - y{jj}))./((y{ii} + y{jj}) - abs(y{ii} + y{jj}))))/4;
+                %
+                gtilde1(isinf(gtilde1)) = 0;
+                gtilde3(isinf(gtilde3)) = 0;
+                gtilde4(isinf(gtilde4)) = 0;
+                gtilde1(isnan(gtilde1)) = 0;
+                gtilde3(isnan(gtilde3)) = 0;
+                gtilde4(isnan(gtilde4)) = 0;
+                %
+                g = g + 2*(Z - Z0).^2.*A{ii}.*A{jj}.*(-gtilde1 - gtilde2 + gtilde3 - gtilde4);
+                %
+            end
+            %
+        end
+        %
+    else
+        %
+        error(['dft.salvat.gaussian is not existing. Check the dft structure and generate the substructure with test_salvat.m script.'])
+        %
+    end
     %
 else %approximate calculation of g (Thomas-Fermi-Kirillov or Tseng-Pratt + different characteristics lengths)
     %
