@@ -8,13 +8,14 @@ close all
 clear all
 clc
 %
-print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
+print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
 %
 Z = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%Atomic number (If multiple Z values, dft change only, no display)
-Z = [4];%change dft subfield salvat, and display results
+Z = [74];%change dft substructure field salvat, and display results
+Z0 = [40];%partially ionized atom for display
 %
 atomic_models = [0];%[0 -> Gaussian DFT,1 -> Thomas-Fermi]
-units = 'MeV/c';%'mec' or 'MeV/c' for the form factor
+units = 'mec';%'mec' or 'MeV/c' for the form factor
 %
 if strcmp(units,'mec')
     %
@@ -28,6 +29,8 @@ elseif strcmp(units,'MeV/c')
     %
 end
 %
+[~,~,~,~,~,~,re,mc2,~,alpha] = pc_dke_yp;%Physics constant
+%
 for iZ = 1:length(Z)
     %
     filename = ['DFT/dft_',int2str(Z(iZ)),'_',elements('atomic_number', Z(iZ), 'symbol'),'_',elements('atomic_number', Z(iZ), 'name'),'.mat'];
@@ -38,9 +41,10 @@ for iZ = 1:length(Z)
         %
         if isfield(dft,'salvat')
             %
-            disp(['WARNING : a salvat substructure already exists in the dft structure for ',elements('atomic_number', Z(iZ), 'name'),', ',elements('atomic_number', Z(iZ), 'symbol'),' (Z = ',int2str(Z(iZ)),').'])
-            flag_salvat = 1;
             dft = rmfield(dft,'salvat');
+            disp(['WARNING : a ''salvat'' substructure already exists in the ''dft'' structure for ',elements('atomic_number', Z(iZ), 'name'),', ',elements('atomic_number', Z(iZ), 'symbol'),' (Z = ',int2str(Z(iZ)),').'])
+            %
+            flag_salvat = 1;
             %
         else
             %
@@ -53,6 +57,8 @@ for iZ = 1:length(Z)
         if length(Z) > 1
             %
             save(filename,'dft');
+            disp(['---> the ''salvat'' substructure in the ''dft'' structure for ',elements('atomic_number', Z(iZ), 'name'),', ',elements('atomic_number', Z(iZ), 'symbol'),' (Z = ',int2str(Z(iZ)),') has been updated and saved.'])
+
             %
         else
             %
@@ -105,6 +111,15 @@ for iZ = 1:length(Z)
             lambda2 = beta2*Z^(1/3)/0.885;
             lambda3 = beta3*Z^(1/3)/0.885;
             %
+            a_mol1_bar = 2/lambda1/alpha;
+            a_mol2_bar = 2/lambda2/alpha;
+            a_mol3_bar = 2/lambda3/alpha;
+            %
+            nq = 1000;
+            q = logspace(-4,1,nq);%normalized momentum
+            %
+            ff_mol = A1*formfactor_yp(a_mol1_bar,q,Z,2) + A2*formfactor_yp(a_mol2_bar,q,Z,2) + A3*formfactor_yp(a_mol3_bar,q,Z,2);
+            %
             xdens_thomas_fermi_moliere_4pir = Z*(A1*lambda1*lambda1*exp(-lambda1.*dft.r) + A2*lambda2*lambda2*exp(-lambda2.*dft.r) + A3*lambda3*lambda3*exp(-lambda3.*dft.r));
             xdens_thomas_fermi_moliere = xdens_thomas_fermi_moliere_4pir./dft.r/4/pi;
             xdens_thomas_fermi_moliere(1) = xdens_thomas_fermi_moliere(2);%avoid Inf value
@@ -113,10 +128,10 @@ for iZ = 1:length(Z)
             imodel = 1;%Gaussian
             %
             leg = {'DHFS (Gaussian code)',...
-                ['Salvat et al. (1 exp), [\chi^2/N = ',num2str(dft.salvat.(models{imodel}){1}.neR2(i)),']'],...
-                ['Salvat et al. (2 exp), [\chi^2/N = ',num2str(dft.salvat.(models{imodel}){2}.neR2(i)),']'],...
-                ['Salvat et al. (3 exp), [\chi^2/N = ',num2str(dft.salvat.(models{imodel}){3}.neR2(i)),']'],...
-                ['Moliere (Thomas-Fermi), [\chi^2/N = ',num2str(neR2_thomas_fermi_moliere),']']};
+                ['Salvat et al. (1 exp. max)'],...
+                ['Salvat et al. (2 exp. max)'],...
+                ['Salvat et al. (3 exp. max)'],...
+                ['Moliere (Thomas-Fermi)']};
             %
             tit1 = ['Density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),'), Salvat-Moliere DHFS (Gaussian)'];
             tit2 = ['Lineic density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),'), Salvat-Moliere DHFS (Gaussian)'];
@@ -146,26 +161,27 @@ for iZ = 1:length(Z)
             ylab = 'Atomic form factor';
             siz = 20+14i;
             %
-            leg = {'DHFS (Gaussian code)',['Salvat et al. (1 exp)'],['Salvat et al. (2 exp)'],['Salvat et al. (3 exp)']};
+            leg = {'DHFS (Gaussian code)',['Salvat et al. (1 exp. max)'],['Salvat et al. (2 exp. max)'],['Salvat et al. (3 exp. max)'],'Moliere''s model'};
             %
             graph1D_jd(q/unitfactor,ff_dhfs(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);
             graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
             graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
             graph1D_jd(q/unitfactor,ff_sal{3}(i,:),1,0,xlabff,ylab,tit3,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca);
+            graph1D_jd(q/unitfactor,ff_mol,1,0,xlabff,ylab,tit3,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca);
             xlim([1e-4,10])
             ylim([0,dft.N(i)])
             %
             drawnow
-            print_jd(print_opt,['Atomicformfactor_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
+            print_jd(print_opt,['Atomicformfactor_MoliereSalvatGaussian_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
             %
-            i = dft.Z;%partially ionized atom 
+            i = Z0+1;%partially ionized atom 
             %
             imodel = 1;%Gaussian
             %
             leg = {'DHFS (Gaussian code)',...
-                ['Salvat et al. (1 exp), [\chi^2/N = ',num2str(dft.salvat.(models{imodel}){1}.neR2(i)),']'],...
-                ['Salvat et al. (2 exp), [\chi^2/N = ',num2str(dft.salvat.(models{imodel}){2}.neR2(i)),']'],...
-                ['Salvat et al. (3 exp), [\chi^2/N = ',num2str(dft.salvat.(models{imodel}){3}.neR2(i)),']']};
+                ['Salvat et al. (1 exp. max)'],...
+                ['Salvat et al. (2 exp. max)'],...
+                ['Salvat et al. (3 exp. max)']};
             %
             tit1 = ['Density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{0,s} = ',int2str(dft.Z0(i)),'), Salvat-Moliere DHFS (Gaussian)'];
             tit2 = ['Lineic density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{0,s} = ',int2str(dft.Z0(i)),'), Salvat-Moliere DHFS (Gaussian)'];
@@ -211,7 +227,7 @@ for iZ = 1:length(Z)
             xlab3 = 'Z_{0,s}/Z_s';
             ylab3 = '\lambda^2_{Z_{0,s}}/\lambda^2_{0,s}';
             tit3 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z = ',int2str(dft.Z),')'];
-            leg3 = {'DHFS-Salvat (Gaussian code) (1 exp.)','Kirillov et al. model (1975)','Avdonina - Pratt model (1989)','Avdonina - Pratt - Peysson model (2019)'};
+            leg3 = {'DHFS-Salvat (Gaussian code) (1 exp. max)','Kirillov et al. model (1975)','Avdonina - Pratt model (1989)','Avdonina - Pratt - Peysson model (2019)'};
             %
             graph1D_jd((dft.Z-dft.salvat.(models{imodel}){1}.Nfit')/dft.Z,(dft.salvat.(models{imodel}){1}.alpha./dft.salvat.(models{imodel}){1}.alpha(1,:)).^2,0,1,xlab3,ylab3,tit3,'','','','none',marker{1},linecolor{1},2,siz,gca);hold on
             graph1D_jd(x,y_kir,0,1,xlab3,ylab3,tit3,'','','',linestyle{2},'none',linecolor{2},2,siz,gca);hold on
@@ -226,7 +242,7 @@ for iZ = 1:length(Z)
             ylab = 'Atomic form factor';
             siz = 20+14i;
             %
-            leg = {'DHFS (Gaussian code)',['Salvat et al. (1 exp)'],['Salvat et al. (2 exp)'],['Salvat et al. (3 exp)']};
+            leg = {'DHFS (Gaussian code)',['Salvat et al. (1 exp. max)'],['Salvat et al. (2 exp. max)'],['Salvat et al. (3 exp. max)']};
             %
             graph1D_jd(q/unitfactor,ff_dhfs(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);
             graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
@@ -236,7 +252,7 @@ for iZ = 1:length(Z)
             ylim([0,dft.N(i)])
             %
             drawnow
-            print_jd(print_opt,['Atomicformfactor_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
+            print_jd(print_opt,['Atomicformfactor_MoliereSalvatGaussian_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
             %
             disp('-----------------------------------------------------------------------------------')
             disp('-----------------------------------------------------------------------------------')
