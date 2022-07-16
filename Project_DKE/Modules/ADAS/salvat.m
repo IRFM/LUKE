@@ -86,7 +86,19 @@ for jj = 1:length(model)
             dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.r = r;%radius (Thomas-Fermi model)
             %
         end
-        %    
+        %
+        if imodel == 0
+            %
+            dft.salvat.(lower(dft.code.codetype)){kk}.A = zeros(dft.Z,kk);
+            dft.salvat.(lower(dft.code.codetype)){kk}.alpha = zeros(dft.Z,kk);
+            %
+        else
+            %
+            dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.A = zeros(dft.Z,kk);
+            dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.alpha = zeros(dft.Z,kk);
+            %
+        end   
+        %
         for i = 1:dft.Z
             %
             x = root_salvat(R(i,:));
@@ -95,11 +107,11 @@ for jj = 1:length(model)
             %
             if imodel == 0
                 %
-                dft.salvat.(lower(dft.code.codetype)){kk}.maxnum_exp = maxnumexp;
+                dft.salvat.(lower(dft.code.codetype)){kk}.maxnum_exp = kk;
                 %
             else
                 %   
-                dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.maxnum_exp = maxnumexp;
+                dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.maxnum_exp = kk;
                 %
             end
             %
