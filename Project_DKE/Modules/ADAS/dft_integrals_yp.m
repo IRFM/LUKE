@@ -19,12 +19,16 @@ function [a_DFT,out] = dft_integrals_yp(rn,dens,Z,N,Z0,model)
 %
 %   By Y. Peysson CEA-IRFM <yves.peysson@cea.fr>, A. Jardin IJF/PAN <axel.jardin@ifj.edu.pl>, Krzysztof Krol IFJ/PAN <krzysztof.krol@ifj.edu.pl>
 %
-if nargin < 5,
+if nargin < 5
+    %
     error('Not enough input arguments in dft_integrals_yp');
+    %
 end
 %
-if nargin < 6,
+if nargin < 6
+    %
     model = 'Thomas-Fermi';
+    %
 end
 %
 [~,~,~,~,~,~,~,~,~,alpha,~,~] = pc_dke_yp;%Universal physics constants
@@ -40,7 +44,9 @@ out.N = 4*pi*trapz_dke_yp([rn,dens.*rn.^2]);%Should be equal to N
 err_N = abs(out.N - N)/N;
 %
 if err_N > 0.05
+    %
     disp(['WARNING: Numerical accuracy becomes poor for the number of bounded N electrons: ',num2str(out.N),' for ',num2str(N),'.']);
+    %
 end
 %
 if rn(1) == 0, rn(1) = eps;end
@@ -60,9 +66,13 @@ for is = 1:length(rn)
     kernel_t = (s.^2 - t.^2).*(s.^2.*log(s) - t.^2.*log(t)).*dens_p.*dens_m;
     %
     if length(kernel_t) ==  1
+        %
         kernel_s(is) = 0;
+        %
     else
+        %
         kernel_s(is) = simps(t(:),kernel_t(:));
+        %
     end
     %
 end
