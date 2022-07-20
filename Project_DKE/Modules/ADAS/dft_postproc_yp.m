@@ -17,26 +17,36 @@ function dft = dft_postproc_yp(Z_in,enforce,display,print_opt)
 %   By Y. Peysson CEA-IRFM <yves.peysson@cea.fr>, A. Jardin IJF/PAN <axel.jardin@ifj.edu.pl>, Krzysztof Krol IFJ/PAN <krzysztof.krol@ifj.edu.pl>
 %
 if nargin < 1
+    %
     error('Error : wrong number of input arguments in dft_postproc_yp.m');
+    %
 end
 %
 if nargin < 2
+    %
     enforce = 0; 
-    display = 0; %no display
-    print_opt = 2; %no saving/printing
+    display = 1; %no display
+    print_opt = -1; %no saving/printing
+    %
 end
 %
 if nargin < 3
+    %
     display = 0; %no display
-    print_opt = 2; %no saving/printing
+    print_opt = -1; %no saving/printing
+    %
 end
 %
 if nargin < 4
-    print_opt = 2; %no saving/printing
+    %
+    print_opt = -1; %no saving/printing
+    %
 end
 %
 if display > 0
+    %
     close all
+    %
 end
 %
 symbol = elements('atomic_number',Z_in, 'symbol');
@@ -97,6 +107,14 @@ if ~isfield(dft,'I1') || enforce == 1
     %
     [~,~,~,~,~,~,~,~,~,alpha,~,~] = pc_dke_yp;%Universal physics constants
     %
+    if enforce == 1
+        %
+        dft = rmfield(dft,'q');
+        dft = rmfield(dft,'ff_DFT');
+        %
+
+    end
+    %
     for i = 1:length(dft.Z0)
         %
         N_dft = 4*pi*simps(dft.r,dft.ne(:,i).*dft.r.*dft.r);
@@ -109,10 +127,10 @@ if ~isfield(dft,'I1') || enforce == 1
         dft.I1(i) = out.I1;
         dft.I2(i) = out.I2;
         %
-        dft.a_TF_DFT(i) = out.a_TF_DFT;%Thomas-Fermi-Kirillov
-        dft.a_TP_DFT(i) = out.a_TP_DFT;%Tseng-Pratt-Botto
+        dft.a_TF_DFT(i) = out.a_TF_DFT;%Thomas-Fermi-Kirillov (from Hesslow integrals)
+        dft.a_TP_DFT(i) = out.a_TP_DFT;%Tseng-Pratt-Botto (from Hesslow integrals)
         %
-        [q,ff_DFT] = form_factor_yp(dft.r,dft.ne(:,i),dft.Z,dft.N(i));%exact forma factor
+        [q,ff_DFT] = formfactornum_yp(dft.r,dft.ne(:,i));%exact form factor
         %
         ff_DFT = ff_DFT*N_exact/max(ff_DFT);% normalization to the total charge
         %
@@ -125,11 +143,11 @@ if ~isfield(dft,'I1') || enforce == 1
         norm_ff_TF = @(a) norm(ff_DFT(:) - fun_ff_TF(a,q));% Thomas-Fermi-Kirillov
         norm_ff_TP = @(a) norm(ff_DFT(:) - fun_ff_TP(a,q));% Tseng-Pratt
         %
-        dft.a_optim_TF(i) = 2*fminsearch(norm_ff_TF, alpha*dft.a_TF_DFT(i)/2)/alpha;
-        dft.a_optim_TP(i) = 2*fminsearch(norm_ff_TP, alpha*dft.a_TP_DFT(i)/2)/alpha;
+        dft.a_optim_TF(i) = fminsearch(norm_ff_TF, dft.a_TF_DFT(i));
+        dft.a_optim_TP(i) = fminsearch(norm_ff_TP, dft.a_TP_DFT(i));
         %
-        ff_optim_TF = fun_ff_TF(alpha*dft.a_optim_TF(i)/2,q);
-        ff_optim_TP = fun_ff_TP(alpha*dft.a_optim_TP(i)/2,q);
+        ff_optim_TF = fun_ff_TF(dft.a_optim_TF(i),q);
+        ff_optim_TP = fun_ff_TP(dft.a_optim_TP(i),q);
         %
         dft.chi2_optim_TF(i) = sum((ff_optim_TF(:) - ff_DFT(:)).^2)/length(q)./(dft.N(i))^2; 
         dft.chi2_optim_TP(i) = sum((ff_optim_TP(:) - ff_DFT(:)).^2)/length(q)./(dft.N(i))^2; 
@@ -217,9 +235,9 @@ leg = {};
 %
 figure('Name',['Normalized ion radius (DFT, Thomas-Fermi) for Z = ',int2str(dft.Z)]);
 %
-leg = [leg,'DFT-TF (Thomas-Fermi-Kirillov)'];
+leg = [leg,'DFT-TF (Hesslow integrals, Thomas-Fermi-Kirillov form factor)'];
 graph1D_jd(dft.Z0,dft.a_TF_DFT,0,0,xlab,ylab,tit,leg,'','','none',marker{1},linecolor{1},2,siz,gca); 
-leg = [leg,'DFT fit (Thomas-Fermi-Kirillov)'];
+leg = [leg,'DHFS fit (Thomas-Fermi-Kirillov form factor)'];
 graph1D_jd(dft.Z0,dft.a_optim_TF,0,0,xlab,ylab,tit,leg,'','',linestyle{1},'none',linecolor{1},2,siz,gca); 
 iref = find(ismember(dft.models,{'Thomas-Fermi-Kirillov'})==1);
 leg = [leg,'Thomas-Fermi-Kirillov'];
@@ -233,9 +251,9 @@ figure('Name',['Normalized ion radius (DFT, Tseng-Pratt) for Z = ',int2str(dft.Z
 leg = {};
 tit = ['Normalized ion radius (DFT, Tseng-Pratt) for Z = ',int2str(dft.Z)];
 %
-leg = [leg,'DFT-TP (Tseng-Pratt)'];
+leg = [leg,'DFT-TP (Hesslow integrals, Tseng-Pratt form factor)'];
 graph1D_jd(dft.Z0,dft.a_TP_DFT,0,0,xlab,ylab,tit,leg,'','','none',marker{1},linecolor{1},2,siz,gca); 
-leg = [leg,'DFT fit (Tseng-Pratt)'];
+leg = [leg,'DHFS fit (Tseng-Pratt form factor)'];
 graph1D_jd(dft.Z0,dft.a_optim_TP,0,0,xlab,ylab,tit,leg,'','',linestyle{1},'none',linecolor{1},2,siz,gca); 
 iref = find(ismember(dft.models,{'Tseng-Pratt-Botto'})==1);
 leg = [leg,'Tseng-Pratt-Botto'];
