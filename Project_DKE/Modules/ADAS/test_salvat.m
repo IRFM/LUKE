@@ -11,8 +11,8 @@ clc
 print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
 %
 Z = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%Atomic number (If multiple Z values, dft change only, no display)
-Z = [74];%change dft substructure field salvat, and display results
-Z0 = [40];%partially ionized atom for display
+Z = [18];%change dft substructure field salvat, and display results
+Z0 = [0];%partially ionized atom for display
 %
 atomic_models = [0];%[0 -> Gaussian DFT,1 -> Thomas-Fermi]
 units = 'mec';%'mec' or 'MeV/c' for the form factor
