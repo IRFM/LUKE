@@ -48,7 +48,7 @@ Z2mZ02 = (Z^2 - Z0.^2);
 %
 [~,~,~,~,~,~,~,~,~,alpha,~,~,~,~,~,a0] = pc_dke_yp;
 %
-if strcmp(model,'DFT') %exact calculation of g from DFT results
+if strcmp(model,'DFT') %exact calculation of g from DFT results of the DHFS model
     %
     gammaE = 0.5772156649;%Euler-Mascheroni constant
     %
@@ -86,25 +86,35 @@ elseif strfind(model,'salvat')
         %
         g = zeros(length(p),size(a,1));
         %
+        index0 = [1:size(a,2)];
+        %
         for ii = 1:size(a,2)
             %
             g = g + Z*(Z - Z0).*A{ii}.*log(1 + y{ii}) - (Z - Z0).^2.*A{ii}.^2.*(y{ii}./(1 + y{ii}) + log(1 + y{ii}))./2;
             %
-            for jj = ii+1:size(a,2)
+            if length(index0) > 1
                 %
-                gtilde1 = (y{ii} + y{jj})./(y{jj} - y{ii}).*log(abs((1 + y{jj})./(1 + y{ii})))/2;
-                gtilde2 = log(abs(1 + y{ii} + y{jj} + y{ii}.*y{jj}))/4;
-                gtilde3 = (y{ii} + y{jj})./(abs(y{ii} - y{jj})).*log(abs((2*y{ii}.*y{jj} + (y{ii} + y{jj}) - abs(y{ii} - y{jj}))./(2*y{ii}.*y{jj} + (y{ii} + y{jj}) + abs(y{ii} - y{jj}))))/4;
-                gtilde4 = (y{ii} + y{jj})./(abs(y{ii} - y{jj})).*log(abs(((y{ii} + y{jj}) - abs(y{ii} - y{jj}))./((y{ii} + y{jj}) - abs(y{ii} + y{jj}))))/4;
+                g1 = zeros(length(p),size(a,1));
                 %
-                gtilde1(isinf(gtilde1)) = 0;
-                gtilde3(isinf(gtilde3)) = 0;
-                gtilde4(isinf(gtilde4)) = 0;
-                gtilde1(isnan(gtilde1)) = 0;
-                gtilde3(isnan(gtilde3)) = 0;
-                gtilde4(isnan(gtilde4)) = 0;
+                index1 = index0(index0~=ii);
                 %
-                g = g + 2*(Z - Z0).^2.*A{ii}.*A{jj}.*(-gtilde1 - gtilde2 + gtilde3 - gtilde4);
+                for jj = index1
+                    %
+                    gtilde1 = (y{ii} + y{jj})./(y{jj} - y{ii}).*log(abs((1 + y{jj})./(1 + y{ii})))/2;
+                    gtilde2 = log(abs(1 + y{ii} + y{jj} + y{ii}.*y{jj}))/4;
+                    gtilde3 = (y{ii} + y{jj})./(abs(y{ii} - y{jj})).*log(abs((2*y{ii}.*y{jj} + (y{ii} + y{jj}) - abs(y{ii} - y{jj}))./(2*y{ii}.*y{jj} + (y{ii} + y{jj}) + abs(y{ii} - y{jj}))))/4;
+                    gtilde4 = (y{ii} + y{jj})./(abs(y{ii} - y{jj})).*log(abs(((y{ii} + y{jj}) - abs(y{ii} - y{jj}))./((y{ii} + y{jj}) + abs(y{ii} - y{jj}))))/4;
+                    %
+                    gtilde1(isinf(gtilde1)) = 0;
+                    gtilde3(isinf(gtilde3)) = 0;
+                    gtilde4(isinf(gtilde4)) = 0;
+                    gtilde1(isnan(gtilde1)) = 0;
+                    gtilde3(isnan(gtilde3)) = 0;
+                    gtilde4(isnan(gtilde4)) = 0;
+                    %
+                    g = g + (Z - Z0).^2.*A{ii}.*A{jj}.*(-gtilde1 - gtilde2 + gtilde3 - gtilde4);
+                    %
+                end  
                 %
             end
             %
@@ -112,7 +122,7 @@ elseif strfind(model,'salvat')
         %
     else
         %
-        error(['dft.salvat.gaussian is not existing. Check the dft structure and generate the substructure with test_salvat.m script.'])
+        error(['dft.salvat.gaussian subfield is not existing. Check the dft structure and generate the substructure with test_salvat.m script.'])
         %
     end
     %
