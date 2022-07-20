@@ -23,14 +23,14 @@ end
 %
 if nargin < 2
     %
-    display = 0; %no display
-    print_opt = 2; %no saving/printing
+    display = 1; %no display
+    print_opt = -1; %no saving/printing
     %
 end
 %
 if nargin < 3
     %
-    print_opt = 2; %no saving but printing
+    print_opt = -1; %no saving but printing
     %
 end
 %
