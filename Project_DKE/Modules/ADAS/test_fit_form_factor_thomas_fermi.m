@@ -1,12 +1,12 @@
 close all
 clear all 
 %
-print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
+print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
 flag_calcul = 1;%1: calculation is done (even data have been saved), 0: data are reload if they have been saved
 %
 models = {'Thomas-Fermi','Thomas-Fermi-Kirillov'};%'Tseng-Pratt-Botto','Tseng-Pratt-Thomas-Fermi'};%,'Tseng-Pratt-Avdonina-Lamoureux'
-atoms = {'Nickel'};%'Xenon','Copper','Iron','Argon','Neon','Oxygen','Nitrogen','Carbon','Beryllium','Helium'};
-units = 'MeV/c';%'mec' or 'MeV/c'
+atoms = {'Argon'};%'Xenon','Copper','Iron','Argon','Neon','Oxygen','Nitrogen','Carbon','Beryllium','Helium'};
+units = 'mec';%'mec' or 'MeV/c'
 %
 [~,~,~,~,~,~,~,~,~,alpha,~,~,~,~,~,a0] = pc_dke_yp;
 %
