@@ -12,7 +12,7 @@ flag_calcul = 1;%1: calculation is enforced (even data have been saved), 0: data
 %
 %atoms = {'Tungsten','Xenon','Copper','Iron','Argon','Neon','Oxygen','Nitrogen','Carbon','Beryllium','Helium'};
 %models = {'Tseng-Pratt-Botto','Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Avdonina-Lamoureux','Tseng-Pratt-Botto','Tseng-Pratt-Thomas-Fermi','Full-screening'};
-atoms = {'Tungsten','Argon','Neon'};
+atoms = {'Argon'};
 models = {'Tseng-Pratt-Botto','Thomas-Fermi'};
 %
 if exist('data_ionradius.mat') && ~flag_calcul
