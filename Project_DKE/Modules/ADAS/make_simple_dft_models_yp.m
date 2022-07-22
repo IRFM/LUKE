@@ -1,4 +1,4 @@
-function dft = make_simple_dft_yp(Z_in,display,print_opt)
+function dft = make_simple_dft_models_yp(Z_in,display,print_opt)
 %
 % Build DFT structure from simple models only DFT calculation post-processing. Reorganize the structure to make fields
 % clear, and add necessary coefficients for further calculations (Fokker-Planck or bremsstrahlung)
