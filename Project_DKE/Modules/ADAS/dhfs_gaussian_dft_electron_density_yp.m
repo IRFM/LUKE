@@ -1,10 +1,9 @@
-function dft = dft_electron_density_yp(Z_in,Z0_in,code,remote,cancel)
+function dft = dhfs_gausian_dft_electron_density_yp(Z_in,Z0_in,code,remote,cancel)
 %
 %   Calculation script of the atomic electron density for all ionization states of an
 %   atom with atomic number Z. To be used with DFT programs to calculate the
-%   atomic electron density like GAUSSIAN, EXCITING or GAMESS. Matlab is
-%   supposed to be installed on the computer on which the DFT codes are
-%   running. 
+%   atomic electron density like GAUSSIAN, GRASP, EXCITING or GAMESS. Matlab is
+%   supposed to be installed on the computer on which the DFT codes are done. 
 %
 %   INPUTS:
 %
