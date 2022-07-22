@@ -1,6 +1,6 @@
 %
-% Build atomic electron density from DFT calculations and test form factor
-% and g screening function with simple models 
+% Build atomic electron density from resolution of the relativistic Dirac-Hartree-Fock-Slater equation and test form factor
+% and g screening function with simple models. Use Gaussian atomic code. 
 %
 % WARNING : the csh shell environment must be installed for Gaussian code
 %
