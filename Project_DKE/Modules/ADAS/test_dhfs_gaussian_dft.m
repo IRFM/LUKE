@@ -85,7 +85,7 @@ for iZ = 1:length(Z)
         remote.remotedir = ['/home/',id{ik},'/dft_shell_scripts_',code.codetype,'_',int2str(Z(iZ))];
         remote.mode = mode;
         %
-        dft = dft_electron_density_yp(Z(iZ),Z0,code,remote,cancel);%remote calculation
+        dft = dhfs_gaussian_dft_electron_density_yp(Z(iZ),Z0,code,remote,cancel);%remote calculation
         %
         if isfield(dft,'datesave')
             %
