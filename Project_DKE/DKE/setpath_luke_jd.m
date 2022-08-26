@@ -110,6 +110,29 @@ end
 %
 % Path for LUKE and Modules
 %
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Test_functions']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Test_functions/Ampere_law']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Test_functions/Circular_equilibrium']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Test_functions/Comparison_luke_ludwig']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Test_functions/Current_profiles']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Test_functions/Matching radius']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Test_functions/Plot_functions']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Test_functions/StaticEquilibrium']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Amplitudes']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Amplitudes/Boundary_conditions']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Amplitudes/Definitions']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Amplitudes/Definitions/Amplitudes']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Amplitudes/Definitions/Derivatives']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Circular_analytical_case']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Coordinates']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Definitions']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Input_profiles']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Magnetic_Field']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Make_equil']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Matching_radius']);
+addpath([luke_root,'Project_DKE/Modules/SANATOKE/Core_functions/Plasma_boundary']);
+%
 addpath([luke_root,'Project_DKE/Modules/MHDK']);
 addpath([luke_root,'Project_DKE/Modules/FEB/Response']);
 addpath([luke_root,'Project_DKE/Modules/FEB/Pile-up']);
