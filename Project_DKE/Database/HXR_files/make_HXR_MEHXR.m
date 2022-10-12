@@ -50,10 +50,5 @@ hxrspec.pur_hxr = zeros(1,nv);% pile-up rejection (0: off, 1:on) [1,m]
 %
 hxrspec.chordstatus_hxr = ones(1,nv);% state of the line-of-sight [1,m]
 %
-hxrspec.kmin = 20;% standard minimum value for Tph calculation (LH : 50; EC : 35)
-hxrspec.kmax = 30;% standard maximum value for Tph calculation (LH : 110; EC : 75)
-hxrspec.kphot = [10:5:200];%Photon energy in keV
-hxrspec.kfit = [12:1:30];%Lower cutoff energy in keV
-%
 eval(['save HXR_',hxr_id,'.mat hxrspec']);
 %

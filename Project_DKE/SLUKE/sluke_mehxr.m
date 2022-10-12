@@ -202,6 +202,16 @@ function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
                 %
                 load(sparams.diags.MEHXR.hxrspec.file{ii},'hxrspec');
                 %
+                hxrspec2 = sluke_params_value(sparams.diags.MEHXR.hxrspec,ii);
+                %
+                f = fieldnames(hxrspec2);
+                %
+                for i = 1:length(f)
+                   %
+                   hxrspec.(f{i}) = hxrspec2.(f{i});
+                   %
+                end
+                %
             else
                 %
                 cprintf([1,0.5,0],['WARNING : file ',sparams.diags.MEHXR.hxrspec.file{ii},' that contains technical specifications is not found. Synthetic diagnostic calculations for MEHXR are cancelled.']);disp(' ')
@@ -305,10 +315,6 @@ function [hxrparam] = sluke_MEHXR_hxrparam(sparams,simul_id,ii,hxrspec)
         elseif isfield(sparams.diags.MEHXR.R5X2,'hxrparam') && isfield(sparams.diags.MEHXR.R5X2.hxrparam,'source') && strcmp(sparams.diags.MEHXR.R5X2.hxrparam.source{ii},'value')
             %
             hxrparam = sluke_params_value(sparams.diags.MEHXR.R5X2.hxrparam,ii);
-            %
-            hxrparam.kphot = hxrspec.kphot;
-            hxrparam.kmin = hxrspec.kmin;
-            hxrparam.kmax = hxrspec.kmax;
             %
         else
             %
