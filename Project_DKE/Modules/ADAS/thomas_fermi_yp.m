@@ -20,7 +20,7 @@ function [phi,phi1a,phi1b,phi2,phi3,x] = thomas_fermi_yp
 %
 if nargin == 0
     %
-    xmax = 6;
+    xmax = 20;
     %
 end
 %
@@ -33,9 +33,8 @@ x = linspace(0.1,xmax,nr);
 [s0,B,err,s,y,exitflag] = tf_potential_yp(0,xmax);
 phi = y(:,1);
 %
-B = -1.588071;%value matching assympotic expansion (Majorana value for neutral atoms)
-%B = -1.6;%value matching assympotic expansion
-%B = -1.8;%value matching assympotic expansion
+B = -1.588071;%value matching asymptotic expansion (Majorana value for neutral atoms)
+%
 phi1a = 1 + B*x + 4/3*x.^(3/2) ...
     + 2/5*B*x.^(5/2) + (1/3)*x.^3 + ((3/70)*B^2)*x.^(7/2)...
     + ((2/15)*B)*x.^(8/2) + (2/27 + (1/252)*B^3)*x.^(9/2);%...
@@ -67,10 +66,10 @@ d = (sqrt(73)-7)/2;
 c = -3.886;
 phi3 = (1 + (x/a).^d).^c;%Sommerfeld model
 %
-xlab = '\chi_{s}';
-ylab = 'Thomas-Fermi potential \phi';
+xlab = 'Normalized distance to the nucleus \chi_{s}';
+ylab = 'Normalized Thomas-Fermi potential \phi';
 tit = 'Thomas-Fermi model for neutral atom (q_{0s} = 0)';
-leg = {'Exact numerical solution','Backer (ref. lun83)','Backer (ref. bak30)','Coulson and March','Sommerfeld-Dirac'};
+leg = {'Exact numerical solution','Backer model (S. Lundqvist and N. H. March, 1983)','Backer model (Phys. Rev, 36 (1930) 630)','Coulson and March model (Proc. Phys. Soc. A63 (1950) 630)','Sommerfeld-Dirac (S. Lundqvist and N. H. March, 1983)'};
 siz = 20+14i;
 %
 xlim = [0,max(max(x))];
