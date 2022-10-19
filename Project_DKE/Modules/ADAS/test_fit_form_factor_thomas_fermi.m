@@ -4,7 +4,7 @@ clear all
 print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
 flag_calcul = 1;%1: calculation is done (even data have been saved), 0: data are reload if they have been saved
 %
-models = {'Thomas-Fermi','Thomas-Fermi-Kirillov'};%'Tseng-Pratt-Botto','Tseng-Pratt-Thomas-Fermi'};%,'Tseng-Pratt-Avdonina-Lamoureux'
+models = {'Thomas-Fermi','Thomas-Fermi-Kirillov','Tseng-Pratt-Botto','Tseng-Pratt-Thomas-Fermi'};%,'Tseng-Pratt-Avdonina-Lamoureux'
 atoms = {'Argon'};%'Xenon','Copper','Iron','Argon','Neon','Oxygen','Nitrogen','Carbon','Beryllium','Helium'};
 units = 'mec';%'mec' or 'MeV/c'
 %
@@ -63,7 +63,7 @@ for iatom = 1:length(atoms)
     end
     %
     ylab = 'Atomic form factor';
-    tit = ['Thomas-Fermi form factor for neutral ',atoms{iatom},' (Z = ',int2str(ionradius(iatom,imodel).Z),')'];
+    tit = ['Thomas-Fermi form factor for neutral ',atoms{iatom},' (Z_s = ',int2str(ionradius(iatom,imodel).Z),',Z_{0,s} = 0)'];
     siz = 20+14i;
     figure('Name',['Thomas-Fermi atomic form factor for neutral ',atoms{iatom}])
     %
