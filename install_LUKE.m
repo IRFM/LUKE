@@ -48,7 +48,7 @@ end
 %
 luke_root = [fileparts(which(mfilename)),filesep];% local LUKE version
 %
-% Creates athe LUKE_PATH.mat structure
+% Creates the LUKE_PATH.mat structure
 %
 addpath([luke_root,'Project_DKE/Database/PATH_files']);
 make_path_LOCAL;
