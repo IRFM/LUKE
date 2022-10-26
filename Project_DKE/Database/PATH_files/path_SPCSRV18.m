@@ -160,6 +160,7 @@ dkepath.gervais(1).MUMPS.mex905 = [dkepath.decker(1).local_root,'MUMPS_5.1.2/MAT
 %
 % for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
 %
+% -------------- profiles selection, Mario Gervais ------------
 %
 remote(1).remoteid = 'SPCSRV18';
 remote(1).schedulername = 'direct';
@@ -173,10 +174,25 @@ remote(2).profilename = 'gervais';
 remote(2).luke_root = dkepath.gervais(1).luke_root;% local cluster
 remote(2).link_mode = [];
 %
-% -------------- profiles selection, Mario Gervais ------------
-%
 dkepath.gervais(1).remote(1) = remote(1);
 dkepath.gervais(1).remote(2) = remote(2);
+%
+% -------------- profiles selection, Krzysiek Krol  ------------
+%
+remote(1).remoteid = 'SPCSRV18';
+remote(1).schedulername = 'direct';
+remote(1).profilename = 'kkrol';
+remote(1).luke_root = dkepath.kkrol(1).luke_root;% local cluster
+remote(1).link_mode = [];
+%
+remote(2).remoteid = 'SPCSRV18';
+remote(2).schedulername = 'condor';
+remote(2).profilename = 'kkrol';
+remote(2).luke_root = dkepath.kkrol(1).luke_root;% local cluster
+remote(2).link_mode = [];
+%
+dkepath.kkrol(1).remote(1) = remote(1);
+dkepath.kkrol(1).remote(2) = remote(2);
 %
 
 
