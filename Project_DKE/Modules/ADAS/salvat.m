@@ -1,9 +1,9 @@
-function [dft] = salvat(dft,model)
+function [dft] = salvat(dft,model,kkmax)
 %
-% Calculate the Salvat's coefficients (up to three Yukawa potentials) from
+% Calculate the Salvat's coefficients (up to four Yukawa potentials) from
 % various atomic models using the density averaged constraint. 
 % Data are saved in a substructure dft.salvat.model{i} where i is ranging
-% from 1 to 3 epending of the number of exponentials used for the
+% from 1 to 4 depending of the number of exponentials used for the
 % calculations
 %
 %	Input:
@@ -25,6 +25,11 @@ if nargin == 0
 elseif nargin == 1
     %
     model = 0;%Gaussian
+    kkmax = 4;%max number of exponentials
+    %
+elseif nargin == 2
+    %
+    kkmax = 4;%max number of exponentials
     %
 end
 %
@@ -64,7 +69,7 @@ for jj = 1:length(model)
         %
     end
     %
-    for kk = 1:3
+    for kk = 1:kkmax
         %
         for i = 1:dft.Z
             %
