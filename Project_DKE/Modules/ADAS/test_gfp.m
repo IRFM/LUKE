@@ -3,7 +3,7 @@ clear all
 close all
 clc
 %
-Z = 18;% Atomic number
+Z = 74;% Atomic number
 Z0 = 0;% Ionization state
 %
 print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
@@ -62,9 +62,9 @@ drawnow
 %
 print_jd(print_opt,['gfp_DHFS_salvat_models_',int2str(Z),'_',int2str(Z0)],'./Figs',get(gcf,'Number'))
 %
-leg = {'DHFS (Gaussian code)',...
+leg = {'DFT (Gaussian code)',...
     'Salvat et al. (<=3 exp)',...
-    'Tseng-Pratt-Botto',...
+    'Tseng-Pratt-Botto (Yukawa)',...
     'Thomas-Fermi-Kirillov'};
 %
 tit = ['Normalized g_{FP} function, ',elements('atomic_number', Z, 'name'),', Z_s = ',int2str(Z),', Z_{s0} = ',int2str(Z0)];
