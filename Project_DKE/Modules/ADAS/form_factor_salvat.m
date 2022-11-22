@@ -70,6 +70,19 @@ if isfield(dft,'salvat')
                     %
                     ff_sal{ii}(iZ,:) = A1*formfactor_yp(a_sal1_bar,q,dft.salvat.(code){ii}.Ndft(iZ),2) + A2*formfactor_yp(a_sal2_bar,q,dft.salvat.(code){ii}.Ndft(iZ),2) + A3*formfactor_yp(a_sal3_bar,q,dft.salvat.(code){ii}.Ndft(iZ),2);
                     %
+                elseif ii == 4 
+                    %
+                    A1 = dft.salvat.(code){ii}.A(iZ,1);
+                    a_sal1_bar = 2/dft.salvat.(code){ii}.alpha(iZ,1)/alpha;
+                    A2 = dft.salvat.(code){ii}.A(iZ,2);
+                    a_sal2_bar = 2/dft.salvat.(code){ii}.alpha(iZ,2)/alpha;
+                    A3 = dft.salvat.(code){ii}.A(iZ,3);
+                    a_sal3_bar = 2/dft.salvat.(code){ii}.alpha(iZ,3)/alpha;
+                    A4 = dft.salvat.(code){ii}.A(iZ,4);
+                    a_sal4_bar = 2/dft.salvat.(code){ii}.alpha(iZ,4)/alpha;
+                    %
+                    ff_sal{ii}(iZ,:) = A1*formfactor_yp(a_sal1_bar,q,dft.salvat.(code){ii}.Ndft(iZ),2) + A2*formfactor_yp(a_sal2_bar,q,dft.salvat.(code){ii}.Ndft(iZ),2) + A3*formfactor_yp(a_sal3_bar,q,dft.salvat.(code){ii}.Ndft(iZ),2) + A4*formfactor_yp(a_sal4_bar,q,dft.salvat.(code){ii}.Ndft(iZ),2);
+                    %
                 end
                 %
             end
