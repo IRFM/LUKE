@@ -1,6 +1,6 @@
 %
 % Test Salvat (Moliere) method for any atomic electron density whatever the ionization state. 
-% Modify the initial dft structure and save it. Two examples are considered : Gaussian DHFS and Thomas-Fermi model.
+% Modify the initial dft structure and save it. Two examples are considered : Gaussian DFT and Thomas-Fermi model.
 %
 % by Y.Peysson CEA-DRFC <yves.peysson@cea.fr>
 %
@@ -8,11 +8,13 @@ close all
 clear all
 clc
 %
-print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
+print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
+%
+maxnumberofexponentials = 4;%up to 4
 %
 Z = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%Atomic number (If multiple Z values, dft change only, no display)
-Z = 74;%74;%[18];%change dft substructure field salvat, and display results
-Z0 = 42;%40;%[17];%fully (0) or partially ionized atom for display
+Z = 79;%[18];%change dft substructure field salvat, and display results
+Z0 = 1;%40;%[17];%fully (0) or partially ionized atom for display
 %
 atomic_models = [0];%[0 -> Gaussian DFT,1 -> Thomas-Fermi]
 units = 'mec';%'mec' or 'MeV/c' for the form factor
@@ -52,7 +54,7 @@ for iZ = 1:length(Z)
             %
         end
         %
-        [dft] = salvat(dft,atomic_models);%add results of Salvat method to dft structure for model [0 -> Gaussian DFT,1 -> Thomas-Fermi]
+        [dft] = salvat(dft,atomic_models,maxnumberofexponentials);%add results of Salvat method to dft structure for model [0 -> Gaussian DFT,1 -> Thomas-Fermi]
         %
         if length(Z) > 1
             %
@@ -260,10 +262,22 @@ for iZ = 1:length(Z)
                 %
                 imodel = 1;%Gaussian
                 %
-                leg = {'DFT-Gaussian',...
-                    ['Salvat-DFT-Gaussian (1 exp.)'],...
-                    ['Salvat-DFT-Gaussian (2 exp.)'],...
-                    ['Salvat-DFT-Gaussian (3 exp.)']};
+                if length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
+                    %
+                    leg = {'DFT-Gaussian',...
+                        ['Salvat-DFT-Gaussian (1 exp.)'],...
+                        ['Salvat-DFT-Gaussian (2 exp.)'],...
+                        ['Salvat-DFT-Gaussian (3 exp.)'],...
+                        ['Salvat-DFT-Gaussian (4 exp.)']};
+                    %
+                else
+                    %
+                    leg = {'DFT-Gaussian',...
+                        ['Salvat-DFT-Gaussian (1 exp.)'],...
+                        ['Salvat-DFT-Gaussian (2 exp.)'],...
+                        ['Salvat-DFT-Gaussian (3 exp.)']};
+                    %
+                end
                 %
                 tit7 = ['Density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{0,s} = ',int2str(dft.Z0(i)),'), Salvat-DFT (Gaussian)'];
                 tit8 = ['Lineic density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{0,s} = ',int2str(dft.Z0(i)),'), Salvat-DFT (Gaussian)'];
@@ -273,6 +287,13 @@ for iZ = 1:length(Z)
                 graph1D_jd(dft.salvat.(models{imodel}){1}.r,dft.salvat.(models{imodel}){1}.ne(:,i),0,1,xlab,ylab1,tit7,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
                 graph1D_jd(dft.salvat.(models{imodel}){2}.r,dft.salvat.(models{imodel}){2}.ne(:,i),0,1,xlab,ylab1,tit7,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
                 graph1D_jd(dft.salvat.(models{imodel}){3}.r,dft.salvat.(models{imodel}){3}.ne(:,i),0,1,xlab,ylab1,tit7,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca); 
+                %
+                if length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
+                    %
+                    graph1D_jd(dft.salvat.(models{imodel}){4}.r,dft.salvat.(models{imodel}){4}.ne(:,i),0,1,xlab,ylab1,tit7,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca); 
+                    %
+                end
+                %
                 axis([0,dft.ionradius{1}.r0n(1)/4,1e-4,1e5])
                 drawnow
                 %
@@ -285,7 +306,29 @@ for iZ = 1:length(Z)
                 graph1D_jd(dft.salvat.(models{imodel}){2}.r,4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),0,0,xlab,ylab2,tit8,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
                 graph1D_jd(dft.salvat.(models{imodel}){3}.r,4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),0,0,xlab,ylab2,tit8,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca); 
                 %
-                maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i)]));
+                if length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
+                    %
+                    graph1D_jd(dft.salvat.(models{imodel}){4}.r,4*pi*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.ne(:,i),0,0,xlab,ylab2,tit8,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca); 
+                    %
+                end
+                %
+                if length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
+                    %
+                    maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),...
+                        4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),...
+                        4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),...
+                        4*pi*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.ne(:,i),...
+                        ]));
+                    %
+                else
+                    %
+                    maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),...
+                        4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),...
+                        4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),...
+                        ]));
+                    %
+                end
+                %
                 ylim([0,maxdens]);
                 xlim([0,dft.ionradius{1}.r0n(i)*3])
                 drawnow
@@ -297,11 +340,11 @@ for iZ = 1:length(Z)
             imodel = 1;%Gaussian
             %
             disp('Salvat et al. moments values')
-            disp('-----------------------------------------------------------------------------------')
-            disp('-----------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
             disp('   Z0s_{fit}  checksum     A1     lambda1 lambda1(N_s)/lambda1(0)^2')
-            disp('-----------------------------------------------------------------------------------')
-            disp('-----------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
             %
             disp([dft.Z-dft.salvat.(models{imodel}){kk}.Nfit',dft.salvat.(models{imodel}){kk}.checksum',dft.salvat.(models{imodel}){kk}.A,dft.salvat.(models{imodel}){kk}.alpha,(dft.salvat.(models{imodel}){kk}.alpha./dft.salvat.(models{imodel}){kk}.alpha(1,:)).^2])
             %
@@ -336,8 +379,16 @@ for iZ = 1:length(Z)
             %
             graph1D_jd(q/unitfactor,ff_dhfs(i,:),1,0,xlabff,ylab,tit9,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);
             graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit9,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
-            graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit9,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+            graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit9,'','','',linestyle{3},'none',linecolor{3},2,siz,gca);
             graph1D_jd(q/unitfactor,ff_sal{3}(i,:),1,0,xlabff,ylab,tit9,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca);
+            %
+            if length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
+                %
+                leg = {'DFT-Gaussian',['Salvat-DFT-Gaussian (1 exp.)'],['Salvat-DFT-Gaussian (2 exp.)'],['Salvat-DFT-Gaussian (3 exp.)'],['Salvat-DFT-Gaussian (4 exp.)']};
+                graph1D_jd(q/unitfactor,ff_sal{4}(i,:),1,0,xlabff,ylab,tit9,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca);
+                %
+            end
+            %
             xlim([1e-4,10])
             ylim([0,dft.N(i)])
             %
@@ -345,23 +396,36 @@ for iZ = 1:length(Z)
             %
             print_jd(print_opt,['Atomicformfactor_SalvatGaussian_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
             %
-            disp('-----------------------------------------------------------------------------------')
-            disp('-----------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
             disp('   Z0s_{fit}  checksum      A1       A2     lambda1   lambda2  ')
-            disp('-----------------------------------------------------------------------------------')
-            disp('-----------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
             %
             imodel = 1;%Gaussian
             disp([dft.Z-dft.salvat.(models{imodel}){2}.Nfit',dft.salvat.(models{imodel}){2}.checksum',dft.salvat.(models{imodel}){2}.A,dft.salvat.(models{imodel}){2}.alpha])
             %
-            disp('-----------------------------------------------------------------------------------')
-            disp('-----------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
             disp('   Z0s_{fit}  checksum      A1       A2        A3     lambda1   lambda2   lambda3')
-            disp('-----------------------------------------------------------------------------------')
-            disp('-----------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
+            disp('-------------------------------------------------------------------------------------------------')
             %
             imodel = 1;%Gaussian
             disp([dft.Z-dft.salvat.(models{imodel}){3}.Nfit',dft.salvat.(models{1}){3}.checksum',dft.salvat.(models{1}){3}.A,dft.salvat.(models{1}){3}.alpha])
+            %
+            if length(dft.salvat.(models{imodel})) > 3
+                %
+                disp('-------------------------------------------------------------------------------------------------')
+                disp('-------------------------------------------------------------------------------------------------')
+                disp('   Z0s_{fit}  checksum      A1       A2        A3     A4    lambda1   lambda2   lambda3   lambda4')
+                disp('-------------------------------------------------------------------------------------------------')
+                disp('-------------------------------------------------------------------------------------------------')
+                %
+                imodel = 1;%Gaussian
+                disp([dft.Z-dft.salvat.(models{imodel}){4}.Nfit',dft.salvat.(models{1}){4}.checksum',dft.salvat.(models{1}){4}.A,dft.salvat.(models{1}){4}.alpha])
+                %
+            end
             %
             % Data saving
             %
