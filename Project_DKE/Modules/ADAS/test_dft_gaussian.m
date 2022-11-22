@@ -1,6 +1,5 @@
 %
-% Build atomic electron density by DFT with Gaussian code. Test form factor
-% and g screening function with simple models.
+% Build atomic electron density by DFT with Gaussian code.
 %
 % WARNING : the csh shell environment must be installed for Gaussian code
 %
@@ -12,7 +11,7 @@ clc
 %
 [ip,id] = connections_params('yves');%Create a file in the LUKE path (or local) : id -> hostname, ip: ethernet address. Must be customized according to the machine where calculations are done.
 %
-Z = 78;%Helium (2), Lithium (3), Argon (18), Copper (29), Xenon (54), Tungsten (74), Gold (79)
+Z = 18;%Helium (2), Lithium (3), Argon (18), Copper (29), Xenon (54), Tungsten (74), Gold (79)
 Z0 = [];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
 %
 mode = 0;%(0): the script wait until all calculations are done, (1): the script is terminated while calculations are still running on the remote machine. It must be launched again to check if calculations are terminated. 
@@ -109,6 +108,6 @@ else
     save dft_job_status.mat job_status
     disp(['---> ',int2str(sum(job_status)),'/',int2str(length(job_status)),' jobs are active.'])
     disp('-----------')
-    disp('Relaunch test_gaussian_dft.m script to get back all dft results if done.')
+    disp('Relaunch test_dft_gaussian.m script to get back all dft results if done.')
 end
 %
