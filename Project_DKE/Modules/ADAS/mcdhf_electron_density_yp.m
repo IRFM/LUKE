@@ -343,7 +343,7 @@ function [] = build_write_shell_script(MM,ZZ0,symbol,code,localdir,remotedir)
         Z0 = ZZ0(iZ0);
         M = MM(iZ0);
         %
-        if strcmp(code.codetype,'gaussian')
+        if strcmp(code.codetype,'grasp2018')
             %
             fileID = fopen([localdir,'/',symbol,'_',int2str(Z0),'.sh'],'w');
             %
