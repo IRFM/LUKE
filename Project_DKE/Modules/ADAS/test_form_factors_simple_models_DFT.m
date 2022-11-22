@@ -1,5 +1,5 @@
 %
-%test most appropriate form factor
+%Test form factors for simple models (Thomas-Fermi,Thomas-Fermi-Kirillov,Tseng-Pratt-Botto) against DFT calculations (Gaussian)
 %
 close all
 clear all
@@ -185,7 +185,7 @@ for ii = 1:length(Z0_hesslow)
     %
     figure('Name',['\chi2, Z = ',int2str(Z_hesslow{ii})])
     %       
-    tit = ['Fit accuracy of the exact DFT form factor for Z = ',int2str(Z_hesslow{ii})];
+    tit = ['Fit accuracy of the DFT form factor for Z = ',int2str(Z_hesslow{ii})];
     %
     for jj = 1:length(models)
         %
@@ -239,7 +239,7 @@ while 1
     disp('-------------------------------------------------------------')
     disp(' ')
     %
-    ii = input_dke_yp(['Display exact DFT form factor and fits. Enter ion index [1:52] or 0 exit: '],45,[-1;52],'Warning, the value must be between -1 (quit) and 52');
+    ii = input_dke_yp(['Display DFT form factor and fits. Enter ion index [1:52] or 0 exit: '],45,[-1;52],'Warning, the value must be between -1 (quit) and 52');
     %
     if ii <= 0
         break
@@ -260,7 +260,7 @@ while 1
         %
     end
     %
-    leg = [leg,['Form factor from DHFS, Hesslow et al. (2018), 2*a_s/\alpha [a_0] = ',num2str(aa_hesslow(ii))]];%
+    leg = [leg,['Form factor from DFT, Hesslow et al. (2018), 2*a_s/\alpha [a_0] = ',num2str(aa_hesslow(ii))]];%
     graph1D_jd(q_hat*2,FF_ref{ii},1,0,xlab,ylab,tit,leg,xlim,ylim,linestyle{imodel+1},'none',linecolor{imodel+1},2,siz,gca); 
     %
     drawnow
