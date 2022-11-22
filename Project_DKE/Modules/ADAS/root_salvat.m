@@ -30,7 +30,6 @@ if jmax == 4%four Yukawa potentials
     %
     if real(y(5)) > 0 && real(y(6)) > 0 && real(y(7)) > 0 && real(y(8)) > 0 && imag(y(5)) == 0 && imag(y(6)) == 0 && imag(y(7)) == 0 && imag(y(8)) == 0 
         %
-        disp('4 ok')
         return
         %
     else
