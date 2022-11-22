@@ -1,7 +1,7 @@
 function dft = dft_postproc_yp(Z_in,enforce,display,print_opt)
 %
-% DFT calculation post-processing. Reorganize the structure to make fields
-% clear, and add necessary coefficients for further calculations (Fokker-Planck or bremsstrahlung)
+% DFT calculation post-processing + incorporation of simple atomic models (Thomas-Fermi, Thomas-Fermi-Kirillov, Tseng-Pratt-Botto, etc)
+% Reorganize the structure to make fields clear, and add necessary coefficients for further calculations (Fokker-Planck or bremsstrahlung)
 %
 %   INPUTS:
 %
@@ -15,6 +15,8 @@ function dft = dft_postproc_yp(Z_in,enforce,display,print_opt)
 %       - dft : updated dft structure 
 %
 %   By Y. Peysson CEA-IRFM <yves.peysson@cea.fr>, A. Jardin IJF/PAN <axel.jardin@ifj.edu.pl>, Krzysztof Krol IFJ/PAN <krzysztof.krol@ifj.edu.pl>
+%
+close all
 %
 if nargin < 1
     %
@@ -68,7 +70,22 @@ if exist([filename,'.mat'],'file') % already processed data
 elseif isstruct(dir(fullfile('', filename1))) % for raw Gaussian data
     %
     temp = dir(fullfile('', filename1));
-    load([temp.folder,filesep,temp.name],'dft');
+    %
+    if length(temp) > 1
+        %
+        for i = 1:length(temp)
+            %
+            disp(['   - file #',int2str(i),' : ',temp(i).name])
+            %
+        end
+        %
+        iref = input_dke_yp('Which dft file is chosen ?',1,[1:length(temp)]);
+        load([temp(iref).folder,filesep,temp(iref).name],'dft');
+    else
+        %
+        load([temp(1).folder,filesep,temp(1).name],'dft');
+        %
+    end
     %
 end
 %
