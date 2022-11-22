@@ -109,6 +109,6 @@ else
     save dft_job_status.mat job_status
     disp(['---> ',int2str(sum(job_status)),'/',int2str(length(job_status)),' jobs are active.'])
     disp('-----------')
-    disp('Relaunch test_dft.m script to get back all dft results.')
+    disp('Relaunch test_gaussian_dft.m script to get back all dft results if done.')
 end
 %
