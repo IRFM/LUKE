@@ -13,8 +13,8 @@ print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
 maxnumberofexponentials = 4;%up to 4
 %
 Z = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%Atomic number (If multiple Z values, dft change only, no display)
-Z = 79;%[18];%change dft substructure field salvat, and display results
-Z0 = 1;%40;%[17];%fully (0) or partially ionized atom for display
+Z = 18;%[18];%change dft substructure field salvat, and display results
+Z0 = 0;%40;%[17];%fully (0) or partially ionized atom for display
 %
 atomic_models = [0];%[0 -> Gaussian DFT,1 -> Thomas-Fermi]
 units = 'mec';%'mec' or 'MeV/c' for the form factor
@@ -128,7 +128,7 @@ for iZ = 1:length(Z)
             %
             imodel = 1;%Gaussian
             %
-            leg = {'DFT (Gaussian)',...
+            leg0 = {'DFT (Gaussian)',...
                 ['Salvat-DFT-Gaussian (1 exp.)'],...
                 ['Salvat-DFT-Gaussian (2 exp.)'],...
                 ['Salvat-DFT-Gaussian (3 exp.)'],...
@@ -139,9 +139,16 @@ for iZ = 1:length(Z)
             %
             figure('Name',tit1);
             graph1D_jd(dft.r,dft.ne(:,i),0,1,xlab,ylab1,tit1,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);hold on
-            graph1D_jd(dft.salvat.(models{imodel}){1}.r,dft.salvat.(models{imodel}){1}.ne(:,i),0,1,xlab,ylab1,tit1,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
-            graph1D_jd(dft.salvat.(models{imodel}){2}.r,dft.salvat.(models{imodel}){2}.ne(:,i),0,1,xlab,ylab1,tit1,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
-            graph1D_jd(dft.salvat.(models{imodel}){3}.r,dft.salvat.(models{imodel}){3}.ne(:,i),0,1,xlab,ylab1,tit1,'','','',linestyle{4},'none',linecolor{4},2,siz,gca); 
+            leg = leg0([1,2,5]);
+            graph1D_jd(dft.salvat.(models{imodel}){1}.r,dft.salvat.(models{imodel}){1}.ne(:,i),0,1,xlab,ylab1,tit1,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca); 
+            if maxnumberofexponentials >1
+                leg = leg0([1,2,3,5]);
+                graph1D_jd(dft.salvat.(models{imodel}){2}.r,dft.salvat.(models{imodel}){2}.ne(:,i),0,1,xlab,ylab1,tit1,leg,'','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+            end
+            if maxnumberofexponentials >2
+                leg = leg0([1,2,3,4,5]);
+                graph1D_jd(dft.salvat.(models{imodel}){3}.r,dft.salvat.(models{imodel}){3}.ne(:,i),0,1,xlab,ylab1,tit1,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca); 
+            end
             graph1D_jd(dft.r,xdens_thomas_fermi_moliere,0,1,xlab,ylab1,tit1,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca); 
             axis([0,dft.ionradius{1}.r0n(i),1e-4,1e5])
             drawnow
@@ -150,12 +157,30 @@ for iZ = 1:length(Z)
             %
             figure('Name',tit2);
             graph1D_jd(dft.r,4*pi*dft.r.*dft.r.*dft.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);hold on
+            leg = leg0([1,2,5]);
             graph1D_jd(dft.salvat.(models{imodel}){1}.r,4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
-            graph1D_jd(dft.salvat.(models{imodel}){2}.r,4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
-            graph1D_jd(dft.salvat.(models{imodel}){3}.r,4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{4},'none',linecolor{4},2,siz,gca); 
+            if maxnumberofexponentials >1
+                leg = leg0([1,2,3,5]);
+                graph1D_jd(dft.salvat.(models{imodel}){2}.r,4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+            end
+            if maxnumberofexponentials >2
+                leg = leg0([1,2,3,4,5]);
+                graph1D_jd(dft.salvat.(models{imodel}){3}.r,4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{4},'none',linecolor{4},2,siz,gca); 
+            end
             graph1D_jd(dft.r,4*pi.*dft.r.*dft.r.*xdens_thomas_fermi_moliere,0,0,xlab,ylab2,tit1,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca); 
             %
-            maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i)]));
+            if maxnumberofexponentials == 1
+                maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i)]));
+            elseif maxnumberofexponentials == 2
+                maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i)]));
+            elseif maxnumberofexponentials == 3
+                maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i)]));
+            elseif maxnumberofexponentials == 4
+                maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),4*pi*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.ne(:,i)]));
+            end
+            %
+            maxdens = max(maxdens,max(dft.ne(:,1)*4*pi.*dft.r.*dft.r));
+            %
             ylim([0,maxdens]);
             xlim([0,dft.ionradius{1}.r0n(i)*0.7]);
             drawnow
@@ -167,12 +192,19 @@ for iZ = 1:length(Z)
             ylab = 'Atomic form factor';
             siz = 20+14i;
             %
-            leg = {'DFT-Gaussian',['Salvat-DFT-Gaussian (1 exp.)'],['Salvat-DFT-Gaussian (2 exp.)'],['Salvat-DFT-Gaussian (3 exp.)'],['Moliere-Thomas-Fermi (3 exp.)']};
+            leg0 = {'DFT-Gaussian',['Salvat-DFT-Gaussian (1 exp.)'],['Salvat-DFT-Gaussian (2 exp.)'],['Salvat-DFT-Gaussian (3 exp.)'],['Moliere-Thomas-Fermi (3 exp.)']};
             %
             graph1D_jd(q/unitfactor,ff_dhfs(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);
-            graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
-            graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
-            graph1D_jd(q/unitfactor,ff_sal{3}(i,:),1,0,xlabff,ylab,tit3,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca);
+            leg = leg0([1,2,5]);
+            graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit3,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca); 
+            if maxnumberofexponentials > 1
+                leg = leg0([1,2,3,5]);
+                graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit3,leg,'','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+            end
+            if maxnumberofexponentials > 2
+                leg = leg0([1,2,3,4,5]);
+                graph1D_jd(q/unitfactor,ff_sal{3}(i,:),1,0,xlabff,ylab,tit3,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca);
+            end
             graph1D_jd(q/unitfactor,ff_mol,1,0,xlabff,ylab,tit3,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca);
             xlim([1e-4,10])
             ylim([0,dft.N(i)])
@@ -264,7 +296,7 @@ for iZ = 1:length(Z)
                 %
                 if length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
                     %
-                    leg = {'DFT-Gaussian',...
+                    leg0 = {'DFT-Gaussian',...
                         ['Salvat-DFT-Gaussian (1 exp.)'],...
                         ['Salvat-DFT-Gaussian (2 exp.)'],...
                         ['Salvat-DFT-Gaussian (3 exp.)'],...
@@ -272,7 +304,7 @@ for iZ = 1:length(Z)
                     %
                 else
                     %
-                    leg = {'DFT-Gaussian',...
+                    leg0 = {'DFT-Gaussian',...
                         ['Salvat-DFT-Gaussian (1 exp.)'],...
                         ['Salvat-DFT-Gaussian (2 exp.)'],...
                         ['Salvat-DFT-Gaussian (3 exp.)']};
@@ -284,12 +316,20 @@ for iZ = 1:length(Z)
                 %
                 figure('Name',tit7);
                 graph1D_jd(dft.r,dft.ne(:,i),0,1,xlab,ylab1,tit1,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);hold on
-                graph1D_jd(dft.salvat.(models{imodel}){1}.r,dft.salvat.(models{imodel}){1}.ne(:,i),0,1,xlab,ylab1,tit7,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
-                graph1D_jd(dft.salvat.(models{imodel}){2}.r,dft.salvat.(models{imodel}){2}.ne(:,i),0,1,xlab,ylab1,tit7,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
-                graph1D_jd(dft.salvat.(models{imodel}){3}.r,dft.salvat.(models{imodel}){3}.ne(:,i),0,1,xlab,ylab1,tit7,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca); 
+                leg = leg0([1,2]);
+                graph1D_jd(dft.salvat.(models{imodel}){1}.r,dft.salvat.(models{imodel}){1}.ne(:,i),0,1,xlab,ylab1,tit7,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca); 
+                if maxnumberofexponentials > 1
+                    leg = leg0([1,2,3]);
+                    graph1D_jd(dft.salvat.(models{imodel}){2}.r,dft.salvat.(models{imodel}){2}.ne(:,i),0,1,xlab,ylab1,tit7,leg,'','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+                end
+                if maxnumberofexponentials > 2
+                  leg = leg0([1,2,3,4]);
+                  graph1D_jd(dft.salvat.(models{imodel}){3}.r,dft.salvat.(models{imodel}){3}.ne(:,i),0,1,xlab,ylab1,tit7,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca); 
+                end
                 %
-                if length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
+                if maxnumberofexponentials > 3 && length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
                     %
+                    leg = leg0;
                     graph1D_jd(dft.salvat.(models{imodel}){4}.r,dft.salvat.(models{imodel}){4}.ne(:,i),0,1,xlab,ylab1,tit7,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca); 
                     %
                 end
@@ -302,17 +342,25 @@ for iZ = 1:length(Z)
                 figure('Name',tit8);
                 %
                 graph1D_jd(dft.r,4*pi*dft.r.*dft.r.*dft.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);hold on
-                graph1D_jd(dft.salvat.(models{imodel}){1}.r,4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),0,0,xlab,ylab2,tit8,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
-                graph1D_jd(dft.salvat.(models{imodel}){2}.r,4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),0,0,xlab,ylab2,tit8,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
-                graph1D_jd(dft.salvat.(models{imodel}){3}.r,4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),0,0,xlab,ylab2,tit8,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca); 
+                leg = leg0([1,2]);
+                graph1D_jd(dft.salvat.(models{imodel}){1}.r,4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),0,0,xlab,ylab2,tit8,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca); 
+                if maxnumberofexponentials >1
+                    leg = leg0([1,2,3]);
+                    graph1D_jd(dft.salvat.(models{imodel}){2}.r,4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),0,0,xlab,ylab2,tit8,leg,'','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+                end
+                if maxnumberofexponentials > 2
+                    leg = leg0([1,2,3,4]);
+                    graph1D_jd(dft.salvat.(models{imodel}){3}.r,4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),0,0,xlab,ylab2,tit8,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca); 
                 %
-                if length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
+                end
+                if maxnumberofexponentials > 3 && length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
                     %
+                    leg = leg0;
                     graph1D_jd(dft.salvat.(models{imodel}){4}.r,4*pi*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.ne(:,i),0,0,xlab,ylab2,tit8,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca); 
                     %
                 end
                 %
-                if length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
+                if maxnumberofexponentials > 3 && length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
                     %
                     maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),...
                         4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),...
@@ -320,14 +368,27 @@ for iZ = 1:length(Z)
                         4*pi*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.ne(:,i),...
                         ]));
                     %
-                else
+                elseif maxnumberofexponentials > 2
                     %
                     maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),...
                         4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),...
                         4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),...
                         ]));
+                elseif maxnumberofexponentials > 1
+                    %
+                    maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),...
+                        4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),...
+                        ]));
+                    %
+                else
+                    %
+                    maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),...
+                        ]));
+                    %
                     %
                 end
+                %
+                maxdens = max(maxdens,max(dft.ne(:,i)*4*pi.*dft.r.*dft.r));
                 %
                 ylim([0,maxdens]);
                 xlim([0,dft.ionradius{1}.r0n(i)*3])
@@ -375,16 +436,23 @@ for iZ = 1:length(Z)
             ylab = 'Atomic form factor';
             siz = 20+14i;
             %
-            leg = {'DFT-Gaussian',['Salvat-DFT-Gaussian (1 exp.)'],['Salvat-DFT-Gaussian (2 exp.)'],['Salvat-DFT-Gaussian (3 exp.)']};
+            leg0 = {'DFT-Gaussian',['Salvat-DFT-Gaussian (1 exp.)'],['Salvat-DFT-Gaussian (2 exp.)'],['Salvat-DFT-Gaussian (3 exp.)'],['Salvat-DFT-Gaussian (4 exp.)']};
             %
             graph1D_jd(q/unitfactor,ff_dhfs(i,:),1,0,xlabff,ylab,tit9,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);
-            graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit9,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
-            graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit9,'','','',linestyle{3},'none',linecolor{3},2,siz,gca);
-            graph1D_jd(q/unitfactor,ff_sal{3}(i,:),1,0,xlabff,ylab,tit9,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca);
+            leg = leg0([1,2]);
+            graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit9,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca); 
+            if maxnumberofexponentials > 1
+                    leg = leg0([1,2,3]);
+                    graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit9,leg,'','',linestyle{3},'none',linecolor{3},2,siz,gca);
+            end
+            if maxnumberofexponentials > 2
+                    leg = leg0([1,2,3,4]);
+                    graph1D_jd(q/unitfactor,ff_sal{3}(i,:),1,0,xlabff,ylab,tit9,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca);
+            end
             %
-            if length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
+            if maxnumberofexponentials > 3 && length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
                 %
-                leg = {'DFT-Gaussian',['Salvat-DFT-Gaussian (1 exp.)'],['Salvat-DFT-Gaussian (2 exp.)'],['Salvat-DFT-Gaussian (3 exp.)'],['Salvat-DFT-Gaussian (4 exp.)']};
+                leg = leg0;
                 graph1D_jd(q/unitfactor,ff_sal{4}(i,:),1,0,xlabff,ylab,tit9,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca);
                 %
             end
@@ -396,23 +464,27 @@ for iZ = 1:length(Z)
             %
             print_jd(print_opt,['Atomicformfactor_SalvatGaussian_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
             %
-            disp('-------------------------------------------------------------------------------------------------')
-            disp('-------------------------------------------------------------------------------------------------')
-            disp('   Z0s_{fit}  checksum      A1       A2     lambda1   lambda2  ')
-            disp('-------------------------------------------------------------------------------------------------')
-            disp('-------------------------------------------------------------------------------------------------')
+            if maxnumberofexponentials > 1
+                disp('-------------------------------------------------------------------------------------------------')
+                disp('-------------------------------------------------------------------------------------------------')
+                disp('   Z0s_{fit}  checksum      A1       A2     lambda1   lambda2  ')
+                disp('-------------------------------------------------------------------------------------------------')
+                disp('-------------------------------------------------------------------------------------------------')
+                %
+                imodel = 1;%Gaussian
+                disp([dft.Z-dft.salvat.(models{imodel}){2}.Nfit',dft.salvat.(models{imodel}){2}.checksum',dft.salvat.(models{imodel}){2}.A,dft.salvat.(models{imodel}){2}.alpha])
+            end
             %
-            imodel = 1;%Gaussian
-            disp([dft.Z-dft.salvat.(models{imodel}){2}.Nfit',dft.salvat.(models{imodel}){2}.checksum',dft.salvat.(models{imodel}){2}.A,dft.salvat.(models{imodel}){2}.alpha])
-            %
-            disp('-------------------------------------------------------------------------------------------------')
-            disp('-------------------------------------------------------------------------------------------------')
-            disp('   Z0s_{fit}  checksum      A1       A2        A3     lambda1   lambda2   lambda3')
-            disp('-------------------------------------------------------------------------------------------------')
-            disp('-------------------------------------------------------------------------------------------------')
-            %
-            imodel = 1;%Gaussian
-            disp([dft.Z-dft.salvat.(models{imodel}){3}.Nfit',dft.salvat.(models{1}){3}.checksum',dft.salvat.(models{1}){3}.A,dft.salvat.(models{1}){3}.alpha])
+            if maxnumberofexponentials > 2
+                disp('-------------------------------------------------------------------------------------------------')
+                disp('-------------------------------------------------------------------------------------------------')
+                disp('   Z0s_{fit}  checksum      A1       A2        A3     lambda1   lambda2   lambda3')
+                disp('-------------------------------------------------------------------------------------------------')
+                disp('-------------------------------------------------------------------------------------------------')
+                %
+                imodel = 1;%Gaussian
+                disp([dft.Z-dft.salvat.(models{imodel}){3}.Nfit',dft.salvat.(models{1}){3}.checksum',dft.salvat.(models{1}){3}.A,dft.salvat.(models{1}){3}.alpha])
+            end
             %
             if length(dft.salvat.(models{imodel})) > 3
                 %
