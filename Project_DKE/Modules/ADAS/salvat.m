@@ -66,6 +66,7 @@ for jj = 1:length(model)
         %
         r = dft.r;
         ne = dft.ne;
+        r(1) = eps;
         %
     end
     %
@@ -77,6 +78,9 @@ for jj = 1:length(model)
                 %
                 n = j - 2;
                 R(i,j) = 4*pi*simps(r,r.^(n+2).*ne(:,i))/(dft.Z - dft.Z0(i))/factorial(n+1);%
+                %irmax = max(find(ne(:,i) > 1e-4));
+                %irmin = 1;
+                %R(i,j) = 4*pi*simps(r(irmin:irmax),r(irmin:irmax).^(n+2).*ne(irmin:irmax,i))/(dft.Z - dft.Z0(i))/factorial(n+1);%
                 %
             end
             %
@@ -107,7 +111,47 @@ for jj = 1:length(model)
         for i = 1:dft.Z
             %
             x = root_salvat(R(i,:));
+            %{
+            irmax = max(find(ne(:,i) > 1e-4));
+            xr = r(1:irmax);
+            xne = ne(1:irmax,i);
+            xN = dft.N(i);
             %
+            if length(x) == 2
+                F = @(xx,xr)xN*(xx(1)*xx(2)*xx(2)*exp(-xx(2)*xr))/4/pi;
+            elseif length(x) == 4
+                F = @(xx,xr)xN*(xx(1)*xx(3)*xx(3)*exp(-xx(3)*xr) + xx(2)*xx(4)*xx(4)*exp(-xx(4)*xr))/4/pi;
+            elseif length(x) == 6
+                F = @(xx,xr)xN*(xx(1)*xx(4)*xx(4)*exp(-xx(4)*xr) + xx(2)*xx(5)*xx(5)*exp(-xx(5)*xr) + xx(3)*xx(6)*xx(6)*exp(-xx(6)*xr))/4/pi;
+            elseif length(x) == 8
+                F = @(xx,xr)xN*(xx(1)*xx(5)*xx(5)*exp(-xx(5)*xr) + xx(2)*xx(6)*xx(6)*exp(-xx(6)*xr) + xx(3)*xx(7)*xx(7)*exp(-xx(7)*xr) + xx(4)*xx(8)*xx(8)*exp(-xx(8)*xr))/4/pi;
+            end
+            %
+            % non linear fit method
+            %
+            if kk == 1
+                FF = @(xx,xr)xN*(xx(1)*xx(2)*xx(2)*exp(-xx(2)*xr))/4/pi;
+                xx0 = [0.1 0.2];
+            elseif kk == 2
+                FF = @(xx,xr)xN*(xx(1)*xx(3)*xx(3)*exp(-xx(3)*xr) + xx(2)*xx(4)*xx(4)*exp(-xx(4)*xr))/4/pi;
+                xx0 = [0.1 0.2 0.3 0.4];
+            elseif kk == 3
+                FF = @(xx,xr)xN*(xx(1)*xx(4)*xx(4)*exp(-xx(4)*xr) + xx(2)*xx(5)*xx(5)*exp(-xx(5)*xr) + xx(3)*xx(6)*xx(6)*exp(-xx(6)*xr))/4/pi;
+                xx0 = [0.1 0.2 0.3 0.4,0.5,0.6];
+            elseif kk == 4
+                FF = @(xx,xr)xN*(xx(1)*xx(5)*xx(5)*exp(-xx(5)*xr) + xx(2)*xx(6)*xx(6)*exp(-xx(6)*xr) + xx(3)*xx(7)*xx(7)*exp(-xx(7)*xr) + xx(4)*xx(8)*xx(8)*exp(-xx(8)*xr))/4/pi;
+                xx0 = [0.1 0.2 0.3 0.4,0.5,0.6,0.7,0.8];
+            end
+            %
+            options = optimoptions('lsqcurvefit','FunctionTolerance',eps);
+            [xx,resnorm,~,exitflag,output] = lsqcurvefit(F,xx0,xr,xne.*xr,-1000,10000,options);
+
+            %figure
+           % semilogy(xr,xne,'k',xr,FF(xx,xr)./xr,'b',xr,F(x,xr)./xr,'r')
+            %title([int2str(xN),',',int2str(kk)])
+            %
+            x = xx;
+            %}
             maxnumexp = min(length(x)/2,kk);
             %
             if imodel == 0
