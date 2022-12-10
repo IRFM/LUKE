@@ -1,13 +1,14 @@
-function [I0,I0_s,Z0,symbol] = meanexcitationenergy_yp(Z)
+function [I0,I0_s,Z0,symbol] = meanexcitationenergy_yp(Z,displaymode)
 %
 %   Calculation of mean excitation energy to be used in Bethe stopping
 %   electron formula. Calculated from a simple heuristic rule from neutral
-%   atom to hydrogenoid ion or exact, if available from quantum relativistic
+%   atom to hydrogenoid ion or, if available, from quantum nopn-relativistic
 %   calculations.
 %
 %   INPUTS:
 %
 %       - Z : atomic number [1,1]
+%       - displaymode : display results [1,1]
 %
 %   OUTPUTS:
 %
@@ -21,8 +22,16 @@ function [I0,I0_s,Z0,symbol] = meanexcitationenergy_yp(Z)
 if nargin < 1
     error('Error: not enough input arguments in spinmultiplicity_yp.m.')
 else
+    if nargin < 2
+        %
+        displaymode = 1;
+        %
+    end
+    %
     if Z > 83
+        %
         error('Error: maximum Z value is 83.')
+        %
     end
 end
 %
@@ -51,7 +60,11 @@ symbol = elements.symbol{Z};
 if Z <= length(I0_ref) && ~isempty(I0_ref{Z}) 
     %
     I0 = I0_ref{Z};
+    flag_ref = 1;
     %
+else
+    I0 = NaN*Z0;
+    flag_ref = 0;
 end
 %
 I0_min = 10*Z;%eV 
@@ -70,9 +83,7 @@ if Z == 1
     I0_s = I0; % specific case of Hydrogen
 end
 %
-display = 1;
-%
-if display
+if displaymode
     %
     linestyle(1) = {'-'};
     linestyle(2) = {'--'};
@@ -97,10 +108,17 @@ if display
     %
     tit = ['Mean excitation energy of ',symbol];
     %
-    graph1D_jd(Z0,I0,0,1,xlab,ylab,tit,NaN,NaN,NaN,'none','o',linecolor{1},2,siz,gca); 
+    if flag_ref
+        graph1D_jd(Z0,I0,0,1,xlab,ylab,tit,NaN,NaN,NaN,'none','o',linecolor{1},2,siz,gca); 
+    end
     graph1D_jd(Z0,I0_s,0,1,xlab,ylab,tit,NaN,NaN,NaN,linestyle{1},'none',linecolor{2},2,siz,gca); 
     %
-    legend('Quantum calculations','Interpolation')
+    if flag_ref
+        legend('Quantum MCSCF calculations (Saue et al. 2015)','Exponential Interpolation')
+    else
+        legend('Quantum MCSCF calculations (Saue et al. 2015)','Exponential Interpolation')
+    end
+    %
 end
     
     
