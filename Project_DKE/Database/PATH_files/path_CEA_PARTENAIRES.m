@@ -217,4 +217,19 @@ dkepath.KK019865(1).remote(5).luke_root = dkepath.KK019865(1).luke_root;
 dkepath.KK019865(1).remote(5).profilename = 'KK019865';
 dkepath.KK019865(1).remote(6).luke_root = dkepath.KK019865(1).luke_root;
 dkepath.KK019865(1).remote(6).profilename = 'KK019865';
+%
+dkepath.RS272879(1) = dkepath.RS272879(1);%Riccardo Saura
+dkepath.RS272879(1).luke_root = '/home/RS272879/luke/LUKE_LHCD/';
+dkepath.RS272879(1).remote(1).luke_root = dkepath.RS272879(1).luke_root;
+dkepath.RS272879(1).remote(1).profilename = 'RS272879';
+dkepath.RS272879(1).remote(2).luke_root = dkepath.RS272879(1).luke_root;
+dkepath.RS272879(1).remote(2).profilename = 'RS272879';
+dkepath.RS272879(1).remote(3).luke_root = dkepath.RS272879(1).luke_root;
+dkepath.RS272879(1).remote(3).profilename = 'RS272879';
+dkepath.RS272879(1).remote(4).luke_root = dkepath.RS272879(1).luke_root;
+dkepath.RS272879(1).remote(4).profilename = 'RS272879';
+dkepath.RS272879(1).remote(5).luke_root = dkepath.RS272879(1).luke_root;
+dkepath.RS272879(1).remote(5).profilename = 'RS272879';
+dkepath.RS272879(1).remote(6).luke_root = dkepath.RS272879(1).luke_root;
+dkepath.RS272879(1).remote(6).profilename = 'RS272879';
 
