@@ -96,8 +96,6 @@ if ~isstruct(sinputs)% new job
         cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
         %
     end 
-
-    end 
     %
 else %previously running job
     %
