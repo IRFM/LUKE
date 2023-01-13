@@ -44,7 +44,7 @@ if isempty(remote)
         %
     else
         %
-        [ydate] = tsdate(shotnumber,signal);
+        [ydate] = tsdate(shotnumber);
         %
     end
     %
