@@ -20,11 +20,11 @@ end
 %
 if ~isreal(sinputs)
     %
-    shotnumber = imag(sinputs);
+    shotnumbers = imag(sinputs);
     %
 else
     %
-    shotnumber = sinputs;
+    shotnumbers = sinputs;
     %
 end    
 %
