@@ -18,6 +18,16 @@ if nargin < 1
      error('Not enough input argument in remote_mtsdate.m');
 end
 %
+if ~isreal(sinputs)
+    %
+    shotnumber = imag(sinputs);
+    %
+else
+    %
+    shotnumber = sinputs;
+    %
+end    
+%
 if ~isstruct(sinputs)% new job
     %
     remote = remote_cea;
@@ -44,12 +54,10 @@ if ~isstruct(sinputs)% new job
         job.rempause = 1/60;% in minutes
         %
         if ~isreal(sinputs)
-            shotnumbers = imag(sinputs);
             job.wait = 0;% (0) return hand (1) wait for result
             job.remtimout = 0;% in minutes
             remote.timeout = 0;%Don't wait until ALOHA job is done
         else
-            shotnumbers = sinputs;
             job.wait = 1;%1;% (0) return hand (1) wait for result
             job.remtimout = 10;% in minutes
         end    
@@ -65,6 +73,16 @@ if ~isstruct(sinputs)% new job
         end
         %
     else
+        %
+         if isempty(remote)
+            %
+            cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+            %
+        else
+            %
+            [ydates] = mtsdate(shotnumbers);
+            %
+        end
         %
         cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
         %
