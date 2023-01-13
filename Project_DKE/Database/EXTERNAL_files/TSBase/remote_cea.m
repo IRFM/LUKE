@@ -17,6 +17,7 @@ remote = [];
 dkepath = load_structures_yp('dkepath','','');
 %
 remote_profile_ALTAIR = ''; 
+%
 remote_profile_SIRRAH = '';
 %
 for ii = 1:length(dkepath.remote)
@@ -25,7 +26,7 @@ for ii = 1:length(dkepath.remote)
         %
         remote_profile_ALTAIR = dkepath.remote(ii);
         %
-    elseif strfind(dkepath.remote(ii).hostname,'sirrah') & strcmp(dkepath.remote(ii).scheduler,'direct')
+    elseif strfind(dkepath.remote(ii).hostname,'sirrah') & strcmp(dkepath.remote(ii).scheduler,'pbs')
         %
         remote_profile_SIRRAH = dkepath.remote(ii);
     end
@@ -59,15 +60,16 @@ if ~isempty(remote_profile_ALTAIR)
         end
     end
     %
+    return
 end
 %
-if ~isempty(remote_profile_SIRRAH) && err > 0
+if ~isempty(remote_profile_SIRRAH)
     %
-    [txt,err] = matremotessh(remote_profile_SIRRAH,'hostname');
+    [err,txt] = unix('hostname');
     %
-    if err == 0 || isempty(txt)
+    if err == 0 && contains(txt,'intra.cea.fr')
         %
-        remote = remote_profile_SIRRAH;
+        remote = 1;
         %
     else
         %
