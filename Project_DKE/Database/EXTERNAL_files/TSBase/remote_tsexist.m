@@ -48,7 +48,7 @@ if isempty(remote)
         %
     else
         %
-        [cr,nb_mesures,num_version,certif,date,heure] = tsexist(shotnumber,nom_donnee);
+        [cr,nb_mesures,num_version,certif,date,heure] = tsexist(num_choc,nom_donnee);
         %
     end
     %
