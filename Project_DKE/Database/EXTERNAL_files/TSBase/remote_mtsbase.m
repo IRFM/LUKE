@@ -67,6 +67,17 @@ if ~isstruct(sinputs)% new job
         %
     else
         %
+         if isempty(remote)
+            %
+            cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+            %
+        else
+            %
+            [soutputs] = mtsbase(shotnumber,signals);
+            %
+        end
+        %
+        %
         cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
         %
     end 

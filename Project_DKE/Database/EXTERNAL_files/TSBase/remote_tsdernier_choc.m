@@ -27,7 +27,15 @@ if isstruct(remote)
     %
 else
     %
-    cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+     if isempty(remote)
+        %
+        cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+        %
+    else
+        %
+        [shotnum] = tsdernier_choc('');
+        %
+    end
     %
 end 
 %

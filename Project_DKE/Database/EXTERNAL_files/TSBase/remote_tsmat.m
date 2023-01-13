@@ -42,6 +42,14 @@ if isstruct(remote)
     %
 else
     %
-    cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+     if isempty(remote)
+        %
+        cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+        %
+    else
+        %
+        [yout1,yout2,yout3,yout4,yout5] = tsmat(shotnumber,signal);
+        %
+    end
     %
 end 

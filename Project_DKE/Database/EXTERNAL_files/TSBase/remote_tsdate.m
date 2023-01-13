@@ -38,8 +38,15 @@ if isstruct(remote)
     [err,job,ydate] = matremote_jd('tsdate',{shotnumber},remote,job);
     %
 else
-    %
-    cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+if isempty(remote)
+        %
+        cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+        %
+    else
+        %
+        [ydate] = tsdate(shotnumber,signal);
+        %
+    end
     %
 end 
 %

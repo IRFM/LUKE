@@ -42,8 +42,15 @@ if isstruct(remote)
     [err,job,cr,nb_mesures,num_version,certif,date,heure] = matremote_jd('tsexist',{num_choc,nom_donnee},remote,job);
   %
 else
-    %
-    cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+if isempty(remote)
+        %
+        cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
+        %
+    else
+        %
+        [cr,nb_mesures,num_version,certif,date,heure] = tsexist(shotnumber,nom_donnee);
+        %
+    end
     %
 end 
 
