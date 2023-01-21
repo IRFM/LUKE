@@ -1,22 +1,11 @@
-IMAS works in the INTRA zone only (Sirrah or Spica). Soon on partenaires zone.
+IMAS works in the INTRA or PARTENAIRES zones
 
-In a terminal, type the following commands:
+The .bashrc files should be set as follow :
 
-module purge # if needed
+alias mat802='module purge;module load tools_dc;module load matlab/2013b;matlab -nodesktop -nosplash -softwareopengl'
+alias mat806='module purge;module load tools_dc/m2015b;module load matlab/2015b;matlab -nodesktop -nosplash'
+alias mat903='module purge;module load matlab/2017b;matlab -nodesktop -nosplash'
+alias mat907='module purge;module load tools_dc/m2019b;module load matlab/2019b;matlab -nodesktop -nosplash'
+alias mat909='module purge;module load matlab/2020b;matlab -nodesktop -nosplash'
 
-module load imas
-
-imasdb west  # Only the first time you type: module load imas
-
-To check the loaded modules type:
-
-module li
-
-Then you can open a Matlab session:
-
-matlab -nodesktop (for R2013B) or mat805 (for R2015A). 
-
-Not above yet R2015A
-
-Then run the test script test_IMAS_WEST.m
-
+No IMAS access for Matlab R2017B and R2020B (January 2023)
