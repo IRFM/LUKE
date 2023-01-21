@@ -57,7 +57,7 @@ if ~isstruct(sinputs)% new job
         if ~isreal(sinputs)
             job.wait = 0;% (0) return hand (1) wait for result
             job.remtimout = 0;% in minutes
-            remote.timeout = 0;%Don't wait until ALOHA job is done
+            remote.timeout = 0;%Don't wait until job is done
         else
             job.wait = 1;%1;% (0) return hand (1) wait for result
             job.remtimout = 10;% in minutes
