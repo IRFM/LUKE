@@ -28,7 +28,9 @@ signals{1} = {'equilibrium', run, occ, user, machine};
 signals{2} = {'interferometer'};
 %
 soutputs = remote_imas_west_mget(shot,signals);
-return
+%
+equi = soutputs.equilibrium;
+interf = soutputs.interferometer;
 
 % Filter no converged equilibrium computations
 mask_eq = equi.code.output_flag >= 0;
