@@ -1,23 +1,24 @@
-function [imas_output] = remote_ids_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine)
+function [imas_output] = remote_ids_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine,imas_backend)
 %
 %LUKE -  Function which load signals at a given time (asolute or relative to t_ignitron) from WEST/TORE SUPRA IMAS database. May be used within CEA network or outside by SSH bridge
 %
 %   Input:
 %
-%		shotnumber: shot number 
-%       ids_name: ids name. To see all ids_name, get data dictionary, type in Linux Terminal: dd_doc
-%       time_requested: time requested -> real : relative time (s), imag : absolute time(s). To get absolute time, get time_ignitron usingvtsbase, tignitron = tsbase(shotnumber, 'rignitron');
-%       imas_run: see IMAS doc
-%       imas_occurrence: see IMAS doc
-%       imas_user: see IMAS doc
-%       imas_machine: see IMAS doc
+%		- shotnumber : shot number 
+%       - ids_name : ids name. To see all ids_name, get data dictionary, type in Linux Terminal: dd_doc
+%       - time_requested : time requested -> real : relative time (s), imag : absolute time(s). To get absolute time, get time_ignitron usingvtsbase, tignitron = tsbase(shotnumber, 'rignitron');
+%       - imas_run : see IMAS doc
+%       - imas_occurrence : see IMAS doc
+%       - imas_user : see IMAS doc
+%       - imas_machine : see IMAS doc
+%       - imas_backend : see IMAS doc
 %
 % NOTE : Default options: imas_run=0, imas_occurrence=0,imas_user='imas_public', imas_machine='west'
 %        Details on the website : https://westusers.partenaires.cea.fr
 %
 %   Output:
 %
-%		imas_output: IMAS data structure for the corresponding data type
+%		- imas_output: IMAS data structure for the corresponding data type
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
@@ -53,6 +54,10 @@ if isstruct(remote)
             %
             imas_output = imas_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine);
             %
+        elseif nargin == 8
+            %
+            imas_output = imas_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine,imas_backend);
+            %
         end
         %
     else
@@ -84,6 +89,10 @@ if isstruct(remote)
         elseif nargin == 7
             %
             [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine},remote,job);
+            %
+        elseif nargin == 8
+            %
+            [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine,imas_backend},remote,job);
             %
         end
         %

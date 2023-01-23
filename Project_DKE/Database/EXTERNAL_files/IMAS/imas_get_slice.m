@@ -1,23 +1,24 @@
-function [imas_output] = imas_get_slice(shot,ids_name,time_requested,run,occurrence,user,machine)
+function [imas_output] = imas_get_slice(shot,ids_name,time_requested,run,occ,user,machine,backend)
 %
 %LUKE -  Function which load signals at a given time (asolute or relative to t_ignitron) from WEST/TORE SUPRA IMAS database. May be used within CEA network or outside by SSH bridge
 %
 %   Input:
 %
-%		shot: shot number 
-%       ids_name: ids name. To see all ids_name, get data dictionary, type in Linux Terminal: dd_doc
-%       time_requested: time requested -> real : relative time (s), imag : absolute time(s). To get absolute time, get time_ignitron usingvtsbase, tignitron = tsbase(shotnumber, 'rignitron');
-%       run: see IMAS doc
-%       occurrence: see IMAS doc
-%       user: see IMAS doc
-%       machine: see IMAS doc
+%		- shot: shot number 
+%       - ids_name: ids name. To see all ids_name, get data dictionary, type in Linux Terminal: dd_doc
+%       - time_requested: time requested -> real : relative time (s), imag : absolute time(s). To get absolute time, get time_ignitron usingvtsbase, tignitron = tsbase(shotnumber, 'rignitron');
+%       - run: see IMAS doc
+%       - occ: see IMAS doc
+%       - user: see IMAS doc
+%       - machine: see IMAS doc
+%       - backend : support -> 12 : MDS+, 13 : HDF5
 %
 % NOTE : Default options: imas_run=0, imas_occurrence=0,imas_user='imas_public', imas_machine='west'
 %        Details on the website : https://westusers.partenaires.cea.fr
 %
 %   Output:
 %
-%		imas_output: IMAS data structure for the corresponding data type at the given time
+%		- imas_output: IMAS data structure for the corresponding data type at the given time
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
@@ -38,7 +39,9 @@ else
     %
 end
 %
-idx = imas_open_env('ids', shot, run, user, machine, '3');
+idx = imas_open_env_backend('ids', shot, run, occ, user, machine, backend);
 %
 imas_output = ids_get_slice(idx, ids_name, time_requested, 1);
+%
+imas_close(idx);
 %
