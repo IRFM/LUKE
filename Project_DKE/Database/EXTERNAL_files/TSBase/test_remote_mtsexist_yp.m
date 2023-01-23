@@ -8,10 +8,10 @@ shotnumbers = [27503,27549,32299];
 %
 if ~isempty(youts)
     for ii = 1:length(shotnumbers)
-        if youts{ii}.cr == 0
+        if youts{ii}.cr == 0 && youts{ii}.certif == 0
             disp(['TPROF data available for discharge #',int2str(shotnumbers(ii))])
         else
-            disp(['TPROF data unavailable for discharge #',int2str(shotnumbers(ii))])
+            disp(['TPROF data unavailable or partially available for discharge #',int2str(shotnumbers(ii))])
         end
     end
 else
