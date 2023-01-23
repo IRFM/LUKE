@@ -2,7 +2,7 @@ IMAS works in the INTRA or PARTENAIRES zones
 
 The .bashrc files should be set as follow :
 
-alias mat802='module purge;module load tools_dc;module load matlab/2013b;matlab -nodesktop -nosplash -softwareopengl'
+alias mat802='module purge;module load tools_dc/m2013b;module load matlab/2013b;matlab -nodesktop -nosplash -softwareopengl'
 alias mat806='module purge;module load tools_dc/m2015b;module load matlab/2015b;matlab -nodesktop -nosplash'
 alias mat903='module purge;module load matlab/2017b;matlab -nodesktop -nosplash'
 alias mat907='module purge;module load tools_dc/m2019b;module load matlab/2019b;matlab -nodesktop -nosplash'
