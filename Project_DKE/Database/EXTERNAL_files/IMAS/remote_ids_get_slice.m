@@ -61,6 +61,12 @@ if isstruct(remote)
         %
     end
     %
+    if ~isempty(err)
+        %
+        imas_output.err = err;
+        %
+    end
+    %
 else
     %
     cprintf('red*','---> CEA computers are unreachable for access to TS/WEST database with IMAS. Check the connection parameters (ssh).');disp(' ')
