@@ -31,39 +31,67 @@ remote = remote_cea;
 %
 if isstruct(remote)
     %
-    cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
-    %
-    remote.matver.matdef = remote.matver.mat907;%enforce Matlab version for IMAS access
-    %
-    job = matstandardjob_jd('runmat');
-    job.funcopy = false;%since binary is machine specific only local version is used
-    %job.debugmode = 1;%
-    %
-    if nargin == 3
+    if ~isempty(strfind(remote.host,'partenaires'))
         %
-        [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested},remote,job);
+        if nargin == 3
+            %
+            imas_output = imas_get_slice(shotnumber,ids_name,time_requested);
+            %
+        elseif nargin == 4
+            %
+            imas_output = imas_get_slice(shotnumber,ids_name,time_requested,imas_run);
+            %
+        elseif nargin == 5
+            %
+            imas_output = imas_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence);
+            %
+        elseif nargin == 6
+            %
+            imas_output = imas_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user);
+            %
+        elseif nargin == 7
+            %
+            imas_output = imas_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine);
+            %
+        end
         %
-    elseif nargin == 4
+    else
         %
-        [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run},remote,job);
+        cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
         %
-    elseif nargin == 5
+        remote.matver.matdef = remote.matver.mat907;%enforce Matlab version for IMAS access
         %
-        [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence},remote,job);
+        job = matstandardjob_jd('runmat');
+        job.funcopy = false;%since binary is machine specific only local version is used
+        %job.debugmode = 1;%
         %
-    elseif nargin == 6
+        if nargin == 3
+            %
+            [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested},remote,job);
+            %
+        elseif nargin == 4
+            %
+            [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run},remote,job);
+            %
+        elseif nargin == 5
+            %
+            [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence},remote,job);
+            %
+        elseif nargin == 6
+            %
+            [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user},remote,job);
+            %
+        elseif nargin == 7
+            %
+            [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine},remote,job);
+            %
+        end
         %
-        [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user},remote,job);
-        %
-    elseif nargin == 7
-        %
-        [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine},remote,job);
-        %
-    end
-    %
-    if ~isempty(err)
-        %
-        imas_output.err = err;
+        if ~isempty(err)
+            %
+            imas_output.err = err;
+            %
+        end
         %
     end
     %

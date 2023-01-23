@@ -30,27 +30,35 @@ remote = remote_cea;
 %
 if isstruct(remote)
     %
-    cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
-    %
-    remote.matver.matdef = remote.matver.mat907;%enforce Matlab version for IMAS access
-    %                      
-    job = matstandardjob_jd('runmat');
-    job.funcopy = false;%since binary is machine specific only local version is used
-    %job.debugmode = 1;
-    %
-    [err,job,outputs] = matremote_jd('imas_west_mget',{shotnumber,signals},remote,job);
-    %
-    if isempty(err)
+    if ~isempty(strfind(remote.host,'partenaires'))
         %
-        for ii = 1:length(signals)
-            %
-            imas_outputs.(signals{ii}{1}) = outputs(ii).imas_output;
-            %
-        end
+        outputs = imas_west_mget(shotnumber,signals);
         %
     else
         %
-        imas_outputs.err = err;
+        cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
+        %
+        remote.matver.matdef = remote.matver.mat907;%enforce Matlab version for IMAS access
+        %                      
+        job = matstandardjob_jd('runmat');
+        job.funcopy = false;%since binary is machine specific only local version is used
+        %job.debugmode = 1;
+        %
+        [err,job,outputs] = matremote_jd('imas_west_mget',{shotnumber,signals},remote,job);
+        %
+        if isempty(err)
+            %
+            for ii = 1:length(signals)
+                %
+                imas_outputs.(signals{ii}{1}) = outputs(ii).imas_output;
+                %
+            end
+            %
+        else
+            %
+            imas_outputs.err = err;
+            %
+        end
         %
     end
     %

@@ -30,39 +30,67 @@ remote = remote_cea;
 %
 if isstruct(remote)
     %
-    cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
-    %
-    remote.matver.matdef = remote.matver.mat907;%enforce Matlab version for IMAS access
-    %
-    job = matstandardjob_jd('runmat');
-    job.funcopy = false;%since binary is machine specific only local version is used
-    %job.debugmode = 1;%
-    %
-    if nargin == 2
+    if ~isempty(strfind(remote.host,'partenaires'))
         %
-        [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name},remote,job);
+        if nargin == 2
+            %
+            imas_output = imas_west_get(shotnumber,ids_name);
+            %
+        elseif nargin == 3
+            %
+            imas_output = imas_west_get(shotnumber,ids_name,imas_run);
+            %
+        elseif nargin == 4
+            %
+            imas_output = imas_west_get(shotnumber,ids_name,imas_run,imas_occurrence);
+            %
+        elseif nargin == 5
+            %
+            imas_output = imas_west_get(shotnumber,ids_name,imas_run,imas_occurrence,imas_user);
+            %
+        elseif nargin == 6
+            %
+            imas_output = imas_west_get(shotnumber,ids_name,imas_run,imas_occurrence,imas_user,imas_machine);
+            %
+        end
         %
-    elseif nargin == 3
+    else
         %
-        [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run},remote,job);
+        cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
         %
-    elseif nargin == 4
+        remote.matver.matdef = remote.matver.mat907;%enforce Matlab version for IMAS access
         %
-        [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run,imas_occurrence},remote,job);
+        job = matstandardjob_jd('runmat');
+        job.funcopy = false;%since binary is machine specific only local version is used
+        %job.debugmode = 1;%
         %
-    elseif nargin == 5
+        if nargin == 2
+            %
+            [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name},remote,job);
+            %
+        elseif nargin == 3
+            %
+            [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run},remote,job);
+            %
+        elseif nargin == 4
+            %
+            [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run,imas_occurrence},remote,job);
+            %
+        elseif nargin == 5
+            %
+            [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run,imas_occurrence,imas_user},remote,job);
+            %
+        elseif nargin == 6
+            %
+            [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run,imas_occurrence,imas_user,imas_machine},remote,job);
+            %
+        end
         %
-        [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run,imas_occurrence,imas_user},remote,job);
-        %
-    elseif nargin == 6
-        %
-        [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run,imas_occurrence,imas_user,imas_machine},remote,job);
-        %
-    end
-    %
-    if ~isempty(err)
-        %
-        imas_output.err = err;
+        if ~isempty(err)
+            %
+            imas_output.err = err;
+            %
+        end
         %
     end
     %
