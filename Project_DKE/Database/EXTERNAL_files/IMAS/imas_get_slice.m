@@ -42,7 +42,7 @@ end
 %
 idx = imas_open_env_backend(shot, run, user, machine, '3', backend);
 %
-imas_output = ids_get_slice(idx, ids_name, time_requested, occ, interp);
+imas_output = ids_get_slice(idx, ids_name, time_ref, occ, interp);
 %
 imas_close(idx);
 %
