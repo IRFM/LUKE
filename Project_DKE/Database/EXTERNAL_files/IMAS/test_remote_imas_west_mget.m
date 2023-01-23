@@ -22,15 +22,22 @@ fprintf('occurrence = %d \n', occ);
 fprintf('user       = %s \n', user);
 fprintf('machine    = %s \n', machine);
 
-% Open IMAS file: function imas_west_get(shot, ids_name, run, occ, user, machine)
-%equi = remote_imas_west_get(shot, 'equilibrium', run, occ, user, machine);
+%
+% Open IMAS file
+%
 signals{1} = {'equilibrium', run, occ, user, machine};
 signals{2} = {'interferometer'};
+signals{3} = {'core_profiles'};
+signals{4} = {'magnetics'};
+signals{5} = {'hard_x_rays'};
 %
-soutputs = remote_imas_west_mget(shot,signals);
+soutputs = remote_imas_west_mget(shot,signals);%multiple loads
 %
 equi = soutputs.equilibrium;
 interf = soutputs.interferometer;
+coreprof = soutputs.core_profiles;
+magnetics = soutputs.magnetics;
+hxr = soutputs.hard_x_rays;
 
 % Filter no converged equilibrium computations
 mask_eq = equi.code.output_flag >= 0;
