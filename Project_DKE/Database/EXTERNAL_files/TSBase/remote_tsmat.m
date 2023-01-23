@@ -31,15 +31,22 @@ remote = remote_cea;
 %
 if isstruct(remote)
     %
-    cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
-    %
-    remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only
-    %
-    job = matstandardjob_jd('runmat');
-    job.funcopy = false;%since binary is machine specific only local version is used
-    %
-    [err,job,yout1,yout2,yout3,yout4,yout5] = matremote_jd('tsmat',{shotnumber,signal},remote,job);
-    %
+    if ~isempty(strfind(remote.host,'partenaires'))
+        %
+        [yout1,yout2,yout3,yout4,yout5] = tsmat(shotnumber,signal);
+        %
+    else
+        %
+        cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
+        %
+        remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only
+        %
+        job = matstandardjob_jd('runmat');
+        job.funcopy = false;%since binary is machine specific only local version is used
+        %
+        [err,job,yout1,yout2,yout3,yout4,yout5] = matremote_jd('tsmat',{shotnumber,signal},remote,job);
+        %
+    end
 else
     %
      if isempty(remote)

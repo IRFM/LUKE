@@ -32,17 +32,25 @@ remote = remote_cea;
 %
 if isstruct(remote)
     %
-    cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
-    %
-    remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only
-    %
-    job = matstandardjob_jd('runmat');
-    job.funcopy = false;%since binary is machine specific only local version is used
-    %
-    [err,job,cr,nb_mesures,num_version,certif,date,heure] = matremote_jd('tsexist',{num_choc,nom_donnee},remote,job);
+    if ~isempty(strfind(remote.host,'partenaires'))
+        %
+        [cr,nb_mesures,num_version,certif,date,heure] = tsexist(num_choc,nom_donnee);
+        %
+    else
+        %
+        cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
+        %
+        remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only
+        %
+        job = matstandardjob_jd('runmat');
+        job.funcopy = false;%since binary is machine specific only local version is used
+        %
+        [err,job,cr,nb_mesures,num_version,certif,date,heure] = matremote_jd('tsexist',{num_choc,nom_donnee},remote,job);
+        %
+    end
   %
 else
-if isempty(remote)
+    if isempty(remote)
         %
         cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
         %

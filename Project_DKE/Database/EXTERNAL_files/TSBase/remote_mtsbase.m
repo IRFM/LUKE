@@ -35,6 +35,12 @@ if ~isstruct(sinputs)% new job
     %
     if isstruct(remote)
         %
+        if ~isempty(strfind(remote.host,'partenaires'))
+            %
+            [soutputs] = mtsbase(shotnumber,signals);
+            %
+        else
+            %
         cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
         %
         remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only

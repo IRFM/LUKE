@@ -28,17 +28,26 @@ remote = remote_cea;
 %
 if isstruct(remote)
     %
-    cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ')
-    %
-    remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only
-    %
-    job = matstandardjob_jd('runmat');
-    job.funcopy = false;%since binary is machine specific only local version is used
-    %
-    [err,job,ydate] = matremote_jd('tsdate',{shotnumber},remote,job);
+    if ~isempty(strfind(remote.host,'partenaires'))
+        %
+        [ydate] = tsdate(shotnumber);
+        %
+    else
+        %
+        cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ')
+        %
+        remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only
+        %
+        job = matstandardjob_jd('runmat');
+        job.funcopy = false;%since binary is machine specific only local version is used
+        %
+        [err,job,ydate] = matremote_jd('tsdate',{shotnumber},remote,job);
+        %
+    end
     %
 else
-if isempty(remote)
+    %
+    if isempty(remote)
         %
         cprintf('red*','---> CEA computers are unreachable for access to TSBase. Check the connection parameters (ssh).');disp(' ')
         %
@@ -51,5 +60,7 @@ if isempty(remote)
 end 
 %
 if length(ydate) > 10
+    %
     ydate = ydate(1:10);%remove possible spurious ending char
+    %
 end
