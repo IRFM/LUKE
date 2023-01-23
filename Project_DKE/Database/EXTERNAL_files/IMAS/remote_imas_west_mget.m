@@ -34,6 +34,12 @@ if isstruct(remote)
         %
         imas_outputs = imas_west_mget(shotnumber,signals);
         %
+        for ii = 1:length(signals)
+            %
+            imas_outputs.(signals{ii}{1}) = outputs(ii).imas_output;
+            %
+        end
+        %
     else
         %
         cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ');
