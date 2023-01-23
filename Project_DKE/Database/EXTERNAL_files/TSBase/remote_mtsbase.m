@@ -35,7 +35,10 @@ if ~isstruct(sinputs)% new job
     %
     if isstruct(remote)
         %
-        if ~isempty(strfind(remote.host,'partenaires'))
+        [err,txt] = unix('hostname');
+        txt = deblank(txt);
+        %
+        if ~isempty(strfind(txt,'partenaires')) && ~isempty(strfind(txt,'intra'))
             %
             [soutputs] = mtsbase(shotnumber,signals);
             %
