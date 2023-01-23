@@ -2280,6 +2280,8 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
                 end  
             end
             %
+            data_proc.ripple = proc_ripple_yp(equilDKE,mksa,data,opt);
+            %
             if ~isfield(opt,'axs') && isfield(data_proc,'timevol') && isfield(data_proc.timevol,'I_tot_rf') && isfield(opt,'its_rf') && any(opt.its_rf),
                 %
                 if islogical(opt.its_rf),
