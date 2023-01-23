@@ -1,11 +1,12 @@
-function [imas_output]= remote_ids_get_slice(shotnumber,ids_name,imas_run,imas_occurrence,imas_user,imas_machine)
+function [imas_output] = remote_ids_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine)
 %
-%LUKE -  Function which load signals from WEST/TORE SUPRA IMAS database. May be used within CEA network or outside by SSH bridge
+%LUKE -  Function which load signals at a given time (asolute or relative to t_ignitron) from WEST/TORE SUPRA IMAS database. May be used within CEA network or outside by SSH bridge
 %
 %   Input:
 %
 %		shotnumber: shot number 
 %       ids_name: ids name. To see all ids_name, get data dictionary, type in Linux Terminal: dd_doc
+%       time_requested: time requested -> real : relative time (s), imag : absolute time(s). To get absolute time, get time_ignitron usingvtsbase, tignitron = tsbase(shotnumber, 'rignitron');
 %       imas_run: see IMAS doc
 %       imas_occurrence: see IMAS doc
 %       imas_user: see IMAS doc
@@ -19,17 +20,11 @@ function [imas_output]= remote_ids_get_slice(shotnumber,ids_name,imas_run,imas_o
 %		imas_output: IMAS data structure for the corresponding data type
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
-
-
-
-%idx = imas_open_env('ids', shot, run, user, machine, '3');
-%corep = ids_get_slice(idx, 'core_profiles', time_requested, 1);
-
 %
 imas_output = [];
 %
-if nargin < 2,
-     error('Not enough input argument in remote_imas_west_get.m');
+if nargin < 3
+     error('Not enough input argument in remote_imas_get_slice.m');
 end
 %
 remote = remote_cea;
@@ -44,25 +39,25 @@ if isstruct(remote)
     job.funcopy = false;%since binary is machine specific only local version is used
     %job.debugmode = 1;%
     %
-    if nargin == 2
+    if nargin == 3
         %
-        [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name},remote,job);
-        %
-    elseif nargin == 3
-        %
-        [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run},remote,job);
+        [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested},remote,job);
         %
     elseif nargin == 4
         %
-        [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run,imas_occurrence},remote,job);
+        [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run},remote,job);
         %
     elseif nargin == 5
         %
-        [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run,imas_occurrence,imas_user},remote,job);
+        [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence},remote,job);
         %
     elseif nargin == 6
         %
-        [err,job,imas_output] = matremote_jd('imas_west_get',{shotnumber,ids_name,imas_run,imas_occurrence,imas_user,imas_machine},remote,job);
+        [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user},remote,job);
+        %
+    elseif nargin == 7
+        %
+        [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine},remote,job);
         %
     end
     %
