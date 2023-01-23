@@ -33,7 +33,10 @@ remote = remote_cea;
 %
 if isstruct(remote)
     %
-    if ~isempty(strfind(remote.host,'partenaires'))
+    [err,txt] = unix('hostname');
+    txt = deblank(txt);
+    %
+    if ~isempty(strfind(txt,'partenaires')) && ~isempty(strfind(txt,'intra'))
         %
         if nargin == 3
             %

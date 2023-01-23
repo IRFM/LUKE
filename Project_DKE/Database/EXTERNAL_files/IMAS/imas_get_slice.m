@@ -31,7 +31,7 @@ end
 %
 if isreal(time_requested)
     %
-    tignitron = tsbase(shot,'rignitron');
+    tignitron = remote_tsbase(shot,'rignitron');
     time_ref = tignitron + time_requested;
     %
 else
