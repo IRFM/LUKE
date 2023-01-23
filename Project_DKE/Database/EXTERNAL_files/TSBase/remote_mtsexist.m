@@ -46,7 +46,7 @@ if ~isstruct(sinputs)% new job
         [err,txt] = unix('hostname');
         txt = deblank(txt);
         %
-        if ~isempty(strfind(txt,'partenaires')) && ~isempty(strfind(txt,'intra'))
+        if ~isempty(strfind(txt,'partenaires')) || ~isempty(strfind(txt,'intra'))
             %
             [youts] = mtsexist(num_chocs,nom_donnee);
             %

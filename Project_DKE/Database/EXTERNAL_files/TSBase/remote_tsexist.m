@@ -35,7 +35,7 @@ if isstruct(remote)
     [err,txt] = unix('hostname');
     txt = deblank(txt);
     %
-    if ~isempty(strfind(txt,'partenaires')) && ~isempty(strfind(txt,'intra'))
+    if ~isempty(strfind(txt,'partenaires')) || ~isempty(strfind(txt,'intra'))
         %
         [cr,nb_mesures,num_version,certif,date,heure] = tsexist(num_choc,nom_donnee);
         %

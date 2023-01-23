@@ -34,7 +34,7 @@ if isstruct(remote)
     [err,txt] = unix('hostname');
     txt = deblank(txt);
     %
-    if ~isempty(strfind(txt,'partenaires')) && ~isempty(strfind(txt,'intra'))
+    if ~isempty(strfind(txt,'partenaires')) || ~isempty(strfind(txt,'intra'))
         %
         [yout1,yout2,yout3,yout4,yout5] = tsmat(shotnumber,signal);
         %
