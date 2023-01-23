@@ -1,4 +1,4 @@
-function [imas_output] = remote_ids_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine,imas_backend)
+function [imas_output] = remote_ids_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine,imas_backend,imas_interp)
 %
 %LUKE -  Function which load signals at a given time (asolute or relative to t_ignitron) from WEST/TORE SUPRA IMAS database. May be used within CEA network or outside by SSH bridge
 %
@@ -12,6 +12,7 @@ function [imas_output] = remote_ids_get_slice(shotnumber,ids_name,time_requested
 %       - imas_user : see IMAS doc
 %       - imas_machine : see IMAS doc
 %       - imas_backend : see IMAS doc
+%       - imas_interp : see IMAS doc
 %
 % NOTE : Default options: imas_run=0, imas_occurrence=0,imas_user='imas_public', imas_machine='west'
 %        Details on the website : https://westusers.partenaires.cea.fr
@@ -58,6 +59,10 @@ if isstruct(remote)
             %
             imas_output = imas_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine,imas_backend);
             %
+        elseif nargin == 9
+            %
+            imas_output = imas_get_slice(shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine,imas_backend,imas_interp);
+            %
         end
         %
     else
@@ -93,6 +98,10 @@ if isstruct(remote)
         elseif nargin == 8
             %
             [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine,imas_backend},remote,job);
+            %
+        elseif nargin == 9
+            %
+            [err,job,imas_output] = matremote_jd('imas_get_slice',{shotnumber,ids_name,time_requested,imas_run,imas_occurrence,imas_user,imas_machine,imas_backend,imas_interp},remote,job);
             %
         end
         %

@@ -11,7 +11,8 @@ run     = 0;
 occ     = 1;
 user    = 'imas_public';
 machine = 'west';
-backend = 12;%mds+ -> 12, hdf5 -> 13
+backend = 12 ;%mds+ -> 12, hdf5 -> 13
+interp = 1;
 
 % Other parameters
 Z_for_R_plot     = 30; % Z position for 1D plot in cartesian grid
@@ -23,11 +24,12 @@ fprintf('run        = %d \n', run);
 fprintf('occurrence = %d \n', occ);
 fprintf('user       = %s \n', user);
 fprintf('machine    = %s \n', machine);
-fprintf('backend    = %s \n', backend);
+fprintf('backend    = %d \n', backend);
+fprintf('interp    = %d \n', interp);
 
 % Open IMAS file: function imas_west_get(shot, ids_name, run, occ, user, machine)
 
-[equi]= remote_ids_get_slice(shot,'equilibrium',time_requested,run,occ,user,machine,backend);
+[equi]= remote_ids_get_slice(shot,'equilibrium',time_requested,run,occ,user,machine,backend,interp);
 
 % Filter no converged equilibrium computations
 mask_eq = equi.code.output_flag >= 0;
