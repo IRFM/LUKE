@@ -32,7 +32,7 @@ if isstruct(remote)
     %
     if ~isempty(strfind(remote.host,'partenaires'))
         %
-        imas_outputs = imas_west_mget(shotnumber,signals);
+        outputs = imas_west_mget(shotnumber,signals);
         %
         for ii = 1:length(signals)
             %
