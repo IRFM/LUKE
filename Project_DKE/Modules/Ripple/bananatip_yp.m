@@ -27,6 +27,7 @@ function ripple = bananatip_yp(ntheta,psin,dpsin,pn,mhu,equil,XXf0,pn2dpn,mksa)
 %            ripple.R_tip: Major radius where the density banana tips are calculated
 %            ripple.Z_tip: Vertical position where the density banana tips are calculated
 %            ripple.ne_ref: reference density for XXf0_tip (m-3) 
+%            ripple.Te_ref: reference temperature for XXf0_tip (keV) 
 %
 % By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
@@ -133,5 +134,6 @@ for ir = 1:length(ripple.rho_tip),
 end
 %
 ripple.ne_ref = mksa.ne_ref;
+ripple.Te_ref = mksa.Te_ref;
 %
 
