@@ -738,6 +738,7 @@ if flag_consistency && real(display_mode) >= 1,
     equil = equilconsistency_yp(equil,'',real(display_mode));
 end
 %
+equilDKE.equil = equil;
 equilDKE.tokname = equil.id;
 equilDKE.mtheta = mtheta;
 equilDKE.xpsin = xpsin;
