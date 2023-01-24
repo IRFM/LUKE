@@ -11,7 +11,7 @@ clear functions
 %output = lukestructs.output;
 %equil = lukestructs.equil;
 %
-load('LUKE_DATA_WEST_52702_5.0442_C3PO_C3_C3PO_C4.mat')
+load('LUKE_DATA_WEST_52702_5.0442_C3PO_C3_C3PO_C4_testrippletips.mat')
 %
 XXf0 = output.dke_out.XXf0{1};
 psin = output.radialDKE.xpsin_f;
