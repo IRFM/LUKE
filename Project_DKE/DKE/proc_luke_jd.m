@@ -1204,6 +1204,21 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             data_proc.radial.xp_rf_2piRp_lin_coll = xp_rf_2piRp_lin_coll;
             data_proc.radial.xp_rf_2piRp_coll_luke = xp_rf_2piRp_coll_luke;
             %
+           %if exist('Zmripple','var') && ~isempty(Zmripple) && sum(sum(Zmripple.Xnhuloss)) ~= 0
+                %
+            data_proc.radial.ripple.Rp = equilDKE.Rp;
+            data_proc.radial.ripple.xR = equilDKE.Rp+equilDKE.Xx(:,1);
+            data_proc.radial.ripple.xMRR_flux = dke_out.xMRR_flux;
+            data_proc.radial.ripple.xMRR_tau = dke_out.xMRR_tau;
+            data_proc.radial.ripple.xthetabanana = Zmripple.xthetabanana;
+            data_proc.radial.ripple.xthetaloss = Zmripple.xthetaloss;
+            data_proc.radial.ripple.xpndetrap = Zmripple.xpndetrap;
+            data_proc.radial.ripple.xpnth = Zmripple.xpnth;
+            %
+            ntheta = 101;
+            pn2dpn = momentumDKE.pn(:).*momentumDKE.pn(:).*momentumDKE.dpn(:);
+            data_proc.radial.ripple.banana_tip = bananatip_yp(ntheta,radialDKE.xpsin_f,radialDKE.xdpsin_f_dke,momentumDKE.mhu,momentumDKE.mhu,equilDKE.equil,dke_out.XXf0{1},pn2dpn,mksa);
+            %
             data_proc.scalar.li = internal_inductance_yp(data_proc.radial.xrhoG,data_proc.radial.J_tot);
             %
             % TIME EVOLUTION
