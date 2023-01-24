@@ -10,11 +10,11 @@ if ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             %
             data_proc = proc_luke_jd(lukestructs.output);%default value
             %
-            cprintf([1,0.5,0],['---> Defaults options for LUKE postprocessing since they are not defined in sparams.' ]);disp(' ')    
+            cprintf([1,0.5,0],'---> Defaults options for LUKE postprocessing since they are not defined in sparams.' );disp(' ')    
             %
         else
             %
-            cprintf('*red',['---> error in local LUKE postprocessing.' ]);disp(' ')    
+            cprintf('*red','---> error in local LUKE postprocessing.' );disp(' ')    
             %
         end
         %
@@ -29,13 +29,14 @@ if ~exist(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'])
             data_proc = proc_luke_jd(lukestructs.output,sluke_params_value(sparams.postprocessing,ii));
             %
         end
+        %
     end
     %
     if ~isempty(data_proc)
         %
         save(['SLUKE_RESULTS/PROC_LUKE_DATA_',simul_id,'.mat'],'data_proc');
         %
-        cprintf('*green',['---> has been completed : processed results are saved.']);disp(' ')
+        cprintf('*green','---> has been completed : processed results of LUKE are saved.');disp(' ')
         %
     else
         %
