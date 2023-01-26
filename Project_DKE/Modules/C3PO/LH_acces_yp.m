@@ -33,7 +33,7 @@ end
 if nargin < 6
     resolution = 0;%low resolution, fast calculations
 end
-%
+%proc
 if resolution == 0
     nnpar = 251;
     ntheta = 131;
@@ -44,11 +44,17 @@ else
     nrho = 212;
 end
 %
+if isfield(equil,'equil_fit')
+    %
+    equil = rmfield(equil,'equil_fit');
+    %
+end
+%
 if ~isfield(equil,'consistency') || ~isfield(equil,'equil_fit')
     equil = equilconsistency_yp(equil,'',0);
 end
 %
-displeg = 0;
+displeg = 1;
 %
 [qe,me,mp,~,e0] = pc_dke_yp;
 %
@@ -205,7 +211,7 @@ ibnpar_mask_max_f = find(~isnan(bnpar_mask_max_f));
 bbR_max_f = bR_max_f(ibnpar_mask_max_f);
 bbnpar_mask_max_f = bnpar_mask_max_f(ibnpar_mask_max_f);
 bk_max_f = boundary(bbR_max_f,bbnpar_mask_max_f);
-graph1D_jd(bbR_max_f(bk_max_f),bbnpar_mask_max_f(bk_max_f),0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'--','none','k',2);
+graph1D_jd(bbR_max_f(bk_max_f),bbnpar_mask_max_f(bk_max_f),0,0,'R (m)','N_{||}',['N_{||0} = ',num2str(npar0),', \gamma_{KAM} = ',num2str(round(100*gamma_KAM_approximate)/100)],NaN,NaN,[1,nparmax],'--','none','k',2);
 %
 if displeg == 1
     legend('N_{||Landau} = 6.5*{T_e[keV]}^{-1/2}','N_{||acc.} (Stix-Golant)','Slow wave @ Z = Z_{p}','Fast wave @ Z = Z_{p}')
@@ -238,7 +244,7 @@ if strfind(equil.id,'WEST')
     disp('WARNING: WEST campaign C4 corrections of Te')
     disp('*******************************************')
 end
-graph1D_jd(bbR_mask_s(bk_min_s),bbnpar_mask_s(bk_min_s),0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'-','none','r',2);hold on
+graph1D_jd(bbR_mask_s(bk_min_s),bbnpar_mask_s(bk_min_s),0,0,'R (m)','N_{||}',['N_{||0} = ',num2str(npar0),', \gamma_{KAM} = ',num2str(round(100*gamma_KAM_approximate)/100)],NaN,NaN,[1,nparmax],'-','none','r',2);hold on
 %
 open_upperboundaries_propagationdomain = ~isempty(find(gamma1>1));
 %
