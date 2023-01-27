@@ -26,10 +26,11 @@ ntheta = 71;
 %
 ripple = bananatip_yp(ntheta,psin,dpsin,pn,mhu,equil,XXf0,pn2dpn,mksa);
 %
-nR = 101;
+nR = 151;
 nZ = 51;
-nlevel = 11;
+nlevel = 21;
 Ec = [mksa.Te_ref,20,100,200];%keV
+%Ec = [1,20,100,200];%keV
 %
 R_tip = linspace(min(min(ripple.R_tip)),max(max(ripple.R_tip)),nR);
 Z_tip = linspace(min(min(ripple.Z_tip)),max(max(ripple.Z_tip)),nZ);
