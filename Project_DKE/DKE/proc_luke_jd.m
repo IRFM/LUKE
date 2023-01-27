@@ -1219,7 +1219,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             %
             ntheta = 101;
             pn2dpn = momentumDKE.pn(:).*momentumDKE.pn(:).*momentumDKE.dpn(:);
-            data_proc.radial.ripple.banana_tip = bananatip_yp(ntheta,radialDKE.xpsin_f,radialDKE.xdpsin_f_dke,momentumDKE.mhu,momentumDKE.mhu,equilDKE.equil,dke_out.XXf0{1},pn2dpn,mksa);
+            data_proc.radial.ripple.banana_tip = bananatip_yp(ntheta,radialDKE.xpsin_f,radialDKE.xdpsin_f_dke,momentumDKE.pn,momentumDKE.mhu,equilDKE.equil,dke_out.XXf0{1},pn2dpn,mksa);
             %
             data_proc.scalar.li = internal_inductance_yp(data_proc.radial.xrhoG,data_proc.radial.J_tot);
             %
