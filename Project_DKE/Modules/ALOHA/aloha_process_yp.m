@@ -11,7 +11,6 @@ else
 end
 %
 ne0 = linspace(optim.ne_guess(1),optim.ne_guess(2),nitmax);% coarse grid
-ne1 = linspace(optim.ne_guess(1),optim.ne_guess(2),1000);% fine grid
 %
 % calculate ALOHA for all densities on the coarse grid
 %
@@ -27,15 +26,37 @@ for ii = 1:nitmax
     %
     mask_klystrons = sc(ii).results.Pin > 5000;%less than 5kW of LH power per module corresponds to a technical failure
     %
-    err_RC(ii) = norm(sc(ii).results.RC(mask_klystrons) - rc(mask_klystrons));%for working klystrons only
+    err_RC(ii) = norm(sc(ii).results.RC(mask_klystrons) - rc(mask_klystronplots));%for working klystrons only
     %
 end
 %
 % Fit the error with experimental measurements
 %
-p = polyfit(ne0,err_RC,nitmax);
-err_RC_fit = polyval(p,ne1);
-ne_optim = ne1(find(err_RC_fit == min(err_RC_fit)));
+ii_min = find(err_RC == min(err_RC))
+%
+if isempty(ii_min) || ii_min < 3 || ii_min > length(ne0)-2 || all(isnan(err_RC))
+    %
+    ne_optim = 1e17;%defaut value since problem in RC in order to avoid code break
+    enforce_mode = 1;
+    %
+else
+    %
+    nfit = 2;
+    %
+    ne0_ref_mean = mean(ne0(ii_min-nfit:ii_min+nfit));
+    ne0_ref = ne0(ii_min-nfit:ii_min+nfit)/ne0_ref_mean;
+    err_RC_ref = err_RC(ii_min-nfit:ii_min+nfit);
+    %
+    p = polyfit(ne0_ref,err_RC_ref,length(err_RC_ref)-1);
+    ne1 = linspace(ne0(ii_min-nfit),ne0(ii_min+nfit),1000);% fine grid
+    err_RC_fit = polyval(p,ne1/ne0_ref_mean);
+    ne_optim = ne1(find(err_RC_fit == min(err_RC_fit)));
+    %
+    %plot(ne0,err_RC,'ro-',ne0_ref,err_RC_ref,'b*--',ne1,err_RC_fit,'gx-.')
+    %
+    enforce_mode = 0;
+    %
+end
 %
 sc_out = sc_in;
 %
@@ -55,6 +76,7 @@ sc_out.simul.optim = optim;
 sc_out.simul.p = p;
 sc_out.simul.err_RC_fit = err_RC_fit;
 sc_out.simul.ne_optim = ne_optim;
+sc_out.simul.enforce_mode = enforce_mode;
 %
 
     
