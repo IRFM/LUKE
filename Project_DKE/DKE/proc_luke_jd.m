@@ -1216,6 +1216,7 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             data_proc.radial.ripple.xthetaloss = Zmripple.xthetaloss;
             data_proc.radial.ripple.xpndetrap = Zmripple.xpndetrap;
             data_proc.radial.ripple.xpnth = Zmripple.xpnth;
+            data_proc.radial.ripple.xEseuil = Zmripple.xEseuil;
             %
             ntheta = 101;
             pn2dpn = momentumDKE.pn(:).*momentumDKE.pn(:).*momentumDKE.dpn(:);
