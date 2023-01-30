@@ -136,4 +136,3 @@ end
 ripple.ne_ref = mksa.ne_ref;
 ripple.Te_ref = mksa.Te_ref;
 %
-
