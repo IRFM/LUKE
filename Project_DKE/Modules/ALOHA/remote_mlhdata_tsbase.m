@@ -26,12 +26,24 @@ function [data_lh] = remote_mlhdata_tsbase(machine,port,shot,tmin,tmax,disp_mode
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
 if nargin < 6
+    %
     disp_mode = 0;
+    disp_save = 0;
     disp_path = '';
+    %
 end
 %
 if nargin < 7
+    %
+    disp_save = 0;
     disp_path = '';
+    %
+end
+%
+if nargin < 8
+    %
+    disp_path = '';
+    %
 end
 %
 data_lh = []; 
