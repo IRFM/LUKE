@@ -20,7 +20,7 @@ if nargin == 0
     error('Wrong number of input arguments in sluke_params_preset.')
     %
 elseif nargin == 1
-	%
+    %
 	if strcmp(upper(preset_name),'TEST_ALOHA') % see Project_FKE/Modules/ALOHA/test_run_aloha_remote
         %
         sparams.machine = {'TS','WEST','TS'};%machine name
@@ -81,16 +81,16 @@ elseif nargin == 1
         % Lower hybrid wave power spectrum calculated by the ALOHA coupling code 
         %
         sparams.rfwaves.antenna.LH.ALOHA.port = {{'Q6A'},{'Q6A'},{'Q6A','Q6B'}};%antenna ports : Q6A, or Q6B or Q6A+Q6B -> (C2,C3) or (C3,C4) or (LH1,LH2) for Tore Supra or WEST
-        sparams.rfwaves.antenna.LH.ALOHA.remote_profile = {{17},{17},{17,17}};%remote profile number (list available by typing 'dispremoteprofiles' in command window) 
+        %sparams.rfwaves.antenna.LH.ALOHA.remote_profile = {{''},{''},{'',''}};%remote profile number (list available by typing 'dispremoteprofiles' in command window) 
         sparams.rfwaves.antenna.LH.ALOHA.display.data.mode = {{[1]},{[1]},{[1],[1]}};%display and save experimental data figures (2), display and do not save figures (1), do not display but save figures (0), do nothing (-1) if exist
         sparams.rfwaves.antenna.LH.ALOHA.display.data.save = {{[1]},{[1]},{[1],[1]}};%display and save experimental data figures (2), display and do not save figures (1), do not display but save figures (0), do nothing (-1) if exist
         sparams.rfwaves.antenna.LH.ALOHA.display.data.path = {{'ALOHA/'},{'ALOHA/'},{'ALOHA/','ALOHA/'}};%
         sparams.rfwaves.antenna.LH.ALOHA.display.results = {{1},{1},{1,1}};%display and save ALOHA power spectrum and RC figures (2), display and do not save figures (1), do not display but save figures (0), do nothing (-1)
         sparams.rfwaves.antenna.LH.ALOHA.optim.method = {{0},{0},{1,1}};%(1) Edge density in front of the grill is calculated such that simulated RC coefficients are the clostest to observations (0) Edge density in front of the grill is given by the guess
-        sparams.rfwaves.antenna.LH.ALOHA.optim.ne_guess = {{1e17},{1e17},{[0.7e17,5.0e17],[0.7e17,5.0e17]}};%Edge density in front of the grill (initial guess or enforced value) (m-3)
+        sparams.rfwaves.antenna.LH.ALOHA.optim.ne_guess = {{1e17},{1e17},{[0.1e17,2.0e17],[0.1e17,2.0e17]}};%Edge density in front of the grill (initial guess or enforced value) (m-3)
         sparams.rfwaves.antenna.LH.ALOHA.optim.tolfun = {{1e-2},{1e-2},{1e-2,1e-2}};%Relative tolerance on targets (if aloha.optim.method = 1)
         sparams.rfwaves.antenna.LH.ALOHA.optim.tolx = {{1e-2},{1e-2},{1e-2,1e-2}};%Relative tolerance on inputs (if aloha.optim.method = 1)
-        sparams.rfwaves.antenna.LH.ALOHA.optim.nitmax = {{10},{10},{10,10}};%Maximum number of iterations (if aloha.optim.method = 1)
+        sparams.rfwaves.antenna.LH.ALOHA.optim.nitmax = {{20},{20},{20,20}};%Maximum number of iterations (if aloha.optim.method = 1)
         %
         sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.param_tor.dir = {{1},{1},{1,1}};%(0) P + preserve repartition and total power, (1) P/N^2 + preserve directivity and repartition, (2) P/N^2 + preserve directivity and total power (treating positive and negative spectra as blocks. Warning : some transfer of P/N^2 across N=0 necessary in this case), (3) P/N^2 + preserve repartition and total power 
         sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.param_tor.mode = {{0},{0},{0,0}};%(0) select a number of Gaussian peaks left unchanged (WARNING : total power less than Pin), (1) assemble peaks fixing Pmax and N, allowing dN to change, (2) assemble peaks allowing Pmax, N and dN to change
