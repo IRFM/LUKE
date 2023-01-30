@@ -26,11 +26,12 @@ ntheta = 71;
 %
 ripple = bananatip_yp(ntheta,psin,dpsin,pn,mhu,equil,XXf0,pn2dpn,mksa);
 %
+ripple.Te_ref = mksa.Te_ref;
+%
 nR = 151;
 nZ = 51;
 nlevel = 21;
-Ec = [mksa.Te_ref,20,100,200];%keV
-%Ec = [1,20,100,200];%keV
+Ec = [ripple.Te_ref,20,100,200];%keV
 %
 R_tip = linspace(min(min(ripple.R_tip)),max(max(ripple.R_tip)),nR);
 Z_tip = linspace(min(min(ripple.Z_tip)),max(max(ripple.Z_tip)),nZ);
@@ -39,6 +40,9 @@ XR_tip = R_tip(:)*ones(1,nZ);
 XZ_tip = ones(nR,1)*Z_tip(:)';
 %
 maxDNeDphi_tip = max(max(max(ripple.DNeDphi_tip)));
+%
+%mask_Ec_detrap = ripple.Ec_tip(:) > 30;
+%ripple.DNeDphi_tip(~mask_Ec_detrap,:,:) = 0;
 %
 for iEc = 1:length(Ec),
     XDNeDphi_tip = griddata(ripple.R_tip,ripple.Z_tip,squeeze(ripple.DNeDphi_tip(sum(ripple.Ec_tip < Ec(iEc)),:,:)),XR_tip,XZ_tip)';
