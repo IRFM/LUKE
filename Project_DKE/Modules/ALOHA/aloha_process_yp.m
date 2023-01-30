@@ -26,7 +26,7 @@ for ii = 1:nitmax
     %
     mask_klystrons = sc(ii).results.Pin > 5000;%less than 5kW of LH power per module corresponds to a technical failure
     %
-    err_RC(ii) = norm(sc(ii).results.RC(mask_klystrons) - rc(mask_klystronplots));%for working klystrons only
+    err_RC(ii) = norm(sc(ii).results.RC(mask_klystrons) - rc(mask_klystrons));%for working klystrons only
     %
 end
 %
