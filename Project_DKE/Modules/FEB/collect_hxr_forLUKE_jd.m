@@ -143,7 +143,7 @@ elseif strcmp(basestr,'WEST')
     %
     if isfield(all_hxr_data,'err')
         %
-        disp(['WARNING : data not found for shot :',num2str(shot1),', error : ',all_hxr_data.err{3}]);
+        disp(['WARNING : data not found for shot : ',num2str(shot1),', error : ',all_hxr_data.err{3}]);
         %
         energy = [];
         hxr = [];
@@ -154,6 +154,33 @@ elseif strcmp(basestr,'WEST')
         %
         return            
     end                
+    %
+    flag_empty_signal = 0;
+    %
+    for iii = 1:length(all_hxr_data)
+        %
+        if isempty(all_hxr_data(iii).yout1) && isempty(all_hxr_data(iii).yout2) && isempty(all_hxr_data(iii).yout3) && isempty(all_hxr_data(iii).yout4) && isempty(all_hxr_data(iii).yout5)
+            %
+            flag_empty_signal = flag_empty_signal + 1;
+            %
+        end
+        %
+    end
+    %
+    if flag_empty_signal == length(all_hxr_data)
+        %
+        disp(['WARNING : data structure is empty for shot : ',num2str(shot1)]);
+        %
+        energy = [];
+        hxr = [];
+        t = [];
+        beta = [];
+        filter_thickness = [];
+        filter_material = [];
+        %
+        return
+        %
+    end
     %
     t = all_hxr_data(1).yout2(:,1);
     %
