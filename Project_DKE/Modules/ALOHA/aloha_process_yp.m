@@ -76,12 +76,49 @@ sc_out.simul.sc_out = sc_out;
 sc_out.simul.sc_in = sc_in;
 sc_out.simul.nitmax = nitmax;
 sc_out.simul.ne0 = ne0;
-sc_out.simul.ne1 = ne1;
-sc_out.simul.err_RC = err_RC;
-sc_out.simul.rc = rc;
-sc_out.simul.optim = optim;
-sc_out.simul.p = p;
-sc_out.simul.err_RC_fit = err_RC_fit;
+%
+if exist('nfit')
+    %
+    sc_out.simul.nfit = nfit;
+    %
+end
+%
+if exist('ne1')
+    %
+    sc_out.simul.ne1 = ne1;
+    %
+end
+%
+if exist('err_RC')
+    %
+    sc_out.simul.err_RC = err_RC;
+    %
+end
+%
+if exist('err_RC_fit')
+    %
+    sc_out.simul.err_RC_fit = err_RC_fit;
+    %
+end
+%
+if exist('p')
+    %
+    sc_out.simul.p = p;
+    %
+end
+%
+if exist('rc')
+    %
+    sc_out.simul.rc = rc;
+    %
+end
+%
+if exist('optim')
+    %
+    sc_out.simul.optim = optim;
+    %
+end
+%
 sc_out.simul.ne_optim = ne_optim;
 sc_out.simul.enforce_mode = enforce_mode;
 %
