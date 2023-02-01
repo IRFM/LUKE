@@ -32,14 +32,13 @@ end
 %
 % Fit the error with experimental measurements
 %
-ii_min = find(err_RC == min(err_RC))
+ii_min = find(err_RC == min(err_RC));
 %
-if isempty(ii_min) || ii_min < 3 || ii_min > length(ne0)-2 || all(isnan(err_RC))
-    %
-    ne_optim = 1e17;%defaut value since problem in RC in order to avoid code break
-    enforce_mode = 1;
-    %
-else
+ne_optim = 1e17;%defaut value since problem in RC in order to avoid code break
+%
+enforce_mode = 1;
+%
+if ~isempty(ii_min) && ii_min >= 3 && ii_min <= length(ne0)-2 && ~all(isnan(err_RC))
     %
     nfit = 2;
     %
@@ -55,6 +54,14 @@ else
     %plot(ne0,err_RC,'ro-',ne0_ref,err_RC_ref,'b*--',ne1,err_RC_fit,'gx-.')
     %
     enforce_mode = 0;
+    %
+end
+%
+if ne_optim < optim.ne_guess(1) || ne_optim > optim.ne_guess(2) || isnan(ne_optim) || isempty(ne_optim) || isinf(ne_optim)
+    %
+    ne_optim = 1e17;%defaut value since problem in RC in order to avoid code break
+    %
+    enforce_mode = 1;
     %
 end
 %
