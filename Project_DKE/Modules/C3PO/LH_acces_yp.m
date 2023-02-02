@@ -1,4 +1,4 @@
-function [na,open_upperboundaries_propagationdomain,intersection] = LH_acces_yp(equil,omega_rf,ray,npar0,nparmax,resolution) 
+function [na,gamma_KAM_exact,gamma_KAM_approximate,open_upperboundaries_propagationdomain,intersection,Npar_gap_min,R_kinematic_gap_min] = LH_acces_yp(equil,omega_rf,ray,npar0,nparmax,resolution,figname) 
 %
 %   Spectral domain of propagation with Stix-Golant accessibility criterion
 %    
@@ -8,14 +8,19 @@ function [na,open_upperboundaries_propagationdomain,intersection] = LH_acces_yp(
 %     - omega_rf: Lower Hybrid wave angular frequency (2*pi*fLH) (rad/s)
 %	  - ray: ray structure
 %     - npar0: initial npar value at the plasma edge
-%     - nparmax: 
-%     - nnpar: 
-%     - ntheta:
-%     - nrho:
+%     - nparmax: upper limit of the propagation domain (default value : 8)
+%     - resolution: 0 or 1 (0: low resolution, 1: high resolution)
+%     - figname: figure name
 %
 %    Output:
 %
-%         - na: accessible refractive index on the (psi,theta) grid [npsi,mtheta]
+%     - na: accessible refractive index on the (psi,theta) grid [npsi,mtheta]
+%     - gamma_KAM_exact : < 1 upper boundaries, > 1 no upper boundaries of the propagation domain
+%     - gamma_KAM_approximate : < 1 upper boundaries, > 1 no upper boundaries of the propagation domain
+%     - open_upperboundaries_propagationdomain:
+%     - intersection: existence of intersection between propagation domain and Landau damping 
+%     - Npar_gap_min:
+%     - R_kinematic_gap_min: (m)
 %
 %by Y.PEYSSON (yves.peysson@cea.fr) and J. Decker (joan.decker@epfl.ch)
 %
@@ -24,14 +29,20 @@ if nargin < 4
     npar0 = 2.0;%n||0 taken at the plasma edge in the equatorial mid-plane with m=0
     nparmax = 8;%max N|| is 8
     resolution = 0;%low resolution, fast calculations
+    figname = '';%local save
 end
 if nargin < 5
     nparmax = 8;%max N|| is 8
     resolution = 0;%low resolution, fast calculations
+    figname = '';%local save
 end
 %
 if nargin < 6
     resolution = 0;%low resolution, fast calculations
+    figname = '';%local save
+end
+if nargin < 7
+    figname = '';%local save
 end
 %proc
 if resolution == 0
@@ -50,9 +61,12 @@ if isfield(equil,'equil_fit')
     %
 end
 %
-if ~isfield(equil,'consistency') || ~isfield(equil,'equil_fit')
-    equil = equilconsistency_yp(equil,'',0);
-end
+equil_fit = fitequil_yp(equil);
+equil.equil_fit = equil_fit;
+%
+%if ~isfield(equil,'consistency') || ~isfield(equil,'equil_fit')
+%    equil = equilconsistency_yp(equil,'',0);
+%end
 %
 displeg = 1;
 %
@@ -73,8 +87,8 @@ gamma_KAM_exact = max(max(gamma1));
 [na,E] = stixgolant_yp(equil_val,omega_rf);
 %
 ns = [equil_val.ne';equil_val.zni'];
-qs = qe*[-1;equil.zZi(:)];    
-ms = [me;mp*equil.zmi(:)];
+qs = qe*[-1;equil_val.zZi(:)];    
+ms = [me;mp*equil_val.zmi(:)];
 %
 wps = repmat(sqrt(ns.*(qs*ones(1,nrho)).^2/e0./ms),[1,1,ntheta]);
 wcs = repmat(qs,[1,nrho,ntheta]).*shiftdim(repmat(equil_val.B,[1,1,length(qs)]),2)./repmat(ms,[1,nrho,ntheta]);
@@ -168,7 +182,7 @@ xTe = [flipud(equil_val.Te(:,1));equil_val.Te(:,1)]';%[HFS:LFS] @ Bmin
 %
 xna = [flipud(na(:,i_thetamax));na(:,i_thetamin)]';%[HFS:LFS] @ Bmin
 %
-figure('Name','Npar propagation domain @ Z = Zp');
+h = figure('Name','Npar propagation domain @ Z = Zp');
 %
 graph1D_jd(xR,xna,0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'--','none','b',2);
 %for i=1:nnpar
@@ -235,7 +249,14 @@ Npar_mp = [Npar_m,Npar_p];
 R_mp = [R,R];
 bbmp = boundary(R_mp(:),Npar_mp(:));
 %
-figure('Name','Projected Npar propagation domain');
+if ~isempty(figname)
+    %h.WindowState = 'maximized';
+    figname1 = [figname,'Npar@Z=Zp'];
+    print(h,'-depsc2','-loose','-r600',[figname1,'.eps']);
+    print(h,'-dpng','-r72',[figname1,'.png']);
+end
+%
+h = figure('Name','Projected Npar propagation domain');
 graph1D_jd(xR,6.5./sqrt(xTe),0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'-.','none','g',2);
 if strfind(equil.id,'WEST')
     %graph1D_jd(xR,6.5./sqrt(xTe*1.3),0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'--','none','g',2);
@@ -299,7 +320,14 @@ if displeg == 1
     legend('N_{||Landau} = 6.5*{T_e[keV]}^{-1/2}','Projection of (N_{||},R,Z) space on (N_{||},Z_{p})',['C3PO ray-tracing N_{||0} = ',num2str(npar0)])
 end
 %
-figure('Name','Stix-Golant accessibility');
+if ~isempty(figname)
+   % h.WindowState = 'maximized';
+    figname1 = [figname,'Npar_projected'];
+    print(h,'-depsc2','-loose','-r600',[figname1,'.eps']);
+    print(h,'-dpng','-r72',[figname1,'.png']);
+end
+%
+h = figure('Name','Stix-Golant accessibility');
 graph2D_jd(R,Z,real(na'),'R (m)','Z (m)',strrep(equil.id,'_','-'),NaN,NaN,1,NaN,NaN,0);colorbar;hold on;
 graph2D_jd(R,Z,psin','R (m)','Z (m)','',NaN,NaN,0,NaN,NaN,0,'--','k');
 axis('equal')
@@ -310,6 +338,13 @@ if isstruct(ray)
 	hold on;
     graph1D_jd(ray.sx+equil.Rp,ray.sy+equil.Zp,0,0,'','','',NaN,NaN,NaN,'-','none','r',2);
     hold off
+end
+%
+if ~isempty(figname)
+   % h.WindowState = 'maximized';
+    figname1 = [figname,'StixGolantAccessibility'];
+    print(h,'-depsc2','-loose','-r600',[figname1,'.eps']);
+    print(h,'-dpng','-r72',[figname1,'.png']);
 end
 %
 disp(' ');
@@ -334,15 +369,14 @@ end
 %
 if intersection == 1
     disp('-----> LH propagation domain intersects kinetic linear absorption domain')
+    Npar_gap_min = '';
+    R_kinematic_gap_min = '';
 else
     disp('-----> LH propagation domain does not intersect kinetic linear absorption domain')
     disp(['-----> Minimal spectral gap Dnpar : ',num2str(Npar_gap_min),' @ R = ',num2str(R_kinematic_gap_min),' m'])
 end
 disp(['---------------------------------------------------------------------------------'])
 disp(['---------------------------------------------------------------------------------'])
-%
-
-
 %
 end
 

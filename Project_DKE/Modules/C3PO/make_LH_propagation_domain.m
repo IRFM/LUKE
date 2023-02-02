@@ -56,13 +56,6 @@ elseif strcmp(machine,'WEST')
     %load('LUKE_DATA_WEST_54952_4.3339_ADAS_Tx1p3_ADAS_CLXP_SCRE_C3PO_C3_npar2.mat')
     %ray = waves{1}.rays{1};
     %
-    if isfield(equil,'consistency')
-        equil = rmfield(equil,'consistency');
-    end
-    if isfield(equil,'ADAS')
-        equil = rmfield(equil,'ADAS');
-    end
-    %
     %
     %npar0 = 1.99;
     %load('EQUIL_WEST_54952_4.4339s_NICE.mat');
@@ -122,6 +115,6 @@ else
     disp(['N||0 = ',num2str(npar0)]);
 end
 %
-[na,open_upperboundaries_propagationdomain,intersection] = LH_acces_yp(equil,omega_rf,ray,npar0,nparmax,resolution);
+[na,gamma_KAM_exact,gamma_KAM_approximate,open_upperboundaries_propagationdomain,intersection,Npar_gap_min,R_kinematic_gap_min] = LH_acces_yp(equil,omega_rf,ray,npar0,nparmax,resolution);
 %
     
