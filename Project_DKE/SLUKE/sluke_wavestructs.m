@@ -273,11 +273,10 @@ else
                                                 wavestructs{kk1}.launch.bNpar0 = wavestructs{kk1}.launch.aloha(mm).C3PO.yN;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
                                                 wavestructs{kk1}.launch.bdNpar0 = wavestructs{kk1}.launch.aloha(mm).C3PO.ydN;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
                                                 wavestructs{kk1}.launch.bPlhtot = wavestructs{kk1}.launch.aloha(mm).C3PO.yP;%for co- or counter-current depending upon sign of sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.cocurrent
-                                                
+                                                %
                                             end
                                         end  
                                         %
-
                                     end
                                     %
                                     if globalspectrum == 1
@@ -302,15 +301,44 @@ else
                                 %
                             end
                             %
+                            imainlobe = find(wavestructs{kk1}.launch.bPlhtot == max(wavestructs{kk1}.launch.bPlhtot));
+                            %
+                            wavestructs{kk1}.launch.mainlobe.imainlobe = imainlobe;
+                            wavestructs{kk1}.launch.mainlobe.bNpar0 = wavestructs{kk1}.launch.bNpar0(imainlobe);
+                            wavestructs{kk1}.launch.mainlobe.bPlhtot = wavestructs{kk1}.launch.bPlhtot(imainlobe);
+                            %
                             if isfield(sparams.rfwaves.antenna.LH.C3PO.launch,'mainlobeshift') && exist('flag_LH_problem','var') && flag_LH_problem == 0
                                 %
                                 mainlobeshift = sparams.rfwaves.antenna.LH.C3PO.launch.mainlobeshift{ii}{kk}; 
                                 %
-                                imainlobe = find(wavestructs{kk1}.launch.bPlhtot == max(wavestructs{kk1}.launch.bPlhtot));
-                                %
                                 wavestructs{kk1}.launch.bNpar0(imainlobe) = (abs(wavestructs{kk1}.launch.bNpar0(imainlobe)) + mainlobeshift)*sign(wavestructs{kk1}.launch.bNpar0(imainlobe));
                                 %
+                                wavestructs{kk1}.launch.mainlobe.bNpar0 = wavestructs{kk1}.launch.bNpar0(imainlobe);
+                                %
                             end
+                            %
+                            % Display LH propagation domain
+                            %
+                            wavestructs{kk1}.launch.mainlobe.bNparmax = 20;
+                            wavestructs{kk1}.launch.mainlobe.resolution = 0;%low resolution (fast calculations): 0, high resolution (slow calculations): 1
+                            wavestructs{kk1}.launch.mainlobe.ray = '';%no ray in the propagation domain
+                            %
+                            equil_propdomain = load(['SLUKE_EQUILS/EQUIL_',wavestructs{kk1}.equil_id,'.mat']);
+                            %
+                            [wavestructs{kk1}.launch.mainlobe.na,...
+                                wavestructs{kk1}.launch.mainlobe.gamma_KAM_exact,...
+                                wavestructs{kk1}.launch.mainlobe.gamma_KAM_approximate,...
+                                wavestructs{kk1}.launch.mainlobe.open_upperboundaries_propagationdomain,...
+                                wavestructs{kk1}.launch.mainlobe.intersection,...
+                                wavestructs{kk1}.launch.mainlobe.Npar_gap_min,...
+                                wavestructs{kk1}.launch.mainlobe.R_kinematic_gap_min] = LH_acces_yp(...
+                                equil_propdomain.equil{ii},...
+                                wavestructs{kk1}.launch.omega_rf,...
+                                wavestructs{kk1}.launch.ray,...
+                                wavestructs{kk1}.launch.bNpar0,...
+                                wavestructs{kk1}.launch.bNparmax,...
+                                wavestructs{kk1}.launch.resolution,...
+                                ['SLUKE_FIGURES/PropDomain_',wavestructs_id,'_']);
                             %
                         else
                             %
