@@ -181,99 +181,115 @@ if err == 0
                             %
                         end
                         %
-                        antennas = run_aloha_remote(antennas);
-                        %
-                        if ~isfield(antennas(1).aloha,'optim') &&  ~isfield(antennas(1).aloha,'err')
+                        if isfield(antennas(1).aloha,'results') && ~(sum(isnan(antennas(1).aloha.results.dP_nz)) || isempty(antennas(1).aloha.results.dP_nz)) && isfield(antennas(2).aloha,'results') && ~(sum(isnan(antennas(2).aloha.results.dP_nz)) || isempty(antennas(2).aloha.results.dP_nz))
                             %
-                            for jj = 1:length(antennas)
+                            cprintf('*green',[' - ALOHA antenna calculations for ',id_aloha,' are already done.']);disp(' ');
+                            %
+                            for jj = 1:length(antennas)  %full or half antenna
                                 %
-                                antennas(jj).aloha.optim = optim;
+                                launchs{jj}.antennas = antennas(jj);
                                 %
                             end
                             %
-                        end
-                        %
-                        save([rfwaves_folder,'ALOHA/Simulations/',id_aloha,'.mat'],'antennas');%save results or job
-                        %
-                        for jj = 1:length(antennas)
+                            remote_status = 0;
                             %
-                            if isfield(antennas(jj).aloha,'job')
+                       else 
+                            %
+                            antennas = run_aloha_remote(antennas);
+                            %
+                            if ~isfield(antennas(1).aloha,'optim') &&  ~isfield(antennas(1).aloha,'err')
                                 %
-                                cprintf('*blue',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' are still in progress.']);disp(' ');
-                                flag_job(ii,jj) = 1;
-                                %
-                            elseif isfield(antennas(jj).aloha,'err')
-                                %
-                                cprintf('*red',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE_RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.']);disp(' ');
-                                flag_job(ii,jj) = -1;
-                                %
-                            else
-                                %
-                                flag_job(ii,jj) = 0;
-                                %
-                                if isfield(antennas(jj).aloha,'results') 
+                                for jj = 1:length(antennas)
                                     %
-                                    if sum(isnan(antennas(jj).aloha.results.dP_nz)) || isempty(antennas(jj).aloha.results.dP_nz)
-                                        %
-                                        cprintf('*red',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE_RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.']);disp(' ');
-                                        %
-                                    else
-                                        %
-                                        cprintf('*green',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' are done.']);disp(' ');
-                                        %
-                                    end
-                                    %
-                                else
-                                    %
-                                    cprintf('*red',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE_RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.']);disp(' ');
+                                    antennas(jj).aloha.optim = optim;
                                     %
                                 end
                                 %
                             end
                             %
-                        end
-                        %                                    
-                        if isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum,'sdisplay') && isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay,'comparison') && sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.comparison{ii}{kk} == 1 && sum(abs(flag_job(ii,:))) == 0 % power spectra are independent of the density in front of the grill. Just the first is plotted
+                            save([rfwaves_folder,'ALOHA/Simulations/',id_aloha,'.mat'],'antennas');%save results or job
                             %
-                            load([rfwaves_folder,'ALOHA/Data/',id_data,'.mat'],'data_lh') 
-                            %
-                            if isfield(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data,'path') && ~isempty(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.path{ii}{kk})
+                            for jj = 1:length(antennas)
                                 %
-                                display_path = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.path{ii}{kk};
+                                if isfield(antennas(jj).aloha,'job')
+                                    %
+                                    cprintf('*blue',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' are still in progress.']);disp(' ');
+                                    flag_job(ii,jj) = 1;
+                                    %
+                                elseif isfield(antennas(jj).aloha,'err')
+                                    %
+                                    cprintf('*red',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE_RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.']);disp(' ');
+                                    flag_job(ii,jj) = -1;
+                                    %
+                                else
+                                    %
+                                    flag_job(ii,jj) = 0;
+                                    %
+                                    if isfield(antennas(jj).aloha,'results') 
+                                        %
+                                        if sum(isnan(antennas(jj).aloha.results.dP_nz)) || isempty(antennas(jj).aloha.results.dP_nz)
+                                            %
+                                            cprintf('*red',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE_RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.']);disp(' ');
+                                            %
+                                        else
+                                            %
+                                            cprintf('*green',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' are done.']);disp(' ');
+                                            %
+                                        end
+                                        %
+                                    else
+                                        %
+                                        cprintf('*red',[' - ALOHA antenna calculations for job #',int2str(jj),' for ',id_aloha,' failed. Load SLUKE_RFWAVES/ALOHA/Simulations/',id_aloha,'.mat file and type antennas.aloha in the command to see the error.']);disp(' ');
+                                        %
+                                    end
+                                    %
+                                end
                                 %
-                            else
+                            end
+                            %                                    
+                            if isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum,'sdisplay') && isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay,'comparison') && sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.comparison{ii}{kk} == 1 && sum(abs(flag_job(ii,:))) == 0 % power spectra are independent of the density in front of the grill. Just the first is plotted
                                 %
-                                display_path = [pwd,'/']; 
+                                load([rfwaves_folder,'ALOHA/Data/',id_data,'.mat'],'data_lh') 
+                                %
+                                if isfield(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data,'path') && ~isempty(sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.path{ii}{kk})
+                                    %
+                                    display_path = sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.path{ii}{kk};
+                                    %
+                                else
+                                    %
+                                    display_path = [pwd,'/']; 
+                                    %
+                                end
+                                %
+                                display_lhdata(data_lh,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.mode{ii}{kk},sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.save{ii}{kk},display_path);
+                                %
+                                flag_display_powerspectrum = display_aloha_powerspectrum(flag_display_powerspectrum,data_lh,antennas,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.results{ii}{kk},rfwaves_folder);
                                 %
                             end
                             %
-                            display_lhdata(data_lh,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.mode{ii}{kk},sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.data.save{ii}{kk},display_path);
+                            for jj = 1:length(antennas)  %full or half antenna
+                                %
+                                launchs{jj}.flag_job = flag_job(ii,jj);
+                                %
+                                launchs{jj}.antennas = antennas(jj);
+                                %
+                            end
                             %
-                            flag_display_powerspectrum = display_aloha_powerspectrum(flag_display_powerspectrum,data_lh,antennas,sparams.rfwaves.antenna.(sparams.rfwaves.antenna.type{ii}{kk}).(sparams.rfwaves.antenna.code{ii}{kk}).display.results{ii}{kk},rfwaves_folder);
+                            for jj = 1:length(antennas)  %full or half antenna
+                                %
+                                if abs(flag_job(ii,jj)) == 1
+                                    %
+                                    remote_status = flag_job(ii,jj);
+                                    break
+                                    %
+                                end
+                                %
+                            end
                             %
-                        end
-                        %
+                       end
+                       %
                     end
-                    %
-                    for jj = 1:length(antennas)  %full or half antenna
-                        %
-                        launchs{jj}.flag_job = flag_job(ii,jj);
-                        %
-                        launchs{jj}.antennas = antennas(jj);
-                        %
-                    end
-                    %
-                    for jj = 1:length(antennas)  %full or half antenna
-                        %
-                        if abs(flag_job(ii,jj)) == 1
-                            %
-                            remote_status = flag_job(ii,jj);
-                            break
-                            %
-                        end
-                        %
-                    end
-                    %
+                    % 
                 else
                     %
                     disp('WARNING : unkown antenna coupling code for the Lower Hybrid wave');
