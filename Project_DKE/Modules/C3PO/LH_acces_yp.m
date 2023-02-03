@@ -70,6 +70,9 @@ equil.equil_fit = equil_fit;
 %
 displeg = 1;
 %
+Npar_gap_min = '';
+R_kinematic_gap_min = '';
+%
 [qe,me,mp,~,e0] = pc_dke_yp;
 %
 if isstruct(ray)
@@ -182,7 +185,11 @@ xTe = [flipud(equil_val.Te(:,1));equil_val.Te(:,1)]';%[HFS:LFS] @ Bmin
 %
 xna = [flipud(na(:,i_thetamax));na(:,i_thetamin)]';%[HFS:LFS] @ Bmin
 %
-h = figure('Name','Npar propagation domain @ Z = Zp');
+if ~isempty(figname) 
+    h = figure('Name','Npar propagation domain @ Z = Zp','Visible','Off');
+else
+    h = figure('Name','Npar propagation domain @ Z = Zp','Visible','On');
+end
 %
 graph1D_jd(xR,xna,0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'--','none','b',2);
 %for i=1:nnpar
@@ -256,7 +263,12 @@ if ~isempty(figname)
     print(h,'-dpng','-r72',[figname1,'.png']);
 end
 %
-h = figure('Name','Projected Npar propagation domain');
+if ~isempty(figname) 
+    h = figure('Name','Projected Npar propagation domain','Visible','Off');
+else
+    h = figure('Name','Projected Npar propagation domain','Visible','On');
+end
+%
 graph1D_jd(xR,6.5./sqrt(xTe),0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'-.','none','g',2);
 if strfind(equil.id,'WEST')
     %graph1D_jd(xR,6.5./sqrt(xTe*1.3),0,0,'R (m)','N_{||}','',NaN,NaN,[1,nparmax],'--','none','g',2);
@@ -317,7 +329,11 @@ if intersection == 0 & ~isempty(iR_min)
 end
 % 
 if displeg == 1
-    legend('N_{||Landau} = 6.5*{T_e[keV]}^{-1/2}','Projection of (N_{||},R,Z) space on (N_{||},Z_{p})',['C3PO ray-tracing N_{||0} = ',num2str(npar0)])
+    if isempty(ray)
+        legend('N_{||Landau} = 6.5*{T_e[keV]}^{-1/2}','Projection of (N_{||},R,Z) space on (N_{||},Z_{p})')
+    else
+        legend('N_{||Landau} = 6.5*{T_e[keV]}^{-1/2}','Projection of (N_{||},R,Z) space on (N_{||},Z_{p})',['C3PO ray-tracing N_{||0} = ',num2str(npar0)])
+    end
 end
 %
 if ~isempty(figname)
@@ -327,7 +343,12 @@ if ~isempty(figname)
     print(h,'-dpng','-r72',[figname1,'.png']);
 end
 %
-h = figure('Name','Stix-Golant accessibility');
+if ~isempty(figname) 
+    h = figure('Name','Stix-Golant accessibility','Visible','Off');
+else
+    h = figure('Name','Stix-Golant accessibility','Visible','On');
+end
+%
 graph2D_jd(R,Z,real(na'),'R (m)','Z (m)',strrep(equil.id,'_','-'),NaN,NaN,1,NaN,NaN,0);colorbar;hold on;
 graph2D_jd(R,Z,psin','R (m)','Z (m)','',NaN,NaN,0,NaN,NaN,0,'--','k');
 axis('equal')
@@ -347,36 +368,38 @@ if ~isempty(figname)
     print(h,'-dpng','-r72',[figname1,'.png']);
 end
 %
-disp(' ');
-disp(['---------------------------------------------------------------------------------'])
-disp(['---------------------------------------------------------------------------------'])
-if resolution == 0
-    disp('Low resolution mode, fast calculations')
-else
-    disp('High resolution mode, slow calculations')
+if isempty(figname)
+    %
+    disp(' ');
+    disp(['---------------------------------------------------------------------------------'])
+    disp(['---------------------------------------------------------------------------------'])
+    if resolution == 0
+        disp('Low resolution mode, fast calculations')
+    else
+        disp('High resolution mode, slow calculations')
+    end
+    disp(['---------------------------------------------------------------------------------'])
+    disp(['---------------------------------------------------------------------------------'])
+    %
+    disp(['-----> Exact criterion for existence of an upper boundary limit : ',num2str(gamma_KAM_exact)])
+    disp(['-----> Approximate criterion for existence of an upper boundary limit : ',num2str(gamma_KAM_approximate)])
+    %
+    if open_upperboundaries_propagationdomain==0
+        disp('-----> Finite upper boundary for the LH propagation domain')
+    else
+        disp('-----> Infinite upper boundary for the LH propagation domain')
+    end
+    %
+    if intersection == 1
+        disp('-----> LH propagation domain intersects kinetic linear absorption domain')
+    else
+        disp('-----> LH propagation domain does not intersect kinetic linear absorption domain')
+        disp(['-----> Minimal spectral gap Dnpar : ',num2str(Npar_gap_min),' @ R = ',num2str(R_kinematic_gap_min),' m'])
+    end
+    disp(['---------------------------------------------------------------------------------'])
+    disp(['---------------------------------------------------------------------------------'])
+    %
 end
-disp(['---------------------------------------------------------------------------------'])
-disp(['---------------------------------------------------------------------------------'])
-%
-disp(['-----> Exact criterion for existence of an upper boundary limit : ',num2str(gamma_KAM_exact)])
-disp(['-----> Approximate criterion for existence of an upper boundary limit : ',num2str(gamma_KAM_approximate)])
-%
-if open_upperboundaries_propagationdomain==0
-    disp('-----> Finite upper boundary for the LH propagation domain')
-else
-    disp('-----> Infinite upper boundary for the LH propagation domain')
-end
-%
-if intersection == 1
-    disp('-----> LH propagation domain intersects kinetic linear absorption domain')
-    Npar_gap_min = '';
-    R_kinematic_gap_min = '';
-else
-    disp('-----> LH propagation domain does not intersect kinetic linear absorption domain')
-    disp(['-----> Minimal spectral gap Dnpar : ',num2str(Npar_gap_min),' @ R = ',num2str(R_kinematic_gap_min),' m'])
-end
-disp(['---------------------------------------------------------------------------------'])
-disp(['---------------------------------------------------------------------------------'])
 %
 end
 
