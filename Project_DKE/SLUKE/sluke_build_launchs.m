@@ -167,6 +167,17 @@ if err == 0
                             %
                         end
                         %
+                        for jj = 1:length(antennas)  %full or half antenna
+                            %
+                            if abs(flag_job(ii,jj)) == 1
+                                %
+                                remote_status = flag_job(ii,jj);
+                                break
+                                %
+                            end
+                            %
+                        end
+                        %
                     else
                         %
                         if mute_sluke_build_launchs == 0
