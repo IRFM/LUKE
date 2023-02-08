@@ -71,9 +71,14 @@ sc_out.plasma.ne0 = ne_optim;
 %
 sc_out = aloha_scenario(sc_out);
 %
-%sc_out.simul.sc = sc;%uncomment for debug only
-%sc_out.simul.sc_out = sc_out;%uncomment for debug only
-%sc_out.simul.sc_in = sc_in;%uncomment for debug only
+if isfield(optim,'debugmode') && optim.debugmode == 1
+    %
+    sc_out.simul.sc = sc;%uncomment for debug only
+    sc_out.simul.sc_out = sc_out;%uncomment for debug only
+    sc_out.simul.sc_in = sc_in;%uncomment for debug only
+    %
+end
+%
 sc_out.simul.nitmax = nitmax;
 sc_out.simul.ne0 = ne0;
 %
