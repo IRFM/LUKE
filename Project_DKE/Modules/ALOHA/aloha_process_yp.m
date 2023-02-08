@@ -34,7 +34,7 @@ end
 %
 ii_min = find(err_RC == min(err_RC));
 %
-ne_optim = 1e17;%defaut value since problem in RC in order to avoid code break
+ne_optim = 2e17;%defaut value since problem in RC in order to avoid code break
 %
 enforce_mode = 1;
 %
