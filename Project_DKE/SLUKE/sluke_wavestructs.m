@@ -130,13 +130,17 @@ else
                                 sign_Ip = sign(equil.psi_apRp(end));%+1 if clockwise
                                 sign_Bt = sign(equil.ptBPHI(1,1));%+1 if clockwise
                                 %
-                                globalspectrum = sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.globalspectrum{ii}{kk};
+                                if isfield(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum,'globalspectrum') && ~isempty(sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.globalspectrum{ii}{kk})
+                                    %
+                                    globalspectrum = sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.globalspectrum{ii}{kk};
+                                    %
+                                end
                                 %
-                                if sparams.rfwaves.antenna.LH.ALOHA.optim.method{ii}{kk} == 0
+                                if length(sparams.rfwaves.antenna.LH.ALOHA.optim.ne_guess{ii}{kk}) == 1
                                     %
                                     globalspectrum = 1;%enforced because no specific difference is made between top and bottom modules
                                     %
-                                    cprintf('*[1,0.5,0]','--->  globalspectrum = 1 is enforced because no specific difference is made between top and bottom modules.');disp(' ')
+                                    cprintf('*[1,0.5,0]','--->  globalspectrum = 1 is enforced because no specific difference is made between top and bottom modules (ALOHA.optim.ne_guess is fixed).');disp(' ')
                                 end
                                 %
                                 for mm = 1:length(aloha_launchs)
@@ -328,15 +332,15 @@ else
                                             %    
                                             if mm == 1 && globalspectrum == 0%up
                                                 %
-                                                figname = ['SLUKE_RFWAVES/ALOHA/Simulations/Figures/PropDomain_',aloha_launchs{1}.antennas.aloha.optim.id_data,'_',sparams.rfwaves.antenna.comment{ii}{kk},'_UP_'];                                  
+                                                figname = ['SLUKE_RFWAVES/ALOHA/Simulations/Figures/PropDomain_',aloha_launchs{1}.antennas.aloha.optim.id_data,'_',aloha_launchs{1}.antennas.aloha.optim.optim_mode,'_',sparams.rfwaves.antenna.comment{ii}{kk},'_UP_'];                                  
                                                 %
                                             elseif mm == 2 && globalspectrum == 0% down
                                                 %
-                                                figname = ['SLUKE_RFWAVES/ALOHA/Simulations/Figures/PropDomain_',aloha_launchs{1}.antennas.aloha.optim.id_data,'_',sparams.rfwaves.antenna.comment{ii}{kk},'_DOWN_'];   
+                                                figname = ['SLUKE_RFWAVES/ALOHA/Simulations/Figures/PropDomain_',aloha_launchs{1}.antennas.aloha.optim.id_data,'_',aloha_launchs{1}.antennas.aloha.optim.optim_mode,'_',sparams.rfwaves.antenna.comment{ii}{kk},'_DOWN_'];   
                                                 %
                                             elseif mm == 1 && globalspectrum == 1
                                                 %
-                                                figname = ['SLUKE_RFWAVES/ALOHA/Simulations/Figures/PropDomain_',aloha_launchs{1}.antennas.aloha.optim.id_data,'_',sparams.rfwaves.antenna.comment{ii}{kk},'_GLOBAL']; 
+                                                figname = ['SLUKE_RFWAVES/ALOHA/Simulations/Figures/PropDomain_',aloha_launchs{1}.antennas.aloha.optim.id_data,'_',aloha_launchs{1}.antennas.aloha.optim.optim_mode,'_',sparams.rfwaves.antenna.comment{ii}{kk},'_GLOBAL']; 
                                                 %
                                             end
                                         else
