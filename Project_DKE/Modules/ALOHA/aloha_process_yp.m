@@ -59,7 +59,7 @@ end
 %
 if ne_optim < optim.ne_guess(1) || ne_optim > optim.ne_guess(2) || isnan(ne_optim) || isempty(ne_optim) || isinf(ne_optim)
     %
-    ne_optim = 1e17;%defaut value since problem in RC in order to avoid code break
+    ne_optim = 2e17;%defaut value since problem in RC in order to avoid code break
     %
     enforce_mode = 1;
     %
