@@ -96,33 +96,34 @@ elseif nargin == 8
     if ~isfield(simul_params,'optim')
         %
         disp(['WARNING : ''optim'' field missing in simul_params --> default values are enforced']) 
-        simul_params.optim.method = 0;%(1) Edge density in front of the grill is calculated such that simulated RC coefficients are the clostest to observations (0) Edge density in front of the grill is given by the guess
-        simul_params.optim.ne_guess = 1.0e17;%Edge density in front of the grill (initial guess or enforced value) (m-3)
+        simul_params.optim.method = 'fixed ne value';%(1) Edge density in front of the grill is calculated such that simulated RC coefficients are the clostest to observations (0) Edge density in front of the grill is given by the guess
+        simul_params.optim.ne_guess = 2.0e17;%Edge density in front of the grill (initial guess or enforced value) (m-3)
         simul_params.optim.tolfun = 1e-2;%Relative tolerance on targets (if optim.method = 1)
         simul_params.optim.tolx = 1e-2;%Relative tolerance on inputs (if optim.method = 1)
-        simul_params.optim.nitmax = 2;%Maximum number of iterations (if optim.method = 1)
+        simul_params.optim.nitmax = 20;%Maximum number of iterations (if optim.method = 1)
+        simul_params.optim.debugmode = 1;%debug if (1)
         %
     else
         %
         if ~isfield(simul_params.optim,'method')
             disp(['WARNING : ''method'' field missing in simul_params.optim --> default value is enforced']) 
-            simul_params.optim.method = 0;%(1) Edge density in front of the grill is calculated such that simulated RC coefficients are the clostest to observations (0) Edge density in front of the grill is given by the guess
+            simul_params.optim.method = 'fixed ne value';%
         end
-        if simul_params.optim.method == 0 && ~isfield(simul_params.optim,'ne_guess')
+        if strcmp(simul_params.optim.method,'fixed ne value') && ~isfield(simul_params.optim,'ne_guess')
             disp(['WARNING : ''ne_guess'' field missing in simul_params.optim --> default value is enforced']) 
-            simul_params.optim.ne_guess = 1.0e17;%Edge density in front of the grill (initial guess or enforced value) (m-3)
+            simul_params.optim.ne_guess = 2.0e17;%Edge density in front of the grill (initial guess or enforced value) (m-3)
         end
-        if simul_params.optim.method == 1 && ~isfield(simul_params.optim,'tolfun')
+        if strcmp(simul_params.optim.method,'ne optimal to fit experimental RC') && ~isfield(simul_params.optim,'tolfun')
         	disp(['WARNING : ''tolfun'' field missing in simul_params.optim --> default value is enforced']) 
             simul_params.optim.tolfun = 1e-2;%Relative tolerance on targets (if optim.method = 1)
         end
-        if simul_params.optim.method == 1 && ~isfield(simul_params.optim,'tolx')
+        if strcmp(simul_params.optim.method,'ne optimal to fit experimental RC') && ~isfield(simul_params.optim,'tolx')
             disp(['WARNING : ''tolx'' field missing in simul_params.optim --> default value is enforced']) 
             simul_params.optim.tolx = 1e-2;%Relative tolerance on inputs (if optim.method = 1)
         end
-        if simul_params.optim.method == 1 && ~isfield(simul_params.optim,'nitmax')
+        if strcmp(simul_params.optim.method,'ne optimal to fit experimental RC') && ~isfield(simul_params.optim,'nitmax')
             disp(['WARNING : ''nitmax'' field missing in simul_params.optim --> default value is enforced']) 
-            simul_params.optim.nitmax = 2;%Maximum number of iterations (if optim.method = 1)
+            simul_params.optim.nitmax = 20;
         end
         %
     end
@@ -167,7 +168,7 @@ elseif nargin == 8
                  sc.antenna.a_ampl = data_lh(jj).mean.amplitude_mean_aloha_upper;
                  sc.antenna.a_phase = data_lh(jj).mean.phase_mean_aloha_upper;
                  %
-                 if simul_params.optim.method == 1
+                 if strcmp(simul_params.optim.method,'ne optimal to fit experimental RC')
                     rc = data_lh(jj).mean.rc_mean_aloha_upper;
                  end
                  %
@@ -178,7 +179,7 @@ elseif nargin == 8
                 sc.antenna.a_ampl = data_lh(jj).mean.amplitude_mean_aloha_lower;
                 sc.antenna.a_phase = data_lh(jj).mean.phase_mean_aloha_lower;
                 %
-                if simul_params.optim.method == 1
+                if strcmp(simul_params.optim.method,'ne optimal to fit experimental RC')
                     rc = data_lh(jj).mean.rc_mean_aloha_lower;
                 end
                 %
