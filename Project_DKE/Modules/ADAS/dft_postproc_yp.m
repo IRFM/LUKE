@@ -173,7 +173,7 @@ if ~isfield(dft,'I1') || enforce == 1
             figure('Name',['Z = ',int2str(dft.Z),', Z_0 = ',int2str(dft.Z0(i))]),
             semilogx(dft.q,ff_DFT,'r-',q,ff_optim_TF,'b--',q,ff_optim_TP,'g--');
             xlabel('q'),ylabel('form factor'),
-            title(['Z = ',int2str(dft.Z),', Z_0 = ',int2str(dft.Z0(i))]);
+            title(['Z_s = ',int2str(dft.Z),', Z_{0,s} = ',int2str(dft.Z0(i))]);
             legend('Exact DFT',['Best fit Thomas-Fermi-Kirillov model, \chi^2/N_q/N_Z^2 = ',num2str(dft.chi2_optim_TF(i))],['Best fit Tseng-Pratt model,  \chi^2/N_q/N_Z^2 = ',num2str(dft.chi2_optim_TP(i))]);
             grid on
             drawnow
@@ -287,13 +287,20 @@ if isfield(dft,'dft_data')
     %
     figure('Name',['DFT electron density, Z = ',int2str(dft.Z)]);
     %
-    xlab = 'r [a_0]';
-    ylab = 'n_e [a_0^{-3}]';
-    tit = ['DFT electron density, Z = ',int2str(dft.Z)];
+    xlab = 'Ion radius [a_0]';
+    ylab = 'Density of bound electrons [a_0^{-3}]';
+    tit = ['DFT electron density, Z_s = ',int2str(dft.Z)];
     %
     graph1D_jd(dft.r,dft.ne,0,1,xlab,ylab,tit,NaN,[0,max(dft.r)],[1e-4,1e4],linestyle{1},'none',linecolor{1},2,siz,gca); 
     %
     drawnow
+    %
+    if dft.Z == 74
+        %
+        xlim([0,6]);
+        text(5,9.7e-4,'Z_{0,s} = 0')
+        %
+    end
     %
     print_jd(print_opt,['ion_radius_',int2str(dft.Z)],'./Figs',get(gcf,'Number'))
     %
