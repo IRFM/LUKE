@@ -8,12 +8,12 @@ close all
 clear all
 clc
 %
-print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
+print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
 %
-maxnumberofexponentials = 4;%up to 4
+maxnumberofexponentials = 3;%up to 4
 %
 Z = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%Atomic number (If multiple Z values, dft change only, no display)
-Z = 18;%[18];%change dft substructure field salvat, and display results
+Z = 74;%[18];%change dft substructure field salvat, and display results
 Z0 = 0;%40;%[17];%fully (0) or partially ionized atom for display
 %
 atomic_models = [0];%[0 -> Gaussian DFT,1 -> Thomas-Fermi]
@@ -91,8 +91,8 @@ for iZ = 1:length(Z)
             siz = 20+14i;
             %
             xlab = 'Ion radius [a_0]';
-            ylab1 = '\rho [{a^{-3}_0}]';
-            ylab2 = '4\pir^2\rho [{a^{-1}_0}]';
+            ylab1 = 'Density of bound electrons [{a^{-3}_0}]';%'$\overline{\rho}$', 'Interpreter', 'latex'
+            ylab2 = 'Lineic density of bound electrons [{a^{-1}_0}]';
             %
             i = 1;%neutral atom
             %
@@ -128,46 +128,59 @@ for iZ = 1:length(Z)
             %
             imodel = 1;%Gaussian
             %
-            leg0 = {'DFT (Gaussian)',...
-                ['Salvat-DFT-Gaussian (1 exp.)'],...
-                ['Salvat-DFT-Gaussian (2 exp.)'],...
-                ['Salvat-DFT-Gaussian (3 exp.)'],...
+            leg0 = {'DFT ({\itGAUSSIAN} code)',...
+                ['Multi-Yukawa/DFT (1 exp.)'],...
+                ['Multi-Yukawa/DFT (2 exp.)'],...
+                ['Multi-Yukawa/DFT (3 exp.)'],...
+                ['Multi-Yukawa/DFT (4 exp.)'],...
                 ['Moliere-Thomas-Fermi (3 exp.)']};
             %
-            tit1 = ['Density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),'), Moliere-TF Salvat-DFT-Gaussian'];
-            tit2 = ['Lineic density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),'), Moliere-TF Salvat-DFT-Gaussian'];
+            tit1 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
+            tit2 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
             %
             figure('Name',tit1);
             graph1D_jd(dft.r,dft.ne(:,i),0,1,xlab,ylab1,tit1,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);hold on
-            leg = leg0([1,2,5]);
-            graph1D_jd(dft.salvat.(models{imodel}){1}.r,dft.salvat.(models{imodel}){1}.ne(:,i),0,1,xlab,ylab1,tit1,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca); 
+            leg = leg0([1,2,6]);
+            graph1D_jd(dft.salvat.(models{imodel}){1}.r,dft.salvat.(models{imodel}){1}.ne(:,i),0,1,xlab,ylab1,tit1,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
             if maxnumberofexponentials >1
-                leg = leg0([1,2,3,5]);
-                graph1D_jd(dft.salvat.(models{imodel}){2}.r,dft.salvat.(models{imodel}){2}.ne(:,i),0,1,xlab,ylab1,tit1,leg,'','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+                leg = leg0([1,2,3,6]);
+                graph1D_jd(dft.salvat.(models{imodel}){2}.r,dft.salvat.(models{imodel}){2}.ne(:,i),0,1,xlab,ylab1,tit1,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
             end
             if maxnumberofexponentials >2
-                leg = leg0([1,2,3,4,5]);
-                graph1D_jd(dft.salvat.(models{imodel}){3}.r,dft.salvat.(models{imodel}){3}.ne(:,i),0,1,xlab,ylab1,tit1,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca); 
+                leg = leg0([1,2,3,4,6]);
+                graph1D_jd(dft.salvat.(models{imodel}){3}.r,dft.salvat.(models{imodel}){3}.ne(:,i),0,1,xlab,ylab1,tit1,'','','',linestyle{4},'none',linecolor{4},2,siz,gca); 
             end
-            graph1D_jd(dft.r,xdens_thomas_fermi_moliere,0,1,xlab,ylab1,tit1,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca); 
+            if maxnumberofexponentials >3
+                leg = leg0([1,2,3,4,5,6]);
+                graph1D_jd(dft.salvat.(models{imodel}){4}.r,dft.salvat.(models{imodel}){4}.ne(:,i),0,1,xlab,ylab1,tit1,'','','',linestyle{5},'none',linecolor{5},2,siz,gca); 
+            end
+            %
+            graph1D_jd(dft.r,xdens_thomas_fermi_moliere,0,1,xlab,ylab1,tit1,leg,'','',linestyle{1},'none',linecolor{6},2,siz,gca); 
             axis([0,dft.ionradius{1}.r0n(i),1e-4,1e5])
+            %xlabel(xlab, 'Interpreter', 'latex')
+            %ylabel(ylab1, 'Interpreter', 'latex')
             drawnow
             %
             print_jd(print_opt,['Density_MoliereSalvatGaussian_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
             %
             figure('Name',tit2);
             graph1D_jd(dft.r,4*pi*dft.r.*dft.r.*dft.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);hold on
-            leg = leg0([1,2,5]);
+            leg = leg0([1,2,6]);
             graph1D_jd(dft.salvat.(models{imodel}){1}.r,4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
             if maxnumberofexponentials >1
-                leg = leg0([1,2,3,5]);
+                leg = leg0([1,2,3,6]);
                 graph1D_jd(dft.salvat.(models{imodel}){2}.r,4*pi*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.r.*dft.salvat.(models{imodel}){2}.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
             end
             if maxnumberofexponentials >2
-                leg = leg0([1,2,3,4,5]);
+                leg = leg0([1,2,3,4,6]);
                 graph1D_jd(dft.salvat.(models{imodel}){3}.r,4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{4},'none',linecolor{4},2,siz,gca); 
             end
-            graph1D_jd(dft.r,4*pi.*dft.r.*dft.r.*xdens_thomas_fermi_moliere,0,0,xlab,ylab2,tit1,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca); 
+            if maxnumberofexponentials >3
+                leg = leg0([1,2,3,4,5,6]);
+                graph1D_jd(dft.salvat.(models{imodel}){4}.r,4*pi*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.r.*dft.salvat.(models{imodel}){4}.ne(:,i),0,0,xlab,ylab2,tit2,'','','',linestyle{5},'none',linecolor{5},2,siz,gca); 
+            end
+            %
+            graph1D_jd(dft.r,4*pi.*dft.r.*dft.r.*xdens_thomas_fermi_moliere,0,0,xlab,ylab2,tit1,leg,'','',linestyle{1},'none',linecolor{6},2,siz,gca); 
             %
             if maxnumberofexponentials == 1
                 maxdens = max(max([4*pi*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.r.*dft.salvat.(models{imodel}){1}.ne(:,i)]));
@@ -183,29 +196,36 @@ for iZ = 1:length(Z)
             %
             ylim([0,maxdens]);
             xlim([0,dft.ionradius{1}.r0n(i)*0.7]);
+            %Mxlabel(xlab, 'Interpreter', 'latex')
+            %ylabel(ylab2, 'Interpreter', 'latex')
             drawnow
             %
             print_jd(print_opt,['Lineicdensity_MoliereSalvatGaussian_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
             %
-            tit3 = ['Atomic form factor, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),'), Moliere-TF Salvat-DFT-Gaussian'];
+            tit3 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
             figure('Name',tit3);
             ylab = 'Atomic form factor';
             siz = 20+14i;
             %
-            leg0 = {'DFT-Gaussian',['Salvat-DFT-Gaussian (1 exp.)'],['Salvat-DFT-Gaussian (2 exp.)'],['Salvat-DFT-Gaussian (3 exp.)'],['Moliere-Thomas-Fermi (3 exp.)']};
+            leg0 = {'DFT ({\itGAUSSIAN} code)',['Multi-Yukawa/DFT (1 exp.)'],['Multi-Yukawa/DFT (2 exp.)'],['Multi-Yukawa/DFT (3 exp.)'],['Moliere-Thomas-Fermi (3 exp.)'],['Moliere-Thomas-Fermi (3 exp.)']};
             %
             graph1D_jd(q/unitfactor,ff_dhfs(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);
-            leg = leg0([1,2,5]);
-            graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit3,leg,'','',linestyle{2},'none',linecolor{2},2,siz,gca); 
+            leg = leg0([1,2,6]);
+            graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
             if maxnumberofexponentials > 1
-                leg = leg0([1,2,3,5]);
-                graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit3,leg,'','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+                leg = leg0([1,2,3,6]);
+                graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
             end
             if maxnumberofexponentials > 2
-                leg = leg0([1,2,3,4,5]);
-                graph1D_jd(q/unitfactor,ff_sal{3}(i,:),1,0,xlabff,ylab,tit3,leg,'','',linestyle{4},'none',linecolor{4},2,siz,gca);
+                leg = leg0([1,2,3,4,6]);
+                graph1D_jd(q/unitfactor,ff_sal{3}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{4},'none',linecolor{4},2,siz,gca);
             end
-            graph1D_jd(q/unitfactor,ff_mol,1,0,xlabff,ylab,tit3,leg,'','',linestyle{5},'none',linecolor{5},2,siz,gca);
+            if maxnumberofexponentials > 3
+                leg = leg0([1,2,3,4,5,6]);
+                graph1D_jd(q/unitfactor,ff_sal{4}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{5},'none',linecolor{5},2,siz,gca);
+            end
+            %
+            graph1D_jd(q/unitfactor,ff_mol,1,0,xlabff,ylab,tit3,leg,'','',linestyle{1},'none',linecolor{6},2,siz,gca);
             xlim([1e-4,10])
             ylim([0,dft.N(i)])
             %
@@ -239,16 +259,19 @@ for iZ = 1:length(Z)
                 xdens_salvat_DHFS(1) = xdens_salvat_DHFS(2);%avoid Inf value
                 neR2_salvat_DHFS = sum((xdens_salvat_DHFS(:) - dft.ne(:,i)).^2)/length(dft.ne(:,i));
                 %
-                tit4 = ['Density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),'), Salvat DHFS - DFT (Gaussian)'];
-                tit5 = ['Lineic density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),'), Salvat DHFS - DFT (Gaussian)'];
+                tit4 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
+                tit5 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
                 %
-                leg = {'DFT-Gaussian','Salvat-DFT-Gaussian (3 exp.)', 'Salvat-DHFS (3 exp.)'};
+                leg = {'DFT ({\itGAUSSIAN} code)','Multi-Yukawa/DFT (3 exp.)', 'Multi-Yukawa/DHFS (3 exp.)','Moliere-Thomas-Fermi (3 exp.)'};
                 %
                 figure('Name',tit4);
                 graph1D_jd(dft.r,dft.ne(:,i),0,1,xlab,ylab1,tit4,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);hold on
                 graph1D_jd(dft.salvat.(models{imodel}){3}.r,dft.salvat.(models{imodel}){3}.ne(:,i),0,1,xlab,ylab1,tit4,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
-                graph1D_jd(dft.r,xdens_salvat_DHFS,0,1,xlab,ylab1,tit4,leg,'','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+                graph1D_jd(dft.r,xdens_salvat_DHFS,0,1,xlab,ylab1,tit4,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+                graph1D_jd(dft.r,xdens_thomas_fermi_moliere,0,1,xlab,ylab2,tit1,leg,'','',linestyle{1},'none',linecolor{6},2,siz,gca); 
                 axis([0,dft.ionradius{1}.r0n(i),1e-4,1e5])
+                %xlabel(xlab, 'Interpreter', 'latex')
+                %ylabel(ylab1, 'Interpreter', 'latex')
                 drawnow
                 %
                 print_jd(print_opt,['Density_DHFS_DFT_Gaussian_Salvat_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
@@ -256,23 +279,29 @@ for iZ = 1:length(Z)
                 figure('Name',tit5);
                 graph1D_jd(dft.r,4*pi*dft.r.*dft.r.*dft.ne(:,i),0,0,xlab,ylab2,tit5,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);hold on
                 graph1D_jd(dft.salvat.(models{imodel}){3}.r,4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),0,0,xlab,ylab2,tit5,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
-                graph1D_jd(dft.r,4*pi*dft.r.*dft.r.*xdens_salvat_DHFS,0,0,xlab,ylab2,tit5,leg,'','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+                graph1D_jd(dft.r,4*pi*dft.r.*dft.r.*xdens_salvat_DHFS,0,0,xlab,ylab2,tit5,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
+                %
+                graph1D_jd(dft.r,4*pi.*dft.r.*dft.r.*xdens_thomas_fermi_moliere,0,0,xlab,ylab2,tit1,leg,'','',linestyle{1},'none',linecolor{6},2,siz,gca); 
                 %
                 maxdens = max(max([4*pi*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.r.*dft.salvat.(models{imodel}){3}.ne(:,i),4*pi*dft.r.*dft.r.*xdens_salvat_DHFS]));
                 ylim([0,maxdens]);
                 xlim([0,dft.ionradius{1}.r0n(i)*0.7]);
+                %xlabel(xlab, 'Interpreter', 'latex')
+                %ylabel(ylab2, 'Interpreter', 'latex')
                 drawnow
                 %
                 print_jd(print_opt,['Lineicdensity_DHFS_DFT_Gaussian_Salvat_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
                 %
-                tit6 = ['Atomic form factor, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
+                tit6 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
                 figure('Name',tit6);
                 ylab = 'Atomic form factor';
                 siz = 20+14i;
                 %
                 graph1D_jd(q/unitfactor,ff_dhfs(i,:),1,0,xlabff,ylab,tit6,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);
                 graph1D_jd(q/unitfactor,ff_sal{3}(i,:),1,0,xlabff,ylab,tit6,'','','',linestyle{2},'none',linecolor{2},2,siz,gca);
-                graph1D_jd(q/unitfactor,ff_salvat_DHFS(i,:),1,0,xlabff,ylab,tit6,leg,'','',linestyle{3},'none',linecolor{3},2,siz,gca);
+                graph1D_jd(q/unitfactor,ff_salvat_DHFS(i,:),1,0,xlabff,ylab,tit6,'','','',linestyle{3},'none',linecolor{3},2,siz,gca);
+                %
+                graph1D_jd(q/unitfactor,ff_mol,1,0,xlabff,ylab,tit3,leg,'','',linestyle{1},'none',linecolor{6},2,siz,gca);
                 %
                 %graph1D_jd(q/unitfactor,ff_sal{1}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{2},'none',linecolor{2},2,siz,gca); 
                 %graph1D_jd(q/unitfactor,ff_sal{2}(i,:),1,0,xlabff,ylab,tit3,'','','',linestyle{3},'none',linecolor{3},2,siz,gca); 
@@ -282,6 +311,7 @@ for iZ = 1:length(Z)
                 ylim([0,dft.N(i)])
                 %
                 drawnow
+                %
                 print_jd(print_opt,['Atomicformfactor_DHFS_DFT_Gaussian_Salvat_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
                 %
             end
@@ -296,23 +326,23 @@ for iZ = 1:length(Z)
                 %
                 if length(dft.salvat.(models{imodel})) > 3 && dft.salvat.(models{imodel}){4}.alpha(i,4) > 0
                     %
-                    leg0 = {'DFT-Gaussian',...
-                        ['Salvat-DFT-Gaussian (1 exp.)'],...
-                        ['Salvat-DFT-Gaussian (2 exp.)'],...
-                        ['Salvat-DFT-Gaussian (3 exp.)'],...
-                        ['Salvat-DFT-Gaussian (4 exp.)']};
+                    leg0 = {'DFT ({\itGAUSSIAN} code)',...
+                        ['Multi-Yukawa/DFT (1 exp.)'],...
+                        ['Multi-Yukawa/DFT (2 exp.)'],...
+                        ['Multi-Yukawa/DFT (3 exp.)'],...
+                        ['Multi-Yukawa/DFT (4 exp.)']};
                     %
                 else
                     %
-                    leg0 = {'DFT-Gaussian',...
-                        ['Salvat-DFT-Gaussian (1 exp.)'],...
-                        ['Salvat-DFT-Gaussian (2 exp.)'],...
-                        ['Salvat-DFT-Gaussian (3 exp.)']};
+                    leg0 = {'DFT ({\itGAUSSIAN} code)',...
+                        ['Multi-Yukawa/DFT (1 exp.)'],...
+                        ['Multi-Yukawa/DFT (2 exp.)'],...
+                        ['Multi-Yukawa/DFT (3 exp.)']};
                     %
                 end
                 %
-                tit7 = ['Density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{0,s} = ',int2str(dft.Z0(i)),'), Salvat-DFT (Gaussian)'];
-                tit8 = ['Lineic density, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{0,s} = ',int2str(dft.Z0(i)),'), Salvat-DFT (Gaussian)'];
+                tit7 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{0,s} = ',int2str(dft.Z0(i)),')'];
+                tit8 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{0,s} = ',int2str(dft.Z0(i)),')'];
                 %
                 figure('Name',tit7);
                 graph1D_jd(dft.r,dft.ne(:,i),0,1,xlab,ylab1,tit1,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);hold on
@@ -335,6 +365,8 @@ for iZ = 1:length(Z)
                 end
                 %
                 axis([0,dft.ionradius{1}.r0n(1)/4,1e-4,1e5])
+                %xlabel(xlab, 'Interpreter', 'latex')
+                %ylabel(ylab1, 'Interpreter', 'latex')
                 drawnow
                 %
                 print_jd(print_opt,['Density_SalvatGaussian_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
@@ -392,6 +424,8 @@ for iZ = 1:length(Z)
                 %
                 ylim([0,maxdens]);
                 xlim([0,dft.ionradius{1}.r0n(i)*3])
+                %xlabel(xlab, 'Interpreter', 'latex')
+                %ylabel(ylab2, 'Interpreter', 'latex')
                 drawnow
                 print_jd(print_opt,['Lineicdensity_SalvatGaussian_',int2str(dft.Z),'_',int2str(dft.Z0(i))],'./Figs',get(gcf,'Number'))
                 %
@@ -420,7 +454,7 @@ for iZ = 1:length(Z)
             xlab3 = 'Z_{0,s}/Z_s';
             ylab3 = '\lambda^2_{Z_{0,s}}/\lambda^2_{0,s}';
             tit3 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z = ',int2str(dft.Z),')'];
-            leg3 = {'Salvat-DFT-Gaussian (1 exp.)','Thomas-Fermi-Kirillov','Avdonina-Pratt','Avdonina-Pratt-Peysson'};
+            leg3 = {'Multi-Yukawa/DFT (1 exp.)','Thomas-Fermi-Kirillov','Avdonina-Pratt','Modified Avdonina-Pratt'};
             %
             graph1D_jd((dft.Z-dft.salvat.(models{imodel}){1}.Nfit')/dft.Z,(dft.salvat.(models{imodel}){1}.alpha./dft.salvat.(models{imodel}){1}.alpha(1,:)).^2,0,1,xlab3,ylab3,tit3,'','','','none',marker{1},linecolor{1},2,siz,gca);hold on
             graph1D_jd(x,y_kir,0,1,xlab3,ylab3,tit3,'','','',linestyle{2},'none',linecolor{2},2,siz,gca);hold on
@@ -431,12 +465,12 @@ for iZ = 1:length(Z)
             %
             print_jd(print_opt,['Salvat_models_for_ionization_state',[upper(dft.name(1)), lower(dft.name(2:end))]],'./Figs',get(gcf,'Number'))
             %
-            tit9 = ['Atomic form factor, ',[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),'), Salvat-DFT (Gaussian)'];
+            tit9 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
             figure('Name',tit9);
             ylab = 'Atomic form factor';
             siz = 20+14i;
             %
-            leg0 = {'DFT-Gaussian',['Salvat-DFT-Gaussian (1 exp.)'],['Salvat-DFT-Gaussian (2 exp.)'],['Salvat-DFT-Gaussian (3 exp.)'],['Salvat-DFT-Gaussian (4 exp.)']};
+            leg0 = {'DFT ({\itGAUSSIAN} code)',['Multi-Yukawa/DFT (1 exp.)'],['Multi-Yukawa/DFT (2 exp.)'],['Multi-Yukawa/DFT (3 exp.)'],['Multi-Yukawa/DFT (4 exp.)']};
             %
             graph1D_jd(q/unitfactor,ff_dhfs(i,:),1,0,xlabff,ylab,tit9,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);
             leg = leg0([1,2]);

@@ -7,7 +7,7 @@ close all
 clc
 clear all
 %
-print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
+print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
 flag_calcul = 1;%1: calculation is enforced (even data have been saved), 0: data are reload if they have been saved
 %
 %atoms = {'Tungsten','Xenon','Copper','Iron','Argon','Neon','Oxygen','Nitrogen','Carbon','Beryllium','Helium'};

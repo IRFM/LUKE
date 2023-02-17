@@ -10,14 +10,14 @@ clc
 %
 Eref = mc2*alpha*alpha*1e3;%eV units
 %
-print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
-save_data = 1;%save calculations in dft structure
-visible_figs = 'off';
+print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
+save_data = 0;%save calculations in dft structure
+visible_figs = 'on';
 %
 % load Gaussian DFT data
 %
 Z = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%Atomic number (If multiple Z values, dft change only, no display)
-%Z = [18];%[18];%change dft substructure field salvat, and display results
+Z = [18];%[18];%change dft substructure field salvat, and display results
 %
 I0_NIST = [19.2;41.8;40.0;63.7;76.0;78.0;82.0;95.0;115.0;137.0;149.0;156.0;166.0;173.0;173.0;180.0;174.0;188.0;190.0;191.0;216.0;233.0;245.0;257.0;272.0;286.0;297.0;311.0;322.0;330.0;334.0;350.0;347.0;348.0;343.0;352.0;363.0;366.0;379.0;393.0;417.0;424.0;428.0;441.0;449.0;470.0;470.0;469.0;...
 488.0;488.0;487.0;485.0;491.0;482.0;488.0;491.0;501.0;523.0;535.0;546.0;560.0;574.0;580.0;591.0;614.0;628.0;650.0;658.0;674.0;684.0;694.0;705.0;718.0;727.0;736.0;746.0;757.0;790.0;790.0;800.0;810.0;823.0;823.0;830.0;825.0;794.0;827.0;826.0;841.0;847.0;878.0;890.0];%neutral atom: https://physics.nist.gov/PhysRefData/XrayMassCoef/tab1.html
@@ -28,7 +28,9 @@ gamma = sqrt(2);%LPA model (may be 1 in H. O. Wyckoff et al., "Stopping Powers f
 %
 % Salvat or multi-Yukawa model
 %
-nexp = 1;%number of exponentials
+nexp = 3;%number of exponentials
+%
+corrfac = 1.0;%to match multi-Yukawa model for variational method with MCSCF code results (use 1.5)
 %
 for iZ = 1:length(Z)
     %
@@ -142,7 +144,7 @@ for iZ = 1:length(Z)
                 semilogy(dft.r,y/4/pi./dft.r(:)./dft.r(:)*dft.N(i),'r',dft.r,fun_dens(x,dft.r)/4/pi./dft.r(:)./dft.r(:)*dft.N(i),'b',dft.ionradius{1}.rn{i},dft.ionradius{1}.dens{i},'g',dft.salvat.gaussian{nexp}.r,dft.salvat.gaussian{nexp}.ne(:,i),'k--','MarkerSize',14,'LineWidth',2);
                 legend('DFT','GSK','TF','MY')
                 xlabel('r/a_0')
-                ylabel('\rho')
+                ylabel('$\overline{\rho}$', 'Interpreter', 'latex')
                 title(([dft.name,', Z_{0s} = ',int2str(dft.Z0(i))]))
                 trapz(dft.r(:),fun_dens(x,dft.r));
                 %
@@ -150,7 +152,7 @@ for iZ = 1:length(Z)
                 plot(dft.r,y*dft.N(i),'r',dft.r,fun_dens(x,dft.r)*dft.N(i),'b',dft.ionradius{1}.rn{i},dft.ionradius{1}.dens{i}.*dft.ionradius{1}.rn{i}.*dft.ionradius{1}.rn{i}*4*pi,'g',dft.salvat.gaussian{nexp}.r,dft.salvat.gaussian{nexp}.ne(:,i)*4*pi.*dft.salvat.gaussian{nexp}.r.*dft.salvat.gaussian{nexp}.r,'k--','MarkerSize',14,'LineWidth',2);
                 legend('DFT','GSK','TF','MY')
                 xlabel('r/a_0')
-                ylabel('\rho')
+                ylabel('$\overline{\rho}$', 'Interpreter', 'latex')
                 title(([dft.name,', Z_{0s} = ',int2str(dft.Z0(i))]))
                 trapz(dft.r(:),fun_dens(x,dft.r));
             end
@@ -160,7 +162,7 @@ for iZ = 1:length(Z)
                 semilogy(dft.r,y/4/pi./dft.r(:)./dft.r(:)*dft.N(i),'r',dft.r,fun_dens(x,dft.r)/4/pi./dft.r(:)./dft.r(:)*dft.N(i),'b',dft.ionradius{1}.rn{i},dft.ionradius{1}.dens{i},'g',dft.salvat.gaussian{nexp}.r,dft.salvat.gaussian{nexp}.ne(:,i),'k--','MarkerSize',14,'LineWidth',2);
                 legend('DFT','GSK','TF','MY')
                 xlabel('r/a_0')
-                ylabel('\rho')
+                ylabel('$\overline{\rho}$', 'Interpreter', 'latex')
                 title(([dft.name,', Z_{0s} = ',int2str(dft.Z0(i))]))
                 trapz(dft.r(:),fun_dens(x,dft.r));
                 %
@@ -168,7 +170,7 @@ for iZ = 1:length(Z)
                 plot(dft.r,y*dft.N(i),'r',dft.r,fun_dens(x,dft.r)*dft.N(i),'b',dft.ionradius{1}.rn{i},dft.ionradius{1}.dens{i}.*dft.ionradius{1}.rn{i}.*dft.ionradius{1}.rn{i}*4*pi,'g',dft.salvat.gaussian{nexp}.r,dft.salvat.gaussian{nexp}.ne(:,i)*4*pi.*dft.salvat.gaussian{nexp}.r.*dft.salvat.gaussian{nexp}.r,'k--','MarkerSize',14,'LineWidth',2);
                 legend('DFT','GSK','TF','MY')
                 xlabel('r/a_0')
-                ylabel('\rho')
+                ylabel('$\overline{\rho}$', 'Interpreter', 'latex')
                 title(([dft.name,', Z_{0s} = ',int2str(dft.Z0(i))]))
                 trapz(dft.r(:),fun_dens(x,dft.r));
                 xlim([0 1])
@@ -178,13 +180,13 @@ for iZ = 1:length(Z)
             meanI1(i) = Eref*sqrt(dft.Z*(x(1)/x(2))^2*(1 - (dft.N(i)/6/dft.Z)*(1 + 1/2/x(1)))/F/x(2)/6);%Variational quantum calculations, GSK atomic model, Eq.34, Garbet, et al. (1987)
             meanI2(i) = I0(i);%MCSCF code Sauer, et al. (2015)
             meanI3(i) = I0_s(i);%Exponential interpolation
-            meanI4(i) = Eref*sqrt(((dft.Z-dft.N(i))*I0_salvat + dft.N(i)*I1_salvat)/I2_salvat);%Variational quantum calculations,Multi-Yukawa atomic model 
+            meanI4(i) = Eref*sqrt(corrfac*((dft.Z-dft.N(i))*I0_salvat + dft.N(i)*I1_salvat)/I2_salvat);%Variational quantum calculations,Multi-Yukawa atomic model 
             %
         end
         %
         figure('visible',visible_figs)
         plot(dft.Z0,log(meanI0),'ro',dft.Z0,log(meanI1),'rx',dft.Z0,log(meanI2),'k*',dft.Z0,log(meanI_LPA_gaussian),'ms',dft.Z0,log(meanI_LPA_salvat),'cs',dft.Z0,log(meanI3),'k-',dft.Z0,log(meanI4),'g--','MarkerSize',14,'LineWidth',2)
-        ylabel('ln(<I>)')
+        ylabel('$\ln\left\langle \hbar\omega_{Z_{0,s}} [eV]\right\rangle$', 'Interpreter', 'latex')
         xlabel('Ion charge Z')
         title([dft.name,', Z_s = ',int2str(dft.Z)])
         legend('Eq.29, Garbet, et al. (1987)','Eq.34, Garbet, et al. (1987)','Sauer, et al. (2015)','LPA-Gaussian','LPA-Salvat','LUKE code','Salvat','Location','NorthWest')
@@ -194,15 +196,15 @@ for iZ = 1:length(Z)
         %
         if isnan(I0) == 0
             plot(0,log(I0_NIST(Z(iZ))),'k*',dft.Z0,log(meanI2),'go',dft.Z0,log(meanI4),'r-',dft.Z0,log(meanI_LPA_salvat),'b--',dft.Z0,log(meanI3),'k-.','MarkerSize',14,'LineWidth',2)
-            ylabel('ln(<I> [eV])')
+            ylabel('$\ln\left\langle \hbar\omega_{Z_{0,s}} [eV]\right\rangle$', 'Interpreter', 'latex')
             xlabel('Ion charge Z_{0,s}')
-            title(['Atom : ',dft.name,', Z_s = ',int2str(dft.Z),''])
+            title([dft.name,', Z_s = ',int2str(dft.Z),''])
             legend('NIST database (neutral atom)','Multi-Configurational Self-Consistent Field code','Variational quantum calculations','Local Plasma Approximation (\gamma = \surd2)','Exponential interpolation','Location','NorthWest')
             grid minor
             xlim([0,dft.Z])
         else
             plot(0,log(I0_NIST(Z(iZ))),'k*',dft.Z0,log(meanI4),'r-',dft.Z0,log(meanI_LPA_salvat),'b--',dft.Z0,log(meanI3),'k-.','MarkerSize',14,'LineWidth',2)
-            ylabel('ln(<I> [eV])')
+            ylabel('$\ln\left\langle \hbar\omega_{Z_{0,s}}[eV]\right\rangle$', 'Interpreter', 'latex')
             xlabel('Ion charge Z_{0,s}')
             title([dft.name,', Z_s = ',int2str(dft.Z),''])
             legend('NIST database (neutral atom)','Variational quantum calculations','Local Plasma Approximation (\gamma = \surd2)','Exponential interpolation','Location','NorthWest')
