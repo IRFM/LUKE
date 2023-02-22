@@ -152,14 +152,14 @@ if length(antennas) == 2
         %
         subplot(122),plot(data(1).mask.aloha(data(1).mask.lower),data(1).mean.rc_mean_aloha_lower,'bo-','LineWidth',2),hold on
         xlim([min(data(1).mask.aloha(data(1).mask.lower)),max(data(1).mask.aloha(data(1).mask.lower))]);ylim([0,30]);xlabel('Module index');ylabel('RC (%)');
-        subplot(122),plot(data(1).mask.aloha(data(1).mask.lower),antennas(1).aloha.results.RC,'rx--','LineWidth',2)
+        subplot(122),plot(data(1).mask.aloha(data(1).mask.lower),antennas(2).aloha.results.RC,'rx--','LineWidth',2)
         xlim([min(data(1).mask.aloha(data(1).mask.lower)),max(data(1).mask.aloha(data(1).mask.lower))]);ylim([0,30]);xlabel('Module index');ylabel('RC (%)');grid minor
         legend('Exp.',['ALOHA, n_{e} = ',num2str(round(100*antennas(2).aloha.plasma.ne0/1e17)/100),'x10^{+17} m^{-3}'],'Location','NorthWest');
         title(['Lower module (',data(1).port,')'])
         if antennas(1).aloha.optim.method == 0
-            disp(['- Port : ',data(1).port,', Pin = ',num2str(sum(antennas(2).aloha.results.Pin)/1e6),' MW, Ptr = ',num2str(sum(antennas(2).aloha.results.Ptr_plasma_RC)/1e6),' MW,  ne (enforced) = ',num2str(antennas(1).aloha.optim.ne_guess/1e17),'x10+17 m-3, lower module, delta = ',num2str(norm(antennas(2).aloha.results.RC - data(1).mean.rc_mean_aloha_lower))])
+            disp(['- Port : ',data(1).port,', Pin = ',num2str(sum(antennas(2).aloha.results.Pin)/1e6),' MW, Ptr = ',num2str(sum(antennas(2).aloha.results.Ptr_plasma_RC)/1e6),' MW,  ne (enforced) = ',num2str(antennas(2).aloha.optim.ne_guess/1e17),'x10+17 m-3, lower module, delta = ',num2str(norm(antennas(2).aloha.results.RC - data(1).mean.rc_mean_aloha_lower))])
         else
-            disp(['- Port : ',data(1).port,', Pin = ',num2str(sum(antennas(2).aloha.results.Pin)/1e6),' MW, Ptr = ',num2str(sum(antennas(2).aloha.results.Ptr_plasma_RC)/1e6),' MW, ne (guess) = ',num2str(antennas(1).aloha.optim.ne_guess/1e17),'x10+17 m-3, , ne (optimized) = ',num2str(antennas(2).aloha.plasma.ne0/1e17),'x10+17 m-3, lower module, delta = ',num2str(norm(antennas(2).aloha.results.RC - data(1).mean.rc_mean_aloha_lower))])
+            disp(['- Port : ',data(1).port,', Pin = ',num2str(sum(antennas(2).aloha.results.Pin)/1e6),' MW, Ptr = ',num2str(sum(antennas(2).aloha.results.Ptr_plasma_RC)/1e6),' MW, ne (guess) = ',num2str(antennas(2).aloha.optim.ne_guess/1e17),'x10+17 m-3, , ne (optimized) = ',num2str(antennas(2).aloha.plasma.ne0/1e17),'x10+17 m-3, lower module, delta = ',num2str(norm(antennas(2).aloha.results.RC - data(1).mean.rc_mean_aloha_lower))])
         end
         %
     end
