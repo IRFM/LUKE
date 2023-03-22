@@ -1,7 +1,7 @@
 function waves = alphaphi_luke_jd(waves,dke_out,ZP0,equilDKE,mksa)
 %
 % This function uses the LUKE power deposition output to calculate the power deposited along the rays
-%%%%
+%
 nw = length(waves);
 if isempty(waves),
     return
