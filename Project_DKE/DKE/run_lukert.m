@@ -906,7 +906,7 @@ end
 %
 if ~isfield(opt,'save') || opt.save == 0 %save only full data (may be reduced form -> dkeparam.opt_struct)
     %
-    lukestructs = selectfields_jd(lukestructs,{'output','equil','simul','opt',});
+    lukestructs = selectfields_jd(lukestructs,{'output','equil','simul','opt'});
     %
 elseif isfield(opt,'save') && opt.save == 1 %save processed data and synthetic diagnostics if any
     %
