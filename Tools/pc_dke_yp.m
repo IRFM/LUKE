@@ -20,6 +20,8 @@ function [varargout] = pc_dke_yp(gauss)
 %   - alpha : Fine structure constant
 %   - kB : Boltzmann's constant (J/K-1)
 %   - amu : Atomic mass unit (Kg)
+%   - h : Planck constant
+%   - hbar : Reduced Planck constant
 %   - a0 : Bohr radius (m)
 %   - lambdaC : Compton length (m)
 %
@@ -75,7 +77,6 @@ if nargout >= 13, varargout{13} = h;end
 if nargout >= 14, varargout{14} = hbar;end
 if nargout >= 15, varargout{15} = lambdaC;end
 if nargout >= 16, varargout{16} = a0;end
-
 
 
 
