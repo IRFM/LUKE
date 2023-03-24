@@ -172,3 +172,21 @@ end
 %
 [dkecluster] = mdce_clustermode(dkecluster.scheduler);
 %
+if isfield(dkecluster,'scheduler') && isfield(dkecluster,'remote')
+    %
+    if isfield(dkecluster.scheduler,'walltime') && isfield(dkecluster.remote,'walltime')
+        %
+        if isnumeric(dkecluster.scheduler.walltime) && isnumeric(dkecluster.remote.walltime)
+            %
+            if dkecluster.scheduler.walltime > dkecluster.remote.walltime
+                %
+                dkecluster.remote.walltime = dkecluster.scheduler.walltime;
+                %
+            end
+            %
+        end
+        %
+    end
+    %
+end
+%
