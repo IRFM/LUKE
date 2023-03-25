@@ -97,33 +97,65 @@ elseif nargin == 8
         %
         disp(['WARNING : ''optim'' field missing in simul_params --> default values are enforced']) 
         simul_params.optim.method = 'fixed ne value';%(1) Edge density in front of the grill is calculated such that simulated RC coefficients are the clostest to observations (0) Edge density in front of the grill is given by the guess
+        simul_params.optim.P_min = 1;%Minimum power (kW) per module below which it is set to zero. Default value is 1 kW. 
         simul_params.optim.ne_guess = 2.0e17;%Edge density in front of the grill (initial guess or enforced value) (m-3)
         simul_params.optim.tolfun = 1e-2;%Relative tolerance on targets (if optim.method = 1)
         simul_params.optim.tolx = 1e-2;%Relative tolerance on inputs (if optim.method = 1)
-        simul_params.optim.nitmax = 20;%Maximum number of iterations (if optim.method = 1)
+        simul_params.optim.nitmax = 10;%Maximum number of iterations (if optim.method = 1)
         simul_params.optim.debugmode = 1;%debug if (1)
         %
     else
         %
         if ~isfield(simul_params.optim,'method')
+            %
             disp(['WARNING : ''method'' field missing in simul_params.optim --> default value is enforced']) 
-            simul_params.optim.method = 'fixed ne value';%
+            simul_params.optim.method = 'fixed ne value';
+            %
         end
+        %
         if strcmp(simul_params.optim.method,'fixed ne value') && ~isfield(simul_params.optim,'ne_guess')
+            %
             disp(['WARNING : ''ne_guess'' field missing in simul_params.optim --> default value is enforced']) 
             simul_params.optim.ne_guess = 2.0e17;%Edge density in front of the grill (initial guess or enforced value) (m-3)
+            %
         end
+        %
+        if ~isfield(simul_params.optim,'P_min')
+            %
+            disp(['WARNING : ''P_min'' field missing in simul_params.optim --> default value is enforced']) 
+            simul_params.optim.P_min = 1;%Minimum power (kW) per module below which it is set to zero. Default value is 1 kW. 
+            %
+        else
+            %
+            if isempty(simul_params.optim.P_min) || simul_params.optim.P_min < 1
+                %
+                disp(['WARNING : ''P_min'' field in simul_params.optim is empty or less than 1 kW --> default value is enforced']) 
+                %
+                simul_params.optim.P_min = 1;%Minimum power (kW) per module below which it is set to zero. Default value is 1 kW. 
+                %
+            end
+            %
+        end
+        %
         if strcmp(simul_params.optim.method,'ne optimal to fit experimental RC') && ~isfield(simul_params.optim,'tolfun')
+            %
         	disp(['WARNING : ''tolfun'' field missing in simul_params.optim --> default value is enforced']) 
             simul_params.optim.tolfun = 1e-2;%Relative tolerance on targets (if optim.method = 1)
+            %
         end
+        %
         if strcmp(simul_params.optim.method,'ne optimal to fit experimental RC') && ~isfield(simul_params.optim,'tolx')
+            %
             disp(['WARNING : ''tolx'' field missing in simul_params.optim --> default value is enforced']) 
             simul_params.optim.tolx = 1e-2;%Relative tolerance on inputs (if optim.method = 1)
+            %
         end
+        %
         if strcmp(simul_params.optim.method,'ne optimal to fit experimental RC') && ~isfield(simul_params.optim,'nitmax')
-            disp(['WARNING : ''nitmax'' field missing in simul_params.optim --> default value is enforced']) 
-            simul_params.optim.nitmax = 20;
+            %
+            disp(['WARNING : ''nitmax'' field missing in simul_params.optim --> default value (10) is enforced']) 
+            simul_params.optim.nitmax = 10;
+            %
         end
         %
     end

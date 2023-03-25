@@ -24,7 +24,7 @@ for ii = 1:nitmax
     %
     sc(ii) = aloha_scenario(sc(ii));
     %
-    mask_klystrons = sc(ii).results.Pin > 5000;%less than 5kW of LH power per module corresponds to a technical failure
+    mask_klystrons = sc(ii).results.Pin > optim.P_min*1000;%less than 1kW of LH power per module corresponds to a technical failure
     %
     err_RC(ii) = norm(sc(ii).results.RC(mask_klystrons) - rc(mask_klystrons));%for working klystrons only
     %
