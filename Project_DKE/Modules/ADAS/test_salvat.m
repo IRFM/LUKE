@@ -10,7 +10,7 @@ clc
 %
 print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
 %
-maxnumberofexponentials = 3;%up to 4
+maxnumberofexponentials = 4;%up to 4
 %
 Z = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%Atomic number (If multiple Z values, dft change only, no display)
 Z = 74;%[18];%change dft substructure field salvat, and display results
@@ -92,7 +92,7 @@ for iZ = 1:length(Z)
             %
             xlab = 'Ion radius [a_0]';
             ylab1 = 'Density of bound electrons [{a^{-3}_0}]';%'$\overline{\rho}$', 'Interpreter', 'latex'
-            ylab2 = 'Lineic density of bound electrons [{a^{-1}_0}]';
+            ylab2 = 'Linear density of bound electrons [{a^{-1}_0}]';
             %
             i = 1;%neutral atom
             %
@@ -204,7 +204,7 @@ for iZ = 1:length(Z)
             %
             tit3 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
             figure('Name',tit3);
-            ylab = 'Atomic form factor';
+            ylab = 'Atomic form factor F_{Z_{0,s}}';
             siz = 20+14i;
             %
             leg0 = {'DFT ({\itGAUSSIAN} code)',['Multi-Yukawa/DFT (1 exp.)'],['Multi-Yukawa/DFT (2 exp.)'],['Multi-Yukawa/DFT (3 exp.)'],['Moliere-Thomas-Fermi (3 exp.)'],['Moliere-Thomas-Fermi (3 exp.)']};
@@ -294,7 +294,7 @@ for iZ = 1:length(Z)
                 %
                 tit6 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
                 figure('Name',tit6);
-                ylab = 'Atomic form factor';
+                ylab = 'Atomic form factor F_{Z_{0,s}}';
                 siz = 20+14i;
                 %
                 graph1D_jd(q/unitfactor,ff_dhfs(i,:),1,0,xlabff,ylab,tit6,'','','',linestyle{1},'none',linecolor{1},2,siz,gca);
@@ -467,7 +467,7 @@ for iZ = 1:length(Z)
             %
             tit9 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
             figure('Name',tit9);
-            ylab = 'Atomic form factor';
+            ylab = 'Atomic form factor F_{Z_{0,s}}';
             siz = 20+14i;
             %
             leg0 = {'DFT ({\itGAUSSIAN} code)',['Multi-Yukawa/DFT (1 exp.)'],['Multi-Yukawa/DFT (2 exp.)'],['Multi-Yukawa/DFT (3 exp.)'],['Multi-Yukawa/DFT (4 exp.)']};

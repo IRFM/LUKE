@@ -10,7 +10,7 @@ clc
 %
 Eref = mc2*alpha*alpha*1e3;%eV units
 %
-print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
+print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
 save_data = 0;%save calculations in dft structure
 visible_figs = 'on';
 %
@@ -199,7 +199,7 @@ for iZ = 1:length(Z)
             ylabel('$\ln\left\langle \hbar\omega_{Z_{0,s}} [eV]\right\rangle$', 'Interpreter', 'latex')
             xlabel('Ion charge Z_{0,s}')
             title([dft.name,', Z_s = ',int2str(dft.Z),''])
-            legend('NIST database (neutral atom)','Multi-Configurational Self-Consistent Field code','Variational quantum calculations','Local Plasma Approximation (\gamma = \surd2)','Exponential interpolation','Location','NorthWest')
+            legend('NIST database (neutral atom)','Multi-Configurational Self-Consistent Field code','Variational quantum calculations','Local Plasma Approximation (\gamma_{LPA} = \surd2)','Exponential interpolation','Location','NorthWest')
             grid minor
             xlim([0,dft.Z])
         else
@@ -207,7 +207,7 @@ for iZ = 1:length(Z)
             ylabel('$\ln\left\langle \hbar\omega_{Z_{0,s}}[eV]\right\rangle$', 'Interpreter', 'latex')
             xlabel('Ion charge Z_{0,s}')
             title([dft.name,', Z_s = ',int2str(dft.Z),''])
-            legend('NIST database (neutral atom)','Variational quantum calculations','Local Plasma Approximation (\gamma = \surd2)','Exponential interpolation','Location','NorthWest')
+            legend('NIST database (neutral atom)','Variational quantum calculations','Local Plasma Approximation (\gamma_{LPA} = \surd2)','Exponential interpolation','Location','NorthWest')
             grid minor
             xlim([0,dft.Z])
         end

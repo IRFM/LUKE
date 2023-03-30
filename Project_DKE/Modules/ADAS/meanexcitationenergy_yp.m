@@ -47,7 +47,7 @@ elements.symbol = {'H','He','Li','Be','B','C','N','O','F','Ne','Na','Mg','Al','S
 %
 I0 = [];
 %
-I0_ref{1} = [13.6];
+I0_ref{1} = [14.9916];
 I0_ref{2} = [42.68,59.88];%S. Sauer, J. Oddershede and J. Sabin, "The mean Excitation Energy of Atomic Ions, Advances in quantum chemistry, 71, (2015) 29  
 I0_ref{3} = [33.1,108.1,134.1];%S. Sauer, J. Oddershede and J. Sabin, "The mean Excitation Energy of Atomic Ions, Advances in quantum chemistry, 71, (2015) 29  
 I0_ref{6} = [65.9,92.6,134.8,214.2,486.2,539.5];%S. Sauer, J. Oddershede and J. Sabin, "The mean Excitation Energy of Atomic Ions, Advances in quantum chemistry, 71, (2015) 29  
@@ -68,7 +68,7 @@ else
 end
 %
 I0_min = 10*Z;%eV 
-I0_max = 13.6*Z^2;%eV
+I0_max = 14.9916*Z^2;%eV
 %
 b = log(I0_min);
 a = log(I0_max) - b;
