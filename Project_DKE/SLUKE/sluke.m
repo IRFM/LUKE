@@ -38,6 +38,12 @@ sparams_in = varargin{1};
 %
 [err,status] = sluke_params_consistency(sparams_in);
 %
+if err == 1
+    % 
+    return;
+    %
+end
+%
 sparams = sluke_params_time(sparams_in);%Expand all time steps if any
 %
 if isfield(sparams.simul,'max_simulations')
@@ -110,14 +116,14 @@ for ii = 1:length(sparams.machine)
     if sparams.simul.enable{ii} == 1
         %
         simul_id = sluke_id(sparams,ii);
-        %
+        %{
         if sluke_sparams_stamp(sparams,ii) == -1 %check consistency of previous simulations with the same id. Remove files to restart simulation at the correct level
             %
             cprintf('*red',['The simulation ',simul_id,' is skipped.']);disp(' ')  
-            break %abort simulations ii 
+            break %abort simulations 
             %
         end
-        %
+        %}
         mute = sluke_params_value(sparams.simul.mute,ii);
         mute_fns = fieldnames(mute);
         %
