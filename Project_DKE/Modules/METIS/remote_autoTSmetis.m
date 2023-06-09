@@ -61,22 +61,20 @@ if ~isstruct(sinputs)% new job
         cluster = 'SIRRAH';%experimental data are in files only
     end
     %
-    remote_profile_ANDROMEDE = remote_CEA_ANDROMEDE;
     remote_profile_ALTAIR = remote_CEA_ALTAIR;
     remote_profile_SIRRAH = remote_CEA_SIRRAH;
     %
     if remote_enforce == 0
         %
         [err_ALTAIR,txt_ALTAIR] = unix(['ssh -Y ',remote_profile_ALTAIR.remoteuser,'@',remote_profile_ALTAIR.host,' "hostname"']);%Zone partenaire
-        [err_ANDROMEDE,txt_ANDROMEDE] = unix(['ssh -Y ',remote_profile_ANDROMEDE.remoteuser,'@',remote_profile_ANDROMEDE.host,' "hostname"']);%Zone partenaire
         [err_SIRRAH,txt_SIRRAH] = unix(['ssh -Y ',remote_profile_SIRRAH.remoteuser,'@',remote_profile_SIRRAH.host,' "hostname"']);%Zone intra
-        err = err_ALTAIR + err_ANDROMEDE + err_SIRRAH;
+        err = err_ALTAIR + err_SIRRAH;
         %
         if err == 0, 
             txt = txt_SIRRAH;%the client is connected to CEA intranet
         else
             if shot >= 20000 %30000 (to be checked)
-                if err_ANDROMEDE == 0 || err_ALTAIR == 0,
+                if err_ALTAIR == 0,
                     txt = txt_ALTAIR;%the client computer can connect directly to CEA extranet.
                 else
                     txt = '';%the client computer cannot connected directly to CEA extranet. May be by a SSH bridge.
@@ -88,7 +86,6 @@ if ~isstruct(sinputs)% new job
     else
         err = 0;
         err_ALTAIR = '';
-        err_ANDROMEDE = '';
         err_SIRRAH = '';
         txt = '';
     end
@@ -122,10 +119,6 @@ if ~isstruct(sinputs)% new job
             for iprof = 1: length(dkepath.profilestr)
                 if strcmp(cluster,'ALTAIR'),
                     if strfind(dkepath.profilestr{iprof},['CEA_ALTAIR : ',remote_mode]),%connect to ALTAIR
-                        break
-                    end
-                elseif strcmp(cluster,'ANDROMEDE'),
-                    if strfind(dkepath.profilestr{iprof},['CEA_ANDROMEDE : ',remote_mode]),%connect to ANDROMEDE
                         break
                     end
                 elseif strcmp(cluster,'SIRRAH'),
