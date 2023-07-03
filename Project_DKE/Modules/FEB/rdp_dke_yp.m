@@ -13,9 +13,9 @@ function [seRDP,seRDP_1,seRDP_2,ec,k,c] = rdp_dke_yp(ec_in,k_in,t0_in,Z,n2f1,nph
 %       - n2f1: number of terms in the series for the calculation o the Gaussian hypergeometric function [1,1]
 %         (default : 100)
 %       - nphi: number of azimuthal angles for the scattered electron [1,1]
-%         (default : 101)
+%         (default : 301)
 %       - ntheta: number of theta angles for the scattered electron [1,1]
-%         (default : 151)
+%         (default : 351)
 %       - integral_mode: mode of integration over phi and theta of the scatteredd electron ('simps' for Simpson method or 'trapz' or trapeze method)
 %         (default : 'simps')
 %
