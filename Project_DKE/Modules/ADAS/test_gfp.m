@@ -6,7 +6,7 @@ clc
 Z = 74;% Atomic number
 Z0 = 42;% Ionization state
 %
-print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
+print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
 %
 p = linspace(0.1,100,1000);mode=0;fig_comment = '';
 %p = linspace(0.001,1,1000);mode=1;fig_comment = '_small_p';
@@ -71,8 +71,8 @@ drawnow
 print_jd(print_opt,['gfp_DHFS_salvat_models_',int2str(Z),'_',int2str(Z0),fig_comment],'./Figs',get(gcf,'Number'))
 %
 leg = {'DFT ({\itGAUSSIAN} code)',...
-    'Multi-Yukawa/DFT (3 exp.)',...
-    'Tseng-Pratt-Botto (1 exp.)',...
+    'Multi-Yukawa/DFT (≤ 3 exp.)',...
+    'Yukawa-Tseng-Pratt-Botto/DHFS (1 exp.)',...
     'Thomas-Fermi-Kirillov'};
 %
 tit = [elements('atomic_number', Z, 'name'),', Z_s = ',int2str(Z),', Z_{s0} = ',int2str(Z0)];
@@ -98,3 +98,4 @@ grid minor
 drawnow
 %
 print_jd(print_opt,['gfp_all_models_',int2str(Z),'_',int2str(Z0),fig_comment],'./Figs',get(gcf,'Number'))
+%
