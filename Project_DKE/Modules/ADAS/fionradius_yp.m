@@ -147,7 +147,7 @@ if q < 1
         %
         nz = Z*(1/3 - 0.0020*Z);
         lambda0 = 0.9*Z^0.42;%a0^(-1) units with a0 Bohr radius  
-        lambdaz2 = lambda0^2*(1.0 - (Z0/Z)^(nz+1))/(1.0 - (Z0/Z))^2;%the term .../(1.0 - (Z0/Z))^2 is added for an accurate dependencie with Z0/Z (notes Y. Peysson)
+        lambdaz2 = lambda0^2*(1.0 - (Z0/Z)^(nz+1))/(1.0 - (Z0/Z))^1.5;%the term .../(1.0 - (Z0/Z))^1.5 is added for an accurate dependencie with Z0/Z (notes Y. Peysson)
         %
         lambdaz = sqrt(lambdaz2);
         %
@@ -184,7 +184,7 @@ if q < 1
         %
         nz = Z*(1/3 - 0.0020*Z);
         lambda0 = 1.13*Z^(1/3);%a0^(-1) units with a0 Bohr radius (Thomas-Fermi value for neutral atom)
-        lambdaz2 = lambda0^2*(1.0 - (Z0/Z)^(nz+1))/(1.0 - (Z0/Z))^2;%the term .../(1.0 - (Z0/Z))^2 is added for an accurate dependencie with Z0/Z (notes Y. Peysson)
+        lambdaz2 = lambda0^2*(1.0 - (Z0/Z)^(nz+1))/(1.0 - (Z0/Z))^1.5;%the term .../(1.0 - (Z0/Z))^1.5 is added for an accurate dependencie with Z0/Z (notes Y. Peysson)
         %
         lambdaz = sqrt(lambdaz2);
         %
