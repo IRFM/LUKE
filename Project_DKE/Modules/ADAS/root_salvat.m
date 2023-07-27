@@ -6,7 +6,7 @@ function y = root_salvat(R)
 %
 %	Input:
 %
-%		- R: normalized moments of the atomic charge density R(2) = 1 by construction [1,2], [1,4], [1,6], [1,8] if one, two or four Yukawa potentials are considered
+%		- R: normalized moments of the atomic charge density R(2) = 1 by construction [1,2], [1,4], [1,6], [1,8] if one, two, three or four Yukawa potentials are considered
 %
 %	Output: 
 %
@@ -68,7 +68,16 @@ if jmax == 3%three Yukawa potentials
 end
 %
 if jmax == 2%two Yukawa potentials
+    %{
+    Y = [R(1);R(2)];
+    A1 = [R(2),-R(3);R(3),-R(4)];
+    X = A1\Y;%find 3rd degree polynomial equation
     %
+    y(jmax+1:end) = roots([1 -X(1) X(2)]);%solve 2nd degree polynomial equation
+    %
+    A2 = [y(3),y(4);1,1];
+    y(1:jmax) = (A2\Y)';
+    %}
     y(jmax+1:end) = roots([R(4) - R(3)^2,R(3)-R(1)*R(4),R(1)*R(3)-1]);%solve 2nd degree polynomial equation
     y(1:jmax) = [(R(1) - y(4))/(y(3) - y(4)),1 - (R(1) - y(4))/(y(3) - y(4))];
     %
