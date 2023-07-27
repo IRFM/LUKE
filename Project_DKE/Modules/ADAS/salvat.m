@@ -109,8 +109,18 @@ for jj = 1:length(model)
         end   
         %
         for i = 1:dft.Z
-            %
-            x = root_salvat(R(i,:));
+            %    
+            x = root_salvat(R(i,:)); 
+            %{
+            if i >= 44 && i < 51
+                %
+                disp('------------------------')
+                disp(i)
+                disp(x)
+                disp('------------------------')
+                %
+            end
+            %}
             %{
             irmax = max(find(ne(:,i) > 1e-4));
             xr = r(1:irmax);
@@ -145,9 +155,8 @@ for jj = 1:length(model)
             %
             options = optimoptions('lsqcurvefit','FunctionTolerance',eps);
             [xx,resnorm,~,exitflag,output] = lsqcurvefit(F,xx0,xr,xne.*xr,-1000,10000,options);
-
             %figure
-           % semilogy(xr,xne,'k',xr,FF(xx,xr)./xr,'b',xr,F(x,xr)./xr,'r')
+            %semilogy(xr,xne,'k',xr,FF(xx,xr)./xr,'b',xr,F(x,xr)./xr,'r')
             %title([int2str(xN),',',int2str(kk)])
             %
             x = xx;
@@ -232,7 +241,12 @@ for jj = 1:length(model)
             if imodel == 0
                 %
                 dft.salvat.(lower(dft.code.codetype)){kk}.ne(:,i) = dens;
-                dft.salvat.(lower(dft.code.codetype)){kk}.neR2(:,i) = sum((dft.salvat.(lower(dft.code.codetype)){kk}.ne(:,i) - ne(:,i)).^2)/length(ne(:,i));
+                ne_mean = sum(ne(:,i))/length(ne(:,i));
+                SSres = sum((dft.salvat.(lower(dft.code.codetype)){kk}.ne(:,i) - ne(:,i)).^2);
+                SStot = sum((ne(:,i) - ne_mean).^2);
+                R2 = 1 - SSres./SStot;
+                %
+                dft.salvat.(lower(dft.code.codetype)){kk}.R2(i) = R2;
                 %
                 dft.salvat.(lower(dft.code.codetype)){kk}.Ndft(i) = 4*pi*simps(r,r.*r.*ne(:,i));
                 dft.salvat.(lower(dft.code.codetype)){kk}.Nfit(i) = 4*pi*simps(r,r.*r.*dft.salvat.(lower(dft.code.codetype)){kk}.ne(:,i));
@@ -240,7 +254,13 @@ for jj = 1:length(model)
             else
                 %
                 dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.ne(:,i) = dens;
-                dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.neR2(:,i) = sum((dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.ne(:,i) - ne(:,i)).^2)/length(ne(:,i))^2;
+                %
+                ne_mean = sum(ne(:,i))/length(ne(:,i))
+                SSres = sum((dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.ne(:,i) - ne(:,i)).^2);
+                SStot = sum((ne(:,i) - ne_mean).^2);
+                R2 = 1 - SSres./SStot;
+                %
+                dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.R2(i) = R2
                 %
                 dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.Ndft(i) = 4*pi*simps(r,r.*r.*ne(:,i));
                 dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.Nfit(i) = 4*pi*simps(r,r.*r.*dft.salvat.(lower(strrep(dft.models{imodel},'-','_'))){kk}.ne(:,i));
