@@ -1,8 +1,9 @@
 function [M,Z0,symbol,neutral_ground_state] = spinmultiplicity_yp(Z,nonist)
 %
-%   Calculation of atomic spin multiplicity for all ionization state of an
-%   atom with atomic number Z. To be used by DFT programs to calculate the
-%   atomic electron density like GAUSSIAN. Use Hund's rules (valid for
+%   Calculation of atomic spin multiplicity and orbital quantum number for 
+%   all ionization ground state of an atom with atomic number Z. 
+%   To be used by DFT or MCDHF programs to calculate the
+%   atomic electron density like GAUSSIAN and GRASP2018. Use Hund's rules (valid for
 %   low-Z elements, NIST data otherwise. If NIST data are not available,
 %   Hund's rule are applied for specific shells
 %
@@ -14,6 +15,7 @@ function [M,Z0,symbol,neutral_ground_state] = spinmultiplicity_yp(Z,nonist)
 %   OUTPUTS:
 %
 %       - M : spin multiplicity [1,Z]
+%       - L : azimuthal quantum number [1,Z]
 %       - Z0 : ionization states including neutral atom [1,Z+1]
 %       - symbol : atom symbol [1,n]
 %       - neutral_ground_state : ground state for neutral atom [1,m]
@@ -55,6 +57,7 @@ elements.ground_state = {'1s1','1s2','[He] 2s1','[He] 2s2','[He] 2s2 2p1','[He] 
 %
 for iN = elements.Z(1):elements.Z(end)
     M_nist{iN} = [];%initialize NIST multiplicity
+    L_nist{iN} = [];%initialize NIST azimuthal quantum number
 end
 %
 % NIST database -> 
@@ -69,15 +72,17 @@ end
 %   (0,3/2) for Au71+ (Nitrogen number of bound electrons). The spin
 %   multiplicity start from the neutral (left) to the Rydberg atom (right)
 %   in M_nist{Z}. For low-Z elements, M_nist = M_hund
-%   The M_hund does not work for high-Z elements weakly ionized. Failure is
-%   Gaussian.However, when spin multiplicity is zero from NIST database, it
+%   The M_hund does not work for high-Z elements weakly ionized. Failure in
+%   Gaussian DFT calculations. However, when spin multiplicity is zero from NIST database, it
 %   is replaced by the Hund's value, otherwise, the density may be zero.
 %
 if nonist == 0
     %
     M_nist{24} = [7,6,5,4,3,2,1,2,3,4,3,2,1,2,1,2,3,4,3,2,1,2,1,2];%Chromium Cr
+    L_nist{24} = [0,0,2,3,3,2,0,1,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,0];%Chromium Cr
     %
     M_nist{26} = [5,6,5,6,5,4,3,2,1,2,3,4,3,2,1,2,1,2,3,4,3,2,1,2,1,2];%Iron Fe
+    L_nist{26} = [2,2,2,0,2,3,3,2,0,1,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,0];%Chromium Cr
     %
     M_nist{28} = [3,2,3,4,5,6,5,4,3,2,1,2,3,4,3,2,1,2,1,2,3,4,3,2,1,2,1,2];%Nickel Ni
     M_nist{29} = [2,1,2,3,4,5,6,5,4,3,2,1,2,3,4,3,2,1,2,1,2,3,4,3,2,1,2,1,2];%Copper Cu
@@ -122,11 +127,25 @@ if nonist == 0
     M_nist{71} = [2,1,2,1,2,3,0,0,4,0,0,3,4,0,0,0,6,7,8,7,6,5,4,3,2,1,2,3,4,5,6,5,4,3,2,1,2,3,4,3,2,1,2,1,2,3,4,0,0,5,4,3,2,1,2,3,2,3,2,1,2,1,2,3,4,3,2,1,2,1,2];% Lutetium Lu
     M_nist{72} = [3,2,3,2,1,2,0,0,0,4,0,0,3,4,5,0,0,6,7,8,7,6,5,4,3,2,1,2,3,4,5,6,5,4,3,2,1,2,3,4,3,2,1,2,1,2,3,4,0,0,5,4,3,2,1,2,3,2,3,2,1,2,1,2,3,4,3,2,1,2,1,2];% Hafnium Hf
     M_nist{73} = [4,5,4,3,2,1,2,0,0,0,4,0,2,3,4,5,0,0,6,7,8,7,6,5,4,3,2,1,2,3,4,5,6,5,4,3,2,1,2,3,4,3,2,1,2,1,2,3,4,0,0,5,4,3,2,1,2,3,2,3,2,1,2,1,2,3,4,3,2,1,2,1,2];% Tantalum Ta 
+    %
     M_nist{74} = [5,6,5,4,3,2,1,2,3,2,3,4,1,2,3,4,5,4,5,6,7,8,7,6,5,4,3,2,1,2,3,4,5,4,3,4,3,2,1,2,3,2,3,2,1,2,1,2,3,4,5,6,5,4,3,2,1,2,3,2,3,2,1,2,1,2,3,2,3,2,1,2,1,2];%Tungsten W
+    L_nist{74} = [2,2,2,3,3,2,0,3,1,1,1,3,0,3,5,6,6,6,6,5,3,0,3,5,6,6,5,3,0,2,3,3,2,1,1,3,3,2,0,1,1,2,1,1,0,0,0,2,i,i,i,i,i,i,i,2,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0];%Tungsten W
     %
     M_nist{78} = [3,2,3,4,5,6,5,4,3,2,1,2,3,2,3,2,1,2,3,2,3,4,5,6,7,8,7,6,5,4,3,2,1,2,3,4,5,4,5,4,3,2,1,2,3,4,3,2,1,2,1,2,3,4,5,4,5,4,3,2,1,2,3,2,3,2,1,2,1,2,3,4,3,2,1,2,1,2];%Gold Au
     M_nist{79} = [2,1,2,3,4,5,6,5,4,3,2,1,2,3,2,3,2,1,2,3,2,3,4,5,6,7,8,7,6,5,4,3,2,1,2,3,4,5,4,5,4,3,2,1,2,3,4,3,2,1,2,1,2,3,4,5,4,5,4,3,2,1,2,3,2,3,2,1,2,1,2,3,4,3,2,1,2,1,2];%Gold Au
     %
+
+
+
+
+
+
+
+
+
+
+
+
 end
 %
 symbol = elements.symbol{Z};
