@@ -7,6 +7,8 @@
 % by Y. Peysson (DRFC/DSM/CEA) <yves.peysson@cea.fr> and J. Decker (DRFC/DSM/CEA) <joan.decker@cea.fr>
 %
 close all
+clear all
+clc
 %
 id_wave = 'WEST_54952';
 flag_analytic = 4;
@@ -31,6 +33,8 @@ path_equil = '../EQUIL/';%if nothing is specified, the working directory is firs
 % initial ray conditions
 %
 omega_rf = [3.7]*2*pi*1e9;
+nparmax = 8;
+resolution = 0;%low resolution (fast calculations): 0, high resolution (slow calculations): 1
 % 
 rho0 = 0.99;
 theta0 = 0.0;
@@ -38,7 +42,7 @@ phi0 = 0.0;
 %
 m0 = 20;
 n0 = NaN;
-Npar0 = 2.0;%initial index of refraction
+Npar0 = 1.9;%initial index of refraction
 %
 dNpar0 = NaN;
 P0_2piRp = NaN;
@@ -81,7 +85,7 @@ fitparam.ngridresample = 1001;%Number of grid points for resampling the radial p
 rayparam.testmode = 0;
 rayparam.tensortype = waveparam.kmode;%(0:cold,1:warm,2:hot;3:weak realtivistic,4:full relativistic)
 rayparam.t0 = 0;
-rayparam.tfinal = 10000;
+rayparam.tfinal = 40000;
 rayparam.dt0 = 1.e-4;
 rayparam.dS = 1.e-4;
 rayparam.tol = 1e-12;%when tolerance is increased (less accurate calculation of D=0), tfinal must be increased accordingly
@@ -148,3 +152,13 @@ opt.propvar = 1;
 %
 graph_comp_RT_jd(rays,legs,'',filename,opt)
 %
+if ~isempty(rays{1})
+    disp(['N||0 (from ray) = ',num2str(abs(real(rays{1}.sNpar(1))))]);
+    npar0 = abs(real(rays{1}.sNpar(1)));
+else
+    disp(['N||0 = ',num2str(npar0)]);
+end
+%
+[na,gamma_KAM_exact,gamma_KAM_approximate,open_upperboundaries_propagationdomain,intersection,Npar_gap_min,R_kinematic_gap_min] = LH_acces_yp(equil,omega_rf,rays{1},npar0,nparmax,resolution);
+%
+    
