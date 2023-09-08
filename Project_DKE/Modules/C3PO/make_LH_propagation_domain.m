@@ -40,6 +40,8 @@ elseif strcmp(machine,'WEST')
     omega_rf = 3.7e9*2*pi;%angular frequency (rad/s)
     npar0 = 2.0;
     load('EQUIL_WEST_55539_3.9369.mat');
+    %load('EQUIL_WEST_54952_4.44_4.55_1_METIS_LH_ALOHA_10L_#1.mat');
+    %equil = equil{1};
     %
     %load('/Users/yves/Travail/Projets/LUKE_Simulations/WEST/WEST_55878/SLUKE_EQUILS/EQUIL_WEST_55878_8_9_1_LH_flat-top_ALOHA_+_TAIL_2L_PSCREENING_TPB_ripple_#6.mat');
     %load('/Users/yves/Travail/Projets/LUKE_Simulations/WEST/WEST_55080/SLUKE_EQUILS/EQUIL_WEST_55080_8_9_1_LH_flat-top_ALOHA_+_TAIL_2L_PSCREENING_TPB_ripple_#6.mat');
