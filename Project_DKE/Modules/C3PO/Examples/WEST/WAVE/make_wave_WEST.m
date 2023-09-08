@@ -49,7 +49,7 @@ mdce_mode_main_C3PO_jd = 0;%MatLab distributed computing environment disabled (0
 %
 % Display parameters
 %
-C3POdisplay.ray = 1;
+C3POdisplay.ray = 0;
 C3POdisplay.equilibrium = 0;
 C3POdisplay.p_opt = 2;%Printing or saving option of the figures
 %
