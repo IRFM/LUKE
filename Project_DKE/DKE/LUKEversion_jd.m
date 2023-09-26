@@ -34,6 +34,6 @@ end
 %
 [matlabversion,matlabrelease] = matversion_yp;
 %
-if str2double(matlabversion) < 705;
+if str2double(matlabversion) < 705 && str2double(matlabrelease(2:end-1)) < 2023
 	error('Version of MatLab prior to R2007B (7.5) are no longer supported');
 end
