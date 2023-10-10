@@ -9,21 +9,21 @@ hxr_id = 'MEHXR';
 %
 nv = 60; %n. of viewing cords
 %
-hxrspec.R_hxr = 5.198*ones(1,nv);% pinhole major radius (m)
-hxrspec.Z_hxr = 0.205*ones(1,nv);% pinhole vertical position (m)
+% Chord label starts from 1 at the bottom divertor to 60 at the top (closer to the equatorial mid-plane of the plasma)
 %
-% Detector label starts from 1 at the bottom to 20 up (closer to the equatorial mid-plane of the plasma)
+hxrspec.R_hxr = 4.7211*ones(1,nv);% pinhole major radius (m)
+hxrspec.Z_hxr = [0.076453,0.079175,0.081901,0.08463,0.087362,0.090098,0.092838,0.09558,0.098326,0.10108,0.10383,0.10658,0.10934,0.11211,0.11487,0.11764,0.12042,0.12319,0.12597,0.12876,0.13155,0.13434,0.13713,0.13993,0.14273,0.14553,0.14834,0.15116,0.15397,0.15679,0.15961,0.16243,0.16524,0.16806,0.17087,0.17367,0.17647,0.17927,0.18206,0.18485,0.18764,0.19043,0.19321,0.19598,0.19876,0.20153,0.20429,0.20706,0.20982,0.21257,0.21532,0.21807,0.22082,0.22356,0.2263,0.22904,0.23177,0.2345,0.23722,0.23995];% pinhole vertical position (m)
 %
 hxrspec.alpha_hxr = zeros(1,nv);%horizontal angle (with respect to R) [-pi...pi]. The negative sign comes from the fact that kv is defined in a direct frame, while alpha_hxr corresponds to an indirect frame in radians
-hxrspec.beta_hxr = fliplr(deg2rad(90 - linspace(16.05,-3.45,nv)));%vertical angle in radians (fliplr for the numbering definition of the chord in ME-HXR: 1 top, 60 bottom)
+hxrspec.beta_hxr = [1.2946,1.3002,1.3057,1.3113,1.3168,1.3224,1.328,1.3336,1.3392,1.3448,1.3504,1.356,1.3616,1.3673,1.3729,1.3786,1.3842,1.3899,1.3955,1.4012,1.4069,1.4125,1.4182,1.4239,1.4296,1.4353,1.4409,1.4466,1.4523,1.458,1.4637,1.4694,1.4751,1.4807,1.4864,1.4921,1.4978,1.5035,1.5091,1.5148,1.5205,1.5261,1.5318,1.5375,1.5431,1.5488,1.5544,1.56,1.5657,1.5713,1.5769,1.5825,1.5881,1.5937,1.5993,1.6049,1.6104,1.616,1.6215,1.6271];%vertical angle in radians 
 %
 hxrspec.EG_hxr = [1.82348586099110e-12,1.83060464368659e-12,1.83749989551992e-12,1.84416935872950e-12,1.85061084696500e-12,1.85682224626964e-12,1.86280151603060e-12,1.86854668989682e-12,1.87405587666393e-12,1.87932726112567e-12,1.88435910489149e-12,1.88914974716992e-12,1.89369760551719e-12,1.89800117655090e-12,1.90205903662819e-12,1.90586984248821e-12,1.90943233185851e-12,1.91274532402500e-12,1.91580772036525e-12,1.91861850484488e-12,1.92117674447668e-12,1.92348158974231e-12,1.92553227497640e-12,1.92732811871273e-12,1.92886852399245e-12,1.93015297863406e-12,1.93118105546512e-12,1.93195241251552e-12,1.93246679317218e-12,1.93272402629517e-12,1.93272402629517e-12,1.93246679317218e-12,1.93195241251552e-12,1.93118105546512e-12,1.93015297863406e-12,1.92886852399245e-12,1.92732811871273e-12,1.92553227497640e-12,1.92348158974231e-12,1.92117674447668e-12,1.91861850484488e-12,1.91580772036525e-12,1.91274532402500e-12,1.90943233185851e-12,1.90586984248821e-12,1.90205903662819e-12,1.89800117655090e-12,1.89369760551719e-12,1.88914974716992e-12,1.88435910489149e-12,1.87932726112567e-12,1.87405587666393e-12,1.86854668989682e-12,1.86280151603060e-12,1.85682224626964e-12,1.85061084696500e-12,1.84416935872950e-12,1.83749989551992e-12,1.83060464368659e-12,1.82348586099110e-12];%etendue (m^2*ster) [1,nchord]
 %
-hxrspec.kd_hxr = ones(nv,1)*[8.1000,11.9000,17.5000,22.2000,25.3000,32.2000,36.0000,49.1000,59.3000,68.8000,75.0000,100,200];% reference energies for detector resolution [m,1]
+hxrspec.kd_hxr = ones(nv,1)*[8,15,24,32,42,50,60,75,100,200];% reference energies for detector resolution [m,1]
 %
-hxrspec.phf_hxr = ones(nv,1)*[0.6369,0.9766,1.7834,2.1231,2.2081,3.1847,3.7792,4.3312,6.1146,10.1062,10.4034,23.8641,23.8641];% detector resolution (width of the detector's S-curve) (keV) [m,1] 
+hxrspec.phf_hxr = ones(nv,1)*[0.8,1.1,1.7,4,4,4.5,6,10,30,30];% detector resolution (width of the detector's S-curve) (keV) [m,1] 
 %    
-hxrspec.res_hxr =  ones(nv,1)*0.39;% charge-sharing parameter f (dimensionless) [m,1]
+hxrspec.res_hxr =  ones(nv,1)*0.5;% charge-sharing parameter f (dimensionless) [m,1]
 %
 hxrspec.ef_hxr = ones(1,nv);% thickness of the vacuum window (mm) [1,m]
 hxrspec.tf_hxr = repmat('Al',nv,1);% type of material for the vacuum window (Al ou Be) [1,m]
@@ -41,8 +41,7 @@ hxrspec.lod_hxr = 83.8*ones(1,nv);% length of the detector (mm) [1,m]
 hxrspec.lad_hxr = 33.5*ones(1,nv);% width of the detector (mm) [1,m]
 hxrspec.lpm_hxr = zeros(1,nv);% Average distance between the radiation impact point and the detector edge (mm) [1,m]
 %
-% not used in bremdiag_dke_yp
-%hxrspec.kdiag_hxr = [linspace(10,200,59); 200*ones(1,59)];% Measured photon energy spectrum (keV) [kmin1,kmin2,...; kmintphot,kmax1,kmax2,...,kmaxtphot] (here photon temp is calculated between 50 and 110 keV) [1,k]
+hxrspec.kfit = [15:10:100];%Lower cutoff energy for diagnostic calculation [keV]
 %
 hxrspec.Gain_hxr = ones(1,nv);% factor of conversion photon energy (keV) <-> channel [1,m]
 hxrspec.Offset_hxr = zeros(1,nv);% offset of conversion photon energy <-> channel [1,m]

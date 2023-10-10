@@ -58,12 +58,8 @@ kphotmax = max(kphot);%hxr.kdiag_hxr(2,end-1);
 %
 kfit = hxr.kfit;%Measured photon energy spectrum (keV) [1,k]
 %
-if ~strcmp(id,'MEHXR')
-    kfit_S = kfit;
-    kfit = (kfit_S(1:end-1) + kfit_S(2:end))/2;
-else
-    kfit_S = [kfit,kfit(end)+kfit(2)-kfit(1)];
-end
+kfit_S = kfit;
+kfit = (kfit_S(1:end-1) + kfit_S(2:end))/2;
 %
 ikfitmin = find(kfit >= hxrparam.kmin,1,'first');
 ikfitmax = find(kfit <= hxrparam.kmax,1,'last');
@@ -116,46 +112,48 @@ td = hxr.td_hxr;%type of material for the detector (BGO,CsI,NaI,Ge or CdTe) [1,m
 %
 meanabsx = zeros(size(brem_bd_plasma));%Mean attenuation per channel
 brem_bd_diag_interp = zeros(size(brem_bd_interp));
-brem_bd_diag = zeros(size(brem_bd_plasma));
+if ~strcmp(id,'MEHXR')
+    brem_bd_diag = zeros(size(brem_bd_plasma));
+else
+    brem_bd_diag = zeros(size(brem_bd_plasma,1),size(brem_bd_plasma,2)+1);
+    brem_bd_diag_dN = zeros(size(brem_bd_plasma,1),size(brem_bd_plasma,2));
+end
 %    
 for ic = 1:size(brem_bd_interp,1),
 	if ic == 1,
         if ~strcmp(id,'MEHXR') 
-            gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
-        else
-            gkEinterp1 = dresp_dke_mehxr(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
-        end
-        normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
-		gkEinterp = gkEinterp1;%(gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
-%		plot(kinterp,trapz(kinterp,gkEinterp1') + gkEinterp1(:,1)'*kinterp(1));%test of the norm
-%       plot(kinterp,trapz(kinterp,gkEinterp'));%test of the norm
-%
-		absxinterp = absx_dke_yp(kinterp,0,0,ef(ic),tf(ic,:),ea(ic),ta(ic,:),ec(ic),tc(ic,:),ed(ic),td(ic,:));%Air contribution is neglected (k > 10 keV only)
-		Tabsxinterp = repmat(absxinterp(:),[1,size(brem_bd_interp,2)]);
-	else
-		if (kd(ic-1) ~= kd(ic)) | (res(ic-1) ~= res(ic)) | (phf(ic-1) ~= phf(ic))
-            if ~strcmp(id,'MEHXR') 
-                gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
-            else
-                gkEinterp1 = dresp_dke_mehxr(res(ic,:),phf(ic,:),kd(ic,:),kinterp);	
-            end
+            gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);
             normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
             gkEinterp = gkEinterp1;%(gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
+    %		plot(kinterp,trapz(kinterp,gkEinterp1') + gkEinterp1(:,1)'*kinterp(1));%test of the norm
+    %       plot(kinterp,trapz(kinterp,gkEinterp'));%test of the norm
+            absxinterp = absx_dke_yp(kinterp,0,0,ef(ic),tf(ic,:),ea(ic),ta(ic,:),ec(ic),tc(ic,:),ed(ic),td(ic,:));%Air contribution is neglected (k > 10 keV only)
+        else
+            gkEinterp = dresp_dke_mehxr_tb(res(ic,:),phf(ic,:),kd(ic,:),kinterp);
+            load('stopping_efficiency_MEHXR.mat');
+            absxinterp = interp1(eff(:,1),eff(:,2),kinterp);
+        end
+    else
+		if (kd(ic-1) ~= kd(ic)) | (res(ic-1) ~= res(ic)) | (phf(ic-1) ~= phf(ic))
+            if ~strcmp(id,'MEHXR') 
+                gkEinterp1 = dresp_dke_yp(res(ic,:),phf(ic,:),kd(ic,:),kinterp);
+                normgkEinterp1 = trapz(kinterp,gkEinterp1');%To enforce that the norm is unity
+                gkEinterp = gkEinterp1;%(gkEinterp1'./(normgkEinterp1(:)*ones(1,length(kinterp)))')';
+            else
+                gkEinterp = dresp_dke_mehxr_tb(res(ic,:),phf(ic,:),kd(ic,:),kinterp);          
+            end    
         end
 %
 		if (ef(ic-1) ~= ef(ic)) | (tf(ic-1) ~= tf(ic)) | (ea(ic-1) ~= ea(ic)) | (ta(ic-1) ~= ta(ic)) | (ec(ic-1) ~= ec(ic)) | (tc(ic-1) ~= tc(ic)) | (ed(ic-1) ~= ed(ic)) | (td(ic-1) ~= td(ic))
-			absxinterp = absx_dke_yp(kinterp,0,0,ef(ic),tf(ic,:),ea(ic),ta(ic,:),ec(ic),tc(ic,:),ed(ic),td(ic,:));%Air contribution is neglected (k > 10 keV only)
-			Tabsxinterp = repmat(absxinterp(:),[1,size(brem_bd_interp,2)]);
+            absxinterp = absx_dke_yp(kinterp,0,0,ef(ic),tf(ic,:),ea(ic),ta(ic,:),ec(ic),tc(ic,:),ed(ic),td(ic,:));%Air contribution is neglected (k > 10 keV only)      
         end		
     end
+%    
+    Tabsxinterp = repmat(absxinterp(:),[1,size(brem_bd_interp,2)]);
 %
     gkEinterp_out{ic} = gkEinterp;%For display of the response function
 %
-    if ~strcmp(id,'MEHXR') 
-        brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))';
-    else
-        brem_bd_diag_interp(ic,:) = (((gkEinterp.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))'; %matrix multiplication C=A*B C(i,j) is the inner product of the ith row of A with the jth column of B.
-    end
+    brem_bd_diag_interp(ic,:) = (((gkEinterp'.*Tabsxinterp')*dkinterp*(brem_bd_interp(ic,:))'))'; %matrix multiplication C=A*B C(i,j) is the inner product of the ith row of A with the jth column of B.
 %	brem_bd_diag_interp(ic,:) = (fix(((eye(size(gkEinterp')).*Tabsxinterp)*(brem_bd_interp(ic,:))')))';%detector response neglected
 %	
 	for ik = 1:nkfit,
@@ -167,14 +165,22 @@ for ic = 1:size(brem_bd_interp,1),
             brem_bd_diag(ic,ik) = sum(brem_bd_diag_interp(ic,min(find(kinterp >= kfit_S(ik))):max(find(kinterp < kfit_S(ik+1)))).').'*dkinterp;%number of pulses in energy channel ik per unit time
         end
     else
-        for ik = 1:nkfit
-            brem_bd_diag(ic,ik) = brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik),1,'first'));%number of pulses for cutoff energy ik per unit time
+        for ik = 1:nkfit+1
+            brem_bd_diag(ic,ik) = brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik),1,'first'))*195;%number of photons for cutoff energy ik per unit time summed over the row of pixels (195)
         end
     end
 %	
 	brem_bd_diag = abs(brem_bd_diag);
 %
-    [Tph,eTph,A,eA,Q] = tphfit_dke_yp(kfit(ikfitmin:ikfitmax)',dt*brem_bd_diag(ic,ikfitmin:ikfitmax)',sqrt(dt*brem_bd_diag(ic,ikfitmin:ikfitmax))');
+    if ~strcmp(id,'MEHXR')
+        [Tph,eTph,A,eA,Q] = tphfit_dke_yp(kfit(ikfitmin:ikfitmax)',dt*brem_bd_diag(ic,ikfitmin:ikfitmax)',sqrt(dt*brem_bd_diag(ic,ikfitmin:ikfitmax))');
+    else
+        for ik = 1:nkfit
+            brem_bd_diag_dN(ic,ik) = brem_bd_diag(ic,ik)-brem_bd_diag(ic,ik+1); %number of photons per energy interval per unit time
+        end
+        [Tph,eTph,A,eA,Q] = tphfit_dke_yp(kfit(ikfitmin:ikfitmax)',dt*brem_bd_diag_dN(ic,ikfitmin:ikfitmax)',sqrt(dt*brem_bd_diag_dN(ic,ikfitmin:ikfitmax))');
+    end
+%        
     if Tph <=0, %Remove negative or null values
 	   Tph = NaN;
        eTph = NaN;
@@ -206,6 +212,7 @@ end
 Zbremdiag.kinterp = kinterp;
 Zbremdiag.gkEinterp_out = gkEinterp_out;
 Zbremdiag.kfit = kfit;
+Zbremdiag.kfit_S = kfit_S;
 Zbremdiag.dkfit = dkfit;
 Zbremdiag.brem_bd_plasma = brem_bd_plasma;
 Zbremdiag.brem_bd_diag = brem_bd_diag;

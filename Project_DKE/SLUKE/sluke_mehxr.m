@@ -18,7 +18,7 @@ if isfield(sparams.diags.MEHXR,'exp') && sparams.diags.MEHXR.exp{ii} == 1
     %
     if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'])
         %
-        [hxrexp.energy,hxrexp.hxr,hxrexp.t,hxrexp.beta,hxrexp.filter_thickness,hxrexp.filter_material,hxrexp.all_hxr_data] = collect_hxr_forLUKE_jd(sparams.machine{ii},sparams.discharge.shot{ii});
+        [hxrexp.energy,hxrexp.hxr,hxrexp.t] = collect_mehxr_forLUKE_tb(sparams.machine{ii},sparams.discharge.shot{ii});
         %
         if ~isempty(hxrexp.t)
             %
@@ -46,15 +46,22 @@ end
 %
 if ~isempty(hxrexp) && isfield(hxrexp,'t')
     %
-    irefs = find((hxrexp.t > sparams.discharge.tmin{ii}) & (hxrexp.t < sparams.discharge.tmax{ii}));%time interval
+    irefs = find((hxrexp.t >= sparams.discharge.tmin{ii}) & (hxrexp.t <= sparams.discharge.tmax{ii}));%time interval
     %
     hxrexp_averaged.hxr_dt = hxrexp.t(2)-hxrexp.t(1);%experimental sampling time (s). 
     %
     for jj = 1:length(hxrexp.energy)
         %
-        hxrexp_averaged.profile(jj,:) = sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs)/hxrexp_averaged.hxr_dt;%time averaging of the HXR signal (counts/s)
+        hxrexp_profile=[];
         %
-        hxrexp_averaged.errorbars(jj,:) = sqrt(sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs))/hxrexp_averaged.hxr_dt;%error bars (Poisson's statistics)
+        for tt=irefs(1):irefs(end)
+            %
+            hxrexp_profile(tt,:) = hxrexp.hxr{tt,jj}; 
+        end
+        %
+        hxrexp_averaged.profile{jj} = sum(hxrexp_profile)/length(irefs)/hxrexp_averaged.hxr_dt;%time averaging of the HXR signal (counts/s)
+        %
+        hxrexp_averaged.errorbars{jj} = sqrt(sum(hxrexp_profile)/length(irefs))/hxrexp_averaged.hxr_dt;%error bars (Poisson's statistics)
         %
     end
     %
@@ -98,8 +105,8 @@ if ~isempty(lukestructs)
         if isempty(MEHXR.R5X2)   
             %
             data_in.lukestructs = lukestructs;
-            data_in.hxrspec = sluke_MEHXR_hxrspec(sparams,simul_id,ii);
-            data_in.hxrparam = sluke_MEHXR_hxrparam(sparams,simul_id,ii,data_in.hxrspec);
+            data_in.hxrspec = sluke_MEHXR_hxrspec(sparams,simul_id,ii,hxrexp);
+            data_in.hxrparam = sluke_MEHXR_hxrparam(sparams,simul_id,ii);
             %
             data_in.dkedisplay.display_mode = 0;
             data_in.dkedisplay.fhxr = 0;
@@ -118,8 +125,8 @@ if ~isempty(lukestructs)
     %
 else
     %
-    hxrspec = sluke_MEHXR_hxrspec(sparams,simul_id,ii);
-    hxrparam = sluke_MEHXR_hxrparam(sparams,simul_id,ii,hxrspec);
+    hxrspec = sluke_MEHXR_hxrspec(sparams,simul_id,ii,hxrexp);
+    hxrparam = sluke_MEHXR_hxrparam(sparams,simul_id,ii);
     %
     if ~isempty(hxrspec) && ~isempty(hxrparam)
         %
@@ -169,7 +176,7 @@ end
 %
 end
 
-function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
+function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii,hxrexp)
 %
     %
     % MEHXR diagnostic technical specifications (hxrspec).
@@ -246,6 +253,12 @@ function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
     %
     if ~isempty(hxrspec)
         %
+        if ~isempty(hxrexp)
+            %
+            hxrspec.kfit = hxrexp.energy';
+            %
+        end
+        %
         if isfield(sparams.diags.MEHXR.hxrspec,'chordstatus_hxr')
             %
             hxrspec.chordstatus_hxr = sparams.diags.MEHXR.hxrspec.chordstatus_hxr{ii};
@@ -271,7 +284,7 @@ function [hxrspec] = sluke_MEHXR_hxrspec(sparams,simul_id,ii)
     %
 end
 
-function [hxrparam] = sluke_MEHXR_hxrparam(sparams,simul_id,ii,hxrspec)
+function [hxrparam] = sluke_MEHXR_hxrparam(sparams,simul_id,ii)
 %
 %
     % DPSX simulations parameters
