@@ -501,21 +501,21 @@ if isfield(equil,'pzni') && isfield(equil,'pzTi') && isfield(equil,'zZi') && isf
     xZeff = interp1(psin,pZeff,xpsin,method);
 end
 %
-XBT = abs(XBphi);%Toroidal B-field
-XBp = sqrt(XBx.^2 + XBy.^2);%Poloidal B-field
-XB = sqrt(XBphi.^2 + XBx.^2 + XBy.^2);%Total B-field
+XBT = abs(XBphi);                       %Toroidal B-field
+XBp = sqrt(XBx.^2 + XBy.^2);            %Poloidal B-field
+XB = sqrt(XBphi.^2 + XBx.^2 + XBy.^2);  %Total B-field
 %
 % index 0 refers to the minimum of the magnetic field
 %
 [xB0,xiB0] = min(XB.'); %Minimum of B on flux surface
 xBmax = max(XB.'); %Maximum of B on flux surface
 %
-xmhu0T2 = 1 - xB0./xBmax; %Pitch-angle (squared) at the trapped-passing boundary
+xmhu0T2 = 1 - xB0./xBmax;       %Pitch-angle (squared) at the trapped-passing boundary
 %
-xiB0 = (xiB0 - 1)*nr + (1:nr);%Indices in (psi,theta) grid corresponding of B=Bmin
-xBT0 = XBT(xiB0);%Toroidal field at B=Bmin
-xBp0 = XBp(xiB0);%Poroidal field at B=Bmin
-xx0 = Xx(xiB0);%Major radius at B=Bmin
+xiB0 = (xiB0 - 1)*nr + (1:nr);  %Indices in (psi,theta) grid corresponding of B=Bmin
+xBT0 = XBT(xiB0);               %Toroidal field at B=Bmin
+xBp0 = XBp(xiB0);               %Poroidal field at B=Bmin
+xx0 = Xx(xiB0);                 %Major radius at B=Bmin
 %
 % volume and surface elements
 %
@@ -813,6 +813,10 @@ end
 %
 if isfield(equil,'li'),
     equilDKE.li = equil.li;
+end
+%
+if isfield(equil,'xmhu0T2Prev') %% Case for loop for finit, %RS
+    equilDKE.xmhu0T2Prev = equil.xmhu0T2Prev;
 end
 %
 if nargout >= 1,
