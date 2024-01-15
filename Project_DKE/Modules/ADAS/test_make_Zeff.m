@@ -1,5 +1,6 @@
 %
-% Test Zeff calculations from ADAS impurity ionization data
+% Test Zeff calculations from ADAS impurity ionization data. Impact of Te
+% on the sensistivity of Zeff to the tungsten content
 %
 clear all
 close all
@@ -165,15 +166,19 @@ for iTe0 = 1:length(Te0)
 end
 %
 leg = {'no W ','W fraction: 0.0001%','W fraction: 0.001%','W fraction: 0.01%','W fraction: 0.1%'};
+%
 for ii = 1:5
-    graph1D_jd(Te0,Zeff(ii,:),0,0,xlab,ylab,tit,leg,xlim,'',linestyle{ii},marker{ii},linecolor{ii},2,siz,gca);
+    %
+    graph1D_jd(Te0,Zeff(ii,:),0,0,xlab,ylab,tit,'',xlim,'',linestyle{ii},marker{ii},linecolor{ii},2,siz,gca);
     %
 end
+%
+legend(leg);
 %
 figure('Name',['Zeff(Te0), H (9.8%), D (88.2%), C (1%), O (1%), no Cu'])
 %
 xlab = 'Core electron temperature (keV)';
-ylab = 'Effective charge Z_{eff}';
+ylab = 'Core effective charge Z_{eff}';
 tit = ['Z_{eff}, H (9.8%), D (88.2%), C (1%), O (1%), no Cu'];
 %leg = {'no W ','W fraction: 0.0001%','W fraction: 0.001%','W fraction: 0.01%','W fraction: 0.1%'};
 siz = 20+14i;
@@ -186,10 +191,14 @@ for iTe0 = 1:length(Te0)
 end
 %
 leg = {'no W ','W fraction: 0.0001%','W fraction: 0.001%','W fraction: 0.01%','W fraction: 0.1%'};
+%
 for ii = 1:5
-    graph1D_jd(Te0,Zeff_noCu(ii,:),0,0,xlab,ylab,tit,leg,xlim,'',linestyle{ii},marker{ii},linecolor{ii},2,siz,gca);
+    %
+    graph1D_jd(Te0,Zeff_noCu(ii,:),0,0,xlab,ylab,tit,'',xlim,'',linestyle{ii},marker{ii},linecolor{ii},2,siz,gca);
     %
 end
+%
+legend(leg)
 %
 figure('Name','Profiles (T_i/T_e = 0.5)')
 %
