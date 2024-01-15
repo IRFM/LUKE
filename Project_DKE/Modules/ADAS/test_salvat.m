@@ -1,23 +1,89 @@
+
+function [] = test_salvat(Z_in,Z0_in,maxnumberofexponentials,atomic_models,units,print_opt)
 %
 % Test Salvat (Moliere) method for any atomic electron density whatever the ionization state. 
 % Modify the initial dft structure and save it. Two examples are considered : Gaussian DFT and Thomas-Fermi model.
 %
-% by Y.Peysson CEA-DRFC <yves.peysson@cea.fr>
+%   INPUTS:
+%
+%       - Z : Atomic number (If multiple Z values, dft change only, no display). Available Z values : 1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79
+%           (default : 74 for tungsten)
+%       - Z0 : Fully (0) or partially ionized atom for display (valid if single Z value is chosen, Z0 <= Z)
+%           (default : 42 for tungsten mean ionization state for T = 3 keV from OPEN-ADAS or round(Z/2).)
+%       - maxnumberofexponentials : Maximum number of exponentials for the multi-Yukawa calculations (<=4)
+%           (default : 4)
+%       - atomic_models : Data input from atomic model for multiu-Yukawa fit, 0 -> Gaussian DFT,1 -> Thomas-Fermi
+%           (default : 0)
+%       - units : Units for comparisons with CERN results, 'mec' or 'MeV/c' for the form factor
+%           (default : 'mec' for relativistic units)
+%       - print_opt : -1: no print, 2:save files (eps,png,fig)
+%           (default : -1) 
+%
+%   OUTPUTS: none
+%
+% by Y.Savoye-Peysson CEA-DRFC <yves.savoye-peysson@cea.fr>
 %
 close all 
-clear all
 clc
+%  
+% Default values
 %
+Z = 74;%tungsten
+Z0 = 42;%tungsten mean ionization state for T = 3 keV 
+maxnumberofexponentials = 4;%up to 4
+atomic_models = 0;%[0 -> Gaussian DFT,1 -> Thomas-Fermi]
+units = 'mec';%'mec' or 'MeV/c' for the form factor
 print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
 %
-maxnumberofexponentials = 3;%up to 4
+Z_available = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%available Z values
 %
-Z = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%Atomic number (If multiple Z values, dft change only, no display)
-Z = 74;%[18];%change dft substructure field salvat, and display results
-Z0 = 42;%40;%[17];%fully (0) or partially ionized atom for display
+if nargin == 1
+    %
+    Z = Z_in;
+    Z0 = round(Z/2);
+    %
+elseif nargin == 2
+    %
+    Z = Z_in;
+    Z0 = Z0_in;
+    %
+elseif nargin == 3
+    %
+    Z = Z_in;
+    Z0 = Z0_in;
+    maxnumberofexponentials = maxnumberofexponentials_in;
+    %
+elseif nargin == 4
+    %
+    Z = Z_in;
+    Z0 = Z0_in;
+    maxnumberofexponentials = maxnumberofexponentials_in;
+    atomic_models = atomic_models_in;
+    %
+elseif nargin == 5
+    %
+    Z = Z_in;
+    Z0 = Z0_in;
+    maxnumberofexponentials = maxnumberofexponentials_in;
+    atomic_models = atomic_models_in;
+    units = units_in;
+    %
+elseif nargin == 6
+    %
+    Z = Z_in;
+    Z0 = Z0_in;
+    maxnumberofexponentials = maxnumberofexponentials_in;
+    atomic_models = atomic_models_in;
+    units = units_in;
+    print_opt = print_opt_in;
+    %
+end
 %
-atomic_models = [0];%[0 -> Gaussian DFT,1 -> Thomas-Fermi]
-units = 'mec';%'mec' or 'MeV/c' for the form factor
+if length(Z) == 1 && isempty(find(Z==Z_available))
+    %
+    error(['ERROR : The input value Z = ',int2str(Z),' is not available for multi-Yukawa calculations.'])
+    %
+end
 %
 if strcmp(units,'mec')
     %
