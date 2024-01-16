@@ -1,7 +1,27 @@
 %
-% Build atomic electron density by DFT with Gaussian code.
+% Build atomic electron density by DFT with GAUSSIAN-09 code.
 %
-% WARNING : the csh shell environment must be installed for Gaussian code
+% This script may be run on any machine, but the GAUSSIAN code, that is
+% precompiled (binaries only) must run on a linux 64 bits machine. The version of GAUSSIAN
+% used here is 09. For version 16, some modifications must be considered in
+% the script. Note that the csh shell environment and openmotif must be
+% installed on the linux machine to run GAUSSIAN. Note that with proper
+% environment installation, GAUSSIAN code crashes (core dump). In particular, the rights
+% of the folders lust be carefully setup. 
+%
+% The distributed computing is performed with htcondor scheduler on the remote
+% machine, which must be setup first. Check that condor_status and
+% condor_q work well through a ssh connection. If not, modify the file
+% /etc/environment (root, linux) to define CONDOR_CONFIG and CONDOR
+% environment variables, and add ~/condor/bin and ~/condor/sbin to PATH. 
+%
+% The calculations require an accurate analysis of the spin multiplicity (see the corresponding matlab script),
+% especially for high-Z atoms. Above Z = 36 (Krypton), relativistic corrections must be considered. 
+%
+% Post-processing 'Multiwfn' tool is used to extract data useful for LUKE
+% calculations.
+%
+%By Y. Savoye-Peysson CEA-IRFM <yves.savoye-peysson@cea.fr>
 %
 %close all
 clear all
@@ -9,16 +29,18 @@ clc
 %
 % ---------------------- INPUT PARAMETERS ---------------------
 %
-[ip,id] = connections_params('yves');%Create a file in the LUKE path (or local) : id -> hostname, ip: ethernet address. Must be customized according to the machine where calculations are done.
+user = 'yves';
 %
-Z = 74;%Helium (2), Lithium (3), Argon (18), Copper (29), Xenon (54), Tungsten (74), Gold (79)
+[ip,id,codename] = connections_params('GAUSSIAN','','home-aix.yvespeysson.fr');%Create a file in the LUKE path (or local) : id -> hostname, ip -> ethernet address, code type -> GAUSSIAN or GRASP2018
+%
+Z = 74;%Helium (2), Lithium (3), Argon (18), Copper (29), Xenon (54), Tungsten (74), Gold (79). Z may be a vector.  
 Z0 = [];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
 %
 mode = 0;%(0): the script wait until all calculations are done, (1): the script is terminated while calculations are still running on the remote machine. It must be launched again to check if calculations are terminated. 
 cancel = 0;%enforce cancel calculations
 %
 disp('-------------------')
-disp(['GAUSSIAN atomic code remote calculations : ',elements('atomic_number', Z, 'name'),' (',int2str(Z),')'])
+disp(['GAUSSIAN-09 atomic code remote calculations : ',elements('atomic_number', Z, 'name'),' (',int2str(Z),')'])
 %
 if isempty(Z0)
     %
@@ -29,13 +51,14 @@ else
     disp(['Ionization states that are calculated : ',int2str(Z0),'.'])
     %
 end
+%
 disp('-------------------')
 %
 % ----------------------- CODE SETTINGS ----------------------
 %
 code.codepath = 'g09';%relative path
 %
-code.codetype = 'gaussian';
+code.codetype = lower(codename);%GAUSSIAN code version
 %
 code.functional = 'PBE1PBE';%hybrid-exchange correlation functional
 %code.basis.mode = '6-311G';%Non relativistic calculations, valid up to Krypton (Z = 36) approx. (see Gaussian documentation)
@@ -59,7 +82,7 @@ if length(Z) > 1
     Z0 = [];%all ionization states are calculated
 end
 %
-job_status = ones(1,length(Z));
+job_status = ones(1,length(Z));%
 %
 if ~exist('dft_job_status.mat')
     %
