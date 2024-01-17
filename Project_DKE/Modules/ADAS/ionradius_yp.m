@@ -53,9 +53,13 @@ ionradius.symbol = elements('atomic_number', Z, 'symbol');
 ionradius.model = model;
 ionradius.Z = Z;
 %
+warning off
+%
 for j = 1:length(Z0)
     %
     [ionradius.Z0(j),ionradius.N(j),ionradius.q(j),ionradius.a(j),ionradius.nff(j),ionradius.B(j),ionradius.r0n(j),ionradius.rn{j},ionradius.bbar{j},ionradius.dens{j},ionradius.I1{j},ionradius.I2{j},ionradius.output{j}]  = fionradius_yp(Z,Z0(j),model);
     %
 end
-
+%
+warning on
+%
