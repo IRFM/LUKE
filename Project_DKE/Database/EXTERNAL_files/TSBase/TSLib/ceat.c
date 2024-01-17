@@ -69,6 +69,8 @@
 int typfor( int );
 extern void lzrw1_decompress(); 
 
+ssize_t read(int fd, void *buf, size_t count);
+
 /****************************************/
 /*  Liste des diagnostics pour un choc  */
 /****************************************/
