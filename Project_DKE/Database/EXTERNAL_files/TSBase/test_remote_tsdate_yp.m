@@ -4,4 +4,4 @@ clc
 %
 [shotdate] = remote_tsdate(45525); 
 %
-disp(['Tore Supra discharge has been done at the date : ',shotdate]);
+disp(['Tore Supra discharge #45525 has been done the  : ',shotdate]);
