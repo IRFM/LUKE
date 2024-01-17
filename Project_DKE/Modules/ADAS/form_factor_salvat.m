@@ -5,7 +5,7 @@ function [q,ff_dhfs,ff_sal] = form_factor_salvat(dft,code)
 %   INPUTS:
 %
 %       - dft : dft structure 
-%       - code : name of the dft code (gaussian, grap,...) 
+%       - code : name of the dft code (gaussian, grasp,...) 
 %           (default : gaussian)
 %
 %   OUTPUTS:
