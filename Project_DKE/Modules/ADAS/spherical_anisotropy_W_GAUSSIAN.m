@@ -1,3 +1,11 @@
+%  
+% Spherical anisotropy from GAUSSIAN output. See publication for more details : 
+% Y. Savoye-Peysson et al., A unified description of the atomic physics for electron Fokker-Planck calculations, 
+% Nucl. Fusion, 2023, 63, pp. 126041
+%
+% Data obtained from J. Bielicki (IFJ-PAN, Krakow, Poland)
+%
+%            
 %            
 close all
 %
@@ -54,6 +62,7 @@ y = [0.00
 0.03
 0.00
 0.04
+%
 0.04
 0.00
 0.05
@@ -183,7 +192,6 @@ grid minor
 drawnow
 %
 print_opt = 2;
-print_jd(print_opt,['SphericalanisoptropyGaussian_W_74'],'.',get(gcf,'Number'))
-
-
-
+print_jd(print_opt,['SphericalanisoptropyGaussian_W_74'],'Figs',get(gcf,'Number'))
+disp('--> Figures saved in Figs folder')
+%
