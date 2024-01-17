@@ -18,8 +18,10 @@ cd([dkepath.luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase']);
 %
 % compilation of the TSLib first
 %
+
 cd TSLib
-! make
+! make clean 
+! make 
 cd ..
 %
 % build mexfiles
