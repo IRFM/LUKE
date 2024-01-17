@@ -61,7 +61,7 @@
   Retour          : compte-rendu d'execution
 
  ------------------------------------------------------------------------------*/
-
+int gethostname(char *nom, size_t lg);
 
 Longint FAR_PASCAL
 TSWrite (	char *NomTrait,
