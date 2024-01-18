@@ -1,4 +1,4 @@
-function sluke(varargin)
+function varargout = sluke(varargin)
 %
 % LUKE - Full calculations of LUKE with sub-time intervals (option). All parameters are in a structure of cell arrays of the SAME SIZE. 
 % 
@@ -198,24 +198,42 @@ for ii = 1:length(sparams.machine)
                 %
                 lukestructs.diags =  sluke_diagnostics(sparams,ii,'',lukestructs.equil);
                 %
-                if sparams.simul.initial_distribution{ii} == -1
-                    %
-                    if exist(['SLUKE_RESULTS/PROC_LUKE_LUKE_DATA_',sluke_id(sparams,ii-1),'.mat'])
-                        %
-                        load(['SLUKE_RESULTS/LUKE_LUKE_DATA_',sluke_id(sparams,ii-1),'.mat'])
-                        %
-                        %TODO :calculate interpolated previous distribution on the new grid
-                        %
-                    else
-                        %
-                        break;%wait for previous time 
-                        %
+                if sparams.simul.initial_distribution{ii} < 0 %chained iteration mode
+                    %RS
+                    %To create more simulation chain use NEGATIVE numbers. The same negative number for each chain. 
+                    
+                    if ii > 1 && sparams.simul.initial_distribution{ii} == sparams.simul.initial_distribution{ii-1} %iteration i>1; ii > 1 to be able to look for sparams.simul.initial_distribution{ii-1} 
+                        if exist(['SLUKE_RESULTS/ITER_LUKE_DATA_',sluke_id(sparams,ii-1),'.mat'],'file') %the prevuious iteration has been evaluated
+                            %
+                            % load parameters from previous simulation
+                            pvSim = load(['SLUKE_RESULTS/ITER_LUKE_DATA_',sluke_id(sparams,ii-1),'.mat']);
+                            %
+                            lukestructs.dkeparam.psin_S = pvSim.radialDKE.xpsin_S_dke;
+                            lukestructs.dkeparam.rho_S  = [];
+                            lukestructs.dkeparam.selfCoherence.xmhu0    = pvSim.momentumDKE.xmhu0;
+                            lukestructs.dkeparam.selfCoherence.XmhuPv   = pvSim.gridDKE.Xmhu;
+                            lukestructs.dkeparam.selfCoherence.XpnPv    = pvSim.gridDKE.Xpn;
+                            lukestructs.dkeparam.selfCoherence.xmhu0T2Pv= pvSim.equilDKE.Xmhu0T2;
+                            lukestructs.equil.xmhu0T2Pv = pvSim.equilDKE.Xmhu0T2;
+                            lukestructs.XXf0 = pvSim.XXf0{1};
+                            %
+                            % Delete saved data used for looping to save space
+                            delete(['SLUKE_RESULTS/ITER_LUKE_DATA_',sluke_id(sparams,ii-1),'.mat']); 
+                            %
+                        else
+                            cprintf('*[1,0.5,0]','---> is skipped, previous simulation has yet to be completed. ');disp(' ') 
+                            continue; %look for other cases to run. 
+                        end
+                    else % initial iteration
+                        lukestructs.dkeparam.selfCoherence = []; %normal simulation but need to save data for future simulation
+                        % no initial distribution because it is initialised
+                        % properly in run_lukert
                     end
-                    %
+                    
                 end
                 %
                 if isempty(antenna_remote_status) || antenna_remote_status == 0  %antenna calculations are done or no antenna calculations
-                    %
+                    % 
                     dkepath = sluke_dkepath(sparams,ii);
                     %
                     if sluke_remote_profile(sparams,ii) > 0
@@ -411,7 +429,7 @@ for ii = 1:length(sparams.machine)
             %
             lukestructs.ohm = sluke_ohm(sparams,ii);
             %
-            [lukestructs.wavestructs,antenna_remote_status] = sluke_wavestructs(sparams,ii);
+            [lukestructs.wavestructs,antenna_remote_status] = sluke_wavestructs(sparams,ii); %#ok<ASGLU>
             %
             lukestructs.transpfaste = sluke_transpfaste(sparams,ii);
             %
@@ -495,6 +513,12 @@ for ii = 1:length(sparams.machine)
     end
     %
 end
+
+if nargout >= 1
+    %Output to give back if every solution is completed %RS
+    varargout{1} = sluke_all_sim_done(sparams);
+end
+
 %
 diary off
 %
