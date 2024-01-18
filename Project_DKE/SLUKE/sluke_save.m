@@ -34,7 +34,7 @@ else
                 %
                 status.waves = 1;
                 fileids.waves = '';
-                %   
+                %
             end
             %
         else
@@ -128,4 +128,22 @@ else
         %
     end
     %
+    %Save data for looping if needed
+    nit = length(sparams.simul.initial_distribution);
+    if sparams.simul.initial_distribution{ii} < 0 && ii < nit && ...
+            sparams.simul.initial_distribution{ii} == sparams.simul.initial_distribution{ii+1};
+        % Current distribution is part of a loop (1st condition), is not the last
+        % simulation (2nd condition) and is not the last of a series (3th
+        % condition) %RS
+        radialDKE = lukestructs.radialDKE;
+        momentumDKE = lukestructs.momentumDKE;
+        gridDKE     = lukestructs.gridDKE;
+        equilDKE    = lukestructs.gridDKE;
+        XXf0        = lukestructs.XXf0;
+        save(['SLUKE_RESULTS/ITER_LUKE_DATA_',simul_id,'.mat'],'radialDKE',...
+            'momentumDKE','gridDKE','equilDKE','XXf0');
+    end
 end
+
+
+
