@@ -1,6 +1,10 @@
 % 
 % ****************************************************************************************************
 % 
+% The LUKE suite of codes is under Git version control 
+% Details are accessible from the website https://forgejo.yvespeysson.fr
+%
+% ---------------------------OLD CVS versioning (obsolete) ----------------------------
 % LUKE Version 1.1
 % 
 % A directory Simulations has been created. It contains the Examples folder.
