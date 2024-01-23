@@ -15,14 +15,6 @@ if nargin == 0,
     verbose = 'off';
 end
 %
-pathmetis0 = which('metis4itm');%remove metis4itm in the Matlab search because it uses also m2html nut in a different way
-if length(pathmetis0) > 0,
-	imetis4itm = strfind(pathmetis0,'metis4itm');
-    warning off
-	rmpath(genpath([pathmetis0(1:imetis4itm(1)-1),'metis4itm']));
-	warning on
-end
-%
 excludedfoldernames = {'EAST','HL2A','AMR'};%list of excluded folders. Update if necessary 
 %
 disp('************************* EXCLUDED FOLDER NAMES **************************')
@@ -61,10 +53,10 @@ texfilelist(1).file = 'Project_DKE/Doc/NoticeDKE';texfilelist(1).title = '3-D li
 texfilelist(2).file = 'Project_DKE/Modules/C3PO/Doc/raytracing';texfilelist(2).title = 'Universal multi-wave ray-tracing (C3PO)';
 texfilelist(3).file = 'Project_DKE/Modules/FEB/Doc/3Tmodel';texfilelist(3).title = 'Fast electron bremsstrahlung (R5-X2)';
 %
-redminepath = 'http://tolbachik.hd.free.fr:8080';%path to the redmine website 
+wikipath = 'https://forgejo.yvespeysson.fr/starwars';%path to the wiki website 
 %
-if isempty(redminepath),disp('WARNING: the ''redminepath'' path is empty.');end
+if isempty(wikipath),disp('WARNING: the ''wikipath'' path is empty.');end
 %
-make_help(verbose,luke_root,redminepath,texfilelist,excludedfoldernames,helptools);
+make_help(verbose,luke_root,wikipath,texfilelist,excludedfoldernames,helptools);
 %
 cd(dirinit);
