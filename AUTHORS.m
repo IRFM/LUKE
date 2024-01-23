@@ -10,14 +10,12 @@
 %
 % Email                      Name                            Affiliation(s)
 % -------------------    ---------------------------     ---------------------------
-% joan.decker@cea.fr        Joan Decker                     CEA/DSM/IRFM, FRANCE
-% yves.peysson@cea.fr       Yves Peysson                    CEA/DSM/IRFM, FRANCE
+% yves.savoye-peysson@cea.fr   Yves Savoye-Peysson             CEA/DRF/IRFM, FRANCE
+% joan.decker@epfl.ch          Joan Decker                     SPC/EPFL, SWITZERLAND
 % 
 % Other contributors
 %
 % Email                      Name                            Affiliation(s)
 % -------------------    ---------------------------     ---------------------------
 %                          
-%                         * Frereric Teisseire
-%                         * Jean le Besnerais
-%
+
