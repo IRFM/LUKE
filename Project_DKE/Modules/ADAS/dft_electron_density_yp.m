@@ -48,7 +48,7 @@ if nargin == 3
     %
     if ~exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
         %
-        remote = [];% local calculation. DFT code is supposed to be on the same computer on which this Matlab script is launched
+        remote = [];% local distributed calculation. GAUSSIAN code is supposed to be on the same computer on which this Matlab script is launched
         %
     end
     %
@@ -99,7 +99,7 @@ if exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
     MM = dft.M;
     code = dft.code; 
     %
-    if ~isempty(remote) %remote calculations
+    if ~isempty(remote) %remote distributed calculations
         %
         disp('-------------------')
         disp(['GAUSSIAN simulations status for Z = ',int2str(Z_in),'.']);
@@ -176,10 +176,14 @@ if exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
             ss = ss + 1;
             %
             if iZ0 == 1
+                %
             	dft.ne(:,1:3) = importdata([symbol,'_',int2str(ZZ0(iZ0)),'.output']);
+                %
             else
+                %
                 ne_tmp = importdata([symbol,'_',int2str(ZZ0(iZ0)),'.output']);
                 dft.ne(:,iZ0+2) = ne_tmp(:,3);
+                %
             end
             %
         end
@@ -200,7 +204,9 @@ if exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
             [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' ''rm -rf ',remote.remotedir,'''']); 
             %
             if s ~= 0
+                %
                 disp(['WARNING : ',m]);
+                %
             end
             %
         end
@@ -225,7 +231,9 @@ if exist(['dft_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
 else
     %
     if ~exist([pwd,'/dft_shell_scripts_',code.codetype,'_',int2str(Z_in)],'dir')
+        %
         mkdir([pwd,'/dft_shell_scripts_',code.codetype,'_',int2str(Z_in)]);
+        %
     end
     %
     localdir = [pwd,'/dft_shell_scripts_',code.codetype,'_',int2str(Z_in)];
@@ -238,46 +246,62 @@ else
         ZZ0 = ZZ0_in(Z0_in+1);
         %
     else
+        %
         MM = MM_in;
         ZZ0 = ZZ0_in;
+        %
     end
     %
     dft.symbol = symbol;
     dft.Z = Z_in;
     dft.Z0 = ZZ0;
     dft.M = MM;
-    dft.code = code;
+    dft.code = code;%transfer simulation parameters
     %
     if isfield(code,'postprocgrid') && ~isempty(code.postprocgrid)
+        %
         dft.ne = zeros(code.postprocgrid,length(ZZ0)+2);
+        %
     else
+        %
         dft.ne = zeros(500,length(ZZ0)+2);
+        %
     end
     %
     build_write_shell_script(MM,ZZ0,symbol,code,localdir,remote.remotedir);% shell script name <<symbol>>_<<Z0>>.sh
     %
-    if ~isempty(remote) %remote calculations
+    if ~isempty(remote) %remote distributed calculations
         %
         [s_condor,m_condor] = unix(['ssh ',remote.id,'@',remote.ip,' ''condor_version''']); %Check if htcondor scheduler exists on remote machine
         %
         if s_condor == 0 && strfind(m_condor,'CondorVersion')
+            %
             build_write_condorshell_script(ZZ0,symbol,localdir);% shell script name <<symbol>>_<<Z0>>.sh
+            %
         end
         %
         [s,m] = unix(['scp -r -p ',localdir,' ',remote.id,'@',remote.ip,':',remote.remotedir]); %copy script on remote computer
         %
         if s ~= 0
+            %
             disp(['WARNING for copying files on the remote computer : ',m]);
+            %
         else
+            %
             disp(['Copying files on the remote computer done.']);
+            %
         end
         %
         [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' '' chmod -R 700 ',remote.remotedir,'''']); %change rights, for owner only (mandatory for Gaussian DFT program)
         %
         if s ~= 0
-                disp(['WARNING for changing rights of the files on the remote computer : ',m]);
+            %
+            disp(['WARNING for changing rights of the files on the remote computer : ',m]);
+            %
         else
+            %
             disp(['Changing rights of the files on the remote computer done.']);
+            %
         end
         %
         disp('Starting calculations. May take some time ... ');
@@ -287,24 +311,33 @@ else
         for iZ0 = 1:length(ZZ0)
             %
             if s_condor == 0 && strfind(m_condor,'CondorVersion')
+                %
                 [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' ''cd ',remote.remotedir,'; condor_submit ',symbol,'_',int2str(ZZ0(iZ0)),'_condor.submit''']); %run each script and give hand back
+                %
             else
+                %    
                 [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' ''cd ',remote.remotedir,'; nohup ./',symbol,'_',int2str(ZZ0(iZ0)),'.sh > /dev/null 2>&1 &''']); %run each script and give hand back
+                %
             end
             %
             if s ~= 0
+                %
                 disp(['WARNING for launching script ',symbol,'_',int2str(ZZ0(iZ0)),'.sh : ',m]);
+                %
                 ss = ss + s;
+                %
             end      
             %
         end
         %
         if ss == 0
-            disp(['Scripts have been well launched on the remote computer.']);
+            %
+            disp(['All scripts have been well launched on the remote computer.']);
             disp('-------------------')
+            %
         end   
         %
-    else local calculations
+    else % local distributed calculations
         %
         cd(localdir);
         %
@@ -313,13 +346,17 @@ else
             [s,m] = unix(['chmod 700 ',localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.sh']); %change rights, for owner only (mandatory for Gaussian DFT program)
             %
             if s ~= 0
+                %
                 disp(['WARNING for changing rights of files on the local computer : ',m]);
+                %
             end
             %
             [s,m] = unix(['nohup ',localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.sh > /dev/null 2>&1 &']); %run script
             %
             if s ~= 0
+                %
                 disp(['WARNING for launching local script ',symbol,'_',int2str(ZZ0(iZ0)),'.sh : ',m]);
+                %
             end        
             %
         end
@@ -442,7 +479,9 @@ function [] = build_write_shell_script(MM,ZZ0,symbol,code,localdir,remotedir)
                 %
             end
         else
-            error('Error: DFT code type not yet recognized.');
+            %
+            error('Error: DFT GAUSSIAN code type not recognized.');
+            %
         end
         %
     end
@@ -458,7 +497,9 @@ function [] = build_write_condorshell_script(ZZ0,symbol,localdir)
         fileID = fopen([localdir,'/',symbol,'_',int2str(Z0),'_condor.submit'],'w');
         %
         if fileID < 0
-            error(['Error : file ',symbol,'_',int2str(Z0),'_condor.submit cannot be created in ',localdir,' folder']);       
+            %
+            error(['Error : file ',symbol,'_',int2str(Z0),'_condor.submit cannot be created in ',localdir,' folder']); 
+            %
         else
             %
             fprintf(fileID,'Universe = vanilla\n');
