@@ -1,9 +1,13 @@
-function dft = mcdhf_electron_density_yp(Z_in,Z0_in,code,remote,cancel)
+function mcdhf = mcdhf_electron_density_yp(Z_in,Z0_in,code,remote,cancel)
 %
 %   Calculation script of the atomic electron density for all ionization states of an
-%   atom with atomic number Z. To be used with MCDHF programs to calculate the
+%   atom with atomic number Z. To be used with MCDHF GRASP2018 code to calculate the
 %   atomic electron density like GRASP2018, .... Matlab is
 %   supposed to be installed on the computer on which the MCDHF calculations are done. 
+%
+%   For examples of GRASP2018 calculations wisit the webpages 
+%       - https://www.diracprogram.org/doc/release-12/exercises/computer_grasp.html
+%       - https://www.diracprogram.org/doc/release-17/exercises/computer_grasp.html
 %
 %   INPUTS:
 %
@@ -14,25 +18,11 @@ function dft = mcdhf_electron_density_yp(Z_in,Z0_in,code,remote,cancel)
 %
 % An example for GRASP2018 MCDHF code
 %
-%   code.rootpath = '/home/u01/GAUSSIAN/';%absolute path
-%   code.codepath = 'g09';%relative path
-%   code.codetype = 'grasp2018';
-%   code.functional = 'PBE1PBE';%hybrid-exchange correlation functional
-%   code.basis = '6-311G';%Non relativistic calculations, valid up to Krypton (Z = 36) approx. (see Gaussian documentation)
-%   code.basis = AUG-cc-pVDZ';%Non relativistic calculations, valid up to Krypton (Z = 36) approx. (see Gaussian documentation)
-%   code.basis = cc-pVDZ';%Non relativistic calculations, valid up to Krypton (Z = 36) approx. (see Gaussian documentation)
-%   code.basis = 'gen/Auto';%Relativistic case calculations. To be used with ANO-RCC basis set exchange basis (download from www.basissetexchange.org)
-%   code.equation = 'Integral=DKH2';%Relativistic case calculations. Douglas-Kroll-Hess second order scalar relativistic Hamiltonian.
-%   code.mem = '5GB';%allocated memory (use 64bits Gaussian, 2GB max for 32bits Gaussian code only)
-%   code.procs = '4';%number of shared cores (use 64bits Gaussian, A proc max for 32bits Gaussian code only)
-%   code.postprocpath = 'Multiwfn';%Post-processing path, absolute or relative path to rootpath
-%   code.postproccode = 'Multiwfn';%Post-processing tool
-%
 %   OUTPUTS:
 %
-%       - mcdhf : mcdhf structure with solid angle averaged atomic electron density for all ionisation states [n,p+2]
+%       - mcdhf : mcdhf structure with solid angle averaged atomic electron density for all ionisation states [nr,p+2]
 %
-%   By Y. Peysson CEA-IRFM <yves.peysson@cea.fr>
+%   By Y. Savoye-Peysson CEA-IRFM <yves.savoye-peysson@cea.fr>
 %
 if nargin < 3
     %
@@ -48,7 +38,7 @@ if nargin == 3
     %
     if ~exist(['mcdhf_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
         %
-        remote = [];% local calculation. MCDHF code is supposed to be on the same computer on which this Matlab script is launched
+        remote = [];% local distributed calculation. GRASP2018 code is supposed to be on the same computer on which this Matlab script is launched
         %
     end
     %
@@ -83,7 +73,7 @@ if cancel
     %
     delete(['mcdhf_run_Zi_',int2str(Z_in),'.mat']); %close simulation
     %
-    dft = [];
+    mcdhf = [];
     %
     return;
     %
@@ -96,7 +86,6 @@ if exist(['mcdhf_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
     symbol = mcdhf.symbol;
     Z_in = mcdhf.Z;
     ZZ0 = mcdhf.Z0;
-    MM = mcdhf.M;
     code = mcdhf.code; 
     %
     if ~isempty(remote) %remote calculations
@@ -175,11 +164,20 @@ if exist(['mcdhf_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
             %
             ss = ss + 1;
             %
+            res = table2array(readtable([symbol,'_',int2str(ZZ0(iZ0)),'.output'],'FileType','text'));
+            res = res(2:end,:);%remove useless first line
+            %
             if iZ0 == 1
-            	dft.ne(:,1:3) = importdata([symbol,'_',int2str(ZZ0(iZ0)),'.output']);
+                %
+                nr = size(res,1);
+                xnr = [1:size(res,1)]';
+                %
+            	mcdhf.ne(:,1:3) = [xnr,res(:,1),res(:,3)/4/pi];
+                %
             else
-                ne_tmp = importdata([symbol,'_',int2str(ZZ0(iZ0)),'.output']);
-                dft.ne(:,iZ0+2) = ne_tmp(:,3);
+                %
+                mcdhf.ne(:,iZ0+2) = res(:,3)/4/pi;
+                %
             end
             %
         end
@@ -192,15 +190,19 @@ if exist(['mcdhf_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
         [s,m] = unix(['rm -rf ',localdir]);
         %
         if s ~= 0
+            %
             disp(['WARNING : ',m]);
+            %
         end
         %
         if ~isempty(remote)
-           %
+            %
             [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' ''rm -rf ',remote.remotedir,'''']); 
             %
             if s ~= 0
+                %
                 disp(['WARNING : ',m]);
+                %
             end
             %
         end
@@ -208,9 +210,9 @@ if exist(['mcdhf_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
         delete(['mcdhf_run_Zi_',int2str(Z_in),'.mat']); %close simulation
         %
         datesave = datestr(now,'dd-mm-yyyy_HH:MM:SS');
-        dft.datesave = datesave;
+        mcdhf.datesave = datesave;
         %
-        save(['mcdhf_',int2str(Z_in),'_',elements('atomic_number', Z_in, 'symbol'),'_',elements('atomic_number', Z_in, 'name'),'_',code.codetype,'_',datesave,'.mat'],'dft');
+        save(['mcdhf_',int2str(Z_in),'_',elements('atomic_number', Z_in, 'symbol'),'_',elements('atomic_number', Z_in, 'name'),'_',code.codetype,'_',datesave,'.mat'],'mcdhf');
         disp(['MCDHF calculations with ',code.codetype,' code successfully saved in mcdhf_',int2str(Z_in),'_',elements('atomic_number', Z_in, 'name'),'_',code.codetype,'_',datesave,'.mat']);
         %
         disp('-------------------')
@@ -225,7 +227,9 @@ if exist(['mcdhf_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
 else
     %
     if ~exist([pwd,'/mcdhf_shell_scripts_',code.codetype,'_',int2str(Z_in)],'dir')
+        %
         mkdir([pwd,'/mcdhf_shell_scripts_',code.codetype,'_',int2str(Z_in)]);
+        %
     end
     %
     localdir = [pwd,'/mcdhf_shell_scripts_',code.codetype,'_',int2str(Z_in)];
@@ -234,50 +238,53 @@ else
     %
     if ~isempty(Z0_in)
         %
-        MM = MM_in(Z0_in+1);
         ZZ0 = ZZ0_in(Z0_in+1);
         %
     else
-        MM = MM_in;
+        %
         ZZ0 = ZZ0_in;
+        %
     end
     %
     mcdhf.symbol = symbol;
     mcdhf.Z = Z_in;
     mcdhf.Z0 = ZZ0;
-    mcdhf.M = MM;
-    mcdhf.code = code;
+    mcdhf.code = code;%transfer simulation parameters
     %
-    if isfield(code,'postprocgrid') && ~isempty(code.postprocgrid)
-        mcdhf.ne = zeros(code.postprocgrid,length(ZZ0)+2);
-    else
-        mcdhf.ne = zeros(500,length(ZZ0)+2);
-    end
+    build_write_shell_script(ZZ0,symbol,code,localdir,remote.remotedir);% shell script name <<symbol>>_<<Z0>>.sh
     %
-    build_write_shell_script(MM,ZZ0,symbol,code,localdir,remote.remotedir);% shell script name <<symbol>>_<<Z0>>.sh
-    %
-    if ~isempty(remote) %remote calculations
+    if ~isempty(remote) %remote distributed calculations
         %
         [s_condor,m_condor] = unix(['ssh ',remote.id,'@',remote.ip,' ''condor_version''']); %Check if htcondor scheduler exists on remote machine
         %
         if s_condor == 0 && strfind(m_condor,'CondorVersion')
+            %
             build_write_condorshell_script(ZZ0,symbol,localdir);% shell script name <<symbol>>_<<Z0>>.sh
+            %
         end
         %
         [s,m] = unix(['scp -r -p ',localdir,' ',remote.id,'@',remote.ip,':',remote.remotedir]); %copy script on remote computer
         %
         if s ~= 0
+            %
             disp(['WARNING for copying files on the remote computer : ',m]);
+            %
         else
+            %
             disp(['Copying files on the remote computer done.']);
+            %
         end
         %
-        [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' '' chmod -R 700 ',remote.remotedir,'''']); %change rights, for owner only (mandatory for Gaussian DFT program)
+        [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' '' chmod -R 777 ',remote.remotedir,'''']); %change rights, for owner only
         %
         if s ~= 0
-                disp(['WARNING for changing rights of the files on the remote computer : ',m]);
+            %
+            disp(['WARNING for changing rights of the files on the remote computer : ',m]);
+            %
         else
+            %
             disp(['Changing rights of the files on the remote computer done.']);
+            %
         end
         %
         disp('Starting calculations. May take some time ... ');
@@ -287,39 +294,52 @@ else
         for iZ0 = 1:length(ZZ0)
             %
             if s_condor == 0 && strfind(m_condor,'CondorVersion')
+                %
                 [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' ''cd ',remote.remotedir,'; condor_submit ',symbol,'_',int2str(ZZ0(iZ0)),'_condor.submit''']); %run each script and give hand back
+                %
             else
+                %
                 [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' ''cd ',remote.remotedir,'; nohup ./',symbol,'_',int2str(ZZ0(iZ0)),'.sh > /dev/null 2>&1 &''']); %run each script and give hand back
+                %
             end
             %
             if s ~= 0
+                %
                 disp(['WARNING for launching script ',symbol,'_',int2str(ZZ0(iZ0)),'.sh : ',m]);
+                %
                 ss = ss + s;
+                %
             end      
             %
         end
         %
         if ss == 0
-            disp(['Scripts have been well launched on the remote computer.']);
+            %
+            disp(['All scripts have been well launched on the remote computer.']);
             disp('-------------------')
+            %
         end   
         %
-    else local calculations
+    else % local distributed calculations
         %
         cd(localdir);
         %
         for iZ0 = 1:length(ZZ0)
             %
-            [s,m] = unix(['chmod 700 ',localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.sh']); %change rights, for owner only (mandatory for Gaussian DFT program)
+            [s,m] = unix(['chmod 700 ',localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.sh']); %change rights, for owner only 
             %
             if s ~= 0
+                %
                 disp(['WARNING for changing rights of files on the local computer : ',m]);
+                %
             end
             %
             [s,m] = unix(['nohup ',localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.sh > /dev/null 2>&1 &']); %run script
             %
             if s ~= 0
+                %
                 disp(['WARNING for launching local script ',symbol,'_',int2str(ZZ0(iZ0)),'.sh : ',m]);
+                %
             end        
             %
         end
@@ -336,14 +356,20 @@ end
 %
 end
 %
-function [] = build_write_shell_script(MM,ZZ0,symbol,code,localdir,remotedir)
+function [] = build_write_shell_script(ZZ0,symbol,code,localdir,remotedir)
+    %
+    Z = elements('symbol',symbol, 'atomic_number');
+    name = elements('symbol',symbol, 'name');
+    weight = elements('atomic_number',Z, 'atomic_mass');
+    mass = 40;
     %
     for iZ0 = 1:length(ZZ0)
         %
         Z0 = ZZ0(iZ0);
-        M = MM(iZ0);
         %
-        if strcmp(code.codetype,'grasp2018')
+        rcsfgenerate = grasp_rcsfgenerate_yp(Z,Z0,code);%core and configurations
+        %
+        if strcmp(lower(code.codetype),'grasp2018')
             %
             fileID = fopen([localdir,'/',symbol,'_',int2str(Z0),'.sh'],'w');
             %
@@ -351,98 +377,109 @@ function [] = build_write_shell_script(MM,ZZ0,symbol,code,localdir,remotedir)
                 error(['Error : file ',symbol,'_',int2str(Z0),'.sh cannot be created in ',localdir,' folder']);       
             else
                 %
-                fprintf(fileID,'#!/bin/csh\n\n');
-                fprintf(fileID,['setenv GAUSS_EXEDIR ',code.rootpath,code.codepath,'\n']);
-                fprintf(fileID,['setenv GAUSS_ARCHDIR ',code.rootpath,code.codepath,'\n']);
-                fprintf(fileID,['setenv GAUSS_SCRDIR /tmp\n']);
-                fprintf(fileID,'setenv LD_LIBRARY_PATH "${GAUSS_EXEDIR}:/usr/lib"\n\n');
+                fprintf(fileID,'#!/bin/bash\n\n');
                 %
-                if ~isempty(remotedir)
-                    fprintf(fileID,[code.rootpath,code.codepath,'/',code.codepath(1:3),' <<END >',remotedir,'/',symbol,'_',int2str(Z0),'.log\n']);
-                    fprintf(fileID,['%%Chk=',remotedir,'/',symbol,'_',int2str(Z0),'\n\n']);
-                else
-                    fprintf(fileID,[code.rootpath,code.codepath,'/',code.codepath,' <<END >',localdir,'/',symbol,'_',int2str(Z0),'.log\n']);
-                    fprintf(fileID,['%%Chk=',localdir,'/',symbol,'_',int2str(Z0),'\n\n']);
+                fprintf(fileID,['export PATH=$PATH:',code.rootpath,'bin\n']);
+                fprintf(fileID,[code.fortran,' \n\n']);
+                %
+                % rnucleus, output file : isodata
+                %
+                fprintf(fileID,'rnucleus << eof\n');
+                fprintf(fileID,[int2str(Z),'\n']);
+                fprintf(fileID,[int2str(mass),'\n']);
+                fprintf(fileID,'n\n');%default answer no (n) concerning root mean squared radius and nuclear skin thickness (see interactive rnucleus)
+                fprintf(fileID,[num2str(weight),'\n']);
+                fprintf(fileID,[int2str(code.rnucleus.nuclear.spin),'\n']);
+                fprintf(fileID,[int2str(code.rnucleus.nuclear.dipole),'\n']);
+                fprintf(fileID,[int2str(code.rnucleus.nuclear.quadrupole),'\n']);
+                fprintf(fileID,'eof\n\n');
+                %
+                % rcsfgenerate, output files : rcsf.out, rcsfgenerate.log
+                %
+                fprintf(fileID,'rcsfgenerate << eof\n');
+                fprintf(fileID,[rcsfgenerate.order,'\n']);
+                fprintf(fileID,[int2str(rcsfgenerate.core),'\n']);
+                %
+                for kk = 1:length(rcsfgenerate.config)
+                    fprintf(fileID,[rcsfgenerate.config{kk},'\n']);
                 end
                 %
-                if isfield(code,'equation') && ~isempty(code.equation)
-                    fprintf(fileID,['#P ',code.functional,'/',code.basis.mode,' ',code.equation,'\n\n']);
-                else
-                    fprintf(fileID,['#P ',code.functional,'/',code.basis.mode,'\n\n']);
-                end
+                fprintf(fileID,[int2str(rcsfgenerate.Jmin),'  ',int2str(rcsfgenerate.Jmax),'\n']);
+                fprintf(fileID,[num2str(rcsfgenerate.excitation),'\n']);
+                fprintf(fileID,'n\n');%no other list
+                fprintf(fileID,'eof\n\n');
                 %
-                if isfield(code,'grid') && ~isempty(code.grid)
-                    fprintf(fileID,['%%Grid=',code.grid,'\n']);
-                end
-                fprintf(fileID,['%%mem=',code.mem,'\n']);
-                fprintf(fileID,['%%NProcShared=',code.procs,'\n']);
+                fprintf(fileID,'mv rcsf.out rcsf.inp\n\n');%file rename for rangular
                 %
-                if strcmp(code.basis.mode,'gen/Auto')
-                    if exist(['DFT/',code.basis.external,'.gbs'],'file') %exchange basis set file
-                        fprintf(fileID,['Gaussian Job for ',symbol,'_',int2str(Z0),' with ',code.basis.external,' external basis set.\n\n']);
-                    end
-                else
-                    fprintf(fileID,['Gaussian Job for ',symbol,'_',int2str(Z0),'\n\n']);
-                end
-                %   
-                fprintf(fileID,[int2str(Z0),',',int2str(M),'\n']);
-                fprintf(fileID,[symbol,'\n\n']);
+                % rangular, input file : rcsf.inp, output files : mcp.30, mcp.31, ... , rangular.log                     
                 %
-                if strcmp(code.basis.mode,'gen/Auto')
-                    %
-                    if exist(['DFT/',code.basis.external,'.gbs'],'file') %exchange basis set file for DFT
-                        %
-                        ebs = fileread(['DFT/',code.basis.external,'.gbs']);
-                        ebs = ebs(12:end);%remove header
-                        ii = strfind(ebs,symbol);
-                        ebs = ebs(ii:end);
-                        jj = strfind(ebs,'****');
-                        ebs = ebs(1:jj+3);
-                        %
-                        fprintf(fileID,[ebs,'\n\n']);
-                        %
-                    else
-                        error(['Error : exchange basis set file ',code.basis.name,'.gbs not found.']);
-                    end
-                    %
-                end
-                %   
-                fprintf(fileID,'END\n\n');
+                fprintf(fileID,'rangular << eof\n');
+                fprintf(fileID,[num2str(code.rangular.fullinteraction),'\n']);
+                fprintf(fileID,'eof\n\n');
                 %
-                if ~isempty(remotedir)
-                    fprintf(fileID,[code.rootpath,code.codepath,'/formchk ',remotedir,'/',symbol,'_',int2str(Z0),'.chk\n\n']);
-                    fprintf(fileID,[code.rootpath,code.postprocpath,'/',code.postproccode,' ',remotedir,'/',symbol,'_',int2str(Z0),'.fchk > ',remotedir,'/',symbol,'_',int2str(Z0),'.txt << EOF\n']);
-                else
-                    fprintf(fileID,[code.rootpath,code.codepath,'/formchk ',localdir,'/',symbol,'_',int2str(Z0),'.chk\n\n']);
-                    fprintf(fileID,[code.rootpath,code.postprocpath,'/',code.postproccode,' ',localdir,'/',symbol,'_',int2str(Z0),'.fchk > ',localdir,'/',symbol,'_',int2str(Z0),'.txt << EOF\n']);    
-                end
+                % rwfnestimate, input files : isodata, rcsf.inp, rwfn (optional), output file : rwfn.inp                
                 %
-                fprintf(fileID,'200\n');
-                fprintf(fileID,'5\n');
+                fprintf(fileID,'rwfnestimate << eof\n');
+                fprintf(fileID,[code.rwfnestimate.default_settings,' \n']);
+                fprintf(fileID,[int2str(code.rwfnestimate.subshell_radial_wavefunctions),'\n']);
+                fprintf(fileID,[code.rwfnestimate.list_of_relativistic_subshells,'\n']);
+                fprintf(fileID,'eof\n\n');
                 %
-                if isfield(code,'postprocgrid') && ~isempty(code.postprocgrid)
-                    fprintf(fileID,'5\n');
-                    fprintf(fileID,[int2str(code.postprocgrid),'\n']); 
-                end
+                % rmcdhf input files : ,output file :              
                 %
-                fprintf(fileID,'0\n');
-                fprintf(fileID,'7\n');
-                fprintf(fileID,'-1\n');
-                fprintf(fileID,'EOF\n\n');
+                fprintf(fileID,'rmcdhf << eof\n');
+                fprintf(fileID,[code.rmcdhf.default_settings,'\n']);
+                fprintf(fileID,[int2str(code.rmcdhf.ASF_serial_numbers_for_each_block),'\n']);
+                fprintf(fileID,[code.rmcdhf.orbitals_to_be_varied,'\n']);
+                fprintf(fileID,[code.rmcdhf.spectroscopic_orbitals,'\n']);
+                %fprintf(fileID,[code.rmcdhf.orbitals_to_be_varied,'\n']);
+                fprintf(fileID,[int2str(code.rmcdhf.maximum_number_of_SCF_cycles),'\n']);
+                fprintf(fileID,'eof\n\n');
                 %
-                if ~isempty(remotedir)
-                    fprintf(fileID,['mv ',remotedir,'/sphavgval.txt ',remotedir,'/',symbol,'_',int2str(Z0),'.output\n']);    
-                else
-                	fprintf(fileID,['mv ',localdir,'/sphavgval.txt ',localdir,'/',symbol,'_',int2str(Z0),'.output\n']);
-                end
+                fprintf(fileID,['rsave DHF_',symbol,int2str(Z0),' \n\n']);
                 %
-                %fprintf(fileID,['mv sphavgval.txt ',symbol,'_',int2str(Z0),'.output\n']);
-                fprintf(fileID,['echo "Job done for ',symbol,'_',int2str(Z0),'.sh"']);
+                % rci input files : isodata, name_of_state.c, name_of_state.w ,output file : name_of_state.cm, name_of_state.csum, name_of_state.clog, rci.res (can be used for restart)        
+                %
+                fprintf(fileID,'rci << eof\n');
+                fprintf(fileID,[code.rci.default_settings,'\n']);
+                fprintf(fileID,['DHF_',symbol,int2str(Z0),'\n']);
+                fprintf(fileID,[code.rci.contribution_of_H,'\n']);
+                fprintf(fileID,[code.rci.modify_all_transverse_photon_frequencies,'\n']);
+                fprintf(fileID,[num2str(code.rci.scale_factor),'\n']);
+                fprintf(fileID,[code.rci.include_H_vacuum_polarisation,'\n']);
+                fprintf(fileID,[code.rci.include_H_normal_mass_shift,'\n']);
+                fprintf(fileID,[code.rci.include_H_specific_mass_shift,'\n']);
+                fprintf(fileID,[code.rci.estimate_self_energy,'\n']);
+                fprintf(fileID,[int2str(code.rci.largest_n_quantum_number_for_including_self_energy),'\n']);
+                fprintf(fileID,[int2str(code.rmcdhf.ASF_serial_numbers_for_each_block),'\n']);
+                fprintf(fileID,'eof\n\n');
+                %
+                % rdensity input files : isodata, name_of_state.c, name_of_state.w, name_of_state.(c)m ,output file : name_of_state.nw, name_of_state.(c)d             
+                %
+                fprintf(fileID,'rdensity << eof\n');
+                fprintf(fileID,[code.rdensity.default_settings,' \n']);
+                fprintf(fileID,['DHF_',symbol,int2str(Z0),' \n']);
+                fprintf(fileID,[code.rdensity.mixing_coefficients_from_CI_calc,' \n']);
+                fprintf(fileID,[int2str(code.rdensity.egvc_order),' \n']);
+                fprintf(fileID,'eof\n\n');
+                %
+                fprintf(fileID,'rm mcp* \n');
+                fprintf(fileID,'rm rci.res \n');
+                fprintf(fileID,'rm rcsf* \n');
+                fprintf(fileID,'rm clist.new \n');
+                %/home/u01/mcdhf_shell_scripts_grasp2018_18/Ar_0_condor.out
+                fprintf(fileID,['mv DHF_',symbol,int2str(Z0),'.cd ',symbol,'_',int2str(Z0),'.output \n']);%to be read by matlab
+                fprintf(fileID,['cp ',symbol,'_',int2str(Z0),'_condor.out ',symbol,'_',int2str(Z0),'.log \n']);%to be read by matlab
+                fprintf(fileID,['rm DHF_',symbol,int2str(Z0),'* \n']);
+                fprintf(fileID,'rm isodata \n');
+                fprintf(fileID,'rm rwfn.inp \n');
+                fprintf(fileID,'rm rwfn.out \n');
+                %
                 fclose(fileID);
                 %
             end
         else
-            error('Error: DFT code type not yet recognized.');
+            error('Error: MCDHF GRASP2018 code not recognized.');
         end
         %
     end
@@ -463,11 +500,11 @@ function [] = build_write_condorshell_script(ZZ0,symbol,localdir)
             %
             fprintf(fileID,'Universe = vanilla\n');
             fprintf(fileID,['Executable = ./',symbol,'_',int2str(Z0),'.sh\n']);
-            fprintf(fileID,['Arguments = \n']);
+            fprintf(fileID,'Arguments = \n');
             fprintf(fileID,['Log = ',symbol,'_',int2str(Z0),'_condor.log\n']);
             fprintf(fileID,['Output = ',symbol,'_',int2str(Z0),'_condor.out\n']);
             fprintf(fileID,['Error = ',symbol,'_',int2str(Z0),'_condor.error\n']);
-            fprintf(fileID,['Queue\n']);
+            fprintf(fileID,'Queue\n');
             %
             fclose(fileID);
             %
