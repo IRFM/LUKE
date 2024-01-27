@@ -7,8 +7,7 @@ function [ip,id,code] = connections_params(code,user,address)
 %       - code : 'GAUSSIAN' or 'GRASP2018'
 %           (default : 'GAUSSIAN')
 %       - user : user name. If user argument, default local calculations with session id
-%       - address : If empty, local calculations, otherwise address of the
-%       machine on calculations are performed
+%       - address : If empty, local calculations, otherwise address of the machine on calculations are performed
 % 
 % OUTPUT :
 %
