@@ -118,6 +118,16 @@ for ir = 1:nr,
                 Xf0 = Xf0*xne_norm(ir)/normf0;
             end
             %
+        elseif isfield(gridDKE,'XmhuPrev') && isfield(gridDKE,'XpnPrev')
+            % case for loop on finit %RS
+            XmhuPrev = gridDKE.XmhuPrev;
+            XpnPrev  = gridDKE.XpnPrev;
+            % IS RENORMALISATION NEEDED ?
+            % 
+            %   TO DO
+            %
+            Xf0 = interp2(XmhuPrev,XpnPrev,XXf0_in(:,:,ir),Xmhu,Xpn);
+            title_initguess = 'Initial distribution from previous distribution';
         else
             if size(XXf0_in,2) == nmhu,
                 Xf0 = XXf0_in(:,:,ir);

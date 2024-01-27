@@ -220,6 +220,17 @@ gridDKE.nmhu = nmhu;
 gridDKE.nr = nr;
 gridDKE.nr_dke = nr_dke;
 %
+if isfield(dkeparam,'selfCoherence')
+    % case for loop on finit %RS
+    selfCoherence = dkeparam.selfCoherence;
+    if isfield(selfCoherence,'XmhuPrev') && isfield(selfCoherence,'XpnPrev') 
+        gridDKE.XmhuPrev = selfCoherence.XmhuPrev;
+        gridDKE.XpnPrev  = selfCoherence.XpnPrev;
+    % no need for else. If if condion is not met it means that it is the 
+    % first iteration and therefore there is no xpnPrev  
+    end
+end
+%
 if display.display_mode == 2, 
 	Fig_PitchGrid = figure('Name','Pitch-angle grid');
 	figure(Fig_PitchGrid),plot(1:nmhu,mhu,'bo',1:nmhu,mhum,'g*',1:nmhu,mhup,'r+');grid on;zoom on;
