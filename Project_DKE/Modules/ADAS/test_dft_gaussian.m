@@ -21,6 +21,8 @@
 % Post-processing 'Multiwfn' tool is used to extract data useful for LUKE
 % calculations.
 %
+% NOTE : GAUSSIAN must be installed at the user session level on the remote machine. 
+%
 %By Y. Savoye-Peysson CEA-IRFM <yves.savoye-peysson@cea.fr>
 %
 %close all
@@ -31,34 +33,20 @@ clc
 %
 user = 'yves';
 %
-[ip,id,codename] = connections_params('GAUSSIAN','','home-aix.yvespeysson.fr');%Create a file in the LUKE path (or local) : id -> hostname, ip -> ethernet address, code type -> GAUSSIAN or GRASP2018
+%[ip,id,codename] = connections_params('GAUSSIAN','','home-aix.yvespeysson.fr');%Create a file in the LUKE path (or local) : id -> hostname, ip -> ethernet address, code type -> GAUSSIAN or GRASP2018
+[ip,id,codename] = connections_params('GAUSSIAN','','');%Create a file in the LUKE path (or local) : id -> hostname, ip -> ethernet address, code type -> GAUSSIAN or GRASP2018
 %
-Z = 74;%Helium (2), Lithium (3), Argon (18), Copper (29), Xenon (54), Tungsten (74), Gold (79). Z may be a vector.  
-Z0 = [];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
+Z = 18;%Helium (2), Lithium (3), Argon (18), Copper (29), Xenon (54), Tungsten (74), Gold (79). Z may be a vector.  
+Z0 = [0];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
 %
 mode = 0;%(0): the script wait until all calculations are done, (1): the script is terminated while calculations are still running on the remote machine. It must be launched again to check if calculations are terminated. 
 cancel = 0;%enforce cancel calculations
-%
-disp('-------------------')
-disp(['GAUSSIAN-09 atomic code remote calculations : ',elements('atomic_number', Z, 'name'),' (',int2str(Z),')'])
-%
-if isempty(Z0)
-    %
-    disp('All ionization states are calculated.')
-    %
-else
-    %
-    disp(['Ionization states that are calculated : ',int2str(Z0),'.'])
-    %
-end
-%
-disp('-------------------')
 %
 % ----------------------- CODE SETTINGS ----------------------
 %
 code.codepath = 'g09';%relative path
 %
-code.codetype = lower(codename);%GAUSSIAN code version
+code.codetype = lower(codename);%GAUSSIAN code version 09
 %
 code.functional = 'PBE1PBE';%hybrid-exchange correlation functional
 %code.basis.mode = '6-311G';%Non relativistic calculations, valid up to Krypton (Z = 36) approx. (see Gaussian documentation)
@@ -75,6 +63,23 @@ code.procs = '4';%number of shared cores (use 64bits Gaussian, A proc max for 32
 code.postprocpath = 'Multiwfn';%Post-processing path, absolute or relative path to rootpath
 code.postproccode = 'Multiwfn';%Post-processing tool
 code.postprocgrid = 3000;%Post-processing grid size (default = 800)
+%
+% ------------------------------------------------------------
+%
+disp('-------------------')
+disp(['GAUSSIAN-09 atomic code distributed (remote) calculations : ',elements('atomic_number', Z, 'name'),' (',int2str(Z),')'])
+%
+if isempty(Z0)
+    %
+    disp('All ionization states will be calculated.')
+    %
+else
+    %
+    disp(['Calculated ionization state(s) : ',int2str(Z0),'.'])
+    %
+end
+%
+disp('-------------------')
 %
 % ----------------------- REMOTE SETUP ----------------------
 %
@@ -117,20 +122,28 @@ for iZ = 1:length(Z)
     end
     %
     if ik == length(id)
+        %
         ik = 1;
+        %
     else
+        %
         ik = ik + 1;
+        %
     end
     %
 end
 %
 if sum(job_status) == 0
+    %
     disp('---> All jobs are done and results are saved in corresponding files')
     delete dft_job_status.mat
+    %
 else
+    %
     save dft_job_status.mat job_status
     disp(['---> ',int2str(sum(job_status)),'/',int2str(length(job_status)),' jobs are active.'])
     disp('-----------')
     disp('Relaunch test_dft_gaussian.m script to get back all dft results if done.')
+    %
 end
 %
