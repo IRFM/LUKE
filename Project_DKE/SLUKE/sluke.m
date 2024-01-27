@@ -116,11 +116,17 @@ for ii = 1:length(sparams.machine)
     if sparams.simul.enable{ii} == 1
         %
         simul_id = sluke_id(sparams,ii);
-        %{
+        %
         if sluke_sparams_stamp(sparams,ii) == -1 %check consistency of previous simulations with the same id. Remove files to restart simulation at the correct level
             %
             cprintf('*red',['The simulation ',simul_id,' is skipped.']);disp(' ')  
             break %abort simulations 
+            %
+        end
+        %{
+        if sparams.simul.enforce{ii} == 2
+            %
+            cprintf([1,0.5,0],['---> has been enforced. Set sparams.simul.enforce{',int2str(ii),'} to zero or one in the script file to avoid infinite calculation loop.']);disp(' ')
             %
         end
         %}
@@ -383,12 +389,6 @@ for ii = 1:length(sparams.machine)
             else
                 %
                 cprintf('*red',['---> has a problem (output not recognized. Check if this not a just a connection problem before cancelling the simulation by deleting the results of the simulation).']);disp(' ')
-                %
-            end
-            %
-            if sparams.simul.enforce{ii} == 2
-                %
-                cprintf([1,0.5,0],['---> has been enforced. Set sparams.simul.enforce{',int2str(ii),'} to zero or one in the script file to avoid infinite calculation loop.']);disp(' ')
                 %
             end
             %

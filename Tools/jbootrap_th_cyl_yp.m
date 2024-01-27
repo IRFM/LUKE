@@ -170,11 +170,12 @@ A2 = dlnTedr;
 A4 = alpha.*pTi./(Zi*pTe).*dlnTidr;
 %
 Jbavnorm = -ppe.*pBT0./pBp0.*(L31.*A1 + L32.*A2 + L34.*A4);%WARNING: pBT0./pBp0 not equal to pq./pia when pia becomes large (i.e. > 0.2)
-Jbavnorm_s = -ppe.*pBT0./pBp0.*(L31_s.*A1 + L32_s.*A2 + L34_s.*A4); 
+%Jbavnorm_s = -ppe.*pBT0./pBp0.*(L31_s.*A1 + L32_s.*A2 + L34_s.*A4); 
 Jbavnorm_hh = -ppe.*pBT0./pBp0.*(0.69*dlnTedr + 2.44*dlnnedr); 
 %
 pcurr_hir_ref_fsav = Jbavnorm/Bt*qe*1e-6*1e3; 
-pcurr_sau_ref_fsav = Jbavnorm_s/Bt*qe*1e-6*1e3;
+%pcurr_sau_ref_fsav = Jbavnorm_s/Bt*qe*1e-6*1e3;
+pcurr_sau_ref_fsav = [];
 pcurr_hin_ref_fsav_e = Jbavnorm_hh/Bt*qe*1e-6*1e3;
 %
 % Ion Flux to be added in the fluid limit: Hinton & Hazeltine, Hirshman and Sauter relations use the same term

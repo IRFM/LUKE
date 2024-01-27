@@ -69,6 +69,26 @@ for ii = 1:length(fns)
         %
     end
     %
+    if ii == 1
+        %
+        machine_names = eval(['sparams_in.',fns{ii}]);
+        %
+        for jj = 1:length(machine_names)
+            %
+            if ~isempty(strfind(machine_names{jj},' '))
+                %
+                err = 1;
+                status{kk} = ['--> machine name ''',machine_names{jj},''' is incorrect : it contains one or multiple spaces.'];
+                cprintf('*red',status{kk});disp(' ')
+                kk = kk + 1;
+                return;
+                %
+            end
+            %
+        end
+        %
+    end
+    %
 end
 %
 if err == 1

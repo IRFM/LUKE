@@ -214,7 +214,7 @@ elseif isfield(sparams.simul,'enforce') && sparams.simul.enforce{ii} <= 1
         %
         if sparams.simul.enforce{ii} == 1
             %
-            cprintf([1,0.5,0],['---> No stamp file of the simulation : ',simul_id,' exists. A new one is created from sparams and the simulation is relaunched.']);disp(' ')
+            cprintf([1,0.5,0],['---> No stamp file for the simulation : ',simul_id,' exists. A new one is created from sparams and the simulation is relaunched.']);disp(' ')
             %
             sparams_stamp = sluke_params_extract(sparams,ii);
             %

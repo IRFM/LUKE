@@ -66,6 +66,18 @@ else
             error([]);
         end
         %
+    elseif isfield(sparams.ohm,'source') && isempty(sparams.ohm.source{ii}) && isfield(sparams.ohm,'Vloop') && ~isempty(sparams.ohm.Vloop{ii}) 
+        %
+        cprintf('*green','Flat ohmic electric field is considered in sparams');disp(' ');
+        %
+        load(['./SLUKE_EQUILS/EQUIL_',ohm_id,'.mat'],'equil');
+        %
+        ohm.rho = psi2rho_jd(equil{end},equil{end}.psi_apRp);%Arbitrary normalized minor radius
+        ohm.epsi = sparams.ohm.Vloop{ii}*ones(1,length(ohm.rho))/(2*pi*equil{end}.Rp);%(V/m)
+        ohm.Vloop = sparams.ohm.Vloop{ii};
+        %
+        save(['SLUKE_OHMS/OHM_',ohm_id,'.mat'],'ohm');
+        %
     else 
         %
         cprintf([1,0.5,0],'No ohmic electric field is considered in sparams');disp(' ');

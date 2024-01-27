@@ -241,7 +241,7 @@ function [hxrspec] = sluke_DSPX_hxrspec(sparams,simul_id,ii)
             hxrspec.chordstatus_hxr = sparams.diags.DSPX.hxrspec.chordstatus_hxr{ii};
             %
         end
-        %
+        %{
         if isfield(hxrspec,'beta_hxr')
             %
             nc = length(hxrspec.beta_hxr);% number of chords
@@ -249,7 +249,7 @@ function [hxrspec] = sluke_DSPX_hxrspec(sparams,simul_id,ii)
             disp(['--> Number of chords in DSPX : ',int2str(nc),'.'])
             %
         end         
-        %
+        %}
         save(['SLUKE_DIAGNOSTICS/DSPX_HXRSPEC_',simul_id,'.mat'],'hxrspec');
         %
     else

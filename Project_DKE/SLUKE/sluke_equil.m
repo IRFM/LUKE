@@ -66,9 +66,73 @@ else
             %
             [dkeparam,dkedisplay,equil,ohm,transpfaste,ripple,wavestructs] = sluke_autoTSmetis(sparams,ii);
             %
+        elseif strcmp(sparams.equil.code{ii},'EFIT') % EFIT code from agnetic measurements
+            %
+            if isfield(sparams.equil,'EFIT') && isstruct(sparams.equil.EFIT)
+                %
+                flag_EFIT = 1;
+                %
+                if isfield(sparams.equil.EFIT,'type') && ~isempty(sparams.equil.EFIT.type{ii})
+                    %
+                    EFIT_type = sparams.equil.EFIT.type{ii};
+                    %
+                else
+                    %
+                    flag_EFIT = 0;
+                    %
+                end
+                %
+                if isfield(sparams.equil.EFIT,'Zeff') && ~isempty(sparams.equil.EFIT.Zeff{ii})
+                    %
+                    EFIT_Zeff = sparams.equil.EFIT.type{ii};
+                    %
+                else
+                    %
+                    Zeff_EFIT = 0;
+                    %
+                end
+                %
+                if isfield(sparams.equil.EFIT,'display') && ~isempty(sparams.equil.EFIT.display{ii})
+                    %
+                    EFIT_display = sparams.equil.EFIT.display{ii};
+                    %
+                else
+                    %
+                    cprintf([1,0.5,0],['WARNING : the parameter ''display'' of the code ',sparams.equil.code{ii},' is not defined. It is enforced to 2.']);disp(' ')
+                    EFIT_display = 2;
+                    %
+                end
+                %
+                if isfield(sparams.equil.EFIT,'p_opt') && ~isempty(sparams.equil.EFIT.p_opt{ii})
+                    %
+                    EFIT_p_opt = sparams.equil.EFIT.p_opt{ii};
+                    %
+                else
+                    %
+                    cprintf([1,0.5,0],['WARNING : the parameter ''p_opt'' of the code ',sparams.equil.code{ii},' is not defined. It is enforced to 2.']);disp(' ')
+                    EFIT_p_opt = -1;
+                    %
+                end
+                %
+                if flag_EFIT == 1
+                    %
+                    equil = equil_EFIT_jd([sparams.equil.path{ii},'/',sparams.equil.file{ii}],EFIT_type,EFIT_display,EFIT_p_opt,equil_id,equil_id,EFIT_Zeff);
+                    delete(['EQUIL_',equil_id,'.mat']);
+                    %
+                else
+                    %
+                    cprintf('*red',['ERROR : some parameters of the code ',sparams.equil.code{ii},' are not defined.']);disp(' ')
+                    %
+                end
+                %   
+            else
+                %
+                cprintf('*red',['ERROR : the parameters of the code ',sparams.equil.code{ii},' are not defined.']);disp(' ')
+                %
+            end
         else
             %
-            disp(['WARNING : the code ',sparams.equil.code{ii},' is not yet implemented'])
+            cprintf([1,0.5,0],['WARNING : the code ',sparams.equil.code{ii},' is not yet implemented.']);disp(' ')
             %
         end
         %
@@ -291,7 +355,7 @@ if ~isfield(equil,'consistency')
             %
         else
             %
-             equil = equilconsistency_yp(equil,'',sparams.equil.equilconsistency.auto_mode{ii},sparams.equil.equilconsistency.display_mode,sparams.equil.equilconsistency.prho{ii},sparams.equil.equilconsistency.mtheta{ii},sparams.equil.fit);
+            equil = equilconsistency_yp(equil,'',sparams.equil.equilconsistency.auto_mode{ii},sparams.equil.equilconsistency.display_mode,sparams.equil.equilconsistency.prho{ii},sparams.equil.equilconsistency.mtheta{ii},sparams.equil.fit);
             %
         end
         %
@@ -387,7 +451,16 @@ if ~isempty(dd)
     delete(['INPUTS/before_luke@*.mat']);%delete all before_luke@ files to avoid wrong files if they come from different METIS simulations
     %
 end
-
+%
+if isfield(equil,'fluct') && isfield(equil.fluct,'enable') && equil.fluct.enable{ii} == 1
+    %
+    %[fluct] = fluctstruct_yp(equil,id_fluct,naequilp);
+    %fluct.naequilp = naequilp;
+    %
+    %equil.fluct = fluct;
+    %equil.fluct.fitparam = fluct_fitparam;
+    %
+end
     
     
     

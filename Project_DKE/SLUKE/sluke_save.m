@@ -112,7 +112,7 @@ else
         %
         basestr = sparams.machine{ii};
         %
-        save(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'],'basestr','simul_id','sparams','status','fileids','output','dkeparam','dkedisplay','equil','ohm','waves','transpfaste','ripple','-v7.3');
+        save(['SLUKE_RESULTS/LUKE_DATA_',simul_id,'.mat'],'basestr','simul_id','sparams','status','fileids','output','dkeparam','dkedisplay','equil','ohm','waves','transpfaste','ripple');
         %
         cprintf('*green',['---> is completed. Full simulation data are saved (',num2str(round(lukestructs_properties.bytes/1e9*100)/100),' GBytes)']);disp(' ')
         %

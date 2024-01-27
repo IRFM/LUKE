@@ -55,10 +55,16 @@ path_ripple = '';%if nothing is specified, the working directory is first used a
 %
 %************************************************************************************************************************************
 %
+%load('EQUIL_ITER_Scen2_200103121816_430_129.mat')
+%equil = equilconsistency_yp(equil,'',2);
+equil.pTe  = ones(size(equil.pTe))*0.01;
+%dkeparam.np_S = 500;
+
+
 if exist('dmumpsmex');dkeparam.invproc = -2;end
 %
 dtn = 10000;
-nit = 10;
+nit = 1;
 tnmax = dtn*nit;
 %
 dkeparam.coll_mode = 2;%Relativistic collision operator: (0) Relativistic Maxwellian background, (1) High-velocity limit, (2) Linearized Belaiev-Budker (3) Non-relativistic Lorentz model, (4) Non-relativistic Maxwellian background
@@ -173,7 +179,7 @@ graph1D_jd(0:dtn:tnmax,[0,normf0_1_1-1],0,0,'','','',NaN,xlim,ylim,'-','none',co
 graph1D_jd(0:dtn:tnmax,[0,(normf0_1_2-1)*1e3],0,0,'','','',leg,xlim,ylim,'-','none',colors{3},2,siz,gca);
 %
 set(gca,'xtick',[0:0.2:1]*tnmax)
-set(gca,'ytick',[-8:4:8]*1e-5)
+%set(gca,'ytick',[-8:4:8]*1e-5)
 %
 figure(2),clf
 %

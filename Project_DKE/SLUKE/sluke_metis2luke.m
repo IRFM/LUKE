@@ -65,7 +65,20 @@ fns = fieldnames(equil2);
 %
 for jj = 1:length(fns)
     %
-    eval(['source.',fns{jj},' = equil2.',fns{jj},'{',int2str(ii),'};']);
+    if ~isstruct(eval(['equil2.',fns{jj}]))
+        %
+        eval(['source.',fns{jj},' = equil2.',fns{jj},'{',int2str(ii),'};']);
+        %
+    else 
+        %
+        fnames = fieldnames(eval(['equil2.',fns{jj}]));
+        for kk = 1:length(fnames)
+            %
+            eval(['source.',fns{jj},'.',fnames{kk},' = equil2.',fns{jj},'.',fnames{kk},'{',int2str(ii),'};']);
+            %
+        end
+        %
+    end
     %
 end
 %
@@ -78,15 +91,19 @@ if nargin == 4
 end
 %
 if isfield(sparams.equil,'equilconsistency')
+    %
     equilconsistency_id = sluke_id(sparams,ii);
     equil.source.equilconsistency = ['SLUKE_EQUILS/EQUILCONSISTENCY_',equilconsistency_id,'.mat'];
     save(['SLUKE_EQUILS/EQUILCONSISTENCY_',equilconsistency_id,'.mat'],'equilconsistency');
+    %
 end
 %
 if isfield(sparams.equil,'fit')
-   fit_id = sluke_id(sparams,ii);
+    % 
+    fit_id = sluke_id(sparams,ii);
     equil.source.fit = ['SLUKE_FITEQUILS/FITEQUIL_',fit_id,'.mat'];
     save(['SLUKE_EQUILS/FITEQUIL_',fit_id,'.mat'],'fit');
+    %
 end
 %
 
