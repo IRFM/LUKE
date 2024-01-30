@@ -21,11 +21,12 @@ clc
 %
 % ---------------------- INPUT PARAMETERS ---------------------
 %
+% direct remote scheduler is enforced (htcondor is not always working well)
 remote_mode = 0;%(0): the script wait until all calculations are done, (1): the script is terminated while calculations are still running on the remote machine. It must be launched again to check if calculations are terminated. 
 remote_cancel = 0;%enforce cancel calculations
 %
-Z = 18;%Helium (2), Lithium (3), Argon (18), Copper (29), Xenon (54), Tungsten (74), Gold (79)
-Z0 = [0];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
+Z = [74];%Helium (2), Lithium (3), Neon [10], Argon (18), Copper (29), Xenon (54), Tungsten (74), Gold (79)
+Z0 = [0:10];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
 %
 %[ip,id,codename] = connections_params('GRASP2018','yves','home-aix.yvespeysson.fr');%Create a file in the LUKE path (or local) : id -> hostname, ip -> ethernet address, code type -> GAUSSIAN or GRASP2018
 [ip,id,codename] = connections_params('GRASP2018','','');%Create a file in the LUKE path (or local) : id -> hostname, ip -> ethernet address, code type -> GAUSSIAN or GRASP2018
@@ -40,7 +41,10 @@ code.rnucleus.nuclear.spin = 1;%Nuclear spin (I) (in units of h / 2 pi)
 code.rnucleus.nuclear.dipole = 1;%Nuclear dipole moment (in nuclear magnetons)
 code.rnucleus.nuclear.quadrupole = 1;%Nuclear quadrupole moment (in barns)
 %
-% rcsfgenerate (generation of the list of CSFs --> see the script grasp_rcsfgenerate_yp.m)
+% rcsfgenerate (generation of the list of CSFs --> see the script grasp_rcsfgenerate_yp.m and atomic_groundstates.m)
+%
+code.rcsfgenerate.order = '*';
+code.rcsfgenerate.excitation = 0;
 %
 % rangular grasp function (angular integration)
 %
@@ -126,6 +130,7 @@ for iZ = 1:length(Z)
         remote.ip = ip{ik};
         remote.remotedir = ['/home/',id{ik},'/mcdhf_shell_scripts_',code.codetype,'_',int2str(Z(iZ))];
         remote.mode = remote_mode;
+        remote.scheduler = 'none';%enforced
         %
         mcdhf = mcdhf_electron_density_yp(Z(iZ),Z0,code,remote,remote_cancel);%remote calculation
         %
@@ -134,6 +139,7 @@ for iZ = 1:length(Z)
             job_status(iZ) = 0;%job done
             %
         end
+        %
     end
     %
     if ik == length(id)
