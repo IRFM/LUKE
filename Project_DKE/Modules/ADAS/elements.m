@@ -171,7 +171,9 @@ function element_struct = fromAtomicNumber(atomicNumber)
         end
     end
     if element_struct.found == false
+        %
         error('Unable to find element with atomic Number %d', atomicNumber);
+        %
     end
 end
 
