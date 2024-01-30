@@ -6,6 +6,7 @@ function mcdhf = mcdhf_electron_density_yp(Z_in,Z0_in,code,remote,cancel)
 %   supposed to be installed on the computer on which the MCDHF calculations are done. 
 %
 %   For examples of GRASP2018 calculations wisit the webpages 
+%
 %       - https://www.diracprogram.org/doc/release-12/exercises/computer_grasp.html
 %       - https://www.diracprogram.org/doc/release-17/exercises/computer_grasp.html
 %
@@ -176,11 +177,15 @@ if exist(['mcdhf_run_Zi_',int2str(Z_in),'.mat'],'file') %jobs are running
                 %
             else
                 %
-                mcdhf.ne(:,iZ0+2) = res(:,3)/4/pi;
+                ne_temp = interp1(res(:,1),res(:,3)/4/pi,mcdhf.ne(:,2));
+                mcdhf.ne(:,iZ0+2) = ne_temp;
                 %
             end
             %
+            clear res ne_temp 
+            %
         end
+        %
     end
     %
     cd('..');
@@ -257,6 +262,12 @@ else
         %
         [s_condor,m_condor] = unix(['ssh ',remote.id,'@',remote.ip,' ''condor_version''']); %Check if htcondor scheduler exists on remote machine
         %
+        if strcmp(remote.scheduler,'none')
+            %
+            s_condor = 1;%direct computing is performed
+            %
+        end
+        %
         if s_condor == 0 && strfind(m_condor,'CondorVersion')
             %
             build_write_condorshell_script(ZZ0,symbol,localdir);% shell script name <<symbol>>_<<Z0>>.sh
@@ -311,6 +322,8 @@ else
                 %
             end      
             %
+            iZ0
+            pause(10)
         end
         %
         if ss == 0
@@ -361,7 +374,7 @@ function [] = build_write_shell_script(ZZ0,symbol,code,localdir,remotedir)
     Z = elements('symbol',symbol, 'atomic_number');
     name = elements('symbol',symbol, 'name');
     weight = elements('atomic_number',Z, 'atomic_mass');
-    mass = 40;
+    mass = 184;
     %
     for iZ0 = 1:length(ZZ0)
         %
@@ -405,7 +418,7 @@ function [] = build_write_shell_script(ZZ0,symbol,code,localdir,remotedir)
                 end
                 %
                 fprintf(fileID,[int2str(rcsfgenerate.Jmin),'  ',int2str(rcsfgenerate.Jmax),'\n']);
-                fprintf(fileID,[num2str(rcsfgenerate.excitation),'\n']);
+                fprintf(fileID,[int2str(rcsfgenerate.excitation),'\n']);
                 fprintf(fileID,'n\n');%no other list
                 fprintf(fileID,'eof\n\n');
                 %
