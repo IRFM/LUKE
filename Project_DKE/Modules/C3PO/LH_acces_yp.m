@@ -151,7 +151,7 @@ Xs = repmat(s,[1,1,nnpar]);
 %
 if isstruct(ray)
     G0 = (ray.sx(1)+equil.Rp)/equil.Rp;%initial ray conditions
-    T0 = ray.sBphi(1)/ray.sB(1);%initial ray conditions
+    T0 = ray.sBz(1)/ray.sB(1);%initial ray conditions
 else
     G0 = (equil_val.x(end,1)+equil_val.Rp)/equil_val.Rp;%initial ray conditions
     T0 = equil_val.Bz(end,1)/equil_val.B(end,1);%initial ray conditions
