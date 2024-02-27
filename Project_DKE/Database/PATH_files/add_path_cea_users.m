@@ -28,7 +28,7 @@ users = ['JA132999';'MG270985';'JM240179';'TB263881';'KK019865';'RS272879';'PM15
 for ii = 1:length(users)
     %
     dkepath.(users(ii,:))(1) = dkepath.YP105119(1);
-    dkepath.(users(ii,:))(1).luke_root = [root_folder,users(ii,:),'/luke/LUKE_LHCD/'];
+    dkepath.(users(ii,:))(1).luke_root = [root_folder,users(ii,:),'/luke/LUKE_CEA/'];
     %
     for jj = 1:length(dkepath.YP105119(1).remote)
         %
