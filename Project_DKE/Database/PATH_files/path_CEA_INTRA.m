@@ -51,6 +51,7 @@ dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex907 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex909 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex911 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.copts.cpp.mex913 = '';
+%
 dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex802 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex806 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex903 = '';
@@ -58,6 +59,7 @@ dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex907 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex909 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex911 = '';
 dkepath.YP105119(1).sirrah.compiler_opt.fopts.mex913 = '';
+%
 dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex806 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).sirrah.compiler_opt.helmex.mex903 = ['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).sirrah.local_root,'LAPACK/lapack-3.7.0 -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
