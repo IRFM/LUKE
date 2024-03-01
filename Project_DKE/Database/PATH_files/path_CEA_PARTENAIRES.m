@@ -39,8 +39,8 @@ dkepath.YP105119(1).andromede1.mex806 = [dkepath.YP105119(1).luke_root,'Project_
 dkepath.YP105119(1).andromede1.mex903 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB903/'];
 dkepath.YP105119(1).andromede1.mex907 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB907/'];
 dkepath.YP105119(1).andromede1.mex909 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB909/'];
-dkepath.YP105119(1).andromede1.mex911 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB911/'];
-dkepath.YP105119(1).andromede1.mex913 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB913/'];
+%dkepath.YP105119(1).andromede1.mex911 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB911/'];
+%dkepath.YP105119(1).andromede1.mex913 = [dkepath.YP105119(1).luke_root,'Project_DKE/MEX/Bin/MATLAB913/'];
 %
 dkepath.YP105119(1).andromede1.compiler_opt.copts = '';
 dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex802 = '';
@@ -48,32 +48,32 @@ dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex806 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex903 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex907 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex909 = '';
-dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex911 = '';
-dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex913 = '';
+%dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex911 = '';
+%dkepath.YP105119(1).andromede1.compiler_opt.copts.cpp.mex913 = '';
 %
 dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex802 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex806 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex903 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex907 = '';
 dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex909 = '';
-dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex911 = '';
-dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex913 = '';
+%dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex911 = '';
+%dkepath.YP105119(1).andromede1.compiler_opt.fopts.mex913 = '';
 %
 dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex802 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex806 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex903 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex907 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex909 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex911 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
-dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex913 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+%dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex911 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
+%dkepath.YP105119(1).andromede1.compiler_opt.helmex.mex913 = ['-L',dkepath.YP105119(1).andromede1.local_root,'lapack-3.4.2 -llapack -lrefblas'];%['-L',dkepath.YP105119(1).altair.local_root,'lapack-3.1.1/ -llapack_ifort -lblas_ifort'];% Optional argument for helmex compilation
 %
 dkepath.YP105119(1).andromede1.MUMPS.mex802 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).andromede1.MUMPS.mex806 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).andromede1.MUMPS.mex903 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB903'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).andromede1.MUMPS.mex907 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
 dkepath.YP105119(1).andromede1.MUMPS.mex909 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB909'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).andromede1.MUMPS.mex911 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB911'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).andromede1.MUMPS.mex913 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB913'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.YP105119(1).andromede1.MUMPS.mex911 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB911'];%Where MUMPS matrix solver is stored (MEX function)
+%dkepath.YP105119(1).andromede1.MUMPS.mex913 = [dkepath.YP105119(1).andromede1.local_root,'MUMPS_4.10.0/MATLAB913'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
