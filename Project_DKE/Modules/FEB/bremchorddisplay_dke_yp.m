@@ -182,9 +182,9 @@ if isempty(axs),
     quiver(RR_pol,ZZ_pol,BR_pol,BZ_pol);
     axis('equal');
     hold on
-    graph1D_jd(ptR,ptZ,0,0,'','','',NaN,'','','-','none','c',1);
-    graph1D_jd(HHR_pol,HHZ_pol,0,0,'','','',NaN,'','','-.','none','r',1);
-    graph1D_jd(VVR_pol,VVZ_pol,0,0,'X=R (m)','Z (m)','B_{\theta} field (T)',NaN,'','','-.','none','r',1);
+    graph1D_jd(ptR,ptZ,0,0,'','','',NaN,'','','-','none','c',1,font);
+    graph1D_jd(HHR_pol,HHZ_pol,0,0,'','','',NaN,'','','-.','none','r',1,font);
+    graph1D_jd(VVR_pol,VVZ_pol,0,0,'X=R (m)','Z (m)','B_{\theta} field (T)',NaN,'','','-.','none','r',1,font);
     hold off
     print_jd(p_opt,[filename,'_BthetaField']);
 end

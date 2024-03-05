@@ -46,15 +46,15 @@ end
 %
 if ~isempty(hxrexp) && isfield(hxrexp,'t')
     %
-    irefs = find((hxrexp.t > sparams.discharge.tmin{ii}) & (hxrexp.t < sparams.discharge.tmax{ii}));%time interval
+    irefs = find((hxrexp.t > sparams.discharge.tmin{ii}) & (hxrexp.t <= sparams.discharge.tmax{ii}));%time interval
     %
     hxrexp_averaged.hxr_dt = hxrexp.t(2)-hxrexp.t(1);%experimental sampling time (s). 
     %
     for jj = 1:length(hxrexp.energy)
         %
-        hxrexp_averaged.profile(jj,:) = sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs)/hxrexp_averaged.hxr_dt;%time averaging of the HXR signal (counts/s)
+        hxrexp_averaged.profile{jj} = sum(cell2mat(hxrexp.hxr(irefs,jj)),1)/length(irefs)/hxrexp_averaged.hxr_dt;%time averaging of the HXR signal (counts/s)
         %
-        hxrexp_averaged.errorbars(jj,:) = sqrt(sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs))/hxrexp_averaged.hxr_dt;%error bars (Poisson's statistics)
+        hxrexp_averaged.errorbars{jj} = sqrt(sum(cell2mat(hxrexp.hxr(irefs,jj)),1)/length(irefs))/hxrexp_averaged.hxr_dt;%error bars (Poisson's statistics)
         %
     end
     %
