@@ -22,12 +22,12 @@ classdef slukeGUI < handle
         imgButtonDim = 19;  % Both dimentions' size of BOL button in pixel
         labelWidth = 120;   % Width of label
         
-        removeImg = 'Icon/remove.png';   %Image for remove button
-        addImg    = 'Icon/add.png';      %Image for add butotn
-        modifyImg = 'Icon/pencil.png';   %Image for modify button
-        copyImg   = 'Icon/copy.png';     %Image for copy button
-        helpImg   = 'Icon/technical.png' %Image for icon in help uiallert
-        bugImg    = 'Icon/scan.png'%Image for icon in help>reportBug uiallert
+        removeImg = 'Icons/remove.png';   %Image for remove button
+        addImg    = 'Icons/add.png';      %Image for add butotn
+        modifyImg = 'Icons/pencil.png';   %Image for modify button
+        copyImg   = 'Icons/copy.png';     %Image for copy button
+        helpImg   = 'Icons/technical.png' %Image for icon in help uiallert
+        bugImg    = 'Icons/scan.png'%Image for icon in help>reportBug uiallert
     end
     %% PUBLIC METHODS
     methods (Access = public)
@@ -1105,7 +1105,7 @@ classdef slukeGUI < handle
         %sparams
         function n = nSim(obj)
             fields = fieldnamesr(obj.sparams);
-            address = split(fields{1});
+            address = split(fields{1},'.');
             n = length(getfield(obj.sparams,address{:}));
         end
         

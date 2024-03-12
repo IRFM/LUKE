@@ -70,8 +70,8 @@ sparams.value.simul.remote.git.pull = {[]};
 sparams.value.simul.remote.git.display = {[]};
 %
 sparams.help.simul.remote.git.projects = {'Git list of projects that may be updated remotely from repository (git pull) prior a simulation.'};
-sparams.help.simul.remote.git.pull = {'Git pull remote projects (1), no git pull (0). Note : some'}
-sparams.help.simul.remote.git.display = {'(0) : no display, (1) : display results'}
+sparams.help.simul.remote.git.pull = {'Git pull remote projects (1), no git pull (0). Note : some'};
+sparams.help.simul.remote.git.display = {'(0) : no display, (1) : display results'};
 %
 sparams.value.simul.remote.scheduler.pbs.nodes = {''};
 sparams.value.simul.remote.scheduler.pbs.ppn = {''};
@@ -80,12 +80,12 @@ sparams.value.simul.remote.scheduler.pbs.ncpus = {[]};
 sparams.value.simul.remote.scheduler.pbs.memory = {[]};
 sparams.value.simul.remote.scheduler.pbs.walltime = {[]};
 %
-sparams.help.simul.remote.scheduler.pbs.nodes = {'number of nodes requested or node names (see PBS syntax). If empty or NaN, default value. For pbs, type ''pbsnodes -a'' to get the list of node names'}
-sparams.help.simul.remote.scheduler.pbs.ppn = {'number of processors requested on the same node. if empty or NaN, default value requested.'}
-sparams.help.simul.remote.scheduler.pbs.select = {'Number of separate nodes. If empty or NaN, default value. Type ''pbsnodes -a'' to get the list of nodesand their charatéristics'}
-sparams.help.simul.remote.scheduler.pbs.ncpus = {'number of cpus per node (must be even number). If empty or NaN, default value. '}
-sparams.help.simul.remote.scheduler.pbs.memory = {'job memory in Mbytes (should be increased for large calculation grids). See the cluster limitations'}
-sparams.help.simul.remote.scheduler.pbs.walltime = {'job walltime in hours'}
+sparams.help.simul.remote.scheduler.pbs.nodes = {'number of nodes requested or node names (see PBS syntax). If empty or NaN, default value. For pbs, type ''pbsnodes -a'' to get the list of node names'};
+sparams.help.simul.remote.scheduler.pbs.ppn = {'number of processors requested on the same node. if empty or NaN, default value requested.'};
+sparams.help.simul.remote.scheduler.pbs.select = {'Number of separate nodes. If empty or NaN, default value. Type ''pbsnodes -a'' to get the list of nodesand their charatéristics'};
+sparams.help.simul.remote.scheduler.pbs.ncpus = {'number of cpus per node (must be even number). If empty or NaN, default value. '};
+sparams.help.simul.remote.scheduler.pbs.memory = {'job memory in Mbytes (should be increased for large calculation grids). See the cluster limitations'};
+sparams.help.simul.remote.scheduler.pbs.walltime = {'job walltime in hours'};
 %
 sparams.value.simul.remote.scheduler.torque.nodes = {''};
 sparams.value.simul.remote.scheduler.torque.ppn = {''};
@@ -94,12 +94,12 @@ sparams.value.simul.remote.scheduler.torque.ncpus = {[]};
 sparams.value.simul.remote.scheduler.torque.memory = {[]};
 sparams.value.simul.remote.scheduler.torque.walltime = {[]};
 %
-sparams.help.simul.remote.scheduler.torque.nodes = {'number of nodes requested or node names (see PBS syntax). If empty or NaN, default value. For pbs, type ''pbsnodes -a'' to get the list of node names'}
-sparams.help.simul.remote.scheduler.torque.ppn = {'number of processors requested on the same node. if empty or NaN, default value requested.'}
-sparams.help.simul.remote.scheduler.torque.select = {'Number of separate nodes. If empty or NaN, default value. Type ''pbsnodes -a'' to get the list of nodesand their charateristics'}
-sparams.help.simul.remote.scheduler.torque.ncpus = {'number of cpus per node (must be even number). If empty or NaN, default value. '}
-sparams.help.simul.remote.scheduler.torque.memory = {'job memory in Mbytes (should be increased for large calculation grids). See the cluster limitations'}
-sparams.help.simul.remote.scheduler.torque.walltime = {'job walltime in hours'}
+sparams.help.simul.remote.scheduler.torque.nodes = {'number of nodes requested or node names (see PBS syntax). If empty or NaN, default value. For pbs, type ''pbsnodes -a'' to get the list of node names'};
+sparams.help.simul.remote.scheduler.torque.ppn = {'number of processors requested on the same node. if empty or NaN, default value requested.'};
+sparams.help.simul.remote.scheduler.torque.select = {'Number of separate nodes. If empty or NaN, default value. Type ''pbsnodes -a'' to get the list of nodesand their charateristics'};
+sparams.help.simul.remote.scheduler.torque.ncpus = {'number of cpus per node (must be even number). If empty or NaN, default value. '};
+sparams.help.simul.remote.scheduler.torque.memory = {'job memory in Mbytes (should be increased for large calculation grids). See the cluster limitations'};
+sparams.help.simul.remote.scheduler.torque.walltime = {'job walltime in hours'};
 %
 sparams.value.simul.remote.scheduler.slurm.ncores = {''};
 sparams.value.simul.remote.scheduler.slurm.memory = {[]};
@@ -107,7 +107,7 @@ sparams.value.simul.remote.scheduler.slurm.walltime = {[]};
 %
 sparams.help.simul.remote.scheduler.slurm.ncores = {'number of cores. If empty or NaN, default value.'};
 sparams.help.simul.remote.scheduler.slurm.memory = {'job memory in Mbytes (should be increased for large calculation grids). See the cluster limitations'};
-sparams.help.simul.remote.scheduler.slurm.walltime = {'job walltime in hours'}
+sparams.help.simul.remote.scheduler.slurm.walltime = {'job walltime in hours'};
 %
 sparams.value.simul.jprofileconsistency.code = {''};
 sparams.value.simul.jprofileconsistency.nit = {[]};
@@ -133,27 +133,27 @@ sparams.value.simul.mute.make_equil_metis2luke = {[]};
 sparams.value.simul.mute.make_sluke_build_launchs = {[]};
 sparams.value.simul.mute.lukeschedulerparam = {[]};
 %
-sparams.help.simul.mute.load_structures_yp = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.run_lukert = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.clustermode_luke = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.mdce_clustermode = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.displayrunningjob = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.remote_tsdate = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.bremsstrahlung_dke_yp = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.bremdiag_dke_yp = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.metis2luke = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.equilconsistency_yp = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.make_equil_metis2luke = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.make_sluke_build_launchs = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
-sparams.help.simul.mute.lukeschedulerparam = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'}
+sparams.help.simul.mute.load_structures_yp = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.run_lukert = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.clustermode_luke = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.mdce_clustermode = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.displayrunningjob = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.remote_tsdate = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.bremsstrahlung_dke_yp = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.bremdiag_dke_yp = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.metis2luke = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.equilconsistency_yp = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.make_equil_metis2luke = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.make_sluke_build_launchs = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
+sparams.help.simul.mute.lukeschedulerparam = {'(0) -> enable display of the function if any, (1) -> disable display of the function if any'};
 %
 sparams.value.simul.jprofileconsistency.code = {''};
 sparams.value.simul.jprofileconsistency.nit = {[]};
 sparams.value.simul.initial_distribution = {[]};
 %
-sparams.help.simul.jprofileconsistency.code = {'%selfconsistency between LUKE and equilibrium solver (current density profiles)'}
-sparams.help.simul.jprofileconsistency.nit = {'selfconsistency between LUKE and equilibrium solver for the current density profile (may be METIS). Time-independent calculation'}
-sparams.help.simul.initial_distribution = {'Time evolution of the distribution function : (0) -> at each time, initial distribution is a Maxwellian, (-1) -> at each time, initial distribution is the distribution from previous time (except the first that is necessarily Maxwellian)'}
+sparams.help.simul.jprofileconsistency.code = {'%selfconsistency between LUKE and equilibrium solver (current density profiles)'};
+sparams.help.simul.jprofileconsistency.nit = {'selfconsistency between LUKE and equilibrium solver for the current density profile (may be METIS). Time-independent calculation'};
+sparams.help.simul.initial_distribution = {'Time evolution of the distribution function : (0) -> at each time, initial distribution is a Maxwellian, (-1) -> at each time, initial distribution is the distribution from previous time (except the first that is necessarily Maxwellian)'};
 %
 %------------------------------------------------------------------------
 %
@@ -174,20 +174,20 @@ sparams.help.kinetics.dkeparam.source = {'preset, code or file'};
 sparams.help.kinetics.dkeparam.preset = {'Preset name'};
 sparams.help.kinetics.dkeparam.file = {'file name'};
 sparams.help.kinetics.dkeparam.path = {'path'};
-sparams.help.kinetics.dkeparam.clustermode.coll_dke_jd.scheduler.mode = {'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)'}
-sparams.help.kinetics.dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = {'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function eecoll_dke_yp.m (MDC toolbox must be installed for option 1)'}
-sparams.help.kinetics.dkeparam.clustermode.wave_solver_yp.scheduler.mode = {'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function wave_solver_yp.m (MDC toolbox must be installed for option 1)'}
-sparams.help.kinetics.dkeparam.clustermode.rfdiff_dke_jd.scheduler.mode = {'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function rfdiff_dke_jd.m (MDC toolbox must be installed for option 1)'}
+sparams.help.kinetics.dkeparam.clustermode.coll_dke_jd.scheduler.mode = {'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)'};
+sparams.help.kinetics.dkeparam.clustermode.eecoll_dke_yp.scheduler.mode = {'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function eecoll_dke_yp.m (MDC toolbox must be installed for option 1)'};
+sparams.help.kinetics.dkeparam.clustermode.wave_solver_yp.scheduler.mode = {'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function wave_solver_yp.m (MDC toolbox must be installed for option 1)'};
+sparams.help.kinetics.dkeparam.clustermode.rfdiff_dke_jd.scheduler.mode = {'MatLab distributed computing environment disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function rfdiff_dke_jd.m (MDC toolbox must be installed for option 1)'};
 %
 sparams.value.kinetics.dkeparam.nmhu_S = {[]};
 sparams.value.kinetics.dkeparam.np_S = {[]};
 sparams.value.kinetics.dkeparam.pnmax_S = {[]};
 sparams.value.kinetics.dkeparam.rho_S = {[]};
 %
-sparams.help.kinetics.dkeparam.nmhu_S = {'enforced value : number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)'}
-sparams.help.kinetics.dkeparam.np_S = {'enforced value : number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.'}
-sparams.help.kinetics.dkeparam.pnmax_S = {'enforced value : maximum value of the flux momentum grid (pth_ref)'}
-sparams.help.kinetics.dkeparam.rho_S = {'(1) -> single real value larger than 1 : number of points for radial grid calculation (automatic and optimized for depending the type of RF waves), (2) -> single or multiple real values less than 1 : manual radial flux grid, (3) -> imaginary values : npoints + 1i*normalized_radial_position ([5+0.1*i,12+0.7*i,3+1.0i]'}
+sparams.help.kinetics.dkeparam.nmhu_S = {'enforced value : number of angular values for the flux grid (WARNING: odd number) (>100 recommended for accurate run)'};
+sparams.help.kinetics.dkeparam.np_S = {'enforced value : number of momentum values for the flux grid (pnmax/np < 0.1 highly recommended for accurate run) WARNING: must be adjusted so that effective momentum point number is larger than thepitch-angle one.'};
+sparams.help.kinetics.dkeparam.pnmax_S = {'enforced value : maximum value of the flux momentum grid (pth_ref)'};
+sparams.help.kinetics.dkeparam.rho_S = {'(1) -> single real value larger than 1 : number of points for radial grid calculation (automatic and optimized for depending the type of RF waves), (2) -> single or multiple real values less than 1 : manual radial flux grid, (3) -> imaginary values : npoints + 1i*normalized_radial_position ([5+0.1*i,12+0.7*i,3+1.0i]'};
 %
 sparams.value.kinetics.dkedisplay.comment = {''};
 sparams.value.kinetics.dkedisplay.source = {''};
