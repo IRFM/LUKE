@@ -52,6 +52,9 @@ classdef slukeGUI < handle
                 end
             else
                 obj.sparams = sluke_params_defaults();
+                if isfield(obj.sparams,'help')
+                    obj.sparams = rmfield(obj.sparams,'help');
+                end
             end
             
             obj.createGUI();

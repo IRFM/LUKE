@@ -176,8 +176,7 @@ addpath([luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase']);
 addpath([luke_root,'Project_DKE/Database/EXTERNAL_files/TSBase/TSBase']);
 addpath([luke_root,'Project_DKE/Database/PATH_files']);
 addpath([luke_root,'Project_DKE/DKE']);
-addpath([luke_root,'Project_DKE/slukeGUI']);
-addpath([luke_root,'Project_DKE/slukeGUI/Icons']);
+addpath(genpath([luke_root,'Project_DKE/slukeGUI']));
 addpath([luke_root,'Tools']);
 %
 % check if dkepath structure has changed in the local path file and may be inconsistent with
