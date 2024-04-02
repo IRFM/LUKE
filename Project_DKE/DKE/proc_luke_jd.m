@@ -815,7 +815,14 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             p0_rf_2piRp = sum(wp0_rf_2piRp);
         end
         %
-        if nr > 1,
+        if nr >= 1, % Case nr==1 was not treated, leading to an error during the post-process of the basic test case performed during LUKE installation (asking for unexisting parameter in the structure) JC (04/2024)
+            if nr==1
+                red = 1;
+                lspace  = NaN;
+                lspace2 = NaN;
+                bspace  = NaN;
+                bspace2 = NaN;
+            end
             %
             if opt.wave == 'y',
                 %
