@@ -21,9 +21,9 @@ end
 %
 %Jean-François Artaud, Marc Goniche, Jorge Morales, Tullio Barbui, Krzysiek
 %Krol, Riccardo Saura, Patrick Maget, Samuele Mazzi, Pierre Manas, Théo
-%Fonghetti, Mathieu Carole,Jean Cazabonne
+%Fonghetti, Mathieu Carole, Jean Cazabonne
 %
-users = ['JA132999';'MG270985';'JM240179';'TB263881';'KK019865';'RS272879';'PM156629';'SM253778';'PM258588';'TF267414';'MC263498'];%;'JC249570'
+users = ['JA132999';'MG270985';'JM240179';'TB263881';'KK019865';'RS272879';'PM156629';'SM253778';'PM258588';'TF267414';'MC263498','JC249570'];
 %
 for ii = 1:length(users)
     %
