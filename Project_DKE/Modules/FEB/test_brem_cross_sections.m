@@ -31,7 +31,7 @@ exp = [0.035,1.263;14.949,1.977;25.031,3.067;40.072,3.914;55.392,3.902;70.326,2.
 %
 [seBHE,seBH,Elwert] = bhe_dke_yp(Ec,k,cos(theta),Znucleus);%Bethe-Heitler (1st Born approx.) + Elwert Coulomb correction (m2)
 %
-[seEH] = eh_dke_yp(Ec,k,theta,Znucleus);%Elwert Haug formula (m2)
+%[seEH] = eh_dke_yp(Ec,k,theta,Znucleus);%Elwert Haug formula (m2)
 %
 [seRDP,seRDP_1,seRDP_2] = rdp_dke_yp(Ec,k,cos(theta),Znucleus);%Roche Ducos and Proriol formula (m2). seRDP_1 and seEH should be identical
 %
@@ -39,10 +39,12 @@ figure('Name','Ec = 50 keV, k = 45 keV, Z = 13 (Al), no screening, angular scan'
 %
 plot(theta*180/pi,squeeze(seBH)*k/mb/Znucleus/Znucleus/511,[colorchoice(3),':'],'LineWidth',2);hold on
 plot(theta*180/pi,squeeze(seBHE)*k/mb/Znucleus/Znucleus/511,[colorchoice(1),'-'],'LineWidth',2);hold on
-plot(theta*180/pi,squeeze(seEH)*k/mb/Znucleus/Znucleus/511,[colorchoice(2),'--'],'LineWidth',2);hold on
+%plot(theta*180/pi,squeeze(seEH)*k/mb/Znucleus/Znucleus/511,[colorchoice(2),'--'],'LineWidth',2);hold on
 plot(theta*180/pi,squeeze(seRDP)*k/mb/Znucleus/Znucleus/511,[colorchoice(4),'-.'],'LineWidth',2);hold on
+%plot(theta*180/pi,squeeze(seHC)*k/mb/511,[colorchoice(5),'-'],'LineWidth',2);hold on
 plot(exp(:,1),exp(:,2),'ko','MarkerSize',12)
-legend('Bethe-Heitler','Bethe-Heitler+Elwert','Elwert-Haug','Roche-Ducos-Proriol','Exp. (Z = 13, Al)')
+%legend('Bethe-Heitler','Bethe-Heitler+Elwert','Elwert-Haug','Roche-Ducos-Proriol','Exp. (Z = 13, Al)')
+legend('Bethe-Heitler','Bethe-Heitler+Elwert','Roche-Ducos-Proriol','Exp. (Z = 13, Al)')
 title('Ec = 50 keV, k = 45 keV, Z = 13 (Al)')
 xlabel('Photon emission angle \theta (deg.)')
 ylabel('(k/Z^2)*d\sigma/dk/d\Omega_k [mb/sterad]')
@@ -59,17 +61,18 @@ exp = [13.551,5.756;17.996,5.375;22.504,5.063;26.986,4.749;31.504,4.436;36.061,4
 %
 [seBHE,seBH,Elwert] = bhe_dke_yp(Ec,k,cos(theta),Znucleus);%Bethe-Heitler (1st Born approx.) + Elwert Coulomb correction (m2)
 %
-[seEH] = eh_dke_yp(Ec,k,theta,Znucleus);%Elwert Haug formula (m2)
+%[seEH] = eh_dke_yp(Ec,k,theta,Znucleus);%Elwert Haug formula (m2)
 %
 [seRDP,seRDP_1,seRDP_2] = rdp_dke_yp(Ec,k,cos(theta),Znucleus);%Roche Ducos and Proriol formula (m2)
 %
 figure('Name','Ec = 45 keV, theta = 55 deg, Z = 13 (Al2O3), no screening, photon energy scan')
 plot(k,squeeze(seBH).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(3),':'],'LineWidth',2);hold on
 plot(k,squeeze(seBHE).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(1),'-'],'LineWidth',2);hold on
-plot(k,squeeze(seEH).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(2),'--'],'LineWidth',2);hold on
+%plot(k,squeeze(seEH).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(2),'--'],'LineWidth',2);hold on
 plot(k,squeeze(seRDP).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(4),'-.'],'LineWidth',2);hold on
 plot(exp(:,1),exp(:,2),'ko','MarkerSize',markersize)
-legend('Bethe-Heitler','Bethe-Heitler+Elwert','Elwert-Haug','Roche-Ducos-Proriol','Exp. (Z = 13, Al_2O_3)')
+%legend('Bethe-Heitler','Bethe-Heitler+Elwert','Elwert-Haug','Roche-Ducos-Proriol','Exp. (Z = 13, Al_2O_3)')
+legend('Bethe-Heitler','Bethe-Heitler+Elwert','Roche-Ducos-Proriol','Exp. (Z = 13, Al_2O_3)')
 title('Ec = 45 keV, theta = 55 deg, Z = 13 (Al_2O_3)')
 xlabel('Photon energy (keV)')
 ylabel('(k/Z^2)*d\sigma/dk/d\Omega_k [mb/sterad]')
@@ -84,7 +87,7 @@ Znucleus = 13;%charge of the nucleus
 %
 [seBHE,seBH,Elwert] = bhe_dke_yp(Ec,k,cos(theta),Znucleus);%Bethe-Heitler (1st Born approx.) + Elwert Coulomb correction (m2)
 %
-[seEH] = eh_dke_yp(Ec,k,theta,Znucleus);%Elwert Haug formula (m2)
+%[seEH] = eh_dke_yp(Ec,k,theta,Znucleus);%Elwert Haug formula (m2)
 %
 [seRDP,seRDP_1,seRDP_2] = rdp_dke_yp(Ec,k,cos(theta),Znucleus);%Roche Ducos and Proriol formula (m2)
 %
@@ -137,7 +140,7 @@ figure('Name','Ec = 180 keV, theta = [12.5,27.5,37.5,57.5,77.5,115] deg, Z = 13 
 for ii = 1:length(theta)
     %
     plot(k,squeeze(seBHE(ii,:,:)).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(1),'-'],'LineWidth',2);hold on
-    plot(k,seEH(:,ii).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(2),'--'],'LineWidth',2);hold on
+    %plot(k,seEH(:,ii).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(2),'--'],'LineWidth',2);hold on
     plot(k,squeeze(seRDP(ii,:,:)).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(4),'-.'],'LineWidth',2);hold on
     plot(exp(:,1),exp(:,2),'ko','MarkerSize',markersize)
     %
@@ -151,7 +154,8 @@ for jj = 1:length(theta)
     %
 end
 %
-legend('Bethe-Heitler+Elwert','Elwert-Haug','Roche-Ducos-Proriol','Exp. (Z = 13, Al)')
+%legend('Bethe-Heitler+Elwert','Elwert-Haug','Roche-Ducos-Proriol','Exp. (Z = 13, Al)')
+legend('Bethe-Heitler+Elwert','Roche-Ducos-Proriol','Exp. (Z = 13, Al)')
 title('Ec = 180 keV, theta = [12.5,27.5,37.5,57.5,77.5,115] deg, Z = 13 (Al)')
 xlabel('Photon energy (keV)')
 ylabel('(k/Z^2)*d\sigma/dk/d\Omega_k [mb/sterad]')
@@ -166,7 +170,7 @@ Znucleus = 79;%charge of the nucleus
 %
 [seBHE,seBH,Elwert] = bhe_dke_yp(Ec,k,cos(theta),Znucleus);%Bethe-Heitler (1st Born approx.) + Elwert Coulomb correction (m2)
 %
-[seEH] = eh_dke_yp(Ec,k,theta,Znucleus);%Elwert Haug formula (m2)
+%[seEH] = eh_dke_yp(Ec,k,theta,Znucleus);%Elwert Haug formula (m2)
 %
 [seRDP,seRDP_1,seRDP_2] = rdp_dke_yp(Ec,k,cos(theta),Znucleus);%Roche Ducos and Proriol formula (m2)
 %
@@ -221,7 +225,7 @@ figure('Name','Ec = 180 keV, theta = [17.5,37.5,57.5,77.5,115] deg, Z = 79 (Au),
 for ii = 1:length(theta)
     %
     plot(k,squeeze(seBHE(ii,:,:)).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(1),'-'],'LineWidth',2);hold on
-    plot(k,seEH(:,ii).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(2),'--'],'LineWidth',2);hold on
+    %plot(k,seEH(:,ii).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(2),'--'],'LineWidth',2);hold on
     plot(k,squeeze(seRDP(ii,:,:)).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(4),'-.'],'LineWidth',2);hold on
     plot(exp(:,1),exp(:,2),'ko','MarkerSize',markersize)
     %
@@ -235,8 +239,8 @@ for jj = 1:length(theta)
     %
 end
 %
-%
-legend('Bethe-Heitler+Elwert','Elwert-Haug','Roche-Ducos-Proriol','Exp. (Z = 79, Au)')
+%legend('Bethe-Heitler+Elwert','Elwert-Haug','Roche-Ducos-Proriol','Exp. (Z = 79, Au)')
+legend('Bethe-Heitler+Elwert','Roche-Ducos-Proriol','Exp. (Z = 79, Au)')
 title('Ec = 180 keV, theta = [17.5,37.5,57.5,77.5,115] deg, Z = 79 (Au)')
 xlabel('Photon energy (keV)')
 ylabel('(k/Z^2)*d\sigma/dk/d\Omega_k [mb/sterad]')
@@ -251,7 +255,7 @@ Znucleus = 79;%charge of the nucleus
 %
 [seBHE,seBH,Elwert] = bhe_dke_yp(Ec,k,cos(theta),Znucleus);%Bethe-Heitler (1st Born approx.) + Elwert Coulomb correction (m2)
 %
-[seEH] = eh_dke_yp(Ec,k,theta,Znucleus);%Elwert Haug formula (m2)
+%[seEH] = eh_dke_yp(Ec,k,theta,Znucleus);%Elwert Haug formula (m2)
 %
 [seRDP,seRDP_1,seRDP_2] = rdp_dke_yp(Ec,k,cos(theta),Znucleus,100,151,3001);%Roche Ducos and Proriol formula (m2)
 %
@@ -279,7 +283,7 @@ figure('Name','Ec = 9.66 MeV, theta = [0,3,5.9] deg, Z = 79 (Au), no screening, 
 for ii = 1:length(theta)
     %
     semilogy(k/1000,squeeze(seBHE(ii,:,:)).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(1),'-'],'LineWidth',2);hold on
-    semilogy(k/1000,seEH(:,ii).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(2),'--'],'LineWidth',2);hold on
+    %semilogy(k/1000,seEH(:,ii).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(2),'--'],'LineWidth',2);hold on
     semilogy(k/1000,squeeze(seRDP(ii,:,:)).*k(:)/mb/Znucleus/Znucleus/511,[colorchoice(4),'-.'],'LineWidth',2);hold on
     semilogy(exp(:,1),exp(:,2),'ko','MarkerSize',markersize)
     %
@@ -293,7 +297,8 @@ for jj = 1:length(theta)
     %
 end
 %
-legend('Bethe-Heitler+Elwert','Elwert-Haug','Roche-Ducos-Proriol','Exp. (Z = 79, Au)')
+%legend('Bethe-Heitler+Elwert','Elwert-Haug','Roche-Ducos-Proriol','Exp. (Z = 79, Au)')
+legend('Bethe-Heitler+Elwert','Roche-Ducos-Proriol','Exp. (Z = 79, Au)')
 title('Ec = 9.66 MeV, theta = [0,3,5.9] deg, Z = 79 (Au)')
 xlabel('Photon energy (MeV)')
 ylabel('(k/Z^2)*d\sigma/dk/d\Omega_k [mb/sterad]')
