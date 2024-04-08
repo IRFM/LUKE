@@ -8,7 +8,7 @@ function [seHC,seH,fee,ec,k,c] = haug_dke_yp(ec_in,k_in,t_in)
 %		- ec: kinetic energy of the incoming electron (keV) [1,m] 
 %		  (default = 500)
 %		- e: photon energy (keV)  [1,n] 
-%		- t: angle between the speed direction of the incoming electron and 
+%		- t: cosine of the angle between the speed direction of the incoming electron and 
 %		  the direction of emission of the bremsstrahlung photon (radian) [1,p]
 %		  (default = 0)
 %
