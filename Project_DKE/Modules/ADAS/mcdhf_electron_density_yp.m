@@ -310,8 +310,9 @@ else
                 %
             else
                 %
-                [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' ''cd ',remote.remotedir,'; nohup ./',symbol,'_',int2str(ZZ0(iZ0)),'.sh > /dev/null 2>&1 &''']); %run each script and give hand back
-                %
+               % [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' ''cd ',remote.remotedir,'; nohup ./',symbol,'_',int2str(ZZ0(iZ0)),'.sh > /dev/null 2>&1 &''']); %run each script and give hand back
+                [s,m] = unix(['ssh ',remote.id,'@',remote.ip,' ''cd ',remote.remotedir,'; ./',symbol,'_',int2str(ZZ0(iZ0)),'.sh''']); %run each script and give hand back
+               %
             end
             %
             if s ~= 0
@@ -323,7 +324,7 @@ else
             end      
             %
             iZ0
-            pause(10)
+            %pause(10)
         end
         %
         if ss == 0
@@ -347,7 +348,9 @@ else
                 %
             end
             %
-            [s,m] = unix(['nohup ',localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.sh > /dev/null 2>&1 &']); %run script
+          %  [s,m] = unix(['nohup ',localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.sh > /dev/null 2>&1 &']); %run script
+            [s,m] = unix([localdir,'/',symbol,'_',int2str(ZZ0(iZ0)),'.sh']); %run script
+
             %
             if s ~= 0
                 %

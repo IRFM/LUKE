@@ -26,7 +26,7 @@ remote_mode = 0;%(0): the script wait until all calculations are done, (1): the 
 remote_cancel = 0;%enforce cancel calculations
 %
 Z = [74];%Helium (2), Lithium (3), Neon [10], Argon (18), Copper (29), Xenon (54), Tungsten (74), Gold (79)
-Z0 = [0:10];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
+Z0 = [0];%if empty, all ionization states are calculated, otherwise only the selected ones are calculated [1:n]. If Z is a vector, Z0 = [];
 %
 %[ip,id,codename] = connections_params('GRASP2018','yves','home-aix.yvespeysson.fr');%Create a file in the LUKE path (or local) : id -> hostname, ip -> ethernet address, code type -> GAUSSIAN or GRASP2018
 [ip,id,codename] = connections_params('GRASP2018','','');%Create a file in the LUKE path (or local) : id -> hostname, ip -> ethernet address, code type -> GAUSSIAN or GRASP2018

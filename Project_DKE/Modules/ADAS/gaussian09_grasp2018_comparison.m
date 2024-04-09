@@ -37,7 +37,8 @@ for iZ = 1:length(Z_in)
     symbol = elements('atomic_number',Z_in(iZ),'symbol');
     %
     load(['DFT/dft_',int2str(Z_in(iZ)),'_',symbol,'_',name,'.mat']);
-    load(['MCDHF/mcdhf_',int2str(Z_in(iZ)),'_',symbol,'_',name,'.mat']);
+    %load(['MCDHF/mcdhf_',int2str(Z_in(iZ)),'_',symbol,'_',name,'.mat']);
+    load(['mcdhf_',int2str(Z_in(iZ)),'_',symbol,'_',name,'.mat']);
     %
     N_dft = 4*pi*trapz_dke_yp([dft.r,dft.ne(:,1).*dft.r.^2]);
     N_mcdhf = 4*pi*trapz_dke_yp([mcdhf.ne(:,2),mcdhf.ne(:,3).*mcdhf.ne(:,2).^2]);
@@ -47,7 +48,7 @@ for iZ = 1:length(Z_in)
     h1 = figure('Name',[tit1,') DFT (GAUSSIAN09) + MCDHF (GRASP2018)']);
     %
     semilogy(dft.dft_data(:,2),dft.dft_data(:,3:end),'r-','LineWidth',2), hold on
-    semilogy(mcdhf.ne(:,2),mcdhf.ne(:,3:end),'bo','MarkerSize',3)
+    semilogy(mcdhf.ne(:,2),mcdhf.ne(:,3:end),'b--','MarkerSize',3)
     %
     axis([0,5,1e-4,1e4])
     %
