@@ -11,7 +11,7 @@ disp('of a fast electron population pulled out from the thermal bulk either indu
 disp('constant electric field, or by an oscillatory one produced by propagating radio-frequency RF ')
 disp('waves. It allows multi-machine, multi-shot time-dependent simulations in a single script.')
 disp(' ')
-disp('In order to run SLUKE, the following toolboxes must be installed : LUKE_LHCD, MatRemote,     ')
+disp('In order to run SLUKE, the following toolboxes must be installed : LUKE_CEA, MatRemote,     ')
 disp('MatTools, MatHelp. For studying the Lower Hybrid wave, it is recommended to install ALOHA    ')
 disp('coupling code (optional). In addition, the MUMPS matrix solver must be compiled as a mex-file')
 disp(' (optional). It speeds up considerably Fokker-Planck calculations.')
