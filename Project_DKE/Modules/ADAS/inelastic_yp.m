@@ -28,7 +28,18 @@ for ir = 1:length(xbetath)
         %
         Z0 = ones(length(pn(:)),1)*dft.Z0;
         N = Z - ones(length(pn(:)),1)*dft.Z0;
-        I_meanexcitationenergy =  ones(length(pn(:)),1)*dft.I_meanexcitationenergy/1000;%keV units
+        %
+        %TODO: implement other models for meanexcitation energy
+        %
+        if isempty(find(isnan(dft.I_meanexcitationenergy)~=0))
+            %
+            I_meanexcitationenergy =  ones(length(pn(:)),1)*dft.I_meanexcitationenergy/1000;%keV units
+            %
+        else
+            %
+            I_meanexcitationenergy =  ones(length(pn(:)),1)*dft.I_meanexcitationenergy_s/1000;%keV units
+            %
+        end
         pprel = pn(:)*ones(1,length(dft.Z0));
         ggamma = gamma(:)*ones(1,length(dft.Z0));
         bbeta2 = 1 - 1.0./ggamma./ggamma;% spin correction
