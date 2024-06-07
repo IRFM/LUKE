@@ -249,12 +249,14 @@ end
 %
 [dummy,matlabversion,matlabrelease] = LUKEversion_jd;
 %
-if str2double(matlabversion) < 710,
+rng('shuffle');
+%{
+if str2double(matlabversion) < 710 && str2double(matlabrelease(2:end-1)) < 2023,
     %
     % action set in feval to avoid error hightlight in subsequent version code analyzer
     %
 	eval('rand(''seed'',sum(100*clock));');%reset rand with clock (never same state)
-elseif str2double(matlabversion) < 712,
+elseif str2double(matlabversion) < 712 && str2double(matlabrelease(2:end-1)) < 2023,
     %
     % action set in feval to avoid error hightlight in subsequent version code analyzer
     %
@@ -262,7 +264,7 @@ elseif str2double(matlabversion) < 712,
 else
 	RandStream.setGlobalStream(RandStream('mt19937ar','seed',sum(100*clock)));%reset rand with clock (never same state)
 end
-%
+%}
 if ~isfield(equil,'fluct') || isempty(equil.fluct),
     equil.fluct = struct;%empty structure
 end
