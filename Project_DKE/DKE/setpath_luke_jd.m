@@ -141,7 +141,6 @@ addpath([luke_root,'Project_DKE/Modules/FEB/Tables']);
 addpath([luke_root,'Project_DKE/Modules/ALOHA']);
 addpath([luke_root,'Project_DKE/Modules/AMR']);
 addpath([luke_root,'Project_DKE/Modules/ACCOME']);
-addpath([luke_root,'Project_DKE/Modules/Helena']);
 addpath([luke_root,'Project_DKE/Modules/R2D2']);
 addpath([luke_root,'Project_DKE/Modules/R2D2/MEX/Bin']);
 addpath([luke_root,'Project_DKE/Modules/EFIT']);
