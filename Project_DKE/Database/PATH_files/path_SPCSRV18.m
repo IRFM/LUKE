@@ -30,7 +30,6 @@ dkepath.decker(1).temppathroot = '/tmp/';%Absolute root directory path adress wh
 dkepath.decker(1).mex901 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
 dkepath.decker(1).mex905 = [dkepath.decker(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB905']; 
 %
-dkepath.decker(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.8.0 -lrefblas'];%NaN;
 dkepath.decker(1).compiler_opt.fopts = '';
 dkepath.decker(1).compiler_opt.copts = '';
 %

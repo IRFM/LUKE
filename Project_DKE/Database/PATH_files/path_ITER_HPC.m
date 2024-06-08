@@ -37,8 +37,6 @@ dkepath.peyssoy(1).mex904 = [dkepath.peyssoy(1).luke_root,'Project_DKE/MEX/Bin/h
 dkepath.peyssoy(1).compiler_opt.copts = '';
 dkepath.peyssoy(1).compiler_opt.copts.cpp.mex904 = '';
 dkepath.peyssoy(1).compiler_opt.fopts.mex904 = 'FC=''gfortran''';%
-dkepath.peyssoy(1).compiler_opt.separatrice.mex904 = [' -largeArrayDims -lgfortran -L',dkepath.peyssoy(1).local_root,'lapack-3.8.0/lapack.a -L',dkepath.peyssoy(1).local_root,'lapack-3.8.0/refblas.a'];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.peyssoy(1).compiler_opt.helmex.mex904 = [' -compatibleArrayDims -lgfortran -L',dkepath.peyssoy(1).local_root,'lapack-3.8.0/lapack.a -L',dkepath.peyssoy(1).local_root,'lapack-3.8.0/refblas.a'];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.peyssoy(1).compiler_opt.fopts.mex904 = ' ';%-largeArrayDims';
 %
 dkepath.peyssoy(1).MUMPS.mex904 = [dkepath.peyssoy(1).local_root,'MUMPS_5.1.2/MATLAB904'];;%Where MUMPS matrix solver is stored (MEX function)

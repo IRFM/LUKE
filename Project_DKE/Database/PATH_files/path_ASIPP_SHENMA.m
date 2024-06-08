@@ -42,8 +42,6 @@ dkepath.PEYSSON(1).login110.mex903 = [dkepath.PEYSSON(1).luke_root,'Project_DKE/
 dkepath.PEYSSON(1).login110.compiler_opt.copts = '';
 %
 dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex903 = 'FC=''gfortran''';%
-dkepath.PEYSSON(1).login110.compiler_opt.separatrice.mex903 = [' -largeArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.PEYSSON(1).login110.compiler_opt.helmex.mex903 = [' -compatibleArrayDims -lgfortran -L',dkepath.PEYSSON(1).login110.local_root,'LAPACK/lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.PEYSSON(1).login110.compiler_opt.fopts.mex903 = ' ';%-largeArrayDims;
 %
 %Where MUMPS matrix solver is stored (MEX function)
