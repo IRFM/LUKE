@@ -202,7 +202,7 @@ xlim = [0,max(Zi_list)];
 ylim = [0,0.1];
 xlab = 'Z_i';
 ylab = 'j';
-tit = ['Relativistice case, T_{e} = ',num2str(round(equil.pTe(1)*100)/100),' keV, fully stripped atom'];
+tit = ['Relativistic case, T_{e} = ',num2str(round(equil.pTe(1)*100)/100),' keV, fully stripped atom'];
 siz = 20+14i;
 %
 %graph1D_jd(Zi_list,j_2,0,0,xlab,ylab,tit,leg,xlim,ylim,'-','none','r',2,siz,gca,0.9,0.7,0.7);
