@@ -39,11 +39,6 @@ if force_compile == 0,
     filetime.erfcc.source(1) = gettime_jd('erfcc_mex_jd.F',sourcepath.C3PO,1); 
     filetime.erfcc.source(2) = gettime_jd('erfcc.f',sourcepath.C3PO,1); 
     %
-    filetime.separatrice.mex = gettime_jd(['separatrice.',mexext],mexpath,0); 
-    filetime.separatrice.source = gettime_jd('separatrice.F',sourcepath.helmex,1);     
-    %
-    filetime.helmex77.mex = gettime_jd(['helmex77.',mexext],mexpath,0); 
-    filetime.helmex77.source = gettime_jd('helmex77.F',sourcepath.helmex,1);     
 end 
 %
 if isstruct(compiler_opt) && isfield(compiler_opt,'copts'),% C mex compiling options
@@ -88,34 +83,6 @@ else
     fopts = '';
 end
 %
-if isstruct(compiler_opt) && isfield(compiler_opt,'separatrice'),% Fortran mex compiling option
-	if isstruct(compiler_opt.separatrice),
-		if isfield(compiler_opt.separatrice,['mex',matver]),
-			separatrice = compiler_opt.separatrice.(['mex',matver]);
-		else
-			separatrice = '';
-		end
-	else
-    	separatrice = compiler_opt.separatrice;
-	end
-else
-    separatrice = '';
-end
-%
-if isstruct(compiler_opt) && isfield(compiler_opt,'helmex'),% Fortran mex compiling option
-	if isstruct(compiler_opt.helmex),
-		if isfield(compiler_opt.helmex,['mex',matver]),
-			helmex = compiler_opt.helmex.(['mex',matver]);
-		else
-			helmex = '';
-		end
-	else
-    	helmex = compiler_opt.helmex;
-	end
-else
-    helmex = '';
-end
-%
 if strfind(computer,'PCWIN'),
     objext = 'obj';
 else
@@ -154,16 +121,6 @@ if ~any(isnan(fopts)) && (force_compile || any(filetime.erfcc.source > filetime.
     eval(['mex -c ',fopts,' ',sourcepath.C3PO,'erfcc.f']);
     eval(['mex ',fopts,' ',sourcepath.C3PO,'erfcc_mex_jd.F erfcc.',objext]);
     disp(['The erfcc_mex_jd.',mexext,' mexfile has been compiled.'])
-end
-%
-if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.separatrice.source > filetime.separatrice.mex)),
-    eval(['mex ',separatrice,' ',sourcepath.helmex,'separatrice.F ']);
-    disp(['The separatrice.',mexext,' mexfile has been compiled.'])
-end
-%
-if ~any(isnan(fopts)) && ~any(isnan(helmex)) && (force_compile || any(filetime.helmex77.source > filetime.helmex77.mex)),
-    %eval(['mex ',helmex,' ',sourcepath.helmex,'helmex77.F ',helmex]);
-    %disp(['The helmex77.',mexext,' mexfile has been compiled.'])
 end
 %
 cd(initdir);
