@@ -20,9 +20,7 @@ for i = 1:length(filelist),
   if build_mode,
      eval(file);
   else
-     if isempty(strfind(file, 'h77'))
-        eval(file);
-     end
+ 
   end  
   load temp.mat
 end
