@@ -170,12 +170,6 @@ else
     if SUPERLU_mex ~= 0,
         dkepath.SUPERLU.mex = SUPERLU_mex;
     end
-    %
-	uisetpath_flag  = input('Please provide the arguments for the HELMEX compilation (type n to abandon helmex compilation): ','s');
-	%
-	if ischar(uisetpath_flag) | ~strcmp(uisetpath_flag,'n'),
-		dkepath.compiler_opt.helmex = uisetpath_flag;
-	end
 	%
     save(filename,'dkepath');
     disp([filename,' is created.'])
