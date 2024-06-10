@@ -166,7 +166,7 @@ for ic = 1:size(brem_bd_interp,1),
         end
     else
         for ik = 1:nkfit+1
-            brem_bd_diag(ic,ik) = brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik),1,'first'))*195;%number of photons for cutoff energy ik per unit time summed over the row of pixels (195)
+            brem_bd_diag(ic,ik) = brem_bd_diag_interp(ic,find(kinterp >= kfit_S(ik),1,'first'));%number of photons for cutoff energy ik per unit time
         end
     end
 %	
