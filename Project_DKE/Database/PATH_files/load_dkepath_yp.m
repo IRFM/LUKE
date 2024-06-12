@@ -62,7 +62,7 @@ for ifile = 1:npathfiles
         end
         %
         for imhost = 1:length(mhostnames)
-            if strcmp(lochostname,mhostnames{imhost}) % local cluster,
+            if any(strfind(lochostname,mhostnames{imhost})) % local cluster,
                 %
                 %TODO : more strict test in case of very simple mhostnames like for EUROfusion, otherwise the machine identification may fail
                 %
