@@ -1,5 +1,7 @@
 function [MEHXR] = sluke_mehxr(sparams,lukestructs,ii,equil)
 %
+% Synthetic diagnostic of the ME-HXR with vertical array of sightlines
+%
 if nargin < 4
     equil = '';
 end
@@ -18,7 +20,7 @@ if isfield(sparams.diags.MEHXR,'exp') && sparams.diags.MEHXR.exp{ii} == 1
     %
     if ~exist(['SLUKE_DIAGNOSTICS/Data/',id_data,'.mat'])
         %
-        [hxrexp.energy,hxrexp.hxr,hxrexp.t] = collect_mehxr_forLUKE_tb(sparams.machine{ii},sparams.discharge.shot{ii});
+        [hxrexp.energy,hxrexp.hxr,hxrexp.t] = collect_mehxr_forLUKE_tb(sparams.machine{ii},sparams.discharge.shot{ii},1);
         %
         if ~isempty(hxrexp.t)
             %
