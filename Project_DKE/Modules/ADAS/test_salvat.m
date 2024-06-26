@@ -4,7 +4,7 @@ function [] = test_salvat(Z_in,Z0_in,maxnumberofexponentials,atomic_models,units
 % Test Salvat (Moliere) method for any atomic electron density whatever the ionization state. 
 % Modify the initial dft structure and save it. Two examples are considered : Gaussian DFT and Thomas-Fermi model.
 %
-%   INPUTS2:
+%   INPUTS:
 %
 %       - Z : Atomic number (If multiple Z values, dft change only, no display). Available Z values : 1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79
 %           (default : 74 for tungsten)
