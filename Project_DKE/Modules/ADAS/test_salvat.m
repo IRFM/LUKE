@@ -1,37 +1,103 @@
+
+function [] = test_salvat(Z_in,Z0_in,maxnumberofexponentials,atomic_models,units,print_opt)
 %
 % Test Salvat (Moliere) method for any atomic electron density whatever the ionization state. 
 % Modify the initial dft structure and save it. Two examples are considered : Gaussian DFT and Thomas-Fermi model.
 %
-% by Y.Peysson CEA-DRFC <yves.peysson@cea.fr>
+%   INPUTS:
+%
+%       - Z : Atomic number (If multiple Z values, dft change only, no display). Available Z values : 1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79
+%           (default : 74 for tungsten)
+%       - Z0 : Fully (0) or partially ionized atom for display (valid if single Z value is chosen, Z0 <= Z)
+%           (default : 42 for tungsten mean ionization state for T = 3 keV from OPEN-ADAS or round(Z/2).)
+%       - maxnumberofexponentials : Maximum number of exponentials for the multi-Yukawa calculations (<=4)
+%           (default : 4)
+%       - atomic_models : Data input from atomic model for multiu-Yukawa fit, 0 -> Gaussian DFT,1 -> Thomas-Fermi
+%           (default : 0)
+%       - units : Units for comparisons with CERN results, 'mec' or 'MeV/c' for the form factor
+%           (default : 'mec' for relativistic units)
+%       - print_opt : -1: no print, 2:save files (eps,png,fig)
+%           (default : -1) 
+%
+%   OUTPUTS: none
+%
+% by Y.Savoye-Peysson CEA-DRFC <yves.savoye-peysson@cea.fr>
 %
 close all 
-clear all
 clc
+%  
+% Default values
 %
-print_opt = 2;%-1: no print, 2:save files (eps,png,fig)
-%
+Z = 74;%tungsten
+Z0 = 42;%tungsten mean ionization state for T = 3 keV 
 maxnumberofexponentials = 4;%up to 4
-%
-Z = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%Atomic number (If multiple Z values, dft change only, no display)
-Z = 42;%[18];%change dft substructure field salvat, and display results
-Z0 = 0;%fully (0) or partially ionized atom for display (Z > 0)
-%
-atomic_models = [0];%[0 -> Gaussian DFT,1 -> Thomas-Fermi]
+atomic_models = 0;%[0 -> Gaussian DFT,1 -> Thomas-Fermi]
 units = 'mec';%'mec' or 'MeV/c' for the form factor
+print_opt = -1;%-1: no print, 2:save files (eps,png,fig)
+%
+Z_available = [1,2,3,4,5,6,7,8,10,13,14,17,18,24,26,28,29,32,36,54,74,79];%available Z values
+%
+if nargin == 1
+    %
+    Z = Z_in;
+    Z0 = round(Z/2);
+    %
+elseif nargin == 2
+    %
+    Z = Z_in;
+    Z0 = Z0_in;
+    %
+elseif nargin == 3
+    %
+    Z = Z_in;
+    Z0 = Z0_in;
+    maxnumberofexponentials = maxnumberofexponentials_in;
+    %
+elseif nargin == 4
+    %
+    Z = Z_in;
+    Z0 = Z0_in;
+    maxnumberofexponentials = maxnumberofexponentials_in;
+    atomic_models = atomic_models_in;
+    %
+elseif nargin == 5
+    %
+    Z = Z_in;
+    Z0 = Z0_in;
+    maxnumberofexponentials = maxnumberofexponentials_in;
+    atomic_models = atomic_models_in;
+    units = units_in;
+    %
+elseif nargin == 6
+    %
+    Z = Z_in;
+    Z0 = Z0_in;
+    maxnumberofexponentials = maxnumberofexponentials_in;
+    atomic_models = atomic_models_in;
+    units = units_in;
+    print_opt = print_opt_in;
+    %
+end
+%
+if length(Z) == 1 && isempty(find(Z==Z_available))
+    %
+    error(['ERROR : The input value Z = ',int2str(Z),' is not available for multi-Yukawa calculations.'])
+    %
+end
 %
 if strcmp(units,'mec')
     %
     unitfactor = 1;
     xlabff = 'q/(m_{e}c)';
     %
-elseif strcmp(units,'MeV/c')
+elseif strcmp(units,'MeV/c') %for comparison with CERN results
     %
     unitfactor = 1.627;
     xlabff = 'q/(MeV/c)';
     %
 end
 %
-[~,~,~,~,~,~,re,mc2,~,alpha] = pc_dke_yp;%Physics constants
+[~,~,~,~,~,~,re,mc2,~,alpha] = pc_dke_yp;%Physics constant
 %
 for iZ = 1:length(Z)
     %
@@ -465,6 +531,22 @@ for iZ = 1:length(Z)
             %
             print_jd(print_opt,['Salvat_models_for_ionization_state',[upper(dft.name(1)), lower(dft.name(2:end))]],'./Figs',get(gcf,'Number'))
             %
+            figure('Name','Salvat-DFT (Gaussian) R2');
+            %   
+            xlab4 = 'Screened ion charge (Z_{0,s})';
+            ylab4 = 'Coefficient of determination R^2';
+            tit4 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z = ',int2str(dft.Z),')'];
+            leg4 = {'Multi-Yukawa/DFT (1 exp.)','Multi-Yukawa/DFT (2 exp.)','Multi-Yukawa/DFT (3 exp.)'};
+            %
+            graph1D_jd(dft.Z0,dft.salvat.(models{imodel}){1}.R2,0,1,xlab4,ylab4,tit4,'','','','none',marker{1},linecolor{1},2,siz,gca);hold on
+            graph1D_jd(dft.Z0,dft.salvat.(models{imodel}){2}.R2,0,1,xlab4,ylab4,tit4,'','','','none',marker{2},linecolor{2},2,siz,gca);hold on
+            graph1D_jd(dft.Z0,dft.salvat.(models{imodel}){3}.R2,0,1,xlab4,ylab4,tit4,leg4,'','','none',marker{3},linecolor{3},2,siz,gca);hold on
+            %
+            axis([0,dft.Z-1,0,1])
+            drawnow
+            %
+            print_jd(print_opt,['Salvat_R2_for_ionization_state',[upper(dft.name(1)), lower(dft.name(2:end))]],'./Figs',get(gcf,'Number'))
+            %
             tit9 = [[upper(dft.name(1)), lower(dft.name(2:end))],' (Z_s = ',int2str(dft.Z),', Z_{s,0} = ',int2str(dft.Z0(i)),')'];
             figure('Name',tit9);
             ylab = 'Atomic form factor F_{Z_{0,s}}';
@@ -501,35 +583,35 @@ for iZ = 1:length(Z)
             if maxnumberofexponentials > 1
                 disp('-------------------------------------------------------------------------------------------------')
                 disp('-------------------------------------------------------------------------------------------------')
-                disp('   Z0s_{fit}  checksum      A1       A2     lambda1   lambda2  ')
+                disp('   Z0s_{fit}  checksum    R2      A1       A2     lambda1   lambda2  ')
                 disp('-------------------------------------------------------------------------------------------------')
                 disp('-------------------------------------------------------------------------------------------------')
                 %
                 imodel = 1;%Gaussian
-                disp([dft.Z-dft.salvat.(models{imodel}){2}.Nfit',dft.salvat.(models{imodel}){2}.checksum',dft.salvat.(models{imodel}){2}.A,dft.salvat.(models{imodel}){2}.alpha])
+                disp([dft.Z-dft.salvat.(models{imodel}){2}.Nfit',dft.salvat.(models{imodel}){2}.checksum',dft.salvat.(models{1}){2}.R2', dft.salvat.(models{imodel}){2}.A,dft.salvat.(models{imodel}){2}.alpha])
             end
             %
             if maxnumberofexponentials > 2
                 disp('-------------------------------------------------------------------------------------------------')
                 disp('-------------------------------------------------------------------------------------------------')
-                disp('   Z0s_{fit}  checksum      A1       A2        A3     lambda1   lambda2   lambda3')
+                disp('   Z0s_{fit}  checksum    R2      A1       A2        A3     lambda1   lambda2   lambda3')
                 disp('-------------------------------------------------------------------------------------------------')
                 disp('-------------------------------------------------------------------------------------------------')
                 %
                 imodel = 1;%Gaussian
-                disp([dft.Z-dft.salvat.(models{imodel}){3}.Nfit',dft.salvat.(models{1}){3}.checksum',dft.salvat.(models{1}){3}.A,dft.salvat.(models{1}){3}.alpha])
+                disp([dft.Z-dft.salvat.(models{imodel}){3}.Nfit',dft.salvat.(models{1}){3}.checksum',dft.salvat.(models{1}){3}.R2',dft.salvat.(models{1}){3}.A,dft.salvat.(models{1}){3}.alpha])
             end
             %
             if length(dft.salvat.(models{imodel})) > 3
                 %
                 disp('-------------------------------------------------------------------------------------------------')
                 disp('-------------------------------------------------------------------------------------------------')
-                disp('   Z0s_{fit}  checksum      A1       A2        A3     A4    lambda1   lambda2   lambda3   lambda4')
+                disp('   Z0s_{fit}  checksum    R2      A1       A2        A3     A4    lambda1   lambda2   lambda3   lambda4')
                 disp('-------------------------------------------------------------------------------------------------')
                 disp('-------------------------------------------------------------------------------------------------')
                 %
                 imodel = 1;%Gaussian
-                disp([dft.Z-dft.salvat.(models{imodel}){4}.Nfit',dft.salvat.(models{1}){4}.checksum',dft.salvat.(models{1}){4}.A,dft.salvat.(models{1}){4}.alpha])
+                disp([dft.Z-dft.salvat.(models{imodel}){4}.Nfit',dft.salvat.(models{1}){4}.checksum',dft.salvat.(models{1}){4}.R2', dft.salvat.(models{1}){4}.A,dft.salvat.(models{1}){4}.alpha])
                 %
             end
             %
