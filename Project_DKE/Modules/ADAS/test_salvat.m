@@ -26,7 +26,7 @@ function [] = test_salvat(Z_in,Z0_in,maxnumberofexponentials,atomic_models,units
 close all 
 clc
 %  
-% Default values
+% Default values test
 %
 Z = 74;%tungsten
 Z0 = 42;%tungsten mean ionization state for T = 3 keV 
