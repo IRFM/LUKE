@@ -1,7 +1,8 @@
 function [data_lh] = remote_mlhdata_tsbase(machine,port,shot,tmin,tmax,disp_mode,disp_save,disp_path)
 %
-%LUKE -  Function which load multiple LH signals from Tore Supra (or WEST) database for ALOHA power spectra calculations (output for upper and lower modules)
-%        Output are averaged over time
+% LUKE -  Function which load multiple LH signals from Tore Supra (or WEST) database for ALOHA power spectra calculations (output for upper and lower modules)
+%         Output are averaged over time
+% This function is embedded as a part of LUKE - written by Y. Peysson
 %   Input:
 %
 %       machine : tokamak name
@@ -132,8 +133,8 @@ elseif shot >= 50000 % start date 12/12/2016 (WEST), Ip clockwise, Bt clock-wise
     %
 end
 %
-type_signals_Q6A = {'gpinjc1','gphic1','gcrefc1','gphrc1'};
-type_signals_Q6B = {'gpinjc2','gphic2','gcrefc2','gphrc2'};
+type_signals_Q6A = {'gpforwc1','gphic1','gcrefc1','gphrc1','gpreflc1'};
+type_signals_Q6B = {'gpforwc2','gphic2','gcrefc2','gphrc2','gpreflc2'};
 %
 if strcmp(port,'Q6A')
     %
@@ -226,27 +227,27 @@ mask_lower = [9:16];%lower row
 %
 % Tore Supra ne (m-3) (for shot < 43540, only three probes per antenna and shot > 43540, 4 probes per antenna
 %
-% - GNLG1%1 : top left (C2) C3 (view from inside)
-% - GNLG1%2 : top right (C2) C3 (view from inside)
-% - GNLG1%3 : bottom left (C2) C3 (view from inside)
-% - GNLG1%4 : bottom right (C2) C3 (view from inside)
+% - GNLG1%1ï¿½: top left (C2) C3 (view from inside)
+% - GNLG1%2ï¿½: top right (C2) C3 (view from inside)
+% - GNLG1%3ï¿½: bottom left (C2) C3 (view from inside)
+% - GNLG1%4ï¿½: bottom right (C2) C3 (view from inside)
 %
-% - GNLG2%1 : top left (C3) C4 (view from inside)
-% - GNLG2%2 : top right (C3) C4 (view from inside)
-% - GNLG2%3 : bottom left (C3) C4 (view from inside)
-% - GNLG2%4 : bottom right (C3) C4 (view from inside)
+% - GNLG2%1ï¿½: top left (C3) C4 (view from inside)
+% - GNLG2%2ï¿½: top right (C3) C4 (view from inside)
+% - GNLG2%3ï¿½: bottom left (C3) C4 (view from inside)
+% - GNLG2%4ï¿½: bottom right (C3) C4 (view from inside)
 %
 % WEST (saturation current -> density : ne (m-3) = 1.29*10^18*GISLH%x/sqrt(Te)/A, where A(mm2) = probe surface = 19.6 and Te(eV) = 9eV by default
 %
-% - GISLH%1 : top left LH1 (view from inside)
-% - GISLH%2 : top right LH1 (view from inside)
-% - GISLH%3 : bottom left LH1 (view from inside)
-% - GISLH%4 : bottom right LH1 (view from inside)
+% - GISLH%1ï¿½: top left LH1 (view from inside)
+% - GISLH%2ï¿½: top right LH1 (view from inside)
+% - GISLH%3ï¿½: bottom left LH1 (view from inside)
+% - GISLH%4ï¿½: bottom right LH1 (view from inside)
 %
-% - GISLH%5 : top left LH2 (view from inside)
-% - GISLH%6 : top right LH2 (view from inside)
-% - GISLH%7 : bottom left LH2 (view from inside)
-% - GISLH%8 : bottom right LH2 (view from inside)
+% - GISLH%5ï¿½: top left LH2 (view from inside)
+% - GISLH%6ï¿½: top right LH2 (view from inside)
+% - GISLH%7ï¿½: bottom left LH2 (view from inside)
+% - GISLH%8ï¿½: bottom right LH2 (view from inside)
 %
 facprobe = 1.29e18/sqrt(9)/19.6;%ne (m-3) = 1.29*10^18*GISLH%x/sqrt(Te)/A, where A(mm2) = probe surface = 19.6 and Te(eV) = 9eV
 %
@@ -272,26 +273,38 @@ for ii = 1:length(ports)
         %
         % Signal loop
         %
-        kk = (ii-1)*4 + jj;
+        kks = (ii-1)*5 + jj; % 5 signals
+        kkp = (ii-1)*4 + jj; % 4 probes
         %
-        data_lh(ii).type_signal{jj}= type_signals{kk};
-        %
-        data_lh(ii).signal(jj).time = data(kk).yout2(data(kk).yout2(:,1) > 0,1);%keep only positive time
-        data_lh(ii).signal(jj).raw = data(kk).yout1(data(kk).yout2(:,1) > 0,:);
-        data_lh(ii).signal(jj).modules = data(kk).yout1(data(kk).yout2(:,1) > 0,data_lh(ii).mask.modules);
-        data_lh(ii).signal(jj).aloha = data(kk).yout1(data(kk).yout2(:,1) > 0,data_lh(ii).mask.aloha);
-        %
-        if ~isempty(probes(kk).yout2)
+        if jj==1 % Special case for injected power: gpinjcX is time shifted for shots < 60359 in WEST
+            %                                       gpforwcX-gpreflcX is used instead
+            data_lh(ii).type_signal{jj}    = [type_signals{kks},'-',type_signals{kks+4}];
+            data_tmp                       = data(kks).yout1-data(kks+4).yout1;
             %
-            data_lh(ii).probe(jj).time = probes(kk).yout2(probes(kk).yout2(:,1) > 0,1);%keep only positive time
+            data_lh(ii).signal(jj).time    = data(kks).yout2(data(kks).yout2(:,1) > 0,1);%keep only positive time
+            data_lh(ii).signal(jj).raw     = data_tmp(data(kks).yout2(:,1) > 0,:);
+            data_lh(ii).signal(jj).modules = data_tmp(data(kks).yout2(:,1) > 0,data_lh(ii).mask.modules);
+            data_lh(ii).signal(jj).aloha   = data_tmp(data(kks).yout2(:,1) > 0,data_lh(ii).mask.aloha);
+        else
+            data_lh(ii).type_signal{jj}    = type_signals{kks};
+            %
+            data_lh(ii).signal(jj).time    = data(kks).yout2(data(kks).yout2(:,1) > 0,1);%keep only positive time
+            data_lh(ii).signal(jj).raw     = data(kks).yout1(data(kks).yout2(:,1) > 0,:);
+            data_lh(ii).signal(jj).modules = data(kks).yout1(data(kks).yout2(:,1) > 0,data_lh(ii).mask.modules);
+            data_lh(ii).signal(jj).aloha   = data(kks).yout1(data(kks).yout2(:,1) > 0,data_lh(ii).mask.aloha);
+        end
+        %
+        if ~isempty(probes(kkp).yout2)
+            %
+            data_lh(ii).probe(jj).time = probes(kkp).yout2(probes(kkp).yout2(:,1) > 0,1);%keep only positive time
             %
             if strcmp(machine_name,'Tore Supra')
                 %
-                data_lh(ii).probe(jj).ne = probes(kk).yout1(probes(kk).yout2(:,1) > 0,1);
+                data_lh(ii).probe(jj).ne = probes(kkp).yout1(probes(kkp).yout2(:,1) > 0,1);
                 %
             else
                 %
-                data_lh(ii).probe(jj).raw = probes(kk).yout1(probes(kk).yout2(:,1) > 0,1);
+                data_lh(ii).probe(jj).raw = probes(kkp).yout1(probes(kkp).yout2(:,1) > 0,1);
                 data_lh(ii).probe(jj).ne = data_lh(ii).probe(jj).raw*facprobe;%saturation current to density
                 %
             end
@@ -302,11 +315,11 @@ for ii = 1:length(ports)
         %
         mean_signal_aloha = mean(data_lh(ii).signal(jj).aloha(data_lh(ii).signal(jj).time > data_lh(ii).mean.tmin & data_lh(ii).signal(jj).time < data_lh(ii).mean.tmax,:),1);        
         %
-        if ~isempty(probes(kk).yout2)
+        if ~isempty(probes(kkp).yout2)
             mean_probe = mean(data_lh(ii).probe(jj).ne(data_lh(ii).probe(jj).time > data_lh(ii).mean.tmin & data_lh(ii).probe(jj).time < data_lh(ii).mean.tmax));
         end
         %
-        if strfind(type_signals{kk},'gpinjc')
+        if strfind(type_signals{kks},'gpinjc')
             %
             data_lh(ii).mean.power_mean_aloha_upper = mean_signal_aloha(data_lh(ii).mask.upper)';%kW
             data_lh(ii).mean.power_mean_aloha_lower = mean_signal_aloha(data_lh(ii).mask.lower)';%kW
@@ -316,21 +329,31 @@ for ii = 1:length(ports)
             %
         end
         %
-        if strfind(type_signals{kk},'gphic')
+        if strfind(type_signals{kks},'gpforwc')
+            %
+            data_lh(ii).mean.power_mean_aloha_upper = mean_signal_aloha(data_lh(ii).mask.upper)';%kW
+            data_lh(ii).mean.power_mean_aloha_lower = mean_signal_aloha(data_lh(ii).mask.lower)';%kW
+            %
+            data_lh(ii).mean.amplitude_mean_aloha_upper = sqrt(data_lh(ii).mean.power_mean_aloha_upper*1e3);%1e3 : kW -> W
+            data_lh(ii).mean.amplitude_mean_aloha_lower = sqrt(data_lh(ii).mean.power_mean_aloha_lower*1e3);%1e3 : kW -> W
+            %
+        end
+        %
+        if strfind(type_signals{kks},'gphic')
             %
             data_lh(ii).mean.phase_mean_aloha_upper = pi/180*mean_signal_aloha(data_lh(ii).mask.upper)';%deg -> rad
             data_lh(ii).mean.phase_mean_aloha_lower = pi/180*mean_signal_aloha(data_lh(ii).mask.lower)';%deg -> rad 
             %
         end
         %
-        if strfind(type_signals{kk},'gcrefc')
+        if strfind(type_signals{kks},'gcrefc')
             %
             data_lh(ii).mean.rc_mean_aloha_upper = mean_signal_aloha(data_lh(ii).mask.upper)';
             data_lh(ii).mean.rc_mean_aloha_lower = mean_signal_aloha(data_lh(ii).mask.lower)'; 
             %
         end
         %
-        if strfind(type_signals{kk},'gphrc')
+        if strfind(type_signals{kks},'gphrc')
             %
             data_lh(ii).mean.phase_rc_mean_aloha_upper = mean_signal_aloha(data_lh(ii).mask.upper)';
             data_lh(ii).mean.phase_rc_mean_aloha_lower = mean_signal_aloha(data_lh(ii).mask.lower)'; 
