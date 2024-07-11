@@ -2,32 +2,121 @@ function sluke_git(sparams,ii)
 %
 [dkepath] = sluke_dkepath(sparams,ii);
 %
+[active_local_branch,local_branches,username] = sluke_git_local_branches(sparams,ii);%get local git branches and the active one
+%
 [remote_profile_num,remote_profile_char] = sluke_remote_profile(sparams,ii,0,1);
+%
+if isfield(sparams,'simul') && isfield(sparams.simul,'git') && isfield(sparams.simul.git,'branch')  && isfield(sparams.simul.git.branch,'luke') && ~isempty(sparams.simul.git.branch.luke{ii})
+    %
+    lukegitbranch = sparams.simul.git.branch.luke{ii};
+    %
+else
+    %
+    if isfield(dkepath,'')
+        %
+        lukegitbranch = dkepath.luke_gitbranch;
+        %
+    else
+        %
+        lukegitbranch = '';
+        %
+    end
+end
 %
 if remote_profile_num > 0
     %
     remote = dkepath.remote(remote_profile_num);
     %
     jj = strfind(remote.env.luke_root,'/');
-    remotelukebranch = remote.env.luke_root(jj(end-1)+1:jj(end)-1);
-    remotelukerootfolder = remote.env.luke_root(1:jj(end-1));
+    remotelukeproject = remote.env.luke_root(jj(end-1)+1:jj(end)-1);
+    remotelukerootproject = remote.env.luke_root(1:jj(end-1));
+    %
+    remote.gitbranch = lukegitbranch;
     %
 else
     %
-    locallukebranch = dkepath.luke_branch;
-    locallukerootfolder = strrep(dkepath.luke_root,[locallukebranch,'/'],'');
+    locallukeproject = dkepath.luke_project;
+    locallukerootproject = strrep(dkepath.luke_root,[locallukeproject,'/'],'');
+    %
+end
+%
+% enforce git branch if specified in sluke simulation parameters on the local computer (will be enforced on the remote using the remote structure)
+%
+if isempty(lukegitbranch)
+    %                        
+    cprintf('*[1,0.5,0]',['---> WARNING : No local git branch specified in sparams for ''',dkepath.luke_project,'''. The default active local branch ''',active_local_branch,''' is used on the local computer and will be enforced on the remote one.']);disp(' ')
+    %
+else
+    %
+    flag_active_branch = 0;
+    %
+    for ib = 1:length(local_branches)
+        %
+        if strcmp(lukegitbranch,local_branches{ib}) && flag_active_branch == 0
+            %
+            [local_status, local_cmdout] = system(['ssh ',username,'@localhost "cd ',dkepath.luke_root,';git checkout ',lukegitbranch,'"']);
+            %
+            if local_status == 0
+                %
+                cprintf('*green',['---> The git branch ''',local_branches{ib},''' specified in sluke simulation parameters for ''',dkepath.luke_project,''' is made active on the local computer.']);disp(' ')
+                flag_active_branch = 1;
+                %
+                disp('-------------------------')
+                disp(local_cmdout)
+                %
+            elseif local_status == 1
+                %
+                cprintf('*red',['---> The git branch ''',local_branches{ib},''' specified in sluke simulation parameters for ''',dkepath.luke_project,''' is not active on the local computer.']);disp(' ')
+                disp('-------------------------')
+                disp(local_cmdout)
+                return
+                %
+            end
+            %
+            if remote_profile_num > 0
+                %
+                [remote_status,remote_cmdout] = matremotecmd(remote,'',['cd ',remotelukerootproject,remotelukeproject,';git checkout ',remote.gitbranch]);
+                %
+                if remote_status == 0
+                    %
+                    cprintf('*green',['---> The git branch ''',local_branches{ib},''' specified in sluke simulation parameters for ''',dkepath.luke_project,''' is made active on the remote computer (',remote_profile_char,').']);disp(' ')
+                    %
+                    disp('-------------------------')
+                    disp(remote_cmdout)
+                    %
+                elseif remote_status == 1
+                    %
+                    cprintf('*red',['---> The git branch ''',local_branches{ib},''' specified in sluke simulation parameters for ''',dkepath.luke_project,''' is not active on the remote computer (',remote_profile_char,').']);disp(' ')
+                    disp('-------------------------')
+                    disp(remote_cmdout)
+                    return
+                    %
+                end
+                %
+            end
+            %
+        end
+        %
+    end
+    %
+    if flag_active_branch == 0
+        %
+        cprintf('*red',['---> WARNING : The requested git branch ''',lukegitbranch,''' specified in sluke simulation parameters for ''',dkepath.luke_project,''' does not exist locally. Check available git branches.']);disp(' ')
+        return;
+        %
+    end
     %
 end
 %
 % git pull of LUKE and related toolboxes on request
 %
-if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'git') && isfield(sparams.simul.remote.git,'pull')  && ~isempty(sparams.simul.remote.git.pull{ii}) && sparams.simul.remote.git.pull{ii} == 1
+if isfield(sparams,'simul') && isfield(sparams.simul,'git') && isfield(sparams.simul.git,'pull')  && ~isempty(sparams.simul.git.pull{ii}) && sparams.simul.git.pull{ii} == 1
     %
-    if isfield(sparams.simul.remote.git,'projects')
+    if isfield(sparams.simul.git,'projects')
         %
-        if isfield(sparams.simul.remote.git,'display') && ~isempty(sparams.simul.remote.git.display{ii})
+        if isfield(sparams.simul.git,'display') && ~isempty(sparams.simul.git.display{ii})
             %
-            displaymode = sparams.simul.remote.git.display{ii};
+            displaymode = sparams.simul.git.display{ii};
             %
         else
             %
@@ -37,19 +126,19 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
         %
         kk = 1;
         %
-        for jj = 1:length(sparams.simul.remote.git.projects{ii})
+        for jj = 1:length(sparams.simul.git.projects{ii})
             %
-            if strcmp(sparams.simul.remote.git.projects{ii}{jj},'MatRemote')
+            if strcmp(sparams.simul.git.projects{ii}{jj},'MatRemote')
                 %
                 if remote_profile_num > 0
                     %
-                    [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatRemote;git pull']);
+                    [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootproject,'MatRemote;git pull']);
                     %
                 else
                     %
                     initdir = pwd;
                     %
-                    [err(kk),txt{kk}] = unix(['cd ',locallukerootfolder,'MatRemote;git pull']);
+                    [err(kk),txt{kk}] = unix(['cd ',locallukerootproject,'MatRemote;git pull']);
                     %
                     cd(initdir);
                     %
@@ -89,17 +178,17 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                 kk = kk + 1;
             end
             %
-            if strcmp(sparams.simul.remote.git.projects{ii}{jj},'MatTools')
+            if strcmp(sparams.simul.git.projects{ii}{jj},'MatTools')
                 %
                 if remote_profile_num > 0
                     %
-                    [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatTools;git pull']);
+                    [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootproject,'MatTools;git pull']);
                     %
                 else
                     %
                     initdir = pwd;
                     %
-                    [err(kk),txt{kk}] = unix(['cd ',locallukerootfolder,'MatTools;git pull']);
+                    [err(kk),txt{kk}] = unix(['cd ',locallukerootproject,'MatTools;git pull']);
                     %
                     cd(initdir);
                     %
@@ -139,17 +228,17 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                 kk = kk + 1;
             end
             %
-            if strcmp(sparams.simul.remote.git.projects{ii}{jj},'MatHelp')
+            if strcmp(sparams.simul.git.projects{ii}{jj},'MatHelp')
                 %
                 if remote_profile_num > 0
                     %
-                    [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatHelp;git pull']);
+                    [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootproject,'MatHelp;git pull']);
                     %
                 else
                     %
                     initdir = pwd;
                     %
-                    [err(kk),txt{kk}] = unix(['cd ',locallukerootfolder,'MatHelp;git pull']);
+                    [err(kk),txt{kk}] = unix(['cd ',locallukerootproject,'MatHelp;git pull']);
                     %
                     cd(initdir);
                     %
@@ -190,17 +279,17 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
             end
             %
             %
-            if strcmp(sparams.simul.remote.git.projects{ii}{jj},'LUKE')
+            if strfind(sparams.simul.git.projects{ii}{jj},'LUKE')
                 %
                 if remote_profile_num > 0
                     %
-                    [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootfolder,remotelukebranch,';git pull']);
+                    [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootproject,remotelukeproject,';git pull']); 
                     %
                 else
                     %
                     initdir = pwd;
                     %
-                    [err(kk),txt{kk}] = unix(['cd ',locallukerootfolder,locallukebranch,';git pull']);
+                    [err(kk),txt{kk}] = unix(['cd ',locallukerootproject,locallukeproject,';git pull']);
                     %
                     cd(initdir);
                     %
@@ -210,11 +299,11 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                     %
                     if remote_profile_num > 0
                         %
-                        cprintf('*red',['---> WARNING : Last ''git pull'' of the remote project ',remotelukebranch,' (',remote_profile_char,') failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')
+                        cprintf('*red',['---> WARNING : Last ''git pull'' of the remote project ',remotelukeproject,' (',remote_profile_char,') failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')
                         %
                     else
                         %
-                        cprintf('*red',['---> WARNING : Last ''git pull'' of the local project ',locallukebranch,' failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')                        
+                        cprintf('*red',['---> WARNING : Last ''git pull'' of the local project ',locallukeproject,' failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')                        
                         %
                     end
                     %
@@ -222,11 +311,11 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
                     %
                     if remote_profile_num > 0
                         %
-                        cprintf('*green',['---> Last ''git pull'' of the remote project ',remotelukebranch,' (',remote_profile_char,') has been successfully performed.']);disp(' ')
+                        cprintf('*green',['---> Last ''git pull'' of the remote project ',remotelukeproject,' (',remote_profile_char,') has been successfully performed.']);disp(' ')
                         %
                     else
                         %
-                        cprintf('*green',['---> Last ''git pull'' of the local project ',locallukebranch,' has been successfully performed.']);disp(' ')
+                        cprintf('*green',['---> Last ''git pull'' of the local project ',locallukeproject,' has been successfully performed.']);disp(' ')
                         %
                     end
                     %
@@ -244,9 +333,13 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'remote') && isfield(sparam
         %
     else
         %
-        cprintf([1,0.5,0],['---> No project defined in sparams.simul.remote.git. Git pull is not performed']);disp(' ')
+        cprintf([1,0.5,0],['---> No project defined in sparams.simul.git. Git pull is not performed']);disp(' ')
         %
     end
+    %
+else
+    %
+
     %
 end
 %
@@ -260,22 +353,22 @@ if remote_profile_num > 0
         %
         if isempty(txt) || err == 0
             %
-            cprintf('*green',['---> Last git hash of the remote project ',remotelukebranch,' (',remote_profile_char,') has been successfully generated.']);disp(' ')
+            cprintf('*green',['---> Last git hash of the remote project ',remotelukeproject,' (',remote_profile_char,') has been successfully generated.']);disp(' ')
             %
         else
             %
-            cprintf([1,0.5,0],['---> Last git hash of the remote project ',remotelukebranch,' (',remote_profile_char,') failed : ',txt]);disp(' ')
+            cprintf([1,0.5,0],['---> Last git hash of the remote project ',remotelukeproject,' (',remote_profile_char,') failed : ',txt]);disp(' ')
             %
         end
     else
         %
-        cprintf([1,0.5,0],['---> Last git hash of the remote project ',remotelukebranch,' (',remote_profile_char,') cannot be generated because luke_root is not defined for the remote machine ',remote.host,'.']);disp(' ')
+        cprintf([1,0.5,0],['---> Last git hash of the remote project ',remotelukeproject,' (',remote_profile_char,') cannot be generated because luke_root is not defined for the remote machine ',remote.host,'.']);disp(' ')
         %
     end
     %
-    [err1,txt1] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatRemote/;git rev-parse --verify HEAD > lastgithash.txt']);
-    [err2,txt2] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatTools/;git rev-parse --verify HEAD > lastgithash.txt']);
-    [err3,txt3] = matremotecmd(remote,'',['cd ',remotelukerootfolder,'MatHelp/;git rev-parse --verify HEAD > lastgithash.txt']);
+    [err1,txt1] = matremotecmd(remote,'',['cd ',remotelukerootproject,'MatRemote/;git rev-parse --verify HEAD > lastgithash.txt']);
+    [err2,txt2] = matremotecmd(remote,'',['cd ',remotelukerootproject,'MatTools/;git rev-parse --verify HEAD > lastgithash.txt']);
+    [err3,txt3] = matremotecmd(remote,'',['cd ',remotelukerootproject,'MatHelp/;git rev-parse --verify HEAD > lastgithash.txt']);
     %
     if ~isempty(txt1) && err1 > 0
         %
@@ -313,22 +406,22 @@ else
         %
         if err == 0
             %
-            cprintf('*green',['---> Last git hash of the local project ',locallukebranch,' has been successfully generated.']);disp(' ')
+            cprintf('*green',['---> Last git hash of the local project ',locallukeproject,' has been successfully generated.']);disp(' ')
             %
         else
             %
-            cprintf([1,0.5,0],['---> Last git hash of the local project ',locallukebranch,' failed : ',txt]);disp(' ')
+            cprintf([1,0.5,0],['---> Last git hash of the local project ',locallukeproject,' failed : ',txt]);disp(' ')
             %
         end
         %
     else
         %
-        cprintf([1,0.5,0],['---> Last git hash of the local project ',locallukebranch,' cannot be generated because luke_root is not defined for the local machine.']);disp(' ')
+        cprintf([1,0.5,0],['---> Last git hash of the local project ',locallukeproject,' cannot be generated because luke_root is not defined for the local machine.']);disp(' ')
         %
     end
     %
     initdir = pwd;
-    cd(locallukerootfolder)
+    cd(locallukerootproject)
     %
     [err1,txt1] = unix('cd MatRemote/;git rev-parse --verify HEAD > lastgithash.txt;cd ..');
     [err2,txt2] = unix('cd MatTools/;git rev-parse --verify HEAD > lastgithash.txt;cd ..');
