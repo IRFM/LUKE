@@ -36,23 +36,27 @@ for irem = 1:length(dkepath.remote),
             %
             nrem = nrem+1;
             remote(nrem) = feval(remotestr,dkepath.remote(irem).schedulername,dkepath.remote(irem).profilename); 
+            %
             remote(nrem).env.luke_root = dkepath.remote(irem).luke_root;
+            %
             if isfield(dkepath.remote(nrem),'link_mode'),
                 remote(nrem).link_mode = dkepath.remote(irem).link_mode;
             end
+            %
             if isfield(dkepath.remote(nrem),'cvsupdate'),
                 remote(nrem).cvsupdate = dkepath.remote(irem).cvsupdate;
             end
+            %
             if isfield(dkepath.remote(nrem),'cvsrights'),
                 remote(nrem).cvsrights = dkepath.remote(irem).cvsrights;
             end
             if isfield(dkepath.remote(nrem),'gitupdate'),
                 remote(nrem).gitupdate = dkepath.remote(irem).gitupdate;
             end
+            %
             if isfield(dkepath.remote(nrem),'gitmode'),
                 remote(nrem).gitmode = dkepath.remote(irem).gitmode;
             end
-
             %
         else
             continue
