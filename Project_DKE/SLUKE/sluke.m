@@ -180,7 +180,7 @@ for ii = 1:length(sparams.machine)
             %
             if kk(sluke_remote_profile(sparams,ii)+1) < kkmax(sluke_remote_profile(sparams,ii)+1)
                 %
-                sluke_git(sparams,ii);%generate the last git hash of luke and related toolboxes in a file and perform on request a git pull prior to calculations
+                sluke_git(sparams,ii);%generate the last git hash of luke and related toolboxes in a file and perform on request a git pull prior to calculations related to the selected branch (or default if not defined)
                 %
                 lukestructs.simul.id = simul_id;
                 %
