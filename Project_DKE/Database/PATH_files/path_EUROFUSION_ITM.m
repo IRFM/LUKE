@@ -28,7 +28,8 @@ luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
 dkepath.g2yvesp(1).luke_root = luke_root;
 %
 sep = strfind(luke_root,'/');
-dkepath.g2yvesp(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
+dkepath.g2yvesp(1).luke_project = luke_root(sep(end-1)+1:sep(end)-1);
+dkepath.g2yvesp(1).luke_gitbranch = '';%default local luke git branch. Empty no specific git branch is enforced. 
 %
 %dkepath.g2yvesp(1).itm.local_root = '/afs/eufus.eu/g2itmdev/user/g2yvesp/public/';
 dkepath.g2yvesp(1).local_root = '/marconi/eufus_gw/home/g2yvesp/public/';

@@ -18,12 +18,14 @@ path_root = fileparts(which(mfilename));
 luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
 %
 sep = strfind(luke_root,'/');
-luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
+luke_project = luke_root(sep(end-1)+1:sep(end)-1);
+luke_gitbranch = '';%default local luke git branch. Empty no specific git branch is enforced. 
 %
 %------------------------------------ Profile number 1, Joan Decker ------------------------------------
 %
 dkepath.decker(1).luke_root = luke_root;
-dkepath.decker(1).luke_branch = luke_branch;
+dkepath.decker(1).luke_project = luke_project;
+dkepath.decker(1).luke_gitbranch  = luke_gitbranch ;
 dkepath.decker(1).local_root = '/opt/';
 dkepath.decker(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -55,14 +57,14 @@ dkepath.decker(1).remote = remote(remote_selection);
 %------------------------------------ Profile number 2, Yves Peysson ------------------------------------
 %
 dkepath.peysson(1).luke_root = luke_root;
-dkepath.peysson(1).luke_branch = luke_branch;
+dkepath.peysson(1).luke_project = luke_project;
+dkepath.peysson(1).luke_gitbranch  = luke_gitbranch ;
 dkepath.peysson(1).local_root = '/opt/';
 dkepath.peysson(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
 dkepath.peysson(1).mex901 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
 dkepath.peysson(1).mex905 = [dkepath.peysson(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB905']; 
 %
-dkepath.peysson(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.8.0 -lrefblas'];%NaN;
 dkepath.peysson(1).compiler_opt.fopts = '';
 dkepath.peysson(1).compiler_opt.copts = '';
 %
@@ -105,98 +107,3 @@ dkepath.peysson(1).remote(2) = remote(2);
 dkepath.peysson(1).remote(3) = remote(3);
 dkepath.peysson(1).remote(4) = remote(4);
 %
-%------------------------------------ Profile number 3, Krzysztof Krol ------------------------------------
-%
-dkepath.kkrol(1).luke_root = luke_root;
-dkepath.kkrol(1).luke_branch = luke_branch;
-dkepath.kkrol(1).local_root = '/opt/';
-dkepath.kkrol(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-%
-dkepath.kkrol(1).mex901 = [dkepath.kkrol(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
-dkepath.kkrol(1).mex905 = [dkepath.kkrol(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB905']; 
-%
-dkepath.kkrol(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.8.0 -lrefblas'];%NaN;
-dkepath.kkrol(1).compiler_opt.fopts = '';
-dkepath.kkrol(1).compiler_opt.copts = '';
-%
-dkepath.kkrol(1).MUMPS.mex901 = [dkepath.decker(1).local_root,'MUMPS_5.1.2/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.kkrol(1).MUMPS.mex905 = [dkepath.decker(1).local_root,'MUMPS_5.1.2/MATLAB905'];%Where MUMPS matrix solver is stored (MEX function)
-%
-%--------------------------- Remote computing -----------------------------
-%
-% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
-%
-%
-remote(1).remoteid = 'SPCSRV18';
-remote(1).schedulername = 'direct';
-remote(1).profilename = 'kkrol';
-remote(1).luke_root = dkepath.kkrol(1).luke_root;% local cluster
-remote(1).link_mode = [];
-%
-% -------------- profiles selection, Krzysztof Krol ------------
-%
-remote_selection = [1];
-dkepath.kkrol(1).remote = remote(remote_selection);
-%
-%------------------------------------ Profile number 3, Mario Gervais ------------------------------------
-%
-dkepath.gervais(1).luke_root = luke_root;
-dkepath.gervais(1).luke_branch = luke_branch;
-dkepath.gervais(1).local_root = '/opt/';
-dkepath.gervais(1).temppathroot = '/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
-%
-dkepath.gervais(1).mex901 = [dkepath.gervais(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB901']; 
-dkepath.gervais(1).mex905 = [dkepath.gervais(1).luke_root,'Project_DKE/MEX/Bin/spcsrv18/MATLAB905']; 
-%
-dkepath.gervais(1).compiler_opt.helmex = ['-L',dkepath.decker(1).local_root,'lapack-3.8.0 -lrefblas'];%NaN;
-dkepath.gervais(1).compiler_opt.fopts = '';
-dkepath.gervais(1).compiler_opt.copts = '';
-%
-dkepath.gervais(1).MUMPS.mex901 = [dkepath.decker(1).local_root,'MUMPS_5.1.2/MATLAB901'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.gervais(1).MUMPS.mex905 = [dkepath.decker(1).local_root,'MUMPS_5.1.2/MATLAB905'];%Where MUMPS matrix solver is stored (MEX function)
-%
-%--------------------------- Remote computing -----------------------------
-%
-% for profilename, use 'local' to select profile from user name on client machine (or default if unknown)
-%
-% -------------- profiles selection, Mario Gervais ------------
-%
-remote(1).remoteid = 'SPCSRV18';
-remote(1).schedulername = 'direct';
-remote(1).profilename = 'gervais';
-remote(1).luke_root = dkepath.gervais(1).luke_root;% local cluster
-remote(1).link_mode = [];
-%
-remote(2).remoteid = 'SPCSRV18';
-remote(2).schedulername = 'condor';
-remote(2).profilename = 'gervais';
-remote(2).luke_root = dkepath.gervais(1).luke_root;% local cluster
-remote(2).link_mode = [];
-%
-dkepath.gervais(1).remote(1) = remote(1);
-dkepath.gervais(1).remote(2) = remote(2);
-%
-% -------------- profiles selection, Krzysiek Krol  ------------
-%
-remote(1).remoteid = 'SPCSRV18';
-remote(1).schedulername = 'direct';
-remote(1).profilename = 'kkrol';
-remote(1).luke_root = dkepath.kkrol(1).luke_root;% local cluster
-remote(1).link_mode = [];
-%
-remote(2).remoteid = 'SPCSRV18';
-remote(2).schedulername = 'condor';
-remote(2).profilename = 'kkrol';
-remote(2).luke_root = dkepath.kkrol(1).luke_root;% local cluster
-remote(2).link_mode = [];
-%
-dkepath.kkrol(1).remote(1) = remote(1);
-dkepath.kkrol(1).remote(2) = remote(2);
-%
-
-
-
-
-
-
-

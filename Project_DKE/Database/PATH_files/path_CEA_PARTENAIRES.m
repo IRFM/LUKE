@@ -9,7 +9,7 @@ function dkepath = path_CEA_PARTENAIRES
 %   Warning: none
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
-%
+%luke_folder
 dkepath.machine =  {'andromede1','andromede2','altair','persee','cephee','rana'};
 dkepath.hostname = {'andromede1','andromede2','altair','persee','cephee','rana'};% should match the output of hostname_jd on the machine
 %
@@ -26,7 +26,8 @@ luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
 dkepath.YP105119(1).luke_root = luke_root;
 %
 sep = strfind(luke_root,'/');
-dkepath.YP105119(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
+dkepath.YP105119(1).luke_project = luke_root(sep(end-1)+1:sep(end)-1);
+dkepath.YP105119(1).luke_gitbranch = '';%default local luke git branch. Empty no specific git branch is enforced. 
 %
 dkepath.YP105119(1).temppathroot = '/data/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %

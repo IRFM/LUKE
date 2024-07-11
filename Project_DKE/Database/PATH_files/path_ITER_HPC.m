@@ -26,7 +26,8 @@ luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
 dkepath.peyssoy(1).luke_root = luke_root;
 %
 sep = strfind(luke_root,'/');
-dkepath.peyssoy(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
+dkepath.peyssoy(1).luke_project = luke_root(sep(end-1)+1:sep(end)-1);
+dkepath.peyssoy(1).luke_gitbranch = '';%default local luke git branch. Empty no specific git branch is enforced. 
 %
 dkepath.peyssoy(1).temppathroot = '/home/ITER/peyssoy/tmp/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %

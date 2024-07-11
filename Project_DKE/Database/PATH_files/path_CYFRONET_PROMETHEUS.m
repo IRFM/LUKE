@@ -27,7 +27,8 @@ luke_root = path_root(1:strfind(path_root,'/Project_DKE/Database/PATH_files'));
 dkepath.plgypeysson(1).luke_root = luke_root;
 %
 sep = strfind(luke_root,'/');
-dkepath.plgypeysson(1).luke_branch = luke_root(sep(end-1)+1:sep(end)-1);
+dkepath.plgypeysson(1).luke_project = luke_root(sep(end-1)+1:sep(end)-1);
+dkepath.plgypeysson(1).luke_gitbranch = '';%default local luke git branch. Empty no specific git branch is enforced. 
 %
 dkepath.plgypeysson(1).temppathroot = '/net/scratch/people/plgypeysson/';%Absolute root directory path adress where temporary matrices are stored (empty: local directory)
 %
@@ -91,13 +92,9 @@ dkepath.plgzgoryk(1).compiler_opt.copts.cpp.mex904 = '-f /net/people/plgzgoryk/l
 dkepath.plgzgoryk(1).compiler_opt.copts.cpp.mex905 = '-f /net/people/plgzgoryk/luke/LUKE_LHCD/Project_DKE/MEX/Bin/cyfronet/MATLAB905/g++_glnxa64.xml';
 %
 dkepath.plgzgoryk(1).compiler_opt.fopts.mex904 = 'FC=''gfortran''';%
-dkepath.plgzgoryk(1).compiler_opt.separatrice.mex904 = [' -largeArrayDims -lgfortran -L',dkepath.plgzgoryk(1).local_root,'lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.plgzgoryk(1).compiler_opt.helmex.mex904 = [' -compatibleArrayDims -lgfortran -L',dkepath.plgzgoryk(1).local_root,'lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.plgzgoryk(1).compiler_opt.fopts.mex904 = ' ';%-largeArrayDims';
 %
 dkepath.plgzgoryk(1).compiler_opt.fopts.mex905 = 'FC=''gfortran''';%
-dkepath.plgzgoryk(1).compiler_opt.separatrice.mex905 = [' -largeArrayDims -lgfortran -L',dkepath.plgzgoryk(1).local_root,'lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.plgzgoryk(1).compiler_opt.helmex.mex905 = [' -compatibleArrayDims -lgfortran -L',dkepath.plgzgoryk(1).local_root,'lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.plgzgoryk(1).compiler_opt.fopts.mex905 = ' ';%-largeArrayDims';
 %
 dkepath.plgzgoryk(1).MUMPS.mex904 = [dkepath.plgzgoryk(1).local_root,'MUMPS_5.1.2/MATLAB904'];%Where MUMPS matrix solver is stored (MEX function)
@@ -143,13 +140,9 @@ dkepath.plgjwalkowiak(1).compiler_opt.copts.cpp.mex904 = '-f /net/people/plgjwal
 dkepath.plgjwalkowiak(1).compiler_opt.copts.cpp.mex905 = '-f /net/people/plgjwalkowiak/luke/LUKE_LHCD/Project_DKE/MEX/Bin/cyfronet/MATLAB905/g++_glnxa64.xml';
 %
 dkepath.plgjwalkowiak(1).compiler_opt.fopts.mex904 = 'FC=''gfortran''';%
-dkepath.plgjwalkowiak(1).compiler_opt.separatrice.mex904 = [' -largeArrayDims -lgfortran -L',dkepath.plgjwalkowiak(1).local_root,'lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.plgjwalkowiak(1).compiler_opt.helmex.mex904 = [' -compatibleArrayDims -lgfortran -L',dkepath.plgjwalkowiak(1).local_root,'lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.plgjwalkowiak(1).compiler_opt.fopts.mex904 = ' ';%-largeArrayDims';
 %
 dkepath.plgjwalkowiak(1).compiler_opt.fopts.mex905 = 'FC=''gfortran''';%
-dkepath.plgjwalkowiak(1).compiler_opt.separatrice.mex905 = [' -largeArrayDims -lgfortran -L',dkepath.plgjwalkowiak(1).local_root,'lapack-3.8.0 -llapack -lrefblas '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
-dkepath.plgjwalkowiak(1).compiler_opt.helmex.mex905 = [' -compatibleArrayDims -lgfortran -L',dkepath.plgjwalkowiak(1).local_root,'lapack-3.8.0 -llapack -lrefblas  '];% -largeArrayDims does not work for helmex77.F but OK for separatrice.F
 dkepath.plgjwalkowiak(1).compiler_opt.fopts.mex905 = ' ';%-largeArrayDims';
 %
 dkepath.plgjwalkowiak(1).MUMPS.mex904 = [dkepath.plgjwalkowiak(1).local_root,'MUMPS_5.1.2/MATLAB904'];%Where MUMPS matrix solver is stored (MEX function)
