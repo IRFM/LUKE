@@ -20,7 +20,9 @@ for i = 1:length(filelist),
   if build_mode,
      eval(file);
   else
- 
+     if isempty(strfind(file, '_mex'))
+        eval(file);
+     end
   end  
   load temp.mat
 end
