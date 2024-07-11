@@ -292,7 +292,6 @@ end
 %
 sourcepath.DKE = [luke_root,'Project_DKE/MEX/Source/'];
 sourcepath.C3PO = [luke_root,'Project_DKE/Modules/C3PO/MEX/Source/'];
-sourcepath.helmex = [luke_root,'Project_DKE/Modules/Helena/MEX/Source/'];
 %
 if isfield(dkepath,['mex',matver]),
     mexpath = dkepath.(['mex',matver]);
