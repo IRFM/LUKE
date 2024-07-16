@@ -1080,13 +1080,19 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             %
             % SIMUL
             %
-            %
             [~, hostname] = system('hostname');
             %
             data_proc.simul = dke_out.simul;
             data_proc.simul.matver = version;
             data_proc.simul.hostname = deblank(hostname);
             data_proc.simul.residue_rf = residue_rf;
+            %
+            dkepath = load_structures_yp('dkepath','','');
+            %
+            data_proc.simul.LUKEproject = dkepath.luke_project;
+            %
+            [~,active_branch] = gitcmd;
+            data_proc.simul.gitbranch = active_branch;
             %
             % SCALAR
             %
@@ -1376,6 +1382,8 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
         txt = ['Simulation date: ',timeid_jd(data_proc.simul.timeid)];data_proc.summary = [data_proc.summary,txt,char(13)];
         txt = ['User id: ',data_proc.simul.userid];data_proc.summary = [data_proc.summary,txt,char(13)];
         txt = ['LUKE Version: ',data_proc.simul.LUKEversion];data_proc.summary = [data_proc.summary,txt,char(13)];
+        txt = ['LUKE project: ',data_proc.simul.LUKEproject];data_proc.summary = [data_proc.summary,txt,char(13)];
+        txt = ['Active git branch: ',data_proc.simul.gitbranch];data_proc.summary = [data_proc.summary,txt,char(13)];
         if all(isfield(data_proc.simul,{'matver','hostname'}))
             txt = ['MATLAB Version: ',data_proc.simul.matver];data_proc.summary = [data_proc.summary,txt,char(13)];
             txt = ['MACHINE: ',data_proc.simul.hostname];data_proc.summary = [data_proc.summary,txt,char(13)];
@@ -1387,6 +1395,8 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
         data_proc.simul.timeid = '';
         data_proc.simul.userid = '';
         data_proc.simul.LUKEversion = '';
+        data_proc.simul.LUKEproject = '';
+        data_proc.simul.gitbranch = '';
         data_proc.simul.matver = '';
         data_proc.simul.hostname = '';
         data_proc.simul.residue_rf = '';
@@ -1676,6 +1686,8 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             txt = ['Simulation date: ',timeid_jd(data_proc.simul.timeid)];disp(txt);
             txt = ['User id: ',data_proc.simul.userid];disp(txt);
             txt = ['LUKE Version: ',data_proc.simul.LUKEversion];disp(txt);
+            txt = ['LUKE project: ',data_proc.simul.LUKEproject];disp(txt);
+            txt = ['Active git branch: ',data_proc.simul.gitbranch];disp(txt);
             if all(isfield(data_proc.simul,{'matver','hostname'}))
                 txt = ['MATLAB Version: ',data_proc.simul.matver];disp(txt);
                 txt = ['MACHINE: ',data_proc.simul.hostname];disp(txt);
@@ -1687,6 +1699,8 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             data_proc.simul.timeid = '';
             data_proc.simul.userid = '';
             data_proc.simul.LUKEversion = '';
+            data_proc.simul.LUKEproject = '';
+            data_proc.simul.gitbranch = '';
             data_proc.simul.matver = '';
             data_proc.simul.hostname = '';
             data_proc.simul.residue_rf = '';
