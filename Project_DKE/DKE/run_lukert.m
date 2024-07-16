@@ -296,6 +296,10 @@ if ~exist(simul.path,'dir'),
     end
 end
 %
+[~,active_branch,~,~] = gitcmd;
+simul.LUKEproject = dkepath.luke_project;
+simul.gitbranch = active_branch;
+%
 if opt.waves == 1 && ~exist([simul.path,'wave_results'],'dir'), 
     %mkdir([simul.path,'wave_results']);
 end
