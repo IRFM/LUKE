@@ -12,7 +12,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'git') && isfield(sparams.s
     %
 else
     %
-    if isfield(dkepath,'')
+    if isfield(dkepath,'luke_gitbranch')
         %
         lukegitbranch = dkepath.luke_gitbranch;
         %
