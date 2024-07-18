@@ -339,16 +339,3 @@ if ~isempty(dkepath.remote),
     disp (' ');
 end
 %
-%Set local git branch if defined in dkepath
-%{
-if isfield(dkepath,'luke_gitbranch')
-    %
-    [git_res,active_branch,branches,workpath] = gitcmd(['git checkout ',dkepath.luke_gitbranch]);
-    %
-    disp('--> The active git branch enforce as defined in dkepath.');
-    %
-end
-%
-[git_res,active_branch,branches,workpath] = gitcmd;
-disp(['---> Active git branch : ',active_branch]);
-%}
