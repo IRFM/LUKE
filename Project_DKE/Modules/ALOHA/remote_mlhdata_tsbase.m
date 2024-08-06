@@ -279,6 +279,20 @@ for ii = 1:length(ports)
         if jj==1 % Special case for injected power: gpinjcX is time shifted for shots < 60359 in WEST
             %                                       gpforwcX-gpreflcX is used instead
             data_lh(ii).type_signal{jj}    = [type_signals{kks},'-',type_signals{kks+4}];
+            % Sometimes, few points are missing in gpreflcX, so time
+            % interpolation is used to avoid issues when substracting
+            % signals
+            if size(data(kks+4).yout1,1) ~= size(data(kks).yout1,1)
+                data_tmp                   = NaN(size(data(kks).yout1));
+                for ik=1:size(data(kks).yout1,2)
+                    data_tmp(:,ik)         = interp1(data(kks+4).yout2(:,ik),data(kks+4).yout1(:,ik),data(kks).yout2(:,1),'linear',NaN);
+                end
+                data(kks+4).yout1          = data_tmp;
+                data(kks+4).yout2          = data(kks).yout2;
+                clear data_tmp
+                fprintf(['\nWarning: data points were missing in ',type_signals{kks+4},' - interpolation performed over ',type_signals{kks},' time vector.\n'])
+            end
+            %
             data_tmp                       = data(kks).yout1-data(kks+4).yout1;
             %
             data_lh(ii).signal(jj).time    = data(kks).yout2(data(kks).yout2(:,1) > 0,1);%keep only positive time
