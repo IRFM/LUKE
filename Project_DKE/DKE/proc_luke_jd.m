@@ -1091,8 +1091,12 @@ function [data_proc,ir_display] = proc_luke_jd(data,ir_display,p_opt,dp_cyl,pnma
             %
             data_proc.simul.LUKEproject = dkepath.luke_project;
             %
-            [~,active_branch] = gitcmd;
-            data_proc.simul.gitbranch = active_branch;
+            if exist([dkepath.luke_root,'.git'])
+                %
+                [~,active_branch] = gitcmd('',dkepath.luke_root);
+                data_proc.simul.gitbranch = active_branch;
+                %
+            end
             %
             % SCALAR
             %
