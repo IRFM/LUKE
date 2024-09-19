@@ -47,7 +47,7 @@ try
     for i=1:nt
         bad_pxl_mask(:,:,i) = mesxr_ids.pixel_status;
     end
-    bad_pxl_mask(bad_pxl_mask==-2) = NaN;
+    bad_pxl_mask(bad_pxl_mask~=1) = NaN;
     data = data.*bad_pxl_mask;
 
     % Finds the thresholds and their indeces
