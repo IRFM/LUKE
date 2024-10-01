@@ -1,6 +1,6 @@
 function dkepath = path_CEA_PARTENAIRES
 %
-% path definitions for the altair, andromede, persee, cephee and rana computers (CEA Partenaires Zone)
+% path definitions for the altair, persee, cephee and rana computers (CEA Partenaires Zone)
 %
 %	Output:
 %
@@ -10,8 +10,8 @@ function dkepath = path_CEA_PARTENAIRES
 %
 % By Yves Peysson (CEA/DSM/IRFM, yves.peysson@cea.fr) and Joan Decker (CEA/DSM/IRFM, joan.decker@cea.fr)
 %luke_folder
-dkepath.machine =  {'andromede1','andromede2','altair','persee','cephee','rana'};
-dkepath.hostname = {'andromede1','andromede2','altair','persee','cephee','rana'};% should match the output of hostname_jd on the machine
+dkepath.machine =  {'altair','persee','cephee','rana'};
+dkepath.hostname = {'altair','persee','cephee','rana'};% should match the output of hostname_jd on the machine
 %
 dkepath.computer = computer;%machine type and supported OS
 %
