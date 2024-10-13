@@ -46,11 +46,11 @@ end
 %
 sparams = sluke_params_time(sparams_in);%Expand all time steps if any
 %
-if isfield(sparams.simul,'max_simulations')
+if isfield(sparams.simul,'remote') && isfield(sparams.simul.remote,'max_simulations')
     %
     for ii = 1:length(sparams.machine)
         %
-        kkmax(sluke_remote_profile(sparams,ii)+1) = sparams.simul.max_simulations{ii};
+        kkmax(sluke_remote_profile(sparams,ii)+1) = sparams.simul.remote.max_simulations{ii};
         %
     end
     %
