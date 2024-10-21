@@ -116,15 +116,15 @@ function sparams = make_preset_LOCAL
     sparams.simul.remote.scheduler.slurm.walltime = {24,24,24};%SLURM scheduler : job walltime in hours
     %
     sparams.simul.jprofileconsistency.code = {'METIS' 'METIS' 'METIS'};%Name of the tokamak code for current density profile selfconsistency with LUKE calculations. If empty, no selfconsistency is performed. 
-    sparams.simul.jprofileconsistency.nit = {[0] [0] [0]};
-    sparams.simul.jprofileconsistency.toll = {[0] [0] [0]};
-    sparams.simul.jprofileconsistency.log = {[1] [1] [1]};
-    sparams.simul.jprofileconsistency.stepsavedata = {[1:8] [1:8] [1:8]};
-    sparams.simul.jprofileconsistency.tprofonoff = {[true] [true] [true]};
-    sparams.simul.jprofileconsistency.datapath = {[pwd] [pwd] [pwd]};
-    sparams.simul.jprofileconsistency.sourceoutside.use = {[1] [1] [1]};
-    sparams.simul.jprofileconsistency.sourceoutside.file = {['SLUKE_RESULTS/PROC_LUKE_DATA_TS_41114_14.5_15.5_1_control_#0.mat'] ['SLUKE_RESULTS/PROC_LUKE_DATA_TS_41114_14.5_15.5_1_control_#0.mat'] ['SLUKE_RESULTS/PROC_LUKE_DATA_TS_41114_14.5_15.5_1_control_#0.mat']};
-    sparams.simul.jprofileconsistency.sourceoutside.condition = {['jit==1'] ['jit==1'] ['jit==1']};
+    sparams.simul.jprofileconsistency.nit = {[0] [0] [0]};%Maximum number of iteration for convergence loop. If 1 standard sluke is performed. ONLY FIELD IN JPROFILECONSISTENCY NEEDED. IT IS POSSIBLE TO CLEAR ANY OTHER FIELD. IF ANY OTHER FIELD IS EMPTY PRESET VALUES WILL BE TAKEN INTO ACCOUNT
+    sparams.simul.jprofileconsistency.toll = {[0] [0] [0]};%Maximum relative difference in current profile among subsequent iteration allowed to exit loop. If empty set to 0.1
+    sparams.simul.jprofileconsistency.log = {[1] [1] [1]};%Flag to create a live log of the process. If empty set to zero.
+    sparams.simul.jprofileconsistency.stepsavedata = {[1:8] [1:8] [1:8]};% Step in which the code will save partial loop data. If empty set to an empty vector
+    sparams.simul.jprofileconsistency.tprofonoff = {[true] [true] [true]};% Bool for autoTSmetis. If empty set to zero.
+    sparams.simul.jprofileconsistency.datapath = {[pwd] [pwd] [pwd]};% String with complete path of current SLUKE simulation. If empty the code will try to get on their own. If not valid log and stepsavedata functions will not be excluded.
+    sparams.simul.jprofileconsistency.sourceoutside.use = {[1] [1] [1]};% Flag for sourceoutside functionality. Enforce use of already done simulation instead of doing actual calculation in certain step. If empty set to 0
+    sparams.simul.jprofileconsistency.sourceoutside.file = {['SLUKE_RESULTS/PROC_LUKE_DATA_TS_41114_14.5_15.5_1_control_#0.mat'] ['SLUKE_RESULTS/PROC_LUKE_DATA_TS_41114_14.5_15.5_1_control_#0.mat'] ['SLUKE_RESULTS/PROC_LUKE_DATA_TS_41114_14.5_15.5_1_control_#0.mat']};% String containing the path (relative to the simulation path) of the already done simulation to load.
+    sparams.simul.jprofileconsistency.sourceoutside.condition = {['jit==1'] ['jit==1'] ['jit==1']};% String containing a condition to be evaluated. When It is true the code will try to load the simulation pointed by sourceoutside.file. If empty set to ‘jit==1’. Useful name to know: jit is the loop index, jitmax is the maximum number of iterations.
     %
     sparams.simul.initial_distribution = {0,0,0};%Time evolution of the distribution function : (0) -> at each time, initial distribution is a Maxwellian, (-1) -> at each time, initial distribution is the distribution from previous time (except the first that is necessarily Maxwellian)
     %
