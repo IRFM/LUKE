@@ -123,31 +123,31 @@ switch str_i
     case 'simul.jprofileconsistency.code'
         str_o = 'Name of the tokamak code for current density profile selfconsistency between LUKE and the toroidal MHD equilibrium solver. If empty, no selfconsistency is performed.'; 
     %
-    case 'simul.jprofileconsistency.nit'
+    case 'simul.jprofileconsistency.METIS.nit'
         str_o = 'Maximum number of iteration for convergence loop. If 1 standard sluke is performed. ONLY FIELD IN JPROFILECONSISTENCY NEEDED. IT IS POSSIBLE TO CLEAR ANY OTHER FIELD. IF ANY OTHER FIELD IS EMPTY PRESET VALUES WILL BE TAKEN INTO ACCOUNT';
     %
-    case 'simul.jprofileconsistency.toll'
+    case 'simul.jprofileconsistency.METIS.toll'
         str_o = 'Maximum relative difference in current profile among subsequent iteration allowed to exit loop. If empty set to 0.1';
     %
-    case 'simul.jprofileconsistency.log'
+    case 'simul.jprofileconsistency.METIS.log'
         str_o = 'Flag to create a live log of the process. If empty set to zero.';
     %
-    case 'simul.jprofileconsistency.stepsavedata'
+    case 'simul.jprofileconsistency.METIS.stepsavedata'
         str_o = 'Step in which the code will save partial loop data. If empty set to an empty vector';
     %
-    case 'simul.jprofileconsistency.tprofonoff'
+    case 'simul.jprofileconsistency.METIS.tprofonoff'
         str_o = 'Bool for autoTSmetis. If empty set to zero.';
     %
-    case 'simul.jprofileconsistency.datapath'
+    case 'simul.jprofileconsistency.METIS.datapath'
         str_o = 'String with complete path of current SLUKE simulation. If empty the code will try to get on their own. If not valid log and stepsavedata functions will not be excluded.';
     %
-    case 'simul.jprofileconsistency.sourceoutside.use'
+    case 'simul.jprofileconsistency.METIS.sourceoutside.use'
         str_o = 'Flag for sourceoutside functionality. Enforce use of already done simulation instead of doing actual calculation in certain step. If empty set to 0';
     %
-    case 'simul.jprofileconsistency.sourceoutside.file'
+    case 'simul.jprofileconsistency.METIS.sourceoutside.file'
         str_o = 'String containing the path (relative to the simulation path) of the already done simulation to load.';
     %
-    case 'simul.jprofileconsistency.sourceoutside.condition'
+    case 'simul.jprofileconsistency.METIS.sourceoutside.condition'
         str_o = 'String containing a condition to be evaluated. When It is true the code will try to load the simulation pointed by sourceoutside.file. If empty set to ''jit==1''. Useful name to know: jit is the loop index, jitmax is the maximum number of iterations.';
     %
     case 'simul.initial_distribution'
