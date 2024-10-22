@@ -1,4 +1,4 @@
-function sluke_params_script(varargin)
+function [script_name] = sluke_params_script(varargin)
 %
 % LUKE - Generate a *.m script from a simulation parameters structure for sluke calculations. All parameters are in a structure of cell arrays of the SAME SIZE. 
 % 
@@ -6,7 +6,9 @@ function sluke_params_script(varargin)
 %
 %   - varargin : initial 'sparams' structure for modifications
 %
-% OUTPUT : none (output is a *.m file)
+% OUTPUT :
+%
+%   - script_name : name of the .m script [string]
 %
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
@@ -44,7 +46,9 @@ if isstruct(sparams_in)
             %
         end
         %
-        fid = fopen(['make_sparams_',filename,'.m'],'w');
+        script_name = ['make_sparams_',filename,'.m'];
+        %
+        fid = fopen(script_name,'w');
         %
         fprintf(fid,'%s\n','%');
         fprintf(fid,'%s\n','%------------------------------------------------------------------------');
