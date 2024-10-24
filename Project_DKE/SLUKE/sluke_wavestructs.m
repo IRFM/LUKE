@@ -402,6 +402,14 @@ else
 
                     end
                     %
+                elseif strcmp(sparams.rfwaves.antenna.type{ii}{kk},'EBW')
+                    %
+                    if strcmp(sparams.rfwaves.antenna.source{ii}{kk},'code')
+
+                    else
+
+                    end
+                    %
                 else
                     %
                     cprintf([1,0.5,0],['WARNING: The type of wave ',sparams.rfwaves.antenna.type{ii}{kk},' is not yet implemented.'])
@@ -409,7 +417,17 @@ else
                     %
                 end
                 %
-            else
+            elseif strcmp(sparams.rfwaves.solver.code{ii}{kk},'GENRAY')
+                %
+
+
+                %
+            elseif strcmp(sparams.rfwaves.solver.code{ii}{kk},'CRAYON') %for EBW
+                %
+
+
+                %
+            else 
                 %
                 cprintf([1,0.5,0],['WARNING: This wavesolver ',sparams.rfwaves.solver.code{ii}{kk},' is not yet implemented'])
                 break
