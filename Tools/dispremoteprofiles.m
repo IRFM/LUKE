@@ -84,14 +84,14 @@ end
 %
 nrem = nrem + 1;
 if display_mode
-    for irem = 2:nrem,
-        info_dke_yp(4,['#',num2str(indexlist(irem)),' : ',profile_list{irem}]);
+    for irem = 2:nrem
+        info_dke_yp(4,['#',num2str(irem-1),' : ',profile_list{irem}]);
     end
 end
 %
 if nargin == 4 && interactive_mode == 1
     %
-    [index_out] = input_dke_yp('Choose the index of the remote machine',indexlist(1:nrem));
+    [index_out] = input_dke_yp('Choose the index of the remote machine',[0:nrem]);%indexlist(1:nrem)
     %
     if index_out == 0
         %
@@ -99,7 +99,7 @@ if nargin == 4 && interactive_mode == 1
         %
     else
         %
-        profile_out =  profile_list{index_out};   
+        profile_out =  profile_list{index_out+1};   
         profile_out = profile_out(1:strfind(profile_out,':')-2);
         %
     end
