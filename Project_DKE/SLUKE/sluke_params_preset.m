@@ -1,85 +1,272 @@
-function [preset_list,sparams] = sluke_params_preset(preset_name,save_mode)
+function [presets_list,sparams] = sluke_params_preset(presets_names,remote_calculation,save_mode)
 %
 % LUKE - Generator of parameters structure for sluke calculations from a preset name. All parameters are in a structure of cell arrays of the SAME SIZE. 
 % 
 % INPUT : 
 %  
-%   - preset_name : name of the preset (string)
-%     (if empty or not defined, only the available list of preset names is output)
-%   - save_mode : (1) : in addition, data are save in a matlab script file whose name is make_sparams_PRESET_NAME.m, (0) or not existing : no script automatic output -> type sluke_params_script(sparams)
+%   - presets_names : names of the presets [cell of strings]. If empty or not defined (no input), only the available list of presets names is output
+%   - remote_calculation : (0) or LOCAL, (1) or REMOTE (string) 
+%     (default : 0)
+%   - save_mode : (2) : all presets are saved in a single folder ready to start a sluke simulations, (1) each preset is saved in a separate folder ready to start a sluke simulations,(0) no simulation folder 
+%     (default : 0)
 %
 % OUTPUT :
 %
-%   - preset_list : list of available preset names
+%   - presets_list : list of available presets names
 %   - sparams : structure of parameters for sluke calculations.
 %
 % by Y.Savoye-Peysson (CEA/DSM/IRFM) <yves.savoye-peysson@cea.fr>
 %
 sparams = struct([]);
 %
-preset_list0 = {'LOCAL';'REMOTE'};
+dkepath = getappdata(0,'dkepath');
 %
-preset_list = ['List of available presets : ''',preset_list0{1},''''];
+presets_list0 = {'ITER_EC';'TORESUPRA_LH';'WEST_LH';'STEP_EBW';'TORESUPRA_OHM'};
 %
-for ii = 2:length(preset_list0)
+remote_calculation0 = {'LOCAL';'REMOTE'};
+%
+presets_list = ['List of available presets : ''',presets_list0{1},''''];
+%
+for ii = 2:length(presets_list0)
     %
-    preset_list = [preset_list,', ''',preset_list0{ii},''''];
+    presets_list = [presets_list,', ''',presets_list0{ii},''''];
     %
 end
 %
 if nargin == 0
     %
-    preset_name = '';
+    presets_names = '';
+    remote_calculation = 'LOCAL';
     save_mode = 0;
     return
     %
 elseif nargin == 1
     %
+    remote_calculation = 'LOCAL';
+    save_mode = 0;
+    %
+elseif nargin == 2
+    %
     save_mode = 0;
     %
 end
 %
-if strcmpi(preset_name,'LOCAL')
+if strcmpi(remote_calculation,'LOCAL') || remote_calculation(1) == 0
     %
-    sparams = make_preset_LOCAL;
-    filename = 'LOCAL';
+    sparams = make_preset_LOCAL(presets_names);
+    filename0 = 'LOCAL';
     %
-elseif strcmpi(preset_name,'REMOTE')
+elseif strcmpi(remote_calculation,'REMOTE') || remote_calculation(1) == 1
     %
-    sparams = make_preset_REMOTE;
-    filename = 'REMOTE';
+    sparams = make_preset_REMOTE(presets_names);
+    filename0 = 'REMOTE';
     %
 else
     %
-    error(['ERROR : The preset ',upper(preset_name), ' is not existing. Type sluke_params_preset to get the list of available presets.'])
+    error(['ERROR : The input presets ',upper(presets_names), ' is not consistent with available presets. Type sluke_params_preset to get the list of available presets.'])
     %
 end
 %
 if save_mode && ~isempty(sparams)
     %
-    sluke_params_script(sparams,filename)
+    if save_mode >= 2
+        %
+        foldername = 'TEST_PRESETS';
+        filename = [filename0,'_TEST_PRESETS'];
+        %
+        sluke_make_simulation_folder(foldername); 
+        dirinit = pwd;
+        cd(foldername);
+        %
+        script_name = sluke_params_script(sparams,filename);
+        make_main_simulation_script(script_name);
+        %
+        sparams_fieldnames = fieldnamesr(sparams);%recursive list of fields and subfields
+        %
+        for ll = 1:length(sparams_fieldnames)
+            %
+            if ~isempty(strfind(sparams_fieldnames{ll},'.file'))
+                %
+                dot_index = strfind(sparams_fieldnames{ll},'.');
+                field_parent = ['sparams.',sparams_fieldnames{ll}(1:dot_index(end)-1)];
+                
+                if isfield(eval(field_parent),'path')
+                    %
+                    field_path = eval([field_parent,'.path']);
+                    field_file = eval(['sparams.',sparams_fieldnames{ll}]);
+                    %
+                    if iscell(field_path{1})
+                        %
+                        for kk = 1:length(field_file)
+                            %
+                            for jj = 1:length(field_file{kk})
+                                %
+                                if ~isempty(field_path{kk}{jj}) 
+                                    %
+                                    if ~exist(field_path{kk}{jj}) 
+                                        %
+                                        mkdir(field_path{kk}{jj})
+                                        %
+                                    end
+                                    %
+                                    if ~isempty(field_file{kk}{jj}) 
+                                        %
+                                        eval(['copyfile ',dkepath.luke_root,'Project_DKE/SLUKE/PRESETS_INPUTS/',field_file{kk}{jj},' ',field_path{kk}{jj},'/']);
+                                        %
+                                    end
+                                    %
+                                end
+                                %
+                            end
+                            %
+                        end
+                        %
+                    else
+                        %
+                        for jj = 1:length(field_file)
+                            %
+                            if ~isempty(field_path{jj}) 
+                                %
+                                if ~exist(field_path{jj}) 
+                                    %
+                                    mkdir(field_path{jj})
+                                    %
+                                end
+                                %
+                                if ~isempty(field_file{jj}) 
+                                    %
+                                    eval(['copyfile ',dkepath.luke_root,'Project_DKE/SLUKE/PRESETS_INPUTS/',field_file{jj},' ',field_path{jj},'/']);
+                                    %
+                                end
+                                %
+                            end
+                            %
+                        end
+                        %
+                    end
+                    %
+                end
+                %
+            end
+            %
+        end
+        %
+        cd(dirinit);
+        %
+    elseif save_mode == 1
+        %
+        dirinit = pwd;
+        %
+        for kk = 1:length(presets_names)
+            %
+            foldername = ['TEST_PRESET_',presets_names{kk}];
+            filename = [filename0,'_',presets_names{kk}];
+            %
+            sluke_make_simulation_folder(foldername); 
+            %
+            cd(foldername);
+            %
+            sparams_sub = sluke_params_extract(sparams,kk);
+            script_name = sluke_params_script(sparams_sub,filename);
+            make_main_simulation_script(script_name);
+            %
+            sparams_fieldnames = fieldnamesr(sparams_sub);%recursive list of fields and subfields
+            %
+            for ll = 1:length(sparams_fieldnames)
+                %
+                if ~isempty(strfind(sparams_fieldnames{ll},'.file'))
+                    %
+                    dot_index = strfind(sparams_fieldnames{ll},'.');
+                    field_parent = ['sparams_sub.',sparams_fieldnames{ll}(1:dot_index(end)-1)];
+                    
+                    if isfield(eval(field_parent),'path')
+                        %
+                        field_path = eval([field_parent,'.path']);
+                        field_file = eval(['sparams_sub.',sparams_fieldnames{ll}]);
+                        %
+                        if iscell(field_path{1})
+                            %
+                            for kk = 1:length(field_file)
+                                %
+                                for jj = 1:length(field_file{kk})
+                                    %
+                                    if ~isempty(field_path{kk}{jj}) 
+                                        %
+                                        if ~exist(field_path{kk}{jj}) 
+                                            %
+                                            mkdir(field_path{kk}{jj})
+                                            %
+                                        end
+                                        %
+                                        if ~isempty(field_file{kk}{jj}) 
+                                            %
+                                            eval(['copyfile ',dkepath.luke_root,'Project_DKE/SLUKE/PRESETS_INPUTS/',field_file{kk}{jj},' ',field_path{kk}{jj},'/']);
+                                            %
+                                        end
+                                        %
+                                    end
+                                    %
+                                end
+                                %
+                            end
+                            %
+                        else
+                            %
+                            for jj = 1:length(field_file)
+                                %
+                                if ~isempty(field_path{jj}) 
+                                    %
+                                    if ~exist(field_path{jj}) 
+                                        %
+                                        mkdir(field_path{jj})
+                                        %
+                                    end
+                                    %
+                                    if ~isempty(field_file{jj}) 
+                                        %
+                                        eval(['copyfile ',dkepath.luke_root,'Project_DKE/SLUKE/PRESETS_INPUTS/',field_file{jj},' ',field_path{jj},'/']);
+                                        %
+                                    end
+                                    %
+                                end
+                                %
+                            end
+                            %
+                        end
+                        %
+                    end
+                    %
+                end
+                %
+            end            
+            %
+            cd(dirinit);
+            %
+        end
+        %
+    end
     %
 end
 %
 end
 %
-function sparams = make_preset_LOCAL
+function sparams = make_preset_LOCAL(presets_names)
     %
-    sparams.machine = {'TS','TS','TS'};%Name of tokamaks
+    sparams.machine = {'ITER','TS','WEST'};%Name of tokamaks
     %
     % discharge parameters  
     %
-    sparams.discharge.shot = {'41114','41114','41114'};%Discharge number or index
-    sparams.discharge.tmin = {14.5,14.5,14.5};%Minimum of the considered time interval (s)
-    sparams.discharge.tmax = {15.5,15.5,15.5};%Maximum of the considered time interval (s)
+    sparams.discharge.shot = {'Scen2_200103121816_430_129','41114','41114'};%Discharge number or index
+    sparams.discharge.tmin = {1,14.5,14.5};%Minimum of the considered time interval (s)
+    sparams.discharge.tmax = {2,15.5,15.5};%Maximum of the considered time interval (s)
     sparams.discharge.nt = {1,1,1};%Number of sub-intervals between tmin and tmax (n>=1). If none, n = 1 is considered in the calculations. Use sluke_params_time to expand the params structure before calculations
     %
     % simulation parameters  
     %
-    sparams.simul.id = {'simul_id_1' 'simul_id_2' 'simul_id_3'};%Simulation identifier
-    sparams.simul.signature = {'' '' ''};%The first and last names of the person doing these simulations
-    sparams.simul.comment = {'' '' ''};%Some general comments to explain the simulation
-    sparams.simul.enable = {1,1,1};%Enable (1) or not (0) the simulations
+    sparams.simul.id = {'ITER_EC' 'TORESUPRA_LH' 'WEST_LH'};%Simulation identifier (no '-' character)
+    sparams.simul.signature = {'Yves Savoye-Peysson' '' ''};%The first and last names of the person doing these simulations
+    sparams.simul.comment = {'For EC wave test' '' ''};%Some general comments to explain the simulation
+    sparams.simul.enable = {1,0,0};%Enable (1) or not (0) the simulations
     sparams.simul.enforce = {0,0,0};%(2) : enforce new simulation and erase all files of previous simulations, (1) : enforce new simulation but erase only necessary files of previous simulations (check the different folders), (0) : simulation is not enforced (but may be canceled : file LUKE_DATA_*** can be deleted in case of problem),  -1 : simulation is not enforced and not canceled
     sparams.simul.log = {1,1,1};%Generate log file (diary)
     sparams.simul.output = {1,1,1};%(0) : LUKE processed data and available synthetic diagnostics + full LUKE output (WARNING : very large *.mat file), (1) : LUKE processed data only and available synthetic diagnostics
@@ -94,7 +281,7 @@ function sparams = make_preset_LOCAL
     %
     sparams.simul.remote.git.projects = {{'MatRemote','MatHelp','MatTools','LUKE_CEA'},{'MatRemote','MatHelp','MatTools','LUKE_CEA'},{'MatRemote','MatHelp','MatTools','LUKE_CEA'}};%List of projects under git control that may be updated remotely from repository (git pull) prior a simulation. (git branch dependent).
     sparams.simul.remote.git.pull = {1,1,1};%Git pull remote projects before running the simulation (1), no remote git pull (0).
-    sparams.simul.git.branch.luke = {'time','time','time'};%LUKE git branches. If empty, no git checkout to a specific LUKE branch is enforced. The current active LUKE branch is used either locally and remotely (WARNING : may lead to calculation inconsistencies)
+    sparams.simul.git.branch.luke = {'eccd','time','time'};%LUKE git branches. If empty, no git checkout to a specific LUKE branch is enforced. The current active LUKE branch is used either locally and remotely (WARNING : may lead to calculation inconsistencies)
     sparams.simul.remote.git.display = {1,1,1};%Display git status in the command window (0) : no display, (1) : display results
     %
     sparams.simul.remote.scheduler.pbs.nodes = {'','',''};%PBS scheduler : number of nodes requested or node names (see PBS syntax). If empty or NaN, default value. For pbs, type 'pbsnodes -a' to get the list of node names
@@ -116,14 +303,14 @@ function sparams = make_preset_LOCAL
     sparams.simul.remote.scheduler.slurm.walltime = {24,24,24};%SLURM scheduler : job walltime in hours
     %
     sparams.simul.jprofileconsistency.code = {'METIS' 'METIS' 'METIS'};%Name of the tokamak code for current density profile selfconsistency between LUKE and the toroidal MHD equilibrium. If empty, no selfconsistency is performed. 
-    sparams.simul.jprofileconsistency.METIS.nit = {[0] [0] [0]};%Maximum number of iteration for convergence loop. If 1 standard sluke is performed. ONLY FIELD IN JPROFILECONSISTENCY NEEDED. IT IS POSSIBLE TO CLEAR ANY OTHER FIELD. IF ANY OTHER FIELD IS EMPTY PRESET VALUES WILL BE TAKEN INTO ACCOUNT
-    sparams.simul.jprofileconsistency.METIS.toll = {[0] [0] [0]};%Maximum relative difference in current profile among subsequent iteration allowed to exit loop. If empty set to 0.1
-    sparams.simul.jprofileconsistency.METIS.log = {[1] [1] [1]};%Flag to create a live log of the process. If empty set to zero.
+    sparams.simul.jprofileconsistency.nit = {[0] [0] [0]};%Maximum number of iteration for convergence loop. If 1 standard sluke is performed. ONLY FIELD IN JPROFILECONSISTENCY NEEDED. IT IS POSSIBLE TO CLEAR ANY OTHER FIELD. IF ANY OTHER FIELD IS EMPTY PRESET VALUES WILL BE TAKEN INTO ACCOUNT
+    sparams.simul.jprofileconsistency.toll = {[0] [0] [0]};%Maximum relative difference in current profile among subsequent iteration allowed to exit loop. If empty set to 0.1
+    sparams.simul.jprofileconsistency.log = {[1] [1] [1]};%Flag to create a live log of the process. If empty set to zero.
     sparams.simul.jprofileconsistency.METIS.stepsavedata = {[1:8] [1:8] [1:8]};% Step in which the code will save partial loop data. If empty set to an empty vector
     sparams.simul.jprofileconsistency.METIS.tprofonoff = {[true] [true] [true]};% Bool for autoTSmetis. If empty set to zero.
     sparams.simul.jprofileconsistency.METIS.datapath = {[pwd] [pwd] [pwd]};% String with complete path of current SLUKE simulation. If empty the code will try to get on their own. If not valid log and stepsavedata functions will not be excluded.
     sparams.simul.jprofileconsistency.METIS.sourceoutside.use = {[1] [1] [1]};% Flag for sourceoutside functionality. Enforce use of already done simulation instead of doing actual calculation in certain step. If empty set to 0
-    sparams.simul.jprofileconsistency.METIS.sourceoutside.file = {['SLUKE_RESULTS/PROC_LUKE_DATA_TS_41114_14.5_15.5_1_control_#0.mat'] ['SLUKE_RESULTS/PROC_LUKE_DATA_TS_41114_14.5_15.5_1_control_#0.mat'] ['SLUKE_RESULTS/PROC_LUKE_DATA_TS_41114_14.5_15.5_1_control_#0.mat']};% String containing the path (relative to the simulation path) of the already done simulation to load.
+    sparams.simul.jprofileconsistency.METIS.sourceoutside.file = {[''] [''] ['']};% String containing the path (relative to the simulation path) of the already done simulation to load.
     sparams.simul.jprofileconsistency.METIS.sourceoutside.condition = {['jit==1'] ['jit==1'] ['jit==1']};% String containing a condition to be evaluated. When It is true the code will try to load the simulation pointed by sourceoutside.file. If empty set to .jit==1’. Useful name to know: jit is the loop index, jitmax is the maximum number of iterations.
     %
     sparams.simul.initial_distribution = {0,0,0};%Time evolution of the distribution function : (0) -> at each time, initial distribution is a Maxwellian, (-1) -> at each time, initial distribution is the distribution from previous time (except the first that is necessarily Maxwellian)
@@ -149,7 +336,7 @@ function sparams = make_preset_LOCAL
     %
     sparams.kinetics.dkeparam.comment = {'' '' ''};%Some general comments to justify the kinetics parameters for the simulations in 'dkeparam' structure
     sparams.kinetics.dkeparam.source = {'preset' 'preset' 'preset'};%Source of the LUKE 'dkeparam' structure : 'preset' or 'file'
-    sparams.kinetics.dkeparam.preset = {'LH_RT' 'LH_RT' 'LH_RT'};%Preset 'dkeparam' value if the source is 'preset'. Available presets are in the LUKE folder ~/LUKE_CEA/Project_DKE/Database/DKEPARAM_files/ 
+    sparams.kinetics.dkeparam.preset = {'EC_RT' 'LH_RT' 'LH_RT'};%Preset 'dkeparam' value if the source is 'preset'. Available presets are in the LUKE folder ~/LUKE_CEA/Project_DKE/Database/DKEPARAM_files/ 
     sparams.kinetics.dkeparam.file = {'' '' ''};%Name of the file that contains the 'dkeparam' structure if the source is 'file'
     sparams.kinetics.dkeparam.path = {'' '' ''};%Path of the file that contains the 'dkeparam' structure if the source is 'file'
     sparams.kinetics.dkeparam.clustermode.coll_dke_jd.scheduler.mode = {0,0,0};%MatLab distributed computing environment: disabled (0), enabled with the dedicated toolbox (1), enabled with a private method (2) for the function coll_dke_jd.m (MDC toolbox must be installed for option 1)
@@ -170,8 +357,8 @@ function sparams = make_preset_LOCAL
     sparams.kinetics.elements.Zi_ref = {'','',''};%Zi values whose density may be modified by the factor density_factor from C3PO/LUKE/R5X2 calculations if exist in equil structure (for tests). May be vector
     sparams.kinetics.elements.Zi_density_factor = {NaN,NaN,NaN};%Ad-hoc multiplication factors of the density of the elements Zi_ref
     sparams.kinetics.elements.screening.ADAS = {'ADAS.mat','ADAS.mat','ADAS.mat'};%Full path for the full ion screening model ADAS (necessary for screening of partially ionized atoms). If empty, fully ionized impurities are considered. If 'ADAS.mat', default ADAS value in LUKE.
-    sparams.kinetics.elements.screening.partial.elastic = {'Tseng-Pratt-Botto','Tseng-Pratt-Botto','Tseng-Pratt-Botto'};%Elastic scattering by partially ionized atoms. List of models : 'DFT', 'Thomas-Fermi', 'Thomas-Fermi-Kirillov', 'Tseng-Pratt-Avdonina-Lamoureux', 'Tseng-Pratt-Botto', 'Tseng-Pratt-Thomas-Fermi'
-    sparams.kinetics.elements.screening.partial.inelastic = {1,1,1};%Inelastic scattering by partially ionized atoms : (0) -> no   (1) -> yes
+    sparams.kinetics.elements.screening.partial.elastic = {'','Tseng-Pratt-Botto','Tseng-Pratt-Botto'};%Elastic scattering by partially ionized atoms. List of models : 'DFT', 'Thomas-Fermi', 'Thomas-Fermi-Kirillov', 'Tseng-Pratt-Avdonina-Lamoureux', 'Tseng-Pratt-Botto', 'Tseng-Pratt-Thomas-Fermi'
+    sparams.kinetics.elements.screening.partial.inelastic = {0,1,1};%Inelastic scattering by partially ionized atoms : (0) -> no   (1) -> yes
     sparams.kinetics.elements.screening.partial.dftpath = {'','',''};%For specific DFT file path only. Leave empty otherwise and the default calculations will be considered in LUKE
     %
     sparams.kinetics.fast_electron_anomalous_transport.comment = {'','',''};%Some general comments to justify the kinetics parameters for the simulations concerning fast electron anomalous transport
@@ -190,10 +377,10 @@ function sparams = make_preset_LOCAL
     %
     % toroidal MHD calculations parameters  
     %
-    sparams.equil.comment = {'metis' 'metis' 'metis'};%Some general comments on the toroidal MHD equilibrium calculations
+    sparams.equil.comment = {'EQDSK code' 'METIS code' 'METIS code'};%Some general comments on the toroidal MHD equilibrium calculations
     sparams.equil.source = {'file' 'file' 'file'};%Source of the toroidal MHD structure : 'preset' or 'file' or 'code'
     sparams.equil.preset = {'','',''};%Preset value of the toroidal MHD structure if the source is 'preset'. Available presets are in the LUKE folder ~/LUKE_CEA/Project_DKE/Database/EQUIL_files/ 
-    sparams.equil.file = {'' '' ''};%Name of the file that contains the 'equil' structure if the source is 'file'
+    sparams.equil.file = {'EQUIL_ITER_Scen2_200103121816_430_129.mat' 'METIS_41114.mat' ''};%Name of the file that contains the 'equil' structure if the source is 'file'
     sparams.equil.path = {'./INPUTS' './INPUTS' './INPUTS'};%Path of the file that contains the 'equil' structure if the source is 'file'
     sparams.equil.code = {'' '' ''};%Code name of the toroidal MHD structure if the source is 'code'.
     %
@@ -233,14 +420,14 @@ function sparams = make_preset_LOCAL
     sparams.rfwaves.path = {'','',''};%Path of the file that contains the 'wavestructs' structure if the source is 'file'
     sparams.rfwaves.enable = {1,1,1};%Enabling RF wave calculations or use of an external wavestructs structure (1) or not (0). 
     %
-    sparams.rfwaves.antenna.type = {{},{'LH','LH'},{'LH','LH'}};%'LH' lower hybrid wave, 'EC' electron cyclotron waves, 'EBW' for electron Bernstein wave, or {'LH','LH'} if the LH wave is launched by two different antennas. As many antennas as necessary may be added. Empty corresponds to RF wave.
-    sparams.rfwaves.antenna.comment = {{} {'ne_fixed','ne_fixed'} {'ne_fixed','ne_optim'}};%General comments on the antenna structure calculation
-    sparams.rfwaves.antenna.source = {{},{'code','code'},{'code','code'}};%Source of the 'antennas' structure : 'code' or 'file'
-    sparams.rfwaves.antenna.code = {{},{'ALOHA','ALOHA'},{'ALOHA','ALOHA'}};%Code name of the 'antennas' structure  if the source is 'code'.
-    sparams.rfwaves.antenna.file = {{},{'',''},{'',''}};%Name of the file that contains the 'antennas' structure if the source is 'file'
-    sparams.rfwaves.antenna.path = {{},{'',''},{'',''}};%Path of the file that contains the 'antennas' structure if the source is 'file'
+    sparams.rfwaves.antenna.type = {{'EC'},{'LH','LH'},{'LH','LH'}};%'LH' lower hybrid wave, 'EC' electron cyclotron waves, 'EBW' for electron Bernstein wave, or {'LH','LH'} if the LH wave is launched by two different antennas. As many antennas as necessary may be added. Empty corresponds to RF wave.
+    sparams.rfwaves.antenna.comment = {{''} {'ne_fixed','ne_fixed'} {'ne_fixed','ne_optim'}};%General comments on the antenna structure calculation
+    sparams.rfwaves.antenna.source = {{''},{'code','code'},{'code','code'}};%Source of the 'antennas' structure : 'code' or 'file'
+    sparams.rfwaves.antenna.code = {{''},{'ALOHA','ALOHA'},{'ALOHA','ALOHA'}};%Code name of the 'antennas' structure  if the source is 'code'.
+    sparams.rfwaves.antenna.file = {{''},{'',''},{'',''}};%Name of the file that contains the 'antennas' structure if the source is 'file'
+    sparams.rfwaves.antenna.path = {{''},{'',''},{'',''}};%Path of the file that contains the 'antennas' structure if the source is 'file'
     %
-    sparams.rfwaves.antenna.LH.ALOHA.port = {{},{'Q6A','Q6B'},{'Q6A','Q6B'}};%antenna ports : Q6A, or Q6B or Q6A+Q6B -> (C2,C3) or (C3,C4) or (LH1,LH2) for Tore Supra or WEST
+    sparams.rfwaves.antenna.LH.ALOHA.port = {{''},{'Q6A','Q6B'},{'Q6A','Q6B'}};%antenna ports : Q6A, or Q6B or Q6A+Q6B -> (C2,C3) or (C3,C4) or (LH1,LH2) for Tore Supra or WEST
     sparams.rfwaves.antenna.LH.ALOHA.remote_profile = {{},{'local','local'},{'local','local'}};%%Calculation profile. Local interactive calculations -> '0' or 'local'. Remote calculations : type first dispremoteprofiles('','scheduler'); to get by values and names the available remote machines on which LUKE calculations can be performed. Profiles in MatRemote toolboxes must be defined first, then incorporated in the local LUKE path file.
     sparams.rfwaves.antenna.LH.ALOHA.display.data.mode = {{},{[-1],[-1]},{[-1],[-1]}};%Display and save experimental data figures (2), display and do not save figures (1), do not display but save figures (0), do nothing (-1) if figure exist
     sparams.rfwaves.antenna.LH.ALOHA.display.data.save = {{},{[1],[1]},{[1],[1]}};%Display and save experimental data figures (2), display and do not save figures (1), do not display but save figures (0), do nothing (-1) if exist
@@ -295,10 +482,10 @@ function sparams = make_preset_LOCAL
     sparams.rfwaves.antenna.LH.C3PO.launch.tail.bP_tail = {{},{0.5,0.5},{0.5,0.5}};
     sparams.rfwaves.antenna.LH.C3PO.launch.tail.bopt_tail = {{},{0.0000 + 1.0000i,0.0000 + 1.0000i},{0.0000 + 1.0000i,0.0000 + 1.0000i}};
     %
-    sparams.rfwaves.solver.type = {{},{'ray-tracing','ray-tracing'},{'ray-tracing','ray-tracing'}};
-    sparams.rfwaves.solver.code = {{},{'C3PO','C3PO'},{'C3PO','C3PO'}};
-    sparams.rfwaves.solver.enable = {{},{1,1},{1,1}};
-    sparams.rfwaves.solver.remote_profile = {{},{1,1},{1,1}};
+    sparams.rfwaves.solver.type = {{'ray-tracing'},{'ray-tracing','ray-tracing'},{'ray-tracing','ray-tracing'}};
+    sparams.rfwaves.solver.code = {{'C3PO'},{'C3PO','C3PO'},{'C3PO','C3PO'}};
+    sparams.rfwaves.solver.enable = {{1},{1,1},{1,1}};
+    sparams.rfwaves.solver.remote_profile = {{1},{1,1},{1,1}};
     %
     %sparams.rfwaves.solver.C3PO.rayparam.comment = {{},{'',''},{'',''}};
     %sparams.rfwaves.solver.C3PO.rayparam.source = {{},{'',''},{'',''}};
@@ -428,14 +615,31 @@ function sparams = make_preset_LOCAL
     sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.nEc = {300,300,300};%keV (number of incoming electron kinetic energies for calculating the BHE cross-section table with partial screening)
     sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.Ecmax = {1000,1000,1000};%keV (max incoming electron kinetic energy for calculating the BHE cross-section table with partial screening)
     %
-
+    chosen_preset_indexes = [];
+    %
+    for jj = 1:length(presets_names)
+        %
+        for kk = 1:length(sparams.simul.id)
+            %
+            if strcmp(presets_names{jj},sparams.simul.id{kk})
+                %
+                chosen_preset_indexes = [chosen_preset_indexes,kk];
+                %
+            end
+            %
+        end 
+        %
+    end
+    %
+    sparams = sluke_params_extract(sparams,chosen_preset_indexes);
+    %
 end
 %
-function sparams = make_preset_REMOTE
+function sparams = make_preset_REMOTE(presets_names)
     %
     [~,~,index_value,profile_value] = dispremoteprofiles('','scheduler',1,1);
     %
-    sparams = make_preset_LOCAL;
+    sparams = make_preset_LOCAL(presets_names);
     %
     for jj = 1:length(sparams.simul.remote.profile)
         %
@@ -444,3 +648,37 @@ function sparams = make_preset_REMOTE
     end
     %
 end
+%
+function [] = make_main_simulation_script(script_name)
+    %
+    fid = fopen(['run_sluke_',script_name(14:end)],'w');
+        %
+        fprintf(fid,'%s\n','%');
+        fprintf(fid,'%s\n','%--------------------------------------------------------------------------');
+        fprintf(fid,'%s\n','%General script to run a sluke simulation from a parameter structure ');
+        fprintf(fid,'%s\n',['%created by the call to the script ',script_name,'. It is not ']);
+        fprintf(fid,'%s\n',['%recommended to change the script ',script_name,' once ']);
+        fprintf(fid,'%s\n','%it is well defined, but instead to perform all modifications in the');
+        fprintf(fid,'%s\n','%present script, before running sluke.');
+        fprintf(fid,'%s\n','%This is the correct practice to perform clear multi-machine,');
+        fprintf(fid,'%s\n','%multi-discharge, multi-time or multi-parameters scans.');
+        fprintf(fid,'%s\n','%Reload this file as many times as necessary to check the simulation status ');
+        fprintf(fid,'%s\n','%if remote calculations are performed until they are all done. Then, the '); 
+        fprintf(fid,'%s\n','%line ''sluke(sparams,mfilename)'' may be commented, such that the remaining ');
+        fprintf(fid,'%s\n','%part of the script may be fully executed without calling the simulation.');
+        fprintf(fid,'%s\n','%status on the remote computer (optional).');
+        %
+        fprintf(fid,'%s\n','%--------------------------------------------------------------------------');
+        fprintf(fid,'%s\n','clear all');
+        fprintf(fid,'%s\n','close all');
+        fprintf(fid,'%s\n','clc');
+        fprintf(fid,'%s\n',[script_name(1:end-2),';%load simulation parameters ']);
+        fprintf(fid,'%s\n','sluke(sparams,mfilename);%main calculations'); 
+        fprintf(fid,'%s\n','%--------------------------------------------------------------------------');
+        fprintf(fid,'%s\n','%Put beyond sluke call any personal secondary calculations, plots, ... ');
+        %
+        %
+    fclose(fid);
+    %
+end
+

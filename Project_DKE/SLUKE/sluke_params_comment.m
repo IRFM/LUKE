@@ -123,13 +123,13 @@ switch str_i
     case 'simul.jprofileconsistency.code'
         str_o = 'Name of the tokamak code for current density profile selfconsistency between LUKE and the toroidal MHD equilibrium solver. If empty, no selfconsistency is performed.'; 
     %
-    case 'simul.jprofileconsistency.METIS.nit'
+    case 'simul.jprofileconsistency.nit'
         str_o = 'Maximum number of iteration for convergence loop. If 1 standard sluke is performed. ONLY FIELD IN JPROFILECONSISTENCY NEEDED. IT IS POSSIBLE TO CLEAR ANY OTHER FIELD. IF ANY OTHER FIELD IS EMPTY PRESET VALUES WILL BE TAKEN INTO ACCOUNT';
     %
-    case 'simul.jprofileconsistency.METIS.toll'
+    case 'simul.jprofileconsistency.toll'
         str_o = 'Maximum relative difference in current profile among subsequent iteration allowed to exit loop. If empty set to 0.1';
     %
-    case 'simul.jprofileconsistency.METIS.log'
+    case 'simul.jprofileconsistency.log'
         str_o = 'Flag to create a live log of the process. If empty set to zero.';
     %
     case 'simul.jprofileconsistency.METIS.stepsavedata'
