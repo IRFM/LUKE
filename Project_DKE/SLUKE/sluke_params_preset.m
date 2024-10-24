@@ -200,7 +200,7 @@ if save_mode && ~isempty(sparams)
                                         %
                                         if ~isempty(field_file{kk}{jj}) 
                                             %
-                                            eval(['copyfile ../PRESETS_INPUTS/',field_file{kk}{jj},' ',field_path{kk}{jj},'/']);
+                                            eval(['copyfile ',dkepath.luke_root,'Project_DKE/SLUKE/PRESETS_INPUTS/',field_file{kk}{jj},' ',field_path{kk}{jj},'/']);
                                             %
                                         end
                                         %
@@ -224,7 +224,7 @@ if save_mode && ~isempty(sparams)
                                     %
                                     if ~isempty(field_file{jj}) 
                                         %
-                                        eval(['copyfile ../PRESETS_INPUTS/',field_file{jj},' ',field_path{jj},'/']);
+                                        eval(['copyfile ',dkepath.luke_root,'Project_DKE/SLUKE/PRESETS_INPUTS/',field_file{jj},' ',field_path{jj},'/']);
                                         %
                                     end
                                     %
@@ -656,20 +656,22 @@ function [] = make_main_simulation_script(script_name)
         fprintf(fid,'%s\n','%--------------------------------------------------------------------------');
         fprintf(fid,'%s\n','%General script to run a sluke simulation from a parameter structure ');
         fprintf(fid,'%s\n',['%created by the call to the script ',script_name,'. It is not ']);
-        fprintf(fid,'%s\n',['%recommended to change the script ',script_name,' once well defined, but ']);
-        fprintf(fid,'%s\n','%to perform all modifications in the present script, before running sluke.');
-        fprintf(fid,'%s\n','%This is the correct practice to perform multi-machine, multi-discharge,');
-        fprintf(fid,'%s\n','%multi-time or multi-parameters scans.');
+        fprintf(fid,'%s\n',['%recommended to change the script ',script_name,' once ']);
+        fprintf(fid,'%s\n','%it is well defined, but instead to perform all modifications in the');
+        fprintf(fid,'%s\n','%present script, before running sluke.');
+        fprintf(fid,'%s\n','%This is the correct practice to perform clear multi-machine,');
+        fprintf(fid,'%s\n','%multi-discharge, multi-time or multi-parameters scans.');
         fprintf(fid,'%s\n','%Reload this file as many times as necessary to check the simulation status ');
         fprintf(fid,'%s\n','%if remote calculations are performed until they are all done. Then, the '); 
         fprintf(fid,'%s\n','%line ''sluke(sparams,mfilename)'' may be commented, such that the remaining ');
-        fprintf(fid,'%s\n','%part of the script may be executed.');
+        fprintf(fid,'%s\n','%part of the script may be fully executed without calling the simulation.');
+        fprintf(fid,'%s\n','%status on the remote computer (optional).');
         %
         fprintf(fid,'%s\n','%--------------------------------------------------------------------------');
         fprintf(fid,'%s\n','clear all');
         fprintf(fid,'%s\n','close all');
         fprintf(fid,'%s\n','clc');
-        fprintf(fid,'%s\n',[script_name,';%load simulation parameters ']);
+        fprintf(fid,'%s\n',[script_name(1:end-2),';%load simulation parameters ']);
         fprintf(fid,'%s\n','sluke(sparams,mfilename);%main calculations'); 
         fprintf(fid,'%s\n','%--------------------------------------------------------------------------');
         fprintf(fid,'%s\n','%Put beyond sluke call any personal secondary calculations, plots, ... ');
