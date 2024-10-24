@@ -19,6 +19,8 @@ function [presets_list,sparams] = sluke_params_preset(presets_names,remote_calcu
 %
 sparams = struct([]);
 %
+dkepath = getappdata(0,'dkepath');
+%
 presets_list0 = {'ITER_EC';'TORESUPRA_LH';'WEST_LH';'STEP_EBW';'TORESUPRA_OHM'};
 %
 remote_calculation0 = {'LOCAL';'REMOTE'};
@@ -109,7 +111,7 @@ if save_mode && ~isempty(sparams)
                                     %
                                     if ~isempty(field_file{kk}{jj}) 
                                         %
-                                        eval(['copyfile ../PRESETS_INPUTS/',field_file{kk}{jj},' ',field_path{kk}{jj},'/']);
+                                        eval(['copyfile ',dkepath.luke_root,'Project_DKE/SLUKE/PRESETS_INPUTS/',field_file{kk}{jj},' ',field_path{kk}{jj},'/']);
                                         %
                                     end
                                     %
@@ -133,7 +135,7 @@ if save_mode && ~isempty(sparams)
                                 %
                                 if ~isempty(field_file{jj}) 
                                     %
-                                    eval(['copyfile ../PRESETS_INPUTS/',field_file{jj},' ',field_path{jj},'/']);
+                                    eval(['copyfile ',dkepath.luke_root,'Project_DKE/SLUKE/PRESETS_INPUTS/',field_file{jj},' ',field_path{jj},'/']);
                                     %
                                 end
                                 %
@@ -300,9 +302,9 @@ function sparams = make_preset_LOCAL(presets_names)
     sparams.simul.remote.scheduler.slurm.walltime = {24,24,24};%SLURM scheduler : job walltime in hours
     %
     sparams.simul.jprofileconsistency.code = {'METIS' 'METIS' 'METIS'};%Name of the tokamak code for current density profile selfconsistency between LUKE and the toroidal MHD equilibrium. If empty, no selfconsistency is performed. 
-    sparams.simul.jprofileconsistency.METIS.nit = {[0] [0] [0]};%Maximum number of iteration for convergence loop. If 1 standard sluke is performed. ONLY FIELD IN JPROFILECONSISTENCY NEEDED. IT IS POSSIBLE TO CLEAR ANY OTHER FIELD. IF ANY OTHER FIELD IS EMPTY PRESET VALUES WILL BE TAKEN INTO ACCOUNT
-    sparams.simul.jprofileconsistency.METIS.toll = {[0] [0] [0]};%Maximum relative difference in current profile among subsequent iteration allowed to exit loop. If empty set to 0.1
-    sparams.simul.jprofileconsistency.METIS.log = {[1] [1] [1]};%Flag to create a live log of the process. If empty set to zero.
+    sparams.simul.jprofileconsistency.nit = {[0] [0] [0]};%Maximum number of iteration for convergence loop. If 1 standard sluke is performed. ONLY FIELD IN JPROFILECONSISTENCY NEEDED. IT IS POSSIBLE TO CLEAR ANY OTHER FIELD. IF ANY OTHER FIELD IS EMPTY PRESET VALUES WILL BE TAKEN INTO ACCOUNT
+    sparams.simul.jprofileconsistency.toll = {[0] [0] [0]};%Maximum relative difference in current profile among subsequent iteration allowed to exit loop. If empty set to 0.1
+    sparams.simul.jprofileconsistency.log = {[1] [1] [1]};%Flag to create a live log of the process. If empty set to zero.
     sparams.simul.jprofileconsistency.METIS.stepsavedata = {[1:8] [1:8] [1:8]};% Step in which the code will save partial loop data. If empty set to an empty vector
     sparams.simul.jprofileconsistency.METIS.tprofonoff = {[true] [true] [true]};% Bool for autoTSmetis. If empty set to zero.
     sparams.simul.jprofileconsistency.METIS.datapath = {[pwd] [pwd] [pwd]};% String with complete path of current SLUKE simulation. If empty the code will try to get on their own. If not valid log and stepsavedata functions will not be excluded.
