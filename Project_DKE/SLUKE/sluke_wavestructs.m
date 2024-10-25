@@ -114,6 +114,16 @@ else
                 %
                 if strcmp(sparams.rfwaves.antenna.type{ii}{kk},'LH')
                     %
+                    if ~isfield(wavestructs{kk1}.launch,'omega_rf') && isfield(sparams.rfwaves.antenna.LH.C3PO.launch,'freq_GHz_rf')
+                        %
+                        wavestructs{kk1}.launch.omega_rf = sparams.rfwaves.antenna.LH.C3PO.launch.freq_GHz_rf*2*pi*1e9;%wave angular frequency (rad/s)
+                        % 
+                    else
+                        %
+                        error('The regular frequency is not defined for the rf wave at the Lower Hybrid frequency. Please check the input parameters')
+                        %
+                    end
+                    %
                     if strcmp(sparams.rfwaves.antenna.source{ii}{kk},'code')
                         %
                         if strcmp(sparams.rfwaves.antenna.code{ii}{kk},'ALOHA')
@@ -397,17 +407,34 @@ else
                 elseif strcmp(sparams.rfwaves.antenna.type{ii}{kk},'EC')
                     %
                     if strcmp(sparams.rfwaves.antenna.source{ii}{kk},'code')
+                        
 
                     else
-
+                        %   
+                        if ~isfield(wavestructs{kk1}.launch,'omega_rf') && isfield(sparams.rfwaves.antenna.EC.C3PO.launch,'freq_GHz_rf')
+                            %
+                            wavestructs{kk1}.launch.omega_rf = wavestructs{kk1}.launch.freq_GHz_rf*2*pi*1e9;%wave angular frequency (rad/s)
+                            % 
+                        else
+                            %
+                            error('The regular frequency is not defined for the rf wave at the Electron Cyclotron frequency. Please check the input parameters')
+                            %
+                        end  
+                        % 
+                        wavestructs{kk1}.launch.yalpha_L = sign(wavestructs{kk1}.launch.beta_prater)*pi - atan(tand(wavestructs{kk1}.launch.beta_prater)/cosd(wavestructs{kk1}.launch.alpha_prater));%horizontal angle with respect to R (rad)
+                        wavestructs{kk1}.launch.ybeta_L = acos(cosd(wavestructs{kk1}.launch.beta_prater)*sind(wavestructs{kk1}.launch.alpha_prater));%vertical angle with respect to Z (rad)
+                        wavestructs{kk1}.launch.w0 = 0.3/(wavestructs{kk1}.launch.freq_GHz_rf*pi*wavestructs{kk1}.launch.cone_div*pi/180);
+                        %
                     end
                     %
                 elseif strcmp(sparams.rfwaves.antenna.type{ii}{kk},'EBW')
                     %
                     if strcmp(sparams.rfwaves.antenna.source{ii}{kk},'code')
-
+                        %
+                        
+                        %
                     else
-
+                        
                     end
                     %
                 else
