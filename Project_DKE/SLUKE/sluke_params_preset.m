@@ -1,4 +1,4 @@
-function [presets_list,sparams] = sluke_params_preset(presets_names,remote_calculation,save_mode)
+function [presets_list,sparams] = sluke_params_preset(presets_names,remote_calculation,diagnostic_mode,save_mode)
 %
 % LUKE - Generator of parameters structure for sluke calculations from a preset name. All parameters are in a structure of cell arrays of the SAME SIZE. 
 % 
@@ -7,6 +7,7 @@ function [presets_list,sparams] = sluke_params_preset(presets_names,remote_calcu
 %   - presets_names : names of the presets [cell of strings]. If empty or not defined (no input), only the available list of presets names is output
 %   - remote_calculation : (0) or LOCAL, (1) or REMOTE (string) 
 %     (default : 0)
+%   - diagnostic_mode : (0) no diagnostics, (1) all diagnostics
 %   - save_mode : (2) : all presets are saved in a single folder ready to start a sluke simulations, (1) each preset is saved in a separate folder ready to start a sluke simulations,(0) no simulation folder 
 %     (default : 0)
 %
@@ -37,15 +38,22 @@ if nargin == 0
     %
     presets_names = '';
     remote_calculation = 'LOCAL';
+    diagnostic_mode = 0;
     save_mode = 0;
     return
     %
 elseif nargin == 1
     %
     remote_calculation = 'LOCAL';
+    diagnostic_mode = 0;
     save_mode = 0;
     %
 elseif nargin == 2
+    %
+    diagnostic_mode = 0;
+    save_mode = 0;
+    %
+elseif nargin == 3
     %
     save_mode = 0;
     %
@@ -79,7 +87,7 @@ if save_mode && ~isempty(sparams)
         cd(foldername);
         %
         script_name = sluke_params_script(sparams,filename);
-        make_main_simulation_script(script_name);
+        make_main_simulation_script(script_name,diagnostic_mode);
         %
         sparams_fieldnames = fieldnamesr(sparams);%recursive list of fields and subfields
         %
@@ -168,7 +176,7 @@ if save_mode && ~isempty(sparams)
             %
             sparams_sub = sluke_params_extract(sparams,kk);
             script_name = sluke_params_script(sparams_sub,filename);
-            make_main_simulation_script(script_name);
+            make_main_simulation_script(script_name,diagnostic_mode);
             %
             sparams_fieldnames = fieldnamesr(sparams_sub);%recursive list of fields and subfields
             %
@@ -307,8 +315,7 @@ function sparams = make_preset_LOCAL(presets_names)
     sparams.simul.jprofileconsistency.toll = {[0] [0] [0]};%Maximum relative difference in current profile among subsequent iteration allowed to exit loop. If empty set to 0.1
     sparams.simul.jprofileconsistency.log = {[1] [1] [1]};%Flag to create a live log of the process. If empty set to zero.
     sparams.simul.jprofileconsistency.METIS.stepsavedata = {[1:8] [1:8] [1:8]};% Step in which the code will save partial loop data. If empty set to an empty vector
-    sparams.simul.jprofileconsistency.METIS.tprofonoff = {[true] [true] [true]};% Bool for autoTSmetis. If empty set to zero.
-    sparams.simul.jprofileconsistency.METIS.datapath = {[pwd] [pwd] [pwd]};% String with complete path of current SLUKE simulation. If empty the code will try to get on their own. If not valid log and stepsavedata functions will not be excluded.
+    sparams.simul.jprofileconsistency.METIS.tprofonoff = {[1] [1] [1]};% Bool for autoTSmetis. If empty set to zero.
     sparams.simul.jprofileconsistency.METIS.sourceoutside.use = {[1] [1] [1]};% Flag for sourceoutside functionality. Enforce use of already done simulation instead of doing actual calculation in certain step. If empty set to 0
     sparams.simul.jprofileconsistency.METIS.sourceoutside.file = {[''] [''] ['']};% String containing the path (relative to the simulation path) of the already done simulation to load.
     sparams.simul.jprofileconsistency.METIS.sourceoutside.condition = {['jit==1'] ['jit==1'] ['jit==1']};% String containing a condition to be evaluated. When It is true the code will try to load the simulation pointed by sourceoutside.file. If empty set to .jit==1’. Useful name to know: jit is the loop index, jitmax is the maximum number of iterations.
@@ -393,7 +400,7 @@ function sparams = make_preset_LOCAL(presets_names)
     sparams.equil.fit.comment = {'','',''};%Some general comments on the vectorial toroidal MHD equilibrium calculations
     sparams.equil.fit.mode_equil = {1,1,1};%
     sparams.equil.fit.method = {'spline','spline','spline'};%
-    sparams.equil.fit.nharm = {NaN,NaN,NaN};%
+    sparams.equil.fit.nharm = {32,NaN,NaN};%
     sparams.equil.fit.ngridresample = {1001,1001,1001};%
     sparams.equil.fit.opt_load = {0,0,0};%
     %
@@ -452,7 +459,7 @@ function sparams = make_preset_LOCAL(presets_names)
     sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.mode = {{},{0,0},{0,0}};%display (0) none (1) text only (2) text and figures (default : 0)
     sparams.rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.comparison = {{},{1,1},{1,1}};%display comparison between experimental value and calculations (1) yes (0) no
     %
-    sparams.rfwaves.antenna.LH.C3PO.launch.omega_rf = {{},{2.3248e+10,2.3248e+10},{2.3248e+10,2.3248e+10}};
+    sparams.rfwaves.antenna.LH.C3PO.launch.freq_GHz_rf = {{NaN},{3.7,3.7},{3.7,3.7}};%Regular rf frequency GHz
     sparams.rfwaves.antenna.LH.C3PO.launch.bNpar0 = {{},{[-1.9149,6.0000],[-1.9149,6.0000]},{[-1.9149,6.0000],[-1.9149,6.0000]}};
     sparams.rfwaves.antenna.LH.C3PO.launch.bdNpar0 = {{},{[0.2,0.2],[0.2,0.2]},{[0.2,0.2],[0.2,0.2]}};
     sparams.rfwaves.antenna.LH.C3PO.launch.bPlhtot = {{},{[1950400,835900],[1950400,835900]},{[1950400,835900],[1950400,835900]}};
@@ -465,8 +472,8 @@ function sparams = make_preset_LOCAL(presets_names)
     sparams.rfwaves.antenna.LH.C3PO.launch.mmode = {{},{-1,-1},{-1,-1}};
     sparams.rfwaves.antenna.LH.C3PO.launch.nparp = {{},{0,0},{0,0}};
     sparams.rfwaves.antenna.LH.C3PO.launch.a_sdNpar = {{},{0,0},{0,0}};
-    sparams.rfwaves.antenna.LH.C3PO.launch.w0 = {{},{NaN,NaN},{NaN,NaN}};
-    sparams.rfwaves.antenna.LH.C3PO.launch.z_L = {{},{NaN,NaN},{NaN,NaN}};
+    %sparams.rfwaves.antenna.LH.C3PO.launch.w0 = {{},{NaN,NaN},{NaN,NaN}};
+    %sparams.rfwaves.antenna.LH.C3PO.launch.z_L = {{},{NaN,NaN},{NaN,NaN}};
     %{
     sparams.rfwaves.antenna.LH.C3PO.launch.ns = {{},{1000,1000},{1000,1000}};
     sparams.rfwaves.antenna.LH.C3PO.launch.n0 = {{},{NaN,NaN},{NaN,NaN}};
@@ -482,6 +489,24 @@ function sparams = make_preset_LOCAL(presets_names)
     sparams.rfwaves.antenna.LH.C3PO.launch.tail.bP_tail = {{},{0.5,0.5},{0.5,0.5}};
     sparams.rfwaves.antenna.LH.C3PO.launch.tail.bopt_tail = {{},{0.0000 + 1.0000i,0.0000 + 1.0000i},{0.0000 + 1.0000i,0.0000 + 1.0000i}};
     %
+    sparams.rfwaves.antenna.EC.C3PO.launch.freq_GHz_rf = {{170},{NaN,NaN},{NaN,NaN}};%Regular rf frequency GHz
+    sparams.rfwaves.antenna.EC.C3PO.launch.yR_L = {{6.4848},{NaN,NaN},{NaN,NaN}};% Major radius in meter (when major radius is finite). See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.yZ_L = {{4.110},{NaN,NaN},{NaN,NaN}};% Vertical position in meter. See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.yphi_L = {{0},{NaN,NaN},{NaN,NaN}};% in radian (toroidal direction) (when major radius is finite). See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.yP_L = {{2e7},{NaN,NaN},{NaN,NaN}};%input EC power in W (when major radius is finite). See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.yx_L =  {{NaN},{NaN,NaN},{NaN,NaN}};% (when major radius is infinite). See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.yy_L = {{NaN},{NaN,NaN},{NaN,NaN}};% (when major radius is infinite). See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.yz_L = {{NaN},{NaN,NaN},{NaN,NaN}};%axial direction in meter (when major radius is infinite). See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.yP_L_2piRp = {{NaN},{NaN,NaN},{NaN,NaN}};%input lineic EC power in W/m (when major radius is infinite)    . See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.cone_div = {{1.08},{NaN,NaN},{NaN,NaN}};%equivalent exp(-2) power cone divergence. See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.cone_ori = {{-0.5},{NaN,NaN},{NaN,NaN}};%equivalent cone origin. See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.focal_point = {{0.35},{NaN,NaN},{NaN,NaN}};%focal point. See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.alpha_prater = {{-63.5},{NaN,NaN},{NaN,NaN}};% angle between N_P and horizontal plane (Prater's definition). See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.beta_prater = {{22},{NaN,NaN},{NaN,NaN}};% angle between N and poloidal plane (Prater's definition). See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.dNpar0 = {{NaN},{NaN,NaN},{NaN,NaN}};%See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.ns = {{3000},{NaN,NaN},{NaN,NaN}};%See main_rayinit_launch_jd.m for more details
+    sparams.rfwaves.antenna.EC.C3PO.launch.method = {{'cubic'},{NaN,NaN},{NaN,NaN}};%See main_rayinit_launch_jd.m for more details
+    %
     sparams.rfwaves.solver.type = {{'ray-tracing'},{'ray-tracing','ray-tracing'},{'ray-tracing','ray-tracing'}};
     sparams.rfwaves.solver.code = {{'C3PO'},{'C3PO','C3PO'},{'C3PO','C3PO'}};
     sparams.rfwaves.solver.enable = {{1},{1,1},{1,1}};
@@ -491,22 +516,22 @@ function sparams = make_preset_LOCAL(presets_names)
     %sparams.rfwaves.solver.C3PO.rayparam.source = {{},{'',''},{'',''}};
     %sparams.rfwaves.solver.C3PO.rayparam.file = {{},{'',''},{'',''}};
     %sparams.rfwaves.solver.C3PO.rayparam.path = {{},{'',''},{'',''}};
-    sparams.rfwaves.solver.C3PO.rayparam.testmode = {{},{0,0},{0,0}};
-    sparams.rfwaves.solver.C3PO.rayparam.tensortype = {{},{0,0},{0,0}};
-    sparams.rfwaves.solver.C3PO.rayparam.t0 = {{},{0,0},{0,0}};
-    sparams.rfwaves.solver.C3PO.rayparam.tfinal = {{},{50000,50000},{50000,50000}};
-    sparams.rfwaves.solver.C3PO.rayparam.dt0 = {{},{1e-4,1e-4},{1e-4,1e-4}};
-    sparams.rfwaves.solver.C3PO.rayparam.dS = {{},{1e-3,1e-3},{1e-3,1e-3}};
-    sparams.rfwaves.solver.C3PO.rayparam.tol = {{},{1e-12,1e-12},{1e-12,1e-12}};
-    sparams.rfwaves.solver.C3PO.rayparam.kmax = {{},{50000,50000},{50000,50000}};
-    sparams.rfwaves.solver.C3PO.rayparam.ncyclharm = {{},{3,3},{3,3}};
-    sparams.rfwaves.solver.C3PO.rayparam.reflection = {{},{1,1},{1,1}};
-    sparams.rfwaves.solver.C3PO.rayparam.rel_opt = {{},{1,1},{1,1}};
-    sparams.rfwaves.solver.C3PO.rayparam.nperp = {{},{1000,1000},{1000,1000}};
-    sparams.rfwaves.solver.C3PO.rayparam.pperpmax = {{},{10,10},{10,10}};
-    sparams.rfwaves.solver.C3PO.rayparam.tau_lim = {{},{20,20},{20,20}};
-    sparams.rfwaves.solver.C3PO.rayparam.kextra = {{},{2000,2000},{2000,2000}};
-    sparams.rfwaves.solver.C3PO.rayparam.colldamp = {{},{1,1},{1,1}};
+    sparams.rfwaves.solver.C3PO.rayparam.testmode = {{0},{0,0},{0,0}};
+    sparams.rfwaves.solver.C3PO.rayparam.tensortype = {{0},{0,0},{0,0}};
+    sparams.rfwaves.solver.C3PO.rayparam.t0 = {{0},{0,0},{0,0}};
+    sparams.rfwaves.solver.C3PO.rayparam.tfinal = {{50000},{50000,50000},{50000,50000}};
+    sparams.rfwaves.solver.C3PO.rayparam.dt0 = {{1e-4},{1e-4,1e-4},{1e-4,1e-4}};
+    sparams.rfwaves.solver.C3PO.rayparam.dS = {{1e-3},{1e-3,1e-3},{1e-3,1e-3}};
+    sparams.rfwaves.solver.C3PO.rayparam.tol = {{1e-8},{1e-12,1e-12},{1e-12,1e-12}};
+    sparams.rfwaves.solver.C3PO.rayparam.kmax = {{50000},{50000,50000},{50000,50000}};
+    sparams.rfwaves.solver.C3PO.rayparam.ncyclharm = {{3},{3,3},{3,3}};
+    sparams.rfwaves.solver.C3PO.rayparam.reflection = {{0},{1,1},{1,1}};
+    sparams.rfwaves.solver.C3PO.rayparam.rel_opt = {{1},{1,1},{1,1}};
+    sparams.rfwaves.solver.C3PO.rayparam.nperp = {{1000},{1000,1000},{1000,1000}};
+    sparams.rfwaves.solver.C3PO.rayparam.pperpmax = {{10},{10,10},{10,10}};
+    sparams.rfwaves.solver.C3PO.rayparam.tau_lim = {{20},{20,20},{20,20}};
+    sparams.rfwaves.solver.C3PO.rayparam.kextra = {{50},{2000,2000},{2000,2000}};
+    sparams.rfwaves.solver.C3PO.rayparam.colldamp = {{0},{1,1},{1,1}};
     %sparams.rfwaves.solver.C3PO.rayparam.metricmode = {{},{1,1},{1,1}};
     %sparams.rfwaves.solver.C3PO.rayparam.rhoswitch = {{},{0.1,0.1},{0.1,0.1}};
     %sparams.rfwaves.solver.C3PO.rayparam.substitution_method = {{},{7,7},{7,7}};
@@ -515,30 +540,30 @@ function sparams = make_preset_LOCAL(presets_names)
     %sparams.rfwaves.solver.C3PO.raydisplay.source = {{},{'',''},{'',''}};
     %sparams.rfwaves.solver.C3PO.raydisplay.file = {{},{'',''},{'',''}};
     %sparams.rfwaves.solver.C3PO.raydisplay.path = {{},{'',''},{'',''}};
-    sparams.rfwaves.solver.C3PO.raydisplay.ray = {{},{0,0},{0,0}};
-    sparams.rfwaves.solver.C3PO.raydisplay.equilibrium = {{},{0,0},{0,0}};
+    sparams.rfwaves.solver.C3PO.raydisplay.ray = {{0},{0,0},{0,0}};
+    sparams.rfwaves.solver.C3PO.raydisplay.equilibrium = {{0},{0,0},{0,0}};
     %sparams.rfwaves.solver.C3PO.raydisplay.fluctuations = {{},{0,0},{0,0}};
-    sparams.rfwaves.solver.C3PO.raydisplay.p_opt = {{},{-1,-1},{-1,-1}};
+    sparams.rfwaves.solver.C3PO.raydisplay.p_opt = {{-1},{-1,-1},{-1,-1}};
     %sparams.rfwaves.solver.C3PO.raydisplay.mdce = {{},{0,0},{0,0}};
     %
-    sparams.rfwaves.solver.C3PO.waveparam.mmode = {{},{-1,-1},{-1,-1}};
-    sparams.rfwaves.solver.C3PO.waveparam.kmode = {{},{0,0},{0,0}};
-    sparams.rfwaves.solver.C3PO.waveparam.opt_rf = {{},{1,1},{1,1}};
-    sparams.rfwaves.solver.C3PO.waveparam.dsmin = {{},{Inf,Inf},{Inf,Inf}};
-    %sparams.rfwaves.solver.C3PO.waveparam.nd = {{},{0,0},{0,0}};
-    %sparams.rfwaves.solver.C3PO.waveparam.nchi = {{},{0,0},{0,0}};
-    sparams.rfwaves.solver.C3PO.waveparam.n_rf_list = {{},{0,0},{0,0}};
-    %sparams.rfwaves.solver.C3PO.waveparam.ns = {{},{0,0},{0,0}};
-    %sparams.rfwaves.solver.C3PO.waveparam.rhomin = {{},{0,0},{0,0}};
-    sparams.rfwaves.solver.C3PO.waveparam.a_sdNpar = {{},{0,0},{0,0}};
-    sparams.rfwaves.solver.C3PO.waveparam.cut_fac = {{},{2,2},{2,2}};
+    sparams.rfwaves.solver.C3PO.waveparam.mmode = {{-1},{-1,-1},{-1,-1}};
+    sparams.rfwaves.solver.C3PO.waveparam.kmode = {{0},{0,0},{0,0}};
+    sparams.rfwaves.solver.C3PO.waveparam.opt_rf = {{1},{1,1},{1,1}};
+    sparams.rfwaves.solver.C3PO.waveparam.dsmin = {{0},{Inf,Inf},{Inf,Inf}};
+    sparams.rfwaves.solver.C3PO.waveparam.nd = {{4},{NaN,NaN},{NaN,NaN}};
+    sparams.rfwaves.solver.C3PO.waveparam.nchi = {{4},{NaN,NaN},{NaN,NaN}};
+    sparams.rfwaves.solver.C3PO.waveparam.n_rf_list = {{[1 2]},{NaN,NaN},{NaN,NaN}};
+    sparams.rfwaves.solver.C3PO.waveparam.ns = {{1},{NaN,NaN},{NaN,NaN}};
+    sparams.rfwaves.solver.C3PO.waveparam.rhomin = {{0.01},{NaN,NaN},{NaN,NaN}};
+    sparams.rfwaves.solver.C3PO.waveparam.a_sdNpar = {{NaN},{0,0},{0,0}};
+    sparams.rfwaves.solver.C3PO.waveparam.cut_fac = {{NaN},{2,2},{2,2}};
     %
     %sparams.rfwaves.solver.C3PO.C3POparam.clustermode.main_C3PO_jd.mode = {{},{0,0},{0,0}};
     %sparams.rfwaves.solver.C3PO.C3POparam.clustermode.main_C3PO_jd.timeout = {{},{1000,1000},{1000,1000}};
     %sparams.rfwaves.solver.C3PO.C3POparam.clustermode.main_C3PO_jd.size = {{},{12,12},{12,12}};
     %sparams.rfwaves.solver.C3PO.C3POparam.clustermode.main_C3PO_jd.mem = {{},{500,500},{500,500}};
-    sparams.rfwaves.solver.C3PO.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = {{},{0,0},{0,0}};
-    sparams.rfwaves.solver.C3PO.C3POparam.clustermode.main_C3PO_jd.scheduler.memory = {{},{500,500},{500,500}};
+    sparams.rfwaves.solver.C3PO.C3POparam.clustermode.main_C3PO_jd.scheduler.mode = {{0},{0,0},{0,0}};
+    sparams.rfwaves.solver.C3PO.C3POparam.clustermode.main_C3PO_jd.scheduler.memory = {{500},{500,500},{500,500}};
     %
     % post-processing calculations parameters  
     %
@@ -553,7 +578,7 @@ function sparams = make_preset_LOCAL(presets_names)
     sparams.postprocessing.peakmode = {1,1,1};%no interactive post-processing display
     sparams.postprocessing.rho = {'t','t','t'};%no interactive post-processing display
     sparams.postprocessing.spec = {0,0,0};%no interactive post-processing display
-    sparams.postprocessing.its_rf = {true,true,true};%no interactive post-processing display
+    sparams.postprocessing.its_rf = {1,1,1};%no interactive post-processing display
     sparams.postprocessing.blist = {'','',''};%no interactive post-processing display
     sparams.postprocessing.diaryname = {'','',''};%no interactive post-processing display       
     %
@@ -649,7 +674,7 @@ function sparams = make_preset_REMOTE(presets_names)
     %
 end
 %
-function [] = make_main_simulation_script(script_name)
+function [] = make_main_simulation_script(script_name,diagnostic_mode)
     %
     fid = fopen(['run_sluke_',script_name(14:end)],'w');
         %
@@ -673,6 +698,15 @@ function [] = make_main_simulation_script(script_name)
         fprintf(fid,'%s\n','close all');
         fprintf(fid,'%s\n','clc');
         fprintf(fid,'%s\n',[script_name(1:end-2),';%load simulation parameters ']);
+        fprintf(fid,'%s\n');
+        %
+        if diagnostic_mode == 0
+            %
+            fprintf(fid,'%s\n','sparams = rmfield(sparams,''diags'');%remove diagnostics from simulations ');
+            fprintf(fid,'%s\n');
+            %
+        end
+        %
         fprintf(fid,'%s\n','sluke(sparams,mfilename);%main calculations'); 
         fprintf(fid,'%s\n','%--------------------------------------------------------------------------');
         fprintf(fid,'%s\n','%Put beyond sluke call any personal secondary calculations, plots, ... ');
