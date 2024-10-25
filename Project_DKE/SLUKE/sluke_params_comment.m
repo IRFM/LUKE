@@ -498,8 +498,8 @@ switch str_i
     case 'rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.comparison'
         str_o = 'display comparison between experimental value and calculations (1) yes (0) no';
     %
-    case 'rfwaves.antenna.LH.C3PO.launch.omega_rf'
-        str_o = '';
+    case 'rfwaves.antenna.LH.C3PO.launch.freq_GHz_rf'
+        str_o = 'Regular rf frequency GHz';
     %
     case 'rfwaves.antenna.LH.C3PO.launch.bNpar0'
         str_o = '';
