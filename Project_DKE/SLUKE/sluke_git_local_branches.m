@@ -7,7 +7,7 @@ function [active_branch,branches,username] = sluke_git_local_branches(sparams,ii
 [status, username] = unix('whoami');%local username
 username = deblank(username);
 %
-[status, cmdout] = system(['ssh ',username,'@localhost "cd ',dkepath.luke_root,';git branch"']);
+[status, cmdout] = system(['timeout 10 ssh ',username,'@localhost "cd ',dkepath.luke_root,';git branch"']);
 branches = strsplit(deblank(cmdout),'\n');
 %
 for ib = 1:length(branches)

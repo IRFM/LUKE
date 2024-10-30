@@ -54,7 +54,7 @@ else
         %
         if strcmp(lukegitbranch,local_branches{ib}) && flag_active_branch == 0
             %
-            [local_status, local_cmdout] = system(['ssh ',username,'@localhost "cd ',dkepath.luke_root,';git checkout ',lukegitbranch,'"']);
+            [local_status, local_cmdout] = system(['timeout 10 ssh ',username,'@localhost "cd ',dkepath.luke_root,';git checkout ',lukegitbranch,'"']);
             %
             if local_status == 0
                 %
