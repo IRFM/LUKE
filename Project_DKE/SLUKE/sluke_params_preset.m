@@ -743,7 +743,6 @@ function sparams = make_preset_LOCAL(presets_names)
     %
 end
 %
-
 function sparams = make_preset_LOCAL1
     %
     sparams.machine = {'WEST','TORESUPRA','STEP'};%Name of tokamaks
@@ -757,13 +756,13 @@ function sparams = make_preset_LOCAL1
     %
     % simulation parameters  
     %
-    sparams.simul.id = {'ITER_EC' 'TORESUPRA_LH' 'WEST_LH'};%Simulation identifier (no '-' character)
-    sparams.simul.signature = {'Yves Savoye-Peysson' '' ''};%The first and last names of the person doing these simulations
+    sparams.simul.id = {'WEST_EC' 'TORESUPRA_OHM' 'STEP_EBW'};%Simulation identifier (no '-' character)
+    sparams.simul.signature = {'Yves Savoye-Peysson' '' ''};%The first and last names of the person doing these simulations. In the simulation name (id) of the generated files, only the capital letters in the signature are kept as a short signature version.
     sparams.simul.comment = {'For EC wave test' '' ''};%Some general comments to explain the simulation
     sparams.simul.enable = {1,0,0};%Enable (1) or not (0) the simulations
-    sparams.simul.enforce = {0,0,0};%(2) : enforce new simulation and erase all files of previous simulations, (1) : enforce new simulation but erase only necessary files of previous simulations (check the different folders), (0) : simulation is not enforced (but may be canceled : file LUKE_DATA_*** can be deleted in case of problem),  -1 : simulation is not enforced and not canceled
+    sparams.simul.enforce = {1,0,0};%(2) : enforce new simulation and erase all files of previous simulations, (1) : enforce new simulation but erase only necessary files of previous simulations (check the different folders), (0) : simulation is not enforced (but may be canceled : file LUKE_DATA_*** can be deleted in case of problem),  -1 : simulation is not enforced and not canceled
     sparams.simul.log = {1,1,1};%Generate log file (diary)
-    sparams.simul.output = {1,1,1};%(0) : LUKE processed data and available synthetic diagnostics + full LUKE output (WARNING : very large *.mat file), (1) : LUKE processed data only and available synthetic diagnostics
+    sparams.simul.output = {0,0,0};%(0) : LUKE processed data and available synthetic diagnostics + full LUKE output (WARNING : very large *.mat file), (1) : LUKE processed data only and available synthetic diagnostics
     %
     sparams.simul.remote.profile = {'local' 'local' 'local'};%Calculation profile. Local interactive calculations -> '0' or 'local'. Remote calculations : type first dispremoteprofiles('','scheduler'); to get by values and names the available remote machines on which LUKE calculations can be performed. Profiles in MatRemote toolboxes must be defined first, then incorporated in the local LUKE path file.
     sparams.simul.remote.mode = {0,0,0};%Distributed remote calculation mode -> (-2,-1) : remcomputing on the remote cluster dkepath.remote(-mdce_mode) (0) : sequential calculation (1)  : use of jobcomputing (2) : use of parcomputing (parfor) (3) : remcomputing on the local cluster
@@ -1098,6 +1097,14 @@ function sparams = make_preset_LOCAL1
     sparams.diags.DSPX.R5X2.hxrparam.kphot = {[20:10:240],[20:10:240],[20:10:240]};%Photon energy in keV (important for bremsstrahlung with partial screening effects)
     sparams.diags.DSPX.R5X2.hxrparam.full_results = {0,0,0};%Save all simulations results (1) or just those that can be compared directly to experimental measurements (0).
     %
+    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.screening_model = {'Tseng-Pratt-Botto','Tseng-Pratt-Botto','Tseng-Pratt-Botto'};%screening model for bremsstrahlung
+    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.nphi = {NaN,NaN,NaN};%for numerical integration 1BS -> 2BN. If nphi = NaN, formula deduced from analytical integration in phi is used (4-D). Otherwise (5-D)
+    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.flag_mem = {1,1,1};%Memory management enforcement : 0 -> 5-D block numerical calculations, 1 -> 4-D block numerical calculations
+    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.ntheta = {2006,2006,2006};%for numerical integration 1BS -> 2BN
+    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.integral = {'simps','simps','simps'};%Numerical integration : trapz (trapeze) or simps (Simpson)
+    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.nEc = {300,300,300};%keV (number of incoming electron kinetic energies for calculating the BHE cross-section table with partial screening)
+    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.Ecmax = {1000,1000,1000};%keV (max incoming electron kinetic energy for calculating the BHE cross-section table with partial screening)
+    %
     sparams.diags.MEHXR.id = {'MEHXR','MEHXR','MEHXR'};
     sparams.diags.MEHXR.code = {'R5X2','R5X2','R5X2'};%name of the FEB code
     sparams.diags.MEHXR.remote_calculations = {1,1,1};%Synthetic diagnostic calculations done remotely (1) or locally( 0)
@@ -1118,14 +1125,6 @@ function sparams = make_preset_LOCAL1
     sparams.diags.MEHXR.R5X2.hxrparam.kphot = {[10:5:200],[10:5:200],[10:5:200]};%Photon energy in keV (important for bremsstrahlung with partial screening effects)
     sparams.diags.MEHXR.R5X2.hxrparam.full_results = {0,0,0};%Save all simulations results (1) or just those that can be compared directly to experimental measurements (0).
     %
-    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.screening_model = {'Tseng-Pratt-Botto','Tseng-Pratt-Botto','Tseng-Pratt-Botto'};%screening model for bremsstrahlung
-    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.nphi = {NaN,NaN,NaN};%for numerical integration 1BS -> 2BN. If nphi = NaN, formula deduced from analytical integration in phi is used (4-D). Otherwise (5-D)
-    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.flag_mem = {1,1,1};%Memory management enforcement : 0 -> 5-D block numerical calculations, 1 -> 4-D block numerical calculations
-    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.ntheta = {2006,2006,2006};%for numerical integration 1BS -> 2BN
-    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.integral = {'simps','simps','simps'};%Numerical integration : trapz (trapeze) or simps (Simpson)
-    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.nEc = {300,300,300};%keV (number of incoming electron kinetic energies for calculating the BHE cross-section table with partial screening)
-    sparams.diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.Ecmax = {1000,1000,1000};%keV (max incoming electron kinetic energy for calculating the BHE cross-section table with partial screening)
-    %
 end
 
 function sparams = make_preset_LOCAL2
@@ -1141,13 +1140,13 @@ function sparams = make_preset_LOCAL2
     %
     % simulation parameters  
     %
-    sparams.simul.id = {'ITER_EC' 'TORESUPRA_LH' 'WEST_LH'};%Simulation identifier (no '-' character)
-    sparams.simul.signature = {'Yves Savoye-Peysson' '' ''};%The first and last names of the person doing these simulations
+    sparams.simul.id = {'DIIID_LH' 'EAST_LH' 'HL2A_LH'};%Simulation identifier (no '-' character)
+    sparams.simul.signature = {'Yves Savoye-Peysson' '' ''};%The first and last names of the person doing these simulations. In the simulation name (id) of the generated files, only the capital letters in the signature are kept as a short signature version.
     sparams.simul.comment = {'For EC wave test' '' ''};%Some general comments to explain the simulation
     sparams.simul.enable = {1,0,0};%Enable (1) or not (0) the simulations
-    sparams.simul.enforce = {0,0,0};%(2) : enforce new simulation and erase all files of previous simulations, (1) : enforce new simulation but erase only necessary files of previous simulations (check the different folders), (0) : simulation is not enforced (but may be canceled : file LUKE_DATA_*** can be deleted in case of problem),  -1 : simulation is not enforced and not canceled
+    sparams.simul.enforce = {1,0,0};%(2) : enforce new simulation and erase all files of previous simulations, (1) : enforce new simulation but erase only necessary files of previous simulations (check the different folders), (0) : simulation is not enforced (but may be canceled : file LUKE_DATA_*** can be deleted in case of problem),  -1 : simulation is not enforced and not canceled
     sparams.simul.log = {1,1,1};%Generate log file (diary)
-    sparams.simul.output = {1,1,1};%(0) : LUKE processed data and available synthetic diagnostics + full LUKE output (WARNING : very large *.mat file), (1) : LUKE processed data only and available synthetic diagnostics
+    sparams.simul.output = {0,0,0};%(0) : LUKE processed data and available synthetic diagnostics + full LUKE output (WARNING : very large *.mat file), (1) : LUKE processed data only and available synthetic diagnostics
     %
     sparams.simul.remote.profile = {'local' 'local' 'local'};%Calculation profile. Local interactive calculations -> '0' or 'local'. Remote calculations : type first dispremoteprofiles('','scheduler'); to get by values and names the available remote machines on which LUKE calculations can be performed. Profiles in MatRemote toolboxes must be defined first, then incorporated in the local LUKE path file.
     sparams.simul.remote.mode = {0,0,0};%Distributed remote calculation mode -> (-2,-1) : remcomputing on the remote cluster dkepath.remote(-mdce_mode) (0) : sequential calculation (1)  : use of jobcomputing (2) : use of parcomputing (parfor) (3) : remcomputing on the local cluster

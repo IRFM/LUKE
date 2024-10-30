@@ -962,25 +962,25 @@ switch str_i
     case 'diags.MEHXR.R5X2.hxrparam.full_results'
         str_o = 'Save all simulations results (1) or just those that can be compared directly to experimental measurements (0).';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.screening_model'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.screening_model'
         str_o = 'screening model for bremsstrahlung';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.nphi'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.nphi'
         str_o = 'for numerical integration 1BS -> 2BN. If nphi = NaN, formula deduced from analytical integration in phi is used (4-D). Otherwise (5-D)';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.flag_mem'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.flag_mem'
         str_o = 'Memory management enforcement : 0 -> 5-D block numerical calculations, 1 -> 4-D block numerical calculations';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.ntheta'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.ntheta'
         str_o = 'for numerical integration 1BS -> 2BN';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.integral'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.integral'
         str_o = 'Numerical integration : trapz (trapeze) or simps (Simpson)';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.nEc'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.nEc'
         str_o = 'keV (number of incoming electron kinetic energies for calculating the BHE cross-section table with partial screening)';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.Ecmax'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.Ecmax'
         str_o = 'keV (max incoming electron kinetic energy for calculating the BHE cross-section table with partial screening)';
     %
     otherwise 
