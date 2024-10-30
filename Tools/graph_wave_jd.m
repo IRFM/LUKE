@@ -84,7 +84,7 @@ end
 %
 [qe,me,mp,mn,e0,mu0,re,mc2,clum] = pc_dke_yp;
 %
-method = 'cubic';
+method = 'spline';
 %format
 %n_ec = 2;% to be automatized
 %N = 5;
