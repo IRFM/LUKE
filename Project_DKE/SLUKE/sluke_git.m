@@ -43,7 +43,7 @@ end
 % enforce git branch if specified in sluke simulation parameters on the local computer (will be enforced on the remote using the remote structure)
 %
 if isempty(lukegitbranch)
-    %                        
+    %
     cprintf('*[1,0.5,0]',['---> WARNING : No local git branch specified in sparams for ''',dkepath.luke_project,'''. The default active local branch ''',active_local_branch,''' is used on the local computer and will be enforced on the remote one.']);disp(' ')
     %
 else
@@ -54,7 +54,7 @@ else
         %
         if strcmp(lukegitbranch,local_branches{ib}) && flag_active_branch == 0
             %
-            [local_status, local_cmdout] = system(['timeout 10 ssh ',username,'@localhost "cd ',dkepath.luke_root,';git checkout ',lukegitbranch,'"']);
+            [local_status, local_cmdout] = system(['ssh ',username,'@localhost "cd ',dkepath.luke_root,';git checkout ',lukegitbranch,'"']);
             %
             if local_status == 0
                 %
@@ -152,7 +152,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'git') && isfield(sparams.s
                         %
                     else
                         %
-                        cprintf('*red',['---> WARNING : Last ''git pull'' of the local project MatRemote failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')                        
+                        cprintf('*red',['---> WARNING : Last ''git pull'' of the local project MatRemote failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')
                         %
                     end
                     %
@@ -202,7 +202,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'git') && isfield(sparams.s
                         %
                     else
                         %
-                        cprintf('*red',['---> WARNING : Last ''git pull'' of the local project MatTools failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')                        
+                        cprintf('*red',['---> WARNING : Last ''git pull'' of the local project MatTools failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')
                         %
                     end
                     %
@@ -252,7 +252,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'git') && isfield(sparams.s
                         %
                     else
                         %
-                        cprintf('*red',['---> WARNING : Last ''git pull'' of the local project MatHelp failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')                        
+                        cprintf('*red',['---> WARNING : Last ''git pull'' of the local project MatHelp failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')
                         %
                     end
                     %
@@ -283,7 +283,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'git') && isfield(sparams.s
                 %
                 if remote_profile_num > 0
                     %
-                    [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootproject,remotelukeproject,';git pull']); 
+                    [err(kk),txt{kk}] = matremotecmd(remote,'',['cd ',remotelukerootproject,remotelukeproject,';git pull']);
                     %
                 else
                     %
@@ -303,7 +303,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'git') && isfield(sparams.s
                         %
                     else
                         %
-                        cprintf('*red',['---> WARNING : Last ''git pull'' of the local project ',locallukeproject,' failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')                        
+                        cprintf('*red',['---> WARNING : Last ''git pull'' of the local project ',locallukeproject,' failed because of a merge conflict for some scripts. Please fix the problem manually.']);disp(' ')
                         %
                     end
                     %
@@ -328,7 +328,7 @@ if isfield(sparams,'simul') && isfield(sparams.simul,'git') && isfield(sparams.s
                 end
                 kk = kk + 1;
             end
-            %            
+            %
         end
         %
     else
@@ -347,7 +347,7 @@ end
 %
 if remote_profile_num > 0
     %
-    if isfield(remote,'env') && isfield(remote.env,'luke_root') && ~isempty(remote.env.luke_root) %active LUKE 
+    if isfield(remote,'env') && isfield(remote.env,'luke_root') && ~isempty(remote.env.luke_root) %active LUKE
         %
         [err,txt] = matremotecmd(remote,'',['cd ',remote.env.luke_root,';git rev-parse --verify HEAD > lastgithash.txt']);
         %
@@ -390,7 +390,7 @@ if remote_profile_num > 0
     %
     if (isempty(txt1) && isempty(txt2) && isempty(txt3)) || (err1 + err2 + err3 == 0)
         %
-        cprintf('*green',['---> Last git hash of the remote projects MatRemote, MatTools and MatHelp (',remote_profile_char,') have all been successfully generated.']);disp(' ')        
+        cprintf('*green',['---> Last git hash of the remote projects MatRemote, MatTools and MatHelp (',remote_profile_char,') have all been successfully generated.']);disp(' ')
         %
     end
 
@@ -449,7 +449,7 @@ else
     %
     if err1 + err2 + err3 == 0
         %
-        cprintf('*green',['---> Last git hash of the local projects MatRemote, MatTools and MatHelp have all been successfully generated.']);disp(' ')        
+        cprintf('*green',['---> Last git hash of the local projects MatRemote, MatTools and MatHelp have all been successfully generated.']);disp(' ')
         %
     end
     %
