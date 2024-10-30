@@ -369,7 +369,7 @@ function sparams = make_preset_LOCAL(presets_names)
     %
     sparams.simul.remote.git.projects = {{'MatRemote','MatHelp','MatTools','LUKE_CEA'},{'MatRemote','MatHelp','MatTools','LUKE_CEA'},{'MatRemote','MatHelp','MatTools','LUKE_CEA'}};%List of projects under git control that may be updated remotely from repository (git pull) prior a simulation. (git branch dependent).
     sparams.simul.remote.git.pull = {1,1,1};%Git pull remote projects before running the simulation (1), no remote git pull (0).
-    sparams.simul.git.branch.luke = {'eccd','time','time'};%LUKE git branches. If empty, no git checkout to a specific LUKE branch is enforced. The current active LUKE branch is used either locally and remotely (WARNING : may lead to calculation inconsistencies)
+    sparams.simul.git.branch.luke = {'lhcd','time','lhcd'};%LUKE git branches. If empty, no git checkout to a specific LUKE branch is enforced. The current active LUKE branch is used either locally and remotely (WARNING : may lead to calculation inconsistencies)
     sparams.simul.remote.git.display = {1,1,1};%Display git status in the command window (0) : no display, (1) : display results
     %
     sparams.simul.remote.scheduler.pbs.nodes = {'','',''};%PBS scheduler : number of nodes requested or node names (see PBS syntax). If empty or NaN, default value. For pbs, type 'pbsnodes -a' to get the list of node names
