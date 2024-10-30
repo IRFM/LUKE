@@ -36,6 +36,8 @@ for iray = 1:Nrays,
     sphi_perp = abs(ray.sphi_xyz(1,:));
     sphi_norm = sqrt(abs(ray.sphi_xyz(1,:)).^2 + abs(ray.sphi_xyz(2,:)).^2 + abs(ray.sphi_xyz(3,:)).^2);
     omega_rf = wave.omega_rf;
+    swpe2 = ray.swpe2;
+    swce2 = ray.swce2;
     %
     ns = length(ss);
     %
@@ -155,6 +157,9 @@ for iray = 1:Nrays,
             if ~isnan(swidth),
                 rays{ir}.swidth = swidth;
             end
+            %
+            rays{ir}.swpe2 = swpe2;
+            rays{ir}.swce2 = swce2;
             %
             rays{ir}.rayinits = ray.rayinits;
             %

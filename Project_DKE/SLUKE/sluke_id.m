@@ -18,7 +18,25 @@ id = strrep(id,';','_');
 %
 if isfield(sparams.simul,'signature') && ~isempty(sparams.simul.signature{ii})
     %
-    signature = lower(cellfun(@(c) c(1),strsplit(sparams.simul.signature{ii})));
+    signature_mod = strrep(sparams.simul.signature{ii},' ','');%remove space
+    signature_mod = strrep(signature_mod,'-','');%remove - character
+    signature_mod = strrep(signature_mod,'_','');%remove _ character
+    %
+    for count = 1:length(signature_mod)
+        %
+        if upper(signature_mod(count)) == signature_mod(count)
+            %
+            isupper(count) = 1;
+            %
+        else
+            %
+            isupper(count) = 0;
+            %
+        end
+        %
+    end
+    %
+    signature = signature_mod(find(isupper==1));
     %
     if strcmp(id(end),'_')
         %

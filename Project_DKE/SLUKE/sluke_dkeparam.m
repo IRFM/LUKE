@@ -60,25 +60,25 @@ else
     end
 end
 %
-if isfield(sparams.kinetics.dkeparam,'nmhu_S') && (~isempty(sparams.kinetics.dkeparam.nmhu_S) || ~isnan(sparams.kinetics.dkeparam.nmhu_S))
+if isfield(sparams.kinetics.dkeparam,'nmhu_S') && ~isempty(sparams.kinetics.dkeparam.nmhu_S) && ~isnan(sparams.kinetics.dkeparam.nmhu_S{1})
     %
     dkeparam.nmhu_S = sparams.kinetics.dkeparam.nmhu_S{ii};%enforced value
     %
 end
 %
-if isfield(sparams.kinetics.dkeparam,'np_S') && (~isempty(sparams.kinetics.dkeparam.np_S) || ~isnan(sparams.kinetics.dkeparam.np_S))
+if isfield(sparams.kinetics.dkeparam,'np_S') && ~isempty(sparams.kinetics.dkeparam.np_S) && ~isnan(sparams.kinetics.dkeparam.np_S{1})
     %
     dkeparam.np_S = sparams.kinetics.dkeparam.np_S{ii};%enforced value
     %
 end
 %
-if isfield(sparams.kinetics.dkeparam,'pnmax_S') && (~isempty(sparams.kinetics.dkeparam.pnmax_S) || ~isnan(sparams.kinetics.dkeparam.pnmax_S))
+if isfield(sparams.kinetics.dkeparam,'pnmax_S') && ~isempty(sparams.kinetics.dkeparam.pnmax_S) && ~isnan(sparams.kinetics.dkeparam.pnmax_S{1})
     %
     dkeparam.pnmax_S = sparams.kinetics.dkeparam.pnmax_S{ii};%enforced value
     %
 end   
 %
-if isfield(sparams.kinetics.dkeparam,'rho_S') && (~isempty(sparams.kinetics.dkeparam.rho_S) || ~isnan(sparams.kinetics.dkeparam.rho_S))
+if isfield(sparams.kinetics.dkeparam,'rho_S') && ~isempty(sparams.kinetics.dkeparam.rho_S) && ~isnan(sparams.kinetics.dkeparam.rho_S{1})
     %
     if isreal(sparams.kinetics.dkeparam.rho_S{ii})
         %

@@ -22,10 +22,10 @@ switch str_i
     % simulation parameters  
     %
     case 'simul.id'
-        str_o = 'Simulation identifier';
+        str_o = 'Main simulation identifier (no ''-'' or any operand character)';
     %
     case 'simul.signature'
-        str_o = 'The first and last names of the person doing these simulations';
+        str_o = 'The first and last names of the person doing these simulations. In the simulation name (id) of the generated files, only the capital letters in the signature are kept as a short signature version.';
     %
     case 'simul.comment'
         str_o = 'Some general comments to explain the simulation';
@@ -498,8 +498,8 @@ switch str_i
     case 'rfwaves.antenna.LH.C3PO.ALOHA.spectrum.sdisplay.comparison'
         str_o = 'display comparison between experimental value and calculations (1) yes (0) no';
     %
-    case 'rfwaves.antenna.LH.C3PO.launch.omega_rf'
-        str_o = '';
+    case 'rfwaves.antenna.LH.C3PO.launch.freq_GHz_rf'
+        str_o = 'Regular rf frequency GHz';
     %
     case 'rfwaves.antenna.LH.C3PO.launch.bNpar0'
         str_o = '';
@@ -569,6 +569,59 @@ switch str_i
     case 'rfwaves.antenna.LH.C3PO.launch.tail.bopt_tail'
         str_o = '';
     %
+    % EC wave
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.freq_GHz_rf'
+        str_o = 'Regular rf frequency GHz';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.yR_L'
+        str_o = 'Major radius in meter (when major radius is finite). See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.yZ_L'
+        str_o = 'Vertical position in meter. See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.yphi_L'
+        str_o = 'in radian (toroidal direction) (when major radius is finite). See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.yP_L'
+        str_o = 'input EC power in W (when major radius is finite). See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.yx_L'
+        str_o = '(when major radius is infinite). See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.yy_L'
+        str_o = '(when major radius is infinite). See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.yz_L'
+        str_o = 'axial direction in meter (when major radius is infinite). See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.yP_L_2piRp'
+        str_o = 'input lineic EC power in W/m (when major radius is infinite)    . See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.cone_div'
+        str_o = 'equivalent exp(-2) power cone divergence. See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.cone_ori'
+        str_o = 'equivalent cone origin. See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.focal_point'
+        str_o = 'focal point. See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.alpha_prater'
+        str_o = 'angle between N_P and horizontal plane (Prater''s definition). See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.beta_prater'
+        str_o = 'angle between N and poloidal plane (Prater''s definition). See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.dNpar0'
+        str_o = 'See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.ns'
+        str_o = 'See main_rayinit_launch_jd.m for more details';
+    %
+    case 'rfwaves.antenna.EC.C3PO.launch.method'
+        str_o = 'See main_rayinit_launch_jd.m for more details';
+    %
     case 'rfwaves.solver.type'
         str_o = '';
     %
@@ -590,13 +643,13 @@ switch str_i
         str_o = '';
     %
     case 'rfwaves.solver.C3PO.rayparam.tensortype'
-        str_o = '';
+        str_o = '(0) cold tensor (1) ... ';
     %
     case 'rfwaves.solver.C3PO.rayparam.t0'
-        str_o = '';
+        str_o = 'Initial integration time for the ray-tracing (normalized ray-tracing unit)';
     %
     case 'rfwaves.solver.C3PO.rayparam.tfinal'
-        str_o = '';
+        str_o = 'Maximum integration time for the ray-tracing (normalized ray-tracing unit)';
     %
     case 'rfwaves.solver.C3PO.rayparam.dt0'
         str_o = '';
@@ -611,10 +664,10 @@ switch str_i
         str_o = '';
     %
     case 'rfwaves.solver.C3PO.rayparam.ncyclharm'
-        str_o = '';
+        str_o = 'List of considered cyclotron harmonics, usually up to 3';
     %
     case 'rfwaves.solver.C3PO.rayparam.reflection'
-        str_o = '';
+        str_o = '(1) at a cut-off layer, a specular reflection is applied (0) no specular reflection is applied';
     %
     case 'rfwaves.solver.C3PO.rayparam.rel_opt'
         str_o = '';
@@ -629,10 +682,10 @@ switch str_i
         str_o = '';
     %
     case 'rfwaves.solver.C3PO.rayparam.kextra'
-        str_o = '';
+        str_o = 'Number of extra ray steps after the linear absorption';
     %
     case 'rfwaves.solver.C3PO.rayparam.colldamp'
-        str_o = '';
+        str_o = '(1) non-resonant collisional damping (fluid model) activated (0) no non-resonant  collisional damping (fluid model)';
     %
     %case 'rfwaves.solver.C3PO.rayparam.metricmode = {{},{1,1},{1,1}};
     %case 'rfwaves.solver.C3PO.rayparam.rhoswitch = {{},{0.1,0.1},{0.1,0.1}};
@@ -666,14 +719,20 @@ switch str_i
     case 'rfwaves.solver.C3PO.waveparam.dsmin'
         str_o = '';
     %
-    %case 'rfwaves.solver.C3PO.waveparam.nd';
-    %case 'rfwaves.solver.C3PO.waveparam.nchi = {{},{0,0},{0,0}};
+    case 'rfwaves.solver.C3PO.waveparam.nd'
+        str_o = '';
+    %
+    case 'rfwaves.solver.C3PO.waveparam.nchi'
+        str_o = '';
     %
     case 'rfwaves.solver.C3PO.waveparam.n_rf_list'
         str_o = '';
     %
-    %case 'rfwaves.solver.C3PO.waveparam.ns = {{},{0,0},{0,0}};
-    %case 'rfwaves.solver.C3PO.waveparam.rhomin = {{},{0,0},{0,0}};
+    case 'rfwaves.solver.C3PO.waveparam.ns'
+        str_o = '';
+    %
+    case 'rfwaves.solver.C3PO.waveparam.rhomin'
+        str_o = '';
     %
     case 'rfwaves.solver.C3PO.waveparam.a_sdNpar'
         str_o = '';
@@ -903,25 +962,25 @@ switch str_i
     case 'diags.MEHXR.R5X2.hxrparam.full_results'
         str_o = 'Save all simulations results (1) or just those that can be compared directly to experimental measurements (0).';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.screening_model'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.screening_model'
         str_o = 'screening model for bremsstrahlung';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.nphi'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.nphi'
         str_o = 'for numerical integration 1BS -> 2BN. If nphi = NaN, formula deduced from analytical integration in phi is used (4-D). Otherwise (5-D)';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.flag_mem'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.flag_mem'
         str_o = 'Memory management enforcement : 0 -> 5-D block numerical calculations, 1 -> 4-D block numerical calculations';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.ntheta'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.ntheta'
         str_o = 'for numerical integration 1BS -> 2BN';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.integral'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.integral'
         str_o = 'Numerical integration : trapz (trapeze) or simps (Simpson)';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.nEc'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.nEc'
         str_o = 'keV (number of incoming electron kinetic energies for calculating the BHE cross-section table with partial screening)';
     %
-    case 'diags.DSPX.R5X2.hxrparam.screening.partial.params.tables.Ecmax'
+    case 'diags.MEHXR.R5X2.hxrparam.screening.partial.params.tables.Ecmax'
         str_o = 'keV (max incoming electron kinetic energy for calculating the BHE cross-section table with partial screening)';
     %
     otherwise 
