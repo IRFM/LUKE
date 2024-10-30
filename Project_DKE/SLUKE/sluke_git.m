@@ -6,6 +6,11 @@ function sluke_git(sparams,ii)
 %
 [remote_profile_num,remote_profile_char] = sluke_remote_profile(sparams,ii,0,1);
 %
+warning_ssh = ['ERROR : The ssh connection to the local machine is not fully set or is broken. Before running this simulation, please type in a bash shell the following command: ' ...
+ '''ssh YOURUSERNAME@THEMACHINEADDRESS'' and allow it to be trusted in the ssh server list by typing ''Yes''. '...
+ 'This operation should be done only once on all remote computers where LUKE is supposed to be running and the local machine itself (self ssh connection). '...
+ 'For the local machine ''THEMACHINEADDRESS'' is ''localhost'', and ''YOURUSERNAME'' may be obtained by typing the command ''whoami''.'];
+%
 if isfield(sparams,'simul') && isfield(sparams.simul,'git') && isfield(sparams.simul.git,'branch')  && isfield(sparams.simul.git.branch,'luke') && ~isempty(sparams.simul.git.branch.luke{ii})
     %
     lukegitbranch = sparams.simul.git.branch.luke{ii};
@@ -54,7 +59,13 @@ else
         %
         if strcmp(lukegitbranch,local_branches{ib}) && flag_active_branch == 0
             %
-            [local_status, local_cmdout] = system(['ssh ',username,'@localhost "cd ',dkepath.luke_root,';git checkout ',lukegitbranch,'"']);
+            [local_status, local_cmdout] = system(['timeout 10 ssh ',username,'@localhost "cd ',dkepath.luke_root,';git checkout ',lukegitbranch,'" || echo "',warning_ssh,'"']);
+            %
+            if strcmp(warning_ssh,deblank(local_cmdout))
+                %
+                error(warning_ssh);
+                %
+            end
             %
             if local_status == 0
                 %
