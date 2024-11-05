@@ -11,6 +11,9 @@ function [soutputs]= remote_mtsmat(sinputs,signals)
 %
 %       soutputs : signals structure
 %
+%NOTE : data are save in a file place in a folder whose path is defined by the environment variable 'EXPERIMENTAL_TOKAMAK_DATA'. This variable must
+%be defined in the startup file startup.m -> setenv('EXPERIMENTAL_TOKAMAK_DATA','**************')
+%
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
 soutputs = [];
@@ -28,7 +31,43 @@ else
     shotnumber = sinputs;
     %
 end    
-
+%
+datapath = getenv('EXPERIMENTAL_TOKAMAK_DATA');%folder path
+%
+if isempty(datapath)
+    %
+    warning('The environment variable EXPERIMENTAL_TOKAMAK_DATA must be set in the startup.m file. Otherwise, data are stored locally')
+    %
+end
+%
+if ~exist(datapath)
+    %
+    mkdir(datapath);
+    %
+end
+%
+signals = lower(signals);%enforce lower case
+%
+signals_list = '';
+%
+for ii = 1:length(signals)
+    %
+    signals_list = [signals_list,signals{ii},'_'];
+    %
+end
+%
+signals_list = signals_list(1:end-1);
+%
+if exist([datapath,'mtsmat_data_',int2str(shotnumber),'_',signals_list,'.mat'])
+    %
+    load([datapath,'mtsmat_data_',int2str(shotnumber),'_',signals_list,'.mat'],'data');
+    %
+    soutputs = data.soutputs;
+    %
+    return
+    %
+end
+%
 if ~isstruct(sinputs)% new job
     %
     remote = remote_cea;
@@ -121,4 +160,24 @@ else %previously running job
     end
     %
 end
-
+%
+data.soutputs = soutputs;
+%
+if length(['mtsbase_data_',int2str(shotnumber),'_',signals_list,'.mat']) > 255
+    %
+    filename_long = [datapath,'mtsmat_data_',int2str(shotnumber),'_',signals_list,'.mat'];
+    filename = [filename_long(1:254),'~'];%truncated name
+    %
+else
+    %
+    filename = [datapath,'mtsmat_data_',int2str(shotnumber),'_',signals_list,'.mat'];
+    %
+end
+%
+save(filename,'data');
+%
+if isempty(soutputs)
+    %
+    disp(['WARNING : mtsmat signals ''',signals_list,''' for discharge #',int2str(shotnumber),' are empty.'])
+    %
+end

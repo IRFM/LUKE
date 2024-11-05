@@ -10,6 +10,9 @@ function [ydates]= remote_mtsdate(sinputs)
 %
 %		ydates: structures of shot dates
 %
+%NOTE : data are save in a file place in a folder whose path is defined by the environment variable 'EXPERIMENTAL_TOKAMAK_DATA'. This variable must
+%be defined in the startup file startup.m -> setenv('EXPERIMENTAL_TOKAMAK_DATA','**************')
+%
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
 ydates = [];
@@ -27,6 +30,40 @@ else
     shotnumbers = sinputs;
     %
 end    
+%
+datapath = getenv('EXPERIMENTAL_TOKAMAK_DATA');%folder path
+%
+if isempty(datapath)
+    %
+    warning('The environment variable EXPERIMENTAL_TOKAMAK_DATA must be set in the startup.m file. Otherwise, data are stored locally')
+    %
+end
+%
+if ~exist(datapath)
+    %
+    mkdir(datapath);
+    %
+end
+%
+shotnumbers_list = '';
+%
+for ii = 1:length(shotnumbers)
+    %
+    shotnumbers_list = [shotnumbers_list,int2str(shotnumbers(ii)),'_'];
+    %
+end
+%
+shotnumbers_list = shotnumbers_list(1:end-1);
+%
+if exist([datapath,'mtsdate_',shotnumbers_list,'.mat'])
+    %
+    load([datapath,'mtsdate_',shotnumbers_list,'.mat'],'data');
+    %
+    ydates = data.ydates;
+    %
+    return
+    %
+end
 %
 if ~isstruct(sinputs)% new job
     %
@@ -128,4 +165,14 @@ for jj = 1:length(ydates)
         ydates{jj} = ydates{jj}(1:10);%remove possible spurious ending char
         %
     end
+end
+%
+data.ydates = ydates;
+%
+save([datapath,'mtsdate_',shotnumbers_list,'.mat'],'data');
+%
+if isempty(ydates)
+    %
+    disp(['WARNING : mtsdate signals of discharge #',int2str(shotnumber),' are empty.'])
+    %
 end

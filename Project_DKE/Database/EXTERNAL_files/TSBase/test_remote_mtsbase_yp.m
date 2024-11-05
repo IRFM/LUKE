@@ -2,14 +2,29 @@ close all
 clear all
 clc
 %
-shotnumber = 45525;%45525*1i;%shot number (real number for waiting results or imaginary number for giving hand after launching function and getting back data later) or data structure (with or without job for remote calculations)
+shotnumber = 32299;%45525*1i;%shot number (real number for waiting results or imaginary number for giving hand after launching function and getting back data later) or data structure (with or without job for remote calculations)
+%
+tsclean(shotnumber);
+%
+data_list = {'GHXR3',      'GPROFCHKVSPX%1', 'GPROFILEVSPX', 'GPROFNEFIT', ...
+            'GPROFTEFIT', 'SCIONBRAG',      'SDEPLW',       'SHAUTTOR',   ...
+            'SPROFIP',    'gbilan%11',      'gbilan',       'gfluxnoy%4', ...
+            'gnl',        'gphyb'           'gplasma',      'gptore',     ...
+            'gpuifci',    'gqbeli',         'grho',         'gshr',       ...
+            'gshtenv',    'sdeb',           'sika1',        'sipmes',     ...
+            'sitor',      'snli',           'snmoy',        'spiq',       ...
+            'sprad',      'stebrag',        'stibrag',      'szfbrm',     ...
+            'svsur'};
 %
 if isreal(shotnumber) 
+    %
     disp('Mode : waiting for results.')
-    data = remote_mtsbase(shotnumber,{'gphyb','sipmes','svsur'});%
+    data = remote_mtsbase(shotnumber,data_list);
+    %
 else
+    %
     disp('Mode : give hand back.')
-    data = remote_mtsbase(shotnumber,{'gphyb','sipmes','svsur'});%
+    data = remote_mtsbase(shotnumber,data_list);%
     %
     while 1
         %
@@ -23,24 +38,32 @@ else
 end
 %
 if isfield(data,'err')
+    %
     disp(['ERROR -> ',data.err])
+    %
 else
     %
     if isfield(data(1),{'yout1','yout2'})
-        phyb = data(1).yout1;
-        thyb = data(1).yout2;
-        subplot(3,1,1),plot(thyb,phyb);title(['Tore Supra, shot #45525']),xlabel('Time (s)');ylabel('Lower Hybrid power (MW)');
+        %
+        phyb = data(14).yout1;
+        thyb = data(14).yout2;
+        subplot(3,1,1),plot(thyb,phyb);title(['Tore Supra, shot #',int2str(shotnumber)]),xlabel('Time (s)');ylabel('Lower Hybrid power (MW)');
+        %
     end
     %
     if isfield(data(2),{'yout1','yout2'})
-        sipmes = data(2).yout1;
-        tsipmes = data(2).yout2;
-        subplot(3,1,2),plot(tsipmes,sipmes);title(['Tore Supra, shot #45525']),xlabel('Time (s)');ylabel('Plasma current (MA)');
+        %
+        sipmes = data(24).yout1;
+        tsipmes = data(24).yout2;
+        subplot(3,1,2),plot(tsipmes,sipmes);title(['Tore Supra, shot #',int2str(shotnumber)]),xlabel('Time (s)');ylabel('Plasma current (MA)');
+        %
     end
     %
     if isfield(data(3),{'yout1','yout2'})
-        svsur = data(3).yout1;
-        tsvsur = data(3).yout2;
-        subplot(3,1,3),plot(tsvsur,svsur);title(['Tore Supra, shot #45525']),xlabel('Time (s)');ylabel('Surface voltage (V)');axis([min(tsvsur),max(tsvsur),-1,1])
+        %
+        svsur = data(33).yout1;
+        tsvsur = data(33).yout2;
+        subplot(3,1,3),plot(tsvsur,svsur);title(['Tore Supra, shot #',int2str(shotnumber)]),xlabel('Time (s)');ylabel('Surface voltage (V)');axis([min(tsvsur),max(tsvsur),-1,1])
+        %
     end
 end

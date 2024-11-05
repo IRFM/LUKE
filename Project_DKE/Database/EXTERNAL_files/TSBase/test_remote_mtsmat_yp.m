@@ -2,6 +2,8 @@ close all
 clear all
 clc
 %
+tsclean(45525);
+%
 [data] = remote_mtsmat(45525,{'EXP=T=S;TORE_SUPRA;LISTDIAG','EXP=T=S;General;Itor','EXP=T=S;ANTENNES;POSHYB'});
 %
 disp('Multiple remote data load using tsmat function') 

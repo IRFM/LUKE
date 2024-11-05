@@ -4,6 +4,8 @@ clc
 %
 shotnumbers = [27503,27549,32299]; 
 %
+tsclean(shotnumbers);
+%
 [youts] = remote_mtsexist(shotnumbers,'GPROFTEFIT');
 %
 if ~isempty(youts)

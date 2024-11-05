@@ -15,6 +15,9 @@ function [yout1,yout2,yout3,yout4,yout5]= remote_tsbase(shotnumber,signal)
 %       yout4: signal vector 4 (may be time vector or empty)
 %       yout5: signal vector 5 (may be time vector or empty)
 %
+%NOTE : data are save in a file place in a folder whose path is defined by the environment variable 'EXPERIMENTAL_TOKAMAK_DATA'. This variable must
+%be defined in the startup file startup.m -> setenv('EXPERIMENTAL_TOKAMAK_DATA','**************')
+%
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
 yout1 = [];
@@ -23,8 +26,40 @@ yout3 = [];
 yout4 = [];
 yout5 = [];
 %
-if nargin < 2,
-     error('Not enough input argument in remote_tsbase.m');
+if nargin < 2
+    %
+    error('Not enough input argument in remote_tsbase.m');
+    %
+end
+%
+datapath = getenv('EXPERIMENTAL_TOKAMAK_DATA');%folder path
+%
+if isempty(datapath)
+    %
+    warning('The environment variable EXPERIMENTAL_TOKAMAK_DATA must be set in the startup.m file. Otherwise, data are stored locally')
+    %
+end
+%
+if ~exist(datapath)
+    %
+    mkdir(datapath);
+    %
+end
+%
+signal = lower(signal);%enforce lower case
+%
+if exist([datapath,'tsbase_data_',int2str(shotnumber),'_',signal,'.mat'])
+    %
+    load([datapath,'tsbase_data_',int2str(shotnumber),'_',signal,'.mat'],'data');
+    %
+    yout1 = data.yout1;
+    yout2 = data.yout2;
+    yout3 = data.yout3;
+    yout4 = data.yout4;
+    yout5 = data.yout5;
+    %
+    return
+    %
 end
 %
 remote = remote_cea;
@@ -64,3 +99,19 @@ else
     end
     %
 end 
+%
+data.yout1 = yout1;
+data.yout2 = yout2;
+data.yout3 = yout3;
+data.yout4 = yout4;
+data.yout5 = yout5;
+%
+save([datapath,'tsbase_data_',int2str(shotnumber),'_',signal,'.mat'],'data');
+%
+if isempty(yout1)
+    %
+    disp(['WARNING : tsbase signal ''',signal,''' for discharge #',int2str(shotnumber),' is empty.'])
+    %
+end
+
+

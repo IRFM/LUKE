@@ -4,6 +4,8 @@ clc
 %
 remote_enforce = 0;%Let the program decide (0) or not (1). If (1), use the remote profile remote_CEA_ALTAIR.m or remote_CEA_ANDROMEDE.m 
 %
+tsclean(45525);
+%
 [liste_diag] = remote_tsmat(45525,'EXP=T=S;TORE_SUPRA;LISTDIAG');
 [poshyb] = remote_tsmat(45525,'EXP=T=S;ANTENNES;POSHYB');
 %[ITOR] = remote_tsmat(45525,'EXP=T=S;General;Itor',remote_enforce,remote_cluster);%shot number may be 0

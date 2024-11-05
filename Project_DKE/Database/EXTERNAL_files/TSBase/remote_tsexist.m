@@ -15,6 +15,9 @@ function [cr,nb_mesures,num_version,certif,date,heure]= remote_tsexist(num_choc,
 %	    certif		=	vecteur des certification pour les donnees traitees (a 0 ou -2 pour les donnees brutes)
 %       date & heure=	date et heure de production
 %
+% NOTE : data are save in a file place in a folder whose path is defined by the environment variable 'EXPERIMENTAL_TOKAMAK_DATA'. This variable must
+%be defined in the startup file startup.m -> setenv('EXPERIMENTAL_TOKAMAK_DATA','**************')
+%
 % by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr>
 %
 cr = [];
@@ -26,6 +29,31 @@ heure = [];
 %
 if nargin < 2,
      error('Not enough input argument in remote_tsexist.m');
+end
+%
+datapath = getenv('EXPERIMENTAL_TOKAMAK_DATA');%folder path
+%
+if isempty(datapath)
+    %
+    warning('The environment variable EXPERIMENTAL_TOKAMAK_DATA must be set in the startup.m file. Otherwise, data are stored locally')
+    %
+end
+%
+nom_donnee = lower(nom_donnee);%enforce lower case
+%
+if exist([datapath,'tsexist_',int2str(num_choc),'_',nom_donnee,'.mat'])
+    %
+    load([datapath,'tsexist_',int2str(num_choc),'_',nom_donnee,'.mat'],'data');
+    %
+    cr = data.cr;
+    nb_mesures = data.nb_mesures;
+    num_version = data.num_version;
+    certif = data.certif;
+    date = data.date;
+    heure = data.heure;
+    %
+    return
+    %
 end
 %
 remote = remote_cea;
@@ -64,4 +92,18 @@ else
     end
     %
 end 
-
+%
+data.cr = cr;
+data.nb_mesures = nb_mesures;
+data.num_version = num_version;
+data.certif = certif;
+data.date = date;
+data.heure = heure;
+%
+save([datapath,'tsexist_',int2str(num_choc),'_',nom_donnee,'.mat'],'data');
+%
+if isempty(cr)
+    %
+    disp(['WARNING : tsexist data for discharge #',int2str(num_choc),' are empty.'])
+    %
+end

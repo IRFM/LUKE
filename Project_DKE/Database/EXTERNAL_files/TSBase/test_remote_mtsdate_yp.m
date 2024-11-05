@@ -4,6 +4,8 @@ clc
 %
 shot_list = [9816,28353,32299,45525,54555];  
 %
+tsclean(shot_list);
+%
 [date_list] = remote_mtsdate(shot_list);
 %
 for ii = 1:length(shot_list)
