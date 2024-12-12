@@ -91,8 +91,9 @@ else
             %
             if isempty(sparams.rfwaves.antenna.type{ii}{kk})
                 %
-                cprintf([1,0.5,0],['---> WARNING : the antenna #',int2str(kk),' in simulation #',int2str(ii),' is not considered in the calculations.']);disp(' ')
-                break % this antenna is removed from calculations
+                cprintf([1,0.5,0],['---> WARNING : the antenna #',int2str(kk),' in simulation #',int2str(ii),' is not considered in the calculations.']);disp(' ');% this antenna is removed from calculations
+                %
+                continue
                 %
             end
             %
@@ -116,7 +117,7 @@ else
                     %
                     if ~isfield(wavestructs{kk1}.launch,'omega_rf') && isfield(sparams.rfwaves.antenna.LH.C3PO.launch,'freq_GHz_rf')
                         %
-                        wavestructs{kk1}.launch.omega_rf = sparams.rfwaves.antenna.LH.C3PO.launch.freq_GHz_rf*2*pi*1e9;%wave angular frequency (rad/s)
+                        wavestructs{kk1}.launch.omega_rf = sparams.rfwaves.antenna.LH.C3PO.launch.freq_GHz_rf{ii}{kk}*2*pi*1e9;%wave angular frequency (rad/s)
                         % 
                     else
                         %
@@ -473,5 +474,5 @@ else
         %
     end
 end
-%                            
+%                                          
                             
