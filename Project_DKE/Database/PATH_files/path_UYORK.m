@@ -39,8 +39,7 @@ dkepath.pll543(1).research1.mex914 = [dkepath.pll543(1).luke_root,'Project_DKE/M
 %
 dkepath.pll543(1).research1.compiler_opt.copts = '';
 dkepath.pll543(1).research1.compiler_opt.copts.cpp.mex914 = '';
-%
-dkepath.pll543(1).research1.compiler_opt.fopts.mex914 = '';
+dkepath.pll543(1).research1.compiler_opt.fopts.mex914 = 'FC=''gfortran''';
 %
 dkepath.pll543(1).research1.MUMPS.mex914 = [dkepath.pll543(1).research1.local_root,'Packages/Bin/MUMPS/MUMPS_5.7.3_S_gfortran/MATLAB914'];%Where MUMPS matrix solver is stored (MEX function)
 %
