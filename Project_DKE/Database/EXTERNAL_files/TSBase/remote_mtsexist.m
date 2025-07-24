@@ -93,7 +93,7 @@ if ~isstruct(sinputs)% new job
             %
             cprintf([1,0.5,0],'---> WARNING: data load may be long if ethernet connection is poor');disp(' ')
             %
-            remote.matver.matdef = remote.matver.mat903;%enforce Matlab R2013b for tsbase only
+            remote.matver.matdef = remote.matver.mat913;%enforce Matlab R2013b for tsbase only
             %                    
             job = matstandardjob_jd;
             job.env.remotematfnc = 'runmat';
