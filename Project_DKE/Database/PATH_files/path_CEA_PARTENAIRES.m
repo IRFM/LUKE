@@ -54,11 +54,11 @@ dkepath.YP105119(1).persee.compiler_opt.fopts.mex907 = '';
 dkepath.YP105119(1).persee.compiler_opt.fopts.mex909 = '';
 dkepath.YP105119(1).persee.compiler_opt.fopts.mex913 = '';
 %
-dkepath.YP105119(1).persee.MUMPS.mex802 = [dkepath.YP105119(1).persee.local_root,'MUMPS/MUMPS_5.8.0_S_gfortran/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).persee.MUMPS.mex806 = [dkepath.YP105119(1).persee.local_root,'MUMPS/MUMPS_5.8.0_S_gfortran/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).persee.MUMPS.mex907 = [dkepath.YP105119(1).persee.local_root,'MUMPS/MUMPS_5.8.0_S_gfortran/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).persee.MUMPS.mex909 = [dkepath.YP105119(1).persee.local_root,'MUMPS/MUMPS_5.8.0_S_gfortran/MATLAB909'];%Where MUMPS matrix solver is stored (MEX function)
-dkepath.YP105119(1).persee.MUMPS.mex913 = [dkepath.YP105119(1).persee.local_root,'MUMPS/MUMPS_5.8.0_S_gfortran/MATLAB913'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).persee.MUMPS.mex802 = [dkepath.YP105119(1).persee.local_root,'Bin/MUMPS/MUMPS_5.8.0_S_gfortran/MATLAB802'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).persee.MUMPS.mex806 = [dkepath.YP105119(1).persee.local_root,'Bin/MUMPS/MUMPS_5.8.0_S_gfortran/MATLAB806'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).persee.MUMPS.mex907 = [dkepath.YP105119(1).persee.local_root,'Bin/MUMPS/MUMPS_5.8.0_S_gfortran/MATLAB907'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).persee.MUMPS.mex909 = [dkepath.YP105119(1).persee.local_root,'Bin/MUMPS/MUMPS_5.8.0_S_gfortran/MATLAB909'];%Where MUMPS matrix solver is stored (MEX function)
+dkepath.YP105119(1).persee.MUMPS.mex913 = [dkepath.YP105119(1).persee.local_root,'Bin/MUMPS/MUMPS_5.8.0_S_gfortran/MATLAB913'];%Where MUMPS matrix solver is stored (MEX function)
 %
 % LUKE documentation
 %
@@ -143,7 +143,3 @@ dkepath.YP105119(1).remote(ir).link_mode = '';
 ir = ir + 1;
 dkepath.YP105119(1).remote(ir) = dkepath.YP105119(1).remote(ir-1);
 dkepath.YP105119(1).remote(ir).schedulername = 'direct';%
-%------------------------------------ Other LUKE users ------------------------------
-%
-dkepath = add_path_cea_users(dkepath,'PARTENAIRES');
-%
