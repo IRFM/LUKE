@@ -52,9 +52,9 @@ if ~isempty(hxrexp) && isfield(hxrexp,'t')
     %
     for jj = 1:length(hxrexp.energy)
         %
-        hxrexp_averaged.profile(jj,:) = sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs)/hxrexp_averaged.hxr_dt;%time averaging of the HXR signal (counts/s)
+        hxrexp_averaged.profile(jj,:) = squeeze(sum(hxrexp.hxr(irefs,jj,:),1))'/length(irefs)/hxrexp_averaged.hxr_dt;%time averaging of the HXR signal (counts/s)
         %
-        hxrexp_averaged.errorbars(jj,:) = sqrt(sum(squeeze(hxrexp.hxr(irefs,jj,:)),1)/length(irefs))/hxrexp_averaged.hxr_dt;%error bars (Poisson's statistics)
+        hxrexp_averaged.errorbars(jj,:) = sqrt(squeeze(sum(hxrexp.hxr(irefs,jj,:),1))'/length(irefs))/hxrexp_averaged.hxr_dt;%error bars (Poisson's statistics)
         %
     end
     %
