@@ -13,6 +13,15 @@ if ~isfield(sparams,'rfwaves')
     %
 end
 %
+if sluke_eval_subfield(sparams,ii,'rfwaves','enable',@(x)~x) %Enter only if enable is explicitly set to zero
+    %   
+    cprintf([1,0.5,0],'RF waves not enabled in sparams');disp(' ');
+    wavestructs = [];
+    remote_status = [];
+    return
+    %
+end 
+%
 wavestructs_id = sluke_id(sparams,ii);
 %
 if exist(['SLUKE_RFWAVES/WAVESTRUCTS_',wavestructs_id,'.mat'])
