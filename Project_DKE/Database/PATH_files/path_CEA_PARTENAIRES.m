@@ -143,3 +143,9 @@ dkepath.YP105119(1).remote(ir).link_mode = '';
 ir = ir + 1;
 dkepath.YP105119(1).remote(ir) = dkepath.YP105119(1).remote(ir-1);
 dkepath.YP105119(1).remote(ir).schedulername = 'direct';%
+
+%
+%------------------------------------ Other LUKE users ------------------------------
+%
+dkepath = add_path_cea_users(dkepath,'PARTENAIRES');
+%
