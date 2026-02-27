@@ -48,7 +48,9 @@ end
 %
 if ~isempty(hxrexp) && isfield(hxrexp,'t')
     %
-    irefs = find((hxrexp.t >= sparams.discharge.tmin{ii}) & (hxrexp.t <= sparams.discharge.tmax{ii}));%time interval
+    [~,irefs1] = min(abs(hxrexp.t - sparams.discharge.tmin{ii}));%time interval
+    irefs2 = find((hxrexp.t > sparams.discharge.tmin{ii}) & (hxrexp.t <= sparams.discharge.tmax{ii}));
+    irefs = unique([irefs1; irefs2]);
     %
     hxrexp_averaged.hxr_dt = hxrexp.t(2)-hxrexp.t(1);%experimental sampling time (s). 
     %
