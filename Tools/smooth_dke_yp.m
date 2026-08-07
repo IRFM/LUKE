@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function y = smooth_dke_yp(x,width,typ)
 % LUKE - Columnwise data smoothing
 %
@@ -13,8 +27,6 @@ function y = smooth_dke_yp(x,width,typ)
 %	Output:
 %	
 %		- y: smoothed data [n,m]
-%
-%by Y.PEYSSON CEA/IRFM <yves.peysson@cea.fr> and Joan Decker CEA/IRFM <joan.decker@cea.fr>
 %
 if nargin < 1,
 	infoyp(2,'Wrong number of input arguments for smooth_dke_yp');

@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [XXf0,x_0] = interpleg_yp(XXf0_leg,mhu,momentumDKE)
 %
 % Pitch-angle interpolation on a new mhu grid
@@ -13,8 +27,6 @@ function [XXf0,x_0] = interpleg_yp(XXf0_leg,mhu,momentumDKE)
 %
 %   - XXf0: interpolation distribution function (npn,nmhu,nr)
 %   - x_0: normalization at all radii (nr)
-%
-% By Yves Peysson (CEA-IRFM, yves.peysson@cea.fr) and Joan Decker (CEA-IRFM, joan.decker@cea.fr)
 %
 if nargin < 2,error('Wrong number of input arguments in interpleg_yp.m.');end
 %

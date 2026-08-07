@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function completed_jobs = load_batch_jd(filename,completed_jobs,savepath)
 %
 % Check the job status send by run_lukert with distributed calculations (local or remote)
@@ -11,9 +25,6 @@ function completed_jobs = load_batch_jd(filename,completed_jobs,savepath)
 % OUTPUTS :
 %
 %   - completed_jobs : status of the running jobs (vector)
-%
-% by J. Decker (joan.decker@cea.fr), E. Nilsson (emelie.nilsson@cea.fr) and Y. Peysson (yves.peysson@cea.fr)
-%
 %
 if nargin == 0, 
     filename = '';

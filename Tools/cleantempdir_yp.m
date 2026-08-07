@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [flag] = cleantempdir_yp(owner,year,month,day)
 %LUKE - Remove all temporary directories created by LUKE where temporary matrices are stored (see make_path_LOCAL.m or equivalent file)
 %
@@ -17,8 +31,6 @@ function [flag] = cleantempdir_yp(owner,year,month,day)
 % OUTPUT
 %
 %	- flag: number of directories or files removed [1,1]
-%
-% by J. Decker (CEA-IRFM) <joan.decker@cea.fr> and   Y. Peysson (CEA-IRFM) <yves.peysson@cea.fr>
 %
 if nargin > 4,error('Wrong number of input arguments in cleantempdir_yp.m');end
 if nargin == 0,owner = getenv('USER');end

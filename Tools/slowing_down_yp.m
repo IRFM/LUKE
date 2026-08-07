@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [tau_sd,tau_ei_sd,tau_ee_sd] = slowing_down_yp(equil,E0,disp_mode)
 %
 % Slowing-down time of fast test electrons with a thermal plasma bulk. Ref. : NRL plasma formulary 2016 
@@ -15,8 +29,6 @@ function [tau_sd,tau_ei_sd,tau_ee_sd] = slowing_down_yp(equil,E0,disp_mode)
 %         - tau_sd: fast electron slowing-down time (ms) [nE,npsi]
 %         - tau_ee_sd: fast electron slowing-down time by electrons (ms) [nE,npsi]
 %         - tau_ei_sd: fast electron slowing-down time by ions (ms) [nE,npsi]
-%
-%by Y.PEYSSON (yves.peysson@cea.fr)
 %
 if nargin == 1,
     E0 = [10:10:200];%keV

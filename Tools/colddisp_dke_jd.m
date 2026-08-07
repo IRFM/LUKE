@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [Nperpp,Nperpm,Kxyz,...
     ep_xyz,em_xyz,ep_pmz,em_pmz,ep_pyk,em_pyk,...
     phip_xyz,phim_xyz,phip_pmz,phim_pmz,phip_pyk,phim_pyk,...
@@ -48,9 +62,6 @@ function [Nperpp,Nperpm,Kxyz,...
 %       - phim_pyk: normalized power flow vector in the (p,y,k) coordinates (root -) [3,1] 
 %       - sigmap: normalized energy density (root +) [1,1] 
 %       - sigmam: normalized energy density (root -) [1,1] 
-%
-% created 05/02/2003
-% by Joan Decker <jodecker@alum.mit.edu> (MIT/RLE) and  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 % 
 [qe,me,mp,mn,e0] = pc_dke_yp;
 %

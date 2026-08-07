@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [wave_out] = change_directivity_yp(wave_in,equil,module_directivity_ref)
 %
 % This function changes the antenna module directivity (module directivity (RC = 0), J. Hillairet et al. Nucl. Fusion 50 (2010) 125010) by balancing power
@@ -19,8 +33,6 @@ function [wave_out] = change_directivity_yp(wave_in,equil,module_directivity_ref
 %	Output:
 %
 %       - wave_out: modified output wave structure (structure)
-%
-% by Y.Peysson (CEA/IRFM, yves.peysson@cea.fr)
 %
 if nargin < 2
     error('Error in change_directivity_yp.m, not enough input arguments')

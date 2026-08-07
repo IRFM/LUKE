@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [xalphaphi,snui] = alphaphi_cd_yp(ray,equilDKE_Fourier,omega_rf)
 %
 %   ALPHAPHI_CD_YP 
@@ -11,13 +25,11 @@ function [xalphaphi,snui] = alphaphi_cd_yp(ray,equilDKE_Fourier,omega_rf)
 %
 %           - ray: ray structure [1,nx]
 %           - equilDKE_Fourier: equil structure [1,nx]
-%           - omega_rf: reference fréquency (Hz) [1,1]
+%           - omega_rf: reference frÃ©quency (Hz) [1,1]
 %
 %   OUTPUTS :
 %           - xalphaphi: alpha/(omega_rf/clum/phi) [1,nx]
 %           - snui: electron-ion collision frequencies normalized to omega_rf [ns,nx]
-%
-%   by Y. Peysson CEA-IRFM (yves.peysson@cea.fr)
 %
 if nargin < 3,
     error('Not enough input arguments in alphaphi_cd_yp.m')

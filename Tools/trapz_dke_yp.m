@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [sf] = trapzyp(f)
 %
 %	Numerical integration by the trapeze's method of a function y = f(x).
@@ -10,11 +24,6 @@ function [sf] = trapzyp(f)
 %	Output:
 %
 %		- sf: [sf1,sf2,...,sfn], sum of fi's [m,n] 
-%
-%
-%by Y.PEYSSON CEA-DRFC 11/10/1991 <peysson@drfc.cad.cea.fr>
-%revised for MatLab 4.1 (31/08/1994) 
-%revised for MatLab 5.2 (31/08/2000) 
 %
 if nargin < 1,
 	infoyp(2,'Wrong number of input arguments for trapz_dke_yp');

@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [mask,xNperp,xepol_pmz,xphi_xyz,xalphaphi_lin_nr,...
         xalphaphi_lin_wr,xalphaphi_lin_fr,xepol_xyz,xepol_pyk,xphi_pmz,xphi_pyk] = ...
     proc_ES_ebw_jd(xa,xq,xbeta,xNpar,xNperp,opt_disp_in,nmax_in)
@@ -19,8 +33,6 @@ function [mask,xNperp,xepol_pmz,xphi_xyz,xalphaphi_lin_nr,...
 %           - (2): Z function expansion large argument 1st order + Nperp >> Npar
 %
 %       - nmax: number of harmonic numbers to be considered
-%
-% J. Decker 14/12/05 (joan.decker@cea.fr)
 %
 if nargin < 7
     nmax_in = 50;

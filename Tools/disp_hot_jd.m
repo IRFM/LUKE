@@ -1,10 +1,24 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [smask_ht,sNperp_ht,sepol_pmz_ht,sPflow_pmz_ht,sPabs_at,...
         smask_ft,sNperp_ft,sepol_pmz_ft] = ...
     disp_hot_jd(ss,sB,sne,sTe,sNpar,omega,sNperp,rel_opt,tol_ht,nd_ht,guess_ES,nn_nr);
 %
 % Hot plasma dispersion solver R2D2 
 %
-% by J. Decker and A.K. Ram
+% Contribution of A.K. Ram (PSFC, MIT)
 %
 nnpar = 50;%number of points to continuously raise Npar when Npar = 1.
 %

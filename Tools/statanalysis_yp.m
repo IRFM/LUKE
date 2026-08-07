@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [iy,y,ym,ys,yr,iyr] = statanalysis_yp(yin,yt,display_mode)
 %
 % This function calculates the mean value, the standard deviation, and the
@@ -17,8 +31,6 @@ function [iy,y,ym,ys,yr,iyr] = statanalysis_yp(yin,yt,display_mode)
 %       - ys: standard deviation [1,1]
 %       - yr: relative accuracy of the mean value [1,1]
 %       - iyr: rejected index [1,m-p]
-%
-% by Y. Peysson DRFC-CEA <yves.peysson@cea.fr> and J. Decker DRFC-CEA <joan.decker@cea.fr> 
 %
 if nargin < 3,
     display_mode = 0;% default value, no display

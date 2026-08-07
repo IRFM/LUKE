@@ -1,10 +1,22 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function s = structindex(s,slength,sindex,ignoredfields)
 %
 % This function returns the fields evaluated at the index sindex.
 %  - Only fields with a dimension of length slength are concerned 
 %  - If several dimensions have the length slength, only the first dimension is concerned
-%
-% by J. Decker 02/01/2011
 %
 if nargin <4,
     ignoredfields = {};

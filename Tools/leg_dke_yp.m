@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [Pn,cL] = leg_dke_yp(x,m)
 %
 %	Fast calculation of the Legendre polynomial Pn(x) of degree m
@@ -14,8 +28,6 @@ function [Pn,cL] = leg_dke_yp(x,m)
 %       - cL: Legendre coefficient up to degree m [m+1] 
 %
 %	Warning: Pn(k+1,:) is corresponding to the Legendre polynomial of	degree k.
-%
-% by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
 if nargin < 1,
 	infoyp(2,'Wrong number of input arguments for leg_dke_yp');

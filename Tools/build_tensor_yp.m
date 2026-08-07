@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [xx,yy,varargout] = build_tensor_yp(x,y,z)
 %
 % Build 2-D (matrix) or 3-D (tensor) from vectors, whatever their dimensions
@@ -12,8 +26,6 @@ function [xx,yy,varargout] = build_tensor_yp(x,y,z)
 %    - xx: matrix or tensor [nx,ny,(nz)]
 %    - yy: matrix or tensor [nx,ny,(nz)]
 %    - zz: matrix or tensor [nx,ny,(nz)] (optional)
-%
-% By Yves Peysson (CEA-DRFC, yves.peysson@cea.fr) and Joan Decker (CEA-DRFC, joan.decker@cea.fr)
 %
 if nargin < 2,error('Not enough input arguments in build_tensor_yp.m !');end
 %

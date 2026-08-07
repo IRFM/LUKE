@@ -1,9 +1,21 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [sdPdrho_dep,rho_dep] = radialdampingprofile_jd(srho,sP,rho_dep_S)
 %
 % calculates the radial power deposition profile of a ray for which the
 % damping is already calculated
-%
-% by J. Decker (joan.decker@cea.fr) and Y. Peysson (yves.peysson@cea.fr)
 %
 if nargin < 3,
     rho_dep_S = 40;

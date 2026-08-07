@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [xNperp,xepol_pmz,xphi_xyz,xalphaphi_lin_nr,...
         xalphaphi_lin_wr,xalphaphi_lin_fr,xepol_xyz,xepol_pyk,xphi_pmz,xphi_pyk]...
     = ES_ebw_disp_jd(xNpar,omega_rf,xTe,xne,xB,xNperp_in,opt_calc,opt_disp,nmax)
@@ -37,8 +51,6 @@ function [xNperp,xepol_pmz,xphi_xyz,xalphaphi_lin_nr,...
 %       - X: kinetic plasma susceptibility tensor elements [3,3]
 %       - X_s: kinetic plasma susceptibility tensor elements for species s [3,3,1+i]
 %       - X_sn: kinetic plasma susceptibility tensor elements for species s and harmonic n [3,3,1+i,N]
-%
-% by Joan Decker <joan.decker@cea.fr> (CEA/DRFC) and  Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 % 
 if nargin < 9
     nmax = 50;

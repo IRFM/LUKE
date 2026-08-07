@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [y,y_th,py_th] = randlin_yp(N,h,ybounds,display_mode)
 %
 % Calculate the random variable with a linear decrease of the p.d.f. (normalized to 1 over the the domain).
@@ -10,7 +24,7 @@ function [y,y_th,py_th] = randlin_yp(N,h,ybounds,display_mode)
 %     (default = 1)
 %   - ybounds : range of the random variable [3,1] or [1,3] for example. If [1,3], f(1)/f(3) = 1/h, and if [3,1], f(1)/f(3) = h. If NaN or empty ybounds = [0,1]
 %     (default [0,1])
-%   - display_mode : display the numerical and theoretical p.d.f and display the distribution is > 0 and is the number of bin of theÒ histogram (0: no, > 1, yes) [1,1]
+%   - display_mode : display the numerical and theoretical p.d.f and display the distribution is > 0 and is the number of bin of theÃ’ histogram (0: no, > 1, yes) [1,1]
 %     (default = 0)
 %
 % Output:
@@ -18,8 +32,6 @@ function [y,y_th,py_th] = randlin_yp(N,h,ybounds,display_mode)
 %   - y : random variable [N,1]
 %   - y_th : theoretical random variable [N,1]
 %   - py_th : theoretical p.d.f. normalized to 1 [N,1]
-%
-%   by Y. Peysson (CEA/DSM/IRFM) (yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM) (joan.decker@cea.fr)
 %
 if nargin < 1, 
     N = 100000;

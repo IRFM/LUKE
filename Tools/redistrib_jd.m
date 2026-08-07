@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function g = redistrib_jd(x,f,y,testsum)
 %
 % This function redistributes the function f defined on the cells limited
@@ -12,7 +26,7 @@ function g = redistrib_jd(x,f,y,testsum)
 % OUTPUTS : 
 %   - g : function evaluated on the output cells [ny-1,1];
 %
-% by J. Decker, E. Nilsson and Y. Peysson
+% Contribution of E. Nilsson
 %
 if nargin < 3,
     error('Not enough input arguments')

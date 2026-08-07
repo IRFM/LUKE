@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [varargout] = pc_dke_yp(gauss)
 %
 % Calculates the universal physics constants
@@ -24,8 +38,6 @@ function [varargout] = pc_dke_yp(gauss)
 %   - hbar : Reduced Planck constant
 %   - a0 : Bohr radius (m)
 %   - lambdaC : Compton length (m)
-%
-% by Joan Decker <jodecker@mit.edu> (MIT/RLE) and Yves Peysson <yves.peysson@cea.fr> (CEA/DRFC)
 %
 qe = 1.602176462e-19;%Absolute value of the electron charge (C)
 me = 9.10938188e-31;%Electron rest mass (Kg)

@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [project_root_old,pmode_old] = startup_project(project_root,pmode_in,smode_in)
 %LUKE -  Function which allows to swap between different LUKE branches or
 %versions (interative mode if no arguments). This function must be placed at the
@@ -20,8 +34,6 @@ function [project_root_old,pmode_old] = startup_project(project_root,pmode_in,sm
 %
 %       - project_root_old: previous project directory [1,1])
 %       - pmode_old: previous project name [1,1])
-%
-% by Y.Peysson (CEA/DSM/IRFM) <yves.peysson@cea.fr> and J. Decker (CEA/DSM/IRFM) <joan.decker@cea.fr>
 %
 clc
 close all

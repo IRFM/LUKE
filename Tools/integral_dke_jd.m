@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [SX] = integral_dke_jd(dx,X,d)
 %
 %	Numerical integration on the dimension d of the matrix X, with steps dx
@@ -11,10 +25,6 @@ function [SX] = integral_dke_jd(dx,X,d)
 %	Output:
 %
 %		- sf: integrated matrix, of dimension nd-1 
-%
-%Last update: 02/05/2002
-%
-%by J. Decker (12/13/02)
 %
 if nargin < 3,
 	error('Wrong number of input arguments for integral_dke_jd');

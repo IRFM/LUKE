@@ -1,8 +1,20 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function print_jd(opt,savename,savedir,fignum,res)
 %
 % prints (opt = 0) and (opt = 1) / or (opt = 2, default) saves to file the current figure under the name savename
-%
-% by J. Decker (jodecker@alum.mit.edu) 09/28/04
 %
 if nargin < 5
     res = 600;

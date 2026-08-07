@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [x,w] = gauleg_dke_yp(n,epsi,x1,x2)
 %
 %	Calculation of the weights for the Gauss-Legendre quadrature. Ribicki's algorithm 
@@ -17,10 +31,6 @@ function [x,w] = gauleg_dke_yp(n,epsi,x1,x2)
 %
 %		- x: Gauss-Legendre quadrature x-values [n,1]
 %		- w: Gauss-Legendre quadrature weights at x-values [n,1]
-%
-%
-%by Y.PEYSSON CEA-DRFC 16/05/1991 <yves.peysson@cea.fr>
-%revised for MatLab 4.1 (30/08/1994) 
 %
 if nargin < 0,
 	infoyp(2,'Wrong number of input arguments for gaulegyp');

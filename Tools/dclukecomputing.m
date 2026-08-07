@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [flag,varargout] = dclukecomputing(fun_handle,args_in,arg_index,arg_range,scheduler)
 % LUKE - LUKE distributed computing environment
 %
@@ -17,8 +31,6 @@ function [flag,varargout] = dclukecomputing(fun_handle,args_in,arg_index,arg_ran
 %       - flag: status of the computation : scheduler.mode (OK with dclukecomputing) or -2 (failed) [1,nrange]
 %       - varargout: output arguments list of the function {1,nargout-1}.
 %           => Each element is a list of size {nrange,1}
-%
-%   by Y. Peysson (CEA/DSM/IRFM) (yves.peysson@cea.fr) and J. Decker (CEA/DSM/IRFM) (joan.decker@cea.fr)
 %
 nrange = length(arg_range);
 varargout_array = cell(nrange,nargout-1);

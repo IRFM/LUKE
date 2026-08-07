@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function xalphaphi = alphaphi_fr_jd(xa,xb,xbeta,xNpar,xNperp,xepol_pmz,n,rel_opt,ns,pperpmax,mex);
 %
 %   ALPHAPHI_FR_JD 
@@ -26,8 +40,6 @@ function xalphaphi = alphaphi_fr_jd(xa,xb,xbeta,xNpar,xNperp,xepol_pmz,n,rel_opt
 %   OUTPUTS :
 %
 %           - xalphaphi: alpha/(omega_rf/clum/phi) [1,nx]
-%
-%   by J. Decker 11/17/05
 %
 if nargin < 11,
     mex = 1;
