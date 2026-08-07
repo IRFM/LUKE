@@ -1,7 +1,7 @@
 %
 % /////////////////////////////////////////
 %
-% Software name : MatTools, part of LUKE
+% Software name : LUKE
 %
 % Authors : Yves Savoye-Peysson and Joan Decker
 %
