@@ -1,3 +1,17 @@
+// /////////////////////////////////////////
+//
+// Software name : LUKE
+//
+// Authors : Yves Savoye-Peysson and Joan Decker
+//
+// Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+//
+// CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+//
+// The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+//
+// /////////////////////////////////////////
+//
 /*COMPARES TXO BINARY FILES GIVEN AS COMMAND LINE ARGUMENTS args[1] and args[2].
 TWO OPTIONS AVAILABLE: a=0 DISPLAYS THE RELATIVE ERROR AND a=1 DISPLAYS INDICES
 OF ELEMENTS WITH ERRORS ARE > 1e6

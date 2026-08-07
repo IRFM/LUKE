@@ -1,3 +1,17 @@
+// /////////////////////////////////////////
+//
+// Software name : LUKE
+//
+// Authors : Yves Savoye-Peysson and Joan Decker
+//
+// Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+//
+// CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+//
+// The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+//
+// /////////////////////////////////////////
+//
 void fluctuation(mode,krho,m,n,Y,krho_s1,krho_s2,krho_s3,krho_s4,krho_s5,krho_s6, m_s1,m_s2,m_s3,m_s4,m_s5, n_s1,n_s2,n_s3,n_s4,n_s5,raymagnetic,rayprofiles,param,equilparam,Npar,ap,cnorm,ran2,res,reset)
 int mode;
 double *krho;

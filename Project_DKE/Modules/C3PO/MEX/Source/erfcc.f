@@ -1,3 +1,18 @@
+C /////////////////////////////////////////
+C 
+C  Software name : LUKE
+C 
+C  Authors : Yves Savoye-Peysson and Joan Decker
+C 
+C  Copyright holders : Commissariat a l'Energie Atomique 
+C  et aux Energies Alternatives (CEA), France
+C  CEA authorizes the use of the LUKE software under the CeCILL-C 
+C  open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+C  The terms and conditions of the CeCILL-C license are deemed to be accepted upon
+C  downloading the software and/or exercising any of the rights granted under
+C  the CeCILL-C license.
+C  /////////////////////////////////////////
+C 
 C      ALGORITHM 680, COLLECTED ALGORITHMS FROM ACM.
 C      THIS WORK PUBLISHED IN TRANSACTIONS ON MATHEMATICAL SOFTWARE,
 C      VOL. 16, NO. 1, PP. 47.

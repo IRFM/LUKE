@@ -1,3 +1,17 @@
+// /////////////////////////////////////////
+//
+// Software name : LUKE
+//
+// Authors : Yves Savoye-Peysson and Joan Decker
+//
+// Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+//
+// CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+//
+// The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+//
+// /////////////////////////////////////////
+//
 /*****************************************************************************
 
    NOM  DU MODULE        :  tsecri.c
@@ -319,8 +333,8 @@ TSWcertif (	char *NomDon,
 
                         TSInitOccTrait
 
-But : 	fonction envoyant au serveur les paramètres écrire 
-	dans la base de données au début de l'éxécution du traitement
+But : 	fonction envoyant au serveur les paramÃ¨tres Ã©crire 
+	dans la base de donnÃ©es au dÃ©but de l'Ã©xÃ©cution du traitement
 Arguments :
 	NomTrait  : nom du traitement
 	Entrees   : liste des entrees du traitement
@@ -421,8 +435,8 @@ int rejeu_ok = 0, len_host = 63 ;
 
                         TSUpdateOccTrait
 
-But : 	fonction envoyant au serveur les paramètres écrire 
-	dans la base de données a la fin de l'éxécution du traitement
+But : 	fonction envoyant au serveur les paramÃ¨tres Ã©crire 
+	dans la base de donnÃ©es a la fin de l'Ã©xÃ©cution du traitement
 Arguments :
 	NomTrait  : nom du traitement
 	Entrees   : liste des entrees du traitement
