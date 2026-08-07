@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [j_R,j_Z,j_phi,rotB_R,rotB_Z,rotB_phi,rel_diff_R,rel_diff_Z,rel_diff_phi] = testAmpereLaw(rhos,thetas,equil,amplitudes)
 % computes mu0*J and rot(B) in cylindric coordinates
 

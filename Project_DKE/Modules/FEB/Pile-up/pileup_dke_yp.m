@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [Ni_s,khisto1,Tphi_s,eTphi_s,Qi_s,Tpho_s,eTpho_s,Qo_s,TphADC_s,eTphADC_s,QADC_s,Tphcode_s,eTphcode_s,Qcode_s] = pileup_dke_yp(pileupsim,diag)
 %
 % Study of of pile-up and dead-time for x-ray spectrometry at high counting rate

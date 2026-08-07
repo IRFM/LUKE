@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [Z0,N,q,a,nff,B,r0n,rn,bbar,dens,I1,I2,output] = fionradius_yp(Z,Z0,model)
 %
 %   Calculation of the ion radius for any positive ion of an element of atomic number Z. 

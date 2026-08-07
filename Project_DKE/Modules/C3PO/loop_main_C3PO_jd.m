@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [rays,rhomin] = loop_main_C3PO_jd(iray,equil,equil_fit,id_wave,omega_rf,rayinit,rayparam,flag,waveparam,C3POdisplay,f0struct,fluct_fit)
 %C3PO - Set ray initial characteristics and launches the C3PO ray-tracing code (loop function for distributed computing environment)
 %

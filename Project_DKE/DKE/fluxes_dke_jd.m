@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [Sp0_imj,Sp0_ipj,Sm0_ijm,Sm0_ijp] = ...
     fluxes_dke_jd(df0dpn_imj,df0dpn_ipj,df0dmhu_imj,df0dmhu_ipj,f0_imj,f0_ipj,...
                   Dpp_imj,Dpp_ipj,Dpm_imj,Dpm_ipj,Fp_imj,Fp_ipj,lmmhu2,pnm,pnp,...

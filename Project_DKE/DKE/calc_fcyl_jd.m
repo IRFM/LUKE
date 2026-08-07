@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [XXf_cyl,xXFpar_cyl,ppar_cyl,xXFperp_cyl,pperp_cyl] = calc_fcyl_jd(XXf,betath_ref,pn,mhu,dp_cyl,ir_list,iir_display,pnmax_disp,XXmask,pmhucrit,ifig)
 %
 % this function transforms the distribution into cylindrical momentum space

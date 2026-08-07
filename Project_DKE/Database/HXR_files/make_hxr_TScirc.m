@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 %******************************************** HARD X-RAY CONFIGURATION ********************************************
 %******************************************************************************************************************
 % Create the local file HXR_hxr_id.mat
@@ -34,15 +48,15 @@ lod = [5];
 lad = [5];
 lpm = [0];
 td = ['CdTe'];
-kd = ones(1,1)*[10,30,50,70,90,110,130,150,170,190,210,250];%Parametres a peu pres adaptes aux spectres de 57Co et 241Am enregistres en labo.
-phf = ones(1,1)*[0.75,0.62,0.51,0.41,0.32,0.2,0.2,0.2,0.2,0.2,0.2,0.2];%Parametres aˆ peu pres adapets aux spectres de 57Co et 241Am enregistres en labo.
-res = ones(1,1)*[6,-0.9];%Parametres aˆ peu pres adapets aux spectres de 57Co et 241Am enregistres en labo.
+kd = ones(1,1)*[10,30,50,70,90,110,130,150,170,190,210,250];%Parametres a peu pres adaptÂes aux spectres de 57Co et 241Am enregistrÂes en labo.
+phf = ones(1,1)*[0.75,0.62,0.51,0.41,0.32,0.2,0.2,0.2,0.2,0.2,0.2,0.2];%Parametres aÂˆ peu pres adapetÂs aux spectres de 57Co et 241Am enregistreÂs en labo.
+res = ones(1,1)*[6,-0.9];%Parametres aÂˆ peu pres adapetÂs aux spectres de 57Co et 241Am enregistreÂs en labo.
 Gain = [1];   
 Offset = [0];
 pur = [0];
 chordstatus = [1];  
 %			
-EG = [1]*1e-3;%Etendue geometrique petite camera
+EG = [1]*1e-3;%Etendue geÂomeÂtrique petite camera
 %
 R_TS = (Ri + ai*cos(tv*pi/180))/1000;% reference major radius (m)
 Z_TS = ai*sin(tv*pi/180)/1000;% reference vertical position (m)

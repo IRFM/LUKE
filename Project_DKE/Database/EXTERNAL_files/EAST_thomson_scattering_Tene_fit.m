@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [equil_new,N_lav,rho_LUKE_ts_sr,rho_psi_ts_sr,T_ts_fit,N_ts_fit,T_ts_sr,dT_ts_sr,N_ts_sr,dN_ts_sr,T_rmse,N_rmse] = EAST_thomson_scattering_Tene_fit(equil,R_ts,Z_ts,T_ts,dT_ts,N_ts,dN_ts,R_hcn,display_mode,nefit_mode)
 %
 % Calculates Te and ne profiles for C3PO/LUKE from Thomson scattering for EAST from raw data, using EQDSK equilibrium 

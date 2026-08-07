@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [ZXXD_s,ZXXF_s,ZXXD_s_tp,ZXXF_s_tp] = synchrotron_dke_jd(dkeparam,display,equilDKE,mksa,gridDKE,Zmomcoef,Zbouncecoef)
 %
 % Calculate matrix coefficient for the synchrotron reaction force in LUKE

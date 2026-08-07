@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [ppar_cyl,pperp_cyl,p_hxr,Xf_hxr_cyl,mc2,betath_ref] = contourfp_hxr_yp(dkeparam,display,equilDKE,momentumDKE,Zmomcoef,radialDKE,dke_out,mksa,Zbremchord,Zbremplasma,Zbremdiag,i_kphot,i_test,j_test,display_mode)
 %
 %Draw countour plot of the electron distribution function with the region that is concerned by fast electron bremsstrahlung above a given photon energy

@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [brem_th_out] = bremth_dke_yp(HXR,vschords,xrho,xne_norm,ne_ref,xTe_norm,Te_ref,xZeff_norm,Zeff_ref)
 %
 %	Calculation of the thermal x-ray contribution: dN(k)/dt.dk.domega (s-1.keV-1.str-1)

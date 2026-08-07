@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [na,gamma_KAM_exact,gamma_KAM_approximate,open_upperboundaries_propagationdomain,intersection,Npar_gap_min,R_kinematic_gap_min] = LH_acces_yp(equil,omega_rf,ray,npar0,nparmax,resolution,figname) 
 %
 %   Spectral domain of propagation with Stix-Golant accessibility criterion

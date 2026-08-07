@@ -1,3 +1,17 @@
+% /////////////////////////////////////////
+%
+% Software name : LUKE
+%
+% Authors : Yves Savoye-Peysson and Joan Decker
+%
+% Copyright holders : Commissariat a l'Energie Atomique et aux Energies Alternatives (CEA), France
+%
+% CEA authorizes the use of the LUKE software under the CeCILL-C open source license https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+%
+% The terms and conditions of the CeCILL-C license are deemed to be accepted upon downloading the software and/or exercising any of the rights granted under the CeCILL-C license.
+%
+% /////////////////////////////////////////
+%
 function [waveparam,xyprop_dke_rf,xyP0_2piRp_in_rf,xyP0_2piRp_in_rf_coll,xyP0_2piRp_in_rf_noabs,yb_rf,yP0_2piRp,xys_rf] = rfwave_dke_jd(dkeparam,display,equil,equilDKE,gridDKE,Zbouncecoef,mksa,waves);
 % 
 %	RF input parameters for the Drift Kinetic equation solver (dke_4_1yp.m). 
